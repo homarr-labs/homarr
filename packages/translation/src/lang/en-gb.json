@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Use icons for pings"
       },
+      "enableRightClickOnWidgets": {
+        "label": "Enable right-click on widgets",
+        "description": "Show Homarr's context menu when right-clicking a widget. Disable to use the browser's default menu (e.g. \"Open link in new tab\")."
+      },
       "defaultSearchEngine": {
         "label": "Default search engine"
       },
@@ -803,47 +807,47 @@
         "placeholder": "Custom application URL"
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Get API key"
       }
     },
     "action": {
       "create": "New integration"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} widgets",
+      "noWidgets": "No widgets",
+      "detected": "Detected via Docker"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
-      "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "dnsHole": "DNS",
+      "mediaService": "Media",
+      "calendar": "Calendar",
+      "mediaSearch": "Search",
+      "mediaRelease": "Releases",
+      "mediaRequest": "Requests",
+      "downloadClient": "Downloads",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Misc",
+      "smartHomeServer": "Smart Home",
+      "indexerManager": "Indexer",
+      "healthMonitoring": "Health",
+      "search": "Search",
+      "mediaTranscoding": "Transcoding",
+      "networkController": "Network",
+      "releasesProvider": "Releases",
+      "notifications": "Notifications",
+      "firewall": "Firewall",
+      "timetable": "Timetable",
+      "photoService": "Photos",
+      "documents": "Documents",
+      "notes": "Notes",
+      "mediaMonitoring": "Monitoring",
+      "speedtest": "Speed Test",
+      "analytics": "Analytics",
+      "vpn": "VPN",
+      "mediaLibrary": "Media Library",
+      "uptimeMonitoring": "Uptime Monitoring"
     },
     "testConnection": {
       "action": {
@@ -1105,6 +1109,14 @@
           "label": "API Key (Secret)",
           "newLabel": "New API Key (Secret)"
         },
+        "patchmonApiKey": {
+          "label": "API Key",
+          "newLabel": "New API Key"
+        },
+        "patchmonApiSecret": {
+          "label": "API Secret",
+          "newLabel": "New API Secret"
+        },
         "githubAppId": {
           "label": "App Id",
           "newLabel": "New App Id"
@@ -1118,8 +1130,8 @@
           "newLabel": "New private key"
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Status page slug",
+          "newLabel": "New status page slug"
         }
       }
     },
@@ -1129,28 +1141,40 @@
       "full": "Full integration access"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Audiobookshelf",
+      "description": "Self-hosted audiobook and podcast server"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Self-hosted music streaming server with Subsonic API compatibility"
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Self-hosted uptime monitoring with public status pages",
       "secret": {
         "slug": {
-          "description": ""
+          "description": "The slug of your public status page. Defaults to \"default\" if not set."
         },
         "apiKey": {
-          "description": ""
+          "description": "Optional API key for authenticated /metrics access"
         }
       }
     },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Cloud-native reverse proxy and load balancer"
+    },
     "paperlessNgx": {
-      "name": "",
-      "description": ""
+      "name": "Paperless-ngx",
+      "description": "Document management system for archiving and organizing scanned documents"
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Patch management and monitoring for Linux hosts"
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Companion application to Sonarr and Radarr that manages and downloads subtitles"
     }
   },
   "media": {
@@ -1194,7 +1218,7 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "No media uploaded"
     }
   },
   "common": {
@@ -1205,7 +1229,7 @@
       "add": "Add",
       "apply": "Apply",
       "backToOverview": "Back to overview",
-      "skip": "",
+      "skip": "Skip",
       "change": "Change",
       "create": "Create",
       "createAnother": "Create and start over",
@@ -1227,16 +1251,16 @@
       "checkLogs": "Check logs for more information",
       "tryAgain": "Try again",
       "loading": "Loading",
-      "show": "",
-      "hide": ""
+      "show": "Show",
+      "hide": "Hide"
     },
     "here": "here",
     "iconPicker": {
       "label": "Icon URL",
       "header": "Please enter a name or object to filter for the icon. Homarr will search throughout {countIcons} different icons to find the right one.",
-      "headerLoading": "",
-      "noResults": "",
-      "error": ""
+      "headerLoading": "Type to search icons…",
+      "noResults": "No icons match \"{search}\".",
+      "error": "Couldn't load icons."
     },
     "colorScheme": {
       "options": {
@@ -1288,7 +1312,7 @@
         "switchToDarkMode": "Switch to dark mode",
         "switchToLightMode": "Switch to light mode",
         "management": "Management",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Your preferences",
         "logout": "Log-out",
         "login": "Log-in",
@@ -1398,7 +1422,7 @@
         "label": {
           "create": "New category",
           "changePosition": "Change position",
-          "settings": ""
+          "settings": "Settings"
         }
       },
       "openAllInNewTabs": {
@@ -1418,16 +1442,16 @@
     },
     "menu": {
       "label": {
-        "settings": "",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "settings": "Settings",
+        "refresh": "Refresh",
+        "options": "Options",
+        "actions": "Actions"
       },
       "status": {
-        "success": "",
-        "error": "",
-        "loading": "",
-        "idle": ""
+        "success": "OK",
+        "error": "Error",
+        "loading": "Loading",
+        "idle": "Idle"
       }
     },
     "create": {
@@ -1455,11 +1479,11 @@
     "edit": {
       "title": "Edit item",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Edit widget",
+        "app": "Edit app"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards."
       },
       "advancedOptions": {
         "label": "Advanced options",
@@ -1487,11 +1511,11 @@
   },
   "widget": {
     "integrationSelect": {
-      "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "configureIntegrationFirst": "Connect an integration first",
+      "loading": "Loading...",
+      "placeholder": "Select an option",
+      "noResults": "No results found",
+      "loadError": "Failed to load options"
     },
     "app": {
       "name": "App",
@@ -1572,7 +1596,7 @@
           "label": "Open in new tab"
         },
         "withBorder": {
-          "label": ""
+          "label": "Show border"
         },
         "items": {
           "label": "Bookmarks",
@@ -1581,11 +1605,11 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "ArchiveTeam Warrior",
+      "description": "Monitor ArchiveTeam Warrior status, projects, and active archival jobs.",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "Show broadcast messages"
         }
       }
     },
@@ -1701,6 +1725,16 @@
         "customDateFormat": {
           "label": "Custom date format",
           "description": "Use ISO 8601 to format date (this will override other options)"
+        },
+        "showWeather": {
+          "label": "Show weather",
+          "description": "Display a small animated weather icon and temperature in the corner of the card"
+        },
+        "weatherLocation": {
+          "label": "Weather location"
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": "Use Fahrenheit"
         }
       }
     },
@@ -1730,7 +1764,7 @@
       "noStation": "No station selected",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "Search.ch URL"
         },
         "station": {
           "label": "Station"
@@ -1762,6 +1796,8 @@
         "clear": "Clear formatting",
         "heading": "Heading {level}",
         "align": "Align text: {position}",
+        "directionLtr": "Set text direction left to right",
+        "directionRtl": "Set text direction right to left",
         "blockquote": "Blockquote",
         "horizontalLine": "Horizontal line",
         "bulletList": "Bullet list",
@@ -2051,7 +2087,8 @@
         "sunrise": "Sunrise",
         "sunset": "Sunset",
         "maxWindSpeed": "Max wind speed: {maxWindSpeed} {unit}",
-        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}"
+        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}",
+        "humidity": "Humidity: {humidity}%"
       },
       "kind": {
         "clear": "Clear",
@@ -2111,9 +2148,9 @@
           "label": "Show Filesystem Info"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Visible storage volumes",
+          "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+          "placeholder": "Select storage volumes"
         },
         "defaultTab": {
           "label": "Default tab"
@@ -2195,7 +2232,7 @@
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Columns to show"
         },
         "enableRowSorting": {
           "label": "Enable items sorting"
@@ -2211,10 +2248,21 @@
         },
         "descendingDefaultSort": {
           "label": "Invert sorting"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Failed to fetch containers stats"
+        "internalServerError": "Failed to fetch containers stats",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2251,40 +2299,40 @@
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "Overview of your VPN connections",
+      "serviceUnavailable": "VPN unavailable",
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Monitor the status of your UPS devices through a NUT server",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Show battery"
         },
         "showLoad": {
-          "label": ""
+          "label": "Show load"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Show voltage"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "Online",
+        "onBattery": "On battery",
+        "lowBattery": "Low battery",
+        "charging": "Charging",
+        "unknown": "Unknown"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Runtime",
+        "load": "Load",
+        "input": "Input",
+        "output": "Output"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch UPS data"
       }
     },
     "tracearr": {
@@ -2347,97 +2395,97 @@
       "description": "Display visitor stats from your Umami analytics instance",
       "visitors": "visitors",
       "active": "active",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "pageviews": "pageviews",
+      "visits": "visits",
+      "bounceRate": "bounce",
+      "avgDuration": "avg",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Website",
+          "description": "Select a website tracked by your Umami instance",
+          "placeholder": "Select a website",
+          "loading": "Loading websites...",
+          "noWebsites": "No websites found",
+          "configureIntegrationFirst": "Connect a Umami integration first"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Time frame",
+          "description": "The time period to display visitor data for",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "today": "Today",
+            "24h": "Last 24 hours",
+            "7d": "Last 7 days",
+            "30d": "Last 30 days",
+            "month": "This month",
+            "lastMonth": "Last month"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Event",
+          "description": "Show total occurrences of a specific event",
+          "placeholder": "Select an event",
+          "loading": "Loading events...",
+          "noEvents": "No events found",
+          "none": "No event",
+          "configureWebsiteFirst": "Select a website first to load events"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Chart type",
+          "description": "Display style for the chart",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Bar chart",
+            "sparkline": "Sparkline"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Chart style",
+          "description": "How to display the event series in the chart",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Side by side",
+            "overlay": "Overlay (subset)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "View",
+          "description": "What to display in the widget body",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Chart",
+            "events": "Events chart",
+            "topPages": "Top pages",
+            "topReferrers": "Top referrers"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Events",
+          "description": "Select one or more events to chart",
+          "placeholder": "Select events...",
+          "loading": "Loading events...",
+          "noEvents": "No events found",
+          "configureWebsiteFirst": "Select a website first to load events"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Items to show",
+          "description": "Number of top items to display (max 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "events",
+        "label": "events"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Direct"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Direct"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Select events to chart"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "No Umami integration configured",
+        "noWebsite": "No website configured",
+        "noData": "No data available",
+        "internalServerError": "Failed to fetch Umami data"
       }
     },
     "common": {
@@ -2508,13 +2556,33 @@
         "showOnlyPlaying": {
           "label": "Show only currently playing",
           "description": "Disabling this will not work for Plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Currently playing",
         "user": "User",
         "name": "Name",
         "id": "Id",
+        "status": "Status",
+        "directPlay": "Direct play",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
+        "transcoding": "Transcoding",
+        "paused": "Paused",
+        "remaining": "{minutes} min left",
         "metadata": {
           "title": "Stats for nerds",
           "video": {
@@ -2536,48 +2604,48 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "name": "Paperless-ngx",
+      "description": "Overview of your Paperless-ngx document archive",
+      "documentsTotal": "Total Documents",
+      "documentsInbox": "Inbox",
+      "correspondents": "Correspondents",
+      "tags": "Tags",
+      "documentTypes": "Document Types",
+      "inboxRatio": "Inbox Ratio",
+      "inbox": "inbox",
+      "total": "total",
       "option": {
         "showInboxRatio": {
-          "label": "",
-          "description": ""
+          "label": "Show inbox ratio",
+          "description": "Display the inbox-to-total document ratio in the hero section"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Show inbox ring",
+          "description": "Display a progress ring alongside the inbox ratio"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Show total documents",
+          "description": "Show the total number of documents in your archive"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Show inbox count",
+          "description": "Show the number of unprocessed documents in the inbox"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Show correspondents",
+          "description": "Show the total number of correspondents"
         },
         "showTags": {
-          "label": "",
-          "description": ""
+          "label": "Show tags",
+          "description": "Show the total number of tags"
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
+          "label": "Show document types",
+          "description": "Show the total number of document types"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch Paperless-ngx data"
       }
     },
     "immich-serverStats": {
@@ -2608,6 +2676,7 @@
     },
     "immich-albumCarousel": {
       "name": "Immich Album",
+      "allPhotos": "All photos",
       "option": {
         "albumId": {
           "label": "Album ID",
@@ -2622,13 +2691,12 @@
           "description": ""
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "Randomise photos",
+          "description": "Show photos in a random order instead of always starting with the same album order."
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Slideshow of pictures from an Immich album or your full library",
+      "noPhotos": "No photos found"
     },
     "downloads": {
       "name": "",
@@ -2670,11 +2738,20 @@
         "limitPerIntegration": {
           "label": "",
           "description": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "",
-        "noCommunications": ""
+        "noCommunications": "",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -2697,7 +2774,8 @@
           "detailsTitle": ""
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": ""
@@ -2731,7 +2809,8 @@
         },
         "time": {
           "columnTitle": "",
-          "detailsTitle": ""
+          "detailsTitle": "",
+          "eta": ""
         },
         "type": {
           "columnTitle": "",
@@ -2775,7 +2854,23 @@
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "",
@@ -2812,6 +2907,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": ""
+        },
+        "statusFilter": {
+          "label": "Statuses to show"
+        },
+        "recentDays": {
+          "label": "Show only recent requests"
         }
       },
       "pending": {
@@ -2989,7 +3090,7 @@
             "label": ""
           },
           "providerUrl": {
-            "label": ""
+            "label": "Provider URL"
           },
           "identifier": {
             "label": "",
@@ -3040,11 +3141,11 @@
             "tooltip": ""
           },
           "tokens": {
-            "label": "",
-            "token": "",
-            "configured": "",
-            "notConfigured": "",
-            "save": ""
+            "label": "Provider Tokens",
+            "token": "Token",
+            "configured": "Token configured",
+            "notConfigured": "No token set",
+            "save": "Save"
           }
         }
       },
@@ -3067,9 +3168,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "",
           "noReleasesFound": "",
-          "noProviderSelected": "",
+          "noProviderSelected": "No provider selected",
           "noProviderResponse": "",
-          "unexpected": ""
+          "unexpected": "Unexpected provider error"
         }
       }
     },
@@ -3162,7 +3263,11 @@
       "name": "",
       "description": "",
       "noItems": "",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": "Hide logos"
+        }
+      }
     },
     "speedtestTracker": {
       "name": "",
@@ -3204,110 +3309,96 @@
       }
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Monitor uptime statistics from your Uptime Kuma status page",
       "option": {
         "showAverageUptime": {
-          "label": "",
-          "description": ""
+          "label": "Show average uptime",
+          "description": "Display the combined 24-hour average uptime percentage"
         },
         "showUptimeRing": {
-          "label": "",
-          "description": ""
+          "label": "Show uptime ring",
+          "description": "Display a progress ring alongside the average uptime value"
         },
         "showTotalMonitors": {
-          "label": "",
-          "description": ""
+          "label": "Show total monitors",
+          "description": "Display the total number of configured monitors"
         },
         "showUpCount": {
-          "label": "",
-          "description": ""
+          "label": "Show up count",
+          "description": "Display how many monitors are currently up"
         },
         "showDownCount": {
-          "label": "",
-          "description": ""
+          "label": "Show down count",
+          "description": "Display how many monitors are currently down"
         },
         "showPausedCount": {
-          "label": "",
-          "description": ""
+          "label": "Show paused count",
+          "description": "Display how many monitors are currently paused"
         }
       },
-      "averageUptime": "",
+      "averageUptime": "Average uptime (24h)",
       "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
+        "totalMonitors": "Total monitors",
+        "upCount": "Up",
+        "downCount": "Down",
+        "pausedCount": "Paused"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch uptime data"
       }
     },
     "audioStats": {
-      "name": "",
-      "description": "",
+      "name": "Audio stats",
+      "description": "Library and playback statistics from Navidrome or Audiobookshelf",
       "option": {
         "showArtists": {
-          "label": "",
-          "description": ""
+          "label": "Show artists",
+          "description": "Show the total number of artists in your music library (Navidrome)"
         },
         "showAlbums": {
-          "label": "",
-          "description": ""
+          "label": "Show albums",
+          "description": "Show the total number of albums in your music library (Navidrome)"
         },
         "showSongs": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
+          "label": "Show songs",
+          "description": "Show the total number of songs in your music library (Navidrome)"
         },
         "showLibraryCount": {
-          "label": "",
-          "description": ""
+          "label": "Show library count",
+          "description": "Show the number of libraries on your instance (Audiobookshelf)"
         },
         "showAudiobooks": {
-          "label": "",
-          "description": ""
+          "label": "Show audiobooks",
+          "description": "Show the total number of audiobooks across all libraries (Audiobookshelf)"
         },
         "showPodcasts": {
-          "label": "",
-          "description": ""
+          "label": "Show podcasts",
+          "description": "Show the total number of podcasts across all libraries (Audiobookshelf)"
         },
         "showListeningTime": {
-          "label": "",
-          "description": ""
+          "label": "Show listening time",
+          "description": "Show your total listening time (Audiobookshelf)"
         },
         "showActiveSessions": {
-          "label": "",
-          "description": ""
+          "label": "Show active sessions",
+          "description": "Show the number of currently active playback sessions (Audiobookshelf)"
         },
         "compactMode": {
-          "label": "",
-          "description": ""
+          "label": "Compact mode",
+          "description": "Use a denser layout with smaller tiles, ideal for small widget sizes"
         }
       },
-      "artists": "",
-      "albums": "",
-      "songs": "",
-      "libraryCount": "",
-      "audiobooks": "",
-      "podcasts": "",
-      "listeningTime": "",
-      "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
+      "artists": "Artists",
+      "albums": "Albums",
+      "songs": "Songs",
+      "libraryCount": "Libraries",
+      "audiobooks": "Audiobooks",
+      "podcasts": "Podcasts",
+      "listeningTime": "Listening Time",
+      "activeSessions": "Active Sessions",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to fetch audio stats data"
       }
     },
     "systemResources": {
@@ -3371,9 +3462,9 @@
           "label": ""
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Visible storage volumes",
+          "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+          "placeholder": "Select storage volumes"
         }
       },
       "status": {
@@ -3381,241 +3472,504 @@
       }
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Beszel Systems (Table)",
+      "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Status filter"
         },
         "sortBy": {
-          "label": ""
+          "label": "Sort by"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Sort direction"
         },
         "showCpu": {
-          "label": ""
+          "label": "Show CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Show memory"
         },
         "showDisk": {
-          "label": ""
+          "label": "Show disk"
         },
         "showGpu": {
-          "label": ""
+          "label": "Show GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Show load average"
         },
         "showNet": {
-          "label": ""
+          "label": "Show network"
         },
         "showTemp": {
-          "label": ""
+          "label": "Show temperature"
         },
         "showBattery": {
-          "label": ""
+          "label": "Show battery"
         },
         "showServices": {
-          "label": ""
+          "label": "Show services"
         },
         "showUptime": {
-          "label": ""
+          "label": "Show uptime"
         },
         "showAgent": {
+          "label": "Show agent version"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
           "label": ""
         }
       },
-      "noRecords": "",
+      "noRecords": "No systems found",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "System",
+        "cpu": "CPU",
+        "memory": "Memory",
+        "disk": "Disk",
+        "gpu": "GPU",
+        "loadAvg": "Load Avg",
+        "net": "Net",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Services",
+        "uptime": "Uptime",
+        "agent": "Agent"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
-      "description": "",
+      "name": "Beszel Systems (Grid)",
+      "description": "Card grid view of all Beszel-monitored systems with real-time metrics",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Status filter"
         },
         "showCpu": {
-          "label": ""
+          "label": "Show CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Show memory"
         },
         "showDisk": {
-          "label": ""
+          "label": "Show disk"
         },
         "showGpu": {
-          "label": ""
+          "label": "Show GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Show load average"
         },
         "showNet": {
-          "label": ""
+          "label": "Show network"
         },
         "showTemp": {
-          "label": ""
+          "label": "Show temperature"
         },
         "showBattery": {
-          "label": ""
+          "label": "Show battery"
         },
         "showServices": {
-          "label": ""
+          "label": "Show services"
         },
         "showUptime": {
-          "label": ""
+          "label": "Show uptime"
         },
         "showAgent": {
-          "label": ""
+          "label": "Show agent version"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
       },
       "empty": {
-        "noSystems": ""
+        "noSystems": "No systems found"
       },
       "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "cpu": "CPU",
+        "memory": "Memory",
+        "disk": "Disk",
+        "gpu": "GPU",
+        "loadAvg": "Load Avg",
+        "net": "Net",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Services",
+        "uptime": "Uptime",
+        "agent": "Agent"
       }
     },
     "beszelAlerts": {
-      "name": "",
-      "description": "",
+      "name": "Beszel Alerts",
+      "description": "View Beszel alert configurations and history",
       "option": {
         "showHistory": {
-          "label": ""
+          "label": "Show alert history"
         },
         "maxHistoryItems": {
-          "label": ""
+          "label": "Max history items"
         }
       },
-      "empty": "",
+      "empty": "No alerts configured",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
       },
-      "history": "",
-      "resolved": "",
+      "history": "History",
+      "resolved": "Resolved",
       "status": {
-        "triggered": "",
-        "ok": ""
+        "triggered": "Triggered",
+        "ok": "OK"
       }
     },
     "beszelSystemStats": {
-      "name": "",
-      "description": "",
+      "name": "Beszel System Stats",
+      "description": "Time-series charts for CPU, memory, disk, network, and Docker container metrics",
       "option": {
         "systemId": {
-          "label": "",
-          "description": ""
+          "label": "System",
+          "description": "Select a Beszel system to display stats for"
         },
         "timePeriod": {
-          "label": ""
+          "label": "Time period"
         },
         "showCpu": {
-          "label": ""
+          "label": "Show CPU chart"
         },
         "showMemory": {
-          "label": ""
+          "label": "Show memory chart"
         },
         "showDisk": {
-          "label": ""
+          "label": "Show disk chart"
         },
         "showDiskIO": {
-          "label": ""
+          "label": "Show disk I/O chart"
         },
         "showNetwork": {
-          "label": ""
+          "label": "Show network chart"
         },
         "showDockerCpu": {
-          "label": ""
+          "label": "Show Docker CPU chart"
         },
         "showDockerMemory": {
-          "label": ""
+          "label": "Show Docker memory chart"
         },
         "showDockerNetwork": {
-          "label": ""
+          "label": "Show Docker network chart"
         }
       },
-      "selectSystem": "",
+      "selectSystem": "Select system",
       "empty": {
-        "noSystems": ""
+        "noSystems": "No systems found"
       },
       "error": {
-        "internalServerError": "",
-        "liveConnectionFailed": "",
-        "switchToHistorical": "",
-        "systemNotFound": ""
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
+        "liveConnectionFailed": "Live connection failed. Your Beszel instance may not support real-time streaming.",
+        "switchToHistorical": "Switch to historical view",
+        "systemNotFound": "Selected system was not found. Choose a different system."
       },
       "chart": {
         "cpu": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "CPU Usage",
+          "subtitle": "Average system-wide CPU utilization",
+          "series": "CPU"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
-          "series": "",
-          "cache": ""
+          "title": "Memory Usage",
+          "subtitle": "Precise utilization at the recorded time",
+          "series": "Used",
+          "cache": "Cache/Buffers"
         },
         "disk": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Disk Usage",
+          "subtitle": "Usage by filesystem",
+          "series": "Root"
         },
         "diskIO": {
-          "title": "",
-          "subtitle": "",
-          "read": "",
-          "write": ""
+          "title": "Disk I/O",
+          "subtitle": "Throughput of root filesystem",
+          "read": "Read",
+          "write": "Write"
+        },
+        "storage": {
+          "title": "Storage",
+          "subtitle": "Per-filesystem disk usage",
+          "series": "Used"
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Bandwidth",
+          "subtitle": "Network traffic of public interfaces",
+          "sent": "Sent",
+          "recv": "Received"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker CPU Usage",
+          "subtitle": "Average CPU utilization of containers"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker Memory Usage",
+          "subtitle": "Memory usage of docker containers"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker Network I/O",
+          "subtitle": "Network traffic of docker containers"
         }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Overview of host patch status from PatchMon",
+      "title": "PatchMon Statistics",
+      "totalHosts": "Total Hosts",
+      "hostsNeedingUpdates": "Needs Updates",
+      "securityUpdates": "Security Updates",
+      "upToDateHosts": "Up-to-Date Hosts",
+      "hostsWithSecurityUpdates": "Hosts with Security Updates",
+      "recentUpdates24h": "Updates (24h)",
+      "totalOutdatedPackages": "Outdated Packages",
+      "totalRepos": "Repositories",
+      "osDistribution": "OS Distribution",
+      "compliance": "Patch Compliance",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Updated {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Show total hosts",
+          "description": "Display the total number of monitored hosts"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Show hosts needing updates",
+          "description": "Display hosts with at least one outdated package"
+        },
+        "showSecurityUpdates": {
+          "label": "Show security updates",
+          "description": "Display the total number of security updates available"
+        },
+        "showUpToDateHosts": {
+          "label": "Show up-to-date hosts",
+          "description": "Display hosts with zero outdated packages"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Show hosts with security updates",
+          "description": "Display hosts requiring security patches"
+        },
+        "showRecentUpdates24h": {
+          "label": "Show recent updates (24h)",
+          "description": "Display the number of updates applied in the last 24 hours"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Show outdated packages",
+          "description": "Display the total number of outdated packages across all hosts"
+        },
+        "showTotalRepos": {
+          "label": "Show repositories",
+          "description": "Display the number of active repositories being monitored"
+        },
+        "enableThresholdColors": {
+          "label": "Enable threshold colours",
+          "description": "Colour stat values green, yellow, or red based on severity presets"
+        },
+        "useCustomThresholds": {
+          "label": "Advanced thresholds",
+          "description": "Customise warning and critical thresholds per stat using absolute counts or percentages of total hosts"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Absolute count",
+            "percent": "Percent of total hosts"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Needs updates threshold mode",
+          "description": "Compare the needs-updates count as an absolute value or percentage of total hosts"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Needs updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Needs updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Security updates threshold mode",
+          "description": "Compare the security-updates count as an absolute value or percentage of total hosts"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Security updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Security updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Hosts with security updates threshold mode",
+          "description": "Compare the host count as an absolute value or percentage of total hosts"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Hosts with security updates warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Hosts with security updates critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Up-to-date hosts threshold mode",
+          "description": "Compare the up-to-date host count as an absolute value or percentage of total hosts"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Up-to-date hosts warning threshold",
+          "description": "Enter yellow when the value is at or above this threshold but below full coverage"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Up-to-date hosts critical threshold",
+          "description": "Enter red when the value falls below this threshold"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Outdated packages threshold mode",
+          "description": "Compare the outdated-packages count as an absolute value or percentage of total hosts"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Outdated packages warning threshold",
+          "description": "Enter yellow when the value reaches this threshold"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Outdated packages critical threshold",
+          "description": "Enter red when the value reaches this threshold"
+        },
+        "showOsDistribution": {
+          "label": "Show OS distribution",
+          "description": "Display a breakdown of monitored hosts by operating system"
+        },
+        "osDistributionLimit": {
+          "label": "OS distribution limit",
+          "description": "Maximum number of operating systems to display",
+          "option": {
+            "3": "Top 3",
+            "5": "Top 5",
+            "10": "Top 10",
+            "all": "All"
+          }
+        },
+        "showOsVersion": {
+          "label": "Show OS version",
+          "description": "Append the OS version to each distribution label when available"
+        },
+        "showComplianceHero": {
+          "label": "Show compliance hero",
+          "description": "Display a compliance ring showing the percentage of up-to-date hosts"
+        },
+        "osDisplayMode": {
+          "label": "OS display mode",
+          "description": "Choose how to display the operating system distribution",
+          "option": {
+            "bars": "Horizontal bars",
+            "donut": "Doughnut chart"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "Failed to fetch PatchMon data"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Overview of missing subtitles and health status from your Bazarr instance",
+      "episodes": "Missing Episodes",
+      "movies": "Missing Movies",
+      "providers": "Provider Issues",
+      "status": "Health Issues",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Show missing episodes",
+          "description": "Display the number of episodes with missing subtitles"
+        },
+        "showMissingMovies": {
+          "label": "Show missing movies",
+          "description": "Display the number of movies with missing subtitles"
+        },
+        "showProviderIssues": {
+          "label": "Show provider issues",
+          "description": "Display the number of subtitle providers with issues"
+        },
+        "showHealthIssues": {
+          "label": "Show health issues",
+          "description": "Display the number of Bazarr health issues"
+        }
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Bazarr data"
+      }
+    },
+    "mediaMissing": {
+      "name": "Missing & Queued Media",
+      "description": "Shows missing and queued movies and episodes from Radarr and Sonarr",
+      "option": {
+        "showMissing": {
+          "label": "Show missing items"
+        },
+        "showQueued": {
+          "label": "Show queued items"
+        },
+        "pageSize": {
+          "label": "Items per page"
+        }
+      },
+      "tab": {
+        "missing": "Missing",
+        "queued": "Queued"
+      },
+      "type": {
+        "movie": "Movie",
+        "episode": "Episode"
+      },
+      "empty": {
+        "missing": "No missing items",
+        "queued": "No queued items",
+        "noTabsEnabled": "Enable at least one tab in the widget settings"
+      },
+      "timeLeft": "Time left"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Overview of Traefik routers, services, middlewares, and entry points",
+      "option": {
+        "showTcp": {
+          "label": "Show TCP"
+        },
+        "showUdp": {
+          "label": "Show UDP"
+        },
+        "showEntryPoints": {
+          "label": "Show entry points"
+        }
+      },
+      "instances": "Traefik instances",
+      "versionUnknown": "Version unknown",
+      "summary": {
+        "routers": "Routers",
+        "entryPoints": "Entry points"
+      },
+      "resource": {
+        "routers": "Routers",
+        "services": "Services",
+        "middlewares": "Middlewares"
+      },
+      "status": {
+        "healthy": "Healthy",
+        "errors": "{count} errors",
+        "warnings": "{count} warnings"
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Traefik data"
       }
     }
   },
@@ -3991,9 +4345,9 @@
       "text": ""
     },
     "error": {
-      "title": "",
-      "text": "",
-      "digest": ""
+      "title": "This page couldn't load",
+      "text": "An unexpected error occurred while loading this page. Your navigation is still available — try reloading, or use another section from the sidebar.",
+      "digest": "Error reference: {digest}"
     },
     "navbar": {
       "items": {
@@ -4018,10 +4372,10 @@
             "docker": "",
             "kubernetes": "",
             "logs": "",
-            "api": "",
+            "api": "API & MCP",
             "certificates": "",
             "tasks": "",
-            "backup": ""
+            "backup": "Backup"
           }
         },
         "settings": "",
@@ -4102,7 +4456,7 @@
           "private": ""
         },
         "noResults": {
-          "title": ""
+          "title": "No boards yet"
         },
         "modal": {
           "createBoard": {
@@ -4136,20 +4490,20 @@
               "firstDayOfWeek": "",
               "accessibility": "",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Onboarding Tours",
+                "description": "Reset the onboarding tours to see them again on your next visit to the management area or dashboard.",
+                "reset": "Reset onboarding tours",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Tours reset",
+                  "message": "Onboarding tours will show again on your next visit"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Completed",
+                  "notStarted": "Not started"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Management",
+                  "dashboard": "Dashboard"
                 }
               }
             }
@@ -4275,8 +4629,8 @@
           "analytics": {
             "title": "",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "Help us improve Homarr",
+              "text": "This helps us figure out what people actually use so we know where to spend our time. We see stuff like how many widgets or integrations you have, your Homarr version, and what database you're on. That's it — no personal info, no URLs, no names, nothing that could identify you or your setup."
             }
           },
           "crawlingAndIndexing": {
@@ -4337,7 +4691,7 @@
             "defaultColorScheme": {
               "label": "Default colour scheme",
               "options": {
-                "auto": "",
+                "auto": "Auto",
                 "light": "",
                 "dark": ""
               }
@@ -4477,213 +4831,213 @@
               }
             },
             "mcp": {
-              "label": "",
-              "title": "",
-              "subtitle": "",
-              "description": "",
-              "noApiKey": "",
-              "createApiKeyButton": "",
+              "label": "AI / MCP",
+              "title": "AI Integration",
+              "subtitle": "Model Context Protocol (MCP) Server",
+              "description": "Connect AI assistants to your Homarr instance and control your entire homelab through natural language. Search and request media on Overseerr, manage Docker containers, toggle Pi-hole, check server health, control Home Assistant devices, and more — all from your AI assistant.",
+              "noApiKey": "You need an API key to authenticate with the MCP server.",
+              "createApiKeyButton": "Create API Key",
               "endpoint": {
-                "title": ""
+                "title": "MCP Endpoint"
               },
               "authentication": {
-                "title": "",
-                "intro": "",
+                "title": "Authentication",
+                "intro": "You can authenticate with your MCP server using either an API key or OAuth. Both methods grant the same level of access.",
                 "apiKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "API Key (manual)",
+                  "description": "Pass the ApiKey header with your full API key in the MCP client configuration."
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (browser login)",
+                  "description": "Clients that support OAuth (such as Claude Code, opencode, or Cursor) can authenticate by opening a browser window. Run the auth command in your client, log in to Homarr in the browser, and you're connected — an API key is created automatically.",
+                  "hint": "OAuth tokens appear as regular API keys in the Authentication tab. You can revoke them at any time."
                 },
-                "permissions": ""
+                "permissions": "The API key determines the permissions available to the AI — it operates with the same access level as the key owner."
               },
               "clientConfig": {
-                "title": "",
+                "title": "Client Configuration",
                 "streamableHttp": {
-                  "recommended": "",
-                  "title": "",
-                  "worksWith": "",
-                  "addToConfig": "",
-                  "cursor": "",
-                  "claudeDesktop": "",
-                  "claudeCode": "",
-                  "vsCodeCopilot": "",
-                  "replaceHint": ""
+                  "recommended": "Recommended",
+                  "title": "Streamable HTTP",
+                  "worksWith": "Works with: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
+                  "addToConfig": "Add to your MCP client configuration file:",
+                  "cursor": "{name}: {file} in your project or global settings",
+                  "claudeDesktop": "{name}: {file}",
+                  "claudeCode": "{name}: {file} or use {command}",
+                  "vsCodeCopilot": "{name}: {file} in workspace settings",
+                  "replaceHint": "Replace the placeholder with the API key you received when creating it."
                 },
                 "stdio": {
-                  "title": "",
-                  "description": ""
+                  "title": "stdio (legacy clients via mcp-remote bridge)",
+                  "description": "For clients that only support stdio transport. Requires {dependency} (Node.js) installed locally:"
                 }
               },
               "testConnection": {
-                "title": "",
-                "description": "",
-                "hint": ""
+                "title": "Test Your Connection",
+                "description": "Run this in your terminal to verify the endpoint is reachable and your API key works:",
+                "hint": "A successful response returns the MCP server capabilities. If you see an error, check the JSON response for hints."
               },
               "availableTools": {
-                "title": "",
-                "description": "",
-                "columnType": "",
-                "columnName": "",
-                "columnDescription": ""
+                "title": "Available Tools",
+                "description": "{count} tools available. Expand a category to see individual tools and their descriptions.",
+                "columnType": "Type",
+                "columnName": "Tool",
+                "columnDescription": "Description"
               },
               "troubleshooting": {
-                "title": "",
+                "title": "Troubleshooting",
                 "missingHeader": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Missing ApiKey header\"",
+                  "description": "Your client is not sending the {header} header. Verify the {section} section in your MCP config is correct. Some clients require restarting after config changes."
                 },
                 "invalidFormat": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Invalid ApiKey format\"",
+                  "description": "Make sure you copied the full API key, not just part of it."
                 },
                 "invalidKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Invalid API key\"",
+                  "description": "The key ID was not found or the token is wrong. API keys can only be viewed once when created. If you lost it, delete the old key and create a new one."
                 },
                 "connectionRefused": {
-                  "title": "",
-                  "description": ""
+                  "title": "Connection refused / timeout",
+                  "description": "Make sure the URL is reachable from your AI client. If Homarr runs behind a reverse proxy or in Docker, use the external URL (not {localhost}). Verify the port is correct (default: 7575 for Docker)."
                 },
                 "toolsNotAppearing": {
-                  "title": "",
-                  "description": ""
+                  "title": "Tools not appearing",
+                  "description": "Some tools require specific integrations to be configured (e.g. Docker, Overseerr). The tool list depends on what's available in your Homarr instance."
                 }
               },
-              "copy": "",
+              "copy": "Copy",
               "oneClick": {
-                "title": "",
-                "subtitle": "",
-                "vsCode": "",
-                "cursor": "",
-                "copyUrl": "",
-                "copied": "",
-                "copyHint": "",
-                "manualConfig": ""
+                "title": "Install in One Click",
+                "subtitle": "Uses OAuth — authenticate in your browser on first use",
+                "vsCode": "Install in VS Code",
+                "cursor": "Install in Cursor",
+                "copyUrl": "Copy MCP URL",
+                "copied": "Copied!",
+                "copyHint": "For ChatGPT, Claude Code, or any MCP client",
+                "manualConfig": "Manual Configuration"
               }
             }
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Full Database Backup",
+          "metaTitle": "Backup & Restore",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Export Database",
+            "description": "Download a full backup of your SQLite database including all settings, users, boards, and encrypted integration secrets. The backup is bundled as a ZIP file with the encryption key and metadata.",
+            "button": "Download Backup",
+            "error": "Export failed",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Sensitive data export",
+              "warningTitle": "This export contains your entire database.",
+              "warningBody": "The backup includes all users, integration secrets (encrypted), API keys, board configurations, and app data. Store the exported file securely and do not share it.",
+              "typePrompt": "Type \"{phrase}\" to continue",
+              "submit": "Export Database",
+              "cancel": "Cancel"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Restore Database",
+            "description": "Upload a previously exported backup ZIP to restore your database. This will replace your entire database. If the backup was created with a different encryption key, secrets will be automatically re-encrypted.",
+            "warning": "Restoring a backup will completely replace your current database and restart the application. This action cannot be undone.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Drop your backup ZIP here or click to browse",
+              "description": "Only .zip files from a Homarr SQLite backup are accepted"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Change file",
+            "button": "Restore Database",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Restore Complete",
+              "message": "Database has been restored successfully. The application is restarting..."
             },
-            "error": ""
+            "error": "Import failed"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Backup Contents",
+            "exported": "Exported {date}",
+            "loading": "Analyzing backup file...",
+            "errorTitle": "Preview Error",
+            "entity": "Entity",
+            "count": "Count",
+            "boards": "Boards",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Boards",
+              "user": "Users",
+              "app": "Apps",
+              "integration": "Integrations",
+              "item": "Widgets",
+              "media": "Media",
+              "search_engine": "Search Engines"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "Failed to analyze backup file",
+            "invalidMissingMetadata": "Invalid backup: missing metadata.json",
+            "invalidMissingDb": "Invalid backup: missing db.sqlite"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Drop your backup ZIP here",
+              "description": "Accepts .zip files from a Homarr SQLite backup (max 256 MB)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Analyzing backup...",
+            "changeFile": "Change file",
+            "continueToRestore": "Continue to restore",
+            "tryAgain": "Try again",
+            "analysisError": "Analysis Error",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Backup Contents",
+              "exported": "Exported {date}",
+              "entity": "Entity",
+              "count": "Count",
+              "boards": "Boards",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Boards",
+                "user": "Users",
+                "app": "Apps",
+                "integration": "Integrations",
+                "item": "Widgets",
+                "media": "Media",
+                "search_engine": "Search Engines"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "{count} migration applied",
+              "migrationsAppliedPlural": "{count} migrations applied",
+              "migrationsOlderVersion": "This backup was from an older Homarr version. {count} schema migration was applied to bring it up to date.",
+              "migrationsOlderVersionPlural": "This backup was from an older Homarr version. {count} schema migrations were applied to bring it up to date.",
+              "migrationsUpToDate": "Database schema is up to date ({count} migrations applied)",
+              "upToDate": "Up to date",
+              "migrationsPending": "{count} pending"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Applying migrations ({current}/{total})",
+              "migrationLabel": "Migration {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Destructive action",
+              "warningTitle": "This will permanently replace your entire database.",
+              "warningBody": "All current boards, users, apps, integrations, settings, and sessions will be lost. This action cannot be undone. The application will restart after the restore.",
+              "typePrompt": "Type \"{phrase}\" to continue",
+              "cancel": "Cancel",
+              "submit": "Restore Database"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Restoring database...",
+              "extracting": "Extracting backup archive",
+              "migrating": "Applying database migrations",
+              "encrypting": "Re-encrypting integration secrets",
+              "swapping": "Replacing database file",
+              "restarting": "Restarting server"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Restore Complete",
+              "message": "Database has been restored successfully. The server is restarting — please refresh the page in a few seconds."
             },
             "failed": {
-              "title": ""
+              "title": "Restore Failed"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Invalid backup: missing metadata.json",
+            "invalidMissingDb": "Invalid backup: missing db.sqlite",
+            "analyzeError": "Failed to analyze backup"
           }
         }
       },
@@ -4730,11 +5084,14 @@
     "title": "",
     "table": {
       "updated": "",
+      "refresh": {
+        "lastUpdated": "Last refresh {when}"
+      },
       "search": "",
       "selected": "",
       "footer": "",
-      "totalCpu": "",
-      "totalMemory": ""
+      "totalCpu": "Total CPU: {cpu}%",
+      "totalMemory": "Total Mem: {memory}"
     },
     "field": {
       "name": {
@@ -4767,15 +5124,15 @@
         "label": ""
       },
       "host": {
-        "label": ""
+        "label": "Host"
       }
     },
     "action": {
       "title": "",
       "logs": {
-        "label": "",
+        "label": "View logs",
         "page": {
-          "title": ""
+          "title": "{name} logs"
         }
       },
       "start": {
@@ -4819,6 +5176,7 @@
       },
       "remove": {
         "label": "",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "",
@@ -4862,7 +5220,7 @@
     },
     "error": {
       "internalServerError": "",
-      "noColumns": ""
+      "noColumns": "Select at least one column in the widget settings"
     }
   },
   "kubernetes": {
@@ -5196,7 +5554,7 @@
         "docker": {
           "label": "",
           "logs": {
-            "label": ""
+            "label": "Logs"
           }
         },
         "kubernetes": {
@@ -5307,7 +5665,7 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Toggle appearance mode",
                 "light": "",
                 "dark": ""
               },
@@ -5348,37 +5706,37 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Preferences",
             "children": {
               "detail": {
-                "title": "",
-                "backHint": "",
-                "backAction": ""
+                "title": "Select a preference to change",
+                "backHint": "Press Backspace or use the back button to go back",
+                "backAction": "Go back"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "Unable to update preference"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Open preferences"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Enabled",
+                "disabled": "Disabled"
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "None",
+                "unavailable": "Currently selected (unavailable)"
               },
               "searchEngine": {
-                "none": "",
-                "unavailable": ""
+                "none": "None",
+                "unavailable": "Currently selected (unavailable)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Colour scheme",
                 "children": {
                   "detail": {
                     "title": "Select your colour scheme"
@@ -5449,37 +5807,45 @@
                   }
                 }
               },
+              "enableRightClickOnWidgets": {
+                "label": "Enable right-click on widgets",
+                "children": {
+                  "detail": {
+                    "title": "Enable right-click on widgets"
+                  }
+                }
+              },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Open full preferences page"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Search for movies or shows to request",
         "requestMovie": "",
         "requestSeries": "",
         "openIn": "",
         "group": {
-          "title": ""
+          "title": "Movies and shows"
         },
         "action": {
           "search": {
-            "label": "",
-            "description": "",
+            "label": "Search for movies or shows",
+            "description": "Start typing to search your media request integrations",
             "disabled": {
-              "noIntegration": "",
-              "scoped": ""
+              "noIntegration": "Add an Overseerr, Jellyseerr, or Seerr integration to enable media search.",
+              "scoped": "This widget does not have an accessible media request integration."
             }
           }
         },
         "availability": {
-          "available": "",
-          "partiallyAvailable": "",
-          "processing": "",
-          "requested": "",
-          "pending": ""
+          "available": "Available",
+          "partiallyAvailable": "Partial",
+          "processing": "Processing",
+          "requested": "Requested",
+          "pending": "Requested"
         }
       },
       "external": {
@@ -5487,13 +5853,13 @@
         "group": {
           "searchEngine": {
             "title": "",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Tip: You can use any DuckDuckGo bangs here as well, e.g. !something",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Search \"{query}\" with {label}",
+              "pressEnterToOpen": "Press Enter to open",
+              "engineSelected": "{label} selected (!{bang})",
+              "typeQueryToContinue": "Type your search query to continue",
+              "emptyBangHint": "Type a bang, e.g. !yt, then press Space to select"
             },
             "children": {
               "action": {

@@ -128,6 +128,8 @@ Homarr supports multiple authentication options, from internal userbase (credent
 
     If you'd rather manage group memberships for OIDC users locally (instead of via the IdP), set `AUTH_OIDC_GROUPS_LOCAL_MANAGEMENT=true`. While enabled, Homarr stops syncing OIDC users' group memberships from the groups claim, and admins can add/remove OIDC users on a group's members page. If you turn this back to `false`, the next login of each user resumes the regular sync and reconciles their groups with the IdP's claim again, which may remove memberships that were added manually while local management was enabled.
 
+    To let an existing credentials user also sign in with OIDC, set `AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING=true`. On the first OIDC sign-in, Homarr links a credentials user with the same email address instead of creating a second user. The user keeps their password login, local username and profile, groups, permissions, boards, settings, and API keys. OIDC profile and group claims do not overwrite the credentials-owned data. Homarr requires the OIDC profile to contain `email_verified: true` while this option is enabled. Only enable this when your OIDC provider verifies email addresses, because a matching email could otherwise be used to take over an existing account.
+
     <details>
       <summary>
         Example Setup
@@ -205,6 +207,7 @@ Homarr supports multiple authentication options, from internal userbase (credent
     | ``AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE`` | Overwrite name attribute. By default it will use preferred_username if it does not contain a `@` and otherwise name. | ---          |
     | ``AUTH_OIDC_FORCE_USERINFO`` | Force userinfo endpoint to be used for user information.    | false         |
     | ``AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING`` | Enable account linking for OIDC provider. This will link the OIDC accounts by email. Be sure that you have verified emails to prevent stealing accounts. | false |
+    | ``AUTH_OIDC_ENABLE_DANGEROUS_CREDENTIALS_LINKING`` | Link an OIDC identity to an existing credentials user with the same email. The credentials login and existing user data are preserved. Requires the OIDC profile to contain `email_verified: true`. | false |
     | ``AUTH_OIDC_TOKEN_ENDPOINT_AUTH_METHOD`` | Override method for the token endpoint authentication. Supported values are `client_secret_basic`, `client_secret_post`, `client_secret_jwt` and `none`. | client_secret_basic |
 
     ### Permission System

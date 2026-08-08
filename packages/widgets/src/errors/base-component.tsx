@@ -17,7 +17,7 @@ export const BaseWidgetError = (props: BaseWidgetErrorProps) => {
   const t = useI18n();
 
   return (
-    <Stack h="100%" align="center" justify="center" gap="md">
+    <Stack h="100%" align="center" justify="center" gap="md" data-homarr-widget-error>
       <props.icon size={40} />
       <Stack gap={0}>
         <Text ta="center">{translateIfNecessary(t, props.message)}</Text>

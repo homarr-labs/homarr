@@ -1,8 +1,8 @@
 import type { JSX } from "react";
 import { Box, Center, Stack, Text, Title } from "@mantine/core";
 
-import { api } from "@homarr/api/server";
 import type { MaybePromise } from "@homarr/common/types";
+import { db } from "@homarr/db";
 import type { OnboardingStep } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 
@@ -29,9 +29,16 @@ const stepComponents: Record<OnboardingStep, null | (() => MaybePromise<JSX.Elem
   finish: InitFinish,
 };
 
+const getCurrentOnboardingStepAsync = async () => {
+  const value = await db.query.onboarding.findFirst();
+  if (!value) return { current: "start" as const, previous: null };
+
+  return { current: value.step, previous: value.previousStep };
+};
+
 export default async function InitPage() {
   const t = await getScopedI18n("init.step");
-  const currentStep = await api.onboard.currentStep();
+  const currentStep = await getCurrentOnboardingStepAsync();
 
   const CurrentComponent = stepComponents[currentStep.current];
 

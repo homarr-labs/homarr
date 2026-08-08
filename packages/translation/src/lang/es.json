@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Usar iconos para pings"
       },
+      "enableRightClickOnWidgets": {
+        "label": "",
+        "description": ""
+      },
       "defaultSearchEngine": {
         "label": "Motor de búsqueda predeterminado"
       },
@@ -1080,6 +1084,14 @@
           "label": "Clave API (Credencial)",
           "newLabel": "Nueva clave API (Credencial)"
         },
+        "patchmonApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "patchmonApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
         "githubAppId": {
           "label": "ID de aplicación",
           "newLabel": "Nuevo ID de aplicación"
@@ -1123,7 +1135,19 @@
         }
       }
     },
+    "traefik": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
+      "name": "",
+      "description": ""
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
       "name": "",
       "description": ""
     }
@@ -1397,6 +1421,12 @@
         "refresh": "",
         "options": "",
         "actions": ""
+      },
+      "status": {
+        "success": "",
+        "error": "",
+        "loading": "",
+        "idle": ""
       }
     },
     "create": {
@@ -1670,6 +1700,16 @@
         "customDateFormat": {
           "label": "Formato de fecha personalizado",
           "description": "Usar ISO 8601 para dar formato a la hora (esto anulará otras opciones)"
+        },
+        "showWeather": {
+          "label": "",
+          "description": ""
+        },
+        "weatherLocation": {
+          "label": ""
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": ""
         }
       }
     },
@@ -1731,6 +1771,8 @@
         "clear": "Borrar formato",
         "heading": "Encabezado {level}",
         "align": "Alinear texto: {position}",
+        "directionLtr": "",
+        "directionRtl": "",
         "blockquote": "Cita",
         "horizontalLine": "Línea horizontal",
         "bulletList": "Lista sin ordenar",
@@ -2020,7 +2062,8 @@
         "sunrise": "Amanecer",
         "sunset": "Atardecer",
         "maxWindSpeed": "Velocidad máxima del viento: {maxWindSpeed} {unit}",
-        "maxWindGusts": "Máximas ráfagas de viento: {maxWindGusts} {unit}"
+        "maxWindGusts": "Máximas ráfagas de viento: {maxWindGusts} {unit}",
+        "humidity": ""
       },
       "kind": {
         "clear": "Despejado",
@@ -2180,10 +2223,21 @@
         },
         "descendingDefaultSort": {
           "label": "Invertir orden"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "No se pudo obtener las estadísticas de los contenedores"
+        "internalServerError": "No se pudo obtener las estadísticas de los contenedores",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2312,30 +2366,30 @@
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Estadísticas Umami",
+      "description": "Mostrar estadísticas de visitantes de su instancia de Umami Analytics",
+      "visitors": "visitantes",
+      "active": "activo",
+      "pageviews": "vistas de página",
+      "visits": "visitas",
+      "bounceRate": "rebote",
+      "avgDuration": "promedio",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Sitio web",
+          "description": "Seleccione un sitio web rastreado por su instancia de Umami",
+          "placeholder": "Seleccione un sitio web",
+          "loading": "Cargando sitios web...",
+          "noWebsites": "No se encontraron sitios web",
+          "configureIntegrationFirst": "Conecte primero una integración de Umami"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Período de tiempo",
+          "description": "El período de tiempo para mostrar los datos de los visitantes",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
+            "today": "Hoy",
+            "24h": "Últimas 24 horas",
+            "7d": "Últimos 7 días",
             "30d": "",
             "month": "",
             "lastMonth": ""
@@ -2477,13 +2531,33 @@
         "showOnlyPlaying": {
           "label": "Mostrar sólo reproducción actual",
           "description": "Desactivar esta opción no funcionará para plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Reproducción en curso",
         "user": "Usuario",
         "name": "Nombre",
         "id": "ID",
+        "status": "",
+        "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
+        "transcoding": "",
+        "paused": "",
+        "remaining": "",
         "metadata": {
           "title": "Estadísticas",
           "video": {
@@ -2549,6 +2623,193 @@
         "internalServerError": ""
       }
     },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "immich-serverStats": {
       "name": "Estadísticas del servidor Immich",
       "description": "Información del servidor Immich",
@@ -2577,6 +2838,7 @@
     },
     "immich-albumCarousel": {
       "name": "Álbum de Immich",
+      "allPhotos": "",
       "option": {
         "albumId": {
           "label": "ID de álbum",
@@ -2596,7 +2858,6 @@
         }
       },
       "description": "Presentación de fotos de un álbum de Immich",
-      "noAlbumSelected": "No se ha seleccionado ningún álbum. Edita el widget y selecciona uno.",
       "noPhotos": "No hay fotos en este álbum"
     },
     "downloads": {
@@ -2639,11 +2900,20 @@
         "limitPerIntegration": {
           "label": "Limitar elementos por integración",
           "description": "Esto limitará el número de elementos mostrados por integración, no globalmente"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Seleccionar Columnas en Artículos",
-        "noCommunications": "No se pueden cargar los datos desde la integración"
+        "noCommunications": "No se pueden cargar los datos desde la integración",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -2666,7 +2936,8 @@
           "detailsTitle": "Índice actual dentro del cliente"
         },
         "id": {
-          "columnTitle": "ID"
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integración"
@@ -2700,7 +2971,8 @@
         },
         "time": {
           "columnTitle": "Hora de finalización",
-          "detailsTitle": "Tiempo desde/hasta la finalización"
+          "detailsTitle": "Tiempo desde/hasta la finalización",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Tipo",
@@ -2744,7 +3016,23 @@
           }
         }
       },
-      "globalRatio": "Relación global"
+      "globalRatio": "Relación global",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Lanzamientos de medios",
@@ -2781,6 +3069,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Abrir enlaces en una pestaña nueva"
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -2887,6 +3181,35 @@
           }
         }
       }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
     },
     "rssFeed": {
       "name": "Fuentes RSS",
@@ -3131,7 +3454,11 @@
       "name": "Notificaciones",
       "description": "Mostrar el historial de notificaciones desde una integración",
       "noItems": "Ninguna notificación para mostrar.",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": ""
+        }
+      }
     },
     "speedtestTracker": {
       "name": "Speedtest Tracker",
@@ -3212,6 +3539,40 @@
         "internalServerError": ""
       }
     },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "audioStats": {
       "name": "",
       "description": "",
@@ -3225,18 +3586,6 @@
           "description": ""
         },
         "showSongs": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
           "label": "",
           "description": ""
         },
@@ -3273,8 +3622,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3394,11 +3741,19 @@
         },
         "showAgent": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "",
@@ -3566,6 +3921,11 @@
           "subtitle": "",
           "read": "",
           "write": ""
+        },
+        "storage": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
         },
         "network": {
           "title": "",
@@ -4669,8 +5029,8 @@
             "subtitle": "{count} contribuyendo con las traducciones en muchos idiomas"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Patrocinadores",
+            "subtitle": "{count} apoyando económicamente el proyecto"
           },
           "libraries": {
             "title": "Librerías",
@@ -4699,6 +5059,9 @@
     "title": "Contenedores",
     "table": {
       "updated": "Actualizado {when}",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "Buscar {count} contenedores",
       "selected": "{selectCount} de {totalCount} contenedores seleccionados",
       "footer": "{count} contenedores en total",
@@ -4788,6 +5151,7 @@
       },
       "remove": {
         "label": "Eliminar",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Contenedores eliminados",
@@ -5411,6 +5775,14 @@
                 }
               },
               "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
                 "label": "",
                 "children": {
                   "detail": {

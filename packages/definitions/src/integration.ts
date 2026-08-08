@@ -418,7 +418,7 @@ export const integrationDefs = {
     name: "Navidrome",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/navidrome.svg",
-    category: ["mediaLibrary"],
+    category: ["mediaLibrary", "mediaService"],
     documentationUrl: null,
     defaultPort: 4533,
   },
@@ -442,7 +442,7 @@ export const integrationDefs = {
     name: "Beszel",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/beszel.svg",
-    category: ["healthMonitoring"],
+    category: ["beszel"],
     documentationUrl: createDocumentationLink("/docs/integrations/beszel"),
     defaultPort: 8090,
   },
@@ -467,7 +467,6 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/archiveteam-warrior.png",
     category: ["archiving"],
     documentationUrl: null,
-    defaultUrl: "http://localhost:8001",
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
@@ -566,6 +565,7 @@ export const integrationCategories = [
   "smartHomeServer",
   "indexerManager",
   "healthMonitoring",
+  "beszel",
   "search",
   "mediaTranscoding",
   "networkController",

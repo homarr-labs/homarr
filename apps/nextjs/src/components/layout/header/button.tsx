@@ -14,6 +14,9 @@ type HeaderButtonProps = (
     }
 ) & {
   children: ReactNode;
+  onFocus?: () => void;
+  onPointerDown?: () => void;
+  onPointerEnter?: () => void;
 } & Partial<ActionIconProps>;
 
 const headerButtonActionIconProps: ActionIconProps = {

@@ -83,3 +83,4 @@ skills-lock.json
 apps/docs/.docusaurus
 apps/docs/build
 .pnpm-store
+benchmark-results

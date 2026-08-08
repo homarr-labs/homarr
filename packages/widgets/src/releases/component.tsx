@@ -29,6 +29,7 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
+import { getReleasesQueryStaleTimeMs } from "./query-options";
 
 const formatRelativeDate = (value: string): string => {
   const isMonths = /\d+m/g.test(value);
@@ -89,16 +90,19 @@ export default function ReleasesWidget({ options, itemId }: WidgetComponentProps
 
   const queryResults = clientApi.useQueries((trpc) =>
     batchedRepositories.flatMap(({ provider, repositories }) =>
-      trpc.widget.releases.getLatest({
-        itemId,
-        repositories: repositories.map((repository) => ({
-          id: repository.id,
-          provider,
-          identifier: repository.identifier,
-          versionFilter: repository.versionFilter,
-          providerUrl: repository.providerUrl,
-        })),
-      }),
+      trpc.widget.releases.getLatest(
+        {
+          itemId,
+          repositories: repositories.map((repository) => ({
+            id: repository.id,
+            provider,
+            identifier: repository.identifier,
+            versionFilter: repository.versionFilter,
+            providerUrl: repository.providerUrl,
+          })),
+        },
+        { staleTime: getReleasesQueryStaleTimeMs },
+      ),
     ),
   );
 

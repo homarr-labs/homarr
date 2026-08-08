@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Divider, Group, Stack, Text } from "@mantine/core";
+import { Button } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -10,7 +10,7 @@ import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { BoardRenameModal } from "~/components/board/modals/board-rename-modal";
-import classes from "./danger.module.css";
+import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 
 export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: boolean }) => {
   const board = useRequiredBoard();
@@ -82,60 +82,36 @@ export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: 
   }, [board.id, deleteBoard, router, t, openConfirmModal]);
 
   return (
-    <Stack gap="sm">
-      <Divider />
-      <DangerZoneRow
+    <DangerZoneRoot>
+      <DangerZoneItem
         label={t("section.dangerZone.action.rename.label")}
         description={t("section.dangerZone.action.rename.description")}
-        buttonText={t("section.dangerZone.action.rename.button")}
-        onClick={onRenameClick}
+        action={
+          <Button variant="subtle" color="red" onClick={onRenameClick}>
+            {t("section.dangerZone.action.rename.button")}
+          </Button>
+        }
       />
-      {hideVisibility ? null : (
-        <>
-          <Divider />
-          <DangerZoneRow
-            label={t("section.dangerZone.action.visibility.label")}
-            description={t(`section.dangerZone.action.visibility.description.${visibility}`)}
-            buttonText={t(`section.dangerZone.action.visibility.button.${visibility}`)}
-            onClick={onVisibilityClick}
-            isPending={isChangeVisibilityPending}
-          />
-        </>
+      {!hideVisibility && (
+        <DangerZoneItem
+          label={t("section.dangerZone.action.visibility.label")}
+          description={t(`section.dangerZone.action.visibility.description.${visibility}`)}
+          action={
+            <Button variant="subtle" color="red" loading={isChangeVisibilityPending} onClick={onVisibilityClick}>
+              {t(`section.dangerZone.action.visibility.button.${visibility}`)}
+            </Button>
+          }
+        />
       )}
-      <Divider />
-      <DangerZoneRow
+      <DangerZoneItem
         label={t("section.dangerZone.action.delete.label")}
         description={t("section.dangerZone.action.delete.description")}
-        buttonText={t("section.dangerZone.action.delete.button")}
-        onClick={onDeleteClick}
-        isPending={isDeletePending}
+        action={
+          <Button variant="subtle" color="red" loading={isDeletePending} onClick={onDeleteClick}>
+            {t("section.dangerZone.action.delete.button")}
+          </Button>
+        }
       />
-    </Stack>
-  );
-};
-
-interface DangerZoneRowProps {
-  label: string;
-  description: string;
-  buttonText: string;
-  isPending?: boolean;
-  onClick: () => void;
-}
-
-const DangerZoneRow = ({ label, description, buttonText, onClick, isPending }: DangerZoneRowProps) => {
-  return (
-    <Group justify="space-between" px="md" className={classes.dangerZoneGroup}>
-      <Stack gap={0}>
-        <Text fw="bold" size="sm">
-          {label}
-        </Text>
-        <Text size="sm">{description}</Text>
-      </Stack>
-      <Group justify="end" w={{ base: "100%", xs: "auto" }}>
-        <Button variant="subtle" color="red" loading={isPending} onClick={onClick}>
-          {buttonText}
-        </Button>
-      </Group>
-    </Group>
+    </DangerZoneRoot>
   );
 };

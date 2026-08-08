@@ -1,9 +1,14 @@
 {
   "name": "homarr",
-  "version": "1.71.0",
+  "version": "1.74.0",
   "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
+    "benchmark:build:docker": "node --experimental-strip-types scripts/benchmarks/docker-build.mts",
+    "benchmark:compare": "node --experimental-strip-types scripts/benchmarks/benchmark-compare.mts",
+    "benchmark:board-graph": "node --experimental-strip-types scripts/benchmarks/board-static-graph.mts",
+    "benchmark:docker": "node --experimental-strip-types scripts/benchmarks/docker-runtime.mts",
+    "benchmark:request-memory": "node --expose-gc --import tsx scripts/benchmarks/request-handler-memory.mts",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "check:custom-widgets": "pnpm --filter @homarr/custom-widgets check:architecture",
@@ -20,13 +25,18 @@
     "db:migration:postgresql:run": "pnpm -F db migration:postgresql:run",
     "db:migration:sqlite:generate": "pnpm -F db migration:sqlite:generate",
     "db:migration:sqlite:run": "pnpm -F db migration:sqlite:run",
+    "db:seed": "pnpm -F db seed",
     "db:push": "pnpm -F db push:sqlite",
     "db:studio": "pnpm -F db studio",
     "dev": "pnpm -F nextjs dev",
+    "dev:benchmark": "node --experimental-strip-types scripts/benchmarks/dev-board.mts",
+    "dev:cli": "go -C tools/homarr-dev run .",
+    "dev:cli:install": "go -C tools/homarr-dev install .",
     "dev:docs": "pnpm -F @homarr/docs dev",
     "docker:docs": "docker compose -f apps/workshop/docker-compose.yml up --build docs",
     "docker:workshop": "docker compose -f apps/workshop/docker-compose.yml up --build workshop",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
+    "docker:dev:up": "docker compose -f ./development/development.docker-compose.yml up -d redis",
     "format": "turbo format --continue -- --check",
     "format:fix": "turbo format --continue",
     "lint": "turbo lint --continue",
@@ -35,9 +45,9 @@
     "release": "semantic-release",
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
-    "start": "concurrently \"pnpm with-env node apps/tasks/tasks.cjs\" \"pnpm with-env node apps/websocket/wssServer.cjs\" \"pnpm -F nextjs start\"",
-    "test": "cross-env NODE_ENV=development CI=true vitest run --project api-node --project custom-widgets-node --project db-node --project dom --coverage.enabled",
-    "test:e2e": "cross-env NODE_ENV=development CI=true vitest run --project e2e",
+    "start": "pnpm -F nextjs start",
+    "test": "cross-env NODE_ENV=development CI=true vitest run --exclude e2e --coverage.enabled ",
+    "test:e2e": "cross-env NODE_ENV=development CI=true vitest e2e",
     "test:workshop": "sh apps/workshop/test.sh",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --exclude e2e --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
@@ -47,6 +57,7 @@
     "jsonpath-plus": "catalog:"
   },
   "devDependencies": {
+    "@babel/parser": "catalog:",
     "@playwright/test": "catalog:",
     "@semantic-release/changelog": "catalog:",
     "@semantic-release/commit-analyzer": "catalog:",
@@ -67,6 +78,7 @@
     "oxlint": "catalog:",
     "semantic-release": "catalog:",
     "testcontainers": "catalog:",
+    "tsx": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
@@ -75,7 +87,7 @@
   },
   "engines": {
     "node": ">=24.18.0",
-    "pnpm": ">=11.11.0"
+    "pnpm": ">=11.15.1"
   },
-  "packageManager": "pnpm@11.11.0"
+  "packageManager": "pnpm@11.15.1"
 }

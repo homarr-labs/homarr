@@ -8,9 +8,9 @@
         "action": {
           "scratch": "",
           "importOldmarr": "",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Obnovi iz varnostne kopije SQLite",
+          "restoreSqliteDescription": "Naložite celotno varnostno kopijo baze podatkov SQLite iz prejšnjega primerka Homarr. To bo obnovilo vse table, uporabnike, aplikacije, integracije in nastavitve.",
+          "backToOptions": "← Nazaj na možnosti nastavitve"
         }
       },
       "import": {
@@ -94,45 +94,45 @@
         "subtitle": ""
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Integracije",
+        "subtitle": "Izberite storitve, ki jih uporabljate.",
+        "description": "Izberite integracije, ki jih želite povezati. Samodejno bomo nastavili vašo nadzorno ploščo z ustreznimi gradniki.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Nadaljuj",
+          "skip": "Zaenkrat preskoči"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{current} od {total}",
+          "skip": "Preskoči to integracijo",
+          "finishing": "Nastavljanje vaše nadzorne plošče ...",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nastavitev ni uspela",
+            "message": "Pri nastavljanju vaše nadzorne plošče je prišlo do napake. Poskusite znova."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "Pomočniki URL",
+            "description": "Ti pomočniki poskušajo uganiti URL za vaše storitve. Če ne deluje, preprosto ročno vnesite naslov."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "Osnovni URL",
+          "placeholder": "homelab.local ali 192.168.1.1",
+          "hint": "Vnesite svojo osnovno domeno ali IP za samodejno izpolnjevanje URL-jev integracij",
+          "warning": "Če zdaj nastavite osnovni URL, bodo vsi URL-ji integracij samodejno izpolnjeni, kar vam prihrani čas med nastavljanjem",
+          "preview": "npr. {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Pod-domena",
+            "hostPort": "Gostitelj:Vrata"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker zazna {count} storitev",
+          "detectedBreakdown": "{integrations} integracij · {apps} aplikacij",
+          "summary": "Homarr je zaznal {apps} aplikacij, od katerih ima {integrations} vgrajene integracije",
+          "appBadge": "Aplikacija",
+          "appSectionLabel": "Aplikacije za dodajanje na nadzorno ploščo ({count} izbranih)",
+          "scanning": "Skeniranje Dockerja ...",
+          "scanningDescription": "Iskanje tekočih vsebnikov v vašem sistemu"
         }
       },
       "finish": {
@@ -158,32 +158,32 @@
         "subtitle": "Dobrodošli nazaj! Prosimo vnesite svoje podatke"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Pridruži se Homarr",
+        "subtitle": "Dobrodošli v Homarr! Prosimo, ustvarite svoj račun",
+        "description": "Povabil vas je {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Nova namestitev Homarr",
+        "subtitle": "Prosimo, ustvarite začetnega skrbniškega uporabnika"
       }
     },
     "field": {
       "email": {
         "label": "E-naslov",
-        "verified": ""
+        "verified": "Preverjeno"
       },
       "username": {
         "label": "Uporabniško ime"
       },
       "password": {
         "label": "Geslo",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Predlogi gesla",
         "suggestion": {
-          "length": "",
+          "length": "Vsaj 8 znakov",
           "lowercase": "Vključuje male črke",
           "uppercase": "Vključuje velike tiskane črke",
           "number": "Vključuje število",
-          "special": ""
+          "special": "Vključuje poseben simbol"
         }
       },
       "passwordConfirm": {
@@ -193,10 +193,14 @@
         "label": "Prejšnje geslo"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Domača tabla"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Uporabi ikone za ping"
+      },
+      "enableRightClickOnWidgets": {
+        "label": "",
+        "description": ""
       },
       "defaultSearchEngine": {
         "label": ""
@@ -205,24 +209,24 @@
         "label": ""
       },
       "ddgBangs": {
-        "label": ""
+        "label": "Omogoči DuckDuckGo bange"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Uporabniško ime je že zasedeno"
     },
     "action": {
       "login": {
         "label": "Prijava",
-        "labelWith": "",
+        "labelWith": "Prijava z {provider}",
         "notification": {
           "success": {
             "title": "Prijava uspešna",
             "message": "Zdaj ste prijavljeni"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Prijava ni uspela",
+            "message": "Vaša prijava ni uspela"
           }
         },
         "forgotPassword": {
@@ -235,11 +239,11 @@
         "notification": {
           "success": {
             "title": "Ustvarjen račun",
-            "message": ""
+            "message": "Za nadaljevanje se prosimo prijavite"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Ustvarjanje računa ni uspelo",
+            "message": "Vašega računa ni bilo mogoče ustvariti"
           }
         }
       },
@@ -248,20 +252,20 @@
         "label": "Spremeni geslo",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Geslo je bilo uspešno spremenjeno"
           },
           "error": {
-            "message": ""
+            "message": "Gesla ni mogoče spremeniti"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Domača tabla je bila uspešno spremenjena"
           },
           "error": {
-            "message": ""
+            "message": "Domače table ni mogoče spremeniti"
           }
         }
       },
@@ -278,58 +282,58 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Prvi dan v tednu je bil uspešno spremenjen"
           },
           "error": {
-            "message": ""
+            "message": "Prvega dne v tednu ni mogoče spremeniti"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ikone za ping so uspešno preklopljene"
           },
           "error": {
-            "message": ""
+            "message": "Ikon za ping ni mogoče preklopiti"
           }
         }
       },
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo bangi uspešno preklopljeni"
           },
           "error": {
-            "message": ""
+            "message": "Preklop DuckDuckGo bangov ni mogoč"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Spremeni sliko",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Slika je bila uspešno spremenjena"
             },
             "error": {
-              "message": ""
+              "message": "Slike ni mogoče spremeniti"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Slika je prevelika",
+              "message": "Največja velikost slike je {size}"
             }
           }
         },
         "removeImage": {
           "label": "Odstrani sliko",
-          "confirm": "",
+          "confirm": "Ali ste prepričani, da želite odstraniti sliko?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Slika je bila uspešno odstranjena"
             },
             "error": {
-              "message": ""
+              "message": "Slike ni mogoče odstraniti"
             }
           }
         }
@@ -337,34 +341,34 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profil je bil uspešno posodobljen"
           },
           "error": {
-            "message": ""
+            "message": "Profila ni mogoče posodobiti"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Trajno izbriši uporabnika",
+        "description": "Izbriše tega uporabnika skupaj z njegovimi nastavitvami. Ne bo izbrisal nobenih tabel. Uporabnik ne bo obveščen.",
+        "confirm": "Ali ste prepričani, da želite izbrisati uporabnika {username} z njegovimi nastavitvami?"
       },
       "select": {
         "label": "Izberi uporabnika",
-        "notFound": ""
+        "notFound": "Uporabnika ni mogoče najti"
       },
       "transfer": {
-        "label": ""
+        "label": "Izberi novega lastnika"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Skupine",
+    "name": "Skupina",
+    "search": "Poišči skupino",
     "field": {
       "name": "Ime",
-      "members": "",
+      "members": "Člani",
       "homeBoard": {
         "label": "",
         "description": ""
@@ -376,11 +380,11 @@
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Skrbnik",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Skrbnik",
+            "description": "Člani s tem dovoljenjem imajo popoln dostop do vseh funkcij in nastavitev"
           }
         }
       },
@@ -388,20 +392,20 @@
         "title": "Aplikacije",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Ustvari aplikacije",
+            "description": "Članom dovoli ustvarjanje aplikacij"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Uporabi vse aplikacije",
+            "description": "Članom dovoli dodajanje vseh aplikacij na njihove table"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Spremeni vse aplikacije",
+            "description": "Članom dovoli spreminjanje vseh aplikacij"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Popoln dostop do aplikacij",
+            "description": "Članom dovoli upravljanje, uporabo in brisanje vseh aplikacij"
           }
         }
       },
@@ -409,165 +413,165 @@
         "title": "Deske",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Ustvari table",
+            "description": "Članom dovoli ustvarjanje tabel"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Ogled vseh tabel",
+            "description": "Članom dovoli ogled vseh tabel"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Spremeni vse table",
+            "description": "Članom dovoli spreminjanje vseh tabel (ne vključuje nadzora dostopa in nevarnega območja)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Popoln dostop do tabel",
+            "description": "Članom dovoli ogled, spreminjanje in brisanje vseh tabel (vključno z nadzorom dostopa in nevarnim območjem)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integracije",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Ustvari integracije",
+            "description": "Članom dovoli ustvarjanje integracij"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Uporabi vse integracije",
+            "description": "Članom dovoli dodajanje vseh integracij na njihove table"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interakcija s katero koli integracijo",
+            "description": "Članom dovoli interakcijo s katero koli integracijo"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Popoln dostop do integracij",
+            "description": "Članom dovoli upravljanje, uporabo in interakcijo s katero koli integracijo"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Mediji",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Naloži medije",
+            "description": "Članom dovoli nalaganje medijev"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Ogled vseh medijev",
+            "description": "Članom dovoli ogled vseh medijev"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Popoln dostop do medijev",
+            "description": "Članom dovoli upravljanje in brisanje katerega koli medija"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Drugo",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Ogled dnevnikov",
+            "description": "Članom dovoli ogled dnevnikov"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Iskalniki",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Ustvari iskalnike",
+            "description": "Članom dovoli ustvarjanje iskalnikov"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Spremeni vse iskalnike",
+            "description": "Članom dovoli spreminjanje vseh iskalnikov"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Popoln dostop do iskalnikov",
+            "description": "Članom dovoli upravljanje in brisanje katerega koli iskalnika"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Nekateri člani so iz zunanjih ponudnikov in jih tukaj ni mogoče upravljati",
+      "external": "Vsi člani so iz zunanjih ponudnikov in jih tukaj ni mogoče upravljati"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Ta skupina je rezervirana za sistemsko uporabo in omejuje nekatera dejanja. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Nova skupina",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Skupina je bila uspešno ustvarjena"
           },
           "error": {
-            "message": ""
+            "message": "Skupine ni bilo mogoče ustvariti"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Prenos lastništva",
+        "description": "Prenesite lastništvo te skupine na drugega uporabnika.",
+        "confirm": "Ali ste prepričani, da želite prenesti lastništvo skupine {name} na {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Lastništvo skupine {group} je bilo uspešno preneseno na {user}"
           },
           "error": {
-            "message": ""
+            "message": "Lastništva ni mogoče prenesti"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Dodaj člana"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Odstrani člana",
+        "confirm": "Ali ste prepričani, da želite odstraniti {user} iz te skupine?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Izbriši skupino",
+        "description": "Ko izbrišete skupino, ni poti nazaj. Prosimo, bodite prepričani.",
+        "confirm": "Ali ste prepričani, da želite izbrisati skupino {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Skupina {name} je bila uspešno izbrisana"
           },
           "error": {
-            "message": ""
+            "message": "Skupine {name} ni mogoče izbrisati"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Dovoljenja shranjena",
+            "message": "Dovoljenja so bila uspešno shranjena"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Dovoljenja niso shranjena",
+            "message": "Dovoljenja niso bila shranjena"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Skupina {name} je bila uspešno shranjena"
           },
           "error": {
-            "message": ""
+            "message": "Skupine {name} ni mogoče shraniti"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Izberi skupino",
+        "notFound": "Ni najdene skupine"
       },
       "settings": {
         "board": {
@@ -605,47 +609,47 @@
       "list": {
         "title": "Aplikacije",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Ni še nobenih aplikacij",
+          "action": "Ustvari svojo prvo aplikacijo"
         }
       },
       "create": {
-        "title": "",
+        "title": "Nova aplikacija",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Ustvarjanje uspešno",
+            "message": "Aplikacija je bila uspešno ustvarjena"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Ustvarjanje ni uspelo",
+            "message": "Aplikacije ni bilo mogoče ustvariti"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Uredi aplikacijo",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Spremembe so bile uspešno uveljavljene",
+            "message": "Aplikacija je bila uspešno shranjena"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Sprememb ni mogoče uveljaviti",
+            "message": "Aplikacije ni bilo mogoče shraniti"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Izbriši aplikacijo",
+        "message": "Ali ste prepričani, da želite izbrisati aplikacijo {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Brisanje uspešno",
+            "message": "Aplikacija je bila uspešno izbrisana"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Brisanje ni uspelo",
+            "message": "Aplikacije ni mogoče izbrisati"
           }
         }
       }
@@ -655,10 +659,10 @@
         "label": "Ime"
       },
       "description": {
-        "label": ""
+        "label": "Opis"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
@@ -669,8 +673,8 @@
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
+        "label": "Izberi aplikacijo",
+        "notFound": "Ni najdene aplikacije",
         "search": "",
         "noResults": "",
         "action": "",
@@ -687,22 +691,22 @@
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Integracije",
+        "search": "Išči integracije",
         "noResults": {
-          "title": ""
+          "title": "Ni še nobenih integracij"
         }
       },
       "create": {
-        "title": "",
+        "title": "Nova integracija {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Ustvarjanje uspešno",
+            "message": "Integracija je bila uspešno ustvarjena"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Ustvarjanje ni uspelo",
+            "message": "Integracije ni bilo mogoče ustvariti"
           }
         },
         "app": {
@@ -722,15 +726,15 @@
         }
       },
       "edit": {
-        "title": "",
+        "title": "Uredi integracijo {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Spremembe uspešno uveljavljene",
+            "message": "Integracija je bila uspešno shranjena"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Sprememb ni mogoče uveljaviti",
+            "message": "Integracije ni bilo mogoče shraniti"
           }
         },
         "app": {
@@ -742,16 +746,16 @@
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Izbriši integracijo",
+        "message": "Ali ste prepričani, da želite izbrisati integracijo {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Brisanje uspešno",
+            "message": "Integracija je bila uspešno izbrisana"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Brisanje ni uspelo",
+            "message": "Integracije ni mogoče izbrisati"
           }
         }
       }
@@ -761,7 +765,7 @@
         "label": "Ime"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "attemptSearchEngineCreation": {
         "label": "",
@@ -778,52 +782,52 @@
         "placeholder": ""
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Pridobi API ključ"
       }
     },
     "action": {
-      "create": ""
+      "create": "Nova integracija"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count, plural, one {# gradnik} two {# gradnika} few {# gradniki} other {# gradnikov}}",
+      "noWidgets": "Ni gradnikov",
+      "detected": "Zaznano prek Dockerja"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
+      "dnsHole": "DNS",
+      "mediaService": "Mediji",
+      "calendar": "Koledar",
+      "mediaSearch": "Iskanje",
+      "mediaRelease": "Izdaje",
+      "mediaRequest": "Zahteve",
+      "downloadClient": "Prenosi",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Razno",
+      "smartHomeServer": "Pametni dom",
+      "indexerManager": "Indeksirnik",
+      "healthMonitoring": "Zdravje",
+      "search": "Iskanje",
+      "mediaTranscoding": "Prekodiranje",
+      "networkController": "Omrežje",
+      "releasesProvider": "Izdaje",
+      "notifications": "Obvestila",
+      "firewall": "Požarni zid",
+      "timetable": "Urnik",
+      "photoService": "Fotografije",
       "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
+      "notes": "Zapiski",
+      "mediaMonitoring": "Nadzor",
+      "speedtest": "Test hitrosti",
+      "analytics": "Analitika",
       "vpn": "",
       "mediaLibrary": "",
       "uptimeMonitoring": ""
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Preizkusi povezavo in ustvari",
+        "edit": "Preizkusi povezavo in shrani"
       },
       "error": {
         "common": {
@@ -951,71 +955,71 @@
           }
         }
       },
-      "alertNotice": "",
+      "alertNotice": "Gumb Shrani je omogočen, ko je vzpostavljena uspešna povezava",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Povezava uspešna",
+          "message": "Povezava je bila uspešno vzpostavljena"
         },
         "invalidUrl": {
           "title": "Nepravilen URL",
-          "message": ""
+          "message": "URL je neveljaven"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Manjkajo poverilnice",
+          "message": "Niso bile vnesene vse poverilnice"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Neveljavne poverilnice",
+          "message": "Poverilnice so neveljavne"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Povezava ni uspela",
+          "message": "Povezave ni bilo mogoče vzpostaviti"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Slaba zahteva",
+          "message": "Zahteva je bila nepravilno oblikovana"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Nepooblaščeno",
+          "message": "Verjetno napačne poverilnice"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Prepovedano",
+          "message": "Verjetno manjkajo dovoljenja"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Ni najdeno",
+          "message": "Verjetno napačen url ali pot"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Notranja napaka strežnika",
+          "message": "Strežnik je naletel na napako"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Storitev ni na voljo",
+          "message": "Strežnik trenutno ni na voljo"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Povezava prekinjena",
+          "message": "Povezava je bila prekinjena"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Domena ni najdena",
+          "message": "Domene ni bilo mogoče najti"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Povezava zavrnjena",
+          "message": "Povezava je bila zavrnjena"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "Neveljaven JSON",
+          "message": "Odgovor ni veljaven JSON"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Napačna pot",
+          "message": "Pot verjetno ni pravilna"
         },
         "tooManyRequests": {
           "title": "",
@@ -1024,29 +1028,29 @@
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Skrivnosti",
+      "lastUpdated": "Nazadnje posodobljeno {date}",
       "notSet": {
         "label": "",
         "tooltip": ""
       },
-      "secureNotice": "",
+      "secureNotice": "Te skrivnosti po ustvarjanju ni mogoče pridobiti",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Ponastavi skrivnost",
+        "message": "Ali ste prepričani, da želite ponastaviti to skrivnost?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Ni skrivnosti",
+        "text": "Za to integracijo niso potrebne skrivnosti"
       },
       "kind": {
         "username": {
           "label": "Uporabniško ime",
-          "newLabel": ""
+          "newLabel": "Novo uporabniško ime"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API ključ",
+          "newLabel": "Nov API ključ"
         },
         "password": {
           "label": "Geslo",
@@ -1080,6 +1084,14 @@
           "label": "",
           "newLabel": ""
         },
+        "patchmonApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "patchmonApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
         "githubAppId": {
           "label": "",
           "newLabel": ""
@@ -1099,9 +1111,9 @@
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Izberi integracije v elementih",
+      "interact": "Interakcija z integracijami",
+      "full": "Popoln dostop do integracij"
     },
     "audiobookshelf": {
       "name": "",
@@ -1123,14 +1135,26 @@
         }
       }
     },
+    "traefik": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
+      "name": "",
+      "description": ""
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
       "name": "",
       "description": ""
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Mediji",
+    "search": "Poišči medij",
     "field": {
       "name": "Ime",
       "size": "Velikost",
@@ -1138,54 +1162,54 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Naloži medij",
+        "file": "Izberi datoteko",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Medij je bil uspešno naložen"
           },
           "error": {
-            "message": ""
+            "message": "Medija ni bilo mogoče naložiti"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Izbriši medij",
+        "description": "Ali ste prepričani, da želite izbrisati medij <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Medij je bil uspešno izbrisan"
           },
           "error": {
-            "message": ""
+            "message": "Medija ni bilo mogoče izbrisati"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "Kopiraj URL"
       },
       "open": {
         "label": ""
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Ni naloženih medijev"
     }
   },
   "common": {
     "success": "",
-    "beta": "",
+    "beta": "Preizkusna",
     "error": "Napaka",
     "action": {
       "add": "Dodaj",
       "apply": "Uporabi",
-      "backToOverview": "",
-      "skip": "",
+      "backToOverview": "Nazaj na pregled",
+      "skip": "Preskoči",
       "change": "",
       "create": "Ustvarite spletno stran",
       "createAnother": "",
       "edit": "Uredi",
-      "import": "",
+      "import": "Uvozi",
       "insert": "Vstavite",
       "remove": "Odstrani",
       "save": "Shrani",
@@ -1195,72 +1219,72 @@
       "discard": "Zapusti",
       "close": "",
       "confirm": "Potrdi",
-      "continue": "",
+      "continue": "Nadaljuj",
       "previous": "Prejšnji",
       "next": "Naslednji",
-      "checkoutDocs": "",
+      "checkoutDocs": "Preverite dokumentacijo",
       "checkLogs": "",
       "tryAgain": "Poskusite znova",
-      "loading": "",
-      "show": "",
-      "hide": ""
+      "loading": "Nalaganje",
+      "show": "Prikaži",
+      "hide": "Skrij"
     },
-    "here": "",
+    "here": "tukaj",
     "iconPicker": {
-      "label": "",
-      "header": "",
+      "label": "URL ikone",
+      "header": "Vnesite ime ali predmete za filtriranje ikon... Homarr bo za vas iskal med {countIcons} ikonami.",
       "headerLoading": "",
       "noResults": "",
       "error": ""
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Samodejno",
         "light": "",
         "dark": ""
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
-      "hours": "",
-      "minutes": ""
+      "min": "Najmanj",
+      "max": "Največ",
+      "days": "Dnevi",
+      "hours": "Ure",
+      "minutes": "Minute"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Ustvarjanje uspešno",
+        "error": "Ustvarjanje ni uspelo"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Brisanje uspešno",
+        "error": "Brisanje ni uspelo"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Spremembe uspešno uveljavljene",
+        "error": "Sprememb ni mogoče uveljaviti"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Prenos uspešen",
+        "error": "Prenos ni uspel"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Izberite eno ali več vrednosti"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Dodajte več vrednosti",
+      "addLabel": "Dodaj {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Izberi vrednost",
       "badge": {
-        "recommended": ""
+        "recommended": "Priporočeno"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
+        "switchToDarkMode": "Preklopi na temni način",
         "switchToLightMode": "Svetli način",
         "management": "Nastavitve",
         "docker": "",
@@ -1279,8 +1303,8 @@
     "applications": "",
     "services": "",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Pokaži predogled",
+      "hide": "Skrij predogled"
     },
     "zod": {
       "errors": {
@@ -1290,7 +1314,7 @@
           "startsWith": "To polje se mora začeti s {startsWith}.",
           "endsWith": "To polje se mora končati s {endsWith}.",
           "includes": "To polje mora vsebovati {includes}.",
-          "invalidEmail": ""
+          "invalidEmail": "To polje mora biti veljaven e-poštni naslov"
         },
         "tooSmall": {
           "string": "To polje mora biti dolgo vsaj {minimum} znakov.",
@@ -1301,13 +1325,13 @@
           "number": "To polje mora biti manjše ali enako {maximum}."
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
+          "passwordsDoNotMatch": "Gesli se ne ujemata",
+          "passwordRequirements": "Geslo ne izpolnjuje zahtev",
+          "boardAlreadyExists": "Tabla s tem imenom že obstaja",
+          "invalidFileType": "Neveljavna vrsta datoteke, pričakovana {expected}",
           "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
+          "fileTooLarge": "Datoteka je prevelika, največja velikost je {maxSize}",
+          "invalidConfiguration": "Neveljavna konfiguracija",
           "groupNameTaken": ""
         }
       }
@@ -1323,7 +1347,7 @@
     "dynamic": {
       "action": {
         "create": "Nova dinamična vsebina",
-        "remove": ""
+        "remove": "Odstrani dinamični odsek"
       },
       "option": {
         "title": {
@@ -1337,8 +1361,8 @@
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Odstrani dinamični odsek",
+        "message": "Ali ste prepričani, da želite odstraniti ta dinamični odsek? Elementi bodo premaknjeni na isto mesto v nadrejenem odseku."
       }
     },
     "category": {
@@ -1349,31 +1373,31 @@
       },
       "action": {
         "create": "Nova kategorija",
-        "edit": "",
-        "remove": "",
+        "edit": "Preimenuj kategorijo",
+        "remove": "Odstrani kategorijo",
         "moveUp": "Premaknite se navzgor",
         "moveDown": "Premaknite se navzdol",
-        "createAbove": "",
-        "createBelow": "",
+        "createAbove": "Nova kategorija zgoraj",
+        "createBelow": "Nova kategorija spodaj",
         "openAllInNewTabs": ""
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Nova kategorija",
+        "submit": "Dodaj kategorijo"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Odstrani kategorijo",
+        "message": "Ali ste prepričani, da želite odstraniti kategorijo {name}?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Preimenuj kategorijo",
+        "submit": "Preimenuj kategorijo"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Nova kategorija",
           "changePosition": "Spremeni položaj",
-          "settings": ""
+          "settings": "Nastavitve"
         }
       },
       "openAllInNewTabs": {
@@ -1385,7 +1409,7 @@
   "item": {
     "action": {
       "create": "Nova vsebina",
-      "import": "",
+      "import": "Uvozi element",
       "edit": "Uredi gradnik",
       "moveResize": "Premakni/spremeni",
       "duplicate": "Podvoji",
@@ -1397,15 +1421,21 @@
         "refresh": "",
         "options": "",
         "actions": ""
+      },
+      "status": {
+        "success": "",
+        "error": "",
+        "loading": "",
+        "idle": ""
       }
     },
     "create": {
-      "title": "",
+      "title": "Izberite element za dodajanje",
       "search": "",
-      "addToBoard": ""
+      "addToBoard": "Dodaj na tablo"
     },
     "moveResize": {
-      "title": "",
+      "title": "Premakni / spremeni velikost elementa",
       "field": {
         "width": {
           "label": "Širina"
@@ -1414,35 +1444,35 @@
           "label": "Višina"
         },
         "xOffset": {
-          "label": ""
+          "label": "Odmik X"
         },
         "yOffset": {
-          "label": ""
+          "label": "Odmik Y"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Uredi element",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Uredi gradnik",
+        "app": "Uredi aplikacijo"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Spremembe te aplikacije bodo uporabljene povsod, kjer se uporablja na vseh nadzornih ploščah."
       },
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Napredne možnosti",
+        "title": "Napredne možnosti elementa"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integracije"
         },
         "title": {
           "label": ""
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Razredi css po meri"
         },
         "borderColor": {
           "label": ""
@@ -1450,8 +1480,8 @@
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Odstrani element",
+      "message": "Ali ste prepričani, da želite odstraniti ta element?"
     }
   },
   "widget": {
@@ -1463,17 +1493,17 @@
       "loadError": ""
     },
     "app": {
-      "name": "",
-      "description": "",
+      "name": "Aplikacija",
+      "description": "Vgradi aplikacijo v tablo.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Izberi aplikacijo"
         },
         "openInNewTab": {
           "label": "Odprite v novem zavihku"
         },
         "showTitle": {
-          "label": ""
+          "label": "Pokaži ime aplikacije"
         },
         "pingEnabled": {
           "label": ""
@@ -1499,17 +1529,17 @@
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Ni aplikacije",
+          "tooltip": "Nimate izbrane veljavne aplikacije"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Zaznamki",
+      "description": "Prikaže več povezav aplikacij",
       "option": {
         "title": {
-          "label": ""
+          "label": "Naslov"
         },
         "layout": {
           "label": "Postavitev",
@@ -1521,7 +1551,7 @@
               "label": "Navpično"
             },
             "grid": {
-              "label": ""
+              "label": "Mreža"
             },
             "gridHorizontal": {
               "label": ""
@@ -1541,11 +1571,11 @@
           "label": ""
         },
         "withBorder": {
-          "label": ""
+          "label": "Pokaži obrobo"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Zaznamki",
+          "add": "Dodaj zaznamek"
         }
       }
     },
@@ -1559,8 +1589,8 @@
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "Povzetek DNS luknje",
+      "description": "Prikaže povzetek vaše DNS luknje",
       "option": {
         "layout": {
           "label": "Postavitev",
@@ -1572,28 +1602,28 @@
               "label": "Navpično"
             },
             "grid": {
-              "label": ""
+              "label": "Mreža"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Uporabi barve Pi-Hole"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "Pridobivanje povzetka DNS luknje ni uspelo",
+        "integrationsDisconnected": "Ni podatkov, vse integracije so prekinjene"
       },
       "data": {
         "adsBlockedToday": "Blokirano danes",
         "adsBlockedTodayPercentage": "Blokirano danes",
         "dnsQueriesToday": "Poizvedbe danes",
-        "domainsBeingBlocked": ""
+        "domainsBeingBlocked": "Domene na blokiranem seznamu"
       },
       "domainsTooltip": ""
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "Nadzor DNS luknje",
       "description": "Nadzorujte PiHole ali AdGuard iz nadzorne plošče",
       "option": {
         "layout": {
@@ -1606,62 +1636,62 @@
               "label": "Navpično"
             },
             "grid": {
-              "label": ""
+              "label": "Mreža"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Pokaži gumbe za preklop vseh"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nadzor DNS luknje ni uspel"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
-        "set": "",
+        "enableAll": "Omogoči vse",
+        "disableAll": "Onemogoči vse",
+        "setTimer": "Nastavi časovnik",
+        "set": "Nastavi",
         "enabled": "Omogočeno",
         "disabled": "Invalidi",
-        "processing": "",
-        "disconnected": "",
-        "hours": "",
-        "minutes": "",
-        "unlimited": ""
+        "processing": "Obdelovanje",
+        "disconnected": "Prekinjeno",
+        "hours": "Ure",
+        "minutes": "Minute",
+        "unlimited": "Pustite prazno za neomejeno"
       }
     },
     "clock": {
-      "name": "",
+      "name": "Datum in čas",
       "description": "Prikaže trenutni datum in čas.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Prikaz naslova/mesta po meri",
+          "description": "Prikažite naslov po meri ali ime mesta/države na vrhu ure."
         },
         "customTitle": {
-          "label": ""
+          "label": "Naslov"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24-urni format",
+          "description": "Uporabi 24-urni format namesto 12-urnega"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Prikaži sekunde"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Uporabi fiksni časovni pas"
         },
         "timezone": {
           "label": "Časovni pas",
-          "description": ""
+          "description": "Izberite časovni pas po standardu IANA"
         },
         "showDate": {
-          "label": ""
+          "label": "Pokaži datum"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Oblika datuma",
+          "description": "Kako naj bo datum videti"
         },
         "customTimeFormat": {
           "label": "",
@@ -1670,6 +1700,16 @@
         "customDateFormat": {
           "label": "",
           "description": ""
+        },
+        "showWeather": {
+          "label": "",
+          "description": ""
+        },
+        "weatherLocation": {
+          "label": ""
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": ""
         }
       }
     },
@@ -1708,7 +1748,7 @@
     },
     "notebook": {
       "name": "Beležnica",
-      "description": "",
+      "description": "Preprost pripomoček za beležnico, ki podpira markdown",
       "option": {
         "showToolbar": {
           "label": "Prikaži orodno vrstico za pomoč pri pisanju markdowna"
@@ -1731,6 +1771,8 @@
         "clear": "Jasno oblikovanje",
         "heading": "Naslov {level}",
         "align": "Poravnava besedila: {position}",
+        "directionLtr": "",
+        "directionRtl": "",
         "blockquote": "Blokovni citat",
         "horizontalLine": "Vodoravna črta",
         "bulletList": "Seznam kroglic",
@@ -1754,7 +1796,7 @@
       },
       "align": {
         "left": "Leva stran",
-        "center": "",
+        "center": "Sredina",
         "right": "Desno"
       },
       "popover": {
@@ -1805,7 +1847,7 @@
       "saveFailed": ""
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Vstavite katero koli vsebino iz interneta. Nekatera spletna mesta lahko omejijo dostop.",
       "option": {
         "embedUrl": {
@@ -1840,38 +1882,38 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "URL iFrame ni podan",
         "unsupportedProtocol": "",
         "noBrowerSupport": "Vaš brskalnik ne podpira iframov. Posodobite svoj brskalnik."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Stanje entitete",
+      "description": "Prikažite stanje entitete in jo po želji preklopite",
       "option": {
         "entityId": {
           "label": "ID subjekta"
         },
         "displayName": {
-          "label": ""
+          "label": "Prikazno ime"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Enota entitete"
         },
         "clickable": {
-          "label": ""
+          "label": "Klikljivo"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Izvedi avtomatizacijo",
+      "description": "Z enim klikom sprožite avtomatizacijo",
       "option": {
         "displayName": {
           "label": "Prikaži ime"
         },
         "automationId": {
-          "label": ""
+          "label": "ID avtomatizacije"
         }
       },
       "spotlightAction": {
@@ -1956,7 +1998,7 @@
     },
     "calendar": {
       "name": "Koledar",
-      "description": "",
+      "description": "Prikažite dogodke iz svojih integracij v koledarskem pogledu v določenem relativnem časovnem obdobju",
       "duration": {
         "allDay": ""
       },
@@ -1964,16 +2006,16 @@
         "releaseType": {
           "label": "Tip sprostitve Radarr",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "V kinematografih",
+            "digitalRelease": "Digitalna izdaja",
+            "physicalRelease": "Fizična izdaja"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Začetek od"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Konec ob"
         },
         "showUnmonitored": {
           "label": ""
@@ -1985,7 +2027,7 @@
       "description": "Prikaže trenutne vremenske informacije za določeno lokacijo.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperatura v Fahrenheitu"
         },
         "disableTemperatureDecimals": {
           "label": ""
@@ -2001,18 +2043,18 @@
           "label": "Lokacija vremena"
         },
         "showCity": {
-          "label": ""
+          "label": "Prikaži mesto"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Prikaži napoved"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Število dni napovedi",
+          "description": "Ko pripomoček ni dovolj širok, je prikazanih manj dni"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Oblika datuma",
+          "description": "Kako naj bo datum videti"
         }
       },
       "currentWindSpeed": "",
@@ -2020,7 +2062,8 @@
         "sunrise": "",
         "sunset": "",
         "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "maxWindGusts": "",
+        "humidity": ""
       },
       "kind": {
         "clear": "Počisti",
@@ -2040,35 +2083,35 @@
       }
     },
     "indexerManager": {
-      "name": "",
-      "description": "",
+      "name": "Stanje upravitelja indekserjev",
+      "description": "Stanje vaših indekserjev",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Odpri stran indekserja v novem zavihku"
         }
       },
-      "title": "",
-      "testAll": "",
+      "title": "Upravitelj indekserjev",
+      "testAll": "Preizkusi vse",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Pridobivanje stanja indekserjev ni uspelo"
       }
     },
     "healthMonitoring": {
-      "name": "",
-      "description": "",
+      "name": "Spremljanje zdravja sistema",
+      "description": "Prikaže informacije o zdravju in stanju vaših sistemov.",
       "tab": {
         "system": "",
         "cluster": ""
       },
       "option": {
         "fahrenheit": {
-          "label": ""
+          "label": "Temperatura CPU v Fahrenheitu"
         },
         "cpu": {
-          "label": ""
+          "label": "Prikaži informacije o CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Prikaži informacije o pomnilniku"
         },
         "gpu": {
           "label": ""
@@ -2077,7 +2120,7 @@
           "label": ""
         },
         "fileSystem": {
-          "label": ""
+          "label": "Prikaži informacije o datotečnem sistemu"
         },
         "visibleStorageVolumes": {
           "label": "",
@@ -2095,22 +2138,22 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
+        "information": "Informacije",
+        "processor": "Procesor: {cpuModelName}",
+        "memory": "Pomnilnik: {memory}GiB",
+        "memoryAvailable": "Na voljo: {memoryAvailable}GiB ({percent}%)",
+        "version": "Različica: {version}",
         "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
-        "available": "",
-        "lastSeen": ""
+        "loadAverage": "Povprečna obremenitev:",
+        "minute": "1 minuta",
+        "minutes": "{count} minut",
+        "used": "Uporabljeno",
+        "available": "Na voljo",
+        "lastSeen": "Zadnja posodobitev stanja: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Pridobivanje stanja zdravja ni uspelo"
       },
       "cluster": {
         "summary": {
@@ -2180,10 +2223,21 @@
         },
         "descendingDefaultSort": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2226,34 +2280,34 @@
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Spremljajte stanje svojih UPS naprav prek strežnika NUT",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Pokaži baterijo"
         },
         "showLoad": {
-          "label": ""
+          "label": "Pokaži obremenitev"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Pokaži napetost"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "Na omrežju",
+        "onBattery": "Na bateriji",
+        "lowBattery": "Nizka baterija",
+        "charging": "Polnjenje",
+        "unknown": "Neznano"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Čas delovanja",
+        "load": "Obremenitev",
+        "input": "Vhod",
+        "output": "Izhod"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Pridobivanje podatkov UPS ni uspelo"
       }
     },
     "tracearr": {
@@ -2336,96 +2390,96 @@
             "today": "",
             "24h": "",
             "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "30d": "Zadnjih 30 dni",
+            "month": "Ta mesec",
+            "lastMonth": "Prejšnji mesec"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Dogodek",
+          "description": "Pokaži skupno število pojavitev določenega dogodka",
+          "placeholder": "Izberite dogodek",
+          "loading": "Nalaganje dogodkov ...",
+          "noEvents": "Ni najdenih dogodkov",
+          "none": "Ni dogodka",
+          "configureWebsiteFirst": "Najprej izberite spletno mesto za nalaganje dogodkov"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Vrsta grafikona",
+          "description": "Slog prikaza grafikona",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Stolpčni grafikon",
+            "sparkline": "Sparkline"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Slog grafikona",
+          "description": "Kako prikazati serijo dogodkov v grafikonu",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Vzporedno",
+            "overlay": "Prekrivno (podmnožica)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Pogled",
+          "description": "Kaj prikazati v telesu gradnika",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Grafikon",
+            "events": "Grafikon dogodkov",
+            "topPages": "Najboljše strani",
+            "topReferrers": "Največ napotiteljev"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Dogodki",
+          "description": "Izberite enega ali več dogodkov za grafikon",
+          "placeholder": "Izberite dogodke ...",
+          "loading": "Nalaganje dogodkov ...",
+          "noEvents": "Ni najdenih dogodkov",
+          "configureWebsiteFirst": "Najprej izberite spletno mesto za nalaganje dogodkov"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Elementi za prikaz",
+          "description": "Število najboljših elementov za prikaz (največ 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "dogodki",
+        "label": "dogodki"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Neposredno"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Neposredno"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Izberite dogodke za grafikon"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Integracija Umami ni konfigurirana",
+        "noWebsite": "Spletno mesto ni konfigurirano",
+        "noData": "Ni razpoložljivih podatkov",
+        "internalServerError": "Pridobivanje podatkov Umami ni uspelo"
       }
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
+        "query": "Mesto / poštna številka",
+        "latitude": "Zemljepisna širina",
+        "longitude": "Zemljepisna dolžina",
+        "disabledTooltip": "Prosimo, vnesite mesto ali poštno številko",
+        "unknownLocation": "Neznana lokacija",
         "search": "Iskanje",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "Mesto",
+            "country": "Država",
+            "coordinates": "Koordinate",
+            "population": "Prebivalstvo"
           },
           "action": {
-            "select": ""
+            "select": "Izberi {city}, {countryCode}"
           },
           "population": {
             "fallback": "Neznano"
@@ -2433,17 +2487,17 @@
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "Ni najdene integracije",
+        "description": "Kliknite <here></here>, da ustvarite novo integracijo"
       },
       "app": {
-        "noData": "",
-        "description": "",
+        "noData": "Ni najdene aplikacije",
+        "description": "Kliknite <here></here>, da ustvarite novo aplikacijo",
         "quickCreate": ""
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "Nobena integracija ni izbrana",
+        "noData": "Ni podatkov o integraciji"
       },
       "option": {}
     },
@@ -2456,34 +2510,54 @@
         },
         "hasAutoPlay": {
           "label": "Samodejno predvajanje",
-          "description": ""
+          "description": "Samodejno predvajanje deluje samo, ko je utišano, zaradi omejitev brskalnika"
         },
         "isMuted": {
-          "label": ""
+          "label": "Utišano"
         },
         "hasControls": {
-          "label": ""
+          "label": "Prikaži kontrolnike"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "URL videa ni podan",
+        "forYoutubeUseIframe": "Za videoposnetke YouTube uporabite možnost iframe"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Trenutni tokovi predstavnostnega strežnika",
+      "description": "Prikaži trenutne tokove na vaših predstavnostnih strežnikih",
       "option": {
         "showOnlyPlaying": {
           "label": "",
           "description": ""
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "",
         "user": "",
         "name": "",
         "id": "",
+        "status": "",
+        "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
+        "transcoding": "",
+        "paused": "",
+        "remaining": "",
         "metadata": {
           "title": "",
           "video": {
@@ -2549,6 +2623,193 @@
         "internalServerError": ""
       }
     },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "immich-serverStats": {
       "name": "",
       "description": "",
@@ -2577,6 +2838,7 @@
     },
     "immich-albumCarousel": {
       "name": "",
+      "allPhotos": "",
       "option": {
         "albumId": {
           "label": "",
@@ -2596,91 +2858,100 @@
         }
       },
       "description": "",
-      "noAlbumSelected": "",
       "noPhotos": ""
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "Odjemalec za prenose",
+      "description": "Omogoča ogled in upravljanje prenosov iz odjemalcev Torrent in Usenet.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Stolpci za prikaz"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Omogoči razvrščanje elementov"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Privzeto uporabljen stolpec za razvrščanje"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Obrni razvrščanje"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Prikaži vnose usenet, označene kot dokončane"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Prikaži vnose torrent, označene kot dokončane"
         },
         "showCompletedHttp": {
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Skrij dokončane torrente pod tem pragom (v kiB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Kategorije/oznake za filtriranje"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Filtriraj kot bel seznam"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Uporabi filter za izračun razmerja"
         },
         "limitPerIntegration": {
           "label": "",
           "description": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Izberite stolpce v elementih",
+        "noCommunications": "Ni mogoče naložiti podatkov iz integracije",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Kontrolniki"
         },
         "added": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Dodano",
+          "detailsTitle": "Datum dodajanja"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Dodatki",
+          "detailsTitle": "Kategorije (ali dodatne informacije)"
         },
         "downSpeed": {
           "columnTitle": "Dol",
           "detailsTitle": "Hitrost prenosa"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Št.",
+          "detailsTitle": "Trenutni indeks znotraj odjemalca"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integracija"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Ime opravila"
         },
         "progress": {
           "columnTitle": "Napredek",
-          "detailsTitle": ""
+          "detailsTitle": "Napredek prenosa"
         },
         "ratio": {
           "columnTitle": "Razmerje",
-          "detailsTitle": ""
+          "detailsTitle": "Razmerje torren (prejeto/poslano)"
         },
         "received": {
           "columnTitle": "",
@@ -2700,7 +2971,8 @@
         },
         "time": {
           "columnTitle": "",
-          "detailsTitle": ""
+          "detailsTitle": "",
+          "eta": ""
         },
         "type": {
           "columnTitle": "",
@@ -2744,7 +3016,23 @@
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "",
@@ -2781,6 +3069,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Odprite povezave v novem zavihku"
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -2887,6 +3181,35 @@
           }
         }
       }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
     },
     "rssFeed": {
       "name": "",
@@ -3131,7 +3454,11 @@
       "name": "",
       "description": "",
       "noItems": "",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": ""
+        }
+      }
     },
     "speedtestTracker": {
       "name": "",
@@ -3212,6 +3539,40 @@
         "internalServerError": ""
       }
     },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "audioStats": {
       "name": "",
       "description": "",
@@ -3225,18 +3586,6 @@
           "description": ""
         },
         "showSongs": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
           "label": "",
           "description": ""
         },
@@ -3273,8 +3622,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3350,110 +3697,118 @@
       }
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Beszel sistemi (tabela)",
+      "description": "Tabelarni pogled vseh sistemov, ki jih spremlja Beszel, z razvrščljivimi stolpci in indikatorji stanja",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Filter stanja"
         },
         "sortBy": {
-          "label": ""
+          "label": "Razvrsti po"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Smer razvrščanja"
         },
         "showCpu": {
-          "label": ""
+          "label": "Pokaži CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Pokaži pomnilnik"
         },
         "showDisk": {
-          "label": ""
+          "label": "Pokaži disk"
         },
         "showGpu": {
-          "label": ""
+          "label": "Pokaži GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Pokaži povprečno obremenitev"
         },
         "showNet": {
-          "label": ""
+          "label": "Pokaži omrežje"
         },
         "showTemp": {
-          "label": ""
+          "label": "Pokaži temperaturo"
         },
         "showBattery": {
-          "label": ""
+          "label": "Pokaži baterijo"
         },
         "showServices": {
-          "label": ""
+          "label": "Pokaži storitve"
         },
         "showUptime": {
-          "label": ""
+          "label": "Pokaži čas delovanja"
         },
         "showAgent": {
+          "label": "Pokaži različico agenta"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
           "label": ""
         }
       },
-      "noRecords": "",
+      "noRecords": "Ni najdenih sistemov",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "Sistem",
+        "cpu": "CPU",
+        "memory": "Pomnilnik",
+        "disk": "Disk",
+        "gpu": "GPU",
+        "loadAvg": "Povp. obr.",
+        "net": "Omrežje",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Storitve",
+        "uptime": "Čas delovanja",
+        "agent": "Agent"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
-      "description": "",
+      "name": "Beszel sistemi (mreža)",
+      "description": "Mrežni pogled kartic vseh sistemov, ki jih spremlja Beszel, z meritvami v realnem času",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Filter stanja"
         },
         "showCpu": {
-          "label": ""
+          "label": "Pokaži CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Pokaži pomnilnik"
         },
         "showDisk": {
-          "label": ""
+          "label": "Pokaži disk"
         },
         "showGpu": {
-          "label": ""
+          "label": "Pokaži GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Pokaži povprečno obremenitev"
         },
         "showNet": {
-          "label": ""
+          "label": "Pokaži omrežje"
         },
         "showTemp": {
-          "label": ""
+          "label": "Pokaži temperaturo"
         },
         "showBattery": {
-          "label": ""
+          "label": "Pokaži baterijo"
         },
         "showServices": {
-          "label": ""
+          "label": "Pokaži storitve"
         },
         "showUptime": {
-          "label": ""
+          "label": "Pokaži čas delovanja"
         },
         "showAgent": {
-          "label": ""
+          "label": "Pokaži različico agenta"
         }
       },
       "error": {
@@ -3463,21 +3818,21 @@
         "noSystems": ""
       },
       "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "cpu": "CPU",
+        "memory": "Pomnilnik",
+        "disk": "Disk",
+        "gpu": "GPU",
+        "loadAvg": "Povp. obr.",
+        "net": "Omrežje",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Storitve",
+        "uptime": "Čas delovanja",
+        "agent": "Agent"
       }
     },
     "beszelAlerts": {
-      "name": "",
+      "name": "Beszel opozorila",
       "description": "",
       "option": {
         "showHistory": {
@@ -3566,6 +3921,11 @@
           "subtitle": "",
           "read": "",
           "write": ""
+        },
+        "storage": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
         },
         "network": {
           "title": "",
@@ -3990,7 +4350,7 @@
             "api": "",
             "certificates": "",
             "tasks": "",
-            "backup": ""
+            "backup": "Varnostno kopiranje"
           }
         },
         "settings": "Nastavitve",
@@ -4071,7 +4431,7 @@
           "private": ""
         },
         "noResults": {
-          "title": ""
+          "title": "Še ni tabel"
         },
         "modal": {
           "createBoard": {
@@ -4105,20 +4465,20 @@
               "firstDayOfWeek": "Prvi dan v tednu",
               "accessibility": "Dostopnost",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Vodniki za uvajanje",
+                "description": "Ponastavite vodnike za uvajanje, da jih boste ob naslednjem obisku upravljalnega območja ali nadzorne plošče videli znova.",
+                "reset": "Ponastavi vodnike za uvajanje",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Vodniki ponastavljeni",
+                  "message": "Vodniki za uvajanje se bodo ob naslednjem obisku spet prikazali"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Dokončano",
+                  "notStarted": "Ni začeto"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Upravljanje",
+                  "dashboard": "Nadzorna plošča"
                 }
               }
             }
@@ -4306,7 +4666,7 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "auto": "",
+                "auto": "Samodejno",
                 "light": "",
                 "dark": ""
               }
@@ -4537,122 +4897,122 @@
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Celotna varnostna kopija baze podatkov",
+          "metaTitle": "Varnostno kopiranje in obnovitev",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Izvozi bazo podatkov",
+            "description": "Prenesite celotno varnostno kopijo svoje baze podatkov SQLite, vključno z vsemi nastavitvami, uporabniki, tablami in šifriranimi skrivnostmi integracij. Varnostna kopija je zapakirana kot datoteka ZIP s šifrirnim ključem in metapodatki.",
+            "button": "Prenesi varnostno kopijo",
+            "error": "Izvoz ni uspel",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Izvoz občutljivih podatkov",
+              "warningTitle": "Ta izvoz vsebuje celotno vašo bazo podatkov.",
+              "warningBody": "Varnostna kopija vključuje vse uporabnike, skrivnosti integracij (šifrirane), API ključe, konfiguracije tabel in podatke aplikacij. Izvoženo datoteko shranite varno in je ne delite.",
+              "typePrompt": "Vnesite »{phrase}« za nadaljevanje",
+              "submit": "Izvozi bazo podatkov",
+              "cancel": "Prekliči"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Obnovi bazo podatkov",
+            "description": "Naložite predhodno izvoženo varnostno kopijo ZIP za obnovitev vaše baze podatkov. To bo zamenjalo celotno vašo bazo podatkov. Če je bila varnostna kopija ustvarjena z drugim šifrirnim ključem, bodo skrivnosti samodejno ponovno šifrirane.",
+            "warning": "Obnovitev varnostne kopije bo popolnoma zamenjala vašo trenutno bazo podatkov in znova zagnala aplikacijo. Tega dejanja ni mogoče razveljaviti.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Spustite svojo varnostno kopijo ZIP tukaj ali kliknite za brskanje",
+              "description": "Sprejete so samo datoteke .zip iz varnostne kopije SQLite Homarr"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Spremeni datoteko",
+            "button": "Obnovi bazo podatkov",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Obnovitev končana",
+              "message": "Baza podatkov je bila uspešno obnovljena. Aplikacija se ponovno zaganja ..."
             },
-            "error": ""
+            "error": "Uvoz ni uspel"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Vsebina varnostne kopije",
+            "exported": "Izvoženo {date}",
+            "loading": "Analiziranje datoteke varnostne kopije ...",
+            "errorTitle": "Napaka predogleda",
+            "entity": "Entiteta",
+            "count": "Število",
+            "boards": "Table",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Table",
+              "user": "Uporabniki",
+              "app": "Aplikacije",
+              "integration": "Integracije",
+              "item": "Gradniki",
+              "media": "Mediji",
+              "search_engine": "Iskalniki"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "Analiza datoteke varnostne kopije ni uspela",
+            "invalidMissingMetadata": "Neveljavna varnostna kopija: manjka metadata.json",
+            "invalidMissingDb": "Neveljavna varnostna kopija: manjka db.sqlite"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Spustite svojo varnostno kopijo ZIP tukaj",
+              "description": "Sprejema datoteke .zip iz varnostne kopije SQLite Homarr (največ 256 MB)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Analiziranje varnostne kopije ...",
+            "changeFile": "Spremeni datoteko",
+            "continueToRestore": "Nadaljujte na obnovitev",
+            "tryAgain": "Poskusite znova",
+            "analysisError": "Napaka analize",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Vsebina varnostne kopije",
+              "exported": "Izvoženo {date}",
+              "entity": "Entiteta",
+              "count": "Število",
+              "boards": "Table",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Table",
+                "user": "Uporabniki",
+                "app": "Aplikacije",
+                "integration": "Integracije",
+                "item": "Gradniki",
+                "media": "Mediji",
+                "search_engine": "Iskalniki"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "{count, plural, one {# migracija uporabljena} two {# migraciji uporabljeni} few {# migracije uporabljene} other {# migracij uporabljenih}}",
+              "migrationsAppliedPlural": "{count, plural, one {# migracija uporabljena} two {# migraciji uporabljeni} few {# migracije uporabljene} other {# migracij uporabljenih}}",
+              "migrationsOlderVersion": "Ta varnostna kopija je bila iz starejše različice Homarr. Uporabljena je bila {count, plural, one {# shematska migracija} two {# shematski migraciji} few {# shematske migracije} other {# shematskih migracij}}, da se posodobi.",
+              "migrationsOlderVersionPlural": "Ta varnostna kopija je bila iz starejše različice Homarr. Uporabljenih je bilo {count, plural, one {# shematska migracija} two {# shematski migraciji} few {# shematske migracije} other {# shematskih migracij}}, da se posodobi.",
+              "migrationsUpToDate": "Shema baze podatkov je posodobljena ({count, plural, one {# migracija uporabljena} two {# migraciji uporabljeni} few {# migracije uporabljene} other {# migracij uporabljenih}})",
+              "upToDate": "Posodobljeno",
+              "migrationsPending": "{count, plural, one {# čaka} two {# čakata} few {# čakajo} other {# čaka}}"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Uporabljanje migracij ({current}/{total})",
+              "migrationLabel": "Migracija {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Uničujoče dejanje",
+              "warningTitle": "To bo trajno zamenjalo celotno vašo bazo podatkov.",
+              "warningBody": "Vse trenutne table, uporabniki, aplikacije, integracije, nastavitve in seje bodo izgubljene. Tega dejanja ni mogoče razveljaviti. Aplikacija se bo po obnovitvi znova zagnala.",
+              "typePrompt": "Vnesite »{phrase}« za nadaljevanje",
+              "cancel": "Prekliči",
+              "submit": "Obnovi bazo podatkov"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Obnavljanje baze podatkov ...",
+              "extracting": "Razširjanje arhiva varnostne kopije",
+              "migrating": "Uporabljanje migracij baze podatkov",
+              "encrypting": "Ponovno šifriranje skrivnosti integracij",
+              "swapping": "Zamenjava datoteke baze podatkov",
+              "restarting": "Ponovni zagon strežnika"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Obnovitev končana",
+              "message": "Baza podatkov je bila uspešno obnovljena. Strežnik se ponovno zaganja – osvežite stran čez nekaj sekund."
             },
             "failed": {
-              "title": ""
+              "title": "Obnovitev ni uspela"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Neveljavna varnostna kopija: manjka metadata.json",
+            "invalidMissingDb": "Neveljavna varnostna kopija: manjka db.sqlite",
+            "analyzeError": "Analiza varnostne kopije ni uspela"
           }
         }
       },
@@ -4699,6 +5059,9 @@
     "title": "",
     "table": {
       "updated": "",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "",
       "selected": "",
       "footer": "",
@@ -4736,15 +5099,15 @@
         "label": "Vrata"
       },
       "host": {
-        "label": ""
+        "label": "Gostitelj"
       }
     },
     "action": {
       "title": "",
       "logs": {
-        "label": "",
+        "label": "Ogled dnevnikov",
         "page": {
-          "title": ""
+          "title": "Dnevniki {name}"
         }
       },
       "start": {
@@ -4788,6 +5151,7 @@
       },
       "remove": {
         "label": "Odstrani",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "",
@@ -5165,7 +5529,7 @@
         "docker": {
           "label": "",
           "logs": {
-            "label": ""
+            "label": "Dnevniki"
           }
         },
         "kubernetes": {
@@ -5276,7 +5640,7 @@
             "title": "",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Preklopi način videza",
                 "light": "",
                 "dark": ""
               },
@@ -5317,100 +5681,108 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Nastavitve",
             "children": {
               "detail": {
-                "title": "",
-                "backHint": "",
-                "backAction": ""
+                "title": "Izberite nastavitev za spremembo",
+                "backHint": "Pritisnite Backspace ali uporabite gumb za nazaj",
+                "backAction": "Nazaj"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "Nastavitve ni bilo mogoče posodobiti"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Odpri nastavitve"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Omogočeno",
+                "disabled": "Onemogočeno"
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "Brez",
+                "unavailable": "Trenutno izbrano (ni na voljo)"
               },
               "searchEngine": {
-                "none": "",
-                "unavailable": ""
+                "none": "Brez",
+                "unavailable": "Trenutno izbrano (ni na voljo)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Barvna shema",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izberite barvno shemo"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Jezik",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izberite želeni jezik"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Privzeti iskalnik",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izberite privzeti iskalnik"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Odpri rezultate iskanja v novem zavihku",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Odpri rezultate iskanja v novem zavihku"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "Omogoči DuckDuckGo bange",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Omogoči DuckDuckGo bange"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "Prvi dan v tednu",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izberite prvi dan v tednu"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Domača tabla",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izberite domačo tablo"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Mobilna domača tabla",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Izberite mobilno domačo tablo"
                   }
                 }
               },
               "pingIconsEnabled": {
+                "label": "Uporabi ikone za ping",
+                "children": {
+                  "detail": {
+                    "title": "Uporabi ikone za ping"
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
                 "label": "",
                 "children": {
                   "detail": {
@@ -5419,36 +5791,36 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Odpri celotno stran z nastavitvami"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Iščite filme ali oddaje za zahtevo",
         "requestMovie": "",
         "requestSeries": "",
         "openIn": "",
         "group": {
-          "title": ""
+          "title": "Filmi in oddaje"
         },
         "action": {
           "search": {
-            "label": "",
-            "description": "",
+            "label": "Iščite filme ali oddaje",
+            "description": "Začnite tipkati za iskanje svojih integracij za zahteve medijev",
             "disabled": {
-              "noIntegration": "",
-              "scoped": ""
+              "noIntegration": "Dodajte integracijo Overseerr, Jellyseerr ali Seerr za omogočanje iskanja medijev.",
+              "scoped": "Ta gradnik nima dostopne integracije za zahteve medijev."
             }
           }
         },
         "availability": {
-          "available": "",
-          "partiallyAvailable": "",
-          "processing": "",
-          "requested": "",
-          "pending": ""
+          "available": "Na voljo",
+          "partiallyAvailable": "Delno",
+          "processing": "Obdelava",
+          "requested": "Zahtevano",
+          "pending": "Zahtevano"
         }
       },
       "external": {
@@ -5456,13 +5828,13 @@
         "group": {
           "searchEngine": {
             "title": "",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Namig: tukaj lahko uporabite tudi kateri koli DuckDuckGo bang, npr. !something",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Išči »{query}« s/z {label}",
+              "pressEnterToOpen": "Pritisnite Enter za odpiranje",
+              "engineSelected": "{label} izbran (!{bang})",
+              "typeQueryToContinue": "Vnesite iskalno poizvedbo za nadaljevanje",
+              "emptyBangHint": "Vnesite bang, npr. !yt, nato pritisnite presledek za izbiro"
             },
             "children": {
               "action": {
@@ -5726,10 +6098,10 @@
               "header": {
                 "season": "",
                 "episodes": "",
-                "status": ""
+                "status": "Stanje"
               },
               "status": {
-                "requested": ""
+                "requested": "Zahtevano"
               }
             },
             "button": {
@@ -5842,69 +6214,69 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Preberite dokumentacijo",
+    "next": "Naprej",
+    "prev": "Nazaj",
+    "done": "Končano",
+    "skip": "Preskoči vodnik",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Dobrodošli v Homarr!",
+        "description": "To je vaš nadzorni center. Od tu upravljate table, aplikacije, integracije, uporabnike in strežniške nastavitve. Oglejmo si vsak razdelek."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Vaše table",
+        "description": "Tukaj so vse vaše nadzorne plošče. Vsaka tabla ima svojo postavitev, ozadje in nastavitve dostopa. Vidite lahko, kdo je katero ustvaril in ali je javna ali zasebna."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Ustvarite tablo",
+        "description": "Kliknite tukaj za ustvarjanje nove nadzorne plošče ali uvoz iz prejšnje namestitve Homarr. Vsaka tabla dobi svoj URL, ki ga lahko delite."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Vaše aplikacije",
+        "description": "To so vse aplikacije, ki ste jih dodali – povezave do vaših samo-gostovanih storitev. Vsaka aplikacija ima ikono, izbirno preverjanje stanja in značko stanja na nadzorni plošči."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Dodajte aplikacijo",
+        "description": "Tukaj registrirajte novo storitev. Poimenujte jo, dodajte URL in ikono – prikazala se bo kot ploščica na vaših tablah s spremljanjem stanja v živo."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Vaše integracije",
+        "description": "To so storitve, povezane s Homarr – Sonarr, Radarr, Plex, Jellyfin in več kot 50 drugih. Vsa poverilnice so šifrirane."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Dodajte integracijo",
+        "description": "Tukaj povežite novo storitev. Izberite vrsto, vnesite URL in API ključ – Homarr pred shranjevanjem preveri povezavo."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Vaši uporabniki",
+        "description": "Oglejte si vse, ki imajo dostop. Organizirajte uporabnike v skupine in nadzorujte, kdo lahko vidi ali ureja posamezno tablo."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Ustvarite uporabnika",
+        "description": "Tukaj dodajte nov uporabniški račun. Uporabite lahko tudi povezave za povabila za enostavno uvajanje. To je vse – pripravljeni ste!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "To je vaša tabla",
+        "description": "Povleci-in-spusti nadzorna plošča, kjer razporejate aplikacije in gradnike. Kadarkoli pritisnite Ctrl+K za iskanje aplikacij, tabel in dejanj."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Način urejanja",
+        "description": "Kliknite tukaj za vstop v način urejanja. Nato lahko dodajate gradnike, aplikacije in razdelke – povlecite za premikanje, spremenite velikost s kotnim ročajem. Znova kliknite za shranjevanje sprememb."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Nastavitve table",
+        "description": "Spremenite ime te table, stolpce, ozadje, barve in kdo lahko do nje dostopa. Vsaka tabla je lahko javna ali zasebna."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Preklopi table",
+        "description": "Skačite med tablami. Ustvarite ločene nadzorne plošče za različne namene – medije, omrežje, po uporabniku ali karkoli drugega."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Vaš profil",
+        "description": "Spremenite barvno shemo, jezik, domačo tablo in nastavitve. Od tu lahko tudi skočite v upravljalno območje."
       }
     }
   }

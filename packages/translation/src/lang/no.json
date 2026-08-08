@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Bruk ikoner for pinger"
       },
+      "enableRightClickOnWidgets": {
+        "label": "",
+        "description": ""
+      },
       "defaultSearchEngine": {
         "label": "Standard søkemotor"
       },
@@ -1080,6 +1084,14 @@
           "label": "API Nøkkel (Hemliglet)",
           "newLabel": "Ny API Key (Secret)"
         },
+        "patchmonApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "patchmonApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
         "githubAppId": {
           "label": "App Id",
           "newLabel": "Ny App Id"
@@ -1123,7 +1135,19 @@
         }
       }
     },
+    "traefik": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
+      "name": "",
+      "description": ""
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
       "name": "",
       "description": ""
     }
@@ -1397,6 +1421,12 @@
         "refresh": "",
         "options": "",
         "actions": ""
+      },
+      "status": {
+        "success": "",
+        "error": "",
+        "loading": "",
+        "idle": ""
       }
     },
     "create": {
@@ -1670,6 +1700,16 @@
         "customDateFormat": {
           "label": "Egendefinert dato format",
           "description": "Bruk ISO 8601 til å formatere datoen (dette vil overstyre andre alternativer)"
+        },
+        "showWeather": {
+          "label": "",
+          "description": ""
+        },
+        "weatherLocation": {
+          "label": ""
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": ""
         }
       }
     },
@@ -1731,6 +1771,8 @@
         "clear": "Fjern formatering",
         "heading": "Overskrift {level}",
         "align": "Juster tekst: {position}",
+        "directionLtr": "",
+        "directionRtl": "",
         "blockquote": "Blokksitat",
         "horizontalLine": "Horisontal linje",
         "bulletList": "Punktliste",
@@ -2020,7 +2062,8 @@
         "sunrise": "Soloppgang",
         "sunset": "Solnedgang",
         "maxWindSpeed": "Maks vindhastighet: {maxWindSpeed} {unit}",
-        "maxWindGusts": "Maks vindkast: {maxWindGusts} {unit}"
+        "maxWindGusts": "Maks vindkast: {maxWindGusts} {unit}",
+        "humidity": ""
       },
       "kind": {
         "clear": "Tøm",
@@ -2180,10 +2223,21 @@
         },
         "descendingDefaultSort": {
           "label": "Reverser sortering"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Kunne ikke hente containerstatistikk"
+        "internalServerError": "Kunne ikke hente containerstatistikk",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2477,13 +2531,33 @@
         "showOnlyPlaying": {
           "label": "Vis kun det som spiller nå",
           "description": "Å deaktivere dette fungerer ikke for Plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Spilles nå",
         "user": "Bruker",
         "name": "Navn",
         "id": "Id",
+        "status": "",
+        "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
+        "transcoding": "",
+        "paused": "",
+        "remaining": "",
         "metadata": {
           "title": "Statistikk for nerder",
           "video": {
@@ -2549,6 +2623,193 @@
         "internalServerError": ""
       }
     },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "immich-serverStats": {
       "name": "Immich-serverstatistikk",
       "description": "Informasjon om din Immich-instans",
@@ -2577,6 +2838,7 @@
     },
     "immich-albumCarousel": {
       "name": "Immich Album",
+      "allPhotos": "",
       "option": {
         "albumId": {
           "label": "Album ID",
@@ -2596,7 +2858,6 @@
         }
       },
       "description": "Lysbildefremvisning av bilder i ditt Immich-album",
-      "noAlbumSelected": "Ingen album valgt, rediger widgeten og velg et album",
       "noPhotos": "Ingen bilder i dette albumet"
     },
     "downloads": {
@@ -2639,11 +2900,20 @@
         "limitPerIntegration": {
           "label": "Begrens elementer per integrasjon",
           "description": "Dette begrenser antall elementer vist per integrasjon, ikke globalt"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Velg kolonner i elementer",
-        "noCommunications": "Kan ikke laste inn data fra integrasjon"
+        "noCommunications": "Kan ikke laste inn data fra integrasjon",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -2666,7 +2936,8 @@
           "detailsTitle": "Gjeldende indeks i klienten"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integrasjon"
@@ -2700,7 +2971,8 @@
         },
         "time": {
           "columnTitle": "Fullfør tid",
-          "detailsTitle": "Tid siden/til fullførelse"
+          "detailsTitle": "Tid siden/til fullførelse",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Type",
@@ -2744,7 +3016,23 @@
           }
         }
       },
-      "globalRatio": "Global ratio"
+      "globalRatio": "Global ratio",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Medieutgivelser",
@@ -2781,6 +3069,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Åpne lenker i ny fane"
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -2887,6 +3181,35 @@
           }
         }
       }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
     },
     "rssFeed": {
       "name": "RSS feed",
@@ -3131,7 +3454,11 @@
       "name": "Varsler",
       "description": "Vis varselhistorikk fra en integrasjon",
       "noItems": "Ingen varsler å vise.",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": ""
+        }
+      }
     },
     "speedtestTracker": {
       "name": "Speedtest tracker",
@@ -3212,6 +3539,40 @@
         "internalServerError": ""
       }
     },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "audioStats": {
       "name": "",
       "description": "",
@@ -3225,18 +3586,6 @@
           "description": ""
         },
         "showSongs": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
           "label": "",
           "description": ""
         },
@@ -3273,8 +3622,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3394,11 +3741,19 @@
         },
         "showAgent": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "",
@@ -3566,6 +3921,11 @@
           "subtitle": "",
           "read": "",
           "write": ""
+        },
+        "storage": {
+          "title": "",
+          "subtitle": "",
+          "series": ""
         },
         "network": {
           "title": "",
@@ -4699,6 +5059,9 @@
     "title": "Containere",
     "table": {
       "updated": "Oppdatert {when}",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "Søk {count} containere",
       "selected": "{selectCount} av {totalCount} containere valgt",
       "footer": "Totalt {count} containere",
@@ -4788,6 +5151,7 @@
       },
       "remove": {
         "label": "Fjern",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Containere fjernet",
@@ -5411,6 +5775,14 @@
                 }
               },
               "pingIconsEnabled": {
+                "label": "",
+                "children": {
+                  "detail": {
+                    "title": ""
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
                 "label": "",
                 "children": {
                   "detail": {

@@ -12,10 +12,12 @@ sidebar_position: 1
 
 ### Prerequisites
 
-- Node.js 24.18 or newer
-- Corepack and pnpm 11.11
-- Git
-- Docker with Docker Compose
+- **Node.js 24.18 or newer**: You can download it from the [official website](https://nodejs.org/).
+- **Corepack**: Run `corepack enable` so the repository selects its pinned pnpm 11 version.
+- **Git**: You can download it from the [official website](https://git-scm.com/).
+- **Docker or Docker Desktop**: Required for the Redis service and the developer Docker CLI.
+- **Go 1.25+**: Required only for the developer Docker CLI. You can download it from the [official website](https://go.dev/).
+- **GitHub CLI**: Required only for pull-request image features. Install it from the [official website](https://cli.github.com/), then authenticate with `gh auth login`.
 
 The versions in the root `package.json` are the supported baseline. Let Corepack select the repository version instead
 of installing an unrelated global pnpm:
@@ -52,6 +54,8 @@ pnpm dev
 
 The infrastructure command remains in the foreground. Open `http://127.0.0.1:3000`; the first user created through
 Homarr becomes the instance administrator.
+Use `pnpm docker:dev:up` instead when you only need Redis in the background. Running the migration also seeds the
+default data; use `pnpm db:seed` to seed it explicitly later.
 
 ### Run PocketBase and documentation
 
@@ -101,10 +105,18 @@ pnpm dev:docs
 ### Useful commands
 
 - `pnpm dev` — Next.js on port 3000.
+- `pnpm dev:benchmark` — authenticated-board benchmark; readiness-only `--smoke` runs are not performance claims.
+- `pnpm dev:cli -- dev` — browse and run local images and remote pull-request images.
+- `pnpm dev:cli -- build <name>` — build the current checkout as `homarr:<name>`.
+- `pnpm dev:cli -- build --pr <number>` — build a pull request from a temporary checkout.
+- `pnpm dev:cli -- rebuild <name>` — rebuild an image from its recorded checkout or pull request.
+- `pnpm dev:cli:install` — optionally install the developer CLI as a `homarr` binary.
 - `pnpm dev:docs` — Docusaurus only on port 3003.
 - `pnpm docker:workshop` — local PocketBase through Docker Compose.
+- `pnpm docker:dev:up` — Redis development service in the background.
 - `pnpm cli` — Homarr operations CLI.
 - `pnpm db:migration:sqlite:run` — create or update a SQLite database.
+- `pnpm db:seed` — seed the default database data explicitly.
 - `pnpm db:studio` — inspect the database.
 - `pnpm format` / `pnpm format:fix` — check or apply oxfmt.
 - `pnpm lint` / `pnpm lint:fix` — check or apply oxlint.
@@ -112,3 +124,5 @@ pnpm dev:docs
 - `pnpm test` — unit and contract suites.
 - `pnpm test:workshop` — disposable Workshop integration suite.
 - `pnpm build` — production monorepo build.
+- `docker build -t homarr .` — build a production Docker image.
+- `docker run -p 7575:7575 -e SECRET_ENCRYPTION_KEY='your_64_character_hex_string' homarr:<name>` — run it.

@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Usa le icone per i ping"
       },
+      "enableRightClickOnWidgets": {
+        "label": "Abilita clic destro sui widget",
+        "description": "Mostra il menu contestuale di Homarr quando si fa clic destro su un widget. Disabilita per usare il menu predefinito del browser (es. \"Apri collegamento in una nuova scheda\")."
+      },
       "defaultSearchEngine": {
         "label": "Motore di ricerca predefinito"
       },
@@ -1134,6 +1138,14 @@
           "label": "Chiave API (Secret)",
           "newLabel": "Nuova Chiave API (Secret)"
         },
+        "patchmonApiKey": {
+          "label": "Chiave API",
+          "newLabel": "Nuova chiave API"
+        },
+        "patchmonApiSecret": {
+          "label": "Secret API",
+          "newLabel": "Nuova API Secret"
+        },
         "githubAppId": {
           "label": "Id App",
           "newLabel": "Nuovo Id App"
@@ -1177,9 +1189,21 @@
         }
       }
     },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Cloud-native reverse proxy e bilanciatore del carico"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Sistema di gestione documentale per archiviare e organizzare documenti scansionati"
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Gestione delle patch e monitoraggio per gli host Linux"
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Applicazione complementare a Sonarr e Radarr che gestisce e scarica i sottotitoli"
     }
   },
   "media": {
@@ -1451,6 +1475,12 @@
         "refresh": "Aggiorna",
         "options": "Opzioni",
         "actions": "Azioni"
+      },
+      "status": {
+        "success": "OK",
+        "error": "Errore",
+        "loading": "Caricamento",
+        "idle": "Inattivo"
       }
     },
     "create": {
@@ -1724,6 +1754,16 @@
         "customDateFormat": {
           "label": "Formato data personalizzato",
           "description": "Usa ISO 8601 per formattare la data (questo sovrascriverà altre opzioni)"
+        },
+        "showWeather": {
+          "label": "Mostra meteo",
+          "description": "Mostra una piccola icona animata del meteo e la temperatura nell'angolo della scheda"
+        },
+        "weatherLocation": {
+          "label": "Località meteo"
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": "Usa Fahrenheit"
         }
       }
     },
@@ -1785,6 +1825,8 @@
         "clear": "Rimuovi formattazione",
         "heading": "Intestazione {level}",
         "align": "Allinea testo: {position}",
+        "directionLtr": "Imposta la direzione del testo da sinistra a sinistra",
+        "directionRtl": "Imposta la direzione del testo da destra a destra",
         "blockquote": "Citazione",
         "horizontalLine": "Linea orizzontale",
         "bulletList": "Elenco puntato",
@@ -2074,7 +2116,8 @@
         "sunrise": "Alba",
         "sunset": "Tramonto",
         "maxWindSpeed": "Max velocità vento: {maxWindSpeed} km/h",
-        "maxWindGusts": "Max raffiche di vento: {maxWindGusts} km/h"
+        "maxWindGusts": "Max raffiche di vento: {maxWindGusts} km/h",
+        "humidity": "Umidità: {humidity}%"
       },
       "kind": {
         "clear": "Sereno",
@@ -2234,10 +2277,21 @@
         },
         "descendingDefaultSort": {
           "label": "Inverti ordinamento"
+        },
+        "columnOrder": {
+          "label": "Ordine delle colonne"
+        },
+        "columnWidths": {
+          "label": "Larghezza delle colonne"
         }
       },
       "error": {
-        "internalServerError": "Recupero statistiche container non riuscito"
+        "internalServerError": "Recupero statistiche container non riuscito",
+        "layoutSaveTitle": "Layout della tabella non salvato",
+        "layoutSaveMessage": "Impossibile salvare il layout della tabella Docker. Prova a spostare o ridimensionare nuovamente la colonna."
+      },
+      "empty": {
+        "noContainers": "Nessun container trovato"
       }
     },
     "coolify": {
@@ -2531,13 +2585,33 @@
         "showOnlyPlaying": {
           "label": "Mostra solo attualmente in riproduzione",
           "description": "La disabilitazione non funzionerà per Plex"
+        },
+        "showBitrate": {
+          "label": "Mostra bitrate",
+          "description": "Mostra il bitrate di riproduzione corrente accanto alla posizione"
+        },
+        "showLocation": {
+          "label": "Mostra posizione",
+          "description": "Mostra se lo stream si trova sulla tua LAN o WAN"
         }
+      },
+      "footer": {
+        "streams": "{count, plural, one {# stream attivo} other {# stream attivi}}",
+        "totalBitrate": "Totale: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Attualmente in riproduzione",
         "user": "Utente",
         "name": "Nome",
         "id": "Id",
+        "status": "Stato",
+        "directPlay": "Riproduzione diretta",
+        "directStream": "Streaming diretto",
+        "transcodeVideo": "Transcodifica video",
+        "transcodeAudio": "Transcodifica audio",
+        "transcoding": "Transcodifica",
+        "paused": "In pausa",
+        "remaining": "{minutes} min rimanenti",
         "metadata": {
           "title": "Statistiche per nerd",
           "video": {
@@ -2603,6 +2677,193 @@
         "internalServerError": "Impossibile recuperare i dati di Paperless-ngx"
       }
     },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Panoramica dello stato delle patch host da PatchMon",
+      "title": "Statistiche PatchMon",
+      "totalHosts": "Host Totali",
+      "hostsNeedingUpdates": "Necessita di aggiornamenti",
+      "securityUpdates": "Aggiornamenti di sicurezza",
+      "upToDateHosts": "Host aggiornati",
+      "hostsWithSecurityUpdates": "Host con aggiornamenti di sicurezza",
+      "recentUpdates24h": "Aggiornamenti (24h)",
+      "totalOutdatedPackages": "Pacchetti obsoleti",
+      "totalRepos": "Repository",
+      "osDistribution": "Distribuzione OS",
+      "compliance": "Conformità Patch",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Aggiornato {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Mostra host totali",
+          "description": "Visualizzare il numero totale di host monitorati"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Mostra host che necessitano di aggiornamenti",
+          "description": "Visualizza gli host con almeno un pacchetto obsoleto"
+        },
+        "showSecurityUpdates": {
+          "label": "Mostra aggiornamenti di sicurezza",
+          "description": "Mostra il numero totale di aggiornamenti di sicurezza disponibili"
+        },
+        "showUpToDateHosts": {
+          "label": "Mostra host aggiornati",
+          "description": "Visualizza host con zero pacchetti obsoleti"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Mostra host con aggiornamenti di sicurezza",
+          "description": "Visualizza host che richiedono patch di sicurezza"
+        },
+        "showRecentUpdates24h": {
+          "label": "Mostra aggiornamenti recenti (24h)",
+          "description": "Mostra il numero di aggiornamenti applicati nelle ultime 24 ore"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Mostra pacchetti obsoleti",
+          "description": "Mostra il numero totale di pacchetti obsoleti su tutti gli host"
+        },
+        "showTotalRepos": {
+          "label": "Mostra repository",
+          "description": "Mostra il numero di repository attivi che vengono controllati"
+        },
+        "enableThresholdColors": {
+          "label": "Abilita colori di soglia",
+          "description": "Valori della statistica di colore verde, giallo, o rosso in base alle preimpostazioni di gravità"
+        },
+        "useCustomThresholds": {
+          "label": "Soglie avanzate",
+          "description": "Personalizza gli avvisi e le soglie critiche per stat utilizzando conteggi assoluti o percentuali del totale degli host"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Conteggio assoluto",
+            "percent": "Percentuale degli host totali"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Modalità soglia aggiornamenti richiesti",
+          "description": "Confronta il numero di aggiornamenti richiesti come valore assoluto o percentuale su host totali"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Soglia di avviso aggiornamenti richiesti",
+          "description": "Inserisci il giallo quando il valore raggiunge questa soglia"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Soglia critica aggiornamenti richiesti",
+          "description": "Inserisci il rosso quando il valore raggiunge questa soglia"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Modalità soglia aggiornamenti di sicurezza",
+          "description": "Confronta il valore degli aggiornamenti di sicurezza come valore assoluto o percentuale del totale degli host"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Soglia di avviso aggiornamenti di sicurezza",
+          "description": "Inserisci il giallo quando il valore raggiunge questa soglia"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Soglia critica aggiornamenti di sicurezza",
+          "description": "Inserisci il rosso quando il valore raggiunge questa soglia"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Modalità soglia host con aggiornamenti di sicurezza",
+          "description": "Confronta il numero di host come valore assoluto o percentuale su host totali"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Soglia di avviso host con aggiornamenti di sicurezza",
+          "description": "Inserisci il giallo quando il valore raggiunge questa soglia"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Soglia critica host con aggiornamenti di sicurezza",
+          "description": "Inserisci il rosso quando il valore raggiunge questa soglia"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Modalità soglia host aggiornati",
+          "description": "Confronta il numero di host aggiornati come valore assoluto o percentuale su host totali"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Soglia di avviso host aggiornati",
+          "description": "Inserisci il giallo quando il valore è pari o superiore a questa soglia ma al di sotto della copertura completa"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Soglia critica host aggiornati",
+          "description": "Inserisci rosso quando il valore scende al di sotto di questa soglia"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Modalità soglia pacchetti obsoleti",
+          "description": "Confronta il numero di pacchetti obsoleti come valore assoluto o percentuale sui host totali"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Soglia di avviso pacchetti obsoleti",
+          "description": "Inserisci il giallo quando il valore raggiunge questa soglia"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Soglia critica pacchetti obsoleti",
+          "description": "Inserisci il rosso quando il valore raggiunge questa soglia"
+        },
+        "showOsDistribution": {
+          "label": "Mostra distribuzione OS",
+          "description": "Mostra un dettaglio degli host monitorati per sistema operativo"
+        },
+        "osDistributionLimit": {
+          "label": "Limite distribuzione OS",
+          "description": "Numero massimo di sistemi operativi da visualizzare",
+          "option": {
+            "3": "Top 3",
+            "5": "Top 5",
+            "10": "Top 10",
+            "all": "Tutto"
+          }
+        },
+        "showOsVersion": {
+          "label": "Mostra versione OS",
+          "description": "Aggiungi la versione del sistema operativo a ogni etichetta di distribuzione quando disponibile"
+        },
+        "showComplianceHero": {
+          "label": "Mostra sezione principale conformità",
+          "description": "Mostra un anello di conformità con la percentuale di host aggiornati"
+        },
+        "osDisplayMode": {
+          "label": "Modalità di visualizzazione OS",
+          "description": "Scegli come visualizzare la distribuzione del sistema operativo",
+          "option": {
+            "bars": "Barre orizzontali",
+            "donut": "Grafico a ciambella"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "Impossibile recuperare i dati di PatchMon"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Panoramica dei sottotitoli mancanti e dello stato di salute della tua istanza Bazarr",
+      "episodes": "Episodi Mancanti",
+      "movies": "Film Mancanti",
+      "providers": "Problemi del Provider",
+      "status": "Problemi di stato",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Mostra episodi mancanti",
+          "description": "Mostra il numero di episodi con sottotitoli mancanti"
+        },
+        "showMissingMovies": {
+          "label": "Mostra film mancanti",
+          "description": "Mostra il numero di film con sottotitoli mancanti"
+        },
+        "showProviderIssues": {
+          "label": "Mostra problemi del provider",
+          "description": "Mostra i provider di sottotitoli con problemi"
+        },
+        "showHealthIssues": {
+          "label": "Mostra problemi di stato",
+          "description": "Mostra il numero di problemi di stato di Bazarr"
+        }
+      },
+      "error": {
+        "internalServerError": "Impossibile recuperare i dati Bazarr"
+      }
+    },
     "immich-serverStats": {
       "name": "Statistiche Server Immich",
       "description": "Informazioni sulla tua istanza Immich",
@@ -2631,6 +2892,7 @@
     },
     "immich-albumCarousel": {
       "name": "Album Immich",
+      "allPhotos": "Tutte le foto",
       "option": {
         "albumId": {
           "label": "ID Album",
@@ -2650,7 +2912,6 @@
         }
       },
       "description": "Presentazione delle immagini nel tuo album Immich",
-      "noAlbumSelected": "Nessun album selezionato, modifica il widget e scegli un album",
       "noPhotos": "Nessuna foto in questo album"
     },
     "downloads": {
@@ -2693,11 +2954,20 @@
         "limitPerIntegration": {
           "label": "Limite elementi per integrazione",
           "description": "Ciò limiterà il numero di elementi mostrati per integrazione, non globalmente"
+        },
+        "columnOrder": {
+          "label": "Ordine delle colonne"
+        },
+        "columnWidths": {
+          "label": "Larghezza delle colonne"
         }
       },
       "errors": {
         "noColumns": "Seleziona colonne in elementi",
-        "noCommunications": "Impossibile caricare i dati dall'integrazione"
+        "noCommunications": "Impossibile caricare i dati dall'integrazione",
+        "noItems": "Nessun download trovato",
+        "actionFailed": "Azione non riuscita",
+        "actionFailedMessage": "L'azione non può essere completata. Per favore riprova."
       },
       "items": {
         "actions": {
@@ -2720,7 +2990,8 @@
           "detailsTitle": "Indice corrente all'interno del client"
         },
         "id": {
-          "columnTitle": "Id"
+          "columnTitle": "Id",
+          "detailsTitle": "ID elemento"
         },
         "integration": {
           "columnTitle": "Integrazione"
@@ -2754,7 +3025,8 @@
         },
         "time": {
           "columnTitle": "Ora di fine",
-          "detailsTitle": "Tempo dal/al completamento"
+          "detailsTitle": "Tempo dal/al completamento",
+          "eta": "ETA"
         },
         "type": {
           "columnTitle": "Tipo",
@@ -2798,7 +3070,23 @@
           }
         }
       },
-      "globalRatio": "Rapporto globale"
+      "globalRatio": "Rapporto globale",
+      "contextMenu": {
+        "copyName": "Copia nome",
+        "copyId": "Copia ID",
+        "clearFilters": "Resetta filtri"
+      },
+      "footer": {
+        "filter": "Filtro download"
+      },
+      "stats": {
+        "show": "Mostra statistiche globali",
+        "hide": "Nascondi statistiche globali",
+        "overallProgress": "Avanzamento complessivo della coda",
+        "totalSize": "Dimensione totale della coda",
+        "clients": "{count, plural, one {# cliente} other {# clienti}}"
+      },
+      "disconnected": "(disconnesso)"
     },
     "mediaReleases": {
       "name": "Comunicati stampa",
@@ -2835,6 +3123,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Apri i link in nuova scheda"
+        },
+        "statusFilter": {
+          "label": "Stati da mostrare"
+        },
+        "recentDays": {
+          "label": "Mostra solo le richieste recenti"
         }
       },
       "pending": {
@@ -2941,6 +3235,35 @@
           }
         }
       }
+    },
+    "mediaMissing": {
+      "name": "Contenuti multimediali mancanti & in coda",
+      "description": "Mostra i film e gli episodi mancanti e in coda da Radarr e Sonarr",
+      "option": {
+        "showMissing": {
+          "label": "Mostra elementi mancanti"
+        },
+        "showQueued": {
+          "label": "Mostra elementi in coda"
+        },
+        "pageSize": {
+          "label": "Elementi per pagina"
+        }
+      },
+      "tab": {
+        "missing": "Mancanti",
+        "queued": "In coda"
+      },
+      "type": {
+        "movie": "Film",
+        "episode": "Episodio"
+      },
+      "empty": {
+        "missing": "Nessun elemento mancante",
+        "queued": "Nessun elemento in coda",
+        "noTabsEnabled": "Abilita almeno una scheda nelle impostazioni del widget"
+      },
+      "timeLeft": "Tempo residuo"
     },
     "rssFeed": {
       "name": "Feed RSS",
@@ -3185,7 +3508,11 @@
       "name": "Notifiche",
       "description": "Visualizza la cronologia delle notifiche da un'integrazione",
       "noItems": "Nessuna notifica da visualizzare.",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": "Nascondi loghi"
+        }
+      }
     },
     "speedtestTracker": {
       "name": "SpeedTest Tracker",
@@ -3266,6 +3593,40 @@
         "internalServerError": "Impossibile recuperare i dati di uptime"
       }
     },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Panoramica dei router, dei servizi, dei middleware e dei punti di ingresso di Traefik",
+      "option": {
+        "showTcp": {
+          "label": "Mostrare TCP"
+        },
+        "showUdp": {
+          "label": "Mostra UDP"
+        },
+        "showEntryPoints": {
+          "label": "Mostra punti di accesso"
+        }
+      },
+      "instances": "Istanze di Traefik",
+      "versionUnknown": "Versione sconosciuta",
+      "summary": {
+        "routers": "Routers",
+        "entryPoints": "Punti di accesso"
+      },
+      "resource": {
+        "routers": "Routers",
+        "services": "Servizi",
+        "middlewares": "Middleware"
+      },
+      "status": {
+        "healthy": "Normale funzionamento",
+        "errors": "{count} errori",
+        "warnings": "{count} avvisi"
+      },
+      "error": {
+        "internalServerError": "Recupero dei dati Traefik non riuscito"
+      }
+    },
     "audioStats": {
       "name": "Statistiche audio",
       "description": "Statistiche della libreria e di riproduzione da Navidrome o Audiobookshelf",
@@ -3281,18 +3642,6 @@
         "showSongs": {
           "label": "Mostra brani",
           "description": "Mostra il numero totale di brani nella tua libreria musicale (Navidrome)"
-        },
-        "showNowPlaying": {
-          "label": "Mostra in riproduzione",
-          "description": "Mostra le tracce attualmente in riproduzione (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Mostra elenco in riproduzione",
-          "description": "Mostra le singole tracce invece del solo conteggio degli stream attivi (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Numero massimo elementi in riproduzione",
-          "description": "Numero massimo di tracce da mostrare nell'elenco in riproduzione (Navidrome)"
         },
         "showLibraryCount": {
           "label": "Mostra conteggio librerie",
@@ -3327,8 +3676,6 @@
       "podcasts": "Podcast",
       "listeningTime": "Tempo di Ascolto",
       "activeSessions": "Sessioni Attive",
-      "nowPlaying": "In Riproduzione",
-      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
         "internalServerError": "Impossibile recuperare i dati delle statistiche audio"
       }
@@ -3463,11 +3810,19 @@
         },
         "showAgent": {
           "label": "Mostra versione agente"
+        },
+        "columnOrder": {
+          "label": "Ordine delle colonne"
+        },
+        "columnWidths": {
+          "label": "Larghezza delle colonne"
         }
       },
       "noRecords": "Nessun sistema trovato",
       "error": {
-        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione."
+        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione.",
+        "layoutSaveTitle": "Impossibile salvare il layout della tabella",
+        "layoutSaveMessage": "Impossibile salvare l'ordine o la larghezza delle colonne. Riprova."
       },
       "column": {
         "system": "Sistema",
@@ -3635,6 +3990,11 @@
           "subtitle": "Throughput del filesystem root",
           "read": "Lettura",
           "write": "Scrittura"
+        },
+        "storage": {
+          "title": "Spazio di archiviazione",
+          "subtitle": "Utilizzo del disco per filesystem",
+          "series": "Usato"
         },
         "network": {
           "title": "Larghezza di Banda",
@@ -4769,6 +5129,9 @@
     "title": "Containers",
     "table": {
       "updated": "Aggiornato {when}",
+      "refresh": {
+        "lastUpdated": "Ultimo aggiornamento {when}"
+      },
       "search": "Cerca {count} container",
       "selected": "{selectCount} di {totalCount} containers selezionati",
       "footer": "Totale container {count}",
@@ -4858,6 +5221,7 @@
       },
       "remove": {
         "label": "Rimuovi",
+        "confirm": "Fare clic di nuovo per rimuovere definitivamente",
         "notification": {
           "success": {
             "title": "Containers rimossi",
@@ -5497,6 +5861,14 @@
                 "children": {
                   "detail": {
                     "title": "Usa le icone per i ping"
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
+                "label": "Abilita clic destro sui widget",
+                "children": {
+                  "detail": {
+                    "title": "Abilita clic destro sui widget"
                   }
                 }
               },

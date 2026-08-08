@@ -8,9 +8,9 @@
         "action": {
           "scratch": "Vanaf nul beginnen",
           "importOldmarr": "Importeren uit Homarr vóór 1.0",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Herstellen vanuit SQLite-back-up",
+          "restoreSqliteDescription": "Upload een volledige SQLite-databaseback-up van een vorige Homarr-instantie. Dit zal alle borden, gebruikers, apps, integraties en instellingen herstellen.",
+          "backToOptions": "← Terug naar installatie-opties"
         }
       },
       "import": {
@@ -94,45 +94,45 @@
         "subtitle": "Serverinstellingen configureren."
       },
       "integrations": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Integraties",
+        "subtitle": "Selecteer de services die je gebruikt.",
+        "description": "Kies de integraties die je wilt verbinden. We stellen je dashboard in met bijbehorende widgets.",
         "action": {
-          "continue": "",
-          "skip": ""
+          "continue": "Doorgaan",
+          "skip": "Overslaan voor nu"
         },
         "configure": {
-          "progress": "",
-          "skip": "",
-          "finishing": "",
+          "progress": "{current} van {total}",
+          "skip": "Deze integratie overslaan",
+          "finishing": "Je dashboard instellen...",
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Instellen mislukt",
+            "message": "Er is iets misgegaan bij het instellen van je dashboard. Probeer het opnieuw."
           },
           "helpers": {
-            "tooltip": "",
-            "description": ""
+            "tooltip": "URL-helpers",
+            "description": "Deze helpers proberen de URL voor je services te raden. Als het niet werkt, typ dan handmatig het adres."
           }
         },
         "urlTemplate": {
-          "label": "",
-          "placeholder": "",
-          "hint": "",
-          "warning": "",
-          "preview": "",
+          "label": "Basis-URL",
+          "placeholder": "homelab.local of 192.168.1.1",
+          "hint": "Voer je basisdomein of IP in om integratie-URL's automatisch in te vullen",
+          "warning": "Door nu je basis-URL in te stellen worden alle integratie-URL's automatisch ingevuld, wat je tijd bespaart tijdens de installatie",
+          "preview": "bijv. {example}",
           "mode": {
-            "subdomain": "",
-            "hostPort": ""
+            "subdomain": "Subdomein",
+            "hostPort": "Host:Poort"
           }
         },
         "docker": {
-          "detected": "",
-          "detectedBreakdown": "",
-          "summary": "",
-          "appBadge": "",
-          "appSectionLabel": "",
-          "scanning": "",
-          "scanningDescription": ""
+          "detected": "Docker heeft {count} services gedetecteerd",
+          "detectedBreakdown": "{integrations} integraties · {apps} apps",
+          "summary": "Homarr heeft {apps} apps gedetecteerd, waarvan {integrations} ingebouwde integraties hebben",
+          "appBadge": "App",
+          "appSectionLabel": "Apps om aan dashboard toe te voegen ({count} geselecteerd)",
+          "scanning": "Docker scannen...",
+          "scanningDescription": "Zoeken naar actieve containers op je systeem"
         }
       },
       "finish": {
@@ -177,7 +177,7 @@
       },
       "password": {
         "label": "Wachtwoord",
-        "suggestionsTitle": "",
+        "suggestionsTitle": "Wachtwoordsuggesties",
         "suggestion": {
           "length": "Bevat ten minste 8 tekens",
           "lowercase": "Inclusief kleine letter",
@@ -198,6 +198,10 @@
       "pingIconsEnabled": {
         "label": "Gebruik iconen voor pings"
       },
+      "enableRightClickOnWidgets": {
+        "label": "",
+        "description": ""
+      },
       "defaultSearchEngine": {
         "label": "Standaard zoekmachine"
       },
@@ -205,7 +209,7 @@
         "label": "Zoekresultaten openen in nieuw tabblad"
       },
       "ddgBangs": {
-        "label": ""
+        "label": "DuckDuckGo bangs inschakelen"
       }
     },
     "error": {
@@ -298,10 +302,10 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "DuckDuckGo bangs succesvol omgeschakeld"
           },
           "error": {
-            "message": ""
+            "message": "Kan DuckDuckGo bangs niet omschakelen"
           }
         }
       },
@@ -778,47 +782,47 @@
         "placeholder": "Aangepaste app-URL"
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "API-sleutel ophalen"
       }
     },
     "action": {
       "create": "Nieuwe integratie"
     },
     "grid": {
-      "widgetCount": "",
-      "noWidgets": "",
-      "detected": ""
+      "widgetCount": "{count} widgets",
+      "noWidgets": "Geen widgets",
+      "detected": "Gedetecteerd via Docker"
     },
     "category": {
-      "dnsHole": "",
-      "mediaService": "",
-      "calendar": "",
-      "mediaSearch": "",
-      "mediaRelease": "",
-      "mediaRequest": "",
-      "downloadClient": "",
-      "usenet": "",
-      "torrent": "",
-      "miscellaneous": "",
-      "smartHomeServer": "",
-      "indexerManager": "",
-      "healthMonitoring": "",
-      "search": "",
-      "mediaTranscoding": "",
-      "networkController": "",
-      "releasesProvider": "",
-      "notifications": "",
-      "firewall": "",
-      "timetable": "",
-      "photoService": "",
-      "documents": "",
-      "notes": "",
-      "mediaMonitoring": "",
-      "speedtest": "",
-      "analytics": "",
+      "dnsHole": "DNS",
+      "mediaService": "Media",
+      "calendar": "Kalender",
+      "mediaSearch": "Zoeken",
+      "mediaRelease": "Uitgaven",
+      "mediaRequest": "Aanvragen",
+      "downloadClient": "Downloads",
+      "usenet": "Usenet",
+      "torrent": "Torrent",
+      "miscellaneous": "Diversen",
+      "smartHomeServer": "Smart Home",
+      "indexerManager": "Indexeerder",
+      "healthMonitoring": "Gezondheid",
+      "search": "Zoeken",
+      "mediaTranscoding": "Transcodering",
+      "networkController": "Netwerk",
+      "releasesProvider": "Uitgaven",
+      "notifications": "Meldingen",
+      "firewall": "Firewall",
+      "timetable": "Rooster",
+      "photoService": "Foto's",
+      "documents": "Documenten",
+      "notes": "Notities",
+      "mediaMonitoring": "Monitoring",
+      "speedtest": "Snelheidstest",
+      "analytics": "Analytics",
       "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "mediaLibrary": "Mediabibliotheek",
+      "uptimeMonitoring": "Uptime-monitoring"
     },
     "testConnection": {
       "action": {
@@ -867,15 +871,15 @@
           "alert": {
             "permission": {
               "title": "Onvoldoende rechten",
-              "message": ""
+              "message": "Je bent niet gemachtigd om certificaten te vertrouwen of te uploaden. Neem contact op met de beheerder om het vereiste rootcertificaat te uploaden."
             },
             "hostnameMismatch": {
               "title": "Hostnaam komt niet overeen",
-              "message": ""
+              "message": "De hostnaam in het certificaat komt niet overeen met de hostnaam waarmee je verbinding maakt. Dit kan duiden op een beveiligingsrisico, maar je kunt er nog steeds voor kiezen dit certificaat te vertrouwen."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "Extraheren van CA-certificaat mislukt",
+              "message": "Alleen zelfondertekende certificaten zonder keten kunnen automatisch worden opgehaald. Als je een zelfondertekend certificaat gebruikt, zorg er dan voor dat je het CA-certificaat handmatig uploadt. Instructies hiervoor vind je <docsLink></docsLink>."
             }
           },
           "action": {
@@ -891,39 +895,39 @@
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Hostnaam-mismatch vertrouwen",
+              "message": "Weet je zeker dat je het certificaat met een hostnaam-mismatch wilt vertrouwen?"
             },
             "notification": {
               "success": {
                 "title": "Vertrouwd certificaat",
-                "message": ""
+                "message": "Hostnaam toegevoegd aan lijst met vertrouwde certificaten"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Vertrouwen certificaat mislukt",
+                "message": "Het certificaat met een hostnaam-mismatch kon niet worden vertrouwd"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
+              "title": "Zelfondertekend certificaat vertrouwen",
               "message": "Weet je zeker dat je dit zelfondertekende certificaat wilt vertrouwen?"
             },
             "notification": {
               "success": {
                 "title": "Vertrouwd certificaat",
-                "message": ""
+                "message": "Certificaat toegevoegd aan lijst met vertrouwde certificaten"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Vertrouwen certificaat mislukt",
+                "message": "Certificaat toevoegen aan lijst met vertrouwde certificaten mislukt"
               }
             }
           },
           "details": {
             "title": "Details",
-            "description": "",
+            "description": "Controleer de certificaatinformatie voordat je besluit het te vertrouwen.",
             "content": {
               "action": "Inhoud weergeven",
               "title": "PEM-certificaat"
@@ -934,19 +938,19 @@
           "title": "Aanvraag fout",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "De server kon niet worden bereikt. Dit betekent meestal dat de host offline is of niet bereikbaar is vanuit je netwerk.",
+              "networkUnreachable": "Het netwerk is niet bereikbaar. Controleer je internetverbinding of netwerkconfiguratie.",
+              "refused": "De server weigerde de verbinding. Mogelijk is deze niet actief of weigert deze verzoeken op de opgegeven poort.",
+              "reset": "De verbinding werd onverwacht gesloten door de server. Dit kan gebeuren als de server instabiel is of opnieuw is opgestart."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "Het serveradres kon niet worden gevonden. Controleer de URL op typefouten of ongeldige domeinnamen.",
+              "timeout": "DNS-zoekopdracht time-out. Dit kan een tijdelijk probleem zijn – probeer het over enkele ogenblikken opnieuw.",
+              "noAnswer": "De DNS-server heeft geen geldig antwoord geretourneerd. Het domein bestaat mogelijk maar heeft geen geldige records."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "Het verzoek is afgebroken voordat het kon worden voltooid. Dit kan komen door een gebruikersactie of een systeemtime-out.",
+              "timeout": "Het verzoek duurde te lang om te voltooien en kreeg een time-out. Controleer je netwerk of probeer het later opnieuw."
             }
           }
         }
@@ -1080,6 +1084,14 @@
           "label": "API-sleutel (geheim)",
           "newLabel": "Nieuwe API-sleutel (geheim)"
         },
+        "patchmonApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "patchmonApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
         "githubAppId": {
           "label": "App ID",
           "newLabel": "Nieuwe App ID"
@@ -1093,8 +1105,8 @@
           "newLabel": "Nieuwe privésleutel"
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Slug van statuspagina",
+          "newLabel": "Nieuwe slug van statuspagina"
         }
       }
     },
@@ -1104,26 +1116,38 @@
       "full": "Volledige integratietoegang"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Audiobookshelf",
+      "description": "Self-hosted audioboek- en podcastserver"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Self-hosted muziekstreamingserver met Subsonic API-compatibiliteit"
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Self-hosted uptime-monitoring met openbare statuspagina's",
       "secret": {
         "slug": {
-          "description": ""
+          "description": "De slug van je openbare statuspagina. Standaard 'default' indien niet ingesteld."
         },
         "apiKey": {
-          "description": ""
+          "description": "Optionele API-sleutel voor geauthenticeerde /metrics-toegang"
         }
       }
     },
+    "traefik": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
+      "name": "Paperless-ngx",
+      "description": "Documentbeheersysteem voor het archiveren en organiseren van gescande documenten"
+    },
+    "patchmon": {
+      "name": "",
+      "description": ""
+    },
+    "bazarr": {
       "name": "",
       "description": ""
     }
@@ -1169,7 +1193,7 @@
       }
     },
     "noResults": {
-      "title": ""
+      "title": "Geen media geüpload"
     }
   },
   "common": {
@@ -1180,7 +1204,7 @@
       "add": "Toevoegen",
       "apply": "Toepassen",
       "backToOverview": "Terug naar overzicht",
-      "skip": "",
+      "skip": "Overslaan",
       "change": "Wijzigen",
       "create": "Aanmaken",
       "createAnother": "Aanmaken en opnieuw beginnen",
@@ -1202,8 +1226,8 @@
       "checkLogs": "Controleer logs voor meer details",
       "tryAgain": "Probeer opnieuw",
       "loading": "Laden",
-      "show": "",
-      "hide": ""
+      "show": "Weergeven",
+      "hide": "Verbergen"
     },
     "here": "hier",
     "iconPicker": {
@@ -1215,7 +1239,7 @@
     },
     "colorScheme": {
       "options": {
-        "auto": "",
+        "auto": "Auto",
         "light": "Licht",
         "dark": "Donker"
       }
@@ -1275,9 +1299,9 @@
     "dangerZone": "Gevarenzone",
     "noResults": "Geen resultaten gevonden",
     "unsavedChanges": "Er zijn niet-opgeslagen wijzigingen!",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "servers": "Servers",
+    "applications": "Apps",
+    "services": "Diensten",
     "preview": {
       "show": "Voorbeeld weergeven",
       "hide": "Voorbeeld verbergen"
@@ -1373,7 +1397,7 @@
         "label": {
           "create": "Nieuwe categorie",
           "changePosition": "Positie wijzigen",
-          "settings": ""
+          "settings": "Instellingen"
         }
       },
       "openAllInNewTabs": {
@@ -1397,6 +1421,12 @@
         "refresh": "",
         "options": "",
         "actions": ""
+      },
+      "status": {
+        "success": "",
+        "error": "",
+        "loading": "",
+        "idle": ""
       }
     },
     "create": {
@@ -1424,11 +1454,11 @@
     "edit": {
       "title": "Item bewerken",
       "tab": {
-        "widget": "",
-        "app": ""
+        "widget": "Widget bewerken",
+        "app": "App bewerken"
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Wijzigingen aan deze app worden overal toegepast waar deze wordt gebruikt op alle dashboards."
       },
       "advancedOptions": {
         "label": "Geavanceerde opties",
@@ -1489,7 +1519,7 @@
         },
         "descriptionDisplayMode": {
           "label": "Beschrijving weergavemodus",
-          "description": "",
+          "description": "Kies hoe de app-beschrijving moet worden weergegeven",
           "option": {
             "normal": "Binnen widget",
             "tooltip": "Als tooltip",
@@ -1541,7 +1571,7 @@
           "label": "In nieuw tabblad openen"
         },
         "withBorder": {
-          "label": ""
+          "label": "Rand weergeven"
         },
         "items": {
           "label": "Bladwijzers",
@@ -1670,6 +1700,16 @@
         "customDateFormat": {
           "label": "Aangepast datumformaat",
           "description": "Gebruik ISO 8601 om datum op te maken (dit overschrijft andere opties)"
+        },
+        "showWeather": {
+          "label": "",
+          "description": ""
+        },
+        "weatherLocation": {
+          "label": ""
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": ""
         }
       }
     },
@@ -1693,16 +1733,16 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Dienstregeling",
+      "description": "Toont vertrektijden voor een station",
+      "title": "Vertrekken {station}",
+      "noStation": "Geen station geselecteerd",
       "option": {
         "baseUrl": {
           "label": ""
         },
         "station": {
-          "label": ""
+          "label": "Station"
         }
       }
     },
@@ -1731,6 +1771,8 @@
         "clear": "Opmaak wissen",
         "heading": "Koptekst {level}",
         "align": "Tekst uitlijnen: {position}",
+        "directionLtr": "",
+        "directionRtl": "",
         "blockquote": "Blokquote",
         "horizontalLine": "Horizontale lijn",
         "bulletList": "Opsommingslijst",
@@ -1766,10 +1808,10 @@
         "width": "Breedte",
         "height": "Hoogte"
       },
-      "placeholder": "",
+      "placeholder": "Begin met het schrijven van je notities",
       "dismiss": {
         "title": "Wijzigingen weggooien?",
-        "message": "",
+        "message": "Je hebt niet-opgeslagen wijzigingen in je notitieblok. Weet je zeker dat je ze wilt verwijderen?",
         "action": {
           "discard": "Aanpassingen weggooien",
           "keepEditing": "Blijven bewerken"
@@ -1777,32 +1819,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Ankernotitie",
+      "description": "Toont een geselecteerde notitie van Anchor",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Notitie"
         },
         "showTitle": {
-          "label": ""
+          "label": "Titel weergeven"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Laatst bijgewerkt weergeven"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Selecteer een notitie om weer te geven",
+      "emptyContent": "Deze notitie heeft geen inhoud",
+      "notFound": "Notitie niet gevonden",
+      "noNotes": "Geen notities gevonden",
+      "integrationRequired": "Selecteer eerst een Anchor-integratie",
+      "updatedAt": "{date} bijgewerkt",
+      "untitled": "Naamloos",
+      "edit": "Bewerken",
+      "save": "Opslaan",
+      "cancel": "Annuleren",
+      "readOnlyViewer": "Je hebt kijktoegang tot deze notitie. Bewerken is uitgeschakeld.",
+      "saveForbidden": "Je hebt geen toestemming om deze notitie te bewerken.",
+      "saveFailed": "Opslaan van deze notitie mislukt. Probeer het opnieuw."
     },
     "iframe": {
       "name": "iFrame",
@@ -1836,7 +1878,7 @@
           "label": "Geolocatie toestaan"
         },
         "allowModals": {
-          "label": ""
+          "label": "Modals toestaan"
         }
       },
       "error": {
@@ -2020,7 +2062,8 @@
         "sunrise": "Zonsopgang",
         "sunset": "Zonsondergang",
         "maxWindSpeed": "Max. windsnelheid: {maxWindSpeed} {unit}",
-        "maxWindGusts": "Max. windstoten: {maxWindGusts} {unit}"
+        "maxWindGusts": "Max. windstoten: {maxWindGusts} {unit}",
+        "humidity": ""
       },
       "kind": {
         "clear": "Wissen",
@@ -2071,7 +2114,7 @@
           "label": "Werkgeheugen info weergeven"
         },
         "gpu": {
-          "label": ""
+          "label": "GPU-info weergeven"
         },
         "showUptime": {
           "label": "Uptime weergeven"
@@ -2161,62 +2204,73 @@
     },
     "dockerContainers": {
       "name": "Docker statistieken",
-      "description": "",
+      "description": "Statistieken van je containers (deze widget kan alleen worden toegevoegd met beheerdersrechten)",
       "option": {
         "columns": {
           "label": ""
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Items sorteren inschakelen"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Kolom die standaard wordt gebruikt voor sorteren",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Naam",
+            "state": "Status",
+            "cpuUsage": "CPU-gebruik",
+            "memoryUsage": "Geheugengebruik"
           }
         },
         "descendingDefaultSort": {
+          "label": "Sorteren omkeren"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
           "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Ophalen van containerstatistieken mislukt",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Overzicht van je Coolify-instantie met servers en applicaties",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Servers weergeven"
         },
         "showApplications": {
-          "label": ""
+          "label": "Applicaties weergeven"
         },
         "showServices": {
-          "label": ""
+          "label": "Diensten weergeven"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "Geen servers gevonden",
+        "applications": "Geen applicaties gevonden",
+        "services": "Geen diensten gevonden"
       },
       "footer": {
-        "updated": ""
+        "updated": "{when} bijgewerkt"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Geen Coolify-integratie geconfigureerd",
+        "internalServerError": "Ophalen van Coolify-gegevens mislukt"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Build"
       },
       "instances": {
-        "title": ""
+        "title": "Instanties"
       }
     },
     "vpn": {
@@ -2226,187 +2280,187 @@
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Bewaak de status van je UPS-apparaten via een NUT-server",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Batterij weergeven"
         },
         "showLoad": {
-          "label": ""
+          "label": "Belasting weergeven"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Spanning weergeven"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "Online",
+        "onBattery": "Op batterij",
+        "lowBattery": "Lage batterij",
+        "charging": "Opladen",
+        "unknown": "Onbekend"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Looptijd",
+        "load": "Belasting",
+        "input": "Invoer",
+        "output": "Uitvoer"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Ophalen van UPS-gegevens mislukt"
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Verbeterde mediaservermonitoring met gedetailleerde stream- en transcoderingsgegevens",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Actieve streams weergeven"
         },
         "showStats": {
-          "label": ""
+          "label": "Statistiekenoverzicht weergeven"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Recente activiteit weergeven"
         },
         "showViolations": {
-          "label": ""
+          "label": "Overtredingen weergeven"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Actieve streams",
+        "totalUsers": "Totaal gebruikers",
+        "transcodes": "Transcodes",
+        "bandwidth": "Bandbreedte"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Geen actieve streams",
+        "user": "Gebruiker",
+        "media": "Media",
+        "state": "Status",
+        "quality": "Kwaliteit",
+        "device": "Apparaat",
+        "progress": "Voortgang",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Direct Play",
+          "transcode": "Transcoderen",
+          "directStream": "Direct Stream"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Recente activiteit",
+        "empty": "Geen recente activiteit",
+        "watched": "Bekeken",
+        "partial": "Gedeeltelijk"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Overtredingen",
+        "empty": "Geen recente overtredingen",
+        "rule": "Regel",
+        "user": "Gebruiker"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Geen secties ingeschakeld",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Geen Tracearr-integratie geconfigureerd",
+        "internalServerError": "Ophalen van Tracearr-gegevens mislukt"
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami Analytics",
+      "description": "Toon bezoekersstatistieken van je Umami analytics-instantie",
+      "visitors": "bezoekers",
+      "active": "actief",
+      "pageviews": "paginaweergaven",
+      "visits": "bezoeken",
+      "bounceRate": "bounce",
+      "avgDuration": "gem",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Website",
+          "description": "Selecteer een website die door je Umami-instantie wordt bijgehouden",
+          "placeholder": "Selecteer een website",
+          "loading": "Websites laden...",
+          "noWebsites": "Geen websites gevonden",
+          "configureIntegrationFirst": "Verbind eerst een Umami-integratie"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Tijdsbestek",
+          "description": "De periode om bezoekersgegevens voor weer te geven",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "today": "Vandaag",
+            "24h": "Laatste 24 uur",
+            "7d": "Laatste 7 dagen",
+            "30d": "Laatste 30 dagen",
+            "month": "Deze maand",
+            "lastMonth": "Vorige maand"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Gebeurtenis",
+          "description": "Toon totaal aantal voorkomens van een specifieke gebeurtenis",
+          "placeholder": "Selecteer een gebeurtenis",
+          "loading": "Gebeurtenissen laden...",
+          "noEvents": "Geen gebeurtenissen gevonden",
+          "none": "Geen gebeurtenis",
+          "configureWebsiteFirst": "Selecteer eerst een website om gebeurtenissen te laden"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Grafiektype",
+          "description": "Weergavestijl voor de grafiek",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Staafdiagram",
+            "sparkline": "Sparkline"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Grafiekstijl",
+          "description": "Hoe de gebeurtenisreeks in de grafiek moet worden weergegeven",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Naast elkaar",
+            "overlay": "Overlay (subset)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Weergave",
+          "description": "Wat moet worden weergegeven in de widgetbody",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Grafiek",
+            "events": "Gebeurtenisgrafiek",
+            "topPages": "Top pagina's",
+            "topReferrers": "Top verwijzers"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Gebeurtenissen",
+          "description": "Selecteer een of meer gebeurtenissen om in een grafiek weer te geven",
+          "placeholder": "Selecteer gebeurtenissen...",
+          "loading": "Gebeurtenissen laden...",
+          "noEvents": "Geen gebeurtenissen gevonden",
+          "configureWebsiteFirst": "Selecteer eerst een website om gebeurtenissen te laden"
         },
         "topCount": {
-          "label": "",
-          "description": ""
+          "label": "Te tonen items",
+          "description": "Aantal topitems om weer te geven (max 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "gebeurtenissen",
+        "label": "gebeurtenissen"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Direct"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Direct"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Selecteer gebeurtenissen om in een grafiek weer te geven"
       },
       "error": {
-        "noIntegration": "",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noIntegration": "Geen Umami integratie geconfigureerd",
+        "noWebsite": "Geen website geconfigureerd",
+        "noData": "Geen gegevens beschikbaar",
+        "internalServerError": "Ophalen van Umami gegevens mislukt"
       }
     },
     "common": {
@@ -2476,14 +2530,34 @@
       "option": {
         "showOnlyPlaying": {
           "label": "Alleen huidig spelende weergeven",
+          "description": "Dit uitschakelen werkt niet voor Plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
           "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "Momenteel aan het afspelen",
         "user": "Gebruiker",
         "name": "Naam",
         "id": "Id",
+        "status": "",
+        "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
+        "transcoding": "",
+        "paused": "",
+        "remaining": "",
         "metadata": {
           "title": "Statistieken voor nerds",
           "video": {
@@ -2505,42 +2579,229 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "name": "Paperless-ngx",
+      "description": "Overzicht van je Paperless-ngx documentenarchief",
+      "documentsTotal": "Totaal documenten",
+      "documentsInbox": "Inbox",
+      "correspondents": "Correspondenten",
+      "tags": "Tags",
+      "documentTypes": "Documenttypes",
+      "inboxRatio": "Inbox-verhouding",
+      "inbox": "inbox",
+      "total": "totaal",
       "option": {
         "showInboxRatio": {
-          "label": "",
-          "description": ""
+          "label": "Toon inbox-verhouding",
+          "description": "Toon de verhouding inbox-tot-totaal aantal documenten in het hero-gedeelte"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Toon inbox-ring",
+          "description": "Toon een voortgangsring naast de inbox-verhouding"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Toon totaal documenten",
+          "description": "Toon het totale aantal documenten in je archief"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Toon inhoud inbox",
+          "description": "Toon het aantal onverwerkte documenten in de inbox"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Toon correspondenten",
+          "description": "Toon het totale aantal correspondenten"
         },
         "showTags": {
+          "label": "Toon tags",
+          "description": "Toon het totale aantal tags"
+        },
+        "showDocumentTypes": {
+          "label": "Toon documenttypes",
+          "description": "Toon het totale aantal documenttypes"
+        }
+      },
+      "error": {
+        "internalServerError": "Ophalen van Paperless-ngx gegevens mislukt"
+      }
+    },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
           "label": "",
           "description": ""
         },
-        "showDocumentTypes": {
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
           "label": "",
           "description": ""
         }
@@ -2550,45 +2811,46 @@
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Immich Serverstatistieken",
+      "description": "Informatie over je Immich-instantie",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "Gebruikers weergeven",
+          "description": "Aantal gebruikers op je instantie weergeven"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Foto's weergeven",
+          "description": "Aantal foto's op je instantie weergeven"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Video's weergeven",
+          "description": "Aantal video's op je instantie weergeven"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Opslag weergeven",
+          "description": "Totale gebruikte opslaghoeveelheid weergeven"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Gebruikers",
+      "photos": "Foto's",
+      "videos": "Video's",
+      "storage": "Gebruikte opslag"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Immich Album",
+      "allPhotos": "",
       "option": {
         "albumId": {
           "label": "",
           "description": ""
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Interval in seconden",
+          "description": "Draai elke X seconden tussen de foto's in het album. Moet minimaal 1 zijn en minder dan 3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Foto-info weergeven",
+          "description": "Datum van de foto en de huidige index onderaan de diavoorstelling weergeven"
         },
         "randomizePhotos": {
           "label": "",
@@ -2596,7 +2858,6 @@
         }
       },
       "description": "",
-      "noAlbumSelected": "",
       "noPhotos": ""
     },
     "downloads": {
@@ -2638,12 +2899,21 @@
         },
         "limitPerIntegration": {
           "label": "Beperk items per integratie",
-          "description": ""
+          "description": "Hiermee wordt het aantal items dat per integratie wordt getoond beperkt, niet globaal"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Kolommen selecteren in items",
-        "noCommunications": "Kan geen gegevens laden van integratie"
+        "noCommunications": "Kan geen gegevens laden van integratie",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -2666,7 +2936,8 @@
           "detailsTitle": "Huidige index binnen client"
         },
         "id": {
-          "columnTitle": "ID"
+          "columnTitle": "ID",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integratie"
@@ -2700,7 +2971,8 @@
         },
         "time": {
           "columnTitle": "Eindtijd",
-          "detailsTitle": "Tijd sinds/tot voltooiing"
+          "detailsTitle": "Tijd sinds/tot voltooiing",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Type",
@@ -2744,11 +3016,27 @@
           }
         }
       },
-      "globalRatio": "Globale verhouding"
+      "globalRatio": "Globale verhouding",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "Media uitgaves",
-      "description": "",
+      "description": "Nieuw toegevoegde media of aankomende releases van verschillende integraties weergeven",
       "option": {
         "layout": {
           "label": "Lay-out",
@@ -2781,6 +3069,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Links in nieuw tabblad openen"
+        },
+        "statusFilter": {
+          "label": ""
+        },
+        "recentDays": {
+          "label": ""
         }
       },
       "pending": {
@@ -2888,6 +3182,35 @@
         }
       }
     },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
+    },
     "rssFeed": {
       "name": "RSS-feeds",
       "description": "Eén of meer algemene RSS-, ATOM- of JSON-feeds monitoren en weergeven",
@@ -2908,21 +3231,21 @@
           "label": "Beschrijving verbergen"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Posterafbeelding weergeven"
         }
       }
     },
     "releases": {
       "name": "Uitgaves",
-      "description": "",
+      "description": "Toont een lijst met de huidige versie van de opgegeven repositories met de opgegeven versie-regex.",
       "option": {
         "newReleaseWithin": {
           "label": "Nieuwe uitgave binnen",
-          "description": ""
+          "description": "Gebruiksvoorbeeld: 1w (1 week), 10M (10 maanden). Geaccepteerde eenheidstypen: h (uren), d (dagen), w (weken), M (maanden), y (jaren). Laat leeg om nieuwe uitgaven niet te markeren."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Verouderde uitgave binnen",
+          "description": "Gebruiksvoorbeeld: 1w (1 week), 10M (10 maanden). Geaccepteerde eenheidstypen: h (uren), d (dagen), w (weken), M (maanden), y (jaren). Laat leeg om verouderde uitgaven niet te markeren."
         },
         "showOnlyHighlighted": {
           "label": "Alleen gemarkeerde weergeven",
@@ -2936,7 +3259,7 @@
         },
         "topReleases": {
           "label": "Top uitgaven",
-          "description": ""
+          "description": "Het maximale aantal nieuwste uitgaven om te tonen. Nul betekent geen limiet."
         },
         "repositories": {
           "label": "Repositories",
@@ -2950,7 +3273,7 @@
             "listFoundImages": "Lijst van gevonden afbeeldingen",
             "listAlreadyImportedImages": "Lijst van reeds geïmporteerde afbeeldingen",
             "allImagesAlreadyImported": "Alle afbeeldingen al geïmporteerd",
-            "onlyAdminCanImport": "",
+            "onlyAdminCanImport": "Alleen beheerders kunnen importeren vanuit Docker",
             "selectAll": "Alles selecteren",
             "deselectAll": "Alles deselecteren"
           },
@@ -3003,10 +3326,10 @@
           "example": {
             "label": "Voorbeeld"
           },
-          "invalid": "",
+          "invalid": "Ongeldige repository-definitie, controleer de waarden",
           "noProvider": {
             "label": "Geen aanbieder",
-            "tooltip": ""
+            "tooltip": "De provider kon niet worden geparsed, stel deze handmatig in na het importeren van de afbeeldingen"
           },
           "tokens": {
             "label": "",
@@ -3129,55 +3452,59 @@
     },
     "notifications": {
       "name": "Meldingen",
-      "description": "",
+      "description": "Toon meldingsgeschiedenis van een integratie",
       "noItems": "Geen meldingen om weer te geven.",
-      "option": {}
-    },
-    "speedtestTracker": {
-      "name": "",
-      "description": "",
       "option": {
-        "showLatestResult": {
-          "label": ""
-        },
-        "showStats": {
-          "label": ""
-        },
-        "showRecentResults": {
-          "label": ""
-        },
-        "showPingGraph": {
+        "hideLogos": {
           "label": ""
         }
+      }
+    },
+    "speedtestTracker": {
+      "name": "Speedtest Tracker",
+      "description": "Toont snelheidstestresultaten van je Speedtest Tracker-instantie.",
+      "option": {
+        "showLatestResult": {
+          "label": "Laatste resultaat weergeven"
+        },
+        "showStats": {
+          "label": "Gemiddelden weergeven"
+        },
+        "showRecentResults": {
+          "label": "Recente resultaten weergeven"
+        },
+        "showPingGraph": {
+          "label": "Ping-grafiek weergeven"
+        }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Laatste resultaat",
+      "averages": "Gemiddelden",
+      "tests": "{count} tests",
+      "recentResults": "Recente resultaten",
+      "recentResultsSpeed": "Snelheid",
+      "recentResultsPing": "Ping",
+      "download": "Download",
+      "upload": "Upload",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Gem. Download",
+      "avgUpload": "Gem. Upload",
+      "avgPing": "Gem. Ping",
+      "healthy": "Gezond",
+      "unhealthy": "Niet-gezond",
+      "ok": "OK",
+      "fail": "Mislukt",
+      "noSectionsEnabled": "Schakel ten minste één sectie in de widgetopties in.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Ophalen van speedtestgegevens mislukt"
       }
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Bewaak uptime-statistieken van je Uptime Kuma statuspagina",
       "option": {
         "showAverageUptime": {
-          "label": "",
+          "label": "Toon gemiddelde uptime",
           "description": ""
         },
         "showUptimeRing": {
@@ -3212,6 +3539,40 @@
         "internalServerError": ""
       }
     },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "audioStats": {
       "name": "",
       "description": "",
@@ -3225,18 +3586,6 @@
           "description": ""
         },
         "showSongs": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
           "label": "",
           "description": ""
         },
@@ -3273,8 +3622,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3292,7 +3639,7 @@
           "option": {
             "cpu": "Processor",
             "memory": "Geheugen",
-            "gpu": "",
+            "gpu": "GPU",
             "network": "Netwerk"
           }
         },
@@ -3309,35 +3656,35 @@
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
-        "gpu": "",
+        "gpu": "GPU",
         "network": "NET",
         "up": "OMHOOG",
         "down": "OMLAAG"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Systeemschijven",
+      "description": "Schijfgebruik van je systeem",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Temperatuur weergeven indien beschikbaar"
         },
         "displayMode": {
-          "label": "",
+          "label": "Weergavemodus",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Percentage (bijv. 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Absolute waarden (bijv. 800GB / 1TB)"
             },
             "free": {
-              "label": ""
+              "label": "Vrije ruimte percentage (bijv. 24% vrij)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Gebruiksbalk op achtergrond weergeven"
         },
         "visibleStorageVolumes": {
           "label": "",
@@ -3346,114 +3693,122 @@
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Niet-gezond"
       }
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Beszel-systemen (tabel)",
+      "description": "Tabelweergave van alle door Beszel bewaakte systemen met sorteerbare kolommen en statusindicatoren",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Statusfilter"
         },
         "sortBy": {
-          "label": ""
+          "label": "Sorteer op"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Sorteerrichting"
         },
         "showCpu": {
-          "label": ""
+          "label": "Toon CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Toon geheugen"
         },
         "showDisk": {
-          "label": ""
+          "label": "Toon schijf"
         },
         "showGpu": {
-          "label": ""
+          "label": "Toon GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Toon gemiddelde belasting"
         },
         "showNet": {
-          "label": ""
+          "label": "Toon netwerk"
         },
         "showTemp": {
-          "label": ""
+          "label": "Toon temperatuur"
         },
         "showBattery": {
-          "label": ""
+          "label": "Toon batterij"
         },
         "showServices": {
-          "label": ""
+          "label": "Toon services"
         },
         "showUptime": {
-          "label": ""
+          "label": "Toon uptime"
         },
         "showAgent": {
+          "label": "Toon agentversie"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
           "label": ""
         }
       },
-      "noRecords": "",
+      "noRecords": "Geen systemen gevonden",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "Systeem",
+        "cpu": "CPU",
+        "memory": "Geheugen",
+        "disk": "Schijf",
+        "gpu": "GPU",
+        "loadAvg": "Gem. belasting",
+        "net": "Net",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Diensten",
+        "uptime": "Uptime",
+        "agent": "Agent"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
-      "description": "",
+      "name": "Beszel-systemen (raster)",
+      "description": "Kaartrasterweergave van alle door Beszel bewaakte systemen met realtime metingen",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Statusfilter"
         },
         "showCpu": {
-          "label": ""
+          "label": "Toon CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Toon geheugen"
         },
         "showDisk": {
-          "label": ""
+          "label": "Toon schijf"
         },
         "showGpu": {
-          "label": ""
+          "label": "Toon GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Toon gemiddelde belasting"
         },
         "showNet": {
-          "label": ""
+          "label": "Toon netwerk"
         },
         "showTemp": {
-          "label": ""
+          "label": "Toon temperatuur"
         },
         "showBattery": {
-          "label": ""
+          "label": "Toon batterij"
         },
         "showServices": {
-          "label": ""
+          "label": "Toon services"
         },
         "showUptime": {
-          "label": ""
+          "label": "Toon uptime"
         },
         "showAgent": {
-          "label": ""
+          "label": "Toon agentversie"
         }
       },
       "error": {
@@ -3463,78 +3818,78 @@
         "noSystems": ""
       },
       "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "cpu": "CPU",
+        "memory": "Geheugen",
+        "disk": "Schijf",
+        "gpu": "GPU",
+        "loadAvg": "Gem. belasting",
+        "net": "Net",
+        "temp": "Temp",
+        "battery": "Bat",
+        "services": "Diensten",
+        "uptime": "Uptime",
+        "agent": "Agent"
       }
     },
     "beszelAlerts": {
-      "name": "",
-      "description": "",
+      "name": "Beszel-waarschuwingen",
+      "description": "Bekijk Beszel-waarschuwingsconfiguraties en geschiedenis",
       "option": {
         "showHistory": {
-          "label": ""
+          "label": "Toon waarschuwingsgeschiedenis"
         },
         "maxHistoryItems": {
-          "label": ""
+          "label": "Max. geschiedenisitems"
         }
       },
-      "empty": "",
+      "empty": "Geen waarschuwingen geconfigureerd",
       "error": {
         "internalServerError": ""
       },
-      "history": "",
-      "resolved": "",
+      "history": "Geschiedenis",
+      "resolved": "Opgelost",
       "status": {
-        "triggered": "",
-        "ok": ""
+        "triggered": "Geactiveerd",
+        "ok": "OK"
       }
     },
     "beszelSystemStats": {
-      "name": "",
-      "description": "",
+      "name": "Beszel-systeemstatistieken",
+      "description": "Tijdreeksgrafieken voor CPU, geheugen, schijf, netwerk en Docker-containerstatistieken",
       "option": {
         "systemId": {
           "label": "",
           "description": ""
         },
         "timePeriod": {
-          "label": ""
+          "label": "Tijdsperiode"
         },
         "showCpu": {
-          "label": ""
+          "label": "Toon CPU-grafiek"
         },
         "showMemory": {
-          "label": ""
+          "label": "Toon geheugengrafiek"
         },
         "showDisk": {
-          "label": ""
+          "label": "Toon schijfgrafiek"
         },
         "showDiskIO": {
-          "label": ""
+          "label": "Toon schijf I/O-grafiek"
         },
         "showNetwork": {
-          "label": ""
+          "label": "Toon netwerkgrafiek"
         },
         "showDockerCpu": {
-          "label": ""
+          "label": "Toon Docker CPU-grafiek"
         },
         "showDockerMemory": {
-          "label": ""
+          "label": "Toon Docker geheugengrafiek"
         },
         "showDockerNetwork": {
-          "label": ""
+          "label": "Toon Docker netwerkgrafiek"
         }
       },
-      "selectSystem": "",
+      "selectSystem": "Selecteer systeem",
       "empty": {
         "noSystems": ""
       },
@@ -3546,44 +3901,49 @@
       },
       "chart": {
         "cpu": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "CPU-gebruik",
+          "subtitle": "Gemiddeld systeembreed CPU-gebruik",
+          "series": "CPU"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
-          "series": "",
-          "cache": ""
+          "title": "Geheugengebruik",
+          "subtitle": "Nauwkeurig gebruik op het opgenomen tijdstip",
+          "series": "Gebruikt",
+          "cache": "Cache/Buffers"
         },
         "disk": {
-          "title": "",
+          "title": "Schijfgebruik",
           "subtitle": "",
           "series": ""
         },
         "diskIO": {
+          "title": "Schijf I/O",
+          "subtitle": "Doorvoersnelheid van het rootbestandssysteem",
+          "read": "Lezen",
+          "write": "Schrijven"
+        },
+        "storage": {
           "title": "",
           "subtitle": "",
-          "read": "",
-          "write": ""
+          "series": ""
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Bandbreedte",
+          "subtitle": "Netwerkverkeer van openbare interfaces",
+          "sent": "Verzonden",
+          "recv": "Ontvangen"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker CPU-gebruik",
+          "subtitle": "Gemiddeld CPU-gebruik van containers"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker geheugengebruik",
+          "subtitle": "Geheugengebruik van Docker-containers"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker netwerk I/O",
+          "subtitle": "Netwerkverkeer van Docker-containers"
         }
       }
     }
@@ -3990,7 +4350,7 @@
             "api": "API",
             "certificates": "Certificaten",
             "tasks": "Taken",
-            "backup": ""
+            "backup": "Back-up"
           }
         },
         "settings": "Instellingen",
@@ -4071,7 +4431,7 @@
           "private": "Dit bord is privé"
         },
         "noResults": {
-          "title": ""
+          "title": "Nog geen borden"
         },
         "modal": {
           "createBoard": {
@@ -4105,20 +4465,20 @@
               "firstDayOfWeek": "Eerste dag van de week",
               "accessibility": "Toegankelijkheid",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Onboarding-rondleidingen",
+                "description": "Reset de onboarding-rondleidingen om ze opnieuw te zien tijdens je volgende bezoek aan de beheerpagina of het dashboard.",
+                "reset": "Onboarding-rondleidingen resetten",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Rondleidingen gereset",
+                  "message": "Onboarding-rondleidingen verschijnen opnieuw tijdens je volgende bezoek"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Voltooid",
+                  "notStarted": "Niet gestart"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Beheer",
+                  "dashboard": "Dashboard"
                 }
               }
             }
@@ -4288,10 +4648,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Gebruikers",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Gravatar inschakelen",
+              "description": "Valt terug op gebruikersavatars van Libravatar/Gravatar wanneer geen aangepaste avatar is ingesteld en een e-mail is geconfigureerd"
             }
           },
           "search": {
@@ -4306,7 +4666,7 @@
             "defaultColorScheme": {
               "label": "Standaard kleurenschema",
               "options": {
-                "auto": "",
+                "auto": "Auto",
                 "light": "Licht",
                 "dark": "Donker"
               }
@@ -4537,122 +4897,122 @@
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Volledige databaseback-up",
+          "metaTitle": "Back-up & Herstel",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Database exporteren",
+            "description": "Download een volledige back-up van je SQLite-database inclusief alle instellingen, gebruikers, borden en versleutelde integratiegeheimen. De back-up is gebundeld als een ZIP-bestand met de encryptiesleutel en metadata.",
+            "button": "Back-up downloaden",
+            "error": "Exporteren mislukt",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Export van gevoelige gegevens",
+              "warningTitle": "Deze export bevat je volledige database.",
+              "warningBody": "De back-up omvat alle gebruikers, integratiegeheimen (versleuteld), API-sleutels, bordconfiguraties en app-gegevens. Bewaar het geëxporteerde bestand veilig en deel het niet.",
+              "typePrompt": "Typ \"{phrase}\" om door te gaan",
+              "submit": "Database exporteren",
+              "cancel": "Annuleren"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Database herstellen",
+            "description": "Upload een eerder geëxporteerde back-up ZIP om je database te herstellen. Dit vervangt je volledige database. Als de back-up met een andere encryptiesleutel is gemaakt, worden geheimen automatisch opnieuw versleuteld.",
+            "warning": "Het herstellen van een back-up zal je huidige database volledig vervangen en de applicatie herstarten. Deze actie kan niet ongedaan worden gemaakt.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Sleep je back-up ZIP hierheen of klik om te bladeren",
+              "description": "Alleen .zip-bestanden van een Homarr SQLite-back-up worden geaccepteerd"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Bestand wijzigen",
+            "button": "Database herstellen",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Herstel voltooid",
+              "message": "Database is succesvol hersteld. De applicatie wordt opnieuw opgestart..."
             },
-            "error": ""
+            "error": "Importeren mislukt"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Back-up inhoud",
+            "exported": "Geëxporteerd op {date}",
+            "loading": "Back-upbestand analyseren...",
+            "errorTitle": "Voorbeeldfout",
+            "entity": "Entiteit",
+            "count": "Aantal",
+            "boards": "Borden",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Borden",
+              "user": "Gebruikers",
+              "app": "Apps",
+              "integration": "Integraties",
+              "item": "Widgets",
+              "media": "Media",
+              "search_engine": "Zoekmachines"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "Kan back-upbestand niet analyseren",
+            "invalidMissingMetadata": "Ongeldige back-up: metadata.json ontbreekt",
+            "invalidMissingDb": "Ongeldige back-up: db.sqlite ontbreekt"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Sleep je back-up ZIP hierheen",
+              "description": "Accepteert .zip-bestanden van een Homarr SQLite-back-up (max 256 MB)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Back-up analyseren...",
+            "changeFile": "Bestand wijzigen",
+            "continueToRestore": "Doorgaan naar herstel",
+            "tryAgain": "Probeer opnieuw",
+            "analysisError": "Analysefout",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Back-up inhoud",
+              "exported": "Geëxporteerd op {date}",
+              "entity": "Entiteit",
+              "count": "Aantal",
+              "boards": "Borden",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Borden",
+                "user": "Gebruikers",
+                "app": "Apps",
+                "integration": "Integraties",
+                "item": "Widgets",
+                "media": "Media",
+                "search_engine": "Zoekmachines"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "{count} migratie toegepast",
+              "migrationsAppliedPlural": "{count} migraties toegepast",
+              "migrationsOlderVersion": "Deze back-up was van een oudere Homarr-versie. {count} schemamigratie werd toegepast om deze bij te werken.",
+              "migrationsOlderVersionPlural": "Deze back-up was van een oudere Homarr-versie. {count} schemamigraties werden toegepast om deze bij te werken.",
+              "migrationsUpToDate": "Database-schema is up-to-date ({count} migraties toegepast)",
+              "upToDate": "Up-to-date",
+              "migrationsPending": "{count} in behandeling"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Migraties toepassen ({current}/{total})",
+              "migrationLabel": "Migratie {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Destructieve actie",
+              "warningTitle": "Dit zal permanent je volledige database vervangen.",
+              "warningBody": "Alle huidige borden, gebruikers, apps, integraties, instellingen en sessies gaan verloren. Deze actie kan niet ongedaan worden gemaakt. De applicatie wordt na het herstel opnieuw opgestart.",
+              "typePrompt": "Typ \"{phrase}\" om door te gaan",
+              "cancel": "Annuleren",
+              "submit": "Database herstellen"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Database herstellen...",
+              "extracting": "Back-uparchief uitpakken",
+              "migrating": "Database migraties toepassen",
+              "encrypting": "Integratiegeheimen opnieuw versleutelen",
+              "swapping": "Databasebestand vervangen",
+              "restarting": "Server herstarten"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Herstel voltooid",
+              "message": "Database is succesvol hersteld. De server wordt opnieuw opgestart — ververs de pagina over enkele seconden."
             },
             "failed": {
-              "title": ""
+              "title": "Herstellen mislukt"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Ongeldige back-up: metadata.json ontbreekt",
+            "invalidMissingDb": "Ongeldige back-up: db.sqlite ontbreekt",
+            "analyzeError": "Kan back-up niet analyseren"
           }
         }
       },
@@ -4669,8 +5029,8 @@
             "subtitle": "{count} bijdragen aan vertalingen in vele talen"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponsors",
+            "subtitle": "{count} die het project financieel ondersteunen"
           },
           "libraries": {
             "title": "Bibliotheken",
@@ -4699,6 +5059,9 @@
     "title": "Containers",
     "table": {
       "updated": "{when} bijgewerkt",
+      "refresh": {
+        "lastUpdated": ""
+      },
       "search": "{count} containers zoeken",
       "selected": "{selectCount} van {totalCount} containers geselecteerd",
       "footer": "Totaal {count} containers",
@@ -4736,15 +5099,15 @@
         "label": "Poorten"
       },
       "host": {
-        "label": ""
+        "label": "Host"
       }
     },
     "action": {
       "title": "Acties",
       "logs": {
-        "label": "",
+        "label": "Logboeken bekijken",
         "page": {
-          "title": ""
+          "title": "{name} logboeken"
         }
       },
       "start": {
@@ -4788,6 +5151,7 @@
       },
       "remove": {
         "label": "Verwijderen",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Containers verwijderd",
@@ -5165,7 +5529,7 @@
         "docker": {
           "label": "Docker",
           "logs": {
-            "label": ""
+            "label": "Logboeken"
           }
         },
         "kubernetes": {
@@ -5276,7 +5640,7 @@
             "title": "Globale commando's",
             "option": {
               "colorScheme": {
-                "auto": "",
+                "auto": "Weergavemodus omschakelen",
                 "light": "Schakel naar lichte modus",
                 "dark": "Schakel naar donkere modus"
               },
@@ -5317,100 +5681,108 @@
             }
           },
           "preferences": {
-            "title": "",
+            "title": "Voorkeuren",
             "children": {
               "detail": {
-                "title": "",
-                "backHint": "",
-                "backAction": ""
+                "title": "Selecteer een voorkeur om te wijzigen",
+                "backHint": "Druk op Backspace of gebruik de terugknop om terug te gaan",
+                "backAction": "Ga terug"
               }
             },
             "notification": {
               "error": {
-                "message": ""
+                "message": "Kan voorkeur niet bijwerken"
               }
             },
             "option": {
               "preferences": {
-                "label": ""
+                "label": "Open voorkeuren"
               },
               "boolean": {
-                "enabled": "",
-                "disabled": ""
+                "enabled": "Ingeschakeld",
+                "disabled": "Uitgeschakeld"
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "Geen",
+                "unavailable": "Momenteel geselecteerd (niet beschikbaar)"
               },
               "searchEngine": {
-                "none": "",
-                "unavailable": ""
+                "none": "Geen",
+                "unavailable": "Momenteel geselecteerd (niet beschikbaar)"
               },
               "colorScheme": {
-                "label": "",
+                "label": "Kleurenschema",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecteer je kleurenschema"
                   }
                 }
               },
               "locale": {
-                "label": "",
+                "label": "Taal",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecteer je voorkeurstaal"
                   }
                 }
               },
               "defaultSearchEngineId": {
-                "label": "",
+                "label": "Standaard zoekmachine",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecteer je standaard zoekmachine"
                   }
                 }
               },
               "openSearchInNewTab": {
-                "label": "",
+                "label": "Zoekresultaten openen in nieuw tabblad",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Zoekresultaten openen in nieuw tabblad"
                   }
                 }
               },
               "ddgBangs": {
-                "label": "",
+                "label": "DuckDuckGo bangs inschakelen",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "DuckDuckGo bangs inschakelen"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "",
+                "label": "Eerste dag van de week",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecteer de eerste dag van de week"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Home bord",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecteer je home bord"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Mobiel home bord",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecteer je mobiele home bord"
                   }
                 }
               },
               "pingIconsEnabled": {
+                "label": "Gebruik iconen voor pings",
+                "children": {
+                  "detail": {
+                    "title": "Gebruik iconen voor pings"
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
                 "label": "",
                 "children": {
                   "detail": {
@@ -5419,36 +5791,36 @@
                 }
               },
               "fullPreferencesPage": {
-                "label": ""
+                "label": "Volledige voorkeurenpagina openen"
               }
             }
           }
         }
       },
       "media": {
-        "help": "",
+        "help": "Zoeken naar films of shows om aan te vragen",
         "requestMovie": "Film aanvragen",
         "requestSeries": "Series aanvragen",
         "openIn": "Openen in {kind}",
         "group": {
-          "title": ""
+          "title": "Films en shows"
         },
         "action": {
           "search": {
-            "label": "",
-            "description": "",
+            "label": "Zoeken naar films of shows",
+            "description": "Begin met typen om je media-aanvraag integraties te doorzoeken",
             "disabled": {
-              "noIntegration": "",
-              "scoped": ""
+              "noIntegration": "Voeg een Overseerr, Jellyseerr of Seerr integratie toe om media zoeken in te schakelen.",
+              "scoped": "Deze widget heeft geen toegankelijke media-aanvraag integratie."
             }
           }
         },
         "availability": {
-          "available": "",
-          "partiallyAvailable": "",
-          "processing": "",
-          "requested": "",
-          "pending": ""
+          "available": "Beschikbaar",
+          "partiallyAvailable": "Gedeeltelijk",
+          "processing": "Verwerken",
+          "requested": "Aangevraagd",
+          "pending": "Aangevraagd"
         }
       },
       "external": {
@@ -5456,13 +5828,13 @@
         "group": {
           "searchEngine": {
             "title": "Zoekmachines",
-            "tipDdgBangs": "",
+            "tipDdgBangs": "Tip: Je kunt hier ook elke DuckDuckGo bang gebruiken, bijvoorbeeld !iets",
             "bang": {
-              "searchWithQuery": "",
-              "pressEnterToOpen": "",
-              "engineSelected": "",
-              "typeQueryToContinue": "",
-              "emptyBangHint": ""
+              "searchWithQuery": "Zoek \"{query}\" met {label}",
+              "pressEnterToOpen": "Druk op Enter om te openen",
+              "engineSelected": "{label} geselecteerd (!{bang})",
+              "typeQueryToContinue": "Typ je zoekopdracht om door te gaan",
+              "emptyBangHint": "Typ een bang, bijv. !yt, en druk op Spatie om te selecteren"
             },
             "children": {
               "action": {
@@ -5726,10 +6098,10 @@
               "header": {
                 "season": "Seizoen",
                 "episodes": "Afleveringen",
-                "status": ""
+                "status": "Status"
               },
               "status": {
-                "requested": ""
+                "requested": "Aangevraagd"
               }
             },
             "button": {
@@ -5842,69 +6214,69 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Lees de documentatie",
+    "next": "Volgende",
+    "prev": "Terug",
+    "done": "Klaar",
+    "skip": "Rondleiding overslaan",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Welkom bij Homarr!",
+        "description": "Dit is je controlepaneel. Vanaf hier beheer je borden, apps, integraties, gebruikers en serverinstellingen. Laten we een rondleiding door elke sectie nemen."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Jouw borden",
+        "description": "Hier zijn al je dashboards. Elk bord heeft zijn eigen lay-out, achtergrond en toegangsinstellingen. Je kunt zien wie elk bord heeft aangemaakt en of het openbaar of privé is."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Een bord aanmaken",
+        "description": "Klik hier om een nieuw dashboard aan te maken of importeer er een uit een vorige Homarr-installatie. Elk bord krijgt een eigen URL die je kunt delen."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Jouw apps",
+        "description": "Dit zijn alle apps die je hebt toegevoegd — koppelingen naar je self-hosted services. Elke app heeft een pictogram, optionele gezondheidscontrole en een statusbadge op het dashboard."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Een app toevoegen",
+        "description": "Registreer hier een nieuwe service. Geef het een naam, URL en pictogram — het verschijnt als een tegel op je borden met live statuscontrole."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Jouw integraties",
+        "description": "Dit zijn de services verbonden met Homarr — Sonarr, Radarr, Plex, Jellyfin en meer dan 50 andere. Alle inloggegevens zijn versleuteld opgeslagen."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Een integratie toevoegen",
+        "description": "Verbind hier een nieuwe service. Kies het type, voer de URL en API-sleutel in — Homarr valideert de verbinding voordat het wordt opgeslagen."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Jouw gebruikers",
+        "description": "Bekijk iedereen die toegang heeft. Organiseer gebruikers in groepen en beheer wie elk bord kan bekijken of bewerken."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Een gebruiker aanmaken",
+        "description": "Voeg hier een nieuw gebruikersaccount toe. Je kunt ook uitnodigingslinks gebruiken voor eenvoudige onboarding. Dat is de rondleiding — je bent helemaal klaar!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Dit is jouw bord",
+        "description": "Een drag-and-drop dashboard waar je apps en widgets rangschikt. Druk op Ctrl+K om op elk moment te zoeken naar apps, borden en acties."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Bewerkmodus",
+        "description": "Klik hier om de bewerkmodus te openen. Je kunt vervolgens widgets, apps en secties toevoegen — versleep om te verplaatsen, vergroot/verklein met de hoekgreep. Klik nogmaals om je wijzigingen op te slaan."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Bordinstellingen",
+        "description": "Wijzig de naam, kolommen, achtergrond, kleuren van dit bord en wie er toegang toe heeft. Elk bord kan openbaar of privé zijn."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Wissel van bord",
+        "description": "Spring tussen borden. Maak aparte dashboards voor verschillende doeleinden — media, netwerken, per gebruiker of wat je maar wilt."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Jouw profiel",
+        "description": "Wijzig je kleurenschema, taal, home bord en voorkeuren. Je kunt ook vanuit hier naar de beheerpagina gaan."
       }
     }
   }

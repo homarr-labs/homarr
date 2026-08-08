@@ -67,5 +67,4 @@ export interface NavidromeDashboardData {
   artistCount: number;
   albumCount: number;
   songCount: number;
-  nowPlaying: NavidromeNowPlayingEntry[];
 }

@@ -18,7 +18,8 @@ import { AppAccessControl } from "./app/app-access-control";
 const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
 
 export const appRouter = createTRPCRouter({
-  getPaginated: protectedProcedure
+  getPaginated: permissionRequiredProcedure
+    .requiresPermission("board-modify-all")
     .input(paginatedSchema)
     .output(z.object({ items: z.array(selectAppSchema), totalCount: z.number() }))
     .meta({
@@ -172,7 +173,7 @@ export const appRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Create a new app (bookmark/shortcut to a service). REQUIRED: name (string), iconUrl (icon URL string), href (app URL, http/https or blank). OPTIONAL: description (string or null), pingUrl (URL to check reachability, or empty string)",
+          "Create a new app (bookmark/shortcut to a service). REQUIRED: name (string), iconUrl (icon URL string), href (app URL or custom URI scheme such as vscode://, or blank). OPTIONAL: description (string or null), pingUrl (URL to check reachability, or empty string)",
       },
     })
     .mutation(async ({ ctx, input }) => {

@@ -8,9 +8,9 @@
         "action": {
           "scratch": "",
           "importOldmarr": "",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "restoreSqlite": "Palauta SQLite-varmuuskopiosta",
+          "restoreSqliteDescription": "Lataa täysi SQLite-tietokantavarmuuskopio aiemmasta Homarr-instanssista. Tämä palauttaa kaikki paneelit, käyttäjät, sovellukset, integraatiot ja asetukset.",
+          "backToOptions": "← Takaisin asennusvaihtoehtoihin"
         }
       },
       "import": {
@@ -197,6 +197,10 @@
       },
       "pingIconsEnabled": {
         "label": "Käytä ping-kuvakkeita"
+      },
+      "enableRightClickOnWidgets": {
+        "label": "Käytä hiiren kakkospainiketta widgeteissä",
+        "description": "Näytä Homarrin kontekstivalikko, kun napsautat hiiren kakkospainikkeella widgetiä. Poista käytöstä käyttääksesi selaimen oletusvalikkoa (esim. \"Avaa linkki uudessa välilehdessä\")."
       },
       "defaultSearchEngine": {
         "label": "Oletushakukone"
@@ -811,14 +815,14 @@
       "firewall": "Palomuuri",
       "timetable": "Aikataulu",
       "photoService": "Valokuvat",
-      "documents": "",
+      "documents": "Asiakirjat",
       "notes": "Muistiinpanot",
       "mediaMonitoring": "Valvonta",
       "speedtest": "Nopeustestaus",
       "analytics": "Analytiikka",
-      "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "vpn": "VPN",
+      "mediaLibrary": "Mediakirjasto",
+      "uptimeMonitoring": "Käytettävyysvalvonta"
     },
     "testConnection": {
       "action": {
@@ -1080,6 +1084,14 @@
           "label": "",
           "newLabel": ""
         },
+        "patchmonApiKey": {
+          "label": "API-avain",
+          "newLabel": "Uusi API-avain"
+        },
+        "patchmonApiSecret": {
+          "label": "API-salaisuus",
+          "newLabel": "Uusi API-salaisuus"
+        },
         "githubAppId": {
           "label": "Sovellustunniste",
           "newLabel": "Uusi sovellustunniste"
@@ -1093,8 +1105,8 @@
           "newLabel": "Uusi yksityinen avain"
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Tilasivun polkutunnus",
+          "newLabel": "Uusi tilasivun polkutunnus"
         }
       }
     },
@@ -1104,28 +1116,40 @@
       "full": "Integraatioiden hallinta"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Audiobookshelf",
+      "description": "Itsepalveluperiaatteella toimiva äänikirja- ja podcast-palvelin"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Itsepalveluperiaatteella toimiva musiikin suoratoistopalvelin Subsonic API -yhteensopivuudella"
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Itsepalveluperiaatteella toimiva käytettävyysvalvonta julkisilla tilasivuilla",
       "secret": {
         "slug": {
-          "description": ""
+          "description": "Julkisen tilasivusi polkutunnus. Oletuksena \"default\", jos ei asetettu."
         },
         "apiKey": {
-          "description": ""
+          "description": "Valinnainen API-avain todennettua /metrics-käyttöä varten"
         }
       }
     },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Pilvinatiivi käänteinen välityspalvelin ja kuormantasaaja"
+    },
     "paperlessNgx": {
-      "name": "",
-      "description": ""
+      "name": "Paperless-ngx",
+      "description": "Asiakirjojen hallintajärjestelmä skannattujen dokumenttien arkistointiin ja järjestelyyn"
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Paikkaustenhallinta ja -valvonta Linux-isännille"
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Sonarrin ja Radarrin kumppanisovellus, joka hallinnoi ja lataa tekstityksiä"
     }
   },
   "media": {
@@ -1180,7 +1204,7 @@
       "add": "Lisää",
       "apply": "",
       "backToOverview": "Palaa yleisnäkymään",
-      "skip": "",
+      "skip": "Ohita",
       "change": "Vaihda",
       "create": "Luo",
       "createAnother": "Luo ja aloita uudelleen",
@@ -1202,16 +1226,16 @@
       "checkLogs": "",
       "tryAgain": "",
       "loading": "",
-      "show": "",
-      "hide": ""
+      "show": "Näytä",
+      "hide": "Piilota"
     },
     "here": "",
     "iconPicker": {
       "label": "Kuvakkeen URL-osoite",
       "header": "Suodata kuvakkeita syöttämällä nimi tai objekti... Homarr etsii {countIcons} kuvakkeesta.",
-      "headerLoading": "",
-      "noResults": "",
-      "error": ""
+      "headerLoading": "Kirjoita hakeaksesi kuvakkeita…",
+      "noResults": "Ei kuvakkeita haulla \"{search}\".",
+      "error": "Kuvakkeiden lataaminen epäonnistui."
     },
     "colorScheme": {
       "options": {
@@ -1263,7 +1287,7 @@
         "switchToDarkMode": "",
         "switchToLightMode": "",
         "management": "Hallinta",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Asetuksesi",
         "logout": "Kirjaudu ulos",
         "login": "",
@@ -1373,7 +1397,7 @@
         "label": {
           "create": "",
           "changePosition": "",
-          "settings": ""
+          "settings": "Asetukset"
         }
       },
       "openAllInNewTabs": {
@@ -1394,9 +1418,15 @@
     "menu": {
       "label": {
         "settings": "Asetukset",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "refresh": "Päivitä",
+        "options": "Asetukset",
+        "actions": "Toiminnot"
+      },
+      "status": {
+        "success": "OK",
+        "error": "Virhe",
+        "loading": "Ladataan",
+        "idle": "Toimeton"
       }
     },
     "create": {
@@ -1456,11 +1486,11 @@
   },
   "widget": {
     "integrationSelect": {
-      "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "configureIntegrationFirst": "Yhdistä integraatio ensin",
+      "loading": "Ladataan...",
+      "placeholder": "Valitse vaihtoehto",
+      "noResults": "Ei hakutuloksia",
+      "loadError": "Vaihtoehtojen lataus epäonnistui"
     },
     "app": {
       "name": "Sovellus",
@@ -1541,7 +1571,7 @@
           "label": "Avaa uudessa välilehdessä"
         },
         "withBorder": {
-          "label": ""
+          "label": "Näytä reunus"
         },
         "items": {
           "label": "",
@@ -1550,11 +1580,11 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "ArchiveTeam Warrior",
+      "description": "Seuraa ArchiveTeam Warriorin tilaa, projekteja ja aktiivisia arkistointitöitä.",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "Näytä yleislähetysviestit"
         }
       }
     },
@@ -1670,6 +1700,16 @@
         "customDateFormat": {
           "label": "Oma päiväyksen esitystapa",
           "description": "Määritä ISO 8601 -standardin mukainen päiväyksen muoto (korvaa muut valinnat)."
+        },
+        "showWeather": {
+          "label": "Näytä sää",
+          "description": "Näytä pieni animoitu sääkuvake ja lämpötila kortin kulmassa"
+        },
+        "weatherLocation": {
+          "label": "Sään sijainti"
+        },
+        "isWeatherFormatFahrenheit": {
+          "label": "Käytä Fahrenheit-asteita"
         }
       }
     },
@@ -1699,7 +1739,7 @@
       "noStation": "",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "Search.ch URL"
         },
         "station": {
           "label": ""
@@ -1731,6 +1771,8 @@
         "clear": "",
         "heading": "",
         "align": "",
+        "directionLtr": "Aseta tekstin suunta vasemmalta oikealle",
+        "directionRtl": "Aseta tekstin suunta oikealta vasemmalle",
         "blockquote": "",
         "horizontalLine": "",
         "bulletList": "",
@@ -2020,7 +2062,8 @@
         "sunrise": "Auringonnousu",
         "sunset": "Auringonlasku",
         "maxWindSpeed": "Tuulen nopeus: {maxWindSpeed} {unit}",
-        "maxWindGusts": "Puuskien nopeus: {maxWindSpeed} {unit}"
+        "maxWindGusts": "Puuskien nopeus: {maxWindSpeed} {unit}",
+        "humidity": "Kosteus: {humidity}%"
       },
       "kind": {
         "clear": "",
@@ -2080,9 +2123,9 @@
           "label": ""
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Näkyvät tallennusvolyymit",
+          "description": "Käytettävissä vain, kun kaikki valitut integraatiot ovat Synology. Jätä tyhjäksi näyttääksesi kaikki havaitut tallennusvolyymit.",
+          "placeholder": "Valitse tallennusvolyymit"
         },
         "defaultTab": {
           "label": ""
@@ -2164,7 +2207,7 @@
       "description": "Konttiesi tilastot (tämä widget voidaan lisätä vain ylläpito-oikeuksilla)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Näytettävät sarakkeet"
         },
         "enableRowSorting": {
           "label": "Salli kohteiden järjestys"
@@ -2180,10 +2223,21 @@
         },
         "descendingDefaultSort": {
           "label": "Käänteinen järjestys"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2220,40 +2274,40 @@
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "Yleiskatsaus VPN-yhteyksistäsi",
+      "serviceUnavailable": "VPN ei ole käytettävissä",
       "option": {}
     },
     "ups": {
-      "name": "",
-      "description": "",
+      "name": "UPS",
+      "description": "Valvo UPS-laitteiden tilaa NUT-palvelimen kautta",
       "option": {
         "showBattery": {
-          "label": ""
+          "label": "Näytä akku"
         },
         "showLoad": {
-          "label": ""
+          "label": "Näytä kuorma"
         },
         "showVoltage": {
-          "label": ""
+          "label": "Näytä jännite"
         }
       },
       "status": {
-        "online": "",
-        "onBattery": "",
-        "lowBattery": "",
-        "charging": "",
-        "unknown": ""
+        "online": "Verkkovirralla",
+        "onBattery": "Akulla",
+        "lowBattery": "Akku vähissä",
+        "charging": "Latautuu",
+        "unknown": "Tuntematon"
       },
       "field": {
-        "runtime": "",
-        "load": "",
-        "input": "",
-        "output": ""
+        "runtime": "Toiminta-aika",
+        "load": "Kuorma",
+        "input": "Syöttö",
+        "output": "Lähtö"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "UPS-tietojen haku epäonnistui"
       }
     },
     "tracearr": {
@@ -2336,77 +2390,77 @@
             "today": "",
             "24h": "",
             "7d": "",
-            "30d": "",
-            "month": "",
-            "lastMonth": ""
+            "30d": "Viimeiset 30 päivää",
+            "month": "Tässä kuussa",
+            "lastMonth": "Viime kuussa"
           }
         },
         "eventName": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "none": "",
-          "configureWebsiteFirst": ""
+          "label": "Tapahtuma",
+          "description": "Näytä tietyn tapahtuman esiintymiskerrat yhteensä",
+          "placeholder": "Valitse tapahtuma",
+          "loading": "Ladataan tapahtumia...",
+          "noEvents": "Tapahtumia ei löytynyt",
+          "none": "Ei tapahtumaa",
+          "configureWebsiteFirst": "Valitse ensin verkkosivusto ladataksesi tapahtumat"
         },
         "chartType": {
-          "label": "",
-          "description": "",
+          "label": "Kaavion tyyppi",
+          "description": "Kaavion näyttötyyli",
           "option": {
-            "bar": "",
-            "sparkline": ""
+            "bar": "Pylväskaavio",
+            "sparkline": "Sparkline"
           }
         },
         "chartStyle": {
-          "label": "",
-          "description": "",
+          "label": "Kaavion tyyli",
+          "description": "Miten tapahtumasarjat näytetään kaaviossa",
           "option": {
-            "grouped": "",
-            "overlay": ""
+            "grouped": "Vierekkäin",
+            "overlay": "Päällekkäin (osajoukko)"
           }
         },
         "viewMode": {
-          "label": "",
-          "description": "",
+          "label": "Näkymä",
+          "description": "Mitä widgetin rungossa näytetään",
           "option": {
-            "chart": "",
-            "events": "",
-            "topPages": "",
-            "topReferrers": ""
+            "chart": "Kaavio",
+            "events": "Tapahtumakaavio",
+            "topPages": "Suosituimmat sivut",
+            "topReferrers": "Suosituimmat viittaajat"
           }
         },
         "eventNames": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noEvents": "",
-          "configureWebsiteFirst": ""
+          "label": "Tapahtumat",
+          "description": "Valitse yksi tai useampi tapahtuma kaavioon",
+          "placeholder": "Valitse tapahtumia...",
+          "loading": "Ladataan tapahtumia...",
+          "noEvents": "Tapahtumia ei löytynyt",
+          "configureWebsiteFirst": "Valitse ensin verkkosivusto ladataksesi tapahtumat"
         },
         "topCount": {
-          "label": "",
+          "label": "Näytettävien kohteiden määrä",
           "description": "Näytettävien huippukohteiden määrä (enintään 500)"
         }
       },
       "event": {
-        "occurrences": "",
-        "label": ""
+        "occurrences": "tapahtumaa",
+        "label": "tapahtumaa"
       },
       "topPages": {
-        "direct": ""
+        "direct": "Suora"
       },
       "topReferrers": {
-        "direct": ""
+        "direct": "Suora"
       },
       "events": {
-        "selectPrompt": ""
+        "selectPrompt": "Valitse tapahtumat kaavioitavaksi"
       },
       "error": {
         "noIntegration": "Umami-integraatiota ei ole määritetty",
-        "noWebsite": "",
-        "noData": "",
-        "internalServerError": ""
+        "noWebsite": "Verkkosivustoa ei ole määritetty",
+        "noData": "Ei tietoja saatavilla",
+        "internalServerError": "Umami-tietojen haku epäonnistui"
       }
     },
     "common": {
@@ -2477,13 +2531,33 @@
         "showOnlyPlaying": {
           "label": "",
           "description": ""
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "",
         "user": "",
         "name": "",
         "id": "",
+        "status": "Tila",
+        "directPlay": "Muuntamaton toisto",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
+        "transcoding": "Transkoodaus",
+        "paused": "Keskeytetty",
+        "remaining": "{minutes} min jäljellä",
         "metadata": {
           "title": "",
           "video": {
@@ -2505,48 +2579,48 @@
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "name": "Paperless-ngx",
+      "description": "Yleiskatsaus Paperless-ngx-dokumenttiarkistostasi",
+      "documentsTotal": "Dokumentteja yhteensä",
+      "documentsInbox": "Saapuneet",
+      "correspondents": "Lähettäjät",
+      "tags": "Tunnisteet",
+      "documentTypes": "Dokumenttityypit",
+      "inboxRatio": "Saapuneiden suhde",
+      "inbox": "saapuneet",
+      "total": "yhteensä",
       "option": {
         "showInboxRatio": {
-          "label": "",
-          "description": ""
+          "label": "Näytä saapuneiden suhde",
+          "description": "Näytä saapuneiden ja kaikkien dokumenttien suhde hero-osiossa"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Näytä saapuneiden rengas",
+          "description": "Näytä edistymisrengas saapuneiden suhteen ohella"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Näytä dokumenttien kokonaismäärä",
+          "description": "Näytä dokumenttien kokonaismäärä arkistossasi"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Näytä saapuneiden määrä",
+          "description": "Näytä käsittelemättömien dokumenttien määrä saapuneissa"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Näytä lähettäjät",
+          "description": "Näytä lähettäjien kokonaismäärä"
         },
         "showTags": {
-          "label": "",
-          "description": ""
+          "label": "Näytä tunnisteet",
+          "description": "Näytä tunnisteiden kokonaismäärä"
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
+          "label": "Näytä dokumenttityypit",
+          "description": "Näytä dokumenttityyppien kokonaismäärä"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Paperless-ngx-tietojen haku epäonnistui"
       }
     },
     "immich-serverStats": {
@@ -2577,10 +2651,11 @@
     },
     "immich-albumCarousel": {
       "name": "",
+      "allPhotos": "Kaikki valokuvat",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "Albumi",
+          "description": "Valitse Immich-albumi tai Kaikki valokuvat. Tyhjä valinta näyttää satunnaisia kuvia koko kirjastostasi."
         },
         "rotationIntervalSeconds": {
           "label": "Aikaväli sekunteina",
@@ -2591,13 +2666,12 @@
           "description": ""
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "Satunnaista valokuvat",
+          "description": "Näytä valokuvat satunnaisessa järjestyksessä albumijärjestyksen sijaan."
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Diaesitys kuvista Immich-albumista tai koko kirjastostasi",
+      "noPhotos": "Valokuvia ei löytynyt"
     },
     "downloads": {
       "name": "Latauspääte",
@@ -2639,11 +2713,20 @@
         "limitPerIntegration": {
           "label": "Integraation elementtien määrärajoitus",
           "description": "Tämä rajoittaa näytettävien elementtien määrää integraatiokohtaisesti, ei kokonaisvaltaisesti."
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "errors": {
         "noColumns": "Valitse kohteiden sarakkeet",
-        "noCommunications": "Integraatiolta ei voida noutaa tietoja"
+        "noCommunications": "Integraatiolta ei voida noutaa tietoja",
+        "noItems": "",
+        "actionFailed": "",
+        "actionFailedMessage": ""
       },
       "items": {
         "actions": {
@@ -2666,7 +2749,8 @@
           "detailsTitle": ""
         },
         "id": {
-          "columnTitle": "Tunniste"
+          "columnTitle": "Tunniste",
+          "detailsTitle": ""
         },
         "integration": {
           "columnTitle": "Integraatio"
@@ -2700,7 +2784,8 @@
         },
         "time": {
           "columnTitle": "Valmistumisaika",
-          "detailsTitle": ""
+          "detailsTitle": "",
+          "eta": ""
         },
         "type": {
           "columnTitle": "Tyyppi",
@@ -2744,7 +2829,23 @@
           }
         }
       },
-      "globalRatio": "Kokonaissuhde"
+      "globalRatio": "Kokonaissuhde",
+      "contextMenu": {
+        "copyName": "",
+        "copyId": "",
+        "clearFilters": ""
+      },
+      "footer": {
+        "filter": ""
+      },
+      "stats": {
+        "show": "",
+        "hide": "",
+        "overallProgress": "",
+        "totalSize": "",
+        "clients": ""
+      },
+      "disconnected": ""
     },
     "mediaReleases": {
       "name": "",
@@ -2781,6 +2882,12 @@
       "option": {
         "linksTargetNewTab": {
           "label": "Avaa linkit uudessa välilehdessä"
+        },
+        "statusFilter": {
+          "label": "Näytettävät tilat"
+        },
+        "recentDays": {
+          "label": "Näytä vain viimeaikaiset pyynnöt"
         }
       },
       "pending": {
@@ -2958,7 +3065,7 @@
             "label": ""
           },
           "providerUrl": {
-            "label": ""
+            "label": "Palveluntarjoajan URL"
           },
           "identifier": {
             "label": "",
@@ -3009,11 +3116,11 @@
             "tooltip": ""
           },
           "tokens": {
-            "label": "",
-            "token": "",
-            "configured": "",
-            "notConfigured": "",
-            "save": ""
+            "label": "Palveluntarjoajan tokenit",
+            "token": "Käyttöavain",
+            "configured": "Token määritetty",
+            "notConfigured": "Tokenia ei ole asetettu",
+            "save": "Tallenna"
           }
         }
       },
@@ -3036,9 +3143,9 @@
           "invalidIdentifier": "",
           "noMatchingVersion": "",
           "noReleasesFound": "",
-          "noProviderSelected": "",
+          "noProviderSelected": "Palveluntarjoajaa ei ole valittu",
           "noProviderResponse": "",
-          "unexpected": ""
+          "unexpected": "Odottamaton palveluntarjoajan virhe"
         }
       }
     },
@@ -3131,7 +3238,11 @@
       "name": "",
       "description": "Näytä integraation ilmoitushistoria",
       "noItems": "",
-      "option": {}
+      "option": {
+        "hideLogos": {
+          "label": "Piilota logot"
+        }
+      }
     },
     "speedtestTracker": {
       "name": "",
@@ -3173,110 +3284,96 @@
       }
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Tarkkaile käytettävyystilastoja Uptime Kuma -tilasivultasi",
       "option": {
         "showAverageUptime": {
-          "label": "",
-          "description": ""
+          "label": "Näytä keskimääräinen käytettävyys",
+          "description": "Näytä yhdistetty 24 tunnin keskimääräinen käytettävyysprosentti"
         },
         "showUptimeRing": {
-          "label": "",
-          "description": ""
+          "label": "Näytä käytettävyysrengas",
+          "description": "Näytä edistymisrengas keskimääräisen käytettävyysarvon ohella"
         },
         "showTotalMonitors": {
-          "label": "",
-          "description": ""
+          "label": "Näytä valvontakohteiden kokonaismäärä",
+          "description": "Näytä määritettyjen valvontakohteiden kokonaismäärä"
         },
         "showUpCount": {
-          "label": "",
-          "description": ""
+          "label": "Näytä ylhäällä olevien määrä",
+          "description": "Näytä kuinka monta valvontakohdetta on tällä hetkellä ylhäällä"
         },
         "showDownCount": {
-          "label": "",
-          "description": ""
+          "label": "Näytä alhaalla olevien määrä",
+          "description": "Näytä kuinka monta valvontakohdetta on tällä hetkellä alhaalla"
         },
         "showPausedCount": {
-          "label": "",
-          "description": ""
+          "label": "Näytä keskeytettyjen määrä",
+          "description": "Näytä kuinka monta valvontakohdetta on tällä hetkellä keskeytettynä"
         }
       },
-      "averageUptime": "",
+      "averageUptime": "Keskimääräinen käytettävyys (24h)",
       "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
+        "totalMonitors": "Valvontakohteita yhteensä",
+        "upCount": "Ylhäällä",
+        "downCount": "Alhaalla",
+        "pausedCount": "Keskeytetty"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Käytettävyystietojen haku epäonnistui"
       }
     },
     "audioStats": {
-      "name": "",
-      "description": "",
+      "name": "Äänitilastot",
+      "description": "Kirjasto- ja toistotilastot Navidromesta tai Audiobookshelfistä",
       "option": {
         "showArtists": {
-          "label": "",
-          "description": ""
+          "label": "Näytä artistit",
+          "description": "Näytä musiikkikirjastosi artistien kokonaismäärä (Navidrome)"
         },
         "showAlbums": {
-          "label": "",
-          "description": ""
+          "label": "Näytä albumit",
+          "description": "Näytä musiikkikirjastosi albumien kokonaismäärä (Navidrome)"
         },
         "showSongs": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlaying": {
-          "label": "",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
-          "description": ""
+          "label": "Näytä kappaleet",
+          "description": "Näytä musiikkikirjastosi kappaleiden kokonaismäärä (Navidrome)"
         },
         "showLibraryCount": {
-          "label": "",
-          "description": ""
+          "label": "Näytä kirjastojen määrä",
+          "description": "Näytä instanssisi kirjastojen lukumäärä (Audiobookshelf)"
         },
         "showAudiobooks": {
-          "label": "",
-          "description": ""
+          "label": "Näytä äänikirjat",
+          "description": "Näytä äänikirjojen kokonaismäärä kaikissa kirjastoissa (Audiobookshelf)"
         },
         "showPodcasts": {
-          "label": "",
-          "description": ""
+          "label": "Näytä podcastit",
+          "description": "Näytä podcastien kokonaismäärä kaikissa kirjastoissa (Audiobookshelf)"
         },
         "showListeningTime": {
-          "label": "",
-          "description": ""
+          "label": "Näytä kuunteluaika",
+          "description": "Näytä kokonaiskuunteluaikasi (Audiobookshelf)"
         },
         "showActiveSessions": {
-          "label": "",
-          "description": ""
+          "label": "Näytä aktiiviset istunnot",
+          "description": "Näytä parhaillaan aktiivisten toistoistuntojen määrä (Audiobookshelf)"
         },
         "compactMode": {
-          "label": "",
-          "description": ""
+          "label": "Tiivis tila",
+          "description": "Käytä tiiviimpää asettelua pienemmillä ruuduilla, ihanteellinen pienille widgeteille"
         }
       },
-      "artists": "",
-      "albums": "",
-      "songs": "",
-      "libraryCount": "",
-      "audiobooks": "",
-      "podcasts": "",
-      "listeningTime": "",
-      "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
+      "artists": "Artistit",
+      "albums": "Albumit",
+      "songs": "Kappaleet",
+      "libraryCount": "Kirjastot",
+      "audiobooks": "Äänikirjat",
+      "podcasts": "Podcastit",
+      "listeningTime": "Kuunteluaika",
+      "activeSessions": "Aktiiviset istunnot",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Audiotilastojen nouto epäonnistui"
       }
     },
     "systemResources": {
@@ -3340,9 +3437,9 @@
           "label": ""
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Näkyvät tallennusvolyymit",
+          "description": "Käytettävissä vain, kun kaikki valitut integraatiot ovat Synology. Jätä tyhjäksi näyttääksesi kaikki havaitut tallennusvolyymit.",
+          "placeholder": "Valitse tallennusvolyymit"
         }
       },
       "status": {
@@ -3350,241 +3447,504 @@
       }
     },
     "beszelSystemTable": {
-      "name": "",
-      "description": "",
+      "name": "Beszel-järjestelmät (taulukko)",
+      "description": "Taulukkonäkymä kaikista Beszel-valvotuista järjestelmistä, lajiteltavilla sarakkeilla ja tilaindikaattoreilla",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Tilasuodatin"
         },
         "sortBy": {
-          "label": ""
+          "label": "Lajitteluperuste"
         },
         "sortDirection": {
-          "label": ""
+          "label": "Lajittelusuunta"
         },
         "showCpu": {
-          "label": ""
+          "label": "Näytä suoritin"
         },
         "showMemory": {
-          "label": ""
+          "label": "Näytä muisti"
         },
         "showDisk": {
-          "label": ""
+          "label": "Näytä levy"
         },
         "showGpu": {
-          "label": ""
+          "label": "Näytä näytönohjain"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Näytä kuormituskeskiarvo"
         },
         "showNet": {
-          "label": ""
+          "label": "Näytä verkko"
         },
         "showTemp": {
-          "label": ""
+          "label": "Näytä lämpötila"
         },
         "showBattery": {
-          "label": ""
+          "label": "Näytä akku"
         },
         "showServices": {
-          "label": ""
+          "label": "Näytä palvelut"
         },
         "showUptime": {
-          "label": ""
+          "label": "Näytä käynnissäoloaika"
         },
         "showAgent": {
+          "label": "Näytä agentin versio"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
           "label": ""
         }
       },
-      "noRecords": "",
+      "noRecords": "Järjestelmiä ei löytynyt",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Beszel-yhteyden muodostaminen epäonnistui. Tarkista integraatioasetuksesi.",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
-        "system": "",
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "system": "Järjestelmä",
+        "cpu": "Suoritin",
+        "memory": "Muisti",
+        "disk": "Levy",
+        "gpu": "Näytönohjain",
+        "loadAvg": "Kuormituska",
+        "net": "Verkko",
+        "temp": "Lämpötila",
+        "battery": "Akku",
+        "services": "Palvelut",
+        "uptime": "Käynnissäoloaika",
+        "agent": "Agentti"
       }
     },
     "beszelSystemGrid": {
-      "name": "",
-      "description": "",
+      "name": "Beszel-järjestelmät (ruudukko)",
+      "description": "Korttiruudukkonäkymä kaikista Beszel-valvotuista järjestelmistä reaaliaikaisilla mittareilla",
       "option": {
         "statusFilter": {
-          "label": ""
+          "label": "Tilasuodatin"
         },
         "showCpu": {
-          "label": ""
+          "label": "Näytä suoritin"
         },
         "showMemory": {
-          "label": ""
+          "label": "Näytä muisti"
         },
         "showDisk": {
-          "label": ""
+          "label": "Näytä levy"
         },
         "showGpu": {
-          "label": ""
+          "label": "Näytä näytönohjain"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Näytä kuormituskeskiarvo"
         },
         "showNet": {
-          "label": ""
+          "label": "Näytä verkko"
         },
         "showTemp": {
-          "label": ""
+          "label": "Näytä lämpötila"
         },
         "showBattery": {
-          "label": ""
+          "label": "Näytä akku"
         },
         "showServices": {
-          "label": ""
+          "label": "Näytä palvelut"
         },
         "showUptime": {
-          "label": ""
+          "label": "Näytä käynnissäoloaika"
         },
         "showAgent": {
-          "label": ""
+          "label": "Näytä agentin versio"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Beszel-yhteyden muodostaminen epäonnistui. Tarkista integraatioasetuksesi."
       },
       "empty": {
-        "noSystems": ""
+        "noSystems": "Järjestelmiä ei löytynyt"
       },
       "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "cpu": "Suoritin",
+        "memory": "Muisti",
+        "disk": "Levy",
+        "gpu": "Näytönohjain",
+        "loadAvg": "Kuormituska",
+        "net": "Verkko",
+        "temp": "Lämpötila",
+        "battery": "Akku",
+        "services": "Palvelut",
+        "uptime": "Käynnissäoloaika",
+        "agent": "Agentti"
       }
     },
     "beszelAlerts": {
-      "name": "",
-      "description": "",
+      "name": "Beszel-hälytykset",
+      "description": "Tarkastele Beszel-hälytysten määrityksiä ja historiaa",
       "option": {
         "showHistory": {
-          "label": ""
+          "label": "Näytä hälytyshistoria"
         },
         "maxHistoryItems": {
-          "label": ""
+          "label": "Historiatietueiden enimmäismäärä"
         }
       },
-      "empty": "",
+      "empty": "Ei määritettyjä hälytyksiä",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Beszel-yhteyden muodostaminen epäonnistui. Tarkista integraatioasetuksesi."
       },
-      "history": "",
-      "resolved": "",
+      "history": "Historia",
+      "resolved": "Kuitattu",
       "status": {
-        "triggered": "",
-        "ok": ""
+        "triggered": "Lauennut",
+        "ok": "OK"
       }
     },
     "beszelSystemStats": {
-      "name": "",
-      "description": "",
+      "name": "Beszel-järjestelmätilastot",
+      "description": "Aikasarjakaaviot suorittimelle, muistille, levylle, verkolle ja Docker-konttien mittareille",
       "option": {
         "systemId": {
-          "label": "",
-          "description": ""
+          "label": "Järjestelmä",
+          "description": "Valitse Beszel-järjestelmä, jonka tilastoja näytetään"
         },
         "timePeriod": {
-          "label": ""
+          "label": "Aikajakso"
         },
         "showCpu": {
-          "label": ""
+          "label": "Näytä suorittimen kaavio"
         },
         "showMemory": {
-          "label": ""
+          "label": "Näytä muistin kaavio"
         },
         "showDisk": {
-          "label": ""
+          "label": "Näytä levyn kaavio"
         },
         "showDiskIO": {
-          "label": ""
+          "label": "Näytä levyn I/O -kaavio"
         },
         "showNetwork": {
-          "label": ""
+          "label": "Näytä verkon kaavio"
         },
         "showDockerCpu": {
-          "label": ""
+          "label": "Näytä Docker-suorittimen kaavio"
         },
         "showDockerMemory": {
-          "label": ""
+          "label": "Näytä Docker-muistin kaavio"
         },
         "showDockerNetwork": {
-          "label": ""
+          "label": "Näytä Docker-verkon kaavio"
         }
       },
-      "selectSystem": "",
+      "selectSystem": "Valitse järjestelmä",
       "empty": {
-        "noSystems": ""
+        "noSystems": "Järjestelmiä ei löytynyt"
       },
       "error": {
-        "internalServerError": "",
-        "liveConnectionFailed": "",
-        "switchToHistorical": "",
-        "systemNotFound": ""
+        "internalServerError": "Beszel-yhteyden muodostaminen epäonnistui. Tarkista integraatioasetuksesi.",
+        "liveConnectionFailed": "Live-yhteys epäonnistui. Beszel-instanssisi ei ehkä tue reaaliaikaista suoratoistoa.",
+        "switchToHistorical": "Siirry historialliseen näkymään",
+        "systemNotFound": "Valittua järjestelmää ei löydy. Valitse eri järjestelmä."
       },
       "chart": {
         "cpu": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Suorittimen kuormitus",
+          "subtitle": "Keskimääräinen koko järjestelmän suorittimen käyttö",
+          "series": "Suoritin"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
-          "series": "",
-          "cache": ""
+          "title": "Muistin varaus",
+          "subtitle": "Tarkka käyttö tallennushetkellä",
+          "series": "Käytetty",
+          "cache": "Välimuisti/Puskurit"
         },
         "disk": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Levyn käyttö",
+          "subtitle": "Käyttö tiedostojärjestelmissä",
+          "series": "Juur"
         },
         "diskIO": {
-          "title": "",
-          "subtitle": "",
-          "read": "",
-          "write": ""
+          "title": "Levyn I/O",
+          "subtitle": "Juuritiedostojärjestelmän läpimeno",
+          "read": "Luettu",
+          "write": "Kirjoitettu"
+        },
+        "storage": {
+          "title": "Tallennustila",
+          "subtitle": "Tiedostojärjestelmäkohtainen levynkäyttö",
+          "series": "Käytössä"
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Kaistanleveys",
+          "subtitle": "Julkisten rajapintojen verkkoliikenne",
+          "sent": "Lähetetty",
+          "recv": "Vastaanotettu"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker-suorittimen käyttö",
+          "subtitle": "Konttien keskimääräinen suorittimen kuormitus"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker-muistin käyttö",
+          "subtitle": "Docker-konttien muistin käyttö"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker-verkon I/O",
+          "subtitle": "Docker-konttien verkkoliikenne"
         }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "Yleiskatsaus isäntien päivitystilanteesta PatchMonista",
+      "title": "PatchMon-tilastot",
+      "totalHosts": "Isännät yhteensä",
+      "hostsNeedingUpdates": "Päivitystä tarvitsevat",
+      "securityUpdates": "Tietoturvapäivitykset",
+      "upToDateHosts": "Ajan tasalla olevat isännät",
+      "hostsWithSecurityUpdates": "Isännät, joilla on tietoturvapäivityksiä",
+      "recentUpdates24h": "Päivitykset (24 h)",
+      "totalOutdatedPackages": "Vanhentuneet paketit",
+      "totalRepos": "Pakettivarastot",
+      "osDistribution": "Käyttöjärjestelmien jakauma",
+      "compliance": "Päivityskattavuus",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Päivitetty {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Näytä isännät yhteensä",
+          "description": "Näytä valvottujen isäntien kokonaismäärä"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Näytä päivitystä tarvitsevat isännät",
+          "description": "Näytä isännät, joilla on vähintään yksi vanhentunut paketti"
+        },
+        "showSecurityUpdates": {
+          "label": "Näytä tietoturvapäivitykset",
+          "description": "Näytä saatavilla olevien tietoturvapäivitysten kokonaismäärä"
+        },
+        "showUpToDateHosts": {
+          "label": "Näytä ajan tasalla olevat isännät",
+          "description": "Näytä isännät, joissa ei ole vanhentuneita paketteja"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Näytä isännät, joilla on tietoturvapäivityksiä",
+          "description": "Näytä isännät, jotka tarvitsevat tietoturvakorjauksia"
+        },
+        "showRecentUpdates24h": {
+          "label": "Näytä viimeaikaiset päivitykset (24 h)",
+          "description": "Näytä viimeisen 24 tunnin aikana asennettujen päivitysten määrä"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Näytä vanhentuneet paketit",
+          "description": "Näytä vanhentuneiden pakettien kokonaismäärä kaikissa isännissä"
+        },
+        "showTotalRepos": {
+          "label": "Näytä repositoriot",
+          "description": "Näytä valvottavien aktiivisten repositorioiden määrä"
+        },
+        "enableThresholdColors": {
+          "label": "Ota käyttöön kynnysarvovärit",
+          "description": "Väritä tilastoarvot vihreäksi, keltaiseksi tai punaiseksi vakavuusesiasetusten perusteella"
+        },
+        "useCustomThresholds": {
+          "label": "Edistyneet kynnysarvot",
+          "description": "Mukauta varoitus- ja kriittiset kynnysarvot tilastoittain käyttäen absoluuttisia määriä tai prosenttiosuutta isäntien kokonaismäärästä"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Absoluuttinen määrä",
+            "percent": "Prosenttia isäntien kokonaismäärästä"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Päivityksiä tarvitsevien kynnysarvotila",
+          "description": "Vertaa päivitystarpeiden määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Päivitystarpeiden varoituskynnysarvo",
+          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Päivitystarpeiden kriittinen kynnysarvo",
+          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Tietoturvapäivitysten kynnysarvotila",
+          "description": "Vertaa tietoturvapäivitysten määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Tietoturvapäivitysten varoituskynnysarvo",
+          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Tietoturvapäivitysten kriittinen kynnysarvo",
+          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Tietoturvapäivityksiä sisältävien isäntien kynnysarvotila",
+          "description": "Vertaa isäntien määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Tietoturvapäivityksiä sisältävien isäntien varoituskynnysarvo",
+          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Tietoturvapäivityksiä sisältävien isäntien kriittinen kynnysarvo",
+          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Ajan tasalla olevien isäntien kynnysarvotila",
+          "description": "Vertaa ajan tasalla olevien isäntien määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Ajan tasalla olevien isäntien varoituskynnysarvo",
+          "description": "Muuta keltaiseksi, kun arvo on vähintään tämä kynnysarvo, mutta alle täyden kattavuuden"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Ajan tasalla olevien isäntien kriittinen kynnysarvo",
+          "description": "Muuta punaiseksi, kun arvo laskee tämän kynnysarvon alle"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Vanhentuneiden pakettien kynnysarvotila",
+          "description": "Vertaa vanhentuneiden pakettien määrää absoluuttisena arvona tai prosenttiosuutena isäntien kokonaismäärästä"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Vanhentuneiden pakettien varoituskynnysarvo",
+          "description": "Muuta keltaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Vanhentuneiden pakettien kriittinen kynnysarvo",
+          "description": "Muuta punaiseksi, kun arvo saavuttaa tämän kynnysarvon"
+        },
+        "showOsDistribution": {
+          "label": "Näytä käyttöjärjestelmäjakauma",
+          "description": "Näytä erittely valvotuista isännistä käyttöjärjestelmittäin"
+        },
+        "osDistributionLimit": {
+          "label": "Käyttöjärjestelmäjakauman rajoitus",
+          "description": "Näytettävien käyttöjärjestelmien enimmäismäärä",
+          "option": {
+            "3": "3 parasta",
+            "5": "5 parasta",
+            "10": "10 parasta",
+            "all": "Kaikki"
+          }
+        },
+        "showOsVersion": {
+          "label": "Näytä käyttöjärjestelmän versio",
+          "description": "Liitä käyttöjärjestelmän versio jokaiseen jakauman nimikkeeseen, kun se on saatavilla"
+        },
+        "showComplianceHero": {
+          "label": "Näytä compliance-hero",
+          "description": "Näytä vaatimustenmukaisuusrengas, joka näyttää ajan tasalla olevien isäntien prosenttiosuuden"
+        },
+        "osDisplayMode": {
+          "label": "Käyttöjärjestelmän näyttötila",
+          "description": "Valitse, miten käyttöjärjestelmän jakelu näytetään",
+          "option": {
+            "bars": "Vaakapalkit",
+            "donut": "Donitsikaavio"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "PatchMon-tietojen nouto epäonnistui"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Yleiskatsaus puuttuvista tekstityksistä ja terveystilasta Bazarr-instanssistasi",
+      "episodes": "Puuttuvat jaksot",
+      "movies": "Puuttuvat elokuvat",
+      "providers": "Palveluntarjoajan ongelmat",
+      "status": "Terveysongelmat",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Näytä puuttuvat jaksot",
+          "description": "Näytä niiden jaksojen määrä, joista puuttuu tekstitys"
+        },
+        "showMissingMovies": {
+          "label": "Näytä puuttuvat elokuvat",
+          "description": "Näytä niiden elokuvien määrä, joista puuttuu tekstitykset"
+        },
+        "showProviderIssues": {
+          "label": "Näytä tarjoajien ongelmat",
+          "description": "Näytä ongelmallisten tekstitystarjoajien määrä"
+        },
+        "showHealthIssues": {
+          "label": "Näytä kunto-ongelmat",
+          "description": "Näytä Bazarrin kunto-ongelmien määrä"
+        }
+      },
+      "error": {
+        "internalServerError": "Bazarrin tietojen nouto epäonnistui"
+      }
+    },
+    "mediaMissing": {
+      "name": "Puuttuva & jonossa oleva media",
+      "description": "Näyttää puuttuvat ja jonossa olevat elokuvat ja jaksot Radarr:sta ja Sonarr:sta",
+      "option": {
+        "showMissing": {
+          "label": "Näytä puuttuvat kohteet"
+        },
+        "showQueued": {
+          "label": "Näytä jonossa olevat kohteet"
+        },
+        "pageSize": {
+          "label": "Kohteita per sivu"
+        }
+      },
+      "tab": {
+        "missing": "Puuttuvat",
+        "queued": "Jonossa"
+      },
+      "type": {
+        "movie": "Elokuva",
+        "episode": "Jakso"
+      },
+      "empty": {
+        "missing": "Ei puuttuvia kohteita",
+        "queued": "Ei jonossa olevia kohteita",
+        "noTabsEnabled": "Ota käyttöön vähintään yksi välilehti widgetin asetuksissa"
+      },
+      "timeLeft": "Jäljellä oleva aika"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Yleiskatsaus Traefikin reitittimistä, palveluista, middlewareista ja sisääntulopisteistä",
+      "option": {
+        "showTcp": {
+          "label": "Näytä TCP"
+        },
+        "showUdp": {
+          "label": "Näytä UDP"
+        },
+        "showEntryPoints": {
+          "label": "Näytä sisääntulopisteet"
+        }
+      },
+      "instances": "Traefik-instanssit",
+      "versionUnknown": "Versio tuntematon",
+      "summary": {
+        "routers": "Reitittimet",
+        "entryPoints": "Sisääntulopisteet"
+      },
+      "resource": {
+        "routers": "Reitittimet",
+        "services": "Palvelut",
+        "middlewares": "Middlewaret"
+      },
+      "status": {
+        "healthy": "Terve",
+        "errors": "{count} virhettä",
+        "warnings": "{count} varoitusta"
+      },
+      "error": {
+        "internalServerError": "Traefikin tietojen nouto epäonnistui"
       }
     }
   },
@@ -3960,9 +4320,9 @@
       "text": ""
     },
     "error": {
-      "title": "",
-      "text": "",
-      "digest": ""
+      "title": "Tätä sivua ei voitu ladata",
+      "text": "Tämän sivun lataamisessa tapahtui odottamaton virhe. Navigaatiopalkki on edelleen käytettävissä – yritä ladata uudelleen tai käytä toista osiota sivupalkista.",
+      "digest": "Virheviite: {digest}"
     },
     "navbar": {
       "items": {
@@ -3987,10 +4347,10 @@
             "docker": "Docker",
             "kubernetes": "Kubernetes",
             "logs": "Lokitiedot",
-            "api": "",
+            "api": "API & MCP",
             "certificates": "Varmenteet",
             "tasks": "Tehtävät",
-            "backup": ""
+            "backup": "Varmuuskopio"
           }
         },
         "settings": "Asetukset",
@@ -4071,7 +4431,7 @@
           "private": ""
         },
         "noResults": {
-          "title": ""
+          "title": "Ei paneeleita vielä"
         },
         "modal": {
           "createBoard": {
@@ -4446,213 +4806,213 @@
               }
             },
             "mcp": {
-              "label": "",
-              "title": "",
-              "subtitle": "",
-              "description": "",
-              "noApiKey": "",
-              "createApiKeyButton": "",
+              "label": "AI / MCP",
+              "title": "AI-integraatio",
+              "subtitle": "Model Context Protocol (MCP) -palvelin",
+              "description": "Yhdistä tekoälyavustajat Homarr-instanssiisi ja hallitse koko kotilaboratoriotasi luonnollisella kielellä. Hae ja pyydä mediaa Overseerrissä, hallitse Docker-kontteja, kytke Pi-hole päälle/pois, tarkista palvelimen kunto, hallitse Home Assistant -laitteita ja paljon muuta – kaikki tekoälyavustajaltasi.",
+              "noApiKey": "Tarvitset API-avaimen MCP-palvelimen todennukseen.",
+              "createApiKeyButton": "Luo API-avain",
               "endpoint": {
-                "title": ""
+                "title": "MCP-päätepiste"
               },
               "authentication": {
-                "title": "",
-                "intro": "",
+                "title": "Tunnistautuminen",
+                "intro": "Voit tunnistautua MCP-palvelimeesi joko API-avaimella tai OAuthilla. Molemmat menetelmät antavat saman käyttöoikeustason.",
                 "apiKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "API-avain (manuaalinen)",
+                  "description": "Välitä ApiKey-otsikko, jossa on koko API-avaimesi, MCP-asiakkaan asetuksissa."
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (selainkirjautuminen)",
+                  "description": "Asiakkaat, jotka tukevat OAuthia (kuten Claude Code, opencode tai Cursor), voivat todentaa avaamalla selainikkunan. Suorita auth-komento asiakkaassasi, kirjaudu selaimeen Homarriin, ja olet yhteydessä – API-avain luodaan automaattisesti.",
+                  "hint": "OAuth-tokenit näkyvät tavallisina API-avaimina Tunnistautuminen-välilehdellä. Voit kumota ne milloin tahansa."
                 },
-                "permissions": ""
+                "permissions": "API-avain määrittää tekoälyn käytettävissä olevat oikeudet – se toimii samalla käyttöoikeustasolla kuin avaimen omistaja."
               },
               "clientConfig": {
-                "title": "",
+                "title": "Asiakasasetukset",
                 "streamableHttp": {
-                  "recommended": "",
-                  "title": "",
-                  "worksWith": "",
-                  "addToConfig": "",
-                  "cursor": "",
-                  "claudeDesktop": "",
-                  "claudeCode": "",
-                  "vsCodeCopilot": "",
-                  "replaceHint": ""
+                  "recommended": "Suositus",
+                  "title": "Streamable HTTP",
+                  "worksWith": "Toimii: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
+                  "addToConfig": "Lisää MCP-asiakkaan asetustiedostoon:",
+                  "cursor": "{name}: {file} projektissasi tai yleisissä asetuksissa",
+                  "claudeDesktop": "{name}: {file}",
+                  "claudeCode": "{name}: {file} tai käytä komentoa {command}",
+                  "vsCodeCopilot": "{name}: {file} työtilan asetuksissa",
+                  "replaceHint": "Korvaa paikkamerkki API-avaimella, jonka sait sitä luodessasi."
                 },
                 "stdio": {
-                  "title": "",
-                  "description": ""
+                  "title": "stdio (vanhat asiakkaat mcp-remote-sillan kautta)",
+                  "description": "Asiakkaille, jotka tukevat vain stdio-siirtoa. Vaatii asennetun {dependency} (Node.js) paikallisesti:"
                 }
               },
               "testConnection": {
-                "title": "",
-                "description": "",
-                "hint": ""
+                "title": "Testaa yhteys",
+                "description": "Suorita tämä terminaalissasi varmistaaksesi, että päätepiste on tavoitettavissa ja API-avaimesi toimii:",
+                "hint": "Onnistunut vastaus palauttaa MCP-palvelimen ominaisuudet. Jos näet virheen, tarkista JSON-vastauksen vihjeet."
               },
               "availableTools": {
-                "title": "",
-                "description": "",
-                "columnType": "",
-                "columnName": "",
-                "columnDescription": ""
+                "title": "Käytettävissä olevat työkalut",
+                "description": "{count} työkalua käytettävissä. Laajenna kategoria nähdäksesi yksittäiset työkalut ja niiden kuvaukset.",
+                "columnType": "Tyyppi",
+                "columnName": "Työkalu",
+                "columnDescription": "Kuvaus"
               },
               "troubleshooting": {
-                "title": "",
+                "title": "Vianmääritys",
                 "missingHeader": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"ApiKey-otsikko puuttuu\"",
+                  "description": "Asiakkaasi ei lähetä {header}-otsikkoa. Tarkista, että {section}-osio MCP-asetuksissasi on oikein. Jotkut asiakkaat vaativat uudelleenkäynnistyksen asetusmuutosten jälkeen."
                 },
                 "invalidFormat": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"ApiKey-muoto virheellinen\"",
+                  "description": "Varmista, että kopioit koko API-avaimen, et vain osaa siitä."
                 },
                 "invalidKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Virheellinen API-avain\"",
+                  "description": "Avaimen tunnusta ei löydy tai tunnus on väärä. API-avaimet voidaan näyttää vain kerran luotaessa. Jos kadotit sen, poista vanha avain ja luo uusi."
                 },
                 "connectionRefused": {
-                  "title": "",
-                  "description": ""
+                  "title": "Yhteys hylättiin / aikakatkaisu",
+                  "description": "Varmista, että URL on tavoitettavissa AI-asiakkaaltasi. Jos Homarr toimii käänteisen välityspalvelimen takana tai Dockerissa, käytä ulkoista URL-osoitetta (ei {localhost}). Tarkista portti on oikein (oletus: 7575 Dockerille)."
                 },
                 "toolsNotAppearing": {
-                  "title": "",
-                  "description": ""
+                  "title": "Työkalut eivät näy",
+                  "description": "Jotkut työkalut vaativat tiettyjä integraatioita (esim. Docker, Overseerr). Työkalulista riippuu siitä, mitä Homarr-instanssissasi on käytettävissä."
                 }
               },
-              "copy": "",
+              "copy": "Kopioi",
               "oneClick": {
-                "title": "",
-                "subtitle": "",
-                "vsCode": "",
-                "cursor": "",
-                "copyUrl": "",
-                "copied": "",
-                "copyHint": "",
-                "manualConfig": ""
+                "title": "Asenna yhdellä napsautuksella",
+                "subtitle": "Käyttää OAuthia – todenna selaimesi ensimmäisellä käyttökerralla",
+                "vsCode": "Asenna VS Codeen",
+                "cursor": "Asenna Cursoriin",
+                "copyUrl": "Kopioi MCP-URL",
+                "copied": "Kopioitu!",
+                "copyHint": "ChatGPT:lle, Claude Codelle tai mille tahansa MCP-asiakkaalle",
+                "manualConfig": "Manuaalinen määritys"
               }
             }
           }
         },
         "backup": {
-          "title": "",
-          "metaTitle": "",
+          "title": "Täysi tietokantavarmuuskopio",
+          "metaTitle": "Varmuuskopiointi ja palautus",
           "export": {
-            "title": "",
-            "description": "",
-            "button": "",
-            "error": "",
+            "title": "Vie tietokanta",
+            "description": "Lataa täysi varmuuskopio SQLite-tietokannastasi, sisältäen kaikki asetukset, käyttäjät, paneelit ja salatut integraatiosalaisuudet. Varmuuskopio pakataan ZIP-tiedostoksi, jossa on salausavain ja metatiedot.",
+            "button": "Lataa varmuuskopio",
+            "error": "Vienti epäonnistui",
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "submit": "",
-              "cancel": ""
+              "title": "Arkaluonteisten tietojen vienti",
+              "warningTitle": "Tämä vienti sisältää koko tietokannan.",
+              "warningBody": "Varmuuskopio sisältää kaikki käyttäjät, integraatiosalaisuudet (salattuina), API-avaimet, paneelien asetukset ja sovellustiedot. Säilytä viety tiedosto turvallisesti äläkä jaa sitä.",
+              "typePrompt": "Kirjoita \"{phrase}\" jatkaaksesi",
+              "submit": "Vie tietokanta",
+              "cancel": "Peruuta"
             }
           },
           "import": {
-            "title": "",
-            "description": "",
-            "warning": "",
+            "title": "Palauta tietokanta",
+            "description": "Lataa aiemmin viety varmuuskopio-ZIP palauttaaksesi tietokannan. Tämä korvaa koko tietokantasi. Jos varmuuskopio on luotu eri salausavaimella, salaisuudet salataan automaattisesti uudelleen.",
+            "warning": "Varmuuskopion palauttaminen korvaa nykyisen tietokannan kokonaan ja käynnistää sovelluksen uudelleen. Tätä toimintoa ei voi peruuttaa.",
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Pudota varmuuskopio-ZIP tähän tai napsauta selataksesi",
+              "description": "Vain Homarr SQLite -varmuuskopion .zip-tiedostot hyväksytään"
             },
-            "changeFile": "",
-            "button": "",
+            "changeFile": "Vaihda tiedosto",
+            "button": "Palauta tietokanta",
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Palautus valmis",
+              "message": "Tietokanta on palautettu onnistuneesti. Sovellus käynnistyy uudelleen..."
             },
-            "error": ""
+            "error": "Tuonti epäonnistui"
           },
           "preview": {
-            "title": "",
-            "exported": "",
-            "loading": "",
-            "errorTitle": "",
-            "entity": "",
-            "count": "",
-            "boards": "",
+            "title": "Varmuuskopion sisältö",
+            "exported": "Viety {date}",
+            "loading": "Analysoidaan varmuuskopiotiedostoa...",
+            "errorTitle": "Esikatseluvirhe",
+            "entity": "Entiteetti",
+            "count": "Lukumäärä",
+            "boards": "Paneelit",
             "entities": {
-              "board": "",
-              "user": "",
-              "app": "",
-              "integration": "",
-              "item": "",
-              "media": "",
-              "search_engine": ""
+              "board": "Paneelit",
+              "user": "Käyttäjät",
+              "app": "Sovellukset",
+              "integration": "Integraatiot",
+              "item": "Widgetit",
+              "media": "Media",
+              "search_engine": "Hakukoneet"
             },
-            "analyzeError": "",
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": ""
+            "analyzeError": "Varmuuskopiotiedoston analysointi epäonnistui",
+            "invalidMissingMetadata": "Virheellinen varmuuskopio: metadata.json puuttuu",
+            "invalidMissingDb": "Virheellinen varmuuskopio: db.sqlite puuttuu"
           },
           "restore": {
             "dropzone": {
-              "title": "",
-              "description": ""
+              "title": "Pudota varmuuskopio-ZIP tähän",
+              "description": "Hyväksyy Homarr SQLite -varmuuskopion .zip-tiedostot (max 256 Mt)"
             },
-            "analyzing": "",
-            "changeFile": "",
-            "continueToRestore": "",
-            "tryAgain": "",
-            "analysisError": "",
+            "analyzing": "Analysoidaan varmuuskopiota...",
+            "changeFile": "Vaihda tiedosto",
+            "continueToRestore": "Jatka palautukseen",
+            "tryAgain": "Yritä uudelleen",
+            "analysisError": "Analyysivirhe",
             "preview": {
-              "title": "",
-              "exported": "",
-              "entity": "",
-              "count": "",
-              "boards": "",
+              "title": "Varmuuskopion sisältö",
+              "exported": "Viety {date}",
+              "entity": "Entiteetti",
+              "count": "Lukumäärä",
+              "boards": "Paneelit",
               "entities": {
-                "board": "",
-                "user": "",
-                "app": "",
-                "integration": "",
-                "item": "",
-                "media": "",
-                "search_engine": ""
+                "board": "Paneelit",
+                "user": "Käyttäjät",
+                "app": "Sovellukset",
+                "integration": "Integraatiot",
+                "item": "Widgetit",
+                "media": "Media",
+                "search_engine": "Hakukoneet"
               },
-              "migrationsApplied": "",
-              "migrationsAppliedPlural": "",
-              "migrationsOlderVersion": "",
-              "migrationsOlderVersionPlural": "",
-              "migrationsUpToDate": "",
-              "upToDate": "",
-              "migrationsPending": ""
+              "migrationsApplied": "{count} migraatio käytössä",
+              "migrationsAppliedPlural": "{count} migraatiota käytössä",
+              "migrationsOlderVersion": "Tämä varmuuskopio on vanhemmasta Homarr-versiosta. {count} skeemamigraatio otettiin käyttöön saattaakseen sen ajan tasalle.",
+              "migrationsOlderVersionPlural": "Tämä varmuuskopio on vanhemmasta Homarr-versiosta. {count} skeemamigraatiota otettiin käyttöön saattaakseen sen ajan tasalle.",
+              "migrationsUpToDate": "Tietokantaskeema on ajan tasalla ({count} migraatiota käytössä)",
+              "upToDate": "Ajan tasalla",
+              "migrationsPending": "{count} odottaa"
             },
             "migration": {
-              "title": "",
-              "migrationLabel": ""
+              "title": "Migraatioiden käyttöönotto ({current}/{total})",
+              "migrationLabel": "Migraatio {index}"
             },
             "confirm": {
-              "title": "",
-              "warningTitle": "",
-              "warningBody": "",
-              "typePrompt": "",
-              "cancel": "",
-              "submit": ""
+              "title": "Tuhoava toimenpide",
+              "warningTitle": "Tämä korvaa koko tietokantasi pysyvästi.",
+              "warningBody": "Kaikki nykyiset paneelit, käyttäjät, sovellukset, integraatiot, asetukset ja istunnot menetetään. Tätä toimintoa ei voi peruuttaa. Sovellus käynnistyy uudelleen palautuksen jälkeen.",
+              "typePrompt": "Kirjoita \"{phrase}\" jatkaaksesi",
+              "cancel": "Peruuta",
+              "submit": "Palauta tietokanta"
             },
             "progress": {
-              "title": "",
-              "extracting": "",
-              "migrating": "",
-              "encrypting": "",
-              "swapping": "",
-              "restarting": ""
+              "title": "Palautetaan tietokantaa...",
+              "extracting": "Puretaan varmuuskopioarkistoa",
+              "migrating": "Otetaan käyttöön tietokantamigraatioita",
+              "encrypting": "Salataan integraatiosalaisuuksia uudelleen",
+              "swapping": "Korvataan tietokantatiedosto",
+              "restarting": "Käynnistetään palvelin uudelleen"
             },
             "complete": {
-              "title": "",
-              "message": ""
+              "title": "Palautus valmis",
+              "message": "Tietokanta on palautettu onnistuneesti. Palvelin käynnistyy uudelleen – päivitä sivu muutaman sekunnin kuluttua."
             },
             "failed": {
-              "title": ""
+              "title": "Palautus epäonnistui"
             },
-            "invalidMissingMetadata": "",
-            "invalidMissingDb": "",
-            "analyzeError": ""
+            "invalidMissingMetadata": "Virheellinen varmuuskopio: metadata.json puuttuu",
+            "invalidMissingDb": "Virheellinen varmuuskopio: db.sqlite puuttuu",
+            "analyzeError": "Varmuuskopion analysointi epäonnistui"
           }
         }
       },
@@ -4699,11 +5059,14 @@
     "title": "Kontit",
     "table": {
       "updated": "Päivitetty {when}",
+      "refresh": {
+        "lastUpdated": "Viimeisin päivitys {when}"
+      },
       "search": "Suodata {count} konttia...",
       "selected": "{selectCount}/{totalCount} kontista valittu",
       "footer": "Yhteensä {count} konttia",
-      "totalCpu": "",
-      "totalMemory": ""
+      "totalCpu": "CPU yhteensä: {cpu}%",
+      "totalMemory": "Muisti yhteensä: {memory}"
     },
     "field": {
       "name": {
@@ -4744,7 +5107,7 @@
       "logs": {
         "label": "Tarkastele lokeja",
         "page": {
-          "title": ""
+          "title": "{name} lokit"
         }
       },
       "start": {
@@ -4788,6 +5151,7 @@
       },
       "remove": {
         "label": "Poista",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "",
@@ -4831,7 +5195,7 @@
     },
     "error": {
       "internalServerError": "",
-      "noColumns": ""
+      "noColumns": "Valitse vähintään yksi sarake widgetin asetuksista"
     }
   },
   "kubernetes": {
@@ -5165,7 +5529,7 @@
         "docker": {
           "label": "Docker",
           "logs": {
-            "label": ""
+            "label": "Lokit"
           }
         },
         "kubernetes": {
@@ -5415,6 +5779,14 @@
                 "children": {
                   "detail": {
                     "title": "Käytä ping-kuvakkeita"
+                  }
+                }
+              },
+              "enableRightClickOnWidgets": {
+                "label": "Käytä hiiren kakkospainiketta widgeteissä",
+                "children": {
+                  "detail": {
+                    "title": "Käytä hiiren kakkospainiketta widgeteissä"
                   }
                 }
               },
@@ -5726,10 +6098,10 @@
               "header": {
                 "season": "",
                 "episodes": "",
-                "status": ""
+                "status": "Tila"
               },
               "status": {
-                "requested": ""
+                "requested": "Pyydetty"
               }
             },
             "button": {
@@ -5842,31 +6214,31 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Lue dokumentaatio",
+    "next": "Seuraava",
+    "prev": "Takaisin",
+    "done": "Valmis",
+    "skip": "Ohita kierros",
     "manage": {
       "welcome": {
         "title": "Tervetuloa Homarriin!",
         "description": "Tämä on ohjauskeskuksesi. Täällä hallitset paneeleita, sovelluksia, integraatioita, käyttäjiä ja palvelinasetuksia. Tutustutaan jokaiseen osioon."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Omat paneelisi",
+        "description": "Tässä ovat kaikki kojelaudat. Jokaisella on oma asettelunsa, taustansa ja käyttöoikeusasetuksensa. Näet kuka ne on luonut ja ovatko ne julkisia vai yksityisiä."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Luo paneeli",
+        "description": "Napsauta tästä luodaksesi uuden kojelaudan tai tuodaksesi sellaisen aiemmasta Homarr-asennuksesta. Jokainen paneeli saa oman URL-osoitteensa, jonka voit jakaa."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Omat sovelluksesi",
+        "description": "Nämä ovat kaikki lisäämäsi sovellukset – linkit itsepalvelupalveluihisi. Jokaisella on kuvake, valinnainen terveystarkastus ja tilamerkki kojelaudalla."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Lisää sovellus",
+        "description": "Rekisteröi uusi palvelu tästä. Anna sille nimi, URL ja kuvake – se näkyy laatikkona paneelissasi ja siinä on reaaliaikainen tilaseuranta."
       },
       "integrationsList": {
         "title": "Integraatiosi",
@@ -5877,34 +6249,34 @@
         "description": "Yhdistä uusi palvelu tästä. Valitse tyyppi, syötä URL-osoite ja rajapinnan avain — Homarr todentaa yhteyden ennen tallennusta."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Käyttäjäsi",
+        "description": "Näe kaikki joilla on pääsy. Järjestä käyttäjät ryhmiin ja hallitse kuka voi katsella tai muokata kutakin paneelia."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Luo käyttäjä",
+        "description": "Lisää uusi käyttäjätili tästä. Voit käyttää myös kutsulinkkejä helppoon käyttöönottoon. Tässä olikin kierros – olet valmis!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
+        "title": "Tämä on paneelisi",
         "description": "Kojelauta, jolla järjestelet sovelluksia ja widgettejä raahamaalla. Etsi sovelluksia, paneeleita ja toimintoja milloin tahansa painamalla Ctrl + K."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Muokkaustila",
+        "description": "Napsauta tästä siirtyäksesi muokkaustilaan. Voit sitten lisätä widgettejä, sovelluksia ja osioita – vedä sijoittaaksesi, muuta kokoa kulmakahvasta. Napsauta uudelleen tallentaaksesi muutokset."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Paneelin asetukset",
+        "description": "Vaihda paneelin nimeä, sarakkeita, taustaa, värejä ja käyttöoikeuksia. Jokainen paneeli voi olla julkinen tai yksityinen."
       },
       "switcher": {
-        "title": "",
+        "title": "Vaihda paneelia",
         "description": "Siirry paneelien välillä. Luo erilliset kojelaudat eri tarkoituksiin — media, verkko, käyttäjäkohtaiset tai mitä vain haluat."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Profiilisi",
+        "description": "Vaihda väriteemaa, kieltä, kotipaneelia ja asetuksia. Täältä pääset myös hallinta-alueelle."
       }
     }
   }

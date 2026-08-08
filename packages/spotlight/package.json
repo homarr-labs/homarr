@@ -13,6 +13,8 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./component": "./src/component.ts",
+    "./open": "./src/open.ts",
     "./styles.css": "./src/styles.css"
   },
   "scripts": {

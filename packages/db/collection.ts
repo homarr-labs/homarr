@@ -36,8 +36,10 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
       db.transaction((transaction) => {
         for (const [key, values] of objectEntries(context)) {
           if (values.length >= 1) {
+            // oxlint-disable-next-line import/namespace -- TableKey limits key to exported schema tables.
+            const table = schema[key];
             transaction
-              .insert(schema[key])
+              .insert(table)
               .values(values as never)
               .run();
           }
@@ -51,7 +53,9 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
         for (const [key, values] of objectEntries(context)) {
           if (values.length >= 1) {
             // Below is actually the mysqlSchema when the driver is mysql
-            await transaction.insert(schema[key] as never).values(values as never);
+            // oxlint-disable-next-line import/namespace -- TableKey limits key to exported schema tables.
+            const table = schema[key] as never;
+            await transaction.insert(table).values(values as never);
           }
         }
       });

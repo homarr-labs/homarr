@@ -11,6 +11,7 @@ const mediaRequestStatusValues = ["pending", "approved", "declined", "failed", "
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaRequests-requestList", {
   icon: IconZoomQuestion,
+  queryKey: [["widget", "mediaRequests"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       linksTargetNewTab: factory.switch({

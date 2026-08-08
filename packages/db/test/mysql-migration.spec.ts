@@ -58,7 +58,7 @@ describe("Mysql Migration", () => {
 
     connection.end();
     await mysqlContainer.stop();
-  }, 90_000);
+  }, 120_000);
 
   test("Custom Widget v2 migration preserves v1 data and board references", async () => {
     const mysqlContainer = await new MySqlContainer("mysql:latest").start();
@@ -198,5 +198,5 @@ describe("Mysql Migration", () => {
       await sql.end();
       await mysqlContainer.stop();
     }
-  }, 90_000);
+  }, 120_000);
 });
