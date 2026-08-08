@@ -710,14 +710,7 @@
       "delete": "사용자 지정 위젯 삭제",
       "deleteConfirm": "\"{name}\"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
       "export": "내보내기",
-      "addMapping": "매핑 추가",
-      "addColumn": "열 추가",
       "edit": "편집",
-      "removeMapping": "매핑 제거",
-      "removeColumn": "열 제거",
-      "addItem": "항목 추가",
-      "removeItem": "항목 제거",
-      "addBar": "바 추가",
       "duplicate": "복사",
       "copyAiPrompt": "AI 프롬프트 복사",
       "enable": "활성화",
@@ -727,140 +720,7 @@
     "field": {
       "name": "이름",
       "description": "설명",
-      "iconUrl": "아이콘 URL",
-      "url": "URL",
-      "authType": "인증 유형",
-      "headerName": "헤더/쿼리 파라미터 이름",
-      "method": "메서드",
-      "requestBody": "요청 본문",
-      "displayType": "표시 유형",
-      "jsonPath": "JSON 경로",
-      "jsonPathHint": "JSONPath 문법으로 값을 추출하십시오. 예: $.data.temperature 또는 $.items[0].name",
-      "label": "레이블",
-      "unit": "단위",
-      "mappings": "매핑",
-      "tablePath": "JSON 경로 배열",
-      "tablePathHint": "응답에서 배열이 위치한 경로입니다. 예: $.data.items",
-      "columns": "열",
-      "header": "헤더",
-      "items": "항목",
-      "gridColumns": "그리드 열 개수",
-      "cardStyle": "카드 스타일",
-      "bars": "바",
-      "valuePath": "JSON 경로 값",
-      "maxPath": "JSON 경로 최댓값",
-      "showPercentage": "백분율 표시",
-      "barSize": "바 크기",
-      "goodValues": "정상 값(쉼표로 구분)",
-      "dotSize": "점 크기",
-      "valueSize": "값 크기",
-      "labelPosition": "레이블 위치",
-      "kvLayout": "레이아웃",
-      "striped": "줄무늬 행",
-      "compact": "컴팩트 모드",
-      "maxHeight": "최대 높이 (px)",
-      "color": "색상",
-      "buttonLabel": "버튼 명칭",
-      "buttonColor": "버튼 색상",
-      "confirmText": "확인 텍스트",
-      "confirmTextHint": "설정하면 요청을 실행하기 전에 확인 대화상자가 표시됩니다",
-      "successMessage": "성공 메세지",
-      "successMessageHint": "실행 성공 후 표시되는 메세지",
-      "enabled": "활성화됨",
-      "template": {
-        "label": "JSX 템플릿",
-        "description": "Mantine JSX 템플릿. 데이터 바인딩(예: data.name)을 통해 API 응답 필드에 액세스합니다. 허용된 구성 요소만 사용하십시오. 금지: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU 온도",
-      "exampleLabelShort": "CPU 온도",
-      "exampleHeader": "이름",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "파랑"
-    },
-    "cardStyleOption": {
-      "filled": "채워짐",
-      "outline": "외곽선",
-      "subtle": "미묘한"
-    },
-    "layoutOption": {
-      "list": "리스트",
-      "grid": "그리드"
-    },
-    "sizeOption": {
-      "sm": "작음",
-      "md": "중간",
-      "lg": "큼",
-      "xl": "매우 큼"
-    },
-    "labelPositionOption": {
-      "above": "위",
-      "below": "아래"
-    },
-    "fieldset": {
-      "general": "일반",
-      "connection": "API 연결",
-      "display": "표시 설정"
-    },
-    "displayTypeDescription": {
-      "singleValue": "레이블과 단위가 있는 하나의 추출된 값을 표시합니다",
-      "keyValue": "여러 레이블이 지정된 값을 나란히 표시합니다",
-      "table": "테이블 형식으로 데이터 행을 표시합니다",
-      "statGrid": "그리드의 색상이 지정된 통계 카드 — Pi-Hole 또는 Speedtest 위젯과 유사",
-      "progressBars": "사용량 또는 완료율을 표시하는 진행률 표시줄 — 디스크, 메모리, 할당량용",
-      "statusIndicator": "온라인/오프라인 또는 상태를 표시하는 색상 상태 점",
-      "countGrid": "좁은 그리드에 작은 숫자 + 레이블 카운터",
-      "raw": "디버깅을 위한 예쁘게 출력된 JSON",
-      "actionButton": "클릭 시 요청을 트리거하는 버튼",
-      "customJsx": "전체 API 데이터 바인딩과 함께 허용된 Mantine 구성 요소를 사용하는 사용자 정의 JSX 레이아웃"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "없음",
-      "bearer": "Bearer 토큰",
-      "basic": "기본 인증",
-      "apiKeyHeader": "API 키(헤더)",
-      "apiKeyQuery": "API 키(쿼리)"
-    },
-    "displayType": {
-      "singleValue": "단일 값",
-      "keyValue": "키-값",
-      "table": "테이블",
-      "statGrid": "스택 그리드",
-      "progressBars": "진행 바",
-      "statusIndicator": "상태 인디케이터",
-      "countGrid": "카운트 그리드",
-      "raw": "원시 JSON",
-      "actionButton": "동작 버튼",
-      "customJsx": "사용자 지정 JSX"
-    },
-    "secret": {
-      "apiKey": "API 키/토큰",
-      "username": "사용자명",
-      "password": "비밀번호",
-      "savedPlaceholder": "••••••• (저장됨, 유지하려면 공백)"
-    },
-    "preview": {
-      "title": "미리보기",
-      "test": "테스트",
-      "hint": "현재 설정으로 API 응답을 미리 보려면 테스트를 클릭하십시오.",
-      "rawResponse": "원본 JSON 응답"
+      "iconUrl": "아이콘 URL"
     },
     "notification": {
       "created": "\"{name}\" 위젯 생성 완료.",
@@ -868,9 +728,6 @@
       "deleted": "\"{name}\" 위젯 삭제 완료.",
       "imported": "위젯 가져오기 완료.",
       "aiPromptCopied": "AI 프롬프트 클립보드에 복사됨",
-      "aiPromptDescription": "사전 제작된 프롬프트를 복사하여 AI 챗봇(ChatGPT, Claude, Gemini 등)에 붙여넣습니다. 전체 위젯 스키마 및 API 응답이 포함되어 있으므로 즉시 가져올 수 있는 JSON 설정을 AI가 생성할 수 있습니다.",
-      "aiPromptCopy": "클립보드에 복사",
-      "aiPromptNoResponse": "팁: 더 나은 결과를 얻기 위해 먼저 테스트로 프롬프트에 API 응답을 포함하십시오.",
       "aiPromptCopyError": "프롬프트 클립보드 복사 실패. 브라우저에서 이 기능을 지원하지 않을 수도 있습니다.",
       "createError": "위젯 생성 실패. API 엔드포인트에 도달할 수 있는지 확인해 보십시오.",
       "updateError": "위젯 업데이트 실패. 변경 사항이 저장되지 않습니다.",
@@ -883,14 +740,6 @@
       "previewError": "미리보기 가져오기 실패. URL을 확인한 후 다시 시도해 주십시오.",
       "executed": "작업 실행 완료.",
       "executeError": "작업 실패: {error}"
-    },
-    "table": {
-      "name": "이름",
-      "url": "URL",
-      "display": "표시"
-    },
-    "widget": {
-      "disabled": "위젯 비활성화됨"
     }
   },
   "integration": {
@@ -2388,10 +2237,21 @@
         },
         "descendingDefaultSort": {
           "label": "역순 정렬"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "컨테이너 상태 불러오기 실패"
+        "internalServerError": "컨테이너 상태 불러오기 실패",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2685,7 +2545,19 @@
         "showOnlyPlaying": {
           "label": "현재 재생 중 항목만 표시",
           "description": "비활성화 옵션은 plex에서는 지원되지 않음"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "현재 재생 중",
@@ -2694,6 +2566,9 @@
         "id": "아이디",
         "status": "상태",
         "directPlay": "직접 재생",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "트랜스코딩",
         "paused": "일시 중지됨",
         "remaining": "남은 시간 {minutes}분",
@@ -2760,193 +2635,6 @@
       },
       "error": {
         "internalServerError": "Paperless-ngx 데이터를 가져오지 못함"
-      }
-    },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "PatchMon의 호스트 패치 상태 개요",
-      "title": "PatchMon 통계",
-      "totalHosts": "총 호스트",
-      "hostsNeedingUpdates": "업데이트 필요",
-      "securityUpdates": "보안 업데이트",
-      "upToDateHosts": "최신 상태의 호스트",
-      "hostsWithSecurityUpdates": "보안 업데이트가 필요한 호스트",
-      "recentUpdates24h": "업데이트 (24시간)",
-      "totalOutdatedPackages": "오래된 패키지",
-      "totalRepos": "저장소",
-      "osDistribution": "OS 배포판",
-      "compliance": "패치 준수",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "{time} 업데이트됨",
-      "option": {
-        "showTotalHosts": {
-          "label": "총 호스트 표시",
-          "description": "모니터링되는 총 호스트 수 표시"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "업데이트가 필요한 호스트 표시",
-          "description": "하나 이상의 오래된 패키지가 있는 호스트 표시"
-        },
-        "showSecurityUpdates": {
-          "label": "보안 업데이트 표시",
-          "description": "사용 가능한 총 보안 업데이트 수 표시"
-        },
-        "showUpToDateHosts": {
-          "label": "최신 호스트 표시",
-          "description": "오래된 패키지가 없는 호스트 표시"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "보안 업데이트가 필요한 호스트 표시",
-          "description": "보안 패치가 필요한 호스트 표시"
-        },
-        "showRecentUpdates24h": {
-          "label": "최근 업데이트 (24시간) 표시",
-          "description": "지난 24시간 동안 적용된 업데이트 수 표시"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "오래된 패키지 표시",
-          "description": "모든 호스트에서의 총 오래된 패키지 수 표시"
-        },
-        "showTotalRepos": {
-          "label": "저장소 표시",
-          "description": "모니터링되는 활성 저장소 수 표시"
-        },
-        "enableThresholdColors": {
-          "label": "임계값 색상 활성화",
-          "description": "심각도 사전 설정에 따라 통계 값을 녹색, 노란색 또는 빨간색으로 표시"
-        },
-        "useCustomThresholds": {
-          "label": "고급 임계값",
-          "description": "절대 개수 또는 전체 호스트 대비 백분율을 사용하여 통계별 경고 및 위험 임계값 사용자 정의"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "절대 개수",
-            "percent": "전체 호스트 대비 백분율"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "업데이트 필요 임계값 모드",
-          "description": "업데이트 필요 개수를 절대값 또는 전체 호스트 대비 백분율로 비교"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "업데이트 필요 경고 임계값",
-          "description": "이 임계값에 도달하면 노란색으로 표시"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "업데이트 필요 위험 임계값",
-          "description": "이 임계값에 도달하면 빨간색으로 표시"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "보안 업데이트 임계값 모드",
-          "description": "보안 업데이트 개수를 절대값 또는 전체 호스트 대비 백분율로 비교"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "보안 업데이트 경고 임계값",
-          "description": "이 임계값에 도달하면 노란색으로 표시"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "보안 업데이트 위험 임계값",
-          "description": "이 임계값에 도달하면 빨간색으로 표시"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "보안 업데이트가 있는 호스트 임계값 모드",
-          "description": "호스트 개수를 절대값 또는 전체 호스트 대비 백분율로 비교"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "보안 업데이트가 있는 호스트 경고 임계값",
-          "description": "이 임계값에 도달하면 노란색으로 표시"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "보안 업데이트가 있는 호스트 위험 임계값",
-          "description": "이 임계값에 도달하면 빨간색으로 표시"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "최신 호스트 임계값 모드",
-          "description": "최신 호스트 개수를 절대값 또는 전체 호스트 대비 백분율로 비교"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "최신 호스트 경고 임계값",
-          "description": "값이 이 임계값 이상이지만 전체 적용 범위 미만일 때 노란색으로 표시"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "최신 호스트 위험 임계값",
-          "description": "값이 이 임계값 미만으로 떨어지면 빨간색으로 표시"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "오래된 패키지 임계값 모드",
-          "description": "오래된 패키지 개수를 절대값 또는 전체 호스트 대비 백분율로 비교"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "오래된 패키지 경고 임계값",
-          "description": "이 임계값에 도달하면 노란색으로 표시"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "오래된 패키지 위험 임계값",
-          "description": "이 임계값에 도달하면 빨간색으로 표시"
-        },
-        "showOsDistribution": {
-          "label": "OS 배포판 표시",
-          "description": "운영 체제별로 모니터링되는 호스트 분석 표시"
-        },
-        "osDistributionLimit": {
-          "label": "OS 배포판 제한",
-          "description": "표시할 최대 운영 체제 수",
-          "option": {
-            "3": "상위 3개",
-            "5": "상위 5개",
-            "10": "상위 10개",
-            "all": "모두"
-          }
-        },
-        "showOsVersion": {
-          "label": "OS 버전 표시",
-          "description": "사용 가능한 경우 각 배포판 레이블에 OS 버전 추가"
-        },
-        "showComplianceHero": {
-          "label": "준수 상태 표시",
-          "description": "최신 호스트의 백분율을 표시하는 준수 링 표시"
-        },
-        "osDisplayMode": {
-          "label": "OS 표시 모드",
-          "description": "운영 체제 배포판 표시 방법 선택",
-          "option": {
-            "bars": "가로 막대",
-            "donut": "도넛 차트"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "PatchMon 데이터를 가져오지 못했습니다"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Bazarr 인스턴스의 누락된 자막 및 상태 개요",
-      "episodes": "누락된 에피소드",
-      "movies": "누락된 영화",
-      "providers": "제공자 문제",
-      "status": "상태 문제",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "누락된 에피소드 표시",
-          "description": "누락된 자막이 있는 에피소드 수 표시"
-        },
-        "showMissingMovies": {
-          "label": "누락된 영화 표시",
-          "description": "누락된 자막이 있는 영화 수 표시"
-        },
-        "showProviderIssues": {
-          "label": "제공자 문제 표시",
-          "description": "문제가 있는 자막 제공자 수 표시"
-        },
-        "showHealthIssues": {
-          "label": "상태 문제 표시",
-          "description": "Bazarr 상태 문제 수 표시"
-        }
-      },
-      "error": {
-        "internalServerError": "Bazarr 데이터를 가져오지 못했습니다"
       }
     },
     "immich-serverStats": {
@@ -3321,35 +3009,6 @@
         }
       }
     },
-    "mediaMissing": {
-      "name": "누락 및 대기 중인 미디어",
-      "description": "Radarr 및 Sonarr의 누락 및 대기 중인 영화와 에피소드 표시",
-      "option": {
-        "showMissing": {
-          "label": "누락된 항목 표시"
-        },
-        "showQueued": {
-          "label": "대기 중인 항목 표시"
-        },
-        "pageSize": {
-          "label": "페이지당 항목 수"
-        }
-      },
-      "tab": {
-        "missing": "누락",
-        "queued": "대기 중"
-      },
-      "type": {
-        "movie": "영화",
-        "episode": "에피소드"
-      },
-      "empty": {
-        "missing": "누락된 항목 없음",
-        "queued": "대기 중인 항목 없음",
-        "noTabsEnabled": "위젯 설정에서 최소한 하나의 탭을 활성화하세요"
-      },
-      "timeLeft": "남은 시간"
-    },
     "rssFeed": {
       "name": "RSS 피드",
       "description": "하나 이상의 일반 RSS, ATOM 또는 JSON 피드를 모니터링하고 표시합니다",
@@ -3678,40 +3337,6 @@
         "internalServerError": "가동 시간 데이터를 가져오지 못함"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Traefik 라우터, 서비스, 미들웨어 및 진입점 개요",
-      "option": {
-        "showTcp": {
-          "label": "TCP 표시"
-        },
-        "showUdp": {
-          "label": "UDP 표시"
-        },
-        "showEntryPoints": {
-          "label": "진입점 표시"
-        }
-      },
-      "instances": "Traefik 인스턴스",
-      "versionUnknown": "버전 알 수 없음",
-      "summary": {
-        "routers": "라우터",
-        "entryPoints": "진입점"
-      },
-      "resource": {
-        "routers": "라우터",
-        "services": "서비스",
-        "middlewares": "미들웨어"
-      },
-      "status": {
-        "healthy": "정상",
-        "errors": "{count}개 오류",
-        "warnings": "{count}개 경고"
-      },
-      "error": {
-        "internalServerError": "Traefik 데이터를 가져오지 못함"
-      }
-    },
     "audioStats": {
       "name": "오디오 정보",
       "description": "Navidrome 또는 Audiobookshelf의 라이브러리 및 재생 정보",
@@ -3727,18 +3352,6 @@
         "showSongs": {
           "label": "음원 표시",
           "description": "음악 라이브러리에 있는 음원 총 수를 표시 (Navidrome)"
-        },
-        "showNowPlaying": {
-          "label": "현재 재생 중 표시",
-          "description": "현재 재생 중인 트랙을 표시 (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "현재 재생 목록 표시",
-          "description": "활성 스트림 수 대신 개별 트랙 표시 (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "최대 현재 재생 항목 수",
-          "description": "현재 재생 목록에 표시할 최대 트랙 수 (Navidrome)"
         },
         "showLibraryCount": {
           "label": "라이브러리 수 표시",
@@ -3773,8 +3386,6 @@
       "podcasts": "팟캐스트",
       "listeningTime": "청취 시간",
       "activeSessions": "활성 세션",
-      "nowPlaying": "현재 재생 중",
-      "nowPlayingCount": "{count, plural, one {# 스트림} other {# 스트림}}",
       "error": {
         "internalServerError": "오디오 정보 가져오기 실패"
       }
@@ -3849,26 +3460,6 @@
         "unhealthy": "비정상"
       }
     },
-    "customApi": {
-      "name": "사용자 지정 API",
-      "description": "사용자 지정 설정으로 외부 API 데이터를 표시합니다.",
-      "option": {
-        "definitionId": {
-          "label": "정의 ID"
-        },
-        "refreshInterval": {
-          "label": "새로고침 간격",
-          "description": "API에서 데이터를 다시 가져오는 빈도 (초 단위)"
-        }
-      },
-      "noDefinition": "선택한 정의 없음",
-      "definitionNotFound": "위젯 정의를 찾을 수 없습니다. 삭제되었을 수 있습니다.",
-      "noDisplayOutput": "디스플레이 출력 없음",
-      "executeConfirm": "이 작업을 삭제하시겠습니까?",
-      "executing": "실행 중...",
-      "executeSuccess": "작업 실행 완료",
-      "executeFailed": "작업 실패. 위젯 설정을 확인하십시오."
-    },
     "beszelSystemTable": {
       "name": "Beszel 시스템 (표)",
       "description": "정렬 가능한 열과 상태 표시기가 있는 모든 Beszel 모니터링 시스템의 표 보기",
@@ -3914,11 +3505,19 @@
         },
         "showAgent": {
           "label": "에이전트 버전 표시"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "시스템을 찾을 수 없음",
       "error": {
-        "internalServerError": "Beszel에 연결할 수 없습니다. 통합 설정을 확인하십시오."
+        "internalServerError": "Beszel에 연결할 수 없습니다. 통합 설정을 확인하십시오.",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "시스템",
@@ -4110,6 +3709,256 @@
           "title": "Docker 네트워크 I/O",
           "subtitle": "Docker 컨테이너의 네트워크 트래픽"
         }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "PatchMon의 호스트 패치 상태 개요",
+      "title": "PatchMon 통계",
+      "totalHosts": "총 호스트",
+      "hostsNeedingUpdates": "업데이트 필요",
+      "securityUpdates": "보안 업데이트",
+      "upToDateHosts": "최신 상태의 호스트",
+      "hostsWithSecurityUpdates": "보안 업데이트가 필요한 호스트",
+      "recentUpdates24h": "업데이트 (24시간)",
+      "totalOutdatedPackages": "오래된 패키지",
+      "totalRepos": "저장소",
+      "osDistribution": "OS 배포판",
+      "compliance": "패치 준수",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "{time} 업데이트됨",
+      "option": {
+        "showTotalHosts": {
+          "label": "총 호스트 표시",
+          "description": "모니터링되는 총 호스트 수 표시"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "업데이트가 필요한 호스트 표시",
+          "description": "하나 이상의 오래된 패키지가 있는 호스트 표시"
+        },
+        "showSecurityUpdates": {
+          "label": "보안 업데이트 표시",
+          "description": "사용 가능한 총 보안 업데이트 수 표시"
+        },
+        "showUpToDateHosts": {
+          "label": "최신 호스트 표시",
+          "description": "오래된 패키지가 없는 호스트 표시"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "보안 업데이트가 필요한 호스트 표시",
+          "description": "보안 패치가 필요한 호스트 표시"
+        },
+        "showRecentUpdates24h": {
+          "label": "최근 업데이트 (24시간) 표시",
+          "description": "지난 24시간 동안 적용된 업데이트 수 표시"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "오래된 패키지 표시",
+          "description": "모든 호스트에서의 총 오래된 패키지 수 표시"
+        },
+        "showTotalRepos": {
+          "label": "저장소 표시",
+          "description": "모니터링되는 활성 저장소 수 표시"
+        },
+        "enableThresholdColors": {
+          "label": "임계값 색상 활성화",
+          "description": "심각도 사전 설정에 따라 통계 값을 녹색, 노란색 또는 빨간색으로 표시"
+        },
+        "useCustomThresholds": {
+          "label": "고급 임계값",
+          "description": "절대 개수 또는 전체 호스트 대비 백분율을 사용하여 통계별 경고 및 위험 임계값 사용자 정의"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "절대 개수",
+            "percent": "전체 호스트 대비 백분율"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "업데이트 필요 임계값 모드",
+          "description": "업데이트 필요 개수를 절대값 또는 전체 호스트 대비 백분율로 비교"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "업데이트 필요 경고 임계값",
+          "description": "이 임계값에 도달하면 노란색으로 표시"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "업데이트 필요 위험 임계값",
+          "description": "이 임계값에 도달하면 빨간색으로 표시"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "보안 업데이트 임계값 모드",
+          "description": "보안 업데이트 개수를 절대값 또는 전체 호스트 대비 백분율로 비교"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "보안 업데이트 경고 임계값",
+          "description": "이 임계값에 도달하면 노란색으로 표시"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "보안 업데이트 위험 임계값",
+          "description": "이 임계값에 도달하면 빨간색으로 표시"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "보안 업데이트가 있는 호스트 임계값 모드",
+          "description": "호스트 개수를 절대값 또는 전체 호스트 대비 백분율로 비교"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "보안 업데이트가 있는 호스트 경고 임계값",
+          "description": "이 임계값에 도달하면 노란색으로 표시"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "보안 업데이트가 있는 호스트 위험 임계값",
+          "description": "이 임계값에 도달하면 빨간색으로 표시"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "최신 호스트 임계값 모드",
+          "description": "최신 호스트 개수를 절대값 또는 전체 호스트 대비 백분율로 비교"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "최신 호스트 경고 임계값",
+          "description": "값이 이 임계값 이상이지만 전체 적용 범위 미만일 때 노란색으로 표시"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "최신 호스트 위험 임계값",
+          "description": "값이 이 임계값 미만으로 떨어지면 빨간색으로 표시"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "오래된 패키지 임계값 모드",
+          "description": "오래된 패키지 개수를 절대값 또는 전체 호스트 대비 백분율로 비교"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "오래된 패키지 경고 임계값",
+          "description": "이 임계값에 도달하면 노란색으로 표시"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "오래된 패키지 위험 임계값",
+          "description": "이 임계값에 도달하면 빨간색으로 표시"
+        },
+        "showOsDistribution": {
+          "label": "OS 배포판 표시",
+          "description": "운영 체제별로 모니터링되는 호스트 분석 표시"
+        },
+        "osDistributionLimit": {
+          "label": "OS 배포판 제한",
+          "description": "표시할 최대 운영 체제 수",
+          "option": {
+            "3": "상위 3개",
+            "5": "상위 5개",
+            "10": "상위 10개",
+            "all": "모두"
+          }
+        },
+        "showOsVersion": {
+          "label": "OS 버전 표시",
+          "description": "사용 가능한 경우 각 배포판 레이블에 OS 버전 추가"
+        },
+        "showComplianceHero": {
+          "label": "준수 상태 표시",
+          "description": "최신 호스트의 백분율을 표시하는 준수 링 표시"
+        },
+        "osDisplayMode": {
+          "label": "OS 표시 모드",
+          "description": "운영 체제 배포판 표시 방법 선택",
+          "option": {
+            "bars": "가로 막대",
+            "donut": "도넛 차트"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "PatchMon 데이터를 가져오지 못했습니다"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Bazarr 인스턴스의 누락된 자막 및 상태 개요",
+      "episodes": "누락된 에피소드",
+      "movies": "누락된 영화",
+      "providers": "제공자 문제",
+      "status": "상태 문제",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "누락된 에피소드 표시",
+          "description": "누락된 자막이 있는 에피소드 수 표시"
+        },
+        "showMissingMovies": {
+          "label": "누락된 영화 표시",
+          "description": "누락된 자막이 있는 영화 수 표시"
+        },
+        "showProviderIssues": {
+          "label": "제공자 문제 표시",
+          "description": "문제가 있는 자막 제공자 수 표시"
+        },
+        "showHealthIssues": {
+          "label": "상태 문제 표시",
+          "description": "Bazarr 상태 문제 수 표시"
+        }
+      },
+      "error": {
+        "internalServerError": "Bazarr 데이터를 가져오지 못했습니다"
+      }
+    },
+    "mediaMissing": {
+      "name": "누락 및 대기 중인 미디어",
+      "description": "Radarr 및 Sonarr의 누락 및 대기 중인 영화와 에피소드 표시",
+      "option": {
+        "showMissing": {
+          "label": "누락된 항목 표시"
+        },
+        "showQueued": {
+          "label": "대기 중인 항목 표시"
+        },
+        "pageSize": {
+          "label": "페이지당 항목 수"
+        }
+      },
+      "tab": {
+        "missing": "누락",
+        "queued": "대기 중"
+      },
+      "type": {
+        "movie": "영화",
+        "episode": "에피소드"
+      },
+      "empty": {
+        "missing": "누락된 항목 없음",
+        "queued": "대기 중인 항목 없음",
+        "noTabsEnabled": "위젯 설정에서 최소한 하나의 탭을 활성화하세요"
+      },
+      "timeLeft": "남은 시간"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Traefik 라우터, 서비스, 미들웨어 및 진입점 개요",
+      "option": {
+        "showTcp": {
+          "label": "TCP 표시"
+        },
+        "showUdp": {
+          "label": "UDP 표시"
+        },
+        "showEntryPoints": {
+          "label": "진입점 표시"
+        }
+      },
+      "instances": "Traefik 인스턴스",
+      "versionUnknown": "버전 알 수 없음",
+      "summary": {
+        "routers": "라우터",
+        "entryPoints": "진입점"
+      },
+      "resource": {
+        "routers": "라우터",
+        "services": "서비스",
+        "middlewares": "미들웨어"
+      },
+      "status": {
+        "healthy": "정상",
+        "errors": "{count}개 오류",
+        "warnings": "{count}개 경고"
+      },
+      "error": {
+        "internalServerError": "Traefik 데이터를 가져오지 못함"
       }
     }
   },
@@ -4491,11 +4340,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "홈",
         "boards": "보드",
         "apps": "앱",
         "integrations": "통합",
-        "customWidgets": "사용자 지정 위젯",
         "searchEngies": "검색 엔진",
         "medias": "미디어",
         "users": {
@@ -5316,6 +5165,7 @@
       },
       "remove": {
         "label": "제거",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "컨테이너 제거됨",
@@ -5633,6 +5483,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "관리",
       "boards": {
         "label": "보드"

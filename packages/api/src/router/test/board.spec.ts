@@ -1753,6 +1753,63 @@ describe("saveLayouts should save layout changes", () => {
   });
 });
 
+describe("Custom Widget placement permissions", () => {
+  test("rejects a direct addItem request from a non-admin board modifier", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId } = await createFullBoardAsync(db, "custom-widget-add");
+
+    await expect(
+      caller.addItem({
+        boardId,
+        kind: "customApi",
+        options: {
+          definitionId: "definition-1",
+          refreshInterval: 30,
+          configuration: {},
+        },
+        integrationIds: [],
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  test("rejects a direct saveBoard request that adds a Custom Widget for a non-admin", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const { boardId, sectionId, layoutId } = await createFullBoardAsync(db, "custom-widget-save");
+
+    await expect(
+      caller.saveBoard({
+        id: boardId,
+        sections: [{ id: sectionId, kind: "empty", yOffset: 0, xOffset: 0 }],
+        items: [
+          {
+            id: createId(),
+            kind: "customApi",
+            options: {
+              definitionId: "definition-1",
+              refreshInterval: 30,
+              configuration: {},
+            },
+            integrationIds: [],
+            advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
+            layouts: [
+              {
+                layoutId,
+                sectionId,
+                height: 1,
+                width: 1,
+                xOffset: 0,
+                yOffset: 0,
+              },
+            ],
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+});
+
 const expectInputToBeFullBoardWithName = (
   input: RouterOutputs["board"]["getHomeBoard"],
   props: { name: string } & Awaited<ReturnType<typeof createFullBoardAsync>>,

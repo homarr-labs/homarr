@@ -1,0 +1,47 @@
+name: "[Bots] Approve and Auto-merge"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions: {}
+
+jobs:
+  approve-and-automerge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # 158783068: homarr-renovate[bot]
+    # 190541745: homarr-crowdin[bot]
+    # 210161987: homarr-update-contributors[bot]
+    # 175441: homarr-releases[bot]
+    # Extracted from https://api.github.com/users/<username>
+    if: |
+      (github.actor_id == 158783068 || github.actor_id == 190541745 || github.actor_id == 210161987 || github.actor_id == 175441) &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.base.ref == 'dev'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Obtain token
+        id: obtainToken
+        uses: actions/create-github-app-token@v3
+        with:
+          private-key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
+          client-id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
+          permission-pull-requests: write # required to approve a pull request and enable auto-merge
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
+      - name: Approve and enable auto-merge
+        env:
+          GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          if [ "$(gh pr view "$PR_NUMBER" --json reviewDecision --jq .reviewDecision)" != "APPROVED" ]; then
+            gh pr review "$PR_NUMBER" --approve --body "Automatically approved by Homarr bot policy"
+          fi
+          if [ "$(gh pr view "$PR_NUMBER" --json autoMergeRequest --jq '.autoMergeRequest != null')" != "true" ]; then
+            gh pr merge "$PR_NUMBER" --auto --squash
+          fi

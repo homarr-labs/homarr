@@ -110,7 +110,7 @@ export const ClientBoard = () => {
     .join(" ");
 
   return (
-    <Box h="100%" pos="relative">
+    <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
       <BoardBackgroundVideo />
       <BoardSectionCollapseProvider>
         <BoardGridPortalHost>

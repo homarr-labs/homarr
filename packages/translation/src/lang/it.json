@@ -710,14 +710,7 @@
       "delete": "Elimina Widget Personalizzato",
       "deleteConfirm": "Sei sicuro di voler eliminare \"{name}\"? Questa azione non può essere annullata.",
       "export": "Esporta",
-      "addMapping": "Aggiungi Mappatura",
-      "addColumn": "Aggiungi Colonna",
       "edit": "Modifica",
-      "removeMapping": "Rimuovi mappatura",
-      "removeColumn": "Rimuovi colonna",
-      "addItem": "Aggiungi Elemento",
-      "removeItem": "Rimuovi elemento",
-      "addBar": "Aggiungi Barra",
       "duplicate": "Duplica",
       "copyAiPrompt": "Copia prompt IA",
       "enable": "Abilita",
@@ -727,140 +720,7 @@
     "field": {
       "name": "Nome",
       "description": "Descrizione",
-      "iconUrl": "URL Icona",
-      "url": "URL",
-      "authType": "Tipo Autenticazione",
-      "headerName": "Nome Header/Parametro Query",
-      "method": "Metodo",
-      "requestBody": "Corpo della Richiesta",
-      "displayType": "Tipo di Visualizzazione",
-      "jsonPath": "Percorso JSON",
-      "jsonPathHint": "Usa la sintassi JSONPath per estrarre i valori, ad es. $.data.temperature o $.items[0].name",
-      "label": "Etichetta",
-      "unit": "Unità",
-      "mappings": "Mappature",
-      "tablePath": "Percorso JSON Array",
-      "tablePathHint": "Percorso dell'array nella risposta, ad es. $.data.items",
-      "columns": "Colonne",
-      "header": "Intestazione",
-      "items": "Elementi",
-      "gridColumns": "Colonne Griglia",
-      "cardStyle": "Stile Card",
-      "bars": "Barre",
-      "valuePath": "Percorso JSON Valore",
-      "maxPath": "Percorso JSON Valore Massimo",
-      "showPercentage": "Mostra Percentuale",
-      "barSize": "Dimensione Barra",
-      "goodValues": "Valori Positivi (separati da virgola)",
-      "dotSize": "Dimensione Punto",
-      "valueSize": "Dimensione Valore",
-      "labelPosition": "Posizione Etichetta",
-      "kvLayout": "Layout",
-      "striped": "Righe Alternate",
-      "compact": "Modalità Compatta",
-      "maxHeight": "Altezza Massima (px)",
-      "color": "Colore",
-      "buttonLabel": "Etichetta Pulsante",
-      "buttonColor": "Colore Pulsante",
-      "confirmText": "Testo di Conferma",
-      "confirmTextHint": "Se impostato, verrà mostrata una finestra di conferma prima di eseguire la richiesta",
-      "successMessage": "Messaggio di Successo",
-      "successMessageHint": "Messaggio mostrato dopo l'esecuzione riuscita",
-      "enabled": "Abilitato",
-      "template": {
-        "label": "Template JSX",
-        "description": "Template JSX Mantine. Accedi ai campi della risposta API tramite binding dei dati (ad es. data.name). Usa solo componenti consentiti. Vietati: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Temperatura CPU",
-      "exampleLabelShort": "Temp CPU",
-      "exampleHeader": "Nome",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.nome",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "blu"
-    },
-    "cardStyleOption": {
-      "filled": "Riempito",
-      "outline": "Contorno",
-      "subtle": "Tenue"
-    },
-    "layoutOption": {
-      "list": "Elenco",
-      "grid": "Griglia"
-    },
-    "sizeOption": {
-      "sm": "Piccolo",
-      "md": "Medio",
-      "lg": "Grande",
-      "xl": "Molto Grande"
-    },
-    "labelPositionOption": {
-      "above": "Sopra",
-      "below": "Sotto"
-    },
-    "fieldset": {
-      "general": "Generale",
-      "connection": "Connessione API",
-      "display": "Configurazione Visualizzazione"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Mostra un singolo valore estratto con etichetta e unità",
-      "keyValue": "Mostra più valori etichettati affiancati",
-      "table": "Mostra righe di dati in formato tabella",
-      "statGrid": "Card statistiche colorate in una griglia, come i widget Pi-Hole o Speedtest",
-      "progressBars": "Barre di progresso che mostrano utilizzo o completamento, per disco, memoria, quote",
-      "statusIndicator": "Indicatori di stato colorati che mostrano online/offline o stati di salute",
-      "countGrid": "Contatori compatti numero + etichetta in una griglia ristretta",
-      "raw": "Output JSON formattato per il debug",
-      "actionButton": "Un pulsante che attiva una richiesta al clic",
-      "customJsx": "Layout JSX personalizzato che usa componenti Mantine consentiti con binding completo dei dati API"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Nessuno",
-      "bearer": "Token Bearer",
-      "basic": "Autenticazione Base",
-      "apiKeyHeader": "Chiave API (Header)",
-      "apiKeyQuery": "Chiave API (Query)"
-    },
-    "displayType": {
-      "singleValue": "Valore Singolo",
-      "keyValue": "Chiave-Valore",
-      "table": "Tabella",
-      "statGrid": "Griglia Statistiche",
-      "progressBars": "Barre di Progresso",
-      "statusIndicator": "Indicatore di Stato",
-      "countGrid": "Griglia Conteggi",
-      "raw": "JSON Grezzo",
-      "actionButton": "Pulsante Azione",
-      "customJsx": "JSX Personalizzato"
-    },
-    "secret": {
-      "apiKey": "Chiave API / Token",
-      "username": "Nome utente",
-      "password": "Password",
-      "savedPlaceholder": "••••••• (salvato, lascia vuoto per mantenere)"
-    },
-    "preview": {
-      "title": "Anteprima",
-      "test": "Test",
-      "hint": "Fai clic su Test per visualizzare in anteprima la risposta dell'API con la configurazione attuale.",
-      "rawResponse": "Risposta JSON grezza"
+      "iconUrl": "URL Icona"
     },
     "notification": {
       "created": "Widget \"{name}\" creato con successo.",
@@ -868,9 +728,6 @@
       "deleted": "Widget \"{name}\" eliminato.",
       "imported": "Widget importato con successo.",
       "aiPromptCopied": "Prompt IA copiato negli appunti",
-      "aiPromptDescription": "Copia un prompt predefinito da incollare in qualsiasi chatbot IA (ChatGPT, Claude, Gemini...). Include lo schema completo del widget e la risposta della tua API, in modo che l'IA possa generare una configurazione JSON pronta per l'importazione.",
-      "aiPromptCopy": "Copia negli appunti",
-      "aiPromptNoResponse": "Suggerimento: esegui prima un test per includere la risposta della tua API nel prompt e ottenere risultati migliori.",
       "aiPromptCopyError": "Impossibile copiare il prompt negli appunti. Il tuo browser potrebbe non supportare questa funzione.",
       "createError": "Impossibile creare il widget. Verifica che l'endpoint dell'API sia raggiungibile.",
       "updateError": "Impossibile aggiornare il widget. Le modifiche non sono state salvate.",
@@ -883,14 +740,6 @@
       "previewError": "Impossibile recuperare l'anteprima. Controlla l'URL e riprova.",
       "executed": "Azione eseguita con successo.",
       "executeError": "Azione non riuscita: {error}"
-    },
-    "table": {
-      "name": "Nome",
-      "url": "URL",
-      "display": "Visualizzazione"
-    },
-    "widget": {
-      "disabled": "Questo widget è disabilitato"
     }
   },
   "integration": {
@@ -2388,10 +2237,21 @@
         },
         "descendingDefaultSort": {
           "label": "Inverti ordinamento"
+        },
+        "columnOrder": {
+          "label": "Ordine delle colonne"
+        },
+        "columnWidths": {
+          "label": "Larghezza delle colonne"
         }
       },
       "error": {
-        "internalServerError": "Recupero statistiche container non riuscito"
+        "internalServerError": "Recupero statistiche container non riuscito",
+        "layoutSaveTitle": "Layout della tabella non salvato",
+        "layoutSaveMessage": "Impossibile salvare il layout della tabella Docker. Prova a spostare o ridimensionare nuovamente la colonna."
+      },
+      "empty": {
+        "noContainers": "Nessun container trovato"
       }
     },
     "coolify": {
@@ -2685,7 +2545,19 @@
         "showOnlyPlaying": {
           "label": "Mostra solo attualmente in riproduzione",
           "description": "La disabilitazione non funzionerà per Plex"
+        },
+        "showBitrate": {
+          "label": "Mostra bitrate",
+          "description": "Mostra il bitrate di riproduzione corrente accanto alla posizione"
+        },
+        "showLocation": {
+          "label": "Mostra posizione",
+          "description": "Mostra se lo stream si trova sulla tua LAN o WAN"
         }
+      },
+      "footer": {
+        "streams": "{count, plural, one {# stream attivo} other {# stream attivi}}",
+        "totalBitrate": "Totale: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Attualmente in riproduzione",
@@ -2694,6 +2566,9 @@
         "id": "Id",
         "status": "Stato",
         "directPlay": "Riproduzione diretta",
+        "directStream": "Streaming diretto",
+        "transcodeVideo": "Transcodifica video",
+        "transcodeAudio": "Transcodifica audio",
         "transcoding": "Transcodifica",
         "paused": "In pausa",
         "remaining": "{minutes} min rimanenti",
@@ -3728,18 +3603,6 @@
           "label": "Mostra brani",
           "description": "Mostra il numero totale di brani nella tua libreria musicale (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "Mostra in riproduzione",
-          "description": "Mostra le tracce attualmente in riproduzione (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "Mostra elenco in riproduzione",
-          "description": "Mostra le singole tracce invece del solo conteggio degli stream attivi (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Numero massimo elementi in riproduzione",
-          "description": "Numero massimo di tracce da mostrare nell'elenco in riproduzione (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Mostra conteggio librerie",
           "description": "Mostra il numero di librerie sulla tua istanza (Audiobookshelf)"
@@ -3773,8 +3636,6 @@
       "podcasts": "Podcast",
       "listeningTime": "Tempo di Ascolto",
       "activeSessions": "Sessioni Attive",
-      "nowPlaying": "In Riproduzione",
-      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
         "internalServerError": "Impossibile recuperare i dati delle statistiche audio"
       }
@@ -3862,12 +3723,7 @@
         }
       },
       "noDefinition": "Nessuna definizione selezionata",
-      "definitionNotFound": "Definizione del widget non trovata. Potrebbe essere stata eliminata.",
-      "noDisplayOutput": "Nessun output di visualizzazione",
-      "executeConfirm": "Sei sicuro di voler eseguire questa azione?",
-      "executing": "Esecuzione in corso...",
-      "executeSuccess": "Azione eseguita con successo",
-      "executeFailed": "Azione non riuscita. Controlla la configurazione del widget."
+      "definitionNotFound": "Definizione del widget non trovata. Potrebbe essere stata eliminata."
     },
     "beszelSystemTable": {
       "name": "Sistemi Beszel (Tabella)",
@@ -3914,11 +3770,19 @@
         },
         "showAgent": {
           "label": "Mostra versione agente"
+        },
+        "columnOrder": {
+          "label": "Ordine delle colonne"
+        },
+        "columnWidths": {
+          "label": "Larghezza delle colonne"
         }
       },
       "noRecords": "Nessun sistema trovato",
       "error": {
-        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione."
+        "internalServerError": "Impossibile connettersi a Beszel. Controlla le tue impostazioni di integrazione.",
+        "layoutSaveTitle": "Impossibile salvare il layout della tabella",
+        "layoutSaveMessage": "Impossibile salvare l'ordine o la larghezza delle colonne. Riprova."
       },
       "column": {
         "system": "Sistema",
@@ -4491,6 +4355,7 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Home",
         "boards": "Board",
         "apps": "Applicazioni",
@@ -5316,6 +5181,7 @@
       },
       "remove": {
         "label": "Rimuovi",
+        "confirm": "Fare clic di nuovo per rimuovere definitivamente",
         "notification": {
           "success": {
             "title": "Containers rimossi",
@@ -5633,6 +5499,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Gestisci",
       "boards": {
         "label": "Board"

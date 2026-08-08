@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { OnboardingTourFocusRevealProps, OnboardingTourStep } from "@gfazioli/mantine-onboarding-tour";
 import { useMediaQuery } from "@mantine/hooks";
@@ -17,6 +17,7 @@ import { clientApi } from "@homarr/api/client";
 import { createDocumentationLink } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { TourTargetsProvider } from "~/components/layout/header/tour-target";
 import { TourShell } from "./tour-shell";
 import { TourStepContent } from "./tour-step-content";
 
@@ -46,13 +47,7 @@ const usersStepFocusRevealProps: OnboardingTourFocusRevealProps = {
 
 export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProps) => {
   const t = useScopedI18n("onboardingTour.manage");
-  const utils = clientApi.useUtils();
-  const { data: tourStatus } = clientApi.user.getTourStatus.useQuery();
-  const { mutate: completeTour } = clientApi.user.completeTour.useMutation({
-    onSuccess() {
-      void utils.user.getTourStatus.invalidate();
-    },
-  });
+  const { mutate: completeTour } = clientApi.user.completeTour.useMutation();
   const isMobile = useMediaQuery("(max-width: 48em)");
   const pathname = usePathname();
   const router = useRouter();
@@ -62,14 +57,13 @@ export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProp
 
   const [tourActive, setTourActive] = useState(false);
   const [tourDismissed, setTourDismissed] = useState(false);
-  const wasManageTourCompletedRef = useRef(tourStatus?.completedManageTour);
 
   useEffect(() => {
     if (tourDismissed) return;
-    if (isManageHome && tourStatus !== undefined && !tourStatus.completedManageTour && !isMobile) {
+    if (isManageHome && !isMobile) {
       setTourActive(true);
     }
-  }, [isManageHome, tourStatus, isMobile, tourDismissed]);
+  }, [isManageHome, isMobile, tourDismissed]);
 
   useEffect(() => {
     if (!isManageSection) {
@@ -77,25 +71,12 @@ export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProp
     }
   }, [isManageSection]);
 
-  useEffect(() => {
-    const wasCompleted = wasManageTourCompletedRef.current;
-    const isCompleted = tourStatus?.completedManageTour;
-    if (wasCompleted === true && isCompleted === false) {
-      setTourDismissed(false);
-    }
-    wasManageTourCompletedRef.current = isCompleted;
-  }, [tourStatus?.completedManageTour]);
-
   const handleEnd = useCallback(() => {
     setTourDismissed(true);
     setTourActive(false);
-    utils.user.getTourStatus.setData(undefined, {
-      completedManageTour: true,
-      completedBoardTour: tourStatus?.completedBoardTour ?? false,
-    });
     completeTour({ tour: "manage" });
     router.push("/manage");
-  }, [completeTour, router, tourStatus?.completedBoardTour, utils.user.getTourStatus]);
+  }, [completeTour, router]);
 
   const steps = useMemo(() => {
     const allSteps: (OnboardingTourStep & { adminOnly?: boolean })[] = [
@@ -207,14 +188,16 @@ export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProp
   }, [isAdmin, t]);
 
   return (
-    <TourShell
-      steps={steps}
-      started={tourActive}
-      onEnd={handleEnd}
-      stepRoutes={stepRoutes}
-      position={{ base: "bottom", sm: "right" }}
-    >
-      {children}
-    </TourShell>
+    <TourTargetsProvider enabled={tourActive}>
+      <TourShell
+        steps={steps}
+        started={tourActive}
+        onEnd={handleEnd}
+        stepRoutes={stepRoutes}
+        position={{ base: "bottom", sm: "right" }}
+      >
+        {children}
+      </TourShell>
+    </TourTargetsProvider>
   );
 };

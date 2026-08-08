@@ -710,14 +710,7 @@
       "delete": "Benutzerdefiniertes Widget löschen",
       "deleteConfirm": "Möchtest du „{name}“ wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
       "export": "Exportieren",
-      "addMapping": "Zuordnung hinzufügen",
-      "addColumn": "Spalte hinzufügen",
       "edit": "Bearbeiten",
-      "removeMapping": "Zuordnung entfernen",
-      "removeColumn": "Spalte entfernen",
-      "addItem": "Element hinzufügen",
-      "removeItem": "Element entfernen",
-      "addBar": "Leiste hinzufügen",
       "duplicate": "Duplizieren",
       "copyAiPrompt": "KI Prompt kopieren",
       "enable": "Aktivieren",
@@ -727,140 +720,7 @@
     "field": {
       "name": "Name",
       "description": "Beschreibung",
-      "iconUrl": "Icon URL",
-      "url": "URL",
-      "authType": "Authentifizierungstyp",
-      "headerName": "Name des Kopf-/Abfrage-Parameters",
-      "method": "Methode",
-      "requestBody": "Body anfordern",
-      "displayType": "Anzeigetyp",
-      "jsonPath": "JSON Pfad",
-      "jsonPathHint": "Verwenden Sie JSONPath Syntax um Werte zu extrahieren, z.B. $.data.temperature oder $.items[0].name",
-      "label": "Kategorie",
-      "unit": "Einheit",
-      "mappings": "Zuordnungen",
-      "tablePath": "JSON Pfad anordnen",
-      "tablePathHint": "Pfad zum Array in der Antwort, z.B. $.data.items",
-      "columns": "Spalten",
-      "header": "Kopfzeile",
-      "items": "Elemente",
-      "gridColumns": "Rasterspalten",
-      "cardStyle": "Kartenstil",
-      "bars": "Balken",
-      "valuePath": "JSON Wert Pfad",
-      "maxPath": "Maximaler Wert des JSON Pfades",
-      "showPercentage": "Prozentwert anzeigen",
-      "barSize": "Balkengröße",
-      "goodValues": "Gute Werte (durch Komma getrennt)",
-      "dotSize": "Punkt Größe",
-      "valueSize": "Größe des Wertes",
-      "labelPosition": "Labelposition",
-      "kvLayout": "Darstellung",
-      "striped": "Gestreifte Reihen",
-      "compact": "Kompakte Darstellung",
-      "maxHeight": "Maximale Höhe (px)",
-      "color": "Farbe",
-      "buttonLabel": "Bezeichnung des Knopfes",
-      "buttonColor": "Farbe des Knopfes",
-      "confirmText": "Text zur Bestätigung",
-      "confirmTextHint": "Wenn gesetzt, erscheint vor der Ausführung der Anfrage ein Bestätigungsdialog",
-      "successMessage": "Erfolgsmeldung",
-      "successMessageHint": "Nachricht, die nach erfolgreicher Ausführung angezeigt wird",
-      "enabled": "Aktiviert",
-      "template": {
-        "label": "JSX Vorlage",
-        "description": "Mantine JSX-Vorlage. Zugriff auf API-Antwortfelder über Datenbindungen (z.B. data.name). Verwenden Sie nur Inhalte der Whitelist. Verboten: Konstruktor, __proto__, eval, Funktion, Fenster, Dokument."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU Temperatur",
-      "exampleLabelShort": "CPU Temp",
-      "exampleHeader": "Name",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API Schlüssel",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, wahr, oben",
-      "color": "blau"
-    },
-    "cardStyleOption": {
-      "filled": "Gefüllt",
-      "outline": "Umrandung",
-      "subtle": "Dezent"
-    },
-    "layoutOption": {
-      "list": "Liste",
-      "grid": "Raster"
-    },
-    "sizeOption": {
-      "sm": "Klein",
-      "md": "Mittel",
-      "lg": "Groß",
-      "xl": "Extragroß"
-    },
-    "labelPositionOption": {
-      "above": "Oberhalb",
-      "below": "Unterhalb"
-    },
-    "fieldset": {
-      "general": "Allgemein",
-      "connection": "API Anbindung",
-      "display": "Anzeigeeinstellungen"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Einen extrahierten Wert mit Label und Einheit anzeigen",
-      "keyValue": "Mehrere markierte Werte nebeneinander anzeigen",
-      "table": "Datenzeilen im Tabellenformat anzeigen",
-      "statGrid": "Farbige Statistikkarten im Raster — wie Pi-Hole oder Speedtest Widgets",
-      "progressBars": "Fortschrittsbalken mit Nutzung oder Fertigstellung — für Festplatte, Speicher, Quoten",
-      "statusIndicator": "Farbige Statuspunkte, die den Online/Offline Status oder Gesundheitszustand anzeigen",
-      "countGrid": "Kompakter Nummern + Label Zähler in einem engen Raster",
-      "raw": "Ansehrlich gedruckte JSON-Ausgabe zum Debuggen",
-      "actionButton": "Eine Schaltfläche welche eine Anfrage auslöst wenn sie angeklickt wird",
-      "customJsx": "Benutzerdefiniertes JSX-Layout mit Whitelist Mantine Komponenten und vollständiger API-Datenbindung"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Keine",
-      "bearer": "Bearer Token",
-      "basic": "Basic Auth",
-      "apiKeyHeader": "API Schlüssel (Kopfzeile)",
-      "apiKeyQuery": "API-Schlüssel (Abfrage)"
-    },
-    "displayType": {
-      "singleValue": "Einzelwert",
-      "keyValue": "Schlüsselwert",
-      "table": "Tabelle",
-      "statGrid": "Statistikraster",
-      "progressBars": "Fortschrittsbalken",
-      "statusIndicator": "Statusanzeige",
-      "countGrid": "Raster zählen",
-      "raw": "Rohes JSON",
-      "actionButton": "Aktionstaste",
-      "customJsx": "Benutzerdefiniertes JSX"
-    },
-    "secret": {
-      "apiKey": "API Schlüssel / Token",
-      "username": "Benutzername",
-      "password": "Passwort",
-      "savedPlaceholder": "••••••• (gespeichert, leer lassen zum Behalten)"
-    },
-    "preview": {
-      "title": "Vorschau",
-      "test": "Test",
-      "hint": "Klicken Sie auf Test, um eine Vorschau der API Antwort mit Ihrer aktuellen Konfiguration zu erhalten.",
-      "rawResponse": "Rohe JSON-Antwort"
+      "iconUrl": "Icon URL"
     },
     "notification": {
       "created": "Widget \"{name}\" erfolgreich erstellt.",
@@ -868,9 +728,6 @@
       "deleted": "Widget \"{name}\" gelöscht.",
       "imported": "Widget erfolgreich importiert.",
       "aiPromptCopied": "KI-Prompt in Zwischenablage kopiert",
-      "aiPromptDescription": "Kopieren Sie eine vorgefertigte Eingabeaufforderung, um sie in jeden AI-Chatbot einzufügen (ChatGPT, Claude, Gemini...). Es enthält das komplette Widget-Schema und Ihre API-Antwort, so dass die KI eine fertige JSON-Konfiguration für Sie generieren kann.",
-      "aiPromptCopy": "In die Zwischenablage kopieren",
-      "aiPromptNoResponse": "Tipp: Führen Sie zuerst einen Test aus, um Ihre API Antwort in die Eingabeaufforderung einzubinden, um bessere Ergebnisse zu erzielen.",
       "aiPromptCopyError": "Fehler beim Kopieren der Eingabeaufforderung. Möglicherweise unterstützt Ihr Browser diese Funktion nicht.",
       "createError": "Fehler beim Erstellen des Widgets. Überprüfen Sie, ob Ihr API Endpunkt erreichbar ist.",
       "updateError": "Fehler beim Aktualisieren des Widgets. Ihre Änderungen wurden nicht gespeichert.",
@@ -883,14 +740,6 @@
       "previewError": "Fehler beim Abrufen der Vorschau. Überprüfen Sie die URL und versuchen Sie es erneut.",
       "executed": "Aktion erfolgreich ausgeführt.",
       "executeError": "Aktion fehlgeschlagen: {error}"
-    },
-    "table": {
-      "name": "Name",
-      "url": "URL",
-      "display": "Anzeige"
-    },
-    "widget": {
-      "disabled": "Dieses Widget ist deaktiviert"
     }
   },
   "integration": {
@@ -1342,19 +1191,19 @@
     },
     "traefik": {
       "name": "Traefik",
-      "description": ""
+      "description": "Cloud-nativer Reverse-Proxy und Lastverteiler"
     },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumentenverwaltungssystem zum Archivieren und Organisieren gescannter Dokumente"
     },
     "patchmon": {
-      "name": "",
-      "description": ""
+      "name": "PatchMon",
+      "description": "Patch-Verwaltung und Systemüberwachung für Linux-Hosts"
     },
     "bazarr": {
       "name": "Bazarr",
-      "description": ""
+      "description": "Schwesteranwendung zu Sonarr und Radarr, welche Untertitel und Downloads verwaltet"
     }
   },
   "media": {
@@ -2288,8 +2137,8 @@
           "label": "Dateisystem Info anzeigen"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
+          "label": "Sichtbare Speichervolumes",
+          "description": "Nur verfügbar, wenn alle Integrationen Synology betreffen. Nicht ausfüllen, um alle erkannten Speichervolumes zu zeigen. ",
           "placeholder": "Speichervolumen auswählen"
         },
         "defaultTab": {
@@ -2388,10 +2237,21 @@
         },
         "descendingDefaultSort": {
           "label": "Sortierung umkehren"
+        },
+        "columnOrder": {
+          "label": "Spaltenordnung"
+        },
+        "columnWidths": {
+          "label": "Spaltenbreite"
         }
       },
       "error": {
-        "internalServerError": "Fehler beim Abrufen der Container Statistiken"
+        "internalServerError": "Fehler beim Abrufen der Container Statistiken",
+        "layoutSaveTitle": "Tabellenlayout nicht gespeichert",
+        "layoutSaveMessage": "Die Docker-Tabelle konnte nicht gespeichert werden. Versuche die Spalte zu verschieben oder eine andere Spaltengröße zu verwenden. "
+      },
+      "empty": {
+        "noContainers": "Keine Docker-Container gefunden"
       }
     },
     "coolify": {
@@ -2685,7 +2545,19 @@
         "showOnlyPlaying": {
           "label": "Nur aktuelle Wiedergabe anzeigen",
           "description": "Diese Einstellung zu deaktivieren wird für Plex nicht funktionieren"
+        },
+        "showBitrate": {
+          "label": "Zeigt die Bitrate an",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": "Zeigt an, ob der Stream über das LAN oder WAN läuft"
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": "Gesamtbitrate: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Aktuelle Wiedergabe",
@@ -2694,6 +2566,9 @@
         "id": "Id",
         "status": "Status",
         "directPlay": "Direkte Wiedergabe",
+        "directStream": "Direkter Stream",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "Transkodierung",
         "paused": "Pausiert",
         "remaining": "{minutes} Min. verbleibend",
@@ -2763,21 +2638,21 @@
       }
     },
     "patchmon": {
-      "name": "",
+      "name": "PatchMon",
       "description": "",
-      "title": "",
+      "title": "PatchMon-Statistiken",
       "totalHosts": "Hosts gesamt",
       "hostsNeedingUpdates": "Update erforderlich",
       "securityUpdates": "Sicherheits-Updates",
-      "upToDateHosts": "",
+      "upToDateHosts": "Aktualisierte Hosts",
       "hostsWithSecurityUpdates": "Hosts mit Sicherheits-Updates",
       "recentUpdates24h": "Updates (24h)",
       "totalOutdatedPackages": "Veraltete Pakete",
       "totalRepos": "Repositories",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
+      "osDistribution": "Betriebssystem-Distribution",
+      "compliance": "Patch-Kompatibilität",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Zuletzt aktualisiert: {time}",
       "option": {
         "showTotalHosts": {
           "label": "Alle Hosts anzeigen",
@@ -2793,30 +2668,30 @@
         },
         "showUpToDateHosts": {
           "label": "Zeige aktuelle Hosts",
-          "description": ""
+          "description": "Zeigt Hosts mit keinen veralteten Paketen an"
         },
         "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Zeigt Hosts mit Sicherheitsupdates an",
+          "description": "Zeigt Hosts an, welche Sicherheitsupdates benötigen"
         },
         "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
+          "label": "Zeigt vergangene Updates in den letzten 24 Stunden an",
+          "description": "Zeigt die Anzahl der angewendeten Updates in den letzten 24 Stunden an"
         },
         "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
+          "label": "Zeigt veraltete Pakete an",
+          "description": "Zeigt die Gesamtanzahl der veralteten Pakete über mehrere Hosts verteilt an"
         },
         "showTotalRepos": {
-          "label": "",
-          "description": ""
+          "label": "Zeigt Repositorys an",
+          "description": "Zeigt die Anzahl der zu überwachenden aktiven Repositorys an"
         },
         "enableThresholdColors": {
-          "label": "",
+          "label": "Aktiviert die Schwellwert-Farben",
           "description": ""
         },
         "useCustomThresholds": {
-          "label": "",
+          "label": "Erweiterte Schwellwerte",
           "description": ""
         },
         "thresholdMode": {
@@ -3728,18 +3603,6 @@
           "label": "Songs anzeigen",
           "description": "Zeigt die Gesamtzahl der Titel in deiner Musikbibliothek an (Navidrome)"
         },
-        "showNowPlaying": {
-          "label": "\"Sie hören\" anzeigen",
-          "description": "Zeige aktuell gespielte Titel an (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "\"Sie hören jetzt\" Wiedergabeliste anzeigen",
-          "description": "Einzelne Tracks anstelle der aktiven Streamanzahl anzeigen (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "Maximale jetzt abgespielte Elemente",
-          "description": "Maximale Anzahl an Titeln, die in der \"Sie hören jetzt\" Wiedergabeliste angezeigt werden (Navidrome)"
-        },
         "showLibraryCount": {
           "label": "Anzahl der Bibliotheken anzeigen",
           "description": "Zeige die Anzahl der Bibliotheken in deiner Instanz (Hörbücherregal)"
@@ -3773,8 +3636,6 @@
       "podcasts": "Podcasts",
       "listeningTime": "Hördauer",
       "activeSessions": "Aktive Sitzungen",
-      "nowPlaying": "Aktuelle Wiedergabe",
-      "nowPlayingCount": "{count, plural, one {# stream} other {# streams}}",
       "error": {
         "internalServerError": "Fehler beim Abrufen der Audio-Statistikdaten"
       }
@@ -3862,12 +3723,7 @@
         }
       },
       "noDefinition": "Keine Definition ausgewählt",
-      "definitionNotFound": "Widget-Definition nicht gefunden. Möglicherweise wurde sie gelöscht.",
-      "noDisplayOutput": "Keine Anzeige-Ausgabe",
-      "executeConfirm": "Bist du dir sicher, dass du diese Aktion ausführen möchtest?",
-      "executing": "Wird ausgeführt...",
-      "executeSuccess": "Aktion erfolgreich ausgeführt",
-      "executeFailed": "Aktion fehlgeschlagen. Überprüfen Sie die Widget-Konfiguration."
+      "definitionNotFound": "Widget-Definition nicht gefunden. Möglicherweise wurde sie gelöscht."
     },
     "beszelSystemTable": {
       "name": "Beszel Systeme (Tabelle)",
@@ -3914,11 +3770,19 @@
         },
         "showAgent": {
           "label": "Agent-Version anzeigen"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "Keine Systeme gefunden",
       "error": {
-        "internalServerError": "Keine Verbindung zu Beszel. Überprüfen Sie Ihre Integrationseinstellungen."
+        "internalServerError": "Keine Verbindung zu Beszel. Überprüfen Sie Ihre Integrationseinstellungen.",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "System",
@@ -4491,11 +4355,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Startseite",
         "boards": "Boards",
         "apps": "Apps",
         "integrations": "Integrationen",
-        "customWidgets": "",
         "searchEngies": "Suchmaschinen",
         "medias": "Medien",
         "users": {
@@ -5316,6 +5180,7 @@
       },
       "remove": {
         "label": "Entfernen",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Container entfernt",
@@ -5633,6 +5498,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Verwalten",
       "boards": {
         "label": "Boards"
@@ -5673,10 +5541,7 @@
           "label": "Neu"
         },
         "edit": {
-          "label": "Bearbeiten",
-          "flow": {
-            "label": ""
-          }
+          "label": "Bearbeiten"
         }
       },
       "users": {

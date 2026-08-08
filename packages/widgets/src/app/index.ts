@@ -15,6 +15,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
+  queryKeys: [[["app", "byId"]], [["widget", "app"]]],
   createOptions(settings) {
     return optionsBuilder.from(
       (factory) => ({

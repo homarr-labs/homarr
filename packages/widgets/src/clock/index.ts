@@ -6,6 +6,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("clock", {
   icon: IconClock,
+  queryKey: [["widget", "weather"]],
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

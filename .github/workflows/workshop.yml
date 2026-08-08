@@ -1,0 +1,63 @@
+name: Workshop
+
+on:
+  pull_request:
+  push:
+    branches: [dev, v2, main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.18.0
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 11.11.0
+          run_install: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @homarr/workshop typecheck
+      - run: pnpm --filter @homarr/docs typecheck
+      - run: pnpm test:workshop
+      - run: docker build --target production -f apps/workshop/Dockerfile .
+
+  publish:
+    if: github.event_name == 'push' && (github.ref_name == 'v2' || github.ref_name == 'main')
+    needs: validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-qemu-action@v4
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/metadata-action@v6
+        id: metadata
+        with:
+          images: ghcr.io/homarr-labs/workshop
+          tags: |
+            type=sha,prefix=sha-,format=long
+            type=raw,value=v2,enable=${{ github.ref_name == 'v2' }}
+            type=raw,value=latest,enable=${{ github.ref_name == 'main' }}
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: apps/workshop/Dockerfile
+          target: production
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}

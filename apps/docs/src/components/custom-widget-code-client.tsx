@@ -1,0 +1,114 @@
+import { useState } from "react";
+import { useColorMode } from "@docusaurus/theme-common";
+import { MantineProvider, Select, Stack, Text } from "@mantine/core";
+/* oxlint-disable import/no-unassigned-import -- Mantine component styles intentionally load for side effects. */
+import "@mantine/core/styles.layer.css";
+/* oxlint-enable import/no-unassigned-import */
+
+import {
+  BUNDLED_CUSTOM_WIDGETS,
+  CUSTOM_WIDGET_OPTIONS_EXAMPLES,
+  CUSTOM_WIDGET_REQUEST_EXAMPLES,
+} from "@homarr/custom-widgets/core";
+import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
+import { CustomWidgetCodeEditor, ReadOnlyCustomWidgetCode } from "@homarr/custom-widgets/workbench";
+
+import type {
+  CanonicalCustomWidgetExampleProps,
+  CustomWidgetCodeExampleProps,
+  CustomWidgetCodeInputProps,
+} from "./custom-widget-code";
+
+const messages: CustomWidgetEditorMessages = {
+  languageJsx: "JSX",
+  languageJson: "JSON",
+  undo: "Undo",
+  redo: "Redo",
+  components: "Components",
+  componentSearch: "Search components",
+  componentEmpty: "No matching components",
+  componentCount: (count) => `${count} components`,
+  insertStarter: "Insert starter",
+  format: "Format",
+  copy: "Copy",
+  copied: "Copied",
+  schema: "Schema",
+  schemaTab: "JSON Schema",
+  minimalTab: "Minimal example",
+  fullTab: "Full example",
+  errors: (count) => `${count} errors`,
+  warnings: (count) => `${count} warnings`,
+  ready: "Read-only example",
+  position: ({ line, column }) => `Ln ${line}, Col ${column}`,
+  characters: (count, limit) => (limit ? `${count} / ${limit}` : `${count} characters`),
+  diagnosticsTitle: "Diagnostics",
+  diagnostic: (diagnostic) => diagnostic.value ?? diagnostic.code,
+};
+const editableMessages: CustomWidgetEditorMessages = { ...messages, ready: "Ready" };
+
+export function CanonicalCustomWidgetExampleClient({ id, label, example, height }: CanonicalCustomWidgetExampleProps) {
+  const value = example === "requests" ? CUSTOM_WIDGET_REQUEST_EXAMPLES.full : CUSTOM_WIDGET_OPTIONS_EXAMPLES.full;
+
+  return <CustomWidgetCodeExampleClient id={id} label={label} code={JSON.stringify(value, null, 2)} height={height} />;
+}
+
+export function CustomWidgetCodeExampleClient(props: CustomWidgetCodeExampleProps) {
+  const { colorMode } = useColorMode();
+
+  return (
+    <MantineProvider forceColorScheme={colorMode}>
+      <ReadOnlyCustomWidgetCode
+        id={props.id}
+        label={props.label}
+        language={props.language ?? "json"}
+        value={props.code}
+        messages={messages}
+        height={props.height}
+      />
+    </MantineProvider>
+  );
+}
+
+export function CustomWidgetCodeInputClient(props: CustomWidgetCodeInputProps) {
+  const { colorMode } = useColorMode();
+
+  return (
+    <MantineProvider forceColorScheme={colorMode}>
+      <CustomWidgetCodeEditor {...props} messages={editableMessages} />
+    </MantineProvider>
+  );
+}
+
+export function BundledCustomWidgetGalleryClient() {
+  const { colorMode } = useColorMode();
+  const [selectedId, setSelectedId] = useState(BUNDLED_CUSTOM_WIDGETS[0]?.id ?? null);
+  const selected = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === selectedId) ?? BUNDLED_CUSTOM_WIDGETS[0];
+  if (!selected) return null;
+
+  return (
+    <MantineProvider forceColorScheme={colorMode}>
+      <Stack gap="md">
+        <Select
+          label="Bundled widget"
+          data={BUNDLED_CUSTOM_WIDGETS.map(({ id, widget }) => ({ value: id, label: widget.name }))}
+          value={selected.id}
+          onChange={(value) => {
+            if (value) setSelectedId(value);
+          }}
+          allowDeselect={false}
+        />
+        <Text size="sm" c="dimmed">
+          {selected.widget.description}
+        </Text>
+        <ReadOnlyCustomWidgetCode
+          id={`${selected.id}-manifest`}
+          label="Complete widget.json"
+          language="json"
+          value={JSON.stringify(selected.widget, null, 2)}
+          messages={messages}
+          height="680px"
+        />
+      </Stack>
+    </MantineProvider>
+  );
+}

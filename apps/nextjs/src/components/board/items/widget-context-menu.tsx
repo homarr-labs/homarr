@@ -1,87 +1,129 @@
 "use client";
 
 import type { MutableRefObject, ReactNode } from "react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Group, Loader, Menu, Switch, Text, Tooltip } from "@mantine/core";
-import {
-  IconAlertTriangle,
-  IconCircleCheck,
-  IconCopy,
-  IconLayoutKanban,
-  IconRefresh,
-  IconSettings,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconAlertTriangle, IconCircleCheck, IconRefresh, IconSettings } from "@tabler/icons-react";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
-import { useIsFetching, useQueryClient } from "@tanstack/react-query";
+import { partialMatchKey, useIsFetching, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { useIntegrations, useSession } from "@homarr/auth/client";
+import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useTimeAgo } from "@homarr/common";
-import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TranslationFunction } from "@homarr/translation";
-import type { WidgetContextMenuAction } from "@homarr/widgets";
-import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
-import { WidgetEditModal } from "@homarr/widgets/modals";
+import type { WidgetContextMenuAction, WidgetDefinition } from "@homarr/widgets/definition";
+import { getWidgetQueryKeys } from "@homarr/widgets/definition";
+import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
-import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
-import { useOpenItemMoveModal } from "./item-move-modal";
+import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 
 interface WidgetContextMenuProps {
   item: SectionItem;
+  definition: WidgetDefinition;
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   children: ReactNode;
 }
 
-export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetContextMenuProps) => {
+export const WidgetContextMenu = ({ item, definition, widgetStateRef, children }: WidgetContextMenuProps) => {
   const { data: session } = useSession();
   const [isEditMode] = useEditMode();
+  const settings = useSettings();
+
+  if (!session || !settings.enableRightClickOnWidgets || isEditMode) return <>{children}</>;
+
+  return (
+    <WidgetContextMenuInner item={item} definition={definition} widgetStateRef={widgetStateRef} settings={settings}>
+      {children}
+    </WidgetContextMenuInner>
+  );
+};
+
+const WidgetContextMenuInner = ({
+  item,
+  definition,
+  widgetStateRef,
+  children,
+  settings,
+}: WidgetContextMenuProps & { settings: ReturnType<typeof useSettings> }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  return (
+    <Menu
+      shadow="md"
+      width={300}
+      closeOnItemClick={false}
+      position="right-start"
+      offset={4}
+      opened={isMenuOpen}
+      onChange={setIsMenuOpen}
+    >
+      <Menu.ContextMenu>{children}</Menu.ContextMenu>
+      <Menu.Dropdown>
+        {isMenuOpen && (
+          <WidgetContextMenuDropdown
+            item={item}
+            definition={definition}
+            widgetStateRef={widgetStateRef}
+            settings={settings}
+          />
+        )}
+      </Menu.Dropdown>
+    </Menu>
+  );
+};
+
+type WidgetContextMenuDropdownProps = Omit<WidgetContextMenuProps, "children"> & {
+  settings: ReturnType<typeof useSettings>;
+};
+
+const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings }: WidgetContextMenuDropdownProps) => {
+  const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
-  const tItem = useScopedI18n("item");
   const tMenu = useScopedI18n("item.menu.label");
   const t = useI18n();
-  const settings = useSettings();
-  const isRightClickEnabled = settings.enableRightClickOnWidgets;
-  const { openModal } = useModalAction(WidgetEditModal);
-  const openMoveModal = useOpenItemMoveModal();
-  const { openConfirmModal } = useConfirmModal();
-  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
-    useItemActions();
-  const integrationData = useIntegrations();
+  const { data: session } = useSession();
+  const canConfigureWidget = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
+  const hasSupportedIntegrations =
+    "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) > 0;
+  const { openModal } = useModalAction(LazyWidgetEditModal);
+  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
+  const { data: integrationData = [], isPending } = clientApi.integration.all.useQuery(undefined, {
+    enabled: hasSupportedIntegrations,
+  });
   const { mutate: saveBoard } = clientApi.board.saveBoard.useMutation();
-  const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
-  const { section } = useSectionContext();
   const queryClient = useQueryClient();
 
-  const widgetQueryKey = useMemo(
-    () => ("queryKey" in currentDefinition ? (currentDefinition.queryKey as QueryKey) : [["widget", item.kind]]),
-    [currentDefinition, item.kind],
-  );
-  const isWidgetFetching = useIsFetching({ queryKey: widgetQueryKey }) > 0;
+  const widgetQueryKeys = useMemo(() => getWidgetQueryKeys(definition, item.kind), [definition, item.kind]);
+  const isWidgetFetching =
+    useIsFetching({
+      predicate: (query) => widgetQueryKeys.some((queryKey) => partialMatchKey(query.queryKey, queryKey)),
+    }) > 0;
   const handleRefetch = useCallback(() => {
-    void queryClient.refetchQueries({ queryKey: widgetQueryKey, type: "all" });
-  }, [queryClient, widgetQueryKey]);
+    void Promise.all(widgetQueryKeys.map((queryKey) => queryClient.refetchQueries({ queryKey, type: "all" })));
+  }, [queryClient, widgetQueryKeys]);
 
   const options = useMemo(
-    () => reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options) as Record<string, unknown>,
-    [item.kind, settings, item.options],
+    () => reduceWidgetOptionsWithDefinition(definition, settings, item.options),
+    [definition, settings, item.options],
   );
 
   type OptionDef = { type: string; skipContextMenu?: boolean };
   const toggleOptions = useMemo(() => {
-    const rawOptions = currentDefinition.createOptions(settings) as unknown as Record<string, OptionDef>;
+    if (!canConfigureWidget) return [];
+    const rawOptions = definition.createOptions(settings) as unknown as Record<string, OptionDef>;
     return Object.entries(rawOptions).filter(([, def]) => def.type === "switch" && !def.skipContextMenu);
-  }, [currentDefinition, settings]);
+  }, [canConfigureWidget, definition, settings]);
 
   const widgetContextActions = useMemo(() => {
-    const def = currentDefinition as Record<string, unknown>;
+    const def = definition as unknown as Record<string, unknown>;
     if (typeof def.contextActions !== "function") return [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const actions = (def.contextActions as any)({
@@ -94,7 +136,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
       widgetStateRef,
     });
     return (Array.isArray(actions) ? actions : []) as WidgetContextMenuAction[];
-  }, [currentDefinition, options, item, updateItemOptions, isEditMode, board.id, widgetStateRef]);
+  }, [definition, options, item, updateItemOptions, isEditMode, board.id, widgetStateRef]);
 
   const persistBoard = useCallback(
     (updatedItems: typeof board.items) => {
@@ -107,6 +149,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
     openModal(
       {
         kind: item.kind,
+        definition,
         value: {
           advancedOptions: item.advancedOptions,
           options: item.options,
@@ -133,10 +176,10 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
         },
         integrationData: integrationData.filter(
           (integration) =>
-            "supportedIntegrations" in currentDefinition &&
-            (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
+            "supportedIntegrations" in definition &&
+            (definition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
         ),
-        integrationSupport: "supportedIntegrations" in currentDefinition,
+        integrationSupport: "supportedIntegrations" in definition,
         settings,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
@@ -150,7 +193,7 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
     updateItemAdvancedOptions,
     updateItemIntegrations,
     integrationData,
-    currentDefinition,
+    definition,
     settings,
     isEditMode,
     persistBoard,
@@ -168,132 +211,88 @@ export const WidgetContextMenu = ({ item, widgetStateRef, children }: WidgetCont
     [options, item.id, updateItemOptions, persistBoard, board],
   );
 
-  if (!session) return <>{children}</>;
-  if (!isRightClickEnabled || isEditMode) return <>{children}</>;
-
   const visibleWidgetActions = widgetContextActions.filter((a) => !a.hidden);
 
   return (
-    <Menu shadow="md" width={300} closeOnItemClick={false} position="right-start" offset={4}>
-      <Menu.ContextMenu>{children}</Menu.ContextMenu>
-      <Menu.Dropdown>
-        {toggleOptions.length > 0 && (
-          <>
-            <Menu.Label>{tMenu("options")}</Menu.Label>
-            {toggleOptions.map(([key]) => (
-              <Menu.Item key={key} onClick={() => handleToggle(key)(!options[key])}>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                <Group wrap="nowrap">
-                  {String(translateIfNecessary(t, ((fn: any) => fn(`widget.${item.kind}.option.${key}.label`)) as any))}
-                  <Switch size="xs" checked={Boolean(options[key])} readOnly tabIndex={-1} ml="auto" />
-                </Group>
-              </Menu.Item>
-            ))}
-          </>
-        )}
-
-        {visibleWidgetActions.length > 0 && (
-          <>
-            {toggleOptions.length > 0 && <Menu.Divider />}
-            <Menu.Label>{tMenu("actions")}</Menu.Label>
-            {visibleWidgetActions.map((action) => {
-              const Icon = action.icon;
-              return (
-                <Menu.Item
-                  key={action.key}
-                  closeMenuOnClick
-                  leftSection={Icon ? <Icon size={16} /> : undefined}
-                  onClick={action.onClick}
-                  disabled={action.disabled}
-                  color={action.color}
-                >
-                  {String(translateIfNecessary(t, action.label))}
-                </Menu.Item>
-              );
-            })}
-          </>
-        )}
-
-        {isEditMode && (
-          <>
-            {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
-            <Menu.Item
-              closeMenuOnClick
-              leftSection={<IconLayoutKanban size={16} />}
-              onClick={() => {
-                openMoveModal({
-                  entry: item,
-                  sourceSectionId: section.id,
-                });
-              }}
-            >
-              {tItem("action.moveResize")}
-            </Menu.Item>
-            <Menu.Item
-              closeMenuOnClick
-              leftSection={<IconCopy size={16} />}
-              onClick={() => duplicateItem({ itemId: item.id })}
-            >
-              {tItem("action.duplicate")}
-            </Menu.Item>
-          </>
-        )}
-
+    <>
+      {toggleOptions.length > 0 && (
         <>
-          {(toggleOptions.length > 0 || visibleWidgetActions.length > 0 || isEditMode) && <Menu.Divider />}
-          <Menu.Item
-            leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
-            onClick={handleRefetch}
-            disabled={isWidgetFetching}
-          >
-            <Group justify="space-between" wrap="nowrap" gap="sm">
-              {tMenu("refresh")}
-              <WidgetQueryStatus
-                queryClient={queryClient}
-                queryKey={widgetQueryKey}
-                isFetching={isWidgetFetching}
-                t={t}
-              />
-            </Group>
-          </Menu.Item>
-          <Menu.Item closeMenuOnClick leftSection={<IconSettings size={16} />} onClick={openEditModal}>
-            {tMenu("settings")}
-          </Menu.Item>
-        </>
-
-        {isEditMode && (
-          <>
-            <Menu.Divider />
-            <Menu.Item
-              closeMenuOnClick
-              color="red"
-              leftSection={<IconTrash size={16} />}
-              onClick={() => {
-                openConfirmModal({
-                  title: tItem("remove.title"),
-                  children: tItem("remove.message"),
-                  onConfirm: () => removeItem({ itemId: item.id }),
-                });
-              }}
-            >
-              {tItem("action.remove")}
+          <Menu.Label>{tMenu("options")}</Menu.Label>
+          {toggleOptions.map(([key]) => (
+            <Menu.Item key={key} onClick={() => handleToggle(key)(!options[key])}>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              <Group wrap="nowrap">
+                {String(translateIfNecessary(t, ((fn: any) => fn(`widget.${item.kind}.option.${key}.label`)) as any))}
+                <Switch size="xs" checked={Boolean(options[key])} readOnly tabIndex={-1} ml="auto" />
+              </Group>
             </Menu.Item>
-          </>
-        )}
-      </Menu.Dropdown>
-    </Menu>
+          ))}
+        </>
+      )}
+
+      {visibleWidgetActions.length > 0 && (
+        <>
+          {toggleOptions.length > 0 && <Menu.Divider />}
+          <Menu.Label>{tMenu("actions")}</Menu.Label>
+          {visibleWidgetActions.map((action) => {
+            const Icon = action.icon;
+            return (
+              <Menu.Item
+                key={action.key}
+                closeMenuOnClick
+                leftSection={Icon ? <Icon size={16} /> : undefined}
+                onClick={action.onClick}
+                disabled={action.disabled}
+                color={action.color}
+              >
+                {String(translateIfNecessary(t, action.label))}
+              </Menu.Item>
+            );
+          })}
+        </>
+      )}
+
+      <>
+        {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
+        <Menu.Item
+          leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
+          onClick={handleRefetch}
+          disabled={isWidgetFetching}
+        >
+          <Group justify="space-between" wrap="nowrap" gap="sm">
+            {tMenu("refresh")}
+            <WidgetQueryStatus
+              queryClient={queryClient}
+              queryKeys={widgetQueryKeys}
+              isFetching={isWidgetFetching}
+              t={t}
+            />
+          </Group>
+        </Menu.Item>
+        <Menu.Item
+          closeMenuOnClick
+          leftSection={<IconSettings size={16} />}
+          onClick={openEditModal}
+          onFocus={preloadWidgetEditModal}
+          onPointerEnter={preloadWidgetEditModal}
+          disabled={!canConfigureWidget || (hasSupportedIntegrations && isPending)}
+        >
+          {tMenu("settings")}
+        </Menu.Item>
+      </>
+    </>
   );
 };
 
 interface WidgetQueryStatusProps {
   queryClient: QueryClient;
-  queryKey: QueryKey;
+  queryKeys: QueryKey[];
   isFetching: boolean;
   t: TranslationFunction;
 }
 
-const WidgetQueryStatus = ({ queryClient, queryKey, isFetching, t }: WidgetQueryStatusProps) => {
-  const queries = queryClient.getQueryCache().findAll({ queryKey });
+const WidgetQueryStatus = ({ queryClient, queryKeys, isFetching, t }: WidgetQueryStatusProps) => {
+  const queries = [...new Set(queryKeys.flatMap((queryKey) => queryClient.getQueryCache().findAll({ queryKey })))];
   const timestamps = queries.map((query) => query.state.dataUpdatedAt).filter(Boolean);
   const latest = timestamps.length > 0 ? Math.max(...timestamps) : 0;
   const ageLabel = useTimeAgo(new Date(latest));
@@ -331,7 +330,8 @@ const WidgetQueryStatus = ({ queryClient, queryKey, isFetching, t }: WidgetQuery
         <Group gap={4} wrap="nowrap">
           <IconAlertTriangle size={12} color="var(--mantine-color-red-6)" />
           <Text size="xs" c="red.6">
-            {t("item.menu.status.error")} · {ageLabel}
+            {t("item.menu.status.error")}
+            {latest > 0 && ` · ${ageLabel}`}
           </Text>
         </Group>
       </Tooltip>
@@ -342,7 +342,8 @@ const WidgetQueryStatus = ({ queryClient, queryKey, isFetching, t }: WidgetQuery
     <Group gap={4} wrap="nowrap">
       <IconCircleCheck size={12} color="var(--mantine-color-green-6)" />
       <Text size="xs" c="dimmed">
-        {t("item.menu.status.success")} · {ageLabel}
+        {t("item.menu.status.success")}
+        {latest > 0 && ` · ${ageLabel}`}
       </Text>
     </Group>
   );

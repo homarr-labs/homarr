@@ -5,6 +5,7 @@ import {
   IconApi,
   IconBook2,
   IconBox,
+  IconBuildingStore,
   IconBrandDiscord,
   IconBrandDocker,
   IconBrandGithub,
@@ -27,8 +28,10 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 
+import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createDocumentationLink } from "@homarr/definitions";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { env } from "@homarr/docker/env";
@@ -39,11 +42,29 @@ import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import type { NavigationLink } from "~/components/layout/navigation";
 import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
-import { ManageTourProvider } from "~/components/onboarding/manage-tour";
+import { ManageTourGate } from "~/components/onboarding/manage-tour-gate";
+import { env as nextEnv } from "~/env";
+
+const logger = createLogger({ module: "manageLayout" });
 
 export default async function ManageLayout({ children }: PropsWithChildren) {
-  const t = await getScopedI18n("management.navbar");
-  const session = await auth();
+  const sessionPromise = auth();
+  const shouldRunManageTourPromise = sessionPromise.then(async (session) => {
+    if (!session || nextEnv.DEMO_MODE) return false;
+
+    try {
+      const user = await getRscUserSettingsAsync(session.user.id);
+      return user !== undefined && !user.completedManageTour;
+    } catch (error) {
+      logger.error(new Error("Failed to load the management tour status", { cause: error }));
+      return false;
+    }
+  });
+  const [t, session, shouldRunManageTour] = await Promise.all([
+    getScopedI18n("management.navbar"),
+    sessionPromise,
+    shouldRunManageTourPromise,
+  ]);
   const navigationLinks: NavigationLink[] = [
     {
       label: t("items.home"),
@@ -78,6 +99,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconApi,
       href: "/manage/custom-widgets",
       label: t("items.customWidgets"),
+      hidden: !session?.user.permissions.includes("admin"),
+    },
+    {
+      icon: IconBuildingStore,
+      href: "/manage/workshop",
+      label: t("items.workshop"),
       hidden: !session?.user.permissions.includes("admin"),
     },
     {
@@ -225,7 +252,9 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     </ClientShell>
   );
 
-  if (!session) return shell;
-
-  return <ManageTourProvider isAdmin={isAdmin}>{shell}</ManageTourProvider>;
+  return (
+    <ManageTourGate enabled={shouldRunManageTour} isAdmin={isAdmin}>
+      {shell}
+    </ManageTourGate>
+  );
 }

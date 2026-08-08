@@ -90,3 +90,16 @@ The dashboard editor saves item positions and sections as one board update.
 Canvas height follows its content automatically and does not require a separate API setting.
 Responsive layouts store optional left and right gutter widths from zero to three columns.
 Gutter columns are reserved from the layout's total column count, and changing them reflows affected items.
+
+## Get Custom Widget authoring resources
+
+Custom JSX v2 provides four HTTP discovery endpoints:
+
+- `GET /api/custom-widgets/authoring-prompt` returns the current prompt plus MCP and HTTP resource identifiers.
+- `GET /api/custom-widgets/schema` returns the canonical widget JSON Schema.
+- `GET /api/custom-widgets/components` returns the release-matched static component catalog.
+- `GET /api/custom-widgets/skill` returns the concise live `SKILL.md` plus skills.sh, source, and install metadata. Retrieve the schema, component catalog, and examples through their dedicated resources only when needed.
+
+Call `customWidget_configurationRequestUser` to create a temporary API source setup URL where the user can confirm their server URL and enter credentials. Do not construct or save this URL.
+
+Authenticated tRPC and MCP procedures support definition management, validation, previews, template patches, and credential writes. An exported definition does not contain credentials.

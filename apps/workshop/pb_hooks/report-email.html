@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workshop report</title>
+  </head>
+  <body style="margin: 0; padding: 0; background: #f4f4f4; font-family: Helvetica, Arial, sans-serif">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f4f4f4">
+      <tr>
+        <td align="center" style="padding: 50px 20px">
+          <table
+            role="presentation"
+            width="600"
+            cellpadding="0"
+            cellspacing="0"
+            style="width: 600px; max-width: 100%; background: #ffffff; border: 1px solid #dc2626"
+          >
+            <tr>
+              <td style="background: #991b1b; padding: 28px 36px; color: #ffffff">
+                <div style="font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase">
+                  Moderation alert
+                </div>
+                <div style="margin-top: 8px; font-size: 22px; font-weight: bold">A Workshop submission was reported</div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 36px; color: #18181b; font-size: 15px; line-height: 1.65">
+                <p style="margin: 0 0 18px">
+                  <strong>{{reporterName}}</strong> reported <a href="{{submissionUrl}}">{{submissionTitle}}</a>.
+                </p>
+                <p style="margin: 0 0 8px; font-size: 12px; font-weight: bold; text-transform: uppercase; color: #991b1b">
+                  {{category}}
+                </p>
+                <blockquote
+                  style="margin: 0 0 26px; padding: 16px 18px; border-left: 3px solid #dc2626; background: #fef2f2"
+                >
+                  {{explanation}}
+                </blockquote>
+                <a
+                  href="{{adminUrl}}"
+                  style="display: inline-block; padding: 12px 20px; background: #991b1b; color: #ffffff; font-weight: bold; text-decoration: none"
+                >
+                  REVIEW REPORT
+                </a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

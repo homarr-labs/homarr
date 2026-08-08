@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Comment on Homarr Workshop</title>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Helvetica, Arial, sans-serif">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4">
+      <tr>
+        <td align="center" style="padding: 50px 20px">
+          <table
+            role="presentation"
+            width="600"
+            cellpadding="0"
+            cellspacing="0"
+            style="width: 600px; max-width: 100%; background-color: #ffffff; border: 1px solid #000000"
+          >
+            <!-- Header -->
+            <tr>
+              <td align="center" style="background-color: #000000; padding: 36px 20px">
+                <a href="https://homarr.dev" target="_blank" style="text-decoration: none">
+                  <img
+                    src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.png"
+                    alt="Homarr"
+                    width="170"
+                    style="display: block; width: 170px; height: auto; border: 0; margin: 0 auto"
+                  />
+                </a>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding: 45px 40px; color: #000000; font-size: 15px; line-height: 1.7">
+                <p style="margin: 0 0 18px 0">Hi there,</p>
+                <p style="margin: 0 0 18px 0">
+                  <strong>{{commenterName}}</strong> left a comment on your submission
+                  <strong>{{submissionTitle}}</strong>:
+                </p>
+                <blockquote
+                  style="
+                    margin: 0 0 24px 0;
+                    padding: 16px 20px;
+                    border-left: 3px solid #000000;
+                    background-color: #f9f9f9;
+                    color: #555555;
+                  "
+                >
+                  {{commentExcerpt}}
+                </blockquote>
+
+                <!-- CTA button -->
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td align="center" style="background-color: #000000">
+                      <a
+                        href="{{submissionUrl}}"
+                        target="_blank"
+                        style="
+                          display: inline-block;
+                          padding: 12px 28px;
+                          color: #ffffff;
+                          font-size: 14px;
+                          font-weight: bold;
+                          text-decoration: none;
+                          letter-spacing: 0.5px;
+                        "
+                      >
+                        VIEW THE COMMENT
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Divider -->
+            <tr>
+              <td style="border-top: 1px solid #000000"></td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td align="center" style="padding: 24px 20px; color: #000000; font-size: 12px">
+                <a href="https://homarr.dev" target="_blank" style="color: #000000; text-decoration: underline"
+                  >homarr.dev</a
+                >
+                &nbsp;&middot;&nbsp; Homarr &mdash; 2026
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

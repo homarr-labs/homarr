@@ -19,9 +19,12 @@ export const throwIfActionForbiddenAsync = async (
   permission: BoardPermission,
 ) => {
   const { db, session } = ctx;
-  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
-    where: eq(groupMembers.userId, session?.user.id ?? ""),
-  });
+  const groupPermissionWhere = session
+    ? inArray(
+        boardGroupPermissions.groupId,
+        db.select({ groupId: groupMembers.groupId }).from(groupMembers).where(eq(groupMembers.userId, session.user.id)),
+      )
+    : eq(boardGroupPermissions.groupId, "");
   const board = await db.query.boards.findFirst({
     where: boardWhere,
     columns: {
@@ -34,7 +37,7 @@ export const throwIfActionForbiddenAsync = async (
         where: eq(boardUserPermissions.userId, session?.user.id ?? ""),
       },
       groupPermissions: {
-        where: inArray(boardGroupPermissions.groupId, groupsOfCurrentUser.map((group) => group.groupId).concat("")),
+        where: groupPermissionWhere,
       },
     },
   });

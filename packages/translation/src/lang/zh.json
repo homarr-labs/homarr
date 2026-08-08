@@ -688,211 +688,6 @@
       "add": "新增應用程式"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "自訂小工具",
-        "noResults": "尚無自訂小工具。建立您的第一個！",
-        "loading": "正在讀取……"
-      },
-      "create": {
-        "title": "建立自訂小工具",
-        "subtitle": "定義 API URL、驗證方式以及如何顯示回應資料。"
-      },
-      "edit": {
-        "title": "編輯自訂小工具"
-      }
-    },
-    "action": {
-      "create": "建立",
-      "import": "匯入",
-      "save": "儲存",
-      "delete": "刪除自訂小工具",
-      "deleteConfirm": "確定要刪除 \"{name}\" 嗎？此動作無法復原。",
-      "export": "匯出",
-      "addMapping": "新增對應",
-      "addColumn": "新增欄",
-      "edit": "編輯",
-      "removeMapping": "移除對應",
-      "removeColumn": "移除欄",
-      "addItem": "新增項目",
-      "removeItem": "移除項目",
-      "addBar": "新增長條",
-      "duplicate": "複製",
-      "copyAiPrompt": "複製 AI 提示",
-      "enable": "啟用",
-      "disable": "停用",
-      "menu": "動作"
-    },
-    "field": {
-      "name": "名稱",
-      "description": "描述",
-      "iconUrl": "圖示網址",
-      "url": "網址",
-      "authType": "驗證類型",
-      "headerName": "標頭/查詢參數名稱",
-      "method": "方法",
-      "requestBody": "請求主體",
-      "displayType": "顯示類型",
-      "jsonPath": "JSON 路徑",
-      "jsonPathHint": "使用 JSONPath 語法來擷取值，例如 $.data.temperature 或 $.items[0].name",
-      "label": "標籤",
-      "unit": "單位",
-      "mappings": "對應",
-      "tablePath": "陣列 JSON 路徑",
-      "tablePathHint": "回應中陣列的路徑，例如 $.data.items",
-      "columns": "欄",
-      "header": "標頭",
-      "items": "項目",
-      "gridColumns": "網格欄",
-      "cardStyle": "卡片樣式",
-      "bars": "長條",
-      "valuePath": "值 JSON 路徑",
-      "maxPath": "最大值 JSON 路徑",
-      "showPercentage": "顯示百分比",
-      "barSize": "長條大小",
-      "goodValues": "良好值 (逗號分隔)",
-      "dotSize": "點大小",
-      "valueSize": "值大小",
-      "labelPosition": "標籤位置",
-      "kvLayout": "佈局",
-      "striped": "條紋列",
-      "compact": "精簡模式",
-      "maxHeight": "最大高度 (像素)",
-      "color": "顏色",
-      "buttonLabel": "按鈕標籤",
-      "buttonColor": "按鈕顏色",
-      "confirmText": "確認文字",
-      "confirmTextHint": "若設定，執行請求前會顯示確認對話框",
-      "successMessage": "成功訊息",
-      "successMessageHint": "執行成功後顯示的訊息",
-      "enabled": "已啟用",
-      "template": {
-        "label": "JSX 樣板",
-        "description": "Mantine JSX 樣板。透過資料綁定存取 API 回應欄位 (例如 data.name)。僅使用白名單中的組件。禁止: constructor, __proto__, eval, Function, window, document。"
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU 溫度",
-      "exampleLabelShort": "CPU 溫度",
-      "exampleHeader": "名稱",
-      "exampleUnit": "°C",
-      "iconUrl": "https://……",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "blue"
-    },
-    "cardStyleOption": {
-      "filled": "填滿",
-      "outline": "外框",
-      "subtle": "細微"
-    },
-    "layoutOption": {
-      "list": "清單",
-      "grid": "網格"
-    },
-    "sizeOption": {
-      "sm": "小",
-      "md": "中",
-      "lg": "大",
-      "xl": "特大"
-    },
-    "labelPositionOption": {
-      "above": "上方",
-      "below": "下方"
-    },
-    "fieldset": {
-      "general": "一般",
-      "connection": "API 連線",
-      "display": "顯示設定"
-    },
-    "displayTypeDescription": {
-      "singleValue": "顯示一個帶有標籤和單位的擷取值",
-      "keyValue": "並排顯示多個帶有標籤的值",
-      "table": "以表格格式顯示資料列",
-      "statGrid": "以網格形式顯示彩色統計卡 — 類似 Pi-Hole 或 Speedtest 小工具",
-      "progressBars": "顯示使用量或完成度的進度條 — 適用於磁碟、記憶體、配額",
-      "statusIndicator": "彩色狀態點顯示線上/離線或健康狀態",
-      "countGrid": "在緊湊的網格中顯示精簡的數字 + 標籤計數器",
-      "raw": "用於偵錯的美化 JSON 輸出",
-      "actionButton": "點擊時觸發請求的按鈕",
-      "customJsx": "使用白名單 Mantine 組件的自訂 JSX 佈局，具有完整的 API 資料綁定"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "無",
-      "bearer": "Bearer 令牌",
-      "basic": "基本驗證",
-      "apiKeyHeader": "API 金鑰 (標頭)",
-      "apiKeyQuery": "API 金鑰 (查詢)"
-    },
-    "displayType": {
-      "singleValue": "單一值",
-      "keyValue": "鍵值",
-      "table": "表格",
-      "statGrid": "統計網格",
-      "progressBars": "進度條",
-      "statusIndicator": "狀態指示器",
-      "countGrid": "計數網格",
-      "raw": "原始 JSON",
-      "actionButton": "動作按鈕",
-      "customJsx": "自訂 JSX"
-    },
-    "secret": {
-      "apiKey": "API 金鑰 / 令牌",
-      "username": "使用者名稱",
-      "password": "密碼",
-      "savedPlaceholder": "••••••• (已儲存，留空則保持不變)"
-    },
-    "preview": {
-      "title": "預覽",
-      "test": "測試",
-      "hint": "點擊「測試」以用目前設定預覽 API 回應。",
-      "rawResponse": "原始 JSON 回應"
-    },
-    "notification": {
-      "created": "小工具 \"{name}\" 建立成功。",
-      "updated": "小工具 \"{name}\" 更新成功。",
-      "deleted": "小工具 \"{name}\" 已刪除。",
-      "imported": "小工具匯入成功。",
-      "aiPromptCopied": "AI 提示已複製到剪貼簿",
-      "aiPromptDescription": "複製預先構建的提示，貼到任何 AI 聊天機器人 (ChatGPT、Claude、Gemini...)。其中包含完整的小工具綱要和您的 API 回應，讓 AI 能為您產生可直接匯入的 JSON 設定。",
-      "aiPromptCopy": "複製到剪貼簿",
-      "aiPromptNoResponse": "提示: 先執行測試將您的 API 回應包含在提示中，以獲得更好的結果。",
-      "aiPromptCopyError": "無法將提示複製到剪貼簿。您的瀏覽器可能不支援此功能。",
-      "createError": "建立小工具失敗。請檢查 API 端點是否可達。",
-      "updateError": "更新小工具失敗。您的變更未被儲存。",
-      "importError": "匯入小工具失敗。請確保檔案是有效的自訂小工具 JSON 匯出。",
-      "exportError": "匯出小工具失敗。",
-      "duplicated": "小工具 \"{name}\" 已複製。",
-      "duplicateError": "複製小工具失敗。",
-      "toggleError": "切換小工具狀態失敗。",
-      "deleteError": "刪除小工具失敗。",
-      "previewError": "無法取得預覽。請檢查網址並重試。",
-      "executed": "動作執行成功。",
-      "executeError": "動作失敗: {error}"
-    },
-    "table": {
-      "name": "名稱",
-      "url": "網址",
-      "display": "顯示"
-    },
-    "widget": {
-      "disabled": "此小工具已停用"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -2388,10 +2183,21 @@
         },
         "descendingDefaultSort": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2685,7 +2491,19 @@
         "showOnlyPlaying": {
           "label": "只顯示目前播放中的項目",
           "description": "停用此功能將無法在 Plex 上運作"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "目前播放中",
@@ -2694,6 +2512,9 @@
         "id": "ID",
         "status": "狀態",
         "directPlay": "直接播放",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "轉碼中",
         "paused": "已暫停",
         "remaining": "剩餘 {minutes} 分鐘",
@@ -2760,193 +2581,6 @@
       },
       "error": {
         "internalServerError": "無法取得 Paperless-ngx 資料"
-      }
-    },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "來自 PatchMon 的主機修補狀態概覽",
-      "title": "PatchMon 統計",
-      "totalHosts": "主機總數",
-      "hostsNeedingUpdates": "需要更新",
-      "securityUpdates": "安全性更新",
-      "upToDateHosts": "已更新至最新",
-      "hostsWithSecurityUpdates": "有安全性更新的主機",
-      "recentUpdates24h": "更新 (24h)",
-      "totalOutdatedPackages": "過時套件",
-      "totalRepos": "儲存庫",
-      "osDistribution": "作業系統分佈",
-      "compliance": "修補合規性",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "更新於 {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "顯示主機總數",
-          "description": "顯示受監控的主機總數"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "顯示需要更新的主機",
-          "description": "顯示至少有一個過時套件的主機"
-        },
-        "showSecurityUpdates": {
-          "label": "顯示安全性更新總數",
-          "description": "顯示可用的安全性更新總數"
-        },
-        "showUpToDateHosts": {
-          "label": "顯示已更新至最新主機",
-          "description": "顯示沒有任何過時套件的主機"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "顯示有安全性更新的主機",
-          "description": "顯示需要安全性修補的主機"
-        },
-        "showRecentUpdates24h": {
-          "label": "顯示近期更新 (24h)",
-          "description": "顯示過去 24 小時內已套用的更新數量"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "顯示過時套件總數",
-          "description": "顯示所有主機上過時套件的總數"
-        },
-        "showTotalRepos": {
-          "label": "顯示儲存庫數量",
-          "description": "顯示正在監控的活躍儲存庫數量"
-        },
-        "enableThresholdColors": {
-          "label": "啟用閾值顏色",
-          "description": "根據嚴重性預設將統計值著色為綠色、黃色或紅色"
-        },
-        "useCustomThresholds": {
-          "label": "進階閾值",
-          "description": "使用絕對計數或主機總數百分比，對每個統計值自訂警告和嚴重閾值"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "絕對計數",
-            "percent": "主機總數百分比"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "需要更新閾值模式",
-          "description": "以絕對值或主機總數百分比比較需要更新的計數"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "需要更新警告閾值",
-          "description": "數值達到此閾值時轉為黃色"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "需要更新嚴重閾值",
-          "description": "數值達到此閾值時轉為紅色"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "安全性更新閾值模式",
-          "description": "以絕對值或主機總數百分比比較安全性更新的計數"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "安全性更新警告閾值",
-          "description": "數值達到此閾值時轉為黃色"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "安全性更新嚴重閾值",
-          "description": "數值達到此閾值時轉為紅色"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "有安全性更新主機閾值模式",
-          "description": "以絕對值或主機總數百分比比較主機計數"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "有安全性更新主機警告閾值",
-          "description": "數值達到此閾值時轉為黃色"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "有安全性更新主機嚴重閾值",
-          "description": "數值達到此閾值時轉為紅色"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "已更新至最新主機閾值模式",
-          "description": "以絕對值或主機總數百分比比較已更新至最新主機計數"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "已更新至最新主機警告閾值",
-          "description": "數值達到或高於此閾值但低於全覆蓋時轉為黃色"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "已更新至最新主機嚴重閾值",
-          "description": "數值低於此閾值時轉為紅色"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "過時套件閾值模式",
-          "description": "以絕對值或主機總數百分比比較過時套件計數"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "過時套件警告閾值",
-          "description": "數值達到此閾值時轉為黃色"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "過時套件嚴重閾值",
-          "description": "數值達到此閾值時轉為紅色"
-        },
-        "showOsDistribution": {
-          "label": "顯示作業系統分佈",
-          "description": "顯示按作業系統細分的受監控主機"
-        },
-        "osDistributionLimit": {
-          "label": "作業系統分佈限制",
-          "description": "最多顯示的作業系統數量",
-          "option": {
-            "3": "前 3 名",
-            "5": "前 5 名",
-            "10": "前 10 名",
-            "all": "全部"
-          }
-        },
-        "showOsVersion": {
-          "label": "顯示作業系統版本",
-          "description": "當可用時，在每個分佈標籤後附加作業系統版本"
-        },
-        "showComplianceHero": {
-          "label": "顯示合規性英雄",
-          "description": "顯示一個合規性環，展示已更新至最新主機的百分比"
-        },
-        "osDisplayMode": {
-          "label": "作業系統顯示模式",
-          "description": "選擇如何顯示作業系統分佈",
-          "option": {
-            "bars": "水平長條",
-            "donut": "甜甜圈圖"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "無法擷取 PatchMon 資料"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "來自 Bazarr 實例的缺少字幕和健康狀態概覽",
-      "episodes": "缺少的集數",
-      "movies": "缺少的電影",
-      "providers": "提供者問題",
-      "status": "健康問題",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "顯示缺少的集數",
-          "description": "顯示缺少字幕的集數數量"
-        },
-        "showMissingMovies": {
-          "label": "顯示缺少的電影",
-          "description": "顯示缺少字幕的電影數量"
-        },
-        "showProviderIssues": {
-          "label": "顯示提供者問題",
-          "description": "顯示有問題的字幕提供者數量"
-        },
-        "showHealthIssues": {
-          "label": "顯示健康問題",
-          "description": "顯示 Bazarr 健康問題的數量"
-        }
-      },
-      "error": {
-        "internalServerError": "無法擷取 Bazarr 資料"
       }
     },
     "immich-serverStats": {
@@ -3321,35 +2955,6 @@
         }
       }
     },
-    "mediaMissing": {
-      "name": "缺少和佇列中的媒體",
-      "description": "顯示來自 Radarr 和 Sonarr 的缺少和佇列中的電影及影集",
-      "option": {
-        "showMissing": {
-          "label": "顯示缺少的項目"
-        },
-        "showQueued": {
-          "label": "顯示佇列中的項目"
-        },
-        "pageSize": {
-          "label": "每頁項目數"
-        }
-      },
-      "tab": {
-        "missing": "缺少",
-        "queued": "佇列中"
-      },
-      "type": {
-        "movie": "電影",
-        "episode": "集數"
-      },
-      "empty": {
-        "missing": "沒有缺少的項目",
-        "queued": "沒有佇列中的項目",
-        "noTabsEnabled": "在小工具設定中至少啟用一個分頁"
-      },
-      "timeLeft": "剩餘時間"
-    },
     "rssFeed": {
       "name": "RSS 訂閱",
       "description": "顯示一個或多個 RSS、ATOM、JSON 源",
@@ -3678,40 +3283,6 @@
         "internalServerError": "無法取得運作時間資料"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Traefik 路由器、服務、中間件和入口點概覽",
-      "option": {
-        "showTcp": {
-          "label": "顯示 TCP"
-        },
-        "showUdp": {
-          "label": "顯示 UDP"
-        },
-        "showEntryPoints": {
-          "label": "顯示入口點"
-        }
-      },
-      "instances": "Traefik 實例",
-      "versionUnknown": "版本未知",
-      "summary": {
-        "routers": "路由器",
-        "entryPoints": "入口點"
-      },
-      "resource": {
-        "routers": "路由器",
-        "services": "服務",
-        "middlewares": "中間件"
-      },
-      "status": {
-        "healthy": "健康",
-        "errors": "{count} 個錯誤",
-        "warnings": "{count} 個警告"
-      },
-      "error": {
-        "internalServerError": "無法擷取 Traefik 資料"
-      }
-    },
     "audioStats": {
       "name": "音訊統計",
       "description": "來自 Navidrome 或 Audiobookshelf 的資料庫和播放統計資料",
@@ -3727,18 +3298,6 @@
         "showSongs": {
           "label": "顯示歌曲",
           "description": "顯示音樂庫中的歌曲總數 (Navidrome)"
-        },
-        "showNowPlaying": {
-          "label": "顯示正在播放",
-          "description": "顯示目前播放中的曲目 (Navidrome)"
-        },
-        "showNowPlayingList": {
-          "label": "顯示正在播放清單",
-          "description": "顯示個別曲目，而非僅顯示活動串流計數 (Navidrome)"
-        },
-        "maxNowPlayingItems": {
-          "label": "最大正在播放項目數",
-          "description": "在正在播放清單中顯示的最大曲目數量 (Navidrome)"
         },
         "showLibraryCount": {
           "label": "顯示庫數量",
@@ -3773,8 +3332,6 @@
       "podcasts": "播客",
       "listeningTime": "聆聽時間",
       "activeSessions": "活躍會話",
-      "nowPlaying": "正在播放",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": "無法擷取音訊統計資料"
       }
@@ -3849,26 +3406,6 @@
         "unhealthy": ""
       }
     },
-    "customApi": {
-      "name": "自訂 API",
-      "description": "使用自訂設定顯示來自任何外部 API 的資料。",
-      "option": {
-        "definitionId": {
-          "label": "定義 ID"
-        },
-        "refreshInterval": {
-          "label": "重新整理間隔",
-          "description": "從 API 重新擷取資料的頻率 (秒)"
-        }
-      },
-      "noDefinition": "未選擇定義",
-      "definitionNotFound": "找不到小工具定義。可能已被刪除。",
-      "noDisplayOutput": "無顯示輸出",
-      "executeConfirm": "確定要執行此動作嗎？",
-      "executing": "正在執行……",
-      "executeSuccess": "動作執行成功",
-      "executeFailed": "動作失敗。請檢查小工具設定。"
-    },
     "beszelSystemTable": {
       "name": "Beszel 系統（表格）",
       "description": "所有 Beszel 監控系統的表格檢視，帶有可排序的欄位和狀態指示器",
@@ -3914,11 +3451,19 @@
         },
         "showAgent": {
           "label": "顯示代理版本"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "找不到系統",
       "error": {
-        "internalServerError": "無法連線到 Beszel。請檢查整合設定。"
+        "internalServerError": "無法連線到 Beszel。請檢查整合設定。",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "系統",
@@ -4110,6 +3655,256 @@
           "title": "Docker 網路 I/O",
           "subtitle": "Docker 容器的網路流量"
         }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "來自 PatchMon 的主機修補狀態概覽",
+      "title": "PatchMon 統計",
+      "totalHosts": "主機總數",
+      "hostsNeedingUpdates": "需要更新",
+      "securityUpdates": "安全性更新",
+      "upToDateHosts": "已更新至最新",
+      "hostsWithSecurityUpdates": "有安全性更新的主機",
+      "recentUpdates24h": "更新 (24h)",
+      "totalOutdatedPackages": "過時套件",
+      "totalRepos": "儲存庫",
+      "osDistribution": "作業系統分佈",
+      "compliance": "修補合規性",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "更新於 {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "顯示主機總數",
+          "description": "顯示受監控的主機總數"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "顯示需要更新的主機",
+          "description": "顯示至少有一個過時套件的主機"
+        },
+        "showSecurityUpdates": {
+          "label": "顯示安全性更新總數",
+          "description": "顯示可用的安全性更新總數"
+        },
+        "showUpToDateHosts": {
+          "label": "顯示已更新至最新主機",
+          "description": "顯示沒有任何過時套件的主機"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "顯示有安全性更新的主機",
+          "description": "顯示需要安全性修補的主機"
+        },
+        "showRecentUpdates24h": {
+          "label": "顯示近期更新 (24h)",
+          "description": "顯示過去 24 小時內已套用的更新數量"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "顯示過時套件總數",
+          "description": "顯示所有主機上過時套件的總數"
+        },
+        "showTotalRepos": {
+          "label": "顯示儲存庫數量",
+          "description": "顯示正在監控的活躍儲存庫數量"
+        },
+        "enableThresholdColors": {
+          "label": "啟用閾值顏色",
+          "description": "根據嚴重性預設將統計值著色為綠色、黃色或紅色"
+        },
+        "useCustomThresholds": {
+          "label": "進階閾值",
+          "description": "使用絕對計數或主機總數百分比，對每個統計值自訂警告和嚴重閾值"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "絕對計數",
+            "percent": "主機總數百分比"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "需要更新閾值模式",
+          "description": "以絕對值或主機總數百分比比較需要更新的計數"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "需要更新警告閾值",
+          "description": "數值達到此閾值時轉為黃色"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "需要更新嚴重閾值",
+          "description": "數值達到此閾值時轉為紅色"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "安全性更新閾值模式",
+          "description": "以絕對值或主機總數百分比比較安全性更新的計數"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "安全性更新警告閾值",
+          "description": "數值達到此閾值時轉為黃色"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "安全性更新嚴重閾值",
+          "description": "數值達到此閾值時轉為紅色"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "有安全性更新主機閾值模式",
+          "description": "以絕對值或主機總數百分比比較主機計數"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "有安全性更新主機警告閾值",
+          "description": "數值達到此閾值時轉為黃色"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "有安全性更新主機嚴重閾值",
+          "description": "數值達到此閾值時轉為紅色"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "已更新至最新主機閾值模式",
+          "description": "以絕對值或主機總數百分比比較已更新至最新主機計數"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "已更新至最新主機警告閾值",
+          "description": "數值達到或高於此閾值但低於全覆蓋時轉為黃色"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "已更新至最新主機嚴重閾值",
+          "description": "數值低於此閾值時轉為紅色"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "過時套件閾值模式",
+          "description": "以絕對值或主機總數百分比比較過時套件計數"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "過時套件警告閾值",
+          "description": "數值達到此閾值時轉為黃色"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "過時套件嚴重閾值",
+          "description": "數值達到此閾值時轉為紅色"
+        },
+        "showOsDistribution": {
+          "label": "顯示作業系統分佈",
+          "description": "顯示按作業系統細分的受監控主機"
+        },
+        "osDistributionLimit": {
+          "label": "作業系統分佈限制",
+          "description": "最多顯示的作業系統數量",
+          "option": {
+            "3": "前 3 名",
+            "5": "前 5 名",
+            "10": "前 10 名",
+            "all": "全部"
+          }
+        },
+        "showOsVersion": {
+          "label": "顯示作業系統版本",
+          "description": "當可用時，在每個分佈標籤後附加作業系統版本"
+        },
+        "showComplianceHero": {
+          "label": "顯示合規性英雄",
+          "description": "顯示一個合規性環，展示已更新至最新主機的百分比"
+        },
+        "osDisplayMode": {
+          "label": "作業系統顯示模式",
+          "description": "選擇如何顯示作業系統分佈",
+          "option": {
+            "bars": "水平長條",
+            "donut": "甜甜圈圖"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "無法擷取 PatchMon 資料"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "來自 Bazarr 實例的缺少字幕和健康狀態概覽",
+      "episodes": "缺少的集數",
+      "movies": "缺少的電影",
+      "providers": "提供者問題",
+      "status": "健康問題",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "顯示缺少的集數",
+          "description": "顯示缺少字幕的集數數量"
+        },
+        "showMissingMovies": {
+          "label": "顯示缺少的電影",
+          "description": "顯示缺少字幕的電影數量"
+        },
+        "showProviderIssues": {
+          "label": "顯示提供者問題",
+          "description": "顯示有問題的字幕提供者數量"
+        },
+        "showHealthIssues": {
+          "label": "顯示健康問題",
+          "description": "顯示 Bazarr 健康問題的數量"
+        }
+      },
+      "error": {
+        "internalServerError": "無法擷取 Bazarr 資料"
+      }
+    },
+    "mediaMissing": {
+      "name": "缺少和佇列中的媒體",
+      "description": "顯示來自 Radarr 和 Sonarr 的缺少和佇列中的電影及影集",
+      "option": {
+        "showMissing": {
+          "label": "顯示缺少的項目"
+        },
+        "showQueued": {
+          "label": "顯示佇列中的項目"
+        },
+        "pageSize": {
+          "label": "每頁項目數"
+        }
+      },
+      "tab": {
+        "missing": "缺少",
+        "queued": "佇列中"
+      },
+      "type": {
+        "movie": "電影",
+        "episode": "集數"
+      },
+      "empty": {
+        "missing": "沒有缺少的項目",
+        "queued": "沒有佇列中的項目",
+        "noTabsEnabled": "在小工具設定中至少啟用一個分頁"
+      },
+      "timeLeft": "剩餘時間"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Traefik 路由器、服務、中間件和入口點概覽",
+      "option": {
+        "showTcp": {
+          "label": "顯示 TCP"
+        },
+        "showUdp": {
+          "label": "顯示 UDP"
+        },
+        "showEntryPoints": {
+          "label": "顯示入口點"
+        }
+      },
+      "instances": "Traefik 實例",
+      "versionUnknown": "版本未知",
+      "summary": {
+        "routers": "路由器",
+        "entryPoints": "入口點"
+      },
+      "resource": {
+        "routers": "路由器",
+        "services": "服務",
+        "middlewares": "中間件"
+      },
+      "status": {
+        "healthy": "健康",
+        "errors": "{count} 個錯誤",
+        "warnings": "{count} 個警告"
+      },
+      "error": {
+        "internalServerError": "無法擷取 Traefik 資料"
       }
     }
   },
@@ -4491,11 +4286,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "首頁",
         "boards": "面板",
         "apps": "應用程式",
         "integrations": "集成",
-        "customWidgets": "自訂小工具",
         "searchEngies": "搜尋引擎",
         "medias": "多媒體",
         "users": {
@@ -5316,6 +5111,7 @@
       },
       "remove": {
         "label": "移除",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "容器已移除",
@@ -5633,6 +5429,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "管理",
       "boards": {
         "label": "面板"
@@ -5665,18 +5464,6 @@
         },
         "edit": {
           "label": "編輯"
-        }
-      },
-      "custom-widgets": {
-        "label": "自訂小工具",
-        "new": {
-          "label": "新增"
-        },
-        "edit": {
-          "label": "編輯",
-          "flow": {
-            "label": "流程"
-          }
         }
       },
       "users": {

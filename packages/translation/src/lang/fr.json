@@ -710,14 +710,7 @@
       "delete": "Supprimer le widget personnalisé",
       "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{name}\" ? Cette action est irréversible.",
       "export": "Exporter",
-      "addMapping": "Ajouter une correspondance",
-      "addColumn": "Ajouter une colonne",
       "edit": "Modifier",
-      "removeMapping": "Supprimer la correspondance",
-      "removeColumn": "Supprimer la colonne",
-      "addItem": "Ajouter un élément",
-      "removeItem": "Supprimer l'élément",
-      "addBar": "Ajouter une barre",
       "duplicate": "Dupliquer",
       "copyAiPrompt": "Copier le prompt IA",
       "enable": "Activer",
@@ -727,150 +720,13 @@
     "field": {
       "name": "Nom",
       "description": "Description",
-      "iconUrl": "URL de l'icône",
-      "url": "URL",
-      "authType": "Type d’authentification",
-      "headerName": "Nom du paramètre de l'entête/requête",
-      "method": "Méthode",
-      "requestBody": "Corps de la requête",
-      "displayType": "Type d'affichage",
-      "jsonPath": "Chemin JSON",
-      "jsonPathHint": "Utiliser la syntaxe JSONPath pour extraire des valeurs, par exemple $.data.temperature ou $.items[0].name",
-      "label": "Étiquette",
-      "unit": "Unité",
-      "mappings": "Correspondances",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "Colonnes",
-      "header": "En-tête",
-      "items": "Objets",
-      "gridColumns": "Nombre de colonnes",
-      "cardStyle": "Style des cartes",
-      "bars": "Barres",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "Afficher le pourcentage",
-      "barSize": "Taille de la barre",
-      "goodValues": "Bonnes valeurs (séparées par des virgules)",
-      "dotSize": "Taille des points",
-      "valueSize": "Taille",
-      "labelPosition": "Position du libellé",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "Mode Compact",
-      "maxHeight": "",
-      "color": "Couleur",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "Texte de confirmation",
-      "confirmTextHint": "",
-      "successMessage": "Message de réussite",
-      "successMessageHint": "",
-      "enabled": "Activé",
-      "template": {
-        "label": "Template JSX",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Température du CPU",
-      "exampleLabelShort": "Température du CPU",
-      "exampleHeader": "Nom",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "",
-      "jsonPath": "$.data.value",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
-    },
-    "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
-    },
-    "layoutOption": {
-      "list": "",
-      "grid": ""
-    },
-    "sizeOption": {
-      "sm": "Petit",
-      "md": "Moyen",
-      "lg": "Grand",
-      "xl": "Très grand"
-    },
-    "labelPositionOption": {
-      "above": "Au-dessus",
-      "below": "En dessous"
-    },
-    "fieldset": {
-      "general": "Général",
-      "connection": "Connexion API",
-      "display": "Configuration de l'affichage"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Afficher une valeur extraite avec une étiquette et une unité",
-      "keyValue": "Afficher plusieurs valeurs étiquetées côte à côte",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "Points d'état colorés montrant en ligne/hors ligne ou l'état de santé",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "Un bouton qui déclenche une requête lorsqu'elle est cliquée",
-      "customJsx": ""
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Aucun",
-      "bearer": "Jeton Bearer",
-      "basic": "Authentification basique",
-      "apiKeyHeader": "Clé API (En-tête)",
-      "apiKeyQuery": "Clé API (requête)"
-    },
-    "displayType": {
-      "singleValue": "Valeur unique",
-      "keyValue": "Clé-Valeur",
-      "table": "Tableau",
-      "statGrid": "Grille de statistiques",
-      "progressBars": "Barre de progression",
-      "statusIndicator": "Indicateur de statut",
-      "countGrid": "Grille de valeurs",
-      "raw": "Raw JSON",
-      "actionButton": "Bouton d'action",
-      "customJsx": "JSX personnalisé"
-    },
-    "secret": {
-      "apiKey": "",
-      "username": "Nom d'utilisateur",
-      "password": "Mot de passe",
-      "savedPlaceholder": ""
-    },
-    "preview": {
-      "title": "Aperçu",
-      "test": "Tester",
-      "hint": "Cliquez sur Test pour prévisualiser la réponse API avec votre configuration actuelle.",
-      "rawResponse": ""
+      "iconUrl": "URL de l'icône"
     },
     "notification": {
       "created": "Widget \"{name}\" créé avec succès.",
       "updated": "Widget \"{name}\" mis à jour avec succès.",
       "deleted": "Widget \"{name}\" supprimé.",
       "imported": "Widget importé avec succès.",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "Copier dans le presse-papiers",
-      "aiPromptNoResponse": "",
       "aiPromptCopyError": "Échec de la copie du prompt dans le presse-papiers. Votre navigateur peut ne pas prendre en charge cette fonctionnalité.",
       "createError": "Impossible de créer le widget. Vérifiez que votre point de terminaison API est joignable.",
       "updateError": "Impossible de mettre à jour le widget. Vos modifications n'ont pas été enregistrées.",
@@ -883,14 +739,6 @@
       "previewError": "Impossible de récupérer l'aperçu. Vérifiez l'URL et réessayez.",
       "executed": "Action exécutée avec succès.",
       "executeError": "Échec de l'action: {error}"
-    },
-    "table": {
-      "name": "Nom",
-      "url": "URL",
-      "display": "Affichage"
-    },
-    "widget": {
-      "disabled": "Ce widget est désactivé"
     }
   },
   "integration": {
@@ -2388,10 +2236,21 @@
         },
         "descendingDefaultSort": {
           "label": "Inverser le tri"
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "error": {
-        "internalServerError": "Impossible de récupérer les statistiques des conteneurs"
+        "internalServerError": "Impossible de récupérer les statistiques des conteneurs",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
+      },
+      "empty": {
+        "noContainers": ""
       }
     },
     "coolify": {
@@ -2685,7 +2544,19 @@
         "showOnlyPlaying": {
           "label": "Afficher seulement les médias en cours de lecture",
           "description": "Désactiver cette option ne fonctionnera pas pour Plex"
+        },
+        "showBitrate": {
+          "label": "",
+          "description": ""
+        },
+        "showLocation": {
+          "label": "",
+          "description": ""
         }
+      },
+      "footer": {
+        "streams": "",
+        "totalBitrate": ""
       },
       "items": {
         "currentlyPlaying": "En cours de lecture",
@@ -2694,6 +2565,9 @@
         "id": "Id",
         "status": "",
         "directPlay": "",
+        "directStream": "",
+        "transcodeVideo": "",
+        "transcodeAudio": "",
         "transcoding": "",
         "paused": "",
         "remaining": "",
@@ -2754,193 +2628,6 @@
           "description": ""
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
-    "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
-      "option": {
-        "showTotalHosts": {
-          "label": "",
-          "description": ""
-        },
-        "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showSecurityUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showUpToDateHosts": {
-          "label": "",
-          "description": ""
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
-        },
-        "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
-        },
-        "showTotalRepos": {
-          "label": "",
-          "description": ""
-        },
-        "enableThresholdColors": {
-          "label": "",
-          "description": ""
-        },
-        "useCustomThresholds": {
-          "label": "",
-          "description": ""
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "",
-            "percent": ""
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "showOsDistribution": {
-          "label": "",
-          "description": ""
-        },
-        "osDistributionLimit": {
-          "label": "",
-          "description": "",
-          "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
-          }
-        },
-        "showOsVersion": {
-          "label": "",
-          "description": ""
-        },
-        "showComplianceHero": {
-          "label": "",
-          "description": ""
-        },
-        "osDisplayMode": {
-          "label": "",
-          "description": "",
-          "option": {
-            "bars": "",
-            "donut": ""
-          }
-        }
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
-    "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "",
-          "description": ""
-        },
-        "showMissingMovies": {
-          "label": "",
-          "description": ""
-        },
-        "showProviderIssues": {
-          "label": "",
-          "description": ""
-        },
-        "showHealthIssues": {
           "label": "",
           "description": ""
         }
@@ -3321,35 +3008,6 @@
         }
       }
     },
-    "mediaMissing": {
-      "name": "",
-      "description": "",
-      "option": {
-        "showMissing": {
-          "label": ""
-        },
-        "showQueued": {
-          "label": ""
-        },
-        "pageSize": {
-          "label": ""
-        }
-      },
-      "tab": {
-        "missing": "",
-        "queued": ""
-      },
-      "type": {
-        "movie": "",
-        "episode": ""
-      },
-      "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
-      },
-      "timeLeft": ""
-    },
     "rssFeed": {
       "name": "Flux RSS",
       "description": "Surveiller et afficher un ou plusieurs flux RSS, ATOM ou JSON génériques",
@@ -3678,40 +3336,6 @@
         "internalServerError": "Impossible de récupérer les données de disponibilité"
       }
     },
-    "traefik": {
-      "name": "",
-      "description": "",
-      "option": {
-        "showTcp": {
-          "label": ""
-        },
-        "showUdp": {
-          "label": ""
-        },
-        "showEntryPoints": {
-          "label": ""
-        }
-      },
-      "instances": "",
-      "versionUnknown": "",
-      "summary": {
-        "routers": "",
-        "entryPoints": ""
-      },
-      "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
-      },
-      "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
     "audioStats": {
       "name": "Statistiques audio",
       "description": "",
@@ -3726,18 +3350,6 @@
         },
         "showSongs": {
           "label": "Afficher les titres",
-          "description": ""
-        },
-        "showNowPlaying": {
-          "label": "Afficher la lecture en cours",
-          "description": ""
-        },
-        "showNowPlayingList": {
-          "label": "",
-          "description": ""
-        },
-        "maxNowPlayingItems": {
-          "label": "",
           "description": ""
         },
         "showLibraryCount": {
@@ -3773,8 +3385,6 @@
       "podcasts": "",
       "listeningTime": "",
       "activeSessions": "",
-      "nowPlaying": "",
-      "nowPlayingCount": "",
       "error": {
         "internalServerError": ""
       }
@@ -3849,26 +3459,6 @@
         "unhealthy": "Dysfonctionnement"
       }
     },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
-    },
     "beszelSystemTable": {
       "name": "Systèmes Beszel (Tableau)",
       "description": "Vue en tableau de tous les systèmes surveillés par Beszel avec colonnes triables et indicateurs d'état",
@@ -3914,11 +3504,19 @@
         },
         "showAgent": {
           "label": ""
+        },
+        "columnOrder": {
+          "label": ""
+        },
+        "columnWidths": {
+          "label": ""
         }
       },
       "noRecords": "",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "",
+        "layoutSaveTitle": "",
+        "layoutSaveMessage": ""
       },
       "column": {
         "system": "",
@@ -4110,6 +3708,256 @@
           "title": "",
           "subtitle": ""
         }
+      }
+    },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
+    },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
+      },
+      "error": {
+        "internalServerError": ""
       }
     }
   },
@@ -4491,11 +4339,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Accueil",
         "boards": "Tableaux de bord",
         "apps": "Applications",
         "integrations": "Intégrations",
-        "customWidgets": "Widgets personnalisés",
         "searchEngies": "Moteurs de recherche",
         "medias": "Médias",
         "users": {
@@ -5316,6 +5164,7 @@
       },
       "remove": {
         "label": "Supprimer",
+        "confirm": "",
         "notification": {
           "success": {
             "title": "Conteneurs supprimés",
@@ -5633,6 +5482,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Gérer",
       "boards": {
         "label": "Tableaux de bord"
@@ -5665,18 +5517,6 @@
         },
         "edit": {
           "label": "Modifier"
-        }
-      },
-      "custom-widgets": {
-        "label": "Widgets personnalisés",
-        "new": {
-          "label": "Nouveau"
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {

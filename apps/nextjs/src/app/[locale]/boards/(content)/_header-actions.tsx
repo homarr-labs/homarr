@@ -1,10 +1,9 @@
 "use client";
 
-import { startTransition, useCallback, useEffect, useState } from "react";
+import { startTransition, useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
-import { Box, Menu, ScrollArea } from "@mantine/core";
+import { Box, Center, Loader, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import { IconLayoutBoard, IconPencil, IconPencilOff, IconReplace, IconSettings } from "@tabler/icons-react";
 
@@ -22,6 +21,7 @@ import { Link } from "@homarr/ui";
 import { useBoardPermissions } from "~/components/board/permissions/client";
 import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
 import { HeaderButton } from "~/components/layout/header/button";
+import { TourTarget } from "~/components/layout/header/tour-target";
 import type * as EditActionsModule from "./_edit-actions";
 
 let editActionsModulePromise: Promise<typeof EditActionsModule> | undefined;
@@ -58,11 +58,11 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
       <EditModeMenu demoReadOnly={demoReadOnly} />
 
       {!demoReadOnly && (
-        <OnboardingTour.Target id="board-settings">
+        <TourTarget id="board-settings">
           <HeaderButton href={`/boards/${board.name}/settings`} aria-label={t("board.action.settings")}>
             <IconSettings stroke={1.5} />
           </HeaderButton>
-        </OnboardingTour.Target>
+        </TourTarget>
       )}
 
       <SelectBoardsMenu />
@@ -77,6 +77,10 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");
+  const latestBoardRef = useRef(board);
+
+  latestBoardRef.current = board;
+
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
     onSuccess() {
       showSuccessNotification({
@@ -84,6 +88,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
         message: t("notification.success.message"),
       });
       void utils.board.getBoardByName.invalidate({ name: board.name });
+      void utils.widget.customApi.getData.invalidate();
       void revalidatePathActionAsync(`/boards/${board.name}`);
       close();
     },
@@ -134,9 +139,8 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const toggle = useCallback(async () => {
     if (isEditMode) {
       if (demoReadOnly) return discardDemoChanges();
-      return saveBoard(board);
+      return saveBoard(latestBoardRef.current);
     }
-
     setIsEnteringEditMode(true);
     try {
       await prepareEditorAsync();
@@ -149,13 +153,13 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
     } finally {
       setIsEnteringEditMode(false);
     }
-  }, [board, demoReadOnly, discardDemoChanges, isEditMode, open, prepareEditorAsync, saveBoard, t]);
+  }, [demoReadOnly, discardDemoChanges, isEditMode, open, prepareEditorAsync, saveBoard, t]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, () => void toggle()]]);
   usePreventLeaveWithDirty(isEditMode);
 
   return (
-    <OnboardingTour.Target id="board-edit-mode">
+    <TourTarget id="board-edit-mode">
       <HeaderButton
         onClick={() => void toggle()}
         onFocus={prewarmEditor}
@@ -169,18 +173,21 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
       >
         {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
       </HeaderButton>
-    </OnboardingTour.Target>
+    </TourTarget>
   );
 };
 
 const SelectBoardsMenu = () => {
-  const { data: boards = [] } = clientApi.board.getAllBoards.useQuery();
   const t = useI18n();
+  const [isOpen, setIsOpen] = useState(false);
+  const utils = clientApi.useUtils();
+  const { data: boards = [], isPending } = clientApi.board.getAllBoards.useQuery(undefined, { enabled: isOpen });
+  const preloadBoards = () => void utils.board.getAllBoards.prefetch();
 
   return (
-    <OnboardingTour.Target id="board-switcher">
-      <Box>
-        <Menu position="bottom-end">
+    <TourTarget id="board-switcher">
+      <Box onFocus={preloadBoards} onPointerEnter={preloadBoards}>
+        <Menu position="bottom-end" opened={isOpen} onChange={setIsOpen}>
           <Menu.Target>
             <HeaderButton w="auto" px={4} aria-label={t("board.action.switch")}>
               <IconReplace stroke={1.5} />
@@ -188,6 +195,11 @@ const SelectBoardsMenu = () => {
           </Menu.Target>
           <Menu.Dropdown style={{ transform: "translate(-7px, 0)" }}>
             <ScrollArea.Autosize mah={300}>
+              {isPending && (
+                <Center p="xs">
+                  <Loader size="xs" />
+                </Center>
+              )}
               {boards.map((board) => (
                 <Menu.Item
                   key={board.id}
@@ -202,7 +214,7 @@ const SelectBoardsMenu = () => {
           </Menu.Dropdown>
         </Menu>
       </Box>
-    </OnboardingTour.Target>
+    </TourTarget>
   );
 };
 
@@ -215,15 +227,13 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
   useEffect(() => {
     if (!isDirty) return;
 
-    const handleClick = (event: Event) => {
-      const target = (event.target as HTMLElement).closest("a");
-
-      if (!target) {
-        console.warn("No anchor element found for click event", event);
-        return;
-      }
+    const handleClick = (event: MouseEvent) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const target = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>(anchorSelector) : null;
+      if (!target) return;
 
       event.preventDefault();
+      event.stopPropagation();
 
       openConfirmModal({
         title: t("board.action.edit.confirmLeave.title"),
@@ -249,17 +259,12 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
       event.returnValue = true;
     };
 
-    const anchors = document.querySelectorAll(anchorSelector);
-    anchors.forEach((link) => {
-      link.addEventListener("click", handleClick);
-    });
+    document.addEventListener("click", handleClick, true);
     window.addEventListener("popstate", handlePopState);
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      anchors.forEach((link) => {
-        link.removeEventListener("click", handleClick);
-      });
+      document.removeEventListener("click", handleClick, true);
       window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };

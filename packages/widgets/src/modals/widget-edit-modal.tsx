@@ -14,11 +14,11 @@ import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
 
-import { widgetImports } from "..";
 import { getInputForType } from "../_inputs";
 import { FormProvider, useForm } from "../_inputs/form";
 import type { BoardItemAdvancedOptions } from "../../../validation/src/shared";
 import type { OptionsBuilderResult } from "../options";
+import type { WidgetDefinition } from "../definition";
 import { OPTIONS_SUPER_REFINE } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetIntegrationSelect } from "../widget-integration-select";
@@ -32,8 +32,9 @@ export interface WidgetEditModalState {
   advancedOptions: BoardItemAdvancedOptions;
 }
 
-interface ModalProps<TSort extends WidgetKind> {
+export interface WidgetEditModalProps<TSort extends WidgetKind> {
   kind: TSort;
+  definition: WidgetDefinition;
   value: WidgetEditModalState;
   onSuccessfulEdit: (value: WidgetEditModalState) => void;
   integrationData: IntegrationSelectOption[];
@@ -43,7 +44,7 @@ interface ModalProps<TSort extends WidgetKind> {
   appId?: string;
 }
 
-export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, innerProps }) => {
+export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ actions, innerProps }) => {
   const t = useI18n();
   const { data: session } = useSession();
   const [advancedOptions, setAdvancedOptions] = useState<BoardItemAdvancedOptions>(innerProps.value.advancedOptions);
@@ -53,7 +54,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   z.config({
     customError: zodErrorMap(t),
   });
-  const { definition } = widgetImports[innerProps.kind];
+  const { definition } = innerProps;
   const options = definition.createOptions(innerProps.settings) as Record<string, OptionsBuilderResult[string]>;
   const optionsSuperRefine = (options as Record<symbol, unknown>)[OPTIONS_SUPER_REFINE] as
     | ((data: Record<string, unknown>, ctx: z.RefinementCtx) => void)
@@ -92,6 +93,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   const { openModal } = useModalAction(WidgetAdvancedOptionsModal);
 
   const canModifyApps = session?.user.permissions.includes("app-modify-all") ?? false;
+  const canConfigureWidget = innerProps.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const appId = innerProps.appId;
   const showAppTab = innerProps.kind === "app" && canModifyApps && Boolean(appId);
 
@@ -120,43 +122,41 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
 
   const widgetFormContent = (
     <Stack>
-      {innerProps.integrationSupport && (
+      {canConfigureWidget && innerProps.integrationSupport && (
         <WidgetIntegrationSelect
           label={t("item.edit.field.integrations.label")}
           data={innerProps.integrationData}
-          canSelectMultiple={
-            ((widgetImports[innerProps.kind].definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity) >
-            1
-          }
+          canSelectMultiple={((definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity) > 1}
           {...form.getInputProps("integrationIds")}
         />
       )}
-      {Object.entries(options).map(([key, value]) => {
-        const Input = getInputForType(value.type);
+      {canConfigureWidget &&
+        Object.entries(options).map(([key, value]) => {
+          const Input = getInputForType(value.type);
 
-        if (
-          !Input ||
-          value.shouldHide?.(
-            form.values.options as never,
-            innerProps.integrationData
-              .filter(({ id }) => form.values.integrationIds.includes(id))
-              .map(({ kind }) => kind),
-          )
-        ) {
-          return null;
-        }
+          if (
+            !Input ||
+            value.shouldHide?.(
+              form.values.options as never,
+              innerProps.integrationData
+                .filter(({ id }) => form.values.integrationIds.includes(id))
+                .map(({ kind }) => kind),
+            )
+          ) {
+            return null;
+          }
 
-        return (
-          <Input
-            key={key}
-            kind={innerProps.kind}
-            property={key}
-            options={value as never}
-            initialOptions={innerProps.value.options}
-            itemId={innerProps.itemId}
-          />
-        );
-      })}
+          return (
+            <Input
+              key={key}
+              kind={innerProps.kind}
+              property={key}
+              options={value as never}
+              initialOptions={innerProps.value.options}
+              itemId={innerProps.itemId}
+            />
+          );
+        })}
       {showAppTab ? (
         <Button
           variant="subtle"

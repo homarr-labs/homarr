@@ -106,7 +106,9 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
               ? Math.min(100, Math.round((positionMs / durationMs) * 100))
               : null;
           const remainingMinutes =
-            positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
+            positionMs !== null && durationMs !== null
+              ? Math.max(0, Math.round((durationMs - positionMs) / 60_000))
+              : null;
 
           return (
             <Stack gap={4} style={{ minWidth: 0 }}>

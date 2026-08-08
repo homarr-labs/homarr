@@ -1,6 +1,6 @@
 ---
-title: 'Download Client'
-description: 'Allows you to view and manage your Downloads from both Torrent and Usenet clients.'
+title: "Download Client"
+description: "Allows you to view and manage your Downloads from both Torrent and Usenet clients."
 hide_title: true
 ---
 
@@ -17,11 +17,7 @@ import { WidgetHeader } from '@site/src/components/widgets/header';
 import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
 import { downloadsWidget } from '.';
 
-
-<WidgetHeader
-  widget={downloadsWidget}
-  categories={['Torrent client', 'Usenet client', 'Downloads']}
-/>
+<WidgetHeader widget={downloadsWidget} categories={["Torrent client", "Usenet client", "Downloads"]} />
 
 This widget displays a list of torrents or usenet-articles that are currently being downloaded, along with their progress and other relevant information. It supports 7 download client integrations and provides a rich, responsive table interface.
 
@@ -94,4 +90,5 @@ import contextMenuImg from './img/context-menu.png';
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={downloadsWidget.configuration} />

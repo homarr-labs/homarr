@@ -1,19 +1,16 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
+import { cache } from "react";
 import { TRPCError } from "@trpc/server";
 
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import type { PersistedClient } from "@tanstack/react-query-persist-client";
-import superjson from "superjson";
-import { queryCacheBuster } from "@homarr/api/query-cache";
-import { getQueryClient } from "@homarr/api/server";
+import { makeQueryClient } from "@homarr/api/shared";
+import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { isNullOrWhitespace } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { WidgetKind } from "@homarr/definitions";
-import { getQueryCacheAsync } from "@homarr/redis";
 import { getI18n } from "@homarr/translation/server";
 import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
 
@@ -23,9 +20,9 @@ import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { ClientBoard } from "./_client";
 import { BoardContentHeaderActions } from "./_header-actions";
-import { BoardIntegrationProvider } from "./_integration-provider";
 
 const logger = createLogger({ module: "createBoardContentPage" });
+const getQueryClient = cache(makeQueryClient);
 
 export type Params = Record<string, unknown>;
 
@@ -58,7 +55,6 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         }
         return acc;
       }, new Map<WidgetKind, Item[]>());
-
       const [integrations] = await Promise.all([
         getIntegrationsWithPermissionsAsync(session),
         ...Array.from(itemsMap).map(([kind, items]) =>
@@ -74,19 +70,12 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         ),
       ]);
 
-      const userId = session?.user.id ?? "anonymous";
-
       return (
-        <>
-          <Suspense>
-            <QueryCacheHydration userId={userId} boardId={board.id} />
-          </Suspense>
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            <BoardIntegrationProvider initialIntegrations={integrations}>
-              <ClientBoard />
-            </BoardIntegrationProvider>
-          </HydrationBoundary>
-        </>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <IntegrationProvider integrations={integrations}>
+            <ClientBoard />
+          </IntegrationProvider>
+        </HydrationBoundary>
       );
     },
     generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {
@@ -117,19 +106,3 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     },
   };
 };
-
-async function QueryCacheHydration({ userId, boardId }: { userId: string; boardId: string }) {
-  try {
-    const serialized = await getQueryCacheAsync(userId, boardId);
-    if (!serialized) return null;
-
-    const persisted = superjson.parse<PersistedClient | undefined>(serialized);
-    if (!persisted || persisted.buster !== queryCacheBuster) return null;
-    if (!persisted.clientState?.queries?.length) return null;
-
-    return <HydrationBoundary state={persisted.clientState} />;
-  } catch (error) {
-    logger.warn(new ErrorWithMetadata("Failed to hydrate query cache", { userId, boardId }, { cause: error }));
-    return null;
-  }
-}

@@ -1,29 +1,35 @@
 # Product
 
+## Register
+
+product
+
 ## Users
 
-Homarr serves people and teams who run self-hosted applications and want one dependable dashboard for launching apps, monitoring services, and viewing live operational data. They use it across wall displays, desktops, tablets, and smaller devices, often returning to the same board many times per day.
+Homarr is used by self-hosters and administrators who assemble dashboards for services running across home labs and private infrastructure. They need dense, reliable controls and status at a glance, with enough guidance to configure advanced features without hiding how they work.
 
 ## Product Purpose
 
-Homarr makes self-hosted services easy to find, understand, and operate without hand-editing configuration files. A successful board loads immediately, stays visually stable, keeps widgets legible across screen sizes, and makes editing feel direct and forgiving.
+Homarr provides one place to organize, observe, and operate self-hosted services. Success means a user can build a useful dashboard quickly, understand its state, recover from configuration errors, and extend it without requiring a bespoke Homarr feature for every service. Boards must load immediately, stay visually stable, keep widgets legible across screen sizes, and make editing feel direct and forgiving.
 
 ## Brand Personality
 
-Fast, capable, and approachable. Homarr should feel like a mature productivity tool: dense when useful, calm in view mode, and explicit about state during editing.
+Direct, capable, and approachable. Copy should be concise and technical when precision matters, while the interface should remain familiar to users who are not developers.
 
 ## Anti-references
 
-Avoid cramped tile spacing, undersized text, layout shifts, decorative motion, hidden drag targets, modal-heavy positioning controls, and dashboards that require users to understand grid internals. Editing must not make the read-only experience heavier or slower.
+Avoid decorative admin dashboards, wizard flows that fight ordinary scrolling, hidden configuration magic, inconsistent controls, excessive modal usage, and interfaces that expose implementation complexity before the user needs it.
 
 ## Design Principles
 
-- Preserve the board: viewing is the primary workflow and must render before editor code is needed.
-- Make spatial actions direct: moving, resizing, nesting, and using fixed sidebars should happen on the canvas with immediate feedback.
-- Keep content predictable: fixed logical tile sizes preserve widget composition, typography, and controls at every viewport.
-- Recover gracefully: collision handling, reflow, loading states, and persistence failures must never lose or obscure content.
-- Use familiar controls: Mantine patterns, clear labels, keyboard support, and visible focus states take priority over novel decoration.
+1. Keep the user in control by making configuration and consequences visible.
+2. Prefer familiar product patterns and progressive disclosure over custom interaction concepts.
+3. Make simple tasks short without limiting advanced use cases.
+4. Isolate failures so one service or widget cannot disrupt the dashboard.
+5. Use the existing Mantine design language consistently across management and board surfaces.
+6. Keep spatial actions direct: moving, resizing, nesting, and using fixed rails happen on the canvas with immediate feedback.
+7. Preserve predictable widget composition with fixed logical tile sizes and horizontal scrolling before controls become inaccessible.
 
 ## Accessibility & Inclusion
 
-Target WCAG 2.2 AA. Maintain keyboard equivalents for drag and resize operations, useful landmarks and announcements, sufficient contrast, readable control sizes, reduced-motion support, and horizontal scrolling before scaling content below an accessible minimum.
+Target WCAG 2.2 AA. Support keyboard navigation, screen readers, visible focus, sufficient contrast, reduced motion, non-color status cues, responsive layouts, actionable error messages, and keyboard equivalents for drag and resize operations.
