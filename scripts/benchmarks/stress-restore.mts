@@ -39,6 +39,7 @@ const backupZip = path.resolve(requireEnv("STRESS_BACKUP_ZIP").replace(/^~/, os.
 const label = process.env.STRESS_LABEL ?? image.replace(/[^a-z0-9]+/gi, "-");
 const memoryLimit = process.env.STRESS_MEMORY_LIMIT ?? "2g";
 const heapMb = process.env.STRESS_HEAP_MB ?? "";
+const nodeOptions = process.env.STRESS_NODE_OPTIONS ?? "";
 const navIterations = Number(process.env.STRESS_NAV_ITERATIONS ?? 6);
 const soakMs = Number(process.env.STRESS_SOAK_MS ?? 120_000);
 const soakIntervalMs = Number(process.env.STRESS_SOAK_INTERVAL_MS ?? 20_000);
@@ -151,7 +152,11 @@ const loginAsync = async (page: Page, baseUrl: string) => {
   await page.getByLabel("Username").fill(username);
   await page.locator("#password").fill(password);
   await page.locator("css=button[type='submit']").click();
-  await page.waitForURL((url) => !url.pathname.includes("/auth/login"), { timeout: 60_000 });
+  // Poll location instead of page.waitForURL: sign-in redirects client-side, so
+  // waitForURL's implicit "load" state may never be reached for that navigation.
+  await page.waitForFunction(() => !window.location.pathname.includes("/auth/login"), undefined, {
+    timeout: 60_000,
+  });
   log(`signed in as ${username}`);
 };
 
@@ -223,6 +228,9 @@ const main = async () => {
     "LOG_LEVEL=warn",
   ];
   if (heapMb) runArgs.push("-e", `HOMARR_MAX_OLD_SPACE_SIZE=${heapMb}`);
+  // Escape hatch for A/B-ing V8 flags against an image whose run.sh does not read
+  // HOMARR_MAX_OLD_SPACE_SIZE (e.g. measuring the heap cap against an older image).
+  if (nodeOptions) runArgs.push("-e", `NODE_OPTIONS=${nodeOptions}`);
   runArgs.push(image);
 
   await execFileAsync("docker", runArgs);
@@ -295,7 +303,15 @@ const main = async () => {
       imageSizeBytes: Number(
         (await execFileAsync("docker", ["image", "inspect", image, "--format", "{{.Size}}"])).stdout.trim(),
       ),
-      config: { memoryLimit, heapMb: heapMb || null, navIterations, soakMs, soakIntervalMs, boardName },
+      config: {
+        memoryLimit,
+        heapMb: heapMb || null,
+        nodeOptions: nodeOptions || null,
+        navIterations,
+        soakMs,
+        soakIntervalMs,
+        boardName,
+      },
       // Recorded so an A/B pair can be rejected if the two runs rendered
       // different amounts of the board (e.g. more widgets errored on one side).
       board: boardOutcome,
