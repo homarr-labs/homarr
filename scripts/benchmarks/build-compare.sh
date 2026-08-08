@@ -7,18 +7,30 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 NEXT_DIR="$REPO_ROOT/apps/nextjs"
 OUT_DIR="$REPO_ROOT/.bench"
+STASH_CREATED=false
 mkdir -p "$OUT_DIR"
 
+cleanup() {
+  git checkout "$CURRENT_BRANCH" -q 2>/dev/null || true
+  if $STASH_CREATED; then
+    git stash pop -q 2>/dev/null || true
+  fi
+}
+trap cleanup EXIT
+
 capture_metrics() {
-  local label="$1" out="$OUT_DIR/$label"
+  local label="$1"
+  local out="$OUT_DIR/$label"
   mkdir -p "$out"
 
   echo "=== Building $label ==="
   cd "$REPO_ROOT"
 
+  rm -rf "$NEXT_DIR/.next"
+
   local start_ns
   start_ns=$(date +%s)
-  pnpm turbo build --filter=@homarr/nextjs 2>&1 | tee "$out/build.log"
+  pnpm turbo build --force --filter=@homarr/nextjs 2>&1 | tee "$out/build.log"
   local end_ns
   end_ns=$(date +%s)
   echo $((end_ns - start_ns)) > "$out/build_time_s"
@@ -47,7 +59,11 @@ capture_metrics() {
 }
 
 echo "Stashing uncommitted changes..."
-git stash --include-untracked -q 2>/dev/null || true
+if git stash --include-untracked -q 2>/dev/null; then
+  if [ "$(git stash list | wc -l)" -gt 0 ]; then
+    STASH_CREATED=true
+  fi
+fi
 
 echo ""
 echo "=== Phase 1: Build origin/dev ==="
@@ -57,7 +73,10 @@ capture_metrics "dev"
 echo ""
 echo "=== Phase 2: Build $CURRENT_BRANCH ==="
 git checkout "$CURRENT_BRANCH" -q
-git stash pop -q 2>/dev/null || true
+if $STASH_CREATED; then
+  git stash pop -q 2>/dev/null || true
+  STASH_CREATED=false
+fi
 capture_metrics "branch"
 
 echo ""
