@@ -1,0 +1,36 @@
+scripts/benchmarks/stress-restore.mts
+  s_a70c07ac5b7a5a::t_ee9e210a97ba5c 157-161
+  s_a70c07ac5b7a5a::t_df0b328dc464ff 214-215,222-231
+  s_a70c07ac5b7a5a::t_dcf8404ec469b4 189-199
+  s_a70c07ac5b7a5a::t_fc0540428f4341 1-118,122,126,137,139-156,162-188,200-213,216-221,232-270,272-306,310-323
+  s_a70c07ac5b7a5a::t_49084bd05a3c33 271
+  s_a70c07ac5b7a5a::t_c2ab77bd22672a 119-121,123-125,127-136,138
+  s_a70c07ac5b7a5a::t_8a5c0af4130dcf 307-309
+scripts/benchmarks/stress-restore-lib.spec.ts
+  s_a70c07ac5b7a5a::t_f75296cfbe40ff 1-183,193-201
+  s_a70c07ac5b7a5a::t_94ebcb2d5191f6 184-192
+scripts/benchmarks/stress-restore-lib.mts
+  s_a70c07ac5b7a5a::t_74368968727bca 1-43,45-46,49-137,142-156,158-159,163-174
+  s_a70c07ac5b7a5a::t_353948b859e0ab 44,47-48
+  s_a70c07ac5b7a5a::t_a68f42674fa801 138-141
+  s_a70c07ac5b7a5a::t_d61bc40d07080a 160-162
+  s_a70c07ac5b7a5a::t_69322ba327fde4 157
+.gitignore
+  s_a70c07ac5b7a5a::t_c56f3cf0e58c6a 83-89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "32f7ba58ab1d890365db3ec37bc258190b0a5b5f",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
