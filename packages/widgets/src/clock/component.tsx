@@ -28,6 +28,7 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
   const customDateFormat = options.customDateFormat;
   const timezone = options.useCustomTimezone ? options.timezone : Intl.DateTimeFormat().resolvedOptions().timeZone;
   const time = useCurrentTime(options);
+  const zonedTime = time === null ? null : dayjs(time).tz(timezone);
 
   const minimumAxis = Math.min(width, height * 1.5);
   const sizing = minimumAxis < 128 ? "xs" : minimumAxis < 196 ? "sm" : "md";
@@ -50,22 +51,18 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
           </Text>
         )}
         <Title className="clock-time-text" fw={700} order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6} lh="1">
-          <time dateTime={dayjs(time).tz(timezone).toISOString()}>
-            {options.customTimeFormat
-              ? dayjs(time).tz(timezone).format(customTimeFormat)
-              : dayjs(time).tz(timezone).format(timeFormat)}
+          <time dateTime={zonedTime?.toISOString()}>
+            {zonedTime === null ? "--:--" : zonedTime.format(options.customTimeFormat ? customTimeFormat : timeFormat)}
           </time>
         </Title>
         {options.showDate && (
           <Text className="clock-date-text" size={sizing} lineClamp={1}>
-            {options.customDateFormat
-              ? dayjs(time).tz(timezone).format(customDateFormat)
-              : dayjs(time).tz(timezone).format(dateFormat)}
+            {zonedTime?.format(options.customDateFormat ? customDateFormat : dateFormat)}
           </Text>
         )}
         {displayMode === "advanced" && (
           <Text size="xs" c="dimmed" lineClamp={1}>
-            {timezone} · UTC{dayjs(time).tz(timezone).format("Z")}
+            {zonedTime === null ? null : `${timezone} · UTC${zonedTime.format("Z")}`}
           </Text>
         )}
       </Stack>
@@ -124,7 +121,7 @@ interface UseCurrentTimeProps {
 }
 
 const useCurrentTime = ({ showSeconds }: UseCurrentTimeProps) => {
-  const [time, setTime] = useState(() => new Date(0));
+  const [time, setTime] = useState<Date | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>(null);
   const intervalRef = useRef<NodeJS.Timeout>(null);
   const intervalMultiplier = useMemo(() => (showSeconds ? 1 : 60), [showSeconds]);
