@@ -4,29 +4,21 @@ description: "Navidrome is a self-hosted music server and streamer compatible wi
 hide_title: true
 ---
 
-import { IntegrationHeader } from '@site/src/components/integrations/header';
-import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
-import { AddingIntegration } from '@site/src/components/integrations/adding';
-import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
-import { navidromeIntegration } from '.';
-import { audioStatsWidget } from '@site/docs/widgets/audio-stats';
-import { mediaServerWidget } from '@site/docs/widgets/media-server';
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { navidromeIntegration } from ".";
+import { audioStatsWidget } from "@site/docs/widgets/audio-stats";
+import { mediaServerWidget } from "@site/docs/widgets/media-server";
 
-
-<IntegrationHeader
-    integration={navidromeIntegration}
-    categories={['Media', 'Media server']}
-/>
+<IntegrationHeader integration={navidromeIntegration} categories={["Media", "Media server"]} />
 
 Navidrome provides music library statistics including artist, album, and song counts, as well as now playing audio streams via the Subsonic API.
 
 ### Widgets & Capabilities
-<IntegrationCapabilites
-    items={[
-        { widget: audioStatsWidget },
-        { widget: mediaServerWidget },
-    ]}
-/>
+
+<IntegrationCapabilites items={[{ widget: audioStatsWidget }, { widget: mediaServerWidget }]} />
 
 ### Adding the integration
 <AddingIntegration />
