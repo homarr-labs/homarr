@@ -25,7 +25,8 @@ const seedBoardAsync = async (db: SqliteDatabase, userId: string) => {
   const sectionId = createId();
   const emptySectionId = createId();
   const notebookId = createId();
-  const clockId = createId();
+  const appItemId = createId();
+  const appId = createId();
 
   await db.insert(sqliteSchema.boards).values({
     id: boardId,
@@ -65,6 +66,11 @@ const seedBoardAsync = async (db: SqliteDatabase, userId: string) => {
       yOffset: 1,
     },
   ]);
+  await db.insert(sqliteSchema.apps).values({
+    id: appId,
+    name: "Media Server",
+    iconUrl: "/favicon.ico",
+  });
   await db.insert(sqliteSchema.items).values([
     {
       id: notebookId,
@@ -74,10 +80,10 @@ const seedBoardAsync = async (db: SqliteDatabase, userId: string) => {
       advancedOptions: stringify({}),
     },
     {
-      id: clockId,
+      id: appItemId,
       boardId,
-      kind: "clock",
-      options: stringify({}),
+      kind: "app",
+      options: stringify({ appId }),
       advancedOptions: stringify({}),
     },
   ]);
@@ -92,7 +98,7 @@ const seedBoardAsync = async (db: SqliteDatabase, userId: string) => {
       height: 2,
     },
     {
-      itemId: clockId,
+      itemId: appItemId,
       layoutId: desktopLayoutId,
       sectionId,
       xOffset: 2,
@@ -110,7 +116,7 @@ const seedBoardAsync = async (db: SqliteDatabase, userId: string) => {
       height: 4,
     },
     {
-      itemId: clockId,
+      itemId: appItemId,
       layoutId: mobileLayoutId,
       sectionId,
       xOffset: 0,
@@ -127,6 +133,8 @@ const seedBoardAsync = async (db: SqliteDatabase, userId: string) => {
       completedBoardTour: true,
     })
     .where(eq(sqliteSchema.users.id, userId));
+
+  return { appId };
 };
 
 describe("Automatic mobile board", () => {
@@ -155,7 +163,7 @@ describe("Automatic mobile board", () => {
   test("squeezes unchanged widgets into a read-only two-column grid", async () => {
     const { db, localMountPath } = await createSqliteDbFileAsync();
     const { userId } = await seedAdminUserAsync(db, credentials);
-    await seedBoardAsync(db, userId);
+    const { appId } = await seedBoardAsync(db, userId);
     await db.insert(sqliteSchema.serverSettings).values({
       settingKey: "board",
       value: stringify({
@@ -191,9 +199,15 @@ describe("Automatic mobile board", () => {
       await loginPage.getByRole("button", { name: "Toggle board edit mode", exact: true }).click();
       const previewToggle = loginPage.getByRole("button", { name: "Mobile preview", exact: true });
       await expect(previewToggle).toBeVisible();
+      expect(await previewToggle.evaluate((element) => element.getBoundingClientRect().left)).toBeLessThan(32);
       await previewToggle.click();
       await expect(loginPage.locator("[data-mobile-board-preview]")).toBeVisible();
       await expect(loginPage.locator("[data-mobile-board-preview-item]")).toHaveCount(2);
+      await expect(loginPage.getByText("Media Server", { exact: true })).toBeVisible();
+      await expect(loginPage.locator(`[data-mobile-board-preview-app-icon="${appId}"] img`)).toHaveAttribute(
+        "src",
+        "/favicon.ico",
+      );
       await loginPage
         .locator("header button")
         .filter({ has: loginPage.locator("svg.tabler-icon-plus") })

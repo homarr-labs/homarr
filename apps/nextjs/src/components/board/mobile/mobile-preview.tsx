@@ -5,10 +5,12 @@ import { useEffect, useMemo, useState } from "react";
 import { ActionIcon, Affix, Button, Center, Group, Paper, ScrollArea, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconDeviceMobile, IconX } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
 import { getDesktopLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
+import { MaskedOrNormalImage } from "@homarr/ui";
 import { widgetCatalogIcons } from "@homarr/widgets/catalog";
 
 import { useIsMobileBoard } from "../use-mobile-board";
@@ -31,7 +33,7 @@ export const MobileBoardPreview = () => {
   if (!isEditMode || isMobileBoard || !enableAutomaticMobileLayout) return null;
 
   return (
-    <Affix position={{ bottom: "var(--mantine-spacing-md)", right: "var(--mantine-spacing-md)" }} zIndex={200}>
+    <Affix position={{ bottom: "var(--mantine-spacing-md)", left: "var(--mantine-spacing-md)" }} zIndex={200}>
       {isExpanded ? (
         <Paper className={classes.panel} radius="md" shadow="md" data-mobile-board-preview>
           <Group justify="space-between" wrap="nowrap" p="sm">
@@ -67,6 +69,12 @@ const MobileBoardPreviewMap = () => {
   const board = useRequiredBoard();
   const desktopLayout = getDesktopLayout(board);
   const items = useMemo(() => createMobileBoardPreviewItems(board, desktopLayout.id), [board, desktopLayout.id]);
+  const appIds = useMemo(
+    () => [...new Set(items.flatMap((item) => (item.appId === null ? [] : [item.appId])))],
+    [items],
+  );
+  const { data: apps = [] } = clientApi.app.byIds.useQuery(appIds, { enabled: appIds.length > 0 });
+  const appsById = useMemo(() => new Map(apps.map((app) => [app.id, app])), [apps]);
   const t = useI18n();
 
   return (
@@ -88,7 +96,8 @@ const MobileBoardPreviewMap = () => {
         >
           {items.map((item) => {
             const WidgetIcon = widgetCatalogIcons[item.kind];
-            const label = item.title?.trim() || t(`widget.${item.kind}.name`);
+            const app = item.appId === null ? undefined : appsById.get(item.appId);
+            const label = app?.name ?? (item.title?.trim() || t(`widget.${item.kind}.name`));
 
             return (
               <div
@@ -98,8 +107,12 @@ const MobileBoardPreviewMap = () => {
                 data-mobile-board-preview-item={item.id}
               >
                 <Group className={classes.itemContent} gap={6} wrap="nowrap" px="xs">
-                  <ThemeIcon variant="light" size="sm">
-                    <WidgetIcon size={14} aria-hidden />
+                  <ThemeIcon variant="light" size="sm" data-mobile-board-preview-app-icon={app?.id}>
+                    {app ? (
+                      <MaskedOrNormalImage imageUrl={app.iconUrl} hasColor={false} alt="" className={classes.appIcon} />
+                    ) : (
+                      <WidgetIcon size={14} aria-hidden />
+                    )}
                   </ThemeIcon>
                   <Text size="xs" fw={500} truncate title={label}>
                     {label}
