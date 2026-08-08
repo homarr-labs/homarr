@@ -2,6 +2,7 @@ import { use, useCallback, useMemo } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { getSafeAppHref } from "@homarr/common";
 import { useConfirmModal } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
@@ -107,10 +108,10 @@ export const useOpenSectionApps = (sectionId: string, enabled: boolean) => {
   });
 
   const open = useCallback(() => {
-    const appsWithUrls = apps.filter((app) => app.href && app.href.length > 0);
+    const appUrls = apps.map((app) => getSafeAppHref(app.href)).filter((href) => href !== undefined);
 
-    for (const app of appsWithUrls) {
-      const openedWindow = window.open(app.href ?? undefined);
+    for (const href of appUrls) {
+      const openedWindow = window.open(href);
       if (openedWindow) continue;
 
       openConfirmModal({

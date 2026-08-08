@@ -1,1 +1,1 @@
-export { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "@homarr/common";
+export { getSafeApplicationUrl, getSafeAppHref, SAFE_NEW_TAB_REL } from "@homarr/common";
