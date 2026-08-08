@@ -23,7 +23,7 @@ import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
-import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { getSafeApplicationUrl, getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import classes from "./bookmark.module.css";
 
@@ -79,7 +79,7 @@ export default function BookmarksWidget({
   useRegisterSpotlightContextResults(
     `bookmark-${itemId}`,
     data.flatMap((app) => {
-      const href = getSafeApplicationUrl(app.href);
+      const href = getSafeAppHref(app.href);
       return href
         ? [
             {
@@ -187,7 +187,7 @@ const FlexLayout = ({
   return (
     <Flex direction={direction} gap={4} w="100%" mih="100%" wrap="nowrap">
       {data.map((app) => {
-        const href = getSafeApplicationUrl(app.href);
+        const href = getSafeAppHref(app.href);
         return (
           <div key={app.id} style={{ display: "flex", flex: `1 0 ${minimumItemSize}px`, flexDirection: direction }}>
             <UnstyledButton
@@ -263,7 +263,7 @@ const AdvancedBookmarksLayout = ({
     <ScrollArea h="100%" style={{ flex: 1 }}>
       <SimpleGrid cols={getAdvancedBookmarkColumns(width, data.length)} spacing="sm">
         {data.map((app) => {
-          const href = getSafeApplicationUrl(app.href);
+          const href = getSafeAppHref(app.href);
           return (
             <UnstyledButton
               key={app.id}
@@ -342,7 +342,7 @@ const GridLayout = ({
       style={{ gridAutoRows: `minmax(${minimumItemHeight}px, 1fr)` }}
     >
       {data.map((app) => {
-        const href = getSafeApplicationUrl(app.href);
+        const href = getSafeAppHref(app.href);
         return (
           <UnstyledButton
             className={classes.bookmarkButton}
