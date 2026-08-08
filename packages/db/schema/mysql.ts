@@ -9,6 +9,7 @@ import {
   foreignKey,
   index,
   int,
+  mediumtext,
   mysqlTable,
   primaryKey,
   smallint,
@@ -487,6 +488,7 @@ export const assistantConfigurations = mysqlTable("assistant_configuration", {
   webSearchEnabled: boolean().notNull().default(false),
   provider: varchar({ length: 32 })
     .$type<
+      | "homarr"
       | "openrouter"
       | "openai"
       | "anthropic"
@@ -536,7 +538,9 @@ export const assistantMessages = mysqlTable(
       .references(() => assistantThreads.id, { onDelete: "cascade" }),
     parentId: varchar({ length: 128 }),
     format: varchar({ length: 64 }).notNull().default("ai-sdk/v6"),
-    content: text().default(emptySuperJSON).notNull(),
+    // `text` only holds 64KB on MySQL, which a single base64 image attachment already exceeds.
+    // `mediumtext` holds 16MB, comfortably above the 2MB request cap enforced by the chat route.
+    content: mediumtext().notNull(),
     createdAt: timestamp().notNull().defaultNow(),
   },
   (message) => ({
