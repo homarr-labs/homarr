@@ -11,6 +11,7 @@ export const views = ["workers", "queue", "statistics"] as const;
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaTranscoding", {
   icon: IconTransform,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "mediaTranscoding", "getDataAsync"]],
   queryMatcher: matchesWidgetRuntimeQuery,
   maxIntegrations: 1,

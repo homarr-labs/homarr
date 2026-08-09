@@ -51,6 +51,7 @@ const createOptions = () =>
 
 export const { definition, componentLoader } = createWidgetDefinition("immich-albumCarousel", {
   icon: IconPhoto,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "immich", "getAlbum"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {

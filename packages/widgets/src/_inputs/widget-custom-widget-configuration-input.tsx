@@ -21,7 +21,7 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import type { CustomWidgetOption } from "@homarr/custom-widgets/core";
-import { validateCustomWidgetOptions } from "@homarr/custom-widgets/core";
+import { normalizeCustomWidgetOptions, validateCustomWidgetOptions } from "@homarr/custom-widgets/core";
 import { CustomWidgetCodeEditor } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
 import { IconPicker } from "@homarr/forms-collection";
@@ -45,10 +45,23 @@ export const WidgetCustomWidgetConfigurationInput = ({
   );
   const definition = available.data?.find((candidate) => candidate.id === definitionId);
   const options = isRecord(definition?.options) ? (definition.options as Record<string, CustomWidgetOption>) : null;
-  const issues = useMemo(
-    () => (options ? validateCustomWidgetOptions(options, configuration) : []),
-    [configuration, options],
+  const definitionVersion = definition?.updatedAt instanceof Date ? definition.updatedAt.getTime() : undefined;
+  const configurationVersion = form.values.options.configurationVersion;
+  const needsDefinitionRepair = definitionVersion !== undefined && configurationVersion !== definitionVersion;
+  const effectiveConfiguration = useMemo(
+    () => (options && needsDefinitionRepair ? normalizeCustomWidgetOptions(options, configuration) : configuration),
+    [configuration, needsDefinitionRepair, options],
   );
+  const issues = useMemo(
+    () => (options ? validateCustomWidgetOptions(options, effectiveConfiguration) : []),
+    [effectiveConfiguration, options],
+  );
+
+  useEffect(() => {
+    if (!needsDefinitionRepair || definitionVersion === undefined) return;
+    form.setFieldValue(`options.${property}`, effectiveConfiguration);
+    form.setFieldValue("options.configurationVersion", definitionVersion);
+  }, [definitionVersion, effectiveConfiguration, form, needsDefinitionRepair, property]);
 
   useEffect(() => {
     const path = `options.${property}`;
@@ -72,7 +85,7 @@ export const WidgetCustomWidgetConfigurationInput = ({
           key={`${definitionId}:${name}`}
           option={option}
           path={`options.${property}.${name}`}
-          configuration={configuration}
+          configuration={effectiveConfiguration}
           definitionId={definitionId}
         />
       ))}
@@ -87,7 +100,7 @@ export const WidgetCustomWidgetConfigurationInput = ({
                     key={`${definitionId}:${name}`}
                     option={option}
                     path={`options.${property}.${name}`}
-                    configuration={configuration}
+                    configuration={effectiveConfiguration}
                     definitionId={definitionId}
                   />
                 ))}

@@ -84,7 +84,11 @@ const createSession = (userId: string): Session => ({
   expires: new Date(Date.now() + 60_000).toISOString(),
 });
 
-async function setup(isPublic = true) {
+async function setup(
+  isPublic = true,
+  customDefinition: HomarrCustomWidgetV2 = definition,
+  configuration: Record<string, unknown> = {},
+) {
   const db = createDb();
   const ownerId = createId();
   const boardId = createId();
@@ -94,14 +98,14 @@ async function setup(isPublic = true) {
   await db.insert(boards).values({ id: boardId, name: createId(), creatorId: ownerId, isPublic });
   await db.insert(customWidgetDefinitions).values({
     id: definitionId,
-    ...serializeCustomWidgetDefinition(definition),
+    ...serializeCustomWidgetDefinition(customDefinition),
     creatorId: ownerId,
   });
   await db.insert(items).values({
     id: itemId,
     boardId,
     kind: "customApi",
-    options: stringifySuperJson({ definitionId, configuration: {}, configurationVersion: 1 }),
+    options: stringifySuperJson({ definitionId, configuration, configurationVersion: 1 }),
   });
   return { db, ownerId, boardId, itemId, definitionId };
 }
@@ -120,6 +124,20 @@ describe("Custom JSX v2 board router", () => {
       code: "NOT_FOUND",
     });
     expect(mocks.executeRequest).toHaveBeenCalledOnce();
+  });
+
+  test("uses current defaults when an updated option no longer accepts the stored value", async () => {
+    const updatedDefinition: HomarrCustomWidgetV2 = {
+      ...definition,
+      options: {
+        limit: { label: "Limit", control: "slider", default: 5, min: 1, max: 10 },
+      },
+      template: "<Text>{options.limit}</Text>",
+    };
+    const { db, itemId } = await setup(true, updatedDefinition, { limit: "5", removed: true });
+    const caller = customApiRouter.createCaller({ db, deviceType: undefined, session: null });
+
+    await expect(caller.getData({ itemId })).resolves.toMatchObject({ options: { limit: 5 } });
   });
 
   test("hides private boards and disabled definitions before executing a request", async () => {

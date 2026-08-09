@@ -6,6 +6,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("clock", {
   icon: IconClock,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "weather", "atLocation"]],
   queryMatcher: ({ input }, scope) => {
     const location = scope.options.weatherLocation;

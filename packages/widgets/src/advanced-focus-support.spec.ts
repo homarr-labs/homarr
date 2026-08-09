@@ -3,41 +3,44 @@ import { describe, expect, test } from "vitest";
 import { supportsAdvancedFocus } from "./definition";
 import { widgetImports } from ".";
 
-const compactOnlyWidgetKinds = [
-  "app",
-  "bazarr",
-  "beszelAlerts",
-  "beszelSystemGrid",
-  "beszelSystemStats",
-  "beszelSystemTable",
-  "coolify",
-  "dnsHoleControls",
-  "dnsHoleSummary",
-  "iframe",
-  "indexerManager",
-  "mediaRequests-requestList",
-  "mediaRequests-requestStats",
-  "minecraftServerStatus",
-  "networkControllerSummary",
-  "notebook",
-  "notifications",
-  "paperlessNgx",
-  "patchmon",
-  "releases",
-  "rssFeed",
-  "stockPrice",
-  "systemDisks",
-  "video",
-  "vpn",
+const advancedFocusWidgetKinds = [
+  "anchorNote",
+  "archiveTeamWarrior",
+  "audioStats",
+  "bookmarks",
+  "calendar",
+  "clock",
+  "dockerContainers",
+  "downloads",
+  "firewall",
+  "healthMonitoring",
+  "immich-albumCarousel",
+  "immich-serverStats",
+  "mediaMissing",
+  "mediaReleases",
+  "mediaServer",
+  "mediaTranscoding",
+  "networkControllerStatus",
+  "smartHome-entityState",
+  "smartHome-executeAutomation",
+  "speedtestTracker",
+  "systemResources",
+  "timetable",
+  "tracearr",
+  "traefik",
+  "umami",
+  "ups",
+  "uptimeKuma",
+  "weather",
 ] as const;
 
 describe("advanced focus support", () => {
   test("is reserved for widgets with a distinct advanced experience", () => {
-    const actualCompactOnlyKinds = Object.entries(widgetImports)
-      .filter(([, widgetImport]) => !supportsAdvancedFocus(widgetImport.definition))
+    const actualAdvancedFocusKinds = Object.entries(widgetImports)
+      .filter(([, widgetImport]) => supportsAdvancedFocus(widgetImport.definition))
       .map(([kind]) => kind)
       .toSorted();
 
-    expect(actualCompactOnlyKinds).toEqual([...compactOnlyWidgetKinds].toSorted());
+    expect(actualAdvancedFocusKinds).toEqual([...advancedFocusWidgetKinds].toSorted());
   });
 });
