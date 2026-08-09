@@ -106,6 +106,112 @@ globalThis.__homarrProbe = {
 };
 
 /**
+ * Opt-in allocation sampling, and on-demand heap snapshots, over an in-process inspector
+ * session.
+ *
+ * A heap snapshot cannot explain a peak. V8 runs a full GC before serialising one, so by
+ * construction it shows what survived, never the transient churn that *is* the peak — the
+ * 94 MiB of ArrayBuffers that drove this container to 500 MB were invisible in every
+ * snapshot taken. The sampling heap profiler is the tool that sees them: it records an
+ * allocation stack every N bytes allocated, whether or not the object survives.
+ *
+ * An in-process `inspector.Session` is used rather than SIGUSR1 plus a debug port, so this
+ * needs no signal, opens no socket, and works while the process is under load.
+ *
+ * Enable with HOMARR_PROBE_SAMPLE_ALLOCATIONS=<sampling interval in bytes>.
+ */
+const inspector = require("inspector");
+let session = null;
+const ensureSession = () => {
+  if (session) return session;
+  session = new inspector.Session();
+  session.connect();
+  return session;
+};
+const postAsync = (method, params) =>
+  new Promise((resolve, reject) =>
+    ensureSession().post(method, params, (error, result) => (error ? reject(error) : resolve(result))),
+  );
+
+const samplingInterval = Number(process.env.HOMARR_PROBE_SAMPLE_ALLOCATIONS ?? 0);
+if (samplingInterval > 0) {
+  postAsync("HeapProfiler.enable")
+    .then(() => postAsync("HeapProfiler.startSampling", { samplingInterval }))
+    .then(() => console.log(`[memory-probe] allocation sampling every ${samplingInterval} bytes`))
+    .catch((error) => console.error(`[memory-probe] could not start sampling: ${error.message}`));
+
+  /**
+   * Flattens the profile's call tree to self-bytes per allocation site.
+   *
+   * Sites are keyed by frame and aggregated over the *whole* tree, not just the largest
+   * nodes, so the reported totals actually sum to the profile total — a truncated list
+   * silently drops most of the bytes and makes every percentage wrong.
+   *
+   * `getSamplingProfile` reports cumulative bytes since sampling began, which mixes boot with
+   * load. Capturing at two stages and subtracting is what isolates a single stage, so the key
+   * is kept stable and machine-comparable for exactly that purpose.
+   */
+  globalThis.__homarrProbe.allocations = async () => {
+    const { profile } = await postAsync("HeapProfiler.getSamplingProfile");
+    const sites = new Map();
+    let total = 0;
+    const walk = (node, ancestry) => {
+      const frame = node.callFrame;
+      const key = `${frame.functionName || "(anonymous)"}|${frame.url}:${frame.lineNumber + 1}`;
+      const stack = [key, ...ancestry];
+      const selfSize = node.selfSize ?? 0;
+      if (selfSize > 0) {
+        total += selfSize;
+        const acc = sites.get(key) ?? { bytes: 0, samples: 0, stack: stack.slice(0, 6) };
+        acc.bytes += selfSize;
+        acc.samples++;
+        sites.set(key, acc);
+      }
+      for (const child of node.children ?? []) walk(child, stack);
+    };
+    walk(profile.head, []);
+    return {
+      total,
+      sites: [...sites.entries()]
+        .map(([key, acc]) => ({ key, ...acc }))
+        .sort((a, b) => b.bytes - a.bytes)
+        .slice(0, 400),
+    };
+  };
+}
+
+/**
+ * Writes a heap snapshot to a path inside the container. Exposed so the harness can grab one
+ * at a chosen moment — in particular while tabs are still open, which is a different heap
+ * from the post-soak one every earlier snapshot captured.
+ */
+globalThis.__homarrProbe.snapshot = (destination) => {
+  // v8.writeHeapSnapshot streams to the file from C++. The CDP route
+  // (HeapProfiler.takeHeapSnapshot) delivers the snapshot as JS string chunks instead, and
+  // for a ~135 MB snapshot that briefly added ~134 MiB of ArrayBuffers to the very process
+  // being measured — an observer effect large enough to be mistaken for an application
+  // problem, which is exactly what happened on the first attempt.
+  const before = process.memoryUsage();
+  v8.writeHeapSnapshot(destination);
+  const after = process.memoryUsage();
+  return {
+    written: destination,
+    bytes: fs.statSync(destination).size,
+    // Reported so the cost of observing is visible rather than assumed to be zero.
+    observerCostMiB: Math.round(((after.rss - before.rss) / 1048576) * 10) / 10,
+  };
+};
+
+/** Address-space breakdown at the moment of capture; only /proc shows native vs JS vs code. */
+globalThis.__homarrProbe.maps = () => {
+  try {
+    return { smaps: fs.readFileSync(`/proc/${process.pid}/smaps`, "utf8") };
+  } catch (error) {
+    return { error: String(error && error.message) };
+  }
+};
+
+/**
  * Opt-in recording of the CommonJS require graph.
  *
  * Knowing that 24 MiB of source is resident at boot does not say *why* any of it is there.
@@ -284,36 +390,49 @@ if (probePort > 0) {
   const probe = globalThis.__homarrProbe;
   require("http")
     .createServer((request, response) => {
-      let body;
-      try {
-        // The raw file list is served separately: it is long, and every stage of a stress
-        // run fetches the summary, so keeping it out of the default payload keeps those
-        // captures small while still allowing a boot-vs-loaded diff on demand.
-        body =
-          request.url === "/files"
-            ? JSON.stringify(probe.moduleFiles())
-            : request.url === "/buffers"
-              ? JSON.stringify(probe.buffers ? probe.buffers() : { disabled: true })
-              : request.url === "/fetches"
-                ? JSON.stringify(probe.fetches ? probe.fetches() : { disabled: true })
-                : request.url === "/requires"
-                  ? JSON.stringify(probe.requireGraph ? probe.requireGraph() : { disabled: true })
-                  : JSON.stringify({
-                usage: probe.usage(),
-                spaces: probe.spaces(),
-                heap: probe.heap(),
-                modules: probe.modules(),
-                largestModules: probe.largestModules(25),
-                uptime: process.uptime(),
-                execArgv: process.execArgv,
-              });
-      } catch (error) {
-        response.writeHead(500, { "content-type": "application/json" });
-        response.end(JSON.stringify({ error: String(error && error.message) }));
-        return;
-      }
-      response.writeHead(200, { "content-type": "application/json" });
-      response.end(body);
+      // Several endpoints are async (the inspector ones), so every route resolves through a
+      // promise rather than some returning a value and some a pending Promise object.
+      const [route, query] = (request.url ?? "/").split("?");
+      const resolve = async () => {
+        switch (route) {
+          // The raw file list is served separately: it is long, and every stage of a stress
+          // run fetches the summary, so keeping it out of the default payload keeps those
+          // captures small while still allowing a boot-vs-loaded diff on demand.
+          case "/files":
+            return probe.moduleFiles();
+          case "/buffers":
+            return probe.buffers ? probe.buffers() : { disabled: true };
+          case "/fetches":
+            return probe.fetches ? probe.fetches() : { disabled: true };
+          case "/requires":
+            return probe.requireGraph ? probe.requireGraph() : { disabled: true };
+          case "/allocations":
+            return probe.allocations ? await probe.allocations() : { disabled: true };
+          case "/maps":
+            return probe.maps();
+          case "/snapshot":
+            return await probe.snapshot(new URLSearchParams(query).get("path") ?? "/tmp/peak.heapsnapshot");
+          default:
+            return {
+              usage: probe.usage(),
+              spaces: probe.spaces(),
+              heap: probe.heap(),
+              modules: probe.modules(),
+              largestModules: probe.largestModules(25),
+              uptime: process.uptime(),
+              execArgv: process.execArgv,
+            };
+        }
+      };
+      resolve()
+        .then((value) => {
+          response.writeHead(200, { "content-type": "application/json" });
+          response.end(JSON.stringify(value));
+        })
+        .catch((error) => {
+          response.writeHead(500, { "content-type": "application/json" });
+          response.end(JSON.stringify({ error: String(error && error.message) }));
+        });
     })
     // NODE_OPTIONS applies to every node process in the container, including the DB
     // migration step and any `docker exec node` the harness runs, so all of them load this

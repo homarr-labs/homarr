@@ -609,6 +609,118 @@ This is also the worst case for the round-trip trade-off: that one event name co
 sequential requests. It did not show up in board load latency (523 ms vs 526 ms median),
 because the widget fetches after the board renders, and total CPU rose 4%.
 
+## Dissecting the peak, not the idle
+
+Everything above measures a drained process — boot idle, or post-soak. That is the wrong
+moment: users complain about the high-water mark. Measuring it needs different instruments,
+because the obvious one cannot work.
+
+**A heap snapshot can never explain a peak.** V8 runs a full GC before serialising one, so by
+construction it reports what survived. The 94 MiB of ArrayBuffers that drove this container to
+500 MB was invisible in every snapshot taken. Three instruments were added instead:
+
+| instrument | what it sees | blind to |
+| --- | --- | --- |
+| `HeapProfiler.startSampling` (in-process `inspector.Session`) | every V8-heap allocation, survivor or garbage, with a stack | anything outside the V8 heap |
+| wrapped `Buffer.alloc`/`concat` | external buffer allocations, with a stack | V8-heap objects |
+| `/proc/<pid>/smaps` at every stage | JS heap vs JIT vs native vs file-backed | anything below page granularity |
+
+Together they cover the whole address space. Neither of the first two alone would have found
+the Umami bug: the sampling profiler cannot see `Buffer` backing stores, which is precisely
+where those 46 MiB lived.
+
+### An observer effect worth recording
+
+The first attempt took the peak snapshot over CDP, which delivers it as JS string chunks. For
+a ~135 MB snapshot that added **~134 MiB of ArrayBuffers to the process being measured**, and
+the stage right after it read 693.7 MiB. That is an artefact, not an application problem —
+and it is exactly the kind of number that gets reported as a finding. Switching to
+`v8.writeHeapSnapshot`, which streams from C++, removed it. The probe now reports its own
+`observerCostMiB` so the cost of looking is visible rather than assumed to be zero.
+
+### What the peak is actually made of
+
+Peak here is `nav-01`, not the multi-tab stage — a GC lands during multi-tab and pulls RSS
+*down*, so "most tabs open" is not the same as "most memory". Node RSS 357.8 MiB:
+
+| component | MiB | notes |
+| --- | --- | --- |
+| live JS objects (`heapUsed`) | 175.7 | of which ~41 MiB is retained bundle source |
+| node binary text | 65.7 | file-backed and shared; not in cgroup `anon` |
+| native malloc | ~59 | see below |
+| external buffers | 24.6 | |
+| V8 committed but free | 12.3 | heapTotal − heapUsed |
+| JIT code | 10.1 | grew from 1.9 MiB at boot |
+
+Cross-checked rather than assumed: `heapTotal 188.0 − V8's 256 KiB pages 153.1 = 34.9 MiB`,
+which matches `large_object_space` at 34.5 MiB. So the handful of very large anonymous
+mappings (31.6, 20.7, 8.4 MiB) are V8's large-object space and external buffers — **not** the
+runaway native allocator that their shape first suggested.
+
+**The retained heap at peak is the same as at rest.** A post-GC snapshot at peak has 160.7 MiB
+of shallow size against 157.7 MiB after the soak; strings 51.1 vs 50.1 MiB. Nothing
+accumulates. The peak is transient churn plus pages V8 and malloc have not returned — which is
+why memory "oscillates" and why soak growth is negative.
+
+And the churn is small now: total V8-heap allocation across the entire run is **125 MiB**, 40%
+of it node's own module loader reading source files. After the Umami fix the multi-tab burst
+allocates **3.3 MiB**. There is no longer a churn problem on the JS side.
+
+## The 16 MiB nobody was using: ssh2
+
+The largest single retainer in every snapshot — at boot, at peak, and after the soak — was one
+`system / Context` holding **16.03 MiB**. Expanding it through the dominator tree (a plain
+graph walk escapes via `__proto__` and reports the whole heap) named it immediately:
+
+```
+=== inside the largest retainer (object:system / Context, 16.03 MiB) ===
+     16.00 MiB  (indirect) -> object:ArrayBuffer
+      0.00 MiB  POLY1305_WASM_MODULE -> object:Object
+      0.00 MiB  ChaChaPolyCipherNative -> closure:ChaChaPolyCipherNative
+      0.00 MiB  AESGCMCipherNative -> closure:AESGCMCipherNative
+```
+
+`ssh2`. Its crypto module instantiates a WebAssembly memory for ChaCha20-Poly1305 the moment
+it is required. Homarr has no SSH feature and does not depend on ssh2; the chain is
+`dockerode → docker-modem → ssh2`, and `docker-modem/lib/modem.js` requires `./ssh` at module
+scope while using it in exactly one place, already guarded by `protocol === 'ssh'`.
+
+Measured directly inside the image — requiring ssh2 and nothing else:
+
+```
+heapUsed  +2.6 MiB     external  +0.9 MiB     rss  +14.0 MiB
+```
+
+Fixed with a pnpm patch moving that one require inside the branch that uses it. SSH-based
+Docker hosts still work — `require` is cached, so they pay it once — and socket-based installs,
+which is everyone else, never load it.
+
+### The same question asked of every dependency
+
+Since one package was hiding 14 MiB behind a require, all 173 were measured the same way: each
+required in a fresh process, RSS delta recorded. Packages costing more than 2 MiB, cross-checked
+against whether the server actually loads them:
+
+| package | RSS to require | loaded at runtime? |
+| --- | --- | --- |
+| drizzle-orm | 124.3 MiB | only via subpaths — the root import loads every dialect, so this figure overstates it |
+| @kubernetes/client-node | 66.9 MiB | **no** — correctly lazy |
+| dockerode | 28.8 MiB | yes (includes docker-modem 16.1 and ssh2 14.3) |
+| **mysql2** | **20.9 MiB** | **yes — 77 files, on a SQLite install** |
+| sharp | 20.4 MiB | no |
+| openid-client / jose | 16.1 / 15.5 MiB | no |
+| @grpc/grpc-js | 14.6 MiB | yes, 61 files (via dockerode) |
+| **pg** | **9.4 MiB** | **yes — 13 files, on a SQLite install** |
+
+These are not additive — dockerode's figure contains ssh2's — but the ranking is what matters.
+
+**mysql2 and pg are loaded on every SQLite install.** `db/drivers/index.ts` statically imports
+all three driver wrappers and picks one at call time, so importing the module executes all
+three. Not yet fixed: `packages/db/index.ts` does `export const db = createDb(schema)` at
+module scope, so `createDb` must stay synchronous and cannot use `await import()`. The viable
+route is deferring the external `require` inside each wrapper. Both dialects have testcontainer
+migration tests, so it is verifiable — it is queued, not dismissed.
+
 ## Why 24 MiB of code is resident before the first request
 
 The module cache is a flat list with no parentage, so "what pulled this in" needed the

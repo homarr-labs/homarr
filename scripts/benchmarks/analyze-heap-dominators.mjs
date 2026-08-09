@@ -198,6 +198,17 @@ const label = (o) => {
   return `${type}:${name}`;
 };
 
+/** The property name a parent reaches a child through — that is what names the contents. */
+const edgeLabelBetween = (from, to) => {
+  for (let e = firstEdge[from]; e < firstEdge[from + 1]; e++) {
+    if (edges[e * eStride + eTo] / nStride !== to) continue;
+    const type = edgeTypes[edges[e * eStride + eType]];
+    const raw = edges[e * eStride + eName];
+    return type === "element" || type === "hidden" ? `[${raw}]` : (strings[raw] ?? String(raw));
+  }
+  return "(indirect)";
+};
+
 const candidates = [];
 for (let i = 0; i < reachableCount; i++) {
   if (i === rootPost) continue;
@@ -226,6 +237,26 @@ for (const i of candidates) {
   shown.push(i);
   console.log(`${MiB(retained[i]).padStart(10)} ${MiB(selfSize(node)).padStart(9)}  ${label(node).slice(0, 96)}`);
   if (shown.length >= topN) break;
+}
+
+// Expanding the single largest retainer is usually the whole point: "a Context retains 16 MiB"
+// is not actionable until its contents are named. Only the dominator tree can do this — a
+// plain graph walk escapes through __proto__ into the entire heap and reports nonsense.
+if (shown.length) {
+  const top = shown[0];
+  const childrenOfTop = [];
+  for (let i = 0; i < reachableCount; i++) {
+    if (i !== top && dom[i] === top) childrenOfTop.push(i);
+  }
+  childrenOfTop.sort((a, b) => retained[b] - retained[a]);
+  const topNode = postOrderNodes[top];
+  console.log(`\n=== inside the largest retainer (${label(topNode)}, ${MiB(retained[top])} MiB) ===`);
+  console.log(`  it dominates ${childrenOfTop.length} direct children; heaviest:`);
+  for (const child of childrenOfTop.slice(0, 20)) {
+    const node = postOrderNodes[child];
+    const edgeName = edgeLabelBetween(topNode, node);
+    console.log(`    ${MiB(retained[child]).padStart(8)} MiB  ${edgeName} -> ${label(node).slice(0, 78)}`);
+  }
 }
 
 // Grouping by constructor over retained size shows which *kind* of thing dominates, which

@@ -46,6 +46,10 @@ const soakIntervalMs = Number(process.env.STRESS_SOAK_INTERVAL_MS ?? 20_000);
 const keepContainer = process.env.STRESS_KEEP_CONTAINER === "true";
 /** Dump a browser heap snapshot here (analyse with analyze-react-fibers.mjs). */
 const clientSnapshotPath = process.env.STRESS_CLIENT_SNAPSHOT;
+/** Dump a *server* heap snapshot taken at peak, with all tabs still open. */
+const peakSnapshotPath = process.env.STRESS_PEAK_SNAPSHOT
+  ? path.resolve(process.env.STRESS_PEAK_SNAPSHOT)
+  : undefined;
 /**
  * Extra `docker run` wiring, so a diagnostics-only preload can be injected into a
  * shipped image without rebuilding it. Used to mount scripts/benchmarks at /probe and
@@ -115,6 +119,54 @@ const captureProbeAsync = async (name: string) => {
   if (!fetches.includes('"disabled"')) {
     await writeFile(path.join(outputDirectory, `${name}.fetches.json`), fetches);
   }
+  // Allocation totals are cumulative since boot, so a single capture cannot separate "the
+  // app loaded its code" from "four tabs churned through memory". Capturing at every stage
+  // makes those subtractable.
+  const allocations = await fetchProbeAsync("/allocations");
+  if (!allocations.includes('"disabled"')) {
+    await writeFile(path.join(outputDirectory, `${name}.allocations.json`), allocations);
+  }
+  // The address-space map is the only place JS heap, JIT code, native malloc and file-backed
+  // pages are distinguishable, and `rss - heapTotal - external` grew by ~85 MiB between boot
+  // and peak with no JS-side explanation. Captured every stage because which stage is the
+  // true high-water mark is not known in advance — it is not always the multi-tab one.
+  const maps = await fetchProbeAsync("/maps");
+  if (!maps.includes('"error"')) {
+    await writeFile(path.join(outputDirectory, `${name}.smaps.json`), maps);
+  }
+};
+
+/**
+ * Grabs the two artefacts that only make sense at the high-water mark, with load still on:
+ * a heap snapshot (what peak memory *retains*) and the cumulative allocation profile (what
+ * peak memory *churned through*, which no snapshot can show because V8 GCs before it
+ * serialises one). Set STRESS_PEAK_SNAPSHOT to a host path to keep the snapshot.
+ */
+const capturePeakAsync = async () => {
+  if (!probePort) return;
+  // Mappings first, and before any snapshot: this is the only reading that separates JS heap
+  // from native, JIT and file-backed pages, and it must reflect the loaded process rather
+  // than the process plus whatever the act of snapshotting allocated.
+  const maps = await fetchProbeAsync("/maps");
+  if (!maps.includes('"error"')) {
+    await writeFile(path.join(outputDirectory, "peak.smaps.json"), maps);
+    log("peak: address-space map captured");
+  }
+  const allocations = await fetchProbeAsync("/allocations");
+  if (!allocations.includes('"disabled"')) {
+    await writeFile(path.join(outputDirectory, "peak.allocations.json"), allocations);
+    log("peak: allocation profile captured");
+  }
+  if (!peakSnapshotPath) return;
+  const inContainer = "/tmp/peak.heapsnapshot";
+  const result = await fetchProbeAsync(`/snapshot?path=${encodeURIComponent(inContainer)}`);
+  if (result.includes('"error"')) {
+    log(`peak: snapshot failed — ${result.slice(0, 160)}`);
+    return;
+  }
+  await execFileAsync("docker", ["cp", `${containerName}:${inContainer}`, peakSnapshotPath]);
+  await execFileAsync("docker", ["exec", containerName, "rm", "-f", inContainer]).catch(() => undefined);
+  log(`peak: heap snapshot saved to ${peakSnapshotPath}`);
 };
 
 const captureAsync = async (name: string) => {
@@ -512,6 +564,9 @@ const main = async () => {
       }
       log(`multi-tab: clicked ${widgetInteractions.clicked}/${widgetInteractions.available} widget controls`);
       await captureAsync("07-multi-tab");
+      // Taken here, with every tab still open, because this is the high-water mark. Every
+      // earlier snapshot was of a drained process and could not show what peak memory holds.
+      await capturePeakAsync();
     }
 
     if (clientSnapshotPath) await captureClientSnapshotAsync(freshPage, clientSnapshotPath);
