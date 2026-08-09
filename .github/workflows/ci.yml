@@ -50,7 +50,7 @@ jobs:
   fast-gate:
     name: Fast gate
     if: github.event_name != 'pull_request_target' && (github.event_name != 'workflow_dispatch' || inputs.operation != 'cleanup')
-    runs-on: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository && 'ubuntu-latest' || 'self-hosted' }}
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
       TURBO_API: ${{ secrets.TURBO_API }}
@@ -110,7 +110,7 @@ jobs:
       github.event_name == 'merge_group' ||
       (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
       (github.event_name == 'workflow_dispatch' && (inputs.operation == 'validate' || inputs.operation == 'publish'))
-    runs-on: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository && 'ubuntu-latest' || 'self-hosted' }}
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
