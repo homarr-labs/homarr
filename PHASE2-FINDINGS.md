@@ -155,6 +155,40 @@ The two groups do not overlap on any stage. The before-side idle samples land wi
 noise. Earlier single-sample rounds suggested −36%; the repeated figure is **−34%**, and
 that is the number used in the PR.
 
+## Round 3 — tried, and reported as not a memory win
+
+`@scalar/api-reference-react` (a docs SPA behind one admin tab) moved to
+`next/dynamic` with `ssr: false`, and `@modelcontextprotocol/sdk` to
+`serverExternalPackages`.
+
+| metric | previous build | with round 3 |
+| --- | --- | --- |
+| idle | 90.3 / 91.1 / 100.5 | 89.4 |
+| board loaded | 163.5 / 164.6 / 176.8 | 161.5 |
+| peak | 568.0 / 590.9 / 594.2 | 563.9 |
+| image | 401 MB | **398 MB** |
+| CPU s | 17.0 | 17.5 |
+
+Every memory figure lands **inside** the previous build's spread. At the better end of
+it, but inside — so on one sample this is not a demonstrated reduction and is not counted
+in the headline. Kept anyway for the deterministic −3 MB image and because a
+documentation SPA should not be compiled for an SSR pass that discards its output.
+
+Recording it here rather than quietly folding it into the total: the whole point of the
+harness is to stop plausible-sounding changes from being credited with wins they did not
+produce.
+
+## Measured but not pursued
+
+| lever | measured cost | why not pursued |
+| --- | --- | --- |
+| in-image Redis (F12) | **8.1 MiB RSS** (6.3 PSS) | The catalog estimated 10–40 MB; the real figure is 8. Removing it means replacing the pub/sub bus for single-instance — real risk for ~5% of the footprint. |
+| in-image nginx (F13) | **9.2 MiB RSS** (3.1 PSS) | Two processes, but PSS is 3 MiB. It terminates TLS and proxies; not worth the deployment change at this size. |
+| locale subset (F19) | ~12 MB image | Reduces languages a user can pick — a product decision, not an optimisation, and it does not move RAM. |
+
+`next-server` is **225.8 MiB RSS of the ~236 MiB total** at board-loaded, so process-level
+trimming has little left to give. Further wins have to come out of that one heap.
+
 ## Is the measurement actually behind a login?
 
 Worth stating explicitly, because "28 widgets rendered" would be meaningless if the board
