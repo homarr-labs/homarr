@@ -1,0 +1,53 @@
+apps/workshop/test-image.sh
+  s_093d61b162b9ca::t_7a62e45d253ec5 1-40,42-43,49-50
+  s_093d61b162b9ca::t_0f895adf0f02ee 41,44-46,48
+  s_093d61b162b9ca::t_f2af6ca552e7da 47
+apps/workshop/README.md
+  s_093d61b162b9ca::t_0f895adf0f02ee 215-216
+  s_093d61b162b9ca::t_b2045cee10716b 165-203,214
+  s_093d61b162b9ca::t_31414638047382 217
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_093d61b162b9ca::t_b2045cee10716b 115-116
+apps/workshop/docker-compose.yml
+  s_093d61b162b9ca::t_7a62e45d253ec5 11,14
+apps/workshop/docker-compose.staging.yml
+  s_093d61b162b9ca::t_7a62e45d253ec5 1-25
+apps/workshop/test.sh
+  s_093d61b162b9ca::t_7a62e45d253ec5 17-20,35-39
+  s_a70c07ac5b7a5a::t_4ea2cda5647c50 40
+apps/docs/docs/management/workshop/index.mdx
+  s_093d61b162b9ca::t_b2045cee10716b 115-150
+apps/workshop/tests/runtime-config.integration.mjs
+  s_093d61b162b9ca::t_7a62e45d253ec5 1-24
+package.json
+  s_093d61b162b9ca::t_7a62e45d253ec5 52
+apps/workshop/.env.staging.example
+  s_093d61b162b9ca::t_7a62e45d253ec5 1-12
+.github/workflows/workshop.yml
+  s_093d61b162b9ca::t_7a62e45d253ec5 28
+  s_093d61b162b9ca::t_0f895adf0f02ee 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "7cf27c3f39aa4d8467c53ce628a6ec8e78109328",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
