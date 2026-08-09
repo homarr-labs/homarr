@@ -30,6 +30,8 @@ describe("withAssistantToolPolicy", () => {
 
 describe("customWidgetAssistantInstructions", () => {
   test("requires the complete skill and real preview-query data before creation", () => {
+    expect(customWidgetAssistantInstructions).toContain("when they are preloaded below");
+    expect(customWidgetAssistantInstructions).toContain("do not call customWidget_getSkill or customWidget_schema");
     expect(customWidgetAssistantInstructions).toContain("first call customWidget_getSkill");
     expect(customWidgetAssistantInstructions).toContain("customWidget_schema");
     expect(customWidgetAssistantInstructions).toContain("customWidget_getComponentCatalog");

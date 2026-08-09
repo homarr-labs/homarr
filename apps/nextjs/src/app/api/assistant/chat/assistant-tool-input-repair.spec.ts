@@ -15,10 +15,33 @@ describe("repairCustomWidgetToolInput", () => {
     });
   });
 
+  test("repairs every JSON-forbidden control character inside a Custom Widget string", () => {
+    const repaired = repairCustomWidgetToolInput({
+      toolName: "customWidget_validate",
+      input: '{"value":"before\u0000\b\fafter"}',
+    });
+
+    expect(JSON.parse(repaired?.input ?? "")).toEqual({ value: "before\u0000\b\fafter" });
+  });
+
   test("does not alter unrelated tools or guess at truncated JSON", () => {
     expect(repairCustomWidgetToolInput({ toolName: "app_create", input: '{"name":"Wiki\npedia"}' })).toBeNull();
     expect(
       repairCustomWidgetToolInput({ toolName: "customWidget_create", input: '{"template":"<Text>broken' }),
     ).toBeNull();
+  });
+
+  test.each([
+    "customWidget_getSkill",
+    "customWidget_schema",
+    "customWidget_getAuthoringPrompt",
+    "customWidget_getComponentCatalog",
+    "customWidget_list",
+  ])("normalizes malformed or provider-specific no-input arguments for %s", (toolName) => {
+    expect(repairCustomWidgetToolInput({ toolName, input: "null" })?.input).toBe("{}");
+    expect(repairCustomWidgetToolInput({ toolName, input: "[]" })?.input).toBe("{}");
+    expect(repairCustomWidgetToolInput({ toolName, input: '{"unexpected":true}' })?.input).toBe("{}");
+    expect(repairCustomWidgetToolInput({ toolName, input: '"' })?.input).toBe("{}");
+    expect(repairCustomWidgetToolInput({ toolName, input: "{}" })).toBeNull();
   });
 });

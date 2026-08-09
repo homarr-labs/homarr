@@ -207,9 +207,12 @@ Custom-widget tools let an administrator list, inspect, create, and update defin
 form's **Design with AI** action sends a focused request into the current conversation, where the assistant
 can propose the matching mutation and use the same approval controls. Existing stored secret values are
 reported only as configured/not configured and are preserved on update unless replacements are explicitly
-provided. Before authoring, the assistant lazily loads the complete installed Custom Widget skill, including
-all bundled schema, runtime, and security references. Multiline JSX uses `templateLines` to avoid fragile streamed
-JSON escaping. The assistant validates the candidate, creates a preview, executes every returned preview query,
+provided. For Custom Widget requests, Homarr lazily adds the complete installed skill, all bundled schema,
+runtime and security references, and the current JSON Schema to the trusted authoring context. This avoids an
+extra provider round trip for the large `customWidget_getSkill` and `customWidget_schema` results. If the model
+discovers the Custom Widget workflow mid-response, Homarr promotes the same resources before its next step and
+removes the now-redundant resource calls from provider history. Multiline JSX uses `templateLines` to avoid fragile
+streamed JSON escaping. The assistant validates the candidate, creates a preview, executes every returned preview query,
 checks the actual HTTP status and response shape, and iterates before saving. Preview and saved-definition results
 include safe Homarr paths that open in the assistant without a page reload. When placement is still a choice, the
 assistant uses the structured question UI instead of ending with a prose question.
