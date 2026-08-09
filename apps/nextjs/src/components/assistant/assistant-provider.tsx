@@ -28,6 +28,7 @@ import { AssistantWidgetRendererProvider } from "@homarr/widgets";
 import { AssistantContext, AssistantPreferencesContext, useAssistantPreferences } from "./assistant-context";
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
 import { AssistantAutoApprovalProvider } from "./assistant-auto-approval";
+import { getRunningAssistantPartType } from "./assistant-activity-state";
 import { prepareAssistantRequestBody } from "./assistant-attachment-payload";
 import { createAssistantBrowserToolExecutors } from "./assistant-browser-tool-executors";
 import { AssistantAskUserTool, AssistantConfigureAppTool } from "./assistant-human-tools";
@@ -536,6 +537,10 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const latestAssistantText = getMessageText(latestAssistantMessage);
   const latestUserText = getMessageText(latestUserMessage);
   const latestStatus = latestAssistantMessage?.role === "assistant" ? latestAssistantMessage.status : undefined;
+  const latestAssistantPartType = getRunningAssistantPartType(
+    latestStatus?.type,
+    latestAssistantMessage?.content.at(-1)?.type,
+  );
   const pendingAction = getPendingAssistantAction(latestAssistantMessage);
   const assistantIsRunning = isRunning || queuedPrompt !== null;
   const notificationKey = getNotificationKey(latestAssistantMessage);
@@ -698,6 +703,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
             isRunning={assistantIsRunning}
             unreadCount={unreadCount}
             latestAssistantText={latestAssistantText}
+            latestAssistantPartType={latestAssistantPartType}
             latestUserText={queuedPrompt ?? latestUserText}
             latestStatus={latestStatus}
             pendingAction={pendingAction}
