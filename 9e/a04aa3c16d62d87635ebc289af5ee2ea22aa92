@@ -1,0 +1,81 @@
+.github/workflows/workshop.yml
+  s_093d61b162b9ca::t_3722d372807f6a 26,28
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_093d61b162b9ca::t_3ac00acd137179 115-116
+apps/docs/docs/management/assistant.mdx
+  s_093d61b162b9ca::t_0140d2b21a4f7a 151-159,167-168
+apps/docs/docs/management/workshop/index.mdx
+  s_093d61b162b9ca::t_3873f031c91508 111-149
+apps/docs/docusaurus.config.ts
+  s_093d61b162b9ca::t_f13c8af672ed88 15,28,30
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_093d61b162b9ca::t_e11dd12ab3f4d8 32,1032
+apps/docs/src/lib/runtime-config.spec.ts
+  s_093d61b162b9ca::t_c0d0f67fc6655b 1-19
+apps/docs/src/lib/runtime-config.ts
+  s_093d61b162b9ca::t_f995f77a2cdc2b 1-16
+apps/docs/src/pages/workshop/admin/index.tsx
+  s_093d61b162b9ca::t_f0c4099e4b2942 6-7,13
+apps/docs/src/pages/workshop/index.tsx
+  s_093d61b162b9ca::t_c297ab21186716 8,20
+apps/docs/static/workshop-runtime-config.js
+  s_093d61b162b9ca::t_815a9ba36f260d 1
+apps/nextjs/src/components/assistant/assistant-message-grouping.ts
+  s_093d61b162b9ca::t_c9e42c09f87ca9 1-12
+apps/nextjs/src/components/assistant/assistant-message-metadata.spec.ts
+  s_093d61b162b9ca::t_fd449958467a21 4,266-315
+apps/nextjs/src/components/assistant/assistant-message-metadata.ts
+  s_093d61b162b9ca::t_3a475ee3bece38 125-135,426-454
+apps/nextjs/src/components/assistant/assistant-panel.module.css
+  s_093d61b162b9ca::t_b5738e78ef4fe6 666-676,975-978,1209-1245,1681-1688
+apps/nextjs/src/components/assistant/assistant-panel.tsx
+  s_093d61b162b9ca::t_c3cec7ce18b34b 30,132-138,145,810-811,824,836-837,850,866-875,948-950,953-955,980-987,989,994,1023,1545-1602,1620,1623-1624,1697,1700,1704,1706,1825-1860,1862
+apps/nextjs/src/components/assistant/assistant-reasoning-state.spec.tsx
+  s_093d61b162b9ca::t_1cf518d65c645f 3,9,18,33-39,48,55-79
+apps/nextjs/src/components/assistant/assistant-tool-trace.spec.ts
+  s_093d61b162b9ca::t_5d162ba03405a2 1-20
+apps/nextjs/src/components/assistant/assistant-tool-trace.ts
+  s_093d61b162b9ca::t_96a49f50e4fe7a 1-16
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_093d61b162b9ca::t_6407c2b46ba688 1327
+apps/workshop/.env.staging.example
+  s_093d61b162b9ca::t_e732842d0f8c1c 1-12
+apps/workshop/Dockerfile
+  s_093d61b162b9ca::t_1fd015980e8ae7 21,24,31,39-44
+apps/workshop/README.md
+  s_093d61b162b9ca::t_cf84129b8b9892 73-74,165-203,214-217
+apps/workshop/docker-compose.staging.yml
+  s_093d61b162b9ca::t_546b811356b397 1-25
+apps/workshop/docker-compose.yml
+  s_093d61b162b9ca::t_178fbc94011a17 11,14,38,40,43
+apps/workshop/entrypoint.sh
+  s_093d61b162b9ca::t_8141f4d06e4a87 9-26
+apps/workshop/test-image.sh
+  s_093d61b162b9ca::t_98b198e5065683 1-50
+apps/workshop/test.sh
+  s_093d61b162b9ca::t_a414368ebc89b5 17-20,35-40
+apps/workshop/tests/runtime-config.integration.mjs
+  s_093d61b162b9ca::t_1775c3ff64dc4a 1-24
+apps/workshop/tests/workshop-contracts.mjs
+  s_093d61b162b9ca::t_20809b093e2a8a 57-67
+e2e/board-grid.spec.ts
+  s_093d61b162b9ca::t_1765a02aa50480 256-287,601-602,711,724
+package.json
+  s_093d61b162b9ca::t_5de53d569118f7 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "9ea04aa3c16d62d87635ebc289af5ee2ea22aa92",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
