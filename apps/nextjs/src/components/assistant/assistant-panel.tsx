@@ -133,6 +133,7 @@ import type { AssistantConversationTurnUsage } from "./assistant-message-metadat
 import type { AssistantPendingAction } from "./assistant-pending-action";
 import { AssistantQuestionPortalProvider } from "./assistant-question-portal";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
+import { useAssistantReasoningState } from "./assistant-reasoning-state";
 import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
 import { getToolResultPresentation } from "./assistant-tool-result";
 import { getSafeAssistantHttpUrl } from "./assistant-url";
@@ -961,20 +962,9 @@ const ChainOfThoughtLayout = ({ children }: { children?: ReactNode }) => (
 const AssistantChainOfThought = () => {
   const t = useScopedI18n("common.assistant");
   const contentId = useId();
-  const aui = useAui();
-  const chainStatus = useAuiState((state) => state.chainOfThought.status);
-  const collapsed = useAuiState((state) => state.chainOfThought.collapsed);
-  const running = chainStatus.type === "running";
   const { collapsed: preferredCollapsed, setCollapsed: setPreferredCollapsed } = useContext(ReasoningVisibilityContext);
-
-  useLayoutEffect(() => {
-    aui.chainOfThought().setCollapsed(preferredCollapsed);
-  }, [aui, preferredCollapsed]);
-
-  useEffect(() => {
-    if (chainStatus.type !== "requires-action") return;
-    aui.chainOfThought().setCollapsed(false);
-  }, [aui, chainStatus.type]);
+  const { chainStatus, collapsed } = useAssistantReasoningState(preferredCollapsed);
+  const running = chainStatus.type === "running";
 
   return (
     <ChainOfThoughtPrimitive.Root className={classes.reasoning} data-opened={!collapsed || undefined}>
@@ -1568,9 +1558,9 @@ const ConversationContext = () => {
           className={classes.composerContext}
           type="button"
           aria-label={quickLabel ? `${t("usage.contextWindow")}: ${quickLabel}` : t("usage.contextWindow")}
+          title={quickLabel || t("usage.contextWindow")}
           aria-expanded={opened}
           aria-haspopup="dialog"
-          data-compact={!quickLabel || undefined}
           onClick={() => setOpened((value) => !value)}
         >
           <RingProgress
@@ -1579,11 +1569,6 @@ const ConversationContext = () => {
             roundCaps
             sections={hasContext ? [{ value: contextPercentage, color: getContextColor(contextPercentage) }] : []}
           />
-          {quickLabel && (
-            <Text size="xs" fw={650} truncate>
-              {quickLabel}
-            </Text>
-          )}
         </UnstyledButton>
       </Popover.Target>
       <Popover.Dropdown className={classes.conversationContextPopover}>

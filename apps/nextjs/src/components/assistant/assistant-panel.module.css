@@ -1153,27 +1153,19 @@
 
 .composerContext {
   display: flex;
-  min-width: 0;
-  max-width: 14rem;
+  width: 1.75rem;
   height: 1.75rem;
   align-items: center;
-  gap: 0.25rem;
-  padding-inline: 0.25rem 0.45rem;
+  justify-content: center;
+  padding: 0;
   border: 1px solid var(--mantine-color-default-border);
-  border-radius: var(--mantine-radius-sm);
+  border-radius: 50%;
   color: var(--mantine-color-text);
   background: var(--mantine-color-body);
 }
 
 .composerContext:hover {
   background: var(--mantine-color-default-hover);
-}
-
-.composerContext[data-compact] {
-  width: 1.75rem;
-  justify-content: center;
-  padding: 0;
-  border-radius: 50%;
 }
 
 .composerContext:focus-visible {

@@ -155,11 +155,12 @@ another message starts. A compact dot matrix distinguishes an initial thinking p
 settles into waiting, success, or error states in the minimized activity bar. The state always keeps its text label,
 and the animation is disabled when the operating system requests reduced motion.
 
-A compact context control beside the model selector gives a quick glance at cumulative conversation tokens and
-cost. Its popover keeps the latest complete context reading while a new response starts and lists every request
+A circular context ring beside the model selector gives a quick glance at cumulative conversation usage without
+expanding the composer toolbar. Its accessible label includes cumulative tokens and cost when available, while
+its popover keeps the latest complete context reading as a new response starts and lists every request
 turn with its model, provider, input, output, cached-input and reasoning tokens, context use, duration, speed,
 agent steps, routing details, and cost when reported. Before usage is available, the control remains a compact
-circle instead of showing a redundant missing-data label. Closing and reopening the popover reads persisted
+ring instead of showing a redundant missing-data label. Closing and reopening the popover reads persisted
 conversation metadata instead of resetting the display to zero.
 
 Each assistant response places a small provider logo in the same stable action toolbar as copy, export,
