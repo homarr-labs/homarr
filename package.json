@@ -45,7 +45,8 @@
     "test:e2e": "cross-env NODE_ENV=development CI=true vitest e2e",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --exclude e2e --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
-    "with-env": "dotenv -e .env --"
+    "with-env": "dotenv -e .env --",
+    "docker:profiling": "docker build --build-arg HOMARR_PROFILING=true -t homarr:performance . && node --experimental-strip-types scripts/benchmarks/verify-react-profiling.mts homarr:performance"
   },
   "dependencies": {
     "jsonpath-plus": "catalog:"

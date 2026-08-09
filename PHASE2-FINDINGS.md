@@ -178,6 +178,41 @@ Recording it here rather than quietly folding it into the total: the whole point
 harness is to stop plausible-sounding changes from being credited with wins they did not
 produce.
 
+## Getting a build React DevTools will profile
+
+```bash
+pnpm docker:profiling      # builds homarr:performance and verifies it
+```
+
+`docker build . -t homarr:performance` on its own produces a **normal** build — the
+profiling renderer is opt-in, so DevTools will keep reporting "Profiling not supported".
+
+Three separate things have to line up, and each fails silently on its own:
+
+1. `reactProductionProfiling` in `next.config.ts` is read **only by the webpack path**.
+2. Under Turbopack the equivalent is `next build --profile`, which
+   `apps/nextjs/package.json` passes when `HOMARR_PROFILING=true`.
+3. Turbo strips any env var not declared in the task's `env`, so `HOMARR_PROFILING`
+   had to be added to `turbo.json`.
+
+Even with all three, the build was still not a profiling one: Next applies the React
+swap through a **webpack alias** (`getReactProfilingInProduction` →
+`'react-dom/client$': 'react-dom/profiling'`) that Turbopack never sees, and a
+Turbopack `resolveAlias` does not catch it either because the vendored entry requires
+`./cjs/react-dom-client.production.js` relatively. The Dockerfile now performs that
+same swap directly on the vendored entry, guarded so it fails loudly if React's
+layout changes.
+
+Verify with `scripts/benchmarks/verify-react-profiling.mts <image>`: 2 client chunks
+carry the profiling renderer with the flag, 0 without.
+
+**A caveat worth stating**: this is verified at the *bundle* level, not by driving the
+real DevTools extension. A Playwright probe that injects a synthetic
+`__REACT_DEVTOOLS_GLOBAL_HOOK__` cannot settle it — React sends a reduced inject
+payload to a stub hook that is byte-identical for profiling and production builds, so
+that probe returns a false negative for both. Confirm the Profiler tab with the real
+extension.
+
 ## Measured but not pursued
 
 | lever | measured cost | why not pursued |

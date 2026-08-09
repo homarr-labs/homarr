@@ -45,6 +45,21 @@ ARG TARGETPLATFORM
 ARG HOMARR_PROFILING='false'
 ENV HOMARR_PROFILING=${HOMARR_PROFILING}
 
+# React ships a separate profiling renderer; the production one omits the hooks
+# DevTools needs, which is what makes it report "Profiling not supported". Next only
+# swaps it via a webpack alias (create-compiler-aliases.js), so under Turbopack both
+# `next build --profile` and `reactProductionProfiling` silently produce a normal
+# build. Point the vendored client entry at the profiling bundle instead — the same
+# swap webpack's alias performs, done where Turbopack cannot miss it.
+RUN if [ "$HOMARR_PROFILING" = "true" ]; then \
+      set -e; \
+      entry=node_modules/next/dist/compiled/react-dom/client.js; \
+      grep -q "react-dom-client.production.js" "$entry" || { echo "profiling patch: unexpected $entry"; exit 1; }; \
+      sed -i "s#./cjs/react-dom-client.production.js#./cjs/react-dom-profiling.profiling.js#" "$entry"; \
+      grep -q "react-dom-profiling.profiling.js" "$entry" || { echo "profiling patch failed"; exit 1; }; \
+      echo "profiling patch applied to $entry"; \
+    fi
+
 RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM \
     --mount=type=secret,id=TURBO_TOKEN,env=TURBO_TOKEN \
