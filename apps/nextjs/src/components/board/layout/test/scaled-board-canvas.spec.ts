@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
 
-import { calculateBoardCanvasScale, calculateBoardUiScale, MIN_ACCESSIBLE_CANVAS_SCALE } from "../scaled-board-canvas";
+import { calculateBoardCanvasScale, calculateBoardUiScale } from "../scaled-board-canvas";
 
 describe("board canvas scale policy", () => {
-  test("fits the logical canvas exactly when the viewport can preserve the minimum scale", () => {
+  test("fits the logical canvas exactly", () => {
     const scale = calculateBoardCanvasScale(840, 1000);
 
     expect(scale).toBe(0.84);
@@ -14,16 +14,16 @@ describe("board canvas scale policy", () => {
     expect(calculateBoardCanvasScale(1800, 1000)).toBe(1.8);
   });
 
-  test("stops counter-scaling at 0.75 and lets the canvas overflow", () => {
+  test("keeps fitting narrow viewports without horizontal overflow", () => {
     const availableWidth = 600;
     const logicalWidth = 1000;
     const scale = calculateBoardCanvasScale(availableWidth, logicalWidth);
 
-    expect(scale).toBe(MIN_ACCESSIBLE_CANVAS_SCALE);
-    expect(logicalWidth * scale).toBeGreaterThan(availableWidth);
+    expect(scale).toBe(0.6);
+    expect(logicalWidth * scale).toBe(availableWidth);
   });
 
-  test("keeps content materially magnified at 200% effective zoom", () => {
+  test("keeps the board fitted at 200% effective zoom", () => {
     const logicalWidth = 1696;
     const normalAvailableWidth = 1872;
     const normalScale = calculateBoardCanvasScale(normalAvailableWidth, logicalWidth);
@@ -31,8 +31,8 @@ describe("board canvas scale policy", () => {
     const normalPaintedCellSize = 200 * normalScale;
     const zoomedPaintedCellSize = 200 * zoomedScale * 2;
 
-    expect(zoomedScale).toBe(MIN_ACCESSIBLE_CANVAS_SCALE);
-    expect(zoomedPaintedCellSize).toBeGreaterThan(normalPaintedCellSize * 1.25);
+    expect(zoomedScale).toBeCloseTo(normalScale / 2);
+    expect(zoomedPaintedCellSize).toBeCloseTo(normalPaintedCellSize);
   });
 
   test.each([

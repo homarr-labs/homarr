@@ -8,7 +8,6 @@
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import type { McpMeta } from "trpc-to-mcp";
 import type { OpenApiMeta } from "trpc-to-openapi";
 import { ZodError } from "zod/v4";
 
@@ -22,6 +21,7 @@ import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
 import { env } from "./env";
 import { getOnboardingOrFallbackAsync } from "./router/onboard/onboard-queries";
+import type { McpMeta } from "./mcp-tools";
 
 const logger = createLogger({ module: "trpc" });
 

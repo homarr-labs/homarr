@@ -12,7 +12,8 @@ export class LayoutMockBuilder {
       columnCount: 12,
       leftGutterColumnCount: 0,
       rightGutterColumnCount: 0,
-      breakpoint: 0,
+      breakpoint: 768,
+      role: "base",
       ...layout,
     } satisfies Board["layouts"][0];
   }

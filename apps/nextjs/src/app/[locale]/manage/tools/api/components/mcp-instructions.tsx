@@ -63,7 +63,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
       await revalidatePathActionAsync("/manage/tools/api");
     },
   });
-  const mcpUrl = `${baseUrl}/api/mcp/mcp`;
+  const mcpUrl = `${baseUrl}/api/mcp`;
 
   const streamableHttpConfig = JSON.stringify(
     {
@@ -93,7 +93,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
     2,
   );
 
-  const testCommand = `curl -s -X POST -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" -H "ApiKey: <your-api-key>" -d '{"jsonrpc":"2.0","method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}},"id":1}' ${mcpUrl}`;
+  const testCommand = `curl -s -X POST -H "Content-Type: application/json" -H "Accept: application/json" -H "ApiKey: <your-api-key>" -H "Mcp-Method: server/discover" -H "Mcp-Name: homarr" -d '{"jsonrpc":"2.0","method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientInfo":{"name":"test","version":"1.0"},"io.modelcontextprotocol/clientCapabilities":{}}},"id":1}' ${mcpUrl}`;
 
   return (
     <Stack gap="xl" p="md">

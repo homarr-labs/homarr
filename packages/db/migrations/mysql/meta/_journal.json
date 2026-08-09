@@ -323,6 +323,20 @@
       "when": 1786212549933,
       "tag": "0045_add_layout_gutters",
       "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "5",
+      "when": 1786215199760,
+      "tag": "0046_add_layout_role",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "5",
+      "when": 1786217088950,
+      "tag": "0047_add_assistant_tables",
+      "breakpoints": true
     }
   ]
 }

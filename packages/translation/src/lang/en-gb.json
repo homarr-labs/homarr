@@ -710,7 +710,8 @@
       "delete": "Delete Custom Widget",
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
       "export": "Export",
-      "edit": "Edit"
+      "edit": "Edit",
+      "aiPrompt": "Design with AI"
     }
   },
   "integration": {

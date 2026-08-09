@@ -9,6 +9,7 @@ import {
   foreignKey,
   index,
   int,
+  mediumtext,
   mysqlTable,
   primaryKey,
   smallint,
@@ -34,6 +35,7 @@ import type {
   IntegrationKind,
   IntegrationPermission,
   IntegrationSecretKind,
+  LayoutRole,
   OnboardingStep,
   SearchEngineType,
   SectionKind,
@@ -343,6 +345,7 @@ export const layouts = mysqlTable("layout", {
   leftGutterColumnCount: tinyint().notNull().default(0),
   rightGutterColumnCount: tinyint().notNull().default(0),
   breakpoint: smallint().notNull().default(0),
+  role: varchar({ length: 16 }).$type<LayoutRole>().notNull().default("custom"),
 });
 
 export const itemLayouts = mysqlTable(
@@ -478,6 +481,71 @@ export const serverSettings = mysqlTable("serverSetting", {
   settingKey: varchar({ length: 64 }).notNull().unique().primaryKey(),
   value: text().default(emptySuperJSON).notNull(),
 });
+
+export const assistantConfigurations = mysqlTable("assistant_configuration", {
+  id: varchar({ length: 64 }).notNull().primaryKey().default("default"),
+  enabled: boolean().notNull().default(false),
+  webSearchEnabled: boolean().notNull().default(false),
+  provider: varchar({ length: 32 })
+    .$type<
+      | "openrouter"
+      | "openai"
+      | "anthropic"
+      | "google-gemini"
+      | "xai"
+      | "groq"
+      | "mistral"
+      | "deepseek"
+      | "together"
+      | "ollama"
+      | "lm-studio"
+      | "custom"
+    >()
+    .notNull()
+    .default("openrouter"),
+  baseUrl: varchar({ length: 2048 }).notNull().default("https://openrouter.ai/api/v1"),
+  modelDiscoveryPath: varchar({ length: 512 }).default("/models"),
+  encryptedApiKey: text().$type<`${string}.${string}`>(),
+  encryptedHeaders: text().$type<`${string}.${string}`>(),
+  modelId: varchar({ length: 256 }),
+  updatedAt: timestamp().notNull().defaultNow(),
+});
+
+export const assistantThreads = mysqlTable(
+  "assistant_thread",
+  {
+    id: varchar({ length: 64 }).notNull().primaryKey(),
+    userId: varchar({ length: 64 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    title: varchar({ length: 256 }),
+    modelId: varchar({ length: 256 }),
+    createdAt: timestamp().notNull().defaultNow(),
+    updatedAt: timestamp().notNull().defaultNow(),
+  },
+  (thread) => ({
+    userUpdatedAtIdx: index("assistant_thread__user_id_updated_at_idx").on(thread.userId, thread.updatedAt),
+  }),
+);
+
+export const assistantMessages = mysqlTable(
+  "assistant_message",
+  {
+    id: varchar({ length: 128 }).notNull().primaryKey(),
+    threadId: varchar({ length: 64 })
+      .notNull()
+      .references(() => assistantThreads.id, { onDelete: "cascade" }),
+    parentId: varchar({ length: 128 }),
+    format: varchar({ length: 64 }).notNull().default("ai-sdk/v6"),
+    // `text` only holds 64KB on MySQL, which a single base64 image attachment already exceeds.
+    // `mediumtext` holds 16MB, comfortably above the 2MB request cap enforced by the chat route.
+    content: mediumtext().notNull(),
+    createdAt: timestamp().notNull().defaultNow(),
+  },
+  (message) => ({
+    threadCreatedAtIdx: index("assistant_message__thread_id_created_at_idx").on(message.threadId, message.createdAt),
+  }),
+);
 
 export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
   user: one(users, {
