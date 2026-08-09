@@ -36,6 +36,7 @@
 .gutter[data-board-editing="true"]::before {
   position: sticky;
   top: 0;
+  inset-inline-start: 0;
   z-index: 2;
   display: block;
   width: fit-content;
