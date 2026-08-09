@@ -663,6 +663,17 @@
   text-align: start;
 }
 
+.tool[data-compact] {
+  margin-block: 0;
+  padding: 0.4rem 0.5rem;
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+}
+
+.tool[data-compact] .toolHeader > :global(.mantine-Group-root) {
+  min-width: 0;
+}
+
 .approvalPanel {
   margin-top: 0.8rem;
   padding-top: 0.8rem;
@@ -961,6 +972,10 @@
   min-width: 0;
 }
 
+.agentTraceTools {
+  min-width: 0;
+}
+
 .source {
   display: inline-flex;
   align-items: center;
@@ -1189,6 +1204,43 @@
   padding: 0.45rem 0.5rem;
   border-radius: var(--mantine-radius-sm);
   background: var(--mantine-color-default);
+}
+
+.contextBreakdown {
+  display: grid;
+  grid-template-columns: 4.75rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.6rem 0.75rem;
+  padding: 0.55rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-default);
+}
+
+.contextBreakdownRing {
+  flex: 0 0 auto;
+}
+
+.contextBreakdownWindow {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.contextBreakdownWindow > div,
+.contextBreakdownCategories > div {
+  min-width: 0;
+}
+
+.contextBreakdownCategories {
+  display: grid;
+  min-width: 0;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.45rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--mantine-color-default-border);
 }
 
 .conversationTurn {
@@ -1626,6 +1678,14 @@
   }
 
   .conversationUsageSummary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .contextBreakdownWindow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contextBreakdownCategories {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
