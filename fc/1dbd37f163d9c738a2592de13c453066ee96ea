@@ -1,0 +1,21 @@
+packages/validation/src/shared.ts
+  s_7cfb890e45839e::t_0758c4ece48772 96-100
+packages/validation/src/board.spec.ts
+  s_7cfb890e45839e::t_fa4d19449d126e 47-56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "fc1dbd37f163d9c738a2592de13c453066ee96ea",
+  "prompts": {},
+  "sessions": {
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
