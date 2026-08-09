@@ -588,6 +588,27 @@ A prediction worth recording, because it confirms the mechanism rather than just
 outcome: at `pageSize=1000` the largest allocation measured 0.7 MiB, and at 5,000 it
 measured 2.4 MiB — 5× the page size, 3.4× the bytes, exactly as a per-page bound implies.
 
+### What the real instance revealed
+
+Widget readiness is identical before and after — 28/28 on the board carrying the three
+Umami widgets, and the same single pre-existing error on the other board — so nothing broke.
+But the container log from the "after" runs contains something the "before" runs could not
+have produced:
+
+```
+warn: Event time series hit the page ceiling, counts are a lower bound
+      module="umami-integration" eventName="Add app" maxRecords="100000"
+```
+
+That site really does have more than 100,000 events for one event name in the window. **The
+old code had exactly the same ceiling** — `pageSize=100000` is 100k records — and the 46.3 MiB
+body it received was that ceiling being hit. The difference is that it truncated in silence
+and reported the undercount as fact. The ceiling is unchanged; it is now visible.
+
+This is also the worst case for the round-trip trade-off: that one event name costs 20
+sequential requests. It did not show up in board load latency (523 ms vs 526 ms median),
+because the widget fetches after the board renders, and total CPU rose 4%.
+
 ## Why 24 MiB of code is resident before the first request
 
 The module cache is a flat list with no parentage, so "what pulled this in" needed the
