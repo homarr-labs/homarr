@@ -127,7 +127,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
         const current = activeRef.current;
         if (current?.activation !== "preview" || current.itemId !== itemId) return;
         if (hoveredRef.current?.itemId === itemId) hoveredRef.current = null;
-        close(false);
+        close(current.restorePreviewFocus);
       }, POINTER_TRANSITION_GRACE_MS);
     },
     [close],
