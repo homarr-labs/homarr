@@ -5,10 +5,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Box } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
-import { MIN_ACCESSIBLE_CANVAS_SCALE } from "./constants";
 import classes from "./scaled-board-canvas.module.css";
-
-export { MIN_ACCESSIBLE_CANVAS_SCALE };
 
 const BoardCanvasScaleContext = createContext(1);
 
@@ -18,7 +15,7 @@ export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: 
   if (!Number.isFinite(availableWidth) || !Number.isFinite(logicalWidth)) return 1;
   if (availableWidth <= 0 || logicalWidth <= 0) return 1;
 
-  return Math.max(MIN_ACCESSIBLE_CANVAS_SCALE, availableWidth / logicalWidth);
+  return availableWidth / logicalWidth;
 };
 
 export const calculateBoardUiScale = (canvasScale: number) => {
@@ -36,9 +33,8 @@ interface ScaledBoardCanvasProps {
 
 /**
  * Scales the complete board as one surface while keeping widget layout in
- * fixed logical pixels. The scale floor deliberately allows horizontal
- * overflow so browser zoom still magnifies content instead of being cancelled
- * by responsive downscaling.
+ * fixed logical pixels. The complete canvas always fits its viewport so board
+ * content can never widen the document or require horizontal scrolling.
  */
 export const ScaledBoardCanvas = ({
   logicalWidth,
@@ -62,6 +58,7 @@ export const ScaledBoardCanvas = ({
     [logicalWidth, resolvedAvailableWidth],
   );
   const uiScale = calculateBoardUiScale(scale);
+  const inverseScale = scale > 0 ? 1 / scale : 1;
   const visualWidth = logicalWidth * scale;
   const hasHorizontalOverflow = resolvedAvailableWidth > 0 && visualWidth - resolvedAvailableWidth > 0.5;
 
@@ -84,8 +81,9 @@ export const ScaledBoardCanvas = ({
           className={classes.canvas}
           w={logicalWidth}
           style={{
+            "--board-canvas-inverse-scale": inverseScale,
             "--board-canvas-ui-scale": uiScale,
-            transform: `scale(${scale})`,
+            zoom: scale,
           }}
         >
           <BoardCanvasScaleContext.Provider value={scale}>{children}</BoardCanvasScaleContext.Provider>

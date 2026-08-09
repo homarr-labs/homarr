@@ -4,9 +4,10 @@ import { Group, ScrollArea, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { UmamiMetricItem } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { umamiQueryOptions } from "./umami-utils";
+import { getUsableWidgetQueryData } from "../common/query-state";
 
 interface UmamiTopListProps {
   integrationIds: string[];
@@ -17,19 +18,25 @@ interface UmamiTopListProps {
 
 export function UmamiTopPagesContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
   const t = useScopedI18n("widget.umami");
-  const { data = [] } = clientApi.widget.umami.getTopPages.useQuery(
-    { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, limit },
-    umamiQueryOptions,
-  );
+  const data =
+    getUsableWidgetQueryData(
+      clientApi.widget.umami.getTopPages.useQuery(
+        { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, limit },
+        umamiQueryOptions,
+      ),
+    ) ?? [];
   return <UmamiTopList items={data} heading={t("option.viewMode.option.topPages")} emptyLabel={t("topPages.direct")} />;
 }
 
 export function UmamiTopReferrersContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
   const t = useScopedI18n("widget.umami");
-  const { data = [] } = clientApi.widget.umami.getTopReferrers.useQuery(
-    { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, limit },
-    umamiQueryOptions,
-  );
+  const data =
+    getUsableWidgetQueryData(
+      clientApi.widget.umami.getTopReferrers.useQuery(
+        { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, limit },
+        umamiQueryOptions,
+      ),
+    ) ?? [];
   return (
     <UmamiTopList
       items={data}
@@ -48,6 +55,8 @@ function UmamiTopList({
   heading: string;
   emptyLabel: string;
 }) {
+  const locale = useCurrentIntlLocale();
+
   return (
     <Stack gap={2} h="100%">
       <Text size="xs" c="dimmed" fw={500}>
@@ -64,7 +73,7 @@ function UmamiTopList({
                 {item.x || emptyLabel}
               </Text>
               <Text size="xs" fw={600} flex="0 0 auto">
-                {item.y.toLocaleString()}
+                {item.y.toLocaleString(locale)}
               </Text>
             </Group>
           ))}

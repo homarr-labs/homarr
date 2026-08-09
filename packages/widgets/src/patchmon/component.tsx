@@ -78,8 +78,12 @@ const getLayoutMode = (width: number, height: number): LayoutMode => {
 export default function PatchMonWidget({ integrationIds, options, width, height }: WidgetComponentProps<"patchmon">) {
   const t = useScopedI18n("widget.patchmon");
   const integrationId = integrationIds[0] ?? "";
-  const { data: stats } = clientApi.widget.patchmon.getStats.useQuery({ integrationId }, { staleTime: 60 * 1000 });
+  const { data: stats, error } = clientApi.widget.patchmon.getStats.useQuery(
+    { integrationId },
+    { staleTime: 60 * 1000 },
+  );
 
+  if (error && !stats) throw error;
   if (!stats) return <WidgetEmptyState />;
 
   const statValues: Record<PatchMonStatKey, number> = {

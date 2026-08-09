@@ -13,6 +13,7 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 
 const logger = createLogger({ module: "releasesRouter" });
+const PUBLIC_RELEASE_ERROR_MESSAGE: string = "Release provider request failed";
 
 const formatVersionFilterRegex = (versionFilter: z.infer<typeof releaseVersionFilterSchema> | undefined) => {
   if (!versionFilter) return undefined;
@@ -100,19 +101,38 @@ export const releasesRouter = createTRPCRouter({
               })
               .getDataAsync();
 
+            const data = response.data.success
+              ? response.data
+              : {
+                  success: false as const,
+                  error: { code: response.data.error.code, message: PUBLIC_RELEASE_ERROR_MESSAGE },
+                };
+            if (!response.data.success) {
+              logger.warn("Release provider request failed", {
+                repositoryId,
+                provider: repository.provider,
+                error: response.data.error,
+              });
+            }
+
             return {
               id: repositoryId,
               provider: repository.provider,
               timestamp: response.timestamp,
-              ...response.data,
+              ...data,
             };
           } catch (error) {
+            logger.warn("Release provider request failed", {
+              repositoryId,
+              provider: repository.provider,
+              error,
+            });
             return {
               id: repositoryId,
               provider: repository.provider,
               timestamp: new Date(),
               success: false as const,
-              error: { code: "unexpected" as const, message: String(error) },
+              error: { code: "unexpected" as const, message: PUBLIC_RELEASE_ERROR_MESSAGE },
             };
           }
         }),

@@ -2,6 +2,12 @@
   background-color: var(--mantine-color-primaryColor-light-hover);
 }
 
+.bookmarkButton:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+  border-radius: var(--mantine-radius-sm);
+}
+
 [data-mantine-color-scheme="light"] .card-grid {
   background-color: var(--mantine-color-gray-1);
 }
@@ -11,5 +17,9 @@
 }
 
 .card:hover > div > div.bookmarkIcon {
+  background-color: var(--mantine-color-iconColor-filled-hover);
+}
+
+.bookmarkButton:focus-visible .bookmarkIcon {
   background-color: var(--mantine-color-iconColor-filled-hover);
 }

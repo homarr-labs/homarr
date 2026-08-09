@@ -1,8 +1,8 @@
 import { z } from "zod/v4";
 
+import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -259,49 +259,27 @@ export class OverseerrIntegration
 
   public async approveRequestAsync(requestId: number): Promise<void> {
     logger.info("Approving media request", { requestId, integration: this.integration.name });
-    await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/approve`), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/approve`), {
       method: "POST",
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
-    }).then((response) => {
-      if (!response.ok) {
-        logger.error(
-          new ErrorWithMetadata("Failed to approve media request", {
-            requestId,
-            integration: this.integration.name,
-            reason: `${response.status} ${response.statusText}`,
-            url: response.url,
-          }),
-        );
-      }
-
-      logger.info("Successfully approved media request", { requestId, integration: this.integration.name });
     });
+    if (!response.ok) throw new ResponseError(response);
+    logger.info("Successfully approved media request", { requestId, integration: this.integration.name });
   }
 
   public async declineRequestAsync(requestId: number): Promise<void> {
     logger.info("Declining media request", { requestId, integration: this.integration.name });
 
-    await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/decline`), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/decline`), {
       method: "POST",
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
-    }).then((response) => {
-      if (!response.ok) {
-        logger.error(
-          new ErrorWithMetadata("Failed to decline media request", {
-            requestId,
-            integration: this.integration.name,
-            reason: `${response.status} ${response.statusText}`,
-            url: response.url,
-          }),
-        );
-      }
-
-      logger.info("Successfully declined media request", { requestId, integration: this.integration.name });
     });
+    if (!response.ok) throw new ResponseError(response);
+    logger.info("Successfully declined media request", { requestId, integration: this.integration.name });
   }
 
   private async getItemInformationAsync(id: number, type: MediaRequest["type"]): Promise<MediaInformation> {

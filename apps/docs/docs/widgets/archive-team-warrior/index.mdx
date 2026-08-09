@@ -1,0 +1,38 @@
+---
+title: "ArchiveTeam Warrior"
+description: "Monitor ArchiveTeam Warrior status, projects, bandwidth, and active archival jobs."
+hide_title: true
+---
+
+import { archiveTeamWarriorIntegration } from "@site/docs/integrations/archiveteam-warrior";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+import { archiveTeamWarriorWidget } from ".";
+
+<WidgetHeader widget={archiveTeamWarriorWidget} categories={["Archiving", "Monitoring"]} />
+
+Use this widget to see what your ArchiveTeam Warrior is preserving without leaving Homarr. The compact view keeps the current project, runner state, job counts, bandwidth, and broadcast message visible. Advanced view adds the complete active-job list and exact update time.
+
+### Supported integration
+
+<WidgetIntegrations
+  items={[
+    {
+      integration: archiveTeamWarriorIntegration,
+      note: "Shows status and active archival work from one Warrior instance",
+    },
+  ]}
+/>
+
+<WidgetInteractionGuide />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={archiveTeamWarriorWidget.configuration} />

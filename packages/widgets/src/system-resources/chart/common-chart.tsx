@@ -83,6 +83,13 @@ export const CommonChart = ({
           )}
         </Group>
       )}
+      {data.length > 1 && height > 0 && height <= 40 && lastValue && !hovered && (
+        <Center pos="absolute" w="100%" h="100%" style={{ zIndex: 2, pointerEvents: "none" }}>
+          <Text size="xs" fw={600}>
+            {lastValue}
+          </Text>
+        </Center>
+      )}
       {data.length <= 1 ? (
         <Center pos="absolute" w="100%" h="100%">
           <Stack px={"xs"} align={"center"} gap={4}>
@@ -90,6 +97,11 @@ export const CommonChart = ({
             {showText && (
               <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} fw={"bold"} ta="center">
                 {title}
+              </Text>
+            )}
+            {lastValue && (
+              <Text size={height > 100 ? "md" : "xs"} fw={600} ta="center">
+                {lastValue}
               </Text>
             )}
           </Stack>

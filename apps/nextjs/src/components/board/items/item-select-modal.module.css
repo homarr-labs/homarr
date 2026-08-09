@@ -2,7 +2,6 @@
   opacity: 0;
   transition: opacity 150ms ease;
 }
-
 .card:hover .action,
 .card:focus-within .action {
   opacity: 1;

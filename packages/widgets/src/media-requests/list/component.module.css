@@ -1,0 +1,38 @@
+.card {
+  min-width: 0;
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+
+  &:hover,
+  &:focus-within {
+    border-color: var(--mantine-primary-color-filled);
+    background-color: var(--mantine-color-default-hover);
+  }
+}
+
+.pendingActions {
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.card:hover .pendingActions,
+.card:focus-within .pendingActions,
+.pendingActionsVisible {
+  opacity: 1;
+}
+
+@media (any-pointer: coarse) {
+  .pendingActions {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .pendingActions {
+    transition: none;
+  }
+}

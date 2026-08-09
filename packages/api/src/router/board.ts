@@ -70,6 +70,7 @@ import {
   throwIfCustomWidgetPlacementChangeForbidden,
 } from "./board/custom-widget-placement-access";
 import { generateResponsiveGridFor } from "./board/grid-algorithm";
+import { validateTimetableOptionsChangeAsync } from "./widgets/timetable";
 
 export const boardRouter = createTRPCRouter({
   exists: permissionRequiredProcedure
@@ -894,6 +895,15 @@ export const boardRouter = createTRPCRouter({
       storedItems: dbBoard.items,
     });
 
+    for (const item of input.items) {
+      if (item.kind !== "timetable") continue;
+      const previousItem = dbBoard.items.find((dbItem) => dbItem.id === item.id);
+      await validateTimetableOptionsChangeAsync(
+        item.options,
+        previousItem?.kind === "timetable" ? previousItem.options : undefined,
+      );
+    }
+
     await handleTransactionsAsync(ctx.db, {
       async handleAsync(db, schema) {
         await db.transaction(async (transaction) => {
@@ -1478,6 +1488,10 @@ export const boardRouter = createTRPCRouter({
         submittedItems: [{ id: "", kind: input.kind, options: input.options }],
         storedItems: [],
       });
+
+      if (input.kind === "timetable") {
+        await validateTimetableOptionsChangeAsync(input.options);
+      }
 
       if (input.integrationIds.length > 0) {
         const existing = await ctx.db.query.integrations.findMany({

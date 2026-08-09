@@ -290,7 +290,6 @@ const ItemSelectModalContent = ({
     </SelectGridLayout>
   );
 };
-
 const ItemSelectModalFrame = ({
   actions,
   innerProps,

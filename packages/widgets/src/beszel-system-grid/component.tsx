@@ -36,7 +36,8 @@ import {
   getProgressTrackSize,
 } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
-import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import { getUsableWidgetQueryData } from "../common/query-state";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
 
@@ -330,10 +331,15 @@ const metricRenderers = [
 ] as const;
 
 const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius, onClick }: SystemCardProps) => {
-  const visibleMetrics = metricRenderers.filter((m) => m.visible(system, options)).slice(0, maxMetrics);
+  const enabledMetrics = metricRenderers.filter((metric) => metric.visible(system, options));
+  const visibleMetrics = enabledMetrics.slice(0, maxMetrics);
+  const hiddenMetricCount = enabledMetrics.length - visibleMetrics.length;
 
   return (
     <Card
+      component="button"
+      type="button"
+      disabled={!onClick}
       padding={size.cardPadding}
       radius={itemRadius}
       bg="transparent"
@@ -345,7 +351,10 @@ const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius, onClick 
         display: "flex",
         flexDirection: "column" as const,
         border: "0.0625rem solid var(--border-color)",
-        cursor: onClick ? "pointer" : undefined,
+        color: "inherit",
+        font: "inherit",
+        textAlign: "left",
+        width: "100%",
       }}
     >
       <Group gap="xs" mb={2}>
@@ -362,6 +371,11 @@ const SystemCard = ({ system, options, t, size, maxMetrics, itemRadius, onClick 
       <Stack gap={0} style={{ flex: 1 }} justify="space-evenly">
         {visibleMetrics.map((m) => m.render(system, t, size))}
       </Stack>
+      {hiddenMetricCount > 0 && (
+        <Text size="10px" c="dimmed" ta="right">
+          +{hiddenMetricCount}
+        </Text>
+      )}
     </Card>
   );
 };
@@ -377,15 +391,11 @@ export default function BeszelSystemGridWidget({
   const board = useRequiredBoard();
   const { openModal } = useModalAction(BeszelSystemStatsModal);
 
-  const {
-    data: results = [],
-    error: systemsError,
-    isPending,
-  } = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
+  const results = getUsableWidgetQueryData(systemsQuery) ?? [];
+  const { isPending } = systemsQuery;
 
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
-
-  if (systemsError) throw systemsError;
 
   if (isPending) {
     return (
@@ -398,7 +408,7 @@ export default function BeszelSystemGridWidget({
   if (filteredSystems.length === 0) {
     return (
       <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
-        <BeszelIntegrationErrorIndicator results={results} />
+        <IntegrationErrorIndicator results={results} />
         <Center h="100%">
           <Stack align="center" gap="xs">
             <IconServerOff size={28} opacity={0.5} />
@@ -414,21 +424,22 @@ export default function BeszelSystemGridWidget({
   const cols = getColCount(width, height, filteredSystems.length);
   const rows = Math.ceil(filteredSystems.length / cols) || 1;
   const rawCellHeight = height / rows;
-  const scrollEnabled = rawCellHeight < MIN_CELL_HEIGHT;
-  const effectiveCellHeight = scrollEnabled ? MIN_CELL_HEIGHT : rawCellHeight;
+  const minimumCellHeight = MIN_CELL_HEIGHT;
+  const scrollEnabled = rawCellHeight < minimumCellHeight;
+  const effectiveCellHeight = scrollEnabled ? minimumCellHeight : rawCellHeight;
   const cellWidth = width / cols;
   const size = getSizeConfig(cellWidth, effectiveCellHeight);
   const maxMetrics = getMaxVisibleMetrics(effectiveCellHeight, size);
 
   return (
     <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
-      <BeszelIntegrationErrorIndicator results={results} />
+      <IntegrationErrorIndicator results={results} />
       <Box
         h="100%"
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          gridTemplateRows: scrollEnabled ? `repeat(${rows}, ${MIN_CELL_HEIGHT}px)` : `repeat(${rows}, 1fr)`,
+          gridTemplateRows: scrollEnabled ? `repeat(${rows}, ${minimumCellHeight}px)` : `repeat(${rows}, 1fr)`,
           gap: size.gap,
           overflow: scrollEnabled ? "auto" : "hidden",
         }}

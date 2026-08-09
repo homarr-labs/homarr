@@ -1,23 +1,43 @@
 "use client";
 
-import { Box, Flex, Group, Text, Tooltip } from "@mantine/core";
+import { Badge, Box, Flex, Group, Progress, Stack, Text, Tooltip, VisuallyHidden } from "@mantine/core";
 import { IconCube, IconUsersGroup } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 
-export default function MinecraftServerStatusWidget({ options }: WidgetComponentProps<"minecraftServerStatus">) {
-  const { data: result } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
-  const tStatus = useScopedI18n("widget.minecraftServerStatus.status");
+export default function MinecraftServerStatusWidget({
+  options,
+  width,
+  height,
+}: WidgetComponentProps<"minecraftServerStatus">) {
+  const { data: result, isPending, error } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
+  const t = useI18n();
 
+  if (isPending) {
+    return (
+      <Flex align="center" justify="center" h="100%">
+        <Text c="dimmed" size="sm">
+          {t("common.action.loading")}
+        </Text>
+      </Flex>
+    );
+  }
+  if (error && !result) throw error;
   if (!result) return <WidgetEmptyState />;
   const { data } = result;
 
   const title = options.title.trim().length > 0 ? options.title : options.domain;
+  const isDense = width < 220 || height < 120;
+  const showServerIcon = !isDense && height >= 144;
+  const showMetadata = width >= 260 && height >= 180;
+  const showCapacity = width >= 180 && height >= 140;
+  const iconSize = Math.max(40, Math.min(80, width * 0.45, height * 0.45));
+  const playerPercent = data.online && data.players.max > 0 ? (data.players.online / data.players.max) * 100 : 0;
 
   return (
     <Flex
@@ -25,24 +45,44 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
       h="100%"
       w="100%"
       direction="column"
-      p="sm"
+      p={isDense ? "xs" : "sm"}
       justify="center"
       align="center"
     >
-      <Group gap="xs" wrap="nowrap" align="center">
-        <Tooltip label={data.online ? tStatus("online") : tStatus("offline")}>
-          <Box miw="md" h="md" bg={data.online ? "teal" : "red"} style={{ borderRadius: "100%" }}></Box>
+      <Group gap="xs" wrap="nowrap" align="center" maw="100%">
+        <Tooltip
+          label={
+            data.online
+              ? t("widget.minecraftServerStatus.status.online")
+              : t("widget.minecraftServerStatus.status.offline")
+          }
+        >
+          <Box aria-hidden miw="md" h="md" bg={data.online ? "teal" : "red"} style={{ borderRadius: "100%" }} />
         </Tooltip>
-        <Text size="md" fw="bold">
+        <VisuallyHidden>
+          {data.online
+            ? t("widget.minecraftServerStatus.status.online")
+            : t("widget.minecraftServerStatus.status.offline")}
+        </VisuallyHidden>
+        <Text size={showMetadata ? "lg" : "md"} fw="bold" truncate="end">
           {title}
         </Text>
       </Group>
+      {showMetadata && (
+        <Group gap="xs" mt="xs" wrap="wrap" justify="center">
+          <Badge variant="light">{options.domain}</Badge>
+          {options.isBedrockServer && (
+            <Badge variant="outline">{t("widget.minecraftServerStatus.option.isBedrockServer.label")}</Badge>
+          )}
+        </Group>
+      )}
       {data.online && (
         <>
           {!options.isBedrockServer &&
+            showServerIcon &&
             (data.icon ? (
               <img
-                style={{ flex: 1, transform: "scale(0.8)", objectFit: "contain" }}
+                style={{ flex: 1, width: iconSize, maxHeight: iconSize, objectFit: "contain" }}
                 alt={`minecraft icon ${options.domain}`}
                 src={data.icon}
               />
@@ -55,16 +95,24 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
                   justifyContent: "center",
                 }}
               >
-                <IconCube size="3rem" color="var(--mantine-color-gray-5)" />
+                <IconCube size={iconSize} color="var(--mantine-color-gray-5)" />
               </Box>
             ))}
-          <Group gap={5} c="gray.6" align="center">
-            <IconUsersGroup size="1rem" />
-            <Text size="md">
-              {formatNumber(data.players.online, 1)} / {formatNumber(data.players.max, 1)}
-            </Text>
-          </Group>
+          <Stack gap={4} w={showCapacity ? "min(100%, 420px)" : "auto"} align="stretch">
+            <Group gap={5} c="dimmed" align="center" justify="center">
+              <IconUsersGroup size={showMetadata ? "1.25rem" : "1rem"} />
+              <Text size={showMetadata ? "lg" : isDense ? "sm" : "md"}>
+                {formatNumber(data.players.online, 1)} / {formatNumber(data.players.max, 1)}
+              </Text>
+            </Group>
+            {showCapacity && <Progress value={playerPercent} color={playerPercent >= 90 ? "orange" : "teal"} />}
+          </Stack>
         </>
+      )}
+      {showMetadata && !data.online && (
+        <Text mt="md" c="dimmed" size="sm">
+          {options.domain}
+        </Text>
       )}
     </Flex>
   );

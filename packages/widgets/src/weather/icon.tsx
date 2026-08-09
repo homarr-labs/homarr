@@ -14,11 +14,9 @@ import {
   IconTemperaturePlus,
   IconWind,
 } from "@tabler/icons-react";
-import dayjs from "dayjs";
-
 import { metricToImperial } from "@homarr/common";
 import type { TranslationObject } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetProps } from "../definition";
@@ -84,6 +82,7 @@ export const WeatherDescription = ({
 }: WeatherDescriptionProps) => {
   const t = useScopedI18n("widget.weather");
   const tCommon = useScopedI18n("common");
+  const locale = useCurrentIntlLocale();
 
   const { name } = weatherDefinitions.find((definition) => definition.codes.includes(weatherCode)) ?? unknownWeather;
 
@@ -93,7 +92,7 @@ export const WeatherDescription = ({
 
   return (
     <Stack align="center" gap="0">
-      <Text fz="24px">{dayjs(time).format(dateFormat)}</Text>
+      <Text fz="24px">{formatWeatherDate(time, locale, dateFormat)}</Text>
       <Text fz="16px">{t(`kind.${name}`)}</Text>
       <List>
         <List.Item icon={<IconTemperaturePlus size={15} />}>{`${tCommon("information.max")}: ${maxTemp}`}</List.Item>
@@ -122,6 +121,50 @@ export const WeatherDescription = ({
       </List>
     </Stack>
   );
+};
+
+export const formatWeatherDate = (
+  value: string | undefined,
+  locale: string,
+  pattern: WidgetProps<"weather">["options"]["dateFormat"] | undefined,
+) => {
+  if (!value) return "?";
+  const resolvedPattern = pattern ?? "dddd, MMMM D";
+  const date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00Z` : value);
+  if (Number.isNaN(date.getTime())) return "?";
+
+  const parts = new Intl.DateTimeFormat(locale, {
+    weekday: "long",
+    year: "numeric",
+    month: resolvedPattern.includes("MMMM") ? "long" : resolvedPattern.includes("MMM") ? "short" : "2-digit",
+    day: resolvedPattern.includes("DD") ? "2-digit" : "numeric",
+    timeZone: "UTC",
+  })
+    .formatToParts(date)
+    .reduce<Record<string, string>>((result, part) => {
+      if (part.type !== "literal") result[part.type] = part.value;
+      return result;
+    }, {});
+
+  switch (resolvedPattern) {
+    case "dddd, D MMMM":
+      return `${parts.weekday}, ${parts.day} ${parts.month}`;
+    case "MMM D":
+      return `${parts.month} ${parts.day}`;
+    case "D MMM":
+      return `${parts.day} ${parts.month}`;
+    case "DD/MM/YYYY":
+      return `${parts.day}/${parts.month}/${parts.year}`;
+    case "MM/DD/YYYY":
+      return `${parts.month}/${parts.day}/${parts.year}`;
+    case "DD/MM":
+      return `${parts.day}/${parts.month}`;
+    case "MM/DD":
+      return `${parts.month}/${parts.day}`;
+    case "dddd, MMMM D":
+    default:
+      return `${parts.weekday}, ${parts.month} ${parts.day}`;
+  }
 };
 
 interface WeatherDefinitionType {
