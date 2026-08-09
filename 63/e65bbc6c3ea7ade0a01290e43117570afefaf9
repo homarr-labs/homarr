@@ -1,0 +1,25 @@
+scripts/benchmarks/measure-rerenders.mts
+  s_a70c07ac5b7a5a::t_8d77d3f1f3e7ff 1-124
+  s_a70c07ac5b7a5a::t_d841a194493bc9 125-175
+packages/common/src/hooks.ts
+  s_a70c07ac5b7a5a::t_8cdb3c1dc4f92d 21-24
+  s_a70c07ac5b7a5a::t_ca4392f17b8c05 25-28
+PHASE2-FINDINGS.md
+  s_a70c07ac5b7a5a::t_a4d708eb54efc1 216-243
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "63e65bbc6c3ea7ade0a01290e43117570afefaf9",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
