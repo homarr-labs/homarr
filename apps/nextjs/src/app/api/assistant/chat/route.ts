@@ -56,9 +56,25 @@ import { toProviderOptionsKey } from "./assistant-provider-options";
 import { assistantExecutionPolicy } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { getSafeAssistantToolError } from "./assistant-tool-error";
-import { getForcedAssistantToolName, withAssistantToolPolicy } from "./assistant-tool-policy";
+import { repairCustomWidgetToolInput } from "./assistant-tool-input-repair";
+import {
+  createCustomWidgetDynamicContextController,
+  getCustomWidgetAuthoringContext,
+  prunePreloadedCustomWidgetModelMessages,
+} from "./custom-widget-authoring-context";
+import {
+  customWidgetAssistantInstructions,
+  getForcedAssistantToolName,
+  getRequiredAssistantToolNames,
+  withAssistantToolPolicy,
+} from "./assistant-tool-policy";
 
 export const maxDuration = 300;
+
+// Five 1 MB image attachments expand to roughly 6.7 MB as base64 before the surrounding message
+// history and JSON envelope are added. Keep the transport ceiling above the composer contract while
+// retaining a bounded request size for this authenticated endpoint.
+const assistantRequestMaxBytes = 12_000_000;
 
 const logger = createLogger({ module: "assistant" });
 const getToolApprovalSecret = () =>
@@ -117,7 +133,7 @@ Homarr concepts:
 
 Action rules:
 - Prefer read-only tools before actions.
-- When required information is missing or the user must choose between meaningful alternatives, call ask_user. Do not ask the question only in prose. Offer distinct choices, categorize agreement or proceeding as affirmative, refusal as negative, and unrelated selections as alternative, then leave the freeform Other answer enabled. A confirmation question must have exactly one affirmative option.
+- Whenever you need an answer from the user before choosing the next action, call ask_user. Never end a prose response with a question that expects the user to type a reply. Offer distinct choices, categorize agreement or proceeding as affirmative, refusal as negative, and unrelated selections as alternative, then leave the freeform Other answer enabled. A confirmation question must have exactly one affirmative option. Purely rhetorical questions and open-ended conversation that does not block an action may remain prose, but optional next steps should be stated declaratively instead of phrased as a question.
 - Mutating Homarr tools already pause for native user approval. Calling a mutation only proposes the action; it cannot execute until the user selects Approve and run. Once the requested change is sufficiently specified, call the mutation immediately so the approval UI appears.
 - A prose response such as "Please confirm if you would like me to proceed", "Would you like me to proceed?", or a parameter summary that asks for confirmation is incorrect. Never ask for a second textual confirmation before an approval-gated tool call.
 - Do not retry a denied action.
@@ -332,8 +348,9 @@ const getProcedureTypeMap = () => {
   );
 };
 
+const waitForDemoChunkAsync = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
 const createDemoAssistantResponse = (request: z.infer<typeof requestSchema>) => {
-  const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
   const text =
     "This is the Homarr demo assistant. It is running in preview/mock mode, so it responds with a canned answer instead of calling a real language model. In a real deployment, an administrator configures a provider and a model for full conversations.";
   const responseId = crypto.randomUUID();
@@ -347,7 +364,7 @@ const createDemoAssistantResponse = (request: z.infer<typeof requestSchema>) => 
       writer.write({ type: "text-start", id: partId });
       for (const chunk of chunkTexts) {
         writer.write({ type: "text-delta", id: partId, delta: chunk });
-        await delay(18);
+        await waitForDemoChunkAsync(18);
       }
       writer.write({ type: "text-end", id: partId });
       writer.write({ type: "finish", finishReason: "stop" });
@@ -359,7 +376,7 @@ const createDemoAssistantResponse = (request: z.infer<typeof requestSchema>) => 
 
 export async function POST(request: Request) {
   const contentLength = Number(request.headers.get("content-length") ?? 0);
-  if (contentLength > 2_000_000) {
+  if (contentLength > assistantRequestMaxBytes) {
     return Response.json({ error: "The assistant request is too large." }, { status: 413 });
   }
 
@@ -369,7 +386,7 @@ export async function POST(request: Request) {
   }
 
   const requestBody = await request.text();
-  if (requestBody.length > 2_000_000) {
+  if (requestBody.length > assistantRequestMaxBytes) {
     return Response.json({ error: "The assistant request is too large." }, { status: 413 });
   }
   const parsed = requestSchema.safeParse(
@@ -390,6 +407,7 @@ export async function POST(request: Request) {
       { status: 413 },
     );
   }
+  const incomingMessages = parsed.data.messages as UIMessage[];
 
   const configuration = await db.query.assistantConfigurations.findFirst({
     where: eq(assistantConfigurations.id, "default"),
@@ -458,9 +476,12 @@ export async function POST(request: Request) {
   ) {
     return Response.json({ error: "The selected model does not support image input." }, { status: 400 });
   }
+  const canAuthorCustomWidgets = session.user.permissions.includes("admin");
+  const customWidgetAuthoringContext = getCustomWidgetAuthoringContext(incomingMessages, canAuthorCustomWidgets);
   const caller = mcpRouter.createCaller(context);
   const procedureTypes = getProcedureTypeMap();
-  const mcpTools = extractMcpTools();
+  const omittedCustomWidgetTools = new Set<string>(customWidgetAuthoringContext.omittedToolNames);
+  const mcpTools = extractMcpTools().filter((mcpTool) => !omittedCustomWidgetTools.has(mcpTool.name));
 
   const homarrTools = Object.fromEntries(
     mcpTools.map((mcpTool) => {
@@ -493,7 +514,7 @@ export async function POST(request: Request) {
                 toolName: mcpTool.name,
                 error: error instanceof Error ? error.message : String(error),
               });
-              return { error: getSafeAssistantToolError(error) };
+              return { error: getSafeAssistantToolError(error, { toolName: mcpTool.name }) };
             }
           },
         }),
@@ -524,7 +545,7 @@ export async function POST(request: Request) {
     }),
   ) satisfies ToolSet;
   const availableTools = { ...homarrTools, ...frontendTools };
-  const forcedToolName = getForcedAssistantToolName(parsed.data.messages as UIMessage[]);
+  const forcedToolName = getForcedAssistantToolName(incomingMessages);
   const openRouterServerToolsEnabled =
     configuration.webSearchEnabled && assistantProviderCanUseOpenRouterServerTools(configuration.provider);
 
@@ -560,17 +581,39 @@ export async function POST(request: Request) {
     let hasReportedCost = false;
     let upstreamCost = 0;
     let hasUpstreamCost = false;
+    const initialModelMessages = await convertToModelMessages(prepareMessagesForModel(incomingMessages));
+    const modelMessages =
+      customWidgetAuthoringContext.systemContext.length > 0
+        ? prunePreloadedCustomWidgetModelMessages(initialModelMessages)
+        : initialModelMessages;
+    const baseInstructions = `${assistantInstructions}${customWidgetAssistantInstructions}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${mentionContext}${customWidgetAuthoringContext.systemContext}`;
+    const prepareDynamicCustomWidgetContext = createCustomWidgetDynamicContextController({
+      isAdmin: canAuthorCustomWidgets,
+      baseInstructions,
+      availableToolNames: Object.keys(availableTools),
+    });
     const result = streamText({
       model: provider(modelId),
-      instructions: `${assistantInstructions}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${mentionContext}`,
-      messages: await convertToModelMessages(prepareMessagesForModel(parsed.data.messages as UIMessage[])),
+      instructions: baseInstructions,
+      messages: modelMessages,
       tools: availableTools,
-      prepareStep: ({ stepNumber }) => {
-        if (stepNumber !== 0 || forcedToolName === undefined || !(forcedToolName in availableTools)) return undefined;
-        return {
-          activeTools: [forcedToolName],
-          toolChoice: { type: "tool", toolName: forcedToolName },
-        };
+      prepareStep: ({ instructions, messages, stepNumber, steps, responseMessages }) => {
+        const dynamicStepOverrides = prepareDynamicCustomWidgetContext({ instructions, messages, steps });
+        const stepOverrides = dynamicStepOverrides ?? {};
+        if (stepNumber === 0 && forcedToolName !== undefined && forcedToolName in availableTools) {
+          return {
+            ...stepOverrides,
+            activeTools: [forcedToolName],
+            toolChoice: { type: "tool", toolName: forcedToolName },
+          };
+        }
+        const requiredToolNames = getRequiredAssistantToolNames(incomingMessages, steps, responseMessages).filter(
+          (toolName) => toolName in availableTools,
+        );
+        if (requiredToolNames.length > 0) {
+          return { ...stepOverrides, activeTools: requiredToolNames, toolChoice: "required" };
+        }
+        return dynamicStepOverrides;
       },
       stopWhen: stepCountIs(assistantExecutionPolicy.maxSteps),
       abortSignal: request.signal,
@@ -581,6 +624,7 @@ export async function POST(request: Request) {
       },
       maxOutputTokens: assistantExecutionPolicy.maxOutputTokens,
       maxRetries: 2,
+      experimental_repairToolCall: ({ toolCall }) => Promise.resolve(repairCustomWidgetToolInput(toolCall)),
       reasoning: parsed.data.reasoning === "auto" ? undefined : parsed.data.reasoning,
       providerOptions:
         configuration.provider === "openrouter" || openRouterServerToolsEnabled

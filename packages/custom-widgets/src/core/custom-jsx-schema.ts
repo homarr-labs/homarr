@@ -17,6 +17,7 @@ import { getCustomWidgetHttpUrlIssue } from "./url-policy";
 export * from "./options-schema";
 export * from "./request-schema";
 export const CUSTOM_WIDGET_SCHEMA = "homarr-custom-widget-v2";
+const CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH = 50_000;
 
 export const customWidgetBindingIdentifierSchema = z
   .string()
@@ -30,7 +31,7 @@ export const customWidgetBindingIdentifierSchema = z
 export const customJsxTemplateSchema = z
   .string()
   .min(1)
-  .max(50_000)
+  .max(CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH)
   .superRefine((template, ctx) => {
     for (const diagnostic of validateCustomJsxTemplate(template)) {
       if (diagnostic.severity === "error") {
@@ -193,13 +194,84 @@ function validateTemplateRequests(template: string, requests: Record<string, Cus
 
 export type HomarrCustomWidgetV2 = z.infer<typeof customWidgetDefinitionSchema>;
 export type HomarrCustomWidgetV2Input = z.input<typeof customWidgetDefinitionSchema>;
-export const customWidgetCreateSchema = customWidgetDefinitionSchema.safeExtend({
+
+const customWidgetTemplateLinesSchema = z
+  .array(z.string().max(10_000))
+  .min(1)
+  .max(2_000)
+  .refine(
+    (lines) => lines.reduce((length, line) => length + line.length, Math.max(0, lines.length - 1)) <= 50_000,
+    `The complete JSX template must contain at most ${CUSTOM_WIDGET_TEMPLATE_MAX_LENGTH} characters`,
+  )
+  .describe(
+    "The complete JSX template split into lines. Prefer this over template for generated multiline JSX. Do not send both fields.",
+  );
+
+export const customWidgetAuthoringDefinitionSchema = z
+  .strictObject({
+    ...customWidgetDefinitionSchema.shape,
+    template: customJsxTemplateSchema
+      .optional()
+      .describe("The complete JSX template as one string. For multiline JSX, prefer templateLines instead."),
+    templateLines: customWidgetTemplateLinesSchema.optional(),
+  })
+  .superRefine((definition, ctx) => {
+    if (definition.template === undefined && definition.templateLines === undefined) {
+      ctx.addIssue({ code: "custom", path: ["template"], message: "Provide template or templateLines" });
+    }
+    if (definition.template !== undefined && definition.templateLines !== undefined) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["templateLines"],
+        message: "Provide template or templateLines, not both",
+      });
+    }
+  });
+
+export type CustomWidgetAuthoringDefinitionInput = z.input<typeof customWidgetAuthoringDefinitionSchema>;
+
+export function normalizeCustomWidgetAuthoringDefinition(input: CustomWidgetAuthoringDefinitionInput) {
+  const { templateLines, ...definition } = input;
+  return customWidgetDefinitionSchema.parse({
+    ...definition,
+    template: definition.template ?? templateLines?.join("\n"),
+  });
+}
+
+const customWidgetAuthoringUpdateSchema = z
+  .strictObject({
+    ...customWidgetDefinitionSchema.shape,
+    options: customWidgetOptionsSchema.removeDefault(),
+    templateLines: customWidgetTemplateLinesSchema.optional(),
+  })
+  .partial()
+  .superRefine((definition, ctx) => {
+    if (definition.template !== undefined && definition.templateLines !== undefined) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["templateLines"],
+        message: "Provide template or templateLines, not both",
+      });
+    }
+  });
+
+export type CustomWidgetAuthoringUpdateInput = z.input<typeof customWidgetAuthoringUpdateSchema>;
+
+export function normalizeCustomWidgetAuthoringUpdate(input: CustomWidgetAuthoringUpdateInput) {
+  const { templateLines, ...definition } = input;
+  return {
+    ...definition,
+    ...(templateLines === undefined ? {} : { template: templateLines.join("\n") }),
+  };
+}
+
+export const customWidgetCreateSchema = customWidgetAuthoringDefinitionSchema.safeExtend({
   secrets: customWidgetSecretsInputSchema.default([]),
 });
-export const customWidgetUpdateSchema = z
-  .strictObject(customWidgetDefinitionSchema.shape)
-  .partial()
-  .extend({ id: z.string().min(1), secrets: customWidgetSecretsInputSchema.optional() });
+export const customWidgetUpdateSchema = customWidgetAuthoringUpdateSchema.safeExtend({
+  id: z.string().min(1),
+  secrets: customWidgetSecretsInputSchema.optional(),
+});
 export const customWidgetImportSchema = customWidgetDefinitionSchema;
 export type CustomWidgetCreateInput = z.infer<typeof customWidgetCreateSchema>;
 export type CustomWidgetUpdateInput = z.infer<typeof customWidgetUpdateSchema>;

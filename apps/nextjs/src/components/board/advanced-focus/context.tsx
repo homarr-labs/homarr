@@ -1,6 +1,6 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
+import type { CSSProperties, PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Overlay, Portal } from "@mantine/core";
 import { useIsomorphicEffect } from "@mantine/hooks";
@@ -36,10 +36,9 @@ interface AdvancedFocusContextValue {
 }
 
 const AdvancedFocusContext = createContext<AdvancedFocusContextValue | null>(null);
-const HOVER_DELAY_MS = 150;
+const HOVER_DELAY_MS = 500;
+const POINTER_TRANSITION_GRACE_MS = 80;
 const CLOSE_DURATION_MS = 180;
-const interactiveSelector =
-  "a[href], button, input, textarea, select, [contenteditable='true'], [role='button'], [role='link'], [role='menuitem'], [role='option']";
 
 const isEditableTarget = (target: EventTarget | null) =>
   target instanceof HTMLElement &&
@@ -48,16 +47,28 @@ const isEditableTarget = (target: EventTarget | null) =>
 export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
   const [isEditMode] = useEditMode();
   const [active, setActive] = useState<ActiveFocus | null>(null);
+  const [isHoldPending, setIsHoldPending] = useState(false);
   const activeRef = useRef<ActiveFocus | null>(null);
   const hoveredRef = useRef<{ itemId: string; source: HTMLElement } | null>(null);
   const shiftHeldRef = useRef(false);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const previewLeaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const holdIndicatorRef = useRef<HTMLDivElement | null>(null);
+  const pointerPositionRef = useRef({ x: -100, y: -100 });
+  const pointerFrameRef = useRef<number | null>(null);
 
   const cancelHoverTimer = useCallback(() => {
     if (hoverTimerRef.current === null) return;
     clearTimeout(hoverTimerRef.current);
     hoverTimerRef.current = null;
+    setIsHoldPending(false);
+  }, []);
+
+  const cancelPreviewLeaveTimer = useCallback(() => {
+    if (previewLeaveTimerRef.current === null) return;
+    clearTimeout(previewLeaveTimerRef.current);
+    previewLeaveTimerRef.current = null;
   }, []);
 
   const updateActive = useCallback((next: ActiveFocus | null) => {
@@ -75,6 +86,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
     (itemId: string, source: HTMLElement, options: OpenAdvancedFocusOptions = {}) => {
       if (isEditMode) return;
       cancelHoverTimer();
+      cancelPreviewLeaveTimer();
       cancelCloseTimer();
       const rect = source.getBoundingClientRect();
       updateActive({
@@ -87,12 +99,13 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
         phase: "visible",
       });
     },
-    [cancelCloseTimer, cancelHoverTimer, isEditMode, updateActive],
+    [cancelCloseTimer, cancelHoverTimer, cancelPreviewLeaveTimer, isEditMode, updateActive],
   );
 
   const close = useCallback(
     (restoreFocus = true) => {
       cancelHoverTimer();
+      cancelPreviewLeaveTimer();
       const current = activeRef.current;
       if (!current || current.phase === "closing") return;
       updateActive({ ...current, phase: "closing" });
@@ -103,22 +116,43 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
         if (restoreFocus && current.source.isConnected) requestAnimationFrame(() => current.source.focus());
       }, closeDuration);
     },
-    [cancelHoverTimer, updateActive],
+    [cancelHoverTimer, cancelPreviewLeaveTimer, updateActive],
+  );
+
+  const schedulePreviewClose = useCallback(
+    (itemId: string) => {
+      if (previewLeaveTimerRef.current !== null) return;
+      previewLeaveTimerRef.current = setTimeout(() => {
+        previewLeaveTimerRef.current = null;
+        const current = activeRef.current;
+        if (current?.activation !== "preview" || current.itemId !== itemId) return;
+        if (hoveredRef.current?.itemId === itemId) hoveredRef.current = null;
+        close(current.restorePreviewFocus);
+      }, POINTER_TRANSITION_GRACE_MS);
+    },
+    [close],
   );
 
   const startHoverTimer = useCallback(() => {
     cancelHoverTimer();
     const hovered = hoveredRef.current;
     if (!hovered || !shiftHeldRef.current || activeRef.current) return;
-    hoverTimerRef.current = setTimeout(
-      () => open(hovered.itemId, hovered.source, { activation: "preview" }),
-      HOVER_DELAY_MS,
-    );
+    if (pointerPositionRef.current.x < 0 || pointerPositionRef.current.y < 0) {
+      const rect = hovered.source.getBoundingClientRect();
+      pointerPositionRef.current = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    }
+    setIsHoldPending(true);
+    hoverTimerRef.current = setTimeout(() => {
+      hoverTimerRef.current = null;
+      setIsHoldPending(false);
+      open(hovered.itemId, hovered.source, { activation: "preview" });
+    }, HOVER_DELAY_MS);
   }, [cancelHoverTimer, open]);
 
   const hover = useCallback(
     (itemId: string, source: HTMLElement) => {
       hoveredRef.current = { itemId, source };
+      cancelPreviewLeaveTimer();
       const current = activeRef.current;
       if (current?.activation === "preview" && current.itemId !== itemId) {
         cancelCloseTimer();
@@ -127,18 +161,38 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
       }
       startHoverTimer();
     },
-    [cancelCloseTimer, startHoverTimer, updateActive],
+    [cancelCloseTimer, cancelPreviewLeaveTimer, startHoverTimer, updateActive],
   );
 
   useEffect(() => {
     const handlePointerMove = (event: PointerEvent) => {
+      pointerPositionRef.current = { x: event.clientX, y: event.clientY };
+      if (holdIndicatorRef.current && pointerFrameRef.current === null) {
+        pointerFrameRef.current = requestAnimationFrame(() => {
+          pointerFrameRef.current = null;
+          const indicator = holdIndicatorRef.current;
+          if (!indicator) return;
+          indicator.style.setProperty("--advanced-focus-pointer-x", `${pointerPositionRef.current.x}px`);
+          indicator.style.setProperty("--advanced-focus-pointer-y", `${pointerPositionRef.current.y}px`);
+        });
+      }
+
       const current = activeRef.current;
       if (!shiftHeldRef.current || current?.activation !== "preview") return;
-      if (
-        event.target instanceof Element &&
-        event.target.closest(interactiveSelector)?.closest("[data-advanced-focus-surface]")
-      )
+      if (event.target instanceof Element && event.target.closest("[data-advanced-focus-surface], [data-portal]")) {
+        cancelPreviewLeaveTimer();
         return;
+      }
+
+      const isInsideSourceRect =
+        event.clientX >= current.sourceRect.left &&
+        event.clientX <= current.sourceRect.left + current.sourceRect.width &&
+        event.clientY >= current.sourceRect.top &&
+        event.clientY <= current.sourceRect.top + current.sourceRect.height;
+      if (isInsideSourceRect) {
+        cancelPreviewLeaveTimer();
+        return;
+      }
 
       const underlyingSource = document
         .elementsFromPoint(event.clientX, event.clientY)
@@ -151,7 +205,10 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
         )
         .find((source) => source !== null && source !== current.source);
       const itemId = underlyingSource?.dataset.itemId;
-      if (!underlyingSource || !itemId) return;
+      if (!underlyingSource || !itemId) {
+        schedulePreviewClose(current.itemId);
+        return;
+      }
 
       if (underlyingSource.hasAttribute("aria-keyshortcuts")) {
         hover(itemId, underlyingSource);
@@ -160,31 +217,38 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
 
       hoveredRef.current = null;
       cancelHoverTimer();
-      cancelCloseTimer();
-      updateActive(null);
+      schedulePreviewClose(current.itemId);
     };
 
     window.addEventListener("pointermove", handlePointerMove, { capture: true });
-    return () => window.removeEventListener("pointermove", handlePointerMove, { capture: true });
-  }, [cancelCloseTimer, cancelHoverTimer, hover, updateActive]);
+    window.addEventListener("pointerover", handlePointerMove, { capture: true });
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove, { capture: true });
+      window.removeEventListener("pointerover", handlePointerMove, { capture: true });
+      if (pointerFrameRef.current !== null) cancelAnimationFrame(pointerFrameRef.current);
+    };
+  }, [cancelHoverTimer, cancelPreviewLeaveTimer, hover, schedulePreviewClose]);
 
   const leave = useCallback(
     (itemId: string) => {
       if (hoveredRef.current?.itemId !== itemId) return;
       hoveredRef.current = null;
       cancelHoverTimer();
+      if (activeRef.current?.activation === "preview" && activeRef.current.itemId === itemId)
+        schedulePreviewClose(itemId);
     },
-    [cancelHoverTimer],
+    [cancelHoverTimer, schedulePreviewClose],
   );
 
   const dismiss = useCallback(
     (itemId: string) => {
       if (activeRef.current?.itemId !== itemId) return;
       cancelHoverTimer();
+      cancelPreviewLeaveTimer();
       cancelCloseTimer();
       updateActive(null);
     },
-    [cancelCloseTimer, cancelHoverTimer, updateActive],
+    [cancelCloseTimer, cancelHoverTimer, cancelPreviewLeaveTimer, updateActive],
   );
 
   useEffect(() => {
@@ -223,9 +287,10 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
       window.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener("blur", handleBlur);
       cancelHoverTimer();
+      cancelPreviewLeaveTimer();
       cancelCloseTimer();
     };
-  }, [cancelCloseTimer, cancelHoverTimer, close, isEditMode, startHoverTimer]);
+  }, [cancelCloseTimer, cancelHoverTimer, cancelPreviewLeaveTimer, close, isEditMode, startHoverTimer]);
 
   useEffect(() => {
     if (isEditMode && activeRef.current) close(false);
@@ -252,6 +317,28 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
   return (
     <AdvancedFocusContext.Provider value={value}>
       {children}
+      {isHoldPending && (
+        <Portal>
+          <div
+            ref={holdIndicatorRef}
+            data-advanced-focus-hold-indicator
+            className={classes.holdIndicator}
+            style={
+              {
+                "--advanced-focus-pointer-x": `${pointerPositionRef.current.x}px`,
+                "--advanced-focus-pointer-y": `${pointerPositionRef.current.y}px`,
+              } as CSSProperties
+            }
+            aria-hidden
+          >
+            <svg className={classes.holdIndicatorRing} viewBox="0 0 36 36">
+              <circle className={classes.holdIndicatorTrack} cx="18" cy="18" r="15" pathLength="1" />
+              <circle className={classes.holdIndicatorProgress} cx="18" cy="18" r="15" pathLength="1" />
+            </svg>
+            <span className={classes.holdIndicatorLabel}>&#8679;</span>
+          </div>
+        </Portal>
+      )}
       {active?.activation === "preview" && (
         <Portal>
           <Overlay

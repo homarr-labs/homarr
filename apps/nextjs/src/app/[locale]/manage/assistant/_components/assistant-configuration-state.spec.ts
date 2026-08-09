@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { getAssistantConnectionState } from "./assistant-configuration-state";
+import { formatAssistantContextWindow, getAssistantConnectionState } from "./assistant-configuration-state";
 
 describe("getAssistantConnectionState", () => {
   it("marks a saved required-key provider as ready", () => {
@@ -61,5 +61,12 @@ describe("getAssistantConnectionState", () => {
       connectionPending: false,
       connectionReady: true,
     });
+  });
+});
+
+describe("formatAssistantContextWindow", () => {
+  it("uses Homarr's compact number format for large context windows", () => {
+    expect(formatAssistantContextWindow(1_048_576)).toBe("1M");
+    expect(formatAssistantContextWindow(131_072)).toBe("131k");
   });
 });

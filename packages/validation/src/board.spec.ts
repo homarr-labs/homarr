@@ -88,8 +88,16 @@ describe("section behavior validation", () => {
     });
   });
 
-  test.each(["category", "dynamic"])("rejects the legacy %s kind", (kind) => {
-    expect(() => sectionSchema.parse({ id: "legacy", kind, layouts: [] })).toThrow();
+  test("normalizes the legacy dynamic kind to a container", () => {
+    expect(sectionSchema.parse({ id: "legacy", kind: "dynamic", layouts: [] })).toMatchObject({
+      id: "legacy",
+      kind: "container",
+      layouts: [],
+    });
+  });
+
+  test("rejects the legacy category kind", () => {
+    expect(() => sectionSchema.parse({ id: "legacy", kind: "category", layouts: [] })).toThrow();
   });
 
   test.each([
