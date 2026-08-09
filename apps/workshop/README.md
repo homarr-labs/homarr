@@ -70,7 +70,8 @@ pnpm dev
 
 `WORKSHOP_API_URL` controls API calls. `WORKSHOP_WEB_URL` controls links from Homarr. `HOMARR_WEBSITE_URL` is the
 documentation/site base. All three must be absolute HTTP(S) URLs. The old Docusaurus-only `WORKSHOP_URL` variable
-remains a deprecated alias for one release.
+remains a deprecated alias for one release. The production image writes these values into the browser runtime
+configuration at container startup, so changing them requires a restart but not an image rebuild.
 
 ## Optional GitHub OAuth
 
@@ -161,6 +162,45 @@ WORKSHOP_PUBLIC_ORIGIN=https://homarr.dev
 PB_ALLOWED_ORIGINS=*
 ```
 
+### Deploy a v2 staging or demo instance
+
+The staging Compose file runs the published `ghcr.io/homarr-labs/workshop:v2` image, persists `/pb_data`, binds only to
+the host loopback interface, and expects TLS to terminate at a reverse proxy. It does not need a repository checkout to
+run; copy `docker-compose.staging.yml` and `.env.staging.example` to the deployment host, then:
+
+```sh
+cp .env.staging.example .env.staging
+docker compose --env-file .env.staging -f docker-compose.staging.yml pull
+docker compose --env-file .env.staging -f docker-compose.staging.yml up --detach
+docker compose --env-file .env.staging -f docker-compose.staging.yml ps
+curl --fail http://127.0.0.1:8090/api/health
+```
+
+The checked-in example is ready for `https://v2.preview.homarr.dev`:
+
+```dotenv
+HOMARR_WEBSITE_URL=https://v2.preview.homarr.dev
+WORKSHOP_API_URL=https://v2.preview.homarr.dev
+WORKSHOP_WEB_URL=https://v2.preview.homarr.dev/workshop
+WORKSHOP_PUBLIC_ORIGIN=https://v2.preview.homarr.dev
+PB_ALLOWED_ORIGINS=*
+```
+
+Proxy the entire `v2.preview.homarr.dev` hostname to `http://127.0.0.1:8090`, including `/api`, `/_/`, and
+`/workshop-runtime-config.js`; do not proxy only `/workshop`. The combined image owns both the Docusaurus pages and
+PocketBase routes. If the hostname already serves the Homarr application, use a dedicated Workshop hostname instead
+and set all four public URL variables to that hostname (with `/workshop` only on `WORKSHOP_WEB_URL`).
+
+The `v2` image tag is intentionally convenient and mutable for previews. Run `pull` followed by `up --detach` to test a
+new v2 image while retaining the named PocketBase volume. Use the immutable `sha-<commit>` image tag when promoting a
+tested build. The public central Workshop needs `PB_ALLOWED_ORIGINS=*` because Homarr instances on arbitrary origins
+call the API and open the OAuth flow; a private demo can instead use a comma-separated allowlist of its browser origins.
+
+After startup, open `https://v2.preview.homarr.dev/_/` to create the first PocketBase superuser. If GitHub OAuth is
+enabled, configure its callback as `https://v2.preview.homarr.dev/api/oauth2-redirect`, set both GitHub credentials, and
+restart the service. Verify `/workshop`, `/api/health`, listing requests, sign-in, and one installation from the Homarr
+preview before sharing the demo.
+
 Build and smoke-test the combined image locally:
 
 ```sh
@@ -170,6 +210,10 @@ curl --fail http://127.0.0.1:3003/
 curl --fail http://127.0.0.1:3003/workshop
 docker compose -f apps/workshop/docker-compose.yml --profile docs stop docs
 ```
+
+`pnpm test:workshop-image` builds the production target, starts it with the preview URL contract, and proves that the
+browser runtime configuration, Workshop page, health endpoint, migrations, public listing endpoint, and cross-origin
+browser access all work.
 
 Normal `up`, `start`, `stop`, and `down` operations retain the named volume. The following command is an intentional,
 irreversible local reset:

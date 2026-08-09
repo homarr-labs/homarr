@@ -54,4 +54,15 @@ for (const required of [
 const workflow = await read(".github/workflows/workshop.yml");
 if (/\n\s+paths:/u.test(workflow)) throw new Error("Workshop workflow must not filter out Docker build inputs");
 
+const entrypoint = await read("apps/workshop/entrypoint.sh");
+if (!entrypoint.includes("/pb_public/workshop-runtime-config.js") || !entrypoint.includes("WORKSHOP_API_URL")) {
+  throw new Error("Workshop must publish its API URL when the container starts");
+}
+
+const docsConfig = await read("apps/docs/docusaurus.config.ts");
+if (!docsConfig.includes('scripts: [{ src: "/workshop-runtime-config.js" }]')) {
+  throw new Error("Workshop must load the container runtime configuration before the documentation bundle");
+}
+await access(resolve("apps/docs/static/workshop-runtime-config.js"));
+
 console.log("Workshop static contracts passed");

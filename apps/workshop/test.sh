@@ -14,7 +14,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
-PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
+HOMARR_WEBSITE_URL=https://preview.example.invalid \
+  WORKSHOP_API_URL=https://api.preview.example.invalid \
+  WORKSHOP_WEB_URL=https://preview.example.invalid/workshop \
+  PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
   -f apps/workshop/docker-compose.yml up --build -d
 
 for attempt in $(seq 1 60); do
@@ -28,6 +31,12 @@ for attempt in $(seq 1 60); do
   fi
   sleep 1
 done
+
+WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_TEST_PORT" \
+  EXPECTED_HOMARR_WEBSITE_URL=https://preview.example.invalid \
+  EXPECTED_WORKSHOP_API_URL=https://api.preview.example.invalid \
+  EXPECTED_WORKSHOP_WEB_URL=https://preview.example.invalid/workshop \
+  node apps/workshop/tests/runtime-config.integration.mjs
 
 docker compose -p "$WORKSHOP_TEST_PROJECT" -f apps/workshop/docker-compose.yml exec -T workshop \
   pocketbase superuser create \
