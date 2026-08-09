@@ -106,6 +106,33 @@ globalThis.__homarrProbe = {
 };
 
 /**
+ * Opt-in recording of the CommonJS require graph.
+ *
+ * Knowing that 24 MiB of source is resident at boot does not say *why* any of it is there.
+ * The module cache is a flat list with no parentage, so the only way to answer "what pulled
+ * this chunk in" is to record parent → child as the loader resolves it. The preload runs
+ * before Next, so the graph is complete from the entry point down.
+ *
+ * Enable with HOMARR_PROBE_TRACK_REQUIRES=1.
+ */
+if (process.env.HOMARR_PROBE_TRACK_REQUIRES === "1") {
+  const edges = new Set();
+  const originalLoad = Module._load;
+  Module._load = function (request, parent, isMain) {
+    const result = originalLoad.call(this, request, parent, isMain);
+    try {
+      const resolved = Module._resolveFilename(request, parent, isMain);
+      // Builtins resolve to their bare name and carry no file cost, so they only add noise.
+      if (resolved.includes("/")) edges.add(`${parent ? parent.filename : "(entry)"}\t${resolved}`);
+    } catch {
+      // An unresolvable request is the caller's problem, not the probe's.
+    }
+    return result;
+  };
+  globalThis.__homarrProbe.requireGraph = () => [...edges].map((edge) => edge.split("\t"));
+}
+
+/**
  * Opt-in tracking of large Buffer allocations, by allocation site.
  *
  * `process.memoryUsage().arrayBuffers` can show ~100 MiB without any hint of who asked for
@@ -269,7 +296,9 @@ if (probePort > 0) {
               ? JSON.stringify(probe.buffers ? probe.buffers() : { disabled: true })
               : request.url === "/fetches"
                 ? JSON.stringify(probe.fetches ? probe.fetches() : { disabled: true })
-                : JSON.stringify({
+                : request.url === "/requires"
+                  ? JSON.stringify(probe.requireGraph ? probe.requireGraph() : { disabled: true })
+                  : JSON.stringify({
                 usage: probe.usage(),
                 spaces: probe.spaces(),
                 heap: probe.heap(),

@@ -588,6 +588,37 @@ A prediction worth recording, because it confirms the mechanism rather than just
 outcome: at `pageSize=1000` the largest allocation measured 0.7 MiB, and at 5,000 it
 measured 2.4 MiB — 5× the page size, 3.4× the bytes, exactly as a per-page bound implies.
 
+## Why 24 MiB of code is resident before the first request
+
+The module cache is a flat list with no parentage, so "what pulled this in" needed the
+require graph recorded as the loader resolves it (`HOMARR_PROBE_TRACK_REQUIRES=1`, analysed
+by `scripts/benchmarks/analyze-require-graph.mjs`). At boot idle, having served only
+`/api/health/ready`: **2,004 edges over 1,121 nodes, 23.97 MiB of source**.
+
+| importer | subtree |
+| --- | --- |
+| `apps/nextjs/server.js` (everything) | 23.83 MiB / 1,087 files |
+| `next/dist/server/load-components.js` | 21.75 MiB / 796 files |
+| **`[root-of-the-server]__0g06wx7._.js`** | **16.10 MiB / 460 files** |
+| next's own framework code, exclusively | 2.16 MiB / 315 files |
+
+Two things follow, and the second is the one that matters:
+
+1. **Next loads all 74 app route bundles at startup**, not on first request. That is
+   framework behaviour, not something this codebase sets.
+2. **One subtree of 16.10 MiB / 460 files is reached by the tRPC/API routes *and* by
+   `instrumentation`** — the cron tasks and websocket server. Exclusive attribution for
+   instrumentation is therefore **0 bytes**: everything it touches, an API route touches
+   too. Only 1.10 MiB / 119 files is common to *every* route, so this is not one universal
+   barrel — it is specifically the API surface pulling in every integration and widget
+   request handler.
+
+That kills the obvious fix. Deferring `instrumentation` would free nothing, because Next
+preloads `/api/[...trpc]` at boot and that route reaches the same graph. Cutting this
+requires the tRPC router to stop referencing every integration eagerly — the same lever the
+integrations barrel diet started, with roughly 16 MiB of source still behind it. Recorded
+as measured and understood, not attempted here.
+
 ## Measured but not pursued
 
 
