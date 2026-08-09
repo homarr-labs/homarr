@@ -206,6 +206,14 @@ packages/integrations/src/unraid @manuel-rw
 apps/docs/docs/integrations/uptime-kuma @ajnart
 packages/integrations/src/uptime-kuma @ajnart
 
+# What's Up Docker (WUD) - introduced in https://github.com/homarr-labs/homarr/pull/6523 by @tiimonn
+apps/docs/docs/integrations/whats-up-docker @tiimonn
+apps/docs/docs/widgets/whats-up-docker @tiimonn
+packages/api/src/router/widgets/wud.ts @tiimonn
+packages/integrations/src/wud @tiimonn
+packages/request-handler/src/wud.ts @tiimonn
+packages/widgets/src/wud @tiimonn
+
 # Traefik - by @Nerdy-Technician
 apps/docs/docs/integrations/traefik @Nerdy-Technician
 apps/docs/docs/widgets/traefik @Nerdy-Technician
