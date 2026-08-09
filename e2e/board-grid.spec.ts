@@ -95,6 +95,11 @@ describe("Board grid", () => {
       await expect(rail).toBeVisible();
       await expect(rail).toHaveAttribute("data-board-gutter", "left");
       await expect(railRootSection).toHaveAttribute("data-rail-placement", "left");
+      await expect(rail).toHaveCSS("overflow-x", "hidden");
+      const initialRailBox = await expectBoundingBoxAsync(rail);
+      const initialRailRootBox = await expectBoundingBoxAsync(railRootSection);
+      expect(initialRailRootBox.width).toBeCloseTo(initialRailBox.width, 1);
+      expect(initialRailRootBox.height).toBeGreaterThanOrEqual(initialRailBox.height - 1);
       await expect(railItem).toHaveAttribute("data-grid-x", "0");
       await expect(containerSection).toHaveAttribute("data-grid-w", "2");
       await expect(containerSection).toHaveAttribute("data-grid-h", "2");
