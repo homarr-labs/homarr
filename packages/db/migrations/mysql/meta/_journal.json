@@ -335,7 +335,7 @@
       "idx": 47,
       "version": "5",
       "when": 1786217088950,
-      "tag": "0047_lame_wallow",
+      "tag": "0047_add_assistant_tables",
       "breakpoints": true
     }
   ]
