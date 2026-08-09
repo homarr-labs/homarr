@@ -1157,6 +1157,13 @@
   background: var(--mantine-color-default-hover);
 }
 
+.composerContext[data-compact] {
+  width: 1.75rem;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
+}
+
 .composerContext:focus-visible {
   outline: 2px solid var(--mantine-primary-color-filled);
   outline-offset: 2px;
@@ -1221,6 +1228,10 @@
   border: 0;
   border-radius: 0;
   background: var(--mantine-color-body);
+}
+
+.composer:has(.composerInput:focus-within) {
+  box-shadow: inset 0 0 0 2px var(--mantine-color-red-filled);
 }
 
 .composerDropzone[data-dragging] .composer {
