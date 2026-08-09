@@ -1,0 +1,38 @@
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_093d61b162b9ca::t_ff33662f9a50f5 19-20,24-25
+  s_7cfb890e45839e::t_413d240e3d151a 26-27
+apps/nextjs/src/components/board/advanced-focus/entrance.spec.ts
+  s_093d61b162b9ca::t_7dadbbd6bee97f 1-33,35-36,38-59,61-62
+  s_093d61b162b9ca::t_dbd764f1260fe9 34,37,60
+apps/nextjs/src/components/board/advanced-focus/entrance.ts
+  s_093d61b162b9ca::t_7dadbbd6bee97f 1-13
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_093d61b162b9ca::t_7dadbbd6bee97f 30,249-254
+  s_093d61b162b9ca::t_afb879a56cdc7f 2,157,218-239,244-248,255-263
+  s_093d61b162b9ca::t_92344c2abeefb9 240-243
+  s_093d61b162b9ca::t_29a11457437b37 374,380,397,437,511
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "463322ad36b6fe9162ca0a1a4d6bd716b0a09eb8",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
