@@ -1,0 +1,19 @@
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_093d61b162b9ca::t_909fbe2d2b850d 130
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "d7bf981b9c36204e0d1d9f1e0b5991c5cf9f62c2",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
