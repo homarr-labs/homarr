@@ -511,12 +511,6 @@ export const AssistantConfiguration = () => {
               placeholder="/models"
             />
           </Stack>
-
-          {destinationChanged && (
-            <Alert icon={<IconAlertTriangle size={18} />} color="yellow" title={t("destinationChanged.title")}>
-              {t("destinationChanged.description")}
-            </Alert>
-          )}
         </ConfigurationSection>
 
         <ConfigurationSection
