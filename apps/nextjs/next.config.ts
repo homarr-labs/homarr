@@ -81,16 +81,13 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     root: path.resolve(import.meta.dirname, "../.."),
-    resolveAlias: {
-      // Development runs tasks and WebSocket as separate processes. These aliases
-      // keep their production-only instrumentation imports out of the dev graph.
-      ...(process.env.NODE_ENV === "development"
+    resolveAlias:
+      process.env.NODE_ENV === "development"
         ? {
             "@homarr/tasks": path.resolve(import.meta.dirname, "src/instrumentation-noop.ts"),
             "@homarr/websocket": path.resolve(import.meta.dirname, "src/instrumentation-noop.ts"),
           }
-        : {}),
-    },
+        : {},
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
