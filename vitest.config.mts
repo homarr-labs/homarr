@@ -66,6 +66,7 @@ export default defineConfig({
           name: "e2e",
           environment: "node",
           include: ["e2e/**/*.spec.ts"],
+          fileParallelism: false,
         },
       },
     ],
