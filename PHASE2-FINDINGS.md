@@ -301,7 +301,62 @@ is a correctness fix — idle commits stayed within their 73–96 range afterwar
 the app-root churn dominates and this hook is not what drives it. Recorded as *not* a
 measured win.
 
+
+## What is actually hogging the memory
+
+Tested directly against the hypothesis that cached base64 images were bloating
+TanStack Query / Redis. **They are not** — measured on a loaded 4-tab session:
+
+| suspect | measured | verdict |
+| --- | --- | --- |
+| base64 data-URLs in server heap | **0.01 MiB** (2 strings) | not a factor |
+| base64 blobs in browser heap | **0.01 MiB** (7 strings) | not a factor |
+| Redis total | **2.17 MB** | not a factor |
+| image bytes in Redis | **none** — `image-proxy` stores only URL + headers | not a factor |
+| React Query `gcTime` | already 5 min, not 24 h | already addressed |
+
+What the server heap is actually made of (141 MiB used, 259 MiB RSS):
+
+| bucket | size | share of heap |
+| --- | --- | --- |
+| **bundled JS source retained as strings** | **41.4 MiB** | **~29%** |
+| other strings (translations, ids, misc) | 10.3 MiB | 7% |
+| URLs | 2.0 MiB | 1% |
+| everything else (objects, code, maps) | ~87 MiB | 62% |
+
+**The memory is the code, not cached data.** That is why every cache-tuning idea in the
+fix catalog measured at zero, and why `serverExternalPackages` — which removes code from
+the boot-loaded bundle — was the only lever that moved idle memory.
+
+Within that, **7.86 MiB is literal duplicate copies** of identical chunk sources: the same
+module inlined into several Turbopack chunks and retained once per chunk. Worst offenders
+were `@ioredis/commands`' command table (in 10 chunks, resident 6×, 2.07 MiB wasted) and
+`got`/`@octokit/request-error` (2.1 MiB each).
+
+`@ioredis/commands` is now external, which removes it from all 10 chunks. Recorded as
+**bundle hygiene, not a memory win**: idle went 89.7 → 89.4 MiB, inside noise, and
+board-loaded/peak differences were smaller than the run-to-run spread (one "before" run
+read 220.6 MiB against 169–173 for identical code).
+
+`got` and `@octokit/request-error` were deliberately **not** externalised. They are only
+transitive dependencies here, and a check inside the image confirmed `got` is **not
+traced** into `node_modules` — externalising it would have turned a bundled module into a
+runtime `require` that resolves to nothing, trading zero measured gain for a possible
+`MODULE_NOT_FOUND` on a code path the benchmarks never hit.
+
+### Where the remaining headroom is
+
+Nothing further is available from caches, Redis, or process trimming. The two real levers
+left are both large:
+
+1. **Ship less server JavaScript.** ~29% of the heap is retained bundle source. Every
+   package moved out of the boot graph pays twice — smaller chunks and less retained
+   source. This is the same lever that produced the −37% idle result.
+2. **Stop the App Router re-rendering every second** (see above). That governs the
+   browser side, which is where the 650 MB peak lives.
+
 ## Measured but not pursued
+
 
 | lever | measured cost | why not pursued |
 | --- | --- | --- |

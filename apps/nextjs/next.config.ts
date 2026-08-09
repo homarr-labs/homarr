@@ -73,6 +73,15 @@ const nextConfig: NextConfig = {
     "linkedom",
     // Only reachable through /api/mcp/[transport].
     "@modelcontextprotocol/sdk",
+    // Bundling inlines a copy per chunk: a server heap snapshot found this package's
+    // command table in 10 chunks and resident 6 times over (2.1 MiB of duplication).
+    // Safe to externalise because ioredis is already external and owns this as a
+    // direct dependency, so it is always traced alongside it. Bundle hygiene — it did
+    // not move measured memory (idle 89.7 -> 89.4 MiB, inside run-to-run noise).
+    // got and @octokit/request-error duplicate similarly but are only transitive
+    // deps here, so externalising them risks a runtime require that was never traced,
+    // for no measured gain.
+    "@ioredis/commands",
   ],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
