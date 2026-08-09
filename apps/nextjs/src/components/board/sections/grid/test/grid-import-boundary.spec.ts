@@ -27,6 +27,7 @@ describe("board grid import boundary", () => {
       { file: "components/board/sections/grid/grid-editor.tsx", kind: "static", specifier: "@dnd-kit/abstract" },
       { file: "components/board/sections/grid/grid-editor.tsx", kind: "static", specifier: "@dnd-kit/collision" },
       { file: "components/board/sections/grid/grid-editor.tsx", kind: "static", specifier: "@dnd-kit/dom" },
+      { file: "components/board/sections/grid/grid-editor.tsx", kind: "static", specifier: "@dnd-kit/dom/modifiers" },
       { file: "components/board/sections/grid/grid-editor.tsx", kind: "static", specifier: "@dnd-kit/dom/utilities" },
       { file: "components/board/sections/grid/grid-editor.tsx", kind: "static", specifier: "@dnd-kit/react" },
     ]);
