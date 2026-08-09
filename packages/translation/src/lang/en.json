@@ -6194,10 +6194,6 @@
               "title": "API base URL",
               "description": "Include the API prefix, usually /v1. In containers, localhost refers to the Homarr container."
             },
-            "destinationChanged": {
-              "title": "Credentials will not follow this endpoint",
-              "description": "Changing the provider or base URL clears the stored API key and headers unless replacements are entered now. This prevents sending one provider's secrets to another service."
-            },
             "apiKey": {
               "title": "API key",
               "required": "Required by this provider. The value is encrypted and write-only.",
