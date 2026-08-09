@@ -7,6 +7,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("weather", {
   icon: IconCloud,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "weather", "atLocation"]],
   queryMatcher: ({ input }, scope) => {
     const location = scope.options.location;
