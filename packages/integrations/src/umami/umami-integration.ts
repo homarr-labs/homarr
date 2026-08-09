@@ -223,7 +223,7 @@ export class UmamiIntegration extends Integration {
     for (const metric of metrics) {
       if (metric.x) names.add(metric.x);
     }
-    return [...names].sort();
+    return [...names].toSorted();
   }
 
   public async getActiveVisitorsAsync(websiteId: string): Promise<number> {
@@ -436,7 +436,7 @@ export class UmamiIntegration extends Integration {
     if (buckets.size === 0) return undefined;
     return (
       Array.from(buckets.entries())
-        .sort(([itemA], [itemB]) => itemA.localeCompare(itemB))
+        .toSorted(([itemA], [itemB]) => itemA.localeCompare(itemB))
         // eslint-disable-next-line id-length
         .map(([x, y]) => ({ x, y }))
     );
