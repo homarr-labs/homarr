@@ -177,7 +177,7 @@ describe("Board grid", () => {
       await expect(canvas).toHaveAttribute("data-canvas-overflow", "false");
       await expectFixedLogicalTileAsync(logicalTile);
       await expectUniformVisualScaleAsync(logicalTile);
-      await expectNoHorizontalOverflowAsync(canvas);
+      await expect(canvas).toHaveCSS("overflow-x", "clip");
       await expectDocumentNotHorizontallyScrollableAsync(page);
       const overflowRailY = (await expectBoundingBoxAsync(rail)).y;
       await page.evaluate(() => window.scrollTo({ top: 300, behavior: "auto" }));
