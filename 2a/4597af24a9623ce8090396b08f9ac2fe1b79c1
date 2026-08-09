@@ -1,0 +1,25 @@
+PHASE2-FINDINGS.md
+  s_a70c07ac5b7a5a::t_873cfa6027ce9d 591-621
+scripts/benchmarks/memory-probe.cjs
+  s_a70c07ac5b7a5a::t_365587db8d5ea6 109-134
+  s_a70c07ac5b7a5a::t_34c39c57f8eddc 299-301
+  s_a70c07ac5b7a5a::t_de29a187ff73c9 108
+scripts/benchmarks/analyze-require-graph.mjs
+  s_a70c07ac5b7a5a::t_67f8e88887801d 1-109
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "2a4597af24a9623ce8090396b08f9ac2fe1b79c1",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
