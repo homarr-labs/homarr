@@ -213,6 +213,34 @@ payload to a stub hook that is byte-identical for profiling and production build
 that probe returns a false negative for both. Confirm the Profiler tab with the real
 extension.
 
+## Where the re-render churn actually comes from
+
+`scripts/benchmarks/measure-rerenders.mts` counts React commits on a board nobody is
+touching, and attributes each commit to the shallowest component that re-rendered — the
+point where the update entered the tree.
+
+**An idle board commits 73–96 times per minute**, and in 60 s `@mantine/core/Box`
+re-renders over 30,000 times. That is the churn behind the 650 MB peak: it is transient
+allocation, not retention.
+
+Roughly 80% of those commits enter at the *same place*: an anonymous provider at depth 2
+whose props are `[value, children]` and whose value is `{appDir}` — Next.js's internal
+`HeadManagerContext`. Its value is a fresh object literal on every App Router render, so
+each one re-renders the entire application below it. The remainder enter around
+`__next_metadata_boundary__` / `<title>`, which points the same way.
+
+So the dominant cost is the **App Router root re-rendering about once a second**, not any
+individual widget. No polling `router.refresh()` exists in application code, so the
+trigger is inside Next's own router/metadata handling and is not fixed by anything in
+this PR. That is the next thing to chase, and it is worth more than any further
+component-level tuning: everything else is downstream of it.
+
+`useTimeAgo` was calling `setState` every second even when the rendered label was
+unchanged ("3 minutes ago" holds for a minute), so it now compares before setting. This
+is a correctness fix — idle commits stayed within their 73–96 range afterwards, because
+the app-root churn dominates and this hook is not what drives it. Recorded as *not* a
+measured win.
+
 ## Measured but not pursued
 
 | lever | measured cost | why not pursued |
