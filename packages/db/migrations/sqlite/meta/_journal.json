@@ -323,13 +323,6 @@
       "when": 1786217088950,
       "tag": "0045_add_assistant_tables",
       "breakpoints": true
-    },
-    {
-      "idx": 43,
-      "version": "6",
-      "when": 1785768736378,
-      "tag": "0043_swift_silver_samurai",
-      "breakpoints": true
     }
   ]
 }
