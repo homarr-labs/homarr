@@ -86,6 +86,10 @@ body[data-board-grid-interacting="drag"] .board-grid-placeholder {
   overflow: visible;
 }
 
+body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="true"] > .board-grid-content-mount {
+  overflow: clip;
+}
+
 .board-grid-placeholder {
   z-index: 0;
   background: color-mix(in srgb, var(--mantine-primary-color-filled) 16%, transparent);
