@@ -71,17 +71,16 @@ describe("lean Custom Widget options", () => {
   });
 
   it("replaces stale values with current defaults", () => {
-    const options = customWidgetDefinitionSchema.parse({
-      $schema: "homarr-custom-widget-v2",
-      name: "Updated options",
-      sources: {},
-      requests: {},
-      options: {
-        limit: { label: "Limit", control: "slider", default: 5, min: 1, max: 10 },
-        label: { label: "Label", control: "text", default: "Default" },
-      },
-      template: "<Text>{options.limit}</Text>",
-    }).options;
+    const options = {
+      limit: customWidgetOptionSchema.parse({
+        label: "Limit",
+        control: "slider",
+        default: 5,
+        min: 1,
+        max: 10,
+      }),
+      label: customWidgetOptionSchema.parse({ label: "Label", control: "text", default: "Default" }),
+    };
 
     const normalized = normalizeCustomWidgetOptions(options, {
       limit: "5",

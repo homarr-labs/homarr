@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Box, Paper, Stack, Text } from "@mantine/core";
 
 import { useCurrentLayout, useInitialViewportWidth, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
+import { useEditMode } from "@homarr/boards/edit-mode";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { getRepresentativeLayoutWidth } from "../_layout-utils";
@@ -25,68 +25,14 @@ import classes from "./_client.module.css";
 
 const APP_SHELL_INLINE_PADDING = 32;
 
-const useFixedBoardGutters = () => {
-  const [columns, setColumns] = useState<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (!columns) return;
-
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const columnsRect = columns.getBoundingClientRect();
-      const headerBottom = document.querySelector("[data-app-shell-header]")?.getBoundingClientRect().bottom ?? 0;
-      const stickyTop = Math.max(0, headerBottom + 16);
-
-      for (const gutter of columns.querySelectorAll<HTMLElement>("[data-board-gutter]")) {
-        const rect = gutter.getBoundingClientRect();
-        if (gutter.offsetWidth <= 0) continue;
-
-        const effectiveScale = rect.width / gutter.offsetWidth;
-        if (!Number.isFinite(effectiveScale) || effectiveScale <= 0) continue;
-
-        const previousOffset = Number(gutter.dataset.stickyOffset ?? 0);
-        const uncorrectedTop = rect.top - previousOffset * effectiveScale;
-        const maximumTop = columnsRect.bottom - rect.height;
-        const targetTop = Math.min(stickyTop, maximumTop);
-        const nextOffset = Math.max(0, targetTop - uncorrectedTop) / effectiveScale;
-
-        gutter.dataset.stickyOffset = String(nextOffset);
-        gutter.style.setProperty("--board-gutter-sticky-offset", `${nextOffset}px`);
-      }
-    };
-    const scheduleUpdate = () => {
-      if (frame !== 0) return;
-      frame = window.requestAnimationFrame(update);
-    };
-
-    const resizeObserver = new ResizeObserver(scheduleUpdate);
-    resizeObserver.observe(columns);
-    document.addEventListener("scroll", scheduleUpdate, { capture: true, passive: true });
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate, { passive: true });
-    scheduleUpdate();
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      resizeObserver.disconnect();
-      document.removeEventListener("scroll", scheduleUpdate, { capture: true });
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
-    };
-  }, [columns]);
-
-  return setColumns;
-};
-
 export const ClientBoard = () => {
   const board = useRequiredBoard();
   const t = useScopedI18n("board.landmark");
   const tPreview = useScopedI18n("board.setting.section.layout.preview");
+  const [isEditMode] = useEditMode();
   const currentLayoutId = useCurrentLayout();
   const initialViewportWidth = useInitialViewportWidth();
   const layoutOverrideId = useLayoutOverride();
-  const columnsRef = useFixedBoardGutters();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId) ?? board.layouts.at(0);
   if (!currentLayout) throw new Error("Expected the board to contain a layout");
 
@@ -128,16 +74,13 @@ export const ClientBoard = () => {
             >
               <BoardGridEditorBoundary key={currentLayoutId}>
                 <BoardGridPortalRenderer />
-                <div
-                  ref={columnsRef}
-                  className={classes.columns}
-                  style={{ gridTemplateColumns, paddingTop: LOGICAL_GRID_GAP }}
-                >
+                <div className={classes.columns} style={{ gridTemplateColumns, paddingTop: LOGICAL_GRID_GAP }}>
                   {leftColumnCount > 0 && leftSection && (
                     <aside
                       className={`${classes.lane} ${classes.gutter}`}
                       aria-label={t("leftRail")}
                       data-board-gutter="left"
+                      data-board-editing={isEditMode ? "true" : undefined}
                     >
                       <BoardEmptySection
                         key={`${currentLayoutId}-${leftSection.id}`}
@@ -163,6 +106,7 @@ export const ClientBoard = () => {
                       className={`${classes.lane} ${classes.gutter}`}
                       aria-label={t("rightRail")}
                       data-board-gutter="right"
+                      data-board-editing={isEditMode ? "true" : undefined}
                     >
                       <BoardEmptySection
                         key={`${currentLayoutId}-${rightSection.id}`}

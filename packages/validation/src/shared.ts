@@ -93,4 +93,8 @@ const containerSectionSchema = z.object({
   ),
 });
 
-export const sectionSchema = z.union([emptySectionSchema, containerSectionSchema]);
+const legacyDynamicSectionSchema = containerSectionSchema
+  .extend({ kind: z.literal("dynamic") })
+  .transform((section) => ({ ...section, kind: "container" as const }));
+
+export const sectionSchema = z.union([emptySectionSchema, containerSectionSchema, legacyDynamicSectionSchema]);

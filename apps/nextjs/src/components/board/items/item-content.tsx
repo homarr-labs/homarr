@@ -1,5 +1,5 @@
 import type { ComponentType, CSSProperties, KeyboardEvent, MutableRefObject } from "react";
-import { Suspense, use, useEffect, useRef, useState } from "react";
+import { memo, Suspense, use, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import type { CardProps } from "@mantine/core";
@@ -27,6 +27,7 @@ import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
 import { useAdvancedFocus } from "../advanced-focus/context";
+import { startAdvancedFocusEntrance } from "../advanced-focus/entrance";
 import { getAdvancedFocusClosePosition, getAdvancedFocusRect } from "../advanced-focus/geometry";
 import { AdvancedFocusManualSurface } from "../advanced-focus/manual-surface";
 import { redirectShiftWheel } from "../advanced-focus/wheel";
@@ -153,6 +154,7 @@ const LoadedBoardItemContent = ({
   const { definition, Component } = use(loadWidgetResources(item.kind));
   const sourceRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const previewEntranceFrameRef = useRef<number | null>(null);
   const { width: viewportWidth, height: viewportHeight } = useViewportSize();
   const board = useRequiredBoard();
   const t = useI18n();
@@ -213,14 +215,52 @@ const LoadedBoardItemContent = ({
     return () => surface.removeEventListener("wheel", handleWheel, { capture: true });
   }, [isAdvanced, isManual, manualSurface]);
 
-  const mountPortalTarget = (node: HTMLDivElement | null, activation: "compact" | "preview" | "manual") => {
-    if (!node || !surfacePortalTarget) return;
-    const shouldMount =
-      (activation === "compact" && !isAdvanced) ||
-      (activation === "preview" && isPreview) ||
-      (activation === "manual" && isManual);
-    if (shouldMount) node.append(surfacePortalTarget);
-  };
+  const cancelPreviewEntrance = useCallback(() => {
+    if (previewEntranceFrameRef.current === null) return;
+    cancelAnimationFrame(previewEntranceFrameRef.current);
+    previewEntranceFrameRef.current = null;
+  }, []);
+
+  const mountCompactHost = useCallback(
+    (host: HTMLDivElement | null) => {
+      if (!host || !surfacePortalTarget || isAdvanced) return;
+      cancelPreviewEntrance();
+      host.append(surfacePortalTarget);
+    },
+    [cancelPreviewEntrance, isAdvanced, surfacePortalTarget],
+  );
+
+  const mountPreviewHost = useCallback(
+    (host: HTMLDivElement | null) => {
+      if (!host || !surfacePortalTarget || !isPreview) {
+        if (!host) cancelPreviewEntrance();
+        return;
+      }
+
+      if (activeFocus?.phase !== "visible") {
+        host.append(surfacePortalTarget);
+        return;
+      }
+      const card = cardRef.current;
+      const readyClass = advancedFocusClasses.surfaceReady;
+      if (!card || !readyClass) return;
+
+      cancelPreviewEntrance();
+      previewEntranceFrameRef.current = startAdvancedFocusEntrance(surfacePortalTarget, host, card, readyClass);
+    },
+    [activeFocus?.phase, cancelPreviewEntrance, isPreview, surfacePortalTarget],
+  );
+
+  const mountManualHost = useCallback(
+    (host: HTMLDivElement | null) => {
+      if (!host || !surfacePortalTarget || !isManual) return;
+      cancelPreviewEntrance();
+      host.append(surfacePortalTarget);
+    },
+    [cancelPreviewEntrance, isManual, surfacePortalTarget],
+  );
+
+  useEffect(() => cancelPreviewEntrance, [cancelPreviewEntrance]);
 
   const previewStyle =
     isPreview && advancedRect && activeFocus
@@ -331,16 +371,13 @@ const LoadedBoardItemContent = ({
           }}
           className={combineClasses(isAdvanced && advancedFocusClasses.sourcePlaceholder)}
         >
-          <div ref={(node) => mountPortalTarget(node, "compact")} className={advancedFocusClasses.surfaceHost}>
+          <div ref={mountCompactHost} className={advancedFocusClasses.surfaceHost}>
             {!supportsAdvancedFocus && widgetCard}
           </div>
           {surfacePortalTarget && createPortal(widgetCard, surfacePortalTarget)}
           {isPreview && (
             <Portal reuseTargetNode={false}>
-              <div
-                ref={(node) => mountPortalTarget(node, "preview")}
-                className={advancedFocusClasses.surfaceHostAdvanced}
-              />
+              <div ref={mountPreviewHost} className={advancedFocusClasses.surfaceHostAdvanced} />
             </Portal>
           )}
           {isManual && activeFocus && advancedRect && closePosition && (
@@ -357,10 +394,7 @@ const LoadedBoardItemContent = ({
               contentRef={setManualSurface}
               onClose={() => close()}
             >
-              <div
-                ref={(node) => mountPortalTarget(node, "manual")}
-                className={advancedFocusClasses.manualSurfaceMount}
-              />
+              <div ref={mountManualHost} className={advancedFocusClasses.manualSurfaceMount} />
             </AdvancedFocusManualSurface>
           )}
         </Box>
@@ -400,7 +434,7 @@ interface InnerContentProps {
   Component: ComponentType<WidgetComponentProps<SectionItem["kind"]>>;
 }
 
-const InnerContent = ({ item, definition, Component, ...dimensions }: InnerContentProps) => {
+const InnerContent = memo(function InnerContent({ item, definition, Component, ...dimensions }: InnerContentProps) {
   const settings = useSettings();
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
@@ -474,7 +508,7 @@ const InnerContent = ({ item, definition, Component, ...dimensions }: InnerConte
       )}
     </QueryErrorResetBoundary>
   );
-};
+});
 
 const Throw = ({ when, error }: { when: boolean; error: Error }) => {
   if (when) throw error;

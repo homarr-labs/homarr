@@ -130,7 +130,11 @@ describe("Board advanced interactions", () => {
       await interactivePreviewProbe.evaluate((element) => element.remove());
       await page.mouse.move(compactBounds.x + 4, compactBounds.y + 4);
       await page.mouse.move(otherBounds.x + otherBounds.width / 2, otherBounds.y + otherBounds.height / 2);
+      await expect(previewSurface).toBeVisible();
+      await expect(bookmarksPreviewSurface).toBeHidden();
+      await page.mouse.move(4, 4);
       await expect(previewSurface).toBeHidden();
+      await otherWidget.hover({ position: { x: 4, y: 4 } });
       await expect(bookmarksPreviewSurface).toBeVisible({ timeout: 2_000 });
       await page.keyboard.up("Shift");
       await expect(bookmarksPreviewSurface).toBeHidden();
