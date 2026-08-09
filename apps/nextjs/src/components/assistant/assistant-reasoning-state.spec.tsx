@@ -1,10 +1,12 @@
 // @vitest-environment jsdom
 
+import type { ReactNode } from "react";
 import { act, createElement, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import type { AssistantClient, ChatModelAdapter, ThreadMessageLike } from "@assistant-ui/react";
 import {
   AssistantRuntimeProvider,
+  ChainOfThoughtByIndicesProvider,
   ChainOfThoughtPrimitive,
   MessagePrimitive,
   ThreadPrimitive,
@@ -13,6 +15,7 @@ import {
 } from "@assistant-ui/react";
 import { afterEach, describe, expect, test } from "vitest";
 
+import { assistantMessageGroupBy } from "./assistant-message-grouping";
 import { useAssistantReasoningState } from "./assistant-reasoning-state";
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -27,7 +30,13 @@ afterEach(() => {
 const ReasoningPart = ({ text }: { text: string }) => <span data-testid="reasoning-part">{text}</span>;
 const ToolPart = ({ toolName }: { toolName: string }) => <span data-testid="tool-part">{toolName}</span>;
 
-const TestChainOfThought = ({ preferredCollapsed = true }: { preferredCollapsed?: boolean }) => {
+const TestChainOfThought = ({
+  preferredCollapsed = true,
+  children,
+}: {
+  preferredCollapsed?: boolean;
+  children?: ReactNode;
+}) => {
   const { chainStatus, collapsed } = useAssistantReasoningState(preferredCollapsed);
 
   return (
@@ -36,14 +45,38 @@ const TestChainOfThought = ({ preferredCollapsed = true }: { preferredCollapsed?
       data-status={chainStatus.type}
       data-collapsed={String(collapsed)}
     >
-      <ChainOfThoughtPrimitive.Parts components={{ Reasoning: ReasoningPart, tools: { Fallback: ToolPart } }} />
+      {children}
     </ChainOfThoughtPrimitive.Root>
   );
 };
 
 const TestMessage = () => (
   <MessagePrimitive.Root>
-    <MessagePrimitive.Parts components={{ ChainOfThought: TestChainOfThought }} />
+    <MessagePrimitive.GroupedParts groupBy={assistantMessageGroupBy} indicator="never">
+      {({ part, children }) => {
+        switch (part.type) {
+          case "group-agent-trace": {
+            const startIndex = part.indices[0];
+            const endIndex = part.indices.at(-1);
+            if (startIndex === undefined || endIndex === undefined) return null;
+            return (
+              <ChainOfThoughtByIndicesProvider startIndex={startIndex} endIndex={endIndex}>
+                <TestChainOfThought>{children}</TestChainOfThought>
+              </ChainOfThoughtByIndicesProvider>
+            );
+          }
+          case "group-reasoning":
+          case "group-tool":
+            return <>{children}</>;
+          case "reasoning":
+            return <ReasoningPart text={part.text} />;
+          case "tool-call":
+            return <ToolPart toolName={part.toolName} />;
+          default:
+            return null;
+        }
+      }}
+    </MessagePrimitive.GroupedParts>
   </MessagePrimitive.Root>
 );
 

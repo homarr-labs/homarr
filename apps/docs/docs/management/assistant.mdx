@@ -148,12 +148,15 @@ moving through long lists. The selector below the composer combines searchable, 
 their description, context size and image-input capability, plus the thinking-level control. Model selection is
 stored on the conversation after a completed request. Thinking mode can be left on **Auto**, disabled, or set
 from minimal through high; explicit levels are sent using the AI SDK's provider-neutral reasoning setting and
-still depend on support from the chosen model and endpoint. Reasoning text is shown live when the provider
-streams it through assistant-ui's compact chain-of-thought disclosure. The **Thinking** disclosure renders
-Markdown, can be opened or closed without interrupting the response, and keeps the user's collapsed state when
-another message starts. A compact dot matrix distinguishes an initial thinking pass from response streaming and
-settles into waiting, success, or error states in the minimized activity bar. The state always keeps its text label,
-and the animation is disabled when the operating system requests reduced motion.
+still depend on support from the chosen model and endpoint. Reasoning text is shown live when the provider streams
+it through assistant-ui's grouped-parts and chain-of-thought primitives. The compact **Thinking** trace groups
+adjacent reasoning with ordinary tool calls, shows each tool's status, duration and safe human-readable target,
+and expands raw input, output and result previews only on request. Approval and question tools remain full-width
+outside the trace. The disclosure renders Markdown, can be opened or closed without interrupting the response,
+and keeps the user's collapsed state when another message starts. A compact dot matrix distinguishes an initial
+thinking pass from response streaming and settles into waiting, success, or error states in the minimized activity
+bar. The state always keeps its text label, and the animation is disabled when the operating system requests
+reduced motion.
 
 A circular context ring beside the model selector gives a quick glance at cumulative conversation usage without
 expanding the composer toolbar. Its accessible label includes cumulative tokens and cost when available, while
@@ -161,7 +164,8 @@ its popover keeps the latest complete context reading as a new response starts a
 turn with its model, provider, input, output, cached-input and reasoning tokens, context use, duration, speed,
 agent steps, routing details, and cost when reported. Before usage is available, the control remains a compact
 ring instead of showing a redundant missing-data label. Closing and reopening the popover reads persisted
-conversation metadata instead of resetting the display to zero.
+conversation metadata instead of resetting the display to zero. A larger ring inside the popover breaks the latest
+reported context into used, remaining and total capacity plus input, cached-input, output and reasoning tokens.
 
 Each assistant response places a small provider logo in the same stable action toolbar as copy, export,
 feedback, and regenerate. Hovering the logo shows the provider, exact model, timing, throughput, and cost without
