@@ -9,6 +9,7 @@ const pageSizeOptions = ["10", "20", "30", "50"] as const;
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaMissing", {
   icon: IconMovie,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "mediaOrganizer", "getData"]],
   queryMatcher: matchesWidgetRuntimeQuery,
   createOptions() {

@@ -5,6 +5,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("uptimeKuma", {
   icon: IconHeartbeat,
+  supportsAdvancedFocus: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showAverageUptime: factory.switch({

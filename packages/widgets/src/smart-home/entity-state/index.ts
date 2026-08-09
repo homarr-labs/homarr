@@ -7,6 +7,7 @@ import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("smartHome-entityState", {
   icon: IconBinaryTree,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "smartHome"]],
   maxIntegrations: 1,
   createOptions() {

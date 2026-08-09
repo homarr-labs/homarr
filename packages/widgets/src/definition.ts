@@ -127,7 +127,7 @@ export interface WidgetDefinition {
 }
 
 export const supportsAdvancedFocus = (definition: object) =>
-  !("supportsAdvancedFocus" in definition) || definition.supportsAdvancedFocus !== false;
+  "supportsAdvancedFocus" in definition && definition.supportsAdvancedFocus === true;
 
 export const getWidgetQueryKeys = (
   definition: {
