@@ -43,6 +43,9 @@ import {
   normalizeBoardLayoutRoles,
   rootSectionOffsets,
   widgetDefaultSizes,
+  widgetIntegrationLimits,
+  widgetIntegrationSupport,
+  widgetKindsWithOptionalIntegrations,
   widgetKinds,
 } from "@homarr/definitions";
 import { importOldmarrAsync } from "@homarr/old-import";
@@ -60,6 +63,7 @@ import {
   boardSavePartialSettingsSchema,
   boardSavePermissionsSchema,
   boardSaveSchema,
+  boardSettingsSchema,
   boardSummarySchema,
 } from "@homarr/validation/board";
 import { byIdSchema } from "@homarr/validation/common";
@@ -69,6 +73,7 @@ import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
+import { throwIfActionForbiddenAsync as throwIfIntegrationActionForbiddenAsync } from "./integration/integration-access";
 import {
   throwIfCustomWidgetBoardDuplicationForbidden,
   throwIfCustomWidgetPlacementChangeForbidden,
@@ -793,6 +798,57 @@ export const boardRouter = createTRPCRouter({
 
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
   }),
+  getBoardSettings: protectedProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Read the editable visual and behavior settings for one board, including its current custom CSS. Requires modify permission. REQUIRED: id (board ID). Call this before proposing board settings or custom CSS changes",
+      },
+    })
+    .input(z.object({ id: z.string() }))
+    .output(boardSettingsSchema)
+    .query(async ({ input, ctx }) => {
+      const boardWhere = eq(boards.id, input.id);
+      await throwIfActionForbiddenAsync(ctx, boardWhere, "modify");
+
+      const board = await ctx.db.query.boards.findFirst({
+        columns: {
+          id: true,
+          name: true,
+          pageTitle: true,
+          metaTitle: true,
+          logoImageUrl: true,
+          faviconImageUrl: true,
+          backgroundImageUrl: true,
+          backgroundImageAttachment: true,
+          backgroundImageRepeat: true,
+          backgroundImageSize: true,
+          primaryColor: true,
+          secondaryColor: true,
+          opacity: true,
+          customCss: true,
+          iconColor: true,
+          itemRadius: true,
+          disableStatus: true,
+        },
+        where: boardWhere,
+      });
+      if (!board) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
+      }
+
+      return {
+        ...board,
+        pageTitle: board.pageTitle ?? "",
+        metaTitle: board.metaTitle ?? "",
+        logoImageUrl: board.logoImageUrl ?? "",
+        faviconImageUrl: board.faviconImageUrl ?? "",
+        backgroundImageUrl: board.backgroundImageUrl ?? "",
+        customCss: board.customCss ?? "",
+        iconColor: board.iconColor ?? "",
+      };
+    }),
   saveLayouts: protectedProcedure
     .input(boardSaveLayoutsSchema)
     .output(boardSaveLayoutsSchema.shape.layouts)
@@ -1760,7 +1816,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Add a widget/app item to a board. Automatically places it in the first empty section at the next free grid position. Provide boardId (from board_getAllBoards), kind (widget type like 'app', 'weather', etc.), optional options map, and optional integrationIds array. Returns { itemId }",
+          "Add a widget/app item to a board after configure_widget has reviewed it. Automatically places it in the first empty section at the next free grid position. Use the configure_widget result's boardId, kind, options, and integrationIds exactly. Integration IDs must be accessible to the current user. To create a formatted dashboard note, configure kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Returns { itemId }",
       },
     })
     .input(addItemToBoardSchema)
@@ -1777,15 +1833,48 @@ export const boardRouter = createTRPCRouter({
         await validateTimetableOptionsChangeAsync(input.options);
       }
 
+      const supportedIntegrations = widgetIntegrationSupport[input.kind];
+      const integrationLimit = widgetIntegrationLimits[input.kind] ?? Infinity;
+      if (input.integrationIds.length > integrationLimit) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `${input.kind} supports at most ${integrationLimit} integration${integrationLimit === 1 ? "" : "s"}`,
+        });
+      }
+      if (supportedIntegrations === undefined && input.integrationIds.length > 0) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `${input.kind} does not support integrations` });
+      }
+      if (
+        supportedIntegrations !== undefined &&
+        input.integrationIds.length === 0 &&
+        !widgetKindsWithOptionalIntegrations.has(input.kind)
+      ) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `${input.kind} requires an integration` });
+      }
+
       if (input.integrationIds.length > 0) {
         const existing = await ctx.db.query.integrations.findMany({
-          columns: { id: true },
+          columns: { id: true, kind: true },
           where: inArray(integrations.id, input.integrationIds),
         });
         const validIds = new Set(existing.map((row) => row.id));
         const invalid = input.integrationIds.filter((id) => !validIds.has(id));
         if (invalid.length > 0) {
           throw new TRPCError({ code: "BAD_REQUEST", message: `Invalid integration IDs: ${invalid.join(", ")}` });
+        }
+
+        await Promise.all(
+          input.integrationIds.map((integrationId) =>
+            throwIfIntegrationActionForbiddenAsync(ctx, eq(integrations.id, integrationId), "use"),
+          ),
+        );
+
+        const incompatible = existing.filter((integration) => !supportedIntegrations?.includes(integration.kind));
+        if (incompatible.length > 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `${input.kind} does not support integration kind${incompatible.length === 1 ? "" : "s"}: ${incompatible.map((integration) => integration.kind).join(", ")}`,
+          });
         }
       }
 

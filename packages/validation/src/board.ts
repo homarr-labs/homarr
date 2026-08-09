@@ -72,6 +72,11 @@ export const boardSavePartialSettingsSchema = z
   })
   .partial();
 
+export const boardSettingsSchema = boardSavePartialSettingsSchema.required().extend({
+  id: z.string(),
+  name: z.string(),
+});
+
 export const boardLayoutSchema = z
   .object({
     id: z.string(),
@@ -168,5 +173,9 @@ export const addItemToBoardSchema = z.object({
   boardId: z.string(),
   kind: zodEnumFromArray(widgetKinds),
   options: z.record(z.string(), z.unknown()).default({}),
-  integrationIds: z.array(z.string()).default([]),
+  integrationIds: z
+    .array(z.string())
+    .max(32)
+    .refine((ids) => new Set(ids).size === ids.length)
+    .default([]),
 });
