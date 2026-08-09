@@ -1,0 +1,28 @@
+scripts/benchmarks/stress-restore.mts
+  s_a70c07ac5b7a5a::t_23b5fd8913ef70 302-317
+  s_a70c07ac5b7a5a::t_fc26b444401d5e 465-466
+  s_a70c07ac5b7a5a::t_23143dd6a54084 47-48
+scripts/benchmarks/probe-fiber-tree.mts
+  s_a70c07ac5b7a5a::t_f2939a8bea7dad 1-21,39-63,75-137
+  s_a70c07ac5b7a5a::t_ea105bda641fd7 64-74
+  s_a70c07ac5b7a5a::t_be6988136c39e8 22-38
+  s_a70c07ac5b7a5a::t_3e219dd79baaf5 138-142
+PHASE2-FINDINGS.md
+  s_a70c07ac5b7a5a::t_55aa8a2437b8a0 206-268
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "fd7bcb2231119bb87eb7c8aba7e5e38cf1a05c80",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
