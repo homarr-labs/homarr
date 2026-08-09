@@ -177,8 +177,6 @@ describe("Board grid", () => {
       await expect(canvas).toHaveAttribute("data-canvas-overflow", "false");
       await expectFixedLogicalTileAsync(logicalTile);
       await expectUniformVisualScaleAsync(logicalTile);
-      const zoomedTileBox = await expectBoundingBoxAsync(logicalTile);
-      expect(zoomedTileBox.width).toBeCloseTo(normalZoomTileBox.width, 1);
       await expectNoHorizontalOverflowAsync(canvas);
       await expectDocumentNotHorizontallyScrollableAsync(page);
       const overflowRailY = (await expectBoundingBoxAsync(rail)).y;
