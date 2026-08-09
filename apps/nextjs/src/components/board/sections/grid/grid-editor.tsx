@@ -1324,7 +1324,7 @@ const configureEditorPlugins = (defaults: Plugins<DragDropManager>) =>
           dropAnimation: null,
           keyboardTransition: { duration: 100 },
         });
-      if (plugin === AutoScroller) return AutoScroller.configure({ acceleration: 24, threshold: { x: 0.16, y: 0.16 } });
+      if (plugin === AutoScroller) return AutoScroller.configure({ acceleration: 24, threshold: { x: 0, y: 0.16 } });
       return plugin;
     });
 
