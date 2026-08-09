@@ -92,6 +92,36 @@ export type AssistantContextWindowTelemetry = {
   source: "current" | "previous";
 };
 
+export type AssistantConversationTurnUsage = {
+  requestId: string;
+  provider: string;
+  modelId: string;
+  startedAt: string;
+  inputTokens?: number;
+  outputTokens?: number;
+  totalTokens?: number;
+  cachedInputTokens?: number;
+  reasoningTokens?: number;
+  cost?: number;
+  durationMs?: number;
+  contextUsed?: number;
+  contextLength?: number;
+  usage: AssistantUsage;
+  telemetry: AssistantRequestTelemetry;
+};
+
+export type AssistantConversationUsage = {
+  turns: AssistantConversationTurnUsage[];
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+  cachedInputTokens: number;
+  reasoningTokens: number;
+  cost: number;
+  contextUsed?: number;
+  contextLength?: number;
+};
+
 const getFiniteNonNegativeNumber = (value: unknown) =>
   typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : undefined;
 
@@ -303,6 +333,82 @@ export const getAssistantTelemetry = (metadata: unknown): AssistantRequestTeleme
       : {}),
     ...(value.costType === "reported" || value.costType === "estimated" ? { costType: value.costType } : {}),
     ...(typeof value.finishReason === "string" ? { finishReason: value.finishReason } : {}),
+  };
+};
+
+const sumReportedStepMetric = (
+  steps: AssistantRequestStep[],
+  getValue: (step: AssistantRequestStep) => number | undefined,
+) => {
+  const values = steps.flatMap((step) => {
+    const value = getValue(step);
+    return value === undefined ? [] : [value];
+  });
+  return values.length > 0 ? values.reduce((sum, value) => sum + value, 0) : undefined;
+};
+
+/**
+ * Produces a stable conversation-level usage snapshot from persisted message metadata.
+ *
+ * A newly-created or streaming message can temporarily have no usage metadata. Keeping
+ * the latest complete context reading from earlier turns avoids flashing the composer
+ * meter back to zero while the next request starts or when its popover is reopened.
+ */
+export const getAssistantConversationUsage = (messageMetadata: unknown[]): AssistantConversationUsage => {
+  const turnsByRequestId = new Map<string, AssistantConversationTurnUsage>();
+
+  for (const metadata of messageMetadata) {
+    const telemetry = getAssistantTelemetry(metadata);
+    if (!telemetry) continue;
+
+    const usage = getAssistantUsage(metadata);
+    const inputTokens = usage?.inputTokens ?? sumReportedStepMetric(telemetry.steps, (step) => step.inputTokens);
+    const outputTokens = usage?.outputTokens ?? sumReportedStepMetric(telemetry.steps, (step) => step.outputTokens);
+    const totalTokens =
+      usage?.totalTokens ??
+      (inputTokens !== undefined || outputTokens !== undefined ? (inputTokens ?? 0) + (outputTokens ?? 0) : undefined);
+    const cachedInputTokens =
+      usage?.cachedInputTokens ?? sumReportedStepMetric(telemetry.steps, (step) => step.cachedInputTokens);
+    const reasoningTokens =
+      usage?.reasoningTokens ?? sumReportedStepMetric(telemetry.steps, (step) => step.reasoningTokens);
+    const cost = telemetry.cost ?? sumReportedStepMetric(telemetry.steps, (step) => step.cost);
+
+    turnsByRequestId.set(telemetry.requestId, {
+      requestId: telemetry.requestId,
+      provider: telemetry.provider,
+      modelId: telemetry.modelId,
+      startedAt: telemetry.startedAt,
+      ...(inputTokens !== undefined ? { inputTokens } : {}),
+      ...(outputTokens !== undefined ? { outputTokens } : {}),
+      ...(totalTokens !== undefined ? { totalTokens } : {}),
+      ...(cachedInputTokens !== undefined ? { cachedInputTokens } : {}),
+      ...(reasoningTokens !== undefined ? { reasoningTokens } : {}),
+      ...(cost !== undefined ? { cost } : {}),
+      ...(telemetry.durationMs !== undefined ? { durationMs: telemetry.durationMs } : {}),
+      ...(telemetry.contextUsed !== undefined ? { contextUsed: telemetry.contextUsed } : {}),
+      ...(telemetry.contextLength !== undefined ? { contextLength: telemetry.contextLength } : {}),
+      usage: usage ?? {},
+      telemetry,
+    });
+  }
+
+  const turns = [...turnsByRequestId.values()];
+  const latestContextTurn = turns.findLast(
+    (turn) => turn.contextUsed !== undefined && turn.contextLength !== undefined,
+  );
+  const sum = (getValue: (turn: AssistantConversationTurnUsage) => number | undefined) =>
+    turns.reduce((total, turn) => total + (getValue(turn) ?? 0), 0);
+
+  return {
+    turns,
+    inputTokens: sum((turn) => turn.inputTokens),
+    outputTokens: sum((turn) => turn.outputTokens),
+    totalTokens: sum((turn) => turn.totalTokens),
+    cachedInputTokens: sum((turn) => turn.cachedInputTokens),
+    reasoningTokens: sum((turn) => turn.reasoningTokens),
+    cost: sum((turn) => turn.cost),
+    ...(latestContextTurn?.contextUsed !== undefined ? { contextUsed: latestContextTurn.contextUsed } : {}),
+    ...(latestContextTurn?.contextLength !== undefined ? { contextLength: latestContextTurn.contextLength } : {}),
   };
 };
 

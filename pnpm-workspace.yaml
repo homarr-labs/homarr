@@ -224,6 +224,7 @@ catalog:
   remark-breaks: ^4.0.0
   remark-directive: ^3.0.1
   remark-gfm: ^4.0.1
+  react-shiki: ^0.11.0
 
 catalogMode: strict
 nodeLinker: hoisted

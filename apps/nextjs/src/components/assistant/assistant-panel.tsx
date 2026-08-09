@@ -1,7 +1,18 @@
 "use client";
 
-import type { ComponentPropsWithoutRef, ReactNode, RefObject } from "react";
-import { createContext, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { ComponentPropsWithoutRef, MouseEvent as ReactMouseEvent, ReactNode, RefObject } from "react";
+import {
+  createContext,
+  lazy,
+  Suspense,
+  useContext,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type {
   FileMessagePartProps,
   ImageMessagePartProps,
@@ -15,6 +26,7 @@ import {
   ActionBarPrimitive,
   AttachmentPrimitive,
   BranchPickerPrimitive,
+  ChainOfThoughtPrimitive,
   ComposerPrimitive,
   ErrorPrimitive,
   MessagePrimitive,
@@ -22,7 +34,6 @@ import {
   ThreadListItemPrimitive,
   ThreadListPrimitive,
   ThreadPrimitive,
-  groupPartByType,
   useAui,
   useAuiState,
   useMessagePartText,
@@ -32,7 +43,7 @@ import {
 } from "@assistant-ui/react";
 import { LexicalComposerInput } from "@assistant-ui/react-lexical";
 import type { DirectiveChipProps } from "@assistant-ui/react-lexical";
-import { MarkdownTextPrimitive } from "@assistant-ui/react-markdown";
+import { MarkdownTextPrimitive, unstable_memoizeMarkdownComponents } from "@assistant-ui/react-markdown";
 import type { SyntaxHighlighterProps } from "@assistant-ui/react-markdown";
 import {
   ActionIcon,
@@ -99,9 +110,11 @@ import {
 import remarkBreaks from "remark-breaks";
 import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
+import { useRouter } from "next/navigation";
 
 import { clientApi } from "@homarr/api/client";
-import { assistantReasoningModes } from "@homarr/definitions";
+import { assistantProviderIds, assistantProviderPresets, assistantReasoningModes } from "@homarr/definitions";
+import type { AssistantProvider } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -111,17 +124,20 @@ import { getAssistantDirectiveTranslationKey, parseAssistantDirectives } from ".
 import { remarkAssistantDirectives, resolveAssistantDirectiveEntity } from "./assistant-markdown-directives";
 import type { AssistantDirectiveEntity } from "./assistant-markdown-directives";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
-import { getSafeAssistantMarkdownImageSource } from "./assistant-markdown-image";
-import {
-  getAssistantTelemetry,
-  getAssistantUsage,
-  resolveAssistantContextWindowTelemetry,
-} from "./assistant-message-metadata";
+import { getSafeAssistantAttachmentImageSource, getSafeAssistantMarkdownImageSource } from "./assistant-markdown-image";
+import { getAssistantConversationUsage, getAssistantTelemetry } from "./assistant-message-metadata";
+import type { AssistantConversationTurnUsage } from "./assistant-message-metadata";
 import type { AssistantPendingAction } from "./assistant-pending-action";
 import { AssistantQuestionPortalProvider } from "./assistant-question-portal";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
 import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
 import { getToolResultPresentation } from "./assistant-tool-result";
+import { getSafeAssistantHttpUrl } from "./assistant-url";
+
+// Shiki's web grammar bundle is intentionally loaded only when a settled response contains a code
+// block. Most assistant conversations never need it, so it should not inflate the global dashboard
+// shell merely because the assistant provider is mounted.
+const ShikiHighlighter = lazy(() => import("react-shiki/web"));
 
 export interface AssistantConversationControls {
   modelId: string | null;
@@ -189,10 +205,44 @@ const ContextDirectiveChip = ({
   );
 };
 
-const MarkdownLink = ({ href, children, ...props }: ComponentPropsWithoutRef<"a">) => {
-  const external = href !== undefined && /^https?:\/\//iu.test(href);
+const getInternalAssistantHref = (href: string) => {
+  if (href.startsWith("/") && !href.startsWith("//")) return href;
+  if (typeof window === "undefined" || !URL.canParse(href)) return null;
+  const url = new URL(href);
+  return url.origin === window.location.origin ? `${url.pathname}${url.search}${url.hash}` : null;
+};
+
+const hasModifiedLinkClick = (event: ReactMouseEvent<HTMLAnchorElement>) =>
+  event.button !== 0 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+
+const MarkdownLink = ({ href, children, onClick, onMouseEnter, ...props }: ComponentPropsWithoutRef<"a">) => {
+  const router = useRouter();
+  const httpLink = href !== undefined && /^https?:\/\//iu.test(href);
+  const relativeLink = href?.startsWith("/") && !href.startsWith("//");
+  const safeLink = href?.startsWith("#") || href?.startsWith("mailto:") || httpLink || relativeLink;
+
+  if (!href || !safeLink) return <span>{children}</span>;
+
   return (
-    <a href={href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined} {...props}>
+    <a
+      href={href}
+      target={httpLink ? "_blank" : undefined}
+      rel={httpLink ? "noreferrer" : undefined}
+      {...props}
+      onMouseEnter={(event) => {
+        onMouseEnter?.(event);
+        const internalHref = getInternalAssistantHref(href);
+        if (internalHref) router.prefetch(internalHref);
+      }}
+      onClick={(event) => {
+        onClick?.(event);
+        if (event.defaultPrevented || hasModifiedLinkClick(event)) return;
+        const internalHref = getInternalAssistantHref(href);
+        if (!internalHref) return;
+        event.preventDefault();
+        router.push(internalHref);
+      }}
+    >
       {children}
     </a>
   );
@@ -218,6 +268,40 @@ const MarkdownImage = ({ src, alt = "", ...props }: ComponentPropsWithoutRef<"im
       decoding="async"
       referrerPolicy="no-referrer"
     />
+  );
+};
+
+const AssistantSyntaxHighlighter = ({ code, components, language }: SyntaxHighlighterProps) => {
+  const colorScheme = useComputedColorScheme("light");
+  const streaming = useAuiState((state) => state.part.status?.type === "running");
+  const Pre = components.Pre;
+  const Code = components.Code;
+  if (streaming) {
+    return (
+      <Pre>
+        <Code>{code}</Code>
+      </Pre>
+    );
+  }
+
+  return (
+    <Suspense
+      fallback={
+        <Pre>
+          <Code>{code}</Code>
+        </Pre>
+      }
+    >
+      <ShikiHighlighter
+        className={classes.syntaxHighlighter}
+        language={language === "unknown" ? "text" : language}
+        theme={colorScheme === "dark" ? "github-dark" : "github-light"}
+        showLanguage={false}
+        addDefaultStyles={false}
+      >
+        {code}
+      </ShikiHighlighter>
+    </Suspense>
   );
 };
 
@@ -324,6 +408,14 @@ const AssistantMarkdownSpan = ({
   return <span {...props}>{children}</span>;
 };
 
+const assistantMarkdownComponents = unstable_memoizeMarkdownComponents({
+  a: MarkdownLink,
+  img: MarkdownImage,
+  span: AssistantMarkdownSpan,
+  table: MarkdownTable,
+  SyntaxHighlighter: AssistantSyntaxHighlighter,
+});
+
 const AssistantTextPart = () => {
   const { data: entities = [] } = clientApi.assistant.getContextEntities.useQuery(undefined, { staleTime: 60_000 });
 
@@ -333,7 +425,7 @@ const AssistantTextPart = () => {
         className={classes.messageMarkdown}
         preprocess={normalizeAssistantMarkdown}
         remarkPlugins={markdownRemarkPlugins}
-        components={{ a: MarkdownLink, img: MarkdownImage, span: AssistantMarkdownSpan, table: MarkdownTable }}
+        components={assistantMarkdownComponents}
         componentsByLanguage={{ mermaid: { SyntaxHighlighter: MermaidDiagram } }}
         defer
       />
@@ -364,14 +456,56 @@ const UserTextPart = () => {
   );
 };
 
+const AttachmentPreview = () => {
+  const attachment = useAuiState((state) => state.attachment);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
+  const contentImage = attachment.content?.find((part) => part.type === "image");
+  const persistedPreview =
+    contentImage?.type === "image"
+      ? getSafeAssistantAttachmentImageSource(
+          contentImage.image,
+          typeof window === "undefined" ? undefined : window.location.origin,
+        )
+      : null;
+
+  useEffect(() => {
+    if (persistedPreview || attachment.type !== "image" || !attachment.file) {
+      setFilePreview(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(attachment.file);
+    setFilePreview(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [attachment.file, attachment.type, persistedPreview]);
+
+  const source = persistedPreview ?? filePreview;
+  if (source) {
+    return <Box component="img" className={classes.attachmentImage} src={source} alt="" aria-hidden />;
+  }
+  return (
+    <Box className={classes.attachmentFileIcon}>
+      {attachment.type === "image" ? <IconPhoto size={18} /> : <IconFile size={18} />}
+    </Box>
+  );
+};
+
 const Attachment = ({ removable = false }: { removable?: boolean }) => {
   const t = useScopedI18n("common.assistant");
+  const attachment = useAuiState((state) => state.attachment);
   return (
     <AttachmentPrimitive.Root className={classes.attachment}>
-      <AttachmentPrimitive.unstable_Thumb className={classes.attachmentThumb} />
-      <Text size="xs" lineClamp={1} className={classes.attachmentName}>
-        <AttachmentPrimitive.Name />
-      </Text>
+      <AttachmentPreview />
+      <Box className={classes.attachmentCopy}>
+        <Text size="xs" fw={600} lineClamp={1} className={classes.attachmentName}>
+          <AttachmentPrimitive.Name />
+        </Text>
+        {attachment.contentType && (
+          <Text size="xs" truncate className={classes.attachmentType}>
+            {attachment.contentType}
+          </Text>
+        )}
+      </Box>
+      {attachment.status.type === "running" && <Loader type="bars" size="xs" />}
       {removable && (
         <AttachmentPrimitive.Remove asChild>
           <ActionIcon variant="subtle" color="gray" size="xs" aria-label={t("removeAttachment")}>
@@ -383,64 +517,45 @@ const Attachment = ({ removable = false }: { removable?: boolean }) => {
   );
 };
 const SentAttachment = () => <Attachment />;
+const HiddenMessagePart = () => null;
 
-const ReasoningPart = ({ text }: ReasoningMessagePartProps) => (
-  <Text component="div" size="sm" c="dimmed" className={classes.reasoningText}>
-    {text}
-  </Text>
+const ReasoningPart = (_props: ReasoningMessagePartProps) => (
+  <AssistantDirectiveEntitiesContext.Provider value={[]}>
+    <MarkdownTextPrimitive
+      className={`${classes.messageMarkdown} ${classes.reasoningText}`}
+      preprocess={normalizeAssistantMarkdown}
+      remarkPlugins={markdownRemarkPlugins}
+      components={assistantMarkdownComponents}
+      componentsByLanguage={{ mermaid: { SyntaxHighlighter: MermaidDiagram } }}
+      defer
+    />
+  </AssistantDirectiveEntitiesContext.Provider>
 );
 
-const ReasoningGroup = ({ children, running }: { children: ReactNode; running: boolean }) => {
-  const t = useScopedI18n("common.assistant");
-  const contentId = useId();
-  const [opened, setOpened] = useState(running);
-  const [manuallyToggled, setManuallyToggled] = useState(false);
+const ReasoningVisibilityContext = createContext<{
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+}>({ collapsed: false, setCollapsed: () => undefined });
 
-  useEffect(() => {
-    if (running && !manuallyToggled) setOpened(true);
-  }, [manuallyToggled, running]);
+const SourcePart = (source: SourceMessagePartProps) => {
+  const safeUrl = getSafeAssistantHttpUrl(source.url);
+  const content = (
+    <>
+      <IconLink size={13} />
+      {source.title}
+    </>
+  );
 
-  return (
-    <Box className={classes.reasoning} data-opened={opened || undefined}>
-      <UnstyledButton
-        className={classes.reasoningToggle}
-        type="button"
-        aria-expanded={opened}
-        aria-controls={contentId}
-        onClick={() => {
-          setManuallyToggled(true);
-          setOpened((value) => !value);
-        }}
-      >
-        <Group gap="xs" wrap="nowrap">
-          {running && <Loader type="bars" size="xs" color="gray" />}
-          <Text size="xs" fw={650} c="dimmed">
-            {t("reasoning")}
-          </Text>
-        </Group>
-        <IconChevronDown size={14} className={classes.reasoningChevron} />
-      </UnstyledButton>
-      <Collapse expanded={opened}>
-        <Box id={contentId} className={classes.reasoningContent} aria-busy={running}>
-          {children}
-        </Box>
-      </Collapse>
-    </Box>
+  return safeUrl ? (
+    <Anchor className={classes.source} href={safeUrl} target="_blank" rel="noreferrer" size="xs">
+      {content}
+    </Anchor>
+  ) : (
+    <Text component="span" className={classes.source} c="dimmed" size="xs">
+      {content}
+    </Text>
   );
 };
-
-const SourcePart = (source: SourceMessagePartProps) => (
-  <Anchor
-    className={classes.source}
-    href={source.url}
-    target={source.url ? "_blank" : undefined}
-    rel={source.url ? "noreferrer" : undefined}
-    size="xs"
-  >
-    <IconLink size={13} />
-    {source.title}
-  </Anchor>
-);
 
 const FilePart = ({ data, filename, mimeType }: FileMessagePartProps) => {
   const t = useScopedI18n("common.assistant");
@@ -471,15 +586,10 @@ const FilePart = ({ data, filename, mimeType }: FileMessagePartProps) => {
 
 const ImagePart = ({ image, filename }: ImageMessagePartProps) => {
   const t = useScopedI18n("common.assistant");
-  const source = (() => {
-    if (/^data:image\/(?:gif|jpeg|png|webp);base64,/u.test(image)) return image;
-    try {
-      const url = new URL(image, window.location.origin);
-      return url.origin === window.location.origin ? url.href : null;
-    } catch {
-      return null;
-    }
-  })();
+  const source = getSafeAssistantAttachmentImageSource(
+    image,
+    typeof window === "undefined" ? undefined : window.location.origin,
+  );
   if (!source) {
     return (
       <Group className={classes.messageFile} gap="xs" wrap="nowrap">
@@ -494,7 +604,7 @@ const ImagePart = ({ image, filename }: ImageMessagePartProps) => {
 const formatToolResultValue = (value: string | number | boolean) =>
   typeof value === "number" ? value.toLocaleString() : String(value);
 
-const ToolResultPreview = ({ result, toolName }: { result: unknown; toolName: string }) => {
+const ToolResultPresentation = ({ result, toolName }: { result: unknown; toolName: string }) => {
   const presentation = getToolResultPresentation(result, { toolName });
   if (!presentation) return null;
 
@@ -610,6 +720,65 @@ const ToolResultPreview = ({ result, toolName }: { result: unknown; toolName: st
         </Badge>
       )}
     </Box>
+  );
+};
+
+const getToolResultNavigation = (result: unknown) => {
+  if (typeof result !== "object" || result === null || Array.isArray(result)) return [];
+
+  const record = result as Record<string, unknown>;
+  const candidates = [
+    { href: record.previewPath, translationKey: "toolNavigation.openPreview" as const },
+    { href: record.managementPath, translationKey: "toolNavigation.openWidget" as const },
+  ];
+
+  return candidates.filter(
+    (candidate): candidate is { href: string; translationKey: (typeof candidate)["translationKey"] } =>
+      typeof candidate.href === "string" && candidate.href.startsWith("/") && !candidate.href.startsWith("//"),
+  );
+};
+
+const ToolResultNavigation = ({ result }: { result: unknown }) => {
+  const t = useScopedI18n("common.assistant");
+  const router = useRouter();
+  const links = getToolResultNavigation(result);
+
+  if (links.length === 0) return null;
+
+  return (
+    <Group className={classes.toolResultNavigation} gap="xs" wrap="wrap">
+      {links.map((link) => (
+        <Button
+          key={`${link.translationKey}-${link.href}`}
+          component="a"
+          href={link.href}
+          size="compact-xs"
+          variant="light"
+          leftSection={<IconLink size={13} aria-hidden />}
+          onMouseEnter={() => router.prefetch(link.href)}
+          onFocus={() => router.prefetch(link.href)}
+          onClick={(event) => {
+            if (hasModifiedLinkClick(event)) return;
+            event.preventDefault();
+            router.push(link.href);
+          }}
+        >
+          {t(link.translationKey)}
+        </Button>
+      ))}
+    </Group>
+  );
+};
+
+const ToolResultPreview = ({ result, toolName }: { result: unknown; toolName: string }) => {
+  const navigation = getToolResultNavigation(result);
+  if (navigation.length === 0) return <ToolResultPresentation result={result} toolName={toolName} />;
+
+  return (
+    <Stack gap="xs">
+      <ToolResultPresentation result={result} toolName={toolName} />
+      <ToolResultNavigation result={result} />
+    </Stack>
   );
 };
 
@@ -766,6 +935,58 @@ const ToolPart = ({
   );
 };
 
+const ChainOfThoughtLayout = ({ children }: { children?: ReactNode }) => (
+  <Stack className={classes.reasoningParts} gap="xs">
+    {children}
+  </Stack>
+);
+
+const AssistantChainOfThought = () => {
+  const t = useScopedI18n("common.assistant");
+  const contentId = useId();
+  const aui = useAui();
+  const chainStatus = useAuiState((state) => state.chainOfThought.status);
+  const collapsed = useAuiState((state) => state.chainOfThought.collapsed);
+  const running = chainStatus.type === "running";
+  const { collapsed: preferredCollapsed, setCollapsed: setPreferredCollapsed } = useContext(ReasoningVisibilityContext);
+
+  useLayoutEffect(() => {
+    aui.chainOfThought().setCollapsed(preferredCollapsed);
+  }, [aui, preferredCollapsed]);
+
+  useEffect(() => {
+    if (chainStatus.type !== "requires-action") return;
+    aui.chainOfThought().setCollapsed(false);
+  }, [aui, chainStatus.type]);
+
+  return (
+    <ChainOfThoughtPrimitive.Root className={classes.reasoning} data-opened={!collapsed || undefined}>
+      <ChainOfThoughtPrimitive.AccordionTrigger asChild>
+        <UnstyledButton
+          className={classes.reasoningToggle}
+          type="button"
+          aria-expanded={!collapsed}
+          aria-controls={contentId}
+          onClick={() => setPreferredCollapsed(!collapsed)}
+        >
+          <Group gap="xs" wrap="nowrap">
+            {running && <Loader type="bars" size="xs" color="gray" />}
+            <Text size="xs" fw={650} c="dimmed">
+              {t("reasoning")}
+            </Text>
+          </Group>
+          <IconChevronDown size={14} className={classes.reasoningChevron} />
+        </UnstyledButton>
+      </ChainOfThoughtPrimitive.AccordionTrigger>
+      <Box id={contentId} className={classes.reasoningContent} aria-busy={running} hidden={collapsed}>
+        <ChainOfThoughtPrimitive.Parts
+          components={{ Reasoning: ReasoningPart, tools: { Fallback: ToolPart }, Layout: ChainOfThoughtLayout }}
+        />
+      </Box>
+    </ChainOfThoughtPrimitive.Root>
+  );
+};
+
 const BranchPicker = () => {
   const t = useScopedI18n("common.assistant");
   return (
@@ -790,10 +1011,10 @@ const BranchPicker = () => {
 const AssistantMessageActions = () => {
   const t = useScopedI18n("common.assistant");
   return (
-    <Group className={classes.messageActions} gap="xs" justify="space-between">
-      <BranchPicker />
-      <ActionBarPrimitive.Root hideWhenRunning>
-        <Group gap={2}>
+    <Box className={classes.messageActions}>
+      <ActionBarPrimitive.Root hideWhenRunning className={classes.messageActionBar}>
+        <Group gap={2} wrap="wrap">
+          <ProviderMessageInfo />
           <Tooltip label={t("copy")}>
             <ActionBarPrimitive.Copy asChild>
               <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("copy")}>
@@ -831,7 +1052,8 @@ const AssistantMessageActions = () => {
           </Tooltip>
         </Group>
       </ActionBarPrimitive.Root>
-    </Group>
+      <BranchPicker />
+    </Box>
   );
 };
 
@@ -863,7 +1085,7 @@ const EditComposer = () => {
   const t = useScopedI18n("common.assistant");
   return (
     <ComposerPrimitive.Root className={classes.editComposer}>
-      <ComposerPrimitive.Input className={classes.editComposerInput} rows={2} />
+      <ComposerPrimitive.Input className={classes.editComposerInput} rows={2} aria-label={t("editMessage")} />
       <Group gap="xs" justify="flex-end">
         <ComposerPrimitive.Cancel asChild>
           <Button size="compact-sm" variant="default">
@@ -892,11 +1114,13 @@ const UserMessage = () => {
           )}
         </MessagePrimitive.Quote>
         <MessagePrimitive.Attachments components={{ Attachment: SentAttachment }} />
-        <MessagePrimitive.Parts components={{ Text: UserTextPart, File: FilePart, Image: ImagePart }} />
+        <MessagePrimitive.Parts
+          components={{ Text: UserTextPart, File: HiddenMessagePart, Image: HiddenMessagePart }}
+        />
       </Box>
-      <Group justify="flex-end" gap="xs">
-        <BranchPicker />
+      <Group className={classes.userMessageActions} justify="flex-end" gap="xs" wrap="wrap">
         <UserMessageActions />
+        <BranchPicker />
       </Group>
     </MessagePrimitive.Root>
   );
@@ -917,34 +1141,92 @@ const getContextColor = (percentage: number) => {
   return "blue";
 };
 
-const RequestTelemetry = () => {
-  const t = useScopedI18n("common.assistant");
-  const [opened, setOpened] = useState(false);
+const getAssistantProviderPreset = (provider: string) => {
+  if (!assistantProviderIds.includes(provider as AssistantProvider)) return null;
+  return assistantProviderPresets[provider as AssistantProvider];
+};
+
+const ProviderIcon = ({ provider, size = 16 }: { provider: string; size?: number }) => {
+  const colorScheme = useComputedColorScheme("light");
+  const preset = getAssistantProviderPreset(provider);
+  const source = colorScheme === "dark" && preset && "darkIconUrl" in preset ? preset.darkIconUrl : preset?.iconUrl;
+
+  return source ? (
+    <Box component="img" className={classes.providerIcon} src={source} alt="" aria-hidden w={size} h={size} />
+  ) : (
+    <IconRobot size={size} aria-hidden />
+  );
+};
+
+const ProviderMessageInfo = () => {
   const metadata = useAuiState((state) => state.message.metadata);
-  const messageId = useAuiState((state) => state.message.id);
-  const threadId = useAuiState((state) => state.threadListItem.remoteId);
-  const threadMessages = useAuiState((state) => state.thread.messages);
-  const threadMessageMetadata = useMemo(() => threadMessages.map((message) => message.metadata), [threadMessages]);
-  const persistedTelemetry = getAssistantTelemetry(metadata);
-  const persistedUsage = getAssistantUsage(metadata);
+  const telemetry = getAssistantTelemetry(metadata);
+  if (!telemetry) return null;
+
+  const details = [
+    telemetry.modelId,
+    telemetry.durationMs !== undefined ? formatDuration(telemetry.durationMs) : undefined,
+    telemetry.outputTokensPerSecond !== undefined ? `${telemetry.outputTokensPerSecond.toFixed(1)} tok/s` : undefined,
+    telemetry.cost !== undefined ? formatCost(telemetry.cost) : undefined,
+  ].filter(Boolean);
+
+  return (
+    <Tooltip
+      label={
+        <Stack gap={2}>
+          <Text size="xs" fw={700} tt="capitalize">
+            {telemetry.provider}
+          </Text>
+          <Text size="xs">{details.join(" · ")}</Text>
+        </Stack>
+      }
+      multiline
+      maw="min(24rem, calc(100vw - 2rem))"
+    >
+      <Box
+        component="span"
+        className={classes.providerAction}
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- the logo and its focused tooltip form one labelled image
+        role="img"
+        tabIndex={0}
+        aria-label={`${telemetry.provider}: ${telemetry.modelId}`}
+      >
+        <ProviderIcon provider={telemetry.provider} />
+      </Box>
+    </Tooltip>
+  );
+};
+
+const ConversationTurn = ({
+  index,
+  messageId,
+  threadId,
+  turn,
+}: {
+  index: number;
+  messageId?: string;
+  threadId?: string;
+  turn: AssistantConversationTurnUsage;
+}) => {
+  const t = useScopedI18n("common.assistant");
+  const detailsId = useId();
+  const [opened, setOpened] = useState(false);
   const generationQuery = clientApi.assistant.getGenerationTelemetry.useQuery(
-    { threadId: threadId ?? "", messageId },
+    { threadId: threadId ?? "", messageId: messageId ?? "" },
     {
-      enabled: opened && persistedTelemetry?.provider === "openrouter" && Boolean(threadId) && Boolean(messageId),
+      enabled: opened && turn.provider === "openrouter" && Boolean(threadId) && Boolean(messageId),
       refetchInterval: (query) =>
         query.state.data?.complete === false && query.state.dataUpdateCount < 6 ? 1500 : false,
       retry: 2,
       staleTime: (query) => (query.state.data?.complete ? 5 * 60_000 : 0),
     },
   );
-  if (!persistedTelemetry) return null;
-
   const generationById = new Map(
     generationQuery.data?.generations.flatMap((generation) =>
       generation.generationId ? [[generation.generationId, generation] as const] : [],
     ) ?? [],
   );
-  const steps = persistedTelemetry.steps.map((step) => ({
+  const steps = turn.telemetry.steps.map((step) => ({
     ...step,
     ...(step.generationId ? generationById.get(step.generationId) : undefined),
   }));
@@ -968,7 +1250,7 @@ const RequestTelemetry = () => {
       ? latestStep.inputTokens + latestStep.outputTokens
       : undefined;
   const usage = {
-    ...persistedUsage,
+    ...turn.usage,
     ...(generationQuery.data?.complete && providerInputTokens !== undefined
       ? { inputTokens: providerInputTokens }
       : {}),
@@ -986,7 +1268,7 @@ const RequestTelemetry = () => {
       : {}),
   };
   const telemetry = {
-    ...persistedTelemetry,
+    ...turn.telemetry,
     steps,
     ...(generationQuery.data?.complete && providerGenerationTimeMs !== undefined
       ? { generationTimeMs: providerGenerationTimeMs }
@@ -997,8 +1279,8 @@ const RequestTelemetry = () => {
     ...(generationQuery.data?.complete && providerContextUsed !== undefined
       ? {
           contextUsed: providerContextUsed,
-          ...(persistedTelemetry.contextLength
-            ? { contextUtilization: Math.min(providerContextUsed / persistedTelemetry.contextLength, 1) }
+          ...(turn.telemetry.contextLength
+            ? { contextUtilization: Math.min(providerContextUsed / turn.telemetry.contextLength, 1) }
             : {}),
         }
       : {}),
@@ -1018,459 +1300,343 @@ const RequestTelemetry = () => {
       ? { fallbackLatencyMs: sumCompleteMetric((step) => step.fallbackLatencyMs) }
       : {}),
   };
-
-  const contextWindow = resolveAssistantContextWindowTelemetry(telemetry, threadMessageMetadata);
-  const contextTelemetry = contextWindow?.telemetry;
-  const contextLength = contextTelemetry?.contextLength ?? 0;
-  const contextUsed = contextTelemetry?.contextUsed ?? 0;
-  const hasContextWindow = contextTelemetry?.contextLength !== undefined && contextTelemetry.contextUsed !== undefined;
-  const contextPercentage = hasContextWindow
-    ? Math.min(
-        100,
-        Math.max(
-          0,
-          Math.round((contextTelemetry.contextUtilization ?? contextUsed / Math.max(contextLength, 1)) * 100),
-        ),
-      )
-    : 0;
-  const contextRemaining = hasContextWindow ? Math.max(contextLength - contextUsed, 0) : undefined;
-  const contextLabel = hasContextWindow
-    ? `${t("usage.contextWindow")}: ${contextUsed.toLocaleString()} / ${contextLength.toLocaleString()} (${contextPercentage}%)`
-    : `${t("usage.contextWindow")}: ${t("usage.notReported")}`;
   const displayedThroughput = telemetry.providerOutputTokensPerSecond ?? telemetry.outputTokensPerSecond;
-  const hasProviderMetrics =
-    telemetry.provider === "openrouter" ||
-    generationQuery.isFetching ||
-    telemetry.providerOutputTokensPerSecond !== undefined ||
-    telemetry.generationTimeMs !== undefined ||
-    telemetry.cacheDiscount !== undefined ||
-    telemetry.fallbackCount !== undefined ||
-    telemetry.fallbackLatencyMs !== undefined ||
-    telemetry.steps.some(
-      (step) =>
-        step.providerLatencyMs !== undefined ||
-        step.moderationLatencyMs !== undefined ||
-        step.serviceTier !== undefined ||
-        step.dataRegion !== undefined,
-    );
 
   return (
-    <Box className={classes.telemetry}>
-      <Group justify="space-between" align="center" gap="xs" wrap="nowrap">
-        <Group className={classes.telemetryFacts} gap="xs" wrap="wrap">
-          <Badge className={classes.modelBadge} size="xs" variant="light" color="gray">
-            {telemetry.modelId}
-          </Badge>
-          <Badge size="xs" variant="outline" color="gray">
-            {telemetry.provider}
-          </Badge>
-          {telemetry.durationMs !== undefined && (
-            <Text size="xs" c="dimmed">
-              {formatDuration(telemetry.durationMs)}
-            </Text>
-          )}
-          {displayedThroughput !== undefined && (
-            <Text size="xs" c="dimmed">
-              {displayedThroughput.toFixed(1)} tok/s
-            </Text>
-          )}
-          {telemetry.cost !== undefined && (
-            <Text size="xs" c="dimmed">
-              {formatCost(telemetry.cost)}
-            </Text>
-          )}
-        </Group>
-
-        <Popover
-          opened={opened}
-          onChange={setOpened}
-          width="min(23rem, calc(100vw - 1.5rem))"
-          position="bottom-end"
-          shadow="md"
-          withArrow
-          trapFocus
-          returnFocus
-        >
-          <Popover.Target>
-            <UnstyledButton
-              className={classes.contextMeter}
-              aria-label={contextLabel}
-              aria-expanded={opened}
-              aria-haspopup="dialog"
-              title={contextLabel}
-              onClick={() => setOpened((value) => !value)}
-            >
-              <RingProgress
-                size={40}
-                thickness={4}
-                roundCaps
-                sections={
-                  hasContextWindow ? [{ value: contextPercentage, color: getContextColor(contextPercentage) }] : []
-                }
-                label={
-                  <Text className={classes.contextMeterLabel} ta="center" fw={700}>
-                    {hasContextWindow ? `${contextPercentage}%` : "–"}
-                  </Text>
-                }
-              />
-            </UnstyledButton>
-          </Popover.Target>
-          <Popover.Dropdown className={classes.telemetryPopover}>
-            <Stack gap="sm">
-              <Group justify="space-between" gap="xs">
-                <div>
-                  <Text size="sm" fw={700}>
-                    {t("usage.contextWindow")}
-                  </Text>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.requestDetails")}
-                  </Text>
-                </div>
-                <Badge size="sm" variant="light" color={getContextColor(contextPercentage)}>
-                  {hasContextWindow ? `${contextPercentage}%` : t("usage.notReported")}
-                </Badge>
-              </Group>
-
-              <Box className={classes.contextStats}>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.used")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {contextTelemetry?.contextUsed?.toLocaleString() ?? t("usage.notReported")}
-                  </Text>
-                </div>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.remaining")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {contextRemaining?.toLocaleString() ?? t("usage.notReported")}
-                  </Text>
-                </div>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.capacity")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {contextTelemetry?.contextLength?.toLocaleString() ?? t("usage.notReported")}
-                  </Text>
-                </div>
-              </Box>
-
-              <Divider />
-              <Box className={classes.usageGrid}>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.input")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {usage?.inputTokens?.toLocaleString() ?? t("usage.notReported")}
-                  </Text>
-                </div>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.output")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {usage?.outputTokens?.toLocaleString() ?? t("usage.notReported")}
-                  </Text>
-                </div>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.cached")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {usage?.cachedInputTokens?.toLocaleString() ?? t("usage.notReported")}
-                  </Text>
-                </div>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.reasoning")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {usage?.reasoningTokens?.toLocaleString() ?? t("usage.notReported")}
-                  </Text>
-                </div>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.cacheWrite")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {usage?.cacheWriteTokens?.toLocaleString() ?? t("usage.notReported")}
-                  </Text>
-                </div>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.tokens")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {usage?.totalTokens?.toLocaleString() ?? t("usage.notReported")}
-                  </Text>
-                </div>
-              </Box>
-
-              <Divider />
-              <Text size="xs" fw={700} tt="uppercase" c="dimmed">
-                {t("usage.homarrTiming")}
+    <Box className={classes.conversationTurn} data-opened={opened || undefined}>
+      <UnstyledButton
+        className={classes.conversationTurnTrigger}
+        aria-expanded={opened}
+        aria-controls={detailsId}
+        onClick={() => setOpened((value) => !value)}
+      >
+        <Group justify="space-between" align="flex-start" gap="xs" wrap="nowrap">
+          <Group gap="xs" wrap="nowrap" miw={0}>
+            <Box className={classes.conversationTurnProvider}>
+              <ProviderIcon provider={turn.provider} size={15} />
+            </Box>
+            <Box miw={0}>
+              <Text size="xs" fw={650} truncate>
+                {t("usage.step", { number: index + 1 })} · {turn.modelId}
               </Text>
-              <Box className={classes.usageGrid}>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.endToEnd")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {telemetry.durationMs !== undefined ? formatDuration(telemetry.durationMs) : t("usage.notReported")}
-                  </Text>
-                </div>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.firstOutput")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {telemetry.timeToFirstOutputMs !== undefined
-                      ? formatDuration(telemetry.timeToFirstOutputMs)
-                      : t("usage.notReported")}
-                  </Text>
-                </div>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.observedThroughput")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {telemetry.outputTokensPerSecond !== undefined
-                      ? `${telemetry.outputTokensPerSecond.toFixed(1)} tok/s`
-                      : t("usage.notReported")}
-                  </Text>
-                </div>
-                <div>
-                  <Text size="xs" c="dimmed">
-                    {t("usage.cost")}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {telemetry.cost !== undefined ? formatCost(telemetry.cost) : t("usage.notReported")}
-                  </Text>
-                  {telemetry.costType && (
+              <Text size="xs" c="dimmed">
+                {[
+                  telemetry.durationMs !== undefined ? formatDuration(telemetry.durationMs) : undefined,
+                  displayedThroughput !== undefined ? `${displayedThroughput.toFixed(1)} tok/s` : undefined,
+                  usage.totalTokens !== undefined
+                    ? `${usage.totalTokens.toLocaleString()} ${t("usage.tokens")}`
+                    : undefined,
+                  telemetry.cost !== undefined ? formatCost(telemetry.cost) : undefined,
+                ]
+                  .filter(Boolean)
+                  .join(" · ") || t("usage.notReported")}
+              </Text>
+            </Box>
+          </Group>
+          <IconChevronDown size={14} className={classes.disclosureIcon} data-opened={opened || undefined} />
+        </Group>
+      </UnstyledButton>
+      <Collapse id={detailsId} expanded={opened}>
+        <Stack gap="sm" pt="sm">
+          {generationQuery.isFetching && generationQuery.data?.complete !== true && (
+            <Group gap="xs">
+              <Loader size="xs" type="bars" />
+              <Text size="xs" c="dimmed">
+                {t("usage.loadingProviderDetails")}
+              </Text>
+            </Group>
+          )}
+          {!generationQuery.isFetching && generationQuery.data?.complete === false && (
+            <Text size="xs" c="dimmed">
+              {t("usage.providerDetailsPending")}
+            </Text>
+          )}
+          <Box className={classes.usageGrid}>
+            {[
+              [t("usage.input"), usage.inputTokens?.toLocaleString()],
+              [t("usage.output"), usage.outputTokens?.toLocaleString()],
+              [t("usage.cached"), usage.cachedInputTokens?.toLocaleString()],
+              [t("usage.reasoning"), usage.reasoningTokens?.toLocaleString()],
+              [t("usage.cacheWrite"), usage.cacheWriteTokens?.toLocaleString()],
+              [t("usage.tokens"), usage.totalTokens?.toLocaleString()],
+              [
+                t("usage.firstOutput"),
+                telemetry.timeToFirstOutputMs !== undefined ? formatDuration(telemetry.timeToFirstOutputMs) : undefined,
+              ],
+              [
+                t("usage.endToEnd"),
+                telemetry.durationMs !== undefined ? formatDuration(telemetry.durationMs) : undefined,
+              ],
+              [
+                t("usage.generationTime"),
+                telemetry.generationTimeMs !== undefined ? formatDuration(telemetry.generationTimeMs) : undefined,
+              ],
+              [
+                t("usage.providerThroughput"),
+                displayedThroughput !== undefined ? `${displayedThroughput.toFixed(1)} tok/s` : undefined,
+              ],
+              [
+                t("usage.cost"),
+                telemetry.cost !== undefined
+                  ? `${formatCost(telemetry.cost)}${telemetry.costType ? ` · ${t(`usage.${telemetry.costType}`)}` : ""}`
+                  : undefined,
+              ],
+              [
+                t("usage.upstreamCost"),
+                telemetry.upstreamCost !== undefined ? formatCost(telemetry.upstreamCost) : undefined,
+              ],
+              [t("usage.fallbacks"), telemetry.fallbackCount?.toLocaleString()],
+              [
+                t("usage.fallbackLatency"),
+                telemetry.fallbackLatencyMs !== undefined ? formatDuration(telemetry.fallbackLatencyMs) : undefined,
+              ],
+              [
+                t("usage.cacheDiscount"),
+                telemetry.cacheDiscount !== undefined ? formatCost(telemetry.cacheDiscount) : undefined,
+              ],
+              [t("usage.webSearches"), telemetry.webSearchRequests?.toLocaleString()],
+              [t("usage.finishReason"), telemetry.finishReason],
+            ].map(([label, value]) => (
+              <div key={label}>
+                <Text size="xs" c="dimmed">
+                  {label}
+                </Text>
+                <Text size="sm" fw={600}>
+                  {value ?? t("usage.notReported")}
+                </Text>
+              </div>
+            ))}
+          </Box>
+          {(telemetry.contextUsed !== undefined || telemetry.contextLength !== undefined) && (
+            <Text size="xs" c="dimmed">
+              {t("usage.contextWindow")}: {telemetry.contextUsed?.toLocaleString() ?? t("usage.notReported")} /{" "}
+              {telemetry.contextLength?.toLocaleString() ?? t("usage.notReported")}
+            </Text>
+          )}
+          {steps.length > 0 && (
+            <Stack gap={4}>
+              <Text size="xs" fw={650}>
+                {t("usage.agentSteps")}
+              </Text>
+              {steps.map((step) => (
+                <Box key={step.index} className={classes.stepRow}>
+                  <Group justify="space-between" gap="xs" wrap="nowrap">
+                    <Text size="xs" fw={600}>
+                      {t("usage.step", { number: step.index })}
+                      {step.routedProvider ? ` · ${step.routedProvider}` : ""}
+                    </Text>
                     <Text size="xs" c="dimmed">
-                      {t(`usage.${telemetry.costType}`)}
+                      {formatDuration(step.durationMs)}
+                      {step.providerOutputTokensPerSecond !== undefined
+                        ? ` · ${step.providerOutputTokensPerSecond.toFixed(1)} tok/s`
+                        : step.outputTokensPerSecond !== undefined
+                          ? ` · ${step.outputTokensPerSecond.toFixed(1)} tok/s`
+                          : ""}
+                      {step.cost !== undefined ? ` · ${formatCost(step.cost)}` : ""}
+                    </Text>
+                  </Group>
+                  <Text size="xs" c="dimmed">
+                    {[
+                      step.providerLatencyMs !== undefined
+                        ? `${t("usage.providerLatency")} ${formatDuration(step.providerLatencyMs)}`
+                        : undefined,
+                      step.generationTimeMs !== undefined
+                        ? `${t("usage.generationTime")} ${formatDuration(step.generationTimeMs)}`
+                        : undefined,
+                      step.moderationLatencyMs !== undefined
+                        ? `${t("usage.moderationLatency")} ${formatDuration(step.moderationLatencyMs)}`
+                        : undefined,
+                      step.inputTokens !== undefined
+                        ? `${step.inputTokens.toLocaleString()} ${t("usage.inputShort")}`
+                        : undefined,
+                      step.outputTokens !== undefined
+                        ? `${step.outputTokens.toLocaleString()} ${t("usage.outputShort")}`
+                        : undefined,
+                      step.cachedInputTokens !== undefined
+                        ? `${step.cachedInputTokens.toLocaleString()} ${t("usage.cachedShort")}`
+                        : undefined,
+                      step.reasoningTokens !== undefined
+                        ? `${step.reasoningTokens.toLocaleString()} ${t("usage.reasoningShort")}`
+                        : undefined,
+                      step.fallbackCount !== undefined
+                        ? `${t("usage.fallbacks")} ${step.fallbackCount.toLocaleString()}`
+                        : undefined,
+                      step.fallbackLatencyMs !== undefined
+                        ? `${t("usage.fallbackLatency")} ${formatDuration(step.fallbackLatencyMs)}`
+                        : undefined,
+                      step.nativeFinishReason,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ") || t("usage.notReported")}
+                  </Text>
+                  {(step.normalizedInputTokens !== undefined || step.normalizedOutputTokens !== undefined) && (
+                    <Text size="xs" c="dimmed">
+                      {t("usage.normalizedTokens")}: {step.normalizedInputTokens?.toLocaleString() ?? "–"} /{" "}
+                      {step.normalizedOutputTokens?.toLocaleString() ?? "–"}
                     </Text>
                   )}
-                </div>
-                {telemetry.upstreamCost !== undefined && (
-                  <div>
+                  {(step.routerStrategy || step.routerRegion || step.serviceTier || step.dataRegion || step.isByok) && (
                     <Text size="xs" c="dimmed">
-                      {t("usage.upstreamCost")}
-                    </Text>
-                    <Text size="sm" fw={600}>
-                      {formatCost(telemetry.upstreamCost)}
-                    </Text>
-                  </div>
-                )}
-                {telemetry.webSearchRequests !== undefined && (
-                  <div>
-                    <Text size="xs" c="dimmed">
-                      {t("usage.webSearches")}
-                    </Text>
-                    <Text size="sm" fw={600}>
-                      {telemetry.webSearchRequests.toLocaleString()}
-                    </Text>
-                  </div>
-                )}
-                {telemetry.finishReason && (
-                  <div>
-                    <Text size="xs" c="dimmed">
-                      {t("usage.finishReason")}
-                    </Text>
-                    <Text size="sm" fw={600}>
-                      {telemetry.finishReason}
-                    </Text>
-                  </div>
-                )}
-              </Box>
-
-              {hasProviderMetrics && (
-                <>
-                  <Divider />
-                  <Text size="xs" fw={700} tt="uppercase" c="dimmed">
-                    {t("usage.providerTiming")}
-                  </Text>
-                  {generationQuery.isFetching && generationQuery.data?.complete !== true && (
-                    <Group gap="xs">
-                      <Loader size="xs" type="bars" />
-                      <Text size="xs" c="dimmed">
-                        {t("usage.loadingProviderDetails")}
-                      </Text>
-                    </Group>
-                  )}
-                  {!generationQuery.isFetching && generationQuery.data?.complete === false && (
-                    <Text size="xs" c="dimmed">
-                      {t("usage.providerDetailsPending")}
+                      {[
+                        step.routerStrategy,
+                        step.routerRegion,
+                        step.serviceTier,
+                        step.dataRegion,
+                        step.isByok ? t("usage.byok") : undefined,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
                     </Text>
                   )}
-                  <Box className={classes.usageGrid}>
-                    <div>
-                      <Text size="xs" c="dimmed">
-                        {t("usage.generationTime")}
-                      </Text>
-                      <Text size="sm" fw={600}>
-                        {telemetry.generationTimeMs !== undefined
-                          ? formatDuration(telemetry.generationTimeMs)
-                          : t("usage.notReported")}
-                      </Text>
-                    </div>
-                    <div>
-                      <Text size="xs" c="dimmed">
-                        {t("usage.providerThroughput")}
-                      </Text>
-                      <Text size="sm" fw={600}>
-                        {telemetry.providerOutputTokensPerSecond !== undefined
-                          ? `${telemetry.providerOutputTokensPerSecond.toFixed(1)} tok/s`
-                          : t("usage.notReported")}
-                      </Text>
-                    </div>
-                    <div>
-                      <Text size="xs" c="dimmed">
-                        {t("usage.fallbacks")}
-                      </Text>
-                      <Text size="sm" fw={600}>
-                        {telemetry.fallbackCount?.toLocaleString() ?? t("usage.notReported")}
-                      </Text>
-                    </div>
-                    {telemetry.fallbackLatencyMs !== undefined && (
-                      <div>
-                        <Text size="xs" c="dimmed">
-                          {t("usage.fallbackLatency")}
-                        </Text>
-                        <Text size="sm" fw={600}>
-                          {formatDuration(telemetry.fallbackLatencyMs)}
-                        </Text>
-                      </div>
-                    )}
-                    {telemetry.cacheDiscount !== undefined && (
-                      <div>
-                        <Text size="xs" c="dimmed">
-                          {t("usage.cacheDiscount")}
-                        </Text>
-                        <Text size="sm" fw={600}>
-                          {formatCost(telemetry.cacheDiscount)}
-                        </Text>
-                      </div>
-                    )}
-                  </Box>
-                </>
-              )}
-
-              {telemetry.steps.length > 0 && (
-                <Stack gap={4}>
-                  <Text size="xs" fw={600}>
-                    {t("usage.agentSteps")}
-                  </Text>
-                  {telemetry.steps.map((step) => (
-                    <Box key={step.index} className={classes.stepRow}>
-                      <Group justify="space-between" gap="xs">
-                        <Text size="xs">
-                          {t("usage.step", { number: step.index })}
-                          {step.routedProvider ? ` · ${step.routedProvider}` : ""}
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          {formatDuration(step.durationMs)}
-                          {step.providerOutputTokensPerSecond !== undefined
-                            ? ` · ${step.providerOutputTokensPerSecond.toFixed(1)} tok/s`
-                            : step.outputTokensPerSecond !== undefined
-                              ? ` · ${step.outputTokensPerSecond.toFixed(1)} tok/s`
-                              : ""}
-                          {step.cost !== undefined ? ` · ${formatCost(step.cost)}` : ""}
-                        </Text>
-                      </Group>
-                      {(step.providerLatencyMs !== undefined ||
-                        step.generationTimeMs !== undefined ||
-                        step.moderationLatencyMs !== undefined ||
-                        step.fallbackCount !== undefined ||
-                        step.fallbackLatencyMs !== undefined) && (
-                        <Text size="xs" c="dimmed">
-                          {[
-                            step.providerLatencyMs !== undefined
-                              ? `${t("usage.providerLatency")} ${formatDuration(step.providerLatencyMs)}`
-                              : undefined,
-                            step.generationTimeMs !== undefined
-                              ? `${t("usage.generationTime")} ${formatDuration(step.generationTimeMs)}`
-                              : undefined,
-                            step.moderationLatencyMs !== undefined
-                              ? `${t("usage.moderationLatency")} ${formatDuration(step.moderationLatencyMs)}`
-                              : undefined,
-                            step.fallbackCount !== undefined
-                              ? `${t("usage.fallbacks")} ${step.fallbackCount.toLocaleString()}`
-                              : undefined,
-                            step.fallbackLatencyMs !== undefined
-                              ? `${t("usage.fallbackLatency")} ${formatDuration(step.fallbackLatencyMs)}`
-                              : undefined,
-                          ]
-                            .filter(Boolean)
-                            .join(" · ")}
-                        </Text>
-                      )}
-                      {(step.inputTokens !== undefined || step.outputTokens !== undefined) && (
-                        <Text size="xs" c="dimmed">
-                          {[
-                            step.inputTokens !== undefined
-                              ? `${step.inputTokens.toLocaleString()} ${t("usage.inputShort")}`
-                              : undefined,
-                            step.outputTokens !== undefined
-                              ? `${step.outputTokens.toLocaleString()} ${t("usage.outputShort")}`
-                              : undefined,
-                            step.cachedInputTokens !== undefined
-                              ? `${step.cachedInputTokens.toLocaleString()} ${t("usage.cachedShort")}`
-                              : undefined,
-                            step.reasoningTokens !== undefined
-                              ? `${step.reasoningTokens.toLocaleString()} ${t("usage.reasoningShort")}`
-                              : undefined,
-                          ]
-                            .filter(Boolean)
-                            .join(" · ")}
-                        </Text>
-                      )}
-                      {(step.serviceTier ||
-                        step.dataRegion ||
-                        step.routerStrategy ||
-                        step.routerRegion ||
-                        step.isByok) && (
-                        <Text size="xs" c="dimmed">
-                          {[
-                            step.routerStrategy,
-                            step.routerRegion,
-                            step.serviceTier,
-                            step.dataRegion,
-                            step.isByok ? t("usage.byok") : undefined,
-                          ]
-                            .filter(Boolean)
-                            .join(" · ")}
-                        </Text>
-                      )}
-                      {(step.normalizedInputTokens !== undefined || step.normalizedOutputTokens !== undefined) &&
-                        (step.normalizedInputTokens !== step.inputTokens ||
-                          step.normalizedOutputTokens !== step.outputTokens) && (
-                          <Text size="xs" c="dimmed">
-                            {t("usage.normalizedTokens")}: {step.normalizedInputTokens?.toLocaleString() ?? "–"} /{" "}
-                            {step.normalizedOutputTokens?.toLocaleString() ?? "–"}
-                          </Text>
-                        )}
-                      {step.generationId && (
-                        <Text size="xs" c="dimmed" className={classes.generationId} title={step.generationId}>
-                          {t("usage.generation")}: {step.generationId}
-                        </Text>
-                      )}
-                    </Box>
-                  ))}
-                </Stack>
-              )}
+                  {step.generationId && (
+                    <Text size="xs" c="dimmed" className={classes.generationId} title={step.generationId}>
+                      {t("usage.generation")}: {step.generationId}
+                    </Text>
+                  )}
+                </Box>
+              ))}
             </Stack>
-          </Popover.Dropdown>
-        </Popover>
-      </Group>
+          )}
+        </Stack>
+      </Collapse>
     </Box>
   );
 };
 
+const ConversationContext = () => {
+  const t = useScopedI18n("common.assistant");
+  const [opened, setOpened] = useState(false);
+  const messages = useAuiState((state) => state.thread.messages);
+  const threadId = useAuiState((state) => state.threadListItem.remoteId);
+  const metadata = useMemo(() => messages.map((message) => message.metadata), [messages]);
+  const messageIdByRequestId = useMemo(
+    () =>
+      new Map(
+        messages.flatMap((message) => {
+          const telemetry = getAssistantTelemetry(message.metadata);
+          return telemetry ? [[telemetry.requestId, message.id] as const] : [];
+        }),
+      ),
+    [messages],
+  );
+  const usage = useMemo(() => getAssistantConversationUsage(metadata), [metadata]);
+  const hasTokenUsage = usage.turns.some((turn) => turn.totalTokens !== undefined);
+  const hasCost = usage.turns.some((turn) => turn.cost !== undefined);
+  const hasContext = usage.contextUsed !== undefined && usage.contextLength !== undefined;
+  const contextPercentage = hasContext
+    ? Math.min(100, Math.round(((usage.contextUsed ?? 0) / Math.max(usage.contextLength ?? 1, 1)) * 100))
+    : 0;
+  const quickLabel = [
+    hasTokenUsage ? `${usage.totalTokens.toLocaleString()} ${t("usage.tokens")}` : t("usage.notReported"),
+    hasCost ? formatCost(usage.cost) : undefined,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  return (
+    <Popover
+      opened={opened}
+      onChange={setOpened}
+      width="min(28rem, calc(100vw - 1rem))"
+      position="top-end"
+      shadow="md"
+      withinPortal
+      trapFocus
+      returnFocus
+    >
+      <Popover.Target>
+        <UnstyledButton
+          className={classes.composerContext}
+          type="button"
+          aria-label={`${t("usage.contextWindow")}: ${quickLabel}`}
+          aria-expanded={opened}
+          aria-haspopup="dialog"
+          onClick={() => setOpened((value) => !value)}
+        >
+          <RingProgress
+            size={24}
+            thickness={3}
+            roundCaps
+            sections={hasContext ? [{ value: contextPercentage, color: getContextColor(contextPercentage) }] : []}
+          />
+          <Text size="xs" fw={650} truncate>
+            {quickLabel}
+          </Text>
+        </UnstyledButton>
+      </Popover.Target>
+      <Popover.Dropdown className={classes.conversationContextPopover}>
+        <Stack gap="sm">
+          <Group justify="space-between" gap="xs" wrap="nowrap">
+            <Box miw={0}>
+              <Text size="sm" fw={700}>
+                {t("usage.contextWindow")}
+              </Text>
+              <Text size="xs" c="dimmed">
+                {t("usage.requestDetails")}
+              </Text>
+            </Box>
+            {hasContext && (
+              <Badge size="sm" variant="light" color={getContextColor(contextPercentage)}>
+                {contextPercentage}%
+              </Badge>
+            )}
+          </Group>
+          <Box className={classes.conversationUsageSummary}>
+            <div>
+              <Text size="xs" c="dimmed">
+                {t("usage.tokens")}
+              </Text>
+              <Text size="sm" fw={650}>
+                {hasTokenUsage ? usage.totalTokens.toLocaleString() : t("usage.notReported")}
+              </Text>
+            </div>
+            <div>
+              <Text size="xs" c="dimmed">
+                {t("usage.cost")}
+              </Text>
+              <Text size="sm" fw={650}>
+                {hasCost ? formatCost(usage.cost) : t("usage.notReported")}
+              </Text>
+            </div>
+            <div>
+              <Text size="xs" c="dimmed">
+                {t("usage.used")}
+              </Text>
+              <Text size="sm" fw={650}>
+                {usage.contextUsed?.toLocaleString() ?? t("usage.notReported")}
+              </Text>
+              {usage.contextLength !== undefined && (
+                <Text size="xs" c="dimmed">
+                  / {usage.contextLength.toLocaleString()}
+                </Text>
+              )}
+            </div>
+          </Box>
+          <Divider />
+          <ScrollArea.Autosize mah="min(21rem, 48dvh)" type="auto" offsetScrollbars>
+            <Stack gap={5}>
+              {usage.turns.length === 0 ? (
+                <Text size="sm" c="dimmed" py="xs">
+                  {t("usage.notReported")}
+                </Text>
+              ) : (
+                usage.turns.map((turn, index) => (
+                  <ConversationTurn
+                    key={turn.requestId}
+                    index={index}
+                    turn={turn}
+                    threadId={threadId ?? undefined}
+                    messageId={messageIdByRequestId.get(turn.requestId)}
+                  />
+                ))
+              )}
+            </Stack>
+          </ScrollArea.Autosize>
+        </Stack>
+      </Popover.Dropdown>
+    </Popover>
+  );
+};
 const RuntimeError = () => {
   const t = useScopedI18n("common.assistant");
   return (
@@ -1566,33 +1732,17 @@ const WebSearchActivity = () => {
 
 const AssistantMessage = () => (
   <MessagePrimitive.Root className={`${classes.message} ${classes.assistantMessage}`}>
-    <MessagePrimitive.GroupedParts groupBy={groupPartByType({ reasoning: ["group-reasoning"] })}>
-      {({ part, children }) => {
-        switch (part.type) {
-          case "group-reasoning":
-            return <ReasoningGroup running={part.status.type === "running"}>{children}</ReasoningGroup>;
-          case "text":
-            return <AssistantTextPart />;
-          case "reasoning":
-            return <ReasoningPart {...part} />;
-          case "source":
-            return <SourcePart {...part} />;
-          case "file":
-            return <FilePart {...part} />;
-          case "image":
-            return <ImagePart {...part} />;
-          case "tool-call":
-            return part.toolUI ?? <ToolPart {...part} />;
-          case "indicator":
-            return null;
-          default:
-            return null;
-        }
+    <MessagePrimitive.Parts
+      components={{
+        Text: AssistantTextPart,
+        Source: SourcePart,
+        File: FilePart,
+        Image: ImagePart,
+        ChainOfThought: AssistantChainOfThought,
       }}
-    </MessagePrimitive.GroupedParts>
+    />
     <RuntimeError />
     <WebSearchActivity />
-    <RequestTelemetry />
     <AssistantMessageActions />
   </MessagePrimitive.Root>
 );
@@ -1797,7 +1947,7 @@ const EmptyThread = () => {
             <Text size="xl" fw={700}>
               {t("emptyTitle")}
             </Text>
-            <Text size="sm" c="dimmed">
+            <Text size="sm" className={classes.emptyDescription}>
               {t("emptyDescription")}
             </Text>
           </Stack>
@@ -2112,6 +2262,11 @@ const RuntimeControls = ({
                   active={model.id === modelId}
                 >
                   <Group gap="xs" wrap="nowrap">
+                    <Divider
+                      className={classes.modelOptionDivider}
+                      orientation="vertical"
+                      data-active={model.id === modelId || undefined}
+                    />
                     <Stack gap={1} className={classes.modelOptionText}>
                       <Text size="sm" fw={model.id === modelId ? 650 : 500} lineClamp={1}>
                         {model.name}
@@ -2170,6 +2325,18 @@ const Composer = (props: ComposerProps) => {
   const t = useScopedI18n("common.assistant");
   const running = useAuiState((state) => state.thread.isRunning);
   const hasPendingAction = props.pendingAction !== undefined;
+  const composerInputRef = useRef<HTMLDivElement>(null);
+  const composerLabel = t("composerPlaceholder");
+
+  useLayoutEffect(() => {
+    const editor = composerInputRef.current?.querySelector<HTMLElement>(".aui-lexical-input");
+    if (!editor) return;
+    editor.setAttribute("aria-label", composerLabel);
+    return () => {
+      if (editor.getAttribute("aria-label") === composerLabel) editor.removeAttribute("aria-label");
+    };
+  }, [composerLabel]);
+
   return (
     <Box className={classes.composerWrap}>
       <ComposerPrimitive.Unstable_TriggerPopoverRoot>
@@ -2203,8 +2370,10 @@ const Composer = (props: ComposerProps) => {
                 </Tooltip>
               </Group>
               <LexicalComposerInput
+                ref={composerInputRef}
                 className={classes.composerInput}
-                placeholder={t("composerPlaceholder")}
+                data-assistant-composer-input
+                placeholder={composerLabel}
                 directiveChip={ContextDirectiveChip}
                 // oxlint-disable-next-line jsx-a11y/no-autofocus -- opening the assistant is an explicit intent to compose
                 autoFocus={props.autoFocusComposer}
@@ -2231,7 +2400,10 @@ const Composer = (props: ComposerProps) => {
               )}
             </Group>
             <Group className={classes.composerFooter} justify="space-between" gap="xs" wrap="nowrap">
-              <RuntimeControls {...props} />
+              <Group className={classes.composerControls} gap={5} wrap="nowrap">
+                <RuntimeControls {...props} />
+                <ConversationContext />
+              </Group>
               <Group className={classes.composerHints} gap="xs" wrap="nowrap">
                 <Text size="xs" c="dimmed">
                   {t("mentions.hint")}
@@ -2442,6 +2614,11 @@ export const AssistantConversationSurface = ({
   const t = useScopedI18n("common.assistant");
   const reducedMotion = useReducedMotion();
   const [questionPortalTarget, setQuestionPortalTarget] = useState<HTMLDivElement | null>(null);
+  const [reasoningCollapsed, setReasoningCollapsed] = useState(false);
+  const reasoningVisibility = useMemo(
+    () => ({ collapsed: reasoningCollapsed, setCollapsed: setReasoningCollapsed }),
+    [reasoningCollapsed],
+  );
   const scrollToLatestBehavior = isRunning || reducedMotion ? "instant" : "smooth";
 
   return (
@@ -2502,45 +2679,50 @@ export const AssistantConversationSurface = ({
         </Group>
       </Group>
       <AssistantQuestionPortalProvider target={questionPortalTarget}>
-        <ThreadPrimitive.Root className={classes.thread}>
-          <ThreadPrimitive.Viewport className={classes.viewport} autoScroll>
-            <Box className={classes.messages}>
-              <EmptyThread />
-              <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
-            </Box>
-            <SelectionToolbarPrimitive.Root className={classes.selectionToolbar}>
-              <SelectionToolbarPrimitive.Quote asChild>
-                <Button variant="filled" color="dark" size="compact-sm" leftSection={<IconQuote size={14} />}>
-                  {t("quoteSelection")}
-                </Button>
-              </SelectionToolbarPrimitive.Quote>
-            </SelectionToolbarPrimitive.Root>
-            <ThreadPrimitive.ScrollToBottom behavior={scrollToLatestBehavior} asChild>
-              <ActionIcon
-                className={classes.scrollToBottom}
-                variant="default"
-                radius="xl"
-                aria-label={t("scrollToLatest")}
-              >
-                <IconArrowUp size={16} style={{ transform: "rotate(180deg)" }} />
-              </ActionIcon>
-            </ThreadPrimitive.ScrollToBottom>
-          </ThreadPrimitive.Viewport>
-          <PendingQuestionDock pendingAction={pendingAction} setTarget={setQuestionPortalTarget} />
-          <PendingActionBanner pendingAction={pendingAction} />
-          <Composer
-            modelId={modelId}
-            models={models}
-            modelOptionsLoading={modelOptionsLoading}
-            reasoning={reasoning}
-            isRefreshing={isRefreshing}
-            onRefresh={onRefresh}
-            onModelChange={onModelChange}
-            onReasoningChange={onReasoningChange}
-            autoFocusComposer={autoFocusComposer}
-            pendingAction={pendingAction}
-          />
-        </ThreadPrimitive.Root>
+        <ReasoningVisibilityContext.Provider value={reasoningVisibility}>
+          <ThreadPrimitive.Root
+            className={classes.thread}
+            data-pending-question={pendingAction?.kind === "question" || undefined}
+          >
+            <ThreadPrimitive.Viewport className={classes.viewport} autoScroll>
+              <Box className={classes.messages}>
+                <EmptyThread />
+                <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
+              </Box>
+              <SelectionToolbarPrimitive.Root className={classes.selectionToolbar}>
+                <SelectionToolbarPrimitive.Quote asChild>
+                  <Button variant="filled" color="dark" size="compact-sm" leftSection={<IconQuote size={14} />}>
+                    {t("quoteSelection")}
+                  </Button>
+                </SelectionToolbarPrimitive.Quote>
+              </SelectionToolbarPrimitive.Root>
+              <ThreadPrimitive.ScrollToBottom behavior={scrollToLatestBehavior} asChild>
+                <ActionIcon
+                  className={classes.scrollToBottom}
+                  variant="default"
+                  radius="xl"
+                  aria-label={t("scrollToLatest")}
+                >
+                  <IconArrowUp size={16} style={{ transform: "rotate(180deg)" }} />
+                </ActionIcon>
+              </ThreadPrimitive.ScrollToBottom>
+            </ThreadPrimitive.Viewport>
+            <PendingQuestionDock pendingAction={pendingAction} setTarget={setQuestionPortalTarget} />
+            <PendingActionBanner pendingAction={pendingAction} />
+            <Composer
+              modelId={modelId}
+              models={models}
+              modelOptionsLoading={modelOptionsLoading}
+              reasoning={reasoning}
+              isRefreshing={isRefreshing}
+              onRefresh={onRefresh}
+              onModelChange={onModelChange}
+              onReasoningChange={onReasoningChange}
+              autoFocusComposer={autoFocusComposer}
+              pendingAction={pendingAction}
+            />
+          </ThreadPrimitive.Root>
+        </ReasoningVisibilityContext.Provider>
       </AssistantQuestionPortalProvider>
     </>
   );
