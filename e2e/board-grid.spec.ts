@@ -253,6 +253,38 @@ describe("Board grid", () => {
       expect(await rail.evaluate((element) => getComputedStyle(element, "::before").content.replaceAll('"', ""))).toBe(
         "Left dashboard rail",
       );
+      const railGrid = rail.locator("[data-grid-section-id]").first();
+      const railSnapshot = await readEditorGridSnapshotAsync(railGrid);
+      await rail.evaluate((element) => {
+        const overflowFixture = document.createElement("div");
+        overflowFixture.dataset.e2eRailOverflowFixture = "true";
+        overflowFixture.style.position = "absolute";
+        overflowFixture.style.insetInlineStart = "100%";
+        overflowFixture.style.width = "500px";
+        overflowFixture.style.height = "1px";
+        overflowFixture.style.pointerEvents = "none";
+        element.appendChild(overflowFixture);
+      });
+      await expect
+        .poll(async () => await rail.evaluate((element) => element.scrollWidth - element.clientWidth))
+        .toBeGreaterThan(0);
+      const railItemBox = await expectBoundingBoxAsync(railItem);
+      const railDragStart = {
+        x: railItemBox.x + railItemBox.width / 2,
+        y: railItemBox.y + railItemBox.height / 2,
+      };
+      await page.mouse.move(railDragStart.x, railDragStart.y);
+      await page.mouse.down();
+      await page.mouse.move(railDragStart.x + 8, railDragStart.y);
+      await expect(railItem).toHaveAttribute("data-dnd-drag-source", "true");
+      await page.mouse.move(railBox.x + railBox.width - 2, railDragStart.y, { steps: 12 });
+      await page.waitForTimeout(250);
+      expect(await rail.evaluate((element) => element.scrollLeft)).toBe(0);
+      expect((await expectBoundingBoxAsync(rail)).x).toBeCloseTo(railBox.x, 1);
+      await page.keyboard.press("Escape");
+      await page.mouse.up();
+      await expect.poll(async () => await readEditorGridSnapshotAsync(railGrid)).toEqual(railSnapshot);
+      await rail.locator('[data-e2e-rail-overflow-fixture="true"]').evaluate((element) => element.remove());
       await expect(logicalTile).toHaveCSS("overflow-x", "hidden");
       await expect(logicalTile).toHaveCSS("overflow-y", "auto");
       await logicalTile.evaluate((element) => {
@@ -566,9 +598,8 @@ describe("Board grid", () => {
       });
       const containerGrip = containerSection.locator("[data-grid-container-drag-handle]");
       await expectTargetSizeAsync(containerGrip);
-      const railEditor = rail.locator("[data-grid-section-id]").first();
-      const railGridBox = await expectBoundingBoxAsync(railEditor);
-      await dragHandleToGridPositionAsync(page, containerGrip, containerSection, railEditor, 0, 0, canvasScale);
+      const railGridBox = await expectBoundingBoxAsync(railGrid);
+      await dragHandleToGridPositionAsync(page, containerGrip, containerSection, railGrid, 0, 0, canvasScale);
       await expect(containerSection.locator("xpath=ancestor::aside[1]")).toHaveAttribute("data-board-gutter", "left");
       await expect(secondItem.locator("xpath=ancestor::*[@data-grid-section-id][1]")).toHaveAttribute(
         "data-grid-section-id",
@@ -677,7 +708,7 @@ describe("Board grid", () => {
       await railKeyboardEntry.focus();
       await railKeyboardEntry.press("Enter");
       const mixedInputSnapshot = await readEditorGridSnapshotAsync(mainGrid);
-      const mixedInputRailSnapshot = await readEditorGridSnapshotAsync(railEditor);
+      const mixedInputRailSnapshot = await readEditorGridSnapshotAsync(railGrid);
       const mixedInputHandleBox = await expectBoundingBoxAsync(eastResizeHandle);
       await page.mouse.move(
         mixedInputHandleBox.x + mixedInputHandleBox.width / 2,
@@ -690,7 +721,7 @@ describe("Board grid", () => {
       await page.keyboard.press("Escape");
       await page.mouse.up();
       await expect.poll(async () => await readEditorGridSnapshotAsync(mainGrid)).toEqual(mixedInputSnapshot);
-      await expect.poll(async () => await readEditorGridSnapshotAsync(railEditor)).toEqual(mixedInputRailSnapshot);
+      await expect.poll(async () => await readEditorGridSnapshotAsync(railGrid)).toEqual(mixedInputRailSnapshot);
       await expectTouchResizeCancellationRestoresAsync(
         page,
         mainGrid,
