@@ -203,6 +203,69 @@ were public. Each run now asserts all three:
 Earlier rounds were correct but only *inferred* this from the private board rendering; the
 assertions now fail the run instead of quietly measuring an anonymous page.
 
+## Round 4 — the client, which the container numbers never showed
+
+A real session reached ~880 MB server and a **650 MB browser heap**. The harness had
+been measuring one tab on one board with no interaction, so it saw none of this.
+
+### What the 650 MB actually is
+
+From the captured `.heapsnapshot` (4M nodes, 18.2M edges):
+
+- **71,596 live React Fibers** (~35k components). Identified structurally, not by name:
+  the retainer edges are `alternate`, `return`, `child` and `__reactFiber$…`.
+- ~7,900 SVG element fibers (charts and icons), 1,726 `<td>`, ~88k event listeners.
+- **Retained heap is only 181 MiB** against a 650 MB peak. Snapshots are taken after a
+  forced GC, so the rest is transient allocation churn from re-rendering — not
+  retention. The trace agrees: **71,850 `UpdateLayer` events**, 41 s in `v8.callFunction`.
+
+So the client cost is render volume and re-render churn. Tuning `gcTime` would not
+have touched it.
+
+### The most-mounted component
+
+`@mantine/core/Box` (513 of 3,918 fibers on a 28-widget board). It is Mantine's
+universal primitive — every Mantine component renders through it — so it is a symptom
+of how many components are mounted, not a bug in itself. Matching proportions
+(13% here, 17% in the 650 MB snapshot) make it near-certain that the minified `y` in
+that snapshot is `Box`.
+
+The genuinely suspicious finding was **71 `Menu` → `Popover` → `PopoverDropdown`
+triplets** mounted on a board that shows 28 widgets. A controlled experiment using the
+existing `enableRightClickOnWidgets` user flag isolates the cost:
+
+| board state | fibers |
+| --- | --- |
+| per-item context menus on | 3,918 |
+| per-item context menus off | 3,554 |
+
+**364 fibers, 9%, for menus that are almost never opened** — and it scales with item
+count. The dropdown *contents* are already lazy; the `Menu`/`Popover`/`PopoverDropdown`
+wrappers are not.
+
+### Attempted fix, reverted
+
+Deferring the whole `Menu` subtree until the first right-click (replaying the event so
+Mantine still positions at the cursor) **failed verification and was reverted**: the
+replayed `contextmenu` re-entered the arming handler, so right-click stopped opening the
+menu and the tree exploded from 3,614 to 20,107 fibers. The Playwright check that caught
+it is the one worth keeping — a fiber count alone would have looked like a win.
+
+Doing this properly means one board-level menu that renders the active item's actions,
+rather than one menu per item — a real refactor, not a wrapper swap.
+
+### A measurement flaw worth recording
+
+The `demo` account in the backup had `completed_board_tour = 0`, so every run before
+this round was measuring the **first-time-user path with the onboarding tour mounted**.
+Completing the tour changed the tree by only 38 fibers, so the earlier numbers stand —
+but the harness was not measuring steady state, and that was luck rather than design.
+
+### Server side
+
+A server heap snapshot pulled from a live container: **37 of 70 MiB is strings**
+(71,287 of them), consistent with the memoised translation payload. Unexplored.
+
 ## Recommendation
 
 **Keep** — carries the measured win:

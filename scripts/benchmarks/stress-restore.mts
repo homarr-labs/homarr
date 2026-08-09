@@ -44,6 +44,8 @@ const navIterations = Number(process.env.STRESS_NAV_ITERATIONS ?? 6);
 const soakMs = Number(process.env.STRESS_SOAK_MS ?? 120_000);
 const soakIntervalMs = Number(process.env.STRESS_SOAK_INTERVAL_MS ?? 20_000);
 const keepContainer = process.env.STRESS_KEEP_CONTAINER === "true";
+/** Dump a browser heap snapshot here (analyse with analyze-react-fibers.mjs). */
+const clientSnapshotPath = process.env.STRESS_CLIENT_SNAPSHOT;
 const outputDirectory = path.resolve(process.env.STRESS_OUTPUT ?? `.bench/stress/${label}`);
 
 const password = process.env.STRESS_PASSWORD ?? "demodemo";
@@ -297,6 +299,22 @@ const interactWithWidgetsAsync = async (page: Page, maxClicks = 6) => {
   return { available, clicked };
 };
 
+/** Streams a browser heap snapshot to disk over CDP, for offline fiber analysis. */
+const captureClientSnapshotAsync = async (page: Page, destination: string) => {
+  const cdp = await page.context().newCDPSession(page);
+  const chunks: string[] = [];
+  cdp.on("HeapProfiler.addHeapSnapshotChunk", ({ chunk }) => chunks.push(chunk));
+  try {
+    await cdp.send("HeapProfiler.enable");
+    await cdp.send("HeapProfiler.collectGarbage");
+    await cdp.send("HeapProfiler.takeHeapSnapshot", { reportProgress: false });
+    await writeFile(destination, chunks.join(""));
+    log(`client heap snapshot -> ${destination}`);
+  } finally {
+    await cdp.detach().catch(() => undefined);
+  }
+};
+
 const waitForBoardAsync = async (page: Page) => {
   const boardSelector = "[data-homarr-dev-benchmark-board]";
   await page.locator(boardSelector).waitFor({ state: "visible", timeout: 120_000 });
@@ -443,6 +461,8 @@ const main = async () => {
       log(`multi-tab: clicked ${widgetInteractions.clicked}/${widgetInteractions.available} widget controls`);
       await captureAsync("07-multi-tab");
     }
+
+    if (clientSnapshotPath) await captureClientSnapshotAsync(freshPage, clientSnapshotPath);
 
     const clientHeap = await sampleClientHeapAsync(freshPage);
     log(
