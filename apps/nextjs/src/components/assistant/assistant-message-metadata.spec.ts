@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import {
+  getAssistantContextBreakdown,
   getAssistantConversationUsage,
   getAssistantTelemetry,
   getAssistantUsage,
@@ -260,5 +261,55 @@ describe("getAssistantConversationUsage", () => {
       reasoningTokens: 5,
       cost: 0.0004,
     });
+  });
+});
+
+describe("getAssistantContextBreakdown", () => {
+  test("combines the latest context reading with the latest reported token categories", () => {
+    const usage = getAssistantConversationUsage([
+      createUsageMetadata({
+        requestId: "reported",
+        inputTokens: 12_777,
+        outputTokens: 55,
+        cost: 0.00041,
+        contextUsed: 13_343,
+      }),
+      {
+        custom: {
+          telemetry: {
+            requestId: "streaming",
+            provider: "openrouter",
+            modelId: "example/model",
+            startedAt: "2026-08-04T10:00:02.000Z",
+            steps: [],
+          },
+        },
+      },
+    ]);
+
+    expect(getAssistantContextBreakdown(usage)).toMatchObject({
+      contextUsed: 13_343,
+      contextLength: 128_000,
+      remaining: 114_657,
+      percentage: 10,
+      inputTokens: 12_777,
+      outputTokens: 55,
+    });
+  });
+
+  test("does not report an invalid percentage for an unavailable capacity", () => {
+    expect(
+      getAssistantContextBreakdown({
+        turns: [],
+        inputTokens: 0,
+        outputTokens: 0,
+        totalTokens: 0,
+        cachedInputTokens: 0,
+        reasoningTokens: 0,
+        cost: 0,
+        contextUsed: 10,
+        contextLength: 0,
+      }),
+    ).toEqual({});
   });
 });
