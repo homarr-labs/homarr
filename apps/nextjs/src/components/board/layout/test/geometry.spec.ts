@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import {
+  getGridRowCountForVisualHeight,
   getLayoutRowCount,
   getLogicalItemStyle,
   getLogicalTrackSize,
@@ -28,5 +29,13 @@ describe("fixed dashboard geometry", () => {
 
     expect(placement).toEqual({ id: "wide", x: 0, y: 0, w: 4, h: 2 });
     expect(getLayoutRowCount([placement, { x: 0, y: 4, w: 1, h: 3 }])).toBe(7);
+  });
+
+  test("derives enough logical rows to fill the visual viewport at any canvas scale", () => {
+    expect(getGridRowCountForVisualHeight(1200, 1)).toBe(6);
+    expect(getLogicalTrackSize(getGridRowCountForVisualHeight(1200, 1))).toBeGreaterThanOrEqual(1200);
+
+    expect(getGridRowCountForVisualHeight(1200, 0.5)).toBe(11);
+    expect(getLogicalTrackSize(getGridRowCountForVisualHeight(1200, 0.5)) * 0.5).toBeGreaterThanOrEqual(1200);
   });
 });

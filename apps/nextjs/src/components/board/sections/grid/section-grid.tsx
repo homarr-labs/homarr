@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { Box, LoadingOverlay } from "@mantine/core";
 import combineClasses from "clsx";
@@ -13,12 +13,14 @@ import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types
 import {
   getCollapsedDisplayLayout,
   getEditableCanvasAttributes,
+  getGridRowCountForVisualHeight,
   getLayoutRowCount,
   getLogicalItemStyle,
   getLogicalTrackSize,
   getReadonlyCanvasAttributes,
   normalizeGridPlacement,
 } from "~/components/board/layout";
+import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
 import { loadGridEditorAsync } from "./grid-editor-loader";
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
@@ -81,6 +83,7 @@ export const SectionGrid = ({
   className,
 }: SectionGridProps) => {
   const [isEditMode] = useEditMode();
+  const canvasScale = useBoardCanvasScale();
   const editorRuntimeStatus = useGridEditorRuntimeStatus();
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
@@ -144,8 +147,12 @@ export const SectionGrid = ({
   );
   const displayedItems = items.map((item) => withPlacement(item, placementById.get(item.id)));
   const displayedInnerSections = innerSections.map((item) => withPlacement(item, placementById.get(item.id)));
+  const minimumViewportRowCount = useMinimumViewportRowCount(
+    section.kind === "empty" && railPlacement === "main",
+    canvasScale,
+  );
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
-  const rowCount = Math.max(contentRowCount, requestedRowCount);
+  const rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   const logicalWidth = getLogicalTrackSize(columnCount);
   const logicalHeight = getLogicalTrackSize(rowCount);
   const canvasAttributes = isEditMode
@@ -197,6 +204,24 @@ export const SectionGrid = ({
       </Box>
     </SectionProvider>
   );
+};
+
+const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
+  const [visualHeight, setVisualHeight] = useState(0);
+
+  useEffect(() => {
+    if (!enabled) return;
+    const update = () => setVisualHeight(window.visualViewport?.height ?? window.innerHeight);
+    update();
+    window.addEventListener("resize", update, { passive: true });
+    window.visualViewport?.addEventListener("resize", update, { passive: true });
+    return () => {
+      window.removeEventListener("resize", update);
+      window.visualViewport?.removeEventListener("resize", update);
+    };
+  }, [enabled]);
+
+  return enabled ? getGridRowCountForVisualHeight(visualHeight, canvasScale) : 0;
 };
 
 const getContainerMinimumSize = (
