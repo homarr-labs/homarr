@@ -990,6 +990,15 @@ describe("Board grid", () => {
       const emptyRightGutter = page.getByRole("complementary", { name: "Right dashboard rail" });
       await expect(emptyRightGutter).toHaveCount(1);
       expect((await expectBoundingBoxAsync(emptyRightGutter)).width).toBeGreaterThan(0);
+      await page.getByTestId("board-edit-mode-toggle").click();
+      await expect(emptyRightGutter).toHaveAttribute("data-board-editing", "true");
+      expect(
+        await emptyRightGutter.evaluate((element) => ({
+          content: getComputedStyle(element, "::before").content.replaceAll('"', ""),
+          insetInlineStart: getComputedStyle(element, "::before").insetInlineStart,
+          top: getComputedStyle(element, "::before").top,
+        })),
+      ).toEqual({ content: "Right dashboard rail", insetInlineStart: "0px", top: "0px" });
       expect(pageErrors).toEqual([]);
     } finally {
       runtimeResources?.stop();
