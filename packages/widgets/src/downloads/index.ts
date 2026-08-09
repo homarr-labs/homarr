@@ -42,6 +42,7 @@ const sortColumns = [
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "downloads", "getJobsAndStatuses"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {

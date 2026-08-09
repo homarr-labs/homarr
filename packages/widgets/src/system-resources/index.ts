@@ -14,6 +14,7 @@ const labelDisplayModeOptions = {
 
 export const { definition, componentLoader } = createWidgetDefinition("systemResources", {
   icon: IconGraphFilled,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "healthMonitoring"]],
   refetchInterval: 5,
   supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],

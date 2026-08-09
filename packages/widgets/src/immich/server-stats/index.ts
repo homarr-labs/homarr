@@ -5,6 +5,7 @@ import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("immich-serverStats", {
   icon: IconGraphFilled,
+  supportsAdvancedFocus: true,
   queryKeys: [[["widget", "immich", "getServerStats"]], [["widget", "immich", "getAlbums"]]],
   queryMatcher: matchesWidgetRuntimeQuery,
   refetchInterval: null,

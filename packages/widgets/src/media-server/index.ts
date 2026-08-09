@@ -7,6 +7,7 @@ import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("mediaServer", {
   icon: IconVideo,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "mediaServer", "getCurrentStreams"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {
