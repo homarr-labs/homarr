@@ -5,6 +5,7 @@ import {
   customWidgetOptionControls,
   customWidgetOptionSchema,
   getCustomWidgetDefaultOptions,
+  normalizeCustomWidgetOptions,
   validateCustomWidgetOptions,
 } from "../core";
 
@@ -67,6 +68,29 @@ describe("lean Custom Widget options", () => {
     );
     const configuration = getCustomWidgetDefaultOptions(options);
     expect(validateCustomWidgetOptions(options, configuration)).toEqual([]);
+  });
+
+  it("replaces stale values with current defaults", () => {
+    const options = customWidgetDefinitionSchema.parse({
+      $schema: "homarr-custom-widget-v2",
+      name: "Updated options",
+      sources: {},
+      requests: {},
+      options: {
+        limit: { label: "Limit", control: "slider", default: 5, min: 1, max: 10 },
+        label: { label: "Label", control: "text", default: "Default" },
+      },
+      template: "<Text>{options.limit}</Text>",
+    }).options;
+
+    const normalized = normalizeCustomWidgetOptions(options, {
+      limit: "5",
+      label: "Custom",
+      removed: true,
+    });
+
+    expect(normalized).toEqual({ limit: 5, label: "Custom" });
+    expect(validateCustomWidgetOptions(options, normalized)).toEqual([]);
   });
 
   it("rejects duplicate static choice values", () => {
