@@ -112,8 +112,8 @@ The advanced deployments environment variables should only be used if you know w
 | Environment Variable     | Description                                                                                                                         |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `DB_MIGRATIONS_DISABLED` | Disable db migrations. For example for helm charts.                                                                                 |
-| `WORKSHOP_PUBLIC_ORIGIN` | Origin used in PocketBase-generated links and email. It must be set explicitly in production.                                       |
-| `PB_ALLOWED_ORIGINS`     | Browser origins accepted by PocketBase. The central public community defaults to `*` so self-hosted Homarr instances can use OAuth. |
+| `WORKSHOP_PUBLIC_ORIGIN` | Origin used in PocketBase-generated links and email. It must be set explicitly in production and must match the externally reachable Workshop origin. |
+| `PB_ALLOWED_ORIGINS`     | Browser origins accepted by PocketBase. Use `*` for the central public community so arbitrary self-hosted Homarr instances can use the API and OAuth; private staging may use a comma-separated origin allowlist. |
 
 All public URL variables reject non-HTTP protocols, embedded credentials, query strings, and fragments, and normalize
 trailing slashes when Homarr or Docusaurus starts. The Docusaurus-only `WORKSHOP_URL` name is accepted as a deprecated alias for
