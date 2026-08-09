@@ -101,7 +101,7 @@ A `2 × 1` tile therefore contains two fixed cell widths plus the gap between th
 Widgets see their logical size, while the board's visual scale makes the complete layout larger or smaller.
 When fitting below 100%, Homarr keeps widget typography and control density at their normal readable size.
 On larger canvases, the complete board grows together like browser zoom.
-The scale never drops below 75%; on narrower screens the canvas scrolls horizontally instead of shrinking controls below an accessible size.
+The complete canvas always fits the available width and never adds horizontal board scrolling.
 
 The position and size of every item are independent in each responsive layout.
 Moving or resizing an item in one layout does not change any other layout.
@@ -109,8 +109,8 @@ When adding a new layout, its initial positions and sizes are generated from the
 New items use their widget's default grid size, while a new Container starts at a useful `4 × 3` size when the layout has enough columns.
 Both are placed in the first available position.
 
-The current board edge is a hard drag boundary, so moving a tile outside the canvas cancels that placement instead of creating empty rows.
-Adding content can still create the rows required for the new tile.
+The canvas is at least one window tall, even when it is empty.
+Its left and right edges are hard drag boundaries, while its bottom edge extends automatically as a tile is dragged or resized downward.
 Nested Containers keep their own resizable bounds.
 
 #### Name
