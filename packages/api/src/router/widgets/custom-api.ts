@@ -9,6 +9,7 @@ import type { BoardPermission } from "@homarr/definitions";
 import {
   getCustomWidgetConfirmation,
   getCustomWidgetDefaultOptions,
+  normalizeCustomWidgetOptions,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
 import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
@@ -96,7 +97,10 @@ async function resolvePlacedDefinitionAsync(ctx: RouterContext, itemId: string) 
   if (!stored.enabled) throw new TRPCError({ code: "FORBIDDEN", message: "Widget is disabled" });
 
   const definition = parseStoredCustomWidgetDefinition(stored);
-  const configuration = { ...getCustomWidgetDefaultOptions(definition.options), ...itemOptions.configuration };
+  const configuration =
+    itemOptions.configurationVersion === stored.updatedAt.getTime()
+      ? { ...getCustomWidgetDefaultOptions(definition.options), ...itemOptions.configuration }
+      : normalizeCustomWidgetOptions(definition.options, itemOptions.configuration);
   const issues = validateCustomWidgetOptions(definition.options, configuration);
   if (issues.length > 0) {
     throw new TRPCError({

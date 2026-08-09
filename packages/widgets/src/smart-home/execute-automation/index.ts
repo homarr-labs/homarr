@@ -7,6 +7,7 @@ import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("smartHome-executeAutomation", {
   icon: IconBinaryTree,
+  supportsAdvancedFocus: true,
   maxIntegrations: 1,
   createOptions() {
     return optionsBuilder.from((factory) => ({

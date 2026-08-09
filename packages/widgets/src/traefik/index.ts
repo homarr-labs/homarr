@@ -5,6 +5,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("traefik", {
   icon: IconRoute,
+  supportsAdvancedFocus: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showTcp: factory.switch({

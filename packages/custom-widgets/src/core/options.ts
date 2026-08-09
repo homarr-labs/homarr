@@ -12,6 +12,18 @@ export function getCustomWidgetDefaultOptions(
   return Object.fromEntries(Object.entries(options).map(([name, option]) => [name, option.default]));
 }
 
+export function normalizeCustomWidgetOptions(
+  options: CustomWidgetOptions,
+  value: Record<string, unknown>,
+): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(options).map(([name, option]) => [
+      name,
+      getCustomWidgetOptionValueIssue(option, value[name]) ? option.default : value[name],
+    ]),
+  );
+}
+
 export function validateCustomWidgetOptions(
   options: CustomWidgetOptions,
   value: Record<string, unknown>,

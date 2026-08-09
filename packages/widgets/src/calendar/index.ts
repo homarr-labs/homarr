@@ -9,6 +9,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("calendar", {
   icon: IconCalendar,
+  supportsAdvancedFocus: true,
   queryKey: [["widget", "calendar", "findAllEvents"]],
   queryMatcher: matchesWidgetRuntimeQuery,
   createOptions() {
