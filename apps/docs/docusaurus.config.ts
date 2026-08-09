@@ -12,6 +12,7 @@ if (deprecatedWorkshopUrl && !process.env.WORKSHOP_API_URL) {
 const publicUrls = resolveHomarrUrlConfig({
   homarrWebsiteUrl: process.env.HOMARR_WEBSITE_URL,
   workshopApiUrl: process.env.WORKSHOP_API_URL ?? deprecatedWorkshopUrl,
+  workshopWebUrl: process.env.WORKSHOP_WEB_URL,
 });
 const config: Config = {
   title: "Homarr documentation",
@@ -24,7 +25,9 @@ const config: Config = {
   projectName: "homarr",
   customFields: {
     workshopUrl: publicUrls.workshopApiUrl,
+    workshopWebUrl: publicUrls.workshopWebUrl,
   },
+  scripts: [{ src: "/workshop-runtime-config.js" }],
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
