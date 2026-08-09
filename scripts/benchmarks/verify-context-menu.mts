@@ -131,6 +131,30 @@ const closed = await dropdown
   .catch(() => false);
 check(closed, "Escape closes the menu");
 
+// Touch long-press: the shared menu replaced Mantine's Menu.ContextMenu, which
+// handled this natively, so it has to be re-proven rather than assumed.
+const longPressItem = (index: number) =>
+  page.evaluate((itemIndex) => {
+    const items = [...document.querySelectorAll('[data-homarr-dev-benchmark-board] [data-type="item"]')];
+    const item = items[itemIndex];
+    if (!item) return false;
+    const rect = item.getBoundingClientRect();
+    const target = (item.querySelector("*") as HTMLElement | null) ?? (item as HTMLElement);
+    const x = rect.x + rect.width / 2;
+    const y = rect.y + rect.height / 2;
+    const touch = new Touch({ identifier: 1, target, clientX: x, clientY: y });
+    target.dispatchEvent(new TouchEvent("touchstart", { bubbles: true, cancelable: true, touches: [touch] }));
+    return true;
+  }, index);
+
+await longPressItem(2 % Math.max(itemCount, 1));
+// Delay is 500ms in the component; allow margin.
+await page.waitForTimeout(1_200);
+const openedByTouch = await dropdown.isVisible().catch(() => false);
+check(openedByTouch, "touch long-press opens the context menu");
+await page.keyboard.press("Escape").catch(() => undefined);
+await dropdown.waitFor({ state: "hidden", timeout: 5_000 }).catch(() => undefined);
+
 // A shared menu has to re-target; a per-item menu would trivially pass the first case.
 if (itemCount > 1) {
   await rightClickItem(1);
@@ -143,11 +167,11 @@ if (itemCount > 1) {
   await dropdown.waitFor({ state: "hidden", timeout: 5_000 }).catch(() => undefined);
 }
 
+// Fiber totals are reported for context only, never asserted on: this counter walks
+// every root the devtools hook has seen, and portals opened by the menu make it swing
+// by 2x between runs of the same build. Use probe-fiber-tree.mts for a stable count.
 const afterFibers = await countFibers(page);
-console.log(
-  `\nfibers after opening/closing menus: ${afterFibers} (delta ${afterFibers - idleFibers >= 0 ? "+" : ""}${afterFibers - idleFibers})`,
-);
-check(afterFibers < idleFibers * 1.5, "tree did not balloon after using the menu");
+console.log(`\nfibers (context only, not asserted): idle ${idleFibers} -> ${afterFibers} after using the menu`);
 
 console.log(`\n${failures.length === 0 ? "ALL CHECKS PASSED" : `${failures.length} CHECK(S) FAILED`}`);
 console.log(JSON.stringify({ itemCount, idleFibers, afterFibers, failures }, null, 2));

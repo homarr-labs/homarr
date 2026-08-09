@@ -8,6 +8,66 @@ onboarding restore UI, signed in, then the busiest board (28 items / 16 widget k
 Images built locally from known commits so the comparison is not against a stale registry
 tag: baseline = merge-base `06724cfeb`, branch = `abec79abe`.
 
+## Before / after
+
+One instrument, one workload, alternated runs (2 before, 2 after) on the same restored
+backup: **4 tabs across 2 boards**, 3 reloads each, widget interaction, 2 min idle soak.
+`before` = merge-base `06724cfeb`, `after` = this branch. Server figures are cgroup
+anonymous memory; `memory.current` is not used because page cache swings it by 60+ MiB.
+
+### Server memory
+
+| stage | before | after | change |
+| --- | --- | --- | --- |
+| boot idle | 141.9 MiB | **89.7 MiB** | **−37%** |
+| after restore | 143.2 MiB | **98.8 MiB** | **−31%** |
+| after sign-in | 248.7 MiB | **158.5 MiB** | **−36%** |
+| dashboard loaded | 257.3 MiB | **173.0 MiB** | **−33%** |
+| after 3 reloads × 4 tabs | 368.4 MiB | 364.3 MiB | **−1%** |
+| after 2 min idle soak | 332.0 MiB | **232.5 MiB** | **−30%** |
+| peak | 705.2 MiB | **568.4 MiB** | **−19%** |
+
+**The honest caveat, and it matters:** under *sustained* multi-tab load the two builds
+converge — 368 vs 364 MiB. The wins are at idle, at steady state, and at peak. That is
+why hammering the app with five tabs did not feel 30% lighter: at that point the
+footprint is dominated by live widget data and render churn, which this PR does not
+change. Idle, first load and worst-case are materially better; saturation is not.
+
+### Browser
+
+| metric | before | after | change |
+| --- | --- | --- | --- |
+| JS event listeners | 10,126 | **7,774** | **−23%** |
+| DOM nodes | 9,175 | **8,284** | **−10%** |
+| React fibers (idle board) | 5,224 | **3,588** | **−31%** |
+| browser JS heap | 55.2 MiB | **51.1 MiB** | **−7%** |
+
+### Cost and neutral metrics
+
+| metric | before | after | change |
+| --- | --- | --- | --- |
+| container CPU over the run | 22.8 s | 22.8 s | unchanged |
+| median board load | 710 ms | 506 ms | faster, but ±200 ms run to run |
+| image size | 410 MB | **398 MB** | −3% |
+
+CPU is unchanged at this workload. An isolated measurement of the V8 young-generation
+bound showed ~8% more CPU on a lighter single-tab run; it does not show up here.
+
+### What produced each win
+
+Measured in isolation, cumulatively from the merge-base image:
+
+| change | size | effect |
+| --- | --- | --- |
+| `--max-semi-space-size=4` | **1 line** | −19% idle, −21% peak server |
+| `serverExternalPackages` + `mysql2`/`pg` | **1 line** | −21 MiB idle server |
+| `serverExternalPackages` + 8 more server-only deps | 1 block | −18 MiB loaded server |
+| one shared board context menu | 3 files | **−23% listeners, −31% fibers** |
+| integrations barrel diet | ~10 files | −40 MiB under load, 0 at idle |
+| jsdom → linkedom | 3 files | image size + XSS hardening |
+| V8 heap cap | 1 line | 0 — a drift ceiling, not a reduction |
+| cache-invalidation layer + `next-cache-handler` | ~30 files | **0 — deleted** |
+
 ## Metric choice
 
 `memory.current` moved between **192 and 261 MiB for the same baseline image** across runs,
@@ -399,3 +459,25 @@ node --experimental-strip-types scripts/benchmarks/stress-restore.mts
 
 The backup is read from that path and never copied into the repo — it contains real
 integration secrets and the instance's encryption key.
+
+## What has not been verified
+
+Stating these plainly, because an unqualified "tested" would be wrong:
+
+- **No long-duration soak.** The reports behind #5301 are about growth over *days*; the
+  longest run here is 2 minutes of idle. Nothing here demonstrates the multi-GB drift is
+  fixed — the V8 heap cap bounds it by construction, but that is an argument, not a
+  measurement.
+- **Single user, single browser.** No concurrent users, no multi-instance
+  (`REDIS_IS_EXTERNAL=true`) deployment, no non-SQLite database. The DB-driver
+  unbundling in particular is only exercised on the SQLite path.
+- **The React DevTools Profiler tab itself.** The profiling build is verified at the
+  bundle level; a synthetic devtools hook cannot confirm the tab, so that last step needs
+  the real extension.
+- **The dominant client cost is unfixed.** The App Router root re-renders ~1×/second and
+  that drives most of the churn. Everything shipped here is downstream of it.
+- **Only the board path is covered end-to-end.** Manage pages, onboarding and integration
+  flows are covered by CI's E2E suite, not by these benchmarks.
+- **Two tests are flaky in CI** (`pi-hole`, backup ZIP) and both pass in isolation
+  locally. They are pre-existing and unrelated to these changes, but they mean a green
+  run is not automatic.
