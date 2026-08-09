@@ -151,7 +151,9 @@ from minimal through high; explicit levels are sent using the AI SDK's provider-
 still depend on support from the chosen model and endpoint. Reasoning text is shown live when the provider
 streams it through assistant-ui's compact chain-of-thought disclosure. The **Thinking** disclosure renders
 Markdown, can be opened or closed without interrupting the response, and keeps the user's collapsed state when
-another message starts.
+another message starts. A compact dot matrix distinguishes an initial thinking pass from response streaming and
+settles into waiting, success, or error states in the minimized activity bar. The state always keeps its text label,
+and the animation is disabled when the operating system requests reduced motion.
 
 A compact context control beside the model selector gives a quick glance at cumulative conversation tokens and
 cost. Its popover keeps the latest complete context reading while a new response starts and lists every request

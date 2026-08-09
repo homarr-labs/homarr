@@ -352,6 +352,12 @@
   max-width: 100%;
 }
 
+.messagePending {
+  width: max-content;
+  min-height: 1.75rem;
+  padding-inline: 0.1rem;
+}
+
 .messageText {
   line-height: 1.6;
   overflow-wrap: anywhere;
@@ -909,8 +915,10 @@
 
 .reasoning {
   margin-block: 0.45rem;
-  padding-inline-start: 0.6rem;
-  border-inline-start: 2px solid var(--mantine-color-default-border);
+  overflow: hidden;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: color-mix(in srgb, var(--mantine-color-default) 72%, transparent);
 }
 
 .reasoningToggle {
@@ -918,9 +926,12 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  padding-block: 0.25rem;
-  border-radius: var(--mantine-radius-sm);
+  padding: 0.4rem 0.55rem;
   cursor: pointer;
+}
+
+.reasoningToggle:hover {
+  background: var(--mantine-color-default-hover);
 }
 
 .reasoningToggle:focus-visible {
@@ -937,7 +948,8 @@
 }
 
 .reasoningContent {
-  padding: 0.3rem 0 0.2rem;
+  padding: 0.45rem 0.55rem 0.55rem;
+  border-top: 1px solid var(--mantine-color-default-border);
 }
 
 .reasoningText {
