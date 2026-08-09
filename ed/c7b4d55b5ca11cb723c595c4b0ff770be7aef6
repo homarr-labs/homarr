@@ -1,0 +1,21 @@
+apps/nextjs/src/components/board/sections/grid/test/grid-import-boundary.spec.ts
+  s_7cfb890e45839e::t_8ab4167f88b81c 30
+e2e/board-grid.spec.ts
+  s_7cfb890e45839e::t_d9eb987c09bc55 864
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "edc7b4d55b5ca11cb723c595c4b0ff770be7aef6",
+  "prompts": {},
+  "sessions": {
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

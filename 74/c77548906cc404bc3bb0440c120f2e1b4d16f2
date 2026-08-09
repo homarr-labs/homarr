@@ -1,0 +1,25 @@
+packages/db/migrations/mysql/meta/_journal.json
+  s_093d61b162b9ca::t_327c7b1b50f81b 328
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_093d61b162b9ca::t_51259774a647ab 5-6
+apps/docs/docs/management/api/index.mdx
+  s_093d61b162b9ca::t_51259774a647ab 4-6
+apps/docs/docs/advanced/keyboard-shortcuts/index.mdx
+  s_093d61b162b9ca::t_51259774a647ab 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "74c77548906cc404bc3bb0440c120f2e1b4d16f2",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

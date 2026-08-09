@@ -1,0 +1,33 @@
+packages/widgets/src/definition.ts
+  s_909ca8cf5b6e15::t_b6b6b6a6e8a529 17
+packages/widgets/src/notifications/index.ts
+  s_909ca8cf5b6e15::t_ccca8b93be2144 5
+.github/workflows/ci.yml
+  s_909ca8cf5b6e15::t_f5a11b0e7fe83f 85
+packages/widgets/src/beszel/_shared/tooltip.tsx
+  s_909ca8cf5b6e15::t_3b03abaf5f97bf 58,62,75,90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "1642a862d9c494144f4ded7456bbe0575dc715ac",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
