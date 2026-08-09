@@ -21,7 +21,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useTimeAgo } from "@homarr/common";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { useSettings } from "@homarr/settings";
+import type { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TranslationFunction } from "@homarr/translation";
