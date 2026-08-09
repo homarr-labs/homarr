@@ -6,10 +6,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { stringify as stringifySuperJSON } from "superjson";
 import { describe, test } from "vitest";
 
-import {
-  LOGICAL_GRID_CELL_SIZE,
-  LOGICAL_GRID_GAP,
-} from "../apps/nextjs/src/components/board/layout/constants";
+import { LOGICAL_GRID_CELL_SIZE, LOGICAL_GRID_GAP } from "../apps/nextjs/src/components/board/layout/constants";
 import * as sqliteSchema from "../packages/db/schema/sqlite";
 import { createHomarrContainer } from "./shared/create-homarr-container";
 import { createSqliteDbFileAsync } from "./shared/e2e-db";
@@ -1739,9 +1736,7 @@ const expectGridGrowsAtBoundaryAsync = async (page: Page, canvas: Locator, grid:
   await page.mouse.down();
   await page.mouse.move(start.x + 8, start.y);
   await expect(locator).toHaveAttribute("data-dnd-drag-source", "true");
-  await expect
-    .poll(async () => (await expectBoundingBoxAsync(grid)).height)
-    .toBeGreaterThan(gridBox.height);
+  await expect.poll(async () => (await expectBoundingBoxAsync(grid)).height).toBeGreaterThan(gridBox.height);
 
   await page.mouse.move(gridBox.x + gridBox.width / 2, gridBox.y + gridBox.height + logicalCellPitch / 2, {
     steps: 12,
