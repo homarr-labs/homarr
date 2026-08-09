@@ -108,8 +108,9 @@ The public URL contract is:
 | `WORKSHOP_PUBLIC_ORIGIN` | PocketBase-generated links and email              | Required in production        |
 | `PB_ALLOWED_ORIGINS`     | PocketBase browser origins                        | `*` for the central community |
 
-The deprecated docs-only `WORKSHOP_URL` alias remains for one release; `WORKSHOP_API_URL` takes precedence. Restart
-services after changing these values.
+The deprecated docs-only `WORKSHOP_URL` alias remains for one release; `WORKSHOP_API_URL` takes precedence. The
+combined Workshop image writes these public URLs into its browser runtime configuration whenever the container starts;
+the Docker build arguments remain fallbacks. Restart the container after changing these values, without rebuilding it.
 
 Back up application and PocketBase data before deployment. Publish the combined image by immutable digest, test the
 exact digest in staging, rehearse application rollback and PocketBase restore, then promote that same digest.
