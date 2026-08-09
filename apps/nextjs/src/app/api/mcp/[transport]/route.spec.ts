@@ -101,7 +101,7 @@ async function callMcp(method: string, params: Record<string, unknown> = {}, id 
   const data = response.headers.get("content-type")?.includes("text/event-stream")
     ? text
         .split("\n")
-        .find((line) => line.startsWith("data: "))
+        .find((line: string) => line.startsWith("data: "))
         ?.slice("data: ".length)
     : text;
   if (!data) throw new Error(`MCP response did not contain JSON-RPC data: ${text}`);

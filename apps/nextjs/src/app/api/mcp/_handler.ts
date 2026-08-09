@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { userAgent } from "next/server";
-import { ResourceTemplate, type McpServer } from "@modelcontextprotocol/server";
+import type { McpServer } from "@modelcontextprotocol/server";
+import { ResourceTemplate } from "@modelcontextprotocol/server";
 import { z } from "zod/v4";
 
 import type { McpTool } from "@homarr/api/mcp";
