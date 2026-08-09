@@ -70,7 +70,8 @@ pnpm dev
 
 `WORKSHOP_API_URL` controls API calls. `WORKSHOP_WEB_URL` controls links from Homarr. `HOMARR_WEBSITE_URL` is the
 documentation/site base. All three must be absolute HTTP(S) URLs. The old Docusaurus-only `WORKSHOP_URL` variable
-remains a deprecated alias for one release.
+remains a deprecated alias for one release. The production image writes these values into the browser runtime
+configuration at container startup, so changing them requires a restart but not an image rebuild.
 
 ## Optional GitHub OAuth
 
