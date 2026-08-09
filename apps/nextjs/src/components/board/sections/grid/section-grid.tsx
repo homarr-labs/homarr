@@ -147,10 +147,7 @@ export const SectionGrid = ({
   );
   const displayedItems = items.map((item) => withPlacement(item, placementById.get(item.id)));
   const displayedInnerSections = innerSections.map((item) => withPlacement(item, placementById.get(item.id)));
-  const minimumViewportRowCount = useMinimumViewportRowCount(
-    section.kind === "empty" && railPlacement === "main",
-    canvasScale,
-  );
+  const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty", canvasScale);
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   const logicalWidth = getLogicalTrackSize(columnCount);

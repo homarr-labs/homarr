@@ -21,6 +21,7 @@
   height: var(--board-gutter-viewport-height);
   padding-top: 24px;
   margin-top: -24px;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;

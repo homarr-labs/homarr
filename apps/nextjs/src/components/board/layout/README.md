@@ -10,9 +10,9 @@ The board uses fixed logical units:
 Items keep the same logical dimensions at every viewport. The viewport reserves
 the painted size while the inner canvas remains at its logical dimensions, so a
 widget's `clientWidth`, `clientHeight`, and `ResizeObserver` measurements stay
-stable. The visual canvas always fits the available width, the main root keeps
-at least one viewport of height, and edit-mode previews extend it downward as
-needed.
+stable. The visual canvas always fits the available width, every root lane
+keeps at least one viewport of height, and edit-mode previews extend it downward
+as needed.
 
 The read-only renderer should:
 
