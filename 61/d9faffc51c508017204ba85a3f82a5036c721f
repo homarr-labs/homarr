@@ -1,0 +1,25 @@
+PHASE2-FINDINGS.md
+  s_a70c07ac5b7a5a::t_49829f780b1bf8 131-157
+apps/nextjs/next.config.ts
+  s_a70c07ac5b7a5a::t_9bf7aedf6ca810 54-55
+apps/nextjs/src/app/[locale]/manage/tools/api/components/scalar-api-reference.tsx
+  s_a70c07ac5b7a5a::t_0dda413fdb0926 3,9-15
+apps/nextjs/src/components/board/items/widget-hover-overlay.module.css
+  s_a70c07ac5b7a5a::t_8450f7e79aef10 16-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "61d9faffc51c508017204ba85a3f82a5036c721f",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
