@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box, Stack, Text, Title } from "@mantine/core";
+import { Box, Loader, Stack, Text, Title } from "@mantine/core";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import timezones from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 
 import { clientApi } from "@homarr/api/client";
+import { metricToImperial } from "@homarr/common";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
+import { isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { AnimatedWeatherIcon } from "../weather/animated-icon";
 
@@ -16,7 +20,7 @@ dayjs.extend(advancedFormat);
 dayjs.extend(utc);
 dayjs.extend(timezones);
 
-export default function ClockWidget({ options, width }: WidgetComponentProps<"clock">) {
+export default function ClockWidget({ options, width, height, displayMode }: WidgetComponentProps<"clock">) {
   const secondsFormat = options.showSeconds ? ":ss" : "";
   const timeFormat = options.is24HourFormat ? `HH:mm${secondsFormat}` : `hh:mm${secondsFormat} A`;
   const dateFormat = options.dateFormat;
@@ -26,7 +30,8 @@ export default function ClockWidget({ options, width }: WidgetComponentProps<"cl
   const time = useCurrentTime(options);
   const zonedTime = time === null ? null : dayjs(time).tz(timezone);
 
-  const sizing = width < 128 ? "xs" : width < 196 ? "sm" : "md";
+  const minimumAxis = Math.min(width, height * 1.5);
+  const sizing = minimumAxis < 128 ? "xs" : minimumAxis < 196 ? "sm" : "md";
   const showWeatherCorner = options.showWeather && sizing !== "xs";
 
   return (
@@ -36,6 +41,7 @@ export default function ClockWidget({ options, width }: WidgetComponentProps<"cl
           latitude={options.weatherLocation.latitude}
           longitude={options.weatherLocation.longitude}
           isFahrenheit={options.isWeatherFormatFahrenheit}
+          showDetails={displayMode === "advanced"}
         />
       )}
       <Stack className="clock-text-stack" h="100%" align="center" justify="center" gap={sizing}>
@@ -45,11 +51,18 @@ export default function ClockWidget({ options, width }: WidgetComponentProps<"cl
           </Text>
         )}
         <Title className="clock-time-text" fw={700} order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6} lh="1">
-          {zonedTime === null ? "--:--" : zonedTime.format(options.customTimeFormat ? customTimeFormat : timeFormat)}
+          <time dateTime={zonedTime?.toISOString()}>
+            {zonedTime === null ? "--:--" : zonedTime.format(options.customTimeFormat ? customTimeFormat : timeFormat)}
+          </time>
         </Title>
         {options.showDate && (
           <Text className="clock-date-text" size={sizing} lineClamp={1}>
             {zonedTime?.format(options.customDateFormat ? customDateFormat : dateFormat)}
+          </Text>
+        )}
+        {displayMode === "advanced" && (
+          <Text size="xs" c="dimmed" lineClamp={1}>
+            {zonedTime === null ? null : `${timezone} · UTC${zonedTime.format("Z")}`}
           </Text>
         )}
       </Stack>
@@ -61,12 +74,26 @@ interface ClockWeatherCornerProps {
   latitude: number;
   longitude: number;
   isFahrenheit: boolean;
+  showDetails: boolean;
 }
 
-const ClockWeatherCorner = ({ latitude, longitude, isFahrenheit }: ClockWeatherCornerProps) => {
-  const { data: weather } = clientApi.widget.weather.atLocation.useQuery({ latitude, longitude });
+const ClockWeatherCorner = ({ latitude, longitude, isFahrenheit, showDetails }: ClockWeatherCornerProps) => {
+  const t = useI18n();
+  const tCommon = useScopedI18n("common");
+  const weatherQuery = clientApi.widget.weather.atLocation.useQuery({ latitude, longitude });
+  const weather = weatherQuery.data;
 
-  if (!weather) return null;
+  if (!weather) {
+    return (
+      <Box pos="absolute" top={4} left={4}>
+        {isInitialWidgetQueryPending(weatherQuery) ? (
+          <Loader size="xs" aria-label={tCommon("action.loading")} />
+        ) : (
+          <WidgetQueryErrorIndicator error={weatherQuery.error} label={t("widget.weather.name")} />
+        )}
+      </Box>
+    );
+  }
 
   const temp = isFahrenheit ? weather.current.temperature * (9 / 5) + 32 : weather.current.temperature;
   const unit = isFahrenheit ? "°F" : "°C";
@@ -78,6 +105,13 @@ const ClockWeatherCorner = ({ latitude, longitude, isFahrenheit }: ClockWeatherC
         {Math.round(temp)}
         {unit}
       </Text>
+      {showDetails && (
+        <Text size="xs" c="dimmed">
+          {Math.round(isFahrenheit ? metricToImperial(weather.current.windspeed) : weather.current.windspeed)}{" "}
+          {isFahrenheit ? tCommon("unit.speed.milesPerHour") : tCommon("unit.speed.kilometersPerHour")}
+        </Text>
+      )}
+      <WidgetQueryErrorIndicator error={weatherQuery.error} label={t("widget.weather.name")} />
     </Stack>
   );
 };

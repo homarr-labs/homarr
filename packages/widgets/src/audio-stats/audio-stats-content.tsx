@@ -8,7 +8,14 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
 import type { AudioStatsBackend, AudioStatsDisplayOptions } from "./shared";
-import { AUDIO_STATS_TRANSLATION_SCOPE, getGridCols, getIconSize, getVisibleStats } from "./shared";
+import {
+  AUDIO_STATS_TRANSLATION_SCOPE,
+  getGridCols,
+  getIconSize,
+  prioritizeVisibleStats,
+  getVisibleStatLimit,
+  getVisibleStats,
+} from "./shared";
 
 const rootClassByCompact = {
   true: classes.rootCompact,
@@ -30,14 +37,17 @@ interface AudioStatsContentProps {
   stats: NavidromeDashboardData | AudiobookshelfDashboardData;
   options: AudioStatsDisplayOptions;
   width: number;
+  height: number;
 }
 
-export function AudioStatsContent({ backend, stats, options, width }: AudioStatsContentProps) {
+export function AudioStatsContent({ backend, stats, options, width, height }: AudioStatsContentProps) {
   const t = useScopedI18n(AUDIO_STATS_TRANSLATION_SCOPE);
-  const visibleStats = getVisibleStats(backend, options, stats);
-  const compactKey = String(options.compactMode ?? false) as keyof typeof rootClassByCompact;
-  const gridCols = getGridCols(width, visibleStats.length, options.compactMode ?? false);
-  const iconSize = getIconSize(width, options.compactMode ?? false);
+  const compact = options.compactMode ?? false;
+  const enabledStats = prioritizeVisibleStats(getVisibleStats(backend, options, stats), compact);
+  const visibleStats = enabledStats.slice(0, getVisibleStatLimit(width, height, enabledStats.length, compact));
+  const compactKey = String(compact) as keyof typeof rootClassByCompact;
+  const gridCols = getGridCols(width, visibleStats.length, compact);
+  const iconSize = getIconSize(width, compact);
 
   return (
     <div className={`${classes.root} ${rootClassByCompact[compactKey]}`}>

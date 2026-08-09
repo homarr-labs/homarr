@@ -1,7 +1,21 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ActionIcon, Avatar, Badge, Box, Center, Group, Menu, Portal, Stack, Text, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Avatar,
+  Badge,
+  Box,
+  Center,
+  getDefaultZIndex,
+  Group,
+  Menu,
+  Portal,
+  Stack,
+  Text,
+  Tooltip,
+  VisuallyHidden,
+} from "@mantine/core";
 import {
   IconBrandDocker,
   IconCategoryPlus,
@@ -29,8 +43,11 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
+import actionTargetClasses from "../common/action-target.module.css";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
+import { getDockerColumnVisibility, getDockerFooterVisibility } from "./layout";
 
 type DockerContainer = RouterOutputs["docker"]["getContainers"]["containers"][number];
 type ContainerAction = "start" | "stop" | "restart" | "remove";
@@ -63,10 +80,32 @@ const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   );
 };
 
+const ContainerStateDot = ({ state }: { state: ContainerState }) => {
+  const t = useScopedI18n("docker.field.state.option");
+  const label = t(state);
+
+  return (
+    <Tooltip label={label} withArrow>
+      <Box component="span" style={{ display: "inline-flex", flexShrink: 0 }}>
+        <Box
+          component="span"
+          aria-hidden="true"
+          w={8}
+          h={8}
+          bg={`${containerStateColorMap[state]}.6`}
+          style={{ borderRadius: "50%" }}
+        />
+        <VisuallyHidden>{label}</VisuallyHidden>
+      </Box>
+    </Tooltip>
+  );
+};
+
 const createColumns = (
   t: ReturnType<typeof useScopedI18n<"docker">>,
   handlers: ContainerActionHandlers,
   sortingEnabled: boolean,
+  inlineState: boolean,
 ): DataTableColumn<DockerContainer>[] => [
   {
     accessor: "name",
@@ -76,6 +115,7 @@ const createColumns = (
     sortable: sortingEnabled,
     render: (container) => (
       <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
+        {inlineState && <ContainerStateDot state={container.state} />}
         <Avatar
           variant="outline"
           radius="sm"
@@ -188,6 +228,7 @@ export default function DockerWidget({
   options,
   width,
   isEditMode,
+  displayMode,
   boardId,
   itemId,
   setOptions,
@@ -198,9 +239,11 @@ export default function DockerWidget({
   const board = useOptionalBoard();
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
-  const isTiny = width <= 256;
+  const isAdvanced = displayMode === "advanced";
 
-  const { data, refetch, isFetching } = clientApi.docker.getContainers.useQuery();
+  const containersQuery = clientApi.docker.getContainers.useQuery();
+  const data = getUsableWidgetQueryData(containersQuery);
+  const { refetch, isFetching } = containersQuery;
   const containers = useMemo(() => data?.containers ?? [], [data?.containers]);
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
@@ -279,13 +322,18 @@ export default function DockerWidget({
     [containers],
   );
 
-  const selectedColumns = useMemo(() => new Set<string>(options.columns), [options.columns]);
+  const columnVisibility = useMemo(
+    () => getDockerColumnVisibility(options.columns, width, isAdvanced),
+    [isAdvanced, options.columns, width],
+  );
+  const inlineState =
+    !isAdvanced && width < 340 && options.columns.includes("name") && options.columns.includes("state");
   const columns = useMemo(() => {
-    const sortingEnabled = options.enableRowSorting && !isEditMode;
-    return createColumns(t, actionHandlers, sortingEnabled).filter(({ accessor }) =>
-      selectedColumns.has(String(accessor)),
+    const sortingEnabled = (isAdvanced || options.enableRowSorting) && !isEditMode;
+    return createColumns(t, actionHandlers, sortingEnabled, inlineState).filter(
+      ({ accessor }) => columnVisibility[String(accessor) as keyof typeof columnVisibility],
     );
-  }, [actionHandlers, isEditMode, options.enableRowSorting, selectedColumns, t]);
+  }, [actionHandlers, columnVisibility, inlineState, isAdvanced, isEditMode, options.enableRowSorting, t]);
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
     columnAccessors,
@@ -303,13 +351,15 @@ export default function DockerWidget({
     setContextMenu({ x: event.clientX, y: event.clientY, container: record });
   }, []);
 
-  if (options.columns.length === 0) {
+  if (!isAdvanced && options.columns.length === 0) {
     return (
       <Center h="100%">
         <Text>{t("error.noColumns")}</Text>
       </Center>
     );
   }
+
+  const footerVisibility = getDockerFooterVisibility(width, isAdvanced);
 
   return (
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
@@ -325,7 +375,7 @@ export default function DockerWidget({
           columns={effectiveColumns}
           storeColumnsKey={storeKey}
           sortStatus={sortStatus}
-          onSortStatusChange={options.enableRowSorting && !isEditMode ? setSortStatus : undefined}
+          onSortStatusChange={(isAdvanced || options.enableRowSorting) && !isEditMode ? setSortStatus : undefined}
           idAccessor="id"
           onRowContextMenu={isEditMode ? undefined : handleContextMenu}
           onScroll={() => {
@@ -334,8 +384,15 @@ export default function DockerWidget({
         />
       </Box>
 
-      {!isTiny && (
-        <Group justify="space-between" style={{ borderTop: "0.0625rem solid var(--border-color)" }} p={4} wrap="nowrap">
+      {footerVisibility.footer && (
+        <Group
+          justify="space-between"
+          style={{
+            borderTop: "0.0625rem solid var(--border-color)",
+          }}
+          p={4}
+          wrap="nowrap"
+        >
           <Group gap={4} wrap="nowrap">
             <IconBrandDocker size={20} style={{ flexShrink: 0 }} />
             <Text size="sm" truncate>
@@ -344,14 +401,19 @@ export default function DockerWidget({
           </Group>
 
           <Group gap="sm" wrap="nowrap" justify="flex-end" style={{ minWidth: 0 }}>
-            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-              {t("table.totalCpu", { cpu: totals.cpu.toFixed(2) })}
-            </Text>
-            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
-              {t("table.totalMemory", { memory: formatBytes(totals.memory) })}
-            </Text>
+            {footerVisibility.cpu && (
+              <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+                {t("table.totalCpu", { cpu: totals.cpu.toFixed(2) })}
+              </Text>
+            )}
+            {footerVisibility.memory && (
+              <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+                {t("table.totalMemory", { memory: formatBytes(totals.memory) })}
+              </Text>
+            )}
             <Tooltip label={t("table.refresh.lastUpdated", { when: relativeTime })}>
               <ActionIcon
+                className={actionTargetClasses.root}
                 size="sm"
                 variant="transparent"
                 c="var(--mantine-color-text)"
@@ -386,6 +448,7 @@ function ContainerMenuButton({
     <Menu opened={opened} onChange={setOpened} closeOnItemClick={false} withinPortal position="bottom-end" shadow="sm">
       <Menu.Target>
         <ActionIcon
+          className={actionTargetClasses.root}
           variant="subtle"
           color="gray"
           size="sm"
@@ -486,7 +549,7 @@ function ContainerContextMenu({
         left={0}
         w="100vw"
         h="100vh"
-        style={{ zIndex: 1000 }}
+        style={{ zIndex: getDefaultZIndex("popover") }}
         onClick={onClose}
         onContextMenu={(event) => {
           event.preventDefault();

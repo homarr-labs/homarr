@@ -81,6 +81,7 @@
     "@tiptap/extension-underline": "catalog:",
     "@tiptap/react": "catalog:",
     "@tiptap/starter-kit": "catalog:",
+    "@trpc/react-query": "catalog:",
     "acorn": "catalog:",
     "acorn-jsx": "catalog:",
     "clsx": "catalog:",

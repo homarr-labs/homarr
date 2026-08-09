@@ -12,6 +12,7 @@ import { updateBoardName } from "./updater";
 
 const BoardContext = createContext<{
   board: RouterOutputs["board"]["getBoardByName"];
+  layoutOverrideId: string | null;
   currentLayout: string;
   initialViewportWidth: number;
 } | null>(null);
@@ -41,10 +42,12 @@ export const BoardProvider = ({
   initialBoard,
   initialLayoutId,
   initialViewportWidth,
+  layoutOverrideId = null,
 }: PropsWithChildren<{
   initialBoard: RouterOutputs["board"]["getBoardByName"];
   initialLayoutId: string;
   initialViewportWidth: number;
+  layoutOverrideId?: string | null;
 }>) => {
   const { data } = clientApi.board.getBoardByName.useQuery(
     { name: initialBoard.name },
@@ -58,8 +61,8 @@ export const BoardProvider = ({
   );
   const currentLayout = useSyncExternalStore(
     subscribeToViewport,
-    () => getCurrentLayout(data),
-    () => initialLayoutId,
+    () => getCurrentLayout(data, layoutOverrideId),
+    () => layoutOverrideId ?? initialLayoutId,
   );
 
   // Update the board name so it can be used within updateBoard method
@@ -83,6 +86,7 @@ export const BoardProvider = ({
     <BoardContext.Provider
       value={{
         board: data,
+        layoutOverrideId,
         currentLayout,
         initialViewportWidth,
       }}
@@ -108,9 +112,17 @@ export const useOptionalBoard = () => {
   return context?.board ?? null;
 };
 
-export const getCurrentLayout = (board: RouterOutputs["board"]["getBoardByName"]) => {
+export const useLayoutOverride = () => useContext(BoardContext)?.layoutOverrideId ?? null;
+
+export const getCurrentLayout = (
+  board: RouterOutputs["board"]["getBoardByName"],
+  layoutOverrideId: string | null = null,
+) => {
+  const layouts = board.layouts;
+  if (layoutOverrideId && layouts.some((layout) => layout.id === layoutOverrideId)) return layoutOverrideId;
+
   const viewportWidth = typeof window === "undefined" ? 0 : getViewportWidth();
-  return getLayoutIdForViewportWidth(board.layouts, viewportWidth);
+  return getLayoutIdForViewportWidth(layouts, viewportWidth);
 };
 
 export const useCurrentLayout = () => {

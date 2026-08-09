@@ -16,6 +16,7 @@ describe("board lanes", () => {
       leftGutterColumnCount: 2,
       rightGutterColumnCount: 3,
       breakpoint: 0,
+      role: "base",
     } satisfies Board["layouts"][number];
 
     expect(getBoardLaneColumnCount(layout, "left")).toBe(2);
@@ -31,6 +32,7 @@ describe("board lanes", () => {
       leftGutterColumnCount: 3,
       rightGutterColumnCount: 3,
       breakpoint: 0,
+      role: "base",
     } satisfies Board["layouts"][number];
 
     expect(getBoardLaneColumnCount(layout, "left")).toBe(3);
@@ -104,6 +106,7 @@ describe("board lanes", () => {
         leftGutterColumnCount: 1,
         rightGutterColumnCount: 0,
         breakpoint: 0,
+        role: "base",
       },
     ];
 

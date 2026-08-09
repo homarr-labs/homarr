@@ -4,6 +4,8 @@ description: "Displays departure times for a station."
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
@@ -23,6 +25,8 @@ import streetDepartures from "./img/street-departures.png";
   <img src={streetDepartures} alt="timetable-widget-bus-and-tram-departures" width={128 * 2} />
 </div>
 
+<WidgetInteractionGuide />
+
 ### Adding the widget
 
 <AddingWidget />
@@ -30,3 +34,7 @@ import streetDepartures from "./img/street-departures.png";
 ### Configuration
 
 <WidgetConfig configuration={timetableWidget.configuration} />
+
+For security, all custom base URLs must resolve to a public IP address whenever Homarr uses them. Private and local hosts are rejected.
+
+If a timetable refresh fails after departures have loaded, the widget keeps the previous departures visible and marks them as stale. The advanced view also shows their last update time.

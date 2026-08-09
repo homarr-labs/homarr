@@ -1,9 +1,9 @@
+import { generateResponsiveGridFor } from "@homarr/common";
+import type { GridAlgorithmItem } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { BoardSize, OldmarrApp, OldmarrConfig, OldmarrWidget, SizedShape } from "@homarr/old-schema";
 import { boardSizes } from "@homarr/old-schema";
 
-import type { GridAlgorithmItem } from "../../../api/src/router/board/grid-algorithm";
-import { generateResponsiveGridFor } from "../../../api/src/router/board/grid-algorithm";
 import { mapColumnCount } from "../mappers/map-column-count";
 import { mapApp, mapWidget } from "../mappers/map-item";
 

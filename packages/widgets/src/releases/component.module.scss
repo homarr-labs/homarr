@@ -7,20 +7,41 @@
 }
 
 .releasesRepositoryHeader {
+  width: 100%;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: start;
   user-select: none;
   cursor: pointer;
 
   &:hover,
   &.active,
+  &:focus-visible,
   &:has(~ .releasesRepositoryDetails:hover) {
     background-color: var(--mantine-color-secondaryColor-light);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: -2px;
   }
 }
 
 .releasesRepositoryDetails {
+  width: 100%;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: start;
   background-color: var(--mantine-color-default-hover);
   user-select: none;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: -2px;
+  }
 }
 
 .releasesRepositoryExpanded {

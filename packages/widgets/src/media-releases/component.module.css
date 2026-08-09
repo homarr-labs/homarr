@@ -1,0 +1,24 @@
+.item {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  color: inherit;
+  text-align: start;
+  transition: background-color 120ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--mantine-color-default-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mantine-primary-color-filled);
+    outline-offset: -2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    transition: none;
+  }
+}

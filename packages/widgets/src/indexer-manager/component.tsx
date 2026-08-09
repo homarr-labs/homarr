@@ -1,6 +1,7 @@
 "use client";
 
-import { ActionIcon, Anchor, Button, Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
+import { useMemo } from "react";
+import { ActionIcon, Anchor, Badge, Card, Flex, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
 import { IconCircleCheck, IconCircleX, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -9,6 +10,10 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { useWidgetRuntimeActions } from "../runtime-hooks";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { getUsableWidgetQueryData } from "../common/query-state";
+import actionTargetClasses from "../common/action-target.module.css";
 import classes from "./component.module.css";
 
 export default function IndexerManagerWidget({
@@ -16,9 +21,12 @@ export default function IndexerManagerWidget({
   integrationIds,
   width,
   height,
+  isEditMode,
+  widgetRuntimeRef,
 }: WidgetComponentProps<"indexerManager">) {
   const t = useI18n();
-  const { data: indexersData = [] } = clientApi.widget.indexerManager.getIndexersStatus.useQuery({ integrationIds });
+  const indexersData =
+    getUsableWidgetQueryData(clientApi.widget.indexerManager.getIndexersStatus.useQuery({ integrationIds })) ?? [];
 
   const utils = clientApi.useUtils();
   const { mutate: testAll, isPending } = clientApi.widget.indexerManager.testAllIndexers.useMutation({
@@ -26,98 +34,135 @@ export default function IndexerManagerWidget({
   });
   const board = useRequiredBoard();
   const hasSmallWidth = width < 256;
-  const hasSmallHeight = height < 256;
+  const isDense = width < 280 || height < 180;
+  const showHealthCounts = width >= 200 && height >= 100;
+  const allIndexers = useMemo(() => indexersData.flatMap((entry) => entry.indexers), [indexersData]);
+  const unavailableCount = allIndexers.filter(
+    (indexer) => indexer.status === false || indexer.enabled === false,
+  ).length;
+
+  useWidgetRuntimeActions(widgetRuntimeRef, { testAllIndexers: () => testAll({ integrationIds }) });
 
   return (
-    <Flex className="indexer-manager-container" h="100%" direction="column" gap="sm" p="sm" align="center">
-      <Group className="indexer-manager-title" align="center" gap="xs" wrap="nowrap">
-        <IconReportSearch
-          className="indexer-manager-title-icon"
-          size={hasSmallWidth ? 16 : 20}
-          style={{ minWidth: hasSmallWidth ? 16 : 20 }}
-        />
-        <Text size={hasSmallWidth ? "xs" : "md"} fw="bold">
-          {t("widget.indexerManager.title")}
-        </Text>
-        {hasSmallHeight && (
+    <Flex
+      className={`indexer-manager-container ${classes.root}`}
+      h="100%"
+      direction="column"
+      gap={isDense ? 4 : "xs"}
+      p={isDense ? "xs" : "sm"}
+    >
+      <Group className="indexer-manager-title" align="center" gap="xs" wrap="nowrap" w="100%">
+        <Tooltip label={t("widget.indexerManager.title")} disabled={!hasSmallWidth}>
+          <IconReportSearch
+            className="indexer-manager-title-icon"
+            size={hasSmallWidth ? 16 : 20}
+            style={{ minWidth: hasSmallWidth ? 16 : 20 }}
+          />
+        </Tooltip>
+        {!hasSmallWidth && (
+          <Text size={isDense ? "xs" : "sm"} fw={600} truncate="end">
+            {t("widget.indexerManager.title")}
+          </Text>
+        )}
+        {showHealthCounts && (
+          <Group gap={4} wrap="nowrap">
+            <Badge size="xs" color="green" variant="light">
+              {allIndexers.length - unavailableCount}
+            </Badge>
+            {unavailableCount > 0 && (
+              <Badge size="xs" color="red" variant="light">
+                {unavailableCount}
+              </Badge>
+            )}
+          </Group>
+        )}
+        <Tooltip label={t("widget.indexerManager.testAll")}>
           <ActionIcon
-            className="indexer-manager-test-action-icon"
+            className={combineClasses("indexer-manager-test-action-icon", classes.testAction, actionTargetClasses.root)}
             size="sm"
             radius={board.itemRadius}
             variant="light"
             loading={isPending}
+            disabled={isEditMode}
             loaderProps={{ type: "dots" }}
             onClick={() => {
               testAll({ integrationIds });
             }}
+            aria-label={t("widget.indexerManager.testAll")}
           >
-            <IconTestPipe size={12} />
+            <IconTestPipe size={14} />
           </ActionIcon>
-        )}
+        </Tooltip>
       </Group>
       <Card
         className={combineClasses("indexer-manager-list-container", classes.card)}
         w="100%"
-        p="xs"
+        p={isDense ? 4 : "xs"}
         radius={board.itemRadius}
         flex={1}
       >
         <ScrollArea className="indexer-manager-list-scroll-area" h="100%" scrollbars="y">
-          {indexersData.map(({ integrationId, indexers }) => (
+          {indexersData.map(({ integrationId, integrationName, indexers, error }) => (
             <Stack gap={4} className={`indexer-manager-${integrationId}-list-container`} p={0} key={integrationId}>
-              {indexers.map((indexer) => (
-                <Group
-                  className={`indexer-manager-line indexer-manager-${indexer.name}`}
-                  key={indexer.id}
-                  justify="space-between"
-                  gap="xs"
-                  wrap="nowrap"
-                >
-                  <Anchor
-                    className="indexer-manager-line-anchor"
-                    href={indexer.url}
-                    target={options.openIndexerSiteInNewTab ? "_blank" : "_self"}
-                  >
-                    <Text className="indexer-manager-line-anchor-text" c="dimmed" size={hasSmallWidth ? "xs" : "sm"}>
-                      {indexer.name}
-                    </Text>
-                  </Anchor>
-                  {indexer.status === false || indexer.enabled === false ? (
-                    <IconCircleX
-                      className="indexer-manager-line-status-icon indexer-manager-line-icon-disabled"
-                      color="#d9534f"
-                      size={hasSmallWidth ? 12 : 16}
-                    />
-                  ) : (
-                    <IconCircleCheck
-                      className="indexer-manager-line-status-icon indexer-manager-line-icon-enabled"
-                      color="#2ecc71"
-                      size={hasSmallWidth ? 12 : 16}
-                    />
+              {indexersData.length > 1 && (
+                <Group justify="space-between" wrap="nowrap" py={4}>
+                  <Text size="xs" fw={600} truncate="end">
+                    {integrationName}
+                  </Text>
+                  {error && (
+                    <Badge size="xs" color="red" variant="light">
+                      {t("common.error")}
+                    </Badge>
                   )}
                 </Group>
-              ))}
+              )}
+              {indexers.map((indexer) => {
+                const href = getSafeApplicationUrl(indexer.url);
+                return (
+                  <Group
+                    className={`indexer-manager-line indexer-manager-${indexer.name} ${classes.indexerRow}`}
+                    key={indexer.id}
+                    justify="space-between"
+                    gap="xs"
+                    wrap="nowrap"
+                  >
+                    <Anchor
+                      className={combineClasses("indexer-manager-line-anchor", classes.indexerLink)}
+                      component={href ? "a" : "span"}
+                      href={href}
+                      target={href ? (options.openIndexerSiteInNewTab ? "_blank" : "_self") : undefined}
+                      rel={href && options.openIndexerSiteInNewTab ? SAFE_NEW_TAB_REL : undefined}
+                      title={href}
+                    >
+                      <Text
+                        className="indexer-manager-line-anchor-text"
+                        c="dimmed"
+                        size={hasSmallWidth ? "xs" : "sm"}
+                        truncate="end"
+                      >
+                        {indexer.name}
+                      </Text>
+                    </Anchor>
+                    {indexer.status === false || indexer.enabled === false ? (
+                      <IconCircleX
+                        className="indexer-manager-line-status-icon indexer-manager-line-icon-disabled"
+                        color="var(--mantine-color-red-6)"
+                        size={hasSmallWidth ? 12 : 16}
+                      />
+                    ) : (
+                      <IconCircleCheck
+                        className="indexer-manager-line-status-icon indexer-manager-line-icon-enabled"
+                        color="var(--mantine-color-green-6)"
+                        size={hasSmallWidth ? 12 : 16}
+                      />
+                    )}
+                  </Group>
+                );
+              })}
             </Stack>
           ))}
         </ScrollArea>
       </Card>
-      {!hasSmallHeight && (
-        <Button
-          className="indexer-manager-test-button"
-          w="100%"
-          size="xs"
-          radius={board.itemRadius}
-          variant="light"
-          leftSection={<IconTestPipe size={"1rem"} />}
-          loading={isPending}
-          loaderProps={{ type: "dots" }}
-          onClick={() => {
-            testAll({ integrationIds });
-          }}
-        >
-          {t("widget.indexerManager.testAll")}
-        </Button>
-      )}
     </Flex>
   );
 }

@@ -97,8 +97,8 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
         const isAudioDirect = isStreamDirect(transcodeElement?.$.audioDecision);
         const containerChanged = Boolean(
           transcodeElement?.$.container &&
-            mediaInfoElement?.$.container &&
-            transcodeElement.$.container !== mediaInfoElement.$.container,
+          mediaInfoElement?.$.container &&
+          transcodeElement.$.container !== mediaInfoElement.$.container,
         );
         const bitrateKbps =
           parseOptionalNumber(sessionElement?.$.bandwidth) ?? parseOptionalNumber(mediaInfoElement?.$.bitrate);

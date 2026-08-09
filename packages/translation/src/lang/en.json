@@ -741,7 +741,7 @@
       },
       "create": {
         "title": "Create Custom Widget",
-        "subtitle": "Build a safe JSX widget with inline API sources, options, queries, and actions."
+        "subtitle": "Define an API URL, authentication, and how to display the response data."
       },
       "edit": {
         "title": "Edit Custom Widget"
@@ -766,12 +766,62 @@
       "migrate": "Migrate Custom Widget",
       "copyMigrationPrompt": "Copy LLM migration prompt",
       "pasteMigration": "Paste migrated widget",
-      "importMigration": "Import migrated JSON file"
+      "importMigration": "Import migrated JSON file",
+      "addMapping": "Add Mapping",
+      "addColumn": "Add Column",
+      "removeMapping": "Remove mapping",
+      "removeColumn": "Remove column",
+      "addItem": "Add Item",
+      "removeItem": "Remove item",
+      "addBar": "Add Bar"
     },
     "field": {
       "name": "Name",
       "description": "Description",
-      "iconUrl": "Icon URL"
+      "iconUrl": "Icon URL",
+      "url": "URL",
+      "authType": "Auth Type",
+      "headerName": "Header/Query Parameter Name",
+      "method": "Method",
+      "requestBody": "Request Body",
+      "displayType": "Display Type",
+      "jsonPath": "JSON Path",
+      "jsonPathHint": "Use JSONPath syntax to extract values, e.g. $.data.temperature or $.items[0].name",
+      "label": "Label",
+      "unit": "Unit",
+      "mappings": "Mappings",
+      "tablePath": "Array JSON Path",
+      "tablePathHint": "Path to the array in the response, e.g. $.data.items",
+      "columns": "Columns",
+      "header": "Header",
+      "items": "Items",
+      "gridColumns": "Grid Columns",
+      "cardStyle": "Card Style",
+      "bars": "Bars",
+      "valuePath": "Value JSON Path",
+      "maxPath": "Max Value JSON Path",
+      "showPercentage": "Show Percentage",
+      "barSize": "Bar Size",
+      "goodValues": "Good Values (comma-separated)",
+      "dotSize": "Dot Size",
+      "valueSize": "Value Size",
+      "labelPosition": "Label Position",
+      "kvLayout": "Layout",
+      "striped": "Striped Rows",
+      "compact": "Compact Mode",
+      "maxHeight": "Max Height (px)",
+      "color": "Color",
+      "buttonLabel": "Button Label",
+      "buttonColor": "Button Color",
+      "confirmText": "Confirmation Text",
+      "confirmTextHint": "If set, a confirmation dialog will appear before executing the request",
+      "successMessage": "Success Message",
+      "successMessageHint": "Message shown after successful execution",
+      "enabled": "Enabled",
+      "template": {
+        "label": "JSX Template",
+        "description": "Mantine JSX template. Access API response fields via data bindings (e.g. data.name). Use whitelisted components only. Forbidden: constructor, __proto__, eval, Function, window, document."
+      }
     },
     "editor": {
       "errorBoundary": {
@@ -1028,9 +1078,9 @@
         "journal": "Redacted request journal",
         "actionParameters": "Action parameters (JSON)",
         "invalidParameters": "Use the declared string, number, and boolean parameter types.",
-      "runDestructive": "Run destructive action",
-      "runAction": "Run action",
-      "deleteConfirmation": "This preview action sends a DELETE request to the configured API.",
+        "runDestructive": "Run destructive action",
+        "runAction": "Run action",
+        "deleteConfirmation": "This preview action sends a DELETE request to the configured API.",
         "simulated": "Action simulated",
         "httpStatus": "HTTP {status, number}",
         "tab": {
@@ -1065,7 +1115,11 @@
           "modify": "Modify",
           "full": "Full"
         }
-      }
+      },
+      "title": "Preview",
+      "test": "Test",
+      "hint": "Click Test to preview the API response with your current configuration.",
+      "rawResponse": "Raw JSON response"
     },
     "notification": {
       "created": "Widget \"{name}\" created successfully.",
@@ -1078,15 +1132,21 @@
       "migrationPromptCopyError": "Failed to copy the migration prompt.",
       "aiPromptCopied": "AI prompt copied to clipboard",
       "aiPromptCopiedWithCount": "AI prompt copied to clipboard ({count, number} characters).",
-      "aiPromptCopyError": "Failed to copy the prompt to the clipboard.",
+      "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
       "updateError": "Failed to update widget. Your changes were not saved.",
-      "importError": "Failed to import widget. Ensure the file uses the homarr-custom-widget-v2 schema.",
+      "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
       "exportError": "Failed to export widget.",
       "duplicated": "Widget \"{name}\" duplicated.",
       "duplicateError": "Failed to duplicate widget.",
       "toggleError": "Failed to toggle widget status.",
       "deleteError": "Failed to delete widget.",
-      "previewError": "Failed to create the preview. Check the API source and try again."
+      "previewError": "Failed to fetch preview. Check the URL and try again.",
+      "aiPromptDescription": "Copy a pre-built prompt to paste into any AI chatbot (ChatGPT, Claude, Gemini...). It includes the full widget schema and your API response so the AI can generate a ready-to-import JSON config for you.",
+      "aiPromptCopy": "Copy to clipboard",
+      "aiPromptNoResponse": "Tip: Run a test first to include your API response in the prompt for better results.",
+      "createError": "Failed to create widget. Check your API endpoint is reachable.",
+      "executed": "Action executed successfully.",
+      "executeError": "Action failed: {error}"
     },
     "importReview": {
       "title": "Review custom widget import",
@@ -1128,6 +1188,98 @@
       "cancel": "Cancel import",
       "confirm": "Import widget",
       "confirmMigration": "Confirm v2 replacement"
+    },
+    "placeholder": {
+      "exampleLabel": "CPU Temperature",
+      "exampleLabelShort": "CPU Temp",
+      "exampleHeader": "Name",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API-Key",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "online, true, up",
+      "color": "blue"
+    },
+    "cardStyleOption": {
+      "filled": "Filled",
+      "outline": "Outline",
+      "subtle": "Subtle"
+    },
+    "layoutOption": {
+      "list": "List",
+      "grid": "Grid"
+    },
+    "sizeOption": {
+      "sm": "Small",
+      "md": "Medium",
+      "lg": "Large",
+      "xl": "Extra Large"
+    },
+    "labelPositionOption": {
+      "above": "Above",
+      "below": "Below"
+    },
+    "fieldset": {
+      "general": "General",
+      "connection": "API Connection",
+      "display": "Display Configuration"
+    },
+    "displayTypeDescription": {
+      "singleValue": "Show one extracted value with a label and unit",
+      "keyValue": "Show multiple labeled values side by side",
+      "table": "Show rows of data in a table format",
+      "statGrid": "Colored stat cards in a grid — like Pi-Hole or Speedtest widgets",
+      "progressBars": "Progress bars showing usage or completion — for disk, memory, quotas",
+      "statusIndicator": "Colored status dots showing online/offline or health states",
+      "countGrid": "Compact number + label counters in a tight grid",
+      "raw": "Pretty-printed JSON output for debugging",
+      "actionButton": "A button that triggers a request when clicked",
+      "customJsx": "Custom JSX layout using whitelisted Mantine components with full API data binding"
+    },
+    "method": {
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "DELETE",
+      "PATCH": "PATCH"
+    },
+    "authType": {
+      "none": "None",
+      "bearer": "Bearer Token",
+      "basic": "Basic Auth",
+      "apiKeyHeader": "API Key (Header)",
+      "apiKeyQuery": "API Key (Query)"
+    },
+    "displayType": {
+      "singleValue": "Single Value",
+      "keyValue": "Key-Value",
+      "table": "Table",
+      "statGrid": "Stat Grid",
+      "progressBars": "Progress Bars",
+      "statusIndicator": "Status Indicator",
+      "countGrid": "Count Grid",
+      "raw": "Raw JSON",
+      "actionButton": "Action Button",
+      "customJsx": "Custom JSX"
+    },
+    "secret": {
+      "apiKey": "API Key / Token",
+      "username": "Username",
+      "password": "Password",
+      "savedPlaceholder": "••••••• (saved, leave empty to keep)"
+    },
+    "table": {
+      "name": "Name",
+      "url": "URL",
+      "display": "Display"
+    },
+    "widget": {
+      "disabled": "This widget is disabled"
     }
   },
   "workshop": {
@@ -1327,7 +1479,8 @@
       "analytics": "Analytics",
       "vpn": "VPN",
       "mediaLibrary": "Media Library",
-      "uptimeMonitoring": "Uptime Monitoring"
+      "uptimeMonitoring": "Uptime Monitoring",
+      "beszel": "Beszel"
     },
     "testConnection": {
       "action": {
@@ -1846,7 +1999,13 @@
         "kilometersPerHour": "km/h",
         "milesPerHour": "mph"
       }
-    }
+    },
+    "widgetQuery": {
+      "loading": "Loading widget data",
+      "stale": "Could not refresh {widget}; showing saved data"
+    },
+    "total": "Total",
+    "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}"
   },
   "section": {
     "option": {
@@ -1894,6 +2053,67 @@
         "title": "Remove container",
         "message": "Remove this container? Its contents will move into the surrounding area."
       }
+    },
+    "dynamic": {
+      "action": {
+        "create": "New dynamic section",
+        "remove": "Remove dynamic section"
+      },
+      "option": {
+        "title": {
+          "label": "Title"
+        },
+        "customCssClasses": {
+          "label": "Custom css classes"
+        },
+        "borderColor": {
+          "label": "Border color"
+        }
+      },
+      "remove": {
+        "title": "Remove dynamic section",
+        "message": "Are you sure you want to remove this dynamic section? Items will be moved at the same location in the parent section."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Name"
+        }
+      },
+      "action": {
+        "create": "New category",
+        "edit": "Rename category",
+        "remove": "Remove category",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "createAbove": "New category above",
+        "createBelow": "New category below",
+        "openAllInNewTabs": "Open all in tabs"
+      },
+      "create": {
+        "title": "New category",
+        "submit": "Add category"
+      },
+      "remove": {
+        "title": "Remove category",
+        "message": "Are you sure you want to remove the category {name}?"
+      },
+      "edit": {
+        "title": "Rename category",
+        "submit": "Rename category"
+      },
+      "menu": {
+        "label": {
+          "create": "New category",
+          "changePosition": "Change position",
+          "settings": "Settings"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "Open all in tabs",
+        "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
+      }
     }
   },
   "item": {
@@ -1918,12 +2138,25 @@
         "error": "Error",
         "loading": "Loading",
         "idle": "Idle"
+      },
+      "notification": {
+        "saveError": {
+          "title": "Unable to save widget",
+          "message": "The widget changes were rolled back"
+        }
       }
     },
     "create": {
       "title": "Choose item to add",
       "search": "Filter items",
-      "addToBoard": "Add to board"
+      "addToBoard": "Add to board",
+      "addAtPosition": "Add item here",
+      "notification": {
+        "error": {
+          "title": "Unable to add item",
+          "message": "The item could not be added to this board"
+        }
+      }
     },
     "moveResize": {
       "title": "Move / resize item",
@@ -1987,6 +2220,11 @@
     "remove": {
       "title": "Remove item",
       "message": "Are you sure you want to remove this item?"
+    },
+    "advancedFocus": {
+      "open": "Open advanced view",
+      "close": "Close advanced view",
+      "label": "{widget} advanced view"
     }
   },
   "widget": {
@@ -2091,6 +2329,26 @@
         "showBroadcastMessage": {
           "label": "Show broadcast messages"
         }
+      },
+      "noProjectSelected": "No project selected",
+      "runnerStatus": "Runner: {status}",
+      "updatedAt": "Updated {date}",
+      "metric": {
+        "running": "Running",
+        "completed": "Done",
+        "failed": "Failed",
+        "canceled": "Canceled",
+        "download": "Download",
+        "upload": "Upload"
+      },
+      "status": {
+        "running": "Running",
+        "completed": "Completed",
+        "failed": "Failed",
+        "canceled": "Canceled",
+        "stopped": "Stopped",
+        "idle": "Idle",
+        "unknown": "Unknown"
       }
     },
     "dnsHoleSummary": {
@@ -2125,7 +2383,12 @@
         "dnsQueriesToday": "Queries today",
         "domainsBeingBlocked": "Domains on blocklist"
       },
-      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
+      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked",
+      "status": {
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "unknown": "Unknown"
+      }
     },
     "dnsHoleControls": {
       "name": "DNS Hole Controls",
@@ -2150,7 +2413,8 @@
         }
       },
       "error": {
-        "internalServerError": "Failed to control DNS Hole"
+        "internalServerError": "Failed to control DNS Hole",
+        "bulkActionsFailed": "{count, plural, one {# action failed} other {# actions failed}}"
       },
       "controls": {
         "enableAll": "Enable All",
@@ -2244,11 +2508,20 @@
       "noStation": "No station selected",
       "option": {
         "baseUrl": {
-          "label": "Search.ch URL"
+          "label": "Search.ch URL",
+          "description": "Custom URLs must resolve to a public IP address. Private and local hosts are rejected."
         },
         "station": {
           "label": "Station"
         }
+      },
+      "error": {
+        "customSourceUnavailable": "The timetable source is unavailable. Check that its URL resolves to a public IP address.",
+        "stationSearch": "Unable to search stations. Check the custom URL and your board access."
+      },
+      "warning": {
+        "stale": "The timetable could not be refreshed. Showing departures last updated at {time}.",
+        "staleCompact": "Stale data"
       }
     },
     "notebook": {
@@ -2321,7 +2594,9 @@
           "discard": "Discard changes",
           "keepEditing": "Keep editing"
         }
-      }
+      },
+      "saveFailed": "Unable to save note",
+      "documentStats": "{words, plural, one {# word} other {# words}} · {characters, plural, one {# character} other {# characters}}"
     },
     "anchorNote": {
       "name": "Anchor Note",
@@ -2349,7 +2624,17 @@
       "cancel": "Cancel",
       "readOnlyViewer": "You have viewer access to this note. Editing is disabled.",
       "saveForbidden": "You do not have permission to edit this note.",
-      "saveFailed": "Failed to save this note. Please try again."
+      "saveFailed": "Failed to save this note. Please try again.",
+      "createdAt": "Created {date}",
+      "permission": {
+        "owner": "Owner",
+        "editor": "Editor",
+        "viewer": "Viewer"
+      },
+      "status": {
+        "pinned": "Pinned",
+        "archived": "Archived"
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -2408,6 +2693,25 @@
         "clickable": {
           "label": "Clickable"
         }
+      },
+      "state": {
+        "on": "On",
+        "off": "Off",
+        "unavailable": "Unavailable",
+        "unknown": "Unknown"
+      },
+      "advanced": {
+        "entityId": "Entity ID: {id}",
+        "lastUpdated": "Updated {date}",
+        "attribute": {
+          "unit": "Unit",
+          "deviceClass": "Device class",
+          "icon": "Icon"
+        }
+      },
+      "error": {
+        "loadFailed": "Unable to load entity",
+        "toggleFailed": "Unable to update entity"
       }
     },
     "smartHome-executeAutomation": {
@@ -2423,6 +2727,17 @@
       },
       "spotlightAction": {
         "run": "Run {name}"
+      },
+      "advanced": {
+        "lastExecuted": "Last run at {time}",
+        "automationId": "Automation ID: {id}"
+      },
+      "status": {
+        "running": "Running automation",
+        "success": "Automation completed"
+      },
+      "error": {
+        "executeFailed": "Unable to run automation"
       }
     },
     "stockPrice": {
@@ -2525,6 +2840,13 @@
         "showUnmonitored": {
           "label": "Show unmonitored"
         }
+      },
+      "advanced": {
+        "previousMonth": "Show previous month",
+        "nextMonth": "Show next month",
+        "eventCount": "{count, plural, one {# event} other {# events}}",
+        "loading": "Loading calendar events...",
+        "noEvents": "No events in this month"
       }
     },
     "weather": {
@@ -2585,6 +2907,18 @@
         "thunderstorm": "Thunderstorm",
         "thunderstormWithHail": "Thunderstorm with hail",
         "unknown": "Unknown"
+      },
+      "details": "Show weather details",
+      "detailsFor": "Show weather details for {date}",
+      "advanced": {
+        "forecast": "7-day forecast",
+        "day": "Day",
+        "conditions": "Conditions",
+        "temperature": "High / low",
+        "humidity": "Humidity",
+        "wind": "Wind / gusts ({unit})",
+        "sun": "Sunrise / sunset",
+        "noForecast": "No forecast data available"
       }
     },
     "indexerManager": {
@@ -2772,17 +3106,40 @@
         "internalServerError": "Failed to fetch Coolify data"
       },
       "server": {
-        "buildServer": "Build"
+        "buildServer": "Build",
+        "resourceCounts": "{applications, plural, one {# app} other {# apps}} / {services, plural, one {# service} other {# services}}"
       },
       "instances": {
         "title": "Instances"
+      },
+      "action": {
+        "openResource": "Open {name}",
+        "openLogs": "Open {name} logs",
+        "showIp": "Show IP address",
+        "hideIp": "Hide IP address"
+      },
+      "status": {
+        "running": "Running",
+        "stopped": "Stopped",
+        "exited": "Exited",
+        "starting": "Starting",
+        "restarting": "Restarting",
+        "unknown": "Unknown",
+        "online": "Online",
+        "offline": "Offline"
       }
     },
     "vpn": {
       "name": "VPN",
       "description": "Overview of your VPN connections",
       "serviceUnavailable": "VPN unavailable",
-      "option": {}
+      "option": {},
+      "status": {
+        "running": "Running",
+        "notRunning": "Not running",
+        "unavailable": "Unavailable",
+        "vpn": "VPN: {status}"
+      }
     },
     "ups": {
       "name": "UPS",
@@ -2809,7 +3166,13 @@
         "runtime": "Runtime",
         "load": "Load",
         "input": "Input",
-        "output": "Output"
+        "output": "Output",
+        "batteryVoltage": "Battery voltage",
+        "power": "Power",
+        "temperature": "Temperature",
+        "manufacturer": "Manufacturer",
+        "model": "Model",
+        "serial": "Serial"
       },
       "error": {
         "internalServerError": "Failed to fetch UPS data"
@@ -3080,7 +3443,13 @@
             "resolution": "Resolution",
             "target": "Target codec"
           }
-        }
+        },
+        "unknownUser": "Unknown user"
+      },
+      "summary": {
+        "sessions": "{count, plural, one {# session} other {# sessions}}",
+        "playing": "{count} playing",
+        "transcoding": "{count} transcoding"
       }
     },
     "paperlessNgx": {
@@ -3339,7 +3708,8 @@
       "users": "Users",
       "photos": "Photos",
       "videos": "Videos",
-      "storage": "Used Storage"
+      "storage": "Used Storage",
+      "albumLimit": "Largest albums (up to {count} shown)"
     },
     "immich-albumCarousel": {
       "name": "Immich Album",
@@ -3363,7 +3733,16 @@
         }
       },
       "description": "Slideshow of pictures from an Immich album or your full library",
-      "noPhotos": "No photos found"
+      "noPhotos": "No photos found",
+      "albumPhoto": "Album photo",
+      "actions": {
+        "previousPhoto": "Previous photo",
+        "nextPhoto": "Next photo",
+        "pauseSlideshow": "Pause slideshow",
+        "resumeSlideshow": "Resume slideshow",
+        "toggleSlideshow": "Pause or resume slideshow",
+        "photo": "Photo {number}"
+      }
     },
     "downloads": {
       "name": "Download Client",
@@ -3738,6 +4117,13 @@
         "showPosterImage": {
           "label": "Show poster image"
         }
+      },
+      "error": {
+        "allFeedsFailed": "Unable to load RSS feeds. Check the feed URLs and try again."
+      },
+      "warning": {
+        "partial": "{count, plural, one {# RSS feed could not be loaded} other {# RSS feeds could not be loaded}}",
+        "stale": "RSS feeds could not be refreshed. Showing previously loaded entries."
       }
     },
     "releases": {
@@ -3868,14 +4254,21 @@
           "noProviderResponse": "No response from provider",
           "unexpected": "Unexpected provider error"
         }
-      }
+      },
+      "expandDetails": "Show details for {name}",
+      "collapseDetails": "Hide details for {name}"
     },
     "networkControllerSummary": {
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": "{count} connected"
-        }
+          "countConnected": "{count, plural, one {# connected} other {# connected}}",
+          "label": "VPN"
+        },
+        "wan": "WAN",
+        "web": "Web",
+        "wifi": "Wi-Fi",
+        "lan": "LAN"
       },
       "error": {
         "integrationsDisconnected": "No data available, all integrations disconnected",
@@ -3953,6 +4346,16 @@
           "recv": "Received",
           "title": "Network Interfaces"
         }
+      },
+      "empty": {
+        "noInterfaces": "No network interface data yet"
+      },
+      "versionUnknown": "Unknown version",
+      "metricAccessible": "{metric}: {value}%, {status}",
+      "status": {
+        "normal": "Normal",
+        "warning": "Warning",
+        "critical": "Critical"
       }
     },
     "notifications": {
@@ -4002,6 +4405,11 @@
       "noSectionsEnabled": "Enable at least one section in widget options.",
       "error": {
         "internalServerError": "Failed to fetch speedtest data"
+      },
+      "range": {
+        "twelveHours": "12h",
+        "oneDay": "24h",
+        "all": "All"
       }
     },
     "uptimeKuma": {
@@ -4042,6 +4450,11 @@
       },
       "error": {
         "internalServerError": "Failed to fetch uptime data"
+      },
+      "status": {
+        "up": "Up",
+        "down": "Down",
+        "paused": "Paused"
       }
     },
     "traefik": {
@@ -4076,7 +4489,20 @@
       },
       "error": {
         "internalServerError": "Failed to fetch Traefik data"
-      }
+      },
+      "resourceType": {
+        "router": "Router",
+        "service": "Service",
+        "middleware": "Middleware"
+      },
+      "resourceStatus": {
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "warning": "Warning",
+        "error": "Error",
+        "unknown": "Unknown"
+      },
+      "failedEndpoint": "Failed: {endpoint}"
     },
     "audioStats": {
       "name": "Audio stats",
@@ -4459,7 +4885,9 @@
         "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
         "liveConnectionFailed": "Live connection failed. Your Beszel instance may not support real-time streaming.",
         "switchToHistorical": "Switch to historical view",
-        "systemNotFound": "Selected system was not found. Choose a different system."
+        "systemNotFound": "Selected system was not found. Choose a different system.",
+        "selectionSaveTitle": "Unable to save selection",
+        "selectionSaveMessage": "Your system or time period selection could not be saved. Please try again."
       },
       "chart": {
         "cpu": {
@@ -4507,6 +4935,14 @@
           "title": "Docker Network I/O",
           "subtitle": "Network traffic of docker containers"
         }
+      },
+      "period": {
+        "live": "Live",
+        "oneHour": "1h",
+        "twelveHours": "12h",
+        "oneDay": "24h",
+        "oneWeek": "1w",
+        "thirtyDays": "30d"
       }
     }
   },
@@ -4761,8 +5197,43 @@
           "title": "Layout",
           "responsive": {
             "title": "Responsive layouts",
+            "description": "Each layout keeps its own widget positions and sizes. Mobile and Base are always available; add custom layouts for widths in between.",
             "action": {
               "add": "Add layout"
+            }
+          },
+          "role": {
+            "mobile": "Mobile",
+            "base": "Base",
+            "custom": "Custom"
+          },
+          "custom": {
+            "defaultName": "Custom layout"
+          },
+          "mobile": {
+            "breakpointDescription": "Mobile is always used from 0px until the next layout breakpoint."
+          },
+          "preview": {
+            "columns": "columns",
+            "empty": "This layout is empty",
+            "dynamicSection": "Dynamic section",
+            "editorWidthLabel": "{layoutName} · {width}px"
+          },
+          "reset": {
+            "action": "Reset from Base",
+            "confirm": {
+              "title": "Reset {layoutName}?",
+              "message": "This replaces every saved position and size in this layout with a new layout generated from Base. This cannot be undone."
+            }
+          },
+          "edit": {
+            "action": "Edit layout",
+            "saveAndEdit": "Save and edit",
+            "save": "Save layout",
+            "cancel": {
+              "action": "Cancel layout editing",
+              "title": "Discard layout changes?",
+              "message": "Your unsaved changes to this layout will be discarded."
             }
           }
         },
