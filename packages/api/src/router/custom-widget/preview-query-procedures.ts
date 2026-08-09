@@ -19,7 +19,8 @@ export const previewQueryProcedures = {
     .meta({
       mcp: {
         enabled: true,
-        description: "Run one named query from a short-lived custom widget preview session.",
+        description:
+          "Execute one real API query from customWidget_previewCreate.queries and return its HTTP status plus parsed data so request paths and template bindings can be verified. Call once for every returned query before customWidget_create.",
       },
     })
     .input(previewSessionRequestSchema)

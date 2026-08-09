@@ -195,21 +195,36 @@ An agent creates one `homarr-custom-widget-v2` definition at a time. Start with 
 The API key owner must be a Homarr administrator. The same rule applies to management, import, migration, preview,
 secrets, publication, Workshop installation, and the HTTP authoring resources.
 
-Then, read the live schema and component resources. These resources describe the installed Mantine components.
+Load the installed skill before authoring. `customWidget_getSkill` returns the complete `SKILL.md` entrypoint and every
+bundled reference in one response, so an MCP client does not need filesystem access or a second documentation fetch.
+Then read the live schema and only the component resources required by the design. These resources describe the
+installed Mantine components.
 
-1. Call `customWidget_getAuthoringPrompt` and `customWidget_schema`.
-2. Build one Custom Widget definition.
-3. Call `customWidget_validate` without saving the definition.
-4. Call `customWidget_previewCreate`.
-5. Test named requests with `customWidget_previewQuery` and `customWidget_previewAction`.
-6. Open the returned preview URL.
-7. Examine `customWidget_previewJournal`.
-8. Revise the local candidate and create another preview session until it is ready.
-9. Call `customWidget_create`, supplying any credentials and deployment-specific source URLs the user already provided.
-10. If the user must enter the source URL or credentials, call `customWidget_configurationRequestUser` with the new definition ID and wait for completion.
-11. Create a final preview with that definition ID so Homarr loads its stored credentials, then test it again.
-12. Use `customWidget_update` or `customWidget_templatePatch` for any final saved-definition corrections.
-13. Repeat this procedure for the next Custom Widget.
+1. Call `customWidget_getSkill`, `customWidget_getAuthoringPrompt`, `customWidget_schema`, and
+   `customWidget_getComponentCatalog`.
+2. Fetch only the relevant installed component documentation with `customWidget_getComponent` and, when useful,
+   one interaction example with `customWidget_getExample`. Component results contain component-specific props; collect
+   any needed shared prop names from the compact catalog and fetch them together once with `customWidget_getSharedProps`.
+3. Build one Custom Widget definition. Use `templateLines` for generated multiline JSX to avoid a fragile JSON-escaped
+   template string.
+4. Call `customWidget_validate` without saving the definition and repair every returned issue path.
+5. Call `customWidget_previewCreate`.
+6. Call `customWidget_previewQuery` for every entry in the returned `queries` list. Supply the listed invocation
+   parameters for manual queries and inspect the real HTTP status and response shape before binding template fields.
+7. Test relevant actions with `customWidget_previewAction` in simulation mode.
+8. Open the returned `previewPath` or `previewUrl`.
+9. Examine `customWidget_previewJournal`.
+10. Revise the local candidate and create another preview session until validation, query data, actions, and rendering
+    are ready.
+11. Call `customWidget_create`, supplying any credentials and deployment-specific source URLs the user already provided.
+12. Open the returned `managementPath` to review the exact saved definition.
+13. If the user must enter the source URL or credentials, call `customWidget_configurationRequestUser` with the new definition ID and wait for completion.
+14. Create a final preview with that definition ID so Homarr loads its stored credentials, then test it again.
+15. Use `customWidget_update` or `customWidget_templatePatch` for any final saved-definition corrections.
+16. Repeat this procedure for the next Custom Widget.
+
+Validation and preview creation return compact lifecycle metadata. They do not echo the submitted widget or duplicate
+its template as both a string and line array; the agent should retain and reuse its local candidate.
 
 The agent receives the configuration-request status. The agent does not receive plaintext credentials. A preview-scoped setup URL configures only that temporary preview; use a definition-scoped URL when the values must persist.
 
@@ -245,6 +260,10 @@ The Custom Widget tools are:
 - `customWidget_workshopGet`
 - `customWidget_workshopInstall`
 - `customWidget_getAuthoringPrompt`
+- `customWidget_getComponentCatalog`
+- `customWidget_getComponent`
+- `customWidget_getSharedProps`
+- `customWidget_getExample`
 - `customWidget_getSkill`
 
 Custom Widget permissions are not assignable group capabilities. Administrator status is required for the complete

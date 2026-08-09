@@ -8,7 +8,7 @@ interface CreateMcpProtocolHandlerOptions {
   version: string;
   instructions: string;
   configureServer?: (server: McpServer) => void;
-  formatToolError: (error: unknown) => string;
+  formatToolError: (error: unknown, toolName: string) => string;
   onToolError?: (toolName: string, error: unknown) => void;
   onProtocolError?: (error: Error) => void;
 }
@@ -70,7 +70,9 @@ export const createMcpProtocolHandler = ({
             } catch (error) {
               onToolError?.(tool.name, error);
               return {
-                content: [{ type: "text" as const, text: JSON.stringify({ error: formatToolError(error) }) }],
+                content: [
+                  { type: "text" as const, text: JSON.stringify({ error: formatToolError(error, tool.name) }) },
+                ],
                 isError: true,
               };
             }

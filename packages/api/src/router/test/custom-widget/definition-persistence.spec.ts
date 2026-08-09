@@ -100,6 +100,86 @@ async function insertLegacyJellyfin(db: ReturnType<typeof createDb>) {
 const secret = { sourceId: "default", kind: "apiKey" as const, value: "test-secret" };
 
 describe("custom widget definition persistence", () => {
+  test("creates and previews MCP-friendly multiline templateLines without losing the JSX", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const { template, ...definition } = jellyfin;
+    const templateLines = template.split("\n");
+
+    const validation = await caller.validate({ widget: { ...definition, templateLines } });
+    expect(validation).toMatchObject({
+      valid: true,
+      summary: {
+        name: jellyfin.name,
+        sourceIds: Object.keys(jellyfin.sources),
+        requestIds: Object.keys(jellyfin.requests),
+        templateLineCount: templateLines.length,
+      },
+    });
+    expect(validation).not.toHaveProperty("widget");
+    expect(validation).not.toHaveProperty("templateLines");
+    expect(Buffer.byteLength(JSON.stringify(validation), "utf8")).toBeLessThan(2_000);
+    const preview = await caller.previewCreate({ definition: { ...definition, templateLines }, secrets: [] });
+    expect(preview).toMatchObject({
+      success: true,
+      previewPath: `/manage/custom-widgets/preview/${preview.previewSession.id}`,
+    });
+    expect(preview).not.toHaveProperty("definition");
+    expect(Buffer.byteLength(JSON.stringify(preview), "utf8")).toBeLessThan(4_000);
+    expect(preview.queries.map(({ requestId }) => requestId)).toEqual(Object.keys(jellyfin.requests));
+    expect(preview.queries.every(({ nextStep }) => nextStep.includes("customWidget_previewQuery"))).toBe(true);
+
+    const created = await caller.create({ ...definition, templateLines, secrets: [] });
+    expect(created.managementPath).toBe(`/manage/custom-widgets/edit/${created.id}`);
+    expect(created.nextAction).toEqual({
+      type: "place-custom-widget",
+      widgetKind: "customApi",
+      options: { definitionId: created.id },
+      whenTargetIsKnown: "Call configure_widget now with the requested board and these exact widget options.",
+      whenTargetIsUnknown:
+        "Call ask_user now with 'Place on a board' and 'Leave unplaced'. Never ask this choice in prose.",
+    });
+    expect((await caller.get({ id: created.id })).template).toBe(template);
+  });
+
+  test("updates a saved widget with MCP-friendly multiline templateLines", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const created = await caller.create({ ...jellyfin, secrets: [] });
+    const updatedTemplate = jellyfin.template.replace("Jellyfin library", "Updated Jellyfin library");
+
+    const updated = await caller.update({ id: created.id, templateLines: updatedTemplate.split("\n") });
+
+    expect(updated.managementPath).toBe(`/manage/custom-widgets/edit/${created.id}`);
+    expect((await caller.get({ id: created.id })).template).toBe(updatedTemplate);
+  });
+
+  test("reports joined templateLines validation issues as BAD_REQUEST for create and update", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const { template: _template, ...definition } = jellyfin;
+    const invalidTemplateLines = ["<Stack>", '  <img src="https://example.com/logo.png" />', "</Stack>"];
+
+    const createError = await caller
+      .create({ ...definition, templateLines: invalidTemplateLines, secrets: [] })
+      .catch((error: unknown) => error);
+    expect(createError).toMatchObject({
+      code: "BAD_REQUEST",
+      cause: { issues: [expect.objectContaining({ path: ["template"] })] },
+    });
+    expect(await db.query.customWidgetDefinitions.findMany()).toHaveLength(0);
+
+    const created = await caller.create({ ...jellyfin, secrets: [] });
+    const updateError = await caller
+      .update({ id: created.id, templateLines: invalidTemplateLines })
+      .catch((error: unknown) => error);
+    expect(updateError).toMatchObject({
+      code: "BAD_REQUEST",
+      cause: { issues: [expect.objectContaining({ path: ["template"] })] },
+    });
+    expect((await caller.get({ id: created.id })).template).toBe(jellyfin.template);
+  });
+
   test("atomically creates a v2 replacement while preserving the legacy widget and its stable ID", async () => {
     const db = await prepareDatabase();
     const legacy = await insertLegacyJellyfin(db);

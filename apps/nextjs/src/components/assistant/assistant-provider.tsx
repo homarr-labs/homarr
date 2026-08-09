@@ -28,13 +28,19 @@ import { AssistantWidgetRendererProvider } from "@homarr/widgets";
 import { AssistantContext, AssistantPreferencesContext, useAssistantPreferences } from "./assistant-context";
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
 import { AssistantAutoApprovalProvider } from "./assistant-auto-approval";
+import { getRunningAssistantPartType } from "./assistant-activity-state";
+import { prepareAssistantRequestBody } from "./assistant-attachment-payload";
 import { createAssistantBrowserToolExecutors } from "./assistant-browser-tool-executors";
 import { AssistantAskUserTool, AssistantConfigureAppTool } from "./assistant-human-tools";
 import { AssistantPanel } from "./assistant-panel";
 import { getPendingAssistantAction } from "./assistant-pending-action";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
 import { resolveAssistantPreferenceModelId, resolveAssistantThreadPreferenceModelId } from "./assistant-preferences";
-import { AssistantRuntimeProviderWithTools } from "./assistant-runtime-provider";
+import {
+  AssistantComposerSurfaceProvider,
+  AssistantRunFocusPreserver,
+  AssistantRuntimeProviderWithTools,
+} from "./assistant-runtime-provider";
 import { sendAssistantPrompt as sendPromptThroughRuntime } from "./assistant-send";
 import { createAssistantPromptInteraction } from "./assistant-spotlight";
 import { browserToolContracts } from "./assistant-tool-contracts";
@@ -69,14 +75,9 @@ const fileToDataUrlAsync = (file: File) =>
   });
 
 const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapter => {
-  const pendingAttachmentIds = new Set<string>();
-
   return {
     accept: [...(allowImages ? assistantImageAttachmentTypes : []), ...assistantDocumentAttachmentTypes].join(","),
     async add({ file }) {
-      if (pendingAttachmentIds.size >= 5) {
-        throw new Error("A message can include up to 5 attachments.");
-      }
       const isImage = file.type.startsWith("image/");
       if (isImage && !allowImages) {
         throw new Error("The selected model does not support image input.");
@@ -93,7 +94,6 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
         throw new Error(isImage ? "Images must be smaller than 1 MB." : "Documents must be smaller than 350 KB.");
       }
       const id = createId();
-      pendingAttachmentIds.add(id);
       return {
         id,
         type: isImage ? "image" : "document",
@@ -104,26 +104,20 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
       };
     },
     async send(attachment) {
-      try {
-        return {
-          ...attachment,
-          status: { type: "complete" },
-          content: [
-            {
-              type: "file",
-              filename: attachment.name,
-              mimeType: attachment.contentType ?? "application/octet-stream",
-              data: await fileToDataUrlAsync(attachment.file),
-            },
-          ],
-        };
-      } finally {
-        pendingAttachmentIds.delete(attachment.id);
-      }
+      return {
+        ...attachment,
+        status: { type: "complete" },
+        content: [
+          {
+            type: "file",
+            filename: attachment.name,
+            mimeType: attachment.contentType ?? "application/octet-stream",
+            data: await fileToDataUrlAsync(attachment.file),
+          },
+        ],
+      };
     },
-    async remove(attachment) {
-      pendingAttachmentIds.delete(attachment.id);
-    },
+    async remove() {},
   };
 };
 
@@ -334,6 +328,7 @@ const AssistantThreadRuntime = () => {
       new AssistantChatTransport({
         api: "/api/assistant/chat",
         body: preferences.getRequestBody,
+        fetch: (input, init) => globalThis.fetch(input, { ...init, body: prepareAssistantRequestBody(init?.body) }),
       }),
     [preferences.getRequestBody],
   );
@@ -460,6 +455,7 @@ const AssistantRuntime = ({ children }: PropsWithChildren) => {
   return (
     <AssistantRuntimeProviderWithTools runtime={runtime} toolkit={toolkit}>
       <AssistantRuntimeEvents />
+      <AssistantRunFocusPreserver />
       <AssistantPreferenceSync />
       {children}
     </AssistantRuntimeProviderWithTools>
@@ -541,6 +537,10 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   const latestAssistantText = getMessageText(latestAssistantMessage);
   const latestUserText = getMessageText(latestUserMessage);
   const latestStatus = latestAssistantMessage?.role === "assistant" ? latestAssistantMessage.status : undefined;
+  const latestAssistantPartType = getRunningAssistantPartType(
+    latestStatus?.type,
+    latestAssistantMessage?.content.at(-1)?.type,
+  );
   const pendingAction = getPendingAssistantAction(latestAssistantMessage);
   const assistantIsRunning = isRunning || queuedPrompt !== null;
   const notificationKey = getNotificationKey(latestAssistantMessage);
@@ -690,30 +690,33 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     <AssistantAutoApprovalProvider conversationId={conversationId}>
       <AssistantContext.Provider value={value}>
         <AssistantWidgetRendererProvider renderer={AssistantBoardWidget}>{children}</AssistantWidgetRendererProvider>
-        <AssistantPanel
-          opened={opened}
-          onOpen={open}
-          onClose={close}
-          onDismissActivity={() => {
-            markRead();
-            setActivityDismissed(true);
-          }}
-          activityDismissed={activityDismissed}
-          isRunning={assistantIsRunning}
-          unreadCount={unreadCount}
-          latestAssistantText={latestAssistantText}
-          latestUserText={queuedPrompt ?? latestUserText}
-          latestStatus={latestStatus}
-          pendingAction={pendingAction}
-          modelId={preferences.modelId}
-          models={preferences.models}
-          modelOptionsLoading={preferences.isLoading}
-          reasoning={preferences.reasoning}
-          isRefreshing={isRefreshing}
-          onRefresh={refreshCurrentView}
-          onModelChange={selectModel}
-          onReasoningChange={preferences.setReasoning}
-        />
+        <AssistantComposerSurfaceProvider surfaceId="floating-panel">
+          <AssistantPanel
+            opened={opened}
+            onOpen={open}
+            onClose={close}
+            onDismissActivity={() => {
+              markRead();
+              setActivityDismissed(true);
+            }}
+            activityDismissed={activityDismissed}
+            isRunning={assistantIsRunning}
+            unreadCount={unreadCount}
+            latestAssistantText={latestAssistantText}
+            latestAssistantPartType={latestAssistantPartType}
+            latestUserText={queuedPrompt ?? latestUserText}
+            latestStatus={latestStatus}
+            pendingAction={pendingAction}
+            modelId={preferences.modelId}
+            models={preferences.models}
+            modelOptionsLoading={preferences.isLoading}
+            reasoning={preferences.reasoning}
+            isRefreshing={isRefreshing}
+            onRefresh={refreshCurrentView}
+            onModelChange={selectModel}
+            onReasoningChange={preferences.setReasoning}
+          />
+        </AssistantComposerSurfaceProvider>
       </AssistantContext.Provider>
     </AssistantAutoApprovalProvider>
   );

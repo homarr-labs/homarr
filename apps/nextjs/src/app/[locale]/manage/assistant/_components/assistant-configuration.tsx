@@ -57,7 +57,7 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-configuration.module.css";
-import { getAssistantConnectionState } from "./assistant-configuration-state";
+import { formatAssistantContextWindow, getAssistantConnectionState } from "./assistant-configuration-state";
 
 type HeaderEntry = { id: number; name: string; value: string };
 type CredentialFlow = "idle" | "replace" | "remove";
@@ -438,9 +438,11 @@ export const AssistantConfiguration = () => {
                   {t("overview.keyProtected")}
                 </Badge>
               )}
-              <Badge variant="filled" color={configuration?.enabled ? "green" : "gray"}>
-                {configuration?.enabled ? t("overview.available") : t("overview.disabled")}
-              </Badge>
+              {configuration?.enabled === false && (
+                <Badge variant="filled" color="gray">
+                  {t("overview.disabled")}
+                </Badge>
+              )}
             </Group>
           </Group>
         </Paper>
@@ -473,7 +475,7 @@ export const AssistantConfiguration = () => {
               allowDeselect={false}
               leftSection={<ProviderIcon providerId={provider} />}
               renderOption={({ option }) => (
-                <Group gap="sm" wrap="nowrap" align={option.value === "homarr" ? "flex-start" : "center"} w="100%">
+                <Group gap="sm" wrap="nowrap" align="center" w="100%">
                   <ProviderIcon providerId={option.value as AssistantProviderOption} />
                   <Box flex={1} miw={0}>
                     <Group gap="xs" wrap="nowrap" justify="space-between">
@@ -486,11 +488,6 @@ export const AssistantConfiguration = () => {
                         </Badge>
                       )}
                     </Group>
-                    {option.value === "homarr" && (
-                      <Text size="xs" c="dimmed" lineClamp={2} maw="46ch">
-                        {t("provider.options.homarr.description")}
-                      </Text>
-                    )}
                   </Box>
                 </Group>
               )}
@@ -511,12 +508,6 @@ export const AssistantConfiguration = () => {
               placeholder="/models"
             />
           </Stack>
-
-          {destinationChanged && (
-            <Alert icon={<IconAlertTriangle size={18} />} color="yellow" title={t("destinationChanged.title")}>
-              {t("destinationChanged.description")}
-            </Alert>
-          )}
         </ConfigurationSection>
 
         <ConfigurationSection
@@ -524,13 +515,11 @@ export const AssistantConfiguration = () => {
           title={t("credentials.title")}
           description={t("credentials.description")}
           status={
-            <Badge variant="light" color={hasStoredApiKey ? "green" : preset.requiresApiKey ? "yellow" : "gray"}>
-              {hasStoredApiKey
-                ? t("apiKey.configuredBadge")
-                : preset.requiresApiKey
-                  ? t("credentials.required")
-                  : t("credentials.optional")}
-            </Badge>
+            hasStoredApiKey ? undefined : (
+              <Badge variant="light" color={preset.requiresApiKey ? "yellow" : "gray"}>
+                {preset.requiresApiKey ? t("credentials.required") : t("credentials.optional")}
+              </Badge>
+            )
           }
           actions={
             <Group justify="space-between">
@@ -787,13 +776,13 @@ export const AssistantConfiguration = () => {
           title={t("model.title")}
           description={t("model.description")}
           status={
-            configuration?.modelId ? (
-              <Badge variant="light" color={configuration.enabled ? "green" : "gray"}>
-                {configuration.enabled ? t("overview.available") : t("overview.disabled")}
-              </Badge>
-            ) : (
+            !configuration?.modelId ? (
               <Badge variant="light" color="gray">
                 {t("overview.noModel")}
+              </Badge>
+            ) : configuration.enabled ? undefined : (
+              <Badge variant="light" color="gray">
+                {t("overview.disabled")}
               </Badge>
             )
           }
@@ -873,7 +862,9 @@ export const AssistantConfiguration = () => {
               </Box>
               <Group className={classes.selectedModelBadges} gap="xs" justify="flex-end">
                 {selectedModel.contextLength && (
-                  <Badge variant="light">{t("model.context", { count: selectedModel.contextLength })}</Badge>
+                  <Badge variant="light">
+                    {t("model.context", { count: formatAssistantContextWindow(selectedModel.contextLength) })}
+                  </Badge>
                 )}
                 <Badge
                   variant="light"

@@ -205,7 +205,7 @@
   }
 
   .composerWrap {
-    padding: 0.45rem;
+    padding: 0;
   }
 
   .composer {
@@ -224,6 +224,15 @@
 
   .suggestions {
     grid-template-columns: 1fr;
+  }
+
+  .humanToolOption {
+    grid-template-columns: max-content minmax(0, 1fr);
+  }
+
+  .humanToolOptionBadge {
+    grid-column: 2;
+    justify-self: start;
   }
 }
 
@@ -249,6 +258,15 @@
   }
 
   .runtimeSelectorEffort {
+    display: none;
+  }
+
+  .composerContext {
+    width: 1.9rem;
+    padding-inline: 0.15rem;
+  }
+
+  .composerContext > :last-child {
     display: none;
   }
 }
@@ -332,6 +350,12 @@
 
 .assistantMessage {
   max-width: 100%;
+}
+
+.messagePending {
+  width: max-content;
+  min-height: 1.75rem;
+  padding-inline: 0.1rem;
 }
 
 .messageText {
@@ -493,6 +517,33 @@
   font-size: var(--mantine-font-size-xs);
 }
 
+.syntaxHighlighter {
+  max-width: 100%;
+  margin-block: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-default);
+}
+
+.syntaxHighlighter :global(pre) {
+  max-width: 100%;
+  margin: 0;
+  overflow: auto;
+  padding: 0.75rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  line-height: 1.5;
+}
+
+.syntaxHighlighter :global(code) {
+  padding: 0;
+  background: transparent;
+  font-family: var(--mantine-font-family-monospace);
+  font-size: var(--mantine-font-size-xs);
+}
+
 .messageMarkdown hr {
   margin-block: 1rem;
   border: 0;
@@ -638,19 +689,25 @@
 }
 
 .pendingQuestionDock {
-  flex: 0 1 auto;
-  max-height: min(22rem, 50cqh);
+  min-height: 0;
+  flex: 1 1 auto;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 0.65rem 0.75rem 0.35rem;
-  border-top: 1px solid var(--mantine-color-default-border);
+  padding: 0.75rem;
   background: var(--mantine-color-body);
 }
 
+.thread[data-pending-question] .viewport {
+  display: none;
+}
+
 .pendingQuestionTarget {
+  display: flex;
   width: 100%;
+  min-height: 100%;
   max-width: 44rem;
   margin-inline: auto;
+  align-items: safe center;
 }
 
 .pendingQuestionTarget .humanTool {
@@ -723,6 +780,11 @@
   white-space: nowrap;
 }
 
+.humanToolOptionBadge {
+  min-width: max-content;
+  max-width: none;
+}
+
 .humanToolOptionText {
   min-width: 0;
 }
@@ -768,6 +830,10 @@
   border-radius: var(--mantine-radius-sm);
   background: var(--mantine-color-body);
   white-space: pre-wrap;
+}
+
+.toolResultNavigation {
+  padding-top: 0.125rem;
 }
 
 .toolResultProperties {
@@ -849,9 +915,10 @@
 
 .reasoning {
   margin-block: 0.45rem;
-  padding: 0.45rem 0.6rem;
+  overflow: hidden;
+  border: 1px solid var(--mantine-color-default-border);
   border-radius: var(--mantine-radius-md);
-  background: var(--mantine-color-default);
+  background: color-mix(in srgb, var(--mantine-color-default) 72%, transparent);
 }
 
 .reasoningToggle {
@@ -859,8 +926,12 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  border-radius: var(--mantine-radius-sm);
+  padding: 0.4rem 0.55rem;
   cursor: pointer;
+}
+
+.reasoningToggle:hover {
+  background: var(--mantine-color-default-hover);
 }
 
 .reasoningToggle:focus-visible {
@@ -877,11 +948,17 @@
 }
 
 .reasoningContent {
-  padding-top: 0.45rem;
+  padding: 0.45rem 0.55rem 0.55rem;
+  border-top: 1px solid var(--mantine-color-default-border);
 }
 
 .reasoningText {
-  white-space: pre-wrap;
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-sm);
+}
+
+.reasoningParts {
+  min-width: 0;
 }
 
 .source {
@@ -941,30 +1018,57 @@
 
 .attachment {
   display: inline-flex;
+  min-width: min(11rem, 100%);
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.5rem;
   margin: 0 0.35rem 0.35rem 0;
+  padding: 0.3rem;
 }
 
-.attachmentThumb {
+.attachmentImage,
+.attachmentFileIcon {
   display: grid;
-  width: 1.7rem;
-  height: 1.7rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
   place-items: center;
   border-radius: var(--mantine-radius-sm);
   color: var(--mantine-color-dimmed);
   background: var(--mantine-color-body);
-  font-size: 0.62rem;
-  font-weight: 700;
+}
+
+.attachmentImage {
+  object-fit: cover;
+}
+
+.attachmentCopy {
+  min-width: 0;
+  flex: 1;
 }
 
 .attachmentName {
-  max-width: 12rem;
+  max-width: 13rem;
+}
+
+.attachmentType {
+  max-width: 13rem;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4));
 }
 
 .messageActions {
+  display: flex;
+  min-width: 0;
   min-height: 1.75rem;
+  align-items: center;
+  gap: 0.2rem;
   margin-top: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.messageActionBar {
+  min-width: 0;
+  max-width: 100%;
+  flex: 0 1 auto;
 }
 
 .userActions {
@@ -973,9 +1077,39 @@
 
 .branchPicker {
   display: flex;
+  width: max-content;
   min-height: 1.75rem;
+  flex: 0 0 auto;
   align-items: center;
   gap: 0.1rem;
+}
+
+.providerAction,
+.conversationTurnProvider {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--mantine-color-dimmed);
+}
+
+.providerAction {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.providerAction:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.providerAction:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 1px;
+}
+
+.providerIcon {
+  display: block;
+  object-fit: contain;
 }
 
 .editComposer {
@@ -995,75 +1129,6 @@
   color: var(--mantine-color-text);
   background: transparent;
   font: inherit;
-}
-
-.telemetry {
-  margin-top: 0.45rem;
-  padding-inline: 0.15rem;
-}
-
-.telemetryFacts {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.modelBadge {
-  max-width: min(100%, 14rem);
-}
-
-.contextMeter {
-  display: grid;
-  width: 2.75rem;
-  height: 2.75rem;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 50%;
-  color: var(--mantine-color-text);
-  transition:
-    background-color 160ms ease,
-    transform 160ms ease;
-}
-
-.contextMeter:hover {
-  background: var(--mantine-color-default-hover);
-}
-
-.contextMeter:active {
-  transform: scale(0.96);
-}
-
-.contextMeter:focus-visible {
-  outline: 2px solid var(--mantine-primary-color-filled);
-  outline-offset: 2px;
-}
-
-.contextMeterLabel {
-  font-size: 0.55rem;
-  line-height: 1;
-}
-
-.telemetryPopover {
-  max-height: min(32rem, calc(100dvh - 2rem));
-  overflow-y: auto;
-}
-
-.contextStats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
-}
-
-.contextStats > div {
-  min-width: 0;
-  padding: 0.45rem 0.5rem;
-  border-radius: var(--mantine-radius-sm);
-  background: var(--mantine-color-body);
-}
-
-.contextStats :global(.mantine-Text-root) {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .usageGrid {
@@ -1086,9 +1151,71 @@
   white-space: nowrap;
 }
 
+.composerContext {
+  display: flex;
+  width: 1.75rem;
+  height: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: 50%;
+  color: var(--mantine-color-text);
+  background: var(--mantine-color-body);
+}
+
+.composerContext:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.composerContext:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.conversationContextPopover {
+  max-height: min(34rem, calc(100dvh - 1rem));
+  overflow: hidden;
+}
+
+.conversationUsageSummary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.conversationUsageSummary > div {
+  min-width: 0;
+  padding: 0.45rem 0.5rem;
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-default);
+}
+
+.conversationTurn {
+  min-width: 0;
+  padding: 0.5rem 0.55rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+}
+
+.conversationTurnTrigger {
+  width: 100%;
+  text-align: start;
+}
+
+.conversationTurnTrigger:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.conversationTurnProvider {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
 .composerWrap {
   flex: 0 0 auto;
-  padding: 0.65rem 0.75rem 0.75rem;
+  padding: 0;
   border-top: 1px solid var(--mantine-color-default-border);
   background: var(--mantine-color-body);
 }
@@ -1097,20 +1224,22 @@
   position: relative;
   display: flex;
   width: 100%;
-  max-width: 44rem;
-  margin-inline: auto;
+  max-width: none;
   flex-direction: column;
   align-items: stretch;
   gap: 0.5rem;
-  padding: 0.4rem;
-  border: 1px solid var(--mantine-color-default-border);
-  border-radius: var(--mantine-radius-lg);
-  background: var(--mantine-color-default);
+  padding: 0.45rem 0.75rem 0.55rem;
+  border: 0;
+  border-radius: 0;
+  background: var(--mantine-color-body);
+}
+
+.composer:has(.composerInput:focus-within) {
+  box-shadow: inset 0 0 0 2px var(--mantine-color-red-filled);
 }
 
 .composerDropzone[data-dragging] .composer {
-  border-color: var(--mantine-primary-color-filled);
-  box-shadow: 0 0 0 2px var(--mantine-primary-color-light);
+  box-shadow: inset 0 0 0 2px var(--mantine-primary-color-filled);
 }
 
 .composerQuote {
@@ -1147,10 +1276,6 @@
   width: 100%;
 }
 
-.composer:focus-within {
-  border-color: var(--mantine-primary-color-filled);
-}
-
 .composerInput {
   position: relative;
   min-height: 2.25rem;
@@ -1180,7 +1305,7 @@
 .composerInput :global(.aui-lexical-placeholder) {
   position: absolute;
   inset: 0.35rem 0.45rem auto;
-  color: var(--mantine-color-dimmed);
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-5));
   line-height: 1.5;
   pointer-events: none;
 }
@@ -1192,6 +1317,11 @@
 .composerFooter {
   min-width: 0;
   padding-inline: 0.2rem;
+}
+
+.composerControls {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .runtimeSelectorTrigger {
@@ -1246,7 +1376,7 @@
 
 .modelOption {
   margin-inline: 0.25rem;
-  padding: 0.32rem 0.45rem;
+  padding: 0.32rem 0.45rem 0.32rem 0.3rem;
   border-radius: var(--mantine-radius-sm);
 }
 
@@ -1254,7 +1384,16 @@
 .modelOption[data-combobox-active] {
   color: var(--mantine-color-text);
   background: var(--mantine-color-default-hover);
-  box-shadow: inset 2px 0 0 var(--mantine-primary-color-filled);
+}
+
+.modelOptionDivider {
+  height: 2rem;
+  align-self: center;
+  border-color: transparent;
+}
+
+.modelOptionDivider[data-active] {
+  border-color: var(--mantine-primary-color-filled);
 }
 
 .modelOptionText {
@@ -1337,6 +1476,10 @@
   text-align: center;
 }
 
+.emptyDescription {
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-5));
+}
+
 .suggestions {
   display: grid;
   width: 100%;
@@ -1411,7 +1554,7 @@
   }
 
   .composerWrap {
-    padding: 0.5rem;
+    padding: 0;
   }
 
   .composer {
@@ -1482,6 +1625,19 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .conversationUsageSummary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .humanToolOption {
+    grid-template-columns: max-content minmax(0, 1fr);
+  }
+
+  .humanToolOptionBadge {
+    grid-column: 2;
+    justify-self: start;
+  }
+
   .approvalActions {
     flex-direction: column;
   }
@@ -1490,6 +1646,10 @@
   .appTool,
   .boardSettingsTool {
     padding: 0.8rem;
+  }
+
+  .pendingQuestionDock {
+    padding: 0.5rem;
   }
 
   .boardSettingsActions,
@@ -1506,7 +1666,6 @@
 @media (prefers-reduced-motion: reduce) {
   .activityBar,
   .floatingPanel,
-  .contextMeter,
   .disclosureIcon,
   .reasoningChevron {
     animation: none;

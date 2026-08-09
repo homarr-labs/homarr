@@ -2100,7 +2100,8 @@
       "dismissQuote": "Remove quote",
       "attachments": {
         "add": "Attach an image or document",
-        "errorTitle": "Attachment could not be added"
+        "errorTitle": "Attachment could not be added",
+        "imageUnsupported": "The selected model does not support image input."
       },
       "mentions": {
         "menu": "Add Homarr context",
@@ -2170,6 +2171,10 @@
       },
       "toolInput": "Input",
       "toolOutput": "Output",
+      "toolNavigation": {
+        "openPreview": "Open preview",
+        "openWidget": "Open widget"
+      },
       "webSearch": {
         "title": "Web search",
         "completed": "OpenRouter searched the live web for this response.",
@@ -6131,8 +6136,7 @@
               },
               "options": {
                 "homarr": {
-                  "label": "Homarr",
-                  "description": "A Homarr-hosted OpenRouter proxy with the same model discovery, tool, and web search features. Available in a future release."
+                  "label": "Homarr"
                 },
                 "openrouter": {
                   "label": "OpenRouter",
@@ -6188,10 +6192,6 @@
             "baseUrl": {
               "title": "API base URL",
               "description": "Include the API prefix, usually /v1. In containers, localhost refers to the Homarr container."
-            },
-            "destinationChanged": {
-              "title": "Credentials will not follow this endpoint",
-              "description": "Changing the provider or base URL clears the stored API key and headers unless replacements are entered now. This prevents sending one provider's secrets to another service."
             },
             "apiKey": {
               "title": "API key",
@@ -6260,7 +6260,7 @@
               "discovering": "Refreshing the models available from this provider…",
               "discovered": "{count, plural, one {Discovered # model. Tool support depends on the selected endpoint and model.} other {Discovered # models. Tool support depends on the selected endpoint and model.}}",
               "discoveryFailed": "Model discovery did not complete",
-              "context": "{count, number} token context",
+              "context": "{count} context window",
               "toolsConfirmed": "Tools advertised",
               "toolsUnknown": "Verify tool support"
             },

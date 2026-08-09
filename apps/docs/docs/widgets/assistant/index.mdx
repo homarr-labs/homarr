@@ -41,17 +41,19 @@ active conversation silently: select **Open conversation** inside the widget bef
 ### Conversation features
 
 - Create, switch, rename, and delete conversations.
-- Send text and supported file or image attachments.
+- Send text and supported file or image attachments by picker, drag and drop, or image paste.
 - Mention permitted apps, integrations, boards, widgets, and tools with `@`.
 - Use `/` shortcuts for common dashboard tasks.
 - Review tool calls, approve mutations, and answer structured assistant questions inline.
 - Answer pending structured questions from the dock above the composer without scrolling through the conversation.
 - Enable conversation-scoped automatic approvals from the shield control to approve protected mutations, use presented form details, and choose answers categorized as affirmative without individual clicks.
 - Edit user messages and copy, regenerate, branch, quote, export, or rate responses.
-- Inspect Markdown, sources, generated files, tool results, reasoning, token use, context-window use, timing,
-  speed, provider routing, and cost.
+- Inspect syntax-highlighted Markdown, sources, generated files, tool results, streaming chain-of-thought,
+  cumulative conversation usage, per-turn token and context use, timing, speed, provider routing, and cost.
 - Change the model and reasoning effort for the active conversation.
 - Refresh the current board from the conversation header. Approved mutations also refresh visible board data automatically.
 
 The expanded assistant and board widget use the same persisted thread runtime. A response continues in the
-background when the widget leaves the viewport or the expanded panel is minimized.
+background when the widget leaves the viewport or the expanded panel is minimized. Each visible surface keeps an
+independent draft, attachments, selection, and focus, so typing in a board widget cannot move or overwrite the
+floating panel composer.
