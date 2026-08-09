@@ -10,7 +10,6 @@ const advancedFocusWidgetKinds = [
   "bookmarks",
   "calendar",
   "clock",
-  "dockerContainers",
   "downloads",
   "firewall",
   "healthMonitoring",
