@@ -128,6 +128,33 @@ a real trade, not a free win.
 **Cumulative vs merge-base: idle 141.7 → 90.3 MiB (−36%), board loaded 257.8 → 164.6 MiB
 (−36%), under load 392.7 → 302.5 MiB (−23%).**
 
+## Final A/B, with repetitions
+
+Everything above is one sample per configuration, which is fine for ranking changes but
+not for a headline. This is the merge-base image against the PR's end state, alternated,
+on the same backup — 2 runs before, 3 after:
+
+| run | idle | board loaded | under load | after soak | peak |
+| --- | --- | --- | --- | --- | --- |
+| before #1 | 144.2 | 249.0 | 392.8 | 529.6 | 753.0 |
+| before #2 | 142.3 | 268.2 | 385.1 | 538.5 | 626.1 |
+| after #1 | 100.5 | 176.8 | 311.1 | 204.3 | 590.9 |
+| after #2 | 91.1 | 163.5 | 319.9 | 212.7 | 568.0 |
+| after #3 | 90.3 | 164.6 | 302.5 | 206.4 | 594.2 |
+
+| metric | before (mean) | after (mean) | change |
+| --- | --- | --- | --- |
+| boot idle | 143.3 | **94.0** | **−34%** |
+| board loaded | 258.6 | **168.3** | **−35%** |
+| under load | 389.0 | **311.2** | **−20%** |
+| after idle soak | 534.1 | **207.8** | **−61%** |
+| peak | 689.6 | **584.4** | −15% |
+
+The two groups do not overlap on any stage. The before-side idle samples land within
+1.9 MiB of each other, which is what justifies treating a ~50 MiB gap as real rather than
+noise. Earlier single-sample rounds suggested −36%; the repeated figure is **−34%**, and
+that is the number used in the PR.
+
 ## Is the measurement actually behind a login?
 
 Worth stating explicitly, because "28 widgets rendered" would be meaningless if the board

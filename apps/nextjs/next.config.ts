@@ -51,6 +51,8 @@ const nextConfig: NextConfig = {
     "node-unifi",
     "@kubernetes/client-node",
     "linkedom",
+    // Only reachable through /api/mcp/[transport].
+    "@modelcontextprotocol/sdk",
   ],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
