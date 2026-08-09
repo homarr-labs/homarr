@@ -1,0 +1,23 @@
+packages/db/migrations/postgresql/meta/_journal.json
+  s_093d61b162b9ca::t_b202c408b40302 86
+packages/db/migrations/sqlite/meta/_journal.json
+  s_093d61b162b9ca::t_b202c408b40302 310
+packages/db/migrations/mysql/meta/_journal.json
+  s_093d61b162b9ca::t_b202c408b40302 324
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "84db5ccfe74c8e5baf0d348c6bd03f9fe6dca11b",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
