@@ -1,6 +1,7 @@
 CREATE TABLE "assistant_configuration" (
 	"id" varchar(64) PRIMARY KEY DEFAULT 'default' NOT NULL,
 	"enabled" boolean DEFAULT false NOT NULL,
+	"web_search_enabled" boolean DEFAULT false NOT NULL,
 	"provider" varchar(32) DEFAULT 'openrouter' NOT NULL,
 	"base_url" varchar(2048) DEFAULT 'https://openrouter.ai/api/v1' NOT NULL,
 	"model_discovery_path" varchar(512) DEFAULT '/models',
@@ -15,7 +16,7 @@ CREATE TABLE "assistant_message" (
 	"thread_id" varchar(64) NOT NULL,
 	"parent_id" varchar(128),
 	"format" varchar(64) DEFAULT 'ai-sdk/v6' NOT NULL,
-	"content" text DEFAULT '{"json": {}}' NOT NULL,
+	"content" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint

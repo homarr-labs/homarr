@@ -99,13 +99,6 @@
       "when": 1786217088954,
       "tag": "0013_add_assistant_tables",
       "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "7",
-      "when": 1785768744667,
-      "tag": "0011_same_sir_ram",
-      "breakpoints": true
     }
   ]
 }
