@@ -48,8 +48,19 @@ const ownerOf = (key) => {
   return "other";
 };
 
-const shorten = (key) =>
-  key.replace("|", "  <- ").replace("/app/apps/nextjs/.next/server/", "").replace("/app/node_modules/", "");
+/**
+ * Renders a `functionName|url:line` key for display. Split on the first separator explicitly
+ * rather than with a single-occurrence `replace`, which reads as a botched sanitiser (CodeQL
+ * flags it as one) and would mangle any URL that itself contained a pipe.
+ */
+const shorten = (key) => {
+  const separator = key.indexOf("|");
+  const functionName = separator === -1 ? key : key.slice(0, separator);
+  const url = separator === -1 ? "" : key.slice(separator + 1);
+  return `${functionName}  <- ${url}`
+    .replaceAll("/app/apps/nextjs/.next/server/", "")
+    .replaceAll("/app/node_modules/", "");
+};
 
 let label;
 let total;
