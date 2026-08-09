@@ -1,3 +1,5 @@
+import { formatNumber } from "@homarr/common";
+
 interface AssistantConnectionStateInput {
   connectionConfigured: boolean;
   destinationChanged: boolean;
@@ -21,3 +23,5 @@ export const getAssistantConnectionState = ({
     connectionReady: !connectionPending,
   };
 };
+
+export const formatAssistantContextWindow = (tokens: number) => formatNumber(tokens, 0);

@@ -6136,8 +6136,7 @@
               },
               "options": {
                 "homarr": {
-                  "label": "Homarr",
-                  "description": "A Homarr-hosted OpenRouter proxy with the same model discovery, tool, and web search features. Available in a future release."
+                  "label": "Homarr"
                 },
                 "openrouter": {
                   "label": "OpenRouter",
@@ -6261,7 +6260,7 @@
               "discovering": "Refreshing the models available from this provider…",
               "discovered": "{count, plural, one {Discovered # model. Tool support depends on the selected endpoint and model.} other {Discovered # models. Tool support depends on the selected endpoint and model.}}",
               "discoveryFailed": "Model discovery did not complete",
-              "context": "{count, number} token context",
+              "context": "{count} context window",
               "toolsConfirmed": "Tools advertised",
               "toolsUnknown": "Verify tool support"
             },

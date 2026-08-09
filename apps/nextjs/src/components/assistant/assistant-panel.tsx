@@ -1527,7 +1527,7 @@ const ConversationContext = () => {
     ? Math.min(100, Math.round(((usage.contextUsed ?? 0) / Math.max(usage.contextLength ?? 1, 1)) * 100))
     : 0;
   const quickLabel = [
-    hasTokenUsage ? `${usage.totalTokens.toLocaleString()} ${t("usage.tokens")}` : t("usage.notReported"),
+    hasTokenUsage ? `${usage.totalTokens.toLocaleString()} ${t("usage.tokens")}` : undefined,
     hasCost ? formatCost(usage.cost) : undefined,
   ]
     .filter(Boolean)
@@ -1548,9 +1548,10 @@ const ConversationContext = () => {
         <UnstyledButton
           className={classes.composerContext}
           type="button"
-          aria-label={`${t("usage.contextWindow")}: ${quickLabel}`}
+          aria-label={quickLabel ? `${t("usage.contextWindow")}: ${quickLabel}` : t("usage.contextWindow")}
           aria-expanded={opened}
           aria-haspopup="dialog"
+          data-compact={!quickLabel || undefined}
           onClick={() => setOpened((value) => !value)}
         >
           <RingProgress
@@ -1559,9 +1560,11 @@ const ConversationContext = () => {
             roundCaps
             sections={hasContext ? [{ value: contextPercentage, color: getContextColor(contextPercentage) }] : []}
           />
-          <Text size="xs" fw={650} truncate>
-            {quickLabel}
-          </Text>
+          {quickLabel && (
+            <Text size="xs" fw={650} truncate>
+              {quickLabel}
+            </Text>
+          )}
         </UnstyledButton>
       </Popover.Target>
       <Popover.Dropdown className={classes.conversationContextPopover}>

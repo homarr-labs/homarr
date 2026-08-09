@@ -46,20 +46,18 @@ Homarr includes presets for OpenRouter, OpenAI, Anthropic Claude, Google Gemini,
 DeepSeek, Together AI, Ollama, and LM Studio. Provider icons make the presets easy to identify. A custom
 preset connects any other service that implements the OpenAI Chat Completions API.
 
-The provider list also shows **Homarr — Coming soon** as a disabled option. The future service will be a
-Homarr-hosted OpenRouter proxy with the same model discovery, tool-calling, and server-tool features. Keeping
-it visible reserves a clear place for that service without making an unavailable backend selectable today.
+The provider list also shows **Homarr — Coming soon** as a disabled option.
 
 The management page presents setup as three compact sections: provider and endpoint, credentials, then
 model and availability. A status summary at the top shows whether the connection is ready, whether a key
-is protected, which model is selected, and whether users can open the assistant.
+is protected, and which model is selected. Redundant active-state badges are omitted when the setup is ready.
 
 1. Choose a provider preset or **Custom endpoint**, then confirm the API base URL. It usually ends in `/v1`.
 2. Add an API key if the service requires bearer authentication. Additional authentication or routing
    headers are available in the collapsed advanced section.
 3. Save the provider connection.
 4. Refresh the model list and select a discovered model. Homarr displays the friendly model name but
-   stores and sends the provider's exact model ID.
+   stores and sends the provider's exact model ID. Context-window sizes use compact labels such as `1M`.
 5. Enable the assistant and save the configuration.
 
 The model discovery path defaults to `/models` and is appended to the API base URL. Leave it blank when
@@ -158,7 +156,8 @@ another message starts.
 A compact context control beside the model selector gives a quick glance at cumulative conversation tokens and
 cost. Its popover keeps the latest complete context reading while a new response starts and lists every request
 turn with its model, provider, input, output, cached-input and reasoning tokens, context use, duration, speed,
-agent steps, routing details, and cost when reported. Closing and reopening the popover reads persisted
+agent steps, routing details, and cost when reported. Before usage is available, the control remains a compact
+circle instead of showing a redundant missing-data label. Closing and reopening the popover reads persisted
 conversation metadata instead of resetting the display to zero.
 
 Each assistant response places a small provider logo in the same stable action toolbar as copy, export,
