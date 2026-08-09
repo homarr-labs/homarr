@@ -122,6 +122,17 @@ export type AssistantConversationUsage = {
   contextLength?: number;
 };
 
+export type AssistantContextBreakdown = {
+  contextUsed?: number;
+  contextLength?: number;
+  remaining?: number;
+  percentage?: number;
+  inputTokens?: number;
+  outputTokens?: number;
+  cachedInputTokens?: number;
+  reasoningTokens?: number;
+};
+
 const getFiniteNonNegativeNumber = (value: unknown) =>
   typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : undefined;
 
@@ -409,6 +420,35 @@ export const getAssistantConversationUsage = (messageMetadata: unknown[]): Assis
     cost: sum((turn) => turn.cost),
     ...(latestContextTurn?.contextUsed !== undefined ? { contextUsed: latestContextTurn.contextUsed } : {}),
     ...(latestContextTurn?.contextLength !== undefined ? { contextLength: latestContextTurn.contextLength } : {}),
+  };
+};
+
+export const getAssistantContextBreakdown = (usage: AssistantConversationUsage): AssistantContextBreakdown => {
+  const latestTokenTurn = usage.turns.findLast(
+    (turn) =>
+      turn.inputTokens !== undefined ||
+      turn.outputTokens !== undefined ||
+      turn.cachedInputTokens !== undefined ||
+      turn.reasoningTokens !== undefined,
+  );
+  const { contextUsed, contextLength } = usage;
+  const hasContext = contextUsed !== undefined && contextLength !== undefined && contextLength > 0;
+
+  return {
+    ...(hasContext
+      ? {
+          contextUsed,
+          contextLength,
+          remaining: Math.max(0, contextLength - contextUsed),
+          percentage: Math.min(100, Math.round((contextUsed / contextLength) * 100)),
+        }
+      : {}),
+    ...(latestTokenTurn?.inputTokens !== undefined ? { inputTokens: latestTokenTurn.inputTokens } : {}),
+    ...(latestTokenTurn?.outputTokens !== undefined ? { outputTokens: latestTokenTurn.outputTokens } : {}),
+    ...(latestTokenTurn?.cachedInputTokens !== undefined
+      ? { cachedInputTokens: latestTokenTurn.cachedInputTokens }
+      : {}),
+    ...(latestTokenTurn?.reasoningTokens !== undefined ? { reasoningTokens: latestTokenTurn.reasoningTokens } : {}),
   };
 };
 

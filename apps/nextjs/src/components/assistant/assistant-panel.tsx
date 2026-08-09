@@ -27,6 +27,7 @@ import {
   ActionBarPrimitive,
   AttachmentPrimitive,
   BranchPickerPrimitive,
+  ChainOfThoughtByIndicesProvider,
   ChainOfThoughtPrimitive,
   ComposerPrimitive,
   ErrorPrimitive,
@@ -128,14 +129,20 @@ import { remarkAssistantDirectives, resolveAssistantDirectiveEntity } from "./as
 import type { AssistantDirectiveEntity } from "./assistant-markdown-directives";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
 import { getSafeAssistantAttachmentImageSource, getSafeAssistantMarkdownImageSource } from "./assistant-markdown-image";
-import { getAssistantConversationUsage, getAssistantTelemetry } from "./assistant-message-metadata";
-import type { AssistantConversationTurnUsage } from "./assistant-message-metadata";
+import {
+  getAssistantContextBreakdown,
+  getAssistantConversationUsage,
+  getAssistantTelemetry,
+} from "./assistant-message-metadata";
+import type { AssistantContextBreakdown, AssistantConversationTurnUsage } from "./assistant-message-metadata";
+import { assistantMessageGroupBy } from "./assistant-message-grouping";
 import type { AssistantPendingAction } from "./assistant-pending-action";
 import { AssistantQuestionPortalProvider } from "./assistant-question-portal";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
 import { useAssistantReasoningState } from "./assistant-reasoning-state";
 import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
 import { getToolResultPresentation } from "./assistant-tool-result";
+import { getAssistantToolTraceTarget } from "./assistant-tool-trace";
 import { getSafeAssistantHttpUrl } from "./assistant-url";
 
 // Shiki's web grammar bundle is intentionally loaded only when a settled response contains a code
@@ -800,6 +807,8 @@ const ToolResultPreview = ({ result, toolName }: { result: unknown; toolName: st
   );
 };
 
+const AgentTraceToolContext = createContext(false);
+
 const ToolPart = ({
   toolCallId,
   toolName,
@@ -812,6 +821,7 @@ const ToolPart = ({
   timing,
 }: ToolCallMessagePartProps) => {
   const t = useScopedI18n("common.assistant");
+  const compact = useContext(AgentTraceToolContext);
   const [opened, setOpened] = useState(false);
   const [approvalResponse, setApprovalResponse] = useState<"approve" | "deny" | null>(null);
   const completed = status?.type === "complete";
@@ -823,6 +833,8 @@ const ToolPart = ({
       status?.type === "incomplete" ||
       (typeof result === "object" && result !== null && "error" in result));
   const successful = completed && !denied && !failed;
+  const compactPresentation = compact && !awaitingApproval;
+  const traceTarget = getAssistantToolTraceTarget(args);
   const duration = timing?.completedAt !== undefined ? Math.max(0, timing.completedAt - timing.startedAt) : undefined;
   const autoApprovalInProgress = useAssistantAutomaticAction({
     toolCallId,
@@ -835,7 +847,7 @@ const ToolPart = ({
   });
 
   return (
-    <Box className={classes.tool}>
+    <Box className={classes.tool} data-compact={compactPresentation || undefined}>
       <UnstyledButton
         className={classes.toolHeader}
         onClick={() => setOpened((current) => !current)}
@@ -851,9 +863,16 @@ const ToolPart = ({
             >
               {denied || failed ? <IconX size={13} /> : successful ? <IconCheck size={13} /> : <IconRobot size={13} />}
             </ThemeIcon>
-            <Text size="sm" fw={600}>
-              {toolName.replaceAll("_", " ")}
-            </Text>
+            <Box miw={0}>
+              <Text size={compactPresentation ? "xs" : "sm"} fw={650} lineClamp={1}>
+                {toolName.replaceAll("_", " ")}
+              </Text>
+              {compactPresentation && traceTarget && (
+                <Text size="xs" c="dimmed" lineClamp={1}>
+                  {traceTarget}
+                </Text>
+              )}
+            </Box>
           </Group>
           <Group gap={6} wrap="nowrap">
             {duration !== undefined && (
@@ -926,9 +945,14 @@ const ToolPart = ({
           )}
         </Box>
       )}
-      {successful && result !== undefined && <ToolResultPreview result={result} toolName={toolName} />}
+      {!compactPresentation && successful && result !== undefined && (
+        <ToolResultPreview result={result} toolName={toolName} />
+      )}
       <Collapse expanded={opened}>
         <Stack gap="xs" mt="sm">
+          {compactPresentation && successful && result !== undefined && (
+            <ToolResultPreview result={result} toolName={toolName} />
+          )}
           <Box>
             <Text size="xs" fw={600} c="dimmed">
               {t("toolInput")}
@@ -953,13 +977,21 @@ const ToolPart = ({
   );
 };
 
+const AgentTraceToolGroup = ({ children }: { children?: ReactNode }) => (
+  <AgentTraceToolContext.Provider value>
+    <Stack className={classes.agentTraceTools} gap={4}>
+      {children}
+    </Stack>
+  </AgentTraceToolContext.Provider>
+);
+
 const ChainOfThoughtLayout = ({ children }: { children?: ReactNode }) => (
-  <Stack className={classes.reasoningParts} gap="xs">
+  <Stack className={classes.reasoningParts} gap={6}>
     {children}
   </Stack>
 );
 
-const AssistantChainOfThought = () => {
+const AssistantChainOfThought = ({ children }: { children?: ReactNode }) => {
   const t = useScopedI18n("common.assistant");
   const contentId = useId();
   const { collapsed: preferredCollapsed, setCollapsed: setPreferredCollapsed } = useContext(ReasoningVisibilityContext);
@@ -988,9 +1020,7 @@ const AssistantChainOfThought = () => {
         </UnstyledButton>
       </ChainOfThoughtPrimitive.AccordionTrigger>
       <Box id={contentId} className={classes.reasoningContent} aria-busy={running} hidden={collapsed}>
-        <ChainOfThoughtPrimitive.Parts
-          components={{ Reasoning: ReasoningPart, tools: { Fallback: ToolPart }, Layout: ChainOfThoughtLayout }}
-        />
+        <ChainOfThoughtLayout>{children}</ChainOfThoughtLayout>
       </Box>
     </ChainOfThoughtPrimitive.Root>
   );
@@ -1512,6 +1542,64 @@ const ConversationTurn = ({
   );
 };
 
+const ConversationContextBreakdown = ({ breakdown }: { breakdown: AssistantContextBreakdown }) => {
+  const t = useScopedI18n("common.assistant");
+  const hasContext = breakdown.percentage !== undefined;
+  const categories = [
+    { label: t("usage.input"), value: breakdown.inputTokens },
+    { label: t("usage.cached"), value: breakdown.cachedInputTokens },
+    { label: t("usage.output"), value: breakdown.outputTokens },
+    { label: t("usage.reasoning"), value: breakdown.reasoningTokens },
+  ];
+
+  return (
+    <Box className={classes.contextBreakdown}>
+      <RingProgress
+        className={classes.contextBreakdownRing}
+        size={76}
+        thickness={7}
+        roundCaps
+        sections={
+          hasContext ? [{ value: breakdown.percentage ?? 0, color: getContextColor(breakdown.percentage ?? 0) }] : []
+        }
+        label={
+          <Text ta="center" size="xs" fw={700}>
+            {hasContext ? `${breakdown.percentage}%` : "–"}
+          </Text>
+        }
+      />
+      <Box className={classes.contextBreakdownWindow}>
+        {[
+          { label: t("usage.used"), value: breakdown.contextUsed },
+          { label: t("usage.remaining"), value: breakdown.remaining },
+          { label: t("usage.capacity"), value: breakdown.contextLength },
+        ].map((item) => (
+          <Box key={item.label}>
+            <Text size="xs" c="dimmed">
+              {item.label}
+            </Text>
+            <Text size="sm" fw={650}>
+              {item.value?.toLocaleString() ?? t("usage.notReported")}
+            </Text>
+          </Box>
+        ))}
+      </Box>
+      <Box className={classes.contextBreakdownCategories}>
+        {categories.map((category) => (
+          <Box key={category.label}>
+            <Text size="xs" c="dimmed">
+              {category.label}
+            </Text>
+            <Text size="xs" fw={650}>
+              {category.value?.toLocaleString() ?? t("usage.notReported")}
+            </Text>
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  );
+};
+
 const ConversationContext = () => {
   const t = useScopedI18n("common.assistant");
   const [opened, setOpened] = useState(false);
@@ -1529,12 +1617,11 @@ const ConversationContext = () => {
     [messages],
   );
   const usage = useMemo(() => getAssistantConversationUsage(metadata), [metadata]);
+  const breakdown = useMemo(() => getAssistantContextBreakdown(usage), [usage]);
   const hasTokenUsage = usage.turns.some((turn) => turn.totalTokens !== undefined);
   const hasCost = usage.turns.some((turn) => turn.cost !== undefined);
-  const hasContext = usage.contextUsed !== undefined && usage.contextLength !== undefined;
-  const contextPercentage = hasContext
-    ? Math.min(100, Math.round(((usage.contextUsed ?? 0) / Math.max(usage.contextLength ?? 1, 1)) * 100))
-    : 0;
+  const hasContext = breakdown.percentage !== undefined;
+  const contextPercentage = breakdown.percentage ?? 0;
   const quickLabel = [
     hasTokenUsage ? `${usage.totalTokens.toLocaleString()} ${t("usage.tokens")}` : undefined,
     hasCost ? formatCost(usage.cost) : undefined,
@@ -1607,20 +1694,16 @@ const ConversationContext = () => {
             </div>
             <div>
               <Text size="xs" c="dimmed">
-                {t("usage.used")}
+                {t("usage.agentSteps")}
               </Text>
               <Text size="sm" fw={650}>
-                {usage.contextUsed?.toLocaleString() ?? t("usage.notReported")}
+                {usage.turns.reduce((total, turn) => total + turn.telemetry.steps.length, 0).toLocaleString()}
               </Text>
-              {usage.contextLength !== undefined && (
-                <Text size="xs" c="dimmed">
-                  / {usage.contextLength.toLocaleString()}
-                </Text>
-              )}
             </div>
           </Box>
+          <ConversationContextBreakdown breakdown={breakdown} />
           <Divider />
-          <ScrollArea.Autosize mah="min(21rem, 48dvh)" type="auto" offsetScrollbars>
+          <ScrollArea.Autosize mah="min(14rem, 30dvh)" type="auto" offsetScrollbars>
             <Stack gap={5}>
               {usage.turns.length === 0 ? (
                 <Text size="sm" c="dimmed" py="xs">
@@ -1739,17 +1822,44 @@ const WebSearchActivity = () => {
 
 const AssistantMessage = () => (
   <MessagePrimitive.Root className={`${classes.message} ${classes.assistantMessage}`}>
-    <MessagePrimitive.Parts
-      unstable_showEmptyOnNonTextEnd={false}
-      components={{
-        Empty: AssistantMessagePending,
-        Text: AssistantTextPart,
-        Source: SourcePart,
-        File: FilePart,
-        Image: ImagePart,
-        ChainOfThought: AssistantChainOfThought,
+    <MessagePrimitive.GroupedParts groupBy={assistantMessageGroupBy} indicator="empty">
+      {({ part, children }) => {
+        switch (part.type) {
+          case "group-agent-trace": {
+            const startIndex = part.indices[0];
+            const endIndex = part.indices.at(-1);
+            if (startIndex === undefined || endIndex === undefined) return null;
+            return (
+              <ChainOfThoughtByIndicesProvider startIndex={startIndex} endIndex={endIndex}>
+                <AssistantChainOfThought>{children}</AssistantChainOfThought>
+              </ChainOfThoughtByIndicesProvider>
+            );
+          }
+          case "group-reasoning":
+            return <>{children}</>;
+          case "group-tool":
+            return <AgentTraceToolGroup>{children}</AgentTraceToolGroup>;
+          case "indicator":
+            return <AssistantMessagePending status={{ type: "running" }} />;
+          case "text":
+            return <AssistantTextPart />;
+          case "reasoning":
+            return <ReasoningPart {...part} />;
+          case "tool-call":
+            return part.toolUI ?? <ToolPart {...part} />;
+          case "source":
+            return <SourcePart {...part} />;
+          case "file":
+            return <FilePart {...part} />;
+          case "image":
+            return <ImagePart {...part} />;
+          case "data":
+            return part.dataRendererUI;
+          default:
+            return null;
+        }
       }}
-    />
+    </MessagePrimitive.GroupedParts>
     <RuntimeError />
     <WebSearchActivity />
     <AssistantMessageActions />
