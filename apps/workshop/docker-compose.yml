@@ -8,8 +8,10 @@ services:
       target: development
     restart: unless-stopped
     environment:
+      HOMARR_WEBSITE_URL: ${HOMARR_WEBSITE_URL:-http://localhost:3003}
       PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
       PORT: ${PB_EXPOSE_PORT:-8090}
+      WORKSHOP_API_URL: ${WORKSHOP_API_URL:-http://localhost:8090}
       WORKSHOP_WEB_URL: ${WORKSHOP_WEB_URL:-http://localhost:3003/workshop}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
