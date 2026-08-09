@@ -1,0 +1,25 @@
+name: homarr-workshop-staging
+
+services:
+  workshop:
+    image: ${WORKSHOP_IMAGE:-ghcr.io/homarr-labs/workshop:v2}
+    restart: unless-stopped
+    environment:
+      HOMARR_WEBSITE_URL: ${HOMARR_WEBSITE_URL:?Set HOMARR_WEBSITE_URL in the Workshop environment file}
+      PB_ALLOWED_ORIGINS: ${PB_ALLOWED_ORIGINS:-*}
+      PORT: 8090
+      WORKSHOP_API_URL: ${WORKSHOP_API_URL:?Set WORKSHOP_API_URL in the Workshop environment file}
+      WORKSHOP_PUBLIC_ORIGIN: ${WORKSHOP_PUBLIC_ORIGIN:?Set WORKSHOP_PUBLIC_ORIGIN in the Workshop environment file}
+      WORKSHOP_WEB_URL: ${WORKSHOP_WEB_URL:?Set WORKSHOP_WEB_URL in the Workshop environment file}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+    ports:
+      - "127.0.0.1:${WORKSHOP_EXPOSE_PORT:-8090}:8090"
+    volumes:
+      - pb_data:/pb_data
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+volumes:
+  pb_data:
