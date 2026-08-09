@@ -1,0 +1,48 @@
+scripts/benchmarks/stress-restore.mts
+  s_a70c07ac5b7a5a::t_397ccb3d71749f 129-136
+  s_a70c07ac5b7a5a::t_7c6d419c446048 567-569
+  s_a70c07ac5b7a5a::t_015e1ca5f93ce2 139-146,155-169
+  s_a70c07ac5b7a5a::t_34345f5a66bf7c 122-128
+  s_a70c07ac5b7a5a::t_fd9d77d4a70131 49-52
+  s_a70c07ac5b7a5a::t_a84ab22afd627c 147-154
+  s_a70c07ac5b7a5a::t_3601d700b5572d 137-138
+scripts/benchmarks/memory-probe.cjs
+  s_a70c07ac5b7a5a::t_e5b188f772fd18 162
+  s_a70c07ac5b7a5a::t_41fa4c26f7a7b4 188-206,208-210
+  s_a70c07ac5b7a5a::t_11ca946fd12f0c 393-410,413-435
+  s_a70c07ac5b7a5a::t_5d13d4e33dc517 108-143,153-155,158-159,170-172,180-187,207,211-213
+  s_a70c07ac5b7a5a::t_0a23eaa68e2a50 411-412
+  s_a70c07ac5b7a5a::t_ebd58d3a6ae0c7 144-152,156-157,160-161,163-169,173-179
+scripts/benchmarks/analyze-allocations.mjs
+  s_a70c07ac5b7a5a::t_f0d038eca003fc 1-2,4-5,7-11,13-28,31-43,46-47,50-73,75-76,79-80,82,89-90,95-98
+  s_a70c07ac5b7a5a::t_a1597a77e12360 3,6,12,29-30,44-45,48-49,74,77-78,81,83-88,91-94,99
+scripts/benchmarks/analyze-smaps-stages.mjs
+  s_a70c07ac5b7a5a::t_84075ea9337b7e 1-121
+PHASE2-FINDINGS.md
+  s_a70c07ac5b7a5a::t_acf129168e08af 612-723
+scripts/benchmarks/analyze-heap-dominators.mjs
+  s_a70c07ac5b7a5a::t_932b3f30680809 201-211
+  s_a70c07ac5b7a5a::t_092335244c5738 242-261
+patches/docker-modem@5.0.7.patch
+  s_a70c07ac5b7a5a::t_dc8dd7176bc716 1-27
+pnpm-lock.yaml
+  s_a70c07ac5b7a5a::t_e27060aa0f82cd 588,23650,23664
+pnpm-workspace.yaml
+  s_a70c07ac5b7a5a::t_37fa2754298abc 236
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3cc6ff33df1f0132952e4c81f43839d85796792c",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
