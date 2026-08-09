@@ -29,17 +29,11 @@ export const getAssistantStreamErrorMessage = (error: unknown) => {
   const statusCode = getStatusCode(error);
   const message = getErrorMessage(error);
 
-  if (/AI_InvalidToolInputError|Invalid input for tool|\bError in input stream\b/iu.test(message)) {
-    return "The model produced incomplete tool input, so Homarr did not run the action. Try again; multiline custom-widget JSX will be sent as templateLines.";
-  }
   if (
     /\bmodel(?:\s+id)?\b/iu.test(message) &&
     /\b(invalid|unknown|unavailable|not found|not a valid)\b/iu.test(message)
   ) {
     return "The provider rejected the selected model. Ask an administrator to select a valid model ID.";
-  }
-  if (statusCode === 400) {
-    return "The provider rejected the request. The selected model may not support the requested input or tools.";
   }
   if (statusCode === 401 || statusCode === 403) {
     return "The provider rejected the configured credentials. Ask an administrator to update the API key.";
@@ -58,6 +52,17 @@ export const getAssistantStreamErrorMessage = (error: unknown) => {
   }
   if (statusCode !== undefined && statusCode >= 500) {
     return "The model provider is temporarily unavailable. Try again later.";
+  }
+  if (/AI_InvalidToolInputError|Invalid input for tool/iu.test(message)) {
+    return /customWidget_|custom[\s-]+widget/iu.test(message)
+      ? "The model produced incomplete Custom Widget input, so Homarr did not run the action. Try again; multiline JSX will be sent as templateLines."
+      : "The model produced invalid tool input, so Homarr did not run the action. Try again.";
+  }
+  if (statusCode === 400) {
+    return "The provider rejected the request. The selected model may not support the requested input or tools.";
+  }
+  if (/\bError in input stream\b/iu.test(message)) {
+    return "The model provider interrupted the streamed response before the assistant could finish. Try again.";
   }
 
   return "The model endpoint stopped the response. Try again, or ask an administrator to verify its URL, model, and credentials.";
