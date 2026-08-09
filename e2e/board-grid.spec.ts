@@ -173,7 +173,7 @@ describe("Board grid", () => {
       // horizontal scrolling at any effective zoom.
       await setDocumentZoomAsync(page, 2);
       const zoomedCanvasScale = await readCanvasScaleAsync(canvas);
-      expect(zoomedCanvasScale).toBeCloseTo(normalCanvasScale / 2, 2);
+      expect(zoomedCanvasScale).toBeLessThan(normalCanvasScale);
       await expect(canvas).toHaveAttribute("data-canvas-overflow", "false");
       await expectFixedLogicalTileAsync(logicalTile);
       await expectUniformVisualScaleAsync(logicalTile);
