@@ -1,8 +1,9 @@
 import type { TRPCError } from "@trpc/server";
 import { describe, expect, test, vi } from "vitest";
-import { extractToolsFromProcedures } from "trpc-to-mcp";
+import { z } from "zod/v4";
 
 import { mcpRouter } from "../mcp";
+import { extractMcpToolsFromProcedures } from "../mcp-tools";
 
 vi.mock("@homarr/auth", () => ({}));
 
@@ -125,7 +126,7 @@ function actualToolInventory() {
     string,
     { _def?: { type?: "query" | "mutation" } }
   >;
-  return extractToolsFromProcedures(mcpRouter)
+  return extractMcpToolsFromProcedures(mcpRouter)
     .map((tool) => {
       const procedure = procedures[tool.pathInRouter.join(".")];
       const type = procedure?.["_def"]?.type;
@@ -144,7 +145,7 @@ describe("production MCP router", () => {
   });
 
   test("keeps every secret-bearing tool behind a mutation procedure", () => {
-    const tools = extractToolsFromProcedures(mcpRouter);
+    const tools = extractMcpToolsFromProcedures(mcpRouter);
     const procedures = mcpRouter["_def"].procedures as unknown as Record<
       string,
       { _def?: { type?: "query" | "mutation" } }
@@ -158,12 +159,20 @@ describe("production MCP router", () => {
   });
 
   test("gives every production tool a description", () => {
-    const tools = extractToolsFromProcedures(mcpRouter);
+    const tools = extractMcpToolsFromProcedures(mcpRouter);
     for (const tool of tools) expect(tool.description, `Tool ${tool.name} should have a description`).toBeTruthy();
     expect(tools.find((tool) => tool.name === "customWidget_getAuthoringPrompt")?.description).toBe(
       "Get the current Custom Widget authoring instructions.",
     );
   });
+});
+
+test("MCP tools are deterministically ordered and retain executable schemas", () => {
+  const tools = extractMcpToolsFromProcedures(mcpRouter);
+  const toolNames = tools.map((tool) => tool.name);
+
+  expect(toolNames).toEqual(toolNames.toSorted((left, right) => left.localeCompare(right)));
+  expect(tools.every((tool) => tool.inputValidator instanceof z.ZodObject)).toBe(true);
 });
 
 describe("custom widget authoring procedure access", () => {

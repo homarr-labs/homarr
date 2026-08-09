@@ -1,4 +1,6 @@
 export { createTRPCContext } from "./trpc";
+export { extractMcpToolsFromProcedures } from "./mcp-tools";
+export type { McpTool } from "./mcp-tools";
 
 import { createTRPCRouter } from "./trpc";
 import { appRouter as appRouterForApps } from "./router/app";
