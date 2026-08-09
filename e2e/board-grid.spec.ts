@@ -245,6 +245,14 @@ describe("Board grid", () => {
       await expect(page.locator(`[data-grid-runtime="${gridRuntimeMarker}"]`)).toHaveCount(3);
       await expect(page.getByTestId("board-grid-editor-loading")).toHaveCount(0);
       await expect(page.getByTestId("board-canvas-row-count-button")).toHaveCount(0);
+      await expect(rail).toHaveAttribute("data-board-editing", "true");
+      await expect(rail).toHaveCSS("position", "sticky");
+      await expect(rail).toHaveCSS("transform", "none");
+      const railBox = await expectBoundingBoxAsync(rail);
+      expect(railBox.height + railBox.y).toBeCloseTo(page.viewportSize()?.height ?? 0, 0);
+      expect(await rail.evaluate((element) => getComputedStyle(element, "::before").content.replaceAll('"', ""))).toBe(
+        "Left dashboard rail",
+      );
       await expect(logicalTile).toHaveCSS("overflow-x", "hidden");
       await expect(logicalTile).toHaveCSS("overflow-y", "auto");
       await logicalTile.evaluate((element) => {
