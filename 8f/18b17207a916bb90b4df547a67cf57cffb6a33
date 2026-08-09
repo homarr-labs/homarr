@@ -1,0 +1,45 @@
+scripts/benchmarks/inspect-container.mts
+  s_a70c07ac5b7a5a::t_288def0f5ac8a3 1,4,8,14,16-19,21,25,27-34,56-57,60-61,108-109,112,114-115,118-120,128-131,133,139,146-148,151,175-177,185,187-189,191,194,196
+  s_a70c07ac5b7a5a::t_7a1aad8032c886 36-52
+  s_a70c07ac5b7a5a::t_5fa8c8b9a9ff67 35,53-55,59
+  s_a70c07ac5b7a5a::t_2f58f74959169d 2-3,5-7,9-13,15,20,22-24,26,58,62-107,110-111,113,116-117,121-127,132,134-138,140-145,149-150,152-174,178-184,186,190,192-193
+  s_a70c07ac5b7a5a::t_d2dfae37880845 195,197-202
+apps/nextjs/next.config.ts
+  s_a70c07ac5b7a5a::t_1acd9e13a97c52 18,23-26,33-35,37-38
+  s_a70c07ac5b7a5a::t_3172a809be151d 19-22,27-32
+Dockerfile
+  s_a70c07ac5b7a5a::t_fd4b4e7d6da601 43-46
+turbo.json
+  s_a70c07ac5b7a5a::t_9b16381875b6f2 16-19
+apps/nextjs/package.json
+  s_a70c07ac5b7a5a::t_5bfc6c2d4b874b 7
+scripts/benchmarks/stress-restore.mts
+  s_a70c07ac5b7a5a::t_36e5bcaaa255ce 424-452
+  s_a70c07ac5b7a5a::t_beb42f33662d51 53-61
+  s_a70c07ac5b7a5a::t_63f994888c682d 237-246,251-275,282,286,293-299
+  s_a70c07ac5b7a5a::t_f7d7565e9b92e8 276-281,283-285,287-292
+  s_a70c07ac5b7a5a::t_58e1b303543a76 498-508
+  s_a70c07ac5b7a5a::t_1c9ecc0f7861de 247-250
+scripts/benchmarks/analyze-heap-retainers.mjs
+  s_a70c07ac5b7a5a::t_7b9f1d0b9dbc11 1-122
+scripts/benchmarks/analyze-heapsnapshot.mjs
+  s_a70c07ac5b7a5a::t_d796bfdf50d011 1-64
+scripts/benchmarks/analyze-react-fibers.mjs
+  s_a70c07ac5b7a5a::t_62b0aa36fa65b8 1-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "8f18b17207a916bb90b4df547a67cf57cffb6a33",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
