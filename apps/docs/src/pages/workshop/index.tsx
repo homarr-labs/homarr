@@ -5,6 +5,7 @@ import Layout from "@theme/Layout";
 
 import { WorkshopApp, WorkshopListingFallback } from "@site/src/components/workshop/WorkshopApp";
 import { WorkshopErrorBoundary } from "@site/src/components/workshop/WorkshopErrorBoundary";
+import { getRuntimeWorkshopApiUrl } from "@site/src/lib/runtime-config";
 
 export default function WorkshopPage() {
   const { siteConfig } = useDocusaurusContext();
@@ -16,7 +17,7 @@ export default function WorkshopPage() {
         <BrowserOnly fallback={<WorkshopListingFallback />}>
           {() => (
             <WorkshopErrorBoundary>
-              <WorkshopApp workshopUrl={configuredWorkshopUrl || window.location.origin} />
+              <WorkshopApp workshopUrl={getRuntimeWorkshopApiUrl(configuredWorkshopUrl)} />
             </WorkshopErrorBoundary>
           )}
         </BrowserOnly>

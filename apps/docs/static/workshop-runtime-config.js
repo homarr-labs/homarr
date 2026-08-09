@@ -1,0 +1,1 @@
+globalThis.homarrRuntimeConfig ??= Object.freeze({});

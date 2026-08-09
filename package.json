@@ -49,6 +49,7 @@
     "test": "cross-env NODE_ENV=development CI=true vitest run --project \"!e2e\" --coverage.enabled ",
     "test:e2e": "cross-env NODE_ENV=development CI=true vitest e2e",
     "test:workshop": "sh apps/workshop/test.sh",
+    "test:workshop-image": "sh apps/workshop/test-image.sh",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --project \"!e2e\" --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
     "with-env": "dotenv -e .env --"

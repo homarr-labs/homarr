@@ -29,6 +29,7 @@ import { toast } from "sonner";
 
 import type { WorkshopSubmission, WorkshopVote } from "@site/src/lib/pocketbase";
 import { getWorkshopBackend } from "@site/src/lib/pocketbase";
+import { getRuntimeWorkshopApiUrl } from "@site/src/lib/runtime-config";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import {
@@ -1028,7 +1029,7 @@ export default function MarketplaceDetailPage() {
         <BrowserOnly fallback={<DetailSkeleton />}>
           {() => (
             <WorkshopErrorBoundary>
-              <MarketplaceDetail workshopUrl={configuredWorkshopUrl || window.location.origin} />
+              <MarketplaceDetail workshopUrl={getRuntimeWorkshopApiUrl(configuredWorkshopUrl)} />
             </WorkshopErrorBoundary>
           )}
         </BrowserOnly>
