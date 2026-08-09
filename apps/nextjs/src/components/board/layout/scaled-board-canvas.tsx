@@ -83,7 +83,7 @@ export const ScaledBoardCanvas = ({
           style={{
             "--board-canvas-inverse-scale": inverseScale,
             "--board-canvas-ui-scale": uiScale,
-            transform: `scale(${scale})`,
+            zoom: scale,
           }}
         >
           <BoardCanvasScaleContext.Provider value={scale}>{children}</BoardCanvasScaleContext.Provider>
