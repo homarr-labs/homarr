@@ -1,0 +1,19 @@
+scripts/benchmarks/analyze-allocations.mjs
+  s_a70c07ac5b7a5a::t_78a8f29d74c8a6 51-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "4a7da0bdabe07ea23cf6d96ad6f03ff2f06cba4a",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
