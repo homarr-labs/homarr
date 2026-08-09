@@ -21,6 +21,13 @@ export const getLogicalItemStyle = ({ x, y, w, h }: GridCoordinates): CSSPropert
 export const getLayoutRowCount = (placements: readonly GridCoordinates[]) =>
   placements.reduce((rowCount, placement) => Math.max(rowCount, placement.y + placement.h), 0);
 
+export const getGridRowCountForVisualHeight = (visualHeight: number, visualScale: number) => {
+  if (!Number.isFinite(visualHeight) || visualHeight <= 0) return 1;
+  if (!Number.isFinite(visualScale) || visualScale <= 0) return 1;
+
+  return Math.max(1, Math.ceil((visualHeight / visualScale + LOGICAL_GRID_GAP) / LOGICAL_GRID_PITCH));
+};
+
 export const normalizeGridPlacement = <TPlacement extends GridPlacement>(
   placement: TPlacement,
   columnCount: number,

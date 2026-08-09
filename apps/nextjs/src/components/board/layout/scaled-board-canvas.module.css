@@ -2,9 +2,7 @@
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  overflow: visible;
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
+  overflow: clip;
 }
 
 .viewport[data-board-hydrated="false"] {
@@ -18,8 +16,6 @@
 .canvas {
   position: absolute;
   inset: 0 auto auto 0;
-  transform-origin: top left;
-  will-change: transform;
 
   /*
    * Keep dashboard UI at its normal readable density while the fixed canvas
@@ -43,10 +39,4 @@
   --mantine-h4-font-size: calc(1.125rem * var(--board-canvas-ui-scale, 1));
   --mantine-h5-font-size: calc(1rem * var(--board-canvas-ui-scale, 1));
   --mantine-h6-font-size: calc(0.875rem * var(--board-canvas-ui-scale, 1));
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .canvas {
-    will-change: auto;
-  }
 }

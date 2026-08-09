@@ -10,6 +10,7 @@ import { CollisionPriority } from "@dnd-kit/abstract";
 import { pointerIntersection } from "@dnd-kit/collision";
 import type { DragDropManager, Draggable as DomDraggable } from "@dnd-kit/dom";
 import { Accessibility, AutoScroller, Feedback, PointerActivationConstraints, PointerSensor } from "@dnd-kit/dom";
+import { RestrictToElement } from "@dnd-kit/dom/modifiers";
 import { getEventCoordinates, getFrameTransform, isPointerEvent } from "@dnd-kit/dom/utilities";
 import type {
   BeforeDragStartEvent,
@@ -720,6 +721,7 @@ export default function GridEditor({ sectionId, columnCount, rowCount, placement
     if (!previewGrid || !interaction) return placements;
 
     if (interaction.sourceGridId === sectionId) {
+      if (interaction.mode === "resize") return previewGrid.placements;
       const original = controlledById.get(interaction.activeId);
       if (!original) return previewGrid.placements;
       return previewGrid.placements.some((placement) => placement.id === interaction.activeId)
@@ -734,9 +736,16 @@ export default function GridEditor({ sectionId, columnCount, rowCount, placement
   );
   const targetPlacement =
     interaction?.valid && interaction.targetGridId === sectionId ? interaction.targetPlacement : null;
+  const growsDuringDrag =
+    interaction?.mode === "drag" &&
+    (interaction.targetGridId === sectionId ||
+      (interaction.targetGridId === null && interaction.sourceGridId === sectionId));
+  const participatesInInteraction =
+    interaction && (interaction.sourceGridId === sectionId || interaction.targetGridId === sectionId);
+  const previewRowCount = getLayoutRowCount(previewGrid?.placements ?? renderPlacements);
   const renderedRowCount =
-    section.kind !== "container" && interaction?.mode === "resize"
-      ? Math.max(rowCount, getLayoutRowCount(renderPlacements))
+    section.kind !== "container" && participatesInInteraction
+      ? Math.max(rowCount, previewRowCount) + (growsDuringDrag ? 1 : 0)
       : rowCount;
 
   const { ref: droppableRef, isDropTarget } = useDroppable<GridTargetData>({
@@ -876,6 +885,14 @@ const DndGridEntry = ({ sectionId, placement, label, columnCount, maxRowCount }:
     ],
     [],
   );
+  const modifiers = useMemo(
+    () => [
+      RestrictToElement.configure({
+        element: () => shellRef.current?.closest('[data-testid="board-canvas"]') ?? null,
+      }),
+    ],
+    [],
+  );
   const {
     ref: draggableRef,
     handleRef,
@@ -886,6 +903,7 @@ const DndGridEntry = ({ sectionId, placement, label, columnCount, maxRowCount }:
     type: GRID_ENTRY_TYPE,
     data: sourceData,
     sensors,
+    modifiers,
   });
   const setShellRef = useCallback(
     (element: HTMLDivElement | null) => {

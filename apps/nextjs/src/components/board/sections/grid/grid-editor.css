@@ -86,6 +86,10 @@ body[data-board-grid-interacting="drag"] .board-grid-placeholder {
   overflow: visible;
 }
 
+body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="true"] > .board-grid-content-mount {
+  overflow: clip;
+}
+
 .board-grid-placeholder {
   z-index: 0;
   background: color-mix(in srgb, var(--mantine-primary-color-filled) 16%, transparent);
@@ -178,7 +182,7 @@ body[data-board-grid-interacting="drag"] .board-grid-placeholder {
 .board-grid-resize-handle[data-grid-resize-handle="s"] {
   right: 44px;
   left: 44px;
-  height: 32px;
+  height: max(32px, calc(25px * var(--board-canvas-inverse-scale, 1)));
   cursor: ns-resize;
 }
 
@@ -194,7 +198,7 @@ body[data-board-grid-interacting="drag"] .board-grid-placeholder {
 .board-grid-resize-handle[data-grid-resize-handle="w"] {
   top: 44px;
   bottom: 44px;
-  width: 32px;
+  width: max(32px, calc(25px * var(--board-canvas-inverse-scale, 1)));
   cursor: ew-resize;
 }
 
@@ -217,8 +221,8 @@ body[data-board-grid-interacting="drag"] .board-grid-placeholder {
 .board-grid-resize-handle[data-grid-resize-handle="sw"],
 .board-grid-resize-handle[data-grid-resize-handle="nw"] {
   z-index: 9;
-  width: 44px;
-  height: 44px;
+  width: max(44px, calc(25px * var(--board-canvas-inverse-scale, 1)));
+  height: max(44px, calc(25px * var(--board-canvas-inverse-scale, 1)));
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="ne"] {
