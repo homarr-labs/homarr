@@ -16,7 +16,13 @@
   box-shadow: var(--mantine-shadow-md);
   overscroll-behavior: contain;
   animation: focus-surface-in 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: backwards;
+  animation-play-state: paused;
   transform-origin: top left;
+}
+
+.surfaceReady {
+  animation-play-state: running;
 }
 
 .manualSurface {
