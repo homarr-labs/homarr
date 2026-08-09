@@ -9,6 +9,7 @@ import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("timetable", {
   icon: IconBusStop,
+  supportsAdvancedFocus: true,
   errors: {
     BAD_REQUEST: {
       icon: IconWorldOff,
