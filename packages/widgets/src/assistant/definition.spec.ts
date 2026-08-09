@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
 
+import { supportsAdvancedFocus } from "../definition";
 import { definition } from ".";
 
 describe("assistant widget definition", () => {
+  it("stays compact without an explicit advanced-focus opt-in", () => {
+    expect(supportsAdvancedFocus(definition)).toBe(false);
+  });
+
   it("follows the current conversation by default", () => {
     const options = definition.createOptions();
 
