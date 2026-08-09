@@ -50,6 +50,15 @@ const password = process.env.STRESS_PASSWORD ?? "demodemo";
 const username = process.env.STRESS_USERNAME ?? "demo";
 /** Board to stress. The backup's busiest board (28 items / 16 widget kinds). */
 const boardName = process.env.STRESS_BOARD ?? "default";
+/**
+ * Real usage is several tabs on several boards, not one tab on one board, and the
+ * browser heap turned out to matter more than the container's. Comma-separated.
+ */
+const boardNames = (process.env.STRESS_BOARDS ?? boardName)
+  .split(",")
+  .map((name) => name.trim())
+  .filter(Boolean);
+const tabsPerBoard = Number(process.env.STRESS_TABS_PER_BOARD ?? 1);
 
 const containerName = `homarr-stress-${Date.now()}`;
 const checkpoints: StressCheckpoint[] = [];
@@ -225,6 +234,69 @@ const loginAsync = async (page: Page, baseUrl: string) => {
   }
 };
 
+/**
+ * Browser-side heap, via CDP. The container figure says nothing about this, and on a
+ * real session the tab heap turned out to be the larger number of the two.
+ */
+const sampleClientHeapAsync = async (page: Page) => {
+  const cdp = await page.context().newCDPSession(page);
+  try {
+    await cdp.send("HeapProfiler.enable");
+    // Force a GC so the reading is retained memory rather than uncollected garbage.
+    await cdp.send("HeapProfiler.collectGarbage");
+    // Performance.getMetrics returns an empty list unless the domain is enabled
+    // first — it does not throw, so this has to be unconditional.
+    await cdp.send("Performance.enable");
+    const { metrics } = await cdp.send("Performance.getMetrics");
+    const byName = new Map(metrics.map((metric) => [metric.name, metric.value]));
+    const counted = (name: string) => byName.get(name) ?? 0;
+    return {
+      jsHeapUsedBytes: counted("JSHeapUsedSize"),
+      jsHeapTotalBytes: counted("JSHeapTotalSize"),
+      documents: counted("Documents"),
+      nodes: counted("Nodes"),
+      jsEventListeners: counted("JSEventListeners"),
+    };
+  } finally {
+    await cdp.detach().catch(() => undefined);
+  }
+};
+
+/**
+ * Clicks into widgets the way a person does — opening whatever detail/live views the
+ * board exposes. Purely reading a board never exercised these paths.
+ */
+const interactWithWidgetsAsync = async (page: Page, maxClicks = 6) => {
+  const clickable = page.locator(
+    '[data-homarr-dev-benchmark-board] [data-type="item"] button:visible, ' +
+      '[data-homarr-dev-benchmark-board] [data-type="item"] [role="tab"]:visible',
+  );
+  const available = await clickable.count().catch(() => 0);
+  let clicked = 0;
+  // Walk spread-out indices: adjacent controls usually belong to the same widget,
+  // so stepping through hits more distinct widgets for the same number of clicks.
+  const step = Math.max(1, Math.floor(available / maxClicks));
+  for (let attempt = 0; attempt < maxClicks; attempt++) {
+    const index = attempt * step;
+    if (index >= available) break;
+    try {
+      // force: widgets overlay hover controls that Playwright considers obscured;
+      // the click still exercises the handler, which is what costs memory.
+      await clickable.nth(index).click({ timeout: 2_000, noWaitAfter: true, force: true });
+      clicked++;
+      await page.waitForTimeout(350);
+      // Only dismiss if something modal actually opened, so we do not close the
+      // live view we just paid to render.
+      if (await page.locator('[role="dialog"]:visible').count()) {
+        await page.keyboard.press("Escape").catch(() => undefined);
+      }
+    } catch {
+      // Widget-specific controls come and go; a miss is not a failure.
+    }
+  }
+  return { available, clicked };
+};
+
 const waitForBoardAsync = async (page: Page) => {
   const boardSelector = "[data-homarr-dev-benchmark-board]";
   await page.locator(boardSelector).waitFor({ state: "visible", timeout: 120_000 });
@@ -349,6 +421,35 @@ const main = async () => {
       boardLoadMs.push(Date.now() - startedNav);
       await captureAsync(`nav-${String(iteration + 1).padStart(2, "0")}`);
     }
+    // Multi-tab phase: hold several boards open at once, like a real session, and
+    // measure the browser heap as well as the container.
+    const openTabs: Page[] = [];
+    const tabPlan = boardNames.flatMap((name) => Array.from({ length: tabsPerBoard }, () => name));
+    let widgetInteractions = { available: 0, clicked: 0 };
+    if (tabPlan.length > 1 || tabsPerBoard > 1) {
+      log(`multi-tab: opening ${tabPlan.length} tabs across boards [${boardNames.join(", ")}]`);
+      for (const [index, name] of tabPlan.entries()) {
+        const tab = index === 0 ? freshPage : await freshContext.newPage();
+        if (index > 0) openTabs.push(tab);
+        await tab.goto(`${baseUrl}/boards/${name}`, { waitUntil: "domcontentloaded" });
+        const outcome = await waitForBoardAsync(tab);
+        log(`  tab ${index + 1} (${name}): ${outcome.items} items, ${outcome.ready} ready`);
+        const interacted = await interactWithWidgetsAsync(tab);
+        widgetInteractions = {
+          available: widgetInteractions.available + interacted.available,
+          clicked: widgetInteractions.clicked + interacted.clicked,
+        };
+      }
+      log(`multi-tab: clicked ${widgetInteractions.clicked}/${widgetInteractions.available} widget controls`);
+      await captureAsync("07-multi-tab");
+    }
+
+    const clientHeap = await sampleClientHeapAsync(freshPage);
+    log(
+      `client heap: used=${toMiB(clientHeap.jsHeapUsedBytes)} MiB total=${toMiB(clientHeap.jsHeapTotalBytes)} MiB ` +
+        `nodes=${clientHeap.nodes} listeners=${clientHeap.jsEventListeners} docs=${clientHeap.documents}`,
+    );
+
     const sortedLoads = [...boardLoadMs].sort((left, right) => left - right);
     const lowerMedian = sortedLoads[Math.floor((sortedLoads.length - 1) / 2)];
     const upperMedian = sortedLoads[Math.ceil((sortedLoads.length - 1) / 2)];
@@ -394,6 +495,17 @@ const main = async () => {
       // different amounts of the board (e.g. more widgets errored on one side).
       board: boardOutcome,
       latency: { boardLoadMs, medianBoardLoadMs },
+      // The browser side. Container memory alone hid this entirely.
+      client: {
+        jsHeapUsedMiB: toMiB(clientHeap.jsHeapUsedBytes),
+        jsHeapTotalMiB: toMiB(clientHeap.jsHeapTotalBytes),
+        domNodes: clientHeap.nodes,
+        jsEventListeners: clientHeap.jsEventListeners,
+        documents: clientHeap.documents,
+        tabsOpen: tabPlan.length,
+        boards: boardNames,
+        widgetInteractions,
+      },
       // Evidence that the board was measured behind a real session rather than
       // because it happened to be publicly readable.
       auth: {

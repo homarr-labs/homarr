@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "HOMARR_VERSION=$(node -p \"require('../../package.json').version\") pnpm with-env next build",
+    "build": "HOMARR_VERSION=$(node -p \"require('../../package.json').version\") pnpm with-env next build $([ \"$HOMARR_PROFILING\" = \"true\" ] && echo --profile)",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "pnpm with-env next dev",
     "format": "oxfmt .",

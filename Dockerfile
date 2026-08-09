@@ -40,6 +40,10 @@ ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
 ARG TARGETPLATFORM
+# Opt-in React profiling build + browser source maps, for React DevTools' Profiler
+# and for readable names in heap snapshots. See next.config.ts.
+ARG HOMARR_PROFILING='false'
+ENV HOMARR_PROFILING=${HOMARR_PROFILING}
 
 RUN --mount=type=secret,id=TURBO_API,env=TURBO_API \
     --mount=type=secret,id=TURBO_TEAM,env=TURBO_TEAM \

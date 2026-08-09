@@ -13,7 +13,10 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "env": ["TURBO_PLATFORM"],
+      // HOMARR_PROFILING must be declared or turbo strips it from the task env, and
+      // the profiling build silently produces a normal one. It is also part of the
+      // cache key, so toggling it correctly invalidates the cached build.
+      "env": ["TURBO_PLATFORM", "HOMARR_PROFILING"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.test.ts",

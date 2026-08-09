@@ -15,7 +15,27 @@ const withNextIntl = createNextIntlPlugin({
   requestConfig: "../../packages/translation/src/request.ts",
 });
 
+/**
+ * Profiling build. React's production bundle strips the hooks React DevTools needs,
+ * which is why the Profiler tab reports "Profiling not supported"; the profiling
+ * variant keeps them. Source maps are emitted alongside so heap snapshots and flame
+ * charts show real component names instead of minified ones like `y`.
+ *
+ * Build with:
+ *   docker build --build-arg HOMARR_PROFILING=true . -t homarr:performance
+ *
+ * `reactProductionProfiling` in this config is only read by the webpack path — under
+ * Turbopack it comes from `next build --profile`, which apps/nextjs/package.json
+ * passes when HOMARR_PROFILING=true. Both are set so either bundler works.
+ *
+ * Off by default: the profiling variant is slower and source maps are large, so this
+ * must never be what ships to users.
+ */
+const isProfilingBuild = process.env.HOMARR_PROFILING === "true";
+
 const nextConfig: NextConfig = {
+  reactProductionProfiling: isProfilingBuild,
+  productionBrowserSourceMaps: isProfilingBuild,
   // Next previews otherwise create agent instruction files in the application
   // directory during development.
   agentRules: false,
