@@ -22,7 +22,7 @@ COPY --parents ./packages/definitions/src ./
 # isolated linker, patches apply inside the virtual store (node_modules/.pnpm/...)
 # which IS created by pnpm fetch. The original hoisted linker is restored
 # before the install step so the final node_modules layout stays flat.
-RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
     pnpm config set store-dir /pnpm/store && \
     sed -i 's/nodeLinker: hoisted/nodeLinker: isolated/' pnpm-workspace.yaml && \
     pnpm fetch --ignore-scripts && \
@@ -31,7 +31,7 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
 # Install only from the fetched, committed lockfile so local and Docker builds
 # resolve the same dependency graph. Serial lifecycle builds avoid esbuild's
 # atomic binary replacement racing across the hoisted workspace (pnpm/pnpm#8200).
-RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
     npm_config_nodedir=/usr/local pnpm install --recursive --offline --frozen-lockfile --child-concurrency=1
 
 COPY . .
