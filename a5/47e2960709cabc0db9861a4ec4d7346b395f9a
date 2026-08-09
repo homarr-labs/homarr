@@ -1,0 +1,63 @@
+.github/workflows/workshop.yml
+  s_093d61b162b9ca::t_c89c67515f4559 26,28
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_093d61b162b9ca::t_5bf102fdfb87a2 115-116
+apps/docs/docs/management/workshop/index.mdx
+  s_093d61b162b9ca::t_e25264f12b16ec 111-149
+apps/docs/docusaurus.config.ts
+  s_093d61b162b9ca::t_64b65de9ac32a5 15,28,30
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_093d61b162b9ca::t_37f4d526d3ff32 32,1032
+apps/docs/src/lib/runtime-config.spec.ts
+  s_093d61b162b9ca::t_436ba8f6ee5176 1-19
+apps/docs/src/lib/runtime-config.ts
+  s_093d61b162b9ca::t_569d4d477e886e 1-16
+apps/docs/src/pages/workshop/admin/index.tsx
+  s_093d61b162b9ca::t_4aacf1bca830c3 6-7,13
+apps/docs/src/pages/workshop/index.tsx
+  s_093d61b162b9ca::t_940bf1b55748cb 8,20
+apps/docs/static/workshop-runtime-config.js
+  s_093d61b162b9ca::t_92d1d9311c941d 1
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_093d61b162b9ca::t_76d4206bf7d6ab 1327
+apps/workshop/.env.staging.example
+  s_093d61b162b9ca::t_94218841a18dd3 1-12
+apps/workshop/Dockerfile
+  s_093d61b162b9ca::t_e1275130cfc5c5 21,24,31,39-44
+apps/workshop/README.md
+  s_093d61b162b9ca::t_2b891fc2a44916 73-74,165-203,214-217
+apps/workshop/docker-compose.staging.yml
+  s_093d61b162b9ca::t_009da2f39f02ae 1-25
+apps/workshop/docker-compose.yml
+  s_093d61b162b9ca::t_a162c86357b695 11,14,38,40,43
+apps/workshop/entrypoint.sh
+  s_093d61b162b9ca::t_ddf8690aadbb7c 9-26
+apps/workshop/test-image.sh
+  s_093d61b162b9ca::t_909c5cf645afc3 1-50
+apps/workshop/test.sh
+  s_093d61b162b9ca::t_9ec7cdb5553461 17-20,35-40
+apps/workshop/tests/runtime-config.integration.mjs
+  s_093d61b162b9ca::t_e2cdea20123376 1-24
+apps/workshop/tests/workshop-contracts.mjs
+  s_093d61b162b9ca::t_9ccbcb6b7688c0 57-67
+e2e/board-grid.spec.ts
+  s_093d61b162b9ca::t_28fed9d5b44ff0 256-287,601-602,711,724
+package.json
+  s_093d61b162b9ca::t_29f2859a84c2ee 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "a547e2960709cabc0db9861a4ec4d7346b395f9a",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
