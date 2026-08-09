@@ -243,16 +243,53 @@ existing `enableRightClickOnWidgets` user flag isolates the cost:
 count. The dropdown *contents* are already lazy; the `Menu`/`Popover`/`PopoverDropdown`
 wrappers are not.
 
-### Attempted fix, reverted
+### The fix: one board-level menu (shipped)
 
-Deferring the whole `Menu` subtree until the first right-click (replaying the event so
-Mantine still positions at the cursor) **failed verification and was reverted**: the
-replayed `contextmenu` re-entered the arming handler, so right-click stopped opening the
-menu and the tree exploded from 3,614 to 20,107 fibers. The Playwright check that caught
-it is the one worth keeping — a fiber count alone would have looked like a win.
+`WidgetContextMenuProvider` mounts a single menu for the whole board, anchored to the
+cursor. Items keep only a `contextmenu`/long-press listener. The dropdown takes the
+section's gridstack ref as a prop, because the shared menu lives outside any
+`SectionContext` — reading it from context there crashed the board.
 
-Doing this properly means one board-level menu that renders the active item's actions,
-rather than one menu per item — a real refactor, not a wrapper swap.
+Verified with `scripts/benchmarks/verify-context-menu.mts`, run against both builds:
+
+| | per-item menus | shared menu |
+| --- | --- | --- |
+| menu opens on right-click | PASS | PASS |
+| menu shows actions | PASS (5) | PASS (5) |
+| Escape closes it | PASS | PASS |
+| re-opens on a second widget | PASS | PASS |
+| idle fibers | 18,670 | **16,278 (−12.8%)** |
+| fibers added by using the menu | +4,191 | **+4** |
+
+Memory, two runs each, four tabs across two boards:
+
+| metric | per-item (mean) | shared (mean) | change |
+| --- | --- | --- | --- |
+| JS event listeners | 10,128 | **7,774** | **−23%** |
+| DOM nodes | 9,189 | **8,287** | **−10%** |
+| browser JS heap | 54.1 MiB | 52.7 MiB | −2.5% |
+| median board load | 520 ms | 479 ms | faster |
+| container CPU | 20.4 s | 20.0 s | unchanged |
+
+Server memory is unchanged, as expected for a client-only change. One `after-stress`
+sample read 362 MiB against ~267 for its pair and for both controls — GC timing on a
+single sample, not a regression.
+
+The listener reduction is the one that matters most: the 650 MB session had ~88k
+listeners, and this removes a per-widget source of them.
+
+### Two earlier attempts, and a broken test
+
+A first attempt deferred each item's `Menu` until the first right-click. It was reverted
+after the gate failed it — but **that verdict was wrong**: the gate used Playwright's
+`click({ button: "right" })`, which does not emit a `contextmenu` event here, so it
+failed *shipped code* identically. The "fiber explosion" attributed to that change showed
+up on the control too.
+
+The gate now dispatches a real `contextmenu` event and is validated by passing against
+unmodified code first. Any optimisation gate that has never been run against the
+un-optimised build is not evidence — it can only tell you something changed, not that it
+still works.
 
 ### A measurement flaw worth recording
 
