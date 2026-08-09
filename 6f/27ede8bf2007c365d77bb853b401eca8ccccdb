@@ -82,6 +82,12 @@ packages/widgets/src/health-monitoring/component.tsx
   s_909ca8cf5b6e15::t_6ecea0064af1d5 44-47,49-54,56
 apps/docs/docs/widgets/media-request-stats/index.mdx
   s_909ca8cf5b6e15::t_cb0a028ac127fe 46
+packages/api/src/router/test/board.spec.ts
+  s_7b8a552cf9f1f8::t_daa386ef1f7b40 1447
+packages/old-import/src/widgets/options.ts
+  s_7b8a552cf9f1f8::t_23ba3e7981822c 151-152
+packages/api/src/router/board.ts
+  s_7b8a552cf9f1f8::t_daa386ef1f7b40 688
 ---
 {
   "schema_version": "authorship/3.0.0",
@@ -89,6 +95,14 @@ apps/docs/docs/widgets/media-request-stats/index.mdx
   "base_commit_sha": "6f27ede8bf2007c365d77bb853b401eca8ccccdb",
   "prompts": {},
   "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
     "s_909ca8cf5b6e15": {
       "agent_id": {
         "tool": "codex",

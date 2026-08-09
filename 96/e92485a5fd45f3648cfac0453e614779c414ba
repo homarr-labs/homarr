@@ -7,6 +7,14 @@ packages/widgets/src/smart-home/entity-state/component.tsx
   "base_commit_sha": "96e92485a5fd45f3648cfac0453e614779c414ba",
   "prompts": {},
   "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
     "s_909ca8cf5b6e15": {
       "agent_id": {
         "tool": "codex",

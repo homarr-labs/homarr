@@ -1,0 +1,17 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "65ff0ecb340810d0d0c9f9e6551fd401d7be2cd1",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

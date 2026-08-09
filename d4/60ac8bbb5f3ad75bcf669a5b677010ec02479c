@@ -15,6 +15,22 @@ packages/widgets/src/timetable/component.tsx
   "base_commit_sha": "d460ac8bbb5f3ad75bcf669a5b677010ec02479c",
   "prompts": {},
   "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8c1f355365c9af": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb819-9df1-71e3-bf79-61683d5d9203",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
     "s_909ca8cf5b6e15": {
       "agent_id": {
         "tool": "codex",

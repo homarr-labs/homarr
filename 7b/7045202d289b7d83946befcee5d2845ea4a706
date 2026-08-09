@@ -65,6 +65,8 @@ packages/widgets/src/custom-api/component.tsx
 packages/widgets/src/indexer-manager/component.tsx
   s_909ca8cf5b6e15::t_a46cfa0de58de0 13
   s_909ca8cf5b6e15::t_9d87113130d0bf 87
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_7b8a552cf9f1f8::t_6be7cb9c2e70e1 34,36
 ---
 {
   "schema_version": "authorship/3.0.0",
@@ -72,6 +74,14 @@ packages/widgets/src/indexer-manager/component.tsx
   "base_commit_sha": "7b7045202d289b7d83946befcee5d2845ea4a706",
   "prompts": {},
   "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
     "s_909ca8cf5b6e15": {
       "agent_id": {
         "tool": "codex",

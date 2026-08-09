@@ -1,0 +1,42 @@
+apps/nextjs/src/components/board/advanced-focus/context.spec.tsx
+  s_093d61b162b9ca::t_e9cbafb0caaa96 83-84,96-97,159-160,167-168
+  s_093d61b162b9ca::t_d5ed42619791c3 123-130,136-146
+  s_093d61b162b9ca::t_a4575b992d1a9c 1-35,41-82,85-95,98-122,131-135,147-158,161-166,169-177,194-195
+  s_093d61b162b9ca::t_6346b537abb292 36-40,178-193
+apps/docs/docs/advanced/keyboard-shortcuts/index.mdx
+  s_093d61b162b9ca::t_3867f4e2a5e49a 14-16,23
+  s_093d61b162b9ca::t_755be798fa113a 9-13
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_093d61b162b9ca::t_55bb56c4035334 3,333
+  s_093d61b162b9ca::t_3867f4e2a5e49a 39-40,50,55,57-59,65-71,89,102,108,119-133,140-144,155,164,169-179,186-193,195,208-211,220,224-230,237-238,240,247,251,290,293,320-332,334-341
+  s_093d61b162b9ca::t_6346b537abb292 145-149,182-185
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_093d61b162b9ca::t_a357e4ffeeccbd 101,122,127,196
+  s_093d61b162b9ca::t_3867f4e2a5e49a 91-100,102-121,123-126,128-142,171-176,183-187,195,197-211
+e2e/board-grid.spec.ts
+  s_7cfb890e45839e::t_93036980eac95b 185
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "54bd8d634389282ddd1c0456179b06da2df3b0c5",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
