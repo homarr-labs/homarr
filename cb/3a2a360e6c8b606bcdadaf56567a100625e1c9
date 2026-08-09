@@ -1,0 +1,71 @@
+scripts/benchmarks/compare-stress-runs.mjs
+  s_a70c07ac5b7a5a::t_9a2940b64d7fe7 1-57,64,71-104
+  s_a70c07ac5b7a5a::t_b4736c0480c362 58-63,65-70
+scripts/benchmarks/attribute-memory.mts
+  s_a70c07ac5b7a5a::t_722a985b0f55fa 45-49,52-54
+  s_a70c07ac5b7a5a::t_e54ec9fcd93959 1-44,50-51,55-116,118-124,128-138,185-187,189-196,203-219,247-253,256-286,291,295,299,308-346,355-385,413-451
+  s_a70c07ac5b7a5a::t_3d79b074489ed1 175-184,198-200,202
+  s_a70c07ac5b7a5a::t_e7a847a94844dc 240-246,254-255
+  s_a70c07ac5b7a5a::t_2fc227d587fd42 347-354
+  s_a70c07ac5b7a5a::t_e828645fee70fd 287-290,292-294
+  s_a70c07ac5b7a5a::t_0ae047e15759c0 220-239
+  s_a70c07ac5b7a5a::t_79c836f6d2418b 296-298,300-307
+  s_a70c07ac5b7a5a::t_746763afd820ee 117,125-127,139-174,188,197,201
+  s_a70c07ac5b7a5a::t_b887381da9fa10 386-412
+scripts/benchmarks/stress-restore.mts
+  s_a70c07ac5b7a5a::t_b82bafec7e16af 114-117
+  s_a70c07ac5b7a5a::t_029e18c0954bd1 439-440
+  s_a70c07ac5b7a5a::t_c0c544a24d0b91 87-95,100-101,118-119,125
+  s_a70c07ac5b7a5a::t_59dd2b8123c4fd 96-97,102-113
+  s_a70c07ac5b7a5a::t_db02be3460146d 98-99
+  s_a70c07ac5b7a5a::t_13d4ab4fdc65bf 49-64
+scripts/benchmarks/analyze-probe-stages.mjs
+  s_a70c07ac5b7a5a::t_c0d76d3f4df884 1-90
+scripts/benchmarks/memory-probe.cjs
+  s_a70c07ac5b7a5a::t_caa1c833a13ad8 107-108,250-261,281-288,296-297
+  s_a70c07ac5b7a5a::t_e9c06ff0d3e344 109-145,153-156,168,170,174-175,177-186
+  s_a70c07ac5b7a5a::t_1529b7239016ef 146-152,157-167,169
+  s_a70c07ac5b7a5a::t_07cb5934bb2065 187-249
+  s_a70c07ac5b7a5a::t_791b94ff3e17e1 270-272
+  s_a70c07ac5b7a5a::t_c0a6099ba9490d 268-269
+  s_a70c07ac5b7a5a::t_15650c05502377 262-267,273-280
+  s_a70c07ac5b7a5a::t_f96a5eb6e9c62d 1-106
+  s_a70c07ac5b7a5a::t_48d6fc57810a5f 289-295
+  s_a70c07ac5b7a5a::t_5864ed6919b912 171-173,176
+scripts/benchmarks/analyze-heap-dominators.mjs
+  s_a70c07ac5b7a5a::t_da7d23171d04d7 1-245
+packages/integrations/src/umami/umami-integration.ts
+  s_a70c07ac5b7a5a::t_0103063c0abc9f 274-290
+  s_a70c07ac5b7a5a::t_4877f840dc892e 333-342,351-362,364-385,387-400,409-413,421-426,429-442
+  s_a70c07ac5b7a5a::t_aeffcc9ce23abe 202-209,216,219,221,223-224
+  s_a70c07ac5b7a5a::t_e5a5bfa4ecd614 41-44,46,49,51
+  s_a70c07ac5b7a5a::t_1a682de51fad67 210-215
+  s_a70c07ac5b7a5a::t_66f094bfff22bf 401-408
+  s_a70c07ac5b7a5a::t_4cb4edcb73a8e2 55-56
+  s_a70c07ac5b7a5a::t_20f4063310b16e 33-40,45,47-48,50,52,57-64
+  s_a70c07ac5b7a5a::t_b15c326230212b 65
+packages/integrations/src/umami/test/umami-integration.spec.ts
+  s_a70c07ac5b7a5a::t_d67c5ec90a5bd2 1-14,16-120,122-179
+  s_a70c07ac5b7a5a::t_322241794ca555 121
+  s_a70c07ac5b7a5a::t_d062efd15988d1 15
+PHASE2-FINDINGS.md
+  s_a70c07ac5b7a5a::t_649f1ff3b79bf7 331-339
+  s_a70c07ac5b7a5a::t_95d09e6621a76a 556-590
+  s_a70c07ac5b7a5a::t_fb34fa38c3663d 363-555
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "cb3a2a360e6c8b606bcdadaf56567a100625e1c9",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
