@@ -1,0 +1,59 @@
+.github/workflows/workshop.yml
+  s_093d61b162b9ca::t_96aa51feeb63a9 26,28
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_093d61b162b9ca::t_492ef262278ef9 115-116
+apps/docs/docs/management/workshop/index.mdx
+  s_093d61b162b9ca::t_0d3569d064c553 111-149
+apps/docs/docusaurus.config.ts
+  s_093d61b162b9ca::t_865f111860ff89 15,28,30
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_093d61b162b9ca::t_8731cac32ad883 32,1032
+apps/docs/src/lib/runtime-config.spec.ts
+  s_093d61b162b9ca::t_ae425c19a723c8 1-19
+apps/docs/src/lib/runtime-config.ts
+  s_093d61b162b9ca::t_08cb1f8263037c 1-16
+apps/docs/src/pages/workshop/admin/index.tsx
+  s_093d61b162b9ca::t_07ecccf373e7f8 6-7,13
+apps/docs/src/pages/workshop/index.tsx
+  s_093d61b162b9ca::t_f68844a6ffcf8a 8,20
+apps/docs/static/workshop-runtime-config.js
+  s_093d61b162b9ca::t_18aa61c77b332a 1
+apps/workshop/.env.staging.example
+  s_093d61b162b9ca::t_52c42394ed8cbd 1-12
+apps/workshop/Dockerfile
+  s_093d61b162b9ca::t_c61e7fa01aeb40 21,24,31,39-44
+apps/workshop/README.md
+  s_093d61b162b9ca::t_8c33d058b5ef10 73-74,165-203,214-217
+apps/workshop/docker-compose.staging.yml
+  s_093d61b162b9ca::t_7fcecd2d650872 1-25
+apps/workshop/docker-compose.yml
+  s_093d61b162b9ca::t_e469ce201e0580 11,14,38,40,43
+apps/workshop/entrypoint.sh
+  s_093d61b162b9ca::t_148b8d679e4065 9-26
+apps/workshop/test-image.sh
+  s_093d61b162b9ca::t_28129f7d84ea9e 1-50
+apps/workshop/test.sh
+  s_093d61b162b9ca::t_76875e3359a4a0 17-20,35-40
+apps/workshop/tests/runtime-config.integration.mjs
+  s_093d61b162b9ca::t_26ab64d269cb75 1-24
+apps/workshop/tests/workshop-contracts.mjs
+  s_093d61b162b9ca::t_3ca86bd3c47003 57-67
+package.json
+  s_093d61b162b9ca::t_29be315619f3f1 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "8cbd53d36271df76740301e08f75830d6b02301a",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
