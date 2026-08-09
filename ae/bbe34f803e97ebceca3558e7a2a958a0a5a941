@@ -1,0 +1,21 @@
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  s_7cfb890e45839e::t_2df42d790f6a5e 86
+e2e/board-grid.spec.ts
+  s_7cfb890e45839e::t_2df42d790f6a5e 864-866
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "aebbe34f803e97ebceca3558e7a2a958a0a5a941",
+  "prompts": {},
+  "sessions": {
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
