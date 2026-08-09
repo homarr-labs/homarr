@@ -1,6 +1,6 @@
 import { IconServerOff, IconTable } from "@tabler/icons-react";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { statusOptions } from "../beszel/_shared/options";
 import { optionsBuilder } from "../options";
 
@@ -25,7 +25,12 @@ const sortDirectionOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemTable", {
   icon: IconTable,
-  queryKey: [["widget", "beszel"]],
+  supportsAdvancedFocus: false,
+  queryKeys: [[["widget", "beszel", "getSystems"]], [["widget", "beszel", "getSystemStats"]]],
+  queryMatcher: (query, scope) =>
+    query.path.at(-1) === "getSystems"
+      ? widgetQueryInputMatches(query.input, { integrationIds: scope.integrationIds })
+      : matchesWidgetRuntimeQuery(query, scope),
   supportedIntegrations: ["beszel", "mock"],
   integrationsRequired: true,
   createOptions() {

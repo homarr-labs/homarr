@@ -30,6 +30,14 @@ export interface AudiobookshelfDashboardData {
   totalPodcasts: number;
   totalListeningTimeSeconds: number;
   activeSessions: number;
+  libraries?: {
+    id: string;
+    name: string;
+    mediaType: "book" | "podcast";
+    totalItems: number;
+    totalDurationSeconds: number | null;
+    totalSizeBytes: number | null;
+  }[];
 }
 
 export type AudiobookshelfLibrary = z.infer<typeof audiobookshelfLibrarySchema>;

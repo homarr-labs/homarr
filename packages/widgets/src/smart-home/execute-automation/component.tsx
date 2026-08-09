@@ -1,44 +1,67 @@
 "use client";
 
 import React from "react";
-import { Center, LoadingOverlay, Overlay, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
+import {
+  Box,
+  Center,
+  LoadingOverlay,
+  Overlay,
+  Stack,
+  Text,
+  ThemeIcon,
+  UnstyledButton,
+  VisuallyHidden,
+} from "@mantine/core";
 import { useDisclosure, useTimeout } from "@mantine/hooks";
 import { IconAutomation, IconCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
-import { useI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
+import { isSmartHomeTiny } from "../layout";
 
 export default function SmartHomeTriggerAutomationWidget({
   options,
   integrationIds,
   isEditMode,
   width,
+  height,
+  displayMode,
 }: WidgetComponentProps<"smartHome-executeAutomation">) {
+  const integrationId = integrationIds[0];
+  const canInteract = useIntegrationsWithInteractAccess().some(({ id }) => id === integrationId);
+  const [lastExecutedAt, setLastExecutedAt] = React.useState<Date | null>(null);
   const [isShowSuccess, { open: showSuccess, close: closeSuccess }] = useDisclosure();
   const { start } = useTimeout(() => {
     closeSuccess();
   }, 1000);
 
-  const { mutateAsync, isPending } = clientApi.widget.smartHome.executeAutomation.useMutation({
+  const { mutateAsync, isPending, error } = clientApi.widget.smartHome.executeAutomation.useMutation({
     onSuccess: () => {
+      setLastExecutedAt(new Date());
       showSuccess();
       start();
     },
   });
   const handleClick = React.useCallback(async () => {
-    if (isEditMode) {
+    if (isEditMode || isPending || !integrationId || !canInteract) {
       return;
     }
-    await mutateAsync({
-      automationId: options.automationId,
-      integrationId: integrationIds[0] ?? "",
-    });
-  }, [integrationIds, isEditMode, mutateAsync, options.automationId]);
+    try {
+      await mutateAsync({
+        automationId: options.automationId,
+        integrationId,
+      });
+    } catch {
+      // The mutation exposes the error below and remains retryable.
+    }
+  }, [canInteract, integrationId, isEditMode, isPending, mutateAsync, options.automationId]);
 
   const t = useI18n();
+  const locale = useCurrentIntlLocale();
   useRegisterSpotlightContextActions(
     `smartHome-automation-${options.automationId}`,
     [
@@ -55,38 +78,87 @@ export default function SmartHomeTriggerAutomationWidget({
             },
           };
         },
+        disabled: !integrationId || !canInteract || isPending,
       },
     ],
-    [handleClick, options.automationId, options.displayName],
+    [canInteract, handleClick, integrationId, isPending, options.automationId, options.displayName],
   );
 
-  const isTiny = width < 128;
+  const isTiny = isSmartHomeTiny(width, height);
 
   return (
-    <UnstyledButton
-      onClick={handleClick}
-      style={{ cursor: !isEditMode ? "pointer" : "initial", pointerEvents: isEditMode ? "none" : undefined }}
-      w="100%"
-      h="100%"
-    >
-      {isShowSuccess && (
-        <Overlay>
-          <Center w="100%" h="100%">
-            <ThemeIcon variant="filled" color="green" size="xl" radius="xl">
-              <IconCheck style={{ width: "70%", height: "70%" }} stroke={1.5} />
-            </ThemeIcon>
-          </Center>
-        </Overlay>
+    <Box pos="relative" w="100%" h="100%">
+      <VisuallyHidden component="output">
+        {isPending
+          ? t("widget.smartHome-executeAutomation.status.running")
+          : isShowSuccess
+            ? t("widget.smartHome-executeAutomation.status.success")
+            : ""}
+      </VisuallyHidden>
+      {error && (
+        <VisuallyHidden role="alert">{t("widget.smartHome-executeAutomation.error.executeFailed")}</VisuallyHidden>
       )}
-      <LoadingOverlay visible={isPending} />
-      <Center w="100%" h="100%">
-        <Stack align="center" gap="md">
-          <IconAutomation size={isTiny ? 16 : undefined} />
-          <Text ta="center" fw="bold" fz={isTiny ? "xs" : undefined}>
-            {options.displayName}
-          </Text>
-        </Stack>
-      </Center>
-    </UnstyledButton>
+      <UnstyledButton
+        onClick={handleClick}
+        disabled={!integrationId || !canInteract || isPending}
+        aria-label={t("widget.smartHome-executeAutomation.spotlightAction.run", { name: options.displayName })}
+        style={{
+          cursor: !isEditMode && integrationId && canInteract ? "pointer" : "initial",
+          pointerEvents: isEditMode ? "none" : undefined,
+        }}
+        aria-description={error ? t("widget.smartHome-executeAutomation.error.executeFailed") : undefined}
+        w="100%"
+        h="100%"
+      >
+        {isShowSuccess && (
+          <Overlay>
+            <Center w="100%" h="100%">
+              <ThemeIcon variant="filled" color="green" size="xl" radius="xl">
+                <IconCheck style={{ width: "70%", height: "70%" }} stroke={1.5} />
+              </ThemeIcon>
+            </Center>
+          </Overlay>
+        )}
+        <LoadingOverlay visible={isPending} />
+        {error && displayMode !== "advanced" && (
+          <Overlay>
+            <Center w="100%" h="100%" p="xs">
+              <Text size="xs" c="red" ta="center" lineClamp={3}>
+                {t("widget.smartHome-executeAutomation.error.executeFailed")}
+              </Text>
+            </Center>
+          </Overlay>
+        )}
+        <Center w="100%" h="100%">
+          <Stack align="center" gap={isTiny ? 6 : "md"} p="xs" maw="100%">
+            <ThemeIcon variant="light" size={isTiny ? "md" : "xl"} radius="xl">
+              <IconAutomation size={isTiny ? 14 : 24} />
+            </ThemeIcon>
+            <Text ta="center" fw={600} fz={isTiny ? "xs" : "sm"} lineClamp={2} maw="100%">
+              {options.displayName}
+            </Text>
+            {displayMode === "advanced" && (
+              <>
+                {error ? (
+                  <Text ta="center" size="xs" c="red">
+                    {t("widget.smartHome-executeAutomation.error.executeFailed")}
+                  </Text>
+                ) : (
+                  <Text ta="center" size="xs" c="dimmed">
+                    {lastExecutedAt
+                      ? t("widget.smartHome-executeAutomation.advanced.lastExecuted", {
+                          time: lastExecutedAt.toLocaleTimeString(locale),
+                        })
+                      : t("widget.smartHome-executeAutomation.advanced.automationId", {
+                          id: options.automationId,
+                        })}
+                  </Text>
+                )}
+              </>
+            )}
+          </Stack>
+        </Center>
+      </UnstyledButton>
+    </Box>
   );
 }

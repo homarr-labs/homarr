@@ -415,7 +415,6 @@ describe("CustomJsxDisplay", () => {
     });
   });
 });
-
 describe("Custom JSX component registry", () => {
   it.each([
     ["@mantine/core", MantineCore],

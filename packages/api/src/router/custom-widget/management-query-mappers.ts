@@ -26,6 +26,7 @@ export function mapCustomWidgetListItem(definition: StoredDefinition & { secrets
     });
     return {
       id: definition.id,
+      managementPath: `/manage/custom-widgets/edit/${definition.id}`,
       name: definition.name,
       description: definition.description ?? undefined,
       iconUrl: definition.iconUrl ?? undefined,
@@ -45,6 +46,7 @@ export function mapCustomWidgetListItem(definition: StoredDefinition & { secrets
   const configuredSecrets = new Set(definition.secrets.map((secret) => `${secret.sourceId}:${secret.kind}`));
   return {
     id: definition.id,
+    managementPath: `/manage/custom-widgets/edit/${definition.id}`,
     name: widget.name,
     description: widget.description,
     iconUrl: widget.iconUrl,
@@ -71,6 +73,7 @@ export function mapCustomWidgetListItem(definition: StoredDefinition & { secrets
 export function mapLegacyCustomWidgetListItem(definition: LegacyDefinition) {
   return {
     id: definition.id,
+    managementPath: "/manage/custom-widgets",
     name: definition.name,
     description: definition.description ?? undefined,
     iconUrl: definition.iconUrl ?? undefined,

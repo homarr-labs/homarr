@@ -18,7 +18,7 @@ export const BoardEmptySection = ({ section, columnCount, requestedRowCount, rai
   const [isEditMode] = useEditMode();
   const t = useScopedI18n("board.landmark");
 
-  if (totalLength === 0 && !isEditMode && requestedRowCount === 0) return null;
+  if (totalLength === 0 && !isEditMode && requestedRowCount === 0 && railPlacement !== "main") return null;
 
   return (
     <SectionGrid

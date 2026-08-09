@@ -4,6 +4,8 @@ description: "Display and edit a selected note from Anchor"
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -33,9 +35,11 @@ import anchorNoteWidgetScreenshot from "./img/widget.png";
 
 ### Interactions
 
-- Click **Edit** to start editing the selected note.
+- Hover the widget, focus within it, or use a touch device to reveal **Edit**, then select it to start editing the note.
 - Click **Save** to persist changes to Anchor.
 - Click **Cancel** to discard unsaved changes.
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

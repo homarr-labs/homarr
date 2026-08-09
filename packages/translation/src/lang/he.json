@@ -1200,6 +1200,8 @@
     "success": "הצלחה",
     "beta": "בטא",
     "error": "שגיאה",
+    "total": "סה״כ",
+    "filesystemUsage": "{count, plural, one {הצגת השימוש במערכת קבצים אחת} other {הצגת השימוש ב-# מערכות קבצים}}",
     "action": {
       "add": "הוסף",
       "apply": "החל",
@@ -1863,6 +1865,12 @@
         "clickable": {
           "label": "ניתן ללחיצה"
         }
+      },
+      "state": {
+        "on": "פעיל",
+        "off": "כבוי",
+        "unavailable": "לא זמין",
+        "unknown": "לא ידוע"
       }
     },
     "smartHome-executeAutomation": {
@@ -3328,8 +3336,13 @@
     "networkControllerSummary": {
       "option": {},
       "card": {
+        "wan": "WAN",
+        "web": "אינטרנט",
+        "wifi": "אלחוטי",
+        "lan": "LAN",
         "vpn": {
-          "countConnected": "{count} מחובר"
+          "label": "VPN",
+          "countConnected": "{count, plural, one {אחד מחובר} other {# מחוברים}}"
         }
       },
       "error": {

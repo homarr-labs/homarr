@@ -1,4 +1,8 @@
-import { customJsxAuthoringCatalog, getCustomJsxComponentProps } from "./component-catalog";
+import {
+  customJsxAuthoringCatalog,
+  customJsxCatalogGlobalPropByName,
+  resolveCustomJsxPropDescriptor,
+} from "./component-catalog";
 import { customJsxExamples } from "./examples";
 import { customJsxTablerIconNames } from "./tabler-icons";
 
@@ -7,7 +11,58 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.1.0";
+export const CUSTOM_WIDGET_SKILL_VERSION = "2.2.0";
+
+export const CUSTOM_WIDGET_SKILL_REFERENCES = {
+  "references/schema.md": `# Schema
+
+\`\`\`ts
+interface HomarrCustomWidgetV2 {
+  $schema: "homarr-custom-widget-v2";
+  name: string;
+  description?: string;
+  iconUrl?: string;
+  sources: Record<string, CustomWidgetSource>;
+  requests: Record<string, CustomWidgetRequest>;
+  options?: Record<string, CustomWidgetOption>;
+  template: string;
+}
+\`\`\`
+
+Sources require \`default\`. A request defaults to the default source, query, GET, load, inherited auth, and view permission. An action defaults to manual and modify permission. DELETE uses full permission and confirmation.
+
+Use stable real URLs for public APIs and clear suggested URLs for self-hosted services. Homarr collects the installer's server URL, network scope, and credentials as source setup; credentials remain outside the manifest.
+
+Paths use \`{option:name}\` and \`{param:name}\`. Query/body data uses \`{ "$option": "name" }\` and \`{ "$param": "name" }\`. Load queries cannot use params. Runtime parameter names and primitive values are inferred from references.
+
+Every option has \`label\`, \`control\`, and \`default\`. Optional fields are \`description\`, \`choices\`, \`choicesFrom\`, \`min\`, \`max\`, \`step\`, \`advanced\`, and \`group\`.
+`,
+  "references/runtime.md": `# Runtime
+
+Templates read \`data.requestId\`, \`status.requestId\`, \`options.name\`, and temporary \`inputs.name\`. Status contains \`loading\`, \`ok\`, \`status\`, \`statusText\`, and \`error\`.
+
+\`bind="search"\` creates an in-memory input. It is never persisted. Supply invocation values only through \`params\`, for example:
+
+\`\`\`jsx
+<TextInput bind="search" label="Search" />
+<SubFetch requestId="search" params={{ query: inputs.search }}>
+  {(items) => <Stack>{(items ?? []).map(item => <Text key={item.id}>{item.name}</Text>)}</Stack>}
+</SubFetch>
+\`\`\`
+
+\`SubFetch\` with \`trigger="manual"\` renders its own load button. To make a card or image launch the request, pass that node through \`triggerContent\` and provide \`triggerAriaLabel\`; Homarr supplies the click and keyboard behavior. Its optional second callback argument contains \`{ ok, status, statusText, loading: false }\`; loading and request failures are rendered by \`SubFetch\` before the callback runs. Do not author \`onClick\` or a fetch callback.
+
+Use expression callbacks for supported collection methods and trusted slots. Do not use callback blocks, IIFEs, authored recursion, or raw events. Bounded regex literals work only with safe string matching/replacement operations.
+`,
+  "references/security.md": `# Security
+
+All requests use Homarr's protected server executor. Source origin, network scope, DNS, redirects, SSRF, rate limits, permissions, size limits, timeouts, and encrypted credential injection remain enforced.
+
+The JSX interpreter blocks imports, hooks, refs, raw event callbacks, browser requests, eval, arbitrary functions, prototype access, unsafe URLs, global CSS escape, arbitrary portals, bigint, statement blocks, IIFEs, and recursion. Regex literals must be bounded and reject backreferences, lookbehind, nested quantifiers, excessive length, and unsupported flags.
+
+Credentials are stored separately and never exported or returned to an agent. A published self-hosted source URL is only a suggestion: installers must confirm or replace private and loopback URLs for their own Homarr deployment. Source origins cannot be controlled through widget options.
+`,
+} as const;
 
 export const CUSTOM_WIDGET_SKILL_MD = `---
 name: homarr-custom-widget
@@ -39,11 +94,19 @@ Preview-scoped configuration expires with the preview. To persist user-entered v
 When this skill is installed from the repository, optional offline details are in \`references/schema.md\`, \`references/runtime.md\`, and \`references/security.md\`. MCP-only clients should use the live Homarr resources instead.
 `;
 
+const CUSTOM_WIDGET_SKILL_BUNDLE_MD = [
+  CUSTOM_WIDGET_SKILL_MD.trimEnd(),
+  ...Object.entries(CUSTOM_WIDGET_SKILL_REFERENCES).map(
+    ([file, content]) => `\n\n---\n\n# Bundled file: ${file}\n\n${content.trimEnd()}`,
+  ),
+].join("");
+
 export function getCustomWidgetSkill() {
   return {
     name: "homarr-custom-widget",
     version: CUSTOM_WIDGET_SKILL_VERSION,
     skillMd: CUSTOM_WIDGET_SKILL_MD,
+    references: CUSTOM_WIDGET_SKILL_REFERENCES,
     skillsShUrl: CUSTOM_WIDGET_SKILLS_SH_URL,
     sourceUrl: CUSTOM_WIDGET_SKILL_SOURCE_URL,
     installCommand: CUSTOM_WIDGET_SKILL_INSTALL_COMMAND,
@@ -51,11 +114,28 @@ export function getCustomWidgetSkill() {
 }
 
 export function getCustomWidgetSkillContent() {
-  return CUSTOM_WIDGET_SKILL_MD;
+  return CUSTOM_WIDGET_SKILL_BUNDLE_MD;
 }
 
 export function getCustomWidgetComponentCatalog() {
-  return customJsxAuthoringCatalog;
+  return {
+    schemaVersion: customJsxAuthoringCatalog.schemaVersion,
+    mantineVersion: customJsxAuthoringCatalog.mantineVersion,
+    customWidgetVersion: customJsxAuthoringCatalog.customWidgetVersion,
+    components: customJsxAuthoringCatalog.components.map(({ name, category, safety }) => ({ name, category, safety })),
+    sharedProps: {
+      count: customJsxAuthoringCatalog.globalProps.length,
+      names: customJsxAuthoringCatalog.globalProps.map(({ name }) => name),
+      fetchTool: "customWidget_getSharedProps" as const,
+      maxPerRequest: 64,
+    },
+    blockedCapabilities: customJsxAuthoringCatalog.blockedCapabilities,
+    examples: getCustomWidgetExampleCatalog(),
+  };
+}
+
+export function getCustomWidgetExampleCatalog() {
+  return customJsxExamples.map(({ id, title, description }) => ({ id, title, description }));
 }
 
 export function getCustomWidgetComponent(name: string) {
@@ -71,15 +151,35 @@ export function getCustomWidgetComponent(name: string) {
     category: component.category,
     safety: component.safety,
     description: component.description,
-    props: getCustomJsxComponentProps(canonicalName),
+    props: component.props.map((prop) => resolveCustomJsxPropDescriptor(prop)),
     blockedProps: component.blockedProps,
     bind: component.bind,
     subcomponents: component.subcomponents,
     accessibilityRequirements: component.accessibilityRequirements,
     documentationUrl: component.documentationUrl,
+    sharedProps:
+      component.safety === "denied"
+        ? undefined
+        : {
+            catalogField: "sharedProps.names" as const,
+            fetchTool: "customWidget_getSharedProps" as const,
+            maxPerRequest: 64,
+            appliesExceptBlockedProps: true as const,
+          },
     knownValues: component.name === "TablerIcon" ? { name: customJsxTablerIconNames } : undefined,
     deniedReason: component.deniedReason,
   };
+}
+
+export function getCustomWidgetSharedProps(names: readonly string[]) {
+  const props: ReturnType<typeof resolveCustomJsxPropDescriptor>[] = [];
+  const notFound: string[] = [];
+  for (const name of new Set(names)) {
+    const prop = customJsxCatalogGlobalPropByName.get(name);
+    if (prop) props.push(resolveCustomJsxPropDescriptor(prop));
+    else notFound.push(name);
+  }
+  return { props, notFound };
 }
 
 export function getCustomWidgetExample(name: string) {

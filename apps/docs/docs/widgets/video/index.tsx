@@ -5,7 +5,7 @@ export const videoWidget: WidgetDefinition = {
   icon: IconDeviceCctv,
   name: "Video Stream",
   description: "Embed a video stream or video from a camera or a website.",
-  path: "../../widgets/stock-price",
+  path: "../../widgets/video",
   configuration: {
     items: [
       {

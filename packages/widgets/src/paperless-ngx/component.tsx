@@ -2,7 +2,7 @@
 
 import { Fragment } from "react";
 import type { CSSProperties } from "react";
-import { RingProgress, Text } from "@mantine/core";
+import { Center, RingProgress, Text } from "@mantine/core";
 import { IconFileDescription, IconFileText, IconInbox, IconTag, IconUsers } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -70,12 +70,32 @@ const heroPartVisibility = {
   ring: "showInboxRing",
 } as const;
 
-export default function PaperlessNgxWidget({ integrationIds, options, width }: WidgetComponentProps<"paperlessNgx">) {
+export default function PaperlessNgxWidget({
+  integrationIds,
+  options,
+  width,
+  height,
+}: WidgetComponentProps<"paperlessNgx">) {
   const t = useScopedI18n("widget.paperlessNgx");
-  const { data: stats } = clientApi.widget.paperlessNgx.getStats.useQuery({
+  const tCommon = useScopedI18n("common");
+  const {
+    data: stats,
+    error,
+    isPending,
+  } = clientApi.widget.paperlessNgx.getStats.useQuery({
     integrationId: integrationIds[0] ?? "",
   });
 
+  if (isPending) {
+    return (
+      <Center h="100%">
+        <Text c="dimmed" size="sm">
+          {tCommon("action.loading")}
+        </Text>
+      </Center>
+    );
+  }
+  if (error && stats === undefined) throw error;
   if (!stats) return <WidgetEmptyState />;
 
   const canShowInboxHero = options.showDocumentsInbox && options.showDocumentsTotal;
@@ -95,18 +115,19 @@ export default function PaperlessNgxWidget({ integrationIds, options, width }: W
     .map(([, statKey]) => statKey)
     .filter((statKey) => !(showHero && gridHiddenWhenHeroShown.has(statKey)));
 
-  const gridCols = getGridCols(width);
-  const ringSize = getRingSize(width);
+  const gridCols = Math.max(1, Math.min(visibleStatKeys.length, getGridCols(width, height)));
+  const ringSize = getRingSize(Math.min(width, height * 2));
   const iconSize = getIconSize(width);
   const ringLabelSize = getRingLabelSize(ringSize);
   const hasContent = showHero || visibleStatKeys.length > 0;
 
   const heroLayoutClass =
     heroLayoutBySecondaryStats[String(visibleStatKeys.length > 0) as keyof typeof heroLayoutBySecondaryStats];
-  const heroRingClass = heroVariantByRing[String(options.showInboxRing) as keyof typeof heroVariantByRing];
+  const showInboxRing = options.showInboxRing && height >= 120;
+  const heroRingClass = heroVariantByRing[String(showInboxRing) as keyof typeof heroVariantByRing];
 
   const visibleHeroParts = Object.entries(heroPartVisibility).filter(
-    ([, optionKey]) => options[optionKey as keyof typeof options],
+    ([partKey, optionKey]) => options[optionKey as keyof typeof options] && (partKey !== "ring" || showInboxRing),
   );
 
   const heroPartRenderers = {
@@ -183,9 +204,9 @@ function computeInboxProgress(total: number, inbox: number): number {
   return Math.round((inbox / total) * 100);
 }
 
-function getGridCols(width: number): number {
+function getGridCols(width: number, height: number): number {
   const match = gridColsByWidth.find(({ minWidth }) => width >= minWidth);
-  return match?.cols ?? 1;
+  return Math.min(match?.cols ?? 1, height < 140 ? 2 : 5);
 }
 
 function getRingSize(width: number): number {

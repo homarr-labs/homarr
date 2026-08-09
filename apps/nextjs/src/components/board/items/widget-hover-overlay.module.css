@@ -105,6 +105,15 @@
   flex-shrink: 0;
 }
 
+@media (forced-colors: active) {
+  .panel {
+    border-color: CanvasText;
+    background: Canvas;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+}
+
 .metadataValue {
   overflow: hidden;
   text-overflow: ellipsis;

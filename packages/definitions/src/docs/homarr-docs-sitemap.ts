@@ -382,4 +382,5 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/beszel-alerts"
   | "/docs/widgets/beszel-system-stats"
   | "/docs/widgets/traefik"
-  | "/docs/widgets/custom-api";
+  | "/docs/widgets/custom-api"
+  | "/docs/widgets/assistant";

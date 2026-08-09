@@ -7,6 +7,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("ups", {
   icon: IconBatteryCharging,
+  supportsAdvancedFocus: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showBattery: factory.switch({

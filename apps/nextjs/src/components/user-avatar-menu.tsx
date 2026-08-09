@@ -2,16 +2,26 @@
 
 import type { ReactNode } from "react";
 import { useCallback } from "react";
-import { Menu } from "@mantine/core";
-import { IconBrandDocker, IconHome, IconLogin, IconLogout, IconSettings, IconTool } from "@tabler/icons-react";
+import { Badge, Indicator, Kbd, Loader, Menu, Text } from "@mantine/core";
+import {
+  IconBrandDocker,
+  IconHome,
+  IconLogin,
+  IconLogout,
+  IconSettings,
+  IconRobot,
+  IconTool,
+} from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
+import { hotkeys } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
+import { useOptionalHomarrAssistant } from "./assistant/assistant-context";
 import { CurrentColorSchemeCombobox } from "./color-scheme/current-color-scheme-combobox";
 import { CurrentLanguageCombobox } from "./language/current-language-combobox";
 import { DockerQuickAccessModal } from "./layout/header/docker-quick-access-modal";
@@ -25,6 +35,12 @@ interface UserAvatarMenuProps {
   onOpenChange: (opened: boolean) => void;
 }
 
+const formatHotkeyLabel = (hotkey: string, modifierLabel: string) =>
+  hotkey
+    .split("+")
+    .map((key) => (key === "mod" ? modifierLabel : `${key.charAt(0).toUpperCase()}${key.slice(1)}`))
+    .join(" + ");
+
 export const UserAvatarMenu = ({
   children,
   availableUpdates,
@@ -37,6 +53,7 @@ export const UserAvatarMenu = ({
 
   const { logoutUrl } = useAuthContext();
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
+  const assistant = useOptionalHomarrAssistant();
 
   const handleSignout = useCallback(async () => {
     const redirectUrl = logoutUrl ?? "/auth/login";
@@ -65,6 +82,29 @@ export const UserAvatarMenu = ({
         <Menu.Divider />
         {Boolean(session.data) && (
           <>
+            {assistant?.enabled && (
+              <Menu.Item
+                leftSection={
+                  assistant.isRunning ? <Loader type="bars" color="red" size="xs" /> : <IconRobot size="1rem" />
+                }
+                rightSection={
+                  assistant.unreadCount > 0 ? (
+                    <Badge size="sm" variant="filled" color="red" circle>
+                      {assistant.unreadCount > 99 ? "99+" : assistant.unreadCount}
+                    </Badge>
+                  ) : assistant.isRunning ? (
+                    <Text size="xs" c="dimmed">
+                      {t("assistantThinking")}
+                    </Text>
+                  ) : (
+                    <Kbd size="xs">{formatHotkeyLabel(hotkeys.openAssistant, t("modifier"))}</Kbd>
+                  )
+                }
+                onClick={assistant.open}
+              >
+                {t("assistant")}
+              </Menu.Item>
+            )}
             <Menu.Item
               component={Link}
               href={`/manage/users/${session.data?.user.id}/general`}
@@ -94,7 +134,28 @@ export const UserAvatarMenu = ({
           </Menu.Item>
         )}
       </Menu.Dropdown>
-      <Menu.Target>{children}</Menu.Target>
+      <Menu.Target>
+        <Indicator
+          inline
+          disabled={!assistant?.isRunning && !assistant?.unreadCount}
+          color="red"
+          size={20}
+          offset={4}
+          label={
+            assistant?.isRunning ? (
+              <Loader type="bars" color="white" size={10} />
+            ) : assistant?.unreadCount ? (
+              assistant.unreadCount > 99 ? (
+                "99+"
+              ) : (
+                assistant.unreadCount
+              )
+            ) : undefined
+          }
+        >
+          {children}
+        </Indicator>
+      </Menu.Target>
     </Menu>
   );
 };

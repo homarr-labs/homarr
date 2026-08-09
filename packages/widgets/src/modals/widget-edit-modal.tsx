@@ -8,6 +8,7 @@ import { z } from "zod/v4";
 
 import { objectEntries } from "@homarr/common";
 import { useSession } from "@homarr/auth/client";
+import { useOptionalBoard } from "@homarr/boards/context";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
@@ -41,11 +42,13 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   integrationSupport: boolean;
   settings: SettingsContextProps;
   itemId?: string;
+  boardId?: string;
   appId?: string;
 }
 
 export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ actions, innerProps }) => {
   const t = useI18n();
+  const board = useOptionalBoard();
   const { data: session } = useSession();
   const [advancedOptions, setAdvancedOptions] = useState<BoardItemAdvancedOptions>(innerProps.value.advancedOptions);
   const appEditRef = useRef<EmbeddedAppEditFormHandle>(null);
@@ -55,6 +58,9 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     customError: zodErrorMap(t),
   });
   const { definition } = innerProps;
+  const integrationsRequired =
+    innerProps.integrationSupport &&
+    (!("integrationsRequired" in definition) || definition.integrationsRequired !== false);
   const options = definition.createOptions(innerProps.settings) as Record<string, OptionsBuilderResult[string]>;
   const optionsSuperRefine = (options as Record<symbol, unknown>)[OPTIONS_SUPER_REFINE] as
     | ((data: Record<string, unknown>, ctx: z.RefinementCtx) => void)
@@ -79,7 +85,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     validate: schemaResolver(
       z.object({
         options: optionsSchema,
-        integrationIds: z.array(z.string()),
+        integrationIds: integrationsRequired ? z.array(z.string()).min(1) : z.array(z.string()),
         advancedOptions: z.object({
           customCssClasses: z.array(z.string()),
           borderColor: z.string(),
@@ -127,6 +133,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           label={t("item.edit.field.integrations.label")}
           data={innerProps.integrationData}
           canSelectMultiple={((definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity) > 1}
+          withAsterisk={integrationsRequired}
           {...form.getInputProps("integrationIds")}
         />
       )}
@@ -154,6 +161,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
               options={value as never}
               initialOptions={innerProps.value.options}
               itemId={innerProps.itemId}
+              boardId={innerProps.boardId ?? board?.id}
             />
           );
         })}

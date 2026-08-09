@@ -36,7 +36,6 @@ export interface ImmichAlbum {
 
 export interface ImmichAsset {
   id: string;
-  originalPath: string;
   thumbhash: string | null;
   fileModifiedAt: string;
   fileCreatedAt: string;
@@ -156,7 +155,6 @@ export class ImmichIntegration extends Integration {
           thumbhash: asset.thumbhash,
           fileCreatedAt: asset.fileCreatedAt,
           fileModifiedAt: asset.fileModifiedAt,
-          originalPath: asset.originalPath,
           updatedAt: asset.updatedAt,
           publicLink,
         };

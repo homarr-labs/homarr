@@ -17,7 +17,9 @@ Install the Agent Skill from the verified Homarr repository:
 npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget
 ```
 
-The portable skill gives concise authoring guidance. The Homarr MCP prompt gives connected agents a retrieval workflow: read the live schema, then fetch only the component documentation needed for the widget.
+The portable skill gives concise authoring guidance. For connected agents, Homarr returns the complete `SKILL.md` and
+all bundled skill references once in one lazy tool response. The Homarr MCP prompt then gives the agent a
+retrieval workflow: read the live schema and fetch only the component documentation needed for the widget.
 
 The workbench's **Copy AI prompt** action is separate. It creates a self-contained prompt below 12,000 characters for an ordinary ChatGPT or Claude conversation. It includes the lean contract, bindings, recommended components, and two polished examples. It never tells an offline model to call MCP tools.
 
@@ -37,38 +39,55 @@ Repository code cannot give this attribution.
 
 The authoring-prompt tool description contains one sentence. The prompt contains the workflow instructions and resource links.
 
-`GET /api/custom-widgets/skill` and the MCP tool return the concise skill discovery payload:
+`GET /api/custom-widgets/skill` and `customWidget_getSkill` return a self-contained structured skill payload:
 
 ```ts
 {
   name: "homarr-custom-widget";
   version: string;
-  skillMd: string;
+  skillMd: string; // Complete SKILL.md
+  references: Record<string, string>;
   skillsShUrl: string;
   sourceUrl: string;
   installCommand: string;
 }
 ```
 
-The full installed component catalog stays available through `homarr://custom-widgets/components` and per-component resources. It is deliberately not embedded in the skill or clipboard prompt.
+The `homarr://custom-widgets/skill` MCP resource returns the same `SKILL.md` and references once as bundled Markdown.
+
+The component catalog is a compact index of names, categories, safety levels, shared prop names, policies, and example
+IDs. Per-component results contain only component-specific props and a reference to shared prop documentation. Use
+`customWidget_getSharedProps` once with only the shared prop names needed across the selected components. This avoids
+repeating hundreds of global props in every tool result. The catalog is deliberately not embedded in the skill or
+clipboard prompt; the skill response still contains the complete authoring, schema, runtime, and security references.
 
 These interfaces do not return an archive URL or archive hash.
 
 ## Create a Custom Widget with MCP
 
-1. Get the prompt, live schema, and component catalog.
-2. Read the external API documentation.
-3. Build one definition.
-4. Validate the definition without saving it.
-5. Create a preview session.
-6. Test the queries and actions.
-7. Open the preview URL with browser tools.
-8. Inspect the redacted journal and revise the local candidate until it is valid.
-9. Create the widget, including any source URLs and credentials the user already supplied.
-10. Otherwise, ask the user to configure the saved definition with the ten-minute Homarr source-setup URL.
-11. Create a final preview with the saved definition ID so Homarr loads its stored credentials, then test it again.
-12. Update the saved definition if the final verification finds a problem.
-13. Repeat the procedure for the next widget.
+1. Load `customWidget_getSkill`, then get the prompt and live schema.
+2. Call `customWidget_getComponentCatalog`, followed by `customWidget_getComponent` for only the relevant installed
+   components and `customWidget_getExample` when one catalog example matches the interaction pattern. If shared props
+   are needed, collect their catalog names and call `customWidget_getSharedProps` once for that set.
+3. Read the external API documentation.
+4. Build one definition, using `templateLines` for multiline JSX tool input.
+5. Validate the definition without saving it and repair every reported issue.
+6. Create a preview session.
+7. Run `customWidget_previewQuery` for every query returned by the preview and inspect its actual status and data shape.
+8. Test relevant actions in simulation mode.
+9. Open the returned preview path with browser tools.
+10. Inspect the redacted journal and revise the local candidate until validation, data, and rendering all work.
+11. Create the widget, including any source URLs and credentials the user already supplied.
+12. Open its returned management path, and use a structured question when the user must choose whether to place it on a board.
+13. Otherwise, ask the user to configure the saved definition with the ten-minute Homarr source-setup URL.
+14. Create a final preview with the saved definition ID so Homarr loads its stored credentials, then test it again.
+15. Update the saved definition if the final verification finds a problem. `customWidget_update` also accepts
+    `templateLines` for multiline JSX without resetting omitted options.
+16. Repeat the procedure for the next widget.
+
+Successful validation returns a compact summary instead of echoing the full widget and template. Preview creation
+returns its session, links, and query checklist without repeating the submitted definition. Keep the candidate locally
+and reuse it for the next lifecycle step.
 
 Each source-configuration URL applies to one definition or preview and one source. It is short-lived, single-use, and
 can only be opened and completed by an authenticated Homarr administrator. The administrator confirms the server URL,

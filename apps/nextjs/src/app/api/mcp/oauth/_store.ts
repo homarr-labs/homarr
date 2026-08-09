@@ -15,6 +15,7 @@ interface AuthCode {
   codeChallenge: string;
   codeChallengeMethod: string;
   redirectUri: string;
+  resource: string | null;
   expiresAt: number;
 }
 
@@ -24,6 +25,7 @@ interface PendingAuth {
   codeChallenge: string;
   codeChallengeMethod: string;
   state: string | null;
+  resource: string | null;
   expiresAt: number;
 }
 
@@ -102,6 +104,7 @@ export function createAuthCode(
   codeChallenge: string,
   codeChallengeMethod: string,
   redirectUri: string,
+  resource: string | null,
 ) {
   if (authCodes.size >= MAX_AUTH_CODES) {
     return null;
@@ -115,6 +118,7 @@ export function createAuthCode(
     codeChallenge,
     codeChallengeMethod,
     redirectUri,
+    resource,
     expiresAt: Date.now() + AUTH_CODE_TTL_MS,
   });
   return code;

@@ -22,7 +22,7 @@ export const SystemResourceMemoryChart = ({
   const t = useScopedI18n("widget.systemResources.card");
 
   const percentageUsed =
-    memoryUsageOverTime.length > 0
+    memoryUsageOverTime.length > 0 && totalCapacityInBytes > 0
       ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         memoryUsageOverTime[memoryUsageOverTime.length - 1]! / totalCapacityInBytes
       : undefined;
@@ -45,7 +45,8 @@ export const SystemResourceMemoryChart = ({
           return (
             <Paper px={3} py={2} shadow="md">
               <Text c="dimmed" size="xs">
-                {memory.used} / {memory.available} ({Math.round((value / totalCapacityInBytes) * 100)}%)
+                {memory.used} / {memory.available} (
+                {totalCapacityInBytes > 0 ? Math.round((value / totalCapacityInBytes) * 100) : 0}%)
               </Text>
             </Paper>
           );

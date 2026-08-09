@@ -10,16 +10,18 @@ interface FirewallMenuProps {
 }
 
 export const FirewallMenu = ({ onChange, isTiny, dropdownItems, selectedFirewall }: FirewallMenuProps) => (
-  <Box>
+  <Box style={{ flex: 1, minWidth: 0 }}>
     <Select
       value={selectedFirewall}
       onChange={onChange}
-      size={isTiny ? "8px" : "xs"}
+      size="xs"
+      w="100%"
       color="lightgray"
       data={dropdownItems}
       styles={{
         input: {
           minHeight: "24px",
+          paddingInline: isTiny ? 6 : undefined,
         },
       }}
     />
