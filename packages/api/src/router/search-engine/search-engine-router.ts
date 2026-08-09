@@ -6,29 +6,100 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, asc, eq, like } from "@homarr/db";
 import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
+import { selectSearchEnginesSchema } from "@homarr/db/validationSchemas";
 import { byIdSchema, paginatedSchema, searchSchema } from "@homarr/validation/common";
-import { searchEngineEditSchema, searchEngineManageSchema } from "@homarr/validation/search-engine";
+import {
+  searchEngineApiEditSchema,
+  searchEngineApiManageSchema,
+  searchEngineUrlTemplateSchema,
+} from "@homarr/validation/search-engine";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "searchEngineRouter" });
 
-export const searchEngineRouter = createTRPCRouter({
-  getPaginated: protectedProcedure.input(paginatedSchema).query(async ({ input, ctx }) => {
-    const whereQuery = input.search ? like(searchEngines.name, `%${input.search.trim()}%`) : undefined;
-    const searchEngineCount = await ctx.db.$count(searchEngines, whereQuery);
+/**
+ * The flat API schemas accept both type specific properties, this makes sure only the ones
+ * belonging to the selected type are persisted and that the required one is present and valid.
+ *
+ * `current` is the stored engine when one is being updated. Integration backed engines used to be
+ * creatable without an integration, so such an engine may keep its empty integration and stay
+ * editable. Requiring one only when the engine is created or switched to that type prevents new
+ * broken engines without making the existing ones impossible to rename.
+ */
+const extractTypeSpecificValues = (
+  input: {
+    type: "generic" | "fromIntegration";
+    urlTemplate?: string | null;
+    integrationId?: string | null;
+  },
+  current?: { type: string; integrationId: string | null },
+) => {
+  if (input.type === "generic") {
+    const result = searchEngineUrlTemplateSchema.safeParse(input.urlTemplate);
 
-    const dbSearachEngines = await ctx.db.query.searchEngines.findMany({
-      limit: input.pageSize,
-      offset: (input.page - 1) * input.pageSize,
-      where: whereQuery,
+    if (!result.success) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `urlTemplate is required for search engines of type 'generic' and has to start with http and contain '%s'`,
+      });
+    }
+
+    return { urlTemplate: result.data, integrationId: null };
+  }
+
+  if (input.integrationId) {
+    return { urlTemplate: null, integrationId: input.integrationId };
+  }
+
+  const keepsExistingType = current?.type === "fromIntegration";
+  if (!keepsExistingType) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "integrationId is required for search engines of type 'fromIntegration'",
     });
+  }
 
-    return {
-      items: dbSearachEngines,
-      totalCount: searchEngineCount,
-    };
-  }),
+  return { urlTemplate: null, integrationId: current.integrationId };
+};
+
+/**
+ * Keeps the narrowed shape the management UI relies on while staying documentable.
+ * Integration backed engines created before an integration was required can still carry
+ * no integration id, so it stays nullable instead of failing to serialize.
+ */
+const searchEngineByIdOutputSchema = z.union([
+  selectSearchEnginesSchema.extend({ type: z.literal("fromIntegration"), integrationId: z.string().nullable() }),
+  selectSearchEnginesSchema.extend({ type: z.literal("generic"), urlTemplate: z.string().nullable() }),
+]);
+
+export const searchEngineRouter = createTRPCRouter({
+  getPaginated: protectedProcedure
+    .meta({
+      openapi: { method: "GET", path: "/api/search-engines", tags: ["search-engines"], protect: true },
+      mcp: {
+        enabled: true,
+        description:
+          "List search engines with pagination. OPTIONAL: search (filter by name), pageSize (default 10), page (default 1)",
+      },
+    })
+    .input(paginatedSchema)
+    .output(z.object({ items: z.array(selectSearchEnginesSchema), totalCount: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const whereQuery = input.search ? like(searchEngines.name, `%${input.search.trim()}%`) : undefined;
+      const searchEngineCount = await ctx.db.$count(searchEngines, whereQuery);
+
+      const dbSearachEngines = await ctx.db.query.searchEngines.findMany({
+        limit: input.pageSize,
+        offset: (input.page - 1) * input.pageSize,
+        where: whereQuery,
+      });
+
+      return {
+        items: dbSearachEngines,
+        totalCount: searchEngineCount,
+      };
+    }),
   getSelectable: protectedProcedure
     .input(z.object({ withIntegrations: z.boolean() }).default({ withIntegrations: true }))
     .query(async ({ ctx, input }) => {
@@ -44,32 +115,39 @@ export const searchEngineRouter = createTRPCRouter({
         .then((engines) => engines.map((engine) => ({ value: engine.id, label: engine.name })));
     }),
 
-  byId: protectedProcedure.input(byIdSchema).query(async ({ ctx, input }) => {
-    const searchEngine = await ctx.db.query.searchEngines.findFirst({
-      where: eq(searchEngines.id, input.id),
-    });
-
-    if (!searchEngine) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Search engine not found",
+  byId: protectedProcedure
+    .meta({
+      openapi: { method: "GET", path: "/api/search-engines/{id}", tags: ["search-engines"], protect: true },
+      mcp: { enabled: true, description: "Get a search engine by ID. REQUIRED: id (search engine ID)" },
+    })
+    .input(byIdSchema)
+    .output(searchEngineByIdOutputSchema)
+    .query(async ({ ctx, input }) => {
+      const searchEngine = await ctx.db.query.searchEngines.findFirst({
+        where: eq(searchEngines.id, input.id),
       });
-    }
 
-    return searchEngine.type === "fromIntegration"
-      ? {
-          ...searchEngine,
-          type: "fromIntegration" as const,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          integrationId: searchEngine.integrationId!,
-        }
-      : {
-          ...searchEngine,
-          type: "generic" as const,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          urlTemplate: searchEngine.urlTemplate!,
-        };
-  }),
+      if (!searchEngine) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Search engine not found",
+        });
+      }
+
+      return searchEngine.type === "fromIntegration"
+        ? {
+            ...searchEngine,
+            type: "fromIntegration" as const,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            integrationId: searchEngine.integrationId!,
+          }
+        : {
+            ...searchEngine,
+            type: "generic" as const,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            urlTemplate: searchEngine.urlTemplate!,
+          };
+    }),
   getDefaultSearchEngine: publicProcedure.query(async ({ ctx }) => {
     const userDefaultId = ctx.session?.user.id
       ? ((await ctx.db.query.users
@@ -153,22 +231,41 @@ export const searchEngineRouter = createTRPCRouter({
   }),
   create: permissionRequiredProcedure
     .requiresPermission("search-engine-create")
-    .input(searchEngineManageSchema)
+    .meta({
+      openapi: { method: "POST", path: "/api/search-engines", tags: ["search-engines"], protect: true },
+      mcp: {
+        enabled: true,
+        description:
+          "Create a search engine. REQUIRED: name, short (trigger, max 8 characters), iconUrl, description (or null), type ('generic' or 'fromIntegration'). Generic engines additionally require urlTemplate containing '%s', integration backed ones an integrationId. Returns { id }",
+      },
+    })
+    .input(searchEngineApiManageSchema)
+    .output(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const id = createId();
       await ctx.db.insert(searchEngines).values({
-        id: createId(),
+        id,
         name: input.name,
         short: input.short.toLowerCase(),
         iconUrl: input.iconUrl,
-        urlTemplate: "urlTemplate" in input ? input.urlTemplate : null,
         description: input.description,
         type: input.type,
-        integrationId: "integrationId" in input ? input.integrationId : null,
+        ...extractTypeSpecificValues(input),
       });
+      return { id };
     }),
   update: permissionRequiredProcedure
     .requiresPermission("search-engine-modify-all")
-    .input(searchEngineEditSchema)
+    .meta({
+      openapi: { method: "PATCH", path: "/api/search-engines/{id}", tags: ["search-engines"], protect: true },
+      mcp: {
+        enabled: true,
+        description:
+          "Update a search engine. REQUIRED: id, name, iconUrl, description (or null), type. Generic engines additionally require urlTemplate, integration backed ones an integrationId. The short trigger cannot be changed",
+      },
+    })
+    .input(searchEngineApiEditSchema)
+    .output(z.void())
     .mutation(async ({ ctx, input }) => {
       const searchEngine = await ctx.db.query.searchEngines.findFirst({
         where: eq(searchEngines.id, input.id),
@@ -186,16 +283,20 @@ export const searchEngineRouter = createTRPCRouter({
         .set({
           name: input.name,
           iconUrl: input.iconUrl,
-          urlTemplate: "urlTemplate" in input ? input.urlTemplate : null,
           description: input.description,
-          integrationId: "integrationId" in input ? input.integrationId : null,
           type: input.type,
+          ...extractTypeSpecificValues(input, searchEngine),
         })
         .where(eq(searchEngines.id, input.id));
     }),
   delete: permissionRequiredProcedure
     .requiresPermission("search-engine-full-all")
+    .meta({
+      openapi: { method: "DELETE", path: "/api/search-engines/{id}", tags: ["search-engines"], protect: true },
+      mcp: { enabled: true, description: "Delete a search engine by ID. REQUIRED: id (search engine ID)" },
+    })
     .input(byIdSchema)
+    .output(z.void())
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .update(users)

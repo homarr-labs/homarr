@@ -25,13 +25,32 @@ const boardServerSettingsSchema = z.object({
 
 const boardServerSettingsUpdateSchema = boardServerSettingsSchema.partial();
 
+/**
+ * The server settings are a wide nested object that is already typed by @homarr/server-settings.
+ * Describing every key again here would duplicate that definition, so the documented shape stays
+ * generic while the cast keeps the precise type for the management UI.
+ */
+const allServerSettingsSchema = z.record(z.string(), z.unknown()) as unknown as z.ZodType<ServerSettings>;
+
 export const serverSettingsRouter = createTRPCRouter({
   getCulture: publicProcedure.query(async ({ ctx }) => {
     return await getServerSettingByKeyAsync(ctx.db, "culture");
   }),
-  getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
-    return await getServerSettingsAsync(ctx.db);
-  }),
+  getAll: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .meta({
+      openapi: { method: "GET", path: "/api/settings", tags: ["settings"], protect: true },
+      mcp: {
+        enabled: true,
+        description:
+          "Get every server setting group at once (analytics, appearance, board, crawlingAndIndexing, culture, search, ...). Requires admin permission",
+      },
+    })
+    .input(z.void())
+    .output(allServerSettingsSchema)
+    .query(async ({ ctx }) => {
+      return await getServerSettingsAsync(ctx.db);
+    }),
   getBoardSettings: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
@@ -95,12 +114,21 @@ export const serverSettingsRouter = createTRPCRouter({
     }),
   saveSettings: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      openapi: { method: "PATCH", path: "/api/settings", tags: ["settings"], protect: true },
+      mcp: {
+        enabled: true,
+        description:
+          "Update one server setting group. REQUIRED: settingsKey (for example 'appearance', 'culture', 'search' or 'board'), value (object which is merged into the current settings of that group). Requires admin permission",
+      },
+    })
     .input(
       z.object({
         settingsKey: z.enum(defaultServerSettingsKeys),
         value: z.record(z.string(), z.unknown()),
       }),
     )
+    .output(z.void())
     .mutation(async ({ ctx, input }) => {
       const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
       await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {

@@ -4,11 +4,14 @@ import { createTRPCRouter } from "./trpc";
 import { appRouter as appRouterForApps } from "./router/app";
 import { apiKeysRouter } from "./router/apiKeys";
 import { boardRouter } from "./router/board";
+import { configRouter } from "./router/config/config-router";
 import { dockerRouter } from "./router/docker/docker-router";
+import { groupRouter } from "./router/group";
 import { iconsRouter } from "./router/icons";
 import { infoRouter } from "./router/info";
 import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
+import { searchEngineRouter } from "./router/search-engine/search-engine-router";
 import { bazarrRouter } from "./router/widgets/bazarr";
 import { serverSettingsRouter } from "./router/serverSettings";
 import { beszelRouter } from "./router/widgets/beszel";
@@ -26,11 +29,14 @@ export const mcpRouter = createTRPCRouter({
   app: appRouterForApps,
   apiKeys: apiKeysRouter,
   board: boardRouter,
+  config: configRouter,
   docker: dockerRouter,
+  group: groupRouter,
   icon: iconsRouter,
   info: infoRouter,
   integration: integrationRouter,
   invite: inviteRouter,
+  searchEngine: searchEngineRouter,
   bazarr: bazarrRouter,
   serverSettings: serverSettingsRouter,
   beszel: beszelRouter,
