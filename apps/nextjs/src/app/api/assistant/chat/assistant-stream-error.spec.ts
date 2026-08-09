@@ -3,6 +3,12 @@ import { describe, expect, test } from "vitest";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 
 describe("assistant stream errors", () => {
+  test("explains malformed streamed tool input without implying the action ran", () => {
+    expect(getAssistantStreamErrorMessage(new Error("Error in input stream"))).toBe(
+      "The model produced incomplete tool input, so Homarr did not run the action. Try again; multiline custom-widget JSX will be sent as templateLines.",
+    );
+  });
+
   test("explains invalid provider model identifiers", () => {
     expect(
       getAssistantStreamErrorMessage({

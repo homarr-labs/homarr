@@ -23,6 +23,10 @@ const MCP_TOOL_ALLOWLIST = {
     "calendar_findAllEvents",
     "customWidget_get",
     "customWidget_getAuthoringPrompt",
+    "customWidget_getComponent",
+    "customWidget_getComponentCatalog",
+    "customWidget_getExample",
+    "customWidget_getSharedProps",
     "customWidget_getSkill",
     "customWidget_legacyMigrationPrompt",
     "customWidget_list",
@@ -186,6 +190,10 @@ describe("custom widget authoring procedure access", () => {
     const calls = [
       unauthenticatedCaller.customWidget.schema(),
       unauthenticatedCaller.customWidget.getAuthoringPrompt(),
+      unauthenticatedCaller.customWidget.getComponentCatalog(),
+      unauthenticatedCaller.customWidget.getComponent({ name: "Stack" }),
+      unauthenticatedCaller.customWidget.getExample({ name: "service-dashboard" }),
+      unauthenticatedCaller.customWidget.getSharedProps({ names: ["p"] }),
       unauthenticatedCaller.customWidget.getSkill(),
       unauthenticatedCaller.customWidget.list(),
       unauthenticatedCaller.customWidget.validate({ widget: {} }),
@@ -208,6 +216,10 @@ describe("custom widget authoring procedure access", () => {
     const calls = [
       nonAdminCaller.customWidget.schema(),
       nonAdminCaller.customWidget.getAuthoringPrompt(),
+      nonAdminCaller.customWidget.getComponentCatalog(),
+      nonAdminCaller.customWidget.getComponent({ name: "Stack" }),
+      nonAdminCaller.customWidget.getExample({ name: "service-dashboard" }),
+      nonAdminCaller.customWidget.getSharedProps({ names: ["p"] }),
       nonAdminCaller.customWidget.getSkill(),
       nonAdminCaller.customWidget.secretSet({
         definitionId: "widget",
@@ -233,5 +245,27 @@ describe("custom widget authoring procedure access", () => {
     await expect(adminCaller.customWidget.getSkill()).resolves.toMatchObject({
       name: expect.any(String),
     });
+    await expect(adminCaller.customWidget.getComponentCatalog()).resolves.toMatchObject({
+      components: expect.arrayContaining([expect.objectContaining({ name: "Stack" })]),
+      examples: expect.arrayContaining([expect.objectContaining({ id: "service-dashboard" })]),
+    });
+    await expect(adminCaller.customWidget.getComponent({ name: "Stack" })).resolves.toMatchObject({
+      name: "Stack",
+      props: expect.anything(),
+    });
+    await expect(adminCaller.customWidget.getExample({ name: "service-dashboard" })).resolves.toMatchObject({
+      id: "service-dashboard",
+      widget: expect.objectContaining({ $schema: "homarr-custom-widget-v2" }),
+    });
+    await expect(adminCaller.customWidget.getSharedProps({ names: ["p", "m"] })).resolves.toMatchObject({
+      props: [expect.objectContaining({ name: "p" }), expect.objectContaining({ name: "m" })],
+      notFound: [],
+    });
+    await expect(adminCaller.customWidget.getComponent({ name: "NotAComponent" })).rejects.toEqual(
+      expect.objectContaining<Partial<TRPCError>>({ code: "NOT_FOUND" }),
+    );
+    await expect(adminCaller.customWidget.getExample({ name: "not-an-example" })).rejects.toEqual(
+      expect.objectContaining<Partial<TRPCError>>({ code: "NOT_FOUND" }),
+    );
   });
 });

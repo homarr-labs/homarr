@@ -107,6 +107,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-error-boundary": "catalog:",
+    "react-shiki": "catalog:",
     "react-simple-code-editor": "catalog:",
     "remark-breaks": "catalog:",
     "remark-directive": "catalog:",

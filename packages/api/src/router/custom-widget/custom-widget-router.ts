@@ -10,9 +10,12 @@ import {
   customWidgetCreateSchema,
   customWidgetDefinitionSchema,
   customWidgetUpdateSchema,
+  normalizeCustomWidgetAuthoringDefinition,
+  normalizeCustomWidgetAuthoringUpdate,
 } from "@homarr/custom-widgets/core";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
+import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
 import { insertCustomWidgetDefinition } from "./definition-insert";
 import { managementQueryProcedures } from "./management-queries";
 import { metadataProcedures } from "./metadata-procedures";
@@ -38,20 +41,43 @@ export const customWidgetRouter = createTRPCRouter({
 
   create: permissionRequiredProcedure
     .requiresPermission("admin")
-    .meta({ mcp: { enabled: true, description: "Create one validated Custom JSX widget." } })
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Create a Custom JSX widget only after customWidget_validate, customWidget_previewCreate, and every returned preview query succeed. Prefer templateLines for multiline JSX. Returns a client-navigable edit link.",
+      },
+    })
     .input(customWidgetCreateSchema)
     .mutation(async ({ ctx, input }) => {
       const { secrets, ...candidate } = input;
-      const definition = customWidgetDefinitionSchema.parse(candidate);
+      const definition = parseCustomWidgetAuthoringInput(() => normalizeCustomWidgetAuthoringDefinition(candidate));
       assertSecretSources(definition.sources, secrets);
       const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets);
       logger.info("Created custom widget definition", { id, name: definition.name });
-      return { id };
+      return {
+        id,
+        managementPath: `/manage/custom-widgets/edit/${id}`,
+        nextAction: {
+          type: "place-custom-widget" as const,
+          widgetKind: "customApi" as const,
+          options: { definitionId: id },
+          whenTargetIsKnown: "Call configure_widget now with the requested board and these exact widget options.",
+          whenTargetIsUnknown:
+            "Call ask_user now with 'Place on a board' and 'Leave unplaced'. Never ask this choice in prose.",
+        },
+      };
     }),
 
   update: permissionRequiredProcedure
     .requiresPermission("admin")
-    .meta({ mcp: { enabled: true, description: "Update one Custom JSX widget." } })
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Update one Custom JSX widget. Prefer templateLines for multiline JSX changes. Returns a client-navigable edit link.",
+      },
+    })
     .input(customWidgetUpdateSchema)
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
@@ -60,8 +86,11 @@ export const customWidgetRouter = createTRPCRouter({
       if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
 
       const current = parseStoredCustomWidgetDefinition(existing);
-      const { id, secrets, ...changes } = input;
-      const definition = customWidgetDefinitionSchema.parse({ ...current, ...changes });
+      const { id, secrets, ...authoringChanges } = input;
+      const definition = parseCustomWidgetAuthoringInput(() => {
+        const changes = normalizeCustomWidgetAuthoringUpdate(authoringChanges);
+        return customWidgetDefinitionSchema.parse({ ...current, ...changes });
+      });
       if (secrets) assertSecretSources(definition.sources, secrets);
       const definitionChanges = { ...serializeCustomWidgetDefinition(definition), updatedAt: new Date() };
       const secretRows = secrets?.map((secret) => ({
@@ -178,6 +207,7 @@ export const customWidgetRouter = createTRPCRouter({
         },
       });
       logger.info("Updated custom widget definition", { id });
+      return { id, managementPath: `/manage/custom-widgets/edit/${id}` };
     }),
 
   ...secretProcedures,

@@ -10,9 +10,16 @@ import { resolveCustomWidgetRequestValues } from "./request-manifest";
 const logger = createLogger({ module: "custom-widget-preview" });
 
 export const previewSessionRequestSchema = z.object({
-  sessionId: z.string().min(1),
-  requestId: z.string().min(1).max(64),
-  params: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).default({}),
+  sessionId: z.string().min(1).describe("The previewSession.id returned by customWidget_previewCreate."),
+  requestId: z
+    .string()
+    .min(1)
+    .max(64)
+    .describe("One query requestId from customWidget_previewCreate.queries. Test every returned query."),
+  params: z
+    .record(z.string(), z.union([z.string(), z.number(), z.boolean()]))
+    .default({})
+    .describe("Invocation parameters required by a manual query. Load queries use an empty object."),
 });
 
 export const recordPreviewJournal = async (...args: Parameters<typeof appendPreviewJournal>) => {

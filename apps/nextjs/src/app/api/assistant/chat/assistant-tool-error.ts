@@ -11,8 +11,48 @@ const getErrorChain = (error: unknown) => {
   return chain;
 };
 
-export const getSafeAssistantToolError = (error: unknown) => {
+const sanitizeValidationText = (value: string) =>
+  value
+    .replace(/https?:\/\/\S+/giu, "[URL]")
+    .replace(/\b(Bearer|Basic)\s+\S+/giu, "$1 [REDACTED]")
+    .replace(/\b(api[_ -]?key|authorization|password|token)\s*[:=]\s*\S+/giu, "$1=[REDACTED]")
+    .replace(/\s+/gu, " ")
+    .trim()
+    .slice(0, 240);
+
+const getCustomWidgetValidationDetails = (chain: Record<string, unknown>[]) => {
+  const details = chain
+    .flatMap((candidate) => (Array.isArray(candidate.issues) ? candidate.issues : []))
+    .flatMap((issue) => {
+      const record = asErrorRecord(issue);
+      if (!record || typeof record.message !== "string") return [];
+      const path = Array.isArray(record.path)
+        ? record.path
+            .filter((segment): segment is string | number => typeof segment === "string" || typeof segment === "number")
+            .map(String)
+            .join(".")
+        : "";
+      const message = sanitizeValidationText(record.message);
+      return message ? [`${path || "widget"}: ${message}`] : [];
+    })
+    .slice(0, 6);
+  if (details.length > 0) return details.join("; ");
+
+  const safeMessage = chain
+    .map((candidate) => (typeof candidate.message === "string" ? sanitizeValidationText(candidate.message) : ""))
+    .find(
+      (message) =>
+        message.length > 0 &&
+        !["BAD_REQUEST", "Invalid input", "Invalid request parameters"].includes(message) &&
+        !message.startsWith("[") &&
+        !message.startsWith("{"),
+    );
+  return safeMessage;
+};
+
+export const getSafeAssistantToolError = (error: unknown, options?: { toolName?: string }) => {
   const chain = getErrorChain(error);
+  const isCustomWidgetTool = options?.toolName?.startsWith("customWidget_") === true;
   if (
     chain.some(
       (candidate) =>
@@ -31,7 +71,35 @@ export const getSafeAssistantToolError = (error: unknown) => {
     case "NOT_FOUND":
       return "The requested resource was not found or is not compatible with this tool.";
     case "BAD_REQUEST":
+      if (isCustomWidgetTool) {
+        const details = getCustomWidgetValidationDetails(chain);
+        if (details) return `The custom widget input was invalid: ${details}`;
+      }
       return "The tool input was not valid.";
+    case "BAD_GATEWAY":
+      if (isCustomWidgetTool) {
+        const details = getCustomWidgetValidationDetails(chain);
+        return details
+          ? `The custom widget data source could not complete the preview request: ${details}`
+          : "The custom widget data source could not complete the preview request.";
+      }
+      break;
+    case "PAYLOAD_TOO_LARGE":
+      if (isCustomWidgetTool) {
+        const details = getCustomWidgetValidationDetails(chain);
+        return details
+          ? `The custom widget preview exceeded a safety limit: ${details}`
+          : "The custom widget preview exceeded a response or request size safety limit.";
+      }
+      break;
+    case "CONFLICT":
+      if (isCustomWidgetTool) {
+        const details = getCustomWidgetValidationDetails(chain);
+        return details
+          ? `The custom widget preview changed while this request was running: ${details}`
+          : "The custom widget preview changed while this request was running. Retry the preview step.";
+      }
+      break;
     case "PRECONDITION_FAILED":
       return "The requested resource is not ready for this operation. Check its configuration and try again.";
     case "TOO_MANY_REQUESTS":

@@ -56,9 +56,20 @@ import { toProviderOptionsKey } from "./assistant-provider-options";
 import { assistantExecutionPolicy } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { getSafeAssistantToolError } from "./assistant-tool-error";
-import { getForcedAssistantToolName, withAssistantToolPolicy } from "./assistant-tool-policy";
+import { repairCustomWidgetToolInput } from "./assistant-tool-input-repair";
+import {
+  customWidgetAssistantInstructions,
+  getForcedAssistantToolName,
+  getRequiredAssistantToolNames,
+  withAssistantToolPolicy,
+} from "./assistant-tool-policy";
 
 export const maxDuration = 300;
+
+// Five 1 MB image attachments expand to roughly 6.7 MB as base64 before the surrounding message
+// history and JSON envelope are added. Keep the transport ceiling above the composer contract while
+// retaining a bounded request size for this authenticated endpoint.
+const assistantRequestMaxBytes = 12_000_000;
 
 const logger = createLogger({ module: "assistant" });
 const getToolApprovalSecret = () =>
@@ -117,7 +128,7 @@ Homarr concepts:
 
 Action rules:
 - Prefer read-only tools before actions.
-- When required information is missing or the user must choose between meaningful alternatives, call ask_user. Do not ask the question only in prose. Offer distinct choices, categorize agreement or proceeding as affirmative, refusal as negative, and unrelated selections as alternative, then leave the freeform Other answer enabled. A confirmation question must have exactly one affirmative option.
+- Whenever you need an answer from the user before choosing the next action, call ask_user. Never end a prose response with a question that expects the user to type a reply. Offer distinct choices, categorize agreement or proceeding as affirmative, refusal as negative, and unrelated selections as alternative, then leave the freeform Other answer enabled. A confirmation question must have exactly one affirmative option. Purely rhetorical questions and open-ended conversation that does not block an action may remain prose, but optional next steps should be stated declaratively instead of phrased as a question.
 - Mutating Homarr tools already pause for native user approval. Calling a mutation only proposes the action; it cannot execute until the user selects Approve and run. Once the requested change is sufficiently specified, call the mutation immediately so the approval UI appears.
 - A prose response such as "Please confirm if you would like me to proceed", "Would you like me to proceed?", or a parameter summary that asks for confirmation is incorrect. Never ask for a second textual confirmation before an approval-gated tool call.
 - Do not retry a denied action.
@@ -359,7 +370,7 @@ const createDemoAssistantResponse = (request: z.infer<typeof requestSchema>) => 
 
 export async function POST(request: Request) {
   const contentLength = Number(request.headers.get("content-length") ?? 0);
-  if (contentLength > 2_000_000) {
+  if (contentLength > assistantRequestMaxBytes) {
     return Response.json({ error: "The assistant request is too large." }, { status: 413 });
   }
 
@@ -369,7 +380,7 @@ export async function POST(request: Request) {
   }
 
   const requestBody = await request.text();
-  if (requestBody.length > 2_000_000) {
+  if (requestBody.length > assistantRequestMaxBytes) {
     return Response.json({ error: "The assistant request is too large." }, { status: 413 });
   }
   const parsed = requestSchema.safeParse(
@@ -493,7 +504,7 @@ export async function POST(request: Request) {
                 toolName: mcpTool.name,
                 error: error instanceof Error ? error.message : String(error),
               });
-              return { error: getSafeAssistantToolError(error) };
+              return { error: getSafeAssistantToolError(error, { toolName: mcpTool.name }) };
             }
           },
         }),
@@ -562,15 +573,25 @@ export async function POST(request: Request) {
     let hasUpstreamCost = false;
     const result = streamText({
       model: provider(modelId),
-      instructions: `${assistantInstructions}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${mentionContext}`,
+      instructions: `${assistantInstructions}${customWidgetAssistantInstructions}${openRouterServerToolsEnabled ? webSearchInstructions : ""}${mentionContext}`,
       messages: await convertToModelMessages(prepareMessagesForModel(parsed.data.messages as UIMessage[])),
       tools: availableTools,
-      prepareStep: ({ stepNumber }) => {
-        if (stepNumber !== 0 || forcedToolName === undefined || !(forcedToolName in availableTools)) return undefined;
-        return {
-          activeTools: [forcedToolName],
-          toolChoice: { type: "tool", toolName: forcedToolName },
-        };
+      prepareStep: ({ stepNumber, steps, responseMessages }) => {
+        if (stepNumber === 0 && forcedToolName !== undefined && forcedToolName in availableTools) {
+          return {
+            activeTools: [forcedToolName],
+            toolChoice: { type: "tool", toolName: forcedToolName },
+          };
+        }
+        const requiredToolNames = getRequiredAssistantToolNames(
+          parsed.data.messages as UIMessage[],
+          steps,
+          responseMessages,
+        ).filter((toolName) => toolName in availableTools);
+        if (requiredToolNames.length > 0) {
+          return { activeTools: requiredToolNames, toolChoice: "required" };
+        }
+        return undefined;
       },
       stopWhen: stepCountIs(assistantExecutionPolicy.maxSteps),
       abortSignal: request.signal,
@@ -581,6 +602,7 @@ export async function POST(request: Request) {
       },
       maxOutputTokens: assistantExecutionPolicy.maxOutputTokens,
       maxRetries: 2,
+      experimental_repairToolCall: ({ toolCall }) => Promise.resolve(repairCustomWidgetToolInput(toolCall)),
       reasoning: parsed.data.reasoning === "auto" ? undefined : parsed.data.reasoning,
       providerOptions:
         configuration.provider === "openrouter" || openRouterServerToolsEnabled

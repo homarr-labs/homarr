@@ -33,7 +33,9 @@ on a dashboard. By default it follows the current conversation. Widget settings 
 conversation; the conversation picker stays hidden until **Pinned conversation** is selected.
 The Shift+A panel is non-modal: opening it focuses its composer, but it does not capture focus from the board.
 Users can continue typing in an Assistant widget or interacting with other dashboard controls while the panel
-is open.
+is open. Every visible assistant surface keeps its own draft, attachment list, selection, and focus while sharing
+the same persisted conversation. Switching conversations restores the draft that belongs to that surface and
+conversation instead of copying text into another widget or the floating panel.
 
 When the assistant is unavailable, its command-menu result remains visible but disabled and explains that
 an administrator must configure and enable it.
@@ -121,13 +123,19 @@ Files returned by a compatible model can be downloaded directly from the message
 Assistant responses render GitHub-flavored Markdown, including headings, links, lists, task lists, tables,
 quotes, inline code, and fenced code blocks. Line breaks are preserved, and Homarr repairs common streamed
 responses where a provider returns escaped line breaks or places a bold-label list on one line.
+Completed fenced code blocks use language-aware syntax highlighting; a streaming block stays plain until its
+content is stable. Safe same-origin links are prefetched and use client-side navigation, so opening a returned
+preview, editor, board, or other Homarr item does not unload the assistant. External links keep their normal
+external-browser behavior.
 Fenced `mermaid` blocks render as diagrams in the current color scheme using Mermaid's strict security mode;
 invalid diagrams fall back to their source instead of breaking the response.
 When Homarr's icon search returns an image URL, visual result tables render that actual icon in a compact
 image column instead of substituting an emoji. Assistant-provided Markdown images accept safe relative,
 HTTP, and HTTPS sources and load without forwarding the Homarr page as the referrer.
 Images up to 1 MB and text, Markdown, CSV, HTML, XML, or JSON documents up to 350 KB can be attached by
-using the paperclip or dropping files onto the composer. A request can contain up to five attachments.
+using the paperclip, dropping files onto the composer, or pasting an image with `Cmd/Ctrl + V`. Attachment
+previews stay local to the composer where they were added and show upload state, file type, and a removable image
+thumbnail or document tile. A request can contain up to five attachments.
 Image understanding depends on the selected model; document text is extracted locally by Homarr and sent
 as part of the prompt.
 
@@ -143,24 +151,30 @@ their description, context size and image-input capability, plus the thinking-le
 stored on the conversation after a completed request. Thinking mode can be left on **Auto**, disabled, or set
 from minimal through high; explicit levels are sent using the AI SDK's provider-neutral reasoning setting and
 still depend on support from the chosen model and endpoint. Reasoning text is shown live when the provider
-streams it. The **Thinking** disclosure can be opened or closed without interrupting the response.
+streams it through assistant-ui's compact chain-of-thought disclosure. The **Thinking** disclosure renders
+Markdown, can be opened or closed without interrupting the response, and keeps the user's collapsed state when
+another message starts.
 
-Each completed response includes a circular context-window meter. Select it to open request details when
-the provider reports them: input, output, cached-input and reasoning tokens, used and remaining context,
-time to first output, total duration, output speed, agent-step timing, and cost. OpenRouter-reported cost
-is labeled as reported.
-While the next response is still streaming, the meter keeps the last completed reading for the same model and
-context capacity instead of briefly showing an incorrect zero. It switches to the new request when token usage
-arrives; incompatible model capacities are never mixed.
-OpenRouter responses request inline usage and routing metadata. When request details are opened, Homarr also
-loads the server-side generation record for each model step and briefly polls while OpenRouter finishes
-processing it. The details separate Homarr's end-to-end timing from OpenRouter's provider latency,
-generation time, and provider throughput, and can include normalized and native token counts, moderation
-latency, cache discount, fallback count, service tier, data region, BYOK status, routed provider, generation
-identifier, exact cost, and upstream inference cost. Provider credentials remain server-side; the browser
-can request only generation identifiers already stored on a conversation owned by the signed-in user and
-signed by the Homarr server for that user and conversation. Successful generation lookups are cached
-briefly so polling and multi-step requests do not repeatedly query OpenRouter for the same record.
+A compact context control beside the model selector gives a quick glance at cumulative conversation tokens and
+cost. Its popover keeps the latest complete context reading while a new response starts and lists every request
+turn with its model, provider, input, output, cached-input and reasoning tokens, context use, duration, speed,
+agent steps, routing details, and cost when reported. Closing and reopening the popover reads persisted
+conversation metadata instead of resetting the display to zero.
+
+Each assistant response places a small provider logo in the same stable action toolbar as copy, export,
+feedback, and regenerate. Hovering the logo shows the provider, exact model, timing, throughput, and cost without
+adding another metadata row to the transcript. Branch navigation occupies its own adjacent group, so switching
+between response versions never pushes the response actions off-screen.
+
+OpenRouter responses request inline usage and routing metadata. Opening detailed turn data also loads the
+server-side generation record for its model steps and briefly polls while OpenRouter finishes processing it.
+The details separate Homarr's end-to-end timing from OpenRouter's provider latency, generation time, and provider
+throughput, and can include normalized and native token counts, moderation latency, cache discount, fallback count,
+service tier, data region, BYOK status, routed provider, generation identifier, exact cost, and upstream inference
+cost. Provider credentials remain server-side; the browser can request only generation identifiers already stored
+on a conversation owned by the signed-in user and signed by the Homarr server for that user and conversation.
+Successful generation lookups are cached briefly so polling and multi-step requests do not repeatedly query
+OpenRouter for the same record.
 When a provider omits cost but model discovery includes prompt and completion pricing, Homarr labels the
 calculated value as estimated. Missing provider data is shown as not reported rather than inferred.
 
@@ -193,7 +207,12 @@ Custom-widget tools let an administrator list, inspect, create, and update defin
 form's **Design with AI** action sends a focused request into the current conversation, where the assistant
 can propose the matching mutation and use the same approval controls. Existing stored secret values are
 reported only as configured/not configured and are preserved on update unless replacements are explicitly
-provided.
+provided. Before authoring, the assistant lazily loads the complete installed Custom Widget skill, including
+all bundled schema, runtime, and security references. Multiline JSX uses `templateLines` to avoid fragile streamed
+JSON escaping. The assistant validates the candidate, creates a preview, executes every returned preview query,
+checks the actual HTTP status and response shape, and iterates before saving. Preview and saved-definition results
+include safe Homarr paths that open in the assistant without a page reload. When placement is still a choice, the
+assistant uses the structured question UI instead of ending with a prose question.
 
 The shield control in the conversation header can enable automatic approvals for the current conversation.
 While enabled, Homarr accepts every affirmative approval step as it arrives: protected mutations are approved,
@@ -207,8 +226,9 @@ When the assistant genuinely needs missing information or a choice, it can pause
 question. Each proposed answer is visibly categorized as **Confirm**, **Decline**, or **Option**, so the effect
 of automatic approval is unambiguous. Users can select one of the proposed answers or choose **Other** and
 enter their own response. While a question is unanswered, its controls stay in a dedicated area immediately
-above the composer instead of requiring the user to find the tool call in the transcript. The answered choice
-then remains in the conversation history.
+above the composer instead of requiring the user to find the tool call in the transcript. The question temporarily
+uses the available conversation body, with its own scrolling when necessary, rather than squeezing a long option
+list into a short dock beside part of the transcript. The answered choice then remains in the conversation history.
 Submitting the answer resumes the same agent run automatically. The minimized activity bar shows the
 question or approval that needs attention and opens directly back to the request. While an answer, app
 form, or mutation approval is pending, the composer preserves its draft but does not replace the pending

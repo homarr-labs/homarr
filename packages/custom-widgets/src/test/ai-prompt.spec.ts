@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { buildCustomWidgetAiPrompt, CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION } from "../core/ai-prompt";
+import {
+  buildCustomWidgetAiPrompt,
+  CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION,
+  CUSTOM_WIDGET_MCP_AUTHORING_PROMPT,
+} from "../core/ai-prompt";
 
 describe("AI prompt", () => {
   it("is self-contained, request-first, and compact", () => {
@@ -34,6 +38,18 @@ describe("AI prompt", () => {
     expect(prompt).not.toContain("homarr://");
     expect(prompt).not.toContain("OFFLINE BUNDLE");
     expect(prompt.match(/Recommended components:/gu)).toHaveLength(1);
+  });
+
+  it("makes the connected MCP workflow load the complete skill and test every preview query", () => {
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("First call customWidget_getSkill");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_validate");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_previewCreate");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_previewQuery once for every query");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_getSharedProps");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Prefer templateLines");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf("customWidget_previewQuery")).toBeLessThan(
+      CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf("customWidget_create"),
+    );
   });
 
   it("redacts secrets and preserves the final instruction when optional context is large", () => {

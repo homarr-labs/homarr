@@ -2100,7 +2100,8 @@
       "dismissQuote": "Remove quote",
       "attachments": {
         "add": "Attach an image or document",
-        "errorTitle": "Attachment could not be added"
+        "errorTitle": "Attachment could not be added",
+        "imageUnsupported": "The selected model does not support image input."
       },
       "mentions": {
         "menu": "Add Homarr context",
@@ -2170,6 +2171,10 @@
       },
       "toolInput": "Input",
       "toolOutput": "Output",
+      "toolNavigation": {
+        "openPreview": "Open preview",
+        "openWidget": "Open widget"
+      },
       "webSearch": {
         "title": "Web search",
         "completed": "OpenRouter searched the live web for this response.",
