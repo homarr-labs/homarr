@@ -2,13 +2,16 @@ import { describe, expect, it } from "vitest";
 
 import {
   CUSTOM_WIDGET_STARTER,
+  customWidgetAuthoringDefinitionSchema,
   customWidgetDefinitionSchema,
+  customWidgetUpdateSchema,
   customJsxRequestSchema,
   getCustomWidgetDefaultOptions,
   getCustomWidgetSecretRequirements,
   getCustomWidgetSourceSetups,
   hasSameCustomWidgetSourceAuthentication,
   applyCustomWidgetSourceSetup,
+  normalizeCustomWidgetAuthoringDefinition,
 } from "../core";
 
 describe("lean Custom Widget schema", () => {
@@ -59,6 +62,56 @@ describe("lean Custom Widget schema", () => {
   it("defaults omitted options to an empty map", () => {
     const { options: _options, ...withoutOptions } = CUSTOM_WIDGET_STARTER;
     expect(customWidgetDefinitionSchema.parse(withoutOptions).options).toEqual({});
+  });
+
+  it("accepts and normalizes realistic multiline JSX without JSON string escaping", () => {
+    const { template: _template, ...definition } = CUSTOM_WIDGET_STARTER;
+    const templateLines = [
+      '<Stack gap="sm">',
+      '  <Group justify="space-between">',
+      "    <Text fw={700}>Upcoming fixtures</Text>",
+      '    <Badge color="blue">{(data.fixtures ?? []).length} matches</Badge>',
+      "  </Group>",
+      "  {(data.fixtures ?? []).map(fixture => (",
+      '    <Paper key={fixture.id} p="sm" withBorder>',
+      "      <Text>{fixture.home_team.name} vs {fixture.away_team.name}</Text>",
+      "    </Paper>",
+      "  ))}",
+      "</Stack>",
+    ];
+    const candidate = customWidgetAuthoringDefinitionSchema.parse({
+      ...definition,
+      requests: { fixtures: { path: "/fixtures" } },
+      templateLines,
+    });
+
+    expect(normalizeCustomWidgetAuthoringDefinition(candidate).template).toBe(templateLines.join("\n"));
+  });
+
+  it("requires exactly one authoring template representation", () => {
+    expect(
+      customWidgetAuthoringDefinitionSchema.safeParse({ ...CUSTOM_WIDGET_STARTER, templateLines: ["<Text />"] })
+        .success,
+    ).toBe(false);
+    const { template: _template, ...withoutTemplate } = CUSTOM_WIDGET_STARTER;
+    expect(customWidgetAuthoringDefinitionSchema.safeParse(withoutTemplate).success).toBe(false);
+  });
+
+  it("keeps omitted update fields absent when using templateLines", () => {
+    expect(customWidgetUpdateSchema.parse({ id: "widget", templateLines: ["<Text />"] })).toEqual({
+      id: "widget",
+      templateLines: ["<Text />"],
+    });
+  });
+
+  it("applies the template size limit before joining templateLines", () => {
+    const { template: _template, ...definition } = CUSTOM_WIDGET_STARTER;
+    expect(
+      customWidgetAuthoringDefinitionSchema.safeParse({
+        ...definition,
+        templateLines: Array.from({ length: 6 }, () => "x".repeat(10_000)),
+      }).success,
+    ).toBe(false);
   });
 
   it("rejects source IDs that collide case-insensitively", () => {

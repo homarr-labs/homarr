@@ -99,6 +99,30 @@ describe("MCP v2 protocol", () => {
     expect(response.result.content).toEqual([{ type: "text", text: '{"message":"hello"}' }]);
   });
 
+  test("passes the tool name to safe error formatting", async () => {
+    const formatToolError = vi.fn((_error: unknown, toolName: string) => `${toolName} input was invalid`);
+    const handler = createMcpProtocolHandler({
+      caller: {
+        echo: vi.fn(async () => {
+          throw new Error("private details");
+        }),
+      },
+      tools: [echoTool],
+      version: "1.0.0",
+      instructions: "Test server",
+      formatToolError,
+    });
+    const response = await parseResponse(
+      await handler.fetch(createRequest("tools/call", { name: "echo", arguments: { message: "hello" } }, "echo")),
+    );
+
+    expect(formatToolError).toHaveBeenCalledWith(expect.any(Error), "echo");
+    expect(response.result).toMatchObject({
+      isError: true,
+      content: [{ type: "text", text: '{"error":"echo input was invalid"}' }],
+    });
+  });
+
   test("keeps stateless compatibility with 2025 Streamable HTTP clients", async () => {
     const { handler } = createTestHandler();
     const request = new Request("http://homarr.test/api/mcp", {

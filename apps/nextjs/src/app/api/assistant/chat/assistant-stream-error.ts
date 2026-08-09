@@ -29,6 +29,9 @@ export const getAssistantStreamErrorMessage = (error: unknown) => {
   const statusCode = getStatusCode(error);
   const message = getErrorMessage(error);
 
+  if (/AI_InvalidToolInputError|Invalid input for tool|\bError in input stream\b/iu.test(message)) {
+    return "The model produced incomplete tool input, so Homarr did not run the action. Try again; multiline custom-widget JSX will be sent as templateLines.";
+  }
   if (
     /\bmodel(?:\s+id)?\b/iu.test(message) &&
     /\b(invalid|unknown|unavailable|not found|not a valid)\b/iu.test(message)

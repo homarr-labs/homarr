@@ -21,6 +21,7 @@ import { customJsxExamples, getCustomWidgetJsonSchema } from "@homarr/custom-wid
 import { db } from "@homarr/db";
 
 import { getPackageVersion } from "~/versions/package-reader";
+import { getSafeAssistantToolError } from "../assistant/chat/assistant-tool-error";
 import { extractMcpTools } from "./_extract-tools";
 import { createMcpProtocolHandler } from "./_protocol";
 
@@ -204,7 +205,8 @@ const SAFE_ERROR_MESSAGES: Record<string, string> = {
   PRECONDITION_FAILED: "A precondition for this operation was not met",
 };
 
-function sanitizeErrorMessage(error: unknown): string {
+function sanitizeErrorMessage(error: unknown, toolName: string): string {
+  if (toolName.startsWith("customWidget_")) return getSafeAssistantToolError(error, { toolName });
   if (error instanceof Error && "code" in error) {
     const trpcCode = (error as Error & { code: string }).code;
     const safeMessage = SAFE_ERROR_MESSAGES[trpcCode];

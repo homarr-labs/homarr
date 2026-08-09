@@ -13,6 +13,7 @@ import classes from "./assistant-panel.module.css";
 import { AssistantConversationSurface } from "./assistant-panel";
 import { getPendingAssistantAction } from "./assistant-pending-action";
 import { useAssistantPreferences, useHomarrAssistant } from "./assistant-context";
+import { AssistantComposerSurfaceProvider } from "./assistant-runtime-provider";
 
 export const AssistantBoardWidget = (props: WidgetComponentProps<"assistant">) => {
   const assistant = useHomarrAssistant();
@@ -21,7 +22,11 @@ export const AssistantBoardWidget = (props: WidgetComponentProps<"assistant">) =
     return <UnavailableAssistantWidget description={assistant.unavailableDescription} />;
   }
 
-  return <EnabledAssistantBoardWidget {...props} />;
+  return (
+    <AssistantComposerSurfaceProvider surfaceId={`board-widget-${props.itemId ?? "preview"}`}>
+      <EnabledAssistantBoardWidget {...props} />
+    </AssistantComposerSurfaceProvider>
+  );
 };
 
 const EnabledAssistantBoardWidget = ({ options, width, height, isEditMode }: WidgetComponentProps<"assistant">) => {
