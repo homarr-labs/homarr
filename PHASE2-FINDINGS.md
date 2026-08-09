@@ -328,10 +328,15 @@ What the server heap is actually made of (141 MiB used, 259 MiB RSS):
 fix catalog measured at zero, and why `serverExternalPackages` — which removes code from
 the boot-loaded bundle — was the only lever that moved idle memory.
 
-Within that, **7.86 MiB is literal duplicate copies** of identical chunk sources: the same
-module inlined into several Turbopack chunks and retained once per chunk. Worst offenders
-were `@ioredis/commands`' command table (in 10 chunks, resident 6×, 2.07 MiB wasted) and
-`got`/`@octokit/request-error` (2.1 MiB each).
+> **Correction (later round).** An earlier version of this section claimed "7.86 MiB is
+> literal duplicate copies" of identical chunk sources. That figure was wrong. It came from
+> grouping heap-snapshot strings by content, but **V8 truncates string contents to ~1 KiB
+> when serialising a snapshot**, so the comparison only ever saw each string's first
+> kilobyte and reported near-identical chunks as identical. Hashing the real files found
+> **zero byte-identical duplicates among all 3,055 `.next/server/**/*.js` files (77.6 MiB)**.
+> The chunks that looked like copies are distinct files that happen to begin with the same
+> vendored module. The real doubling has a different cause — see "Why the source costs
+> twice what it should" below.
 
 `@ioredis/commands` is now external, which removes it from all 10 chunks. Recorded as
 **bundle hygiene, not a memory win**: idle went 89.7 → 89.4 MiB, inside noise, and
@@ -354,6 +359,234 @@ left are both large:
    source. This is the same lever that produced the −37% idle result.
 2. **Stop the App Router re-rendering every second** (see above). That governs the
    browser side, which is where the 650 MB peak lives.
+
+## Full attribution — every megabyte, top to bottom
+
+Everything above measured *totals*. This section measures *composition*: each layer is
+reconciled against the one above it, so nothing hides in a rounding gap. Tooling:
+`scripts/benchmarks/attribute-memory.mts` (cgroup → processes → mappings → V8 spaces →
+loaded code) with `scripts/benchmarks/memory-probe.cjs` injected as a `--require` preload.
+
+The probe is diagnostics-only and is never in a shipped image: the harness mounts
+`scripts/benchmarks` at `/probe` and sets `NODE_OPTIONS=--require /probe/memory-probe.cjs`.
+
+### Layer 1 — the container is one process
+
+| process | RSS at steady state |
+| --- | --- |
+| **next-server** | **188.1 MiB (95%)** |
+| redis-server | 4.8 MiB |
+| nginx (2 procs) | 3.7 MiB |
+| shells | 1.3 MiB |
+
+Redis and nginx are rounding errors. Every question about Homarr's memory is a question
+about one Node process.
+
+### Layer 2 — where that process's RSS lives
+
+Measured from `/proc/<pid>/smaps`. Anonymous mappings cannot be told apart by size, so they
+are classified by signature: V8 allocates its heap in **256 KiB pages** (`kRegularPageSize`),
+and pthread reserves ~8 MiB per thread stack.
+
+At boot idle (139 MiB RSS):
+
+| region | RSS | what it is |
+| --- | --- | --- |
+| **node binary (code)** | **54.3 MiB** | the Node runtime's own text pages — **file-backed and shared**, so it counts in RSS but *not* in cgroup `anon` |
+| V8 heap pages (256 KiB each) | 47.8 MiB | the JS heap |
+| native malloc / small V8 spaces | 28.2 MiB | musl arenas, Buffers |
+| V8 code range / trusted space | 4.8 MiB | |
+| JIT code (anonymous executable) | 1.8 MiB | machine code V8 compiled |
+| better_sqlite3.node | 2.0 MiB | the only native addon that matters |
+| thread stacks | 0.1 MiB resident | 48 MiB *reserved*, essentially untouched |
+
+**This explains the single most confusing number in the whole exercise:** RSS 139 MiB but
+cgroup `anon` only 89 MiB. The 54 MiB gap is the Node binary itself. It is reclaimable page
+cache shared with every other Node process on the host, so it is real RSS but not a real
+cost — which is exactly why `anon` is the metric this PR reports.
+
+Address space reserved but not committed: **16.8 GiB**. V8 claims its cage up front. It is
+not memory.
+
+### Layer 3 — inside the JS heap
+
+| V8 space | boot idle | after real use |
+| --- | --- | --- |
+| old_space | 42.0 MiB | **97.2 MiB** |
+| large_object_space | 22.7 MiB | 27.3 MiB |
+| code_space + code_large | 1.9 MiB | 10.9 MiB |
+| trusted_space | 3.9 MiB | 8.1 MiB |
+| new_space | 0.0 MiB | 0.2 MiB |
+| external (Buffers) | 4.1 MiB | 22.0 MiB |
+
+### Layer 4 — what those objects *are*
+
+From a post-GC heap snapshot at steady state (143.8 MiB heapUsed, 1.39M nodes):
+
+| bucket | size | share of heap |
+| --- | --- | --- |
+| **bundled JS source retained as strings** | **41.0 MiB** | **28%** |
+| ArrayBuffer backing stores | 17.6 MiB | 12% |
+| object property/element arrays | 16.4 MiB | 11% |
+| other strings (translations, ids) | 10.3 MiB | 7% |
+| closures | 5.7 MiB | 4% |
+| plain objects | 4.5 MiB | 3% |
+| shapes/maps/descriptors | 6.6 MiB | 5% |
+| compiled code metadata | ~12 MiB | 8% |
+
+Confirmed again, with a dominator-tree analysis this time
+(`scripts/benchmarks/analyze-heap-dominators.mjs`, real retained sizes rather than shallow
+histograms): the largest single retainers are `code:` nodes named after chunk files, each
+holding **0.5–1.4 MiB**, i.e. the Script objects keeping their own source alive. V8 retains
+a script's source string for as long as any function in it might still be lazily compiled.
+
+**The memory is the code, not cached data.**
+
+### Why the source costs twice what it should
+
+`.next/server` chunks loaded at boot are 21.7 MiB on disk, but the heap holds 32.4 MiB of
+source strings. The gap is not duplication — it is character width.
+
+A V8 string is either one byte per character (Latin-1) or two. **One character above U+00FF
+anywhere in a file forces the entire source string to two bytes.**
+
+| loaded JS | files | on disk | heap cost |
+| --- | --- | --- | --- |
+| pure Latin-1 | 1,025 | 12.25 MiB | 12.25 MiB |
+| contains ≥1 char > U+00FF | **80** | 9.45 MiB | **18.91 MiB** |
+
+Predicted total 31.16 MiB against 32.43 MiB measured — within 4%.
+
+Proven directly rather than inferred, by reading one chunk as shipped and again with its
+non-Latin-1 characters replaced (identical length):
+
+```
+_049nb9n._.js  538,519 chars, 2 of them non-Latin-1
+  as shipped      : 1053 KiB per copy -> 2.00 bytes/char
+  ascii variant   :  526 KiB per copy -> 1.00 bytes/char
+```
+
+**Two characters cost 527 KiB.** The offenders are almost all trivia in dependencies:
+
+| chunk | non-ASCII chars | the actual characters |
+| --- | --- | --- |
+| `_049nb9n._.js` (+2 siblings) | 2 | `process.versions.icu?"✅":"Y "` |
+| `[root-of-the-server]__1ipwvlq._.js` | 13,141 | Next's log symbols `○ ⨯ ⚠` |
+| `_1ew9xg8._.js` (+ssr twin) | 70,175 | a UTF-8 self-test containing `💩` |
+| zod chunks ×4 | 13,137 | `✖ ${i.message}` |
+| `app-page-turbo.runtime.prod.js` | 13 | an ellipsis `…` |
+| `[root-of-the-server]__1xyzm2f._.js` | 13 | **an em-dash in Homarr's own MCP instructions** |
+
+Total recoverable: **~9.45 MiB of heap** (≈10% of idle `anon`), by emitting server bundles
+with `\uXXXX` escapes instead of raw characters. Not implemented here — it means rewriting
+minified vendor output at build time, and the safety argument needs to be made properly
+before that ships. Recorded as a measured, mechanistically understood opportunity.
+
+## The peak: one integration was allocating 46 MiB per refresh
+
+The steady state above is ~237 MiB RSS. The *peak* during a 4-tab session was 429 MiB RSS /
+539 MiB container, and that peak is a completely different phenomenon.
+
+Per-stage V8 accounting (`scripts/benchmarks/analyze-probe-stages.mjs`):
+
+| stage | rss | old_space | external | **arrayBuffers** |
+| --- | --- | --- | --- | --- |
+| boot idle | 138.6 | 42.0 | 4.1 | 0.3 |
+| board loaded | 254.9 | 95.3 | 22.9 | 3.0 |
+| nav ×3 | 361.9 | 122.5 | 24.7 | 4.8 |
+| **4 tabs, 2 boards** | **429.3** | **152.6** | **114.3** | **94.3** |
+| after 90 s idle | 237.0 | 97.2 | 22.0 | **2.0** |
+
+`arrayBuffers` goes **0.3 → 94.3 → 2.0**. It is entirely transient — which is precisely why
+the app appears to "oscillate between 835 MB and 400 MB" and never settles at the high mark.
+Soak growth was **−102 MiB/hour**: there is no leak.
+
+Tracking large `Buffer` allocations by stack (`HOMARR_PROBE_TRACK_BUFFERS`) put **48.3 MiB
+in 16 allocations at one site, with a single allocation of 46.3 MiB**:
+
+```
+T (/app/apps/nextjs/.next/server/chunks/_1q3xovl._.js:92:32374)
+process.processTicksAndRejections
+```
+
+That function is undici's `fullyReadBody` — the machinery behind `Response.json()`:
+
+```js
+async function T(A,e,t){ let r=[],s=0; for(;;){ let{done:i,value:o}=await A.read();
+  if(i) return void e(Buffer.concat(r,s)); r.push(o), s+=o.length } }
+```
+
+It holds the chunk list *and* the joined copy at the same moment, so a body of size N costs
+~2N at the instant it completes. Capturing the bytes identified the response immediately:
+
+```
+46.3 MiB assembled from 3,946 socket chunks
+{"data":[{"id":"1251f6db…","websiteId":"f133f10c…","sessionId":"9e02d227…","createdAt":"2026-08-09T…
+```
+
+**Umami.** And the cause was in plain source — two call sites requesting
+`pageSize: "100000"`, i.e. up to 100,000 raw event records:
+
+1. `getEventNamesAsync` downloaded every raw event of the last 30 days **to collect a
+   handful of distinct event name strings**.
+2. `getWebsiteEventTimeSeriesAsync` downloaded them to bucket them into a time series.
+3. `getMultiEventTimeSeriesAsync` ran (2) for **every tracked event name concurrently** via
+   `Promise.all`, multiplying the resident pages by the number of events.
+
+A board with 3 Umami widgets and several tracked events therefore had several ~46 MiB bodies
+in flight at once, each briefly doubled, plus ~100k parsed objects per response landing in
+old_space. That is the 500–880 MB.
+
+### The fix
+
+| call site | before | after |
+| --- | --- | --- |
+| `getEventNamesAsync` | list 100k raw events, collect distinct names | aggregated `/metrics?type=event`, one row per name |
+| `getWebsiteEventTimeSeriesAsync` | one page of up to 100k records | pages of 1,000, folded into buckets and released |
+| `getMultiEventTimeSeriesAsync` | `Promise.all` over all event names | sequential |
+
+The paging path keeps the existing dual-shape handling: instances that return aggregated
+`{x,y}` buckets still answer in one request, and an instance that accepts `pageSize` but
+ignores `page` is detected (repeated first record id) and stopped rather than double-counted.
+Hitting the page ceiling logs a warning instead of silently undercounting.
+
+Covered by `packages/integrations/src/umami/test/umami-integration.spec.ts` (6 tests, new —
+there were none).
+
+### Result
+
+Alternated runs, 2 before and 2 after, same harness and workload, `before` = branch HEAD
+`f707f6433`, `after` = HEAD + this change. Per-run values are given because the harness's
+own spread is what decides whether a difference means anything.
+
+| metric | before | after | change | before spread / after spread |
+| --- | --- | --- | --- | --- |
+| **peak container** | 498.9 MiB | **398.5 MiB** | **−20%** | [461.6, 536.3] / [387.0, 410.0] |
+| **peak node RSS** | 452.4 MiB | **353.3 MiB** | **−22%** | [432.7, 472.2] / [355.6, 350.9] |
+| **peak during 4 tabs** | 498.5 MiB | **356.3 MiB** | **−29%** | [460.8, 536.3] / [341.8, 370.8] |
+| **peak arrayBuffers** | 95.8 MiB | **6.6 MiB** | **−93%** | [95.7, 95.8] / [6.4, 6.7] |
+| largest single allocation | 46.4 MiB | **2.4 MiB** | −95% | identical in both runs |
+| post-soak steady state | 324.2 MiB | 322.5 MiB | −1% | [337.7, 310.7] / [280.7, 364.4] |
+| boot idle | 119.4 MiB | 125.8 MiB | +5% | [130.0, 108.8] / [152.8, 98.8] |
+| median board load | 526 ms | 523 ms | −1% | [389, 663] / [401, 645] |
+| CPU over the run | 19.5 s | 20.4 s | +4% | [19.6, 19.4] / [20.3, 20.4] |
+
+Every peak metric separates cleanly — the two sides' ranges do not overlap. Two rows do
+**not** support a claim and are listed so they are not read as one:
+
+- **post-soak steady state is inconclusive.** One "after" run finished at 364.4 MiB, above
+  a "before" run at 310.7. This change targets a transient spike, so a steady-state effect
+  was not expected.
+- **boot idle is noise.** The spread is ±20 MiB on *identical* code (before: 130.0 vs
+  108.8), which is wider than the apparent difference. Umami's code is not even loaded at
+  boot; it arrives when a board containing the widget renders.
+
+The cost is **+4% CPU**, from turning one large request into several smaller ones. Board
+load latency did not regress.
+
+A prediction worth recording, because it confirms the mechanism rather than just the
+outcome: at `pageSize=1000` the largest allocation measured 0.7 MiB, and at 5,000 it
+measured 2.4 MiB — 5× the page size, 3.4× the bytes, exactly as a per-page bound implies.
 
 ## Measured but not pursued
 

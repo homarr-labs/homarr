@@ -46,6 +46,22 @@ const soakIntervalMs = Number(process.env.STRESS_SOAK_INTERVAL_MS ?? 20_000);
 const keepContainer = process.env.STRESS_KEEP_CONTAINER === "true";
 /** Dump a browser heap snapshot here (analyse with analyze-react-fibers.mjs). */
 const clientSnapshotPath = process.env.STRESS_CLIENT_SNAPSHOT;
+/**
+ * Extra `docker run` wiring, so a diagnostics-only preload can be injected into a
+ * shipped image without rebuilding it. Used to mount scripts/benchmarks at /probe and
+ * point NODE_OPTIONS at memory-probe.cjs, which is what makes per-V8-space and
+ * per-module attribution possible at every capture stage.
+ *   STRESS_MOUNT="hostPath:containerPath:ro"  (comma-separated for several)
+ *   STRESS_ENV="KEY=value,KEY2=value2"
+ */
+const extraMounts = (process.env.STRESS_MOUNT ?? "")
+  .split(",")
+  .map((entry) => entry.trim())
+  .filter(Boolean);
+const extraEnv = (process.env.STRESS_ENV ?? "")
+  .split(",")
+  .map((entry) => entry.trim())
+  .filter(Boolean);
 const outputDirectory = path.resolve(process.env.STRESS_OUTPUT ?? `.bench/stress/${label}`);
 
 const password = process.env.STRESS_PASSWORD ?? "demodemo";
@@ -68,11 +84,45 @@ let startedAt = Date.now();
 
 const log = (message: string) => console.log(`[stress:${label}] ${message}`);
 
+/** Port the injected memory probe serves JSON on, if one was wired up via STRESS_ENV. */
+const probePort = /HOMARR_PROBE_PORT=(\d+)/.exec(extraEnv.join(","))?.[1];
+
+/**
+ * Pulls the probe's V8-space and loaded-module attribution alongside the coarse memory
+ * numbers. Saved per stage so the *delta* between stages is attributable — "the 90 MiB
+ * that appeared at sign-in was old-space objects, not code" is a different problem from
+ * "the code got bigger", and only per-stage capture can tell them apart.
+ */
+const fetchProbeAsync = async (probePath: string) => {
+  const script = `fetch("http://127.0.0.1:${probePort}${probePath}").then((r) => r.text()).then((t) => console.log(t)).catch((e) => console.log(JSON.stringify({ error: String(e && e.message) })));`;
+  // NODE_OPTIONS is cleared so this helper does not also run the server's --require preload.
+  const { stdout } = await execFileAsync("docker", ["exec", "-e", "NODE_OPTIONS=", containerName, "node", "-e", script], {
+    maxBuffer: 32 * 1024 * 1024,
+  }).catch((error: Error) => ({ stdout: JSON.stringify({ error: error.message }) }));
+  return stdout;
+};
+
+const captureProbeAsync = async (name: string) => {
+  if (!probePort) return;
+  await writeFile(path.join(outputDirectory, `${name}.probe.json`), await fetchProbeAsync("/"));
+  // Buffer allocation sites, when tracking is enabled. Cumulative, so the useful reading is
+  // the difference between two stages: that isolates what one workload allocated.
+  const buffers = await fetchProbeAsync("/buffers");
+  if (!buffers.includes('"disabled"')) {
+    await writeFile(path.join(outputDirectory, `${name}.buffers.json`), buffers);
+  }
+  const fetches = await fetchProbeAsync("/fetches");
+  if (!fetches.includes('"disabled"')) {
+    await writeFile(path.join(outputDirectory, `${name}.fetches.json`), fetches);
+  }
+};
+
 const captureAsync = async (name: string) => {
   const { stdout } = await execFileAsync("docker", ["exec", containerName, "sh", "-c", stressMemoryScript], {
     maxBuffer: 8 * 1024 * 1024,
   });
   await writeFile(path.join(outputDirectory, `${name}.txt`), stdout);
+  await captureProbeAsync(name);
   const checkpoint = parseStressSnapshot(name, Date.now() - startedAt, stdout);
   checkpoints.push(checkpoint);
   log(`${name}: container=${toMiB(checkpoint.container.currentBytes)} MiB`);
@@ -386,6 +436,8 @@ const main = async () => {
   // Escape hatch for A/B-ing V8 flags against an image whose run.sh does not read
   // HOMARR_MAX_OLD_SPACE_SIZE (e.g. measuring the heap cap against an older image).
   if (nodeOptions) runArgs.push("-e", `NODE_OPTIONS=${nodeOptions}`);
+  for (const mount of extraMounts) runArgs.push("-v", mount);
+  for (const entry of extraEnv) runArgs.push("-e", entry);
   runArgs.push(image);
 
   await execFileAsync("docker", runArgs);
