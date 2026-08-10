@@ -4,6 +4,7 @@ import { Badge, Box, Group, Stack, Text, ThemeIcon, Tooltip } from "@mantine/cor
 import { IconLayoutGrid } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
+import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 import { widgetCatalogIcons } from "@homarr/widgets/catalog";
@@ -17,7 +18,7 @@ interface Props {
   board: Board;
   layout: BoardLayout;
   layouts: BoardLayout[];
-  sourceLayout: Pick<BoardLayout, "id" | "columnCount">;
+  sourceLayout: BoardLayout;
   apps: RouterOutputs["app"]["byIds"];
 }
 
@@ -31,8 +32,8 @@ export const LayoutPreview = ({ board, layout, layouts, sourceLayout, apps }: Pr
   const previewWidth = `${(representativeWidth / largestRepresentativeWidth) * 100}%`;
   const appsById = new Map(apps.map((app) => [app.id, app]));
   const rootSections = board.sections
-    .filter((section) => section.kind !== "dynamic")
-    .toSorted((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset);
+    .filter((section) => section.kind === "empty")
+    .toSorted((sectionA, sectionB) => sectionA.xOffset - sectionB.xOffset);
 
   return (
     <Stack gap={6} align="center" w="100%">
@@ -44,7 +45,7 @@ export const LayoutPreview = ({ board, layout, layouts, sourceLayout, apps }: Pr
           {layout.columnCount} {t("board.setting.section.layout.preview.columns")}
         </Text>
       </Group>
-      <Box w={previewWidth} miw="min(11rem, 100%)" maw="100%" className={classes.canvas}>
+      <Box w={{ base: "100%", md: `max(${previewWidth}, 14rem)` }} maw="100%" className={classes.canvas}>
         {elements.length === 0 ? (
           <Text size="xs" c="dimmed" ta="center" py="xl">
             {t("board.setting.section.layout.preview.empty")}
@@ -53,18 +54,14 @@ export const LayoutPreview = ({ board, layout, layouts, sourceLayout, apps }: Pr
           <Stack gap="xs">
             {rootSections.map((section) => {
               const sectionElements = elements.filter((element) => element.sectionId === section.id);
-              if (sectionElements.length === 0) return null;
+              const columnCount = getBoardLaneColumnCount(layout, getRootSectionLane(section.xOffset));
+              if (sectionElements.length === 0 || columnCount === 0) return null;
 
               return (
                 <Stack key={section.id} gap={4} className={classes.section}>
-                  {section.kind === "category" && (
-                    <Text size="xs" fw={600}>
-                      {section.name}
-                    </Text>
-                  )}
                   <Box
                     className={classes.grid}
-                    style={{ gridTemplateColumns: `repeat(${layout.columnCount}, minmax(0, 1fr))` }}
+                    style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}
                   >
                     {sectionElements.map((element) => {
                       const item =
@@ -72,15 +69,15 @@ export const LayoutPreview = ({ board, layout, layouts, sourceLayout, apps }: Pr
                       const appId =
                         item?.kind === "app" && typeof item.options.appId === "string" ? item.options.appId : null;
                       const app = appId ? appsById.get(appId) : undefined;
-                      const dynamicSection =
+                      const container =
                         element.type === "section"
                           ? board.sections.find((candidate) => candidate.id === element.id)
                           : undefined;
-                      const dynamicSectionLabel =
-                        dynamicSection?.kind === "dynamic" && dynamicSection.options.title
-                          ? dynamicSection.options.title
-                          : t("board.setting.section.layout.preview.dynamicSection");
-                      const label = app?.name ?? (item ? t(`widget.${item.kind}.name`) : dynamicSectionLabel);
+                      const containerLabel =
+                        container?.kind === "container" && container.options.title
+                          ? container.options.title
+                          : t("section.container.untitled");
+                      const label = app?.name ?? (item ? t(`widget.${item.kind}.name`) : containerLabel);
                       const WidgetIcon = item ? widgetCatalogIcons[item.kind] : IconLayoutGrid;
 
                       return (
@@ -88,7 +85,7 @@ export const LayoutPreview = ({ board, layout, layouts, sourceLayout, apps }: Pr
                           <Box
                             role="img"
                             aria-label={label}
-                            className={`${classes.tile} ${element.type === "section" ? classes.dynamicTile : ""}`}
+                            className={`${classes.tile} ${element.type === "section" ? classes.containerTile : ""}`}
                             style={{
                               gridColumn: `${element.xOffset + 1} / span ${element.width}`,
                               gridRow: `${element.yOffset + 1} / span ${element.height}`,
