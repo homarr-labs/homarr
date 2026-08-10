@@ -47,6 +47,13 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_previewQuery once for every query");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_createFromPreview");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_getSharedProps");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("at most eight named component documents");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("at most four after loading a complete example");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Treat preview data as the binding contract");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("freshness context");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Make initial states actionable");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("compact narrow-tile rows");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Label standalone icons");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Prefer templateLines");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf("customWidget_previewQuery")).toBeLessThan(
       CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf("customWidget_create"),

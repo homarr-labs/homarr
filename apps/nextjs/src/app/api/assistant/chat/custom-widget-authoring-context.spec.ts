@@ -6,9 +6,12 @@ import { getCustomWidgetSkill, getCustomWidgetSkillContent } from "@homarr/custo
 import { getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 
 import {
+  createCustomWidgetComponentDocumentBudget,
   createCustomWidgetDynamicContextController,
   getCustomWidgetAuthoringContext,
   isCustomWidgetAuthoringToolName,
+  MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS,
+  MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS_WITH_EXAMPLE,
   needsCustomWidgetAuthoringContext,
   preloadedCustomWidgetToolNames,
   prunePreloadedCustomWidgetModelMessages,
@@ -189,6 +192,59 @@ describe("createCustomWidgetDynamicContextController", () => {
         steps: [{ toolCalls: [{ toolName: "customWidget_getSkill" }] }],
       }),
     ).toBeUndefined();
+  });
+
+  test("removes component documentation after the targeted retrieval budget is exhausted", () => {
+    const prepareContext = createCustomWidgetDynamicContextController({
+      isAdmin: true,
+      baseInstructions: "Base instructions",
+      availableToolNames: ["customWidget_getComponent", "customWidget_validate", "customWidget_previewCreate"],
+    });
+    const toolCalls = Array.from({ length: MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS }, () => ({
+      toolName: "customWidget_getComponent",
+    }));
+
+    expect(prepareContext({ instructions: "Base instructions", messages: [], steps: [{ toolCalls }] })).toMatchObject({
+      activeTools: ["customWidget_validate", "customWidget_previewCreate"],
+    });
+  });
+
+  test("uses a smaller component budget after a complete example is loaded", () => {
+    const prepareContext = createCustomWidgetDynamicContextController({
+      isAdmin: true,
+      baseInstructions: "Base instructions",
+      availableToolNames: ["customWidget_getComponent", "customWidget_getExample", "customWidget_validate"],
+    });
+    const toolCalls = [
+      { toolName: "customWidget_getExample" },
+      ...Array.from({ length: MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS_WITH_EXAMPLE }, () => ({
+        toolName: "customWidget_getComponent",
+      })),
+    ];
+
+    expect(prepareContext({ instructions: "Base instructions", messages: [], steps: [{ toolCalls }] })).toMatchObject({
+      activeTools: ["customWidget_getExample", "customWidget_validate"],
+    });
+  });
+
+  test("rejects excess parallel component document executions without blocking other tools", () => {
+    const budget = createCustomWidgetComponentDocumentBudget(2);
+
+    expect(budget.claim("customWidget_getComponent")).toBe(true);
+    expect(budget.claim("customWidget_getComponent")).toBe(true);
+    expect(budget.claim("customWidget_getComponent")).toBe(false);
+    expect(budget.claim("customWidget_validate")).toBe(true);
+  });
+
+  test("reduces the hard execution budget after loading an example", () => {
+    const budget = createCustomWidgetComponentDocumentBudget();
+
+    expect(budget.claim("customWidget_getExample")).toBe(true);
+    for (let index = 0; index < MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS_WITH_EXAMPLE; index += 1) {
+      expect(budget.claim("customWidget_getComponent")).toBe(true);
+    }
+    expect(budget.claim("customWidget_getComponent")).toBe(false);
+    expect(budget.claim("customWidget_validate")).toBe(true);
   });
 });
 
