@@ -1,11 +1,10 @@
 import { notFound } from "next/navigation";
-import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
 
-import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { SettingsForm } from "./_components/settings-form";
 
 export async function generateMetadata() {
@@ -28,12 +27,8 @@ export default async function SettingsPage() {
   const tSettings = await getScopedI18n("management.page.settings");
 
   return (
-    <>
-      <DynamicBreadcrumb />
-      <Stack>
-        <Title order={1}>{tSettings("title")}</Title>
-        <SettingsForm initialData={serverSettings} />
-      </Stack>
-    </>
+    <ManagePageLayout title={tSettings("title")}>
+      <SettingsForm initialData={serverSettings} />
+    </ManagePageLayout>
   );
 }
