@@ -10,6 +10,7 @@ widgets, 11 integrations, driven through an actual login — not from a syntheti
 | [CLIENT-PERFORMANCE.md](./CLIENT-PERFORMANCE.md) | Dashboard rendering cost in Chrome: DOM, fibers, images, paint |
 | [REJECTED.md](./REJECTED.md) | Ideas that were implemented and measured, then abandoned — with the numbers |
 | [METHODOLOGY.md](./METHODOLOGY.md) | The tools, and the measurement traps that produced wrong answers |
+| [NEXT-STEPS.md](./NEXT-STEPS.md) | Handoff: what is unverified, what to do next, and the set for a clean PR |
 
 ## Headline result
 
