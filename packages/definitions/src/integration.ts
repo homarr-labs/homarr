@@ -468,6 +468,14 @@ export const integrationDefs = {
     category: ["archiving"],
     documentationUrl: null,
   },
+  wud: {
+    name: "What's Up Docker",
+    secretKinds: [[], ["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/whats-up-docker.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: createDocumentationLink("/docs/integrations/whats-up-docker"),
+    defaultPort: 3000,
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",

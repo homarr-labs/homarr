@@ -76,6 +76,7 @@ const moduleLoaders: Record<WidgetKind, () => Promise<WidgetModule>> = {
   beszelSystemStats: () => import("./beszel-system-stats") as Promise<WidgetModule>,
   traefik: () => import("./traefik") as Promise<WidgetModule>,
   customApi: () => import("./custom-api") as Promise<WidgetModule>,
+  wud: () => import("./wud") as Promise<WidgetModule>,
 };
 
 // Keep these imports explicit so Turbopack can create one discoverable chunk per
@@ -137,6 +138,7 @@ const componentLoaders: Record<WidgetKind, () => Promise<WidgetComponentModule>>
   beszelSystemStats: () => import("./beszel-system-stats/component") as Promise<WidgetComponentModule>,
   traefik: () => import("./traefik/component") as Promise<WidgetComponentModule>,
   customApi: () => import("./custom-api/component") as Promise<WidgetComponentModule>,
+  wud: () => import("./wud/component") as Promise<WidgetComponentModule>,
 };
 
 const definitionPromises = new Map<WidgetKind, Promise<WidgetDefinition>>();
