@@ -87,6 +87,17 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForBuild: true,
     useTypeScriptCli: true,
+    /**
+     * Next otherwise loads the module graph for every route at startup. Measured here: 74 route
+     * bundles and 1,114 files, 24 MiB of source, resident before the first request — and one
+     * shared 16 MiB subtree behind the API routes that reaches every integration. A dashboard
+     * serves a handful of routes per session, so preloading the rest is pure cost.
+     *
+     * The trade is that the first request to a route pays its module load instead of the boot
+     * paying for all of them. That suits a long-lived self-hosted server, where boot happens
+     * once and routes warm up as they are used.
+     */
+    preloadEntriesOnStart: false,
   },
   turbopack: {
     root: path.resolve(import.meta.dirname, "../.."),
