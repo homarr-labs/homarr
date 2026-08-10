@@ -5,9 +5,10 @@
  * set renders every row into the DOM regardless. Those off-screen rows cost nodes, fibers and heap
  * while painting nothing, and totals like "9,293 DOM nodes" never reveal it — only the ratio does.
  *
- * Rows are found by looking for the deepest container whose children are numerous and similarly
- * sized, rather than by guessing at the markup: widgets nest differently and a fixed selector finds
- * nothing.
+ * The row container is found as the element with the most children, which is what a mapped list
+ * looks like whatever the surrounding markup. An earlier version required children to be of similar
+ * height; that reported a chart's SVG groups as rows and missed the worst widget entirely, because
+ * its cards vary in height.
  *
  *   STRESS_BASE_URL=http://127.0.0.1:PORT node scripts/benchmarks/measure-widget-overdraw.mjs
  */
@@ -28,58 +29,59 @@ await page.locator("css=button[type='submit']").click();
 await page.waitForFunction(() => !window.location.pathname.includes("/auth/login"), undefined, { timeout: 60_000 });
 await page.goto(`${baseUrl}/boards/${boardName}`, { waitUntil: "domcontentloaded" });
 await page.locator("[data-homarr-dev-benchmark-board]").waitFor({ state: "attached", timeout: 120_000 });
-await page.waitForTimeout(8_000);
+await page
+  .waitForFunction(
+    () => {
+      const items = [...document.querySelectorAll('[data-type="item"]')];
+      return items.length > 0 && items.every((i) => i.querySelector("[data-homarr-widget-ready],[data-homarr-widget-error]"));
+    },
+    undefined,
+    { timeout: 120_000 },
+  )
+  .catch(() => console.log("warn: widgets did not all settle"));
+await page.waitForTimeout(6_000);
 
-const result = await page.evaluate(() => {
+const rows = await page.evaluate(() => {
   const report = [];
   for (const item of document.querySelectorAll('[data-type="item"]')) {
-    const kind = item.getAttribute("data-kind") ?? "?";
     const tile = item.getBoundingClientRect();
-
-    // The repeated-row container is whichever element has the most children that are all roughly
-    // the same height — that is what a mapped list looks like regardless of wrapper markup.
-    let best = null;
+    let container = null;
     for (const element of item.querySelectorAll("*")) {
-      const children = [...element.children];
-      if (children.length < 4) continue;
-      const heights = children.map((c) => c.getBoundingClientRect().height).filter((h) => h > 4);
-      if (heights.length < 4) continue;
-      const min = Math.min(...heights);
-      const max = Math.max(...heights);
-      if (max > min * 3) continue; // not a uniform list
-      if (!best || children.length > best.rows) {
-        best = { rows: children.length, container: element };
-      }
+      if (!container || element.children.length > container.children.length) container = element;
     }
-    if (!best) continue;
+    if (!container || container.children.length < 4) continue;
 
-    const rows = [...best.container.children];
-    const visible = rows.filter((row) => {
-      const r = row.getBoundingClientRect();
-      return r.bottom > tile.top && r.top < tile.bottom && r.height > 0;
+    const children = [...container.children];
+    const visible = children.filter((child) => {
+      const rect = child.getBoundingClientRect();
+      return rect.height > 0 && rect.bottom > tile.top && rect.top < tile.bottom;
     });
     const nodes = item.querySelectorAll("*").length;
+    const perRow = nodes / children.length;
     report.push({
-      kind,
-      rows: rows.length,
-      visibleRows: visible.length,
+      kind: item.getAttribute("data-kind") ?? "?",
+      rendered: children.length,
+      visible: visible.length,
       nodes,
-      nodesPerRow: Math.round(nodes / rows.length),
-      wastedNodes: Math.round((nodes / rows.length) * (rows.length - visible.length)),
+      offscreenNodes: Math.round(perRow * (children.length - visible.length)),
+      images: item.querySelectorAll("img").length,
+      contentPx: Math.round(container.scrollHeight),
+      tilePx: Math.round(tile.height),
+      contained: getComputedStyle(children[0]).contentVisibility ?? "",
     });
   }
-  return report.sort((a, b) => b.wastedNodes - a.wastedNodes);
+  return report.sort((a, b) => b.offscreenNodes - a.offscreenNodes);
 });
 
 console.log(
-  `${"nodes".padStart(6)} ${"rows".padStart(5)} ${"vis".padStart(4)} ${"n/row".padStart(6)} ${"offscreen".padStart(10)}  kind`,
+  `\n${"nodes".padStart(6)} ${"rows".padStart(5)} ${"vis".padStart(4)} ${"offscr".padStart(7)} ${"imgs".padStart(5)} ${"tile".padStart(6)} ${"content".padStart(8)}  kind`,
 );
-let wasted = 0;
-for (const r of result) {
-  wasted += r.wastedNodes;
+let offscreen = 0;
+for (const row of rows) {
+  offscreen += row.offscreenNodes;
   console.log(
-    `${String(r.nodes).padStart(6)} ${String(r.rows).padStart(5)} ${String(r.visibleRows).padStart(4)} ${String(r.nodesPerRow).padStart(6)} ${String(r.wastedNodes).padStart(10)}  ${r.kind}`,
+    `${String(row.nodes).padStart(6)} ${String(row.rendered).padStart(5)} ${String(row.visible).padStart(4)} ${String(row.offscreenNodes).padStart(7)} ${String(row.images).padStart(5)} ${String(row.tilePx).padStart(6)} ${String(row.contentPx).padStart(8)}  ${row.kind}${row.contained === "auto" ? "  [content-visibility: auto]" : ""}`,
   );
 }
-console.log(`\nDOM elements rendered for rows that are scrolled out of view: ~${wasted}`);
+console.log(`\nDOM elements rendered for rows scrolled out of view: ~${offscreen}`);
 await browser.close();

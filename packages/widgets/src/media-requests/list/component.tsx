@@ -104,10 +104,20 @@ const MediaRequestCard = ({ request, isTiny, options }: MediaRequestCardProps) =
       className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${request.type} mediaRequests-list-item-${request.status}`}
       radius={board.itemRadius}
       p="xs"
+      style={{
+        // This list maps over every request, so its content is taller than the tile: measured at
+        // 1,512 px of cards in a 405 px tile, with 20 cards rendering 60 images between them. The
+        // off-screen ones still cost a backdrop and a poster fetch and decode each, and decoded
+        // bitmaps are far larger in memory than their files. Skipping layout, paint and raster for
+        // them leaves the DOM untouched, so scrolling and in-page search behave as before.
+        contentVisibility: "auto",
+        containIntrinsicSize: "auto 64px",
+      }}
     >
       <Image
         className="mediaRequests-list-item-background"
         src={request.backdropImageUrl}
+        loading="lazy"
         pos="absolute"
         w="100%"
         h="100%"
@@ -130,6 +140,7 @@ const MediaRequestCard = ({ request, isTiny, options }: MediaRequestCardProps) =
             <Image
               className="mediaRequests-list-item-poster"
               src={request.posterImagePath}
+              loading="lazy"
               h={40}
               w="auto"
               radius={"md"}
