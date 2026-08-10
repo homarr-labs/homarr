@@ -92,6 +92,7 @@ describe("lazy widget application graph", () => {
         timeout: 15_000,
       });
       await page.keyboard.press("Control+K");
+      await expect(page.locator("[data-homarr-dev-benchmark-spotlight-feedback]")).toHaveCount(0);
       await expect(page.locator("[data-homarr-dev-benchmark-spotlight]")).toBeVisible({ timeout: 15_000 });
       await page.keyboard.press("Escape");
       await expect(page.locator("[data-homarr-dev-benchmark-spotlight]")).not.toBeVisible();
