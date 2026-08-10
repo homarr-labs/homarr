@@ -1344,10 +1344,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Uus konteiner",
-        "remove": "Eemalda konteiner"
+        "create": "Uus dünaamiline sektsioon",
+        "remove": "Eemalda dünaamiline sektsioon"
       },
       "option": {
         "title": {
@@ -1361,8 +1361,48 @@
         }
       },
       "remove": {
-        "title": "Eemalda konteiner",
-        "message": "Kas oled kindel, et soovid selle konteineri eemaldada? Üksused teisaldatakse ülemsektsiooni samasse asukohta."
+        "title": "Eemalda dünaamiline sektsioon",
+        "message": "Kas oled kindel, et soovid selle dünaamilise sektsiooni eemaldada? Üksused teisaldatakse ülemsektsiooni samasse asukohta."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Nimi"
+        }
+      },
+      "action": {
+        "create": "Uus kategooria",
+        "edit": "Nimeta kategooria ümber",
+        "remove": "Eemalda kategooria",
+        "moveUp": "Liiguta üles",
+        "moveDown": "Liiguta alla",
+        "createAbove": "Uus kategooria ülal",
+        "createBelow": "Uus kategooria all",
+        "openAllInNewTabs": ""
+      },
+      "create": {
+        "title": "Uus kategooria",
+        "submit": "Lisa kategooria"
+      },
+      "remove": {
+        "title": "Eemalda kategooria",
+        "message": "Kas oled kindel, et soovid eemaldada kategooria {name}?"
+      },
+      "edit": {
+        "title": "Nimeta kategooria ümber",
+        "submit": "Nimeta kategooria ümber"
+      },
+      "menu": {
+        "label": {
+          "create": "Uus kategooria",
+          "changePosition": "Muuda asukohta",
+          "settings": ""
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
