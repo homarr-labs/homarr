@@ -1,0 +1,29 @@
+apps/nextjs/src/app/[locale]/manage/settings/_components/analytics.settings.tsx
+  s_5d9f23ee18513b::t_a53a6e4ef82908 3-6,19,22-37
+apps/nextjs/src/app/[locale]/manage/settings/page.tsx
+  s_5d9f23ee18513b::t_fdfe7971ca02f9 7,30-32
+apps/nextjs/src/components/layout/header/lazy-spotlight.tsx
+  s_5d9f23ee18513b::t_ccd04003f30d54 7,34-35,44,46-48
+apps/nextjs/src/components/manage/unsaved-changes-bar.tsx
+  s_5d9f23ee18513b::t_fd5fe38039e290 16-17
+e2e/lazy-widgets.spec.ts
+  s_5d9f23ee18513b::t_c7424d8db4780b 95
+packages/translation/src/lang/en.json
+  s_5d9f23ee18513b::t_e59265f67d5bd1 5701
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "55bc3353b6c715c1b755ece44baade15804d51a1",
+  "prompts": {},
+  "sessions": {
+    "s_5d9f23ee18513b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fec85-68a8-7c10-b157-287fdb19bbad",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
