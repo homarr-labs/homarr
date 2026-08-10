@@ -113,7 +113,29 @@ Homarr maintainers can run the same self-contained prompt that the workbench cop
 OPENROUTER_API_KEY=... pnpm --filter @homarr/custom-widgets test:ai
 ```
 
-The suite uses DeepSeek V4 Pro to author Pokédex, Portainer, football, Jellyfin, and Home Assistant widgets. Before DeepSeek V4 Flash judges a result, it must pass Homarr's real clipboard parser, canonical schema, and deterministic scenario checks for the documented API routes, authentication, bindings, actions, and essential runtime components. It saves every response, validated widget manifest, and detailed category scores under `packages/custom-widgets/.ai-evaluations/`.
+The manifest suite covers nine complex and public-API prompts. Its deterministic fixture-backed cases include a fake
+homelab health API, CoinMarketCap's keyless public API, Bored, Agify, and a multi-request Pokédex. Before the configured
+model judges a result, the candidate must pass Homarr's real clipboard parser, canonical schema, and deterministic
+checks for documented endpoints, authentication, request triggers, query bindings, response fields, and essential
+runtime components.
+
+To exercise the real Homarr Assistant lifecycle instead of accepting a returned JSON block, run:
+
+```sh
+OPENROUTER_API_KEY=... pnpm --filter @homarr/custom-widgets test:assistant-ai
+```
+
+The assistant test exposes the same lazy skill, live schema, component catalog, targeted component references,
+validation, preview-query, and create-from-preview tools as the product. It refuses to save a definition that was not
+validated exactly or whose preview queries were not all tested. Multi-request fixtures return a different payload for
+each documented path and require manual-query parameters. Use `--case=pokedex`, `--case=coinmarketcap-keyless`,
+`--case=bored-activity`, or `--case=agify-name` for a focused run.
+
+Both suites default generation and harsh review to OpenRouter's `~deepseek/deepseek-v4-flash-latest` route. They save
+tool traces, validated manifests, raw reviews, and detailed category scores under
+`packages/custom-widgets/.ai-evaluations/`. These live tests are maintainer-invoked rather than CI-required because
+they consume a configured provider account and exercise a nondeterministic model. The repository's ordinary tests
+cover the lifecycle enforcement, fixture routing, score calculation, and failure behavior without network access.
 
 Each scenario stops as soon as it passes and has a hard limit of ten generation attempts. Override the models or
 per-scenario limit with `OPENROUTER_GENERATOR_MODEL`, `OPENROUTER_JUDGE_MODEL`, and
@@ -121,3 +143,8 @@ per-scenario limit with `OPENROUTER_GENERATOR_MODEL`, `OPENROUTER_JUDGE_MODEL`, 
 into the bundled-widget source deliberately.
 
 The reference API check uses a real PokeAPI list/detail request and a read-only Portainer container query when `PORTAINER_BASE_URL` and `PORTAINER_API_KEY` are set. Use `pnpm --filter @homarr/custom-widgets test:reference-apis -- --pokeapi-only` for the public PokeAPI check alone. To exercise start, restart, and stop against a disposable container, also set `PORTAINER_TEST_CONTAINER_ID` and the explicit safeguard `PORTAINER_ALLOW_MUTATIONS=1`; the script restores the container's original running state.
+
+Use `pnpm --filter @homarr/custom-widgets test:reference-apis -- --public-ai-apis-only` to verify the live Bored and
+CoinMarketCap response shapes used by the assistant fixtures. The same command also verifies Agify when
+`AGIFY_API_KEY` is configured; otherwise it reports the authenticated check as skipped without weakening the
+deterministic Agify fixture tests.

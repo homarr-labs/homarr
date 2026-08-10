@@ -3,9 +3,12 @@ import { describe, expect, it } from "vitest";
 import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "../../scripts/ai-evaluation-cases";
 import {
   buildEvaluationPrompt,
+  buildJudgePrompt,
   buildRepairPrompt,
   DEFAULT_GENERATOR_MODEL,
   DEFAULT_JUDGE_MODEL,
+  getDeterministicEvaluationIssues,
+  getEvaluationResponseFixtureText,
   getJudgeResponseFormat,
   judgePasses,
   parseJudgeResult,
@@ -46,9 +49,106 @@ const makeJudgeResult = (score: number) => ({
 });
 
 describe("AI authoring evaluation", () => {
-  it("defines five distinct complex scenarios", () => {
-    expect(CUSTOM_WIDGET_AI_EVALUATION_CASES).toHaveLength(5);
-    expect(new Set(CUSTOM_WIDGET_AI_EVALUATION_CASES.map((entry) => entry.id)).size).toBe(5);
+  it("defines distinct complex and public-API scenarios", () => {
+    expect(CUSTOM_WIDGET_AI_EVALUATION_CASES).toHaveLength(9);
+    expect(new Set(CUSTOM_WIDGET_AI_EVALUATION_CASES.map((entry) => entry.id)).size).toBe(9);
+    expect(CUSTOM_WIDGET_AI_EVALUATION_CASES.map(({ id }) => id)).toEqual(
+      expect.arrayContaining([
+        "pokedex",
+        "fake-service-health",
+        "coinmarketcap-keyless",
+        "bored-activity",
+        "agify-name",
+      ]),
+    );
+  });
+
+  it("grounds fixture-backed scenarios in verified routes and authentication", () => {
+    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "agify-name");
+    if (!testCase) throw new Error("Agify evaluation case is missing");
+    const validWidget = {
+      $schema: "homarr-custom-widget-v2" as const,
+      name: "Agify",
+      sources: {
+        default: {
+          baseUrl: "https://api.agify.io",
+          networkScope: "public" as const,
+          auth: { type: "apiKeyQuery" as const, name: "apikey" },
+        },
+      },
+      requests: {
+        prediction: {
+          source: "default",
+          kind: "query" as const,
+          method: "GET" as const,
+          path: "/",
+          trigger: "manual" as const,
+          query: { name: { $param: "name" }, country_id: { $param: "country" } },
+          auth: "inherit" as const,
+          permission: "view" as const,
+        },
+      },
+      options: {},
+      template:
+        '<Stack><TextInput bind="name" /><SubFetch requestId="prediction" params={{ name: inputs.name, country: "US" }}>{(result) => <Text>{result.age} from {result.count}</Text>}</SubFetch></Stack>',
+    };
+    expect(getDeterministicEvaluationIssues(testCase, validWidget)).toEqual([]);
+    expect(
+      getDeterministicEvaluationIssues(testCase, {
+        ...validWidget,
+        sources: { default: { ...validWidget.sources.default, auth: "none" as const } },
+      }),
+    ).toContainEqual(expect.objectContaining({ path: ["sources", "default", "auth"] }));
+  });
+
+  it("checks the public API response contract instead of only the endpoint", () => {
+    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "coinmarketcap-keyless");
+    if (!testCase) throw new Error("CoinMarketCap evaluation case is missing");
+    const widget = {
+      $schema: "homarr-custom-widget-v2" as const,
+      name: "Crypto",
+      sources: {
+        default: {
+          baseUrl: "https://pro-api.coinmarketcap.com",
+          networkScope: "public" as const,
+          auth: "none" as const,
+        },
+      },
+      requests: {
+        prices: {
+          source: "default",
+          kind: "query" as const,
+          method: "GET" as const,
+          path: "/public-api/v3/cryptocurrency/quotes/latest",
+          trigger: "load" as const,
+          query: { id: "1,1027,5426", convert: "USD" },
+          auth: "inherit" as const,
+          permission: "view" as const,
+        },
+      },
+      options: {},
+      template:
+        "<Stack><RefreshButton />{data.prices?.data?.map(item => <Text key={item.symbol}>{item.quote?.[0]?.percent_change_24h} {item.quote?.[0]?.market_cap} {item.quote?.[0]?.volume_24h} {item.last_updated}</Text>)}</Stack>",
+    };
+
+    expect(getDeterministicEvaluationIssues(testCase, widget)).toEqual([]);
+    expect(
+      getDeterministicEvaluationIssues(testCase, {
+        ...widget,
+        requests: { prices: { ...widget.requests.prices, query: { id: "1,1027", convert: "USD" } } },
+      }),
+    ).toContainEqual(expect.objectContaining({ path: ["requests"] }));
+  });
+
+  it("includes every path-specific Pokédex fixture in generator and judge context", () => {
+    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "pokedex");
+    if (!testCase) throw new Error("Pokédex evaluation case is missing");
+    const fixtureText = getEvaluationResponseFixtureText(testCase);
+
+    expect(fixtureText).toContain("/api/v2/pokemon/{param:name}");
+    expect(fixtureText).toContain('"official-artwork"');
+    expect(fixtureText).toContain('"results"');
+    expect(testCase.minimumPreviewCycles).toBe(3);
   });
 
   it("uses the exact clipboard prompt and grounded API notes", () => {
@@ -70,8 +170,8 @@ describe("AI authoring evaluation", () => {
   });
 
   it("uses the requested DeepSeek models and strict structured judge output", () => {
-    expect(DEFAULT_GENERATOR_MODEL).toBe("deepseek/deepseek-v4-pro");
-    expect(DEFAULT_JUDGE_MODEL).toBe("deepseek/deepseek-v4-flash");
+    expect(DEFAULT_GENERATOR_MODEL).toBe("~deepseek/deepseek-v4-flash-latest");
+    expect(DEFAULT_JUDGE_MODEL).toBe("~deepseek/deepseek-v4-flash-latest");
     const format = getJudgeResponseFormat();
     expect(format.type).toBe("json_schema");
     expect(format.json_schema.strict).toBe(true);
@@ -89,6 +189,28 @@ describe("AI authoring evaluation", () => {
     expect(judgePasses({ ...makeJudgeResult(95), fatalProblems: ["A requested core action is missing."] })).toBe(false);
   });
 
+  it("gives the harsh judge the authoritative request-state runtime contract", () => {
+    const testCase = CUSTOM_WIDGET_AI_EVALUATION_CASES.find(({ id }) => id === "fake-service-health");
+    if (!testCase) throw new Error("Fake service-health case is missing");
+    const widget = {
+      $schema: "homarr-custom-widget-v2" as const,
+      name: "Health",
+      sources: {
+        default: { baseUrl: "https://status.example.test", networkScope: "public" as const, auth: "none" as const },
+      },
+      requests: {},
+      options: {},
+      template: "<Text>Health</Text>",
+    };
+    const prompt = buildJudgePrompt(testCase, widget);
+
+    expect(prompt).toContain("status.<requestId> with loading/ok/status/error fields");
+    expect(prompt).toContain("RefreshButton is an installed runtime helper");
+    expect(prompt).toContain(JSON.stringify(testCase.sampleResponse, null, 2));
+    expect(prompt).toContain("# Bundled file: references/runtime.md");
+    expect(prompt).toContain("does not prove API correctness, visual quality, usefulness, or accessibility");
+  });
+
   it("computes the weighted score and refuses inflated advisory verdicts", () => {
     const parsed = parseJudgeResult(
       JSON.stringify({
@@ -104,5 +226,19 @@ describe("AI authoring evaluation", () => {
     );
     expect(parsed.total).toBe(91);
     expect(parsed.verdict).toBe("fail");
+  });
+
+  it("accepts a provider response that wraps structured review JSON in a code fence", () => {
+    const parsed = parseJudgeResult(`\`\`\`json\n${JSON.stringify(makeJudgeResult(90))}\n\`\`\``);
+    expect(parsed.total).toBe(90);
+    expect(parsed.verdict).toBe("pass");
+  });
+
+  it("normalizes a prose 'none' entry out of an otherwise empty fatal-problem list", () => {
+    const parsed = parseJudgeResult(
+      JSON.stringify({ ...makeJudgeResult(90), fatalProblems: ["None: all requested capabilities are present."] }),
+    );
+    expect(parsed.fatalProblems).toEqual([]);
+    expect(parsed.verdict).toBe("pass");
   });
 });

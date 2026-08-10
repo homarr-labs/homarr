@@ -74,17 +74,25 @@ description: Author safe Homarr Custom JSX v2 widgets from API documentation.
 
 Author one widget at a time. When connected to Homarr, retrieve \`homarr://custom-widgets/schema\` and only the component resources needed for the design. The live resources are authoritative for the installed release.
 
+Keep documentation retrieval targeted: fetch at most eight named component documents before the first validation, or at most four after loading a complete example. Fetch another component only when a validation issue or a concrete missing interaction requires it; never load the catalog component-by-component.
+
 1. Read the API documentation.
 2. Create one credential-free widget with keyed \`sources\`, keyed \`requests\`, optional keyed \`options\`, and safe JSX \`template\`.
 3. Validate, preview, test queries and simulated actions, visually inspect, and iterate.
 4. Configure deployment-specific source URLs and request credentials through Homarr; never repeat plaintext.
 5. Save only after narrow/wide, light/dark, loading, empty, error, and success states work. When connected through MCP, persist the exact final tested preview with \`customWidget_createFromPreview\`; do not resend a large template through \`customWidget_create\` unless no preview session is available.
 
+Treat a supplied sample or successful preview response as the binding contract. Render every core requested field, guard optional arrays and nested values before indexing, and do not silently drop returned items. Show concise freshness context when the API supplies a timestamp. Give recoverable load errors and empty states a clear refresh or retry path.
+
 Use \`{option:name}\` or \`$option\` for saved options. Use \`{param:name}\` or \`$param\` for values supplied by \`SubFetch\`, \`ActionButton\`, or \`ToggleSwitch\`. Load queries cannot use invocation parameters. Templates read \`data\`, \`status\`, \`options\`, and temporary \`inputs\`.
 
 \`SubFetch\` with \`trigger="manual"\` renders its own load button. Pass a card or image through \`triggerContent\` with \`triggerAriaLabel\` when that content should launch the request. Its callback is \`(result, meta)\`; never author \`onClick\` or a fetch callback.
 
 Use standard Mantine compound names and deliberate visual hierarchy, spacing, restrained semantic color, and responsive layouts. Avoid excessive nested cards.
+
+Aim for distinctive polish without decorative gradients or fragile custom styling: use one semantic accent, clear surface contrast, purposeful typography, and compact rows that remain scannable in narrow tiles. Give standalone icons an accessible label or pair them with visible text.
+
+Make initial states actionable with an example, useful hint, or clear next step. Use wrapping groups for variable-length labels and values on narrow tiles. Do not use an unlabeled decorative icon as an empty state.
 
 Do not use imports, hooks, refs, raw HTML, raw event callbacks, browser requests, arbitrary functions, eval, bigint, npm packages, authored statement blocks, IIFEs, or recursion. Do not pretend MCP tools exist in an offline chat session.
 

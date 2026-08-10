@@ -2,6 +2,11 @@ import { customJsxRequestSchema } from "../src/core/request-schema";
 import { executeCustomWidgetRequest } from "../src/server/request-executor";
 import { renderRequestTarget, resolveCustomWidgetRequestValues } from "../src/server/request-manifest";
 
+if (process.argv.includes("--public-ai-apis-only")) {
+  await verifyPublicAiEvaluationApis();
+  process.exit(0);
+}
+
 const pokemonListRequest = customJsxRequestSchema.parse({
   path: "/api/v2/pokemon",
   query: { limit: { $option: "limit" }, offset: 0 },
@@ -135,4 +140,53 @@ async function runPortainerAction(action: string, containerId: string, ignoreCon
   if (!response.ok && !(ignoreConflict && response.status === 304)) {
     throw new Error(`Portainer ${action} returned HTTP ${response.status}`);
   }
+}
+
+async function verifyPublicAiEvaluationApis() {
+  const bored = await fetchJson(new URL("https://bored-api.appbrewery.com/random"), {});
+  if (!isRecord(bored) || typeof bored.activity !== "string" || typeof bored.participants !== "number") {
+    throw new Error("Bored response did not match the evaluation fixture contract");
+  }
+  process.stdout.write("Bored activity request passed\n");
+
+  const coinMarketCapRequest = customJsxRequestSchema.parse({
+    path: "/public-api/v3/cryptocurrency/quotes/latest",
+    query: { id: "1,1027,5426", convert: "USD" },
+  });
+  const coinMarketCapTarget = renderRequestTarget(
+    "https://pro-api.coinmarketcap.com",
+    coinMarketCapRequest,
+    resolveCustomWidgetRequestValues(coinMarketCapRequest, {}),
+  );
+  const response = await fetchJson(coinMarketCapTarget, {});
+  const assets = isRecord(response) ? response.data : undefined;
+  if (
+    !Array.isArray(assets) ||
+    !["BTC", "ETH", "SOL"].every((symbol) =>
+      assets.some((asset) => isRecord(asset) && asset.symbol === symbol && Array.isArray(asset.quote)),
+    )
+  ) {
+    throw new Error("CoinMarketCap response did not match the evaluation fixture contract");
+  }
+  process.stdout.write("CoinMarketCap keyless watchlist request passed\n");
+
+  const agifyApiKey = process.env.AGIFY_API_KEY;
+  if (!agifyApiKey) {
+    process.stdout.write("Agify live request skipped (AGIFY_API_KEY is not configured)\n");
+    return;
+  }
+  const agifyTarget = new URL("https://api.agify.io/");
+  agifyTarget.searchParams.set("name", "michael");
+  agifyTarget.searchParams.set("country_id", "US");
+  agifyTarget.searchParams.set("apikey", agifyApiKey);
+  const prediction = await fetchJson(agifyTarget, {});
+  if (
+    !isRecord(prediction) ||
+    typeof prediction.name !== "string" ||
+    !(typeof prediction.age === "number" || prediction.age === null) ||
+    typeof prediction.count !== "number"
+  ) {
+    throw new Error("Agify response did not match the evaluation fixture contract");
+  }
+  process.stdout.write("Agify authenticated lookup request passed\n");
 }

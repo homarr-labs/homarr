@@ -19,6 +19,7 @@ const customWidgetAuthoringToolNameSet = new Set([
   "customWidget_previewAction",
   "customWidget_previewJournal",
   "customWidget_create",
+  "customWidget_createFromPreview",
   "customWidget_update",
   "customWidget_templatePatch",
   "customWidget_legacyMigrationPrompt",
@@ -139,6 +140,29 @@ type CustomWidgetToolStep = {
   toolCalls: readonly { toolName: string }[];
 };
 
+export const MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS = 8;
+export const MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS_WITH_EXAMPLE = 4;
+
+export const createCustomWidgetComponentDocumentBudget = (limit = MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS) => {
+  let served = 0;
+  let exampleWasLoaded = false;
+  return {
+    claim(toolName: string) {
+      if (toolName === "customWidget_getExample") {
+        exampleWasLoaded = true;
+        return true;
+      }
+      if (toolName !== "customWidget_getComponent") return true;
+      const activeLimit = exampleWasLoaded
+        ? Math.min(limit, MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS_WITH_EXAMPLE)
+        : limit;
+      if (served >= activeLimit) return false;
+      served += 1;
+      return true;
+    },
+  };
+};
+
 export const createCustomWidgetDynamicContextController = <TToolName extends string>(options: {
   isAdmin: boolean;
   baseInstructions: string;
@@ -163,6 +187,22 @@ export const createCustomWidgetDynamicContextController = <TToolName extends str
     const shouldInjectContext = !contextWasInjected;
     if (shouldInjectContext) contextWasInjected = true;
 
+    const componentDocumentCount = step.steps.reduce(
+      (count, result) =>
+        count + result.toolCalls.filter((toolCall) => toolCall.toolName === "customWidget_getComponent").length,
+      0,
+    );
+    const exampleWasLoaded = step.steps.some((result) =>
+      result.toolCalls.some((toolCall) => toolCall.toolName === "customWidget_getExample"),
+    );
+    const componentDocumentLimit = exampleWasLoaded
+      ? MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS_WITH_EXAMPLE
+      : MAX_CUSTOM_WIDGET_COMPONENT_DOCUMENTS;
+    const boundedActiveToolNames =
+      componentDocumentCount >= componentDocumentLimit
+        ? activeToolNames.filter((toolName) => toolName !== "customWidget_getComponent")
+        : activeToolNames;
+
     return {
       ...(shouldInjectContext
         ? {
@@ -170,7 +210,7 @@ export const createCustomWidgetDynamicContextController = <TToolName extends str
           }
         : {}),
       messages: prunePreloadedCustomWidgetModelMessages(step.messages),
-      activeTools: activeToolNames,
+      activeTools: boundedActiveToolNames,
     };
   };
 };
