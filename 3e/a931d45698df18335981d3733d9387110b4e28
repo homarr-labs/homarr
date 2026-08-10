@@ -1,0 +1,57 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
+  s_093d61b162b9ca::t_0685882a0e91d6 3-4,49-59,64-87
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_093d61b162b9ca::t_43fc43666c5228 28,31
+apps/docs/docs/management/workshop/index.mdx
+  s_093d61b162b9ca::t_e94c0c022a8ca4 38-39,56-58
+apps/docs/docusaurus.config.ts
+  s_093d61b162b9ca::t_196b175bb6202e 405
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_093d61b162b9ca::t_76939b150eb148 454,884
+apps/docs/src/components/workshop/WorkshopAdmin.tsx
+  s_093d61b162b9ca::t_c5e4abd01e9831 112-116
+apps/docs/src/components/workshop/WorkshopApp.tsx
+  s_093d61b162b9ca::t_0ec1542b3800af 11,18,121,132,135-144,422,424-429
+apps/docs/src/components/workshop/useWorkshop.ts
+  s_093d61b162b9ca::t_5760f737f0d01d 165
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.spec.tsx
+  s_093d61b162b9ca::t_e786facb2e15cc 33-39
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-ai-card.tsx
+  s_093d61b162b9ca::t_9651774e6f17d1 3-4,23-28,34-58
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.spec.tsx
+  s_093d61b162b9ca::t_c7637c0a94a5a0 3,73-82,136-137
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx
+  s_093d61b162b9ca::t_cfe3f3c0df2f1a 4,86,92-115,120-122,124-127,153-166
+apps/nextjs/src/components/workshop/workshop-browser.tsx
+  s_093d61b162b9ca::t_05b3333957bdd5 433
+apps/workshop/README.md
+  s_093d61b162b9ca::t_bf5c98a08de34f 11-12
+apps/workshop/pb_migrations/1784240000_workshop_widgets.js
+  s_093d61b162b9ca::t_eaed363b79ff74 219
+apps/workshop/tests/workshop-contracts.mjs
+  s_093d61b162b9ca::t_977acd09f2f522 72-74,76
+apps/workshop/tests/workshop.integration.mjs
+  s_093d61b162b9ca::t_7cb291415f2aaa 271,276
+packages/translation/src/lang/en.json
+  s_093d61b162b9ca::t_57a6986ae6f495 1030
+packages/workshop/src/schema.spec.ts
+  s_093d61b162b9ca::t_0636bc81777d29 11,44-47
+packages/workshop/src/schema.ts
+  s_093d61b162b9ca::t_dd05dd22c26ab1 76-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3ea931d45698df18335981d3733d9387110b4e28",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
