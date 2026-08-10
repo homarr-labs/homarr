@@ -1,0 +1,23 @@
+packages/widgets/src/immich/album-carousel/component.module.css
+  s_093d61b162b9ca::t_4d1c98aca3f8da 17-21
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_093d61b162b9ca::t_4d1c98aca3f8da 156-161,227
+apps/docs/docs/widgets/immich-album-carousel/index.mdx
+  s_093d61b162b9ca::t_4d1c98aca3f8da 36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b639ce8741d99fc026b8a96769522b1c86c050b7",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
