@@ -1,0 +1,23 @@
+apps/docs/docs/management/assistant.mdx
+  s_5d9f23ee18513b::t_d824aeae978c83 76-77
+apps/nextjs/src/app/[locale]/manage/assistant/_components/assistant-configuration.tsx
+  s_5d9f23ee18513b::t_bd2676175634a9 4,60
+e2e/assistant-management.spec.ts
+  s_5d9f23ee18513b::t_6d8f86636e1da5 15,67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "106fca2a619e76114ca0a3f0bbc3a6d5b7a60a96",
+  "prompts": {},
+  "sessions": {
+    "s_5d9f23ee18513b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fec85-68a8-7c10-b157-287fdb19bbad",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
