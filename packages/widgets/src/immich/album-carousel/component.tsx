@@ -153,7 +153,12 @@ function Carousel({
   return (
     <Stack w="100%" h="100%" gap={0}>
       <Box w="100%" style={{ flex: 1, minHeight: 0 }} className={classes.carouselContainer}>
-        <Image src={currentAsset.publicLink} alt={t("albumPhoto")} className={classes.carouselImage} />
+        <Image
+          src={currentAsset.publicLink}
+          alt={t("albumPhoto")}
+          className={classes.carouselImage}
+          data-fit={advanced ? "contain" : "cover"}
+        />
 
         {assets.length > 1 && (
           <Group
@@ -219,7 +224,7 @@ function Carousel({
       {advanced && (
         <ScrollArea type="never" scrollbarSize={0} px="xs" py={6}>
           <Group gap={6} wrap="nowrap">
-            {assets.slice(0, 24).map((asset, index) => (
+            {assets.map((asset, index) => (
               <UnstyledButton
                 key={asset.id}
                 onClick={() => setCurrentIndex(index)}
