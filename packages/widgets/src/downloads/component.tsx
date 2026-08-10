@@ -489,7 +489,7 @@ export default function DownloadClientsWidget({
         title: "",
         width: 36,
         render: (record) => (
-          <Tooltip label={record.integration.name} withArrow>
+          <Tooltip key={displayMode} label={record.integration.name} withArrow>
             <Avatar size={20} radius={0} src={getIconUrl(record.integration.kind)} />
           </Tooltip>
         ),
@@ -501,6 +501,7 @@ export default function DownloadClientsWidget({
         ellipsis: true,
         render: (record) => (
           <Tooltip
+            key={displayMode}
             label={buildHoverTooltip(record, t)}
             multiline
             w={280}
@@ -535,7 +536,14 @@ export default function DownloadClientsWidget({
         render: (record) => {
           const pct = Math.floor(record.progress * 100);
           return (
-            <Tooltip label={buildProgressTooltip(record)} withArrow openDelay={300} position="top" color="dark">
+            <Tooltip
+              key={displayMode}
+              label={buildProgressTooltip(record)}
+              withArrow
+              openDelay={300}
+              position="top"
+              color="dark"
+            >
               <Group gap={4} wrap="nowrap" style={{ flex: 1 }}>
                 <Text size="xs" fw={500} w={36} ta="right" style={{ flexShrink: 0 }}>
                   {`${pct}%`}
@@ -676,7 +684,7 @@ export default function DownloadClientsWidget({
       },
     ];
     return cols.filter(Boolean) as DataTableColumn<ExtendedDownloadClientItem>[];
-  }, [columnContext, t, size, progressColumnWidth]);
+  }, [columnContext, t, size, progressColumnWidth, displayMode]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
@@ -740,6 +748,7 @@ export default function DownloadClientsWidget({
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
       {(showStats || isAdvanced) && (
         <GlobalStatsBar
+          key={displayMode}
           queueStats={queueStats}
           totalSpeed={totalSpeed}
           totalUpSpeed={totalUpSpeed}
@@ -784,6 +793,7 @@ export default function DownloadClientsWidget({
 
       {(isAdvanced || height >= 96) && (
         <WidgetFooter
+          key={displayMode}
           clients={clients}
           totalSpeed={totalSpeed}
           totalUpSpeed={totalUpSpeed}
