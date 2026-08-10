@@ -96,15 +96,17 @@ while the replacement exists; deleting the v2 record surfaces the v1 entry as mi
 legacy deletion is intentionally unavailable during v2 stabilization. Credentials are never included in prompts,
 logs, or exports.
 
-For administrators adding widgets while editing a board, the Custom Widgets section includes **Install from
-Workshop**. Non-administrators do not see the Custom Widget picker or Workshop actions. The Workshop and API source
-review open above the widget picker without closing it. After import, the new definition appears in the picker. Its tile
+For administrators adding widgets while editing a board, the Custom Widgets section includes **Import from
+Workshop**. Non-administrators do not see the Custom Widget picker or Workshop actions. Selecting **Install widget**
+opens a two-step modal flow: first review the Workshop entry and its complete source in the read-only editor, then
+confirm API sources and credentials. The steps keep the same dimensions and the previous step remains available when
+you go back. After import, the new definition appears in the picker. Its tile
 waits for the board to be saved before server requests run and loads automatically after a successful save; no page
 reload is required.
 
 ## Import and Workshop
 
-Import review shows origins, authentication modes, network scopes, methods, actions, and permissions. Every source has a suggested URL, but private and loopback sources must be confirmed or replaced for the current Homarr installation. The same screen accepts API keys, tokens, usernames, and passwords; credentials remain optional at install time and missing values stay visible on the Custom Widgets page.
+The install flow always links to the corresponding public Workshop entry using `WORKSHOP_WEB_URL`. Import confirmation shows origins, authentication modes, network scopes, methods, actions, and permissions. Every source has a suggested URL, but private and loopback sources must be confirmed or replaced for the current Homarr installation. The same screen accepts API keys, tokens, usernames, and passwords; credentials remain optional at install time and missing values stay visible on the Custom Widgets page.
 
 For example, installing **Tautulli Activity** asks for both the user's Tautulli URL and API key. A stable public source such as PokéAPI keeps its published URL without creating unnecessary setup work.
 
