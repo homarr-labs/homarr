@@ -105,7 +105,7 @@ describe("Workshop widget validation", () => {
 
     expect(result.type).toBe("customWidget");
     expect(result.screenshots).toEqual([]);
-    expect(result.authorGithubUsername).toBe("");
+    expect(result.authorName).toBe("");
     expect(result.upvotes).toBe(0);
   });
 

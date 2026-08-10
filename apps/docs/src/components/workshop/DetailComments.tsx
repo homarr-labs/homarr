@@ -159,12 +159,10 @@ export const CommentsSection = ({ submissionId, backend, currentUser, onRequireA
             const canDelete = ownComment || currentUser?.isAdmin === true;
             const isEditing = editingId === comment.id;
             const edited = comment.updated !== comment.created;
-            const authorGithubUsername = ownComment
-              ? (currentUser?.githubUsername ?? comment.authorGithubUsername)
-              : comment.authorGithubUsername;
-            const authorName = authorGithubUsername || "Community member";
-            const avatarUrl = githubAvatarUrl(authorGithubUsername);
-            const profileUrl = githubProfileUrl(authorGithubUsername);
+            const authorHandle = ownComment ? (currentUser?.name ?? comment.authorName) : comment.authorName;
+            const authorName = authorHandle || "Community member";
+            const avatarUrl = githubAvatarUrl(authorHandle);
+            const profileUrl = githubProfileUrl(authorHandle);
 
             return (
               <article
@@ -292,10 +290,8 @@ export const CommentsSection = ({ submissionId, backend, currentUser, onRequireA
       <div className="rounded-xl border border-border bg-muted/30 p-3">
         <div className="flex items-start gap-2.5">
           <Avatar className="mt-0.5 size-9 bg-background ring-1 ring-border">
-            {currentUser?.githubUsername && <AvatarImage src={githubAvatarUrl(currentUser.githubUsername)} alt="" />}
-            <AvatarFallback className="bg-background">
-              {avatarFallback(currentUser?.githubUsername ?? "Guest")}
-            </AvatarFallback>
+            {currentUser?.name && <AvatarImage src={githubAvatarUrl(currentUser.name)} alt="" />}
+            <AvatarFallback className="bg-background">{avatarFallback(currentUser?.name ?? "Guest")}</AvatarFallback>
           </Avatar>
           <Textarea
             className="min-h-16 flex-1 resize-none bg-background"
