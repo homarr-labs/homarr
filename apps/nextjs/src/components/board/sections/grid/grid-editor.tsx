@@ -59,6 +59,7 @@ interface GridEditorProps {
   sectionId: string;
   columnCount: number;
   rowCount: number;
+  maxRowCount: number | null;
   placements: readonly SectionGridPlacement[];
   className: string;
 }
@@ -707,7 +708,14 @@ const GridCollisionSynchronizer = ({ interaction }: { interaction: GridInteracti
 };
 
 /** A section-local dnd-kit canvas registered with the board transaction. */
-export default function GridEditor({ sectionId, columnCount, rowCount, placements, className }: GridEditorProps) {
+export default function GridEditor({
+  sectionId,
+  columnCount,
+  rowCount,
+  maxRowCount,
+  placements,
+  className,
+}: GridEditorProps) {
   const t = useI18n();
   const { section, items, innerSections } = useSectionContext();
   const { interaction, registerGrid, getDepth, isDropTargetEligible } = useBoardGridEditor();
@@ -744,7 +752,7 @@ export default function GridEditor({ sectionId, columnCount, rowCount, placement
     interaction && (interaction.sourceGridId === sectionId || interaction.targetGridId === sectionId);
   const previewRowCount = getLayoutRowCount(previewGrid?.placements ?? renderPlacements);
   const renderedRowCount =
-    section.kind !== "container" && participatesInInteraction
+    maxRowCount === null && participatesInInteraction
       ? Math.max(rowCount, previewRowCount) + (growsDuringDrag ? 1 : 0)
       : rowCount;
 
@@ -775,14 +783,14 @@ export default function GridEditor({ sectionId, columnCount, rowCount, placement
     return registerGrid({
       id: sectionId,
       columnCount,
-      maxRowCount: section.kind === "container" ? rowCount : null,
+      maxRowCount,
       parentGridId,
       ownerPlacementId,
       placements,
       depth,
       element,
     });
-  }, [columnCount, depth, ownerPlacementId, parentGridId, placements, registerGrid, rowCount, section.kind, sectionId]);
+  }, [columnCount, depth, maxRowCount, ownerPlacementId, parentGridId, placements, registerGrid, sectionId]);
 
   useLayoutEffect(() => {
     const viewport = gridRef.current?.parentElement;
@@ -824,7 +832,7 @@ export default function GridEditor({ sectionId, columnCount, rowCount, placement
             placement={placement}
             label={label}
             columnCount={columnCount}
-            maxRowCount={section.kind === "container" ? rowCount : null}
+            maxRowCount={maxRowCount}
           />
         );
       })}
@@ -1044,6 +1052,7 @@ const GridResizeHandles = ({
     y: number;
     direction: GridResizeDirection;
     visualScale: { x: number; y: number };
+    placement: SectionGridPlacement;
   } | null>(null);
 
   const start = (direction: GridResizeDirection) =>
@@ -1077,7 +1086,14 @@ const GridResizeHandles = ({
       cancelResize();
       return;
     }
-    pointerStartRef.current = { id: event.pointerId, x: event.clientX, y: event.clientY, direction, visualScale };
+    pointerStartRef.current = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      direction,
+      visualScale,
+      placement: { ...placement },
+    };
   };
 
   const handlePointerMove = (event: ReactPointerEvent<HTMLSpanElement>) => {
@@ -1095,14 +1111,14 @@ const GridResizeHandles = ({
     const valid = update(started.direction, snappedDelta.x, snappedDelta.y);
     setContinuousResize({
       placement: getContinuousResizePlacement({
-        placement,
+        placement: started.placement,
         direction: started.direction,
         deltaColumns: continuousDelta.x,
         deltaRows: continuousDelta.y,
         columnCount,
         maxRowCount,
-        minWidth: placement.minW ?? 1,
-        minHeight: placement.minH ?? 1,
+        minWidth: started.placement.minW ?? 1,
+        minHeight: started.placement.minH ?? 1,
       }),
       valid,
     });
