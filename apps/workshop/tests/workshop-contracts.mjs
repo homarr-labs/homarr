@@ -1,5 +1,6 @@
 import { access, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import vm from "node:vm";
 
 const read = (path) => readFile(resolve(path), "utf8");
 
@@ -39,6 +40,34 @@ for (const artifact of [
 if (hook.includes('findAllRecords("users")') || !hook.includes('findRecordsByFilter("users"')) {
   throw new Error("Workshop report notifications must use a filtered, bounded administrator query");
 }
+if (!hook.includes('routerAdd("GET", "/workshop/{id}"') || !hook.includes('getStringSlice("screenshots")')) {
+  throw new Error("Workshop detail routes must render server-side social metadata with submission screenshots");
+}
+
+const hookUtilsModule = { exports: {} };
+vm.runInNewContext(await read("apps/workshop/pb_hooks/workshop-utils.js"), { module: hookUtilsModule });
+const socialHtml = hookUtilsModule.exports.renderWorkshopSocialHtml(
+  '<html><head><title data-rh="true">Homarr documentation</title><meta data-rh="true" property="og:title" content="Homarr documentation"><meta data-rh="true" name="description" content="Generic"><link data-rh="true" rel="canonical" href="https://homarr.dev/"></head></html>',
+  {
+    title: "Ocean <Glow> · Homarr Workshop",
+    description: "Custom CSS for Homarr. Calm & readable.",
+    url: "https://preview.example/workshop/abc",
+    image: "https://preview.example/api/files/submissions/abc/preview.png",
+    section: "Custom CSS",
+    submissionTitle: "Ocean <Glow>",
+  },
+);
+for (const expected of [
+  "<title>Ocean &lt;Glow&gt; · Homarr Workshop</title>",
+  'property="og:description" content="Custom CSS for Homarr. Calm &amp; readable."',
+  'rel="canonical" href="https://preview.example/workshop/abc"',
+  'property="og:image" content="https://preview.example/api/files/submissions/abc/preview.png"',
+  'name="twitter:card" content="summary_large_image"',
+  'property="article:section" content="Custom CSS"',
+]) {
+  if (!socialHtml.includes(expected)) throw new Error(`Workshop social metadata is missing: ${expected}`);
+}
+if (socialHtml.includes("Homarr documentation")) throw new Error("Workshop social metadata must replace generic tags");
 
 const migration = await read("apps/workshop/pb_migrations/1784240000_workshop_widgets.js");
 for (const removedField of ["displayName", "avatarUrl", "githubProfileUrl", "githubUsername"]) {

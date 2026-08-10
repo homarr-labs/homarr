@@ -93,6 +93,8 @@ Custom Widget imports detect required bearer, basic, header, or query credential
 
 Workshop is powered by [PocketBase](https://pocketbase.io). The production image compiles the current Docusaurus site and serves it together with the API from one origin. The deployment lives in `apps/workshop/` with a Dockerfile, Compose configuration, version-controlled migrations, hooks, a smoke test, and ACT-local workflow instructions.
 
+Submission links include Open Graph and X/Twitter metadata for the submission title, description, and type. The first uploaded screenshot is used as the social preview image; submissions without screenshots use the Homarr logo.
+
 Run `pnpm docker:workshop` for PocketBase on port 8090, then run
 `WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs` for Docusaurus on port 3003. `pnpm docker:docs` builds the
 combined production layout. Normal start and stop commands retain data; `down --volumes` is an intentional,
