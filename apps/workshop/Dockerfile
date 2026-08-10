@@ -29,6 +29,7 @@ ENV PORT=8090
 RUN addgroup -S pocketbase && adduser -S -G pocketbase pocketbase
 COPY apps/workshop/entrypoint.sh /usr/local/bin/workshop-entrypoint
 RUN chmod 755 /usr/local/bin/workshop-entrypoint && mkdir -p /pb_data /pb_public && chown pocketbase:pocketbase /pb_data /pb_public
+VOLUME ["/pb_data"]
 ENTRYPOINT ["workshop-entrypoint"]
 
 FROM pocketbase-runtime AS development
