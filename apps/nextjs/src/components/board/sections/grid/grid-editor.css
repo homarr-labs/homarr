@@ -140,6 +140,14 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
   pointer-events: none;
 }
 
+body[data-board-grid-interacting] .board-grid-resize-handle {
+  pointer-events: none;
+}
+
+body[data-board-grid-interacting] .board-grid-resize-handle::after {
+  opacity: 0;
+}
+
 .board-grid-entry[data-grid-item-type="section"][data-grid-section-chrome-active="true"] {
   outline: 2px solid var(--mantine-primary-color-filled);
   outline-offset: 4px;

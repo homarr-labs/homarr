@@ -1,7 +1,18 @@
 "use client";
 
 import type { CSSProperties, PointerEvent as ReactPointerEvent, PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 import "./grid-editor.css"; // oxlint-disable-line import/no-unassigned-import
 
@@ -47,7 +58,10 @@ import {
   previewGridResize,
 } from "./dnd";
 import type { DragProjectionOrigin, GridResizeDirection, GridTransaction, TransactionalGridState } from "./dnd";
+import type { DndGridEntryProps } from "./grid-entry-memo";
+import { areDndGridEntryPropsEqual } from "./grid-entry-memo";
 import { getGridDepth } from "./grid-depth";
+import { createGridInteractionStore } from "./grid-interaction-store";
 import { useBoardGridPortalHost } from "./grid-portal-host";
 import type { CommitSectionGridInput, SectionGridPlacement } from "./use-grid-layout-actions";
 import { useGridLayoutActions } from "./use-grid-layout-actions";
@@ -124,8 +138,7 @@ interface ResizePreviewInput {
   minHeight: number;
 }
 
-interface BoardGridEditorContextValue {
-  interaction: GridInteraction | null;
+interface BoardGridEditorActionsContextValue {
   registerGrid: (grid: RegisteredGrid) => () => void;
   getDepth: (gridId: string) => number;
   isDropTargetEligible: (source: AbstractDraggable, targetGridId: string) => boolean;
@@ -136,12 +149,33 @@ interface BoardGridEditorContextValue {
   cancelResize: () => void;
 }
 
-const BoardGridEditorContext = createContext<BoardGridEditorContextValue | null>(null);
+const BoardGridEditorActionsContext = createContext<BoardGridEditorActionsContextValue | null>(null);
+const BoardGridEditorInteractionContext = createContext<ReturnType<
+  typeof createGridInteractionStore<GridInteraction>
+> | null>(null);
 
-const useBoardGridEditor = () => {
-  const value = useContext(BoardGridEditorContext);
+const useBoardGridEditorActions = () => {
+  const value = useContext(BoardGridEditorActionsContext);
   if (!value) throw new Error("BoardGridEditorProvider is required");
   return value;
+};
+
+const useBoardGridEditorInteractionStore = () => {
+  const store = useContext(BoardGridEditorInteractionContext);
+  if (!store) throw new Error("BoardGridEditorProvider is required");
+  return store;
+};
+
+const useBoardGridEditorInteraction = () => {
+  const store = useBoardGridEditorInteractionStore();
+  return useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
+};
+
+const useBoardGridEditorGridInteraction = (sectionId: string) => {
+  const store = useBoardGridEditorInteractionStore();
+  const subscribe = useCallback((listener: () => void) => store.subscribeGrid(sectionId, listener), [sectionId, store]);
+  const getSnapshot = useCallback(() => store.getGridSnapshot(sectionId), [sectionId, store]);
+  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 };
 
 /** One provider coordinates every root and nested grid on the board. */
@@ -155,7 +189,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
   const activeRef = useRef<ActiveTransaction | null>(null);
   const renderedInteractionRef = useRef<GridInteraction | null>(null);
   const collisionFrameRef = useRef(0);
-  const [interaction, setInteraction] = useState<GridInteraction | null>(null);
+  const [interactionStore] = useState(() => createGridInteractionStore<GridInteraction>());
   const [overlayZoom, setOverlayZoom] = useState(1);
   const parentGridById = useMemo(
     () =>
@@ -176,21 +210,9 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
     collisionFrameRef.current = 0;
     activeRef.current = null;
     renderedInteractionRef.current = null;
-    setInteraction(null);
+    interactionStore.publish(null);
     document.body.removeAttribute("data-board-grid-interacting");
-  }, []);
-
-  useLayoutEffect(() => {
-    const active = activeRef.current;
-    renderedInteractionRef.current =
-      interaction &&
-      active &&
-      interaction.mode === active.mode &&
-      interaction.activeId === active.transaction.activeId &&
-      interaction.sourceGridId === active.transaction.sourceGridId
-        ? interaction
-        : null;
-  }, [interaction]);
+  }, [interactionStore]);
 
   useEffect(() => clearInteraction, [clearInteraction, currentLayoutId]);
 
@@ -265,7 +287,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
           previewRevision: 0,
         };
         document.body.setAttribute("data-board-grid-interacting", mode);
-        setInteraction({
+        interactionStore.publish({
           activeId,
           sourceGridId,
           targetGridId: mode === "resize" ? sourceGridId : null,
@@ -282,7 +304,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         return false;
       }
     },
-    [announce, clearInteraction, getCurrentState, t],
+    [announce, clearInteraction, getCurrentState, interactionStore, t],
   );
 
   const updateDragPreview = useCallback(
@@ -297,7 +319,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
 
       const publishPreview = (preview: Omit<GridInteraction, "previewRevision">) => {
         active.previewRevision += 1;
-        setInteraction({ ...preview, previewRevision: active.previewRevision });
+        interactionStore.publish({ ...preview, previewRevision: active.previewRevision });
       };
 
       const showInvalidPreview = (targetGridId: string | null, previewKey: string) => {
@@ -406,7 +428,7 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         valid: true,
       });
     },
-    [canAcceptDrop, isDropTargetEligible],
+    [canAcceptDrop, interactionStore, isDropTargetEligible],
   );
 
   const commitActiveTransaction = useCallback(
@@ -573,49 +595,52 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
     [beginTransaction],
   );
 
-  const applyResizePreview = useCallback((input: ResizePreviewInput) => {
-    const active = activeRef.current;
-    if (!active) return false;
-    active.mode = "resize";
-    active.targetGridId = active.transaction.sourceGridId;
+  const applyResizePreview = useCallback(
+    (input: ResizePreviewInput) => {
+      const active = activeRef.current;
+      if (!active) return false;
+      active.mode = "resize";
+      active.targetGridId = active.transaction.sourceGridId;
 
-    const key = `${input.direction}:${input.deltaColumns}:${input.deltaRows}:${input.minWidth}:${input.minHeight}`;
-    if (active.lastPreviewKey === key) return active.valid;
-    active.lastPreviewKey = key;
-    const result = previewGridResize(active.transaction, input);
-    active.valid = result.accepted;
-    if (!result.accepted) {
+      const key = `${input.direction}:${input.deltaColumns}:${input.deltaRows}:${input.minWidth}:${input.minHeight}`;
+      if (active.lastPreviewKey === key) return active.valid;
+      active.lastPreviewKey = key;
+      const result = previewGridResize(active.transaction, input);
+      active.valid = result.accepted;
+      if (!result.accepted) {
+        active.previewRevision += 1;
+        interactionStore.publish({
+          activeId: active.transaction.activeId,
+          sourceGridId: active.transaction.sourceGridId,
+          targetGridId: active.transaction.sourceGridId,
+          targetPlacement: null,
+          state: cancelGridTransaction(active.transaction),
+          mode: "resize",
+          valid: false,
+          previewRevision: active.previewRevision,
+        });
+        return false;
+      }
+
+      active.transaction = result.transaction;
       active.previewRevision += 1;
-      setInteraction({
+      interactionStore.publish({
         activeId: active.transaction.activeId,
         sourceGridId: active.transaction.sourceGridId,
         targetGridId: active.transaction.sourceGridId,
-        targetPlacement: null,
-        state: cancelGridTransaction(active.transaction),
+        targetPlacement:
+          result.transaction.preview.grids
+            .find((grid) => grid.id === active.transaction.sourceGridId)
+            ?.placements.find((placement) => placement.id === active.transaction.activeId) ?? null,
+        state: result.transaction.preview,
         mode: "resize",
-        valid: false,
+        valid: true,
         previewRevision: active.previewRevision,
       });
-      return false;
-    }
-
-    active.transaction = result.transaction;
-    active.previewRevision += 1;
-    setInteraction({
-      activeId: active.transaction.activeId,
-      sourceGridId: active.transaction.sourceGridId,
-      targetGridId: active.transaction.sourceGridId,
-      targetPlacement:
-        result.transaction.preview.grids
-          .find((grid) => grid.id === active.transaction.sourceGridId)
-          ?.placements.find((placement) => placement.id === active.transaction.activeId) ?? null,
-      state: result.transaction.preview,
-      mode: "resize",
-      valid: true,
-      previewRevision: active.previewRevision,
-    });
-    return true;
-  }, []);
+      return true;
+    },
+    [interactionStore],
+  );
 
   const previewResize = useCallback(
     (input: ResizePreviewInput) => {
@@ -626,9 +651,8 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
     [applyResizePreview],
   );
 
-  const value = useMemo<BoardGridEditorContextValue>(
+  const actions = useMemo<BoardGridEditorActionsContextValue>(
     () => ({
-      interaction,
       registerGrid,
       getDepth,
       isDropTargetEligible,
@@ -643,13 +667,74 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
       canAcceptDrop,
       cancelActiveInteraction,
       commitActiveTransaction,
-      interaction,
       isDropTargetEligible,
       previewResize,
       getDepth,
       registerGrid,
     ],
   );
+
+  const syncRenderedInteraction = useCallback((interaction: GridInteraction | null) => {
+    const active = activeRef.current;
+    renderedInteractionRef.current =
+      interaction &&
+      active &&
+      interaction.mode === active.mode &&
+      interaction.activeId === active.transaction.activeId &&
+      interaction.sourceGridId === active.transaction.sourceGridId
+        ? interaction
+        : null;
+  }, []);
+
+  return (
+    <BoardGridEditorActionsContext.Provider value={actions}>
+      <BoardGridEditorInteractionContext.Provider value={interactionStore}>
+        <DragDropProvider
+          plugins={configureEditorPlugins}
+          onCollision={handleCollision}
+          onBeforeDragStart={handleBeforeDragStart}
+          onDragStart={handleDragStart}
+          onDragMove={handleDragMove}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          {children}
+          <DragOverlay
+            className="board-grid-drag-overlay"
+            dropAnimation={null}
+            style={
+              {
+                zoom: overlayZoom,
+                "--board-grid-overlay-content-zoom": 1 / overlayZoom,
+              } as CSSProperties
+            }
+          >
+            {(source) => {
+              const data = getGridEntryData(source);
+              return data ? <div className="board-grid-drag-overlay-card">{data.label}</div> : null;
+            }}
+          </DragOverlay>
+          <GridInteractionEffects
+            cancelActiveInteraction={cancelActiveInteraction}
+            syncRenderedInteraction={syncRenderedInteraction}
+          />
+        </DragDropProvider>
+      </BoardGridEditorInteractionContext.Provider>
+    </BoardGridEditorActionsContext.Provider>
+  );
+};
+
+const GridInteractionEffects = ({
+  cancelActiveInteraction,
+  syncRenderedInteraction,
+}: {
+  cancelActiveInteraction: () => void;
+  syncRenderedInteraction: (interaction: GridInteraction | null) => void;
+}) => {
+  const interaction = useBoardGridEditorInteraction();
+
+  useLayoutEffect(() => syncRenderedInteraction(interaction), [interaction, syncRenderedInteraction]);
+
   useEffect(() => {
     if (interaction?.mode !== "resize") return;
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -661,48 +746,17 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
     return () => window.removeEventListener("keydown", handleKeyDown, { capture: true });
   }, [cancelActiveInteraction, interaction?.mode]);
 
-  return (
-    <BoardGridEditorContext.Provider value={value}>
-      <DragDropProvider
-        plugins={configureEditorPlugins}
-        onCollision={handleCollision}
-        onBeforeDragStart={handleBeforeDragStart}
-        onDragStart={handleDragStart}
-        onDragMove={handleDragMove}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        {children}
-        <DragOverlay
-          className="board-grid-drag-overlay"
-          dropAnimation={null}
-          style={
-            {
-              zoom: overlayZoom,
-              "--board-grid-overlay-content-zoom": 1 / overlayZoom,
-            } as CSSProperties
-          }
-        >
-          {(source) => {
-            const data = getGridEntryData(source);
-            return data ? <div className="board-grid-drag-overlay-card">{data.label}</div> : null;
-          }}
-        </DragOverlay>
-        <GridCollisionSynchronizer interaction={interaction} />
-      </DragDropProvider>
-    </BoardGridEditorContext.Provider>
-  );
+  return <GridCollisionSynchronizer previewRevision={interaction?.previewRevision ?? null} />;
 };
 
-const GridCollisionSynchronizer = ({ interaction }: { interaction: GridInteraction | null }) => {
+const GridCollisionSynchronizer = ({ previewRevision }: { previewRevision: number | null }) => {
   const manager = useDragDropManager();
-  const geometryKey = interaction ? getGridGeometryKey(interaction.state) : null;
 
   useLayoutEffect(() => {
-    if (!geometryKey || !manager) return;
+    if (previewRevision === null || !manager) return;
     for (const target of manager.registry.droppables.value) target.refreshShape();
     manager.collisionObserver.forceUpdate(true);
-  }, [geometryKey, manager]);
+  }, [manager, previewRevision]);
 
   return null;
 };
@@ -718,7 +772,8 @@ export default function GridEditor({
 }: GridEditorProps) {
   const t = useI18n();
   const { section, items, innerSections } = useSectionContext();
-  const { interaction, registerGrid, getDepth, isDropTargetEligible } = useBoardGridEditor();
+  const interaction = useBoardGridEditorGridInteraction(sectionId);
+  const { registerGrid, getDepth, isDropTargetEligible } = useBoardGridEditorActions();
   const gridRef = useRef<HTMLDivElement>(null);
   const parentGridId = "parentSectionId" in section ? section.parentSectionId : null;
   const ownerPlacementId = "parentSectionId" in section ? section.id : null;
@@ -738,9 +793,17 @@ export default function GridEditor({
     }
     return previewGrid.placements.filter((placement) => placement.id !== interaction.activeId);
   }, [controlledById, interaction, placements, previewGrid, sectionId]);
-  const entryById = useMemo(
-    () => new Map([...items, ...innerSections].map((entry) => [entry.id, entry])),
-    [innerSections, items],
+  const labelById = useMemo(
+    () =>
+      new Map(
+        [...items, ...innerSections].map((entry) => [
+          entry.id,
+          entry.type === "item"
+            ? entry.advancedOptions.title?.trim() || t(`widget.${entry.kind}.name`)
+            : entry.options.title.trim() || t("section.container.untitled"),
+        ]),
+      ),
+    [innerSections, items, t],
   );
   const targetPlacement =
     interaction?.valid && interaction.targetGridId === sectionId ? interaction.targetPlacement : null;
@@ -819,20 +882,15 @@ export default function GridEditor({
       }
     >
       {renderPlacements.map((placement) => {
-        const entry = entryById.get(placement.id);
-        const label = entry
-          ? entry.type === "item"
-            ? entry.advancedOptions.title?.trim() || t(`widget.${entry.kind}.name`)
-            : entry.options.title.trim() || t("section.container.untitled")
-          : placement.id;
         return (
           <DndGridEntry
             key={placement.id}
             sectionId={sectionId}
             placement={placement}
-            label={label}
+            label={labelById.get(placement.id) ?? placement.id}
             columnCount={columnCount}
             maxRowCount={maxRowCount}
+            isActive={interaction?.activeId === placement.id}
           />
         );
       })}
@@ -859,17 +917,16 @@ export default function GridEditor({
   );
 }
 
-interface DndGridEntryProps {
-  sectionId: string;
-  placement: SectionGridPlacement;
-  label: string;
-  columnCount: number;
-  maxRowCount: number | null;
-}
-
-const DndGridEntry = ({ sectionId, placement, label, columnCount, maxRowCount }: DndGridEntryProps) => {
+const DndGridEntryComponent = ({
+  sectionId,
+  placement,
+  label,
+  columnCount,
+  maxRowCount,
+  isActive,
+}: DndGridEntryProps) => {
   const { acquireContainer } = useBoardGridPortalHost();
-  const { interaction, beginResize, previewResize, completeResize, cancelResize } = useBoardGridEditor();
+  const { beginResize, previewResize, completeResize, cancelResize } = useBoardGridEditorActions();
   const [isSectionChromeActive, setIsSectionChromeActive] = useState(false);
   const [continuousResize, setContinuousResize] = useState<{
     placement: SectionGridPlacement;
@@ -963,7 +1020,6 @@ const DndGridEntry = ({ sectionId, placement, label, columnCount, maxRowCount }:
     return () => shell.removeEventListener("pointerdown", handlePointerDownCapture, { capture: true });
   }, [placement.type]);
 
-  const isActive = interaction?.activeId === placement.id;
   const style = getLogicalItemStyle(placement) as CSSProperties;
   const continuousResizeStyle =
     continuousResize && isActive
@@ -1004,7 +1060,7 @@ const DndGridEntry = ({ sectionId, placement, label, columnCount, maxRowCount }:
         sectionId={sectionId}
         placement={placement}
         label={label}
-        disabled={interaction !== null || (placement.type === "section" && !isSectionChromeActive)}
+        disabled={placement.type === "section" && !isSectionChromeActive}
         columnCount={columnCount}
         maxRowCount={maxRowCount}
         beginResize={beginResize}
@@ -1017,6 +1073,8 @@ const DndGridEntry = ({ sectionId, placement, label, columnCount, maxRowCount }:
   );
 };
 
+const DndGridEntry = memo(DndGridEntryComponent, areDndGridEntryPropsEqual);
+
 interface GridResizeHandlesProps {
   sectionId: string;
   placement: SectionGridPlacement;
@@ -1024,10 +1082,10 @@ interface GridResizeHandlesProps {
   disabled: boolean;
   columnCount: number;
   maxRowCount: number | null;
-  beginResize: BoardGridEditorContextValue["beginResize"];
-  previewResize: BoardGridEditorContextValue["previewResize"];
-  completeResize: BoardGridEditorContextValue["completeResize"];
-  cancelResize: BoardGridEditorContextValue["cancelResize"];
+  beginResize: BoardGridEditorActionsContextValue["beginResize"];
+  previewResize: BoardGridEditorActionsContextValue["previewResize"];
+  completeResize: BoardGridEditorActionsContextValue["completeResize"];
+  cancelResize: BoardGridEditorActionsContextValue["cancelResize"];
   setContinuousResize: (preview: { placement: SectionGridPlacement; valid: boolean } | null) => void;
 }
 
@@ -1355,18 +1413,3 @@ const getGridTargetData = (target: { data: Record<string, unknown> }): GridTarge
   const data = target.data as Partial<GridTargetData>;
   return data.kind === GRID_TARGET_TYPE && data.sectionId ? (data as GridTargetData) : null;
 };
-
-const getGridGeometryKey = (state: TransactionalGridState<SectionGridPlacement>) =>
-  JSON.stringify(
-    state.grids
-      .map((grid) => ({
-        id: grid.id,
-        columnCount: grid.columnCount,
-        maxRowCount: grid.maxRowCount,
-        parentGridId: grid.parentGridId,
-        placements: grid.placements
-          .map(({ id, x, y, w, h }) => ({ id, x, y, w, h }))
-          .toSorted((first, second) => first.id.localeCompare(second.id)),
-      }))
-      .toSorted((first, second) => first.id.localeCompare(second.id)),
-  );
