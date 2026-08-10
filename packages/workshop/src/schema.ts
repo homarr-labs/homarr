@@ -16,6 +16,11 @@ export const MAX_WORKSHOP_SCREENSHOT_BYTES = 5 * 1024 * 1024;
 export const WORKSHOP_REQUEST_TIMEOUT_MS = 8_000;
 export const WORKSHOP_SCREENSHOT_MIME_TYPES = ["image/png", "image/jpeg", "image/webp"] as const;
 
+export const githubProfileUrl = (username: string) =>
+  username ? `https://github.com/${encodeURIComponent(username)}` : "";
+export const githubAvatarUrl = (username: string) =>
+  username ? `https://github.com/${encodeURIComponent(username)}.png` : "";
+
 export interface HomarrUrlConfig {
   homarrWebsiteUrl: string;
   workshopApiUrl: string;
@@ -85,10 +90,7 @@ const workshopFileListSchema = z
 
 export const workshopUserSchema = z.object({
   id: z.string(),
-  displayName: z.string(),
-  avatarUrl: z.string().default(""),
   githubUsername: z.string().default(""),
-  githubProfileUrl: z.string().default(""),
   isAdmin: z.boolean().default(false),
 });
 export type WorkshopUser = z.infer<typeof workshopUserSchema>;
@@ -111,10 +113,7 @@ const workshopSubmissionBaseObjectSchema = z.object({
   widgetSchema: z.string(),
   screenshots: workshopFileListSchema,
   author: z.string(),
-  authorName: z.string().default("Community member"),
-  authorAvatarUrl: z.string().default(""),
   authorGithubUsername: z.string().default(""),
-  authorGithubProfileUrl: z.string().default(""),
   score: z.number().int().default(0),
   upvotes: z.number().int().default(0),
   downvotes: z.number().int().default(0),
@@ -174,7 +173,7 @@ export const workshopReportSchema = z.object({
   id: z.string(),
   submission: z.string(),
   reporter: z.string(),
-  reporterName: z.string().default("Community member"),
+  reporterGithubUsername: z.string().default(""),
   submissionTitle: z.string().default("Deleted submission"),
   category: workshopReportCategorySchema,
   explanation: z.string(),
@@ -191,9 +190,7 @@ export const workshopCommentSchema = z.object({
   content: z.string().min(1).max(2_000),
   created: z.string(),
   updated: z.string(),
-  authorName: z.string().default("Community member"),
-  authorAvatarUrl: z.string().default(""),
-  authorGithubProfileUrl: z.string().default(""),
+  authorGithubUsername: z.string().default(""),
 });
 export type WorkshopComment = z.infer<typeof workshopCommentSchema>;
 

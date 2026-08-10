@@ -3,6 +3,7 @@ import { IconCheck, IconEdit, IconMessageCircle, IconRefresh, IconSend, IconTras
 
 import type { WorkshopComment } from "@site/src/lib/pocketbase";
 import { getWorkshopBackend } from "@site/src/lib/pocketbase";
+import { githubAvatarUrl, githubProfileUrl } from "@homarr/workshop/schema";
 import type { WorkshopUser } from "@homarr/workshop/schema";
 import { errorMessage } from "@site/src/lib/utils";
 
@@ -158,13 +159,12 @@ export const CommentsSection = ({ submissionId, backend, currentUser, onRequireA
             const canDelete = ownComment || currentUser?.isAdmin === true;
             const isEditing = editingId === comment.id;
             const edited = comment.updated !== comment.created;
-            const authorName = ownComment ? (currentUser?.displayName ?? comment.authorName) : comment.authorName;
-            const avatarUrl = ownComment
-              ? (currentUser?.avatarUrl ?? comment.authorAvatarUrl)
-              : comment.authorAvatarUrl;
-            const profileUrl = ownComment
-              ? (currentUser?.githubProfileUrl ?? comment.authorGithubProfileUrl)
-              : comment.authorGithubProfileUrl;
+            const authorGithubUsername = ownComment
+              ? (currentUser?.githubUsername ?? comment.authorGithubUsername)
+              : comment.authorGithubUsername;
+            const authorName = authorGithubUsername || "Community member";
+            const avatarUrl = githubAvatarUrl(authorGithubUsername);
+            const profileUrl = githubProfileUrl(authorGithubUsername);
 
             return (
               <article
@@ -292,9 +292,9 @@ export const CommentsSection = ({ submissionId, backend, currentUser, onRequireA
       <div className="rounded-xl border border-border bg-muted/30 p-3">
         <div className="flex items-start gap-2.5">
           <Avatar className="mt-0.5 size-9 bg-background ring-1 ring-border">
-            {currentUser?.avatarUrl && <AvatarImage src={currentUser.avatarUrl} alt="" />}
+            {currentUser?.githubUsername && <AvatarImage src={githubAvatarUrl(currentUser.githubUsername)} alt="" />}
             <AvatarFallback className="bg-background">
-              {avatarFallback(currentUser?.displayName ?? "Guest")}
+              {avatarFallback(currentUser?.githubUsername ?? "Guest")}
             </AvatarFallback>
           </Avatar>
           <Textarea

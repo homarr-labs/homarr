@@ -95,8 +95,11 @@ irreversible development reset.
 GitHub needs only the central callback `https://<workshop-host>/api/oauth2-redirect`. Keep PocketBase origins unrestricted
 unless every self-hosted Homarr caller is explicitly listed. Configure both `GITHUB_CLIENT_ID` and
 `GITHUB_CLIENT_SECRET`; supplying only one is a startup error. Set `WORKSHOP_PUBLIC_ORIGIN` in production so generated
-links and email use the public host. Workshop uses the OAuth provider username as the public display name instead of
-the profile's full name. Configure SMTP for comment, report, and removal notices.
+links and email use the public host. Workshop stores only the OAuth provider username in `users.githubUsername`, and
+users cannot rename it. Map **OAuth2 username** to `githubUsername`; leave OAuth2 id, full name, and avatar mappings
+empty. Profile and avatar URLs are derived from `https://github.com/<username>` and
+`https://github.com/<username>.png`, so PocketBase does not store duplicate profile metadata or avatar files. Configure
+SMTP for comment, report, and removal notices.
 
 The public URL contract is:
 
