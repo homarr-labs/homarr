@@ -796,6 +796,7 @@ export const assistantRouter = createTRPCRouter({
         threadId: z.string().max(64),
         id: z.string().min(1).max(128),
         parentId: z.string().max(128).nullable(),
+        // The current assistant-ui AI SDK v7 adapter uses this value as its persisted wire-format identifier.
         format: z.literal("ai-sdk/v6"),
         content: z.unknown(),
       }),
