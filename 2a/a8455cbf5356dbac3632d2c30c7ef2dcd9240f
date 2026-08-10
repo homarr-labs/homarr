@@ -1,0 +1,79 @@
+packages/definitions/src/widget.ts
+  s_093d61b162b9ca::t_05b62bcd915134 57
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_093d61b162b9ca::t_05b62bcd915134 333,387-388
+packages/definitions/src/docs/widget-doc-slugs.ts
+  s_093d61b162b9ca::t_05b62bcd915134 59
+packages/widgets/src/index.tsx
+  s_093d61b162b9ca::t_05b62bcd915134 68,150
+CODEOWNERS
+  s_093d61b162b9ca::t_9e943fd3eccf87 209-216
+apps/docs/README.md
+  s_093d61b162b9ca::t_db4e38a69ece12 64-65
+apps/docs/docs/integrations/whats-up-docker/index.mdx
+  s_093d61b162b9ca::t_eca27dacdaf450 1-48
+apps/docs/docs/integrations/whats-up-docker/index.ts
+  s_093d61b162b9ca::t_3f47ee251354ca 1-9
+apps/docs/docs/widgets/whats-up-docker/index.mdx
+  s_093d61b162b9ca::t_e4e960031e256b 1-35
+apps/docs/docs/widgets/whats-up-docker/index.ts
+  s_093d61b162b9ca::t_f129e25c0d4990 1-37
+docs/README.md
+  s_093d61b162b9ca::t_9c5201244051cb 432-438
+packages/api/src/router/widgets/index.ts
+  s_093d61b162b9ca::t_3934a3df94e4d3 47
+packages/api/src/router/widgets/wud.ts
+  s_093d61b162b9ca::t_457f6fdc4dbf4a 1-25
+packages/definitions/src/docs/integration-doc-slugs.ts
+  s_093d61b162b9ca::t_797c0d94ca6dbd 57
+packages/definitions/src/integration.ts
+  s_093d61b162b9ca::t_0303eb7bbe3c48 471-478
+packages/definitions/src/widget-integration-map.ts
+  s_093d61b162b9ca::t_52d9d7c0904d9c 27-29,55
+packages/integrations/src/base/creator.ts
+  s_093d61b162b9ca::t_96e0456817d259 57,137
+packages/integrations/src/index.ts
+  s_093d61b162b9ca::t_d3c40fb5be1c0d 3,96
+packages/integrations/src/wud/test/wud-integration.spec.ts
+  s_093d61b162b9ca::t_4b0fcb9d31c461 1-269
+packages/integrations/src/wud/wud-integration.ts
+  s_093d61b162b9ca::t_2f4ac728c8075c 1-68
+packages/integrations/src/wud/wud-types.ts
+  s_093d61b162b9ca::t_863018686ecb58 1-81
+packages/request-handler/src/health-monitoring.ts
+  s_093d61b162b9ca::t_494ca009aed886 9
+packages/request-handler/src/wud.ts
+  s_093d61b162b9ca::t_3c3c285a86a38f 1-11
+packages/translation/src/lang/en.json
+  s_093d61b162b9ca::t_c3fcd92cf5264c 1800-1803,2655-2686
+packages/widgets/src/catalog.ts
+  s_093d61b162b9ca::t_18e4eea33dc839 112
+packages/widgets/src/health-monitoring/index.ts
+  s_093d61b162b9ca::t_d5540677007d52 117-119
+packages/widgets/src/manifest.ts
+  s_093d61b162b9ca::t_741384ad7e6dd1 80,143
+packages/widgets/src/refetch-intervals.ts
+  s_093d61b162b9ca::t_a19f795bb76581 35
+packages/widgets/src/wud/component.module.css
+  s_093d61b162b9ca::t_cab4777739470f 1-7
+packages/widgets/src/wud/component.tsx
+  s_093d61b162b9ca::t_f299b2f3988eb7 1-222
+packages/widgets/src/wud/index.ts
+  s_093d61b162b9ca::t_bfdd0b423e304e 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "2aa8455cbf5356dbac3632d2c30c7ef2dcd9240f",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
