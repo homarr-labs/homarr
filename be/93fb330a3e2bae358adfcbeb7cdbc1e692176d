@@ -12,6 +12,8 @@ packages/translation/src/lang/en.json
   s_f3d4850db94e77::t_6a8b1cc484d0e0 979
 apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx
   s_f3d4850db94e77::t_2467761454b1ca 4,86,92-115,120-122,124-127,153-166
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
+  s_f3d4850db94e77::t_43386528985430 3-4,39-49
 ---
 {
   "schema_version": "authorship/3.0.0",
