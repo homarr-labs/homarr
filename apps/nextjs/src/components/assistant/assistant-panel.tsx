@@ -124,6 +124,7 @@ import classes from "./assistant-panel.module.css";
 import { getAssistantActivityState } from "./assistant-activity-state";
 import { useAssistantAutoApproval, useAssistantAutomaticAction } from "./assistant-auto-approval";
 import { AssistantDotMatrix } from "./assistant-dot-matrix";
+import { AssistantImage } from "./assistant-image";
 import { getAssistantDirectiveTranslationKey, parseAssistantDirectives } from "./assistant-directives";
 import { remarkAssistantDirectives, resolveAssistantDirectiveEntity } from "./assistant-markdown-directives";
 import type { AssistantDirectiveEntity } from "./assistant-markdown-directives";
@@ -142,6 +143,7 @@ import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assi
 import { useAssistantReasoningState } from "./assistant-reasoning-state";
 import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
 import { getToolResultPresentation } from "./assistant-tool-result";
+import { getAssistantIconSearchQuery } from "./assistant-tool-label";
 import { getAssistantToolTraceTarget } from "./assistant-tool-trace";
 import { getSafeAssistantHttpUrl } from "./assistant-url";
 
@@ -267,18 +269,19 @@ const MarkdownTable = ({ children, ...props }: ComponentPropsWithoutRef<"table">
 );
 
 const MarkdownImage = ({ src, alt = "", ...props }: ComponentPropsWithoutRef<"img">) => {
+  const t = useScopedI18n("common.assistant.image");
   const safeSource = getSafeAssistantMarkdownImageSource(src);
   if (!safeSource) return null;
 
   return (
-    <img
+    <AssistantImage
       {...props}
-      src={safeSource}
+      source={safeSource}
       alt={alt}
       className={classes.markdownImage}
-      loading="lazy"
-      decoding="async"
-      referrerPolicy="no-referrer"
+      loadingLabel={t("loading")}
+      failedLabel={t("failed")}
+      retryLabel={t("retry")}
     />
   );
 };
@@ -623,7 +626,18 @@ const ImagePart = ({ image, filename }: ImageMessagePartProps) => {
       </Group>
     );
   }
-  return <Box component="img" src={source} alt={filename ?? t("attachedImage")} className={classes.messageImage} />;
+  return (
+    <AssistantImage
+      messagePart
+      source={source}
+      alt={filename ?? t("attachedImage")}
+      caption={filename}
+      className={classes.messageImage}
+      loadingLabel={t("image.loading")}
+      failedLabel={t("image.failed")}
+      retryLabel={t("image.retry")}
+    />
+  );
 };
 
 const formatToolResultValue = (value: string | number | boolean) =>
@@ -835,6 +849,13 @@ const ToolPart = ({
   const successful = completed && !denied && !failed;
   const compactPresentation = compact && !awaitingApproval;
   const traceTarget = getAssistantToolTraceTarget(args);
+  const iconSearchQuery = getAssistantIconSearchQuery(toolName, args);
+  const displayName =
+    iconSearchQuery === null
+      ? toolName.replaceAll("_", " ")
+      : iconSearchQuery.length > 0
+        ? t("toolActivity.iconSearch", { query: iconSearchQuery })
+        : t("toolActivity.iconBrowse");
   const duration = timing?.completedAt !== undefined ? Math.max(0, timing.completedAt - timing.startedAt) : undefined;
   const autoApprovalInProgress = useAssistantAutomaticAction({
     toolCallId,
@@ -865,7 +886,7 @@ const ToolPart = ({
             </ThemeIcon>
             <Box miw={0}>
               <Text size={compactPresentation ? "xs" : "sm"} fw={650} lineClamp={1}>
-                {toolName.replaceAll("_", " ")}
+                {displayName}
               </Text>
               {compactPresentation && traceTarget && (
                 <Text size="xs" c="dimmed" lineClamp={1}>
