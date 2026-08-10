@@ -14,6 +14,7 @@ import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import type {
   WorkshopComment,
   WorkshopReport,
+  WorkshopReportSummary,
   WorkshopSubmissionDetail,
   WorkshopSubmissionInput,
   WorkshopSubmissionSummary,
@@ -28,6 +29,7 @@ import {
   WORKSHOP_SCHEMA_BY_TYPE,
   workshopCommentSchema,
   workshopReportSchema,
+  workshopReportSummarySchema,
   workshopSubmissionDetailSchema,
   workshopSubmissionSummarySchema,
   workshopSubmissionInputSchema,
@@ -122,6 +124,13 @@ export interface WorkshopReportRecord extends WorkshopBaseRecord {
   expand?: { reporter?: WorkshopUserRecord; submission?: WorkshopSubmissionRecord };
 }
 
+export interface WorkshopReportSummaryRecord extends WorkshopBaseRecord {
+  submission: string;
+  category: WorkshopReportSummary["category"];
+  explanation: string;
+  created: string;
+}
+
 export interface WorkshopCommentRecord extends WorkshopBaseRecord {
   submission: string;
   author: string;
@@ -137,6 +146,7 @@ export interface TypedWorkshopPocketBase extends PocketBase {
   collection(idOrName: "workshop_listings"): RecordService<WorkshopListingRecord>;
   collection(idOrName: "votes"): RecordService<WorkshopVoteRecord>;
   collection(idOrName: "reports"): RecordService<WorkshopReportRecord>;
+  collection(idOrName: "workshop_report_summaries"): RecordService<WorkshopReportSummaryRecord>;
   collection(idOrName: "comments"): RecordService<WorkshopCommentRecord>;
   collection(idOrName: string): RecordService;
 }
@@ -508,6 +518,18 @@ export class WorkshopBackend {
     }
   }
 
+  public async listReportSummaries(submission: string): Promise<WorkshopReportSummary[]> {
+    try {
+      const filter = this.pocketBase.filter("submission = {:submission}", { submission });
+      const items = await this.pocketBase
+        .collection("workshop_report_summaries")
+        .getFullList({ batch: 100, filter, sort: "-created" });
+      return items.map((item) => workshopReportSummarySchema.parse(item));
+    } catch (error) {
+      throw workshopError(error, "Failed to load report details");
+    }
+  }
+
   public async dismissReport(id: string) {
     try {
       await this.pocketBase.collection("reports").update(id, { status: "dismissed" });
@@ -599,6 +621,14 @@ export const workshopQueryKeys = {
   details: (baseUrl?: string) => [...workshopQueryKeys.all, "detail", baseUrl] as const,
   detail: (backend: WorkshopBackend, id: string) => [...workshopQueryKeys.details(backend.baseUrl), id] as const,
   reports: (backend: WorkshopBackend) => [...workshopQueryKeys.all, "reports", backend.baseUrl] as const,
+  reportSummaries: (backend: WorkshopBackend, submission: string) =>
+    [
+      ...workshopQueryKeys.all,
+      "report-summaries",
+      backend.baseUrl,
+      submission,
+      backend.currentUser?.id ?? "anonymous",
+    ] as const,
   comments: (backend: WorkshopBackend, submission: string) =>
     [...workshopQueryKeys.all, "comments", backend.baseUrl, submission] as const,
 };
@@ -619,6 +649,13 @@ export const workshopSubmissionQueryOptions = (backend: WorkshopBackend, id: str
 
 export const workshopReportsQueryOptions = (backend: WorkshopBackend) =>
   queryOptions({ queryKey: workshopQueryKeys.reports(backend), queryFn: () => backend.listReports() });
+
+export const workshopReportSummariesQueryOptions = (backend: WorkshopBackend, submission: string) =>
+  queryOptions({
+    queryKey: workshopQueryKeys.reportSummaries(backend, submission),
+    queryFn: () => backend.listReportSummaries(submission),
+    enabled: submission.length > 0,
+  });
 
 export const workshopCommentsQueryOptions = (backend: WorkshopBackend, submission: string) =>
   queryOptions({
@@ -700,6 +737,10 @@ export function useWorkshopReportsQuery(backend: WorkshopBackend) {
   return useQuery(workshopReportsQueryOptions(backend));
 }
 
+export function useWorkshopReportSummariesQuery(backend: WorkshopBackend, submission: string) {
+  return useQuery(workshopReportSummariesQueryOptions(backend, submission));
+}
+
 export function useWorkshopCommentsQuery(backend: WorkshopBackend, submission: string) {
   return useQuery(workshopCommentsQueryOptions(backend, submission));
 }
@@ -712,6 +753,8 @@ function useWorkshopInvalidation(backend: WorkshopBackend) {
     detail: (id: string) => queryClient.invalidateQueries({ queryKey: workshopQueryKeys.detail(backend, id) }),
     removeDetail: (id: string) => queryClient.removeQueries({ queryKey: workshopQueryKeys.detail(backend, id) }),
     reports: () => queryClient.invalidateQueries({ queryKey: workshopQueryKeys.reports(backend) }),
+    reportSummaries: (submission: string) =>
+      queryClient.invalidateQueries({ queryKey: workshopQueryKeys.reportSummaries(backend, submission) }),
     comments: (submission: string) =>
       queryClient.invalidateQueries({ queryKey: workshopQueryKeys.comments(backend, submission) }),
   };
@@ -753,7 +796,13 @@ export function useWorkshopReportMutation(backend: WorkshopBackend) {
   const invalidation = useWorkshopInvalidation(backend);
   return useMutation({
     ...workshopReportMutationOptions(backend),
-    onSuccess: async () => Promise.all([invalidation.lists(), invalidation.details(), invalidation.reports()]),
+    onSuccess: async (_report, input) =>
+      Promise.all([
+        invalidation.lists(),
+        invalidation.details(),
+        invalidation.reports(),
+        invalidation.reportSummaries(input.submission),
+      ]),
   });
 }
 
