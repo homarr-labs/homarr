@@ -1,0 +1,46 @@
+apps/nextjs/src/components/workshop/workshop-browser.tsx
+  s_093d61b162b9ca::t_4b6cba5559c2fb 542,578
+  s_093d61b162b9ca::t_885ea707c7e277 539-541,543-577,579-586
+  s_093d61b162b9ca::t_d4b368210ed9c2 3,25,29,32,41-42,66,83-94,97,106,112-124,156,168,194-204,206-225,320-321,337-342,349-368,406,439,448,455,483-489
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_093d61b162b9ca::t_c6fa3f0f1023d2 93-97,103
+apps/nextjs/src/components/workshop/workshop-install-button.tsx
+  s_093d61b162b9ca::t_57ec9c739f77c2 78-83
+  s_093d61b162b9ca::t_5bd4aa718b98d4 5,30,32-33,48,53,55-67
+  s_093d61b162b9ca::t_b7cb9913e854d1 6,20-27,51,54,77
+apps/nextjs/src/components/custom-widgets/custom-widget-import-dialog.tsx
+  s_093d61b162b9ca::t_57ec9c739f77c2 32,44,118-121,130-131
+  s_093d61b162b9ca::t_b7cb9913e854d1 5,31,43,111
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_093d61b162b9ca::t_5bd4aa718b98d4 163
+apps/nextjs/src/components/workshop/workshop-install-flow.spec.ts
+  s_093d61b162b9ca::t_45b809a5a1b9b1 3-34
+  s_093d61b162b9ca::t_ea11bb62a8cee3 1-2
+packages/translation/src/lang/en.json
+  s_093d61b162b9ca::t_5bd4aa718b98d4 1133-1134,1155,1163
+  s_093d61b162b9ca::t_57ec9c739f77c2 1164-1166
+apps/nextjs/src/components/workshop/workshop-client.ts
+  s_093d61b162b9ca::t_5bd4aa718b98d4 2,15-22
+  s_093d61b162b9ca::t_466182c8c3fb1c 23
+packages/custom-widgets/src/workbench/import-review.tsx
+  s_093d61b162b9ca::t_04e5b39d8d1803 72
+  s_093d61b162b9ca::t_b7cb9913e854d1 33-34,59-60,73
+apps/docs/docs/management/workshop/index.mdx
+  s_093d61b162b9ca::t_c6fa3f0f1023d2 81-82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "cf3c4b415274f258b3ff7b4949482f6ef0d2c401",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
