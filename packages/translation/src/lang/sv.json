@@ -1344,10 +1344,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Ny behållare",
-        "remove": "Ta bort behållare"
+        "create": "Ny dynamisk sektion",
+        "remove": ""
       },
       "option": {
         "title": {
@@ -1361,8 +1361,48 @@
         }
       },
       "remove": {
-        "title": "Ta bort behållare",
-        "message": "Är du säker på att du vill ta bort den här behållaren? Objekten flyttas till samma plats i den överordnade sektionen."
+        "title": "",
+        "message": ""
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Namn"
+        }
+      },
+      "action": {
+        "create": "Ny kategori",
+        "edit": "",
+        "remove": "",
+        "moveUp": "Flytta uppåt",
+        "moveDown": "Flytta nedåt",
+        "createAbove": "",
+        "createBelow": "",
+        "openAllInNewTabs": ""
+      },
+      "create": {
+        "title": "",
+        "submit": "Lägg till kategori"
+      },
+      "remove": {
+        "title": "",
+        "message": "Är du säker du vill ta bort kategorin {name}?"
+      },
+      "edit": {
+        "title": "",
+        "submit": ""
+      },
+      "menu": {
+        "label": {
+          "create": "",
+          "changePosition": "Ändra position",
+          "settings": "Inställningar"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
