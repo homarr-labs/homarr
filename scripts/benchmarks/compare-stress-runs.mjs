@@ -61,13 +61,20 @@ const peakStage = (stages) => {
   return values.length ? Math.max(...values) : null;
 };
 
+/**
+ * Ordered with cgroup anonymous memory first, because that is the figure that counts against a
+ * container limit and cannot be reclaimed. `memory.current` also includes page cache, which has
+ * swung 60+ MiB between runs of an identical image, so it is reported but never led with.
+ */
 const METRICS = [
-  ["peak container MiB", (run) => peakStage(run.summary.containerMiB)],
+  ["PEAK anon MiB", (run) => peakStage(run.summary.anonMiB)],
+  ["anon: boot idle", (run) => run.summary.anonMiB?.["01-boot-idle"]],
+  ["anon: post-login", (run) => run.summary.anonMiB?.["03-post-login"]],
+  ["anon: board loaded", (run) => run.summary.anonMiB?.["04-board-loaded"]],
+  ["anon: multi-tab", (run) => run.summary.anonMiB?.["07-multi-tab"]],
+  ["anon: post-soak", (run) => run.summary.anonMiB?.["06-final"]],
   ["peak node RSS MiB", (run) => peakStage(run.summary.nodeRssMiB)],
-  ["peak node anon MiB", (run) => peakStage(run.summary.nodeAnonMiB)],
-  ["multi-tab container MiB", (run) => run.summary.containerMiB?.["07-multi-tab"]],
-  ["final (post-soak) MiB", (run) => run.summary.containerMiB?.["06-final"]],
-  ["boot idle MiB", (run) => run.summary.containerMiB?.["01-boot-idle"]],
+  ["peak container (w/ cache)", (run) => peakStage(run.summary.containerMiB)],
   ["peak arrayBuffers MiB", (run) => peakArrayBuffers(run.dir)],
   ["largest single alloc MiB", (run) => largestAllocation(run.dir)],
   ["client JS heap MiB", (run) => run.summary.client?.jsHeapUsedMiB],

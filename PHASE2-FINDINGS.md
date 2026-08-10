@@ -958,6 +958,36 @@ never observes the mid-response client disconnect that creates an orphan in the 
 Recorded because the initial reading of the snapshot was wrong in a way that would have shipped a
 fix for a leak this deployment does not have.
 
+## jemalloc: tested, and musl is the frugal one
+
+The largest thing that was attributed but not fixed is ~38 MiB of V8 parser/compiler zone memory
+that is freed back to malloc and never returned to the kernel by musl. Swapping in jemalloc, which
+decays unused spans back to the OS, looked like the obvious answer.
+
+Tested properly: `jemalloc` added to the image but activated only by `HOMARR_MALLOC=jemalloc`
+through `LD_PRELOAD`, so both sides of the A/B ran the **byte-identical image** and differed by one
+environment variable — no build-to-build variance at all. Presence of the "Using jemalloc" line in
+the container log was asserted, so this is not inferred from the variable being set.
+
+| stage | musl | jemalloc | change |
+| --- | --- | --- | --- |
+| boot idle | 62.4 MiB | **80.3 MiB** | **+29%** |
+| after sign-in | 144.9 MiB | **170.6 MiB** | +18% |
+| dashboard loaded | 214.8 MiB | 184.4 MiB | −14% |
+| 4 tabs | 259.9 MiB | **319.6 MiB** | +23% |
+| after soak | 215.5 MiB | **279.6 MiB** | +30% |
+| peak anon | 299.4 MiB | 322.5 MiB | +8% |
+| **CPU** | 28.0 s | **24.5 s** | **−13%** |
+
+Every row non-overlapping. **The hypothesis was backwards.** jemalloc does not hand freed spans
+back sooner; it deliberately keeps more of them — thread-local caches plus time-based dirty-page
+decay — and spends that memory to be fast. It is 13% cheaper on CPU and 18–30% more expensive on
+resident memory, which is the opposite of the trade wanted here.
+
+Reverted. The useful conclusion is a closed door: musl's allocator is already the memory-frugal
+choice, so "swap the allocator" is not a direction for reducing RAM in this container. If CPU ever
+becomes the binding constraint instead, this is a measured 13% for two lines.
+
 ## Measured but not pursued
 
 
