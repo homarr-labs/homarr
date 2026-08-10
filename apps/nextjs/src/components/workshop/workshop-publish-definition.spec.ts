@@ -26,6 +26,12 @@ describe("Workshop publish definition inspection", () => {
     expect(workshopDefinitionChanged(definition, { ...definition, name: "Updated" })).toBe(true);
   });
 
+  it("publishes readable multi-line JSON", () => {
+    const serialized = serializeWorkshopDefinition(definition);
+    expect(serialized).toContain('\n  "name": "Status"');
+    expect(JSON.parse(serialized)).toEqual(definition);
+  });
+
   it("blocks publishing when the definition changes after inspection", async () => {
     const publish = vi.fn(async () => undefined);
     await expect(

@@ -28,7 +28,14 @@ const root = await request("/api/collections/_superusers/auth-with-password", {
 const rootHeaders = { authorization: `Bearer ${root.token}` };
 const collections = await request("/api/collections?perPage=200", { headers: rootHeaders });
 const collectionNames = new Set(collections.items.map((collection) => collection.name));
-for (const required of ["submissions", "votes", "comments", "reports", "workshop_listings"]) {
+for (const required of [
+  "submissions",
+  "votes",
+  "comments",
+  "reports",
+  "workshop_listings",
+  "workshop_report_summaries",
+]) {
   if (!collectionNames.has(required)) throw new Error(`Missing Workshop collection: ${required}`);
 }
 for (const removed of ["workshop_admin_actions", "workshop_admins"]) {
@@ -278,6 +285,23 @@ await expectStatus(`/api/collections/reports/records/${report.id}`, { headers: v
 await expectStatus("/api/collections/reports/records", { headers: visitorSession.headers }, 200);
 const publicReports = await request("/api/collections/reports/records", { headers: visitorSession.headers });
 if (publicReports.items.length !== 0) throw new Error("Report details must remain private to Workshop moderators");
+const visitorReportSummaries = await request("/api/collections/workshop_report_summaries/records", {
+  headers: visitorSession.headers,
+});
+if (visitorReportSummaries.items.length !== 0) {
+  throw new Error("Report explanations must remain private from unrelated Workshop users");
+}
+const authorReportSummaries = await request("/api/collections/workshop_report_summaries/records", {
+  headers: authorSession.headers,
+});
+if (
+  authorReportSummaries.items.length !== 1 ||
+  authorReportSummaries.items[0].submission !== submission.id ||
+  authorReportSummaries.items[0].explanation !== "Runtime moderation test" ||
+  "reporter" in authorReportSummaries.items[0]
+) {
+  throw new Error("Submission authors must see report reasons without exposing reporter identities");
+}
 await expectStatus(
   `/api/collections/reports/records/${report.id}`,
   { method: "DELETE", headers: visitorSession.headers },
