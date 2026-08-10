@@ -78,6 +78,7 @@ import {
   IconApps,
   IconArrowUp,
   IconArrowsMaximize,
+  IconArrowsMinimize,
   IconAt,
   IconCheck,
   IconChevronDown,
@@ -2731,6 +2732,9 @@ interface AssistantConversationSurfaceProps extends AssistantConversationControl
   pendingAction: AssistantPendingAction | undefined;
   onExpand?: () => void;
   onMinimize?: () => void;
+  onWindowClose?: () => void;
+  onToggleMaximize?: () => void;
+  maximized?: boolean;
 }
 
 export const AssistantConversationSurface = ({
@@ -2747,6 +2751,9 @@ export const AssistantConversationSurface = ({
   onReasoningChange,
   onExpand,
   onMinimize,
+  onWindowClose,
+  onToggleMaximize,
+  maximized = false,
 }: AssistantConversationSurfaceProps) => {
   const t = useScopedI18n("common.assistant");
   const reducedMotion = useReducedMotion();
@@ -2761,6 +2768,48 @@ export const AssistantConversationSurface = ({
   return (
     <>
       <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
+        {onWindowClose && onMinimize && onToggleMaximize && (
+          <Group
+            component="fieldset"
+            className={classes.windowControls}
+            gap={4}
+            wrap="nowrap"
+            aria-label={t("windowControls")}
+          >
+            <Tooltip label={t("close")}>
+              <ActionIcon
+                className={`${classes.windowControl} ${classes.windowControlClose}`}
+                onClick={onWindowClose}
+                aria-label={t("close")}
+              >
+                <IconX size={12} stroke={2.4} />
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label={t("minimize")}>
+              <ActionIcon
+                className={`${classes.windowControl} ${classes.windowControlMinimize}`}
+                onClick={onMinimize}
+                aria-label={t("minimize")}
+              >
+                <IconMinus size={12} stroke={2.4} />
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label={maximized ? t("restore") : t("maximize")}>
+              <ActionIcon
+                className={`${classes.windowControl} ${classes.windowControlMaximize}`}
+                onClick={onToggleMaximize}
+                aria-label={maximized ? t("restore") : t("maximize")}
+                aria-pressed={maximized}
+              >
+                {maximized ? (
+                  <IconArrowsMinimize size={11} stroke={2.4} />
+                ) : (
+                  <IconArrowsMaximize size={11} stroke={2.4} />
+                )}
+              </ActionIcon>
+            </Tooltip>
+          </Group>
+        )}
         <Group className={classes.panelIdentity} gap="xs" wrap="nowrap">
           <ThemeIcon variant="light" color="red" radius="xl">
             <IconRobot size={18} />
@@ -2797,19 +2846,6 @@ export const AssistantConversationSurface = ({
                 aria-label={t("activity.expand")}
               >
                 <IconArrowsMaximize size={17} />
-              </ActionIcon>
-            </Tooltip>
-          )}
-          {onMinimize && (
-            <Tooltip label={t("minimize")}>
-              <ActionIcon
-                className={classes.panelAction}
-                variant="subtle"
-                color="gray"
-                onClick={onMinimize}
-                aria-label={t("minimize")}
-              >
-                <IconMinus size={18} />
               </ActionIcon>
             </Tooltip>
           )}
@@ -2889,6 +2925,7 @@ export const AssistantPanel = ({
 }: AssistantPanelProps) => {
   const t = useScopedI18n("common.assistant");
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const [maximized, setMaximized] = useState(false);
 
   useWindowEvent("keydown", (event) => {
     if (opened && event.key === "Escape") onClose();
@@ -2928,7 +2965,7 @@ export const AssistantPanel = ({
         />
       )}
       {opened && (
-        <dialog className={classes.floatingPanel} aria-label={t("title")} open>
+        <dialog className={classes.floatingPanel} data-maximized={maximized || undefined} aria-label={t("title")} open>
           <AssistantConversationSurface
             isRunning={isRunning}
             pendingAction={pendingAction}
@@ -2942,6 +2979,12 @@ export const AssistantPanel = ({
             onReasoningChange={onReasoningChange}
             autoFocusComposer
             onMinimize={onClose}
+            onWindowClose={() => {
+              onDismissActivity();
+              onClose();
+            }}
+            onToggleMaximize={() => setMaximized((current) => !current)}
+            maximized={maximized}
           />
         </dialog>
       )}
