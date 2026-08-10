@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BrowserOnly from "@docusaurus/BrowserOnly";
+import Head from "@docusaurus/Head";
 import Link from "@docusaurus/Link";
 import { useLocation } from "@docusaurus/router";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
@@ -69,6 +70,7 @@ import { WorkshopErrorBoundary } from "./WorkshopErrorBoundary";
 import { downloadSubmissionJson, voteAndReconcile } from "./workshop-utils";
 
 const typeLabels: Record<SubmissionType, string> = { customCss: "CSS", customWidget: "Widget" };
+const typeSocialLabels: Record<SubmissionType, string> = { customCss: "Custom CSS", customWidget: "Custom widget" };
 const typeDotColors: Record<SubmissionType, string> = { customCss: "bg-blue-500", customWidget: "bg-yellow-500" };
 const contentLanguages: Record<SubmissionType, string> = { customCss: "css", customWidget: "json" };
 const copyState = [
@@ -536,9 +538,31 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const options = widgetDefinition ? Object.entries(widgetDefinition.options) : [];
   const protectedSources = sources.filter(([, source]) => sourceNeedsSecret(source.auth));
   const displayedContent = formatWorkshopContent(submission.type, submission.content);
+  const socialTitle = `${submission.title} · Homarr Workshop`;
+  const socialDescription = `${typeSocialLabels[submission.type]} for Homarr. ${submission.description}`.trim();
+  const socialUrl = `${window.location.origin}${window.location.pathname}`;
+  const socialImage = screenshotUrls[0] ?? `${window.location.origin}/img/logo.png`;
 
   return (
     <div className="mx-auto max-w-[90rem] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
+      <Head>
+        <title>{socialTitle}</title>
+        <meta name="description" content={socialDescription} />
+        <link rel="canonical" href={socialUrl} />
+        <meta property="og:type" content="article" />
+        <meta property="og:site_name" content="Homarr Workshop" />
+        <meta property="og:title" content={socialTitle} />
+        <meta property="og:description" content={socialDescription} />
+        <meta property="og:url" content={socialUrl} />
+        <meta property="og:image" content={socialImage} />
+        <meta property="og:image:alt" content={`${submission.title} preview`} />
+        <meta property="article:section" content={typeSocialLabels[submission.type]} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={socialTitle} />
+        <meta name="twitter:description" content={socialDescription} />
+        <meta name="twitter:image" content={socialImage} />
+        <meta name="twitter:image:alt" content={`${submission.title} preview`} />
+      </Head>
       <Toaster position="bottom-right" richColors />
       <Link
         to="/workshop"

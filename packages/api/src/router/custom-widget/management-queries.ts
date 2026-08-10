@@ -65,6 +65,7 @@ export const managementQueryProcedures = {
       if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Legacy custom widget not found" });
       return {
         id: definition.id,
+        managementPath: "/manage/custom-widgets",
         version: 1 as const,
         prompt: buildLegacyCustomWidgetMigrationPrompt(
           definition,
@@ -85,6 +86,7 @@ export const managementQueryProcedures = {
       if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
       return {
         id: definition.id,
+        managementPath: `/manage/custom-widgets/edit/${definition.id}`,
         ...parseStoredCustomWidgetDefinition(definition),
         enabled: definition.enabled,
         createdAt: definition.createdAt,

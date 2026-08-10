@@ -14,6 +14,20 @@ describe("item actions create-item", () => {
     vi.restoreAllMocks();
   });
 
+  test("clips oversized widgets to each layout's column count", () => {
+    const board = new BoardMockBuilder()
+      .addLayout({ id: "mobile", name: "Mobile", role: "mobile", columnCount: 3, breakpoint: 0 })
+      .addEmptySection({ id: "section" })
+      .build();
+    const baseLayout = board.layouts.find((layout) => layout.role === "base");
+
+    const result = createItemCallback({ kind: "mediaMissing" })(board);
+
+    const createdItem = result.items.at(0);
+    expect(createdItem?.layouts.find((layout) => layout.layoutId === "mobile")?.width).toBe(3);
+    expect(createdItem?.layouts.find((layout) => layout.layoutId === baseLayout?.id)?.width).toBe(4);
+  });
+
   test("should add it to first section", () => {
     // Arrange
     const itemKind = "clock";
@@ -113,6 +127,26 @@ describe("item actions create-item", () => {
       undefined,
       { height: 1, width: 1 },
     );
+  });
+
+  test("should fit a wide widget to every board layout", () => {
+    const layoutId = "compact-layout";
+    const layout = new LayoutMockBuilder({ id: layoutId, columnCount: 4 }).build();
+    const board = new BoardMockBuilder().addLayout(layout).addEmptySection({ id: "section" }).build();
+    const layoutsSpy = vi.spyOn(boardContext, "getBoardLayouts");
+    layoutsSpy.mockReturnValue([layoutId]);
+    const emptyPositionSpy = vi.spyOn(emptyPositionModule, "getFirstEmptyPosition");
+    emptyPositionSpy.mockReturnValue({ xOffset: 0, yOffset: 0 });
+
+    const result = createItemCallback({ kind: "assistant" })(board);
+
+    expect(result.items.at(0)?.layouts.at(0)).toEqual(
+      expect.objectContaining({ width: layout.columnCount, height: 4 }),
+    );
+    expect(emptyPositionSpy).toHaveBeenCalledWith([], layout.columnCount, undefined, {
+      width: layout.columnCount,
+      height: 4,
+    });
   });
 
   test("clamps wide defaults and places below a full automatic canvas", () => {

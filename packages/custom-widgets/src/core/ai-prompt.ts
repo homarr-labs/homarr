@@ -111,10 +111,14 @@ Recommended components: ${RECOMMENDED_COMPONENTS.join(", ")}. This list is not e
 
 Make the result genuinely attractive: establish clear visual hierarchy, use deliberate spacing, restrained semantic color, responsive layouts, and theme-safe colors. Prefer one strong primary surface over excessive nested cards. Include useful loading, empty, error, and success states. Make narrow and wide tiles both work.
 
+Treat a supplied sample response as an executable contract. Render every core field requested by the user, guard optional arrays and nested values before indexing them, and do not silently drop sample items. When the response includes a timestamp, show concise freshness context. Pair recoverable load errors and empty states with a clear refresh or retry path.
+
 Visual quality bar:
 - Give the widget a purposeful header with title, useful context, and its primary status or action.
 - When the data supports it, lead with 2–4 scannable summary metrics before detailed rows.
 - Use responsive SimpleGrid/Grid column objects and let long content wrap on narrow tiles.
+- Make the initial state actionable with an example, useful hint, or clear next step. Use wrapping groups for variable-length labels and values on narrow tiles.
+- Avoid unlabeled decorative icons in empty states. Pair an icon with visible explanatory text or give an interactive standalone icon an accessible label.
 - Use theme tokens and semantic Mantine colors; avoid hard-coded light backgrounds and decorative gradients.
 
 ${compactExample(0)}
@@ -127,9 +131,21 @@ export const CUSTOM_WIDGET_AUTHORING_PROMPT = AUTHORING_PROMPT;
 
 export const CUSTOM_WIDGET_MCP_AUTHORING_PROMPT = `Author one Homarr Custom JSX v2 widget at a time.
 
-Read the live schema and only the component resources needed for the design. Construct a credential-free widget, validate it, create a preview, test queries and simulated actions, visually inspect it, then create it. Configure deployment-specific source URLs and request credentials through Homarr when needed; never repeat plaintext. The live resources are authoritative for this Homarr release.
+First call customWidget_getSkill. Its single lazy response contains the complete installed SKILL.md and every bundled reference; follow all of it. Read the live schema and compact component catalog. Fetch only the named component and example resources needed for the design. Component resources contain component-specific props; if shared props are needed, collect their catalog names and fetch those docs together once with customWidget_getSharedProps. The live resources are authoritative for this Homarr release.
+
+Keep the documentation phase bounded. Fetch at most eight named component documents before the first validation, or at most four after loading a complete example. Fetch another component only to resolve a concrete validation issue or missing interaction; never walk the catalog component-by-component. Move promptly from the smallest sufficient documentation set to a complete customWidget_validate call.
+
+Follow this lifecycle without skipping steps: construct one credential-free definition; call customWidget_validate; repair every reported issue; call customWidget_previewCreate; call customWidget_previewQuery once for every query returned by that preview (supplying required manual parameters); inspect the real response shape and HTTP status; adjust paths and template bindings; validate and preview again after changes; open or provide the returned previewPath for visual review; only then call customWidget_createFromPreview with the exact final tested preview session ID. Use customWidget_create only when no reusable preview session exists. Prefer templateLines over a JSON-escaped template string for multiline JSX in validate and preview tool inputs.
+
+Do not claim a query works when it has not returned a successful preview response. Configure deployment-specific source URLs and request credentials through Homarr when needed; never repeat plaintext. Use simulated preview actions unless the user explicitly enables live preview actions.
+
+Treat preview data as the binding contract: render every core requested field, guard optional arrays and nested values before indexing, and do not silently drop returned items. Show concise freshness context when the response supplies a timestamp. Give recoverable load errors and empty states a clear refresh or retry path.
 
 Use the lean keyed sources, requests, and options contract. Bind saved values directly with $option and invocation values with $param. Load queries cannot use $param. Keep the design responsive, accessible, theme-safe, loading-aware, empty-aware, and error-aware.
+
+Create distinctive polish with one semantic accent, clear surface contrast, purposeful typography, and compact narrow-tile rows rather than decorative gradients or excessive nested cards. Label standalone icons for assistive technology or pair them with visible text.
+
+Make initial states actionable with an example, useful hint, or clear next step. Use wrapping groups for variable-length labels and values on narrow tiles. Do not use an unlabeled decorative icon as an empty state.
 
 Use Workshop search/get/install when the user asks for an existing community widget. After installation, configure self-hosted source URLs and credentials with the dedicated source configuration tool or a secure user configuration request.`;
 

@@ -80,7 +80,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const { grant_type, code, code_verifier, redirect_uri } = params;
+  const { grant_type, code, code_verifier, redirect_uri, resource } = params;
 
   if (grant_type !== "authorization_code") {
     return Response.json({ error: "unsupported_grant_type" }, { status: 400 });
@@ -109,6 +109,11 @@ export async function POST(req: Request) {
   if (redirect_uri && redirect_uri !== authCode.redirectUri) {
     recordTokenFailure(ip);
     return Response.json({ error: "invalid_grant", error_description: "redirect_uri mismatch" }, { status: 400 });
+  }
+
+  if (authCode.resource && resource !== authCode.resource) {
+    recordTokenFailure(ip);
+    return Response.json({ error: "invalid_target", error_description: "resource mismatch" }, { status: 400 });
   }
 
   if (!verifyPkce(code_verifier, authCode.codeChallenge, authCode.codeChallengeMethod)) {

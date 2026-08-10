@@ -151,6 +151,13 @@ describe("Board grid", () => {
       await nestedAppLink.click();
       await expect(page).toHaveURL(/#board-app-opened$/);
       await page.evaluate(() => history.replaceState(null, "", `${location.pathname}${location.search}`));
+
+      await firstItem.click({ button: "right" });
+      await expect(page.getByRole("menu")).toBeVisible();
+      await page.keyboard.press("Escape");
+      await nestedItem.click({ button: "right" });
+      await expect(page.getByRole("menu")).toHaveCount(0);
+
       const normalZoomTileBox = await expectBoundingBoxAsync(logicalTile);
       const secondItemBox = await expectBoundingBoxAsync(secondItem);
       expect(secondItemBox.x - (normalZoomTileBox.x + normalZoomTileBox.width)).toBeCloseTo(

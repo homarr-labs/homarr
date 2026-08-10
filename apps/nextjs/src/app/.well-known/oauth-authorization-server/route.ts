@@ -22,6 +22,7 @@ export async function GET() {
       code_challenge_methods_supported: ["S256"],
       token_endpoint_auth_methods_supported: ["none"],
       scopes_supported: ["mcp:tools"],
+      resource_indicators_supported: true,
     },
     { headers: corsHeaders },
   );

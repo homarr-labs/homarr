@@ -7,13 +7,14 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq, handleTransactionsAsync, notInArray } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
 import {
-  customWidgetCreateSchema,
   customWidgetDefinitionSchema,
   customWidgetUpdateSchema,
+  normalizeCustomWidgetAuthoringUpdate,
 } from "@homarr/custom-widgets/core";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
-import { insertCustomWidgetDefinition } from "./definition-insert";
+import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
+import { creationProcedures } from "./creation-procedures";
 import { managementQueryProcedures } from "./management-queries";
 import { metadataProcedures } from "./metadata-procedures";
 import { previewActionProcedures } from "./preview-action-procedures";
@@ -35,23 +36,17 @@ const logger = createLogger({ module: "custom-widget" });
 export const customWidgetRouter = createTRPCRouter({
   ...metadataProcedures,
   ...managementQueryProcedures,
-
-  create: permissionRequiredProcedure
-    .requiresPermission("admin")
-    .meta({ mcp: { enabled: true, description: "Create one validated Custom JSX widget." } })
-    .input(customWidgetCreateSchema)
-    .mutation(async ({ ctx, input }) => {
-      const { secrets, ...candidate } = input;
-      const definition = customWidgetDefinitionSchema.parse(candidate);
-      assertSecretSources(definition.sources, secrets);
-      const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets);
-      logger.info("Created custom widget definition", { id, name: definition.name });
-      return { id };
-    }),
+  ...creationProcedures,
 
   update: permissionRequiredProcedure
     .requiresPermission("admin")
-    .meta({ mcp: { enabled: true, description: "Update one Custom JSX widget." } })
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Update one Custom JSX widget. Prefer templateLines for multiline JSX changes. Returns a client-navigable edit link.",
+      },
+    })
     .input(customWidgetUpdateSchema)
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.db.query.customWidgetDefinitions.findFirst({
@@ -60,8 +55,11 @@ export const customWidgetRouter = createTRPCRouter({
       if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
 
       const current = parseStoredCustomWidgetDefinition(existing);
-      const { id, secrets, ...changes } = input;
-      const definition = customWidgetDefinitionSchema.parse({ ...current, ...changes });
+      const { id, secrets, ...authoringChanges } = input;
+      const definition = parseCustomWidgetAuthoringInput(() => {
+        const changes = normalizeCustomWidgetAuthoringUpdate(authoringChanges);
+        return customWidgetDefinitionSchema.parse({ ...current, ...changes });
+      });
       if (secrets) assertSecretSources(definition.sources, secrets);
       const definitionChanges = { ...serializeCustomWidgetDefinition(definition), updatedAt: new Date() };
       const secretRows = secrets?.map((secret) => ({
@@ -178,6 +176,7 @@ export const customWidgetRouter = createTRPCRouter({
         },
       });
       logger.info("Updated custom widget definition", { id });
+      return { id, managementPath: `/manage/custom-widgets/edit/${id}` };
     }),
 
   ...secretProcedures,

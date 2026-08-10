@@ -10,8 +10,11 @@ export type ContextSpecificItem = {
   id: string;
   name: string;
   icon: TablerIcon | string;
-  interaction: () => inferSearchInteractionDefinition<SearchInteraction>;
+  interaction: (query: string) => inferSearchInteractionDefinition<SearchInteraction>;
   disabled?: boolean;
+  description?: string;
+  unavailable?: boolean;
+  alwaysVisible?: boolean;
 };
 
 interface SpotlightContextProps {

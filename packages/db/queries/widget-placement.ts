@@ -30,46 +30,54 @@ interface PlacementContext extends BoardTarget {
 
 const placeWidgetAsync = async (
   db: Database,
-  ctx: PlacementContext,
+  contexts: PlacementContext[],
   kind: WidgetKind,
   linkedIntegrationIds: string[],
   options?: string,
   size?: { width: number; height: number },
 ) => {
-  const itemWidth = size?.width ?? 2;
-  const itemHeight = size?.height ?? 2;
+  const boardId = contexts.at(0)?.boardId;
+  if (!boardId) return;
 
-  if (ctx.xOffset + itemWidth > ctx.columnCount) {
-    ctx.xOffset = 0;
-    ctx.yOffset += ctx.rowMaxHeight;
-    ctx.rowMaxHeight = 0;
-  }
+  const desiredItemWidth = size?.width ?? 2;
+  const itemHeight = size?.height ?? 2;
 
   const itemId = createId();
   await db.insert(items).values({
     id: itemId,
-    boardId: ctx.boardId,
+    boardId,
     kind,
     options: options ?? emptySuperJSON,
     advancedOptions: emptySuperJSON,
   });
 
-  await db.insert(itemLayouts).values({
-    itemId,
-    sectionId: ctx.sectionId,
-    layoutId: ctx.layoutId,
-    xOffset: ctx.xOffset,
-    yOffset: ctx.yOffset,
-    width: itemWidth,
-    height: itemHeight,
-  });
+  await db.insert(itemLayouts).values(
+    contexts.map((ctx) => {
+      const itemWidth = Math.min(ctx.columnCount, desiredItemWidth);
+      if (ctx.xOffset + itemWidth > ctx.columnCount) {
+        ctx.xOffset = 0;
+        ctx.yOffset += ctx.rowMaxHeight;
+        ctx.rowMaxHeight = 0;
+      }
+
+      const placement = {
+        itemId,
+        sectionId: ctx.sectionId,
+        layoutId: ctx.layoutId,
+        xOffset: ctx.xOffset,
+        yOffset: ctx.yOffset,
+        width: itemWidth,
+        height: itemHeight,
+      };
+      ctx.rowMaxHeight = Math.max(ctx.rowMaxHeight, itemHeight);
+      ctx.xOffset += itemWidth;
+      return placement;
+    }),
+  );
 
   for (const integrationId of linkedIntegrationIds) {
     await db.insert(integrationItems).values({ itemId, integrationId });
   }
-
-  ctx.rowMaxHeight = Math.max(ctx.rowMaxHeight, itemHeight);
-  ctx.xOffset += itemWidth;
 };
 
 interface App {
@@ -79,16 +87,17 @@ interface App {
 
 export const placeAllWidgetsAsync = async (
   db: Database,
-  target: BoardTarget,
+  target: BoardTarget | BoardTarget[],
   allIntegrations: Integration[],
   allApps: App[],
 ) => {
-  const ctx: PlacementContext = {
-    ...target,
+  const targets = Array.isArray(target) ? target : [target];
+  const contexts: PlacementContext[] = targets.map((currentTarget) => ({
+    ...currentTarget,
     xOffset: 0,
     yOffset: 0,
     rowMaxHeight: 0,
-  };
+  }));
 
   const placedWidgets = new Set<WidgetKind>();
 
@@ -106,7 +115,7 @@ export const placeAllWidgetsAsync = async (
       const options = config?.options ? superjson.stringify(config.options) : undefined;
       await placeWidgetAsync(
         db,
-        ctx,
+        contexts,
         widgetKind,
         matchingIds,
         options,
@@ -118,7 +127,7 @@ export const placeAllWidgetsAsync = async (
   for (const app of allApps) {
     await placeWidgetAsync(
       db,
-      ctx,
+      contexts,
       "app",
       [],
       superjson.stringify({ appId: app.id, openInNewTab: true, showTitle: true }),
@@ -138,7 +147,7 @@ export const placeAllWidgetsAsync = async (
       options = { ...options, items: bookmarkAppIds };
     }
 
-    await placeWidgetAsync(db, ctx, config.kind, [], options ? superjson.stringify(options) : undefined, {
+    await placeWidgetAsync(db, contexts, config.kind, [], options ? superjson.stringify(options) : undefined, {
       width: config.width,
       height: config.height,
     });
