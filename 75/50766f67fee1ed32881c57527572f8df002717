@@ -1,0 +1,29 @@
+scripts/benchmarks/measure-widget-overdraw.mjs
+  s_a70c07ac5b7a5a::t_12834d6b1150d4 3,7-84
+  s_a70c07ac5b7a5a::t_b7523d60c56721 1-2
+  s_a70c07ac5b7a5a::t_a7eeb31621702a 4-6
+  s_a70c07ac5b7a5a::t_c915d1083ee1b7 85
+scripts/benchmarks/measure-widget-cost.mts
+  s_a70c07ac5b7a5a::t_13bde75b250e72 1-139
+scripts/benchmarks/measure-board-paint.mts
+  s_a70c07ac5b7a5a::t_efdeef360006e2 1-79
+packages/widgets/src/media-releases/component.tsx
+  s_a70c07ac5b7a5a::t_066aa1f4c32796 107-111
+  s_a70c07ac5b7a5a::t_04959d03d21fb6 74-86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "7550766f67fee1ed32881c57527572f8df002717",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
