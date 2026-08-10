@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Center, Group, Indicator, Loader, Progress, Text } from "@mantine/core";
+import { Box, Center, Group, Loader, Progress, Text } from "@mantine/core";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
 import {
   Activity,
@@ -194,7 +194,7 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => (
           <Group gap={8} wrap="nowrap" style={{ overflow: "hidden", paddingInlineStart: 4 }}>
-            <Indicator color={statusColorMap[record.status]} size={7} />
+            <Box w={7} h={7} bg={statusColorMap[record.status]} style={{ borderRadius: "50%", flexShrink: 0 }} />
             <Text size={size.fontSize} fw={500} truncate>
               {record.name}
             </Text>
@@ -269,7 +269,12 @@ export default function BeszelSystemTableWidget({
         sortable: true,
         render: (record) => (
           <Group gap={8} wrap="nowrap">
-            <Indicator color={record.loadAvg ? loadAvgColor(record.loadAvg[0], record.cores) : "gray"} size={7} />
+            <Box
+              w={7}
+              h={7}
+              bg={record.loadAvg ? loadAvgColor(record.loadAvg[0], record.cores) : "gray"}
+              style={{ borderRadius: "50%", flexShrink: 0 }}
+            />
             <Text size={size.fontSize}>{formatLoadAvg(record.loadAvg)}</Text>
           </Group>
         ),
