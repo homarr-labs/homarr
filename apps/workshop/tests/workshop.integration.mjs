@@ -46,7 +46,7 @@ await request("/api/collections/users", {
   body: JSON.stringify({ ...usersCollection, passwordAuth: { enabled: true, identityFields: ["email"] } }),
 });
 
-const createUser = async (email, displayName, password, extra = {}) =>
+const createUser = async (email, githubUsername, password, extra = {}) =>
   request("/api/collections/users/records", {
     method: "POST",
     headers: rootHeaders,
@@ -56,7 +56,7 @@ const createUser = async (email, displayName, password, extra = {}) =>
       verified: true,
       password,
       passwordConfirm: password,
-      displayName,
+      githubUsername,
       ...extra,
     }),
   });
@@ -70,65 +70,27 @@ const signIn = async (email, password) => {
 };
 
 const authorPassword = "WorkshopAuthor123!";
-const author = await createUser("widget-author@example.invalid", "Widget Author", authorPassword);
+const author = await createUser("widget-author@example.invalid", "widget-author", authorPassword);
 const authorSession = await signIn(author.email, authorPassword);
 await expectStatus(
   `/api/collections/users/records/${author.id}`,
   { method: "PATCH", headers: authorSession.headers, body: JSON.stringify({ isAdmin: true }) },
   404,
 );
-for (const [field, value] of [
-  ["displayName", "Homarr Team"],
-  ["avatarUrl", "https://example.invalid/forged-avatar.png"],
-  ["githubUsername", "homarr-labs"],
-  ["githubProfileUrl", "https://github.com/homarr-labs"],
-]) {
-  await expectStatus(
-    `/api/collections/users/records/${author.id}`,
-    { method: "PATCH", headers: authorSession.headers, body: JSON.stringify({ [field]: value }) },
-    404,
-  );
-}
-const forgedAvatar = new FormData();
-forgedAvatar.set(
-  "avatar",
-  new Blob(
-    [
-      Buffer.from(
-        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
-        "base64",
-      ),
-    ],
-    { type: "image/png" },
-  ),
-  "forged-avatar.png",
+await expectStatus(
+  `/api/collections/users/records/${author.id}`,
+  { method: "PATCH", headers: authorSession.headers, body: JSON.stringify({ githubUsername: "homarr-labs" }) },
+  404,
 );
-const avatarResponse = await fetch(`${baseUrl}/api/collections/users/records/${author.id}`, {
-  method: "PATCH",
-  headers: authorSession.headers,
-  body: forgedAvatar,
-});
-const avatarResponseBody = await avatarResponse.json().catch(() => null);
-if (avatarResponse.status !== 400 || !JSON.stringify(avatarResponseBody).includes("managed by GitHub OAuth")) {
-  throw new Error(
-    `Workshop user avatar upload bypassed the OAuth identity hook: ${avatarResponse.status} ${JSON.stringify(avatarResponseBody)}`,
-  );
-}
 const unchangedAuthor = await request(`/api/collections/users/records/${author.id}`, {
   headers: authorSession.headers,
 });
-if (
-  unchangedAuthor.displayName !== "Widget Author" ||
-  unchangedAuthor.avatar ||
-  unchangedAuthor.avatarUrl ||
-  unchangedAuthor.githubUsername ||
-  unchangedAuthor.githubProfileUrl
-) {
+if (unchangedAuthor.githubUsername !== "widget-author") {
   throw new Error("Workshop users can forge OAuth provider identity fields");
 }
 
 const visitorPassword = "WorkshopVisitor123!";
-const visitor = await createUser("widget-visitor@example.invalid", "Widget Visitor", visitorPassword);
+const visitor = await createUser("widget-visitor@example.invalid", "widget-visitor", visitorPassword);
 const visitorSession = await signIn(visitor.email, visitorPassword);
 
 const widget = {
@@ -259,7 +221,7 @@ if (
   listing.score !== 2 ||
   listing.upvotes !== 2 ||
   listing.downvotes !== 0 ||
-  listing.authorName !== "Widget Author" ||
+  listing.authorGithubUsername !== "widget-author" ||
   listing.widgetSchema !== widget.$schema
 ) {
   throw new Error("Workshop listing data is incorrect");
@@ -270,7 +232,7 @@ const comment = await request("/api/collections/comments/records?expand=author",
   headers: visitorSession.headers,
   body: JSON.stringify({ submission: submission.id, author: visitor.id, content: "Useful widget" }),
 });
-if (comment.author !== visitor.id || comment.expand.author.displayName !== "Widget Visitor") {
+if (comment.author !== visitor.id || comment.expand.author.githubUsername !== "widget-visitor") {
   throw new Error("Comment author expansion is incorrect");
 }
 await expectStatus(

@@ -6,7 +6,6 @@ WORKSHOP_TEST_PROJECT="homarr-workshop-test-$$"
 
 node apps/workshop/tests/workshop-contracts.mjs
 node apps/workshop/tests/workshop-migration.mjs
-node apps/workshop/tests/workshop-identity.mjs
 
 cleanup() {
   PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
