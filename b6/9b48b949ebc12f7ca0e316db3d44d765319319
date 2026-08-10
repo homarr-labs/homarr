@@ -1,0 +1,35 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-ai-card.tsx
+  s_f3d4850db94e77::t_6a8b1cc484d0e0 3-4,23-28,34-51,53-58
+  s_f3d4850db94e77::t_fa68165fe48ba2 52
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.spec.tsx
+  s_f3d4850db94e77::t_2bdaf00edb9828 37-38
+  s_f3d4850db94e77::t_60899ae4539aea 33-36,39
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_f3d4850db94e77::t_d1955f5c8c29b0 45,47
+apps/docs/docs/management/custom-widgets/authoring.mdx
+  s_f3d4850db94e77::t_d1955f5c8c29b0 28,31
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.spec.tsx
+  s_f3d4850db94e77::t_2bdaf00edb9828 3,73-82,136-137
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
+  s_f3d4850db94e77::t_6a8b1cc484d0e0 3-4,48-71
+packages/translation/src/lang/en.json
+  s_f3d4850db94e77::t_6a8b1cc484d0e0 1030
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx
+  s_f3d4850db94e77::t_2467761454b1ca 4,86,92-115,120-122,124-127,153-166
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b69b48b949ebc12f7ca0e316db3d44d765319319",
+  "prompts": {},
+  "sessions": {
+    "s_f3d4850db94e77": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fec2c-1f64-7c51-96a3-bb5627ec2d49",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
