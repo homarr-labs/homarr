@@ -1549,10 +1549,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "新增容器",
-        "remove": "移除容器"
+        "create": "創建動態區段",
+        "remove": "移除動態區段"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,48 @@
         }
       },
       "remove": {
-        "title": "移除容器",
-        "message": "確認要移除此容器嗎？項目將移動到父區段的相同位置"
+        "title": "移除動態區段",
+        "message": "確認要移除此動態區段嗎？項目將移動到父區段的相同位置"
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "名稱"
+        }
+      },
+      "action": {
+        "create": "創建分類",
+        "edit": "移除分類",
+        "remove": "移除分類",
+        "moveUp": "上移",
+        "moveDown": "下移",
+        "createAbove": "新分類之上",
+        "createBelow": "新分類之下",
+        "openAllInNewTabs": "於分頁中開啟全部"
+      },
+      "create": {
+        "title": "創建分類",
+        "submit": "創建分類"
+      },
+      "remove": {
+        "title": "移除分類",
+        "message": "確認移除分類 {name} 嗎？"
+      },
+      "edit": {
+        "title": "重新命名分類",
+        "submit": "重新命名分類"
+      },
+      "menu": {
+        "label": {
+          "create": "創建分類",
+          "changePosition": "變更位置",
+          "settings": "設定"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "於分頁中開啟全部",
+        "text": "某些瀏覽器可能會因安全性考量而阻止批量開啟分頁，Homarr 無法開啟所有視窗，因為您的瀏覽器已封鎖此操作，請允許「開啟彈出式視窗」，然後重試"
       }
     }
   },

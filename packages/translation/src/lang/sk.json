@@ -1549,10 +1549,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Nový kontajner",
-        "remove": "Odstrániť kontajner"
+        "create": "Nová dynamická sekcia",
+        "remove": "Nová dynamická sekcia"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,48 @@
         }
       },
       "remove": {
-        "title": "Odstrániť kontajner",
-        "message": "Naozaj chcete odstrániť tento kontajner? Položky sa presunú na rovnaké miesto v nadradenej sekcii."
+        "title": "Nová dynamická sekcia",
+        "message": "Naozaj chcete odstrániť túto dynamickú sekciu? Položky sa presunú na rovnaké miesto v nadradenej sekcii."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Názov"
+        }
+      },
+      "action": {
+        "create": "Nová kategória",
+        "edit": "Premenovať kategóriu",
+        "remove": "Odstrániť kategóriu",
+        "moveUp": "Posunúť nahor",
+        "moveDown": "Posunúť nadol",
+        "createAbove": "Nová kategória vyššie",
+        "createBelow": "Nová kategória nižšie",
+        "openAllInNewTabs": "Otvoriť všetko na kartách"
+      },
+      "create": {
+        "title": "Nová kategória",
+        "submit": "Pridať kategóriu"
+      },
+      "remove": {
+        "title": "Odstrániť kategóriu",
+        "message": "Naozaj chcete odstrániť kategóriu {name}?"
+      },
+      "edit": {
+        "title": "Premenovať kategóriu",
+        "submit": "Premenovať kategóriu"
+      },
+      "menu": {
+        "label": {
+          "create": "Nová kategória",
+          "changePosition": "Zmeniť pozíciu",
+          "settings": "Nastavenia"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "Otvoriť všetko na kartách",
+        "text": "Niektoré prehliadače môžu z bezpečnostných dôvodov blokovať hromadné otváranie kariet. Homarr nemohol otvoriť všetky okná, pretože váš prehliadač túto akciu zablokoval. Povoľte možnosť „Otvoriť kontextové okná“ a skúste to znova."
       }
     }
   },

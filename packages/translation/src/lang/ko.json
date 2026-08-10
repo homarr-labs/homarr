@@ -1549,10 +1549,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "새 컨테이너",
-        "remove": "컨테이너 제거"
+        "create": "새 동적 섹션",
+        "remove": "동적 섹션 제거"
       },
       "option": {
         "title": {
@@ -1566,8 +1566,48 @@
         }
       },
       "remove": {
-        "title": "컨테이너 제거",
-        "message": "이 컨테이너를 제거하시겠습니까? 항목은 상위 섹션의 동일한 위치로 이동합니다."
+        "title": "동적 섹션 제거",
+        "message": "이 동적 섹션을 제거하시겠습니까? 항목은 상위 섹션의 동일한 위치로 이동합니다."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "이름"
+        }
+      },
+      "action": {
+        "create": "새 카테고리",
+        "edit": "카테고리 이름 변경",
+        "remove": "카테고리 제거",
+        "moveUp": "위로 이동",
+        "moveDown": "아래로 이동",
+        "createAbove": "위에 새 카테고리 생성",
+        "createBelow": "아래 새 카테고리 생성",
+        "openAllInNewTabs": "탭에서 모두 열기"
+      },
+      "create": {
+        "title": "새 카테고리",
+        "submit": "카테고리 추가"
+      },
+      "remove": {
+        "title": "카테고리 제거",
+        "message": "{name} 카테고리를 제거하시겠습니까?"
+      },
+      "edit": {
+        "title": "카테고리 이름 변경",
+        "submit": "카테고리 이름 변경"
+      },
+      "menu": {
+        "label": {
+          "create": "새 카테고리",
+          "changePosition": "위치 변경",
+          "settings": "설정"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "탭에서 모두 열기",
+        "text": "일부 브라우저는 보안상의 이유로 탭의 대량 열기를 차단할 수 있습니다. 브라우저가 이 작업을 차단했기 때문에 Homarr가 모든 창을 열지 못했습니다. \"팝업 창 열기\"를 허용한 후 다시 시도해 주십시오."
       }
     }
   },
