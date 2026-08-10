@@ -1241,13 +1241,6 @@
       "actionButton": "A button that triggers a request when clicked",
       "customJsx": "Custom JSX layout using whitelisted Mantine components with full API data binding"
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "None",
       "bearer": "Bearer Token",
