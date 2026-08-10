@@ -56,6 +56,12 @@ export const BoardDynamicSection = ({ section }: Props) => {
           style={{
             height: "100%",
             overflowY: options.scrollable ? "auto" : "hidden",
+            // Reserve the scrollbar's width on both sides (not just the one it actually
+            // renders on) so items stay evenly spaced whether or not the section currently
+            // needs to scroll -- without this, the right edge only narrows once there's
+            // enough content to scroll, leaving a lopsided gap that appears/disappears as
+            // content changes. Unsupported browsers just fall back to the old behavior.
+            scrollbarGutter: options.scrollable ? "stable both-edges" : undefined,
           }}
         >
           {/* Use unique key by layout to reinitialize gridstack */}
