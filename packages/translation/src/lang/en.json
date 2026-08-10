@@ -1644,6 +1644,10 @@
       "name": "Traefik",
       "description": "Cloud-native reverse proxy and load balancer"
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Monitor which of your Docker containers have image updates available"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Document management system for archiving and organizing scanned documents"
@@ -2090,6 +2094,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Show broadcast messages"
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Show how many watched containers have updates available.",
+      "title": "What's Up Docker",
+      "monitored": "Monitored",
+      "updatesAvailable": "{count, plural, one {# update available} other {# updates available}}",
+      "updateAvailable": "Update available",
+      "openReleaseNotes": "Open release notes",
+      "option": {
+        "showTitle": {
+          "label": "Show title"
+        },
+        "showRing": {
+          "label": "Show update ring"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Show container update list",
+          "description": "Lists each monitored container that has an image update available"
         }
       }
     },
