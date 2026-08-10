@@ -17,6 +17,46 @@ onBootstrap((event) => {
   console.log(JSON.stringify({ event: "workshop_oauth_synchronized", enabled: configured }));
 });
 
+const workshopDetailPage = (event) => {
+  const id = event.request.pathValue("id");
+  if (id === "admin") return event.fileFS($os.dirFS("/pb_public"), "workshop/admin/index.html");
+
+  const indexHtml = toString($os.readFile("/pb_public/index.html"));
+  try {
+    const { renderWorkshopSocialHtml } = require(`${__hooks}/workshop-utils.js`);
+    const submission = event.app.findRecordById("submissions", id);
+    const type = submission.getString("type");
+    const section = type === "customCss" ? "Custom CSS" : "Custom widget";
+    const submissionTitle = submission.getString("title");
+    const title = `${submissionTitle} · Homarr Workshop`;
+    const description = `${section} for Homarr. ${submission.getString("description")}`.trim();
+    const workshopUrl = $os.getenv("WORKSHOP_WEB_URL").replace(/\/$/, "");
+    const apiUrl = $os.getenv("WORKSHOP_API_URL").replace(/\/$/, "");
+    const websiteUrl = $os.getenv("HOMARR_WEBSITE_URL").replace(/\/$/, "");
+    const screenshot = submission.getStringSlice("screenshots")[0];
+    const image = screenshot
+      ? `${apiUrl}/api/files/submissions/${submission.id}/${encodeURIComponent(screenshot)}`
+      : `${websiteUrl}/img/logo.png`;
+
+    return event.html(
+      200,
+      renderWorkshopSocialHtml(indexHtml, {
+        title,
+        description,
+        url: `${workshopUrl}/${submission.id}`,
+        image,
+        section,
+        submissionTitle,
+      }),
+    );
+  } catch {
+    return event.html(200, indexHtml);
+  }
+};
+
+routerAdd("GET", "/workshop/{id}", workshopDetailPage);
+routerAdd("GET", "/workshop/{id}/{$}", workshopDetailPage);
+
 onRecordCreateRequest((event) => {
   event.record.set("revision", 1);
   event.record.set("expectedRevision", 0);
