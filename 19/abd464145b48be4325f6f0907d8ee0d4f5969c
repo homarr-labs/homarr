@@ -1,12 +1,8 @@
-packages/widgets/src/assistant/definition.spec.ts
-  s_093d61b162b9ca::t_1f1d3ee7ceab46 3,7-10
-e2e/board-grid.spec.ts
-  s_7cfb890e45839e::t_36aa3235f5a1ae 846
 ---
 {
   "schema_version": "authorship/3.0.0",
   "git_ai_version": "1.6.21",
-  "base_commit_sha": "5daa0570acb2de9eaead18e21bd88dd07f6bc129",
+  "base_commit_sha": "19abd464145b48be4325f6f0907d8ee0d4f5969c",
   "prompts": {},
   "sessions": {
     "s_093d61b162b9ca": {
@@ -17,10 +13,10 @@ e2e/board-grid.spec.ts
       },
       "human_author": "Thomas Camlong <thomas@ajnart.fr>"
     },
-    "s_7cfb890e45839e": {
+    "s_138640ab9b4dd8": {
       "agent_id": {
         "tool": "codex",
-        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "id": "019fea8d-8e1d-7223-841c-13732edb270e",
         "model": "gpt-5.6-sol"
       },
       "human_author": "Thomas Camlong <thomas@ajnart.fr>"

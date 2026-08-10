@@ -1,0 +1,72 @@
+packages/widgets/src/vpn/component.tsx
+  s_909ca8cf5b6e15::t_d66f856e0ac3a1 17
+packages/widgets/src/coolify/instance-card.tsx
+  s_909ca8cf5b6e15::t_6fb869064ee13e 93
+e2e/custom-widgets-custom-jsx.spec.ts
+  s_909ca8cf5b6e15::t_8db9f5ae0e7ae2 72
+packages/api/src/router/custom-widget/custom-widget-router.ts
+  s_909ca8cf5b6e15::t_40acb3e74e72ac 67-68
+packages/widgets/src/video/component.tsx
+  s_909ca8cf5b6e15::t_8a44793a4ddb98 4
+packages/widgets/src/bazarr/component.tsx
+  s_909ca8cf5b6e15::t_e51de3410758a0 56
+packages/widgets/src/media-missing/component.tsx
+  s_909ca8cf5b6e15::t_45c2f424062337 22
+packages/widgets/src/beszel-system-table/component.tsx
+  s_909ca8cf5b6e15::t_a198d86e0eb22d 4,370
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_909ca8cf5b6e15::t_cd1daeca506791 108
+packages/widgets/src/patchmon/component.tsx
+  s_909ca8cf5b6e15::t_6fb869064ee13e 78
+  s_909ca8cf5b6e15::t_7146849e8b3e27 101-102,105,112,123,125-126,275,278
+packages/widgets/src/indexer-manager/component.tsx
+  s_909ca8cf5b6e15::t_b10655e6e96908 28
+packages/widgets/src/dns-hole/summary/component.tsx
+  s_909ca8cf5b6e15::t_cd1daeca506791 44
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_909ca8cf5b6e15::t_cd1daeca506791 144,149-153
+packages/widgets/src/umami/umami-content.tsx
+  s_909ca8cf5b6e15::t_5ed8f92802a407 165
+packages/widgets/src/paperless-ngx/component.tsx
+  s_909ca8cf5b6e15::t_7146849e8b3e27 143
+packages/widgets/src/media-requests/stats/component.tsx
+  s_909ca8cf5b6e15::t_42bcc6408dc47a 164
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_909ca8cf5b6e15::t_a198d86e0eb22d 414,421
+packages/widgets/src/stocks/component.tsx
+  s_909ca8cf5b6e15::t_8366215ec483f6 25
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_909ca8cf5b6e15::t_bec701b716d4a6 54,60
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_7b8a552cf9f1f8::t_64d6574efdb79d 130-131,135-152
+packages/widgets/src/coolify/single-instance-layout.tsx
+  s_909ca8cf5b6e15::t_6fb869064ee13e 59
+packages/widgets/src/iframe/component.tsx
+  s_909ca8cf5b6e15::t_af3dc33b15b312 3,12
+packages/widgets/src/rssFeed/component.tsx
+  s_909ca8cf5b6e15::t_42bcc6408dc47a 66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "5155d7b7424016f8a03074f29119a709f7018c39",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
