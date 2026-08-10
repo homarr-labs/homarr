@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 
+import { readFileSync } from "node:fs";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
@@ -69,6 +70,16 @@ afterEach(async () => {
 });
 
 describe("Custom Widget preview panel", () => {
+  test("inherits the application theme instead of forcing a reload-sensitive preview theme", () => {
+    const source = readFileSync(
+      `${process.cwd()}/apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.tsx`,
+      "utf8",
+    );
+
+    expect(source).not.toContain("forceColorScheme");
+    expect(source).not.toContain("onThemeChange");
+  });
+
   test("contains invalid definitions inside the widget canvas while keeping every inspection tab", async () => {
     await act(async () => {
       root.render(
@@ -79,8 +90,6 @@ describe("Custom Widget preview panel", () => {
             preview={{ data: { previous: true }, status: {}, session: null, outcome: "idle" }}
             size="standard"
             onSizeChange={vi.fn()}
-            theme="dark"
-            onThemeChange={vi.fn()}
             optionsSnapshot={{}}
             onOptionsChange={vi.fn()}
             onLiveActionsChange={vi.fn()}
@@ -124,6 +133,8 @@ describe("Custom Widget preview panel", () => {
 
     expect(host.textContent).toContain("sources.0.baseUrl");
     expect(host.textContent).toContain("Enter a complete URL.");
+    expect(host.textContent).not.toContain("sessionActive");
+    expect(host.textContent).not.toContain("simulationPending");
   });
 
   test("contains renderer failures inside the widget tab and keeps the inspection tabs usable", async () => {
@@ -149,8 +160,6 @@ describe("Custom Widget preview panel", () => {
             preview={preview}
             size="standard"
             onSizeChange={vi.fn()}
-            theme="dark"
-            onThemeChange={vi.fn()}
             optionsSnapshot={{ ...failingOptions }}
             onOptionsChange={vi.fn()}
             onLiveActionsChange={vi.fn()}
@@ -175,8 +184,6 @@ describe("Custom Widget preview panel", () => {
             preview={preview}
             size="standard"
             onSizeChange={vi.fn()}
-            theme="dark"
-            onThemeChange={vi.fn()}
             optionsSnapshot={failingOptions}
             onOptionsChange={vi.fn()}
             onLiveActionsChange={vi.fn()}
@@ -211,8 +218,6 @@ describe("Custom Widget preview panel", () => {
             preview={preview}
             size="standard"
             onSizeChange={vi.fn()}
-            theme="dark"
-            onThemeChange={vi.fn()}
             optionsSnapshot={{}}
             onOptionsChange={vi.fn()}
             onLiveActionsChange={vi.fn()}

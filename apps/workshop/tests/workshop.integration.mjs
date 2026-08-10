@@ -268,11 +268,12 @@ const report = await request("/api/collections/reports/records", {
   body: JSON.stringify({
     submission: submission.id,
     reporter: visitor.id,
-    category: "other",
+    category: "outdated",
     explanation: "Runtime moderation test",
     status: "dismissed",
   }),
 });
+if (report.category !== "outdated") throw new Error("Outdated Workshop reports must be accepted");
 await expectStatus(`/api/collections/reports/records/${report.id}`, { headers: visitorSession.headers }, 404);
 await expectStatus("/api/collections/reports/records", { headers: visitorSession.headers }, 200);
 const publicReports = await request("/api/collections/reports/records", { headers: visitorSession.headers });

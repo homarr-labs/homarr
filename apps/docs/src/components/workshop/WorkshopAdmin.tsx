@@ -109,7 +109,11 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
       submission,
       reports: reports.filter((report) => report.submission === submission.id),
     }))
-    .sort((left, right) => Number(right.reports.length > 0) - Number(left.reports.length > 0));
+    .sort(
+      (left, right) =>
+        right.reports.length - left.reports.length ||
+        Date.parse(right.submission.updated) - Date.parse(left.submission.updated),
+    );
 
   return (
     <main className="marketplace mx-auto max-w-6xl px-4 pb-20 text-foreground sm:px-6">

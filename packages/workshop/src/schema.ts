@@ -73,7 +73,14 @@ export function resolveHomarrUrlConfig(input: HomarrUrlConfigInput = {}): Homarr
   return { homarrWebsiteUrl, workshopApiUrl, workshopWebUrl };
 }
 
-export const workshopReportCategorySchema = z.enum(["malicious", "spam", "copyright", "inappropriate", "other"]);
+export const workshopReportCategorySchema = z.enum([
+  "outdated",
+  "malicious",
+  "spam",
+  "copyright",
+  "inappropriate",
+  "other",
+]);
 export const workshopSubmissionTypeSchema = z.enum(["customWidget", "customCss"]);
 export type WorkshopSubmissionType = z.infer<typeof workshopSubmissionTypeSchema>;
 
