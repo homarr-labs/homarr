@@ -1344,10 +1344,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Nový kontejner",
-        "remove": "Odstranit kontejner"
+        "create": "Nová dynamická sekce",
+        "remove": "Odstranit dynamickou sekci"
       },
       "option": {
         "title": {
@@ -1361,8 +1361,48 @@
         }
       },
       "remove": {
-        "title": "Odstranit kontejner",
-        "message": "Jste si jisti, že chcete odstranit tento kontejner? Položky budou přesunuty na stejné místo v nadřazené sekci."
+        "title": "Odstranit dynamickou sekci",
+        "message": "Jste si jisti, že chcete odstranit tuto dynamickou sekci? Položky budou přesunuty na stejné místo v nadřazené sekci."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Název"
+        }
+      },
+      "action": {
+        "create": "Nová kategorie",
+        "edit": "Přejmenovat kategorii",
+        "remove": "Odstranit kategorii",
+        "moveUp": "Posunout nahoru",
+        "moveDown": "Posunout dolů",
+        "createAbove": "Nová kategorie nad",
+        "createBelow": "Nová kategorie pod",
+        "openAllInNewTabs": ""
+      },
+      "create": {
+        "title": "Nová kategorie",
+        "submit": "Přidat kategorii"
+      },
+      "remove": {
+        "title": "Odstranit kategorii",
+        "message": "Jste si jisti, že chcete odstranit kategorii {name}?"
+      },
+      "edit": {
+        "title": "Přejmenovat kategorii",
+        "submit": "Přejmenovat kategorii"
+      },
+      "menu": {
+        "label": {
+          "create": "Nová kategorie",
+          "changePosition": "Změnit pozici",
+          "settings": "Nastavení"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },

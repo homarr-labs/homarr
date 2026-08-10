@@ -1344,10 +1344,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Yeni konteyner",
-        "remove": "Konteyneri kaldır"
+        "create": "Yeni Dinamik Bölüm",
+        "remove": "Dinamik bölümü kaldır"
       },
       "option": {
         "title": {
@@ -1361,8 +1361,48 @@
         }
       },
       "remove": {
-        "title": "Konteyneri kaldır",
-        "message": "Bu konteyneri kaldırmak istediğinizden emin misiniz? Öğeler üst bölümdeki aynı konuma taşınacaktır."
+        "title": "Dinamik bölümü kaldır",
+        "message": "Bu dinamik bölümü kaldırmak istediğinizden emin misiniz? Öğeler üst bölümdeki aynı konuma taşınacaktır."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "İsim"
+        }
+      },
+      "action": {
+        "create": "Yeni Kategori",
+        "edit": "Kategoriyi Yeniden Adlandır",
+        "remove": "Kategoriyi kaldır",
+        "moveUp": "Yukarı taşı",
+        "moveDown": "Aşağı taşı",
+        "createAbove": "Yukarı Yeni Kategori",
+        "createBelow": "Aşağı Yeni Kategori",
+        "openAllInNewTabs": "Tümünü sekmelerde aç"
+      },
+      "create": {
+        "title": "Yeni Kategori",
+        "submit": "Kategori ekle"
+      },
+      "remove": {
+        "title": "Kategoriyi kaldır",
+        "message": "{name} kategorisini kaldırmak istediğinizden emin misiniz?"
+      },
+      "edit": {
+        "title": "Kategoriyi Yeniden Adlandır",
+        "submit": "Kategoriyi Yeniden Adlandır"
+      },
+      "menu": {
+        "label": {
+          "create": "Yeni Kategori",
+          "changePosition": "Pozisyonu değiştir",
+          "settings": "Ayarlar"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "Tümünü sekmelerde aç",
+        "text": "Bazı tarayıcılar güvenlik nedeniyle sekmelerin toplu olarak açılmasını engelleyebilir. Homarr tüm pencereleri açamadı, çünkü tarayıcınız bu eylemi engelledi. Lütfen \"Açılır pencereleri aç\"a izin verin ve tekrar deneyin."
       }
     }
   },
