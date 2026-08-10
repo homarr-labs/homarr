@@ -25,6 +25,11 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
   // Scrollable dynamic sections aren't limited to the visible section height,
   // so items can be placed below the fold and reached by scrolling.
   const maxRow = isDynamic && "height" in section && !isScrollable ? (section.height as number) : 0;
+  // A scrollable section's visible viewport is already bounded by the outer overflow-y:auto
+  // container (see dynamic-section.tsx), so its content shouldn't also be floored at the full
+  // resized box height -- that forces empty trailing rows whenever there's less content than
+  // the box has room for, showing up as a lopsided gap under the last row of items.
+  const minRow = isDynamic && "height" in section && !isScrollable ? (section.height as number) : 1;
   newGrid.current = GridStack.init(
     {
       column: sectionColumnCount,
@@ -34,7 +39,7 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
       alwaysShowResizeHandle: true,
       acceptWidgets: true,
       staticGrid: true,
-      minRow: isDynamic && "height" in section ? (section.height as number) : 1,
+      minRow,
       maxRow,
       animate: false,
       styleInHead: true,
@@ -49,9 +54,11 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
   const previousColumn = grid.getColumn();
 
   // GridStack.init() reuses the cached instance for an already-initialized element and
-  // silently ignores the new options object above -- including maxRow. Its engine also keeps
-  // its own separate copy of maxRow (set once when first constructed) that collision/accept
-  // checks actually read, so it has to be synced explicitly here too, not just on grid.opts.
+  // silently ignores the new options object above -- including minRow/maxRow. Its engine also
+  // keeps its own separate copy of maxRow (set once when first constructed) that collision/
+  // accept checks actually read, so that one has to be synced explicitly too, not just on
+  // grid.opts (minRow isn't read from the engine anywhere, so grid.opts alone covers it).
+  grid.opts.minRow = minRow;
   grid.opts.maxRow = maxRow;
   if (grid.engine) grid.engine.maxRow = maxRow;
 

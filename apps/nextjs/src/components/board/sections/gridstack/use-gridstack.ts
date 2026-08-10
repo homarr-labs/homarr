@@ -284,11 +284,10 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
   useEffect(() => {
     if (!sectionHeight) return;
     if (isScrollable) {
-      // .row() forces both minRow and maxRow to the same value, which would re-cap a
-      // scrollable section back to its visible height. Only carry over the minRow baseline
-      // (used e.g. by getRow() for cellHeight math); leave maxRow at the unlimited value
-      // initializeGridstack already set.
-      if (gridRef.current) gridRef.current.opts.minRow = sectionHeight;
+      // .row() forces both minRow and maxRow to the resized box height. For a scrollable
+      // section that would float the content area at the full box height even when there's
+      // less content than that, showing up as a gap under the last row -- leave both alone
+      // here and let initializeGridstack's smaller minRow/unlimited maxRow stand.
       return;
     }
     gridRef.current?.row(sectionHeight);
