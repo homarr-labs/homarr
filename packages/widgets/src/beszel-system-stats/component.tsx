@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useRef } from "react";
-import { Box, Button, Center, Loader, Menu, ScrollArea, SegmentedControl, Select, Stack, Text } from "@mantine/core";
+import { Box, Button, Center, Group, Loader, Menu, ScrollArea, Select, Stack, Text } from "@mantine/core";
 import { IconQuestionMark, IconServer, IconServerOff } from "@tabler/icons-react";
 import { getQueryKey } from "@trpc/react-query";
 
@@ -185,54 +185,65 @@ export default function BeszelSystemStatsWidget({
         style={{ pointerEvents: isEditMode ? "none" : undefined }}
       >
         <Stack gap="md" p="sm">
-          {!isEditMode && systems.length > 1 && (
-            <Menu position="bottom-start" withArrow shadow="md" withinPortal>
-              <Menu.Target>
-                <Button
-                  variant="default"
-                  size="compact-xs"
-                  leftSection={<IconServer size={14} />}
-                  className={classes.beszelStatsSystemToggle}
+          {!isEditMode && (
+            <Group gap="xs" wrap="nowrap" className={classes.beszelStatsControls}>
+              {systems.length > 1 && (
+                <Menu position="bottom-start" withArrow shadow="md" withinPortal>
+                  <Menu.Target>
+                    <Button
+                      variant="default"
+                      size="compact-xs"
+                      leftSection={<IconServer size={14} />}
+                      className={classes.beszelStatsSystemToggle}
+                      disabled={isSelectionSavePending}
+                    >
+                      {selectedLabel}
+                    </Button>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    {systems.map((system) => (
+                      <Menu.Item
+                        key={system.value}
+                        fz="xs"
+                        fw={system.value === selectedValue ? 600 : 400}
+                        c={system.value !== selectedValue ? "dimmed" : undefined}
+                        disabled={isSelectionSavePending}
+                        onClick={() => handleSelectSystem(system.value)}
+                      >
+                        {system.label}
+                      </Menu.Item>
+                    ))}
+                  </Menu.Dropdown>
+                </Menu>
+              )}
+              {width >= 560 ? (
+                <Button.Group className={classes.beszelStatsPeriodToggle}>
+                  {periodOptions.map((period) => (
+                    <Button
+                      key={period.value}
+                      size="compact-xs"
+                      variant={period.value === options.timePeriod ? "filled" : "default"}
+                      className={classes.beszelStatsPeriodButton}
+                      aria-pressed={period.value === options.timePeriod}
+                      disabled={isSelectionSavePending}
+                      onClick={() => handleTimePeriod(period.value)}
+                    >
+                      {period.label}
+                    </Button>
+                  ))}
+                </Button.Group>
+              ) : (
+                <Select
+                  size="xs"
+                  value={options.timePeriod}
+                  onChange={(value) => value && handleTimePeriod(value)}
                   disabled={isSelectionSavePending}
-                >
-                  {selectedLabel}
-                </Button>
-              </Menu.Target>
-              <Menu.Dropdown>
-                {systems.map((system) => (
-                  <Menu.Item
-                    key={system.value}
-                    fz="xs"
-                    fw={system.value === selectedValue ? 600 : 400}
-                    c={system.value !== selectedValue ? "dimmed" : undefined}
-                    disabled={isSelectionSavePending}
-                    onClick={() => handleSelectSystem(system.value)}
-                  >
-                    {system.label}
-                  </Menu.Item>
-                ))}
-              </Menu.Dropdown>
-            </Menu>
+                  data={periodOptions}
+                  className={classes.beszelStatsPeriodToggle}
+                />
+              )}
+            </Group>
           )}
-          {!isEditMode &&
-            (width >= 560 ? (
-              <SegmentedControl
-                size="xs"
-                fullWidth
-                value={options.timePeriod}
-                onChange={handleTimePeriod}
-                disabled={isSelectionSavePending}
-                data={periodOptions}
-              />
-            ) : (
-              <Select
-                size="xs"
-                value={options.timePeriod}
-                onChange={(value) => value && handleTimePeriod(value)}
-                disabled={isSelectionSavePending}
-                data={periodOptions}
-              />
-            ))}
           <BeszelStatsView
             integrationIds={selectedSystem ? [selectedSystem.integrationId] : []}
             systemId={selectedSystem?.systemId ?? ""}
