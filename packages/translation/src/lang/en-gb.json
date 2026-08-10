@@ -1369,10 +1369,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Create a new container",
-        "remove": "Delete container"
+        "create": "Create a new dynamic section",
+        "remove": "Delete dynamic section"
       },
       "option": {
         "title": {
@@ -1386,8 +1386,48 @@
         }
       },
       "remove": {
-        "title": "Remove container",
-        "message": "Are you certain that you want to remove this container? All items inside will be moved to the same location within the parent section."
+        "title": "Remove dynamic section",
+        "message": "Are you certain that you want to remove this dynamic section? All items inside will be moved to the same location within the parent section."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Name"
+        }
+      },
+      "action": {
+        "create": "New category",
+        "edit": "Rename category",
+        "remove": "Remove category",
+        "moveUp": "Move upwards",
+        "moveDown": "Move downwards",
+        "createAbove": "Create new category above",
+        "createBelow": "Create new category below",
+        "openAllInNewTabs": "Open all in new tabs"
+      },
+      "create": {
+        "title": "New category",
+        "submit": "Add category"
+      },
+      "remove": {
+        "title": "Remove category",
+        "message": "Are you sure you want to remove the category {name}?"
+      },
+      "edit": {
+        "title": "Rename category",
+        "submit": "Rename category"
+      },
+      "menu": {
+        "label": {
+          "create": "New category",
+          "changePosition": "Change position",
+          "settings": "Settings"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "Open all in tabs",
+        "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
       }
     }
   },

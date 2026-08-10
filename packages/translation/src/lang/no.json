@@ -1344,10 +1344,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Ny beholder",
-        "remove": "Fjern beholder"
+        "create": "Ny dynamisk seksjon",
+        "remove": "Fjern dynamisk seksjon"
       },
       "option": {
         "title": {
@@ -1361,8 +1361,48 @@
         }
       },
       "remove": {
-        "title": "Fjern beholder",
-        "message": "Er du sikker på at du vil fjerne denne beholderen? Elementer vil bli flyttet til samme sted i overordnet seksjon."
+        "title": "Fjern dynamisk seksjon",
+        "message": "Er du sikker på at du vil fjerne denne dynamiske delen? Elementer vil bli flyttet til samme sted i overordnet seksjon."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Navn"
+        }
+      },
+      "action": {
+        "create": "Ny kategori",
+        "edit": "Endre kategorinavn",
+        "remove": "Fjern kategori",
+        "moveUp": "Flytte opp",
+        "moveDown": "Flytt ned",
+        "createAbove": "Ny kategori over",
+        "createBelow": "Ny kategori under",
+        "openAllInNewTabs": "Åpne alle i faner"
+      },
+      "create": {
+        "title": "Ny kategori",
+        "submit": "Legg til kategori"
+      },
+      "remove": {
+        "title": "Fjern kategori",
+        "message": "Er du sikker på at du vil slette kategorien {name}?"
+      },
+      "edit": {
+        "title": "Endre kategorinavn",
+        "submit": "Endre kategorinavn"
+      },
+      "menu": {
+        "label": {
+          "create": "Ny kategori",
+          "changePosition": "Endre posisjon",
+          "settings": ""
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "Åpne alle i faner",
+        "text": "Noen nettlesere kan blokkere åpning av faner av sikkerhetsgrunner. Homarr kunne ikke åpne alle vinduer, fordi nettleseren din blokkerte denne handlingen. Vennligst tillat \"Åpne pop-up vinduer\" og prøv på nytt."
       }
     }
   },
