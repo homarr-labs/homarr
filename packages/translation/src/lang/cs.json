@@ -824,13 +824,6 @@
       "actionButton": "",
       "customJsx": ""
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "",
-      "PATCH": ""
-    },
     "authType": {
       "none": "",
       "bearer": "",

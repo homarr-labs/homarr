@@ -824,13 +824,6 @@
       "actionButton": "点击时触发请求的按钮",
       "customJsx": "使用白名单 Mantine 组件的自定义 JSX 布局，支持完整 API 数据绑定"
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "删除",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "空",
       "bearer": "Bearer 令牌",

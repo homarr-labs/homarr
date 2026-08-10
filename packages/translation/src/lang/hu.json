@@ -824,13 +824,6 @@
       "actionButton": "Egy gomb, ami kérés végrehajtását váltja ki kattintásra",
       "customJsx": "Egyéni JSX elrendezés engedélyezett Mantine komponensekkel és teljes API adatkötéssel"
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "Nincs",
       "bearer": "Bearer token",

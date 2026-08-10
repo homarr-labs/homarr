@@ -824,13 +824,6 @@
       "actionButton": "Um botão que aciona uma solicitação quando clicado",
       "customJsx": "Layout JSX personalizado usando componentes Mantine na lista branca com ligação completa de dados de API"
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "Nenhum",
       "bearer": "Token Bearer",

@@ -824,13 +824,6 @@
       "actionButton": "Painike, joka laukaisee pyynnön napsautettaessa",
       "customJsx": "Mukautettu JSX-asettelu käyttäen sallittuja Mantine-komponentteja täydellä API-tietojen sidonnalla"
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "Ei mitään",
       "bearer": "Bearer-tunniste",

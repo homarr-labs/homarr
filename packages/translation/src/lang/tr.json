@@ -824,13 +824,6 @@
       "actionButton": "Tıklandığında istek başlatan bir düğme",
       "customJsx": "Tam API veri bağlamasıyla izin verilen Mantine bileşenlerini kullanan özel JSX düzeni"
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "Yok",
       "bearer": "Bearer Token",

@@ -824,13 +824,6 @@
       "actionButton": "Un bouton qui déclenche une requête lorsqu'elle est cliquée",
       "customJsx": ""
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "Aucun",
       "bearer": "Jeton Bearer",

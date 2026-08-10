@@ -824,13 +824,6 @@
       "actionButton": "點擊時觸發請求的按鈕",
       "customJsx": "使用白名單 Mantine 組件的自訂 JSX 佈局，具有完整的 API 資料綁定"
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "無",
       "bearer": "Bearer 令牌",

@@ -824,13 +824,6 @@
       "actionButton": "Un pulsante che attiva una richiesta al clic",
       "customJsx": "Layout JSX personalizzato che usa componenti Mantine consentiti con binding completo dei dati API"
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "Nessuno",
       "bearer": "Token Bearer",

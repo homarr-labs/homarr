@@ -824,13 +824,6 @@
       "actionButton": "클릭 시 요청을 트리거하는 버튼",
       "customJsx": "전체 API 데이터 바인딩과 함께 허용된 Mantine 구성 요소를 사용하는 사용자 정의 JSX 레이아웃"
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "없음",
       "bearer": "Bearer 토큰",

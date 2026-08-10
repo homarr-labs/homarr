@@ -824,13 +824,6 @@
       "actionButton": "Eine Schaltfläche welche eine Anfrage auslöst wenn sie angeklickt wird",
       "customJsx": "Benutzerdefiniertes JSX-Layout mit Whitelist Mantine Komponenten und vollständiger API-Datenbindung"
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "Keine",
       "bearer": "Bearer Token",

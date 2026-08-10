@@ -824,13 +824,6 @@
       "actionButton": "Tlačidlo, ktoré po kliknutí spustí požiadavku",
       "customJsx": "Vlastné rozloženie JSX pomocou whitelistovaných komponentov Mantine s plnou väzbou API dát"
     },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
     "authType": {
       "none": "Žiadna",
       "bearer": "Bearer token",

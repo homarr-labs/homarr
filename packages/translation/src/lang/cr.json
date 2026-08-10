@@ -824,13 +824,6 @@
       "actionButton": "crwdns5493:0crwdne5493:0",
       "customJsx": "crwdns5495:0crwdne5495:0"
     },
-    "method": {
-      "GET": "crwdns5497:0crwdne5497:0",
-      "POST": "crwdns5499:0crwdne5499:0",
-      "PUT": "crwdns5501:0crwdne5501:0",
-      "DELETE": "crwdns5503:0crwdne5503:0",
-      "PATCH": "crwdns5505:0crwdne5505:0"
-    },
     "authType": {
       "none": "crwdns5507:0crwdne5507:0",
       "bearer": "crwdns5509:0crwdne5509:0",
