@@ -56,4 +56,5 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   traefik: "traefik",
   customApi: "custom-api",
   assistant: "assistant",
+  wud: "whats-up-docker",
 };

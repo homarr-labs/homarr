@@ -65,6 +65,7 @@ import * as video from "./video";
 import * as weather from "./weather";
 import * as customApi from "./custom-api";
 import * as assistant from "./assistant";
+import * as wud from "./wud";
 
 export type {
   NormalizedWidgetQuery,
@@ -146,6 +147,7 @@ export const widgetImports = {
   traefik,
   customApi,
   assistant,
+  wud,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

@@ -109,4 +109,5 @@ export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
   beszelSystemStats: IconChartAreaLine,
   traefik: IconRoute,
   customApi: IconApi,
+  wud: IconBrandDocker,
 };
