@@ -1,0 +1,21 @@
+packages/widgets/src/downloads/component.tsx
+  s_093d61b162b9ca::t_baf8f5dcbbe406 492,504,539-546,687,751,796
+apps/docs/docs/widgets/downloads/index.mdx
+  s_093d61b162b9ca::t_baf8f5dcbbe406 48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "f5cde547056912ad0d8a07f96c096372e6fba3fb",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
