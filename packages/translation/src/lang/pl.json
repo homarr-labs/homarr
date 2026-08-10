@@ -2239,19 +2239,19 @@
           "label": "Odwróć sortowanie"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Kolejność kolumn"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Szerokości kolumn"
         }
       },
       "error": {
         "internalServerError": "Nie udało się pobrać statystyk kontenerów",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "Nie zapisano układu tabeli",
+        "layoutSaveMessage": "Nie można zapisać układu tabeli Dockera. Spróbuj ponownie przesunąć lub zmienić rozmiar kolumny."
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "Nie znaleziono kontenerów"
       }
     },
     "coolify": {
@@ -2547,17 +2547,17 @@
           "description": "Wyłączenie tej opcji nie zadziała w przypadku Plex"
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż bitrate",
+          "description": "Pokaż bieżącą przepływność odtwarzania obok lokalizacji"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż lokalizację",
+          "description": "Pokaż, czy strumień jest w sieci LAN, czy WAN"
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, one {# aktywny strumień} few {# aktywne strumienie} many {# aktywnych strumieni} other {# aktywnych strumieni}}",
+        "totalBitrate": "Łącznie: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "Obecnie odtwarzane",
@@ -2566,9 +2566,9 @@
         "id": "ID",
         "status": "Status",
         "directPlay": "Odtwarzanie bezpośrednie",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
+        "directStream": "Bezpośredni strumień",
+        "transcodeVideo": "Transkodowanie wideo",
+        "transcodeAudio": "Transkodowanie audio",
         "transcoding": "Transkodowanie",
         "paused": "Zatrzymane",
         "remaining": "{minutes} min pozostało",
@@ -2916,18 +2916,18 @@
           "description": "To ograniczy liczbę wyświetlanych elementów dla każdej integracji, a nie globalnie."
         },
         "columnOrder": {
-          "label": ""
+          "label": "Kolejność kolumn"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Szerokości kolumn"
         }
       },
       "errors": {
         "noColumns": "Wybierz kolumny w elementach",
         "noCommunications": "Nie można załadować danych z integracji",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "Nie znaleziono pobrań",
+        "actionFailed": "Akcja nie powiodła się",
+        "actionFailedMessage": "Nie można ukończyć działania. Spróbuj ponownie."
       },
       "items": {
         "actions": {
@@ -2951,7 +2951,7 @@
         },
         "id": {
           "columnTitle": "ID",
-          "detailsTitle": ""
+          "detailsTitle": "Identyfikator elementu"
         },
         "integration": {
           "columnTitle": "Integracja"
@@ -2986,7 +2986,7 @@
         "time": {
           "columnTitle": "Czas zakończenia",
           "detailsTitle": "Czas od/do zakończenia",
-          "eta": ""
+          "eta": "Przewidywany czas"
         },
         "type": {
           "columnTitle": "Typ",
@@ -3032,21 +3032,21 @@
       },
       "globalRatio": "Wskaźnik globalny",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "Kopiuj nazwę",
+        "copyId": "Kopiuj ID",
+        "clearFilters": "Wyczyść filtry"
       },
       "footer": {
-        "filter": ""
+        "filter": "Filtruj pobierania"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "Pokaż globalne statystyki",
+        "hide": "Ukryj globalne statystyki",
+        "overallProgress": "Ogólny postęp kolejki",
+        "totalSize": "Całkowity rozmiar kolejki",
+        "clients": "{count, plural, one {# klient} few {# klientów} many {# klientów} other {# klientów}}"
       },
-      "disconnected": ""
+      "disconnected": "(rozłączono)"
     },
     "mediaReleases": {
       "name": "Wydania mediów",
@@ -3772,17 +3772,17 @@
           "label": "Pokaż wersję agenta"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Kolejność kolumn"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Szerokości kolumn"
         }
       },
       "noRecords": "Nie znaleziono systemów",
       "error": {
         "internalServerError": "Nie można połączyć się z Beszel. Sprawdź ustawienia integracji.",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "Nie można zapisać układu tabeli",
+        "layoutSaveMessage": "Nie można zapisać kolejności kolumn ani ich szerokości. Spróbuj ponownie."
       },
       "column": {
         "system": "System",
@@ -5181,7 +5181,7 @@
       },
       "remove": {
         "label": "Usuń",
-        "confirm": "",
+        "confirm": "Kliknij ponownie, aby trwale usunąć",
         "notification": {
           "success": {
             "title": "Usunięto kontenery",
