@@ -14,6 +14,11 @@
   background-color: var(--mantine-color-gray-8);
 }
 
+.carouselImage[data-fit="contain"] {
+  object-fit: contain;
+  background-color: var(--mantine-color-black);
+}
+
 .photoInfo {
   position: absolute;
   bottom: 0;
