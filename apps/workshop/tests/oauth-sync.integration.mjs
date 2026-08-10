@@ -24,9 +24,10 @@ if (!users.oauth2?.enabled || github?.clientId !== expectedClientId) {
   throw new Error(`GitHub OAuth was not synchronized for ${expectedClientId}`);
 }
 if (
-  users.oauth2?.mappedFields?.username !== "displayName" ||
+  users.oauth2?.mappedFields?.username !== "githubUsername" ||
+  users.oauth2?.mappedFields?.id ||
   users.oauth2?.mappedFields?.name ||
-  users.oauth2?.mappedFields?.avatarURL !== "avatarUrl"
+  users.oauth2?.mappedFields?.avatarURL
 ) {
   throw new Error(`GitHub OAuth field mapping was not synchronized: ${JSON.stringify(users.oauth2?.mappedFields)}`);
 }

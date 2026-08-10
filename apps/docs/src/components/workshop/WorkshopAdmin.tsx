@@ -10,6 +10,7 @@ import {
 } from "@tabler/icons-react";
 
 import { WorkshopBackend } from "@homarr/workshop/backend";
+import { githubAvatarUrl, githubProfileUrl } from "@homarr/workshop/schema";
 import type { WorkshopReport, WorkshopSubmissionSummary, WorkshopUser } from "@homarr/workshop/schema";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -194,18 +195,20 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
                   <CardHeader className="border-b border-border pb-4 sm:grid-cols-[1fr_auto]">
                     <div className="flex min-w-0 items-center gap-3">
                       <Avatar className="size-10">
-                        {submission.authorAvatarUrl && <AvatarImage src={submission.authorAvatarUrl} alt="" />}
-                        <AvatarFallback>{avatarFallback(submission.authorName)}</AvatarFallback>
+                        {submission.authorGithubUsername && (
+                          <AvatarImage src={githubAvatarUrl(submission.authorGithubUsername)} alt="" />
+                        )}
+                        <AvatarFallback>{avatarFallback(submission.authorGithubUsername)}</AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
                         <CardTitle className="truncate text-base">{submission.title}</CardTitle>
                         <a
-                          href={submission.authorGithubProfileUrl || undefined}
-                          target={submission.authorGithubProfileUrl ? "_blank" : undefined}
+                          href={githubProfileUrl(submission.authorGithubUsername) || undefined}
+                          target={submission.authorGithubUsername ? "_blank" : undefined}
                           rel="noreferrer"
                           className="text-xs text-muted-foreground hover:text-foreground hover:underline"
                         >
-                          {submission.authorName}
+                          {submission.authorGithubUsername || "Community member"}
                         </a>
                       </div>
                     </div>
@@ -237,7 +240,8 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
                                 <div className="min-w-0">
                                   <AlertTitle className="col-auto capitalize">{report.category} report</AlertTitle>
                                   <p className="m-0 mt-1 text-xs text-destructive/75">
-                                    Reported by {report.reporterName} · {new Date(report.created).toLocaleString()}
+                                    Reported by {report.reporterGithubUsername || "Community member"} ·{" "}
+                                    {new Date(report.created).toLocaleString()}
                                   </p>
                                 </div>
                                 <Button
