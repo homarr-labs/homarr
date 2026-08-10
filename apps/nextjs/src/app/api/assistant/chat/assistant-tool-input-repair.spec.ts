@@ -1,13 +1,13 @@
 import { describe, expect, test } from "vitest";
 
-import { repairCustomWidgetToolInput } from "./assistant-tool-input-repair";
+import { repairAssistantToolInput } from "./assistant-tool-input-repair";
 
-describe("repairCustomWidgetToolInput", () => {
+describe("repairAssistantToolInput", () => {
   test("repairs literal newlines generated inside a multiline Custom JSX template", () => {
     const input = `{"definition":{"template":"<Stack>
   <Text>{data.fixtures?.length} fixtures</Text>
 </Stack>"}}`;
-    const repaired = repairCustomWidgetToolInput({ toolName: "customWidget_previewCreate", input });
+    const repaired = repairAssistantToolInput({ toolName: "customWidget_previewCreate", input });
 
     expect(repaired).not.toBeNull();
     expect(JSON.parse(repaired?.input ?? "")).toEqual({
@@ -16,7 +16,7 @@ describe("repairCustomWidgetToolInput", () => {
   });
 
   test("repairs every JSON-forbidden control character inside a Custom Widget string", () => {
-    const repaired = repairCustomWidgetToolInput({
+    const repaired = repairAssistantToolInput({
       toolName: "customWidget_validate",
       input: '{"value":"before\u0000\b\fafter"}',
     });
@@ -25,10 +25,26 @@ describe("repairCustomWidgetToolInput", () => {
   });
 
   test("does not alter unrelated tools or guess at truncated JSON", () => {
-    expect(repairCustomWidgetToolInput({ toolName: "app_create", input: '{"name":"Wiki\npedia"}' })).toBeNull();
+    expect(repairAssistantToolInput({ toolName: "app_create", input: '{"name":"Wiki\npedia"}' })).toBeNull();
     expect(
-      repairCustomWidgetToolInput({ toolName: "customWidget_create", input: '{"template":"<Text>broken' }),
+      repairAssistantToolInput({ toolName: "customWidget_create", input: '{"template":"<Text>broken' }),
     ).toBeNull();
+  });
+
+  test("recovers a truncated read-only icon search after the model omits the closing object delimiter", () => {
+    expect(
+      repairAssistantToolInput({
+        toolName: "icon_findIcons",
+        input: '{"searchText":"homarr","limitPerGroup":6',
+      }),
+    ).toEqual({
+      toolName: "icon_findIcons",
+      input: '{"searchText":"homarr","limitPerGroup":6}',
+    });
+  });
+
+  test("does not guess icon search text when the streamed string itself is incomplete", () => {
+    expect(repairAssistantToolInput({ toolName: "icon_findIcons", input: '{"searchText":"homar' })).toBeNull();
   });
 
   test.each([
@@ -38,10 +54,10 @@ describe("repairCustomWidgetToolInput", () => {
     "customWidget_getComponentCatalog",
     "customWidget_list",
   ])("normalizes malformed or provider-specific no-input arguments for %s", (toolName) => {
-    expect(repairCustomWidgetToolInput({ toolName, input: "null" })?.input).toBe("{}");
-    expect(repairCustomWidgetToolInput({ toolName, input: "[]" })?.input).toBe("{}");
-    expect(repairCustomWidgetToolInput({ toolName, input: '{"unexpected":true}' })?.input).toBe("{}");
-    expect(repairCustomWidgetToolInput({ toolName, input: '"' })?.input).toBe("{}");
-    expect(repairCustomWidgetToolInput({ toolName, input: "{}" })).toBeNull();
+    expect(repairAssistantToolInput({ toolName, input: "null" })?.input).toBe("{}");
+    expect(repairAssistantToolInput({ toolName, input: "[]" })?.input).toBe("{}");
+    expect(repairAssistantToolInput({ toolName, input: '{"unexpected":true}' })?.input).toBe("{}");
+    expect(repairAssistantToolInput({ toolName, input: '"' })?.input).toBe("{}");
+    expect(repairAssistantToolInput({ toolName, input: "{}" })).toBeNull();
   });
 });
