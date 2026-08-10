@@ -2152,6 +2152,7 @@
                       "beszelSystemStats",
                       "traefik",
                       "customApi",
+                      "assistant",
                       "wud"
                     ]
                   },
@@ -2165,6 +2166,7 @@
                   },
                   "integrationIds": {
                     "default": [],
+                    "maxItems": 32,
                     "type": "array",
                     "items": {
                       "type": "string"

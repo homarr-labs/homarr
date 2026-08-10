@@ -95,8 +95,8 @@ export const setPreviewSessionLiveActions = (id: string, userId: string, enabled
   call(() => getService().setLiveActions(id, userId, enabled));
 export const appendPreviewJournal = (
   session: CustomWidgetPreviewSession,
-  entry: Omit<CustomWidgetPreviewJournalEntry, "id" | "timestamp">,
-) => call(() => getService().appendJournal(session, entry));
+  entry: Omit<CustomWidgetPreviewJournalEntry, "id" | "sessionRevision" | "timestamp">,
+) => call(() => getService().appendJournal(session, { ...entry, sessionRevision: session.revision }));
 export const getPreviewJournal = (id: string, userId: string) => call(() => getService().getJournal(id, userId));
 export const getPreviewSessionSecrets = (session: CustomWidgetPreviewSession, sourceId: string) =>
   getService().getSecrets(session, sourceId);

@@ -13,7 +13,7 @@ export async function GET() {
 
   return Response.json(
     {
-      resource: baseUrl,
+      resource: `${baseUrl}/api/mcp`,
       authorization_servers: [baseUrl],
     },
     { headers: corsHeaders },

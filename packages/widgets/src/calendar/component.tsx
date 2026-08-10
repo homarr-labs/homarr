@@ -70,7 +70,7 @@ interface FetchCalendarProps extends WidgetComponentProps<"calendar"> {
 const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, displayMode }: FetchCalendarProps) => {
   const input = {
     integrationIds,
-    month: month.getMonth(),
+    month: month.getMonth() + 1,
     year: month.getFullYear(),
     releaseType: options.releaseType,
     showUnmonitored: options.showUnmonitored,

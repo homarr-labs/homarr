@@ -15,6 +15,11 @@ import { describe, expect, test } from "vitest";
 import { customWidgetRouter } from "../../custom-widget/custom-widget-router";
 import { getCustomWidgetConfigurationRequestForUser } from "../../custom-widget/configuration-requests";
 import { configureCustomWidgetSourceFromRequest } from "../../custom-widget/secret-persistence";
+import {
+  appendPreviewJournal,
+  configurePreviewSessionSource,
+  getPreviewSession,
+} from "../../custom-widget/preview-sessions";
 import { serializeCustomWidgetDefinition } from "../../custom-widget/stored-definition";
 
 const userId = createId();
@@ -33,6 +38,8 @@ const nonAdminSession = {
 
 const jellyfin = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-jellyfin")?.widget;
 if (!jellyfin) throw new Error("Jellyfin bundled widget is missing");
+const pokedex = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-pokedex")?.widget;
+if (!pokedex) throw new Error("Pokédex bundled widget is missing");
 const jellyfinDefaultSource = jellyfin.sources.default;
 if (!jellyfinDefaultSource) throw new Error("Jellyfin default source is missing");
 
@@ -100,6 +107,149 @@ async function insertLegacyJellyfin(db: ReturnType<typeof createDb>) {
 const secret = { sourceId: "default", kind: "apiKey" as const, value: "test-secret" };
 
 describe("custom widget definition persistence", () => {
+  test("creates and previews MCP-friendly multiline templateLines without losing the JSX", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const { template, ...definition } = jellyfin;
+    const templateLines = template.split("\n");
+
+    const validation = await caller.validate({ widget: { ...definition, templateLines } });
+    expect(validation).toMatchObject({
+      valid: true,
+      summary: {
+        name: jellyfin.name,
+        sourceIds: Object.keys(jellyfin.sources),
+        requestIds: Object.keys(jellyfin.requests),
+        templateLineCount: templateLines.length,
+      },
+    });
+    expect(validation).not.toHaveProperty("widget");
+    expect(validation).not.toHaveProperty("templateLines");
+    expect(Buffer.byteLength(JSON.stringify(validation), "utf8")).toBeLessThan(2_000);
+    const preview = await caller.previewCreate({ definition: { ...definition, templateLines }, secrets: [] });
+    expect(preview).toMatchObject({
+      success: true,
+      previewPath: `/manage/custom-widgets/preview/${preview.previewSession.id}`,
+    });
+    expect(preview).not.toHaveProperty("definition");
+    expect(Buffer.byteLength(JSON.stringify(preview), "utf8")).toBeLessThan(4_000);
+    expect(preview.queries.map(({ requestId }) => requestId)).toEqual(Object.keys(jellyfin.requests));
+    expect(preview.queries.every(({ nextStep }) => nextStep.includes("customWidget_previewQuery"))).toBe(true);
+
+    const created = await caller.create({ ...definition, templateLines, secrets: [] });
+    expect(created.managementPath).toBe(`/manage/custom-widgets/edit/${created.id}`);
+    expect(created.nextAction).toEqual({
+      type: "place-custom-widget",
+      widgetKind: "customApi",
+      options: { definitionId: created.id },
+      whenTargetIsKnown: "Call configure_widget now with the requested board and these exact widget options.",
+      whenTargetIsUnknown:
+        "Call ask_user now with 'Place on a board' and 'Leave unplaced'. Never ask this choice in prose.",
+    });
+    expect((await caller.get({ id: created.id })).template).toBe(template);
+  });
+
+  test("persists the exact final tested Pokédex preview without resending its JSX", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const { template, ...definition } = pokedex;
+    const candidate = { ...definition, templateLines: template.split("\n") };
+
+    // A long-running authoring request can iterate several times. Only the final preview session
+    // is eligible for persistence, and its compact ID replaces a second large streamed payload.
+    await caller.previewCreate({ definition: candidate, secrets: [] });
+    await caller.previewCreate({ definition: candidate, secrets: [] });
+    const finalPreview = await caller.previewCreate({ definition: candidate, secrets: [] });
+    const createInput = { previewSessionId: finalPreview.previewSession.id, targetBoardId: "board-hey" };
+    expect(Buffer.byteLength(JSON.stringify(createInput), "utf8")).toBeLessThan(128);
+
+    await expect(caller.createFromPreview(createInput)).rejects.toThrow("Test every final preview query successfully");
+
+    const previewSession = await getPreviewSession(finalPreview.previewSession.id, userId);
+    for (const [requestId, request] of Object.entries(previewSession.requests)) {
+      if (request.kind !== "query") continue;
+      await appendPreviewJournal(previewSession, {
+        requestId,
+        kind: "query",
+        method: request.method,
+        path: request.path,
+        status: 200,
+        durationMs: 1,
+        simulated: false,
+      });
+    }
+
+    const defaultSource = previewSession.sources.default;
+    if (!defaultSource) throw new Error("Pokédex preview source is missing");
+    await configurePreviewSessionSource(previewSession.id, userId, "default", { ...defaultSource }, []);
+    await expect(caller.createFromPreview(createInput)).rejects.toThrow("Test every final preview query successfully");
+
+    const finalPreviewSession = await getPreviewSession(finalPreview.previewSession.id, userId);
+    for (const [requestId, request] of Object.entries(finalPreviewSession.requests)) {
+      if (request.kind !== "query") continue;
+      await appendPreviewJournal(finalPreviewSession, {
+        requestId,
+        kind: "query",
+        method: request.method,
+        path: request.path,
+        status: 200,
+        durationMs: 1,
+        simulated: false,
+      });
+    }
+
+    const created = await caller.createFromPreview(createInput);
+    expect(created.managementPath).toBe(`/manage/custom-widgets/edit/${created.id}`);
+    expect(created.nextAction.options).toEqual({ definitionId: created.id });
+    expect(created.nextAction.targetBoardId).toBe("board-hey");
+    await expect(caller.get({ id: created.id })).resolves.toMatchObject({
+      name: pokedex.name,
+      description: pokedex.description,
+      template,
+      sources: pokedex.sources,
+      requests: pokedex.requests,
+      options: pokedex.options,
+    });
+  });
+
+  test("updates a saved widget with MCP-friendly multiline templateLines", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const created = await caller.create({ ...jellyfin, secrets: [] });
+    const updatedTemplate = jellyfin.template.replace("Jellyfin library", "Updated Jellyfin library");
+
+    const updated = await caller.update({ id: created.id, templateLines: updatedTemplate.split("\n") });
+
+    expect(updated.managementPath).toBe(`/manage/custom-widgets/edit/${created.id}`);
+    expect((await caller.get({ id: created.id })).template).toBe(updatedTemplate);
+  });
+
+  test("reports joined templateLines validation issues as BAD_REQUEST for create and update", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const { template: _template, ...definition } = jellyfin;
+    const invalidTemplateLines = ["<Stack>", '  <img src="https://example.com/logo.png" />', "</Stack>"];
+
+    const createError = await caller
+      .create({ ...definition, templateLines: invalidTemplateLines, secrets: [] })
+      .catch((error: unknown) => error);
+    expect(createError).toMatchObject({
+      code: "BAD_REQUEST",
+      cause: { issues: [expect.objectContaining({ path: ["template"] })] },
+    });
+    expect(await db.query.customWidgetDefinitions.findMany()).toHaveLength(0);
+
+    const created = await caller.create({ ...jellyfin, secrets: [] });
+    const updateError = await caller
+      .update({ id: created.id, templateLines: invalidTemplateLines })
+      .catch((error: unknown) => error);
+    expect(updateError).toMatchObject({
+      code: "BAD_REQUEST",
+      cause: { issues: [expect.objectContaining({ path: ["template"] })] },
+    });
+    expect((await caller.get({ id: created.id })).template).toBe(jellyfin.template);
+  });
+
   test("atomically creates a v2 replacement while preserving the legacy widget and its stable ID", async () => {
     const db = await prepareDatabase();
     const legacy = await insertLegacyJellyfin(db);

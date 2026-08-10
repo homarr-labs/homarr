@@ -61,6 +61,7 @@ interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
   ) => {
     error?: string;
     isPending: boolean;
+    isError?: boolean;
     options: DynamicSelectOption[];
   };
 }
