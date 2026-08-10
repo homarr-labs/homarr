@@ -22,7 +22,6 @@ export default async function WorkshopPage() {
   return (
     <ManagePageLayout
       title={t("title")}
-      size="xl"
       primaryAction={
         <Button
           component="a"
