@@ -8,6 +8,7 @@ import {
   normalizeHttpUrl,
   resolveHomarrUrlConfig,
   validateWorkshopWidget,
+  workshopReportCategorySchema,
   workshopSubmissionInputSchema,
   workshopSubmissionSummarySchema,
 } from "./schema";
@@ -40,6 +41,10 @@ describe("Workshop URL configuration", () => {
 });
 
 describe("Workshop widget validation", () => {
+  test("accepts outdated as a report category", () => {
+    expect(workshopReportCategorySchema.parse("outdated")).toBe("outdated");
+  });
+
   test("accepts a canonical credential-free widget", () => {
     expect(validateWorkshopWidget(JSON.stringify(CUSTOM_WIDGET_STARTER)).success).toBe(true);
     expect(

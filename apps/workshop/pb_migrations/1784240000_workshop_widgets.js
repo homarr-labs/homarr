@@ -216,7 +216,7 @@ migrate(
           name: "category",
           required: true,
           maxSelect: 1,
-          values: ["malicious", "spam", "copyright", "inappropriate", "other"],
+          values: ["outdated", "malicious", "spam", "copyright", "inappropriate", "other"],
         },
         { type: "text", name: "explanation", required: true, min: 3, max: 1000 },
         { type: "select", name: "status", required: true, maxSelect: 1, values: ["open", "dismissed"] },

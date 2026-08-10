@@ -67,7 +67,6 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   const [documentationUrl, setDocumentationUrl] = useState("");
   const [preview, setPreview] = useState<PreviewState>({ data: {}, status: {}, session: null, outcome: "idle" });
   const [previewSize, setPreviewSize] = useState("standard");
-  const [previewTheme, setPreviewTheme] = useState<"light" | "dark">("dark");
   const [optionsSnapshot, setOptionsSnapshot] = useState<Record<string, unknown>>(() => {
     const initialDefinition = buildDefinition(formInitialValues);
     return initialDefinition.success ? getDefinitionDefaults(initialDefinition.data) : {};
@@ -267,8 +266,6 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
             preview={preview}
             size={previewSize}
             onSizeChange={setPreviewSize}
-            theme={previewTheme}
-            onThemeChange={setPreviewTheme}
             optionsSnapshot={optionsSnapshot}
             onOptionsChange={setOptionsSnapshot}
             onLiveActionsChange={(enabled) =>
