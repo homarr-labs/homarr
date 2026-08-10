@@ -5698,6 +5698,7 @@
           }
         },
         "section": {
+          "analyticsDocumentation": "See exactly what analytics data Homarr collects",
           "analytics": {
             "title": "Analytics",
             "general": {
