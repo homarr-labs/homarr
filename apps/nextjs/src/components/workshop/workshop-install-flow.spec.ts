@@ -31,4 +31,18 @@ describe("Workshop widget install flow", () => {
     expect(browser).toContain("ReadOnlyCustomWidgetCode");
     expect(browser).not.toContain("{item.widgetSchema}");
   });
+
+  it("uses a two-step modal stack for Custom CSS", () => {
+    const cssButton = readFileSync(
+      `${process.cwd()}/apps/nextjs/src/components/workshop/workshop-css-import-button.tsx`,
+      "utf8",
+    );
+    const browser = readFileSync(`${process.cwd()}/apps/nextjs/src/components/workshop/workshop-browser.tsx`, "utf8");
+
+    expect(cssButton).toContain('useModalsStack(["workshop", "details", "report"])');
+    expect(cssButton).toContain("<Modal.Stack>");
+    expect(cssButton).toContain('height: "min(85dvh, 900px)"');
+    expect(browser).not.toContain("cssAwaitingConfirmation");
+    expect(browser).toContain("useWorkshopReportSummariesQuery");
+  });
 });
