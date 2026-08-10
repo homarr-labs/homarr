@@ -958,6 +958,57 @@ never observes the mid-response client disconnect that creates an orphan in the 
 Recorded because the initial reading of the snapshot was wrong in a way that would have shipped a
 fix for a leak this deployment does not have.
 
+## The 38 MiB of compiler zones: attributed, then found to be unaddressable
+
+The largest single item in the peak breakdown that was never explained is now explained, and then
+closed off.
+
+**It is V8's optimising compiler.** `peak_malloced_memory` jumps from 4.5 MiB to 42.1 MiB the
+moment a board's modules are compiled, while *current* `malloced_memory` stays at 1.0 MiB — memory
+V8 takes for compilation, frees back to malloc, and that musl never returns to the kernel. Proven
+by re-reading the `--jitless` runs, where the spike **never happens at all**:
+
+| stage | normal | `--jitless` |
+| --- | --- | --- |
+| boot idle | 4.5 MiB | 4.5 MiB |
+| **board loaded** | **42.1 MiB** | **4.5 MiB** |
+| multi-tab | 42.7 MiB | 4.5 MiB |
+
+`--jitless` itself is unusable (it leaves the page under-rendered — see above), but V8 can cap the
+*tier* instead of removing code generation: `--max-opt=3` is the default Turbofan, `2` stops at
+Maglev, `1` at Sparkplug. It is rejected by `NODE_OPTIONS` but accepted on the command line, so it
+was wired behind `HOMARR_MAX_OPT` and A/B'd on one image.
+
+**`--max-opt=2` is a null result for memory:**
+
+| stage | full | capped at Maglev |
+| --- | --- | --- |
+| peak anon | 276.0 MiB | 282.8 MiB (+2%) |
+| boot idle | 64.0 MiB | 72.3 MiB (+13%) |
+| board loaded | 186.1 MiB | 179.2 MiB (−4%) |
+| 4 tabs | 270.8 MiB | 238.5 MiB (−12%) |
+| after soak | 199.0 MiB | 214.3 MiB (+8%) |
+| CPU | 28.1 s | 27.8 s (unchanged) |
+
+Render integrity was checked explicitly this time, because that is how `--jitless` was caught:
+listeners were **7,784 in all four runs** and DOM nodes within 40 of each other, so unlike jitless
+the page rendered fully and the comparison is valid. There is simply no consistent memory win —
+some stages better, some worse, peak unchanged.
+
+The mechanism says why, and it is worth recording as a closed door. Measured directly with the
+probe under `--max-opt=2`:
+
+```
+01-boot-idle     peak_malloced=  4.5 MiB
+03-post-login    peak_malloced=  4.5 MiB
+04-board-loaded  peak_malloced= 42.1 MiB   <- identical to Turbofan
+```
+
+**Maglev's zone allocation is just as large as Turbofan's.** Capping the tier does not reduce zone
+memory; only not compiling at all does, and that breaks the page. So this 38 MiB is not reachable
+through V8 configuration — it is proportional to how much JavaScript V8 has to compile, which puts
+it back under the one remaining server-side lever: ship less server code. Reverted.
+
 ## jemalloc: tested, and musl is the frugal one
 
 The largest thing that was attributed but not fixed is ~38 MiB of V8 parser/compiler zone memory
