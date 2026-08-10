@@ -33,6 +33,8 @@ import { getRuntimeWorkshopApiUrl } from "@site/src/lib/runtime-config";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import {
+  githubAvatarUrl,
+  githubProfileUrl,
   MAX_WORKSHOP_SCREENSHOTS,
   MAX_WORKSHOP_SCREENSHOT_BYTES,
   WORKSHOP_SCREENSHOT_MIME_TYPES,
@@ -524,10 +526,10 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const canManage = user?.id === submission.author || user?.isAdmin === true;
   const canEdit = user?.id === submission.author;
   const signedInAuthor = user?.id === submission.author ? user : null;
-  const authorName = signedInAuthor?.displayName || submission.authorName;
-  const authorAvatarUrl = signedInAuthor?.avatarUrl || submission.authorAvatarUrl;
   const authorGithubUsername = signedInAuthor?.githubUsername || submission.authorGithubUsername;
-  const authorGithubProfileUrl = signedInAuthor?.githubProfileUrl || submission.authorGithubProfileUrl;
+  const authorName = authorGithubUsername || "Community member";
+  const authorAvatarUrl = githubAvatarUrl(authorGithubUsername);
+  const authorGithubProfileUrl = githubProfileUrl(authorGithubUsername);
   const sources = widgetDefinition ? Object.entries(widgetDefinition.sources) : [];
   const requests = widgetDefinition ? Object.entries(widgetDefinition.requests) : [];
   const options = widgetDefinition ? Object.entries(widgetDefinition.options) : [];
@@ -593,10 +595,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                       {authorName}
                       {authorGithubProfileUrl && <IconBrandGithub size={14} />}
                     </a>
-                    <p className="text-xs text-muted-foreground">
-                      {authorGithubUsername ? `@${authorGithubUsername} · ` : ""}
-                      Published {formatRelativeTime(submission.created)}
-                    </p>
+                    <p className="text-xs text-muted-foreground">Published {formatRelativeTime(submission.created)}</p>
                   </div>
                 </div>
               </div>

@@ -71,12 +71,7 @@ export interface WorkshopUserRecord extends WorkshopBaseRecord {
   email: string;
   emailVisibility: boolean;
   verified: boolean;
-  username: string;
-  displayName: string;
-  avatarUrl: string;
-  avatar: string;
   githubUsername: string;
-  githubProfileUrl: string;
   isAdmin: boolean;
   created: string;
   updated: string;
@@ -100,11 +95,7 @@ export interface WorkshopSubmissionRecord extends WorkshopBaseRecord {
 
 export interface WorkshopListingRecord extends Omit<WorkshopSubmissionRecord, "content" | "screenshots"> {
   screenshots: string[] | string;
-  authorName: string;
-  authorAvatar: string;
-  authorAvatarUrl: string;
   authorGithubUsername: string;
-  authorGithubProfileUrl: string;
   score: number;
   upvotes: number;
   downvotes: number;
@@ -176,7 +167,10 @@ function filterListings(items: WorkshopSubmissionSummary[], options: WorkshopLis
       if (options.type && options.type !== "all" && item.type !== options.type) return false;
       if (options.author && item.author !== options.author) return false;
       if (options.includeOutdated === false && item.outdated) return false;
-      if (search && !`${item.title}\n${item.description}\n${item.authorName}`.toLocaleLowerCase().includes(search))
+      if (
+        search &&
+        !`${item.title}\n${item.description}\n${item.authorGithubUsername}`.toLocaleLowerCase().includes(search)
+      )
         return false;
       return true;
     }),
@@ -196,7 +190,7 @@ function listingFilter(pocketBase: TypedWorkshopPocketBase, options: WorkshopLis
   if (options.type && options.type !== "all") filters.push(pocketBase.filter("type = {:type}", { type: options.type }));
   if (options.search?.trim()) {
     filters.push(
-      pocketBase.filter("(title ~ {:search} || description ~ {:search} || authorName ~ {:search})", {
+      pocketBase.filter("(title ~ {:search} || description ~ {:search} || authorGithubUsername ~ {:search})", {
         search: options.search.trim(),
       }),
     );
@@ -209,10 +203,7 @@ function listingFilter(pocketBase: TypedWorkshopPocketBase, options: WorkshopLis
 const isViewCompatibilityError = (error: unknown) =>
   error instanceof ClientResponseError && (error.status === 400 || error.status === 404);
 
-const enrichAuthor = (
-  row: unknown,
-  resolveAvatarUrl?: (record: Record<string, unknown>, user: Record<string, unknown>) => string,
-) => {
+const enrichAuthor = (row: unknown) => {
   if (typeof row !== "object" || row === null || Array.isArray(row)) return row;
   const record = row as Record<string, unknown>;
   const expand = record.expand;
@@ -222,27 +213,15 @@ const enrichAuthor = (
       : undefined;
   const user =
     typeof author === "object" && author !== null && !Array.isArray(author) ? (author as Record<string, unknown>) : {};
-  const githubUsername = record.authorGithubUsername || user.githubUsername || user.username;
   return {
     ...record,
-    authorName: record.authorName || user.displayName || user.username,
-    authorAvatarUrl: resolveAvatarUrl?.(record, user) || record.authorAvatarUrl || user.avatarUrl,
-    authorGithubUsername: githubUsername,
-    authorGithubProfileUrl:
-      record.authorGithubProfileUrl ||
-      user.githubProfileUrl ||
-      (typeof githubUsername === "string" && githubUsername
-        ? `https://github.com/${encodeURIComponent(githubUsername)}`
-        : undefined),
+    authorGithubUsername: record.authorGithubUsername || user.githubUsername,
   };
 };
 
-const parseListings = (
-  rows: unknown[],
-  resolveAvatarUrl?: (record: Record<string, unknown>, user: Record<string, unknown>) => string,
-) =>
+const parseListings = (rows: unknown[]) =>
   rows.flatMap((row) => {
-    const result = workshopSubmissionSummarySchema.safeParse(enrichAuthor(row, resolveAvatarUrl));
+    const result = workshopSubmissionSummarySchema.safeParse(enrichAuthor(row));
     return result.success ? [result.data] : [];
   });
 
@@ -284,33 +263,12 @@ export class WorkshopBackend {
     this.pocketBase.autoCancellation(false);
   }
 
-  private userAvatarUrl(record: Record<string, unknown>) {
-    const avatar = typeof record.avatar === "string" ? record.avatar : "";
-    if (avatar) return this.pocketBase.files.getURL(record, avatar);
-    return typeof record.avatarUrl === "string" ? record.avatarUrl : "";
-  }
-
-  private listingAuthorAvatarUrl(record: Record<string, unknown>, user: Record<string, unknown>) {
-    const expandedAvatarUrl = this.userAvatarUrl(user);
-    if (expandedAvatarUrl) return expandedAvatarUrl;
-
-    const author = typeof record.author === "string" ? record.author : "";
-    const avatar = typeof record.authorAvatar === "string" ? record.authorAvatar : "";
-    if (!author || !avatar) return "";
-    return `${this.baseUrl}/api/files/users/${encodeURIComponent(author)}/${encodeURIComponent(avatar)}`;
-  }
-
   public get currentUser(): WorkshopUser | null {
     const record = this.pocketBase.authStore.record;
     if (!record) return null;
     return workshopUserSchema.parse({
       id: record.id,
-      displayName: record.displayName || record.name || record.username || "Community member",
-      avatarUrl: this.userAvatarUrl(record),
       githubUsername: record.githubUsername || "",
-      githubProfileUrl:
-        record.githubProfileUrl ||
-        (record.githubUsername ? `https://github.com/${encodeURIComponent(record.githubUsername)}` : ""),
       isAdmin: record.isAdmin === true,
     });
   }
@@ -337,7 +295,6 @@ export class WorkshopBackend {
     try {
       const auth = await this.pocketBase.collection("users").authWithOAuth2({
         provider: "github",
-        createData: { displayName: "GitHub user" },
       });
       this.pocketBase.authStore.save(auth.token, auth.record);
       return this.currentUser;
@@ -362,7 +319,7 @@ export class WorkshopBackend {
         });
         return {
           ...result,
-          items: parseListings(result.items, (record, user) => this.listingAuthorAvatarUrl(record, user)),
+          items: parseListings(result.items),
         };
       } catch (error) {
         if (!isViewCompatibilityError(error)) throw error;
@@ -389,7 +346,7 @@ export class WorkshopBackend {
           sort: listingSort(options.sort),
           signal: requestSignal(options.signal),
         });
-        return parseListings(rows, (record, user) => this.listingAuthorAvatarUrl(record, user));
+        return parseListings(rows);
       } catch (error) {
         if (!isViewCompatibilityError(error)) throw error;
         return filterListings(await this.loadListingsFallback(options.signal), options);
@@ -409,7 +366,7 @@ export class WorkshopBackend {
           return this.pocketBase.collection("submissions").getFullList({ ...options, expand: "author" });
         throw error;
       });
-    return parseListings(rows, (record, user) => this.listingAuthorAvatarUrl(record, user));
+    return parseListings(rows);
   }
 
   public async get(id: string, signal?: AbortSignal): Promise<WorkshopSubmissionDetail> {
@@ -425,10 +382,7 @@ export class WorkshopBackend {
           throw error;
         });
       return workshopSubmissionDetailSchema.parse(
-        enrichAuthor(
-          { ...submission, ...listing, expand: submission.expand, content: submission.content },
-          (record, user) => this.listingAuthorAvatarUrl(record, user),
-        ),
+        enrichAuthor({ ...submission, ...listing, expand: submission.expand, content: submission.content }),
       );
     } catch (error) {
       throw workshopError(error, "Submission not found");
@@ -548,7 +502,7 @@ export class WorkshopBackend {
       return items.map((item) =>
         workshopReportSchema.parse({
           ...item,
-          reporterName: item.expand?.reporter?.displayName,
+          reporterGithubUsername: item.expand?.reporter?.githubUsername,
           submissionTitle: item.expand?.submission?.title,
         }),
       );
@@ -585,13 +539,7 @@ export class WorkshopBackend {
       return rows.map((row) =>
         workshopCommentSchema.parse({
           ...row,
-          authorName: row.expand?.author?.displayName,
-          authorAvatarUrl: row.expand?.author ? this.userAvatarUrl(row.expand.author) : undefined,
-          authorGithubProfileUrl:
-            row.expand?.author?.githubProfileUrl ||
-            (row.expand?.author?.githubUsername
-              ? `https://github.com/${encodeURIComponent(row.expand.author.githubUsername)}`
-              : undefined),
+          authorGithubUsername: row.expand?.author?.githubUsername,
         }),
       );
     } catch (error) {
@@ -606,13 +554,7 @@ export class WorkshopBackend {
         .create({ submission, author: this.currentUser?.id ?? "", content: content.trim() }, { expand: "author" });
       return workshopCommentSchema.parse({
         ...row,
-        authorName: row.expand?.author?.displayName,
-        authorAvatarUrl: row.expand?.author ? this.userAvatarUrl(row.expand.author) : undefined,
-        authorGithubProfileUrl:
-          row.expand?.author?.githubProfileUrl ||
-          (row.expand?.author?.githubUsername
-            ? `https://github.com/${encodeURIComponent(row.expand.author.githubUsername)}`
-            : undefined),
+        authorGithubUsername: row.expand?.author?.githubUsername,
       });
     } catch (error) {
       throw workshopError(error, "Failed to post comment");
@@ -626,13 +568,7 @@ export class WorkshopBackend {
         .update(id, { content: content.trim() }, { expand: "author" });
       return workshopCommentSchema.parse({
         ...row,
-        authorName: row.expand?.author?.displayName,
-        authorAvatarUrl: row.expand?.author ? this.userAvatarUrl(row.expand.author) : undefined,
-        authorGithubProfileUrl:
-          row.expand?.author?.githubProfileUrl ||
-          (row.expand?.author?.githubUsername
-            ? `https://github.com/${encodeURIComponent(row.expand.author.githubUsername)}`
-            : undefined),
+        authorGithubUsername: row.expand?.author?.githubUsername,
       });
     } catch (error) {
       throw workshopError(error, "Failed to update comment");

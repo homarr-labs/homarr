@@ -3,6 +3,8 @@ import { describe, expect, test } from "vitest";
 import { CUSTOM_WIDGET_STARTER } from "@homarr/custom-widgets/core";
 
 import {
+  githubAvatarUrl,
+  githubProfileUrl,
   normalizeHttpUrl,
   resolveHomarrUrlConfig,
   validateWorkshopWidget,
@@ -11,6 +13,11 @@ import {
 } from "./schema";
 
 describe("Workshop URL configuration", () => {
+  test("derives GitHub identity URLs from the stored username", () => {
+    expect(githubProfileUrl("octocat")).toBe("https://github.com/octocat");
+    expect(githubAvatarUrl("octocat")).toBe("https://github.com/octocat.png");
+  });
+
   test("normalizes the URL contract and derives Workshop defaults", () => {
     expect(
       resolveHomarrUrlConfig({
@@ -98,7 +105,7 @@ describe("Workshop widget validation", () => {
 
     expect(result.type).toBe("customWidget");
     expect(result.screenshots).toEqual([]);
-    expect(result.authorName).toBe("Community member");
+    expect(result.authorGithubUsername).toBe("");
     expect(result.upvotes).toBe(0);
   });
 
