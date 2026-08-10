@@ -195,20 +195,18 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
                   <CardHeader className="border-b border-border pb-4 sm:grid-cols-[1fr_auto]">
                     <div className="flex min-w-0 items-center gap-3">
                       <Avatar className="size-10">
-                        {submission.authorGithubUsername && (
-                          <AvatarImage src={githubAvatarUrl(submission.authorGithubUsername)} alt="" />
-                        )}
-                        <AvatarFallback>{avatarFallback(submission.authorGithubUsername)}</AvatarFallback>
+                        {submission.authorName && <AvatarImage src={githubAvatarUrl(submission.authorName)} alt="" />}
+                        <AvatarFallback>{avatarFallback(submission.authorName)}</AvatarFallback>
                       </Avatar>
                       <div className="min-w-0">
                         <CardTitle className="truncate text-base">{submission.title}</CardTitle>
                         <a
-                          href={githubProfileUrl(submission.authorGithubUsername) || undefined}
-                          target={submission.authorGithubUsername ? "_blank" : undefined}
+                          href={githubProfileUrl(submission.authorName) || undefined}
+                          target={submission.authorName ? "_blank" : undefined}
                           rel="noreferrer"
                           className="text-xs text-muted-foreground hover:text-foreground hover:underline"
                         >
-                          {submission.authorGithubUsername || "Community member"}
+                          {submission.authorName || "Community member"}
                         </a>
                       </div>
                     </div>
@@ -240,7 +238,7 @@ export function WorkshopAdmin({ workshopUrl }: { workshopUrl?: string }) {
                                 <div className="min-w-0">
                                   <AlertTitle className="col-auto capitalize">{report.category} report</AlertTitle>
                                   <p className="m-0 mt-1 text-xs text-destructive/75">
-                                    Reported by {report.reporterGithubUsername || "Community member"} ·{" "}
+                                    Reported by {report.reporterName || "Community member"} ·{" "}
                                     {new Date(report.created).toLocaleString()}
                                   </p>
                                 </div>
