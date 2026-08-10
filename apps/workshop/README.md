@@ -8,7 +8,8 @@ The runtime base is PocketBase 0.39.9 pinned by its multi-platform OCI digest in
 version and digest together, then run the Workshop integration and production-image smoke suites.
 
 The internal PocketBase field `users.isAdmin` means **Workshop moderator**. It does not grant Homarr administrator
-access. Moderators can review private reports, dismiss reports, and remove submissions or comments.
+access. Signed-in moderators can open `/workshop/admin` from the visible **Moderation** button, review private report
+details, dismiss reports, and remove submissions or comments. Public submission cards show only the open report count.
 
 ## Run locally
 

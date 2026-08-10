@@ -15,6 +15,11 @@ import { describe, expect, test } from "vitest";
 import { customWidgetRouter } from "../../custom-widget/custom-widget-router";
 import { getCustomWidgetConfigurationRequestForUser } from "../../custom-widget/configuration-requests";
 import { configureCustomWidgetSourceFromRequest } from "../../custom-widget/secret-persistence";
+import {
+  appendPreviewJournal,
+  configurePreviewSessionSource,
+  getPreviewSession,
+} from "../../custom-widget/preview-sessions";
 import { serializeCustomWidgetDefinition } from "../../custom-widget/stored-definition";
 
 const userId = createId();
@@ -33,6 +38,8 @@ const nonAdminSession = {
 
 const jellyfin = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-jellyfin")?.widget;
 if (!jellyfin) throw new Error("Jellyfin bundled widget is missing");
+const pokedex = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-pokedex")?.widget;
+if (!pokedex) throw new Error("Pokédex bundled widget is missing");
 const jellyfinDefaultSource = jellyfin.sources.default;
 if (!jellyfinDefaultSource) throw new Error("Jellyfin default source is missing");
 
@@ -140,6 +147,69 @@ describe("custom widget definition persistence", () => {
         "Call ask_user now with 'Place on a board' and 'Leave unplaced'. Never ask this choice in prose.",
     });
     expect((await caller.get({ id: created.id })).template).toBe(template);
+  });
+
+  test("persists the exact final tested Pokédex preview without resending its JSX", async () => {
+    const db = await prepareDatabase();
+    const caller = createCaller(db);
+    const { template, ...definition } = pokedex;
+    const candidate = { ...definition, templateLines: template.split("\n") };
+
+    // A long-running authoring request can iterate several times. Only the final preview session
+    // is eligible for persistence, and its compact ID replaces a second large streamed payload.
+    await caller.previewCreate({ definition: candidate, secrets: [] });
+    await caller.previewCreate({ definition: candidate, secrets: [] });
+    const finalPreview = await caller.previewCreate({ definition: candidate, secrets: [] });
+    const createInput = { previewSessionId: finalPreview.previewSession.id, targetBoardId: "board-hey" };
+    expect(Buffer.byteLength(JSON.stringify(createInput), "utf8")).toBeLessThan(128);
+
+    await expect(caller.createFromPreview(createInput)).rejects.toThrow("Test every final preview query successfully");
+
+    const previewSession = await getPreviewSession(finalPreview.previewSession.id, userId);
+    for (const [requestId, request] of Object.entries(previewSession.requests)) {
+      if (request.kind !== "query") continue;
+      await appendPreviewJournal(previewSession, {
+        requestId,
+        kind: "query",
+        method: request.method,
+        path: request.path,
+        status: 200,
+        durationMs: 1,
+        simulated: false,
+      });
+    }
+
+    const defaultSource = previewSession.sources.default;
+    if (!defaultSource) throw new Error("Pokédex preview source is missing");
+    await configurePreviewSessionSource(previewSession.id, userId, "default", { ...defaultSource }, []);
+    await expect(caller.createFromPreview(createInput)).rejects.toThrow("Test every final preview query successfully");
+
+    const finalPreviewSession = await getPreviewSession(finalPreview.previewSession.id, userId);
+    for (const [requestId, request] of Object.entries(finalPreviewSession.requests)) {
+      if (request.kind !== "query") continue;
+      await appendPreviewJournal(finalPreviewSession, {
+        requestId,
+        kind: "query",
+        method: request.method,
+        path: request.path,
+        status: 200,
+        durationMs: 1,
+        simulated: false,
+      });
+    }
+
+    const created = await caller.createFromPreview(createInput);
+    expect(created.managementPath).toBe(`/manage/custom-widgets/edit/${created.id}`);
+    expect(created.nextAction.options).toEqual({ definitionId: created.id });
+    expect(created.nextAction.targetBoardId).toBe("board-hey");
+    await expect(caller.get({ id: created.id })).resolves.toMatchObject({
+      name: pokedex.name,
+      description: pokedex.description,
+      template,
+      sources: pokedex.sources,
+      requests: pokedex.requests,
+      options: pokedex.options,
+    });
   });
 
   test("updates a saved widget with MCP-friendly multiline templateLines", async () => {

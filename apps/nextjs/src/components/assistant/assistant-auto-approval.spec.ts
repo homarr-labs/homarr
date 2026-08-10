@@ -2,7 +2,7 @@
 
 import { act, createElement, Fragment } from "react";
 import { createRoot } from "react-dom/client";
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 
 import {
   AssistantAutoApprovalProvider,
@@ -65,6 +65,19 @@ describe("assistant automatic approval tracker", () => {
 
     tracker.clear();
     expect(tracker.claim("app-create-1")).toBe(true);
+  });
+
+  test("bounds automatic retries and permits a fresh claim after completion", () => {
+    const tracker = createAssistantAutoApprovalTracker(2);
+
+    expect(tracker.claim("custom-widget-create-1")).toBe(true);
+    tracker.release("custom-widget-create-1");
+    expect(tracker.claim("custom-widget-create-1")).toBe(true);
+    tracker.release("custom-widget-create-1");
+    expect(tracker.claim("custom-widget-create-1")).toBe(false);
+
+    tracker.complete("custom-widget-create-1");
+    expect(tracker.claim("custom-widget-create-1")).toBe(true);
   });
 
   test("keeps the setting for the same local conversation and resets it on a real switch", async () => {
@@ -184,5 +197,49 @@ describe("assistant automatic approval tracker", () => {
     expect(automaticActionInProgress).toBe(false);
 
     await act(async () => root.unmount());
+  });
+
+  test("retries an approval response that never settles and restores manual controls after two attempts", async () => {
+    vi.useFakeTimers();
+    const container = document.createElement("div");
+    containers.push(container);
+    document.body.append(container);
+    const root = createRoot(container);
+    let confirmationCount = 0;
+
+    await act(async () => {
+      root.render(
+        createElement(
+          AssistantAutoApprovalProvider,
+          { conversationId: "local-thread-1" },
+          createElement(
+            Fragment,
+            null,
+            createElement(AutoApprovalProbe),
+            createElement(AutomaticActionProbe, {
+              ready: true,
+              completed: false,
+              confirm: () => {
+                confirmationCount += 1;
+              },
+            }),
+          ),
+        ),
+      );
+    });
+    act(() => currentAutoApproval?.setEnabled(true));
+    expect(confirmationCount).toBe(1);
+    expect(automaticActionInProgress).toBe(true);
+
+    await act(async () => vi.advanceTimersByTime(5_000));
+    expect(confirmationCount).toBe(2);
+    expect(automaticActionInProgress).toBe(true);
+
+    await act(async () => vi.advanceTimersByTime(5_000));
+    expect(confirmationCount).toBe(2);
+    expect(automaticActionInProgress).toBe(false);
+
+    await act(async () => root.unmount());
+    vi.useRealTimers();
   });
 });

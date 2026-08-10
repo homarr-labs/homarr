@@ -7,10 +7,19 @@ const mutationApprovalInstruction =
 export const customWidgetAssistantInstructions = `
 
 Custom Widget authoring rules:
-- For every request to create, repair, validate, preview, or explain a Custom JSX widget, use the complete installed skill and JSON Schema from the trusted Custom Widget authoring context when they are preloaded below; do not call customWidget_getSkill or customWidget_schema in that case. When they are not preloaded, first call customWidget_getSkill, whose response contains the complete installed skill and all references, then call customWidget_schema. Follow those resources as authoritative. Next call the compact customWidget_getComponentCatalog for the installed release. Fetch only the relevant named component documentation with customWidget_getComponent and, when its interaction pattern applies, one named example with customWidget_getExample before authoring. Component results contain only component-specific props; if the design needs shared props such as spacing or color, collect their names from the catalog and call customWidget_getSharedProps once with only those names.
+- Custom Widget tools are mandatory for Custom JSX work. Never answer a request to create, repair, or materially change a Custom Widget with only a manifest, JSX, instructions, or an unsupported claim that it should work.
+- For every request to create, repair, validate, preview, or explain a Custom JSX widget, use the complete installed skill and JSON Schema from the trusted Custom Widget authoring context when they are preloaded below; do not call customWidget_getSkill or customWidget_schema in that case because Homarr has already loaded their complete contents into this system prompt. When they are not preloaded, first call customWidget_getSkill, whose response contains the complete installed skill and all references, then call customWidget_schema. Do not merely say that you loaded them: use their rules for the subsequent tool inputs. Follow those resources as authoritative. Next call the compact customWidget_getComponentCatalog for the installed release. Fetch only the relevant named component documentation with customWidget_getComponent and, when its interaction pattern applies, one named example with customWidget_getExample before authoring. Component results contain only component-specific props; if the design needs shared props such as spacing or color, collect their names from the catalog and call customWidget_getSharedProps once with only those names.
 - Use templateLines for multiline JSX tool input. Do not send a heavily escaped multiline template string when templateLines is accepted.
-- Never skip the authoring lifecycle: customWidget_validate, repair all issues, customWidget_previewCreate, then customWidget_previewQuery for every query listed by the preview. Inspect the real status and returned data shape, correct request paths and template bindings, and repeat validation and preview after changes. Call customWidget_create only after the definition and its preview queries succeed.
-- A preview session is not evidence that its API queries work. Never claim live data works until customWidget_previewQuery returned it. Use the returned previewPath when the user should inspect the rendered result.
+- Keep each tool call within a reliable streamed size. For Pokédex or PokéAPI requests, start from the installed \`pokedex\` example returned by customWidget_getExample and improve it through validated iterations instead of generating one enormous untested JSX argument from scratch. Completeness comes from working interactions and states, not gratuitous line count.
+- Honor an explicit iteration count. Each requested iteration must make a meaningful improvement and complete its own validation, preview, and required preview-query checks. Persist only the last tested preview session.
+- Never skip or reorder the evidence checkpoints for the exact candidate that will be saved:
+  1. Call customWidget_validate with the complete definition. Repair every reported issue and call it again until it succeeds.
+  2. Call customWidget_previewCreate with that same validated definition.
+  3. Call customWidget_previewQuery for every query returned by the preview. Inspect the real HTTP status and returned data shape. Test relevant simulated actions with customWidget_previewAction when the widget contains actions.
+  4. If the JSX template, request definitions, sources, options, or bindings change materially at any point, the previous validation and preview evidence is stale. Start again at customWidget_validate with the complete revised definition, create a fresh preview, and retest every returned query.
+  5. For a new widget, call customWidget_createFromPreview with the final tested preview session ID so the approved mutation persists that exact candidate without streaming the complete JSX again. If the user already named a target board, resolve its ID before creation and include targetBoardId; after creation call configure_widget directly and do not ask the user to choose again. Use customWidget_create only when no preview session can be reused. For an update, call customWidget_update only with the final definition whose latest validation, preview, and required query checks succeeded. Never substitute a later unvalidated version.
+- A successful syntax validation proves only that the definition is valid. A preview session proves only that it can be rendered. Never claim live data works until every customWidget_previewQuery succeeded with the expected response shape. Never say the widget is created, updated, placed, or fully working unless the corresponding customWidget_create, customWidget_update, or board placement tool returned success. If a tool fails, report the specific failed checkpoint and continue repairing it when possible instead of describing the widget as done.
+- Progress updates may say which checkpoint is running, but they must not claim success before the tool result exists. Use the returned previewPath when the user should inspect the rendered result.
 - After creating a widget, include the returned managementPath as a Markdown link so the user can open and edit the exact widget in Homarr.
 - If the user must choose what happens next, such as whether to add the created widget to a board or leave it unplaced, call ask_user with explicit choices. Never end a custom-widget response with a prose question that expects a typed answer. Open-ended conversation and purely rhetorical questions do not require ask_user; state optional next steps declaratively instead of asking about them.`;
 
@@ -58,7 +67,16 @@ type AssistantToolResponseMessage = {
   content: unknown;
 };
 
-const isSuccessfulCustomWidgetCreateOutput = (output: unknown) =>
+const customWidgetCreateToolNames = new Set(["customWidget_create", "customWidget_createFromPreview"]);
+
+type SuccessfulCustomWidgetCreateOutput = {
+  id: string;
+  managementPath: string;
+  nextAction?: unknown;
+  error?: undefined;
+};
+
+const isSuccessfulCustomWidgetCreateOutput = (output: unknown): output is SuccessfulCustomWidgetCreateOutput =>
   typeof output === "object" &&
   output !== null &&
   "id" in output &&
@@ -68,6 +86,18 @@ const isSuccessfulCustomWidgetCreateOutput = (output: unknown) =>
   typeof output.managementPath === "string" &&
   output.managementPath.length > 0 &&
   (!("error" in output) || output.error === undefined);
+
+const getCustomWidgetCreateFollowup = (output: unknown) => {
+  if (!isSuccessfulCustomWidgetCreateOutput(output)) return [];
+  const nextAction = output.nextAction;
+  const hasKnownTarget =
+    typeof nextAction === "object" &&
+    nextAction !== null &&
+    "targetBoardId" in nextAction &&
+    typeof nextAction.targetBoardId === "string" &&
+    nextAction.targetBoardId.length > 0;
+  return hasKnownTarget ? (["configure_widget"] as const) : (["configure_widget", "ask_user"] as const);
+};
 
 const getCustomWidgetCreateOutputFromResponseMessages = (responseMessages: readonly AssistantToolResponseMessage[]) => {
   for (const message of responseMessages.toReversed()) {
@@ -79,7 +109,7 @@ const getCustomWidgetCreateOutputFromResponseMessages = (responseMessages: reado
         !("type" in part) ||
         part.type !== "tool-result" ||
         !("toolName" in part) ||
-        part.toolName !== "customWidget_create" ||
+        !customWidgetCreateToolNames.has(String(part.toolName)) ||
         !("output" in part)
       ) {
         continue;
@@ -113,10 +143,8 @@ export const getRequiredAssistantToolNames = (
     const latestCreateResult = completedSteps
       .at(-1)
       ?.toolResults.toReversed()
-      .find((result) => result.toolName === "customWidget_create");
-    return latestCreateResult && isSuccessfulCustomWidgetCreateOutput(latestCreateResult.output)
-      ? (["configure_widget", "ask_user"] as const)
-      : [];
+      .find((result) => customWidgetCreateToolNames.has(result.toolName));
+    return latestCreateResult ? getCustomWidgetCreateFollowup(latestCreateResult.output) : [];
   }
 
   // Approval-gated tools execute immediately before the first model step of the follow-up request.
@@ -124,9 +152,7 @@ export const getRequiredAssistantToolNames = (
   // UI history, so inspect them before falling back to the persisted UI part.
   const responseCreateOutput = getCustomWidgetCreateOutputFromResponseMessages(responseMessages);
   if (responseCreateOutput !== undefined) {
-    return isSuccessfulCustomWidgetCreateOutput(responseCreateOutput)
-      ? (["configure_widget", "ask_user"] as const)
-      : [];
+    return getCustomWidgetCreateFollowup(responseCreateOutput);
   }
 
   // Approval-gated tools finish in a later HTTP request. At step zero their result is already in
@@ -137,14 +163,12 @@ export const getRequiredAssistantToolNames = (
   if (
     latestToolPart === undefined ||
     latestToolPart.state !== "output-available" ||
-    getToolName(latestToolPart) !== "customWidget_create"
+    !customWidgetCreateToolNames.has(getToolName(latestToolPart))
   ) {
     return [];
   }
-  if (!isSuccessfulCustomWidgetCreateOutput(latestToolPart.output)) return [];
-
   // A successful definition creation always has one structured follow-up: place the widget when
   // a target is already known, or ask whether it should remain unplaced. Requiring one of these
   // tools prevents the model from falling back to a prose "Want me to add it?" question.
-  return ["configure_widget", "ask_user"] as const;
+  return getCustomWidgetCreateFollowup(latestToolPart.output);
 };

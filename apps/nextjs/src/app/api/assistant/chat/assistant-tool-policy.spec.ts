@@ -30,8 +30,13 @@ describe("withAssistantToolPolicy", () => {
 
 describe("customWidgetAssistantInstructions", () => {
   test("requires the complete skill and real preview-query data before creation", () => {
+    expect(customWidgetAssistantInstructions).toContain("Custom Widget tools are mandatory");
+    expect(customWidgetAssistantInstructions).toContain("only a manifest, JSX, instructions");
     expect(customWidgetAssistantInstructions).toContain("when they are preloaded below");
     expect(customWidgetAssistantInstructions).toContain("do not call customWidget_getSkill or customWidget_schema");
+    expect(customWidgetAssistantInstructions).toContain(
+      "already loaded their complete contents into this system prompt",
+    );
     expect(customWidgetAssistantInstructions).toContain("first call customWidget_getSkill");
     expect(customWidgetAssistantInstructions).toContain("customWidget_schema");
     expect(customWidgetAssistantInstructions).toContain("customWidget_getComponentCatalog");
@@ -39,8 +44,15 @@ describe("customWidgetAssistantInstructions", () => {
     expect(customWidgetAssistantInstructions).toContain("customWidget_getSharedProps once");
     expect(customWidgetAssistantInstructions).toContain("customWidget_getExample");
     expect(customWidgetAssistantInstructions).toContain("templateLines");
-    expect(customWidgetAssistantInstructions).toContain("customWidget_previewQuery for every query");
-    expect(customWidgetAssistantInstructions).toContain("Call customWidget_create only after");
+    expect(customWidgetAssistantInstructions).toContain("installed `pokedex` example");
+    expect(customWidgetAssistantInstructions).toContain("Honor an explicit iteration count");
+    expect(customWidgetAssistantInstructions).toContain("customWidget_validate with the complete definition");
+    expect(customWidgetAssistantInstructions).toContain("customWidget_previewQuery for every query returned");
+    expect(customWidgetAssistantInstructions).toContain("the previous validation and preview evidence is stale");
+    expect(customWidgetAssistantInstructions).toContain("Never substitute a later unvalidated version");
+    expect(customWidgetAssistantInstructions).toContain("customWidget_createFromPreview");
+    expect(customWidgetAssistantInstructions).toContain("Never say the widget is created, updated, placed");
+    expect(customWidgetAssistantInstructions).toContain("corresponding customWidget_create, customWidget_update");
     expect(customWidgetAssistantInstructions).toContain("managementPath");
   });
 
@@ -190,6 +202,28 @@ describe("getRequiredAssistantToolNames", () => {
           toolName: "customWidget_create",
           toolCallId: "create-widget-1",
           input: { name: "PSG fixtures" },
+          state: "output-available",
+          output: {
+            id: "widget-1",
+            managementPath: "/manage/custom-widgets/edit/widget-1",
+            nextAction: {
+              type: "place-custom-widget",
+              targetBoardId: "board-hey",
+            },
+          },
+        }),
+      ]),
+    ).toEqual(["configure_widget"]);
+  });
+
+  test("requires placement after persisting the final tested preview", () => {
+    expect(
+      getRequiredAssistantToolNames([
+        assistantMessage({
+          type: "dynamic-tool",
+          toolName: "customWidget_createFromPreview",
+          toolCallId: "create-widget-from-preview-1",
+          input: { previewSessionId: "preview-3" },
           state: "output-available",
           output: {
             id: "widget-1",

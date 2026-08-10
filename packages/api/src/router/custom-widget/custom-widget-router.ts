@@ -7,16 +7,14 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq, handleTransactionsAsync, notInArray } from "@homarr/db";
 import { customWidgetDefinitions, customWidgetSecrets } from "@homarr/db/schema";
 import {
-  customWidgetCreateSchema,
   customWidgetDefinitionSchema,
   customWidgetUpdateSchema,
-  normalizeCustomWidgetAuthoringDefinition,
   normalizeCustomWidgetAuthoringUpdate,
 } from "@homarr/custom-widgets/core";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
-import { insertCustomWidgetDefinition } from "./definition-insert";
+import { creationProcedures } from "./creation-procedures";
 import { managementQueryProcedures } from "./management-queries";
 import { metadataProcedures } from "./metadata-procedures";
 import { previewActionProcedures } from "./preview-action-procedures";
@@ -38,36 +36,7 @@ const logger = createLogger({ module: "custom-widget" });
 export const customWidgetRouter = createTRPCRouter({
   ...metadataProcedures,
   ...managementQueryProcedures,
-
-  create: permissionRequiredProcedure
-    .requiresPermission("admin")
-    .meta({
-      mcp: {
-        enabled: true,
-        description:
-          "Create a Custom JSX widget only after customWidget_validate, customWidget_previewCreate, and every returned preview query succeed. Prefer templateLines for multiline JSX. Returns a client-navigable edit link.",
-      },
-    })
-    .input(customWidgetCreateSchema)
-    .mutation(async ({ ctx, input }) => {
-      const { secrets, ...candidate } = input;
-      const definition = parseCustomWidgetAuthoringInput(() => normalizeCustomWidgetAuthoringDefinition(candidate));
-      assertSecretSources(definition.sources, secrets);
-      const id = await insertCustomWidgetDefinition(ctx.db, definition, ctx.session.user.id, secrets);
-      logger.info("Created custom widget definition", { id, name: definition.name });
-      return {
-        id,
-        managementPath: `/manage/custom-widgets/edit/${id}`,
-        nextAction: {
-          type: "place-custom-widget" as const,
-          widgetKind: "customApi" as const,
-          options: { definitionId: id },
-          whenTargetIsKnown: "Call configure_widget now with the requested board and these exact widget options.",
-          whenTargetIsUnknown:
-            "Call ask_user now with 'Place on a board' and 'Leave unplaced'. Never ask this choice in prose.",
-        },
-      };
-    }),
+  ...creationProcedures,
 
   update: permissionRequiredProcedure
     .requiresPermission("admin")

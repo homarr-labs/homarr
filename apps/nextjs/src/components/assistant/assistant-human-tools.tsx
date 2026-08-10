@@ -83,7 +83,6 @@ export const AssistantAskUserTool = ({
     completed: result !== undefined,
     confirm: () => {
       if (!affirmativeResult) return;
-      setSubmitting(true);
       addResult(affirmativeResult);
     },
   });
@@ -299,7 +298,6 @@ export const AssistantConfigureAppTool = ({
     completed: result !== undefined,
     confirm: () => {
       if (!initialValues) return;
-      setSubmitting(true);
       addResult(initialValues);
     },
   });

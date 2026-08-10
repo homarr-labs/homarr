@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Group } from "@mantine/core";
-import { IconCopy, IconRobot, IconSparkles } from "@tabler/icons-react";
+import { ActionIcon, Group, Tooltip } from "@mantine/core";
+import { IconCopy, IconRobot } from "@tabler/icons-react";
 
 import { buildCustomWidgetAiPrompt } from "@homarr/custom-widgets/authoring-prompt";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -46,40 +46,45 @@ export const CopyAiPromptButton = ({
 
   if (!assistant?.enabled) {
     return (
-      <Button
-        type="button"
-        variant="light"
-        leftSection={<IconSparkles size={16} />}
-        onClick={() => void handleCopy()}
-        fullWidth
-        size="sm"
-      >
-        {t("action.copyAiPrompt")}
-      </Button>
+      <Tooltip label={t("action.copyAiPrompt")}>
+        <ActionIcon
+          type="button"
+          variant="subtle"
+          size="lg"
+          aria-label={t("action.copyAiPrompt")}
+          onClick={() => void handleCopy()}
+        >
+          <IconCopy size={16} />
+        </ActionIcon>
+      </Tooltip>
     );
   }
 
   return (
-    <Group grow gap="xs" wrap="nowrap">
-      <Button
-        type="button"
-        variant="light"
-        leftSection={<IconRobot size={16} />}
-        onClick={handleAssistant}
-        disabled={!request?.trim()}
-        size="sm"
-      >
-        {t("action.aiPrompt")}
-      </Button>
-      <Button
-        type="button"
-        variant="default"
-        leftSection={<IconCopy size={16} />}
-        onClick={() => void handleCopy()}
-        size="sm"
-      >
-        {t("notification.aiPromptCopy")}
-      </Button>
+    <Group gap={2} wrap="nowrap">
+      <Tooltip label={t("action.aiPrompt")}>
+        <ActionIcon
+          type="button"
+          variant="subtle"
+          size="lg"
+          aria-label={t("action.aiPrompt")}
+          onClick={handleAssistant}
+          disabled={!request?.trim()}
+        >
+          <IconRobot size={16} />
+        </ActionIcon>
+      </Tooltip>
+      <Tooltip label={t("action.copyAiPrompt")}>
+        <ActionIcon
+          type="button"
+          variant="subtle"
+          size="lg"
+          aria-label={t("action.copyAiPrompt")}
+          onClick={() => void handleCopy()}
+        >
+          <IconCopy size={16} />
+        </ActionIcon>
+      </Tooltip>
     </Group>
   );
 };

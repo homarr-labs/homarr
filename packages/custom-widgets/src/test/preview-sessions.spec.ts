@@ -64,8 +64,13 @@ describe("preview sessions", () => {
       status: 200,
       durationMs: 5,
       simulated: false,
+      sessionRevision: session.revision,
     });
-    expect((await service.getJournal(created.id, "user"))[0]).toMatchObject({ path: "/data", status: 200 });
+    expect((await service.getJournal(created.id, "user"))[0]).toMatchObject({
+      path: "/data",
+      status: 200,
+      sessionRevision: session.revision,
+    });
   });
 
   it("applies source deployment values without restoring stale source metadata", async () => {

@@ -30,7 +30,13 @@ describe("Copy AI prompt", () => {
       `${process.cwd()}/apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.module.css`,
       "utf8",
     );
-    expect(card).toContain("<SimpleGrid cols={{ base: 1, sm: 2 }}>");
+    const actions = readFileSync(
+      `${process.cwd()}/apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx`,
+      "utf8",
+    );
+    expect(card).toContain('<Accordion variant="contained">');
+    expect(card).not.toContain("defaultValue");
+    expect(actions).toContain("<ActionIcon");
     expect(styles).toContain(".sectionNav > a");
     expect(styles).toContain("flex: 0 0 auto");
   });

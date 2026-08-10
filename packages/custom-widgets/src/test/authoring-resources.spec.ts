@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import {
   getCustomWidgetComponent,
   getCustomWidgetComponentCatalog,
+  getCustomWidgetExample,
   getCustomWidgetSharedProps,
   getCustomWidgetSkill,
   getCustomWidgetSkillContent,
@@ -15,7 +16,7 @@ const skillSourceDirectory = path.resolve(import.meta.dirname, "../../../../.age
 describe("authoring resources", () => {
   it("returns the complete portable skill and keeps every bundled source file in sync", () => {
     const skill = getCustomWidgetSkill();
-    expect(skill).toMatchObject({ name: "homarr-custom-widget", version: "2.2.0" });
+    expect(skill).toMatchObject({ name: "homarr-custom-widget", version: "2.3.0" });
     expect(skill.skillsShUrl).toContain("skills.sh/homarr-labs/homarr");
     expect(skill.sourceUrl).toContain("/tree/HEAD/.agents/skills/homarr-custom-widget");
     expect(skill.installCommand).toContain("--skill homarr-custom-widget");
@@ -40,6 +41,17 @@ describe("authoring resources", () => {
       expect.arrayContaining([expect.objectContaining({ name: "Stack", category: expect.any(String) })]),
     );
     expect(catalog.examples).toEqual(expect.arrayContaining([expect.objectContaining({ id: "service-dashboard" })]));
+    expect(catalog.examples).toEqual(expect.arrayContaining([expect.objectContaining({ id: "pokedex" })]));
+    const pokedex = getCustomWidgetExample("pokedex");
+    expect(pokedex).toMatchObject({
+      id: "pokedex",
+      widget: {
+        $schema: "homarr-custom-widget-v2",
+        name: "Pokédex",
+        sources: { default: { baseUrl: "https://pokeapi.co" } },
+      },
+    });
+    expect(Buffer.byteLength(JSON.stringify(pokedex), "utf8")).toBeLessThan(16_000);
     expect(catalog.sharedProps).toMatchObject({
       count: expect.any(Number),
       fetchTool: "customWidget_getSharedProps",
