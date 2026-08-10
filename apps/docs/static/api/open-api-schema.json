@@ -2152,7 +2152,8 @@
                       "beszelSystemStats",
                       "traefik",
                       "customApi",
-                      "assistant"
+                      "assistant",
+                      "wud"
                     ]
                   },
                   "options": {
