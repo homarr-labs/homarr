@@ -45,7 +45,7 @@ export const LayoutPreview = ({ board, layout, layouts, sourceLayout, apps }: Pr
           {layout.columnCount} {t("board.setting.section.layout.preview.columns")}
         </Text>
       </Group>
-      <Box w={{ base: "100%", md: previewWidth }} maw="100%" className={classes.canvas}>
+      <Box w={{ base: "100%", md: `max(${previewWidth}, 14rem)` }} maw="100%" className={classes.canvas}>
         {elements.length === 0 ? (
           <Text size="xs" c="dimmed" ta="center" py="xl">
             {t("board.setting.section.layout.preview.empty")}
