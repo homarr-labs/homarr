@@ -12,6 +12,8 @@ apps/nextjs/src/components/layout/header/lazy-spotlight.tsx
   s_5d9f23ee18513b::t_5d60f4268ab772 7,34-35,44,46-48
 apps/nextjs/src/app/[locale]/manage/settings/page.tsx
   s_5d9f23ee18513b::t_2ca8a506020585 7,30-32
+apps/nextjs/src/app/[locale]/boards/[name]/settings/page.tsx
+  s_5d9f23ee18513b::t_f2c4f1fd6f9e08 56
 ---
 {
   "schema_version": "authorship/3.0.0",
