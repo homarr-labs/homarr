@@ -65,12 +65,16 @@ describe("assistant-ui AI SDK v7 transport", () => {
       },
       stopWhen: stepCountIs(2),
     });
-    const fetchMock = vi.fn(async () =>
-      result.toUIMessageStreamResponse({
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, init?: RequestInit) => {
+      expect(JSON.parse(String(init?.body))).toMatchObject({
+        id: "thread-1",
+        messages: [{ id: "user-1", role: "user", parts: [{ type: "text", text: "Run migration test" }] }],
+      });
+      return result.toUIMessageStreamResponse({
         sendReasoning: true,
         messageMetadata: ({ part }) => (part.type === "finish" ? { runtime: "ai-sdk-v7" } : undefined),
-      }),
-    );
+      });
+    });
     const transport = new AssistantChatTransport({
       api: "https://homarr.test/api/assistant/chat",
       fetch: fetchMock,
