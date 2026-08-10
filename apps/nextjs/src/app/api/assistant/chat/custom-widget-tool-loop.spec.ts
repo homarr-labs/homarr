@@ -7,7 +7,7 @@ import { getCustomWidgetSkill } from "@homarr/custom-widgets/authoring-resources
 import { getCustomWidgetJsonSchema } from "@homarr/custom-widgets/core";
 
 import { createCustomWidgetDynamicContextController } from "./custom-widget-authoring-context";
-import { repairCustomWidgetToolInput } from "./assistant-tool-input-repair";
+import { repairAssistantToolInput } from "./assistant-tool-input-repair";
 
 const usage = {
   inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 },
@@ -217,7 +217,7 @@ describe("Custom Widget assistant tool loop", () => {
           execute,
         }),
       },
-      experimental_repairToolCall: ({ toolCall }) => Promise.resolve(repairCustomWidgetToolInput(toolCall)),
+      experimental_repairToolCall: ({ toolCall }) => Promise.resolve(repairAssistantToolInput(toolCall)),
       stopWhen: stepCountIs(2),
     });
 

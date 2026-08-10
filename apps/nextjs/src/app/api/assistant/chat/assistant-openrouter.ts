@@ -82,6 +82,17 @@ export const withOpenRouterWebSearch = (body: Record<string, unknown>) => {
   return { ...body, tools: [...tools, openRouterWebSearchTool] };
 };
 
+export const withOpenRouterToolRequestOptions = (
+  body: Record<string, unknown>,
+  options: { webSearchEnabled: boolean },
+) => ({
+  ...(options.webSearchEnabled ? withOpenRouterWebSearch(body) : body),
+  // OpenRouter enables parallel tool calls for most models by default. Several routed models
+  // interleave or truncate function argument streams when they emit multiple calls together.
+  // Sequential calls preserve the same agent loop while making every tool input independently valid.
+  parallel_tool_calls: false,
+});
+
 export const getOpenRouterWebSearchRequests = (value: unknown) => {
   if (typeof value !== "object" || value === null || Array.isArray(value)) return undefined;
   const usage = "usage" in value && typeof value.usage === "object" && value.usage !== null ? value.usage : undefined;

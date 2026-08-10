@@ -721,6 +721,7 @@ export const assistantRouter = createTRPCRouter({
         id: message.id,
         parentId: message.parentId,
         format: message.format,
+        createdAt: message.createdAt,
         content: parse(message.content),
       })),
     };

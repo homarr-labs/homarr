@@ -4,6 +4,7 @@ import {
   getOpenRouterWebSearchRequests,
   getOpenRouterWebSearchSources,
   normalizeOpenRouterWebSearchSources,
+  withOpenRouterToolRequestOptions,
   withOpenRouterWebSearch,
 } from "./assistant-openrouter";
 
@@ -26,6 +27,21 @@ describe("withOpenRouterWebSearch", () => {
     const body = { tools: [{ type: "openrouter:web_search", parameters: { max_results: 3 } }] };
 
     expect(withOpenRouterWebSearch(body)).toBe(body);
+  });
+
+  test("runs OpenRouter function tools sequentially while preserving optional server web search", () => {
+    expect(
+      withOpenRouterToolRequestOptions(
+        {
+          model: "deepseek/deepseek-v4-flash-latest",
+          tools: [{ type: "function", function: { name: "icon_findIcons", parameters: {} } }],
+        },
+        { webSearchEnabled: true },
+      ),
+    ).toMatchObject({
+      parallel_tool_calls: false,
+      tools: [{ type: "function", function: { name: "icon_findIcons" } }, { type: "openrouter:web_search" }],
+    });
   });
 
   test("reads OpenRouter server-tool usage from a response", () => {
