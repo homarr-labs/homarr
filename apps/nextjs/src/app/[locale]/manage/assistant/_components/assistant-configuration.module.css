@@ -68,24 +68,6 @@
   min-width: 0;
 }
 
-.credentialFlow {
-  padding: var(--mantine-spacing-md);
-  border: 1px solid light-dark(var(--mantine-color-yellow-4), var(--mantine-color-yellow-8));
-  border-radius: var(--mantine-radius-md);
-  background-color: light-dark(
-    var(--mantine-color-yellow-0),
-    color-mix(in srgb, var(--mantine-color-yellow-9) 18%, transparent)
-  );
-}
-
-.credentialStepper :global(.mantine-Stepper-stepLabel) {
-  font-size: var(--mantine-font-size-sm);
-}
-
-.credentialStepper :global(.mantine-Stepper-content) {
-  padding-top: var(--mantine-spacing-md);
-}
-
 .advancedControl {
   min-height: 3.25rem;
 }
@@ -146,10 +128,6 @@
   .flowActions {
     display: grid;
     grid-template-columns: 1fr;
-  }
-
-  .credentialStepper :global(.mantine-Stepper-stepLabel) {
-    display: none;
   }
 
   .selectedModel {
