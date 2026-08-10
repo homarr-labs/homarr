@@ -40,6 +40,11 @@ const handleResizeChange = (
   isDynamic: boolean,
   isScrollable = false,
 ) => {
+  // width/height are used as division denominators below (column count and row count); a
+  // section not yet measured/laid out can report either as 0, which would otherwise produce
+  // an Infinity or NaN cell height.
+  if (width <= 0 || height <= 0) return;
+
   wrapper.style.setProperty("--gridstack-column-count", width.toString());
   wrapper.style.setProperty("--gridstack-row-count", height.toString());
 
@@ -358,12 +363,18 @@ const useCssVariableConfiguration = ({
     if (!wrapperRef.current) return;
     if (!gridRef.current) return;
 
-    wrapperRef.current.style.setProperty("--gridstack-column-count", gridRef.current.getColumn().toString());
-    wrapperRef.current.style.setProperty("--gridstack-row-count", gridRef.current.getRow().toString());
+    const column = gridRef.current.getColumn();
+    const row = gridRef.current.getRow();
+    // See the equivalent guard in handleResizeChange: column/row are used as division
+    // denominators below and can be 0 before the grid has been measured/laid out.
+    if (column <= 0 || row <= 0) return;
 
-    let cellHeight = wrapperRef.current.clientWidth / gridRef.current.getColumn();
+    wrapperRef.current.style.setProperty("--gridstack-column-count", column.toString());
+    wrapperRef.current.style.setProperty("--gridstack-row-count", row.toString());
+
+    let cellHeight = wrapperRef.current.clientWidth / column;
     if (isDynamic && !isScrollable) {
-      cellHeight = wrapperRef.current.clientHeight / gridRef.current.getRow();
+      cellHeight = wrapperRef.current.clientHeight / row;
     }
 
     gridRef.current.cellHeight(cellHeight);

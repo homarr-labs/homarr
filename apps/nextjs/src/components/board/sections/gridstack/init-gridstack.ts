@@ -44,6 +44,9 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
     `.grid-stack-${section.kind}[data-section-id='${section.id}']`,
   );
   const grid = newGrid.current;
+  // GridStack.init() also ignores the column above when reusing an existing instance (see
+  // below), so this reflects the grid's actual current column count, not sectionColumnCount.
+  const previousColumn = grid.getColumn();
 
   // GridStack.init() reuses the cached instance for an already-initialized element and
   // silently ignores the new options object above -- including maxRow. Its engine also keeps
@@ -73,7 +76,11 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
   // "list" re-adds each item with auto-placement (in original order), so GridStack's own
   // collision handling finds each one a clear slot -- "move"/"moveScale" assign explicit
   // positions directly, which can make that collision pass thrash and leave items overlapping.
-  grid.column(sectionColumnCount, isDynamic ? "list" : "none");
+  // Only actually reflow when the column count changed though: this effect also re-runs when
+  // just the scrollable option is toggled (see use-gridstack.ts), and "list" auto-places every
+  // item by order regardless, which would rearrange an untouched section on every such toggle.
+  const columnChanged = sectionColumnCount !== previousColumn;
+  grid.column(sectionColumnCount, isDynamic && columnChanged ? "list" : "none");
 
   return true;
 };

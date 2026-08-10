@@ -5,7 +5,7 @@ import type { z } from "zod/v4";
 
 import { useZodForm } from "@homarr/form";
 import { createModal, ModalFormFooter, modalSizeForm } from "@homarr/modals";
-import { useI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { TextMultiSelect } from "@homarr/ui";
 import { dynamicSectionOptionsSchema } from "@homarr/validation/shared";
 
@@ -16,6 +16,7 @@ interface ModalProps {
 
 export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, innerProps }) => {
   const t = useI18n();
+  const tDynamic = useScopedI18n("section.dynamic");
   const theme = useMantineTheme();
 
   const form = useZodForm(dynamicSectionOptionsSchema, {
@@ -49,8 +50,8 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
           {...form.getInputProps("borderColor")}
         />
         <Switch
-          label={t("section.dynamic.option.scrollable.label")}
-          description={t("section.dynamic.option.scrollable.description")}
+          label={tDynamic("option.scrollable.label")}
+          description={tDynamic("option.scrollable.description")}
           {...form.getInputProps("scrollable", { type: "checkbox" })}
         />
         <ModalFormFooter onCancel={actions.closeModal} />
