@@ -109,6 +109,8 @@ const previewCreateProcedure = permissionRequiredProcedure
       sources: definition.sources,
       requests: definition.requests,
       name: definition.name,
+      description: definition.description,
+      iconUrl: definition.iconUrl,
       template: definition.template,
       optionDefinitions: definition.options,
       options,
@@ -145,6 +147,8 @@ export const previewBaseProcedures = {
       return {
         id: session.id,
         name: session.name,
+        description: session.description,
+        iconUrl: session.iconUrl,
         expiresAt: session.expiresAt,
         template: session.template,
         optionDefinitions: session.optionDefinitions,

@@ -45,6 +45,7 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_validate");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_previewCreate");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_previewQuery once for every query");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_createFromPreview");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("customWidget_getSharedProps");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Prefer templateLines");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf("customWidget_previewQuery")).toBeLessThan(

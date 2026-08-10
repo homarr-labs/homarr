@@ -42,6 +42,38 @@ describe("shouldAutomaticallyContinueAssistant", () => {
     ).toBe(true);
   });
 
+  test("continues an approved mutation when the same step also reports a provider-executed server tool", () => {
+    expect(
+      shouldAutomaticallyContinueAssistant({
+        messages: [
+          {
+            id: "assistant-message",
+            role: "assistant",
+            parts: [
+              { type: "step-start" },
+              {
+                type: "dynamic-tool",
+                toolName: "openrouter_web_search",
+                toolCallId: "search-1",
+                input: { query: "PokéAPI" },
+                state: "input-available",
+                providerExecuted: true,
+              },
+              {
+                type: "dynamic-tool",
+                toolName: "customWidget_createFromPreview",
+                toolCallId: "create-1",
+                input: { previewSessionId: "preview-1" },
+                state: "approval-responded",
+                approval: { id: "approval-1", approved: true },
+              },
+            ],
+          },
+        ],
+      }),
+    ).toBe(true);
+  });
+
   test("waits while a human tool has no result", () => {
     expect(
       shouldAutomaticallyContinueAssistant({

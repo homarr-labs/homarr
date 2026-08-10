@@ -11,7 +11,7 @@ Author one widget at a time. When connected to Homarr, retrieve `homarr://custom
 2. Create one credential-free widget with keyed `sources`, keyed `requests`, optional keyed `options`, and safe JSX `template`.
 3. Validate, preview, test queries and simulated actions, visually inspect, and iterate.
 4. Configure deployment-specific source URLs and request credentials through Homarr; never repeat plaintext.
-5. Save only after narrow/wide, light/dark, loading, empty, error, and success states work.
+5. Save only after narrow/wide, light/dark, loading, empty, error, and success states work. When connected through MCP, persist the exact final tested preview with `customWidget_createFromPreview`; do not resend a large template through `customWidget_create` unless no preview session is available.
 
 Use `{option:name}` or `$option` for saved options. Use `{param:name}` or `$param` for values supplied by `SubFetch`, `ActionButton`, or `ToggleSwitch`. Load queries cannot use invocation parameters. Templates read `data`, `status`, `options`, and temporary `inputs`.
 

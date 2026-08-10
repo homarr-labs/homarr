@@ -3,6 +3,7 @@ import {
   customJsxCatalogGlobalPropByName,
   resolveCustomJsxPropDescriptor,
 } from "./component-catalog";
+import { BUNDLED_CUSTOM_WIDGETS } from "./bundled-widgets";
 import { customJsxExamples } from "./examples";
 import { customJsxTablerIconNames } from "./tabler-icons";
 
@@ -11,7 +12,7 @@ export const CUSTOM_WIDGET_SKILL_SOURCE_URL =
   "https://github.com/homarr-labs/homarr/tree/HEAD/.agents/skills/homarr-custom-widget";
 export const CUSTOM_WIDGET_SKILL_INSTALL_COMMAND =
   "npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget";
-export const CUSTOM_WIDGET_SKILL_VERSION = "2.2.0";
+export const CUSTOM_WIDGET_SKILL_VERSION = "2.3.0";
 
 export const CUSTOM_WIDGET_SKILL_REFERENCES = {
   "references/schema.md": `# Schema
@@ -77,7 +78,7 @@ Author one widget at a time. When connected to Homarr, retrieve \`homarr://custo
 2. Create one credential-free widget with keyed \`sources\`, keyed \`requests\`, optional keyed \`options\`, and safe JSX \`template\`.
 3. Validate, preview, test queries and simulated actions, visually inspect, and iterate.
 4. Configure deployment-specific source URLs and request credentials through Homarr; never repeat plaintext.
-5. Save only after narrow/wide, light/dark, loading, empty, error, and success states work.
+5. Save only after narrow/wide, light/dark, loading, empty, error, and success states work. When connected through MCP, persist the exact final tested preview with \`customWidget_createFromPreview\`; do not resend a large template through \`customWidget_create\` unless no preview session is available.
 
 Use \`{option:name}\` or \`$option\` for saved options. Use \`{param:name}\` or \`$param\` for values supplied by \`SubFetch\`, \`ActionButton\`, or \`ToggleSwitch\`. Load queries cannot use invocation parameters. Templates read \`data\`, \`status\`, \`options\`, and temporary \`inputs\`.
 
@@ -100,6 +101,8 @@ const CUSTOM_WIDGET_SKILL_BUNDLE_MD = [
     ([file, content]) => `\n\n---\n\n# Bundled file: ${file}\n\n${content.trimEnd()}`,
   ),
 ].join("");
+
+const pokedexAuthoringExample = BUNDLED_CUSTOM_WIDGETS.find(({ id }) => id === "seed-pokedex");
 
 export function getCustomWidgetSkill() {
   return {
@@ -135,7 +138,19 @@ export function getCustomWidgetComponentCatalog() {
 }
 
 export function getCustomWidgetExampleCatalog() {
-  return customJsxExamples.map(({ id, title, description }) => ({ id, title, description }));
+  return [
+    ...customJsxExamples.map(({ id, title, description }) => ({ id, title, description })),
+    ...(pokedexAuthoringExample
+      ? [
+          {
+            id: "pokedex",
+            title: "Complete Pokédex",
+            description:
+              "A production-safe PokéAPI browser with searchable species, artwork, types, abilities, base stats, loading states, and manual detail requests.",
+          },
+        ]
+      : []),
+  ];
 }
 
 export function getCustomWidgetComponent(name: string) {
@@ -183,5 +198,14 @@ export function getCustomWidgetSharedProps(names: readonly string[]) {
 }
 
 export function getCustomWidgetExample(name: string) {
+  if (name === "pokedex" && pokedexAuthoringExample) {
+    return {
+      id: "pokedex",
+      title: "Complete Pokédex",
+      description:
+        "A production-safe PokéAPI browser with searchable species, artwork, types, abilities, base stats, loading states, and manual detail requests.",
+      widget: pokedexAuthoringExample.widget,
+    };
+  }
   return customJsxExamples.find((example) => example.id === name) ?? null;
 }
