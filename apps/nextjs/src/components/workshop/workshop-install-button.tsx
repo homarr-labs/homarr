@@ -2,7 +2,8 @@
 
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { Button, getDefaultZIndex, Modal, useModalsStack } from "@mantine/core";
+import { Button, Modal, useModalsStack } from "@mantine/core";
+import type { ModalProps } from "@mantine/core";
 import { IconBuildingStore } from "@tabler/icons-react";
 
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
@@ -16,11 +17,20 @@ interface WorkshopInstallButtonProps {
   fullWidth?: boolean;
 }
 
+const installFlowModalProps = {
+  size: "90%",
+  styles: {
+    content: { display: "flex", flexDirection: "column", height: "min(85dvh, 900px)" },
+    body: { flex: 1, overflowY: "auto" },
+  },
+} satisfies Pick<ModalProps, "size" | "styles">;
+
 export function WorkshopInstallButton({ children, fullWidth }: WorkshopInstallButtonProps = {}) {
   const t = useScopedI18n("workshop");
-  const stack = useModalsStack(["workshop", "review"]);
+  const stack = useModalsStack(["workshop", "details", "report", "review"]);
   const [pendingWidget, setPendingWidget] = useState<HomarrCustomWidgetV2 | null>(null);
-  const zIndex = getDefaultZIndex("modal") + 10;
+  const detailsModal = stack.register("details");
+  const reportModal = stack.register("report");
 
   const closeReview = () => {
     stack.close("review");
@@ -35,11 +45,26 @@ export function WorkshopInstallButton({ children, fullWidth }: WorkshopInstallBu
         onClick={() => stack.open("workshop")}
         fullWidth={fullWidth}
       >
-        {children ?? t("title")}
+        {children ?? t("importFromWorkshop")}
       </Button>
       <Modal.Stack>
-        <Modal {...stack.register("workshop")} title={t("installDialog")} size="90%" zIndex={zIndex}>
+        <Modal {...stack.register("workshop")} {...installFlowModalProps} title={t("installDialog")}>
           <WorkshopBrowser
+            modalStack={{
+              modalProps: installFlowModalProps,
+              details: {
+                opened: detailsModal.opened,
+                stackId: detailsModal.stackId,
+                open: () => stack.open("details"),
+                close: () => stack.close("details"),
+              },
+              report: {
+                opened: reportModal.opened,
+                stackId: reportModal.stackId,
+                open: () => stack.open("report"),
+                close: () => stack.close("report"),
+              },
+            }}
             onInstall={async (widget) => {
               setPendingWidget(widget);
               stack.open("review");
@@ -49,7 +74,13 @@ export function WorkshopInstallButton({ children, fullWidth }: WorkshopInstallBu
         <CustomWidgetImportDialog
           {...stack.register("review")}
           widget={pendingWidget}
-          zIndex={zIndex + 1}
+          modalProps={installFlowModalProps}
+          labels={{
+            title: t("confirmInstallTitle"),
+            description: t("confirmInstallDescription"),
+            cancel: t("backToWidget"),
+            confirm: t("install"),
+          }}
           onClose={closeReview}
           onImported={() => {
             stack.closeAll();
