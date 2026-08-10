@@ -2018,6 +2018,9 @@
       "open": "Open Homarr Assistant",
       "close": "Close assistant",
       "minimize": "Minimize assistant",
+      "maximize": "Maximize assistant",
+      "restore": "Restore assistant size",
+      "windowControls": "Conversation window controls",
       "spotlight": "Ask Homarr Assistant",
       "spotlightDescription": "Type and send a prompt without leaving the command menu.",
       "spotlightPrompt": {
@@ -2093,6 +2096,11 @@
       "downloadFile": "Download {name}",
       "attachedImage": "Attached image",
       "externalImageBlocked": "External image blocked for privacy",
+      "image": {
+        "loading": "Loading image",
+        "failed": "This image could not be loaded.",
+        "retry": "Try image again"
+      },
       "quoteSelection": "Quote",
       "dismissQuote": "Remove quote",
       "attachments": {
@@ -2168,6 +2176,10 @@
       },
       "toolInput": "Input",
       "toolOutput": "Output",
+      "toolActivity": {
+        "iconSearch": "Looking for “{query}” icons",
+        "iconBrowse": "Browsing available icons"
+      },
       "toolNavigation": {
         "openPreview": "Open preview",
         "openWidget": "Open widget"

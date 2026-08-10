@@ -78,6 +78,7 @@ import {
   IconApps,
   IconArrowUp,
   IconArrowsMaximize,
+  IconArrowsMinimize,
   IconAt,
   IconCheck,
   IconChevronDown,
@@ -124,6 +125,7 @@ import classes from "./assistant-panel.module.css";
 import { getAssistantActivityState } from "./assistant-activity-state";
 import { useAssistantAutoApproval, useAssistantAutomaticAction } from "./assistant-auto-approval";
 import { AssistantDotMatrix } from "./assistant-dot-matrix";
+import { AssistantImage } from "./assistant-image";
 import { getAssistantDirectiveTranslationKey, parseAssistantDirectives } from "./assistant-directives";
 import { remarkAssistantDirectives, resolveAssistantDirectiveEntity } from "./assistant-markdown-directives";
 import type { AssistantDirectiveEntity } from "./assistant-markdown-directives";
@@ -142,6 +144,7 @@ import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assi
 import { useAssistantReasoningState } from "./assistant-reasoning-state";
 import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
 import { getToolResultPresentation } from "./assistant-tool-result";
+import { getAssistantIconSearchQuery } from "./assistant-tool-label";
 import { getAssistantToolTraceTarget } from "./assistant-tool-trace";
 import { getSafeAssistantHttpUrl } from "./assistant-url";
 
@@ -267,18 +270,19 @@ const MarkdownTable = ({ children, ...props }: ComponentPropsWithoutRef<"table">
 );
 
 const MarkdownImage = ({ src, alt = "", ...props }: ComponentPropsWithoutRef<"img">) => {
+  const t = useScopedI18n("common.assistant.image");
   const safeSource = getSafeAssistantMarkdownImageSource(src);
   if (!safeSource) return null;
 
   return (
-    <img
+    <AssistantImage
       {...props}
-      src={safeSource}
+      source={safeSource}
       alt={alt}
       className={classes.markdownImage}
-      loading="lazy"
-      decoding="async"
-      referrerPolicy="no-referrer"
+      loadingLabel={t("loading")}
+      failedLabel={t("failed")}
+      retryLabel={t("retry")}
     />
   );
 };
@@ -623,7 +627,18 @@ const ImagePart = ({ image, filename }: ImageMessagePartProps) => {
       </Group>
     );
   }
-  return <Box component="img" src={source} alt={filename ?? t("attachedImage")} className={classes.messageImage} />;
+  return (
+    <AssistantImage
+      messagePart
+      source={source}
+      alt={filename ?? t("attachedImage")}
+      caption={filename}
+      className={classes.messageImage}
+      loadingLabel={t("image.loading")}
+      failedLabel={t("image.failed")}
+      retryLabel={t("image.retry")}
+    />
+  );
 };
 
 const formatToolResultValue = (value: string | number | boolean) =>
@@ -835,6 +850,13 @@ const ToolPart = ({
   const successful = completed && !denied && !failed;
   const compactPresentation = compact && !awaitingApproval;
   const traceTarget = getAssistantToolTraceTarget(args);
+  const iconSearchQuery = getAssistantIconSearchQuery(toolName, args);
+  const displayName =
+    iconSearchQuery === null
+      ? toolName.replaceAll("_", " ")
+      : iconSearchQuery.length > 0
+        ? t("toolActivity.iconSearch", { query: iconSearchQuery })
+        : t("toolActivity.iconBrowse");
   const duration = timing?.completedAt !== undefined ? Math.max(0, timing.completedAt - timing.startedAt) : undefined;
   const autoApprovalInProgress = useAssistantAutomaticAction({
     toolCallId,
@@ -865,7 +887,7 @@ const ToolPart = ({
             </ThemeIcon>
             <Box miw={0}>
               <Text size={compactPresentation ? "xs" : "sm"} fw={650} lineClamp={1}>
-                {toolName.replaceAll("_", " ")}
+                {displayName}
               </Text>
               {compactPresentation && traceTarget && (
                 <Text size="xs" c="dimmed" lineClamp={1}>
@@ -2710,6 +2732,9 @@ interface AssistantConversationSurfaceProps extends AssistantConversationControl
   pendingAction: AssistantPendingAction | undefined;
   onExpand?: () => void;
   onMinimize?: () => void;
+  onWindowClose?: () => void;
+  onToggleMaximize?: () => void;
+  maximized?: boolean;
 }
 
 export const AssistantConversationSurface = ({
@@ -2726,6 +2751,9 @@ export const AssistantConversationSurface = ({
   onReasoningChange,
   onExpand,
   onMinimize,
+  onWindowClose,
+  onToggleMaximize,
+  maximized = false,
 }: AssistantConversationSurfaceProps) => {
   const t = useScopedI18n("common.assistant");
   const reducedMotion = useReducedMotion();
@@ -2740,6 +2768,48 @@ export const AssistantConversationSurface = ({
   return (
     <>
       <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
+        {onWindowClose && onMinimize && onToggleMaximize && (
+          <Group
+            component="fieldset"
+            className={classes.windowControls}
+            gap={4}
+            wrap="nowrap"
+            aria-label={t("windowControls")}
+          >
+            <Tooltip label={t("close")}>
+              <ActionIcon
+                className={`${classes.windowControl} ${classes.windowControlClose}`}
+                onClick={onWindowClose}
+                aria-label={t("close")}
+              >
+                <IconX size={12} stroke={2.4} />
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label={t("minimize")}>
+              <ActionIcon
+                className={`${classes.windowControl} ${classes.windowControlMinimize}`}
+                onClick={onMinimize}
+                aria-label={t("minimize")}
+              >
+                <IconMinus size={12} stroke={2.4} />
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label={maximized ? t("restore") : t("maximize")}>
+              <ActionIcon
+                className={`${classes.windowControl} ${classes.windowControlMaximize}`}
+                onClick={onToggleMaximize}
+                aria-label={maximized ? t("restore") : t("maximize")}
+                aria-pressed={maximized}
+              >
+                {maximized ? (
+                  <IconArrowsMinimize size={11} stroke={2.4} />
+                ) : (
+                  <IconArrowsMaximize size={11} stroke={2.4} />
+                )}
+              </ActionIcon>
+            </Tooltip>
+          </Group>
+        )}
         <Group className={classes.panelIdentity} gap="xs" wrap="nowrap">
           <ThemeIcon variant="light" color="red" radius="xl">
             <IconRobot size={18} />
@@ -2776,19 +2846,6 @@ export const AssistantConversationSurface = ({
                 aria-label={t("activity.expand")}
               >
                 <IconArrowsMaximize size={17} />
-              </ActionIcon>
-            </Tooltip>
-          )}
-          {onMinimize && (
-            <Tooltip label={t("minimize")}>
-              <ActionIcon
-                className={classes.panelAction}
-                variant="subtle"
-                color="gray"
-                onClick={onMinimize}
-                aria-label={t("minimize")}
-              >
-                <IconMinus size={18} />
               </ActionIcon>
             </Tooltip>
           )}
@@ -2868,6 +2925,7 @@ export const AssistantPanel = ({
 }: AssistantPanelProps) => {
   const t = useScopedI18n("common.assistant");
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const [maximized, setMaximized] = useState(false);
 
   useWindowEvent("keydown", (event) => {
     if (opened && event.key === "Escape") onClose();
@@ -2907,7 +2965,7 @@ export const AssistantPanel = ({
         />
       )}
       {opened && (
-        <dialog className={classes.floatingPanel} aria-label={t("title")} open>
+        <dialog className={classes.floatingPanel} data-maximized={maximized || undefined} aria-label={t("title")} open>
           <AssistantConversationSurface
             isRunning={isRunning}
             pendingAction={pendingAction}
@@ -2921,6 +2979,12 @@ export const AssistantPanel = ({
             onReasoningChange={onReasoningChange}
             autoFocusComposer
             onMinimize={onClose}
+            onWindowClose={() => {
+              onDismissActivity();
+              onClose();
+            }}
+            onToggleMaximize={() => setMaximized((current) => !current)}
+            maximized={maximized}
           />
         </dialog>
       )}

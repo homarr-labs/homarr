@@ -95,7 +95,8 @@ describe("Board grid", () => {
       await expect(rail).toBeVisible();
       await expect(rail).toHaveAttribute("data-board-gutter", "left");
       await expect(railRootSection).toHaveAttribute("data-rail-placement", "left");
-      await expect(rail).toHaveCSS("overflow-x", "hidden");
+      await expect(rail).toHaveCSS("overflow-x", "clip");
+      await expect(rail).toHaveCSS("overflow-y", "clip");
       const initialRailBox = await expectBoundingBoxAsync(rail);
       const initialRailRootBox = await expectBoundingBoxAsync(railRootSection);
       expect(initialRailRootBox.width).toBeCloseTo(initialRailBox.width, 1);
@@ -240,6 +241,7 @@ describe("Board grid", () => {
 
       const viewMainSectionBox = await expectBoundingBoxAsync(mainSection);
       const viewFirstItemBox = await expectBoundingBoxAsync(logicalTile);
+      const viewScrollY = await page.evaluate(() => window.scrollY);
       runtimeResources.enterEditMode();
       await editToggle.click();
       await expect(page.locator(`[data-grid-runtime="${gridRuntimeMarker}"]`)).toHaveCount(3);
@@ -285,6 +287,39 @@ describe("Board grid", () => {
       await page.mouse.up();
       await expect.poll(async () => await readEditorGridSnapshotAsync(railGrid)).toEqual(railSnapshot);
       await rail.locator('[data-e2e-rail-overflow-fixture="true"]').evaluate((element) => element.remove());
+      await rail.evaluate((element) => {
+        const overflowFixture = document.createElement("div");
+        overflowFixture.dataset.e2eRailOverflowFixture = "true";
+        overflowFixture.style.position = "absolute";
+        overflowFixture.style.insetBlockStart = "100%";
+        overflowFixture.style.width = "1px";
+        overflowFixture.style.height = "500px";
+        overflowFixture.style.pointerEvents = "none";
+        element.appendChild(overflowFixture);
+      });
+      await expect
+        .poll(async () => await rail.evaluate((element) => element.scrollHeight - element.clientHeight))
+        .toBeGreaterThan(0);
+      const fixedRailGridHeight = (await expectBoundingBoxAsync(railGrid)).height;
+      const fixedRailHeight = (await expectBoundingBoxAsync(rail)).height;
+      const verticalRailItemBox = await expectBoundingBoxAsync(railItem);
+      await page.mouse.move(
+        verticalRailItemBox.x + verticalRailItemBox.width / 2,
+        verticalRailItemBox.y + verticalRailItemBox.height / 2,
+      );
+      await page.mouse.down();
+      await page.mouse.move(verticalRailItemBox.x + verticalRailItemBox.width / 2 + 8, verticalRailItemBox.y);
+      await expect(railItem).toHaveAttribute("data-dnd-drag-source", "true");
+      await page.mouse.move(railBox.x + railBox.width / 2, railBox.y + railBox.height - 2, { steps: 12 });
+      await page.waitForTimeout(250);
+      expect(await rail.evaluate((element) => element.scrollTop)).toBe(0);
+      expect((await expectBoundingBoxAsync(rail)).height).toBeCloseTo(fixedRailHeight, 1);
+      expect((await expectBoundingBoxAsync(railGrid)).height).toBeCloseTo(fixedRailGridHeight, 1);
+      await page.keyboard.press("Escape");
+      await page.mouse.up();
+      await expect.poll(async () => await readEditorGridSnapshotAsync(railGrid)).toEqual(railSnapshot);
+      await rail.locator('[data-e2e-rail-overflow-fixture="true"]').evaluate((element) => element.remove());
+      await page.evaluate((scrollY) => window.scrollTo({ top: scrollY, behavior: "auto" }), viewScrollY);
       await expect(logicalTile).toHaveCSS("overflow-x", "hidden");
       await expect(logicalTile).toHaveCSS("overflow-y", "auto");
       await logicalTile.evaluate((element) => {
@@ -766,6 +801,42 @@ describe("Board grid", () => {
       await expect(containerSection).toHaveAttribute("data-grid-section-chrome-active", "true");
       await expect(eastResizeHandle).not.toHaveAttribute("data-grid-resize-disabled");
       await resizeLocatorByImmediateReleaseAsync(page, eastResizeHandle, logicalCellPitch * canvasScale, 0);
+      await expect(containerSection).toHaveAttribute("data-grid-w", "2");
+      await expectGridEntryGeometrySettledAsync(containerSection);
+      await expect(eastResizeHandle).not.toHaveAttribute("data-grid-resize-disabled");
+
+      const expandingEastResizeBox = await expectBoundingBoxAsync(eastResizeHandle);
+      const expandingEastResizeStart = {
+        x: expandingEastResizeBox.x + expandingEastResizeBox.width / 2,
+        y: expandingEastResizeBox.y + expandingEastResizeBox.height / 2,
+      };
+      const expandingContainerBox = await expectBoundingBoxAsync(containerSection);
+      const eastHandleGrabOffset = expandingContainerBox.x + expandingContainerBox.width - expandingEastResizeStart.x;
+      const continuousExpansion = logicalCellPitch * canvasScale * 1.2;
+      await page.mouse.move(expandingEastResizeStart.x, expandingEastResizeStart.y);
+      await page.mouse.down();
+      await expect(page.locator("body")).toHaveAttribute("data-board-grid-interacting", "resize");
+      await page.mouse.move(expandingEastResizeStart.x + continuousExpansion, expandingEastResizeStart.y, {
+        steps: 12,
+      });
+      await expect(resizeOutline).toBeVisible();
+      const expandedOutlineBox = await expectBoundingBoxAsync(resizeOutline);
+      expect(expandedOutlineBox.x + expandedOutlineBox.width).toBeCloseTo(
+        expandingEastResizeStart.x + continuousExpansion + eastHandleGrabOffset,
+        1,
+      );
+      expect(
+        await resizeOutline.evaluate((element) => {
+          const probe = document.createElement("span");
+          probe.style.color = "var(--mantine-primary-color-filled)";
+          element.appendChild(probe);
+          const usesPrimaryColor = getComputedStyle(element).borderTopColor === getComputedStyle(probe).color;
+          probe.remove();
+          return usesPrimaryColor;
+        }),
+      ).toBe(true);
+      await page.keyboard.press("Escape");
+      await page.mouse.up();
       await expect(containerSection).toHaveAttribute("data-grid-w", "2");
 
       const northResizeHandle = containerSection.locator(':scope > [data-grid-resize-handle="n"]');

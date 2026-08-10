@@ -22,6 +22,8 @@ While a response is running, a compact activity bar appears at the bottom of the
 avatar shows a thinking indicator. The activity bar can be opened to follow the response. Completed
 responses add an unread count to the user menu until they are opened or dismissed. The expanded
 conversation has a minimize action that returns it to the activity bar without interrupting a response.
+Its desktop-style window controls can also maximize the conversation to the available viewport or close it
+without leaving an activity bar behind. Each control includes an icon, tooltip, and accessible label.
 The transcript follows streamed output while it is already at the bottom, including fast responses. Scrolling
 up releases that follow state until **Scroll to latest** is selected or the user returns to the bottom.
 
@@ -129,7 +131,9 @@ Fenced `mermaid` blocks render as diagrams in the current color scheme using Mer
 invalid diagrams fall back to their source instead of breaking the response.
 When Homarr's icon search returns an image URL, visual result tables render that actual icon in a compact
 image column instead of substituting an emoji. Assistant-provided Markdown images accept safe relative,
-HTTP, and HTTPS sources and load without forwarding the Homarr page as the referrer.
+HTTP, and HTTPS sources and load without forwarding the Homarr page as the referrer. Image message parts
+render through assistant-ui's image primitive in a bounded responsive preview with an accessible loading state,
+a filename caption when available, and an in-place retry when the source fails.
 Images up to 1 MB and text, Markdown, CSV, HTML, XML, or JSON documents up to 350 KB can be attached by
 using the paperclip, dropping files onto the composer, or pasting an image with `Cmd/Ctrl + V`. Attachment
 previews stay local to the composer where they were added and show upload state, file type, and a removable image
@@ -192,7 +196,8 @@ the assistant does not require a second typed confirmation first. Tool cards exp
 validated input, result, and error state without flooding the conversation with raw JSON by default.
 Common collection and widget results are summarized inline as compact responsive cards, while the full
 structured result remains available in the tool card details. Icon searches show the returned image variants,
-file formats, and repositories instead of the size of the complete icon catalog.
+file formats, and repositories instead of the size of the complete icon catalog. Their trace uses a readable
+activity such as **Looking for “homarr” icons** instead of exposing the internal MCP procedure name.
 
 Large tool-driven requests can use up to 32 agent steps and a larger response budget within one request, so
 multi-item dashboard changes normally finish without requiring a follow-up “Continue” message. Independent
@@ -203,6 +208,10 @@ headings, lists, tasks, links, emphasis, tables, or images; it generates compati
 the native widget configuration form and standard mutation approval, then places the widget in the next
 available dashboard position. The generated content is retained even though the Notebook content field is
 normally hidden from widget settings.
+
+Automatic placement checks every responsive layout and treats both widgets and complete container footprints
+as occupied. New assistant-created items use the first free position in the main canvas instead of overlapping
+existing content or being placed in a gutter.
 
 Every assistant-created dashboard widget now passes through Homarr's native widget editor before it is added.
 The form fills widget defaults, validates widget-specific options, and only offers compatible integrations that

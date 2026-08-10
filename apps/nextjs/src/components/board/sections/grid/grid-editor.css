@@ -116,11 +116,6 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
   pointer-events: none;
 }
 
-.board-grid-resize-outline[data-grid-resize-valid="false"] {
-  background: color-mix(in srgb, var(--mantine-color-red-filled) 8%, transparent);
-  border-color: var(--mantine-color-red-filled);
-}
-
 .board-grid-editor[data-dnd-drop-target="true"] {
   outline: 2px solid color-mix(in srgb, var(--mantine-primary-color-filled) 60%, transparent);
   outline-offset: 4px;
