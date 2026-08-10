@@ -3,7 +3,7 @@ interface PublishableWorkshopDefinition {
 }
 
 export const serializeWorkshopDefinition = (definition: unknown): string => {
-  const serialized = JSON.stringify(definition);
+  const serialized = JSON.stringify(definition, null, 2);
   if (serialized === undefined) throw new Error("Workshop definition is not serializable");
   return serialized;
 };

@@ -9,7 +9,8 @@ version and digest together, then run the Workshop integration and production-im
 
 The internal PocketBase field `users.isAdmin` means **Workshop moderator**. It does not grant Homarr administrator
 access. Signed-in moderators can open `/workshop/admin` from the visible **Moderation** button, review private report
-details, dismiss reports, and remove submissions or comments. Public submission cards show only the open report count.
+details, dismiss reports, and remove submissions or comments. Public submission cards show only the open report count;
+the submission author can read the report category and explanation without receiving the reporter identity.
 
 ## Run locally
 
