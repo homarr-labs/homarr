@@ -212,6 +212,9 @@ multi-item dashboard changes normally finish without requiring a follow-up “Co
 Homarr tools sequentially to prevent routed models from interleaving or truncating parallel JSON arguments, while
 every mutation still pauses for its normal approval. A safely recoverable truncated icon-search object is repaired
 before validation; incomplete search strings and all mutation inputs are never guessed.
+Homarr also normalizes internal tool results to the model's JSON-compatible message format before continuing an
+agent loop. Rich server values such as dates cannot invalidate the next model step, and an interrupted tool call
+without a result is omitted when the conversation resumes instead of making the entire prompt fail.
 
 The assistant can create a formatted dashboard note by adding a **Notebook** widget. Ask it for a note with
 headings, lists, tasks, links, emphasis, tables, or images; it generates compatible rich-text content, shows

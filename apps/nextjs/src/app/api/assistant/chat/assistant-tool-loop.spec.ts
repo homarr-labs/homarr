@@ -3,6 +3,7 @@ import { jsonSchema, simulateReadableStream, stepCountIs, streamText, tool } fro
 import { MockLanguageModelV4 } from "ai/test";
 
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
+import { toAssistantToolOutput } from "./assistant-tool-output";
 
 const usage = {
   inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 },
@@ -166,5 +167,69 @@ describe("Assistant tool loop", () => {
       { searchText: "homarr" },
       expect.objectContaining({ toolCallId: "icon-call" }),
     );
+  });
+
+  test("normalizes rich tRPC results before the next model step", async () => {
+    const streamErrors = vi.fn();
+    const inspect = vi.fn(() =>
+      toAssistantToolOutput({
+        updatedAt: new Date("2026-08-10T00:00:00.000Z"),
+        optional: undefined,
+        exactCount: 28_154n,
+        groups: new Map([["icons", new Set(["homarr.svg", "homarr.png"])]]),
+      }),
+    );
+    const model = new MockLanguageModelV4({
+      doStream: [
+        {
+          stream: simulateReadableStream({
+            chunks: [
+              { type: "stream-start" as const, warnings: [] },
+              {
+                type: "tool-call" as const,
+                toolCallId: "inspect-call",
+                toolName: "inspect",
+                input: "{}",
+              },
+              finish("tool-calls"),
+            ],
+            chunkDelayInMs: null,
+          }),
+        },
+        {
+          stream: simulateReadableStream({
+            chunks: [
+              { type: "stream-start" as const, warnings: [] },
+              { type: "text-start" as const, id: "answer" },
+              { type: "text-delta" as const, id: "answer", delta: "The rich result is valid." },
+              { type: "text-end" as const, id: "answer" },
+              finish("stop"),
+            ],
+            chunkDelayInMs: null,
+          }),
+        },
+      ],
+    });
+    const result = streamText({
+      model,
+      prompt: "Inspect rich Homarr data.",
+      tools: {
+        inspect: tool({
+          inputSchema: jsonSchema({ type: "object", properties: {}, additionalProperties: false }),
+          execute: inspect,
+        }),
+      },
+      stopWhen: stepCountIs(2),
+      onError: streamErrors,
+    });
+
+    await expect(result.text).resolves.toBe("The rich result is valid.");
+    expect(streamErrors).not.toHaveBeenCalled();
+    expect(inspect).toHaveBeenCalledTimes(1);
+    const nextPrompt = JSON.stringify(model.doStreamCalls[1]?.prompt);
+    expect(nextPrompt).toContain('"updatedAt":"2026-08-10T00:00:00.000Z"');
+    expect(nextPrompt).toContain('"optional":null');
+    expect(nextPrompt).toContain('"exactCount":"28154"');
+    expect(nextPrompt).toContain('"groups":[["icons",["homarr.svg","homarr.png"]]]');
   });
 });
