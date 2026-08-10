@@ -1,0 +1,88 @@
+packages/translation/src/lang/tr.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/et.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/es.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/da.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/ru.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/pt-br.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1399,1401-1402,1416-1457
+packages/translation/src/lang/lt.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/de-CH.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/de.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1401,1403-1404,1418-1459
+packages/translation/src/lang/cr.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1401,1421-1459
+  s_093d61b162b9ca::t_f6d2a6c8521e8e 1460
+packages/translation/src/lang/cs.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/el.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/he.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/en-gb.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1372,1374-1375,1389-1430
+packages/translation/src/lang/sk.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/ko.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1401,1403-1404,1418-1459
+packages/translation/src/lang/ca.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/hr.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/zh.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/hu.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/pt.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/no.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/ro.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/fr.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1400,1402-1403,1417-1458
+packages/translation/src/lang/lv.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1357,1359-1360,1374-1415
+packages/translation/src/lang/pl.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1401,1403-1404,1418-1459
+packages/translation/src/lang/sl.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/uk.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1357,1359-1360,1374-1415
+packages/translation/src/lang/nl.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/vi.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/fi.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/it.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1401,1403-1404,1418-1459
+packages/translation/src/lang/ja.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/sv.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1347,1349-1350,1364-1405
+packages/translation/src/lang/cn.json
+  s_093d61b162b9ca::t_dc4ff231778e8d 1552,1554-1555,1569-1610
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "c1d93d4c7df38006d1d8e0981c0d5c9a0d14b188",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
