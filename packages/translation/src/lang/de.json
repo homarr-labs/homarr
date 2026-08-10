@@ -1254,8 +1254,6 @@
     "success": "Erfolgreich",
     "beta": "Beta",
     "error": "Fehler",
-    "total": "Gesamt",
-    "filesystemUsage": "{count, plural, one {Auslastung für # Dateisystem anzeigen} other {Auslastung für # Dateisysteme anzeigen}}",
     "action": {
       "add": "Hinzufügen",
       "apply": "Übernehmen",
@@ -1959,12 +1957,6 @@
         "clickable": {
           "label": "Anklickbar"
         }
-      },
-      "state": {
-        "on": "Ein",
-        "off": "Aus",
-        "unavailable": "Nicht verfügbar",
-        "unknown": "Unbekannt"
       }
     },
     "smartHome-executeAutomation": {
@@ -3430,13 +3422,8 @@
     "networkControllerSummary": {
       "option": {},
       "card": {
-        "wan": "WAN",
-        "web": "Web",
-        "wifi": "WLAN",
-        "lan": "LAN",
         "vpn": {
-          "label": "VPN",
-          "countConnected": "{count, plural, one {# verbunden} other {# verbunden}}"
+          "countConnected": "{count} verbunden"
         }
       },
       "error": {
