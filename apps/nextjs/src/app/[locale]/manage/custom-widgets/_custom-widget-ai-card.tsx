@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Card, Group, SimpleGrid, Stack, Text, TextInput, Textarea } from "@mantine/core";
-import { IconSparkles } from "@tabler/icons-react";
+import { Accordion, Button, Group, Stack, Text, TextInput, Textarea } from "@mantine/core";
+import { IconClipboard, IconSparkles } from "@tabler/icons-react";
 
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -20,38 +20,41 @@ interface AiCardProps {
 export function CustomWidgetAiCard(props: AiCardProps) {
   const t = useScopedI18n("customWidget.workbench.ai");
   return (
-    <Card withBorder p="md">
-      <Stack gap="sm">
-        <Group gap="xs">
-          <IconSparkles size={18} />
-          <Text fw={600}>{t("title")}</Text>
-        </Group>
-        <Text size="sm" c="dimmed">
-          {t("description")}
-        </Text>
-        <Textarea
-          label={t("request")}
-          value={props.request}
-          onChange={(event) => props.onRequestChange(event.currentTarget.value)}
-          autosize
-          minRows={2}
-        />
-        <TextInput
-          label={t("documentationUrl")}
-          value={props.documentationUrl}
-          onChange={(event) => props.onDocumentationUrlChange(event.currentTarget.value)}
-        />
-        <SimpleGrid cols={{ base: 1, sm: 2 }}>
+    <Accordion variant="contained">
+      <Accordion.Item value="ai">
+        <Group gap={0} wrap="nowrap">
+          <Accordion.Control icon={<IconSparkles size={18} />} style={{ flex: 1 }}>
+            {t("title")}
+          </Accordion.Control>
           <CopyAiPromptButton
             currentConfig={props.candidate}
             request={props.request}
             documentationUrl={props.documentationUrl}
           />
-          <Button type="button" variant="light" leftSection={<IconSparkles size={16} />} onClick={props.onPaste}>
-            {t("paste")}
-          </Button>
-        </SimpleGrid>
-      </Stack>
-    </Card>
+        </Group>
+        <Accordion.Panel>
+          <Stack gap="sm">
+            <Text size="sm" c="dimmed">
+              {t("description")}
+            </Text>
+            <Textarea
+              label={t("request")}
+              value={props.request}
+              onChange={(event) => props.onRequestChange(event.currentTarget.value)}
+              autosize
+              minRows={2}
+            />
+            <TextInput
+              label={t("documentationUrl")}
+              value={props.documentationUrl}
+              onChange={(event) => props.onDocumentationUrlChange(event.currentTarget.value)}
+            />
+            <Button type="button" variant="light" leftSection={<IconClipboard size={16} />} onClick={props.onPaste}>
+              {t("paste")}
+            </Button>
+          </Stack>
+        </Accordion.Panel>
+      </Accordion.Item>
+    </Accordion>
   );
 }

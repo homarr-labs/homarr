@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@mantine/core";
-import { IconSparkles } from "@tabler/icons-react";
+import { ActionIcon, Tooltip } from "@mantine/core";
+import { IconCopy } from "@tabler/icons-react";
 
 import { buildCustomWidgetAiPrompt } from "@homarr/custom-widgets/authoring-prompt";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -36,15 +36,16 @@ export const CopyAiPromptButton = ({
   };
 
   return (
-    <Button
-      type="button"
-      variant="light"
-      leftSection={<IconSparkles size={16} />}
-      onClick={() => void handleCopy()}
-      fullWidth
-      size="sm"
-    >
-      {t("action.copyAiPrompt")}
-    </Button>
+    <Tooltip label={t("action.copyAiPrompt")}>
+      <ActionIcon
+        type="button"
+        variant="subtle"
+        size="lg"
+        aria-label={t("action.copyAiPrompt")}
+        onClick={() => void handleCopy()}
+      >
+        <IconCopy size={16} />
+      </ActionIcon>
+    </Tooltip>
   );
 };

@@ -1,20 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Alert,
-  Badge,
-  Box,
-  Card,
-  Group,
-  MantineProvider,
-  Paper,
-  SegmentedControl,
-  Stack,
-  Switch,
-  Tabs,
-  Text,
-} from "@mantine/core";
+import { Alert, Box, Card, Group, Paper, SegmentedControl, Stack, Switch, Tabs, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
@@ -44,8 +31,6 @@ interface PreviewPanelProps {
   preview: PreviewState;
   size: string;
   onSizeChange(value: string): void;
-  theme: "light" | "dark";
-  onThemeChange(value: "light" | "dark"): void;
   optionsSnapshot: Record<string, unknown>;
   onOptionsChange(value: Record<string, unknown>): void;
   onLiveActionsChange(enabled: boolean): void;
@@ -98,39 +83,51 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
   return (
     <Card withBorder p="md">
       <Stack gap="md">
-        <Group grow>
+        <Group gap="xs" justify="space-between">
           <SegmentedControl
             size="xs"
             value={props.size}
             onChange={props.onSizeChange}
             data={[
-              { value: "compact", label: t("size.compact") },
-              { value: "standard", label: t("size.standard") },
-              { value: "wide", label: t("size.wide") },
+              {
+                value: "compact",
+                label: (
+                  <span aria-label={t("size.compact")} title={t("size.compact")}>
+                    S
+                  </span>
+                ),
+              },
+              {
+                value: "standard",
+                label: (
+                  <span aria-label={t("size.standard")} title={t("size.standard")}>
+                    M
+                  </span>
+                ),
+              },
+              {
+                value: "wide",
+                label: (
+                  <span aria-label={t("size.wide")} title={t("size.wide")}>
+                    L
+                  </span>
+                ),
+              },
             ]}
           />
           <SegmentedControl
             size="xs"
-            value={props.theme}
-            onChange={(value) => props.onThemeChange(value as "light" | "dark")}
+            value={fixture}
+            disabled={!candidate}
+            onChange={(value) => setFixture(value as typeof fixture)}
             data={[
-              { value: "light", label: t("theme.light") },
-              { value: "dark", label: t("theme.dark") },
+              { value: "live", label: t("fixture.live") },
+              { value: "loading", label: t("fixture.loading") },
+              { value: "empty", label: t("fixture.empty") },
+              { value: "error", label: t("fixture.error") },
             ]}
           />
         </Group>
-        <SegmentedControl
-          size="xs"
-          value={fixture}
-          disabled={!candidate}
-          onChange={(value) => setFixture(value as typeof fixture)}
-          data={[
-            { value: "live", label: t("fixture.live") },
-            { value: "loading", label: t("fixture.loading") },
-            { value: "empty", label: t("fixture.empty") },
-            { value: "error", label: t("fixture.error") },
-          ]}
-        />
         {candidate && (
           <PreviewResult
             outcome={props.preview.outcome}
@@ -153,22 +150,20 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
           </Tabs.List>
           <Tabs.Panel value="widget" pt="sm">
             <Box className={classes.previewCanvas}>
-              <MantineProvider forceColorScheme={props.theme}>
-                <Paper withBorder p="sm" h={360} w={widths[props.size] ?? 480} maw="100%" style={{ overflow: "auto" }}>
-                  {displayData ? (
-                    <PreviewErrorBoundary
-                      title={errorBoundaryMessages("title")}
-                      description={t("containedFailures")}
-                      retryLabel={errorBoundaryMessages("retry")}
-                      resetKeys={[rendererResetKey]}
-                    >
-                      <CustomJsxDisplay data={displayData} />
-                    </PreviewErrorBoundary>
-                  ) : (
-                    <Alert color="yellow">{t("invalid")}</Alert>
-                  )}
-                </Paper>
-              </MantineProvider>
+              <Paper withBorder p="sm" h={360} w={widths[props.size] ?? 480} maw="100%" style={{ overflow: "auto" }}>
+                {displayData ? (
+                  <PreviewErrorBoundary
+                    title={errorBoundaryMessages("title")}
+                    description={t("containedFailures")}
+                    retryLabel={errorBoundaryMessages("retry")}
+                    resetKeys={[rendererResetKey]}
+                  >
+                    <CustomJsxDisplay data={displayData} />
+                  </PreviewErrorBoundary>
+                ) : (
+                  <Alert color="yellow">{t("invalid")}</Alert>
+                )}
+              </Paper>
             </Box>
           </Tabs.Panel>
           <Tabs.Panel value="data" pt="sm">
@@ -221,11 +216,6 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
           </Tabs.Panel>
           <Tabs.Panel value="diagnostics" pt="sm">
             <Stack gap="xs">
-              {props.preview.session ? (
-                <Badge color="green">{t("sessionActive")}</Badge>
-              ) : (
-                <Badge color="gray">{t("simulationPending")}</Badge>
-              )}
               <Text size="sm" c="dimmed">
                 {t("containedFailures")}
               </Text>
