@@ -5,7 +5,17 @@ import { describe, expect, test } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
-import { boards, integrations, integrationUserPermissions, items, layouts, sections, users } from "@homarr/db/schema";
+import { eq as dbEq } from "@homarr/db";
+import {
+  boards,
+  integrations,
+  integrationUserPermissions,
+  items,
+  layouts,
+  sectionLayouts,
+  sections,
+  users,
+} from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 
 import { boardRouter } from "../board";
@@ -16,19 +26,28 @@ const createBoardCallerAsync = async () => {
   const boardId = createId();
   await db.insert(users).values({ id: userId });
   await db.insert(boards).values({ id: boardId, name: "Home", creatorId: userId });
+  const layoutId = createId();
   await db.insert(layouts).values({
-    id: createId(),
+    id: layoutId,
     name: "Base",
     boardId,
     columnCount: 12,
     breakpoint: 0,
   });
-  await db.insert(sections).values({ id: createId(), boardId, kind: "empty", xOffset: 0, yOffset: 0 });
+  const sectionId = createId();
+  await db.insert(sections).values({ id: sectionId, boardId, kind: "empty", xOffset: 0, yOffset: 0 });
   const session = {
     user: { id: userId, permissions: [], colorScheme: "light" },
     expires: new Date().toISOString(),
   } satisfies Session;
-  return { db, userId, boardId, caller: boardRouter.createCaller({ db, deviceType: undefined, session }) };
+  return {
+    db,
+    userId,
+    boardId,
+    layoutId,
+    sectionId,
+    caller: boardRouter.createCaller({ db, deviceType: undefined, session }),
+  };
 };
 
 describe("board.addItem", () => {
@@ -50,6 +69,97 @@ describe("board.addItem", () => {
       showToolbar: true,
       allowReadOnlyCheck: true,
     });
+  });
+
+  test("places a new item after the complete footprint of an existing container", async () => {
+    const { db, boardId, caller, layoutId, sectionId } = await createBoardCallerAsync();
+    const mobileLayoutId = createId();
+    await db.insert(layouts).values({
+      id: mobileLayoutId,
+      name: "Mobile",
+      boardId,
+      columnCount: 4,
+      breakpoint: 640,
+    });
+    const containerId = createId();
+    await db.insert(sections).values({ id: containerId, boardId, kind: "container" });
+    await db.insert(sectionLayouts).values([
+      {
+        sectionId: containerId,
+        parentSectionId: sectionId,
+        layoutId,
+        xOffset: 0,
+        yOffset: 0,
+        width: 4,
+        height: 3,
+      },
+      {
+        sectionId: containerId,
+        parentSectionId: sectionId,
+        layoutId: mobileLayoutId,
+        xOffset: 0,
+        yOffset: 0,
+        width: 2,
+        height: 1,
+      },
+    ]);
+
+    const result = await caller.addItem({ boardId, kind: "app", options: {}, integrationIds: [] });
+    const placements = await db.query.itemLayouts.findMany({
+      where: (table, { eq }) => eq(table.itemId, result.itemId),
+    });
+
+    expect(placements).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ layoutId, xOffset: 4, yOffset: 0, width: 1, height: 1 }),
+        expect.objectContaining({ layoutId: mobileLayoutId, xOffset: 2, yOffset: 0, width: 1, height: 1 }),
+      ]),
+    );
+  });
+
+  test("uses the main section width instead of placing into gutter columns", async () => {
+    const { db, boardId, caller, layoutId, sectionId } = await createBoardCallerAsync();
+    await db
+      .update(layouts)
+      .set({ leftGutterColumnCount: 2, rightGutterColumnCount: 2 })
+      .where(dbEq(layouts.id, layoutId));
+    const containerId = createId();
+    await db.insert(sections).values({ id: containerId, boardId, kind: "container" });
+    await db.insert(sectionLayouts).values({
+      sectionId: containerId,
+      parentSectionId: sectionId,
+      layoutId,
+      xOffset: 0,
+      yOffset: 0,
+      width: 8,
+      height: 1,
+    });
+
+    const result = await caller.addItem({ boardId, kind: "app", options: {}, integrationIds: [] });
+    const placement = await db.query.itemLayouts.findFirst({
+      where: (table, { eq }) => eq(table.itemId, result.itemId),
+    });
+
+    expect(placement).toMatchObject({ xOffset: 0, yOffset: 1 });
+  });
+
+  test("serializes concurrent automatic placements on the same board", async () => {
+    const { db, boardId, caller } = await createBoardCallerAsync();
+
+    const results = await Promise.all([
+      caller.addItem({ boardId, kind: "app", options: {}, integrationIds: [] }),
+      caller.addItem({ boardId, kind: "app", options: {}, integrationIds: [] }),
+    ]);
+    const placements = await db.query.itemLayouts.findMany({
+      where: (table, { inArray }) =>
+        inArray(
+          table.itemId,
+          results.map((result) => result.itemId),
+        ),
+    });
+
+    expect(placements).toHaveLength(2);
+    expect(new Set(placements.map((placement) => `${placement.xOffset}:${placement.yOffset}`)).size).toBe(2);
   });
 
   test("accepts an integration the current user can use", async () => {

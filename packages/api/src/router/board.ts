@@ -80,6 +80,50 @@ import {
 } from "./board/custom-widget-placement-access";
 import { validateTimetableOptionsChangeAsync } from "./widgets/timetable";
 
+interface BoardItemPlacementRectangle {
+  xOffset: number;
+  yOffset: number;
+  width: number;
+  height: number;
+}
+
+const boardItemPlacementTails = new Map<string, Promise<void>>();
+
+const serializeBoardItemPlacementAsync = async <T>(boardId: string, operation: () => Promise<T>) => {
+  const previous = boardItemPlacementTails.get(boardId) ?? Promise.resolve();
+  const { promise: current, resolve: release } = Promise.withResolvers<void>();
+  const tail = previous.then(() => current);
+  boardItemPlacementTails.set(boardId, tail);
+  await previous;
+
+  try {
+    return await operation();
+  } finally {
+    release();
+    if (boardItemPlacementTails.get(boardId) === tail) boardItemPlacementTails.delete(boardId);
+  }
+};
+
+const findFirstAvailableBoardItemPosition = (
+  placements: readonly BoardItemPlacementRectangle[],
+  columnCount: number,
+  size: { width: number; height: number },
+) => {
+  for (let yOffset = 0; yOffset < 9999; yOffset++) {
+    for (let xOffset = 0; xOffset + size.width <= columnCount; xOffset++) {
+      const overlaps = placements.some(
+        (placement) =>
+          placement.yOffset < yOffset + size.height &&
+          placement.yOffset + placement.height > yOffset &&
+          placement.xOffset < xOffset + size.width &&
+          placement.xOffset + placement.width > xOffset,
+      );
+      if (!overlaps) return { xOffset, yOffset };
+    }
+  }
+  return null;
+};
+
 export const boardRouter = createTRPCRouter({
   exists: permissionRequiredProcedure
     .requiresPermission("board-create")
@@ -1816,7 +1860,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Add a widget/app item to a board after configure_widget has reviewed it. Automatically places it in the first empty section at the next free grid position. Use the configure_widget result's boardId, kind, options, and integrationIds exactly. Integration IDs must be accessible to the current user. To create a formatted dashboard note, configure kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Returns { itemId }",
+          "Add a widget/app item to a board after configure_widget has reviewed it. Automatically places it in the main canvas at the first free grid position without overlapping items or containers. Use the configure_widget result's boardId, kind, options, and integrationIds exactly. Integration IDs must be accessible to the current user. To create a formatted dashboard note, configure kind 'notebook' with options { content: Tiptap-compatible HTML, showToolbar: boolean, allowReadOnlyCheck: boolean }. Returns { itemId }",
       },
     })
     .input(addItemToBoardSchema)
@@ -1878,109 +1922,85 @@ export const boardRouter = createTRPCRouter({
         }
       }
 
-      const board = await ctx.db.query.boards.findFirst({
-        where: eq(boards.id, input.boardId),
-        with: {
-          sections: true,
-          layouts: true,
-          items: { with: { layouts: true } },
-        },
-      });
+      return await serializeBoardItemPlacementAsync(input.boardId, async () => {
+        const board = await ctx.db.query.boards.findFirst({
+          where: eq(boards.id, input.boardId),
+          with: {
+            sections: { with: { layouts: true } },
+            layouts: true,
+            items: { with: { layouts: true } },
+          },
+        });
 
-      if (!board) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
-      }
-
-      const emptySection = board.sections
-        .filter((s) => s.kind === "empty")
-        .toSorted((a, b) => (a.yOffset ?? 0) - (b.yOffset ?? 0))[0];
-
-      if (!emptySection) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Board has no empty section to place items in" });
-      }
-
-      const itemId = createId();
-
-      await ctx.db.insert(items).values({
-        id: itemId,
-        boardId: input.boardId,
-        kind: input.kind,
-        options: superjson.stringify(input.options),
-        advancedOptions: emptySuperJSON,
-      });
-
-      const layoutRows: (typeof itemLayouts.$inferInsert)[] = [];
-
-      for (const layout of board.layouts) {
-        const existingInSection = board.items
-          .flatMap((item) => item.layouts)
-          .filter((il) => il.sectionId === emptySection.id && il.layoutId === layout.id);
-
-        const occupied: boolean[][] = [];
-        for (const il of existingInSection) {
-          for (let y = il.yOffset; y < il.yOffset + il.height; y++) {
-            while (occupied.length <= y) occupied.push(Array.from<boolean>({ length: layout.columnCount }).fill(false));
-            const occupiedRow = occupied[y];
-            if (!occupiedRow) continue;
-            for (let x = il.xOffset; x < il.xOffset + il.width; x++) {
-              occupiedRow[x] = true;
-            }
-          }
+        if (!board) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
         }
 
+        const emptySection = board.sections
+          .filter((section) => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main")
+          .toSorted(
+            (sectionA, sectionB) =>
+              (sectionA.yOffset ?? 0) - (sectionB.yOffset ?? 0) || sectionA.id.localeCompare(sectionB.id),
+          )[0];
+
+        if (!emptySection) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Board has no main section to place items in" });
+        }
+
+        const itemId = createId();
         const defaultSize = widgetDefaultSizes[input.kind as WidgetKind] ?? { width: 1, height: 1 };
-        const sizeForLayout = { ...defaultSize, width: Math.min(layout.columnCount, defaultSize.width) };
+        const layoutRows: (typeof itemLayouts.$inferInsert)[] = board.layouts.map((layout) => {
+          const columnCount = getBoardLaneColumnCount(layout, getRootSectionLane(emptySection.xOffset));
+          const size = { ...defaultSize, width: Math.min(columnCount, defaultSize.width) };
+          const itemPlacements = board.items
+            .flatMap((item) => item.layouts)
+            .filter((itemLayout) => itemLayout.sectionId === emptySection.id && itemLayout.layoutId === layout.id);
+          const containerPlacements = board.sections
+            .filter((section) => section.kind === "container")
+            .flatMap((section) => section.layouts)
+            .filter(
+              (sectionLayout) =>
+                sectionLayout.parentSectionId === emptySection.id && sectionLayout.layoutId === layout.id,
+            );
+          const position = findFirstAvailableBoardItemPosition(
+            [...itemPlacements, ...containerPlacements],
+            columnCount,
+            size,
+          );
 
-        const fitsAt = (x: number, y: number) => {
-          if (x + sizeForLayout.width > layout.columnCount) return false;
-          for (let dy = 0; dy < sizeForLayout.height; dy++) {
-            const row = occupied[y + dy];
-            if (!row) continue;
-            for (let dx = 0; dx < sizeForLayout.width; dx++) {
-              if (row[x + dx]) return false;
-            }
+          if (!position) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Board section is full, no free grid position available",
+            });
           }
-          return true;
-        };
 
-        let placed = false;
-        for (let y = 0; y < 9999 && !placed; y++) {
-          if (!occupied[y]) occupied.push(Array.from<boolean>({ length: layout.columnCount }).fill(false));
-          for (let x = 0; x < layout.columnCount && !placed; x++) {
-            if (fitsAt(x, y)) {
-              layoutRows.push({
-                itemId,
-                sectionId: emptySection.id,
-                layoutId: layout.id,
-                xOffset: x,
-                yOffset: y,
-                width: sizeForLayout.width,
-                height: sizeForLayout.height,
-              });
-              placed = true;
-            }
-          }
+          return {
+            itemId,
+            sectionId: emptySection.id,
+            layoutId: layout.id,
+            ...position,
+            width: size.width,
+            height: size.height,
+          };
+        });
+
+        await ctx.db.insert(items).values({
+          id: itemId,
+          boardId: input.boardId,
+          kind: input.kind,
+          options: superjson.stringify(input.options),
+          advancedOptions: emptySuperJSON,
+        });
+        if (layoutRows.length > 0) await ctx.db.insert(itemLayouts).values(layoutRows);
+        if (input.integrationIds.length > 0) {
+          await ctx.db
+            .insert(integrationItems)
+            .values(input.integrationIds.map((integrationId) => ({ itemId, integrationId })));
         }
 
-        if (!placed) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "Board section is full, no free grid position available",
-          });
-        }
-      }
-
-      if (layoutRows.length > 0) {
-        await ctx.db.insert(itemLayouts).values(layoutRows);
-      }
-
-      if (input.integrationIds.length > 0) {
-        await ctx.db
-          .insert(integrationItems)
-          .values(input.integrationIds.map((integrationId) => ({ itemId, integrationId })));
-      }
-
-      return { itemId };
+        return { itemId };
+      });
     }),
 });
 
