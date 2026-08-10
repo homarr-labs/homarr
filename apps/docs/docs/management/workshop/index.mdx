@@ -35,7 +35,7 @@ Back up your instance before installing untrusted content.
 - Sign in with **GitHub** to upvote/downvote, submit your own creations, or report a submission.
 - Each submission shows its title, description, linked GitHub author, revision, optional screenshots, comments, and full content. Widget pages also summarize API sources, actions, options, network access, and required credentials before installation.
 - A new submission receives one real upvote owned by its author. Votes remain unique per user and submission.
-- Open report counts are public on submission cards so visitors can make an informed installation decision. Report explanations and reporter identities remain visible only to Workshop moderators.
+- Open report counts are public on submission cards so visitors can make an informed installation decision. The submission author and Workshop moderators can read each report category and explanation; reporter identities remain moderator-only.
 - Signed-in moderators see a **Moderation** button in the Workshop header. The moderation queue is sorted by open report count and lets moderators inspect every report, dismiss it, or delete the submission. Reports do not automatically remove a submission.
 - The manual **Outdated** badge warns visitors that a submission may need an update.
 
@@ -52,6 +52,9 @@ Comments are publicly readable and appear in chronological conversation bubbles 
    - **Custom CSS** — paste your stylesheet (max 16384 characters).
 3. Review the widget JSON or CSS in the syntax-aware editor, then add a title, description, optional screenshots, and changelog.
 4. Submit the entry.
+
+Custom widget JSON is normalized to readable multi-line formatting when it is published, and the Workshop detail page
+also formats older compact submissions before displaying them.
 
 Community members can report submissions as outdated or no longer working, malicious, spam, copyright-infringing,
 inappropriate, or another concern. An outdated report does not automatically mark or remove the submission.
@@ -80,8 +83,7 @@ You can install workshop entries without leaving Homarr:
 
 - **Custom widgets (Homarr administrators only)** — go to **Manage → Custom Widgets**, or use **Import from Workshop** in the
   board widget picker. Choose **Install widget**, review the complete source and capabilities, then confirm API sources and any local secrets in the second modal step.
-- **Custom CSS from Workshop (Homarr administrators only)** — open a board's **Settings → Custom CSS**, click **Install from Workshop**, and
-  pick a theme to load it into the editor before saving.
+- **Custom CSS from Workshop (Homarr administrators only)** — open a board's **Settings → Custom CSS**, click **Import from Workshop**, choose a theme, review its full CSS in the second same-size modal step, and click **Import CSS** once. The board setting is still saved separately.
 
 Alternatively, open a submission in the Workshop and use **Download widget JSON** or **Copy CSS**. The submission page shows the matching manual installation steps before the source code.
 
