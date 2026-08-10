@@ -38,6 +38,13 @@ WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT" \
   EXPECTED_WORKSHOP_WEB_URL="$PREVIEW_ORIGIN/workshop" \
   node apps/workshop/tests/runtime-config.integration.mjs
 
+docker exec "$WORKSHOP_IMAGE_TEST_NAME" pocketbase superuser create \
+  workshop-image@example.invalid 'WorkshopImageTest123!' --dir=/pb_data
+WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT" \
+  EXPECTED_WORKSHOP_API_URL="$PREVIEW_ORIGIN" \
+  EXPECTED_WORKSHOP_WEB_URL="$PREVIEW_ORIGIN/workshop" \
+  node apps/workshop/tests/workshop-social-metadata.integration.mjs
+
 curl --fail --location --silent "http://127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT/workshop" >/dev/null
 curl --fail --silent \
   "http://127.0.0.1:$WORKSHOP_IMAGE_TEST_PORT/api/collections/workshop_listings/records?perPage=1" >/dev/null
