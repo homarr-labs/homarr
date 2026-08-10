@@ -429,6 +429,13 @@
   <br/>  
   <p align="center">Uptime<br/>Kuma</p>
 </a>
+</td>
+<td align="center">
+<a href="https://homarr.dev/docs/integrations/whats-up-docker" target="_blank" rel="noreferrer noopener">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/whats-up-docker.svg" alt="What's Up Docker" width="90" height="90" />
+  <br/>  
+  <p align="center">What's<br/>Up<br/>Docker</p>
+</a>
 </td></tr>
 </tbody>
 </table>
