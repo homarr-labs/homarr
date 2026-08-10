@@ -378,6 +378,42 @@ export const useAssistantComposerSurface = () => {
 };
 
 const surfaceElements = new Map<string, HTMLElement>();
+let lastFocusedSurfaceElement: HTMLElement | null = null;
+let lastFocusedSurfaceAt = 0;
+
+interface AssistantSurfaceScrollPosition {
+  element: HTMLElement;
+  left: number;
+  top: number;
+}
+
+const captureAssistantSurfaceScrollPositions = () => {
+  const elements = new Set<HTMLElement>();
+  for (const surfaceElement of surfaceElements.values()) {
+    let element: HTMLElement | null = surfaceElement;
+    while (element) {
+      elements.add(element);
+      element = element.parentElement;
+    }
+  }
+
+  return Array.from(
+    elements,
+    (element): AssistantSurfaceScrollPosition => ({
+      element,
+      left: element.scrollLeft,
+      top: element.scrollTop,
+    }),
+  );
+};
+
+const restoreAssistantSurfaceScrollPositions = (positions: AssistantSurfaceScrollPosition[]) => {
+  for (const { element, left, top } of positions) {
+    if (!element.isConnected) continue;
+    element.scrollLeft = left;
+    element.scrollTop = top;
+  }
+};
 
 const getSurfaceIdForElement = (element: Element | null) => {
   if (!element) return null;
@@ -461,7 +497,16 @@ const AssistantComposerSurfaceBoundary = ({ children, surfaceId }: PropsWithChil
 
   return (
     <AssistantComposerSurfaceContext.Provider value={contextValue}>
-      <div ref={elementRef} style={{ display: "contents" }} onPasteCapture={handlePasteCapture}>
+      <div
+        ref={elementRef}
+        style={{ display: "contents" }}
+        onFocusCapture={(event) => {
+          if (!(event.target instanceof HTMLElement)) return;
+          lastFocusedSurfaceElement = event.target;
+          lastFocusedSurfaceAt = performance.now();
+        }}
+        onPasteCapture={handlePasteCapture}
+      >
         <AssistantComposerSurfaceEvents />
         {children}
       </div>
@@ -476,19 +521,42 @@ const AssistantComposerSurfaceBoundary = ({ children, surfaceId }: PropsWithChil
  */
 export const AssistantRunFocusPreserver = () => {
   useAuiEvent("thread.runStart", () => {
-    const focusedBeforeRun = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const activeElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    // Sending can briefly move focus to <body> while Lexical reconciles the editor. Retain the
+    // last connected assistant input so the run still belongs to the surface the user submitted.
+    const recentlyFocusedSurface = performance.now() - lastFocusedSurfaceAt < 1000;
+    const focusedBeforeRun =
+      activeElement && activeElement !== document.body
+        ? activeElement
+        : recentlyFocusedSurface && lastFocusedSurfaceElement?.isConnected
+          ? lastFocusedSurfaceElement
+          : activeElement;
     const surfaceIdBeforeRun = getSurfaceIdForElement(focusedBeforeRun);
+    const scrollPositionsBeforeRun = captureAssistantSurfaceScrollPositions();
+    let isRestoring = false;
 
     const restoreFocus = () => {
+      if (isRestoring) return;
       const surfaceIdAfterRun = getSurfaceIdForElement(document.activeElement);
-      if (!surfaceIdAfterRun || surfaceIdAfterRun === surfaceIdBeforeRun) return;
+      const movedToAnotherSurface = surfaceIdAfterRun !== null && surfaceIdAfterRun !== surfaceIdBeforeRun;
+      const leftInitiatingSurface = surfaceIdBeforeRun !== null && surfaceIdAfterRun !== surfaceIdBeforeRun;
+      if (!movedToAnotherSurface && !leftInitiatingSurface) return;
 
-      if (focusedBeforeRun?.isConnected) focusedBeforeRun.focus({ preventScroll: true });
-      if (
-        getSurfaceIdForElement(document.activeElement) !== surfaceIdBeforeRun &&
-        document.activeElement instanceof HTMLElement
-      ) {
-        document.activeElement.blur();
+      isRestoring = true;
+      try {
+        if (focusedBeforeRun?.isConnected) focusedBeforeRun.focus({ preventScroll: true });
+        if (
+          getSurfaceIdForElement(document.activeElement) !== surfaceIdBeforeRun &&
+          document.activeElement instanceof HTMLElement
+        ) {
+          document.activeElement.blur();
+        }
+        // Focusing the other mounted Lexical composer may already have scrolled the dashboard or
+        // one of its nested board containers. Put every assistant surface ancestor back before the
+        // browser paints so a send from the floating panel never jumps to the board widget.
+        restoreAssistantSurfaceScrollPositions(scrollPositionsBeforeRun);
+      } finally {
+        isRestoring = false;
       }
     };
 

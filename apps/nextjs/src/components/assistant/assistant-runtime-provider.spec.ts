@@ -16,6 +16,7 @@ import {
   MessagePrimitive,
   ThreadPrimitive,
   useAui,
+  useAuiEvent,
   useLocalRuntime,
 } from "@assistant-ui/react";
 import { LexicalComposerInput } from "@assistant-ui/react-lexical";
@@ -118,14 +119,25 @@ const SurfaceProbe = ({ id, onReady }: SurfaceProbeProps) => {
   } as ComponentProps<typeof LexicalComposerInput>);
 };
 
+const LexicalRunFocusProbe = () => {
+  useAuiEvent("thread.runStart", () => {
+    queueMicrotask(() => {
+      document.querySelector<HTMLElement>('[data-testid="input-b"] [contenteditable="true"]')?.focus();
+    });
+  });
+  return null;
+};
+
 const SurfaceTestAssistant = ({
   onReady,
   onRuntimeReady,
   allowImages = true,
+  simulateRunFocus = false,
 }: {
   onReady: SurfaceProbeProps["onReady"];
   onRuntimeReady: (runtime: AssistantRuntime) => void;
   allowImages?: boolean;
+  simulateRunFocus?: boolean;
 }) => {
   const runtime = useLocalRuntime(noOpAdapter, {
     adapters: { attachments: createAttachmentAdapter(allowImages ? "image/png,text/plain" : "text/plain") },
@@ -145,10 +157,14 @@ const SurfaceTestAssistant = ({
       { surfaceId: "surface-b" },
       createElement(SurfaceProbe, { id: "b", onReady }),
     ),
+    simulateRunFocus ? createElement(LexicalRunFocusProbe) : null,
   );
 };
 
-const renderSurfaceTestAssistant = async ({ allowImages = true }: { allowImages?: boolean } = {}) => {
+const renderSurfaceTestAssistant = async ({
+  allowImages = true,
+  simulateRunFocus = false,
+}: { allowImages?: boolean; simulateRunFocus?: boolean } = {}) => {
   const container = document.createElement("div");
   containers.push(container);
   document.body.append(container);
@@ -160,6 +176,7 @@ const renderSurfaceTestAssistant = async ({ allowImages = true }: { allowImages?
     root.render(
       createElement(SurfaceTestAssistant, {
         allowImages,
+        simulateRunFocus,
         onReady: (id, aui) => clients.set(id, aui),
         onRuntimeReady: (runtime) => {
           sharedRuntime = runtime;
@@ -331,6 +348,35 @@ describe("AssistantRuntimeProviderWithTools", () => {
 
     expect(document.activeElement).toBe(outsideInput);
     outsideInput.remove();
+    await act(async () => root.unmount());
+  });
+
+  test("keeps focus and dashboard scroll on the surface that started the run", async () => {
+    const { container, root, a } = await renderSurfaceTestAssistant({ simulateRunFocus: true });
+    const panelInput = getRequiredComposerInput(container, "input-a");
+    const widgetInput = getRequiredComposerInput(container, "input-b");
+    const scrollContainer = container;
+    scrollContainer.scrollTop = 120;
+    const focusWidget = widgetInput.focus.bind(widgetInput);
+    const widgetFocus = vi.spyOn(widgetInput, "focus").mockImplementation((options) => {
+      // jsdom does not implement native focus scrolling, so reproduce the dashboard jump that a
+      // browser performs when the off-screen widget composer receives programmatic focus.
+      scrollContainer.scrollTop = 640;
+      focusWidget(options);
+    });
+    panelInput.focus();
+
+    act(() => {
+      a.composer().setText("Send from the floating panel");
+      a.composer().send();
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+
+    expect(widgetFocus).toHaveBeenCalled();
+    expect(document.activeElement).toBe(panelInput);
+    expect(scrollContainer.scrollTop).toBe(120);
     await act(async () => root.unmount());
   });
 
