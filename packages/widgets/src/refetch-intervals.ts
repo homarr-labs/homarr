@@ -26,4 +26,5 @@ export const widgetQueryRefetchIntervals = [
   { queryKey: [["widget", "stockPrice"]], intervalSeconds: null },
   { queryKey: [["widget", "umami"]], intervalSeconds: null },
   { queryKey: [["widget", "vpn"]], intervalSeconds: null },
+  { queryKey: [["widget", "wud"]], intervalSeconds: null },
 ] as const;

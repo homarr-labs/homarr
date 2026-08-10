@@ -1,0 +1,48 @@
+---
+title: "What's Up Docker"
+description: "What's Up Docker (WUD) watches your Docker containers and reports which ones have newer image versions available."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { wudIntegration } from ".";
+import { wudWidget } from "@site/docs/widgets/whats-up-docker";
+
+<IntegrationHeader integration={wudIntegration} categories={["Health Monitoring"]} />
+
+The What's Up Docker integration lets Homarr connect to your [WUD](https://github.com/getwud/wud) instance so you can see how many of your watched containers have image updates available directly from your dashboard.
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: wudWidget }]} />
+
+### Adding the integration
+
+<AddingIntegration />
+
+:::info URL configuration
+Use the root URL of your WUD instance, for example `https://wud.example.com`. Homarr calls the `/api/app` and `/api/containers` endpoints under that URL automatically.
+:::
+
+### Secrets
+
+WUD does not require authentication by default. If your instance is protected with [Basic Authentication](https://github.com/getwud/wud/blob/main/docs/configuration/authentications/basic/README.md), you can provide a username and password.
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: [],
+      steps: [],
+    },
+    {
+      credentials: ["username", "password"],
+      steps: [
+        "Open your WUD instance's configuration and configure a WUD_AUTH_BASIC_* user as described in the WUD documentation",
+        "Enter that username and password in Homarr — Basic authentication is handled automatically",
+      ],
+    },
+  ]}
+/>
