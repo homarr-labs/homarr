@@ -57,6 +57,17 @@ describe("Workshop widget validation", () => {
     ).toBe(true);
   });
 
+  test("normalizes widget submissions to readable multi-line JSON", () => {
+    const parsed = workshopSubmissionInputSchema.parse({
+      type: "customWidget",
+      title: "Starter widget",
+      description: "",
+      content: JSON.stringify(CUSTOM_WIDGET_STARTER),
+    });
+    expect(parsed.content).toContain('\n  "$schema":');
+    expect(JSON.parse(parsed.content)).toEqual(CUSTOM_WIDGET_STARTER);
+  });
+
   test("accepts Custom CSS without treating it as widget JSON", () => {
     expect(
       workshopSubmissionInputSchema.safeParse({

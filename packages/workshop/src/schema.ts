@@ -156,7 +156,8 @@ export const workshopSubmissionInputSchema = z
   .superRefine((input, context) => {
     const result = validateWorkshopContent(input.type, input.content);
     if (!result.success) context.addIssue({ code: "custom", path: ["content"], message: result.error });
-  });
+  })
+  .transform((input) => ({ ...input, content: formatWorkshopContent(input.type, input.content) }));
 export type WorkshopSubmissionInput = z.input<typeof workshopSubmissionInputSchema>;
 
 export const workshopScreenshotsSchema = z
@@ -190,6 +191,15 @@ export const workshopReportSchema = z.object({
 });
 export type WorkshopReport = z.infer<typeof workshopReportSchema>;
 
+export const workshopReportSummarySchema = z.object({
+  id: z.string(),
+  submission: z.string(),
+  category: workshopReportCategorySchema,
+  explanation: z.string(),
+  created: z.string(),
+});
+export type WorkshopReportSummary = z.infer<typeof workshopReportSummarySchema>;
+
 export const workshopCommentSchema = z.object({
   id: z.string(),
   submission: z.string(),
@@ -217,6 +227,15 @@ export function validateWorkshopContent(type: WorkshopSubmissionType, content: s
   }
 
   return validateWorkshopWidget(content);
+}
+
+export function formatWorkshopContent(type: WorkshopSubmissionType, content: string): string {
+  if (type !== "customWidget") return content;
+  try {
+    return JSON.stringify(JSON.parse(content) as unknown, null, 2);
+  } catch {
+    return content;
+  }
 }
 
 export function validateWorkshopWidget(content: string): WorkshopWidgetValidationResult {
