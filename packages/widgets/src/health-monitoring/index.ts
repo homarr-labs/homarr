@@ -114,7 +114,9 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
       },
     );
   },
-  supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring").filter((kind) => kind !== "patchmon"),
+  supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring").filter(
+    (kind) => kind !== "patchmon" && kind !== "wud",
+  ),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,
