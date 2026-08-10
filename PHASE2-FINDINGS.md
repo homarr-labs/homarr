@@ -844,6 +844,56 @@ changed and the comparison is void.**
 Flags that cannot be used this way at all: `--optimize-for-size`, `--no-opt` and `--lite-mode`
 are rejected by Node with "not allowed in NODE_OPTIONS".
 
+## Closing the last gap: what the native bucket at peak actually is
+
+At peak the `smaps` bucket "other anonymous" holds **118.8 MiB** and was the least understood
+part of the footprint. It is now mostly accounted for:
+
+| component | MiB | how it was established |
+| --- | --- | --- |
+| V8 `large_object_space` | 34.5 | `heapTotal 188.0 − the 256 KiB pages 153.1 = 34.9`, matching the space report |
+| `external` — Buffers/ArrayBuffers | 24.6 | `process.memoryUsage()` |
+| freed-but-unreturned V8 zone memory | ~38 | `peak_malloced_memory` 4.6 → **42.2 MiB** at the board-loaded stage, while *current* `malloced_memory` stays at 1.0 MiB |
+| unattributed native malloc | ~22 | remainder |
+
+The zone figure is the interesting one. V8 mallocs ~38 MiB of parser/compiler zone memory while
+compiling the board's modules, frees it back to malloc, and **musl never returns it to the
+kernel** — so it stays resident as anonymous memory with nothing alive in it.
+
+### A prediction that was wrong
+
+The obvious inference — loading fewer files means less compiler zone memory, so "ship less
+server JS" pays twice — **does not hold**. `peak_malloced_memory` measured across the
+`preloadEntriesOnStart` A/B:
+
+| stage | before ×2 | after ×2 |
+| --- | --- | --- |
+| boot idle | 4.5, 4.5 | 4.5, 4.5 |
+| post-login | 4.5, 4.5 | 4.5, 4.5 |
+| board loaded | 42.1, 42.3 | 42.1, 42.1 |
+
+Identical, despite 310 fewer files being loaded. The 38 MiB spike is a **fixed cost incurred at
+board load**, not a per-file one — one large parse or compile, not the sum of many. So the
+"pays twice" claim is withdrawn; `preloadEntriesOnStart` saves retained source and live heap, and
+does nothing for the native bucket.
+
+### The zlib-orphan hypothesis: disproven here
+
+Next's own source documents a real leak class: a zlib stream left open by a client disconnect is
+pinned by its native handle, survives GC, and permanently retains ~256 KiB of deflate state.
+`releaseCompressionStream`, the fix, is **not present** in this Next build, and a peak heap
+snapshot showed 16 `Zlib` and 15 `Gzip` objects — 14 still there at idle, which looked exactly
+like accumulation.
+
+It is not. `process.getActiveResourcesInfo()` reports **Zlib=0**, both at baseline and after
+**300 deliberately aborted gzip requests**, with RSS flat at 136.5 MiB. Those snapshot entries
+are heap objects, not live handles — an important distinction, since a snapshot happily lists
+objects with no live native resource behind them. nginx buffers the response from Next, so Next
+never observes the mid-response client disconnect that creates an orphan in the first place.
+
+Recorded because the initial reading of the snapshot was wrong in a way that would have shipped a
+fix for a leak this deployment does not have.
+
 ## Measured but not pursued
 
 

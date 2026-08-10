@@ -202,6 +202,19 @@ globalThis.__homarrProbe.snapshot = (destination) => {
   };
 };
 
+/**
+ * Live libuv/Node handles by kind.
+ *
+ * Native handles are invisible to both the JS heap and the allocation profiler, yet a zlib
+ * stream left open by a client disconnect is pinned by its handle, survives GC, and holds
+ * ~256 KiB of deflate state. Counting handles is the only cheap way to watch that accumulate.
+ */
+globalThis.__homarrProbe.handles = () => {
+  const counts = {};
+  for (const kind of process.getActiveResourcesInfo()) counts[kind] = (counts[kind] ?? 0) + 1;
+  return counts;
+};
+
 /** Address-space breakdown at the moment of capture; only /proc shows native vs JS vs code. */
 globalThis.__homarrProbe.maps = () => {
   try {
@@ -410,6 +423,8 @@ if (probePort > 0) {
             return probe.allocations ? await probe.allocations() : { disabled: true };
           case "/maps":
             return probe.maps();
+          case "/handles":
+            return probe.handles();
           case "/snapshot":
             return await probe.snapshot(new URLSearchParams(query).get("path") ?? "/tmp/peak.heapsnapshot");
           default:
