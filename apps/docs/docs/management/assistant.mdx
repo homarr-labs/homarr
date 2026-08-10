@@ -209,6 +209,10 @@ the native widget configuration form and standard mutation approval, then places
 available dashboard position. The generated content is retained even though the Notebook content field is
 normally hidden from widget settings.
 
+Automatic placement checks every responsive layout and treats both widgets and complete container footprints
+as occupied. New assistant-created items use the first free position in the main canvas instead of overlapping
+existing content or being placed in a gutter.
+
 Every assistant-created dashboard widget now passes through Homarr's native widget editor before it is added.
 The form fills widget defaults, validates widget-specific options, and only offers compatible integrations that
 the current user can use. Required integrations cannot be left empty, single-integration widgets cannot receive
