@@ -323,15 +323,42 @@ On the 28-item board, idle for 45 s:
 | downloads | 4 | 1% |
 | (outside any widget) | 93 | 13% |
 
-**Three Beszel widgets account for 82% of all idle churn**, one of them for 64% on its own, at
-10.4 mutations per second.
+**Three Beszel widgets account for 82% of all idle churn**, one of them for 64% on its own.
 
-The mechanism is in `packages/widgets/src/beszel/_shared/use-live-stats.ts`: the tRPC
-subscription's `onData` called `setSystemStats((prev) => [...prev, record])` — one React state
-update per record, each allocating a fresh 60-element array. Beszel pushes one record per second
-*per system*, plus one per container, so a widget watching several systems drives a steady stream
-of renders. Records are now accumulated outside React and flushed once a second, which is the
-fastest a 60-second sliding-window chart can meaningfully show. Nothing is dropped.
+### And then the second correction: there is no defect here
+
+The obvious next step was to coalesce the updates. `use-live-stats.ts` calls
+`setSystemStats((prev) => [...prev, record])` in the subscription's `onData` — one React state
+update per record, each allocating a fresh 60-element array. Buffering records outside React and
+flushing once a second looked like an easy large win.
+
+**It measured exactly zero, twice over:**
+
+| | before | after |
+| --- | --- | --- |
+| DOM mutations / 45 s | 733 | 748 |
+| React commits / 45 s | **55** | **55** |
+
+Identical commit counts. The reason is arithmetic I should have done first: Beszel emits roughly
+one record per second, and the flush interval was also one second, so each flush batched precisely
+one record. Coalescing at the arrival rate does nothing.
+
+That also exposes a unit error in the numbers above. **DOM mutations are not re-renders.** The real
+figures are:
+
+- **1.22 React commits per second** for the whole board
+- **13.3 DOM mutations per commit** — a chart redraw touches many nodes
+
+So "10.4 mutations per second" for the stats widget was ~0.8 *renders* per second. Three
+live-monitoring widgets each refreshing about once a second, which is precisely what they exist to
+do. **73 commits/min is not pathological; it is the feature working.** The change was reverted
+rather than shipped, because keeping speculative complexity that measured zero — an extra timer,
+plus unmount and system-change teardown to get right — is exactly the trade this work has rejected
+elsewhere.
+
+The residual conclusion still stands and is narrower than before: idle churn is widget-driven, not
+app-shell driven, and it is legitimate. The 650 MB browser heap therefore comes from *interaction*
+and multi-tab use, not from idle churn, and remains unexplained.
 
 `useTimeAgo` was calling `setState` every second even when the rendered label was
 unchanged ("3 minutes ago" holds for a minute), so it now compares before setting. This
