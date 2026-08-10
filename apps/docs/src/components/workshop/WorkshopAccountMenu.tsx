@@ -18,9 +18,9 @@ interface WorkshopAccountMenuProps {
 export const WorkshopAccountMenu = ({ user, onSignOut }: WorkshopAccountMenuProps) => {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
-  const profileUrl = githubProfileUrl(user.githubUsername);
-  const avatarUrl = githubAvatarUrl(user.githubUsername);
-  const accountLabel = user.githubUsername ? `@${user.githubUsername}` : "Account";
+  const profileUrl = githubProfileUrl(user.name);
+  const avatarUrl = githubAvatarUrl(user.name);
+  const accountLabel = user.name ? `@${user.name}` : "Account";
 
   useEffect(() => {
     if (!open) return;
@@ -53,7 +53,7 @@ export const WorkshopAccountMenu = ({ user, onSignOut }: WorkshopAccountMenuProp
       >
         <Avatar className="size-6">
           {avatarUrl && <AvatarImage src={avatarUrl} alt="" />}
-          <AvatarFallback className="text-[10px]">{avatarFallback(user.githubUsername)}</AvatarFallback>
+          <AvatarFallback className="text-[10px]">{avatarFallback(user.name)}</AvatarFallback>
         </Avatar>
         <span className="max-w-36 truncate">{accountLabel}</span>
         <IconChevronDown
@@ -72,7 +72,7 @@ export const WorkshopAccountMenu = ({ user, onSignOut }: WorkshopAccountMenuProp
           <div className="flex items-center gap-3 px-2 py-2">
             <Avatar className="size-9">
               {avatarUrl && <AvatarImage src={avatarUrl} alt="" />}
-              <AvatarFallback>{avatarFallback(user.githubUsername)}</AvatarFallback>
+              <AvatarFallback>{avatarFallback(user.name)}</AvatarFallback>
             </Avatar>
             <div className="min-w-0">
               <p className="truncate text-sm font-medium">{accountLabel}</p>

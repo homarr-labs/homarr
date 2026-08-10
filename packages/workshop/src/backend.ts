@@ -71,7 +71,7 @@ export interface WorkshopUserRecord extends WorkshopBaseRecord {
   email: string;
   emailVisibility: boolean;
   verified: boolean;
-  githubUsername: string;
+  name: string;
   isAdmin: boolean;
   created: string;
   updated: string;
@@ -95,7 +95,7 @@ export interface WorkshopSubmissionRecord extends WorkshopBaseRecord {
 
 export interface WorkshopListingRecord extends Omit<WorkshopSubmissionRecord, "content" | "screenshots"> {
   screenshots: string[] | string;
-  authorGithubUsername: string;
+  authorName: string;
   score: number;
   upvotes: number;
   downvotes: number;
@@ -167,10 +167,7 @@ function filterListings(items: WorkshopSubmissionSummary[], options: WorkshopLis
       if (options.type && options.type !== "all" && item.type !== options.type) return false;
       if (options.author && item.author !== options.author) return false;
       if (options.includeOutdated === false && item.outdated) return false;
-      if (
-        search &&
-        !`${item.title}\n${item.description}\n${item.authorGithubUsername}`.toLocaleLowerCase().includes(search)
-      )
+      if (search && !`${item.title}\n${item.description}\n${item.authorName}`.toLocaleLowerCase().includes(search))
         return false;
       return true;
     }),
@@ -190,7 +187,7 @@ function listingFilter(pocketBase: TypedWorkshopPocketBase, options: WorkshopLis
   if (options.type && options.type !== "all") filters.push(pocketBase.filter("type = {:type}", { type: options.type }));
   if (options.search?.trim()) {
     filters.push(
-      pocketBase.filter("(title ~ {:search} || description ~ {:search} || authorGithubUsername ~ {:search})", {
+      pocketBase.filter("(title ~ {:search} || description ~ {:search} || authorName ~ {:search})", {
         search: options.search.trim(),
       }),
     );
@@ -215,7 +212,7 @@ const enrichAuthor = (row: unknown) => {
     typeof author === "object" && author !== null && !Array.isArray(author) ? (author as Record<string, unknown>) : {};
   return {
     ...record,
-    authorGithubUsername: record.authorGithubUsername || user.githubUsername,
+    authorName: record.authorName || user.name,
   };
 };
 
@@ -268,7 +265,7 @@ export class WorkshopBackend {
     if (!record) return null;
     return workshopUserSchema.parse({
       id: record.id,
-      githubUsername: record.githubUsername || "",
+      name: record.name || "",
       isAdmin: record.isAdmin === true,
     });
   }
@@ -502,7 +499,7 @@ export class WorkshopBackend {
       return items.map((item) =>
         workshopReportSchema.parse({
           ...item,
-          reporterGithubUsername: item.expand?.reporter?.githubUsername,
+          reporterName: item.expand?.reporter?.name,
           submissionTitle: item.expand?.submission?.title,
         }),
       );
@@ -539,7 +536,7 @@ export class WorkshopBackend {
       return rows.map((row) =>
         workshopCommentSchema.parse({
           ...row,
-          authorGithubUsername: row.expand?.author?.githubUsername,
+          authorName: row.expand?.author?.name,
         }),
       );
     } catch (error) {
@@ -554,7 +551,7 @@ export class WorkshopBackend {
         .create({ submission, author: this.currentUser?.id ?? "", content: content.trim() }, { expand: "author" });
       return workshopCommentSchema.parse({
         ...row,
-        authorGithubUsername: row.expand?.author?.githubUsername,
+        authorName: row.expand?.author?.name,
       });
     } catch (error) {
       throw workshopError(error, "Failed to post comment");
@@ -568,7 +565,7 @@ export class WorkshopBackend {
         .update(id, { content: content.trim() }, { expand: "author" });
       return workshopCommentSchema.parse({
         ...row,
-        authorGithubUsername: row.expand?.author?.githubUsername,
+        authorName: row.expand?.author?.name,
       });
     } catch (error) {
       throw workshopError(error, "Failed to update comment");
