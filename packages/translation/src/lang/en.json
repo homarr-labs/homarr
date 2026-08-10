@@ -2087,6 +2087,11 @@
       "notHelpful": "Not helpful",
       "feedbackError": "Your feedback could not be saved. Try again.",
       "exportMarkdown": "Export as Markdown",
+      "exportConversation": {
+        "action": "Export conversation as Markdown",
+        "failedTitle": "Conversation could not be exported",
+        "failedDescription": "Homarr could not load this conversation. Try again."
+      },
       "reasoning": "Thinking",
       "previousResponse": "Previous response",
       "nextResponse": "Next response",

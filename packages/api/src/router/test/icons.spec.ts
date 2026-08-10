@@ -51,4 +51,27 @@ describe("findIcons", () => {
 
     expect(result.icons).toMatchObject([{ slug: "example/empty", icons: [] }]);
   });
+
+  test("finds the Homarr icon and returns its exact local repository URL", async () => {
+    const db = createDb();
+    await db.insert(iconRepositories).values({ id: "dashboard-icons", slug: "homarr-labs/dashboard-icons" });
+    await db.insert(icons).values({
+      id: "homarr-svg",
+      name: "homarr.svg",
+      url: "https://cdn.example.com/homarr.svg",
+      checksum: "homarr",
+      iconRepositoryId: "dashboard-icons",
+    });
+    const caller = iconsRouter.createCaller({ db, deviceType: undefined, session: null });
+
+    await expect(caller.findIcons({ searchText: "homarr" })).resolves.toMatchObject({
+      countIcons: 1,
+      icons: [
+        {
+          slug: "homarr-labs/dashboard-icons",
+          icons: [{ name: "homarr.svg", url: "https://cdn.example.com/homarr.svg" }],
+        },
+      ],
+    });
+  });
 });

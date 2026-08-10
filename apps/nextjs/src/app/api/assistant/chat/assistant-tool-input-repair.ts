@@ -60,7 +60,36 @@ const escapeControlCharactersInsideJsonStrings = (value: string) => {
   return result;
 };
 
-export const repairCustomWidgetToolInput = <T extends AssistantToolCallInput>(toolCall: T): T | null => {
+const repairIconSearchInput = <T extends AssistantToolCallInput>(toolCall: T): T | null => {
+  if (toolCall.toolName !== "icon_findIcons") return null;
+
+  // Some OpenAI-compatible providers finish a streamed tool call after the last value but before
+  // the closing object delimiter. Recover only the harmless, read-only icon search fields instead
+  // of trying to balance arbitrary mutation input.
+  const searchTextMatch = /"searchText"\s*:\s*("(?:\\.|[^"\\])*")/u.exec(toolCall.input);
+  if (!searchTextMatch?.[1]) return null;
+  let searchText: unknown;
+  try {
+    searchText = JSON.parse(searchTextMatch[1]);
+  } catch {
+    return null;
+  }
+  if (typeof searchText !== "string") return null;
+
+  const limitMatch = /"limitPerGroup"\s*:\s*(\d+)/u.exec(toolCall.input);
+  const limitPerGroup = limitMatch?.[1] ? Number(limitMatch[1]) : undefined;
+  const hasValidLimit =
+    limitPerGroup !== undefined && Number.isInteger(limitPerGroup) && limitPerGroup >= 1 && limitPerGroup <= 500;
+  return {
+    ...toolCall,
+    input: JSON.stringify({
+      searchText,
+      ...(hasValidLimit ? { limitPerGroup } : {}),
+    }),
+  };
+};
+
+const repairCustomWidgetToolInput = <T extends AssistantToolCallInput>(toolCall: T): T | null => {
   if (!toolCall.toolName.startsWith("customWidget_")) return null;
   if (customWidgetNoInputToolNames.has(toolCall.toolName)) {
     try {
@@ -83,3 +112,6 @@ export const repairCustomWidgetToolInput = <T extends AssistantToolCallInput>(to
     return null;
   }
 };
+
+export const repairAssistantToolInput = <T extends AssistantToolCallInput>(toolCall: T): T | null =>
+  repairIconSearchInput(toolCall) ?? repairCustomWidgetToolInput(toolCall);
