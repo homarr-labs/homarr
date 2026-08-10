@@ -49,17 +49,16 @@ describe("Assistant management", () => {
       await page.goto(`${baseUrl}/manage/assistant`);
       await expect(page.getByRole("heading", { name: "Assistant" })).toBeVisible();
       await expect(page.getByText("Connection ready")).toBeVisible();
-      await expect(page.getByText("Key protected")).toBeVisible();
       await expect(page.getByText("Encrypted API key saved")).toBeVisible();
       await expect(page.getByRole("button", { name: "Remove saved API key" })).toBeVisible();
       await page.getByRole("button", { name: "Additional request headers" }).click();
       await expect(page.getByRole("button", { name: "Add header" })).toBeVisible();
 
-      await page.getByRole("button", { name: "Remove all credentials" }).click();
-      await expect(page.getByRole("dialog", { name: "Remove all assistant credentials" })).toBeVisible();
-      await expect(page.getByRole("button", { name: "Remove credentials" })).toBeVisible();
-      await page.getByRole("button", { name: "Keep credentials" }).click();
-      await expect(page.getByRole("dialog", { name: "Remove all assistant credentials" })).toBeHidden();
+      await page.getByRole("button", { name: "Remove saved API key" }).click();
+      await expect(page.getByText("Remove the saved API key?")).toBeVisible();
+      await expect(page.getByRole("button", { name: "Remove API key" })).toBeVisible();
+      await page.getByRole("button", { name: "Keep saved key" }).click();
+      await expect(page.getByText("Remove the saved API key?")).toBeHidden();
 
       await page.setViewportSize({ width: 390, height: 844 });
       await page.reload();
