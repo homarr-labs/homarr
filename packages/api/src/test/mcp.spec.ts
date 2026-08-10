@@ -103,6 +103,7 @@ const MCP_TOOL_ALLOWLIST = {
     "apiKeys_delete",
     "customWidget_configurationRequestUser",
     "customWidget_create",
+    "customWidget_createFromPreview",
     "customWidget_migrateLegacy",
     "customWidget_previewCreate",
     "customWidget_secretSet",
@@ -197,6 +198,7 @@ describe("custom widget authoring procedure access", () => {
       unauthenticatedCaller.customWidget.getSkill(),
       unauthenticatedCaller.customWidget.list(),
       unauthenticatedCaller.customWidget.validate({ widget: {} }),
+      unauthenticatedCaller.customWidget.createFromPreview({ previewSessionId: "preview" }),
       unauthenticatedCaller.customWidget.secretSet({
         definitionId: "widget",
         secret: { sourceId: "default", kind: "apiKey", value: "secret" },
@@ -221,6 +223,7 @@ describe("custom widget authoring procedure access", () => {
       nonAdminCaller.customWidget.getExample({ name: "service-dashboard" }),
       nonAdminCaller.customWidget.getSharedProps({ names: ["p"] }),
       nonAdminCaller.customWidget.getSkill(),
+      nonAdminCaller.customWidget.createFromPreview({ previewSessionId: "preview" }),
       nonAdminCaller.customWidget.secretSet({
         definitionId: "widget",
         secret: { sourceId: "default", kind: "apiKey", value: "secret" },
@@ -255,7 +258,17 @@ describe("custom widget authoring procedure access", () => {
     });
     await expect(adminCaller.customWidget.getExample({ name: "service-dashboard" })).resolves.toMatchObject({
       id: "service-dashboard",
-      widget: expect.objectContaining({ $schema: "homarr-custom-widget-v2" }),
+      widget: expect.objectContaining({
+        $schema: "homarr-custom-widget-v2",
+        templateLines: expect.any(Array),
+      }),
+    });
+    await expect(adminCaller.customWidget.getExample({ name: "pokedex" })).resolves.toMatchObject({
+      id: "pokedex",
+      widget: expect.objectContaining({
+        name: "Pokédex",
+        templateLines: expect.arrayContaining([expect.stringContaining("<Stack")]),
+      }),
     });
     await expect(adminCaller.customWidget.getSharedProps({ names: ["p", "m"] })).resolves.toMatchObject({
       props: [expect.objectContaining({ name: "p" }), expect.objectContaining({ name: "m" })],
