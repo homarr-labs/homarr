@@ -30,6 +30,8 @@ export interface ImportReviewDialogProps {
   children?: ReactNode;
   stackId?: string;
   zIndex?: ModalProps["zIndex"];
+  size?: ModalProps["size"];
+  styles?: ModalProps["styles"];
   onClose(): void;
   onConfirm(): void;
 }
@@ -54,6 +56,8 @@ export function ImportReviewDialog({
   children,
   stackId,
   zIndex,
+  size,
+  styles,
   onClose,
   onConfirm,
 }: ImportReviewDialogProps) {
@@ -63,9 +67,10 @@ export function ImportReviewDialog({
       onClose={onClose}
       title={messages.title}
       centered
-      size="lg"
       stackId={stackId}
       zIndex={zIndex}
+      size={size ?? "lg"}
+      styles={styles}
     >
       {review && (
         <Stack gap="md">
