@@ -1,0 +1,43 @@
+apps/nextjs/src/components/manage/unsaved-changes-bar.tsx
+  s_5d9f23ee18513b::t_c6e6fb9cf069ad 16
+  s_5d9f23ee18513b::t_cf6a57cea50dd4 17
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout.tsx
+  s_5d9f23ee18513b::t_7f95e9b68fc8d8 171,214,225,339,347
+  s_5d9f23ee18513b::t_36ed023544e6e6 226-232
+  s_5d9f23ee18513b::t_6c19a6926ec83d 233
+apps/nextjs/src/app/[locale]/manage/settings/_components/analytics.settings.tsx
+  s_5d9f23ee18513b::t_06b5de4025a587 3-6,29-34,36-37
+  s_5d9f23ee18513b::t_1dddd0440963ee 19,22-28,35
+apps/nextjs/src/app/[locale]/boards/[name]/settings/page.tsx
+  s_5d9f23ee18513b::t_36ed023544e6e6 56
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout-preview.module.css
+  s_5d9f23ee18513b::t_7f95e9b68fc8d8 7
+packages/translation/src/lang/en.json
+  s_5d9f23ee18513b::t_1dddd0440963ee 6063
+e2e/lazy-widgets.spec.ts
+  s_5d9f23ee18513b::t_5d60f4268ab772 95
+apps/nextjs/src/components/layout/header/lazy-spotlight.tsx
+  s_5d9f23ee18513b::t_5d60f4268ab772 7,34-35,44,46-48
+apps/nextjs/src/app/[locale]/manage/settings/page.tsx
+  s_5d9f23ee18513b::t_2ca8a506020585 7,30-32
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout-preview.tsx
+  s_5d9f23ee18513b::t_36ed023544e6e6 48
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout.module.css
+  s_5d9f23ee18513b::t_7f95e9b68fc8d8 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "5af517dbb068640d4f87c0ebf56f8af24e4afd9b",
+  "prompts": {},
+  "sessions": {
+    "s_5d9f23ee18513b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fec85-68a8-7c10-b157-287fdb19bbad",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
