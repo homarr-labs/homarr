@@ -37,7 +37,7 @@ export const WidgetContextMenu = ({ item, definition, widgetStateRef, children }
   const [isEditMode] = useEditMode();
   const settings = useSettings();
 
-  if (!session || !settings.enableRightClickOnWidgets || isEditMode) return <>{children}</>;
+  if (!session || !settings.enableRightClickOnWidgets || isEditMode || item.kind === "app") return <>{children}</>;
 
   return (
     <WidgetContextMenuInner item={item} definition={definition} widgetStateRef={widgetStateRef} settings={settings}>
