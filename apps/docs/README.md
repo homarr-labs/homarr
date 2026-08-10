@@ -61,8 +61,8 @@ pnpm typecheck
 docs/
 ├── getting-started/    # Installation guides, glossary, prerequisites
 ├── management/         # Boards, apps, users, integrations, settings, tasks, API
-├── integrations/       # 55 integration guides (one folder each)
-├── widgets/            # 42 widget guides (one folder each)
+├── integrations/       # 56 integration guides (one folder each)
+├── widgets/            # 43 widget guides (one folder each)
 ├── advanced/           # SSO, env vars, proxy, styling, CLI, development
 └── community/          # FAQ, donate, license, translations, get-in-touch
 ```
