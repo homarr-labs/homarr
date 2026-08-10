@@ -5224,8 +5224,43 @@
           "title": "Layout",
           "responsive": {
             "title": "Responsive layouts",
+            "description": "Each layout keeps its own widget positions and sizes. Mobile and Base are always available; add custom layouts for widths in between.",
             "action": {
               "add": "Add layout"
+            }
+          },
+          "role": {
+            "mobile": "Mobile",
+            "base": "Base",
+            "custom": "Custom"
+          },
+          "custom": {
+            "defaultName": "Custom layout"
+          },
+          "mobile": {
+            "breakpointDescription": "Mobile is always used from 0px until the next layout breakpoint."
+          },
+          "preview": {
+            "columns": "columns",
+            "empty": "This layout is empty",
+            "dynamicSection": "Dynamic section",
+            "editorWidthLabel": "{layoutName} · {width}px"
+          },
+          "reset": {
+            "action": "Reset from Base",
+            "confirm": {
+              "title": "Reset {layoutName}?",
+              "message": "This replaces every saved position and size in this layout with a new layout generated from Base. This cannot be undone."
+            }
+          },
+          "edit": {
+            "action": "Edit layout",
+            "saveAndEdit": "Save and edit",
+            "save": "Save layout",
+            "cancel": {
+              "action": "Cancel layout editing",
+              "title": "Discard layout changes?",
+              "message": "Your unsaved changes to this layout will be discarded."
             }
           }
         },
