@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import type { ModalProps } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -27,6 +28,8 @@ interface CustomWidgetImportDialogProps {
   legacyId?: string;
   stackId?: string;
   zIndex?: number;
+  modalProps?: Pick<ModalProps, "size" | "styles">;
+  labels?: { title?: string; description?: string; cancel?: string; confirm?: string };
   onClose(): void;
   onImported?(result: { id: string }): void;
 }
@@ -37,6 +40,8 @@ export function CustomWidgetImportDialog({
   legacyId,
   stackId,
   zIndex,
+  modalProps,
+  labels,
   onClose,
   onImported,
 }: CustomWidgetImportDialogProps) {
@@ -103,14 +108,17 @@ export function CustomWidgetImportDialog({
       opened={opened}
       stackId={stackId}
       zIndex={zIndex}
+      {...modalProps}
       review={review}
       pending={pending}
       confirmDisabled={!isCustomWidgetSourceSetupReady(setups, values)}
       onClose={onClose}
       onConfirm={importWidget}
       messages={{
-        title: legacyId ? t("importReview.migrationTitle") : t("importReview.title"),
-        description: legacyId ? t("importReview.migrationDescription") : t("importReview.description"),
+        title: legacyId ? t("importReview.migrationTitle") : (labels?.title ?? t("importReview.title")),
+        description: legacyId
+          ? t("importReview.migrationDescription")
+          : (labels?.description ?? t("importReview.description")),
         name: t("importReview.name"),
         origin: t("importReview.origin"),
         authentication: t("importReview.authentication"),
@@ -119,8 +127,8 @@ export function CustomWidgetImportDialog({
         permissions: t("importReview.permissions"),
         actionWarningTitle: t("importReview.actionWarning.title"),
         actionWarningDescription: t("importReview.actionWarning.description"),
-        cancel: t("importReview.cancel"),
-        confirm: legacyId ? t("importReview.confirmMigration") : t("importReview.confirm"),
+        cancel: labels?.cancel ?? t("importReview.cancel"),
+        confirm: legacyId ? t("importReview.confirmMigration") : (labels?.confirm ?? t("importReview.confirm")),
         permission: (permission) => t(`preview.request.permission.${permission}` as never),
       }}
     >
