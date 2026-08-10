@@ -90,7 +90,7 @@ const workshopFileListSchema = z
 
 export const workshopUserSchema = z.object({
   id: z.string(),
-  githubUsername: z.string().default(""),
+  name: z.string().default(""),
   isAdmin: z.boolean().default(false),
 });
 export type WorkshopUser = z.infer<typeof workshopUserSchema>;
@@ -113,7 +113,7 @@ const workshopSubmissionBaseObjectSchema = z.object({
   widgetSchema: z.string(),
   screenshots: workshopFileListSchema,
   author: z.string(),
-  authorGithubUsername: z.string().default(""),
+  authorName: z.string().default(""),
   score: z.number().int().default(0),
   upvotes: z.number().int().default(0),
   downvotes: z.number().int().default(0),
@@ -173,7 +173,7 @@ export const workshopReportSchema = z.object({
   id: z.string(),
   submission: z.string(),
   reporter: z.string(),
-  reporterGithubUsername: z.string().default(""),
+  reporterName: z.string().default(""),
   submissionTitle: z.string().default("Deleted submission"),
   category: workshopReportCategorySchema,
   explanation: z.string(),
@@ -190,7 +190,7 @@ export const workshopCommentSchema = z.object({
   content: z.string().min(1).max(2_000),
   created: z.string(),
   updated: z.string(),
-  authorGithubUsername: z.string().default(""),
+  authorName: z.string().default(""),
 });
 export type WorkshopComment = z.infer<typeof workshopCommentSchema>;
 

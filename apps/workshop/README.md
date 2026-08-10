@@ -91,8 +91,8 @@ GITHUB_CLIENT_SECRET=...
 OAuth settings synchronize on every PocketBase startup. Restart after rotation. A production deployment must never
 supply only one credential. `PB_ALLOWED_ORIGINS=*` is appropriate for the central community because arbitrary
 self-hosted Homarr origins must open its OAuth popup; a restricted list must include every allowed browser origin.
-Workshop stores only the OAuth provider username in `users.githubUsername`; users cannot rename it. PocketBase maps
-**OAuth2 username** to `githubUsername` and leaves the OAuth2 id, full name, and avatar mappings empty. GitHub profiles
+Workshop stores only the OAuth provider username in `users.name`; users cannot rename it. PocketBase maps
+**OAuth2 username** to `name` and leaves the OAuth2 id, full name, and avatar mappings empty. GitHub profiles
 and avatars are derived from `https://github.com/<username>` and `https://github.com/<username>.png`, so no duplicate
 profile metadata or avatar file is stored.
 

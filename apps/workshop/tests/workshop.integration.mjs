@@ -46,7 +46,7 @@ await request("/api/collections/users", {
   body: JSON.stringify({ ...usersCollection, passwordAuth: { enabled: true, identityFields: ["email"] } }),
 });
 
-const createUser = async (email, githubUsername, password, extra = {}) =>
+const createUser = async (email, name, password, extra = {}) =>
   request("/api/collections/users/records", {
     method: "POST",
     headers: rootHeaders,
@@ -56,7 +56,7 @@ const createUser = async (email, githubUsername, password, extra = {}) =>
       verified: true,
       password,
       passwordConfirm: password,
-      githubUsername,
+      name,
       ...extra,
     }),
   });
@@ -79,13 +79,13 @@ await expectStatus(
 );
 await expectStatus(
   `/api/collections/users/records/${author.id}`,
-  { method: "PATCH", headers: authorSession.headers, body: JSON.stringify({ githubUsername: "homarr-labs" }) },
+  { method: "PATCH", headers: authorSession.headers, body: JSON.stringify({ name: "homarr-labs" }) },
   404,
 );
 const unchangedAuthor = await request(`/api/collections/users/records/${author.id}`, {
   headers: authorSession.headers,
 });
-if (unchangedAuthor.githubUsername !== "widget-author") {
+if (unchangedAuthor.name !== "widget-author") {
   throw new Error("Workshop users can forge OAuth provider identity fields");
 }
 
@@ -221,7 +221,7 @@ if (
   listing.score !== 2 ||
   listing.upvotes !== 2 ||
   listing.downvotes !== 0 ||
-  listing.authorGithubUsername !== "widget-author" ||
+  listing.authorName !== "widget-author" ||
   listing.widgetSchema !== widget.$schema
 ) {
   throw new Error("Workshop listing data is incorrect");
@@ -232,7 +232,7 @@ const comment = await request("/api/collections/comments/records?expand=author",
   headers: visitorSession.headers,
   body: JSON.stringify({ submission: submission.id, author: visitor.id, content: "Useful widget" }),
 });
-if (comment.author !== visitor.id || comment.expand.author.githubUsername !== "widget-visitor") {
+if (comment.author !== visitor.id || comment.expand.author.name !== "widget-visitor") {
   throw new Error("Comment author expansion is incorrect");
 }
 await expectStatus(
