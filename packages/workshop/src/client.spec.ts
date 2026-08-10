@@ -70,7 +70,7 @@ describe("WorkshopBackend", () => {
       token: "token",
       record: {
         id: "user-id",
-        githubUsername: "octocat",
+        name: "octocat",
       },
       meta: { username: "octocat" },
     });
@@ -82,7 +82,7 @@ describe("WorkshopBackend", () => {
     expect(mocks.authWithOAuth2.mock.calls[0]?.[0]).not.toHaveProperty("requestKey");
     expect(mocks.authWithOAuth2.mock.calls[0]?.[0]).not.toHaveProperty("urlCallback");
     expect(mocks.update).not.toHaveBeenCalled();
-    expect(user).toMatchObject({ githubUsername: "octocat" });
+    expect(user).toMatchObject({ name: "octocat" });
   });
 
   test("exposes the typed submission collection service", () => {
@@ -214,8 +214,7 @@ describe("WorkshopBackend", () => {
       1,
       12,
       expect.objectContaining({
-        filter:
-          "(title ~ 'active streams' || description ~ 'active streams' || authorGithubUsername ~ 'active streams')",
+        filter: "(title ~ 'active streams' || description ~ 'active streams' || authorName ~ 'active streams')",
       }),
     );
   });

@@ -526,10 +526,10 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const canManage = user?.id === submission.author || user?.isAdmin === true;
   const canEdit = user?.id === submission.author;
   const signedInAuthor = user?.id === submission.author ? user : null;
-  const authorGithubUsername = signedInAuthor?.githubUsername || submission.authorGithubUsername;
-  const authorName = authorGithubUsername || "Community member";
-  const authorAvatarUrl = githubAvatarUrl(authorGithubUsername);
-  const authorGithubProfileUrl = githubProfileUrl(authorGithubUsername);
+  const authorHandle = signedInAuthor?.name || submission.authorName;
+  const authorName = authorHandle || "Community member";
+  const authorAvatarUrl = githubAvatarUrl(authorHandle);
+  const authorGithubProfileUrl = githubProfileUrl(authorHandle);
   const sources = widgetDefinition ? Object.entries(widgetDefinition.sources) : [];
   const requests = widgetDefinition ? Object.entries(widgetDefinition.requests) : [];
   const options = widgetDefinition ? Object.entries(widgetDefinition.options) : [];
