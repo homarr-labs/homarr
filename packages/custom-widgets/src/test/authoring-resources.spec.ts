@@ -31,6 +31,10 @@ describe("authoring resources", () => {
       expect(bundledContent).toContain(content.trim());
     }
     expect(bundledContent).toContain(skill.skillMd.trim());
+    expect(bundledContent).toContain("at most eight named component documents");
+    expect(bundledContent).toContain("at most four after loading a complete example");
+    expect(bundledContent).toContain("successful preview response as the binding contract");
+    expect(bundledContent).toContain("Do not use an unlabeled decorative icon as an empty state");
     expect(Buffer.byteLength(JSON.stringify(skill), "utf8")).toBeLessThan(12_000);
   });
 
