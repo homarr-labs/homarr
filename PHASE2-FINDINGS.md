@@ -772,8 +772,8 @@ by `scripts/benchmarks/analyze-require-graph.mjs`). At boot idle, having served 
 
 Two things follow, and the second is the one that matters:
 
-1. **Next loads all 74 app route bundles at startup**, not on first request. That is
-   framework behaviour, not something this codebase sets.
+1. **Next loads all 74 app route bundles at startup**, not on first request. ~~That is
+   framework behaviour, not something this codebase sets.~~ **That was wrong** — see below.
 2. **One subtree of 16.10 MiB / 460 files is reached by the tRPC/API routes *and* by
    `instrumentation`** — the cron tasks and websocket server. Exclusive attribution for
    instrumentation is therefore **0 bytes**: everything it touches, an API route touches
@@ -782,10 +782,67 @@ Two things follow, and the second is the one that matters:
    request handler.
 
 That kills the obvious fix. Deferring `instrumentation` would free nothing, because Next
-preloads `/api/[...trpc]` at boot and that route reaches the same graph. Cutting this
-requires the tRPC router to stop referencing every integration eagerly — the same lever the
-integrations barrel diet started, with roughly 16 MiB of source still behind it. Recorded
-as measured and understood, not attempted here.
+preloads `/api/[...trpc]` at boot and that route reaches the same graph. Cutting the shared
+subtree itself requires the tRPC router to stop referencing every integration eagerly — the same
+lever the integrations barrel diet started, with roughly 16 MiB of source still behind it.
+
+### Correction: preloading *is* configurable, and turning it off is the largest idle win here
+
+The claim above that route preloading is "framework behaviour, not something this codebase sets"
+was wrong. Next documents `experimental.preloadEntriesOnStart: false` for exactly this, and the
+guide describes it as preventing the server from preloading page modules into memory at startup.
+Found by reading Next's own memory-usage guide rather than by inference — which is the lesson.
+
+Deterministic per-stage measurements, identical across both runs on each side:
+
+| stage | source loaded | files | heapUsed |
+| --- | --- | --- | --- |
+| boot idle | 24.0 → **10.6 MiB** | 1114 → **706** | 70.7 → **44.8 MiB** (−37%) |
+| post-login | 27.9 → **19.3 MiB** | 1215 → **884** | 123.8 → **109.8 MiB** |
+| board loaded | 29.0 → **21.7 MiB** | 1323 → **1006** | run-to-run noise |
+| multi-tab | 29.2 → **22.9 MiB** | 1325 → **1015** | 139.7 → **127.8 MiB** |
+| post-soak | 29.2 → **22.9 MiB** | 1325 → **1015** | 142.5 → **127.4 MiB** |
+
+The last two rows are the important ones: **310 files and 6.3 MiB of source stay unloaded even
+after a full multi-tab session**, so this is not merely deferred cost — routes a session never
+visits are never paid for at all. Live heap is lower at every stage.
+
+Peak node RSS does not move (350.3 → 346.1, spreads overlap), for the same reason the ssh2 chop
+did not move it: V8 sizes its heap against available headroom, so a smaller live set does not
+shrink peak RSS. Median board load is +3% with overlapping spreads, so the first-hit cost this
+trades for did not show at this workload. Full E2E suite passes 8/8.
+
+Also from that guide, and **not** applicable here: `webpackMemoryOptimizations`,
+`serverSourceMaps`, `enablePrerenderSourceMaps` and disabling the Webpack cache all address
+*build-time* memory, and this build uses Turbopack.
+
+### `--jitless`: rejected, and the reason generalises
+
+V8's `--jitless` removes the optimising compiler and all generated machine code. It applies
+through `NODE_OPTIONS` and its effect on code memory is real and unambiguous: **code space
+11.6 → 0.0 MiB**. The stress figures looked spectacular — peak node RSS −24%, peak container
+−36%, CPU −14%, median board load 30% *faster*.
+
+Three of those are impossible. The flag was applied to the **server**, so it cannot make the
+browser lighter, and removing an optimising compiler does not make code faster. The client
+metrics show what actually happened:
+
+| | normal | jitless |
+| --- | --- | --- |
+| DOM nodes | 8,256 / 8,280 | **5,442 / 5,442** |
+| JS event listeners | 7,781 / 7,784 | **1,570 / 1,570** |
+| browser JS heap | 50.0 / 49.5 MiB | 28.1 / 28.2 MiB |
+| widget controls available | 244 | 216 |
+
+Boards still reported 28/28 widgets ready, so the coarse readiness check passed — but the page
+carries **80% fewer event listeners**. Much of the UI never mounted. The memory "win" is an app
+doing less work, and the CPU and latency "improvements" are the same artefact.
+
+The generalisable tell: **when a server-side change moves a client-side metric, the workload
+changed and the comparison is void.**
+
+Flags that cannot be used this way at all: `--optimize-for-size`, `--no-opt` and `--lite-mode`
+are rejected by Node with "not allowed in NODE_OPTIONS".
 
 ## Measured but not pursued
 
