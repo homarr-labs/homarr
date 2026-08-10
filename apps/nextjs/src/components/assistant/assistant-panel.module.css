@@ -117,15 +117,6 @@
   animation: assistant-panel-in 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.floatingPanel[data-maximized] {
-  inset: 1rem;
-  width: auto;
-  height: auto;
-  min-height: 0;
-  transform: none;
-  animation: none;
-}
-
 .widgetPanel {
   container-name: assistant-widget;
   container-type: size;
@@ -188,38 +179,13 @@
 }
 
 .windowControl {
-  width: 1.75rem;
-  height: 1.75rem;
-  border: 0;
-  color: rgba(0, 0, 0, 0.72);
-  transition:
-    filter 160ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.windowControl:hover {
-  filter: brightness(0.94) saturate(1.08);
-}
-
-.windowControl:active {
-  transform: scale(0.92);
+  width: 2.25rem;
+  height: 2.25rem;
 }
 
 .windowControl:focus-visible {
   outline: 2px solid var(--mantine-primary-color-filled);
   outline-offset: 2px;
-}
-
-.windowControlClose {
-  background: var(--mantine-color-red-6);
-}
-
-.windowControlMinimize {
-  background: var(--mantine-color-yellow-5);
-}
-
-.windowControlMaximize {
-  background: var(--mantine-color-green-6);
 }
 
 .panelAction {
@@ -1666,14 +1632,6 @@
     min-height: min(20rem, calc(100dvh - 1rem - env(safe-area-inset-bottom, 0px)));
   }
 
-  .floatingPanel[data-maximized] {
-    inset: 0;
-    width: 100vw;
-    height: 100dvh;
-    min-height: 0;
-    border-radius: 0;
-  }
-
   .panelHeader {
     min-height: 3.5rem;
     padding: 0.5rem;
@@ -1809,7 +1767,6 @@
 @media (prefers-reduced-motion: reduce) {
   .activityBar,
   .floatingPanel,
-  .windowControl,
   .disclosureIcon,
   .reasoningChevron {
     animation: none;
