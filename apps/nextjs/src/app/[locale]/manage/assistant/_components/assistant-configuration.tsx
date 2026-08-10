@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Accordion,
   ActionIcon,
@@ -17,10 +17,8 @@ import {
   Paper,
   PasswordInput,
   Select,
-  SimpleGrid,
   Skeleton,
   Stack,
-  Stepper,
   Switch,
   Text,
   TextInput,
@@ -29,7 +27,6 @@ import {
 } from "@mantine/core";
 import {
   IconAlertTriangle,
-  IconArrowLeft,
   IconCheck,
   IconCircleCheck,
   IconDatabaseSearch,
@@ -60,7 +57,7 @@ import classes from "./assistant-configuration.module.css";
 import { formatAssistantContextWindow, getAssistantConnectionState } from "./assistant-configuration-state";
 
 type HeaderEntry = { id: number; name: string; value: string };
-type CredentialFlow = "idle" | "replace" | "remove";
+type CredentialFlow = "idle" | "remove";
 type AssistantProviderOption = AssistantProvider | "homarr";
 
 const ProviderIcon = ({ providerId, size = 20 }: { providerId: AssistantProviderOption; size?: number }) => {
@@ -151,7 +148,6 @@ export const AssistantConfiguration = () => {
   const [modelDiscoveryPath, setModelDiscoveryPath] = useState<string>("/models");
   const [apiKey, setApiKey] = useState("");
   const [credentialFlow, setCredentialFlow] = useState<CredentialFlow>("idle");
-  const [credentialStep, setCredentialStep] = useState(0);
   const [headers, setHeaders] = useState<HeaderEntry[]>([]);
   const [clearHeaders, setClearHeaders] = useState(false);
   const [nextHeaderId, setNextHeaderId] = useState(1);
@@ -159,7 +155,6 @@ export const AssistantConfiguration = () => {
   const [enabled, setEnabled] = useState(false);
   const [webSearchEnabled, setWebSearchEnabled] = useState(false);
   const [clearCredentialsOpened, setClearCredentialsOpened] = useState(false);
-  const replacementKeyInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setProvider(configuration?.provider ?? "openrouter");
@@ -170,7 +165,6 @@ export const AssistantConfiguration = () => {
     setWebSearchEnabled(configuration?.webSearchEnabled ?? false);
     setApiKey("");
     setCredentialFlow("idle");
-    setCredentialStep(0);
   }, [configuration]);
 
   const normalizedBaseUrl = baseUrl.trim().replace(/\/$/, "");
@@ -240,12 +234,6 @@ export const AssistantConfiguration = () => {
     }
   }, [modelId, models]);
 
-  useEffect(() => {
-    if (credentialFlow !== "replace" || credentialStep !== 0) return;
-    const animationFrame = requestAnimationFrame(() => replacementKeyInputRef.current?.focus());
-    return () => cancelAnimationFrame(animationFrame);
-  }, [credentialFlow, credentialStep]);
-
   const preset = assistantProviderPresets[provider];
   const headerValuesValid = headers.every((header) => header.name.trim().length > 0 && header.value.length > 0);
   const { hasStoredApiKey, connectionPending, connectionReady } = getAssistantConnectionState({
@@ -265,7 +253,6 @@ export const AssistantConfiguration = () => {
     onSuccess: async ({ credentialsClearedForDestinationChange }) => {
       setApiKey("");
       setCredentialFlow("idle");
-      setCredentialStep(0);
       setHeaders([]);
       setClearHeaders(false);
       await Promise.all([
@@ -323,7 +310,6 @@ export const AssistantConfiguration = () => {
   const resetCredentialFlow = () => {
     setApiKey("");
     setCredentialFlow("idle");
-    setCredentialStep(0);
   };
 
   const clearDraftConnectionState = () => {
@@ -560,111 +546,11 @@ export const AssistantConfiguration = () => {
                 </Box>
               </Group>
               <Group className={classes.credentialActions} gap="xs">
-                <Button
-                  variant="light"
-                  leftSection={<IconKey size={16} />}
-                  onClick={() => {
-                    setCredentialFlow("replace");
-                    setCredentialStep(0);
-                  }}
-                >
-                  {t("apiKey.replace")}
-                </Button>
                 <Button variant="subtle" color="red" onClick={() => setCredentialFlow("remove")}>
                   {t("apiKey.remove")}
                 </Button>
               </Group>
             </Group>
-          ) : credentialFlow === "replace" ? (
-            <Box className={classes.credentialFlow}>
-              <Stepper
-                className={classes.credentialStepper}
-                active={credentialStep}
-                size="sm"
-                allowNextStepsSelect={false}
-              >
-                <Stepper.Step label={t("apiKey.replaceFlow.enterStep")}>
-                  <Stack gap="md">
-                    <Box>
-                      <Text fw={650}>{t("apiKey.replaceFlow.title")}</Text>
-                      <Text size="sm" c="dimmed">
-                        {t("apiKey.replaceFlow.description")}
-                      </Text>
-                    </Box>
-                    <PasswordInput
-                      label={t("apiKey.replaceFlow.newKey")}
-                      description={t("apiKey.replaceFlow.newKeyDescription")}
-                      value={apiKey}
-                      onChange={(event) => setApiKey(event.currentTarget.value)}
-                      leftSection={<IconKey size={16} />}
-                      placeholder={t("apiKey.replacementPlaceholder")}
-                      autoComplete="new-password"
-                      ref={replacementKeyInputRef}
-                    />
-                    <Box className={classes.flowActions}>
-                      <Button variant="default" onClick={resetCredentialFlow}>
-                        {t("apiKey.replaceFlow.cancel")}
-                      </Button>
-                      <Button
-                        rightSection={<IconCheck size={16} />}
-                        disabled={apiKey.trim().length === 0}
-                        onClick={() => setCredentialStep(1)}
-                      >
-                        {t("apiKey.replaceFlow.review")}
-                      </Button>
-                    </Box>
-                  </Stack>
-                </Stepper.Step>
-                <Stepper.Step label={t("apiKey.replaceFlow.reviewStep")}>
-                  <Stack gap="md">
-                    <Alert
-                      color="yellow"
-                      icon={<IconAlertTriangle size={18} />}
-                      title={t("apiKey.replaceFlow.warningTitle")}
-                    >
-                      {t("apiKey.replaceFlow.warningDescription")}
-                    </Alert>
-                    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
-                      <Box>
-                        <Text size="xs" c="dimmed">
-                          {t("apiKey.replaceFlow.provider")}
-                        </Text>
-                        <Text size="sm" fw={600}>
-                          {t(`provider.options.${provider}.label`)}
-                        </Text>
-                      </Box>
-                      <Box>
-                        <Text size="xs" c="dimmed">
-                          {t("apiKey.replaceFlow.endpoint")}
-                        </Text>
-                        <Text size="sm" fw={600} truncate>
-                          {normalizedBaseUrl}
-                        </Text>
-                      </Box>
-                    </SimpleGrid>
-                    <Box className={classes.flowActions}>
-                      <Button
-                        variant="default"
-                        leftSection={<IconArrowLeft size={16} />}
-                        onClick={() => setCredentialStep(0)}
-                      >
-                        {t("apiKey.replaceFlow.back")}
-                      </Button>
-                      <Button
-                        color="yellow"
-                        variant="filled"
-                        leftSection={<IconKey size={16} />}
-                        onClick={() => saveConnection()}
-                        disabled={!connectionValid}
-                        loading={updateConnection.isPending}
-                      >
-                        {t("apiKey.replaceFlow.confirm")}
-                      </Button>
-                    </Box>
-                  </Stack>
-                </Stepper.Step>
-              </Stepper>
-            </Box>
           ) : credentialFlow === "remove" ? (
             <Alert color="red" icon={<IconAlertTriangle size={18} />} title={t("apiKey.removeFlow.title")}>
               <Stack gap="md">

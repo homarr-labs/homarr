@@ -168,7 +168,7 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
               bg="transparent"
             >
               <Grid gap={{ base: "lg", xl: "xl" }} align="flex-start">
-                <Grid.Col span={{ base: 12, md: 4 }}>
+                <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
                   <Stack gap="md">
                     <TextInput {...form.getInputProps(`layouts.${index}.name`)} label={t("layout.field.name.label")} />
                     <Input.Wrapper label={t("layout.field.columnCount.label")}>
@@ -209,16 +209,9 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
                       }
                       max={layout.role === "custom" ? baseBreakpoint - 1 : 32767}
                     />
-                    <GutterSettings
-                      left={layout.leftGutterColumnCount}
-                      right={layout.rightGutterColumnCount}
-                      columnCount={layout.columnCount}
-                      onLeftChange={(value) => form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, value)}
-                      onRightChange={(value) => form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, value)}
-                    />
                   </Stack>
                 </Grid.Col>
-                <Grid.Col span={{ base: 12, md: 8 }}>
+                <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
                   {sourceLayout && (
                     <LayoutPreview
                       board={board}
@@ -228,6 +221,15 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
                       apps={apps}
                     />
                   )}
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, lg: 4 }}>
+                  <GutterSettings
+                    left={layout.leftGutterColumnCount}
+                    right={layout.rightGutterColumnCount}
+                    columnCount={layout.columnCount}
+                    onLeftChange={(value) => form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, value)}
+                    onRightChange={(value) => form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, value)}
+                  />
                 </Grid.Col>
               </Grid>
 
@@ -334,7 +336,7 @@ const GutterSettings = ({ left, right, columnCount, onLeftChange, onRightChange 
         <GutterPreview left={left} right={right} columnCount={columnCount} />
 
         <Grid>
-          <Grid.Col span={{ base: 12, md: 6 }}>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
             <GutterControl
               side="left"
               value={left}
@@ -342,7 +344,7 @@ const GutterSettings = ({ left, right, columnCount, onLeftChange, onRightChange 
               onChange={onLeftChange}
             />
           </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
             <GutterControl
               side="right"
               value={right}
@@ -377,7 +379,6 @@ const GutterControl = ({
         disabled={max < 1}
         onChange={(event) => onChange(event.currentTarget.checked ? Math.min(2, max) : 0)}
         label={t(`layout.field.gutters.${side}.label`)}
-        description={t(`layout.field.gutters.${side}.description`)}
       />
       {enabled && (
         <Input.Wrapper label={t("layout.field.gutters.width.label")}>

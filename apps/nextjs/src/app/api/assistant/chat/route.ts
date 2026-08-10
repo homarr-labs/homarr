@@ -52,6 +52,7 @@ import { getSafeAssistantToolError } from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
 import { toAssistantToolOutput } from "./assistant-tool-output";
 import {
+  createCustomWidgetComponentDocumentBudget,
   createCustomWidgetDynamicContextController,
   getCustomWidgetAuthoringContext,
   prunePreloadedCustomWidgetModelMessages,
@@ -476,6 +477,7 @@ export async function POST(request: Request) {
   const procedureTypes = getProcedureTypeMap();
   const omittedCustomWidgetTools = new Set<string>(customWidgetAuthoringContext.omittedToolNames);
   const mcpTools = extractMcpTools().filter((mcpTool) => !omittedCustomWidgetTools.has(mcpTool.name));
+  const customWidgetComponentDocumentBudget = createCustomWidgetComponentDocumentBudget();
 
   const homarrTools = Object.fromEntries(
     mcpTools.map((mcpTool) => {
@@ -488,6 +490,12 @@ export async function POST(request: Request) {
             (mcpTool.inputSchema ?? { type: "object", properties: {} }) as Parameters<typeof jsonSchema>[0],
           ),
           execute: async (input) => {
+            if (!customWidgetComponentDocumentBudget.claim(mcpTool.name)) {
+              return {
+                error:
+                  "The targeted component-document budget is exhausted. Continue with validation and fetch another component only in a new repair turn if a concrete issue requires it.",
+              };
+            }
             try {
               const procedure = mcpTool.pathInRouter.reduce<unknown>(
                 (current, segment) =>

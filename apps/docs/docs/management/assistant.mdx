@@ -73,15 +73,12 @@ disabled, unavailable, or returns no models.
 
 API keys and additional header values are encrypted in the Homarr database. They are decrypted only on
 the server for discovery and model requests, and they are never returned to the browser. Changing the
-provider or base URL clears existing credentials unless replacements are submitted with the change. This
-prevents credentials for one service from being sent to another endpoint.
+provider or base URL clears existing credentials. This prevents credentials for one service from being sent
+to another endpoint.
 
 When a key is already stored, the page shows its protected state instead of an ambiguous empty password
-field. **Replace key** starts a two-step flow: enter the new key, then review the provider, destination,
-and impact before confirming. The existing key remains active until confirmation, and its value cannot be
-restored after replacement. Removing only the API key also requires explicit confirmation. **Remove all
-credentials** uses a separate destructive confirmation because it also clears the selected model and
-disables the assistant.
+field. Removing the API key requires explicit confirmation. Save that removal before entering and saving a
+different key.
 
 :::info Container networking
 
@@ -249,6 +246,11 @@ does not stream the complete JSX a second time. When the request already names a
 create result and placement continues without asking the user to select it again. Preview and saved-definition results
 include safe Homarr paths that open in the assistant without a page reload. When placement is still a choice, the
 assistant uses the structured question UI instead of ending with a prose question.
+
+The authoring phase limits broad component-document retrieval and then moves into validation with the smallest useful
+reference set. Supplied samples and successful preview responses are treated as binding contracts: the assistant is
+instructed to render the requested fields, guard optional nested data, preserve every returned item, expose freshness
+when timestamps are available, and provide a refresh path for recoverable empty or error states.
 
 The shield control in the conversation header can enable automatic approvals for the current conversation.
 While enabled, Homarr accepts every affirmative approval step as it arrives: protected mutations are approved,

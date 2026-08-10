@@ -42,6 +42,13 @@ describe("customWidgetAssistantInstructions", () => {
     expect(customWidgetAssistantInstructions).toContain("customWidget_getComponentCatalog");
     expect(customWidgetAssistantInstructions).toContain("customWidget_getComponent");
     expect(customWidgetAssistantInstructions).toContain("customWidget_getSharedProps once");
+    expect(customWidgetAssistantInstructions).toContain("at most eight named component documents");
+    expect(customWidgetAssistantInstructions).toContain("at most four after loading a complete example");
+    expect(customWidgetAssistantInstructions).toContain("successful preview responses as binding contracts");
+    expect(customWidgetAssistantInstructions).toContain("Make initial states actionable");
+    expect(customWidgetAssistantInstructions).toContain("never load the catalog component-by-component");
+    expect(customWidgetAssistantInstructions).toContain("compact rows that remain scannable in narrow tiles");
+    expect(customWidgetAssistantInstructions).toContain("Label standalone icons");
     expect(customWidgetAssistantInstructions).toContain("customWidget_getExample");
     expect(customWidgetAssistantInstructions).toContain("templateLines");
     expect(customWidgetAssistantInstructions).toContain("installed `pokedex` example");
