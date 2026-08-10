@@ -1344,10 +1344,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Nov vsebnik",
-        "remove": "Odstrani vsebnik"
+        "create": "Nova dinamična vsebina",
+        "remove": "Odstrani dinamični odsek"
       },
       "option": {
         "title": {
@@ -1361,8 +1361,48 @@
         }
       },
       "remove": {
-        "title": "Odstrani vsebnik",
-        "message": "Ali ste prepričani, da želite odstraniti ta vsebnik? Elementi bodo premaknjeni na isto mesto v nadrejenem odseku."
+        "title": "Odstrani dinamični odsek",
+        "message": "Ali ste prepričani, da želite odstraniti ta dinamični odsek? Elementi bodo premaknjeni na isto mesto v nadrejenem odseku."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Ime"
+        }
+      },
+      "action": {
+        "create": "Nova kategorija",
+        "edit": "Preimenuj kategorijo",
+        "remove": "Odstrani kategorijo",
+        "moveUp": "Premaknite se navzgor",
+        "moveDown": "Premaknite se navzdol",
+        "createAbove": "Nova kategorija zgoraj",
+        "createBelow": "Nova kategorija spodaj",
+        "openAllInNewTabs": ""
+      },
+      "create": {
+        "title": "Nova kategorija",
+        "submit": "Dodaj kategorijo"
+      },
+      "remove": {
+        "title": "Odstrani kategorijo",
+        "message": "Ali ste prepričani, da želite odstraniti kategorijo {name}?"
+      },
+      "edit": {
+        "title": "Preimenuj kategorijo",
+        "submit": "Preimenuj kategorijo"
+      },
+      "menu": {
+        "label": {
+          "create": "Nova kategorija",
+          "changePosition": "Spremeni položaj",
+          "settings": "Nastavitve"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },

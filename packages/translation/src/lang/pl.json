@@ -1398,10 +1398,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Nowy kontener",
-        "remove": "Usuń kontener"
+        "create": "Nowa sekcja dynamiczna",
+        "remove": "Usuń sekcję dynamiczną"
       },
       "option": {
         "title": {
@@ -1415,8 +1415,48 @@
         }
       },
       "remove": {
-        "title": "Usuń kontener",
-        "message": "Czy na pewno chcesz usunąć ten kontener? Elementy zostaną przeniesione w tej samej lokalizacji w sekcji nadrzędnej."
+        "title": "Usuń sekcję dynamiczną",
+        "message": "Czy na pewno chcesz usunąć tę sekcję dynamiczną? Elementy zostaną przeniesione w tej samej lokalizacji w sekcji nadrzędnej."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Nazwa"
+        }
+      },
+      "action": {
+        "create": "Nowa kategoria",
+        "edit": "Zmień nazwę kategorii",
+        "remove": "Usuń kategorię",
+        "moveUp": "Przenieś w górę",
+        "moveDown": "Przenieś w dół",
+        "createAbove": "Nowa kategoria powyżej",
+        "createBelow": "Nowa kategoria poniżej",
+        "openAllInNewTabs": "Otwórz wszystkie w kartach"
+      },
+      "create": {
+        "title": "Nowa kategoria",
+        "submit": "Dodaj kategorię"
+      },
+      "remove": {
+        "title": "Usuń kategorię",
+        "message": "Czy na pewno chcesz usunąć kategorię {name}?"
+      },
+      "edit": {
+        "title": "Zmień nazwę kategorii",
+        "submit": "Zmień nazwę kategorii"
+      },
+      "menu": {
+        "label": {
+          "create": "Nowa kategoria",
+          "changePosition": "Zmiana pozycji",
+          "settings": "Ustawienia"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "Otwórz wszystkie w kartach",
+        "text": "Niektóre przeglądarki mogą blokować masowe otwieranie kart ze względów bezpieczeństwa. Homarr nie był w stanie otworzyć wszystkich okien, ponieważ Twoja przeglądarka zablokowała tę akcję. Proszę zezwolić na \"Otwórz wyskakujące okna\" i spróbować ponownie."
       }
     }
   },

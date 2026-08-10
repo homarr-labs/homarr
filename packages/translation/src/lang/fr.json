@@ -1397,10 +1397,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Nouveau conteneur",
-        "remove": "Supprimer le conteneur"
+        "create": "Nouvelle section dynamique",
+        "remove": "Supprimer la section dynamique"
       },
       "option": {
         "title": {
@@ -1414,8 +1414,48 @@
         }
       },
       "remove": {
-        "title": "Supprimer le conteneur",
-        "message": "Êtes-vous sûr de vouloir supprimer ce conteneur ? Les éléments seront déplacés au même emplacement dans la section parente."
+        "title": "Supprimer la section dynamique",
+        "message": "Êtes-vous sûr de vouloir supprimer cette section dynamique ? Les éléments seront déplacés au même emplacement dans la section parente."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Nom"
+        }
+      },
+      "action": {
+        "create": "Nouvelle catégorie",
+        "edit": "Renommer la catégorie",
+        "remove": "Supprimer la catégorie",
+        "moveUp": "Monter",
+        "moveDown": "Descendre",
+        "createAbove": "Nouvelle catégorie au-dessus",
+        "createBelow": "Nouvelle catégorie en dessous",
+        "openAllInNewTabs": "Tout ouvrir dans des onglets"
+      },
+      "create": {
+        "title": "Nouvelle catégorie",
+        "submit": "Ajouter une catégorie"
+      },
+      "remove": {
+        "title": "Supprimer la catégorie",
+        "message": "Êtes-vous sûr de vouloir supprimer la catégorie {name}?"
+      },
+      "edit": {
+        "title": "Renommer la catégorie",
+        "submit": "Renommer la catégorie"
+      },
+      "menu": {
+        "label": {
+          "create": "Nouvelle catégorie",
+          "changePosition": "Modifier la position",
+          "settings": "Réglages"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "Tout ouvrir dans des onglets",
+        "text": "Certains navigateurs peuvent bloquer l'ouverture en masse d'onglets pour des raisons de sécurité. Homarr n'a pas pu ouvrir toutes les fenêtres, car votre navigateur a bloqué cette action. Veuillez autoriser \"Ouvrir les fenêtres pop-ups\" et réessayer."
       }
     }
   },

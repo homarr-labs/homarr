@@ -1398,10 +1398,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Neuer Container",
-        "remove": "Container entfernen"
+        "create": "Neuer dynamischer Abschnitt",
+        "remove": "Dynamischen Abschnitt entfernen"
       },
       "option": {
         "title": {
@@ -1415,8 +1415,48 @@
         }
       },
       "remove": {
-        "title": "Container entfernen",
-        "message": "Möchten Sie diesen Container wirklich entfernen? Die Elemente werden an die gleiche Position im übergeordneten Bereich verschoben."
+        "title": "Dynamischen Abschnitt entfernen",
+        "message": "Möchten Sie diesen dynamischen Abschnitt wirklich entfernen? Die Elemente werden an die gleiche Position im übergeordneten Abschnitt verschoben."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Name"
+        }
+      },
+      "action": {
+        "create": "Neue Kategorie",
+        "edit": "Kategorie umbenennen",
+        "remove": "Kategorie entfernen",
+        "moveUp": "Nach oben bewegen",
+        "moveDown": "Nach unten bewegen",
+        "createAbove": "Neue Kategorie oben",
+        "createBelow": "Neue Kategorie unten",
+        "openAllInNewTabs": "Alle in Tabs öffnen"
+      },
+      "create": {
+        "title": "Neue Kategorie",
+        "submit": "Kategorie hinzufügen"
+      },
+      "remove": {
+        "title": "Kategorie entfernen",
+        "message": "Möchten Sie die Kategorie {name} wirklich entfernen?"
+      },
+      "edit": {
+        "title": "Kategorie umbenennen",
+        "submit": "Kategorie umbenennen"
+      },
+      "menu": {
+        "label": {
+          "create": "Neue Kategorie",
+          "changePosition": "Position wechseln",
+          "settings": "Einstellungen"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "Alle in tabs öffnen",
+        "text": "Einige Browser können aus Sicherheitsgründen das gleichzeitige Öffnen von mehreren Tabs blockieren. Homarr konnte nicht alle Fenster öffnen, weil Ihr Browser diese Aktion blockiert hat. Bitte erlauben Sie \"Pop-up Fenster öffnen\" und versuchen Sie es erneut."
       }
     }
   },

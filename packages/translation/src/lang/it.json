@@ -1398,10 +1398,10 @@
     }
   },
   "section": {
-    "container": {
+    "dynamic": {
       "action": {
-        "create": "Nuovo container",
-        "remove": "Rimuovi container"
+        "create": "Nuova sezione dinamica",
+        "remove": "Rimuovi sezione dinamica"
       },
       "option": {
         "title": {
@@ -1415,8 +1415,48 @@
         }
       },
       "remove": {
-        "title": "Rimuovi container",
-        "message": "Vuoi davvero rimuovere questo container? Gli elementi verranno spostati nella stessa posizione nella sezione padre."
+        "title": "Rimuovi sezione dinamica",
+        "message": "Vuoi davvero rimuovere questa sezione dinamica? Gli elementi verranno spostati nella stessa posizione nella sezione padre."
+      }
+    },
+    "category": {
+      "field": {
+        "name": {
+          "label": "Nome"
+        }
+      },
+      "action": {
+        "create": "Nuova categoria",
+        "edit": "Rinomina categoria",
+        "remove": "Rimuovi categoria",
+        "moveUp": "Sposta in alto",
+        "moveDown": "Sposta in basso",
+        "createAbove": "Nuova categoria sopra",
+        "createBelow": "Nuova categoria sotto",
+        "openAllInNewTabs": "Apri tutto in schede"
+      },
+      "create": {
+        "title": "Nuova categoria",
+        "submit": "Aggiungi categoria"
+      },
+      "remove": {
+        "title": "Rimuovi categoria",
+        "message": "Sei sicuro di voler rimuovere la categoria {name}?"
+      },
+      "edit": {
+        "title": "Rinomina categoria",
+        "submit": "Rinomina categoria"
+      },
+      "menu": {
+        "label": {
+          "create": "Nuova categoria",
+          "changePosition": "Cambia posizione",
+          "settings": "Impostazioni"
+        }
+      },
+      "openAllInNewTabs": {
+        "title": "Apri tutto in schede",
+        "text": "Alcuni browser potrebbero bloccare l'apertura multipla delle schede per motivi di sicurezza. Homarr non è riuscito ad aprire tutte le finestre perché il browser ha bloccato questa azione. Consenti l'apertura di finestre pop-up e riprova."
       }
     }
   },
