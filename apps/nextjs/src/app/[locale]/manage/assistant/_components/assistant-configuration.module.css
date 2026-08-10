@@ -94,7 +94,8 @@
 }
 
 .securityNote {
-  max-width: 66ch;
+  min-width: 0;
+  flex: 1;
 }
 
 .flowActions {

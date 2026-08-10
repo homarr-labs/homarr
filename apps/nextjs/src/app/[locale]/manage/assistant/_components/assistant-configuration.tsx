@@ -13,7 +13,6 @@ import {
   Group,
   Image,
   LoadingOverlay,
-  Modal,
   Paper,
   PasswordInput,
   Select,
@@ -31,7 +30,6 @@ import {
   IconCircleCheck,
   IconDatabaseSearch,
   IconKey,
-  IconLock,
   IconPlus,
   IconSearch,
   IconShieldCheck,
@@ -154,7 +152,6 @@ export const AssistantConfiguration = () => {
   const [modelId, setModelId] = useState("");
   const [enabled, setEnabled] = useState(false);
   const [webSearchEnabled, setWebSearchEnabled] = useState(false);
-  const [clearCredentialsOpened, setClearCredentialsOpened] = useState(false);
 
   useEffect(() => {
     setProvider(configuration?.provider ?? "openrouter");
@@ -285,27 +282,7 @@ export const AssistantConfiguration = () => {
     onError: (error) => showErrorNotification({ title: t("notification.error.title"), message: error.message }),
   });
 
-  const clearCredentials = clientApi.assistant.clearCredentials.useMutation({
-    onSuccess: async () => {
-      setClearCredentialsOpened(false);
-      setApiKey("");
-      setHeaders([]);
-      setModelId("");
-      setEnabled(false);
-      await Promise.all([
-        utils.assistant.getAdminConfiguration.invalidate(),
-        utils.assistant.discoverModels.invalidate(),
-        utils.assistant.getAvailability.invalidate(),
-      ]);
-      showSuccessNotification({
-        title: t("notification.credentialsCleared.title"),
-        message: t("notification.credentialsCleared.message"),
-      });
-    },
-    onError: (error) => showErrorNotification({ title: t("notification.error.title"), message: error.message }),
-  });
-
-  const pending = updateConnection.isPending || saveConfiguration.isPending || clearCredentials.isPending;
+  const pending = updateConnection.isPending || saveConfiguration.isPending;
 
   const resetCredentialFlow = () => {
     setApiKey("");
@@ -419,11 +396,6 @@ export const AssistantConfiguration = () => {
                   {t("serverTools.webSearch.label")}
                 </Badge>
               )}
-              {hasStoredApiKey && (
-                <Badge variant="light" color="teal" leftSection={<IconLock size={12} />}>
-                  {t("overview.keyProtected")}
-                </Badge>
-              )}
               {configuration?.enabled === false && (
                 <Badge variant="filled" color="gray">
                   {t("overview.disabled")}
@@ -508,15 +480,7 @@ export const AssistantConfiguration = () => {
             )
           }
           actions={
-            <Group justify="space-between">
-              <Button
-                variant="subtle"
-                color="red"
-                onClick={() => setClearCredentialsOpened(true)}
-                disabled={!configuration?.apiKeyConfigured && !configuration?.customHeadersConfigured}
-              >
-                {t("connection.clearCredentials")}
-              </Button>
+            <Group justify="flex-end">
               {credentialFlow === "idle" && (
                 <Button
                   leftSection={<IconCheck size={16} />}
@@ -820,28 +784,6 @@ export const AssistantConfiguration = () => {
           </Group>
         </ConfigurationSection>
       </Stack>
-
-      <Modal
-        opened={clearCredentialsOpened}
-        onClose={() => setClearCredentialsOpened(false)}
-        title={t("clearCredentials.title")}
-        centered
-      >
-        <Stack>
-          <Alert color="red" icon={<IconAlertTriangle size={18} />} title={t("clearCredentials.warningTitle")}>
-            {t("clearCredentials.description")}
-          </Alert>
-          <Divider />
-          <Group justify="flex-end">
-            <Button variant="default" onClick={() => setClearCredentialsOpened(false)}>
-              {t("clearCredentials.cancel")}
-            </Button>
-            <Button color="red" loading={clearCredentials.isPending} onClick={() => clearCredentials.mutate()}>
-              {t("clearCredentials.confirm")}
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
     </>
   );
 };
