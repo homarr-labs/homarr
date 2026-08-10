@@ -1,20 +1,19 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { OnboardingTour } from "@gfazioli/mantine-onboarding-tour";
 import { NavLink } from "@mantine/core";
 
 import { Link } from "@homarr/ui";
 
+import { TourTarget } from "./header/tour-target";
+
 export const CommonNavLink = (props: ClientNavigationLink) =>
   "href" in props ? <NavLinkHref {...props} /> : <NavLinkWithItems {...props} />;
 
-const TourTarget = ({ id, children }: { id?: string; children: ReactNode }) => {
-  if (!id) return <>{children}</>;
-  return <OnboardingTour.Target id={id}>{children}</OnboardingTour.Target>;
-};
+const withOptionalTourTarget = (id: string | undefined, children: ReactElement) =>
+  id ? <TourTarget id={id}>{children}</TourTarget> : children;
 
 const pathMatches = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
@@ -43,7 +42,7 @@ const NavLinkHref = (props: NavigationLinkHref) => {
       active={isClient && pathMatches(pathname, props.href)}
     />
   );
-  return <TourTarget id={tourId}>{link}</TourTarget>;
+  return withOptionalTourTarget(tourId, link);
 };
 
 const NavLinkWithItems = (props: NavigationLinkWithItems) => {
@@ -56,7 +55,7 @@ const NavLinkWithItems = (props: NavigationLinkWithItems) => {
       ))}
     </NavLink>
   );
-  return <TourTarget id={props["data-onboarding-tour-id"]}>{nav}</TourTarget>;
+  return withOptionalTourTarget(props["data-onboarding-tour-id"], nav);
 };
 
 interface CommonNavigationLinkProps {

@@ -1,7 +1,5 @@
-import type { QueryClient } from "@tanstack/react-query";
+import type { QueryClient, QueryKey } from "@tanstack/react-query";
 
-import { isPersistableWidgetQueryKey } from "@homarr/api/query-cache";
-
-export const removePersistedWidgetQueries = (queryClient: QueryClient) => {
-  queryClient.removeQueries({ predicate: (query) => isPersistableWidgetQueryKey(query.queryKey) });
+export const removeWidgetDataQueries = (queryClient: QueryClient, queryKeys: QueryKey[]) => {
+  queryKeys.forEach((queryKey) => queryClient.removeQueries({ queryKey }));
 };

@@ -63,6 +63,7 @@ test("schemas should match", () => {
       if (!("uniqueName" in sqliteColumn)) return;
       if (!("primary" in sqliteColumn)) return;
 
+      // oxlint-disable-next-line import/namespace -- this test intentionally compares matching dynamic schema keys.
       const mysqlTable = mysqlSchema[tableName];
 
       const mysqlColumn = mysqlTable[columnName as keyof typeof mysqlTable] as object;
@@ -84,6 +85,7 @@ test("schemas should match", () => {
       ).toEqual(mysqlColumn.primary);
     });
 
+    // oxlint-disable-next-line import/namespace -- this test intentionally compares matching dynamic schema keys.
     const mysqlTable = mysqlSchema[tableName];
     const sqliteForeignKeys = sqliteTable[Symbol.for("drizzle:SQLiteInlineForeignKeys") as keyof typeof sqliteTable] as
       | SqliteForeignKey[]
@@ -144,6 +146,7 @@ test("schemas should match for postgresql", () => {
   objectEntries(sqliteSchema).forEach(([tableName, sqliteTable]) => {
     // keys of sqliteSchema and postgresqlSchema are the same, so we can safely use tableName as key
     // skipcq: JS-E1007
+    // oxlint-disable-next-line import/namespace -- this test intentionally compares matching dynamic schema keys.
     const postgresqlTable = postgresqlSchema[tableName];
     Object.entries(sqliteTable).forEach(([columnName, sqliteColumn]: [string, object]) => {
       if (!("isUnique" in sqliteColumn)) return;

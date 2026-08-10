@@ -43,7 +43,7 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
 }
 
 interface WeatherProps extends Pick<WidgetComponentProps<"weather">, "options"> {
-  weather: RouterOutputs["widget"]["weather"]["atLocation"];
+  weather: NonNullable<RouterOutputs["widget"]["weather"]["atLocation"]>;
 }
 
 const DailyWeather = ({ options, weather }: WeatherProps) => {

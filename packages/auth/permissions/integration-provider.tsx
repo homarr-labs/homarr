@@ -3,14 +3,9 @@
 import type { PropsWithChildren } from "react";
 import { createContext, useContext } from "react";
 
-import type { IntegrationKind } from "@homarr/definitions";
-
 interface IntegrationContextProps {
   integrations: {
     id: string;
-    name: string;
-    url: string;
-    kind: IntegrationKind;
     permissions: {
       hasFullAccess: boolean;
       hasInteractAccess: boolean;

@@ -1,19 +1,21 @@
+"use client";
+
 import { Fragment } from "react";
 import { Card, CardSection, Divider, Group, Stack, Text, Title } from "@mantine/core";
 
-import { getI18n } from "@homarr/translation/server";
+import { useScopedI18n } from "@homarr/translation/client";
 
 interface DangerZoneRootProps {
   children: React.ReactNode[] | React.ReactNode;
 }
 
-export const DangerZoneRoot = async ({ children }: DangerZoneRootProps) => {
-  const t = await getI18n();
+export const DangerZoneRoot = ({ children }: DangerZoneRootProps) => {
+  const t = useScopedI18n("common");
 
   return (
     <Stack gap="sm">
       <Title c="red.8" order={2}>
-        {t("common.dangerZone")}
+        {t("dangerZone")}
       </Title>
       <Card style={{ borderColor: "var(--mantine-color-red-8)", borderWidth: 3 }}>
         <Stack gap="sm">
