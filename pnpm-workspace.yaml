@@ -234,6 +234,7 @@ overrides:
 patchedDependencies:
   "@types/node-unifi": "patches/@types__node-unifi.patch"
   docker-modem@5.0.7: patches/docker-modem@5.0.7.patch
+  dockerode@5.0.1: patches/dockerode@5.0.1.patch
   "trpc-to-openapi": "patches/trpc-to-openapi.patch"
 
 allowUnusedPatches: true
