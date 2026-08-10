@@ -1,0 +1,21 @@
+PHASE2-FINDINGS.md
+  s_a70c07ac5b7a5a::t_060f703cad9df0 961-990
+scripts/benchmarks/compare-stress-runs.mjs
+  s_a70c07ac5b7a5a::t_11340e88bb4fea 64-68,70-75,77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "dc460575448bb674dbac9e7712d86d78a28c3b4a",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
