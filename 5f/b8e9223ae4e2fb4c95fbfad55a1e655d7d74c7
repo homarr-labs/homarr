@@ -1,0 +1,19 @@
+PHASE2-FINDINGS.md
+  s_a70c07ac5b7a5a::t_ad82ea41bd3fb2 961-1011
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "5fb8e9223ae4e2fb4c95fbfad55a1e655d7d74c7",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
