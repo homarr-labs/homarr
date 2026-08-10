@@ -1,0 +1,54 @@
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_093d61b162b9ca::t_ab2e49753f52ea 529-532
+apps/workshop/tests/workshop-contracts.mjs
+  s_093d61b162b9ca::t_3967cf6eac2436 18,44
+apps/docs/src/components/workshop/DetailComments.tsx
+  s_093d61b162b9ca::t_ab2e49753f52ea 162-165
+  s_093d61b162b9ca::t_43b10731881d11 293-294
+apps/docs/docs/management/workshop/index.mdx
+  s_093d61b162b9ca::t_e6df1a9e55b268 98-99
+apps/docs/src/components/workshop/WorkshopAccountMenu.tsx
+  s_093d61b162b9ca::t_d617b315b7d0b2 21-23,56,75
+apps/docs/src/components/workshop/WorkshopAdmin.tsx
+  s_093d61b162b9ca::t_4bb52ed3bf897d 198-199,204-205,209,241
+apps/docs/src/components/workshop/WorkshopApp.tsx
+  s_093d61b162b9ca::t_9dc80297ad48d7 102,360-361,366-367,369
+apps/nextjs/src/components/workshop/workshop-browser.tsx
+  s_093d61b162b9ca::t_50ba59c2d014ff 166,257,310
+apps/workshop/README.md
+  s_093d61b162b9ca::t_005d905e27771b 94-95
+apps/workshop/pb_hooks/workshop.pb.js
+  s_093d61b162b9ca::t_068e127a7cf7ce 14,98,135
+apps/workshop/pb_migrations/1784240000_workshop_widgets.js
+  s_093d61b162b9ca::t_3ab95395b10fee 6-8,66,238
+apps/workshop/tests/oauth-sync.integration.mjs
+  s_093d61b162b9ca::t_7098d42a9b8eb2 27
+apps/workshop/tests/workshop.integration.mjs
+  s_093d61b162b9ca::t_a51bc2f492207c 49,59,82,88,224,235
+packages/api/src/router/custom-widget/workshop-procedures.ts
+  s_093d61b162b9ca::t_2afed2a1566478 99,122
+packages/workshop/src/backend.ts
+  s_093d61b162b9ca::t_650993789f1995 74,98,170,190,215,268,502,539,554,568
+packages/workshop/src/client.spec.ts
+  s_093d61b162b9ca::t_bb6d3ec168a3e4 73,85,217
+packages/workshop/src/schema.spec.ts
+  s_093d61b162b9ca::t_ac5dcc90123ddb 108
+packages/workshop/src/schema.ts
+  s_093d61b162b9ca::t_7f5849cfb7e2ce 93,116,176,193
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "893fcd6ed18aff73df863e73ecab23ed35980ecd",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
