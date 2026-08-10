@@ -3,16 +3,7 @@ import { hkdfSync } from "node:crypto";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { MetadataExtractor } from "@ai-sdk/openai-compatible";
 import type { ToolSet, UIMessage } from "ai";
-import {
-  convertToModelMessages,
-  createUIMessageStream,
-  createUIMessageStreamResponse,
-  jsonSchema,
-  stepCountIs,
-  streamText,
-  tool,
-} from "ai";
-import { parse, stringify } from "superjson";
+import { createUIMessageStream, createUIMessageStreamResponse, jsonSchema, stepCountIs, streamText, tool } from "ai";
 import { z } from "zod/v4";
 
 import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
@@ -46,6 +37,7 @@ import type {
 import { extractMcpTools } from "../../mcp/_extract-tools";
 import { getRequestedMentionIds, sanitizeAttachmentFilename } from "./assistant-chat-input";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
+import { convertAssistantMessagesToModelMessages } from "./assistant-message-conversion";
 import {
   getOpenRouterWebSearchRequests,
   getOpenRouterWebSearchSources,
@@ -58,6 +50,7 @@ import { assistantExecutionPolicy } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { getSafeAssistantToolError } from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
+import { toAssistantToolOutput } from "./assistant-tool-output";
 import {
   createCustomWidgetDynamicContextController,
   getCustomWidgetAuthoringContext,
@@ -509,7 +502,7 @@ export async function POST(request: Request) {
               const result = await (procedure as (value: unknown) => Promise<unknown>)(
                 input && Object.keys(input as object).length > 0 ? input : undefined,
               );
-              return parse(stringify(result));
+              return toAssistantToolOutput(result);
             } catch (error) {
               logger.error("Assistant tool call failed", {
                 toolName: mcpTool.name,
@@ -587,7 +580,9 @@ export async function POST(request: Request) {
     let hasReportedCost = false;
     let upstreamCost = 0;
     let hasUpstreamCost = false;
-    const initialModelMessages = await convertToModelMessages(prepareMessagesForModel(incomingMessages));
+    const initialModelMessages = await convertAssistantMessagesToModelMessages(
+      prepareMessagesForModel(incomingMessages),
+    );
     const modelMessages =
       customWidgetAuthoringContext.systemContext.length > 0
         ? prunePreloadedCustomWidgetModelMessages(initialModelMessages)
