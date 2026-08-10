@@ -259,6 +259,8 @@ const createHistoryAdapter = (threadId: string | undefined): ThreadHistoryAdapte
   withFormat<TMessage, TStorageFormat extends Record<string, unknown>>(
     formatAdapter: MessageFormatAdapter<TMessage, TStorageFormat>,
   ) {
+    // assistant-ui's current AI SDK v7 runtime intentionally keeps this identifier for its
+    // persisted UIMessage wire format. It is a storage codec name, not the installed SDK version.
     if (formatAdapter.format !== "ai-sdk/v6") {
       throw new Error(`Unsupported assistant message format: ${formatAdapter.format}`);
     }
@@ -375,6 +377,8 @@ const AssistantThreadRuntime = () => {
     sendAutomaticallyWhen: shouldAutomaticallyContinueAssistant,
   });
 
+  // The lower-level AI SDK v7 runtime is intentional: Homarr supplies its own tRPC-backed
+  // thread list and history adapters and shares this chat instance with its custom transport.
   const runtime = useAISDKRuntime(chat, {
     ...assistantAiSdkRuntimeOptions,
     adapters: {

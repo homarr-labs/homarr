@@ -305,6 +305,16 @@ describe("AssistantRuntimeProviderWithTools", () => {
     await act(async () => root.unmount());
   });
 
+  test("forwards main-thread reloads through the surface runtime", async () => {
+    const { root, a, sharedRuntime } = await renderSurfaceTestAssistant();
+    const reloadMainThread = vi.spyOn(sharedRuntime.threads, "reloadMainThread").mockResolvedValue();
+
+    await act(async () => a.threads().reloadMainThread());
+
+    expect(reloadMainThread).toHaveBeenCalledOnce();
+    await act(async () => root.unmount());
+  });
+
   test("restores focus after the Lexical run-start behavior tries to focus every surface", async () => {
     const outsideInput = document.createElement("input");
     document.body.append(outsideInput);
