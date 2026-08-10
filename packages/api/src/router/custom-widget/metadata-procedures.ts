@@ -108,7 +108,8 @@ export const metadataProcedures = {
     .query(({ input }) => {
       const example = getCustomWidgetExample(input.name);
       if (!example) throw new TRPCError({ code: "NOT_FOUND", message: "Custom JSX example not found" });
-      return example;
+      const { template, ...widget } = example.widget;
+      return { ...example, widget: { ...widget, templateLines: template.split("\n") } };
     }),
 
   validate: permissionRequiredProcedure

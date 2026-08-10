@@ -240,8 +240,13 @@ runtime and security references, and the current JSON Schema to the trusted auth
 extra provider round trip for the large `customWidget_getSkill` and `customWidget_schema` results. If the model
 discovers the Custom Widget workflow mid-response, Homarr promotes the same resources before its next step and
 removes the now-redundant resource calls from provider history. Multiline JSX uses `templateLines` to avoid fragile
-streamed JSON escaping. The assistant validates the candidate, creates a preview, executes every returned preview query,
-checks the actual HTTP status and response shape, and iterates before saving. Preview and saved-definition results
+streamed JSON escaping. Custom Widget authoring tools are mandatory: the assistant validates the complete candidate,
+creates a preview from that exact version, executes every returned preview query, checks the actual HTTP status and
+response shape, and repeats the entire validation and preview sequence after any material JSX, request, source, option,
+or binding change. It only reports a widget as validated, working, created, or placed when the corresponding tool result
+proves that checkpoint. Large widgets are saved from the exact final tested preview session, so the approved create step
+does not stream the complete JSX a second time. When the request already names a board, that board is carried into the
+create result and placement continues without asking the user to select it again. Preview and saved-definition results
 include safe Homarr paths that open in the assistant without a page reload. When placement is still a choice, the
 assistant uses the structured question UI instead of ending with a prose question.
 
