@@ -22,7 +22,19 @@ const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
 
 await context.addInitScript(() => {
-  const state = { commits: 0, byComponent: new Map<string, number>(), roots: new Map<string, number>(), started: 0 };
+  const state = {
+    commits: 0,
+    byComponent: new Map<string, number>(),
+    roots: new Map<string, number>(),
+    started: 0,
+    /**
+     * Whether any fiber carried `actualDuration`. React only populates it in a profiling
+     * build, so on a production build every fiber fails the re-render test and the
+     * attribution comes back empty — which reads as "nothing re-rendered" rather than
+     * "this build cannot tell you". Tracked so the report can say which it is.
+     */
+    sawTimings: false,
+  };
   (globalThis as unknown as Record<string, unknown>).__homarrRenderStats = state;
 
   const nameOf = (fiber: { type?: unknown; elementType?: unknown }) => {
@@ -60,6 +72,7 @@ await context.addInitScript(() => {
         if (!fiber || seen.has(fiber) || depth > 2000) return;
         seen.add(fiber);
         const alternate = fiber.alternate as Record<string, unknown> | null;
+        if (fiber.actualDuration !== undefined) state.sawTimings = true;
         // A fiber re-rendered if it committed new work over a previous version.
         if (alternate && fiber.actualDuration !== undefined && (fiber.actualDuration as number) > 0) {
           const name = nameOf(fiber as never);
@@ -122,15 +135,15 @@ await page.locator("css=button[type='submit']").click();
 await page.waitForFunction(() => !window.location.pathname.includes("/auth/login"), undefined, { timeout: 60_000 });
 
 await page.goto(`${baseUrl}/boards/${boardName}`, { waitUntil: "domcontentloaded" });
-await page.locator("[data-homarr-dev-benchmark-board]").waitFor({ state: "visible", timeout: 120_000 });
+// Attached, not visible: a board with zero items renders this container hidden, and the
+// empty-board case is exactly the control needed to tell shell churn from widget churn.
+await page.locator("[data-homarr-dev-benchmark-board]").waitFor({ state: "attached", timeout: 120_000 });
 await page
   .waitForFunction(
     () => {
       const items = [...document.querySelectorAll('[data-type="item"]')];
-      return (
-        items.length > 0 &&
-        items.every((item) => item.querySelector("[data-homarr-widget-ready],[data-homarr-widget-error]"))
-      );
+      // An empty board legitimately has zero items; only require settling if any exist.
+      return items.every((item) => item.querySelector("[data-homarr-widget-ready],[data-homarr-widget-error]"));
     },
     undefined,
     { timeout: 120_000 },
@@ -154,9 +167,11 @@ const stats = await page.evaluate(() => {
     byComponent: Map<string, number>;
     roots: Map<string, number>;
     started: number;
+    sawTimings: boolean;
   };
   return {
     commits: state.commits,
+    sawTimings: (state as unknown as { sawTimings: boolean }).sawTimings,
     elapsedMs: Date.now() - state.started,
     top: [...state.byComponent.entries()].sort((a, b) => b[1] - a[1]).slice(0, 20),
     roots: [...state.roots.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12),
@@ -167,9 +182,19 @@ const perMinute = (stats.commits / stats.elapsedMs) * 60_000;
 console.log(
   `\ncommits while idle: ${stats.commits} over ${(stats.elapsedMs / 1000).toFixed(0)}s (${perMinute.toFixed(1)}/min)`,
 );
-console.log("\nupdate entered the tree at (commit roots):");
-for (const [name, count] of stats.roots) console.log(String(count).padStart(8), ` ${name}`);
-console.log("\nre-renders by component:");
-for (const [name, count] of stats.top) console.log(String(count).padStart(8), ` ${name}`);
+if (!stats.sawTimings) {
+  // Without this the empty tables below read as "nothing re-rendered", which is the
+  // opposite of the truth when the commit count is high.
+  console.log(
+    `\nNO PER-COMPONENT ATTRIBUTION: this is a production React build, which does not populate` +
+      `\nfiber.actualDuration. The commit count above is still valid. For attribution, build with` +
+      `\n  docker build --build-arg HOMARR_PROFILING=true . -t homarr:performance`,
+  );
+} else {
+  console.log("\nupdate entered the tree at (commit roots):");
+  for (const [name, count] of stats.roots) console.log(String(count).padStart(8), ` ${name}`);
+  console.log("\nre-renders by component:");
+  for (const [name, count] of stats.top) console.log(String(count).padStart(8), ` ${name}`);
+}
 console.log(`\n${JSON.stringify({ commits: stats.commits, perMinute: Number(perMinute.toFixed(1)) })}`);
 await browser.close();

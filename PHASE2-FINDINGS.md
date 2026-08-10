@@ -283,23 +283,60 @@ point where the update entered the tree.
 re-renders over 30,000 times. That is the churn behind the 650 MB peak: it is transient
 allocation, not retention.
 
-Roughly 80% of those commits enter at the *same place*: an anonymous provider at depth 2
-whose props are `[value, children]` and whose value is `{appDir}` — Next.js's internal
-`HeadManagerContext`. Its value is a fresh object literal on every App Router render, so
-each one re-renders the entire application below it. The remainder enter around
-`__next_metadata_boundary__` / `<title>`, which points the same way.
+> ### Correction: this was wrong, and it was the wrong thing to chase
+>
+> An earlier round of this work concluded that ~80% of commits entered at an anonymous depth-2
+> provider with props `[value, children]` and value `{appDir}` — Next's internal
+> `HeadManagerContext` — and therefore that "the App Router root re-renders about once a second"
+> was the dominant cost and the highest-value next step.
+>
+> **Both claims are false.** Measuring the same idle churn against boards of different sizes:
+>
+> | board | items | idle commits/min |
+> | --- | --- | --- |
+> | `hey` | 0 | **0.0** |
+> | `footbol` | 3 | **0.0** |
+> | `default` | 28 | **76.0** |
+>
+> A 3-item board commits **zero** times per minute. If the App Router re-rendered on a timer,
+> every board would churn regardless of its contents. The churn is entirely widget-driven.
+>
+> The original attribution was an artefact: `measure-rerenders.mts` decides a fiber re-rendered
+> from `fiber.actualDuration`, which **only a React profiling build populates**. On a production
+> build every fiber fails that test and both attribution tables come back empty — and an empty
+> table reads as "nothing here" rather than "this build cannot tell you". The tool now says which
+> case it is instead of printing nothing. The depth-2 provider was whatever survived that filter
+> in a profiling build, not the cause.
 
-So the dominant cost is the **App Router root re-rendering about once a second**, not any
-individual widget. No polling `router.refresh()` exists in application code, so the
-trigger is inside Next's own router/metadata handling and is not fixed by anything in
-this PR. That is the next thing to chase, and it is worth more than any further
-component-level tuning: everything else is downstream of it.
+Attribution that works on a production build uses DOM mutations instead —
+`scripts/benchmarks/measure-widget-churn.mts`. Every re-render that changes anything observable
+mutates the DOM, and the mutated node's nearest `[data-type="item"]` ancestor names the widget.
+On the 28-item board, idle for 45 s:
+
+| widget | mutations | share |
+| --- | --- | --- |
+| **beszelSystemStats** | **470** | **64%** |
+| beszelSystemTable | 77 | 11% |
+| beszelSystemGrid | 52 | 7% |
+| dockerContainers | 22 | 3% |
+| immich-albumCarousel | 14 | 2% |
+| downloads | 4 | 1% |
+| (outside any widget) | 93 | 13% |
+
+**Three Beszel widgets account for 82% of all idle churn**, one of them for 64% on its own, at
+10.4 mutations per second.
+
+The mechanism is in `packages/widgets/src/beszel/_shared/use-live-stats.ts`: the tRPC
+subscription's `onData` called `setSystemStats((prev) => [...prev, record])` — one React state
+update per record, each allocating a fresh 60-element array. Beszel pushes one record per second
+*per system*, plus one per container, so a widget watching several systems drives a steady stream
+of renders. Records are now accumulated outside React and flushed once a second, which is the
+fastest a 60-second sliding-window chart can meaningfully show. Nothing is dropped.
 
 `useTimeAgo` was calling `setState` every second even when the rendered label was
 unchanged ("3 minutes ago" holds for a minute), so it now compares before setting. This
-is a correctness fix — idle commits stayed within their 73–96 range afterwards, because
-the app-root churn dominates and this hook is not what drives it. Recorded as *not* a
-measured win.
+is a correctness fix — idle commits did not move measurably, because the Beszel widgets
+dominate and this hook is not what drives them. Recorded as *not* a measured win.
 
 
 ## What is actually hogging the memory
