@@ -9,7 +9,7 @@
           "scratch": "从零开始",
           "importOldmarr": "从 1.0 之前的 Homarr 导入",
           "restoreSqlite": "从 SQLite 备份恢复",
-          "restoreSqliteDescription": "上传来自先前 Homarr 实例的完整 SQLite 数据库备份。这将恢复所有面板、用户、应用、集成和设置。",
+          "restoreSqliteDescription": "上传之前 Homarr 实例的完整 SQLite 数据库备份。这将恢复所有面板、用户、应用、集成和设置。",
           "backToOptions": "← 返回设置选项"
         }
       },
@@ -115,10 +115,10 @@
           }
         },
         "urlTemplate": {
-          "label": "基础 URL",
+          "label": "Base URL",
           "placeholder": "homelab.local 或 192.168.1.1",
           "hint": "输入您的基础域或 IP 以自动填充集成 URL",
-          "warning": "立即设置基础 URL 将自动填充所有集成 URL，从而节省设置时间",
+          "warning": "现在设置基础 URL，将自动填充所有集成的 URL，在配置过程中为您节省时间",
           "preview": "例如 {example}",
           "mode": {
             "subdomain": "子域名",
@@ -199,8 +199,8 @@
         "label": "为 ping 使用图标"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "启用右击小组件",
+        "description": "右键单击小组件时显示 Homarr 的上下文菜单。禁用后可使用浏览器的默认菜单（例如“在新标签页中打开链接”）。"
       },
       "defaultSearchEngine": {
         "label": "默认搜索引擎"
@@ -688,6 +688,211 @@
       "add": "添加应用"
     }
   },
+  "customWidget": {
+    "page": {
+      "list": {
+        "title": "自定义小组件",
+        "noResults": "暂无自定义小组件，创建第一个吧！",
+        "loading": "加载中……"
+      },
+      "create": {
+        "title": "创建自定义小组件",
+        "subtitle": "定义 API URL、认证方式以及响应数据的显示方式。"
+      },
+      "edit": {
+        "title": "编辑自定义小组件"
+      }
+    },
+    "action": {
+      "create": "创建",
+      "import": "导入",
+      "save": "保存",
+      "delete": "删除自定义小组件",
+      "deleteConfirm": "确定要删除“{name}”吗？此操作不可撤销。",
+      "export": "导出",
+      "addMapping": "添加映射",
+      "addColumn": "添加列",
+      "edit": "编辑",
+      "removeMapping": "删除映射",
+      "removeColumn": "删除列",
+      "addItem": "添加项",
+      "removeItem": "删除项",
+      "addBar": "添加条",
+      "duplicate": "复制",
+      "copyAiPrompt": "复制 AI 提示词",
+      "enable": "启用",
+      "disable": "禁用",
+      "menu": "操作"
+    },
+    "field": {
+      "name": "名称",
+      "description": "描述",
+      "iconUrl": "图标 URL",
+      "url": "URL",
+      "authType": "认证类型",
+      "headerName": "标头/查询参数名称",
+      "method": "方法",
+      "requestBody": "请求体",
+      "displayType": "显示类型",
+      "jsonPath": "JSON 路径",
+      "jsonPathHint": "使用 JSONPath 语法提取值，例如 $.data.temperature 或 $.items[0].name",
+      "label": "标签",
+      "unit": "单位",
+      "mappings": "映射",
+      "tablePath": "数组 JSON 路径",
+      "tablePathHint": "响应中数组的路径，例如 $.data.items",
+      "columns": "列",
+      "header": "标头",
+      "items": "项",
+      "gridColumns": "网格列数",
+      "cardStyle": "卡片样式",
+      "bars": "条形图",
+      "valuePath": "数值的 JSON 路径",
+      "maxPath": "最大值对应的 JSON 路径",
+      "showPercentage": "显示百分比",
+      "barSize": "条形图尺寸",
+      "goodValues": "良好值（逗号分隔）",
+      "dotSize": "点大小",
+      "valueSize": "数值大小",
+      "labelPosition": "标签位置",
+      "kvLayout": "布局",
+      "striped": "交替行颜色",
+      "compact": "紧凑模式",
+      "maxHeight": "最大高度 (px)",
+      "color": "颜色",
+      "buttonLabel": "按钮标签",
+      "buttonColor": "按钮颜色",
+      "confirmText": "确认文本",
+      "confirmTextHint": "如果设置，执行请求前将显示确认对话框",
+      "successMessage": "成功消息",
+      "successMessageHint": "成功执行后显示的消息",
+      "enabled": "启用",
+      "template": {
+        "label": "JSX 模板",
+        "description": "Mantine JSX 模板。通过数据绑定（如 data.name）访问 API 响应字段。仅使用白名单组件。禁止使用：constructor、__proto__、eval、Function、window、document。"
+      }
+    },
+    "placeholder": {
+      "exampleLabel": "CPU 温度",
+      "exampleLabelShort": "CPU 温度",
+      "exampleHeader": "名称",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API-Key",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "online, true, up",
+      "color": "blue"
+    },
+    "cardStyleOption": {
+      "filled": "填充",
+      "outline": "轮廓",
+      "subtle": "淡雅"
+    },
+    "layoutOption": {
+      "list": "列表",
+      "grid": "网格"
+    },
+    "sizeOption": {
+      "sm": "小",
+      "md": "中",
+      "lg": "大",
+      "xl": "特大"
+    },
+    "labelPositionOption": {
+      "above": "上方",
+      "below": "下方"
+    },
+    "fieldset": {
+      "general": "常规",
+      "connection": "API 连接",
+      "display": "显示配置"
+    },
+    "displayTypeDescription": {
+      "singleValue": "显示一个带标签和单位的提取值",
+      "keyValue": "并排显示多个带标签的值",
+      "table": "以表格格式显示数据行",
+      "statGrid": "网格中带颜色的统计卡片 — 类似于 Pi-Hole 或 Speedtest 小组件",
+      "progressBars": "显示使用量或完成进度的进度条 — 用于磁盘、内存、配额",
+      "statusIndicator": "显示在线/离线或健康状态的彩色状态点",
+      "countGrid": "紧凑网格中的数字 + 标签计数器",
+      "raw": "用于调试的格式化 JSON 输出",
+      "actionButton": "点击时触发请求的按钮",
+      "customJsx": "使用白名单 Mantine 组件的自定义 JSX 布局，支持完整 API 数据绑定"
+    },
+    "method": {
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "删除",
+      "PATCH": "PATCH"
+    },
+    "authType": {
+      "none": "空",
+      "bearer": "Bearer 令牌",
+      "basic": "基本认证",
+      "apiKeyHeader": "API 密钥（请求头）",
+      "apiKeyQuery": "API 密钥（查询参数）"
+    },
+    "displayType": {
+      "singleValue": "单个值",
+      "keyValue": "键值",
+      "table": "表格",
+      "statGrid": "统计网格",
+      "progressBars": "进度条",
+      "statusIndicator": "状态指示器",
+      "countGrid": "计数网格",
+      "raw": "原始 JSON",
+      "actionButton": "操作按钮",
+      "customJsx": "自定义 JSX"
+    },
+    "secret": {
+      "apiKey": "API 密钥/令牌",
+      "username": "用户名",
+      "password": "密码",
+      "savedPlaceholder": "•••••••（已保存，留空则保持不变）"
+    },
+    "preview": {
+      "title": "预览",
+      "test": "测试",
+      "hint": "点击“测试”可使用当前配置预览 API 响应。",
+      "rawResponse": "原始 JSON 响应"
+    },
+    "notification": {
+      "created": "小组件“{name}”创建成功。",
+      "updated": "小组件“{name}”更新成功。",
+      "deleted": "小组件“{name}”已删除。",
+      "imported": "小组件导入成功。",
+      "aiPromptCopied": "AI 提示词已复制到剪贴板",
+      "aiPromptDescription": "复制一个预置提示词，可粘贴到任何 AI 聊天机器人（ChatGPT、Claude、Gemini...）中。其中包含完整的小组件架构和您的 API 响应数据，AI 可据此为您生成可直接导入的 JSON 配置。",
+      "aiPromptCopy": "复制到剪贴板",
+      "aiPromptNoResponse": "提示：先运行测试，将 API 响应包含在提示词中，可获得更好效果。",
+      "aiPromptCopyError": "复制提示词到剪贴板失败，您的浏览器可能不支持此功能。",
+      "createError": "创建小组件失败。请检查您的 API 端点是否可访问。",
+      "updateError": "更新小组件失败，您的更改未能保存。",
+      "importError": "导入小组件失败。请确保文件为有效的自定义小组件 JSON 导出文件。",
+      "exportError": "导出小组件失败。",
+      "duplicated": "小组件“{name}”已复制。",
+      "duplicateError": "复制小组件失败。",
+      "toggleError": "切换小组件状态失败。",
+      "deleteError": "删除小组件失败。",
+      "previewError": "获取预览失败，请检查 URL 后重试。",
+      "executed": "操作执行成功。",
+      "executeError": "操作失败：{error}"
+    },
+    "table": {
+      "name": "名称",
+      "url": "URL",
+      "display": "显示"
+    },
+    "widget": {
+      "disabled": "此小组件已禁用"
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -789,8 +994,8 @@
       "create": "新建集成"
     },
     "grid": {
-      "widgetCount": "{count} 个小部件",
-      "noWidgets": "无小部件",
+      "widgetCount": "{count} 个小组件",
+      "noWidgets": "暂无小组件",
       "detected": "通过 Docker 检测到"
     },
     "category": {
@@ -803,10 +1008,10 @@
       "downloadClient": "下载",
       "usenet": "Usenet",
       "torrent": "种子",
-      "miscellaneous": "杂项",
+      "miscellaneous": "其它",
       "smartHomeServer": "智能家居",
       "indexerManager": "索引器",
-      "healthMonitoring": "健康",
+      "healthMonitoring": "健康状态",
       "search": "搜索",
       "mediaTranscoding": "转码",
       "networkController": "网络",
@@ -820,7 +1025,7 @@
       "mediaMonitoring": "监控",
       "speedtest": "速度测试",
       "analytics": "分析",
-      "vpn": "",
+      "vpn": "VPN",
       "mediaLibrary": "媒体库",
       "uptimeMonitoring": "运行时间监控"
     },
@@ -1085,12 +1290,12 @@
           "newLabel": "新建API密钥（机密）"
         },
         "patchmonApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API 密钥",
+          "newLabel": "新 API Key"
         },
         "patchmonApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API 机密",
+          "newLabel": "新 API Secret"
         },
         "githubAppId": {
           "label": "应用 ID",
@@ -1136,20 +1341,20 @@
       }
     },
     "traefik": {
-      "name": "",
-      "description": ""
+      "name": "Traefik",
+      "description": "云原生反向代理和负载均衡器"
     },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "用于归档和组织扫描文档的文档管理系统"
     },
     "patchmon": {
-      "name": "",
-      "description": ""
+      "name": "PatchMon",
+      "description": "Linux 主机的补丁管理和监控"
     },
     "bazarr": {
-      "name": "",
-      "description": ""
+      "name": "Bazarr",
+      "description": "Sonarr 和 Radarr 的配套应用，用于管理和下载字幕"
     }
   },
   "media": {
@@ -1216,7 +1421,7 @@
       "saveChanges": "保存更改",
       "cancel": "取消",
       "delete": "删除",
-      "discard": "Discard",
+      "discard": "放弃",
       "close": "关闭",
       "confirm": "确认",
       "continue": "继续",
@@ -1233,9 +1438,9 @@
     "iconPicker": {
       "label": "图标 URL",
       "header": "输入名称或对象来筛选图标… Homarr 将为您搜索 {countIcons} 图标。",
-      "headerLoading": "",
-      "noResults": "",
-      "error": ""
+      "headerLoading": "输入以搜索图标…",
+      "noResults": "没有与“{search}”匹配的图标。",
+      "error": "无法加载图标。"
     },
     "colorScheme": {
       "options": {
@@ -1287,7 +1492,7 @@
         "switchToDarkMode": "切换到暗黑模式",
         "switchToLightMode": "切换到日间模式",
         "management": "管理中心",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "偏好设置",
         "logout": "退出登录",
         "login": "登录",
@@ -1418,15 +1623,15 @@
     "menu": {
       "label": {
         "settings": "设置",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "refresh": "刷新",
+        "options": "选项",
+        "actions": "操作"
       },
       "status": {
-        "success": "",
-        "error": "",
-        "loading": "",
-        "idle": ""
+        "success": "正常",
+        "error": "错误",
+        "loading": "加载中",
+        "idle": "空闲"
       }
     },
     "create": {
@@ -1454,7 +1659,7 @@
     "edit": {
       "title": "编辑项目",
       "tab": {
-        "widget": "编辑小部件",
+        "widget": "编辑小组件",
         "app": "编辑应用"
       },
       "app": {
@@ -1486,11 +1691,11 @@
   },
   "widget": {
     "integrationSelect": {
-      "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "configureIntegrationFirst": "请先连接一个集成",
+      "loading": "加载中...",
+      "placeholder": "选择一个选项",
+      "noResults": "未找到结果",
+      "loadError": "加载选项失败"
     },
     "app": {
       "name": "应用",
@@ -1521,7 +1726,7 @@
           "label": "描述显示模式",
           "description": "选择应用描述的显示方式",
           "option": {
-            "normal": "窗口组件内",
+            "normal": "小组件内部",
             "tooltip": "在工具提示中显示",
             "hidden": "隐藏"
           }
@@ -1580,11 +1785,11 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "ArchiveTeam Warrior",
+      "description": "监控 ArchiveTeam Warrior 状态、项目和活跃的归档任务。",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "显示广播消息"
         }
       }
     },
@@ -1702,14 +1907,14 @@
           "description": "使用 ISO 8601 格式化日期(这将覆盖其他选项)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "显示天气",
+          "description": "在卡片角落显示一个小型动画天气图标和温度"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "天气位置"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "使用华氏度"
         }
       }
     },
@@ -1739,7 +1944,7 @@
       "noStation": "未选择车站",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "Search.ch URL"
         },
         "station": {
           "label": "车站"
@@ -1748,7 +1953,7 @@
     },
     "notebook": {
       "name": "笔记",
-      "description": "支持 Markdown 的简单笔记本小部件",
+      "description": "一个支持 Markdown 的简易笔记本小组件",
       "option": {
         "showToolbar": {
           "label": "显示帮助您写下 Markdown 的工具栏"
@@ -1771,8 +1976,8 @@
         "clear": "清除格式",
         "heading": "标题 {level}",
         "align": "对齐文本： {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "设置文字方向为从左到右",
+        "directionRtl": "设置文字方向为从右到左",
         "blockquote": "引用",
         "horizontalLine": "横线",
         "bulletList": "符号列表",
@@ -2050,7 +2255,7 @@
         },
         "forecastDayCount": {
           "label": "预报天数",
-          "description": "当小部件不够宽时，显示的天数减少"
+          "description": "当小组件宽度不足时，显示的天数会减少"
         },
         "dateFormat": {
           "label": "日期格式",
@@ -2063,7 +2268,7 @@
         "sunset": "日落",
         "maxWindSpeed": "最大风速：{maxWindSpeed} {unit}",
         "maxWindGusts": "最大阵风：{maxWindGusts} {unit}",
-        "humidity": ""
+        "humidity": "湿度：{humidity}%"
       },
       "kind": {
         "clear": "晴朗",
@@ -2123,9 +2328,9 @@
           "label": "显示文件系统信息"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "可见存储卷",
+          "description": "仅当所有选定的集成都是 Synology 时可用。留空以显示所有检测到的存储卷。",
+          "placeholder": "选择存储卷"
         },
         "defaultTab": {
           "label": "默认标签"
@@ -2204,10 +2409,10 @@
     },
     "dockerContainers": {
       "name": "Docker 状态",
-      "description": "您的容器状态 (这个小部件只能用管理员权限添加)",
+      "description": "容器的统计信息（此小组件仅管理员权限可添加）",
       "option": {
         "columns": {
-          "label": ""
+          "label": "要显示的列"
         },
         "enableRowSorting": {
           "label": "启用项目排序"
@@ -2225,19 +2430,19 @@
           "label": "倒序"
         },
         "columnOrder": {
-          "label": ""
+          "label": "列顺序"
         },
         "columnWidths": {
-          "label": ""
+          "label": "列宽"
         }
       },
       "error": {
         "internalServerError": "获取容器统计信息失败",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "表格布局未保存",
+        "layoutSaveMessage": "Docker 表格布局无法保存。请再次尝试移动或调整列宽。"
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "未找到容器"
       }
     },
     "coolify": {
@@ -2274,9 +2479,9 @@
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "您的 VPN 连接概览",
+      "serviceUnavailable": "VPN 不可用",
       "option": {}
     },
     "ups": {
@@ -2284,7 +2489,7 @@
       "description": "通过 NUT 服务器监控 UPS 设备的状态",
       "option": {
         "showBattery": {
-          "label": "显示电池"
+          "label": "显示电量"
         },
         "showLoad": {
           "label": "显示负载"
@@ -2295,8 +2500,8 @@
       },
       "status": {
         "online": "在线",
-        "onBattery": "使用电池",
-        "lowBattery": "电池电量低",
+        "onBattery": "电池模式",
+        "lowBattery": "电量低",
         "charging": "充电中",
         "unknown": "未知"
       },
@@ -2422,7 +2627,7 @@
         },
         "viewMode": {
           "label": "视图",
-          "description": "组件主体中要显示的内容",
+          "description": "小组件主体中显示的内容",
           "option": {
             "chart": "图表",
             "events": "事件图表",
@@ -2533,31 +2738,31 @@
           "description": "禁用此功能对plex不起作用"
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "显示比特率",
+          "description": "在位置旁边显示当前播放比特率"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "显示位置",
+          "description": "显示流媒体是在局域网还是广域网"
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, one {# 个活跃流} other {# 个活跃流}}",
+        "totalBitrate": "总计：{bitrate}"
       },
       "items": {
         "currentlyPlaying": "正在播放",
         "user": "用户",
         "name": "名称",
         "id": "ID",
-        "status": "",
-        "directPlay": "",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "status": "状态",
+        "directPlay": "直接播放",
+        "directStream": "直接串流",
+        "transcodeVideo": "视频转码",
+        "transcodeAudio": "音频转码",
+        "transcoding": "转码中",
+        "paused": "已暂停",
+        "remaining": "剩余 {minutes} 分钟",
         "metadata": {
           "title": "技术统计",
           "video": {
@@ -2583,44 +2788,231 @@
       "description": "Paperless-ngx 文档存档概览",
       "documentsTotal": "文档总数",
       "documentsInbox": "收件箱",
-      "correspondents": "通讯员",
+      "correspondents": "发件人",
       "tags": "标签",
       "documentTypes": "文档类型",
-      "inboxRatio": "收件箱比率",
+      "inboxRatio": "收件箱比例",
       "inbox": "收件箱",
       "total": "总计",
       "option": {
         "showInboxRatio": {
-          "label": "显示收件箱比率",
-          "description": "在主要部分显示收件箱与总文档的比率"
+          "label": "显示收件箱比例",
+          "description": "在概览区显示收件箱文档与总文档的比例"
         },
         "showInboxRing": {
-          "label": "显示收件箱圆环",
-          "description": "在收件箱比率旁边显示进度圆环"
+          "label": "显示收件箱环形图",
+          "description": "在收件箱比例旁显示进度环"
         },
         "showDocumentsTotal": {
           "label": "显示文档总数",
           "description": "显示存档中的文档总数"
         },
         "showDocumentsInbox": {
-          "label": "显示收件箱计数",
-          "description": "显示收件箱中未处理文档的数量"
+          "label": "显示收件箱数量",
+          "description": "显示收件箱中未处理的文档数量"
         },
         "showCorrespondents": {
-          "label": "显示通讯员",
-          "description": "显示通讯员的总数"
+          "label": "显示发件人",
+          "description": "显示发件人总数"
         },
         "showTags": {
           "label": "显示标签",
-          "description": "显示标签的总数"
+          "description": "显示标签总数"
         },
         "showDocumentTypes": {
           "label": "显示文档类型",
-          "description": "显示文档类型的总数"
+          "description": "显示文档类型总数"
         }
       },
       "error": {
         "internalServerError": "获取 Paperless-ngx 数据失败"
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "来自 PatchMon 的主机补丁状态概览",
+      "title": "PatchMon 统计信息",
+      "totalHosts": "主机总数",
+      "hostsNeedingUpdates": "需要更新",
+      "securityUpdates": "安全更新",
+      "upToDateHosts": "已更新的主机",
+      "hostsWithSecurityUpdates": "有安全更新的主机",
+      "recentUpdates24h": "更新（24小时）",
+      "totalOutdatedPackages": "过时的软件包",
+      "totalRepos": "软件源",
+      "osDistribution": "操作系统",
+      "compliance": "补丁合规性",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "更新于 {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "显示主机总数",
+          "description": "显示所监控主机的总数"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "显示需要更新的主机",
+          "description": "显示至少有一个过时软件包的主机"
+        },
+        "showSecurityUpdates": {
+          "label": "显示安全更新",
+          "description": "显示可用安全更新的总数"
+        },
+        "showUpToDateHosts": {
+          "label": "显示已更新的主机",
+          "description": "显示没有过时软件包的主机"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "显示有安全更新的主机",
+          "description": "显示需要安全补丁的主机"
+        },
+        "showRecentUpdates24h": {
+          "label": "显示最近更新（24小时）",
+          "description": "显示过去 24 小时内应用的更新数量"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "显示过时的软件包",
+          "description": "显示所有主机上过时软件包的总数"
+        },
+        "showTotalRepos": {
+          "label": "显示软件源",
+          "description": "显示正在监控的活跃软件源数量"
+        },
+        "enableThresholdColors": {
+          "label": "启用阈值颜色",
+          "description": "根据严重程度预设，将统计值颜色标记为绿色、黄色或红色"
+        },
+        "useCustomThresholds": {
+          "label": "高级阈值设置",
+          "description": "按统计项自定义警告和严重阈值，可使用绝对数量或占主机总数的百分比进行设置"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "绝对数量",
+            "percent": "占主机总数的百分比"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "需要更新阈值模式",
+          "description": "将“需要更新”的数量以绝对数值或占主机总数的百分比方式进行比较"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "需要更新警告阈值",
+          "description": "当值达到此阈值时显示黄色"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "需要更新临界阈值",
+          "description": "当值达到此阈值时显示红色"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "安全更新阈值模式",
+          "description": "将安全更新计数作为绝对值或总主机数的百分比进行比较"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "安全更新警告阈值",
+          "description": "当值达到此阈值时显示黄色"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "安全更新临界阈值",
+          "description": "当值达到此阈值时显示红色"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "有安全更新的主机阈值模式",
+          "description": "将主机计数作为绝对值或总主机数的百分比进行比较"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "有安全更新的主机警告阈值",
+          "description": "当值达到此阈值时显示黄色"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "有安全更新的主机临界阈值",
+          "description": "当值达到此阈值时显示红色"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "最新主机阈值模式",
+          "description": "将最新主机计数作为绝对值或总主机数的百分比进行比较"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "最新主机警告阈值",
+          "description": "当值达到或超过此阈值但低于全覆盖时显示黄色"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "最新主机临界阈值",
+          "description": "当值低于此阈值时显示红色"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "过期包阈值模式",
+          "description": "将过期包计数作为绝对值或总主机数的百分比进行比较"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "过期包警告阈值",
+          "description": "当值达到此阈值时显示黄色"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "过期包临界阈值",
+          "description": "当值达到此阈值时显示红色"
+        },
+        "showOsDistribution": {
+          "label": "显示操作系统分布",
+          "description": "按操作系统显示受监控主机的分类"
+        },
+        "osDistributionLimit": {
+          "label": "操作系统分布限制",
+          "description": "显示的最大操作系统数量",
+          "option": {
+            "3": "前 3 个",
+            "5": "前 5 个",
+            "10": "前 10 个",
+            "all": "全部"
+          }
+        },
+        "showOsVersion": {
+          "label": "显示操作系统版本",
+          "description": "可用时将操作系统版本附加到每个分布标签"
+        },
+        "showComplianceHero": {
+          "label": "显示合规概要",
+          "description": "显示合规环，展示最新主机的百分比"
+        },
+        "osDisplayMode": {
+          "label": "操作系统显示模式",
+          "description": "选择如何显示操作系统分布",
+          "option": {
+            "bars": "水平条形图",
+            "donut": "环形图"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "获取 PatchMon 数据失败"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "来自您 Bazarr 实例的缺失字幕和健康状态概览",
+      "episodes": "缺失剧集",
+      "movies": "缺失电影",
+      "providers": "提供商问题",
+      "status": "健康问题",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "显示缺失剧集",
+          "description": "显示缺失字幕的剧集数量"
+        },
+        "showMissingMovies": {
+          "label": "显示缺失电影",
+          "description": "显示缺失字幕的电影数量"
+        },
+        "showProviderIssues": {
+          "label": "显示提供商问题",
+          "description": "显示有问题的字幕提供商数量"
+        },
+        "showHealthIssues": {
+          "label": "显示健康问题",
+          "description": "显示 Bazarr 健康问题的数量"
+        }
+      },
+      "error": {
+        "internalServerError": "获取 Bazarr 数据失败"
       }
     },
     "immich-serverStats": {
@@ -2651,11 +3043,11 @@
     },
     "immich-albumCarousel": {
       "name": "Immich 相册",
-      "allPhotos": "",
+      "allPhotos": "所有照片",
       "option": {
         "albumId": {
-          "label": "相册ID",
-          "description": "这是一个唯一标识符，用于指向您的 Immich 相册。您可以通过打开相册并从 URL 中复制那段唯一字符串来找到该 ID，例如：'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "label": "相册",
+          "description": "选择一个 Immich 相册或选择“所有照片”。若留空，则会显示您整个图库中的随机照片。"
         },
         "rotationIntervalSeconds": {
           "label": "间隔（秒）",
@@ -2666,12 +3058,12 @@
           "description": "在幻灯片底部显示图片日期和当前索引"
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "随机排列照片",
+          "description": "以随机顺序显示照片，而不是始终以相同的相册顺序开始。"
         }
       },
-      "description": "Immich 相册图片幻灯片",
-      "noPhotos": "此相册中没有照片"
+      "description": "来自 Immich 相册或整个图库的照片幻灯片展示",
+      "noPhotos": "未找到照片"
     },
     "downloads": {
       "name": "下载客户端",
@@ -2715,18 +3107,18 @@
           "description": "这将限制每个集成显示的项目数量，而不是全局项目"
         },
         "columnOrder": {
-          "label": ""
+          "label": "列顺序"
         },
         "columnWidths": {
-          "label": ""
+          "label": "列宽"
         }
       },
       "errors": {
         "noColumns": "在项目中选择列",
         "noCommunications": "无法从集成中加载数据",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "未找到下载",
+        "actionFailed": "操作失败",
+        "actionFailedMessage": "操作无法完成。请重试。"
       },
       "items": {
         "actions": {
@@ -2750,7 +3142,7 @@
         },
         "id": {
           "columnTitle": "ID",
-          "detailsTitle": ""
+          "detailsTitle": "项目 ID"
         },
         "integration": {
           "columnTitle": "集成"
@@ -2785,7 +3177,7 @@
         "time": {
           "columnTitle": "完成时间",
           "detailsTitle": "完成时间",
-          "eta": ""
+          "eta": "预计完成时间"
         },
         "type": {
           "columnTitle": "类型",
@@ -2831,21 +3223,21 @@
       },
       "globalRatio": "全局比率",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "复制名称",
+        "copyId": "复制 ID",
+        "clearFilters": "清除筛选"
       },
       "footer": {
-        "filter": ""
+        "filter": "筛选下载"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "显示全局统计",
+        "hide": "隐藏全局统计",
+        "overallProgress": "整体队列进度",
+        "totalSize": "队列总大小",
+        "clients": "{count, plural, one {# 个客户端} other {# 个客户端}}"
       },
-      "disconnected": ""
+      "disconnected": "(已断开)"
     },
     "mediaReleases": {
       "name": "媒体发布",
@@ -2884,10 +3276,10 @@
           "label": "在新标签页中打开链接"
         },
         "statusFilter": {
-          "label": ""
+          "label": "要显示的状态"
         },
         "recentDays": {
-          "label": ""
+          "label": "仅显示最近的请求"
         }
       },
       "pending": {
@@ -2995,6 +3387,35 @@
         }
       }
     },
+    "mediaMissing": {
+      "name": "缺失和排队媒体",
+      "description": "显示来自 Radarr 和 Sonarr 的缺失和排队的电影和剧集",
+      "option": {
+        "showMissing": {
+          "label": "显示缺失项目"
+        },
+        "showQueued": {
+          "label": "显示排队项目"
+        },
+        "pageSize": {
+          "label": "每页项目数"
+        }
+      },
+      "tab": {
+        "missing": "缺失",
+        "queued": "排队中"
+      },
+      "type": {
+        "movie": "电影",
+        "episode": "剧集"
+      },
+      "empty": {
+        "missing": "无缺失项目",
+        "queued": "无排队项目",
+        "noTabsEnabled": "请在小组件设置中至少启用一个标签"
+      },
+      "timeLeft": "剩余时间"
+    },
     "rssFeed": {
       "name": "RSS 订阅",
       "description": "监视和显示一个或多个通用 RSS、ATOM 或 JSON 源",
@@ -3065,7 +3486,7 @@
             "label": "提供者"
           },
           "providerUrl": {
-            "label": ""
+            "label": "提供商 URL"
           },
           "identifier": {
             "label": "标识符",
@@ -3116,11 +3537,11 @@
             "tooltip": "无法解析该提供者，请在导入镜像后手动设置"
           },
           "tokens": {
-            "label": "",
-            "token": "",
-            "configured": "",
-            "notConfigured": "",
-            "save": ""
+            "label": "提供商令牌",
+            "token": "令牌",
+            "configured": "令牌已配置",
+            "notConfigured": "未设置令牌",
+            "save": "保存"
           }
         }
       },
@@ -3143,9 +3564,9 @@
           "invalidIdentifier": "无效标识符",
           "noMatchingVersion": "没有找到匹配的版本",
           "noReleasesFound": "没有发现发布信息",
-          "noProviderSelected": "",
+          "noProviderSelected": "未选择提供商",
           "noProviderResponse": "提供者没有响应",
-          "unexpected": ""
+          "unexpected": "意外的提供商错误"
         }
       }
     },
@@ -3158,7 +3579,7 @@
       },
       "error": {
         "integrationsDisconnected": "没有可用的数据，所有集成已断开",
-        "unknownContentOption": "网络控制器摘要小部件的未知内容选项： "
+        "unknownContentOption": "网络控制器摘要小组件存在未知的内容选项： "
       },
       "name": "网络控制器概述",
       "description": "显示网络控制器摘要(如Unifi Controller)"
@@ -3190,12 +3611,12 @@
               "label": "有线"
             }
           },
-          "label": "小部件内容"
+          "label": "小组件内容"
         }
       },
       "error": {
         "integrationsDisconnected": "没有可用的数据，所有集成已断开",
-        "unknownContentOption": "网络状态小部件的未知内容选项： "
+        "unknownContentOption": "网络状态小组件存在未知的内容选项： "
       },
       "name": "网络状态",
       "description": "在网络上显示已连接的设备"
@@ -3240,7 +3661,7 @@
       "noItems": "没有可显示的通知。",
       "option": {
         "hideLogos": {
-          "label": ""
+          "label": "隐藏标志"
         }
       }
     },
@@ -3278,54 +3699,88 @@
       "unhealthy": "不健康",
       "ok": "正常",
       "fail": "失败",
-      "noSectionsEnabled": "请在组件选项中至少启用一个模块。",
+      "noSectionsEnabled": "请至少选择一个小组件选项。",
       "error": {
         "internalServerError": "获取测速数据失败"
       }
     },
     "uptimeKuma": {
       "name": "Uptime Kuma",
-      "description": "监控来自 Uptime Kuma 状态页的运行时间统计信息",
+      "description": "来自 Uptime Kuma 状态页面的运行时间监控统计",
       "option": {
         "showAverageUptime": {
           "label": "显示平均运行时间",
-          "description": "显示 24 小时平均运行时间百分比"
+          "description": "显示过去 24 小时的平均可用率"
         },
         "showUptimeRing": {
-          "label": "显示运行时间圆环",
-          "description": "在平均运行时间值旁边显示进度圆环"
+          "label": "显示运行时间环形图",
+          "description": "在平均运行时间值旁显示进度环"
         },
         "showTotalMonitors": {
-          "label": "显示监视器总数",
-          "description": "显示已配置的监视器总数"
+          "label": "显示监控项总数",
+          "description": "显示已配置的监控项总数"
         },
         "showUpCount": {
           "label": "显示正常数量",
-          "description": "显示当前正常的监视器数量"
+          "description": "显示当前正常在线的监控项数量"
         },
         "showDownCount": {
-          "label": "显示故障数量",
-          "description": "显示当前故障的监视器数量"
+          "label": "显示异常数量",
+          "description": "显示当前异常的监控项数量"
         },
         "showPausedCount": {
-          "label": "显示暂停数量",
-          "description": "显示当前暂停的监视器数量"
+          "label": "显示已暂停数量",
+          "description": "显示当前已暂停的监控项数量"
         }
       },
-      "averageUptime": "平均运行时间（24 小时）",
+      "averageUptime": "平均可用率（24小时）",
       "stats": {
-        "totalMonitors": "监视器总数",
+        "totalMonitors": "监控项总数",
         "upCount": "正常",
-        "downCount": "故障",
-        "pausedCount": "暂停"
+        "downCount": "异常",
+        "pausedCount": "已暂停"
       },
       "error": {
         "internalServerError": "获取运行时间数据失败"
       }
     },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Traefik 路由、服务、中间件和入口点概览",
+      "option": {
+        "showTcp": {
+          "label": "显示 TCP"
+        },
+        "showUdp": {
+          "label": "显示 UDP"
+        },
+        "showEntryPoints": {
+          "label": "显示入口点"
+        }
+      },
+      "instances": "Traefik 实例",
+      "versionUnknown": "版本未知",
+      "summary": {
+        "routers": "路由",
+        "entryPoints": "入口点"
+      },
+      "resource": {
+        "routers": "路由",
+        "services": "服务",
+        "middlewares": "中间件"
+      },
+      "status": {
+        "healthy": "健康",
+        "errors": "{count} 个错误",
+        "warnings": "{count} 个警告"
+      },
+      "error": {
+        "internalServerError": "获取 Traefik 数据失败"
+      }
+    },
     "audioStats": {
-      "name": "音频统计",
-      "description": "来自 Navidrome 或 Audiobookshelf 的库和播放统计信息",
+      "name": "音频统计信息",
+      "description": "来自 Navidrome 或 Audiobookshelf 的媒体库和播放统计信息",
       "option": {
         "showArtists": {
           "label": "显示艺术家",
@@ -3361,7 +3816,7 @@
         },
         "compactMode": {
           "label": "紧凑模式",
-          "description": "使用更密集的布局和较小的磁贴，适合小尺寸小部件"
+          "description": "使用更紧凑的布局，磁贴更小，适合小尺寸小组件"
         }
       },
       "artists": "艺术家",
@@ -3437,14 +3892,34 @@
           "label": "显示背景使用栏"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "可见存储卷",
+          "description": "仅当所有选定的集成都是 Synology 时可用。留空以显示所有检测到的存储卷。",
+          "placeholder": "选择存储卷"
         }
       },
       "status": {
         "unhealthy": "异常"
       }
+    },
+    "customApi": {
+      "name": "自定义 API",
+      "description": "通过自定义配置显示来自任何外部 API 的数据。",
+      "option": {
+        "definitionId": {
+          "label": "定义 ID"
+        },
+        "refreshInterval": {
+          "label": "刷新间隔",
+          "description": "从 API 重新获取数据的频率（秒）"
+        }
+      },
+      "noDefinition": "未选择定义",
+      "definitionNotFound": "找不到该小组件，可能已被删除。",
+      "noDisplayOutput": "无显示输出",
+      "executeConfirm": "您确定要执行此操作吗？",
+      "executing": "执行中...",
+      "executeSuccess": "操作执行成功",
+      "executeFailed": "操作失败，请检查小组件配置。"
     },
     "beszelSystemTable": {
       "name": "Beszel 系统（表格）",
@@ -3481,7 +3956,7 @@
           "label": "显示温度"
         },
         "showBattery": {
-          "label": "显示电池"
+          "label": "显示电量"
         },
         "showServices": {
           "label": "显示服务"
@@ -3493,17 +3968,17 @@
           "label": "显示代理版本"
         },
         "columnOrder": {
-          "label": ""
+          "label": "列顺序"
         },
         "columnWidths": {
-          "label": ""
+          "label": "列宽"
         }
       },
       "noRecords": "未找到系统",
       "error": {
-        "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "internalServerError": "无法连接到 Beszel。请检查您的集成设置。",
+        "layoutSaveTitle": "无法保存表格布局",
+        "layoutSaveMessage": "您的列顺序或宽度无法保存。请重试。"
       },
       "column": {
         "system": "系统",
@@ -3514,7 +3989,7 @@
         "loadAvg": "平均负载",
         "net": "网络",
         "temp": "温度",
-        "battery": "电池",
+        "battery": "电量",
         "services": "服务",
         "uptime": "运行时间",
         "agent": "代理"
@@ -3522,10 +3997,10 @@
     },
     "beszelSystemGrid": {
       "name": "Beszel 系统（网格）",
-      "description": "所有 Beszel 监控系统的卡片网格视图，具有实时指标",
+      "description": "所有 Beszel 监控系统的卡片网格视图，包含实时指标",
       "option": {
         "statusFilter": {
-          "label": "状态过滤器"
+          "label": "状态筛选"
         },
         "showCpu": {
           "label": "显示 CPU"
@@ -3549,7 +4024,7 @@
           "label": "显示温度"
         },
         "showBattery": {
-          "label": "显示电池"
+          "label": "显示电量"
         },
         "showServices": {
           "label": "显示服务"
@@ -3562,10 +4037,10 @@
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "无法连接到 Beszel。请检查您的集成设置。"
       },
       "empty": {
-        "noSystems": ""
+        "noSystems": "未找到系统"
       },
       "metric": {
         "cpu": "CPU",
@@ -3575,7 +4050,7 @@
         "loadAvg": "平均负载",
         "net": "网络",
         "temp": "温度",
-        "battery": "电池",
+        "battery": "电量",
         "services": "服务",
         "uptime": "运行时间",
         "agent": "代理"
@@ -3594,7 +4069,7 @@
       },
       "empty": "未配置警报",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "无法连接到 Beszel。请检查您的集成设置。"
       },
       "history": "历史记录",
       "resolved": "已解决",
@@ -3608,8 +4083,8 @@
       "description": "CPU、内存、磁盘、网络和 Docker 容器指标的时间序列图表",
       "option": {
         "systemId": {
-          "label": "",
-          "description": ""
+          "label": "系统",
+          "description": "选择要显示统计信息的 Beszel 系统"
         },
         "timePeriod": {
           "label": "时间段"
@@ -3641,13 +4116,13 @@
       },
       "selectSystem": "选择系统",
       "empty": {
-        "noSystems": ""
+        "noSystems": "未找到系统"
       },
       "error": {
-        "internalServerError": "",
-        "liveConnectionFailed": "",
-        "switchToHistorical": "",
-        "systemNotFound": ""
+        "internalServerError": "无法连接到 Beszel。请检查您的集成设置。",
+        "liveConnectionFailed": "实时连接失败。您的 Beszel 实例可能不支持实时流。",
+        "switchToHistorical": "切换到历史视图",
+        "systemNotFound": "未找到所选系统。请选择其他系统。"
       },
       "chart": {
         "cpu": {
@@ -3663,8 +4138,8 @@
         },
         "disk": {
           "title": "磁盘使用率",
-          "subtitle": "",
-          "series": ""
+          "subtitle": "按文件系统使用量",
+          "series": "根目录"
         },
         "diskIO": {
           "title": "磁盘 I/O",
@@ -3673,9 +4148,9 @@
           "write": "写入"
         },
         "storage": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "存储",
+          "subtitle": "每个文件系统的磁盘使用量",
+          "series": "已用"
         },
         "network": {
           "title": "带宽",
@@ -3696,256 +4171,6 @@
           "subtitle": "Docker 容器的网络流量"
         }
       }
-    },
-    "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
-      "option": {
-        "showTotalHosts": {
-          "label": "",
-          "description": ""
-        },
-        "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showSecurityUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showUpToDateHosts": {
-          "label": "",
-          "description": ""
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
-        },
-        "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
-        },
-        "showTotalRepos": {
-          "label": "",
-          "description": ""
-        },
-        "enableThresholdColors": {
-          "label": "",
-          "description": ""
-        },
-        "useCustomThresholds": {
-          "label": "",
-          "description": ""
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "",
-            "percent": ""
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "showOsDistribution": {
-          "label": "",
-          "description": ""
-        },
-        "osDistributionLimit": {
-          "label": "",
-          "description": "",
-          "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
-          }
-        },
-        "showOsVersion": {
-          "label": "",
-          "description": ""
-        },
-        "showComplianceHero": {
-          "label": "",
-          "description": ""
-        },
-        "osDisplayMode": {
-          "label": "",
-          "description": "",
-          "option": {
-            "bars": "",
-            "donut": ""
-          }
-        }
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
-    "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "",
-          "description": ""
-        },
-        "showMissingMovies": {
-          "label": "",
-          "description": ""
-        },
-        "showProviderIssues": {
-          "label": "",
-          "description": ""
-        },
-        "showHealthIssues": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
-    "mediaMissing": {
-      "name": "",
-      "description": "",
-      "option": {
-        "showMissing": {
-          "label": ""
-        },
-        "showQueued": {
-          "label": ""
-        },
-        "pageSize": {
-          "label": ""
-        }
-      },
-      "tab": {
-        "missing": "",
-        "queued": ""
-      },
-      "type": {
-        "movie": "",
-        "episode": ""
-      },
-      "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
-      },
-      "timeLeft": ""
-    },
-    "traefik": {
-      "name": "",
-      "description": "",
-      "option": {
-        "showTcp": {
-          "label": ""
-        },
-        "showUdp": {
-          "label": ""
-        },
-        "showEntryPoints": {
-          "label": ""
-        }
-      },
-      "instances": "",
-      "versionUnknown": "",
-      "summary": {
-        "routers": "",
-        "entryPoints": ""
-      },
-      "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
-      },
-      "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
-      },
-      "error": {
-        "internalServerError": ""
-      }
     }
   },
   "widgetPreview": {
@@ -3961,7 +4186,7 @@
     "action": {
       "duplicate": {
         "title": "复制面板",
-        "message": "这将复制面板{name}及其所有内容。如果组件引用了不允许使用的集成，它们将被删除。",
+        "message": "这将复制面板 {name} 及其全部内容。如果小组件引用了您无权使用的集成，这些小组件将被移除。",
         "notification": {
           "success": {
             "title": "面板已复制",
@@ -4320,17 +4545,17 @@
       "text": "找不到请求的资源"
     },
     "error": {
-      "title": "",
-      "text": "",
-      "digest": ""
+      "title": "此页面无法加载",
+      "text": "加载此页面时发生意外错误。您的导航仍然可用 — 请尝试重新加载，或使用侧边栏中的其他部分。",
+      "digest": "错误引用：{digest}"
     },
     "navbar": {
       "items": {
-        "workshop": "Workshop",
         "home": "首页",
         "boards": "面板",
         "apps": "应用",
         "integrations": "集成",
+        "customWidgets": "自定义小组件",
         "searchEngies": "搜索",
         "medias": "媒体",
         "users": {
@@ -4605,7 +4830,7 @@
             "title": "分析",
             "general": {
               "title": "发送匿名分析",
-              "text": "Homarr 将使用开源软件 Umami 发送匿名分析数据。启用后，我们会收集：Homarr 版本、数据库类型（MySQL/PostgreSQL/SQLite）、Docker/Kubernetes 状态、已启用的身份验证方法以及各项功能的数量。所有数据均为匿名且汇总收集——绝不收集任何个人信息、URL、名称或可识别数据。这有助于我们的开源团队了解使用模式并确定开发优先级。"
+              "text": "这有助于我们了解用户实际使用哪些功能，从而决定将开发精力投入到哪里。我们会收集诸如您拥有多少小组件或集成、Homarr 版本以及使用的数据库类型等信息。仅此而已——不包含个人信息、URL、名称，也不含任何可能识别您本人或您个人配置的内容。"
             }
           },
           "crawlingAndIndexing": {
@@ -4942,7 +5167,7 @@
               "user": "用户",
               "app": "应用",
               "integration": "集成",
-              "item": "小部件",
+              "item": "小组件",
               "media": "媒体",
               "search_engine": "搜索引擎"
             },
@@ -4971,7 +5196,7 @@
                 "user": "用户",
                 "app": "应用",
                 "integration": "集成",
-                "item": "小部件",
+                "item": "小组件",
                 "media": "媒体",
                 "search_engine": "搜索引擎"
               },
@@ -5046,7 +5271,7 @@
             "action": {
               "toggleBoardEdit": "切换面板编辑模式",
               "toggleColorScheme": "切换 亮色/暗色 模式",
-              "saveNotebook": "保存笔记（仅在笔记小工具内有效）",
+              "saveNotebook": "保存笔记本（仅在笔记本小组件内）",
               "openSpotlight": "打开搜索"
             },
             "note": "提示：Mod 键在 macOS 上指 Ctrl 键和 ⌘ 键"
@@ -5060,13 +5285,13 @@
     "table": {
       "updated": "已更新 {when}",
       "refresh": {
-        "lastUpdated": ""
+        "lastUpdated": "上次刷新 {when}"
       },
       "search": "搜索 {count} 容器",
       "selected": "{totalCount} 容器的 {selectCount}",
       "footer": "总计 {count} 容器",
-      "totalCpu": "",
-      "totalMemory": ""
+      "totalCpu": "总 CPU：{cpu}%",
+      "totalMemory": "总内存：{memory}"
     },
     "field": {
       "name": {
@@ -5151,7 +5376,7 @@
       },
       "remove": {
         "label": "删除",
-        "confirm": "",
+        "confirm": "再次点击以永久删除",
         "notification": {
           "success": {
             "title": "容器已删除",
@@ -5195,7 +5420,7 @@
     },
     "error": {
       "internalServerError": "获取 Docker 容器失败",
-      "noColumns": ""
+      "noColumns": "请在小组件设置中至少选择一列"
     }
   },
   "kubernetes": {
@@ -5469,9 +5694,6 @@
   },
   "navigationStructure": {
     "manage": {
-      "workshop": {
-        "label": "Workshop"
-      },
       "label": "管理中心",
       "boards": {
         "label": "面板"
@@ -5504,6 +5726,18 @@
         },
         "edit": {
           "label": "编辑"
+        }
+      },
+      "custom-widgets": {
+        "label": "自定义小组件",
+        "new": {
+          "label": "新建"
+        },
+        "edit": {
+          "label": "编辑",
+          "flow": {
+            "label": "流程"
+          }
         }
       },
       "users": {
@@ -5783,10 +6017,10 @@
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "",
+                "label": "启用小组件右键菜单",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "启用小组件右键功能"
                   }
                 }
               },
@@ -5811,7 +6045,7 @@
             "description": "开始输入以搜索您的媒体请求集成",
             "disabled": {
               "noIntegration": "添加 Overseerr、Jellyseerr 或 Seerr 集成以启用媒体搜索。",
-              "scoped": "此小部件没有可访问的媒体请求集成。"
+              "scoped": "此小组件没有可用的媒体请求集成。"
             }
           }
         },
@@ -6260,11 +6494,11 @@
     "board": {
       "welcome": {
         "title": "这是您的面板",
-        "description": "一个拖放式面板，您可以在其中排列应用和小部件。随时按 Ctrl+K 搜索应用、面板和操作。"
+        "description": "一个拖拽式面板，您可以在其中自由排列应用和小组件。随时按 Ctrl+K 搜索应用、面板和操作。"
       },
       "editMode": {
         "title": "编辑模式",
-        "description": "点击此处进入编辑模式。然后您可以添加小部件、应用和分区——拖放调整位置，用角手柄调整大小。再次点击保存更改。"
+        "description": "点击此处进入编辑模式。您随后可添加小组件、应用和分区——拖动可调整位置，通过角控点可调整大小。再次点击即可保存更改。"
       },
       "settings": {
         "title": "面板设置",
