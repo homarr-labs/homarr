@@ -3,6 +3,7 @@ packages:
   - packages/*
   - tooling/*
 catalog:
+  "@ai-sdk/react": ^4.0.55
   "@babel/parser": ^7.29.7
   "@codemirror/autocomplete": ^6.20.3
   "@codemirror/commands": ^6.10.3
