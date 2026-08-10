@@ -22,8 +22,8 @@ While a response is running, a compact activity bar appears at the bottom of the
 avatar shows a thinking indicator. The activity bar can be opened to follow the response. Completed
 responses add an unread count to the user menu until they are opened or dismissed. The expanded
 conversation has a minimize action that returns it to the activity bar without interrupting a response.
-Its desktop-style window controls can also maximize the conversation to the available viewport or close it
-without leaving an activity bar behind. Each control includes an icon, tooltip, and accessible label.
+Its adjacent close action hides the panel without leaving an activity bar behind. Both window actions use
+subtle buttons with an icon, tooltip, and accessible label.
 The transcript follows streamed output while it is already at the bottom, including fast responses. Scrolling
 up releases that follow state until **Scroll to latest** is selected or the user returns to the bottom.
 
@@ -117,7 +117,10 @@ page layout until it is opened. Users can start, revisit, and delete conversatio
 conversation menu in the floating panel.
 
 Messages support copy, edit-and-resend, response regeneration and branch navigation, Markdown export,
-and helpful/not-helpful feedback.
+and helpful/not-helpful feedback. The conversation menu also provides a compact export action beside delete for
+each conversation. Its debugging-oriented Markdown includes every stored user, assistant, reasoning, tool, error,
+branch-parent, and server-metadata record while redacting secret-looking fields and embedded attachment data.
+The per-response export uses the same tool-aware format instead of assistant-ui's text-only copy representation.
 Selecting text in a message exposes a quote action that carries the selected passage into the next prompt.
 Files returned by a compatible model can be downloaded directly from the message.
 Assistant responses render GitHub-flavored Markdown, including headings, links, lists, task lists, tables,
@@ -200,8 +203,10 @@ file formats, and repositories instead of the size of the complete icon catalog.
 activity such as **Looking for “homarr” icons** instead of exposing the internal MCP procedure name.
 
 Large tool-driven requests can use up to 32 agent steps and a larger response budget within one request, so
-multi-item dashboard changes normally finish without requiring a follow-up “Continue” message. Independent
-read-only lookups may be performed together, while every mutation still pauses for its normal approval.
+multi-item dashboard changes normally finish without requiring a follow-up “Continue” message. OpenRouter calls
+Homarr tools sequentially to prevent routed models from interleaving or truncating parallel JSON arguments, while
+every mutation still pauses for its normal approval. A safely recoverable truncated icon-search object is repaired
+before validation; incomplete search strings and all mutation inputs are never guessed.
 
 The assistant can create a formatted dashboard note by adding a **Notebook** widget. Ask it for a note with
 headings, lists, tasks, links, emphasis, tables, or images; it generates compatible rich-text content, shows

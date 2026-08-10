@@ -78,7 +78,6 @@ import {
   IconApps,
   IconArrowUp,
   IconArrowsMaximize,
-  IconArrowsMinimize,
   IconAt,
   IconCheck,
   IconChevronDown,
@@ -115,7 +114,7 @@ import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
 import { useRouter } from "next/navigation";
 
-import { clientApi } from "@homarr/api/client";
+import { clientApi, fetchApi } from "@homarr/api/client";
 import { assistantProviderIds, assistantProviderPresets, assistantReasoningModes } from "@homarr/definitions";
 import type { AssistantProvider } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -124,6 +123,11 @@ import { useScopedI18n } from "@homarr/translation/client";
 import classes from "./assistant-panel.module.css";
 import { getAssistantActivityState } from "./assistant-activity-state";
 import { useAssistantAutoApproval, useAssistantAutomaticAction } from "./assistant-auto-approval";
+import {
+  buildAssistantConversationMarkdown,
+  buildAssistantMessageMarkdown,
+  getAssistantConversationExportFilename,
+} from "./assistant-conversation-export";
 import { AssistantDotMatrix } from "./assistant-dot-matrix";
 import { AssistantImage } from "./assistant-image";
 import { getAssistantDirectiveTranslationKey, parseAssistantDirectives } from "./assistant-directives";
@@ -1069,6 +1073,46 @@ const BranchPicker = () => {
   );
 };
 
+const downloadAssistantMarkdown = (markdown: string, filename: string) => {
+  const blobUrl = URL.createObjectURL(new Blob([markdown], { type: "text/markdown;charset=utf-8" }));
+  const link = document.createElement("a");
+  link.href = blobUrl;
+  link.download = filename;
+  link.hidden = true;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(blobUrl), 0);
+};
+
+const AssistantMessageExportAction = () => {
+  const t = useScopedI18n("common.assistant");
+  const message = useAuiState((state) => state.message);
+
+  return (
+    <Tooltip label={t("exportMarkdown")}>
+      <ActionIcon
+        variant="subtle"
+        color="gray"
+        size="sm"
+        aria-label={t("exportMarkdown")}
+        onClick={() => {
+          const markdown = buildAssistantMessageMarkdown({
+            id: message.id,
+            parentId: message.parentId,
+            format: "assistant-ui/runtime",
+            content: message,
+            createdAt: message.createdAt,
+          });
+          downloadAssistantMarkdown(markdown, `assistant-message-${message.id.slice(0, 8)}.md`);
+        }}
+      >
+        <IconFileExport size={14} />
+      </ActionIcon>
+    </Tooltip>
+  );
+};
+
 const AssistantMessageActions = () => {
   const t = useScopedI18n("common.assistant");
   return (
@@ -1097,13 +1141,7 @@ const AssistantMessageActions = () => {
               </ActionIcon>
             </ActionBarPrimitive.FeedbackNegative>
           </Tooltip>
-          <Tooltip label={t("exportMarkdown")}>
-            <ActionBarPrimitive.ExportMarkdown asChild>
-              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("exportMarkdown")}>
-                <IconFileExport size={14} />
-              </ActionIcon>
-            </ActionBarPrimitive.ExportMarkdown>
-          </Tooltip>
+          <AssistantMessageExportAction />
           <Tooltip label={t("regenerate")}>
             <ActionBarPrimitive.Reload asChild>
               <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("regenerate")}>
@@ -1893,6 +1931,30 @@ const HistorySelectContext = createContext<() => void>(() => undefined);
 const ThreadListItem = () => {
   const t = useScopedI18n("common.assistant");
   const onSelect = useContext(HistorySelectContext);
+  const remoteId = useAuiState((state) => state.threadListItem.remoteId);
+  const title = useAuiState((state) => state.threadListItem.title);
+  const [exporting, setExporting] = useState(false);
+
+  const exportConversation = async () => {
+    if (!remoteId || exporting) return;
+    setExporting(true);
+    try {
+      const conversation = await fetchApi.assistant.getThread.query({ threadId: remoteId });
+      const markdown = buildAssistantConversationMarkdown(conversation);
+      downloadAssistantMarkdown(
+        markdown,
+        getAssistantConversationExportFilename(conversation.thread.title ?? title, remoteId),
+      );
+    } catch {
+      showErrorNotification({
+        title: t("exportConversation.failedTitle"),
+        message: t("exportConversation.failedDescription"),
+      });
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <ThreadListItemPrimitive.Root className={classes.historyItem}>
       <Group gap={4} wrap="nowrap">
@@ -1909,6 +1971,20 @@ const ThreadListItem = () => {
             <ThreadListItemPrimitive.Title fallback={t("newConversation")} />
           </Button>
         </ThreadListItemPrimitive.Trigger>
+        <Tooltip label={t("exportConversation.action")}>
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            size="sm"
+            loading={exporting}
+            loaderProps={{ type: "bars" }}
+            disabled={!remoteId}
+            aria-label={t("exportConversation.action")}
+            onClick={() => void exportConversation()}
+          >
+            <IconFileExport size={14} />
+          </ActionIcon>
+        </Tooltip>
         <ThreadListItemPrimitive.Delete asChild>
           <ActionIcon variant="subtle" color="red" size="sm" aria-label={t("delete")}>
             <IconTrash size={14} />
@@ -2733,8 +2809,6 @@ interface AssistantConversationSurfaceProps extends AssistantConversationControl
   onExpand?: () => void;
   onMinimize?: () => void;
   onWindowClose?: () => void;
-  onToggleMaximize?: () => void;
-  maximized?: boolean;
 }
 
 export const AssistantConversationSurface = ({
@@ -2752,8 +2826,6 @@ export const AssistantConversationSurface = ({
   onExpand,
   onMinimize,
   onWindowClose,
-  onToggleMaximize,
-  maximized = false,
 }: AssistantConversationSurfaceProps) => {
   const t = useScopedI18n("common.assistant");
   const reducedMotion = useReducedMotion();
@@ -2768,7 +2840,7 @@ export const AssistantConversationSurface = ({
   return (
     <>
       <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
-        {onWindowClose && onMinimize && onToggleMaximize && (
+        {onWindowClose && onMinimize && (
           <Group
             component="fieldset"
             className={classes.windowControls}
@@ -2778,34 +2850,24 @@ export const AssistantConversationSurface = ({
           >
             <Tooltip label={t("close")}>
               <ActionIcon
-                className={`${classes.windowControl} ${classes.windowControlClose}`}
+                className={classes.windowControl}
+                variant="subtle"
+                color="gray"
                 onClick={onWindowClose}
                 aria-label={t("close")}
               >
-                <IconX size={12} stroke={2.4} />
+                <IconX size={16} />
               </ActionIcon>
             </Tooltip>
             <Tooltip label={t("minimize")}>
               <ActionIcon
-                className={`${classes.windowControl} ${classes.windowControlMinimize}`}
+                className={classes.windowControl}
+                variant="subtle"
+                color="gray"
                 onClick={onMinimize}
                 aria-label={t("minimize")}
               >
-                <IconMinus size={12} stroke={2.4} />
-              </ActionIcon>
-            </Tooltip>
-            <Tooltip label={maximized ? t("restore") : t("maximize")}>
-              <ActionIcon
-                className={`${classes.windowControl} ${classes.windowControlMaximize}`}
-                onClick={onToggleMaximize}
-                aria-label={maximized ? t("restore") : t("maximize")}
-                aria-pressed={maximized}
-              >
-                {maximized ? (
-                  <IconArrowsMinimize size={11} stroke={2.4} />
-                ) : (
-                  <IconArrowsMaximize size={11} stroke={2.4} />
-                )}
+                <IconMinus size={17} />
               </ActionIcon>
             </Tooltip>
           </Group>
@@ -2925,7 +2987,6 @@ export const AssistantPanel = ({
 }: AssistantPanelProps) => {
   const t = useScopedI18n("common.assistant");
   const previousFocusRef = useRef<HTMLElement | null>(null);
-  const [maximized, setMaximized] = useState(false);
 
   useWindowEvent("keydown", (event) => {
     if (opened && event.key === "Escape") onClose();
@@ -2965,7 +3026,7 @@ export const AssistantPanel = ({
         />
       )}
       {opened && (
-        <dialog className={classes.floatingPanel} data-maximized={maximized || undefined} aria-label={t("title")} open>
+        <dialog className={classes.floatingPanel} aria-label={t("title")} open>
           <AssistantConversationSurface
             isRunning={isRunning}
             pendingAction={pendingAction}
@@ -2983,8 +3044,6 @@ export const AssistantPanel = ({
               onDismissActivity();
               onClose();
             }}
-            onToggleMaximize={() => setMaximized((current) => !current)}
-            maximized={maximized}
           />
         </dialog>
       )}

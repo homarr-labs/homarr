@@ -357,4 +357,42 @@ describe("assistant conversation features", () => {
       metadata: { submittedFeedback: { type: "positive" } },
     });
   });
+
+  test("returns complete stored tool messages for conversation debugging exports", async () => {
+    const db = await createConfiguredAssistantAsync();
+    await db.insert(users).values({ id: adminSession.user.id });
+    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    const thread = await caller.createThread();
+    const content = {
+      role: "assistant",
+      parts: [
+        {
+          type: "tool-icon_findIcons",
+          toolCallId: "call-icons",
+          state: "output-available",
+          input: { searchText: "homarr" },
+          output: { icons: [{ name: "homarr.svg" }] },
+        },
+      ],
+      metadata: { custom: { telemetry: { requestId: "request-1" } } },
+    };
+    await caller.appendMessage({
+      threadId: thread.id,
+      id: "message-with-tool",
+      parentId: null,
+      format: "ai-sdk/v6",
+      content,
+    });
+
+    const result = await caller.getThread({ threadId: thread.id });
+
+    expect(result.messages).toHaveLength(1);
+    expect(result.messages[0]).toMatchObject({
+      id: "message-with-tool",
+      parentId: null,
+      format: "ai-sdk/v6",
+      content,
+    });
+    expect(result.messages[0]?.createdAt).toBeInstanceOf(Date);
+  });
 });

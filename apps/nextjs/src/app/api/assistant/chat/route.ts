@@ -50,13 +50,14 @@ import {
   getOpenRouterWebSearchRequests,
   getOpenRouterWebSearchSources,
   normalizeOpenRouterWebSearchSources,
+  withOpenRouterToolRequestOptions,
   withOpenRouterWebSearch,
 } from "./assistant-openrouter";
 import { toProviderOptionsKey } from "./assistant-provider-options";
 import { assistantExecutionPolicy } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { getSafeAssistantToolError } from "./assistant-tool-error";
-import { repairCustomWidgetToolInput } from "./assistant-tool-input-repair";
+import { repairAssistantToolInput } from "./assistant-tool-input-repair";
 import {
   createCustomWidgetDynamicContextController,
   getCustomWidgetAuthoringContext,
@@ -143,7 +144,7 @@ Action rules:
 - To create a formatted note on a dashboard, call configure_widget with kind "notebook". Put valid Tiptap-compatible HTML in options.content and set options.showToolbar and options.allowReadOnlyCheck when useful. Use semantic paragraphs, headings, lists, task lists, blockquotes, tables, links, emphasis, and images as appropriate. Never include scripts, styles, iframes, event handlers, or unsafe URL protocols.
 - When choosing an app icon without configure_app, call the Homarr icon findIcons tool first and use one of its returned local icon URLs. Never invent a third-party icon CDN URL.
 - When a Homarr tool returns a usable image or icon URL and a visual summary helps, embed that exact URL with Markdown image syntax. App summary tables must use an Icon column such as ![Discord icon](exact-returned-url). Never replace an available returned icon with emoji, and never invent or transform image URLs.
-- Complete batch requests in the same run. Use parallel independent read-only calls when supported, reuse results, continue calling tools until every requested item has been attempted, and summarize only after the batch is complete. Do not stop after a partial batch or ask the user to type "Continue".
+- Complete batch requests in the same run. Perform independent read-only calls in sequence, reuse results, continue calling tools until every requested item has been attempted, and summarize only after the batch is complete. Do not stop after a partial batch or ask the user to type "Continue".
 - Browser tools can navigate within Homarr, open existing Homarr UI, or refresh the active view after a completed change. Never navigate to an arbitrary external URL and never refresh before a mutation finishes.
 - Keep responses concise and lead with the result. Summarize tool output instead of dumping JSON.
 - Use well-formed GitHub-flavored Markdown. Put each list item on its own line and leave a blank line before lists.
@@ -571,7 +572,12 @@ export async function POST(request: Request) {
       apiKey: providerApiKey,
       headers: providerHeaders,
       includeUsage: true,
-      transformRequestBody: openRouterServerToolsEnabled ? withOpenRouterWebSearch : undefined,
+      transformRequestBody:
+        configuration.provider === "openrouter"
+          ? (body) => withOpenRouterToolRequestOptions(body, { webSearchEnabled: openRouterServerToolsEnabled })
+          : openRouterServerToolsEnabled
+            ? withOpenRouterWebSearch
+            : undefined,
       metadataExtractor: createProviderTelemetryExtractor(),
     });
 
@@ -624,7 +630,7 @@ export async function POST(request: Request) {
       },
       maxOutputTokens: assistantExecutionPolicy.maxOutputTokens,
       maxRetries: 2,
-      experimental_repairToolCall: ({ toolCall }) => Promise.resolve(repairCustomWidgetToolInput(toolCall)),
+      experimental_repairToolCall: ({ toolCall }) => Promise.resolve(repairAssistantToolInput(toolCall)),
       reasoning: parsed.data.reasoning === "auto" ? undefined : parsed.data.reasoning,
       providerOptions:
         configuration.provider === "openrouter" || openRouterServerToolsEnabled
