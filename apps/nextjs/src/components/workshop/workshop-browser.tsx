@@ -43,6 +43,7 @@ import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbenc
 import {
   useWorkshopCssImportMutation,
   useWorkshopQuery,
+  useWorkshopReportSummariesQuery,
   useWorkshopReportMutation,
   useWorkshopSubmissionQuery,
   useWorkshopVoteMutation,
@@ -108,7 +109,6 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
   const [reportExplanation, setReportExplanation] = useState("");
   const [loginPending, setLoginPending] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
-  const [cssAwaitingConfirmation, setCssAwaitingConfirmation] = useState<string | null>(null);
   const workshopWebUrl = useMemo(getWorkshopWebUrl, []);
   const detailsOpened = modalStack?.details.opened ?? selectedId !== null;
   const reportOpened = modalStack?.report.opened ?? internalReportOpened;
@@ -131,6 +131,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
 
   const list = useWorkshopQuery(client, { page, perPage: 12, type, sort, search: debouncedSearch });
   const detail = useWorkshopSubmissionQuery(client, selectedId ?? "");
+  const reportSummaries = useWorkshopReportSummariesQuery(client, selectedId ?? "");
   const detailValidation = useMemo(() => {
     if (!detail.data) return null;
     return type === "customCss"
@@ -154,10 +155,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
       .finally(() => setLoginPending(false));
   };
   const install = useWorkshopWidgetImportMutation(onInstall);
-  const useCss = useWorkshopCssImportMutation(onUseCss, () => {
-    setCssAwaitingConfirmation(null);
-    setSelectedId(null);
-  });
+  const useCss = useWorkshopCssImportMutation(onUseCss, () => setSelectedId(null));
   const vote = useWorkshopVoteMutation(client);
   const report = useWorkshopReportMutation(client);
   const submitReport = () =>
@@ -372,11 +370,28 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
               </Alert>
             )}
             {detail.data.reportCount > 0 && (
-              <Alert color="red" icon={<IconAlertTriangle size={18} />}>
-                This submission has {detail.data.reportCount} open community report
-                {detail.data.reportCount === 1 ? "" : "s"}. It remains installable, but you should review its content
-                first.
-              </Alert>
+              <Stack gap="xs">
+                <Alert color="red" icon={<IconAlertTriangle size={18} />}>
+                  This submission has {detail.data.reportCount} open community report
+                  {detail.data.reportCount === 1 ? "" : "s"}. It remains installable, but you should review its content
+                  first.
+                </Alert>
+                {reportSummaries.data?.map((summary) => (
+                  <Card key={summary.id} withBorder p="sm">
+                    <Badge color="red" variant="light" mb="xs">
+                      {summary.category}
+                    </Badge>
+                    <Text size="sm" style={{ whiteSpace: "pre-wrap" }}>
+                      {summary.explanation}
+                    </Text>
+                  </Card>
+                ))}
+                {reportSummaries.data?.length === 0 && (
+                  <Text size="xs" c="dimmed">
+                    Report details are visible only to this submission's author and Workshop admins.
+                  </Text>
+                )}
+              </Stack>
             )}
             {detail.data.screenshots.length > 0 && (
               <SimpleGrid cols={{ base: 1, sm: 2 }}>
@@ -457,11 +472,12 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
               )}
               {onUseCss && (
                 <Button
+                  loading={useCss.isPending}
                   disabled={!detailCompatible}
                   onClick={() =>
                     detailValidation?.success &&
                     typeof detailValidation.data === "string" &&
-                    setCssAwaitingConfirmation(detailValidation.data)
+                    useCss.mutate(detailValidation.data)
                   }
                 >
                   {t("useCss")}
@@ -505,31 +521,6 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
           <Button loading={report.isPending} disabled={reportExplanation.trim().length < 3} onClick={submitReport}>
             {t("reportSend")}
           </Button>
-        </Stack>
-      </Modal>
-      <Modal
-        opened={cssAwaitingConfirmation !== null}
-        onClose={() => setCssAwaitingConfirmation(null)}
-        title="Import this Custom CSS?"
-      >
-        <Stack>
-          <Alert color="yellow" icon={<IconAlertTriangle size={18} />}>
-            Review community CSS before applying it. Importing replaces the current Custom CSS editor value, but nothing
-            is saved until you save the board settings.
-          </Alert>
-          <Group justify="flex-end">
-            <Button variant="default" onClick={() => setCssAwaitingConfirmation(null)}>
-              Cancel
-            </Button>
-            <Button
-              loading={useCss.isPending}
-              onClick={() => {
-                if (cssAwaitingConfirmation !== null) useCss.mutate(cssAwaitingConfirmation);
-              }}
-            >
-              Import CSS
-            </Button>
-          </Group>
         </Stack>
       </Modal>
     </Stack>

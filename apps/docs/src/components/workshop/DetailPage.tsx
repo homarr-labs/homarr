@@ -35,6 +35,7 @@ import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import {
   githubAvatarUrl,
   githubProfileUrl,
+  formatWorkshopContent,
   MAX_WORKSHOP_SCREENSHOTS,
   MAX_WORKSHOP_SCREENSHOT_BYTES,
   WORKSHOP_SCREENSHOT_MIME_TYPES,
@@ -534,6 +535,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
   const requests = widgetDefinition ? Object.entries(widgetDefinition.requests) : [];
   const options = widgetDefinition ? Object.entries(widgetDefinition.options) : [];
   const protectedSources = sources.filter(([, source]) => sourceNeedsSecret(source.auth));
+  const displayedContent = formatWorkshopContent(submission.type, submission.content);
 
   return (
     <div className="mx-auto max-w-[90rem] px-4 pb-20 pt-8 sm:px-6 lg:px-8">
@@ -697,12 +699,12 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
               <CustomWidgetCodeExample
                 id={`workshop-${submission.id}`}
                 label="widget.json"
-                code={submission.content}
+                code={displayedContent}
                 language="json"
                 height="min(58vh, 640px)"
               />
             ) : (
-              <CodeBlock content={submission.content} language={contentLanguages[submission.type]} />
+              <CodeBlock content={displayedContent} language={contentLanguages[submission.type]} />
             )}
           </section>
 
