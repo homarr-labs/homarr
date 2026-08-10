@@ -348,6 +348,7 @@ export const createAssistantSurfaceRuntime = (runtime: AssistantRuntime): Assist
     switchToNewThread: () => sharedThreads.switchToNewThread(),
     getLoadThreadsPromise: () => sharedThreads.getLoadThreadsPromise(),
     reload: () => sharedThreads.reload(),
+    reloadMainThread: () => sharedThreads.reloadMainThread(),
     loadMore: () => sharedThreads.loadMore(),
   };
 

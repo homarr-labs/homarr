@@ -18,6 +18,7 @@ import {
 
 import type { WorkshopSubmission } from "@site/src/lib/pocketbase";
 import type { SubmissionType } from "@site/src/lib/workshop-schema";
+import { githubAvatarUrl, githubProfileUrl } from "@homarr/workshop/schema";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -98,7 +99,8 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
       .filter((item) => includeOutdated || !item.outdated)
       .filter(
         (item) =>
-          !q || [item.title, item.description, item.authorName].some((value) => value?.toLowerCase().includes(q)),
+          !q ||
+          [item.title, item.description, item.authorGithubUsername].some((value) => value?.toLowerCase().includes(q)),
       )
       .toSorted(workshop.sorters[sort])
       .map((s) => s.id);
@@ -356,16 +358,18 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
         </div>
         <CardDescription className="flex min-w-0 items-center gap-1 text-xs">
           <a
-            href={submission.authorGithubProfileUrl || undefined}
-            target={submission.authorGithubProfileUrl ? "_blank" : undefined}
+            href={githubProfileUrl(submission.authorGithubUsername) || undefined}
+            target={submission.authorGithubUsername ? "_blank" : undefined}
             rel="noreferrer"
             className="inline-flex min-w-0 items-center gap-1.5 hover:text-foreground"
           >
             <Avatar className="size-4">
-              {submission.authorAvatarUrl && <AvatarImage src={submission.authorAvatarUrl} alt="" />}
-              <AvatarFallback className="text-[9px]">{avatarFallback(submission.authorName)}</AvatarFallback>
+              {submission.authorGithubUsername && (
+                <AvatarImage src={githubAvatarUrl(submission.authorGithubUsername)} alt="" />
+              )}
+              <AvatarFallback className="text-[9px]">{avatarFallback(submission.authorGithubUsername)}</AvatarFallback>
             </Avatar>
-            <span className="truncate">{submission.authorName}</span>
+            <span className="truncate">{submission.authorGithubUsername || "Community member"}</span>
           </a>
           <span className="shrink-0 whitespace-nowrap">
             · v{submission.revision} · {formatRelativeTime(submission.created)}

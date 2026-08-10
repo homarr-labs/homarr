@@ -15,6 +15,9 @@ if (!hook.includes("require(`${__hooks}/workshop-utils.js`)")) {
 if (!hook.includes("onBootstrap") || !hook.includes("users.oauth2.providers = configured")) {
   throw new Error("Workshop OAuth settings must be synchronized at every bootstrap");
 }
+if (!hook.includes('username: "githubUsername"') || hook.includes("onRecordAuthWithOAuth2Request")) {
+  throw new Error("Workshop identity must use PocketBase's direct GitHub username mapping");
+}
 if (hook.includes("validateAndNormalizeSubmission")) {
   throw new Error("PocketBase must store Workshop submissions without interpreting their content");
 }
@@ -38,6 +41,9 @@ if (hook.includes('findAllRecords("users")') || !hook.includes('findRecordsByFil
 }
 
 const migration = await read("apps/workshop/pb_migrations/1784240000_workshop_widgets.js");
+for (const removedField of ["displayName", "avatarUrl", "githubProfileUrl"]) {
+  if (migration.includes(removedField)) throw new Error(`Redundant Workshop user field remains: ${removedField}`);
+}
 for (const required of [
   "workshop_migration_state",
   "addedUserFields",

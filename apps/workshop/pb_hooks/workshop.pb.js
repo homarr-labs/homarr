@@ -11,53 +11,11 @@ onBootstrap((event) => {
   event.next();
   const users = event.app.findCollectionByNameOrId("users");
   users.oauth2.enabled = configured;
-  users.oauth2.mappedFields = { id: "", name: "", username: "displayName", avatarURL: "avatarUrl" };
+  users.oauth2.mappedFields = { id: "", name: "", username: "githubUsername", avatarURL: "" };
   users.oauth2.providers = configured ? [{ name: "github", clientId, clientSecret }] : [];
   event.app.save(users);
   console.log(JSON.stringify({ event: "workshop_oauth_synchronized", enabled: configured }));
 });
-
-onRecordAuthWithOAuth2Request((event) => {
-  if (event.providerName !== "github" || !event.oauth2User) {
-    event.next();
-    return;
-  }
-
-  const { deriveGithubIdentity } = require(`${__hooks}/workshop-utils.js`);
-  const identity = deriveGithubIdentity(event.oauth2User, event.record ? event.record.id : event.oauth2User.id);
-  if (event.record) {
-    event.record.set("displayName", identity.displayName);
-    event.record.set("avatar", "");
-    event.record.set("avatarUrl", identity.avatarUrl);
-    event.record.set("githubUsername", identity.githubUsername);
-    event.record.set("githubProfileUrl", identity.githubProfileUrl);
-    event.app.save(event.record);
-  } else {
-    event.createData.displayName = identity.displayName;
-    event.createData.avatarUrl = identity.avatarUrl;
-    event.createData.githubUsername = identity.githubUsername;
-    event.createData.githubProfileUrl = identity.githubProfileUrl;
-  }
-  console.log(
-    JSON.stringify({
-      event: "workshop_oauth_identity_synchronized",
-      provider: "github",
-      recordId: event.record ? event.record.id : null,
-      newRecord: !event.record,
-    }),
-  );
-  event.next();
-}, "users");
-
-onRecordUpdateRequest((event) => {
-  const { rejectRequest } = require(`${__hooks}/workshop-utils.js`);
-  const originalAvatar = event.record.original().getString("avatar");
-  const pendingAvatarFiles = event.record.getUnsavedFiles("avatar");
-  if (event.record.getString("avatar") !== originalAvatar || pendingAvatarFiles.length > 0) {
-    rejectRequest("Workshop avatars are managed by GitHub OAuth");
-  }
-  event.next();
-}, "users");
 
 onRecordCreateRequest((event) => {
   event.record.set("revision", 1);
@@ -137,7 +95,7 @@ onRecordAfterCreateSuccess((event) => {
       return;
     }
 
-    const commenterName = commenter.getString("displayName") || "A community member";
+    const commenterName = commenter.getString("githubUsername") || "A community member";
     const submissionTitle = submission.getString("title");
     const rawExcerpt = event.record.getString("content").slice(0, 280);
     const submissionUrl = `${publicWorkshopUrl}/${submission.id}/`;
@@ -174,7 +132,7 @@ onRecordAfterCreateSuccess((event) => {
       return;
     }
 
-    const reporterName = reporter.getString("displayName") || "A community member";
+    const reporterName = reporter.getString("githubUsername") || "A community member";
     const submissionTitle = submission.getString("title");
     const category = event.record.getString("category");
     const explanation = event.record.getString("explanation");

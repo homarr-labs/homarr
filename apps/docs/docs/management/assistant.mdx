@@ -42,6 +42,11 @@ conversation instead of copying text into another widget or the floating panel.
 When the assistant is unavailable, its command-menu result remains visible but disabled and explains that
 an administrator must configure and enable it.
 
+The assistant uses the assistant-ui runtime for **AI SDK v7**. Homarr tracks the newest mutually compatible
+package set permitted by its supply-chain release-age policy. Persisted message rows can still report the upstream
+codec name `ai-sdk/v6`; assistant-ui's current v7 adapter deliberately retains that identifier for its compatible
+UI-message wire format. It does not mean the application is running AI SDK v6.
+
 ## Configure a model provider
 
 Homarr includes presets for OpenRouter, OpenAI, Anthropic Claude, Google Gemini, xAI, Groq, Mistral AI,
