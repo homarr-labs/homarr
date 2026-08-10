@@ -99,8 +99,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
       .filter((item) => includeOutdated || !item.outdated)
       .filter(
         (item) =>
-          !q ||
-          [item.title, item.description, item.authorGithubUsername].some((value) => value?.toLowerCase().includes(q)),
+          !q || [item.title, item.description, item.authorName].some((value) => value?.toLowerCase().includes(q)),
       )
       .toSorted(workshop.sorters[sort])
       .map((s) => s.id);
@@ -358,18 +357,16 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
         </div>
         <CardDescription className="flex min-w-0 items-center gap-1 text-xs">
           <a
-            href={githubProfileUrl(submission.authorGithubUsername) || undefined}
-            target={submission.authorGithubUsername ? "_blank" : undefined}
+            href={githubProfileUrl(submission.authorName) || undefined}
+            target={submission.authorName ? "_blank" : undefined}
             rel="noreferrer"
             className="inline-flex min-w-0 items-center gap-1.5 hover:text-foreground"
           >
             <Avatar className="size-4">
-              {submission.authorGithubUsername && (
-                <AvatarImage src={githubAvatarUrl(submission.authorGithubUsername)} alt="" />
-              )}
-              <AvatarFallback className="text-[9px]">{avatarFallback(submission.authorGithubUsername)}</AvatarFallback>
+              {submission.authorName && <AvatarImage src={githubAvatarUrl(submission.authorName)} alt="" />}
+              <AvatarFallback className="text-[9px]">{avatarFallback(submission.authorName)}</AvatarFallback>
             </Avatar>
-            <span className="truncate">{submission.authorGithubUsername || "Community member"}</span>
+            <span className="truncate">{submission.authorName || "Community member"}</span>
           </a>
           <span className="shrink-0 whitespace-nowrap">
             · v{submission.revision} · {formatRelativeTime(submission.created)}
