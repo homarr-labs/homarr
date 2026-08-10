@@ -1026,7 +1026,7 @@
         "description": "Copy one prompt, then paste the AI's single JSON block. Homarr loads its JSX into the editor automatically.",
         "request": "What should this widget do?",
         "documentationUrl": "API documentation URL (optional)",
-        "paste": "Paste AI response",
+        "paste": "Paste",
         "response": "AI response",
         "loaded": "Widget loaded into the editor",
         "invalidResponse": "Clipboard does not contain a valid v2 widget",
@@ -1060,8 +1060,6 @@
         "liveActions": "Run actions against the configured API",
         "liveActionsDescription": "Off is safe simulation. Turning this on affects the real service.",
         "noActions": "No actions are defined.",
-        "sessionActive": "Preview session active",
-        "simulationPending": "Actions are simulated until you run preview",
         "containedFailures": "Runtime failures are contained inside this widget. Request journals never include secret values.",
         "validation": {
           "title": "Validation",
@@ -1095,10 +1093,6 @@
           "compact": "Compact",
           "standard": "Standard",
           "wide": "Wide"
-        },
-        "theme": {
-          "light": "Light",
-          "dark": "Dark"
         },
         "fixture": {
           "live": "Live",

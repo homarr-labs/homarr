@@ -430,7 +430,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
             label={t("reportReason")}
             value={reportCategory}
             onChange={(value) => setReportCategory((value as WorkshopReport["category"]) ?? "other")}
-            data={["malicious", "spam", "copyright", "inappropriate", "other"]}
+            data={["outdated", "malicious", "spam", "copyright", "inappropriate", "other"]}
             allowDeselect={false}
           />
           <Textarea

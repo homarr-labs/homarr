@@ -8,12 +8,14 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconEye,
+  IconFlag,
   IconMessage,
   IconPackage,
   IconPlus,
   IconPuzzle,
   IconRefresh,
   IconSearch,
+  IconShield,
 } from "@tabler/icons-react";
 
 import type { WorkshopSubmission } from "@site/src/lib/pocketbase";
@@ -116,6 +118,7 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
   const availableTypeFilters = workshop.user
     ? [...typeFilters, { value: "yours" as const, label: "Yours" }]
     : typeFilters;
+  const openReportCount = workshop.submissions.reduce((total, submission) => total + submission.reportCount, 0);
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-16">
@@ -126,9 +129,19 @@ export const WorkshopApp = ({ workshopUrl }: { workshopUrl: string }) => {
             Discover community-made widgets and CSS. Review the source, then import it into Homarr.
           </p>
         </div>
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
           {workshop.user ? (
             <>
+              {workshop.user.isAdmin && (
+                <Button
+                  variant="outline"
+                  className="h-10 sm:h-8"
+                  nativeButton={false}
+                  render={<a href="/workshop/admin" aria-label={`Open moderation, ${openReportCount} open reports`} />}
+                >
+                  <IconShield size={14} /> Moderation{openReportCount > 0 ? ` (${openReportCount})` : ""}
+                </Button>
+              )}
               <Button className="h-10 sm:h-8" onClick={() => setShowSubmit(true)}>
                 <IconPlus size={14} /> Share yours
               </Button>
@@ -406,9 +419,14 @@ const SubmissionCard = ({ submission, backend, userVote, onVote }: SubmissionCar
       </CardHeader>
 
       <CardContent className="min-h-[4.5rem] flex-1 overflow-hidden">
-        {submission.outdated && (
+        {(submission.outdated || submission.reportCount > 0) && (
           <div className="mb-2 flex flex-wrap gap-1.5">
-            <Badge variant="secondary">Outdated</Badge>
+            {submission.outdated && <Badge variant="secondary">Outdated</Badge>}
+            {submission.reportCount > 0 && (
+              <Badge variant="destructive" className="gap-1">
+                <IconFlag size={12} /> {submission.reportCount} {submission.reportCount === 1 ? "report" : "reports"}
+              </Badge>
+            )}
           </div>
         )}
         {submission.description && (
