@@ -11,7 +11,7 @@ onBootstrap((event) => {
   event.next();
   const users = event.app.findCollectionByNameOrId("users");
   users.oauth2.enabled = configured;
-  users.oauth2.mappedFields = { id: "", name: "", username: "githubUsername", avatarURL: "" };
+  users.oauth2.mappedFields = { id: "", name: "", username: "name", avatarURL: "" };
   users.oauth2.providers = configured ? [{ name: "github", clientId, clientSecret }] : [];
   event.app.save(users);
   console.log(JSON.stringify({ event: "workshop_oauth_synchronized", enabled: configured }));
@@ -95,7 +95,7 @@ onRecordAfterCreateSuccess((event) => {
       return;
     }
 
-    const commenterName = commenter.getString("githubUsername") || "A community member";
+    const commenterName = commenter.getString("name") || "A community member";
     const submissionTitle = submission.getString("title");
     const rawExcerpt = event.record.getString("content").slice(0, 280);
     const submissionUrl = `${publicWorkshopUrl}/${submission.id}/`;
@@ -132,7 +132,7 @@ onRecordAfterCreateSuccess((event) => {
       return;
     }
 
-    const reporterName = reporter.getString("githubUsername") || "A community member";
+    const reporterName = reporter.getString("name") || "A community member";
     const submissionTitle = submission.getString("title");
     const category = event.record.getString("category");
     const explanation = event.record.getString("explanation");

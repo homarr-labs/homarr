@@ -3,10 +3,9 @@
 const cloneJson = (value) => JSON.parse(JSON.stringify(value));
 const cloneRule = (value) => (value === null ? null : String(value));
 const adminRule = "@request.auth.isAdmin = true";
-const identityFieldsUnchanged = [
-  "@request.body.email:changed = false",
-  "@request.body.githubUsername:changed = false",
-].join(" && ");
+const identityFieldsUnchanged = ["@request.body.email:changed = false", "@request.body.name:changed = false"].join(
+  " && ",
+);
 const immutableSubmissionFields = [
   "@request.body.author:changed = false",
   "@request.body.type:changed = false",
@@ -64,7 +63,7 @@ migrate(
     };
 
     users.passwordAuth = { enabled: false };
-    addUserField(new TextField({ name: "githubUsername", required: true, min: 1, max: 39 }));
+    addUserField(new TextField({ name: "name", required: true, min: 1, max: 39 }));
     addUserField(new BoolField({ name: "isAdmin" }));
 
     users.listRule = "";
@@ -236,7 +235,7 @@ migrate(
       viewRule: "",
       viewQuery: `
         SELECT s.id, s.type, s.title, s.description, s.widgetSchema, s.screenshots, s.author,
-          u.githubUsername AS authorGithubUsername,
+          u.name AS authorName,
           s.revision, s.changelog, s.outdated, s.created, s.updated,
           COALESCE((SELECT COUNT(*) FROM votes v WHERE v.submission = s.id AND v.value = 1), 0) AS upvotes,
           COALESCE((SELECT COUNT(*) FROM votes v WHERE v.submission = s.id AND v.value = -1), 0) AS downvotes,
