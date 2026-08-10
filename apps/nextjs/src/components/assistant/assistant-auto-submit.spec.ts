@@ -55,4 +55,36 @@ describe("shouldAutomaticallyContinueAssistant", () => {
       }),
     ).toBe(false);
   });
+
+  test("continues a completed browser-tool step without treating an earlier agent step as user input", () => {
+    expect(
+      shouldAutomaticallyContinueAssistant({
+        messages: [
+          {
+            id: "assistant-message",
+            role: "assistant",
+            parts: [
+              { type: "step-start" },
+              {
+                type: "dynamic-tool",
+                toolName: "icon_findIcons",
+                toolCallId: "icon-1",
+                input: { searchText: "homarr" },
+                state: "input-available",
+              },
+              { type: "step-start" },
+              {
+                type: "dynamic-tool",
+                toolName: "refresh_current_view",
+                toolCallId: "refresh-1",
+                input: {},
+                state: "output-available",
+                output: { success: true },
+              },
+            ],
+          },
+        ],
+      }),
+    ).toBe(true);
+  });
 });

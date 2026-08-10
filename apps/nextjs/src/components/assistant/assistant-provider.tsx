@@ -12,7 +12,8 @@ import type {
   Toolkit,
 } from "@assistant-ui/react";
 import { defineToolkit, useAui, useAuiEvent, useAuiState, useRemoteThreadListRuntime } from "@assistant-ui/react";
-import { AssistantChatTransport, useChatRuntime } from "@assistant-ui/react-ai-sdk";
+import { useChat } from "@ai-sdk/react";
+import { AssistantChatTransport, useAISDKRuntime } from "@assistant-ui/react-ai-sdk";
 import { useHotkeys } from "@mantine/hooks";
 import { createAssistantStream } from "assistant-stream";
 
@@ -36,6 +37,7 @@ import { AssistantPanel } from "./assistant-panel";
 import { getPendingAssistantAction } from "./assistant-pending-action";
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
 import { resolveAssistantPreferenceModelId, resolveAssistantThreadPreferenceModelId } from "./assistant-preferences";
+import { assistantAiSdkRuntimeOptions } from "./assistant-runtime-options";
 import {
   AssistantComposerSurfaceProvider,
   AssistantRunFocusPreserver,
@@ -321,6 +323,8 @@ const createHistoryAdapter = (threadId: string | undefined): ThreadHistoryAdapte
 
 const AssistantThreadRuntime = () => {
   const t = useScopedI18n("common.assistant");
+  const aui = useAui();
+  const localThreadId = useAuiState((state) => state.threadListItem.id);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
   const preferences = useAssistantPreferences();
   const transport = useMemo(
@@ -364,16 +368,25 @@ const AssistantThreadRuntime = () => {
     [t],
   );
 
-  return useChatRuntime<AssistantUIMessage>({
+  const chat = useChat<AssistantUIMessage>({
+    id: localThreadId,
     transport,
     onError,
     sendAutomaticallyWhen: shouldAutomaticallyContinueAssistant,
+  });
+
+  const runtime = useAISDKRuntime(chat, {
+    ...assistantAiSdkRuntimeOptions,
     adapters: {
       history,
       attachments,
       feedback,
     },
   });
+  transport.setRuntime(runtime);
+  // oxlint-disable-next-line no-underscore-dangle -- assistant-ui requires this hook to resolve the persisted remote thread before sending.
+  transport.__internal_setGetThreadListItem(() => (aui.threadListItem.source ? aui.threadListItem() : undefined));
+  return runtime;
 };
 
 const AssistantRuntime = ({ children }: PropsWithChildren) => {
