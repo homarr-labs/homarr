@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import {
   Alert,
   Badge,
@@ -22,11 +22,14 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import type { ModalProps } from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import {
   IconAlertTriangle,
+  IconArrowRight,
   IconBuildingStore,
   IconDownload,
+  IconExternalLink,
   IconFlag,
   IconRefresh,
   IconSearch,
@@ -35,6 +38,8 @@ import {
 } from "@tabler/icons-react";
 import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
+import { ReadOnlyCustomWidgetCode } from "@homarr/custom-widgets/workbench";
+import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
 import {
   useWorkshopCssImportMutation,
   useWorkshopQuery,
@@ -58,7 +63,7 @@ import {
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { createWorkshopClient } from "./workshop-client";
+import { createWorkshopClient, getWorkshopWebUrl } from "./workshop-client";
 
 function downloadWorkshopSubmission(submission: WorkshopSubmissionDetail) {
   const url = URL.createObjectURL(
@@ -75,9 +80,21 @@ interface WorkshopBrowserProps {
   type?: WorkshopSubmissionType;
   onInstall?(widget: HomarrCustomWidgetV2): Promise<void>;
   onUseCss?(css: string): void;
+  modalStack?: {
+    modalProps: Pick<ModalProps, "size" | "styles">;
+    details: WorkshopModalStep;
+    report: WorkshopModalStep;
+  };
 }
 
-export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: WorkshopBrowserProps) {
+interface WorkshopModalStep {
+  opened: boolean;
+  stackId?: string;
+  open(): void;
+  close(): void;
+}
+
+export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, modalStack }: WorkshopBrowserProps) {
   const t = useScopedI18n("workshop");
   const client = useMemo(createWorkshopClient, []);
   const [user, setUser] = useState<WorkshopUser | null>(null);
@@ -86,12 +103,25 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 250);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [reportOpened, reportControls] = useDisclosure(false);
+  const [internalReportOpened, reportControls] = useDisclosure(false);
   const [reportCategory, setReportCategory] = useState<WorkshopReport["category"]>("other");
   const [reportExplanation, setReportExplanation] = useState("");
   const [loginPending, setLoginPending] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [cssAwaitingConfirmation, setCssAwaitingConfirmation] = useState<string | null>(null);
+  const workshopWebUrl = useMemo(getWorkshopWebUrl, []);
+  const detailsOpened = modalStack?.details.opened ?? selectedId !== null;
+  const reportOpened = modalStack?.report.opened ?? internalReportOpened;
+  const openDetails = (id: string) => {
+    setSelectedId(id);
+    modalStack?.details.open();
+  };
+  const closeDetails = () => {
+    modalStack?.details.close();
+    setSelectedId(null);
+  };
+  const openReport = modalStack?.report.open ?? reportControls.open;
+  const closeReport = modalStack?.report.close ?? reportControls.close;
 
   useEffect(() => {
     const unsubscribe = client.subscribeToAuth(setUser);
@@ -123,7 +153,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
       })
       .finally(() => setLoginPending(false));
   };
-  const install = useWorkshopWidgetImportMutation(onInstall, () => setSelectedId(null));
+  const install = useWorkshopWidgetImportMutation(onInstall);
   const useCss = useWorkshopCssImportMutation(onUseCss, () => {
     setCssAwaitingConfirmation(null);
     setSelectedId(null);
@@ -135,7 +165,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
       { submission: selectedId ?? "", category: reportCategory, explanation: reportExplanation },
       {
         onSuccess: () => {
-          reportControls.close();
+          closeReport();
           setReportExplanation("");
           showSuccessNotification({ title: t("reportSent"), message: t("reportSentDescription") });
         },
@@ -161,25 +191,38 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
               </Text>
             </Box>
           </Group>
-          {user ? (
-            <Group gap="xs">
-              <Badge variant="light">{user.name}</Badge>
-              <Button
-                size="xs"
-                variant="subtle"
-                onClick={() => {
-                  client.signOut();
-                  setUser(null);
-                }}
-              >
-                {t("signOut")}
-              </Button>
-            </Group>
-          ) : (
-            <Button size="xs" loading={loginPending} onClick={signIn}>
-              {t("signIn")}
+          <Group gap="xs">
+            <Button
+              component="a"
+              href={workshopWebUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              size="xs"
+              variant="default"
+              leftSection={<IconExternalLink size={14} />}
+            >
+              {t("openCommunity")}
             </Button>
-          )}
+            {user ? (
+              <>
+                <Badge variant="light">{user.name}</Badge>
+                <Button
+                  size="xs"
+                  variant="subtle"
+                  onClick={() => {
+                    client.signOut();
+                    setUser(null);
+                  }}
+                >
+                  {t("signOut")}
+                </Button>
+              </>
+            ) : (
+              <Button size="xs" loading={loginPending} onClick={signIn}>
+                {t("signIn")}
+              </Button>
+            )}
+          </Group>
         </Group>
       </Card>
       <Alert color="yellow" icon={<IconAlertTriangle size={18} />}>
@@ -260,9 +303,6 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
                     <IconThumbUp size={13} /> {item.upvotes} · <IconThumbDown size={13} /> {item.downvotes}
                   </Text>
                 </Group>
-                <Badge color={item.widgetSchema === expectedSchema ? "green" : "red"} variant="light">
-                  {item.widgetSchema}
-                </Badge>
                 <Group gap="xs">
                   {item.outdated && <Badge color="yellow">Outdated</Badge>}
                   {item.reportCount > 0 && (
@@ -277,8 +317,8 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
                 <Text size="sm" c="dimmed" lineClamp={2}>
                   {item.description || t("noDescription")}
                 </Text>
-                <Button variant="light" onClick={() => setSelectedId(item.id)}>
-                  {type === "customCss" ? t("inspectCss") : t("inspect")}
+                <Button variant="light" onClick={() => openDetails(item.id)}>
+                  {type === "customCss" ? t("inspectCss") : t("install")}
                 </Button>
               </Stack>
             </Card>
@@ -294,21 +334,38 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
       )}
 
       <Modal
-        opened={selectedId !== null}
-        onClose={() => setSelectedId(null)}
-        title={detail.data?.title ?? t("details")}
-        size="xl"
+        {...modalStack?.modalProps}
+        opened={detailsOpened}
+        onClose={closeDetails}
+        stackId={modalStack?.details.stackId}
+        title={type === "customCss" ? t("inspectCss") : t("install")}
+        size={modalStack?.modalProps.size ?? "xl"}
       >
         {detail.isPending ? (
           <Skeleton h={400} />
         ) : detail.isError || !detail.data ? (
           <Alert color="red">{detail.error instanceof Error ? detail.error.message : t("loadError")}</Alert>
         ) : (
-          <Stack>
-            <Text>{detail.data.description}</Text>
-            <Text size="sm" c="dimmed">
-              {t("author", { name: detail.data.authorName || "Community member" })}
-            </Text>
+          <Stack gap="lg">
+            <Group justify="space-between" align="flex-start">
+              <Box>
+                <Title order={3}>{detail.data.title}</Title>
+                <Text size="sm" c="dimmed">
+                  {t("author", { name: detail.data.authorName || "Community member" })}
+                </Text>
+              </Box>
+              <Button
+                component="a"
+                href={getWorkshopWebUrl(detail.data.id)}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="default"
+                leftSection={<IconExternalLink size={16} />}
+              >
+                {t("openCommunity")}
+              </Button>
+            </Group>
+            {detail.data.description && <Text>{detail.data.description}</Text>}
             {detail.data.outdated && (
               <Alert color="yellow" icon={<IconAlertTriangle size={18} />}>
                 The author marked this submission as outdated. Review it carefully before importing.
@@ -346,9 +403,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
                 {t("installErrorDescription")}
               </Alert>
             )}
-            <Code block mah={360} style={{ overflow: "auto", whiteSpace: "pre" }}>
-              {detail.data.content}
-            </Code>
+            <WorkshopCodeViewer value={detail.data.content} language={type === "customCss" ? "css" : "json"} />
             <Group justify="space-between">
               <Group gap="xs">
                 <Button
@@ -381,7 +436,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
                   color="red"
                   leftSection={<IconFlag size={16} />}
                   disabled={!user}
-                  onClick={reportControls.open}
+                  onClick={openReport}
                 >
                   {t("report")}
                 </Button>
@@ -390,13 +445,14 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
                 <Button
                   loading={install.isPending}
                   disabled={!detailCompatible}
+                  rightSection={<IconArrowRight size={16} />}
                   onClick={() =>
                     detailValidation?.success &&
                     typeof detailValidation.data !== "string" &&
                     install.mutate(detailValidation.data)
                   }
                 >
-                  {t("install")}
+                  {t("continueInstall")}
                 </Button>
               )}
               {onUseCss && (
@@ -424,7 +480,13 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
         )}
       </Modal>
 
-      <Modal opened={reportOpened} onClose={reportControls.close} title={t("reportTitle")}>
+      <Modal
+        {...modalStack?.modalProps}
+        opened={reportOpened}
+        onClose={closeReport}
+        stackId={modalStack?.report.stackId}
+        title={t("reportTitle")}
+      >
         <Stack>
           <Select
             label={t("reportReason")}
@@ -471,6 +533,54 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
         </Stack>
       </Modal>
     </Stack>
+  );
+}
+
+function WorkshopCodeViewer({ value, language }: { value: string; language: "json" | "css" }) {
+  const id = useId();
+  const t = useScopedI18n("customWidget.editor");
+  const workshopT = useScopedI18n("workshop");
+  const messages: CustomWidgetEditorMessages = {
+    languageJsx: t("language.jsx"),
+    languageJson: t("language.json"),
+    undo: t("action.undo"),
+    redo: t("action.redo"),
+    components: t("action.components"),
+    componentSearch: t("componentReference.search"),
+    componentEmpty: t("componentReference.empty"),
+    componentCount: (count) => t("componentReference.count", { count }),
+    insertStarter: t("action.insertStarter"),
+    format: t("action.format"),
+    copy: t("action.copy"),
+    copied: t("action.copied"),
+    schema: t("action.schema"),
+    schemaTab: t("reference.schema"),
+    minimalTab: t("reference.minimal"),
+    fullTab: t("reference.full"),
+    errors: (count) => t("status.errors", { count }),
+    warnings: (count) => t("status.warnings", { count }),
+    ready: t("status.ready"),
+    position: (cursor) => t("status.position", cursor),
+    characters: (count, limit) =>
+      limit ? t("status.charactersWithLimit", { count, limit }) : t("status.characters", { count }),
+    diagnosticsTitle: t("diagnostics.title"),
+    diagnostic: (diagnostic) => diagnostic.value ?? diagnostic.code,
+  };
+  let displayValue = value;
+  if (language === "json") {
+    try {
+      displayValue = JSON.stringify(JSON.parse(value) as unknown, null, 2);
+    } catch {}
+  }
+  return (
+    <ReadOnlyCustomWidgetCode
+      id={`workshop-source-${id}`}
+      label={workshopT("sourceCode")}
+      language={language}
+      value={displayValue}
+      messages={messages}
+      height="360px"
+    />
   );
 }
 

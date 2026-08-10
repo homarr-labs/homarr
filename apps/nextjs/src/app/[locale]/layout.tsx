@@ -161,6 +161,7 @@ export default async function Layout(props: {
       <head>
         <meta name="homarr-website-url" content={publicUrls.homarrWebsiteUrl} />
         <meta name="homarr-workshop-api-url" content={publicUrls.workshopApiUrl} />
+        <meta name="homarr-workshop-web-url" content={publicUrls.workshopWebUrl} />
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
       </head>
