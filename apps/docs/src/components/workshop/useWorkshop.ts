@@ -162,7 +162,7 @@ export const useWorkshop = (workshopUrl: string) => {
   const report = useCallback(
     async (
       submissionId: string,
-      category: "malicious" | "spam" | "copyright" | "inappropriate" | "other",
+      category: "outdated" | "malicious" | "spam" | "copyright" | "inappropriate" | "other",
       explanation: string,
     ) => {
       try {

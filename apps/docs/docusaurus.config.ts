@@ -402,6 +402,7 @@ html[data-workshop-detail-loading] #workshop-detail-route-fallback {
             path: "/workshop/:id",
             component: "@site/src/components/workshop/WorkshopDetailRoutePage",
             exact: true,
+            priority: -1,
           });
         },
       };

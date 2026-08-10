@@ -69,6 +69,10 @@ const docsConfig = await read("apps/docs/docusaurus.config.ts");
 if (!docsConfig.includes('scripts: [{ src: "/workshop-runtime-config.js" }]')) {
   throw new Error("Workshop must load the container runtime configuration before the documentation bundle");
 }
+if (!docsConfig.includes('path: "/workshop/:id"') || !docsConfig.includes("priority: -1")) {
+  throw new Error("Workshop submission routes must not capture the moderation page");
+}
 await access(resolve("apps/docs/static/workshop-runtime-config.js"));
+await access(resolve("apps/docs/src/pages/workshop/admin/index.tsx"));
 
 console.log("Workshop static contracts passed");
