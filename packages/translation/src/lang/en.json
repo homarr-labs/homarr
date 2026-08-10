@@ -2018,6 +2018,9 @@
       "open": "Open Homarr Assistant",
       "close": "Close assistant",
       "minimize": "Minimize assistant",
+      "maximize": "Maximize assistant",
+      "restore": "Restore assistant size",
+      "windowControls": "Conversation window controls",
       "spotlight": "Ask Homarr Assistant",
       "spotlightDescription": "Type and send a prompt without leaving the command menu.",
       "spotlightPrompt": {
