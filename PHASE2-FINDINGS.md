@@ -714,12 +714,47 @@ against whether the server actually loads them:
 
 These are not additive — dockerode's figure contains ssh2's — but the ranking is what matters.
 
-**mysql2 and pg are loaded on every SQLite install.** `db/drivers/index.ts` statically imports
-all three driver wrappers and picks one at call time, so importing the module executes all
-three. Not yet fixed: `packages/db/index.ts` does `export const db = createDb(schema)` at
-module scope, so `createDb` must stay synchronous and cannot use `await import()`. The viable
-route is deferring the external `require` inside each wrapper. Both dialects have testcontainer
-migration tests, so it is verifiable — it is queued, not dismissed.
+> **Correction.** The RSS figures in the table above were measured without forcing a GC
+> between readings, so they include V8 growing its heap opportunistically rather than the real
+> cost of the module. Re-measured with `global.gc()` before each reading, the two unused
+> database drivers cost **21.4 MiB RSS / 4.1 MiB heap**, not the ~30 MiB the naive sum implied
+> — and `drizzle-orm`'s 124.3 MiB was almost entirely this artefact. The ssh2 conclusion is
+> unaffected: it was confirmed independently by the before/after external-memory drop.
+
+### mysql2 and pg load on every SQLite install — and it was not worth fixing
+
+`db/drivers/index.ts` statically imports all three driver wrappers and picks one at call time,
+so importing the module executes all three. Confirmed at runtime: mysql2 (77 files) and pg
+(13 files) are resident on a SQLite install. Re-measured properly, the prize is **21.4 MiB**.
+
+Three attempts, each caught by testing the real image rather than by typecheck:
+
+1. `createRequire(import.meta.url)` — this module is bundled into two entry points, and
+   `db/migrations/<dialect>/migrate.cjs` is **CommonJS**, where `import.meta.url` compiles to
+   `undefined`. `createRequire` threw `ERR_INVALID_ARG_VALUE` at load and took down migrations,
+   and therefore startup, **for every dialect including SQLite**. Fixed by basing resolution on
+   `process.cwd()`.
+2. With that fixed, MySQL failed with `MODULE_NOT_FOUND` on
+   `drizzle-orm/mysql2/index.cjs`. A dynamic `require` resolves through the package's `require`
+   condition to a `.cjs` build, and Next's tracing only ever copied the ESM `index.js` into the
+   standalone output.
+3. Leaving drizzle's dialect as a static import defeats the purpose entirely:
+   `drizzle-orm/mysql2` itself does `from "mysql2"`, so the client loads anyway. Verified — the
+   built image still loaded all 77 mysql2 files.
+
+That leaves two routes, and both are worse than the problem. Forcing drizzle's `.cjs` into the
+image via `outputFileTracingIncludes` would load **a second copy of drizzle's core** next to
+the ESM one for MySQL users, so class identities and `is()` checks would straddle two module
+instances. Requiring the ESM file works under Node 24's `require(esm)` — but only via an
+absolute path (`/app/node_modules/drizzle-orm/mysql2/index.js`); both bare specifiers fail,
+so it would hardcode drizzle's internal file layout and a drizzle upgrade would break
+*startup* for MySQL and Postgres users.
+
+**Backed out.** 21.4 MiB is not worth a startup-failure class of risk on two dialects that
+cannot be exercised in normal development. The blocker to record is structural: `createDb`
+must stay synchronous because `packages/db/index.ts` does `export const db = createDb(schema)`
+at module scope and `migrate.cjs` is CommonJS, so neither `await import()` nor top-level await
+is available. Making the database handle async would unblock it.
 
 ## Why 24 MiB of code is resident before the first request
 
