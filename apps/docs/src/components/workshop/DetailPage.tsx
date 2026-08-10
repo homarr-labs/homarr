@@ -451,7 +451,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
     try {
       await backend.report(
         submission.id,
-        reportCategory as "malicious" | "spam" | "copyright" | "inappropriate" | "other",
+        reportCategory as "outdated" | "malicious" | "spam" | "copyright" | "inappropriate" | "other",
         reportExplanation,
       );
       setReportOpen(false);
@@ -881,6 +881,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
                 <SelectValue>{(value) => String(value).replace(/^./u, (letter) => letter.toUpperCase())}</SelectValue>
               </SelectTrigger>
               <SelectContent align="start">
+                <SelectItem value="outdated">Outdated or no longer working</SelectItem>
                 <SelectItem value="malicious">Malicious</SelectItem>
                 <SelectItem value="spam">Spam</SelectItem>
                 <SelectItem value="copyright">Copyright</SelectItem>
