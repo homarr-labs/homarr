@@ -70,9 +70,7 @@ describe("WorkshopBackend", () => {
       token: "token",
       record: {
         id: "user-id",
-        displayName: "octocat",
         githubUsername: "octocat",
-        githubProfileUrl: "https://github.com/octocat",
       },
       meta: { username: "octocat" },
     });
@@ -80,14 +78,11 @@ describe("WorkshopBackend", () => {
     const client = new WorkshopBackend("https://workshop.example.com");
     const user = await client.signInWithGitHub();
 
-    expect(mocks.authWithOAuth2).toHaveBeenCalledWith({
-      provider: "github",
-      createData: { displayName: "GitHub user" },
-    });
+    expect(mocks.authWithOAuth2).toHaveBeenCalledWith({ provider: "github" });
     expect(mocks.authWithOAuth2.mock.calls[0]?.[0]).not.toHaveProperty("requestKey");
     expect(mocks.authWithOAuth2.mock.calls[0]?.[0]).not.toHaveProperty("urlCallback");
     expect(mocks.update).not.toHaveBeenCalled();
-    expect(user).toMatchObject({ displayName: "octocat", githubUsername: "octocat" });
+    expect(user).toMatchObject({ githubUsername: "octocat" });
   });
 
   test("exposes the typed submission collection service", () => {
@@ -219,7 +214,8 @@ describe("WorkshopBackend", () => {
       1,
       12,
       expect.objectContaining({
-        filter: "(title ~ 'active streams' || description ~ 'active streams' || authorName ~ 'active streams')",
+        filter:
+          "(title ~ 'active streams' || description ~ 'active streams' || authorGithubUsername ~ 'active streams')",
       }),
     );
   });
