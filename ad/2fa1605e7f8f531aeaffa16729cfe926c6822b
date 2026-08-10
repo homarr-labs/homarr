@@ -1,0 +1,19 @@
+apps/nextjs/src/components/layout/header/lazy-spotlight.tsx
+  s_5d9f23ee18513b::t_e960426f39fcea 4,10-15,18,35,40-47,50-51,54,61,63-69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "ad2fa1605e7f8f531aeaffa16729cfe926c6822b",
+  "prompts": {},
+  "sessions": {
+    "s_5d9f23ee18513b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fec85-68a8-7c10-b157-287fdb19bbad",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
