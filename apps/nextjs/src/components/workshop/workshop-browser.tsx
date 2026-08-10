@@ -163,7 +163,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
           </Group>
           {user ? (
             <Group gap="xs">
-              <Badge variant="light">{user.displayName}</Badge>
+              <Badge variant="light">{user.githubUsername}</Badge>
               <Button
                 size="xs"
                 variant="subtle"
@@ -254,7 +254,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
               <Stack gap="xs" mt="md">
                 <Group justify="space-between">
                   <Text size="xs" c="dimmed">
-                    {t("author", { name: item.authorName })}
+                    {t("author", { name: item.authorGithubUsername || "Community member" })}
                   </Text>
                   <Text size="sm" c="dimmed">
                     <IconThumbUp size={13} /> {item.upvotes} · <IconThumbDown size={13} /> {item.downvotes}
@@ -307,7 +307,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss }: 
           <Stack>
             <Text>{detail.data.description}</Text>
             <Text size="sm" c="dimmed">
-              {t("author", { name: detail.data.authorName })}
+              {t("author", { name: detail.data.authorGithubUsername || "Community member" })}
             </Text>
             {detail.data.outdated && (
               <Alert color="yellow" icon={<IconAlertTriangle size={18} />}>
