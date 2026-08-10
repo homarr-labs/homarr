@@ -30,6 +30,7 @@ interface UseGristackReturnType {
  * @param width width of the section (column count)
  * @param height height of the section (row count)
  * @param isDynamic if the section is dynamic
+ * @param isScrollable if the dynamic section is scrollable (cells keep a fixed height instead of shrinking to fit)
  */
 const handleResizeChange = (
   wrapper: HTMLDivElement,
@@ -37,17 +38,22 @@ const handleResizeChange = (
   width: number,
   height: number,
   isDynamic: boolean,
+  isScrollable = false,
 ) => {
   wrapper.style.setProperty("--gridstack-column-count", width.toString());
   wrapper.style.setProperty("--gridstack-row-count", height.toString());
 
   let cellHeight = wrapper.clientWidth / width;
-  if (isDynamic) {
+  if (isDynamic && !isScrollable) {
     cellHeight = wrapper.clientHeight / height;
   }
 
   if (!isDynamic) {
     document.body.style.setProperty("--gridstack-cell-size", cellHeight.toString());
+  }
+
+  if (isDynamic && isScrollable) {
+    wrapper.style.setProperty("--gridstack-dynamic-height", `${cellHeight * height}px`);
   }
 
   gridstack.cellHeight(cellHeight);
@@ -76,6 +82,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     section.kind === "dynamic" && "width" in section && typeof section.width === "number"
       ? section.width
       : currentLayout.columnCount;
+  const isScrollable = section.kind === "dynamic" && "options" in section && section.options.scrollable;
 
   const itemRefKeys = Object.keys(itemRefs.current);
   // define items in itemRefs for easy access and reference to items
@@ -206,8 +213,11 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
       markAsReady(section.id);
     }
 
-    // Only run this effect when the section items change
-  }, [itemIds.length, columnCount]);
+    // Only run this effect when the section items, column count, or scrollable option change.
+    // scrollable has to be included: it drives maxRow inside initializeGridstack, and without
+    // it here, toggling the option updates the data-scrollable attribute (set directly in JSX)
+    // but never re-initializes the grid engine, leaving maxRow stuck at its old value.
+  }, [itemIds.length, columnCount, isScrollable]);
 
   /**
    * IMPORTANT: This effect has to be placed after the effect to initialize the gridstack
@@ -234,6 +244,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
             node.w ?? 1,
             node.h ?? 1,
             true,
+            dynamicInnerGrid.getAttribute("data-scrollable") === "true",
           );
         });
     });
@@ -267,8 +278,16 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
    */
   useEffect(() => {
     if (!sectionHeight) return;
+    if (isScrollable) {
+      // .row() forces both minRow and maxRow to the same value, which would re-cap a
+      // scrollable section back to its visible height. Only carry over the minRow baseline
+      // (used e.g. by getRow() for cellHeight math); leave maxRow at the unlimited value
+      // initializeGridstack already set.
+      if (gridRef.current) gridRef.current.opts.minRow = sectionHeight;
+      return;
+    }
     gridRef.current?.row(sectionHeight);
-  }, [sectionHeight]);
+  }, [sectionHeight, isScrollable]);
 
   /**
    * IMPORTANT: This effect has to be placed after the effect to initialize the gridstack
@@ -281,6 +300,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     width,
     height,
     isDynamic: section.kind === "dynamic",
+    isScrollable,
   });
 
   return {
@@ -299,6 +319,7 @@ interface UseCssVariableConfiguration {
   height: number;
   columnCount: number;
   isDynamic: boolean;
+  isScrollable: boolean;
 }
 
 /**
@@ -318,6 +339,7 @@ const useCssVariableConfiguration = ({
   height,
   columnCount,
   isDynamic,
+  isScrollable,
 }: UseCssVariableConfiguration) => {
   const onResize = useCallback(() => {
     if (!wrapperRef.current) return;
@@ -328,8 +350,9 @@ const useCssVariableConfiguration = ({
       gridRef.current.getColumn(),
       gridRef.current.getRow(),
       isDynamic,
+      isScrollable,
     );
-  }, [wrapperRef, gridRef, isDynamic]);
+  }, [wrapperRef, gridRef, isDynamic, isScrollable]);
 
   useCallback(() => {
     if (!wrapperRef.current) return;
@@ -339,12 +362,12 @@ const useCssVariableConfiguration = ({
     wrapperRef.current.style.setProperty("--gridstack-row-count", gridRef.current.getRow().toString());
 
     let cellHeight = wrapperRef.current.clientWidth / gridRef.current.getColumn();
-    if (isDynamic) {
+    if (isDynamic && !isScrollable) {
       cellHeight = wrapperRef.current.clientHeight / gridRef.current.getRow();
     }
 
     gridRef.current.cellHeight(cellHeight);
-  }, [wrapperRef, gridRef, isDynamic]);
+  }, [wrapperRef, gridRef, isDynamic, isScrollable]);
 
   // Define widget-width by calculating the width of one column with mainRef width and column count
   useEffect(() => {

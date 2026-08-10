@@ -1563,6 +1563,10 @@
         },
         "borderColor": {
           "label": "Border color"
+        },
+        "scrollable": {
+          "label": "Scrollable",
+          "description": "Allow the section content to scroll instead of shrinking to fit"
         }
       },
       "remove": {

@@ -52,8 +52,15 @@ export const BoardDynamicSection = ({ section }: Props) => {
             {options.title}
           </Badge>
         )}
-        {/* Use unique key by layout to reinitialize gridstack */}
-        <GridStack key={`${currentLayoutId}-${section.id}`} section={section} className="min-row" />
+        <Box
+          style={{
+            height: "100%",
+            overflowY: options.scrollable ? "auto" : "hidden",
+          }}
+        >
+          {/* Use unique key by layout to reinitialize gridstack */}
+          <GridStack key={`${currentLayoutId}-${section.id}`} section={section} className="min-row" />
+        </Box>
       </Card>
       <BoardDynamicSectionMenu section={section} />
     </Box>

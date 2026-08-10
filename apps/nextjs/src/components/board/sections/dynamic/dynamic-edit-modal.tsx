@@ -1,6 +1,6 @@
 "use client";
 
-import { CloseButton, ColorInput, Stack, TextInput, useMantineTheme } from "@mantine/core";
+import { CloseButton, ColorInput, Stack, Switch, TextInput, useMantineTheme } from "@mantine/core";
 import type { z } from "zod/v4";
 
 import { useZodForm } from "@homarr/form";
@@ -47,6 +47,11 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
             />
           }
           {...form.getInputProps("borderColor")}
+        />
+        <Switch
+          label={t("section.dynamic.option.scrollable.label")}
+          description={t("section.dynamic.option.scrollable.description")}
+          {...form.getInputProps("scrollable", { type: "checkbox" })}
         />
         <ModalFormFooter onCancel={actions.closeModal} />
       </Stack>

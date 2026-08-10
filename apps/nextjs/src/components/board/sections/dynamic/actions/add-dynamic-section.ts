@@ -20,6 +20,7 @@ export const addDynamicSectionCallback = () => (board: Board) => {
       title: "",
       borderColor: "",
       customCssClasses: [],
+      scrollable: false,
     },
     layouts: createDynamicSectionLayouts(board, firstSection),
   } satisfies DynamicSection;

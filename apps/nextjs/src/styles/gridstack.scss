@@ -87,6 +87,14 @@
   height: 100% !important;
 }
 
+// When a dynamic section is scrollable, the grid grows to fit its rows
+// instead of being compressed to 100% of the visible section height,
+// letting the surrounding wrapper (see dynamic-section.tsx) scroll it.
+.grid-stack[data-kind="dynamic"][data-scrollable="true"] {
+  height: var(--gridstack-dynamic-height, 100%) !important;
+  min-height: 100%;
+}
+
 // General gridstack styling
 .grid-stack > .grid-stack-item > .grid-stack-item-content,
 .grid-stack > .grid-stack-item > .placeholder-content {

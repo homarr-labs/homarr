@@ -20,6 +20,11 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
   if (!refs.wrapper.current) return false;
   // initialize gridstack
   const newGrid = refs.gridstack;
+  const isDynamic = section.kind === "dynamic";
+  const isScrollable = isDynamic && "options" in section && section.options.scrollable;
+  // Scrollable dynamic sections aren't limited to the visible section height,
+  // so items can be placed below the fold and reached by scrolling.
+  const maxRow = isDynamic && "height" in section && !isScrollable ? (section.height as number) : 0;
   newGrid.current = GridStack.init(
     {
       column: sectionColumnCount,
@@ -29,8 +34,8 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
       alwaysShowResizeHandle: true,
       acceptWidgets: true,
       staticGrid: true,
-      minRow: section.kind === "dynamic" && "height" in section ? (section.height as number) : 1,
-      maxRow: section.kind === "dynamic" && "height" in section ? (section.height as number) : 0,
+      minRow: isDynamic && "height" in section ? (section.height as number) : 1,
+      maxRow,
       animate: false,
       styleInHead: true,
       disableRemoveNodeOnDrop: true,
@@ -40,8 +45,12 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
   );
   const grid = newGrid.current;
 
-  // Must be used to update the column count after the initialization
-  grid.column(sectionColumnCount, "none");
+  // GridStack.init() reuses the cached instance for an already-initialized element and
+  // silently ignores the new options object above -- including maxRow. Its engine also keeps
+  // its own separate copy of maxRow (set once when first constructed) that collision/accept
+  // checks actually read, so it has to be synced explicitly here too, not just on grid.opts.
+  grid.opts.maxRow = maxRow;
+  if (grid.engine) grid.engine.maxRow = maxRow;
 
   grid.batchUpdate();
   grid.removeAll(false);
@@ -52,5 +61,19 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
     grid.makeWidget(ref);
   });
   grid.batchUpdate(false);
+
+  // Must be used to update the column count after the initialization. Has to run after the
+  // removeAll/makeWidget rebuild above, not before: calling it first works when checked in
+  // isolation, but makeWidget re-registers each item from its DOM ref right afterward and
+  // does not preserve that reflow, undoing it and leaving items overlapping.
+  // A dynamic section's column count changes continuously as its outer box is resized
+  // (unlike other sections, which only change column count between board layouts that
+  // already store their own explicit item positions), so its items need to be reflowed
+  // to fit the new column count instead of keeping their old, now out-of-bounds offsets.
+  // "list" re-adds each item with auto-placement (in original order), so GridStack's own
+  // collision handling finds each one a clear slot -- "move"/"moveScale" assign explicit
+  // positions directly, which can make that collision pass thrash and leave items overlapping.
+  grid.column(sectionColumnCount, isDynamic ? "list" : "none");
+
   return true;
 };
