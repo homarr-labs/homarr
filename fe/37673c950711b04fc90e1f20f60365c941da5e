@@ -1,0 +1,36 @@
+apps/docs/docs/management/boards/index.mdx
+  s_093d61b162b9ca::t_05eba11119d19d 137
+e2e/board-grid.spec.ts
+  s_093d61b162b9ca::t_db326ea029900e 244,322
+  s_093d61b162b9ca::t_67024db41b7ced 805-806,819
+  s_093d61b162b9ca::t_64c16739a954e5 813-815,826
+  s_093d61b162b9ca::t_0f3505ec7e0978 290-321
+  s_093d61b162b9ca::t_e86bb063612e9c 98-99
+  s_093d61b162b9ca::t_4efe2fef14f659 808-812,816-818,820-825,827-828,839-840
+  s_093d61b162b9ca::t_480f46f2431cfb 829-838
+  s_093d61b162b9ca::t_ca488007f3c706 807
+apps/nextjs/src/app/[locale]/boards/(content)/_client.module.css
+  s_093d61b162b9ca::t_b22d616ac8b8e5 24
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_093d61b162b9ca::t_05eba11119d19d 153,168,186
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_093d61b162b9ca::t_1d7b46b87c1eaa 1055,1089-1094,1096,1114,1120-1121
+  s_093d61b162b9ca::t_5a9eb07546319b 1095
+  s_093d61b162b9ca::t_05eba11119d19d 62,711-718,755,786,793,835
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "fe37673c950711b04fc90e1f20f60365c941da5e",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
