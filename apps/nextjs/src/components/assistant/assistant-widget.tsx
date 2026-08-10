@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useCallback, useState } from "react";
 import { useAui, useAuiState } from "@assistant-ui/react";
 import { ActionIcon, Box, Button, Center, Group, Loader, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
@@ -8,6 +8,7 @@ import { IconAlertTriangle, IconArrowsMaximize, IconMessage, IconRobot } from "@
 
 import { useI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "@homarr/widgets";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 import classes from "./assistant-panel.module.css";
 import { AssistantConversationSurface } from "./assistant-panel";
@@ -31,6 +32,7 @@ export const AssistantBoardWidget = (props: WidgetComponentProps<"assistant">) =
 
 const EnabledAssistantBoardWidget = ({ options, width, height, isEditMode }: WidgetComponentProps<"assistant">) => {
   const t = useI18n();
+  const board = useRequiredBoard();
   const assistant = useHomarrAssistant();
   const preferences = useAssistantPreferences();
   const aui = useAui();
@@ -110,9 +112,11 @@ const EnabledAssistantBoardWidget = ({ options, width, height, isEditMode }: Wid
   return (
     <Box
       className={classes.widgetPanel}
+      data-board-widget
       data-compact={width < 420 || height < 420 || undefined}
       data-editing={isEditMode || undefined}
       aria-busy={isLoading || assistant.isRunning}
+      style={{ "--assistant-widget-radius": `var(--mantine-radius-${board.itemRadius})` } as CSSProperties}
     >
       <AssistantConversationSurface
         isRunning={assistant.isRunning}
