@@ -29,6 +29,7 @@ import { createWorkshopClient } from "~/components/workshop/workshop-client";
 
 import { AssistantContext, AssistantPreferencesContext, useAssistantPreferences } from "./assistant-context";
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
+import { isAssistantProviderUnavailable } from "./assistant-provider-quota";
 import { AssistantAutoApprovalProvider } from "./assistant-auto-approval";
 import { getRunningAssistantPartType } from "./assistant-activity-state";
 import { prepareAssistantRequestBody } from "./assistant-attachment-payload";
@@ -169,7 +170,7 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
       reasoning: current.reasoning,
     };
   }, []);
-  const getRequestHeaders = useCallback(() => {
+  const getRequestHeaders = useCallback((): Record<string, string> => {
     if (data?.provider !== "homarr") return {};
     const token = workshopClient.authToken;
     return token ? { [assistantHomarrProviderTokenHeader]: token } : {};
@@ -412,18 +413,19 @@ const AssistantThreadRuntime = () => {
   const localThreadId = useAuiState((state) => state.threadListItem.id);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
   const preferences = useAssistantPreferences();
+  const { getRequestBody, getRequestHeaders } = preferences;
   const transport = useMemo(
     () =>
       new AssistantChatTransport({
         api: "/api/assistant/chat",
-        body: preferences.getRequestBody,
+        body: getRequestBody,
         fetch: (input, init) => {
           const headers = new Headers(init?.headers);
-          for (const [name, value] of Object.entries(preferences.getRequestHeaders())) headers.set(name, value);
+          for (const [name, value] of Object.entries(getRequestHeaders())) headers.set(name, value);
           return globalThis.fetch(input, { ...init, headers, body: prepareAssistantRequestBody(init?.body) });
         },
       }),
-    [preferences.getRequestBody, preferences.getRequestHeaders],
+    [getRequestBody, getRequestHeaders],
   );
   const history = useMemo(() => createHistoryAdapter(threadId), [threadId]);
   const selectedModel = preferences.models.find((model) => model.id === preferences.modelId);
@@ -447,17 +449,14 @@ const AssistantThreadRuntime = () => {
     }),
     [t, threadId],
   );
-  const onError = useCallback(
-    () => {
-      void preferences.refreshQuota();
-      showErrorNotification({
-        title: t("responseError.title"),
-        message: t("responseError.description"),
-        autoClose: 10_000,
-      });
-    },
-    [preferences, t],
-  );
+  const onError = useCallback(() => {
+    void preferences.refreshQuota();
+    showErrorNotification({
+      title: t("responseError.title"),
+      message: t("responseError.description"),
+      autoClose: 10_000,
+    });
+  }, [preferences, t]);
 
   const chat = useChat<AssistantUIMessage>({
     id: localThreadId,
@@ -650,6 +649,11 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   );
   const pendingAction = getPendingAssistantAction(latestAssistantMessage);
   const assistantIsRunning = isRunning || queuedPrompt !== null;
+  const providerUnavailable = isAssistantProviderUnavailable({
+    provider: preferences.provider,
+    signedIn: preferences.providerUser !== null,
+    remaining: preferences.quota?.remaining,
+  });
   const notificationKey = getNotificationKey(latestAssistantMessage);
   const notificationStateRef = useRef(initialAssistantNotificationState);
   const mutationRefreshStateRef = useRef<{ conversationId: string | null; toolCallIds: Set<string> }>({
@@ -680,6 +684,15 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     (prompt: string) => {
       const text = prompt.trim();
       if (text.length === 0) return false;
+      if (providerUnavailable) {
+        showWarningNotification({
+          title: t("providerQuota.title"),
+          message: preferences.providerUser
+            ? t("providerQuota.exhaustedDescription")
+            : t("providerQuota.signInDescription"),
+        });
+        return false;
+      }
       if (assistantIsRunning || latestStatus?.type === "requires-action") {
         showWarningNotification({
           title: t("busy.title"),
@@ -694,7 +707,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
       }
       return sendPromptThroughRuntime(aui, text);
     },
-    [assistantIsRunning, aui, isLoading, latestStatus?.type, t],
+    [assistantIsRunning, aui, isLoading, latestStatus?.type, preferences.providerUser, providerUnavailable, t],
   );
   const selectModel = useCallback(
     (modelId: string) => {
@@ -712,10 +725,14 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (isLoading || isRunning || queuedPrompt === null) return;
+    if (providerUnavailable) {
+      setQueuedPrompt(null);
+      return;
+    }
     const prompt = queuedPrompt;
     setQueuedPrompt(null);
     sendPromptThroughRuntime(aui, prompt);
-  }, [aui, isLoading, isRunning, queuedPrompt]);
+  }, [aui, isLoading, isRunning, providerUnavailable, queuedPrompt]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -757,12 +774,16 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   useHotkeys([[hotkeys.openAssistant, open, { preventDefault: true }]]);
 
   const spotlightItem = useMemo(() => {
-    const canSend = !assistantIsRunning && latestStatus?.type !== "requires-action";
+    const canSend = !providerUnavailable && !assistantIsRunning && latestStatus?.type !== "requires-action";
     return {
       id: "homarr-assistant",
       name: t("spotlight"),
       icon: "/logo/logo.png",
-      description: canSend ? t("spotlightDescription") : t("busy.description"),
+      description: providerUnavailable
+        ? t("providerQuota.unavailableDescription")
+        : canSend
+          ? t("spotlightDescription")
+          : t("busy.description"),
       unavailable: !canSend,
       alwaysVisible: true,
       interaction: (query: string) =>
@@ -773,7 +794,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
           canSend,
         }),
     };
-  }, [assistantIsRunning, latestStatus?.type, sendPrompt, t]);
+  }, [assistantIsRunning, latestStatus?.type, providerUnavailable, sendPrompt, t]);
   useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
 
   const value = useMemo(

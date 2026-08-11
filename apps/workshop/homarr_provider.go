@@ -20,13 +20,14 @@ import (
 )
 
 const (
-	homarrProviderModelID  = "homarr/deepseek-v4-flash-latest"
-	openRouterModelID      = "~deepseek/deepseek-v4-flash-latest"
-	defaultDailyLimit      = 50
-	maxChatRequestBytes    = 8 << 20
-	maxUpstreamErrorBytes  = 1 << 20
-	openRouterDefaultURL   = "https://openrouter.ai/api/v1"
-	providerRequestTimeout = 5 * time.Minute
+	homarrProviderModelID   = "homarr/deepseek-v4-flash-latest"
+	openRouterModelID       = "~deepseek/deepseek-v4-flash-latest"
+	defaultDailyLimit       = 50
+	maxProviderRequestUnits = 1000
+	maxChatRequestBytes     = 8 << 20
+	maxUpstreamErrorBytes   = 1 << 20
+	openRouterDefaultURL    = "https://openrouter.ai/api/v1"
+	providerRequestTimeout  = 5 * time.Minute
 )
 
 type homarrProvider struct {
@@ -139,7 +140,7 @@ func (provider *homarrProvider) models(event *core.RequestEvent) error {
 }
 
 func (provider *homarrProvider) usage(event *core.RequestEvent) error {
-	snapshot, err := provider.quota(event.App, event.Auth, 0)
+	snapshot, err := provider.quota(event.App, event.Auth)
 	if err != nil {
 		return event.InternalServerError("The Homarr provider allowance could not be loaded.", nil)
 	}
@@ -165,16 +166,8 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	}
 
 	requestUnits := countRequestUnits(requestBody.Messages)
-	snapshot, err := provider.quota(event.App, event.Auth, requestUnits)
-	if err != nil {
-		var quotaErr *quotaExceededError
-		if errors.As(err, &quotaErr) {
-			event.Response.Header().Set("X-Homarr-Quota-Limit", strconv.Itoa(quotaErr.Snapshot.Limit))
-			event.Response.Header().Set("X-Homarr-Quota-Remaining", "0")
-			event.Response.Header().Set("X-Homarr-Quota-Reset", quotaErr.Snapshot.ResetsAt.Format(time.RFC3339))
-			return event.JSON(http.StatusTooManyRequests, openAIError("Your daily Homarr provider allowance is exhausted."))
-		}
-		return event.JSON(http.StatusInternalServerError, openAIError("The Homarr provider allowance could not be reserved."))
+	if requestUnits > maxProviderRequestUnits {
+		return event.JSON(http.StatusBadRequest, openAIError("A single Homarr provider request can use at most 1000 request units."))
 	}
 
 	var payload map[string]any
@@ -188,8 +181,15 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		return event.JSON(http.StatusBadRequest, openAIError("The request body could not be prepared."))
 	}
 
-	privateRequest, publicActivity, err := provider.startActivity(event.App, event.Auth, requestUnits)
+	snapshot, privateRequest, publicActivity, err := provider.startRequest(event.App, event.Auth, requestUnits)
 	if err != nil {
+		var quotaErr *quotaExceededError
+		if errors.As(err, &quotaErr) {
+			event.Response.Header().Set("X-Homarr-Quota-Limit", strconv.Itoa(quotaErr.Snapshot.Limit))
+			event.Response.Header().Set("X-Homarr-Quota-Remaining", "0")
+			event.Response.Header().Set("X-Homarr-Quota-Reset", quotaErr.Snapshot.ResetsAt.Format(time.RFC3339))
+			return event.JSON(http.StatusTooManyRequests, openAIError("Your daily Homarr provider allowance is exhausted."))
+		}
 		return event.JSON(http.StatusInternalServerError, openAIError("The Homarr provider request could not be started."))
 	}
 	startedAt := provider.now().UTC()
@@ -262,76 +262,99 @@ func countRequestUnits(messages []providerMessage) int {
 	return units
 }
 
-func (provider *homarrProvider) quota(app core.App, user *core.Record, reserve int) (quotaSnapshot, error) {
+func (provider *homarrProvider) quota(app core.App, user *core.Record) (quotaSnapshot, error) {
 	now := provider.now().UTC()
-	today := now.Format(time.DateOnly)
-	resetsAt := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, time.UTC)
 	var snapshot quotaSnapshot
 	err := app.RunInTransaction(func(txApp core.App) error {
-		quota, err := txApp.FindFirstRecordByFilter("assistant_quotas", "user = {:user}", dbx.Params{"user": user.Id})
-		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		quota, current, err := provider.loadQuota(txApp, user, now)
+		if err != nil {
 			return err
 		}
-		if quota == nil {
-			collection, err := txApp.FindCollectionByNameOrId("assistant_quotas")
-			if err != nil {
-				return err
-			}
-			quota = core.NewRecord(collection)
-			quota.Set("user", user.Id)
-			quota.Set("dailyLimit", provider.dailyLimit)
-		}
-		if quota.GetString("day") != today {
-			quota.Set("day", today)
-			quota.Set("used", 0)
-			quota.Set("inputTokens", 0)
-			quota.Set("outputTokens", 0)
-			quota.Set("totalTokens", 0)
-		}
-		limit := quota.GetInt("dailyLimit")
-		used := quota.GetInt("used")
-		snapshot = quotaSnapshot{Limit: limit, Used: used, Remaining: max(0, limit-used), ResetsAt: resetsAt}
-		if reserve > snapshot.Remaining {
-			return &quotaExceededError{Snapshot: snapshot}
-		}
-		if reserve > 0 {
-			used += reserve
-			quota.Set("used", used)
-			snapshot.Used = used
-			snapshot.Remaining = max(0, limit-used)
-		}
+		snapshot = current
 		return txApp.Save(quota)
 	})
 	return snapshot, err
 }
 
-func (provider *homarrProvider) startActivity(app core.App, user *core.Record, requestUnits int) (*core.Record, *core.Record, error) {
-	privateCollection, err := app.FindCollectionByNameOrId("assistant_requests")
-	if err != nil {
-		return nil, nil, err
+func (provider *homarrProvider) loadQuota(app core.App, user *core.Record, now time.Time) (*core.Record, quotaSnapshot, error) {
+	quota, err := app.FindFirstRecordByFilter("assistant_quotas", "user = {:user}", dbx.Params{"user": user.Id})
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return nil, quotaSnapshot{}, err
 	}
-	publicCollection, err := app.FindCollectionByNameOrId("assistant_activity")
-	if err != nil {
-		return nil, nil, err
+	if quota == nil {
+		collection, err := app.FindCollectionByNameOrId("assistant_quotas")
+		if err != nil {
+			return nil, quotaSnapshot{}, err
+		}
+		quota = core.NewRecord(collection)
+		quota.Set("user", user.Id)
+		quota.Set("dailyLimit", provider.dailyLimit)
 	}
-	privateRequest := core.NewRecord(privateCollection)
-	publicActivity := core.NewRecord(publicCollection)
-	for _, record := range []*core.Record{privateRequest, publicActivity} {
-		record.Set("status", "processing")
-		record.Set("model", homarrProviderModelID)
-		record.Set("requestUnits", requestUnits)
+	if quota.GetString("day") != now.Format(time.DateOnly) {
+		quota.Set("day", now.Format(time.DateOnly))
+		quota.Set("used", 0)
+		quota.Set("inputTokens", 0)
+		quota.Set("outputTokens", 0)
+		quota.Set("totalTokens", 0)
 	}
-	privateRequest.Set("user", user.Id)
-	privateRequest.Set("publicActivity", publicActivity.Id)
+	limit := quota.GetInt("dailyLimit")
+	used := quota.GetInt("used")
+	return quota, quotaSnapshot{
+		Limit:     limit,
+		Used:      used,
+		Remaining: max(0, limit-used),
+		ResetsAt:  time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, time.UTC),
+	}, nil
+}
 
-	err = app.RunInTransaction(func(txApp core.App) error {
+func (provider *homarrProvider) startRequest(
+	app core.App,
+	user *core.Record,
+	requestUnits int,
+) (quotaSnapshot, *core.Record, *core.Record, error) {
+	var snapshot quotaSnapshot
+	var privateRequest *core.Record
+	var publicActivity *core.Record
+	err := app.RunInTransaction(func(txApp core.App) error {
+		quota, current, err := provider.loadQuota(txApp, user, provider.now().UTC())
+		if err != nil {
+			return err
+		}
+		if requestUnits > current.Remaining {
+			return &quotaExceededError{Snapshot: current}
+		}
+
+		privateCollection, err := txApp.FindCollectionByNameOrId("assistant_requests")
+		if err != nil {
+			return err
+		}
+		publicCollection, err := txApp.FindCollectionByNameOrId("assistant_activity")
+		if err != nil {
+			return err
+		}
+		privateRequest = core.NewRecord(privateCollection)
+		publicActivity = core.NewRecord(publicCollection)
+		for _, record := range []*core.Record{privateRequest, publicActivity} {
+			record.Set("status", "processing")
+			record.Set("model", homarrProviderModelID)
+			record.Set("requestUnits", requestUnits)
+		}
+		privateRequest.Set("user", user.Id)
+
 		if err := txApp.Save(publicActivity); err != nil {
 			return err
 		}
 		privateRequest.Set("publicActivity", publicActivity.Id)
-		return txApp.Save(privateRequest)
+		if err := txApp.Save(privateRequest); err != nil {
+			return err
+		}
+		current.Used += requestUnits
+		current.Remaining = max(0, current.Limit-current.Used)
+		quota.Set("used", current.Used)
+		snapshot = current
+		return txApp.Save(quota)
 	})
-	return privateRequest, publicActivity, err
+	return snapshot, privateRequest, publicActivity, err
 }
 
 func (provider *homarrProvider) finishActivity(

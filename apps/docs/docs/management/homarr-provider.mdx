@@ -57,12 +57,16 @@ share the prompt, API source, and screenshots so other Homarr users can improve 
 
 The open-source proxy is part of the Workshop image. Operators configure it with server-only environment variables:
 
-| Variable | Purpose | Default |
-| --- | --- | --- |
-| `OPENROUTER_API_KEY` | Upstream key used only by the Workshop proxy | Disabled when empty |
-| `HOMARR_AI_DAILY_REQUEST_LIMIT` | Initial daily limit stored for each new user | `50` |
-| `HOMARR_AI_OPENROUTER_BASE_URL` | OpenRouter-compatible upstream base URL | `https://openrouter.ai/api/v1` |
+| Variable                        | Purpose                                      | Default                        |
+| ------------------------------- | -------------------------------------------- | ------------------------------ |
+| `OPENROUTER_API_KEY`            | Upstream key used only by the Workshop proxy | Disabled when empty            |
+| `HOMARR_AI_DAILY_REQUEST_LIMIT` | Initial daily limit stored for each new user | `50`                           |
+| `HOMARR_AI_OPENROUTER_BASE_URL` | OpenRouter-compatible upstream base URL      | `https://openrouter.ai/api/v1` |
 
 Changing the global default affects new quota records. Existing per-user limits remain unchanged so administrators can
 support future account plans. Run `pnpm test:workshop` to verify authentication, streaming, UTC reset, atomic quota
 enforcement, tool-call accounting, private records, anonymous public activity, realtime delivery, and migration rollback.
+
+The Custom Widget AI evaluation suites can use this proxy by setting `AI_PROVIDER_BASE_URL` to this service's
+`/api/ai/v1` endpoint and `AI_PROVIDER_API_KEY` to a disposable Workshop user token. See
+[Agent authoring](./custom-widgets/agent-authoring#evaluate-the-copied-prompt) for the complete command.

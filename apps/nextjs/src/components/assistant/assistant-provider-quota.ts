@@ -1,4 +1,5 @@
 import type { WorkshopAssistantUsage } from "@homarr/workshop/schema";
+import type { AssistantProvider } from "@homarr/definitions";
 
 export type AssistantProviderQuotaLevel = "ok" | "warning" | "bad" | "dead";
 
@@ -11,3 +12,13 @@ export const getAssistantProviderQuotaLevel = (
   if (remainingRatio <= 0.5) return "warning";
   return "ok";
 };
+
+export const isAssistantProviderUnavailable = ({
+  provider,
+  signedIn,
+  remaining,
+}: {
+  provider: AssistantProvider | null;
+  signedIn: boolean;
+  remaining: number | undefined;
+}) => provider === "homarr" && (!signedIn || remaining === 0);

@@ -1,3 +1,5 @@
+import { assistantHomarrProviderTokenHeader } from "@homarr/definitions";
+
 /**
  * The AI SDK resolves provider options by the provider name registered on the
  * language model. The @ai-sdk/openai-compatible provider converts the raw
@@ -16,8 +18,7 @@ export const toProviderOptionsKey = (name: string) =>
     })
     .join("");
 
-export const getHomarrProviderBaseUrl = (workshopApiUrl: string) =>
-  `${workshopApiUrl.replace(/\/+$/u, "")}/api/ai/v1`;
+export const getHomarrProviderBaseUrl = (workshopApiUrl: string) => `${workshopApiUrl.replace(/\/+$/u, "")}/api/ai/v1`;
 
 export const resolveHomarrProviderToken = ({
   provider,
@@ -37,4 +38,3 @@ export const resolveHomarrProviderToken = ({
   const token = headers.get(assistantHomarrProviderTokenHeader)?.trim();
   return token && token.length <= 4096 ? token : null;
 };
-import { assistantHomarrProviderTokenHeader } from "@homarr/definitions";

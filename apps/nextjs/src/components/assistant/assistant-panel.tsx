@@ -117,7 +117,7 @@ import remarkGfm from "remark-gfm";
 import { useRouter } from "next/navigation";
 
 import { clientApi, fetchApi } from "@homarr/api/client";
-import { useTimeAgo } from "@homarr/common/hooks";
+import { useTimeAgo } from "@homarr/common";
 import { assistantProviderIds, assistantProviderPresets, assistantReasoningModes } from "@homarr/definitions";
 import type { AssistantProvider } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -153,7 +153,7 @@ import { useAssistantReasoningState } from "./assistant-reasoning-state";
 import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
 import { getToolResultPresentation } from "./assistant-tool-result";
 import { getAssistantIconSearchQuery } from "./assistant-tool-label";
-import { getAssistantProviderQuotaLevel } from "./assistant-provider-quota";
+import { getAssistantProviderQuotaLevel, isAssistantProviderUnavailable } from "./assistant-provider-quota";
 import { getAssistantToolTraceTarget } from "./assistant-tool-trace";
 import { getSafeAssistantHttpUrl } from "./assistant-url";
 
@@ -2581,12 +2581,7 @@ const HomarrProviderQuota = () => {
   return (
     <Popover position="top" width={290} shadow="md" withinPortal>
       <Popover.Target>
-        <UnstyledButton
-          className={classes.providerQuotaTrigger}
-          data-level={level}
-          type="button"
-          aria-label={label}
-        >
+        <UnstyledButton className={classes.providerQuotaTrigger} data-level={level} type="button" aria-label={label}>
           {preferences.quotaLoading && !preferences.quota ? <Loader size={14} /> : <Icon size={16} aria-hidden />}
           <Text component="span" size="xs" fw={650}>
             {preferences.quota?.remaining ?? "–"}
@@ -2644,7 +2639,10 @@ const HomarrProviderQuota = () => {
               </Box>
               <Text size="xs" c="dimmed">
                 {t("providerQuota.reset", { relative: resetRelative })}{" "}
-                <time dateTime={preferences.quota.resetsAt} title={new Date(preferences.quota.resetsAt).toLocaleString()}>
+                <time
+                  dateTime={preferences.quota.resetsAt}
+                  title={new Date(preferences.quota.resetsAt).toLocaleString()}
+                >
                   {new Date(preferences.quota.resetsAt).toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -2679,8 +2677,15 @@ const HomarrProviderQuota = () => {
 
 const Composer = (props: ComposerProps) => {
   const t = useScopedI18n("common.assistant");
+  const preferences = useAssistantPreferences();
   const running = useAuiState((state) => state.thread.isRunning);
   const hasPendingAction = props.pendingAction !== undefined;
+  const providerUnavailable = isAssistantProviderUnavailable({
+    provider: preferences.provider,
+    signedIn: preferences.providerUser !== null,
+    remaining: preferences.quota?.remaining,
+  });
+  const sendBlocked = hasPendingAction || providerUnavailable;
   const composerInputRef = useRef<HTMLDivElement>(null);
   const composerLabel = t("composerPlaceholder");
 
@@ -2701,7 +2706,7 @@ const Composer = (props: ComposerProps) => {
             className={classes.composer}
             data-pending-action={hasPendingAction || undefined}
             onSubmit={(event) => {
-              if (hasPendingAction) event.preventDefault();
+              if (sendBlocked) event.preventDefault();
             }}
           >
             <ComposerTriggers />
@@ -2747,8 +2752,14 @@ const Composer = (props: ComposerProps) => {
                     color="red"
                     variant="filled"
                     size="lg"
-                    aria-label={hasPendingAction ? t("pendingAction.sendBlocked") : t("send")}
-                    disabled={hasPendingAction}
+                    aria-label={
+                      hasPendingAction
+                        ? t("pendingAction.sendBlocked")
+                        : providerUnavailable
+                          ? t("providerQuota.unavailableDescription")
+                          : t("send")
+                    }
+                    disabled={sendBlocked}
                   >
                     <IconArrowUp size={18} />
                   </ActionIcon>

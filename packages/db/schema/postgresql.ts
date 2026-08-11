@@ -486,6 +486,7 @@ export const assistantConfigurations = pgTable("assistant_configuration", {
   webSearchEnabled: boolean().notNull().default(false),
   provider: varchar({ length: 32 })
     .$type<
+      | "homarr"
       | "openrouter"
       | "openai"
       | "anthropic"

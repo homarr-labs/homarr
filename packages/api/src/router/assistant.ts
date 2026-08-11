@@ -480,7 +480,7 @@ export const assistantRouter = createTRPCRouter({
     const configuration = await getConfigurationAsync(ctx.db);
     if (isDemoMode) {
       return {
-        provider: "homarr",
+        provider: "custom" as const,
         defaultModelId: "homarr-assistant",
         models: [
           {

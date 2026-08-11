@@ -159,6 +159,30 @@ await expectStatus(
   {
     method: "POST",
     headers: authorSession.headers,
+    body: JSON.stringify({
+      model: "homarr/deepseek-v4-flash-latest",
+      messages: [
+        { role: "user", content: "too many tools" },
+        ...Array.from({ length: 1000 }, (_, index) => ({
+          role: "tool",
+          tool_call_id: `tool-${index}`,
+          content: "{}",
+        })),
+      ],
+    }),
+  },
+  400,
+);
+const usageAfterRejectedRequest = await request("/api/ai/usage", { headers: authorSession.headers });
+if (usageAfterRejectedRequest.used !== 0) {
+  throw new Error("A rejected oversized request-unit batch consumed allowance");
+}
+
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    headers: authorSession.headers,
     body: JSON.stringify({ model: "another-model", messages: [{ role: "user", content: "hello" }] }),
   },
   400,
@@ -257,6 +281,18 @@ if (
 ) {
   throw new Error("Public assistant activity must be anonymous and include completed token totals");
 }
+await expectStatus(
+  "/api/collections/assistant_activity/records",
+  {
+    method: "POST",
+    body: JSON.stringify({
+      status: "completed",
+      model: "forged",
+      requestUnits: 1,
+    }),
+  },
+  403,
+);
 await expectStatus("/api/collections/assistant_requests/records", { headers: authorSession.headers }, 403);
 await expectStatus("/api/collections/assistant_quotas/records", { headers: authorSession.headers }, 403);
 
@@ -296,13 +332,12 @@ const allowanceProbe = () =>
       stream: false,
     }),
   });
-if (!(await allowanceProbe()).ok || !(await allowanceProbe()).ok) {
-  throw new Error("The per-user allowance rejected a permitted request");
-}
-const exhaustedResponse = await allowanceProbe();
+const concurrentAllowanceResponses = await Promise.all([allowanceProbe(), allowanceProbe(), allowanceProbe()]);
+const concurrentStatuses = concurrentAllowanceResponses.map((response) => response.status).toSorted();
+const exhaustedResponse = concurrentAllowanceResponses.find((response) => response.status === 429);
 if (
-  exhaustedResponse.status !== 429 ||
-  exhaustedResponse.headers.get("x-homarr-quota-remaining") !== "0" ||
+  concurrentStatuses.join(",") !== "200,200,429" ||
+  exhaustedResponse?.headers.get("x-homarr-quota-remaining") !== "0" ||
   !exhaustedResponse.headers.get("x-homarr-quota-reset")
 ) {
   throw new Error("The per-user allowance was not enforced atomically");

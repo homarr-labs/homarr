@@ -14,7 +14,24 @@ import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
 // deepseek/deepseek-v4-flash-latest alias is rejected by the chat-completions API.
 export const DEFAULT_GENERATOR_MODEL = "~deepseek/deepseek-v4-flash-latest";
 export const DEFAULT_JUDGE_MODEL = "~deepseek/deepseek-v4-flash-latest";
+export const DEFAULT_AI_PROVIDER_BASE_URL = "https://openrouter.ai/api/v1";
 export const MAX_AI_EVALUATION_LOOPS = 10;
+export const getAiProviderChatCompletionsUrl = (baseUrl = DEFAULT_AI_PROVIDER_BASE_URL) =>
+  `${baseUrl.replace(/\/+$/u, "")}/chat/completions`;
+export const resolveAiEvaluationProviderConfig = (environment: Record<string, string | undefined>) => {
+  const baseUrl = (environment.AI_PROVIDER_BASE_URL ?? DEFAULT_AI_PROVIDER_BASE_URL).replace(/\/+$/u, "");
+  const homarrProvider = baseUrl.endsWith("/api/ai/v1");
+  const providerDefaultModel = homarrProvider ? "homarr/deepseek-v4-flash-latest" : DEFAULT_GENERATOR_MODEL;
+  return {
+    apiKey: environment.AI_PROVIDER_API_KEY ?? environment.OPENROUTER_API_KEY,
+    baseUrl,
+    generatorModel: environment.AI_PROVIDER_MODEL ?? environment.OPENROUTER_GENERATOR_MODEL ?? providerDefaultModel,
+    judgeModel:
+      environment.AI_PROVIDER_JUDGE_MODEL ??
+      environment.OPENROUTER_JUDGE_MODEL ??
+      (homarrProvider ? providerDefaultModel : DEFAULT_JUDGE_MODEL),
+  };
+};
 
 const scoreSchema = z.number().int().min(0).max(100);
 const judgeCategoriesSchema = z.strictObject({
@@ -263,10 +280,12 @@ export async function requestCustomWidgetJudge(args: {
   testCase: CustomWidgetAiEvaluationCase;
   widget: HomarrCustomWidgetV2;
   apiKey: string;
+  baseUrl?: string;
   judgeModel?: string;
 }) {
   return callOpenRouter({
     apiKey: args.apiKey,
+    baseUrl: args.baseUrl,
     model: args.judgeModel ?? DEFAULT_JUDGE_MODEL,
     prompt: buildJudgePrompt(args.testCase, args.widget),
     purpose: "judge",
@@ -277,6 +296,7 @@ export async function judgeCustomWidgetCase(args: {
   testCase: CustomWidgetAiEvaluationCase;
   widget: HomarrCustomWidgetV2;
   apiKey: string;
+  baseUrl?: string;
   judgeModel?: string;
 }) {
   const raw = await requestCustomWidgetJudge(args);
@@ -286,6 +306,7 @@ export async function judgeCustomWidgetCase(args: {
 export async function evaluateCustomWidgetCase(args: {
   testCase: CustomWidgetAiEvaluationCase;
   apiKey: string;
+  baseUrl?: string;
   outputRoot: string;
   maxLoops: number;
   generatorModel?: string;
@@ -305,6 +326,7 @@ export async function evaluateCustomWidgetCase(args: {
     try {
       response = await callOpenRouter({
         apiKey: args.apiKey,
+        baseUrl: args.baseUrl,
         model: args.generatorModel ?? DEFAULT_GENERATOR_MODEL,
         prompt,
         purpose: "generation",
@@ -340,6 +362,7 @@ export async function evaluateCustomWidgetCase(args: {
         testCase: args.testCase,
         widget: canonical,
         apiKey: args.apiKey,
+        baseUrl: args.baseUrl,
         judgeModel: args.judgeModel,
       });
       await writeFile(path.join(caseDirectory, `judge-${attempt}.json`), judgeRaw, "utf8");
@@ -413,12 +436,13 @@ async function writeWidgetFiles(directory: string, widget: HomarrCustomWidgetV2,
 
 async function callOpenRouter(args: {
   apiKey: string;
+  baseUrl?: string;
   model: string;
   prompt: string;
   purpose: "generation" | "judge";
 }): Promise<string> {
   const isJudge = args.purpose === "judge";
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  const response = await fetch(getAiProviderChatCompletionsUrl(args.baseUrl), {
     method: "POST",
     headers: {
       Authorization: `Bearer ${args.apiKey}`,
@@ -438,8 +462,8 @@ async function callOpenRouter(args: {
   });
   const payload = (await response.json()) as OpenRouterResponse;
   if (!response.ok)
-    throw new Error(`OpenRouter request failed (${response.status}): ${payload.error?.message ?? "Unknown error"}`);
+    throw new Error(`AI provider request failed (${response.status}): ${payload.error?.message ?? "Unknown error"}`);
   const content = payload.choices?.[0]?.message?.content;
-  if (!content) throw new Error("OpenRouter returned no message content");
+  if (!content) throw new Error("AI provider returned no message content");
   return content;
 }

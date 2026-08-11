@@ -471,6 +471,7 @@ export const assistantConfigurations = sqliteTable("assistant_configuration", {
   webSearchEnabled: int({ mode: "boolean" }).notNull().default(false),
   provider: text()
     .$type<
+      | "homarr"
       | "openrouter"
       | "openai"
       | "anthropic"

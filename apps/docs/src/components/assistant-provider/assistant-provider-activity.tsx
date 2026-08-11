@@ -23,9 +23,11 @@ const statusLabel = {
   failed: "Failed",
 };
 
+const activityDate = (value: string) => new Date(value.includes("T") ? value : value.replace(" ", "T"));
+
 const mergeActivity = (current: WorkshopAssistantActivity[], next: WorkshopAssistantActivity) =>
   [next, ...current.filter((item) => item.id !== next.id)]
-    .toSorted((left, right) => Date.parse(right.created) - Date.parse(left.created))
+    .toSorted((left, right) => activityDate(right.created).getTime() - activityDate(left.created).getTime())
     .slice(0, 10);
 
 export const AssistantProviderActivity = ({ compact = false }: { compact?: boolean }) => {
@@ -44,13 +46,18 @@ export const AssistantProviderActivity = ({ compact = false }: { compact?: boole
       try {
         const initial = await backend.listAssistantActivity(10);
         if (active) setActivities(initial);
-        unsubscribe = await backend.pocketBase.collection("assistant_activity").subscribe("*", (event) => {
+        const nextUnsubscribe = await backend.pocketBase.collection("assistant_activity").subscribe("*", (event) => {
           const parsed = workshopAssistantActivitySchema.safeParse(event.record);
           if (!active || !parsed.success) return;
           setConnected(true);
           setActivities((current) => mergeActivity(current, parsed.data));
         });
-        if (active) setConnected(true);
+        if (active) {
+          unsubscribe = nextUnsubscribe;
+          setConnected(true);
+        } else {
+          nextUnsubscribe();
+        }
       } catch {
         if (active) setConnected(false);
       } finally {
@@ -93,8 +100,8 @@ export const AssistantProviderActivity = ({ compact = false }: { compact?: boole
                 return (
                   <tr key={activity.id}>
                     <td>
-                      <time dateTime={activity.created} title={new Date(activity.created).toLocaleString()}>
-                        {new Date(activity.created).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      <time dateTime={activity.created} title={activityDate(activity.created).toLocaleString()}>
+                        {activityDate(activity.created).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                       </time>
                     </td>
                     <td>
