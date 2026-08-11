@@ -16,7 +16,6 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import type { ActionIconProps } from "@mantine/core";
 import { ActionIcon, Card, Center, Fieldset, Loader, Stack } from "@mantine/core";
 import { IconGripHorizontal } from "@tabler/icons-react";
 
@@ -177,21 +176,6 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({
     id,
   });
 
-  const Handle = (props: Partial<ActionIconProps>) => {
-    return (
-      <ActionIcon
-        variant="transparent"
-        color="gray"
-        {...props}
-        {...listeners}
-        ref={setActivatorNodeRef}
-        style={{ cursor: "grab" }}
-      >
-        <IconGripHorizontal />
-      </ActionIcon>
-    );
-  };
-
   return (
     <Card
       padding="sm"
@@ -222,7 +206,17 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({
         item={item}
         removeItem={removeItem}
         rootAttributes={attributes}
-        handle={Handle}
+        handle={
+          <ActionIcon
+            variant="transparent"
+            color="gray"
+            {...listeners}
+            ref={setActivatorNodeRef}
+            style={{ cursor: "grab" }}
+          >
+            <IconGripHorizontal />
+          </ActionIcon>
+        }
       />
     </Card>
   );

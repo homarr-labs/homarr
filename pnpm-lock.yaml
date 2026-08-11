@@ -695,7 +695,6 @@ overrides:
 
 patchedDependencies:
   '@types/node-unifi': 5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5
-  docker-modem@5.0.7: 6a79e31b826a993dfdfce5e3acc72e5f77816730fe6fb9b3c53c7fcf4570e3ec
   trpc-to-openapi: 2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c
 
 importers:
@@ -26481,7 +26480,7 @@ snapshots:
     dependencies:
       yaml: 2.9.0
 
-  docker-modem@5.0.7(patch_hash=6a79e31b826a993dfdfce5e3acc72e5f77816730fe6fb9b3c53c7fcf4570e3ec)(supports-color@10.2.2):
+  docker-modem@5.0.7(supports-color@10.2.2):
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       readable-stream: 3.6.2
@@ -26495,7 +26494,7 @@ snapshots:
       '@balena/dockerignore': 1.0.2
       '@grpc/grpc-js': 1.12.5
       '@grpc/proto-loader': 0.7.13
-      docker-modem: 5.0.7(patch_hash=6a79e31b826a993dfdfce5e3acc72e5f77816730fe6fb9b3c53c7fcf4570e3ec)(supports-color@10.2.2)
+      docker-modem: 5.0.7(supports-color@10.2.2)
       protobufjs: 7.4.0
       tar-fs: 2.1.4
     transitivePeerDependencies:
@@ -26506,7 +26505,7 @@ snapshots:
       '@balena/dockerignore': 1.0.2
       '@grpc/grpc-js': 1.12.5
       '@grpc/proto-loader': 0.7.13
-      docker-modem: 5.0.7(patch_hash=6a79e31b826a993dfdfce5e3acc72e5f77816730fe6fb9b3c53c7fcf4570e3ec)(supports-color@10.2.2)
+      docker-modem: 5.0.7(supports-color@10.2.2)
       protobufjs: 7.4.0
       tar-fs: 2.1.4
     transitivePeerDependencies:
