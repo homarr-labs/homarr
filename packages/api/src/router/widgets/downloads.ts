@@ -18,7 +18,7 @@ export const downloadsRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50)",
+          "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50). For SABnzbd, includeArchivedHistory includes archived jobs when true and defaults to false; historyWindowDays accepts 10, 20, or 30 days and defaults to 10 days.",
       },
     })
     .concat(createDownloadClientIntegrationMiddleware("query"))
