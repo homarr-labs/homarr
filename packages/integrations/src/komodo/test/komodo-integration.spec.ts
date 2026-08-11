@@ -10,7 +10,7 @@ vi.hoisted(() => {
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { ParseError } from "@homarr/common/server";
 
-import type { IntegrationTestingInput } from "../../base/integration";
+import type { IntegrationInput, IntegrationTestingInput } from "../../base/integration";
 import { IntegrationParseError } from "../../base/errors/parse/integration-parse-error";
 import { KomodoIntegration } from "../komodo-integration";
 import { createKomodoOverview, parseKomodoPollingRateSeconds } from "../komodo-types";
@@ -22,6 +22,16 @@ vi.mock("@homarr/core/infrastructure/http", () => ({
 const TEST_URL = "https://komodo.example.com";
 const TEST_API_KEY = "test-api-key";
 const TEST_API_SECRET = "test-api-secret";
+const TEST_INTEGRATION_INPUT: IntegrationInput = {
+  id: "test-komodo",
+  name: "Test Komodo",
+  url: TEST_URL,
+  externalUrl: null,
+  decryptedSecrets: [
+    { kind: "komodoApiKey", value: TEST_API_KEY },
+    { kind: "komodoApiSecret", value: TEST_API_SECRET },
+  ],
+};
 
 const mockFetch = vi.mocked(fetchWithTrustedCertificatesAsync);
 
@@ -41,17 +51,7 @@ const setupMockResponses = (responses: Record<string, MockResponse>) => {
   });
 };
 
-const createIntegration = () =>
-  new KomodoIntegration({
-    id: "test-komodo",
-    name: "Test Komodo",
-    url: TEST_URL,
-    externalUrl: null,
-    decryptedSecrets: [
-      { kind: "komodoApiKey", value: TEST_API_KEY },
-      { kind: "komodoApiSecret", value: TEST_API_SECRET },
-    ],
-  });
+const createIntegration = () => new KomodoIntegration(TEST_INTEGRATION_INPUT);
 
 class TestableKomodoIntegration extends KomodoIntegration {
   public async testWithFetchAsync(fetchAsync: IntegrationTestingInput["fetchAsync"]) {
@@ -59,17 +59,7 @@ class TestableKomodoIntegration extends KomodoIntegration {
   }
 }
 
-const createTestableIntegration = () =>
-  new TestableKomodoIntegration({
-    id: "test-komodo",
-    name: "Test Komodo",
-    url: TEST_URL,
-    externalUrl: null,
-    decryptedSecrets: [
-      { kind: "komodoApiKey", value: TEST_API_KEY },
-      { kind: "komodoApiSecret", value: TEST_API_SECRET },
-    ],
-  });
+const createTestableIntegration = () => new TestableKomodoIntegration(TEST_INTEGRATION_INPUT);
 
 beforeEach(() => {
   mockFetch.mockReset();

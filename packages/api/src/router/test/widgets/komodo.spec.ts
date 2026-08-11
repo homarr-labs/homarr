@@ -159,6 +159,20 @@ describe("komodoRouter access control", () => {
     });
   });
 
+  test("rejects unauthenticated server queries when the integration is only on a private board", async () => {
+    const db = createDb();
+    const ownerId = createId();
+    await db.insert(users).values({ id: ownerId });
+    const integrationId = await createKomodoIntegrationOnBoardAsync(db, {
+      isPublic: false,
+      boardCreatorId: ownerId,
+    });
+
+    await expect(createCaller(db, null).getServers({ integrationId })).rejects.toMatchObject({
+      code: "FORBIDDEN",
+    });
+  });
+
   test("rejects authenticated users without board or integration access", async () => {
     const db = createDb();
     const ownerId = createId();

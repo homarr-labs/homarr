@@ -59,4 +59,4 @@ Homarr makes only the following authenticated `POST` requests:
 - `/read/ListStacks`
 - `/read/ListDeployments`
 
-Resource list requests use `limit: 0` so the overview includes every resource visible to the API key. The widgets request fresh data at their configured refresh interval.
+Resource list requests use `limit: 0` so the overview includes every resource visible to the API key. Successful responses are cached for one second. During a temporary Komodo error, Homarr can continue serving the most recent successful response for up to five minutes. The widgets request data at their configured refresh interval.

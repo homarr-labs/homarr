@@ -7,9 +7,36 @@ export const komodoStatusColors: Record<KomodoResourceStatus, string> = {
   unknown: "gray",
 };
 
-export const formatKomodoState = (state: string) =>
-  state
-    .replaceAll(/([a-z])([A-Z])/g, "$1 $2")
-    .replaceAll("_", " ")
+const komodoStateTranslationKeys = {
+  ok: "ok",
+  disabled: "disabled",
+  notok: "notOk",
+  not_ok: "notOk",
+  running: "running",
+  deploying: "deploying",
+  paused: "paused",
+  stopped: "stopped",
+  created: "created",
+  removing: "removing",
+  down: "down",
+  restarting: "restarting",
+  dead: "dead",
+  unhealthy: "unhealthy",
+  stopping: "stopping",
+  exited: "exited",
+  not_deployed: "notDeployed",
+  unknown: "unknown",
+} as const;
+
+export type KomodoStateTranslationKey = (typeof komodoStateTranslationKeys)[keyof typeof komodoStateTranslationKeys];
+
+export const getKomodoStateTranslationKey = (state: string): KomodoStateTranslationKey => {
+  const normalizedState = state
     .trim()
-    .replace(/^./, (character) => character.toUpperCase());
+    .toLowerCase()
+    .replaceAll(/[^a-z0-9]+/g, "_");
+
+  return (
+    (komodoStateTranslationKeys as Readonly<Record<string, KomodoStateTranslationKey>>)[normalizedState] ?? "unknown"
+  );
+};

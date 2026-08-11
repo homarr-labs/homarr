@@ -21,7 +21,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
-import { formatKomodoState, komodoStatusColors } from "../komodo/display";
+import { getKomodoStateTranslationKey, komodoStatusColors } from "../komodo/display";
 import { getKomodoRefreshIntervalMs } from "../komodo/refresh-interval";
 
 const formatPercent = (value: number | null) => (value === null ? "—" : `${value.toFixed(1)}%`);
@@ -53,16 +53,20 @@ const PercentageMetric = ({ value, compact = false }: PercentageMetricProps) => 
   </Group>
 );
 
-const ServerName = ({ server }: { server: KomodoServerOverviewItem }) => (
-  <Tooltip label={formatKomodoState(server.state)} openDelay={300}>
-    <Group gap="xs" wrap="nowrap">
-      <IconServer size={16} color={`var(--mantine-color-${komodoStatusColors[server.status]}-6)`} />
-      <Text size="sm" fw={500} truncate>
-        {server.name}
-      </Text>
-    </Group>
-  </Tooltip>
-);
+const ServerName = ({ server }: { server: KomodoServerOverviewItem }) => {
+  const tState = useScopedI18n("widget.komodo.resourceState");
+
+  return (
+    <Tooltip label={tState(getKomodoStateTranslationKey(server.state))} openDelay={300}>
+      <Group gap="xs" wrap="nowrap">
+        <IconServer size={16} color={`var(--mantine-color-${komodoStatusColors[server.status]}-6)`} />
+        <Text size="sm" fw={500} truncate>
+          {server.name}
+        </Text>
+      </Group>
+    </Tooltip>
+  );
+};
 
 const LoadAverage = ({ server, coresLabel }: { server: KomodoServerOverviewItem; coresLabel: string }) => {
   const load = server.stats?.loadAverage;

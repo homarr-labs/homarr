@@ -306,7 +306,7 @@ const summarizeResources = (resources: KomodoResource[]): KomodoResourceSummary 
   unknown: resources.filter((resource) => resource.status === "unknown").length,
 });
 
-const PROBLEM_LIST_LIMIT = 20;
+const PROBLEM_LIST_LIMIT_PER_RESOURCE_KIND = 20;
 
 export const createKomodoOverview = (
   servers: KomodoResource[],
@@ -329,9 +329,9 @@ export const createKomodoOverview = (
     deployments: summarizeResources(deployments),
     problemCount: serverProblems.length + stackProblems.length + deploymentProblems.length,
     problems: [
-      ...serverProblems.slice(0, PROBLEM_LIST_LIMIT),
-      ...stackProblems.slice(0, PROBLEM_LIST_LIMIT),
-      ...deploymentProblems.slice(0, PROBLEM_LIST_LIMIT),
+      ...serverProblems.slice(0, PROBLEM_LIST_LIMIT_PER_RESOURCE_KIND),
+      ...stackProblems.slice(0, PROBLEM_LIST_LIMIT_PER_RESOURCE_KIND),
+      ...deploymentProblems.slice(0, PROBLEM_LIST_LIMIT_PER_RESOURCE_KIND),
     ],
   };
 };

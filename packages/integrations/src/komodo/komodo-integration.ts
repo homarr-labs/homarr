@@ -22,6 +22,9 @@ type KomodoFetchAsync = (url: URL, options?: RequestInit) => Promise<Response>;
 type KomodoReadPath = "/read/GetVersion" | "/read/ListServers" | "/read/ListStacks" | "/read/ListDeployments";
 
 export class KomodoIntegration extends Integration {
+  private readonly fetchAsync: KomodoFetchAsync = async (url, options) =>
+    await fetchWithTrustedCertificatesAsync(url, { ...options, timeout: REQUEST_TIMEOUT_MS });
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await this.sendRequestAsync(input.fetchAsync, "/read/GetVersion", {});
 
@@ -54,9 +57,7 @@ export class KomodoIntegration extends Integration {
   }
 
   public async getServerOverviewAsync(): Promise<KomodoServerOverviewItem[]> {
-    const fetchAsync: KomodoFetchAsync = async (url, options) =>
-      await fetchWithTrustedCertificatesAsync(url, { ...options, timeout: REQUEST_TIMEOUT_MS });
-    const response = await this.sendRequestAsync(fetchAsync, "/read/ListServers", LIST_REQUEST_BODY);
+    const response = await this.sendRequestAsync(this.fetchAsync, "/read/ListServers", LIST_REQUEST_BODY);
 
     if (!response.ok) {
       throw new ResponseError(response);
@@ -76,9 +77,7 @@ export class KomodoIntegration extends Integration {
   }
 
   private async listResourcesAsync(kind: KomodoResourceKind, path: KomodoReadPath): Promise<KomodoResource[]> {
-    const fetchAsync: KomodoFetchAsync = async (url, options) =>
-      await fetchWithTrustedCertificatesAsync(url, { ...options, timeout: REQUEST_TIMEOUT_MS });
-    const response = await this.sendRequestAsync(fetchAsync, path, LIST_REQUEST_BODY);
+    const response = await this.sendRequestAsync(this.fetchAsync, path, LIST_REQUEST_BODY);
 
     if (!response.ok) {
       throw new ResponseError(response);

@@ -10,7 +10,7 @@ import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
-import { formatKomodoState, komodoStatusColors } from "./display";
+import { getKomodoStateTranslationKey, komodoStatusColors } from "./display";
 import { getKomodoRefreshIntervalMs } from "./refresh-interval";
 
 const getSummaryColor = (summary: KomodoResourceSummary) => {
@@ -22,6 +22,7 @@ const getSummaryColor = (summary: KomodoResourceSummary) => {
 
 export default function KomodoWidget({ integrationIds, options, width, height }: WidgetComponentProps<"komodo">) {
   const t = useScopedI18n("widget.komodo");
+  const tState = useScopedI18n("widget.komodo.resourceState");
   const integrationId = integrationIds[0];
   const { data, error, isPending } = clientApi.widget.komodo.getOverview.useQuery(
     { integrationId: integrationId ?? "" },
@@ -147,7 +148,7 @@ export default function KomodoWidget({ integrationIds, options, width, height }:
                     </Text>
                   </Stack>
                   <Badge color={komodoStatusColors[problem.status]} variant="light" size="sm">
-                    {formatKomodoState(problem.state)}
+                    {tState(getKomodoStateTranslationKey(problem.state))}
                   </Badge>
                 </Group>
               </Paper>
