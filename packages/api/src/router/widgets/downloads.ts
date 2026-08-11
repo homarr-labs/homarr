@@ -22,10 +22,20 @@ export const downloadsRouter = createTRPCRouter({
       },
     })
     .concat(createDownloadClientIntegrationMiddleware("query"))
-    .input(z.object({ limitPerIntegration: z.number().default(50) }))
+    .input(
+      z.object({
+        limitPerIntegration: z.number().default(50),
+        includeArchivedHistory: z.boolean().default(false),
+        historyWindowDays: z.enum(["10", "20", "30"]).default("10"),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
+        const innerHandler = downloadClientRequestHandler.handler(integration, {
+          limit: input.limitPerIntegration,
+          includeArchivedHistory: input.includeArchivedHistory,
+          historyWindowDays: input.historyWindowDays,
+        });
         const { data, timestamp } = await innerHandler.getDataAsync();
         return {
           integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },

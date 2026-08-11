@@ -7,7 +7,11 @@ import { createIntegrationRequestHandler } from "./lib/integration-request-handl
 export const downloadClientRequestHandler = createIntegrationRequestHandler<
   DownloadClientJobsAndStatus,
   IntegrationKindByCategory<"downloadClient">,
-  { limit: number }
+  {
+    limit: number;
+    includeArchivedHistory: boolean;
+    historyWindowDays: "10" | "20" | "30";
+  }
 >({
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);

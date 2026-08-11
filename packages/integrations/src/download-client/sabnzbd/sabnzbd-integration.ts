@@ -12,6 +12,7 @@ import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/dow
 import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
+import { getSabnzbdHistorySlotsAsync } from "./sabnzbd-history";
 import { historySchema, queueSchema } from "./sabnzbd-schema";
 
 dayjs.extend(duration);
@@ -23,7 +24,11 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
     return { success: true };
   }
 
-  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: {
+    limit: number;
+    includeArchivedHistory?: boolean;
+    historyWindowDays?: "10" | "20" | "30";
+  }): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
     const { queue } = await queueSchema.parseAsync(
       await this.sabNzbApiCallAsync("queue", { limit: input.limit.toString() }),
@@ -31,6 +36,24 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
     const { history } = await historySchema.parseAsync(
       await this.sabNzbApiCallAsync("history", { limit: input.limit.toString() }),
     );
+    const historySlots = input.includeArchivedHistory
+      ? await getSabnzbdHistorySlotsAsync({
+          activeSlots: history.slots,
+          historyWindowDays: Number(input.historyWindowDays ?? "10"),
+          fetchPageAsync: async ({ start, limit }) => {
+            const { history: archivedHistory } = await historySchema.parseAsync(
+              await this.sabNzbApiCallAsync("history", {
+                archive: "1",
+                start: start.toString(),
+                limit: limit.toString(),
+              }),
+            );
+
+            return archivedHistory.slots;
+          },
+        })
+      : history.slots;
+
     const status: DownloadClientStatus = {
       paused: queue.paused,
       rates: { down: Math.floor(Number(queue.kbpersec) * 1024) }, //Actually rounded kiBps ()
@@ -63,7 +86,7 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
         };
       })
       .concat(
-        history.slots.map((slot, index): DownloadClientItem => {
+        historySlots.map((slot, index): DownloadClientItem => {
           const state = SabnzbdIntegration.getUsenetHistoryState(slot.status);
           return {
             type,

@@ -73,6 +73,28 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
         showCompletedHttp: factory.switch({
           defaultValue: true,
         }),
+        includeArchivedHistory: factory.switch({
+          defaultValue: false,
+          withDescription: true,
+        }),
+        historyWindowDays: factory.select({
+          defaultValue: "10",
+          options: [
+            {
+              value: "10",
+              label: (t) => t("widget.downloads.option.historyWindowDays.values.10Days"),
+            },
+            {
+              value: "20",
+              label: (t) => t("widget.downloads.option.historyWindowDays.values.20Days"),
+            },
+            {
+              value: "30",
+              label: (t) => t("widget.downloads.option.historyWindowDays.values.30Days"),
+            },
+          ],
+          withDescription: true,
+        }),
         activeTorrentThreshold: factory.number({
           validate: z.number().min(0),
           defaultValue: 0,
@@ -99,6 +121,13 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
       {
         columnOrder: { shouldHide: () => true },
         columnWidths: { shouldHide: () => true },
+        includeArchivedHistory: {
+          shouldHide: (_, integrationKinds) => !integrationKinds.includes("sabNzbd"),
+        },
+        historyWindowDays: {
+          shouldHide: ({ includeArchivedHistory }, integrationKinds) =>
+            !integrationKinds.includes("sabNzbd") || !includeArchivedHistory,
+        },
         showCompletedUsenet: {
           shouldHide: (_, integrationKinds) =>
             !getIntegrationKindsByCategory("usenet").some((kinds) => integrationKinds.includes(kinds)),
