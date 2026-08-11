@@ -133,6 +133,67 @@ configuration or by physical reality — disks, tunnels, configured instances �
 image and no overlay. That is sound reasoning, not a reading, and a widget whose data source changes
 shape could invalidate it.
 
+## Checked against Vercel's React/Next performance rules
+
+Sourced with the `skills` CLI — `npx skills find "react performance"`, then
+`npx skills use affaan-m/ecc@react-performance`, which is an adaptation of
+[Vercel Labs `react-best-practices`](https://github.com/vercel-labs/agent-skills): 70+ rules across
+8 priority categories. Every rule that is mechanically checkable was run against the widgets.
+
+| rule | category | result |
+| --- | --- | --- |
+| `content-visibility: auto` for long lists | rendering | **applied** — 6 widgets |
+| Don't define components inside components | re-render | **2 found, both fixed** (`PercentCell`, drag handle) |
+| Ternary over `&&` for conditional render | rendering | **passes** — only 2 `&&` renders exist and both operands are already boolean or string, so nothing can render a literal `0` |
+| Passive listeners for scroll | client fetching | **N/A** — no widget registers a scroll listener |
+| `Set`/`Map` for membership over `Array.includes` | JS micro-perf | **passes** — the nested scans that exist are over configured integrations and column accessors, single digits either way. `use-persisted-table-layout` already uses a `Set` for the hot half |
+| `React.cache()` for per-request dedup | server | **applied** — 4 functions |
+| TanStack Query for dedup, not hand-rolled `useEffect` + `fetch` | client fetching | **passes** — used throughout |
+| Direct imports, not barrels | bundle | **partial** — see below |
+| Hoist default non-primitive props | re-render | **declined** — see below |
+| `<Activity>` for show/hide instead of mount/unmount | rendering | **deliberately contradicted** — see below |
+
+### The one rule this codebase deliberately contradicts
+
+The skill says to prefer React 19's `<Activity>` over unmounting for tabs, because it avoids
+remount cost. `keepMounted={false}`, which this pass added to two widgets, is exactly the opposite.
+
+That is a considered trade, not an oversight. The rule optimises for **switching**; a dashboard
+optimises for **mounting**. Every board load mounts every widget, while a user switches a widget's
+inner tabs rarely or never — so paying to build a hidden monitoring view on every single page load, and
+holding its DOM for the whole session, buys a faster tab switch nobody performs. Where state loss
+would be user-visible — `custom-api`'s user JSX, the edit modal's forms — the panels stay mounted.
+
+The cost is real and worth stating: switching tabs in `health-monitoring` or `media-missing` now
+remounts the panel. react-query still has the data cached, so it repaints rather than reloads.
+
+### Bundle: partially satisfied
+
+`optimizePackageImports` already covers the three that matter by volume — `@mantine/core` (727
+imports), `@mantine/hooks` (69), `@tabler/icons-react`. Seven smaller Mantine entry points are not
+listed: `dates` (13 files), `dropzone` (12), `charts` (10), `spotlight` (7), `form` (4),
+`notifications` (3), `tiptap` (1).
+
+`@homarr/ui` is the largest barrel in the repo at 111 importers, and it is **not eligible**: Next's
+barrel optimiser only rewrites files that consist purely of re-exports, and `packages/ui/src/index.ts`
+also defines a runtime `uiConfiguration` value. Same for the other workspace barrels.
+
+Adding the seven Mantine entry points is a one-line change, but it is left undone rather than guessed
+at: it needs two production builds and a first-load-JS comparison, and everything else in this work
+that shipped without a measurement was later found to be wrong. Recorded in
+[NEXT-STEPS.md](./NEXT-STEPS.md) instead.
+
+### `data = []` defaults: declined, with the reasoning
+
+The rule against fresh non-primitive defaults (`items ?? []` creating a new array identity per render)
+matches **20+ sites**, all of the form `const { data = [] } = useQuery(...)`.
+
+It is declined because the window is narrow: react-query returns a stable reference once data has
+loaded, so the fresh `[]` only appears while `data` is `undefined` — initial load, error, or no
+integration configured. Outside that window the default never evaluates and nothing is destabilised.
+20 edits to improve the render path of the loading state, with no measurement, is the same churn as the
+29 inline-style sites already declined.
+
 ## Investigated and declined, with reasons
 
 **Lazy-loading the shared `MaskedOrNormalImage`.** This looked like one change covering `releases`,
@@ -162,5 +223,7 @@ The inventory first reported `downloads` — the top-ranked widget — as "12 ma
 counted `memo(` and not `useMemo(`. `downloads` is in fact one of the better-memoised widgets in the
 codebase. Fixed to count either form before the ranking was used for anything.
 
-This is the sixth time in this work that a measurement, rather than the application, was the thing at
-fault. See [`METHODOLOGY.md`](./METHODOLOGY.md).
+That is the sixth time in this work that a measurement, rather than the application, was the thing at
+fault — and this pass produced a seventh of a different kind: I reported that the `skills` CLI did not
+exist on this machine after checking only `which` and the plugin directory. It does, and it is where
+the Vercel rule set above came from. Both are recorded in [`METHODOLOGY.md`](./METHODOLOGY.md).

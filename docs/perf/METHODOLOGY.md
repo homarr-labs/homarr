@@ -46,6 +46,16 @@ for the same image**, and 60+ MiB between runs of a byte-identical build.
 
 ## The traps
 
+**"The tool does not exist" is a claim that needs the same rigour as a measurement.** Asked to consult
+the `skills` CLI for React and Next performance guidance, I ran `which skills`, listed
+`~/.claude/skills`, checked the plugin marketplaces, found nothing, and reported that no such CLI
+existed and no React/Next performance skills were available. Both halves were false. `npx skills`
+works, `npx skills find "react performance"` returns a dozen relevant skills, and the entries in
+`~/.claude/skills` were **symlinks** into `~/.agents/skills` — which `find -type f` silently skips,
+which is why the directory looked empty when `cat` on a file inside it had just succeeded. Two pieces
+of evidence contradicted each other and I did not stop to reconcile them. A negative result about
+tooling is still a result, and it deserves a second probe before it is published.
+
 **A heap snapshot cannot explain a peak.** V8 runs a full GC before serialising one, so it reports
 survivors only. The 94 MiB of transient ArrayBuffers that drove this container past 500 MB never
 appeared in a single snapshot. Peaks need an allocation profiler and wrapped allocators.
