@@ -3,12 +3,15 @@ set -eu
 
 WORKSHOP_TEST_PORT=${WORKSHOP_TEST_PORT:-18090}
 WORKSHOP_TEST_PROJECT="homarr-workshop-test-$$"
+export HOMARR_AI_OPENROUTER_BASE_URL=http://assistant-upstream:18091/api/v1
+export OPENROUTER_API_KEY=workshop-test-openrouter-key
 
+docker build --target pocketbase-test -f apps/workshop/Dockerfile .
 node apps/workshop/tests/workshop-contracts.mjs
 node apps/workshop/tests/workshop-migration.mjs
 
 cleanup() {
-  PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
+  PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose --profile test -p "$WORKSHOP_TEST_PROJECT" \
     -f apps/workshop/docker-compose.yml down --volumes --remove-orphans >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
@@ -16,7 +19,7 @@ trap cleanup EXIT
 HOMARR_WEBSITE_URL=https://preview.example.invalid \
   WORKSHOP_API_URL=https://api.preview.example.invalid \
   WORKSHOP_WEB_URL=https://preview.example.invalid/workshop \
-  PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
+  PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose --profile test -p "$WORKSHOP_TEST_PROJECT" \
   -f apps/workshop/docker-compose.yml up --build -d
 
 for attempt in $(seq 1 60); do

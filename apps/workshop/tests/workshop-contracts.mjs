@@ -73,6 +73,34 @@ const migration = await read("apps/workshop/pb_migrations/1784240000_workshop_wi
 for (const removedField of ["displayName", "avatarUrl", "githubProfileUrl", "githubUsername"]) {
   if (migration.includes(removedField)) throw new Error(`Redundant Workshop user field remains: ${removedField}`);
 }
+
+const providerMigration = await read("apps/workshop/pb_migrations/1786500000_homarr_provider.js");
+for (const required of [
+  'name: "assistant_quotas"',
+  'name: "assistant_requests"',
+  'name: "assistant_activity"',
+  'listRule: ""',
+  "idx_assistant_quotas_user",
+]) {
+  if (!providerMigration.includes(required)) throw new Error(`Homarr provider migration is missing: ${required}`);
+}
+if (/assistant_activity[\s\S]*name: "user"/u.test(providerMigration.split("const requests")[0])) {
+  throw new Error("The public assistant activity collection must not contain user identity");
+}
+
+const providerBackend = await read("apps/workshop/homarr_provider.go");
+for (const required of [
+  '"homarr/deepseek-v4-flash-latest"',
+  'apis.RequireAuth("users")',
+  "DefaultActivityLoggerMiddlewareId",
+  'os.Getenv("OPENROUTER_API_KEY")',
+  'os.Getenv("HOMARR_AI_DAILY_REQUEST_LIMIT")',
+]) {
+  if (!providerBackend.includes(required)) throw new Error(`Homarr provider backend is missing: ${required}`);
+}
+if (/logger\(\)|\.Logger\(/u.test(providerBackend)) {
+  throw new Error("The Homarr provider must not log request content or user tokens");
+}
 for (const required of [
   "workshop_migration_state",
   "addedUserFields",

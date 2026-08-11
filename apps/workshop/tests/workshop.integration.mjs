@@ -1,5 +1,34 @@
 const baseUrl = process.env.WORKSHOP_TEST_URL ?? "http://127.0.0.1:18090";
 
+const createSseReader = (body) => {
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  return {
+    cancel: () => reader.cancel(),
+    async next() {
+      while (true) {
+        const boundary = buffer.indexOf("\n\n");
+        if (boundary >= 0) {
+          const block = buffer.slice(0, boundary);
+          buffer = buffer.slice(boundary + 2);
+          const result = { event: "message", id: "", data: "" };
+          for (const line of block.split("\n")) {
+            if (line.startsWith("event:")) result.event = line.slice(6).trim();
+            if (line.startsWith("id:")) result.id = line.slice(3).trim();
+            if (line.startsWith("data:")) result.data += line.slice(5).trim();
+          }
+          if (result.data || result.id) return result;
+          continue;
+        }
+        const chunk = await reader.read();
+        if (chunk.done) throw new Error("PocketBase realtime stream ended unexpectedly");
+        buffer += decoder.decode(chunk.value, { stream: true }).replaceAll("\r\n", "\n");
+      }
+    },
+  };
+};
+
 const request = async (path, init = {}) => {
   const response = await fetch(`${baseUrl}${path}`, {
     ...init,
@@ -35,6 +64,9 @@ for (const required of [
   "reports",
   "workshop_listings",
   "workshop_report_summaries",
+  "assistant_quotas",
+  "assistant_requests",
+  "assistant_activity",
 ]) {
   if (!collectionNames.has(required)) throw new Error(`Missing Workshop collection: ${required}`);
 }
@@ -99,6 +131,182 @@ if (unchangedAuthor.name !== "widget-author") {
 const visitorPassword = "WorkshopVisitor123!";
 const visitor = await createUser("widget-visitor@example.invalid", "widget-visitor", visitorPassword);
 const visitorSession = await signIn(visitor.email, visitorPassword);
+
+const modelList = await request("/api/ai/v1/models");
+if (
+  modelList.object !== "list" ||
+  modelList.data.length !== 1 ||
+  modelList.data[0].id !== "homarr/deepseek-v4-flash-latest"
+) {
+  throw new Error("The Homarr provider must advertise exactly one model");
+}
+await expectStatus("/api/ai/usage", {}, 401);
+
+const initialUsage = await request("/api/ai/usage", { headers: authorSession.headers });
+const initialReset = new Date(initialUsage.resetsAt);
+if (
+  initialUsage.limit !== 50 ||
+  initialUsage.used !== 0 ||
+  initialUsage.remaining !== 50 ||
+  initialReset.getUTCHours() !== 0 ||
+  initialReset <= new Date()
+) {
+  throw new Error(`Unexpected initial Homarr provider allowance: ${JSON.stringify(initialUsage)}`);
+}
+
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    headers: authorSession.headers,
+    body: JSON.stringify({ model: "another-model", messages: [{ role: "user", content: "hello" }] }),
+  },
+  400,
+);
+
+const realtimeResponse = await fetch(`${baseUrl}/api/realtime`);
+if (!realtimeResponse.ok || !realtimeResponse.body) throw new Error("PocketBase realtime connection failed");
+const realtime = createSseReader(realtimeResponse.body);
+const connectedEvent = await realtime.next();
+if (connectedEvent.event !== "PB_CONNECT" || !connectedEvent.id) {
+  throw new Error("PocketBase realtime did not provide a client ID");
+}
+await request("/api/realtime", {
+  method: "POST",
+  body: JSON.stringify({ clientId: connectedEvent.id, subscriptions: ["assistant_activity/*"] }),
+});
+const activityEvent = (async () => {
+  while (true) {
+    const event = await realtime.next();
+    const payload = JSON.parse(event.data);
+    if (payload.action === "create") return payload.record;
+  }
+})();
+
+const streamStartedAt = performance.now();
+const streamResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+  method: "POST",
+  headers: { "content-type": "application/json", ...authorSession.headers },
+  body: JSON.stringify({
+    model: "homarr/deepseek-v4-flash-latest",
+    messages: [{ role: "user", content: "hello" }],
+    stream: true,
+  }),
+});
+if (!streamResponse.ok || streamResponse.headers.get("x-homarr-quota-remaining") !== "49") {
+  throw new Error(`Streaming provider request failed: ${streamResponse.status}`);
+}
+const streamReader = streamResponse.body.getReader();
+const firstChunk = await streamReader.read();
+const firstChunkAt = performance.now();
+let streamText = new TextDecoder().decode(firstChunk.value ?? new Uint8Array());
+while (true) {
+  const chunk = await streamReader.read();
+  if (chunk.done) break;
+  streamText += new TextDecoder().decode(chunk.value);
+}
+const streamFinishedAt = performance.now();
+if (
+  firstChunk.done ||
+  !streamText.includes("Hello from ") ||
+  !streamText.includes("the Homarr provider") ||
+  streamFinishedAt - firstChunkAt < 50 ||
+  firstChunkAt - streamStartedAt > 5_000
+) {
+  throw new Error("The Homarr provider did not preserve the upstream SSE stream");
+}
+const liveActivity = await Promise.race([
+  activityEvent,
+  new Promise((_, reject) => setTimeout(() => reject(new Error("Assistant activity realtime event timed out")), 2_000)),
+]);
+await realtime.cancel();
+if (liveActivity.model !== "homarr/deepseek-v4-flash-latest" || liveActivity.requestUnits !== 1) {
+  throw new Error("The public assistant activity event is invalid");
+}
+
+const toolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+  method: "POST",
+  headers: { "content-type": "application/json", ...authorSession.headers },
+  body: JSON.stringify({
+    model: "homarr/deepseek-v4-flash-latest",
+    messages: [
+      { role: "user", content: "inspect my dashboard" },
+      { role: "assistant", content: null, tool_calls: [{ id: "one" }, { id: "two" }] },
+      { role: "tool", tool_call_id: "one", content: "{}" },
+      { role: "tool", tool_call_id: "two", content: "{}" },
+    ],
+    stream: false,
+  }),
+});
+if (!toolResponse.ok || toolResponse.headers.get("x-homarr-quota-remaining") !== "46") {
+  throw new Error("Tool results must each consume one Homarr provider request unit");
+}
+
+const afterToolsUsage = await request("/api/ai/usage", { headers: authorSession.headers });
+if (afterToolsUsage.used !== 4 || afterToolsUsage.remaining !== 46) {
+  throw new Error(`Tool request accounting is incorrect: ${JSON.stringify(afterToolsUsage)}`);
+}
+
+const publicActivities = await request("/api/collections/assistant_activity/records?sort=-created&perPage=10");
+if (
+  publicActivities.items.length < 2 ||
+  publicActivities.items.some((item) => "user" in item) ||
+  !publicActivities.items.some(
+    (item) => item.status === "completed" && item.inputTokens === 12 && item.outputTokens === 7,
+  )
+) {
+  throw new Error("Public assistant activity must be anonymous and include completed token totals");
+}
+await expectStatus("/api/collections/assistant_requests/records", { headers: authorSession.headers }, 403);
+await expectStatus("/api/collections/assistant_quotas/records", { headers: authorSession.headers }, 403);
+
+const privateRequests = await request("/api/collections/assistant_requests/records?perPage=20", {
+  headers: rootHeaders,
+});
+if (
+  privateRequests.items.length < 2 ||
+  privateRequests.items.some((item) => item.user !== author.id) ||
+  privateRequests.items.some((item) => "messages" in item || "prompt" in item || "body" in item)
+) {
+  throw new Error("Private provider accounting must identify the user without storing request content");
+}
+const quotas = await request("/api/collections/assistant_quotas/records?perPage=20", { headers: rootHeaders });
+const authorQuota = quotas.items.find((item) => item.user === author.id);
+if (!authorQuota || authorQuota.dailyLimit !== 50 || authorQuota.used !== 4 || authorQuota.totalTokens !== 38) {
+  throw new Error(`Private provider quota is incorrect: ${JSON.stringify(authorQuota)}`);
+}
+
+await request(`/api/collections/assistant_quotas/records/${authorQuota.id}`, {
+  method: "PATCH",
+  headers: rootHeaders,
+  body: JSON.stringify({ day: "2000-01-01", used: 49, dailyLimit: 2 }),
+});
+const resetUsage = await request("/api/ai/usage", { headers: authorSession.headers });
+if (resetUsage.limit !== 2 || resetUsage.used !== 0 || resetUsage.remaining !== 2) {
+  throw new Error(`Quota did not reset at the UTC day boundary: ${JSON.stringify(resetUsage)}`);
+}
+
+const allowanceProbe = () =>
+  fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+    method: "POST",
+    headers: { "content-type": "application/json", ...authorSession.headers },
+    body: JSON.stringify({
+      model: "homarr/deepseek-v4-flash-latest",
+      messages: [{ role: "user", content: "allowance probe" }],
+      stream: false,
+    }),
+  });
+if (!(await allowanceProbe()).ok || !(await allowanceProbe()).ok) {
+  throw new Error("The per-user allowance rejected a permitted request");
+}
+const exhaustedResponse = await allowanceProbe();
+if (
+  exhaustedResponse.status !== 429 ||
+  exhaustedResponse.headers.get("x-homarr-quota-remaining") !== "0" ||
+  !exhaustedResponse.headers.get("x-homarr-quota-reset")
+) {
+  throw new Error("The per-user allowance was not enforced atomically");
+}
 
 const widget = {
   $schema: "homarr-custom-widget-v2",
