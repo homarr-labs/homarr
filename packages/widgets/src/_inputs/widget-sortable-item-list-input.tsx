@@ -177,20 +177,28 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({
     id,
   });
 
-  const Handle = (props: Partial<ActionIconProps>) => {
-    return (
-      <ActionIcon
-        variant="transparent"
-        color="gray"
-        {...props}
-        {...listeners}
-        ref={setActivatorNodeRef}
-        style={{ cursor: "grab" }}
-      >
-        <IconGripHorizontal />
-      </ActionIcon>
-    );
-  };
+  // Declared with useMemo because it is passed to a child as `handle={Handle}`, i.e. as a component
+  // *type*. A type that changes identity makes React unmount and remount the subtree rather than
+  // update it, and this component re-renders on every frame of a drag as dnd-kit updates `transform`
+  // — so the drag handle was being torn down and rebuilt continuously while being dragged.
+  const Handle = useMemo(
+    () =>
+      function DragHandle(props: Partial<ActionIconProps>) {
+        return (
+          <ActionIcon
+            variant="transparent"
+            color="gray"
+            {...props}
+            {...listeners}
+            ref={setActivatorNodeRef}
+            style={{ cursor: "grab" }}
+          >
+            <IconGripHorizontal />
+          </ActionIcon>
+        );
+      },
+    [listeners, setActivatorNodeRef],
+  );
 
   return (
     <Card
