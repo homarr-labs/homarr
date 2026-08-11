@@ -6,10 +6,10 @@ export interface GridPreviewDomState {
   changedIds: Set<string>;
 }
 
-interface SyncGridPreviewGeometryInput<TPlacement extends GridPlacement> {
+interface SyncGridPreviewGeometryInput {
   elements: ReadonlyMap<string, HTMLElement>;
-  placements: readonly TPlacement[];
-  previewPlacements: readonly TPlacement[] | null;
+  placements: readonly GridPlacement[];
+  previewPlacements: readonly GridPlacement[] | null;
   activeId: string | null;
   mode: "drag" | "resize" | null;
   previous: GridPreviewDomState;
@@ -20,14 +20,14 @@ export const createGridPreviewDomState = (): GridPreviewDomState => ({
   changedIds: new Set(),
 });
 
-export const syncGridPreviewGeometry = <TPlacement extends GridPlacement>({
+export const syncGridPreviewGeometry = ({
   elements,
   placements,
   previewPlacements,
   activeId,
   mode,
   previous,
-}: SyncGridPreviewGeometryInput<TPlacement>): GridPreviewDomState => {
+}: SyncGridPreviewGeometryInput): GridPreviewDomState => {
   const controlledById = new Map(placements.map((placement) => [placement.id, placement]));
   const changedIds = new Set<string>();
 
@@ -58,9 +58,9 @@ export const syncGridPreviewGeometry = <TPlacement extends GridPlacement>({
   return { activeId, changedIds };
 };
 
-export const clearGridPreviewGeometry = <TPlacement extends GridPlacement>(
+export const clearGridPreviewGeometry = (
   elements: ReadonlyMap<string, HTMLElement>,
-  placements: readonly TPlacement[],
+  placements: readonly GridPlacement[],
   state: GridPreviewDomState,
 ) => {
   const controlledById = new Map(placements.map((placement) => [placement.id, placement]));
