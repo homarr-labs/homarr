@@ -1,0 +1,72 @@
+import { getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
+import type { GridPlacement } from "~/components/board/layout";
+
+interface ResizeOutlinePreview<TPlacement extends GridPlacement> {
+  placement: TPlacement;
+  valid: boolean;
+}
+
+export const createGridResizeOutlineController = <TPlacement extends GridPlacement>(
+  getShell: () => HTMLElement | null,
+  getControlledPlacement: () => TPlacement,
+) => {
+  let frame = 0;
+  let pending: ResizeOutlinePreview<TPlacement> | null = null;
+
+  const remove = () => {
+    getShell()?.querySelector(":scope > [data-grid-resize-outline]")?.remove();
+  };
+
+  const flush = () => {
+    frame = 0;
+    const shell = getShell();
+    const preview = pending;
+    if (!shell || !preview) return;
+
+    const controlled = getControlledPlacement();
+    const visualX = toFiniteNumber(shell.dataset.gridX, controlled.x);
+    const visualY = toFiniteNumber(shell.dataset.gridY, controlled.y);
+    const outline =
+      shell.querySelector<HTMLElement>(":scope > [data-grid-resize-outline]") ?? createResizeOutline(shell);
+    outline.style.position = "absolute";
+    outline.style.left = `${(preview.placement.x - visualX) * LOGICAL_GRID_PITCH}px`;
+    outline.style.top = `${(preview.placement.y - visualY) * LOGICAL_GRID_PITCH}px`;
+    outline.style.width = `${getLogicalTrackSize(preview.placement.w)}px`;
+    outline.style.height = `${getLogicalTrackSize(preview.placement.h)}px`;
+    outline.dataset.gridResizeValid = String(preview.valid);
+  };
+
+  return {
+    schedule(preview: ResizeOutlinePreview<TPlacement> | null) {
+      pending = preview;
+      if (!preview) {
+        window.cancelAnimationFrame(frame);
+        frame = 0;
+        remove();
+        return;
+      }
+      if (frame !== 0) return;
+      frame = window.requestAnimationFrame(flush);
+    },
+    destroy() {
+      pending = null;
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+      remove();
+    },
+  };
+};
+
+const toFiniteNumber = (value: string | undefined, fallback: number) => {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+};
+
+const createResizeOutline = (shell: HTMLElement) => {
+  const outline = document.createElement("div");
+  outline.className = "board-grid-resize-outline";
+  outline.dataset.gridResizeOutline = "";
+  outline.setAttribute("aria-hidden", "true");
+  shell.append(outline);
+  return outline;
+};

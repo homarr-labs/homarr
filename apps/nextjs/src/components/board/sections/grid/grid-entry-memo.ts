@@ -6,7 +6,7 @@ export interface DndGridEntryProps {
   label: string;
   columnCount: number;
   maxRowCount: number | null;
-  isActive: boolean;
+  registerElement: (id: string, element: HTMLElement | null) => void;
 }
 
 export const areDndGridEntryPropsEqual = (previous: DndGridEntryProps, next: DndGridEntryProps) =>
@@ -14,7 +14,7 @@ export const areDndGridEntryPropsEqual = (previous: DndGridEntryProps, next: Dnd
   previous.label === next.label &&
   previous.columnCount === next.columnCount &&
   previous.maxRowCount === next.maxRowCount &&
-  previous.isActive === next.isActive &&
+  previous.registerElement === next.registerElement &&
   previous.placement.id === next.placement.id &&
   previous.placement.type === next.placement.type &&
   previous.placement.x === next.placement.x &&
