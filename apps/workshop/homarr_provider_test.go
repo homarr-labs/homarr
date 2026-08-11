@@ -2,7 +2,9 @@ package main
 
 import (
 	"math"
+	"strings"
 	"testing"
+	"time"
 )
 
 func TestCountRequestUnits(t *testing.T) {
@@ -82,5 +84,25 @@ func TestProviderEnvironment(t *testing.T) {
 	t.Setenv("HOMARR_AI_DAILY_REQUEST_LIMIT", "0")
 	if _, err := newHomarrProviderFromEnv(); err == nil {
 		t.Fatal("expected invalid daily limit to fail")
+	}
+}
+
+func TestReadBoundedBody(t *testing.T) {
+	body, err := readBoundedBody(strings.NewReader("1234"), 4)
+	if err != nil || string(body) != "1234" {
+		t.Fatalf("unexpected bounded body: %q, %v", body, err)
+	}
+	if _, err := readBoundedBody(strings.NewReader("12345"), 4); err != errProviderResponseTooLarge {
+		t.Fatalf("expected response size error, got %v", err)
+	}
+}
+
+func TestRequestBelongsToQuotaDay(t *testing.T) {
+	startedAt := time.Date(2026, 8, 12, 1, 30, 0, 0, time.FixedZone("CEST", 2*60*60))
+	if !requestBelongsToQuotaDay("2026-08-11", startedAt) {
+		t.Fatal("expected request to match its UTC start day")
+	}
+	if requestBelongsToQuotaDay("2026-08-12", startedAt) {
+		t.Fatal("request usage must not be added after the quota record resets")
 	}
 }

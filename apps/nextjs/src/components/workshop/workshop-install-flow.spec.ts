@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { getWorkshopWebUrl } from "./workshop-client";
+import { getWorkshopAssistantProviderUrl, getWorkshopWebUrl } from "./workshop-client";
 
 describe("Workshop widget install flow", () => {
   afterEach(() => {
@@ -15,6 +15,12 @@ describe("Workshop widget install flow", () => {
 
     expect(getWorkshopWebUrl()).toBe("https://preview.example/workshop");
     expect(getWorkshopWebUrl("widget/id")).toBe("https://preview.example/workshop/widget%2Fid");
+  });
+
+  it("derives the Homarr provider endpoint from the runtime Workshop API", () => {
+    document.head.innerHTML = '<meta name="homarr-workshop-api-url" content="https://api.preview.example/">';
+
+    expect(getWorkshopAssistantProviderUrl()).toBe("https://api.preview.example/api/ai/v1");
   });
 
   it("uses one registered modal stack for browsing, details, reports, and confirmation", () => {

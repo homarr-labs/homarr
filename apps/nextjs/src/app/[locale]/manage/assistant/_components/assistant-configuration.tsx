@@ -52,6 +52,8 @@ import type { AssistantProvider, AssistantProviderCategory } from "@homarr/defin
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { getWorkshopAssistantProviderUrl } from "~/components/workshop/workshop-client";
+
 import classes from "./assistant-configuration.module.css";
 import { formatAssistantContextWindow, getAssistantConnectionState } from "./assistant-configuration-state";
 
@@ -153,8 +155,13 @@ export const AssistantConfiguration = () => {
   const [webSearchEnabled, setWebSearchEnabled] = useState(false);
 
   useEffect(() => {
-    setProvider(configuration?.provider ?? "openrouter");
-    setBaseUrl(configuration?.baseUrl ?? assistantProviderPresets.openrouter.baseUrl);
+    const configuredProvider = configuration?.provider ?? "openrouter";
+    setProvider(configuredProvider);
+    setBaseUrl(
+      configuredProvider === "homarr"
+        ? getWorkshopAssistantProviderUrl()
+        : (configuration?.baseUrl ?? assistantProviderPresets.openrouter.baseUrl),
+    );
     setModelDiscoveryPath(configuration?.modelDiscoveryPath ?? "");
     setModelId(configuration?.modelId ?? "");
     setEnabled(configuration?.enabled ?? false);
@@ -291,7 +298,7 @@ export const AssistantConfiguration = () => {
     const nextPreset = assistantProviderPresets[nextProvider];
     clearDraftConnectionState();
     setProvider(nextProvider);
-    setBaseUrl(nextPreset.baseUrl);
+    setBaseUrl(nextProvider === "homarr" ? getWorkshopAssistantProviderUrl() : nextPreset.baseUrl);
     setModelDiscoveryPath(nextPreset.modelDiscoveryPath ?? "");
   };
 
@@ -321,12 +328,11 @@ export const AssistantConfiguration = () => {
   };
 
   const saveConnection = (clearApiKey = false) => {
-    const customHeaders =
-      isHomarrProvider
-        ? undefined
-        : headers.length > 0
-          ? Object.fromEntries(headers.map((header) => [header.name.trim(), header.value]))
-          : undefined;
+    const customHeaders = isHomarrProvider
+      ? undefined
+      : headers.length > 0
+        ? Object.fromEntries(headers.map((header) => [header.name.trim(), header.value]))
+        : undefined;
     updateConnection.mutate({
       provider,
       baseUrl,
@@ -542,76 +548,81 @@ export const AssistantConfiguration = () => {
           {!isHomarrProvider && (
             <Accordion variant="contained" radius="md">
               <Accordion.Item value="headers">
-              <Accordion.Control className={classes.advancedControl} icon={<IconShieldLock size={18} />}>
-                <Group justify="space-between" wrap="nowrap">
-                  <Box>
-                    <Text size="sm" fw={600}>
-                      {t("headers.title")}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      {t("headers.description")}
-                    </Text>
-                  </Box>
-                  {configuration?.customHeadersConfigured && (
-                    <Badge variant="light" color={clearHeaders ? "yellow" : "green"}>
-                      {clearHeaders ? t("headers.pendingRemoval") : t("headers.savedBadge")}
-                    </Badge>
-                  )}
-                </Group>
-              </Accordion.Control>
-              <Accordion.Panel>
-                <Stack gap="sm">
-                  <Group justify="space-between" align="center">
-                    <Text size="sm" c="dimmed">
-                      {configuration?.customHeadersConfigured ? t("headers.configured") : t("headers.empty")}
-                    </Text>
-                    <Button variant="light" size="compact-sm" leftSection={<IconPlus size={14} />} onClick={addHeader}>
-                      {t("headers.add")}
-                    </Button>
+                <Accordion.Control className={classes.advancedControl} icon={<IconShieldLock size={18} />}>
+                  <Group justify="space-between" wrap="nowrap">
+                    <Box>
+                      <Text size="sm" fw={600}>
+                        {t("headers.title")}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        {t("headers.description")}
+                      </Text>
+                    </Box>
+                    {configuration?.customHeadersConfigured && (
+                      <Badge variant="light" color={clearHeaders ? "yellow" : "green"}>
+                        {clearHeaders ? t("headers.pendingRemoval") : t("headers.savedBadge")}
+                      </Badge>
+                    )}
                   </Group>
-                  {headers.map((header) => (
-                    <Group key={header.id} align="flex-end" wrap="wrap">
-                      <TextInput
-                        flex={1}
-                        miw="12rem"
-                        label={t("headers.name")}
-                        value={header.name}
-                        onChange={(event) => updateHeader(header.id, "name", event.currentTarget.value)}
-                        placeholder="X-Provider-Header"
-                      />
-                      <PasswordInput
-                        flex={2}
-                        miw="12rem"
-                        label={t("headers.value")}
-                        value={header.value}
-                        onChange={(event) => updateHeader(header.id, "value", event.currentTarget.value)}
-                        placeholder={t("headers.valuePlaceholder")}
-                        autoComplete="off"
-                      />
-                      <Tooltip label={t("headers.remove")}>
-                        <ActionIcon
-                          size="lg"
-                          variant="subtle"
-                          color="red"
-                          aria-label={t("headers.remove")}
-                          onClick={() => setHeaders((current) => current.filter((item) => item.id !== header.id))}
-                        >
-                          <IconTrash size={17} />
-                        </ActionIcon>
-                      </Tooltip>
+                </Accordion.Control>
+                <Accordion.Panel>
+                  <Stack gap="sm">
+                    <Group justify="space-between" align="center">
+                      <Text size="sm" c="dimmed">
+                        {configuration?.customHeadersConfigured ? t("headers.configured") : t("headers.empty")}
+                      </Text>
+                      <Button
+                        variant="light"
+                        size="compact-sm"
+                        leftSection={<IconPlus size={14} />}
+                        onClick={addHeader}
+                      >
+                        {t("headers.add")}
+                      </Button>
                     </Group>
-                  ))}
-                  {configuration?.customHeadersConfigured && headers.length === 0 && (
-                    <Button
-                      variant="light"
-                      color={clearHeaders ? "gray" : "red"}
-                      onClick={() => setClearHeaders(!clearHeaders)}
-                    >
-                      {clearHeaders ? t("headers.keep") : t("headers.clear")}
-                    </Button>
-                  )}
-                </Stack>
-              </Accordion.Panel>
+                    {headers.map((header) => (
+                      <Group key={header.id} align="flex-end" wrap="wrap">
+                        <TextInput
+                          flex={1}
+                          miw="12rem"
+                          label={t("headers.name")}
+                          value={header.name}
+                          onChange={(event) => updateHeader(header.id, "name", event.currentTarget.value)}
+                          placeholder="X-Provider-Header"
+                        />
+                        <PasswordInput
+                          flex={2}
+                          miw="12rem"
+                          label={t("headers.value")}
+                          value={header.value}
+                          onChange={(event) => updateHeader(header.id, "value", event.currentTarget.value)}
+                          placeholder={t("headers.valuePlaceholder")}
+                          autoComplete="off"
+                        />
+                        <Tooltip label={t("headers.remove")}>
+                          <ActionIcon
+                            size="lg"
+                            variant="subtle"
+                            color="red"
+                            aria-label={t("headers.remove")}
+                            onClick={() => setHeaders((current) => current.filter((item) => item.id !== header.id))}
+                          >
+                            <IconTrash size={17} />
+                          </ActionIcon>
+                        </Tooltip>
+                      </Group>
+                    ))}
+                    {configuration?.customHeadersConfigured && headers.length === 0 && (
+                      <Button
+                        variant="light"
+                        color={clearHeaders ? "gray" : "red"}
+                        onClick={() => setClearHeaders(!clearHeaders)}
+                      >
+                        {clearHeaders ? t("headers.keep") : t("headers.clear")}
+                      </Button>
+                    )}
+                  </Stack>
+                </Accordion.Panel>
               </Accordion.Item>
             </Accordion>
           )}

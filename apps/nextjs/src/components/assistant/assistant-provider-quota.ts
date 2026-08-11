@@ -3,6 +3,9 @@ import type { AssistantProvider } from "@homarr/definitions";
 
 export type AssistantProviderQuotaLevel = "ok" | "warning" | "bad" | "dead";
 
+export const getAssistantProviderQuotaRefreshDelay = (resetsAt: string, now = Date.now()) =>
+  Math.max(0, Date.parse(resetsAt) - now) + 1_000;
+
 export const getAssistantProviderQuotaLevel = (
   usage: Pick<WorkshopAssistantUsage, "limit" | "remaining">,
 ): AssistantProviderQuotaLevel => {

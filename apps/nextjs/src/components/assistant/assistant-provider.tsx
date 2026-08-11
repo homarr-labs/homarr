@@ -29,7 +29,7 @@ import { createWorkshopClient } from "~/components/workshop/workshop-client";
 
 import { AssistantContext, AssistantPreferencesContext, useAssistantPreferences } from "./assistant-context";
 import { shouldAutomaticallyContinueAssistant } from "./assistant-auto-submit";
-import { isAssistantProviderUnavailable } from "./assistant-provider-quota";
+import { getAssistantProviderQuotaRefreshDelay, isAssistantProviderUnavailable } from "./assistant-provider-quota";
 import { AssistantAutoApprovalProvider } from "./assistant-auto-approval";
 import { getRunningAssistantPartType } from "./assistant-activity-state";
 import { prepareAssistantRequestBody } from "./assistant-attachment-payload";
@@ -236,6 +236,12 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
     if (data?.provider !== "homarr" || !providerUser) return;
     void refreshQuota();
   }, [data?.provider, providerUser, refreshQuota]);
+
+  useEffect(() => {
+    if (data?.provider !== "homarr" || !providerUser || !quota) return;
+    const timeout = window.setTimeout(() => void refreshQuota(), getAssistantProviderQuotaRefreshDelay(quota.resetsAt));
+    return () => window.clearTimeout(timeout);
+  }, [data?.provider, providerUser, quota, refreshQuota]);
 
   const value = useMemo(
     () => ({

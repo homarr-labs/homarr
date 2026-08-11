@@ -25,10 +25,13 @@ const (
 	defaultDailyLimit       = 50
 	maxProviderRequestUnits = 1000
 	maxChatRequestBytes     = 8 << 20
+	maxChatResponseBytes    = 8 << 20
 	maxUpstreamErrorBytes   = 1 << 20
 	openRouterDefaultURL    = "https://openrouter.ai/api/v1"
 	providerRequestTimeout  = 5 * time.Minute
 )
+
+var errProviderResponseTooLarge = errors.New("provider response is too large")
 
 type homarrProvider struct {
 	apiKey     string
@@ -119,6 +122,9 @@ func newHomarrProviderFromEnv() (*homarrProvider, error) {
 }
 
 func (provider *homarrProvider) models(event *core.RequestEvent) error {
+	if provider.apiKey == "" {
+		return event.JSON(http.StatusServiceUnavailable, openAIError("The Homarr provider is not configured."))
+	}
 	return event.JSON(http.StatusOK, map[string]any{
 		"object": "list",
 		"data": []map[string]any{{
@@ -245,13 +251,25 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		return nil
 	}
 
-	responseBody, readErr := io.ReadAll(upstreamResponse.Body)
-	usage := usageFromJSON(responseBody)
-	provider.finishActivity(event.App, privateRequest, publicActivity, statusForError(readErr), usage, startedAt)
+	responseBody, readErr := readBoundedBody(upstreamResponse.Body, maxChatResponseBytes)
 	if readErr != nil {
-		return readErr
+		provider.finishActivity(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt)
+		return event.JSON(http.StatusBadGateway, openAIError("The model endpoint returned an invalid response."))
 	}
+	usage := usageFromJSON(responseBody)
+	provider.finishActivity(event.App, privateRequest, publicActivity, "completed", usage, startedAt)
 	return event.Blob(upstreamResponse.StatusCode, contentType, responseBody)
+}
+
+func readBoundedBody(reader io.Reader, limit int64) ([]byte, error) {
+	body, err := io.ReadAll(io.LimitReader(reader, limit+1))
+	if err != nil {
+		return nil, err
+	}
+	if int64(len(body)) > limit {
+		return nil, errProviderResponseTooLarge
+	}
+	return body, nil
 }
 
 func countRequestUnits(messages []providerMessage) int {
@@ -386,11 +404,18 @@ func (provider *homarrProvider) finishActivity(
 		if err != nil {
 			return err
 		}
+		if !requestBelongsToQuotaDay(quota.GetString("day"), startedAt) {
+			return nil
+		}
 		quota.Set("inputTokens", quota.GetInt("inputTokens")+usage.InputTokens)
 		quota.Set("outputTokens", quota.GetInt("outputTokens")+usage.OutputTokens)
 		quota.Set("totalTokens", quota.GetInt("totalTokens")+usage.TotalTokens)
 		return txApp.Save(quota)
 	})
+}
+
+func requestBelongsToQuotaDay(day string, startedAt time.Time) bool {
+	return day == startedAt.UTC().Format(time.DateOnly)
 }
 
 func statusForError(err error) string {

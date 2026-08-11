@@ -62,6 +62,24 @@ for client_id in workshop-test-client workshop-rotated-client; do
     node apps/workshop/tests/oauth-sync.integration.mjs
 done
 
+OPENROUTER_API_KEY= PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
+  -f apps/workshop/docker-compose.yml up -d --force-recreate workshop
+for attempt in $(seq 1 60); do
+  if curl --fail --silent "http://127.0.0.1:$WORKSHOP_TEST_PORT/api/health" >/dev/null; then
+    break
+  fi
+  if [ "$attempt" -eq 60 ]; then
+    exit 1
+  fi
+  sleep 1
+done
+models_status=$(curl --silent --output /dev/null --write-out '%{http_code}' \
+  "http://127.0.0.1:$WORKSHOP_TEST_PORT/api/ai/v1/models")
+if [ "$models_status" != "503" ]; then
+  echo "Expected an unconfigured Homarr provider to return 503, received $models_status"
+  exit 1
+fi
+
 PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
   -f apps/workshop/docker-compose.yml stop workshop
 printf 'y\n' | PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
