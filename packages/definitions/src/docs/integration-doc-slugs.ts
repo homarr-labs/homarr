@@ -9,7 +9,7 @@ export const integrationDocSlugs: Record<IntegrationKind, string | null> = {
   aria2: "aria2",
   slskd: "slskd",
   sonarr: "sonarr",
-  sportarr: null,
+  sportarr: "sportarr",
   radarr: "radarr",
   lidarr: "lidarr",
   readarr: "readarr",
