@@ -8,6 +8,7 @@ widgets, 11 integrations, driven through an actual login — not from a syntheti
 | --- | --- |
 | [SERVER-MEMORY.md](./SERVER-MEMORY.md) | What the container's RAM is made of, and the changes that reduced it |
 | [CLIENT-PERFORMANCE.md](./CLIENT-PERFORMANCE.md) | Dashboard rendering cost in Chrome: DOM, fibers, images, paint |
+| [WIDGET-AUDIT.md](./WIDGET-AUDIT.md) | All 50 widgets, one at a time, with a verdict and the evidence for each |
 | [REJECTED.md](./REJECTED.md) | Ideas that were implemented and measured, then abandoned — with the numbers |
 | [METHODOLOGY.md](./METHODOLOGY.md) | The tools, and the measurement traps that produced wrong answers |
 | [NEXT-STEPS.md](./NEXT-STEPS.md) | Handoff: what is unverified, what to do next, and the set for a clean PR |
