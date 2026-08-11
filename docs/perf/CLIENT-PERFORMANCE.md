@@ -98,3 +98,39 @@ per second** for the whole board at **13.3 DOM mutations per commit**. That is t
 widgets refreshing about once a second, which is what they are for. A coalescing fix measured *exactly
 zero* (55 commits both sides) and was reverted.
 
+
+## Verification of the off-screen changes, and one instrument that lied
+
+The off-screen work was committed before it was measured. Verified afterwards on two containers
+restored from identical data, `maxopt` against `client3`:
+
+| metric | before | after |
+| --- | --- | --- |
+| image requests | 138, 135 | **22, 22** (−84%) |
+| image bytes (declared) | 12.27 MiB | **0.03 MiB** |
+| layout objects | 11611, 7836 | **3694, 3705** (−53%) |
+
+**A −99.8% drop in image bytes is not believable, so it was checked rather than reported.** Three
+checks, and the first two were bad instruments:
+
+1. Counting decoded images with `getBoundingClientRect()` reported **80/80 loaded in both arms** — but
+   reading geometry forces layout, which forces `content-visibility` subtrees to render, which triggers
+   exactly the image loads the check was looking for. The instrument caused the result.
+2. Screenshotting the widgets produced **byte-identical images in both arms** (3,372 bytes for
+   media-releases, 1,580 for media-requests), because this environment shows an onboarding overlay and
+   media-requests renders blank with unreachable integrations. Useful only as evidence of *no visual
+   difference*, not as evidence images render.
+3. Counting `img.complete && img.naturalWidth > 0`, which reads no geometry, gave the answer:
+
+| arm | images decoded | image responses |
+| --- | --- | --- |
+| before | **80 / 80** | 138 |
+| after | **80 / 80** | **25** |
+
+**Everything still displays.** The 80 `<img>` in media-releases are integration icons that share URLs,
+so the browser deduplicates them to ~25 unique fetches in both arms; the ~113 requests avoided are
+other widgets' off-screen artwork, chiefly media-requests' full-size per-card backdrops. That also
+explains the byte figure: those backdrops are where the 12.27 MiB came from.
+
+One limit worth stating: media-requests renders blank here because its integrations are unreachable, so
+its *visible-card* behaviour after the change is not verified. Media-releases is, at 80/80 decoded.
