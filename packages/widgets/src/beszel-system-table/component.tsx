@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Center, Group, Indicator, Loader, Progress, Text } from "@mantine/core";
 import type { DataTableColumn, DataTableSortStatus } from "mantine-datatable";
 import {
@@ -41,6 +41,34 @@ import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { BeszelIntegrationErrorIndicator } from "../beszel/_shared/error-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
+
+/**
+ * One cpu/memory/gpu cell.
+ *
+ * This lived inside the widget body, which made it a **new component type on every render**: React
+ * cannot match a new type to the previous one, so it unmounted and remounted every cell's subtree
+ * (Group, Text and Progress) instead of updating it. This widget re-renders about once a second from
+ * its live Beszel subscription, so that was three cells per system torn down and rebuilt every
+ * second. Declaring it here makes the type stable, and memo keeps a cell from re-rendering when its
+ * own value has not changed.
+ *
+ * `size` is passed rather than closed over — it was the only thing the nested version captured.
+ */
+const PercentCell = memo(function PercentCell({ value, size }: { value: number; size: SizeConfig }) {
+  return (
+    <Group gap={8} wrap="nowrap" style={{ flex: 1 }}>
+      <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+        {formatPercent(value)}
+      </Text>
+      <Progress
+        value={value}
+        color={thresholdColor(value)}
+        size={getProgressTrackSize(size.progressSize)}
+        style={{ flex: 1 }}
+      />
+    </Group>
+  );
+});
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
@@ -149,20 +177,6 @@ export default function BeszelSystemTableWidget({
     });
   }, [filteredSystems, sortStatus]);
 
-  const PercentCell = ({ value }: { value: number }) => (
-    <Group gap={8} wrap="nowrap" style={{ flex: 1 }}>
-      <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
-        {formatPercent(value)}
-      </Text>
-      <Progress
-        value={value}
-        color={thresholdColor(value)}
-        size={getProgressTrackSize(size.progressSize)}
-        style={{ flex: 1 }}
-      />
-    </Group>
-  );
-
   const columns = useMemo((): DataTableColumn<SystemRowWithKey>[] => {
     const cols: (DataTableColumn<SystemRowWithKey> | false)[] = [
       {
@@ -195,7 +209,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.cpu} />,
+        render: (record) => <PercentCell value={record.cpu} size={size} />,
       },
       options.showMemory && {
         accessor: "memory",
@@ -207,7 +221,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.memory} />,
+        render: (record) => <PercentCell value={record.memory} size={size} />,
       },
       options.showDisk && {
         accessor: "disk",
@@ -239,7 +253,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.gpu} />,
+        render: (record) => <PercentCell value={record.gpu} size={size} />,
       },
       options.showLoadAvg && {
         accessor: "loadAvg",
