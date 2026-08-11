@@ -85,6 +85,11 @@ export class SynologyClient {
       if (volumesFromV2.length > 0) {
         return volumesFromV2;
       }
+
+      const legacyVolumesFromV2 = this.mapLegacyVolumes(storageV2.vol_info);
+      if (legacyVolumesFromV2.length > 0) {
+        return legacyVolumesFromV2;
+      }
     } catch (error) {
       logger.debug("storage_v2 unavailable, falling back to legacy storage info", {
         integrationId: this.integrationId,
