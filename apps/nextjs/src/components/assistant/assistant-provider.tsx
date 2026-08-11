@@ -136,6 +136,7 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
   const [quota, setQuota] = useState<Awaited<ReturnType<typeof workshopClient.getAssistantUsage>> | null>(null);
   const [quotaLoading, setQuotaLoading] = useState(false);
   const [quotaError, setQuotaError] = useState<string | null>(null);
+  const quotaRequestRef = useRef<AbortController | null>(null);
   const previousDefaultModelIdRef = useRef<string | null | undefined>(undefined);
   const preferencesRef = useRef<{ modelId: string | null; reasoning: AssistantReasoningMode }>({
     modelId: null,
@@ -176,19 +177,30 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
     return token ? { [assistantHomarrProviderTokenHeader]: token } : {};
   }, [data?.provider, workshopClient]);
   const refreshQuota = useCallback(async () => {
+    quotaRequestRef.current?.abort();
     if (data?.provider !== "homarr" || !workshopClient.authToken) {
+      quotaRequestRef.current = null;
       setQuota(null);
       setQuotaError(null);
+      setQuotaLoading(false);
       return;
     }
+    const controller = new AbortController();
+    quotaRequestRef.current = controller;
     setQuotaLoading(true);
     setQuotaError(null);
     try {
-      setQuota(await workshopClient.getAssistantUsage());
+      const nextQuota = await workshopClient.getAssistantUsage(controller.signal);
+      if (quotaRequestRef.current === controller && !controller.signal.aborted) setQuota(nextQuota);
     } catch (error) {
-      setQuotaError(error instanceof Error ? error.message : "The Homarr provider allowance could not be loaded.");
+      if (quotaRequestRef.current === controller && !controller.signal.aborted) {
+        setQuotaError(error instanceof Error ? error.message : "The Homarr provider allowance could not be loaded.");
+      }
     } finally {
-      setQuotaLoading(false);
+      if (quotaRequestRef.current === controller) {
+        quotaRequestRef.current = null;
+        setQuotaLoading(false);
+      }
     }
   }, [data?.provider, workshopClient]);
   const signInToProvider = useCallback(async () => {
@@ -228,9 +240,19 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
       return;
     }
     const unsubscribe = workshopClient.subscribeToAuth(setProviderUser);
-    void workshopClient.refreshAuth().then(setProviderUser);
+    void workshopClient
+      .refreshAuth()
+      .then(setProviderUser)
+      .catch(() => undefined);
     return unsubscribe;
   }, [data?.provider, workshopClient]);
+
+  useEffect(
+    () => () => {
+      quotaRequestRef.current?.abort();
+    },
+    [],
+  );
 
   useEffect(() => {
     if (data?.provider !== "homarr" || !providerUser) return;
@@ -419,7 +441,7 @@ const AssistantThreadRuntime = () => {
   const localThreadId = useAuiState((state) => state.threadListItem.id);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
   const preferences = useAssistantPreferences();
-  const { getRequestBody, getRequestHeaders } = preferences;
+  const { getRequestBody, getRequestHeaders, refreshQuota } = preferences;
   const transport = useMemo(
     () =>
       new AssistantChatTransport({
@@ -456,19 +478,20 @@ const AssistantThreadRuntime = () => {
     [t, threadId],
   );
   const onError = useCallback(() => {
-    void preferences.refreshQuota();
+    void refreshQuota();
     showErrorNotification({
       title: t("responseError.title"),
       message: t("responseError.description"),
       autoClose: 10_000,
     });
-  }, [preferences, t]);
+  }, [refreshQuota, t]);
+  const onFinish = useCallback(() => void refreshQuota(), [refreshQuota]);
 
   const chat = useChat<AssistantUIMessage>({
     id: localThreadId,
     transport,
     onError,
-    onFinish: () => void preferences.refreshQuota(),
+    onFinish,
     sendAutomaticallyWhen: shouldAutomaticallyContinueAssistant,
   });
 

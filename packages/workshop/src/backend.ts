@@ -291,11 +291,12 @@ export class WorkshopBackend {
   public get currentUser(): WorkshopUser | null {
     const record = this.pocketBase.authStore.record;
     if (!record) return null;
-    return workshopUserSchema.parse({
+    const parsed = workshopUserSchema.safeParse({
       id: record.id,
       name: record.name || "",
       isAdmin: record.isAdmin === true,
     });
+    return parsed.success ? parsed.data : null;
   }
 
   public get authToken(): string | null {
@@ -326,7 +327,9 @@ export class WorkshopBackend {
         provider: "github",
       });
       this.pocketBase.authStore.save(auth.token, auth.record);
-      return this.currentUser;
+      const user = this.currentUser;
+      if (!user) throw new Error("The Workshop returned an invalid user session.");
+      return user;
     } catch (error) {
       throw workshopError(error, "GitHub sign-in failed");
     }
@@ -351,11 +354,13 @@ export class WorkshopBackend {
 
   public async listAssistantActivity(limit = 10, signal?: AbortSignal): Promise<WorkshopAssistantActivity[]> {
     try {
-      const result = await this.pocketBase.collection("assistant_activity").getList(1, Math.min(Math.max(limit, 1), 50), {
-        sort: "-created",
-        signal: requestSignal(signal),
-        requestKey: null,
-      });
+      const result = await this.pocketBase
+        .collection("assistant_activity")
+        .getList(1, Math.min(Math.max(limit, 1), 50), {
+          sort: "-created",
+          signal: requestSignal(signal),
+          requestKey: null,
+        });
       return result.items.flatMap((item) => {
         const parsed = workshopAssistantActivitySchema.safeParse(item);
         return parsed.success ? [parsed.data] : [];

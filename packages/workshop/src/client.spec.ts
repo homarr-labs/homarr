@@ -15,16 +15,21 @@ vi.mock("pocketbase", () => {
     public readonly authStore = {
       token: "",
       record: null as Record<string, unknown> | null,
-      isValid: false,
+      get isValid() {
+        try {
+          const payload = JSON.parse(atob(this.token.split(".")[1] ?? "")) as { exp?: unknown };
+          return typeof payload.exp === "number" && payload.exp > Date.now() / 1000;
+        } catch {
+          return false;
+        }
+      },
       save: (token: string, record: Record<string, unknown>) => {
         this.authStore.token = token;
         this.authStore.record = record;
-        this.authStore.isValid = true;
       },
       clear: () => {
         this.authStore.token = "";
         this.authStore.record = null;
-        this.authStore.isValid = false;
       },
     };
 
@@ -62,6 +67,8 @@ import type { RecordService } from "pocketbase";
 import { WorkshopBackend } from "./backend";
 import type { WorkshopSubmissionRecord } from "./backend";
 import * as workshopClient from "./client";
+
+const validWorkshopToken = "header.eyJleHAiOjQxMDI0NDQ4MDB9.signature";
 
 describe("WorkshopBackend", () => {
   test("resolves the advertised client module", () => {
@@ -108,7 +115,7 @@ describe("WorkshopBackend", () => {
   test("reuses a valid Workshop session for the Homarr provider allowance", async () => {
     const client = new WorkshopBackend("https://workshop.example.com");
     expect(client.authToken).toBeNull();
-    client.pocketBase.authStore.save("workshop-token", { id: "author-id", name: "octocat" } as never);
+    client.pocketBase.authStore.save(validWorkshopToken, { id: "author-id", name: "octocat" } as never);
     mocks.send.mockResolvedValue({
       limit: 50,
       used: 7,
@@ -117,11 +124,24 @@ describe("WorkshopBackend", () => {
     });
 
     await expect(client.getAssistantUsage()).resolves.toMatchObject({ limit: 50, remaining: 43 });
-    expect(client.authToken).toBe("workshop-token");
+    expect(client.authToken).toBe(validWorkshopToken);
     expect(mocks.send).toHaveBeenCalledWith(
       "/api/ai/usage",
       expect.objectContaining({ method: "GET", requestKey: null, signal: expect.any(AbortSignal) }),
     );
+  });
+
+  test("fails closed for expired tokens and malformed Workshop user records", () => {
+    const client = new WorkshopBackend("https://workshop.example.com");
+    client.pocketBase.authStore.save("header.eyJleHAiOjF9.signature", {
+      id: "author-id",
+      name: "octocat",
+    } as never);
+    expect(client.authToken).toBeNull();
+
+    client.pocketBase.authStore.save(validWorkshopToken, { id: 42 } as never);
+    expect(client.currentUser).toBeNull();
+    expect(client.authToken).toBeNull();
   });
 
   test("loads only valid anonymous provider activity records", async () => {
@@ -155,7 +175,7 @@ describe("WorkshopBackend", () => {
 
   test("sends the exported schema while leaving initial revision ownership to PocketBase", async () => {
     const client = new WorkshopBackend("https://workshop.example.com");
-    client.pocketBase.authStore.save("token", { id: "author-id" } as never);
+    client.pocketBase.authStore.save(validWorkshopToken, { id: "author-id" } as never);
     mocks.create.mockResolvedValue({ id: "submission-id" });
     vi.spyOn(client, "get").mockResolvedValue(listingRecord() as never);
 

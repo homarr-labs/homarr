@@ -30,6 +30,9 @@ const mergeActivity = (current: WorkshopAssistantActivity[], next: WorkshopAssis
     .toSorted((left, right) => activityDate(right.created).getTime() - activityDate(left.created).getTime())
     .slice(0, 10);
 
+const mergeActivities = (current: WorkshopAssistantActivity[], next: WorkshopAssistantActivity[]) =>
+  next.reduce(mergeActivity, current);
+
 export const AssistantProviderActivity = ({ compact = false }: { compact?: boolean }) => {
   const { siteConfig } = useDocusaurusContext();
   const configuredWorkshopUrl = (siteConfig.customFields?.workshopUrl as string | undefined) ?? "";
@@ -44,8 +47,6 @@ export const AssistantProviderActivity = ({ compact = false }: { compact?: boole
     const backend = getWorkshopBackend(workshopUrl);
     const load = async () => {
       try {
-        const initial = await backend.listAssistantActivity(10);
-        if (active) setActivities(initial);
         const nextUnsubscribe = await backend.pocketBase.collection("assistant_activity").subscribe("*", (event) => {
           const parsed = workshopAssistantActivitySchema.safeParse(event.record);
           if (!active || !parsed.success) return;
@@ -60,6 +61,12 @@ export const AssistantProviderActivity = ({ compact = false }: { compact?: boole
         }
       } catch {
         if (active) setConnected(false);
+      }
+      try {
+        const initial = await backend.listAssistantActivity(10);
+        if (active) setActivities((current) => mergeActivities(current, initial));
+      } catch {
+        // Realtime activity can still populate this view when the initial list request fails.
       } finally {
         if (active) setLoading(false);
       }
@@ -77,7 +84,7 @@ export const AssistantProviderActivity = ({ compact = false }: { compact?: boole
     <section className={clsx(styles.root, compact && styles.compact)} aria-label="Live Homarr provider activity">
       <header className={styles.header}>
         <h3 className={styles.title}>Homarr provider activity</h3>
-        <span className={styles.live} aria-live="polite">
+        <span className={styles.live} data-connected={connected || undefined} aria-live="polite">
           <span className={styles.beep} aria-hidden />
           {connected ? "Live" : loading ? "Connecting" : "Offline"}
         </span>

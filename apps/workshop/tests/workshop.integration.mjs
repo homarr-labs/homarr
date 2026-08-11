@@ -229,12 +229,13 @@ while (true) {
   if (chunk.done) break;
   streamText += new TextDecoder().decode(chunk.value);
 }
-const streamFinishedAt = performance.now();
+const dataFrames = streamText.split(/\r?\n/u).filter((line) => line.startsWith("data:"));
 if (
   firstChunk.done ||
   !streamText.includes("Hello from ") ||
   !streamText.includes("the Homarr provider") ||
-  streamFinishedAt - firstChunkAt < 50 ||
+  dataFrames.length < 3 ||
+  dataFrames.at(-1)?.trim() !== "data: [DONE]" ||
   firstChunkAt - streamStartedAt > 5_000
 ) {
   throw new Error("The Homarr provider did not preserve the upstream SSE stream");
@@ -260,6 +261,11 @@ const toolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
       { role: "tool", tool_call_id: "two", content: "{}" },
     ],
     stream: false,
+    models: ["attacker/model"],
+    provider: { order: ["attacker"] },
+    route: "fallback",
+    plugins: ["web"],
+    transforms: ["middle-out"],
   }),
 });
 if (!toolResponse.ok || toolResponse.headers.get("x-homarr-quota-remaining") !== "46") {
@@ -269,6 +275,23 @@ if (!toolResponse.ok || toolResponse.headers.get("x-homarr-quota-remaining") !==
 const afterToolsUsage = await request("/api/ai/usage", { headers: authorSession.headers });
 if (afterToolsUsage.used !== 4 || afterToolsUsage.remaining !== 46) {
   throw new Error(`Tool request accounting is incorrect: ${JSON.stringify(afterToolsUsage)}`);
+}
+
+const upstreamFailure = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+  method: "POST",
+  headers: { "content-type": "application/json", ...authorSession.headers },
+  body: JSON.stringify({
+    model: "homarr/deepseek-v4-flash-latest",
+    messages: [{ role: "user", content: "upstream failure" }],
+    stream: false,
+  }),
+});
+if (upstreamFailure.status !== 503 || upstreamFailure.headers.get("x-homarr-quota-remaining") !== "46") {
+  throw new Error("Failed upstream requests must refund their Homarr provider allowance");
+}
+const afterFailureUsage = await request("/api/ai/usage", { headers: authorSession.headers });
+if (afterFailureUsage.used !== 4 || afterFailureUsage.remaining !== 46) {
+  throw new Error(`Failed upstream request was charged: ${JSON.stringify(afterFailureUsage)}`);
 }
 
 const publicActivities = await request("/api/collections/assistant_activity/records?sort=-created&perPage=10");
@@ -305,6 +328,18 @@ if (
   privateRequests.items.some((item) => "messages" in item || "prompt" in item || "body" in item)
 ) {
   throw new Error("Private provider accounting must identify the user without storing request content");
+}
+const requestToRetain = privateRequests.items.find((item) => item.publicActivity);
+if (!requestToRetain) throw new Error("Expected a private request linked to public activity");
+await request(`/api/collections/assistant_activity/records/${requestToRetain.publicActivity}`, {
+  method: "DELETE",
+  headers: rootHeaders,
+});
+const retainedRequest = await request(`/api/collections/assistant_requests/records/${requestToRetain.id}`, {
+  headers: rootHeaders,
+});
+if (retainedRequest.id !== requestToRetain.id || retainedRequest.publicActivity) {
+  throw new Error("Pruning public activity must retain private accounting records");
 }
 const quotas = await request("/api/collections/assistant_quotas/records?perPage=20", { headers: rootHeaders });
 const authorQuota = quotas.items.find((item) => item.user === author.id);

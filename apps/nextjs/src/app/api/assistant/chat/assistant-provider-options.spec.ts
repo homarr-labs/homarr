@@ -21,7 +21,9 @@ describe("toProviderOptionsKey", () => {
   test("leaves names without separators unchanged", () => {
     expect(toProviderOptionsKey("homarr")).toBe("homarr");
   });
+});
 
+describe("resolveHomarrProviderToken", () => {
   test("accepts a Workshop token only for the matching Homarr provider endpoint", () => {
     const headers = new Headers({ [assistantHomarrProviderTokenHeader]: "workshop-token" });
     expect(
@@ -33,6 +35,24 @@ describe("toProviderOptionsKey", () => {
       }),
     ).toBe("workshop-token");
     expect(getHomarrProviderBaseUrl("https://homarr.dev/")).toBe("https://homarr.dev/api/ai/v1");
+  });
+
+  test.each([
+    [undefined, null],
+    ["", null],
+    ["   ", null],
+    ["a".repeat(4096), "a".repeat(4096)],
+    ["a".repeat(4097), null],
+  ])("validates the Workshop token header %s", (token, expected) => {
+    const headers = new Headers(token === undefined ? undefined : { [assistantHomarrProviderTokenHeader]: token });
+    expect(
+      resolveHomarrProviderToken({
+        provider: "homarr",
+        configuredBaseUrl: "https://homarr.dev/api/ai/v1",
+        workshopApiUrl: "https://homarr.dev",
+        headers,
+      }),
+    ).toBe(expected);
   });
 
   test("never forwards a Workshop token to another endpoint", () => {

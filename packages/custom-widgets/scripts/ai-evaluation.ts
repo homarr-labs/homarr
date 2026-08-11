@@ -19,16 +19,21 @@ export const MAX_AI_EVALUATION_LOOPS = 10;
 export const getAiProviderChatCompletionsUrl = (baseUrl = DEFAULT_AI_PROVIDER_BASE_URL) =>
   `${baseUrl.replace(/\/+$/u, "")}/chat/completions`;
 export const resolveAiEvaluationProviderConfig = (environment: Record<string, string | undefined>) => {
-  const baseUrl = (environment.AI_PROVIDER_BASE_URL ?? DEFAULT_AI_PROVIDER_BASE_URL).replace(/\/+$/u, "");
+  const configuredBaseUrl = environment.AI_PROVIDER_BASE_URL?.trim();
+  const baseUrl = (configuredBaseUrl || DEFAULT_AI_PROVIDER_BASE_URL).replace(/\/+$/u, "");
   const homarrProvider = baseUrl.endsWith("/api/ai/v1");
+  const openRouterProvider = baseUrl === DEFAULT_AI_PROVIDER_BASE_URL;
   const providerDefaultModel = homarrProvider ? "homarr/deepseek-v4-flash-latest" : DEFAULT_GENERATOR_MODEL;
   return {
-    apiKey: environment.AI_PROVIDER_API_KEY ?? environment.OPENROUTER_API_KEY,
+    apiKey: environment.AI_PROVIDER_API_KEY ?? (openRouterProvider ? environment.OPENROUTER_API_KEY : undefined),
     baseUrl,
-    generatorModel: environment.AI_PROVIDER_MODEL ?? environment.OPENROUTER_GENERATOR_MODEL ?? providerDefaultModel,
+    generatorModel:
+      environment.AI_PROVIDER_MODEL ??
+      (openRouterProvider ? environment.OPENROUTER_GENERATOR_MODEL : undefined) ??
+      providerDefaultModel,
     judgeModel:
       environment.AI_PROVIDER_JUDGE_MODEL ??
-      environment.OPENROUTER_JUDGE_MODEL ??
+      (openRouterProvider ? environment.OPENROUTER_JUDGE_MODEL : undefined) ??
       (homarrProvider ? providerDefaultModel : DEFAULT_JUDGE_MODEL),
   };
 };

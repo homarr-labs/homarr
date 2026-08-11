@@ -1232,7 +1232,7 @@
 }
 
 .providerQuotaTrigger[data-level="ok"] {
-  color: var(--mantine-color-green-7);
+  color: light-dark(var(--mantine-color-green-8), var(--mantine-color-green-4));
 }
 
 .providerQuotaTrigger[data-level="warning"] {
@@ -1244,7 +1244,7 @@
 }
 
 .providerQuotaTrigger[data-level="dead"] {
-  color: var(--mantine-color-red-7);
+  color: light-dark(var(--mantine-color-red-8), var(--mantine-color-red-4));
 }
 
 .conversationContextPopover {

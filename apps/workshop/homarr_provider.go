@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -32,6 +33,8 @@ const (
 )
 
 var errProviderResponseTooLarge = errors.New("provider response is too large")
+
+var clientControlledRoutingFields = []string{"models", "provider", "route", "plugins", "transforms"}
 
 type homarrProvider struct {
 	apiKey     string
@@ -180,8 +183,7 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	if err := json.Unmarshal(body, &payload); err != nil {
 		return event.JSON(http.StatusBadRequest, openAIError("The request body is not valid OpenAI chat JSON."))
 	}
-	payload["model"] = openRouterModelID
-	payload["usage"] = map[string]any{"include": true}
+	sanitizeProviderPayload(payload)
 	upstreamBody, err := json.Marshal(payload)
 	if err != nil {
 		return event.JSON(http.StatusBadRequest, openAIError("The request body could not be prepared."))
@@ -206,7 +208,7 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		bytes.NewReader(upstreamBody),
 	)
 	if err != nil {
-		provider.finishActivity(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt)
+		provider.finishActivityWithRefund(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt, requestUnits)
 		return event.JSON(http.StatusInternalServerError, openAIError("The Homarr provider request could not be prepared."))
 	}
 	upstreamRequest.Header.Set("Authorization", "Bearer "+provider.apiKey)
@@ -218,10 +220,10 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 
 	upstreamResponse, err := provider.httpClient.Do(upstreamRequest)
 	if err != nil {
-		provider.finishActivity(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt)
+		provider.finishActivityWithRefund(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt, requestUnits)
 		return event.JSON(http.StatusBadGateway, openAIError("The model endpoint could not be reached."))
 	}
-	defer upstreamResponse.Body.Close()
+	defer func() { _ = upstreamResponse.Body.Close() }()
 
 	event.Response.Header().Set("Cache-Control", "no-store")
 	event.Response.Header().Set("X-Accel-Buffering", "no")
@@ -238,7 +240,8 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	}
 	if upstreamResponse.StatusCode < 200 || upstreamResponse.StatusCode >= 300 {
 		errorBody, _ := io.ReadAll(io.LimitReader(upstreamResponse.Body, maxUpstreamErrorBytes))
-		provider.finishActivity(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt)
+		provider.finishActivityWithRefund(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt, requestUnits)
+		event.Response.Header().Set("X-Homarr-Quota-Remaining", strconv.Itoa(min(snapshot.Limit, snapshot.Remaining+requestUnits)))
 		return event.Blob(upstreamResponse.StatusCode, contentType, errorBody)
 	}
 
@@ -259,6 +262,14 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	usage := usageFromJSON(responseBody)
 	provider.finishActivity(event.App, privateRequest, publicActivity, "completed", usage, startedAt)
 	return event.Blob(upstreamResponse.StatusCode, contentType, responseBody)
+}
+
+func sanitizeProviderPayload(payload map[string]any) {
+	for _, field := range clientControlledRoutingFields {
+		delete(payload, field)
+	}
+	payload["model"] = openRouterModelID
+	payload["usage"] = map[string]any{"include": true}
 }
 
 func readBoundedBody(reader io.Reader, limit int64) ([]byte, error) {
@@ -383,8 +394,20 @@ func (provider *homarrProvider) finishActivity(
 	usage requestUsage,
 	startedAt time.Time,
 ) {
+	provider.finishActivityWithRefund(app, privateRequest, publicActivity, status, usage, startedAt, 0)
+}
+
+func (provider *homarrProvider) finishActivityWithRefund(
+	app core.App,
+	privateRequest *core.Record,
+	publicActivity *core.Record,
+	status string,
+	usage requestUsage,
+	startedAt time.Time,
+	refundUnits int,
+) {
 	durationMs := max(0, int(provider.now().UTC().Sub(startedAt).Milliseconds()))
-	_ = app.RunInTransaction(func(txApp core.App) error {
+	err := app.RunInTransaction(func(txApp core.App) error {
 		for _, record := range []*core.Record{privateRequest, publicActivity} {
 			record.Set("status", status)
 			record.Set("inputTokens", usage.InputTokens)
@@ -407,11 +430,17 @@ func (provider *homarrProvider) finishActivity(
 		if !requestBelongsToQuotaDay(quota.GetString("day"), startedAt) {
 			return nil
 		}
+		if refundUnits > 0 {
+			quota.Set("used", max(0, quota.GetInt("used")-refundUnits))
+		}
 		quota.Set("inputTokens", quota.GetInt("inputTokens")+usage.InputTokens)
 		quota.Set("outputTokens", quota.GetInt("outputTokens")+usage.OutputTokens)
 		quota.Set("totalTokens", quota.GetInt("totalTokens")+usage.TotalTokens)
 		return txApp.Save(quota)
 	})
+	if err != nil {
+		log.Printf("Homarr provider accounting update failed for status %q", status)
+	}
 }
 
 func requestBelongsToQuotaDay(day string, startedAt time.Time) bool {
@@ -462,7 +491,7 @@ func (capture *sseUsageCapture) Write(chunk []byte) (int, error) {
 		capture.pending = capture.pending[end+1:]
 	}
 	if len(capture.pending) > maxUpstreamErrorBytes {
-		capture.pending = capture.pending[len(capture.pending)-maxUpstreamErrorBytes:]
+		capture.pending = nil
 	}
 	return len(chunk), nil
 }

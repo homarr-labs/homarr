@@ -106,7 +106,7 @@ export const workshopAssistantUsageSchema = z.object({
   limit: z.number().int().nonnegative(),
   used: z.number().int().nonnegative(),
   remaining: z.number().int().nonnegative(),
-  resetsAt: z.string().datetime({ offset: true }),
+  resetsAt: z.iso.datetime({ offset: true }),
 });
 export type WorkshopAssistantUsage = z.infer<typeof workshopAssistantUsageSchema>;
 

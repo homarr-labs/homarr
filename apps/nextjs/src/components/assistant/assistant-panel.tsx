@@ -121,7 +121,7 @@ import { useTimeAgo } from "@homarr/common";
 import { assistantProviderIds, assistantProviderPresets, assistantReasoningModes } from "@homarr/definitions";
 import type { AssistantProvider } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
 import { getAssistantActivityState } from "./assistant-activity-state";
@@ -2558,8 +2558,10 @@ const providerQuotaColors = {
 
 const HomarrProviderQuota = () => {
   const t = useScopedI18n("common.assistant");
+  const locale = useCurrentIntlLocale();
   const preferences = useAssistantPreferences();
-  const resetAt = useMemo(() => new Date(preferences.quota?.resetsAt ?? Date.now()), [preferences.quota?.resetsAt]);
+  const quota = preferences.quota;
+  const resetAt = useMemo(() => new Date(quota?.resetsAt ?? Date.now()), [quota?.resetsAt]);
   const resetRelative = useTimeAgo(resetAt, 30_000);
   if (preferences.provider !== "homarr") return null;
 
@@ -2570,13 +2572,22 @@ const HomarrProviderQuota = () => {
     ? Math.min(100, Math.max(0, (preferences.quota.remaining / Math.max(preferences.quota.limit, 1)) * 100))
     : 0;
   const label = preferences.providerUser
-    ? preferences.quota
+    ? quota
       ? t("providerQuota.remainingLabel", {
-          remaining: preferences.quota.remaining,
-          limit: preferences.quota.limit,
+          remaining: quota.remaining,
+          limit: quota.limit,
         })
       : t("providerQuota.loading")
     : t("providerQuota.signInRequired");
+  const resetTime = quota ? (
+    <time dateTime={quota.resetsAt} title={new Date(quota.resetsAt).toLocaleString(locale)}>
+      {new Date(quota.resetsAt).toLocaleTimeString(locale, {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZoneName: "short",
+      })}
+    </time>
+  ) : null;
 
   return (
     <Popover position="top" width={290} shadow="md" withinPortal>
@@ -2638,17 +2649,10 @@ const HomarrProviderQuota = () => {
                 <Progress value={percentage} color={color} size="sm" aria-label={label} />
               </Box>
               <Text size="xs" c="dimmed">
-                {t("providerQuota.reset", { relative: resetRelative })}{" "}
-                <time
-                  dateTime={preferences.quota.resetsAt}
-                  title={new Date(preferences.quota.resetsAt).toLocaleString()}
-                >
-                  {new Date(preferences.quota.resetsAt).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    timeZoneName: "short",
-                  })}
-                </time>
+                {t.rich("providerQuota.reset", {
+                  relative: resetRelative,
+                  time: () => resetTime,
+                })}
               </Text>
               <Text size="xs" c="dimmed">
                 {t("providerQuota.toolCalls")}

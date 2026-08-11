@@ -432,11 +432,18 @@ export async function POST(request: Request) {
       workshopApiUrl: appEnv.WORKSHOP_API_URL ?? appEnv.HOMARR_WEBSITE_URL,
       headers: request.headers,
     });
-  } catch {
+  } catch (error) {
+    logger.warn("Rejected an unsafe Homarr provider endpoint", {
+      provider: configuration.provider,
+      error,
+    });
     return Response.json({ error: "The Homarr provider endpoint is not configured safely." }, { status: 503 });
   }
   if (homarrProviderToken === null) {
-    return Response.json({ error: "Sign in to the Homarr Community Workshop to use the Homarr provider." }, { status: 401 });
+    return Response.json(
+      { error: "Sign in to the Homarr Community Workshop to use the Homarr provider." },
+      { status: 401 },
+    );
   }
 
   const context = createTRPCContext({ headers: request.headers, session });

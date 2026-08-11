@@ -50,10 +50,10 @@ migrate(
         {
           type: "relation",
           name: "publicActivity",
-          required: true,
+          required: false,
           maxSelect: 1,
           collectionId: activity.id,
-          cascadeDelete: true,
+          cascadeDelete: false,
         },
       ],
     });

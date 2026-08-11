@@ -28,12 +28,23 @@ const server = createServer(async (request, response) => {
     json(response, 400, { error: { message: "Unexpected upstream model" } });
     return;
   }
+  const forbiddenRoutingField = ["models", "provider", "route", "plugins", "transforms"].find((field) => field in body);
+  if (forbiddenRoutingField) {
+    json(response, 400, { error: { message: `Client routing field was forwarded: ${forbiddenRoutingField}` } });
+    return;
+  }
+  if (body.messages?.some((message) => message.content === "upstream failure")) {
+    json(response, 503, { error: { message: "Simulated upstream failure" } });
+    return;
+  }
 
   const completion = {
     id: "gen-workshop-test",
     object: "chat.completion",
     model: body.model,
-    choices: [{ index: 0, message: { role: "assistant", content: "Hello from the Homarr provider" }, finish_reason: "stop" }],
+    choices: [
+      { index: 0, message: { role: "assistant", content: "Hello from the Homarr provider" }, finish_reason: "stop" },
+    ],
     usage: { prompt_tokens: 12, completion_tokens: 7, total_tokens: 19, cost: 0.00041 },
   };
   if (!body.stream) {

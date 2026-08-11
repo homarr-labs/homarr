@@ -34,6 +34,10 @@
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
+  background: var(--ifm-color-emphasis-500);
+}
+
+.live[data-connected] .beep {
   background: #2f9e44;
   box-shadow: 0 0 0 0 rgb(47 158 68 / 35%);
   animation: live-beep 2.2s ease-out infinite;
@@ -148,7 +152,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .beep {
+  .live[data-connected] .beep {
     animation: none;
   }
 }

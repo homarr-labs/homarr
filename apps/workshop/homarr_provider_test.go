@@ -1,11 +1,37 @@
 package main
 
 import (
+	"encoding/json"
 	"math"
 	"strings"
 	"testing"
 	"time"
 )
+
+func TestSanitizeProviderPayload(t *testing.T) {
+	payload := map[string]any{
+		"model":      homarrProviderModelID,
+		"models":     []string{"attacker/model"},
+		"provider":   map[string]any{"order": []string{"attacker"}},
+		"route":      "fallback",
+		"plugins":    []string{"web"},
+		"transforms": []string{"middle-out"},
+		"messages":   []any{map[string]any{"role": "user", "content": "hello"}},
+	}
+	sanitizeProviderPayload(payload)
+	for _, field := range clientControlledRoutingFields {
+		if _, exists := payload[field]; exists {
+			t.Fatalf("client-controlled routing field %q was forwarded", field)
+		}
+	}
+	if payload["model"] != openRouterModelID {
+		t.Fatalf("unexpected upstream model: %v", payload["model"])
+	}
+	usage, err := json.Marshal(payload["usage"])
+	if err != nil || string(usage) != `{"include":true}` {
+		t.Fatalf("unexpected usage options: %s, %v", usage, err)
+	}
+}
 
 func TestCountRequestUnits(t *testing.T) {
 	tests := []struct {
