@@ -1,8 +1,10 @@
 import { getImageMatchRank, normalizeImageName } from "@homarr/common";
+import { env } from "@homarr/common/env";
 import { icons } from "@homarr/db/schema";
-import { iconsFindSchema } from "@homarr/validation/icons";
+import { fetchFaviconUrlAsync } from "@homarr/icons";
+import { iconsDetectFaviconSchema, iconsFindSchema } from "@homarr/validation/icons";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, permissionRequiredProcedure, publicProcedure } from "../trpc";
 
 export const iconsRouter = createTRPCRouter({
   findIcons: publicProcedure
@@ -52,5 +54,20 @@ export const iconsRouter = createTRPCRouter({
               })),
         countIcons: await ctx.db.$count(icons),
       };
+    }),
+  detectFavicon: permissionRequiredProcedure
+    .requiresPermission("app-create")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          'Detect the icon of a website by reading the <link rel="icon"> declarations of its page, falling back to /favicon.ico. REQUIRED: href (http or https URL of the website). Returns { url: string | null }, null when no icon was found',
+      },
+    })
+    .input(iconsDetectFaviconSchema)
+    .query(async ({ input }) => {
+      if (env.NO_EXTERNAL_CONNECTION) return { url: null };
+
+      return { url: await fetchFaviconUrlAsync(input.href) };
     }),
 });

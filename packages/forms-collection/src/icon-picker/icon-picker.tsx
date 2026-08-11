@@ -30,6 +30,7 @@ import {
   IconPhotoOff,
   IconSearchOff,
   IconUpload,
+  IconWorldWww,
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -38,7 +39,7 @@ import { supportedLanguages } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { UploadMedia } from "../upload-media/upload-media";
-import { arrangeIconPickerSections, isDirectImageUrl, isImageSource, isSvgImage } from "./icon-picker.utils";
+import { arrangeIconPickerSections, isDirectImageUrl, isHttpUrl, isImageSource, isSvgImage } from "./icon-picker.utils";
 import classes from "./icon-picker.module.css";
 
 interface IconPickerProps {
@@ -50,6 +51,8 @@ interface IconPickerProps {
   label?: string;
   placeholder?: string;
   suggestedSearch?: string | null;
+  /** Website whose own icon is offered as a suggestion, usually the URL of the app being created */
+  faviconSourceUrl?: string | null;
   withAsterisk?: boolean;
 }
 
@@ -65,6 +68,7 @@ export const IconPicker = ({
   label,
   placeholder,
   suggestedSearch,
+  faviconSourceUrl,
 }: IconPickerProps) => {
   const [value, setValue] = useUncontrolled({ value: propsValue, onChange, defaultValue: "" });
   const [draft, setDraft] = useState(propsValue ?? "");
@@ -90,6 +94,16 @@ export const IconPicker = ({
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
   });
 
+  const faviconSource = faviconSourceUrl?.trim() ?? "";
+  const faviconHostname = isHttpUrl(faviconSource) ? new URL(faviconSource).hostname : null;
+  // Detecting the icon reaches out to the website, so it only happens while the user
+  // actually browses for an image and not on every keystroke in the URL field.
+  const faviconQuery = clientApi.icon.detectFavicon.useQuery(
+    { href: faviconSource },
+    { enabled: faviconHostname !== null && directUrl === null && combobox.dropdownOpened, retry: false },
+  );
+  const detectedFaviconUrl = faviconQuery.data?.url ?? null;
+
   useEffect(() => {
     setDraft(value ?? "");
     setHasEdited(false);
@@ -103,10 +117,18 @@ export const IconPicker = ({
     () => arrangeIconPickerSections(query.data?.icons ?? [], searchText),
     [query.data?.icons, searchText],
   );
-  const orderedOptions = useMemo(
-    () => [...sections.local, ...sections.svg, ...sections.other],
-    [sections.local, sections.svg, sections.other],
+  const detectedFavicon = useMemo(
+    () =>
+      detectedFaviconUrl !== null && faviconHostname !== null
+        ? { url: detectedFaviconUrl, hostname: faviconHostname }
+        : null,
+    [detectedFaviconUrl, faviconHostname],
   );
+  const orderedOptions = useMemo(
+    () => [...(detectedFavicon ? [detectedFavicon] : []), ...sections.local, ...sections.svg, ...sections.other],
+    [detectedFavicon, sections.local, sections.svg, sections.other],
+  );
+  const sectionOffset = detectedFavicon ? 1 : 0;
   const totalOptions = sections.local.length + sections.svg.length + sections.other.length;
 
   const commitValue = (nextValue: string) => {
@@ -193,6 +215,31 @@ export const IconPicker = ({
     </SimpleGrid>
   );
 
+  const renderDetectedFavicon = () => {
+    if (!detectedFavicon) {
+      return null;
+    }
+
+    return (
+      <Box p="xs" pb={0}>
+        <PickerSection icon={<IconWorldWww size={15} />} label={tCommon("iconPicker.websiteIcon")}>
+          <SimpleGrid className={classes.iconGrid} spacing={6} verticalSpacing={6}>
+            <Tooltip label={detectedFavicon.hostname} openDelay={500}>
+              <Combobox.Option
+                value={detectedFavicon.url}
+                aria-label={detectedFavicon.hostname}
+                active={detectedFavicon.url === value || keyboardIndex === 0}
+                className={classes.iconOption}
+              >
+                <Image src={detectedFavicon.url} alt="" w={30} h={30} fit="contain" fallbackSrc="/logo/logo.png" />
+              </Combobox.Option>
+            </Tooltip>
+          </SimpleGrid>
+        </PickerSection>
+      </Box>
+    );
+  };
+
   const renderSearchResults = () => {
     if (query.isError) {
       return (
@@ -231,17 +278,17 @@ export const IconPicker = ({
       <Stack gap="sm" p="xs">
         {sections.local.length > 0 && (
           <PickerSection icon={<IconPhoto size={15} />} label={tCommon("iconPicker.localImages")}>
-            {renderIconOptions(sections.local, 0)}
+            {renderIconOptions(sections.local, sectionOffset)}
           </PickerSection>
         )}
         {sections.svg.length > 0 && (
           <PickerSection label={tCommon("iconPicker.svgIcons")} badge="SVG">
-            {renderIconOptions(sections.svg, sections.local.length)}
+            {renderIconOptions(sections.svg, sectionOffset + sections.local.length)}
           </PickerSection>
         )}
         {sections.other.length > 0 && (
           <PickerSection icon={<IconCloud size={15} />} label={tCommon("iconPicker.otherImages")}>
-            {renderIconOptions(sections.other, sections.local.length + sections.svg.length)}
+            {renderIconOptions(sections.other, sectionOffset + sections.local.length + sections.svg.length)}
           </PickerSection>
         )}
       </Stack>
@@ -415,7 +462,10 @@ export const IconPicker = ({
               </Group>
             </Paper>
           ) : (
-            renderSearchResults()
+            <>
+              {renderDetectedFavicon()}
+              {renderSearchResults()}
+            </>
           )}
         </Combobox.Options>
       </Combobox.Dropdown>
