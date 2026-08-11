@@ -8,6 +8,7 @@ import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { assistantWidget } from ".";
+import assistantWidgetImage from "../../management/img/assistant-widget.png";
 
 <WidgetHeader widget={assistantWidget} categories={["Productivity"]} />
 
@@ -16,7 +17,18 @@ board. Messages, conversations, tool calls, approvals, files, mentions, model co
 usage details, and response actions remain synchronized with the app-wide assistant.
 
 The assistant must be enabled by an administrator in **Management → Assistant**. Signed-out users and users
-on an instance without an enabled model see an unavailable state instead of a broken composer.
+on an instance without an enabled model see an unavailable state instead of a broken composer. Signed-out users see
+**Sign in**; a configured provider without a saved model or with **Enable Assistant** off remains unavailable until
+the administrator saves a working connection, selects a model, and enables the assistant.
+
+<img
+  src={assistantWidgetImage}
+  alt="Assistant widget embedded on a dashboard with its conversation header, automatic approvals control, model selector, and composer"
+  style={{ maxWidth: "100%" }}
+/>
+
+The current preview capture labels the board-embedded surface: its header exposes conversation history, refresh,
+automatic approvals, and new-conversation controls, while the footer exposes the model, thinking mode, and composer.
 
 ### Adding the widget
 
@@ -37,7 +49,8 @@ the command menu. This is the default and keeps every assistant entry point sync
 
 **Pinned conversation** reveals a searchable conversation selector. A pinned widget never changes the
 active conversation silently: select **Open conversation** inside the widget before continuing that thread. If the pinned
-thread was deleted or cannot be opened, the widget shows the same recovery action and a retry state.
+thread was deleted or cannot be opened, the widget keeps the pinned selection, shows the same recovery action and a
+retry state, and retries that thread when **Open conversation** is selected again.
 
 ### Conversation features
 
@@ -51,10 +64,16 @@ thread was deleted or cannot be opened, the widget shows the same recovery actio
 - Edit user messages and copy, regenerate, branch, quote, export, or rate responses.
 - Inspect syntax-highlighted Markdown, sources, generated files, tool results, streaming chain-of-thought,
   cumulative conversation usage, per-turn token and context use, timing, speed, provider routing, and cost.
-- Change the model and reasoning effort for the active conversation.
+- Change the model and reasoning effort for the active conversation. A model choice is saved per persisted thread,
+  does not change the administrator's default, and is restored when that thread is selected again; a new thread
+  starts from the configured default.
 - Refresh the current board from the conversation header. Approved mutations also refresh visible board data automatically.
 
 The expanded assistant and board widget use the same persisted thread runtime. A response continues in the
 background when the widget leaves the viewport or the expanded panel is minimized. Each visible surface keeps an
 independent draft, attachments, selection, and focus, so typing in a board widget cannot move or overwrite the
 floating panel composer.
+
+Automatic approvals are off by default, reset when switching conversations, and never select a neutral choice. A
+structured question shows **Other** only when the tool allows it (`allowOther` is not `false`); selecting **Other**
+opens a manual freeform response even when automatic approvals are enabled.

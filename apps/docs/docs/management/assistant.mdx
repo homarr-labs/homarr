@@ -7,6 +7,7 @@ tags:
 ---
 
 import assistantConfigImage from "./img/assistant-config.png";
+import assistantWidgetImage from "./img/assistant-widget.png";
 
 # Assistant
 
@@ -20,9 +21,12 @@ focus whenever the command menu opens, including when it is opened by an assista
 command menu preserves any draft in the expanded conversation. The local result is temporarily disabled while
 the assistant is responding or waiting for an approval.
 
-Availability follows the setup state: signed-out users see **Sign in**; configured-but-disabled users cannot use the
-user-menu or `Shift + A` entry points; and `Cmd/Ctrl + K` keeps the assistant result visible but unavailable and
-non-interactive until an administrator enables it.
+Availability follows the setup state. Signed-out users do not get an assistant action in the user menu or from
+`Shift + A`; the always-visible command-menu result is disabled and says **Sign in**. If the provider connection or
+model is configured but **Enable Assistant** is off, the user-menu and `Shift + A` entry points do not open the
+assistant, while `Cmd/Ctrl + K` keeps its result visible but disabled with an explanation that an administrator must
+configure and enable it. Saving a working connection, model, and enabled state makes all three entry points
+available again.
 
 While a response is running, a compact activity bar appears at the bottom of the page and the user-menu
 avatar shows a thinking indicator. The activity bar can be opened to follow the response. Completed
@@ -40,7 +44,19 @@ The **Assistant** board widget embeds the same persisted conversation and full i
 on a dashboard. By default it follows the current conversation. Widget settings can instead pin a specific
 conversation; the conversation picker stays hidden until **Pinned conversation** is selected.
 If the pinned conversation was deleted or cannot be opened, the widget shows an **Open conversation** recovery action
-and retry state instead of silently losing the widget content.
+and retry state instead of silently losing the widget content or falling back to another thread. **Open conversation**
+retries the same pinned thread after a failed switch.
+
+<img
+  src={assistantWidgetImage}
+  alt="Assistant widget embedded on a dashboard with its conversation header, automatic approvals control, model selector, and composer"
+  style={{ maxWidth: "100%" }}
+/>
+
+The current preview capture shows the board-embedded surface, including its conversation header, automatic-approval
+control, model and thinking controls, and composer. These controls operate on the same persisted thread as the
+floating assistant while keeping this surface's draft and focus independent.
+
 The Shift+A panel is non-modal: opening it focuses its composer, but it does not capture focus from the board.
 Users can continue typing in an Assistant widget or interacting with other dashboard controls while the panel
 is open. Every visible assistant surface keeps its own draft, attachment list, selection, and focus while sharing
@@ -84,8 +100,13 @@ working provider, model, and enabled state are saved.
    stores and sends the provider's exact model ID. Context-window sizes use compact labels such as `1M`.
 5. Enable the assistant and save the configuration.
 
-Changing the provider, base URL, or discovery path clears the selected model and disables the assistant. Save the
-connection again, refresh or enter a model ID, then enable the assistant and save the configuration once more.
+Changing the provider or base URL immediately resets the unsaved credential/header draft, selected model, and
+enabled state, and puts the model section into a **save connection first** state. Saving that destination change also
+clears stored credentials for the previous destination. Changing the discovery path resets the selected model and
+enabled state; save the new path before relying on its discovery results. For an unsaved provider or base-URL change,
+the model controls, **Refresh models**, web-search switch, enable switch, and **Save assistant** remain unavailable.
+After the connection is saved, refresh the model list and select a model; if discovery is blank or returns no models,
+the manual model-ID field is the supported fallback. Only then enable the assistant and save the configuration.
 
 The model discovery path defaults to `/models` and is appended to the API base URL. Leave the custom path blank when
 the service does not expose a usable discovery endpoint. A manual model ID can still be used when discovery is
@@ -93,8 +114,9 @@ unavailable or returns no models.
 
 API keys and additional header values are encrypted in the Homarr database. They are decrypted only on
 the server for discovery and model requests, and they are never returned to the browser. Changing the
-provider or base URL clears existing credentials. This prevents credentials for one service from being sent
-to another endpoint. Additional headers are write-only; saving them replaces the complete stored header set. Use the
+provider or base URL, then saving the connection, clears existing credentials. This prevents credentials for one
+service from being sent to another endpoint. Additional headers are write-only; saving them replaces the complete
+stored header set. Use the
 explicit clear/remove flow when you want to remove previously saved headers.
 
 When a key is already stored, the page shows its protected state instead of an ambiguous empty password
@@ -176,7 +198,10 @@ stored app or integration icon when one is available. Type `/`
 for common prompt shortcuts. Both menus support keyboard navigation and keep the active result visible while
 moving through long lists. The selector below the composer combines searchable, provider-grouped models with
 their description, context size and image-input capability, plus the thinking-level control. Model selection is
-saved to the current conversation when selected. Thinking mode can be left on **Auto**, disabled, or set
+saved to the current conversation when selected. For a persisted thread, changing the model updates that thread's
+preference without changing the administrator's configured default; switching threads restores each thread's saved
+model, while a new thread starts from the configured default until the user changes it. Thinking mode can be left on
+**Auto**, disabled, or set
 from minimal through high; explicit levels are sent using the AI SDK's provider-neutral reasoning setting and
 still depend on support from the chosen model and endpoint. Reasoning text is shown live when the provider streams
 it through assistant-ui's grouped-parts and chain-of-thought primitives. The compact **Thinking** trace groups
@@ -275,7 +300,8 @@ reference set. Supplied samples and successful preview responses are treated as 
 instructed to render the requested fields, guard optional nested data, preserve every returned item, expose freshness
 when timestamps are available, and provide a refresh path for recoverable empty or error states.
 
-The shield control in the conversation header can enable automatic approvals for the current conversation.
+The shield control in the conversation header can enable automatic approvals for the current conversation; they are
+off by default.
 While enabled, Homarr accepts every affirmative approval step as it arrives: protected mutations are approved,
 presented app details and board changes are used, and structured questions with an explicitly categorized
 **Confirm** answer choose that answer. Neutral choices such as selecting a board still wait for input because
@@ -285,8 +311,9 @@ floating assistant are visible.
 
 When the assistant genuinely needs missing information or a choice, it can pause with a structured
 question. Each proposed answer is visibly categorized as **Confirm**, **Decline**, or **Option**, so the effect
-of automatic approval is unambiguous. When enabled by the tool, users can select **Other** and
-enter their own response. While a question is unanswered, its controls stay in a dedicated area immediately
+of automatic approval is unambiguous. **Other** is shown only when the tool allows it (`allowOther` is not `false`);
+selecting it opens a freeform response and is always a manual alternative, not an automatic approval choice. While a
+question is unanswered, its controls stay in a dedicated area immediately
 above the composer instead of requiring the user to find the tool call in the transcript. The question temporarily
 uses the available conversation body, with its own scrolling when necessary, rather than squeezing a long option
 list into a short dock beside part of the transcript. The answered choice then remains in the conversation history.
@@ -305,12 +332,13 @@ to invent external icon CDN URLs.
 Board appearance changes use a similar review flow. The assistant first reads the board's current settings,
 including its complete custom stylesheet, and then opens an editable form with Custom CSS, Appearance,
 Background, and General tabs. The form highlights how many fields were proposed, preserves settings the
-assistant did not change, and returns only values that differ from the current board. Custom CSS can be
+assistant did not change, and returns only values that differ from the current board. If nothing differs, the review
+cancels without creating a mutation or approval. Custom CSS can be
 copied or restored before continuing, and Homarr warns when it contains an imported stylesheet or remote
 resource URL. Continuing from the form opens the normal mutation approval before anything is saved.
 
 The board-settings tool covers General, Background, Appearance, Custom CSS, and app-status settings. It does not edit
-responsive layouts, board access control, or Danger zone actions.
+responsive layouts, board access control, or Danger zone actions; those remain outside this review scope.
 
 Ask for changes such as “make the cards denser on my Home board,” “add a mobile CSS rule without removing
 my existing styles,” or “change the board colors and disable app status checks.” The current user must have
