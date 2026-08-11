@@ -9,87 +9,45 @@ tags:
 
 # Community Workshop
 
-:::warning Experimental feature
+The [Community Workshop](pathname:///workshop) is where Homarr users share Custom Widgets and dashboard CSS.
 
-This feature is experimental and will probably change. If you encounter bugs, need more capabilities, or find something confusing, tell us in the [official discussion thread](https://github.com/homarr-labs/homarr/discussions/categories/custom-widgets). Your feedback directly shapes what comes next. Happy hacking!
+:::warning Experimental
 
-:::
-
-The [Community Workshop](pathname:///workshop) is where Homarr users share and discover
-**custom CSS themes** and **custom widgets**. You can browse submissions, upvote the ones
-you like, report abuse, and install entries directly into your own Homarr instance.
-
-The central `homarr.dev` Workshop is a public community. Browsing it on the website is public. Browsing, installing,
-publishing, or importing Workshop content **inside a Homarr instance is restricted to Homarr administrators**.
-
-:::warning
-
-The Workshop contains community-made content. Moderation is not a security boundary, and PocketBase does not interpret
-or validate submission content. Always review widget capabilities, network origins, actions, and CSS before installing.
-Homarr's installation-time validator is definitive and can reject content that the public service accepted earlier.
-Back up your instance before installing untrusted content.
+Workshop content is made by the community. Review it before installation and back up your Homarr instance.
 
 :::
 
-## Browsing and voting
+## Find and install content
 
-- Filter by **Widgets** or **CSS**, show or hide outdated entries, and sort by popularity, creation date, recent updates, or discussion activity.
-- Sign in with **GitHub** to upvote/downvote, submit your own creations, or report a submission.
-- Each submission shows its title, description, linked GitHub author, revision, optional screenshots, comments, and full content. Widget pages also summarize API sources, actions, options, network access, and required credentials before installation.
-- A new submission receives one real upvote owned by its author. Votes remain unique per user and submission.
-- Open report counts are public on submission cards so visitors can make an informed installation decision. The submission author and Workshop moderators can read each report category and explanation; reporter identities remain moderator-only.
-- Signed-in moderators see a **Moderation** button in the Workshop header. The moderation queue is sorted by open report count and lets moderators inspect every report, dismiss it, or delete the submission. Reports do not automatically remove a submission.
-- The manual **Outdated** badge warns visitors that a submission may need an update.
+Browse the Workshop by type, date, popularity, or recent activity. Each submission includes its source, screenshots,
+author, revision, comments, and reports.
 
-## Comments
+Administrators can install content without leaving Homarr:
 
-Comments are publicly readable and appear in chronological conversation bubbles with the author's avatar and GitHub profile. Signed-in users can post; authors can edit or delete their own comments, and Workshop moderators can delete any comment. Failed posts keep the text you typed. When SMTP and `WORKSHOP_PUBLIC_ORIGIN` are configured, the submission author receives one email for a comment from another user. Self-comments, edits, and deletions do not send mail.
+- **Custom Widgets:** open **Management → Custom Widgets**, then select **Import from Workshop**.
+- **Custom CSS:** open a board's **Settings → Custom CSS**, then select **Import from Workshop**.
 
-## Submitting
+Homarr shows the complete source and required permissions before installation. Widget credentials are entered in your
+Homarr instance and are never included in a Workshop submission.
 
-1. Sign in with GitHub.
-2. Click **Share yours** and choose the type:
-   - **Custom widget** — paste the JSON exported from **Manage → Custom Widgets → Export**.
-     It must match the `homarr-custom-widget-v2` schema (validated before submission).
-   - **Custom CSS** — paste your stylesheet (max 16384 characters).
-3. Review the widget JSON or CSS in the syntax-aware editor, then add a title, description, optional screenshots, and changelog.
-4. Submit the entry.
+## Share your work
 
-Custom widget JSON is normalized to readable multi-line formatting when it is published, and the Workshop detail page
-also formats older compact submissions before displaying them.
+1. Sign in to the Workshop with GitHub.
+2. Select **Share yours**.
+3. Choose **Custom Widget** or **Custom CSS**.
+4. Add the source, a short description, screenshots, and a changelog.
+5. Review and publish the submission.
 
-Community members can report submissions as outdated or no longer working, malicious, spam, copyright-infringing,
-inappropriate, or another concern. An outdated report does not automatically mark or remove the submission.
+Export Custom Widget JSON from **Management → Custom Widgets → Export**. You can edit a submission later without
+changing its Workshop URL.
 
-Submissions are published immediately. Reported entries are reviewed and may be removed.
-Authors can edit a submission later to publish a new revision. The edit form can keep or remove existing screenshots and add new PNG, JPG, or WebP images without changing the Workshop URL.
+## Voting, comments, and reports
 
-When SMTP and `WORKSHOP_PUBLIC_ORIGIN` are configured, every current Workshop moderator receives an email when a report is submitted. If a moderator deletes the reported submission, its author receives a separate removal email. Author self-deletion does not send a moderation email.
+Signed-in users can vote, comment, and report submissions. Authors can edit their own comments and submissions.
+Workshop moderators can review reports, remove comments, and delete unsafe content. Reports do not remove a submission
+automatically.
 
-:::info Separate roles
+A Workshop moderator manages the public community. This is separate from the administrator role on a Homarr instance.
 
-A Workshop moderator is a user with PocketBase's internal `isAdmin` field. This role moderates the central community
-and is unrelated to a Homarr instance administrator.
-
-:::
-
-## Submission guidelines
-
-Submissions must be useful to Homarr users and safe to install. Do not submit content that is
-malicious, deceptive, illegal, hateful, sexually explicit, gore, gambling-focused, spam, or content
-that primarily promotes unrelated products or services.
-
-## Installing into Homarr
-
-You can install workshop entries without leaving Homarr:
-
-- **Custom widgets (Homarr administrators only)** — go to **Manage → Custom Widgets**, or use **Import from Workshop** in the
-  board widget picker. Choose **Install widget**, review the complete source and capabilities, then confirm API sources and any local secrets in the second modal step.
-- **Custom CSS from Workshop (Homarr administrators only)** — open a board's **Settings → Custom CSS**, click **Import from Workshop**, choose a theme, review its full CSS in the second same-size modal step, and click **Import CSS** once. The board setting is still saved separately.
-
-Alternatively, open a submission in the Workshop and use **Download widget JSON** or **Copy CSS**. The submission page shows the matching manual installation steps before the source code.
-
-Custom Widget imports detect required bearer, basic, header, or query credentials. You can enter them during import or explicitly defer them; secret values are never stored in Workshop content. Missing credentials remain visible on the local Custom Widget afterward.
-
-Deployment, environment variables, backups, and service architecture are covered in the
-[Workshop operator guide](./operator).
+Deployment and server configuration are in the [Workshop operator guide](./operator). Local setup is in
+[Workshop development](./development).

@@ -136,11 +136,23 @@ const modelList = await request("/api/ai/v1/models");
 if (
   modelList.object !== "list" ||
   modelList.data.length !== 1 ||
-  modelList.data[0].id !== "homarr/deepseek-v4-flash-latest"
+  modelList.data[0].id !== "homarr/deepseek-v4-flash-latest" ||
+  modelList.data[0].context_length !== 256 * 1024
 ) {
   throw new Error("The Homarr provider must advertise exactly one model");
 }
 await expectStatus("/api/ai/usage", {}, 401);
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    body: JSON.stringify({
+      model: "homarr/deepseek-v4-flash-latest",
+      messages: [{ role: "user", content: "unauthenticated" }],
+    }),
+  },
+  401,
+);
 
 const initialUsage = await request("/api/ai/usage", { headers: authorSession.headers });
 const initialReset = new Date(initialUsage.resetsAt);
@@ -172,6 +184,19 @@ await expectStatus(
     }),
   },
   400,
+);
+
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    headers: authorSession.headers,
+    body: JSON.stringify({
+      model: "homarr/deepseek-v4-flash-latest",
+      messages: [{ role: "user", content: "x".repeat(256 * 1024) }],
+    }),
+  },
+  413,
 );
 const usageAfterRejectedRequest = await request("/api/ai/usage", { headers: authorSession.headers });
 if (usageAfterRejectedRequest.used !== 0) {
@@ -266,6 +291,20 @@ const toolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
     route: "fallback",
     plugins: ["web"],
     transforms: ["middle-out"],
+    max_tokens: 1_000_000,
+    max_completion_tokens: 1_000_000,
+    n: 100,
+    parallel_tool_calls: true,
+    extra_body: { provider: { order: ["attacker"] } },
+    extra_headers: { Authorization: "Bearer attacker" },
+    metadata: { user: "must-not-reach-openrouter" },
+    reasoning: { effort: "high", max_tokens: 1_000_000 },
+    user: "must-not-reach-openrouter",
+    tools: [
+      { type: "function", function: { name: "board_list" } },
+      { type: "openrouter:web_search", parameters: { max_results: 1000, max_uses: 1000 } },
+      { type: "openrouter:web_search" },
+    ],
   }),
 });
 if (!toolResponse.ok || toolResponse.headers.get("x-homarr-quota-remaining") !== "46") {
@@ -286,12 +325,20 @@ const upstreamFailure = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
     stream: false,
   }),
 });
-if (upstreamFailure.status !== 503 || upstreamFailure.headers.get("x-homarr-quota-remaining") !== "46") {
-  throw new Error("Failed upstream requests must refund their Homarr provider allowance");
+if (upstreamFailure.status !== 503 || upstreamFailure.headers.get("x-homarr-quota-remaining") !== "45") {
+  throw new Error("Every request forwarded upstream must consume Homarr provider allowance");
+}
+const upstreamFailureBody = await upstreamFailure.text();
+if (upstreamFailureBody.includes("Simulated upstream failure")) {
+  throw new Error("Upstream error details must not be exposed to clients");
 }
 const afterFailureUsage = await request("/api/ai/usage", { headers: authorSession.headers });
-if (afterFailureUsage.used !== 4 || afterFailureUsage.remaining !== 46) {
-  throw new Error(`Failed upstream request was charged: ${JSON.stringify(afterFailureUsage)}`);
+if (afterFailureUsage.used !== 5 || afterFailureUsage.remaining !== 45) {
+  throw new Error(`Forwarded upstream failure escaped quota accounting: ${JSON.stringify(afterFailureUsage)}`);
+}
+const visitorUsage = await request("/api/ai/usage", { headers: visitorSession.headers });
+if (visitorUsage.used !== 0 || visitorUsage.remaining !== 50) {
+  throw new Error(`Provider allowance leaked across users: ${JSON.stringify(visitorUsage)}`);
 }
 
 const publicActivities = await request("/api/collections/assistant_activity/records?sort=-created&perPage=10");
@@ -343,7 +390,7 @@ if (retainedRequest.id !== requestToRetain.id || retainedRequest.publicActivity)
 }
 const quotas = await request("/api/collections/assistant_quotas/records?perPage=20", { headers: rootHeaders });
 const authorQuota = quotas.items.find((item) => item.user === author.id);
-if (!authorQuota || authorQuota.dailyLimit !== 50 || authorQuota.used !== 4 || authorQuota.totalTokens !== 38) {
+if (!authorQuota || authorQuota.dailyLimit !== 50 || authorQuota.used !== 5 || authorQuota.totalTokens !== 38) {
   throw new Error(`Private provider quota is incorrect: ${JSON.stringify(authorQuota)}`);
 }
 

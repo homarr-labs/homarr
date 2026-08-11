@@ -13,69 +13,41 @@ import { OpenCollectiveLink } from "@site/src/components/assistant-provider/open
 
 # Homarr provider
 
-The Homarr provider gives Workshop users access to **DeepSeek V4 Flash Latest**. It uses an OpenAI-compatible proxy in
-the [Community Workshop](/docs/workshop). A Homarr administrator can select this provider without an API key. Each user
-signs in to the Workshop with GitHub. The Workshop session authorizes the user's requests.
+The Homarr provider gives Workshop users access to **DeepSeek V4 Flash Latest** without an administrator API key.
+Each user signs in with GitHub and receives a separate daily allowance.
+
+![Homarr provider configuration](/img/assistant/homarr-provider.png)
+
+## Set it up
+
+1. Open **Management → Assistant**.
+2. Select **Homarr** as the provider.
+3. Save the provider connection.
+4. Select the available model, enable the assistant, and save.
+5. Open the assistant and sign in to the Workshop when asked.
+
+## Daily allowance
+
+- Each user starts with **50 request units per UTC day**.
+- A model request uses one unit.
+- Each completed Homarr tool call uses one additional unit.
+- The allowance resets at 00:00 UTC.
+
+The battery beside the model selector shows the remaining allowance and reset time. The Workshop server enforces the
+limit before it sends a request to OpenRouter.
 
 <AssistantProviderActivity />
 
-## Allowance
+## Data and cost
 
-- Each user gets **50 request units per UTC day** by default.
-- A model request uses one unit.
-- Each completed Homarr tool call uses one additional unit.
-- A request that reaches the upstream uses its reserved units even when the upstream fails. Invalid requests rejected
-  by the Workshop before forwarding do not use units.
-- The limit resets at 00:00 UTC.
-- The battery icon beside the model selector shows the remaining units. Select it to see the limit, reset time,
-  Workshop account, and status.
-- The server stores a separate limit for each user. A change to the global default applies only to new users.
+The Workshop keeps the OpenRouter API key on its server. It does not send that key to Homarr or the browser.
 
-The remaining count shown in Homarr is informational. The Workshop server authenticates the user and reserves request
-units in a database transaction before it contacts OpenRouter. Concurrent or direct API requests cannot spend more
-than the stored allowance.
+Prompts, attachments, tool definitions, and tool results are sent to OpenRouter to generate a response. The Workshop
+does not store this content. It stores only request status, model, usage, duration, cost, and timestamps.
 
-## Security and cost controls
-
-The proxy owns the upstream model and routing configuration. It removes client-supplied fallback models, providers,
-routes, plugins, transforms, and user identifiers before forwarding a request. It also forces one completion, disables
-parallel tool calls, caps OpenRouter web search, and limits every response to **32,768 output tokens**.
-
-Input uses a conservative **256k token ceiling**. The Workshop enforces this with a 256 KiB serialized request limit,
-because a byte can encode at most one input token. This deliberately rejects some large attachments before they reach
-the theoretical token limit. It prevents a browser or direct API client from hiding an oversized prompt behind an
-optimistic client-side token estimate.
-
-Only OpenAI function tools and Homarr's bounded `openrouter:web_search` server tool are accepted. The response stream
-has an independent byte limit in case an upstream ignores the requested output ceiling. Upstream error bodies are not
-forwarded to users.
-
-## Privacy
-
-The proxy does not store prompts, messages, attachments, tool inputs, tool outputs, or response text. Private records
-store only the Workshop user ID, status, model ID, request units, token totals, duration, cost, and timestamps. The
-public feed is read-only. It contains operational data but does not contain a user ID or GitHub account.
-
-The Workshop server stores the OpenRouter API key. It does not send this key to a Homarr instance or browser. A Homarr
-server sends the user's Workshop token only to the configured Workshop origin.
-
-Prompts, attachments, tool definitions, and tool results are forwarded to the configured OpenRouter-compatible
-upstream so it can generate the response. That upstream's data-handling policy applies. The Workshop proxy does not
-log or persist this content.
-
-The open-source proxy can limit authenticated use, but it cannot prevent one person from creating several eligible
-Workshop accounts. Operators should also set a hard OpenRouter credit limit and monitor the anonymous activity feed.
-
-## Costs
-
-The Homarr community pays for provider requests. Donations help cover these costs.
+The Homarr community pays for these requests. Donations help cover the cost.
 
 <OpenCollectiveLink />
 
-## Share your results
-
-Publish useful Custom Widgets in the [Community Workshop](pathname:///workshop). Include the prompt, API source, and
-screenshots. This information helps other users test and improve the widget.
-
-Workshop operators can configure the proxy, its upstream, and its default allowance in the
+Workshop operators can change the upstream, default allowance, and security limits in the
 [Workshop operator guide](./operator#homarr-provider-proxy).

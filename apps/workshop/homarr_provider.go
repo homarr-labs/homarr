@@ -23,18 +23,27 @@ import (
 const (
 	homarrProviderModelID   = "homarr/deepseek-v4-flash-latest"
 	openRouterModelID       = "~deepseek/deepseek-v4-flash-latest"
+	maxChatInputTokens      = 256 * 1024
+	maxChatOutputTokens     = 32 * 1024
 	defaultDailyLimit       = 50
 	maxProviderRequestUnits = 1000
-	maxChatRequestBytes     = 8 << 20
-	maxChatResponseBytes    = 8 << 20
-	maxUpstreamErrorBytes   = 1 << 20
-	openRouterDefaultURL    = "https://openrouter.ai/api/v1"
-	providerRequestTimeout  = 5 * time.Minute
+	// Do not trust a client-side token estimate. Applying the same numeric ceiling to
+	// the complete serialized payload is deliberately stricter than a tokenizer-based
+	// limit and also bounds attachments and tool schemas.
+	maxChatRequestBytes    = maxChatInputTokens
+	maxChatResponseBytes   = 8 << 20
+	maxUpstreamErrorBytes  = 1 << 20
+	maxWebSearchResults    = 5
+	maxWebSearchUses       = 3
+	openRouterDefaultURL   = "https://openrouter.ai/api/v1"
+	providerRequestTimeout = 5 * time.Minute
 )
 
 var errProviderResponseTooLarge = errors.New("provider response is too large")
 
-var clientControlledRoutingFields = []string{"models", "provider", "route", "plugins", "transforms"}
+var clientControlledRoutingFields = []string{
+	"models", "provider", "route", "plugins", "transforms", "extra_body", "extra_headers",
+}
 
 type homarrProvider struct {
 	apiKey     string
@@ -97,8 +106,9 @@ func newHomarrProviderFromEnv() (*homarrProvider, error) {
 		baseURL = openRouterDefaultURL
 	}
 	parsedURL, err := url.Parse(baseURL)
-	if err != nil || parsedURL.Host == "" || (parsedURL.Scheme != "https" && parsedURL.Scheme != "http") {
-		return nil, errors.New("HOMARR_AI_OPENROUTER_BASE_URL must be an absolute HTTP(S) URL")
+	if err != nil || parsedURL.Host == "" || (parsedURL.Scheme != "https" && parsedURL.Scheme != "http") ||
+		parsedURL.User != nil || parsedURL.RawQuery != "" || parsedURL.Fragment != "" {
+		return nil, errors.New("HOMARR_AI_OPENROUTER_BASE_URL must be an absolute HTTP(S) URL without credentials, a query, or a fragment")
 	}
 
 	dailyLimit := defaultDailyLimit
@@ -136,7 +146,7 @@ func (provider *homarrProvider) models(event *core.RequestEvent) error {
 			"name":           "DeepSeek V4 Flash Latest",
 			"description":    "Fast agentic model provided by the community-funded Homarr provider.",
 			"owned_by":       "homarr",
-			"context_length": 1_048_576,
+			"context_length": maxChatInputTokens,
 			"supported_parameters": []string{
 				"tools", "tool_choice", "reasoning", "include_reasoning", "structured_outputs",
 			},
@@ -183,7 +193,9 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	if err := json.Unmarshal(body, &payload); err != nil {
 		return event.JSON(http.StatusBadRequest, openAIError("The request body is not valid OpenAI chat JSON."))
 	}
-	sanitizeProviderPayload(payload)
+	if err := sanitizeProviderPayload(payload); err != nil {
+		return event.JSON(http.StatusBadRequest, openAIError(err.Error()))
+	}
 	upstreamBody, err := json.Marshal(payload)
 	if err != nil {
 		return event.JSON(http.StatusBadRequest, openAIError("The request body could not be prepared."))
@@ -208,7 +220,7 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		bytes.NewReader(upstreamBody),
 	)
 	if err != nil {
-		provider.finishActivityWithRefund(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt, requestUnits)
+		provider.finishActivity(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt)
 		return event.JSON(http.StatusInternalServerError, openAIError("The Homarr provider request could not be prepared."))
 	}
 	upstreamRequest.Header.Set("Authorization", "Bearer "+provider.apiKey)
@@ -220,7 +232,7 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 
 	upstreamResponse, err := provider.httpClient.Do(upstreamRequest)
 	if err != nil {
-		provider.finishActivityWithRefund(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt, requestUnits)
+		provider.finishActivity(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt)
 		return event.JSON(http.StatusBadGateway, openAIError("The model endpoint could not be reached."))
 	}
 	defer func() { _ = upstreamResponse.Body.Close() }()
@@ -239,17 +251,15 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		contentType = "application/json"
 	}
 	if upstreamResponse.StatusCode < 200 || upstreamResponse.StatusCode >= 300 {
-		errorBody, _ := io.ReadAll(io.LimitReader(upstreamResponse.Body, maxUpstreamErrorBytes))
-		provider.finishActivityWithRefund(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt, requestUnits)
-		event.Response.Header().Set("X-Homarr-Quota-Remaining", strconv.Itoa(min(snapshot.Limit, snapshot.Remaining+requestUnits)))
-		return event.Blob(upstreamResponse.StatusCode, contentType, errorBody)
+		provider.finishActivity(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt)
+		return event.JSON(upstreamResponse.StatusCode, openAIError("The model endpoint rejected the request."))
 	}
 
 	if requestBody.Stream {
 		capture := newSSEUsageCapture()
 		event.Response.Header().Set("Content-Type", contentType)
 		event.Response.WriteHeader(upstreamResponse.StatusCode)
-		_, copyErr := io.Copy(flushingWriter{event.Response}, io.TeeReader(upstreamResponse.Body, capture))
+		_, copyErr := copyBounded(flushingWriter{event.Response}, io.TeeReader(upstreamResponse.Body, capture), maxChatResponseBytes)
 		provider.finishActivity(event.App, privateRequest, publicActivity, statusForError(copyErr), capture.Usage(), startedAt)
 		return nil
 	}
@@ -264,12 +274,72 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	return event.Blob(upstreamResponse.StatusCode, contentType, responseBody)
 }
 
-func sanitizeProviderPayload(payload map[string]any) {
+func sanitizeProviderPayload(payload map[string]any) error {
 	for _, field := range clientControlledRoutingFields {
 		delete(payload, field)
 	}
+	delete(payload, "max_completion_tokens")
+	delete(payload, "metadata")
+	delete(payload, "user")
+	if reasoning, ok := payload["reasoning"].(map[string]any); ok {
+		delete(reasoning, "max_tokens")
+	}
+
+	if rawTools, exists := payload["tools"]; exists {
+		tools, ok := rawTools.([]any)
+		if !ok {
+			return errors.New("The request tools are not valid.")
+		}
+		sanitizedTools := make([]any, 0, len(tools))
+		webSearchAdded := false
+		for _, rawTool := range tools {
+			tool, ok := rawTool.(map[string]any)
+			if !ok {
+				return errors.New("The request contains an unsupported tool.")
+			}
+			switch tool["type"] {
+			case "function":
+				sanitizedTools = append(sanitizedTools, tool)
+			case "openrouter:web_search":
+				if !webSearchAdded {
+					sanitizedTools = append(sanitizedTools, map[string]any{
+						"type": "openrouter:web_search",
+						"parameters": map[string]any{
+							"max_results": maxWebSearchResults,
+							"max_uses":    maxWebSearchUses,
+						},
+					})
+					webSearchAdded = true
+				}
+			default:
+				return errors.New("The request contains an unsupported tool.")
+			}
+		}
+		payload["tools"] = sanitizedTools
+	}
+
 	payload["model"] = openRouterModelID
+	payload["max_tokens"] = maxChatOutputTokens
+	payload["n"] = 1
+	payload["parallel_tool_calls"] = false
 	payload["usage"] = map[string]any{"include": true}
+	return nil
+}
+
+func copyBounded(writer io.Writer, reader io.Reader, limit int64) (int64, error) {
+	written, err := io.Copy(writer, io.LimitReader(reader, limit))
+	if err != nil {
+		return written, err
+	}
+	var extra [1]byte
+	read, err := reader.Read(extra[:])
+	if read > 0 {
+		return written, errProviderResponseTooLarge
+	}
+	if err != nil && !errors.Is(err, io.EOF) {
+		return written, err
+	}
+	return written, nil
 }
 
 func readBoundedBody(reader io.Reader, limit int64) ([]byte, error) {
@@ -394,18 +464,6 @@ func (provider *homarrProvider) finishActivity(
 	usage requestUsage,
 	startedAt time.Time,
 ) {
-	provider.finishActivityWithRefund(app, privateRequest, publicActivity, status, usage, startedAt, 0)
-}
-
-func (provider *homarrProvider) finishActivityWithRefund(
-	app core.App,
-	privateRequest *core.Record,
-	publicActivity *core.Record,
-	status string,
-	usage requestUsage,
-	startedAt time.Time,
-	refundUnits int,
-) {
 	durationMs := max(0, int(provider.now().UTC().Sub(startedAt).Milliseconds()))
 	err := app.RunInTransaction(func(txApp core.App) error {
 		for _, record := range []*core.Record{privateRequest, publicActivity} {
@@ -429,9 +487,6 @@ func (provider *homarrProvider) finishActivityWithRefund(
 		}
 		if !requestBelongsToQuotaDay(quota.GetString("day"), startedAt) {
 			return nil
-		}
-		if refundUnits > 0 {
-			quota.Set("used", max(0, quota.GetInt("used")-refundUnits))
 		}
 		quota.Set("inputTokens", quota.GetInt("inputTokens")+usage.InputTokens)
 		quota.Set("outputTokens", quota.GetInt("outputTokens")+usage.OutputTokens)

@@ -28,9 +28,32 @@ const server = createServer(async (request, response) => {
     json(response, 400, { error: { message: "Unexpected upstream model" } });
     return;
   }
+  if (body.max_tokens !== 32_768 || body.n !== 1 || body.parallel_tool_calls !== false) {
+    json(response, 400, { error: { message: "Unsafe generation controls reached the upstream" } });
+    return;
+  }
+  if (
+    "max_completion_tokens" in body ||
+    "user" in body ||
+    "metadata" in body ||
+    "extra_body" in body ||
+    "extra_headers" in body ||
+    "max_tokens" in (body.reasoning ?? {})
+  ) {
+    json(response, 400, { error: { message: "Private or unbounded request fields reached the upstream" } });
+    return;
+  }
   const forbiddenRoutingField = ["models", "provider", "route", "plugins", "transforms"].find((field) => field in body);
   if (forbiddenRoutingField) {
     json(response, 400, { error: { message: `Client routing field was forwarded: ${forbiddenRoutingField}` } });
+    return;
+  }
+  const webSearchTools = body.tools?.filter((tool) => tool.type === "openrouter:web_search") ?? [];
+  if (
+    webSearchTools.length > 1 ||
+    webSearchTools.some((tool) => tool.parameters?.max_results !== 5 || tool.parameters?.max_uses !== 3)
+  ) {
+    json(response, 400, { error: { message: "Unbounded web search controls reached the upstream" } });
     return;
   }
   if (body.messages?.some((message) => message.content === "upstream failure")) {
