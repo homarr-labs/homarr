@@ -3,11 +3,24 @@
 Written as a handoff. The branch is green and everything below is measured except where explicitly
 marked.
 
-## 1. Verify the one unmeasured change
+## 1. Verify the unmeasured changes
 
-`c526dd2b7` applies the `content-visibility` treatment to `mediaRequests-requestList`. It is
-typechecked but **not measured** — the session ended first. Every other performance claim on this
-branch was A/B'd before commit; this one was not.
+Four commits apply the off-screen-row treatment beyond the one widget where it was measured. All are
+typechecked and lint-clean, none are A/B'd — they are the only performance claims on this branch not
+verified before commit.
+
+| commit | widget | measured on this board? |
+| --- | --- | --- |
+| `7550766f6` | mediaReleases | **yes** — 135 → 55 image requests, 8346 → 5117 layout objects |
+| `c526dd2b7` | mediaRequests-requestList | no — but overdraw confirmed: 1,512 px of cards in a 405 px tile, 60 images |
+| `040f10594` | rssFeed, notifications, calendar event list | no — these do **not** overdraw on this board |
+
+The last row needs care when reading a result. On the test backup rssFeed renders 7 nodes and the
+calendar's 7 rows fit their tile, so a measurement will correctly show **no change**. That is not a
+failure of the change — the benefit only exists for a user whose integrations return more rows than
+the tile can show. To observe it, use a backup with a busier feed, or shrink the tile.
+
+For `c526dd2b7`, which does overdraw here, a real effect is expected:
 
 ```bash
 # restore two containers on identical data, one per image, then:
@@ -15,12 +28,32 @@ STRESS_BASE_URL=http://127.0.0.1:PORT STRESS_BOARD=default \
   node --experimental-strip-types scripts/benchmarks/measure-board-paint.mts
 ```
 
-Expect **image requests to fall** (the measured effect on `mediaReleases` was 135 → 55). Do **not**
-expect JS heap to move: decoded bitmaps live outside `JSHeapUsedSize`. Three repeats per side — a
-single run wrongly suggested a −16% heap win on the first widget.
+Expect **image requests to fall**. Do **not** expect JS heap to move: decoded bitmaps live outside
+`JSHeapUsedSize`. Three repeats per side — a single run wrongly suggested a −16% heap win on the first
+widget. If image requests do not fall, revert it.
 
-If it does not reduce image requests, revert it. Unmeasured complexity is exactly what this branch
-has rejected everywhere else.
+## 1b. What was deliberately not changed
+
+26 widgets use `ScrollArea`; the treatment was applied to five. `content-visibility` is not free — it
+costs containment work, and on content that measures itself (charts, editors, the notebook) skipping
+layout can be actively wrong. The rule used: apply it where list length is decided by remote data,
+leave fixed-size and chart widgets alone.
+
+`beszelSystemStats`, `beszelSystemTable` and `beszelSystemGrid` report large row counts in the
+overdraw tool, but that is the tool misreading SVG groups as rows — their content fits their tiles.
+
+## React `cache()` and memoisation — already in place
+
+Recorded because it looks like a gap and is not.
+
+React `cache()` is **server-only**: it dedupes within a single RSC render and does nothing for client
+widget rendering. It is already applied where it belongs — `getBoardByNameAsync`, `getHomeBoardAsync`,
+`getRscServerSettingsAsync` and `getQueryClient` are all wrapped, the last with a comment explaining
+the dedup.
+
+Client-side data is cached by tRPC/react-query, whose `gcTime` was already checked and found to be
+5 minutes, not the 24 hours the original fix catalogue assumed. `React.memo` is already used in the
+clock, calendar and releases widgets.
 
 ## 2. The one lever with real headroom left
 
@@ -30,29 +63,29 @@ request. This pays twice:
 
 - ~41 MiB of retained bundle source (28% of the live server heap) — V8 keeps a script's source alive
   while any function in it may still be lazily compiled
-- ~38 MiB of V8 compiler zone memory, which is **proportional to how much JavaScript V8 compiles**
-  and is not reachable by any V8 flag (`--max-opt` is a null result; only `--jitless` removes it, and
-  that breaks rendering)
+- ~38 MiB of V8 compiler zone memory, which is **proportional to how much JavaScript V8 compiles** and
+  is not reachable by any V8 flag (`--max-opt` is a null result; only `--jitless` removes it, and that
+  breaks rendering)
 
 Nothing else has this profile. Every allocator and V8-level avenue is closed — see
 [REJECTED.md](./REJECTED.md).
 
-Start from `analyze-require-graph.mjs`, which showed the shared subtree, and
-`[root-of-the-server]__0g06wx7._.js` as the chunk that reaches 460 files.
+Start from `analyze-require-graph.mjs`, which found the shared subtree, and
+`[root-of-the-server]__0g06wx7._.js` as the chunk reaching 460 files.
 
 ## 3. Known-good but deliberately deferred
 
 | item | prize | why it was not done |
 | --- | --- | --- |
-| ASCII-escape server bundles | **9.45 MiB** | Proven mechanism (2.00 vs 1.00 bytes/char; one char above U+00FF doubles a whole source string). Needs a build-time rewrite of minified **vendor** output — deserves its own PR with its own safety argument |
-| Lazy `mysql2` / `pg` | 21.4 MiB | Three implementations, all broken; see REJECTED.md. Blocked structurally because `createDb` must stay synchronous |
+| ASCII-escape server bundles | **9.45 MiB** | Proven mechanism — 2.00 vs 1.00 bytes/char; one char above U+00FF doubles a whole source string. Needs a build-time rewrite of minified **vendor** output, so it deserves its own PR and safety argument |
+| Lazy `mysql2` / `pg` | 21.4 MiB | Three implementations, all broken; see REJECTED.md. Structurally blocked because `createDb` must stay synchronous |
 | `beszelSystemStats` at 1,156 nodes | unknown | Second-heaviest widget, but its cost is chart SVG (`<g>×317`), so reducing it changes what is drawn |
 | `documents` reads 18–32 | unknown | Never investigated; each document carries overhead |
 
 ## 4. For the clean PR
 
-The instruction was to close this experimental PR and open one with only the verified fixes, judged
-on lines-of-code to performance ratio. On the evidence, that set is:
+The instruction was to close this experimental PR and open one with only the verified fixes, judged on
+lines-of-code to performance ratio. On the evidence, that set is:
 
 | change | size | measured effect |
 | --- | --- | --- |
@@ -69,11 +102,11 @@ stage, for **+18% CPU**.
 Two things to leave out or flag:
 
 - **The gRPC patch** removes 112 files and 6 MiB from an isolated `require`, but is **not separately
-  visible in a full run**. It is bundle hygiene, not a measured memory win.
+  visible in a full run**. Bundle hygiene, not a measured memory win.
 - **Median board load reads +30%** but is **not established** — individual loads were
   [506, 383, 1233] and [848, 431, 574] before against [780, 808, 515] and [621, 579, 1004] after,
-  heavily overlapping with no cold-then-warm pattern. If the latency trade matters, measure it
-  properly with many more samples; the suspicion is that it is real and concentrated in
+  heavily overlapping with no cold-then-warm pattern. If the latency trade matters, measure it properly
+  with many more samples; the suspicion is that it is real and concentrated in
   `preloadEntriesOnStart`.
 
 ## 5. Read this before measuring anything
