@@ -1,4 +1,11 @@
+// @vitest-environment node
+
 import { beforeEach, describe, expect, test, vi } from "vitest";
+
+vi.hoisted(() => {
+  process.env.SKIP_ENV_VALIDATION = "true";
+  process.env.SECRET_ENCRYPTION_KEY = "ff3f4f7ce30e870c9630de9e5d244ffa81101a24ed0dfe5f064beb53a7e684f1";
+});
 
 import { IntegrationRequestError } from "../../base/errors/http/integration-request-error";
 import type { IntegrationSecret } from "../../base/types";
@@ -8,7 +15,7 @@ const ws = vi.hoisted(() => {
   const constructedUrls: string[] = [];
   // A failure with a `code` emits a coded TLS-style error; without one it mimics a missing endpoint (HTTP 404).
   const failures: { path: string; code?: string }[] = [];
-  let responder: (method: string, params: unknown[]) => unknown = () => undefined;
+  let responder: (method: string, params: unknown[]) => unknown | Promise<unknown> = () => undefined;
 
   type Listener = (...args: unknown[]) => void;
 
@@ -58,12 +65,15 @@ const ws = vi.hoisted(() => {
         return;
       }
 
-      const result = responder(payload.method as string, (payload.params as unknown[] | undefined) ?? []);
-      const envelope =
-        payload.jsonrpc === "2.0"
-          ? { jsonrpc: "2.0", id: payload.id, result }
-          : { msg: "result", id: payload.id, result };
-      this.respond(JSON.stringify(envelope));
+      void Promise.resolve(responder(payload.method as string, (payload.params as unknown[] | undefined) ?? [])).then(
+        (result) => {
+          const envelope =
+            payload.jsonrpc === "2.0"
+              ? { jsonrpc: "2.0", id: payload.id, result }
+              : { msg: "result", id: payload.id, result };
+          this.respond(JSON.stringify(envelope));
+        },
+      );
     }
 
     close() {
@@ -85,7 +95,7 @@ const ws = vi.hoisted(() => {
     sentPayloads,
     constructedUrls,
     failures,
-    setResponder: (fn: (method: string, params: unknown[]) => unknown) => {
+    setResponder: (fn: (method: string, params: unknown[]) => unknown | Promise<unknown>) => {
       responder = fn;
     },
   };
@@ -207,6 +217,34 @@ describe("TrueNasIntegration", () => {
       // `available` is the free space left on the pool (free = 500), not its total size.
       fileSystem: [{ deviceName: "tank", available: "500", used: "500", percentage: 50 }],
       smart: [{ deviceName: "tank", healthy: true, overallStatus: "ONLINE", temperature: null }],
+    });
+  });
+
+  test("starts independent system requests together while preserving the network interface dependency", async () => {
+    const gates = new Map<string, ReturnType<typeof Promise.withResolvers<unknown>>>();
+    ws.setResponder((method) => {
+      if (method.startsWith("auth.")) return true;
+      const gate = Promise.withResolvers<unknown>();
+      gates.set(method, gate);
+      return gate.promise;
+    });
+    const integration = createIntegration(credentials);
+
+    const resultPromise = integration.getSystemInfoAsync();
+
+    await vi.waitFor(() => {
+      expect([...gates.keys()]).toEqual(["system.info", "reporting.get_data", "pool.query", "interface.query"]);
+    });
+    expect(gates.has("reporting.netdata_get_data")).toBe(false);
+
+    gates.get("interface.query")?.resolve(happyResponder("interface.query"));
+    await vi.waitFor(() => expect(gates.has("reporting.netdata_get_data")).toBe(true));
+
+    for (const [method, gate] of gates) gate.resolve(happyResponder(method));
+
+    await expect(resultPromise).resolves.toMatchObject({
+      version: "TrueNAS-SCALE-24.10",
+      network: { up: 20_000, down: 10_000 },
     });
   });
 

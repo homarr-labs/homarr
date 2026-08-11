@@ -24,15 +24,16 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
   }
 
   public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {
-    const systemInformation = await this.getSystemInformationAsync();
-    const reporting = await this.getReportingAsync();
+    const [systemInformation, reporting, datasets, netdata] = await Promise.all([
+      this.getSystemInformationAsync(),
+      this.getReportingAsync(),
+      this.getPoolsAsync(),
+      this.getReportingNetdataAsync(),
+    ]);
 
     const cpuData = this.extractLatestReportingData(reporting, "cpu");
     const cpuTempData = this.extractLatestReportingData(reporting, "cputemp");
     const memoryData = this.extractLatestReportingData(reporting, "memory");
-    const datasets = await this.getPoolsAsync();
-
-    const netdata = await this.getReportingNetdataAsync();
 
     const upload = this.extractNetworkTrafficData(netdata, 2); // Index 2 is "sent"
     const download = this.extractNetworkTrafficData(netdata, 1); // Index 1 is "received"

@@ -11,11 +11,14 @@ import { filteringStatusSchema, statsResponseSchema, statusResponseSchema } from
 
 export class AdGuardHomeIntegration extends Integration implements DnsHoleSummaryIntegration {
   public async getSummaryAsync(): Promise<DnsHoleSummary> {
-    const statsResponse = await fetchWithTrustedCertificatesAsync(this.url("/control/stats"), {
-      headers: {
-        Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
-      },
-    });
+    const headers = {
+      Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
+    };
+    const [statsResponse, statusResponse, filteringStatusResponse] = await Promise.all([
+      fetchWithTrustedCertificatesAsync(this.url("/control/stats"), { headers }),
+      fetchWithTrustedCertificatesAsync(this.url("/control/status"), { headers }),
+      fetchWithTrustedCertificatesAsync(this.url("/control/filtering/status"), { headers }),
+    ]);
 
     if (!statsResponse.ok) {
       throw new Error(
@@ -23,23 +26,11 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
       );
     }
 
-    const statusResponse = await fetchWithTrustedCertificatesAsync(this.url("/control/status"), {
-      headers: {
-        Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
-      },
-    });
-
     if (!statusResponse.ok) {
       throw new Error(
         `Failed to fetch status for ${this.integration.name} (${this.integration.id}): ${statusResponse.statusText}`,
       );
     }
-
-    const filteringStatusResponse = await fetchWithTrustedCertificatesAsync(this.url("/control/filtering/status"), {
-      headers: {
-        Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
-      },
-    });
 
     if (!filteringStatusResponse.ok) {
       throw new Error(
