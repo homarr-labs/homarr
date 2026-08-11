@@ -16,10 +16,13 @@ export const GET = async (_request: Request, props: { params: Promise<{ id: stri
     });
   }
 
-  return new Response(result.image, {
+  // undici and the DOM lib describe the same web stream with incompatible types, so the value is
+  // passed straight through.
+  return new Response(result.image as BodyInit | null, {
     headers: {
       "Cache-Control": "public, max-age=3600, immutable", // Cache for 1 hour
       ...(result.contentType ? { "Content-Type": result.contentType } : {}),
+      ...(result.contentLength ? { "Content-Length": result.contentLength } : {}),
     },
   });
 };

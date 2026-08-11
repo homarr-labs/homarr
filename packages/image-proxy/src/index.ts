@@ -19,8 +19,11 @@ const createUrlByIdChannel = (id: string) =>
     headers: `${string}.${string}`;
   }>(`image-proxy:url:${id}`);
 
+/** The upstream body, forwarded as-is rather than buffered. */
+type ProxiedImageBody = Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>["body"];
+
 export type ForwardImageResult =
-  | { image: ArrayBuffer; contentType: string | null }
+  | { image: ProxiedImageBody; contentType: string | null; contentLength: string | null }
   | { error: "not-found" }
   | { error: "upstream-error"; statusCode: number }
   | { error: "fetch-error" };
@@ -94,16 +97,22 @@ export class ImageProxy {
       return { error: "upstream-error", statusCode: response.status };
     }
 
-    const arrayBuffer = await response.arrayBuffer();
+    const contentLength = response.headers.get("content-length");
     logger.debug("Forwarding image succeeded", {
       id,
       url: this.redactUrl(urlAndHeaders.url),
       headers: this.redactHeaders(urlAndHeaders.headers),
       proxyUrl,
-      size: `${(arrayBuffer.byteLength / 1024).toFixed(1)}KB`,
+      size: contentLength ? `${(Number(contentLength) / 1024).toFixed(1)}KB` : "unknown",
     });
 
-    return { image: arrayBuffer, contentType: response.headers.get("content-type") };
+    // The body is forwarded as a stream rather than buffered: a board can request dozens of posters
+    // at once, and buffering held every one of them in memory in full before responding.
+    return {
+      image: response.body,
+      contentType: response.headers.get("content-type"),
+      contentLength,
+    };
   }
 
   private createImageUrl(id: string): string {
