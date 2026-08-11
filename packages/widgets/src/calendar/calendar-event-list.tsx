@@ -21,6 +21,14 @@ import { useI18n } from "@homarr/translation/client";
 import classes from "./calendar-event-list.module.css";
 import { offscreenRowStyle } from "../common/offscreen-rows";
 
+/**
+ * A broken poster used to fall back to `https://placehold.co/400x400`, so a self-hosted dashboard
+ * reached out to a third party - once per failing event - to draw a grey square. This is the same
+ * grey square, inline, and it still works when the host has no internet access at all.
+ */
+const NO_IMAGE_FALLBACK =
+  "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20400%20400'%3E%3Crect%20width='400'%20height='400'%20fill='%23868e96'%20fill-opacity='0.2'/%3E%3C/svg%3E";
+
 interface CalendarEventListProps {
   events: CalendarEvent[];
 }
@@ -55,7 +63,7 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                       : "1/1",
                   }}
                   radius="sm"
-                  fallbackSrc="https://placehold.co/400x400?text=No%20image"
+                  fallbackSrc={NO_IMAGE_FALLBACK}
                 />
                 {event.image.badge !== undefined && (
                   <Badge pos="absolute" bottom={-6} left="50%" w="90%" className={classes.badge}>

@@ -37,7 +37,10 @@ export default function HealthMonitoringWidget(props: WidgetComponentProps<"heal
 
   return (
     <ScrollArea h="100%">
-      <Tabs defaultValue={props.options.defaultTab} variant="outline">
+      {/* Both panels are live monitoring views. Keeping the inactive one mounted built its whole tree
+          for content nobody can see; react-query still has the data cached, so switching back is
+          instant rather than a fresh load. */}
+      <Tabs keepMounted={false} defaultValue={props.options.defaultTab} variant="outline">
         <Tabs.List grow>
           <Tabs.Tab value="system" fz="xs">
             <b>{t("widget.healthMonitoring.tab.system")}</b>
