@@ -29,6 +29,7 @@ import {
 
 // Umami event type ID for custom events (type 1 = page view, type 2 = custom event)
 const UMAMI_CUSTOM_EVENT_TYPE = 2;
+const UMAMI_EVENT_NAME_LIMIT = 5_000;
 const UMAMI_EVENT_PAGE_SIZE = 5_000;
 const UMAMI_EVENT_PAGE_MAX = 20;
 
@@ -184,7 +185,14 @@ export class UmamiIntegration extends Integration {
     const authHeaders = await this.getAuthHeadersAsync();
     const endAt = Date.now();
     const startAt = dayjs().subtract(30, "day").valueOf();
-    const metrics = await this.getWebsiteMetricsAsync(websiteId, startAt, endAt, "event", authHeaders);
+    const metrics = await this.getWebsiteMetricsAsync(
+      websiteId,
+      startAt,
+      endAt,
+      "event",
+      authHeaders,
+      UMAMI_EVENT_NAME_LIMIT,
+    );
     const names = new Set<string>();
     for (const metric of metrics) {
       if (metric.x) names.add(metric.x);

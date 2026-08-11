@@ -25,12 +25,16 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
 
   public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
-    const { queue } = await queueSchema.parseAsync(
-      await this.sabNzbApiCallAsync("queue", { limit: input.limit.toString() }),
-    );
-    const { history } = await historySchema.parseAsync(
-      await this.sabNzbApiCallAsync("history", { limit: input.limit.toString() }),
-    );
+    const [queueResult, historyResult] = await Promise.all([
+      this.sabNzbApiCallAsync("queue", { limit: input.limit.toString() }).then((result) =>
+        queueSchema.parseAsync(result),
+      ),
+      this.sabNzbApiCallAsync("history", { limit: input.limit.toString() }).then((result) =>
+        historySchema.parseAsync(result),
+      ),
+    ]);
+    const { queue } = queueResult;
+    const { history } = historyResult;
     const status: DownloadClientStatus = {
       paused: queue.paused,
       rates: { down: Math.floor(Number(queue.kbpersec) * 1024) }, //Actually rounded kiBps ()

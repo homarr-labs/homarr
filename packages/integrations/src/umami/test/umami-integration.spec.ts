@@ -1,3 +1,5 @@
+// @vitest-environment node
+
 import { Request, Response } from "undici";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
@@ -76,6 +78,7 @@ describe("UmamiIntegration", () => {
       expect(requestedUrls).toHaveLength(1);
       expect(requestedUrls[0]?.path).toContain("/metrics");
       expect(requestedUrls[0]?.params.get("type")).toBe("event");
+      expect(requestedUrls[0]?.params.get("limit")).toBe("5000");
       expect(requestedUrls.some((requested) => requested.path.endsWith("/events"))).toBe(false);
     });
 
