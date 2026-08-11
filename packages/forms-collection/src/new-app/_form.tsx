@@ -128,7 +128,10 @@ export const AppForm = ({
   const formFields = (
     <Stack>
       <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
-      <IconPicker {...form.getInputProps("iconUrl")} suggestedSearch={form.values.name} />
+      <IconPicker
+        {...form.getInputProps("iconUrl")}
+        suggestedSearch={initialValues === undefined ? form.values.name : undefined}
+      />
       <Textarea
         {...form.getInputProps("description")}
         label={t("app.field.description.label")}

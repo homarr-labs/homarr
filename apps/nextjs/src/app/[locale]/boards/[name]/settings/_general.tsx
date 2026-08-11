@@ -48,7 +48,6 @@ export const GeneralSettingsContent = ({ board, form }: Props) => {
             {...form.getInputProps("logoImageUrl")}
             label={t("board.field.logoImageUrl.label")}
             placeholder="/logo/logo.png"
-            suggestedSearch={board.name}
             withAsterisk={false}
           />
         </Grid.Col>
@@ -57,7 +56,6 @@ export const GeneralSettingsContent = ({ board, form }: Props) => {
             {...form.getInputProps("faviconImageUrl")}
             label={t("board.field.faviconImageUrl.label")}
             placeholder="/logo/logo.png"
-            suggestedSearch={board.name}
             withAsterisk={false}
           />
         </Grid.Col>
