@@ -15,4 +15,10 @@ export class SportarrIntegration extends SonarrIntegration {
   protected override get calendarLinkLogo(): string {
     return "/images/apps/sportarr.svg";
   }
+
+  // Sportarr seasons are years ("S2026/E43" overflows the badge), and
+  // the calendar already shows the date, so the season adds nothing.
+  protected override getCalendarBadgeContent(_seasonNumber: number, episodeNumber: number): string {
+    return `E${episodeNumber}`;
+  }
 }

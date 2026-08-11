@@ -42,6 +42,21 @@ const calendarEventResponse = [
   },
 ];
 
+const createCalendarEventWithPoster = (seasonNumber: number, episodeNumber: number) => [
+  {
+    title: "Test Event",
+    airDateUtc: "2026-01-01T00:00:00Z",
+    seasonNumber,
+    episodeNumber,
+    images: [{ coverType: "poster", remoteUrl: "https://example.com/event-poster.jpg" }],
+    series: {
+      title: "Test League",
+      titleSlug: "test-league",
+      images: [],
+    },
+  },
+];
+
 const sportarrIntegrationInput = {
   id: "test-sportarr",
   name: "Sportarr",
@@ -85,5 +100,34 @@ describe("SportarrIntegration branding override", () => {
       name: "Sonarr",
       logo: "/images/apps/sonarr.svg",
     });
+  });
+
+  test("shortens the calendar badge to the episode number because seasons are years", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(createCalendarEventWithPoster(2026, 43)),
+    } as never);
+
+    const integration = new SportarrIntegration(sportarrIntegrationInput);
+    const events = await integration.getCalendarEventsAsync(new Date("2026-01-01"), new Date("2026-01-31"));
+
+    expect(events[0]?.image?.badge?.content).toBe("E43");
+  });
+
+  test("does not affect SonarrIntegration's own calendar badge format", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(createCalendarEventWithPoster(1, 2)),
+    } as never);
+
+    const integration = new SonarrIntegration({
+      ...sportarrIntegrationInput,
+      id: "test-sonarr",
+      name: "Sonarr",
+      url: "http://localhost:8989",
+    });
+    const events = await integration.getCalendarEventsAsync(new Date("2026-01-01"), new Date("2026-01-31"));
+
+    expect(events[0]?.image?.badge?.content).toBe("S1/E2");
   });
 });
