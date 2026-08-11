@@ -5,7 +5,9 @@ import { afterEach, beforeEach, describe, expect, test } from "vitest";
 
 import type { DndGridEntryProps } from "../grid-entry-memo";
 import { areDndGridEntryPropsEqual } from "../grid-entry-memo";
-import { createGridPreviewDomState, syncGridPreviewGeometry } from "../grid-preview-geometry";
+import { createGridInteractionStore } from "../grid-interaction-store";
+import type { GridInteraction } from "../grid-preview-layer";
+import { GridPreviewLayer } from "../grid-preview-layer";
 
 describe("grid entry memoization", () => {
   let container: HTMLDivElement;
@@ -76,8 +78,13 @@ describe("grid entry memoization", () => {
     expect(renders).toBe(101);
   });
 
-  test("keeps 100 entry and widget renders frozen while preview geometry changes", () => {
+  test("keeps 100 entry and widget renders frozen across interaction store previews", () => {
     const elements = new Map<string, HTMLElement>();
+    const interactionStore = createGridInteractionStore<GridInteraction>();
+    const gridRef = { current: null as HTMLDivElement | null };
+    const setGridRef = (element: HTMLDivElement | null) => {
+      gridRef.current = element;
+    };
     const registerElement = (id: string, element: HTMLElement | null) => {
       if (element) elements.set(id, element);
       else elements.delete(id);
@@ -87,21 +94,50 @@ describe("grid entry memoization", () => {
       registerElement,
       placement: { ...createProps().placement, id: `item-${index}`, x: index % 10, y: Math.floor(index / 10) },
     }));
-    renderBoard(entries);
+    const renderPreviewBoard = (nextEntries: DndGridEntryProps[]) => {
+      act(() =>
+        root.render(
+          createElement(
+            "div",
+            { "data-section-id": "root" },
+            createElement(
+              "div",
+              { ref: setGridRef },
+              nextEntries.map((entry) => createElement(Probe, { ...entry, key: entry.placement.id })),
+              createElement(GridPreviewLayer, {
+                sectionId: "root",
+                rowCount: 10,
+                maxRowCount: null,
+                placements: nextEntries.map((entry) => entry.placement),
+                gridRef,
+                entryElements: elements,
+                interactionStore,
+              }),
+            ),
+          ),
+        ),
+      );
+    };
+
+    renderPreviewBoard(entries);
     expect(renders).toBe(100);
     expect(widgetRenders).toBe(100);
 
-    let previewState = createGridPreviewDomState();
     for (let revision = 1; revision <= 20; revision += 1) {
-      previewState = syncGridPreviewGeometry({
-        elements,
-        placements: entries.map((entry) => entry.placement),
-        previewPlacements: entries.map((entry, index) =>
-          index === 42 ? { ...entry.placement, y: entry.placement.y + revision } : entry.placement,
-        ),
-        activeId: "item-0",
-        mode: "drag",
-        previous: previewState,
+      const previewPlacements = entries.map((entry, index) =>
+        index === 42 ? { ...entry.placement, y: entry.placement.y + revision } : entry.placement,
+      );
+      act(() => {
+        interactionStore.publish({
+          activeId: "item-0",
+          sourceGridId: "root",
+          targetGridId: "root",
+          targetPlacement: previewPlacements[0] ?? null,
+          state: { grids: [{ id: "root", columnCount: 12, maxRowCount: null, placements: previewPlacements }] },
+          mode: "drag",
+          valid: true,
+          previewRevision: revision,
+        });
       });
     }
 
@@ -109,13 +145,16 @@ describe("grid entry memoization", () => {
     expect(widgetRenders).toBe(100);
     expect(elements.get("item-42")?.getAttribute("data-grid-preview")).toBe("true");
 
-    renderBoard(
+    act(() => interactionStore.publish(null));
+    renderPreviewBoard(
       entries.map((entry, index) =>
         index === 42 ? { ...entry, placement: { ...entry.placement, y: entry.placement.y + 20 } } : entry,
       ),
     );
     expect(renders).toBe(101);
     expect(widgetRenders).toBe(101);
+    expect(gridRef.current?.dataset.dndDropTarget).toBe("false");
+    expect(gridRef.current?.hasAttribute("data-dnd-preview-revision")).toBe(false);
   });
 
   test.each([
