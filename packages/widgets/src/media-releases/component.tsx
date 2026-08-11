@@ -117,6 +117,7 @@ const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
     >
       <UnstyledButton
         className={classes.item}
+        data-defer-rendering={isAdvanced ? undefined : true}
         component={href ? "a" : "div"}
         href={href}
         target={href ? "_blank" : undefined}
@@ -159,6 +160,7 @@ const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
                 src={item.imageUrls.poster}
                 alt=""
                 radius="xs"
+                loading="lazy"
                 style={{ flexShrink: 0 }}
               />
             )}

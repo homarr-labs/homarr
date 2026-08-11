@@ -16,7 +16,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
   icon: IconGraphFilled,
   supportsAdvancedFocus: true,
   queryKey: [["widget", "healthMonitoring"]],
-  refetchInterval: 5,
+  refetchInterval: 10,
   supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
   createOptions() {
     return optionsBuilder.from((factory) => ({

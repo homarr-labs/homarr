@@ -49,7 +49,7 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
       integrationIds: scope.integrationIds,
       limitPerIntegration: scope.options.limitPerIntegration,
     }),
-  refetchInterval: 5,
+  refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

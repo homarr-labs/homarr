@@ -14,7 +14,7 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaServ
       integrationIds: scope.integrationIds,
       showOnlyPlaying: scope.options.showOnlyPlaying,
     }),
-  refetchInterval: 5,
+  refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showOnlyPlaying: factory.switch({ defaultValue: true, withDescription: true }),

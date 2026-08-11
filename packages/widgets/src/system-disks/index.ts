@@ -8,7 +8,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemDis
   supportsAdvancedFocus: true,
   icon: IconServer2,
   queryKey: [["widget", "healthMonitoring"]],
-  refetchInterval: 5,
+  refetchInterval: 10,
   supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology"],
   createOptions() {
     return optionsBuilder.from(
