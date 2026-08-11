@@ -2094,6 +2094,8 @@
         "exhaustedDescription": "Your Homarr provider allowance is used for today. It resets at midnight UTC.",
         "unavailableDescription": "Sign in to the Workshop or wait for your Homarr provider allowance to reset.",
         "signIn": "Sign in with GitHub",
+        "signInError": "GitHub sign-in failed. Try again in a moment.",
+        "loadError": "The Homarr provider allowance could not be loaded.",
         "reset": "Resets {relative} at <time></time>",
         "toolCalls": "Each model request and completed tool call uses one request.",
         "retry": "Reload allowance",

@@ -126,6 +126,7 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
 };
 
 const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
+  const t = useScopedI18n("common.assistant");
   const { data, isLoading } = clientApi.assistant.getRuntimeOptions.useQuery(undefined, {
     staleTime: 10 * 60_000,
   });
@@ -192,9 +193,9 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
     try {
       const nextQuota = await workshopClient.getAssistantUsage(controller.signal);
       if (quotaRequestRef.current === controller && !controller.signal.aborted) setQuota(nextQuota);
-    } catch (error) {
+    } catch {
       if (quotaRequestRef.current === controller && !controller.signal.aborted) {
-        setQuotaError(error instanceof Error ? error.message : "The Homarr provider allowance could not be loaded.");
+        setQuotaError(t("providerQuota.loadError"));
       }
     } finally {
       if (quotaRequestRef.current === controller) {
@@ -202,7 +203,7 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
         setQuotaLoading(false);
       }
     }
-  }, [data?.provider, workshopClient]);
+  }, [data?.provider, t, workshopClient]);
   const signInToProvider = useCallback(async () => {
     setQuotaLoading(true);
     setQuotaError(null);
@@ -211,12 +212,12 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
       setProviderUser(user);
       await refreshQuota();
     } catch (error) {
-      setQuotaError(error instanceof Error ? error.message : "GitHub sign-in failed.");
+      setQuotaError(t("providerQuota.signInError"));
       throw error;
     } finally {
       setQuotaLoading(false);
     }
-  }, [refreshQuota, workshopClient]);
+  }, [refreshQuota, t, workshopClient]);
 
   useEffect(() => {
     if (!data) return;
