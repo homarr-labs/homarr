@@ -4,6 +4,8 @@ Most widgets use a single source named `default`; the manifest must contain it. 
 that combine APIs. Source IDs are case-insensitively unique. Base URLs must use HTTP(S), contain no embedded credentials,
 query string, or fragment, and sources can be `public`, `private`, or `loopback`. Authentication is `none`, `bearer`,
 `basic`, an API-key header, or an API-key query parameter. Credentials belong to the widget but remain outside its manifest.
+Source origins are fixed by the definition and source-setup flow; widget options and invocation parameters cannot redirect a
+request to a different origin.
 
 ## Named requests
 
@@ -45,6 +47,13 @@ also use structured `json` and `multiSelect` option values, for example `{ "enti
 ## Protection
 
 Every request uses Homarr's existing server executor: same-origin source enforcement, network scope, DNS and redirect validation, SSRF protection, board permissions, rate and request limits, body and response limits, timeouts, and encrypted credential injection. Static headers cannot override credentials, cookies, routing, proxy, forwarding, or hop-by-hop headers.
+
+The executor caps request bodies at 10 KiB and response bodies at 1 MiB. Parsed JSON is limited to depth 32 and 50,000 nodes;
+each network hop has a ten-second timeout, queries follow at most three same-origin redirects, actions do not follow redirects,
+and the total request deadline is 45 seconds.
+
+The limiter allows four concurrent requests per user/item and eight per definition. Per minute, a user/item can make up to 60
+queries, 10 actions, or 3 DELETE actions; a definition can receive up to 240, 40, or 12 of those request categories.
 
 Queries default to view permission and actions to modify. DELETE always requires full permission and confirmation. Actions are never cached, retried, or run on load.
 

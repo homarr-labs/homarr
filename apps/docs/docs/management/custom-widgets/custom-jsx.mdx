@@ -12,6 +12,13 @@ case-insensitively unique. Each request allows up to 32 static headers and 32 in
 up to 24 secrets, each up to 8,192 characters, and templates are limited to 50,000 characters. Validation reports the
 exact field when a limit is exceeded.
 
+Authoring input accepts either `template` or `templateLines`, not both. `templateLines` accepts 1–2,000 lines, each up to
+10,000 characters; after joining lines with newlines, the complete template must still fit the 50,000-character limit.
+
+The safe interpreter also bounds JSX evaluation: AST depth 64, 25,000 operations, 4,000 collection items, 10,000 rendered
+nodes, and 200,000 characters in one string or rendered value. API responses are bounded separately before they reach the
+template.
+
 Use normal Mantine layouts, typography, feedback, dates, and charts. Official compound names such as `Card.Section`, `Tabs.List`, and `Radio.Group` are supported. Ordinary safe props pass through; a dangerous capability produces an explicit error.
 Unsafe URLs, callback props, and unapproved style properties are stripped. Response data is deep-sanitized and budgeted
 before it reaches `data`, so treat it as untrusted input even when the source is private.
@@ -45,15 +52,17 @@ than one variable quantifier are rejected.
 
 ## Runtime components
 
-- `SubFetch` runs a manual query with its `params`. Set `triggerContent` to a card or image to make that content the accessible click and keyboard trigger instead of showing the default load button.
+- `SubFetch` runs a named query. Automatic queries run when the widget loads; set `trigger="manual"` to defer one and pass
+  primitive `params` for its invocation references. With `triggerContent`, any content node (commonly a card or image) becomes
+  the accessible click and keyboard trigger instead of showing the default load button.
 - `SubFetch` with `trigger="manual"` keeps its result local to that instance; it does not populate the shared
   `data.requestId` or `status.requestId` roots. The child callback receives `(result, meta)`, while loading, errors, and
   retry are handled by `SubFetch`. Provide both `triggerContent` and `triggerAriaLabel` when custom content launches it.
 - `ActionButton` and `ToggleSwitch` run actions only when the widget is mounted outside edit mode. A toggle needs both
   enabled and disabled request parameters and rolls back its visual state if the action fails.
-- `RefreshButton` renders a compact, accessible icon control that invalidates the client&apos;s load-query cache; it does not
-  execute a request itself. It is disabled when the widget has no active item or preview session, or while the board is in
-  edit mode.
+- `RefreshButton` renders a compact, accessible icon control that invalidates the client&apos;s load-query cache so active load
+  queries can refetch; it does not execute a request itself. It is disabled when the widget has no active item or preview
+  session, or while the board is in edit mode.
 - `Icon`/`TablerIcon` resolves installed safe icons.
 
 Always include responsive loading, empty, error, and success states. Runtime failures remain inside the widget tile.

@@ -74,14 +74,16 @@ These interfaces do not return an archive URL or archive hash.
 4. Build one definition, using `templateLines` for multiline JSX tool input.
 5. Validate the definition without saving it and repair every reported issue.
 6. Create a preview session.
-7. Run `customWidget_previewQuery` for every query returned by the preview and inspect its actual status and data shape.
+7. Run `customWidget_previewQuery` for every query returned by the preview and inspect its actual status and data shape. Use
+   `{}` for load queries; manual queries require exactly the returned primitive `parameterNames`.
 8. Test relevant actions in simulation mode.
 9. Open the returned preview path with browser tools.
 10. Inspect the redacted journal and revise the local candidate until validation, data, and rendering all work. Keep the
-    exact tested preview candidate locally.
-11. Create the widget from that final tested preview with `customWidget_createFromPreview`, including any source URLs and
-    credentials the user already supplied. The create call persists that tested preview and accepts its session ID plus an
-    optional target board.
+    exact tested preview candidate locally. Any definition, template, or source change requires a new validation and preview;
+    earlier query evidence belongs to the previous preview revision.
+11. Create the widget from that final tested preview with `customWidget_createFromPreview`. The preview session already carries
+    the source URLs and encrypted credentials supplied during preview; the create call accepts only its session ID plus an
+    optional target board and persists that tested preview.
 12. Open its returned management path, and use a structured question when the user must choose whether to place it on a board.
 13. Otherwise, ask the user to configure the saved definition with the ten-minute Homarr source-setup URL.
 14. Create a final preview with the saved definition ID so Homarr loads its stored credentials, then test it again.
