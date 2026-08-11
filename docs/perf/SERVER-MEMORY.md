@@ -709,3 +709,33 @@ probe under `--max-opt=2`:
 memory; only not compiling at all does, and that breaks the page. So this 38 MiB is not reachable
 through V8 configuration — it is proportional to how much JavaScript V8 has to compile, which puts
 it back under the one remaining server-side lever: ship less server code. Reverted.
+
+## Correction: the "16 MiB tRPC subtree" lever was already removed
+
+Earlier rounds identified a **16.10 MiB subtree of 460 files reached by every API route** and named it
+the one remaining lever with real headroom, attributing it to the tRPC router importing every
+integration eagerly. Both halves of that are now known to be wrong.
+
+**The integration creator was already fully lazy.** Every kind in
+`packages/integrations/src/base/creator.ts` is `() => import(...)`, so no integration class is loaded
+until one is constructed. The earlier "integrations barrel diet" had already done this properly; the
+claim that the router imports them eagerly was never checked against the code.
+
+**The subtree itself was an artefact of route preloading.** That measurement was taken before
+`preloadEntriesOnStart: false` shipped, when Next loaded the module graph of all 74 routes at startup.
+Re-measured on the current build, boot is **706 files and 10.56 MiB of source**, and it breaks down as:
+
+| owner | size | files | can it be reduced? |
+| --- | --- | --- | --- |
+| `.next/server/chunks` (app code) | 3.73 MiB | 28 | this is the app's own boot graph, already lean at 28 chunks |
+| better-sqlite3 | 2.16 MiB | 14 | no — 2.1 MiB of it is the native `.node` binary, and it is the default driver |
+| next/dist (framework) | 1.75 MiB | 359 | no — framework, and flat regardless of load |
+| next/dist/compiled (vendored) | 1.58 MiB | 25 | no |
+| **mysql2 + pg** | **0.52 MiB** | 90 | yes in principle, but structurally blocked — see REJECTED.md |
+| everything else | < 0.5 MiB | — | noise |
+
+So there is no single large server-side lever left. What remains is diffuse: under a full multi-tab
+session the app loads **15.44 MiB of its own chunks** across 241 files, and that is what the ~41 MiB of
+retained source and the ~38 MiB of compiler zones both scale with. Reducing it means shipping less
+application JavaScript per route — a broad refactor with no single target, not a 16 MiB subtree waiting
+to be cut.
