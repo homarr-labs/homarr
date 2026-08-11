@@ -1,0 +1,30 @@
+---
+title: "Komodo Servers"
+description: "Displays live resource usage and version information for servers managed by Komodo."
+hide_title: true
+---
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { komodoServerOverviewWidget } from ".";
+import { komodoIntegration } from "@site/docs/integrations/komodo";
+
+<WidgetHeader widget={komodoServerOverviewWidget} categories={["System monitoring"]} />
+
+The Komodo Servers widget shows all active servers in a responsive overview. Wide widgets use a table, while narrow widgets switch to server cards. CPU, memory, disk, load average, network traffic, and Periphery version columns can be enabled or disabled independently.
+
+Servers without current statistics remain visible with their Komodo status. Resource templates are excluded. The data is refreshed every 30 seconds.
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{ integration: komodoIntegration }]} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={komodoServerOverviewWidget.configuration} />

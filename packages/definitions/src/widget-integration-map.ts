@@ -34,6 +34,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   systemDisks: ["dashDot", "openmediavault", "truenas", "unraid", "synology"],
   coolify: ["coolify"],
   komodo: ["komodo"],
+  komodoServerOverview: ["komodo"],
   "immich-serverStats": ["immich"],
   "immich-albumCarousel": ["immich"],
   paperlessNgx: ["paperlessNgx"],

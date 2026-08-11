@@ -101,6 +101,8 @@ export type {
   KomodoResourceKind,
   KomodoResourceStatus,
   KomodoResourceSummary,
+  KomodoServerOverviewItem,
+  KomodoServerStats,
 } from "./komodo/komodo-types";
 
 // Schemas

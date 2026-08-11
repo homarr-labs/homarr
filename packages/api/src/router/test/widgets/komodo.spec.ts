@@ -4,7 +4,7 @@ import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { boards, integrationItems, integrations, items, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
-import type { KomodoOverview } from "@homarr/integrations";
+import type { KomodoOverview, KomodoServerOverviewItem } from "@homarr/integrations";
 
 import { komodoRouter } from "../../widgets/komodo";
 
@@ -22,10 +22,37 @@ const sampleOverview = {
 
 const updatedAt = new Date("2026-08-11T12:00:00.000Z");
 
+const sampleServers = [
+  {
+    id: "server-1",
+    name: "Production",
+    state: "Ok",
+    status: "healthy",
+    version: "2.3.1",
+    physicalCoreCount: 4,
+    logicalCoreCount: 8,
+    stats: {
+      cpuPercentage: 33.3,
+      loadAverage: { one: 0.21, five: 0.32, fifteen: 0.31 },
+      memoryUsedGb: 4.7,
+      memoryTotalGb: 10,
+      diskUsedGb: 92.2,
+      diskTotalGb: 100,
+      networkIngressBytes: 512,
+      networkEgressBytes: 32,
+    },
+  },
+] satisfies KomodoServerOverviewItem[];
+
 vi.mock("@homarr/request-handler/komodo", () => ({
   komodoOverviewRequestHandler: {
     handler: () => ({
       getDataAsync: async () => ({ data: sampleOverview, timestamp: updatedAt }),
+    }),
+  },
+  komodoServerOverviewRequestHandler: {
+    handler: () => ({
+      getDataAsync: async () => ({ data: sampleServers, timestamp: updatedAt }),
     }),
   },
 }));
@@ -72,6 +99,23 @@ describe("komodoRouter.getOverview", () => {
 
     await expect(caller.getOverview({ integrationId })).resolves.toStrictEqual({
       overview: sampleOverview,
+      updatedAt,
+    });
+  });
+});
+
+describe("komodoRouter.getServers", () => {
+  test("returns Komodo server metrics for the widget", async () => {
+    const db = createDb();
+    const integrationId = await createKomodoIntegrationOnPublicBoardAsync(db);
+    const caller = komodoRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: null,
+    });
+
+    await expect(caller.getServers({ integrationId })).resolves.toStrictEqual({
+      servers: sampleServers,
       updatedAt,
     });
   });

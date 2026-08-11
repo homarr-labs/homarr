@@ -368,6 +368,7 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/system-resources"
   | "/docs/widgets/coolify"
   | "/docs/widgets/komodo"
+  | "/docs/widgets/komodo-server-overview"
   | "/docs/widgets/system-disks"
   | "/docs/widgets/timetable"
   | "/docs/widgets/immich-server-stats"

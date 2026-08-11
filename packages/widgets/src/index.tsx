@@ -17,6 +17,7 @@ import * as calendar from "./calendar";
 import * as clock from "./clock";
 import * as coolify from "./coolify";
 import * as komodo from "./komodo";
+import * as komodoServerOverview from "./komodo-server-overview";
 import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
@@ -113,6 +114,7 @@ export const widgetImports = {
   systemResources,
   coolify,
   komodo,
+  komodoServerOverview,
   systemDisks,
   timetable,
   "immich-serverStats": immichServerStats,

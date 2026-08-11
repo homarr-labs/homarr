@@ -33,6 +33,7 @@ export const widgetKinds = [
   "systemResources",
   "coolify",
   "komodo",
+  "komodoServerOverview",
   "systemDisks",
   "timetable",
   "immich-serverStats",
@@ -64,6 +65,7 @@ export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; hei
   paperlessNgx: { width: 2, height: 2 },
   patchmon: { width: 2, height: 2 },
   komodo: { width: 2, height: 2 },
+  komodoServerOverview: { width: 4, height: 3 },
   mediaMissing: { width: 4, height: 3 },
   bazarr: { width: 2, height: 2 },
 };

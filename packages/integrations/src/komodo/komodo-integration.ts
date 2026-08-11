@@ -7,10 +7,11 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { KomodoOverview, KomodoResource, KomodoResourceKind } from "./komodo-types";
+import type { KomodoOverview, KomodoResource, KomodoResourceKind, KomodoServerOverviewItem } from "./komodo-types";
 import {
   createKomodoOverview,
   parseKomodoResourceListResponseAsync,
+  parseKomodoServerOverviewResponseAsync,
   parseKomodoVersionResponseAsync,
 } from "./komodo-types";
 
@@ -50,6 +51,18 @@ export class KomodoIntegration extends Integration {
 
   public async listDeploymentsAsync(): Promise<KomodoResource[]> {
     return await this.listResourcesAsync("deployment", "/read/ListDeployments");
+  }
+
+  public async getServerOverviewAsync(): Promise<KomodoServerOverviewItem[]> {
+    const fetchAsync: KomodoFetchAsync = async (url, options) =>
+      await fetchWithTrustedCertificatesAsync(url, { ...options, timeout: REQUEST_TIMEOUT_MS });
+    const response = await this.sendRequestAsync(fetchAsync, "/read/ListServers", LIST_REQUEST_BODY);
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    return await parseKomodoServerOverviewResponseAsync(response);
   }
 
   public async getOverviewAsync(): Promise<KomodoOverview> {

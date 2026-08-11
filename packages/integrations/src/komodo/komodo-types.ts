@@ -4,6 +4,34 @@ import { z } from "zod/v4";
 const INVALID_LIST_RESPONSE_MESSAGE = "Invalid Komodo resource list response";
 const INVALID_VERSION_RESPONSE_MESSAGE = "Invalid Komodo version response";
 
+const komodoMinimalSystemStatsSchema = z.object({
+  cpu_perc: z.number(),
+  load_average: z.object({
+    one: z.number(),
+    five: z.number(),
+    fifteen: z.number(),
+  }),
+  mem_used_gb: z.number(),
+  mem_total_gb: z.number(),
+  disk_used_gb: z.number(),
+  disk_total_gb: z.number(),
+  network_ingress_bytes: z.number().default(0),
+  network_egress_bytes: z.number().default(0),
+});
+
+const komodoServerOverviewListItemSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  template: z.boolean().optional(),
+  info: z.object({
+    state: z.string(),
+    version: z.string().nullish(),
+    core_count: z.number().int().nonnegative().nullish(),
+    logical_core_count: z.number().int().nonnegative().nullish(),
+    stats: z.unknown().nullish(),
+  }),
+});
+
 const komodoResourceListItemSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -58,6 +86,28 @@ export interface KomodoOverview {
   deployments: KomodoResourceSummary;
   problemCount: number;
   problems: KomodoProblem[];
+}
+
+export interface KomodoServerStats {
+  cpuPercentage: number;
+  loadAverage: {
+    one: number;
+    five: number;
+    fifteen: number;
+  };
+  memoryUsedGb: number;
+  memoryTotalGb: number;
+  diskUsedGb: number;
+  diskTotalGb: number;
+  networkIngressBytes: number;
+  networkEgressBytes: number;
+}
+
+export interface KomodoServerOverviewItem extends KomodoResource {
+  version: string | null;
+  physicalCoreCount: number | null;
+  logicalCoreCount: number | null;
+  stats: KomodoServerStats | null;
 }
 
 const statusStates = {
@@ -151,6 +201,72 @@ export const parseKomodoResourceListResponseAsync = async (
         name: fallback.success ? (fallback.data.name ?? "Unknown resource") : "Unknown resource",
         state,
         status: "unknown",
+      },
+    ];
+  });
+};
+
+export const parseKomodoServerOverviewResponseAsync = async (response: {
+  json: () => Promise<unknown>;
+}): Promise<KomodoServerOverviewItem[]> => {
+  const json = await readJsonAsync(response, INVALID_LIST_RESPONSE_MESSAGE);
+  const listResult = komodoResourceListResponseSchema.safeParse(json);
+
+  if (!listResult.success) {
+    throw new ParseError(INVALID_LIST_RESPONSE_MESSAGE, { cause: listResult.error });
+  }
+
+  return listResult.data.flatMap<KomodoServerOverviewItem>((item, index) => {
+    const result = komodoServerOverviewListItemSchema.safeParse(item);
+    if (!result.success) {
+      const fallback = komodoResourceListItemFallbackSchema.safeParse(item);
+      if (fallback.success && fallback.data.template === true) return [];
+
+      const state = fallback.success ? (fallback.data.info?.state ?? "unknown") : "unknown";
+      return [
+        {
+          id: fallback.success ? (fallback.data.id ?? `invalid-${index}`) : `invalid-${index}`,
+          name: fallback.success ? (fallback.data.name ?? "Unknown server") : "Unknown server",
+          state,
+          status: mapKomodoResourceStatus("server", state),
+          version: null,
+          physicalCoreCount: null,
+          logicalCoreCount: null,
+          stats: null,
+        },
+      ];
+    }
+
+    if (result.data.template === true) return [];
+
+    const statsResult = komodoMinimalSystemStatsSchema.safeParse(result.data.info.stats);
+    const stats = statsResult.success
+      ? {
+          cpuPercentage: statsResult.data.cpu_perc,
+          loadAverage: {
+            one: statsResult.data.load_average.one,
+            five: statsResult.data.load_average.five,
+            fifteen: statsResult.data.load_average.fifteen,
+          },
+          memoryUsedGb: statsResult.data.mem_used_gb,
+          memoryTotalGb: statsResult.data.mem_total_gb,
+          diskUsedGb: statsResult.data.disk_used_gb,
+          diskTotalGb: statsResult.data.disk_total_gb,
+          networkIngressBytes: statsResult.data.network_ingress_bytes,
+          networkEgressBytes: statsResult.data.network_egress_bytes,
+        }
+      : null;
+
+    return [
+      {
+        id: result.data.id,
+        name: result.data.name,
+        state: result.data.info.state,
+        status: mapKomodoResourceStatus("server", result.data.info.state),
+        version: result.data.info.version ?? null,
+        physicalCoreCount: result.data.info.core_count ?? null,
+        logicalCoreCount: result.data.info.logical_core_count ?? null,
+        stats,
       },
     ];
   });

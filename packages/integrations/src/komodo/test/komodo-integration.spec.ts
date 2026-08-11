@@ -237,6 +237,114 @@ describe("KomodoIntegration overview", () => {
   });
 });
 
+describe("KomodoIntegration server overview", () => {
+  test("reads server metrics, core counts, and Periphery versions from the server list", async () => {
+    setupMockResponses({
+      "/read/ListServers": {
+        body: [
+          {
+            id: "server-1",
+            name: "Production",
+            info: {
+              state: "Ok",
+              version: "2.3.1",
+              core_count: 4,
+              logical_core_count: 8,
+              stats: {
+                cpu_perc: 33.3,
+                load_average: { one: 0.21, five: 0.32, fifteen: 0.31 },
+                mem_used_gb: 4.7,
+                mem_total_gb: 10,
+                disk_used_gb: 92.2,
+                disk_total_gb: 100,
+                network_ingress_bytes: 512,
+                network_egress_bytes: 32,
+                polling_rate: "5-sec",
+                refresh_ts: 1_786_444_800_000,
+              },
+            },
+          },
+          {
+            id: "server-2",
+            name: "Offline",
+            info: { state: "NotOk", version: null, stats: null },
+          },
+          {
+            id: "server-template",
+            name: "Template",
+            template: true,
+            info: { state: "Unknown", stats: null },
+          },
+        ],
+      },
+    });
+
+    await expect(createIntegration().getServerOverviewAsync()).resolves.toStrictEqual([
+      {
+        id: "server-1",
+        name: "Production",
+        state: "Ok",
+        status: "healthy",
+        version: "2.3.1",
+        physicalCoreCount: 4,
+        logicalCoreCount: 8,
+        stats: {
+          cpuPercentage: 33.3,
+          loadAverage: { one: 0.21, five: 0.32, fifteen: 0.31 },
+          memoryUsedGb: 4.7,
+          memoryTotalGb: 10,
+          diskUsedGb: 92.2,
+          diskTotalGb: 100,
+          networkIngressBytes: 512,
+          networkEgressBytes: 32,
+        },
+      },
+      {
+        id: "server-2",
+        name: "Offline",
+        state: "NotOk",
+        status: "error",
+        version: null,
+        physicalCoreCount: null,
+        logicalCoreCount: null,
+        stats: null,
+      },
+    ]);
+
+    const [url, options] = mockFetch.mock.calls[0] ?? [];
+    expect(String(url)).toBe(`${TEST_URL}/read/ListServers`);
+    expect(JSON.parse(String(options?.body))).toStrictEqual({ limit: 0 });
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+  });
+
+  test("keeps a server visible when its statistics are malformed", async () => {
+    setupMockResponses({
+      "/read/ListServers": {
+        body: [
+          {
+            id: "server-1",
+            name: "Production",
+            info: { state: "Ok", version: "2.3.1", stats: { cpu_perc: "invalid" } },
+          },
+        ],
+      },
+    });
+
+    await expect(createIntegration().getServerOverviewAsync()).resolves.toStrictEqual([
+      {
+        id: "server-1",
+        name: "Production",
+        state: "Ok",
+        status: "healthy",
+        version: "2.3.1",
+        physicalCoreCount: null,
+        logicalCoreCount: null,
+        stats: null,
+      },
+    ]);
+  });
+});
+
 describe("KomodoIntegration errors and connection testing", () => {
   test.each([401, 403])("handles authentication error %s", async (status) => {
     setupMockResponses({

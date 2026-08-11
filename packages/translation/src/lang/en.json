@@ -2571,6 +2571,46 @@
         "internalServerError": "Failed to fetch Komodo data"
       }
     },
+    "komodoServerOverview": {
+      "name": "Komodo Servers",
+      "description": "Detailed overview of all servers managed by Komodo",
+      "option": {
+        "showCpu": {
+          "label": "Show CPU"
+        },
+        "showMemory": {
+          "label": "Show memory"
+        },
+        "showDisk": {
+          "label": "Show disk"
+        },
+        "showLoadAverage": {
+          "label": "Show load average"
+        },
+        "showNetwork": {
+          "label": "Show network"
+        },
+        "showVersion": {
+          "label": "Show version"
+        }
+      },
+      "column": {
+        "name": "Name",
+        "cpu": "CPU",
+        "memory": "Memory",
+        "disk": "Disk",
+        "loadAverage": "Load Avg",
+        "network": "Net",
+        "version": "Version"
+      },
+      "cores": "cores",
+      "empty": {
+        "noServers": "No servers found"
+      },
+      "error": {
+        "internalServerError": "Failed to fetch Komodo server data"
+      }
+    },
     "vpn": {
       "name": "VPN",
       "description": "Overview of your VPN connections",
