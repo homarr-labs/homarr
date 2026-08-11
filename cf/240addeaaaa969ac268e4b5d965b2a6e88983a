@@ -1,0 +1,23 @@
+packages/image-proxy/src/index.ts
+  s_a70c07ac5b7a5a::t_90977cb92ba9ac 22-24,26
+  s_a70c07ac5b7a5a::t_bfa8bd5f889125 100,106,109-115
+apps/nextjs/src/app/api/image-proxy/[id]/route.ts
+  s_a70c07ac5b7a5a::t_b5514cadfa4a64 25
+  s_a70c07ac5b7a5a::t_13680ea215b1cf 19-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "cf240addeaaaa969ac268e4b5d965b2a6e88983a",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
