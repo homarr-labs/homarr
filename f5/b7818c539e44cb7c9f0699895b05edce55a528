@@ -1,0 +1,23 @@
+scripts/benchmarks/measure-widget-cost.mts
+  s_a70c07ac5b7a5a::t_fae4b69d43896a 93-96,101,106
+  s_a70c07ac5b7a5a::t_d87a03b319aca9 82
+  s_a70c07ac5b7a5a::t_c92045aac98543 61,78-81,83,86-90,122-123,125,145-146,149,151-152
+packages/widgets/src/media-releases/component.tsx
+  s_a70c07ac5b7a5a::t_9e2dfa46287339 60-89,91-122,126-132,134-138,140-163,165-191
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f5b7818c539e44cb7c9f0699895b05edce55a528",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
