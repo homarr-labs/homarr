@@ -134,9 +134,9 @@ export default function KomodoWidget({ integrationIds, options, width, height }:
 
       {showProblemList ? (
         <ScrollArea flex={1} mih={0} scrollbars={false}>
-          <Stack gap={4} pr={4}>
+          <Stack gap={4} pr={4} pb={2}>
             {visibleProblems.map((problem) => (
-              <Paper key={`${problem.kind}-${problem.id}`} withBorder p="xs" radius="md">
+              <Paper key={`${problem.kind}-${problem.id}`} withBorder px="xs" py={4} radius="md">
                 <Group justify="space-between" gap="xs" wrap="nowrap">
                   <Stack gap={0} style={{ minWidth: 0 }}>
                     <Text size="sm" fw={500} truncate>
