@@ -133,7 +133,7 @@ export default function KomodoWidget({ integrationIds, options, width, height }:
       </SimpleGrid>
 
       {showProblemList ? (
-        <ScrollArea flex={1} mih={0} type="auto" scrollbarSize={4}>
+        <ScrollArea flex={1} mih={0} scrollbars={false}>
           <Stack gap={4} pr={4}>
             {visibleProblems.map((problem) => (
               <Paper key={`${problem.kind}-${problem.id}`} withBorder p="xs" radius="md">
