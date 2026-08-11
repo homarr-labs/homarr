@@ -10,7 +10,7 @@ export const wudWidget: WidgetDefinition = {
     items: [
       {
         name: "Show title",
-        description: 'Displays the icon and "What\'s Up Docker" label above the stats',
+        description: "Displays the icon and \"What's Up Docker\" label above the stats",
         values: { type: "boolean" },
         defaultValue: "yes",
       },
@@ -28,8 +28,7 @@ export const wudWidget: WidgetDefinition = {
       },
       {
         name: "Show container update list",
-        description:
-          "Lists each monitored container that has an image update available, linking to its release notes when known",
+        description: "Lists each monitored container that has an image update available, linking to its release notes when known",
         values: { type: "boolean" },
         defaultValue: "no",
       },
