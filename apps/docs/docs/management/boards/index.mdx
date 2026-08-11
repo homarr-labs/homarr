@@ -14,6 +14,7 @@ import itemRadiusImage from "./img/item-radius.png";
 import layoutSettingsImage from "./img/layout-settings.png";
 import layoutSettingsCustomRailsImage from "./img/layout-settings-custom-rails.png";
 import layoutSettingsMobileImage from "./img/layout-settings-mobile.png";
+import boardViewModeImage from "./img/board-view-mode.png";
 import boardEditModeImage from "./img/board-edit-mode.png";
 import addBoardContentMenuImage from "./img/add-board-content-menu.png";
 import keyboardTileEditingImage from "./img/keyboard-tile-editing.png";
@@ -180,6 +181,13 @@ View mode renders a static board without executing the drag-and-drop editor.
 After the board is interactive, Homarr prepares the editor in the background for users who can modify it.
 Entering edit mode keeps the static board visible until that preparation finishes, then enables collision-aware movement and resizing.
 Collapsed Containers are expanded while editing so their contents and controls are reachable.
+
+<img
+  src={boardViewModeImage}
+  alt="A Homarr board in view mode with the dashboard canvas and static widgets visible"
+  style={{ maxWidth: "100%" }}
+/>
+
 Widget content is inert in edit mode, so dragging from the inert widget area moves the tile instead of activating the widget;
 settings and other controls remain usable in the compact header above the tile.
 A single compatible collision can swap two items when both resulting placements fit, including different-sized or lateral moves.
@@ -191,7 +199,7 @@ changes, Homarr asks whether to discard them. If the editor cannot load, the boa
 
 <img
   src={boardEditModeImage}
-  alt="Board in edit mode with the Save board button and widget editing affordances visible"
+  alt="Board in edit mode with the board header controls and editable dashboard tiles visible"
   style={{ maxWidth: "100%" }}
 />
 
@@ -456,6 +464,8 @@ This is separate from a board's **Mobile layout**, which controls the layout sel
 You can set a mobile home board for yourself in your user preferences, for a user or group through management, or for the
 whole server with **Global mobile board** under `Management` > `Settings` > `Boards`.
 
-Homarr checks a user's mobile home board first, then that user's desktop home board, matching group defaults, and finally
-the server-wide mobile or desktop board. Global defaults must be public. See the
+For signed-in users, Homarr checks the user's mobile home board, then the user's desktop home board, then the mobile and
+desktop defaults for the lowest-position matching group, followed by the mobile and desktop defaults for the `Everyone`
+group, and finally the server-wide mobile and desktop defaults. Anonymous visitors use the server-wide mobile default and
+then the server-wide desktop default. Server-wide fallback boards must be public. See the
 [global board defaults](/docs/management/settings#boards) for the complete precedence and the required public-board rule.
