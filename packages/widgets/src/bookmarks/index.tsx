@@ -28,11 +28,11 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
       openNewTab: factory.switch({ defaultValue: true }),
       withBorder: factory.switch({ defaultValue: false }),
       items: factory.sortableItemList<RouterOutputs["app"]["all"][number], string>({
-        ItemComponent: ({ item, handle: Handle, removeItem, rootAttributes }) => {
+        ItemComponent: ({ item, handle, removeItem, rootAttributes }) => {
           return (
             <Group {...rootAttributes} tabIndex={0} justify="space-between" wrap="nowrap">
               <Group wrap="nowrap">
-                <Handle />
+                {handle}
 
                 <Group>
                   <Avatar src={item.iconUrl} alt={item.name} />
