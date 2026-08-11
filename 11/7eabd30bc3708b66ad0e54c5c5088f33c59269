@@ -1,0 +1,27 @@
+e2e/custom-widgets-custom-jsx-v2.spec.ts
+  s_093d61b162b9ca::t_571e2a9a7f8ddc 39-42
+packages/integrations/src/synology/synology-client.ts
+  s_093d61b162b9ca::t_30ed46369a9ae1 88-92
+packages/integrations/src/synology/synology-types.ts
+  s_093d61b162b9ca::t_c5167be8730e99 81
+packages/integrations/src/synology/test/synology-integration.spec.ts
+  s_093d61b162b9ca::t_cf7574a6c78acf 429-482
+packages/widgets/src/beszel/_shared/tooltip.tsx
+  s_093d61b162b9ca::t_d6c1e311b2ce34 48,56,72-88,95,103
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "117eabd30bc3708b66ad0e54c5c5088f33c59269",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
