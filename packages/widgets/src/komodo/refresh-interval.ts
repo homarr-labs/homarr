@@ -1,6 +1,6 @@
 export const KOMODO_DEFAULT_REFRESH_INTERVAL_SECONDS = 30;
-export const KOMODO_MIN_REFRESH_INTERVAL_SECONDS = 5;
-export const KOMODO_MAX_REFRESH_INTERVAL_SECONDS = 3600;
+export const KOMODO_MIN_REFRESH_INTERVAL_SECONDS = 1;
+export const KOMODO_MAX_REFRESH_INTERVAL_SECONDS = 300;
 
 export const getKomodoRefreshIntervalMs = (value: number) => {
   const intervalSeconds = Number.isFinite(value)

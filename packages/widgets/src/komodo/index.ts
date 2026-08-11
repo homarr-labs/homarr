@@ -24,7 +24,7 @@ export const { definition, componentLoader } = createWidgetDefinition("komodo", 
       refreshInterval: factory.slider({
         defaultValue: KOMODO_DEFAULT_REFRESH_INTERVAL_SECONDS,
         validate: z.number().min(KOMODO_MIN_REFRESH_INTERVAL_SECONDS).max(KOMODO_MAX_REFRESH_INTERVAL_SECONDS),
-        step: 5,
+        step: 1,
         withDescription: true,
       }),
     }));

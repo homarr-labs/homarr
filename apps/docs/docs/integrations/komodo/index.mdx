@@ -58,4 +58,4 @@ Homarr makes only the following authenticated `POST` requests:
 - `/read/ListStacks`
 - `/read/ListDeployments`
 
-Resource list requests use `limit: 0` so the overview includes every resource visible to the API key. Responses are cached briefly to reduce load on Komodo Core.
+Resource list requests use `limit: 0` so the overview includes every resource visible to the API key. The widgets request fresh data at their configured refresh interval.

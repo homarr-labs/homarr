@@ -8,7 +8,7 @@ export const komodoOverviewRequestHandler = createIntegrationRequestHandler<
   "komodo",
   Record<string, never>
 >({
-  cacheTtlMs: 5_000,
+  cacheTtlMs: 0,
   async requestAsync(integration) {
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getOverviewAsync();
@@ -20,7 +20,7 @@ export const komodoServerOverviewRequestHandler = createIntegrationRequestHandle
   "komodo",
   Record<string, never>
 >({
-  cacheTtlMs: 5_000,
+  cacheTtlMs: 0,
   async requestAsync(integration) {
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getServerOverviewAsync();
