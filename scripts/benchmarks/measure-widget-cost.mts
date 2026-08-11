@@ -58,6 +58,7 @@ const perWidget = await page.evaluate(() => {
     if (!key) return { fibers: 0, top: [] as [string, number][] };
     const root = (element as unknown as Record<string, unknown>)[key] as Record<string, unknown>;
     const counts = new Map<string, number>();
+    const interactive = new Map<string, number>();
     let fibers = 0;
     const seen = new Set<unknown>();
     const stack: (Record<string, unknown> | null | undefined)[] = [root];
@@ -74,21 +75,35 @@ const perWidget = await page.evaluate(() => {
             ? (type.displayName ?? type.name)!
             : null;
       if (name) counts.set(name, (counts.get(name) ?? 0) + 1);
+      // Components that attach their own DOM listeners. A per-item Tooltip or Popover is the
+      // same anti-pattern the shared board context menu fixed, and listener count is the only
+      // metric that exposes it.
+      if (name && /Tooltip|Popover|Menu|UnstyledButton|ActionIcon|Anchor|Button|Checkbox|Input/.test(name)) {
+        interactive.set(name, (interactive.get(name) ?? 0) + 1);
+      }
       stack.push(fiber.child as never, fiber.sibling as never);
     }
-    return { fibers, top: [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4) };
+    return {
+      fibers,
+      top: [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4),
+      interactive: [...interactive.entries()].sort((a, b) => b[1] - a[1]),
+    };
   };
 
-  const byKind = new Map<string, { count: number; nodes: number; fibers: number; components: Map<string, number> }>();
+  const byKind = new Map<
+    string,
+    { count: number; nodes: number; fibers: number; components: Map<string, number>; interactive: Map<string, number> }
+  >();
   for (const item of document.querySelectorAll('[data-type="item"]')) {
     const kind = item.getAttribute("data-kind") ?? "(unknown)";
     const nodes = item.querySelectorAll("*").length;
     const stats = fiberStats(item);
-    const acc = byKind.get(kind) ?? { count: 0, nodes: 0, fibers: 0, components: new Map() };
+    const acc = byKind.get(kind) ?? { count: 0, nodes: 0, fibers: 0, components: new Map(), interactive: new Map() };
     acc.count++;
     acc.nodes += nodes;
     acc.fibers += stats.fibers;
     for (const [name, n] of stats.top) acc.components.set(name, (acc.components.get(name) ?? 0) + n);
+    for (const [name, n] of stats.interactive ?? []) acc.interactive.set(name, (acc.interactive.get(name) ?? 0) + n);
     byKind.set(kind, acc);
   }
 
@@ -104,8 +119,10 @@ const perWidget = await page.evaluate(() => {
         nodesEach: Math.round(acc.nodes / acc.count),
         fibersEach: Math.round(acc.fibers / acc.count),
         components: [...acc.components.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3),
+        interactive: [...acc.interactive.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5),
+        interactiveTotal: [...acc.interactive.values()].reduce((sum, n) => sum + n, 0),
       }))
-      .sort((a, b) => b.nodes - a.nodes),
+      .sort((a, b) => b.interactiveTotal - a.interactiveTotal),
   };
 });
 
@@ -125,14 +142,14 @@ console.log(`  event listeners  ${metric("JSEventListeners")}`);
 console.log(`  documents        ${metric("Documents")}`);
 console.log(`  widgets on board ${perWidget.itemCount}`);
 
-console.log(`\n=== cost per widget kind, heaviest first ===`);
-console.log(`${"nodes".padStart(7)} ${"each".padStart(6)} ${"fibers".padStart(7)} ${"each".padStart(6)} ${"n".padStart(3)}  kind / heaviest components`);
+console.log(`\n=== listener-attaching components per widget kind, heaviest first ===`);
+console.log(`${"interact".padStart(9)} ${"nodes".padStart(7)} ${"fibers".padStart(7)} ${"n".padStart(3)}  kind / which components`);
 for (const kind of perWidget.kinds) {
   console.log(
-    `${String(kind.nodes).padStart(7)} ${String(kind.nodesEach).padStart(6)} ${String(kind.fibers).padStart(7)} ${String(kind.fibersEach).padStart(6)} ${String(kind.count).padStart(3)}  ${kind.kind}`,
+    `${String(kind.interactiveTotal).padStart(9)} ${String(kind.nodes).padStart(7)} ${String(kind.fibers).padStart(7)} ${String(kind.count).padStart(3)}  ${kind.kind}`,
   );
-  if (kind.components.length) {
-    console.log(`${" ".repeat(33)}${kind.components.map(([name, n]) => `${name}×${n}`).join("  ")}`);
+  if (kind.interactive.length) {
+    console.log(`${" ".repeat(29)}${kind.interactive.map(([name, n]) => `${name}×${n}`).join("  ")}`);
   }
 }
 
