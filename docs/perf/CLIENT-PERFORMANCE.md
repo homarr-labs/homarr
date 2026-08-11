@@ -2,99 +2,99 @@
 
 Measured on the busiest board of a restored real backup: 28 items, 16 widget kinds.
 
-## Where the board's cost actually is
+## A systemic Mantine cost, found in five places
 
-`scripts/benchmarks/measure-widget-cost.mts` attributes DOM nodes and React fibers to each widget by
-walking the fiber subtree hanging off its DOM node. Totals do not tell you what to fix; this does.
+**Mantine overlay components mount their full machinery regardless of `disabled`.** A `Tooltip`,
+`HoverCard` or `Popover` that can never open still creates a `Popover`, a `PopoverTarget` and a
+`PopoverDropdown`. `disabled` suppresses *display*, not *cost* — so avoiding it means deciding before
+rendering, not passing a prop.
 
-Board totals: **9,293 DOM nodes, 8,165 event listeners, 86.3 MiB JS heap, 28 widgets.**
+That single fact accounts for five separate findings, three of them measured:
 
-| nodes | each | fibers | each | n | widget kind |
-| --- | --- | --- | --- | --- | --- |
-| **2,951** | 2,951 | **8,387** | 8,387 | 1 | **mediaReleases** |
-| 1,156 | 1,156 | 3,231 | 3,231 | 1 | beszelSystemStats |
-| 451 | 451 | 1,286 | 1,286 | 1 | beszelSystemTable |
-| 393 | 393 | 1,204 | 1,204 | 1 | mediaRequests-requestList |
-| 313 | 313 | 669 | 669 | 1 | beszelSystemGrid |
-| 265 | 265 | 900 | 900 | 1 | downloads |
-| 251 | 251 | 1,195 | 1,195 | 1 | calendar |
-| 177 | 177 | 390 | 390 | 1 | dockerContainers |
-| 88 | 8 | 528 | 48 | 11 | app |
-| 62 | 21 | 297 | 99 | 3 | umami |
-
-**One widget is 44% of the board's DOM.** `mediaReleases` contains **1,935 Mantine `Box`
-components** on its own.
-
-## Why: it renders 13× more than the tile can show
-
-Measured directly on that widget:
-
-| | |
-| --- | --- |
-| tile height | **539 px** |
-| content height | **7,206 px** |
-| cards rendered | **80** |
-| cards visible | **7** |
-| nodes per card | 34 |
-| `<img>` elements | 80 |
-| `<svg>` / `<path>` | 160 / 560 |
-
-The component is `releases.map(...)` with **no cap** — every release the integrations return becomes
-a card. So 73 of 80 cards are entirely off-screen, costing ~2,480 DOM nodes, ~7,600 fibers, and a
-poster plus a CSS backdrop image each. Decoded bitmaps are far larger in memory than their files, and
-this is the expensive part.
-
-### The fix
-
-`content-visibility: auto` with `contain-intrinsic-size` on each card, plus `loading="lazy"` on the
-poster. The browser then skips layout, paint, raster **and background-image fetch** for off-screen
-cards. Nothing leaves the DOM, so scrolling and in-page search are unchanged; the intrinsic size stops
-the scrollbar jumping.
-
-Three repeats per side, identical restored data:
-
-| metric | before | after | |
-| --- | --- | --- | --- |
-| image requests | 135, 135, 135 | **55, 55, 56** | **−59%** |
-| image bytes (declared) | 12.27 MiB | **8.41 MiB** | −31% |
-| layout objects | 8346, 7815, 7815 | **5117, 4696, 4636** | **−41%** |
-
-**Not established, stated because a single run suggested otherwise:** JS heap did not clearly improve
-— 46–88 MiB before against 74–86 MiB after, a 2× spread on the before side. This is expected, since
-decoded image memory lives **outside** `JSHeapUsedSize`, so the saving from 81 avoided image fetches
-is invisible to that metric. Task duration and time-to-settled overlap and support no conclusion.
-
-## Idle churn is widget-driven, and legitimate
-
-An idle board commits **73–96 times per minute**, which earlier rounds attributed to the App Router
-re-rendering once a second. That was wrong — see the correction in
-[REJECTED.md](./REJECTED.md#coalescing-beszel-subscription-updates--measured-exactly-zero) and
-[METHODOLOGY.md](./METHODOLOGY.md).
-
-| board | items | idle commits/min |
+| widget | before | after |
 | --- | --- | --- |
-| `hey` | 0 | **0.0** |
-| `footbol` | 3 | **0.0** |
-| `default` | 28 | **76.0** |
+| **mediaReleases** | 340 components / 8,387 fibers | **170 / 8,057** (−50% components) |
+| **calendar** | 171 components / 1,195 fibers | **75 / 907** (−56% components, −24% fibers) |
+| **beszelSystemTable** | 36 components / 1,286 fibers | **18 / 1,230** (−50% components) |
+| downloads, mediaRequests, app | unchanged | unchanged — their overlays are functional |
 
-A 3-item board commits zero times per minute. Attributed by DOM mutation
-(`measure-widget-churn.mts`), three Beszel widgets account for **82%** of it — but the real rate is
-**1.22 React commits per second** for the whole board at **13.3 DOM mutations per commit**. That is
-three live-monitoring widgets refreshing about once a second, which is what they are for. Not a
-defect.
+- **calendar** mounted a `HoverCard` per day cell. A month grid is ~42 cells and `disabled` is
+  `isEditMode || eventsForDate.length === 0`, so most days — and in edit mode *every* day — mounted
+  three components for a card that can never open. 126 of its 171 components, in a widget with only
+  251 DOM nodes.
+- **OverflowBadge** (shared UI in `packages/ui`) mounted a `Popover` and `Popover.Dropdown` even when
+  nothing overflowed, which is the common case. Used by media-releases, releases, the docker table and
+  the widget inputs, so it repeated per row wherever a list renders it. This is where the entire
+  media-releases win came from.
+- **beszel disk-usage** mounted a `HoverCard` per table row for systems reporting no filesystems —
+  it already fell back to a plain bar inside its own target, so the overlay existed to render nothing.
 
-## Earlier client wins
+### Two remount bugs
 
-| change | effect |
-| --- | --- |
-| one shared board context menu instead of one per item | **−23% listeners, −31% fibers** |
-| `useTimeAgo` comparing before `setState` | correctness fix; idle commits unchanged, recorded as *not* a measured win |
+A component declared inside a render body is a **new type every render**, so React unmounts and
+remounts its subtree instead of updating it.
 
-## What remains on the client
+- `beszelSystemTable` declared `PercentCell` inline and used it for three columns, while the widget
+  re-renders ~1×/second from its live subscription — three cell subtrees per system rebuilt every
+  second. Hoisted and memoised.
+- A drag handle was passed to a child as `handle={Handle}` while its parent re-renders every frame of
+  a drag, so the handle was rebuilt continuously mid-drag. Stabilised with `useMemo`.
 
-- **`beszelSystemStats` at 1,156 nodes / 3,231 fibers** is the next largest single widget. Its cost is
-  chart SVG (`<g>×317`, `<path>×98`), which is harder to reduce without changing what it draws.
-- **`documents` reads 18–32** depending on the run. Not yet investigated; each document carries its
-  own overhead.
-- **The same map-everything pattern** appears in `mediaRequests-requestList` (393 nodes),
-  `beszelSystemTable` (451) and `downloads` (265). Smaller instances of the widget fixed above.
+### The audit that found them
+
+`scripts/benchmarks/audit-widget-render.mjs` scans every widget and ranks findings by whether they sit
+inside a `.map()`, since those multiply by row count. All 54 findings were triaged:
+
+| count | pattern | outcome |
+| --- | --- | --- |
+| 12 | overlay-per-row | **5 fixed**; the other 7 are functional tooltips with real labels — nothing is disabled to skip, and swapping them for native `title` would change UX, not just cost |
+| 11 | index-key | **all safe.** Either static text splits (`description.split("\n")`) or stateless read-only rows from user-configured JSONPath data with no stable id, where an index key is correct and avoids remounts |
+| 2 | nested-component | **both fixed** |
+| 29 | inline-style-per-row | **left alone.** A fresh object per row only defeats memoisation if the child is memoised, and these are not. 29 edits without a measurement is churn |
+
+### Off-screen rendering
+
+`mediaReleases` rendered **80 cards into a 539 px tile whose content is 7,206 px** — 7 visible, 73
+off-screen, each still fetching and decoding a poster and a full-tile backdrop. Decoded bitmaps are
+far larger in memory than their files, which is what made this expensive.
+
+Fixed with `content-visibility: auto` + `contain-intrinsic-size`, plus `loading="lazy"`. Three repeats
+per side:
+
+| metric | before | after |
+| --- | --- | --- |
+| image requests | 135, 135, 135 | **55, 55, 56** (−59%) |
+| image bytes | 12.27 MiB | **8.41 MiB** (−31%) |
+| layout objects | 8346, 7815, 7815 | **5117, 4696, 4636** (−41%) |
+
+Extracted to `offscreenRowStyle()` and applied to the other data-driven lists (rssFeed, notifications,
+calendar events, media-requests). Applied to 5 of 26 `ScrollArea` widgets deliberately:
+`content-visibility` costs containment work and can be wrong on self-measuring content like charts.
+
+### Two metrics that cannot be used, and one claim withdrawn
+
+**Chrome's board-level `JSEventListeners` is unusable here.** Across six runs of identical code it read
+7905, 8000, 8166, 8179, 10360 and 17114. Its `Nodes` counter has the same problem — 23,072 on one run
+against ~8,850 on the others — because it counts detached nodes awaiting collection, while
+"elements under body" stayed at 6,691–6,726 throughout. Only per-widget component and fiber counts are
+stable enough to compare, so those are what is reported above.
+
+**The media-releases tooltip fix measured zero**, and is reported as such. Every release on the test
+board has a description and the option is on, so all 80 tooltips are legitimately enabled and none are
+skipped. The mechanism is correct; this board is not the case it helps. The −50% for that widget came
+entirely from OverflowBadge.
+
+### Idle churn is legitimate, and an earlier claim here was wrong
+
+This description previously said ~80% of idle React commits entered at Next's `HeadManagerContext` and
+that the App Router re-rendered once a second. **Both were false.** A 3-item board commits **0.0**
+times per minute against 76.0 for the 28-item board — if the router re-rendered on a timer, every board
+would churn. The original attribution was a tooling artefact: `fiber.actualDuration` is only populated
+by a React *profiling* build, so on production every fiber fails the "did it re-render" test and the
+tables come back empty, which reads as "nothing" rather than "this build cannot tell you".
+
+Attributed properly, three Beszel widgets are 82% of idle churn — but the real rate is **1.22 commits
+per second** for the whole board at **13.3 DOM mutations per commit**. That is three live-monitoring
+widgets refreshing about once a second, which is what they are for. A coalescing fix measured *exactly
+zero* (55 commits both sides) and was reverted.
+
