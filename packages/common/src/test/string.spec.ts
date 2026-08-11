@@ -61,6 +61,8 @@ describe("image name matching", () => {
     ["https://example.com/Home_Assistant.PNG?v=1", "home assistant"],
     ["jelly.fin.webp", "jelly fin"],
     ["Caf\u00e9.svg", "cafe"],
+    ["\u6771\u4eac.svg", "\u6771\u4eac"],
+    ["\u0939\u093f\u0928\u094d\u0926\u0940.svg", "\u0939\u093f\u0928\u094d\u0926\u0940"],
   ])("normalizes %s", (value, expected) => {
     expect(normalizeImageName(value)).toBe(expected);
   });
@@ -69,6 +71,8 @@ describe("image name matching", () => {
     ["homeassistant", "home-assistant.svg", 1],
     ["home assistant", "home_assistant.png", 0],
     ["home assistant", "Home Assistant.webp", 0],
+    ["\u6771\u4eac", "\u6771\u4eac.svg", 0],
+    ["\u0939\u093f\u0928\u094d\u0926\u0940", "\u0939\u093f\u0928\u094d\u0926\u0940.png", 0],
     ["home assistant", "unrelated.svg", null],
   ])("ranks %s against %s", (search, candidate, expected) => {
     expect(getImageMatchRank(normalizeImageName(search), candidate)).toBe(expected);

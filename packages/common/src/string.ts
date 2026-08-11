@@ -37,7 +37,7 @@ export const normalizeImageName = (value: string) => {
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/&/g, " and ")
-    .replace(/[^a-zA-Z0-9]+/g, " ")
+    .replace(/[^\p{L}\p{M}\p{N}]+/gu, " ")
     .trim()
     .toLowerCase();
 };
