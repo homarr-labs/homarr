@@ -1,0 +1,68 @@
+---
+title: Homarr provider
+sidebar_position: 7
+tags:
+  - Assistant
+  - AI
+  - Privacy
+  - Community
+---
+
+import { AssistantProviderActivity } from "@site/src/components/assistant-provider/assistant-provider-activity";
+
+# Homarr provider
+
+The Homarr provider gives signed-in community members a small daily allowance for **DeepSeek V4 Flash Latest**.
+It is an OpenAI-compatible proxy operated alongside the [Community Workshop](./workshop). Homarr administrators can
+select it without adding an API key to their own instance. Each user signs in to the Workshop with GitHub, and that
+existing PocketBase session authorizes only their requests.
+
+<AssistantProviderActivity />
+
+## Allowance
+
+- The default allowance is **50 requests per user per UTC day**.
+- Every model request consumes one request. Every completed Homarr tool call consumes one additional request.
+- The allowance resets at midnight UTC.
+- The battery beside the assistant model selector shows the remaining count. Select it to see the limit, reset time,
+  Workshop identity, and current status.
+- A future account plan can change the stored per-user limit without changing other users.
+
+## Privacy
+
+The proxy streams the model response without storing prompts, messages, attachments, tool inputs, tool outputs, or
+response text. Private accounting records contain only the Workshop user ID, status, model identifier, request-unit
+count, token totals, duration, cost, and timestamps. The public live feed above is a separate read-only collection
+with the same operational metrics and **no user or GitHub field**.
+
+The upstream OpenRouter key exists only in the Workshop server environment. It is never sent to Homarr instances or
+browsers. A user's Workshop token is forwarded by their Homarr server only to the configured Workshop origin.
+
+## Fund free access
+
+Inference is paid from the Homarr community budget. If this provider is useful, help keep the daily allowance
+available through the [Homarr OpenCollective](https://opencollective.com/homarr).
+
+<a className="button button--primary" href="https://opencollective.com/homarr">
+  Fund free Homarr AI
+</a>
+
+## Share what you build
+
+The provider is intended to help people create useful dashboards and Custom Widgets without first configuring a
+commercial model account. Publish successful Custom Widgets in the [Community Workshop](pathname:///workshop), and
+share the prompt, API source, and screenshots so other Homarr users can improve them.
+
+## Run the proxy
+
+The open-source proxy is part of the Workshop image. Operators configure it with server-only environment variables:
+
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `OPENROUTER_API_KEY` | Upstream key used only by the Workshop proxy | Disabled when empty |
+| `HOMARR_AI_DAILY_REQUEST_LIMIT` | Initial daily limit stored for each new user | `50` |
+| `HOMARR_AI_OPENROUTER_BASE_URL` | OpenRouter-compatible upstream base URL | `https://openrouter.ai/api/v1` |
+
+Changing the global default affects new quota records. Existing per-user limits remain unchanged so administrators can
+support future account plans. Run `pnpm test:workshop` to verify authentication, streaming, UTC reset, atomic quota
+enforcement, tool-call accounting, private records, anonymous public activity, realtime delivery, and migration rollback.

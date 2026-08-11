@@ -6,16 +6,25 @@ const mocks = vi.hoisted(() => ({
   create: vi.fn(),
   getFullList: vi.fn(),
   getList: vi.fn(),
+  send: vi.fn(),
   update: vi.fn(),
 }));
 
 vi.mock("pocketbase", () => {
   class MockPocketBase {
     public readonly authStore = {
+      token: "",
       record: null as Record<string, unknown> | null,
       isValid: false,
-      save: (_token: string, record: Record<string, unknown>) => {
+      save: (token: string, record: Record<string, unknown>) => {
+        this.authStore.token = token;
         this.authStore.record = record;
+        this.authStore.isValid = true;
+      },
+      clear: () => {
+        this.authStore.token = "";
+        this.authStore.record = null;
+        this.authStore.isValid = false;
       },
     };
 
@@ -26,6 +35,10 @@ vi.mock("pocketbase", () => {
     public autoCancellation(enabled: boolean) {
       mocks.autoCancellation(enabled);
       return this;
+    }
+
+    public send(path: string, options: unknown) {
+      return mocks.send(path, options);
     }
 
     public filter(template: string, values: Record<string, string>) {
@@ -62,6 +75,7 @@ describe("WorkshopBackend", () => {
     mocks.create.mockReset();
     mocks.getFullList.mockReset();
     mocks.getList.mockReset();
+    mocks.send.mockReset();
     mocks.update.mockReset();
   });
 
@@ -89,6 +103,54 @@ describe("WorkshopBackend", () => {
     const client = new WorkshopBackend("https://workshop.example.com");
     expectTypeOf(client.pocketBase.collection("submissions")).toEqualTypeOf<RecordService<WorkshopSubmissionRecord>>();
     expect(mocks.autoCancellation).toHaveBeenCalledWith(false);
+  });
+
+  test("reuses a valid Workshop session for the Homarr provider allowance", async () => {
+    const client = new WorkshopBackend("https://workshop.example.com");
+    expect(client.authToken).toBeNull();
+    client.pocketBase.authStore.save("workshop-token", { id: "author-id", name: "octocat" } as never);
+    mocks.send.mockResolvedValue({
+      limit: 50,
+      used: 7,
+      remaining: 43,
+      resetsAt: "2026-08-12T00:00:00Z",
+    });
+
+    await expect(client.getAssistantUsage()).resolves.toMatchObject({ limit: 50, remaining: 43 });
+    expect(client.authToken).toBe("workshop-token");
+    expect(mocks.send).toHaveBeenCalledWith(
+      "/api/ai/usage",
+      expect.objectContaining({ method: "GET", requestKey: null, signal: expect.any(AbortSignal) }),
+    );
+  });
+
+  test("loads only valid anonymous provider activity records", async () => {
+    mocks.getList.mockResolvedValue({
+      items: [
+        {
+          id: "activity-id",
+          status: "completed",
+          model: "homarr/deepseek-v4-flash-latest",
+          requestUnits: 2,
+          inputTokens: 12,
+          outputTokens: 7,
+          totalTokens: 19,
+          durationMs: 250,
+          cost: 0.0001,
+          created: "2026-08-11 10:00:00.000Z",
+          updated: "2026-08-11 10:00:00.250Z",
+        },
+        { id: "invalid" },
+      ],
+    });
+    const client = new WorkshopBackend("https://workshop.example.com");
+
+    await expect(client.listAssistantActivity()).resolves.toHaveLength(1);
+    expect(mocks.getList).toHaveBeenCalledWith(
+      1,
+      10,
+      expect.objectContaining({ sort: "-created", requestKey: null, signal: expect.any(AbortSignal) }),
+    );
   });
 
   test("sends the exported schema while leaving initial revision ownership to PocketBase", async () => {

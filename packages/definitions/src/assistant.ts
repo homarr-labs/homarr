@@ -1,4 +1,5 @@
 export const assistantProviderIds = [
+  "homarr",
   "openrouter",
   "openai",
   "anthropic",
@@ -15,6 +16,7 @@ export const assistantProviderIds = [
 
 export type AssistantProvider = (typeof assistantProviderIds)[number];
 export type AssistantProviderCategory = "hosted" | "local" | "custom";
+export const assistantHomarrProviderTokenHeader = "X-Homarr-Provider-Token";
 
 export const assistantReasoningModes = ["auto", "none", "minimal", "low", "medium", "high"] as const;
 export type AssistantReasoningMode = (typeof assistantReasoningModes)[number];
@@ -43,6 +45,14 @@ interface AssistantProviderPreset {
 }
 
 export const assistantProviderPresets = {
+  homarr: {
+    baseUrl: "https://homarr.dev/api/ai/v1",
+    modelDiscoveryPath: "/models",
+    requiresApiKey: false,
+    category: "hosted",
+    discoveryAuthentication: "bearer",
+    iconUrl: "https://homarr.dev/img/logo.png",
+  },
   openrouter: {
     baseUrl: "https://openrouter.ai/api/v1",
     modelDiscoveryPath: "/models",
@@ -149,5 +159,5 @@ export const assistantProviderRequiresApiKey = (provider: AssistantProvider) =>
  * OpenRouter and Homarr Router implement OpenRouter server tools directly.
  * Custom endpoints may opt in when they proxy the OpenRouter request format.
  */
-export const assistantProviderCanUseOpenRouterServerTools = (provider: AssistantProvider | "homarr") =>
+export const assistantProviderCanUseOpenRouterServerTools = (provider: AssistantProvider) =>
   provider === "openrouter" || provider === "homarr" || provider === "custom";

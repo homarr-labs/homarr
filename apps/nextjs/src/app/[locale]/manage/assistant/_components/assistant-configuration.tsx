@@ -26,6 +26,7 @@ import {
 } from "@mantine/core";
 import {
   IconAlertTriangle,
+  IconBrandGithub,
   IconCheck,
   IconCircleCheck,
   IconDatabaseSearch,
@@ -56,9 +57,7 @@ import { formatAssistantContextWindow, getAssistantConnectionState } from "./ass
 
 type HeaderEntry = { id: number; name: string; value: string };
 type CredentialFlow = "idle" | "remove";
-type AssistantProviderOption = AssistantProvider | "homarr";
-
-const ProviderIcon = ({ providerId, size = 20 }: { providerId: AssistantProviderOption; size?: number }) => {
+const ProviderIcon = ({ providerId, size = 20 }: { providerId: AssistantProvider; size?: number }) => {
   if (providerId === "homarr") {
     return <Image src="/logo/logo.png" alt="" aria-hidden w={size} h={size} fit="contain" />;
   }
@@ -203,20 +202,7 @@ export const AssistantConfiguration = () => {
             label: t(`provider.options.${providerId}.label`),
           }));
 
-        return {
-          group: t(`provider.groups.${category}`),
-          items:
-            category === "hosted"
-              ? [
-                  {
-                    value: "homarr",
-                    label: t("provider.options.homarr.label"),
-                    disabled: true,
-                  },
-                  ...items,
-                ]
-              : items,
-        };
+        return { group: t(`provider.groups.${category}`), items };
       }),
     [t],
   );
@@ -232,6 +218,7 @@ export const AssistantConfiguration = () => {
   }, [modelId, models]);
 
   const preset = assistantProviderPresets[provider];
+  const isHomarrProvider = provider === "homarr";
   const headerValuesValid = headers.every((header) => header.name.trim().length > 0 && header.value.length > 0);
   const { hasStoredApiKey, connectionPending, connectionReady } = getAssistantConnectionState({
     connectionConfigured: configuration?.connectionConfigured === true,
@@ -335,15 +322,19 @@ export const AssistantConfiguration = () => {
 
   const saveConnection = (clearApiKey = false) => {
     const customHeaders =
-      headers.length > 0 ? Object.fromEntries(headers.map((header) => [header.name.trim(), header.value])) : undefined;
+      isHomarrProvider
+        ? undefined
+        : headers.length > 0
+          ? Object.fromEntries(headers.map((header) => [header.name.trim(), header.value]))
+          : undefined;
     updateConnection.mutate({
       provider,
       baseUrl,
       modelDiscoveryPath: modelDiscoveryPath.trim() || null,
-      apiKey: clearApiKey ? undefined : apiKey.trim() || undefined,
-      clearApiKey,
+      apiKey: clearApiKey || isHomarrProvider ? undefined : apiKey.trim() || undefined,
+      clearApiKey: clearApiKey || isHomarrProvider,
       customHeaders,
-      clearCustomHeaders: clearHeaders,
+      clearCustomHeaders: clearHeaders || isHomarrProvider,
     });
   };
 
@@ -434,17 +425,12 @@ export const AssistantConfiguration = () => {
               leftSection={<ProviderIcon providerId={provider} />}
               renderOption={({ option }) => (
                 <Group gap="sm" wrap="nowrap" align="center" w="100%">
-                  <ProviderIcon providerId={option.value as AssistantProviderOption} />
+                  <ProviderIcon providerId={option.value as AssistantProvider} />
                   <Box flex={1} miw={0}>
                     <Group gap="xs" wrap="nowrap" justify="space-between">
                       <Text size="sm" truncate>
                         {option.label}
                       </Text>
-                      {option.value === "homarr" && (
-                        <Badge size="xs" variant="light" color="gray" flex="0 0 auto">
-                          {t("provider.comingSoon")}
-                        </Badge>
-                      )}
                     </Group>
                   </Box>
                 </Group>
@@ -473,7 +459,11 @@ export const AssistantConfiguration = () => {
           title={t("credentials.title")}
           description={t("credentials.description")}
           status={
-            hasStoredApiKey ? undefined : (
+            isHomarrProvider ? (
+              <Badge variant="light" color="blue">
+                {t("credentials.workshop")}
+              </Badge>
+            ) : hasStoredApiKey ? undefined : (
               <Badge variant="light" color={preset.requiresApiKey ? "yellow" : "gray"}>
                 {preset.requiresApiKey ? t("credentials.required") : t("credentials.optional")}
               </Badge>
@@ -494,7 +484,11 @@ export const AssistantConfiguration = () => {
             </Group>
           }
         >
-          {hasStoredApiKey && credentialFlow === "idle" ? (
+          {isHomarrProvider ? (
+            <Alert color="blue" icon={<IconBrandGithub size={18} />} title={t("provider.homarrAuth.title")}>
+              {t("provider.homarrAuth.description")}
+            </Alert>
+          ) : hasStoredApiKey && credentialFlow === "idle" ? (
             <Group className={classes.credentialSummary} justify="space-between" align="center">
               <Group className={classes.credentialSummaryContent} gap="sm" wrap="nowrap">
                 <ThemeIcon color="teal" variant="light" radius="xl">
@@ -545,8 +539,9 @@ export const AssistantConfiguration = () => {
             />
           )}
 
-          <Accordion variant="contained" radius="md">
-            <Accordion.Item value="headers">
+          {!isHomarrProvider && (
+            <Accordion variant="contained" radius="md">
+              <Accordion.Item value="headers">
               <Accordion.Control className={classes.advancedControl} icon={<IconShieldLock size={18} />}>
                 <Group justify="space-between" wrap="nowrap">
                   <Box>
@@ -617,8 +612,9 @@ export const AssistantConfiguration = () => {
                   )}
                 </Stack>
               </Accordion.Panel>
-            </Accordion.Item>
-          </Accordion>
+              </Accordion.Item>
+            </Accordion>
+          )}
         </ConfigurationSection>
 
         <ConfigurationSection

@@ -2,6 +2,9 @@
 
 import { createContext, useContext } from "react";
 
+import type { AssistantProvider } from "@homarr/definitions";
+import type { WorkshopAssistantUsage, WorkshopUser } from "@homarr/workshop/schema";
+
 import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assistant-preferences";
 
 /**
@@ -27,14 +30,22 @@ export interface AssistantContextValue {
 export const AssistantContext = createContext<AssistantContextValue | null>(null);
 
 export interface AssistantPreferencesContextValue {
+  provider: AssistantProvider | null;
   defaultModelId: string | null;
   modelId: string | null;
   models: AssistantRuntimeModelOption[];
   reasoning: AssistantReasoningMode;
   isLoading: boolean;
+  providerUser: WorkshopUser | null;
+  quota: WorkshopAssistantUsage | null;
+  quotaLoading: boolean;
+  quotaError: string | null;
   setModelId: (modelId: string) => void;
   setReasoning: (reasoning: AssistantReasoningMode) => void;
   getRequestBody: () => { modelId?: string; reasoning: AssistantReasoningMode };
+  getRequestHeaders: () => Record<string, string>;
+  refreshQuota: () => Promise<void>;
+  signInToProvider: () => Promise<void>;
 }
 
 export const AssistantPreferencesContext = createContext<AssistantPreferencesContextValue | null>(null);

@@ -1,0 +1,120 @@
+import { useEffect, useMemo, useState } from "react";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import { IconCheck, IconLoader2, IconX } from "@tabler/icons-react";
+import clsx from "clsx";
+
+import type { WorkshopAssistantActivity } from "@homarr/workshop/schema";
+import { workshopAssistantActivitySchema } from "@homarr/workshop/schema";
+
+import { getWorkshopBackend } from "@site/src/lib/pocketbase";
+import { getRuntimeWorkshopApiUrl } from "@site/src/lib/runtime-config";
+
+import styles from "./assistant-provider-activity.module.css";
+
+const statusIcon = {
+  processing: IconLoader2,
+  completed: IconCheck,
+  failed: IconX,
+};
+
+const statusLabel = {
+  processing: "Processing",
+  completed: "Completed",
+  failed: "Failed",
+};
+
+const mergeActivity = (current: WorkshopAssistantActivity[], next: WorkshopAssistantActivity) =>
+  [next, ...current.filter((item) => item.id !== next.id)]
+    .toSorted((left, right) => Date.parse(right.created) - Date.parse(left.created))
+    .slice(0, 10);
+
+export const AssistantProviderActivity = ({ compact = false }: { compact?: boolean }) => {
+  const { siteConfig } = useDocusaurusContext();
+  const configuredWorkshopUrl = (siteConfig.customFields?.workshopUrl as string | undefined) ?? "";
+  const [activities, setActivities] = useState<WorkshopAssistantActivity[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [connected, setConnected] = useState(false);
+  const workshopUrl = useMemo(() => getRuntimeWorkshopApiUrl(configuredWorkshopUrl), [configuredWorkshopUrl]);
+
+  useEffect(() => {
+    let active = true;
+    let unsubscribe: (() => void) | undefined;
+    const backend = getWorkshopBackend(workshopUrl);
+    const load = async () => {
+      try {
+        const initial = await backend.listAssistantActivity(10);
+        if (active) setActivities(initial);
+        unsubscribe = await backend.pocketBase.collection("assistant_activity").subscribe("*", (event) => {
+          const parsed = workshopAssistantActivitySchema.safeParse(event.record);
+          if (!active || !parsed.success) return;
+          setConnected(true);
+          setActivities((current) => mergeActivity(current, parsed.data));
+        });
+        if (active) setConnected(true);
+      } catch {
+        if (active) setConnected(false);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+    void load();
+    return () => {
+      active = false;
+      unsubscribe?.();
+    };
+  }, [workshopUrl]);
+
+  const visibleActivities = compact ? activities.slice(0, 3) : activities;
+
+  return (
+    <section className={clsx(styles.root, compact && styles.compact)} aria-label="Live Homarr provider activity">
+      <header className={styles.header}>
+        <h3 className={styles.title}>Homarr provider activity</h3>
+        <span className={styles.live} aria-live="polite">
+          <span className={styles.beep} aria-hidden />
+          {connected ? "Live" : loading ? "Connecting" : "Offline"}
+        </span>
+      </header>
+      {visibleActivities.length > 0 ? (
+        <div className={styles.tableWrap}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Requests</th>
+                <th>Tokens</th>
+                <th>Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visibleActivities.map((activity) => {
+                const StatusIcon = statusIcon[activity.status];
+                return (
+                  <tr key={activity.id}>
+                    <td>
+                      <time dateTime={activity.created} title={new Date(activity.created).toLocaleString()}>
+                        {new Date(activity.created).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      </time>
+                    </td>
+                    <td>
+                      <span className={styles.status} data-status={activity.status}>
+                        <StatusIcon size={13} aria-hidden />
+                        {statusLabel[activity.status]}
+                      </span>
+                    </td>
+                    <td>{activity.requestUnits.toLocaleString()}</td>
+                    <td>{activity.totalTokens > 0 ? activity.totalTokens.toLocaleString() : "–"}</td>
+                    <td>{activity.durationMs > 0 ? `${(activity.durationMs / 1000).toFixed(1)} s` : "–"}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className={styles.empty}>{loading ? "Loading recent activity…" : "No provider requests yet today."}</div>
+      )}
+    </section>
+  );
+};

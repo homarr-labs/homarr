@@ -1,6 +1,12 @@
 import { describe, expect, test } from "vitest";
 
-import { toProviderOptionsKey } from "./assistant-provider-options";
+import { assistantHomarrProviderTokenHeader } from "@homarr/definitions";
+
+import {
+  getHomarrProviderBaseUrl,
+  resolveHomarrProviderToken,
+  toProviderOptionsKey,
+} from "./assistant-provider-options";
 
 describe("toProviderOptionsKey", () => {
   test("converts the hyphenated provider name to the camelCase AI SDK provider option key", () => {
@@ -14,5 +20,37 @@ describe("toProviderOptionsKey", () => {
 
   test("leaves names without separators unchanged", () => {
     expect(toProviderOptionsKey("homarr")).toBe("homarr");
+  });
+
+  test("accepts a Workshop token only for the matching Homarr provider endpoint", () => {
+    const headers = new Headers({ [assistantHomarrProviderTokenHeader]: "workshop-token" });
+    expect(
+      resolveHomarrProviderToken({
+        provider: "homarr",
+        configuredBaseUrl: "https://homarr.dev/api/ai/v1/",
+        workshopApiUrl: "https://homarr.dev",
+        headers,
+      }),
+    ).toBe("workshop-token");
+    expect(getHomarrProviderBaseUrl("https://homarr.dev/")).toBe("https://homarr.dev/api/ai/v1");
+  });
+
+  test("never forwards a Workshop token to another endpoint", () => {
+    expect(() =>
+      resolveHomarrProviderToken({
+        provider: "homarr",
+        configuredBaseUrl: "https://attacker.example/v1",
+        workshopApiUrl: "https://homarr.dev",
+        headers: new Headers({ [assistantHomarrProviderTokenHeader]: "workshop-token" }),
+      }),
+    ).toThrow("does not match");
+    expect(
+      resolveHomarrProviderToken({
+        provider: "openrouter",
+        configuredBaseUrl: "https://openrouter.ai/api/v1",
+        workshopApiUrl: "https://homarr.dev",
+        headers: new Headers({ [assistantHomarrProviderTokenHeader]: "workshop-token" }),
+      }),
+    ).toBeUndefined();
   });
 });

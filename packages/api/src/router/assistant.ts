@@ -231,7 +231,7 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
   const models = (Array.isArray(body) ? body : (body.data ?? body.models ?? [])).slice(0, 1_000);
   return models
     .filter((model) => {
-      if (configuration.provider !== "openrouter") return true;
+      if (configuration.provider !== "openrouter" && configuration.provider !== "homarr") return true;
       const parameters = Array.isArray(model.supported_parameters) ? model.supported_parameters : [];
       const outputModalities = Array.isArray(model.architecture?.output_modalities)
         ? model.architecture.output_modalities
@@ -260,6 +260,7 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
               : null;
       const toolSupport =
         configuration.provider === "openrouter" ||
+        configuration.provider === "homarr" ||
         model.capabilities?.function_calling === true ||
         configuration.provider === "anthropic"
           ? ("confirmed" as const)
@@ -553,16 +554,22 @@ export const assistantRouter = createTRPCRouter({
         existing !== undefined && (existing.provider !== input.provider || existing.baseUrl !== baseUrl);
       const connectionChanged =
         existing !== undefined && (destinationChanged || existing.modelDiscoveryPath !== modelDiscoveryPath);
-      const encryptedApiKey = input.apiKey
-        ? encryptSecret(input.apiKey)
-        : input.clearApiKey || destinationChanged
+      const encryptedApiKey =
+        input.provider === "homarr"
           ? null
-          : (existing?.encryptedApiKey ?? null);
-      const encryptedHeaders = input.customHeaders
-        ? encryptSecret(JSON.stringify(input.customHeaders))
-        : input.clearCustomHeaders || destinationChanged
+          : input.apiKey
+            ? encryptSecret(input.apiKey)
+            : input.clearApiKey || destinationChanged
+              ? null
+              : (existing?.encryptedApiKey ?? null);
+      const encryptedHeaders =
+        input.provider === "homarr"
           ? null
-          : (existing?.encryptedHeaders ?? null);
+          : input.customHeaders
+            ? encryptSecret(JSON.stringify(input.customHeaders))
+            : input.clearCustomHeaders || destinationChanged
+              ? null
+              : (existing?.encryptedHeaders ?? null);
 
       if (existing) {
         await ctx.db

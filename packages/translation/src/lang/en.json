@@ -2083,6 +2083,25 @@
           "high": "High"
         }
       },
+      "providerQuota": {
+        "title": "Homarr provider",
+        "communityWorkshop": "Community Workshop",
+        "dailyAllowance": "Daily request allowance",
+        "remainingLabel": "{remaining} of {limit} Homarr provider requests remaining",
+        "loading": "Loading Homarr provider allowance",
+        "signInRequired": "Workshop sign-in required for the Homarr provider",
+        "signInDescription": "Sign in with GitHub through the Community Workshop to receive your separate daily allowance.",
+        "signIn": "Sign in with GitHub",
+        "reset": "Resets {relative} at",
+        "toolCalls": "Each model request and completed tool call uses one request.",
+        "retry": "Reload allowance",
+        "level": {
+          "ok": "OK",
+          "warning": "Warning",
+          "bad": "Low",
+          "dead": "Used"
+        }
+      },
       "stop": "Stop response",
       "send": "Send message",
       "copy": "Copy response",
@@ -6176,7 +6195,8 @@
               "title": "Credentials",
               "description": "Add the secrets this endpoint needs. Stored values stay encrypted and cannot be read back.",
               "required": "Key required",
-              "optional": "Key optional"
+              "optional": "Key optional",
+              "workshop": "Per-user GitHub sign-in"
             },
             "provider": {
               "title": "Provider",
@@ -6187,7 +6207,8 @@
               },
               "options": {
                 "homarr": {
-                  "label": "Homarr"
+                  "label": "Homarr",
+                  "description": "Community-funded DeepSeek V4 Flash access through Homarr. Each user signs in with the Community Workshop and receives a daily allowance."
                 },
                 "openrouter": {
                   "label": "OpenRouter",
@@ -6238,7 +6259,10 @@
                   "description": "Any other endpoint compatible with OpenAI Chat Completions."
                 }
               },
-              "comingSoon": "Coming soon"
+              "homarrAuth": {
+                "title": "No administrator API key required",
+                "description": "Homarr keeps the upstream OpenRouter credential on the Community Workshop server. Each user authorizes requests with their own Workshop GitHub session, so their daily allowance stays separate."
+              }
             },
             "baseUrl": {
               "title": "API base URL",

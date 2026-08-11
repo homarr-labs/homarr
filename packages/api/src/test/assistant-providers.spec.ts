@@ -25,7 +25,9 @@ describe("assistant provider presets", () => {
 
   test("requires credentials for hosted providers but not local or custom endpoints", () => {
     for (const provider of assistantProviderIds) {
-      expect(assistantProviderRequiresApiKey(provider)).toBe(assistantProviderPresets[provider].category === "hosted");
+      expect(assistantProviderRequiresApiKey(provider)).toBe(
+        assistantProviderPresets[provider].category === "hosted" && provider !== "homarr",
+      );
     }
   });
 

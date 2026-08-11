@@ -1,6 +1,6 @@
 import { AppWidget } from "./widgets/app-widget";
 import { ClockWidget } from "./widgets/clock-widget";
-import { DownloadsWidget } from "./widgets/downloads-widget";
+import { AssistantProviderWidget } from "./widgets/assistant-provider-widget";
 import { WeatherWidget } from "./widgets/weather-widget";
 import { StockWidget } from "./widgets/stock-widget";
 import { EntityStateWidget } from "./widgets/entity-state-widget";
@@ -12,7 +12,7 @@ export const HeroCards = () => {
       <AppWidget />
       <AppWidget className="hidden 3xl:block" />
       <WeatherWidget />
-      <DownloadsWidget />
+      <AssistantProviderWidget />
       <EntityStateWidget />
       <AppWidget />
 
