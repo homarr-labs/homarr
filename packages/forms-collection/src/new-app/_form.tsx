@@ -138,6 +138,7 @@ export const AppForm = ({
         <IconPicker
           {...form.getInputProps("iconUrl")}
           suggestedSearch={initialValues === undefined ? form.values.name : undefined}
+          faviconSourceUrl={form.values.href}
         />
         <Textarea
           {...form.getInputProps("description")}

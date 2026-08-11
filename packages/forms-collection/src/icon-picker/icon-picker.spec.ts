@@ -6,8 +6,9 @@ import { MantineProvider } from "@mantine/core";
 import type { Root } from "react-dom/client";
 import type { IconGroup } from "./icon-picker.utils";
 
-const { findIconsQuery, refetch, uploadSelection, sessionPermissions } = vi.hoisted(() => ({
+const { findIconsQuery, detectFaviconQuery, refetch, uploadSelection, sessionPermissions } = vi.hoisted(() => ({
   findIconsQuery: vi.fn(),
+  detectFaviconQuery: vi.fn(),
   refetch: vi.fn(),
   uploadSelection: vi.fn(),
   sessionPermissions: { current: [] as string[] },
@@ -25,6 +26,7 @@ let queryResult: {
   isFetching: boolean;
   isError: boolean;
 };
+let faviconResult: { data?: { url: string | null } };
 
 vi.mock("@homarr/api/client", () => ({
   clientApi: {
@@ -33,6 +35,12 @@ vi.mock("@homarr/api/client", () => ({
         useQuery: (input: { searchText: string; limitPerGroup: number }, options: { enabled: boolean }) => {
           findIconsQuery(input, options);
           return { ...queryResult, refetch };
+        },
+      },
+      detectFavicon: {
+        useQuery: (input: { href: string }, options: { enabled: boolean }) => {
+          detectFaviconQuery(input, options);
+          return options.enabled ? faviconResult : {};
         },
       },
     },
@@ -127,10 +135,12 @@ describe("IconPicker", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     findIconsQuery.mockClear();
+    detectFaviconQuery.mockClear();
     refetch.mockClear();
     uploadSelection.mockClear();
     sessionPermissions.current = [];
     queryResult = { data: emptyResult, isLoading: false, isFetching: false, isError: false };
+    faviconResult = { data: undefined };
   });
 
   afterEach(() => {
@@ -289,6 +299,40 @@ describe("IconPicker", () => {
     await act(async () => retry.click());
 
     expect(refetch).toHaveBeenCalledOnce();
+  });
+
+  test("offers the icon detected for the website of the app", async () => {
+    faviconResult = { data: { url: "https://app.example.com/favicon.ico" } };
+    const onChange = vi.fn();
+    const input = await renderPicker(onChange, { faviconSourceUrl: "https://app.example.com" });
+    await focusInput(input);
+
+    expect(detectFaviconQuery.mock.calls.at(-1)?.[0]).toEqual({ href: "https://app.example.com" });
+    expect(document.body.textContent).toContain("iconPicker.websiteIcon");
+
+    const option = document.body.querySelector<HTMLElement>(
+      '[data-combobox-option][value="https://app.example.com/favicon.ico"]',
+    );
+    if (!option) throw new Error("Website icon option was not rendered");
+    await act(async () => option.click());
+
+    expect(onChange).toHaveBeenCalledWith("https://app.example.com/favicon.ico");
+  });
+
+  test("detects the website icon only while the dropdown is open", async () => {
+    const input = await renderPicker(vi.fn(), { faviconSourceUrl: "https://app.example.com" });
+
+    expect(detectFaviconQuery.mock.calls.at(-1)?.[1]).toMatchObject({ enabled: false });
+
+    await focusInput(input);
+    expect(detectFaviconQuery.mock.calls.at(-1)?.[1]).toMatchObject({ enabled: true });
+  });
+
+  test("does not detect a website icon without a website", async () => {
+    const input = await renderPicker(vi.fn());
+    await focusInput(input);
+
+    expect(detectFaviconQuery.mock.calls.at(-1)?.[1]).toMatchObject({ enabled: false });
   });
 
   test("selects an uploaded local image when the user has permission", async () => {
