@@ -113,17 +113,22 @@ async function setup(
 describe("Custom JSX v2 board router", () => {
   beforeEach(() => mocks.executeRequest.mockClear());
 
-  test("allows public queries only through the definition placed on an accessible board", async () => {
+  test("loads placed widgets and public queries for anonymous visitors on public boards", async () => {
     const { db, itemId } = await setup();
     const caller = customApiRouter.createCaller({ db, deviceType: undefined, session: null });
 
+    await expect(caller.getData({ itemId })).resolves.toMatchObject({
+      template: definition.template,
+      data: { "load-status": { value: 42 } },
+      status: { "load-status": { ok: true } },
+    });
     await expect(caller.queryRequest({ itemId, requestId: "status", params: { name: "homarr" } })).resolves.toEqual(
       expect.objectContaining({ ok: true, data: { value: 42 } }),
     );
     await expect(caller.queryRequest({ itemId, requestId: "missing", params: {} })).rejects.toMatchObject({
       code: "NOT_FOUND",
     });
-    expect(mocks.executeRequest).toHaveBeenCalledOnce();
+    expect(mocks.executeRequest).toHaveBeenCalledTimes(2);
   });
 
   test("uses current defaults when an updated option no longer accepts the stored value", async () => {
@@ -150,6 +155,7 @@ describe("Custom JSX v2 board router", () => {
     await expect(
       anonymous.queryRequest({ itemId: privateSetup.itemId, requestId: "status", params: { name: "homarr" } }),
     ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(anonymous.getData({ itemId: privateSetup.itemId })).rejects.toMatchObject({ code: "NOT_FOUND" });
 
     const enabledSetup = await setup();
     await enabledSetup.db

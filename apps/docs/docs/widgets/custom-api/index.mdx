@@ -38,6 +38,9 @@ Enable the definition before you use it. The definition must also be available t
 
 Each named request declares its minimum board permission. This permission does not depend on the HTTP method.
 
+Anonymous visitors can load queries from a Custom API widget on a public board. Definitions placed only on private
+boards remain unavailable to them.
+
 Queries and actions can use GET, POST, PUT, or PATCH. DELETE is valid only for actions so it can never run
 automatically while a board loads. The `kind` value controls the remaining runtime behavior.
 
