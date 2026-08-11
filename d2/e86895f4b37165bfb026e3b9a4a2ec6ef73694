@@ -1,0 +1,19 @@
+docs/perf/CLIENT-PERFORMANCE.md
+  s_a70c07ac5b7a5a::t_f5916f2d15d1a3 5-64,66-100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "d2e86895f4b37165bfb026e3b9a4a2ec6ef73694",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
