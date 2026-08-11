@@ -3,24 +3,29 @@ import { useEffect, useState } from "react";
 import { CommonWidgetProps, WidgetCard } from "./card";
 import clsx from "clsx";
 import { generateSlug } from "random-word-slugs";
+import styles from "../../../../../pages/index.module.css";
 
 export const DownloadsWidget = ({ className }: CommonWidgetProps) => {
-  const [downloads, setDownloads] = useState<Download[]>([]);
+  const [downloads, setDownloads] = useState<Download[]>([
+    { filename: "photos-backup.zip", progress: 72 },
+    { filename: "media-library.mkv", progress: 38 },
+  ]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setDownloads((prev: Download[]) => {
         const filteredPrev = prev.filter((download) => download.progress !== 100);
 
-        filteredPrev.forEach((download, index) => {
-          download.progress = Math.min(100, download.progress + getRndInteger(0, index < 2 ? 16 : 8));
-        });
+        const progressedDownloads = filteredPrev.map((download, index) => ({
+          ...download,
+          progress: Math.min(100, download.progress + getRndInteger(0, index < 2 ? 16 : 8)),
+        }));
 
-        if (filteredPrev.length < 3 && filteredPrev.length === prev.length) {
-          filteredPrev.push(generateRandomDownload());
+        if (progressedDownloads.length < 3 && progressedDownloads.length === prev.length) {
+          progressedDownloads.push(generateRandomDownload());
         }
 
-        return [...filteredPrev];
+        return progressedDownloads;
       });
     }, 500);
 
@@ -39,14 +44,17 @@ export const DownloadsWidget = ({ className }: CommonWidgetProps) => {
           </tr>
         </thead>
         <tbody>
-          {downloads.map((file: Download, index: number) => {
+          {downloads.map((file: Download) => {
             return (
-              <tr key={index}>
+              <tr key={file.filename}>
                 <td className="border-none text-nowrap p-2">{file.filename}</td>
-                <td className="border-none p-2 w-full">
-                  <div className="overflow-hidden rounded-xl h-2 w-full bg-zinc-600">
-                    <div className="bg-green-600 h-full animated-width" style={{ width: `${file.progress}%` }}></div>
-                  </div>
+                <td className="border-none p-2 w-full" aria-label={`${file.progress}% complete`}>
+                  <progress
+                    className={styles.downloadProgress}
+                    value={file.progress}
+                    max={100}
+                    aria-label={`${file.filename} download progress`}
+                  />
                 </td>
               </tr>
             );

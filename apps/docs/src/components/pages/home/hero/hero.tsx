@@ -7,9 +7,9 @@ import { HeroCards } from "./hero-cards";
 export default function HomeHero() {
   return (
     <header className={clsx("hero hero--primary", styles.heroBanner, styles.hero)}>
-      <div className="flex">
-        <div className="ps-0 lg:ps-52">
-          <h1 className="font-extrabold lg:text-7xl text-3xl">
+      <div className={styles.heroContent}>
+        <div className={styles.heroCopy}>
+          <h1 className={clsx("font-extrabold lg:text-7xl text-3xl", styles.heroTitle)}>
             A simple, yet
             <br />
             powerful dashboard
@@ -22,7 +22,7 @@ export default function HomeHero() {
             information.
           </p>
 
-          <div className={"flex flex-nowrap gap-2"}>
+          <div className={styles.heroActions}>
             <Link
               data-attr="Install button"
               className={"button button--secondary button--lg rounded-3xl dark:border-zinc-600 dark:bg-zinc-800"}
@@ -57,7 +57,7 @@ export default function HomeHero() {
             </Link>
           </div>
         </div>
-        <div className="flex-grow-1 w-full lg:block hidden hover-animation">
+        <div className={styles.heroPreview} aria-label="Example Homarr dashboard">
           <HeroCards />
         </div>
       </div>
