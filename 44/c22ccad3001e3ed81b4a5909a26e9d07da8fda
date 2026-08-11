@@ -1,3 +1,5 @@
+package.json
+  s_093d61b162b9ca::t_68b01e9c1c2a72 49
 ---
 {
   "schema_version": "authorship/3.0.0",
@@ -5,6 +7,14 @@
   "base_commit_sha": "44c22ccad3001e3ed81b4a5909a26e9d07da8fda",
   "prompts": {},
   "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
     "s_5dcfe7e44b75bf": {
       "agent_id": {
         "tool": "claude",
