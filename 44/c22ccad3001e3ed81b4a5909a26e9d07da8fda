@@ -1,0 +1,17 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "44c22ccad3001e3ed81b4a5909a26e9d07da8fda",
+  "prompts": {},
+  "sessions": {
+    "s_5dcfe7e44b75bf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9bcd108a-daea-48a5-b53c-d927f15a1b24",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
