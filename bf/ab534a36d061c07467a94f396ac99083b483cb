@@ -1,0 +1,29 @@
+packages/api/src/router/widgets/custom-api.ts
+  s_093d61b162b9ca::t_d47de8e8aa510e 2,34,56
+  s_093d61b162b9ca::t_1cab75c436550a 21,32-33,35-37,40
+  s_093d61b162b9ca::t_9d991e4e6c7e83 6,9-10,22-31,38-39,42,102
+packages/widgets/src/custom-api/component.tsx
+  s_093d61b162b9ca::t_9d991e4e6c7e83 403,420-422,425-433,439
+  s_093d61b162b9ca::t_32e1172a32dc7f 441
+packages/api/src/router/test/widgets/custom-api.spec.ts
+  s_093d61b162b9ca::t_9d991e4e6c7e83 4-31,33-52
+  s_093d61b162b9ca::t_d47de8e8aa510e 1-3,32
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_093d61b162b9ca::t_9d991e4e6c7e83 19-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "bfab534a36d061c07467a94f396ac99083b483cb",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
