@@ -30,19 +30,20 @@ export const downloadsWidget: WidgetDefinition = {
       {
         name: "Columns to show",
         description:
-          "Select the columns you want to display in the widget. Columns automatically hide/show based on widget width.",
+          "Select the columns you want to display in the widget. Compact layouts automatically hide/show selected columns based on widget width and height; advanced view keeps the selected columns visible.",
         values: `List of columns: ${columnsList.join(", ")}`,
         defaultValue: ["name", "progress", "downSpeed", "time", "state"].join(", "),
       },
       {
         name: "Default sort column",
-        description: "The column used for initial sorting when the widget loads.",
+        description:
+          "The column used for initial sorting when the widget loads. Clicking a column header changes the current view only.",
         defaultValue: "progress",
         values: `List of columns: ${sortColumns.join(", ")}`,
       },
       {
         name: "Invert sorting",
-        description: "This will invert the default sorting order.",
+        description: "This sets the initial sorting direction.",
         values: { type: "boolean" },
         defaultValue: "no",
       },
@@ -84,8 +85,9 @@ export const downloadsWidget: WidgetDefinition = {
         defaultValue: "no",
       },
       {
-        name: "Use filter to calculate Ratio",
-        description: "This will use the category filter when calculating the global torrent ratio.",
+        name: "Use category filter for global torrent ratio",
+        description:
+          "When enabled, the configured category/label filter is applied to the global torrent ratio. Footer client/status filters do not change this ratio.",
         values: { type: "boolean" },
         defaultValue: "yes",
       },

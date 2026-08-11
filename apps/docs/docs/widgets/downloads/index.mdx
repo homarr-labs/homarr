@@ -28,6 +28,7 @@ This widget displays torrent, Usenet, and miscellaneous download jobs, along wit
 import downloadsCard from "./img/screenshot.png";
 import contextMenuImg from "./img/context-menu.png";
 import advancedViewImg from "./img/advanced-view.png";
+import filterPanelImg from "./img/filter-panel.png";
 
 <div>
   <img src={downloadsCard} alt="Downloads widget showing torrent and usenet items" width={128 * 4} />
@@ -49,28 +50,48 @@ import advancedViewImg from "./img/advanced-view.png";
   />
 </div>
 
+#### Advanced filter panel
+
+<div>
+  <img src={filterPanelImg} alt="Downloads advanced view with the status filter panel open" width={128 * 6} />
+</div>
+
 ### Features
 
-- **Responsive table** — columns automatically adapt to widget width, hiding less important columns at smaller sizes
-- **Sortable columns** — click any column header to sort ascending/descending
+- **Responsive compact table** — in compact mode, selected columns adapt to both widget width and height; narrow or short tiles hide speed/state columns, and the shortest tiles also hide the ETA column
+- **Sortable columns** — click any sortable column header to sort the current view; the configured default controls the initial column and direction
 - **Column customization** — choose which columns to display, then hover a header to reveal its grab handle for reordering or drag its edge to resize it; layouts save automatically per widget
-- **Right-click context menu** — pause, resume, delete downloads, or copy download names directly from the context menu when the selected integration grants interact access
+- **Download-row context menu** — copy a download name or ID from any row; pause, resume, and delete actions appear when you have Interact access to that integration
 - **Row expansion** — click any row to see full details inline without opening a separate modal
 - **Hover tooltips** — hover a download name to see size, speeds, ETA, ratio, and category; open tooltips close when switching between compact and advanced mode
-- **Global stats bar** — show a summary bar with queue progress, total size, speeds, ratio, and per-state counts in compact mode; advanced view always includes it
+- **Global stats bar** — show queue progress, downloaded/total size, transfer speeds, global torrent ratio, and per-state counts in compact mode; advanced view always includes it
 - **Client filtering** — filter downloads by integration or status using the footer filter panel
-- **Global controls** — pause/resume all downloads across all clients from the footer bar
+- **Global controls** — pause/resume actionable queues from the footer bar, limited to selected integrations where you have Interact access
 - **Status indicators** — color-coded badges show download state at a glance
-- **Speed overview** — total download and upload speeds displayed in the footer
+- **Speed overview** — total download and upload speeds for the selected clients are displayed in the footer
 
 :::note
 
-Compact layouts hide secondary columns as width decreases and can hide the footer on very short tiles. Downloads supports
-Advanced view, which restores the denser table, stats, filters, and footer controls in a focused panel.
+Compact layouts use both dimensions: below 500px wide, speed columns are hidden; below 300px wide, the ETA and state
+columns are hidden too. A tile shorter than 180px hides speed and state columns, and a tile shorter than 120px also
+hides ETA. The footer is hidden below 96px in compact mode. Advanced view bypasses these compact size reductions,
+keeps the selected column set, and always includes the stats bar and footer controls, with the filter panel available
+from the footer.
 
-Pause, resume, delete, and global controls depend on integration permissions. `slskd` does not implement pause, resume,
-or delete operations; if shared permission UI exposes those controls, they have no effect for that client.
-The screenshot above is a download-row menu, separate from the shared widget context menu described in the board guide.
+The filter panel changes the visible rows. Its client/status filters also change the stats bar's progress, size, and
+state counts, while transfer-speed totals summarize the selected clients and the global torrent ratio summarizes the
+selected torrent clients. The configured category/label filter can optionally be applied to the global torrent ratio
+through **Use category filter for global torrent ratio**; footer client/status filters do not change that ratio.
+
+The per-item **Ratio** is sent bytes divided by the item's total size. **Global Ratio** is total uploaded bytes divided
+by total downloaded bytes.
+
+Mutation controls depend on the integration's Interact permission. Users without that permission can still view rows and
+use the row menu's copy actions. `slskd` is list-only: its pause, resume, and delete operations are no-ops, so those
+controls have no effect for that client even when Interact permission exposes them.
+
+The screenshot above is a Downloads row menu, separate from the shared widget context menu. When board right-click menus
+are enabled, the shared menu provides widget-level actions such as advanced view, widget options, refresh, and settings.
 
 :::
 
@@ -104,20 +125,20 @@ The screenshot above is a download-row menu, separate from the shared widget con
     },
     {
       integration: slskdIntegration,
-      note: "Soulseek client (no mutation support)",
+      note: "Soulseek client (list-only; mutation controls are no-ops)",
     },
   ]}
 />
 
 ### Interactions
 
-- **Right-click** any download to open a context menu with the actions allowed by that integration
+- **Right-click** any download to copy its name or ID; pause, resume, and delete are available only with Interact access
 - **Click** any row to expand it and see full download details inline
 - **Hover** a download name for a quick stats tooltip
 - **Stats toggle** — show or hide the global stats bar in compact mode; advanced view always shows the stats bar
-- **Pause / Resume** all downloads using the footer controls
-- **Filter** by integration or status using the filter button in the footer
-- **Sort** by clicking column headers; the direction applies to the current view
+- **Pause / Resume** actionable queues using the footer controls
+- **Filter** rows by integration or status using the filter button in the footer
+- **Sort** by clicking sortable column headers; the default sort is configured per widget, while header changes apply to the current view
 
 <WidgetInteractionGuide />
 
