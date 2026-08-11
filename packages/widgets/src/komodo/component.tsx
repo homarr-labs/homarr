@@ -10,6 +10,7 @@ import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { getKomodoRefreshIntervalMs } from "./refresh-interval";
 
 const statusColors: Record<KomodoResourceStatus, string> = {
   healthy: "green",
@@ -37,7 +38,10 @@ export default function KomodoWidget({ integrationIds, options, width, height }:
   const integrationId = integrationIds[0];
   const { data } = clientApi.widget.komodo.getOverview.useQuery(
     { integrationId: integrationId ?? "" },
-    { enabled: integrationId !== undefined },
+    {
+      enabled: integrationId !== undefined,
+      refetchInterval: getKomodoRefreshIntervalMs(options.refreshInterval),
+    },
   );
 
   if (!integrationId || !data) return <WidgetEmptyState />;
@@ -93,7 +97,7 @@ export default function KomodoWidget({ integrationIds, options, width, height }:
     );
   }
 
-  const maxColumns = width >= 680 ? 4 : width >= 360 ? 2 : 1;
+  const maxColumns = width >= 360 ? 2 : 1;
   const columns = Math.min(maxColumns, summaries.length);
   const shouldSpanLastCard = columns > 1 && summaries.length % columns !== 0;
   const showProblemList = options.showProblems && height >= 250 && overview.problems.length > 0;

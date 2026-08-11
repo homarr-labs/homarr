@@ -1,6 +1,12 @@
 import { IconServerOff, IconTable } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";
+import {
+  KOMODO_DEFAULT_REFRESH_INTERVAL_SECONDS,
+  KOMODO_MAX_REFRESH_INTERVAL_SECONDS,
+  KOMODO_MIN_REFRESH_INTERVAL_SECONDS,
+} from "../komodo/refresh-interval";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("komodoServerOverview", {
@@ -18,6 +24,12 @@ export const { definition, componentLoader } = createWidgetDefinition("komodoSer
       showLoadAverage: factory.switch({ defaultValue: true }),
       showNetwork: factory.switch({ defaultValue: true }),
       showVersion: factory.switch({ defaultValue: true }),
+      refreshInterval: factory.slider({
+        defaultValue: KOMODO_DEFAULT_REFRESH_INTERVAL_SECONDS,
+        validate: z.number().min(KOMODO_MIN_REFRESH_INTERVAL_SECONDS).max(KOMODO_MAX_REFRESH_INTERVAL_SECONDS),
+        step: 5,
+        withDescription: true,
+      }),
     }));
   },
   errors: {

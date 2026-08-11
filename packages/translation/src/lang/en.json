@@ -2562,6 +2562,10 @@
         },
         "showProblems": {
           "label": "Show problems"
+        },
+        "refreshInterval": {
+          "label": "Refresh interval",
+          "description": "How often to refetch data from Komodo (in seconds)"
         }
       },
       "empty": {
@@ -2592,6 +2596,10 @@
         },
         "showVersion": {
           "label": "Show version"
+        },
+        "refreshInterval": {
+          "label": "Refresh interval",
+          "description": "How often to refetch data from Komodo (in seconds)"
         }
       },
       "column": {

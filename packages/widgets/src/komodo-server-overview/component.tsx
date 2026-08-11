@@ -20,6 +20,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { getKomodoRefreshIntervalMs } from "../komodo/refresh-interval";
 
 const statusColors: Record<KomodoResourceStatus, string> = {
   healthy: "green",
@@ -175,7 +176,10 @@ export default function KomodoServerOverviewWidget({
   const integrationId = integrationIds[0];
   const { data, error, isPending } = clientApi.widget.komodo.getServers.useQuery(
     { integrationId: integrationId ?? "" },
-    { enabled: integrationId !== undefined },
+    {
+      enabled: integrationId !== undefined,
+      refetchInterval: getKomodoRefreshIntervalMs(options.refreshInterval),
+    },
   );
 
   if (error) throw error;

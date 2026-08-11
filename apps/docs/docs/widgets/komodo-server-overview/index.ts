@@ -44,6 +44,12 @@ export const komodoServerOverviewWidget: WidgetDefinition = {
         values: { type: "boolean" },
         defaultValue: "yes",
       },
+      {
+        name: "Refresh interval",
+        description: "How often to retrieve new data from Komodo, in seconds.",
+        values: { type: "string" },
+        defaultValue: "30",
+      },
     ],
   },
 };
