@@ -237,6 +237,7 @@ function Carousel({
                 <Image
                   src={asset.publicLink}
                   alt=""
+                  loading="lazy"
                   w={64}
                   h={44}
                   radius="sm"

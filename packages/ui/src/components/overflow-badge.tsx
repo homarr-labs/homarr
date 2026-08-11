@@ -19,23 +19,35 @@ export function OverflowBadge({
     radius: "sm",
     ...props,
   };
-  return (
-    <Popover width="content" shadow="md" disabled={disablePopover}>
+
+  const hasOverflow = data.length > overflowCount;
+  const badges = data.slice(0, overflowCount).map((item) => (
+    <Badge key={item} px="xs" {...badgeProps}>
+      {item}
+    </Badge>
+  ));
+  const overflowTrigger = hasOverflow ? (
+    <UnstyledButton display="flex">
+      <Badge px="xs" style={{ cursor: "pointer", ...badgeProps.style }} {...badgeProps}>
+        +{data.length - overflowCount}
+      </Badge>
+    </UnstyledButton>
+  ) : null;
+
+  if (disablePopover || !hasOverflow) {
+    return (
       <Group gap={groupGap}>
-        {data.slice(0, overflowCount).map((item) => (
-          <Badge key={item} px="xs" {...badgeProps}>
-            {item}
-          </Badge>
-        ))}
-        {data.length > overflowCount && (
-          <Popover.Target>
-            <UnstyledButton display="flex">
-              <Badge px="xs" style={{ cursor: "pointer", ...badgeProps.style }} {...badgeProps}>
-                +{data.length - overflowCount}
-              </Badge>
-            </UnstyledButton>
-          </Popover.Target>
-        )}
+        {badges}
+        {overflowTrigger}
+      </Group>
+    );
+  }
+
+  return (
+    <Popover width="content" shadow="md">
+      <Group gap={groupGap}>
+        {badges}
+        <Popover.Target>{overflowTrigger}</Popover.Target>
       </Group>
       <Popover.Dropdown>
         <Stack>

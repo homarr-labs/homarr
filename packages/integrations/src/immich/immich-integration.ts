@@ -45,7 +45,7 @@ export interface ImmichAsset {
 }
 
 const logger = createLogger({ module: "immich-integration" });
-const randomPhotoCount = 50;
+const carouselPhotoCount = 50;
 
 export class ImmichIntegration extends Integration {
   constructor(integration: IntegrationInput) {
@@ -74,7 +74,7 @@ export class ImmichIntegration extends Integration {
       const assets = await searchRandom(
         {
           randomSearchDto: {
-            size: randomPhotoCount,
+            size: carouselPhotoCount,
             type: AssetTypeEnum.Image,
             visibility: AssetVisibility.Timeline,
           },
@@ -125,13 +125,15 @@ export class ImmichIntegration extends Integration {
     let nextPage: string | null = null;
 
     do {
-      const metadataSearchDto: MetadataSearchDto = { albumIds: [albumId] };
-      if (nextPage !== null) {
-        metadataSearchDto.page = Number(nextPage);
-      }
-      const searchResult = await searchAssets({ metadataSearchDto }, requestOptions);
-      assets.push(...searchResult.assets.items);
-      nextPage = searchResult.assets.nextPage;
+      const metadataSearchDto: MetadataSearchDto = {
+        albumIds: [albumId],
+        type: AssetTypeEnum.Image,
+      };
+      if (nextPage !== null) metadataSearchDto.page = Number(nextPage);
+
+      const result = await searchAssets({ metadataSearchDto }, requestOptions);
+      assets.push(...result.assets.items);
+      nextPage = result.assets.nextPage;
     } while (nextPage !== null);
 
     return assets;

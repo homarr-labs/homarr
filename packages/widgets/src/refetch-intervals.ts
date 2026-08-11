@@ -7,12 +7,12 @@
  */
 export const widgetQueryRefetchIntervals = [
   { queryKey: [["docker", "getContainers"]], intervalSeconds: 30 },
-  { queryKey: [["widget", "dnsHole"]], intervalSeconds: 5 },
-  { queryKey: [["widget", "downloads", "getJobsAndStatuses"]], intervalSeconds: 5 },
-  { queryKey: [["widget", "firewall"]], intervalSeconds: 5 },
-  { queryKey: [["widget", "healthMonitoring"]], intervalSeconds: 5 },
-  { queryKey: [["widget", "mediaServer", "getCurrentStreams"]], intervalSeconds: 5 },
-  { queryKey: [["widget", "tracearr"]], intervalSeconds: 5 },
+  { queryKey: [["widget", "dnsHole"]], intervalSeconds: 10 },
+  { queryKey: [["widget", "downloads", "getJobsAndStatuses"]], intervalSeconds: 10 },
+  { queryKey: [["widget", "firewall"]], intervalSeconds: 10 },
+  { queryKey: [["widget", "healthMonitoring"]], intervalSeconds: 10 },
+  { queryKey: [["widget", "mediaServer", "getCurrentStreams"]], intervalSeconds: 10 },
+  { queryKey: [["widget", "tracearr"]], intervalSeconds: 10 },
   { queryKey: [["widget", "immich", "getAlbum"]], intervalSeconds: null },
   { queryKey: [["widget", "immich", "getServerStats"]], intervalSeconds: null },
   { queryKey: [["widget", "immich", "getAlbums"]], intervalSeconds: null },

@@ -11,10 +11,15 @@ export const mediaTranscodingRequestHandler = createIntegrationRequestHandler<
 >({
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
+    const [queue, workers, statistics] = await Promise.all([
+      integrationInstance.getQueueAsync(input.pageOffset, input.pageSize),
+      integrationInstance.getWorkersAsync(),
+      integrationInstance.getStatisticsAsync(),
+    ]);
     return {
-      queue: await integrationInstance.getQueueAsync(input.pageOffset, input.pageSize),
-      workers: await integrationInstance.getWorkersAsync(),
-      statistics: await integrationInstance.getStatisticsAsync(),
+      queue,
+      workers,
+      statistics,
     };
   },
 });
