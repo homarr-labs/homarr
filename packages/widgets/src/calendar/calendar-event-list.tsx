@@ -19,6 +19,7 @@ import type { CalendarEvent } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
 import classes from "./calendar-event-list.module.css";
+import { offscreenRowStyle } from "../common/offscreen-rows";
 
 interface CalendarEventListProps {
   events: CalendarEvent[];
@@ -40,11 +41,12 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
     >
       <Stack>
         {events.map((event, eventIndex) => (
-          <Group key={`event-${eventIndex}`} align={"stretch"} wrap="nowrap">
+          <Group key={`event-${eventIndex}`} align={"stretch"} wrap="nowrap" style={offscreenRowStyle(110)}>
             {event.image !== null && (
               <Box pos="relative">
                 <Image
                   src={event.image.src}
+                  loading="lazy"
                   w={70}
                   mah={150}
                   style={{

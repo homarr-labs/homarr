@@ -10,6 +10,7 @@ import { useTimeAgo } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { offscreenRowStyle } from "../common/offscreen-rows";
 
 export default function NotificationsWidget({ options, integrationIds }: WidgetComponentProps<"notifications">) {
   const { data: notificationIntegrations = [] } = clientApi.widget.notifications.getNotifications.useQuery({
@@ -43,7 +44,7 @@ export default function NotificationsWidget({ options, integrationIds }: WidgetC
               radius={board.itemRadius}
               w="100%"
               p="sm"
-              style={{ color: "inherit", textDecoration: "none" }}
+              style={{ color: "inherit", textDecoration: "none", ...offscreenRowStyle(72) }}
             >
               <Flex gap="sm" align="flex-start" w="100%">
                 {!options.hideLogos && notification.source?.iconUrl && (
