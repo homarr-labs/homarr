@@ -33,11 +33,18 @@ const mergeActivity = (current: WorkshopAssistantActivity[], next: WorkshopAssis
 const mergeActivities = (current: WorkshopAssistantActivity[], next: WorkshopAssistantActivity[]) =>
   next.reduce(mergeActivity, current);
 
+const getEmptyLabel = (loading: boolean, loadFailed: boolean, connected: boolean) => {
+  if (loading) return "Loading recent activity…";
+  if (loadFailed) return connected ? "Waiting for live provider activity…" : "Recent provider activity is unavailable.";
+  return "No provider requests yet today.";
+};
+
 export const AssistantProviderActivity = ({ compact = false }: { compact?: boolean }) => {
   const { siteConfig } = useDocusaurusContext();
   const configuredWorkshopUrl = (siteConfig.customFields?.workshopUrl as string | undefined) ?? "";
   const [activities, setActivities] = useState<WorkshopAssistantActivity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [connected, setConnected] = useState(false);
   const workshopUrl = useMemo(() => getRuntimeWorkshopApiUrl(configuredWorkshopUrl), [configuredWorkshopUrl]);
 
@@ -64,9 +71,12 @@ export const AssistantProviderActivity = ({ compact = false }: { compact?: boole
       }
       try {
         const initial = await backend.listAssistantActivity(10);
-        if (active) setActivities((current) => mergeActivities(current, initial));
+        if (active) {
+          setActivities((current) => mergeActivities(current, initial));
+          setLoadFailed(false);
+        }
       } catch {
-        // Realtime activity can still populate this view when the initial list request fails.
+        if (active) setLoadFailed(true);
       } finally {
         if (active) setLoading(false);
       }
@@ -127,7 +137,7 @@ export const AssistantProviderActivity = ({ compact = false }: { compact?: boole
           </table>
         </div>
       ) : (
-        <div className={styles.empty}>{loading ? "Loading recent activity…" : "No provider requests yet today."}</div>
+        <div className={styles.empty}>{getEmptyLabel(loading, loadFailed, connected)}</div>
       )}
     </section>
   );
