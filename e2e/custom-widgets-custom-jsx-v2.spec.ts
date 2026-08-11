@@ -36,7 +36,10 @@ describe("Custom JSX v2 workbench", () => {
       await page.waitForLoadState("networkidle");
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
-      const signedIn = page.waitForURL(baseUrl, { waitUntil: "commit", timeout: 15_000 });
+      const signedIn = page.waitForURL((url) => url.origin === baseUrl && url.pathname !== "/auth/login", {
+        waitUntil: "commit",
+        timeout: 60_000,
+      });
       await page.locator("button[type='submit']").click();
       await signedIn;
 

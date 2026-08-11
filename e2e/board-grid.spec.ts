@@ -843,6 +843,8 @@ describe("Board grid", () => {
         }),
       ).toBe(true);
       await page.keyboard.press("Escape");
+      await expect(resizeOutline).toHaveCount(0);
+      await expect(page.locator("body")).not.toHaveAttribute("data-board-grid-interacting");
       await page.mouse.up();
       await expect(containerSection).toHaveAttribute("data-grid-w", "2");
 

@@ -1,4 +1,4 @@
-import { and, like } from "@homarr/db";
+import { getImageMatchRank, normalizeImageName } from "@homarr/common";
 import { icons } from "@homarr/db/schema";
 import { iconsFindSchema } from "@homarr/validation/icons";
 
@@ -15,38 +15,41 @@ export const iconsRouter = createTRPCRouter({
     })
     .input(iconsFindSchema)
     .query(async ({ ctx, input }) => {
-      const term = input.searchText?.toLowerCase().trim() ?? "";
-      const keywords = (input.searchText ?? "").split(" ").filter((keyword) => keyword.length > 0);
-
-      let whereCondition = undefined;
-      if (term.length > 0) {
-        whereCondition = and(...keywords.map((keyword) => like(icons.name, `%${keyword}%`)));
-      }
+      const term = normalizeImageName(input.searchText ?? "");
+      const repositories = await ctx.db.query.iconRepositories.findMany({
+        orderBy: (table, { asc, sql }) => [sql`CASE WHEN ${table.slug} = 'local' THEN 0 ELSE 1 END`, asc(table.slug)],
+        with: {
+          icons: {
+            columns: { id: true, name: true, url: true },
+            orderBy: (table, { asc, sql }) => [
+              sql`CASE WHEN ${table.name} LIKE '%.svg' THEN 0 ELSE 1 END`,
+              asc(table.name),
+            ],
+            limit: term.length === 0 ? input.limitPerGroup : undefined,
+          },
+        },
+      });
 
       return {
-        icons: await ctx.db.query.iconRepositories.findMany({
-          with: {
-            icons: {
-              columns: { id: true, name: true, url: true },
-              where: whereCondition,
-              orderBy: (table, { asc, sql }) => {
-                const svgFirst = sql`CASE WHEN ${table.name} LIKE '%.svg' THEN 0 ELSE 1 END`;
-                const nameAsc = asc(table.name);
-                if (term.length === 0) {
-                  return [svgFirst, nameAsc];
-                }
-                const tier = sql`CASE
-                  WHEN LOWER(${table.name}) = ${term} THEN 0
-                  WHEN LOWER(${table.name}) LIKE ${term + "%"} THEN 1
-                  WHEN LOWER(${table.name}) LIKE ${`%${term}%`} THEN 2
-                  ELSE 3
-                END`;
-                return [tier, svgFirst, nameAsc];
-              },
-              limit: input.limitPerGroup,
-            },
-          },
-        }),
+        icons:
+          term.length === 0
+            ? repositories
+            : repositories.map((repository) => ({
+                ...repository,
+                icons: repository.icons
+                  .flatMap((icon) => {
+                    const rank = getImageMatchRank(term, icon.name || icon.url);
+                    return rank === null ? [] : [{ icon, rank }];
+                  })
+                  .toSorted((a, b) =>
+                    a.rank !== b.rank
+                      ? a.rank - b.rank
+                      : Number(b.icon.name.toLowerCase().endsWith(".svg")) -
+                          Number(a.icon.name.toLowerCase().endsWith(".svg")) || a.icon.name.localeCompare(b.icon.name),
+                  )
+                  .slice(0, input.limitPerGroup)
+                  .map(({ icon }) => icon),
+              })),
         countIcons: await ctx.db.$count(icons),
       };
     }),
