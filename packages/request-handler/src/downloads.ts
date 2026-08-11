@@ -10,7 +10,7 @@ export const downloadClientRequestHandler = createIntegrationRequestHandler<
   {
     limit: number;
     includeArchivedHistory: boolean;
-    historyWindowDays: "10" | "20" | "30";
+    historyWindowDays: number;
   }
 >({
   async requestAsync(integration, input) {

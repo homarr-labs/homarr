@@ -32,7 +32,7 @@ describe("getSabnzbdHistorySlotsAsync", () => {
     expect(result.map((slot) => slot.nzo_id)).toEqual(["active", "archived", "duplicate"]);
   });
 
-  test.each([10, 20, 30])("includes the exact %i-day cutoff", async (historyWindowDays) => {
+  test.each([2, 7, 14, 28])("includes the exact %i-day cutoff", async (historyWindowDays) => {
     const result = await getSabnzbdHistorySlotsAsync({
       activeSlots: [],
       historyWindowDays,

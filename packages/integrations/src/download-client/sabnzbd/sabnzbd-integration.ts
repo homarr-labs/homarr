@@ -27,7 +27,7 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
   public async getClientJobsAndStatusAsync(input: {
     limit: number;
     includeArchivedHistory?: boolean;
-    historyWindowDays?: "10" | "20" | "30";
+    historyWindowDays?: number;
   }): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
     const { queue } = await queueSchema.parseAsync(
@@ -36,23 +36,25 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
     const { history } = await historySchema.parseAsync(
       await this.sabNzbApiCallAsync("history", { limit: input.limit.toString() }),
     );
-    const historySlots = input.includeArchivedHistory
-      ? await getSabnzbdHistorySlotsAsync({
-          activeSlots: history.slots,
-          historyWindowDays: Number(input.historyWindowDays ?? "10"),
-          fetchPageAsync: async ({ start, limit }) => {
-            const { history: archivedHistory } = await historySchema.parseAsync(
-              await this.sabNzbApiCallAsync("history", {
-                archive: "1",
-                start: start.toString(),
-                limit: limit.toString(),
-              }),
-            );
+    let historySlots = history.slots;
 
-            return archivedHistory.slots;
-          },
-        })
-      : history.slots;
+    if (input.includeArchivedHistory) {
+      historySlots = await getSabnzbdHistorySlotsAsync({
+        activeSlots: history.slots,
+        historyWindowDays: input.historyWindowDays ?? 7,
+        fetchPageAsync: async ({ start, limit }) => {
+          const { history: archivedHistory } = await historySchema.parseAsync(
+            await this.sabNzbApiCallAsync("history", {
+              archive: "1",
+              start: start.toString(),
+              limit: limit.toString(),
+            }),
+          );
+
+          return archivedHistory.slots;
+        },
+      });
+    }
 
     const status: DownloadClientStatus = {
       paused: queue.paused,

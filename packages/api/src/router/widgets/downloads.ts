@@ -18,7 +18,7 @@ export const downloadsRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50). For SABnzbd, includeArchivedHistory includes archived jobs when true and defaults to false; historyWindowDays accepts 10, 20, or 30 days and defaults to 10 days.",
+          "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50). For SABnzbd, includeArchivedHistory includes archived jobs when true and defaults to false; historyWindowDays is a positive whole number of days and defaults to 7.",
       },
     })
     .concat(createDownloadClientIntegrationMiddleware("query"))
@@ -26,7 +26,7 @@ export const downloadsRouter = createTRPCRouter({
       z.object({
         limitPerIntegration: z.number().default(50),
         includeArchivedHistory: z.boolean().default(false),
-        historyWindowDays: z.enum(["10", "20", "30"]).default("10"),
+        historyWindowDays: z.number().int().min(1).default(7),
       }),
     )
     .query(async ({ ctx, input }) => {

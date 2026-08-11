@@ -77,22 +77,10 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
           defaultValue: false,
           withDescription: true,
         }),
-        historyWindowDays: factory.select({
-          defaultValue: "10",
-          options: [
-            {
-              value: "10",
-              label: (t) => t("widget.downloads.option.historyWindowDays.values.10Days"),
-            },
-            {
-              value: "20",
-              label: (t) => t("widget.downloads.option.historyWindowDays.values.20Days"),
-            },
-            {
-              value: "30",
-              label: (t) => t("widget.downloads.option.historyWindowDays.values.30Days"),
-            },
-          ],
+        historyWindowDays: factory.number({
+          defaultValue: 7,
+          validate: z.number().int().min(1),
+          step: 1,
           withDescription: true,
         }),
         activeTorrentThreshold: factory.number({

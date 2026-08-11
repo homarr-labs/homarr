@@ -99,10 +99,9 @@ export const downloadsWidget: WidgetDefinition = {
       },
       {
         name: "Archived history window",
-        description:
-          "Show archived jobs completed within the selected period. Increase the item limit to show older results.",
-        values: "10 days, 20 days, or 30 days",
-        defaultValue: "10 days",
+        description: "Number of days of archived jobs to include. Increase the item limit to show more results.",
+        values: "Any positive whole number of days",
+        defaultValue: "7 days",
       },
       {
         name: "Limit items per integration",
