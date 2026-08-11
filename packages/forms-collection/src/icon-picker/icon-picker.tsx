@@ -76,7 +76,8 @@ export const IconPicker = ({
   const [debouncedDraft] = useDebouncedValue(draft, 250);
 
   const directUrl = isDirectImageUrl(draft) ? draft.trim() : null;
-  const searchText = directUrl || debouncedDraft === (value ?? "") ? "" : debouncedDraft.trim();
+  const isCommittedValueDraft = debouncedDraft === (value ?? "");
+  const searchText = directUrl !== null || isCommittedValueDraft ? "" : debouncedDraft.trim();
   const canUpload = session?.user.permissions.includes("media-upload") ?? false;
 
   const query = clientApi.icon.findIcons.useQuery(
@@ -283,92 +284,91 @@ export const IconPicker = ({
       }}
     >
       <Combobox.Target withExpandedAttribute>
-        <Group wrap="nowrap" gap="xs" w="100%" align="start">
-          <InputBase
-            flex={1}
-            leftSection={leftSection}
-            rightSection={
-              <Group gap={2} wrap="nowrap">
-                {(draft || value) && (
-                  <CloseButton
-                    size="sm"
-                    aria-label={tCommon("iconPicker.clear")}
-                    onMouseDown={(event) => event.preventDefault()}
-                    onClick={clearValue}
-                  />
-                )}
-                {query.isFetching && !directUrl ? <Loader size={14} /> : <Combobox.Chevron />}
-              </Group>
-            }
-            rightSectionWidth={56}
-            rightSectionPointerEvents="all"
-            value={draft}
-            onChange={(event) => {
-              const nextValue = event.currentTarget.value;
-              setDraft(nextValue);
-              setHasEdited(true);
-              setKeyboardIndex(-1);
-              combobox.openDropdown("keyboard");
-              combobox.updateSelectedOptionIndex();
-
-              if (!nextValue) {
-                setValue("");
-              } else if (isImageSource(nextValue)) {
-                setValue(nextValue.trim());
-              }
-            }}
-            onKeyDown={handleKeyDown}
-            onClick={openWithSuggestedSearch}
-            onFocus={(event) => {
-              onFocus?.(event);
-              openWithSuggestedSearch();
-            }}
-            onBlur={(event) => {
-              onBlur?.(event);
-              combobox.closeDropdown();
-              setDraft(value ?? "");
-              setHasEdited(false);
-            }}
-            withAsterisk={withAsterisk}
-            error={error}
-            label={label ?? tCommon("iconPicker.label")}
-            description={tCommon("iconPicker.description")}
-            styles={{
-              description: { color: "var(--mantine-color-text)" },
-              input: { color: "var(--mantine-color-text)" },
-              error: { color: "light-dark(var(--mantine-color-red-9), var(--mantine-color-red-2))" },
-            }}
-            placeholder={placeholderText}
-            autoComplete="off"
-            spellCheck={false}
-          />
-
-          {canUpload && (
-            <UploadMedia
-              onSuccess={(medias) => {
-                const first = medias.at(0);
-                if (!first) return;
-                commitValue(first.url);
-                combobox.closeDropdown();
-              }}
-            >
-              {({ onClick, loading }) => (
-                <Tooltip label={tCommon("iconPicker.uploadImage")}>
-                  <ActionIcon
-                    onClick={onClick}
-                    loading={loading}
-                    mt={46}
-                    size={36}
-                    variant="default"
-                    aria-label={tCommon("iconPicker.uploadImage")}
-                  >
-                    <IconUpload size={17} stroke={1.5} />
-                  </ActionIcon>
-                </Tooltip>
+        <InputBase
+          flex={1}
+          leftSection={leftSection}
+          rightSection={
+            <Group gap={2} wrap="nowrap">
+              {canUpload && (
+                <UploadMedia
+                  onSuccess={(medias) => {
+                    const first = medias.at(0);
+                    if (!first) return;
+                    commitValue(first.url);
+                    combobox.closeDropdown();
+                  }}
+                >
+                  {({ onClick, loading }) => (
+                    <Tooltip label={tCommon("iconPicker.uploadImage")}>
+                      <ActionIcon
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onClick();
+                        }}
+                        loading={loading}
+                        size="sm"
+                        variant="subtle"
+                        aria-label={tCommon("iconPicker.uploadImage")}
+                      >
+                        <IconUpload size={16} stroke={1.5} />
+                      </ActionIcon>
+                    </Tooltip>
+                  )}
+                </UploadMedia>
               )}
-            </UploadMedia>
-          )}
-        </Group>
+              {(draft || value) && (
+                <CloseButton
+                  size="sm"
+                  aria-label={tCommon("iconPicker.clear")}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={clearValue}
+                />
+              )}
+              {query.isFetching && !directUrl ? <Loader size={14} /> : <Combobox.Chevron />}
+            </Group>
+          }
+          rightSectionWidth={canUpload ? 86 : 56}
+          rightSectionPointerEvents="all"
+          value={draft}
+          onChange={(event) => {
+            const nextValue = event.currentTarget.value;
+            setDraft(nextValue);
+            setHasEdited(true);
+            setKeyboardIndex(-1);
+            combobox.openDropdown("keyboard");
+            combobox.updateSelectedOptionIndex();
+
+            if (!nextValue) {
+              setValue("");
+            } else if (isImageSource(nextValue)) {
+              setValue(nextValue.trim());
+            }
+          }}
+          onKeyDown={handleKeyDown}
+          onClick={openWithSuggestedSearch}
+          onFocus={(event) => {
+            onFocus?.(event);
+            openWithSuggestedSearch();
+          }}
+          onBlur={(event) => {
+            onBlur?.(event);
+            combobox.closeDropdown();
+            setDraft(value ?? "");
+            setHasEdited(false);
+          }}
+          withAsterisk={withAsterisk}
+          error={error}
+          label={label ?? tCommon("iconPicker.label")}
+          description={tCommon("iconPicker.description")}
+          styles={{
+            description: { color: "var(--mantine-color-text)" },
+            input: { color: "var(--mantine-color-text)" },
+            error: { color: "light-dark(var(--mantine-color-red-9), var(--mantine-color-red-2))" },
+          }}
+          placeholder={placeholderText}
+          autoComplete="off"
+          spellCheck={false}
+        />
       </Combobox.Target>
 
       <Combobox.Dropdown className={classes.dropdown}>

@@ -1,13 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import type { IconGroup } from "./icon-picker.utils";
-import {
-  arrangeIconPickerSections,
-  findBestIconMatch,
-  isDirectImageUrl,
-  isImageSource,
-  isSvgImage,
-} from "./icon-picker.utils";
+import { arrangeIconPickerSections, isDirectImageUrl, isImageSource, isSvgImage } from "./icon-picker.utils";
 
 const groups = [
   {
@@ -33,26 +27,6 @@ describe("icon picker utilities", () => {
     expect(result.local.map((icon) => icon.id)).toEqual(["local"]);
     expect(result.svg.map((icon) => icon.id)).toEqual(["svg", "long"]);
     expect(result.other.map((icon) => icon.id)).toEqual(["raster"]);
-  });
-
-  test("normalizes punctuation and prefers a user's exact local image", () => {
-    expect(findBestIconMatch("home_assistant", groups)).toBe("/api/user-medias/home-assistant");
-  });
-
-  test("prefers SVG over raster when equally matched outside local images", () => {
-    expect(findBestIconMatch("Home Assistant", [groups[0] as IconGroup])).toBe(
-      "https://cdn.example.com/home-assistant.svg?v=1",
-    );
-  });
-
-  test("prefers an exact normalized name over a longer partial match", () => {
-    expect(findBestIconMatch("home assistant", [groups[0] as IconGroup])).toBe(
-      "https://cdn.example.com/home-assistant.svg?v=1",
-    );
-  });
-
-  test("does not return unrelated icons", () => {
-    expect(findBestIconMatch("jellyfin", groups)).toBeNull();
   });
 
   test.each([
