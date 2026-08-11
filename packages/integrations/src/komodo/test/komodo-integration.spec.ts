@@ -126,6 +126,21 @@ describe("KomodoIntegration resource lists", () => {
     ]);
   });
 
+  test("excludes templates from operational resource lists", async () => {
+    setupMockResponses({
+      "/read/ListStacks": {
+        body: [
+          { id: "stack-1", name: "Media", template: false, info: { state: "running" } },
+          { id: "stack-template", name: "Stack Template", template: true, info: { state: "unknown" } },
+        ],
+      },
+    });
+
+    await expect(createIntegration().listStacksAsync()).resolves.toStrictEqual([
+      { id: "stack-1", name: "Media", state: "running", status: "healthy" },
+    ]);
+  });
+
   test("reads deployments and maps their states", async () => {
     setupMockResponses({
       "/read/ListDeployments": {

@@ -10,7 +10,12 @@ export const { definition, componentLoader } = createWidgetDefinition("komodo", 
   maxIntegrations: 1,
   refetchInterval: 30,
   createOptions() {
-    return optionsBuilder.from(() => ({}));
+    return optionsBuilder.from((factory) => ({
+      showServers: factory.switch({ defaultValue: true }),
+      showStacks: factory.switch({ defaultValue: true }),
+      showDeployments: factory.switch({ defaultValue: true }),
+      showProblems: factory.switch({ defaultValue: true }),
+    }));
   },
   errors: {
     INTERNAL_SERVER_ERROR: {

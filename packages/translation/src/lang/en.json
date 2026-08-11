@@ -2550,7 +2550,23 @@
         "attention": "need attention"
       },
       "problems": "Problems",
-      "option": {},
+      "option": {
+        "showServers": {
+          "label": "Show servers"
+        },
+        "showStacks": {
+          "label": "Show stacks"
+        },
+        "showDeployments": {
+          "label": "Show deployments"
+        },
+        "showProblems": {
+          "label": "Show problems"
+        }
+      },
+      "empty": {
+        "noSections": "Select at least one section in the widget settings"
+      },
       "error": {
         "internalServerError": "Failed to fetch Komodo data"
       }

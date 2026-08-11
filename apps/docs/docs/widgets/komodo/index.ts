@@ -7,6 +7,31 @@ export const komodoWidget: WidgetDefinition = {
   description: "Displays server, stack, deployment, and problem counts from Komodo.",
   path: "../../widgets/komodo",
   configuration: {
-    items: [],
+    items: [
+      {
+        name: "Show servers",
+        description: "Display the server status summary.",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+      {
+        name: "Show stacks",
+        description: "Display the stack status summary.",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+      {
+        name: "Show deployments",
+        description: "Display the deployment status summary.",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+      {
+        name: "Show problems",
+        description: "Display the combined problem count and, when space permits, the problem list.",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+    ],
   },
 };

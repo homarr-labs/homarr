@@ -7,6 +7,7 @@ const INVALID_VERSION_RESPONSE_MESSAGE = "Invalid Komodo version response";
 const komodoResourceListItemSchema = z.object({
   id: z.string(),
   name: z.string(),
+  template: z.boolean().optional(),
   info: z.object({
     state: z.string(),
   }),
@@ -15,6 +16,7 @@ const komodoResourceListItemSchema = z.object({
 const komodoResourceListItemFallbackSchema = z.object({
   id: z.string().optional(),
   name: z.string().optional(),
+  template: z.boolean().optional(),
   info: z
     .object({
       state: z.string().optional(),
@@ -126,25 +128,31 @@ export const parseKomodoResourceListResponseAsync = async (
     throw new ParseError(INVALID_LIST_RESPONSE_MESSAGE, { cause: listResult.error });
   }
 
-  return listResult.data.map((item, index) => {
+  return listResult.data.flatMap<KomodoResource>((item, index) => {
     const result = komodoResourceListItemSchema.safeParse(item);
     if (result.success) {
-      return {
-        id: result.data.id,
-        name: result.data.name,
-        state: result.data.info.state,
-        status: mapKomodoResourceStatus(kind, result.data.info.state),
-      };
+      if (result.data.template === true) return [];
+      return [
+        {
+          id: result.data.id,
+          name: result.data.name,
+          state: result.data.info.state,
+          status: mapKomodoResourceStatus(kind, result.data.info.state),
+        },
+      ];
     }
 
     const fallback = komodoResourceListItemFallbackSchema.safeParse(item);
+    if (fallback.success && fallback.data.template === true) return [];
     const state = fallback.success ? (fallback.data.info?.state ?? "unknown") : "unknown";
-    return {
-      id: fallback.success ? (fallback.data.id ?? `invalid-${index}`) : `invalid-${index}`,
-      name: fallback.success ? (fallback.data.name ?? "Unknown resource") : "Unknown resource",
-      state,
-      status: "unknown",
-    };
+    return [
+      {
+        id: fallback.success ? (fallback.data.id ?? `invalid-${index}`) : `invalid-${index}`,
+        name: fallback.success ? (fallback.data.name ?? "Unknown resource") : "Unknown resource",
+        state,
+        status: "unknown",
+      },
+    ];
   });
 };
 
