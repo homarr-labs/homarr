@@ -170,7 +170,11 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           <EditorSection id="general" title={w("generalInformation")} icon={IconSettings}>
             <TextInput label={t("field.name")} required {...form.getInputProps("name")} />
             <Textarea label={t("field.description")} autosize minRows={2} {...form.getInputProps("description")} />
-            <IconPicker withAsterisk={false} {...form.getInputProps("iconUrl")} />
+            <IconPicker
+              withAsterisk={false}
+              suggestedSearch={mode === "create" ? form.values.name : undefined}
+              {...form.getInputProps("iconUrl")}
+            />
           </EditorSection>
           <EditorSection id="sources" title={w("sources.title")} icon={IconApi}>
             <CustomWidgetSourcesEditor form={form} definitionId={definitionId} />
