@@ -67,8 +67,9 @@ These interfaces do not return an archive URL or archive hash.
 
 1. Load `customWidget_getSkill`, then get the prompt and live schema.
 2. Call `customWidget_getComponentCatalog`, followed by `customWidget_getComponent` for only the relevant installed
-   components and `customWidget_getExample` when one catalog example matches the interaction pattern. If shared props
-   are needed, collect their catalog names and call `customWidget_getSharedProps` once for that set.
+   components and `customWidget_getExample` when one catalog example matches the interaction pattern. Fetch at most
+   eight component documents before the first validation (or four after a complete example already matches). If shared
+   props are needed, collect their catalog names and call `customWidget_getSharedProps` once for that set.
 3. Read the external API documentation.
 4. Build one definition, using `templateLines` for multiline JSX tool input.
 5. Validate the definition without saving it and repair every reported issue.
@@ -76,8 +77,9 @@ These interfaces do not return an archive URL or archive hash.
 7. Run `customWidget_previewQuery` for every query returned by the preview and inspect its actual status and data shape.
 8. Test relevant actions in simulation mode.
 9. Open the returned preview path with browser tools.
-10. Inspect the redacted journal and revise the local candidate until validation, data, and rendering all work.
-11. Create the widget, including any source URLs and credentials the user already supplied.
+10. Inspect the redacted journal and revise the local candidate until validation, data, and rendering all work. Keep the
+    exact tested preview candidate locally.
+11. Create the widget from that final tested preview, including any source URLs and credentials the user already supplied.
 12. Open its returned management path, and use a structured question when the user must choose whether to place it on a board.
 13. Otherwise, ask the user to configure the saved definition with the ten-minute Homarr source-setup URL.
 14. Create a final preview with the saved definition ID so Homarr loads its stored credentials, then test it again.

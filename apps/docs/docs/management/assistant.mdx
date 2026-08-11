@@ -6,6 +6,8 @@ tags:
   - Security
 ---
 
+import assistantConfigImage from "./img/assistant-config.png";
+
 # Assistant
 
 Administrators can configure the instance-wide AI assistant from **Management → Assistant**.
@@ -58,6 +60,15 @@ The provider list also shows **Homarr — Coming soon** as a disabled option.
 The management page presents setup as three compact sections: provider and endpoint, credentials, then
 model and availability. A status summary at the top shows whether the connection is ready, whether a key
 is protected, and which model is selected. Redundant active-state badges are omitted when the setup is ready.
+
+<img
+  src={assistantConfigImage}
+  alt="Assistant configuration page showing provider, credentials, model, and availability sections"
+  style={{ maxWidth: "100%" }}
+/>
+
+The screenshot shows the configuration surface with no provider key entered; the assistant remains disabled until a
+working provider, model, and enabled state are saved.
 
 1. Choose a provider preset or **Custom endpoint**, then confirm the API base URL. It usually ends in `/v1`.
 2. Add an API key if the service requires bearer authentication. Additional authentication or routing
@@ -285,6 +296,9 @@ Background, and General tabs. The form highlights how many fields were proposed,
 assistant did not change, and returns only values that differ from the current board. Custom CSS can be
 copied or restored before continuing, and Homarr warns when it contains an imported stylesheet or remote
 resource URL. Continuing from the form opens the normal mutation approval before anything is saved.
+
+The board-settings tool covers General, Background, Appearance, Custom CSS, and app-status settings. It does not edit
+responsive layouts, board access control, or Danger zone actions.
 
 Ask for changes such as “make the cards denser on my Home board,” “add a mobile CSS rule without removing
 my existing styles,” or “change the board colors and disable app status checks.” The current user must have

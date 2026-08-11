@@ -7,6 +7,9 @@ Templates are JSX expressions interpreted inside a widget-local safety and rende
 - `options.name` — saved widget configuration
 - `inputs.name` — temporary values from declarative `bind`
 
+The v2 manifest supports up to eight sources and 64 requests. Source IDs are case-insensitively unique, and
+the template and secret values have bounded sizes. Validation reports the exact field when a limit is exceeded.
+
 Use normal Mantine layouts, typography, feedback, dates, and charts. Official compound names such as `Card.Section`, `Tabs.List`, and `Radio.Group` are supported. Ordinary safe props pass through; a dangerous capability produces an explicit error.
 
 ## Temporary inputs
@@ -15,7 +18,7 @@ Use normal Mantine layouts, typography, feedback, dates, and charts. Official co
 <Stack>
   <TextInput bind="search" defaultValue="" label="Search" />
   <SubFetch requestId="search" params={{ query: inputs.search }}>
-    {(results) => (
+    {(results, meta) => (
       <Stack>
         {(results ?? []).map((item) => (
           <Text key={item.id}>{item.name}</Text>
@@ -37,7 +40,11 @@ Bounded regex literals are supported for string matching, splitting, search, and
 ## Runtime components
 
 - `SubFetch` runs a manual query with its `params`. Set `triggerContent` to a card or image to make that content the accessible click and keyboard trigger instead of showing the default load button.
-- `ActionButton` and `ToggleSwitch` run actions.
+- `SubFetch` with `trigger="manual"` keeps its result local to that instance; it does not populate the shared
+  `data.requestId` or `status.requestId` roots. The child callback receives `(result, meta)`, while loading, errors, and
+  retry are handled by `SubFetch`. Provide both `triggerContent` and `triggerAriaLabel` when custom content launches it.
+- `ActionButton` and `ToggleSwitch` run actions only when the widget is mounted outside edit mode. A toggle needs both
+  enabled and disabled request parameters and rolls back its visual state if the action fails.
 - `RefreshButton` renders a compact, accessible icon control that refreshes load queries for authenticated viewers. It
   is disabled for anonymous public-board viewers because refreshing invalidates shared server cache state.
 - `Icon`/`TablerIcon` resolves installed safe icons.

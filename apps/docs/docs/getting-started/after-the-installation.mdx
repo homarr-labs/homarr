@@ -130,7 +130,7 @@ It is important that you first migrate correctly using [the list of breaking cha
    Copy it and do not loose it!
 5. Go to your new >1.0.0 Homarr instance and start the onboarding. Choose `Import from Homarr before 1.0`
 6. Drag and drop your previously downloaded ZIP archive into the file upload: <br/><img src={manageImportOldHomarrDropzone} style={{ maxWidth: 500 }} />
-7. Next, choose the data that you want to import and how to import it. Since screen sizes were removed in 1.0, we create a new board for every screen size by default. We recommend you to only keep the best layout and adjust it later in 1.0.0 - but you can also import all of them and pick later.<br/><img src={manageImportOldHomarrChooseData} style={{ maxWidth: 500 }} />
+7. Next, choose the data that you want to import and how to import it. Old Homarr screen sizes are imported as responsive layouts on the same board: the narrowest becomes **Mobile**, the widest becomes **Base**, and layouts between them become custom layouts. Homarr normalizes duplicate breakpoints automatically, so you can review the imported board in Board Settings and adjust the layouts there.<br/><img src={manageImportOldHomarrChooseData} style={{ maxWidth: 500 }} />
 8. If you previously exported integrations or users, you will be asked to decrypt the data safely using your obtained encryption token. Paste into the modal and confirm your action.<br/><img src={manageImportDecryptionToken} style={{ maxWidth: 500 }} />
 9. Next, you can [follow the same setup as when starting from scratch](#starting-from-scratch). After you completed the onboarding, all of your data will be migrated and available.
 
@@ -150,6 +150,9 @@ Public boards are also accessible for users, that are not logged in ([see access
 Congratulations - you've just created your first board. You can see boards, that you have access to, on this page:
 
 ![](./img/manage-view-board.png)
+
+New boards start with **Mobile** and **Base** responsive layouts automatically, so you can edit the board for phones and
+desktops without creating extra layouts first. Each layout keeps its own tile positions and sizes.
 
 ## Add your first app to Homarr
 
@@ -182,21 +185,23 @@ Here you have the following options in the header:
 - **Search**: Here you can search for data. You can search for integrations, boards, actions, sites and much more. Some actions may be context dependent (eg. will only show when certain widgets are on your page)
 - **Edit mode**: Clicking this button will toggle the edit mode. In this mode you can edit the contents of your board.
 - **Settings**: Clicking this button will redirect you to a settings page where you can adjust the board settings (page title, colors, ...).
+- **Board switcher**: Use this button to open another board that you can access.
 - **Profile**: This avatar will be visible on every page. Clicking it will show a menu with actions.
 
 When entering the edit mode, you'll get some additional buttons to work with:
 
 <img src={manageBoardHeaderEditMode} alt={"Screenshot of buttons in the edit mode"} width={200} />
 
-- **Add item**: Click this button to add new elements to your page.
-- **Exit edit mode**: Click this button to save your changes and exit edit mode.
+- **Add board content**: Click this button to create a new item, app, integration, or Container.
+- **Exit edit mode**: Click this button to save your changes and exit edit mode. If you leave with unsaved changes, Homarr asks whether to discard them.
 
 Outside edit mode, right-click a widget for its live status, refresh, settings, quick options, and supported actions.
 Hold `Shift` while hovering a widget that supports advanced view to expand it in place while the rest of the board
 stays visible but dimmed. Release `Shift` to close it. You can also focus that widget and press `Shift` + `Enter` to
 keep its advanced view open until you close it. Widgets without a distinct advanced experience adapt in place.
 
-To continue, click the option "New Item":
+To continue, click **New item** in the add-content menu. New content is placed at the first available position on the main
+canvas; it is not inserted at a clicked empty cell or directly into a rail or Container:
 
 <img src={manageBoardHeaderAddItem} alt={"Screenshot of the add item menu"} width={200} />
 
@@ -233,7 +238,8 @@ The tile snaps to the grid. Equally-sized tiles swap when one is dropped into th
 Every `1 × 1` tile has a logical content size of `200 × 200` pixels.
 Larger tiles use multiples of that fixed unit, with a consistent gap between cells.
 Homarr scales the complete board uniformly, like zooming a page.
-It stops shrinking at 75% and lets you scroll horizontally instead of making text and controls too small.
+The complete canvas always fits the available width without horizontal board scrolling. Below 100%, Homarr preserves the
+widget's readable typography and control density instead of shrinking each widget independently.
 It does not squeeze or reflow the content of individual widgets, so a widget keeps the same design and proportions across screen sizes.
 
 :::note
@@ -251,9 +257,11 @@ This helps you to explore the capabilities of Homarr before you build your board
 
 :::
 
-Keyboard users can focus a tile, press Enter or Space, then use arrow keys to move and Shift plus arrow keys to resize.
-Press Escape to stop.
-For precise numeric controls or touch input, choose **Move / resize item** from the tile's edit menu.
+Keyboard users can focus a tile, press Enter or Space, then use arrow keys to move and Shift plus arrow keys to resize
+within its current canvas, rail, or Container. Press Escape to stop keyboard editing. Touch dragging starts after a short
+hold of about `200 ms`; resize handles accept direct touch input. During a pointer or touch move or resize, press Escape
+to cancel and restore the previous layout. For cross-grid moves or precise numeric controls, choose **Move / resize item**
+from the tile's edit menu.
 The dialog can also move the tile to another section or fixed sidebar:
 
 ![](./img/manage-board-move-resize-item-menu.png)

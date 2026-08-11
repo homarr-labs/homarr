@@ -27,6 +27,7 @@ This widget displays a list of torrents or usenet-articles that are currently be
 
 import downloadsCard from "./img/screenshot.png";
 import contextMenuImg from "./img/context-menu.png";
+import advancedViewImg from "./img/advanced-view.png";
 
 <div>
   <img src={downloadsCard} alt="Downloads widget showing torrent and usenet items" width={128 * 4} />
@@ -38,12 +39,22 @@ import contextMenuImg from "./img/context-menu.png";
   <img src={contextMenuImg} alt="Downloads widget context menu with pause, delete, and copy actions" width={128 * 4} />
 </div>
 
+#### Advanced view
+
+<div>
+  <img
+    src={advancedViewImg}
+    alt="Downloads widget in advanced view with stats, sortable columns, and expanded details"
+    width={128 * 6}
+  />
+</div>
+
 ### Features
 
 - **Responsive table** — columns automatically adapt to widget width, hiding less important columns at smaller sizes
 - **Sortable columns** — click any column header to sort ascending/descending
 - **Column customization** — choose which columns to display, then hover a header to reveal its grab handle for reordering or drag its edge to resize it; layouts save automatically per widget
-- **Right-click context menu** — pause, resume, delete downloads, or copy download names directly from the context menu
+- **Right-click context menu** — pause, resume, delete downloads, or copy download names directly from the context menu when the selected integration grants interact access
 - **Row expansion** — click any row to see full details inline without opening a separate modal
 - **Hover tooltips** — hover a download name to see size, speeds, ETA, ratio, and category; open tooltips close when switching between compact and advanced mode
 - **Global stats bar** — toggle a summary bar showing queue progress, total size, speeds, ratio, and per-state counts
@@ -51,6 +62,16 @@ import contextMenuImg from "./img/context-menu.png";
 - **Global controls** — pause/resume all downloads across all clients from the footer bar
 - **Status indicators** — color-coded badges show download state at a glance
 - **Speed overview** — total download and upload speeds displayed in the footer
+
+:::note
+
+Compact layouts hide secondary columns as width decreases and can hide the footer on very short tiles. Downloads supports
+Advanced view, which restores the denser table, stats, filters, and footer controls in a focused panel.
+
+Pause, resume, delete, and global controls depend on integration permissions. `slskd` is read-only, so its rows expose
+copy and inspection actions instead of mutations.
+
+:::
 
 ### Supported Integrations
 
@@ -89,7 +110,7 @@ import contextMenuImg from "./img/context-menu.png";
 
 ### Interactions
 
-- **Right-click** any download to open a context menu with pause/resume, delete, and copy actions
+- **Right-click** any download to open a context menu with the actions allowed by that integration
 - **Click** any row to expand it and see full download details inline
 - **Hover** a download name for a quick stats tooltip
 - **Stats toggle** — show or hide the global stats bar from the footer

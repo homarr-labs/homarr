@@ -1,8 +1,19 @@
 # Create a Custom Widget
 
 import { CanonicalCustomWidgetExample } from "@site/src/components/custom-widget-code";
+import workbenchImage from "./img/workbench.png";
 
 The workbench is visual-first: configure the default API connection, add request cards, add option rows, then write JSX. Additional sources and raw manifest JSON remain under Advanced. Code and preview sit side by side on desktop and use tabs on mobile.
+For multiline JSX, prefer `templateLines` in agent or MCP input and keep the final tested preview as the source of truth before saving.
+
+<img
+  src={workbenchImage}
+  alt="Custom Widget workbench with configuration sections and a live preview"
+  style={{ maxWidth: "100%" }}
+/>
+
+The workbench keeps the configuration and preview together so you can inspect validation diagnostics, the redacted request
+journal, fixture data, and preview size before saving.
 
 ## Manual workflow
 

@@ -1,10 +1,10 @@
-import { IconArrowsMaximize, IconLayoutGrid, IconMouse2, IconPlus } from "@tabler/icons-react";
+import { IconArrowsMaximize, IconLayoutGrid, IconMouse2 } from "@tabler/icons-react";
 
 const advancedInteraction = {
   icon: IconArrowsMaximize,
   title: "Advanced view",
   description:
-    "Hold Shift while hovering for an in-place preview, press Shift + Enter, or choose Open advanced view from the widget menu.",
+    "On supported widgets, hold Shift while hovering for about 500 ms, press Shift + Enter, or choose Open advanced view from the widget menu. It is unavailable in edit mode.",
 } as const;
 
 const standardInteractions = [
@@ -12,13 +12,7 @@ const standardInteractions = [
     icon: IconMouse2,
     title: "Widget actions",
     description:
-      "Right-click for live query status, refresh, settings, quick options, and actions supported by the widget.",
-  },
-  {
-    icon: IconPlus,
-    title: "Place it precisely",
-    description:
-      "With board changes allowed, right-click or touch and hold empty grid space to add there. Keyboard users can press Shift + F10.",
+      "When signed in, outside edit mode, and with Enable right click on widgets enabled, right-click for live query status, refresh, settings, quick options, and supported actions. App tiles are excluded.",
   },
   {
     icon: IconLayoutGrid,
@@ -35,9 +29,9 @@ export const WidgetInteractionGuide = ({ advancedView = true }: { advancedView?:
     <details className="group my-6 overflow-hidden rounded-xl border border-solid border-[#e5e7eb] bg-slate-50/70 dark:border-[#333] dark:bg-gray-900/40">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-semibold marker:hidden">
         <span>Power-user controls</span>
-        <span className="text-xs font-normal text-[#696969] group-open:hidden dark:text-[#999]">Show shortcuts</span>
+        <span className="text-xs font-normal text-[#696969] group-open:hidden dark:text-[#999]">Show controls</span>
         <span className="hidden text-xs font-normal text-[#696969] group-open:inline dark:text-[#999]">
-          Hide shortcuts
+          Hide controls
         </span>
       </summary>
       <div
@@ -53,8 +47,9 @@ export const WidgetInteractionGuide = ({ advancedView = true }: { advancedView?:
       </div>
       {advancedView && (
         <p className="m-0 px-4 pb-4 text-xs text-[#696969] dark:text-[#999]">
-          Advanced view reuses the widget&apos;s live data and cache. The rest of the board stays visible but dimmed. On
-          touch devices, use the widget menu; compact-only widgets adapt in place instead.
+          Advanced view reuses the widget&apos;s live data and cache. Preview dims the rest of the board; the manual
+          view traps focus and locks background scrolling. On touch devices, use the widget menu where your browser
+          exposes it; compact-only widgets adapt in place instead.
         </p>
       )}
     </details>

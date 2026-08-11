@@ -14,12 +14,13 @@ import itemRadiusImage from "./img/item-radius.png";
 import layoutLargeImage from "./img/layout-large.png";
 import layoutMediumImage from "./img/layout-medium.png";
 import layoutSmallImage from "./img/layout-small.png";
+import layoutSettingsImage from "./img/layout-settings.png";
 
 Each dashboard is called a "board".
 You can create as many boards as you want.
 Boards can be restricted to user groups.
-A user may also have a "home board" which they will see at the root path (e.g. my-homarr.com or my-homarr.com/board).
-Other boards can be viewed by direct links (e.g. my-homarr.com/board/smart-home) or via the management pages.
+A user may also have a "home board" which they will see at the root path (e.g. my-homarr.com or my-homarr.com/boards).
+Other boards can be viewed by direct links (e.g. my-homarr.com/boards/smart-home) or via the management pages.
 
 Names of boards must be unique because this will be used in the URL to load the desired board.
 
@@ -92,9 +93,14 @@ Homarr will fall back to the Homarr logo if nothing is set.
 
 In this section you can configure the different responsive layouts. Homarr selects the layout with the highest breakpoint that is not wider than the current screen, then scales its complete fixed-size canvas uniformly.
 
-![](./img/layout-settings.png)
+<img
+  src={layoutSettingsImage}
+  alt="Board settings showing protected Mobile and Base responsive layouts with rail controls"
+  style={{ maxWidth: "100%" }}
+/>
 
-Every board has two protected layouts:
+Every board has two protected layouts. Creating a board adds **Mobile** at `0px` with three columns and **Base** at
+`768px` with the column count you choose. Both layouts can be edited, but neither can be removed.
 
 Every `1 × 1` tile has a `200 × 200` logical-pixel content area.
 The `24` logical-pixel gap between tiles is separate from that size.
@@ -107,9 +113,16 @@ The complete canvas always fits the available width and never adds horizontal bo
 - **Mobile** starts at `0px` and uses three columns on new boards.
 - **Base** is the widest layout and starts at `768px` on new boards.
 
-Mobile and Base can be renamed and their column counts and rails can be changed, but they cannot be removed. You can add removable custom layouts between their breakpoints.
+Mobile and Base can be renamed and their column counts and rails can be changed. You can add removable custom layouts
+between their breakpoints.
 
-Each layout stores independent positions and sizes. Moving or resizing a widget while editing Mobile does not move it in Base or any custom layout. New custom layouts are generated from Base and scaled to their selected column count.
+Each layout stores independent positions and sizes. Moving or resizing a widget while editing Mobile does not move it in
+Base or any custom layout. New custom layouts start from Base's current column count and rail widths; Homarr chooses a
+free breakpoint between Mobile and Base, and you can then change the breakpoint, columns, and rails.
+
+Older or incomplete boards are repaired automatically. Homarr restores missing Mobile/Base layouts, promotes the narrowest
+and widest existing layouts to those protected roles, keeps intermediate layouts custom, and normalizes duplicate or
+out-of-order breakpoints without discarding saved positions.
 
 Use **Reset from Base** on Mobile or a custom layout to replace all of its positions and sizes with a newly generated version of Base. The layout's name, breakpoint, and column count are kept.
 
@@ -152,17 +165,27 @@ After the board is interactive, Homarr prepares the editor in the background for
 Entering edit mode keeps the static board visible until that preparation finishes, then enables collision-aware movement and resizing without changing the board geometry.
 Widget content is inert in edit mode, so dragging anywhere on the content moves the tile instead of activating the widget; its settings button remains visible in the compact header above the tile.
 Dropping a tile into another tile's exact slot swaps their positions when both resulting placements fit without overlapping other content.
-For other collisions, or when a tile grows into occupied space, nearby tiles are compacted out of the way.
+For other collisions, or when a tile grows into occupied space, nearby tiles are compacted out of the way. A compatible
+single-item collision can swap when both placements fit; other collision chains reflow around the move.
 The visible corner controls provide a 44-pixel resize target, and edge controls appear on hover for horizontal or vertical resizing.
 Resize handles stop at the tile's minimum allowed size while the pointer is still moving.
-Exit edit mode to save the resulting positions.
+Use the pencil button in the board header to enter edit mode; click it again to save. If you leave the page with unsaved
+changes, Homarr asks whether to discard them. If the editor cannot load, the board remains in view mode.
+
+While edit mode is active, **Add board content** creates a new item, app, integration, or Container on the main canvas.
+New content uses the first available position; clicking an empty cell does not place it there, and items cannot be added
+directly into a rail or Container from this menu.
 
 Pointer users can drag anywhere on a widget tile. Containers use the grab button at their top-left corner.
-Resize tiles from any edge or corner handle.
-On a touch screen, press and hold the tile before moving it; resize handles support direct touch input.
+Widgets can be resized from any edge or corner handle. Activate a Container's chrome with its top-left grip before using
+its resize handles.
+On a touch screen, press and hold a tile for about `200 ms` before moving it; a quick tap does not start a drag. Resize
+handles support direct touch input.
 Keyboard users can focus a tile, press Enter or Space to start editing, use the arrow keys to move it, and use Shift plus the arrow keys to resize it.
 Press Enter, Space, or Escape to stop keyboard editing.
-Keyboard moves and resizes apply immediately; Escape stops keyboard editing without undoing those changes.
+Keyboard moves and resizes apply immediately within the current canvas, rail, or Container; they cannot move an item
+between grids. Use pointer drag or **Move / resize item** for that.
+Escape stops keyboard editing without undoing those changes.
 During a pointer or touch interaction, Escape cancels the move or resize and restores the layout from before that interaction.
 The **Move / resize item** action in the edit menu remains available for precise numeric input.
 
@@ -247,9 +270,10 @@ Change the radius of your items and Containers.
 This is the field where you can enter custom CSS.
 The styling will only be applied on the respective board page.
 
-When Homarr Assistant is enabled, users with modify permission can also ask it to edit the board's Custom
-CSS and other visual or behavior settings. The assistant reads the current stylesheet first and presents an
-editable review form before requesting approval to save the change.
+When Homarr Assistant is enabled, users with modify permission can also ask it to edit the board's General, Background,
+Appearance, Custom CSS, and app-status settings. The assistant reads the current stylesheet first and presents an
+editable review form before requesting approval to save the change. It does not edit responsive layouts, access control,
+or Danger zone actions.
 
 [See this guide on how to work with custom CSS](/docs/advanced/styling/).
 
@@ -266,12 +290,12 @@ Widgets expose their routine controls without requiring edit mode:
 - Hold `Shift` while hovering a widget that supports advanced view to expand it in place while the other widgets
   remain visible but dimmed. Release `Shift` to close it. Focus that widget and press `Shift` + `Enter` to keep the view
   open until you close it. On touch devices, open it from the widget menu. Other widgets adapt in place instead.
-- Right-click a widget to inspect its live query status, refresh its data, change quick options, open settings, or run
-  supported actions. Available controls follow your board and integration permissions.
-- If you can modify the board, right-click or touch and hold an empty grid cell to add an item there. Focus a board
-  section and press `Shift` + `F10` for the keyboard equivalent.
+- When signed in, outside edit mode, and with **Enable right click on widgets** enabled, right-click a widget to inspect
+  its live query status, refresh its data, change quick options, open settings, or run supported actions. App tiles do
+  not use this widget menu, and available controls follow your board and integration permissions.
 
-Widget and empty-space context menus follow the **Enable right click on widgets** preference in your user settings.
+The widget context menu follows the **Enable right click on widgets** preference in your user settings. On touch devices,
+use the widget menu where your browser exposes it.
 
 ### Access control
 
@@ -388,5 +412,7 @@ For the global home board you can only select boards that are public.
 
 ### Mobile home board
 
-Same as the home board, you can also set a mobile home board.
-It will be used for devices that are detected as mobile devices. (Using User-Agent header)
+Same as the home board, you can also set a mobile home board. It is used for devices detected as mobile devices from the
+User-Agent header. For the server-wide fallback, configure **Global mobile board** under `Management` > `Settings` >
+`Boards`; the selected board must be public. See the [global board defaults](/docs/management/settings#boards) for the
+desktop and mobile fallback rules.
