@@ -8,11 +8,13 @@
 .board-grid-entry {
   z-index: 1;
   overflow: visible;
-  transition:
-    left 100ms ease,
-    top 100ms ease,
-    width 100ms ease,
-    height 100ms ease;
+}
+
+.board-grid-entry[data-grid-preview="true"] {
+  width: var(--board-grid-preview-width) !important;
+  height: var(--board-grid-preview-height) !important;
+  translate: var(--board-grid-preview-x) var(--board-grid-preview-y);
+  will-change: translate;
 }
 
 .board-grid-entry[data-dnd-active="true"],

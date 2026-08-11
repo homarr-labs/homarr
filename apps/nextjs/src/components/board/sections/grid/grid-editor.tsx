@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, PointerEvent as ReactPointerEvent, PropsWithChildren } from "react";
+import type { CSSProperties, PointerEvent as ReactPointerEvent, PropsWithChildren, RefObject } from "react";
 import {
   createContext,
   memo,
@@ -63,6 +63,8 @@ import { areDndGridEntryPropsEqual } from "./grid-entry-memo";
 import { getGridDepth } from "./grid-depth";
 import { createGridInteractionStore } from "./grid-interaction-store";
 import { useBoardGridPortalHost } from "./grid-portal-host";
+import { clearGridPreviewGeometry, createGridPreviewDomState, syncGridPreviewGeometry } from "./grid-preview-geometry";
+import { createGridResizeOutlineController } from "./grid-resize-outline";
 import type { CommitSectionGridInput, SectionGridPlacement } from "./use-grid-layout-actions";
 import { useGridLayoutActions } from "./use-grid-layout-actions";
 
@@ -772,27 +774,12 @@ export default function GridEditor({
 }: GridEditorProps) {
   const t = useI18n();
   const { section, items, innerSections } = useSectionContext();
-  const interaction = useBoardGridEditorGridInteraction(sectionId);
   const { registerGrid, getDepth, isDropTargetEligible } = useBoardGridEditorActions();
   const gridRef = useRef<HTMLDivElement>(null);
+  const entryElementsRef = useRef(new Map<string, HTMLElement>());
   const parentGridId = "parentSectionId" in section ? section.parentSectionId : null;
   const ownerPlacementId = "parentSectionId" in section ? section.id : null;
   const depth = getDepth(sectionId);
-  const previewGrid = interaction?.state.grids.find((grid) => grid.id === sectionId);
-  const controlledById = useMemo(() => new Map(placements.map((placement) => [placement.id, placement])), [placements]);
-  const renderPlacements = useMemo(() => {
-    if (!previewGrid || !interaction) return placements;
-
-    if (interaction.sourceGridId === sectionId) {
-      if (interaction.mode === "resize") return previewGrid.placements;
-      const original = controlledById.get(interaction.activeId);
-      if (!original) return previewGrid.placements;
-      return previewGrid.placements.some((placement) => placement.id === interaction.activeId)
-        ? previewGrid.placements.map((placement) => (placement.id === interaction.activeId ? original : placement))
-        : [...previewGrid.placements, original];
-    }
-    return previewGrid.placements.filter((placement) => placement.id !== interaction.activeId);
-  }, [controlledById, interaction, placements, previewGrid, sectionId]);
   const labelById = useMemo(
     () =>
       new Map(
@@ -805,21 +792,7 @@ export default function GridEditor({
       ),
     [innerSections, items, t],
   );
-  const targetPlacement =
-    interaction?.valid && interaction.targetGridId === sectionId ? interaction.targetPlacement : null;
-  const growsDuringDrag =
-    interaction?.mode === "drag" &&
-    (interaction.targetGridId === sectionId ||
-      (interaction.targetGridId === null && interaction.sourceGridId === sectionId));
-  const participatesInInteraction =
-    interaction && (interaction.sourceGridId === sectionId || interaction.targetGridId === sectionId);
-  const previewRowCount = getLayoutRowCount(previewGrid?.placements ?? renderPlacements);
-  const renderedRowCount =
-    maxRowCount === null && participatesInInteraction
-      ? Math.max(rowCount, previewRowCount) + (growsDuringDrag ? 1 : 0)
-      : rowCount;
-
-  const { ref: droppableRef, isDropTarget } = useDroppable<GridTargetData>({
+  const { ref: droppableRef } = useDroppable<GridTargetData>({
     id: `board-grid:${sectionId}`,
     type: GRID_TARGET_TYPE,
     data: { kind: GRID_TARGET_TYPE, sectionId },
@@ -830,7 +803,6 @@ export default function GridEditor({
     // through to an accepting parent grid underneath the pointer.
     accept: (source) => isDropTargetEligible(source, sectionId),
   });
-  const isIntentTarget = interaction?.mode === "drag" ? interaction.targetGridId === sectionId : isDropTarget;
 
   const setGridRef = useCallback(
     (element: HTMLDivElement | null) => {
@@ -839,6 +811,10 @@ export default function GridEditor({
     },
     [droppableRef],
   );
+  const registerEntryElement = useCallback((id: string, element: HTMLElement | null) => {
+    if (element) entryElementsRef.current.set(id, element);
+    else entryElementsRef.current.delete(id);
+  }, []);
 
   useLayoutEffect(() => {
     const element = gridRef.current;
@@ -855,33 +831,21 @@ export default function GridEditor({
     });
   }, [columnCount, depth, maxRowCount, ownerPlacementId, parentGridId, placements, registerGrid, sectionId]);
 
-  useLayoutEffect(() => {
-    const viewport = gridRef.current?.parentElement;
-    if (!viewport?.hasAttribute("data-section-id")) return;
-    viewport.style.setProperty("--board-grid-drag-height", `${getLogicalTrackSize(renderedRowCount)}px`);
-    return () => {
-      viewport.style.removeProperty("--board-grid-drag-height");
-    };
-  }, [renderedRowCount]);
-
   return (
     <div
       ref={setGridRef}
       className={className}
       data-grid-section-id={sectionId}
       data-grid-depth={depth}
-      data-dnd-drop-target={isIntentTarget ? "true" : "false"}
-      data-dnd-drop-valid={isIntentTarget ? String(targetPlacement !== null) : undefined}
-      data-dnd-preview-revision={interaction?.targetGridId === sectionId ? interaction.previewRevision : undefined}
       style={
         {
           width: getLogicalTrackSize(columnCount),
-          height: getLogicalTrackSize(renderedRowCount),
+          height: getLogicalTrackSize(rowCount),
           "--board-grid-pitch": `${LOGICAL_GRID_PITCH}px`,
         } as CSSProperties
       }
     >
-      {renderPlacements.map((placement) => {
+      {placements.map((placement) => {
         return (
           <DndGridEntry
             key={placement.id}
@@ -890,23 +854,18 @@ export default function GridEditor({
             label={labelById.get(placement.id) ?? placement.id}
             columnCount={columnCount}
             maxRowCount={maxRowCount}
-            isActive={interaction?.activeId === placement.id}
+            registerElement={registerEntryElement}
           />
         );
       })}
-      {targetPlacement && (
-        <div
-          className="board-grid-placeholder"
-          style={getLogicalItemStyle(targetPlacement)}
-          data-grid-placeholder-for={interaction?.activeId}
-          data-grid-placeholder-mode={interaction?.mode}
-          data-grid-x={targetPlacement.x}
-          data-grid-y={targetPlacement.y}
-          data-grid-w={targetPlacement.w}
-          data-grid-h={targetPlacement.h}
-          aria-hidden="true"
-        />
-      )}
+      <GridPreviewLayer
+        sectionId={sectionId}
+        rowCount={rowCount}
+        maxRowCount={maxRowCount}
+        placements={placements}
+        gridRef={gridRef}
+        entryElementsRef={entryElementsRef}
+      />
       <span
         data-grid-runtime="homarr-dnd-kit-v1"
         data-editor-section-id={sectionId}
@@ -917,23 +876,126 @@ export default function GridEditor({
   );
 }
 
+interface GridPreviewLayerProps {
+  sectionId: string;
+  rowCount: number;
+  maxRowCount: number | null;
+  placements: readonly SectionGridPlacement[];
+  gridRef: RefObject<HTMLDivElement | null>;
+  entryElementsRef: RefObject<Map<string, HTMLElement>>;
+}
+
+const GridPreviewLayer = ({
+  sectionId,
+  rowCount,
+  maxRowCount,
+  placements,
+  gridRef,
+  entryElementsRef,
+}: GridPreviewLayerProps) => {
+  const interaction = useBoardGridEditorGridInteraction(sectionId);
+  const previewGrid = interaction?.state.grids.find((grid) => grid.id === sectionId);
+  const previewStateRef = useRef(createGridPreviewDomState());
+  const placementsRef = useRef(placements);
+  placementsRef.current = placements;
+  const targetPlacement =
+    interaction?.valid && interaction.targetGridId === sectionId ? interaction.targetPlacement : null;
+  const growsDuringDrag =
+    interaction?.mode === "drag" &&
+    (interaction.targetGridId === sectionId ||
+      (interaction.targetGridId === null && interaction.sourceGridId === sectionId));
+  const previewRowCount = getLayoutRowCount(previewGrid?.placements ?? placements);
+  const renderedRowCount =
+    maxRowCount === null && interaction ? Math.max(rowCount, previewRowCount) + (growsDuringDrag ? 1 : 0) : rowCount;
+
+  useLayoutEffect(() => {
+    previewStateRef.current = syncGridPreviewGeometry({
+      elements: entryElementsRef.current,
+      placements,
+      previewPlacements: previewGrid?.placements ?? null,
+      activeId: interaction?.activeId ?? null,
+      mode: interaction?.mode ?? null,
+      previous: previewStateRef.current,
+    });
+
+    const grid = gridRef.current;
+    if (!grid) return;
+    const isIntentTarget = interaction?.mode === "drag" && interaction.targetGridId === sectionId;
+    setOptionalAttribute(grid, "data-dnd-drop-target", isIntentTarget ? "true" : "false");
+    setOptionalAttribute(grid, "data-dnd-drop-valid", isIntentTarget ? String(targetPlacement !== null) : null);
+    setOptionalAttribute(
+      grid,
+      "data-dnd-preview-revision",
+      interaction?.targetGridId === sectionId ? String(interaction.previewRevision) : null,
+    );
+    grid.style.height = `${getLogicalTrackSize(renderedRowCount)}px`;
+
+    const viewport = grid.parentElement;
+    if (viewport?.hasAttribute("data-section-id")) {
+      viewport.style.setProperty("--board-grid-drag-height", `${getLogicalTrackSize(renderedRowCount)}px`);
+    }
+  }, [
+    entryElementsRef,
+    gridRef,
+    interaction,
+    placements,
+    previewGrid?.placements,
+    renderedRowCount,
+    sectionId,
+    targetPlacement,
+  ]);
+
+  useLayoutEffect(
+    () => () => {
+      clearGridPreviewGeometry(entryElementsRef.current, placementsRef.current, previewStateRef.current);
+      const grid = gridRef.current;
+      if (!grid) return;
+      grid.removeAttribute("data-dnd-drop-target");
+      grid.removeAttribute("data-dnd-drop-valid");
+      grid.removeAttribute("data-dnd-preview-revision");
+      grid.parentElement?.style.removeProperty("--board-grid-drag-height");
+    },
+    [entryElementsRef, gridRef],
+  );
+
+  return targetPlacement ? (
+    <div
+      className="board-grid-placeholder"
+      style={getLogicalItemStyle(targetPlacement)}
+      data-grid-placeholder-for={interaction?.activeId}
+      data-grid-placeholder-mode={interaction?.mode}
+      data-grid-x={targetPlacement.x}
+      data-grid-y={targetPlacement.y}
+      data-grid-w={targetPlacement.w}
+      data-grid-h={targetPlacement.h}
+      aria-hidden="true"
+    />
+  ) : null;
+};
+
 const DndGridEntryComponent = ({
   sectionId,
   placement,
   label,
   columnCount,
   maxRowCount,
-  isActive,
+  registerElement,
 }: DndGridEntryProps) => {
   const { acquireContainer } = useBoardGridPortalHost();
   const { beginResize, previewResize, completeResize, cancelResize } = useBoardGridEditorActions();
   const [isSectionChromeActive, setIsSectionChromeActive] = useState(false);
-  const [continuousResize, setContinuousResize] = useState<{
-    placement: SectionGridPlacement;
-    valid: boolean;
-  } | null>(null);
   const mountRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
+  const placementRef = useRef(placement);
+  placementRef.current = placement;
+  const resizeOutlineController = useMemo(
+    () =>
+      createGridResizeOutlineController(
+        () => shellRef.current,
+        () => placementRef.current,
+      ),
+    [],
+  );
   const sourceData = useMemo<GridEntryData>(
     () => ({ kind: GRID_ENTRY_TYPE, sectionId, placement, label }),
     [label, placement, sectionId],
@@ -973,10 +1035,13 @@ const DndGridEntryComponent = ({
   const setShellRef = useCallback(
     (element: HTMLDivElement | null) => {
       shellRef.current = element;
+      registerElement(placement.id, element);
       draggableRef(element);
     },
-    [draggableRef],
+    [draggableRef, placement.id, registerElement],
   );
+
+  useEffect(() => () => resizeOutlineController.destroy(), [resizeOutlineController]);
 
   useLayoutEffect(() => {
     const mount = mountRef.current;
@@ -1020,21 +1085,11 @@ const DndGridEntryComponent = ({
     return () => shell.removeEventListener("pointerdown", handlePointerDownCapture, { capture: true });
   }, [placement.type]);
 
-  const style = getLogicalItemStyle(placement) as CSSProperties;
-  const continuousResizeStyle =
-    continuousResize && isActive
-      ? getLogicalItemStyle({
-          ...continuousResize.placement,
-          x: continuousResize.placement.x - placement.x,
-          y: continuousResize.placement.y - placement.y,
-        })
-      : undefined;
-
   return (
     <div
       ref={setShellRef}
       className="board-grid-entry"
-      style={style}
+      style={getLogicalItemStyle(placement) as CSSProperties}
       data-grid-item-id={placement.id}
       data-grid-item-type={placement.type}
       data-grid-x={placement.x}
@@ -1042,20 +1097,10 @@ const DndGridEntryComponent = ({
       data-grid-w={placement.w}
       data-grid-h={placement.h}
       data-grid-section-chrome-active={placement.type === "section" ? String(isSectionChromeActive) : undefined}
-      data-dnd-active={isActive ? "true" : undefined}
       data-dnd-drag-source={isDragging ? "true" : undefined}
       data-dnd-dropping={isDropping ? "true" : undefined}
     >
       <div ref={mountRef} className="board-grid-content-mount" />
-      {continuousResizeStyle && (
-        <div
-          className="board-grid-resize-outline"
-          style={continuousResizeStyle}
-          data-grid-resize-outline
-          data-grid-resize-valid={String(continuousResize?.valid)}
-          aria-hidden="true"
-        />
-      )}
       <GridResizeHandles
         sectionId={sectionId}
         placement={placement}
@@ -1067,7 +1112,7 @@ const DndGridEntryComponent = ({
         previewResize={previewResize}
         completeResize={completeResize}
         cancelResize={cancelResize}
-        setContinuousResize={setContinuousResize}
+        setContinuousResize={resizeOutlineController.schedule}
       />
     </div>
   );
@@ -1279,6 +1324,11 @@ const getAncestorCssZoom = (element: Element): number => {
 
 const arePointerCoordinatesEqual = (first: { x: number; y: number } | null, second: { x: number; y: number } | null) =>
   first !== null && second !== null && Math.abs(first.x - second.x) <= 0.5 && Math.abs(first.y - second.y) <= 0.5;
+
+const setOptionalAttribute = (element: HTMLElement, name: string, value: string | null) => {
+  if (value === null) element.removeAttribute(name);
+  else element.setAttribute(name, value);
+};
 
 const getPointerTargetGrid = (
   grids: Iterable<RegisteredGrid>,
