@@ -1,0 +1,63 @@
+apps/docs/docs/advanced/icons/index.mdx
+  s_093d61b162b9ca::t_948164abdedd6d 15,24,34-35,39-43
+apps/docs/docs/management/apps/index.mdx
+  s_093d61b162b9ca::t_205ac714f5e702 31
+apps/docs/docs/widgets/custom-api/index.mdx
+  s_093d61b162b9ca::t_3417c38a2720ef 41-43
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-form.tsx
+  s_093d61b162b9ca::t_52b68b46aca4a1 174-178
+apps/nextjs/src/app/[locale]/manage/search-engines/_form.tsx
+  s_093d61b162b9ca::t_cf488628c0b4d1 60-63
+e2e/custom-widgets-custom-jsx-v2.spec.ts
+  s_093d61b162b9ca::t_a266823c647d99 39-42
+packages/api/src/router/icons.ts
+  s_093d61b162b9ca::t_decb990df77b9b 1,18-31,34-52
+packages/api/src/router/test/icons.spec.ts
+  s_093d61b162b9ca::t_a83ef514fb2b3f 1-44
+packages/api/src/router/test/widgets/custom-api-v2.spec.ts
+  s_093d61b162b9ca::t_4add74082daec3 116,120-124,131,158
+packages/common/src/string.ts
+  s_093d61b162b9ca::t_6c24b9ea42f762 31-61
+packages/common/src/test/string.spec.ts
+  s_093d61b162b9ca::t_d0a0417f1b5f4e 3,57-80
+packages/forms-collection/src/icon-picker/icon-picker.module.css
+  s_093d61b162b9ca::t_7af6431ddc9e13 1-33,35-88
+packages/forms-collection/src/icon-picker/icon-picker.spec.ts
+  s_093d61b162b9ca::t_4a1f27cebaf7e7 7,9-13,16-28,30-39,42,46-63,68-84,93-104,113,115,124,128,130-133,137,139-140,143-146,151,158-215,218,220-224,226-227,230-231,234,236-237,239-304
+packages/forms-collection/src/icon-picker/icon-picker.tsx
+  s_093d61b162b9ca::t_b607b5525aaa74 3-4,9,14,16,20-21,25-33,41,52,56-57,67,69-73,76,78-81,83-85,90,93-96,98-100,102-110,112-197,199-207,210-218,220-227,229,231-246,251-275,277-317,319-371,374-419,426-461
+packages/forms-collection/src/icon-picker/icon-picker.utils.spec.ts
+  s_093d61b162b9ca::t_2e57855b2c4d44 1-50
+packages/forms-collection/src/icon-picker/icon-picker.utils.ts
+  s_093d61b162b9ca::t_7d1dc711be0da9 4,7-8,10-14,16-17,19-44,46-47,49-54,56-58,60-66
+packages/forms-collection/src/new-app/_form.tsx
+  s_093d61b162b9ca::t_162684e2e34d9c 6,131-134
+packages/integrations/src/synology/synology-client.ts
+  s_093d61b162b9ca::t_a01ead082276b3 88-92
+packages/integrations/src/synology/synology-types.ts
+  s_093d61b162b9ca::t_3e28e26fdbd778 81
+packages/integrations/src/synology/test/synology-integration.spec.ts
+  s_093d61b162b9ca::t_19fb1a98e5289c 429-482
+packages/translation/src/lang/en.json
+  s_093d61b162b9ca::t_20e899b62ee1a4 1742-1753
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_093d61b162b9ca::t_eb830684276ace 3,50,494,503
+packages/widgets/src/beszel/_shared/tooltip.tsx
+  s_093d61b162b9ca::t_15244d77161e89 48,56,72-88,95,103
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "e55e709b72d36066f82f70a70e69e627e94272f2",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
