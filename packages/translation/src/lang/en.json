@@ -3132,12 +3132,8 @@
         },
         "historyWindowDays": {
           "label": "Archived history window",
-          "description": "Show archived jobs completed within this period. Increase the item limit to show older results.",
-          "values": {
-            "10Days": "10 days",
-            "20Days": "20 days",
-            "30Days": "30 days"
-          }
+          "description": "Show archived jobs completed within this period. Increase the item limit to show older results."
+
         },
         "activeTorrentThreshold": {
           "label": "Hide completed torrent under this threshold (in kiB/s)"
