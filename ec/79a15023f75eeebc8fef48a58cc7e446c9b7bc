@@ -1,0 +1,37 @@
+packages/request-handler/src/rss-feeds.ts
+  s_a70c07ac5b7a5a::t_7fb8708a92fe96 49-52
+packages/widgets/src/health-monitoring/component.tsx
+  s_a70c07ac5b7a5a::t_464c73626b6a6b 40-43
+scripts/benchmarks/widget-inventory.mjs
+  s_a70c07ac5b7a5a::t_2ee8979cd1edd0 66-68
+  s_a70c07ac5b7a5a::t_90d432fc23d6f4 100
+  s_a70c07ac5b7a5a::t_85b22998e543f0 112-114
+  s_a70c07ac5b7a5a::t_fbba9b44db70f6 1-65,69-99,101-111,115-149
+packages/widgets/src/media-missing/component.tsx
+  s_a70c07ac5b7a5a::t_d9e2229771ed2a 215-226
+  s_a70c07ac5b7a5a::t_64d301595ea6b9 26
+  s_a70c07ac5b7a5a::t_309d609b56f9e5 91-93
+  s_a70c07ac5b7a5a::t_876fe33a926d52 136
+  s_a70c07ac5b7a5a::t_13802e79e01cac 4-18,31-36,55-56,66,68-71,140-147,214,227-234
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_a70c07ac5b7a5a::t_d11fce63911c54 66
+  s_a70c07ac5b7a5a::t_af20a9bc482bc8 24-31
+docs/perf/WIDGET-AUDIT.md
+  s_a70c07ac5b7a5a::t_aa33f00b47a7be 1-152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ec79a15023f75eeebc8fef48a58cc7e446c9b7bc",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
