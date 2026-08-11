@@ -1,6 +1,9 @@
 # Configure requests and security
 
-Most widgets use a single source named `default`. Extra keyed sources are available under Advanced for widgets that combine APIs. Authentication is `none`, `bearer`, `basic`, an API-key header, or an API-key query parameter. Credentials belong to the widget but remain outside its manifest.
+Most widgets use a single source named `default`; the manifest must contain it. Extra keyed sources are available for widgets
+that combine APIs. Source IDs are case-insensitively unique. Base URLs must use HTTP(S), contain no embedded credentials,
+query string, or fragment, and sources can be `public`, `private`, or `loopback`. Authentication is `none`, `bearer`,
+`basic`, an API-key header, or an API-key query parameter. Credentials belong to the widget but remain outside its manifest.
 
 ## Named requests
 
@@ -35,7 +38,9 @@ Bind values directly where they are used:
 
 `{option:name}` and `$option` read saved widget options. `{param:name}` and `$param` read invocation-time `params`. Load queries cannot use invocation parameters. Homarr infers the exact parameter names and primitive values from these references, rejecting missing or extra invocation params at the request boundary.
 
-Paths and query-string values must resolve to text, numbers, or booleans. JSON bodies can also use structured `json` and `multiSelect` option values, for example `{ "entity_ids": { "$option": "entities" } }`.
+Path placeholders and query values must resolve to text, numbers, or booleans. `$option` and `$param` references may appear
+recursively in JSON bodies; invocation parameters remain primitive, and load queries cannot use `$param`. JSON bodies can
+also use structured `json` and `multiSelect` option values, for example `{ "entity_ids": { "$option": "entities" } }`.
 
 ## Protection
 
@@ -46,8 +51,8 @@ Queries default to view permission and actions to modify. DELETE always requires
 Management and runtime are intentionally separate. A Homarr administrator with board-modify permission places and
 configures the widget. After placement, query and action authorization follows the request's board permission. Public
 boards may execute queries for anonymous viewers, but mutations stay authenticated. This includes shared-cache
-invalidation: `RefreshButton` is disabled for anonymous viewers, while ordinary scheduled query rendering remains
-available.
+invalidation: `RefreshButton` is disabled only without an active item or preview session, or in edit mode, while ordinary
+scheduled query rendering remains available to anonymous viewers.
 
 Responses use bounded, versioned shared-Redis cache keys. Action invalidation advances the shared version so every
 Homarr replica stops serving the previous response without scanning or deleting a key prefix.

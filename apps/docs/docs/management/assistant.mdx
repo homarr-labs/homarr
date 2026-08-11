@@ -20,6 +20,10 @@ focus whenever the command menu opens, including when it is opened by an assista
 command menu preserves any draft in the expanded conversation. The local result is temporarily disabled while
 the assistant is responding or waiting for an approval.
 
+Availability follows the setup state: signed-out users see **Sign in**; configured-but-disabled users cannot use the
+user-menu or `Shift + A` entry points; and `Cmd/Ctrl + K` keeps the assistant result visible but unavailable and
+non-interactive until an administrator enables it.
+
 While a response is running, a compact activity bar appears at the bottom of the page and the user-menu
 avatar shows a thinking indicator. The activity bar can be opened to follow the response. Completed
 responses add an unread count to the user menu until they are opened or dismissed. The expanded
@@ -35,6 +39,8 @@ fields, selectors, and editable content.
 The **Assistant** board widget embeds the same persisted conversation and full interaction surface directly
 on a dashboard. By default it follows the current conversation. Widget settings can instead pin a specific
 conversation; the conversation picker stays hidden until **Pinned conversation** is selected.
+If the pinned conversation was deleted or cannot be opened, the widget shows an **Open conversation** recovery action
+and retry state instead of silently losing the widget content.
 The Shift+A panel is non-modal: opening it focuses its composer, but it does not capture focus from the board.
 Users can continue typing in an Assistant widget or interacting with other dashboard controls while the panel
 is open. Every visible assistant surface keeps its own draft, attachment list, selection, and focus while sharing
@@ -78,14 +84,18 @@ working provider, model, and enabled state are saved.
    stores and sends the provider's exact model ID. Context-window sizes use compact labels such as `1M`.
 5. Enable the assistant and save the configuration.
 
-The model discovery path defaults to `/models` and is appended to the API base URL. Leave it blank when
-the service does not expose model discovery. A manual model ID can still be used when discovery is
-disabled, unavailable, or returns no models.
+Changing the provider, base URL, or discovery path clears the selected model and disables the assistant. Save the
+connection again, refresh or enter a model ID, then enable the assistant and save the configuration once more.
+
+The model discovery path defaults to `/models` and is appended to the API base URL. Leave the custom path blank when
+the service does not expose a usable discovery endpoint. A manual model ID can still be used when discovery is
+unavailable or returns no models.
 
 API keys and additional header values are encrypted in the Homarr database. They are decrypted only on
 the server for discovery and model requests, and they are never returned to the browser. Changing the
 provider or base URL clears existing credentials. This prevents credentials for one service from being sent
-to another endpoint.
+to another endpoint. Additional headers are write-only; saving them replaces the complete stored header set. Use the
+explicit clear/remove flow when you want to remove previously saved headers.
 
 When a key is already stored, the page shows its protected state instead of an ambiguous empty password
 field. Removing the API key requires explicit confirmation. Save that removal before entering and saving a
@@ -166,7 +176,7 @@ stored app or integration icon when one is available. Type `/`
 for common prompt shortcuts. Both menus support keyboard navigation and keep the active result visible while
 moving through long lists. The selector below the composer combines searchable, provider-grouped models with
 their description, context size and image-input capability, plus the thinking-level control. Model selection is
-stored on the conversation after a completed request. Thinking mode can be left on **Auto**, disabled, or set
+saved to the current conversation when selected. Thinking mode can be left on **Auto**, disabled, or set
 from minimal through high; explicit levels are sent using the AI SDK's provider-neutral reasoning setting and
 still depend on support from the chosen model and endpoint. Reasoning text is shown live when the provider streams
 it through assistant-ui's grouped-parts and chain-of-thought primitives. The compact **Thinking** trace groups
@@ -206,8 +216,9 @@ calculated value as estimated. Missing provider data is shown as not reported ra
 
 The assistant can use the same internal tool definitions as the [Homarr MCP server](./mcp).
 Each tool call runs as the signed-in user, so normal Homarr permission checks still apply. Read-only
-procedures can run during the agent loop. Mutating procedures require an explicit approval in the
-conversation before they execute. The approval appears as a large **Approve and run** or **Deny** action;
+procedures can run during the agent loop. Mutating procedures require native approval unless automatic approvals are
+enabled for the conversation. Neutral choices and questions still wait for the user. The approval appears as a large
+**Approve and run** or **Deny** action;
 the assistant does not require a second typed confirmation first. Tool cards expose their status, timing,
 validated input, result, and error state without flooding the conversation with raw JSON by default.
 Common collection and widget results are summarized inline as compact responsive cards, while the full
@@ -218,7 +229,8 @@ activity such as **Looking for “homarr” icons** instead of exposing the inte
 Large tool-driven requests can use up to 32 agent steps and a larger response budget within one request, so
 multi-item dashboard changes normally finish without requiring a follow-up “Continue” message. OpenRouter calls
 Homarr tools sequentially to prevent routed models from interleaving or truncating parallel JSON arguments, while
-every mutation still pauses for its normal approval. A safely recoverable truncated icon-search object is repaired
+every mutation still follows its native approval policy, including conversation-scoped automatic approvals. A safely
+recoverable truncated icon-search object is repaired
 before validation; incomplete search strings and all mutation inputs are never guessed.
 Homarr also normalizes internal tool results to the model's JSON-compatible message format before continuing an
 agent loop. Rich server values such as dates cannot invalidate the next model step, and an interrupted tool call
@@ -273,7 +285,7 @@ floating assistant are visible.
 
 When the assistant genuinely needs missing information or a choice, it can pause with a structured
 question. Each proposed answer is visibly categorized as **Confirm**, **Decline**, or **Option**, so the effect
-of automatic approval is unambiguous. Users can select one of the proposed answers or choose **Other** and
+of automatic approval is unambiguous. When enabled by the tool, users can select **Other** and
 enter their own response. While a question is unanswered, its controls stay in a dedicated area immediately
 above the composer instead of requiring the user to find the tool call in the transcript. The question temporarily
 uses the available conversation body, with its own scrolling when necessary, rather than squeezing a long option

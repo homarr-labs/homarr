@@ -14,6 +14,10 @@ import manageBoardHeaderEditMode from "./img/manage-board-header-edit-mode.png";
 import manageBoardHeaderAddItem from "./img/manage-board-header-add-item-menu.png";
 import manageBoardHeaderChooseItem from "./img/manage-board-header-choose-item.png";
 import manageBoardNoApp from "./img/manage-board-no-app.png";
+import currentBoardEditMode from "../management/boards/img/board-edit-mode.png";
+import currentAddBoardContentMenu from "../management/boards/img/add-board-content-menu.png";
+import currentKeyboardTileEditing from "../management/boards/img/keyboard-tile-editing.png";
+import currentBoardMobileView from "./img/board-mobile-view.png";
 import manageExportOldHomarr from "./img/old-homarr-export-data.png";
 import manageImportOldHomarrDropzone from "./img/old-homarr-import-dropzone.png";
 import manageImportOldHomarrChooseData from "./img/old-homarr-import-choose-imported-data.png";
@@ -131,6 +135,7 @@ It is important that you first migrate correctly using [the list of breaking cha
 5. Go to your new >1.0.0 Homarr instance and start the onboarding. Choose `Import from Homarr before 1.0`
 6. Drag and drop your previously downloaded ZIP archive into the file upload: <br/><img src={manageImportOldHomarrDropzone} style={{ maxWidth: 500 }} />
 7. Next, choose the data that you want to import and how to import it. Old Homarr screen sizes are imported as responsive layouts on the same board: the narrowest becomes **Mobile**, the widest becomes **Base**, and layouts between them become custom layouts. Homarr normalizes duplicate breakpoints automatically, so you can review the imported board in Board Settings and adjust the layouts there.<br/><img src={manageImportOldHomarrChooseData} style={{ maxWidth: 500 }} />
+   For example, legacy `sm`, `md`, and `lg` layouts at `0px`, `800px`, and `1400px` become Mobile, a custom layout, and Base. The imported board keeps each layout's positions so you can review the result before saving.
 8. If you previously exported integrations or users, you will be asked to decrypt the data safely using your obtained encryption token. Paste into the modal and confirm your action.<br/><img src={manageImportDecryptionToken} style={{ maxWidth: 500 }} />
 9. Next, you can [follow the same setup as when starting from scratch](#starting-from-scratch). After you completed the onboarding, all of your data will be migrated and available.
 
@@ -192,6 +197,10 @@ When entering the edit mode, you'll get some additional buttons to work with:
 
 <img src={manageBoardHeaderEditMode} alt={"Screenshot of buttons in the edit mode"} width={200} />
 
+The current editor keeps the board visible while it prepares its controls:
+
+<img src={currentBoardEditMode} alt="Current Homarr board in edit mode" style={{ maxWidth: "100%" }} />
+
 - **Add board content**: Click this button to create a new item, app, integration, or Container.
 - **Exit edit mode**: Click this button to save your changes and exit edit mode. If you leave with unsaved changes, Homarr asks whether to discard them.
 
@@ -204,6 +213,14 @@ To continue, click **New item** in the add-content menu. New content is placed a
 canvas; it is not inserted at a clicked empty cell or directly into a rail or Container:
 
 <img src={manageBoardHeaderAddItem} alt={"Screenshot of the add item menu"} width={200} />
+
+The same menu also exposes direct actions for an app, integration, and Container:
+
+<img
+  src={currentAddBoardContentMenu}
+  alt="Current add board content menu with item, app, integration, and Container actions"
+  style={{ maxWidth: "100%" }}
+/>
 
 Next, you can choose what item you'd like to add.
 We will discuss the other options in the following sections - for now choose "App" to continue.
@@ -224,16 +241,13 @@ In the modal you can edit the app that you want to display:
 ![](./img/manage-board-choose-app.png)
 
 As soon as you save your changes, the tile on the board will refresh and display your app.
-Use the resize handle at the bottom right to resize the tile.
-Press and hold the handle, move the pointer, and release it when the tile has the size you want.
+Resize from any visible edge or corner handle. For a Container, activate its top-left grip before using its resize handles.
+Press and hold a handle, move the pointer, and release it when the tile has the size you want.
 
-![](./img/resize-item.gif)
-
-To move a tile in edit mode, press and hold its content, move it to the desired position, and release it.
+To move a tile in edit mode, press and hold its inert content area, move it to the desired position, and release it.
 Widget content is disabled while editing so its controls do not intercept the drag; use the tile's settings button for edit actions.
-The tile snaps to the grid. Equally-sized tiles swap when one is dropped into the other's slot, while other neighboring tiles move out of the way automatically.
-
-![](./img/move-item.gif)
+The tile snaps to the grid. A single compatible collision may swap the two items when both resulting placements fit;
+otherwise the collision chain reflows neighboring tiles automatically.
 
 Every `1 × 1` tile has a logical content size of `200 × 200` pixels.
 Larger tiles use multiples of that fixed unit, with a consistent gap between cells.
@@ -241,6 +255,15 @@ Homarr scales the complete board uniformly, like zooming a page.
 The complete canvas always fits the available width without horizontal board scrolling. Below 100%, Homarr preserves the
 widget's readable typography and control density instead of shrinking each widget independently.
 It does not squeeze or reflow the content of individual widgets, so a widget keeps the same design and proportions across screen sizes.
+
+On a narrow screen, Homarr uses the Mobile layout and stacks the board content vertically while preserving each widget's
+fixed logical proportions:
+
+<img
+  src={currentBoardMobileView}
+  alt="Homarr board rendered in a narrow mobile viewport"
+  style={{ maxWidth: "390px" }}
+/>
 
 :::note
 
@@ -262,7 +285,12 @@ within its current canvas, rail, or Container. Press Escape to stop keyboard edi
 hold of about `200 ms`; resize handles accept direct touch input. During a pointer or touch move or resize, press Escape
 to cancel and restore the previous layout. For cross-grid moves or precise numeric controls, choose **Move / resize item**
 from the tile's edit menu.
-The dialog can also move the tile to another section or fixed sidebar:
+Keyboard commands at a grid boundary or minimum tile size are ignored and announced; they do not move or shrink the tile.
+
+<img src={currentKeyboardTileEditing} alt="A board tile focused for keyboard editing" style={{ maxWidth: "100%" }} />
+
+Open **Move / resize item** from the tile menu to move the tile to another section or rail and enter precise numeric
+coordinates and dimensions. The image below shows the menu entry point:
 
 ![](./img/manage-board-move-resize-item-menu.png)
 
@@ -345,7 +373,7 @@ Each Container can configure:
 - Show or hide **Open all in new tabs**.
 - Change its border color and custom CSS classes.
 
-Open the add-content menu and choose **New Container**.
+Open the add-content menu and choose **New container**.
 In edit mode, move and resize it like any other item, then drag items into or out of it.
 Nested content stays within the Container's bounds.
 While resizing, the solid outline follows the pointer continuously and the dashed grid preview shows the size that will be saved on release.

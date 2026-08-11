@@ -7,10 +7,14 @@ Templates are JSX expressions interpreted inside a widget-local safety and rende
 - `options.name` — saved widget configuration
 - `inputs.name` — temporary values from declarative `bind`
 
-The v2 manifest supports up to eight sources and 64 requests. Source IDs are case-insensitively unique, and
-the template and secret values have bounded sizes. Validation reports the exact field when a limit is exceeded.
+The v2 manifest requires a `default` source and supports up to eight sources, 64 requests, and 64 options. Source IDs are
+case-insensitively unique. Each request allows up to 32 static headers and 32 invalidation targets; a widget can contain
+up to 24 secrets, each up to 8,192 characters, and templates are limited to 50,000 characters. Validation reports the
+exact field when a limit is exceeded.
 
 Use normal Mantine layouts, typography, feedback, dates, and charts. Official compound names such as `Card.Section`, `Tabs.List`, and `Radio.Group` are supported. Ordinary safe props pass through; a dangerous capability produces an explicit error.
+Unsafe URLs, callback props, and unapproved style properties are stripped. Response data is deep-sanitized and budgeted
+before it reaches `data`, so treat it as untrusted input even when the source is private.
 
 ## Temporary inputs
 
@@ -35,7 +39,9 @@ Bound values live only in React memory while the widget is mounted. They are not
 
 Use expressions, conditionals, optional chaining, arrays, objects, template strings, safe standard helpers, and expression callbacks for `map`, `filter`, `sort`, and trusted runtime slots. Callback blocks, authored `const`, IIFEs, authored recursion, arbitrary functions, imports, hooks, refs, raw events, browser requests, `eval`, and bigint are blocked.
 
-Bounded regex literals are supported for string matching, splitting, search, and replacement. Patterns with lookbehind, backreferences, nested quantifiers, excessive length, or unsupported flags are rejected.
+Bounded regex literals are supported for string matching, splitting, search, and replacement. Regex literals are limited to
+128 characters and flags `gimsu`; lookarounds, backreferences, repeated alternatives/groups, unsupported flags, and more
+than one variable quantifier are rejected.
 
 ## Runtime components
 
@@ -45,8 +51,9 @@ Bounded regex literals are supported for string matching, splitting, search, and
   retry are handled by `SubFetch`. Provide both `triggerContent` and `triggerAriaLabel` when custom content launches it.
 - `ActionButton` and `ToggleSwitch` run actions only when the widget is mounted outside edit mode. A toggle needs both
   enabled and disabled request parameters and rolls back its visual state if the action fails.
-- `RefreshButton` renders a compact, accessible icon control that refreshes load queries for authenticated viewers. It
-  is disabled for anonymous public-board viewers because refreshing invalidates shared server cache state.
+- `RefreshButton` renders a compact, accessible icon control that invalidates the client&apos;s load-query cache; it does not
+  execute a request itself. It is disabled when the widget has no active item or preview session, or while the board is in
+  edit mode.
 - `Icon`/`TablerIcon` resolves installed safe icons.
 
 Always include responsive loading, empty, error, and success states. Runtime failures remain inside the widget tile.

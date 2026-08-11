@@ -79,7 +79,9 @@ These interfaces do not return an archive URL or archive hash.
 9. Open the returned preview path with browser tools.
 10. Inspect the redacted journal and revise the local candidate until validation, data, and rendering all work. Keep the
     exact tested preview candidate locally.
-11. Create the widget from that final tested preview, including any source URLs and credentials the user already supplied.
+11. Create the widget from that final tested preview with `customWidget_createFromPreview`, including any source URLs and
+    credentials the user already supplied. The create call persists that tested preview and accepts its session ID plus an
+    optional target board.
 12. Open its returned management path, and use a structured question when the user must choose whether to place it on a board.
 13. Otherwise, ask the user to configure the saved definition with the ten-minute Homarr source-setup URL.
 14. Create a final preview with the saved definition ID so Homarr loads its stored credentials, then test it again.

@@ -92,7 +92,7 @@ export const downloadsWidget: WidgetDefinition = {
       {
         name: "Limit items per integration",
         description: "This will limit the number of items shown per integration, not globally.",
-        values: "Any number above 1",
+        values: "Any whole number from 1 upward",
         defaultValue: "50",
       },
     ],

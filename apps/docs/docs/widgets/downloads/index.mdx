@@ -21,7 +21,7 @@ import { downloadsWidget } from ".";
 
 <WidgetHeader widget={downloadsWidget} categories={["Torrent client", "Usenet client", "Downloads"]} />
 
-This widget displays a list of torrents or usenet-articles that are currently being downloaded, along with their progress and other relevant information. It supports 7 download client integrations and provides a rich, responsive table interface.
+This widget displays torrent, Usenet, and miscellaneous download jobs, along with their progress and other relevant information. It supports 7 download client integrations and provides a rich, responsive table interface.
 
 ### Screenshots
 
@@ -33,10 +33,10 @@ import advancedViewImg from "./img/advanced-view.png";
   <img src={downloadsCard} alt="Downloads widget showing torrent and usenet items" width={128 * 4} />
 </div>
 
-#### Right-click context menu
+#### Download-row context menu
 
 <div>
-  <img src={contextMenuImg} alt="Downloads widget context menu with pause, delete, and copy actions" width={128 * 4} />
+  <img src={contextMenuImg} alt="Downloads row context menu with pause, delete, and copy actions" width={128 * 4} />
 </div>
 
 #### Advanced view
@@ -57,7 +57,7 @@ import advancedViewImg from "./img/advanced-view.png";
 - **Right-click context menu** — pause, resume, delete downloads, or copy download names directly from the context menu when the selected integration grants interact access
 - **Row expansion** — click any row to see full details inline without opening a separate modal
 - **Hover tooltips** — hover a download name to see size, speeds, ETA, ratio, and category; open tooltips close when switching between compact and advanced mode
-- **Global stats bar** — toggle a summary bar showing queue progress, total size, speeds, ratio, and per-state counts
+- **Global stats bar** — show a summary bar with queue progress, total size, speeds, ratio, and per-state counts in compact mode; advanced view always includes it
 - **Client filtering** — filter downloads by integration or status using the footer filter panel
 - **Global controls** — pause/resume all downloads across all clients from the footer bar
 - **Status indicators** — color-coded badges show download state at a glance
@@ -68,8 +68,9 @@ import advancedViewImg from "./img/advanced-view.png";
 Compact layouts hide secondary columns as width decreases and can hide the footer on very short tiles. Downloads supports
 Advanced view, which restores the denser table, stats, filters, and footer controls in a focused panel.
 
-Pause, resume, delete, and global controls depend on integration permissions. `slskd` is read-only, so its rows expose
-copy and inspection actions instead of mutations.
+Pause, resume, delete, and global controls depend on integration permissions. `slskd` does not implement pause, resume,
+or delete operations; if shared permission UI exposes those controls, they have no effect for that client.
+The screenshot above is a download-row menu, separate from the shared widget context menu described in the board guide.
 
 :::
 
@@ -103,7 +104,7 @@ copy and inspection actions instead of mutations.
     },
     {
       integration: slskdIntegration,
-      note: "Soulseek client (read-only)",
+      note: "Soulseek client (no mutation support)",
     },
   ]}
 />
@@ -113,10 +114,10 @@ copy and inspection actions instead of mutations.
 - **Right-click** any download to open a context menu with the actions allowed by that integration
 - **Click** any row to expand it and see full download details inline
 - **Hover** a download name for a quick stats tooltip
-- **Stats toggle** — show or hide the global stats bar from the footer
+- **Stats toggle** — show or hide the global stats bar in compact mode; advanced view always shows the stats bar
 - **Pause / Resume** all downloads using the footer controls
 - **Filter** by integration or status using the filter button in the footer
-- **Sort** by clicking column headers (with persistent sort direction)
+- **Sort** by clicking column headers; the direction applies to the current view
 
 <WidgetInteractionGuide />
 

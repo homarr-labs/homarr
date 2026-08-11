@@ -3,7 +3,9 @@
 import { CanonicalCustomWidgetExample } from "@site/src/components/custom-widget-code";
 import workbenchImage from "./img/workbench.png";
 
-The workbench is visual-first: configure the default API connection, add request cards, add option rows, then write JSX. Additional sources and raw manifest JSON remain under Advanced. Code and preview sit side by side on desktop and use tabs on mobile.
+The workbench exposes General, API sources, Requests, Options, JSX, and Preview sections. Advanced JSON is available in the
+manifest and request/option editors. Code and preview sit side by side on desktop; mobile switches between Configure and
+Preview.
 For multiline JSX, prefer `templateLines` in agent or MCP input and keep the final tested preview as the source of truth before saving.
 
 <img
@@ -32,7 +34,9 @@ journal, fixture data, and preview size before saving.
 
 <CanonicalCustomWidgetExample id="widget-options" label="Widget options" example="options" height="360px" />
 
-Every option has a default. Supported controls include text, textarea, number, switch, select, multi-select, slider, date, time, color, icon, URL, duration, time zone, and JSON. Dynamic choices use `choicesFrom` with a query ID and value/label paths.
+Every option has a default. Supported controls include text, textarea, number, switch, select, multi-select, slider, date, time, color, icon, URL, duration, time zone, and JSON. Dynamic choices use `choicesFrom: { request, itemsPath?, valuePath, labelPath }`; the request must be a load query without invocation parameters, and you cannot provide both static `choices` and `choicesFrom`.
+
+Preview actions are simulated by default and recorded in the journal without contacting the service. Enable **Run actions against the configured API** only when you intend a real mutation; live actions still require configured confirmation.
 
 ## ChatGPT or Claude
 

@@ -32,7 +32,8 @@ Credentials remain on the server.
 
 :::note
 Custom API widgets must first be created in **Management → Custom Widgets** before they appear in the widget picker.
-Action buttons can only be executed by administrators.
+Action buttons require the request's minimum board permission, which is `modify` by default. Anonymous viewers cannot run
+mutations. DELETE additionally requires full permission and confirmation.
 :::
 
 ### Permissions and actions

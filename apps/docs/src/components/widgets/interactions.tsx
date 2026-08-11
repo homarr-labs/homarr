@@ -1,4 +1,4 @@
-import { IconArrowsMaximize, IconLayoutGrid, IconMouse2 } from "@tabler/icons-react";
+import { IconArrowsMaximize, IconLayoutGrid, IconMouse2, IconRefresh } from "@tabler/icons-react";
 
 const advancedInteraction = {
   icon: IconArrowsMaximize,
@@ -20,6 +20,12 @@ const standardInteractions = [
     description:
       "Resize a widget to tune its density. Compact views keep primary status visible, then reveal details and controls as space or intent allows.",
   },
+  {
+    icon: IconRefresh,
+    title: "Data status",
+    description:
+      "Initial loading, successful empty results, terminal errors, stale cached data, and partial integration failures are distinct states. The shared menu reports loading, idle, error, or success with cache age when available; Refresh targets only active queries owned by that widget and view.",
+  },
 ] as const;
 
 export const WidgetInteractionGuide = ({ advancedView = true }: { advancedView?: boolean }) => {
@@ -34,9 +40,7 @@ export const WidgetInteractionGuide = ({ advancedView = true }: { advancedView?:
           Hide controls
         </span>
       </summary>
-      <div
-        className={`grid gap-3 border-0 border-t border-solid border-[#e5e7eb] p-4 md:grid-cols-2 ${advancedView ? "xl:grid-cols-4" : "xl:grid-cols-3"} dark:border-[#333]`}
-      >
+      <div className="grid gap-3 border-0 border-t border-solid border-[#e5e7eb] p-4 md:grid-cols-2 xl:grid-cols-4 dark:border-[#333]">
         {interactions.map(({ icon: Icon, title, description }) => (
           <div key={title} className="rounded-lg bg-white p-3 shadow-sm dark:bg-gray-950">
             <Icon aria-hidden size={20} stroke={1.5} className="mb-2 stroke-red-500" />
@@ -47,9 +51,11 @@ export const WidgetInteractionGuide = ({ advancedView = true }: { advancedView?:
       </div>
       {advancedView && (
         <p className="m-0 px-4 pb-4 text-xs text-[#696969] dark:text-[#999]">
-          Advanced view reuses the widget&apos;s live data and cache. Preview dims the rest of the board; the manual
-          view traps focus and locks background scrolling. On touch devices, use the widget menu where your browser
-          exposes it; compact-only widgets adapt in place instead.
+          Advanced view reuses existing data where possible; some widgets request additional or denser data. Hold Shift
+          while hovering for a temporary preview, which closes when Shift is released, the pointer leaves, or the window
+          loses focus. The manual view closes with Escape, its close button, or the backdrop; it traps focus and locks
+          background scrolling. Shift + wheel is routed to a scrollable advanced panel when possible. On touch devices,
+          use the widget menu where your browser exposes it; compact-only widgets adapt in place instead.
         </p>
       )}
     </details>

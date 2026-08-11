@@ -20,7 +20,9 @@ import { technitiumDnsIntegration } from "@site/docs/integrations/technitium-dns
 
 <WidgetHeader widget={dnsHoleControlsWidget} categories={["DNS Hole"]} />
 
-This widget lets permitted users enable, disable, or temporarily pause one or more DNS services. It shares the summary query and cache with DNS Hole Summary. Every selected source stays available in the normal scrollable view, while cards and controls adapt to the widget&apos;s width and height.
+This widget lets permitted users enable, disable, or temporarily pause one or more DNS services. It shares the summary query
+and cache with DNS Hole Summary. Cards and controls adapt to the widget&apos;s width and height. Sources that fail to load are
+omitted from the returned summaries; bulk actions keep successful results visible and report the number of failures.
 
 ### Screenshots
 
