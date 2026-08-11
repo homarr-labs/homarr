@@ -1,0 +1,61 @@
+---
+title: "Komodo"
+description: "Monitor servers, stacks, and deployments managed by Komodo."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { komodoIntegration } from ".";
+import { komodoWidget } from "@site/docs/widgets/komodo";
+
+<IntegrationHeader integration={komodoIntegration} categories={["System monitoring", "Deployment"]} />
+
+The Komodo integration gives Homarr a read-only overview of the servers, stacks, and deployments visible to a Komodo API key. Homarr never starts, stops, deploys, or modifies Komodo resources.
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: komodoWidget }]} />
+
+### Adding the integration
+
+<AddingIntegration />
+
+:::info URL configuration
+Use the root URL of your Komodo Core instance, for example `https://komodo.example.com`. Do not add `/read` or another API path. Homarr appends the required RPC paths automatically.
+:::
+
+### Secrets
+
+Komodo authenticates API clients with a key and secret sent in request headers. Both values are stored as encrypted, non-public Homarr secrets and are never added to request URLs.
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey", "komodoApiSecret"],
+      steps: [
+        <span>
+          Open your Komodo profile and find the <strong>API Keys</strong> section.
+        </span>,
+        'Select "New API Key", enter a descriptive name such as "Homarr", and choose an expiry.',
+        "Create the key, then copy both the key and secret. Komodo only displays the secret once.",
+        "Paste the key into Homarr's API Key field and the secret into the API Secret field.",
+      ],
+    },
+  ]}
+/>
+
+The API key uses the permissions of its Komodo user. It must be able to read the servers, stacks, and deployments that you want to display.
+
+### API requests
+
+Homarr makes only the following authenticated `POST` requests:
+
+- `/read/GetVersion` when testing the connection
+- `/read/ListServers`
+- `/read/ListStacks`
+- `/read/ListDeployments`
+
+Resource list requests use `limit: 0` so the overview includes every resource visible to the API key. Responses are cached briefly to reduce load on Komodo Core.

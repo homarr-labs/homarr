@@ -86,6 +86,7 @@ export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
   notifications: IconMessage,
   systemResources: IconGraphFilled,
   coolify: IconCloud,
+  komodo: IconServer2,
   systemDisks: IconServer2,
   timetable: IconBusStop,
   "immich-serverStats": IconGraphFilled,

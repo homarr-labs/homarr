@@ -12,6 +12,7 @@ export const widgetQueryRefetchIntervals = [
   { queryKey: [["widget", "firewall"]], intervalSeconds: 5 },
   { queryKey: [["widget", "healthMonitoring"]], intervalSeconds: 5 },
   { queryKey: [["widget", "mediaServer"]], intervalSeconds: 5 },
+  { queryKey: [["widget", "komodo"]], intervalSeconds: 30 },
   { queryKey: [["widget", "tracearr"]], intervalSeconds: 5 },
   { queryKey: [["widget", "immich"]], intervalSeconds: null },
   { queryKey: [["widget", "indexerManager"]], intervalSeconds: null },

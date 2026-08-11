@@ -16,6 +16,7 @@ import * as bazarr from "./bazarr";
 import * as calendar from "./calendar";
 import * as clock from "./clock";
 import * as coolify from "./coolify";
+import * as komodo from "./komodo";
 import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
@@ -111,6 +112,7 @@ export const widgetImports = {
   mediaReleases,
   systemResources,
   coolify,
+  komodo,
   systemDisks,
   timetable,
   "immich-serverStats": immichServerStats,

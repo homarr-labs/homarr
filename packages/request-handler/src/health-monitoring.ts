@@ -6,7 +6,7 @@ import { createIntegrationRequestHandler } from "./lib/integration-request-handl
 
 export const systemInfoRequestHandler = createIntegrationRequestHandler<
   SystemHealthMonitoring,
-  Exclude<IntegrationKindByCategory<"healthMonitoring">, "proxmox" | "coolify" | "beszel" | "patchmon" | "wud">,
+  Exclude<IntegrationKindByCategory<"healthMonitoring">,"proxmox" | "coolify" | "komodo" | "beszel" | "patchmon" | "wud">,
   Record<string, never>
 >({
   async requestAsync(integration, _input) {

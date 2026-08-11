@@ -35,6 +35,7 @@ export { UnraidIntegration } from "./unraid/unraid-integration";
 export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
 export { ICalIntegration } from "./ical/ical-integration";
 export { CoolifyIntegration } from "./coolify/coolify-integration";
+export { KomodoIntegration } from "./komodo/komodo-integration";
 export { ImmichIntegration } from "./immich/immich-integration";
 export { TracearrIntegration } from "./tracearr/tracearr-integration";
 export { SpeedtestTrackerIntegration } from "./speedtest-tracker/speedtest-tracker-integration";
@@ -93,6 +94,14 @@ export type {
   ArchiveTeamWarriorStatus,
 } from "./archive-team-warrior/archive-team-warrior-types";
 export type { WudStats, WudContainerUpdate } from "./wud/wud-types";
+export type {
+  KomodoOverview,
+  KomodoProblem,
+  KomodoResource,
+  KomodoResourceKind,
+  KomodoResourceStatus,
+  KomodoResourceSummary,
+} from "./komodo/komodo-types";
 
 // Schemas
 export { anchorNotesListInputSchema } from "./anchor/anchor-types";

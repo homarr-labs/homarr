@@ -25,7 +25,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   networkControllerStatus: getIntegrationKindsByCategory("networkController"),
   indexerManager: getIntegrationKindsByCategory("indexerManager"),
   healthMonitoring: getIntegrationKindsByCategory("healthMonitoring").filter(
-    (kind) => kind !== "patchmon" && kind !== "wud",
+    (kind) => kind !== "komodo" && kind !== "patchmon" && kind !== "wud",
   ),
   firewall: getIntegrationKindsByCategory("firewall"),
   notifications: getIntegrationKindsByCategory("notifications"),
@@ -33,6 +33,7 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   systemResources: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
   systemDisks: ["dashDot", "openmediavault", "truenas", "unraid", "synology"],
   coolify: ["coolify"],
+  komodo: ["komodo"],
   "immich-serverStats": ["immich"],
   "immich-albumCarousel": ["immich"],
   paperlessNgx: ["paperlessNgx"],

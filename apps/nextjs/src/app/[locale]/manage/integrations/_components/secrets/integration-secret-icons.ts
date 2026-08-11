@@ -28,6 +28,7 @@ export const integrationSecretIcons = {
   opnsenseApiSecret: IconPassword,
   patchmonApiKey: IconKey,
   patchmonApiSecret: IconPassword,
+  komodoApiSecret: IconPassword,
   githubAppId: IconCode,
   githubInstallationId: IconPlug,
   privateKey: IconKey,

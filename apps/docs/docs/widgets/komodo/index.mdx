@@ -1,0 +1,33 @@
+---
+title: "Komodo Overview"
+description: "Displays server, stack, deployment, and problem counts from Komodo."
+hide_title: true
+---
+
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { komodoWidget } from ".";
+import { komodoIntegration } from "@site/docs/integrations/komodo";
+
+<WidgetHeader widget={komodoWidget} categories={["System monitoring", "Deployment"]} />
+
+The Komodo Overview widget shows the number of healthy resources compared with the total number of servers, stacks, and deployments. It also displays a combined problem count. When enough vertical space is available, the widget lists up to 20 resources that need attention.
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{ integration: komodoIntegration }]} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Status handling
+
+| Resource       | Healthy   | Warning                                                   | Error                          | Unknown                             |
+| -------------- | --------- | --------------------------------------------------------- | ------------------------------ | ----------------------------------- |
+| **Server**     | `Ok`      | `Disabled`                                                | `NotOk`                        | Any unrecognized state              |
+| **Stack**      | `running` | Transitional, stopped, paused, created, removing, or down | Restarting, dead, or unhealthy | `unknown` or any unrecognized state |
+| **Deployment** | `running` | Transitional, paused, exited, created, or not deployed    | Restarting, dead, or unhealthy | `unknown` or any unrecognized state |
+
+Every non-healthy resource contributes to the problem count. Unknown states remain visible as unknown instead of causing the widget to fail.

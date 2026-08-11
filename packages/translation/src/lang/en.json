@@ -1297,6 +1297,10 @@
           "label": "API Secret",
           "newLabel": "New API Secret"
         },
+        "komodoApiSecret": {
+          "label": "API Secret",
+          "newLabel": "New API Secret"
+        },
         "githubAppId": {
           "label": "App Id",
           "newLabel": "New App Id"
@@ -1355,6 +1359,10 @@
     "patchmon": {
       "name": "PatchMon",
       "description": "Patch management and monitoring for Linux hosts"
+    },
+    "komodo": {
+      "name": "Komodo",
+      "description": "Monitor servers, stacks, and deployments managed by Komodo"
     },
     "bazarr": {
       "name": "Bazarr",
@@ -2522,6 +2530,29 @@
       },
       "instances": {
         "title": "Instances"
+      }
+    },
+    "komodo": {
+      "name": "Komodo Overview",
+      "description": "Overview of servers, stacks, and deployments managed by Komodo",
+      "resource": {
+        "server": "Server",
+        "servers": "Servers",
+        "stack": "Stack",
+        "stacks": "Stacks",
+        "deployment": "Deployment",
+        "deployments": "Deployments"
+      },
+      "state": {
+        "online": "online",
+        "running": "running",
+        "healthy": "healthy",
+        "attention": "need attention"
+      },
+      "problems": "Problems",
+      "option": {},
+      "error": {
+        "internalServerError": "Failed to fetch Komodo data"
       }
     },
     "vpn": {

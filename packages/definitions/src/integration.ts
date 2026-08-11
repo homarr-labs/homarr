@@ -15,6 +15,7 @@ export const integrationSecretKindObject = {
   opnsenseApiSecret: { isPublic: false, multiline: false },
   patchmonApiKey: { isPublic: true, multiline: false },
   patchmonApiSecret: { isPublic: false, multiline: false },
+  komodoApiSecret: { isPublic: false, multiline: false },
   url: { isPublic: false, multiline: false },
   privateKey: { isPublic: false, multiline: true },
   githubAppId: { isPublic: true, multiline: false },
@@ -355,6 +356,14 @@ export const integrationDefs = {
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
     defaultPort: 8000,
+  },
+  komodo: {
+    name: "Komodo",
+    secretKinds: [["apiKey", "komodoApiSecret"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/komodo.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: createDocumentationLink("/docs/integrations/komodo"),
+    defaultPort: 9120,
   },
   immich: {
     name: "Immich",

@@ -34,6 +34,7 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   notifications: "notifications",
   systemResources: "system-resources",
   coolify: "coolify",
+  komodo: "komodo",
   systemDisks: "system-disks",
   timetable: "timetable",
   "immich-serverStats": "immich-server-stats",
