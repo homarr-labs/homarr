@@ -1,0 +1,21 @@
+scripts/benchmarks/audit-widget-render.mjs
+  s_a70c07ac5b7a5a::t_a68d5c89c14886 1-121
+packages/widgets/src/beszel-system-table/component.tsx
+  s_a70c07ac5b7a5a::t_69b73c43ff7b37 3,45-72,212,224,256
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "7e961d3da4f2b0e6c6f71574c9ae517bb5550350",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
