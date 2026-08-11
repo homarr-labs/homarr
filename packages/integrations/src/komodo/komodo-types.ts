@@ -17,6 +17,7 @@ const komodoMinimalSystemStatsSchema = z.object({
   disk_total_gb: z.number(),
   network_ingress_bytes: z.number().default(0),
   network_egress_bytes: z.number().default(0),
+  polling_rate: z.string().optional(),
 });
 
 const komodoServerOverviewListItemSchema = z.object({
@@ -99,8 +100,8 @@ export interface KomodoServerStats {
   memoryTotalGb: number;
   diskUsedGb: number;
   diskTotalGb: number;
-  networkIngressBytes: number;
-  networkEgressBytes: number;
+  networkIngressBytesPerSecond: number | null;
+  networkEgressBytesPerSecond: number | null;
 }
 
 export interface KomodoServerOverviewItem extends KomodoResource {
@@ -133,6 +134,26 @@ const normalizeState = (state: string) =>
     .trim()
     .toLowerCase()
     .replaceAll(/[^a-z0-9]+/g, "_");
+
+const pollingRateUnitSeconds = {
+  sec: 1,
+  min: 60,
+  hr: 60 * 60,
+  day: 24 * 60 * 60,
+  wk: 7 * 24 * 60 * 60,
+} as const;
+
+export const parseKomodoPollingRateSeconds = (pollingRate: string | undefined): number | null => {
+  const match = /^(\d+)-(sec|min|hr|day|wk)$/.exec(pollingRate ?? "");
+  const amountText = match?.[1];
+  const unit = match?.[2] as keyof typeof pollingRateUnitSeconds | undefined;
+  if (!amountText || !unit) return null;
+
+  const amount = Number(amountText);
+  if (!Number.isSafeInteger(amount) || amount <= 0) return null;
+
+  return amount * pollingRateUnitSeconds[unit];
+};
 
 export const mapKomodoResourceStatus = (kind: KomodoResourceKind, state: string): KomodoResourceStatus => {
   const normalizedState = normalizeState(state);
@@ -240,6 +261,9 @@ export const parseKomodoServerOverviewResponseAsync = async (response: {
     if (result.data.template === true) return [];
 
     const statsResult = komodoMinimalSystemStatsSchema.safeParse(result.data.info.stats);
+    const pollingRateSeconds = statsResult.success
+      ? parseKomodoPollingRateSeconds(statsResult.data.polling_rate)
+      : null;
     const stats = statsResult.success
       ? {
           cpuPercentage: statsResult.data.cpu_perc,
@@ -252,8 +276,10 @@ export const parseKomodoServerOverviewResponseAsync = async (response: {
           memoryTotalGb: statsResult.data.mem_total_gb,
           diskUsedGb: statsResult.data.disk_used_gb,
           diskTotalGb: statsResult.data.disk_total_gb,
-          networkIngressBytes: statsResult.data.network_ingress_bytes,
-          networkEgressBytes: statsResult.data.network_egress_bytes,
+          networkIngressBytesPerSecond:
+            pollingRateSeconds === null ? null : statsResult.data.network_ingress_bytes / pollingRateSeconds,
+          networkEgressBytesPerSecond:
+            pollingRateSeconds === null ? null : statsResult.data.network_egress_bytes / pollingRateSeconds,
         }
       : null;
 
@@ -287,17 +313,25 @@ export const createKomodoOverview = (
   stacks: KomodoResource[],
   deployments: KomodoResource[],
 ): KomodoOverview => {
-  const problems = [
-    ...servers.map((resource) => ({ ...resource, kind: "server" as const })),
-    ...stacks.map((resource) => ({ ...resource, kind: "stack" as const })),
-    ...deployments.map((resource) => ({ ...resource, kind: "deployment" as const })),
-  ].filter((resource) => resource.status !== "healthy");
+  const serverProblems = servers
+    .filter((resource) => resource.status !== "healthy")
+    .map((resource) => ({ ...resource, kind: "server" as const }));
+  const stackProblems = stacks
+    .filter((resource) => resource.status !== "healthy")
+    .map((resource) => ({ ...resource, kind: "stack" as const }));
+  const deploymentProblems = deployments
+    .filter((resource) => resource.status !== "healthy")
+    .map((resource) => ({ ...resource, kind: "deployment" as const }));
 
   return {
     servers: summarizeResources(servers),
     stacks: summarizeResources(stacks),
     deployments: summarizeResources(deployments),
-    problemCount: problems.length,
-    problems: problems.slice(0, PROBLEM_LIST_LIMIT),
+    problemCount: serverProblems.length + stackProblems.length + deploymentProblems.length,
+    problems: [
+      ...serverProblems.slice(0, PROBLEM_LIST_LIMIT),
+      ...stackProblems.slice(0, PROBLEM_LIST_LIMIT),
+      ...deploymentProblems.slice(0, PROBLEM_LIST_LIMIT),
+    ],
   };
 };

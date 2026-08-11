@@ -8,9 +8,12 @@ vi.hoisted(() => {
 });
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { ParseError } from "@homarr/common/server";
 
 import type { IntegrationTestingInput } from "../../base/integration";
+import { IntegrationParseError } from "../../base/errors/parse/integration-parse-error";
 import { KomodoIntegration } from "../komodo-integration";
+import { createKomodoOverview, parseKomodoPollingRateSeconds } from "../komodo-types";
 
 vi.mock("@homarr/core/infrastructure/http", () => ({
   fetchWithTrustedCertificatesAsync: vi.fn(),
@@ -45,7 +48,7 @@ const createIntegration = () =>
     url: TEST_URL,
     externalUrl: null,
     decryptedSecrets: [
-      { kind: "apiKey", value: TEST_API_KEY },
+      { kind: "komodoApiKey", value: TEST_API_KEY },
       { kind: "komodoApiSecret", value: TEST_API_SECRET },
     ],
   });
@@ -63,13 +66,30 @@ const createTestableIntegration = () =>
     url: TEST_URL,
     externalUrl: null,
     decryptedSecrets: [
-      { kind: "apiKey", value: TEST_API_KEY },
+      { kind: "komodoApiKey", value: TEST_API_KEY },
       { kind: "komodoApiSecret", value: TEST_API_SECRET },
     ],
   });
 
 beforeEach(() => {
   mockFetch.mockReset();
+});
+
+describe("parseKomodoPollingRateSeconds", () => {
+  test.each([
+    ["1-sec", 1],
+    ["5-sec", 5],
+    ["1-min", 60],
+    ["2-hr", 7_200],
+    ["1-day", 86_400],
+    ["1-wk", 604_800],
+  ])("parses %s", (pollingRate, expected) => {
+    expect(parseKomodoPollingRateSeconds(pollingRate)).toBe(expected);
+  });
+
+  test.each([undefined, "", "0-sec", "5-seconds", "future"])("rejects unsupported value %s", (pollingRate) => {
+    expect(parseKomodoPollingRateSeconds(pollingRate)).toBeNull();
+  });
 });
 
 describe("KomodoIntegration resource lists", () => {
@@ -208,6 +228,26 @@ describe("KomodoIntegration overview", () => {
     });
   });
 
+  test("retains problems from every resource kind when one kind exceeds the display limit", () => {
+    const serverProblems = Array.from({ length: 21 }, (_, index) => ({
+      id: `server-${index}`,
+      name: `Server ${index}`,
+      state: "NotOk",
+      status: "error" as const,
+    }));
+    const stackProblems = [{ id: "stack-1", name: "Stack", state: "stopped", status: "warning" as const }];
+    const deploymentProblems = [
+      { id: "deployment-1", name: "Deployment", state: "unknown", status: "unknown" as const },
+    ];
+
+    const overview = createKomodoOverview(serverProblems, stackProblems, deploymentProblems);
+
+    expect(overview.problemCount).toBe(23);
+    expect(overview.problems).toHaveLength(22);
+    expect(overview.problems.at(-2)?.kind).toBe("stack");
+    expect(overview.problems.at(-1)?.kind).toBe("deployment");
+  });
+
   test("keeps an unknown future state without crashing", async () => {
     setupMockResponses({
       "/read/ListStacks": {
@@ -295,8 +335,8 @@ describe("KomodoIntegration server overview", () => {
           memoryTotalGb: 10,
           diskUsedGb: 92.2,
           diskTotalGb: 100,
-          networkIngressBytes: 512,
-          networkEgressBytes: 32,
+          networkIngressBytesPerSecond: 102.4,
+          networkEgressBytesPerSecond: 6.4,
         },
       },
       {
@@ -346,6 +386,28 @@ describe("KomodoIntegration server overview", () => {
 });
 
 describe("KomodoIntegration errors and connection testing", () => {
+  test("handles invalid JSON in the server overview response", async () => {
+    setupMockResponses({
+      "/read/ListServers": { body: "not-json" },
+    });
+
+    await expect(createIntegration().getServerOverviewAsync()).rejects.toSatisfy((error) => {
+      if (!(error instanceof IntegrationParseError)) return false;
+      return error.cause instanceof ParseError && error.cause.message.includes("Invalid Komodo resource list response");
+    });
+  });
+
+  test("handles a non-array server overview response", async () => {
+    setupMockResponses({
+      "/read/ListServers": { body: { unexpected: true } },
+    });
+
+    await expect(createIntegration().getServerOverviewAsync()).rejects.toSatisfy((error) => {
+      if (!(error instanceof IntegrationParseError)) return false;
+      return error.cause instanceof ParseError && error.cause.message.includes("Invalid Komodo resource list response");
+    });
+  });
+
   test.each([401, 403])("handles authentication error %s", async (status) => {
     setupMockResponses({
       "/read/ListServers": { body: { error: "Invalid user credentials" }, status },
@@ -363,6 +425,17 @@ describe("KomodoIntegration errors and connection testing", () => {
     });
 
     await expect(createIntegration().listServersAsync()).rejects.toMatchObject({
+      name: "IntegrationResponseError",
+      cause: { statusCode: 500 },
+    });
+  });
+
+  test("handles an upstream API error for the server overview", async () => {
+    setupMockResponses({
+      "/read/ListServers": { body: { error: "Internal error" }, status: 500 },
+    });
+
+    await expect(createIntegration().getServerOverviewAsync()).rejects.toMatchObject({
       name: "IntegrationResponseError",
       cause: { statusCode: 500 },
     });

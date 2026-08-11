@@ -15,47 +15,20 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import type { KomodoResourceStatus, KomodoServerOverviewItem } from "@homarr/integrations";
+import { formatByteRate } from "@homarr/common";
+import type { KomodoServerOverviewItem } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { formatKomodoState, komodoStatusColors } from "../komodo/display";
 import { getKomodoRefreshIntervalMs } from "../komodo/refresh-interval";
-
-const statusColors: Record<KomodoResourceStatus, string> = {
-  healthy: "green",
-  warning: "yellow",
-  error: "red",
-  unknown: "gray",
-};
 
 const formatPercent = (value: number | null) => (value === null ? "—" : `${value.toFixed(1)}%`);
 
 const getPercentage = (used: number, total: number) => (total > 0 ? (used / total) * 100 : null);
 
 const getMetricColor = (value: number | null) => (value !== null && value >= 90 ? "yellow" : "green");
-
-const formatByteRate = (bytes: number) => {
-  if (!Number.isFinite(bytes) || bytes < 0) return "—";
-
-  const units = ["B/s", "KiB/s", "MiB/s", "GiB/s"];
-  let value = bytes;
-  let unitIndex = 0;
-  while (value >= 1024 && unitIndex < units.length - 1) {
-    value /= 1024;
-    unitIndex += 1;
-  }
-
-  const decimals = unitIndex === 0 || value >= 100 ? 0 : 1;
-  return `${value.toFixed(decimals)} ${units[unitIndex]}`;
-};
-
-const formatState = (state: string) =>
-  state
-    .replaceAll(/([a-z])([A-Z])/g, "$1 $2")
-    .replaceAll("_", " ")
-    .trim()
-    .replace(/^./, (character) => character.toUpperCase());
 
 const getCoreLabel = (server: KomodoServerOverviewItem) => {
   if (server.logicalCoreCount !== null && server.physicalCoreCount !== null) {
@@ -81,9 +54,9 @@ const PercentageMetric = ({ value, compact = false }: PercentageMetricProps) => 
 );
 
 const ServerName = ({ server }: { server: KomodoServerOverviewItem }) => (
-  <Tooltip label={formatState(server.state)} openDelay={300}>
+  <Tooltip label={formatKomodoState(server.state)} openDelay={300}>
     <Group gap="xs" wrap="nowrap">
-      <IconServer size={16} color={`var(--mantine-color-${statusColors[server.status]}-6)`} />
+      <IconServer size={16} color={`var(--mantine-color-${komodoStatusColors[server.status]}-6)`} />
       <Text size="sm" fw={500} truncate>
         {server.name}
       </Text>
@@ -127,8 +100,10 @@ const LoadAverage = ({ server, coresLabel }: { server: KomodoServerOverviewItem;
 const NetworkRate = ({ server, detailed = false }: { server: KomodoServerOverviewItem; detailed?: boolean }) => {
   if (!server.stats) return <Text size="xs">—</Text>;
 
-  const ingress = server.stats.networkIngressBytes;
-  const egress = server.stats.networkEgressBytes;
+  const ingress = server.stats.networkIngressBytesPerSecond;
+  const egress = server.stats.networkEgressBytesPerSecond;
+  if (ingress === null || egress === null) return <Text size="xs">—</Text>;
+
   if (!detailed) {
     return <Text size="xs">{formatByteRate(ingress + egress)}</Text>;
   }

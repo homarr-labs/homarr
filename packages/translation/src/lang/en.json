@@ -1297,6 +1297,10 @@
           "label": "API Secret",
           "newLabel": "New API Secret"
         },
+        "komodoApiKey": {
+          "label": "API Key",
+          "newLabel": "New API Key"
+        },
         "komodoApiSecret": {
           "label": "API Secret",
           "newLabel": "New API Secret"

@@ -10,6 +10,7 @@ import { AddingIntegration } from "@site/src/components/integrations/adding";
 import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { komodoIntegration } from ".";
 import { komodoWidget } from "@site/docs/widgets/komodo";
+import { komodoServerOverviewWidget } from "@site/docs/widgets/komodo-server-overview";
 
 <IntegrationHeader integration={komodoIntegration} categories={["System monitoring", "Deployment"]} />
 
@@ -17,7 +18,7 @@ The Komodo integration gives Homarr a read-only overview of the servers, stacks,
 
 ### Widgets & Capabilities
 
-<IntegrationCapabilites items={[{ widget: komodoWidget }]} />
+<IntegrationCapabilites items={[{ widget: komodoWidget }, { widget: komodoServerOverviewWidget }]} />
 
 ### Adding the integration
 
@@ -34,7 +35,7 @@ Komodo authenticates API clients with a key and secret sent in request headers. 
 <IntegrationSecrets
   secrets={[
     {
-      credentials: ["apiKey", "komodoApiSecret"],
+      credentials: ["komodoApiKey", "komodoApiSecret"],
       steps: [
         <span>
           Open your Komodo profile and find the <strong>API Keys</strong> section.

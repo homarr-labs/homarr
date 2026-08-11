@@ -6,13 +6,14 @@ hide_title: true
 
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
 import { komodoWidget } from ".";
 import { komodoIntegration } from "@site/docs/integrations/komodo";
 
 <WidgetHeader widget={komodoWidget} categories={["System monitoring", "Deployment"]} />
 
-The Komodo Overview widget shows the number of healthy resources compared with the total number of servers, stacks, and deployments. It also displays a combined problem count. Each of these four sections can be enabled or disabled in the widget settings. The summary uses at most two columns to keep its cards readable. When enough vertical space is available, the widget lists up to 20 resources that need attention.
+The Komodo Overview widget shows the number of healthy resources compared with the total number of servers, stacks, and deployments. It also displays a combined problem count for the enabled resource types. Each of these four sections can be enabled or disabled in the widget settings. The summary uses at most two columns to keep its cards readable. When enough vertical space is available, the widget lists up to 20 enabled resources that need attention.
 
 The refresh interval can be configured between 1 and 300 seconds. It defaults to 30 seconds.
 
@@ -23,6 +24,10 @@ The refresh interval can be configured between 1 and 300 seconds. It defaults to
 ### Adding the widget
 
 <AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={komodoWidget.configuration} />
 
 ### Status handling
 

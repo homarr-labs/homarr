@@ -1,23 +1,17 @@
 "use client";
 
-import { Badge, Center, Group, Paper, ScrollArea, SimpleGrid, Stack, Text, ThemeIcon } from "@mantine/core";
+import { Badge, Center, Group, Loader, Paper, ScrollArea, SimpleGrid, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconAlertTriangle, IconRocket, IconServer, IconStack2 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import type { KomodoResourceStatus, KomodoResourceSummary } from "@homarr/integrations";
+import type { KomodoResourceSummary } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { formatKomodoState, komodoStatusColors } from "./display";
 import { getKomodoRefreshIntervalMs } from "./refresh-interval";
-
-const statusColors: Record<KomodoResourceStatus, string> = {
-  healthy: "green",
-  warning: "yellow",
-  error: "red",
-  unknown: "gray",
-};
 
 const getSummaryColor = (summary: KomodoResourceSummary) => {
   if (summary.error > 0) return "red";
@@ -26,17 +20,10 @@ const getSummaryColor = (summary: KomodoResourceSummary) => {
   return "green";
 };
 
-const formatState = (state: string) =>
-  state
-    .replaceAll(/([a-z])([A-Z])/g, "$1 $2")
-    .replaceAll("_", " ")
-    .trim()
-    .replace(/^./, (character) => character.toUpperCase());
-
 export default function KomodoWidget({ integrationIds, options, width, height }: WidgetComponentProps<"komodo">) {
   const t = useScopedI18n("widget.komodo");
   const integrationId = integrationIds[0];
-  const { data } = clientApi.widget.komodo.getOverview.useQuery(
+  const { data, error, isPending } = clientApi.widget.komodo.getOverview.useQuery(
     { integrationId: integrationId ?? "" },
     {
       enabled: integrationId !== undefined,
@@ -44,10 +31,30 @@ export default function KomodoWidget({ integrationIds, options, width, height }:
     },
   );
 
-  if (!integrationId || !data) return <WidgetEmptyState />;
+  if (error) throw error;
+  if (!integrationId) return <WidgetEmptyState />;
+  if (isPending) {
+    return (
+      <Center h="100%">
+        <Loader />
+      </Center>
+    );
+  }
+  if (!data) return <WidgetEmptyState />;
 
   const { overview } = data;
-  const problemColor = overview.problemCount > 0 ? "red" : "green";
+  const visibleProblemCount =
+    (options.showServers ? overview.servers.total - overview.servers.healthy : 0) +
+    (options.showStacks ? overview.stacks.total - overview.stacks.healthy : 0) +
+    (options.showDeployments ? overview.deployments.total - overview.deployments.healthy : 0);
+  const visibleProblems = overview.problems
+    .filter((problem) => {
+      if (problem.kind === "server") return options.showServers;
+      if (problem.kind === "stack") return options.showStacks;
+      return options.showDeployments;
+    })
+    .slice(0, 20);
+  const problemColor = visibleProblemCount > 0 ? "red" : "green";
   const summaries: SummaryCardProps[] = [];
 
   if (options.showServers) {
@@ -81,8 +88,8 @@ export default function KomodoWidget({ integrationIds, options, width, height }:
     summaries.push({
       icon: IconAlertTriangle,
       label: t("problems"),
-      value: overview.problemCount.toString(),
-      detail: overview.problemCount === 0 ? t("state.healthy") : t("state.attention"),
+      value: visibleProblemCount.toString(),
+      detail: visibleProblemCount === 0 ? t("state.healthy") : t("state.attention"),
       color: problemColor,
     });
   }
@@ -100,7 +107,9 @@ export default function KomodoWidget({ integrationIds, options, width, height }:
   const maxColumns = width >= 360 ? 2 : 1;
   const columns = Math.min(maxColumns, summaries.length);
   const shouldSpanLastCard = columns > 1 && summaries.length % columns !== 0;
-  const showProblemList = options.showProblems && height >= 250 && overview.problems.length > 0;
+  const summaryRowCount = Math.ceil(summaries.length / columns);
+  const minimumProblemListHeight = summaryRowCount * 64 + 96;
+  const showProblemList = options.showProblems && height >= minimumProblemListHeight && visibleProblems.length > 0;
 
   return (
     <Stack h="100%" gap="xs" p="xs" style={{ overflow: "hidden" }}>
@@ -110,6 +119,7 @@ export default function KomodoWidget({ integrationIds, options, width, height }:
         verticalSpacing="xs"
         style={{
           flex: showProblemList ? undefined : 1,
+          flexShrink: 0,
           gridAutoRows: showProblemList ? undefined : "minmax(0, 1fr)",
         }}
       >
@@ -123,9 +133,9 @@ export default function KomodoWidget({ integrationIds, options, width, height }:
       </SimpleGrid>
 
       {showProblemList ? (
-        <ScrollArea flex={1} type="auto" scrollbarSize={4}>
+        <ScrollArea flex={1} mih={0} type="auto" scrollbarSize={4}>
           <Stack gap={4} pr={4}>
-            {overview.problems.map((problem) => (
+            {visibleProblems.map((problem) => (
               <Paper key={`${problem.kind}-${problem.id}`} withBorder p="xs" radius="md">
                 <Group justify="space-between" gap="xs" wrap="nowrap">
                   <Stack gap={0} style={{ minWidth: 0 }}>
@@ -136,8 +146,8 @@ export default function KomodoWidget({ integrationIds, options, width, height }:
                       {t(`resource.${problem.kind}`)}
                     </Text>
                   </Stack>
-                  <Badge color={statusColors[problem.status]} variant="light" size="sm">
-                    {formatState(problem.state)}
+                  <Badge color={komodoStatusColors[problem.status]} variant="light" size="sm">
+                    {formatKomodoState(problem.state)}
                   </Badge>
                 </Group>
               </Paper>

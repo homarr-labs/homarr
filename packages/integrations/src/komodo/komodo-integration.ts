@@ -96,7 +96,7 @@ export class KomodoIntegration extends Integration {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        "x-api-key": this.getSecretValue("apiKey"),
+        "x-api-key": this.getSecretValue("komodoApiKey"),
         "x-api-secret": this.getSecretValue("komodoApiSecret"),
       },
       body: JSON.stringify(body),
