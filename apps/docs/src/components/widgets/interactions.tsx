@@ -4,7 +4,7 @@ const advancedInteraction = {
   icon: IconArrowsMaximize,
   title: "Advanced view",
   description:
-    "On supported widgets, hold Shift while hovering for about 500 ms, press Shift + Enter, or choose Open advanced view from the widget menu. It is unavailable in edit mode.",
+    "Supported widgets explicitly opt into advanced view. Focus a widget and press Shift + Enter, hold Shift while hovering for about 500 ms, or choose Open advanced view from its menu. It is unavailable in edit mode and remains compact-only on widgets that do not opt in.",
 } as const;
 
 const standardInteractions = [
@@ -12,19 +12,19 @@ const standardInteractions = [
     icon: IconMouse2,
     title: "Widget actions",
     description:
-      "When signed in, outside edit mode, and with Enable right click on widgets enabled, right-click for live query status, refresh, settings, quick options, and supported actions. App tiles are excluded.",
+      "Signed-in users can open the widget context menu outside edit mode when Enable right click on widgets is enabled. App tiles are excluded. Settings, quick options, and integration actions appear or enable only when the widget and your board or integration permissions allow them.",
   },
   {
     icon: IconLayoutGrid,
     title: "Adaptive detail",
     description:
-      "Resize a widget to tune its density. Compact views keep primary status visible, then reveal details and controls as space or intent allows.",
+      "Resize a widget to tune its density. Compact layouts hide lower-priority details and controls as space shrinks; compact-only widgets adapt in place instead of opening a separate advanced view.",
   },
   {
     icon: IconRefresh,
     title: "Data status",
     description:
-      "Initial loading, successful empty results, terminal errors, stale cached data, and partial integration failures are distinct states. The shared menu reports loading, idle, error, or success with cache age when available; Refresh targets only active queries owned by that widget and view.",
+      "Widgets distinguish initial loading, successful empty results, terminal errors, stale cached data, and partial integration failures as applicable. Initial loads use a loading state, empty results use an empty state, and terminal failures can offer retry; retained data can stay visible with a stale warning, while healthy integrations can remain visible when another source fails. The shared menu reports Loading while matching active queries fetch, Idle when none are active, Error when any match is in error, otherwise Success with the latest data age when available. Refresh refetches only active queries owned by that widget and view and is disabled while they fetch.",
   },
 ] as const;
 
@@ -52,10 +52,12 @@ export const WidgetInteractionGuide = ({ advancedView = true }: { advancedView?:
       {advancedView && (
         <p className="m-0 px-4 pb-4 text-xs text-[#696969] dark:text-[#999]">
           Advanced view reuses existing data where possible; some widgets request additional or denser data. Hold Shift
-          while hovering for a temporary preview, which closes when Shift is released, the pointer leaves, or the window
-          loses focus. The manual view closes with Escape, its close button, or the backdrop; it traps focus and locks
-          background scrolling. Shift + wheel is routed to a scrollable advanced panel when possible. On touch devices,
-          use the widget menu where your browser exposes it; compact-only widgets adapt in place instead.
+          while hovering a supported widget for a temporary preview; it opens after about 500 ms and closes when Shift
+          is released, the pointer leaves, or the window loses focus. For a persistent view, focus the widget and press
+          Shift + Enter or use Open advanced view from its menu. Manual view closes with Escape after nested menus or
+          popovers handle their own Escape, its close button, or the backdrop; it restores focus, traps focus, and locks
+          background scrolling. Shift + wheel scrolls a scrollable advanced panel when it can consume the event. On
+          touch devices, use the widget menu when available; compact-only widgets adapt in place instead.
         </p>
       )}
     </details>
