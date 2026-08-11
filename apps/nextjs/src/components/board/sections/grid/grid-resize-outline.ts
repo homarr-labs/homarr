@@ -1,17 +1,17 @@
 import { getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import type { GridPlacement } from "~/components/board/layout";
 
-interface ResizeOutlinePreview<TPlacement extends GridPlacement> {
-  placement: TPlacement;
+interface ResizeOutlinePreview {
+  placement: GridPlacement;
   valid: boolean;
 }
 
-export const createGridResizeOutlineController = <TPlacement extends GridPlacement>(
+export const createGridResizeOutlineController = (
   getShell: () => HTMLElement | null,
-  getControlledPlacement: () => TPlacement,
+  getControlledPlacement: () => GridPlacement,
 ) => {
   let frame = 0;
-  let pending: ResizeOutlinePreview<TPlacement> | null = null;
+  let pending: ResizeOutlinePreview | null = null;
 
   const remove = () => {
     getShell()?.querySelector(":scope > [data-grid-resize-outline]")?.remove();
@@ -37,7 +37,7 @@ export const createGridResizeOutlineController = <TPlacement extends GridPlaceme
   };
 
   return {
-    schedule(preview: ResizeOutlinePreview<TPlacement> | null) {
+    schedule(preview: ResizeOutlinePreview | null) {
       pending = preview;
       if (!preview) {
         window.cancelAnimationFrame(frame);
