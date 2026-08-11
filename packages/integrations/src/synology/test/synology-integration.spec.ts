@@ -426,6 +426,60 @@ describe("SynologyIntegration.getSystemInfoAsync", () => {
     expect(result.fileSystem[0]?.deviceName).toBe("volume_1");
   });
 
+  test("uses vol_info from storage_v2 without falling back to legacy storage", async () => {
+    mockSuccessfulFlow({
+      storageV2: {
+        success: true,
+        data: {
+          vol_info: [
+            {
+              name: "volume_1",
+              used_size: "4000000000",
+              total_size: "10000000000",
+              status: "normal",
+            },
+            {
+              name: "volume_2",
+              used_size: "5000000000",
+              total_size: "20000000000",
+              status: "attention",
+            },
+          ],
+        },
+      },
+    });
+
+    const integration = createIntegration();
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.fileSystem).toEqual([
+      {
+        deviceName: "volume_1",
+        used: "4000000000",
+        available: "6000000000",
+        percentage: 40,
+      },
+      {
+        deviceName: "volume_2",
+        used: "5000000000",
+        available: "15000000000",
+        percentage: 25,
+      },
+    ]);
+
+    const legacyStorageRequests = mockFetch.mock.calls.filter(([url]) => {
+      const urlString = toUrlString(url);
+
+      return (
+        getApiFromUrl(urlString) === "SYNO.Core.System" &&
+        getMethodFromUrl(urlString) === "info" &&
+        getTypeFromUrl(urlString) === "storage"
+      );
+    });
+
+    expect(legacyStorageRequests).toHaveLength(0);
+  });
+
   test("continues when optional tier-2 calls fail", async () => {
     mockSuccessfulFlow({ skipOptional: true });
     const integration = createIntegration();
