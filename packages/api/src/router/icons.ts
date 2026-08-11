@@ -25,6 +25,7 @@ export const iconsRouter = createTRPCRouter({
 
       return {
         icons: await ctx.db.query.iconRepositories.findMany({
+          orderBy: (table, { asc, sql }) => [sql`CASE WHEN ${table.slug} = 'local' THEN 0 ELSE 1 END`, asc(table.slug)],
           with: {
             icons: {
               columns: { id: true, name: true, url: true },
