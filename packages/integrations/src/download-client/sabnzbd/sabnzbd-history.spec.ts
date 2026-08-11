@@ -24,11 +24,9 @@ describe("getSabnzbdHistorySlotsAsync", () => {
       activeSlots: [createSlot("active", 1), createSlot("duplicate", 3)],
       historyWindowDays: 10,
       now: NOW,
-      fetchPageAsync: vi.fn().mockResolvedValue([
-        createSlot("archived", 2),
-        createSlot("duplicate", 3),
-        createSlot("expired", 11),
-      ]),
+      fetchPageAsync: vi
+        .fn()
+        .mockResolvedValue([createSlot("archived", 2), createSlot("duplicate", 3), createSlot("expired", 11)]),
     });
 
     expect(result.map((slot) => slot.nzo_id)).toEqual(["active", "archived", "duplicate"]);
@@ -39,10 +37,9 @@ describe("getSabnzbdHistorySlotsAsync", () => {
       activeSlots: [],
       historyWindowDays,
       now: NOW,
-      fetchPageAsync: vi.fn().mockResolvedValue([
-        createSlot("inside", historyWindowDays),
-        createSlot("outside", historyWindowDays + 1),
-      ]),
+      fetchPageAsync: vi
+        .fn()
+        .mockResolvedValue([createSlot("inside", historyWindowDays), createSlot("outside", historyWindowDays + 1)]),
     });
 
     expect(result.map((slot) => slot.nzo_id)).toEqual(["inside"]);

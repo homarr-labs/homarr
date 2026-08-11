@@ -28,10 +28,7 @@ export async function getSabnzbdHistorySlotsAsync({
 
     archivedSlots.push(...slots);
 
-    if (
-      slots.length < ARCHIVED_HISTORY_PAGE_SIZE ||
-      slots.every((slot) => slot.completed < cutoff)
-    ) {
+    if (slots.length < ARCHIVED_HISTORY_PAGE_SIZE || slots.every((slot) => slot.completed < cutoff)) {
       break;
     }
   }

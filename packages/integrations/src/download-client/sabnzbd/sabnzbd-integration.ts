@@ -62,7 +62,7 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
     const items = queue.slots
       .map((slot): DownloadClientItem => {
         const state = SabnzbdIntegration.getUsenetQueueState(slot.status);
-        const times = slot.timeleft.split(":").reverse();
+        const times = slot.timeleft.split(":").toReversed();
         const time = dayjs
           .duration({
             seconds: Number(times[0] ?? 0),
