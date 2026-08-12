@@ -45,7 +45,7 @@ import {
   withOpenRouterToolRequestOptions,
   withOpenRouterWebSearch,
 } from "./assistant-openrouter";
-import { toProviderOptionsKey } from "./assistant-provider-options";
+import { resolveHomarrProviderToken, toProviderOptionsKey } from "./assistant-provider-options";
 import { assistantExecutionPolicy } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { getSafeAssistantToolError } from "./assistant-tool-error";
@@ -72,6 +72,7 @@ export const maxDuration = 300;
 const assistantRequestMaxBytes = 12_000_000;
 
 const logger = createLogger({ module: "assistant" });
+const getAssistantLogErrorType = (error: unknown) => (error instanceof Error ? error.name : typeof error);
 const getToolApprovalSecret = () =>
   Buffer.from(
     hkdfSync("sha256", Buffer.from(env.SECRET_ENCRYPTION_KEY, "hex"), "", "assistant-tool-approval", 32),
@@ -424,6 +425,28 @@ export async function POST(request: Request) {
     return Response.json({ error: "Homarr Assistant is not configured." }, { status: 503 });
   }
 
+  let homarrProviderToken: string | null | undefined;
+  try {
+    homarrProviderToken = resolveHomarrProviderToken({
+      provider: configuration.provider,
+      configuredBaseUrl: configuration.baseUrl,
+      workshopApiUrl: appEnv.WORKSHOP_API_URL ?? appEnv.HOMARR_WEBSITE_URL,
+      headers: request.headers,
+    });
+  } catch (error) {
+    logger.warn("Rejected an unsafe Homarr provider endpoint", {
+      provider: configuration.provider,
+      errorType: getAssistantLogErrorType(error),
+    });
+    return Response.json({ error: "The Homarr provider endpoint is not configured safely." }, { status: 503 });
+  }
+  if (homarrProviderToken === null) {
+    return Response.json(
+      { error: "Sign in to the Homarr Community Workshop to use the Homarr provider." },
+      { status: 401 },
+    );
+  }
+
   const context = createTRPCContext({ headers: request.headers, session });
   const requestStartedAt = Date.now();
   const requestId = crypto.randomUUID();
@@ -440,7 +463,7 @@ export async function POST(request: Request) {
       requestId,
       provider: configuration.provider,
       modelId: requestedModelId,
-      error: modelLookup.error,
+      errorType: getAssistantLogErrorType(modelLookup.error),
     });
   }
   const selectedModel = modelLookup.model;
@@ -514,7 +537,7 @@ export async function POST(request: Request) {
             } catch (error) {
               logger.error("Assistant tool call failed", {
                 toolName: mcpTool.name,
-                error: error instanceof Error ? error.message : String(error),
+                errorType: getAssistantLogErrorType(error),
               });
               return { error: getSafeAssistantToolError(error, { toolName: mcpTool.name }) };
             }
@@ -559,13 +582,18 @@ export async function POST(request: Request) {
       ...(configuration.provider === "openrouter" || openRouterServerToolsEnabled
         ? {
             "HTTP-Referer": "https://homarr.dev",
-            "X-Title": "Homarr Assistant",
+            "X-OpenRouter-Title": "Homarr AI Assistant",
             "X-OpenRouter-Metadata": "enabled",
           }
         : {}),
       ...customHeaders,
     };
-    const providerApiKey = configuration.encryptedApiKey ? decryptSecret(configuration.encryptedApiKey) : undefined;
+    const providerApiKey =
+      configuration.provider === "homarr"
+        ? homarrProviderToken
+        : configuration.encryptedApiKey
+          ? decryptSecret(configuration.encryptedApiKey)
+          : undefined;
     const providerName = `homarr-${configuration.provider}`;
     const provider = createOpenAICompatible({
       name: providerName,
@@ -720,7 +748,7 @@ export async function POST(request: Request) {
           requestId,
           provider: configuration.provider,
           modelId,
-          error: error instanceof Error ? error.message : String(error),
+          errorType: getAssistantLogErrorType(error),
         });
       },
       onFinish: async () => {
@@ -732,7 +760,7 @@ export async function POST(request: Request) {
         } catch (error) {
           logger.error("Failed to update assistant conversation metadata", {
             threadId: thread.id,
-            error: error instanceof Error ? error.message : String(error),
+            errorType: getAssistantLogErrorType(error),
           });
         }
       },
@@ -839,7 +867,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     logger.error("Assistant response could not start", {
-      error: error instanceof Error ? error.message : String(error),
+      errorType: getAssistantLogErrorType(error),
     });
     return Response.json(
       {

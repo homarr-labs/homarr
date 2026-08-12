@@ -1,0 +1,9 @@
+{
+  "label": "Workshop",
+  "collapsed": true,
+  "position": 4,
+  "link": {
+    "type": "doc",
+    "id": "workshop/index"
+  }
+}

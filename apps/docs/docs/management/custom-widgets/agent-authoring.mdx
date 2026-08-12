@@ -125,20 +125,33 @@ To exercise the real Homarr Assistant lifecycle instead of accepting a returned 
 OPENROUTER_API_KEY=... pnpm --filter @homarr/custom-widgets test:assistant-ai
 ```
 
+The same suites can target the Homarr provider with a Workshop PocketBase token instead of an OpenRouter key:
+
+```sh
+AI_PROVIDER_BASE_URL=https://homarr.dev/api/ai/v1 \
+AI_PROVIDER_API_KEY=<workshop-token> \
+AI_PROVIDER_MODEL=homarr/model \
+pnpm --filter @homarr/custom-widgets test:assistant-ai
+```
+
+`AI_PROVIDER_JUDGE_MODEL` can select a separate judge when the configured endpoint offers one. The Homarr provider
+offers exactly one model, so generation and review both use `homarr/model`.
+
 The assistant test exposes the same lazy skill, live schema, component catalog, targeted component references,
 validation, preview-query, and create-from-preview tools as the product. It refuses to save a definition that was not
 validated exactly or whose preview queries were not all tested. Multi-request fixtures return a different payload for
 each documented path and require manual-query parameters. Use `--case=pokedex`, `--case=coinmarketcap-keyless`,
 `--case=bored-activity`, or `--case=agify-name` for a focused run.
 
-Both suites default generation and harsh review to OpenRouter's `~deepseek/deepseek-v4-flash-latest` route. They save
-tool traces, validated manifests, raw reviews, and detailed category scores under
+Both suites use the configured provider models for generation and harsh review. They save tool traces, validated
+manifests, raw reviews, and detailed category scores under
 `packages/custom-widgets/.ai-evaluations/`. These live tests are maintainer-invoked rather than CI-required because
 they consume a configured provider account and exercise a nondeterministic model. The repository's ordinary tests
 cover the lifecycle enforcement, fixture routing, score calculation, and failure behavior without network access.
 
-Each scenario stops as soon as it passes and has a hard limit of ten generation attempts. Override the models or
-per-scenario limit with `OPENROUTER_GENERATOR_MODEL`, `OPENROUTER_JUDGE_MODEL`, and
+Each scenario stops as soon as it passes and has a hard limit of ten generation attempts. Override the endpoint,
+models, or per-scenario limit with `AI_PROVIDER_BASE_URL`, `AI_PROVIDER_API_KEY`, `AI_PROVIDER_MODEL`,
+`AI_PROVIDER_JUDGE_MODEL`, and
 `CUSTOM_WIDGET_AI_MAX_LOOPS`. Generated artifacts are local and ignored by Git; promote a reviewed, validated result
 into the bundled-widget source deliberately.
 

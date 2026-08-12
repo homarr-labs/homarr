@@ -123,6 +123,18 @@ pnpm --filter @homarr/docs typecheck
 
 The integration suite uses a separate Compose project and deletes only its disposable volume.
 
+To smoke-test a deployed Workshop against its real configured upstream, use a dedicated low-quota test user:
+
+```sh
+HOMARR_AI_LIVE_SMOKE=1 \
+WORKSHOP_LIVE_TEST_URL=https://workshop.example.com \
+WORKSHOP_LIVE_TEST_TOKEN=<temporary-pocketbase-user-token> \
+pnpm test:workshop-live-provider
+```
+
+This opt-in check consumes one real request. It verifies the stable model contract, an authenticated completion, quota
+headers, and server-side user accounting without requiring the OpenRouter key or upstream model on the test client.
+
 ## Backup and restore
 
 PocketBase data lives in `/pb_data`. Stop writes and copy it into a new, empty host directory for each

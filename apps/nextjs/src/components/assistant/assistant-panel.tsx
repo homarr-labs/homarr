@@ -60,6 +60,7 @@ import {
   Image,
   Loader,
   Popover,
+  Progress,
   RingProgress,
   ScrollArea,
   SegmentedControl,
@@ -79,6 +80,10 @@ import {
   IconArrowUp,
   IconArrowsMaximize,
   IconAt,
+  IconBattery1,
+  IconBattery3,
+  IconBatteryFilled,
+  IconBatteryOff,
   IconCheck,
   IconChevronDown,
   IconChevronLeft,
@@ -115,10 +120,11 @@ import remarkGfm from "remark-gfm";
 import { useRouter } from "next/navigation";
 
 import { clientApi, fetchApi } from "@homarr/api/client";
+import { useTimeAgo } from "@homarr/common";
 import { assistantProviderIds, assistantProviderPresets, assistantReasoningModes } from "@homarr/definitions";
 import type { AssistantProvider } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
 import { getAssistantActivityState } from "./assistant-activity-state";
@@ -129,6 +135,7 @@ import {
   getAssistantConversationExportFilename,
 } from "./assistant-conversation-export";
 import { AssistantDotMatrix } from "./assistant-dot-matrix";
+import { useAssistantPreferences } from "./assistant-context";
 import { AssistantImage } from "./assistant-image";
 import { getAssistantDirectiveTranslationKey, parseAssistantDirectives } from "./assistant-directives";
 import { remarkAssistantDirectives, resolveAssistantDirectiveEntity } from "./assistant-markdown-directives";
@@ -149,6 +156,7 @@ import { useAssistantReasoningState } from "./assistant-reasoning-state";
 import { getNearestTriggerScrollTop } from "./assistant-trigger-scroll";
 import { getToolResultPresentation } from "./assistant-tool-result";
 import { getAssistantIconSearchQuery } from "./assistant-tool-label";
+import { getAssistantProviderQuotaLevel, isAssistantProviderUnavailable } from "./assistant-provider-quota";
 import { getAssistantToolTraceTarget } from "./assistant-tool-trace";
 import { getSafeAssistantHttpUrl } from "./assistant-url";
 
@@ -2537,10 +2545,154 @@ const RuntimeControls = ({
   );
 };
 
+const providerQuotaIcons = {
+  ok: IconBatteryFilled,
+  warning: IconBattery3,
+  bad: IconBattery1,
+  dead: IconBatteryOff,
+};
+
+const providerQuotaColors = {
+  ok: "green",
+  warning: "yellow",
+  bad: "orange",
+  dead: "red",
+} as const;
+
+const HomarrProviderQuota = () => {
+  const t = useScopedI18n("common.assistant");
+  const locale = useCurrentIntlLocale();
+  const preferences = useAssistantPreferences();
+  const quota = preferences.quota;
+  const resetAt = useMemo(() => new Date(quota?.resetsAt ?? Date.now()), [quota?.resetsAt]);
+  const resetRelative = useTimeAgo(resetAt, 30_000);
+  if (preferences.provider !== "homarr") return null;
+
+  const level = preferences.quota ? getAssistantProviderQuotaLevel(preferences.quota) : "dead";
+  const Icon = providerQuotaIcons[level];
+  const color = providerQuotaColors[level];
+  const percentage = preferences.quota
+    ? Math.min(100, Math.max(0, (preferences.quota.remaining / Math.max(preferences.quota.limit, 1)) * 100))
+    : 0;
+  const label = preferences.providerUser
+    ? quota
+      ? t("providerQuota.remainingLabel", {
+          remaining: quota.remaining,
+          limit: quota.limit,
+        })
+      : t("providerQuota.loading")
+    : t("providerQuota.signInRequired");
+  const resetTime = quota ? (
+    <time dateTime={quota.resetsAt} title={new Date(quota.resetsAt).toLocaleString(locale)}>
+      {new Date(quota.resetsAt).toLocaleTimeString(locale, {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZoneName: "short",
+      })}
+    </time>
+  ) : null;
+
+  return (
+    <Popover position="top" width={290} shadow="md" withinPortal>
+      <Popover.Target>
+        <UnstyledButton className={classes.providerQuotaTrigger} data-level={level} type="button" aria-label={label}>
+          {preferences.quotaLoading && !preferences.quota ? <Loader size={14} /> : <Icon size={16} aria-hidden />}
+          <Text component="span" size="xs" fw={650}>
+            {preferences.quota?.remaining ?? "–"}
+          </Text>
+        </UnstyledButton>
+      </Popover.Target>
+      <Popover.Dropdown>
+        <Stack gap="sm">
+          <Group justify="space-between" wrap="nowrap">
+            <Group gap="xs" wrap="nowrap">
+              <ThemeIcon color={color} variant="light" size="sm" radius="xl">
+                <Icon size={15} aria-hidden />
+              </ThemeIcon>
+              <Box>
+                <Text size="sm" fw={700}>
+                  {t("providerQuota.title")}
+                </Text>
+                <Text size="xs" c="dimmed">
+                  {preferences.providerUser?.name || t("providerQuota.communityWorkshop")}
+                </Text>
+              </Box>
+            </Group>
+            {preferences.quota && (
+              <Badge color={color} variant="light" size="sm">
+                {t(`providerQuota.level.${level}`)}
+              </Badge>
+            )}
+          </Group>
+
+          {!preferences.providerUser ? (
+            <>
+              <Text size="sm" c="dimmed">
+                {t("providerQuota.signInDescription")}
+              </Text>
+              <Button
+                size="compact-sm"
+                loading={preferences.quotaLoading}
+                onClick={() => void preferences.signInToProvider().catch(() => undefined)}
+              >
+                {t("providerQuota.signIn")}
+              </Button>
+            </>
+          ) : preferences.quota ? (
+            <>
+              <Box>
+                <Group justify="space-between" gap="xs" mb={5}>
+                  <Text size="xs" c="dimmed">
+                    {t("providerQuota.dailyAllowance")}
+                  </Text>
+                  <Text size="xs" fw={650}>
+                    {preferences.quota.remaining} / {preferences.quota.limit}
+                  </Text>
+                </Group>
+                <Progress value={percentage} color={color} size="sm" aria-label={label} />
+              </Box>
+              <Text size="xs" c="dimmed">
+                {t.rich("providerQuota.reset", {
+                  relative: resetRelative,
+                  time: () => resetTime,
+                })}
+              </Text>
+              <Text size="xs" c="dimmed">
+                {t("providerQuota.toolCalls")}
+              </Text>
+            </>
+          ) : (
+            <Button
+              variant="light"
+              size="compact-sm"
+              loading={preferences.quotaLoading}
+              onClick={() => void preferences.refreshQuota()}
+            >
+              {t("providerQuota.retry")}
+            </Button>
+          )}
+          {preferences.quotaError && (
+            <Text size="xs" c="red">
+              {preferences.quotaError}
+            </Text>
+          )}
+        </Stack>
+      </Popover.Dropdown>
+    </Popover>
+  );
+};
+
 const Composer = (props: ComposerProps) => {
   const t = useScopedI18n("common.assistant");
+  const preferences = useAssistantPreferences();
   const running = useAuiState((state) => state.thread.isRunning);
   const hasPendingAction = props.pendingAction !== undefined;
+  const providerUnavailable = isAssistantProviderUnavailable({
+    provider: preferences.provider,
+    signedIn: preferences.providerUser !== null,
+    remaining: preferences.quota?.remaining,
+  });
+  const sendBlocked = hasPendingAction || providerUnavailable;
   const composerInputRef = useRef<HTMLDivElement>(null);
   const composerLabel = t("composerPlaceholder");
 
@@ -2561,7 +2713,7 @@ const Composer = (props: ComposerProps) => {
             className={classes.composer}
             data-pending-action={hasPendingAction || undefined}
             onSubmit={(event) => {
-              if (hasPendingAction) event.preventDefault();
+              if (sendBlocked) event.preventDefault();
             }}
           >
             <ComposerTriggers />
@@ -2607,8 +2759,14 @@ const Composer = (props: ComposerProps) => {
                     color="red"
                     variant="filled"
                     size="lg"
-                    aria-label={hasPendingAction ? t("pendingAction.sendBlocked") : t("send")}
-                    disabled={hasPendingAction}
+                    aria-label={
+                      hasPendingAction
+                        ? t("pendingAction.sendBlocked")
+                        : providerUnavailable
+                          ? t("providerQuota.unavailableDescription")
+                          : t("send")
+                    }
+                    disabled={sendBlocked}
                   >
                     <IconArrowUp size={18} />
                   </ActionIcon>
@@ -2618,6 +2776,7 @@ const Composer = (props: ComposerProps) => {
             <Group className={classes.composerFooter} justify="space-between" gap="xs" wrap="nowrap">
               <Group className={classes.composerControls} gap={5} wrap="nowrap">
                 <RuntimeControls {...props} />
+                <HomarrProviderQuota />
                 <ConversationContext />
               </Group>
               <Group className={classes.composerHints} gap="xs" wrap="nowrap">

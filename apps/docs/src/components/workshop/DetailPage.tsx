@@ -758,7 +758,7 @@ const MarketplaceDetail = ({ workshopUrl }: { workshopUrl: string }) => {
               </div>
             </div>
             <Link
-              to="/docs/management/workshop/"
+              to="/docs/workshop/"
               className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
             >
               Installation guide <IconExternalLink size={13} />

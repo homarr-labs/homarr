@@ -1,308 +1,85 @@
 ---
+description: Configure and use Homarr Assistant.
 tags:
   - Assistant
   - AI
   - Administration
-  - Security
 ---
 
 # Assistant
 
-Administrators can configure the instance-wide AI assistant from **Management → Assistant**.
-It is available to signed-in users from the user menu, with `Shift + A`, and from the
-`Cmd/Ctrl + K` command menu. **Ask Homarr Assistant** is always available as a local result in the default
-search. Selecting it with an existing query sends that query in the background; selecting it without a
-query turns the command-menu search field into a prompt composer. Press
-`Enter` to send the prompt in the background without opening the conversation. The search field receives
-focus whenever the command menu opens, including when it is opened by an assistant tool. Sending from the
-command menu preserves any draft in the expanded conversation. The local result is temporarily disabled while
-the assistant is responding or waiting for an approval.
+Homarr Assistant can answer questions about your Homarr instance and use Homarr tools on your behalf. It follows the
+permissions of the signed-in user and asks for approval before it changes anything.
 
-While a response is running, a compact activity bar appears at the bottom of the page and the user-menu
-avatar shows a thinking indicator. The activity bar can be opened to follow the response. Completed
-responses add an unread count to the user menu until they are opened or dismissed. The expanded
-conversation has a minimize action that returns it to the activity bar without interrupting a response.
-Its adjacent close action hides the panel without leaving an activity bar behind. Both window actions use
-subtle buttons with an icon, tooltip, and accessible label.
-The transcript follows streamed output while it is already at the bottom, including fast responses. Scrolling
-up releases that follow state until **Scroll to latest** is selected or the user returns to the bottom.
+![Homarr Assistant conversation with suggested prompts](/img/assistant/conversation.png)
 
-`Shift + A` opens the compact conversation panel directly. The shortcut is ignored while typing in text
-fields, selectors, and editable content.
+## Open the assistant
 
-The **Assistant** board widget embeds the same persisted conversation and full interaction surface directly
-on a dashboard. By default it follows the current conversation. Widget settings can instead pin a specific
-conversation; the conversation picker stays hidden until **Pinned conversation** is selected.
-The Shift+A panel is non-modal: opening it focuses its composer, but it does not capture focus from the board.
-Users can continue typing in an Assistant widget or interacting with other dashboard controls while the panel
-is open. Every visible assistant surface keeps its own draft, attachment list, selection, and focus while sharing
-the same persisted conversation. Switching conversations restores the draft that belongs to that surface and
-conversation instead of copying text into another widget or the floating panel.
+- Select **Assistant** in the user menu.
+- Press `Shift + A` from anywhere in Homarr.
+- Type a question in `Cmd/Ctrl + K`, then select **Ask Homarr Assistant**.
+- Add the **Assistant** widget to a board for a permanent conversation view.
 
-When the assistant is unavailable, its command-menu result remains visible but disabled and explains that
-an administrator must configure and enable it.
+You can minimize a conversation while it works. The activity bar shows its progress and the user menu shows unread
+responses.
 
-The assistant uses the assistant-ui runtime for **AI SDK v7**. Homarr tracks the newest mutually compatible
-package set permitted by its supply-chain release-age policy. Persisted message rows can still report the upstream
-codec name `ai-sdk/v6`; assistant-ui's current v7 adapter deliberately retains that identifier for its compatible
-UI-message wire format. It does not mean the application is running AI SDK v6.
+## What it can do
 
-## Configure a model provider
+- Find and update boards, apps, integrations, widgets, and dashboard settings.
+- Check downloads, media, Docker containers, service health, and other connected integrations.
+- Create formatted notes and Custom Widgets.
+- Search the web when OpenRouter web search is enabled.
+- Show tool activity, reasoning summaries, usage, time, and cost when the provider reports them.
 
-Homarr includes presets for OpenRouter, OpenAI, Anthropic Claude, Google Gemini, xAI, Groq, Mistral AI,
-DeepSeek, Together AI, Ollama, and LM Studio. Provider icons make the presets easy to identify. A custom
-preset connects any other service that implements the OpenAI Chat Completions API.
+Use `@` to add an app, board, integration, widget, or tool as context. Use `/` for common prompts. You can also paste or
+attach images and text files when the selected model supports them.
 
-The provider list also shows **Homarr — Coming soon** as a disabled option.
+## Configure the assistant
 
-The management page presents setup as three compact sections: provider and endpoint, credentials, then
-model and availability. A status summary at the top shows whether the connection is ready, whether a key
-is protected, and which model is selected. Redundant active-state badges are omitted when the setup is ready.
+Open **Management → Assistant**.
 
-1. Choose a provider preset or **Custom endpoint**, then confirm the API base URL. It usually ends in `/v1`.
-2. Add an API key if the service requires bearer authentication. Additional authentication or routing
-   headers are available in the collapsed advanced section.
-3. Save the provider connection.
-4. Refresh the model list and select a discovered model. Homarr displays the friendly model name but
-   stores and sends the provider's exact model ID. Context-window sizes use compact labels such as `1M`.
-5. Enable the assistant and save the configuration.
+![Assistant provider, credentials, and model configuration](/img/assistant/configuration.png)
 
-The model discovery path defaults to `/models` and is appended to the API base URL. Leave it blank when
-the service does not expose model discovery. A manual model ID can still be used when discovery is
-disabled, unavailable, or returns no models.
+1. Select a provider.
+2. Check the API base URL and add an API key if required.
+3. Select **Save provider connection**.
+4. Refresh the model list and choose a model.
+5. Enable the assistant, then select **Save assistant**.
 
-API keys and additional header values are encrypted in the Homarr database. They are decrypted only on
-the server for discovery and model requests, and they are never returned to the browser. Changing the
-provider or base URL clears existing credentials. This prevents credentials for one service from being sent
-to another endpoint.
+Homarr includes presets for OpenRouter, OpenAI, Claude, Gemini, xAI, Groq, Mistral, DeepSeek, Together AI, Ollama, and
+LM Studio. Use **Custom endpoint** for another OpenAI-compatible Chat Completions service.
 
-When a key is already stored, the page shows its protected state instead of an ambiguous empty password
-field. Removing the API key requires explicit confirmation. Save that removal before entering and saving a
-different key.
+The [Homarr provider](../workshop/homarr-provider) does not require an administrator API key. Each user signs in to the
+Community Workshop and receives a separate daily allowance. A shared Workshop daily quota also applies, so requests
+can be rejected after that shared quota is exhausted.
 
-:::info Container networking
+:::info Local model servers
 
-For a containerized Homarr installation, `localhost` refers to the Homarr container. Use a resolvable
-container name, internal DNS name, or host gateway address to reach Ollama, LM Studio, or another local
-model server.
+Inside a container, `localhost` means the Homarr container. Use the model server's container name, local DNS name, or
+host gateway address instead.
 
 :::
 
-The configured endpoint must support streaming Chat Completions and structured tool calls for the full
-assistant experience. Model discovery alone does not guarantee tool support, except when OpenRouter
-explicitly advertises the model's `tools` capability.
+## Approvals and data
 
-OpenRouter web search is an opt-in option in the model section. It registers OpenRouter's model-callable
-[`openrouter:web_search` server tool](https://openrouter.ai/docs/guides/features/server-tools/web-search)
-alongside Homarr's tools, so OpenRouter performs each search without
-exposing the stored credential to the browser. The model decides when live research is needed and can use the
-grounded results and source links in responses or dashboard notes. Homarr limits each assistant request to
-three searches with five results per search. OpenRouter charges web-search usage separately from model tokens.
-Completed responses show a compact web-search activity card when OpenRouter reports search usage. OpenRouter
-does not expose these server-side searches as ordinary client-executed tool calls, so Homarr shows the reported
-search count and the safe title and URL from each returned `url_citation` annotation instead. Citation excerpts
-stay in the provider response and are not persisted in the activity card.
+Read-only tools can run automatically. Changes show an approval card with the exact action before Homarr runs it.
+Normal Homarr permissions still apply.
 
-The option is also available for custom endpoints that forward OpenRouter's server-tools request format. This
-supports OpenRouter proxies, including the future Homarr Router provider. Leave it disabled for ordinary
-OpenAI-compatible endpoints because the `openrouter:*` tool type is not part of the standard OpenAI API.
+API keys and custom headers are encrypted in the Homarr database and are never returned to the browser. Prompts,
+attachments, tool definitions, and tool results are sent to the configured model provider. Check that provider's data
+policy before enabling the assistant.
 
-The Claude preset uses Anthropic's OpenAI SDK compatibility layer. Anthropic describes that layer as
-suited to testing and comparison rather than as its full native API; unsupported OpenAI fields may be
-ignored. Streaming responses and tool calls are supported, which are the capabilities Homarr Assistant
-uses. Choose OpenRouter or another provider when you prefer a provider-neutral production endpoint.
+Conversations are stored per user. Users can edit or retry messages, copy responses, export a conversation as Markdown,
+and delete conversations.
 
-## Conversations and tools
+## If setup does not work
 
-Conversations and messages are stored per user in the Homarr database. The assistant stays out of the
-page layout until it is opened. Users can start, revisit, and delete conversations from the
-conversation menu in the floating panel.
+- **No models found:** check the base URL, model discovery path, and API key. You can enter a model ID manually.
+- **The assistant is unavailable:** enable it and save the configuration.
+- **A model stops during a tool call:** use a model that supports streaming and structured tool calls.
+- **A local endpoint cannot be reached:** check container networking and the endpoint's listen address.
 
-Messages support copy, edit-and-resend, response regeneration and branch navigation, Markdown export,
-and helpful/not-helpful feedback. The conversation menu also provides a compact export action beside delete for
-each conversation. Its debugging-oriented Markdown includes every stored user, assistant, reasoning, tool, error,
-branch-parent, and server-metadata record while redacting secret-looking fields and embedded attachment data.
-The per-response export uses the same tool-aware format instead of assistant-ui's text-only copy representation.
-Selecting text in a message exposes a quote action that carries the selected passage into the next prompt.
-Files returned by a compatible model can be downloaded directly from the message.
-Assistant responses render GitHub-flavored Markdown, including headings, links, lists, task lists, tables,
-quotes, inline code, and fenced code blocks. Line breaks are preserved, and Homarr repairs common streamed
-responses where a provider returns escaped line breaks or places a bold-label list on one line.
-Completed fenced code blocks use language-aware syntax highlighting; a streaming block stays plain until its
-content is stable. Safe same-origin links are prefetched and use client-side navigation, so opening a returned
-preview, editor, board, or other Homarr item does not unload the assistant. External links keep their normal
-external-browser behavior.
-Fenced `mermaid` blocks render as diagrams in the current color scheme using Mermaid's strict security mode;
-invalid diagrams fall back to their source instead of breaking the response.
-When Homarr's icon search returns an image URL, visual result tables render that actual icon in a compact
-image column instead of substituting an emoji. Assistant-provided Markdown images accept safe relative,
-HTTP, and HTTPS sources and load without forwarding the Homarr page as the referrer. Image message parts
-render through assistant-ui's image primitive in a bounded responsive preview with an accessible loading state,
-a filename caption when available, and an in-place retry when the source fails.
-Images up to 1 MB and text, Markdown, CSV, HTML, XML, or JSON documents up to 350 KB can be attached by
-using the paperclip, dropping files onto the composer, or pasting an image with `Cmd/Ctrl + V`. Attachment
-previews stay local to the composer where they were added and show upload state, file type, and a removable image
-thumbnail or document tile. A request can contain up to five attachments.
-Image understanding depends on the selected model; document text is extracted locally by Homarr and sent
-as part of the prompt.
-
-Type `@` in the composer to add permission-checked context. The nested menu contains apps, integrations,
-boards, widgets, and tools available to the current user. Homarr validates every referenced ID again on
-the server before adding it to the model context. Selected references appear as compact, typed pills in the
-composer and sent message, while preserving assistant-ui's underlying directive syntax for the model. When the
-assistant cites one of those references in its own response, Homarr renders the same typed pill and uses the
-stored app or integration icon when one is available. Type `/`
-for common prompt shortcuts. Both menus support keyboard navigation and keep the active result visible while
-moving through long lists. The selector below the composer combines searchable, provider-grouped models with
-their description, context size and image-input capability, plus the thinking-level control. Model selection is
-stored on the conversation after a completed request. Thinking mode can be left on **Auto**, disabled, or set
-from minimal through high; explicit levels are sent using the AI SDK's provider-neutral reasoning setting and
-still depend on support from the chosen model and endpoint. Reasoning text is shown live when the provider streams
-it through assistant-ui's grouped-parts and chain-of-thought primitives. The compact **Thinking** trace groups
-adjacent reasoning with ordinary tool calls, shows each tool's status, duration and safe human-readable target,
-and expands raw input, output and result previews only on request. Approval and question tools remain full-width
-outside the trace. The disclosure renders Markdown, can be opened or closed without interrupting the response,
-and keeps the user's collapsed state when another message starts. A compact dot matrix distinguishes an initial
-thinking pass from response streaming and settles into waiting, success, or error states in the minimized activity
-bar. The state always keeps its text label, and the animation is disabled when the operating system requests
-reduced motion.
-
-A circular context ring beside the model selector gives a quick glance at cumulative conversation usage without
-expanding the composer toolbar. Its accessible label includes cumulative tokens and cost when available, while
-its popover keeps the latest complete context reading as a new response starts and lists every request
-turn with its model, provider, input, output, cached-input and reasoning tokens, context use, duration, speed,
-agent steps, routing details, and cost when reported. Before usage is available, the control remains a compact
-ring instead of showing a redundant missing-data label. Closing and reopening the popover reads persisted
-conversation metadata instead of resetting the display to zero. A larger ring inside the popover breaks the latest
-reported context into used, remaining and total capacity plus input, cached-input, output and reasoning tokens.
-
-Each assistant response places a small provider logo in the same stable action toolbar as copy, export,
-feedback, and regenerate. Hovering the logo shows the provider, exact model, timing, throughput, and cost without
-adding another metadata row to the transcript. Branch navigation occupies its own adjacent group, so switching
-between response versions never pushes the response actions off-screen.
-
-OpenRouter responses request inline usage and routing metadata. Opening detailed turn data also loads the
-server-side generation record for its model steps and briefly polls while OpenRouter finishes processing it.
-The details separate Homarr's end-to-end timing from OpenRouter's provider latency, generation time, and provider
-throughput, and can include normalized and native token counts, moderation latency, cache discount, fallback count,
-service tier, data region, BYOK status, routed provider, generation identifier, exact cost, and upstream inference
-cost. Provider credentials remain server-side; the browser can request only generation identifiers already stored
-on a conversation owned by the signed-in user and signed by the Homarr server for that user and conversation.
-Successful generation lookups are cached briefly so polling and multi-step requests do not repeatedly query
-OpenRouter for the same record.
-When a provider omits cost but model discovery includes prompt and completion pricing, Homarr labels the
-calculated value as estimated. Missing provider data is shown as not reported rather than inferred.
-
-The assistant can use the same internal tool definitions as the [Homarr MCP server](./mcp).
-Each tool call runs as the signed-in user, so normal Homarr permission checks still apply. Read-only
-procedures can run during the agent loop. Mutating procedures require an explicit approval in the
-conversation before they execute. The approval appears as a large **Approve and run** or **Deny** action;
-the assistant does not require a second typed confirmation first. Tool cards expose their status, timing,
-validated input, result, and error state without flooding the conversation with raw JSON by default.
-Common collection and widget results are summarized inline as compact responsive cards, while the full
-structured result remains available in the tool card details. Icon searches show the returned image variants,
-file formats, and repositories instead of the size of the complete icon catalog. Their trace uses a readable
-activity such as **Looking for “homarr” icons** instead of exposing the internal MCP procedure name.
-
-Large tool-driven requests can use up to 32 agent steps and a larger response budget within one request, so
-multi-item dashboard changes normally finish without requiring a follow-up “Continue” message. OpenRouter calls
-Homarr tools sequentially to prevent routed models from interleaving or truncating parallel JSON arguments, while
-every mutation still pauses for its normal approval. A safely recoverable truncated icon-search object is repaired
-before validation; incomplete search strings and all mutation inputs are never guessed.
-Homarr also normalizes internal tool results to the model's JSON-compatible message format before continuing an
-agent loop. Rich server values such as dates cannot invalidate the next model step, and an interrupted tool call
-without a result is omitted when the conversation resumes instead of making the entire prompt fail.
-
-The assistant can create a formatted dashboard note by adding a **Notebook** widget. Ask it for a note with
-headings, lists, tasks, links, emphasis, tables, or images; it generates compatible rich-text content, shows
-the native widget configuration form and standard mutation approval, then places the widget in the next
-available dashboard position. The generated content is retained even though the Notebook content field is
-normally hidden from widget settings.
-
-Automatic placement checks every responsive layout and treats both widgets and complete container footprints
-as occupied. New assistant-created items use the first free position in the main canvas instead of overlapping
-existing content or being placed in a gutter.
-
-Every assistant-created dashboard widget now passes through Homarr's native widget editor before it is added.
-The form fills widget defaults, validates widget-specific options, and only offers compatible integrations that
-the current user can use. Required integrations cannot be left empty, single-integration widgets cannot receive
-multiple integrations, and the reviewed values are passed unchanged into the final approval-gated mutation.
-
-Custom-widget tools let an administrator list, inspect, create, and update definitions. The custom-widget
-form's **Design with AI** action sends a focused request into the current conversation, where the assistant
-can propose the matching mutation and use the same approval controls. Existing stored secret values are
-reported only as configured/not configured and are preserved on update unless replacements are explicitly
-provided. For Custom Widget requests, Homarr lazily adds the complete installed skill, all bundled schema,
-runtime and security references, and the current JSON Schema to the trusted authoring context. This avoids an
-extra provider round trip for the large `customWidget_getSkill` and `customWidget_schema` results. If the model
-discovers the Custom Widget workflow mid-response, Homarr promotes the same resources before its next step and
-removes the now-redundant resource calls from provider history. Multiline JSX uses `templateLines` to avoid fragile
-streamed JSON escaping. Custom Widget authoring tools are mandatory: the assistant validates the complete candidate,
-creates a preview from that exact version, executes every returned preview query, checks the actual HTTP status and
-response shape, and repeats the entire validation and preview sequence after any material JSX, request, source, option,
-or binding change. It only reports a widget as validated, working, created, or placed when the corresponding tool result
-proves that checkpoint. Large widgets are saved from the exact final tested preview session, so the approved create step
-does not stream the complete JSX a second time. When the request already names a board, that board is carried into the
-create result and placement continues without asking the user to select it again. Preview and saved-definition results
-include safe Homarr paths that open in the assistant without a page reload. When placement is still a choice, the
-assistant uses the structured question UI instead of ending with a prose question.
-
-The authoring phase limits broad component-document retrieval and then moves into validation with the smallest useful
-reference set. Supplied samples and successful preview responses are treated as binding contracts: the assistant is
-instructed to render the requested fields, guard optional nested data, preserve every returned item, expose freshness
-when timestamps are available, and provide a refresh path for recoverable empty or error states.
-
-The shield control in the conversation header can enable automatic approvals for the current conversation.
-While enabled, Homarr accepts every affirmative approval step as it arrives: protected mutations are approved,
-presented app details and board changes are used, and structured questions with an explicitly categorized
-**Confirm** answer choose that answer. Neutral choices such as selecting a board still wait for input because
-they do not have a safe affirmative default. Automatic approvals turn off when you switch conversations, and
-the shared approval tracker prevents the same call from being handled twice when both a board widget and the
-floating assistant are visible.
-
-When the assistant genuinely needs missing information or a choice, it can pause with a structured
-question. Each proposed answer is visibly categorized as **Confirm**, **Decline**, or **Option**, so the effect
-of automatic approval is unambiguous. Users can select one of the proposed answers or choose **Other** and
-enter their own response. While a question is unanswered, its controls stay in a dedicated area immediately
-above the composer instead of requiring the user to find the tool call in the transcript. The question temporarily
-uses the available conversation body, with its own scrolling when necessary, rather than squeezing a long option
-list into a short dock beside part of the transcript. The answered choice then remains in the conversation history.
-Submitting the answer resumes the same agent run automatically. The minimized activity bar shows the
-question or approval that needs attention and opens directly back to the request. While an answer, app
-form, or mutation approval is pending, the composer preserves its draft but does not replace the pending
-tool call with a new message. If the provider stops before an interactive tool supplies complete arguments,
-Homarr replaces the loading state with an explicit error and confirms that no change was made.
-
-App creation uses Homarr's native app form inside the conversation. The form reuses the local icon picker,
-including automatic matching and searches through the `icon.findIcons` procedure, before the final
-`app.create` approval is requested. App fields are filled only after the complete tool input has arrived, so
-streaming partial arguments cannot replace the proposed values with empty fields. The model is instructed not
-to invent external icon CDN URLs.
-
-Board appearance changes use a similar review flow. The assistant first reads the board's current settings,
-including its complete custom stylesheet, and then opens an editable form with Custom CSS, Appearance,
-Background, and General tabs. The form highlights how many fields were proposed, preserves settings the
-assistant did not change, and returns only values that differ from the current board. Custom CSS can be
-copied or restored before continuing, and Homarr warns when it contains an imported stylesheet or remote
-resource URL. Continuing from the form opens the normal mutation approval before anything is saved.
-
-Ask for changes such as “make the cards denser on my Home board,” “add a mobile CSS rule without removing
-my existing styles,” or “change the board colors and disable app status checks.” The current user must have
-modify permission on the selected board. The empty conversation includes an **Improve a dashboard** starter,
-and `/style` prepares the same guided workflow from the composer.
-
-Homarr also exposes a small set of browser-only actions to the assistant. These actions can navigate to
-safe internal routes, refresh the current view, and open Homarr interfaces such as the command menu and media request search.
-They never receive provider credentials and cannot navigate to arbitrary external URLs.
-
-After an approved mutation completes, Homarr automatically refetches active page and dashboard data so
-board items, settings, custom CSS, apps, and other visible results update without a full browser reload.
-The refresh action in the conversation header performs the same safe refetch manually. It keeps the
-conversation open while refreshing both client queries and server-rendered route data.
-
-:::warning
-
-Assistant prompts and selected tool results are sent to the configured model endpoint. Review that
-service's privacy and retention terms before enabling this feature for an instance.
-
-:::
+Homarr exposes its MCP-enabled procedures to external clients through the [MCP server](./mcp). MCP omits
+`customWidget_*` tools for non-admin API keys, while the built-in assistant adds browser actions and optional
+OpenRouter web search. Custom Widget authors can find the full workflow in
+[Agent authoring](./custom-widgets/agent-authoring).

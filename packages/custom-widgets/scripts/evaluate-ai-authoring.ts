@@ -4,11 +4,13 @@ import path from "node:path";
 import { CUSTOM_WIDGET_AI_EVALUATION_CASES } from "./ai-evaluation-cases";
 import { evaluateCustomWidgetAssistantCase } from "./ai-assistant-evaluation";
 import type { CustomWidgetAssistantEvaluationResult } from "./ai-assistant-evaluation";
-import { DEFAULT_GENERATOR_MODEL, DEFAULT_JUDGE_MODEL, evaluateCustomWidgetCase } from "./ai-evaluation";
+import { evaluateCustomWidgetCase, resolveAiEvaluationProviderConfig } from "./ai-evaluation";
 import type { AiEvaluationResult } from "./ai-evaluation";
 
-const apiKey = process.env.OPENROUTER_API_KEY;
-if (!apiKey) throw new Error("OPENROUTER_API_KEY is required for the live Custom Widget AI evaluation");
+const { apiKey, baseUrl: providerBaseUrl, generatorModel, judgeModel } = resolveAiEvaluationProviderConfig(process.env);
+if (!apiKey) {
+  throw new Error("AI_PROVIDER_API_KEY or OPENROUTER_API_KEY is required for the live Custom Widget AI evaluation");
+}
 
 const requestedCase = process.argv.find((value) => value.startsWith("--case="))?.slice("--case=".length);
 const assistantMode = process.argv.includes("--assistant");
@@ -43,18 +45,20 @@ for (const testCase of selectedCases) {
     ? await evaluateCustomWidgetAssistantCase({
         testCase,
         apiKey,
+        baseUrl: providerBaseUrl,
         outputRoot,
         maxLoops,
-        generatorModel: process.env.OPENROUTER_GENERATOR_MODEL ?? DEFAULT_GENERATOR_MODEL,
-        judgeModel: process.env.OPENROUTER_JUDGE_MODEL ?? DEFAULT_JUDGE_MODEL,
+        generatorModel,
+        judgeModel,
       })
     : await evaluateCustomWidgetCase({
         testCase,
         apiKey,
+        baseUrl: providerBaseUrl,
         outputRoot,
         maxLoops,
-        generatorModel: process.env.OPENROUTER_GENERATOR_MODEL ?? DEFAULT_GENERATOR_MODEL,
-        judgeModel: process.env.OPENROUTER_JUDGE_MODEL ?? DEFAULT_JUDGE_MODEL,
+        generatorModel,
+        judgeModel,
       });
   results.push(result);
   remainingLoopBudget -= result.attempts;
@@ -68,8 +72,9 @@ for (const testCase of selectedCases) {
 const summary = {
   generatedAt: new Date().toISOString(),
   mode: assistantMode ? "assistant-tool-loop" : "manifest",
-  generatorModel: process.env.OPENROUTER_GENERATOR_MODEL ?? DEFAULT_GENERATOR_MODEL,
-  judgeModel: process.env.OPENROUTER_JUDGE_MODEL ?? DEFAULT_JUDGE_MODEL,
+  providerBaseUrl,
+  generatorModel,
+  judgeModel,
   results: results.map((result) => ({
     caseId: result.caseId,
     attempts: result.attempts,

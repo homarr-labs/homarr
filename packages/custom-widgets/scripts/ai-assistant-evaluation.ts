@@ -21,6 +21,7 @@ import { getCustomWidgetJsonSchema } from "../src/core/schema";
 import type { CustomWidgetAiEvaluationCase } from "./ai-evaluation-cases";
 import {
   DEFAULT_GENERATOR_MODEL,
+  getAiProviderChatCompletionsUrl,
   getDeterministicEvaluationIssues,
   judgePasses,
   parseJudgeResult,
@@ -441,12 +442,13 @@ function buildAssistantPrompt(testCase: CustomWidgetAiEvaluationCase, feedback: 
 
 async function callAssistantStep(args: {
   apiKey: string;
+  baseUrl?: string;
   model: string;
   messages: OpenRouterMessage[];
   tools: ToolDefinition[];
   toolChoice?: string;
 }): Promise<OpenRouterAssistantMessage> {
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  const response = await fetch(getAiProviderChatCompletionsUrl(args.baseUrl), {
     method: "POST",
     headers: {
       Authorization: `Bearer ${args.apiKey}`,
@@ -467,10 +469,10 @@ async function callAssistantStep(args: {
   });
   const payload = (await response.json()) as OpenRouterResponse;
   if (!response.ok) {
-    throw new Error(`OpenRouter request failed (${response.status}): ${payload.error?.message ?? "Unknown error"}`);
+    throw new Error(`AI provider request failed (${response.status}): ${payload.error?.message ?? "Unknown error"}`);
   }
   const message = payload.choices?.[0]?.message;
-  if (!message) throw new Error("OpenRouter returned no assistant message");
+  if (!message) throw new Error("AI provider returned no assistant message");
   return message;
 }
 
@@ -498,6 +500,7 @@ export const getAssistantEvaluationRecoveryToolName = (state: AssistantAttemptSt
 
 async function callAssistantStepWithRecovery(args: {
   apiKey: string;
+  baseUrl?: string;
   model: string;
   messages: OpenRouterMessage[];
   tools: ToolDefinition[];
@@ -530,6 +533,7 @@ async function callAssistantStepWithRecovery(args: {
 async function runAssistantAttempt(args: {
   testCase: CustomWidgetAiEvaluationCase;
   apiKey: string;
+  baseUrl?: string;
   model: string;
   feedback: readonly string[];
 }) {
@@ -553,6 +557,7 @@ async function runAssistantAttempt(args: {
         : customWidgetAssistantEvaluationToolDefinitions;
     const message = await callAssistantStepWithRecovery({
       apiKey: args.apiKey,
+      baseUrl: args.baseUrl,
       model: args.model,
       messages,
       tools,
@@ -592,6 +597,7 @@ async function runAssistantAttempt(args: {
 export async function evaluateCustomWidgetAssistantCase(args: {
   testCase: CustomWidgetAiEvaluationCase;
   apiKey: string;
+  baseUrl?: string;
   outputRoot: string;
   maxLoops: number;
   generatorModel?: string;
@@ -612,6 +618,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
       run = await runAssistantAttempt({
         testCase: args.testCase,
         apiKey: args.apiKey,
+        baseUrl: args.baseUrl,
         model: args.generatorModel ?? DEFAULT_GENERATOR_MODEL,
         feedback,
       });
@@ -651,6 +658,7 @@ export async function evaluateCustomWidgetAssistantCase(args: {
         testCase: args.testCase,
         widget: run.state.createdWidget,
         apiKey: args.apiKey,
+        baseUrl: args.baseUrl,
         judgeModel: args.judgeModel,
       });
       await writeFile(path.join(caseDirectory, `judge-${attempt}.json`), judgeRaw, "utf8");

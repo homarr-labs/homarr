@@ -29,13 +29,260 @@ section {
 
 
 .heroBanner {
-  padding: 4rem;
+  padding: clamp(3rem, 6vw, 6rem) clamp(1.25rem, 4vw, 4rem);
   position: relative;
   overflow: hidden;
 }
 
+.heroContent {
+  display: grid;
+  grid-template-columns: minmax(25rem, 1fr) minmax(44rem, 48rem);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 3rem);
+  max-width: 108rem;
+  margin-inline: auto;
+}
+
+.heroCopy {
+  max-width: 52rem;
+}
+
+.heroTitle {
+  text-wrap: balance;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.heroPreview {
+  min-width: 0;
+}
+
+.heroCards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 0.75rem;
+  width: min(100%, 48rem);
+  margin-inline: auto;
+  color: #343a40;
+}
+
+:global([data-theme="dark"]) .heroCards {
+  color: #dee2e6;
+}
+
+.widgetCard {
+  flex: none;
+  min-width: 0;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, currentcolor 12%, transparent) !important;
+  color: inherit;
+  font: inherit;
+  background: color-mix(in srgb, var(--ifm-navbar-background-color) 76%, transparent) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 28px rgb(31 41 55 / 14%);
+}
+
+.resourcesWidget,
+.dockerWidget {
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 0.5rem;
+  padding: 0.75rem !important;
+}
+
+.widgetHeading,
+.resourceLabel,
+.containerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.widgetTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.onlineStatus,
+.dockerCount {
+  flex: none;
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.onlineStatus {
+  color: #087f5b;
+}
+
+:global([data-theme="dark"]) .onlineStatus {
+  color: #69dbb1;
+}
+
+.resourceMeter {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.resourceMeterCritical .resourceLabel {
+  color: #a51111;
+  font-weight: 700;
+}
+
+.resourceLabel {
+  font-size: 0.6875rem;
+}
+
+.resourceLabel > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.resourceTrack {
+  display: block;
+  appearance: none;
+  overflow: hidden;
+  width: 100%;
+  height: 0.375rem;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentcolor 16%, transparent);
+}
+
+.resourceTrack::-webkit-progress-bar {
+  background: transparent;
+}
+
+.resourceTrack::-webkit-progress-value,
+.resourceTrack::-moz-progress-bar {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ifm-color-primary);
+}
+
+.resourceMeterCritical .resourceTrack::-webkit-progress-value,
+.resourceMeterCritical .resourceTrack::-moz-progress-bar {
+  background: #e03131;
+}
+
+.downloadProgress {
+  display: block;
+  appearance: none;
+  overflow: hidden;
+  width: 100%;
+  height: 0.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentcolor 18%, transparent);
+}
+
+.downloadProgress::-webkit-progress-bar {
+  background: transparent;
+}
+
+.downloadProgress::-webkit-progress-value,
+.downloadProgress::-moz-progress-bar {
+  border-radius: inherit;
+  background: #2f9e44;
+}
+
+.containerList {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.containerRow {
+  font-size: 0.6875rem;
+  line-height: 1.25;
+}
+
+.containerName {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.containerStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: color-mix(in srgb, currentcolor 82%, transparent);
+}
+
+.statusDot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 999px;
+  background: #12b886;
+}
+
+.containerRowFailed {
+  color: #a51111;
+  font-weight: 700;
+}
+
+:global([data-theme="dark"]) .resourceMeterCritical .resourceLabel,
+:global([data-theme="dark"]) .containerRowFailed {
+  color: #ffe3e3;
+}
+
+.statusDotFailed {
+  background: #fa5252;
+  animation: failed-container-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes failed-container-pulse {
+  50% {
+    opacity: 0.35;
+    transform: scale(1.65);
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .heroBanner {
+    padding: 3rem 1.5rem;
+  }
+
+  .heroContent {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+
+  .heroCopy {
+    max-width: 46rem;
+  }
+
+  .heroCards {
+    width: min(100%, 48rem);
+  }
+}
+
 @media screen and (max-width: 996px) {
   .heroBanner {
-    padding: 2rem;
+    padding: 2.5rem 1rem;
+  }
+
+  .heroPreview {
+    display: none;
+  }
+
+  .heroActions > :global(*) {
+    flex: 1 1 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statusDotFailed {
+    animation: none;
   }
 }
