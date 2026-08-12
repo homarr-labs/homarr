@@ -95,28 +95,25 @@ const LoadAverage = ({
   const load = server.stats?.loadAverage;
   if (!load) return <Text size="xs">—</Text>;
 
+  const entries = [
+    { label: "1m", value: load.one },
+    { label: "5m", value: load.five },
+    { label: "15m", value: load.fifteen },
+  ];
+  const Values = compact ? Stack : Group;
+
   return (
     <Stack gap={1} align={compact ? "flex-end" : "stretch"}>
-      <Group gap={compact ? 6 : 8} wrap={compact ? "wrap" : "nowrap"} justify={compact ? "flex-end" : "flex-start"}>
-        <Text size="xs" style={{ whiteSpace: "nowrap" }}>
-          <Text span c="dimmed" inherit>
-            1m&nbsp;
+      <Values gap={compact ? 1 : 8} wrap="nowrap" align={compact ? "flex-end" : "center"}>
+        {entries.map((entry) => (
+          <Text key={entry.label} size="xs" style={{ whiteSpace: "nowrap" }}>
+            <Text span c="dimmed" inherit>
+              {entry.label}&nbsp;
+            </Text>
+            {entry.value.toFixed(2)}
           </Text>
-          {load.one.toFixed(2)}
-        </Text>
-        <Text size="xs" style={{ whiteSpace: "nowrap" }}>
-          <Text span c="dimmed" inherit>
-            5m&nbsp;
-          </Text>
-          {load.five.toFixed(2)}
-        </Text>
-        <Text size="xs" style={{ whiteSpace: "nowrap" }}>
-          <Text span c="dimmed" inherit>
-            15m&nbsp;
-          </Text>
-          {load.fifteen.toFixed(2)}
-        </Text>
-      </Group>
+        ))}
+      </Values>
       <Text size="10px" c="dimmed">
         {getCoreLabel(server)} {coresLabel}
       </Text>
