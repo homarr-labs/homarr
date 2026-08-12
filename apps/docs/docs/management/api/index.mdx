@@ -93,6 +93,10 @@ an optional `error` on a failed integration; media-request responses expose a `f
 requests endpoint returns its items in `requests`. When every selected integration fails, the query returns an error instead
 of a partial response.
 
+Other widgets use the same settlement pattern with endpoint-specific shapes: a failed integration may appear as a named
+fallback row, in a failure array, or be omitted while healthy results remain. Widget pages should identify the shape they
+render rather than assuming every query exposes an `error` field.
+
 ### Saving dashboard layouts
 
 The dashboard editor saves item positions and sections as one board update.

@@ -6,14 +6,32 @@ tags:
 
 Homarr has the following keyboard shortcuts:
 
-| Shortcut                                        | Description                                |
-| ----------------------------------------------- | ------------------------------------------ |
-| `MOD` + `K`                                     | Opens the search bar                       |
-| `MOD` + `J`                                     | Toggles Dark Mode                          |
-| `MOD` + `E`                                     | Toggles Edit Mode                          |
-| Hold `Shift` for 500 ms over a supported widget | Opens its temporary advanced view          |
-| `Shift` + `Enter` on a supported widget         | Opens its advanced view until it is closed |
-| `Esc`                                           | Closes an open advanced view or board menu |
+| Shortcut                                        | Description                                                                                                                |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `MOD` + `K`                                     | Opens the search bar                                                                                                       |
+| `MOD` + `J`                                     | Toggles Dark Mode                                                                                                          |
+| `MOD` + `E`                                     | Toggles Edit Mode                                                                                                          |
+| Hold `Shift` for 500 ms over a supported widget | Opens its temporary advanced view                                                                                          |
+| `Shift` + `Enter` on a supported widget         | Opens its advanced view until it is closed                                                                                 |
+| `Esc`                                           | Stops keyboard tile editing, cancels an active pointer or touch move/resize, or closes an open advanced view or board menu |
+
+## Board editing
+
+`MOD` + `E` enters edit mode. Homarr keeps the current board visible while the editor prepares; movement and resizing become available when it is ready.
+
+When a tile is focused in edit mode:
+
+| Shortcut             | Description                                                                 |
+| -------------------- | --------------------------------------------------------------------------- |
+| `Enter` or `Space`   | Starts or stops keyboard editing                                            |
+| Arrow keys           | Moves the focused tile within its current canvas, rail, or Container        |
+| `Shift` + Arrow keys | Resizes from the tile's lower-right corner: Left/Up shrink; Right/Down grow |
+| `Esc`                | Stops keyboard editing without undoing its changes                          |
+
+Keyboard moves and resizes apply immediately. To move an item between a canvas, rail, or Container, drag it there or use **Move / resize item** for precise numeric placement.
+Commands at a grid boundary or at the tile's minimum size are ignored and announced instead of moving or shrinking the tile.
+
+On touch screens, press and hold a tile before moving it; a quick tap does not start a drag. Resize handles accept direct touch input. During a pointer or touch move or resize, `Esc` cancels the interaction and restores the layout from before it started.
 
 ## Board editing
 

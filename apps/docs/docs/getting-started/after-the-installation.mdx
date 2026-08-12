@@ -6,10 +6,16 @@ tags:
   - Configuration
 ---
 
-import manageBoardHeaderEditMode from "./img/manage-board-header-edit-mode.png";
-import manageBoardHeaderAddItem from "./img/manage-board-header-add-item-menu.png";
-import manageBoardHeaderChooseItem from "./img/manage-board-header-choose-item.png";
 import manageBoardNoApp from "./img/manage-board-no-app.png";
+import currentKeyboardTileEditing from "../management/boards/img/keyboard-tile-editing.png";
+import boardDesktopCurrent from "./img/onboarding-board-desktop-current.png";
+import boardEditModeCurrent from "./img/onboarding-board-edit-mode-current.png";
+import addContentMenuCurrent from "./img/onboarding-add-content-menu-current.png";
+import chooseItemCurrent from "./img/onboarding-choose-item-current.png";
+import editItemCurrent from "./img/onboarding-edit-item-current.png";
+import boardsHomeMobileMenu from "./img/onboarding-boards-home-mobile-menu.png";
+import moveResizeMenuCurrent from "./img/onboarding-move-resize-menu-current.png";
+import currentBoardMobileView from "./img/onboarding-board-mobile-current.png";
 
 :::tip
 
@@ -72,9 +78,25 @@ Public boards are also accessible for users, that are not logged in ([see access
 
 ![](./img/manage-create-board-modal.png)
 
-Congratulations - you've just created your first board. You can see boards, that you have access to, on this page:
+Congratulations - you've just created another board. You can see the boards you have access to on this page:
 
-![](./img/manage-view-board.png)
+<figure>
+  <img
+    src={boardsHomeMobileMenu}
+    alt="Boards management page showing a Home badge and separate desktop and mobile home-board menu entries"
+    style={{ maxWidth: "100%" }}
+  />
+  <figcaption>The Boards page selects the board opened from Home separately for desktop and mobile.</figcaption>
+</figure>
+
+The board marked **Home** is the board opened from the desktop Home route. **Set as your mobile board** selects which board
+opens on phones. This is separate from the **Mobile** layout: the home-board setting chooses a board, while **Mobile** and
+**Base** are responsive layouts inside that board. A phone can therefore open a different home board and still use that
+board's Mobile layout.
+
+New boards start with **Mobile** and **Base** responsive layouts automatically, so you can edit the board for phones and
+desktops without creating extra layouts first. Mobile starts at `0px` with 3 columns and Base at `768px` with 10 columns.
+Each layout keeps its own tile positions and sizes.
 
 ## Add your first app to Homarr
 
@@ -98,37 +120,63 @@ After you created the app, you'll see in on the apps page:
 Let's add your freshly created app, from the previous step, to the board.
 To do this, edit your previously created board by clicking on the big `Open board` button:
 
-![](./img/manage-view-board.png)
+<figure>
+  <img src={boardDesktopCurrent} alt="Current Homarr board opened from the Boards page" style={{ maxWidth: "100%" }} />
+  <figcaption>Open a board to view its dashboard, then enter edit mode to arrange its content.</figcaption>
+</figure>
 
 Here you have the following options in the header:
 
 ![](./img/manage-board-header.png)
 
 - **Search**: Here you can search for data. You can search for integrations, boards, actions, sites and much more. Some actions may be context dependent (eg. will only show when certain widgets are on your page)
-- **Edit mode**: Clicking this button will toggle the edit mode. In this mode you can edit the contents of your board.
+- **Edit board**: Clicking this button will toggle edit mode. In this mode you can edit the contents of your board.
 - **Settings**: Clicking this button will redirect you to a settings page where you can adjust the board settings (page title, colors, ...).
+- **Board switcher**: Use this button to open another board that you can access.
 - **Profile**: This avatar will be visible on every page. Clicking it will show a menu with actions.
 
 When entering the edit mode, you'll get some additional buttons to work with:
 
-<img src={manageBoardHeaderEditMode} alt={"Screenshot of buttons in the edit mode"} width={200} />
+<figure>
+  <img
+    src={boardEditModeCurrent}
+    alt="Current Homarr board editor with tile controls visible"
+    style={{ maxWidth: "100%" }}
+  />
+  <figcaption>The current editor keeps the board visible while its editing controls are available.</figcaption>
+</figure>
 
-- **Add item**: Click this button to add new elements to your page.
-- **Exit edit mode**: Click this button to save your changes and exit edit mode.
+- **Add board content**: Click this button to create a new item, app, integration, or Container.
+- **Save board**: Click this button to save your changes and leave edit mode. If you leave with unsaved changes, Homarr asks whether to discard them.
 
 Outside edit mode, right-click a widget for its live status, refresh, settings, quick options, and supported actions.
 Hold `Shift` while hovering a widget that supports advanced view to expand it in place while the rest of the board
 stays visible but dimmed. Release `Shift` to close it. You can also focus that widget and press `Shift` + `Enter` to
 keep its advanced view open until you close it. Widgets without a distinct advanced experience adapt in place.
 
-To continue, click the option "New Item":
+To continue, click **New item** in the add-content menu. New content is placed at the first available position on the main
+canvas; it is not inserted at a clicked empty cell or directly into a rail or Container:
 
-<img src={manageBoardHeaderAddItem} alt={"Screenshot of the add item menu"} width={200} />
+<figure>
+  <img
+    src={addContentMenuCurrent}
+    alt="Current add board content menu with item, app, integration, and Container actions"
+    style={{ maxWidth: "100%" }}
+  />
+  <figcaption>The add-content menu provides the four supported ways to place new content on the board.</figcaption>
+</figure>
 
 Next, you can choose what item you'd like to add.
 We will discuss the other options in the following sections - for now choose "App" to continue.
 
-<img src={manageBoardHeaderChooseItem} alt={"Screenshot of choosing the app item in the modal"} width={300} />
+<figure>
+  <img
+    src={chooseItemCurrent}
+    alt="Current item picker showing the App card and other item types"
+    style={{ maxWidth: "100%" }}
+  />
+  <figcaption>Choose the App item from the current picker to add an app tile.</figcaption>
+</figure>
 
 As soon as you chose the app, the modal will close and you'll get the following item on your board:
 
@@ -137,30 +185,51 @@ As soon as you chose the app, the modal will close and you'll get the following 
 This is expected, because you haven't told Homarr what app it should show in this item.
 To configure this, click on the small 3 dots at the top of the item in the edit mode and choose "Edit item" in the menu.
 
-![](./img/manage-board-edit-app.gif)
+<figure>
+  <img
+    src={moveResizeMenuCurrent}
+    alt="Current board tile menu showing Edit item and Move or resize item"
+    style={{ maxWidth: "450px" }}
+  />
+  <figcaption>The tile menu contains the item editor and the separate move-and-resize tools.</figcaption>
+</figure>
 
 In the modal you can edit the app that you want to display:
 
-![](./img/manage-board-choose-app.png)
+<figure>
+  <img src={editItemCurrent} alt="Current Edit item modal for an App tile" style={{ maxWidth: "620px" }} />
+  <figcaption>Use the Edit item modal to choose the app and configure how its tile is displayed.</figcaption>
+</figure>
 
 As soon as you save your changes, the tile on the board will refresh and display your app.
-Use the resize handle at the bottom right to resize the tile.
-Press and hold the handle, move the pointer, and release it when the tile has the size you want.
+Resize from any visible edge or corner handle. For a Container, activate its top-left grip before using its resize handles.
+Press and hold a handle, move the pointer, and release it when the tile has the size you want.
 
-![](./img/resize-item.gif)
-
-To move a tile in edit mode, press and hold its content, move it to the desired position, and release it.
+To move a tile in edit mode, press and hold its inert content area, move it to the desired position, and release it.
 Widget content is disabled while editing so its controls do not intercept the drag; use the tile's settings button for edit actions.
-The tile snaps to the grid. Equally-sized tiles swap when one is dropped into the other's slot, while other neighboring tiles move out of the way automatically.
-
-![](./img/move-item.gif)
+The tile snaps to the grid. A single compatible collision may swap the two items when both resulting placements fit;
+otherwise the collision chain reflows neighboring tiles automatically.
 
 Every `1 × 1` tile has a logical content size of `200 × 200` pixels.
 Larger tiles use multiples of that fixed unit, with a consistent gap between cells.
 Homarr scales the complete board uniformly, like zooming a page.
-The complete canvas always fits the available width without horizontal board scrolling.
-Below 100%, Homarr preserves the widget's readable typography and control density instead of shrinking each widget independently.
+The complete canvas always fits the available width without horizontal board scrolling. Below 100%, Homarr preserves the
+widget's readable typography and control density instead of shrinking each widget independently.
 It does not squeeze or reflow the content of individual widgets, so a widget keeps the same design and proportions across screen sizes.
+
+On a narrow screen, Homarr uses the **Mobile layout** for the selected board and stacks the board content vertically while
+preserving each widget's fixed logical proportions:
+
+<figure>
+  <img
+    src={currentBoardMobileView}
+    alt="Homarr's Mobile layout in a 390-pixel-wide viewport, with tiles scaled to fit and stacked vertically"
+    style={{ maxWidth: "390px" }}
+  />
+  <figcaption>
+    At phone width, the selected board uses its Mobile layout and fits the complete canvas to the viewport.
+  </figcaption>
+</figure>
 
 :::note
 
@@ -177,16 +246,17 @@ This helps you to explore the capabilities of Homarr before you build your board
 
 :::
 
-Keyboard users can focus a tile, press Enter or Space, then use arrow keys to move and Shift plus arrow keys to resize.
-Press Escape to stop.
-For precise numeric controls or touch input, choose **Move / resize item** from the tile's edit menu.
-The dialog can also move the tile to another section or fixed sidebar:
+Keyboard users can focus a tile, press Enter or Space, then use arrow keys to move and Shift plus arrow keys to resize
+within its current canvas, rail, or Container. Press Escape to stop keyboard editing. Touch dragging starts after a short
+hold of about `200 ms`; resize handles accept direct touch input. During a pointer or touch move or resize, press Escape
+to cancel and restore the previous layout. For cross-grid moves or precise numeric controls, choose **Move / resize item**
+from the tile's edit menu.
+Keyboard commands at a grid boundary or minimum tile size are ignored and announced; they do not move or shrink the tile.
 
-![](./img/manage-board-move-resize-item-menu.png)
+<img src={currentKeyboardTileEditing} alt="A board tile focused for keyboard editing" style={{ maxWidth: "100%" }} />
 
-Be sure to save your changes by exiting edit mode!
-
-![](./img/exit-edit-mode.png)
+Open **Move / resize item** from the tile menu to move the tile to another section or rail and enter precise numeric
+coordinates and dimensions. After making changes, click **Save board** to persist them and leave edit mode.
 
 ## Adding your first integration
 
@@ -221,7 +291,14 @@ Let's add your integration, that you have configured in the section above, as a 
 First, navigate back to your board that you want to add it to.
 Next, enter edit mode again and add another item to your board:
 
-![](./img/manage-board-header-add-item-menu.png)
+<figure>
+  <img
+    src={addContentMenuCurrent}
+    alt="Current add board content menu with item, app, integration, and Container actions"
+    style={{ maxWidth: "100%" }}
+  />
+  <figcaption>Use the same add-content menu to place an integration widget on the board.</figcaption>
+</figure>
 
 Instead of choosing an app, let's choose `System Health Monitoring` this time.
 Click on "Add to board":
@@ -248,9 +325,7 @@ Editing a widget will trigger a data update and data will soon appear:
 
 ![](./img/widget-system-health.png)
 
-As with every change, don't forget to save your changes using the exit edit mode button:
-
-![](./img/exit-edit-mode.png)
+As with every change, click **Save board** to persist your board changes and leave edit mode.
 
 ## Organizing items with Containers
 
@@ -263,7 +338,7 @@ Each Container can configure:
 - Show or hide **Open all in new tabs**.
 - Change its border color and custom CSS classes.
 
-Open the add-content menu and choose **New Container**.
+Open the add-content menu and choose **New container**.
 In edit mode, move and resize it like any other item, then drag items into or out of it.
 Nested content stays within the Container's bounds.
 While resizing, the solid outline follows the pointer continuously and the dashed grid preview shows the size that will be saved on release.
