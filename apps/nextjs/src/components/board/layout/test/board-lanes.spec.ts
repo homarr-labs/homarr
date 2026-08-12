@@ -38,6 +38,22 @@ describe("board lanes", () => {
     expect(getBoardLaneColumnCount(layout, "right")).toBe(0);
   });
 
+  test("disables gutters for mobile layouts", () => {
+    const layout = {
+      id: "mobile",
+      name: "Mobile",
+      columnCount: 12,
+      leftGutterColumnCount: 2,
+      rightGutterColumnCount: 3,
+      breakpoint: 0,
+      role: "mobile",
+    } satisfies Board["layouts"][number];
+
+    expect(getBoardLaneColumnCount(layout, "left")).toBe(0);
+    expect(getBoardLaneColumnCount(layout, "main")).toBe(12);
+    expect(getBoardLaneColumnCount(layout, "right")).toBe(0);
+  });
+
   test("rejects ambiguous duplicate roots", () => {
     const board = new BoardMockBuilder()
       .addSection(new EmptySectionMockBuilder({ id: "main-a" }).build())
