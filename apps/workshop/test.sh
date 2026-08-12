@@ -4,6 +4,8 @@ set -eu
 WORKSHOP_TEST_PORT=${WORKSHOP_TEST_PORT:-18090}
 WORKSHOP_TEST_PROJECT="homarr-workshop-test-$$"
 export HOMARR_AI_OPENROUTER_BASE_URL=http://assistant-upstream:18091/api/v1
+export HOMARR_AI_OPENROUTER_MODEL=mock/team-selected-model
+export HOMARR_AI_ALLOW_INSECURE_UPSTREAM=true
 export OPENROUTER_API_KEY=workshop-test-openrouter-key
 
 docker build --target pocketbase-test -f apps/workshop/Dockerfile .

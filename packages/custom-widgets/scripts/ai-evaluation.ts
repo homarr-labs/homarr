@@ -23,7 +23,7 @@ export const resolveAiEvaluationProviderConfig = (environment: Record<string, st
   const baseUrl = (configuredBaseUrl || DEFAULT_AI_PROVIDER_BASE_URL).replace(/\/+$/u, "");
   const homarrProvider = baseUrl.endsWith("/api/ai/v1");
   const openRouterProvider = baseUrl === DEFAULT_AI_PROVIDER_BASE_URL;
-  const providerDefaultModel = homarrProvider ? "homarr/deepseek-v4-flash-latest" : DEFAULT_GENERATOR_MODEL;
+  const providerDefaultModel = homarrProvider ? "homarr/model" : DEFAULT_GENERATOR_MODEL;
   return {
     apiKey: environment.AI_PROVIDER_API_KEY ?? (openRouterProvider ? environment.OPENROUTER_API_KEY : undefined),
     baseUrl,

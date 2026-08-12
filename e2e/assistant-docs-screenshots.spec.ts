@@ -80,19 +80,13 @@ describe.skipIf(process.env.UPDATE_DOCS_SCREENSHOTS !== "true")("Assistant docum
         baseUrl: "https://homarr.dev/api/ai/v1",
         modelDiscoveryPath: "/models",
         encryptedApiKey: null,
-        modelId: "~deepseek/deepseek-v4-flash-latest",
+        modelId: "homarr/model",
       });
       await page.goto(`${baseUrl}/manage/assistant`);
       await expect(page.getByRole("heading", { name: "Assistant" })).toBeVisible();
       await expect(page.getByText("Homarr", { exact: true }).first()).toBeVisible();
       await expect(page.getByRole("button", { name: "Refresh models" })).toBeVisible({ timeout: 15_000 });
-      const mainBox = await page.getByRole("main").first().boundingBox();
-      if (!mainBox) throw new Error("Assistant management page has no visible main content");
-      await page.screenshot({
-        animations: "disabled",
-        path: path.join(outputDirectory, "homarr-provider.png"),
-        clip: { ...mainBox, height: Math.min(mainBox.height, 1_090) },
-      });
+      await expect(page.getByText("Homarr model")).toBeVisible();
     } finally {
       await browser.close();
       await homarrContainer.stop();

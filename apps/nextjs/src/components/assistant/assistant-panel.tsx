@@ -73,7 +73,6 @@ import {
   useComputedColorScheme,
 } from "@mantine/core";
 import { useReducedMotion, useWindowEvent } from "@mantine/hooks";
-import { BatteryFull, BatteryLow, BatteryMedium, BatteryWarning } from "lucide-react";
 import {
   IconActivityHeartbeat,
   IconAlertTriangle,
@@ -81,6 +80,10 @@ import {
   IconArrowUp,
   IconArrowsMaximize,
   IconAt,
+  IconBattery1,
+  IconBattery3,
+  IconBatteryFilled,
+  IconBatteryOff,
   IconCheck,
   IconChevronDown,
   IconChevronLeft,
@@ -2543,10 +2546,10 @@ const RuntimeControls = ({
 };
 
 const providerQuotaIcons = {
-  ok: BatteryFull,
-  warning: BatteryMedium,
-  bad: BatteryLow,
-  dead: BatteryWarning,
+  ok: IconBatteryFilled,
+  warning: IconBattery3,
+  bad: IconBattery1,
+  dead: IconBatteryOff,
 };
 
 const providerQuotaColors = {

@@ -194,8 +194,8 @@ describe("AI authoring evaluation", () => {
     ).toEqual({
       apiKey: "workshop-token",
       baseUrl: "https://homarr.dev/api/ai/v1",
-      generatorModel: "homarr/deepseek-v4-flash-latest",
-      judgeModel: "homarr/deepseek-v4-flash-latest",
+      generatorModel: "homarr/model",
+      judgeModel: "homarr/model",
     });
     expect(
       resolveAiEvaluationProviderConfig({
@@ -221,8 +221,8 @@ describe("AI authoring evaluation", () => {
     ).toEqual({
       apiKey: "workshop-token",
       baseUrl: "https://homarr.dev/api/ai/v1",
-      generatorModel: "homarr/deepseek-v4-flash-latest",
-      judgeModel: "homarr/deepseek-v4-flash-latest",
+      generatorModel: "homarr/model",
+      judgeModel: "homarr/model",
     });
   });
 

@@ -128,8 +128,8 @@ describe("assistantRouter.updateConnection", () => {
 
     await caller.updateConnection({
       provider: "homarr",
-      baseUrl: "https://homarr.dev/api/ai/v1",
-      modelDiscoveryPath: "/models",
+      baseUrl: "https://attacker.example/v1",
+      modelDiscoveryPath: "/attacker-models",
       apiKey: "must-not-be-stored",
       customHeaders: { "X-Secret": "must-not-be-stored" },
       clearApiKey: false,
@@ -139,6 +139,8 @@ describe("assistantRouter.updateConnection", () => {
     const [configuration] = await db.select().from(assistantConfigurations);
     expect(configuration).toMatchObject({
       provider: "homarr",
+      baseUrl: "https://homarr.dev/api/ai/v1",
+      modelDiscoveryPath: "/models",
       encryptedApiKey: null,
       encryptedHeaders: null,
       enabled: false,
@@ -203,7 +205,7 @@ describe("assistantRouter.updateConfiguration", () => {
         baseUrl: "https://homarr.dev/api/ai/v1",
         encryptedApiKey: null,
         encryptedHeaders: null,
-        modelId: "homarr/deepseek-v4-flash-latest",
+        modelId: "homarr/model",
       })
       .where(eq(assistantConfigurations.id, "default"));
     const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
@@ -213,8 +215,8 @@ describe("assistantRouter.updateConfiguration", () => {
         Response.json({
           data: [
             {
-              id: "homarr/deepseek-v4-flash-latest",
-              name: "DeepSeek V4 Flash Latest",
+              id: "homarr/model",
+              name: "Homarr model",
               supported_parameters: ["tools"],
               architecture: { output_modalities: ["text"] },
             },
@@ -226,7 +228,7 @@ describe("assistantRouter.updateConfiguration", () => {
     try {
       await caller.updateConfiguration({
         enabled: true,
-        modelId: "homarr/deepseek-v4-flash-latest",
+        modelId: "homarr/model",
         webSearchEnabled: true,
       });
     } finally {

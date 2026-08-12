@@ -447,6 +447,7 @@ export const AssistantConfiguration = () => {
               description={t("baseUrl.description")}
               leftSection={<IconWorld size={16} />}
               value={baseUrl}
+              disabled={isHomarrProvider}
               onChange={(event) => changeBaseUrl(event.currentTarget.value)}
               placeholder="https://provider.example/v1"
             />
@@ -454,6 +455,7 @@ export const AssistantConfiguration = () => {
               label={t("model.discoveryPath")}
               description={t("model.discoveryPathDescription")}
               value={modelDiscoveryPath}
+              disabled={isHomarrProvider}
               onChange={(event) => changeModelDiscoveryPath(event.currentTarget.value)}
               placeholder="/models"
             />

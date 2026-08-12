@@ -27,6 +27,7 @@ export const StockWidget = ({ className }: CommonWidgetProps) => {
         HOMR
       </div>
       <Line
+        ariaLabel="Simulated HOMR stock price trend"
         height={128}
         width={244}
         colors={[upwardTrend ? "green" : "red"]}

@@ -18,11 +18,11 @@ export const WidgetCard = ({ width, children, className, onClick }: WidgetCardPr
     <Component
       className={clsx(
         styles.widgetCard,
-        width === 2 ? styles.widgetCardWide : styles.widgetCardSingle,
         "flex flex-col justify-center items-center p-2 relative border-none bg-[var(--ifm-navbar-background-color)]",
         className,
         onClick ? "cursor-pointer" : undefined,
       )}
+      style={{ width: (128 * width + (width === 2 ? 16 : 0)) * 0.9, height: 128 }}
       type={onClick ? "button" : undefined}
       onClick={onClick}
     >

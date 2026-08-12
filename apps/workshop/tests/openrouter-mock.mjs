@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
 
 const port = Number(process.env.PORT ?? 18091);
+const expectedModel = process.env.EXPECTED_MODEL ?? "mock/team-selected-model";
 
 const json = (response, status, body) => {
   response.writeHead(status, { "content-type": "application/json" });
@@ -24,16 +25,16 @@ const server = createServer(async (request, response) => {
   const chunks = [];
   for await (const chunk of request) chunks.push(chunk);
   const body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
-  if (body.model !== "~deepseek/deepseek-v4-flash-latest") {
+  if (body.model !== expectedModel) {
     json(response, 400, { error: { message: "Unexpected upstream model" } });
     return;
   }
-  if (body.max_tokens !== 32_768 || body.n !== 1 || body.parallel_tool_calls !== false) {
+  if (body.max_completion_tokens !== 32_768 || body.n !== 1 || body.parallel_tool_calls !== false) {
     json(response, 400, { error: { message: "Unsafe generation controls reached the upstream" } });
     return;
   }
   if (
-    "max_completion_tokens" in body ||
+    "max_tokens" in body ||
     "user" in body ||
     "metadata" in body ||
     "extra_body" in body ||
@@ -43,9 +44,20 @@ const server = createServer(async (request, response) => {
     json(response, 400, { error: { message: "Private or unbounded request fields reached the upstream" } });
     return;
   }
-  const forbiddenRoutingField = ["models", "provider", "route", "plugins", "transforms"].find((field) => field in body);
+  const forbiddenCostField = ["audio", "modalities", "logprobs", "top_logprobs", "prediction", "service_tier"].find(
+    (field) => field in body,
+  );
+  if (forbiddenCostField) {
+    json(response, 400, { error: { message: `Client cost field was forwarded: ${forbiddenCostField}` } });
+    return;
+  }
+  const forbiddenRoutingField = ["models", "route", "plugins", "transforms"].find((field) => field in body);
   if (forbiddenRoutingField) {
     json(response, 400, { error: { message: `Client routing field was forwarded: ${forbiddenRoutingField}` } });
+    return;
+  }
+  if (body.provider?.zdr !== true || body.provider?.data_collection !== "deny") {
+    json(response, 400, { error: { message: "Required upstream privacy controls are missing" } });
     return;
   }
   const webSearchTools = body.tools?.filter((tool) => tool.type === "openrouter:web_search") ?? [];

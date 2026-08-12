@@ -57,9 +57,9 @@ export default function HomeHero() {
             </Link>
           </div>
         </div>
-        <div className={styles.heroPreview} aria-label="Example Homarr dashboard">
+        <section className={clsx(styles.heroPreview, "hover-animation")} aria-label="Example Homarr dashboard">
           <HeroCards />
-        </div>
+        </section>
       </div>
     </header>
   );

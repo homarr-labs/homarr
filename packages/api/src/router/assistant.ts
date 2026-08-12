@@ -29,6 +29,7 @@ import {
 
 import type { createTRPCContext } from "../trpc";
 import { fetchOpenRouterGenerationTelemetryAsync } from "../assistant-generation-telemetry";
+import { env } from "../env";
 import { orderMessagesByParent } from "../assistant-message-order";
 import { verifyAssistantGenerationAccessToken } from "../assistant-generation-access";
 import { createTRPCRouter, isDemoMode, permissionRequiredProcedure, protectedProcedure } from "../trpc";
@@ -128,6 +129,9 @@ const normalizeDiscoveryPath = (value: string | null) => {
   }
   return path;
 };
+
+const getHomarrProviderBaseUrl = () =>
+  `${(env.WORKSHOP_API_URL ?? env.HOMARR_WEBSITE_URL).replace(/\/+$/u, "")}/api/ai/v1`;
 
 const getConfigurationAsync = async (db: Database) => {
   return await db.query.assistantConfigurations.findFirst({
@@ -547,8 +551,9 @@ export const assistantRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const baseUrl = normalizeBaseUrl(input.baseUrl);
-      const modelDiscoveryPath = normalizeDiscoveryPath(input.modelDiscoveryPath);
+      const baseUrl = input.provider === "homarr" ? getHomarrProviderBaseUrl() : normalizeBaseUrl(input.baseUrl);
+      const modelDiscoveryPath =
+        input.provider === "homarr" ? "/models" : normalizeDiscoveryPath(input.modelDiscoveryPath);
       const existing = await getConfigurationAsync(ctx.db);
       const destinationChanged =
         existing !== undefined && (existing.provider !== input.provider || existing.baseUrl !== baseUrl);

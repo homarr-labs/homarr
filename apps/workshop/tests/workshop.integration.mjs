@@ -1,34 +1,5 @@
 const baseUrl = process.env.WORKSHOP_TEST_URL ?? "http://127.0.0.1:18090";
 
-const createSseReader = (body) => {
-  const reader = body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-  return {
-    cancel: () => reader.cancel(),
-    async next() {
-      while (true) {
-        const boundary = buffer.indexOf("\n\n");
-        if (boundary >= 0) {
-          const block = buffer.slice(0, boundary);
-          buffer = buffer.slice(boundary + 2);
-          const result = { event: "message", id: "", data: "" };
-          for (const line of block.split("\n")) {
-            if (line.startsWith("event:")) result.event = line.slice(6).trim();
-            if (line.startsWith("id:")) result.id = line.slice(3).trim();
-            if (line.startsWith("data:")) result.data += line.slice(5).trim();
-          }
-          if (result.data || result.id) return result;
-          continue;
-        }
-        const chunk = await reader.read();
-        if (chunk.done) throw new Error("PocketBase realtime stream ended unexpectedly");
-        buffer += decoder.decode(chunk.value, { stream: true }).replaceAll("\r\n", "\n");
-      }
-    },
-  };
-};
-
 const request = async (path, init = {}) => {
   const response = await fetch(`${baseUrl}${path}`, {
     ...init,
@@ -65,12 +36,11 @@ for (const required of [
   "workshop_listings",
   "workshop_report_summaries",
   "assistant_quotas",
-  "assistant_requests",
-  "assistant_activity",
+  "assistant_global_quota",
 ]) {
   if (!collectionNames.has(required)) throw new Error(`Missing Workshop collection: ${required}`);
 }
-for (const removed of ["workshop_admin_actions", "workshop_admins"]) {
+for (const removed of ["workshop_admin_actions", "workshop_admins", "assistant_requests", "assistant_activity"]) {
   if (collectionNames.has(removed)) throw new Error(`Removed Workshop collection still exists: ${removed}`);
 }
 
@@ -136,7 +106,7 @@ const modelList = await request("/api/ai/v1/models");
 if (
   modelList.object !== "list" ||
   modelList.data.length !== 1 ||
-  modelList.data[0].id !== "homarr/deepseek-v4-flash-latest" ||
+  modelList.data[0].id !== "homarr/model" ||
   modelList.data[0].context_length !== 256 * 1024
 ) {
   throw new Error("The Homarr provider must advertise exactly one model");
@@ -147,7 +117,7 @@ await expectStatus(
   {
     method: "POST",
     body: JSON.stringify({
-      model: "homarr/deepseek-v4-flash-latest",
+      model: "homarr/model",
       messages: [{ role: "user", content: "unauthenticated" }],
     }),
   },
@@ -172,7 +142,7 @@ await expectStatus(
     method: "POST",
     headers: authorSession.headers,
     body: JSON.stringify({
-      model: "homarr/deepseek-v4-flash-latest",
+      model: "homarr/model",
       messages: [
         { role: "user", content: "too many tools" },
         ...Array.from({ length: 1000 }, (_, index) => ({
@@ -192,8 +162,8 @@ await expectStatus(
     method: "POST",
     headers: authorSession.headers,
     body: JSON.stringify({
-      model: "homarr/deepseek-v4-flash-latest",
-      messages: [{ role: "user", content: "x".repeat(256 * 1024) }],
+      model: "homarr/model",
+      messages: [{ role: "user", content: "x".repeat(4 * 256 * 1024 + 1) }],
     }),
   },
   413,
@@ -213,31 +183,12 @@ await expectStatus(
   400,
 );
 
-const realtimeResponse = await fetch(`${baseUrl}/api/realtime`);
-if (!realtimeResponse.ok || !realtimeResponse.body) throw new Error("PocketBase realtime connection failed");
-const realtime = createSseReader(realtimeResponse.body);
-const connectedEvent = await realtime.next();
-if (connectedEvent.event !== "PB_CONNECT" || !connectedEvent.id) {
-  throw new Error("PocketBase realtime did not provide a client ID");
-}
-await request("/api/realtime", {
-  method: "POST",
-  body: JSON.stringify({ clientId: connectedEvent.id, subscriptions: ["assistant_activity/*"] }),
-});
-const activityEvent = (async () => {
-  while (true) {
-    const event = await realtime.next();
-    const payload = JSON.parse(event.data);
-    if (payload.action === "create") return payload.record;
-  }
-})();
-
 const streamStartedAt = performance.now();
 const streamResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
   method: "POST",
   headers: { "content-type": "application/json", ...authorSession.headers },
   body: JSON.stringify({
-    model: "homarr/deepseek-v4-flash-latest",
+    model: "homarr/model",
     messages: [{ role: "user", content: "hello" }],
     stream: true,
   }),
@@ -265,20 +216,11 @@ if (
 ) {
   throw new Error("The Homarr provider did not preserve the upstream SSE stream");
 }
-const liveActivity = await Promise.race([
-  activityEvent,
-  new Promise((_, reject) => setTimeout(() => reject(new Error("Assistant activity realtime event timed out")), 2_000)),
-]);
-await realtime.cancel();
-if (liveActivity.model !== "homarr/deepseek-v4-flash-latest" || liveActivity.requestUnits !== 1) {
-  throw new Error("The public assistant activity event is invalid");
-}
-
 const toolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
   method: "POST",
   headers: { "content-type": "application/json", ...authorSession.headers },
   body: JSON.stringify({
-    model: "homarr/deepseek-v4-flash-latest",
+    model: "homarr/model",
     messages: [
       { role: "user", content: "inspect my dashboard" },
       { role: "assistant", content: null, tool_calls: [{ id: "one" }, { id: "two" }] },
@@ -298,6 +240,12 @@ const toolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
     extra_body: { provider: { order: ["attacker"] } },
     extra_headers: { Authorization: "Bearer attacker" },
     metadata: { user: "must-not-reach-openrouter" },
+    audio: { format: "wav", voice: "alloy" },
+    modalities: ["text", "audio"],
+    logprobs: true,
+    top_logprobs: 20,
+    prediction: { content: "attacker-controlled prediction" },
+    service_tier: "priority",
     reasoning: { effort: "high", max_tokens: 1_000_000 },
     user: "must-not-reach-openrouter",
     tools: [
@@ -307,12 +255,12 @@ const toolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
     ],
   }),
 });
-if (!toolResponse.ok || toolResponse.headers.get("x-homarr-quota-remaining") !== "46") {
-  throw new Error("Tool results must each consume one Homarr provider request unit");
+if (!toolResponse.ok || toolResponse.headers.get("x-homarr-quota-remaining") !== "48") {
+  throw new Error("Every upstream inference must consume one Homarr provider request unit");
 }
 
 const afterToolsUsage = await request("/api/ai/usage", { headers: authorSession.headers });
-if (afterToolsUsage.used !== 4 || afterToolsUsage.remaining !== 46) {
+if (afterToolsUsage.used !== 2 || afterToolsUsage.remaining !== 48) {
   throw new Error(`Tool request accounting is incorrect: ${JSON.stringify(afterToolsUsage)}`);
 }
 
@@ -320,12 +268,12 @@ const upstreamFailure = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
   method: "POST",
   headers: { "content-type": "application/json", ...authorSession.headers },
   body: JSON.stringify({
-    model: "homarr/deepseek-v4-flash-latest",
+    model: "homarr/model",
     messages: [{ role: "user", content: "upstream failure" }],
     stream: false,
   }),
 });
-if (upstreamFailure.status !== 503 || upstreamFailure.headers.get("x-homarr-quota-remaining") !== "45") {
+if (upstreamFailure.status !== 503 || upstreamFailure.headers.get("x-homarr-quota-remaining") !== "47") {
   throw new Error("Every request forwarded upstream must consume Homarr provider allowance");
 }
 const upstreamFailureBody = await upstreamFailure.text();
@@ -333,7 +281,7 @@ if (upstreamFailureBody.includes("Simulated upstream failure")) {
   throw new Error("Upstream error details must not be exposed to clients");
 }
 const afterFailureUsage = await request("/api/ai/usage", { headers: authorSession.headers });
-if (afterFailureUsage.used !== 5 || afterFailureUsage.remaining !== 45) {
+if (afterFailureUsage.used !== 3 || afterFailureUsage.remaining !== 47) {
   throw new Error(`Forwarded upstream failure escaped quota accounting: ${JSON.stringify(afterFailureUsage)}`);
 }
 const visitorUsage = await request("/api/ai/usage", { headers: visitorSession.headers });
@@ -341,75 +289,42 @@ if (visitorUsage.used !== 0 || visitorUsage.remaining !== 50) {
   throw new Error(`Provider allowance leaked across users: ${JSON.stringify(visitorUsage)}`);
 }
 
-const publicActivities = await request("/api/collections/assistant_activity/records?sort=-created&perPage=10");
-if (
-  publicActivities.items.length < 2 ||
-  publicActivities.items.some((item) => "user" in item) ||
-  !publicActivities.items.some(
-    (item) => item.status === "completed" && item.inputTokens === 12 && item.outputTokens === 7,
-  )
-) {
-  throw new Error("Public assistant activity must be anonymous and include completed token totals");
-}
-await expectStatus(
-  "/api/collections/assistant_activity/records",
-  {
-    method: "POST",
-    body: JSON.stringify({
-      status: "completed",
-      model: "forged",
-      requestUnits: 1,
-    }),
-  },
-  403,
-);
-await expectStatus("/api/collections/assistant_requests/records", { headers: authorSession.headers }, 403);
 await expectStatus("/api/collections/assistant_quotas/records", { headers: authorSession.headers }, 403);
-
-const privateRequests = await request("/api/collections/assistant_requests/records?perPage=20", {
-  headers: rootHeaders,
-});
-if (
-  privateRequests.items.length < 2 ||
-  privateRequests.items.some((item) => item.user !== author.id) ||
-  privateRequests.items.some((item) => "messages" in item || "prompt" in item || "body" in item)
-) {
-  throw new Error("Private provider accounting must identify the user without storing request content");
-}
-const requestToRetain = privateRequests.items.find((item) => item.publicActivity);
-if (!requestToRetain) throw new Error("Expected a private request linked to public activity");
-await request(`/api/collections/assistant_activity/records/${requestToRetain.publicActivity}`, {
-  method: "DELETE",
-  headers: rootHeaders,
-});
-const retainedRequest = await request(`/api/collections/assistant_requests/records/${requestToRetain.id}`, {
-  headers: rootHeaders,
-});
-if (retainedRequest.id !== requestToRetain.id || retainedRequest.publicActivity) {
-  throw new Error("Pruning public activity must retain private accounting records");
-}
+await expectStatus("/api/collections/assistant_global_quota/records", { headers: authorSession.headers }, 403);
 const quotas = await request("/api/collections/assistant_quotas/records?perPage=20", { headers: rootHeaders });
 const authorQuota = quotas.items.find((item) => item.user === author.id);
-if (!authorQuota || authorQuota.dailyLimit !== 50 || authorQuota.used !== 5 || authorQuota.totalTokens !== 38) {
+if (
+  !authorQuota ||
+  authorQuota.used !== 3 ||
+  ["dailyLimit", "inputTokens", "outputTokens", "totalTokens", "model", "cost"].some((field) => field in authorQuota)
+) {
   throw new Error(`Private provider quota is incorrect: ${JSON.stringify(authorQuota)}`);
 }
 
 await request(`/api/collections/assistant_quotas/records/${authorQuota.id}`, {
   method: "PATCH",
   headers: rootHeaders,
-  body: JSON.stringify({ day: "2000-01-01", used: 49, dailyLimit: 2 }),
+  body: JSON.stringify({ day: "2000-01-01", used: 49 }),
 });
 const resetUsage = await request("/api/ai/usage", { headers: authorSession.headers });
-if (resetUsage.limit !== 2 || resetUsage.used !== 0 || resetUsage.remaining !== 2) {
+if (resetUsage.limit !== 50 || resetUsage.used !== 0 || resetUsage.remaining !== 50) {
   throw new Error(`Quota did not reset at the UTC day boundary: ${JSON.stringify(resetUsage)}`);
 }
+const resetQuota = (
+  await request("/api/collections/assistant_quotas/records?perPage=20", { headers: rootHeaders })
+).items.find((item) => item.user === author.id);
+await request(`/api/collections/assistant_quotas/records/${resetQuota.id}`, {
+  method: "PATCH",
+  headers: rootHeaders,
+  body: JSON.stringify({ used: 48 }),
+});
 
 const allowanceProbe = () =>
   fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
     method: "POST",
     headers: { "content-type": "application/json", ...authorSession.headers },
     body: JSON.stringify({
-      model: "homarr/deepseek-v4-flash-latest",
+      model: "homarr/model",
       messages: [{ role: "user", content: "allowance probe" }],
       stream: false,
     }),
@@ -423,6 +338,35 @@ if (
   !exhaustedResponse.headers.get("x-homarr-quota-reset")
 ) {
   throw new Error("The per-user allowance was not enforced atomically");
+}
+
+const globalQuota = (await request("/api/collections/assistant_global_quota/records", { headers: rootHeaders }))
+  .items[0];
+await request(`/api/collections/assistant_global_quota/records/${globalQuota.id}`, {
+  method: "PATCH",
+  headers: rootHeaders,
+  body: JSON.stringify({ day: new Date().toISOString().slice(0, 10), used: 9_999 }),
+});
+await request(`/api/collections/assistant_quotas/records/${resetQuota.id}`, {
+  method: "PATCH",
+  headers: rootHeaders,
+  body: JSON.stringify({ used: 0 }),
+});
+const globalResponses = await Promise.all([
+  allowanceProbe(),
+  fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+    method: "POST",
+    headers: { "content-type": "application/json", ...visitorSession.headers },
+    body: JSON.stringify({ model: "homarr/model", messages: [{ role: "user", content: "global allowance probe" }] }),
+  }),
+]);
+if (
+  globalResponses
+    .map((response) => response.status)
+    .toSorted()
+    .join(",") !== "200,429"
+) {
+  throw new Error("The shared upstream allowance was not enforced atomically across users");
 }
 
 const widget = {

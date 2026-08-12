@@ -6,13 +6,13 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
@@ -21,18 +21,22 @@ import (
 )
 
 const (
-	homarrProviderModelID   = "homarr/deepseek-v4-flash-latest"
-	openRouterModelID       = "~deepseek/deepseek-v4-flash-latest"
-	maxChatInputTokens      = 256 * 1024
-	maxChatOutputTokens     = 32 * 1024
-	defaultDailyLimit       = 50
-	maxProviderRequestUnits = 1000
-	// Do not trust a client-side token estimate. Applying the same numeric ceiling to
-	// the complete serialized payload is deliberately stricter than a tokenizer-based
-	// limit and also bounds attachments and tool schemas.
-	maxChatRequestBytes    = maxChatInputTokens
+	homarrProviderModelID    = "homarr/model"
+	homarrProviderModelName  = "Homarr model"
+	defaultOpenRouterModelID = "~deepseek/deepseek-v4-flash-latest"
+	maxChatInputTokens       = 256 * 1024
+	maxChatOutputTokens      = 32 * 1024
+	defaultDailyLimit        = 50
+	defaultGlobalDailyLimit  = 10_000
+	// The Homarr composer permits five 1 MB images, which expand to about 6.7 MB as
+	// base64. Keep the authenticated transport bounded without confusing bytes with
+	// model tokens; validate textual and image content separately below.
+	maxChatRequestBytes    = 12_000_000
+	maxChatTextBytes       = 4 * maxChatInputTokens
+	maxChatImageDataBytes  = 1_400_000
+	maxChatImages          = 5
+	maxChatMessages        = 512
 	maxChatResponseBytes   = 8 << 20
-	maxUpstreamErrorBytes  = 1 << 20
 	maxWebSearchResults    = 5
 	maxWebSearchUses       = 3
 	openRouterDefaultURL   = "https://openrouter.ai/api/v1"
@@ -45,12 +49,18 @@ var clientControlledRoutingFields = []string{
 	"models", "provider", "route", "plugins", "transforms", "extra_body", "extra_headers",
 }
 
+var clientControlledCostFields = []string{
+	"audio", "modalities", "logprobs", "top_logprobs", "prediction", "service_tier",
+}
+
 type homarrProvider struct {
-	apiKey     string
-	baseURL    string
-	dailyLimit int
-	httpClient *http.Client
-	now        func() time.Time
+	apiKey           string
+	baseURL          string
+	modelID          string
+	dailyLimit       int
+	globalDailyLimit int
+	httpClient       *http.Client
+	now              func() time.Time
 }
 
 type quotaSnapshot struct {
@@ -58,13 +68,6 @@ type quotaSnapshot struct {
 	Used      int       `json:"used"`
 	Remaining int       `json:"remaining"`
 	ResetsAt  time.Time `json:"resetsAt"`
-}
-
-type requestUsage struct {
-	InputTokens  int
-	OutputTokens int
-	TotalTokens  int
-	Cost         float64
 }
 
 type providerRequest struct {
@@ -92,7 +95,9 @@ func registerHomarrProvider(app *pocketbase.PocketBase) {
 	app.OnServe().BindFunc(func(event *core.ServeEvent) error {
 		group := event.Router.Group("/api/ai")
 		group.GET("/v1/models", provider.models)
-		group.GET("/usage", provider.usage).Bind(apis.RequireAuth("users"))
+		group.GET("/usage", provider.usage).
+			Bind(apis.RequireAuth("users")).
+			Unbind(apis.DefaultActivityLoggerMiddlewareId)
 		group.POST("/v1/chat/completions", provider.chat).
 			Bind(apis.RequireAuth("users"), apis.BodyLimit(maxChatRequestBytes)).
 			Unbind(apis.DefaultActivityLoggerMiddlewareId)
@@ -110,6 +115,19 @@ func newHomarrProviderFromEnv() (*homarrProvider, error) {
 		parsedURL.User != nil || parsedURL.RawQuery != "" || parsedURL.Fragment != "" {
 		return nil, errors.New("HOMARR_AI_OPENROUTER_BASE_URL must be an absolute HTTP(S) URL without credentials, a query, or a fragment")
 	}
+	if parsedURL.Scheme != "https" && strings.TrimSpace(os.Getenv("HOMARR_AI_ALLOW_INSECURE_UPSTREAM")) != "true" {
+		return nil, errors.New("HOMARR_AI_OPENROUTER_BASE_URL must use HTTPS unless HOMARR_AI_ALLOW_INSECURE_UPSTREAM=true")
+	}
+
+	modelID := strings.TrimSpace(os.Getenv("HOMARR_AI_OPENROUTER_MODEL"))
+	if modelID == "" {
+		modelID = defaultOpenRouterModelID
+	}
+	if len(modelID) > 256 || strings.IndexFunc(modelID, func(value rune) bool {
+		return unicode.IsSpace(value) || unicode.IsControl(value)
+	}) >= 0 {
+		return nil, errors.New("HOMARR_AI_OPENROUTER_MODEL must be a non-empty model identifier of at most 256 characters")
+	}
 
 	dailyLimit := defaultDailyLimit
 	if rawLimit := strings.TrimSpace(os.Getenv("HOMARR_AI_DAILY_REQUEST_LIMIT")); rawLimit != "" {
@@ -119,11 +137,21 @@ func newHomarrProviderFromEnv() (*homarrProvider, error) {
 		}
 		dailyLimit = value
 	}
+	globalDailyLimit := defaultGlobalDailyLimit
+	if rawLimit := strings.TrimSpace(os.Getenv("HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT")); rawLimit != "" {
+		value, parseErr := strconv.Atoi(rawLimit)
+		if parseErr != nil || value < 1 || value > 10_000_000 {
+			return nil, errors.New("HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT must be an integer between 1 and 10000000")
+		}
+		globalDailyLimit = value
+	}
 
 	return &homarrProvider{
-		apiKey:     strings.TrimSpace(os.Getenv("OPENROUTER_API_KEY")),
-		baseURL:    baseURL,
-		dailyLimit: dailyLimit,
+		apiKey:           strings.TrimSpace(os.Getenv("OPENROUTER_API_KEY")),
+		baseURL:          baseURL,
+		modelID:          modelID,
+		dailyLimit:       dailyLimit,
+		globalDailyLimit: globalDailyLimit,
 		httpClient: &http.Client{
 			Timeout: providerRequestTimeout,
 			CheckRedirect: func(_ *http.Request, _ []*http.Request) error {
@@ -143,8 +171,8 @@ func (provider *homarrProvider) models(event *core.RequestEvent) error {
 		"data": []map[string]any{{
 			"id":             homarrProviderModelID,
 			"object":         "model",
-			"name":           "DeepSeek V4 Flash Latest",
-			"description":    "Fast agentic model provided by the community-funded Homarr provider.",
+			"name":           homarrProviderModelName,
+			"description":    "The tool-capable model selected by the Homarr team.",
 			"owned_by":       "homarr",
 			"context_length": maxChatInputTokens,
 			"supported_parameters": []string{
@@ -180,20 +208,21 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	if err := json.Unmarshal(body, &requestBody); err != nil || len(requestBody.Messages) == 0 {
 		return event.JSON(http.StatusBadRequest, openAIError("The request body is not valid OpenAI chat JSON."))
 	}
-	if requestBody.Model != homarrProviderModelID {
-		return event.JSON(http.StatusBadRequest, openAIError("The Homarr provider offers only DeepSeek V4 Flash Latest."))
+	if len(requestBody.Messages) > maxChatMessages {
+		return event.JSON(http.StatusBadRequest, openAIError("The request contains too many messages."))
 	}
-
-	requestUnits := countRequestUnits(requestBody.Messages)
-	if requestUnits > maxProviderRequestUnits {
-		return event.JSON(http.StatusBadRequest, openAIError("A single Homarr provider request can use at most 1000 request units."))
+	if requestBody.Model != homarrProviderModelID {
+		return event.JSON(http.StatusBadRequest, openAIError("The Homarr provider offers only the Homarr model."))
 	}
 
 	var payload map[string]any
 	if err := json.Unmarshal(body, &payload); err != nil {
 		return event.JSON(http.StatusBadRequest, openAIError("The request body is not valid OpenAI chat JSON."))
 	}
-	if err := sanitizeProviderPayload(payload); err != nil {
+	if err := validateProviderInput(payload); err != nil {
+		return event.JSON(http.StatusRequestEntityTooLarge, openAIError(err.Error()))
+	}
+	if err := sanitizeProviderPayload(payload, provider.modelID); err != nil {
 		return event.JSON(http.StatusBadRequest, openAIError(err.Error()))
 	}
 	upstreamBody, err := json.Marshal(payload)
@@ -201,7 +230,7 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		return event.JSON(http.StatusBadRequest, openAIError("The request body could not be prepared."))
 	}
 
-	snapshot, privateRequest, publicActivity, err := provider.startRequest(event.App, event.Auth, requestUnits)
+	snapshot, err := provider.startRequest(event.App, event.Auth)
 	if err != nil {
 		var quotaErr *quotaExceededError
 		if errors.As(err, &quotaErr) {
@@ -212,7 +241,6 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		}
 		return event.JSON(http.StatusInternalServerError, openAIError("The Homarr provider request could not be started."))
 	}
-	startedAt := provider.now().UTC()
 	upstreamRequest, err := http.NewRequestWithContext(
 		event.Request.Context(),
 		http.MethodPost,
@@ -220,7 +248,6 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		bytes.NewReader(upstreamBody),
 	)
 	if err != nil {
-		provider.finishActivity(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt)
 		return event.JSON(http.StatusInternalServerError, openAIError("The Homarr provider request could not be prepared."))
 	}
 	upstreamRequest.Header.Set("Authorization", "Bearer "+provider.apiKey)
@@ -232,7 +259,6 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 
 	upstreamResponse, err := provider.httpClient.Do(upstreamRequest)
 	if err != nil {
-		provider.finishActivity(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt)
 		return event.JSON(http.StatusBadGateway, openAIError("The model endpoint could not be reached."))
 	}
 	defer func() { _ = upstreamResponse.Body.Close() }()
@@ -251,34 +277,32 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		contentType = "application/json"
 	}
 	if upstreamResponse.StatusCode < 200 || upstreamResponse.StatusCode >= 300 {
-		provider.finishActivity(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt)
 		return event.JSON(upstreamResponse.StatusCode, openAIError("The model endpoint rejected the request."))
 	}
 
 	if requestBody.Stream {
-		capture := newSSEUsageCapture()
 		event.Response.Header().Set("Content-Type", contentType)
 		event.Response.WriteHeader(upstreamResponse.StatusCode)
-		_, copyErr := copyBounded(flushingWriter{event.Response}, io.TeeReader(upstreamResponse.Body, capture), maxChatResponseBytes)
-		provider.finishActivity(event.App, privateRequest, publicActivity, statusForError(copyErr), capture.Usage(), startedAt)
+		_, _ = copyBounded(flushingWriter{event.Response}, upstreamResponse.Body, maxChatResponseBytes)
 		return nil
 	}
 
 	responseBody, readErr := readBoundedBody(upstreamResponse.Body, maxChatResponseBytes)
 	if readErr != nil {
-		provider.finishActivity(event.App, privateRequest, publicActivity, "failed", requestUsage{}, startedAt)
 		return event.JSON(http.StatusBadGateway, openAIError("The model endpoint returned an invalid response."))
 	}
-	usage := usageFromJSON(responseBody)
-	provider.finishActivity(event.App, privateRequest, publicActivity, "completed", usage, startedAt)
 	return event.Blob(upstreamResponse.StatusCode, contentType, responseBody)
 }
 
-func sanitizeProviderPayload(payload map[string]any) error {
+func sanitizeProviderPayload(payload map[string]any, upstreamModelID string) error {
 	for _, field := range clientControlledRoutingFields {
 		delete(payload, field)
 	}
+	for _, field := range clientControlledCostFields {
+		delete(payload, field)
+	}
 	delete(payload, "max_completion_tokens")
+	delete(payload, "max_tokens")
 	delete(payload, "metadata")
 	delete(payload, "user")
 	if reasoning, ok := payload["reasoning"].(map[string]any); ok {
@@ -318,12 +342,53 @@ func sanitizeProviderPayload(payload map[string]any) error {
 		payload["tools"] = sanitizedTools
 	}
 
-	payload["model"] = openRouterModelID
-	payload["max_tokens"] = maxChatOutputTokens
+	payload["model"] = upstreamModelID
+	payload["max_completion_tokens"] = maxChatOutputTokens
 	payload["n"] = 1
 	payload["parallel_tool_calls"] = false
 	payload["usage"] = map[string]any{"include": true}
+	payload["provider"] = map[string]any{"zdr": true, "data_collection": "deny"}
 	return nil
+}
+
+func validateProviderInput(payload map[string]any) error {
+	textBytes := 0
+	imageCount := 0
+	var walk func(any) error
+	walk = func(value any) error {
+		switch typed := value.(type) {
+		case string:
+			if strings.HasPrefix(typed, "data:image/") {
+				imageCount++
+				if imageCount > maxChatImages || len(typed) > maxChatImageDataBytes {
+					return errors.New("The request contains too many images or an image that is too large.")
+				}
+				return nil
+			}
+			textBytes += len(typed)
+			if textBytes > maxChatTextBytes {
+				return errors.New("The request exceeds the Homarr model input limit.")
+			}
+		case []any:
+			for _, item := range typed {
+				if err := walk(item); err != nil {
+					return err
+				}
+			}
+		case map[string]any:
+			for key, item := range typed {
+				textBytes += len(key)
+				if textBytes > maxChatTextBytes {
+					return errors.New("The request exceeds the Homarr model input limit.")
+				}
+				if err := walk(item); err != nil {
+					return err
+				}
+			}
+		}
+		return nil
+	}
+	return walk(payload)
 }
 
 func copyBounded(writer io.Writer, reader io.Reader, limit int64) (int64, error) {
@@ -353,14 +418,6 @@ func readBoundedBody(reader io.Reader, limit int64) ([]byte, error) {
 	return body, nil
 }
 
-func countRequestUnits(messages []providerMessage) int {
-	units := 1
-	for index := len(messages) - 1; index >= 0 && messages[index].Role == "tool"; index-- {
-		units++
-	}
-	return units
-}
-
 func (provider *homarrProvider) quota(app core.App, user *core.Record) (quotaSnapshot, error) {
 	now := provider.now().UTC()
 	var snapshot quotaSnapshot
@@ -369,10 +426,30 @@ func (provider *homarrProvider) quota(app core.App, user *core.Record) (quotaSna
 		if err != nil {
 			return err
 		}
+		globalQuota, globalRemaining, err := provider.loadGlobalQuota(txApp, now)
+		if err != nil {
+			return err
+		}
+		current.Remaining = min(current.Remaining, globalRemaining)
 		snapshot = current
+		if err := txApp.Save(globalQuota); err != nil {
+			return err
+		}
 		return txApp.Save(quota)
 	})
 	return snapshot, err
+}
+
+func (provider *homarrProvider) loadGlobalQuota(app core.App, now time.Time) (*core.Record, int, error) {
+	quota, err := app.FindFirstRecordByFilter("assistant_global_quota", "key = 'default'")
+	if err != nil {
+		return nil, 0, err
+	}
+	if quota.GetString("day") != now.Format(time.DateOnly) {
+		quota.Set("day", now.Format(time.DateOnly))
+		quota.Set("used", 0)
+	}
+	return quota, max(0, provider.globalDailyLimit-quota.GetInt("used")), nil
 }
 
 func (provider *homarrProvider) loadQuota(app core.App, user *core.Record, now time.Time) (*core.Record, quotaSnapshot, error) {
@@ -387,16 +464,12 @@ func (provider *homarrProvider) loadQuota(app core.App, user *core.Record, now t
 		}
 		quota = core.NewRecord(collection)
 		quota.Set("user", user.Id)
-		quota.Set("dailyLimit", provider.dailyLimit)
 	}
 	if quota.GetString("day") != now.Format(time.DateOnly) {
 		quota.Set("day", now.Format(time.DateOnly))
 		quota.Set("used", 0)
-		quota.Set("inputTokens", 0)
-		quota.Set("outputTokens", 0)
-		quota.Set("totalTokens", 0)
 	}
-	limit := quota.GetInt("dailyLimit")
+	limit := provider.dailyLimit
 	used := quota.GetInt("used")
 	return quota, quotaSnapshot{
 		Limit:     limit,
@@ -409,104 +482,32 @@ func (provider *homarrProvider) loadQuota(app core.App, user *core.Record, now t
 func (provider *homarrProvider) startRequest(
 	app core.App,
 	user *core.Record,
-	requestUnits int,
-) (quotaSnapshot, *core.Record, *core.Record, error) {
+) (quotaSnapshot, error) {
 	var snapshot quotaSnapshot
-	var privateRequest *core.Record
-	var publicActivity *core.Record
 	err := app.RunInTransaction(func(txApp core.App) error {
-		quota, current, err := provider.loadQuota(txApp, user, provider.now().UTC())
+		now := provider.now().UTC()
+		quota, current, err := provider.loadQuota(txApp, user, now)
 		if err != nil {
 			return err
 		}
-		if requestUnits > current.Remaining {
+		globalQuota, globalRemaining, err := provider.loadGlobalQuota(txApp, now)
+		if err != nil {
+			return err
+		}
+		if current.Remaining < 1 || globalRemaining < 1 {
 			return &quotaExceededError{Snapshot: current}
 		}
-
-		privateCollection, err := txApp.FindCollectionByNameOrId("assistant_requests")
-		if err != nil {
-			return err
-		}
-		publicCollection, err := txApp.FindCollectionByNameOrId("assistant_activity")
-		if err != nil {
-			return err
-		}
-		privateRequest = core.NewRecord(privateCollection)
-		publicActivity = core.NewRecord(publicCollection)
-		for _, record := range []*core.Record{privateRequest, publicActivity} {
-			record.Set("status", "processing")
-			record.Set("model", homarrProviderModelID)
-			record.Set("requestUnits", requestUnits)
-		}
-		privateRequest.Set("user", user.Id)
-
-		if err := txApp.Save(publicActivity); err != nil {
-			return err
-		}
-		privateRequest.Set("publicActivity", publicActivity.Id)
-		if err := txApp.Save(privateRequest); err != nil {
-			return err
-		}
-		current.Used += requestUnits
+		current.Used++
 		current.Remaining = max(0, current.Limit-current.Used)
 		quota.Set("used", current.Used)
+		globalQuota.Set("used", globalQuota.GetInt("used")+1)
 		snapshot = current
-		return txApp.Save(quota)
-	})
-	return snapshot, privateRequest, publicActivity, err
-}
-
-func (provider *homarrProvider) finishActivity(
-	app core.App,
-	privateRequest *core.Record,
-	publicActivity *core.Record,
-	status string,
-	usage requestUsage,
-	startedAt time.Time,
-) {
-	durationMs := max(0, int(provider.now().UTC().Sub(startedAt).Milliseconds()))
-	err := app.RunInTransaction(func(txApp core.App) error {
-		for _, record := range []*core.Record{privateRequest, publicActivity} {
-			record.Set("status", status)
-			record.Set("inputTokens", usage.InputTokens)
-			record.Set("outputTokens", usage.OutputTokens)
-			record.Set("totalTokens", usage.TotalTokens)
-			record.Set("durationMs", durationMs)
-			record.Set("cost", usage.Cost)
-			if err := txApp.Save(record); err != nil {
-				return err
-			}
-		}
-		quota, err := txApp.FindFirstRecordByFilter(
-			"assistant_quotas",
-			"user = {:user}",
-			dbx.Params{"user": privateRequest.GetString("user")},
-		)
-		if err != nil {
+		if err := txApp.Save(globalQuota); err != nil {
 			return err
 		}
-		if !requestBelongsToQuotaDay(quota.GetString("day"), startedAt) {
-			return nil
-		}
-		quota.Set("inputTokens", quota.GetInt("inputTokens")+usage.InputTokens)
-		quota.Set("outputTokens", quota.GetInt("outputTokens")+usage.OutputTokens)
-		quota.Set("totalTokens", quota.GetInt("totalTokens")+usage.TotalTokens)
 		return txApp.Save(quota)
 	})
-	if err != nil {
-		log.Printf("Homarr provider accounting update failed for status %q", status)
-	}
-}
-
-func requestBelongsToQuotaDay(day string, startedAt time.Time) bool {
-	return day == startedAt.UTC().Format(time.DateOnly)
-}
-
-func statusForError(err error) string {
-	if err != nil {
-		return "failed"
-	}
-	return "completed"
+	return snapshot, err
 }
 
 func openAIError(message string) map[string]any {
@@ -523,62 +524,4 @@ func (writer flushingWriter) Write(chunk []byte) (int, error) {
 		flusher.Flush()
 	}
 	return written, err
-}
-
-type sseUsageCapture struct {
-	pending []byte
-	usage   requestUsage
-}
-
-func newSSEUsageCapture() *sseUsageCapture { return &sseUsageCapture{} }
-
-func (capture *sseUsageCapture) Write(chunk []byte) (int, error) {
-	capture.pending = append(capture.pending, chunk...)
-	for {
-		end := bytes.IndexByte(capture.pending, '\n')
-		if end < 0 {
-			break
-		}
-		line := bytes.TrimSuffix(capture.pending[:end], []byte{'\r'})
-		if bytes.HasPrefix(line, []byte("data: ")) {
-			capture.mergeUsage(bytes.TrimPrefix(line, []byte("data: ")))
-		}
-		capture.pending = capture.pending[end+1:]
-	}
-	if len(capture.pending) > maxUpstreamErrorBytes {
-		capture.pending = nil
-	}
-	return len(chunk), nil
-}
-
-func (capture *sseUsageCapture) mergeUsage(data []byte) {
-	if bytes.Equal(data, []byte("[DONE]")) || !bytes.Contains(data, []byte(`"usage"`)) {
-		return
-	}
-	usage := usageFromJSON(data)
-	if usage.InputTokens != 0 || usage.OutputTokens != 0 || usage.TotalTokens != 0 || usage.Cost != 0 {
-		capture.usage = usage
-	}
-}
-
-func (capture *sseUsageCapture) Usage() requestUsage { return capture.usage }
-
-func usageFromJSON(data []byte) requestUsage {
-	var payload struct {
-		Usage struct {
-			PromptTokens     int     `json:"prompt_tokens"`
-			CompletionTokens int     `json:"completion_tokens"`
-			TotalTokens      int     `json:"total_tokens"`
-			Cost             float64 `json:"cost"`
-		} `json:"usage"`
-	}
-	if json.Unmarshal(data, &payload) != nil {
-		return requestUsage{}
-	}
-	return requestUsage{
-		InputTokens:  payload.Usage.PromptTokens,
-		OutputTokens: payload.Usage.CompletionTokens,
-		TotalTokens:  payload.Usage.TotalTokens,
-		Cost:         payload.Usage.Cost,
-	}
 }

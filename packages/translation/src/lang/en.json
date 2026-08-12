@@ -6212,7 +6212,7 @@
               "options": {
                 "homarr": {
                   "label": "Homarr",
-                  "description": "Community-funded DeepSeek V4 Flash access through Homarr. Each user signs in with the Community Workshop and receives a daily allowance."
+                  "description": "Community-funded access to the model selected by the Homarr team. Each user signs in with the Community Workshop and receives a daily allowance."
                 },
                 "openrouter": {
                   "label": "OpenRouter",

@@ -362,7 +362,7 @@ html[data-workshop-detail-loading] #workshop-detail-route-fallback {
   box-sizing: border-box;
   color: #4b5563;
   display: flex;
-  font: 500 0.875rem/1.5 Inter, system-ui, sans-serif;
+  font: 500 0.875rem/1.5 "Work Sans", system-ui, sans-serif;
   justify-content: center;
   min-height: 100vh;
   padding: 2rem;

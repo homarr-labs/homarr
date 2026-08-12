@@ -13,7 +13,6 @@ import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 
 import type {
   WorkshopComment,
-  WorkshopAssistantActivity,
   WorkshopAssistantUsage,
   WorkshopReport,
   WorkshopReportSummary,
@@ -30,7 +29,6 @@ import {
   WORKSHOP_REQUEST_TIMEOUT_MS,
   WORKSHOP_SCHEMA_BY_TYPE,
   workshopCommentSchema,
-  workshopAssistantActivitySchema,
   workshopAssistantUsageSchema,
   workshopReportSchema,
   workshopReportSummarySchema,
@@ -144,19 +142,6 @@ export interface WorkshopCommentRecord extends WorkshopBaseRecord {
   expand?: { author?: WorkshopUserRecord };
 }
 
-export interface WorkshopAssistantActivityRecord extends WorkshopBaseRecord {
-  status: "processing" | "completed" | "failed";
-  model: string;
-  requestUnits: number;
-  inputTokens: number;
-  outputTokens: number;
-  totalTokens: number;
-  durationMs: number;
-  cost: number;
-  created: string;
-  updated: string;
-}
-
 export interface TypedWorkshopPocketBase extends PocketBase {
   collection(idOrName: "users"): RecordService<WorkshopUserRecord>;
   collection(idOrName: "submissions"): RecordService<WorkshopSubmissionRecord>;
@@ -165,7 +150,6 @@ export interface TypedWorkshopPocketBase extends PocketBase {
   collection(idOrName: "reports"): RecordService<WorkshopReportRecord>;
   collection(idOrName: "workshop_report_summaries"): RecordService<WorkshopReportSummaryRecord>;
   collection(idOrName: "comments"): RecordService<WorkshopCommentRecord>;
-  collection(idOrName: "assistant_activity"): RecordService<WorkshopAssistantActivityRecord>;
   collection(idOrName: string): RecordService;
 }
 
@@ -289,6 +273,7 @@ export class WorkshopBackend {
   }
 
   public get currentUser(): WorkshopUser | null {
+    if (!this.pocketBase.authStore.isValid) return null;
     const record = this.pocketBase.authStore.record;
     if (!record) return null;
     const parsed = workshopUserSchema.safeParse({
@@ -308,7 +293,10 @@ export class WorkshopBackend {
   }
 
   public async refreshAuth() {
-    if (!this.pocketBase.authStore.isValid) return null;
+    if (!this.pocketBase.authStore.isValid) {
+      this.pocketBase.authStore.clear();
+      return null;
+    }
     try {
       await this.pocketBase.collection("users").authRefresh();
       return this.currentUser;
@@ -349,24 +337,6 @@ export class WorkshopBackend {
       return workshopAssistantUsageSchema.parse(value);
     } catch (error) {
       throw workshopError(error, "Failed to load the Homarr provider allowance");
-    }
-  }
-
-  public async listAssistantActivity(limit = 10, signal?: AbortSignal): Promise<WorkshopAssistantActivity[]> {
-    try {
-      const result = await this.pocketBase
-        .collection("assistant_activity")
-        .getList(1, Math.min(Math.max(limit, 1), 50), {
-          sort: "-created",
-          signal: requestSignal(signal),
-          requestKey: null,
-        });
-      return result.items.flatMap((item) => {
-        const parsed = workshopAssistantActivitySchema.safeParse(item);
-        return parsed.success ? [parsed.data] : [];
-      });
-    } catch (error) {
-      throw workshopError(error, "Failed to load live Homarr provider activity");
     }
   }
 

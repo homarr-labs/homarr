@@ -46,6 +46,7 @@ interface AssistantProviderPreset {
 
 export const assistantProviderPresets = {
   homarr: {
+    // Browser and server code replace this public fallback with WORKSHOP_API_URL at runtime.
     baseUrl: "https://homarr.dev/api/ai/v1",
     modelDiscoveryPath: "/models",
     requiresApiKey: false,

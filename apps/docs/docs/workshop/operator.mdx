@@ -37,16 +37,18 @@ store duplicate profile metadata or avatar files. Configure SMTP for comment, re
 
 The public URL contract and Workshop-only server configuration are:
 
-| Variable                        | Purpose                                           | Default                        |
-| ------------------------------- | ------------------------------------------------- | ------------------------------ |
-| `HOMARR_WEBSITE_URL`            | Documentation/site base used by Homarr links      | `https://homarr.dev`           |
-| `WORKSHOP_API_URL`              | PocketBase API used by Homarr and standalone docs | `HOMARR_WEBSITE_URL`           |
-| `WORKSHOP_WEB_URL`              | Public Workshop page linked from Homarr           | `HOMARR_WEBSITE_URL/workshop`  |
-| `WORKSHOP_PUBLIC_ORIGIN`        | PocketBase-generated links and email              | Required in production         |
-| `PB_ALLOWED_ORIGINS`            | PocketBase browser origins                        | `*` for the central community  |
-| `OPENROUTER_API_KEY`            | Server-only key for the Homarr provider proxy     | Provider disabled when empty   |
-| `HOMARR_AI_DAILY_REQUEST_LIMIT` | Initial per-user daily provider allowance         | `50`                           |
-| `HOMARR_AI_OPENROUTER_BASE_URL` | OpenRouter-compatible proxy upstream              | `https://openrouter.ai/api/v1` |
+| Variable                               | Purpose                                           | Default                        |
+| -------------------------------------- | ------------------------------------------------- | ------------------------------ |
+| `HOMARR_WEBSITE_URL`                   | Documentation/site base used by Homarr links      | `https://homarr.dev`           |
+| `WORKSHOP_API_URL`                     | PocketBase API used by Homarr and standalone docs | `HOMARR_WEBSITE_URL`           |
+| `WORKSHOP_WEB_URL`                     | Public Workshop page linked from Homarr           | `HOMARR_WEBSITE_URL/workshop`  |
+| `WORKSHOP_PUBLIC_ORIGIN`               | PocketBase-generated links and email              | Required in production         |
+| `PB_ALLOWED_ORIGINS`                   | PocketBase browser origins                        | `*` for the central community  |
+| `OPENROUTER_API_KEY`                   | Server-only key for the Homarr provider proxy     | Provider disabled when empty   |
+| `HOMARR_AI_DAILY_REQUEST_LIMIT`        | Per-user daily provider allowance                 | `50`                           |
+| `HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT` | Shared daily ceiling across all users             | `10000`                        |
+| `HOMARR_AI_OPENROUTER_BASE_URL`        | OpenRouter-compatible proxy upstream              | `https://openrouter.ai/api/v1` |
+| `HOMARR_AI_OPENROUTER_MODEL`           | Server-selected upstream model                    | Selected by the Homarr team    |
 
 All public URL variables reject non-HTTP protocols, embedded credentials, query strings, and fragments, and normalize
 trailing slashes when Homarr or Docusaurus starts. The deprecated docs-only `WORKSHOP_URL` alias remains for one
@@ -57,13 +59,18 @@ container after changing these values, without rebuilding it.
 ### Homarr provider proxy
 
 The [Homarr provider](./homarr-provider) proxy is part of the Workshop image. `OPENROUTER_API_KEY` enables the proxy,
-`HOMARR_AI_OPENROUTER_BASE_URL` selects its OpenRouter-compatible upstream, and `HOMARR_AI_DAILY_REQUEST_LIMIT` sets the
-initial limit stored for each new user. Existing users keep their assigned limits. The upstream URL cannot contain
-embedded credentials, a query, or a fragment. Use HTTPS for any upstream outside a trusted private network.
+`HOMARR_AI_OPENROUTER_BASE_URL` selects its OpenRouter-compatible upstream, `HOMARR_AI_OPENROUTER_MODEL` selects the
+private upstream model behind the stable `homarr/model` alias, and the two allowance variables provide per-user and
+shared cost ceilings. Lowering either allowance takes effect for existing users. The upstream URL cannot contain
+embedded credentials, a query, or a fragment and must use HTTPS. Tests can explicitly opt into an insecure local mock
+with `HOMARR_AI_ALLOW_INSECURE_UPSTREAM=true`; do not use that setting with a real API key.
 
-Run `pnpm test:workshop` to test authentication, streaming, UTC reset, atomic quota enforcement, failed-request
-accounting, input and output controls, tool-call accounting, private records, public activity, realtime delivery, and
-migration rollback.
+The proxy overwrites client routing and generation limits. It requires OpenRouter zero-data-retention routing, denies
+data-collecting providers, limits responses to 32,768 completion tokens, and does not retain prompts, responses, or
+per-request telemetry. Keep an OpenRouter account-level credit limit as the final operational backstop.
+
+Run `pnpm test:workshop` to test authentication, streaming, UTC reset, atomic per-user and global quota enforcement,
+failed-request accounting, input and output controls, privacy routing, absence of request logs, and migration rollback.
 
 The Custom Widget AI tests can use this proxy. Set `AI_PROVIDER_BASE_URL` to the `/api/ai/v1` endpoint and
 `AI_PROVIDER_API_KEY` to a temporary Workshop user token. See

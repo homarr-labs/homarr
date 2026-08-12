@@ -75,30 +75,28 @@ for (const removedField of ["displayName", "avatarUrl", "githubProfileUrl", "git
 }
 
 const providerMigration = await read("apps/workshop/pb_migrations/1786500000_homarr_provider.js");
-for (const required of [
-  'name: "assistant_quotas"',
-  'name: "assistant_requests"',
-  'name: "assistant_activity"',
-  'listRule: ""',
-  "idx_assistant_quotas_user",
-]) {
+for (const required of ['name: "assistant_quotas"', 'name: "assistant_global_quota"', "idx_assistant_quotas_user"]) {
   if (!providerMigration.includes(required)) throw new Error(`Homarr provider migration is missing: ${required}`);
 }
-if (/assistant_activity[\s\S]*name: "user"/u.test(providerMigration.split("const requests")[0])) {
-  throw new Error("The public assistant activity collection must not contain user identity");
+for (const forbidden of ['name: "assistant_requests"', 'name: "assistant_activity"', 'name: "dailyLimit"']) {
+  if (providerMigration.includes(forbidden)) throw new Error(`Homarr provider must not persist ${forbidden}`);
 }
 
 const providerBackend = await read("apps/workshop/homarr_provider.go");
 for (const required of [
-  '"homarr/deepseek-v4-flash-latest"',
+  '"homarr/model"',
   'apis.RequireAuth("users")',
   "DefaultActivityLoggerMiddlewareId",
   'os.Getenv("OPENROUTER_API_KEY")',
   'os.Getenv("HOMARR_AI_DAILY_REQUEST_LIMIT")',
+  'os.Getenv("HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT")',
+  'os.Getenv("HOMARR_AI_OPENROUTER_MODEL")',
+  '"data_collection": "deny"',
+  '"zdr": true',
 ]) {
   if (!providerBackend.includes(required)) throw new Error(`Homarr provider backend is missing: ${required}`);
 }
-if (/logger\(\)|\.Logger\(/u.test(providerBackend)) {
+if (/logger\(\)|\.Logger\(|log\.Print/u.test(providerBackend)) {
   throw new Error("The Homarr provider must not log request content or user tokens");
 }
 for (const required of [

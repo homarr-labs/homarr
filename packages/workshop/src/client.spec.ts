@@ -88,7 +88,7 @@ describe("WorkshopBackend", () => {
 
   test("lets PocketBase own the complete GitHub popup flow", async () => {
     mocks.authWithOAuth2.mockResolvedValue({
-      token: "token",
+      token: validWorkshopToken,
       record: {
         id: "user-id",
         name: "octocat",
@@ -137,40 +137,12 @@ describe("WorkshopBackend", () => {
       id: "author-id",
       name: "octocat",
     } as never);
+    expect(client.currentUser).toBeNull();
     expect(client.authToken).toBeNull();
 
     client.pocketBase.authStore.save(validWorkshopToken, { id: 42 } as never);
     expect(client.currentUser).toBeNull();
     expect(client.authToken).toBeNull();
-  });
-
-  test("loads only valid anonymous provider activity records", async () => {
-    mocks.getList.mockResolvedValue({
-      items: [
-        {
-          id: "activity-id",
-          status: "completed",
-          model: "homarr/deepseek-v4-flash-latest",
-          requestUnits: 2,
-          inputTokens: 12,
-          outputTokens: 7,
-          totalTokens: 19,
-          durationMs: 250,
-          cost: 0.0001,
-          created: "2026-08-11 10:00:00.000Z",
-          updated: "2026-08-11 10:00:00.250Z",
-        },
-        { id: "invalid" },
-      ],
-    });
-    const client = new WorkshopBackend("https://workshop.example.com");
-
-    await expect(client.listAssistantActivity()).resolves.toHaveLength(1);
-    expect(mocks.getList).toHaveBeenCalledWith(
-      1,
-      10,
-      expect.objectContaining({ sort: "-created", requestKey: null, signal: expect.any(AbortSignal) }),
-    );
   });
 
   test("sends the exported schema while leaving initial revision ownership to PocketBase", async () => {

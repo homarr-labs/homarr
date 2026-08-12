@@ -35,10 +35,10 @@ section {
 
 .heroContent {
   display: grid;
-  grid-template-columns: minmax(24rem, 1fr) minmax(31.25rem, 0.9fr);
+  grid-template-columns: minmax(25rem, 1fr) minmax(44rem, 48rem);
   align-items: center;
-  gap: clamp(2rem, 5vw, 5rem);
-  max-width: 90rem;
+  gap: clamp(1rem, 3vw, 3rem);
+  max-width: 108rem;
   margin-inline: auto;
 }
 
@@ -61,10 +61,10 @@ section {
 }
 
 .heroCards {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.75rem;
-  width: min(100%, 31.25rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 0.75rem;
+  width: min(100%, 48rem);
   margin-inline: auto;
   color: #343a40;
 }
@@ -74,19 +74,15 @@ section {
 }
 
 .widgetCard {
-  height: 8rem;
+  flex: none;
   min-width: 0;
   border-radius: 0.75rem;
-  background: color-mix(in srgb, var(--ifm-navbar-background-color) 88%, transparent) !important;
-  box-shadow: 0 4px 8px rgb(31 41 55 / 12%);
-}
-
-.widgetCardSingle {
-  grid-column: span 1;
-}
-
-.widgetCardWide {
-  grid-column: span 2;
+  border: 1px solid color-mix(in srgb, currentColor 12%, transparent) !important;
+  color: inherit;
+  font: inherit;
+  background: color-mix(in srgb, var(--ifm-navbar-background-color) 76%, transparent) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 28px rgb(31 41 55 / 14%);
 }
 
 .resourcesWidget,
@@ -135,6 +131,11 @@ section {
   gap: 0.25rem;
 }
 
+.resourceMeterCritical .resourceLabel {
+  color: #a51111;
+  font-weight: 700;
+}
+
 .resourceLabel {
   font-size: 0.6875rem;
 }
@@ -165,6 +166,11 @@ section {
   height: 100%;
   border-radius: inherit;
   background: var(--ifm-color-primary);
+}
+
+.resourceMeterCritical .resourceTrack::-webkit-progress-value,
+.resourceMeterCritical .resourceTrack::-moz-progress-bar {
+  background: #e03131;
 }
 
 .downloadProgress {
@@ -219,7 +225,29 @@ section {
   background: #12b886;
 }
 
-@media screen and (max-width: 996px) {
+.containerRowFailed {
+  color: #a51111;
+  font-weight: 700;
+}
+
+:global([data-theme="dark"]) .resourceMeterCritical .resourceLabel,
+:global([data-theme="dark"]) .containerRowFailed {
+  color: #ffe3e3;
+}
+
+.statusDotFailed {
+  background: #fa5252;
+  animation: failed-container-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes failed-container-pulse {
+  50% {
+    opacity: 0.35;
+    transform: scale(1.65);
+  }
+}
+
+@media screen and (max-width: 1280px) {
   .heroBanner {
     padding: 3rem 1.5rem;
   }
@@ -234,11 +262,11 @@ section {
   }
 
   .heroCards {
-    width: min(100%, 36rem);
+    width: min(100%, 48rem);
   }
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2.5rem 1rem;
   }
@@ -249,5 +277,11 @@ section {
 
   .heroActions > :global(*) {
     flex: 1 1 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statusDotFailed {
+    animation: none;
   }
 }

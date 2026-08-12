@@ -110,21 +110,6 @@ export const workshopAssistantUsageSchema = z.object({
 });
 export type WorkshopAssistantUsage = z.infer<typeof workshopAssistantUsageSchema>;
 
-export const workshopAssistantActivitySchema = z.object({
-  id: z.string(),
-  status: z.enum(["processing", "completed", "failed"]),
-  model: z.string(),
-  requestUnits: z.number().int().positive(),
-  inputTokens: z.number().int().nonnegative().default(0),
-  outputTokens: z.number().int().nonnegative().default(0),
-  totalTokens: z.number().int().nonnegative().default(0),
-  durationMs: z.number().int().nonnegative().default(0),
-  cost: z.number().nonnegative().default(0),
-  created: z.string(),
-  updated: z.string(),
-});
-export type WorkshopAssistantActivity = z.infer<typeof workshopAssistantActivitySchema>;
-
 const normalizeWorkshopSubmissionRecord = (value: unknown) => {
   if (typeof value !== "object" || value === null || Array.isArray(value)) return value;
   const record = value as Record<string, unknown>;
