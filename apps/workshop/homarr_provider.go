@@ -47,6 +47,8 @@ var (
 	errProviderResponseTooLarge = errors.New("provider response is too large")
 	errInvalidTools             = errors.New("invalid request tools")
 	errUnsupportedTool          = errors.New("unsupported request tool")
+	errTooManyImages            = errors.New("too many images or image too large")
+	errInputTooLarge            = errors.New("request exceeds model input limit")
 )
 
 var clientControlledRoutingFields = []string{
@@ -224,7 +226,11 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		return event.JSON(http.StatusBadRequest, openAIError("The request body is not valid OpenAI chat JSON."))
 	}
 	if err := validateProviderInput(payload); err != nil {
-		return event.JSON(http.StatusRequestEntityTooLarge, openAIError(err.Error()))
+		message := "The request exceeds the Homarr model input limit."
+		if errors.Is(err, errTooManyImages) {
+			message = "The request contains too many images or an image that is too large."
+		}
+		return event.JSON(http.StatusRequestEntityTooLarge, openAIError(message))
 	}
 	if err := sanitizeProviderPayload(payload, provider.modelID); err != nil {
 		message := "The request contains an unsupported tool."
@@ -238,6 +244,15 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		return event.JSON(http.StatusBadRequest, openAIError("The request body could not be prepared."))
 	}
 
+	upstreamRequest, err := http.NewRequestWithContext(
+		event.Request.Context(),
+		http.MethodPost,
+		provider.baseURL+"/chat/completions",
+		bytes.NewReader(upstreamBody),
+	)
+	if err != nil {
+		return event.JSON(http.StatusInternalServerError, openAIError("The Homarr provider request could not be prepared."))
+	}
 	snapshot, err := provider.startRequest(event.App, event.Auth)
 	if err != nil {
 		var quotaErr *quotaExceededError
@@ -248,15 +263,6 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 			return event.JSON(http.StatusTooManyRequests, openAIError("Your daily Homarr provider allowance is exhausted."))
 		}
 		return event.JSON(http.StatusInternalServerError, openAIError("The Homarr provider request could not be started."))
-	}
-	upstreamRequest, err := http.NewRequestWithContext(
-		event.Request.Context(),
-		http.MethodPost,
-		provider.baseURL+"/chat/completions",
-		bytes.NewReader(upstreamBody),
-	)
-	if err != nil {
-		return event.JSON(http.StatusInternalServerError, openAIError("The Homarr provider request could not be prepared."))
 	}
 	upstreamRequest.Header.Set("Authorization", "Bearer "+provider.apiKey)
 	upstreamRequest.Header.Set("Content-Type", "application/json")
@@ -376,13 +382,13 @@ func validateProviderInput(payload map[string]any) error {
 			if strings.HasPrefix(typed, "data:image/") {
 				imageCount++
 				if imageCount > maxChatImages || len(typed) > maxChatImageDataBytes {
-					return errors.New("The request contains too many images or an image that is too large.")
+					return errTooManyImages
 				}
 				return nil
 			}
 			textBytes += len(typed)
 			if textBytes > maxChatTextBytes {
-				return errors.New("The request exceeds the Homarr model input limit.")
+				return errInputTooLarge
 			}
 		case []any:
 			for _, item := range typed {
@@ -394,7 +400,7 @@ func validateProviderInput(payload map[string]any) error {
 			for key, item := range typed {
 				textBytes += len(key)
 				if textBytes > maxChatTextBytes {
-					return errors.New("The request exceeds the Homarr model input limit.")
+					return errInputTooLarge
 				}
 				if err := walk(item); err != nil {
 					return err

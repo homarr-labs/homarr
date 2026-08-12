@@ -28,6 +28,8 @@ changing the user-facing provider. Each user signs in with GitHub and receives a
 
 - Each user starts with **50 request units per UTC day**.
 - Each model request uses one unit. Agent tool loops can make multiple model requests.
+- Once Workshop forwards a request, it uses one unit even if the upstream later fails. This prevents failed requests
+  from bypassing the shared cost and abuse limits.
 - The allowance resets at 00:00 UTC.
 
 The battery beside the model selector shows the remaining allowance and reset time. The Workshop server enforces the

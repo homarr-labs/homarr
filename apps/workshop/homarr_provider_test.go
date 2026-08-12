@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
 )
@@ -125,8 +126,18 @@ func TestValidateProviderInput(t *testing.T) {
 		t.Fatalf("expected a supported Homarr image request, got %v", err)
 	}
 	payload["messages"] = []any{map[string]any{"role": "user", "content": strings.Repeat("x", maxChatTextBytes+1)}}
-	if err := validateProviderInput(payload); err == nil {
-		t.Fatal("expected oversized text input to be rejected")
+	if err := validateProviderInput(payload); !errors.Is(err, errInputTooLarge) {
+		t.Fatalf("expected oversized text input to be rejected, got %v", err)
+	}
+	payload["messages"] = []any{map[string]any{
+		"role": "user",
+		"content": []any{map[string]any{
+			"type":      "image_url",
+			"image_url": map[string]any{"url": "data:image/png;base64," + strings.Repeat("a", maxChatImageDataBytes)},
+		}},
+	}}
+	if err := validateProviderInput(payload); !errors.Is(err, errTooManyImages) {
+		t.Fatalf("expected oversized image input to be rejected, got %v", err)
 	}
 }
 
