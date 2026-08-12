@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { getKomodoStateTranslationKey } from "./display";
+import { getKomodoStateTranslationKey } from "./komodo-display";
 
 describe("getKomodoStateTranslationKey", () => {
   test.each([

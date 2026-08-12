@@ -5,7 +5,7 @@ import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { boards, integrationItems, integrations, integrationUserPermissions, items, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
-import type { KomodoOverview, KomodoServerOverviewItem } from "@homarr/integrations";
+import type { KomodoContainer, KomodoOverview, KomodoServerOverviewItem } from "@homarr/integrations";
 
 import { komodoRouter } from "../../widgets/komodo";
 
@@ -22,6 +22,19 @@ const sampleOverview = {
 } satisfies KomodoOverview;
 
 const updatedAt = new Date("2026-08-11T12:00:00.000Z");
+
+const sampleContainers = [
+  {
+    id: "container-1",
+    name: "homarr",
+    host: "Production",
+    state: "running",
+    image: "ghcr.io/homarr-labs/homarr:latest",
+    cpuUsage: 1.5,
+    memoryUsage: 256 * 1024 * 1024,
+    iconUrl: null,
+  },
+] satisfies (KomodoContainer & { iconUrl: null })[];
 
 const sampleServers = [
   {
@@ -46,6 +59,11 @@ const sampleServers = [
 ] satisfies KomodoServerOverviewItem[];
 
 vi.mock("@homarr/request-handler/komodo", () => ({
+  komodoContainersRequestHandler: {
+    handler: () => ({
+      getDataAsync: async () => ({ data: sampleContainers, timestamp: updatedAt }),
+    }),
+  },
   komodoOverviewRequestHandler: {
     handler: () => ({
       getDataAsync: async () => ({ data: sampleOverview, timestamp: updatedAt }),
@@ -99,7 +117,7 @@ const createKomodoIntegrationOnBoardAsync = async (
   });
   await db.insert(items).values({
     id: itemId,
-    kind: "komodo",
+    kind: "dockerContainers",
     boardId,
     options: "{}",
   });
@@ -107,6 +125,24 @@ const createKomodoIntegrationOnBoardAsync = async (
 
   return integrationId;
 };
+
+describe("komodoRouter.getContainers", () => {
+  test("returns Komodo containers for the Docker widget", async () => {
+    const db = createDb();
+    const ownerId = createId();
+    await db.insert(users).values({ id: ownerId });
+    const integrationId = await createKomodoIntegrationOnBoardAsync(db, {
+      isPublic: true,
+      boardCreatorId: ownerId,
+    });
+    const caller = createCaller(db, null);
+
+    await expect(caller.getContainers({ integrationId })).resolves.toStrictEqual({
+      containers: sampleContainers,
+      timestamp: updatedAt,
+    });
+  });
+});
 
 describe("komodoRouter.getOverview", () => {
   test("returns transformed overview data for the widget", async () => {
@@ -169,6 +205,20 @@ describe("komodoRouter access control", () => {
     });
 
     await expect(createCaller(db, null).getServers({ integrationId })).rejects.toMatchObject({
+      code: "FORBIDDEN",
+    });
+  });
+
+  test("rejects unauthenticated container queries when the integration is only on a private board", async () => {
+    const db = createDb();
+    const ownerId = createId();
+    await db.insert(users).values({ id: ownerId });
+    const integrationId = await createKomodoIntegrationOnBoardAsync(db, {
+      isPublic: false,
+      boardCreatorId: ownerId,
+    });
+
+    await expect(createCaller(db, null).getContainers({ integrationId })).rejects.toMatchObject({
       code: "FORBIDDEN",
     });
   });

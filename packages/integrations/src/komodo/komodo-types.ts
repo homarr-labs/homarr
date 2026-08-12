@@ -1,8 +1,36 @@
 import { ParseError } from "@homarr/common/server";
+import { dockerContainerStates } from "@homarr/definitions";
+import type { DockerContainerState } from "@homarr/definitions";
 import { z } from "zod/v4";
 
 const INVALID_LIST_RESPONSE_MESSAGE = "Invalid Komodo resource list response";
+const INVALID_CONTAINER_LIST_RESPONSE_MESSAGE = "Invalid Komodo container list response";
 const INVALID_VERSION_RESPONSE_MESSAGE = "Invalid Komodo version response";
+
+const komodoContainerStatsSchema = z.object({
+  cpu_perc: z.string(),
+  mem_usage: z.string(),
+});
+
+const komodoContainerListItemSchema = z.object({
+  server_id: z.string().nullish(),
+  server_name: z.string().nullish(),
+  name: z.string(),
+  id: z.string().nullish(),
+  image: z.string().nullish(),
+  state: z.string(),
+  stats: komodoContainerStatsSchema.nullish(),
+});
+
+const komodoContainerListItemFallbackSchema = z.object({
+  server_id: z.string().nullish(),
+  server_name: z.string().nullish(),
+  name: z.string().optional(),
+  id: z.string().nullish(),
+  image: z.string().nullish(),
+  state: z.string().optional(),
+  stats: z.unknown().nullish(),
+});
 
 const komodoMinimalSystemStatsSchema = z.object({
   cpu_perc: z.number(),
@@ -111,6 +139,16 @@ export interface KomodoServerOverviewItem extends KomodoResource {
   stats: KomodoServerStats | null;
 }
 
+export interface KomodoContainer {
+  id: string;
+  name: string;
+  host: string;
+  state: DockerContainerState | "unknown";
+  image: string;
+  cpuUsage: number;
+  memoryUsage: number;
+}
+
 const statusStates = {
   server: {
     healthy: new Set(["ok"]),
@@ -134,6 +172,40 @@ const normalizeState = (state: string) =>
     .trim()
     .toLowerCase()
     .replaceAll(/[^a-z0-9]+/g, "_");
+
+const dockerContainerStateSet = new Set<string>(dockerContainerStates);
+
+const normalizeContainerState = (state: string): KomodoContainer["state"] => {
+  const normalizedState = normalizeState(state);
+  return dockerContainerStateSet.has(normalizedState) ? (normalizedState as DockerContainerState) : "unknown";
+};
+
+const byteUnitMultipliers: Readonly<Record<string, number>> = {
+  b: 1,
+  kb: 1000,
+  mb: 1000 ** 2,
+  gb: 1000 ** 3,
+  tb: 1000 ** 4,
+  kib: 1024,
+  mib: 1024 ** 2,
+  gib: 1024 ** 3,
+  tib: 1024 ** 4,
+};
+
+const parsePercentage = (value: string | undefined) => {
+  const parsed = Number.parseFloat(value?.replace("%", "").trim() ?? "");
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+};
+
+const parseMemoryUsageBytes = (value: string | undefined) => {
+  const usedValue = value?.split("/", 1)[0]?.trim();
+  const match = /^(\d+(?:\.\d+)?)\s*([kmgt]?i?b)$/i.exec(usedValue ?? "");
+  const amount = Number.parseFloat(match?.[1] ?? "");
+  const multiplier = byteUnitMultipliers[match?.[2]?.toLowerCase() ?? ""];
+
+  if (!Number.isFinite(amount) || multiplier === undefined) return 0;
+  return amount * multiplier;
+};
 
 const pollingRateUnitSeconds = {
   sec: 1,
@@ -295,6 +367,37 @@ export const parseKomodoServerOverviewResponseAsync = async (response: {
         stats,
       },
     ];
+  });
+};
+
+export const parseKomodoContainerListResponseAsync = async (response: {
+  json: () => Promise<unknown>;
+}): Promise<KomodoContainer[]> => {
+  const json = await readJsonAsync(response, INVALID_CONTAINER_LIST_RESPONSE_MESSAGE);
+  const listResult = komodoResourceListResponseSchema.safeParse(json);
+
+  if (!listResult.success) {
+    throw new ParseError(INVALID_CONTAINER_LIST_RESPONSE_MESSAGE, { cause: listResult.error });
+  }
+
+  return listResult.data.map<KomodoContainer>((item, index) => {
+    const result = komodoContainerListItemSchema.safeParse(item);
+    const fallbackResult = komodoContainerListItemFallbackSchema.safeParse(item);
+    const fallback = result.success ? result.data : fallbackResult.success ? fallbackResult.data : undefined;
+    const serverId = fallback?.server_id ?? null;
+    const host = fallback?.server_name ?? serverId ?? "Unknown server";
+    const name = fallback?.name ?? "Unknown container";
+    const stats = komodoContainerStatsSchema.safeParse(fallback?.stats);
+
+    return {
+      id: fallback?.id ?? `${serverId ?? "unknown-server"}:${name}:${index}`,
+      name,
+      host,
+      state: normalizeContainerState(fallback?.state ?? "unknown"),
+      image: fallback?.image ?? "",
+      cpuUsage: stats.success ? parsePercentage(stats.data.cpu_perc) : 0,
+      memoryUsage: stats.success ? parseMemoryUsageBytes(stats.data.mem_usage) : 0,
+    };
   });
 };
 

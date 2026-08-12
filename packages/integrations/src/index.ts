@@ -95,6 +95,7 @@ export type {
 } from "./archive-team-warrior/archive-team-warrior-types";
 export type { WudStats, WudContainerUpdate } from "./wud/wud-types";
 export type {
+  KomodoContainer,
   KomodoOverview,
   KomodoProblem,
   KomodoResource,

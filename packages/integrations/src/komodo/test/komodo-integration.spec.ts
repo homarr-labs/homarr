@@ -170,6 +170,127 @@ describe("KomodoIntegration resource lists", () => {
   });
 });
 
+describe("KomodoIntegration containers", () => {
+  test("reads containers and converts Docker stats for the existing table", async () => {
+    setupMockResponses({
+      "/read/ListAllContainers": {
+        body: [
+          {
+            server_id: "server-1",
+            server_name: "Production",
+            name: "homarr",
+            id: "container-1",
+            image: "ghcr.io/homarr-labs/homarr:latest",
+            state: "running",
+            stats: {
+              name: "homarr",
+              cpu_perc: "2.50%",
+              mem_perc: "25.00%",
+              mem_usage: "256MiB / 1GiB",
+              net_io: "1MB / 2MB",
+              block_io: "0B / 0B",
+              pids: "12",
+            },
+          },
+        ],
+      },
+    });
+
+    await expect(createIntegration().getContainersAsync()).resolves.toStrictEqual([
+      {
+        id: "container-1",
+        name: "homarr",
+        host: "Production",
+        state: "running",
+        image: "ghcr.io/homarr-labs/homarr:latest",
+        cpuUsage: 2.5,
+        memoryUsage: 256 * 1024 * 1024,
+      },
+    ]);
+
+    const [url, options] = mockFetch.mock.calls[0] ?? [];
+    expect(String(url)).toBe(`${TEST_URL}/read/ListAllContainers`);
+    expect(JSON.parse(String(options?.body))).toStrictEqual({ limit: 0 });
+  });
+
+  test.each([400, 404])("supports the pre-2.3 container endpoint after status %s", async (status) => {
+    setupMockResponses({
+      "/read/ListAllContainers": { body: { error: "Not found" }, status },
+      "/read/ListAllDockerContainers": { body: [] },
+    });
+
+    await expect(createIntegration().getContainersAsync()).resolves.toStrictEqual([]);
+    expect(mockFetch.mock.calls.map(([url]) => new URL(String(url)).pathname)).toStrictEqual([
+      "/read/ListAllContainers",
+      "/read/ListAllDockerContainers",
+    ]);
+  });
+
+  test("keeps unknown states and malformed statistics visible", async () => {
+    setupMockResponses({
+      "/read/ListAllContainers": {
+        body: [
+          {
+            server_id: "server-1",
+            name: "future-container",
+            state: "future-state",
+            stats: { cpu_perc: "invalid", mem_usage: "unknown" },
+          },
+        ],
+      },
+    });
+
+    await expect(createIntegration().getContainersAsync()).resolves.toStrictEqual([
+      {
+        id: "server-1:future-container:0",
+        name: "future-container",
+        host: "server-1",
+        state: "unknown",
+        image: "",
+        cpuUsage: 0,
+        memoryUsage: 0,
+      },
+    ]);
+  });
+
+  test("handles invalid JSON in the container response", async () => {
+    setupMockResponses({
+      "/read/ListAllContainers": { body: "not-json" },
+    });
+
+    await expect(createIntegration().getContainersAsync()).rejects.toSatisfy((error) => {
+      if (!(error instanceof IntegrationParseError)) return false;
+      return (
+        error.cause instanceof ParseError && error.cause.message.includes("Invalid Komodo container list response")
+      );
+    });
+  });
+
+  test("handles a non-array container response", async () => {
+    setupMockResponses({
+      "/read/ListAllContainers": { body: { unexpected: true } },
+    });
+
+    await expect(createIntegration().getContainersAsync()).rejects.toSatisfy((error) => {
+      if (!(error instanceof IntegrationParseError)) return false;
+      return (
+        error.cause instanceof ParseError && error.cause.message.includes("Invalid Komodo container list response")
+      );
+    });
+  });
+
+  test("handles an upstream container API error", async () => {
+    setupMockResponses({
+      "/read/ListAllContainers": { body: { error: "Internal error" }, status: 500 },
+    });
+
+    await expect(createIntegration().getContainersAsync()).rejects.toMatchObject({
+      name: "IntegrationResponseError",
+      cause: { statusCode: 500 },
+    });
+  });
+});
+
 describe("KomodoIntegration overview", () => {
   test("summarizes healthy, warning, error, unknown, and problem counts", async () => {
     setupMockResponses({

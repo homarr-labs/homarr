@@ -9,16 +9,15 @@ import { IntegrationCapabilites } from "@site/src/components/integrations/widget
 import { AddingIntegration } from "@site/src/components/integrations/adding";
 import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { komodoIntegration } from ".";
-import { komodoWidget } from "@site/docs/widgets/komodo";
-import { komodoServerOverviewWidget } from "@site/docs/widgets/komodo-server-overview";
+import { dockerContainersWidget } from "@site/docs/widgets/docker-containers";
 
 <IntegrationHeader integration={komodoIntegration} categories={["System monitoring", "Deployment"]} />
 
-The Komodo integration gives Homarr a read-only overview of the servers, stacks, and deployments visible to a Komodo API key. Homarr never starts, stops, deploys, or modifies Komodo resources.
+The Komodo integration adds Komodo as a read-only data source to the Containers widget. It can display containers, summary counts for servers, stacks, deployments, and problems, as well as a detailed server table. Homarr never starts, stops, deploys, or modifies Komodo resources.
 
 ### Widgets & Capabilities
 
-<IntegrationCapabilites items={[{ widget: komodoWidget }, { widget: komodoServerOverviewWidget }]} />
+<IntegrationCapabilites items={[{ widget: dockerContainersWidget }]} />
 
 ### Adding the integration
 
@@ -48,15 +47,18 @@ Komodo authenticates API clients with a key and secret sent in request headers. 
   ]}
 />
 
-The API key uses the permissions of its Komodo user. It must be able to read the servers, stacks, and deployments that you want to display.
+The API key uses the permissions of its Komodo user. It must be able to read the containers, servers, stacks, and deployments that you want to display.
+
+After adding the integration, add or edit the **Containers** widget and select the Komodo integration. Leave the integration selection empty to use Homarr's direct Docker connection instead.
 
 ### API requests
 
 Homarr makes only the following authenticated `POST` requests:
 
 - `/read/GetVersion` when testing the connection
+- `/read/ListAllContainers` to list containers (`/read/ListAllDockerContainers` on older Komodo versions)
 - `/read/ListServers`
 - `/read/ListStacks`
 - `/read/ListDeployments`
 
-Resource list requests use `limit: 0` so the overview includes every resource visible to the API key. Successful responses are cached for one second. During a temporary Komodo error, Homarr can continue serving the most recent successful response for up to five minutes. The widgets request data at their configured refresh interval.
+Resource list requests use `limit: 0` so the widget includes every resource visible to the API key. Successful responses are cached for one second. During a temporary Komodo error, Homarr can continue serving the most recent successful response for up to five minutes. The widget requests data at its configured refresh interval.

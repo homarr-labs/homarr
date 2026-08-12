@@ -7,9 +7,16 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { KomodoOverview, KomodoResource, KomodoResourceKind, KomodoServerOverviewItem } from "./komodo-types";
+import type {
+  KomodoContainer,
+  KomodoOverview,
+  KomodoResource,
+  KomodoResourceKind,
+  KomodoServerOverviewItem,
+} from "./komodo-types";
 import {
   createKomodoOverview,
+  parseKomodoContainerListResponseAsync,
   parseKomodoResourceListResponseAsync,
   parseKomodoServerOverviewResponseAsync,
   parseKomodoVersionResponseAsync,
@@ -19,7 +26,13 @@ const REQUEST_TIMEOUT_MS = 10_000;
 const LIST_REQUEST_BODY = { limit: 0 };
 
 type KomodoFetchAsync = (url: URL, options?: RequestInit) => Promise<Response>;
-type KomodoReadPath = "/read/GetVersion" | "/read/ListServers" | "/read/ListStacks" | "/read/ListDeployments";
+type KomodoReadPath =
+  | "/read/GetVersion"
+  | "/read/ListServers"
+  | "/read/ListStacks"
+  | "/read/ListDeployments"
+  | "/read/ListAllContainers"
+  | "/read/ListAllDockerContainers";
 
 export class KomodoIntegration extends Integration {
   private readonly fetchAsync: KomodoFetchAsync = async (url, options) =>
@@ -64,6 +77,20 @@ export class KomodoIntegration extends Integration {
     }
 
     return await parseKomodoServerOverviewResponseAsync(response);
+  }
+
+  public async getContainersAsync(): Promise<KomodoContainer[]> {
+    let response = await this.sendRequestAsync(this.fetchAsync, "/read/ListAllContainers", LIST_REQUEST_BODY);
+
+    if (response.status === 400 || response.status === 404) {
+      response = await this.sendRequestAsync(this.fetchAsync, "/read/ListAllDockerContainers", LIST_REQUEST_BODY);
+    }
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    return await parseKomodoContainerListResponseAsync(response);
   }
 
   public async getOverviewAsync(): Promise<KomodoOverview> {

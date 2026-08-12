@@ -19,10 +19,9 @@ import { formatByteRate } from "@homarr/common";
 import type { KomodoServerOverviewItem } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
-import { getKomodoStateTranslationKey, komodoStatusColors } from "../komodo/display";
-import { getKomodoRefreshIntervalMs } from "../komodo/refresh-interval";
+import { getKomodoStateTranslationKey, komodoStatusColors } from "./komodo-display";
+import { getKomodoRefreshIntervalMs } from "./komodo-refresh-interval";
 
 const formatPercent = (value: number | null) => (value === null ? "—" : `${value.toFixed(1)}%`);
 
@@ -54,7 +53,7 @@ const PercentageMetric = ({ value, compact = false }: PercentageMetricProps) => 
 );
 
 const ServerName = ({ server }: { server: KomodoServerOverviewItem }) => {
-  const tState = useScopedI18n("widget.komodo.resourceState");
+  const tState = useScopedI18n("widget.dockerContainers.komodo.resourceState");
 
   return (
     <Tooltip label={tState(getKomodoStateTranslationKey(server.state))} openDelay={300}>
@@ -146,24 +145,20 @@ const CardMetric = ({ icon, label, children }: CardMetricProps) => (
   </Group>
 );
 
-export default function KomodoServerOverviewWidget({
-  integrationIds,
-  options,
-  width,
-}: WidgetComponentProps<"komodoServerOverview">) {
-  const t = useScopedI18n("widget.komodoServerOverview");
-  const integrationId = integrationIds[0];
+interface KomodoServerTableProps {
+  integrationId: string;
+  options: WidgetComponentProps<"dockerContainers">["options"];
+  width: number;
+}
+
+export const KomodoServerTable = ({ integrationId, options, width }: KomodoServerTableProps) => {
+  const t = useScopedI18n("widget.dockerContainers.komodo.server");
   const { data, error, isPending } = clientApi.widget.komodo.getServers.useQuery(
-    { integrationId: integrationId ?? "" },
-    {
-      enabled: integrationId !== undefined,
-      refetchInterval: getKomodoRefreshIntervalMs(options.refreshInterval),
-    },
+    { integrationId },
+    { refetchInterval: getKomodoRefreshIntervalMs(options.refreshInterval) },
   );
 
   if (error) throw error;
-
-  if (!integrationId) return <WidgetEmptyState />;
 
   if (isPending) {
     return (
@@ -329,4 +324,4 @@ export default function KomodoServerOverviewWidget({
       </Table>
     </ScrollArea>
   );
-}
+};

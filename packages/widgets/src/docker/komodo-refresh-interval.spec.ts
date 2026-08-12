@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { getKomodoRefreshIntervalMs } from "./refresh-interval";
+import { getKomodoRefreshIntervalMs } from "./komodo-refresh-interval";
 
 describe("getKomodoRefreshIntervalMs", () => {
   test.each([
