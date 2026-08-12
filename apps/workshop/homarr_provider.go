@@ -318,7 +318,9 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	if requestBody.Stream {
 		event.Response.Header().Set("Content-Type", contentType)
 		event.Response.WriteHeader(upstreamResponse.StatusCode)
-		_, _ = copyAliasedSSE(flushingWriter{event.Response}, upstreamResponse.Body, maxChatResponseBytes)
+		if _, streamErr := copyAliasedSSE(flushingWriter{event.Response}, upstreamResponse.Body, maxChatResponseBytes); streamErr != nil {
+			_, _ = io.WriteString(flushingWriter{event.Response}, streamErrorFrame())
+		}
 		return nil
 	}
 
@@ -331,6 +333,16 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		return event.JSON(http.StatusBadGateway, openAIError("The model endpoint returned an invalid response."))
 	}
 	return event.Blob(upstreamResponse.StatusCode, contentType, responseBody)
+}
+
+func streamErrorFrame() string {
+	payload, _ := json.Marshal(map[string]any{
+		"error": map[string]any{
+			"message": "The model endpoint returned an invalid response.",
+			"type":    "homarr_provider_error",
+		},
+	})
+	return "data: " + string(payload) + "\n\ndata: [DONE]\n\n"
 }
 
 func (provider *homarrProvider) acquireRequest(userID string) bool {

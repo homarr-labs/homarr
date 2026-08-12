@@ -81,6 +81,11 @@ const server = createServer(async (request, response) => {
     json(response, 503, { error: { message: "Simulated upstream failure" } });
     return;
   }
+  if (body.messages?.some((message) => message.content === "malformed stream")) {
+    response.writeHead(200, { "content-type": "text/event-stream" });
+    response.end('data: {"model":\n\n');
+    return;
+  }
   if (body.messages?.some((message) => message.content === "in-flight probe")) {
     await new Promise((resolve) => setTimeout(resolve, 500));
   }

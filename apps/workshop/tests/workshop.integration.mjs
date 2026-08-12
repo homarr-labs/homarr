@@ -278,6 +278,24 @@ if (
 ) {
   throw new Error("The Homarr provider did not preserve the upstream SSE stream");
 }
+const malformedStreamResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+  method: "POST",
+  headers: { "content-type": "application/json", ...concurrencySession.headers },
+  body: JSON.stringify({
+    model: "homarr/model",
+    messages: [{ role: "user", content: "malformed stream" }],
+    stream: true,
+  }),
+});
+const malformedStreamText = await malformedStreamResponse.text();
+if (
+  !malformedStreamResponse.ok ||
+  !malformedStreamText.includes('"type":"homarr_provider_error"') ||
+  malformedStreamText.includes('data: {"model":') ||
+  !malformedStreamText.endsWith("data: [DONE]\n\n")
+) {
+  throw new Error(`Malformed upstream streams did not terminate safely: ${malformedStreamText}`);
+}
 const toolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
   method: "POST",
   headers: {

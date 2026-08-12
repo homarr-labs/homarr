@@ -173,8 +173,14 @@ func TestValidateProviderInput(t *testing.T) {
 
 func TestProviderInFlightLimits(t *testing.T) {
 	provider := &homarrProvider{inFlightByUser: make(map[string]int)}
-	if !provider.acquireRequest("one") || !provider.acquireRequest("one") || provider.acquireRequest("one") {
-		t.Fatal("expected the per-user in-flight limit to allow two requests")
+	if !provider.acquireRequest("one") {
+		t.Fatal("expected the first user request to be admitted")
+	}
+	if !provider.acquireRequest("one") {
+		t.Fatal("expected the second user request to be admitted")
+	}
+	if provider.acquireRequest("one") {
+		t.Fatal("expected the third user request to be rejected")
 	}
 	provider.releaseRequest("one")
 	provider.releaseRequest("one")
