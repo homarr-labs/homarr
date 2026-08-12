@@ -85,7 +85,14 @@ export const boardLayoutSchema = z
   .refine((layout) => layout.leftGutterColumnCount + layout.rightGutterColumnCount < layout.columnCount, {
     message: "Gutters must leave at least one dashboard column",
     path: ["columnCount"],
-  });
+  })
+  .refine(
+    (layout) => layout.role !== "mobile" || (layout.leftGutterColumnCount === 0 && layout.rightGutterColumnCount === 0),
+    {
+      message: "Mobile layouts cannot have sidebars",
+      path: ["leftGutterColumnCount"],
+    },
+  );
 
 export const responsiveBoardLayoutsSchema = z
   .array(boardLayoutSchema)

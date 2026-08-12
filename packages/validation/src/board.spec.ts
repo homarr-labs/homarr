@@ -41,6 +41,10 @@ describe("responsiveBoardLayoutsSchema", () => {
       name: "duplicate layout ID",
       layouts: [mobile, { ...base, id: mobile.id }],
     },
+    {
+      name: "mobile sidebar",
+      layouts: [{ ...mobile, leftGutterColumnCount: 1 }, base],
+    },
   ])("rejects $name", ({ layouts }) => {
     expect(responsiveBoardLayoutsSchema.safeParse(layouts).success).toBe(false);
   });

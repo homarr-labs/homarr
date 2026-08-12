@@ -222,15 +222,17 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
                     />
                   )}
                 </Grid.Col>
-                <Grid.Col span={{ base: 12, lg: 4 }}>
-                  <GutterSettings
-                    left={layout.leftGutterColumnCount}
-                    right={layout.rightGutterColumnCount}
-                    columnCount={layout.columnCount}
-                    onLeftChange={(value) => form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, value)}
-                    onRightChange={(value) => form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, value)}
-                  />
-                </Grid.Col>
+                {layout.role !== "mobile" && (
+                  <Grid.Col span={{ base: 12, lg: 4 }}>
+                    <GutterSettings
+                      left={layout.leftGutterColumnCount}
+                      right={layout.rightGutterColumnCount}
+                      columnCount={layout.columnCount}
+                      onLeftChange={(value) => form.setFieldValue(`layouts.${index}.leftGutterColumnCount`, value)}
+                      onRightChange={(value) => form.setFieldValue(`layouts.${index}.rightGutterColumnCount`, value)}
+                    />
+                  </Grid.Col>
+                )}
               </Grid>
 
               <Group justify="space-between" mt="lg" gap="sm" wrap="wrap">

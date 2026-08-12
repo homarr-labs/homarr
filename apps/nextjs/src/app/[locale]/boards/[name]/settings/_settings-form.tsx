@@ -36,6 +36,11 @@ const boardSettingsFormSchema = boardSavePartialSettingsSchema
 
 export type FormValues = z.infer<typeof boardSettingsFormSchema>;
 
+const normalizeMobileLayoutGutters = (layouts: readonly FormValues["layouts"][number][]) =>
+  layouts.map((layout) =>
+    layout.role === "mobile" ? { ...layout, leftGutterColumnCount: 0, rightGutterColumnCount: 0 } : layout,
+  );
+
 const PARTIAL_FORM_KEYS = [
   "pageTitle",
   "metaTitle",
@@ -70,7 +75,7 @@ const buildInitialValues = (board: Board): FormValues => ({
   itemRadius: board.itemRadius,
   customCss: board.customCss ?? "",
   disableStatus: board.disableStatus,
-  layouts: board.layouts,
+  layouts: normalizeMobileLayoutGutters(board.layouts),
 });
 
 interface BoardSettingsFormProps {
@@ -127,7 +132,8 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
     const changed = <TKey extends keyof FormValues>(...fields: TKey[]) =>
       fields.some((field) => values[field] !== defaults[field]);
 
-    const { layouts, ...partialSettings } = values;
+    const { layouts: submittedLayouts, ...partialSettings } = values;
+    const layouts = normalizeMobileLayoutGutters(submittedLayouts);
     const partialSettingsChanged = changed(...PARTIAL_FORM_KEYS);
     const layoutsChanged = changed("layouts");
     if (!partialSettingsChanged && !layoutsChanged) return values;

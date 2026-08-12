@@ -107,7 +107,7 @@ The complete canvas always fits the available width and never adds horizontal bo
 - **Mobile** starts at `0px` and uses three columns on new boards.
 - **Base** is the widest layout and starts at `768px` on new boards.
 
-Mobile and Base can be renamed and their column counts and rails can be changed, but they cannot be removed. You can add removable custom layouts between their breakpoints.
+Mobile and Base can be renamed and their column counts can be changed, but they cannot be removed. Mobile has no fixed rails; rail configuration is available only on Base and custom layouts. You can add removable custom layouts between their breakpoints.
 
 Each layout stores independent positions and sizes. Moving or resizing a widget while editing Mobile does not move it in Base or any custom layout. New custom layouts are generated from Base and scaled to their selected column count.
 
@@ -128,7 +128,7 @@ The total number of columns in the layout. Changing it projects the saved positi
 
 #### Fixed rails
 
-Each responsive layout can enable a fixed left rail, a fixed right rail, or both.
+Base and custom responsive layouts can enable a fixed left rail, a fixed right rail, or both. Mobile has no fixed rails.
 Set a rail width to zero to disable it for that layout.
 Choose a width from one to three columns with the three-step slider.
 The preview shows how much space remains for the main canvas.
