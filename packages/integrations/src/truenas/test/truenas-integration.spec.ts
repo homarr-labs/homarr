@@ -218,6 +218,19 @@ describe("TrueNasIntegration", () => {
     });
   });
 
+  test("reports zero usage for an empty root dataset", async () => {
+    ws.setResponder((method) =>
+      method === "pool.dataset.query"
+        ? [{ id: "tank", used: { parsed: 0 }, available: { parsed: 0 } }]
+        : happyResponder(method),
+    );
+    const integration = createIntegration(credentials);
+
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.fileSystem[0]?.percentage).toBe(0);
+  });
+
   test("authenticates with an API key when one is configured", async () => {
     const integration = createIntegration([{ kind: "apiKey", value: "api-key-123" }]);
 

@@ -51,7 +51,8 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
         deviceName: dataset.name,
         available: `${dataset.available}`,
         used: `${dataset.used}`,
-        percentage: (dataset.used / (dataset.used + dataset.available)) * 100,
+        percentage:
+          dataset.used + dataset.available === 0 ? 0 : (dataset.used / (dataset.used + dataset.available)) * 100,
       })),
       availablePkgUpdates: 0,
       network: {
