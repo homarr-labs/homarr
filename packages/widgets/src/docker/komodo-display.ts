@@ -30,6 +30,23 @@ const komodoStateTranslationKeys = {
 
 export type KomodoStateTranslationKey = (typeof komodoStateTranslationKeys)[keyof typeof komodoStateTranslationKeys];
 
+const KOMODO_SERVER_TABLE_MIN_WIDTH = 700;
+const KOMODO_SUMMARY_WIDE_MIN_WIDTH = 720;
+const KOMODO_SUMMARY_MEDIUM_MIN_WIDTH = 400;
+
+export const usesKomodoServerTableLayout = (width: number) => width >= KOMODO_SERVER_TABLE_MIN_WIDTH;
+
+export const getKomodoSummaryColumnCount = (width: number) => {
+  if (width >= KOMODO_SUMMARY_WIDE_MIN_WIDTH) return 4;
+  if (width >= KOMODO_SUMMARY_MEDIUM_MIN_WIDTH) return 2;
+  return 1;
+};
+
+export const isContainerColumnVisible = (accessor: string, selectedColumns: ReadonlySet<string>, isKomodo: boolean) =>
+  selectedColumns.has(accessor) && (!isKomodo || accessor !== "actions");
+
+export const isContainerContextMenuEnabled = (isEditMode: boolean, isKomodo: boolean) => !isEditMode && !isKomodo;
+
 export const getKomodoStateTranslationKey = (state: string): KomodoStateTranslationKey => {
   const normalizedState = state
     .trim()

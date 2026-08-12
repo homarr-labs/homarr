@@ -31,6 +31,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
+import { isContainerColumnVisible, isContainerContextMenuEnabled } from "./komodo-display";
 import { getKomodoRefreshIntervalMs } from "./komodo-refresh-interval";
 import { KomodoServerTable } from "./komodo-server-table";
 import { KomodoSummary } from "./komodo-summary";
@@ -317,8 +318,8 @@ export default function DockerWidget({
   const selectedColumns = useMemo(() => new Set<string>(options.columns), [options.columns]);
   const columns = useMemo(() => {
     const sortingEnabled = options.enableRowSorting && !isEditMode;
-    return createColumns(t, isKomodo ? undefined : actionHandlers, sortingEnabled).filter(
-      ({ accessor }) => selectedColumns.has(String(accessor)) && (!isKomodo || accessor !== "actions"),
+    return createColumns(t, isKomodo ? undefined : actionHandlers, sortingEnabled).filter(({ accessor }) =>
+      isContainerColumnVisible(String(accessor), selectedColumns, isKomodo),
     );
   }, [actionHandlers, isEditMode, isKomodo, options.enableRowSorting, selectedColumns, t]);
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
@@ -373,7 +374,7 @@ export default function DockerWidget({
             sortStatus={sortStatus}
             onSortStatusChange={options.enableRowSorting && !isEditMode ? setSortStatus : undefined}
             idAccessor="id"
-            onRowContextMenu={isEditMode || isKomodo ? undefined : handleContextMenu}
+            onRowContextMenu={isContainerContextMenuEnabled(isEditMode, isKomodo) ? handleContextMenu : undefined}
             onScroll={() => {
               if (contextMenu) closeContextMenu();
             }}

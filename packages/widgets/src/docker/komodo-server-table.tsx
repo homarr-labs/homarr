@@ -20,8 +20,20 @@ import type { KomodoServerOverviewItem } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { getKomodoStateTranslationKey, komodoStatusColors } from "./komodo-display";
+import { getKomodoStateTranslationKey, komodoStatusColors, usesKomodoServerTableLayout } from "./komodo-display";
 import { getKomodoRefreshIntervalMs } from "./komodo-refresh-interval";
+
+const serverNameColumnMinWidth = 180;
+const serverMetricColumnWidths = {
+  cpu: 140,
+  memory: 140,
+  disk: 140,
+  loadAverage: 200,
+  network: 110,
+  version: 110,
+} as const;
+
+type ServerMetricColumn = keyof typeof serverMetricColumnWidths;
 
 const formatPercent = (value: number | null) => (value === null ? "—" : `${value.toFixed(1)}%`);
 
@@ -42,7 +54,7 @@ interface PercentageMetricProps {
 }
 
 const PercentageMetric = ({ value, compact = false }: PercentageMetricProps) => (
-  <Group gap={compact ? 6 : 10} wrap="nowrap" miw={compact ? 0 : 130} style={{ flex: 1 }}>
+  <Group gap={compact ? 6 : 10} wrap="nowrap" miw={0} style={{ flex: 1 }}>
     <Text size="xs" fw={500} w={42} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
       {formatPercent(value)}
     </Text>
@@ -57,8 +69,12 @@ const ServerName = ({ server }: { server: KomodoServerOverviewItem }) => {
 
   return (
     <Tooltip label={tState(getKomodoStateTranslationKey(server.state))} openDelay={300}>
-      <Group gap="xs" wrap="nowrap">
-        <IconServer size={16} color={`var(--mantine-color-${komodoStatusColors[server.status]}-6)`} />
+      <Group gap="xs" wrap="nowrap" style={{ minWidth: 0, overflow: "hidden" }}>
+        <IconServer
+          size={16}
+          color={`var(--mantine-color-${komodoStatusColors[server.status]}-6)`}
+          style={{ flexShrink: 0 }}
+        />
         <Text size="sm" fw={500} truncate>
           {server.name}
         </Text>
@@ -178,9 +194,7 @@ export const KomodoServerTable = ({ integrationId, options, width }: KomodoServe
     );
   }
 
-  const isTableLayout = width >= 700;
-
-  if (!isTableLayout) {
+  if (!usesKomodoServerTableLayout(width)) {
     return (
       <ScrollArea h="100%" type="auto" scrollbarSize={5}>
         <Stack gap="xs" p="xs">
@@ -198,7 +212,13 @@ export const KomodoServerTable = ({ integrationId, options, width }: KomodoServe
                   <Group justify="space-between" wrap="nowrap">
                     <ServerName server={server} />
                     {options.showVersion && server.version ? (
-                      <Badge size="xs" variant="light" color="green" leftSection={<IconCheck size={10} />}>
+                      <Badge
+                        size="xs"
+                        variant="light"
+                        color="green"
+                        leftSection={<IconCheck size={10} />}
+                        style={{ flexShrink: 0 }}
+                      >
                         {server.version}
                       </Badge>
                     ) : null}
@@ -237,14 +257,17 @@ export const KomodoServerTable = ({ integrationId, options, width }: KomodoServe
     );
   }
 
-  const visibleMetricColumns = [
-    options.showCpu,
-    options.showMemory,
-    options.showDisk,
-    options.showLoadAverage,
-    options.showNetwork,
-    options.showVersion,
-  ].filter(Boolean).length;
+  const metricColumnVisibility: Record<ServerMetricColumn, boolean> = {
+    cpu: options.showCpu,
+    memory: options.showMemory,
+    disk: options.showDisk,
+    loadAverage: options.showLoadAverage,
+    network: options.showNetwork,
+    version: options.showVersion,
+  };
+  const tableMinWidth = (Object.keys(serverMetricColumnWidths) as ServerMetricColumn[])
+    .filter((column) => metricColumnVisibility[column])
+    .reduce((total, column) => total + serverMetricColumnWidths[column], serverNameColumnMinWidth);
 
   return (
     <ScrollArea h="100%" type="auto" scrollbarSize={5}>
@@ -253,17 +276,23 @@ export const KomodoServerTable = ({ integrationId, options, width }: KomodoServe
         highlightOnHover
         verticalSpacing="xs"
         horizontalSpacing="sm"
-        style={{ minWidth: 180 + visibleMetricColumns * 130 }}
+        style={{ minWidth: tableMinWidth, width: "100%", tableLayout: "fixed" }}
       >
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>{t("column.name")}</Table.Th>
-            {options.showCpu ? <Table.Th>{t("column.cpu")}</Table.Th> : null}
-            {options.showMemory ? <Table.Th>{t("column.memory")}</Table.Th> : null}
-            {options.showDisk ? <Table.Th>{t("column.disk")}</Table.Th> : null}
-            {options.showLoadAverage ? <Table.Th>{t("column.loadAverage")}</Table.Th> : null}
-            {options.showNetwork ? <Table.Th>{t("column.network")}</Table.Th> : null}
-            {options.showVersion ? <Table.Th>{t("column.version")}</Table.Th> : null}
+            <Table.Th miw={serverNameColumnMinWidth}>{t("column.name")}</Table.Th>
+            {options.showCpu ? <Table.Th w={serverMetricColumnWidths.cpu}>{t("column.cpu")}</Table.Th> : null}
+            {options.showMemory ? <Table.Th w={serverMetricColumnWidths.memory}>{t("column.memory")}</Table.Th> : null}
+            {options.showDisk ? <Table.Th w={serverMetricColumnWidths.disk}>{t("column.disk")}</Table.Th> : null}
+            {options.showLoadAverage ? (
+              <Table.Th w={serverMetricColumnWidths.loadAverage}>{t("column.loadAverage")}</Table.Th>
+            ) : null}
+            {options.showNetwork ? (
+              <Table.Th w={serverMetricColumnWidths.network}>{t("column.network")}</Table.Th>
+            ) : null}
+            {options.showVersion ? (
+              <Table.Th w={serverMetricColumnWidths.version}>{t("column.version")}</Table.Th>
+            ) : null}
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
@@ -277,7 +306,7 @@ export const KomodoServerTable = ({ integrationId, options, width }: KomodoServe
 
             return (
               <Table.Tr key={server.id}>
-                <Table.Td miw={160}>
+                <Table.Td style={{ overflow: "hidden" }}>
                   <ServerName server={server} />
                 </Table.Td>
                 {options.showCpu ? (
@@ -296,12 +325,12 @@ export const KomodoServerTable = ({ integrationId, options, width }: KomodoServe
                   </Table.Td>
                 ) : null}
                 {options.showLoadAverage ? (
-                  <Table.Td miw={170}>
+                  <Table.Td>
                     <LoadAverage server={server} coresLabel={t("cores")} />
                   </Table.Td>
                 ) : null}
                 {options.showNetwork ? (
-                  <Table.Td miw={90}>
+                  <Table.Td>
                     <NetworkRate server={server} />
                   </Table.Td>
                 ) : null}

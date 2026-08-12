@@ -9,6 +9,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import { getKomodoSummaryColumnCount } from "./komodo-display";
 import { getKomodoRefreshIntervalMs } from "./komodo-refresh-interval";
 
 const getSummaryColor = (summary: KomodoResourceSummary) => {
@@ -85,7 +86,7 @@ export const KomodoSummary = ({ integrationId, options, width }: KomodoSummaryPr
 
   if (summaries.length === 0) return null;
 
-  const maximumColumns = width >= 720 ? 4 : width >= 400 ? 2 : 1;
+  const maximumColumns = getKomodoSummaryColumnCount(width);
 
   return (
     <SimpleGrid
