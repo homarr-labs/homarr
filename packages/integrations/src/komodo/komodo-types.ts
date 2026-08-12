@@ -15,16 +15,6 @@ const komodoContainerStatsSchema = z.object({
 const komodoContainerListItemSchema = z.object({
   server_id: z.string().nullish(),
   server_name: z.string().nullish(),
-  name: z.string(),
-  id: z.string().nullish(),
-  image: z.string().nullish(),
-  state: z.string(),
-  stats: komodoContainerStatsSchema.nullish(),
-});
-
-const komodoContainerListItemFallbackSchema = z.object({
-  server_id: z.string().nullish(),
-  server_name: z.string().nullish(),
   name: z.string().optional(),
   id: z.string().nullish(),
   image: z.string().nullish(),
@@ -105,16 +95,10 @@ export interface KomodoResourceSummary {
   unknown: number;
 }
 
-export interface KomodoProblem extends KomodoResource {
-  kind: KomodoResourceKind;
-}
-
 export interface KomodoOverview {
   servers: KomodoResourceSummary;
   stacks: KomodoResourceSummary;
   deployments: KomodoResourceSummary;
-  problemCount: number;
-  problems: KomodoProblem[];
 }
 
 export interface KomodoServerStats {
@@ -382,19 +366,18 @@ export const parseKomodoContainerListResponseAsync = async (response: {
 
   return listResult.data.map<KomodoContainer>((item, index) => {
     const result = komodoContainerListItemSchema.safeParse(item);
-    const fallbackResult = komodoContainerListItemFallbackSchema.safeParse(item);
-    const fallback = result.success ? result.data : fallbackResult.success ? fallbackResult.data : undefined;
-    const serverId = fallback?.server_id ?? null;
-    const host = fallback?.server_name ?? serverId ?? "Unknown server";
-    const name = fallback?.name ?? "Unknown container";
-    const stats = komodoContainerStatsSchema.safeParse(fallback?.stats);
+    const container = result.success ? result.data : undefined;
+    const serverId = container?.server_id ?? null;
+    const host = container?.server_name ?? serverId ?? "Unknown server";
+    const name = container?.name ?? "Unknown container";
+    const stats = komodoContainerStatsSchema.safeParse(container?.stats);
 
     return {
-      id: fallback?.id ?? `${serverId ?? "unknown-server"}:${name}:${index}`,
+      id: container?.id ?? `${serverId ?? "unknown-server"}:${name}:${index}`,
       name,
       host,
-      state: normalizeContainerState(fallback?.state ?? "unknown"),
-      image: fallback?.image ?? "",
+      state: normalizeContainerState(container?.state ?? "unknown"),
+      image: container?.image ?? "",
       cpuUsage: stats.success ? parsePercentage(stats.data.cpu_perc) : 0,
       memoryUsage: stats.success ? parseMemoryUsageBytes(stats.data.mem_usage) : 0,
     };
@@ -409,32 +392,12 @@ const summarizeResources = (resources: KomodoResource[]): KomodoResourceSummary 
   unknown: resources.filter((resource) => resource.status === "unknown").length,
 });
 
-const PROBLEM_LIST_LIMIT_PER_RESOURCE_KIND = 20;
-
 export const createKomodoOverview = (
   servers: KomodoResource[],
   stacks: KomodoResource[],
   deployments: KomodoResource[],
-): KomodoOverview => {
-  const serverProblems = servers
-    .filter((resource) => resource.status !== "healthy")
-    .map((resource) => ({ ...resource, kind: "server" as const }));
-  const stackProblems = stacks
-    .filter((resource) => resource.status !== "healthy")
-    .map((resource) => ({ ...resource, kind: "stack" as const }));
-  const deploymentProblems = deployments
-    .filter((resource) => resource.status !== "healthy")
-    .map((resource) => ({ ...resource, kind: "deployment" as const }));
-
-  return {
-    servers: summarizeResources(servers),
-    stacks: summarizeResources(stacks),
-    deployments: summarizeResources(deployments),
-    problemCount: serverProblems.length + stackProblems.length + deploymentProblems.length,
-    problems: [
-      ...serverProblems.slice(0, PROBLEM_LIST_LIMIT_PER_RESOURCE_KIND),
-      ...stackProblems.slice(0, PROBLEM_LIST_LIMIT_PER_RESOURCE_KIND),
-      ...deploymentProblems.slice(0, PROBLEM_LIST_LIMIT_PER_RESOURCE_KIND),
-    ],
-  };
-};
+): KomodoOverview => ({
+  servers: summarizeResources(servers),
+  stacks: summarizeResources(stacks),
+  deployments: summarizeResources(deployments),
+});

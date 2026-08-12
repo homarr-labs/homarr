@@ -13,12 +13,6 @@ const sampleOverview = {
   servers: { total: 2, healthy: 1, warning: 0, error: 1, unknown: 0 },
   stacks: { total: 3, healthy: 2, warning: 1, error: 0, unknown: 0 },
   deployments: { total: 4, healthy: 3, warning: 0, error: 0, unknown: 1 },
-  problemCount: 3,
-  problems: [
-    { id: "server-2", name: "Offline", state: "NotOk", status: "error", kind: "server" },
-    { id: "stack-3", name: "Deploying", state: "deploying", status: "warning", kind: "stack" },
-    { id: "deployment-4", name: "Unknown", state: "future_state", status: "unknown", kind: "deployment" },
-  ],
 } satisfies KomodoOverview;
 
 const updatedAt = new Date("2026-08-11T12:00:00.000Z");

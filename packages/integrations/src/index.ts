@@ -97,7 +97,6 @@ export type { WudStats, WudContainerUpdate } from "./wud/wud-types";
 export type {
   KomodoContainer,
   KomodoOverview,
-  KomodoProblem,
   KomodoResource,
   KomodoResourceKind,
   KomodoResourceStatus,

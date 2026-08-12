@@ -83,6 +83,7 @@ export class KomodoIntegration extends Integration {
     let response = await this.sendRequestAsync(this.fetchAsync, "/read/ListAllContainers", LIST_REQUEST_BODY);
 
     if (response.status === 400 || response.status === 404) {
+      await response.body?.cancel();
       response = await this.sendRequestAsync(this.fetchAsync, "/read/ListAllDockerContainers", LIST_REQUEST_BODY);
     }
 

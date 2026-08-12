@@ -213,7 +213,7 @@ describe("KomodoIntegration containers", () => {
     expect(JSON.parse(String(options?.body))).toStrictEqual({ limit: 0 });
   });
 
-  test.each([400, 404])("supports the pre-2.3 container endpoint after status %s", async (status) => {
+  test.each([400, 404])("falls back to the legacy container endpoint after status %s", async (status) => {
     setupMockResponses({
       "/read/ListAllContainers": { body: { error: "Not found" }, status },
       "/read/ListAllDockerContainers": { body: [] },
@@ -292,7 +292,7 @@ describe("KomodoIntegration containers", () => {
 });
 
 describe("KomodoIntegration overview", () => {
-  test("summarizes healthy, warning, error, unknown, and problem counts", async () => {
+  test("summarizes healthy, warning, error, and unknown counts", async () => {
     setupMockResponses({
       "/read/ListServers": {
         body: [
@@ -319,8 +319,6 @@ describe("KomodoIntegration overview", () => {
     expect(result.servers).toStrictEqual({ total: 2, healthy: 1, warning: 0, error: 1, unknown: 0 });
     expect(result.stacks).toStrictEqual({ total: 2, healthy: 1, warning: 1, error: 0, unknown: 0 });
     expect(result.deployments).toStrictEqual({ total: 2, healthy: 1, warning: 0, error: 0, unknown: 1 });
-    expect(result.problemCount).toBe(3);
-    expect(result.problems.map((problem) => problem.name)).toStrictEqual(["Offline", "Deploying", "Future"]);
   });
 
   test("supports empty resource lists", async () => {
@@ -334,29 +332,24 @@ describe("KomodoIntegration overview", () => {
       servers: { total: 0, healthy: 0, warning: 0, error: 0, unknown: 0 },
       stacks: { total: 0, healthy: 0, warning: 0, error: 0, unknown: 0 },
       deployments: { total: 0, healthy: 0, warning: 0, error: 0, unknown: 0 },
-      problemCount: 0,
-      problems: [],
     });
   });
 
-  test("retains problems from every resource kind when one kind exceeds the display limit", () => {
-    const serverProblems = Array.from({ length: 21 }, (_, index) => ({
+  test("summarizes every resource kind separately", () => {
+    const servers = Array.from({ length: 21 }, (_, index) => ({
       id: `server-${index}`,
       name: `Server ${index}`,
       state: "NotOk",
       status: "error" as const,
     }));
-    const stackProblems = [{ id: "stack-1", name: "Stack", state: "stopped", status: "warning" as const }];
-    const deploymentProblems = [
-      { id: "deployment-1", name: "Deployment", state: "unknown", status: "unknown" as const },
-    ];
+    const stacks = [{ id: "stack-1", name: "Stack", state: "stopped", status: "warning" as const }];
+    const deployments = [{ id: "deployment-1", name: "Deployment", state: "unknown", status: "unknown" as const }];
 
-    const overview = createKomodoOverview(serverProblems, stackProblems, deploymentProblems);
+    const overview = createKomodoOverview(servers, stacks, deployments);
 
-    expect(overview.problemCount).toBe(23);
-    expect(overview.problems).toHaveLength(22);
-    expect(overview.problems.at(-2)?.kind).toBe("stack");
-    expect(overview.problems.at(-1)?.kind).toBe("deployment");
+    expect(overview.servers).toStrictEqual({ total: 21, healthy: 0, warning: 0, error: 21, unknown: 0 });
+    expect(overview.stacks).toStrictEqual({ total: 1, healthy: 0, warning: 1, error: 0, unknown: 0 });
+    expect(overview.deployments).toStrictEqual({ total: 1, healthy: 0, warning: 0, error: 0, unknown: 1 });
   });
 
   test("keeps an unknown future state without crashing", async () => {
