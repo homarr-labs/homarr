@@ -99,6 +99,7 @@ export default function RssFeed({ options, width, height }: WidgetComponentProps
               <Group wrap="nowrap" align="flex-start" gap={isDense ? "xs" : "md"}>
                 {feedEntry.enclosure !== undefined && options.showPosterImage && !isTiny && (
                   <Image
+                    loading="lazy"
                     className={classes.poster}
                     src={feedEntry.enclosure}
                     alt=""
