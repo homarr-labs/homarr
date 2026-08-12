@@ -42,4 +42,17 @@ describe("board layout gutters", () => {
       }).success,
     ).toBe(false);
   });
+
+  test("rejects sidebars on mobile layouts", () => {
+    expect(
+      boardLayoutSchema.safeParse({
+        id: "mobile",
+        name: "Mobile",
+        columnCount: 6,
+        leftGutterColumnCount: 1,
+        breakpoint: 0,
+        role: "mobile",
+      }).success,
+    ).toBe(false);
+  });
 });
