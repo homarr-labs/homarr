@@ -582,7 +582,7 @@ export async function POST(request: Request) {
       ...(configuration.provider === "openrouter" || openRouterServerToolsEnabled
         ? {
             "HTTP-Referer": "https://homarr.dev",
-            "X-Title": "Homarr Assistant",
+            "X-OpenRouter-Title": "Homarr AI Assistant",
             "X-OpenRouter-Metadata": "enabled",
           }
         : {}),

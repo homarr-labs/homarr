@@ -101,6 +101,13 @@ if (unchangedAuthor.name !== "widget-author") {
 const visitorPassword = "WorkshopVisitor123!";
 const visitor = await createUser("widget-visitor@example.invalid", "widget-visitor", visitorPassword);
 const visitorSession = await signIn(visitor.email, visitorPassword);
+const concurrencyPassword = "WorkshopConcurrency123!";
+const concurrencyUser = await createUser(
+  "provider-concurrency@example.invalid",
+  "provider-concurrency",
+  concurrencyPassword,
+);
+const concurrencySession = await signIn(concurrencyUser.email, concurrencyPassword);
 
 const modelList = await request("/api/ai/v1/models");
 if (
@@ -123,6 +130,42 @@ await expectStatus(
   },
   401,
 );
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    headers: { authorization: "Bearer forged-workshop-user-token" },
+    body: JSON.stringify({
+      model: "homarr/model",
+      messages: [{ role: "user", content: "forged identity" }],
+    }),
+  },
+  401,
+);
+
+const inFlightProbe = () =>
+  fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+    method: "POST",
+    headers: { "content-type": "application/json", ...concurrencySession.headers },
+    body: JSON.stringify({
+      model: "homarr/model",
+      messages: [{ role: "user", content: "in-flight probe" }],
+      stream: false,
+    }),
+  });
+const inFlightResponses = await Promise.all([inFlightProbe(), inFlightProbe(), inFlightProbe()]);
+if (
+  inFlightResponses
+    .map((response) => response.status)
+    .toSorted()
+    .join(",") !== "200,200,429"
+) {
+  throw new Error("The per-user in-flight request limit was not enforced");
+}
+const concurrencyUsage = await request("/api/ai/usage", { headers: concurrencySession.headers });
+if (concurrencyUsage.used !== 2) {
+  throw new Error(`Rejected in-flight requests must not consume allowance: ${JSON.stringify(concurrencyUsage)}`);
+}
 
 const initialUsage = await request("/api/ai/usage", { headers: authorSession.headers });
 const initialReset = new Date(initialUsage.resetsAt);
@@ -163,7 +206,24 @@ await expectStatus(
     headers: authorSession.headers,
     body: JSON.stringify({
       model: "homarr/model",
-      messages: [{ role: "user", content: "x".repeat(4 * 256 * 1024 + 1) }],
+      messages: [{ role: "user", content: "x".repeat(256 * 1024 + 1) }],
+    }),
+  },
+  413,
+);
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    headers: authorSession.headers,
+    body: JSON.stringify({
+      model: "homarr/model",
+      messages: [
+        {
+          role: "user",
+          content: [{ type: "image_url", image_url: { url: "https://attacker.example/tracker.png" } }],
+        },
+      ],
     }),
   },
   413,
@@ -210,6 +270,8 @@ if (
   firstChunk.done ||
   !streamText.includes("Hello from ") ||
   !streamText.includes("the Homarr provider") ||
+  streamText.includes("mock/team-selected-model") ||
+  !streamText.includes('"model":"homarr/model"') ||
   dataFrames.length < 3 ||
   dataFrames.at(-1)?.trim() !== "data: [DONE]" ||
   firstChunkAt - streamStartedAt > 5_000
@@ -218,7 +280,13 @@ if (
 }
 const toolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
   method: "POST",
-  headers: { "content-type": "application/json", ...authorSession.headers },
+  headers: {
+    "content-type": "application/json",
+    ...authorSession.headers,
+    "http-referer": "https://attacker.example",
+    "x-openrouter-title": "Attacker",
+    "x-openrouter-metadata": "attacker",
+  },
   body: JSON.stringify({
     model: "homarr/model",
     messages: [
@@ -257,6 +325,40 @@ const toolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
 });
 if (!toolResponse.ok || toolResponse.headers.get("x-homarr-quota-remaining") !== "48") {
   throw new Error("Every upstream inference must consume one Homarr provider request unit");
+}
+const toolCompletion = await toolResponse.json();
+if (
+  toolCompletion.model !== "homarr/model" ||
+  toolCompletion.choices?.[0]?.finish_reason !== "tool_calls" ||
+  toolCompletion.choices?.[0]?.message?.tool_calls?.[0]?.function?.name !== "board_list"
+) {
+  throw new Error(
+    `The public model alias or function tool response was not forwarded: ${JSON.stringify(toolCompletion)}`,
+  );
+}
+
+const streamedToolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+  method: "POST",
+  headers: { "content-type": "application/json", ...concurrencySession.headers },
+  body: JSON.stringify({
+    model: "homarr/model",
+    messages: [{ role: "user", content: "inspect my dashboard" }],
+    tools: [{ type: "function", function: { name: "board_list", parameters: { type: "object" } } }],
+    stream: true,
+  }),
+});
+const streamedToolText = await streamedToolResponse.text();
+if (
+  !streamedToolResponse.ok ||
+  streamedToolText.includes("mock/team-selected-model") ||
+  !streamedToolText.includes('"model":"homarr/model"') ||
+  !streamedToolText.includes('"name":"board_list"') ||
+  !streamedToolText.includes('"arguments":"{"') ||
+  !streamedToolText.includes('"arguments":"}"') ||
+  !streamedToolText.includes('"finish_reason":"tool_calls"') ||
+  !streamedToolText.endsWith("data: [DONE]\n\n")
+) {
+  throw new Error(`Streamed function tool calls were not preserved safely: ${streamedToolText}`);
 }
 
 const afterToolsUsage = await request("/api/ai/usage", { headers: authorSession.headers });
@@ -316,7 +418,7 @@ const resetQuota = (
 await request(`/api/collections/assistant_quotas/records/${resetQuota.id}`, {
   method: "PATCH",
   headers: rootHeaders,
-  body: JSON.stringify({ used: 48 }),
+  body: JSON.stringify({ used: 49 }),
 });
 
 const allowanceProbe = () =>
@@ -329,11 +431,11 @@ const allowanceProbe = () =>
       stream: false,
     }),
   });
-const concurrentAllowanceResponses = await Promise.all([allowanceProbe(), allowanceProbe(), allowanceProbe()]);
+const concurrentAllowanceResponses = await Promise.all([allowanceProbe(), allowanceProbe()]);
 const concurrentStatuses = concurrentAllowanceResponses.map((response) => response.status).toSorted();
 const exhaustedResponse = concurrentAllowanceResponses.find((response) => response.status === 429);
 if (
-  concurrentStatuses.join(",") !== "200,200,429" ||
+  concurrentStatuses.join(",") !== "200,429" ||
   exhaustedResponse?.headers.get("x-homarr-quota-remaining") !== "0" ||
   !exhaustedResponse.headers.get("x-homarr-quota-reset")
 ) {

@@ -164,7 +164,7 @@ const getProviderHeaders = (configuration: AssistantConfiguration) => {
   }
   if (configuration.provider === "openrouter") {
     headers["HTTP-Referer"] ??= "https://homarr.dev";
-    headers["X-Title"] ??= "Homarr Assistant";
+    headers["X-OpenRouter-Title"] ??= "Homarr AI Assistant";
   }
   return { ...headers, ...decryptCustomHeaders(configuration.encryptedHeaders) };
 };

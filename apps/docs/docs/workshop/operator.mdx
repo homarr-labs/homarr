@@ -61,16 +61,32 @@ container after changing these values, without rebuilding it.
 The [Homarr provider](./homarr-provider) proxy is part of the Workshop image. `OPENROUTER_API_KEY` enables the proxy,
 `HOMARR_AI_OPENROUTER_BASE_URL` selects its OpenRouter-compatible upstream, `HOMARR_AI_OPENROUTER_MODEL` selects the
 private upstream model behind the stable `homarr/model` alias, and the two allowance variables provide per-user and
-shared cost ceilings. Lowering either allowance takes effect for existing users. The upstream URL cannot contain
+shared request ceilings. Lowering either allowance takes effect for existing users. The upstream URL cannot contain
 embedded credentials, a query, or a fragment and must use HTTPS. Tests can explicitly opt into an insecure local mock
 with `HOMARR_AI_ALLOW_INSECURE_UPSTREAM=true`; do not use that setting with a real API key.
 
 The proxy overwrites client routing and generation limits. It requires OpenRouter zero-data-retention routing, denies
 data-collecting providers, limits responses to 32,768 completion tokens, and does not retain prompts, responses, or
-per-request telemetry. Keep an OpenRouter account-level credit limit as the final operational backstop.
+per-request telemetry. It accepts only uploaded image data, conservatively bounds text to the advertised context, and
+allows at most two concurrent requests per user and 100 across the service. Keep an OpenRouter account-level credit
+limit as the final monetary backstop because request quotas are not dollar accounting.
 
 Run `pnpm test:workshop` to test authentication, streaming, UTC reset, atomic per-user and global quota enforcement,
-failed-request accounting, input and output controls, privacy routing, absence of request logs, and migration rollback.
+failed-request accounting, identity attribution, server-selected model routing, function tools, input and output
+controls, privacy routing, spoofing resistance, absence of request logs, and migration rollback.
+
+An operator can explicitly smoke-test a deployed Workshop against its real configured upstream with a dedicated,
+low-quota test user:
+
+```sh
+HOMARR_AI_LIVE_SMOKE=1 \
+WORKSHOP_LIVE_TEST_URL=https://workshop.example.com \
+WORKSHOP_LIVE_TEST_TOKEN=<temporary-pocketbase-user-token> \
+pnpm test:workshop-live-provider
+```
+
+This optional check consumes one provider request. The test client needs neither the OpenRouter key nor the private
+upstream model ID. Do not run it in CI or with a normal user's Workshop token.
 
 The Custom Widget AI tests can use this proxy. Set `AI_PROVIDER_BASE_URL` to the `/api/ai/v1` endpoint and
 `AI_PROVIDER_API_KEY` to a temporary Workshop user token. See

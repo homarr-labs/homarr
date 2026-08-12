@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 
 const port = Number(process.env.PORT ?? 18091);
 const expectedModel = process.env.EXPECTED_MODEL ?? "mock/team-selected-model";
+const expectedApiKey = process.env.EXPECTED_API_KEY ?? "workshop-test-openrouter-key";
 
 const json = (response, status, body) => {
   response.writeHead(status, { "content-type": "application/json" });
@@ -17,8 +18,16 @@ const server = createServer(async (request, response) => {
     json(response, 404, { error: { message: "Not found" } });
     return;
   }
-  if (request.headers.authorization !== "Bearer workshop-test-openrouter-key") {
+  if (request.headers.authorization !== `Bearer ${expectedApiKey}`) {
     json(response, 401, { error: { message: "Invalid upstream credentials" } });
+    return;
+  }
+  if (
+    request.headers["http-referer"] !== "https://homarr.dev" ||
+    request.headers["x-openrouter-title"] !== "Homarr AI Assistant" ||
+    request.headers["x-openrouter-metadata"] !== "enabled"
+  ) {
+    json(response, 400, { error: { message: "Homarr upstream attribution headers are missing or spoofed" } });
     return;
   }
 
@@ -72,13 +81,42 @@ const server = createServer(async (request, response) => {
     json(response, 503, { error: { message: "Simulated upstream failure" } });
     return;
   }
+  if (body.messages?.some((message) => message.content === "in-flight probe")) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+
+  const wantsToolCall = body.messages?.some((message) => message.content === "inspect my dashboard");
+  if (wantsToolCall && !body.tools?.some((tool) => tool.type === "function" && tool.function?.name === "board_list")) {
+    json(response, 400, { error: { message: "The authenticated function tool was not forwarded" } });
+    return;
+  }
 
   const completion = {
     id: "gen-workshop-test",
     object: "chat.completion",
     model: body.model,
     choices: [
-      { index: 0, message: { role: "assistant", content: "Hello from the Homarr provider" }, finish_reason: "stop" },
+      wantsToolCall
+        ? {
+            index: 0,
+            message: {
+              role: "assistant",
+              content: null,
+              tool_calls: [
+                {
+                  id: "call-board-list",
+                  type: "function",
+                  function: { name: "board_list", arguments: "{}" },
+                },
+              ],
+            },
+            finish_reason: "tool_calls",
+          }
+        : {
+            index: 0,
+            message: { role: "assistant", content: "Hello from the Homarr provider" },
+            finish_reason: "stop",
+          },
     ],
     usage: { prompt_tokens: 12, completion_tokens: 7, total_tokens: 19, cost: 0.00041 },
   };
@@ -92,6 +130,49 @@ const server = createServer(async (request, response) => {
     "cache-control": "no-cache",
     "x-request-id": "mock-openrouter-request",
   });
+  if (wantsToolCall) {
+    response.write(
+      `data: ${JSON.stringify({
+        id: completion.id,
+        object: "chat.completion.chunk",
+        model: body.model,
+        choices: [
+          {
+            index: 0,
+            delta: {
+              role: "assistant",
+              tool_calls: [
+                {
+                  index: 0,
+                  id: "call-board-list",
+                  type: "function",
+                  function: { name: "board_list", arguments: "{" },
+                },
+              ],
+            },
+            finish_reason: null,
+          },
+        ],
+      })}\n\n`,
+    );
+    response.write(
+      `data: ${JSON.stringify({
+        id: completion.id,
+        object: "chat.completion.chunk",
+        model: body.model,
+        choices: [
+          {
+            index: 0,
+            delta: { tool_calls: [{ index: 0, function: { arguments: "}" } }] },
+            finish_reason: "tool_calls",
+          },
+        ],
+        usage: completion.usage,
+      })}\n\n`,
+    );
+    response.end("data: [DONE]\n\n");
+    return;
+  }
   response.write(
     `data: ${JSON.stringify({
       id: completion.id,

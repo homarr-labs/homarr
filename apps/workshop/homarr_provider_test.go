@@ -139,6 +139,73 @@ func TestValidateProviderInput(t *testing.T) {
 	if err := validateProviderInput(payload); !errors.Is(err, errTooManyImages) {
 		t.Fatalf("expected oversized image input to be rejected, got %v", err)
 	}
+	payload["messages"] = []any{map[string]any{
+		"role": "user",
+		"content": []any{map[string]any{
+			"type":      "image_url",
+			"image_url": map[string]any{"url": "https://attacker.example/expensive-image.png"},
+		}},
+	}}
+	if err := validateProviderInput(payload); !errors.Is(err, errRemoteImage) {
+		t.Fatalf("expected a remote image URL to be rejected, got %v", err)
+	}
+	payload["messages"] = []any{map[string]any{
+		"role": "user",
+		"content": []any{
+			map[string]any{"type": "image_url", "image_url": map[string]any{"url": "data:image/png;base64,YQ=="}},
+			map[string]any{"type": "image_url", "image_url": map[string]any{"url": "data:image/png;base64,YQ=="}},
+			map[string]any{"type": "image_url", "image_url": map[string]any{"url": "data:image/png;base64,YQ=="}},
+			map[string]any{"type": "image_url", "image_url": map[string]any{"url": "data:image/png;base64,YQ=="}},
+			map[string]any{"type": "image_url", "image_url": map[string]any{"url": "data:image/png;base64,YQ=="}},
+		},
+	}}
+	if err := validateProviderInput(payload); err != nil {
+		t.Fatalf("expected five uploaded images to be accepted, got %v", err)
+	}
+	payload["messages"].([]any)[0].(map[string]any)["content"] = append(
+		payload["messages"].([]any)[0].(map[string]any)["content"].([]any),
+		map[string]any{"type": "image_url", "image_url": map[string]any{"url": "data:image/png;base64,YQ=="}},
+	)
+	if err := validateProviderInput(payload); !errors.Is(err, errTooManyImages) {
+		t.Fatalf("expected six uploaded images to be rejected, got %v", err)
+	}
+}
+
+func TestProviderInFlightLimits(t *testing.T) {
+	provider := &homarrProvider{inFlightByUser: make(map[string]int)}
+	if !provider.acquireRequest("one") || !provider.acquireRequest("one") || provider.acquireRequest("one") {
+		t.Fatal("expected the per-user in-flight limit to allow two requests")
+	}
+	provider.releaseRequest("one")
+	provider.releaseRequest("one")
+	for index := range maxGlobalInFlight {
+		if !provider.acquireRequest(string(rune(index + 1))) {
+			t.Fatalf("expected global request %d to be admitted", index)
+		}
+	}
+	if provider.acquireRequest("overflow") {
+		t.Fatal("expected the global in-flight limit to reject overflow")
+	}
+}
+
+func TestCompletionModelAlias(t *testing.T) {
+	body, err := aliasCompletionBody([]byte(`{"id":"one","model":"private/model","choices":[]}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(string(body), "private/model") || !strings.Contains(string(body), `"model":"homarr/model"`) {
+		t.Fatalf("private upstream model leaked in JSON: %s", body)
+	}
+	var stream strings.Builder
+	_, err = copyAliasedSSE(
+		&stream,
+		strings.NewReader("data: {\"id\":\"one\",\"model\":\"private/model\",\"choices\":[]}\n\ndata: [DONE]\n\n"),
+		1024,
+	)
+	if err != nil || strings.Contains(stream.String(), "private/model") ||
+		!strings.Contains(stream.String(), `"model":"homarr/model"`) {
+		t.Fatalf("private upstream model leaked in SSE: %s, %v", stream.String(), err)
+	}
 }
 
 func TestProviderEnvironment(t *testing.T) {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"database/sql"
 	"encoding/json"
@@ -11,6 +12,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 	"unicode"
 
@@ -31,23 +33,32 @@ const (
 	// The Homarr composer permits five 1 MB images, which expand to about 6.7 MB as
 	// base64. Keep the authenticated transport bounded without confusing bytes with
 	// model tokens; validate textual and image content separately below.
-	maxChatRequestBytes    = 12_000_000
-	maxChatTextBytes       = 4 * maxChatInputTokens
+	maxChatRequestBytes = 12_000_000
+	// One UTF-8 byte cannot expand into more than one tokenizer fallback token.
+	// This conservative bound keeps every accepted text payload within 256K tokens
+	// without coupling the public alias to the private upstream tokenizer.
+	maxChatTextBytes       = maxChatInputTokens
 	maxChatImageDataBytes  = 1_400_000
 	maxChatImages          = 5
 	maxChatMessages        = 512
 	maxChatResponseBytes   = 8 << 20
 	maxWebSearchResults    = 5
 	maxWebSearchUses       = 3
+	maxUserInFlight        = 2
+	maxGlobalInFlight      = 100
 	openRouterDefaultURL   = "https://openrouter.ai/api/v1"
+	openRouterReferer      = "https://homarr.dev"
+	openRouterTitle        = "Homarr AI Assistant"
 	providerRequestTimeout = 5 * time.Minute
 )
 
 var (
 	errProviderResponseTooLarge = errors.New("provider response is too large")
+	errInvalidProviderResponse  = errors.New("invalid provider response")
 	errInvalidTools             = errors.New("invalid request tools")
 	errUnsupportedTool          = errors.New("unsupported request tool")
 	errTooManyImages            = errors.New("too many images or image too large")
+	errRemoteImage              = errors.New("remote image not allowed")
 	errInputTooLarge            = errors.New("request exceeds model input limit")
 )
 
@@ -67,6 +78,9 @@ type homarrProvider struct {
 	globalDailyLimit int
 	httpClient       *http.Client
 	now              func() time.Time
+	inFlightMutex    sync.Mutex
+	inFlightByUser   map[string]int
+	globalInFlight   int
 }
 
 type quotaSnapshot struct {
@@ -164,7 +178,8 @@ func newHomarrProviderFromEnv() (*homarrProvider, error) {
 				return http.ErrUseLastResponse
 			},
 		},
-		now: time.Now,
+		now:            time.Now,
+		inFlightByUser: make(map[string]int),
 	}, nil
 }
 
@@ -204,6 +219,10 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	if provider.apiKey == "" {
 		return event.JSON(http.StatusServiceUnavailable, openAIError("The Homarr provider is not configured."))
 	}
+	if !provider.acquireRequest(event.Auth.Id) {
+		return event.JSON(http.StatusTooManyRequests, openAIError("Too many Homarr provider requests are already running."))
+	}
+	defer provider.releaseRequest(event.Auth.Id)
 
 	body, err := io.ReadAll(io.LimitReader(event.Request.Body, maxChatRequestBytes+1))
 	if err != nil || len(body) > maxChatRequestBytes {
@@ -229,6 +248,8 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		message := "The request exceeds the Homarr model input limit."
 		if errors.Is(err, errTooManyImages) {
 			message = "The request contains too many images or an image that is too large."
+		} else if errors.Is(err, errRemoteImage) {
+			message = "Remote image URLs are not supported. Upload the image to Homarr instead."
 		}
 		return event.JSON(http.StatusRequestEntityTooLarge, openAIError(message))
 	}
@@ -267,8 +288,8 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	upstreamRequest.Header.Set("Authorization", "Bearer "+provider.apiKey)
 	upstreamRequest.Header.Set("Content-Type", "application/json")
 	upstreamRequest.Header.Set("Accept", "text/event-stream, application/json")
-	upstreamRequest.Header.Set("HTTP-Referer", "https://homarr.dev")
-	upstreamRequest.Header.Set("X-Title", "Homarr Provider")
+	upstreamRequest.Header.Set("HTTP-Referer", openRouterReferer)
+	upstreamRequest.Header.Set("X-OpenRouter-Title", openRouterTitle)
 	upstreamRequest.Header.Set("X-OpenRouter-Metadata", "enabled")
 
 	upstreamResponse, err := provider.httpClient.Do(upstreamRequest)
@@ -297,7 +318,7 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	if requestBody.Stream {
 		event.Response.Header().Set("Content-Type", contentType)
 		event.Response.WriteHeader(upstreamResponse.StatusCode)
-		_, _ = copyBounded(flushingWriter{event.Response}, upstreamResponse.Body, maxChatResponseBytes)
+		_, _ = copyAliasedSSE(flushingWriter{event.Response}, upstreamResponse.Body, maxChatResponseBytes)
 		return nil
 	}
 
@@ -305,7 +326,32 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 	if readErr != nil {
 		return event.JSON(http.StatusBadGateway, openAIError("The model endpoint returned an invalid response."))
 	}
+	responseBody, readErr = aliasCompletionBody(responseBody)
+	if readErr != nil {
+		return event.JSON(http.StatusBadGateway, openAIError("The model endpoint returned an invalid response."))
+	}
 	return event.Blob(upstreamResponse.StatusCode, contentType, responseBody)
+}
+
+func (provider *homarrProvider) acquireRequest(userID string) bool {
+	provider.inFlightMutex.Lock()
+	defer provider.inFlightMutex.Unlock()
+	if provider.globalInFlight >= maxGlobalInFlight || provider.inFlightByUser[userID] >= maxUserInFlight {
+		return false
+	}
+	provider.globalInFlight++
+	provider.inFlightByUser[userID]++
+	return true
+}
+
+func (provider *homarrProvider) releaseRequest(userID string) {
+	provider.inFlightMutex.Lock()
+	defer provider.inFlightMutex.Unlock()
+	provider.globalInFlight--
+	provider.inFlightByUser[userID]--
+	if provider.inFlightByUser[userID] == 0 {
+		delete(provider.inFlightByUser, userID)
+	}
 }
 
 func safeUpstreamStatus(status int) int {
@@ -397,7 +443,21 @@ func validateProviderInput(payload map[string]any) error {
 				}
 			}
 		case map[string]any:
+			if typed["type"] == "image_url" {
+				image, ok := typed["image_url"].(map[string]any)
+				imageURL, urlOK := image["url"].(string)
+				if !ok || !urlOK || !strings.HasPrefix(imageURL, "data:image/") {
+					return errRemoteImage
+				}
+				imageCount++
+				if imageCount > maxChatImages || len(imageURL) > maxChatImageDataBytes {
+					return errTooManyImages
+				}
+			}
 			for key, item := range typed {
+				if typed["type"] == "image_url" && key == "image_url" {
+					continue
+				}
 				textBytes += len(key)
 				if textBytes > maxChatTextBytes {
 					return errInputTooLarge
@@ -410,6 +470,54 @@ func validateProviderInput(payload map[string]any) error {
 		return nil
 	}
 	return walk(payload)
+}
+
+func aliasCompletionBody(body []byte) ([]byte, error) {
+	var payload map[string]any
+	if err := json.Unmarshal(body, &payload); err != nil {
+		return nil, errInvalidProviderResponse
+	}
+	payload["model"] = homarrProviderModelID
+	aliased, err := json.Marshal(payload)
+	if err != nil {
+		return nil, errInvalidProviderResponse
+	}
+	return aliased, nil
+}
+
+func copyAliasedSSE(writer io.Writer, reader io.Reader, limit int64) (int64, error) {
+	buffered := bufio.NewReader(io.LimitReader(reader, limit+1))
+	var written int64
+	var read int64
+	for {
+		line, err := buffered.ReadString('\n')
+		read += int64(len(line))
+		if read > limit {
+			return written, errProviderResponseTooLarge
+		}
+		if strings.HasPrefix(line, "data: ") && strings.TrimSpace(strings.TrimPrefix(line, "data: ")) != "[DONE]" {
+			payload := strings.TrimSpace(strings.TrimPrefix(line, "data: "))
+			aliased, aliasErr := aliasCompletionBody([]byte(payload))
+			if aliasErr != nil {
+				return written, aliasErr
+			}
+			line = "data: " + string(aliased) + "\n"
+		}
+		if written+int64(len(line)) > limit {
+			return written, errProviderResponseTooLarge
+		}
+		count, writeErr := io.WriteString(writer, line)
+		written += int64(count)
+		if writeErr != nil {
+			return written, writeErr
+		}
+		if errors.Is(err, io.EOF) {
+			return written, nil
+		}
+		if err != nil {
+			return written, err
+		}
+	}
 }
 
 func copyBounded(writer io.Writer, reader io.Reader, limit int64) (int64, error) {
