@@ -23,10 +23,12 @@ Meteo response.
 
 import forecastWeather from "./img/forecast.png";
 import currentWeather from "./img/current.png";
+import advancedWeather from "./img/advanced-view.png";
 
 <div className="flex flex-col gap-1">
-  <img src={forecastWeather} alt="weather forecast-5-days" width={128 * 4.5} />
-  <img src={currentWeather} alt="weather current" width={128 * 3} />
+  <img src={forecastWeather} alt="Weather compact forecast" width={238} height={112} />
+  <img src={currentWeather} alt="Weather compact current conditions" width={198} height={93} />
+  <img src={advancedWeather} alt="Weather advanced view with seven-day forecast details" width={800} height={484} />
 </div>
 
 <WidgetInteractionGuide />
