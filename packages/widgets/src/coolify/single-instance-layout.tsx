@@ -50,8 +50,6 @@ export function SingleInstanceLayout({
 
   const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
   const displayUrl = baseUrl ? baseUrl.replace(/^https?:\/\//, "") : "—";
-  const relativeTime = useTimeAgo(instance.updatedAt);
-
   return (
     <ScrollArea h="100%">
       <Stack gap={0}>
@@ -87,6 +85,7 @@ export function SingleInstanceLayout({
           variant="contained"
           chevronPosition="right"
           multiple
+          keepMounted={false}
           value={isAdvanced ? advancedOpenSections : openSections}
           onChange={isAdvanced ? setAdvancedOpenSections : setOpenSections}
         >
@@ -115,23 +114,31 @@ export function SingleInstanceLayout({
         </Accordion>
 
         {!hideFooter && (
-          <Group
-            justify="space-between"
-            p={4}
-            style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
-          >
-            <Group gap={2}>
-              <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
-              <Text size="xs" c="dimmed">
-                v{instance.instanceInfo.version}
-              </Text>
-            </Group>
-            <Text size="xs" c="dimmed">
-              {t("footer.updated", { when: relativeTime })}
-            </Text>
-          </Group>
+          <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />
         )}
       </Stack>
     </ScrollArea>
   );
 }
+
+const InstanceFooter = ({ version, updatedAt }: { version: string; updatedAt: Date }) => {
+  const t = useScopedI18n("widget.coolify");
+  const relativeTime = useTimeAgo(updatedAt, 60_000);
+  return (
+    <Group
+      justify="space-between"
+      p={4}
+      style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
+    >
+      <Group gap={2}>
+        <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
+        <Text size="xs" c="dimmed">
+          v{version}
+        </Text>
+      </Group>
+      <Text size="xs" c="dimmed">
+        {t("footer.updated", { when: relativeTime })}
+      </Text>
+    </Group>
+  );
+};

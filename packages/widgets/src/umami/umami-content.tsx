@@ -63,7 +63,7 @@ export function UmamiContent({
     { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].toSorted() },
     { enabled: viewMode === "events" && eventNames.length > 0, ...umamiQueryOptions },
   );
-  const multiEventSeries = multiEventQuery.data;
+  const multiEventSeries = getUsableWidgetQueryData(multiEventQuery);
 
   const multiEventTotal = multiEventSeries
     ? multiEventSeries.flatMap(({ dataPoints }) => dataPoints).reduce((sum, { y }) => sum + y, 0)
@@ -106,10 +106,9 @@ export function UmamiContent({
   const selectedView =
     viewMode === "events" ? (
       <UmamiEventsContent
-        integrationIds={integrationIds}
-        websiteId={websiteId}
+        series={multiEventSeries ?? []}
         timeFrame={timeFrame}
-        eventNames={eventNames}
+        hasSelectedEvents={eventNames.length > 0}
         chartType={chartType}
         showXAxis={showXAxis}
       />

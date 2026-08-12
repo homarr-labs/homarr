@@ -34,8 +34,6 @@ import {
   IconTriangleFilled,
   IconZoomScan,
 } from "@tabler/icons-react";
-import { escapeForRegEx } from "@tiptap/react";
-
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { createId } from "@homarr/common";
@@ -62,6 +60,8 @@ interface FormValidation {
   hasErrors: boolean;
   errors: FormErrors;
 }
+
+const escapeForRegEx = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 export const WidgetMultiReleasesRepositoriesInput = ({
   property,
