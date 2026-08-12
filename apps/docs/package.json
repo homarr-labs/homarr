@@ -51,7 +51,6 @@
     "postcss": "^8.5.16",
     "posthog-docusaurus": "^2.0.5",
     "prism-react-renderer": "^2.4.1",
-    "random-word-slugs": "^0.1.7",
     "react": "catalog:",
     "react-day-picker": "catalog:",
     "react-dom": "catalog:",

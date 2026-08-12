@@ -1210,6 +1210,43 @@
   outline-offset: 2px;
 }
 
+.providerQuotaTrigger {
+  display: inline-flex;
+  height: 1.75rem;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.25rem;
+  padding-inline: 0.38rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+}
+
+.providerQuotaTrigger:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.providerQuotaTrigger:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.providerQuotaTrigger[data-level="ok"] {
+  color: light-dark(var(--mantine-color-green-8), var(--mantine-color-green-4));
+}
+
+.providerQuotaTrigger[data-level="warning"] {
+  color: light-dark(var(--mantine-color-yellow-8), var(--mantine-color-yellow-4));
+}
+
+.providerQuotaTrigger[data-level="bad"] {
+  color: light-dark(var(--mantine-color-orange-8), var(--mantine-color-orange-4));
+}
+
+.providerQuotaTrigger[data-level="dead"] {
+  color: light-dark(var(--mantine-color-red-8), var(--mantine-color-red-4));
+}
+
 .conversationContextPopover {
   max-height: min(34rem, calc(100dvh - 1rem));
   overflow: hidden;

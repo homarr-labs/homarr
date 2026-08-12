@@ -102,6 +102,14 @@ export const workshopUserSchema = z.object({
 });
 export type WorkshopUser = z.infer<typeof workshopUserSchema>;
 
+export const workshopAssistantUsageSchema = z.object({
+  limit: z.number().int().nonnegative(),
+  used: z.number().int().nonnegative(),
+  remaining: z.number().int().nonnegative(),
+  resetsAt: z.iso.datetime({ offset: true }),
+});
+export type WorkshopAssistantUsage = z.infer<typeof workshopAssistantUsageSchema>;
+
 const normalizeWorkshopSubmissionRecord = (value: unknown) => {
   if (typeof value !== "object" || value === null || Array.isArray(value)) return value;
   const record = value as Record<string, unknown>;

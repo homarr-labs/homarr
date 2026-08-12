@@ -1,6 +1,19 @@
 name: homarr-workshop
 
 services:
+  assistant-upstream:
+    profiles:
+      - test
+    image: node:24.18.0-alpine
+    command: ["node", "/mock/openrouter-mock.mjs"]
+    environment:
+      PORT: 18091
+      EXPECTED_MODEL: mock/team-selected-model
+    volumes:
+      - ./tests/openrouter-mock.mjs:/mock/openrouter-mock.mjs:ro
+    security_opt:
+      - no-new-privileges:true
+
   workshop:
     build:
       context: ../..
@@ -15,6 +28,12 @@ services:
       WORKSHOP_WEB_URL: ${WORKSHOP_WEB_URL:-http://localhost:3003/workshop}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      HOMARR_AI_DAILY_REQUEST_LIMIT: ${HOMARR_AI_DAILY_REQUEST_LIMIT:-50}
+      HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT: ${HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT:-10000}
+      HOMARR_AI_OPENROUTER_BASE_URL: ${HOMARR_AI_OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      HOMARR_AI_OPENROUTER_MODEL: ${HOMARR_AI_OPENROUTER_MODEL:-~deepseek/deepseek-v4-flash-latest}
+      HOMARR_AI_ALLOW_INSECURE_UPSTREAM: ${HOMARR_AI_ALLOW_INSECURE_UPSTREAM:-false}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       WORKSHOP_PUBLIC_ORIGIN: ${WORKSHOP_PUBLIC_ORIGIN:-http://localhost:3003}
     ports:
       - "127.0.0.1:${PB_EXPOSE_PORT:-8090}:${PB_EXPOSE_PORT:-8090}"
@@ -44,6 +63,12 @@ services:
       WORKSHOP_WEB_URL: ${WORKSHOP_WEB_URL:-http://localhost:3003/workshop}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      HOMARR_AI_DAILY_REQUEST_LIMIT: ${HOMARR_AI_DAILY_REQUEST_LIMIT:-50}
+      HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT: ${HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT:-10000}
+      HOMARR_AI_OPENROUTER_BASE_URL: ${HOMARR_AI_OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      HOMARR_AI_OPENROUTER_MODEL: ${HOMARR_AI_OPENROUTER_MODEL:-~deepseek/deepseek-v4-flash-latest}
+      HOMARR_AI_ALLOW_INSECURE_UPSTREAM: ${HOMARR_AI_ALLOW_INSECURE_UPSTREAM:-false}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       WORKSHOP_PUBLIC_ORIGIN: ${WORKSHOP_PUBLIC_ORIGIN:-http://localhost:3003}
     ports:
       - "127.0.0.1:${DOCS_EXPOSE_PORT:-3003}:${DOCS_EXPOSE_PORT:-3003}"

@@ -37,6 +37,9 @@ Using the `PUID` and `PGID` will require you to set the correct permissions on t
 | `WORKSHOP_API_URL`       | PocketBase API used by Homarr and standalone documentation.                                                                                                                                                                            | HTTP(S) URL                         | `HOMARR_WEBSITE_URL`          |
 | `WORKSHOP_WEB_URL`       | Public Workshop page opened from Homarr.                                                                                                                                                                                               | HTTP(S) URL                         | `HOMARR_WEBSITE_URL/workshop` |
 
+Workshop service operators can find its server-only configuration in the
+[Workshop operator guide](../../workshop/operator#environment-variables).
+
 ## Authentication
 
 See [Single Sign-On](/docs/advanced/single-sign-on) for more informations.
@@ -109,12 +112,9 @@ External redis is currently not supported with Proxmox Community Scripts
 The advanced deployments environment variables should only be used if you know what you are doing.
 :::
 
-| Environment Variable     | Description                                                                                                                                                                                                       |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DB_MIGRATIONS_DISABLED` | Disable db migrations. For example for helm charts.                                                                                                                                                               |
-| `WORKSHOP_PUBLIC_ORIGIN` | Origin used in PocketBase-generated links and email. It must be set explicitly in production and must match the externally reachable Workshop origin.                                                             |
-| `PB_ALLOWED_ORIGINS`     | Browser origins accepted by PocketBase. Use `*` for the central public community so arbitrary self-hosted Homarr instances can use the API and OAuth; private staging may use a comma-separated origin allowlist. |
+| Environment Variable     | Description                                         |
+| ------------------------ | --------------------------------------------------- |
+| `DB_MIGRATIONS_DISABLED` | Disable db migrations. For example for helm charts. |
 
 All public URL variables reject non-HTTP protocols, embedded credentials, query strings, and fragments, and normalize
-trailing slashes when Homarr or Docusaurus starts. The Docusaurus-only `WORKSHOP_URL` name is accepted as a deprecated alias for
-`WORKSHOP_API_URL` for one release. `WORKSHOP_API_URL` takes precedence.
+trailing slashes when Homarr or Docusaurus starts.

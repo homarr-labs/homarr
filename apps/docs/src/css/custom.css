@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Work+Sans:wght@400;500;600;700&display=swap";
 @import "tailwindcss/theme" layer(theme);
 @import "tailwindcss/utilities" layer(utilities);
 
@@ -10,7 +10,7 @@
   --breakpoint-3xl: 1697px;
 
   --font-heading: var(--font-sans);
-  --font-sans: "Inter", sans-serif;
+  --font-sans: "Work Sans", sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -137,7 +137,7 @@
   --sidebar-border: oklch(0.9276 0.0058 264.5313);
   --sidebar-ring: oklch(0.56 0.205 25.6509);
   --destructive-foreground: oklch(0.9851 0 0);
-  --font-sans: "Inter", sans-serif;
+  --font-sans: "Work Sans", sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: "JetBrains Mono", monospace;
   --shadow-color: #000000;
@@ -491,6 +491,10 @@ html[data-theme="dark"] div#__docusaurus div[role="banner"] button svg {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hover-animation {
+    animation: none;
+  }
+
   .submit-step-enter {
     animation: none;
   }
@@ -541,7 +545,7 @@ html[data-theme="dark"] div#__docusaurus div[role="banner"] button svg {
   --sidebar-accent-foreground: oklch(0.6646 0.2222 25.6509);
   --sidebar-border: oklch(0.2739 0.0055 286.0326);
   --sidebar-ring: oklch(0.72 0.16 25.6509);
-  --font-sans: "Inter", sans-serif;
+  --font-sans: "Work Sans", sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: "JetBrains Mono", monospace;
   --shadow-color: #000000;

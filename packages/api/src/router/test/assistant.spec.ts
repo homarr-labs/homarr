@@ -121,6 +121,32 @@ describe("assistantRouter.updateConnection", () => {
       modelId: "example/model",
     });
   });
+
+  test("never stores administrator credentials for the Homarr provider", async () => {
+    const db = await createConfiguredAssistantAsync();
+    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    await caller.updateConnection({
+      provider: "homarr",
+      baseUrl: "https://attacker.example/v1",
+      modelDiscoveryPath: "/attacker-models",
+      apiKey: "must-not-be-stored",
+      customHeaders: { "X-Secret": "must-not-be-stored" },
+      clearApiKey: false,
+      clearCustomHeaders: false,
+    });
+
+    const [configuration] = await db.select().from(assistantConfigurations);
+    expect(configuration).toMatchObject({
+      provider: "homarr",
+      baseUrl: "https://homarr.dev/api/ai/v1",
+      modelDiscoveryPath: "/models",
+      encryptedApiKey: null,
+      encryptedHeaders: null,
+      enabled: false,
+      modelId: null,
+    });
+  });
 });
 
 describe("assistantRouter.updateConfiguration", () => {
@@ -165,6 +191,49 @@ describe("assistantRouter.updateConfiguration", () => {
     const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     await caller.updateConfiguration({ enabled: true, modelId: "example/model", webSearchEnabled: true });
+
+    const [configuration] = await db.select().from(assistantConfigurations);
+    expect(configuration?.webSearchEnabled).toBe(true);
+  });
+
+  test("allows the Homarr OpenRouter proxy to enable web search", async () => {
+    const db = await createConfiguredAssistantAsync();
+    await db
+      .update(assistantConfigurations)
+      .set({
+        provider: "homarr",
+        baseUrl: "https://homarr.dev/api/ai/v1",
+        encryptedApiKey: null,
+        encryptedHeaders: null,
+        modelId: "homarr/model",
+      })
+      .where(eq(assistantConfigurations.id, "default"));
+    const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        Response.json({
+          data: [
+            {
+              id: "homarr/model",
+              name: "Homarr model",
+              supported_parameters: ["tools"],
+              architecture: { output_modalities: ["text"] },
+            },
+          ],
+        }),
+      ),
+    );
+
+    try {
+      await caller.updateConfiguration({
+        enabled: true,
+        modelId: "homarr/model",
+        webSearchEnabled: true,
+      });
+    } finally {
+      vi.unstubAllGlobals();
+    }
 
     const [configuration] = await db.select().from(assistantConfigurations);
     expect(configuration?.webSearchEnabled).toBe(true);

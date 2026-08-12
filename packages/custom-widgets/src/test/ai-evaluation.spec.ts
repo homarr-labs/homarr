@@ -5,13 +5,16 @@ import {
   buildEvaluationPrompt,
   buildJudgePrompt,
   buildRepairPrompt,
+  DEFAULT_AI_PROVIDER_BASE_URL,
   DEFAULT_GENERATOR_MODEL,
   DEFAULT_JUDGE_MODEL,
+  getAiProviderChatCompletionsUrl,
   getDeterministicEvaluationIssues,
   getEvaluationResponseFixtureText,
   getJudgeResponseFormat,
   judgePasses,
   parseJudgeResult,
+  resolveAiEvaluationProviderConfig,
 } from "../../scripts/ai-evaluation";
 import type { CustomWidgetJudgeResult } from "../../scripts/ai-evaluation";
 
@@ -176,6 +179,51 @@ describe("AI authoring evaluation", () => {
     expect(format.type).toBe("json_schema");
     expect(format.json_schema.strict).toBe(true);
     expect(format.json_schema.schema).toMatchObject({ type: "object", additionalProperties: false });
+  });
+
+  it("can run the same evaluation against the Homarr provider endpoint", () => {
+    expect(getAiProviderChatCompletionsUrl("https://homarr.dev/api/ai/v1/")).toBe(
+      "https://homarr.dev/api/ai/v1/chat/completions",
+    );
+    expect(getAiProviderChatCompletionsUrl()).toBe("https://openrouter.ai/api/v1/chat/completions");
+    expect(
+      resolveAiEvaluationProviderConfig({
+        AI_PROVIDER_BASE_URL: "https://homarr.dev/api/ai/v1/",
+        AI_PROVIDER_API_KEY: "workshop-token",
+      }),
+    ).toEqual({
+      apiKey: "workshop-token",
+      baseUrl: "https://homarr.dev/api/ai/v1",
+      generatorModel: "homarr/model",
+      judgeModel: "homarr/model",
+    });
+    expect(
+      resolveAiEvaluationProviderConfig({
+        AI_PROVIDER_BASE_URL: "   ",
+        OPENROUTER_API_KEY: "legacy-key",
+        OPENROUTER_GENERATOR_MODEL: "legacy-generator",
+        OPENROUTER_JUDGE_MODEL: "legacy-judge",
+      }),
+    ).toEqual({
+      apiKey: "legacy-key",
+      baseUrl: DEFAULT_AI_PROVIDER_BASE_URL,
+      generatorModel: "legacy-generator",
+      judgeModel: "legacy-judge",
+    });
+    expect(
+      resolveAiEvaluationProviderConfig({
+        AI_PROVIDER_BASE_URL: "https://homarr.dev/api/ai/v1",
+        AI_PROVIDER_API_KEY: "workshop-token",
+        OPENROUTER_API_KEY: "must-not-leak",
+        OPENROUTER_GENERATOR_MODEL: "must-not-apply",
+        OPENROUTER_JUDGE_MODEL: "must-not-apply",
+      }),
+    ).toEqual({
+      apiKey: "workshop-token",
+      baseUrl: "https://homarr.dev/api/ai/v1",
+      generatorModel: "homarr/model",
+      judgeModel: "homarr/model",
+    });
   });
 
   it("requires exceptional goal, design, practicality, and complexity scores", () => {

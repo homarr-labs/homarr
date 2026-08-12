@@ -29,6 +29,7 @@ import {
 
 import type { createTRPCContext } from "../trpc";
 import { fetchOpenRouterGenerationTelemetryAsync } from "../assistant-generation-telemetry";
+import { env } from "../env";
 import { orderMessagesByParent } from "../assistant-message-order";
 import { verifyAssistantGenerationAccessToken } from "../assistant-generation-access";
 import { createTRPCRouter, isDemoMode, permissionRequiredProcedure, protectedProcedure } from "../trpc";
@@ -129,6 +130,9 @@ const normalizeDiscoveryPath = (value: string | null) => {
   return path;
 };
 
+const getHomarrProviderBaseUrl = () =>
+  `${(env.WORKSHOP_API_URL ?? env.HOMARR_WEBSITE_URL).replace(/\/+$/u, "")}/api/ai/v1`;
+
 const getConfigurationAsync = async (db: Database) => {
   return await db.query.assistantConfigurations.findFirst({
     where: eq(assistantConfigurations.id, configurationId),
@@ -160,7 +164,7 @@ const getProviderHeaders = (configuration: AssistantConfiguration) => {
   }
   if (configuration.provider === "openrouter") {
     headers["HTTP-Referer"] ??= "https://homarr.dev";
-    headers["X-Title"] ??= "Homarr Assistant";
+    headers["X-OpenRouter-Title"] ??= "Homarr AI Assistant";
   }
   return { ...headers, ...decryptCustomHeaders(configuration.encryptedHeaders) };
 };
@@ -231,7 +235,7 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
   const models = (Array.isArray(body) ? body : (body.data ?? body.models ?? [])).slice(0, 1_000);
   return models
     .filter((model) => {
-      if (configuration.provider !== "openrouter") return true;
+      if (configuration.provider !== "openrouter" && configuration.provider !== "homarr") return true;
       const parameters = Array.isArray(model.supported_parameters) ? model.supported_parameters : [];
       const outputModalities = Array.isArray(model.architecture?.output_modalities)
         ? model.architecture.output_modalities
@@ -260,6 +264,7 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
               : null;
       const toolSupport =
         configuration.provider === "openrouter" ||
+        configuration.provider === "homarr" ||
         model.capabilities?.function_calling === true ||
         configuration.provider === "anthropic"
           ? ("confirmed" as const)
@@ -479,7 +484,7 @@ export const assistantRouter = createTRPCRouter({
     const configuration = await getConfigurationAsync(ctx.db);
     if (isDemoMode) {
       return {
-        provider: "homarr",
+        provider: "custom" as const,
         defaultModelId: "homarr-assistant",
         models: [
           {
@@ -546,23 +551,30 @@ export const assistantRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const baseUrl = normalizeBaseUrl(input.baseUrl);
-      const modelDiscoveryPath = normalizeDiscoveryPath(input.modelDiscoveryPath);
+      const baseUrl = input.provider === "homarr" ? getHomarrProviderBaseUrl() : normalizeBaseUrl(input.baseUrl);
+      const modelDiscoveryPath =
+        input.provider === "homarr" ? "/models" : normalizeDiscoveryPath(input.modelDiscoveryPath);
       const existing = await getConfigurationAsync(ctx.db);
       const destinationChanged =
         existing !== undefined && (existing.provider !== input.provider || existing.baseUrl !== baseUrl);
       const connectionChanged =
         existing !== undefined && (destinationChanged || existing.modelDiscoveryPath !== modelDiscoveryPath);
-      const encryptedApiKey = input.apiKey
-        ? encryptSecret(input.apiKey)
-        : input.clearApiKey || destinationChanged
+      const encryptedApiKey =
+        input.provider === "homarr"
           ? null
-          : (existing?.encryptedApiKey ?? null);
-      const encryptedHeaders = input.customHeaders
-        ? encryptSecret(JSON.stringify(input.customHeaders))
-        : input.clearCustomHeaders || destinationChanged
+          : input.apiKey
+            ? encryptSecret(input.apiKey)
+            : input.clearApiKey || destinationChanged
+              ? null
+              : (existing?.encryptedApiKey ?? null);
+      const encryptedHeaders =
+        input.provider === "homarr"
           ? null
-          : (existing?.encryptedHeaders ?? null);
+          : input.customHeaders
+            ? encryptSecret(JSON.stringify(input.customHeaders))
+            : input.clearCustomHeaders || destinationChanged
+              ? null
+              : (existing?.encryptedHeaders ?? null);
 
       if (existing) {
         await ctx.db
