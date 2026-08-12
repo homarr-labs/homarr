@@ -885,9 +885,6 @@ importers:
       prism-react-renderer:
         specifier: ^2.4.1
         version: 2.4.1(react@19.2.7)
-      random-word-slugs:
-        specifier: ^0.1.7
-        version: 0.1.7
       react:
         specifier: 'catalog:'
         version: 19.2.7
@@ -14874,9 +14871,6 @@ packages:
 
   radix3@1.1.2:
     resolution: {integrity: sha512-b484I/7b8rDEdSDKckSSBA8knMpcdsXudlE/LNL639wFoHKwLbEkQFZHWEYwDC0wa0FKUcCY+GAF73Z7wxNVFA==}
-
-  random-word-slugs@0.1.7:
-    resolution: {integrity: sha512-8cyzxOIDeLFvwSPTgCItMXHGT5ZPkjhuFKUTww06Xg1dNMXuGxIKlARvS7upk6JXIm41ZKXmtlKR1iCRWklKmg==}
 
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -30726,8 +30720,6 @@ snapshots:
       - '@vue/composition-api'
 
   radix3@1.1.2: {}
-
-  random-word-slugs@0.1.7: {}
 
   randombytes@2.1.0:
     dependencies:

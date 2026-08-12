@@ -43,7 +43,11 @@ const (
 	providerRequestTimeout = 5 * time.Minute
 )
 
-var errProviderResponseTooLarge = errors.New("provider response is too large")
+var (
+	errProviderResponseTooLarge = errors.New("provider response is too large")
+	errInvalidTools             = errors.New("invalid request tools")
+	errUnsupportedTool          = errors.New("unsupported request tool")
+)
 
 var clientControlledRoutingFields = []string{
 	"models", "provider", "route", "plugins", "transforms", "extra_body", "extra_headers",
@@ -223,7 +227,11 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		return event.JSON(http.StatusRequestEntityTooLarge, openAIError(err.Error()))
 	}
 	if err := sanitizeProviderPayload(payload, provider.modelID); err != nil {
-		return event.JSON(http.StatusBadRequest, openAIError(err.Error()))
+		message := "The request contains an unsupported tool."
+		if errors.Is(err, errInvalidTools) {
+			message = "The request tools are not valid."
+		}
+		return event.JSON(http.StatusBadRequest, openAIError(message))
 	}
 	upstreamBody, err := json.Marshal(payload)
 	if err != nil {
@@ -277,7 +285,7 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		contentType = "application/json"
 	}
 	if upstreamResponse.StatusCode < 200 || upstreamResponse.StatusCode >= 300 {
-		return event.JSON(upstreamResponse.StatusCode, openAIError("The model endpoint rejected the request."))
+		return event.JSON(safeUpstreamStatus(upstreamResponse.StatusCode), openAIError("The model endpoint rejected the request."))
 	}
 
 	if requestBody.Stream {
@@ -292,6 +300,13 @@ func (provider *homarrProvider) chat(event *core.RequestEvent) error {
 		return event.JSON(http.StatusBadGateway, openAIError("The model endpoint returned an invalid response."))
 	}
 	return event.Blob(upstreamResponse.StatusCode, contentType, responseBody)
+}
+
+func safeUpstreamStatus(status int) int {
+	if status == http.StatusUnauthorized || status == http.StatusForbidden {
+		return http.StatusBadGateway
+	}
+	return status
 }
 
 func sanitizeProviderPayload(payload map[string]any, upstreamModelID string) error {
@@ -312,14 +327,14 @@ func sanitizeProviderPayload(payload map[string]any, upstreamModelID string) err
 	if rawTools, exists := payload["tools"]; exists {
 		tools, ok := rawTools.([]any)
 		if !ok {
-			return errors.New("The request tools are not valid.")
+			return errInvalidTools
 		}
 		sanitizedTools := make([]any, 0, len(tools))
 		webSearchAdded := false
 		for _, rawTool := range tools {
 			tool, ok := rawTool.(map[string]any)
 			if !ok {
-				return errors.New("The request contains an unsupported tool.")
+				return errUnsupportedTool
 			}
 			switch tool["type"] {
 			case "function":
@@ -336,7 +351,7 @@ func sanitizeProviderPayload(payload map[string]any, upstreamModelID string) err
 					webSearchAdded = true
 				}
 			default:
-				return errors.New("The request contains an unsupported tool.")
+				return errUnsupportedTool
 			}
 		}
 		payload["tools"] = sanitizedTools
@@ -422,52 +437,66 @@ func (provider *homarrProvider) quota(app core.App, user *core.Record) (quotaSna
 	now := provider.now().UTC()
 	var snapshot quotaSnapshot
 	err := app.RunInTransaction(func(txApp core.App) error {
-		quota, current, err := provider.loadQuota(txApp, user, now)
+		quota, current, quotaChanged, err := provider.loadQuota(txApp, user, now)
 		if err != nil {
 			return err
 		}
-		globalQuota, globalRemaining, err := provider.loadGlobalQuota(txApp, now)
+		globalQuota, globalRemaining, globalQuotaChanged, err := provider.loadGlobalQuota(txApp, now)
 		if err != nil {
 			return err
 		}
 		current.Remaining = min(current.Remaining, globalRemaining)
 		snapshot = current
-		if err := txApp.Save(globalQuota); err != nil {
-			return err
+		if globalQuotaChanged {
+			if err := txApp.Save(globalQuota); err != nil {
+				return err
+			}
 		}
-		return txApp.Save(quota)
+		if quotaChanged {
+			return txApp.Save(quota)
+		}
+		return nil
 	})
 	return snapshot, err
 }
 
-func (provider *homarrProvider) loadGlobalQuota(app core.App, now time.Time) (*core.Record, int, error) {
+func (provider *homarrProvider) loadGlobalQuota(app core.App, now time.Time) (*core.Record, int, bool, error) {
 	quota, err := app.FindFirstRecordByFilter("assistant_global_quota", "key = 'default'")
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, false, err
 	}
+	changed := false
 	if quota.GetString("day") != now.Format(time.DateOnly) {
 		quota.Set("day", now.Format(time.DateOnly))
 		quota.Set("used", 0)
+		changed = true
 	}
-	return quota, max(0, provider.globalDailyLimit-quota.GetInt("used")), nil
+	return quota, max(0, provider.globalDailyLimit-quota.GetInt("used")), changed, nil
 }
 
-func (provider *homarrProvider) loadQuota(app core.App, user *core.Record, now time.Time) (*core.Record, quotaSnapshot, error) {
+func (provider *homarrProvider) loadQuota(
+	app core.App,
+	user *core.Record,
+	now time.Time,
+) (*core.Record, quotaSnapshot, bool, error) {
 	quota, err := app.FindFirstRecordByFilter("assistant_quotas", "user = {:user}", dbx.Params{"user": user.Id})
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return nil, quotaSnapshot{}, err
+		return nil, quotaSnapshot{}, false, err
 	}
+	changed := false
 	if quota == nil {
 		collection, err := app.FindCollectionByNameOrId("assistant_quotas")
 		if err != nil {
-			return nil, quotaSnapshot{}, err
+			return nil, quotaSnapshot{}, false, err
 		}
 		quota = core.NewRecord(collection)
 		quota.Set("user", user.Id)
+		changed = true
 	}
 	if quota.GetString("day") != now.Format(time.DateOnly) {
 		quota.Set("day", now.Format(time.DateOnly))
 		quota.Set("used", 0)
+		changed = true
 	}
 	limit := provider.dailyLimit
 	used := quota.GetInt("used")
@@ -476,7 +505,7 @@ func (provider *homarrProvider) loadQuota(app core.App, user *core.Record, now t
 		Used:      used,
 		Remaining: max(0, limit-used),
 		ResetsAt:  time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, time.UTC),
-	}, nil
+	}, changed, nil
 }
 
 func (provider *homarrProvider) startRequest(
@@ -486,11 +515,11 @@ func (provider *homarrProvider) startRequest(
 	var snapshot quotaSnapshot
 	err := app.RunInTransaction(func(txApp core.App) error {
 		now := provider.now().UTC()
-		quota, current, err := provider.loadQuota(txApp, user, now)
+		quota, current, _, err := provider.loadQuota(txApp, user, now)
 		if err != nil {
 			return err
 		}
-		globalQuota, globalRemaining, err := provider.loadGlobalQuota(txApp, now)
+		globalQuota, globalRemaining, _, err := provider.loadGlobalQuota(txApp, now)
 		if err != nil {
 			return err
 		}

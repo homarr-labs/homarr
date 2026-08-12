@@ -1,3 +1,4 @@
+import { translate } from "@docusaurus/Translate";
 import { IconBrandDocker, IconCpu, IconDeviceDesktopAnalytics } from "@tabler/icons-react";
 
 import styles from "../../../../pages/index.module.css";
@@ -30,18 +31,31 @@ export const HeroCards = () => {
   );
 };
 
+const heroLabels = {
+  systemResources: translate({ id: "homepage.preview.systemResources", message: "System resources" }),
+  online: translate({ id: "homepage.preview.online", message: "Online" }),
+  cpu: translate({ id: "homepage.preview.cpu", message: "CPU" }),
+  memory: translate({ id: "homepage.preview.memory", message: "Memory" }),
+  disk: translate({ id: "homepage.preview.disk", message: "Disk" }),
+  docker: translate({ id: "homepage.preview.docker", message: "Docker" }),
+  dockerSummary: translate({ id: "homepage.preview.dockerSummary", message: "2 running · 1 failed" }),
+  healthy: translate({ id: "homepage.preview.healthy", message: "Healthy" }),
+  running: translate({ id: "homepage.preview.running", message: "Running" }),
+  exited: translate({ id: "homepage.preview.exited", message: "Exited" }),
+};
+
 const SystemResourcesWidget = () => (
   <WidgetCard width={2} className={styles.resourcesWidget}>
     <div className={styles.widgetHeading}>
       <span className={styles.widgetTitle}>
         <IconDeviceDesktopAnalytics size={17} aria-hidden="true" />
-        System resources
+        {heroLabels.systemResources}
       </span>
-      <span className={styles.onlineStatus}>Online</span>
+      <span className={styles.onlineStatus}>{heroLabels.online}</span>
     </div>
-    <ResourceMeter icon={<IconCpu size={15} aria-hidden="true" />} label="CPU" value={34} />
-    <ResourceMeter label="Memory" value={62} />
-    <ResourceMeter label="Disk" value={98} />
+    <ResourceMeter icon={<IconCpu size={15} aria-hidden="true" />} label={heroLabels.cpu} value={34} />
+    <ResourceMeter label={heroLabels.memory} value={62} />
+    <ResourceMeter label={heroLabels.disk} value={98} />
   </WidgetCard>
 );
 
@@ -63,23 +77,20 @@ const DockerWidget = () => (
     <div className={styles.widgetHeading}>
       <span className={styles.widgetTitle}>
         <IconBrandDocker size={18} aria-hidden="true" />
-        Docker
+        {heroLabels.docker}
       </span>
-      <span className={styles.dockerCount}>2 running · 1 failed</span>
+      <span className={styles.dockerCount}>{heroLabels.dockerSummary}</span>
     </div>
     <div className={styles.containerList}>
       {[
-        ["immich", "Healthy"],
-        ["jellyfin", "Running"],
-        ["paperless", "Exited"],
-      ].map(([name, status]) => (
-        <div className={`${styles.containerRow} ${status === "Exited" ? styles.containerRowFailed : ""}`} key={name}>
+        { name: "immich", status: heroLabels.healthy, failed: false },
+        { name: "jellyfin", status: heroLabels.running, failed: false },
+        { name: "paperless", status: heroLabels.exited, failed: true },
+      ].map(({ name, status, failed }) => (
+        <div className={`${styles.containerRow} ${failed ? styles.containerRowFailed : ""}`} key={name}>
           <span className={styles.containerName}>{name}</span>
           <span className={styles.containerStatus}>
-            <span
-              className={`${styles.statusDot} ${status === "Exited" ? styles.statusDotFailed : ""}`}
-              aria-hidden="true"
-            />
+            <span className={`${styles.statusDot} ${failed ? styles.statusDotFailed : ""}`} aria-hidden="true" />
             {status}
           </span>
         </div>

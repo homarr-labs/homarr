@@ -1,4 +1,5 @@
 import Link from "@docusaurus/Link";
+import { translate } from "@docusaurus/Translate";
 import { IconDownload, IconExternalLink } from "@tabler/icons-react";
 import clsx from "clsx";
 import styles from "../../../../pages/index.module.css";
@@ -57,7 +58,10 @@ export default function HomeHero() {
             </Link>
           </div>
         </div>
-        <section className={clsx(styles.heroPreview, "hover-animation")} aria-label="Example Homarr dashboard">
+        <section
+          className={clsx(styles.heroPreview, "hover-animation")}
+          aria-label={translate({ id: "homepage.preview.label", message: "Example Homarr dashboard" })}
+        >
           <HeroCards />
         </section>
       </div>

@@ -100,12 +100,23 @@ func TestSanitizeProviderPayloadRejectsUnsupportedServerTools(t *testing.T) {
 	}
 }
 
+func TestSafeUpstreamStatus(t *testing.T) {
+	for _, status := range []int{401, 403} {
+		if actual := safeUpstreamStatus(status); actual != 502 {
+			t.Fatalf("expected upstream %d to become 502, got %d", status, actual)
+		}
+	}
+	if actual := safeUpstreamStatus(429); actual != 429 {
+		t.Fatalf("expected upstream 429 to be preserved, got %d", actual)
+	}
+}
+
 func TestValidateProviderInput(t *testing.T) {
 	payload := map[string]any{
 		"messages": []any{map[string]any{
 			"role": "user",
 			"content": []any{map[string]any{
-				"type": "image_url",
+				"type":      "image_url",
 				"image_url": map[string]any{"url": "data:image/png;base64," + strings.Repeat("a", 1_300_000)},
 			}},
 		}},

@@ -2,6 +2,8 @@ import { mkdir } from "node:fs/promises";
 import path from "node:path";
 
 import { chromium, expect } from "@playwright/test";
+import type { Browser } from "@playwright/test";
+import type { StartedTestContainer } from "testcontainers";
 import { describe, test } from "vitest";
 
 import * as sqliteSchema from "../packages/db/schema/sqlite";
@@ -33,20 +35,23 @@ describe.skipIf(process.env.UPDATE_DOCS_SCREENSHOTS !== "true")("Assistant docum
     const outputDirectory = path.resolve("apps/docs/static/img/assistant");
     await mkdir(outputDirectory, { recursive: true });
 
-    const homarrContainer = await createHomarrContainer({
-      environment: { AUTH_PROVIDERS: "credentials" },
-      mounts: { "/appdata": localMountPath },
-    }).start();
-    const baseUrl = `http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`;
-    const browser = await chromium.launch();
-    const context = await browser.newContext({
-      colorScheme: "dark",
-      deviceScaleFactor: 1,
-      viewport: { width: 1440, height: 1000 },
-    });
-    const page = await context.newPage();
+    let homarrContainer: StartedTestContainer | undefined;
+    let browser: Browser | undefined;
 
     try {
+      homarrContainer = await createHomarrContainer({
+        environment: { AUTH_PROVIDERS: "credentials" },
+        mounts: { "/appdata": localMountPath },
+      }).start();
+      const baseUrl = `http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`;
+      browser = await chromium.launch();
+      const context = await browser.newContext({
+        colorScheme: "dark",
+        deviceScaleFactor: 1,
+        viewport: { width: 1440, height: 1000 },
+      });
+      const page = await context.newPage();
+
       await page.goto(`${baseUrl}/auth/login`);
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
@@ -88,8 +93,7 @@ describe.skipIf(process.env.UPDATE_DOCS_SCREENSHOTS !== "true")("Assistant docum
       await expect(page.getByRole("button", { name: "Refresh models" })).toBeVisible({ timeout: 15_000 });
       await expect(page.getByText("Homarr model")).toBeVisible();
     } finally {
-      await browser.close();
-      await homarrContainer.stop();
+      await Promise.allSettled([browser?.close(), homarrContainer?.stop()]);
     }
   }, 120_000);
 });

@@ -50,7 +50,8 @@ Homarr includes presets for OpenRouter, OpenAI, Claude, Gemini, xAI, Groq, Mistr
 LM Studio. Use **Custom endpoint** for another OpenAI-compatible Chat Completions service.
 
 The [Homarr provider](../workshop/homarr-provider) does not require an administrator API key. Each user signs in to the
-Community Workshop and receives a separate daily allowance.
+Community Workshop and receives a separate daily allowance. A shared Workshop daily quota also applies, so requests
+can be rejected after that shared quota is exhausted.
 
 :::info Local model servers
 
@@ -78,5 +79,7 @@ and delete conversations.
 - **A model stops during a tool call:** use a model that supports streaming and structured tool calls.
 - **A local endpoint cannot be reached:** check container networking and the endpoint's listen address.
 
-Homarr exposes the same tool set to external clients through the [MCP server](./mcp). Custom Widget authors can find
-the full workflow in [Agent authoring](./custom-widgets/agent-authoring).
+Homarr exposes its MCP-enabled procedures to external clients through the [MCP server](./mcp). MCP omits
+`customWidget_*` tools for non-admin API keys, while the built-in assistant adds browser actions and optional
+OpenRouter web search. Custom Widget authors can find the full workflow in
+[Agent authoring](./custom-widgets/agent-authoring).

@@ -77,7 +77,7 @@ section {
   flex: none;
   min-width: 0;
   border-radius: 0.75rem;
-  border: 1px solid color-mix(in srgb, currentColor 12%, transparent) !important;
+  border: 1px solid color-mix(in srgb, currentcolor 12%, transparent) !important;
   color: inherit;
   font: inherit;
   background: color-mix(in srgb, var(--ifm-navbar-background-color) 76%, transparent) !important;
@@ -154,7 +154,7 @@ section {
   height: 0.375rem;
   border: 0;
   border-radius: 999px;
-  background: color-mix(in srgb, currentColor 16%, transparent);
+  background: color-mix(in srgb, currentcolor 16%, transparent);
 }
 
 .resourceTrack::-webkit-progress-bar {
@@ -181,7 +181,7 @@ section {
   height: 0.5rem;
   border: 0;
   border-radius: 999px;
-  background: color-mix(in srgb, currentColor 18%, transparent);
+  background: color-mix(in srgb, currentcolor 18%, transparent);
 }
 
 .downloadProgress::-webkit-progress-bar {
@@ -215,7 +215,7 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  color: color-mix(in srgb, currentColor 82%, transparent);
+  color: color-mix(in srgb, currentcolor 82%, transparent);
 }
 
 .statusDot {
