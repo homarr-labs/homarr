@@ -83,13 +83,21 @@ const ServerName = ({ server }: { server: KomodoServerOverviewItem }) => {
   );
 };
 
-const LoadAverage = ({ server, coresLabel }: { server: KomodoServerOverviewItem; coresLabel: string }) => {
+const LoadAverage = ({
+  server,
+  coresLabel,
+  compact = false,
+}: {
+  server: KomodoServerOverviewItem;
+  coresLabel: string;
+  compact?: boolean;
+}) => {
   const load = server.stats?.loadAverage;
   if (!load) return <Text size="xs">—</Text>;
 
   return (
-    <Stack gap={1}>
-      <Group gap={8} wrap="nowrap">
+    <Stack gap={1} align={compact ? "flex-end" : "stretch"}>
+      <Group gap={compact ? 6 : 8} wrap={compact ? "wrap" : "nowrap"} justify={compact ? "flex-end" : "flex-start"}>
         <Text size="xs" style={{ whiteSpace: "nowrap" }}>
           <Text span c="dimmed" inherit>
             1m&nbsp;
@@ -240,7 +248,7 @@ export const KomodoServerTable = ({ integrationId, options, width }: KomodoServe
                   ) : null}
                   {options.showLoadAverage ? (
                     <CardMetric icon={<IconActivity size={14} />} label={t("column.loadAverage")}>
-                      <LoadAverage server={server} coresLabel={t("cores")} />
+                      <LoadAverage server={server} coresLabel={t("cores")} compact />
                     </CardMetric>
                   ) : null}
                   {options.showNetwork ? (
