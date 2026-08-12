@@ -130,8 +130,10 @@ const normalizeDiscoveryPath = (value: string | null) => {
   return path;
 };
 
-const getHomarrProviderBaseUrl = () =>
-  `${(env.WORKSHOP_API_URL ?? env.HOMARR_WEBSITE_URL).replace(/\/+$/u, "")}/api/ai/v1`;
+const getHomarrProviderBaseUrl = () => {
+  const baseUrl = env.WORKSHOP_API_URL ?? env.HOMARR_WEBSITE_URL;
+  return baseUrl ? `${baseUrl.replace(/\/+$/u, "")}/api/ai/v1` : assistantProviderPresets.homarr.baseUrl;
+};
 
 const getConfigurationAsync = async (db: Database) => {
   return await db.query.assistantConfigurations.findFirst({
