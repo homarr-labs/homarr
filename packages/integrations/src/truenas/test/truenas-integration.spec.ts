@@ -148,6 +148,14 @@ const happyResponder = (method: string) => {
       ];
     case "pool.query":
       return [{ name: "tank", status: "ONLINE", healthy: true, free: 500, size: 1000, allocated: 500 }];
+    case "pool.dataset.query":
+      return [
+        {
+          id: "tank",
+          used: { parsed: 200 },
+          available: { parsed: 300 },
+        },
+      ];
     case "interface.query":
       return [{ id: "eth0", name: "eth0" }];
     case "reporting.netdata_get_data":
@@ -204,8 +212,8 @@ describe("TrueNasIntegration", () => {
       loadAverage: null,
       gpu: [],
       network: { up: 20_000, down: 10_000 },
-      // `available` is the free space left on the pool (free = 500), not its total size.
-      fileSystem: [{ deviceName: "tank", available: "500", used: "500", percentage: 50 }],
+      // `available` and `used` come from the root dataset, not the physical pool.
+      fileSystem: [{ deviceName: "tank", available: "300", used: "200", percentage: 40 }],
       smart: [{ deviceName: "tank", healthy: true, overallStatus: "ONLINE", temperature: null }],
     });
   });
