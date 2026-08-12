@@ -131,11 +131,12 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
   const isInitialLoading = queryResults.some(isInitialWidgetQueryPending);
 
   const repositories = useMemo(() => {
+    const resultById = new Map(results.flat().map((result) => [result.id, result]));
     const formattedResults = normalizedRepositories
       .map((repository) => {
         if (!repository.provider) return { ...repository, error: { code: "noProviderSelected" } };
 
-        const repositoryResult = results.flat().find(({ id }) => id === repository.id);
+        const repositoryResult = resultById.get(repository.id);
         if (!repositoryResult) return { ...repository, error: { code: "noProviderResponse" } };
         if (!repositoryResult.success) return { ...repository, error: repositoryResult.error };
 

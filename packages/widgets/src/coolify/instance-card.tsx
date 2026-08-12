@@ -23,7 +23,6 @@ interface InstanceCardProps {
 }
 
 export function InstanceCard({ instance, options, isTiny, widgetKey, hideFooter }: InstanceCardProps) {
-  const t = useScopedI18n("widget.coolify");
   const tCommon = useScopedI18n("common");
   const cardKey = `${widgetKey}-${instance.integrationId}`;
   const [showIp, setShowIp] = useLocalStorage({
@@ -41,8 +40,6 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, hideFooter 
   );
 
   const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
-  const relativeTime = useTimeAgo(instance.updatedAt);
-
   const onlineServers = instance.instanceInfo.servers.filter((s) => s.is_reachable !== false).length;
   const runningApps = instance.instanceInfo.applications.filter(
     (a) => parseStatus(a.status ?? "") === "running",
@@ -125,7 +122,14 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, hideFooter 
         </Group>
       </Group>
 
-      <Accordion variant="filled" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
+      <Accordion
+        variant="filled"
+        chevronPosition="right"
+        multiple
+        keepMounted={false}
+        value={openSections}
+        onChange={setOpenSections}
+      >
         {options.showServers && (
           <ServersSection
             servers={instance.instanceInfo.servers}
@@ -145,19 +149,27 @@ export function InstanceCard({ instance, options, isTiny, widgetKey, hideFooter 
       </Accordion>
 
       {!hideFooter && (
-        <Group
-          justify="space-between"
-          p={4}
-          style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
-        >
-          <Text size="10px" c="dimmed">
-            v{instance.instanceInfo.version}
-          </Text>
-          <Text size="10px" c="dimmed">
-            {t("footer.updated", { when: relativeTime })}
-          </Text>
-        </Group>
+        <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />
       )}
     </Card>
   );
 }
+
+const InstanceFooter = ({ version, updatedAt }: { version: string; updatedAt: Date }) => {
+  const t = useScopedI18n("widget.coolify");
+  const relativeTime = useTimeAgo(updatedAt, 60_000);
+  return (
+    <Group
+      justify="space-between"
+      p={4}
+      style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
+    >
+      <Text size="10px" c="dimmed">
+        v{version}
+      </Text>
+      <Text size="10px" c="dimmed">
+        {t("footer.updated", { when: relativeTime })}
+      </Text>
+    </Group>
+  );
+};

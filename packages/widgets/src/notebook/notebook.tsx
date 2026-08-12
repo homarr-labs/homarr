@@ -865,17 +865,29 @@ function TaskListToggle() {
   );
 }
 
-function ListIndentIncrease() {
+function useActiveListItemType() {
   const { editor } = useRichTextEditorContext();
   const [itemType, setItemType] = useState("listItem");
+
+  useEffect(() => {
+    if (!editor) return;
+    const updateItemType = () => setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
+    updateItemType();
+    editor.on("selectionUpdate", updateItemType);
+    return () => {
+      editor.off("selectionUpdate", updateItemType);
+    };
+  }, [editor]);
+
+  return { editor, itemType };
+}
+
+function ListIndentIncrease() {
+  const { editor, itemType } = useActiveListItemType();
   const tControls = useScopedI18n("widget.notebook.controls");
   const handleIncreaseIndent = useCallback(() => {
     editor?.chain().focus().sinkListItem(itemType).run();
   }, [editor, itemType]);
-
-  editor?.on("selectionUpdate", ({ editor }) => {
-    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
-  });
 
   return (
     <RichTextEditor.Control
@@ -889,17 +901,12 @@ function ListIndentIncrease() {
 }
 
 function ListIndentDecrease() {
-  const { editor } = useRichTextEditorContext();
-  const [itemType, setItemType] = useState("listItem");
+  const { editor, itemType } = useActiveListItemType();
   const tControls = useScopedI18n("widget.notebook.controls");
 
   const handleDecreaseIndent = useCallback(() => {
     editor?.chain().focus().liftListItem(itemType).run();
   }, [editor, itemType]);
-
-  editor?.on("selectionUpdate", ({ editor }) => {
-    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
-  });
 
   return (
     <RichTextEditor.Control

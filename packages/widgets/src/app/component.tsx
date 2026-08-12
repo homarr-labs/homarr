@@ -59,17 +59,9 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
   return (
     <Box h="100%" w="100%" pos="relative">
       <AppLink href={href} openInNewTab={options.openInNewTab} enabled={Boolean(href) && !isEditMode}>
-        <Tooltip.Floating
-          label={app.description?.split("\n").map((line, index) => (
-            <Fragment key={index}>
-              {line}
-              <br />
-            </Fragment>
-          ))}
-          position="right-start"
-          multiline
-          disabled={options.descriptionDisplayMode !== "tooltip" || !app.description || isEditMode}
-          styles={{ tooltip: { maxWidth: 300 } }}
+        <AppDescriptionTooltip
+          description={app.description}
+          enabled={options.descriptionDisplayMode === "tooltip" && Boolean(app.description) && !isEditMode}
         >
           <Flex
             p={isTiny ? 4 : "sm"}
@@ -123,7 +115,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
               }}
             />
           </Flex>
-        </Tooltip.Floating>
+        </AppDescriptionTooltip>
         {options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus && app.href ? (
           <Suspense fallback={<PingDot icon={IconMinus} color="gray" tooltip={`${t("common.action.loading")}…`} />}>
             <PingIndicator appId={app.id} />
@@ -144,6 +136,29 @@ interface AppLinkProps {
   openInNewTab: boolean;
   enabled: boolean;
 }
+
+const AppDescriptionTooltip = ({
+  description,
+  enabled,
+  children,
+}: PropsWithChildren<{ description?: string | null; enabled: boolean }>) =>
+  enabled ? (
+    <Tooltip.Floating
+      label={description?.split("\n").map((line, index) => (
+        <Fragment key={index}>
+          {line}
+          <br />
+        </Fragment>
+      ))}
+      position="right-start"
+      multiline
+      styles={{ tooltip: { maxWidth: 300 } }}
+    >
+      {children}
+    </Tooltip.Floating>
+  ) : (
+    children
+  );
 
 const AppLink = ({ href, openInNewTab, enabled, children }: PropsWithChildren<AppLinkProps>) =>
   enabled ? (

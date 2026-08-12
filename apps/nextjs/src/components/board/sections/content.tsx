@@ -39,12 +39,21 @@ interface ItemProps {
 }
 
 export const SectionContentItem = ({ item, integrations }: ItemProps) => {
-  const minWidth = useMinSize(item, "x");
-  const minHeight = useMinSize(item, "y");
+  if (item.type === "section") return <ContainerSectionContentItem item={item} />;
+
   return (
-    <FixedGridItem key={item.id} item={item} minWidth={minWidth} minHeight={minHeight}>
-      {item.type === "item" && item.kind !== "app" && <WidgetHoverOverlay item={item} integrations={integrations} />}
-      {item.type === "item" ? <BoardItemContent item={item} /> : <BoardContainerSection section={item} />}
+    <FixedGridItem item={item}>
+      {item.kind !== "app" && <WidgetHoverOverlay item={item} integrations={integrations} />}
+      <BoardItemContent item={item} />
+    </FixedGridItem>
+  );
+};
+
+const ContainerSectionContentItem = ({ item }: { item: ContainerSectionItem }) => {
+  const { minWidth, minHeight } = useMinSize(item);
+  return (
+    <FixedGridItem item={item} minWidth={minWidth} minHeight={minHeight}>
+      <BoardContainerSection section={item} />
     </FixedGridItem>
   );
 };
@@ -52,14 +61,18 @@ export const SectionContentItem = ({ item, integrations }: ItemProps) => {
 /**
  * Calculates a container's minimum width or height from its direct content.
  */
-export const useMinSize = (item: ContainerSectionItem | SectionItem, direction: "x" | "y") => {
+export const useMinSize = (item: ContainerSectionItem) => {
   const { items, innerSections } = useSectionItems(item.id);
-  if (item.type === "item") return undefined;
-
-  const size = direction === "x" ? "width" : "height";
-  return Math.max(
-    1,
-    ...items.map((childItem) => childItem[`${direction}Offset`] + childItem[size]),
-    ...innerSections.map((childSection) => childSection[`${direction}Offset`] + childSection[size]),
-  );
+  return {
+    minWidth: Math.max(
+      1,
+      ...items.map((child) => child.xOffset + child.width),
+      ...innerSections.map((child) => child.xOffset + child.width),
+    ),
+    minHeight: Math.max(
+      1,
+      ...items.map((child) => child.yOffset + child.height),
+      ...innerSections.map((child) => child.yOffset + child.height),
+    ),
+  };
 };
