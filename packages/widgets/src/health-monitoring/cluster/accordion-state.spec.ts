@@ -1,6 +1,16 @@
 import { describe, expect, test } from "vitest";
 
-import { getClusterAccordionDefault } from "./accordion-state";
+import { clusterSections, getClusterAccordionDefault, getClusterVisibleSections } from "./accordion-state";
+
+describe("getClusterVisibleSections", () => {
+  test("keeps the configured sections in compact mode", () => {
+    expect(getClusterVisibleSections("compact", ["node", "storage"])).toEqual(["node", "storage"]);
+  });
+
+  test("shows every cluster section in advanced mode", () => {
+    expect(getClusterVisibleSections("advanced", ["node"])).toEqual(clusterSections);
+  });
+});
 
 describe("getClusterAccordionDefault", () => {
   test("opens only the first visible section in compact mode", () => {

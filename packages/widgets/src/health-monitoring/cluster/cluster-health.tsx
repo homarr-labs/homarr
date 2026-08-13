@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Accordion, Center, Flex, Group, RingProgress, Stack, Text } from "@mantine/core";
+import { Accordion, Box, Center, Flex, Group, RingProgress, Stack, Text } from "@mantine/core";
 import { IconBrain, IconCpu, IconCube, IconDatabase, IconDeviceLaptop, IconServer } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -8,9 +8,10 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getUsableWidgetQueryData } from "../../common/query-state";
+import { WidgetQueryErrorIndicator } from "../../common/query-state-indicator";
 import type { WidgetComponentProps } from "../../definition";
 import { formatUptime } from "../system-health";
-import { getClusterAccordionDefault } from "./accordion-state";
+import { getClusterAccordionDefault, getClusterVisibleSections } from "./accordion-state";
 import { ResourceAccordionItem } from "./resource-accordion-item";
 import { ResourceTable } from "./resource-table";
 
@@ -39,11 +40,11 @@ export const ClusterHealthMonitoring = ({
   displayMode,
 }: WidgetComponentProps<"healthMonitoring"> & { integrationId: string }) => {
   const t = useI18n();
-  const healthData = getUsableWidgetQueryData(
-    clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery({ integrationId }),
-  );
-  const accordionScope = `${displayMode}:${options.visibleClusterSections.join(",")}`;
-  const accordionDefault = getClusterAccordionDefault(displayMode, options.visibleClusterSections);
+  const healthQuery = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery({ integrationId });
+  const healthData = getUsableWidgetQueryData(healthQuery);
+  const visibleSections = getClusterVisibleSections(displayMode, options.visibleClusterSections);
+  const accordionScope = `${displayMode}:${visibleSections.join(",")}`;
+  const accordionDefault = getClusterAccordionDefault(displayMode, visibleSections);
   const [accordionValues, setAccordionValues] = useState<Record<string, string[]>>({});
   const accordionValue = accordionValues[accordionScope] ?? accordionDefault;
 
@@ -65,10 +66,14 @@ export const ClusterHealthMonitoring = ({
 
   const cpuPercent = maxCpu ? (usedCpu / maxCpu) * 100 : 0;
   const memPercent = maxMem ? (usedMem / maxMem) * 100 : 0;
+  const isAdvanced = displayMode === "advanced";
   const isTiny = displayMode !== "advanced" && width < 256;
   return (
-    <Stack h={displayMode === "advanced" ? "auto" : "100%"} p="xs" gap={isTiny ? "xs" : "md"}>
-      {options.showUptime && !isTiny && (
+    <Stack h={isAdvanced ? "auto" : "100%"} p="xs" gap={isTiny ? "xs" : "md"} pos="relative">
+      <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
+        <WidgetQueryErrorIndicator error={healthQuery.error} label={t("widget.healthMonitoring.name")} />
+      </Box>
+      {(isAdvanced || options.showUptime) && !isTiny && (
         <Group justify="center" wrap="nowrap">
           <Text fz="xs" fw={700} c="dimmed" ta="center">
             {formatUptime(uptime, t)}
@@ -78,15 +83,15 @@ export const ClusterHealthMonitoring = ({
       <SummaryHeader
         cpu={{
           value: cpuPercent,
-          hidden: !options.cpu,
+          hidden: !isAdvanced && !options.cpu,
         }}
         memory={{
           value: memPercent,
-          hidden: !options.memory,
+          hidden: !isAdvanced && !options.memory,
         }}
         isTiny={isTiny}
       />
-      {options.visibleClusterSections.length >= 1 && (
+      {visibleSections.length >= 1 && (
         <Accordion
           variant="contained"
           chevronPosition="right"
@@ -94,7 +99,7 @@ export const ClusterHealthMonitoring = ({
           value={accordionValue}
           onChange={(value) => setAccordionValues((current) => ({ ...current, [accordionScope]: value }))}
         >
-          {options.visibleClusterSections.includes("node") && (
+          {visibleSections.includes("node") && (
             <ResourceAccordionItem
               value="node"
               title={t("widget.healthMonitoring.cluster.resource.node.name")}
@@ -110,7 +115,7 @@ export const ClusterHealthMonitoring = ({
             </ResourceAccordionItem>
           )}
 
-          {options.visibleClusterSections.includes("qemu") && (
+          {visibleSections.includes("qemu") && (
             <ResourceAccordionItem
               value="qemu"
               title={t("widget.healthMonitoring.cluster.resource.qemu.name")}
@@ -126,7 +131,7 @@ export const ClusterHealthMonitoring = ({
             </ResourceAccordionItem>
           )}
 
-          {options.visibleClusterSections.includes("lxc") && (
+          {visibleSections.includes("lxc") && (
             <ResourceAccordionItem
               value="lxc"
               title={t("widget.healthMonitoring.cluster.resource.lxc.name")}
@@ -142,7 +147,7 @@ export const ClusterHealthMonitoring = ({
             </ResourceAccordionItem>
           )}
 
-          {options.visibleClusterSections.includes("storage") && (
+          {visibleSections.includes("storage") && (
             <ResourceAccordionItem
               value="storage"
               title={t("widget.healthMonitoring.cluster.resource.storage.name")}

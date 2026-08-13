@@ -13,6 +13,7 @@ interface NetworkControllerStatusLayoutInput {
 export interface NetworkControllerStatusLayout {
   padding: "xs" | "sm" | "md";
   columns: 1 | 2;
+  sourceColumns: 1 | 2;
   showWifi: boolean;
   showWired: boolean;
   cardPadding: 0 | "md";
@@ -32,6 +33,7 @@ export const getNetworkControllerStatusLayout = ({
   return {
     padding: isAdvanced ? "md" : height < 120 ? "xs" : "sm",
     columns: isAdvanced && width >= 560 ? 2 : 1,
+    sourceColumns: isAdvanced && width >= 960 ? 2 : 1,
     showWifi: isAdvanced || content === "wifi",
     showWired: isAdvanced || content === "wired",
     cardPadding: isAdvanced ? "md" : 0,

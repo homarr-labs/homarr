@@ -22,12 +22,26 @@ describe("network controller status layout", () => {
     {
       name: "advanced below wide boundary",
       input: { width: 559, height: 320, displayMode: "advanced" as const, content: "wifi" as const },
-      expected: { padding: "md", columns: 1, showWifi: true, showWired: true, horizontalStats: false },
+      expected: {
+        padding: "md",
+        columns: 1,
+        sourceColumns: 1,
+        showWifi: true,
+        showWired: true,
+        horizontalStats: false,
+      },
     },
     {
       name: "wide advanced",
       input: { width: 560, height: 320, displayMode: "advanced" as const, content: "wired" as const },
-      expected: { padding: "md", columns: 2, showWifi: true, showWired: true, horizontalStats: false },
+      expected: {
+        padding: "md",
+        columns: 2,
+        sourceColumns: 1,
+        showWifi: true,
+        showWired: true,
+        horizontalStats: false,
+      },
     },
     {
       name: "advanced at 200 percent zoom",
@@ -45,5 +59,8 @@ describe("network controller status layout", () => {
     expect(
       getNetworkControllerStatusLayout({ width: 199, height: 119, displayMode: "compact", content: "wifi" }),
     ).toMatchObject({ padding: "xs", horizontalStats: false });
+    expect(
+      getNetworkControllerStatusLayout({ width: 960, height: 320, displayMode: "advanced", content: "wifi" }),
+    ).toMatchObject({ sourceColumns: 2 });
   });
 });

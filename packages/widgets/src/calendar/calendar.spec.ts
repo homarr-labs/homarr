@@ -90,6 +90,15 @@ describe("getCalendarAgendaEvents", () => {
 
     expect(getCalendarAgendaEvents([cinema, digital], new Date(2025, 0, 1), ["inCinemas"])).toEqual([cinema]);
   });
+
+  test("preserves source ownership through advanced filtering", () => {
+    const event = {
+      ...createEvent(new Date(2025, 0, 5)),
+      source: { integrationId: "calendar-1", integrationName: "Family calendar" },
+    };
+
+    expect(getCalendarAgendaEvents([event], new Date(2025, 0, 1), [])).toEqual([event]);
+  });
 });
 
 describe("moveCalendarMonth", () => {

@@ -24,8 +24,13 @@ import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-u
 import { formatLocalizedTime } from "../common/locale";
 import classes from "./calendar-event-list.module.css";
 
+export type CalendarEventWithSource = CalendarEvent & {
+  source?: { integrationId: string; integrationName: string };
+};
+
 interface CalendarEventListProps {
-  events: CalendarEvent[];
+  events: CalendarEventWithSource[];
+  advanced?: boolean;
   fillHeight?: boolean;
   groupByDate?: boolean;
   locale?: string;
@@ -33,6 +38,7 @@ interface CalendarEventListProps {
 
 export const CalendarEventList = ({
   events,
+  advanced = false,
   fillHeight = false,
   groupByDate = false,
   locale,
@@ -70,26 +76,34 @@ export const CalendarEventList = ({
                   {dateFormatter.format(groupedEvents[0]?.startDate)}
                 </Text>
                 <Stack mt="xs">
-                  <CalendarEventRows events={groupedEvents} locale={effectiveLocale} />
+                  <CalendarEventRows events={groupedEvents} locale={effectiveLocale} advanced={advanced} />
                 </Stack>
               </Box>
             );
           })
         ) : (
-          <CalendarEventRows events={events} locale={effectiveLocale} />
+          <CalendarEventRows events={events} locale={effectiveLocale} advanced={advanced} />
         )}
       </Stack>
     </ScrollArea>
   );
 };
 
-const CalendarEventRows = ({ events, locale }: Pick<CalendarEventListProps, "events"> & { locale: string }) => {
+const CalendarEventRows = ({
+  events,
+  locale,
+  advanced,
+}: Pick<CalendarEventListProps, "events" | "advanced"> & { locale: string }) => {
   const { colorScheme } = useMantineColorScheme();
   const t = useI18n();
   return (
     <>
       {events.map((event, eventIndex) => (
-        <Group key={`event-${eventIndex}`} align={"stretch"} wrap="nowrap">
+        <Group
+          key={`${event.source?.integrationId ?? "event"}-${event.startDate.toISOString()}-${event.title}-${eventIndex}`}
+          align={"stretch"}
+          wrap="nowrap"
+        >
           {event.image !== null && (
             <Box pos="relative">
               <Image
@@ -115,13 +129,18 @@ const CalendarEventRows = ({ events, locale }: Pick<CalendarEventListProps, "eve
             <Group justify="space-between" align="start" mb="xs" wrap="wrap">
               <Stack gap={0} style={{ flex: "1 1 12rem", minWidth: 0 }}>
                 {event.subTitle !== null && (
-                  <Text lineClamp={1} size="sm">
+                  <Text lineClamp={advanced ? undefined : 1} size="sm">
                     {event.subTitle}
                   </Text>
                 )}
-                <Text fw={"bold"} lineClamp={1} size="sm">
+                <Text fw={"bold"} lineClamp={advanced ? undefined : 1} size="sm">
                   {event.title}
                 </Text>
+                {advanced && event.source && (
+                  <Badge size="xs" variant="light" w="fit-content">
+                    {event.source.integrationName}
+                  </Badge>
+                )}
               </Stack>
               {event.metadata?.type === "radarr" && (
                 <Group wrap="nowrap">
@@ -159,14 +178,14 @@ const CalendarEventRows = ({ events, locale }: Pick<CalendarEventListProps, "eve
             {event.location !== null && (
               <Group gap={4} mb={isNullOrWhitespace(event.description) ? 0 : "sm"}>
                 <IconPin opacity={0.7} size={"1rem"} />
-                <Text size={"xs"} c={"dimmed"} lineClamp={1}>
+                <Text size={"xs"} c={"dimmed"} lineClamp={advanced ? undefined : 1}>
                   {event.location}
                 </Text>
               </Group>
             )}
 
             {!isNullOrWhitespace(event.description) && (
-              <Text size={"xs"} c={"dimmed"} lineClamp={2}>
+              <Text size={"xs"} c={"dimmed"} lineClamp={advanced ? undefined : 2}>
                 {event.description}
               </Text>
             )}

@@ -10,11 +10,11 @@ export const moveCalendarMonth = (month: Date, amount: number): Date =>
 const matchesReleaseType = (event: CalendarEvent, releaseTypes: readonly string[]) =>
   event.metadata?.type !== "radarr" || releaseTypes.includes(event.metadata.releaseType);
 
-export const getCalendarAgendaEvents = (
-  events: CalendarEvent[],
+export const getCalendarAgendaEvents = <TEvent extends CalendarEvent>(
+  events: TEvent[],
   viewedMonth: Date,
   releaseTypes: readonly string[],
-): CalendarEvent[] => {
+): TEvent[] => {
   const monthStart = dayjs(viewedMonth).startOf("month");
   const monthEnd = monthStart.add(1, "month");
 
@@ -31,8 +31,8 @@ export const getCalendarAgendaEvents = (
     .toSorted((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
 };
 
-export const groupEventsByDate = (events: CalendarEvent[]): Map<string, CalendarEvent[]> => {
-  const result = new Map<string, CalendarEvent[]>();
+export const groupEventsByDate = <TEvent extends CalendarEvent>(events: TEvent[]): Map<string, TEvent[]> => {
+  const result = new Map<string, TEvent[]>();
   for (const event of events) {
     const key = toCalendarDateKey(event.startDate);
     const entries = result.get(key) ?? [];
