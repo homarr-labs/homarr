@@ -116,7 +116,10 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
             />
           </Flex>
         </AppDescriptionTooltip>
-        {options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus && app.href ? (
+        {options.pingEnabled &&
+        !settings.forceDisableStatus &&
+        !board.disableStatus &&
+        Boolean(app.pingUrl ?? app.href) ? (
           <Suspense fallback={<PingDot icon={IconMinus} color="gray" tooltip={`${t("common.action.loading")}…`} />}>
             <PingIndicator appId={app.id} />
           </Suspense>

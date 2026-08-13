@@ -20,6 +20,7 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
+import { formatBytes } from "@homarr/common";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -40,15 +41,23 @@ import {
 } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
+import { getBeszelTableVisibleMetricKeys } from "./display";
 
 const directionMultiplier: Record<string, number> = { asc: 1, desc: -1 };
 
-type SystemRowWithKey = BeszelSystemRow & { _key: string };
+type SystemRowWithKey = BeszelSystemRow & { rowKey: string; integrationName: string };
 
 const columnAccessors = [
   "name",
+  "integrationName",
+  "hostname",
+  "osName",
+  "cpuModel",
+  "cores",
+  "memoryTotal",
   "cpu",
   "memory",
   "disk",
@@ -60,7 +69,7 @@ const columnAccessors = [
   "services",
   "uptime",
   "agentVersion",
-] as const satisfies readonly (keyof BeszelSystemRow)[];
+] as const satisfies readonly (keyof SystemRowWithKey)[];
 
 interface SizeConfig {
   iconSize: number;
@@ -113,6 +122,7 @@ export default function BeszelSystemTableWidget({
   boardId,
   itemId,
   setOptions,
+  displayMode,
 }: WidgetComponentProps<"beszelSystemTable">) {
   const t = useScopedI18n("widget.beszelSystemTable");
   const { openModal } = useModalAction(BeszelSystemStatsModal);
@@ -120,26 +130,15 @@ export default function BeszelSystemTableWidget({
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
-  const results = getUsableWidgetQueryData(systemsQuery) ?? [];
+  const systemsData = getUsableWidgetQueryData(systemsQuery);
+  const results = useMemo(() => systemsData ?? [], [systemsData]);
   const { isPending } = systemsQuery;
+  const isAdvanced = displayMode === "advanced";
   const size = useMemo(() => getSizeConfig(width), [width]);
-  const visibleMetricKeys = useMemo(() => {
-    const enabled = [
-      "showCpu",
-      "showMemory",
-      "showDisk",
-      "showGpu",
-      "showLoadAvg",
-      "showNet",
-      "showTemp",
-      "showBattery",
-      "showServices",
-      "showUptime",
-      "showAgent",
-    ].filter((key) => options[key as keyof typeof options]) as string[];
-    const budget = width < 360 ? 1 : width < 560 ? 2 : width < 760 ? 4 : enabled.length;
-    return new Set(enabled.slice(0, budget));
-  }, [options, width]);
+  const visibleMetricKeys = useMemo(
+    () => getBeszelTableVisibleMetricKeys(options, width, isAdvanced),
+    [options, width, isAdvanced],
+  );
 
   const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
     onError: () =>
@@ -157,6 +156,18 @@ export default function BeszelSystemTableWidget({
   });
 
   const filteredSystems = useBeszelFilteredSystems(results, options.statusFilter);
+  const integrationNames = useMemo(
+    () => new Map(results.map((result) => [result.integrationId, result.integrationName])),
+    [results],
+  );
+  const systemsWithSource = useMemo(
+    () =>
+      filteredSystems.map((system) => ({
+        ...system,
+        integrationName: integrationNames.get(system.rowKey.split(":")[0] ?? "") ?? "—",
+      })),
+    [filteredSystems, integrationNames],
+  );
 
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus<SystemRowWithKey>>({
     columnAccessor: options.sortBy,
@@ -170,16 +181,16 @@ export default function BeszelSystemTableWidget({
   }, [options.sortBy, options.sortDirection]);
 
   const sortedSystems = useMemo(() => {
-    const accessor = sortStatus.columnAccessor as keyof BeszelSystemRow;
+    const accessor = sortStatus.columnAccessor as keyof SystemRowWithKey;
     const dir = directionMultiplier[sortStatus.direction] ?? 1;
-    return [...filteredSystems].toSorted((a, b) => {
+    return [...systemsWithSource].toSorted((a, b) => {
       const aVal = a[accessor] ?? 0;
       const bVal = b[accessor] ?? 0;
       if (typeof aVal === "string" && typeof bVal === "string") return aVal.localeCompare(bVal) * dir;
       if (typeof aVal === "number" && typeof bVal === "number") return (aVal - bVal) * dir;
       return 0;
     });
-  }, [filteredSystems, sortStatus]);
+  }, [systemsWithSource, sortStatus]);
 
   const columns = useMemo((): DataTableColumn<SystemRowWithKey>[] => {
     const cols: (DataTableColumn<SystemRowWithKey> | false)[] = [
@@ -201,6 +212,54 @@ export default function BeszelSystemTableWidget({
               {record.name}
             </Text>
           </Group>
+        ),
+      },
+      isAdvanced && {
+        accessor: "integrationName",
+        width: 140,
+        ellipsis: true,
+        title: t("column.source"),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.integrationName}</Text>,
+      },
+      isAdvanced && {
+        accessor: "hostname",
+        width: 150,
+        ellipsis: true,
+        title: t("column.hostname"),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.hostname || "—"}</Text>,
+      },
+      isAdvanced && {
+        accessor: "osName",
+        width: 160,
+        ellipsis: true,
+        title: t("column.os"),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.osName || "—"}</Text>,
+      },
+      isAdvanced && {
+        accessor: "cpuModel",
+        width: 220,
+        ellipsis: true,
+        title: t("column.cpuModel"),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.cpuModel || "—"}</Text>,
+      },
+      isAdvanced && {
+        accessor: "cores",
+        width: 80,
+        title: t("column.cores"),
+        sortable: true,
+        render: (record) => <Text size={size.fontSize}>{record.cores}</Text>,
+      },
+      isAdvanced && {
+        accessor: "memoryTotal",
+        width: 120,
+        title: t("column.memoryTotal"),
+        sortable: true,
+        render: (record) => (
+          <Text size={size.fontSize}>{record.memoryTotal > 0 ? formatBytes(record.memoryTotal) : "—"}</Text>
         ),
       },
       visibleMetricKeys.has("showCpu") && {
@@ -359,7 +418,7 @@ export default function BeszelSystemTableWidget({
     ];
 
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
-  }, [t, size, visibleMetricKeys]);
+  }, [t, size, visibleMetricKeys, isAdvanced]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
@@ -373,7 +432,7 @@ export default function BeszelSystemTableWidget({
 
   const handleRowClick = useCallback(
     ({ record }: { record: SystemRowWithKey }) => {
-      const integrationId = record._key.split(":")[0] ?? "";
+      const integrationId = record.rowKey.split(":")[0] ?? "";
       openModal({ integrationId, systemId: record.id }, { title: record.name });
     },
     [openModal],
@@ -390,7 +449,10 @@ export default function BeszelSystemTableWidget({
   const table = (
     <div style={{ position: "relative", height: "100%" }}>
       <div style={{ position: "absolute", top: 4, right: 8, zIndex: 1 }}>
-        <IntegrationErrorIndicator results={results} />
+        <Group gap={0}>
+          <WidgetQueryErrorIndicator error={systemsQuery.error} label={t("name")} />
+          <IntegrationErrorIndicator results={results} />
+        </Group>
       </div>
       <HomarrDataTable
         isEditMode={isEditMode}
@@ -401,7 +463,7 @@ export default function BeszelSystemTableWidget({
         sortStatus={sortStatus}
         onSortStatusChange={setSortStatus}
         noRecordsText={t("noRecords")}
-        idAccessor="_key"
+        idAccessor="rowKey"
         storeColumnsKey={storeKey}
         onRowClick={isEditMode ? undefined : handleRowClick}
       />

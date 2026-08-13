@@ -31,8 +31,6 @@ interface UserAvatarMenuProps {
   children: ReactNode;
   availableUpdates?: RouterOutputs["updateChecker"]["getAvailableUpdates"];
   isDockerEnabled?: boolean;
-  opened: boolean;
-  onOpenChange: (opened: boolean) => void;
 }
 
 const formatHotkeyLabel = (hotkey: string, modifierLabel: string) =>
@@ -41,13 +39,7 @@ const formatHotkeyLabel = (hotkey: string, modifierLabel: string) =>
     .map((key) => (key === "mod" ? modifierLabel : `${key.charAt(0).toUpperCase()}${key.slice(1)}`))
     .join(" + ");
 
-export const UserAvatarMenu = ({
-  children,
-  availableUpdates,
-  isDockerEnabled,
-  opened,
-  onOpenChange,
-}: UserAvatarMenuProps) => {
+export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled }: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
   const session = useSession();
 
@@ -65,7 +57,7 @@ export const UserAvatarMenu = ({
 
   return (
     // We use keepMounted so we can add event listeners to prevent navigating away without saving the board
-    <Menu width={300} withinPortal keepMounted opened={opened} onChange={onOpenChange}>
+    <Menu width={300} withinPortal keepMounted>
       <Menu.Dropdown>
         <AvailableUpdatesMenuItem availableUpdates={availableUpdates} />
         <Menu.Item component={Link} href="/boards" leftSection={<IconHome size="1rem" />}>

@@ -53,11 +53,18 @@ import { showErrorNotification } from "@homarr/notifications";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { formatLocalizedDateTime } from "../common/locale";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
-import { filterDownloadItemsByStatus, getAvailableDownloadStates } from "./helpers";
+import {
+  DOWNLOAD_COLUMN_ACCESSORS,
+  filterDownloadItemsByStatus,
+  getAvailableDownloadStates,
+  getDownloadColumnAccessors,
+} from "./helpers";
 
 dayjs.extend(relativeTime);
 
@@ -84,6 +91,7 @@ interface ColumnContext {
   hasTorrents: boolean;
   hasMultipleClients: boolean;
   hasMultipleTypes: boolean;
+  isAdvanced: boolean;
   size: SizeConfig;
 }
 
@@ -143,8 +151,8 @@ const columnVisibilityChecks: Partial<Record<string, (ctx: ColumnContext) => boo
   upSpeed: (ctx) => ctx.hasTorrents && ctx.size.showSpeedColumns,
   ratio: (ctx) => ctx.hasTorrents,
   sent: (ctx) => ctx.hasTorrents,
-  integration: (ctx) => ctx.hasMultipleClients,
-  type: (ctx) => ctx.hasMultipleTypes,
+  integration: (ctx) => ctx.isAdvanced || ctx.hasMultipleClients,
+  type: (ctx) => ctx.isAdvanced || ctx.hasMultipleTypes,
   downSpeed: (ctx) => ctx.size.showSpeedColumns,
   time: (ctx) => ctx.size.showTimeColumn,
   state: (ctx) => ctx.size.showStateColumn,
@@ -170,24 +178,6 @@ function progressColor(state: DownloadState, progress: number): string {
   if (progress >= 1) return "green";
   return "blue";
 }
-
-const columnAccessors = [
-  "name",
-  "progress",
-  "size",
-  "downSpeed",
-  "upSpeed",
-  "time",
-  "state",
-  "added",
-  "ratio",
-  "received",
-  "sent",
-  "category",
-  "integration",
-  "index",
-  "type",
-] as const;
 
 function toCategoryArray(category: string | string[]): string[] {
   if (Array.isArray(category)) return category;
@@ -320,10 +310,17 @@ export default function DownloadClientsWidget({
     integrationIds,
     limitPerIntegration: options.limitPerIntegration,
   });
-  const currentItems = getUsableWidgetQueryData(downloadsQuery) ?? [];
+  const currentItems = getUsableWidgetQueryData(downloadsQuery);
+  const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);
   const { isFetching } = downloadsQuery;
 
   const t = useScopedI18n("widget.downloads");
+  const queryIndicators = (
+    <Group gap={0}>
+      <IntegrationErrorIndicator results={currentItems ?? []} />
+      <WidgetQueryErrorIndicator error={downloadsQuery.error} label={t("name")} />
+    </Group>
+  );
 
   const [clientFilter, setClientFilter] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
@@ -370,7 +367,7 @@ export default function DownloadClientsWidget({
   }, [options.defaultSort, defaultSortDirection]);
 
   const eligibleData = useMemo<ExtendedDownloadClientItem[]>(() => {
-    return currentItems
+    return availableItems
       .filter(({ integration }) => integrationIds.includes(integration.id))
       .flatMap((pair) =>
         pair.data.items
@@ -399,7 +396,7 @@ export default function DownloadClientsWidget({
           }),
       );
   }, [
-    currentItems,
+    availableItems,
     integrationIds,
     integrationInteractSet,
     mutateDeleteItem,
@@ -422,7 +419,7 @@ export default function DownloadClientsWidget({
   }, [data, sortStatus]);
 
   const clients = useMemo<ExtendedClientStatus[]>(() => {
-    return currentItems
+    return availableItems
       .filter(({ integration }) => integrationIds.includes(integration.id))
       .map(({ integration, data: clientData }): ExtendedClientStatus => {
         const interact = integrationInteractSet.has(integration.id);
@@ -459,7 +456,7 @@ export default function DownloadClientsWidget({
         };
       });
   }, [
-    currentItems,
+    availableItems,
     integrationIds,
     integrationInteractSet,
     options.applyFilterToRatio,
@@ -472,10 +469,13 @@ export default function DownloadClientsWidget({
   const hasMultipleTypes = new Set(data.map(({ type }) => type)).size > 1;
 
   const size = useMemo(() => getSizeConfig(width, height, isAdvanced), [height, isAdvanced, width]);
-  const optionsColumnSet = useMemo(() => new Set<string>(options.columns), [options.columns]);
+  const optionsColumnSet = useMemo(
+    () => new Set<string>(getDownloadColumnAccessors(options.columns, isAdvanced)),
+    [isAdvanced, options.columns],
+  );
   const columnContext = useMemo<ColumnContext>(
-    () => ({ optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes, size }),
-    [optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes, size],
+    () => ({ optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes, isAdvanced, size }),
+    [optionsColumnSet, hasTorrents, hasMultipleClients, hasMultipleTypes, isAdvanced, size],
   );
 
   let progressColumnWidth = 120;
@@ -688,7 +688,7 @@ export default function DownloadClientsWidget({
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
-    columnAccessors,
+    columnAccessors: DOWNLOAD_COLUMN_ACCESSORS,
     columnOrder: options.columnOrder,
     columnWidths: options.columnWidths,
     itemId,
@@ -733,11 +733,16 @@ export default function DownloadClientsWidget({
     return { stateCounts, totalSize, completedSize, totalItems: data.length };
   }, [data]);
 
-  if (options.columns.length === 0) {
+  if (!isAdvanced && options.columns.length === 0) {
     return (
-      <Center h="100%">
-        <Text>{t("errors.noColumns")}</Text>
-      </Center>
+      <Box h="100%" pos="relative">
+        <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
+          {queryIndicators}
+        </Box>
+        <Center h="100%">
+          <Text>{t("errors.noColumns")}</Text>
+        </Center>
+      </Box>
     );
   }
 
@@ -759,10 +764,13 @@ export default function DownloadClientsWidget({
       )}
 
       <Box style={{ flex: 1, minHeight: 0, position: "relative" }}>
+        <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
+          {queryIndicators}
+        </Box>
         <HomarrDataTable
           isEditMode={isEditMode}
           cellPadding={`${size.cellPadding}px 8px`}
-          fetching={isFetching && currentItems.length === 0}
+          fetching={isFetching && (currentItems?.length ?? 0) === 0}
           fz={size.fontSize}
           records={sortedData}
           columns={effectiveColumns}

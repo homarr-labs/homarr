@@ -536,7 +536,7 @@ export const assistantMessages = pgTable(
       .references(() => assistantThreads.id, { onDelete: "cascade" }),
     parentId: varchar({ length: 128 }),
     format: varchar({ length: 64 }).notNull().default("ai-sdk/v6"),
-    content: text().default(emptySuperJSON).notNull(),
+    content: text().notNull(),
     createdAt: timestamp().notNull().defaultNow(),
   },
   (message) => ({

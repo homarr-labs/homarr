@@ -90,5 +90,3 @@ When modifying user-facing code, you MUST also update the corresponding document
 - Run `pnpm dev:cli -- build <name>` from a Homarr checkout to build `homarr:<name>` with rebuild provenance.
 - Run `pnpm dev:cli -- build --pr <number>` to build a PR locally from a temporary checkout.
 - Run Go checks from `tools/homarr-dev` with `go test ./...` and `go vet ./...`.
-- Use `dayjs` for date/time formatting or comparisons; do not hand-roll relative time or date math.
-- Extract shared helpers/components when the same logic appears in multiple workshop/store files.

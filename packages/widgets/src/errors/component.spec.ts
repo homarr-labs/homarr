@@ -46,7 +46,6 @@ describe("WidgetError", () => {
           MantineProvider,
           null,
           createElement(WidgetError, {
-            kind: "app",
             error: new Error(secret),
             resetErrorBoundary: vi.fn(),
           }),

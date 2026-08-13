@@ -527,7 +527,7 @@ export const assistantMessages = sqliteTable(
       .references(() => assistantThreads.id, { onDelete: "cascade" }),
     parentId: text(),
     format: text().notNull().default("ai-sdk/v6"),
-    content: text().default(emptySuperJSON).notNull(),
+    content: text().notNull(),
     createdAt: int({ mode: "timestamp" })
       .notNull()
       .default(sql`(unixepoch())`),

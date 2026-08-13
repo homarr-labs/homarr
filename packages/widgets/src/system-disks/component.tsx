@@ -9,16 +9,21 @@ import { formatBytesPair } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
-import { getUsableWidgetQueryData } from "../common/query-state";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
-type DisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
+type DiskDisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
+
+export const clampPercentage = (percentage: number): number => Math.min(100, Math.max(0, percentage));
 
 export const getDisplayText = (
   item: { used: string; available: string; percentage: number },
-  displayMode: DisplayMode,
+  displayMode: DiskDisplayMode,
+  translatedFreeText?: string,
 ) => {
   switch (displayMode) {
     case "percentage":
@@ -27,27 +32,26 @@ export const getDisplayText = (
       const usedInBytes = Number(item.used);
       const availableInBytes = Number(item.available);
       if (Number.isFinite(usedInBytes) && Number.isFinite(availableInBytes)) {
-        const { used, available } = formatBytesPair(usedInBytes, availableInBytes);
-        return `${used} / ${available}`;
+        const { used, available: total } = formatBytesPair(usedInBytes, usedInBytes + availableInBytes);
+        return `${used} / ${total}`;
       }
       return `${item.used} / ${item.available}`;
     }
     case "free":
-      return `${Math.round(100 - item.percentage)}% free`;
+      return translatedFreeText ?? `${Math.round(100 - clampPercentage(item.percentage))}% free`;
     default:
       return `${Math.round(item.percentage)}%`;
   }
 };
 
-export const clampPercentage = (percentage: number): number => Math.min(100, Math.max(0, percentage));
-
-const getAbsoluteText = (item: { used: string; available: string }) => {
-  const usedInBytes = Number(item.used);
-  const availableInBytes = Number(item.available);
-  if (!Number.isFinite(usedInBytes) || !Number.isFinite(availableInBytes)) return `${item.used} / ${item.available}`;
-  const { used, available } = formatBytesPair(usedInBytes, availableInBytes);
-  return `${used} / ${available}`;
-};
+export const getAdvancedDisplayTexts = (
+  item: { used: string; available: string; percentage: number },
+  translatedFreeText?: string,
+) => ({
+  percentage: getDisplayText(item, "percentage"),
+  absolute: getDisplayText(item, "absolute"),
+  free: getDisplayText(item, "free", translatedFreeText),
+});
 
 interface SystemDiskCardProps {
   deviceName: string;
@@ -58,6 +62,9 @@ interface SystemDiskCardProps {
   showBackgroundBar: boolean;
   integrationName?: string;
   secondaryText?: string;
+  freeText?: string;
+  smartStatus?: string;
+  isAdvanced: boolean;
   showSecondaryText: boolean;
   showTemperature: boolean;
 }
@@ -71,6 +78,9 @@ const SystemDiskCard = ({
   showBackgroundBar,
   integrationName,
   secondaryText,
+  freeText,
+  smartStatus,
+  isAdvanced,
   showSecondaryText,
   showTemperature,
 }: SystemDiskCardProps) => {
@@ -99,7 +109,9 @@ const SystemDiskCard = ({
   }, []);
 
   const unhealthyLabel = t("widget.systemDisks.status.unhealthy");
-  const hasHiddenTemperature = temperature !== null && temperature !== undefined && !showTemperature;
+  const hasTemperature = temperature !== null && temperature !== undefined;
+  const temperatureText = hasTemperature ? `${temperature}°C` : "—°C";
+  const hasHiddenTemperature = hasTemperature && !showTemperature;
   const hasHiddenSecondaryText = Boolean(secondaryText && secondaryText !== displayText && !showSecondaryText);
   const tooltipLabel = [
     healthy ? displayText : `${displayText} (${unhealthyLabel})`,
@@ -141,11 +153,19 @@ const SystemDiskCard = ({
                 {secondaryText}
               </Text>
             )}
+            {isAdvanced && freeText && freeText !== displayText && (
+              <Text size="xs" c="dimmed">
+                {freeText}
+              </Text>
+            )}
+            {isAdvanced && (
+              <Text size="xs" c={healthy ? "dimmed" : "red"}>
+                {t("widget.systemDisks.status.smart")}: {smartStatus?.trim() || "—"}
+              </Text>
+            )}
           </div>
           <div style={{ flexShrink: 0 }}>
-            {showTemperature && temperature !== null && temperature !== undefined ? (
-              <Text size="sm">{temperature}°C</Text>
-            ) : null}
+            {showTemperature && (hasTemperature || isAdvanced) ? <Text size="sm">{temperatureText}</Text> : null}
           </div>
         </Group>
         <Box
@@ -170,12 +190,32 @@ export default function SystemResources({
   options,
   width,
   height,
+  displayMode,
 }: WidgetComponentProps<"systemDisks">) {
+  const t = useI18n();
   const queryInput = { integrationIds };
-  const data =
-    getUsableWidgetQueryData(clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput)) ?? [];
+  const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
+  const results = getUsableWidgetQueryData(healthQuery) ?? [];
+  const data = results.filter(
+    (entry): entry is typeof entry & { healthInfo: NonNullable<typeof entry.healthInfo> } => entry.healthInfo !== null,
+  );
+  const queryIndicators = (
+    <Group gap={0}>
+      <IntegrationErrorIndicator results={results} />
+      <WidgetQueryErrorIndicator error={healthQuery.error} label={t("widget.systemDisks.name")} />
+    </Group>
+  );
+  const emptyState = (
+    <Box h="100%" pos="relative">
+      <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
+        {queryIndicators}
+      </Box>
+      <WidgetEmptyState />
+    </Box>
+  );
 
-  if (data.length === 0) return <WidgetEmptyState />;
+  if (isInitialWidgetQueryPending(healthQuery)) return <WidgetQueryLoadingState />;
+  if (data.length === 0) return emptyState;
 
   const disks = data.flatMap((entry) => {
     const fileSystem = filterStorageVolumes(
@@ -194,32 +234,52 @@ export default function SystemResources({
     }));
   });
 
-  if (data.every((entry) => entry.healthInfo.fileSystem.length === 0)) throw new NoIntegrationDataError();
-  if (disks.length === 0) return <WidgetEmptyState />;
+  const hasNoFileSystems = data.every((entry) => entry.healthInfo.fileSystem.length === 0);
+  const hasFailedSource = results.some((entry) => Boolean(entry.error));
+  if (hasNoFileSystems && !hasFailedSource && !healthQuery.error) throw new NoIntegrationDataError();
+  if (hasNoFileSystems || disks.length === 0) return emptyState;
 
+  const isAdvanced = displayMode === "advanced";
   const minimumCardWidth = 260;
   const columns = Math.max(1, Math.min(disks.length, Math.floor(width / minimumCardWidth)));
   const cellWidth = width / columns;
 
   return (
-    <ScrollArea h="100%">
-      <SimpleGrid cols={columns} spacing="xs" p="xs">
-        {disks.map(({ integrationId, integrationName, item, smartItem }) => (
-          <SystemDiskCard
-            key={`${integrationId}:${item.deviceName}`}
-            deviceName={item.deviceName}
-            percentage={item.percentage}
-            displayText={getDisplayText(item, options.displayMode)}
-            temperature={options.showTemperatureIfAvailable ? smartItem?.temperature : undefined}
-            healthy={smartItem?.healthy ?? true} // fall back to healthy if no information is available
-            showBackgroundBar={options.showBackgroundBar}
-            integrationName={data.length > 1 ? integrationName : undefined}
-            secondaryText={getAbsoluteText(item)}
-            showSecondaryText={height >= 160 && cellWidth >= 260}
-            showTemperature={height >= 100 && cellWidth >= 220}
-          />
-        ))}
-      </SimpleGrid>
-    </ScrollArea>
+    <Box h="100%" pos="relative">
+      <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
+        {queryIndicators}
+      </Box>
+      <ScrollArea h="100%">
+        <SimpleGrid cols={columns} spacing="xs" p="xs">
+          {disks.map(({ integrationId, integrationName, item, smartItem }) => {
+            const freeText = t("widget.systemDisks.status.free", {
+              percentage: String(Math.round(100 - clampPercentage(item.percentage))),
+            });
+            const advancedDisplayTexts = getAdvancedDisplayTexts(item, freeText);
+
+            return (
+              <SystemDiskCard
+                key={`${integrationId}:${item.deviceName}`}
+                deviceName={item.deviceName}
+                percentage={item.percentage}
+                displayText={
+                  isAdvanced ? advancedDisplayTexts.percentage : getDisplayText(item, options.displayMode, freeText)
+                }
+                temperature={isAdvanced || options.showTemperatureIfAvailable ? smartItem?.temperature : undefined}
+                healthy={smartItem?.healthy ?? true} // fall back to healthy if no information is available
+                showBackgroundBar={isAdvanced || options.showBackgroundBar}
+                integrationName={isAdvanced || data.length > 1 ? integrationName : undefined}
+                secondaryText={advancedDisplayTexts.absolute}
+                freeText={advancedDisplayTexts.free}
+                smartStatus={smartItem?.overallStatus}
+                isAdvanced={isAdvanced}
+                showSecondaryText={isAdvanced || (height >= 160 && cellWidth >= 260)}
+                showTemperature={isAdvanced || (height >= 100 && cellWidth >= 220)}
+              />
+            );
+          })}
+        </SimpleGrid>
+      </ScrollArea>
+    </Box>
   );
 }

@@ -1,1 +1,0 @@
-ALTER TABLE `assistant_configuration` ADD `web_search_enabled` integer DEFAULT false NOT NULL;

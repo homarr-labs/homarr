@@ -27,7 +27,6 @@ section {
   max-width: min(100%, 500px);
 }
 
-
 .heroBanner {
   padding: clamp(3rem, 6vw, 6rem) clamp(1.25rem, 4vw, 4rem);
   position: relative;

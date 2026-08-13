@@ -12,7 +12,7 @@ const timeRangeOptions = stockPriceTimeFrames.range;
 const timeIntervalOptions = stockPriceTimeFrames.interval;
 
 export const { definition, componentLoader } = createWidgetDefinition("stockPrice", {
-  supportsAdvancedFocus: false,
+  supportsAdvancedFocus: true,
   icon: IconBuildingBank,
   queryKey: [["widget", "stockPrice", "getPriceHistory"]],
   queryMatcher: ({ input }, scope) =>

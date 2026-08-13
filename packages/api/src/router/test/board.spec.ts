@@ -1853,47 +1853,6 @@ describe("saveLayouts should save layout changes", () => {
     expect(basePosition).toMatchObject({ xOffset: 0, yOffset: 1, width: 4, height: 1, sectionId });
     expect(customPosition).toMatchObject({ xOffset: 0, yOffset: 1, width: 4, height: 1, sectionId });
   });
-  test("should project a new custom layout from the resized Base layout", async () => {
-    const db = createDb();
-    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
-    const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
-    const mobileLayoutId = await addMobileLayoutAsync(db, boardId);
-    const secondItemId = createId();
-
-    await db.update(itemLayouts).set({ width: 4, xOffset: 0 }).where(eq(itemLayouts.itemId, itemId));
-    await db.insert(items).values({
-      id: secondItemId,
-      kind: "clock",
-      boardId,
-      options: SuperJSON.stringify({ is24HourFormat: true }),
-    });
-    await db.insert(itemLayouts).values({
-      itemId: secondItemId,
-      layoutId,
-      sectionId,
-      width: 4,
-      height: 1,
-      xOffset: 6,
-      yOffset: 0,
-    });
-
-    const resizedBase = { ...createExistingLayout(layoutId), columnCount: 6 };
-    const savedLayouts = await caller.saveLayouts({
-      id: boardId,
-      layouts: [createMobileLayout(mobileLayoutId), createNewLayout(8), resizedBase],
-    });
-    const customLayoutId = expectToBeDefined(savedLayouts.find((layout) => layout.role === "custom")).id;
-
-    const basePosition = await db.query.itemLayouts.findFirst({
-      where: and(eq(itemLayouts.itemId, secondItemId), eq(itemLayouts.layoutId, layoutId)),
-    });
-    const customPosition = await db.query.itemLayouts.findFirst({
-      where: and(eq(itemLayouts.itemId, secondItemId), eq(itemLayouts.layoutId, customLayoutId)),
-    });
-
-    expect(basePosition).toMatchObject({ xOffset: 0, yOffset: 1, width: 4, height: 1, sectionId });
-    expect(customPosition).toMatchObject({ xOffset: 0, yOffset: 1, width: 4, height: 1, sectionId });
-  });
   test("should remove layout when not present in input", async () => {
     // Arrange
     const db = createDb();

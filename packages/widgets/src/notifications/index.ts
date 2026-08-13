@@ -6,7 +6,7 @@ import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { componentLoader, definition } = createWidgetDefinition("notifications", {
-  supportsAdvancedFocus: false,
+  supportsAdvancedFocus: true,
   icon: IconMessage,
   queryKey: [["widget", "notifications", "getNotifications"]],
   queryMatcher: ({ input }, scope) =>

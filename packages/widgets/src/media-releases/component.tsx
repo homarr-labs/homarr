@@ -31,6 +31,7 @@ import { OverflowBadge } from "@homarr/ui";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
 import classes from "./component.module.css";
@@ -44,36 +45,43 @@ export default function MediaReleasesWidget({
 }: WidgetComponentProps<"mediaReleases">) {
   const t = useI18n();
   const releasesQuery = clientApi.widget.mediaRelease.getMediaReleases.useQuery({ integrationIds });
-  const releases = getUsableWidgetQueryData(releasesQuery);
+  const response = getUsableWidgetQueryData(releasesQuery);
 
   if (isInitialWidgetQueryPending(releasesQuery)) return <WidgetQueryLoadingState />;
-  if (!releases || releases.length === 0) return <WidgetEmptyState />;
+  if (!response) return <WidgetEmptyState />;
+
+  const { releases, failedIntegrations } = response;
 
   const isAdvanced = displayMode === "advanced";
 
   return (
     <Box h="100%" pos="relative">
-      <ScrollArea h="100%">
-        <SimpleGrid cols={isAdvanced ? Math.max(1, Math.floor(width / 360)) : 1} p="xs" spacing="sm">
-          {releases.map((item, index) => (
-            <Fragment key={`${item.integration.id}:${item.id}`}>
-              {!isAdvanced && index !== 0 && options.layout === "poster" && <Divider />}
-              <Item item={item} options={options} isAdvanced={isAdvanced} width={width} height={height} />
-            </Fragment>
-          ))}
-        </SimpleGrid>
-      </ScrollArea>
-      {releasesQuery.error && (
-        <Box pos="absolute" top={4} right={4}>
+      {releases.length === 0 ? (
+        <WidgetEmptyState />
+      ) : (
+        <ScrollArea h="100%">
+          <SimpleGrid cols={isAdvanced ? Math.max(1, Math.floor(width / 360)) : 1} p="xs" spacing="sm">
+            {releases.map((item, index) => (
+              <Fragment key={`${item.integration.id}:${item.id}`}>
+                {!isAdvanced && index !== 0 && options.layout === "poster" && <Divider />}
+                <Item item={item} options={options} isAdvanced={isAdvanced} width={width} height={height} />
+              </Fragment>
+            ))}
+          </SimpleGrid>
+        </ScrollArea>
+      )}
+      {(failedIntegrations.length > 0 || releasesQuery.error) && (
+        <Group pos="absolute" top={4} right={4} gap={0}>
+          <IntegrationErrorIndicator results={failedIntegrations} />
           <WidgetQueryErrorIndicator error={releasesQuery.error} label={t("widget.mediaReleases.name")} />
-        </Box>
+        </Group>
       )}
     </Box>
   );
 }
 
 interface ItemProps {
-  item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleases"][number];
+  item: RouterOutputs["widget"]["mediaRelease"]["getMediaReleases"]["releases"][number];
   options: WidgetComponentProps<"mediaReleases">["options"];
   isAdvanced: boolean;
   width: number;
@@ -213,7 +221,7 @@ const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
                 />
               )}
               {isAdvanced && item.description && (
-                <Text size="xs" c="dimmed" lineClamp={3}>
+                <Text size="xs" c="dimmed">
                   {item.description}
                 </Text>
               )}
@@ -232,9 +240,17 @@ const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
                 </Badge>
               )}
 
-              {(isAdvanced || options.showSource) && (
-                <Avatar size="sm" radius="xl" src={getIconUrl(item.integration.kind)} alt={item.integration.name} />
-              )}
+              {(isAdvanced || options.showSource) &&
+                (isAdvanced ? (
+                  <Group gap={4} wrap="nowrap">
+                    <Avatar size="sm" radius="xl" src={getIconUrl(item.integration.kind)} alt="" />
+                    <Text size="xs" fw={500} lineClamp={1}>
+                      {item.integration.name}
+                    </Text>
+                  </Group>
+                ) : (
+                  <Avatar size="sm" radius="xl" src={getIconUrl(item.integration.kind)} alt={item.integration.name} />
+                ))}
             </Stack>
           )}
         </Group>
