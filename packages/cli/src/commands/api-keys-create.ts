@@ -1,8 +1,7 @@
 import { command, string } from "@drizzle-team/brocli";
 
-import { randomBytes } from "crypto";
-
 import { hashPasswordAsync } from "@homarr/auth";
+import { createId } from "@homarr/common";
 import { generateSecureRandomToken } from "@homarr/common/server";
 import { db, eq } from "@homarr/db";
 import { apiKeys, users } from "@homarr/db/schema";
@@ -14,7 +13,6 @@ export const apiKeysCreate = command({
     id: string("id").alias("i").desc("ID of the user the key belongs to"),
     username: string("username").alias("u").desc("Name of the user the key belongs to"),
   },
-  // eslint-disable-next-line no-restricted-syntax
   handler: async (options) => {
     if (!options.id && !options.username) {
       console.error("Either --id or --username must be provided");
@@ -30,7 +28,7 @@ export const apiKeysCreate = command({
       return;
     }
 
-    const id = randomBytes(4).toString("hex");
+    const id = createId();
     const token = generateSecureRandomToken(24);
 
     await db.insert(apiKeys).values({

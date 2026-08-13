@@ -5,7 +5,6 @@ import { db } from "@homarr/db";
 export const apiKeysList = command({
   name: "list",
   desc: "List all API keys (id and owner, the key itself is not stored in plain text)",
-  // eslint-disable-next-line no-restricted-syntax
   handler: async () => {
     const allApiKeys = await db.query.apiKeys.findMany({
       columns: { id: true, apiKey: false },

@@ -1,8 +1,7 @@
 import { z } from "zod/v4";
 
-import { randomBytes } from "crypto";
-
 import { hashPasswordAsync } from "@homarr/auth";
+import { createId } from "@homarr/common";
 import { generateSecureRandomToken } from "@homarr/common/server";
 import { eq } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
@@ -24,7 +23,11 @@ export const apiKeysRouter = createTRPCRouter({
     .requiresPermission("admin")
     .meta({
       openapi: { method: "GET", path: "/api/apikeys", tags: ["apikeys"], protect: true },
-      mcp: { enabled: true, description: "List all API keys (admin only)" },
+      mcp: {
+        enabled: true,
+        description:
+          "List all API keys without their secret values (admin only). Pass the returned id to apiKeys_delete when removing a key",
+      },
     })
     .input(z.void())
     .output(z.array(apiKeySchema))
@@ -58,7 +61,7 @@ export const apiKeysRouter = createTRPCRouter({
     .input(z.void())
     .output(z.object({ apiKey: z.string() }))
     .mutation(async ({ ctx }) => {
-      const id = randomBytes(4).toString("hex");
+      const id = createId();
       const token = generateSecureRandomToken(24);
       const hashedToken = await hashPasswordAsync(token);
       await ctx.db.insert(apiKeys).values({

@@ -9,28 +9,15 @@ import {
   updateServerSettingByKeyAsync,
 } from "@homarr/db/queries";
 import { boards, serverSettings } from "@homarr/db/schema";
-import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettingsKeys } from "@homarr/server-settings";
-import { settingsInitSchema } from "@homarr/validation/settings";
+import { serverSettingSchemas, serverSettingsSchema, settingsInitSchema } from "@homarr/validation/settings";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, publicProcedure } from "../trpc";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
-const boardServerSettingsSchema = z.object({
-  homeBoardId: z.string().nullable(),
-  mobileHomeBoardId: z.string().nullable(),
-  enableStatusByDefault: z.boolean(),
-  forceDisableStatus: z.boolean(),
-}) satisfies z.ZodType<ServerSettings["board"]>;
+const boardServerSettingsSchema = serverSettingSchemas.board;
 
 const boardServerSettingsUpdateSchema = boardServerSettingsSchema.partial();
-
-/**
- * The server settings are a wide nested object that is already typed by @homarr/server-settings.
- * Describing every key again here would duplicate that definition, so the documented shape stays
- * generic while the cast keeps the precise type for the management UI.
- */
-const allServerSettingsSchema = z.record(z.string(), z.unknown()) as unknown as z.ZodType<ServerSettings>;
 
 export const serverSettingsRouter = createTRPCRouter({
   getCulture: publicProcedure.query(async ({ ctx }) => {
@@ -47,7 +34,7 @@ export const serverSettingsRouter = createTRPCRouter({
       },
     })
     .input(z.void())
-    .output(allServerSettingsSchema)
+    .output(serverSettingsSchema)
     .query(async ({ ctx }) => {
       return await getServerSettingsAsync(ctx.db);
     }),
@@ -131,10 +118,11 @@ export const serverSettingsRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
+      const value = serverSettingSchemas[input.settingsKey].partial().parse(input.value);
       await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {
         ...current,
-        ...input.value,
-      } as ServerSettings[keyof ServerSettings]);
+        ...value,
+      });
     }),
   initSettings: onboardingProcedure
     .requiresStep("settings")

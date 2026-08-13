@@ -16,6 +16,7 @@ import {
   searchEngines,
   serverSettings,
 } from "@homarr/db/schema";
+import { defaultServerSettingsKeys } from "@homarr/server-settings";
 import type { configExportSchema, configImportSchema } from "@homarr/validation/config";
 
 import { collectBoardDocumentOperations, createBoardExportDocument } from "../board/board-io";
@@ -51,7 +52,7 @@ export const createConfigExportDocumentAsync = async (db: Database): Promise<Con
 
   return {
     version: 1,
-    settings: settings as unknown as ConfigExportDocument["settings"],
+    settings,
     apps: dbApps.map(({ id, name, description, iconUrl, href, pingUrl }) => ({
       id,
       name,
@@ -478,14 +479,17 @@ export const importConfigDocumentAsync = async (
 
   // Server settings have no identity of their own, so they are always merged
   if (document.settings) {
-    const currentSettings = (await getServerSettingsAsync(db)) as unknown as Record<string, object>;
+    const currentSettings = await getServerSettingsAsync(db);
     const existingKeys = new Set(
       (await db.query.serverSettings.findMany({ columns: { settingKey: true } })).map(({ settingKey }) => settingKey),
     );
 
-    for (const [settingKey, value] of Object.entries(document.settings)) {
+    for (const settingKey of defaultServerSettingsKeys) {
+      const value = document.settings[settingKey];
+      if (!value) continue;
+
       // Settings point at other entities by id, so an adopted entity has to be followed here too
-      const remapped = { ...value };
+      const remapped: Record<string, unknown> = { ...value };
 
       if (settingKey === "board") {
         if ("homeBoardId" in remapped) {

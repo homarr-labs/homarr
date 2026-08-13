@@ -9,7 +9,6 @@ export const apiKeysDelete = command({
   options: {
     id: string("id").required().alias("i").desc("ID of the API key, the part in front of the dot"),
   },
-  // eslint-disable-next-line no-restricted-syntax
   handler: async (options) => {
     const apiKey = await db.query.apiKeys.findFirst({
       columns: { id: true, apiKey: false },

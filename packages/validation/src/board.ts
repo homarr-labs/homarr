@@ -161,8 +161,9 @@ export const boardSummarySchema = z.object({
  */
 export const boardDocumentGridLimit = 256;
 
-const gridCoordinateSchema = z.number().int().min(0).max(boardDocumentGridLimit);
-const gridSizeSchema = z.number().int().min(1).max(boardDocumentGridLimit);
+const gridLimitError = `Grid values must not exceed ${boardDocumentGridLimit}`;
+const gridCoordinateSchema = z.number().int().min(0).max(boardDocumentGridLimit, { error: gridLimitError });
+const gridSizeSchema = z.number().int().min(1).max(boardDocumentGridLimit, { error: gridLimitError });
 
 /**
  * Explicit placement of an item within one specific layout.
@@ -233,7 +234,7 @@ export const addBoardSectionSchema = z.object({
   kind: zodEnumFromArray(sectionKinds),
   /** Only used for category sections */
   name: z.string().min(1).max(255).optional(),
-  /** Only used for empty and category sections */
+  /** Vertical order of empty and category sections; dynamic sections use layouts or parentSectionId */
   yOffset: gridCoordinateSchema.optional(),
   /** Only used for dynamic sections */
   options: dynamicSectionOptionsSchema.optional(),
@@ -354,7 +355,7 @@ const boardDocumentLayoutSchema = z.object({
   // More permissive than the 24 columns the board settings offer so that a board created by an
   // older version or the oldmarr importer survives a round trip, but still small enough that a
   // grid of this width stays cheap to work with
-  columnCount: z.number().int().min(1).max(boardDocumentGridLimit),
+  columnCount: z.number().int().min(1).max(boardDocumentGridLimit, { error: gridLimitError }),
   breakpoint: z.number().min(0).max(32767),
 });
 
@@ -390,16 +391,16 @@ const boardDocumentItemSchema = z.object({
 });
 
 /**
- * Full description of a board, symmetric between export and import.
- * All ids inside the document are local references only, on import the server
- * always generates fresh ids so the same document can be imported repeatedly.
- */
-/**
  * What should happen when the target already exists.
  * `skip` and `replace` make repeated imports of the same document idempotent.
  */
 export const importConflictStrategySchema = z.enum(["fail", "skip", "replace"]).default("fail");
 
+/**
+ * Full description of a board, symmetric between export and import.
+ * All ids inside the document are local references only, on import the server
+ * always generates fresh ids so the same document can be imported repeatedly.
+ */
 export const boardImportSchema = z.object({
   name: boardNameSchema,
   isPublic: z.boolean().default(false),

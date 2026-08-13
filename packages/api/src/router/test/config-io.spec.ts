@@ -2,6 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
+import { encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import {
@@ -11,6 +12,7 @@ import {
   groupPermissions,
   groups,
   integrations,
+  integrationSecrets,
   layouts,
   searchEngines,
   sections,
@@ -128,6 +130,11 @@ describe("config export and import", () => {
   test("should not export integration secret values", async () => {
     // Arrange
     const source = await createSourceInstanceAsync();
+    await source.db.insert(integrationSecrets).values({
+      integrationId: source.integrationId,
+      kind: "apiKey",
+      value: encryptSecret("secretValue"),
+    });
 
     // Act
     const document = await createConfigCaller(source.db).export();
@@ -275,7 +282,7 @@ describe("config export and import", () => {
     await createConfigCaller(source.db).import({
       version: 1,
       settings: { search: { defaultSearchEngineId: sourceEngine.id } },
-    } as never);
+    });
     const document = await createConfigCaller(source.db).export();
 
     // The target has the same engine under a different id
@@ -348,5 +355,17 @@ describe("config export and import", () => {
     // Assert
     const settings = await createConfigCaller(targetDb).export();
     expect(settings.settings.appearance).toMatchObject({ defaultColorScheme: "dark" });
+  });
+
+  test("should reject unknown or invalid server settings", async () => {
+    const db = await createTargetInstanceAsync();
+    const caller = createConfigCaller(db);
+
+    await expect(caller.import({ version: 1, settings: { unknown: {} } } as never)).rejects.toThrowError(
+      "Unrecognized key",
+    );
+    await expect(
+      caller.import({ version: 1, settings: { appearance: { defaultColorScheme: "purple" } } } as never),
+    ).rejects.toThrowError();
   });
 });

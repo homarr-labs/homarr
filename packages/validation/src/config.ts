@@ -10,6 +10,7 @@ import {
 
 import { boardExportSchema, boardImportSchema, importConflictStrategySchema } from "./board";
 import { zodEnumFromArray } from "./enums";
+import { serverSettingsSchema, serverSettingsUpdateSchema } from "./settings";
 
 /**
  * Documents of the full configuration export.
@@ -63,11 +64,9 @@ const configBoardGroupPermissionSchema = z.object({
   permission: z.enum(boardPermissions),
 });
 
-const configSettingsSchema = z.record(z.string(), z.record(z.string(), z.unknown()));
-
 export const configExportSchema = z.object({
   version: z.literal(1),
-  settings: configSettingsSchema,
+  settings: serverSettingsSchema,
   apps: z.array(configAppSchema),
   integrations: z.array(configIntegrationSchema),
   searchEngines: z.array(configSearchEngineSchema),
@@ -82,7 +81,7 @@ export const configExportSchema = z.object({
 
 export const configImportSchema = z.object({
   version: z.literal(1),
-  settings: configSettingsSchema.optional(),
+  settings: serverSettingsUpdateSchema.optional(),
   apps: z.array(configAppSchema).default([]),
   integrations: z
     .array(

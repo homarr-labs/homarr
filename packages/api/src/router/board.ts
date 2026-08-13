@@ -79,6 +79,8 @@ import {
 } from "./board/board-io";
 import { generateResponsiveGridFor } from "./board/grid-algorithm";
 import { collectOccupiedAreas, getDefaultSizeForKind, resolvePlacementForAllLayouts } from "./board/item-placement";
+import type { DbOperation } from "./db-operations";
+import { runDbOperationsAsync } from "./db-operations";
 
 export const boardRouter = createTRPCRouter({
   exists: permissionRequiredProcedure
@@ -1528,24 +1530,39 @@ export const boardRouter = createTRPCRouter({
       });
 
       const itemId = createId();
-
-      await ctx.db.insert(items).values({
-        id: itemId,
-        boardId: input.boardId,
-        kind: input.kind,
-        options: superjson.stringify(input.options),
-        advancedOptions: input.advancedOptions ? superjson.stringify(input.advancedOptions) : emptySuperJSON,
-      });
+      const operations: DbOperation[] = [
+        {
+          type: "insert",
+          table: "items",
+          values: [
+            {
+              id: itemId,
+              boardId: input.boardId,
+              kind: input.kind,
+              options: superjson.stringify(input.options),
+              advancedOptions: input.advancedOptions ? superjson.stringify(input.advancedOptions) : emptySuperJSON,
+            },
+          ],
+        },
+      ];
 
       if (placements.length > 0) {
-        await ctx.db.insert(itemLayouts).values(placements.map((placement) => ({ itemId, ...placement })));
+        operations.push({
+          type: "insert",
+          table: "itemLayouts",
+          values: placements.map((placement) => ({ itemId, ...placement })),
+        });
       }
 
       if (input.integrationIds.length > 0) {
-        await ctx.db
-          .insert(integrationItems)
-          .values(input.integrationIds.map((integrationId) => ({ itemId, integrationId })));
+        operations.push({
+          type: "insert",
+          table: "integrationItems",
+          values: input.integrationIds.map((integrationId) => ({ itemId, integrationId })),
+        });
       }
+
+      await runDbOperationsAsync(ctx.db, operations);
 
       return { itemId };
     }),
@@ -1574,16 +1591,20 @@ export const boardRouter = createTRPCRouter({
         await throwIfIntegrationsMissingAsync(ctx.db, input.integrationIds);
       }
 
+      const operations: DbOperation[] = [];
+
       if (input.options !== undefined || input.advancedOptions !== undefined) {
-        await ctx.db
-          .update(items)
-          .set({
+        operations.push({
+          type: "update",
+          table: "items",
+          set: {
             ...(input.options !== undefined ? { options: superjson.stringify(input.options) } : {}),
             ...(input.advancedOptions !== undefined
               ? { advancedOptions: superjson.stringify(input.advancedOptions) }
               : {}),
-          })
-          .where(eq(items.id, input.itemId));
+          },
+          where: eq(items.id, input.itemId),
+        });
       }
 
       if (hasPlacementChanges(input)) {
@@ -1619,26 +1640,31 @@ export const boardRouter = createTRPCRouter({
           defaultSize: getDefaultSizeForKind(item.kind),
         });
 
-        // Updated in place instead of delete + insert, so a failure can never leave the
-        // item without any position, which would make it disappear from the board.
+        // Updated in place instead of delete + insert so relations keep their identity.
         for (const placement of placements) {
           const exists = item.layouts.some((itemLayout) => itemLayout.layoutId === placement.layoutId);
 
           if (!exists) {
-            await ctx.db.insert(itemLayouts).values({ itemId: input.itemId, ...placement });
+            operations.push({
+              type: "insert",
+              table: "itemLayouts",
+              values: [{ itemId: input.itemId, ...placement }],
+            });
             continue;
           }
 
-          await ctx.db
-            .update(itemLayouts)
-            .set({
+          operations.push({
+            type: "update",
+            table: "itemLayouts",
+            set: {
               sectionId: placement.sectionId,
               xOffset: placement.xOffset,
               yOffset: placement.yOffset,
               width: placement.width,
               height: placement.height,
-            })
-            .where(and(eq(itemLayouts.itemId, input.itemId), eq(itemLayouts.layoutId, placement.layoutId)));
+            },
+            where: and(eq(itemLayouts.itemId, input.itemId), eq(itemLayouts.layoutId, placement.layoutId)) as SQL,
+          });
         }
       }
 
@@ -1650,17 +1676,26 @@ export const boardRouter = createTRPCRouter({
         const added = requestedIntegrationIds.filter((id) => !currentIntegrationIds.includes(id));
 
         if (removed.length > 0) {
-          await ctx.db
-            .delete(integrationItems)
-            .where(and(eq(integrationItems.itemId, input.itemId), inArray(integrationItems.integrationId, removed)));
+          operations.push({
+            type: "delete",
+            table: "integrationItems",
+            where: and(
+              eq(integrationItems.itemId, input.itemId),
+              inArray(integrationItems.integrationId, removed),
+            ) as SQL,
+          });
         }
 
         if (added.length > 0) {
-          await ctx.db
-            .insert(integrationItems)
-            .values(added.map((integrationId) => ({ itemId: input.itemId, integrationId })));
+          operations.push({
+            type: "insert",
+            table: "integrationItems",
+            values: added.map((integrationId) => ({ itemId: input.itemId, integrationId })),
+          });
         }
       }
+
+      await runDbOperationsAsync(ctx.db, operations);
     }),
   removeItem: protectedProcedure
     .meta({
@@ -1759,19 +1794,29 @@ export const boardRouter = createTRPCRouter({
             }))
           : [];
 
-      await ctx.db.insert(sections).values({
-        id: sectionId,
-        boardId: input.boardId,
-        kind: input.kind,
-        name: input.kind === "category" ? (input.name ?? null) : null,
-        xOffset: input.kind === "dynamic" ? null : 0,
-        yOffset: input.kind === "dynamic" ? null : (input.yOffset ?? nextSectionYOffset(board)),
-        options: input.kind === "dynamic" ? superjson.stringify(input.options ?? {}) : emptySuperJSON,
-      });
+      const operations: DbOperation[] = [
+        {
+          type: "insert",
+          table: "sections",
+          values: [
+            {
+              id: sectionId,
+              boardId: input.boardId,
+              kind: input.kind,
+              name: input.kind === "category" ? (input.name ?? null) : null,
+              xOffset: input.kind === "dynamic" ? null : 0,
+              yOffset: input.kind === "dynamic" ? null : (input.yOffset ?? nextSectionYOffset(board)),
+              options: input.kind === "dynamic" ? superjson.stringify(input.options ?? {}) : emptySuperJSON,
+            },
+          ],
+        },
+      ];
 
       if (sectionLayoutRows.length > 0) {
-        await ctx.db.insert(sectionLayouts).values(sectionLayoutRows);
+        operations.push({ type: "insert", table: "sectionLayouts", values: sectionLayoutRows });
       }
+
+      await runDbOperationsAsync(ctx.db, operations);
 
       return { sectionId };
     }),
@@ -1816,14 +1861,21 @@ export const boardRouter = createTRPCRouter({
         return;
       }
 
+      const operations: DbOperation[] = [];
+
       if (input.options !== undefined) {
-        await ctx.db
-          .update(sections)
-          .set({ options: superjson.stringify(input.options) })
-          .where(eq(sections.id, input.sectionId));
+        operations.push({
+          type: "update",
+          table: "sections",
+          set: { options: superjson.stringify(input.options) },
+          where: eq(sections.id, input.sectionId),
+        });
       }
 
-      if (!hasPlacementChanges({ ...input, sectionId: input.parentSectionId })) return;
+      if (!hasPlacementChanges({ ...input, sectionId: input.parentSectionId })) {
+        await runDbOperationsAsync(ctx.db, operations);
+        return;
+      }
 
       throwIfLayoutsUnknown(board, input.layouts);
 
@@ -1854,6 +1906,8 @@ export const boardRouter = createTRPCRouter({
         };
       });
 
+      throwIfSectionNestingCycle(board, input.sectionId, mergedLayouts);
+
       const placements = resolvePlacementForAllLayouts({
         board,
         placement: { sectionId: input.parentSectionId, layouts: mergedLayouts },
@@ -1862,34 +1916,47 @@ export const boardRouter = createTRPCRouter({
         context: "the section",
       });
 
-      // Updated in place instead of delete + insert for the same reason as in updateItem
+      // Updated in place instead of delete + insert so relations keep their identity.
       for (const placement of placements) {
         const exists = section.layouts.some((sectionLayout) => sectionLayout.layoutId === placement.layoutId);
 
         if (!exists) {
-          await ctx.db.insert(sectionLayouts).values({
-            sectionId: input.sectionId,
-            layoutId: placement.layoutId,
-            parentSectionId: placement.sectionId,
-            xOffset: placement.xOffset,
-            yOffset: placement.yOffset,
-            width: placement.width,
-            height: placement.height,
+          operations.push({
+            type: "insert",
+            table: "sectionLayouts",
+            values: [
+              {
+                sectionId: input.sectionId,
+                layoutId: placement.layoutId,
+                parentSectionId: placement.sectionId,
+                xOffset: placement.xOffset,
+                yOffset: placement.yOffset,
+                width: placement.width,
+                height: placement.height,
+              },
+            ],
           });
           continue;
         }
 
-        await ctx.db
-          .update(sectionLayouts)
-          .set({
+        operations.push({
+          type: "update",
+          table: "sectionLayouts",
+          set: {
             parentSectionId: placement.sectionId,
             xOffset: placement.xOffset,
             yOffset: placement.yOffset,
             width: placement.width,
             height: placement.height,
-          })
-          .where(and(eq(sectionLayouts.sectionId, input.sectionId), eq(sectionLayouts.layoutId, placement.layoutId)));
+          },
+          where: and(
+            eq(sectionLayouts.sectionId, input.sectionId),
+            eq(sectionLayouts.layoutId, placement.layoutId),
+          ) as SQL,
+        });
       }
+
+      await runDbOperationsAsync(ctx.db, operations);
     }),
   removeSection: protectedProcedure
     .meta({
@@ -1925,9 +1992,7 @@ export const boardRouter = createTRPCRouter({
       // its layout rows and leave the items behind without any position on the board.
       const removedSectionIds = collectNestedSectionIds(board, input.sectionId);
       const orphanedItemIds = board.items
-        .filter(
-          (item) => item.layouts.length > 0 && item.layouts.every((layout) => removedSectionIds.has(layout.sectionId)),
-        )
+        .filter((item) => item.layouts.some((layout) => removedSectionIds.has(layout.sectionId)))
         .map((item) => item.id);
 
       const sectionIdsToRemove = [...removedSectionIds];
@@ -2039,6 +2104,7 @@ export const boardRouter = createTRPCRouter({
       }
 
       if (input.onConflict === "skip") {
+        await throwIfActionForbiddenAsync(ctx, eq(boards.id, existing.id), "view");
         return { boardId: existing.id, created: false };
       }
 
@@ -2155,6 +2221,31 @@ const collectNestedSectionIds = (board: BoardForPlacement, sectionId: string) =>
   }
 
   return sectionIds;
+};
+
+const throwIfSectionNestingCycle = (
+  board: BoardForPlacement,
+  sectionId: string,
+  placements: { layoutId: string; sectionId?: string | null }[],
+) => {
+  for (const placement of placements) {
+    const visited = new Set([sectionId]);
+    let parentSectionId = placement.sectionId;
+
+    while (parentSectionId) {
+      if (visited.has(parentSectionId)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Section nesting cannot form a cycle in layout '${placement.layoutId}'`,
+        });
+      }
+
+      visited.add(parentSectionId);
+      parentSectionId = board.sections
+        .find((section) => section.id === parentSectionId)
+        ?.layouts.find((layout) => layout.layoutId === placement.layoutId)?.parentSectionId;
+    }
+  }
 };
 
 const nextSectionYOffset = (board: BoardForPlacement) =>

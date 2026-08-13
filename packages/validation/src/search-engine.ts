@@ -2,10 +2,20 @@ import type { ZodTypeAny } from "zod/v4";
 import { z } from "zod/v4";
 
 import type { SearchEngineType } from "@homarr/definitions";
+import { searchEngineTypes } from "@homarr/definitions";
+
+import { zodEnumFromArray } from "./enums";
+
+/** Only http and https are allowed for security reasons, javascript: must not be usable */
+export const searchEngineUrlTemplateSchema = z
+  .string()
+  .min(1)
+  .regex(/^https?:\/\//)
+  .includes("%s");
 
 const genericSearchEngine = z.object({
   type: z.literal("generic" satisfies SearchEngineType),
-  urlTemplate: z.string().min(1).startsWith("http").includes("%s"), // Only allow http and https for security reasons (javascript: is not allowed)
+  urlTemplate: searchEngineUrlTemplateSchema,
 });
 
 const fromIntegrationSearchEngine = z.object({
@@ -46,13 +56,10 @@ export const searchEngineEditSchema = createManageSearchEngineSchema((schema) =>
  * for the property of the other type and an empty string for a field that was never filled in.
  */
 const searchEngineTypeSpecificShape = {
-  type: z.enum(["generic", "fromIntegration"] satisfies SearchEngineType[]),
+  type: zodEnumFromArray(searchEngineTypes),
   urlTemplate: z.string().nullish(),
   integrationId: z.string().nullish(),
 };
-
-/** Only http and https are allowed for security reasons, javascript: must not be usable */
-export const searchEngineUrlTemplateSchema = z.string().min(1).startsWith("http").includes("%s");
 
 export const searchEngineApiManageSchema = baseSearchEngineManageSchema.extend(searchEngineTypeSpecificShape);
 

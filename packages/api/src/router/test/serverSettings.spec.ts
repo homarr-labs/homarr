@@ -89,6 +89,15 @@ describe("saveSettings", () => {
       },
     ]);
   });
+
+  test("saveSettings should reject fields outside the selected setting group", async () => {
+    const db = createDb();
+    const caller = serverSettingsRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    await expect(
+      caller.saveSettings({ settingsKey: "appearance", value: { enableGeneral: true } }),
+    ).rejects.toThrowError("Unrecognized key");
+  });
 });
 
 describe("board settings API", () => {

@@ -41,7 +41,8 @@ const extractTypeSpecificValues = (
     if (!result.success) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: `urlTemplate is required for search engines of type 'generic' and has to start with http and contain '%s'`,
+        message:
+          "urlTemplate is required for search engines of type 'generic', must use http:// or https://, and must contain '%s'",
       });
     }
 
@@ -138,14 +139,10 @@ export const searchEngineRouter = createTRPCRouter({
         ? {
             ...searchEngine,
             type: "fromIntegration" as const,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            integrationId: searchEngine.integrationId!,
           }
         : {
             ...searchEngine,
             type: "generic" as const,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            urlTemplate: searchEngine.urlTemplate!,
           };
     }),
   getDefaultSearchEngine: publicProcedure.query(async ({ ctx }) => {
@@ -261,7 +258,7 @@ export const searchEngineRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Update a search engine. REQUIRED: id, name, iconUrl, description (or null), type. Generic engines additionally require urlTemplate, integration backed ones an integrationId. The short trigger cannot be changed",
+          "Replace a search engine's complete editable representation. REQUIRED: id, name, iconUrl, description (or null), type. Generic engines additionally require urlTemplate, integration backed ones an integrationId. The short trigger cannot be changed",
       },
     })
     .input(searchEngineApiEditSchema)

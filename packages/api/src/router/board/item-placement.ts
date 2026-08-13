@@ -178,8 +178,11 @@ const findFreePosition = (
   const relevantAreas = areas.filter((area) => area.layoutId === layout.id && area.sectionId === sectionId);
   const firstEmptyRow = relevantAreas.reduce((lowest, area) => Math.max(lowest, area.yOffset + area.height), 0);
   const scannedRows = Math.min(firstEmptyRow, maximumScannedRows);
+  const candidateRows = [...new Set([0, ...relevantAreas.map((area) => area.yOffset + area.height)])]
+    .filter((yOffset) => yOffset < scannedRows)
+    .toSorted((first, second) => first - second);
 
-  for (let yOffset = 0; yOffset < scannedRows; yOffset++) {
+  for (const yOffset of candidateRows) {
     const startingPoints = new Set([0]);
 
     for (const area of relevantAreas) {
@@ -249,7 +252,10 @@ export const resolvePlacementForAllLayouts = ({
   defaultSize: { width: number; height: number };
   context?: string;
 }): ResolvedPlacement[] => {
-  const fallbackSectionId = resolveSectionId(board, placement.sectionId, context);
+  const explicitLayoutIds = (placement.layouts ?? []).map(({ layoutId }) => layoutId);
+  if (new Set(explicitLayoutIds).size !== explicitLayoutIds.length) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "A layout can only have one placement per element" });
+  }
 
   for (const explicitLayout of placement.layouts ?? []) {
     if (!board.layouts.some((layout) => layout.id === explicitLayout.layoutId)) {
@@ -302,7 +308,7 @@ export const resolvePlacementForAllLayouts = ({
       continue;
     }
 
-    const sectionId = fallbackSectionId;
+    const sectionId = resolveSectionId(board, placement.sectionId, context);
     const columnCount = getColumnCountOfSection(board, sectionId, layout);
     const width = Math.min(placement.width ?? defaultSize.width, columnCount);
     const height = placement.height ?? defaultSize.height;

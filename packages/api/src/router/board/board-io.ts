@@ -123,6 +123,34 @@ const sortDynamicSectionsByNesting = (sections: DocumentSection[]) => {
   return ordered;
 };
 
+const throwIfSectionNestingCycles = (document: Omit<BoardImportDocument, "onConflict">) => {
+  for (const layout of document.layouts) {
+    const parentBySectionId = new Map(
+      document.sections.flatMap((section) => {
+        const parentSectionId = section.layouts?.find((entry) => entry.layoutId === layout.id)?.parentSectionId;
+        return parentSectionId ? [[section.id, parentSectionId] as const] : [];
+      }),
+    );
+
+    for (const sectionId of parentBySectionId.keys()) {
+      const visited = new Set([sectionId]);
+      let parentSectionId = parentBySectionId.get(sectionId);
+
+      while (parentSectionId) {
+        if (visited.has(parentSectionId)) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Section nesting cannot form a cycle in layout '${layout.id}'`,
+          });
+        }
+
+        visited.add(parentSectionId);
+        parentSectionId = parentBySectionId.get(parentSectionId);
+      }
+    }
+  }
+};
+
 const requireReference = (map: Map<string, string>, reference: string, kind: string) => {
   const resolved = map.get(reference);
   if (!resolved) {
@@ -176,6 +204,8 @@ export const collectBoardDocumentRows = (
   if (sectionIdMap.size !== document.sections.length) {
     throw new TRPCError({ code: "BAD_REQUEST", message: "Section references must be unique" });
   }
+
+  throwIfSectionNestingCycles(document);
 
   collection.boards.push({
     ...document.settings,

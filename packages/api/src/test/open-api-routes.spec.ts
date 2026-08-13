@@ -230,6 +230,16 @@ test("service endpoints should work over http", async () => {
   });
   expect(invalid.status).toBe(400);
 
+  const invalidScheme = await callAsync("POST", "/api/search-engines", {
+    name: "Broken scheme",
+    short: "bs",
+    iconUrl: "https://example.com/icon.svg",
+    description: null,
+    type: "generic",
+    urlTemplate: "httpx://example.com/%s",
+  });
+  expect(invalidScheme.status).toBe(400);
+
   // Integration backed engines require an integration
   const withoutIntegration = await callAsync("POST", "/api/search-engines", {
     name: "Broken",
@@ -271,7 +281,7 @@ test("service endpoints should work over http", async () => {
 
   const apiKey = await callAsync("POST", "/api/apikeys");
   expect(apiKey.status).toBe(200);
-  expect(apiKey.body.apiKey).toMatch(/^[0-9a-f]{8}\./);
+  expect(apiKey.body.apiKey).toMatch(/^[a-z0-9]+\./);
   expect(await callAsync("GET", "/api/apikeys").then(({ body }) => body)).toHaveLength(1);
 
   expect((await callAsync("GET", "/api/integration-kinds")).status).toBe(200);

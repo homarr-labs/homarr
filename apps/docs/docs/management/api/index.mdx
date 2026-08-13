@@ -79,10 +79,10 @@ Creating an API key normally requires signing in once. For fully automated setup
 
 ```bash
 # Only needed when no credentials admin exists yet
-docker exec -it <container-id> /bin/bash homarr recreate-admin -u admin
+docker exec -it <container-id> homarr recreate-admin -u admin
 
 # Prints "<id>.<token>" once, store it somewhere safe
-docker exec -it <container-id> /bin/bash homarr api-keys create -u admin
+docker exec -it <container-id> homarr api-keys create -u admin
 ```
 
 See [API keys](../../advanced/command-line/api-keys/) for the other available commands.
@@ -155,6 +155,7 @@ A few rules apply:
 
 - Overlapping items are rejected with `400`. Omit `xOffset` and `yOffset` to let Homarr pick the
   next free position for the requested size.
+- A dynamic section cannot be nested inside itself or one of its descendants in the same layout.
 
 `PATCH /api/boards/{boardId}/items/{itemId}` accepts the same placement properties. Anything that is
 not part of the request keeps its current value, so an item can be resized, moved into another
@@ -299,3 +300,6 @@ Besides boards, apps, users and invites, the following are available over the Op
 
 Creating or updating an integration tests the connection first. If the test fails the response
 contains an `error` object describing the problem and nothing is saved.
+
+Server-setting imports and updates reject unknown setting groups, unknown fields, and values of the
+wrong type instead of storing configuration that the management interface cannot read back.
