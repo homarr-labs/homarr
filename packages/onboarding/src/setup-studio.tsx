@@ -1159,24 +1159,14 @@ const Connections = (props: StudioSectionProps) => {
         </Fieldset>
       ) : null}
 
-      <Accordion variant="separated" radius="md">
-        <Accordion.Item value="manual-integrations">
-          <Accordion.Control icon={<IconPlugConnected size={20} />}>
-            <Group gap="xs">
-              <Text fw={600}>{t("otherIntegrations")}</Text>
-              {props.selectedKinds.length > 0 ? <Badge variant="light">{props.selectedKinds.length}</Badge> : null}
-            </Group>
-          </Accordion.Control>
-          <Accordion.Panel>
-            <IntegrationMultiSelectGrid
-              selectedKinds={props.selectedKinds}
-              onSelectionChange={props.setSelectedKinds}
-              detectedKinds={props.detectedKinds}
-              onboarding
-            />
-          </Accordion.Panel>
-        </Accordion.Item>
-      </Accordion>
+      <Fieldset legend={t("otherIntegrations")}>
+        <IntegrationMultiSelectGrid
+          selectedKinds={props.selectedKinds}
+          onSelectionChange={props.setSelectedKinds}
+          detectedKinds={props.detectedKinds}
+          onboarding
+        />
+      </Fieldset>
 
       {props.discoveredApps.length > 0 ? (
         <Fieldset legend={t("discoveredApps", { count: String(props.discoveredApps.length) })}>
