@@ -152,6 +152,38 @@ const seedBoardAsync = async (
   return { layoutId, sectionId };
 };
 
+describe("onboard.testIntegration", () => {
+  it("tests an onboarding draft without persisting it", async () => {
+    const db = createDb();
+    const claimToken = await seedOnboardingAsync(db);
+    const testConnection = vi.spyOn(integrationConnection, "testConnectionAsync").mockResolvedValue({ success: true });
+
+    try {
+      await expect(
+        createCaller(db, claimToken).testIntegration({
+          sourceId: "manual:sonarr",
+          name: "Sonarr",
+          url: "http://sonarr:8989",
+          kind: "sonarr",
+          secrets: [{ kind: "apiKey", value: "secret" }],
+        }),
+      ).resolves.toEqual({ success: true });
+      expect(testConnection).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: stableIntegrationIdForSource("manual:sonarr"),
+          name: "Sonarr",
+          url: "http://sonarr:8989",
+          kind: "sonarr",
+        }),
+      );
+      expect(await db.query.integrations.findMany()).toHaveLength(0);
+      expect(await db.query.integrationSecrets.findMany()).toHaveLength(0);
+    } finally {
+      testConnection.mockRestore();
+    }
+  });
+});
+
 describe("onboard.completeSetup", () => {
   beforeEach(() => {
     listDiscoveredContainersAsync.mockReset();

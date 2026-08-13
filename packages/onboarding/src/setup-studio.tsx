@@ -1312,16 +1312,35 @@ const IntegrationEditor = ({
               {t("noCredentialsDescription")}
             </Text>
           ) : null}
-          <Group justify="flex-end">
+          {apiKeyUrl ? (
+            <Anchor href={apiKeyUrl} target="_blank" rel="noopener noreferrer" size="sm">
+              <Group gap={4}>
+                <IconKey size={14} />
+                {t("getApiKey")}
+                <IconExternalLink size={14} />
+              </Group>
+            </Anchor>
+          ) : null}
+          <Group justify="space-between" align="center" wrap="wrap">
+            {documentationUrl ? (
+              <Anchor href={documentationUrl} target="_blank" rel="noopener noreferrer" size="sm">
+                <Group gap={4}>
+                  <IconExternalLink size={14} />
+                  {t("openGuide")}
+                </Group>
+              </Anchor>
+            ) : (
+              <span />
+            )}
             <Button
               variant="default"
-              size="compact-sm"
+              size="xs"
               disabled={needsConfiguration}
               loading={testConnection.isPending}
               color={
                 testConnection.data?.success ? "green" : testConnection.data?.success === false ? "red" : undefined
               }
-              leftSection={testConnection.data?.success ? <IconCheck size={15} /> : <IconPlugConnected size={15} />}
+              leftSection={testConnection.data?.success ? <IconCheck size={14} /> : <IconPlugConnected size={14} />}
               onClick={() =>
                 testConnection.mutate({
                   sourceId: draft.sourceId ?? draft.id,
@@ -1335,23 +1354,6 @@ const IntegrationEditor = ({
               {t("testConnection")}
             </Button>
           </Group>
-          {apiKeyUrl ? (
-            <Anchor href={apiKeyUrl} target="_blank" rel="noopener noreferrer" size="sm">
-              <Group gap={4}>
-                <IconKey size={14} />
-                {t("getApiKey")}
-                <IconExternalLink size={14} />
-              </Group>
-            </Anchor>
-          ) : null}
-          {documentationUrl ? (
-            <Anchor href={documentationUrl} target="_blank" rel="noopener noreferrer" size="sm">
-              <Group gap={4}>
-                <IconExternalLink size={14} />
-                {t("openGuide")}
-              </Group>
-            </Anchor>
-          ) : null}
         </Stack>
       </Accordion.Panel>
     </Accordion.Item>
