@@ -2,7 +2,6 @@ import { Group, Text } from "@mantine/core";
 import {
   IconBox,
   IconCategoryPlus,
-  IconFileImport,
   IconMailForward,
   IconPlug,
   IconUserPlus,
@@ -11,7 +10,7 @@ import {
 
 import { useSession } from "@homarr/auth/client";
 import { useModalAction } from "@homarr/modals";
-import { AddBoardModal, AddGroupModal, ImportBoardModal, InviteCreateModal } from "@homarr/modals-collection";
+import { AddBoardModal, AddGroupModal, InviteCreateModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -67,28 +66,11 @@ export const globalCommandGroup = createGroup<Command>({
         hidden: !session?.user.permissions.includes("board-create"),
       },
       {
-        commandKey: "importBoard",
-        icon: IconFileImport,
-        name: tOption("importBoard.label"),
-        useInteraction() {
-          const { openModal } = useModalAction(ImportBoardModal);
-
-          return {
-            type: "javaScript",
-            onSelect() {
-              openModal(undefined);
-            },
-          };
-        },
-        hidden: !session?.user.permissions.includes("board-create"),
-      },
-      {
         commandKey: "newApp",
         icon: IconBox,
         name: tOption("newApp.label"),
         useInteraction: interaction.link(() => ({ href: "/manage/apps/new" })),
-        hidden:
-          !session?.user.permissions.includes("board-modify-all") || !session?.user.permissions.includes("app-create"),
+        hidden: !session?.user.permissions.includes("app-create"),
       },
       {
         commandKey: "newIntegration",

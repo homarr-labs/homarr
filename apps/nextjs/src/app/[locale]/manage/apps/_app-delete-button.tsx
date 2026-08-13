@@ -17,6 +17,7 @@ interface AppDeleteButtonProps {
 
 export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
   const t = useScopedI18n("app.page.delete");
+  const tList = useScopedI18n("app.page.list.action");
   const { openConfirmModal } = useConfirmModal();
   const { mutate, isPending } = clientApi.app.delete.useMutation();
 
@@ -50,7 +51,14 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
   }, [app, mutate, t, openConfirmModal]);
 
   return (
-    <ActionIcon loading={isPending} variant="subtle" color="red" onClick={onClick} aria-label={t("title")}>
+    <ActionIcon
+      loading={isPending}
+      variant="subtle"
+      color="red"
+      size={44}
+      onClick={onClick}
+      aria-label={tList("delete", { name: app.name })}
+    >
       <IconTrash color="red" size={16} stroke={1.5} />
     </ActionIcon>
   );

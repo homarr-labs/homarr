@@ -27,14 +27,14 @@ export class OnboardingActions {
     }
   }
 
-  public async startOnboardingAsync(type: "scratch" | "before 1.0") {
-    await this.page.locator("button", { hasText: type }).click();
+  public async startOnboardingAsync() {
+    await this.page.getByRole("button", { name: "Get started" }).click();
   }
 
   public async processUserStepAsync(input: { username: string; password: string; confirmPassword: string }) {
-    await this.page.waitForSelector("text=administrator user");
+    await this.page.getByRole("heading", { name: "Create your administrator" }).waitFor();
 
-    await this.page.getByLabel("Username").fill(input.username);
+    await this.page.getByLabel("Administrator username").fill(input.username);
     await this.page.getByLabel("Password", { exact: true }).fill(input.password);
     await this.page.getByLabel("Confirm password").fill(input.confirmPassword);
 
@@ -42,18 +42,16 @@ export class OnboardingActions {
   }
 
   public async processExternalGroupStepAsync(input: { name: string }) {
-    await this.page.waitForSelector("text=external provider");
-    await this.page.locator("input").fill(input.name);
+    await this.page.getByRole("heading", { name: "Connect your administrator group" }).waitFor();
+    await this.page.getByLabel("External administrator group").fill(input.name);
     await this.page.locator("css=button[type='submit']").click();
   }
 
   public async processSettingsStepAsync() {
-    await this.page.waitForSelector("text=Analytics");
-    await this.page.locator("css=button[type='submit']").click();
+    await this.page.getByRole("heading", { name: "Start with familiar defaults" }).waitFor();
   }
 
   public async processIntegrationsStepAsync() {
-    await this.page.waitForSelector("text=integrations you'd like to connect");
-    await this.page.locator("button", { hasText: "Skip for now" }).click();
+    await this.page.getByRole("button", { name: "Build my board" }).click();
   }
 }

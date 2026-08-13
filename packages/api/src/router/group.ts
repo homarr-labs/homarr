@@ -6,7 +6,7 @@ import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
-import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
+import { groupMembers, groupPermissions, groups, onboarding, users } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import {
@@ -19,7 +19,6 @@ import {
 } from "@homarr/validation/group";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
-import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 export const groupRouter = createTRPCRouter({
   getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
@@ -185,18 +184,28 @@ export const groupRouter = createTRPCRouter({
       const maxPosition = await getMaxGroupPositionAsync(ctx.db);
 
       const groupId = createId();
-      await ctx.db.insert(groups).values({
+      const groupRow = {
         id: groupId,
         name: input.name,
         position: maxPosition + 1,
-      });
+      };
 
-      await ctx.db.insert(groupPermissions).values({
-        groupId,
-        permission: "admin",
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction.insert(schema.groups).values(groupRow);
+            await transaction.insert(schema.groupPermissions).values({ groupId, permission: "admin" });
+            await transaction.update(schema.onboarding).set({ previousStep: "group", step: "setup" });
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.insert(groups).values(groupRow).run();
+            transaction.insert(groupPermissions).values({ groupId, permission: "admin" }).run();
+            transaction.update(onboarding).set({ previousStep: "group", step: "setup" }).run();
+          });
+        },
       });
-
-      await nextOnboardingStepAsync(ctx.db, undefined);
     }),
   createGroup: permissionRequiredProcedure
     .requiresPermission("admin")

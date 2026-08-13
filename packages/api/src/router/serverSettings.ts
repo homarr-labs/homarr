@@ -11,10 +11,8 @@ import {
 import { boards, serverSettings } from "@homarr/db/schema";
 import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettingsKeys } from "@homarr/server-settings";
-import { settingsInitSchema } from "@homarr/validation/settings";
 
-import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, publicProcedure } from "../trpc";
-import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
+import { createTRPCRouter, permissionRequiredProcedure, publicProcedure } from "../trpc";
 
 const boardServerSettingsSchema = z.object({
   homeBoardId: z.string().nullable(),
@@ -107,14 +105,5 @@ export const serverSettingsRouter = createTRPCRouter({
         ...current,
         ...input.value,
       } as ServerSettings[keyof ServerSettings]);
-    }),
-  initSettings: onboardingProcedure
-    .requiresStep("settings")
-    .input(settingsInitSchema)
-    .mutation(async ({ ctx, input }) => {
-      const currentAnalytics = await getServerSettingByKeyAsync(ctx.db, "analytics");
-      await updateServerSettingByKeyAsync(ctx.db, "analytics", { ...currentAnalytics, ...input.analytics });
-      await updateServerSettingByKeyAsync(ctx.db, "crawlingAndIndexing", input.crawlingAndIndexing);
-      await nextOnboardingStepAsync(ctx.db, undefined);
     }),
 });

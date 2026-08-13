@@ -686,7 +686,7 @@ const seedDemoUserAsync = async (db: Database) => {
 
   await db.update(onboarding).set({
     step: "finish",
-    previousStep: "settings",
+    previousStep: "setup",
   });
 
   const integrationId = createId();

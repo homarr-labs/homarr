@@ -1,18 +1,19 @@
 import { Fragment } from "react";
-import { notFound, redirect } from "next/navigation";
-import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text } from "@mantine/core";
+import { redirect } from "next/navigation";
+import { ActionIcon, ActionIconGroup, Anchor, Avatar, Text } from "@mantine/core";
 import { IconBox, IconPencil } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
+import { getSafeAppHref } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
-import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { getScopedI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
-import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { NoResults } from "~/components/no-results";
 import { AppDeleteButton } from "./_app-delete-button";
@@ -29,24 +30,38 @@ interface AppsPageProps {
 
 export default async function AppsPage(props: AppsPageProps) {
   const session = await auth();
-
-  if (!session) {
-    redirect("/auth/login");
-  }
-  if (!session.user.permissions.includes("board-modify-all")) {
-    notFound();
-  }
+  if (!session) redirect("/auth/login");
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
-
   const { items: apps, totalCount } = await api.app.getPaginated(searchParams);
   const t = await getScopedI18n("app");
-
   const canCreate = session.user.permissions.includes("app-create");
+  const canModify = session.user.permissions.includes("app-modify-all");
+  const canDelete = session.user.permissions.includes("app-full-all");
+  const hasSearch = Boolean(searchParams.search?.trim());
 
-  return (
-    <ManagePageLayout
+  const emptyState = hasSearch ? (
+    <NoResults
+      icon={IconBox}
+      title={t("page.list.noResults.filteredTitle")}
+      description={t("page.list.noResults.filteredDescription", { search: searchParams.search ?? "" })}
+      action={{ label: t("page.list.noResults.clearSearch"), href: "/manage/apps" }}
+    />
+  ) : (
+    <NoResults
+      icon={IconBox}
+      title={t("page.list.noResults.title")}
+      description={t("page.list.noResults.description")}
+      action={{ label: t("page.list.noResults.action"), href: "/manage/apps/new", hidden: !canCreate }}
+    />
+  );
+
+  const page = (
+    <ManageCollectionPage
       title={t("page.list.title")}
+      ariaLabel={t("page.list.ariaLabel")}
+      itemCount={apps.length}
+      emptyState={emptyState}
       primaryAction={
         canCreate ? (
           <TourTarget id="manage-apps-create">
@@ -56,101 +71,94 @@ export default async function AppsPage(props: AppsPageProps) {
           </TourTarget>
         ) : undefined
       }
-      toolbar={<SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} flexExpand />}
-      footer={<TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />}
+      toolbar={
+        <SearchInput
+          placeholder={`${t("search")}...`}
+          ariaLabel={t("search")}
+          defaultValue={searchParams.search}
+          flexExpand
+        />
+      }
+      footer={
+        totalCount > searchParams.pageSize ? (
+          <TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />
+        ) : undefined
+      }
       floatingPrimaryAction={canCreate}
     >
-      {apps.length === 0 && <AppNoResults />}
-      {apps.length > 0 && (
-        <TourTarget id="manage-apps-list">
-          <Stack gap="sm">
-            {apps.map((app) => (
-              <AppCard key={app.id} app={app} />
-            ))}
-          </Stack>
-        </TourTarget>
-      )}
-    </ManagePageLayout>
+      {apps.map((app) => (
+        <AppItem key={app.id} app={app} canModify={canModify} canDelete={canDelete} />
+      ))}
+    </ManageCollectionPage>
   );
+
+  return apps.length > 0 ? <TourTarget id="manage-apps-list">{page}</TourTarget> : page;
 }
 
-interface AppCardProps {
-  app: RouterOutputs["app"]["all"][number];
+interface AppItemProps {
+  app: RouterOutputs["app"]["getPaginated"]["items"][number];
+  canModify: boolean;
+  canDelete: boolean;
 }
 
-const AppCard = async ({ app }: AppCardProps) => {
+const AppItem = async ({ app, canModify, canDelete }: AppItemProps) => {
   const t = await getScopedI18n("app");
-  const session = await auth();
+  const descriptionLines = app.description?.split("\n");
+  const safeHref = getSafeAppHref(app.href);
 
   return (
-    <Card>
-      <Group justify="space-between" wrap="nowrap">
-        <Group align="top" justify="start" wrap="nowrap" style={{ flex: "1" }}>
-          <Avatar
+    <ManageCollectionItem
+      leading={<Avatar size={36} src={app.iconUrl} radius="sm" styles={{ image: { objectFit: "contain" } }} alt="" />}
+      title={
+        <Text component="span" fw={600} lineClamp={1}>
+          {app.name}
+        </Text>
+      }
+      description={
+        descriptionLines ? (
+          <Text size="sm" c="dimmed" lineClamp={2}>
+            {descriptionLines.map((line, index) => (
+              <Fragment key={index}>
+                {line}
+                {index < descriptionLines.length - 1 && <br />}
+              </Fragment>
+            ))}
+          </Text>
+        ) : undefined
+      }
+      metadata={
+        safeHref ? (
+          <Anchor
+            href={safeHref}
+            target="_blank"
+            rel="noreferrer"
+            lineClamp={1}
             size="sm"
-            src={app.iconUrl}
-            radius={0}
-            styles={{
-              image: {
-                objectFit: "contain",
-              },
-            }}
-          />
-          <Stack gap={0} style={{ flex: "1" }}>
-            <Text fw={500} lineClamp={1}>
-              {app.name}
-            </Text>
-            {app.description && (
-              <Text size="sm" c="gray.6" lineClamp={4}>
-                {app.description.split("\n").map((line, index) => (
-                  <Fragment key={index}>
-                    {line}
-                    <br />
-                  </Fragment>
-                ))}
-              </Text>
-            )}
-            {app.href && (
-              <Anchor href={app.href} lineClamp={1} size="sm" style={{ wordBreak: "break-all" }}>
-                {app.href}
-              </Anchor>
-            )}
-          </Stack>
-        </Group>
-        <Group>
+            style={{ wordBreak: "break-all" }}
+          >
+            {app.href}
+          </Anchor>
+        ) : undefined
+      }
+      actions={
+        canModify || canDelete ? (
           <ActionIconGroup>
-            {session?.user.permissions.includes("app-modify-all") && (
+            {canModify && (
               <ActionIcon
                 component={Link}
                 href={`/manage/apps/edit/${app.id}`}
                 variant="subtle"
                 color="gray"
-                aria-label={t("page.edit.title")}
+                size={44}
+                aria-label={t("page.list.action.edit", { name: app.name })}
               >
-                <IconPencil size={16} stroke={1.5} />
+                <IconPencil size={18} stroke={1.5} />
               </ActionIcon>
             )}
-            {session?.user.permissions.includes("app-full-all") && <AppDeleteButton app={app} />}
+            {canDelete && <AppDeleteButton app={app} />}
           </ActionIconGroup>
-        </Group>
-      </Group>
-    </Card>
-  );
-};
-
-const AppNoResults = async () => {
-  const t = await getI18n();
-  const session = await auth();
-
-  return (
-    <NoResults
-      icon={IconBox}
-      title={t("app.page.list.noResults.title")}
-      action={{
-        label: t("app.page.list.noResults.action"),
-        href: "/manage/apps/new",
-        hidden: !session?.user.permissions.includes("app-create"),
-      }}
+        ) : undefined
+      }
     />
   );
 };

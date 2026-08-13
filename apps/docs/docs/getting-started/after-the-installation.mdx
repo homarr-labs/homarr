@@ -6,18 +6,10 @@ tags:
   - Configuration
 ---
 
-import imageStartFromScratchStepServerSettings from "./img/onboarding-from-scratch-step-server-settings.png";
-import imageStartFromScratchStepAdminUser from "./img/onboarding-from-scratch-step-admin-user.png";
-import imageStartFromScratchStepExternalAdminGroup from "./img/onboarding-from-scratch-step-external-admin-group.png";
-import imageStartFromScratchStepFinish from "./img/onboarding-from-scratch-step-finish.png";
 import manageBoardHeaderEditMode from "./img/manage-board-header-edit-mode.png";
 import manageBoardHeaderAddItem from "./img/manage-board-header-add-item-menu.png";
 import manageBoardHeaderChooseItem from "./img/manage-board-header-choose-item.png";
 import manageBoardNoApp from "./img/manage-board-no-app.png";
-import manageExportOldHomarr from "./img/old-homarr-export-data.png";
-import manageImportOldHomarrDropzone from "./img/old-homarr-import-dropzone.png";
-import manageImportOldHomarrChooseData from "./img/old-homarr-import-choose-imported-data.png";
-import manageImportDecryptionToken from "./img/old-homarr-import-decryption-token.png";
 
 :::tip
 
@@ -29,117 +21,50 @@ Congratulations on installing Homarr. Now it's time to get yourself familiar wit
 
 ## Onboarding
 
-The onboard will show the first time you start Homarr.
-This process will help you with your first steps and adding some initial data, such as the administrator account.
+Onboarding appears the first time Homarr starts. Its goal is to create a useful responsive board, not merely an
+administrator account. The setup uses one guided studio, so you can keep the safe defaults and finish quickly or review
+every detected service before anything is added to the board.
 
 :::note
 
-If you see this screen repeatitly after you restarted the Homarr container, your Docker mounting paths may be missing,
+If you see this screen repeatedly after restarting the Homarr container, your Docker mounting paths may be missing,
 incorrect or read-only. Read [our installation instructions](/docs/getting-started/installation/docker) again to fix this issue.
 
 :::
 
-You can either import a previous dashboard using the ZIP archive or start from scratch:
+### Restore or start fresh
 
-![Screenshot of Step 1 onboarding](./img/onboarding-step-1.png)
+SQLite installations can restore a complete Homarr database backup from the welcome screen. This restores current
+boards, people, apps, integrations, and settings. The pre-1.0 ZIP importer is no longer included.
 
-You may refresh anytime and continue from a different device - the onboarding is saved immediately on the server for your convenience.
+For a new installation, Homarr first creates either a credentials administrator or an administrator group matching your
+LDAP/OIDC provider. The browser that starts setup claims the first-run session; refreshes are safe, while another browser
+cannot change credentials or integrations during that setup.
 
-### Starting from scratch
+### Setup studio
 
-Depending on your auth provider configuration you will either first see the admin user creation form or the external group creation form.
-If the credentials provider was selected, you'll be prompted to create an admin user for Homarr.
-This user cannot be deleted and has full control over Homarr and all of its boards.
-You must choose a username and password (both can later be changed).
-We enforce strict password requirements when you enter your password to protect your instance if you accidentally
-expose it to the internet.
+The studio keeps related choices together:
 
-<img src={imageStartFromScratchStepAdminUser} alt={"Screenshot form to create admin user"} width={300} />
+1. **Essentials** sets the default language, color scheme, analytics preference, and the usual host, IP address, or domain used by your services.
+2. **Discover** checks the actual database, Docker-compatible sockets, Kubernetes configuration, Workshop, and Assistant capabilities. Unavailable sources never block manual setup.
+3. **Connect** combines explicit `homarr.*` or Homepage Docker labels with image matching. Select several integrations and apps at once, review every URL, and use the service-specific link to open its API-key settings when one is available.
+4. **Board** previews the protected Mobile and Base layouts, colors, widget radius, sidebars, selected apps, and widgets inferred from integrations or Docker labels.
+5. **Extend** explains and optionally configures Homarr Assistant, the community Workshop, and the separate Homarr MCP endpoint.
+6. **Review** tests and saves the selected connections, creates the chosen apps and widgets, and configures the exact first board without clearing unrelated data.
 
-If you selected external providers (such as LDAP or OIDC), you'll be prompted to create an admin group.
-This group will be used to synchronize users from your provider to Homarr.
-When a user logs in through the provider, any of their groups that match groups in Homarr will be assigned to the user.
-The name of the group must match exactly the name of the group in the provider.
+Docker discovery reports each configured host separately. Results from reachable hosts remain selectable if another socket
+is unavailable, which is useful for remote Docker, rootless Docker, Synology, and mixed deployments. On Kubernetes or
+bare-metal installations without a Docker socket, enter services manually and use the same integration catalog.
 
-<img
-  src={imageStartFromScratchStepExternalAdminGroup}
-  alt={"Screenshot form to create external admin group"}
-  width={300}
-/>
+After setup, **Open my board** takes you directly to the configured board. The in-product tour then introduces edit mode,
+responsive layouts, widgets, and search without delaying completion.
 
-Next, you can configure some basic settings for Homarr. We recommend to leave all settings at default for most users.
-Here you can also disable analytics. Please note that our analytics are completly anonymous and is fully compliant with GDPR and PECR.
-
-<img
-  src={imageStartFromScratchStepServerSettings}
-  alt={"Screenshot of analytics and indexing settings in the onboarding"}
-  width={300}
-/>
-
-### Setting up integrations
-
-After configuring server settings, the onboarding guides you through setting up your integrations.
-
-#### Docker service discovery
-
-If Docker is available (socket mounted), Homarr automatically detects running containers and matches them to known integration types.
-Matching integrations are pre-selected in the integration list, saving you from manually picking each one.
-
-#### URL templating
-
-You can define a base URL template to auto-fill integration URLs in bulk.
-Two modes are supported:
-
-- **Subdomain mode** - e.g. `{app}.example.com` where `{app}` is replaced with the integration name
-- **Port mode** - e.g. `192.168.1.1:{port}` where `{port}` is replaced with the integration's default port
-
-#### API key helper links
-
-For integrations that require API keys (such as Sonarr, Radarr, SABnzbd, or Seerr), a helper link opens the relevant settings page in the target application so you can quickly copy your key.
-
-#### Creating apps from Docker containers
-
-You can optionally auto-create bookmark apps for all discovered Docker containers, making them immediately available on your board.
-
-:::note
-
-Release providers and Search.ch are configured directly in their widgets instead of the integrations page.
-
-:::
-
-After this step, you finished the onboarding.
-The onboarding can no longer be started again.
-From here you can click on one of the provided links to continue your journey.
-We recommend you to continue with the section [creating your first board on this page](#creating-your-first-board).
-
-<img src={imageStartFromScratchStepFinish} alt={"Screenshot of the finish onboarding process with links"} width={300} />
-
-### Importing a ZIP from version before 1.0.0
-
-This is recommended when you used Homarr before and want to re-import your data.
-It is important that you first migrate correctly using [the list of breaking changes for 1.0](/blog/2024/09/23/version-1.0).
-
-<img src={manageExportOldHomarr} alt="Export from old Homarr" style={{ maxWidth: 500 }} />
-
-**How to export and import data**
-
-1. Navigate to your old Homarr, open your management pages, open the tools submenu and open `Migrate to 1.0`.
-2. Check the contents that you want to export. We recommend you to export all data.
-3. Click on the export data button
-4. Save the ZIP file, that is being downloaded, on your device. If you selected "integrations" or "users", you also get an encryption / decryption key.
-   Copy it and do not loose it!
-5. Go to your new >1.0.0 Homarr instance and start the onboarding. Choose `Import from Homarr before 1.0`
-6. Drag and drop your previously downloaded ZIP archive into the file upload: <br/><img src={manageImportOldHomarrDropzone} style={{ maxWidth: 500 }} />
-7. Next, choose the data that you want to import and how to import it. Since screen sizes were removed in 1.0, we create a new board for every screen size by default. We recommend you to only keep the best layout and adjust it later in 1.0.0 - but you can also import all of them and pick later.<br/><img src={manageImportOldHomarrChooseData} style={{ maxWidth: 500 }} />
-8. If you previously exported integrations or users, you will be asked to decrypt the data safely using your obtained encryption token. Paste into the modal and confirm your action.<br/><img src={manageImportDecryptionToken} style={{ maxWidth: 500 }} />
-9. Next, you can [follow the same setup as when starting from scratch](#starting-from-scratch). After you completed the onboarding, all of your data will be migrated and available.
-
-## Creating your first board
+## Creating another board
 
 In Homarr, you organize your apps and widgets on boards.
 Boards use fixed-size tiles so the same widget keeps the same proportions on every screen.
 Drag, resize, and section controls are available in edit mode.
-Let's create your first board by navigating here: `Manage` > `Boards` > `New board`:
+Onboarding already created the first board. To create another one, navigate to `Manage` > `Boards` > `New board`:
 ![](./img/manage-create-board-button.png)
 
 A board must always have a name and can either be public or private.

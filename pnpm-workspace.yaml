@@ -166,6 +166,7 @@ catalog:
   mantine-datatable: ^9.3.1
   mantine-react-table: npm:mantine-react-table-open@9.0.3
   mermaid: ^11.15.0
+  motion: ^13.0.0
   maria2: ^0.4.1
   mysql2: 3.22.6
   next: 16.3.0-preview.9

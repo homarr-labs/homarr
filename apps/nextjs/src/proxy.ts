@@ -42,8 +42,9 @@ const getDefaultLocaleDedupedAsync = () => {
 export async function proxy(request: NextRequest) {
   // Redirect to onboarding if it's not finished yet
   const pathname = request.nextUrl.pathname;
+  const isOnboardingAccessRoute = /\/(?:init|auth\/login)\/?$/.test(pathname);
 
-  if (!isOnboardingFinished && !pathname.endsWith("/init")) {
+  if (!isOnboardingFinished && !isOnboardingAccessRoute) {
     const currentOnboardingStep = await getOnboardingStepDedupedAsync();
     if (currentOnboardingStep !== "finish") {
       return NextResponse.redirect(new URL("/init", request.url));

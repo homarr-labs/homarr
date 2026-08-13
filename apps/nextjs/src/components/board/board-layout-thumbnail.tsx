@@ -1,0 +1,91 @@
+import { Box, Center } from "@mantine/core";
+import { IconLayoutGrid } from "@tabler/icons-react";
+
+import type { BoardPreviewData } from "@homarr/boards/layout-preview";
+import { projectBoardLayout } from "@homarr/boards/layout-preview";
+import { boardLanes, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
+
+import classes from "./board-layout-thumbnail.module.css";
+
+interface BoardLayoutThumbnailProps {
+  preview: BoardPreviewData | null;
+  label: string;
+}
+
+const maxThumbnailRows = 12;
+
+export const BoardLayoutThumbnail = ({ preview, label }: BoardLayoutThumbnailProps) => {
+  const layout = preview?.layouts.at(0);
+  if (!preview || !layout) {
+    return (
+      <Center className={classes.canvas} role="img" aria-label={label}>
+        <IconLayoutGrid size={28} stroke={1.4} aria-hidden />
+      </Center>
+    );
+  }
+
+  const elements = projectBoardLayout(preview, layout, layout);
+  const roots = preview.sections.filter((section) => section.kind === "empty");
+  const lanes = boardLanes.flatMap((lane) => {
+    const root = roots.find((section) => getRootSectionLane(section.xOffset) === lane);
+    const columnCount = getBoardLaneColumnCount(layout, lane);
+    return root && columnCount > 0 ? [{ lane, root, columnCount }] : [];
+  });
+  if (lanes.length === 0) {
+    return (
+      <Center className={classes.canvas} role="img" aria-label={label}>
+        <IconLayoutGrid size={28} stroke={1.4} aria-hidden />
+      </Center>
+    );
+  }
+
+  return (
+    <Box className={classes.canvas} role="img" aria-label={label}>
+      <div
+        className={classes.lanes}
+        style={{ gridTemplateColumns: lanes.map(({ columnCount }) => `${columnCount}fr`).join(" ") }}
+      >
+        {lanes.map(({ lane, root, columnCount }) => {
+          const laneElements = elements.filter(
+            (element) =>
+              element.sectionId === root.id &&
+              element.xOffset >= 0 &&
+              element.xOffset < columnCount &&
+              element.yOffset >= 0 &&
+              element.yOffset < maxThumbnailRows &&
+              element.width > 0 &&
+              element.height > 0,
+          );
+          const rowCount = Math.min(
+            maxThumbnailRows,
+            Math.max(4, ...laneElements.map((element) => element.yOffset + element.height)),
+          );
+
+          return (
+            <div
+              key={lane}
+              className={classes.lane}
+              data-lane={lane}
+              style={{
+                gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
+                gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
+              }}
+            >
+              {laneElements.map((element) => (
+                <span
+                  key={`${element.type}-${element.id}`}
+                  aria-hidden
+                  className={`${classes.tile} ${element.type === "section" ? classes.container : ""}`}
+                  style={{
+                    gridColumn: `${element.xOffset + 1} / span ${Math.min(element.width, columnCount - element.xOffset)}`,
+                    gridRow: `${element.yOffset + 1} / span ${Math.min(element.height, rowCount - element.yOffset)}`,
+                  }}
+                />
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    </Box>
+  );
+};

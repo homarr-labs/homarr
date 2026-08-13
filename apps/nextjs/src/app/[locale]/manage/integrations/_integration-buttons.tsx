@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { ActionIcon } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 
@@ -11,13 +10,12 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 
 interface DeleteIntegrationActionButtonProps {
-  count: number;
   integration: { id: string; name: string };
 }
 
-export const DeleteIntegrationActionButton = ({ count, integration }: DeleteIntegrationActionButtonProps) => {
+export const DeleteIntegrationActionButton = ({ integration }: DeleteIntegrationActionButtonProps) => {
   const t = useScopedI18n("integration.page.delete");
-  const router = useRouter();
+  const tList = useScopedI18n("integration.page.list.action");
   const { openConfirmModal } = useConfirmModal();
   const utils = clientApi.useUtils();
   const { mutateAsync, isPending } = clientApi.integration.delete.useMutation();
@@ -27,6 +25,7 @@ export const DeleteIntegrationActionButton = ({ count, integration }: DeleteInte
       loading={isPending}
       variant="subtle"
       color="red"
+      size={44}
       onClick={() => {
         openConfirmModal({
           title: t("title"),
@@ -40,9 +39,6 @@ export const DeleteIntegrationActionButton = ({ count, integration }: DeleteInte
                     title: t("notification.success.title"),
                     message: t("notification.success.message"),
                   });
-                  if (count === 1) {
-                    router.replace("/manage/integrations");
-                  }
                   void revalidatePathActionAsync("/manage/integrations");
                   void utils.integration.invalidate();
                 },
@@ -57,7 +53,7 @@ export const DeleteIntegrationActionButton = ({ count, integration }: DeleteInte
           },
         });
       }}
-      aria-label={t("title")}
+      aria-label={tList("delete", { name: integration.name })}
     >
       <IconTrash color="red" size={16} stroke={1.5} />
     </ActionIcon>

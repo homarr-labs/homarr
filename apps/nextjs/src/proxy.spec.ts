@@ -62,6 +62,16 @@ describe("locale and onboarding proxy", () => {
     expect(mocks.getDefaultLocale).toHaveBeenCalledOnce();
   });
 
+  it("allows administrator sign-in while onboarding is unfinished", async () => {
+    mocks.getOnboardingStep.mockResolvedValue("setup");
+    const { proxy } = await loadProxy();
+
+    const response = await proxy(createRequest("/en/auth/login"));
+
+    expect(response.status).toBe(200);
+    expect(mocks.getOnboardingStep).not.toHaveBeenCalled();
+  });
+
   it("uses the configured default locale for a missing or invalid locale cookie", async () => {
     mocks.getDefaultLocale.mockResolvedValue("de");
     const { proxy } = await loadProxy();

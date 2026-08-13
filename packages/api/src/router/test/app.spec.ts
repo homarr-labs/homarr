@@ -76,23 +76,23 @@ describe("all should return all apps", () => {
   });
 });
 
-describe("getPaginated should require board modification access", () => {
-  test("should throw FORBIDDEN without board-modify-all", async () => {
+describe("getPaginated should return apps to authenticated users", () => {
+  test("should throw UNAUTHORIZED without a session", async () => {
     const caller = appRouter.createCaller({
       db: createDb(),
       deviceType: undefined,
-      session: createDefaultSession(),
+      session: null,
     });
 
-    await expect(caller.getPaginated({ page: 1, pageSize: 10 })).rejects.toThrow("Permission denied");
+    await expect(caller.getPaginated({ page: 1, pageSize: 10 })).rejects.toThrow("UNAUTHORIZED");
   });
 
-  test("should return apps with board-modify-all", async () => {
+  test("should return apps without board permissions", async () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
-      session: createDefaultSession(["board-modify-all"]),
+      session: createDefaultSession(),
     });
     await db.insert(apps).values({ id: "1", name: "Homarr", iconUrl: "https://homarr.dev/icon.svg" });
 

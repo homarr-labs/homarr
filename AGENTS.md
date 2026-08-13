@@ -40,8 +40,6 @@ homarr/
 │   ├── analytics/       # Server-side analytics (Umami)
 │   ├── server-settings/ # Server setting keys/types
 │   ├── settings/        # User-facing settings UI context
-│   ├── old-import/      # Legacy Homarr import
-│   ├── old-schema/      # Legacy Homarr zod schemas
 │   └── cli/             # Node CLI for ops (brocli)
 ├── tooling/
 │   ├── typescript/      # Base tsconfig

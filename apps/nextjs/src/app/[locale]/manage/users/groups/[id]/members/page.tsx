@@ -66,7 +66,11 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       )}
 
       <Group justify="space-between">
-        <SearchInput placeholder={`${tMembers("search")}...`} defaultValue={searchParams.search} />
+        <SearchInput
+          placeholder={`${tMembers("search")}...`}
+          ariaLabel={tMembers("search")}
+          defaultValue={searchParams.search}
+        />
         {canManageMembers && !isReserved && (
           <AddGroupMember
             groupId={group.id}

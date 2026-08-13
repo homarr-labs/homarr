@@ -24,10 +24,11 @@ import {
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
+import { constructBoardPermissions } from "@homarr/auth/shared";
 import { getScopedI18n } from "@homarr/translation/server";
 import { Link, UserAvatar } from "@homarr/ui";
 
-import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
+import { BoardLayoutThumbnail } from "~/components/board/board-layout-thumbnail";
 import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { NoResults } from "~/components/no-results";
@@ -37,7 +38,7 @@ import { CreateBoardButton } from "./_components/create-board-button";
 export default async function ManageBoardsPage() {
   const t = await getScopedI18n("management.page.board");
   const session = await auth();
-  const boards = await api.board.getAllBoards();
+  const boards = await api.board.getManageOverview();
   const canCreateBoards = session?.user.permissions.includes("board-create");
 
   return (
@@ -52,13 +53,31 @@ export default async function ManageBoardsPage() {
       }
       floatingPrimaryAction={canCreateBoards}
     >
-      {boards.length === 0 && <NoResults icon={IconLayoutDashboard} title={t("noResults.title")} />}
+      {boards.length === 0 && (
+        <NoResults icon={IconLayoutDashboard} title={t("noResults.title")} description={t("noResults.description")} />
+      )}
       {boards.length > 0 && (
         <TourTarget id="manage-boards-list">
           <Grid>
             {boards.map((board) => (
               <GridCol span={{ base: 12, md: 6 }} key={board.id}>
-                <BoardCard board={board} />
+                <BoardCard
+                  board={board}
+                  isMenuVisible={constructBoardPermissions(board, session).hasChangeAccess}
+                  labels={{
+                    visibility: t(`visibility.${board.isPublic ? "public" : "private"}`),
+                    preview: t("preview.label", {
+                      name: board.name,
+                      count: String(board.preview?.items.length ?? 0),
+                    }),
+                    home: t("action.setHomeBoard.badge.label"),
+                    homeTooltip: t("action.setHomeBoard.badge.tooltip"),
+                    mobileHome: t("action.setMobileHomeBoard.badge.label"),
+                    mobileHomeTooltip: t("action.setMobileHomeBoard.badge.tooltip"),
+                    open: t("action.open.label"),
+                    settings: t("action.settings.label"),
+                  }}
+                />
               </GridCol>
             ))}
           </Grid>
@@ -69,48 +88,60 @@ export default async function ManageBoardsPage() {
 }
 
 interface BoardCardProps {
-  board: RouterOutputs["board"]["getAllBoards"][number];
+  board: RouterOutputs["board"]["getManageOverview"][number];
+  isMenuVisible: boolean;
+  labels: {
+    visibility: string;
+    preview: string;
+    home: string;
+    homeTooltip: string;
+    mobileHome: string;
+    mobileHomeTooltip: string;
+    open: string;
+    settings: string;
+  };
 }
 
-const BoardCard = async ({ board }: BoardCardProps) => {
-  const t = await getScopedI18n("management.page.board");
-  const { hasChangeAccess: isMenuVisible } = await getBoardPermissionsAsync(board);
-  const visibility = board.isPublic ? "public" : "private";
+const BoardCard = ({ board, isMenuVisible, labels }: BoardCardProps) => {
   const VisibilityIcon = board.isPublic ? IconWorld : IconLock;
 
   return (
-    <Card>
+    <Card padding={0} withBorder>
+      <CardSection withBorder>
+        <BoardLayoutThumbnail preview={board.preview} label={labels.preview} />
+      </CardSection>
       <CardSection p="sm" withBorder>
-        <Group justify="space-between" align="center">
-          <Group gap="sm">
-            <Tooltip label={t(`visibility.${visibility}`)}>
+        <Group justify="space-between" align="flex-start" wrap="wrap" gap="xs">
+          <Group gap="sm" wrap="nowrap" style={{ minWidth: 0, flex: "1 1 12rem" }}>
+            <Tooltip label={labels.visibility}>
               <VisibilityIcon size={20} stroke={1.5} />
             </Tooltip>
-            <Text fw={700}>{board.name}</Text>
+            <Text fw={700} truncate>
+              {board.name}
+            </Text>
           </Group>
 
-          <Group>
+          <Group gap="xs" justify="flex-end" wrap="wrap" style={{ marginInlineStart: "auto" }}>
             {board.isHome && (
-              <Tooltip label={t("action.setHomeBoard.badge.tooltip")}>
+              <Tooltip label={labels.homeTooltip}>
                 <Badge tt="none" color="yellow" variant="light" leftSection={<IconHomeFilled size=".7rem" />}>
-                  {t("action.setHomeBoard.badge.label")}
+                  {labels.home}
                 </Badge>
               </Tooltip>
             )}
 
             {board.isMobileHome && (
-              <Tooltip label={t("action.setMobileHomeBoard.badge.tooltip")}>
+              <Tooltip label={labels.mobileHomeTooltip}>
                 <Badge tt="none" color="yellow" variant="light" leftSection={<IconDeviceMobile size=".7rem" />}>
-                  {t("action.setMobileHomeBoard.badge.label")}
+                  {labels.mobileHome}
                 </Badge>
               </Tooltip>
             )}
 
             {board.creator && (
-              <Group gap="xs">
+              <Tooltip label={board.creator.name ?? board.creator.email}>
                 <UserAvatar user={board.creator} size="sm" />
-                <Text>{board.creator.name}</Text>
-              </Group>
+              </Tooltip>
             )}
           </Group>
         </Group>
@@ -123,9 +154,10 @@ const BoardCard = async ({ board }: BoardCardProps) => {
             component={Link}
             href={`/boards/${board.name}`}
             variant="default"
+            h={44}
             fullWidth
           >
-            {t("action.open.label")}
+            {labels.open}
           </Button>
           {isMenuVisible && (
             <Menu position="bottom-end">
@@ -133,8 +165,8 @@ const BoardCard = async ({ board }: BoardCardProps) => {
                 <ActionIcon
                   style={{ borderTop: "none", borderBottom: "none", borderRight: "none", borderRadius: 0 }}
                   variant="default"
-                  size="lg"
-                  aria-label={t("action.settings.label")}
+                  size={44}
+                  aria-label={labels.settings}
                 >
                   <IconDotsVertical size={16} stroke={1.5} />
                 </ActionIcon>

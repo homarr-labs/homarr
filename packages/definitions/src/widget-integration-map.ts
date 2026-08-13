@@ -63,6 +63,40 @@ export const widgetIntegrationLimits: Partial<Record<WidgetKind, number>> = {
   audioStats: 1,
 };
 
+export type WidgetIntegrationIssue =
+  | { code: "integration-not-supported" }
+  | { code: "integration-required" }
+  | { code: "incompatible-integration"; incompatibleKinds: IntegrationKind[] }
+  | { code: "integration-limit"; limit: number };
+
+export const getWidgetIntegrationIssue = (
+  widgetKind: WidgetKind,
+  integrationKinds: readonly IntegrationKind[],
+): WidgetIntegrationIssue | null => {
+  const supportedIntegrations = widgetIntegrationSupport[widgetKind];
+  const integrationLimit = widgetIntegrationLimits[widgetKind] ?? Number.POSITIVE_INFINITY;
+  if (integrationKinds.length > integrationLimit) return { code: "integration-limit", limit: integrationLimit };
+  if (supportedIntegrations === undefined && integrationKinds.length > 0) return { code: "integration-not-supported" };
+  if (
+    supportedIntegrations !== undefined &&
+    integrationKinds.length === 0 &&
+    !widgetKindsWithOptionalIntegrations.has(widgetKind)
+  ) {
+    return { code: "integration-required" };
+  }
+  const incompatibleKinds = integrationKinds.filter((kind) => !supportedIntegrations?.includes(kind));
+  return incompatibleKinds.length > 0 ? { code: "incompatible-integration", incompatibleKinds } : null;
+};
+
+export const getWidgetIntegrationIssueMessage = (widgetKind: WidgetKind, issue: WidgetIntegrationIssue) => {
+  if (issue.code === "integration-limit") {
+    return `${widgetKind} supports at most ${issue.limit} integration${issue.limit === 1 ? "" : "s"}`;
+  }
+  if (issue.code === "integration-not-supported") return `${widgetKind} does not support integrations`;
+  if (issue.code === "integration-required") return `${widgetKind} requires an integration`;
+  return `${widgetKind} does not support integration kind${issue.incompatibleKinds.length === 1 ? "" : "s"}: ${issue.incompatibleKinds.join(", ")}`;
+};
+
 export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {
   const result: WidgetKind[] = [];
   for (const [widgetKind, supportedIntegrations] of Object.entries(widgetIntegrationSupport)) {

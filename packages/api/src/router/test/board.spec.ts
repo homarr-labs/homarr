@@ -287,6 +287,113 @@ describe("getAllBoards should return all boards accessable to the current user",
   );
 });
 
+describe("getManageOverview", () => {
+  test("returns the same accessible board set as getAllBoards", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const otherUserId = await createRandomUserAsync(db);
+    const publicBoardId = createId();
+    const creatorBoardId = createId();
+    const directBoardId = createId();
+    const groupBoardId = createId();
+    const hiddenBoardId = createId();
+    const groupId = createId();
+
+    await db.insert(users).values({ id: defaultCreatorId });
+    await db.insert(boards).values([
+      { id: publicBoardId, name: "public-overview", creatorId: otherUserId, isPublic: true },
+      { id: creatorBoardId, name: "creator-overview", creatorId: defaultCreatorId, isPublic: false },
+      { id: directBoardId, name: "direct-overview", creatorId: otherUserId, isPublic: false },
+      { id: groupBoardId, name: "group-overview", creatorId: otherUserId, isPublic: false },
+      { id: hiddenBoardId, name: "hidden-overview", creatorId: otherUserId, isPublic: false },
+    ]);
+    await db.insert(boardUserPermissions).values({
+      userId: defaultCreatorId,
+      boardId: directBoardId,
+      permission: "view",
+    });
+    await db.insert(groups).values({ id: groupId, name: "overview-group", position: 1 });
+    await db.insert(groupMembers).values({ userId: defaultCreatorId, groupId });
+    await db.insert(boardGroupPermissions).values({ groupId, boardId: groupBoardId, permission: "view" });
+
+    const [summaries, overview] = await Promise.all([caller.getAllBoards(), caller.getManageOverview()]);
+
+    expect(overview.map((board) => board.id).toSorted()).toEqual(summaries.map((board) => board.id).toSorted());
+    expect(overview.map((board) => board.id)).not.toContain(hiddenBoardId);
+  });
+
+  test("returns one compact base-layout preview for each accessible board", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const boardId = createId();
+    const hiddenBoardId = createId();
+    const baseLayoutId = createId();
+    const mobileLayoutId = createId();
+    const rootSectionId = createId();
+    const itemId = createId();
+
+    await db.insert(users).values({ id: defaultCreatorId });
+    await db.insert(boards).values([
+      { id: boardId, name: "overview", creatorId: defaultCreatorId, isPublic: false },
+      { id: hiddenBoardId, name: "hidden", creatorId: await createRandomUserAsync(db), isPublic: false },
+    ]);
+    await db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, defaultCreatorId));
+    await db.insert(layouts).values([
+      {
+        id: mobileLayoutId,
+        name: "Mobile",
+        boardId,
+        columnCount: 3,
+        breakpoint: 0,
+        role: "mobile",
+      },
+      {
+        id: baseLayoutId,
+        name: "Base",
+        boardId,
+        columnCount: 12,
+        breakpoint: 768,
+        role: "base",
+      },
+    ]);
+    await db.insert(sections).values({
+      id: rootSectionId,
+      boardId,
+      kind: "empty",
+      xOffset: 0,
+      yOffset: 0,
+    });
+    await db.insert(items).values({ id: itemId, boardId, kind: "clock" });
+    await db.insert(itemLayouts).values({
+      itemId,
+      sectionId: rootSectionId,
+      layoutId: baseLayoutId,
+      xOffset: 2,
+      yOffset: 1,
+      width: 4,
+      height: 2,
+    });
+
+    const result = await caller.getManageOverview();
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      id: boardId,
+      isHome: true,
+      preview: {
+        layouts: [{ id: baseLayoutId, role: "base", columnCount: 12 }],
+        items: [
+          {
+            id: itemId,
+            layouts: [{ layoutId: baseLayoutId, sectionId: rootSectionId, width: 4, height: 2 }],
+          },
+        ],
+      },
+    });
+    expect(result[0]?.preview?.layouts).toHaveLength(1);
+  });
+});
+
 describe("createBoard should create a new board", () => {
   test("should create a new board with permission board-create", async () => {
     // Arrange
