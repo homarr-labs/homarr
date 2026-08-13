@@ -212,7 +212,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [activeSection, setActiveSection] = useState<StudioSection>("essentials");
   const [incompleteIntegrationConfirmationOpened, setIncompleteIntegrationConfirmationOpened] = useState(false);
   const [selectedLocale, setSelectedLocale] = useState(currentLocale);
-  const [serverOrigin, setServerOrigin] = useState("");
+  const [serverOrigin, setServerOrigin] = useState(environment.serverOrigin);
   const [urlMode, setUrlMode] = useState<UrlTemplateMode>("hostPort");
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
   const [selectedKinds, setSelectedKinds] = useState<IntegrationKind[]>([]);
@@ -281,10 +281,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     () => new Set(discoveredIntegrations.map((integration) => integration.kind)),
     [discoveredIntegrations],
   );
-
-  useEffect(() => {
-    setServerOrigin((current) => current || window.location.origin);
-  }, []);
 
   useEffect(() => {
     if (!docker.data) return;
@@ -894,6 +890,8 @@ const SectionHeading = ({
 
 const Essentials = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.essentials");
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => setIsHydrated(true), []);
   return (
     <Stack gap="lg">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
@@ -921,9 +919,9 @@ const Essentials = (props: StudioSectionProps) => {
           placeholder="home.lan · 192.168.1.10 · https://homarr.example.com"
           value={props.serverOrigin}
           onChange={(event) => props.setServerOrigin(event.currentTarget.value)}
+          readOnly={!isHydrated}
           required
           withAsterisk
-          autoFocus
         />
         <OnboardingFloatingControl
           ariaLabel={t("urlModeLabel")}
@@ -1614,6 +1612,7 @@ const BoardPreview = ({
     <figure
       className={classes.preview}
       aria-label={ariaLabel}
+      data-layout-role="base"
       data-layout-columns={columnCount}
       style={
         {

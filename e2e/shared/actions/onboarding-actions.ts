@@ -52,6 +52,7 @@ export class OnboardingActions {
   }
 
   public async processIntegrationsStepAsync() {
+    await this.page.getByRole("button", { name: "Review (6/6)" }).click();
     await this.page.getByRole("button", { name: "Build my board" }).click();
   }
 }

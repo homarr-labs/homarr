@@ -11,6 +11,7 @@ export interface OnboardingEnvironment {
   kubernetesConfigured: boolean;
   workshopApiUrl: string;
   workshopUrl: string;
+  serverOrigin: string;
   mcpEndpoint: string;
   canConfigurePrivileged: boolean;
   hasUsers: boolean;

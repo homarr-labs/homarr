@@ -64,6 +64,7 @@ export default async function InitPage() {
         kubernetesConfigured: canReadSetupContext && dockerEnv.ENABLE_KUBERNETES,
         workshopApiUrl,
         workshopUrl: workshopWebUrl,
+        serverOrigin: baseUrl,
         mcpEndpoint: `${baseUrl}/api/mcp`,
         canConfigurePrivileged,
         hasUsers: Boolean(firstUser),
