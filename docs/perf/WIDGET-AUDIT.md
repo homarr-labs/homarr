@@ -2,6 +2,12 @@
 
 Every widget in `packages/widgets/src`, worked through one at a time. 50 widgets, 22,726 lines.
 
+`_inputs/` is excluded on purpose, not overlooked. Its 2,748 lines are widget *option* editors, reached
+only from the edit modal and the custom-widget form; the one widget that imports from it,
+`timetable/component.tsx`, uses `import type`, which is erased at build. None of it is on the board
+render path. The one real finding there — a drag handle rebuilt every frame of a drag — was found and
+fixed by the anti-pattern audit, which does cover the directory.
+
 The point of doing this exhaustively rather than opportunistically: the two largest client wins so far
 (`OverflowBadge`, `content-visibility` on media-releases) were both found in widgets nobody suspected,
 and both turned out to be *shared* problems that repeated across many widgets. A sweep finds the
@@ -40,6 +46,17 @@ their panels mounted and are left alone:
 
 `health-monitoring` is the worse of the two: its panels are the system and cluster monitors, so a
 board showing one was building the other's whole tree as well.
+
+**The premise is verified, not inferred.** This started as a reading of Mantine's documentation, which
+is a weak basis for a prop that trades a remount cost for a mount saving — if Mantine ever stopped
+rendering inactive panels, the prop would be pure loss. `common/tabs-keep-mounted.spec.ts` pins the
+behaviour in the installed version: with three marker children per panel, the default renders **3 of 3**
+children of the *inactive* panel into the DOM, and `keepMounted={false}` renders **0**. If that ever
+changes, the test fails and the prop should come back out.
+
+What remains unmeasured is the *magnitude* on a live board — `media-missing` and `health-monitoring`
+need reachable integrations to render data, so neither could go through the per-widget component-count
+harness. The mechanism is confirmed; the size of the saving is not.
 
 ## Changes made
 
@@ -147,6 +164,8 @@ Sourced with the `skills` CLI — `npx skills find "react performance"`, then
 | Ternary over `&&` for conditional render | rendering | **passes** — only 2 `&&` renders exist and both operands are already boolean or string, so nothing can render a literal `0` |
 | Passive listeners for scroll | client fetching | **N/A** — no widget registers a scroll listener |
 | `Set`/`Map` for membership over `Array.includes` | JS micro-perf | **passes** — the nested scans that exist are over configured integrations and column accessors, single digits either way. `use-persisted-table-layout` already uses a `Set` for the hot half |
+| Hoist RegExp out of loops | JS micro-perf | **passes** — the only user-supplied pattern, the release version filter, is compiled once by `compileVersionRegex` before the `.filter()` that uses it |
+| Statically analyzable dynamic imports | bundle | **one exception, justified** — `translation/src/mapping.ts` builds `import(`./lang/${language}.json`)` for 36 languages, 6.8 MiB of JSON. The rule targets accidental over-inclusion; here every language is genuinely reachable because the user can switch at runtime, so the context module includes exactly what is needed. Rewriting it as 36 explicit entries would emit the same 36 lazy chunks |
 | `React.cache()` for per-request dedup | server | **applied** — 4 functions |
 | TanStack Query for dedup, not hand-rolled `useEffect` + `fetch` | client fetching | **passes** — used throughout |
 | Direct imports, not barrels | bundle | **partial** — see below |
