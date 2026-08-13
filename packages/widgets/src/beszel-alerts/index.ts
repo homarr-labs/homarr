@@ -6,7 +6,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelAlerts", {
   icon: IconBell,
-  supportsAdvancedFocus: true,
   queryKey: [["widget", "beszel", "getAlerts"]],
   queryMatcher(query, scope) {
     const hasRuntimeAlertsQuery = scope.runtimeQueries.some(({ path }) => path.at(-1) === "getAlerts");
