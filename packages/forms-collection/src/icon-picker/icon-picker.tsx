@@ -73,7 +73,11 @@ export const IconPicker = ({
   const [value, setValue] = useUncontrolled({ value: propsValue, onChange, defaultValue: "" });
   const [draft, setDraft] = useState(propsValue ?? "");
   const [hasEdited, setHasEdited] = useState(false);
-  const [keyboardIndex, setKeyboardIndex] = useState(-1);
+  // The option the user navigated to is remembered by its URL and not by its position,
+  // because the list grows while the dropdown is open, for example when the detected
+  // website icon arrives. A position would then point at a different option than the
+  // one the user actually highlighted.
+  const [keyboardSelectedUrl, setKeyboardSelectedUrl] = useState<string | null>(null);
   const [previewState, setPreviewState] = useState<PreviewState>("idle");
   const { data: session } = useSession();
   const tCommon = useScopedI18n("common");
@@ -128,15 +132,28 @@ export const IconPicker = ({
     () => [...(detectedFavicon ? [detectedFavicon] : []), ...sections.local, ...sections.svg, ...sections.other],
     [detectedFavicon, sections.local, sections.svg, sections.other],
   );
-  const sectionOffset = detectedFavicon ? 1 : 0;
   const totalOptions = sections.local.length + sections.svg.length + sections.other.length;
+  const keyboardIndex = useMemo(
+    () =>
+      keyboardSelectedUrl === null ? -1 : orderedOptions.findIndex((option) => option.url === keyboardSelectedUrl),
+    [keyboardSelectedUrl, orderedOptions],
+  );
+
+  // Mantine marks the highlighted option by its position, so the mark is moved along
+  // whenever options are inserted before the one the user navigated to.
+  const { selectOption: selectComboboxOption } = combobox;
+  useEffect(() => {
+    if (keyboardIndex >= 0) {
+      selectComboboxOption(keyboardIndex);
+    }
+  }, [keyboardIndex, selectComboboxOption]);
 
   const commitValue = (nextValue: string) => {
     startTransition(() => {
       setValue(nextValue);
       setDraft(nextValue);
       setHasEdited(false);
-      setKeyboardIndex(-1);
+      setKeyboardSelectedUrl(null);
     });
   };
 
@@ -169,18 +186,15 @@ export const IconPicker = ({
     if (!directUrl && orderedOptions.length > 0 && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
       event.preventDefault();
       combobox.openDropdown("keyboard");
-      setKeyboardIndex((current) => {
-        const next =
-          event.key === "ArrowDown"
-            ? current >= orderedOptions.length - 1
-              ? 0
-              : current + 1
-            : current <= 0
-              ? orderedOptions.length - 1
-              : current - 1;
-        combobox.selectOption(next);
-        return next;
-      });
+      const nextIndex =
+        event.key === "ArrowDown"
+          ? keyboardIndex >= orderedOptions.length - 1
+            ? 0
+            : keyboardIndex + 1
+          : keyboardIndex <= 0
+            ? orderedOptions.length - 1
+            : keyboardIndex - 1;
+      setKeyboardSelectedUrl(orderedOptions[nextIndex]?.url ?? null);
       return;
     }
 
@@ -197,14 +211,14 @@ export const IconPicker = ({
     }
   };
 
-  const renderIconOptions = (icons: typeof sections.local, offset: number) => (
+  const renderIconOptions = (icons: typeof sections.local) => (
     <SimpleGrid className={classes.iconGrid} spacing={6} verticalSpacing={6}>
-      {icons.map((icon, index) => (
+      {icons.map((icon) => (
         <Tooltip key={icon.id} label={`${icon.name} · ${icon.repositorySlug}`} openDelay={500}>
           <Combobox.Option
             value={icon.url}
             aria-label={icon.name}
-            active={icon.url === value || keyboardIndex === offset + index}
+            active={icon.url === value || icon.url === keyboardSelectedUrl}
             className={classes.iconOption}
           >
             <Image src={icon.url} alt="" w={30} h={30} fit="contain" fallbackSrc="/logo/logo.png" />
@@ -228,7 +242,7 @@ export const IconPicker = ({
               <Combobox.Option
                 value={detectedFavicon.url}
                 aria-label={detectedFavicon.hostname}
-                active={detectedFavicon.url === value || keyboardIndex === 0}
+                active={detectedFavicon.url === value || detectedFavicon.url === keyboardSelectedUrl}
                 className={classes.iconOption}
               >
                 <Image src={detectedFavicon.url} alt="" w={30} h={30} fit="contain" fallbackSrc="/logo/logo.png" />
@@ -278,17 +292,17 @@ export const IconPicker = ({
       <Stack gap="sm" p="xs">
         {sections.local.length > 0 && (
           <PickerSection icon={<IconPhoto size={15} />} label={tCommon("iconPicker.localImages")}>
-            {renderIconOptions(sections.local, sectionOffset)}
+            {renderIconOptions(sections.local)}
           </PickerSection>
         )}
         {sections.svg.length > 0 && (
           <PickerSection label={tCommon("iconPicker.svgIcons")} badge="SVG">
-            {renderIconOptions(sections.svg, sectionOffset + sections.local.length)}
+            {renderIconOptions(sections.svg)}
           </PickerSection>
         )}
         {sections.other.length > 0 && (
           <PickerSection icon={<IconCloud size={15} />} label={tCommon("iconPicker.otherImages")}>
-            {renderIconOptions(sections.other, sectionOffset + sections.local.length + sections.svg.length)}
+            {renderIconOptions(sections.other)}
           </PickerSection>
         )}
       </Stack>
@@ -381,7 +395,7 @@ export const IconPicker = ({
             const nextValue = event.currentTarget.value;
             setDraft(nextValue);
             setHasEdited(true);
-            setKeyboardIndex(-1);
+            setKeyboardSelectedUrl(null);
             combobox.openDropdown("keyboard");
             combobox.updateSelectedOptionIndex();
 
