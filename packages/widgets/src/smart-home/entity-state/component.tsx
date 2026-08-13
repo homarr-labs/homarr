@@ -158,6 +158,11 @@ export default function SmartHomeEntityStateWidget({
                 {t("advanced.entityId", { id: entity.entity_id })}
               </Text>
               <Text size="xs" c="dimmed">
+                {t("advanced.lastChanged", {
+                  date: new Date(entity.last_changed).toLocaleString(locale),
+                })}
+              </Text>
+              <Text size="xs" c="dimmed">
                 {t("advanced.lastUpdated", {
                   date: new Date(entity.last_updated).toLocaleString(locale),
                 })}

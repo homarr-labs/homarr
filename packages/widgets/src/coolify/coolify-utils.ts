@@ -110,3 +110,26 @@ export function createStorageKey(widgetKey: string, integrationId: string, type:
   const cardKey = widgetKey.includes("-") ? `${widgetKey}-${integrationId}` : widgetKey;
   return `coolify-${type}-${cardKey}`;
 }
+
+interface CoolifySectionOptions {
+  showServers: boolean;
+  showApplications: boolean;
+  showServices: boolean;
+}
+
+export function getCoolifySectionVisibility(
+  options: CoolifySectionOptions,
+  displayMode?: "compact" | "advanced",
+): CoolifySectionOptions {
+  if (displayMode === "advanced") {
+    return { showServers: true, showApplications: true, showServices: true };
+  }
+  return options;
+}
+
+export function getCoolifyServerState(server: CoolifyServer, field: "is_reachable" | "is_usable"): boolean | undefined {
+  return server[field] ?? server.settings?.[field] ?? undefined;
+}
+
+export const isCoolifyServerOnline = (server: CoolifyServer): boolean =>
+  getCoolifyServerState(server, "is_reachable") === true;

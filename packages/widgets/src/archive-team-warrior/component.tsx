@@ -106,8 +106,35 @@ const ArchiveTeamWarriorWidgetContent = ({
               {t("updatedAt", { date: new Date(status.updatedAt).toLocaleString(locale) })}
             </Text>
           </Group>
+          <Group gap="xs" wrap="wrap">
+            {status.project?.id && (
+              <Badge size="xs" variant="light">
+                {t("projectId", { id: status.project.id })}
+              </Badge>
+            )}
+            {status.bandwidth?.received !== undefined && (
+              <Text size="xs" c="dimmed">
+                {t("sessionReceived", { value: formatBandwidth(status.bandwidth.received) })}
+              </Text>
+            )}
+            {status.bandwidth?.sent !== undefined && (
+              <Text size="xs" c="dimmed">
+                {t("sessionSent", { value: formatBandwidth(status.bandwidth.sent) })}
+              </Text>
+            )}
+            {status.bandwidth?.session_id && (
+              <Text size="xs" c="dimmed">
+                {t("sessionId", { id: status.bandwidth.session_id })}
+              </Text>
+            )}
+          </Group>
           <ScrollArea style={{ flex: 1 }}>
             <Stack gap={4}>
+              {status.items.length === 0 && (
+                <Text size="sm" c="dimmed" ta="center" py="md">
+                  {t("emptyItems")}
+                </Text>
+              )}
               {status.items.map((item) => {
                 const itemStatusKey = getStatusKey(item.status);
                 return (
@@ -120,6 +147,11 @@ const ArchiveTeamWarriorWidgetContent = ({
                         <Text size="xs" c="dimmed" lineClamp={1}>
                           {item.project ?? projectName}
                         </Text>
+                        {item.startTime !== undefined && (
+                          <Text size="xs" c="dimmed" lineClamp={1}>
+                            {t("startedAt", { date: new Date(item.startTime * 1000).toLocaleString(locale) })}
+                          </Text>
+                        )}
                       </Stack>
                       <Badge size="xs" color={getStatusColor(itemStatusKey)}>
                         {t(`status.${itemStatusKey}`)}

@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { Text } from "@mantine/core";
-import { IconAlertTriangle, IconDeviceTv, IconMovie, IconPlugConnected } from "@tabler/icons-react";
+import { IconAlertTriangle, IconBell, IconDeviceTv, IconMovie, IconPlugConnected } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -11,18 +11,34 @@ import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
-const statVisibilityByOption = {
-  showMissingEpisodes: "episodes",
-  showMissingMovies: "movies",
-  showProviderIssues: "providers",
-  showHealthIssues: "status",
-} as const;
+const compactStatOptions = [
+  { option: "showMissingEpisodes", stat: "episodes" },
+  { option: "showMissingMovies", stat: "movies" },
+  { option: "showProviderIssues", stat: "providers" },
+  { option: "showHealthIssues", stat: "status" },
+] as const;
+
+const allStatKeys = [
+  "episodes",
+  "movies",
+  "providers",
+  "status",
+  "sonarrSignalr",
+  "radarrSignalr",
+  "announcements",
+] as const;
+
+type BazarrStatKey = (typeof allStatKeys)[number];
+type BazarrVisibilityOptions = Record<(typeof compactStatOptions)[number]["option"], boolean>;
 
 const statIcons = {
   episodes: IconDeviceTv,
   movies: IconMovie,
   providers: IconPlugConnected,
   status: IconAlertTriangle,
+  sonarrSignalr: IconPlugConnected,
+  radarrSignalr: IconPlugConnected,
+  announcements: IconBell,
 } as const;
 
 const gridColsByWidth = [
@@ -37,7 +53,13 @@ const iconSizeByWidth = [
   { minWidth: 0, size: 16 },
 ] as const;
 
-export default function BazarrWidget({ integrationIds, options, width, height }: WidgetComponentProps<"bazarr">) {
+export default function BazarrWidget({
+  integrationIds,
+  options,
+  width,
+  height,
+  displayMode,
+}: WidgetComponentProps<"bazarr">) {
   const t = useScopedI18n("widget.bazarr");
   const { data: badges, error } = clientApi.widget.bazarr.getBadges.useQuery(
     { integrationId: integrationIds[0] ?? "" },
@@ -52,11 +74,12 @@ export default function BazarrWidget({ integrationIds, options, width, height }:
     movies: badges.movies,
     providers: badges.providers,
     status: badges.status,
-  } as const;
+    sonarrSignalr: badges.sonarr_signalr,
+    radarrSignalr: badges.radarr_signalr,
+    announcements: badges.announcements,
+  } satisfies Record<BazarrStatKey, number | string>;
 
-  const visibleStatKeys = Object.entries(statVisibilityByOption)
-    .filter(([optionKey]) => options[optionKey as keyof typeof options])
-    .map(([, statKey]) => statKey);
+  const visibleStatKeys = getVisibleBazarrStatKeys(options, displayMode);
 
   const gridCols = getGridCols(width, height, visibleStatKeys.length);
   const iconSize = getIconSize(Math.min(width, height));
@@ -83,12 +106,17 @@ export default function BazarrWidget({ integrationIds, options, width, height }:
         {visibleStatKeys.map((statKey) => {
           const Icon = statIcons[statKey];
           const value = statValues[statKey];
-          const isWarning = (statKey === "providers" || statKey === "status") && value > 0;
+          const isWarning =
+            typeof value === "number" &&
+            (statKey === "providers" || statKey === "status" || statKey === "announcements") &&
+            value > 0;
 
           return (
             <div key={statKey} className={`${classes.statTile} ${isWarning ? classes.statTileWarning : ""}`}>
               <Icon className={classes.statIcon} size={iconSize} stroke={1.5} />
-              <span className={`${classes.statValue} ${isWarning ? classes.statValueWarning : ""}`}>{value}</span>
+              <span className={`${classes.statValue} ${isWarning ? classes.statValueWarning : ""}`}>
+                {typeof value === "string" && value.trim() === "" ? "—" : value}
+              </span>
               <span className={classes.statLabel} title={t(statKey)}>
                 {t(statKey)}
               </span>
@@ -99,6 +127,14 @@ export default function BazarrWidget({ integrationIds, options, width, height }:
     </div>
   );
 }
+
+export const getVisibleBazarrStatKeys = (
+  options: BazarrVisibilityOptions,
+  displayMode?: "compact" | "advanced",
+): BazarrStatKey[] => {
+  if (displayMode === "advanced") return [...allStatKeys];
+  return compactStatOptions.filter(({ option }) => options[option]).map(({ stat }) => stat);
+};
 
 export function getGridCols(width: number, height: number, itemCount: number): number {
   if (itemCount <= 1) return 1;

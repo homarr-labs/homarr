@@ -26,7 +26,7 @@ import editOn from "./img/edit.png";
   <img src={editOn} alt="notebook edit-on" width={128 * 3} />
 </div>
 
-<WidgetInteractionGuide advancedView={false} />
+<WidgetInteractionGuide />
 
 ### Adding the widget
 
@@ -45,6 +45,10 @@ When your permissions allow it, hover the widget, focus within it, or use a touc
 You can then decide to save your changes or cancel them to exit editing, using the buttons placed in the same location.
 
 ![](./img/notebook-exit-editing.webp)
+
+### Advanced view
+
+Advanced view keeps the notebook read-only until an authorized user enters editing. While editing, it always shows the complete, unclipped toolbar even when **Show the toolbar** is disabled, and it always displays the document word and character counts regardless of the widget height. Permissions, saving and cancellation, and the **Allow check in read only mode** setting work exactly as they do in the compact widget.
 
 ### Notebook toolbar functions
 

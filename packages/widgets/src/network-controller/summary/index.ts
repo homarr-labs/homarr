@@ -6,7 +6,7 @@ import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("networkControllerSummary", {
-  supportsAdvancedFocus: false,
+  supportsAdvancedFocus: true,
   icon: IconTopologyFull,
   queryKey: [["widget", "networkController"]],
   refetchInterval: null,

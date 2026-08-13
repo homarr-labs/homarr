@@ -36,14 +36,22 @@ interface AudioStatsContentProps {
   backend: AudioStatsBackend;
   stats: NavidromeDashboardData | AudiobookshelfDashboardData;
   options: AudioStatsDisplayOptions;
+  showAllStats?: boolean;
   width: number;
   height: number;
 }
 
-export function AudioStatsContent({ backend, stats, options, width, height }: AudioStatsContentProps) {
+export function AudioStatsContent({
+  backend,
+  stats,
+  options,
+  showAllStats = false,
+  width,
+  height,
+}: AudioStatsContentProps) {
   const t = useScopedI18n(AUDIO_STATS_TRANSLATION_SCOPE);
   const compact = options.compactMode ?? false;
-  const enabledStats = prioritizeVisibleStats(getVisibleStats(backend, options, stats), compact);
+  const enabledStats = prioritizeVisibleStats(getVisibleStats(backend, options, stats, showAllStats), compact);
   const visibleStats = enabledStats.slice(0, getVisibleStatLimit(width, height, enabledStats.length, compact));
   const compactKey = String(compact) as keyof typeof rootClassByCompact;
   const gridCols = getGridCols(width, visibleStats.length, compact);

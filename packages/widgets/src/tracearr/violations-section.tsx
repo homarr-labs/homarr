@@ -4,7 +4,17 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 import type { TracearrViolation } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
-export function ViolationsList({ violations }: { violations: TracearrViolation[] }) {
+import type { SourcedTracearrItem } from "./source";
+
+type SourcedTracearrViolation = SourcedTracearrItem<TracearrViolation>;
+
+export function ViolationsList({
+  violations,
+  showSource,
+}: {
+  violations: SourcedTracearrViolation[];
+  showSource: boolean;
+}) {
   const t = useScopedI18n("widget.tracearr");
   const locale = useCurrentIntlLocale();
 
@@ -20,7 +30,7 @@ export function ViolationsList({ violations }: { violations: TracearrViolation[]
       ) : (
         <Stack gap="xs">
           {violations.map((violation) => (
-            <Paper key={violation.id} p="xs" radius="lg">
+            <Paper key={violation.key} p="xs" radius="lg">
               <Group justify="space-between" wrap="nowrap">
                 <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
                   <IconAlertTriangle
@@ -40,6 +50,7 @@ export function ViolationsList({ violations }: { violations: TracearrViolation[]
                     </Text>
                     <Text size="xs" c="dimmed" lineClamp={1}>
                       {t("violations.rule")}: {violation.rule.name}
+                      {showSource ? ` · ${violation.integrationName}` : ""}
                     </Text>
                   </Stack>
                 </Group>

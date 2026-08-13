@@ -1,4 +1,5 @@
 .root {
+  position: relative;
   container-type: size;
   display: flex;
   flex-direction: column;
@@ -7,6 +8,32 @@
   padding: clamp(6px, 3cqi, 14px);
   gap: clamp(4px, 2cqi, 10px);
   overflow: hidden;
+}
+
+.advancedContent {
+  height: auto;
+  min-height: 100%;
+}
+
+.advancedContent .statsSection {
+  flex: none;
+}
+
+.advancedContent .grid {
+  height: auto;
+  grid-auto-rows: minmax(92px, auto);
+}
+
+.advancedContent .osSectionWrapper {
+  flex: none;
+  min-height: 220px;
+}
+
+.queryIndicator {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 2;
 }
 
 .compactRoot {

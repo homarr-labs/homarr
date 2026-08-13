@@ -13,7 +13,7 @@ const relativeDateSchema = z
   .or(z.literal(""));
 
 export const { definition, componentLoader } = createWidgetDefinition("releases", {
-  supportsAdvancedFocus: false,
+  supportsAdvancedFocus: true,
   icon: IconRocket,
   queryKey: [["widget", "releases", "getLatest"]],
   queryMatcher: ({ input }, scope) => widgetQueryInputMatches(input, { itemId: scope.itemId }),

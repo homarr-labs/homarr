@@ -1,9 +1,10 @@
 import { createIntegrationAsync } from "@homarr/integrations";
+import type { SystemHealthMonitoring } from "@homarr/integrations";
 import { SynologyIntegration } from "@homarr/integrations";
 import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const healthMonitoringIntegrationKinds = [
@@ -16,6 +17,14 @@ const healthMonitoringIntegrationKinds = [
   "mock",
 ] as const;
 
+interface SystemHealthQueryResult {
+  integrationId: string;
+  integrationName: string;
+  healthInfo: SystemHealthMonitoring | null;
+  updatedAt?: Date;
+  error?: string;
+}
+
 export const healthMonitoringRouter = createTRPCRouter({
   getSystemHealthStatus: publicProcedure
     .meta({
@@ -27,15 +36,27 @@ export const healthMonitoringRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...healthMonitoringIntegrationKinds))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
-        return {
-          integrationId: integration.id,
-          integrationName: integration.name,
-          healthInfo: data,
-          updatedAt: timestamp,
-        };
-      });
+      return await settleIntegrationQueries<(typeof ctx.integrations)[number], SystemHealthQueryResult>(
+        ctx.integrations,
+        async (integration) => {
+          const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            healthInfo: data,
+            updatedAt: timestamp,
+          };
+        },
+        {
+          fallback: (integration) => ({
+            integrationId: integration.id,
+            integrationName: integration.name,
+            healthInfo: null,
+            error: PUBLIC_INTEGRATION_ERROR,
+          }),
+          throwOnAllFailures: true,
+        },
+      );
     }),
   listStorageVolumes: publicProcedure
     .meta({

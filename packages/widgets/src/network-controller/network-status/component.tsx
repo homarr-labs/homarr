@@ -11,6 +11,7 @@ import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
+import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import { getNetworkControllerStatusLayout } from "./layout";
 import { WifiVariant } from "./variants/wifi-variant";
 import { WiredVariant } from "./variants/wired-variant";
@@ -36,7 +37,7 @@ export default function NetworkControllerNetworkStatusWidget({
   const t = useScopedI18n("widget.networkControllerStatus");
   const tCommon = useScopedI18n("common");
 
-  const data = useMemo(() => (summaries ?? []).flatMap(({ summary }) => summary), [summaries]);
+  const data = useMemo(() => (summaries ?? []).flatMap(({ summary }) => (summary ? [summary] : [])), [summaries]);
   const countWifiGuests = data.reduce((sum, summary) => sum + summary.wifi.guests, 0);
   const countWifiUsers = data.reduce((sum, summary) => sum + summary.wifi.users, 0);
   const countLanGuests = data.reduce((sum, summary) => sum + summary.lan.guests, 0);
@@ -56,7 +57,10 @@ export default function NetworkControllerNetworkStatusWidget({
   }
 
   return (
-    <Box p={layout.padding} h="100%">
+    <Box p={layout.padding} h="100%" pos="relative">
+      <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
+        <IntegrationErrorIndicator results={summaries ?? []} />
+      </Box>
       <SimpleGrid cols={layout.columns} h="100%" spacing="sm">
         {layout.showWifi && (
           <Card p={layout.cardPadding} withBorder={layout.withBorder}>

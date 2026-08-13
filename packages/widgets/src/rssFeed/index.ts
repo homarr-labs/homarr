@@ -11,7 +11,7 @@ import { optionsBuilder } from "../options";
  * - https://www.jsonfeed.org/version/1.1/
  */
 export const { definition, componentLoader } = createWidgetDefinition("rssFeed", {
-  supportsAdvancedFocus: false,
+  supportsAdvancedFocus: true,
   icon: IconRss,
   queryKey: [["widget", "rssFeed", "getFeeds"]],
   queryMatcher: ({ input }, scope) =>

@@ -96,6 +96,21 @@ describe("getVisibleStats", () => {
     expect(result).toEqual([]);
   });
 
+  test("returns every backend-relevant stat when advanced disclosure is enabled", () => {
+    expect(getVisibleStats("navidrome", {}, navidromeStats, true).map((stat) => stat.statKey)).toEqual([
+      "artists",
+      "albums",
+      "songs",
+    ]);
+    expect(getVisibleStats("audiobookshelf", {}, audiobookshelfStats, true).map((stat) => stat.statKey)).toEqual([
+      "libraryCount",
+      "audiobooks",
+      "podcasts",
+      "listeningTime",
+      "activeSessions",
+    ]);
+  });
+
   test("formats listening time as duration string", () => {
     const result = getVisibleStats("audiobookshelf", { showListeningTime: true }, audiobookshelfStats);
     expect(result).toHaveLength(1);

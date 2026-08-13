@@ -21,8 +21,10 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { NoIntegrationSelectedError } from "../errors/no-integration-selected";
 
 const statusColors: Record<UpsStatus, string> = {
@@ -67,18 +69,24 @@ interface UpsContentProps {
 
 function UpsContent({ integrationIds, options, width, height, displayMode }: UpsContentProps) {
   const t = useScopedI18n("widget.ups");
-  const data = getUsableWidgetQueryData(clientApi.widget.ups.getSummaries.useQuery({ integrationIds }));
+  const summariesQuery = clientApi.widget.ups.getSummaries.useQuery({ integrationIds });
+  const data = getUsableWidgetQueryData(summariesQuery);
 
   if (!data) return <WidgetEmptyState />;
 
-  const devices = data
-    .flatMap((instance) =>
-      instance.summaries.map((summary) => ({ key: `${instance.integrationId}:${summary.id}`, summary })),
-    )
-    .toSorted((left, right) => statusPriority[left.summary.status] - statusPriority[right.summary.status]);
+  const devices = getUpsDevices(data);
+  const showSource = displayMode === "advanced" || data.length > 1;
 
   if (devices.length === 0) {
-    return <WidgetEmptyState />;
+    return (
+      <Box h="100%" pos="relative">
+        <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
+          <IntegrationErrorIndicator results={data} />
+          <WidgetQueryErrorIndicator error={summariesQuery.error} label={t("name")} />
+        </Group>
+        <WidgetEmptyState />
+      </Box>
+    );
   }
 
   // Pick a layout from the available width so the widget stays useful at any size. The surrounding
@@ -89,10 +97,11 @@ function UpsContent({ integrationIds, options, width, height, displayMode }: Ups
   const layout: UpsLayout =
     displayMode === "advanced" ? "full" : width < 150 || height < 110 ? "mini" : width < 256 ? "compact" : "full";
 
-  const cards = devices.map(({ key, summary }) => (
+  const cards = devices.map(({ key, integrationName, summary }) => (
     <UpsDeviceCard
       key={key}
       summary={summary}
+      sourceName={showSource ? integrationName : undefined}
       options={options}
       layout={layout}
       advanced={displayMode === "advanced"}
@@ -101,17 +110,23 @@ function UpsContent({ integrationIds, options, width, height, displayMode }: Ups
   ));
 
   return (
-    <ScrollArea h="100%">
-      {displayMode === "advanced" ? (
-        <SimpleGrid cols={width >= 760 ? 2 : 1} spacing="md" p="md">
-          {cards}
-        </SimpleGrid>
-      ) : (
-        <Stack gap="xs" p="xs">
-          {cards}
-        </Stack>
-      )}
-    </ScrollArea>
+    <Box h="100%" pos="relative">
+      <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
+        <IntegrationErrorIndicator results={data} />
+        <WidgetQueryErrorIndicator error={summariesQuery.error} label={t("name")} />
+      </Group>
+      <ScrollArea h="100%">
+        {displayMode === "advanced" ? (
+          <SimpleGrid cols={width >= 760 ? 2 : 1} spacing="md" p="md">
+            {cards}
+          </SimpleGrid>
+        ) : (
+          <Stack gap="xs" p="xs">
+            {cards}
+          </Stack>
+        )}
+      </ScrollArea>
+    </Box>
   );
 }
 
@@ -123,16 +138,38 @@ const statusPriority: Record<UpsStatus, number> = {
   online: 4,
 };
 
+export const getUpsDevices = <T extends Pick<UpsSummary, "id" | "status">>(
+  instances: readonly {
+    integrationId: string;
+    integrationName: string;
+    summaries: readonly T[];
+  }[],
+) =>
+  instances
+    .flatMap(({ integrationId, integrationName, summaries }) =>
+      summaries.map((summary) => ({
+        key: `${integrationId}:${summary.id}`,
+        integrationId,
+        integrationName,
+        summary,
+      })),
+    )
+    .toSorted((left, right) => statusPriority[left.summary.status] - statusPriority[right.summary.status]);
+
 interface UpsDeviceCardProps {
   summary: UpsSummary;
+  sourceName?: string;
   options: WidgetComponentProps<"ups">["options"];
   layout: UpsLayout;
   advanced: boolean;
   t: ScopedTranslationFunction<"widget.ups">;
 }
 
-function UpsDeviceCard({ summary, options, layout, advanced, t }: UpsDeviceCardProps) {
-  const showRing = options.showBattery && summary.batteryCharge !== null;
+function UpsDeviceCard({ summary, sourceName, options, layout, advanced, t }: UpsDeviceCardProps) {
+  const showBattery = advanced || options.showBattery;
+  const showLoad = advanced || options.showLoad;
+  const showVoltage = advanced || options.showVoltage;
+  const showRing = showBattery && summary.batteryCharge !== null;
   const statusBadge = (
     <Badge
       color={statusColors[summary.status]}
@@ -163,6 +200,11 @@ function UpsDeviceCard({ summary, options, layout, advanced, t }: UpsDeviceCardP
             {summary.name}
           </Text>
         </Group>
+        {sourceName && (
+          <Text size="10px" c="dimmed" ta="center" truncate>
+            {sourceName}
+          </Text>
+        )}
         {showRing && summary.batteryCharge !== null && (
           <Group justify="center">
             <RingProgress
@@ -203,6 +245,11 @@ function UpsDeviceCard({ summary, options, layout, advanced, t }: UpsDeviceCardP
             <Text fw={600} size="xs" truncate>
               {summary.name}
             </Text>
+            {sourceName && (
+              <Text size="10px" c="dimmed" truncate>
+                {sourceName}
+              </Text>
+            )}
             {statusBadge}
           </Stack>
         </Group>
@@ -213,9 +260,16 @@ function UpsDeviceCard({ summary, options, layout, advanced, t }: UpsDeviceCardP
   return (
     <Card p="xs" radius="md">
       <Group justify="space-between" wrap="nowrap" mb={4}>
-        <Text fw={600} size="sm" truncate>
-          {summary.name}
-        </Text>
+        <Stack gap={0} style={{ minWidth: 0 }}>
+          <Text fw={600} size="sm" truncate>
+            {summary.name}
+          </Text>
+          {sourceName && (
+            <Text size="xs" c="dimmed" truncate>
+              {sourceName}
+            </Text>
+          )}
+        </Stack>
         {statusBadge}
       </Group>
 
@@ -235,11 +289,11 @@ function UpsDeviceCard({ summary, options, layout, advanced, t }: UpsDeviceCardP
         )}
 
         <Stack gap={2} style={{ flex: 1, minWidth: 0 }}>
-          {options.showBattery && summary.batteryRuntime !== null && (
+          {showBattery && summary.batteryRuntime !== null && (
             <StatRow label={t("field.runtime")} value={formatDuration(summary.batteryRuntime * 1000)} />
           )}
 
-          {options.showLoad && summary.load !== null && (
+          {showLoad && summary.load !== null && (
             <Box>
               <Group justify="space-between" gap="xs" mb={2}>
                 <Text size="xs" c="dimmed">
@@ -251,7 +305,7 @@ function UpsDeviceCard({ summary, options, layout, advanced, t }: UpsDeviceCardP
             </Box>
           )}
 
-          {options.showVoltage && (summary.inputVoltage !== null || summary.outputVoltage !== null) && (
+          {showVoltage && (summary.inputVoltage !== null || summary.outputVoltage !== null) && (
             <Group gap="md">
               {summary.inputVoltage !== null && (
                 <StatRow label={t("field.input")} value={`${Math.round(summary.inputVoltage)} V`} />

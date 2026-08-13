@@ -5,6 +5,23 @@ import type {
   SpeedtestTrackerStats,
 } from "@homarr/integrations/types";
 
+export interface SpeedtestDashboardSource {
+  integrationId: string;
+  integrationName: string;
+  dashboard: SpeedtestTrackerDashboardData;
+}
+
+export const getAvailableSpeedtestDashboards = (
+  results: readonly {
+    integrationId: string;
+    integrationName: string;
+    dashboard: SpeedtestTrackerDashboardData | null;
+  }[],
+): SpeedtestDashboardSource[] =>
+  results.flatMap(({ integrationId, integrationName, dashboard }) =>
+    dashboard === null ? [] : [{ integrationId, integrationName, dashboard }],
+  );
+
 export const mergeStats = (
   statsA: SpeedtestTrackerDashboardData["stats"],
   statsB: SpeedtestTrackerDashboardData["stats"],

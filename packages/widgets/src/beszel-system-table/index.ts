@@ -25,7 +25,7 @@ const sortDirectionOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemTable", {
   icon: IconTable,
-  supportsAdvancedFocus: false,
+  supportsAdvancedFocus: true,
   queryKeys: [[["widget", "beszel", "getSystems"]], [["widget", "beszel", "getSystemStats"]]],
   queryMatcher: (query, scope) =>
     query.path.at(-1) === "getSystems"

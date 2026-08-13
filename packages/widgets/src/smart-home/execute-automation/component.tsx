@@ -138,23 +138,30 @@ export default function SmartHomeTriggerAutomationWidget({
               {options.displayName}
             </Text>
             {displayMode === "advanced" && (
-              <>
-                {error ? (
+              <Stack gap={2} align="center">
+                <Text ta="center" size="xs" c="dimmed">
+                  {t("widget.smartHome-executeAutomation.advanced.automationId", { id: options.automationId })}
+                </Text>
+                <Text ta="center" size="xs" c={canInteract ? "dimmed" : "orange"}>
+                  {t(
+                    canInteract
+                      ? "widget.smartHome-executeAutomation.advanced.ready"
+                      : "widget.smartHome-executeAutomation.advanced.noPermission",
+                  )}
+                </Text>
+                {lastExecutedAt && (
+                  <Text ta="center" size="xs" c="dimmed">
+                    {t("widget.smartHome-executeAutomation.advanced.lastExecuted", {
+                      time: lastExecutedAt.toLocaleTimeString(locale),
+                    })}
+                  </Text>
+                )}
+                {error && (
                   <Text ta="center" size="xs" c="red">
                     {t("widget.smartHome-executeAutomation.error.executeFailed")}
                   </Text>
-                ) : (
-                  <Text ta="center" size="xs" c="dimmed">
-                    {lastExecutedAt
-                      ? t("widget.smartHome-executeAutomation.advanced.lastExecuted", {
-                          time: lastExecutedAt.toLocaleTimeString(locale),
-                        })
-                      : t("widget.smartHome-executeAutomation.advanced.automationId", {
-                          id: options.automationId,
-                        })}
-                  </Text>
                 )}
-              </>
+              </Stack>
             )}
           </Stack>
         </Center>

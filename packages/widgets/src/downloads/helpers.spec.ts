@@ -1,6 +1,11 @@
 import { describe, expect, test } from "vitest";
 
-import { columnWidthsToRecord, filterDownloadItemsByStatus, getAvailableDownloadStates } from "./helpers";
+import {
+  DOWNLOAD_COLUMN_ACCESSORS,
+  filterDownloadItemsByStatus,
+  getAvailableDownloadStates,
+  getDownloadColumnAccessors,
+} from "./helpers";
 
 describe("downloads filters", () => {
   const eligibleItems = [{ state: "downloading" as const }, { state: "seeding" as const }];
@@ -18,11 +23,9 @@ describe("downloads filters", () => {
   });
 });
 
-describe("downloads column widths", () => {
-  test("serializes numeric and pixel widths while ignoring automatic widths", () => {
-    expect(columnWidthsToRecord([{ name: 240 }, { progress: "120px" }, { state: "auto" }])).toEqual({
-      name: 240,
-      progress: 120,
-    });
+describe("downloads advanced columns", () => {
+  test("uses every column in advanced mode without changing the compact selection", () => {
+    expect(getDownloadColumnAccessors(["name"], true)).toEqual(DOWNLOAD_COLUMN_ACCESSORS);
+    expect(getDownloadColumnAccessors(["name"], false)).toEqual(["name"]);
   });
 });
