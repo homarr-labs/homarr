@@ -1,0 +1,69 @@
+---
+title: "Hermes Agent"
+description: "Local-first AI agent with messaging, skills, tools, sessions, and scheduled automations."
+hide_title: true
+---
+
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
+import { hermesAgentIntegration } from ".";
+import { hermesAgentWidget } from "../../widgets/hermes-agent";
+
+<IntegrationHeader integration={hermesAgentIntegration} categories={["AI", "Automation"]} />
+
+Homarr can connect to either the Hermes Agent API server or its web dashboard. Use the API server when you want complete widget data.
+
+### Widgets & Capabilities
+
+<IntegrationCapabilites items={[{ widget: hermesAgentWidget }]} />
+
+### Adding the integration
+
+<AddingIntegration />
+
+### Connection modes
+
+- **API server (recommended):** use `http://<hermes-host>:8642` with an API key for complete widget data.
+- **Web dashboard:** use `http://<hermes-host>:9119` without credentials for public status and any details exposed by the dashboard session API.
+
+:::info URL configuration
+Enter the root URL without `/v1`. In a container, `127.0.0.1` refers to the Homarr container, not the Hermes Agent host.
+:::
+
+#### API server (recommended)
+
+Add the following to `~/.hermes/.env` on the Hermes Agent host:
+
+```bash
+API_SERVER_ENABLED=true
+API_SERVER_HOST=0.0.0.0
+API_SERVER_PORT=8642
+API_SERVER_KEY=<strong-random-key>
+```
+
+Restart with `hermes gateway`, then enter the port `8642` URL and the same `API_SERVER_KEY` in Homarr. See the [Hermes Agent API server documentation](https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server/) for additional options.
+
+:::warning Security
+Use a strong key and restrict port `8642` to a trusted network, firewall rule, or VPN. Homarr connects server-to-server, so CORS configuration is not required.
+:::
+
+#### Web dashboard compatibility
+
+Select the credential option without an API key. Protected dashboard details are unavailable because Homarr does not perform an interactive login. The dashboard listens on loopback by default; follow the [Hermes Agent dashboard documentation](https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard) before exposing it to Homarr.
+
+### Secrets
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["apiKey"],
+      steps: ["Paste the API_SERVER_KEY value from ~/.hermes/.env."],
+    },
+    {
+      credentials: [],
+      steps: ["Use this option only with the web dashboard URL, for example http://hermes-host:9119."],
+    },
+  ]}
+/>

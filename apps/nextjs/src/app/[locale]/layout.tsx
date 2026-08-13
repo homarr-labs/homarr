@@ -31,6 +31,7 @@ import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-transla
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { ServiceWorkerRegistration } from "~/components/layout/service-worker-registration";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
+import { hermesFontVariables } from "~/theme/hermes-fonts";
 import { DayJsLoader } from "./_client-providers/dayjs-loader";
 import { JotaiProvider } from "./_client-providers/jotai";
 import { CustomMantineProvider } from "./_client-providers/mantine";
@@ -154,7 +155,7 @@ export default async function Layout(props: {
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
       </head>
-      <body className={[fontSans.className, fontSans.variable].join(" ")} suppressHydrationWarning>
+      <body className={[fontSans.className, fontSans.variable, hermesFontVariables].join(" ")} suppressHydrationWarning>
         <Analytics enabled={serverSettings.analytics.enableGeneral} />
         <StackedProvider>
           <Notifications pauseResetOnHover="notification" />

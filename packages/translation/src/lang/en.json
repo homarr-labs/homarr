@@ -2561,6 +2561,112 @@
         "internalServerError": "Failed to fetch UPS data"
       }
     },
+    "hermesAgent": {
+      "name": "Hermes Agent",
+      "description": "Responsive Hermes Agent gateway, activity, automation, and update overview",
+      "unknown": "Unknown",
+      "unknownShort": "n/a",
+      "option": {
+        "brandTheme": {
+          "label": "Hermes theme colors",
+          "description": "Use a Hermes dashboard color theme instead of following the Homarr board theme"
+        },
+        "themePreset": {
+          "label": "Hermes theme",
+          "description": "Choose one of the built-in Hermes dashboard themes"
+        },
+        "fontFamily": {
+          "label": "Font",
+          "description": "Use the selected theme's font or override it with a font from the Hermes dashboard catalog"
+        },
+        "showPlatforms": {
+          "label": "Show platforms",
+          "description": "Show connected messaging platforms when detail access is allowed"
+        },
+        "showSessions": {
+          "label": "Show recent sessions",
+          "description": "Show recent agent sessions when detail access is allowed"
+        },
+        "showJobs": {
+          "label": "Show scheduled jobs",
+          "description": "Show scheduled and paused jobs when detail access is allowed"
+        },
+        "showSkills": {
+          "label": "Show skills",
+          "description": "Show enabled skills ordered by Hermes usage when detail access is allowed"
+        }
+      },
+      "meta": {
+        "version": "v{version}",
+        "versionAndMode": "v{version} · {mode}"
+      },
+      "mode": {
+        "apiServer": "API server",
+        "dashboard": "Dashboard"
+      },
+      "status": {
+        "authError": "Authentication error",
+        "short": {
+          "ok": "OK",
+          "busy": "BUSY",
+          "warn": "WARN",
+          "auth": "AUTH",
+          "error": "ERR",
+          "wait": "WAIT"
+        }
+      },
+      "summary": {
+        "agents": "Agents",
+        "agentsActivityTitle": "{active} active; {total} available in total",
+        "jobs": "Jobs",
+        "platforms": "Platforms",
+        "sessions": "Sessions",
+        "sessionsActivityTitle": "{active} active; {last24Hours} active in the last 24 hours",
+        "skills": "Skills",
+        "toolsets": "Toolsets",
+        "update": "Update",
+        "version": "Version"
+      },
+      "sections": {
+        "platforms": "Platforms",
+        "sessions": "Recent sessions",
+        "jobs": "Scheduled jobs",
+        "skills": "Skills"
+      },
+      "overflow": {
+        "more": "+ {count} more",
+        "moreAtLeast": "+ {count}+ more",
+        "moreAtLeastTitle": "At least {count} more items"
+      },
+      "empty": {
+        "platforms": "No platforms reported",
+        "sessions": "No recent sessions",
+        "jobs": "No scheduled jobs",
+        "skills": "No skills reported",
+        "enabledSkills": "No enabled skills",
+        "unavailable": "This endpoint is not available",
+        "restricted": "Direct integration permission is required"
+      },
+      "jobs": {
+        "unnamed": "Unnamed job",
+        "enabled": "Enabled",
+        "failed": "{count} failed",
+        "failedLabel": "Failed",
+        "paused": "Paused",
+        "noSchedule": "No schedule",
+        "next": "next {when}"
+      },
+      "update": {
+        "availableShort": "NEW",
+        "currentShort": "OK"
+      },
+      "action": {
+        "openSection": "Open {section} in Hermes Agent"
+      },
+      "skills": { "usage": "{count, plural, =1 {Used # time} other {Used # times}}" },
+      "footer": { "updated": "Updated {when}" },
+      "error": { "internalServerError": "Failed to fetch Hermes Agent data" }
+    },
     "tracearr": {
       "name": "Tracearr",
       "description": "Enhanced media server monitoring with detailed stream and transcoding data",
