@@ -101,7 +101,7 @@ describe("Onboarding", () => {
         await page.locator("css=button[type='submit']").click();
         await page.getByRole("heading", { name: "Start with familiar defaults" }).waitFor({ timeout: 30_000 });
 
-        const serverOrigin = page.getByLabel("Usual server address");
+        const serverOrigin = page.getByRole("textbox", { name: "Usual server address" });
         await serverOrigin.fill("https://home.example/homarr");
         await page.getByLabel("Default language").click();
         await page.getByRole("option", { name: /Français/ }).click();
