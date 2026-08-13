@@ -65,9 +65,14 @@ const getTrustMaterialAsync = async () => {
     .digest("hex");
 
   if (fingerprint !== cachedTrustFingerprint) {
-    // Superseded agents hold their idle sockets open until they are closed.
+    // undici's close() waits for enqueued requests to finish, so releasing the pool cannot interrupt
+    // a request already in flight.
+    //
+    // The node agents are deliberately *not* destroyed: agent.destroy() destroys sockets that are
+    // currently in use, so an admin adding a certificate could abort an in-flight calendar sync.
+    // They run without keepAlive, so dropping the reference is enough - each socket closes once its
+    // own response completes.
     for (const agent of undiciAgentCache.values()) void agent.close();
-    for (const agent of httpsAgentCache.values()) agent.destroy();
     undiciAgentCache.clear();
     httpsAgentCache.clear();
     cachedTrustFingerprint = fingerprint;

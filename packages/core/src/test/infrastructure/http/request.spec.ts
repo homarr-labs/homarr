@@ -138,6 +138,27 @@ describe("createHttpsAgentAsync", () => {
     expect(after).not.toBe(before);
   });
 
+  test("should not destroy a superseded agent, which would abort requests in flight", async () => {
+    // agent.destroy() destroys sockets that are currently in use, so destroying the old agent when an
+    // admin adds a certificate could abort an in-flight calendar sync. These agents run without
+    // keepAlive, so dropping the reference is enough.
+    const { createHttpsAgentAsync } = await importRequestModuleAsync();
+    const before = await createHttpsAgentAsync();
+    // keepAlive is a real runtime property but is absent from @types/node's public Agent surface.
+    // It is asserted because it is the premise of not destroying: without keepAlive, a dropped agent's
+    // sockets close on their own once their response completes.
+    expect((before as unknown as { keepAlive: boolean }).keepAlive).toBe(false);
+    const destroySpy = vi.spyOn(before, "destroy");
+
+    // Act
+    trustMaterial.certificates = [{ fileName: "added.crt", content: "-----BEGIN CERTIFICATE-----" }];
+    const after = await createHttpsAgentAsync();
+
+    // Assert
+    expect(after).not.toBe(before);
+    expect(destroySpy).not.toHaveBeenCalled();
+  });
+
   test("should give a caller supplying an override a dedicated agent", async () => {
     // Arrange
     const { createHttpsAgentAsync } = await importRequestModuleAsync();
