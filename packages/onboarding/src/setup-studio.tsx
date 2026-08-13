@@ -270,7 +270,12 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
             appUrlOverrides[app.sourceId],
             app.suggestedUrl,
             serverOrigin
-              ? buildAppUrl(app.detectedType ?? app.containerName, serverOrigin, urlMode, app.publishedPort ?? undefined)
+              ? buildAppUrl(
+                  app.detectedType ?? app.containerName,
+                  serverOrigin,
+                  urlMode,
+                  app.publishedPort ?? undefined,
+                )
               : null,
           ),
         ]),
