@@ -1159,15 +1159,6 @@ const Connections = (props: StudioSectionProps) => {
         </Fieldset>
       ) : null}
 
-      <Fieldset legend={t("otherIntegrations")}>
-        <IntegrationMultiSelectGrid
-          selectedKinds={props.selectedKinds}
-          onSelectionChange={props.setSelectedKinds}
-          detectedKinds={props.detectedKinds}
-          onboarding
-        />
-      </Fieldset>
-
       {props.discoveredApps.length > 0 ? (
         <Fieldset legend={t("discoveredApps", { count: String(props.discoveredApps.length) })}>
           <SimpleGrid cols={{ base: 1, xs: 2, md: 3 }}>
@@ -1196,9 +1187,14 @@ const Connections = (props: StudioSectionProps) => {
                         {app.containerName.at(0)}
                       </Avatar>
                       <Stack gap={0} miw={0}>
-                        <Text size="sm" fw={600} truncate>
-                          {app.containerName}
-                        </Text>
+                        <Group gap="xs" wrap="nowrap">
+                          <Text size="sm" fw={600} truncate>
+                            {app.containerName}
+                          </Text>
+                          <Badge size="xs" variant="light" color={app.source === "label" ? "blue" : "gray"}>
+                            {app.source === "label" ? t("dockerLabelSource") : t("dockerImageSource")}
+                          </Badge>
+                        </Group>
                         <Text size="xs" c="dimmed" truncate>
                           {props.discoveredAppUrls[app.sourceId] || t("addressNeeded")}
                         </Text>
@@ -1221,6 +1217,16 @@ const Connections = (props: StudioSectionProps) => {
           </SimpleGrid>
         </Fieldset>
       ) : null}
+
+      <Fieldset legend={t("otherIntegrations")}>
+        <IntegrationMultiSelectGrid
+          selectedKinds={props.selectedKinds}
+          onSelectionChange={props.setSelectedKinds}
+          detectedKinds={props.detectedKinds}
+          onboarding
+        />
+      </Fieldset>
+
       {props.appError ? (
         <Alert color="red" role="alert">
           {props.appError}
