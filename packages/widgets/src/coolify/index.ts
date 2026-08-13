@@ -4,7 +4,7 @@ import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("coolify", {
-  supportsAdvancedFocus: false,
+  supportsAdvancedFocus: true,
   icon: IconCloud,
   createOptions() {
     return optionsBuilder.from((factory) => ({

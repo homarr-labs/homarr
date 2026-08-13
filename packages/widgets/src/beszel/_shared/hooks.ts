@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import type { BeszelSystemRow } from "./types";
 
-type SystemRowWithKey = BeszelSystemRow & { _key: string };
+type SystemRowWithKey = BeszelSystemRow & { rowKey: string };
 
 export const useBeszelFilteredSystems = (
   results: { integrationId: string; systems: BeszelSystemRow[] }[],
@@ -13,7 +13,7 @@ export const useBeszelFilteredSystems = (
   const allSystems = useMemo(
     () =>
       results
-        .flatMap((r) => r.systems.map((s) => ({ ...s, _key: `${r.integrationId}:${s.id}` })))
+        .flatMap((r) => r.systems.map((s) => ({ ...s, rowKey: `${r.integrationId}:${s.id}` })))
         .toSorted((a, b) => a.name.localeCompare(b.name)),
     [results],
   );

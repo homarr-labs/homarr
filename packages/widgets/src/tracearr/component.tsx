@@ -1,16 +1,19 @@
 "use client";
 
-import { ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { TracearrDashboardData } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import { formatTotalTracearrBitrate } from "./bitrate";
 import { RecentActivityList } from "./recent-activity-section";
+import { attachTracearrSource } from "./source";
 import { StatsBar } from "./stats-section";
 import { StreamsList } from "./streams-section";
 import { ViolationsList } from "./violations-section";
@@ -18,6 +21,18 @@ import { ViolationsList } from "./violations-section";
 const ADVANCED_GRID_BREAKPOINT = 800;
 const ADVANCED_GRID_GAP_PX = 16;
 const ADVANCED_GRID_PADDING_PX = 16;
+
+type TracearrSectionOptions = Pick<
+  WidgetComponentProps<"tracearr">["options"],
+  "showStats" | "showStreams" | "showViolations" | "showRecentActivity"
+>;
+
+export const getTracearrSectionVisibility = (options: TracearrSectionOptions, isAdvanced: boolean) => ({
+  stats: isAdvanced || options.showStats,
+  streams: isAdvanced || options.showStreams,
+  violations: isAdvanced || options.showViolations,
+  recentActivity: isAdvanced || options.showRecentActivity,
+});
 
 export const getCompactSectionVisibility = ({
   height,
@@ -68,13 +83,16 @@ interface TracearrContentProps {
 
 function TracearrContent({ integrationIds, options, width, height, displayMode }: TracearrContentProps) {
   const t = useScopedI18n("widget.tracearr");
-  const dashboardData =
-    getUsableWidgetQueryData(clientApi.widget.tracearr.getDashboard.useQuery({ integrationIds })) ?? [];
+  const dashboardQuery = clientApi.widget.tracearr.getDashboard.useQuery({ integrationIds });
+  const dashboardData = getUsableWidgetQueryData(dashboardQuery) ?? [];
+  const successfulDashboards = dashboardData.flatMap((item) =>
+    item.dashboard === null ? [] : [{ ...item, dashboard: item.dashboard }],
+  );
 
   // Merge data from all integrations
-  const combinedData = dashboardData.reduce<TracearrDashboardData>(
-    (acc, item) => {
-      const { stats, streams, violations, recentActivity } = item.dashboard;
+  const combinedData = successfulDashboards.reduce<TracearrDashboardData>(
+    (acc, { dashboard }) => {
+      const { stats, streams, violations, recentActivity } = dashboard;
       const vData = violations ?? { data: [], meta: { total: 0, page: 1, pageSize: 5 } };
       const aData = recentActivity ?? { data: [], meta: { total: 0, page: 1, pageSize: 5 } };
 
@@ -136,60 +154,101 @@ function TracearrContent({ integrationIds, options, width, height, displayMode }
     },
   };
 
-  const noSectionsEnabled =
-    !options.showStats && !options.showStreams && !options.showRecentActivity && !options.showViolations;
+  const isAdvanced = displayMode === "advanced";
+  const sectionVisibility = getTracearrSectionVisibility(options, isAdvanced);
+  const noSectionsEnabled = Object.values(sectionVisibility).every((isVisible) => !isVisible);
 
   const compactLimit = height < 220 ? 2 : height < 360 ? 4 : 8;
-  const streams = displayMode === "advanced" ? combined.streams.data : combined.streams.data.slice(0, compactLimit);
-  const violations = combined.violations?.data ?? [];
-  const recentActivity = combined.recentActivity?.data ?? [];
+  const sourcedStreams = successfulDashboards.flatMap(({ integrationId, integrationName, dashboard }) =>
+    attachTracearrSource(dashboard.streams.data, { integrationId, integrationName }),
+  );
+  const sourcedViolations = successfulDashboards.flatMap(({ integrationId, integrationName, dashboard }) =>
+    attachTracearrSource(dashboard.violations?.data ?? [], { integrationId, integrationName }),
+  );
+  const sourcedRecentActivity = successfulDashboards.flatMap(({ integrationId, integrationName, dashboard }) =>
+    attachTracearrSource(dashboard.recentActivity?.data ?? [], { integrationId, integrationName }),
+  );
+  const streams = isAdvanced ? sourcedStreams : sourcedStreams.slice(0, compactLimit);
+  const showSource = isAdvanced || dashboardData.length > 1;
   const compactSections = getCompactSectionVisibility({
     height,
-    showStreams: options.showStreams,
-    showViolations: options.showViolations,
-    hasViolations: violations.length > 0,
-    showRecentActivity: options.showRecentActivity,
+    showStreams: sectionVisibility.streams,
+    showViolations: sectionVisibility.violations,
+    hasViolations: sourcedViolations.length > 0,
+    showRecentActivity: sectionVisibility.recentActivity,
   });
 
-  if (displayMode === "advanced") {
+  if (isAdvanced) {
     const isTwoColumn = width >= ADVANCED_GRID_BREAKPOINT;
     const columnWidth = getAdvancedColumnWidth(width, isTwoColumn);
     return (
-      <ScrollArea h="100%">
-        <SimpleGrid
-          cols={isTwoColumn ? 2 : 1}
-          spacing={`${ADVANCED_GRID_GAP_PX}px`}
-          p={`${ADVANCED_GRID_PADDING_PX}px`}
-        >
-          <Stack gap="sm">
-            {options.showStats && (
-              <StatsBar stats={combined.stats} summary={combined.streams.summary} width={columnWidth} />
-            )}
-            {options.showStreams && <StreamsList streams={streams} width={columnWidth} />}
-          </Stack>
-          <Stack gap="sm">
-            {options.showViolations && <ViolationsList violations={violations} />}
-            {options.showRecentActivity && <RecentActivityList sessions={recentActivity} />}
-          </Stack>
-        </SimpleGrid>
-      </ScrollArea>
+      <Box h="100%" pos="relative">
+        <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
+          <IntegrationErrorIndicator results={dashboardData} />
+          <WidgetQueryErrorIndicator error={dashboardQuery.error} label={t("name")} />
+        </Group>
+        <ScrollArea h="100%">
+          <SimpleGrid
+            cols={isTwoColumn ? 2 : 1}
+            spacing={`${ADVANCED_GRID_GAP_PX}px`}
+            p={`${ADVANCED_GRID_PADDING_PX}px`}
+          >
+            <Stack gap="sm">
+              <Text size="xs" c="dimmed" lineClamp={1}>
+                {successfulDashboards.map(({ integrationName }) => integrationName).join(" · ")}
+              </Text>
+              {sectionVisibility.stats && (
+                <StatsBar stats={combined.stats} summary={combined.streams.summary} width={columnWidth} />
+              )}
+              {sectionVisibility.streams && (
+                <StreamsList streams={streams} width={columnWidth} showSource={showSource} />
+              )}
+            </Stack>
+            <Stack gap="sm">
+              {sectionVisibility.violations && (
+                <ViolationsList violations={sourcedViolations} showSource={showSource} />
+              )}
+              {sectionVisibility.recentActivity && (
+                <RecentActivityList sessions={sourcedRecentActivity} showSource={showSource} />
+              )}
+            </Stack>
+          </SimpleGrid>
+        </ScrollArea>
+      </Box>
     );
   }
 
   return (
-    <ScrollArea h="100%">
-      <Stack gap="xs" p="xs">
-        {options.showStats && <StatsBar stats={combined.stats} summary={combined.streams.summary} width={width} />}
-        {compactSections.violations && <ViolationsList violations={violations.slice(0, compactLimit)} />}
-        {options.showStreams && <StreamsList streams={streams} width={width} />}
-        {compactSections.recentActivity && <RecentActivityList sessions={recentActivity.slice(0, compactLimit)} />}
-        {noSectionsEnabled && (
-          <Text c="dimmed" ta="center">
-            {t("noSectionsEnabled")}
-          </Text>
-        )}
-      </Stack>
-    </ScrollArea>
+    <Box h="100%" pos="relative">
+      <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
+        <IntegrationErrorIndicator results={dashboardData} />
+        <WidgetQueryErrorIndicator error={dashboardQuery.error} label={t("name")} />
+      </Group>
+      <ScrollArea h="100%">
+        <Stack gap="xs" p="xs">
+          {showSource && (
+            <Text size="xs" c="dimmed" lineClamp={1}>
+              {successfulDashboards.map(({ integrationName }) => integrationName).join(" · ")}
+            </Text>
+          )}
+          {sectionVisibility.stats && (
+            <StatsBar stats={combined.stats} summary={combined.streams.summary} width={width} />
+          )}
+          {compactSections.violations && (
+            <ViolationsList violations={sourcedViolations.slice(0, compactLimit)} showSource={showSource} />
+          )}
+          {sectionVisibility.streams && <StreamsList streams={streams} width={width} showSource={showSource} />}
+          {compactSections.recentActivity && (
+            <RecentActivityList sessions={sourcedRecentActivity.slice(0, compactLimit)} showSource={showSource} />
+          )}
+          {noSectionsEnabled && (
+            <Text c="dimmed" ta="center">
+              {t("noSectionsEnabled")}
+            </Text>
+          )}
+        </Stack>
+      </ScrollArea>
+    </Box>
   );
 }
 

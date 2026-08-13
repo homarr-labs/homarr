@@ -3,7 +3,17 @@ import { Avatar, Badge, Group, Paper, Stack, Text } from "@mantine/core";
 import type { TracearrHistorySession } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
-export function RecentActivityList({ sessions }: { sessions: TracearrHistorySession[] }) {
+import type { SourcedTracearrItem } from "./source";
+
+type SourcedTracearrHistorySession = SourcedTracearrItem<TracearrHistorySession>;
+
+export function RecentActivityList({
+  sessions,
+  showSource,
+}: {
+  sessions: SourcedTracearrHistorySession[];
+  showSource: boolean;
+}) {
   const t = useScopedI18n("widget.tracearr");
   const locale = useCurrentIntlLocale();
 
@@ -25,7 +35,7 @@ export function RecentActivityList({ sessions }: { sessions: TracearrHistorySess
                 : session.mediaTitle;
 
             return (
-              <Paper key={session.id} p="sm" radius="lg">
+              <Paper key={session.key} p="sm" radius="lg">
                 <Group justify="space-between" wrap="nowrap">
                   <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
                     <Avatar src={session.user.avatarUrl} alt={session.user.username} radius="xl" size="sm" />
@@ -35,6 +45,7 @@ export function RecentActivityList({ sessions }: { sessions: TracearrHistorySess
                       </Text>
                       <Text size="xs" c="dimmed" lineClamp={1}>
                         {session.user.username} • {session.serverName}
+                        {showSource ? ` • ${session.integrationName}` : ""}
                       </Text>
                     </Stack>
                   </Group>

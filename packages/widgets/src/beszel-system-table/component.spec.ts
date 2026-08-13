@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { parseColumnOrder, parseColumnWidths } from "../common/use-persisted-table-layout";
+import { beszelTableMetricOptionKeys, getBeszelTableVisibleMetricKeys } from "./display";
 
 const columnAccessors = ["name", "cpu", "memory", "disk", "temp"];
 
@@ -30,5 +31,25 @@ describe("Beszel table column layout options", () => {
         columnAccessors,
       ),
     ).toEqual({ cpu: 140 });
+  });
+});
+
+describe("Beszel table metric visibility", () => {
+  const enabledOptions = Object.fromEntries(beszelTableMetricOptionKeys.map((key) => [key, true])) as Record<
+    (typeof beszelTableMetricOptionKeys)[number],
+    boolean
+  >;
+
+  test("keeps the compact width budget", () => {
+    expect([...getBeszelTableVisibleMetricKeys(enabledOptions, 350, false)]).toEqual(["showCpu"]);
+    expect(getBeszelTableVisibleMetricKeys(enabledOptions, 600, false).size).toBe(4);
+  });
+
+  test("shows every metric in advanced mode regardless of visibility options", () => {
+    const disabledOptions = Object.fromEntries(
+      beszelTableMetricOptionKeys.map((key) => [key, false]),
+    ) as typeof enabledOptions;
+
+    expect([...getBeszelTableVisibleMetricKeys(disabledOptions, 200, true)]).toEqual(beszelTableMetricOptionKeys);
   });
 });

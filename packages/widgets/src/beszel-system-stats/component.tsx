@@ -18,6 +18,7 @@ import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import type { BeszelTimePeriod } from "../beszel/_shared/chart";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
 import { createBeszelSystemChoices, resolveBeszelSystemChoice } from "./selection";
 
@@ -45,7 +46,8 @@ export default function BeszelSystemStatsWidget({
         }),
     });
   const systemsQuery = clientApi.widget.beszel.getSystems.useQuery({ integrationIds });
-  const systemsResult = getUsableWidgetQueryData(systemsQuery) ?? [];
+  const systemsData = getUsableWidgetQueryData(systemsQuery);
+  const systemsResult = useMemo(() => systemsData ?? [], [systemsData]);
   const { isPending: systemsPending } = systemsQuery;
 
   const systems = useMemo(() => createBeszelSystemChoices(systemsResult), [systemsResult]);
@@ -138,7 +140,10 @@ export default function BeszelSystemStatsWidget({
   if (systems.length === 0) {
     return (
       <Box h="100%" pos="relative">
-        <IntegrationErrorIndicator results={systemsResult} />
+        <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 1 }}>
+          <WidgetQueryErrorIndicator error={systemsQuery.error} label={t("name")} />
+          <IntegrationErrorIndicator results={systemsResult} />
+        </Group>
         <Center h="100%">
           <Stack align="center" gap="xs">
             <IconServerOff size={28} opacity={0.5} />
@@ -175,7 +180,10 @@ export default function BeszelSystemStatsWidget({
   return (
     <Box h="100%" pos="relative">
       <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
-        <IntegrationErrorIndicator results={systemsResult} />
+        <Group gap={0}>
+          <WidgetQueryErrorIndicator error={systemsQuery.error} label={t("name")} />
+          <IntegrationErrorIndicator results={systemsResult} />
+        </Group>
       </Box>
       <ScrollArea
         h="100%"

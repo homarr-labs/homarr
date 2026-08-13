@@ -10,7 +10,8 @@ export const notebookWidget: WidgetDefinition = {
     items: [
       {
         name: "Show the toolbar to help you write markdown",
-        description: "Upon editing, enables a toolbar at the top with document editing functions.",
+        description:
+          "Upon editing in compact mode, enables a toolbar at the top with document editing functions. Advanced view always shows the complete toolbar while editing.",
         values: { type: "boolean" },
         defaultValue: "yes",
       },

@@ -17,6 +17,10 @@ import { uptimeKumaIntegration } from "@site/docs/integrations/uptime-kuma";
 
 This widget displays uptime statistics from your Uptime Kuma status page, including a visual uptime ring, average uptime percentage, and per-status monitor counts.
 
+Advanced view always shows the uptime ring, all status totals, and the complete monitor list with source identity, regardless of compact visibility switches.
+
+When multiple Uptime Kuma integrations are selected, monitors from healthy sources remain visible if another source fails. A warning indicator identifies each unavailable integration without exposing private request details. If every selected integration fails, the widget reports an error; if cached data remains visible after a later total failure, a stale-data warning is shown.
+
 ### Supported Integrations
 
 <WidgetIntegrations

@@ -1,13 +1,15 @@
 "use client";
 
 import { Sparkline } from "@mantine/charts";
-import { Flex, Stack, Text, Title, useMantineTheme } from "@mantine/core";
+import { Badge, Box, Flex, Group, Paper, SimpleGrid, Stack, Text, Title, useMantineTheme } from "@mantine/core";
 import { IconMinus, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 
 function round(value: number) {
@@ -25,8 +27,11 @@ function calculateChangePercentage(currentPrice: number, previousClose: number) 
 
 export interface StockSummary {
   currentPrice: number;
+  previousClose: number;
   change: number;
   changePercentage: number | null;
+  minimum: number;
+  maximum: number;
   graphValues: number[];
 }
 
@@ -55,20 +60,29 @@ export function getStockSummary(priceHistory: number[], previousClose: number): 
   const minimum = Math.min(...priceHistory);
   return {
     currentPrice,
+    previousClose,
     change: round(calculateChange(currentPrice, previousClose)),
     changePercentage: calculateChangePercentage(currentPrice, previousClose),
+    minimum,
+    maximum: Math.max(...priceHistory),
     graphValues: priceHistory.map((value) => value - minimum + 50),
   };
 }
 
-export default function StockPriceWidget({ options, width, height }: WidgetComponentProps<"stockPrice">) {
+export default function StockPriceWidget({
+  options,
+  width,
+  height,
+  displayMode = "compact",
+}: WidgetComponentProps<"stockPrice">) {
   const t = useScopedI18n("widget.stockPrice");
   const locale = useCurrentIntlLocale();
   const numberFormatter = new Intl.NumberFormat(locale);
   const theme = useMantineTheme();
-  const { data: result, error } = clientApi.widget.stockPrice.getPriceHistory.useQuery(options);
+  const stockQuery = clientApi.widget.stockPrice.getPriceHistory.useQuery(options);
+  const result = getUsableWidgetQueryData(stockQuery);
 
-  if (error && !result) throw error;
+  if (isInitialWidgetQueryPending(stockQuery)) return <WidgetQueryLoadingState />;
   if (!result) return <WidgetEmptyState />;
   const { data } = result;
 
@@ -79,57 +93,126 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
   const stockGraphValues = summary.graphValues;
   const trendColor = stockValuesChange > 0 ? "green.7" : stockValuesChange < 0 ? "red.7" : "gray.6";
   const layout = getStockLayout(width, height);
+  const formatValue = (value: number) => numberFormatter.format(round(value));
+  const formatSignedValue = (value: number) => `${value > 0 ? "+" : ""}${formatValue(value)}`;
 
-  return (
-    <Flex h="100%" w="100%">
-      <Sparkline
-        pos="absolute"
-        bottom={10}
-        w="100%"
-        h={layout.graphHeight}
-        data={stockGraphValues}
-        curveType="linear"
-        color={trendColor}
-        fillOpacity={0.6}
-        strokeWidth={2.5}
-      />
+  const content =
+    displayMode === "advanced" ? (
+      <Stack h="100%" w="100%" gap="md" p="md" style={{ overflow: "hidden" }}>
+        <Group justify="space-between" align="flex-start" gap="sm" wrap="wrap">
+          <Stack gap={2}>
+            <Title order={2}>{data.symbol}</Title>
+            <Text c="dimmed">{data.shortName}</Text>
+          </Stack>
+          <Group gap="xs" wrap="wrap" justify="flex-end">
+            <Badge variant="light">
+              {t("option.timeRange.label")}: {t(`option.timeRange.option.${options.timeRange}.label`)}
+            </Badge>
+            <Badge variant="light">
+              {t("option.timeInterval.label")}: {t(`option.timeInterval.option.${options.timeInterval}.label`)}
+            </Badge>
+          </Group>
+        </Group>
 
-      <Stack pos="absolute" top={10} left={10}>
-        <Text size="xl" fw={700} lh="0.715">
-          {stockValuesChange > 0 ? (
-            <IconTrendingUp size="1.5rem" color={theme.colors.green[7]} />
-          ) : stockValuesChange < 0 ? (
-            <IconTrendingDown size="1.5rem" color={theme.colors.red[7]} />
-          ) : (
-            <IconMinus size="1.5rem" color={theme.colors.gray[6]} />
+        <SimpleGrid cols={width >= 840 ? 6 : width >= 480 ? 3 : 2} spacing="xs">
+          <StockMetric label={t("advanced.currentPrice")} value={formatValue(summary.currentPrice)} />
+          <StockMetric label={t("advanced.previousClose")} value={formatValue(summary.previousClose)} />
+          <StockMetric label={t("advanced.change")} value={formatSignedValue(summary.change)} color={trendColor} />
+          <StockMetric
+            label={t("advanced.changePercentage")}
+            value={summary.changePercentage === null ? "—" : `${formatSignedValue(summary.changePercentage)}%`}
+            color={trendColor}
+          />
+          <StockMetric label={t("advanced.minimum")} value={formatValue(summary.minimum)} />
+          <StockMetric label={t("advanced.maximum")} value={formatValue(summary.maximum)} />
+        </SimpleGrid>
+
+        <Box style={{ flex: 1, minHeight: 160 }}>
+          <Sparkline
+            w="100%"
+            h="100%"
+            data={data.priceHistory}
+            curveType="linear"
+            color={trendColor}
+            fillOpacity={0.35}
+            strokeWidth={2.5}
+          />
+        </Box>
+      </Stack>
+    ) : (
+      <Flex h="100%" w="100%">
+        <Sparkline
+          pos="absolute"
+          bottom={10}
+          w="100%"
+          h={layout.graphHeight}
+          data={stockGraphValues}
+          curveType="linear"
+          color={trendColor}
+          fillOpacity={0.6}
+          strokeWidth={2.5}
+        />
+
+        <Stack pos="absolute" top={10} left={10}>
+          <Text size="xl" fw={700} lh="0.715">
+            {stockValuesChange > 0 ? (
+              <IconTrendingUp size="1.5rem" color={theme.colors.green[7]} />
+            ) : stockValuesChange < 0 ? (
+              <IconTrendingDown size="1.5rem" color={theme.colors.red[7]} />
+            ) : (
+              <IconMinus size="1.5rem" color={theme.colors.gray[6]} />
+            )}
+            {data.symbol}
+          </Text>
+          {layout.showName && (
+            <Text size="md" lh="1">
+              {data.shortName}
+            </Text>
           )}
-          {data.symbol}
-        </Text>
-        {layout.showName && (
-          <Text size="md" lh="1">
-            {data.shortName}
+        </Stack>
+
+        <Title pos="absolute" bottom={10} right={10} order={layout.priceOrder} fw={700}>
+          {formatValue(summary.currentPrice)}
+        </Title>
+
+        {layout.showChange && (
+          <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
+            {numberFormatter.format(stockValuesChange)}
+            {stockValuesChangePercentage === null
+              ? null
+              : ` (${stockValuesChange > 0 ? "+" : ""}${numberFormatter.format(stockValuesChangePercentage)}%)`}
           </Text>
         )}
-      </Stack>
 
-      <Title pos="absolute" bottom={10} right={10} order={layout.priceOrder} fw={700}>
-        {numberFormatter.format(round(summary.currentPrice))}
-      </Title>
+        {layout.showRange && (
+          <Text pos="absolute" bottom={10} left={10} fw={700}>
+            {t(`option.timeRange.option.${options.timeRange}.label`)}
+          </Text>
+        )}
+      </Flex>
+    );
 
-      {layout.showChange && (
-        <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
-          {numberFormatter.format(stockValuesChange)}
-          {stockValuesChangePercentage === null
-            ? null
-            : ` (${stockValuesChange > 0 ? "+" : ""}${numberFormatter.format(stockValuesChangePercentage)}%)`}
-        </Text>
+  return (
+    <Box h="100%" w="100%" pos="relative">
+      {content}
+      {stockQuery.error && (
+        <Box pos="absolute" top={4} right={4}>
+          <WidgetQueryErrorIndicator error={stockQuery.error} label={t("name")} />
+        </Box>
       )}
+    </Box>
+  );
+}
 
-      {layout.showRange && (
-        <Text pos="absolute" bottom={10} left={10} fw={700}>
-          {t(`option.timeRange.option.${options.timeRange}.label`)}
-        </Text>
-      )}
-    </Flex>
+function StockMetric({ label, value, color }: { label: string; value: string; color?: string }) {
+  return (
+    <Paper p="sm" radius="md">
+      <Text size="xs" c="dimmed" truncate>
+        {label}
+      </Text>
+      <Text size="lg" fw={700} c={color} truncate title={value}>
+        {value}
+      </Text>
+    </Paper>
   );
 }

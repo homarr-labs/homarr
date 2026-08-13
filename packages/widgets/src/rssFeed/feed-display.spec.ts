@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { feedDescriptionToText, getHostname } from "./component";
+import { feedDescriptionToText, getHostname, getRssEntryDisplay } from "./component";
 
 describe("RSS feed display helpers", () => {
   test("renders feed markup as inert text", () => {
@@ -12,5 +12,23 @@ describe("RSS feed display helpers", () => {
   test("handles malformed feed URLs without crashing the widget", () => {
     expect(getHostname("not a URL")).toBe("not a URL");
     expect(getHostname("https://example.com/feed.xml")).toBe("example.com");
+  });
+
+  test("advanced mode exposes all fetched entry details", () => {
+    expect(
+      getRssEntryDisplay({
+        isAdvanced: true,
+        isDense: true,
+        isTiny: true,
+        hideDescription: true,
+        showPosterImage: false,
+        descriptionLines: 1,
+      }),
+    ).toEqual({
+      showDescription: true,
+      showImage: true,
+      showSource: true,
+      descriptionLineClamp: undefined,
+    });
   });
 });

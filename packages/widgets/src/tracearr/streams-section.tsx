@@ -5,7 +5,19 @@ import { formatDuration } from "@homarr/common";
 import type { TracearrStream } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
-export function StreamsList({ streams, width }: { streams: TracearrStream[]; width: number }) {
+import type { SourcedTracearrItem } from "./source";
+
+type SourcedTracearrStream = SourcedTracearrItem<TracearrStream>;
+
+export function StreamsList({
+  streams,
+  width,
+  showSource,
+}: {
+  streams: SourcedTracearrStream[];
+  width: number;
+  showSource: boolean;
+}) {
   const t = useScopedI18n("widget.tracearr");
 
   if (streams.length === 0) {
@@ -19,13 +31,21 @@ export function StreamsList({ streams, width }: { streams: TracearrStream[]; wid
   return (
     <Stack gap="xs">
       {streams.map((stream) => (
-        <StreamCard key={stream.id} stream={stream} compact={width < 300} />
+        <StreamCard key={stream.key} stream={stream} compact={width < 300} showSource={showSource} />
       ))}
     </Stack>
   );
 }
 
-function StreamCard({ stream, compact }: { stream: TracearrStream; compact: boolean }) {
+function StreamCard({
+  stream,
+  compact,
+  showSource,
+}: {
+  stream: SourcedTracearrStream;
+  compact: boolean;
+  showSource: boolean;
+}) {
   const t = useScopedI18n("widget.tracearr");
   const progressPercent =
     stream.durationMs && stream.durationMs > 0 ? (stream.progressMs / stream.durationMs) * 100 : 0;
@@ -115,13 +135,13 @@ function StreamCard({ stream, compact }: { stream: TracearrStream; compact: bool
           </Group>
         )}
 
-        <Group gap="xs" wrap="nowrap">
-          {stream.device && (
+        {(stream.device || showSource) && (
+          <Group gap="xs" wrap="nowrap">
             <Text size="xs" c="dimmed" lineClamp={1}>
-              {stream.player ?? stream.device}
+              {[stream.player ?? stream.device, showSource ? stream.integrationName : null].filter(Boolean).join(" · ")}
             </Text>
-          )}
-        </Group>
+          </Group>
+        )}
       </Stack>
     </Paper>
   );

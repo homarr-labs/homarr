@@ -37,9 +37,13 @@ import { getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/defin
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
-import type { WidgetComponentProps } from "../definition";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
+import { WidgetEmptyState } from "../common/empty-state";
+import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
+import { selectReleaseRepositoriesForDisplay } from "./display";
 import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
 import { getReleasesQueryStaleTimeMs } from "./query-options";
 
@@ -49,7 +53,7 @@ const formatRelativeDate = (value: string): string => {
   return isMonths ? value.toUpperCase() : isOtherUnits ? value.toLowerCase() : value;
 };
 
-export default function ReleasesWidget({ options, itemId, width }: WidgetComponentProps<"releases">) {
+export default function ReleasesWidget({ options, itemId, width, displayMode }: WidgetComponentProps<"releases">) {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
@@ -60,6 +64,7 @@ export default function ReleasesWidget({ options, itemId, width }: WidgetCompone
     key: "releases-viewed-versions",
     defaultValue: {},
   });
+  const isAdvanced = displayMode === "advanced";
   const columns = Math.max(1, Math.floor(width / 420));
 
   const relativeDateOptions = useMemo(
@@ -123,6 +128,7 @@ export default function ReleasesWidget({ options, itemId, width }: WidgetCompone
     () => queryResults.map((q) => q.data).filter((d): d is NonNullable<typeof d> => d != null),
     [queryResults],
   );
+  const isInitialLoading = queryResults.some(isInitialWidgetQueryPending);
 
   const repositories = useMemo(() => {
     const formattedResults = normalizedRepositories
@@ -147,22 +153,19 @@ export default function ReleasesWidget({ options, itemId, width }: WidgetCompone
           viewed: releasesViewedList[repository.id] === release.latestRelease,
         };
       })
-      .filter(
-        (repository) =>
-          "error" in repository || !options.showOnlyHighlighted || repository.isNewRelease || repository.isStaleRelease,
-      )
       .toSorted((repoA, repoB) => {
         if ("error" in repoA) return -1;
         if ("error" in repoB) return 1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
       }) as ReleasesRepositoryResponse[];
 
-    if (typeof options.topReleases !== "string" && options.topReleases > 0) {
-      return formattedResults.slice(0, options.topReleases);
-    }
-
-    return formattedResults;
+    return selectReleaseRepositoriesForDisplay(formattedResults, {
+      displayMode,
+      showOnlyHighlighted: options.showOnlyHighlighted,
+      topReleases: options.topReleases,
+    });
   }, [
+    displayMode,
     results,
     normalizedRepositories,
     options.showOnlyHighlighted,
@@ -185,6 +188,9 @@ export default function ReleasesWidget({ options, itemId, width }: WidgetCompone
     },
     [setReleasesViewedList],
   );
+
+  if (isInitialLoading) return <WidgetQueryLoadingState />;
+  if (repositories.length === 0) return <WidgetEmptyState />;
 
   return (
     <ScrollArea h="100%" className="releases">
@@ -241,7 +247,7 @@ export default function ReleasesWidget({ options, itemId, width }: WidgetCompone
                     miw={0}
                     style={{ flex: 1 }}
                   >
-                    {!options.showOnlyIcon && (
+                    {(isAdvanced || !options.showOnlyIcon) && (
                       <Text className="releases-repository-header-name" size="xs">
                         {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
                         {repository.name || repository.identifier}
@@ -321,7 +327,7 @@ export default function ReleasesWidget({ options, itemId, width }: WidgetCompone
                   </Group>
                 </Group>
               </UnstyledButton>
-              {options.showDetails && (
+              {(isAdvanced || options.showDetails) && (
                 <DetailsDisplay
                   repository={repository}
                   isExpanded={isActive}

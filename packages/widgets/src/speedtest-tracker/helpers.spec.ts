@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { SpeedtestTrackerDashboardData, SpeedtestTrackerStats } from "@homarr/integrations/types";
 
-import { combineSpeedtestDashboards, getCompactSections, mergeStats } from "./helpers";
+import { combineSpeedtestDashboards, getAvailableSpeedtestDashboards, getCompactSections, mergeStats } from "./helpers";
 
 const stats = (average: number, totalResults: number): SpeedtestTrackerStats => ({
   ping: { avg: average, min: average, max: average },
@@ -24,6 +24,23 @@ describe("speedtest dashboard aggregation", () => {
       { latestResult: older, stats: null, recentResults: [] },
     ];
     expect(combineSpeedtestDashboards(dashboards).latestResult?.id).toBe(2);
+  });
+});
+
+describe("speedtest source ownership", () => {
+  it("keeps integration identity when upstream result ids overlap", () => {
+    const result = { id: 1, ping: 1, download_bits: 1, upload_bits: 1, healthy: true, created_at: new Date(1) };
+    const dashboard = { latestResult: result, stats: null, recentResults: [result] };
+
+    expect(
+      getAvailableSpeedtestDashboards([
+        { integrationId: "speed-a", integrationName: "Speed A", dashboard },
+        { integrationId: "speed-b", integrationName: "Speed B", dashboard },
+      ]).map(({ integrationId, integrationName }) => ({ integrationId, integrationName })),
+    ).toEqual([
+      { integrationId: "speed-a", integrationName: "Speed A" },
+      { integrationId: "speed-b", integrationName: "Speed B" },
+    ]);
   });
 });
 

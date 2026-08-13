@@ -1,20 +1,44 @@
 "use client";
 
-import { useMemo } from "react";
-import { ActionIcon, Anchor, Badge, Card, Flex, Group, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
+import { useCallback, useMemo } from "react";
+import {
+  ActionIcon,
+  Anchor,
+  Badge,
+  Card,
+  Center,
+  Flex,
+  Group,
+  Loader,
+  ScrollArea,
+  Stack,
+  Text,
+  Tooltip,
+  VisuallyHidden,
+} from "@mantine/core";
 import { IconCircleCheck, IconCircleX, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeActions } from "../runtime-hooks";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
-import { getUsableWidgetQueryData } from "../common/query-state";
+import { WidgetEmptyState } from "../common/empty-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import actionTargetClasses from "../common/action-target.module.css";
 import classes from "./component.module.css";
+import { getIndexerDisplayStatus } from "./status";
+
+const statusPresentation = {
+  healthy: { color: "green" },
+  unhealthy: { color: "red" },
+  disabled: { color: "gray" },
+} as const;
 
 export default function IndexerManagerWidget({
   options,
@@ -23,25 +47,41 @@ export default function IndexerManagerWidget({
   height,
   isEditMode,
   widgetRuntimeRef,
+  displayMode,
 }: WidgetComponentProps<"indexerManager">) {
   const t = useI18n();
-  const indexersData =
-    getUsableWidgetQueryData(clientApi.widget.indexerManager.getIndexersStatus.useQuery({ integrationIds })) ?? [];
+  const indexersQuery = clientApi.widget.indexerManager.getIndexersStatus.useQuery({ integrationIds });
+  const isInitialPending = isInitialWidgetQueryPending(indexersQuery);
+  const indexersData = getUsableWidgetQueryData(indexersQuery) ?? [];
 
   const utils = clientApi.useUtils();
-  const { mutate: testAll, isPending } = clientApi.widget.indexerManager.testAllIndexers.useMutation({
+  const {
+    mutate: testAll,
+    isPending,
+    error: testAllError,
+  } = clientApi.widget.indexerManager.testAllIndexers.useMutation({
     onSettled: () => void utils.widget.indexerManager.getIndexersStatus.invalidate(),
   });
+  const interactIntegrationIds = new Set(useIntegrationsWithInteractAccess().map(({ id }) => id));
+  const canInteract = integrationIds.length > 0 && integrationIds.every((id) => interactIntegrationIds.has(id));
   const board = useRequiredBoard();
-  const hasSmallWidth = width < 256;
-  const isDense = width < 280 || height < 180;
-  const showHealthCounts = width >= 200 && height >= 100;
-  const allIndexers = useMemo(() => indexersData.flatMap((entry) => entry.indexers), [indexersData]);
+  const isAdvanced = displayMode === "advanced";
+  const hasSmallWidth = !isAdvanced && width < 256;
+  const isDense = !isAdvanced && (width < 280 || height < 180);
+  const showHealthCounts = isAdvanced || (width >= 200 && height >= 100);
+  const allIndexers = indexersData.flatMap((entry) => entry.indexers);
+  const hasSourceError = indexersData.some((entry) => Boolean(entry.error));
   const unavailableCount = allIndexers.filter(
     (indexer) => indexer.status === false || indexer.enabled === false,
   ).length;
 
-  useWidgetRuntimeActions(widgetRuntimeRef, { testAllIndexers: () => testAll({ integrationIds }) });
+  const testAllIndexers = useCallback(() => {
+    if (!canInteract || isPending) return;
+    testAll({ integrationIds });
+  }, [canInteract, integrationIds, isPending, testAll]);
+
+  const runtimeActions = useMemo(() => ({ testAllIndexers }), [testAllIndexers]);
+  useWidgetRuntimeActions(widgetRuntimeRef, runtimeActions);
 
   return (
     <Flex
@@ -52,6 +92,7 @@ export default function IndexerManagerWidget({
       p={isDense ? "xs" : "sm"}
     >
       <Group className="indexer-manager-title" align="center" gap="xs" wrap="nowrap" w="100%">
+        {testAllError && <VisuallyHidden role="alert">{t("common.error")}</VisuallyHidden>}
         <Tooltip label={t("widget.indexerManager.title")} disabled={!hasSmallWidth}>
           <IconReportSearch
             className="indexer-manager-title-icon"
@@ -76,17 +117,19 @@ export default function IndexerManagerWidget({
             )}
           </Group>
         )}
-        <Tooltip label={t("widget.indexerManager.testAll")}>
+        <WidgetQueryErrorIndicator error={indexersQuery.error} label={t("widget.indexerManager.title")} />
+        <Tooltip label={testAllError ? t("common.error") : t("widget.indexerManager.testAll")}>
           <ActionIcon
             className={combineClasses("indexer-manager-test-action-icon", classes.testAction, actionTargetClasses.root)}
             size="sm"
             radius={board.itemRadius}
             variant="light"
+            color={testAllError ? "red" : undefined}
             loading={isPending}
-            disabled={isEditMode}
+            disabled={isEditMode || !canInteract}
             loaderProps={{ type: "dots" }}
             onClick={() => {
-              testAll({ integrationIds });
+              testAllIndexers();
             }}
             aria-label={t("widget.indexerManager.testAll")}
           >
@@ -101,67 +144,81 @@ export default function IndexerManagerWidget({
         radius={board.itemRadius}
         flex={1}
       >
-        <ScrollArea className="indexer-manager-list-scroll-area" h="100%" scrollbars="y">
-          {indexersData.map(({ integrationId, integrationName, indexers, error }) => (
-            <Stack gap={4} className={`indexer-manager-${integrationId}-list-container`} p={0} key={integrationId}>
-              {indexersData.length > 1 && (
-                <Group justify="space-between" wrap="nowrap" py={4}>
-                  <Text size="xs" fw={600} truncate="end">
-                    {integrationName}
-                  </Text>
-                  {error && (
-                    <Badge size="xs" color="red" variant="light">
-                      {t("common.error")}
-                    </Badge>
-                  )}
-                </Group>
-              )}
-              {indexers.map((indexer) => {
-                const href = getSafeApplicationUrl(indexer.url);
-                return (
-                  <Group
-                    className={`indexer-manager-line indexer-manager-${indexer.name} ${classes.indexerRow}`}
-                    key={indexer.id}
-                    justify="space-between"
-                    gap="xs"
-                    wrap="nowrap"
-                  >
-                    <Anchor
-                      className={combineClasses("indexer-manager-line-anchor", classes.indexerLink)}
-                      component={href ? "a" : "span"}
-                      href={href}
-                      target={href ? (options.openIndexerSiteInNewTab ? "_blank" : "_self") : undefined}
-                      rel={href && options.openIndexerSiteInNewTab ? SAFE_NEW_TAB_REL : undefined}
-                      title={href}
-                    >
-                      <Text
-                        className="indexer-manager-line-anchor-text"
-                        c="dimmed"
-                        size={hasSmallWidth ? "xs" : "sm"}
-                        truncate="end"
-                      >
-                        {indexer.name}
-                      </Text>
-                    </Anchor>
-                    {indexer.status === false || indexer.enabled === false ? (
-                      <IconCircleX
-                        className="indexer-manager-line-status-icon indexer-manager-line-icon-disabled"
-                        color="var(--mantine-color-red-6)"
-                        size={hasSmallWidth ? 12 : 16}
-                      />
-                    ) : (
-                      <IconCircleCheck
-                        className="indexer-manager-line-status-icon indexer-manager-line-icon-enabled"
-                        color="var(--mantine-color-green-6)"
-                        size={hasSmallWidth ? 12 : 16}
-                      />
+        {isInitialPending ? (
+          <Center h="100%">
+            <Loader size="sm" />
+          </Center>
+        ) : allIndexers.length === 0 && !hasSourceError ? (
+          <WidgetEmptyState />
+        ) : (
+          <ScrollArea className="indexer-manager-list-scroll-area" h="100%" scrollbars="y">
+            {indexersData.map(({ integrationId, integrationName, indexers, error }) => (
+              <Stack gap={4} className={`indexer-manager-${integrationId}-list-container`} p={0} key={integrationId}>
+                {(isAdvanced || indexersData.length > 1 || error) && (
+                  <Group justify="space-between" wrap="nowrap" py={4}>
+                    <Text size="xs" fw={600} truncate="end">
+                      {integrationName}
+                    </Text>
+                    {error && (
+                      <Badge size="xs" color="red" variant="light">
+                        {t("common.error")}
+                      </Badge>
                     )}
                   </Group>
-                );
-              })}
-            </Stack>
-          ))}
-        </ScrollArea>
+                )}
+                {indexers.map((indexer) => {
+                  const href = getSafeApplicationUrl(indexer.url);
+                  const displayStatus = getIndexerDisplayStatus(indexer);
+                  const presentation = statusPresentation[displayStatus];
+                  return (
+                    <Group
+                      className={`indexer-manager-line indexer-manager-${indexer.name} ${classes.indexerRow}`}
+                      key={indexer.id}
+                      justify="space-between"
+                      gap="xs"
+                      wrap="nowrap"
+                    >
+                      <Anchor
+                        className={combineClasses("indexer-manager-line-anchor", classes.indexerLink)}
+                        component={href ? "a" : "span"}
+                        href={href}
+                        target={href ? (options.openIndexerSiteInNewTab ? "_blank" : "_self") : undefined}
+                        rel={href && options.openIndexerSiteInNewTab ? SAFE_NEW_TAB_REL : undefined}
+                        title={href}
+                      >
+                        <Text
+                          className="indexer-manager-line-anchor-text"
+                          c="dimmed"
+                          size={hasSmallWidth ? "xs" : "sm"}
+                          truncate="end"
+                        >
+                          {indexer.name}
+                        </Text>
+                      </Anchor>
+                      {isAdvanced ? (
+                        <Badge size="xs" color={presentation.color} variant="light">
+                          {t(`widget.indexerManager.status.${displayStatus}`)}
+                        </Badge>
+                      ) : displayStatus === "healthy" ? (
+                        <IconCircleCheck
+                          className="indexer-manager-line-status-icon indexer-manager-line-icon-enabled"
+                          color="var(--mantine-color-green-6)"
+                          size={hasSmallWidth ? 12 : 16}
+                        />
+                      ) : (
+                        <IconCircleX
+                          className="indexer-manager-line-status-icon indexer-manager-line-icon-disabled"
+                          color="var(--mantine-color-red-6)"
+                          size={hasSmallWidth ? 12 : 16}
+                        />
+                      )}
+                    </Group>
+                  );
+                })}
+              </Stack>
+            ))}
+          </ScrollArea>
+        )}
       </Card>
     </Flex>
   );

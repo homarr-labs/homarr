@@ -69,6 +69,8 @@
   color: var(--mantine-primary-color-filled);
   line-height: 1.1;
   text-align: center;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .statValueWarning {
