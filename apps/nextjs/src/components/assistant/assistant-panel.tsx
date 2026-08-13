@@ -3030,16 +3030,6 @@ export const AssistantConversationSurface = ({
             </Tooltip>
           </Group>
         )}
-        <Group className={classes.panelIdentity} gap="xs" wrap="nowrap">
-          <ThemeIcon variant="light" color="red" radius="xl">
-            <IconRobot size={18} />
-          </ThemeIcon>
-          <div className={classes.panelIdentityText}>
-            <Text fw={700} lh={1.1} lineClamp={1}>
-              {t("title")}
-            </Text>
-          </div>
-        </Group>
         <Group className={classes.panelActions} gap={2} wrap="nowrap">
           <ConversationHistory />
           <ViewRefreshAction isRefreshing={isRefreshing} onRefresh={onRefresh} />

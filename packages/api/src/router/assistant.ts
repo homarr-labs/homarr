@@ -17,6 +17,7 @@ import {
   integrations,
   integrationUserPermissions,
   items,
+  users,
 } from "@homarr/db/schema";
 import {
   assistantProviderCanUseOpenRouterServerTools,
@@ -33,7 +34,7 @@ import { env } from "../env";
 import { orderMessagesByParent } from "../assistant-message-order";
 import { verifyAssistantGenerationAccessToken } from "../assistant-generation-access";
 import { createTRPCRouter, isDemoMode, permissionRequiredProcedure, protectedProcedure } from "../trpc";
-import { boardRouter } from "./board";
+import { boardRouter, getHomeIdBoardAsync } from "./board";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
 const configurationId = "default";
@@ -331,7 +332,7 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
   const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
     where: eq(groupMembers.userId, ctx.session.user.id),
   });
-  const [availableBoards, availableIntegrations, availableApps] = await Promise.all([
+  const [availableBoards, availableIntegrations, availableApps, currentUser] = await Promise.all([
     boardRouter.createCaller(ctx).getAllBoards(),
     ctx.db.query.integrations.findMany({
       columns: { id: true, name: true, kind: true },
@@ -354,7 +355,9 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
       orderBy: asc(apps.name),
       limit: 250,
     }),
+    ctx.db.query.users.findFirst({ where: eq(users.id, ctx.session.user.id) }),
   ]);
+  const homeBoardId = await getHomeIdBoardAsync(ctx.db, currentUser ?? null, ctx.deviceType);
   const boardsById = new Map(availableBoards.map((board) => [board.id, board]));
   const availableItems =
     availableBoards.length === 0
@@ -395,7 +398,8 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
         id: board.id,
         type: "board",
         label: board.name,
-        description: board.isHome ? "Home board" : board.isMobileHome ? "Mobile home board" : "Homarr board",
+        description:
+          board.id === homeBoardId ? "Home board" : board.isMobileHome ? "Mobile home board" : "Homarr board",
       }),
     ),
     ...availableItems.flatMap((item): AssistantContextEntity[] => {
