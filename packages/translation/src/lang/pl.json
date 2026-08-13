@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Witaj w Homarr",
+        "subtitle": "Zacznijmy od konfiguracji Twojej instancji Homarr.",
+        "description": "Aby rozpocząć, wybierz jak chcesz skonfigurować instancję Homarr.",
+        "action": {
+          "scratch": "Zacznij od zera",
+          "importOldmarr": "Importuj z Homarr przed 1.0",
+          "restoreSqlite": "Przywróć z kopii zapasowej SQLite",
+          "restoreSqliteDescription": "Prześlij pełną kopię zapasową bazy danych SQLite z poprzedniej instancji Homarr. Spowoduje to przywrócenie wszystkich tablic, użytkowników, aplikacji, integracji i ustawień.",
+          "backToOptions": "← Wróć do opcji konfiguracji"
+        }
+      },
+      "import": {
+        "title": "Importuj dane",
+        "subtitle": "Możesz zaimportować dane z istniejącej instancji Homarra.",
+        "dropzone": {
+          "title": "Przeciągnij tutaj plik zip lub kliknij, aby przeglądać",
+          "description": "Przesłany zip zostanie przetworzony i będziesz mógł wybrać co chcesz zaimportować"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Zmień plik"
+          }
+        },
+        "importSettings": {
+          "title": "Importuj ustawienia",
+          "description": "Skonfiguruj zachowanie importu"
+        },
+        "boardSelection": {
+          "title": "Znaleziono {count} tablic",
+          "description": "Wybierz wszystkie tablice o rozmiarze do zaimportowania",
+          "action": {
+            "selectAll": "Zaznacz wszystkie",
+            "unselectAll": "Odznacz wszystkie"
+          }
+        },
+        "summary": {
+          "title": "Podsumowanie importu",
+          "description": "W poniższym podsumowaniu możesz zobaczyć, co zostanie zaimportowane",
+          "action": {
+            "import": "Potwierdź import i kontynuuj"
+          },
+          "entities": {
+            "apps": "Aplikacje",
+            "boards": "Tablice",
+            "integrations": "Integracje",
+            "credentialUsers": "Dane użytkowników"
+          }
+        },
+        "tokenModal": {
+          "title": "Wpisz token importu",
+          "field": {
+            "token": {
+              "label": "Token",
+              "description": "Wprowadź token importu z poprzedniej instancji homarr"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Nieprawidłowy token",
+              "message": "Wprowadzony token jest nieprawidłowy"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Administrator",
+        "subtitle": "Określ dane uwierzytelniające dla administratora",
+        "notification": {
+          "success": {
+            "title": "Użytkownik został utworzony",
+            "message": "Użytkownik został pomyślnie utworzony"
+          },
+          "error": {
+            "title": "Błąd podczas tworzenia użytkownika"
+          }
+        }
+      },
+      "group": {
+        "title": "Zewnętrzna grupa",
+        "subtitle": "Określ grupę, która powinna być używana przez użytkowników zewnętrznych.",
+        "form": {
+          "name": {
+            "label": "Nazwa grupy",
+            "description": "Nazwa musi być zgodna z grupą administratora zewnętrznego dostawcy"
+          }
+        }
+      },
+      "settings": {
+        "title": "Ustawienia",
+        "subtitle": "Konfiguruj ustawienia serwera"
+      },
+      "integrations": {
+        "title": "Integracje",
+        "subtitle": "Wybierz usługi, których używasz.",
+        "description": "Wybierz integracje, które chcesz połączyć. Skonfigurujemy Twoją tablicę z pasującymi widgetami automatycznie.",
+        "action": {
+          "continue": "Kontynuuj",
+          "skip": "Pomiń na razie"
+        },
+        "configure": {
+          "progress": "{current} z {total}",
+          "skip": "Pomiń tę integrację",
+          "finishing": "Konfigurowanie twojej tablicy...",
+          "error": {
+            "title": "Konfiguracja nie powiodła się",
+            "message": "Coś poszło nie tak podczas konfiguracji twojej tablicy. Spróbuj ponownie później."
+          },
+          "helpers": {
+            "tooltip": "URL helpers",
+            "description": "URL helpers spróbują odgadnąć URL twoich serwisów. Jeżeli to nie zadziała, po prostu wpisz adres ręcznie."
+          }
+        },
+        "urlTemplate": {
+          "label": "Base URL",
+          "placeholder": "homelab.local lub 192.168.1.1",
+          "hint": "Wprowadź swoją podstawową domenę lub adres IP, aby automatycznie wypełniać adresy URL integracji",
+          "warning": "Ustawienie Base URL spowoduje automatyczne wypełnienie wszystkich adresów URL integracji, oszczędzając czas podczas konfiguracji",
+          "preview": "np. {example}",
+          "mode": {
+            "subdomain": "Subdomena",
+            "hostPort": "Host:Port"
+          }
+        },
+        "docker": {
+          "detected": "Doker wykrył {count} usług",
+          "detectedBreakdown": "Integracje {integrations} · {apps} aplikacje",
+          "summary": "Homarr wykrył {apps} aplikacji, z których {integrations} ma wbudowane integracje",
+          "appBadge": "Aplikacja",
+          "appSectionLabel": "Aplikacje do dodania do tablicy (wybrano {count})",
+          "scanning": "Skanowanie Dockera...",
+          "scanningDescription": "Szukanie uruchomionych kontenerów w systemie"
+        }
+      },
+      "finish": {
+        "title": "Zakończ konfigurację",
+        "subtitle": "Gotowe!",
+        "description": "Pomyślnie zakończyłeś proces konfiguracji. Teraz możesz zacząć używać Homarr. Wybierz następną akcję:",
+        "action": {
+          "goToBoard": "Idź do tablicy {name}",
+          "createBoard": "Stwórz swoją pierwszą tablicę",
+          "inviteUser": "Zaproś innych użytkowników",
+          "docs": "Przeczytaj dokumentację"
+        }
+      }
+    },
+    "backToStart": "Powrót do początku"
+  },
   "user": {
     "title": "Użytkownicy",
     "name": "Użytkownik",
@@ -3909,6 +4058,62 @@
           "message": "Masz niezapisane zmiany, czy na pewno chcesz wyjść?"
         }
       },
+      "oldImport": {
+        "label": "Import z Homarr sprzed wersji 1.0.0",
+        "notification": {
+          "success": {
+            "title": "Import zakończony pomyślnie",
+            "message": "Tablica została pomyślnie zaimportowana"
+          },
+          "error": {
+            "title": "Import nie powiódł się",
+            "message": "Nie udało się zaimportować tablicy. Sprawdź logi, aby uzyskać więcej informacji."
+          }
+        },
+        "form": {
+          "file": {
+            "label": "Wybierz plik JSON",
+            "invalidError": "Nieprawidłowy plik konfiguracji"
+          },
+          "apps": {
+            "label": "Aplikacje",
+            "avoidDuplicates": {
+              "label": "Unikaj duplikatów",
+              "description": "Ignoruje aplikacje, dla których już istnieje aplikacja z tym samym adresem href."
+            },
+            "onlyImportApps": {
+              "label": "Import tylko aplikacje",
+              "description": "Dodaje tylko aplikacje, tablica musi zostać odtworzona ręcznie."
+            }
+          },
+          "name": {
+            "label": "Nazwa tablicy"
+          },
+          "screenSize": {
+            "label": "Rozmiar ekranu",
+            "description": "W wersjach przed 1.0 istniały trzy różne tryby, dzięki czemu można było wybrać liczbę kolumn dla każdego rozmiaru ekranu.",
+            "option": {
+              "sm": "Mały",
+              "md": "Średni",
+              "lg": "Duży"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "Zachowanie paska bocznego",
+            "description": "Paski boczne zostały usunięte w wersji 1.0, możesz wybrać, co ma się stać z elementami, które się w nich znajdowały.",
+            "option": {
+              "lastSection": {
+                "label": "Ostatnia sekcja",
+                "description": "Pasek boczny będzie wyświetlany poniżej ostatniej sekcji"
+              },
+              "removeItems": {
+                "label": "Usuń elementy",
+                "description": "Elementy znajdujące się w pasku bocznym zostaną usunięte"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "Utwórz aplikację w locie",
@@ -5531,6 +5736,9 @@
               },
               "newBoard": {
                 "label": "Utwórz nową tablicę"
+              },
+              "importBoard": {
+                "label": "Importuj tablicę"
               },
               "newApp": {
                 "label": "Utwórz nową aplikację"

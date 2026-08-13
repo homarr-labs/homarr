@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Bem-vindo ao Homarr",
+        "subtitle": "Vamos começar configurando a sua instância Homarr.",
+        "description": "Para começar, por favor selecione como você deseja configurar sua instância Homarr.",
+        "action": {
+          "scratch": "Começar do zero",
+          "importOldmarr": "Importe de uma instância do Homarr anterior a 1.0",
+          "restoreSqlite": "Restaurar do backup SQLite",
+          "restoreSqliteDescription": "Fazer o upload de um backup completo do banco de dados SQLite de uma instância anterior da Homarr. Isso restaurará todos os painéis, usuários, apps, integrações e configurações.",
+          "backToOptions": "← Retorna às opções de instalação"
+        }
+      },
+      "import": {
+        "title": "Importar dados",
+        "subtitle": "Você pode importar dados de uma instância existente do Homarr.",
+        "dropzone": {
+          "title": "Arraste o arquivo ZIP aqui ou clique para procurar",
+          "description": "O arquivo ZIP enviado será processado e você poderá selecionar o que deseja importar"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Alterar arquivo"
+          }
+        },
+        "importSettings": {
+          "title": "Importar configurações",
+          "description": "Configure o comportamento da importação"
+        },
+        "boardSelection": {
+          "title": "{count} painéis encontrados",
+          "description": "Escolha todos os painéis com o tamanho que você deseja importar",
+          "action": {
+            "selectAll": "Selecionar todos",
+            "unselectAll": "Desmarcar Todos"
+          }
+        },
+        "summary": {
+          "title": "Resumo da importação",
+          "description": "No resumo abaixo você pode ver o que será importado",
+          "action": {
+            "import": "Confirmar a importação e continuar"
+          },
+          "entities": {
+            "apps": "Aplicativos",
+            "boards": "Painéis",
+            "integrations": "Integrações",
+            "credentialUsers": "Usuários credenciados"
+          }
+        },
+        "tokenModal": {
+          "title": "Insira o token de importação",
+          "field": {
+            "token": {
+              "label": "Token",
+              "description": "Insira o token de importação mostrado em sua instância homarr anterior"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Token inválido",
+              "message": "O token que você inseriu é inválido"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Usuário Administrador",
+        "subtitle": "Especifique as credenciais para seu usuário administrador.",
+        "notification": {
+          "success": {
+            "title": "Usuário criado",
+            "message": "O usuário foi criado com sucesso"
+          },
+          "error": {
+            "title": "Falha ao criar usuário"
+          }
+        }
+      },
+      "group": {
+        "title": "Grupo externo",
+        "subtitle": "Especifique o grupo que deve ser usado para usuários externos.",
+        "form": {
+          "name": {
+            "label": "Nome do grupo",
+            "description": "O nome tem que coincidir com o grupo administrador do provedor externo"
+          }
+        }
+      },
+      "settings": {
+        "title": "Configurações",
+        "subtitle": "Definir as configurações do servidor."
+      },
+      "integrations": {
+        "title": "Integrações",
+        "subtitle": "Selecione os serviços que você usa.",
+        "description": "Escolha as integrações que deseja conectar. Vamos configurar seu painel com os widgets correspondentes automaticamente.",
+        "action": {
+          "continue": "Continuar",
+          "skip": "Pular por enquanto"
+        },
+        "configure": {
+          "progress": "{current} de {total}",
+          "skip": "Pular esta integração",
+          "finishing": "Configurando seu painel...",
+          "error": {
+            "title": "Falha na configuração",
+            "message": "Algo deu errado ao configurar seu painel. Por favor, tente novamente."
+          },
+          "helpers": {
+            "tooltip": "Auxiliares de URL",
+            "description": "Esses auxiliares tentam adivinhar a URL dos seus serviços. Se não funcionar, digite o endereço manualmente."
+          }
+        },
+        "urlTemplate": {
+          "label": "URL base",
+          "placeholder": "homelab.local ou 192.168.1.1",
+          "hint": "Digite seu domínio base ou IP para preencher automaticamente as URLs das integrações",
+          "warning": "Definir sua URL base agora preencherá automaticamente todas as URLs das integrações, economizando tempo durante a configuração",
+          "preview": "ex.: {example}",
+          "mode": {
+            "subdomain": "Subdomínio",
+            "hostPort": "Host:Porta"
+          }
+        },
+        "docker": {
+          "detected": "Docker detectou {count} serviços",
+          "detectedBreakdown": "{integrations} integrações · {apps} apps",
+          "summary": "O Homarr detectou {apps} apps, dos quais {integrations} possuem integrações nativas",
+          "appBadge": "App",
+          "appSectionLabel": "Apps para adicionar ao painel ({count} selecionados)",
+          "scanning": "Verificando Docker...",
+          "scanningDescription": "Procurando contêineres em execução no seu sistema"
+        }
+      },
+      "finish": {
+        "title": "Concluir configuração",
+        "subtitle": "Você está pronto para começar!",
+        "description": "Você concluiu com sucesso o processo de configuração. Agora você pode começar a usar o Homarr. Selecione sua próxima ação:",
+        "action": {
+          "goToBoard": "Ir para o painel {name}",
+          "createBoard": "Crie seu primeiro painel",
+          "inviteUser": "Convidar outros usuários",
+          "docs": "Ler a documentação"
+        }
+      }
+    },
+    "backToStart": "Voltar ao início"
+  },
   "user": {
     "title": "Usuários",
     "name": "Usuário",
@@ -3892,6 +4041,62 @@
           "message": "Você tem alterações não salvas, tem certeza de que deseja sair?"
         }
       },
+      "oldImport": {
+        "label": "Importar do Homarr anterior à versão 1.0.0",
+        "notification": {
+          "success": {
+            "title": "Importação bem-sucedida",
+            "message": "O painel foi importado com sucesso"
+          },
+          "error": {
+            "title": "Falha na importação",
+            "message": "O painel não pôde ser importado, verifique os logs para mais detalhes"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "Selecionar arquivo JSON",
+            "invalidError": "Arquivo de configuração inválido"
+          },
+          "apps": {
+            "label": "Aplicativos",
+            "avoidDuplicates": {
+              "label": "Evitar duplicatas",
+              "description": "Ignora aplicativos onde já existe um aplicativo com o mesmo href"
+            },
+            "onlyImportApps": {
+              "label": "Importar apenas aplicativos",
+              "description": "Só adiciona os aplicativos, o painel precisa ser recriado manualmente"
+            }
+          },
+          "name": {
+            "label": "Nome do painel"
+          },
+          "screenSize": {
+            "label": "Tamanho da tela",
+            "description": "Nas versões anteriores à 1.0 existiam três modos diferentes, então você podia escolher a quantidade de colunas para cada tamanho de tela.",
+            "option": {
+              "sm": "Pequeno",
+              "md": "Médio",
+              "lg": "Grande"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "Comportamento da barra lateral",
+            "description": "As barras laterais foram removidas na versão 1.0. Você pode selecionar o que deve acontecer com os itens dentro delas.",
+            "option": {
+              "lastSection": {
+                "label": "Última seção",
+                "description": "A barra lateral será exibida abaixo da última seção"
+              },
+              "removeItems": {
+                "label": "Remover itens",
+                "description": "Os itens presentes na barra lateral serão removidos"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "Criar aplicativo em tempo real",
@@ -5501,6 +5706,9 @@
               },
               "newBoard": {
                 "label": "Criar um novo quadro"
+              },
+              "importBoard": {
+                "label": "Importe um quadro"
               },
               "newApp": {
                 "label": "Criar aplicativo"

@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Vítejte v Homarru",
+        "subtitle": "Pojďme začít nastavením instance Homarru.",
+        "description": "Chcete-li začít, zvolte, jak chcete nastavit instanci Homarru.",
+        "action": {
+          "scratch": "Začít od začátku",
+          "importOldmarr": "Import z Homarru před verzí 1.0",
+          "restoreSqlite": "Obnovit ze zálohy SQLite",
+          "restoreSqliteDescription": "Nahrajte kompletní zálohu SQLite databáze z předchozí instance Homarru. Tím se obnoví všechny plochy, uživatelé, aplikace, integrace a nastavení.",
+          "backToOptions": "← Zpět na možnosti nastavení"
+        }
+      },
+      "import": {
+        "title": "Import dat",
+        "subtitle": "Můžete importovat data z existující instance Homarru.",
+        "dropzone": {
+          "title": "Přetáhněte zip soubor sem nebo klikněte pro procházení souborů",
+          "description": "Nahraný zip soubor bude zpracován a budete si moci vybrat, co chcete importovat"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Změnit soubor"
+          }
+        },
+        "importSettings": {
+          "title": "Importovat nastavení",
+          "description": "Konfigurovat chování importu"
+        },
+        "boardSelection": {
+          "title": "Nalezeno {count} ploch",
+          "description": "Vyberte všechny plochy s velikostmi, které chcete importovat",
+          "action": {
+            "selectAll": "Vybrat vše",
+            "unselectAll": "Zrušit vybraní všeho"
+          }
+        },
+        "summary": {
+          "title": "Přehled importu",
+          "description": "V následujícím přehledu můžete vidět, co bude importováno",
+          "action": {
+            "import": "Potvrdit import a pokračovat"
+          },
+          "entities": {
+            "apps": "Aplikace",
+            "boards": "Plochy",
+            "integrations": "Integrace",
+            "credentialUsers": "Uživatelské oprávnění"
+          }
+        },
+        "tokenModal": {
+          "title": "Zadejte token pro import",
+          "field": {
+            "token": {
+              "label": "Token",
+              "description": "Zadejte zobrazený importní token z předchozí instance homarr"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Neplatný token",
+              "message": "Token, který jste zadali je neplatný"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Správce",
+        "subtitle": "Zadejte přihlašovací údaje pro administrátora.",
+        "notification": {
+          "success": {
+            "title": "Uživatel byl vytvořen",
+            "message": "Uživatel byl úspěšně vytvořen"
+          },
+          "error": {
+            "title": "Vytvoření uživatele se nezdařilo"
+          }
+        }
+      },
+      "group": {
+        "title": "Externí skupina",
+        "subtitle": "Zadejte skupinu, která by měla být použita pro externí uživatele.",
+        "form": {
+          "name": {
+            "label": "Název skupiny",
+            "description": "Název musí odpovídat skupině admin externího poskytovatele"
+          }
+        }
+      },
+      "settings": {
+        "title": "Nastavení",
+        "subtitle": "Konfigurace nastavení serveru."
+      },
+      "integrations": {
+        "title": "Integrace",
+        "subtitle": "Vyberte služby, které používáte.",
+        "description": "Vyberte integrace, které chcete připojit. Automaticky nastavíme vaši plochu s odpovídajícími widgety.",
+        "action": {
+          "continue": "Pokračovat",
+          "skip": "Prozatím přeskočit"
+        },
+        "configure": {
+          "progress": "{current} z {total}",
+          "skip": "Přeskočit tuto integraci",
+          "finishing": "Nastavování vaší plochy...",
+          "error": {
+            "title": "Nastavení se nezdařilo",
+            "message": "Během nastavování vaší plochy se něco pokazilo. Zkuste to prosím znovu."
+          },
+          "helpers": {
+            "tooltip": "Pomocníci s URL",
+            "description": "Tito pomocníci se pokusí uhodnout URL vašich služeb. Pokud to nefunguje, zadejte adresu ručně."
+          }
+        },
+        "urlTemplate": {
+          "label": "Základní URL",
+          "placeholder": "homelab.local nebo 192.168.1.1",
+          "hint": "Zadejte svou základní doménu nebo IP pro automatické vyplnění integračních URL",
+          "warning": "Nastavením základní URL nyní se automaticky vyplní všechna integrační URL, což vám ušetří čas během nastavování",
+          "preview": "např. {example}",
+          "mode": {
+            "subdomain": "Subdoména",
+            "hostPort": "Hostitel:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker detekoval {count} služeb",
+          "detectedBreakdown": "{integrations} integrací · {apps} aplikací",
+          "summary": "Homarr detekoval {apps} aplikací, {integrations} z nich má vestavěné integrace",
+          "appBadge": "Aplikace",
+          "appSectionLabel": "Aplikace k přidání na plochu ({count} vybráno)",
+          "scanning": "Skenování Dockeru...",
+          "scanningDescription": "Hledání běžících kontejnerů ve vašem systému"
+        }
+      },
+      "finish": {
+        "title": "Dokončit nastavení",
+        "subtitle": "Jste připraveni začít!",
+        "description": "Úspěšně jste dokončili proces nastavení. Nyní můžete začít používat Homarr. Vyberte další akci:",
+        "action": {
+          "goToBoard": "Přejít na plochu {name}",
+          "createBoard": "Vytvořte svou první plochu",
+          "inviteUser": "Pozvat ostatní uživatele",
+          "docs": "Přečtěte si dokumentaci"
+        }
+      }
+    },
+    "backToStart": "Zpět na začátek"
+  },
   "user": {
     "title": "Uživatelé",
     "name": "Uživatel",
@@ -3840,6 +3989,62 @@
           "message": "Máte neuložené změny, jste si jistí, že chcete odejít?"
         }
       },
+      "oldImport": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": "Plochu se nepodařilo importovat, zkontrolujte logy pro více informací"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "",
+            "invalidError": ""
+          },
+          "apps": {
+            "label": "Aplikace",
+            "avoidDuplicates": {
+              "label": "",
+              "description": ""
+            },
+            "onlyImportApps": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "name": {
+            "label": ""
+          },
+          "screenSize": {
+            "label": "",
+            "description": "",
+            "option": {
+              "sm": "Malé",
+              "md": "Střední",
+              "lg": "Velké"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "",
+            "description": "",
+            "option": {
+              "lastSection": {
+                "label": "",
+                "description": ""
+              },
+              "removeItems": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "",
@@ -5449,6 +5654,9 @@
               },
               "newBoard": {
                 "label": "Vytvořit novou plochu"
+              },
+              "importBoard": {
+                "label": ""
               },
               "newApp": {
                 "label": ""

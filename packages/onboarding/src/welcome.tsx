@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "motion/react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { OnboardingStudioProps } from "./types";
@@ -14,6 +15,7 @@ import classes from "./onboarding-studio.module.css";
 
 export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) => {
   const t = useScopedI18n("init.studio.welcome");
+  const claimT = useScopedI18n("init.studio.claim");
   const reduceMotion = useReducedMotion();
   const [showRestore, setShowRestore] = useState(false);
   const [claimPending, setClaimPending] = useState(false);
@@ -22,7 +24,25 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
     async onSuccess() {
       await revalidatePathActionAsync("/init");
     },
+    onError() {
+      showErrorNotification({ title: t("errorTitle"), message: t("errorDescription") });
+    },
   });
+
+  const getClaimError = (code: unknown) => {
+    switch (code) {
+      case "finished":
+      case "unavailable":
+      case "cross_site":
+        return claimT("errorDescription");
+      case "administrator_required":
+        return claimT("signInDescription");
+      case "locked":
+        return claimT("lockedDescription");
+      default:
+        return t("errorDescription");
+    }
+  };
 
   const claimOnboardingAsync = async () => {
     setClaimPending(true);
@@ -30,8 +50,8 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
     try {
       const response = await fetch("/api/onboarding/claim", { method: "POST" });
       if (!response.ok) {
-        const body = (await response.json().catch(() => null)) as { error?: string } | null;
-        throw new Error(body?.error ?? t("errorTitle"));
+        const body = (await response.json().catch(() => null)) as { code?: unknown } | null;
+        throw new Error(getClaimError(body?.code));
       }
       return true;
     } catch (error) {
@@ -128,7 +148,7 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
 
             {claimError || start.error ? (
               <Alert color="red" title={t("errorTitle")} maw="38rem">
-                {claimError ?? start.error?.message}
+                {claimError ?? t("errorDescription")}
               </Alert>
             ) : null}
           </Stack>

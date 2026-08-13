@@ -96,7 +96,7 @@ import { IntegrationAvatar, Link } from "@homarr/ui";
 import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
 
 import type { OnboardingStudioProps } from "./types";
-import { isHttpUrl, resolveDiscoveredAppUrl, takeNewSourceIds } from "./discovery-selection";
+import { isHttpUrl, normalizeServiceUrl, resolveDiscoveredAppUrl, takeNewSourceIds } from "./discovery-selection";
 import classes from "./onboarding-studio.module.css";
 
 type StudioSection = "essentials" | "discover" | "connect" | "board" | "extend" | "review";
@@ -150,8 +150,10 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
   const [selectedAppIds, setSelectedAppIds] = useState<string[]>([]);
   const [appUrlOverrides, setAppUrlOverrides] = useState<Record<string, string>>({});
   const [appErrorSourceId, setAppErrorSourceId] = useState<string | null>(null);
-  const [selectedBoardId, setSelectedBoardId] = useState<string | null>(environment.initialBoard?.id ?? null);
-  const [boardName, setBoardName] = useState(environment.initialBoard?.name ?? "dashboard");
+  const initialBoard =
+    environment.initialBoard ?? (environment.availableBoards.length === 1 ? environment.availableBoards[0] : null);
+  const [selectedBoardId, setSelectedBoardId] = useState<string | null>(initialBoard?.id ?? null);
+  const [boardName, setBoardName] = useState(initialBoard?.name ?? "dashboard");
   const [primaryColor, setPrimaryColor] = useState("#fa5252");
   const [secondaryColor, setSecondaryColor] = useState("#fd7e14");
   const [itemRadius, setItemRadius] = useState<MantineSize>("lg");
@@ -163,6 +165,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
   const [applyError, setApplyError] = useState<string | null>(null);
   const [appError, setAppError] = useState<string | null>(null);
   const sectionHeadingRef = useRef<HTMLHeadingElement>(null);
+  const sectionButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const initialSection = useRef(true);
   const focusSectionHeading = useRef(true);
   const seenIntegrationSourceIds = useRef(new Set<string>());
@@ -177,7 +180,11 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
     retry: false,
     refetchOnWindowFocus: false,
   });
-  const complete = clientApi.onboard.completeSetup.useMutation();
+  const complete = clientApi.onboard.completeSetup.useMutation({
+    onError(error) {
+      showErrorNotification({ title: t("review.errorTitle"), message: error.message });
+    },
+  });
   const isApplying = complete.isPending;
 
   const dockerData = docker.data;
@@ -313,8 +320,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
     if (!nextSection) return;
     focusSectionHeading.current = false;
     selectSection(nextSection.id);
-    const nextButton = event.currentTarget.parentElement?.querySelectorAll("button").item(nextIndex);
-    if (nextButton instanceof HTMLButtonElement) nextButton.focus();
+    sectionButtonRefs.current[nextIndex]?.focus();
   };
 
   const updateDraft = (id: string, patch: Partial<IntegrationDraft>) => {
@@ -394,7 +400,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
           return {
             sourceId: draft.sourceId ?? draft.id,
             name: draft.name,
-            url: draft.url,
+            url: normalizeServiceUrl(draft.url) ?? draft.url,
             kind: draft.kind,
             secrets: draft.secrets,
             iconUrl: discovered?.iconUrl ?? null,
@@ -403,7 +409,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
           };
         }),
         apps: appsToCreate.flatMap((app) => {
-          const href = discoveredAppUrls[app.sourceId];
+          const href = normalizeServiceUrl(discoveredAppUrls[app.sourceId] ?? "");
           return href
             ? [
                 {
@@ -448,7 +454,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
       if (dockerWarningCount > 0) {
         showWarningNotification({
           title: t("review.dockerWarningTitle"),
-          message: t("review.dockerWarningDescription", { count: String(dockerWarningCount) }),
+          message: t("review.dockerWarningDescription", { count: dockerWarningCount }),
         });
       }
       setApplyMessage(t("review.progress.done"));
@@ -552,6 +558,9 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
                   return (
                     <UnstyledButton
                       key={section.id}
+                      ref={(node) => {
+                        sectionButtonRefs.current[index] = node;
+                      }}
                       className={classes.railButton}
                       data-active={active}
                       onClick={() => selectSection(section.id)}
@@ -1093,8 +1102,7 @@ const Connections = (props: StudioSectionProps) => {
                       value={props.discoveredAppUrls[app.sourceId] ?? ""}
                       onChange={(event) => props.setDiscoveredAppUrl(app.sourceId, event.currentTarget.value)}
                       error={props.appErrorSourceId === app.sourceId ? props.appError : undefined}
-                      placeholder="https://service.example"
-                      type="url"
+                      placeholder="service.local:8080"
                       required
                     />
                   ) : null}
@@ -1253,7 +1261,7 @@ const BoardBuilder = (props: StudioSectionProps) => {
               allowDeselect={false}
               searchable
               withAsterisk
-              error={props.selectedBoardId ? undefined : t("targetRequired")}
+              error={!props.selectedBoardId && props.applyProgress > 0 ? t("targetRequired") : undefined}
             />
           ) : null}
           <TextInput
@@ -1509,6 +1517,7 @@ const Extensions = (props: StudioSectionProps) => {
 
 const AssistantSetup = ({ environment }: { environment: StudioSectionProps["environment"] }) => {
   const t = useScopedI18n("init.studio.extend.assistantSetup");
+  const assistantSettingsT = useScopedI18n("management.page.settings.section.assistant");
   const reduceMotion = useReducedMotion();
   const [provider, setProvider] = useState<AssistantProvider>("homarr");
   const [baseUrl, setBaseUrl] = useState<string>(assistantProviderPresets.homarr.baseUrl);
@@ -1531,6 +1540,9 @@ const AssistantSetup = ({ environment }: { environment: StudioSectionProps["envi
     async onSuccess() {
       await configuration.refetch();
       await models.refetch();
+    },
+    onError(error) {
+      showErrorNotification({ title: t("errorTitle"), message: error.message });
     },
   });
   const updateConfiguration = clientApi.assistant.updateConfiguration.useMutation({
@@ -1616,7 +1628,10 @@ const AssistantSetup = ({ environment }: { environment: StudioSectionProps["envi
           label={t("provider")}
           value={provider}
           onChange={selectProvider}
-          data={assistantProviderIds.map((value) => ({ value, label: value.replaceAll("-", " ") }))}
+          data={assistantProviderIds.map((value) => ({
+            value,
+            label: assistantSettingsT(`provider.options.${value}.label`),
+          }))}
           allowDeselect={false}
         />
         <TextInput
@@ -1767,6 +1782,9 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
   const createKey = clientApi.apiKeys.create.useMutation({
     onSuccess(data) {
       setApiKey(data.apiKey);
+    },
+    onError(error) {
+      showErrorNotification({ title: t("errorTitle"), message: error.message });
     },
   });
   const config = JSON.stringify(
@@ -1957,6 +1975,6 @@ const createDraft = ({
   url,
   source,
   secretOption: 0,
-  secrets: getAllSecretKindOptions(kind)[0].map((secretKind) => ({ kind: secretKind, value: "" })),
+  secrets: (getAllSecretKindOptions(kind)[0] ?? []).map((secretKind) => ({ kind: secretKind, value: "" })),
   error: null,
 });

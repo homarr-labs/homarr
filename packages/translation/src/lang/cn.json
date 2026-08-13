@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "欢迎使用 Homarr",
+        "subtitle": "让我们开始设置您的 Homarr 实例。",
+        "description": "首先，请选择您想要如何设置您的 Homarr 实例。",
+        "action": {
+          "scratch": "从零开始",
+          "importOldmarr": "从 1.0 之前的 Homarr 导入",
+          "restoreSqlite": "从 SQLite 备份恢复",
+          "restoreSqliteDescription": "上传之前 Homarr 实例的完整 SQLite 数据库备份。这将恢复所有面板、用户、应用、集成和设置。",
+          "backToOptions": "← 返回设置选项"
+        }
+      },
+      "import": {
+        "title": "导入数据",
+        "subtitle": "您可以从已有的 Homarr 实例导入数据。",
+        "dropzone": {
+          "title": "将 zip 文件拖到此处或单击浏览",
+          "description": "上传的压缩包将被处理，您可以选择要导入的内容"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "更改文件"
+          }
+        },
+        "importSettings": {
+          "title": "导入设置",
+          "description": "配置导入方式"
+        },
+        "boardSelection": {
+          "title": "找到 {count} 个面板",
+          "description": "选择您想要导入的所有面板",
+          "action": {
+            "selectAll": "选择全部",
+            "unselectAll": "取消全选"
+          }
+        },
+        "summary": {
+          "title": "导入概况",
+          "description": "在下面的概况中，您可以看到将要导入的内容",
+          "action": {
+            "import": "确认导入并继续"
+          },
+          "entities": {
+            "apps": "应用",
+            "boards": "面板",
+            "integrations": "集成",
+            "credentialUsers": "用户凭证"
+          }
+        },
+        "tokenModal": {
+          "title": "输入导入密钥",
+          "field": {
+            "token": {
+              "label": "秘钥",
+              "description": "输入您之前的 homarr 实例中显示的导入秘钥"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "无效秘钥",
+              "message": "您输入的秘钥无效"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "管理员用户",
+        "subtitle": "指定您的管理员用户的凭证。",
+        "notification": {
+          "success": {
+            "title": "创建用户",
+            "message": "用户已成功创建"
+          },
+          "error": {
+            "title": "用户创建失败"
+          }
+        }
+      },
+      "group": {
+        "title": "外部用户组",
+        "subtitle": "指定应该用于外部用户的用户组。",
+        "form": {
+          "name": {
+            "label": "用户组名称",
+            "description": "名称必须与外部提供商的管理组匹配"
+          }
+        }
+      },
+      "settings": {
+        "title": "设置",
+        "subtitle": "配置服务器的设置"
+      },
+      "integrations": {
+        "title": "集成",
+        "subtitle": "选择您使用的服务。",
+        "description": "选择您要连接的集成。我们将自动为您设置带有匹配小部件的面板。",
+        "action": {
+          "continue": "继续",
+          "skip": "暂时跳过"
+        },
+        "configure": {
+          "progress": "{current} / {total}",
+          "skip": "跳过此集成",
+          "finishing": "正在设置您的面板……",
+          "error": {
+            "title": "设置失败",
+            "message": "设置面板时出现问题。请重试。"
+          },
+          "helpers": {
+            "tooltip": "URL 帮助程序",
+            "description": "这些帮助程序尝试猜测服务的 URL。如果无效，只需手动输入地址。"
+          }
+        },
+        "urlTemplate": {
+          "label": "Base URL",
+          "placeholder": "homelab.local 或 192.168.1.1",
+          "hint": "输入您的基础域或 IP 以自动填充集成 URL",
+          "warning": "现在设置基础 URL，将自动填充所有集成的 URL，在配置过程中为您节省时间",
+          "preview": "例如 {example}",
+          "mode": {
+            "subdomain": "子域名",
+            "hostPort": "主机：端口"
+          }
+        },
+        "docker": {
+          "detected": "Docker 检测到 {count} 个服务",
+          "detectedBreakdown": "{integrations} 个集成 · {apps} 个应用",
+          "summary": "Homarr 检测到 {apps} 个应用，其中 {integrations} 个具有内置集成",
+          "appBadge": "应用",
+          "appSectionLabel": "要添加到面板的应用（已选择 {count} 个）",
+          "scanning": "正在扫描 Docker……",
+          "scanningDescription": "正在查找系统上运行的容器"
+        }
+      },
+      "finish": {
+        "title": "完成设置",
+        "subtitle": "你已设置完成！",
+        "description": "您已成功完成设置过程。现在您可以开始使用 Homarr 了。选择下一步操作：",
+        "action": {
+          "goToBoard": "转到 {name} 面板",
+          "createBoard": "创建您的第一个面板",
+          "inviteUser": "邀请其他用户",
+          "docs": "阅读文档"
+        }
+      }
+    },
+    "backToStart": "返回起点"
+  },
   "user": {
     "title": "用户",
     "name": "用户",
@@ -4065,6 +4214,62 @@
           "message": "您有尚未保存的更改。您确定要离开吗？"
         }
       },
+      "oldImport": {
+        "label": "从 1.0.0 之前的 Homarr 导入",
+        "notification": {
+          "success": {
+            "title": "导入成功",
+            "message": "面板导入成功"
+          },
+          "error": {
+            "title": "导入失败",
+            "message": "无法导入面板，请检查日志以获取更多详情"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "选择 JSON 文件",
+            "invalidError": "无效的配置文件"
+          },
+          "apps": {
+            "label": "应用",
+            "avoidDuplicates": {
+              "label": "避免重复",
+              "description": "忽略已经存在具有相同链接的应用"
+            },
+            "onlyImportApps": {
+              "label": "仅导入应用",
+              "description": "只添加应用，面板需要手动重新创建"
+            }
+          },
+          "name": {
+            "label": "面板名称"
+          },
+          "screenSize": {
+            "label": "屏幕大小",
+            "description": "在1.0之前的版本中，有三种不同的模式，所以你可以根据屏幕大小选择列的数量。",
+            "option": {
+              "sm": "小号",
+              "md": "中号",
+              "lg": "大号"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "侧边栏行为",
+            "description": "侧边栏在1.0中被删除了，您可以选择其中的项目应该发生什么。",
+            "option": {
+              "lastSection": {
+                "label": "最后部分",
+                "description": "侧边栏将显示在最后一部分的下方"
+              },
+              "removeItems": {
+                "label": "删除项目",
+                "description": "侧边栏中包含的项目将被删除"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "在运行时创建应用",
@@ -5683,6 +5888,9 @@
               },
               "newBoard": {
                 "label": "创建面板"
+              },
+              "importBoard": {
+                "label": "导入面板"
               },
               "newApp": {
                 "label": "创建应用"

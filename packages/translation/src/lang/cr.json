@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "crwdns2264:0crwdne2264:0",
+        "subtitle": "crwdns2266:0crwdne2266:0",
+        "description": "crwdns2268:0crwdne2268:0",
+        "action": {
+          "scratch": "crwdns2270:0crwdne2270:0",
+          "importOldmarr": "crwdns2272:0crwdne2272:0",
+          "restoreSqlite": "crwdns4601:0crwdne4601:0",
+          "restoreSqliteDescription": "crwdns4603:0crwdne4603:0",
+          "backToOptions": "crwdns4605:0crwdne4605:0"
+        }
+      },
+      "import": {
+        "title": "crwdns2274:0crwdne2274:0",
+        "subtitle": "crwdns2276:0crwdne2276:0",
+        "dropzone": {
+          "title": "crwdns2278:0crwdne2278:0",
+          "description": "crwdns2280:0crwdne2280:0"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "crwdns2282:0crwdne2282:0"
+          }
+        },
+        "importSettings": {
+          "title": "crwdns2284:0crwdne2284:0",
+          "description": "crwdns2286:0crwdne2286:0"
+        },
+        "boardSelection": {
+          "title": "crwdns2288:0{count}crwdne2288:0",
+          "description": "crwdns2692:0crwdne2692:0",
+          "action": {
+            "selectAll": "crwdns2292:0crwdne2292:0",
+            "unselectAll": "crwdns2294:0crwdne2294:0"
+          }
+        },
+        "summary": {
+          "title": "crwdns2296:0crwdne2296:0",
+          "description": "crwdns2298:0crwdne2298:0",
+          "action": {
+            "import": "crwdns2300:0crwdne2300:0"
+          },
+          "entities": {
+            "apps": "crwdns2302:0crwdne2302:0",
+            "boards": "crwdns2304:0crwdne2304:0",
+            "integrations": "crwdns2306:0crwdne2306:0",
+            "credentialUsers": "crwdns2308:0crwdne2308:0"
+          }
+        },
+        "tokenModal": {
+          "title": "crwdns2310:0crwdne2310:0",
+          "field": {
+            "token": {
+              "label": "crwdns2312:0crwdne2312:0",
+              "description": "crwdns2314:0crwdne2314:0"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "crwdns2316:0crwdne2316:0",
+              "message": "crwdns2318:0crwdne2318:0"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "crwdns2320:0crwdne2320:0",
+        "subtitle": "crwdns2322:0crwdne2322:0",
+        "notification": {
+          "success": {
+            "title": "crwdns2324:0crwdne2324:0",
+            "message": "crwdns2326:0crwdne2326:0"
+          },
+          "error": {
+            "title": "crwdns2328:0crwdne2328:0"
+          }
+        }
+      },
+      "group": {
+        "title": "crwdns2330:0crwdne2330:0",
+        "subtitle": "crwdns2332:0crwdne2332:0",
+        "form": {
+          "name": {
+            "label": "crwdns2334:0crwdne2334:0",
+            "description": "crwdns2336:0crwdne2336:0"
+          }
+        }
+      },
+      "settings": {
+        "title": "crwdns2338:0crwdne2338:0",
+        "subtitle": "crwdns2340:0crwdne2340:0"
+      },
+      "integrations": {
+        "title": "crwdns4369:0crwdne4369:0",
+        "subtitle": "crwdns4371:0crwdne4371:0",
+        "description": "crwdns4373:0crwdne4373:0",
+        "action": {
+          "continue": "crwdns4375:0crwdne4375:0",
+          "skip": "crwdns4377:0crwdne4377:0"
+        },
+        "configure": {
+          "progress": "crwdns4379:0{current}crwdnd4379:0{total}crwdne4379:0",
+          "skip": "crwdns4381:0crwdne4381:0",
+          "finishing": "crwdns4383:0crwdne4383:0",
+          "error": {
+            "title": "crwdns4385:0crwdne4385:0",
+            "message": "crwdns4387:0crwdne4387:0"
+          },
+          "helpers": {
+            "tooltip": "crwdns4389:0crwdne4389:0",
+            "description": "crwdns4391:0crwdne4391:0"
+          }
+        },
+        "urlTemplate": {
+          "label": "crwdns4393:0crwdne4393:0",
+          "placeholder": "crwdns4395:0crwdne4395:0",
+          "hint": "crwdns4397:0crwdne4397:0",
+          "warning": "crwdns4399:0crwdne4399:0",
+          "preview": "crwdns4401:0{example}crwdne4401:0",
+          "mode": {
+            "subdomain": "crwdns4403:0crwdne4403:0",
+            "hostPort": "crwdns4405:0crwdne4405:0"
+          }
+        },
+        "docker": {
+          "detected": "crwdns4407:0{count}crwdne4407:0",
+          "detectedBreakdown": "crwdns4409:0{integrations}crwdnd4409:0{apps}crwdne4409:0",
+          "summary": "crwdns4411:0{apps}crwdnd4411:0{integrations}crwdne4411:0",
+          "appBadge": "crwdns4413:0crwdne4413:0",
+          "appSectionLabel": "crwdns4415:0{count}crwdne4415:0",
+          "scanning": "crwdns4417:0crwdne4417:0",
+          "scanningDescription": "crwdns4419:0crwdne4419:0"
+        }
+      },
+      "finish": {
+        "title": "crwdns2342:0crwdne2342:0",
+        "subtitle": "crwdns2344:0crwdne2344:0",
+        "description": "crwdns2346:0crwdne2346:0",
+        "action": {
+          "goToBoard": "crwdns2348:0{name}crwdne2348:0",
+          "createBoard": "crwdns2350:0crwdne2350:0",
+          "inviteUser": "crwdns2352:0crwdne2352:0",
+          "docs": "crwdns2354:0crwdne2354:0"
+        }
+      }
+    },
+    "backToStart": "crwdns2356:0crwdne2356:0"
+  },
   "user": {
     "title": "crwdns2:0crwdne2:0",
     "name": "crwdns4:0crwdne4:0",
@@ -3909,6 +4058,62 @@
           "message": "crwdns1380:0crwdne1380:0"
         }
       },
+      "oldImport": {
+        "label": "crwdns1382:0crwdne1382:0",
+        "notification": {
+          "success": {
+            "title": "crwdns1384:0crwdne1384:0",
+            "message": "crwdns1386:0crwdne1386:0"
+          },
+          "error": {
+            "title": "crwdns1388:0crwdne1388:0",
+            "message": "crwdns1390:0crwdne1390:0"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "crwdns1392:0crwdne1392:0",
+            "invalidError": "crwdns1394:0crwdne1394:0"
+          },
+          "apps": {
+            "label": "crwdns1396:0crwdne1396:0",
+            "avoidDuplicates": {
+              "label": "crwdns1398:0crwdne1398:0",
+              "description": "crwdns1400:0crwdne1400:0"
+            },
+            "onlyImportApps": {
+              "label": "crwdns1402:0crwdne1402:0",
+              "description": "crwdns1404:0crwdne1404:0"
+            }
+          },
+          "name": {
+            "label": "crwdns1406:0crwdne1406:0"
+          },
+          "screenSize": {
+            "label": "crwdns1408:0crwdne1408:0",
+            "description": "crwdns2368:0crwdne2368:0",
+            "option": {
+              "sm": "crwdns1410:0crwdne1410:0",
+              "md": "crwdns1412:0crwdne1412:0",
+              "lg": "crwdns1414:0crwdne1414:0"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "crwdns1416:0crwdne1416:0",
+            "description": "crwdns1418:0crwdne1418:0",
+            "option": {
+              "lastSection": {
+                "label": "crwdns1420:0crwdne1420:0",
+                "description": "crwdns1422:0crwdne1422:0"
+              },
+              "removeItems": {
+                "label": "crwdns1424:0crwdne1424:0",
+                "description": "crwdns1426:0crwdne1426:0"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "crwdns2810:0crwdne2810:0",
@@ -5531,6 +5736,9 @@
               },
               "newBoard": {
                 "label": "crwdns2082:0crwdne2082:0"
+              },
+              "importBoard": {
+                "label": "crwdns2084:0crwdne2084:0"
               },
               "newApp": {
                 "label": "crwdns2086:0crwdne2086:0"

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isHttpUrl, resolveDiscoveredAppUrl, takeNewSourceIds } from "./discovery-selection";
+import { isHttpUrl, normalizeServiceUrl, resolveDiscoveredAppUrl, takeNewSourceIds } from "./discovery-selection";
 
 describe("takeNewSourceIds", () => {
   it("keeps same-kind service instances independent and does not reselect them after refresh", () => {
@@ -22,10 +22,12 @@ describe("takeNewSourceIds", () => {
     expect(resolveDiscoveredAppUrl(undefined, null, null)).toBe("");
   });
 
-  it("accepts only HTTP and HTTPS service addresses", () => {
+  it("normalizes HTTP, HTTPS, and bare self-hosted service addresses", () => {
     expect(isHttpUrl("http://home.lan:8989")).toBe(true);
     expect(isHttpUrl("https://home.example/sonarr")).toBe(true);
-    expect(isHttpUrl("home.lan:8989")).toBe(false);
+    expect(normalizeServiceUrl("home.lan:8989")).toBe("http://home.lan:8989");
+    expect(normalizeServiceUrl("0.0.0.0:8989")).toBe("http://0.0.0.0:8989");
     expect(isHttpUrl("javascript:alert(1)")).toBe(false);
+    expect(isHttpUrl("file:///etc/passwd")).toBe(false);
   });
 });

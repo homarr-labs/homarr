@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Homarr에 오신 것을 환영합니다",
+        "subtitle": "Homarr 인스턴스 설정을 시작합니다.",
+        "description": "시작하기 전에, Homarr 인스턴스를 어떻게 설정할지 선택해주세요.",
+        "action": {
+          "scratch": "처음부터 시작하기",
+          "importOldmarr": "1.0 이전의 Homarr에서 불러오기",
+          "restoreSqlite": "SQLite 백업 복원",
+          "restoreSqliteDescription": "이전 Homarr 인스턴스로부터 전체 SQLite 데이터베이스 백업을 업로드합니다. 모든 보드, 사용자, 앱, 통합 및 설정이 복원됩니다.",
+          "backToOptions": "← 설정 옵션으로 돌아가기"
+        }
+      },
+      "import": {
+        "title": "데이터 불러오기",
+        "subtitle": "기존 Homarr 인스턴스에서 데이터를 불러올 수 있습니다.",
+        "dropzone": {
+          "title": "zip 파일 드롭 또는 클릭해서 찾아보기",
+          "description": "업로드된 zip이 처리되어 가져올 항목을 선택할 수 있습니다"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "파일 변경"
+          }
+        },
+        "importSettings": {
+          "title": "설정 불러오기",
+          "description": "가져오기 동작 설정"
+        },
+        "boardSelection": {
+          "title": "{count}개의 보드 찾음",
+          "description": "가져올 보드의 크기를 모두 선택",
+          "action": {
+            "selectAll": "모두 선택",
+            "unselectAll": "모두 선택 해제"
+          }
+        },
+        "summary": {
+          "title": "불러오기 요약",
+          "description": "아래 요약에서 가져올 항목을 확인할 수 있습니다",
+          "action": {
+            "import": "가져오기 확인 및 계속 진행"
+          },
+          "entities": {
+            "apps": "앱",
+            "boards": "보드",
+            "integrations": "통합",
+            "credentialUsers": "자격 증명 사용자"
+          }
+        },
+        "tokenModal": {
+          "title": "가져오기 토큰 입력",
+          "field": {
+            "token": {
+              "label": "토큰",
+              "description": "이전 Homarr 인스턴스에서 표시된 가져오기 토큰 입력"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "유효하지 않은 토큰",
+              "message": "입력한 토큰이 유효하지 않습니다"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "관리자",
+        "subtitle": "관리자의 계정 정보를 설정해주세요.",
+        "notification": {
+          "success": {
+            "title": "계정 생성됨",
+            "message": "계정이 성공적으로 생성되었습니다"
+          },
+          "error": {
+            "title": "계정 생성 실패"
+          }
+        }
+      },
+      "group": {
+        "title": "외부 그룹",
+        "subtitle": "외부 사용자가 사용할 그룹을 지정합니다.",
+        "form": {
+          "name": {
+            "label": "그룹 이름",
+            "description": "이름은 외부 제공자의 관리자 그룹과 일치해야 합니다"
+          }
+        }
+      },
+      "settings": {
+        "title": "설정",
+        "subtitle": "서버 설정하기."
+      },
+      "integrations": {
+        "title": "통합",
+        "subtitle": "사용할 서비스를 선택합니다.",
+        "description": "연결하려는 통합을 선택하십시오. 일치하는 위젯으로 대시보드를 자동 설정합니다.",
+        "action": {
+          "continue": "계속",
+          "skip": "지금은 건너뛰기"
+        },
+        "configure": {
+          "progress": "{total}개 중 {current}개",
+          "skip": "이 통합 건너뛰기",
+          "finishing": "대시보드 설정 중...",
+          "error": {
+            "title": "설치 실패",
+            "message": "대시보드를 설정하는 중 문제가 발생했습니다. 다시 시도해 주십시오."
+          },
+          "helpers": {
+            "tooltip": "URL 도우미",
+            "description": "서비스 URL을 추측합니다. 작동하지 않을 경우, 주소를 직접 입력해 주십시오."
+          }
+        },
+        "urlTemplate": {
+          "label": "기본 URL",
+          "placeholder": "homelab.local 또는 192.168.1.1",
+          "hint": "기본 도메인 또는 IP를 입력하여 통합 URL 자동 채우기",
+          "warning": "지금 기본 URL을 설정하면 모든 통합 URL이 자동으로 채워져 설정 시간을 아낄 수 있습니다",
+          "preview": "예) {example}",
+          "mode": {
+            "subdomain": "서브도메인",
+            "hostPort": "호스트:포트"
+          }
+        },
+        "docker": {
+          "detected": "{count}개 docker 서비스 감지",
+          "detectedBreakdown": "통합 {integrations}개, 앱 {apps}개",
+          "summary": "Homarr가 {apps}개 앱을 감지했으며, 그 중 {integrations}개는 통합 기능이 내장되어 있습니다",
+          "appBadge": "앱",
+          "appSectionLabel": "대시보드에 추가할 앱 ({count}개 선택)",
+          "scanning": "Docker 스캔 중...",
+          "scanningDescription": "시스템에서 실행 중인 컨테이너 찾기"
+        }
+      },
+      "finish": {
+        "title": "설정 완료",
+        "subtitle": "모든 준비가 끝났습니다!",
+        "description": "설정 과정을 성공적으로 완료했습니다. 이제 Homarr을 사용할 수 있습니다. 다음 작업을 선택해주세요:",
+        "action": {
+          "goToBoard": "{name} 보드로 가기",
+          "createBoard": "첫 번째 보드 만들기",
+          "inviteUser": "다른 사용자 초대하기",
+          "docs": "문서 읽기"
+        }
+      }
+    },
+    "backToStart": "시작으로 돌아가기"
+  },
   "user": {
     "title": "사용자",
     "name": "사용자",
@@ -3894,6 +4043,62 @@
           "message": "저장되지 않은 변경 사항이 있습니다. 나가시겠습니까?"
         }
       },
+      "oldImport": {
+        "label": "1.0.0 이전의 Homarr에서 가져오기",
+        "notification": {
+          "success": {
+            "title": "가져오기 완료",
+            "message": "보드 가져오기가 완료되었습니다"
+          },
+          "error": {
+            "title": "가져오기 실패",
+            "message": "보드를 가져올 수 없었습니다, 상세 내용은 로그를 확인해 주십시오"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "JSON 파일 선택",
+            "invalidError": "올바르지 않은 설정 파일"
+          },
+          "apps": {
+            "label": "앱",
+            "avoidDuplicates": {
+              "label": "중복 방지",
+              "description": "동일한 href를 가진 앱에서는 가져오기 내용을 무시합니다"
+            },
+            "onlyImportApps": {
+              "label": "앱만 가져오기",
+              "description": "앱만 추가합니다. 보드는 수동으로 다시 생성해야 합니다"
+            }
+          },
+          "name": {
+            "label": "보드 이름"
+          },
+          "screenSize": {
+            "label": "화면 크기",
+            "description": "1.0 이전 버전에서는 세 가지의 다른 모드가 존재했으므로 각 화면 크기에 맞는 열 수를 선택할 수 있었습니다.",
+            "option": {
+              "sm": "작음",
+              "md": "중간",
+              "lg": "큼"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "사이드바 행동",
+            "description": "사이드바는 1.0에서 제거되었으며, 그 안에 있던 항목을 어떻게 처리할지 선택할 수 있습니다.",
+            "option": {
+              "lastSection": {
+                "label": "마지막 섹션",
+                "description": "마지막 섹션 아래에 사이드바를 표시합니다"
+              },
+              "removeItems": {
+                "label": "항목 제거",
+                "description": "사이드바 내에 있는 항목을 제거합니다"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "즉석 앱 생성",
@@ -5515,6 +5720,9 @@
               },
               "newBoard": {
                 "label": "새 보드 생성"
+              },
+              "importBoard": {
+                "label": "보드 가져오기"
               },
               "newApp": {
                 "label": "새 앱 생성"

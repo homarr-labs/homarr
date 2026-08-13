@@ -51,12 +51,27 @@ describe("parseContainerLabels", () => {
         "remote:2375",
       ),
     ).toMatchObject({
-      sourceId: "docker:remote:2375:container-1",
+      sourceId: "docker:remote%3A2375:container-1",
       name: "Jellyfin",
       group: "Media",
       href: "http://jellyfin:8096",
       icon: "jellyfin.svg",
     });
+  });
+
+  it("keeps host and service identifiers unambiguous", () => {
+    const first = parseContainerLabels(
+      container({ "homarr.name": "Service", "homarr.href": "http://service", "homarr.id": "service" }),
+      "remote:2375",
+    );
+    const second = parseContainerLabels(
+      container({ "homarr.name": "Service", "homarr.href": "http://service", "homarr.id": "2375:service" }),
+      "remote",
+    );
+
+    expect(first?.sourceId).toBe("docker:remote%3A2375:service");
+    expect(second?.sourceId).toBe("docker:remote:2375%3Aservice");
+    expect(first?.sourceId).not.toBe(second?.sourceId);
   });
 
   it("keeps a labeled service without a group for root placement", () => {

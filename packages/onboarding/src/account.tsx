@@ -10,6 +10,7 @@ import { signIn } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { UserCreatePasswordFields } from "@homarr/forms-collection";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { groupCreateSchema } from "@homarr/validation/group";
@@ -60,17 +61,24 @@ export const AccountSetup = ({ environment }: OnboardingStudioProps) => {
 const CredentialsSetup = () => {
   const t = useScopedI18n("init.studio.account");
   const [requiresSignIn, setRequiresSignIn] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const recoveryActionRef = useRef<HTMLAnchorElement>(null);
-  const mutation = clientApi.user.initUser.useMutation();
+  const mutation = clientApi.user.initUser.useMutation({
+    onError() {
+      const message = t("unknownError");
+      setSubmitError(message);
+      showErrorNotification({ title: t("errorTitle"), message });
+    },
+  });
   const form = useZodForm(userInitSchema, {
     initialValues: { username: "", password: "", confirmPassword: "" },
   });
 
   const submitAsync = async (values: z.infer<typeof userInitSchema>) => {
+    setSubmitError(null);
     try {
       await mutation.mutateAsync(values);
-    } catch (error) {
-      form.setErrors({ username: error instanceof Error ? error.message : t("unknownError") });
+    } catch {
       return;
     }
 
@@ -119,9 +127,9 @@ const CredentialsSetup = () => {
             passwordInputProps={{ ...form.getInputProps("password"), autoComplete: "new-password" }}
             confirmPasswordInputProps={{ ...form.getInputProps("confirmPassword"), autoComplete: "new-password" }}
           />
-          {mutation.error ? (
+          {submitError ? (
             <Alert color="red" title={t("errorTitle")}>
-              {mutation.error.message}
+              {submitError}
             </Alert>
           ) : null}
           <Button type="submit" size="md" loading={mutation.isPending} rightSection={<IconArrowRight size={18} />}>
@@ -135,16 +143,27 @@ const CredentialsSetup = () => {
 
 const ExternalGroupSetup = () => {
   const t = useScopedI18n("init.studio.externalGroup");
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const mutation = clientApi.group.createInitialExternalGroup.useMutation({
     async onSuccess() {
       await revalidatePathActionAsync("/init");
+    },
+    onError() {
+      const message = t("unknownError");
+      setSubmitError(message);
+      showErrorNotification({ title: t("errorTitle"), message });
     },
   });
   const form = useZodForm(groupCreateSchema, { initialValues: { name: "" } });
 
   return (
     <AccountShell title={t("title")} description={t("description")}>
-      <form onSubmit={form.onSubmit((values) => mutation.mutate(values))}>
+      <form
+        onSubmit={form.onSubmit((values) => {
+          setSubmitError(null);
+          mutation.mutate(values);
+        })}
+      >
         <Stack gap="md">
           <TextInput
             label={t("name")}
@@ -153,9 +172,9 @@ const ExternalGroupSetup = () => {
             withAsterisk
             {...form.getInputProps("name")}
           />
-          {mutation.error ? (
+          {submitError ? (
             <Alert color="red" title={t("errorTitle")}>
-              {mutation.error.message}
+              {submitError}
             </Alert>
           ) : null}
           <Button type="submit" size="md" loading={mutation.isPending} rightSection={<IconArrowRight size={18} />}>

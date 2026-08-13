@@ -70,6 +70,7 @@ export default async function ManageBoardsPage() {
                       name: board.name,
                       count: String(board.preview?.items.length ?? 0),
                     }),
+                    unknownCreator: t("preview.unknownCreator"),
                     home: t("action.setHomeBoard.badge.label"),
                     homeTooltip: t("action.setHomeBoard.badge.tooltip"),
                     mobileHome: t("action.setMobileHomeBoard.badge.label"),
@@ -93,6 +94,7 @@ interface BoardCardProps {
   labels: {
     visibility: string;
     preview: string;
+    unknownCreator: string;
     home: string;
     homeTooltip: string;
     mobileHome: string;
@@ -139,7 +141,7 @@ const BoardCard = ({ board, isMenuVisible, labels }: BoardCardProps) => {
             )}
 
             {board.creator && (
-              <Tooltip label={board.creator.name ?? board.creator.email}>
+              <Tooltip label={board.creator.name ?? labels.unknownCreator}>
                 <UserAvatar user={board.creator} size="sm" />
               </Tooltip>
             )}

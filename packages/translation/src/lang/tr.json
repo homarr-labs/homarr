@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Homarr'a Hoş Geldiniz",
+        "subtitle": "Homarr örneğinizi kurmaya başlayalım.",
+        "description": "Başlamak için lütfen Homarr örneğinizi nasıl kurmak istediğinizi seçin.",
+        "action": {
+          "scratch": "Sıfırdan Başla",
+          "importOldmarr": "Homarr 1.0'dan Önceki Yedeğinizi İçe Aktarın",
+          "restoreSqlite": "SQLite yedeklemesinden geri yükle",
+          "restoreSqliteDescription": "Önceki bir Homarr örneğinden tam SQLite veritabanı yedeklemesi yükleyin. Bu, tüm panoları, kullanıcıları, uygulamaları, entegrasyonları ve ayarları geri yükler.",
+          "backToOptions": "← Kurulum seçeneklerine geri dön"
+        }
+      },
+      "import": {
+        "title": "Verileri İçe Aktar",
+        "subtitle": "Mevcut bir Homarr örneğinden veri içe aktarabilirsiniz.",
+        "dropzone": {
+          "title": "Zip dosyasını buraya sürükleyin veya göz atmak için tıklayın",
+          "description": "Seçtiğiniz zip işlenecek ve içe aktarmak istediğiniz verileri seçebileceksiniz"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Dosyayı Değiştir"
+          }
+        },
+        "importSettings": {
+          "title": "İçe Aktarma Ayarları",
+          "description": "İçe Aktarma İşlevlerini Yapılandır"
+        },
+        "boardSelection": {
+          "title": "{count} Panel Bulundu",
+          "description": "İçe Aktarılacak Tüm Panellerin Boyutlarını Seçin",
+          "action": {
+            "selectAll": "Tümünü Seç",
+            "unselectAll": "Tüm Seçimi Kaldır"
+          }
+        },
+        "summary": {
+          "title": "İçe Aktarma Özeti",
+          "description": "Aşağıdaki Özeti Kontrol Ederek İçe Aktarılacak İşlevleri Görebilirsiniz",
+          "action": {
+            "import": "İçe Aktarmayı Onayla ve Devam Et"
+          },
+          "entities": {
+            "apps": "Uygulamalar",
+            "boards": "Paneller",
+            "integrations": "Entegrasyonlar",
+            "credentialUsers": "Kullanıcı Kimlik Bilgileri"
+          }
+        },
+        "tokenModal": {
+          "title": "İçe Aktarma Anahtarını Girin",
+          "field": {
+            "token": {
+              "label": "Token Anahtarı",
+              "description": "Önceki Homarr Örneğinizden Aldığınız İçe Aktarma Anahtarı girin"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Token",
+              "message": "Girdiğiniz Token Anahtarı Geçersiz"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Yönetici",
+        "subtitle": "Yönetici kullanıcınız için kimlik bilgilerini girin.",
+        "notification": {
+          "success": {
+            "title": "Kullanıcı oluşturuldu",
+            "message": "Kullanıcı başarıyla oluşturuldu"
+          },
+          "error": {
+            "title": "Kullanıcı oluşturma başarısız"
+          }
+        }
+      },
+      "group": {
+        "title": "Harici grup",
+        "subtitle": "Harici kullanıcılar için kullanılacak grubu belirtin.",
+        "form": {
+          "name": {
+            "label": "Grup adı",
+            "description": "Ad, harici sağlayıcının yönetici grubuyla eşleşmelidir"
+          }
+        }
+      },
+      "settings": {
+        "title": "Ayarlar",
+        "subtitle": "Sunucu ayarlarınızı yapılandırın."
+      },
+      "integrations": {
+        "title": "Entegrasyonlar",
+        "subtitle": "Kullandığınız hizmetleri seçin.",
+        "description": "Bağlanmak istediğiniz entegrasyonları seçin. Panonuzu eşleşen widget'larla otomatik olarak kuracağız.",
+        "action": {
+          "continue": "Devam Et",
+          "skip": "Şimdilik atla"
+        },
+        "configure": {
+          "progress": "{current} / {total}",
+          "skip": "Bu entegrasyonu atla",
+          "finishing": "Panonuz kuruluyor...",
+          "error": {
+            "title": "Kurulum başarısız oldu",
+            "message": "Panonuzu kurarken bir şeyler yanlış gitti. Lütfen tekrar deneyin."
+          },
+          "helpers": {
+            "tooltip": "URL yardımcıları",
+            "description": "Bu yardımcılar, hizmetlerinizin URL'sini tahmin etmeye çalışır. Çalışmazsa, adresi manuel olarak yazın."
+          }
+        },
+        "urlTemplate": {
+          "label": "Temel URL",
+          "placeholder": "homelab.local veya 192.168.1.1",
+          "hint": "Entegrasyon URL'lerini otomatik doldurmak için temel alan adınızı veya IP'nizi girin",
+          "warning": "Temel URL'nizi şimdi ayarlamak, tüm entegrasyon URL'lerini otomatik olarak dolduracak ve kurulum sırasında zaman kazandıracak",
+          "preview": "örn. {example}",
+          "mode": {
+            "subdomain": "Alt alan adı",
+            "hostPort": "Ana Bilgisayar:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker {count} hizmet tespit etti",
+          "detectedBreakdown": "{integrations} entegrasyon · {apps} uygulama",
+          "summary": "Homarr {apps} uygulama tespit etti, bunların {integrations} tanesinde entegrasyon yerleşik",
+          "appBadge": "Uygulama",
+          "appSectionLabel": "Panoya eklenecek uygulamalar ({count} seçili)",
+          "scanning": "Docker taranıyor...",
+          "scanningDescription": "Sisteminizdeki çalışan konteynerler aranıyor"
+        }
+      },
+      "finish": {
+        "title": "Kurulumu Bitir",
+        "subtitle": "Başlamaya Hazırsınız!",
+        "description": "Kurulum sürecini başarıyla tamamladınız. Artık Homarr'ı kullanmaya başlayabilirsiniz. Sonraki eyleminizi seçin:",
+        "action": {
+          "goToBoard": "{name} Paneline Git",
+          "createBoard": "İlk Panelinizi Oluşturun",
+          "inviteUser": "Yeni Kullanıcı Davet Et",
+          "docs": "Dokümanları Oku"
+        }
+      }
+    },
+    "backToStart": "Başlangıca Geri Dön"
+  },
   "user": {
     "title": "Kullanıcılar",
     "name": "Kullanıcı",
@@ -3840,6 +3989,62 @@
           "message": "Kaydedilmemiş değişiklikleriniz var, çıkmak istediğinizden emin misiniz?"
         }
       },
+      "oldImport": {
+        "label": "Homarr 1.0'dan önceki yedeğinizi içe aktarın",
+        "notification": {
+          "success": {
+            "title": "İçe aktarma başarılı",
+            "message": "Panel başarıyla içe aktarıldı"
+          },
+          "error": {
+            "title": "İçe aktarma başarısız oldu",
+            "message": "Panel içe aktarılamadı, daha fazla ayrıntı için günlükleri kontrol edin"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "JSON Dosyası Seç",
+            "invalidError": "Geçersiz yapılandırma dosyası"
+          },
+          "apps": {
+            "label": "Uygulamalar",
+            "avoidDuplicates": {
+              "label": "Tekrarlardan kaçının",
+              "description": "Aynı href'e sahip bir uygulamanın zaten mevcut olduğu uygulamaları yok sayar"
+            },
+            "onlyImportApps": {
+              "label": "Yalnızca uygulamaları içe aktar",
+              "description": "Sadece uygulamaları ekler, panelin manuel olarak yeniden oluşturulması gerekir"
+            }
+          },
+          "name": {
+            "label": "Panel adı"
+          },
+          "screenSize": {
+            "label": "Ekran boyutu",
+            "description": "1.0'dan önceki sürümlerde üç farklı mod mevcuttu, yani her ekran boyutu için sütun miktarını seçebiliyordunuz.",
+            "option": {
+              "sm": "Küçük",
+              "md": "Orta",
+              "lg": "Büyük"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "Kenar çubuğu davranışı",
+            "description": "Kenar çubukları 1.0'da kaldırıldı, içlerindeki öğelere ne olacağını seçebilirsiniz.",
+            "option": {
+              "lastSection": {
+                "label": "Son bölüm",
+                "description": "Kenar çubuğu son bölümün altında görüntülenecektir"
+              },
+              "removeItems": {
+                "label": "Öğeleri kaldır",
+                "description": "Kenar çubuğunda bulunan öğeler kaldırılacak"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "Anında uygulama oluştur",
@@ -5449,6 +5654,9 @@
               },
               "newBoard": {
                 "label": "Yeni Panel Oluştur"
+              },
+              "importBoard": {
+                "label": "Bir paneli içe aktar"
               },
               "newApp": {
                 "label": "Yeni Uygulama Oluştur"

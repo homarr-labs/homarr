@@ -49,7 +49,12 @@ export const getOnboardingClaimTokenFromCookieHeader = (cookieHeader: string | n
     const name = part.slice(0, separator).trim();
     if (name !== onboardingClaimCookieName) continue;
     const value = part.slice(separator + 1).trim();
-    return value || undefined;
+    if (!value) return undefined;
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return undefined;
+    }
   }
   return undefined;
 };

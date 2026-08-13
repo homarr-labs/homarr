@@ -70,6 +70,7 @@ export const userRouter = createTRPCRouter({
         ownerId: userId,
         position: maxPosition + 1,
       };
+      const nextStep = isProviderEnabled("ldap") || isProviderEnabled("oidc") ? "group" : "setup";
 
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
@@ -78,7 +79,6 @@ export const userRouter = createTRPCRouter({
             await transaction.insert(schema.groups).values(groupRow);
             await transaction.insert(schema.groupPermissions).values({ groupId, permission: "admin" });
             await transaction.insert(schema.groupMembers).values({ groupId, userId });
-            const nextStep = isProviderEnabled("ldap") || isProviderEnabled("oidc") ? "group" : "setup";
             await transaction.update(schema.onboarding).set({ previousStep: "user", step: nextStep });
           });
         },
@@ -88,7 +88,6 @@ export const userRouter = createTRPCRouter({
             transaction.insert(groups).values(groupRow).run();
             transaction.insert(groupPermissions).values({ groupId, permission: "admin" }).run();
             transaction.insert(groupMembers).values({ groupId, userId }).run();
-            const nextStep = isProviderEnabled("ldap") || isProviderEnabled("oidc") ? "group" : "setup";
             transaction.update(onboarding).set({ previousStep: "user", step: nextStep }).run();
           });
         },

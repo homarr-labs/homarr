@@ -20,8 +20,18 @@ import { AppDeleteButton } from "./_app-delete-button";
 
 const searchParamsSchema = z.object({
   search: z.string().optional(),
-  pageSize: z.string().regex(/\d+/).transform(Number).catch(10),
-  page: z.string().regex(/\d+/).transform(Number).catch(1),
+  pageSize: z
+    .string()
+    .regex(/^[1-9]\d*$/u)
+    .transform(Number)
+    .pipe(z.number().int().positive())
+    .catch(10),
+  page: z
+    .string()
+    .regex(/^[1-9]\d*$/u)
+    .transform(Number)
+    .pipe(z.number().int().positive())
+    .catch(1),
 });
 
 interface AppsPageProps {
@@ -87,7 +97,13 @@ export default async function AppsPage(props: AppsPageProps) {
       floatingPrimaryAction={canCreate}
     >
       {apps.map((app) => (
-        <AppItem key={app.id} app={app} canModify={canModify} canDelete={canDelete} />
+        <AppItem
+          key={app.id}
+          app={app}
+          canModify={canModify}
+          canDelete={canDelete}
+          editLabel={t("page.list.action.edit", { name: app.name })}
+        />
       ))}
     </ManageCollectionPage>
   );
@@ -99,10 +115,10 @@ interface AppItemProps {
   app: RouterOutputs["app"]["getPaginated"]["items"][number];
   canModify: boolean;
   canDelete: boolean;
+  editLabel: string;
 }
 
-const AppItem = async ({ app, canModify, canDelete }: AppItemProps) => {
-  const t = await getScopedI18n("app");
+const AppItem = ({ app, canModify, canDelete, editLabel }: AppItemProps) => {
   const descriptionLines = app.description?.split("\n");
   const safeHref = getSafeAppHref(app.href);
 
@@ -150,7 +166,7 @@ const AppItem = async ({ app, canModify, canDelete }: AppItemProps) => {
                 variant="subtle"
                 color="gray"
                 size={44}
-                aria-label={t("page.list.action.edit", { name: app.name })}
+                aria-label={editLabel}
               >
                 <IconPencil size={18} stroke={1.5} />
               </ActionIcon>

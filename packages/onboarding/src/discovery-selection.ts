@@ -11,11 +11,15 @@ export const resolveDiscoveredAppUrl = (
   generatedUrl: string | null,
 ) => override ?? suggestedUrl ?? generatedUrl ?? "";
 
-export const isHttpUrl = (value: string) => {
+export const normalizeServiceUrl = (value: string) => {
   try {
-    const protocol = new URL(value).protocol;
-    return protocol === "http:" || protocol === "https:";
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+    const url = new URL(/^[a-z][a-z0-9+.-]*:\/\//iu.test(trimmed) ? trimmed : `http://${trimmed}`);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.toString().replace(/\/$/u, "") : null;
   } catch {
-    return false;
+    return null;
   }
 };
+
+export const isHttpUrl = (value: string) => normalizeServiceUrl(value) !== null;

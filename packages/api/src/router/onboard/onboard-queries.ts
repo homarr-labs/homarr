@@ -7,7 +7,6 @@ export const nextOnboardingStepAsync = async (db: Database) => {
   const { current } = await getOnboardingOrFallbackAsync(db);
   if (current !== "start") return;
   const nextStep = await getNextOnboardingStepAsync(db);
-  if (!nextStep) return;
 
   await db.update(onboarding).set({ previousStep: current, step: nextStep });
 };

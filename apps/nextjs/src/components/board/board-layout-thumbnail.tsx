@@ -15,7 +15,7 @@ interface BoardLayoutThumbnailProps {
 const maxThumbnailRows = 12;
 
 export const BoardLayoutThumbnail = ({ preview, label }: BoardLayoutThumbnailProps) => {
-  const layout = preview?.layouts.at(0);
+  const layout = preview?.layouts.find((candidate) => candidate.role === "base") ?? preview?.layouts.at(0);
   if (!preview || !layout) {
     return (
       <Center className={classes.canvas} role="img" aria-label={label}>
@@ -25,7 +25,9 @@ export const BoardLayoutThumbnail = ({ preview, label }: BoardLayoutThumbnailPro
   }
 
   const elements = projectBoardLayout(preview, layout, layout);
-  const roots = preview.sections.filter((section) => section.kind === "empty");
+  const roots = preview.sections
+    .filter((section) => section.kind === "empty")
+    .toSorted((first, second) => (first.xOffset ?? 0) - (second.xOffset ?? 0) || first.id.localeCompare(second.id));
   const lanes = boardLanes.flatMap((lane) => {
     const root = roots.find((section) => getRootSectionLane(section.xOffset) === lane);
     const columnCount = getBoardLaneColumnCount(layout, lane);

@@ -13,7 +13,7 @@ const noStoreHeaders = { "Cache-Control": "no-store" };
 export async function POST(request: Request) {
   const fetchSite = request.headers.get("sec-fetch-site");
   if (fetchSite && fetchSite !== "same-origin" && fetchSite !== "none") {
-    return NextResponse.json({ error: "Cross-site onboarding claims are not allowed." }, { status: 403 });
+    return NextResponse.json({ code: "cross_site" }, { status: 403 });
   }
 
   const session = await auth();
@@ -22,21 +22,18 @@ export async function POST(request: Request) {
     force: session?.user.permissions.includes("admin") ?? false,
   });
   if (result.status === "finished") {
-    const response = NextResponse.json({ error: "Onboarding is already complete." }, { status: 409 });
+    const response = NextResponse.json({ code: "finished" }, { status: 409 });
     response.cookies.delete(onboardingClaimCookieName);
     return response;
   }
   if (result.status === "forbidden") {
-    return NextResponse.json({ error: "Administrator access is required." }, { status: 403 });
+    return NextResponse.json({ code: "administrator_required" }, { status: 403 });
   }
   if (result.status === "locked") {
-    return NextResponse.json(
-      { error: "Another browser has already claimed onboarding.", expiresAt: result.expiresAt },
-      { status: 423, headers: noStoreHeaders },
-    );
+    return NextResponse.json({ code: "locked", expiresAt: result.expiresAt }, { status: 423, headers: noStoreHeaders });
   }
   if (result.status !== "issued" && result.status !== "active") {
-    return NextResponse.json({ error: "Onboarding could not be claimed." }, { status: 409 });
+    return NextResponse.json({ code: "unavailable" }, { status: 409 });
   }
 
   const forwardedProtocol = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim();

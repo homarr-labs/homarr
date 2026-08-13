@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Willkomme zu Homarr",
+        "subtitle": "Lass uns mit der Einrichtung deiner Homarr-Instanz beginnen.",
+        "description": "Um loszulegen, wähle bitte wie du deine Homarr Instanz einrichten möchtest.",
+        "action": {
+          "scratch": "Vo vorne starte",
+          "importOldmarr": "Importiärä us Homarr vor 1.0",
+          "restoreSqlite": "",
+          "restoreSqliteDescription": "",
+          "backToOptions": ""
+        }
+      },
+      "import": {
+        "title": "Date importiärä",
+        "subtitle": "Du casch date us ere existierende Homarr Instanz importiere.",
+        "dropzone": {
+          "title": "Zieh e ZIP-Datei hiä ane oder klick druf um z durchsueche",
+          "description": "Die uechegladeni ZIP Datei wird verarbeitet und du wirsch chönnä uswähle, was importiere wotsch"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Datei ändere"
+          }
+        },
+        "importSettings": {
+          "title": "Istellige importiere",
+          "description": "Import verhalte konfiguriere"
+        },
+        "boardSelection": {
+          "title": "{count} boards gfunge",
+          "description": "Wähl alli boards, mit dr grössi wo de wotsch importiere, us",
+          "action": {
+            "selectAll": "Alli uswähle",
+            "unselectAll": "Gesamte Auswahl aufheben"
+          }
+        },
+        "summary": {
+          "title": "Import zämäfassig",
+          "description": "Ir zämäfassig unge gsehsch, was importier wird",
+          "action": {
+            "import": "Bestätige und witer"
+          },
+          "entities": {
+            "apps": "Apps",
+            "boards": "Boads",
+            "integrations": "Integratione",
+            "credentialUsers": "Benutzer mit Zugangsdaten"
+          }
+        },
+        "tokenModal": {
+          "title": "Import token igäh",
+          "field": {
+            "token": {
+              "label": "Token",
+              "description": "Gib z import token vo dire vorherige Homarr Instanz ah"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Invalids token",
+              "message": "Z token wo de hesch agäh isch invalid"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Administrator benutzer",
+        "subtitle": "Gib z Zugangsdate für di Administrator benutzer ah.",
+        "notification": {
+          "success": {
+            "title": "Benutzer ersteut",
+            "message": "Dr Benutzer isch erfougrich ersteut worde"
+          },
+          "error": {
+            "title": "Benutzerersteuig isch fehlgschlagge"
+          }
+        }
+      },
+      "group": {
+        "title": "Externi Gruppe",
+        "subtitle": "Gib d gruppe ah wo für externi Benutzer verwendet werde söu",
+        "form": {
+          "name": {
+            "label": "Guppename",
+            "description": "Name muss mit der Admin-Gruppe des externen Anbieters übereinstimmen"
+          }
+        }
+      },
+      "settings": {
+        "title": "Istellige",
+        "subtitle": "Serveristellige apasse."
+      },
+      "integrations": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "continue": "",
+          "skip": ""
+        },
+        "configure": {
+          "progress": "",
+          "skip": "",
+          "finishing": "",
+          "error": {
+            "title": "",
+            "message": ""
+          },
+          "helpers": {
+            "tooltip": "",
+            "description": ""
+          }
+        },
+        "urlTemplate": {
+          "label": "",
+          "placeholder": "",
+          "hint": "",
+          "warning": "",
+          "preview": "",
+          "mode": {
+            "subdomain": "",
+            "hostPort": ""
+          }
+        },
+        "docker": {
+          "detected": "",
+          "detectedBreakdown": "",
+          "summary": "",
+          "appBadge": "",
+          "appSectionLabel": "",
+          "scanning": "",
+          "scanningDescription": ""
+        }
+      },
+      "finish": {
+        "title": "Irichtig abschliesse",
+        "subtitle": "Du bisch startklar!",
+        "description": "Du hast die Einrichtung erfolgreich abgeschlossen. Du kannst jetzt mit der Nutzung von Homarr beginnen. Wähle deine nächste Aktion:",
+        "action": {
+          "goToBoard": "Gehe zu {name} Board",
+          "createBoard": "Erstelle dein erstes Board",
+          "inviteUser": "Andere Benutzer einladen",
+          "docs": "Lese die Dokumentation"
+        }
+      }
+    },
+    "backToStart": "Zurück zum Anfang"
+  },
   "user": {
     "title": "Benutzer",
     "name": "Benutzer",
@@ -3840,6 +3989,62 @@
           "message": "Sie haben ungespeicherte Änderungen, sind sie sicher dass sie abbrechen möchten?"
         }
       },
+      "oldImport": {
+        "label": "Import von Homarr vor Version 1.0.0",
+        "notification": {
+          "success": {
+            "title": "Import erfolgreich",
+            "message": "Das Board wurde erfolgreich importiert"
+          },
+          "error": {
+            "title": "Import fehlgeschlagen",
+            "message": "Das Board konnte nicht importiert werden, überprüfen Sie die Protokolle für weitere Details"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "Wähle eine JSON-Datei",
+            "invalidError": "Ungültige Konfigurationsdatei"
+          },
+          "apps": {
+            "label": "",
+            "avoidDuplicates": {
+              "label": "Duplikate vermeiden",
+              "description": "Ignoriert Apps, bei denen eine App mit dem gleichen href bereits existiert"
+            },
+            "onlyImportApps": {
+              "label": "Nur Apps importieren",
+              "description": "Fügt nur die Apps hinzu, das Board muss manuell neu erstellt werden"
+            }
+          },
+          "name": {
+            "label": "Board Name"
+          },
+          "screenSize": {
+            "label": "Bildschirmgröße",
+            "description": "In Versionen vor 1.0 gab es drei verschiedene Modi, so dass Sie die Anzahl der Spalten für jede Bildschirmgröße festlegen konnten.",
+            "option": {
+              "sm": "Klein",
+              "md": "Mittel",
+              "lg": "Groß"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "Verhalten der Seitenleiste",
+            "description": "Seitenleisten wurden in 1.0 entfernt, Sie können wählen, was mit den Elementen in ihnen passieren soll.",
+            "option": {
+              "lastSection": {
+                "label": "Letzter Abschnitt",
+                "description": "Seitenleiste wird unterhalb des letzten Abschnitts angezeigt"
+              },
+              "removeItems": {
+                "label": "Elemente entfernen",
+                "description": "Elemente in der Seitenleiste werden entfernt"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "Jetzt eine App erstellen",
@@ -5449,6 +5654,9 @@
               },
               "newBoard": {
                 "label": "Erstellen Sie ein neues Board"
+              },
+              "importBoard": {
+                "label": "Ein Board importieren"
               },
               "newApp": {
                 "label": "Neue App erstellen"

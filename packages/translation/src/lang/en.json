@@ -40,6 +40,7 @@
         "restoreTitle": "Restore this Homarr",
         "restoreDescription": "A full SQLite backup restores boards, people, apps, integrations, and settings. Homarr validates it before replacing anything.",
         "errorTitle": "Setup could not start",
+        "errorDescription": "Your setup choices are still here. Try again, or reload the page if this continues.",
         "ready": "Ready to configure",
         "panelTitle": "From services to a useful board",
         "panelDescription": "Discovery, secure connections, layouts, widgets, Assistant, Workshop, and MCP stay connected in one flow.",
@@ -64,7 +65,8 @@
         "name": "External administrator group",
         "nameDescription": "This is case-sensitive and must match your identity provider.",
         "continue": "Save group and continue",
-        "errorTitle": "Group could not be saved"
+        "errorTitle": "Group could not be saved",
+        "unknownError": "The administrator group could not be saved."
       },
       "essentials": {
         "title": "Start with familiar defaults",
@@ -117,9 +119,6 @@
       "connect": {
         "title": "Connect what makes the board useful",
         "description": "Select several services at once. Docker labels take priority, image matching fills gaps, and every URL and credential stays reviewable.",
-        "search": "Search integrations",
-        "widgets": "{count} widgets",
-        "detected": "Detected",
         "discoveredIntegrations": "Detected integration instances ({count})",
         "detectedIntegrationLabel": "Import {name}, detected as {kind}",
         "detectedAppLabel": "Import detected app {name}",
@@ -222,6 +221,7 @@
           "keyDescription": "For security, Homarr cannot show this API key again.",
           "copyKey": "Copy API key",
           "createKey": "Create an MCP API key",
+          "errorTitle": "MCP API key could not be created",
           "loginRequired": "Sign in as an administrator after setup to create an API key.",
           "configuration": "Client configuration",
           "copy": "Copy configuration",
@@ -6063,7 +6063,8 @@
           "private": "This board is private"
         },
         "preview": {
-          "label": "Layout preview for {name}, with {count} items"
+          "label": "Layout preview for {name}, with {count} items",
+          "unknownCreator": "Unknown creator"
         },
         "noResults": {
           "title": "No boards yet",

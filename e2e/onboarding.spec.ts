@@ -1,4 +1,4 @@
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir, readFile, rm } from "node:fs/promises";
 import path from "node:path";
 
 import { chromium } from "@playwright/test";
@@ -23,41 +23,53 @@ const captureScreenshotAsync = async (page: Page, name: string) => {
   await page.screenshot({ path: path.join(directory, `onboarding-${name}.png`), fullPage: true });
 };
 
-const createRestoreArchiveAsync = async () => {
-  const { db, localMountPath } = await createSqliteDbFileAsync();
-  await db.insert(sqliteSchema.onboarding).values({ id: "onboarding", step: "finish", previousStep: "setup" });
-  await db.insert(sqliteSchema.boards).values({ id: "restored-board", name: "restored", isPublic: true });
-  await db.insert(sqliteSchema.layouts).values({
-    id: "restored-base",
-    boardId: "restored-board",
-    name: "Base",
-    role: "base",
-    columnCount: 10,
-    breakpoint: 768,
-  });
-  await db.insert(sqliteSchema.sections).values({
-    id: "restored-root",
-    boardId: "restored-board",
-    kind: "empty",
-    xOffset: 0,
-    yOffset: 0,
-  });
-  db.$client.close();
+type SqliteTestDatabase = Awaited<ReturnType<typeof createSqliteDbFileAsync>>;
 
-  const zip = new AdmZip();
-  zip.addFile("db.sqlite", await readFile(path.join(localMountPath, "db", "db.sqlite")));
-  zip.addFile(
-    "metadata.json",
-    Buffer.from(
-      JSON.stringify({
-        homarrVersion: "e2e",
-        exportedAt: new Date().toISOString(),
-        dbDialect: "sqlite",
-        encryptionKey: "0".repeat(64),
-      }),
-    ),
-  );
-  return zip.toBuffer();
+const cleanupSqliteDbAsync = async ({ db, localMountPath }: SqliteTestDatabase) => {
+  if (db.$client.open) db.$client.close();
+  await rm(localMountPath, { recursive: true, force: true });
+};
+
+const createRestoreArchiveAsync = async () => {
+  const sqlite = await createSqliteDbFileAsync();
+  const { db, localMountPath } = sqlite;
+  try {
+    await db.insert(sqliteSchema.onboarding).values({ id: "onboarding", step: "finish", previousStep: "setup" });
+    await db.insert(sqliteSchema.boards).values({ id: "restored-board", name: "restored", isPublic: true });
+    await db.insert(sqliteSchema.layouts).values({
+      id: "restored-base",
+      boardId: "restored-board",
+      name: "Base",
+      role: "base",
+      columnCount: 10,
+      breakpoint: 768,
+    });
+    await db.insert(sqliteSchema.sections).values({
+      id: "restored-root",
+      boardId: "restored-board",
+      kind: "empty",
+      xOffset: 0,
+      yOffset: 0,
+    });
+    db.$client.close();
+
+    const zip = new AdmZip();
+    zip.addFile("db.sqlite", await readFile(path.join(localMountPath, "db", "db.sqlite")));
+    zip.addFile(
+      "metadata.json",
+      Buffer.from(
+        JSON.stringify({
+          homarrVersion: "e2e",
+          exportedAt: new Date().toISOString(),
+          dbDialect: "sqlite",
+          encryptionKey: "0".repeat(64),
+        }),
+      ),
+    );
+    return zip.toBuffer();
+  } finally {
+    await cleanupSqliteDbAsync(sqlite);
+  }
 };
 
 describe("Onboarding", () => {
@@ -68,7 +80,8 @@ describe("Onboarding", () => {
   ])(
     "Onboarding is usable at the $name viewport",
     async ({ name, width, height }) => {
-      const { localMountPath } = await createSqliteDbFileAsync();
+      const sqlite = await createSqliteDbFileAsync();
+      const { localMountPath } = sqlite;
       const homarrContainer = await createHomarrContainer({ mounts: { "/appdata": localMountPath } }).start();
       const browser = await chromium.launch();
       const context = await browser.newContext({ viewport: { width, height }, reducedMotion: "reduce" });
@@ -159,7 +172,11 @@ describe("Onboarding", () => {
         expect(await boardCanvas.locator("[data-grid-item-id]").count()).toBeGreaterThanOrEqual(3);
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
       } finally {
-        await Promise.all([browser.close(), homarrContainer.stop()]);
+        try {
+          await Promise.all([browser.close(), homarrContainer.stop()]);
+        } finally {
+          await cleanupSqliteDbAsync(sqlite);
+        }
       }
     },
     90_000,
@@ -169,7 +186,8 @@ describe("Onboarding", () => {
     const restoreArchive = await createRestoreArchiveAsync();
     const invalidArchive = new AdmZip();
     invalidArchive.addFile("db.sqlite", Buffer.from("not-a-database"));
-    const { localMountPath } = await createSqliteDbFileAsync();
+    const sqlite = await createSqliteDbFileAsync();
+    const { localMountPath } = sqlite;
     const initialContainer = await createHomarrContainer({ mounts: { "/appdata": localMountPath } }).start();
     let initialContainerStopped = false;
     let restoredContainer: StartedTestContainer | undefined;
@@ -209,15 +227,20 @@ describe("Onboarding", () => {
       await page.locator('[data-testid="board-canvas"][data-board-hydrated="true"]').waitFor({ timeout: 30_000 });
       expect(page.url()).toMatch(/\/boards\/restored(?:[/?#]|$)/);
     } finally {
-      await browser.close();
-      if (!initialContainerStopped) await initialContainer.stop();
-      if (restoredContainer) await restoredContainer.stop();
+      try {
+        await browser.close();
+        if (!initialContainerStopped) await initialContainer.stop();
+        if (restoredContainer) await restoredContainer.stop();
+      } finally {
+        await cleanupSqliteDbAsync(sqlite);
+      }
     }
   }, 120_000);
 
   test("Credentials onboarding should be successful", async () => {
     // Arrange
-    const { db, localMountPath } = await createSqliteDbFileAsync();
+    const sqlite = await createSqliteDbFileAsync();
+    const { db, localMountPath } = sqlite;
     const homarrContainer = await createHomarrContainer({
       mounts: {
         "/appdata": localMountPath,
@@ -255,12 +278,17 @@ describe("Onboarding", () => {
       await assertions.assertUserAndAdminGroupInsertedAsync("admin");
       await assertions.assertDbOnboardingStepAsync("finish");
     } finally {
-      await Promise.all([browser.close(), homarrContainer.stop()]);
+      try {
+        await Promise.all([browser.close(), homarrContainer.stop()]);
+      } finally {
+        await cleanupSqliteDbAsync(sqlite);
+      }
     }
   }, 60_000);
 
   test("Credentials onboarding recovers when automatic sign-in fails after account creation", async () => {
-    const { db, localMountPath } = await createSqliteDbFileAsync();
+    const sqlite = await createSqliteDbFileAsync();
+    const { db, localMountPath } = sqlite;
     const homarrContainer = await createHomarrContainer({ mounts: { "/appdata": localMountPath } }).start();
     const browser = await chromium.launch();
     const context = await browser.newContext();
@@ -286,13 +314,18 @@ describe("Onboarding", () => {
       expect((await db.query.users.findMany()).length).toBe(1);
       expect((await db.query.onboarding.findFirst())?.step).toBe("setup");
     } finally {
-      await Promise.all([browser.close(), homarrContainer.stop()]);
+      try {
+        await Promise.all([browser.close(), homarrContainer.stop()]);
+      } finally {
+        await cleanupSqliteDbAsync(sqlite);
+      }
     }
   }, 60_000);
 
   test("External provider onboarding requires sign-in before privileged setup", async () => {
     // Arrange
-    const { db, localMountPath } = await createSqliteDbFileAsync();
+    const sqlite = await createSqliteDbFileAsync();
+    const { db, localMountPath } = sqlite;
     const homarrContainer = await createHomarrContainer({
       environment: {
         AUTH_PROVIDERS: "ldap",
@@ -329,13 +362,18 @@ describe("Onboarding", () => {
       await assertions.assertExternalGroupInsertedAsync(externalGroupName);
       await assertions.assertDbOnboardingStepAsync("setup");
     } finally {
-      await Promise.all([browser.close(), homarrContainer.stop()]);
+      try {
+        await Promise.all([browser.close(), homarrContainer.stop()]);
+      } finally {
+        await cleanupSqliteDbAsync(sqlite);
+      }
     }
   }, 60_000);
 
   test("Legacy setup requires sign-in without exposing private board metadata", async () => {
     const credentials = { username: "admin", password: "Comp(exP4sswOrd" };
-    const { db, localMountPath } = await createSqliteDbFileAsync();
+    const sqlite = await createSqliteDbFileAsync();
+    const { db, localMountPath } = sqlite;
     await seedAdminUserAsync(db, credentials);
     await db.update(sqliteSchema.onboarding).set({ step: "import" as never });
     const privateBoardName = "private-board-must-not-leak";
@@ -376,13 +414,18 @@ describe("Onboarding", () => {
       await page.getByRole("heading", { name: "Start with familiar defaults" }).waitFor();
       expect(await page.getByRole("heading", { name: "Create your administrator" }).count()).toBe(0);
     } finally {
-      await Promise.all([browser.close(), homarrContainer.stop()]);
+      try {
+        await Promise.all([browser.close(), homarrContainer.stop()]);
+      } finally {
+        await cleanupSqliteDbAsync(sqlite);
+      }
     }
   }, 90_000);
 
   test("Assistant setup restores saved configuration and accepts a manual model", async () => {
     const credentials = { username: "admin", password: "Comp(exP4sswOrd" };
-    const { db, localMountPath } = await createSqliteDbFileAsync();
+    const sqlite = await createSqliteDbFileAsync();
+    const { db, localMountPath } = sqlite;
     await seedAdminUserAsync(db, credentials);
     await db.update(sqliteSchema.onboarding).set({ step: "setup", previousStep: "group" });
     await db.insert(sqliteSchema.assistantConfigurations).values({
@@ -419,7 +462,11 @@ describe("Onboarding", () => {
       expect(await page.getByLabel("Default model").inputValue()).toBe("local-model");
       expect(await page.getByText("Model discovery is unavailable.").count()).toBe(1);
     } finally {
-      await Promise.all([browser.close(), homarrContainer.stop()]);
+      try {
+        await Promise.all([browser.close(), homarrContainer.stop()]);
+      } finally {
+        await cleanupSqliteDbAsync(sqlite);
+      }
     }
   }, 90_000);
 });

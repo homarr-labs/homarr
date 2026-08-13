@@ -12,12 +12,18 @@ const normalizeBaseHost = (value: string) => {
   const trimmed = value.trim();
   if (!trimmed) return null;
   try {
-    const parsed = new URL(trimmed.includes("://") ? trimmed : `http://${trimmed}`);
+    const url = trimmed.includes("://") ? trimmed : `http://${trimmed}`;
+    const authority = url
+      .match(/^[a-z][a-z0-9+.-]*:\/\/([^/?#]*)/iu)?.[1]
+      ?.split("@")
+      .at(-1);
+    const explicitPort = authority?.match(/^(?:\[[^\]]+\]|[^:]+):(\d+)$/u)?.[1];
+    const parsed = new URL(url);
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
     return {
       protocol: parsed.protocol,
       hostname: parsed.hostname,
-      port: parsed.port ? Number(parsed.port) : undefined,
+      port: parsed.port ? Number(parsed.port) : explicitPort ? Number(explicitPort) : undefined,
       pathname: parsed.pathname.replace(/\/+$/, ""),
     };
   } catch {
@@ -32,8 +38,7 @@ const buildUrl = (slug: string, rawHost: string, mode: UrlTemplateMode, port?: n
   const modeBuilders: Record<UrlTemplateMode, () => string> = {
     subdomain: () => (base.hostname.startsWith("[") ? "" : `https://${slug}.${base.hostname}`),
     hostPort: () => (effectivePort ? `http://${base.hostname}:${effectivePort}` : `http://${base.hostname}`),
-    path: () =>
-      `${base.protocol}//${base.hostname}${base.port ? `:${base.port}` : ""}${base.pathname}/${slug}`,
+    path: () => `${base.protocol}//${base.hostname}${base.port ? `:${base.port}` : ""}${base.pathname}/${slug}`,
   };
   return modeBuilders[mode]();
 };

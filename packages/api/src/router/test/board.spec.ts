@@ -288,6 +288,20 @@ describe("getAllBoards should return all boards accessable to the current user",
 });
 
 describe("getManageOverview", () => {
+  test("does not expose a public board creator email to anonymous callers", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: null });
+    const creatorId = createId();
+
+    await db.insert(users).values({ id: creatorId, name: "Board creator", email: "private@example.com" });
+    await db.insert(boards).values({ id: createId(), name: "public-overview", creatorId, isPublic: true });
+
+    const [board] = await caller.getManageOverview();
+
+    expect(board?.creator).toEqual({ id: creatorId, name: "Board creator", image: null });
+    expect(board?.creator).not.toHaveProperty("email");
+  });
+
   test("returns the same accessible board set as getAllBoards", async () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
@@ -433,6 +447,8 @@ describe("getManageOverview", () => {
     const result = await caller.getManageOverview();
 
     expect(result).toHaveLength(1);
+    expect(result[0]?.creator).toEqual({ id: defaultCreatorId, name: null, image: null });
+    expect(result[0]?.creator).not.toHaveProperty("email");
     expect(result[0]).toMatchObject({
       id: boardId,
       isHome: true,

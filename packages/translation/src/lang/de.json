@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Willkommen bei Homarr",
+        "subtitle": "Lass uns mit der Einrichtung deiner Homarr-Instanz beginnen.",
+        "description": "Um loszulegen, wähle bitte wie du deine Homarr Instanz einrichten möchtest.",
+        "action": {
+          "scratch": "Von vorne beginnen",
+          "importOldmarr": "Import von Homarr vor 1.0",
+          "restoreSqlite": "Aus SQLite-Backup wiederherstellen",
+          "restoreSqliteDescription": "Laden Sie eine vollständige SQLite-Datenbanksicherung von einer vorherigen Homarr-Instanz hoch. Dies wird alle Boards, Benutzer, Apps, Integrationen und Einstellungen wiederherstellen.",
+          "backToOptions": "← Zurück zu Setup Optionen"
+        }
+      },
+      "import": {
+        "title": "Daten importieren",
+        "subtitle": "Sie können Daten aus einer bestehenden Homarr-Instanz importieren.",
+        "dropzone": {
+          "title": "Ziehen Sie die Zip-Datei hierher oder klicken Sie zum Durchsuchen",
+          "description": "Die hochgeladene Zip-Datei wird bearbeitet und Sie können wählen, was Sie importieren möchten"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Datei ändern"
+          }
+        },
+        "importSettings": {
+          "title": "Einstellungen Importieren",
+          "description": "Importverhalten konfigurieren"
+        },
+        "boardSelection": {
+          "title": "{count} Boards gefunden",
+          "description": "Wählen Sie alle Boards mit der Größe aus, die Sie importieren möchten",
+          "action": {
+            "selectAll": "Alles auswählen",
+            "unselectAll": "Gesamte Auswahl aufheben"
+          }
+        },
+        "summary": {
+          "title": "Zusammenfassung des Imports",
+          "description": "In der folgenden Zusammenfassung sehen Sie, was importiert wird",
+          "action": {
+            "import": "Import bestätigen und fortfahren"
+          },
+          "entities": {
+            "apps": "Applikationen",
+            "boards": "Boards",
+            "integrations": "Integrationen",
+            "credentialUsers": "Benutzer mit Zugangsdaten"
+          }
+        },
+        "tokenModal": {
+          "title": "Importschlüssel eingeben",
+          "field": {
+            "token": {
+              "label": "Schlüssel",
+              "description": "Gib den angezeigten Importschlüssel von der vorherigen Homarr-Instanz ein"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Ungültiger Schlüssel",
+              "message": "Der eingegebene Schlüssel ist ungültig"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Administrator",
+        "subtitle": "Geben Sie die Zugangsdaten für Ihren Administrator-Benutzer an.",
+        "notification": {
+          "success": {
+            "title": "Benutzer erstellt",
+            "message": "Der Benutzer wurde erfolgreich erstellt"
+          },
+          "error": {
+            "title": "Erstellung des Benutzers fehlgeschlagen"
+          }
+        }
+      },
+      "group": {
+        "title": "Externe Gruppe",
+        "subtitle": "Gebe die Gruppe an, welche für externe Benutzer verwendet werden soll.",
+        "form": {
+          "name": {
+            "label": "Gruppenname",
+            "description": "Name muss mit der Admin-Gruppe des externen Anbieters übereinstimmen"
+          }
+        }
+      },
+      "settings": {
+        "title": "Einstellungen",
+        "subtitle": "Server-Einstellungen konfigurieren."
+      },
+      "integrations": {
+        "title": "Integrationen",
+        "subtitle": "Wählen Sie die von Ihnen verwendeten Dienste aus.",
+        "description": "Wählen Sie die Integrationen, die Sie verbinden möchten. Ihr Dashboard wird automatisch mit passenden Widgets eingerichtet.",
+        "action": {
+          "continue": "Weiter",
+          "skip": "Vorerst überspringen"
+        },
+        "configure": {
+          "progress": "{current} von {total}",
+          "skip": "Diese Integration überspringen",
+          "finishing": "Dashboard wird eingerichtet...",
+          "error": {
+            "title": "Einrichtung fehlgeschlagen",
+            "message": "Beim Einrichten des Dashboards ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+          },
+          "helpers": {
+            "tooltip": "URL Helfer",
+            "description": "Diese Helfer versuchen die URL für deine Dienste zu erraten. Wenn dies nicht funktioniert, gib einfach die Adresse manuell ein."
+          }
+        },
+        "urlTemplate": {
+          "label": "Basis URL",
+          "placeholder": "homelab.local oder 192.168.1.1",
+          "hint": "Geben Sie Ihre Basis-Domain oder IP ein, um die Integrations-URLs automatisch auszufüllen",
+          "warning": "Wenn Sie jetzt Ihre Basis-URL einstellen, werden alle Integration-URLs automatisch ausgefüllt, was Ihnen Zeit während des Setups spart",
+          "preview": "z.B. {example}",
+          "mode": {
+            "subdomain": "Sub-Domain",
+            "hostPort": "Host:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker erkannte {count} Dienste",
+          "detectedBreakdown": "{integrations} Integrationen · {apps} Anwendungen",
+          "summary": "Homarr erkannte {apps} Anwendungen, {integrations} von denen Integrationen integriert sind",
+          "appBadge": "Anwendung",
+          "appSectionLabel": "Zum Dashboard hinzuzufügende Apps ({count} gewählt)",
+          "scanning": "Durchsuche Docker...",
+          "scanningDescription": "Suche nach laufenden Containern auf Ihrem System"
+        }
+      },
+      "finish": {
+        "title": "Einrichtung abschließen",
+        "subtitle": "Es kann losgehen!",
+        "description": "Du hast die Einrichtung erfolgreich abgeschlossen. Du kannst jetzt mit der Nutzung von Homarr beginnen. Wähle deine nächste Aktion:",
+        "action": {
+          "goToBoard": "Gehe zu {name} Board",
+          "createBoard": "Erstelle dein erstes Board",
+          "inviteUser": "Andere Benutzer einladen",
+          "docs": "Lese die Dokumentation"
+        }
+      }
+    },
+    "backToStart": "Zurück zum Anfang"
+  },
   "user": {
     "title": "Benutzer",
     "name": "Benutzer",
@@ -3909,6 +4058,62 @@
           "message": "Sie haben ungespeicherte Änderungen, sind sie sicher dass sie abbrechen möchten?"
         }
       },
+      "oldImport": {
+        "label": "Import von Homarr vor Version 1.0.0",
+        "notification": {
+          "success": {
+            "title": "Import erfolgreich",
+            "message": "Das Board wurde erfolgreich importiert"
+          },
+          "error": {
+            "title": "Import fehlgeschlagen",
+            "message": "Das Board konnte nicht importiert werden, überprüfen Sie die Protokolle für weitere Details"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "Wähle eine JSON-Datei",
+            "invalidError": "Ungültige Konfigurationsdatei"
+          },
+          "apps": {
+            "label": "Apps",
+            "avoidDuplicates": {
+              "label": "Duplikate vermeiden",
+              "description": "Ignoriert Apps, bei denen eine App mit dem gleichen href bereits existiert"
+            },
+            "onlyImportApps": {
+              "label": "Nur Apps importieren",
+              "description": "Fügt nur die Apps hinzu. Das Board selbst muss manuell neu erstellt werden"
+            }
+          },
+          "name": {
+            "label": "Board Name"
+          },
+          "screenSize": {
+            "label": "Bildschirmgröße",
+            "description": "In Versionen vor 1.0 gab es drei verschiedene Modi, so dass Sie die Anzahl der Spalten für jede Bildschirmgröße festlegen konnten.",
+            "option": {
+              "sm": "Klein",
+              "md": "Mittel",
+              "lg": "Groß"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "Verhalten der Seitenleiste",
+            "description": "Seitenleisten wurden in 1.0 entfernt, Sie können wählen, was mit den Elementen in ihnen passieren soll.",
+            "option": {
+              "lastSection": {
+                "label": "Letzter Abschnitt",
+                "description": "Seitenleiste wird unterhalb des letzten Abschnitts angezeigt"
+              },
+              "removeItems": {
+                "label": "Elemente entfernen",
+                "description": "Elemente in der Seitenleiste werden entfernt"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "Jetzt eine App erstellen",
@@ -5527,6 +5732,9 @@
               },
               "newBoard": {
                 "label": "Erstellen Sie ein neues Board"
+              },
+              "importBoard": {
+                "label": "Ein Board importieren"
               },
               "newApp": {
                 "label": "Neue App erstellen"

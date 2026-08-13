@@ -43,6 +43,8 @@ vi.mock("@homarr/common", async (importOriginal) => ({
   createId: createIdMock,
 }));
 vi.mock("@homarr/docker", () => ({
+  createDockerSourceId: (host: string, externalId: string) =>
+    `docker:${encodeURIComponent(host)}:${encodeURIComponent(externalId)}`,
   dockerLabels: { hide: "homarr.hide" },
   listDiscoveredContainersAsync,
 }));
@@ -264,6 +266,20 @@ describe("onboard.completeSetup", () => {
     );
     expect(await db.query.boards.findFirst({ where: eq(boards.id, "target") })).toMatchObject({ name: "target" });
     expect(await db.query.boards.findFirst({ where: eq(boards.id, "other") })).toMatchObject({ name: "other" });
+    expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "setup", previousStep: "group" });
+  });
+
+  it("rejects an explicit board id that no longer exists", async () => {
+    const db = createDb();
+    const claimToken = await seedOnboardingAsync(db);
+    await seedBoardAsync(db, { boardId: "target" });
+
+    await expect(createCaller(db, claimToken).completeSetup(completionInput("missing"))).rejects.toMatchObject({
+      code: "NOT_FOUND",
+      message: "The selected board no longer exists.",
+    });
+
+    expect(await db.query.boards.findFirst({ where: eq(boards.id, "target") })).toMatchObject({ name: "target" });
     expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "setup", previousStep: "group" });
   });
 
@@ -899,6 +915,7 @@ describe("onboard.completeSetup", () => {
     for (const layoutId of ["target-base", "target-mobile"]) {
       const positions = groupedLayouts.filter((layout) => layout.layoutId === layoutId);
       const containerLayout = containerLayouts.find((layout) => layout.layoutId === layoutId);
+      expect(positions.length).toBeGreaterThan(0);
       expect(containerLayout).toBeDefined();
       expect(Math.max(...positions.map((position) => position.yOffset + position.height))).toBeLessThanOrEqual(
         containerLayout?.height ?? 0,

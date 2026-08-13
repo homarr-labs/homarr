@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Welkom bij Homarr",
+        "subtitle": "Laten we beginnen met het opzetten van je Homarr instantie.",
+        "description": "Selecteer om te beginnen hoe je je Homarr instantie wilt instellen.",
+        "action": {
+          "scratch": "Vanaf nul beginnen",
+          "importOldmarr": "Importeren uit Homarr vóór 1.0",
+          "restoreSqlite": "Herstellen vanuit SQLite-back-up",
+          "restoreSqliteDescription": "Upload een volledige SQLite-databaseback-up van een vorige Homarr-instantie. Dit zal alle borden, gebruikers, apps, integraties en instellingen herstellen.",
+          "backToOptions": "← Terug naar installatie-opties"
+        }
+      },
+      "import": {
+        "title": "Gegevens importeren",
+        "subtitle": "Je kunt gegevens importeren uit een bestaande Homarr instantie.",
+        "dropzone": {
+          "title": "Sleep het ZIP-bestand hierheen of klik om te bladeren",
+          "description": "De geüploade ZIP wordt verwerkt en je kunt selecteren wat je wilt importeren"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Bestand veranderen"
+          }
+        },
+        "importSettings": {
+          "title": "Instellingen importeren",
+          "description": "Het importgedrag configureren"
+        },
+        "boardSelection": {
+          "title": "{count} borden gevonden",
+          "description": "Kies alle borden met hun grootte die je wilt importeren",
+          "action": {
+            "selectAll": "Alles selecteren",
+            "unselectAll": "Alles deselecteren"
+          }
+        },
+        "summary": {
+          "title": "Overzicht importeren",
+          "description": "In het onderstaande overzicht kun je zien wat er wordt geïmporteerd",
+          "action": {
+            "import": "Import bevestigen en doorgaan"
+          },
+          "entities": {
+            "apps": "Apps",
+            "boards": "Borden",
+            "integrations": "Integraties",
+            "credentialUsers": "Inloggegevens gebruikers"
+          }
+        },
+        "tokenModal": {
+          "title": "Importeertoken invoeren",
+          "field": {
+            "token": {
+              "label": "Penning",
+              "description": "Voer het getoonde importeertoken van je vorige Homarr instantie in"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Ongeldig token",
+              "message": "Het ingevoerde token is ongeldig"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Beheerder gebruiker",
+        "subtitle": "Geef de inloggegevens op voor de administrator gebruiker.",
+        "notification": {
+          "success": {
+            "title": "Gebruiker aangemaakt",
+            "message": "De gebruiker is succesvol aangemaakt"
+          },
+          "error": {
+            "title": "Gebruiker aanmaken mislukt"
+          }
+        }
+      },
+      "group": {
+        "title": "Externe groep",
+        "subtitle": "Geef de groep op die moet worden gebruikt voor externe gebruikers.",
+        "form": {
+          "name": {
+            "label": "Groepsnaam",
+            "description": "De naam moet overeenkomen met de beheerdersgroep van de externe provider"
+          }
+        }
+      },
+      "settings": {
+        "title": "Instellingen",
+        "subtitle": "Serverinstellingen configureren."
+      },
+      "integrations": {
+        "title": "Integraties",
+        "subtitle": "Selecteer de services die je gebruikt.",
+        "description": "Kies de integraties die je wilt verbinden. We stellen je dashboard in met bijbehorende widgets.",
+        "action": {
+          "continue": "Doorgaan",
+          "skip": "Overslaan voor nu"
+        },
+        "configure": {
+          "progress": "{current} van {total}",
+          "skip": "Deze integratie overslaan",
+          "finishing": "Je dashboard instellen...",
+          "error": {
+            "title": "Instellen mislukt",
+            "message": "Er is iets misgegaan bij het instellen van je dashboard. Probeer het opnieuw."
+          },
+          "helpers": {
+            "tooltip": "URL-helpers",
+            "description": "Deze helpers proberen de URL voor je services te raden. Als het niet werkt, typ dan handmatig het adres."
+          }
+        },
+        "urlTemplate": {
+          "label": "Basis-URL",
+          "placeholder": "homelab.local of 192.168.1.1",
+          "hint": "Voer je basisdomein of IP in om integratie-URL's automatisch in te vullen",
+          "warning": "Door nu je basis-URL in te stellen worden alle integratie-URL's automatisch ingevuld, wat je tijd bespaart tijdens de installatie",
+          "preview": "bijv. {example}",
+          "mode": {
+            "subdomain": "Subdomein",
+            "hostPort": "Host:Poort"
+          }
+        },
+        "docker": {
+          "detected": "Docker heeft {count} services gedetecteerd",
+          "detectedBreakdown": "{integrations} integraties · {apps} apps",
+          "summary": "Homarr heeft {apps} apps gedetecteerd, waarvan {integrations} ingebouwde integraties hebben",
+          "appBadge": "App",
+          "appSectionLabel": "Apps om aan dashboard toe te voegen ({count} geselecteerd)",
+          "scanning": "Docker scannen...",
+          "scanningDescription": "Zoeken naar actieve containers op je systeem"
+        }
+      },
+      "finish": {
+        "title": "Instellen voltooien",
+        "subtitle": "Je bent er klaar voor!",
+        "description": "Je hebt het installatieproces succesvol afgerond. Je kunt Homarr nu gaan gebruiken. Selecteer je volgende actie:",
+        "action": {
+          "goToBoard": "Ga naar {name} bord",
+          "createBoard": "Je eerste bord aanmaken",
+          "inviteUser": "Andere gebruikers uitnodigen",
+          "docs": "Lees de documentatie"
+        }
+      }
+    },
+    "backToStart": "Terug naar start"
+  },
   "user": {
     "title": "Gebruikers",
     "name": "Gebruiker",
@@ -3840,6 +3989,62 @@
           "message": "Je hebt niet-opgeslagen wijzigingen, weet je zeker dat je weg wilt?"
         }
       },
+      "oldImport": {
+        "label": "Importeren uit Homarr vóór 1.0.0",
+        "notification": {
+          "success": {
+            "title": "Succesvol geimporteerd",
+            "message": "Het bord is succesvol geïmporteerd"
+          },
+          "error": {
+            "title": "Importeren mislukt",
+            "message": "Het bord kon niet worden geïmporteerd, controleer de logs voor meer informatie"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "JSON-bestand selecteren",
+            "invalidError": "Ongeldig configuratiebestand"
+          },
+          "apps": {
+            "label": "Apps",
+            "avoidDuplicates": {
+              "label": "Duplicaten vermijden",
+              "description": "Negeert apps waar al een app met dezelfde href bestaat"
+            },
+            "onlyImportApps": {
+              "label": "Alleen apps importeren",
+              "description": "Voegt alleen de apps toe, het bord moet handmatig opnieuw worden aangemaakt"
+            }
+          },
+          "name": {
+            "label": "Bord naam"
+          },
+          "screenSize": {
+            "label": "Schermgrootte",
+            "description": "In versies vóór 1.0 bestonden drie verschillende modi, zodat je het aantal kolommen voor elke schermgrootte kon kiezen.",
+            "option": {
+              "sm": "Klein",
+              "md": "Gemiddeld",
+              "lg": "Groot"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "Zijbalk-gedrag",
+            "description": "Zijbalken zijn verwijderd in 1.0, je kunt kiezen wat er moet gebeuren met de items erin.",
+            "option": {
+              "lastSection": {
+                "label": "Laatste sectie",
+                "description": "De zijbalk wordt onder de laatste sectie weergegeven"
+              },
+              "removeItems": {
+                "label": "Items verwijderen",
+                "description": "Items in de zijbalk worden verwijderd"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "App onmiddellijk maken",
@@ -5449,6 +5654,9 @@
               },
               "newBoard": {
                 "label": "Een nieuw bord aanmaken"
+              },
+              "importBoard": {
+                "label": "Een bord importeren"
               },
               "newApp": {
                 "label": "Een nieuwe app aanmaken"

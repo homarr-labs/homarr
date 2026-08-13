@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "scratch": "",
+          "importOldmarr": "",
+          "restoreSqlite": "Vrati iz SQLite sigurnosne kopije",
+          "restoreSqliteDescription": "Prenesite cjelovitu SQLite sigurnosnu kopiju baze podataka iz prethodne Homarr instance. To će vratiti sve ploče, korisnike, aplikacije, integracije i postavke.",
+          "backToOptions": "← Natrag na opcije postavljanja"
+        }
+      },
+      "import": {
+        "title": "",
+        "subtitle": "",
+        "dropzone": {
+          "title": "",
+          "description": ""
+        },
+        "fileInfo": {
+          "action": {
+            "change": ""
+          }
+        },
+        "importSettings": {
+          "title": "",
+          "description": ""
+        },
+        "boardSelection": {
+          "title": "",
+          "description": "",
+          "action": {
+            "selectAll": "",
+            "unselectAll": ""
+          }
+        },
+        "summary": {
+          "title": "",
+          "description": "",
+          "action": {
+            "import": ""
+          },
+          "entities": {
+            "apps": "aplikacije",
+            "boards": "Daske",
+            "integrations": "",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "",
+          "field": {
+            "token": {
+              "label": "Znak",
+              "description": ""
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "",
+        "subtitle": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": ""
+          }
+        }
+      },
+      "group": {
+        "title": "",
+        "subtitle": "",
+        "form": {
+          "name": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "settings": {
+        "title": "Postavke",
+        "subtitle": ""
+      },
+      "integrations": {
+        "title": "Integracije",
+        "subtitle": "Odaberite usluge koje koristite.",
+        "description": "Odaberite integracije koje želite povezati. Automatski ćemo postaviti vašu ploču s odgovarajućim widgetima.",
+        "action": {
+          "continue": "Nastavi",
+          "skip": "Preskoči za sada"
+        },
+        "configure": {
+          "progress": "{current} od {total}",
+          "skip": "Preskoči ovu integraciju",
+          "finishing": "Postavljanje vaše ploče...",
+          "error": {
+            "title": "Postavljanje nije uspjelo",
+            "message": "Nešto je pošlo po zlu prilikom postavljanja vaše ploče. Pokušajte ponovno."
+          },
+          "helpers": {
+            "tooltip": "Pomagači URL-a",
+            "description": "Ovi pomagači pokušavaju pogoditi URL za vaše usluge. Ako ne radi, samo ručno upišite adresu."
+          }
+        },
+        "urlTemplate": {
+          "label": "Osnovni URL",
+          "placeholder": "homelab.local ili 192.168.1.1",
+          "hint": "Unesite svoju osnovnu domenu ili IP za automatsko popunjavanje URL-ova integracija",
+          "warning": "Postavljanjem osnovnog URL-a sada automatski će ispuniti sve URL-ove integracija, uštedjet ćete vrijeme tijekom postavljanja",
+          "preview": "npr. {example}",
+          "mode": {
+            "subdomain": "Poddomena",
+            "hostPort": "Računalo:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker je otkrio {count} usluga",
+          "detectedBreakdown": "{integrations} integracija · {apps} aplikacija",
+          "summary": "Homarr je otkrio {apps} aplikacija, {integrations} od kojih imaju ugrađene integracije",
+          "appBadge": "Aplikacija",
+          "appSectionLabel": "Aplikacije za dodavanje na ploču ({count} odabrano)",
+          "scanning": "Skeniranje Dockera...",
+          "scanningDescription": "Traženje pokrenutih kontejnera na vašem sustavu"
+        }
+      },
+      "finish": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "goToBoard": "",
+          "createBoard": "",
+          "inviteUser": "",
+          "docs": ""
+        }
+      }
+    },
+    "backToStart": ""
+  },
   "user": {
     "title": "Korisnici",
     "name": "Korisnik",
@@ -3840,6 +3989,62 @@
           "message": "Imate nespremljene promjene, jeste li sigurni da želite otići?"
         }
       },
+      "oldImport": {
+        "label": "Uvoz iz homarr prije 1.0.0",
+        "notification": {
+          "success": {
+            "title": "Uvoz uspješan",
+            "message": "Ploča je uspješno uvezena"
+          },
+          "error": {
+            "title": "Uvoz nije uspio",
+            "message": "Ploču nije bilo moguće uvesti, provjerite zapise za više detalja"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "Odaberite JSON datoteku",
+            "invalidError": "Nevažeća konfiguracijska datoteka"
+          },
+          "apps": {
+            "label": "aplikacije",
+            "avoidDuplicates": {
+              "label": "Izbjegni duplikate",
+              "description": "Zanemaruje aplikacije kod kojih već postoji aplikacija s istim href-om"
+            },
+            "onlyImportApps": {
+              "label": "Uvezi samo aplikacije",
+              "description": "Dodaje samo aplikacije, ploču treba ručno rekreirati"
+            }
+          },
+          "name": {
+            "label": "Naziv ploče"
+          },
+          "screenSize": {
+            "label": "Veličina zaslona",
+            "description": "",
+            "option": {
+              "sm": "Mali",
+              "md": "Srednji",
+              "lg": "velika"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "Ponašanje bočne trake",
+            "description": "Bočne trake su uklonjene u 1.0, možete odabrati što bi se trebalo dogoditi sa stavkama unutar njih.",
+            "option": {
+              "lastSection": {
+                "label": "Posljednji odjeljak",
+                "description": "Bočna traka će biti prikazana ispod posljednjeg odjeljka"
+              },
+              "removeItems": {
+                "label": "Ukloni stavke",
+                "description": "Stavke unutar bočne trake bit će uklonjene"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "",
@@ -5449,6 +5654,9 @@
               },
               "newBoard": {
                 "label": "Stvori novu ploču"
+              },
+              "importBoard": {
+                "label": "Uvezi ploču"
               },
               "newApp": {
                 "label": "Stvori novu aplikaciju"

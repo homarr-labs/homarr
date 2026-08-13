@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Bienvenido a Homarr",
+        "subtitle": "Comencemos con la configuración de tu instancia de Homarr.",
+        "description": "Para empezar, por favor, selecciona cómo deseas configurar tu instancia de Homarr.",
+        "action": {
+          "scratch": "Empezar de cero",
+          "importOldmarr": "Importar desde una versión anterior a Homarr 1.0",
+          "restoreSqlite": "",
+          "restoreSqliteDescription": "",
+          "backToOptions": ""
+        }
+      },
+      "import": {
+        "title": "Importar datos",
+        "subtitle": "Puedes importar datos desde una instancia de Homarr existente.",
+        "dropzone": {
+          "title": "Arrastre el archivo ZIP aquí o haga clic para navegar",
+          "description": "El archivo ZIP subido será procesado y podrás seleccionar lo que quieres importar"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Modificar el archivo"
+          }
+        },
+        "importSettings": {
+          "title": "Importar ajustes",
+          "description": "Configurar el comportamiento de la importación"
+        },
+        "boardSelection": {
+          "title": "Se encontraron {count} tableros",
+          "description": "Elige todos los tableros con el tamaño que deseas para importar",
+          "action": {
+            "selectAll": "Seleccionar todo",
+            "unselectAll": "Deshacer selección"
+          }
+        },
+        "summary": {
+          "title": "Resumen de la importación",
+          "description": "En el resumen que se muestra a continuación puedes ver qué se importará",
+          "action": {
+            "import": "Confirmar la importación y continuar"
+          },
+          "entities": {
+            "apps": "Aplicaciones",
+            "boards": "Tableros",
+            "integrations": "Integraciones",
+            "credentialUsers": "Credenciales de usuarios"
+          }
+        },
+        "tokenModal": {
+          "title": "Introducir token de importación",
+          "field": {
+            "token": {
+              "label": "Token",
+              "description": "Introduzca el token de importación mostrado de su anterior instancia de Homarr"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Token no válido",
+              "message": "El token que has introducido no es válido"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Usuario administrador",
+        "subtitle": "Especifica las credenciales para tu usuario administrador.",
+        "notification": {
+          "success": {
+            "title": "Usuario creado",
+            "message": "El usuario se creó con éxito"
+          },
+          "error": {
+            "title": "Error al crear el usuario"
+          }
+        }
+      },
+      "group": {
+        "title": "Grupo externo",
+        "subtitle": "Especifique el grupo que debe ser usado para usuarios externos.",
+        "form": {
+          "name": {
+            "label": "Nombre del grupo",
+            "description": "El nombre debe coincidir con el grupo de administración del proveedor externo"
+          }
+        }
+      },
+      "settings": {
+        "title": "Ajustes",
+        "subtitle": "Configurar ajustes del servidor."
+      },
+      "integrations": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "continue": "",
+          "skip": ""
+        },
+        "configure": {
+          "progress": "",
+          "skip": "",
+          "finishing": "",
+          "error": {
+            "title": "",
+            "message": ""
+          },
+          "helpers": {
+            "tooltip": "",
+            "description": ""
+          }
+        },
+        "urlTemplate": {
+          "label": "",
+          "placeholder": "",
+          "hint": "",
+          "warning": "",
+          "preview": "",
+          "mode": {
+            "subdomain": "",
+            "hostPort": ""
+          }
+        },
+        "docker": {
+          "detected": "",
+          "detectedBreakdown": "",
+          "summary": "",
+          "appBadge": "",
+          "appSectionLabel": "",
+          "scanning": "",
+          "scanningDescription": ""
+        }
+      },
+      "finish": {
+        "title": "Finalizar la configuración",
+        "subtitle": "¡Estás listo para empezar!",
+        "description": "Has completado el proceso de configuración inicial con éxito. Puedes empezar a utilizar Homarr. Selecciona tu próxima tarea:",
+        "action": {
+          "goToBoard": "Ir al tablero {name}",
+          "createBoard": "Crea tu primer tablero",
+          "inviteUser": "Invita a otros usuarios",
+          "docs": "Consulta la documentación"
+        }
+      }
+    },
+    "backToStart": "Volver al inicio"
+  },
   "user": {
     "title": "Usuarios",
     "name": "Usuario",
@@ -3840,6 +3989,62 @@
           "message": "Tienes cambios sin guardar, ¿estás seguro de que quieres salir?"
         }
       },
+      "oldImport": {
+        "label": "Importar desde una versión anterior a Homarr 1.0",
+        "notification": {
+          "success": {
+            "title": "Importación con éxito",
+            "message": "El tablero fue importado con éxito"
+          },
+          "error": {
+            "title": "Error de importación",
+            "message": "El tablero no pudo ser importado, compruebe los registros para más detalles"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "Seleccionar archivo JSON",
+            "invalidError": "Archivo de configuración no válido"
+          },
+          "apps": {
+            "label": "Aplicaciones",
+            "avoidDuplicates": {
+              "label": "Evitar duplicados",
+              "description": "Ignora aplicaciones donde ya existe una aplicación con el mismo href"
+            },
+            "onlyImportApps": {
+              "label": "Importar solo aplicaciones",
+              "description": "Sólo añade las aplicaciones, el tablero debe ser recreado manualmente"
+            }
+          },
+          "name": {
+            "label": "Nombre del tablero"
+          },
+          "screenSize": {
+            "label": "Tamaño de pantalla",
+            "description": "En versiones anteriores a la 1.0 existían tres modos diferentes, por lo que podías elegir la cantidad de columnas para cada tamaño de pantalla.",
+            "option": {
+              "sm": "Pequeño",
+              "md": "Mediano",
+              "lg": "Grande"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "Comportamiento de la barra lateral",
+            "description": "Las barras laterales fueron eliminadas en la versión 1.0, puedes seleccionar lo que debería pasar con los elementos dentro de ellas.",
+            "option": {
+              "lastSection": {
+                "label": "Última sección",
+                "description": "La barra lateral se mostrará debajo de la última sección"
+              },
+              "removeItems": {
+                "label": "Eliminar los elementos",
+                "description": "Los elementos contenidos en la barra lateral serán eliminados"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "Crear aplicación en el momento",
@@ -5449,6 +5654,9 @@
               },
               "newBoard": {
                 "label": "Crear un nuevo tablero"
+              },
+              "importBoard": {
+                "label": "Importar un tablero"
               },
               "newApp": {
                 "label": "Crear una nueva aplicación"

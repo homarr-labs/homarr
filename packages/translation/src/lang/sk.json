@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Víta Vás Homár",
+        "subtitle": "Začnime s nastavením inštancie Homár.",
+        "description": "Ak chcete začať, vyberte, ako chcete nastaviť inštanciu Homár.",
+        "action": {
+          "scratch": "Začať odznova",
+          "importOldmarr": "Import z Homarr pred 1.0",
+          "restoreSqlite": "Obnoviť zo zálohy SQLite",
+          "restoreSqliteDescription": "Nahrajte úplnú zálohu databázy SQLite z predchádzajúcej inštancie Homarr. Tým sa obnovia všetky dosky, používatelia, aplikácie, integrácie a nastavenia.",
+          "backToOptions": "← Späť na možnosti nastavenia"
+        }
+      },
+      "import": {
+        "title": "Importovať dáta",
+        "subtitle": "Údaje môžete importovať z existujúcej inštancie aplikácie Homarr.",
+        "dropzone": {
+          "title": "Potiahnite súbor ZIP sem alebo kliknite na tlačidlo prehľadávania",
+          "description": "Nahraný súbor zip sa spracuje a vy si budete môcť vybrať, čo chcete importovať."
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Zmeniť súbor"
+          }
+        },
+        "importSettings": {
+          "title": "Import nastavení",
+          "description": "Nakonfigurujte správanie importu"
+        },
+        "boardSelection": {
+          "title": "Nájdených {count} dosiek",
+          "description": "Vyberte všetky dosky s veľkosťou, ktorú chcete importovať",
+          "action": {
+            "selectAll": "Vybrať všetko",
+            "unselectAll": "Zrušiť výber"
+          }
+        },
+        "summary": {
+          "title": "Súhrn importu",
+          "description": "V nasledujúcom prehľade môžete vidieť, čo sa bude importovať",
+          "action": {
+            "import": "Potvrďte import a pokračujte"
+          },
+          "entities": {
+            "apps": "Aplikácie",
+            "boards": "Dosky",
+            "integrations": "Integrácie",
+            "credentialUsers": "Používatelia poverení"
+          }
+        },
+        "tokenModal": {
+          "title": "Zadajte token importu",
+          "field": {
+            "token": {
+              "label": "Token",
+              "description": "Zadajte zobrazený token importu z predchádzajúcej inštancie homarr"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Neplatný token",
+              "message": "Zadaný token je neplatný"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Používateľ administrátora",
+        "subtitle": "Zadajte poverenia pre používateľa správcu.",
+        "notification": {
+          "success": {
+            "title": "Používateľ vytvorený",
+            "message": "Používateľ bol úspešne vytvorený"
+          },
+          "error": {
+            "title": "Vytvorenie užívateľa zlyhalo"
+          }
+        }
+      },
+      "group": {
+        "title": "Externá skupina",
+        "subtitle": "Zadajte skupinu, ktorá sa má použiť pre externých používateľov.",
+        "form": {
+          "name": {
+            "label": "Názov skupiny",
+            "description": "Názov sa musí zhodovať s administrátorskou skupinou externého poskytovateľa"
+          }
+        }
+      },
+      "settings": {
+        "title": "Nastavenia",
+        "subtitle": "Nakonfigurujte nastavenia servera."
+      },
+      "integrations": {
+        "title": "Integrácie",
+        "subtitle": "Vyberte služby, ktoré používate.",
+        "description": "Vyberte integrácie, ktoré chcete pripojiť. Automaticky nastavíme prístrojovú dosku so zodpovedajúcimi miniaplikáciami.",
+        "action": {
+          "continue": "Pokračovať",
+          "skip": "Teraz preskočiť"
+        },
+        "configure": {
+          "progress": "{current} z {total}",
+          "skip": "Preskočiť túto integráciu",
+          "finishing": "Nastavuje sa prístrojová doska...",
+          "error": {
+            "title": "Nastavenie zlyhalo",
+            "message": "Pri nastavovaní prístrojovej dosky sa niečo pokazilo. Skúste to znova."
+          },
+          "helpers": {
+            "tooltip": "Pomocníci URL",
+            "description": "Títo pomocníci sa snažia uhádnuť adresu URL pre vaše služby. Ak to nefunguje, jednoducho napíšte adresu ručne."
+          }
+        },
+        "urlTemplate": {
+          "label": "Základná adresa URL",
+          "placeholder": "homelab.local alebo 192.168.1.1",
+          "hint": "Zadajte svoju základnú doménu alebo IP, aby sa automaticky vyplnili adresy URL integrácií",
+          "warning": "Nastavením základnej adresy URL teraz sa automaticky vyplnia všetky adresy URL integrácií, čím ušetríte čas počas nastavovania",
+          "preview": "napr. {example}",
+          "mode": {
+            "subdomain": "Subdoména",
+            "hostPort": "Hostiteľ:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker rozpoznal {count} služieb",
+          "detectedBreakdown": "{integrations} integrácií · {apps} aplikácií",
+          "summary": "Homarr rozpoznal {apps} aplikácií, z ktorých {integrations} má vstavané integrácie",
+          "appBadge": "Aplikácia",
+          "appSectionLabel": "Aplikácie, ktoré sa pridajú na prístrojovú dosku ({count} vybratých)",
+          "scanning": "Skenuje sa Docker...",
+          "scanningDescription": "Hľadajú sa spustené kontajnery vo vašom systéme"
+        }
+      },
+      "finish": {
+        "title": "Dokončiť nastavenie",
+        "subtitle": "Ste pripravení vyraziť!",
+        "description": "Úspešne ste dokončili proces nastavenia. Teraz môžete začať používať Homarr. Vyberte ďalšiu akciu:",
+        "action": {
+          "goToBoard": "Prejdite na nástenku {name}",
+          "createBoard": "Vytvorte si svoju prvú nástenku",
+          "inviteUser": "Pozvite ďalších používateľov",
+          "docs": "Prečítajte si dokumentáciu"
+        }
+      }
+    },
+    "backToStart": "Späť na začiatok"
+  },
   "user": {
     "title": "Používatelia",
     "name": "Používateľ",
@@ -3840,6 +3989,62 @@
           "message": "Máte neuložené zmeny. Naozaj chcete odísť?"
         }
       },
+      "oldImport": {
+        "label": "Import z homarru pred 1.0.0",
+        "notification": {
+          "success": {
+            "title": "Import úspešný",
+            "message": "Doska bola úspešne importovaná"
+          },
+          "error": {
+            "title": "Import zlyhal.",
+            "message": "Dosku sa nepodarilo importovať, ďalšie podrobnosti nájdete v záznamoch"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "Vyberte súbor JSON",
+            "invalidError": "Neplatný konfiguračný súbor"
+          },
+          "apps": {
+            "label": "Aplikácie",
+            "avoidDuplicates": {
+              "label": "Vyhnite sa duplikátom",
+              "description": "Ignoruje aplikácie, v ktorých už existuje aplikácia s rovnakým href"
+            },
+            "onlyImportApps": {
+              "label": "Importujte iba aplikácie",
+              "description": "Pridá len aplikácie, dosku je potrebné vytvoriť znova ručne"
+            }
+          },
+          "name": {
+            "label": "Názov dosky"
+          },
+          "screenSize": {
+            "label": "Veľkosť obrazovky",
+            "description": "Vo verziách pred 1.0 existovali tri rôzne režimy, takže ste si mohli vybrať množstvo stĺpcov pre každú veľkosť obrazovky.",
+            "option": {
+              "sm": "Malé",
+              "md": "Stredné",
+              "lg": "Veľké"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "Správanie bočného panela",
+            "description": "Bočné panely boli odstránené vo verzii 1.0, môžete si vybrať, čo sa má stať s položkami v nich.",
+            "option": {
+              "lastSection": {
+                "label": "Posledná sekcia",
+                "description": "Pod poslednou sekciou sa zobrazí bočný panel"
+              },
+              "removeItems": {
+                "label": "Odstrániť položky",
+                "description": "Položky na bočnom paneli budú odstránené"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "Vytvorte aplikáciu za chodu",
@@ -5449,6 +5654,9 @@
               },
               "newBoard": {
                 "label": "Vytvorte novú dosku"
+              },
+              "importBoard": {
+                "label": "Importujte dosku"
               },
               "newApp": {
                 "label": "Vytvorte novú aplikáciu"

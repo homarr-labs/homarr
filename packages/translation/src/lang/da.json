@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Velkommen til Homarr",
+        "subtitle": "Lad os komme i gang med at konfigurere din Homarr instans.",
+        "description": "For at komme i gang, skal du vælge, hvordan du vil konfigurere din Homarr instans.",
+        "action": {
+          "scratch": "Start fra bunden",
+          "importOldmarr": "Importer fra Homarr før 1.0",
+          "restoreSqlite": "Gendan fra SQLite backup",
+          "restoreSqliteDescription": "Upload en fuld SQLite database backup fra en tidligere Homarr instans. Dette vil gendanne alle tavler, brugere, apps, integrationer og indstillinger.",
+          "backToOptions": "← Tilbage til opsætningsmuligheder"
+        }
+      },
+      "import": {
+        "title": "Importer data",
+        "subtitle": "Du kan importere data fra en eksisterende Homarr instans.",
+        "dropzone": {
+          "title": "Træk zip-filen her eller klik for at gennemse",
+          "description": "Den uploadede zip vil blive behandlet, og du vil kunne vælge, hvad du vil importere"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Ændre fil"
+          }
+        },
+        "importSettings": {
+          "title": "Importer indstillinger",
+          "description": "Konfigurer importadfærden"
+        },
+        "boardSelection": {
+          "title": "Fundet {count} tavler",
+          "description": "Vælg alle tavler med den størrelse, du vil importere",
+          "action": {
+            "selectAll": "Vælg alle",
+            "unselectAll": "Fravælg alle"
+          }
+        },
+        "summary": {
+          "title": "Importér sammendrag",
+          "description": "I nedenstående oversigt kan du se hvad der vil blive importeret",
+          "action": {
+            "import": "Bekræft import og fortsæt"
+          },
+          "entities": {
+            "apps": "Apps",
+            "boards": "Tavler",
+            "integrations": "Integrationer",
+            "credentialUsers": "Brugere, der er legitimerede"
+          }
+        },
+        "tokenModal": {
+          "title": "Angiv import token",
+          "field": {
+            "token": {
+              "label": "Token",
+              "description": "Indtast den viste import token fra din tidligere homarr instans"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Ugyldig token",
+              "message": "Den indtastede token er ugyldig"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Admin bruger",
+        "subtitle": "Angiv legitimationsoplysninger for din administrator bruger.",
+        "notification": {
+          "success": {
+            "title": "Bruger oprettet",
+            "message": "Brugeren blev oprettet"
+          },
+          "error": {
+            "title": "Brugeroprettelse mislykkedes"
+          }
+        }
+      },
+      "group": {
+        "title": "Ekstern gruppe",
+        "subtitle": "Angiv den gruppe, der skal bruges til eksterne brugere.",
+        "form": {
+          "name": {
+            "label": "Gruppenavn",
+            "description": "Navn skal matche admin gruppe fra ekstern udbyder"
+          }
+        }
+      },
+      "settings": {
+        "title": "Indstillinger",
+        "subtitle": "Konfigurer serverindstillinger."
+      },
+      "integrations": {
+        "title": "Integrationer",
+        "subtitle": "Vælg de tjenester, du bruger.",
+        "description": "Vælg de integrationer, du gerne vil forbinde. Vi konfigurerer dit dashboard med matchende widgets automatisk.",
+        "action": {
+          "continue": "Forsæt",
+          "skip": "Spring over for nu"
+        },
+        "configure": {
+          "progress": "{current} af {total}",
+          "skip": "Spring over denne integration",
+          "finishing": "Sætter dit dashboard op...",
+          "error": {
+            "title": "Opsætning mislykkedes",
+            "message": "Der opstod en fejl under opsætningen af dit dashboard. Prøv igen."
+          },
+          "helpers": {
+            "tooltip": "URL-hjælpere",
+            "description": "Disse hjælpere forsøger at gætte URL'en til dine tjenester. Hvis det ikke virker, skal du blot indtaste adressen manuelt."
+          }
+        },
+        "urlTemplate": {
+          "label": "Basis-URL",
+          "placeholder": "homelab.local eller 192.168.1.1",
+          "hint": "Indtast dit basisdomæne eller IP for automatisk at udfylde integrations-URL'er",
+          "warning": "Hvis du indstiller din basis-URL nu, udfyldes alle integrations-URL'er automatisk, hvilket sparer dig tid under opsætningen",
+          "preview": "f.eks. {example}",
+          "mode": {
+            "subdomain": "Subdomæne",
+            "hostPort": "Vært:Port"
+          }
+        },
+        "docker": {
+          "detected": "Docker opdagede {count} tjenester",
+          "detectedBreakdown": "{integrations} integrationer · {apps} apps",
+          "summary": "Homarr opdagede {apps} apps, {integrations} heraf har indbyggede integrationer",
+          "appBadge": "App",
+          "appSectionLabel": "Apps der skal tilføjes til dashboard ({count} valgt)",
+          "scanning": "Scanner Docker...",
+          "scanningDescription": "Leder efter kørende containere på dit system"
+        }
+      },
+      "finish": {
+        "title": "Afslut opsætningen",
+        "subtitle": "Du er klar!",
+        "description": "Du har fuldført opsætningsprocessen. Du kan nu begynde at bruge Homarr. Vælg din næste handling:",
+        "action": {
+          "goToBoard": "Gå til {name} tavle",
+          "createBoard": "Opret din første tavle",
+          "inviteUser": "Inviter andre brugere",
+          "docs": "Læs dokumentationen"
+        }
+      }
+    },
+    "backToStart": "Tilbage til start"
+  },
   "user": {
     "title": "Brugere",
     "name": "Bruger",
@@ -3840,6 +3989,62 @@
           "message": "Du har ændringer, der ikke er gemt. Er du sikker på, at du vil forlade siden?"
         }
       },
+      "oldImport": {
+        "label": "Importer fra homarr før 1.0.0",
+        "notification": {
+          "success": {
+            "title": "Import udført",
+            "message": "Tavlen blev importeret"
+          },
+          "error": {
+            "title": "Import mislykkedes",
+            "message": "Tavlen kunne ikke importeres, tjek logfilerne for yderligere detaljer"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "Vælg JSON fil",
+            "invalidError": "Ugyldig konfigurationsfil"
+          },
+          "apps": {
+            "label": "Apps",
+            "avoidDuplicates": {
+              "label": "Undgå dubletter",
+              "description": "Ignorerer apps, hvor en app med samme href allerede findes"
+            },
+            "onlyImportApps": {
+              "label": "Importér kun apps",
+              "description": "Kun tilføjer apps, tavlen skal genskabes manuelt"
+            }
+          },
+          "name": {
+            "label": "Navn på tavle"
+          },
+          "screenSize": {
+            "label": "Skærmstørrelse",
+            "description": "I versioner før 1.0 tre forskellige tilstande eksisterede, så du var i stand til at vælge mængden af kolonner for hver skærmstørrelse.",
+            "option": {
+              "sm": "Lille",
+              "md": "Mellem",
+              "lg": "Stor"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "Sidebar opførsel",
+            "description": "Sidebars blev fjernet i 1.0, kan du vælge, hvad der skal ske med elementerne fra dem.",
+            "option": {
+              "lastSection": {
+                "label": "Sidste afsnit",
+                "description": "Sidebjælken vil blive vist under sidste sektion"
+              },
+              "removeItems": {
+                "label": "Fjern elementer",
+                "description": "Elementer i sidepanelet vil blive fjernet"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "Opret app i farten",
@@ -5449,6 +5654,9 @@
               },
               "newBoard": {
                 "label": "Opret en ny tavle"
+              },
+              "importBoard": {
+                "label": "Importer en tavle"
               },
               "newApp": {
                 "label": "Oprette en ny app"

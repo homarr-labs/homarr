@@ -8,6 +8,8 @@ import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { handleTransactionsAsync, eq, inArray, like, or } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
@@ -49,6 +51,8 @@ import { createTRPCRouter, onboardingClaimedProcedure, onboardingProcedure, publ
 import { MissingSecretError, testConnectionAsync } from "../integration/integration-test-connection";
 import { getOnboardingOrFallbackAsync, nextOnboardingStepAsync } from "./onboard-queries";
 import { probeRuntimeCapabilitiesAsync } from "./capability-probes";
+
+const logger = createLogger({ module: "onboardRouter" });
 
 interface PortInfo {
   IP?: string;
@@ -159,7 +163,7 @@ export const onboardRouter = createTRPCRouter({
     const empty = { integrations: [] as DiscoveredIntegration[], apps: [] as DiscoveredApp[] };
 
     try {
-      const { listDiscoveredContainersAsync, dockerLabels } = await import("@homarr/docker");
+      const { createDockerSourceId, listDiscoveredContainersAsync, dockerLabels } = await import("@homarr/docker");
       const discovery = await listDiscoveredContainersAsync();
       const successfulHosts = discovery.hosts.filter((host) => host.status === "success");
       const unavailableHosts = discovery.hosts.filter((host) => host.status === "unavailable");
@@ -169,14 +173,15 @@ export const onboardRouter = createTRPCRouter({
           .map((container) => ({ ...container, host: hostResult.host })),
       );
       const labeledContainerKeys = new Set(
-        discovery.services.map((service) => `${service.host}:${service.containerId}`),
+        discovery.services.map((service) => createDockerSourceId(service.host, service.containerId)),
       );
       const imageCandidates = containers.filter(
-        (container) => !labeledContainerKeys.has(`${container.host}:${container.Id}`),
+        (container) => !labeledContainerKeys.has(createDockerSourceId(container.host, container.Id)),
       );
-      const likeQueries = imageCandidates.map((container) =>
-        like(icons.name, `%${extractContainerImageName(container.Image)}%`),
-      );
+      const candidateImageNames = [
+        ...new Set(imageCandidates.map((container) => extractContainerImageName(container.Image)).filter(Boolean)),
+      ].slice(0, 64);
+      const likeQueries = candidateImageNames.map((imageName) => like(icons.name, `%${imageName}%`));
       const dbIcons = likeQueries.length > 0 ? await ctx.db.query.icons.findMany({ where: or(...likeQueries) }) : [];
       const cdnIconUrl = (slug: string) =>
         `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/${slug}.svg`;
@@ -237,7 +242,7 @@ export const onboardRouter = createTRPCRouter({
         const iconUrl = dbIcon ?? cdnIconUrl(imageName.toLowerCase());
         const { url: suggestedUrl, publishedPort } = buildSuggestedUrl(container.Ports, container.host);
         const kind = matchIntegrationKindFromContainer({ image: container.Image, name: containerName });
-        const sourceId = `docker:${container.host}:${container.Id}`;
+        const sourceId = createDockerSourceId(container.host, container.Id);
 
         if (kind) {
           discoveredIntegrations.push({
@@ -281,6 +286,7 @@ export const onboardRouter = createTRPCRouter({
 
       return { status, hosts, integrations: discoveredIntegrations, apps: discoveredApps };
     } catch (error) {
+      logger.warn(new ErrorWithMetadata("Docker discovery failed during onboarding", {}, { cause: error }));
       const reason = error instanceof Error ? error.message : "Docker discovery failed";
       return {
         status: "unavailable" as const,
@@ -306,6 +312,9 @@ export const onboardRouter = createTRPCRouter({
         : boardList.length === 1
           ? boardList[0]
           : undefined;
+      if (input.board.id !== undefined && !existingTargetBoard) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "The selected board no longer exists." });
+      }
       const pendingBoardRow =
         boardList.length === 0 && input.board.id === undefined
           ? {
@@ -701,6 +710,48 @@ export const onboardRouter = createTRPCRouter({
         return id;
       };
 
+      const getDockerWidgetPlan = (service: (typeof selectedDockerSources)[number]) => {
+        const widgetKind = service.widgetKind;
+        if (!widgetKind || !input.selectedWidgetKinds.includes(widgetKind)) return null;
+        const integration = service.integrationKind
+          ? selectedIntegrations.find(
+              (candidate) => candidate.id === stableOnboardingId("integration", service.sourceId),
+            )
+          : undefined;
+        const issue = getWidgetIntegrationIssue(widgetKind, integration ? [integration.kind] : []);
+        if (issue) {
+          if (issue.code !== "integration-limit") {
+            skippedWidgets.push({
+              sourceId: service.sourceId,
+              widgetKind,
+              code: issue.code,
+              integrationKind: integration?.kind,
+            });
+          }
+          return null;
+        }
+        const config = getDefaultWidgetConfig(widgetKind);
+        return config.skip ? null : { widgetKind, integration, config };
+      };
+
+      const linkExistingDockerWidget = (
+        widgetKind: WidgetKind,
+        integration: (typeof selectedIntegrations)[number] | undefined,
+      ) => {
+        const existing = existingItemsByKind.get(widgetKind);
+        if (!existing) return false;
+        if (!integration) return true;
+        const linkedIds = new Set([
+          ...existing.integrations.map((row) => row.integrationId),
+          ...newIntegrationItems.filter((row) => row.itemId === existing.id).map((row) => row.integrationId),
+        ]);
+        if (linkedIds.has(integration.id)) return true;
+        const limit = widgetIntegrationLimits[widgetKind] ?? Number.POSITIVE_INFINITY;
+        if (linkedIds.size >= limit) return false;
+        newIntegrationItems.push({ itemId: existing.id, integrationId: integration.id });
+        return true;
+      };
+
       const selectedIntegrationIdsByWidget = new Map<WidgetKind, string[]>();
       const labeledIntegrationSourceById = new Map(
         selectedDockerSources
@@ -780,48 +831,15 @@ export const onboardRouter = createTRPCRouter({
         if (app && !existingAppIds.has(app.id)) {
           placeNewItem("app", SuperJSON.stringify({ appId: app.id, openInNewTab: true, showTitle: true }), 1, 1);
         }
-        if (!service.widgetKind || !input.selectedWidgetKinds.includes(service.widgetKind)) continue;
-        const integration = service.integrationKind
-          ? selectedIntegrations.find(
-              (candidate) => candidate.id === stableOnboardingId("integration", service.sourceId),
-            )
-          : undefined;
-        const issue = getWidgetIntegrationIssue(service.widgetKind, integration ? [integration.kind] : []);
-        if (issue) {
-          if (issue.code !== "integration-limit") {
-            skippedWidgets.push({
-              sourceId: service.sourceId,
-              widgetKind: service.widgetKind,
-              code: issue.code,
-              integrationKind: integration?.kind,
-            });
-          }
-          continue;
-        }
-        const existing = existingItemsByKind.get(service.widgetKind);
-        if (existing && integration) {
-          const linkedIds = new Set([
-            ...existing.integrations.map((row) => row.integrationId),
-            ...newIntegrationItems.filter((row) => row.itemId === existing.id).map((row) => row.integrationId),
-          ]);
-          const limit = widgetIntegrationLimits[service.widgetKind] ?? Number.POSITIVE_INFINITY;
-          if (!linkedIds.has(integration.id) && linkedIds.size < limit) {
-            newIntegrationItems.push({ itemId: existing.id, integrationId: integration.id });
-            continue;
-          }
-          if (linkedIds.has(integration.id)) continue;
-        } else if (existing) {
-          continue;
-        }
-        const config = getDefaultWidgetConfig(service.widgetKind);
-        if (config.skip) continue;
+        const plan = getDockerWidgetPlan(service);
+        if (!plan || linkExistingDockerWidget(plan.widgetKind, plan.integration)) continue;
         const itemId = placeNewItem(
-          service.widgetKind,
-          config.options ? SuperJSON.stringify(config.options) : emptySuperJSON,
-          config.width,
-          config.height,
+          plan.widgetKind,
+          plan.config.options ? SuperJSON.stringify(plan.config.options) : emptySuperJSON,
+          plan.config.width,
+          plan.config.height,
         );
-        if (integration) newIntegrationItems.push({ itemId, integrationId: integration.id });
+        if (plan.integration) newIntegrationItems.push({ itemId, integrationId: plan.integration.id });
       }
 
       const groupedSourcesByName = Map.groupBy(
@@ -857,49 +875,14 @@ export const onboardRouter = createTRPCRouter({
             });
           }
 
-          if (!service.widgetKind || !input.selectedWidgetKinds.includes(service.widgetKind)) continue;
-          const integration = service.integrationKind
-            ? selectedIntegrations.find(
-                (candidate) => candidate.id === stableOnboardingId("integration", service.sourceId),
-              )
-            : undefined;
-          const issue = getWidgetIntegrationIssue(service.widgetKind, integration ? [integration.kind] : []);
-          if (issue) {
-            if (issue.code !== "integration-limit") {
-              skippedWidgets.push({
-                sourceId: service.sourceId,
-                widgetKind: service.widgetKind,
-                code: issue.code,
-                integrationKind: integration?.kind,
-              });
-            }
-            continue;
-          }
-
-          const existing = existingItemsByKind.get(service.widgetKind);
-          if (existing && integration) {
-            const linkedIds = new Set([
-              ...existing.integrations.map((row) => row.integrationId),
-              ...newIntegrationItems.filter((row) => row.itemId === existing.id).map((row) => row.integrationId),
-            ]);
-            const limit = widgetIntegrationLimits[service.widgetKind] ?? Number.POSITIVE_INFINITY;
-            if (!linkedIds.has(integration.id) && linkedIds.size < limit) {
-              newIntegrationItems.push({ itemId: existing.id, integrationId: integration.id });
-              continue;
-            }
-            if (linkedIds.has(integration.id)) continue;
-          } else if (existing) {
-            continue;
-          }
-
-          const config = getDefaultWidgetConfig(service.widgetKind);
-          if (config.skip) continue;
+          const plan = getDockerWidgetPlan(service);
+          if (!plan || linkExistingDockerWidget(plan.widgetKind, plan.integration)) continue;
           groupedItemPlans.push({
-            kind: service.widgetKind,
-            options: config.options ? SuperJSON.stringify(config.options) : emptySuperJSON,
-            width: config.width,
-            height: config.height,
-            integrationId: integration?.id,
+            kind: plan.widgetKind,
+            options: plan.config.options ? SuperJSON.stringify(plan.config.options) : emptySuperJSON,
+            width: plan.config.width,
+            height: plan.config.height,
+            integrationId: plan.integration?.id,
           });
         }
         if (groupedItemPlans.length === 0) continue;
@@ -982,10 +965,12 @@ export const onboardRouter = createTRPCRouter({
         }
       }
 
-      const currentAppearance = await getServerSettingByKeyAsync(ctx.db, "appearance");
-      const currentCulture = await getServerSettingByKeyAsync(ctx.db, "culture");
-      const currentAnalytics = await getServerSettingByKeyAsync(ctx.db, "analytics");
-      const currentBoardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
+      const [currentAppearance, currentCulture, currentAnalytics, currentBoardSettings] = await Promise.all([
+        getServerSettingByKeyAsync(ctx.db, "appearance"),
+        getServerSettingByKeyAsync(ctx.db, "culture"),
+        getServerSettingByKeyAsync(ctx.db, "analytics"),
+        getServerSettingByKeyAsync(ctx.db, "board"),
+      ]);
       const settingValues = {
         appearance: SuperJSON.stringify({ ...currentAppearance, defaultColorScheme: input.server.defaultColorScheme }),
         culture: SuperJSON.stringify({ ...currentCulture, defaultLocale: input.server.defaultLocale }),

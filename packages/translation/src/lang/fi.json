@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Tervetuloa Homarriin",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "scratch": "",
+          "importOldmarr": "",
+          "restoreSqlite": "Palauta SQLite-varmuuskopiosta",
+          "restoreSqliteDescription": "Lataa täysi SQLite-tietokantavarmuuskopio aiemmasta Homarr-instanssista. Tämä palauttaa kaikki paneelit, käyttäjät, sovellukset, integraatiot ja asetukset.",
+          "backToOptions": "← Takaisin asennusvaihtoehtoihin"
+        }
+      },
+      "import": {
+        "title": "",
+        "subtitle": "",
+        "dropzone": {
+          "title": "",
+          "description": ""
+        },
+        "fileInfo": {
+          "action": {
+            "change": ""
+          }
+        },
+        "importSettings": {
+          "title": "",
+          "description": ""
+        },
+        "boardSelection": {
+          "title": "",
+          "description": "",
+          "action": {
+            "selectAll": "Valitse kaikki",
+            "unselectAll": "Tyhjennä valinnat"
+          }
+        },
+        "summary": {
+          "title": "",
+          "description": "",
+          "action": {
+            "import": ""
+          },
+          "entities": {
+            "apps": "",
+            "boards": "",
+            "integrations": "Integraatiot",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "",
+          "field": {
+            "token": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Pääkäyttäjä",
+        "subtitle": "Määritä pääkäyttäjäsi kirjautumistiedot.",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "Käyttäjän luonti epäonnistui"
+          }
+        }
+      },
+      "group": {
+        "title": "Ulkoinen ryhmä",
+        "subtitle": "Määritä ulkoisille käyttäjille käytettävä ryhmä.",
+        "form": {
+          "name": {
+            "label": "Ryhmän nimi",
+            "description": "Nimen tulee vastata ulkoisen palveluntarjoajan pääkäyttäjäryhmää"
+          }
+        }
+      },
+      "settings": {
+        "title": "Asetukset",
+        "subtitle": "Määritä palvelinasetukset."
+      },
+      "integrations": {
+        "title": "Integraatiot",
+        "subtitle": "Valitse käyttämäsi palvelut.",
+        "description": "Valitse integraatiot, jotka haluat yhdistää. Kojelaudallaesi lisätään automaattisesti yhteensopivia widgettejä.",
+        "action": {
+          "continue": "Jatka",
+          "skip": "Ohita toistaiseksi"
+        },
+        "configure": {
+          "progress": "{current}/{total}",
+          "skip": "Ohita tämä integraatio",
+          "finishing": "Kojelautaasi määritetään...",
+          "error": {
+            "title": "Määritys epäonnistui",
+            "message": "Jotain meni pieleen kojelautaasi määritettäessä. Yritä uudelleen."
+          },
+          "helpers": {
+            "tooltip": "URL-apurit",
+            "description": "Nämä apurit pyrkivät arvaamaan palveluidesi URL-osoitteet. Jos tämä ei toimi, kirjoita osoite manuaalisesti."
+          }
+        },
+        "urlTemplate": {
+          "label": "Perus-URL",
+          "placeholder": "homelab.local tai 192.168.1.1",
+          "hint": "Syötä perusverkkotunnuksesi tai IP-osoite täyttääksesi integraation URL-osoitteet automaattisesti",
+          "warning": "Asettamalla perusosoitteen nyt, voidaan integraatioiden URL-osoitteet täyttää automaattisesti, joka nopeuttaa käyttöönottoa",
+          "preview": "esim. {example}",
+          "mode": {
+            "subdomain": "Aliverkkotunnus",
+            "hostPort": "Isäntä:Portti"
+          }
+        },
+        "docker": {
+          "detected": "Docker löysi {count} palvelua",
+          "detectedBreakdown": "{integrations} integraatiota · {apps} sovellusta",
+          "summary": "Homarr havaitse {apps} sovellusta, joista {integrations} löytyy sisäänrakennettu integraatio",
+          "appBadge": "Sovellus",
+          "appSectionLabel": "Ohjauspaneeliin lisättävät sovellukset ({count} valittu)",
+          "scanning": "Dockeria tutkitaan...",
+          "scanningDescription": "Tunnistetaan järjestelmässäsi suoritettavia kontteja"
+        }
+      },
+      "finish": {
+        "title": "Viimeistele määritys",
+        "subtitle": "Olet valmis aloittamaan!",
+        "description": "Olet suorittanut käyttöönoton onnistuneesti ja voit nyt aloittaa Homarrin käytön. Valitse seuraava toimenpiteesi:",
+        "action": {
+          "goToBoard": "Avaa paneeli {name}",
+          "createBoard": "Luo ensimmäinen paneelisi",
+          "inviteUser": "Kutsu muita käyttäjiä",
+          "docs": "Lue ohjeita"
+        }
+      }
+    },
+    "backToStart": "Palaa alkuun"
+  },
   "user": {
     "title": "Käyttäjät",
     "name": "Käyttäjä",
@@ -3840,6 +3989,62 @@
           "message": "Muutoksia ei ole tallennettu. Haluatko varmasti poistua?"
         }
       },
+      "oldImport": {
+        "label": "Tuo Homarr-versiota 1.0.0 vanhemmasta",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "form": {
+          "file": {
+            "label": "",
+            "invalidError": ""
+          },
+          "apps": {
+            "label": "",
+            "avoidDuplicates": {
+              "label": "",
+              "description": ""
+            },
+            "onlyImportApps": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "name": {
+            "label": ""
+          },
+          "screenSize": {
+            "label": "",
+            "description": "",
+            "option": {
+              "sm": "",
+              "md": "",
+              "lg": ""
+            }
+          },
+          "sidebarBehavior": {
+            "label": "",
+            "description": "",
+            "option": {
+              "lastSection": {
+                "label": "",
+                "description": ""
+              },
+              "removeItems": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "Luo sovellus lennossa",
@@ -5449,6 +5654,9 @@
               },
               "newBoard": {
                 "label": "Luo uusi paneeli"
+              },
+              "importBoard": {
+                "label": "Tuo paneeli"
               },
               "newApp": {
                 "label": "Luo uusi sovellus"

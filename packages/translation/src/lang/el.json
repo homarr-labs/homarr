@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Καλώς ήρθατε στο Homarr",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "scratch": "",
+          "importOldmarr": "",
+          "restoreSqlite": "Επαναφορά από αντίγραφο ασφαλείας SQLite",
+          "restoreSqliteDescription": "Μεταφορτώστε ένα πλήρες αντίγραφο ασφαλείας βάσης δεδομένων SQLite από προηγούμενη εγκατάσταση Homarr. Αυτό θα επαναφέρει όλους τους πίνακες, χρήστες, εφαρμογές, ενσωματώσεις και ρυθμίσεις.",
+          "backToOptions": "← Επιστροφή στις επιλογές ρύθμισης"
+        }
+      },
+      "import": {
+        "title": "Εισαγωγή δεδομένων",
+        "subtitle": "",
+        "dropzone": {
+          "title": "",
+          "description": ""
+        },
+        "fileInfo": {
+          "action": {
+            "change": ""
+          }
+        },
+        "importSettings": {
+          "title": "Εισαγωγή ρυθμίσεων",
+          "description": ""
+        },
+        "boardSelection": {
+          "title": "",
+          "description": "",
+          "action": {
+            "selectAll": "Επιλογή όλων",
+            "unselectAll": "Αποεπιλογή όλων"
+          }
+        },
+        "summary": {
+          "title": "",
+          "description": "",
+          "action": {
+            "import": ""
+          },
+          "entities": {
+            "apps": "Εφαρμογές",
+            "boards": "Πίνακες",
+            "integrations": "",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "",
+          "field": {
+            "token": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Διαχειριστής",
+        "subtitle": "",
+        "notification": {
+          "success": {
+            "title": "Ο Χρήστης δημιουργήθηκε",
+            "message": ""
+          },
+          "error": {
+            "title": ""
+          }
+        }
+      },
+      "group": {
+        "title": "Εξωτερική ομάδα",
+        "subtitle": "",
+        "form": {
+          "name": {
+            "label": "Όνομα ομάδας",
+            "description": ""
+          }
+        }
+      },
+      "settings": {
+        "title": "Ρυθμίσεις",
+        "subtitle": "Διαμόρφωση ρυθμίσεων διακομιστή."
+      },
+      "integrations": {
+        "title": "Ενσωματώσεις",
+        "subtitle": "Επιλέξτε τις υπηρεσίες που χρησιμοποιείτε.",
+        "description": "Επιλέξτε τις ενσωματώσεις που θέλετε να συνδέσετε. Θα ρυθμίσουμε τον πίνακα σας με αντίστοιχα widgets αυτόματα.",
+        "action": {
+          "continue": "Συνέχεια",
+          "skip": "Παράλειψη για τώρα"
+        },
+        "configure": {
+          "progress": "{current} από {total}",
+          "skip": "Παράλειψη αυτής της ενσωμάτωσης",
+          "finishing": "Ρύθμιση του πίνακα σας...",
+          "error": {
+            "title": "Αποτυχία ρύθμισης",
+            "message": "Κάτι πήγε στραβά κατά τη ρύθμιση του πίνακα σας. Παρακαλώ προσπαθήστε ξανά."
+          },
+          "helpers": {
+            "tooltip": "Βοηθοί URL",
+            "description": "Αυτοί οι βοηθοί προσπαθούν να μαντέψουν το URL για τις υπηρεσίες σας. Αν δεν λειτουργήσει, απλά πληκτρολογήστε τη διεύθυνση χειροκίνητα."
+          }
+        },
+        "urlTemplate": {
+          "label": "Βασικό URL",
+          "placeholder": "homelab.local ή 192.168.1.1",
+          "hint": "Εισαγάγετε το βασικό domain ή IP σας για αυτόματη συμπλήρωση των URL ενσωμάτωσης",
+          "warning": "Η ρύθμιση του βασικού URL τώρα θα συμπληρώσει αυτόματα όλα τα URL ενσωμάτωσης, εξοικονομώντας χρόνο κατά τη ρύθμιση",
+          "preview": "π.χ. {example}",
+          "mode": {
+            "subdomain": "Υποτομέας",
+            "hostPort": "Διακομιστής:Θύρα"
+          }
+        },
+        "docker": {
+          "detected": "Ο Docker εντόπισε {count} υπηρεσίες",
+          "detectedBreakdown": "{integrations} ενσωματώσεις · {apps} εφαρμογές",
+          "summary": "Το Homarr εντόπισε {apps} εφαρμογές, {integrations} από τις οποίες έχουν ενσωματωμένες ενσωματώσεις",
+          "appBadge": "Εφαρμογή",
+          "appSectionLabel": "Εφαρμογές προς προσθήκη στον πίνακα ({count} επιλεγμένες)",
+          "scanning": "Σάρωση Docker...",
+          "scanningDescription": "Αναζήτηση εκτελούμενων containers στο σύστημά σας"
+        }
+      },
+      "finish": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "goToBoard": "",
+          "createBoard": "",
+          "inviteUser": "",
+          "docs": "Διαβάστε την τεκμηρίωση"
+        }
+      }
+    },
+    "backToStart": ""
+  },
   "user": {
     "title": "Χρήστες",
     "name": "Χρήστης",
@@ -3840,6 +3989,62 @@
           "message": ""
         }
       },
+      "oldImport": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "form": {
+          "file": {
+            "label": "",
+            "invalidError": ""
+          },
+          "apps": {
+            "label": "Εφαρμογές",
+            "avoidDuplicates": {
+              "label": "",
+              "description": ""
+            },
+            "onlyImportApps": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "name": {
+            "label": ""
+          },
+          "screenSize": {
+            "label": "",
+            "description": "",
+            "option": {
+              "sm": "Μικρό",
+              "md": "Μεσαίο",
+              "lg": "Μεγάλο"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "",
+            "description": "",
+            "option": {
+              "lastSection": {
+                "label": "",
+                "description": ""
+              },
+              "removeItems": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "",
@@ -5448,6 +5653,9 @@
                 }
               },
               "newBoard": {
+                "label": ""
+              },
+              "importBoard": {
                 "label": ""
               },
               "newApp": {

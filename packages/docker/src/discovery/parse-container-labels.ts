@@ -31,6 +31,9 @@ const parseIntegrationKind = (value: string | undefined): IntegrationKind | unde
 const parseWidgetKind = (value: string | undefined): WidgetKind | undefined =>
   value && widgetKindSet.has(value) ? (value as WidgetKind) : undefined;
 
+export const createDockerSourceId = (host: string, externalId: string) =>
+  `docker:${encodeURIComponent(host)}:${encodeURIComponent(externalId)}`;
+
 export const parseContainerLabels = (
   container: Pick<ContainerInfo, "Id" | "Labels">,
   host: string,
@@ -48,7 +51,7 @@ export const parseContainerLabels = (
 
   const externalId = readLabel(labels, dockerLabels.id) ?? container.Id;
   return {
-    sourceId: `docker:${host}:${externalId}`,
+    sourceId: createDockerSourceId(host, externalId),
     containerId: container.Id,
     host,
     group,

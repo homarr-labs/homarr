@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "歡迎使用 Homarr",
+        "subtitle": "讓我們開始設定 Homarr",
+        "description": "請選擇設定 Homarr 方式",
+        "action": {
+          "scratch": "重新開始",
+          "importOldmarr": "從 1.0 版本的 Homarr 匯入設定",
+          "restoreSqlite": "從 SQLite 備份還原",
+          "restoreSqliteDescription": "上傳先前 Homarr 執行個體的完整 SQLite 資料庫備份。這將還原所有面板、使用者、應用程式、整合和設定。",
+          "backToOptions": "← 返回設定選項"
+        }
+      },
+      "import": {
+        "title": "匯入數據",
+        "subtitle": "從現有的 Homarr 匯入數據",
+        "dropzone": {
+          "title": "將 ZIP 壓縮檔拖曳至此處或點擊瀏覽",
+          "description": "上傳的壓縮檔將被處理，您可以選擇要匯入的內容"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "更改檔案"
+          }
+        },
+        "importSettings": {
+          "title": "匯入設定",
+          "description": "設定匯入方式"
+        },
+        "boardSelection": {
+          "title": "找到 {count} 個面板",
+          "description": "選擇要匯入的面板",
+          "action": {
+            "selectAll": "選擇全部",
+            "unselectAll": "取消全選"
+          }
+        },
+        "summary": {
+          "title": "匯入概況",
+          "description": "於下方的概況中，可以看到即將匯入的內容",
+          "action": {
+            "import": "確認匯入並繼續"
+          },
+          "entities": {
+            "apps": "應用程式",
+            "boards": "面板",
+            "integrations": "集成",
+            "credentialUsers": "使用者憑證"
+          }
+        },
+        "tokenModal": {
+          "title": "輸入匯入密鑰",
+          "field": {
+            "token": {
+              "label": "密鑰",
+              "description": "輸入之前 Homarr 中顯示導入之密鑰匙"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "無效密鑰",
+              "message": "輸入的密鑰無效"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "管理員",
+        "subtitle": "指定管理員的使用者憑證",
+        "notification": {
+          "success": {
+            "title": "創建使用者",
+            "message": "使用者已成功創建"
+          },
+          "error": {
+            "title": "使用者創建失敗"
+          }
+        }
+      },
+      "group": {
+        "title": "外部使用者",
+        "subtitle": "指定用於外部使用者的用戶組",
+        "form": {
+          "name": {
+            "label": "用戶組名稱",
+            "description": "名稱必須與外部提供者的管理員匹配"
+          }
+        }
+      },
+      "settings": {
+        "title": "設定",
+        "subtitle": "設定伺服器的設定"
+      },
+      "integrations": {
+        "title": "整合",
+        "subtitle": "選取你使用的服務。",
+        "description": "選擇你要連接的整合。我們將會自動為你的儀表板設定相符的小工具。",
+        "action": {
+          "continue": "繼續",
+          "skip": "暫時略過"
+        },
+        "configure": {
+          "progress": "{current}/{total}",
+          "skip": "略過此整合",
+          "finishing": "正在設定你的儀表板……",
+          "error": {
+            "title": "設定失敗",
+            "message": "設定儀表板時發生錯誤。請再試一次。"
+          },
+          "helpers": {
+            "tooltip": "URL 幫手",
+            "description": "這些幫手會嘗試猜測你的服務 URL。如果無效，請手動輸入位址。"
+          }
+        },
+        "urlTemplate": {
+          "label": "基礎 URL",
+          "placeholder": "homelab.local 或 192.168.1.1",
+          "hint": "輸入你的基礎網域或 IP 以自動填寫整合 URL",
+          "warning": "現在設定你的基礎 URL 將會自動填寫所有整合 URL，在設定過程中節省你的時間",
+          "preview": "例如 {example}",
+          "mode": {
+            "subdomain": "子網域",
+            "hostPort": "主機：連接埠"
+          }
+        },
+        "docker": {
+          "detected": "Docker 偵測到 {count} 個服務",
+          "detectedBreakdown": "{integrations} 個整合 · {apps} 個應用程式",
+          "summary": "Homarr 偵測到 {apps} 個應用程式，其中 {integrations} 個具有內建整合",
+          "appBadge": "應用程式",
+          "appSectionLabel": "要新增至儀表板的應用程式（已選取 {count} 個）",
+          "scanning": "正在掃描 Docker……",
+          "scanningDescription": "正在尋找系統上執行的容器"
+        }
+      },
+      "finish": {
+        "title": "設定完成",
+        "subtitle": "已設定完成",
+        "description": "已成功完成設定，開始使用 Homarr，請選擇下一步操作",
+        "action": {
+          "goToBoard": "進入 {name} 面板",
+          "createBoard": "創建第一個面板",
+          "inviteUser": "邀請其他使用者",
+          "docs": "閱讀說明書"
+        }
+      }
+    },
+    "backToStart": "返回起點"
+  },
   "user": {
     "title": "使用者",
     "name": "使用者",
@@ -3840,6 +3989,62 @@
           "message": "尚未保存編輯，確認要離開嗎？"
         }
       },
+      "oldImport": {
+        "label": "從 1.0.0 之前的 Homarr 匯入",
+        "notification": {
+          "success": {
+            "title": "匯入成功",
+            "message": "面板匯入成功"
+          },
+          "error": {
+            "title": "匯入失敗",
+            "message": "無法匯入面板，請查閱 Logs 以取得更多詳情"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "選擇 JSON 檔案",
+            "invalidError": "無效的設定檔案"
+          },
+          "apps": {
+            "label": "應用程式",
+            "avoidDuplicates": {
+              "label": "避免重複",
+              "description": "忽略已存在具有相同鏈結的應用程式"
+            },
+            "onlyImportApps": {
+              "label": "僅匯入應用程式",
+              "description": "僅新增應用程式，面板需要手動重新創建"
+            }
+          },
+          "name": {
+            "label": "面板名稱"
+          },
+          "screenSize": {
+            "label": "螢幕大小",
+            "description": "在 1.0 之前的版本中，有三種不同的模式，因此可以根據螢幕大小選擇列的數量",
+            "option": {
+              "sm": "小號",
+              "md": "中等",
+              "lg": "大號"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "側邊欄行為",
+            "description": "側邊欄在 1.0 中被移除了，你可以選擇該怎麼處理其中的項目",
+            "option": {
+              "lastSection": {
+                "label": "最後區段",
+                "description": "側邊欄將顯示在最後區段的下方"
+              },
+              "removeItems": {
+                "label": "移除項目",
+                "description": "側邊欄中包含的項目將被移除"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "快速建立應用程式",
@@ -5449,6 +5654,9 @@
               },
               "newBoard": {
                 "label": "創建新面板"
+              },
+              "importBoard": {
+                "label": "匯入面板"
               },
               "newApp": {
                 "label": "創建新應用程式"

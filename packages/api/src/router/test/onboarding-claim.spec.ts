@@ -77,6 +77,8 @@ describe("onboarding claim", () => {
     expect(
       getOnboardingClaimTokenFromCookieHeader(`theme=dark; ${onboardingClaimCookieName}=secret-token; other=x`),
     ).toBe("secret-token");
+    expect(getOnboardingClaimTokenFromCookieHeader(`${onboardingClaimCookieName}=secret%2Dtoken`)).toBe("secret-token");
+    expect(getOnboardingClaimTokenFromCookieHeader(`${onboardingClaimCookieName}=%E0%A4%A`)).toBeUndefined();
     expect(getOnboardingClaimTokenFromCookieHeader(`${onboardingClaimCookieName}-copy=wrong`)).toBeUndefined();
   });
 });

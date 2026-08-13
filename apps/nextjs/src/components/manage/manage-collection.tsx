@@ -52,7 +52,7 @@ export const ManageCollectionItem = ({
       <Stack gap={4} flex={1} miw={0}>
         <Group gap="xs" wrap="wrap">
           {title}
-          {badges}
+          {badges && <Box style={{ flexShrink: 0 }}>{badges}</Box>}
         </Group>
         {description}
         {metadata}

@@ -10,12 +10,11 @@ If you are still on a version before 0.15.10, please update to 0.15.10 where we 
 
 <!-- truncate -->
 
-## Export your data
+## Preserve your old installation
 
-As 1.0 is a complete rewrite of Homarr and therefor not compatible with the old docker mounts, we need to export your data first.
-For this you can navigate to the `Migrate to 1.0` page which you can find under `Management` > `Tools` > `Migrate to 1.0`.
-Here you can select which things you want to export and download the zip file.
-It will also show you a secret key which you will need to import the secret data like user password hashes, salts and integration secrets.
+Homarr 1.0 is a complete rewrite and cannot reuse the old Docker mounts. Keep the 0.15 installation and its data intact while you build the replacement. The historical `Management` > `Tools` > `Migrate to 1.0` export can still be kept as a record, but current Homarr releases cannot import that ZIP or its secret key.
+
+Plan to recreate your apps, integrations, and boards manually in the new installation. A SQLite database backup can be restored from the onboarding welcome screen only when it was created by a compatible current Homarr release; it is not a conversion path for a 0.15 database.
 
 ![Export page](./img/old-homarr-export-data.png)
 
@@ -31,7 +30,7 @@ So in your compose file the ports would be `7576:7575` instead of `7575:7575`.
 
 :::warning Legacy guide
 
-The pre-1.0 ZIP importer described by this historical migration guide is no longer included in current Homarr releases. Keep the old installation and export available while you recreate the required apps and boards in a supported release. SQLite database backups from current Homarr releases can still be restored from the onboarding welcome screen.
+The pre-1.0 ZIP importer is no longer included in current Homarr releases. Keep the old installation available until you have manually verified the replacement. Compatible SQLite backups from current releases can still be restored from the onboarding welcome screen.
 
 :::
 
