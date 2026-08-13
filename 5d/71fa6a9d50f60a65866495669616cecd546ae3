@@ -1,0 +1,21 @@
+e2e/board-grid.spec.ts
+  s_7cfb890e45839e::t_fc6b73869ff4d9 993-1001
+apps/nextjs/src/app/[locale]/boards/(content)/_client.module.css
+  s_7cfb890e45839e::t_fc6b73869ff4d9 39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "5d71fa6a9d50f60a65866495669616cecd546ae3",
+  "prompts": {},
+  "sessions": {
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

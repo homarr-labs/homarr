@@ -1,0 +1,45 @@
+apps/docs/src/pages/workshop/admin/index.tsx
+  s_093d61b162b9ca::t_86f751aa5a919b 6-7,13
+apps/workshop/README.md
+  s_093d61b162b9ca::t_86f751aa5a919b 75-76
+apps/docs/docusaurus.config.ts
+  s_093d61b162b9ca::t_86f751aa5a919b 15,28,30
+apps/docs/src/pages/workshop/index.tsx
+  s_093d61b162b9ca::t_86f751aa5a919b 8,20
+apps/workshop/Dockerfile
+  s_093d61b162b9ca::t_86f751aa5a919b 21,24
+  s_093d61b162b9ca::t_1cb8e4de338df9 40-45
+apps/workshop/docker-compose.yml
+  s_093d61b162b9ca::t_86f751aa5a919b 38,40,43
+apps/workshop/entrypoint.sh
+  s_093d61b162b9ca::t_86f751aa5a919b 9-26
+apps/docs/src/lib/runtime-config.ts
+  s_093d61b162b9ca::t_86f751aa5a919b 1-16
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_093d61b162b9ca::t_86f751aa5a919b 33,1058
+apps/docs/static/workshop-runtime-config.js
+  s_093d61b162b9ca::t_f3c6ebc5a72092 1
+apps/docs/src/lib/runtime-config.spec.ts
+  s_093d61b162b9ca::t_86f751aa5a919b 1-19
+apps/workshop/tests/workshop-contracts.mjs
+  s_093d61b162b9ca::t_f3c6ebc5a72092 104
+  s_093d61b162b9ca::t_86f751aa5a919b 92-100,106
+apps/docs/docs/management/workshop/index.mdx
+  s_093d61b162b9ca::t_86f751aa5a919b 122-124
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "c504ddca0cc4f94daa0c0028b0c4ef5a31fdf7d6",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
