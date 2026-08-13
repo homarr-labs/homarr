@@ -1,16 +1,46 @@
 import { z } from "zod/v4";
 
+import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
 import { createIntegrationAsync, downloadClientItemSchema } from "@homarr/integrations";
 import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
   createManyIntegrationMiddleware(action, ...getIntegrationKindsByCategory("downloadClient"));
+
+interface DownloadClientQueryResultBase {
+  integrationId: string;
+  integrationName: string;
+}
+
+type DownloadClientQueryResult = DownloadClientQueryResultBase &
+  (
+    | {
+        integration: {
+          id: string;
+          name: string;
+          kind: IntegrationKindByCategory<"downloadClient">;
+          updatedAt: Date;
+        };
+        data: DownloadClientJobsAndStatus;
+        error?: never;
+      }
+    | {
+        integration: {
+          id: string;
+          name: string;
+          kind: IntegrationKindByCategory<"downloadClient">;
+        };
+        data: null;
+        error: string;
+      }
+  );
 
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure
@@ -24,14 +54,29 @@ export const downloadsRouter = createTRPCRouter({
     .concat(createDownloadClientIntegrationMiddleware("query"))
     .input(z.object({ limitPerIntegration: z.number().default(50) }))
     .query(async ({ ctx, input }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
-        const { data, timestamp } = await innerHandler.getDataAsync();
-        return {
-          integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
-          data,
-        };
-      });
+      return await settleIntegrationQueries<(typeof ctx.integrations)[number], DownloadClientQueryResult>(
+        ctx.integrations,
+        async (integration) => {
+          const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
+          const { data, timestamp } = await innerHandler.getDataAsync();
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
+            data,
+          };
+        },
+        {
+          fallback: (integration) => ({
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integration: { id: integration.id, name: integration.name, kind: integration.kind },
+            data: null,
+            error: PUBLIC_INTEGRATION_ERROR,
+          }),
+          throwOnAllFailures: true,
+        },
+      );
     }),
   pause: protectedProcedure
     .meta({
