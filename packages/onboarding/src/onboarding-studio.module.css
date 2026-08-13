@@ -1,17 +1,19 @@
 .page {
   --studio-surface: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
+  --studio-glow-color: var(--mantine-primary-color-filled);
+  --studio-secondary-glow-color: var(--mantine-color-orange-6);
   min-height: 100dvh;
   overflow-x: clip;
   position: relative;
   background:
     radial-gradient(
       circle at 10% 10%,
-      color-mix(in srgb, var(--mantine-primary-color-filled) 14%, transparent),
+      color-mix(in srgb, var(--studio-glow-color) 14%, transparent),
       transparent 34rem
     ),
     radial-gradient(
       circle at 90% 5%,
-      color-mix(in srgb, var(--mantine-color-orange-6) 10%, transparent),
+      color-mix(in srgb, var(--studio-secondary-glow-color) 10%, transparent),
       transparent 30rem
     ),
     var(--mantine-color-body);
@@ -20,19 +22,22 @@
 .page::before {
   content: "";
   position: fixed;
-  inset: 0;
+  inset: -2rem;
   pointer-events: none;
-  opacity: 0.22;
-  background-image: radial-gradient(circle, var(--mantine-color-dimmed) 0.7px, transparent 0.7px);
-  background-size: 24px 24px;
-  mask-image: linear-gradient(to bottom, black, transparent 75%);
+  opacity: 0.28;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--mantine-color-dimmed) 28%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--mantine-color-dimmed) 28%, transparent) 1px, transparent 1px);
+  background-size: 32px 32px;
+  filter: blur(0.35px);
+  mask-image: radial-gradient(ellipse 66% 86% at center, transparent 22%, black 88%);
 }
 
 .shell {
   position: relative;
   width: min(100% - 2rem, 76rem);
   margin-inline: auto;
-  padding-block: clamp(1rem, 3vw, 2.5rem) 5rem;
+  padding-block: clamp(1rem, 3vw, 2.5rem) calc(6rem + env(safe-area-inset-bottom));
 }
 
 .topbar {
@@ -42,77 +47,38 @@
 
 .wordmark {
   display: block;
-  width: clamp(9.5rem, 22vw, 14rem);
-  height: auto;
-  padding: 0.4rem 0.55rem;
-  border-radius: var(--mantine-radius-md);
-  background: rgba(12, 12, 14, 0.86);
-  filter: drop-shadow(0 0.8rem 1.6rem color-mix(in srgb, black 22%, transparent));
+  width: auto;
+  height: 3.5rem;
+}
+
+.onboardingWordmark {
+  height: clamp(5rem, 12vw, 7rem);
+  max-width: min(70vw, 28rem);
+}
+
+:global([data-mantine-color-scheme="light"]) .wordmark {
+  filter: brightness(0);
 }
 
 .hero {
-  min-height: calc(100dvh - 8rem);
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
-  align-items: center;
-  gap: clamp(2rem, 6vw, 6rem);
+  margin-inline: auto;
+  max-width: 42rem;
+  padding-block: 5rem 3rem;
+  text-align: center;
 }
 
 .heroTitle {
-  font-size: clamp(2.5rem, 7vw, 5.8rem);
-  line-height: 0.94;
-  letter-spacing: -0.04em;
+  font-size: 3.5rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
   text-wrap: balance;
-  max-width: 11ch;
 }
 
-.heroPanel,
 .studio {
   background: var(--studio-surface);
   backdrop-filter: blur(18px);
   border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 76%, transparent);
   box-shadow: var(--mantine-shadow-sm);
-}
-
-.heroPanel {
-  position: relative;
-  min-height: 27rem;
-  overflow: hidden;
-}
-
-.orbit {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  width: 18rem;
-  height: 18rem;
-  margin: -9rem;
-  border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--mantine-primary-color-filled) 35%, transparent);
-}
-
-.orbitItem {
-  position: absolute;
-  width: 3.25rem;
-  height: 3.25rem;
-  display: grid;
-  place-items: center;
-  border-radius: var(--mantine-radius-lg);
-  background: var(--mantine-color-body);
-  border: 1px solid var(--mantine-color-default-border);
-  box-shadow: var(--mantine-shadow-md);
-}
-
-.orbitItem:nth-child(1) {
-  inset: -1.6rem auto auto calc(50% - 1.6rem);
-}
-.orbitItem:nth-child(2) {
-  inset: calc(50% - 1.6rem) -1.6rem auto auto;
-}
-.orbitItem:nth-child(3) {
-  inset: auto auto -1.6rem calc(50% - 1.6rem);
-}
-.orbitItem:nth-child(4) {
-  inset: calc(50% - 1.6rem) auto auto -1.6rem;
 }
 
 .studio {
@@ -121,7 +87,7 @@
 
 .studioGrid {
   display: grid;
-  grid-template-columns: 17rem minmax(0, 1fr);
+  grid-template-columns: 15rem minmax(0, 1fr);
   min-height: 40rem;
 }
 
@@ -131,42 +97,44 @@
   background: color-mix(in srgb, var(--mantine-color-default) 40%, transparent);
 }
 
-.railButton {
+.timeline {
   width: 100%;
-  min-height: 3.25rem;
-  padding: 0.65rem 0.75rem;
+}
+
+.timelineBullet {
+  pointer-events: none;
+}
+
+.timelineButton {
+  width: calc(100% + 2.75rem);
+  min-height: 2.75rem;
+  margin-inline-start: -2.75rem;
+  padding: 0.15rem 0.25rem;
+  padding-inline-start: 2.75rem;
   border-radius: var(--mantine-radius-md);
   color: var(--mantine-color-dimmed);
-  transition:
-    background-color 150ms ease,
-    color 150ms ease,
-    transform 150ms ease;
 }
 
-.railButton[data-active="true"] {
+.timelineButton[data-active="true"] {
   color: var(--mantine-color-text);
-  background: var(--mantine-color-default-hover);
 }
 
-.railButton:focus-visible {
+.timelineButton:focus-visible {
   outline: 2px solid var(--mantine-primary-color-filled);
   outline-offset: 2px;
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
+  min-height: 100%;
   padding: clamp(1rem, 3vw, 2rem);
 }
 
 .sectionCard {
   background: var(--studio-surface);
   border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 76%, transparent);
-}
-
-.discoveryChoice {
-  transition:
-    border-color 150ms ease,
-    background-color 150ms ease;
 }
 
 .discoveryChoice[data-checked] {
@@ -177,6 +145,10 @@
 .discoveryChoice:focus-visible {
   outline: 3px solid var(--mantine-primary-color-light-color);
   outline-offset: 2px;
+}
+
+.integrationStatus {
+  flex: 0 0 auto;
 }
 
 .choiceGrid {
@@ -192,19 +164,11 @@
   border: 1px solid var(--mantine-color-default-border);
   background: var(--mantine-color-body);
   padding: var(--mantine-spacing-md);
-  transition:
-    border-color 150ms ease,
-    background-color 150ms ease,
-    transform 150ms ease;
 }
 
 .choice[data-selected="true"] {
   border-color: var(--mantine-primary-color-filled);
   background: color-mix(in srgb, var(--mantine-primary-color-light) 70%, var(--mantine-color-body));
-}
-
-.choice:hover {
-  transform: translateY(-2px);
 }
 
 .choice:focus-visible {
@@ -220,21 +184,15 @@
   padding: 0.6rem;
   overflow: hidden;
   border-radius: var(--mantine-radius-lg);
-  background: color-mix(in srgb, var(--mantine-color-default) 66%, transparent);
+  background: var(--mantine-color-default);
   border: 1px solid var(--mantine-color-default-border);
-}
-
-.preview[data-layout-role="mobile"] {
-  width: min(100%, 28rem);
-  margin-inline: auto;
-  aspect-ratio: 4 / 3;
 }
 
 .previewLane {
   min-width: 0;
   border-radius: calc(var(--mantine-radius-lg) * 0.65);
-  background: color-mix(in srgb, var(--mantine-color-body) 88%, transparent);
-  border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 70%, transparent);
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-default-border);
   padding: 0.35rem;
 }
 
@@ -248,62 +206,28 @@
 
 .previewTile {
   border-radius: calc(var(--mantine-radius-lg) * 0.45);
-  background: linear-gradient(
-    135deg,
-    var(--mantine-primary-color-light),
-    color-mix(in srgb, var(--mantine-color-orange-light) 60%, transparent)
-  );
-  border: 1px solid color-mix(in srgb, var(--mantine-primary-color-filled) 22%, transparent);
-}
-
-.assistantStage {
-  position: relative;
-  min-height: 13rem;
-  overflow: hidden;
-  border-radius: var(--mantine-radius-lg);
-  background: color-mix(in srgb, var(--mantine-primary-color-light) 44%, var(--mantine-color-body));
-}
-
-.assistantGlow {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  width: 12rem;
-  height: 12rem;
-  margin: -6rem;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--mantine-primary-color-filled) 35%, transparent),
-    transparent 68%
-  );
+  background: var(--mantine-color-default);
+  border: 1px solid var(--mantine-color-default-border);
 }
 
 .stickyActions {
   position: sticky;
   z-index: 2;
   bottom: 0;
-  margin: 1.5rem -2rem -2rem;
+  margin: auto -2rem -2rem;
   padding: 1rem 2rem;
   background: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
   border-top: 1px solid var(--mantine-color-default-border);
   backdrop-filter: blur(16px);
 }
 
-.applyError {
-  margin-top: var(--mantine-spacing-lg);
-}
-
 .nextCard {
   color: inherit;
   text-decoration: none;
-  transition:
-    background-color 150ms ease,
-    transform 150ms ease;
 }
 
 .nextCard:hover {
   background: var(--mantine-color-default-hover);
-  transform: translateY(-2px);
 }
 
 .nextCard:focus-visible {
@@ -312,10 +236,52 @@
 }
 
 .content :global(.mantine-Button-root),
-.content :global(.mantine-SegmentedControl-label),
 .page :global(.mantine-Input-input),
 .page :global(.mantine-Tabs-tab) {
   min-height: 2.75rem;
+}
+
+.floatingControlScroller {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.floatingControlRoot {
+  position: relative;
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  padding: 0.2rem;
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-default);
+}
+
+.floatingControlIndicator {
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: calc(var(--mantine-radius-md) - 0.2rem);
+  background: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-xs);
+}
+
+.floatingControl {
+  position: relative;
+  z-index: 1;
+  flex: 1 0 auto;
+  min-height: 2.25rem;
+  padding-inline: var(--mantine-spacing-sm);
+  border-radius: calc(var(--mantine-radius-md) - 0.2rem);
+  color: var(--mantine-color-dimmed);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.floatingControl[data-active="true"] {
+  color: var(--mantine-color-text);
+}
+
+.floatingControl:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
 }
 
 .page :global(.mantine-Switch-body) {
@@ -325,32 +291,15 @@
 
 @media (max-width: 62em) {
   .hero {
-    grid-template-columns: 1fr;
     padding-block: 3rem;
   }
 
-  .heroPanel {
-    min-height: 22rem;
-  }
-
   .studioGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 12rem minmax(0, 1fr);
   }
 
   .rail {
-    border-right: 0;
-    border-bottom: 1px solid var(--mantine-color-default-border);
-    overflow-x: auto;
-  }
-
-  .railList {
-    min-width: max-content;
-    flex-direction: row;
-  }
-
-  .railButton {
-    width: auto;
-    min-width: 10rem;
+    padding-inline: 1rem;
   }
 }
 
@@ -360,7 +309,7 @@
   }
 
   .heroTitle {
-    font-size: clamp(2.35rem, 14vw, 4.5rem);
+    font-size: 2.75rem;
   }
 
   .choiceGrid {
@@ -371,8 +320,25 @@
     padding: 1rem;
   }
 
+  .studioGrid {
+    grid-template-columns: 3.75rem minmax(0, 1fr);
+  }
+
+  .rail {
+    padding: 1rem 0.5rem;
+  }
+
+  .timelineLabel {
+    display: none;
+  }
+
+  .timelineButton {
+    min-height: 2rem;
+    padding-inline-start: 2.75rem;
+  }
+
   .stickyActions {
-    margin: 1rem -1rem -1rem;
+    margin: auto -1rem -1rem;
     padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
   }
 
@@ -382,10 +348,6 @@
 
   .primaryActions > * {
     flex: 1 1 12rem;
-  }
-
-  .content :global(.mantine-SegmentedControl-root) {
-    overflow-x: auto;
   }
 
   .content :global(.mantine-Tabs-list) {
@@ -406,29 +368,11 @@
   }
 
   .wordmark {
-    width: 9.5rem;
+    height: 3rem;
   }
 
   .hero {
-    min-height: auto;
-    gap: 2rem;
     padding-block: 2rem 3rem;
-  }
-
-  .heroPanel {
-    min-height: 19rem;
-  }
-
-  .orbit {
-    scale: 0.78;
-  }
-
-  .rail {
-    padding: 0.75rem;
-  }
-
-  .railButton {
-    min-width: 8.5rem;
   }
 
   .stickyActions {
@@ -459,12 +403,6 @@
     min-width: 0;
   }
 
-  .fastAction {
-    flex: 1.15 1 0;
-    min-width: 0;
-    padding-inline: 0.25rem;
-  }
-
   .primaryActions > :global(.mantine-Button-root):last-child {
     flex: 1 1 0;
     min-width: 0;
@@ -475,36 +413,20 @@
     font-size: var(--mantine-font-size-sm);
   }
 
-  .content :global(.mantine-SegmentedControl-label) {
-    min-width: 0;
-    height: auto;
-    padding: 0.45rem 0.3rem;
-    line-height: 1.15;
-    white-space: normal;
-  }
-
   .sectionCard :global(.mantine-Group-root) {
     flex-wrap: wrap;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page {
-    scroll-behavior: auto;
+  .page * {
+    animation: none !important;
   }
 
-  .choice,
-  .railButton,
-  .nextCard,
-  .discoveryChoice {
-    transition: none;
-  }
-
-  .choice:hover {
-    transform: none;
-  }
-
-  .nextCard:hover {
-    transform: none;
+  .page *:not(.integrationAccordion *),
+  .page *:not(.integrationAccordion *)::before,
+  .page *:not(.integrationAccordion *)::after {
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -126,6 +126,9 @@ const CredentialsSetup = () => {
             passwordInputProps={{ ...form.getInputProps("password"), autoComplete: "new-password" }}
             confirmPasswordInputProps={{ ...form.getInputProps("confirmPassword"), autoComplete: "new-password" }}
           />
+          <Text size="sm" c="dimmed" my="xs">
+            {t("passwordHint")}
+          </Text>
           {submitError ? (
             <Alert color="red" title={t("errorTitle")}>
               {submitError}

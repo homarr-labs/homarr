@@ -2,21 +2,20 @@
 
 import { useState } from "react";
 import { Alert, Badge, Button, Group, Paper, Stack, Text, ThemeIcon, Title } from "@mantine/core";
-import { IconArrowRight, IconDatabaseImport, IconLayoutDashboard, IconSparkles } from "@tabler/icons-react";
-import { motion, useReducedMotion } from "motion/react";
+import { IconArrowRight, IconDatabaseImport } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { OnboardingWordmark } from "./onboarding-wordmark";
 import type { OnboardingStudioProps } from "./types";
 import classes from "./onboarding-studio.module.css";
 
 export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) => {
   const t = useScopedI18n("init.studio.welcome");
   const claimT = useScopedI18n("init.studio.claim");
-  const reduceMotion = useReducedMotion();
   const [showRestore, setShowRestore] = useState(false);
   const [claimPending, setClaimPending] = useState(false);
   const [claimError, setClaimError] = useState<string | null>(null);
@@ -78,29 +77,19 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
     <main className={classes.page}>
       <div className={classes.shell}>
         <Group className={classes.topbar} justify="space-between">
-          <motion.img
-            src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg"
-            alt="Homarr"
-            className={classes.wordmark}
-            initial={reduceMotion ? false : { opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-          />
+          <OnboardingWordmark />
           <Badge variant="light" size="lg">
             {t("badge")}
           </Badge>
         </Group>
 
         <section className={classes.hero} aria-labelledby="onboarding-welcome-title">
-          <Stack gap="xl" align="flex-start">
-            <Stack gap="md">
-              <Text c="dimmed" fw={650} size="sm">
-                {t("eyebrow")}
-              </Text>
-              <Title id="onboarding-welcome-title" className={classes.heroTitle}>
+          <Stack gap="xl" align="center">
+            <Stack gap="sm" align="center">
+              <Title id="onboarding-welcome-title" className={classes.heroTitle} ta="center">
                 {t("title")}
               </Title>
-              <Text size="lg" c="dimmed" maw="38rem">
+              <Text size="lg" c="dimmed" maw="38rem" ta="center">
                 {t("description")}
               </Text>
             </Stack>
@@ -152,48 +141,6 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
               </Alert>
             ) : null}
           </Stack>
-
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, scale: 0.96, y: 24 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.08 }}
-          >
-            <Paper className={classes.heroPanel} radius="lg" p="xl">
-              <div className={classes.orbit} aria-hidden>
-                {[IconLayoutDashboard, IconSparkles, IconDatabaseImport, IconLayoutDashboard].map((Icon, index) => (
-                  <motion.div
-                    key={index}
-                    className={classes.orbitItem}
-                    animate={reduceMotion ? undefined : { y: [0, index % 2 === 0 ? -6 : 6, 0] }}
-                    transition={{ duration: 3.4 + index * 0.35, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    <Icon size={22} />
-                  </motion.div>
-                ))}
-              </div>
-              <Stack h="100%" justify="space-between" pos="relative">
-                <Badge variant="dot" color="green">
-                  {t("ready")}
-                </Badge>
-                <Stack gap={4} align="center">
-                  <ThemeIcon size={72} radius="xl" variant="light">
-                    <IconLayoutDashboard size={34} />
-                  </ThemeIcon>
-                  <Text fw={700} size="lg">
-                    {t("panelTitle")}
-                  </Text>
-                  <Text size="sm" c="dimmed" ta="center" maw="19rem">
-                    {t("panelDescription")}
-                  </Text>
-                </Stack>
-                <Group gap="xs" justify="center">
-                  <Badge variant="light">{t("chipDiscover")}</Badge>
-                  <Badge variant="light">{t("chipConnect")}</Badge>
-                  <Badge variant="light">{t("chipBuild")}</Badge>
-                </Group>
-              </Stack>
-            </Paper>
-          </motion.div>
         </section>
       </div>
     </main>

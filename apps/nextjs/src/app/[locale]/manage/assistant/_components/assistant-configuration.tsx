@@ -144,8 +144,8 @@ export const AssistantConfiguration = () => {
   const router = useRouter();
   const utils = clientApi.useUtils();
   const { data: configuration, isLoading } = clientApi.assistant.getAdminConfiguration.useQuery();
-  const [provider, setProvider] = useState<AssistantProvider>("openrouter");
-  const [baseUrl, setBaseUrl] = useState<string>(assistantProviderPresets.openrouter.baseUrl);
+  const [provider, setProvider] = useState<AssistantProvider>("homarr");
+  const [baseUrl, setBaseUrl] = useState<string>(assistantProviderPresets.homarr.baseUrl);
   const [modelDiscoveryPath, setModelDiscoveryPath] = useState<string>("/models");
   const [apiKey, setApiKey] = useState("");
   const [credentialFlow, setCredentialFlow] = useState<CredentialFlow>("idle");
@@ -157,7 +157,7 @@ export const AssistantConfiguration = () => {
   const [webSearchEnabled, setWebSearchEnabled] = useState(false);
 
   useEffect(() => {
-    const configuredProvider = configuration?.provider ?? "openrouter";
+    const configuredProvider = configuration?.provider ?? "homarr";
     setProvider(configuredProvider);
     setBaseUrl(
       configuredProvider === "homarr"
@@ -203,7 +203,7 @@ export const AssistantConfiguration = () => {
   );
   const providerOptions = useMemo(
     () =>
-      (["hosted", "local", "custom"] satisfies AssistantProviderCategory[]).map((category) => {
+      (["free", "hosted", "local", "custom"] satisfies AssistantProviderCategory[]).map((category) => {
         const items = assistantProviderIds
           .filter((providerId) => assistantProviderPresets[providerId].category === category)
           .map((providerId) => ({
@@ -441,6 +441,11 @@ export const AssistantConfiguration = () => {
                         {option.label}
                       </Text>
                     </Group>
+                    {option.value === "homarr" && (
+                      <Text size="xs" c="dimmed" lineClamp={2}>
+                        {t("provider.options.homarr.description")}
+                      </Text>
+                    )}
                   </Box>
                 </Group>
               )}

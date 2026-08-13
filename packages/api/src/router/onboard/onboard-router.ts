@@ -585,7 +585,7 @@ export const onboardRouter = createTRPCRouter({
       );
       let leftGutterColumnCount = requestedGutters.left;
       let rightGutterColumnCount = requestedGutters.right;
-      const desiredColumns = getLayoutPresetColumnCount(input.board.layoutPreset);
+      const desiredColumns = input.board.columnCount ?? getLayoutPresetColumnCount(input.board.layoutPreset);
       if (requiredColumns + leftGutterColumnCount + rightGutterColumnCount > 24) rightGutterColumnCount = 0;
       if (requiredColumns + leftGutterColumnCount + rightGutterColumnCount > 24) leftGutterColumnCount = 0;
       const baseColumnCount = Math.min(

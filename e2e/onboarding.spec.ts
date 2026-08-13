@@ -141,11 +141,9 @@ describe("Onboarding", () => {
         const boardPreview = page.locator('figure[aria-label="Live preview of the first board layout"]');
         expect(await boardPreview.getAttribute("data-layout-role")).toBe("base");
         expect(await boardPreview.getAttribute("data-layout-columns")).toBe("10");
-        await page.getByText("Mobile", { exact: true }).click();
-        expect(await boardPreview.getAttribute("data-layout-role")).toBe("mobile");
-        expect(await boardPreview.getAttribute("data-layout-columns")).toBe("3");
-        await page.getByText("Wide", { exact: true }).click();
-        await page.getByText("Base", { exact: true }).click();
+        const columnSlider = page.getByRole("slider", { name: "Board columns" });
+        await columnSlider.press("ArrowRight");
+        await columnSlider.press("ArrowRight");
         expect(await boardPreview.getAttribute("data-layout-columns")).toBe("12");
 
         await page.getByRole("button", { name: /^Connect/ }).click();

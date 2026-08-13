@@ -1,10 +1,7 @@
 {
   "init": {
     "studio": {
-      "setupBadge": "First-time setup",
       "navigationLabel": "Onboarding sections",
-      "title": "Setup studio",
-      "subtitle": "Configure the essentials, let Homarr infer the rest.",
       "back": "Back",
       "continue": "Continue",
       "buildBoard": "Build my board",
@@ -31,8 +28,7 @@
         "review": "Review"
       },
       "welcome": {
-        "badge": "New Homarr",
-        "eyebrow": "Your homelab, one useful board away",
+        "badge": "Homarr v2",
         "title": "Make home feel organized.",
         "description": "Homarr can discover your services, connect the right integrations, and build a responsive first board. You only decide what cannot be inferred.",
         "start": "Get started",
@@ -40,18 +36,13 @@
         "restoreTitle": "Restore this Homarr",
         "restoreDescription": "A full SQLite backup restores boards, people, apps, integrations, and settings. Homarr validates it before replacing anything.",
         "errorTitle": "Setup could not start",
-        "errorDescription": "Your setup choices are still here. Try again, or reload the page if this continues.",
-        "ready": "Ready to configure",
-        "panelTitle": "From services to a useful board",
-        "panelDescription": "Discovery, secure connections, layouts, widgets, Assistant, Workshop, and MCP stay connected in one flow.",
-        "chipDiscover": "Discover",
-        "chipConnect": "Connect",
-        "chipBuild": "Build"
+        "errorDescription": "Your setup choices are still here. Try again, or reload the page if this continues."
       },
       "account": {
         "title": "Create your administrator",
-        "description": "This account owns the first setup and protects integration, Assistant, and MCP credentials.",
+        "description": "Specify the credentials for your administrator user.",
         "username": "Administrator username",
+        "passwordHint": "Only the 8-character minimum is required. The other password-strength checks are suggestions.",
         "create": "Create administrator",
         "errorTitle": "Administrator could not be created",
         "recoveryTitle": "Administrator account created",
@@ -77,9 +68,11 @@
         "themeLight": "Light",
         "themeDark": "Dark",
         "serverTitle": "Usual server address",
+        "serverOriginHelp": "Homarr uses this address to prefill detected service URLs. You can still edit every service individually.",
         "serverDescription": "This is a shortcut, not a restriction. Every detected service remains editable.",
         "serverOrigin": "Domain, IP, or reverse-proxy path",
         "serverOriginDescription": "Examples: home.lan, 192.168.1.10, or https://home.example.com/services. Choose how each service is appended below.",
+        "urlModeLabel": "Service address pattern",
         "hostPort": "Same host, different ports",
         "subdomain": "One subdomain per service",
         "path": "One path per service",
@@ -94,7 +87,6 @@
         "kubernetes": "Kubernetes",
         "assistantWorkshop": "Assistant and Workshop",
         "found": "Found {integrations} integrations and {apps} additional apps",
-        "retryDocker": "Scan Docker again",
         "retryKubernetes": "Check Kubernetes again",
         "retryWorkshop": "Check Workshop again",
         "unknownVersion": "unknown version",
@@ -105,8 +97,6 @@
         "workshopUnavailable": "Local and custom Assistant providers remain available",
         "partialTitle": "Some sources could not be scanned",
         "partialDescription": "Results from reachable hosts are kept. Check socket permissions or add services manually in the next section.",
-        "platformTitle": "Docker, Synology, Kubernetes, and bare metal are all welcome",
-        "platformDescription": "Homarr uses capabilities rather than guessing your platform. Detected values are suggestions you can review before anything is created.",
         "status": {
           "checking": "Checking availability…",
           "available": "Available",
@@ -134,9 +124,13 @@
         "url": "Service URL",
         "noCredentials": "No credentials",
         "noCredentialsDescription": "This integration does not need credentials.",
+        "credentialMethod": "Credential method",
         "getApiKey": "Open the API key settings for this service",
         "openGuide": "Open Homarr's setup guide for this service",
-        "validationError": "Complete the URL and required credentials for {name}, or remove it from the selection."
+        "needsConfiguration": "Needs configuration",
+        "configured": "Configured",
+        "validationError": "Complete the URL and required credentials for {name}, or remove it from the selection.",
+        "incompleteConfirmation": "Some integrations need to be configured, are you sure?"
       },
       "board": {
         "title": "Shape the board before it is built",
@@ -150,54 +144,23 @@
         "primaryColor": "Primary color",
         "secondaryColor": "Secondary color",
         "radius": "Widget corner radius",
-        "layoutPreset": "Board width preset",
-        "layoutFocused": "Focused",
-        "layoutBalanced": "Balanced",
-        "layoutWide": "Wide",
+        "columns": "Board columns",
+        "columnsDescription": "Columns define the horizontal grid used to size and position items. 12 is plenty for most people.",
+        "columnCount": "{count, plural, one {# column} other {# columns}}",
         "leftSidebar": "Left sidebar",
         "rightSidebar": "Right sidebar",
-        "previewLabel": "Live preview of the first board layout",
-        "previewLayout": "Layout to preview",
-        "previewMobile": "Mobile",
-        "previewBase": "Base",
-        "widgetPrimer": "A 30-second Homarr primer",
-        "primerAppsTitle": "Apps open things",
-        "primerAppsDescription": "App tiles are fast links with icons, status, and optional ping checks.",
-        "primerWidgetsTitle": "Widgets explain things",
-        "primerWidgetsDescription": "Integrations power focused views such as downloads, calendars, requests, and health.",
-        "primerEditTitle": "Everything stays editable",
-        "primerEditDescription": "Enter edit mode to move, resize, group, or add items independently on Mobile and Base layouts."
+        "previewLabel": "Live preview of the first board layout"
       },
       "extend": {
-        "title": "Add intelligence when it helps",
-        "description": "Assistant, Workshop, and MCP work together but remain independent. Configure any now or return later.",
+        "title": "Advanced features",
         "tabsLabel": "Assistant, Workshop, and MCP setup",
         "assistant": "Assistant",
         "workshop": "Workshop",
         "mcp": "MCP",
         "assistantSetup": {
-          "title": "Homarr Assistant",
-          "description": "Ask about this Homarr, create and edit apps or boards with approval, inspect integrations, and use the same conversations in the Assistant widget.",
           "loginTitle": "Administrator sign-in required",
           "loginDescription": "Provider keys and model access are privileged. Finish setup, sign in, and Homarr will open the Assistant configuration directly.",
-          "loginAction": "Sign in to configure Assistant",
-          "provider": "Provider",
-          "baseUrl": "Provider URL",
-          "apiKey": "API key",
-          "connect": "Save connection and discover models",
-          "connectHint": "Keys are encrypted and never returned by the API.",
-          "model": "Default model",
-          "modelPlaceholder": "Connect a provider first",
-          "manualModelPlaceholder": "Enter a model ID",
-          "manualModelDescription": "Model discovery is unavailable. Enter the exact model ID exposed by your provider.",
-          "discovering": "Discovering models…",
-          "enable": "Enable Assistant",
-          "webSearch": "Allow supported web search",
-          "advanced": "Advanced headers and provider settings",
-          "save": "Save Assistant",
-          "savedTitle": "Assistant is ready",
-          "savedDescription": "The selected model is available from the header and Assistant widget.",
-          "errorTitle": "Assistant could not be configured"
+          "loginAction": "Sign in to configure Assistant"
         },
         "workshopSetup": {
           "title": "Homarr Workshop",
@@ -232,18 +195,29 @@
       "review": {
         "title": "One board, built around your services",
         "description": "Homarr tests unsaved connections, imports the selected apps, applies appearance and layouts, then opens the exact board it configured.",
-        "appearance": "Language and appearance",
-        "services": "Selected services",
-        "servicesValue": "{integrations} integrations · {apps} apps",
         "board": "First board",
+        "columns": "Board columns",
+        "columnsValue": "{count, plural, one {# column} other {# columns}}",
+        "sidebars": "Sidebars",
+        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
         "layouts": "Responsive layouts",
         "layoutsValue": "Mobile + Base",
-        "previewLabel": "Preview of the board being created",
-        "automaticTitle": "What Homarr will infer",
+        "integrations": "Integrations",
+        "integrationsValue": "{count, plural, =0 {None selected} one {# integration} other {# integrations}}",
+        "apps": "App tiles",
+        "appsValue": "{count, plural, =0 {Starter apps only} one {# app tile} other {# app tiles}}",
+        "language": "Language",
+        "theme": "Theme",
+        "themeAuto": "System preference",
+        "themeLight": "Light",
+        "themeDark": "Dark",
+        "colors": "Board colors",
+        "radius": "Widget radius",
+        "automaticTitle": "What Homarr will create",
         "automaticDescription": "Compatible widgets, icons, app links, integration relationships, and responsive placement come from the shared Homarr catalog. You can edit every result later.",
         "dockerWarningTitle": "Some Docker labels changed during setup",
         "dockerWarningDescription": "{count, plural, one {# selected Docker result could not be applied because its service changed, targeted another board, or its widget was incompatible} other {# selected Docker results could not be applied because services changed, targeted another board, or their widgets were incompatible}}.",
-        "errorTitle": "Setup paused safely",
+        "errorTitle": "Board could not be built",
         "progress": {
           "applying": "Testing connections and building your board",
           "done": "Your board is ready"
@@ -253,7 +227,6 @@
         "title": "Your first board is ready.",
         "description": "Homarr connected the pieces you selected and kept the rest editable. Open the board now; the short in-product tour can show you edit mode, widgets, layouts, and search.",
         "openBoard": "Open my board",
-        "tutorial": "Tip: use edit mode to move or resize widgets. Mobile and Base layouts keep independent positions, so every screen can feel intentional.",
         "manageTitle": "Manage",
         "manageDescription": "Fine-tune apps, integrations, boards, users, and server settings.",
         "workshopTitle": "Workshop",
@@ -6350,6 +6323,7 @@
             "provider": {
               "title": "Provider",
               "groups": {
+                "free": "Free with Homarr",
                 "hosted": "Hosted providers",
                 "local": "Local providers",
                 "custom": "Custom"
@@ -6357,7 +6331,7 @@
               "options": {
                 "homarr": {
                   "label": "Homarr",
-                  "description": "Community-funded access to the model selected by the Homarr team. Each user signs in with the Community Workshop and receives a daily allowance."
+                  "description": "A limited number of Assistant uses are free each day, paid for by the Homarr team. Sign in with the Community Workshop to use your allowance."
                 },
                 "openrouter": {
                   "label": "OpenRouter",
@@ -6409,8 +6383,8 @@
                 }
               },
               "homarrAuth": {
-                "title": "No administrator API key required",
-                "description": "Homarr keeps the upstream OpenRouter credential on the Community Workshop server. Each user authorizes requests with their own Workshop GitHub session, so their daily allowance stays separate."
+                "title": "Free daily Assistant uses included",
+                "description": "No API key is needed. The Homarr team covers a limited number of Assistant uses for you each day. Sign in with the Community Workshop to keep your allowance separate."
               }
             },
             "baseUrl": {

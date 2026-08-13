@@ -21,6 +21,7 @@ import { IconX } from "@tabler/icons-react";
 
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
+import { BoardColorInput } from "@homarr/ui";
 
 import { SectionCard } from "~/components/manage/section-card";
 import { generateColors } from "../../(content)/_theme";
@@ -44,21 +45,11 @@ export const ColorSettingsContent = ({ form }: Props) => {
       <Grid>
         <Grid.Col span={{ sm: 12, md: 6 }}>
           <Stack gap="xs">
-            <ColorInput
-              label={t("board.field.primaryColor.label")}
-              format="hex"
-              swatches={Object.values(theme.colors).map((color) => color[6])}
-              {...form.getInputProps("primaryColor")}
-            />
+            <BoardColorInput label={t("board.field.primaryColor.label")} {...form.getInputProps("primaryColor")} />
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
-          <ColorInput
-            label={t("board.field.secondaryColor.label")}
-            format="hex"
-            swatches={Object.values(theme.colors).map((color) => color[6])}
-            {...form.getInputProps("secondaryColor")}
-          />
+          <BoardColorInput label={t("board.field.secondaryColor.label")} {...form.getInputProps("secondaryColor")} />
         </Grid.Col>
         <Grid.Col span={12}>
           <Anchor onClick={toggle}>{showPreview ? t("common.preview.hide") : t("common.preview.show")}</Anchor>

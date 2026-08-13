@@ -12,62 +12,64 @@ import {
   Button,
   Checkbox,
   Code,
-  ColorInput,
+  ColorSwatch,
   CopyButton,
-  Divider,
   Fieldset,
+  FloatingIndicator,
   Group,
-  Image,
-  Loader,
   Paper,
   PasswordInput,
+  Popover,
   Progress,
-  SegmentedControl,
   Select,
   SimpleGrid,
+  Slider,
   Stack,
   Switch,
   Tabs,
   Text,
   TextInput,
   ThemeIcon,
+  Timeline,
   Title,
   UnstyledButton,
   useMantineColorScheme,
-  useMantineTheme,
 } from "@mantine/core";
 import type { MantineSize } from "@mantine/core";
 import {
   IconAdjustments,
+  IconAlertCircle,
   IconApps,
   IconArrowLeft,
   IconArrowRight,
   IconBrandDocker,
-  IconBrain,
+  IconBorderRadius,
   IconCheck,
   IconCode,
   IconCopy,
   IconDatabase,
   IconDeviceMobile,
   IconExternalLink,
+  IconInfoCircle,
   IconKey,
+  IconLanguage,
+  IconLayoutColumns,
   IconLayoutDashboard,
+  IconLayoutSidebar,
   IconPalette,
   IconPlugConnected,
   IconRefresh,
+  IconRobot,
   IconSearch,
   IconServer,
   IconSparkles,
-  IconTool,
-  IconWorld,
+  IconSunMoon,
 } from "@tabler/icons-react";
-import { motion, useReducedMotion } from "motion/react";
 
 import { clientApi } from "@homarr/api/client";
 import type { RouterOutputs } from "@homarr/api";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type {
-  AssistantProvider,
   ColorScheme,
   IntegrationKind,
   IntegrationSecretKind,
@@ -75,9 +77,6 @@ import type {
   WidgetKind,
 } from "@homarr/definitions";
 import {
-  assistantProviderCanUseOpenRouterServerTools,
-  assistantProviderIds,
-  assistantProviderPresets,
   buildAppUrl,
   buildIntegrationUrl,
   getAllSecretKindOptions,
@@ -89,19 +88,28 @@ import {
   getWidgetKindsForIntegration,
   generalWidgets,
 } from "@homarr/definitions";
-import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
+import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
 import type { SupportedLanguage } from "@homarr/translation";
-import { localeConfigurations, supportedLanguages } from "@homarr/translation";
 import { useCurrentLocale, useScopedI18n } from "@homarr/translation/client";
-import { IntegrationAvatar, Link } from "@homarr/ui";
+import { BoardColorInput, ColorSchemeCombobox, IntegrationAvatar, LanguageCombobox, Link } from "@homarr/ui";
 import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
 
 import type { OnboardingStudioProps } from "./types";
-import { isHttpUrl, normalizeServiceUrl, resolveDiscoveredAppUrl, takeNewSourceIds } from "./discovery-selection";
+import { OnboardingWordmark } from "./onboarding-wordmark";
+import {
+  isHttpUrl,
+  normalizeServiceUrl,
+  resolveDiscoveredAppUrl,
+  resolveIntegrationDraftUrl,
+  takeNewSourceIds,
+} from "./discovery-selection";
 import classes from "./onboarding-studio.module.css";
 
 type StudioSection = "essentials" | "discover" | "connect" | "board" | "extend" | "review";
 type LayoutPreset = "balanced" | "wide" | "focused";
+
+const getLayoutPresetForColumnCount = (columnCount: number): LayoutPreset =>
+  columnCount <= 8 ? "focused" : columnCount <= 10 ? "balanced" : "wide";
 
 interface IntegrationDraft {
   id: string;
@@ -109,6 +117,7 @@ interface IntegrationDraft {
   kind: IntegrationKind;
   name: string;
   url: string;
+  urlOverridden: boolean;
   source: "manual" | "docker";
   secretOption: number;
   secrets: { kind: IntegrationSecretKind; value: string }[];
@@ -135,12 +144,61 @@ const sectionDefinitions = [
 const radiusValues = ["xs", "sm", "md", "lg", "xl"] as const;
 const emptyDiscoveredIntegrations: DockerDiscoveryData["integrations"] = [];
 const emptyDiscoveredApps: DockerDiscoveryData["apps"] = [];
-export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
+
+interface OnboardingFloatingControlProps<T extends string> {
+  value: T;
+  onChange: (value: T) => void;
+  options: readonly { value: T; label: ReactNode }[];
+  ariaLabel: string;
+}
+
+const OnboardingFloatingControl = <T extends string>({
+  value,
+  onChange,
+  options,
+  ariaLabel,
+}: OnboardingFloatingControlProps<T>) => {
+  const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
+  const controlRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  return (
+    <div className={classes.floatingControlScroller}>
+      <div ref={setRootRef} className={classes.floatingControlRoot} role="group" aria-label={ariaLabel}>
+        <FloatingIndicator
+          target={controlRefs.current[value] ?? null}
+          parent={rootRef}
+          className={classes.floatingControlIndicator}
+        />
+        {options.map((option) => {
+          const selected = value === option.value;
+          return (
+            <UnstyledButton
+              key={option.value}
+              ref={(node) => {
+                controlRefs.current[option.value] = node;
+              }}
+              type="button"
+              className={classes.floatingControl}
+              data-active={selected}
+              aria-pressed={selected}
+              onClick={() => onChange(option.value)}
+            >
+              {option.label}
+            </UnstyledButton>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingStudioProps) => {
   const t = useScopedI18n("init.studio");
+  const tCommon = useScopedI18n("common.action");
   const currentLocale = useCurrentLocale();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
-  const reduceMotion = useReducedMotion();
   const [activeSection, setActiveSection] = useState<StudioSection>("essentials");
+  const [incompleteIntegrationConfirmationOpened, setIncompleteIntegrationConfirmationOpened] = useState(false);
   const [selectedLocale, setSelectedLocale] = useState(currentLocale);
   const [serverOrigin, setServerOrigin] = useState("");
   const [urlMode, setUrlMode] = useState<UrlTemplateMode>("hostPort");
@@ -158,12 +216,11 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
   const [primaryColor, setPrimaryColor] = useState("#fa5252");
   const [secondaryColor, setSecondaryColor] = useState("#fd7e14");
   const [itemRadius, setItemRadius] = useState<MantineSize>("lg");
-  const [layoutPreset, setLayoutPreset] = useState<LayoutPreset>("balanced");
+  const [columnCount, setColumnCount] = useState(10);
   const [leftSidebar, setLeftSidebar] = useState(false);
   const [rightSidebar, setRightSidebar] = useState(false);
   const [applyProgress, setApplyProgress] = useState(0);
   const [applyMessage, setApplyMessage] = useState("");
-  const [applyError, setApplyError] = useState<string | null>(null);
   const [appError, setAppError] = useState<string | null>(null);
   const sectionHeadingRef = useRef<HTMLHeadingElement>(null);
   const sectionButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -235,17 +292,18 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
       for (const discovered of discoveredIntegrations) {
         if (!selectedIntegrationSourceIds.includes(discovered.sourceId)) continue;
         const id = discovered.sourceId;
-        const generatedUrl =
-          discovered.suggestedUrl ||
-          (serverOrigin
-            ? buildIntegrationUrl(discovered.kind, serverOrigin, urlMode, discovered.publishedPort ?? undefined)
-            : "");
         const existingDraft = existing.get(id);
+        const generatedUrl = resolveIntegrationDraftUrl({
+          currentUrl: existingDraft?.url ?? "",
+          overridden: existingDraft?.urlOverridden ?? false,
+          serverUrl: serverOrigin
+            ? buildIntegrationUrl(discovered.kind, serverOrigin, urlMode, discovered.publishedPort ?? undefined)
+            : null,
+          fallbackUrl: discovered.suggestedUrl,
+        });
         next.push(
           existingDraft
-            ? existingDraft.url || !generatedUrl
-              ? existingDraft
-              : { ...existingDraft, url: generatedUrl }
+            ? { ...existingDraft, url: generatedUrl }
             : createDraft({
                 id,
                 sourceId: discovered.sourceId,
@@ -258,15 +316,16 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
       }
       for (const kind of selectedKinds) {
         const id = `manual:${kind}`;
-        const generatedUrl = serverOrigin
-          ? buildIntegrationUrl(kind, serverOrigin, urlMode)
-          : getIntegrationDefaultUrl(kind);
         const existingDraft = existing.get(id);
+        const generatedUrl = resolveIntegrationDraftUrl({
+          currentUrl: existingDraft?.url ?? "",
+          overridden: existingDraft?.urlOverridden ?? false,
+          serverUrl: serverOrigin ? buildIntegrationUrl(kind, serverOrigin, urlMode) : null,
+          fallbackUrl: getIntegrationDefaultUrl(kind) ?? null,
+        });
         next.push(
           existingDraft
-            ? existingDraft.url || !generatedUrl
-              ? existingDraft
-              : { ...existingDraft, url: generatedUrl }
+            ? { ...existingDraft, url: generatedUrl }
             : createDraft({
                 id,
                 sourceId: id,
@@ -300,7 +359,6 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
   };
 
   const selectSection = (section: StudioSection) => {
-    setApplyError(null);
     setActiveSection(section);
   };
 
@@ -339,8 +397,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
     });
   };
 
-  const applySetupAsync = async (includeSelections = true) => {
-    setApplyError(null);
+  const applySetupAsync = async () => {
     setAppError(null);
     setAppErrorSourceId(null);
     setApplyProgress(5);
@@ -353,7 +410,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
         setActiveSection("board");
         throw new Error(t("board.nameDescription"));
       }
-      const draftsToApply = includeSelections ? drafts : [];
+      const draftsToApply = drafts;
       const invalidDraft = draftsToApply.find(
         (draft) => !isHttpUrl(draft.url) || draft.secrets.some((secret) => secret.value.trim().length === 0),
       );
@@ -363,9 +420,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
         setActiveSection("connect");
         throw new Error(message);
       }
-      const appsToCreate = includeSelections
-        ? discoveredApps.filter((app) => selectedAppIds.includes(app.sourceId))
-        : [];
+      const appsToCreate = discoveredApps.filter((app) => selectedAppIds.includes(app.sourceId));
       const appWithoutAddress = appsToCreate.find((app) => !isHttpUrl(discoveredAppUrls[app.sourceId] ?? ""));
       if (appWithoutAddress) {
         const message = t("connect.appAddressRequired", { name: appWithoutAddress.containerName });
@@ -390,7 +445,8 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
           primaryColor,
           secondaryColor,
           itemRadius,
-          layoutPreset,
+          layoutPreset: getLayoutPresetForColumnCount(columnCount),
+          columnCount,
           leftSidebar,
           rightSidebar,
         },
@@ -461,8 +517,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
       setApplyMessage(t("review.progress.done"));
       setApplyProgress(100);
       await revalidatePathActionAsync("/init");
-    } catch (error) {
-      setApplyError(error instanceof Error ? error.message : t("common.unknownError"));
+    } catch {
       setApplyProgress(0);
     }
   };
@@ -470,6 +525,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
   const sectionProps: StudioSectionProps = {
     headingRef: sectionHeadingRef,
     environment,
+    assistantConfiguration,
     serverOrigin,
     setServerOrigin,
     urlMode,
@@ -513,102 +569,101 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
     setSecondaryColor,
     itemRadius,
     setItemRadius,
-    layoutPreset,
-    setLayoutPreset,
+    columnCount,
+    setColumnCount,
     leftSidebar,
     setLeftSidebar,
     rightSidebar,
     setRightSidebar,
     applyProgress,
     applyMessage,
-    applyError,
     appError,
     appErrorSourceId,
   };
-
+  const hasIntegrationsWithoutUrl = drafts.some((draft) => draft.url.trim().length === 0);
+  const continueDisabled = isApplying || (activeSection === "essentials" && serverOrigin.trim().length === 0);
+  const continueOnboarding = () => {
+    if (continueDisabled) return;
+    if (activeSection === "review") {
+      void applySetupAsync();
+    } else if (activeSection === "connect" && hasIntegrationsWithoutUrl) {
+      setIncompleteIntegrationConfirmationOpened(true);
+    } else {
+      move(1);
+    }
+  };
   return (
-    <main className={classes.page}>
+    <main
+      className={classes.page}
+      style={
+        {
+          "--studio-glow-color": primaryColor,
+          "--studio-secondary-glow-color": secondaryColor,
+        } as CSSProperties
+      }
+    >
       <div className={classes.shell}>
-        <Group className={classes.topbar} justify="space-between" mb="lg">
-          <Image
-            src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg"
-            alt="Homarr"
-            className={classes.wordmark}
-          />
-          <Group gap="xs">
-            <Badge variant="light">{t("setupBadge")}</Badge>
-            <Badge variant="dot" color={environment.databaseDriver === "sqlite" ? "blue" : "grape"}>
-              {environment.databaseDriver}
-            </Badge>
-          </Group>
+        <Group className={classes.topbar} mb="lg">
+          <OnboardingWordmark />
         </Group>
 
         <Paper className={classes.studio} radius="lg">
           <div className={classes.studioGrid}>
             <nav className={classes.rail} aria-label={t("navigationLabel")}>
-              <Stack className={classes.railList} gap={4}>
-                <Stack gap={4} mb="md" px="xs" visibleFrom="md">
-                  <Text fw={700}>{t("title")}</Text>
-                  <Text size="xs" c="dimmed">
-                    {t("subtitle")}
-                  </Text>
-                </Stack>
+              <Timeline
+                active={activeIndex}
+                bulletSize={32}
+                lineWidth={2}
+                color={primaryColor}
+                className={classes.timeline}
+                classNames={{ itemBullet: classes.timelineBullet }}
+              >
                 {sectionDefinitions.map((section, index) => {
                   const Icon = section.icon;
                   const active = section.id === activeSection;
                   return (
-                    <UnstyledButton
+                    <Timeline.Item
                       key={section.id}
-                      ref={(node) => {
-                        sectionButtonRefs.current[index] = node;
-                      }}
-                      className={classes.railButton}
-                      data-active={active}
-                      onClick={() => selectSection(section.id)}
-                      onKeyDown={(event) => handleSectionKeyDown(event, index)}
-                      aria-current={active ? "step" : undefined}
-                      aria-controls="onboarding-studio-section"
-                      tabIndex={active ? 0 : -1}
-                    >
-                      <Group wrap="nowrap" gap="sm">
-                        <ThemeIcon variant={active ? "light" : "transparent"} size="md">
-                          <Icon size={17} />
-                        </ThemeIcon>
-                        <Stack gap={0} align="flex-start">
-                          <Text size="sm" fw={active ? 650 : 500}>
-                            {t(`navigation.${section.id}`)}
-                          </Text>
-                          <Text size="xs" c="dimmed">
-                            {index + 1} / {sectionDefinitions.length}
-                          </Text>
-                        </Stack>
-                      </Group>
-                    </UnstyledButton>
+                      bullet={<Icon size={16} aria-hidden />}
+                      title={
+                        <UnstyledButton
+                          ref={(node) => {
+                            sectionButtonRefs.current[index] = node;
+                          }}
+                          className={classes.timelineButton}
+                          data-active={active}
+                          onClick={() => selectSection(section.id)}
+                          onKeyDown={(event) => handleSectionKeyDown(event, index)}
+                          aria-label={`${t(`navigation.${section.id}`)} (${index + 1}/${sectionDefinitions.length})`}
+                          aria-current={active ? "step" : undefined}
+                          aria-controls="onboarding-studio-section"
+                          tabIndex={active ? 0 : -1}
+                        >
+                          <Stack gap={0} align="flex-start">
+                            <Text className={classes.timelineLabel} size="sm" fw={active ? 650 : 500}>
+                              {t(`navigation.${section.id}`)}
+                            </Text>
+                            <Text className={classes.timelineLabel} size="xs" c="dimmed">
+                              {index + 1} / {sectionDefinitions.length}
+                            </Text>
+                          </Stack>
+                        </UnstyledButton>
+                      }
+                    />
                   );
                 })}
-              </Stack>
+              </Timeline>
             </nav>
 
             <section id="onboarding-studio-section" className={classes.content} aria-labelledby="studio-section-title">
-              <motion.div
-                key={activeSection}
-                initial={reduceMotion ? false : { x: 12 }}
-                animate={{ x: 0 }}
-                transition={{ duration: reduceMotion ? 0 : 0.18 }}
-              >
+              <div key={activeSection}>
                 <StudioSectionContent section={activeSection} {...sectionProps} />
-              </motion.div>
-
-              {applyError ? (
-                <Alert className={classes.applyError} color="red" title={t("review.errorTitle")} role="alert">
-                  {applyError}
-                </Alert>
-              ) : null}
+              </div>
 
               <Group className={classes.stickyActions} justify="space-between" wrap="nowrap">
                 <Button
                   className={classes.backAction}
-                  size="md"
+                  size="sm"
                   variant="default"
                   leftSection={<IconArrowLeft size={16} />}
                   aria-label={t("back")}
@@ -619,34 +674,72 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
                 </Button>
                 {activeSection === "review" ? (
                   <Button
-                    size="md"
+                    size="sm"
                     loading={isApplying}
                     rightSection={<IconSparkles size={16} />}
-                    onClick={() => void applySetupAsync()}
+                    onClick={continueOnboarding}
                   >
                     {t("buildBoard")}
                   </Button>
                 ) : (
                   <Group className={classes.primaryActions} gap="xs" wrap="nowrap">
-                    {activeSection === "essentials" ? (
-                      <Button
-                        className={classes.fastAction}
-                        size="md"
-                        variant="subtle"
-                        loading={isApplying}
-                        onClick={() => void applySetupAsync(false)}
+                    {activeSection === "connect" && hasIntegrationsWithoutUrl ? (
+                      <Popover
+                        opened={incompleteIntegrationConfirmationOpened}
+                        onDismiss={() => setIncompleteIntegrationConfirmationOpened(false)}
+                        transitionProps={{ duration: 0 }}
+                        position="top-end"
+                        width={320}
+                        shadow="md"
+                        withArrow
+                        trapFocus
                       >
-                        {t("buildBoard")}
+                        <Popover.Target>
+                          <Button
+                            size="sm"
+                            disabled={continueDisabled}
+                            rightSection={<IconArrowRight size={16} />}
+                            aria-haspopup="dialog"
+                            aria-expanded={incompleteIntegrationConfirmationOpened}
+                            onClick={() => setIncompleteIntegrationConfirmationOpened((opened) => !opened)}
+                          >
+                            {t("continue")}
+                          </Button>
+                        </Popover.Target>
+                        <Popover.Dropdown role="dialog" aria-label={t("connect.incompleteConfirmation")}>
+                          <Stack gap="sm">
+                            <Text size="sm">{t("connect.incompleteConfirmation")}</Text>
+                            <Group justify="flex-end" gap="xs">
+                              <Button
+                                size="xs"
+                                variant="default"
+                                onClick={() => setIncompleteIntegrationConfirmationOpened(false)}
+                              >
+                                {tCommon("cancel")}
+                              </Button>
+                              <Button
+                                size="xs"
+                                onClick={() => {
+                                  setIncompleteIntegrationConfirmationOpened(false);
+                                  move(1);
+                                }}
+                              >
+                                {tCommon("confirm")}
+                              </Button>
+                            </Group>
+                          </Stack>
+                        </Popover.Dropdown>
+                      </Popover>
+                    ) : (
+                      <Button
+                        size="sm"
+                        disabled={continueDisabled}
+                        rightSection={<IconArrowRight size={16} />}
+                        onClick={continueOnboarding}
+                      >
+                        {t("continue")}
                       </Button>
-                    ) : null}
-                    <Button
-                      size="md"
-                      disabled={isApplying}
-                      rightSection={<IconArrowRight size={16} />}
-                      onClick={() => move(1)}
-                    >
-                      {t("continue")}
-                    </Button>
+                    )}
                   </Group>
                 )}
               </Group>
@@ -661,6 +754,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
 interface StudioSectionProps {
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   environment: OnboardingStudioProps["environment"];
+  assistantConfiguration: ReactNode;
   serverOrigin: string;
   setServerOrigin: (value: string) => void;
   urlMode: UrlTemplateMode;
@@ -698,15 +792,14 @@ interface StudioSectionProps {
   setSecondaryColor: (value: string) => void;
   itemRadius: MantineSize;
   setItemRadius: (value: MantineSize) => void;
-  layoutPreset: LayoutPreset;
-  setLayoutPreset: (value: LayoutPreset) => void;
+  columnCount: number;
+  setColumnCount: (value: number) => void;
   leftSidebar: boolean;
   setLeftSidebar: (value: boolean) => void;
   rightSidebar: boolean;
   setRightSidebar: (value: boolean) => void;
   applyProgress: number;
   applyMessage: string;
-  applyError: string | null;
   appError: string | null;
   appErrorSourceId: string | null;
 }
@@ -753,65 +846,47 @@ const Essentials = (props: StudioSectionProps) => {
     <Stack gap="lg">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
       <SimpleGrid cols={{ base: 1, sm: 2 }}>
-        <Select
+        <LanguageCombobox
           label={t("language")}
-          data={supportedLanguages.map((locale) => ({
-            value: locale,
-            label: `${localeConfigurations[locale].name} · ${localeConfigurations[locale].translatedName}`,
-          }))}
           value={props.selectedLocale}
-          onChange={(value) => value && props.setSelectedLocale(value as SupportedLanguage)}
-          searchable
-          allowDeselect={false}
+          onChange={props.setSelectedLocale}
+          width="100%"
         />
-        <SegmentedControl
-          aria-label={t("theme")}
+        <ColorSchemeCombobox
+          label={t("theme")}
           value={props.colorScheme}
-          onChange={(value) => props.setColorScheme(value as ColorScheme)}
-          data={[
-            { value: "auto", label: t("themeAuto") },
-            { value: "light", label: t("themeLight") },
-            { value: "dark", label: t("themeDark") },
-          ]}
-          fullWidth
+          onChange={props.setColorScheme}
+          width="100%"
         />
       </SimpleGrid>
 
-      <Paper className={classes.sectionCard} radius="lg" p="lg">
-        <Stack>
-          <Group wrap="nowrap" align="flex-start">
-            <ThemeIcon variant="light" size="lg">
-              <IconServer size={20} />
-            </ThemeIcon>
-            <Stack gap={2}>
-              <Text fw={650}>{t("serverTitle")}</Text>
-              <Text size="sm" c="dimmed">
-                {t("serverDescription")}
-              </Text>
-            </Stack>
-          </Group>
-          <TextInput
-            label={t("serverOrigin")}
-            description={t("serverOriginDescription")}
-            placeholder="home.lan · 192.168.1.10 · https://homarr.example.com"
-            value={props.serverOrigin}
-            onChange={(event) => props.setServerOrigin(event.currentTarget.value)}
-          />
-          <SegmentedControl
-            fullWidth
-            value={props.urlMode}
-            onChange={(value) => props.setUrlMode(value as UrlTemplateMode)}
-            data={[
-              { value: "hostPort", label: t("hostPort") },
-              { value: "subdomain", label: t("subdomain") },
-              { value: "path", label: t("path") },
-            ]}
-          />
-          {props.serverOrigin ? (
-            <Code block>{buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}</Code>
-          ) : null}
-        </Stack>
-      </Paper>
+      <Stack gap="sm">
+        <Alert variant="light" icon={<IconInfoCircle size={18} />} my="xs">
+          {t("serverOriginHelp")}
+        </Alert>
+        <TextInput
+          label={t("serverTitle")}
+          placeholder="home.lan · 192.168.1.10 · https://homarr.example.com"
+          value={props.serverOrigin}
+          onChange={(event) => props.setServerOrigin(event.currentTarget.value)}
+          required
+          withAsterisk
+          autoFocus
+        />
+        <OnboardingFloatingControl
+          ariaLabel={t("urlModeLabel")}
+          value={props.urlMode}
+          onChange={props.setUrlMode}
+          options={[
+            { value: "hostPort", label: t("hostPort") },
+            { value: "subdomain", label: t("subdomain") },
+            { value: "path", label: t("path") },
+          ]}
+        />
+        {props.serverOrigin ? (
+          <Code block>{buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}</Code>
+        ) : null}
+      </Stack>
 
       <Switch
         checked={props.analyticsEnabled}
@@ -887,19 +962,6 @@ const Discovery = (props: StudioSectionProps) => {
                 })
               : t(`status.${dockerStatus}`)
           }
-          action={
-            props.environment.dockerConfigured ? (
-              <ActionIcon
-                size={44}
-                variant="subtle"
-                aria-label={t("retryDocker")}
-                onClick={() => void props.docker.refetch()}
-                loading={props.docker.isFetching}
-              >
-                <IconRefresh size={18} />
-              </ActionIcon>
-            ) : undefined
-          }
         />
         <CapabilityRow
           icon={IconServer}
@@ -946,10 +1008,6 @@ const Discovery = (props: StudioSectionProps) => {
           </Stack>
         </Alert>
       ) : null}
-
-      <Alert variant="light" icon={<IconWorld size={18} />} title={t("platformTitle")}>
-        {t("platformDescription")}
-      </Alert>
     </Stack>
   );
 };
@@ -991,7 +1049,7 @@ const CapabilityRow = ({
       <Group justify="space-between" wrap="nowrap">
         <Group wrap="nowrap" miw={0}>
           <ThemeIcon variant="light" color={color} size="lg">
-            {status === "checking" ? <Loader size="sm" /> : <Icon size={20} />}
+            <Icon size={20} />
           </ThemeIcon>
           <Stack gap={1} miw={0}>
             <Text fw={650}>{title}</Text>
@@ -1130,7 +1188,15 @@ const Connections = (props: StudioSectionProps) => {
       ) : null}
 
       {props.drafts.length > 0 ? (
-        <Accordion variant="separated" multiple defaultValue={props.drafts.slice(0, 1).map((draft) => draft.id)}>
+        <Accordion
+          className={classes.integrationAccordion}
+          variant="separated"
+          multiple
+          transitionDuration={200}
+          order={3}
+          mb="md"
+          defaultValue={props.drafts.slice(0, 1).map((draft) => draft.id)}
+        >
           {props.drafts.map((draft) => (
             <IntegrationEditor
               key={draft.id}
@@ -1141,7 +1207,7 @@ const Connections = (props: StudioSectionProps) => {
           ))}
         </Accordion>
       ) : (
-        <Alert variant="light" icon={<IconPlugConnected size={18} />}>
+        <Alert variant="light" icon={<IconPlugConnected size={18} />} my="xs">
           {t("empty")}
         </Alert>
       )}
@@ -1162,9 +1228,14 @@ const IntegrationEditor = ({
   const options = getAllSecretKindOptions(draft.kind);
   const apiKeyUrl = getIntegrationApiKeyUrl(draft.url, draft.kind);
   const documentationUrl = getIntegrationDocumentationUrl(draft.kind);
+  const needsConfiguration =
+    !isHttpUrl(draft.url) || draft.secrets.some((secret) => secret.value.trim().length === 0) || Boolean(draft.error);
   return (
     <Accordion.Item value={draft.id}>
-      <Accordion.Control icon={<IntegrationAvatar kind={draft.kind} size="sm" />}>
+      <Accordion.Control
+        icon={<IntegrationAvatar kind={draft.kind} size="sm" />}
+        aria-label={needsConfiguration ? `${draft.name}: ${t("needsConfiguration")}` : draft.name}
+      >
         <Group justify="space-between" wrap="nowrap" pr="sm">
           <Stack gap={0} miw={0}>
             <Text fw={650} truncate>
@@ -1174,6 +1245,16 @@ const IntegrationEditor = ({
               {getIntegrationName(draft.kind)} · {draft.source === "docker" ? t("dockerSource") : t("manualSource")}
             </Text>
           </Stack>
+          <ThemeIcon
+            className={classes.integrationStatus}
+            color={needsConfiguration ? "orange" : "green"}
+            variant="light"
+            size="sm"
+            radius="xl"
+            aria-label={t(needsConfiguration ? "needsConfiguration" : "configured")}
+          >
+            {needsConfiguration ? <IconAlertCircle size={14} /> : <IconCheck size={14} />}
+          </ThemeIcon>
         </Group>
       </Accordion.Control>
       <Accordion.Panel>
@@ -1187,14 +1268,15 @@ const IntegrationEditor = ({
             <TextInput
               label={t("url")}
               value={draft.url}
-              onChange={(event) => update({ url: event.currentTarget.value, error: null })}
+              onChange={(event) => update({ url: event.currentTarget.value, urlOverridden: true, error: null })}
             />
           </SimpleGrid>
           {options.length > 1 ? (
-            <SegmentedControl
+            <OnboardingFloatingControl
+              ariaLabel={t("credentialMethod")}
               value={String(draft.secretOption)}
               onChange={(value) => selectSecretOption(Number(value))}
-              data={options.map((secretKinds, index) => ({
+              options={options.map((secretKinds, index) => ({
                 value: String(index),
                 label: secretKinds.length === 0 ? t("noCredentials") : secretKinds.map(formatSecretKind).join(" + "),
               }))}
@@ -1249,9 +1331,6 @@ const formatSecretKind = (kind: IntegrationSecretKind) =>
 
 const BoardBuilder = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.board");
-  const reduceMotion = useReducedMotion();
-  const theme = useMantineTheme();
-  const colorSwatches = Object.values(theme.colors).map((color) => color[6]);
   const previewWidgetKinds = getPreviewWidgetKinds(props);
   const previewAppCount = getPreviewAppCount(props);
   return (
@@ -1285,50 +1364,34 @@ const BoardBuilder = (props: StudioSectionProps) => {
             withAsterisk
           />
           <SimpleGrid cols={2}>
-            <ColorInput
-              label={t("primaryColor")}
-              value={props.primaryColor}
-              onChange={props.setPrimaryColor}
-              format="hex"
-              swatches={colorSwatches}
-              withPicker={false}
-              disallowInput
-            />
-            <ColorInput
+            <BoardColorInput label={t("primaryColor")} value={props.primaryColor} onChange={props.setPrimaryColor} />
+            <BoardColorInput
               label={t("secondaryColor")}
               value={props.secondaryColor}
               onChange={props.setSecondaryColor}
-              format="hex"
-              swatches={colorSwatches}
-              withPicker={false}
-              disallowInput
             />
           </SimpleGrid>
           <Stack gap="xs">
             <Text size="sm" fw={500}>
               {t("radius")}
             </Text>
-            <SegmentedControl
-              aria-label={t("radius")}
-              fullWidth
+            <OnboardingFloatingControl
+              ariaLabel={t("radius")}
               value={props.itemRadius}
-              onChange={(value) => props.setItemRadius(value as MantineSize)}
-              data={radiusValues.map((value) => ({ value, label: value.toUpperCase() }))}
+              onChange={props.setItemRadius}
+              options={radiusValues.map((value) => ({ value, label: value.toUpperCase() }))}
             />
             <Group gap="xs" aria-hidden>
-              {radiusValues.map((radius, index) => (
-                <motion.div
+              {radiusValues.map((radius) => (
+                <div
                   key={radius}
-                  animate={{
-                    borderRadius: props.itemRadius === radius ? `var(--mantine-radius-${radius})` : "4px",
-                    scale: reduceMotion ? 1 : props.itemRadius === radius ? 1.06 : 1,
-                  }}
-                  transition={{ duration: reduceMotion ? 0 : 0.18 }}
                   style={{
                     flex: 1,
                     height: 34,
-                    background: index % 2 === 0 ? props.primaryColor : props.secondaryColor,
-                    opacity: props.itemRadius === radius ? 1 : 0.28,
+                    borderRadius: `var(--mantine-radius-${radius})`,
+                    background: "var(--mantine-color-default)",
+                    border: "1px solid var(--mantine-color-default-border)",
+                    opacity: props.itemRadius === radius ? 1 : 0.55,
                   }}
                 />
               ))}
@@ -1336,24 +1399,36 @@ const BoardBuilder = (props: StudioSectionProps) => {
           </Stack>
         </Stack>
 
-        <Stack>
-          <SegmentedControl
-            aria-label={t("layoutPreset")}
-            fullWidth
-            value={props.layoutPreset}
-            onChange={(value) => props.setLayoutPreset(value as LayoutPreset)}
-            data={[
-              { value: "focused", label: t("layoutFocused") },
-              { value: "balanced", label: t("layoutBalanced") },
-              { value: "wide", label: t("layoutWide") },
-            ]}
-          />
+        <Stack gap="lg">
+          <Stack gap="xs" pb="md">
+            <Group justify="space-between" align="flex-start">
+              <Stack gap={2}>
+                <Text size="sm" fw={500}>
+                  {t("columns")}
+                </Text>
+                <Text size="xs" c="dimmed" maw="44ch">
+                  {t("columnsDescription")}
+                </Text>
+              </Stack>
+              <Badge variant="light">{t("columnCount", { count: props.columnCount })}</Badge>
+            </Group>
+            <Slider
+              mt="xs"
+              min={8}
+              max={24}
+              step={1}
+              value={props.columnCount}
+              onChange={props.setColumnCount}
+              marks={[8, 10, 12, 18, 24].map((value) => ({ value, label: String(value) }))}
+              thumbLabel={t("columns")}
+              thumbValueText={(value) => t("columnCount", { count: value })}
+              label={(value) => t("columnCount", { count: value })}
+            />
+          </Stack>
           <BoardPreview
             ariaLabel={t("previewLabel")}
-            primaryColor={props.primaryColor}
-            secondaryColor={props.secondaryColor}
             itemRadius={props.itemRadius}
-            layoutPreset={props.layoutPreset}
+            baseColumnCount={props.columnCount}
             leftSidebar={props.leftSidebar}
             rightSidebar={props.rightSidebar}
             widgetKinds={previewWidgetKinds}
@@ -1373,154 +1448,81 @@ const BoardBuilder = (props: StudioSectionProps) => {
           </SimpleGrid>
         </Stack>
       </SimpleGrid>
-
-      <Divider label={t("widgetPrimer")} labelPosition="left" />
-      <Stack gap="lg">
-        <PrimerRow icon={IconApps} title={t("primerAppsTitle")} description={t("primerAppsDescription")} />
-        <PrimerRow
-          icon={IconPlugConnected}
-          title={t("primerWidgetsTitle")}
-          description={t("primerWidgetsDescription")}
-        />
-        <PrimerRow icon={IconTool} title={t("primerEditTitle")} description={t("primerEditDescription")} />
-      </Stack>
     </Stack>
   );
 };
 
 const BoardPreview = ({
   ariaLabel,
-  primaryColor,
-  secondaryColor,
   itemRadius,
-  layoutPreset,
+  baseColumnCount,
   leftSidebar,
   rightSidebar,
   widgetKinds,
   appCount,
 }: {
   ariaLabel: string;
-  primaryColor: string;
-  secondaryColor: string;
   itemRadius: MantineSize;
-  layoutPreset: LayoutPreset;
+  baseColumnCount: number;
   leftSidebar: boolean;
   rightSidebar: boolean;
   widgetKinds: WidgetKind[];
   appCount: number;
 }) => {
-  const t = useScopedI18n("init.studio.board");
-  const reduceMotion = useReducedMotion();
-  const [layoutRole, setLayoutRole] = useState<"mobile" | "base">("base");
-  const baseColumnCount = { focused: 8, balanced: 10, wide: 12 }[layoutPreset];
-  const columnCount =
-    layoutRole === "mobile" ? 3 : Math.max(1, baseColumnCount - Number(leftSidebar) - Number(rightSidebar));
-  const showLeftSidebar = layoutRole === "base" && leftSidebar;
-  const showRightSidebar = layoutRole === "base" && rightSidebar;
+  const columnCount = Math.max(1, baseColumnCount - Number(leftSidebar) - Number(rightSidebar));
   const previewItems = [
     ...widgetKinds.map((kind) => {
       const config = getDefaultWidgetConfig(kind);
-      return {
-        id: `widget:${kind}`,
-        width: config.width,
-        height: config.height,
-      };
+      return { id: `widget:${kind}`, width: config.width, height: config.height };
     }),
     ...Array.from({ length: appCount }, (_, index) => ({ id: `app:${index}`, width: 1, height: 1 })),
   ].slice(0, 12);
 
   return (
-    <Stack gap="xs">
-      <SegmentedControl<"mobile" | "base">
-        aria-label={t("previewLayout")}
-        value={layoutRole}
-        onChange={setLayoutRole}
-        data={[
-          { value: "mobile", label: t("previewMobile") },
-          { value: "base", label: t("previewBase") },
-        ]}
-        fullWidth
-      />
-      <figure
-        className={classes.preview}
-        aria-label={ariaLabel}
-        data-layout-role={layoutRole}
-        data-layout-columns={columnCount}
-        style={
-          {
-            gridTemplateColumns: [
-              showLeftSidebar ? "0.24fr" : null,
-              "minmax(0, 1fr)",
-              showRightSidebar ? "0.24fr" : null,
-            ]
-              .filter(Boolean)
-              .join(" "),
-          } as CSSProperties
-        }
-      >
-        {showLeftSidebar ? <div className={classes.previewLane} /> : null}
-        <div className={classes.previewLane}>
-          <div
-            className={classes.previewTiles}
-            style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}
-          >
-            {previewItems.map((item, index) => (
-              <motion.div
-                key={item.id}
-                className={classes.previewTile}
-                aria-hidden
-                initial={reduceMotion ? false : { opacity: 0.65, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1, borderRadius: `var(--mantine-radius-${itemRadius})` }}
-                transition={{
-                  duration: reduceMotion ? 0 : 0.18,
-                  delay: reduceMotion ? 0 : Math.min(index * 0.015, 0.12),
-                }}
-                style={{
-                  gridColumn: `span ${Math.min(columnCount, item.width)}`,
-                  gridRow: `span ${Math.min(3, item.height)}`,
-                  borderRadius: `var(--mantine-radius-${itemRadius})`,
-                  background: `linear-gradient(135deg, color-mix(in srgb, ${primaryColor} 45%, transparent), color-mix(in srgb, ${secondaryColor} 38%, transparent))`,
-                }}
-              />
-            ))}
-          </div>
+    <figure
+      className={classes.preview}
+      aria-label={ariaLabel}
+      data-layout-columns={columnCount}
+      style={
+        {
+          gridTemplateColumns: [leftSidebar ? "0.24fr" : null, "minmax(0, 1fr)", rightSidebar ? "0.24fr" : null]
+            .filter(Boolean)
+            .join(" "),
+        } as CSSProperties
+      }
+    >
+      {leftSidebar ? <div className={classes.previewLane} /> : null}
+      <div className={classes.previewLane}>
+        <div className={classes.previewTiles} style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
+          {previewItems.map((item) => (
+            <div
+              key={item.id}
+              className={classes.previewTile}
+              aria-hidden
+              style={{
+                gridColumn: `span ${Math.min(columnCount, item.width)}`,
+                gridRow: `span ${Math.min(3, item.height)}`,
+                borderRadius: `var(--mantine-radius-${itemRadius})`,
+              }}
+            />
+          ))}
         </div>
-        {showRightSidebar ? <div className={classes.previewLane} /> : null}
-      </figure>
-    </Stack>
+      </div>
+      {rightSidebar ? <div className={classes.previewLane} /> : null}
+    </figure>
   );
 };
-
-const PrimerRow = ({
-  icon: Icon,
-  title,
-  description,
-}: {
-  icon: typeof IconApps;
-  title: string;
-  description: string;
-}) => (
-  <Group wrap="nowrap" align="flex-start">
-    <ThemeIcon variant="light" size="lg" flex="0 0 auto">
-      <Icon size={20} />
-    </ThemeIcon>
-    <Stack gap={3}>
-      <Text fw={650}>{title}</Text>
-      <Text size="sm" c="dimmed" maw="65ch">
-        {description}
-      </Text>
-    </Stack>
-  </Group>
-);
 
 const Extensions = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.extend");
   return (
-    <Stack gap="lg">
-      <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
-      <Tabs defaultValue="assistant" variant="outline">
+    <Stack gap={0}>
+      <Title id="studio-section-title" ref={props.headingRef} order={2} tabIndex={-1} mb="xs">
+        {t("title")}
+      </Title>
+      <Tabs defaultValue="assistant">
         <Tabs.List grow aria-label={t("tabsLabel")}>
-          <Tabs.Tab value="assistant" leftSection={<IconBrain size={16} />}>
+          <Tabs.Tab value="assistant" leftSection={<IconRobot size={16} />}>
             {t("assistant")}
           </Tabs.Tab>
           <Tabs.Tab value="workshop" leftSection={<IconSparkles size={16} />}>
@@ -1530,13 +1532,13 @@ const Extensions = (props: StudioSectionProps) => {
             {t("mcp")}
           </Tabs.Tab>
         </Tabs.List>
-        <Tabs.Panel value="assistant" pt="md">
-          <AssistantSetup environment={props.environment} />
+        <Tabs.Panel value="assistant" pt="xs">
+          <AssistantSetup environment={props.environment} configuration={props.assistantConfiguration} />
         </Tabs.Panel>
-        <Tabs.Panel value="workshop" pt="md">
+        <Tabs.Panel value="workshop" pt="xs">
           <WorkshopSetup environment={props.environment} runtimeCapabilities={props.runtimeCapabilities} />
         </Tabs.Panel>
-        <Tabs.Panel value="mcp" pt="md">
+        <Tabs.Panel value="mcp" pt="xs">
           <McpSetup environment={props.environment} />
         </Tabs.Panel>
       </Tabs>
@@ -1544,78 +1546,14 @@ const Extensions = (props: StudioSectionProps) => {
   );
 };
 
-const AssistantSetup = ({ environment }: { environment: StudioSectionProps["environment"] }) => {
+const AssistantSetup = ({
+  environment,
+  configuration,
+}: {
+  environment: StudioSectionProps["environment"];
+  configuration: ReactNode;
+}) => {
   const t = useScopedI18n("init.studio.extend.assistantSetup");
-  const assistantSettingsT = useScopedI18n("management.page.settings.section.assistant");
-  const reduceMotion = useReducedMotion();
-  const [provider, setProvider] = useState<AssistantProvider>("homarr");
-  const [baseUrl, setBaseUrl] = useState<string>(assistantProviderPresets.homarr.baseUrl);
-  const [apiKey, setApiKey] = useState("");
-  const [modelId, setModelId] = useState("");
-  const [enabled, setEnabled] = useState(true);
-  const [webSearch, setWebSearch] = useState(false);
-  const configuration = clientApi.assistant.getAdminConfiguration.useQuery(undefined, {
-    enabled: environment.canConfigurePrivileged,
-    retry: false,
-  });
-  const models = clientApi.assistant.discoverModels.useQuery(undefined, {
-    enabled:
-      environment.canConfigurePrivileged &&
-      configuration.data?.connectionConfigured === true &&
-      configuration.data.modelDiscoveryPath !== null,
-    retry: false,
-  });
-  const updateConnection = clientApi.assistant.updateConnection.useMutation({
-    async onSuccess() {
-      await configuration.refetch();
-      await models.refetch();
-    },
-    onError(error) {
-      showErrorNotification({ title: t("errorTitle"), message: error.message });
-    },
-  });
-  const updateConfiguration = clientApi.assistant.updateConfiguration.useMutation({
-    onSuccess() {
-      showSuccessNotification({ title: t("savedTitle"), message: t("savedDescription") });
-    },
-    onError(error) {
-      showErrorNotification({ title: t("errorTitle"), message: error.message });
-    },
-  });
-
-  useEffect(() => {
-    const saved = configuration.data;
-    if (!saved?.connectionConfigured) return;
-    setProvider(saved.provider);
-    setBaseUrl(saved.baseUrl);
-    setModelId(saved.modelId ?? "");
-    setEnabled(saved.enabled);
-    setWebSearch(saved.webSearchEnabled);
-    setApiKey("");
-  }, [configuration.data]);
-
-  const preset = assistantProviderPresets[provider];
-  const normalizedBaseUrl = baseUrl.trim().replace(/\/$/, "");
-  const connectionChanged =
-    configuration.data?.connectionConfigured === true &&
-    (configuration.data.provider !== provider || configuration.data.baseUrl !== normalizedBaseUrl);
-  const modelControlsDisabled = configuration.data?.connectionConfigured !== true || connectionChanged;
-  const useManualModelInput =
-    !modelControlsDisabled &&
-    !models.isFetching &&
-    (configuration.data?.modelDiscoveryPath === null || models.isError || models.data?.length === 0);
-  const modelOptions = (models.data ?? []).map((model) => ({ value: model.id, label: model.name }));
-  if (modelId && !modelOptions.some((model) => model.value === modelId)) {
-    modelOptions.unshift({ value: modelId, label: modelId });
-  }
-  const selectProvider = (value: string | null) => {
-    if (!value || !assistantProviderIds.includes(value as AssistantProvider)) return;
-    const next = value as AssistantProvider;
-    setProvider(next);
-    setBaseUrl(next === "homarr" ? environment.workshopApiUrl : assistantProviderPresets[next].baseUrl);
-    setModelId("");
-  };
-
   if (!environment.canConfigurePrivileged) {
     return (
       <Alert icon={<IconKey size={18} />} title={t("loginTitle")}>
@@ -1629,116 +1567,7 @@ const AssistantSetup = ({ environment }: { environment: StudioSectionProps["envi
     );
   }
 
-  return (
-    <Stack gap="md">
-      <div className={classes.assistantStage}>
-        <motion.div
-          className={classes.assistantGlow}
-          animate={reduceMotion ? undefined : { scale: [0.86, 1.14, 0.86], opacity: [0.55, 1, 0.55] }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <Stack h="100%" justify="center" align="center" pos="relative" p="lg">
-          <motion.div
-            animate={reduceMotion ? undefined : { rotate: [0, 4, -4, 0] }}
-            transition={{ duration: 4, repeat: Infinity }}
-          >
-            <ThemeIcon size={64} radius="xl" variant="light">
-              <IconBrain size={30} />
-            </ThemeIcon>
-          </motion.div>
-          <Text fw={700}>{t("title")}</Text>
-          <Text size="sm" c="dimmed" ta="center" maw="34rem">
-            {t("description")}
-          </Text>
-        </Stack>
-      </div>
-      <SimpleGrid cols={{ base: 1, sm: 2 }}>
-        <Select
-          label={t("provider")}
-          value={provider}
-          onChange={selectProvider}
-          data={assistantProviderIds.map((value) => ({
-            value,
-            label: assistantSettingsT(`provider.options.${value}.label`),
-          }))}
-          allowDeselect={false}
-        />
-        <TextInput
-          label={t("baseUrl")}
-          value={baseUrl}
-          onChange={(event) => setBaseUrl(event.currentTarget.value)}
-          disabled={provider === "homarr"}
-        />
-      </SimpleGrid>
-      {preset.requiresApiKey ? (
-        <PasswordInput label={t("apiKey")} value={apiKey} onChange={(event) => setApiKey(event.currentTarget.value)} />
-      ) : null}
-      <Group>
-        <Button
-          variant="light"
-          loading={updateConnection.isPending || models.isFetching}
-          onClick={() =>
-            updateConnection.mutate({
-              provider,
-              baseUrl,
-              modelDiscoveryPath: preset.modelDiscoveryPath,
-              apiKey: apiKey.trim() || undefined,
-              clearApiKey: provider === "homarr",
-              clearCustomHeaders: provider === "homarr",
-            })
-          }
-        >
-          {t("connect")}
-        </Button>
-        <Text size="sm" c="dimmed">
-          {t("connectHint")}
-        </Text>
-      </Group>
-      {models.error ? <Alert color="orange">{models.error.message}</Alert> : null}
-      {updateConnection.error ? <Alert color="red">{updateConnection.error.message}</Alert> : null}
-      {useManualModelInput ? (
-        <TextInput
-          label={t("model")}
-          value={modelId}
-          onChange={(event) => setModelId(event.currentTarget.value)}
-          placeholder={t("manualModelPlaceholder")}
-          description={t("manualModelDescription")}
-        />
-      ) : (
-        <Select
-          label={t("model")}
-          searchable
-          data={modelControlsDisabled ? [] : modelOptions}
-          value={modelId || null}
-          onChange={(value) => setModelId(value ?? "")}
-          placeholder={models.isFetching ? t("discovering") : t("modelPlaceholder")}
-          disabled={modelControlsDisabled || models.isFetching}
-          allowDeselect={false}
-        />
-      )}
-      <Group grow>
-        <Switch checked={enabled} onChange={(event) => setEnabled(event.currentTarget.checked)} label={t("enable")} />
-        <Switch
-          checked={webSearch}
-          onChange={(event) => setWebSearch(event.currentTarget.checked)}
-          label={t("webSearch")}
-          disabled={!assistantProviderCanUseOpenRouterServerTools(provider)}
-        />
-      </Group>
-      <Group justify="space-between">
-        <Anchor component={Link} href="/manage/assistant" size="sm">
-          {t("advanced")}
-        </Anchor>
-        <Button
-          disabled={!modelId}
-          loading={updateConfiguration.isPending}
-          onClick={() => updateConfiguration.mutate({ enabled, modelId, webSearchEnabled: webSearch })}
-        >
-          {t("save")}
-        </Button>
-      </Group>
-    </Stack>
-  );
+  return configuration;
 };
 
 const WorkshopSetup = ({
@@ -1830,7 +1659,7 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
   );
   return (
     <Stack>
-      <Alert icon={<IconBrain size={18} />} title={t("title")}>
+      <Alert icon={<IconCode size={18} />} title={t("title")} my="xs">
         {t("description")}
       </Alert>
       <TextInput label={t("endpoint")} value={environment.mcpEndpoint} readOnly />
@@ -1896,28 +1725,63 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
 
 const Review = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.review");
-  const reduceMotion = useReducedMotion();
+  const themeLabel = {
+    auto: t("themeAuto"),
+    light: t("themeLight"),
+    dark: t("themeDark"),
+  }[props.colorScheme];
+  const sidebarCount = Number(props.leftSidebar) + Number(props.rightSidebar);
   const summary = [
     {
-      icon: IconPalette,
-      label: t("appearance"),
-      value: `${props.selectedLocale} · ${props.colorScheme} · ${props.itemRadius}`,
+      icon: IconLayoutDashboard,
+      label: t("board"),
+      value: props.boardName,
     },
     {
-      icon: IconBrandDocker,
-      label: t("services"),
-      value: t("servicesValue", {
-        integrations: String(props.drafts.length),
-        apps: String(props.selectedAppIds.length),
-      }),
+      icon: IconLayoutColumns,
+      label: t("columns"),
+      value: t("columnsValue", { count: props.columnCount }),
     },
-    { icon: IconLayoutDashboard, label: t("board"), value: props.boardName },
+    {
+      icon: IconLayoutSidebar,
+      label: t("sidebars"),
+      value: t("sidebarsValue", { count: sidebarCount }),
+    },
     { icon: IconDeviceMobile, label: t("layouts"), value: t("layoutsValue") },
+    {
+      icon: IconPlugConnected,
+      label: t("integrations"),
+      value: t("integrationsValue", { count: props.drafts.length }),
+    },
+    {
+      icon: IconApps,
+      label: t("apps"),
+      value: t("appsValue", { count: getPreviewAppCount(props) }),
+    },
+    { icon: IconLanguage, label: t("language"), value: props.selectedLocale },
+    { icon: IconSunMoon, label: t("theme"), value: themeLabel },
+    {
+      icon: IconPalette,
+      label: t("colors"),
+      value: (
+        <Group gap="xs" wrap="nowrap">
+          <ColorSwatch color={props.primaryColor} size={18} />
+          <Text size="sm" fw={650} ff="monospace">
+            {props.primaryColor}
+          </Text>
+          <ColorSwatch color={props.secondaryColor} size={18} />
+          <Text size="sm" fw={650} ff="monospace">
+            {props.secondaryColor}
+          </Text>
+        </Group>
+      ),
+    },
+    { icon: IconBorderRadius, label: t("radius"), value: props.itemRadius.toUpperCase() },
   ];
   return (
     <Stack gap="lg">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
-      <SimpleGrid cols={{ base: 1, sm: 2 }}>
+      <SimpleGrid cols={{ base: 1, xs: 2, lg: 3 }}>
         {summary.map(({ icon: Icon, label, value }) => (
           <Paper key={label} className={classes.sectionCard} radius="lg" p="md">
             <Group wrap="nowrap">
@@ -1928,26 +1792,19 @@ const Review = (props: StudioSectionProps) => {
                 <Text size="xs" c="dimmed">
                   {label}
                 </Text>
-                <Text fw={650} truncate>
-                  {value}
-                </Text>
+                {typeof value === "string" ? (
+                  <Text fw={650} truncate>
+                    {value}
+                  </Text>
+                ) : (
+                  value
+                )}
               </Stack>
             </Group>
           </Paper>
         ))}
       </SimpleGrid>
-      <BoardPreview
-        ariaLabel={t("previewLabel")}
-        primaryColor={props.primaryColor}
-        secondaryColor={props.secondaryColor}
-        itemRadius={props.itemRadius}
-        layoutPreset={props.layoutPreset}
-        leftSidebar={props.leftSidebar}
-        rightSidebar={props.rightSidebar}
-        widgetKinds={getPreviewWidgetKinds(props)}
-        appCount={getPreviewAppCount(props)}
-      />
-      <Alert icon={<IconSparkles size={18} />} title={t("automaticTitle")}>
+      <Alert icon={<IconSparkles size={18} />} title={t("automaticTitle")} my="xs">
         {t("automaticDescription")}
       </Alert>
       {props.applyProgress > 0 ? (
@@ -1961,12 +1818,7 @@ const Review = (props: StudioSectionProps) => {
                 {props.applyProgress}%
               </Text>
             </Group>
-            <Progress
-              value={props.applyProgress}
-              animated={!reduceMotion && props.applyProgress < 100}
-              aria-label={props.applyMessage}
-              aria-live="polite"
-            />
+            <Progress value={props.applyProgress} aria-label={props.applyMessage} aria-live="polite" />
           </Stack>
         </Paper>
       ) : null}
@@ -2002,6 +1854,7 @@ const createDraft = ({
   kind,
   name,
   url,
+  urlOverridden: false,
   source,
   secretOption: 0,
   secrets: (getAllSecretKindOptions(kind)[0] ?? []).map((secretKind) => ({ kind: secretKind, value: "" })),

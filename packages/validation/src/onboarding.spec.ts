@@ -102,4 +102,28 @@ describe("onboarding URL validation", () => {
       onboardingCompleteSetupSchema.safeParse({ ...input, selectedDockerSourceIds: ["x".repeat(513)] }).success,
     ).toBe(false);
   });
+
+  test("accepts board column counts from 8 through 24", () => {
+    const input = {
+      server: { defaultLocale: "en", defaultColorScheme: "dark" },
+      board: {
+        name: "dashboard",
+        primaryColor: "#228BE6",
+        secondaryColor: "#15AABF",
+        itemRadius: "md",
+        columnCount: 8,
+      },
+    };
+
+    expect(onboardingCompleteSetupSchema.safeParse(input).success).toBe(true);
+    expect(
+      onboardingCompleteSetupSchema.safeParse({ ...input, board: { ...input.board, columnCount: 24 } }).success,
+    ).toBe(true);
+    expect(
+      onboardingCompleteSetupSchema.safeParse({ ...input, board: { ...input.board, columnCount: 7 } }).success,
+    ).toBe(false);
+    expect(
+      onboardingCompleteSetupSchema.safeParse({ ...input, board: { ...input.board, columnCount: 25 } }).success,
+    ).toBe(false);
+  });
 });

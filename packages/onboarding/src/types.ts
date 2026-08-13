@@ -20,4 +20,5 @@ export interface OnboardingEnvironment {
 export interface OnboardingStudioProps {
   environment: OnboardingEnvironment;
   sqliteRestore?: ReactNode;
+  assistantConfiguration?: ReactNode;
 }

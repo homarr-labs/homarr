@@ -36,7 +36,6 @@
     "@mantine/core": "catalog:",
     "@mantine/hooks": "catalog:",
     "@tabler/icons-react": "catalog:",
-    "motion": "catalog:",
     "react": "catalog:",
     "zod": "catalog:"
   },

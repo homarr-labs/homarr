@@ -15,6 +15,7 @@ import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
 import { DatabaseRestoreFlow } from "~/components/backup";
 import { env } from "~/env";
+import { AssistantConfiguration } from "../manage/assistant/_components/assistant-configuration";
 
 export default async function InitPage() {
   const [state, session, requestHeaders, firstUser] = await Promise.all([
@@ -68,6 +69,7 @@ export default async function InitPage() {
         availableBoards,
       }}
       sqliteRestore={databaseDriver === "sqlite" ? <DatabaseRestoreFlow variant="standalone" /> : undefined}
+      assistantConfiguration={canConfigurePrivileged ? <AssistantConfiguration /> : undefined}
     />
   );
 }
