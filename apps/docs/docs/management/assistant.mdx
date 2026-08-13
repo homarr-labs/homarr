@@ -8,82 +8,61 @@ tags:
 
 # Assistant
 
-Homarr Assistant can answer questions about your Homarr instance and use Homarr tools on your behalf. It follows the
-permissions of the signed-in user and asks for approval before it changes anything.
+Homarr Assistant can answer questions and manage Homarr for you. It uses the signed-in user's permissions and asks for
+approval before making changes.
 
 ![Homarr Assistant conversation with suggested prompts](/img/assistant/conversation.png)
 
-## Open the assistant
-
-- Select **Assistant** in the user menu.
-- Press `Shift + A` from anywhere in Homarr.
-- Type a question in `Cmd/Ctrl + K`, then select **Ask Homarr Assistant**.
-- Add the **Assistant** widget to a board for a permanent conversation view.
-
-You can minimize a conversation while it works. The activity bar shows its progress and the user menu shows unread
-responses.
-
-## What it can do
-
-- Find and update boards, apps, integrations, widgets, and dashboard settings.
-- Check downloads, media, Docker containers, service health, and other connected integrations.
-- Create formatted notes and Custom Widgets.
-- Search the web when OpenRouter web search is enabled.
-- Show tool activity, reasoning summaries, usage, time, and cost when the provider reports them.
-
-Use `@` to add an app, board, integration, widget, or tool as context. Use `/` for common prompts. You can also paste or
-attach images and text files when the selected model supports them.
-
-## Configure the assistant
+## Set it up
 
 Open **Management → Assistant**.
 
 ![Assistant provider, credentials, and model configuration](/img/assistant/configuration.png)
 
-1. Select a provider.
-2. Check the API base URL and add an API key if required.
-3. Select **Save provider connection**.
-4. Refresh the model list and choose a model.
-5. Enable the assistant, then select **Save assistant**.
+1. Select a provider and check its API URL.
+2. Enter an API key when required, then save the connection.
+3. Refresh the model list and select a model.
+4. Enable the assistant and save.
 
-Homarr includes presets for OpenRouter, OpenAI, Claude, Gemini, xAI, Groq, Mistral, DeepSeek, Together AI, Ollama, and
-LM Studio. Use **Custom endpoint** for another OpenAI-compatible Chat Completions service.
-
-The [Homarr provider](../workshop/homarr-provider) does not require an administrator API key. Each user signs in to the
-Community Workshop and receives a separate daily allowance. A shared Workshop daily quota also applies, so requests
-can be rejected after that shared quota is exhausted.
+Choose a provider preset or use **Custom endpoint** with an OpenAI-compatible Chat Completions API. The
+[Homarr provider](../workshop/homarr-provider) needs no administrator API key; users sign in to the Community Workshop
+and receive a daily allowance.
 
 :::info Local model servers
 
 Inside a container, `localhost` means the Homarr container. Use the model server's container name, local DNS name, or
-host gateway address instead.
+host gateway address.
 
 :::
 
-## Approvals and data
+## Use it
 
-Read-only tools can run automatically. Changes show an approval card with the exact action before Homarr runs it.
-Normal Homarr permissions still apply.
+- Select **Assistant** in the user menu or press `Shift + A`.
+- Ask from `Cmd/Ctrl + K`.
+- Add the [Assistant widget](../widgets/assistant) to a board.
 
-API keys and custom headers are encrypted in the Homarr database and are never returned to the browser. Prompts,
-attachments, tool definitions, and tool results are sent to the configured model provider. Check that provider's data
-policy before enabling the assistant.
+The assistant can work with boards, apps, integrations, widgets, Custom Widgets, and connected services. Use `@` to
+add Homarr items as context, `/` for shortcuts, and the paperclip for supported files.
 
-Conversations are stored per user. Users can edit or retry messages, copy responses, export a conversation as Markdown,
-and delete conversations.
+Each request includes the user's name, current page and board, home board, server time, browser time zone, and a small
+summary of accessible Homarr resources. Live status is fetched only when needed.
 
-Each request includes the signed-in user's name, server time, current page and board, home board, browser time zone,
-and a bounded snapshot of the Homarr resources they can access. Live service and system status is loaded with tools
-only when needed.
+## Permissions and privacy
 
-## If setup does not work
+- Read-only actions can run automatically. Changes require approval.
+- Homarr permissions apply to every tool call and mentioned item.
+- API keys and custom headers are encrypted and never returned to the browser.
+- Conversations are stored per user and can be exported or deleted.
+
+Prompts, attachments, tool definitions, and tool results are sent to the selected model provider. Review that
+provider's privacy policy before enabling the assistant.
+
+## Troubleshooting
 
 - **No models found:** check the base URL, model discovery path, and API key. You can enter a model ID manually.
-- **The assistant is unavailable:** enable it and save the configuration.
-- **A model stops during a tool call:** use a model that supports streaming and structured tool calls.
-- **A local endpoint cannot be reached:** check container networking and the endpoint's listen address.
+- **Assistant is unavailable:** enable it and save the configuration.
+- **Tool calls stop:** select a model that supports streaming and tool calls.
+- **Local endpoint is unreachable:** check container networking and the server's listen address.
 
-Homarr exposes its MCP-enabled procedures to external clients through the [MCP server](./mcp). MCP omits
-`customWidget_*` tools for non-admin API keys, while the built-in assistant adds browser actions and optional
-OpenRouter web search. Custom Widget authors can find the full workflow in
-[Agent authoring](./custom-widgets/agent-authoring).
+See [MCP](./mcp) for external AI clients and [Custom Widget agent authoring](./custom-widgets/agent-authoring) for the
+widget authoring workflow.
