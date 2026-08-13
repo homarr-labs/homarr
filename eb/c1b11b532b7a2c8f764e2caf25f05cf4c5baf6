@@ -1,0 +1,29 @@
+packages/onboarding/src/onboarding-studio.module.css
+  s_bc3b2ff5afd321::t_ec79ad0fbd223a 184-188
+packages/translation/src/lang/en.json
+  s_bc3b2ff5afd321::t_ec79ad0fbd223a 115,117
+packages/onboarding/src/setup-studio.tsx
+  s_bc3b2ff5afd321::t_ed2318ce2dc79f 1233
+  s_bc3b2ff5afd321::t_ec79ad0fbd223a 272-274,1153,1170,1186,1191-1194,1196,1203,1218-1221,1234-1257
+  s_bc3b2ff5afd321::t_5b7dfb5ec6c248 1222-1223
+apps/docs/docs/integrations/docker-labels/index.mdx
+  s_bc3b2ff5afd321::t_ec79ad0fbd223a 72-73
+packages/api/src/router/onboard/onboard-router.ts
+  s_bc3b2ff5afd321::t_ec79ad0fbd223a 91,211-212,261,275
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ebc1b11b532b7a2c8f764e2caf25f05cf4c5baf6",
+  "prompts": {},
+  "sessions": {
+    "s_bc3b2ff5afd321": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa77-6fff-7222-aeba-e870dc5f1496",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
