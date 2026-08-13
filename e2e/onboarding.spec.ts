@@ -149,6 +149,7 @@ describe("Onboarding", () => {
         expect(await boardPreview.getAttribute("data-layout-columns")).toBe("12");
 
         await page.getByRole("button", { name: /^Connect/ }).click();
+        await page.getByRole("button", { name: "Add another integration" }).click();
         const sonarr = page.locator('button[aria-label="Sonarr"]');
         await sonarr.click();
         await page.getByLabel("Service URL").waitFor();
