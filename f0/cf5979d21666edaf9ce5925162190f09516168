@@ -1,0 +1,176 @@
+packages/onboarding/src/onboarding-studio.tsx
+  s_06f8fd8d11bc0e::t_e68e04884787a6 4
+packages/onboarding/src/onboarding-studio.module.css
+  s_f88a182f44b431::t_20c5f3bcac7563 4,16
+  s_06f8fd8d11bc0e::t_5b7c28fef47073 150-153
+  s_06f8fd8d11bc0e::t_6c82a656499356 40
+  s_06f8fd8d11bc0e::t_e1595399be7794 104-107,109,111,337
+  s_06f8fd8d11bc0e::t_ff3f21ac66048d 112-113
+  s_f88a182f44b431::t_db41a7fa498aa7 25,27-33
+  s_06f8fd8d11bc0e::t_c5a5f5b3994202 245-248,257-258,270-271,275,285-286
+  s_9e3e8866e477c7::t_31c36b30acb332 55-58,64,67
+  s_9e3e8866e477c7::t_113bf9e070cad1 128-129,131,217,341
+  s_06f8fd8d11bc0e::t_ec2322ef6a3bdf 252-253,269
+  s_06f8fd8d11bc0e::t_ff22b50535c26f 422-423,426-430
+  s_9e3e8866e477c7::t_4e92b6ebcad46c 187,194-195,209-210
+  s_9e3e8866e477c7::t_0fd1091beb1b00 54
+  s_06f8fd8d11bc0e::t_c3395fee7354f8 90,100,102-103,108,110,118,122,298,302,323-336,338-339
+  s_06f8fd8d11bc0e::t_0154700bb48679 50-53,59-60,65-66,71-73,312,371
+  s_f88a182f44b431::t_2677c95ff90360 3,11
+  s_f88a182f44b431::t_fa66240308da84 244,249-251,254-256,259-268,272-274,276-284
+packages/ui/src/components/index.tsx
+  s_9e3e8866e477c7::t_45dcc9d5723b32 18-19
+  s_f88a182f44b431::t_2677c95ff90360 20
+packages/ui/src/components/language-combobox.tsx
+  s_9e3e8866e477c7::t_45dcc9d5723b32 1-92
+packages/onboarding/src/welcome.tsx
+  s_9e3e8866e477c7::t_31c36b30acb332 87-89,92
+  s_06f8fd8d11bc0e::t_0154700bb48679 5
+  s_f88a182f44b431::t_cf9adeb160286c 12,80
+packages/api/src/router/test/onboard.spec.ts
+  s_06f8fd8d11bc0e::t_8c28129fcb8485 310,332
+apps/nextjs/src/app/[locale]/manage/assistant/_components/assistant-configuration.tsx
+  s_9e3e8866e477c7::t_504074d0f2095d 145-146,158
+  s_9e3e8866e477c7::t_c97940ea6ab4a6 441,443
+  s_9e3e8866e477c7::t_84449f109de870 204,442,444-445
+packages/ui/src/components/board-color-input.tsx
+  s_f88a182f44b431::t_2677c95ff90360 1-10
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_appereance.tsx
+  s_9e3e8866e477c7::t_57dfb4fc5ee285 48,52
+  s_f88a182f44b431::t_2677c95ff90360 24
+packages/api/src/router/test/assistant.spec.ts
+  s_9e3e8866e477c7::t_b0c99593428b5c 62-73
+packages/onboarding/src/discovery-selection.spec.ts
+  s_f88a182f44b431::t_16d5b29a0e5854 3-9,31-47
+  s_f88a182f44b431::t_8015aa524bfb8a 48-49
+packages/onboarding/src/types.ts
+  s_9e3e8866e477c7::t_2a017fc99fb5ff 23
+packages/api/src/router/onboard/onboard-router.ts
+  s_06f8fd8d11bc0e::t_8c28129fcb8485 588
+packages/onboarding/src/discovery-selection.ts
+  s_f88a182f44b431::t_16d5b29a0e5854 14-25
+packages/translation/src/lang/en.json
+  s_06f8fd8d11bc0e::t_ec2322ef6a3bdf 127
+  s_f88a182f44b431::t_2aa793b55ddd92 148
+  s_06f8fd8d11bc0e::t_1f068007f2cc29 199-202,205-215
+  s_06f8fd8d11bc0e::t_045e6752691b6b 152
+  s_9e3e8866e477c7::t_2a017fc99fb5ff 155,163
+  s_06f8fd8d11bc0e::t_920fcbe1803397 149
+  s_06f8fd8d11bc0e::t_5b7c28fef47073 130
+  s_9e3e8866e477c7::t_965bf37e4a7892 132-133
+  s_06f8fd8d11bc0e::t_287e348b85e154 131
+  s_06f8fd8d11bc0e::t_2aeb5d9802e5c4 216
+  s_f88a182f44b431::t_5ec756185b2a19 220
+  s_9e3e8866e477c7::t_84449f109de870 6331
+  s_06f8fd8d11bc0e::t_8c28129fcb8485 147
+  s_9e3e8866e477c7::t_1b1422d38228c2 71
+  s_06f8fd8d11bc0e::t_0154700bb48679 31,39,43,45
+  s_9e3e8866e477c7::t_504074d0f2095d 6339,6391-6392
+  s_06f8fd8d11bc0e::t_c5a5f5b3994202 75
+packages/validation/src/onboarding.ts
+  s_06f8fd8d11bc0e::t_8c28129fcb8485 88
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_9e3e8866e477c7::t_32500a1de3aed9 8
+apps/nextjs/public/logo/homarr-wordmark-light.svg
+  s_9e3e8866e477c7::t_a337e7af5aaea3 1-72
+packages/ui/src/components/color-scheme-combobox.tsx
+  s_9e3e8866e477c7::t_45dcc9d5723b32 1-86
+apps/nextjs/src/components/color-scheme/color-scheme-combobox.tsx
+  s_9e3e8866e477c7::t_45dcc9d5723b32 3
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_06f8fd8d11bc0e::t_8c28129fcb8485 51
+packages/onboarding/src/setup-studio.tsx
+  s_06f8fd8d11bc0e::t_8c28129fcb8485 26,219,448-449,572-573,795-796,1402-1408,1412-1427
+  s_f88a182f44b431::t_5ec756185b2a19 520
+  s_06f8fd8d11bc0e::t_287e348b85e154 1248-1257
+  s_9e3e8866e477c7::t_45dcc9d5723b32 849,852-853,855-856,858-859,867-871,875,886-889
+  s_06f8fd8d11bc0e::t_ec2322ef6a3bdf 147,149-154,156-159,194,877-885,1276,1279,1379,1381-1382
+  s_06f8fd8d11bc0e::t_3e4efff881e479 866
+  s_f88a182f44b431::t_52c3fa4a11339f 1385,1392-1394
+  s_06f8fd8d11bc0e::t_5b7c28fef47073 41,1192,1195-1197,1231-1232,1235-1238
+  s_f88a182f44b431::t_16d5b29a0e5854 99-105,120,296-303,306,320-325,328,1271,1857
+  s_f88a182f44b431::t_2aa793b55ddd92 1409-1411
+  s_06f8fd8d11bc0e::t_c429eef0e8b08e 864,1210,1662,1807
+  s_f88a182f44b431::t_870fba338d022f 1523
+  s_f88a182f44b431::t_b9a26f97f07c93 22,687,691-699,702,705,707-708,710,712-715,717,719-722,725-726,728-732
+  s_06f8fd8d11bc0e::t_e1595399be7794 613-620
+  s_9e3e8866e477c7::t_2a017fc99fb5ff 91,195,528,757,1519,1535-1536,1538,1541,1549-1555,1570
+  s_9e3e8866e477c7::t_42c6b743e56ac1 606
+  s_9e3e8866e477c7::t_5cd1c9c5c9613b 197,201,400,413,423
+  s_9e3e8866e477c7::t_31becdef36a466 666,677
+  s_f88a182f44b431::t_cf9adeb160286c 98,607
+  s_f88a182f44b431::t_5745a568b49371 172-174,176,180,183-186,188-189
+  s_9e3e8866e477c7::t_d7e689a89c51da 583,686,688-689,701,703-704,706,709,711,716,718,723-724,727,733,735,737,740,742
+  s_06f8fd8d11bc0e::t_3525b5167b6813 659,661,863,1052,1191,1193-1194,1198-1199,1386,1391,1497-1498,1505,1821
+  s_9e3e8866e477c7::t_683184cb7ff708 865
+  s_06f8fd8d11bc0e::t_e68e04884787a6 690
+  s_f88a182f44b431::t_fa66240308da84 18,148,155,160-171,175,177-179,181-182,187,190-193,876,1275,1378
+  s_06f8fd8d11bc0e::t_1f068007f2cc29 15,46,55-56,58,66,1728-1733,1736-1743,1746-1748,1751-1779,1784,1795-1801
+  s_06f8fd8d11bc0e::t_7a8749437f2344 62,1520-1522,1525
+  s_9e3e8866e477c7::t_34d121c8bf3e61 1431,1458,1466,1472,1476,1482-1496,1499-1504,1506-1508,1510-1512
+  s_06f8fd8d11bc0e::t_920fcbe1803397 111-113
+  s_9e3e8866e477c7::t_1b1422d38228c2 53,584,700,736,872-874
+  s_f88a182f44b431::t_20c5f3bcac7563 596-604
+  s_06f8fd8d11bc0e::t_c3395fee7354f8 33,625,627-652,655
+  s_f88a182f44b431::t_2677c95ff90360 94,1367-1372
+  s_06f8fd8d11bc0e::t_10f60b2e1d6d84 1120-1129
+  s_9e3e8866e477c7::t_d826d364404f79 585-594,680,738
+packages/onboarding/src/finish.tsx
+  s_9e3e8866e477c7::t_c702a1a7f244fc 3-4
+  s_06f8fd8d11bc0e::t_267460b4417556 22,25,29,62
+packages/validation/src/onboarding.spec.ts
+  s_f88a182f44b431::t_6ceacac040375e 119-127
+  s_06f8fd8d11bc0e::t_8c28129fcb8485 105-118,128
+packages/onboarding/src/onboarding-wordmark.tsx
+  s_06f8fd8d11bc0e::t_5b0c13d35f586b 4-8
+  s_06f8fd8d11bc0e::t_267460b4417556 3,9
+  s_f88a182f44b431::t_cf9adeb160286c 1-2
+packages/api/src/router/assistant.ts
+  s_9e3e8866e477c7::t_504074d0f2095d 537-538
+packages/definitions/src/assistant.ts
+  s_9e3e8866e477c7::t_84449f109de870 18,53
+apps/nextjs/src/components/language/language-combobox.tsx
+  s_9e3e8866e477c7::t_45dcc9d5723b32 3
+packages/onboarding/src/account.tsx
+  s_06f8fd8d11bc0e::t_c429eef0e8b08e 129
+  s_06f8fd8d11bc0e::t_0154700bb48679 130
+  s_06f8fd8d11bc0e::t_3e4efff881e479 131
+apps/nextjs/src/app/[locale]/init/page.tsx
+  s_9e3e8866e477c7::t_2a017fc99fb5ff 18,72
+e2e/onboarding.spec.ts
+  s_06f8fd8d11bc0e::t_8c28129fcb8485 144-146
+apps/docs/docs/management/assistant.mdx
+  s_9e3e8866e477c7::t_504074d0f2095d 28-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f0cf5979d21666edaf9ce5925162190f09516168",
+  "prompts": {},
+  "sessions": {
+    "s_06f8fd8d11bc0e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffc43-219d-71d3-99c9-a8969fe772c8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9e3e8866e477c7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffc40-9362-7f41-b5f1-170ea5f2fb0a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_f88a182f44b431": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffc43-a969-7140-a8d1-074d9b38b745",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
