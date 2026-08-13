@@ -1,20 +1,15 @@
 import styles from "../../../../pages/index.module.css";
 import { supportedIntegrations } from "../../../../constants/supported-integrations";
 
-const featuredIntegrations = [
-  { name: "Radarr", position: styles.dataflowNodeTopLeft },
-  { name: "Sonarr", position: styles.dataflowNodeMiddleLeft },
-  { name: "Lidarr", position: styles.dataflowNodeBottomLeft },
-  { name: "SABnzbd", position: styles.dataflowNodeTopRight },
-  { name: "Jellyfin", position: styles.dataflowNodeMiddleRight },
-].map((node) => ({
-  ...node,
-  image: supportedIntegrations.find((integration) => integration.name === node.name)?.iconUrl ?? "",
-}));
-
-const featuredNames = new Set(["Homarr", ...featuredIntegrations.map((integration) => integration.name)]);
-const otherIntegrations = supportedIntegrations.filter((integration) => !featuredNames.has(integration.name));
-const iconCycleStepInSeconds = 1.4;
+const nodePositions = [
+  styles.dataflowNodeTopLeft,
+  styles.dataflowNodeMiddleLeft,
+  styles.dataflowNodeBottomLeft,
+  styles.dataflowNodeTopRight,
+  styles.dataflowNodeMiddleRight,
+  styles.dataflowNodeBottomRight,
+];
+const cyclingIntegrations = supportedIntegrations.filter((integration) => integration.name !== "Homarr");
 
 const paths = [
   "M145 82 C330 82 330 235 480 260",
@@ -39,7 +34,7 @@ export const DataflowVisualizationComponent = () => (
     <div
       className={styles.dataflowDiagram}
       role="img"
-      aria-label="Information flowing both ways between Homarr, Radarr, Sonarr, Lidarr, SABnzbd, Jellyfin, and 19 more integrations"
+      aria-label={`Information flowing both ways between Homarr and rotating examples from ${cyclingIntegrations.length} supported integrations`}
     >
       <svg className={styles.dataflowLines} viewBox="0 0 960 520" preserveAspectRatio="none" aria-hidden="true">
         {paths.map((path) => (
@@ -51,30 +46,35 @@ export const DataflowVisualizationComponent = () => (
         ))}
       </svg>
 
-      {featuredIntegrations.map((integration) => (
-        <div className={`${styles.dataflowNode} ${integration.position}`} key={integration.name}>
-          <img src={integration.image} alt="" width={54} height={54} />
-        </div>
-      ))}
+      {nodePositions.map((position, nodeIndex) => {
+        const cycleStepInSeconds = 1.2 + nodeIndex * 0.13;
+        const phaseOffsetInSeconds = nodeIndex * 2.7;
 
-      <div className={`${styles.dataflowNode} ${styles.dataflowNodeBottomRight}`}>
-        <div className={styles.dataflowMoreIcons} aria-hidden="true">
-          {otherIntegrations.map((integration, index) => (
-            <img
-              src={integration.iconUrl}
-              alt=""
-              width={54}
-              height={54}
-              key={integration.name}
-              style={{
-                animationDelay: `${-index * iconCycleStepInSeconds}s`,
-                animationDuration: `${otherIntegrations.length * iconCycleStepInSeconds}s`,
-              }}
-            />
-          ))}
-        </div>
-        <span>+{otherIntegrations.length} more</span>
-      </div>
+        return (
+          <div className={`${styles.dataflowNode} ${position}`} key={position}>
+            <div className={styles.dataflowCyclingIcons} aria-hidden="true">
+              {cyclingIntegrations.map((_, integrationIndex) => {
+                const integration =
+                  cyclingIntegrations[(integrationIndex + nodeIndex * 4) % cyclingIntegrations.length];
+
+                return (
+                  <img
+                    src={integration.iconUrl}
+                    alt=""
+                    width={54}
+                    height={54}
+                    key={integration.name}
+                    style={{
+                      animationDelay: `${-(integrationIndex * cycleStepInSeconds + phaseOffsetInSeconds)}s`,
+                      animationDuration: `${cyclingIntegrations.length * cycleStepInSeconds}s`,
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
 
       <div className={`${styles.dataflowNode} ${styles.dataflowHub}`}>
         <img src="/img/logo.png" alt="" width={86} height={86} />

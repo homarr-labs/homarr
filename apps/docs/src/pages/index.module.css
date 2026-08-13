@@ -323,30 +323,19 @@ section {
   object-fit: contain;
 }
 
-.dataflowMoreIcons {
+.dataflowCyclingIcons {
   position: relative;
   width: clamp(2rem, 4.5vw, 3.4rem);
   aspect-ratio: 1;
 }
 
-.dataflowMoreIcons img {
+.dataflowCyclingIcons img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
   animation: dataflow-icon-cycle linear infinite;
-}
-
-.dataflowNode span {
-  overflow: hidden;
-  width: 100%;
-  font-size: clamp(0.68rem, 1.4vw, 0.875rem);
-  font-weight: 700;
-  line-height: 1.2;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .dataflowNodeTopLeft,
@@ -398,12 +387,12 @@ section {
 
 @keyframes dataflow-icon-cycle {
   0%,
-  4.8% {
+  3.7% {
     opacity: 1;
     transform: scale(1);
   }
 
-  5.3%,
+  4.2%,
   99% {
     opacity: 0;
     transform: scale(0.82);
@@ -483,7 +472,7 @@ section {
   .statusDotFailed,
   .dataflowSignal,
   .dataflowSignalReverse,
-  .dataflowMoreIcons img {
+  .dataflowCyclingIcons img {
     animation: none;
   }
 
@@ -492,7 +481,7 @@ section {
     display: none;
   }
 
-  .dataflowMoreIcons img:first-child {
+  .dataflowCyclingIcons img:first-child {
     opacity: 1;
   }
 }
