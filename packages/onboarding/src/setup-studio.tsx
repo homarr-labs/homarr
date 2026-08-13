@@ -121,8 +121,10 @@ interface IntegrationDraft {
   source: "manual" | "docker";
   secretOption: number;
   secrets: { kind: IntegrationSecretKind; value: string }[];
-  error: string | null;
 }
+
+const isIntegrationDraftComplete = (draft: IntegrationDraft) =>
+  isHttpUrl(draft.url) && draft.secrets.every((secret) => secret.value.trim().length > 0);
 
 type DockerDiscoveryData = RouterOutputs["onboard"]["discoverDockerServices"];
 type RuntimeCapabilitiesQuery = Omit<
@@ -410,16 +412,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
         setActiveSection("board");
         throw new Error(t("board.nameDescription"));
       }
-      const draftsToApply = drafts;
-      const invalidDraft = draftsToApply.find(
-        (draft) => !isHttpUrl(draft.url) || draft.secrets.some((secret) => secret.value.trim().length === 0),
-      );
-      if (invalidDraft) {
-        const message = t("connect.validationError", { name: invalidDraft.name });
-        updateDraft(invalidDraft.id, { error: message });
-        setActiveSection("connect");
-        throw new Error(message);
-      }
+      const draftsToApply = drafts.filter(isIntegrationDraftComplete);
       const appsToCreate = discoveredApps.filter((app) => selectedAppIds.includes(app.sourceId));
       const appWithoutAddress = appsToCreate.find((app) => !isHttpUrl(discoveredAppUrls[app.sourceId] ?? ""));
       if (appWithoutAddress) {
@@ -580,13 +573,13 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     appError,
     appErrorSourceId,
   };
-  const hasIntegrationsWithoutUrl = drafts.some((draft) => draft.url.trim().length === 0);
+  const hasIncompleteIntegrations = drafts.some((draft) => !isIntegrationDraftComplete(draft));
   const continueDisabled = isApplying || (activeSection === "essentials" && serverOrigin.trim().length === 0);
   const continueOnboarding = () => {
     if (continueDisabled) return;
     if (activeSection === "review") {
       void applySetupAsync();
-    } else if (activeSection === "connect" && hasIntegrationsWithoutUrl) {
+    } else if (activeSection === "connect" && hasIncompleteIntegrations) {
       setIncompleteIntegrationConfirmationOpened(true);
     } else {
       move(1);
@@ -683,7 +676,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                   </Button>
                 ) : (
                   <Group className={classes.primaryActions} gap="xs" wrap="nowrap">
-                    {activeSection === "connect" && hasIntegrationsWithoutUrl ? (
+                    {activeSection === "connect" && hasIncompleteIntegrations ? (
                       <Popover
                         opened={incompleteIntegrationConfirmationOpened}
                         onDismiss={() => setIncompleteIntegrationConfirmationOpened(false)}
@@ -1228,8 +1221,7 @@ const IntegrationEditor = ({
   const options = getAllSecretKindOptions(draft.kind);
   const apiKeyUrl = getIntegrationApiKeyUrl(draft.url, draft.kind);
   const documentationUrl = getIntegrationDocumentationUrl(draft.kind);
-  const needsConfiguration =
-    !isHttpUrl(draft.url) || draft.secrets.some((secret) => secret.value.trim().length === 0) || Boolean(draft.error);
+  const needsConfiguration = !isIntegrationDraftComplete(draft);
   return (
     <Accordion.Item value={draft.id}>
       <Accordion.Control
@@ -1263,12 +1255,12 @@ const IntegrationEditor = ({
             <TextInput
               label={t("name")}
               value={draft.name}
-              onChange={(event) => update({ name: event.currentTarget.value, error: null })}
+              onChange={(event) => update({ name: event.currentTarget.value })}
             />
             <TextInput
               label={t("url")}
               value={draft.url}
-              onChange={(event) => update({ url: event.currentTarget.value, urlOverridden: true, error: null })}
+              onChange={(event) => update({ url: event.currentTarget.value, urlOverridden: true })}
             />
           </SimpleGrid>
           {options.length > 1 ? (
@@ -1289,7 +1281,6 @@ const IntegrationEditor = ({
               value={secret.value}
               onChange={(event) =>
                 update({
-                  error: null,
                   secrets: draft.secrets.map((item, itemIndex) =>
                     itemIndex === index ? { ...item, value: event.currentTarget.value } : item,
                   ),
@@ -1319,7 +1310,6 @@ const IntegrationEditor = ({
               </Group>
             </Anchor>
           ) : null}
-          {draft.error ? <Alert color="red">{draft.error}</Alert> : null}
         </Stack>
       </Accordion.Panel>
     </Accordion.Item>
@@ -1751,7 +1741,7 @@ const Review = (props: StudioSectionProps) => {
     {
       icon: IconPlugConnected,
       label: t("integrations"),
-      value: t("integrationsValue", { count: props.drafts.length }),
+      value: t("integrationsValue", { count: props.drafts.filter(isIntegrationDraftComplete).length }),
     },
     {
       icon: IconApps,
@@ -1829,7 +1819,7 @@ const Review = (props: StudioSectionProps) => {
 const getPreviewWidgetKinds = (props: StudioSectionProps) => [
   ...new Set([
     ...generalWidgets,
-    ...props.drafts.flatMap((draft) => getWidgetKindsForIntegration(draft.kind)),
+    ...props.drafts.filter(isIntegrationDraftComplete).flatMap((draft) => getWidgetKindsForIntegration(draft.kind)),
     ...props.discoveredApps
       .filter((app) => props.selectedAppIds.includes(app.sourceId))
       .flatMap((app) => (app.widgetKind ? [app.widgetKind] : [])),
@@ -1837,7 +1827,8 @@ const getPreviewWidgetKinds = (props: StudioSectionProps) => [
 ];
 
 const getPreviewAppCount = (props: StudioSectionProps) =>
-  props.drafts.length + props.discoveredApps.filter((app) => props.selectedAppIds.includes(app.sourceId)).length;
+  props.drafts.filter(isIntegrationDraftComplete).length +
+  props.discoveredApps.filter((app) => props.selectedAppIds.includes(app.sourceId)).length;
 
 const createDraft = ({
   id,
@@ -1858,5 +1849,4 @@ const createDraft = ({
   source,
   secretOption: 0,
   secrets: (getAllSecretKindOptions(kind)[0] ?? []).map((secretKind) => ({ kind: secretKind, value: "" })),
-  error: null,
 });
