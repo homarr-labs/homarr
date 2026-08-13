@@ -1,0 +1,204 @@
+packages/onboarding/src/setup-studio.tsx
+  s_bc3b2ff5afd321::t_d2512625a00ca6 902,904-905,907,1379-1380,1386-1387,1390,1426-1429,1437-1440
+  s_bc3b2ff5afd321::t_7ad07c1ab29a9a 89,435,438-440
+  s_bc3b2ff5afd321::t_166c577996a1f5 181,321,371-372,390-404,420-421
+  s_bc3b2ff5afd321::t_d958120f3ffd62 1341-1343,1348-1349,1457,1466-1474,1476
+  s_bc3b2ff5afd321::t_a071b1d789c6f8 118-123,666
+  s_bc3b2ff5afd321::t_d57745bce273be 194,744,860,1008,1238,1483,1872
+  s_bc3b2ff5afd321::t_53a716ad23ba92 972,974-980,1015
+  s_bc3b2ff5afd321::t_9911d65bce5af1 1275,1304
+  s_bc3b2ff5afd321::t_ae453e6f1cc084 1524-1527,1545-1555,1557-1569,1655-1674
+  s_bc3b2ff5afd321::t_7586eb039d3a60 99,351,362
+  s_bc3b2ff5afd321::t_639ac5701030fd 1942
+  s_bc3b2ff5afd321::t_8dc3d41c2095ce 829-840,846-856,897-898,906,912,918
+  s_bc3b2ff5afd321::t_367407177e92da 176-179,478
+  s_bc3b2ff5afd321::t_82183ac14a8381 148,168,211-213,228,274,481-483,669-671,1009-1010,1012-1014,1016-1051
+  s_bc3b2ff5afd321::t_648abedb816a4e 1011
+  s_bc3b2ff5afd321::t_b9f7dc7632f880 83,94,143,376,472-473,660-661,752-753,1385,1388-1389,1857
+  s_bc3b2ff5afd321::t_eb622407dac838 363-368
+  s_bc3b2ff5afd321::t_1e3346bae8e95e 405-419,973
+  s_bc3b2ff5afd321::t_5042697b7f805b 151-152,186-193,195-199,338,489-496,519,677-678,701,1056-1103
+  s_bc3b2ff5afd321::t_3582468b08871f 841-844,903
+  s_bc3b2ff5afd321::t_afe15ab7e25f1d 74,88,899-901,913-917,1234-1235,1319,1322-1323,1359,1362-1363,1369,1372-1373,1375,1377-1378,1381-1384,1391-1394,1396-1425,1430-1436,1441-1449,1451-1453,1500,1700-1706,1708-1712,1725-1726,1897,1900-1901,1930-1941
+  s_bc3b2ff5afd321::t_e6a5a271b07c49 169,218-220
+  s_bc3b2ff5afd321::t_095484a74d136d 207-209,214-217
+  s_bc3b2ff5afd321::t_73d7ed007b9a32 797,1485
+  s_bc3b2ff5afd321::t_79d83c32063f05 845
+packages/onboarding/src/discovery-selection.spec.ts
+  s_bc3b2ff5afd321::t_5042697b7f805b 12-22
+  s_bc3b2ff5afd321::t_095484a74d136d 1-2,4-11,30-31
+  s_bc3b2ff5afd321::t_7586eb039d3a60 3,23-29
+packages/onboarding/src/onboarding-studio.module.css
+  s_bc3b2ff5afd321::t_53a716ad23ba92 166-181,498-499
+  s_bc3b2ff5afd321::t_afe15ab7e25f1d 227-232,245
+apps/nextjs/src/app/api/backup/test/import-route.spec.ts
+  s_bc3b2ff5afd321::t_2c3818b47a7f6f 1-84,86-159,162-176,179-207,230-258
+  s_bc3b2ff5afd321::t_8afd52a9dd8255 85
+  s_bc3b2ff5afd321::t_f96b692dfe0ad1 160-161,177-178
+  s_bc3b2ff5afd321::t_754c8fa2a40c78 208-229
+packages/onboarding/src/account-recovery.spec.ts
+  s_bc3b2ff5afd321::t_5bd1c015ccd89d 1-14
+apps/nextjs/src/components/backup/database-restore-flow.tsx
+  s_bc3b2ff5afd321::t_754c8fa2a40c78 26-46,48-62,64-74,76-84,86,88-91,94-99,101-102,110,128,138,144-148,150-159,165,200-201,307-309
+  s_bc3b2ff5afd321::t_720c4f4288ef70 3,25,47,63,75,85,87,92-93,100,103-104,111,114-120,139-140,166-167,169,174-177,180-191,194-196,199
+  s_bc3b2ff5afd321::t_9ca1744ecad182 9
+packages/validation/src/onboarding.spec.ts
+  s_bc3b2ff5afd321::t_41cb2acd5d539a 3-7,60-79
+  s_bc3b2ff5afd321::t_639ac5701030fd 80
+packages/api/src/router/test/board.spec.ts
+  s_bc3b2ff5afd321::t_377a75e4f923af 333,335-337,363-381,383-386,388-431,447-454,458-529
+packages/onboarding/src/claim-state.ts
+  s_bc3b2ff5afd321::t_095484a74d136d 1-14
+apps/nextjs/src/components/backup/restore-progress-panel.tsx
+  s_bc3b2ff5afd321::t_c3010fb6f9b2a0 4,21,23,30,32-36,38,40,46-60,62-63
+  s_bc3b2ff5afd321::t_754c8fa2a40c78 5,7,9,13-15,18-20,25-26,31,37,41-45,61,66-75
+  s_bc3b2ff5afd321::t_23853e301c288e 3
+  s_bc3b2ff5afd321::t_beff910be49aa7 27
+packages/onboarding/src/welcome.tsx
+  s_bc3b2ff5afd321::t_53a716ad23ba92 77
+packages/definitions/src/integration.ts
+  s_bc3b2ff5afd321::t_cd87c43b8a8add 550-552
+  s_bc3b2ff5afd321::t_d0d7ada478ddb7 1,549,553-561
+packages/api/src/router/group.ts
+  s_bc3b2ff5afd321::t_c8da417ee1588a 1-2,198-207,214-221
+packages/docker/src/discovery/list-discovered-containers.ts
+  s_bc3b2ff5afd321::t_c0e3e3eb7c3b3c 24-25,27,37-44,46
+  s_bc3b2ff5afd321::t_c58bb7666ceec2 26,28-36,45
+packages/api/src/router/test/onboard.spec.ts
+  s_bc3b2ff5afd321::t_07f777cdd0edc5 196-211,213,216-218,220,227-251
+  s_bc3b2ff5afd321::t_ef6e826bf712d6 23,56,74-75
+  s_bc3b2ff5afd321::t_69df5575b9085c 445-447
+  s_bc3b2ff5afd321::t_c2ab84b45ecc1d 195,212,214-215,219,221-226
+  s_bc3b2ff5afd321::t_fc3f2590ba1c52 270-284
+  s_bc3b2ff5afd321::t_41cb2acd5d539a 470-475
+  s_bc3b2ff5afd321::t_5339a95c7878c8 413,416-418,427-429,438-444,448-451,453-456,461-469,476,482,485,487-497,501-509,511-513
+  s_bc3b2ff5afd321::t_c1e6736f5a80a3 30
+  s_bc3b2ff5afd321::t_3f74bfcf302f4c 40,1049-1052,1065-1074,1076-1086
+  s_bc3b2ff5afd321::t_639ac5701030fd 1075,1087
+apps/nextjs/src/components/backup/database-restore-flow.spec.ts
+  s_bc3b2ff5afd321::t_4648fa1131e6b2 1-34,36-54,56-57,59-75
+  s_bc3b2ff5afd321::t_f96b692dfe0ad1 35,58
+  s_bc3b2ff5afd321::t_140ace19e0883c 55
+packages/onboarding/src/finish.tsx
+  s_bc3b2ff5afd321::t_8a8732cf0c16e2 18
+packages/api/src/router/onboard/capability-probes.spec.ts
+  s_bc3b2ff5afd321::t_6b79889cb17026 2-5,10-41,60
+  s_bc3b2ff5afd321::t_984b7feb102898 1,6-9,42-59,61-70
+e2e/onboarding.spec.ts
+  s_bc3b2ff5afd321::t_5ae076d5d957fc 95-96,129-130,132-133,136,195
+  s_bc3b2ff5afd321::t_3f74bfcf302f4c 337,339,372-377
+  s_bc3b2ff5afd321::t_07f777cdd0edc5 91-94,97
+  s_bc3b2ff5afd321::t_648abedb816a4e 68-90,98-126,138-153,161-166
+  s_bc3b2ff5afd321::t_6f52034008d789 1,7,26-44,46-62,167-171,173-174,177,181-191,193-194,196-202,204-210,212-214,216
+  s_bc3b2ff5afd321::t_dcafb1f2087be3 6,11,16-17,335-336,338,340-343,353-360,366-371,378-396,402-408,412-415,418-424
+  s_bc3b2ff5afd321::t_832edf58531ae3 361,416-417
+  s_bc3b2ff5afd321::t_7dd7fd8ef9841e 397-401,409-411
+  s_bc3b2ff5afd321::t_b3a9878cd16016 45
+  s_bc3b2ff5afd321::t_38f8449c609547 262-292
+  s_bc3b2ff5afd321::t_7ad07c1ab29a9a 154-160
+  s_bc3b2ff5afd321::t_cab872e951172f 8,175
+  s_bc3b2ff5afd321::t_9911d65bce5af1 127-128,131,134-135,137
+  s_bc3b2ff5afd321::t_1bdcfd59da2dec 344-352,362-365
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_bc3b2ff5afd321::t_5212aa6304dece 75,89-91,190,200,212
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_bc3b2ff5afd321::t_90e14d39d57605 50,53
+  s_bc3b2ff5afd321::t_725550b8d19470 51
+  s_bc3b2ff5afd321::t_1bca6789073526 48
+apps/nextjs/src/app/api/backup/import/route.ts
+  s_bc3b2ff5afd321::t_ca45bc41a5b035 40,52,74-80,88
+  s_bc3b2ff5afd321::t_754c8fa2a40c78 330-332
+  s_bc3b2ff5afd321::t_639ac5701030fd 215
+  s_bc3b2ff5afd321::t_4c57d13b62c0e6 27-39,41-51,53-73,81-87,89-121,203-205,208-209,212-214,217-225,227-233,235-240,242-246,248-258,306,309-316,322-328
+packages/api/src/router/onboard/onboard-router.ts
+  s_bc3b2ff5afd321::t_ff92a94e7c183b 126-134,147,149-154
+  s_bc3b2ff5afd321::t_4d0cf1aae95fe9 44,124
+  s_bc3b2ff5afd321::t_151251873ace1f 373-452,454-465,469,473,476,480
+  s_bc3b2ff5afd321::t_fc3f2590ba1c52 520-524
+  s_bc3b2ff5afd321::t_6b79889cb17026 47,51
+  s_bc3b2ff5afd321::t_757c49ffeddba7 1016-1035,1107-1124
+  s_bc3b2ff5afd321::t_b9f7dc7632f880 3-4,34,723-724,748-750,761-762,765-767,816-817,820-822,895-896,899-901,1006-1015,1100-1106,1125
+  s_bc3b2ff5afd321::t_69df5575b9085c 453,479
+packages/api/src/router/test/group-onboarding.spec.ts
+  s_bc3b2ff5afd321::t_b1900956bb7f34 1-37
+packages/onboarding/src/account.tsx
+  s_bc3b2ff5afd321::t_cf52fd7f094999 3,63,93-96,103
+  s_bc3b2ff5afd321::t_5bd1c015ccd89d 14,18,62,72-77,83-87,89-90,97-102,104-111
+  s_bc3b2ff5afd321::t_c30fb1d35b4714 112
+packages/onboarding/src/account-recovery.ts
+  s_bc3b2ff5afd321::t_5bd1c015ccd89d 1-7
+packages/definitions/src/test/integration-url-template.spec.ts
+  s_bc3b2ff5afd321::t_73d7ed007b9a32 37-45
+packages/translation/src/lang/en.json
+  s_bc3b2ff5afd321::t_5bd1c015ccd89d 56-58
+  s_bc3b2ff5afd321::t_73d7ed007b9a32 80,83,175
+  s_bc3b2ff5afd321::t_afe15ab7e25f1d 96-99,101,161-163,207
+  s_bc3b2ff5afd321::t_79769c1d88fa1e 106
+  s_bc3b2ff5afd321::t_9911d65bce5af1 154
+  s_bc3b2ff5afd321::t_510ac8dbc5826e 123-126,129-130
+  s_bc3b2ff5afd321::t_8c0e7fa3375528 192-193
+  s_bc3b2ff5afd321::t_50c903457c42b7 248
+  s_bc3b2ff5afd321::t_cd5a44f945f602 140
+  s_bc3b2ff5afd321::t_4738e421777858 6768-6771
+packages/docker/src/discovery/list-discovered-containers.spec.ts
+  s_bc3b2ff5afd321::t_c58bb7666ceec2 71
+  s_bc3b2ff5afd321::t_d668301c1de28d 58,69-70,72,83-84
+e2e/manage-collections.spec.ts
+  s_bc3b2ff5afd321::t_9afbfea0dad586 1-133,135-142
+  s_bc3b2ff5afd321::t_8fa01d7bb1c341 134
+packages/definitions/src/integration-url-template.ts
+  s_bc3b2ff5afd321::t_0673e33fec023c 7,16-22,35-36
+packages/definitions/src/test/api-key-url.spec.ts
+  s_bc3b2ff5afd321::t_d0d7ada478ddb7 56-59,67-77
+  s_bc3b2ff5afd321::t_cd87c43b8a8add 54-55,60-66
+apps/nextjs/src/app/[locale]/init/page.tsx
+  s_bc3b2ff5afd321::t_648abedb816a4e 3
+  s_bc3b2ff5afd321::t_d425be0144bc73 20,26-38,45-51,60-61,65
+packages/onboarding/src/discovery-selection.ts
+  s_bc3b2ff5afd321::t_5042697b7f805b 7-12
+  s_bc3b2ff5afd321::t_7586eb039d3a60 13-21
+  s_bc3b2ff5afd321::t_095484a74d136d 1-6
+packages/onboarding/src/onboarding-studio.tsx
+  s_bc3b2ff5afd321::t_648abedb816a4e 48
+  s_bc3b2ff5afd321::t_095484a74d136d 11,19,21,26-27
+packages/api/src/router/board.ts
+  s_bc3b2ff5afd321::t_5f43e4027b5c81 11,87,265-269,277-289,291,293,299-309,312-313,319-364,366-385,394-395
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_bc3b2ff5afd321::t_1bdcfd59da2dec 176-181
+packages/api/src/router/onboard/capability-probes.ts
+  s_bc3b2ff5afd321::t_6b79889cb17026 3-9,15-16,22-24,26,32-42,55-58,61,63-66,74-80
+  s_bc3b2ff5afd321::t_58830ae651f17d 1-2,47,51
+  s_bc3b2ff5afd321::t_984b7feb102898 17-21,25,27-31,43-46,48-50,52-54,59,62,67-73
+  s_bc3b2ff5afd321::t_afe15ab7e25f1d 10-14,60
+packages/onboarding/src/claim-state.spec.ts
+  s_bc3b2ff5afd321::t_095484a74d136d 1-26
+packages/definitions/src/widget-integration-map.ts
+  s_bc3b2ff5afd321::t_b9f7dc7632f880 5,125-128
+  s_bc3b2ff5afd321::t_60d80e5ae0045c 129
+packages/api/src/router/onboard/onboard-queries.ts
+  s_bc3b2ff5afd321::t_3f74bfcf302f4c 9,25-27
+apps/nextjs/src/components/backup/restore-progress-panel.spec.tsx
+  s_bc3b2ff5afd321::t_4648fa1131e6b2 1-11,14-89,92-99
+  s_bc3b2ff5afd321::t_639ac5701030fd 12-13,90-91
+packages/validation/src/onboarding.ts
+  s_bc3b2ff5afd321::t_76af1fe157cbe4 3-9,13,24,29,35-45,47,59-72
+  s_bc3b2ff5afd321::t_274d7aeb859ce1 55-58
+  s_bc3b2ff5afd321::t_ce87e2e8e8c038 73-111
+  s_bc3b2ff5afd321::t_639ac5701030fd 112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "fa4418e676c90ac1d575c24521a3661b15dc7015",
+  "prompts": {},
+  "sessions": {
+    "s_bc3b2ff5afd321": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa77-6fff-7222-aeba-e870dc5f1496",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
