@@ -48,6 +48,8 @@ export const smartHomeRouter = createTRPCRouter({
           message: "Home Assistant failed to toggle the entity",
         });
       }
+
+      return success;
     }),
   executeAutomation: protectedProcedure
     .meta({
