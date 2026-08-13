@@ -1,0 +1,85 @@
+packages/widgets/src/archive-team-warrior/component.tsx
+  s_3818b2bc75a8b0::t_93ef34fccb5746 11,52,75-80
+  s_3818b2bc75a8b0::t_ea69e7cd897423 83,85
+packages/widgets/src/network-controller/network-status/layout.spec.ts
+  s_3818b2bc75a8b0::t_040aacae3b5f01 25-32,37-44,62-64
+apps/docs/docs/widgets/archive-team-warrior/index.mdx
+  s_3818b2bc75a8b0::t_93ef34fccb5746 17
+packages/spotlight/src/components/actions/items/group-action-item.tsx
+  s_3818b2bc75a8b0::t_ea69e7cd897423 3,34
+packages/widgets/src/wud/component.tsx
+  s_3818b2bc75a8b0::t_93ef34fccb5746 15,44,118-122
+packages/widgets/src/calendar/calendar-events.ts
+  s_3818b2bc75a8b0::t_040aacae3b5f01 13-14,17,34-35
+apps/docs/docs/widgets/health-monitoring/index.mdx
+  s_3818b2bc75a8b0::t_ea69e7cd897423 26
+packages/widgets/src/health-monitoring/cluster/cluster-health.tsx
+  s_3818b2bc75a8b0::t_ea69e7cd897423 2,11,14,43-47,69,72-76,86,90,94,102,118,134,150
+apps/docs/docs/widgets/anchor-note/index.mdx
+  s_3818b2bc75a8b0::t_ea69e7cd897423 20-21
+apps/docs/docs/widgets/calendar/index.mdx
+  s_3818b2bc75a8b0::t_040aacae3b5f01 75
+apps/docs/docs/widgets/bookmarks/index.mdx
+  s_3818b2bc75a8b0::t_ea69e7cd897423 19
+packages/widgets/src/network-controller/network-status/component.tsx
+  s_3818b2bc75a8b0::t_4e0f03e9ff537c 4
+  s_3818b2bc75a8b0::t_63ff0ec6d3477d 31
+  s_3818b2bc75a8b0::t_6612398983c1ea 7,37,70,74-83
+  s_3818b2bc75a8b0::t_93ef34fccb5746 69
+  s_3818b2bc75a8b0::t_040aacae3b5f01 11-12,24,27-30,32-34,39-42,44-50,52-63,65,67-68,71-73,84-100,105-106,129
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_3818b2bc75a8b0::t_ba119b14a45d76 23,35,37-42,44,73-92
+packages/translation/src/lang/en.json
+  s_3818b2bc75a8b0::t_6612398983c1ea 4366-4368
+packages/widgets/src/archive-team-warrior/layout.spec.ts
+  s_3818b2bc75a8b0::t_ba119b14a45d76 23-30
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_3818b2bc75a8b0::t_040aacae3b5f01 27-30,32-33,41,79,85,92-96,102-106,132,136,139-143,181,188
+packages/widgets/src/bookmarks/component.tsx
+  s_3818b2bc75a8b0::t_ea69e7cd897423 114,293
+  s_3818b2bc75a8b0::t_ba119b14a45d76 286
+apps/docs/docs/widgets/immich-album-carousel/index.mdx
+  s_3818b2bc75a8b0::t_ba119b14a45d76 36
+apps/docs/docs/widgets/whats-up-docker/index.mdx
+  s_3818b2bc75a8b0::t_93ef34fccb5746 32
+packages/spotlight/src/components/actions/items/children-action-item.tsx
+  s_3818b2bc75a8b0::t_ea69e7cd897423 3,19
+apps/docs/docs/widgets/network-controller-status/index.mdx
+  s_3818b2bc75a8b0::t_040aacae3b5f01 24
+  s_3818b2bc75a8b0::t_6612398983c1ea 23
+packages/widgets/src/health-monitoring/cluster/accordion-state.spec.ts
+  s_3818b2bc75a8b0::t_ea69e7cd897423 3-13
+packages/widgets/src/calendar/calendar.spec.ts
+  s_3818b2bc75a8b0::t_ba119b14a45d76 93-101
+packages/widgets/src/calendar/component.tsx
+  s_3818b2bc75a8b0::t_4e0f03e9ff537c 14,141,174,272,284,332
+  s_3818b2bc75a8b0::t_040aacae3b5f01 19,30,57,84-97,109,120,123,135,173,188,268,271,283,330-331,342
+  s_3818b2bc75a8b0::t_34cec817855b27 185
+  s_3818b2bc75a8b0::t_4240a91c1364cc 333
+packages/widgets/src/media-transcoding/component.tsx
+  s_3818b2bc75a8b0::t_ba119b14a45d76 7,30,71-72,100-104,108-109,139-140
+apps/docs/docs/widgets/media-transcoding/index.mdx
+  s_3818b2bc75a8b0::t_ba119b14a45d76 23
+packages/widgets/src/network-controller/network-status/layout.ts
+  s_3818b2bc75a8b0::t_040aacae3b5f01 16,36
+packages/widgets/src/anchor-note/component.tsx
+  s_3818b2bc75a8b0::t_ea69e7cd897423 22,311,313,345-360,362-378
+packages/widgets/src/health-monitoring/cluster/accordion-state.ts
+  s_3818b2bc75a8b0::t_ea69e7cd897423 1-9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1bd43c79dc2bf228a6ec34e9f47e79c78ba48a28",
+  "prompts": {},
+  "sessions": {
+    "s_3818b2bc75a8b0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa66-f26c-7c32-8090-19f178bd36bd",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
