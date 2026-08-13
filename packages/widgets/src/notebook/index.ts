@@ -5,7 +5,6 @@ import { optionsBuilder } from "../options";
 import { defaultContent } from "./default-content";
 
 export const { definition, componentLoader } = createWidgetDefinition("notebook", {
-  supportsAdvancedFocus: true,
   icon: IconNotes,
   createOptions() {
     return optionsBuilder.from(
