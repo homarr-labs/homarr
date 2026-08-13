@@ -95,9 +95,22 @@ lines-of-code to performance ratio. On the evidence, that set is:
 | `serverExternalPackages` (mysql2/pg + 8 more) | 1 block | −21 MiB idle |
 | `content-visibility` on media-release cards | 4 lines | −59% image requests, −41% layout objects |
 | ssh2 WASM heap (docker-modem patch) | 1 patch | −15 to −18 MiB external at every stage |
+| Reuse the certificate agent instead of one per request | 1 file | 5.11 → 1.69 ms/request, 60 → 2 TLS handshakes over 60 requests |
+| Stream proxied images instead of buffering | 2 files | −36% peak RSS on 30 concurrent 2 MiB images (116 → 74 MiB) |
 
-Together these produce the headline: **−26% peak anon, −52% at idle**, no overlapping ranges at any
-stage, for **+18% CPU**.
+Together the server changes produce the headline: **−26% peak anon, −52% at idle**, no overlapping
+ranges at any stage, for **+18% CPU**.
+
+Two notes for whoever cuts it:
+
+- **Split the formatting out of `media-missing/component.tsx`.** Its 77-line diff is roughly 8 lines of
+  semantic change plus **69 lines of pre-existing formatting debt** that `oxfmt` swept up when the file
+  was touched. Every other file changed in this work was already `oxfmt`-clean, so this is the only one
+  affected. Landing the reformat as its own commit keeps the perf change reviewable.
+- The client changes worth carrying are `OverflowBadge`, the `calendar` day-cell `HoverCard`, the
+  `beszelSystemTable` inline `PercentCell`, `content-visibility` on the data-driven lists, the two
+  `keepMounted={false}` widgets, and the `placehold.co` removal. The last of those is a bug fix rather
+  than an optimisation and should probably ship regardless.
 
 Two things to leave out or flag:
 

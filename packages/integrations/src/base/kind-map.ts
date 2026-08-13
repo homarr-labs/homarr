@@ -56,6 +56,7 @@ import type { UmamiIntegration } from "../umami/umami-integration";
 import type { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import type { UnraidIntegration } from "../unraid/unraid-integration";
 import type { UptimeKumaIntegration } from "../uptime-kuma/uptime-kuma-integration";
+import type { WudIntegration } from "../wud/wud-integration";
 
 export interface IntegrationInstanceMap {
   anchor: AnchorIntegration;
@@ -112,6 +113,7 @@ export interface IntegrationInstanceMap {
   unifiController: UnifiControllerIntegration;
   unraid: UnraidIntegration;
   uptimeKuma: UptimeKumaIntegration;
+  wud: WudIntegration;
 }
 
 export type IntegrationInstanceOfKind<TKind extends IntegrationKind> = TKind extends keyof IntegrationInstanceMap

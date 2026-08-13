@@ -54,6 +54,7 @@ import type * as ups from "./ups";
 import type * as video from "./video";
 import type * as vpn from "./vpn";
 import type * as weather from "./weather";
+import type * as wud from "./wud";
 
 export type WidgetImportRecord = Record<WidgetKind, unknown>;
 
@@ -112,6 +113,7 @@ export type WidgetImports = {
   beszelSystemStats: typeof beszelSystemStats;
   traefik: typeof traefik;
   customApi: typeof customApi;
+  wud: typeof wud;
 };
 
 export type WidgetImportKey = keyof WidgetImports;

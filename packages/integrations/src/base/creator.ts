@@ -75,6 +75,7 @@ const integrationLoaders: Record<IntegrationKind, IntegrationLoader> = {
     import("../unifi-controller/unifi-controller-integration").then((m) => m.UnifiControllerIntegration),
   unraid: () => import("../unraid/unraid-integration").then((m) => m.UnraidIntegration),
   uptimeKuma: () => import("../uptime-kuma/uptime-kuma-integration").then((m) => m.UptimeKumaIntegration),
+  wud: () => import("../wud/wud-integration").then((m) => m.WudIntegration),
 };
 
 export const integrationLoaderKinds = Object.keys(integrationLoaders) as IntegrationKind[];
