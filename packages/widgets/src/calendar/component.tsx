@@ -10,13 +10,13 @@ import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import type { CalendarEvent } from "@homarr/integrations/types";
 import { useSettings } from "@homarr/settings";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import actionTargetClasses from "../common/action-target.module.css";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { CalendarDay } from "./calender-day";
@@ -27,6 +27,7 @@ import {
   splitEvents,
   toCalendarDateKey,
 } from "./calendar-events";
+import type { CalendarEventWithSource } from "./calendar-event-list";
 import { CalendarEventList } from "./calendar-event-list";
 import classes from "./component.module.css";
 
@@ -53,6 +54,7 @@ export default function CalendarWidget(props: WidgetComponentProps<"calendar">) 
         events={[]}
         failedIntegrations={[]}
         isPending={false}
+        queryError={undefined}
         month={month}
         setMonth={setMonth}
       />
@@ -79,7 +81,20 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
   const data = getUsableWidgetQueryData(calendarQuery);
   const { isPending } = calendarQuery;
 
-  const events = useMemo(() => data?.flatMap((item) => item.events) ?? [], [data]);
+  const events = useMemo(
+    () =>
+      data?.flatMap(({ events: integrationEvents, integration, error }) =>
+        error
+          ? []
+          : integrationEvents.map(
+              (event): CalendarEventWithSource => ({
+                ...event,
+                source: { integrationId: integration.id, integrationName: integration.name },
+              }),
+            ),
+      ) ?? [],
+    [data],
+  );
   const failedIntegrations =
     data?.flatMap(({ integration, error }) =>
       error ? [{ integrationId: integration.id, integrationName: integration.name, error }] : [],
@@ -91,6 +106,7 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
       events={events}
       failedIntegrations={failedIntegrations}
       isPending={isPending}
+      queryError={calendarQuery.error}
       month={month}
       setMonth={setMonth}
       options={options}
@@ -101,9 +117,10 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
 
 interface CalendarBaseProps {
   isEditMode: boolean;
-  events: CalendarEvent[];
+  events: CalendarEventWithSource[];
   failedIntegrations: { integrationId: string; integrationName: string; error: string }[];
   isPending: boolean;
+  queryError: unknown;
   month: Date;
   setMonth: (date: Date) => void;
   options: WidgetComponentProps<"calendar">["options"];
@@ -115,11 +132,13 @@ const CalendarBase = ({
   events,
   failedIntegrations,
   isPending,
+  queryError,
   month,
   setMonth,
   options,
   displayMode,
 }: CalendarBaseProps) => {
+  const t = useI18n();
   const locale = useCurrentIntlLocale();
   const { firstDayOfWeek } = useSettings();
   const board = useRequiredBoard();
@@ -151,6 +170,8 @@ const CalendarBase = ({
         events={agendaEvents}
         failedIntegrations={failedIntegrations}
         isPending={isPending}
+        queryError={queryError}
+        queryErrorLabel={t("widget.calendar.name")}
         isEditMode={isEditMode}
         locale={locale}
         month={month}
@@ -161,9 +182,10 @@ const CalendarBase = ({
 
   return (
     <Stack ref={ref} h="100%" w="100%" gap="xs" style={{ overflow: "hidden" }}>
-      {failedIntegrations.length > 0 && (
+      {(failedIntegrations.length > 0 || Boolean(queryError)) && (
         <Group px="xs" justify="flex-end">
           <IntegrationErrorIndicator results={failedIntegrations} />
+          <WidgetQueryErrorIndicator error={queryError} label={t("widget.calendar.name")} />
         </Group>
       )}
       <Calendar
@@ -243,9 +265,11 @@ const CalendarBase = ({
 };
 
 interface CalendarAgendaProps {
-  events: CalendarEvent[];
+  events: CalendarEventWithSource[];
   failedIntegrations: CalendarBaseProps["failedIntegrations"];
   isPending: boolean;
+  queryError: unknown;
+  queryErrorLabel: string;
   isEditMode: boolean;
   locale: string;
   month: Date;
@@ -256,6 +280,8 @@ const CalendarAgenda = ({
   events,
   failedIntegrations,
   isPending,
+  queryError,
+  queryErrorLabel,
   isEditMode,
   locale,
   month,
@@ -301,7 +327,10 @@ const CalendarAgenda = ({
             </ActionIcon>
           </Tooltip>
         </Group>
-        {failedIntegrations.length > 0 && <IntegrationErrorIndicator results={failedIntegrations} />}
+        <Group gap={0}>
+          <IntegrationErrorIndicator results={failedIntegrations} />
+          <WidgetQueryErrorIndicator error={queryError} label={queryErrorLabel} />
+        </Group>
       </Group>
 
       <Box style={{ flex: 1, minHeight: 0 }}>
@@ -310,7 +339,7 @@ const CalendarAgenda = ({
             <Loader size="sm" />
           </Center>
         ) : events.length > 0 ? (
-          <CalendarEventList events={events} groupByDate locale={locale} fillHeight />
+          <CalendarEventList events={events} advanced groupByDate locale={locale} fillHeight />
         ) : (
           <Stack h="100%" align="center" justify="center" p="md">
             <Text c="dimmed" size="sm" ta="center">

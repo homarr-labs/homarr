@@ -688,211 +688,6 @@
       "add": "Pridajte aplikáciu"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Vlastné widgety",
-        "noResults": "Zatiaľ žiadne vlastné widgety. Vytvorte svoj prvý!",
-        "loading": "Nahrávam..."
-      },
-      "create": {
-        "title": "Vytvoriť vlastný widget",
-        "subtitle": "Definujte URL API, autentifikáciu a spôsob zobrazenia údajov odpovede."
-      },
-      "edit": {
-        "title": "Upraviť vlastný widget"
-      }
-    },
-    "action": {
-      "create": "Vytvoriť",
-      "import": "Importovať",
-      "save": "Uložiť",
-      "delete": "Odstrániť vlastný widget",
-      "deleteConfirm": "Naozaj chcete odstrániť \"{name}\"? Táto akcia sa nedá vrátiť späť.",
-      "export": "Exportovať",
-      "addMapping": "Pridať mapovanie",
-      "addColumn": "Pridať stĺpec",
-      "edit": "Upraviť",
-      "removeMapping": "Odstrániť mapovanie",
-      "removeColumn": "Odstrániť stĺpec",
-      "addItem": "Pridať položku",
-      "removeItem": "Odstrániť položku",
-      "addBar": "Pridať pruh",
-      "duplicate": "Duplikovať",
-      "copyAiPrompt": "Kopírovať AI prompt",
-      "enable": "Povoliť",
-      "disable": "Zakázať",
-      "menu": "Akcie"
-    },
-    "field": {
-      "name": "Názov",
-      "description": "Popis",
-      "iconUrl": "URL ikony",
-      "url": "URL",
-      "authType": "Typ autentifikácie",
-      "headerName": "Názov hlavičky/parametra dotazu",
-      "method": "Metóda",
-      "requestBody": "Telo požiadavky",
-      "displayType": "Typ zobrazenia",
-      "jsonPath": "JSON cesta",
-      "jsonPathHint": "Použite syntax JSONPath na extrakciu hodnôt, napr. $.data.teplota alebo $.polozky[0].nazov",
-      "label": "Označenie",
-      "unit": "Jednotka",
-      "mappings": "Mapovania",
-      "tablePath": "JSON cesta poľa",
-      "tablePathHint": "Cesta k poľu v odpovedi, napr. $.data.polozky",
-      "columns": "Stĺpce",
-      "header": "Hlavička",
-      "items": "Položky",
-      "gridColumns": "Stĺpce mriežky",
-      "cardStyle": "Štýl karty",
-      "bars": "Pruhy",
-      "valuePath": "JSON cesta hodnoty",
-      "maxPath": "JSON cesta maximálnej hodnoty",
-      "showPercentage": "Zobraziť percentá",
-      "barSize": "Veľkosť pruhu",
-      "goodValues": "Dobré hodnoty (oddelené čiarkou)",
-      "dotSize": "Veľkosť bodky",
-      "valueSize": "Veľkosť hodnoty",
-      "labelPosition": "Pozícia označenia",
-      "kvLayout": "Rozloženie",
-      "striped": "Pruhované riadky",
-      "compact": "Kompaktný režim",
-      "maxHeight": "Max. výška (px)",
-      "color": "Farba",
-      "buttonLabel": "Označenie tlačidla",
-      "buttonColor": "Farba tlačidla",
-      "confirmText": "Text potvrdenia",
-      "confirmTextHint": "Ak je nastavený, pred vykonaním požiadavky sa zobrazí dialóg potvrdenia",
-      "successMessage": "Správa o úspechu",
-      "successMessageHint": "Správa zobrazená po úspešnom vykonaní",
-      "enabled": "Povolené",
-      "template": {
-        "label": "JSX šablóna",
-        "description": "Mantine JSX šablóna. Prístup k poliam odpovede API cez dátové väzby (napr. data.nazov). Používajte iba whitelistované komponenty. Zakázané: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "Teplota CPU",
-      "exampleLabelShort": "Teplota CPU",
-      "exampleHeader": "Názov",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.priklad.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.hodnota",
-      "tablePath": "$.data.polozky",
-      "columnJsonPath": "$.nazov",
-      "valuePath": "$.data.pouzite",
-      "maxPath": "$.data.celkom",
-      "goodValues": "online, true, up",
-      "color": "modrá"
-    },
-    "cardStyleOption": {
-      "filled": "Vyplnené",
-      "outline": "Obrys",
-      "subtle": "Jemný"
-    },
-    "layoutOption": {
-      "list": "Zoznam",
-      "grid": "Mriežka"
-    },
-    "sizeOption": {
-      "sm": "Malé",
-      "md": "Stredné",
-      "lg": "Veľké",
-      "xl": "Extra veľké"
-    },
-    "labelPositionOption": {
-      "above": "Nad",
-      "below": "Pod"
-    },
-    "fieldset": {
-      "general": "Všeobecné",
-      "connection": "Pripojenie API",
-      "display": "Konfigurácia zobrazenia"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Zobraziť jednu extrahovanú hodnotu s označením a jednotkou",
-      "keyValue": "Zobraziť viacero označených hodnôt vedľa seba",
-      "table": "Zobraziť riadky údajov vo formáte tabuľky",
-      "statGrid": "Farebné karty štatistík v mriežke – ako widgety Pi-Hole alebo Speedtest",
-      "progressBars": "Pruhy postupu zobrazujúce využitie alebo dokončenie – pre disk, pamäť, kvóty",
-      "statusIndicator": "Farebné bodky stavu zobrazujúce online/offline alebo stavy zdravia",
-      "countGrid": "Kompaktné počítadlá číslo + označenie v tesnej mriežke",
-      "raw": "Prehľadne formátovaný JSON výstup pre ladenie",
-      "actionButton": "Tlačidlo, ktoré po kliknutí spustí požiadavku",
-      "customJsx": "Vlastné rozloženie JSX pomocou whitelistovaných komponentov Mantine s plnou väzbou API dát"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Žiadna",
-      "bearer": "Bearer token",
-      "basic": "Basic Auth",
-      "apiKeyHeader": "API kľúč (hlavička)",
-      "apiKeyQuery": "API kľúč (dotaz)"
-    },
-    "displayType": {
-      "singleValue": "Jedna hodnota",
-      "keyValue": "Kľúč-hodnota",
-      "table": "Tabuľka",
-      "statGrid": "Mriežka štatistík",
-      "progressBars": "Pruhy postupu",
-      "statusIndicator": "Indikátor stavu",
-      "countGrid": "Mriežka počtu",
-      "raw": "Surové JSON",
-      "actionButton": "Akčné tlačidlo",
-      "customJsx": "Vlastné JSX"
-    },
-    "secret": {
-      "apiKey": "API kľúč / token",
-      "username": "Používateľské meno",
-      "password": "Heslo",
-      "savedPlaceholder": "••••••• (uložené, ponechajte prázdne pre zachovanie)"
-    },
-    "preview": {
-      "title": "Náhľad",
-      "test": "Test",
-      "hint": "Kliknite na Test pre náhľad odpovede API s vašou aktuálnou konfiguráciou.",
-      "rawResponse": "Surová JSON odpoveď"
-    },
-    "notification": {
-      "created": "Widget \"{name}\" bol úspešne vytvorený.",
-      "updated": "Widget \"{name}\" bol úspešne aktualizovaný.",
-      "deleted": "Widget \"{name}\" bol odstránený.",
-      "imported": "",
-      "aiPromptCopied": "AI prompt skopírovaný do schránky",
-      "aiPromptDescription": "Skopírujte pripravený prompt a vložte ho do akéhokoľvek AI chatbota (ChatGPT, Claude, Gemini...). Obsahuje úplnú schému widgetu a vašu odpoveď API, aby AI mohla vygenerovať pripravenú JSON konfiguráciu na import.",
-      "aiPromptCopy": "Skopírovať do schránky",
-      "aiPromptNoResponse": "Tip: Najprv spustite test, aby ste zahrnuli odpoveď API do výzvy pre lepšie výsledky.",
-      "aiPromptCopyError": "Nepodarilo sa skopírovať výzvu do schránky. Váš prehliadač možno nepodporuje túto funkciu.",
-      "createError": "Nepodarilo sa vytvoriť widget. Skontrolujte, či je váš API endpoint dostupný.",
-      "updateError": "Nepodarilo sa aktualizovať widget. Vaše zmeny neboli uložené.",
-      "importError": "Nepodarilo sa importovať widget. Uistite sa, že súbor je platný JSON export vlastného widgetu.",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
-    },
-    "table": {
-      "name": "",
-      "url": "",
-      "display": ""
-    },
-    "widget": {
-      "disabled": ""
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -2828,193 +2623,6 @@
         "internalServerError": "Nepodarilo sa načítať údaje Paperless-ngx"
       }
     },
-    "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
-      "option": {
-        "showTotalHosts": {
-          "label": "",
-          "description": ""
-        },
-        "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showSecurityUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showUpToDateHosts": {
-          "label": "",
-          "description": ""
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
-        },
-        "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
-        },
-        "showTotalRepos": {
-          "label": "",
-          "description": ""
-        },
-        "enableThresholdColors": {
-          "label": "",
-          "description": ""
-        },
-        "useCustomThresholds": {
-          "label": "",
-          "description": ""
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "",
-            "percent": ""
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "showOsDistribution": {
-          "label": "",
-          "description": ""
-        },
-        "osDistributionLimit": {
-          "label": "",
-          "description": "",
-          "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
-          }
-        },
-        "showOsVersion": {
-          "label": "",
-          "description": ""
-        },
-        "showComplianceHero": {
-          "label": "",
-          "description": ""
-        },
-        "osDisplayMode": {
-          "label": "",
-          "description": "",
-          "option": {
-            "bars": "",
-            "donut": ""
-          }
-        }
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
-    "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "",
-          "description": ""
-        },
-        "showMissingMovies": {
-          "label": "",
-          "description": ""
-        },
-        "showProviderIssues": {
-          "label": "",
-          "description": ""
-        },
-        "showHealthIssues": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
     "immich-serverStats": {
       "name": "",
       "description": "",
@@ -3387,35 +2995,6 @@
         }
       }
     },
-    "mediaMissing": {
-      "name": "",
-      "description": "",
-      "option": {
-        "showMissing": {
-          "label": ""
-        },
-        "showQueued": {
-          "label": ""
-        },
-        "pageSize": {
-          "label": ""
-        }
-      },
-      "tab": {
-        "missing": "",
-        "queued": ""
-      },
-      "type": {
-        "movie": "",
-        "episode": ""
-      },
-      "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
-      },
-      "timeLeft": ""
-    },
     "rssFeed": {
       "name": "RSS kanály",
       "description": "Monitorujte a zobrazujte jeden alebo viac všeobecných informačných kanálov RSS, ATOM alebo JSON",
@@ -3744,40 +3323,6 @@
         "internalServerError": "Nepodarilo sa načítať údaje o dostupnosti"
       }
     },
-    "traefik": {
-      "name": "",
-      "description": "",
-      "option": {
-        "showTcp": {
-          "label": ""
-        },
-        "showUdp": {
-          "label": ""
-        },
-        "showEntryPoints": {
-          "label": ""
-        }
-      },
-      "instances": "",
-      "versionUnknown": "",
-      "summary": {
-        "routers": "",
-        "entryPoints": ""
-      },
-      "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
-      },
-      "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
     "audioStats": {
       "name": "Audio štatistiky",
       "description": "Štatistiky knižnice a prehrávania z Navidrome alebo Audiobookshelf",
@@ -3900,26 +3445,6 @@
       "status": {
         "unhealthy": ""
       }
-    },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
     },
     "beszelSystemTable": {
       "name": "Beszel systémy (tabuľka)",
@@ -4170,6 +3695,256 @@
           "title": "I/O siete Docker",
           "subtitle": "Sieťová prevádzka Docker kontajnerov"
         }
+      }
+    },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
+    },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
+      },
+      "error": {
+        "internalServerError": ""
       }
     }
   },
@@ -4551,11 +4326,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Domovská stránka",
         "boards": "Dosky",
         "apps": "Aplikácie",
         "integrations": "Integrácie",
-        "customWidgets": "",
         "searchEngies": "Vyhľadávače",
         "medias": "Médiá",
         "users": {
@@ -5694,6 +5469,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Spravovať",
       "boards": {
         "label": "Dosky"
@@ -5726,18 +5504,6 @@
         },
         "edit": {
           "label": "Upraviť"
-        }
-      },
-      "custom-widgets": {
-        "label": "",
-        "new": {
-          "label": ""
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {

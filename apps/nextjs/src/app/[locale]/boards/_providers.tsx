@@ -11,10 +11,18 @@ import type { Board } from "./_types";
 
 interface Props {
   initialBoard: Board;
+  initialLayoutId: string;
+  initialViewportWidth: number;
   canModify: boolean;
 }
 
-export const BoardProviders = ({ children, initialBoard, canModify }: PropsWithChildren<Props>) => {
+export const BoardProviders = ({
+  children,
+  initialBoard,
+  initialLayoutId,
+  initialViewportWidth,
+  canModify,
+}: PropsWithChildren<Props>) => {
   const searchParams = useSearchParams();
   const isDesktop = useMediaQuery("(min-width: 64em)");
   const requestedLayoutId = searchParams.get("layout");
@@ -23,7 +31,12 @@ export const BoardProviders = ({ children, initialBoard, canModify }: PropsWithC
   const layoutOverrideId = isLayoutEditRequest && isDesktop ? requestedLayoutId : null;
 
   return (
-    <BoardProvider initialBoard={initialBoard} layoutOverrideId={layoutOverrideId}>
+    <BoardProvider
+      initialBoard={initialBoard}
+      initialLayoutId={initialLayoutId}
+      initialViewportWidth={initialViewportWidth}
+      layoutOverrideId={layoutOverrideId}
+    >
       <EditModeProvider initialOpen={isLayoutEditRequest}>{children}</EditModeProvider>
     </BoardProvider>
   );

@@ -12,13 +12,27 @@ const mocks = vi.hoisted(() => ({
   },
 }));
 
+vi.mock("@homarr/api/client", () => ({
+  clientApi: {
+    integration: {
+      all: {
+        useQuery: () => ({ data: undefined }),
+      },
+    },
+  },
+}));
+
 vi.mock("@homarr/auth/client", () => ({
-  useIntegrations: () => undefined,
+  useSession: () => ({ data: { user: { id: "user" } } }),
 }));
 
 vi.mock("@homarr/boards/context", () => ({
   useCurrentLayout: () => "desktop",
   useRequiredBoard: () => mocks.board,
+}));
+
+vi.mock("@homarr/boards/edit-mode", () => ({
+  useEditMode: () => [true],
 }));
 
 describe("board grid portal host", () => {

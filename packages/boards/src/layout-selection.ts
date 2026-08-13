@@ -5,10 +5,7 @@ interface ResponsiveLayout {
   breakpoint: number;
 }
 
-export const getLayoutIdForViewportWidth = (
-  layouts: readonly ResponsiveLayout[],
-  viewportWidth: number,
-): string => {
+export const getLayoutIdForViewportWidth = (layouts: readonly ResponsiveLayout[], viewportWidth: number): string => {
   if (layouts.length === 0) {
     throw new Error("Expected the board to contain a layout");
   }

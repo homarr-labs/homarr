@@ -15,9 +15,10 @@ import { NextIntlClientProvider } from "next-intl";
 
 import { api } from "@homarr/api/server";
 import { env as authEnv } from "@homarr/auth/env";
+import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
+import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
-import { db } from "@homarr/db";
-import { getServerSettingsAsync } from "@homarr/db/queries";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ModalProvider } from "@homarr/modals";
 import { Notifications } from "@homarr/notifications";
 import { SettingsProvider } from "@homarr/settings";
@@ -47,6 +48,8 @@ const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
+
+const logger = createLogger({ module: "rootLayout" });
 
 // eslint-disable-next-line no-restricted-syntax
 export const generateMetadata = async (): Promise<Metadata> => ({
@@ -83,25 +86,36 @@ export default async function Layout(props: {
   children: React.ReactNode;
   params: Promise<{ locale: SupportedLanguage }>;
 }) {
-  if (!isLocaleSupported((await props.params).locale)) {
+  const { locale } = await props.params;
+  if (!isLocaleSupported(locale)) {
     notFound();
   }
 
-  const session = await auth();
-  const user = session ? await api.user.getById({ userId: session.user.id }).catch(() => null) : null;
-  const serverSettings = await getServerSettingsAsync(db);
-  // Resolved on the server so the assistant runtime chunk is never referenced by a page unless the
-  // assistant is actually usable. Reuses the availability check the management page invalidates.
-  // The states stay distinct so a signed-out visitor is told to sign in rather than that the
-  // instance is unconfigured, which the server cannot know for them.
-  const assistantAvailability: AssistantAvailability = !session
-    ? "unauthenticated"
-    : await api.assistant
-        .getAvailability()
-        .then((availability) => (availability.enabled ? ("enabled" as const) : ("unconfigured" as const)))
-        .catch(() => "error" as const);
-  const colorScheme = await getCurrentColorSchemeAsync();
-  const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
+  const sessionPromise = auth();
+  const userPromise = sessionPromise.then((session) =>
+    session
+      ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
+          logger.error(new Error("Failed to load the authenticated user in the root layout", { cause: error }));
+          return null;
+        })
+      : null,
+  );
+  const assistantAvailabilityPromise: Promise<AssistantAvailability> = sessionPromise.then((session) =>
+    !session
+      ? "unauthenticated"
+      : api.assistant
+          .getAvailability()
+          .then((availability) => (availability.enabled ? "enabled" : "unconfigured"))
+          .catch(() => "error"),
+  );
+  const [session, user, serverSettings, colorScheme, assistantAvailability] = await Promise.all([
+    sessionPromise,
+    userPromise,
+    getRscServerSettingsAsync(),
+    getCurrentColorSchemeAsync(),
+    assistantAvailabilityPromise,
+  ]);
+  const direction = isLocaleRTL(locale) ? "rtl" : "ltr";
   const publicUrls = resolveHomarrUrlConfig({
     homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,
     workshopApiUrl: env.WORKSHOP_API_URL,
@@ -145,8 +159,6 @@ export default async function Layout(props: {
     (innerProps) => <SpotlightProvider {...innerProps} />,
     (innerProps) => <AssistantGate availability={assistantAvailability} {...innerProps} />,
   ]);
-
-  const { locale } = await props.params;
 
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering

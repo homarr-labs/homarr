@@ -32,7 +32,7 @@ const feedsInput = z.object({
 
 export const rssFeedRouter = createTRPCRouter({
   getFeeds: publicProcedure.input(feedsInput).query(async ({ ctx, input }) => {
-    if (env.NO_EXTERNAL_CONNECTION) return [];
+    if (env.NO_EXTERNAL_CONNECTION) return { entries: [], failedFeedCount: 0 };
 
     const urls = (await canAccessAllFeedsAsync(ctx.db, ctx.session))
       ? input.urls

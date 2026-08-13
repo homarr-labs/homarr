@@ -16,7 +16,6 @@ import { bazarrRouter } from "./router/widgets/bazarr";
 import { serverSettingsRouter } from "./router/serverSettings";
 import { beszelRouter } from "./router/widgets/beszel";
 import { calendarRouter } from "./router/widgets/calendar";
-import { customWidgetRouter } from "./router/custom-widget/custom-widget-router";
 import { dnsHoleRouter } from "./router/widgets/dns-hole";
 import { downloadsRouter } from "./router/widgets/downloads";
 import { healthMonitoringRouter } from "./router/widgets/health-monitoring";
@@ -40,7 +39,6 @@ export const mcpRouter = createTRPCRouter({
   serverSettings: serverSettingsRouter,
   beszel: beszelRouter,
   calendar: calendarRouter,
-  customWidget: customWidgetRouter,
   dnsHole: dnsHoleRouter,
   downloads: downloadsRouter,
   healthMonitoring: healthMonitoringRouter,

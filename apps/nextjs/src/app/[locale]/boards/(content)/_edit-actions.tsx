@@ -4,6 +4,7 @@ import { Group, Menu } from "@mantine/core";
 import { IconBox, IconChevronDown, IconLayoutGridAdd, IconPlug, IconPlus, IconResize } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
@@ -20,6 +21,7 @@ export default function BoardEditActions() {
 
 const AddMenu = () => {
   const { data: session } = useSession();
+  const board = useRequiredBoard();
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
   const { openModal: openAppSelectModal } = useModalAction(AppSelectModal);
   const { openModal: openIntegrationSelectModal } = useModalAction(IntegrationSelectModal);
@@ -28,7 +30,7 @@ const AddMenu = () => {
   const t = useI18n();
 
   const handleSelectItem = () => {
-    openItemSelectModal();
+    openItemSelectModal({ boardId: board.id });
   };
 
   const handleSelectApp = () => {

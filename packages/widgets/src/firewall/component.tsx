@@ -37,7 +37,7 @@ interface FirewallQueryState {
   isPending: boolean;
   isFetching: boolean;
   isError: boolean;
-  data?: readonly { error?: string }[];
+  data?: readonly { error?: string; integration?: { id: string } }[];
 }
 
 export const hasTotalFirewallFailure = (queries: readonly FirewallQueryState[]) =>
@@ -46,6 +46,13 @@ export const hasTotalFirewallFailure = (queries: readonly FirewallQueryState[]) 
     (query) =>
       (query.isError && query.data === undefined) ||
       (query.data !== undefined && query.data.length > 0 && query.data.every(({ error }) => error)),
+  );
+
+export const hasFirewallPartialFailure = (firewallId: string, queries: readonly FirewallQueryState[]) =>
+  queries.some(
+    (query) =>
+      query.isError ||
+      query.data?.some(({ error, integration }) => integration?.id === firewallId && Boolean(error)) === true,
   );
 
 export default function FirewallWidget({
@@ -101,6 +108,7 @@ export default function FirewallWidget({
   const initialSelectedFirewall = firewallIds[0] ?? "";
   const activeFirewall = firewallMetadata.has(selectedFirewall) ? selectedFirewall : initialSelectedFirewall;
   const displayedFirewallIds = isAdvanced ? firewallIds : activeFirewall ? [activeFirewall] : [];
+  const firewallHasError = (firewallId: string) => hasFirewallPartialFailure(firewallId, queries);
   const dropdownItems = firewallIds.map((firewallId) => ({
     label: firewallMetadata.get(firewallId)?.name ?? firewallId,
     value: firewallId,
@@ -128,11 +136,20 @@ export default function FirewallWidget({
               dropdownItems={dropdownItems}
               isTiny={isTiny}
             />
-            <FirewallVersion
-              firewallsVersionData={firewallsVersionData.filter(({ error }) => !error)}
-              selectedFirewall={activeFirewall}
-              isTiny={isTiny}
-            />
+            <Group gap={4} wrap="nowrap">
+              {activeFirewall && firewallHasError(activeFirewall) && (
+                <Tooltip label={t("widget.firewall.error.internalServerError")}>
+                  <Badge color="red" variant="light" size="xs">
+                    {t("common.error")}
+                  </Badge>
+                </Tooltip>
+              )}
+              <FirewallVersion
+                firewallsVersionData={firewallsVersionData.filter(({ error }) => !error)}
+                selectedFirewall={activeFirewall}
+                isTiny={isTiny}
+              />
+            </Group>
           </Group>
         )}
 
@@ -142,9 +159,7 @@ export default function FirewallWidget({
             const memory = firewallsMemoryData.find(({ integration }) => integration.id === firewallId);
             const version = firewallsVersionData.find(({ integration }) => integration.id === firewallId);
             const interfaces = firewallsInterfacesData.find(({ integration }) => integration.id === firewallId);
-            const hasError = Boolean(
-              cpu?.error || memory?.error || version?.error || interfacesQuery.isError || interfaces?.error,
-            );
+            const hasError = firewallHasError(firewallId);
             const metadata = firewallMetadata.get(firewallId);
 
             return (
