@@ -1,0 +1,88 @@
+packages/api/src/test/open-api-routes.spec.ts
+  s_ca2323b7f96e59::t_201aab4f32b82b 233-242,284
+packages/api/src/router/serverSettings.ts
+  s_ca2323b7f96e59::t_10649d78de657d 13
+  s_ca2323b7f96e59::t_49dc10cad84e63 18,37,121,124-125
+packages/api/src/router/test/config-io.spec.ts
+  s_ca2323b7f96e59::t_6ea6a9eb81be55 5,136
+  s_ca2323b7f96e59::t_45c30b2f0035a3 15,133-135,137,285,359-363,367-369
+  s_ca2323b7f96e59::t_10649d78de657d 364-366
+  s_4681040d0eda16::t_9f9d997909f12f 370
+packages/api/src/router/integration/integration-router.ts
+  s_ca2323b7f96e59::t_10649d78de657d 377
+  s_ca2323b7f96e59::t_664a277d6a8314 441-442
+  s_ca2323b7f96e59::t_bfe04129c423fb 373
+packages/validation/src/board.ts
+  s_ca2323b7f96e59::t_0f0fd959bc5a01 358
+  s_ca2323b7f96e59::t_723b04e9f565ad 164-166,237,399-403
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_ca2323b7f96e59::t_982fe8181715ee 121
+apps/docs/docs/management/api/index.mdx
+  s_ca2323b7f96e59::t_664a277d6a8314 82,85,158,303-305
+packages/api/src/router/test/serverSettings.spec.ts
+  s_ca2323b7f96e59::t_ad9320bdb3ba61 92-100
+packages/cli/src/commands/api-keys-create.ts
+  s_ca2323b7f96e59::t_664a277d6a8314 4,31
+packages/validation/src/settings.ts
+  s_ca2323b7f96e59::t_70df6919dc2b67 3-50
+packages/api/src/router/search-engine/search-engine-router.ts
+  s_ca2323b7f96e59::t_93120d0fb723a5 44-45,261
+packages/api/src/router/board/board-io.ts
+  s_ca2323b7f96e59::t_549fbbdd9803a6 126-153,208
+  s_4681040d0eda16::t_bf7c2d91a9ae5a 209
+packages/api/src/router/board/item-placement.ts
+  s_ca2323b7f96e59::t_2e88282b529ca6 255-258
+  s_ca2323b7f96e59::t_888c7abbabf900 181-183,185,311
+packages/validation/src/config.ts
+  s_ca2323b7f96e59::t_70df6919dc2b67 13,69,84
+packages/api/src/router/apiKeys.ts
+  s_ca2323b7f96e59::t_664a277d6a8314 4,26-30,64
+packages/validation/src/media.ts
+  s_ca2323b7f96e59::t_70df6919dc2b67 1
+apps/nextjs/src/app/[locale]/manage/search-engines/edit/[id]/_search-engine-edit-form.tsx
+  s_ca2323b7f96e59::t_664a277d6a8314 56-60
+packages/api/src/router/config/config-io.ts
+  s_ca2323b7f96e59::t_9cd365512ab647 19,55,482,487-490,492
+packages/validation/src/search-engine.ts
+  s_ca2323b7f96e59::t_93120d0fb723a5 5-14,18,59
+packages/api/src/router/test/board-composition.spec.ts
+  s_ca2323b7f96e59::t_87162322d7dded 297-319,506-563,850-894,911
+  s_ca2323b7f96e59::t_5ce12f4b025da9 663-681
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/types.ts
+  s_ca2323b7f96e59::t_982fe8181715ee 3
+packages/api/src/router/board.ts
+  s_ca2323b7f96e59::t_10649d78de657d 1682-1685
+  s_ca2323b7f96e59::t_ba8bb38a1a56af 2226-2250
+  s_ca2323b7f96e59::t_252ff773006d3e 1594-1595,1597-1600,1605-1607,1643,1648-1652,1656-1659,1665,1667,1679-1681,1686,1690-1694,1697-1698
+  s_ca2323b7f96e59::t_5b164304c165c2 1797-1813,1816,1819
+  s_ca2323b7f96e59::t_689a953e8af3e4 1666,1952-1955
+  s_ca2323b7f96e59::t_73bbae833345e6 1864-1865,1867-1872,1875-1878,1909-1910,1919,1924-1937,1942-1945,1951,1956,1958-1959
+  s_ca2323b7f96e59::t_b0e2f985417a21 1533-1547,1550-1554,1558-1562,1565
+  s_ca2323b7f96e59::t_cb6582428b3b76 82-83
+  s_ca2323b7f96e59::t_42efe3b868fc16 1995,2107
+  s_ca2323b7f96e59::t_19459793c9d131 1566,1820
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "06b0a29fc6cd432aa3eebf32b795fac4cded8fdc",
+  "prompts": {},
+  "sessions": {
+    "s_4681040d0eda16": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5c-bed5-76e3-9e03-89fd02741b39",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_ca2323b7f96e59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5b-9d67-7470-9988-648d9d7016d2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
