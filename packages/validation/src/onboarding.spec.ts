@@ -42,6 +42,12 @@ describe("onboarding URL validation", () => {
         name: "Sonarr",
         url: "http://sonarr:8989",
         pingUrl: "file:///etc/passwd",
+      }).success,
+    ).toBe(false);
+    expect(
+      onboardingCreateIntegrationSchema.safeParse({
+        name: "Sonarr",
+        url: "http://sonarr:8989",
         description: "x".repeat(513),
       }).success,
     ).toBe(false);
@@ -77,5 +83,23 @@ describe("onboarding URL validation", () => {
         apps: [{ ...input.apps[0], href: "https://status.example.com" }],
       }).success,
     ).toBe(true);
+  });
+
+  test("accepts Docker source IDs up to 512 characters", () => {
+    const input = {
+      server: { defaultLocale: "en", defaultColorScheme: "dark" },
+      board: {
+        name: "dashboard",
+        primaryColor: "#228BE6",
+        secondaryColor: "#15AABF",
+        itemRadius: "md",
+      },
+      selectedDockerSourceIds: ["x".repeat(512)],
+    };
+
+    expect(onboardingCompleteSetupSchema.safeParse(input).success).toBe(true);
+    expect(
+      onboardingCompleteSetupSchema.safeParse({ ...input, selectedDockerSourceIds: ["x".repeat(513)] }).success,
+    ).toBe(false);
   });
 });

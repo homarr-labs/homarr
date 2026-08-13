@@ -17,10 +17,11 @@ const httpUrlSchema = z.url().refine((value) => {
   const protocol = new URL(value).protocol;
   return protocol === "http:" || protocol === "https:";
 }, "Only HTTP and HTTPS URLs are permitted");
-const uniqueIdsSchema = z
-  .array(z.string().trim().min(1).max(255))
-  .max(128)
-  .refine((ids) => new Set(ids).size === ids.length, { message: "IDs must be unique" });
+const uniqueIdsSchema = (maxLength = 255) =>
+  z
+    .array(z.string().trim().min(1).max(maxLength))
+    .max(128)
+    .refine((ids) => new Set(ids).size === ids.length, { message: "IDs must be unique" });
 const sourceIdSchema = z.string().trim().min(1).max(512);
 
 export const onboardingCreateIntegrationSchema = z.object({
@@ -87,11 +88,11 @@ export const onboardingCompleteSetupSchema = z
       leftSidebar: z.boolean().default(false),
       rightSidebar: z.boolean().default(false),
     }),
-    selectedIntegrationIds: uniqueIdsSchema.default([]),
-    selectedAppIds: uniqueIdsSchema.default([]),
+    selectedIntegrationIds: uniqueIdsSchema().default([]),
+    selectedAppIds: uniqueIdsSchema().default([]),
     integrations: integrationDraftsSchema.default([]),
     apps: appDraftsSchema.default([]),
-    selectedDockerSourceIds: uniqueIdsSchema.default([]),
+    selectedDockerSourceIds: uniqueIdsSchema(512).default([]),
     selectedWidgetKinds: z
       .array(z.enum(widgetKinds))
       .max(widgetKinds.length)

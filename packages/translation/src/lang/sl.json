@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "scratch": "",
+          "importOldmarr": "",
+          "restoreSqlite": "Obnovi iz varnostne kopije SQLite",
+          "restoreSqliteDescription": "Naložite celotno varnostno kopijo baze podatkov SQLite iz prejšnjega primerka Homarr. To bo obnovilo vse table, uporabnike, aplikacije, integracije in nastavitve.",
+          "backToOptions": "← Nazaj na možnosti nastavitve"
+        }
+      },
+      "import": {
+        "title": "",
+        "subtitle": "",
+        "dropzone": {
+          "title": "",
+          "description": ""
+        },
+        "fileInfo": {
+          "action": {
+            "change": ""
+          }
+        },
+        "importSettings": {
+          "title": "",
+          "description": ""
+        },
+        "boardSelection": {
+          "title": "",
+          "description": "",
+          "action": {
+            "selectAll": "",
+            "unselectAll": ""
+          }
+        },
+        "summary": {
+          "title": "",
+          "description": "",
+          "action": {
+            "import": ""
+          },
+          "entities": {
+            "apps": "Aplikacije",
+            "boards": "Deske",
+            "integrations": "",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "",
+          "field": {
+            "token": {
+              "label": "Žeton",
+              "description": ""
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "",
+        "subtitle": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": ""
+          }
+        }
+      },
+      "group": {
+        "title": "",
+        "subtitle": "",
+        "form": {
+          "name": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "settings": {
+        "title": "Nastavitve",
+        "subtitle": ""
+      },
+      "integrations": {
+        "title": "Integracije",
+        "subtitle": "Izberite storitve, ki jih uporabljate.",
+        "description": "Izberite integracije, ki jih želite povezati. Samodejno bomo nastavili vašo nadzorno ploščo z ustreznimi gradniki.",
+        "action": {
+          "continue": "Nadaljuj",
+          "skip": "Zaenkrat preskoči"
+        },
+        "configure": {
+          "progress": "{current} od {total}",
+          "skip": "Preskoči to integracijo",
+          "finishing": "Nastavljanje vaše nadzorne plošče ...",
+          "error": {
+            "title": "Nastavitev ni uspela",
+            "message": "Pri nastavljanju vaše nadzorne plošče je prišlo do napake. Poskusite znova."
+          },
+          "helpers": {
+            "tooltip": "Pomočniki URL",
+            "description": "Ti pomočniki poskušajo uganiti URL za vaše storitve. Če ne deluje, preprosto ročno vnesite naslov."
+          }
+        },
+        "urlTemplate": {
+          "label": "Osnovni URL",
+          "placeholder": "homelab.local ali 192.168.1.1",
+          "hint": "Vnesite svojo osnovno domeno ali IP za samodejno izpolnjevanje URL-jev integracij",
+          "warning": "Če zdaj nastavite osnovni URL, bodo vsi URL-ji integracij samodejno izpolnjeni, kar vam prihrani čas med nastavljanjem",
+          "preview": "npr. {example}",
+          "mode": {
+            "subdomain": "Pod-domena",
+            "hostPort": "Gostitelj:Vrata"
+          }
+        },
+        "docker": {
+          "detected": "Docker zazna {count} storitev",
+          "detectedBreakdown": "{integrations} integracij · {apps} aplikacij",
+          "summary": "Homarr je zaznal {apps} aplikacij, od katerih ima {integrations} vgrajene integracije",
+          "appBadge": "Aplikacija",
+          "appSectionLabel": "Aplikacije za dodajanje na nadzorno ploščo ({count} izbranih)",
+          "scanning": "Skeniranje Dockerja ...",
+          "scanningDescription": "Iskanje tekočih vsebnikov v vašem sistemu"
+        }
+      },
+      "finish": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "goToBoard": "",
+          "createBoard": "",
+          "inviteUser": "",
+          "docs": ""
+        }
+      }
+    },
+    "backToStart": ""
+  },
   "user": {
     "title": "Uporabniki",
     "name": "Uporabnik",
@@ -3840,6 +3989,62 @@
           "message": "Vsebina ni shranjena, želite nadaljevati?"
         }
       },
+      "oldImport": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "form": {
+          "file": {
+            "label": "",
+            "invalidError": ""
+          },
+          "apps": {
+            "label": "Aplikacije",
+            "avoidDuplicates": {
+              "label": "",
+              "description": ""
+            },
+            "onlyImportApps": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "name": {
+            "label": ""
+          },
+          "screenSize": {
+            "label": "",
+            "description": "",
+            "option": {
+              "sm": "Majhna",
+              "md": "Srednja",
+              "lg": "Velika"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "",
+            "description": "",
+            "option": {
+              "lastSection": {
+                "label": "",
+                "description": ""
+              },
+              "removeItems": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "",
@@ -5448,6 +5653,9 @@
                 }
               },
               "newBoard": {
+                "label": ""
+              },
+              "importBoard": {
                 "label": ""
               },
               "newApp": {

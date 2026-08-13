@@ -42,7 +42,11 @@ const getDefaultLocaleDedupedAsync = () => {
 export async function proxy(request: NextRequest) {
   // Redirect to onboarding if it's not finished yet
   const pathname = request.nextUrl.pathname;
-  const isOnboardingAccessRoute = /\/(?:init|auth\/login)\/?$/.test(pathname);
+  const segments = pathname.split("/").filter(Boolean);
+  const routeSegments = supportedLanguages.includes(segments[0] as SupportedLanguage) ? segments.slice(1) : segments;
+  const isOnboardingAccessRoute =
+    (routeSegments.length === 1 && routeSegments[0] === "init") ||
+    (routeSegments.length === 2 && routeSegments[0] === "auth" && routeSegments[1] === "login");
 
   if (!isOnboardingFinished && !isOnboardingAccessRoute) {
     const currentOnboardingStep = await getOnboardingStepDedupedAsync();

@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Chào mừng đến với Homarr",
+        "subtitle": "Hãy bắt đầu cài đặt ứng dụng Homarr của bạn.",
+        "description": "Để bắt đầu, hãy chọn cách bạn muốn cài đặt ứng dụng Homarr của mình.",
+        "action": {
+          "scratch": "Bắt đầu từ đầu",
+          "importOldmarr": "Nhập dữ liệu từ Homarr phiên bản trước 1.0",
+          "restoreSqlite": "Khôi phục từ bản sao lưu SQLite",
+          "restoreSqliteDescription": "Tải lên bản sao lưu cơ sở dữ liệu SQLite đầy đủ từ phiên bản Homarr trước. Thao tác này sẽ khôi phục tất cả bảng, người dùng, ứng dụng, tích hợp và cài đặt.",
+          "backToOptions": "← Quay lại tùy chọn thiết lập"
+        }
+      },
+      "import": {
+        "title": "Nhập dữ liệu",
+        "subtitle": "Bạn có thể nhập dữ liệu từ một phiên bản Homarr có sẵn.",
+        "dropzone": {
+          "title": "Kéo tệp tin zip vào đây hoặc nhấp chuột để chọn",
+          "description": "Tệp tin zip đã tải lên sẽ được xử lý và bạn sẽ có thể chọn những gì bạn muốn nhập"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "Thay đổi tập tin"
+          }
+        },
+        "importSettings": {
+          "title": "Nhập cài đặt",
+          "description": "Cấu hình hành vi nhập dữ liệu"
+        },
+        "boardSelection": {
+          "title": "Tìm thấy {count} bảng",
+          "description": "Chọn tất cả các bảng với kích thước bạn muốn nhập",
+          "action": {
+            "selectAll": "Chọn tất cả",
+            "unselectAll": "Bỏ chọn tất cả"
+          }
+        },
+        "summary": {
+          "title": "",
+          "description": "",
+          "action": {
+            "import": "Xác nhận nhập và tiếp tục"
+          },
+          "entities": {
+            "apps": "Ứng dụng",
+            "boards": "Bảng",
+            "integrations": "Tích hợp",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "Nhập token nhập",
+          "field": {
+            "token": {
+              "label": "Mã thông báo",
+              "description": "Nhập token nhập được hiển thị từ phiên bản homarr trước đó của bạn"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "Token không hợp lệ",
+              "message": "Token bạn nhập không đúng"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Người dùng quản trị",
+        "subtitle": "",
+        "notification": {
+          "success": {
+            "title": "Đã tạo người dùng",
+            "message": "Người dùng đã được tạo thành công"
+          },
+          "error": {
+            "title": "Tạo người dùng không thành công"
+          }
+        }
+      },
+      "group": {
+        "title": "",
+        "subtitle": "",
+        "form": {
+          "name": {
+            "label": "Tên nhóm",
+            "description": ""
+          }
+        }
+      },
+      "settings": {
+        "title": "Cài đặt",
+        "subtitle": "Cấu hình cài đặt máy chủ."
+      },
+      "integrations": {
+        "title": "Tích hợp",
+        "subtitle": "Chọn dịch vụ bạn dùng.",
+        "description": "Chọn các tích hợp bạn muốn kết nối. Chúng tôi sẽ tự động thiết lập bảng với widget phù hợp.",
+        "action": {
+          "continue": "Tiếp tục",
+          "skip": "Bỏ qua lúc này"
+        },
+        "configure": {
+          "progress": "{current} của {total}",
+          "skip": "Bỏ qua tích hợp này",
+          "finishing": "Đang thiết lập bảng của bạn...",
+          "error": {
+            "title": "Thiết lập thất bại",
+            "message": "Đã xảy ra lỗi khi thiết lập bảng. Vui lòng thử lại."
+          },
+          "helpers": {
+            "tooltip": "Trợ giúp URL",
+            "description": "Những trợ giúp này cố gắng đoán URL cho dịch vụ của bạn. Nếu không hiệu quả, hãy nhập địa chỉ thủ công."
+          }
+        },
+        "urlTemplate": {
+          "label": "URL cơ sở",
+          "placeholder": "homelab.local hoặc 192.168.1.1",
+          "hint": "Nhập tên miền cơ sở hoặc IP để tự động điền URL tích hợp",
+          "warning": "Đặt URL cơ sở bây giờ sẽ tự động điền tất cả URL tích hợp, tiết kiệm thời gian thiết lập",
+          "preview": "ví dụ: {example}",
+          "mode": {
+            "subdomain": "Tên miền phụ",
+            "hostPort": "Máy:Cổng"
+          }
+        },
+        "docker": {
+          "detected": "Docker phát hiện {count} dịch vụ",
+          "detectedBreakdown": "{integrations} tích hợp · {apps} ứng dụng",
+          "summary": "Homarr phát hiện {apps} ứng dụng, {integrations} trong đó có tích hợp sẵn",
+          "appBadge": "Ứng dụng",
+          "appSectionLabel": "Ứng dụng thêm vào bảng ({count} đã chọn)",
+          "scanning": "Đang quét Docker...",
+          "scanningDescription": "Đang tìm container đang chạy trên hệ thống của bạn"
+        }
+      },
+      "finish": {
+        "title": "Hoàn tất cài đặt",
+        "subtitle": "Bạn đã sẵn sàng để tiếp tục!",
+        "description": "",
+        "action": {
+          "goToBoard": "",
+          "createBoard": "",
+          "inviteUser": "Mời người dùng khác",
+          "docs": "Đọc tài liệu hướng dẫn"
+        }
+      }
+    },
+    "backToStart": "Trở lại từ đầu"
+  },
   "user": {
     "title": "Người dùng",
     "name": "Người dùng",
@@ -3840,6 +3989,62 @@
           "message": "Bạn có thay đổi chưa lưu, bạn có chắc chắn muốn rời đi không?"
         }
       },
+      "oldImport": {
+        "label": "Nhập từ Homarr trước 1.0.0",
+        "notification": {
+          "success": {
+            "title": "Nhập thành công",
+            "message": "Bảng đã được nhập thành công"
+          },
+          "error": {
+            "title": "Nhập không thành công",
+            "message": "Không thể nhập bảng, kiểm tra nhật ký để biết chi tiết"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "Chọn tệp JSON",
+            "invalidError": "Tệp cấu hình không hợp lệ"
+          },
+          "apps": {
+            "label": "Ứng dụng",
+            "avoidDuplicates": {
+              "label": "Tránh trùng lặp",
+              "description": "Bỏ qua ứng dụng nếu đã có ứng dụng cùng href"
+            },
+            "onlyImportApps": {
+              "label": "Chỉ nhập ứng dụng",
+              "description": "Chỉ thêm ứng dụng, cần tạo lại bảng thủ công"
+            }
+          },
+          "name": {
+            "label": "Tên bảng"
+          },
+          "screenSize": {
+            "label": "Kích thước màn hình",
+            "description": "",
+            "option": {
+              "sm": "Bé nhỏ",
+              "md": "Trung bình",
+              "lg": "Lớn"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "Hành vi thanh bên",
+            "description": "Thanh bên đã bị loại bỏ trong 1.0, bạn có thể chọn điều gì xảy ra với các mục bên trong.",
+            "option": {
+              "lastSection": {
+                "label": "Phần cuối cùng",
+                "description": "Thanh bên sẽ hiển thị bên dưới phần cuối cùng"
+              },
+              "removeItems": {
+                "label": "Xóa mục",
+                "description": "Các mục trong thanh bên sẽ bị xóa"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "",
@@ -5448,6 +5653,9 @@
                 }
               },
               "newBoard": {
+                "label": ""
+              },
+              "importBoard": {
                 "label": ""
               },
               "newApp": {

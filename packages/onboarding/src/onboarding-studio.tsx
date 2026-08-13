@@ -35,13 +35,21 @@ export const OnboardingStudio = (props: OnboardingStudioProps) => {
           setClaimState("ready");
           return;
         }
-        const body = (await response.json().catch(() => null)) as { error?: string } | null;
-        setClaimError(body?.error ?? t("errorDescription"));
-        setClaimState(response.status === 423 ? "locked" : response.status === 403 ? "signIn" : "error");
+        const body = (await response.json().catch(() => null)) as { code?: unknown } | null;
+        if (body?.code === "locked") {
+          setClaimState("locked");
+          return;
+        }
+        if (body?.code === "administrator_required") {
+          setClaimState("signIn");
+          return;
+        }
+        setClaimError(t("errorDescription"));
+        setClaimState("error");
       })
-      .catch((error: unknown) => {
+      .catch(() => {
         if (controller.signal.aborted) return;
-        setClaimError(error instanceof Error ? error.message : t("errorDescription"));
+        setClaimError(t("errorDescription"));
         setClaimState("error");
       });
     return () => controller.abort();

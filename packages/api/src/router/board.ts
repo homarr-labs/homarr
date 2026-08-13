@@ -242,7 +242,6 @@ export const boardRouter = createTRPCRouter({
             id: true,
             name: true,
             image: true,
-            email: true,
           },
         },
         userPermissions: {

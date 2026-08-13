@@ -15,8 +15,7 @@ interface SearchInputProps {
 }
 
 export const SearchInput = ({ placeholder, ariaLabel, defaultValue, flexExpand = false }: SearchInputProps) => {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { replace } = useRouter();
+  const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -25,9 +24,9 @@ export const SearchInput = ({ placeholder, ariaLabel, defaultValue, flexExpand =
     setValue(defaultValue ?? "");
     setLoading(false);
   }, [defaultValue]);
-  const handleSearchDebounced = useDebouncedCallback((value: string) => {
+  const handleSearchDebounced = useDebouncedCallback((nextValue: string) => {
     const params = new URLSearchParams(searchParams);
-    const normalizedValue = value.trim();
+    const normalizedValue = nextValue.trim();
     if (normalizedValue.length === 0) {
       params.delete("search");
     } else {
@@ -35,7 +34,7 @@ export const SearchInput = ({ placeholder, ariaLabel, defaultValue, flexExpand =
     }
     if (params.has("page")) params.set("page", "1"); // Reset page to 1
     const query = params.toString();
-    replace(query ? `${pathName}?${query}` : pathName);
+    router.replace(query ? `${pathName}?${query}` : pathName);
     setLoading(false);
   }, 250);
 

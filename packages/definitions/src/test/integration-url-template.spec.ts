@@ -38,9 +38,7 @@ describe("buildIntegrationUrl", () => {
     expect(buildIntegrationUrl("sonarr", "https://home.example.com/services", "path")).toBe(
       "https://home.example.com/services/sonarr",
     );
-    expect(buildAppUrl("My Service", "home.lan/apps/", "path", 9999)).toBe(
-      "http://home.lan/apps/my-service",
-    );
+    expect(buildAppUrl("My Service", "home.lan/apps/", "path", 9999)).toBe("http://home.lan/apps/my-service");
   });
 
   it("replaces a supplied base port instead of producing a double port", () => {
@@ -49,6 +47,12 @@ describe("buildIntegrationUrl", () => {
     );
     expect(buildAppUrl("My Service", "https://home.example.com:8443/homarr", "hostPort")).toBe(
       "http://home.example.com:8443",
+    );
+  });
+
+  it("preserves an explicitly supplied default port for an app", () => {
+    expect(buildAppUrl("My Service", "https://home.example.com:443/homarr", "hostPort")).toBe(
+      "http://home.example.com:443",
     );
   });
 

@@ -76,7 +76,7 @@ export const IntegrationMultiSelectGrid = ({
               h={selectGridCardHeight}
               className={classes.card}
               style={{
-                borderColor: isSelected ? "var(--mantine-color-blue-6)" : undefined,
+                borderColor: isSelected ? "var(--mantine-primary-color-filled)" : undefined,
                 borderWidth: isSelected ? 2 : undefined,
               }}
               withBorder
@@ -87,7 +87,7 @@ export const IntegrationMultiSelectGrid = ({
                   <Text fw={500} lh={1.2} size="sm" lineClamp={2} style={{ flex: 1 }}>
                     {integration.name}
                   </Text>
-                  {isSelected && <IconCheck size={18} color="var(--mantine-color-blue-6)" />}
+                  {isSelected && <IconCheck size={18} color="var(--mantine-primary-color-filled)" />}
                 </Group>
                 <Stack gap={4} mt="auto">
                   {isDetected && (

@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "Homarrへようこそ",
+        "subtitle": "Homarrインスタンスの設定を始めましょう。",
+        "description": "始めるには、Homarrインスタンスの設定方法を選択してください。",
+        "action": {
+          "scratch": "自分でゼロから作成",
+          "importOldmarr": "1.0 より前の Homarr からインポート",
+          "restoreSqlite": "",
+          "restoreSqliteDescription": "",
+          "backToOptions": ""
+        }
+      },
+      "import": {
+        "title": "データのインポート",
+        "subtitle": "既存のHomarrインスタンスからデータをインポートできます。",
+        "dropzone": {
+          "title": "ここにzipファイルをドラッグするか、クリックして参照してください",
+          "description": "アップロードされたzipファイルは処理され、インポートするものを選択することができます"
+        },
+        "fileInfo": {
+          "action": {
+            "change": "ファイルを変更する"
+          }
+        },
+        "importSettings": {
+          "title": "設定をインポート",
+          "description": "インポートの動作を設定"
+        },
+        "boardSelection": {
+          "title": "{count} 個のボードを見つけました",
+          "description": "インポートしたいサイズのボードをすべて選択してください",
+          "action": {
+            "selectAll": "すべてを選択",
+            "unselectAll": "すべて選択解除"
+          }
+        },
+        "summary": {
+          "title": "インポート結果",
+          "description": "以下のサマリーで、インポートする内容を確認できます",
+          "action": {
+            "import": "インポートを確認して続ける"
+          },
+          "entities": {
+            "apps": "アプリ",
+            "boards": "ボード",
+            "integrations": "連携機能",
+            "credentialUsers": "認証情報ユーザー"
+          }
+        },
+        "tokenModal": {
+          "title": "インポートトークンを入力してください",
+          "field": {
+            "token": {
+              "label": "トークン",
+              "description": "以前のhomarrインスタンスから表示されたインポートトークンを入力してください"
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "無効なトークン",
+              "message": "入力されたトークンは無効です"
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "管理者ユーザー",
+        "subtitle": "管理者ユーザーの認証情報を指定します。",
+        "notification": {
+          "success": {
+            "title": "ユーザーが作成されました",
+            "message": "ユーザーが正常に作成されました"
+          },
+          "error": {
+            "title": "ユーザーの作成に失敗しました"
+          }
+        }
+      },
+      "group": {
+        "title": "外部グループ",
+        "subtitle": "外部ユーザーに使用するグループを指定します。",
+        "form": {
+          "name": {
+            "label": "グループ名",
+            "description": "名前は外部プロバイダの管理者グループと一致する必要があります"
+          }
+        }
+      },
+      "settings": {
+        "title": "設定",
+        "subtitle": "サーバーの設定。"
+      },
+      "integrations": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "continue": "",
+          "skip": ""
+        },
+        "configure": {
+          "progress": "",
+          "skip": "",
+          "finishing": "",
+          "error": {
+            "title": "",
+            "message": ""
+          },
+          "helpers": {
+            "tooltip": "",
+            "description": ""
+          }
+        },
+        "urlTemplate": {
+          "label": "",
+          "placeholder": "",
+          "hint": "",
+          "warning": "",
+          "preview": "",
+          "mode": {
+            "subdomain": "",
+            "hostPort": ""
+          }
+        },
+        "docker": {
+          "detected": "",
+          "detectedBreakdown": "",
+          "summary": "",
+          "appBadge": "",
+          "appSectionLabel": "",
+          "scanning": "",
+          "scanningDescription": ""
+        }
+      },
+      "finish": {
+        "title": "設定終了",
+        "subtitle": "準備ができています！",
+        "description": "セットアッププロセスが正常に完了しました。今すぐHomarrの使用を開始できます。次のアクションを選択してください：",
+        "action": {
+          "goToBoard": "{name} ボードへ移動",
+          "createBoard": "あなたの最初のボードを作成する",
+          "inviteUser": "他のユーザーを招待する",
+          "docs": "ドキュメントを読む"
+        }
+      }
+    },
+    "backToStart": "最初に戻る"
+  },
   "user": {
     "title": "ユーザー",
     "name": "ユーザー",
@@ -3840,6 +3989,62 @@
           "message": "保存されていない変更があります。このページから移動してもいいですか？"
         }
       },
+      "oldImport": {
+        "label": "1.0.0 より前の Homarr からインポート",
+        "notification": {
+          "success": {
+            "title": "インポート成功",
+            "message": "ボードは、正常にインポートされました"
+          },
+          "error": {
+            "title": "インポート失敗",
+            "message": "ボードをインポートできませんでした。詳細はログを確認してください"
+          }
+        },
+        "form": {
+          "file": {
+            "label": "JSON ファイルを選択",
+            "invalidError": "無効な設定ファイルです"
+          },
+          "apps": {
+            "label": "アプリ",
+            "avoidDuplicates": {
+              "label": "重複の回避",
+              "description": "同じ href を持つアプリが既に存在するアプリを無視します"
+            },
+            "onlyImportApps": {
+              "label": "アプリのみインポート",
+              "description": "アプリのみを追加します。ボードを手動で再作成する必要があります"
+            }
+          },
+          "name": {
+            "label": "ボード名"
+          },
+          "screenSize": {
+            "label": "画面サイズ",
+            "description": "1.0 以前のバージョンでは、3種類のモードが存在するため、画面サイズごとに列数を選択することができました。",
+            "option": {
+              "sm": "小",
+              "md": "中",
+              "lg": "大"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "サイドバーの動作",
+            "description": "サイドバーは 1.0 で削除され、内部のアイテムで何が起こるかを選択できます。",
+            "option": {
+              "lastSection": {
+                "label": "最後のセクション",
+                "description": "最後のセクションの下に、サイドバーが表示されます"
+              },
+              "removeItems": {
+                "label": "アイテムを削除",
+                "description": "サイドバーに含まれるアイテムは、削除されます"
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "即座にアプリを作成",
@@ -5449,6 +5654,9 @@
               },
               "newBoard": {
                 "label": "新しいボードを作成する"
+              },
+              "importBoard": {
+                "label": "ボードをインポート"
               },
               "newApp": {
                 "label": "新しいアプリを作成する"

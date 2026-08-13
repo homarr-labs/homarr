@@ -1,5 +1,154 @@
 {
-  "init": {},
+  "init": {
+    "step": {
+      "start": {
+        "title": "",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "scratch": "Sākt no jauna",
+          "importOldmarr": "",
+          "restoreSqlite": "SQLite rezerves kopija",
+          "restoreSqliteDescription": "Augšupielādējiet pilnu SQLite datu bāzes dublējumu no iepriekšējās Homarr instances. Tas atjaunos visus dēļus, lietotājus, lietotnes, integrācijas un iestatījumus.",
+          "backToOptions": "← Atpakaļ uz iestatīšanas opcijām"
+        }
+      },
+      "import": {
+        "title": "Importēt datus",
+        "subtitle": "",
+        "dropzone": {
+          "title": "",
+          "description": ""
+        },
+        "fileInfo": {
+          "action": {
+            "change": ""
+          }
+        },
+        "importSettings": {
+          "title": "Importēt iestatījumus",
+          "description": ""
+        },
+        "boardSelection": {
+          "title": "",
+          "description": "",
+          "action": {
+            "selectAll": "Atzīmēt visu",
+            "unselectAll": ""
+          }
+        },
+        "summary": {
+          "title": "Importēšanas kopsavilkums",
+          "description": "",
+          "action": {
+            "import": ""
+          },
+          "entities": {
+            "apps": "Lietotnes",
+            "boards": "Dēļi",
+            "integrations": "Integrācijas",
+            "credentialUsers": ""
+          }
+        },
+        "tokenModal": {
+          "title": "",
+          "field": {
+            "token": {
+              "label": "Atslēga",
+              "description": ""
+            }
+          },
+          "notification": {
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "user": {
+        "title": "Administratora lietotājs",
+        "subtitle": "",
+        "notification": {
+          "success": {
+            "title": "Lietotājs izveidots",
+            "message": ""
+          },
+          "error": {
+            "title": "Lietotāja izveide neizdevās"
+          }
+        }
+      },
+      "group": {
+        "title": "",
+        "subtitle": "",
+        "form": {
+          "name": {
+            "label": "",
+            "description": ""
+          }
+        }
+      },
+      "settings": {
+        "title": "Iestatījumi",
+        "subtitle": ""
+      },
+      "integrations": {
+        "title": "Integrācijas",
+        "subtitle": "Atlasiet pakalpojumus, ko izmantojat.",
+        "description": "Izvēlieties integrācijas, ko vēlaties savienot. Mēs automātiski iestatīsim jūsu informācijas paneli ar atbilstošiem logrīkiem.",
+        "action": {
+          "continue": "Turpināt",
+          "skip": "Pagaidām izlaist šo soli"
+        },
+        "configure": {
+          "progress": "{current} no {total}",
+          "skip": "Izlaist šo integrāciju",
+          "finishing": "Notiek informācijas paneļa iestatīšana...",
+          "error": {
+            "title": "Neizdevās iestatīt!",
+            "message": "Radās kļūda, iestatot jūsu informācijas paneli. Lūdzu, mēģiniet vēlreiz."
+          },
+          "helpers": {
+            "tooltip": "URL palīgrīki",
+            "description": "Šie palīgrīki mēģina uzminēt jūsu pakalpojumu URL. Ja tas nedarbojas, vienkārši ievadiet adresi manuāli."
+          }
+        },
+        "urlTemplate": {
+          "label": "Bāzes URL",
+          "placeholder": "homelab.local vai 192.168.1.1",
+          "hint": "Ievadiet savu bāzes domēnu vai IP, lai automātiski aizpildītu integrāciju URL",
+          "warning": "Bāzes URL iestatīšana tagad automātiski aizpildīs visus integrāciju URL, ietaupot laiku iestatīšanas laikā",
+          "preview": "piem., {example}",
+          "mode": {
+            "subdomain": "Apakšdomēns",
+            "hostPort": "Resursdators:Ports"
+          }
+        },
+        "docker": {
+          "detected": "Docker atklāja {count} pakalpojumus",
+          "detectedBreakdown": "{integrations} integrācijas · {apps} lietotnes",
+          "summary": "Homarr atklāja {apps} lietotnes, {integrations} no tām ir iebūvētas integrācijas",
+          "appBadge": "Lietotne",
+          "appSectionLabel": "Pievienojamās lietotnes informācijas panelim ({count} atlasītas)",
+          "scanning": "Notiek Docker skenēšana...",
+          "scanningDescription": "Meklē darbojošos konteinerus jūsu sistēmā"
+        }
+      },
+      "finish": {
+        "title": "Pabeigt Iestatīšanu",
+        "subtitle": "",
+        "description": "",
+        "action": {
+          "goToBoard": "",
+          "createBoard": "",
+          "inviteUser": "Ielūgt citus lietotājus",
+          "docs": "Lasīt dokumentāciju"
+        }
+      }
+    },
+    "backToStart": ""
+  },
   "user": {
     "title": "Lietotāji",
     "name": "Lietotājs",
@@ -3850,6 +3999,62 @@
           "message": ""
         }
       },
+      "oldImport": {
+        "label": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        },
+        "form": {
+          "file": {
+            "label": "",
+            "invalidError": ""
+          },
+          "apps": {
+            "label": "Lietotnes",
+            "avoidDuplicates": {
+              "label": "",
+              "description": ""
+            },
+            "onlyImportApps": {
+              "label": "",
+              "description": ""
+            }
+          },
+          "name": {
+            "label": ""
+          },
+          "screenSize": {
+            "label": "",
+            "description": "",
+            "option": {
+              "sm": "Mazs",
+              "md": "Vidējs",
+              "lg": "Liels"
+            }
+          },
+          "sidebarBehavior": {
+            "label": "",
+            "description": "",
+            "option": {
+              "lastSection": {
+                "label": "",
+                "description": ""
+              },
+              "removeItems": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
+        }
+      },
       "quickCreateApp": {
         "modal": {
           "title": "",
@@ -5458,6 +5663,9 @@
                 }
               },
               "newBoard": {
+                "label": ""
+              },
+              "importBoard": {
                 "label": ""
               },
               "newApp": {
