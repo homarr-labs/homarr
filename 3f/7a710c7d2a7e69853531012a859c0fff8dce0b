@@ -1,0 +1,93 @@
+packages/ui/src/components/index.tsx
+  s_f88a182f44b431::t_6e5a617a3e59ba 21
+packages/onboarding/src/onboarding-wordmark.tsx
+  s_06f8fd8d11bc0e::t_688369cc7c4174 15,18
+  s_06f8fd8d11bc0e::t_48209bc8b08c12 13-14
+  s_9e3e8866e477c7::t_82bcc55f64dd1c 6,30,52,60
+  s_06f8fd8d11bc0e::t_7ea2efb0ce6dbf 1-2,7,11-12,16-17,27,54,62-64
+  s_06f8fd8d11bc0e::t_1d2ccd416e8c1e 5,20
+packages/onboarding/package.json
+  s_9e3e8866e477c7::t_623d0ea6cf3a2b 40,46
+packages/onboarding/src/account.tsx
+  s_f88a182f44b431::t_3b3714daf097dd 20,35
+packages/api/src/router/test/onboard.spec.ts
+  s_06f8fd8d11bc0e::t_17eb03ca4c46f6 531-561
+packages/onboarding/src/setup-studio.tsx
+  s_f88a182f44b431::t_3b3714daf097dd 99,653
+  s_06f8fd8d11bc0e::t_17eb03ca4c46f6 456
+  s_06f8fd8d11bc0e::t_636cc112f961ce 1307
+  s_06f8fd8d11bc0e::t_7f973ba4441e5f 1409-1415
+  s_06f8fd8d11bc0e::t_ab0195967b2f18 67,1299-1306,1312,1325,1329,1331,1407-1408
+  s_06f8fd8d11bc0e::t_48209bc8b08c12 607,656,659
+packages/onboarding/src/finish.tsx
+  s_9e3e8866e477c7::t_f0d4bd0d16939f 6,25,27-51,76-79,81-83
+  s_f88a182f44b431::t_3b3714daf097dd 12,63
+packages/onboarding/src/types.ts
+  s_06f8fd8d11bc0e::t_688369cc7c4174 6
+packages/translation/src/lang/en.json
+  s_06f8fd8d11bc0e::t_ba0fb402a4d623 135-136
+packages/onboarding/src/welcome.tsx
+  s_06f8fd8d11bc0e::t_688369cc7c4174 4,103
+  s_f88a182f44b431::t_3b3714daf097dd 12,99
+packages/ui/src/components/integration-marquee.tsx
+  s_f88a182f44b431::t_9089bce2d3ba1e 15,23,26-28
+  s_f88a182f44b431::t_6e5a617a3e59ba 1-14,16-22,24-25,29-33
+packages/onboarding/src/onboarding-backdrop.tsx
+  s_f88a182f44b431::t_6e5a617a3e59ba 1-6,13-14
+  s_f88a182f44b431::t_8d96357f2f3b86 7-12
+packages/ui/src/components/integration-marquee.module.css
+  s_f88a182f44b431::t_6e5a617a3e59ba 1,3-4,6-7,11-14,16,29-41
+  s_f88a182f44b431::t_d63784d56f76b0 2,9-10,25,27
+  s_f88a182f44b431::t_9089bce2d3ba1e 5,15,17-24,26,28
+  s_f88a182f44b431::t_eaa78fb137ba64 8
+apps/nextjs/src/app/[locale]/manage/_components/hero-banner.tsx
+  s_f88a182f44b431::t_6e5a617a3e59ba 1,4,23
+packages/onboarding/src/onboarding-studio.module.css
+  s_f88a182f44b431::t_7d3b4057443f5f 22,24-26,31-32,34,39-40,59,372,387-388,458
+  s_06f8fd8d11bc0e::t_688369cc7c4174 81-85,456-457
+  s_f88a182f44b431::t_d63784d56f76b0 48,54
+  s_f88a182f44b431::t_8d96357f2f3b86 28-30,33,35-38,41-47,49-53,373-386
+  s_f88a182f44b431::t_a6a371d5481923 459
+apps/nextjs/src/app/[locale]/init/page.tsx
+  s_06f8fd8d11bc0e::t_688369cc7c4174 18,59
+pnpm-workspace.yaml
+  s_9e3e8866e477c7::t_623d0ea6cf3a2b 230
+packages/api/src/router/onboard/onboard-router.ts
+  s_06f8fd8d11bc0e::t_17eb03ca4c46f6 414-417
+packages/ui/src/components/integration-marquee.module.d.css.ts
+  s_f88a182f44b431::t_6e5a617a3e59ba 1-2
+pnpm-lock.yaml
+  s_9e3e8866e477c7::t_da4ed904300318 288-290,375-377,2459-2461,2472-2474,9199-9201,10411-10413,24285-24286,25598-25599
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "3f7a710c7d2a7e69853531012a859c0fff8dce0b",
+  "prompts": {},
+  "sessions": {
+    "s_06f8fd8d11bc0e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffc43-219d-71d3-99c9-a8969fe772c8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_9e3e8866e477c7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffc40-9362-7f41-b5f1-170ea5f2fb0a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_f88a182f44b431": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffc43-a969-7140-a8d1-074d9b38b745",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
