@@ -269,7 +269,9 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
           resolveDiscoveredAppUrl(
             appUrlOverrides[app.sourceId],
             app.suggestedUrl,
-            serverOrigin ? buildAppUrl(app.containerName, serverOrigin, urlMode, app.publishedPort ?? undefined) : null,
+            serverOrigin
+              ? buildAppUrl(app.detectedType ?? app.containerName, serverOrigin, urlMode, app.publishedPort ?? undefined)
+              : null,
           ),
         ]),
       ),
@@ -1148,7 +1150,7 @@ const Connections = (props: StudioSectionProps) => {
                         {integration.containerName}
                       </Text>
                       <Text size="xs" c="dimmed" truncate>
-                        {getIntegrationName(integration.kind)} · {integration.suggestedUrl || t("addressNeeded")}
+                        {getIntegrationName(integration.kind)}
                       </Text>
                     </Stack>
                   </Group>
@@ -1165,7 +1167,7 @@ const Connections = (props: StudioSectionProps) => {
             {props.discoveredApps.map((app) => {
               const selected = props.selectedAppIds.includes(app.sourceId);
               return (
-                <Stack key={app.sourceId} gap="xs">
+                <Stack key={app.sourceId} gap="xs" h="100%">
                   <Checkbox.Card
                     className={classes.discoveryChoice}
                     value={app.sourceId}
@@ -1181,29 +1183,24 @@ const Connections = (props: StudioSectionProps) => {
                     p="sm"
                     radius="md"
                   >
-                    <Group wrap="nowrap">
+                    <Group wrap="nowrap" w="100%">
                       <Checkbox.Indicator />
                       <Avatar src={app.iconUrl} size="sm" radius="sm">
                         {app.containerName.at(0)}
                       </Avatar>
-                      <Stack gap={0} miw={0}>
-                        <Group gap="xs" wrap="nowrap">
-                          <Text size="sm" fw={600} truncate>
-                            {app.containerName}
-                          </Text>
-                          <Badge size="xs" variant="light" color={app.source === "label" ? "blue" : "gray"}>
-                            {app.source === "label" ? t("dockerLabelSource") : t("dockerImageSource")}
-                          </Badge>
-                        </Group>
+                      <Stack gap={0} miw={0} style={{ flex: 1 }}>
+                        <Text size="sm" fw={600} truncate>
+                          {app.containerName}
+                        </Text>
                         <Text size="xs" c="dimmed" truncate>
-                          {props.discoveredAppUrls[app.sourceId] || t("addressNeeded")}
+                          {app.detectedType ?? t("appType")}
                         </Text>
                       </Stack>
                     </Group>
                   </Checkbox.Card>
                   {selected ? (
                     <TextInput
-                      label={t("appUrl", { name: app.containerName })}
+                      label={t("url")}
                       value={props.discoveredAppUrls[app.sourceId] ?? ""}
                       onChange={(event) => props.setDiscoveredAppUrl(app.sourceId, event.currentTarget.value)}
                       error={props.appErrorSourceId === app.sourceId ? props.appError : undefined}
@@ -1218,6 +1215,12 @@ const Connections = (props: StudioSectionProps) => {
         </Fieldset>
       ) : null}
 
+      {props.appError ? (
+        <Alert color="red" role="alert">
+          {props.appError}
+        </Alert>
+      ) : null}
+
       <Fieldset legend={t("otherIntegrations")}>
         <IntegrationMultiSelectGrid
           selectedKinds={props.selectedKinds}
@@ -1227,36 +1230,31 @@ const Connections = (props: StudioSectionProps) => {
         />
       </Fieldset>
 
-      {props.appError ? (
-        <Alert color="red" role="alert">
-          {props.appError}
-        </Alert>
-      ) : null}
-
-      {props.drafts.length > 0 ? (
-        <Accordion
-          className={classes.integrationAccordion}
-          variant="separated"
-          multiple
-          transitionDuration={200}
-          order={3}
-          mb="md"
-          defaultValue={props.drafts.slice(0, 1).map((draft) => draft.id)}
-        >
-          {props.drafts.map((draft) => (
-            <IntegrationEditor
-              key={draft.id}
-              draft={draft}
-              update={(patch) => props.updateDraft(draft.id, patch)}
-              selectSecretOption={(option) => props.selectSecretOption(draft, option)}
-            />
-          ))}
-        </Accordion>
-      ) : (
-        <Alert variant="light" icon={<IconPlugConnected size={18} />} my="xs">
-          {t("empty")}
-        </Alert>
-      )}
+      <Fieldset legend={t("configureIntegrations")}>
+        {props.drafts.length > 0 ? (
+          <Accordion
+            className={classes.integrationAccordion}
+            variant="separated"
+            multiple
+            transitionDuration={200}
+            order={3}
+            defaultValue={props.drafts.slice(0, 1).map((draft) => draft.id)}
+          >
+            {props.drafts.map((draft) => (
+              <IntegrationEditor
+                key={draft.id}
+                draft={draft}
+                update={(patch) => props.updateDraft(draft.id, patch)}
+                selectSecretOption={(option) => props.selectSecretOption(draft, option)}
+              />
+            ))}
+          </Accordion>
+        ) : (
+          <Alert variant="light" icon={<IconPlugConnected size={18} />}>
+            {t("empty")}
+          </Alert>
+        )}
+      </Fieldset>
     </Stack>
   );
 };

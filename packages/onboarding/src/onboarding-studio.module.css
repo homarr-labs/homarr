@@ -181,6 +181,11 @@
   border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 76%, transparent);
 }
 
+.discoveryChoice {
+  width: 100%;
+  min-height: 4.25rem;
+}
+
 .discoveryChoice[data-checked] {
   border-color: var(--mantine-primary-color-filled);
   background: color-mix(in srgb, var(--mantine-primary-color-light) 62%, var(--mantine-color-body));
