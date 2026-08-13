@@ -16,19 +16,19 @@ still be suggested from their image and published ports.
 
 `homarr.name` and `homarr.href` are required for label discovery. All other labels are optional.
 
-| Label | Purpose |
-| --- | --- |
-| `homarr.name` | App or integration display name |
-| `homarr.href` | Address opened by the app and used as the suggested integration address |
-| `homarr.group` | Container section that receives the selected app and compatible widget |
-| `homarr.icon` | App icon URL |
-| `homarr.description` | App description |
-| `homarr.ping` | Address used for app status checks |
-| `homarr.id` | Stable source identifier; defaults to the Docker container ID |
-| `homarr.board` | Intended board name; see [Board targeting](#board-targeting) |
-| `homarr.integration` | Homarr integration kind, for example `sonarr` |
-| `homarr.widget` | Homarr widget kind to add when it supports the selected integration |
-| `homarr.hide` | Excludes the container when this label is present, regardless of its value |
+| Label                | Purpose                                                                    |
+| -------------------- | -------------------------------------------------------------------------- |
+| `homarr.name`        | App or integration display name                                            |
+| `homarr.href`        | Address opened by the app and used as the suggested integration address    |
+| `homarr.group`       | Container section that receives the selected app and compatible widget     |
+| `homarr.icon`        | App icon URL                                                               |
+| `homarr.description` | App description                                                            |
+| `homarr.ping`        | Address used for app status checks                                         |
+| `homarr.id`          | Stable source identifier; defaults to the Docker container ID              |
+| `homarr.board`       | Intended board name; see [Board targeting](#board-targeting)               |
+| `homarr.integration` | Homarr integration kind, for example `sonarr`                              |
+| `homarr.widget`      | Homarr widget kind to add when it supports the selected integration        |
+| `homarr.hide`        | Excludes the container when this label is present, regardless of its value |
 
 Unknown integration and widget kinds are ignored. Do not put API keys, passwords, or other secrets in labels. Enter
 credentials in onboarding, where Homarr stores them using its normal encrypted integration-secret flow.
