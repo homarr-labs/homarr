@@ -183,7 +183,19 @@
 
 .discoveryChoice {
   width: 100%;
-  min-height: 4.25rem;
+  height: 4.25rem;
+  overflow: hidden;
+}
+
+.detectedAppGrid {
+  align-items: start;
+}
+
+.detectedAppItem {
+  display: grid;
+  grid-template-rows: 4.25rem auto;
+  gap: var(--mantine-spacing-xs);
+  min-width: 0;
 }
 
 .discoveryChoice[data-checked] {

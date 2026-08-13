@@ -1163,11 +1163,11 @@ const Connections = (props: StudioSectionProps) => {
 
       {props.discoveredApps.length > 0 ? (
         <Fieldset legend={t("discoveredApps", { count: String(props.discoveredApps.length) })}>
-          <SimpleGrid cols={{ base: 1, xs: 2, md: 3 }}>
+          <SimpleGrid className={classes.detectedAppGrid} cols={{ base: 1, xs: 2, md: 3 }}>
             {props.discoveredApps.map((app) => {
               const selected = props.selectedAppIds.includes(app.sourceId);
               return (
-                <Stack key={app.sourceId} gap="xs" h="100%">
+                <div className={classes.detectedAppItem} key={app.sourceId}>
                   <Checkbox.Card
                     className={classes.discoveryChoice}
                     value={app.sourceId}
@@ -1208,7 +1208,7 @@ const Connections = (props: StudioSectionProps) => {
                       required
                     />
                   ) : null}
-                </Stack>
+                </div>
               );
             })}
           </SimpleGrid>
