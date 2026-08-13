@@ -411,9 +411,10 @@ export const onboardRouter = createTRPCRouter({
             throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
           });
           if (!result.success) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: `Unable to connect to ${integration.name}: ${result.error.message}`,
+            logger.warn("Creating onboarding integration after its connection test failed", {
+              name: integration.name,
+              kind: integration.kind,
+              error: result.error.message,
             });
           }
         }),

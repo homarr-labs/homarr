@@ -528,6 +528,37 @@ describe("onboard.completeSetup", () => {
     }
   });
 
+  it("creates a selected integration when its connection test fails", async () => {
+    const db = createDb();
+    const claimToken = await seedOnboardingAsync(db);
+    await seedBoardAsync(db, { boardId: "target" });
+    const input = completionInput("target");
+    input.integrations = [
+      {
+        sourceId: "manual:sonarr",
+        name: "Sonarr",
+        url: "http://sonarr:8989",
+        kind: "sonarr",
+        secrets: [{ kind: "apiKey", value: "invalid" }],
+      },
+    ];
+    const testConnection = vi
+      .spyOn(integrationConnection, "testConnectionAsync")
+      .mockResolvedValue({ success: false, error: new Error("Connection refused") as never });
+
+    try {
+      await expect(createCaller(db, claimToken).completeSetup(input)).resolves.toMatchObject({ boardId: "target" });
+      expect(
+        await db.query.integrations.findFirst({
+          where: eq(integrations.id, stableIntegrationIdForSource("manual:sonarr")),
+        }),
+      ).toMatchObject({ name: "Sonarr", kind: "sonarr" });
+      expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "finish" });
+    } finally {
+      testConnection.mockRestore();
+    }
+  });
+
   it("rolls draft records back with board writes and reuses stable IDs on retry", async () => {
     const db = createDb();
     const claimToken = await seedOnboardingAsync(db);

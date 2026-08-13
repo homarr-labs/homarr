@@ -28,9 +28,9 @@
         "review": "Review"
       },
       "welcome": {
-        "badge": "Homarr v2",
-        "title": "Make home feel organized.",
-        "description": "Homarr can discover your services, connect the right integrations, and build a responsive first board. You only decide what cannot be inferred.",
+        "title": "Welcome home",
+        "version": "Welcome to Homarr v{version}",
+        "description": "Let's get you started with homarr",
         "start": "Get started",
         "restore": "Come from a backup",
         "restoreTitle": "Restore this Homarr",
@@ -133,7 +133,8 @@
         "testError": "Connection failed",
         "testErrorDescription": "Check the service address and credentials, then try again.",
         "needsConfiguration": "Needs configuration",
-        "configured": "Configured",
+        "tested": "Connection tested",
+        "testFailed": "Connection test failed",
         "incompleteConfirmation": "Unfinished integrations will be skipped. Continue without them?"
       },
       "board": {

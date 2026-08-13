@@ -1,12 +1,15 @@
 "use client";
 
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { Button, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { IconArrowRight, IconBook2, IconSparkles, IconTool } from "@tabler/icons-react";
+import confetti from "canvas-confetti";
 
 import { createDocumentationLink } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
+import { OnboardingBackdrop } from "./onboarding-backdrop";
 import type { OnboardingStudioProps } from "./types";
 import classes from "./onboarding-studio.module.css";
 
@@ -14,9 +17,36 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
   const t = useScopedI18n("init.studio.finish");
   const boardHref = `/boards/${encodeURIComponent(environment.initialBoard?.name ?? "dashboard")}`;
   const destination = environment.canConfigurePrivileged ? boardHref : "/auth/login?callbackUrl=%2Finit";
+  const openBoard = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    const button = event.currentTarget.getBoundingClientRect();
+    void confetti({
+      particleCount: 120,
+      spread: 75,
+      startVelocity: 45,
+      origin: {
+        x: (button.left + button.width / 2) / window.innerWidth,
+        y: (button.top + button.height / 2) / window.innerHeight,
+      },
+      disableForReducedMotion: true,
+    });
+    window.setTimeout(() => window.location.assign(destination), 450);
+  };
 
   return (
     <main className={classes.page}>
+      <OnboardingBackdrop />
       <div className={classes.shell}>
         <Stack mih="calc(100dvh - 6rem)" justify="center" align="center">
           <div style={{ width: "100%", maxWidth: "52rem" }}>
@@ -33,7 +63,13 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
                     {t("description")}
                   </Text>
                 </Stack>
-                <Button component={Link} href={destination} size="lg" rightSection={<IconArrowRight size={18} />}>
+                <Button
+                  component={Link}
+                  href={destination}
+                  size="lg"
+                  rightSection={<IconArrowRight size={18} />}
+                  onClick={openBoard}
+                >
                   {t("openBoard")}
                 </Button>
                 <SimpleGrid cols={{ base: 1, sm: 3 }} w="100%">

@@ -19,22 +19,44 @@
     var(--mantine-color-body);
 }
 
-.page::before {
-  content: "";
+.marqueeBackdrop {
   position: fixed;
-  inset: -2rem;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
   pointer-events: none;
-  opacity: 0.28;
-  background-image:
-    linear-gradient(color-mix(in srgb, var(--mantine-color-dimmed) 28%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--mantine-color-dimmed) 28%, transparent) 1px, transparent 1px);
-  background-size: 32px 32px;
-  filter: blur(0.35px);
-  mask-image: radial-gradient(ellipse 66% 86% at center, transparent 22%, black 88%);
+  opacity: 0.42;
+  filter: blur(1.25px) saturate(0.92);
+  mask-image: linear-gradient(to right, black 0%, black 18%, transparent 40%, transparent 60%, black 82%, black 100%);
+}
+
+.marqueeRail {
+  position: absolute;
+  top: -14rem;
+  bottom: -14rem;
+  width: clamp(22rem, 26vw, 32rem);
+  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+}
+
+.marqueeRail > * {
+  height: 100%;
+  overflow: visible;
+}
+
+.marqueeRailLeft {
+  left: -7rem;
+  --integration-marquee-accent: var(--studio-glow-color);
+}
+
+.marqueeRailRight {
+  right: -7rem;
+  top: -22rem;
+  --integration-marquee-accent: var(--studio-secondary-glow-color);
 }
 
 .shell {
   position: relative;
+  z-index: 1;
   width: min(100% - 2rem, 76rem);
   margin-inline: auto;
   padding-block: clamp(1rem, 3vw, 2.5rem) calc(6rem + env(safe-area-inset-bottom));
@@ -56,7 +78,12 @@
   max-width: min(70vw, 28rem);
 }
 
-:global([data-mantine-color-scheme="light"]) .wordmark {
+.wordmark.welcomeWordmark {
+  height: clamp(8rem, 20vw, 12rem);
+  max-width: min(92vw, 42rem);
+}
+
+:global([data-mantine-color-scheme="light"]) .wordmark:not([data-recolored="true"]) {
   filter: brightness(0);
 }
 
@@ -304,6 +331,23 @@
 }
 
 @media (max-width: 48em) {
+  .marqueeBackdrop {
+    opacity: 0.24;
+    mask-image: linear-gradient(to right, black, transparent 42%, transparent 58%, black);
+  }
+
+  .marqueeRail {
+    width: 17rem;
+  }
+
+  .marqueeRailLeft {
+    left: -8rem;
+  }
+
+  .marqueeRailRight {
+    right: -8rem;
+  }
+
   .shell {
     width: min(100% - 1rem, 76rem);
   }
@@ -369,6 +413,10 @@
 
   .wordmark {
     height: 3rem;
+  }
+
+  .wordmark.welcomeWordmark {
+    height: clamp(7rem, 34vw, 10rem);
   }
 
   .hero {

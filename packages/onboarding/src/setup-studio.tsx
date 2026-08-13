@@ -64,6 +64,7 @@ import {
   IconServer,
   IconSparkles,
   IconSunMoon,
+  IconX,
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -95,6 +96,7 @@ import { BoardColorInput, ColorSchemeCombobox, IntegrationAvatar, LanguageCombob
 import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
 
 import type { OnboardingStudioProps } from "./types";
+import { OnboardingBackdrop } from "./onboarding-backdrop";
 import { OnboardingWordmark } from "./onboarding-wordmark";
 import {
   isHttpUrl,
@@ -217,6 +219,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [boardName, setBoardName] = useState(initialBoard?.name ?? "dashboard");
   const [primaryColor, setPrimaryColor] = useState("#fa5252");
   const [secondaryColor, setSecondaryColor] = useState("#fd7e14");
+  const [boardColorsDirty, setBoardColorsDirty] = useState(false);
   const [itemRadius, setItemRadius] = useState<MantineSize>("lg");
   const [columnCount, setColumnCount] = useState(10);
   const [leftSidebar, setLeftSidebar] = useState(false);
@@ -425,6 +428,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
 
       setApplyMessage(t("review.progress.applying"));
       setApplyProgress(20);
+      await new Promise((resolve) => setTimeout(resolve, 300));
       const selectedSourceIds = new Set(draftsToApply.flatMap((draft) => (draft.sourceId ? [draft.sourceId] : [])));
       const completion = await complete.mutateAsync({
         server: {
@@ -557,9 +561,15 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     selectedBoardId,
     setSelectedBoardId,
     primaryColor,
-    setPrimaryColor,
+    setPrimaryColor: (value) => {
+      setPrimaryColor(value);
+      setBoardColorsDirty(true);
+    },
     secondaryColor,
-    setSecondaryColor,
+    setSecondaryColor: (value) => {
+      setSecondaryColor(value);
+      setBoardColorsDirty(true);
+    },
     itemRadius,
     setItemRadius,
     columnCount,
@@ -595,9 +605,13 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
         } as CSSProperties
       }
     >
+      <OnboardingBackdrop />
       <div className={classes.shell}>
         <Group className={classes.topbar} mb="lg">
-          <OnboardingWordmark />
+          <OnboardingWordmark
+            primaryColor={boardColorsDirty ? primaryColor : undefined}
+            secondaryColor={boardColorsDirty ? secondaryColor : undefined}
+          />
         </Group>
 
         <Paper className={classes.studio} radius="lg">
@@ -1238,11 +1252,20 @@ const IntegrationEditor = ({
     testConnection.reset();
     update(patch);
   };
+  const testFailed = testConnection.data?.success === false || testConnection.isError;
+  const testSucceeded = testConnection.data?.success === true;
+  const status = needsConfiguration
+    ? { color: "orange", label: t("needsConfiguration"), icon: <IconAlertCircle size={14} /> }
+    : testSucceeded
+      ? { color: "green", label: t("tested"), icon: <IconCheck size={14} /> }
+      : testFailed
+        ? { color: "red", label: t("testFailed"), icon: <IconX size={14} /> }
+        : { color: "gray", label: t("testConnection"), icon: <IconPlugConnected size={14} /> };
   return (
     <Accordion.Item value={draft.id}>
       <Accordion.Control
         icon={<IntegrationAvatar kind={draft.kind} size="sm" />}
-        aria-label={needsConfiguration ? `${draft.name}: ${t("needsConfiguration")}` : draft.name}
+        aria-label={`${draft.name}: ${status.label}`}
       >
         <Group justify="space-between" wrap="nowrap" pr="sm">
           <Stack gap={0} miw={0}>
@@ -1255,13 +1278,13 @@ const IntegrationEditor = ({
           </Stack>
           <ThemeIcon
             className={classes.integrationStatus}
-            color={needsConfiguration ? "orange" : "green"}
+            color={status.color}
             variant="light"
             size="sm"
             radius="xl"
-            aria-label={t(needsConfiguration ? "needsConfiguration" : "configured")}
+            aria-label={status.label}
           >
-            {needsConfiguration ? <IconAlertCircle size={14} /> : <IconCheck size={14} />}
+            {status.icon}
           </ThemeIcon>
         </Group>
       </Accordion.Control>
@@ -1337,10 +1360,16 @@ const IntegrationEditor = ({
               size="xs"
               disabled={needsConfiguration}
               loading={testConnection.isPending}
-              color={
-                testConnection.data?.success ? "green" : testConnection.data?.success === false ? "red" : undefined
+              color={testSucceeded ? "green" : testFailed ? "red" : undefined}
+              leftSection={
+                testSucceeded ? (
+                  <IconCheck size={14} />
+                ) : testFailed ? (
+                  <IconX size={14} />
+                ) : (
+                  <IconPlugConnected size={14} />
+                )
               }
-              leftSection={testConnection.data?.success ? <IconCheck size={14} /> : <IconPlugConnected size={14} />}
               onClick={() =>
                 testConnection.mutate({
                   sourceId: draft.sourceId ?? draft.id,

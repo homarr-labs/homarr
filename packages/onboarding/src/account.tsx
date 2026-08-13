@@ -17,6 +17,7 @@ import { groupCreateSchema } from "@homarr/validation/group";
 import { userInitSchema } from "@homarr/validation/user";
 
 import { didCredentialsSignInFail } from "./account-recovery";
+import { OnboardingBackdrop } from "./onboarding-backdrop";
 import type { OnboardingStudioProps } from "./types";
 import classes from "./onboarding-studio.module.css";
 
@@ -30,6 +31,7 @@ const AccountShell = ({
   children: React.ReactNode;
 }) => (
   <main className={classes.page}>
+    <OnboardingBackdrop />
     <div className={classes.shell}>
       <Stack mih="calc(100dvh - 6rem)" justify="center" align="center">
         <Paper className={classes.studio} radius="lg" p={{ base: "lg", sm: "xl" }} w="100%" maw="36rem">
