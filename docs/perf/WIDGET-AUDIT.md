@@ -167,21 +167,30 @@ would be user-visible — `custom-api`'s user JSX, the edit modal's forms — th
 The cost is real and worth stating: switching tabs in `health-monitoring` or `media-missing` now
 remounts the panel. react-query still has the data cached, so it repaints rather than reloads.
 
-### Bundle: partially satisfied
+### Bundle: the rule does not apply here at all
 
-`optimizePackageImports` already covers the three that matter by volume — `@mantine/core` (727
-imports), `@mantine/hooks` (69), `@tabler/icons-react`. Seven smaller Mantine entry points are not
-listed: `dates` (13 files), `dropzone` (12), `charts` (10), `spotlight` (7), `form` (4),
-`notifications` (3), `tiptap` (1).
+The "direct imports, not barrels" rule, and the whole `optimizePackageImports` lever behind it, is
+**inert in this repo** — measured, then explained.
 
-`@homarr/ui` is the largest barrel in the repo at 111 importers, and it is **not eligible**: Next's
-barrel optimiser only rewrites files that consist purely of re-exports, and `packages/ui/src/index.ts`
-also defines a runtime `uiConfiguration` value. Same for the other workspace barrels.
+Seven Mantine entry points were missing from `optimizePackageImports`: `dates` (13 files), `dropzone`
+(12), `charts` (10), `spotlight` (7), `form` (4), `notifications` (3), `tiptap` (1). Adding all seven
+and rebuilding produced a client bundle that was **byte-for-byte identical** — 482 files, 18050.7 KiB
+in both arms, down to the individual chunk hashes.
 
-Adding the seven Mantine entry points is a one-line change, but it is left undone rather than guessed
-at: it needs two production builds and a first-load-JS comparison, and everything else in this work
-that shipped without a measurement was later found to be wrong. Recorded in
-[NEXT-STEPS.md](./NEXT-STEPS.md) instead.
+Identical output including hashes looks like a cached build, especially with
+`turbopackFileSystemCacheForBuild` enabled, so it was checked instead of reported. The Next.js docs
+settle it: *"This is not needed when using Turbopack. Turbopack automatically analyzes and optimizes
+imports without requiring this configuration."* This app builds with Turbopack — the build banner says
+so — and the config is dead weight.
+
+Which also disposes of the sub-question underneath it. `@homarr/ui` is the largest barrel in the repo
+at 111 importers, and I had noted it as ineligible because Next's barrel optimiser only rewrites pure
+re-export files while `packages/ui/src/index.ts` also defines a runtime `uiConfiguration`. True, and
+irrelevant: Turbopack does not use that optimiser and tree-shakes the barrel regardless.
+
+Measuring first-load JS per route was not possible the usual way, incidentally: Next 16 + Turbopack
+prints no size columns in the route table and emits no `app-build-manifest.json`. Total bytes under
+`.next/static/chunks` is the substitute.
 
 ### `data = []` defaults: declined, with the reasoning
 

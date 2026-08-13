@@ -3,6 +3,35 @@
 Each of these was implemented or configured, built, and measured. They are recorded with their
 numbers so nobody repeats them, and because several looked like wins until the measurement came in.
 
+## `optimizePackageImports` — inert, because this app builds with Turbopack
+
+Seven Mantine entry points were absent from `experimental.optimizePackageImports` while
+`@mantine/core`, `@mantine/hooks` and `@tabler/icons-react` were listed: `charts`, `dates`,
+`dropzone`, `form`, `notifications`, `spotlight`, `tiptap`. Adding all seven and rebuilding:
+
+| | baseline | all seven added |
+| --- | --- | --- |
+| client chunk files | 482 | 482 |
+| client chunk bytes | 18050.7 KiB | 18050.7 KiB |
+| largest chunk | 2341.5 KiB | 2341.5 KiB |
+
+**Byte-for-byte identical, down to the chunk hashes.** That pattern normally means a cached build — and
+`turbopackFileSystemCacheForBuild` is enabled here — so it was checked rather than written up as a null
+result. The Next.js documentation is explicit: *"This is not needed when using Turbopack. Turbopack
+automatically analyzes and optimizes imports without requiring this configuration."* The build banner
+reads `Next.js 16.3.0-preview.9 (Turbopack)`.
+
+So the existing three-entry list is also dead config. It is left in place as a fallback should the app
+ever build with webpack again, with a comment saying not to expect anything from it.
+
+This retires the entire "barrel imports / bundle optimization" line of enquiry for this repo, including
+the sub-question of whether `@homarr/ui` — the biggest barrel at 111 importers — could be optimised.
+It cannot be by that mechanism, and does not need to be.
+
+Two measurement notes for anyone revisiting this: Next 16 with Turbopack prints **no size columns** in
+its route table and emits no `app-build-manifest.json`, so per-route first-load JS is not available
+from the build output. Total bytes under `.next/static/chunks` is what these numbers are.
+
 ## `--jitless` — looked like the biggest win of the entire investigation, and was fake
 
 V8's `--jitless` removes the optimising compiler and all generated machine code. Its effect on code

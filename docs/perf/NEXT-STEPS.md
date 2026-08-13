@@ -81,7 +81,6 @@ Start from `analyze-require-graph.mjs`, which found the shared subtree, and
 | Lazy `mysql2` / `pg` | 21.4 MiB | Three implementations, all broken; see REJECTED.md. Structurally blocked because `createDb` must stay synchronous |
 | `beszelSystemStats` at 1,156 nodes | unknown | Second-heaviest widget, but its cost is chart SVG (`<g>×317`), so reducing it changes what is drawn |
 | `documents` reads 18–32 | unknown | Never investigated; each document carries overhead |
-| Add 7 Mantine entry points to `optimizePackageImports` | unknown | One line: `dates`, `dropzone`, `charts`, `spotlight`, `form`, `notifications`, `tiptap` are not listed, while `core`/`hooks`/`icons-react` are. Needs two production builds and a first-load-JS diff to know whether it does anything. `@homarr/ui` is **not** eligible despite 111 importers — Next's barrel optimiser only rewrites pure re-export files, and `packages/ui/src/index.ts` also defines a runtime value |
 
 ## 4. For the clean PR
 

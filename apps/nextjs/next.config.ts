@@ -84,6 +84,15 @@ const nextConfig: NextConfig = {
     "@ioredis/commands",
   ],
   experimental: {
+    /**
+     * Dead config under Turbopack, which this app builds with: "Turbopack automatically analyzes and
+     * optimizes imports without requiring this configuration."
+     *
+     * Measured rather than assumed - adding the seven Mantine entry points that are missing here
+     * (charts, dates, dropzone, form, notifications, spotlight, tiptap) produced a client bundle that
+     * was byte-for-byte identical, 482 files and 18050.7 KiB in both arms, down to the chunk hashes.
+     * Kept only as a fallback for a webpack build; do not add to it expecting an effect.
+     */
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForBuild: true,
     useTypeScriptCli: true,
