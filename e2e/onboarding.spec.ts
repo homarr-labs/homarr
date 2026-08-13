@@ -103,7 +103,7 @@ describe("Onboarding", () => {
 
         const serverOrigin = page.getByLabel("Domain, IP, or reverse-proxy path");
         await serverOrigin.fill("https://home.example/homarr");
-        await page.getByLabel("Default language").click();
+        await page.getByRole("combobox", { name: "Default language" }).click();
         await page.getByRole("option", { name: /Français/ }).click();
         expect(await serverOrigin.inputValue()).toBe("https://home.example/homarr");
         expect(await page.getByRole("heading", { name: "Start with familiar defaults" }).isVisible()).toBe(true);
@@ -138,14 +138,14 @@ describe("Onboarding", () => {
         }
 
         await page.getByRole("button", { name: /^Board/ }).click();
-        const boardPreview = page.getByLabel("Live preview of the first board layout");
+        const boardPreview = page.locator('figure[aria-label="Live preview of the first board layout"]');
         expect(await boardPreview.getAttribute("data-layout-role")).toBe("base");
         expect(await boardPreview.getAttribute("data-layout-columns")).toBe("10");
-        await page.getByRole("radio", { name: "Mobile", exact: true }).click();
+        await page.getByText("Mobile", { exact: true }).click();
         expect(await boardPreview.getAttribute("data-layout-role")).toBe("mobile");
         expect(await boardPreview.getAttribute("data-layout-columns")).toBe("3");
-        await page.getByRole("radio", { name: "Wide", exact: true }).click();
-        await page.getByRole("radio", { name: "Base", exact: true }).click();
+        await page.getByText("Wide", { exact: true }).click();
+        await page.getByText("Base", { exact: true }).click();
         expect(await boardPreview.getAttribute("data-layout-columns")).toBe("12");
 
         await page.getByRole("button", { name: /^Connect/ }).click();
@@ -299,9 +299,7 @@ describe("Onboarding", () => {
       await page.goto(`${baseUrl}/init`);
       await page.getByRole("button", { name: "Get started" }).click();
       await page.getByRole("heading", { name: "Create your administrator" }).waitFor();
-      await page.route("**/api/auth/callback/credentials**", async (route) => {
-        await route.fulfill({ status: 500, contentType: "application/json", body: '{"error":"forced-e2e-failure"}' });
-      });
+      await page.route(/\/api\/auth\/callback\/credentials(?:\?.*)?$/, (route) => route.abort("failed"));
       await page.getByLabel("Administrator username").fill("admin");
       await page.getByLabel("Password", { exact: true }).fill("Comp(exP4sswOrd");
       await page.getByLabel("Confirm password").fill("Comp(exP4sswOrd");
@@ -457,9 +455,9 @@ describe("Onboarding", () => {
       await page.getByLabel("Provider URL").waitFor();
 
       const provider = page.getByRole("combobox", { name: "Provider", exact: true });
-      await expect.poll(() => provider.inputValue(), { timeout: 10_000 }).toBe("custom");
+      await expect.poll(() => provider.inputValue(), { timeout: 10_000 }).toBe("Custom endpoint");
       expect(await page.getByLabel("Provider URL").inputValue()).toBe("http://assistant.local/v1");
-      expect(await page.getByLabel("Default model").inputValue()).toBe("local-model");
+      expect(await page.locator('input[value="local-model"]').inputValue()).toBe("local-model");
       expect(await page.getByText("Model discovery is unavailable.").count()).toBe(1);
     } finally {
       try {
