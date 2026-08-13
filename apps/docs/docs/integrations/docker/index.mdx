@@ -160,11 +160,13 @@ They are then available in the app list and can be used as normally added apps.
 
 ![Apps added from containers](img/add-to-homarr-apps.png)
 
-### Configuration
+### Container labels
 
-Currently Homarr supports one label for configuration of the containers:
+`homarr.hide` excludes a container from the Docker Containers widget, tools page, and onboarding discovery whenever the
+label is present.
 
-- **homarr.hide:** If set to any value, the container will be hidden from the Docker Containers widget and tools page.
+During first-run onboarding, Homarr can also discover apps, integrations, groups, and compatible widgets from
+`homarr.*` labels, with Homepage labels as a fallback. See the complete [Docker label reference](/docs/integrations/docker-labels).
 
 ### Security
 
