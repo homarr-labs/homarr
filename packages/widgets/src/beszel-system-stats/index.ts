@@ -16,6 +16,7 @@ const timePeriodOptions = [
 ];
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemStats", {
+  supportsAdvancedFocus: false,
   icon: IconChartAreaLine,
   queryKeys: [[["widget", "beszel", "getSystems"]], [["widget", "beszel", "getSystemStats"]]],
   queryMatcher(query, scope) {
