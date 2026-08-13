@@ -53,7 +53,10 @@ export const getDockerReconciliationAsync = async (db: Database) => {
       ? sameKindIntegrations.filter(({ name }) => normalizeName(name) === normalizeName(container.name))
       : [];
     const exactIntegration = exactIntegrationMatches.length === 1 ? exactIntegrationMatches[0] : undefined;
-    const nameIntegration = nameIntegrationMatches.length === 1 ? nameIntegrationMatches[0] : undefined;
+    const nameIntegration =
+      exactIntegrationMatches.length === 0 && nameIntegrationMatches.length === 1
+        ? nameIntegrationMatches[0]
+        : undefined;
     const integration = exactIntegration ?? nameIntegration;
     const exactAppMatches = apps.filter(({ href }) => {
       const normalizedUrl = normalizeDockerServiceUrl(href);
@@ -63,11 +66,16 @@ export const getDockerReconciliationAsync = async (db: Database) => {
       ? apps.filter(({ name }) => normalizeName(name) === normalizeName(container.name))
       : [];
     const exactApp = exactAppMatches.length === 1 ? exactAppMatches[0] : undefined;
-    const nameApp = nameAppMatches.length === 1 ? nameAppMatches[0] : undefined;
+    const nameApp = exactAppMatches.length === 0 && nameAppMatches.length === 1 ? nameAppMatches[0] : undefined;
     const linkedApp = integration?.appId ? apps.find(({ id }) => id === integration.appId) : undefined;
     const app = linkedApp ?? exactApp ?? nameApp;
     const exactUrl = Boolean(exactIntegration || exactApp);
     const linked = Boolean(integration?.appId && linkedApp);
+    const integrationAmbiguous =
+      exactIntegrationMatches.length > 1 || (exactIntegrationMatches.length === 0 && nameIntegrationMatches.length > 1);
+    const appAmbiguous =
+      !linkedApp && (exactAppMatches.length > 1 || (exactAppMatches.length === 0 && nameAppMatches.length > 1));
+    const ambiguous = integrationAmbiguous || appAmbiguous;
     const state: DockerReconciliationState = linked
       ? "linked"
       : integration && !exactUrl
@@ -87,7 +95,11 @@ export const getDockerReconciliationAsync = async (db: Database) => {
       match,
       urlCandidates,
       state,
-      nextAction: nextActionForState(state),
+      nextAction: integrationAmbiguous
+        ? ("reviewIntegration" as const)
+        : appAmbiguous
+          ? ("viewRepresentation" as const)
+          : nextActionForState(state),
       representation: {
         integration: integration
           ? {
@@ -105,11 +117,7 @@ export const getDockerReconciliationAsync = async (db: Database) => {
           exactUrl,
           nameMatch: Boolean(nameIntegration || nameApp),
           linked,
-          ambiguous:
-            exactIntegrationMatches.length > 1 ||
-            nameIntegrationMatches.length > 1 ||
-            exactAppMatches.length > 1 ||
-            nameAppMatches.length > 1,
+          ambiguous,
         },
       },
     };
@@ -148,7 +156,7 @@ export const getDockerServiceHealthAsync = async (db: Database) => {
             Boolean(candidate.representation.integration),
           ),
           nextAction:
-            candidate.state === "moved"
+            candidate.nextAction === "reviewIntegration"
               ? ("reviewIntegration" as const)
               : candidate.state === "newRecognized"
                 ? ("setupIntegration" as const)
@@ -159,9 +167,11 @@ export const getDockerServiceHealthAsync = async (db: Database) => {
           status: "notObserved" as const,
           nextAction: candidate.representation.integration
             ? ("testConnection" as const)
-            : candidate.match
-              ? ("setupIntegration" as const)
-              : ("none" as const),
+            : candidate.nextAction === "reviewIntegration"
+              ? ("reviewIntegration" as const)
+              : candidate.match
+                ? ("setupIntegration" as const)
+                : ("none" as const),
         },
         {
           layer: "apiRequest" as const,
@@ -173,7 +183,11 @@ export const getDockerServiceHealthAsync = async (db: Database) => {
         {
           layer: "appRepresentation" as const,
           status: candidate.representation.app ? ("linked" as const) : ("missing" as const),
-          nextAction: candidate.representation.app ? ("none" as const) : ("createApp" as const),
+          nextAction: candidate.representation.app
+            ? ("none" as const)
+            : candidate.representation.signals.ambiguous && candidate.nextAction === "viewRepresentation"
+              ? ("viewRepresentation" as const)
+              : ("createApp" as const),
         },
         {
           layer: "widgetConfiguration" as const,

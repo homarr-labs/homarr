@@ -20,7 +20,6 @@
     "./onboarding-claim": "./src/onboarding-claim.ts",
     "./assistant": "./src/assistant.ts",
     "./onboarding-step": "./src/onboarding-step.ts",
-    "./custom-widget/display-data": "./src/router/custom-widget/display-data.ts",
     "./mcp": "./src/mcp.ts",
     "./custom-widget-configuration": "./src/custom-widget-configuration.ts"
   },

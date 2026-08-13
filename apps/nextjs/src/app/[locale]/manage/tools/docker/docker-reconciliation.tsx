@@ -20,6 +20,7 @@ import { IconAlertTriangle, IconArrowRight, IconEyeOff, IconPlugConnected, IconR
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { getIntegrationName } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -32,8 +33,18 @@ type ServiceHealth = RouterOutputs["docker"]["getServiceHealth"]["services"][num
 
 export const DockerReconciliation = () => {
   const t = useScopedI18n("docker.reconciliation");
+  const utils = clientApi.useUtils();
   const reconciliation = clientApi.docker.reconcileServices.useQuery();
   const health = clientApi.docker.getServiceHealth.useQuery();
+  const refreshInventory = clientApi.docker.refreshInventory.useMutation({
+    async onSuccess() {
+      await Promise.all([
+        utils.docker.getContainers.invalidate(),
+        utils.docker.reconcileServices.invalidate(),
+        utils.docker.getServiceHealth.invalidate(),
+      ]);
+    },
+  });
   const [filter, setFilter] = useState<DockerReconciliationInboxFilter>("attention");
   const [dismissedCandidateKeys, setDismissedCandidateKeys] = useLocalStorage<string[]>({
     key: "homarr-docker-reconciliation-dismissed",
@@ -50,7 +61,7 @@ export const DockerReconciliation = () => {
           ["newRecognized", "newApp", "moved"].includes(status) && !dismissedCandidateKeys.includes(key),
       ).length
     : 0;
-  const isRefreshing = reconciliation.isFetching || health.isFetching;
+  const isRefreshing = refreshInventory.isPending || reconciliation.isFetching || health.isFetching;
 
   return (
     <Card withBorder>
@@ -89,7 +100,7 @@ export const DockerReconciliation = () => {
               size="xs"
               loading={isRefreshing}
               leftSection={<IconRefresh size={14} />}
-              onClick={() => void Promise.all([reconciliation.refetch(), health.refetch()])}
+              onClick={() => refreshInventory.mutate()}
             >
               {t("action.refresh")}
             </Button>
@@ -244,6 +255,13 @@ const DockerReconciliationCandidate = ({
 };
 
 const getCandidateTarget = (candidate: ReconciliationCandidate, url: string) => {
+  if (candidate.representation.signals.ambiguous) {
+    if (candidate.nextAction === "reviewIntegration" && candidate.match) {
+      const params = new URLSearchParams({ search: getIntegrationName(candidate.match.kind) });
+      return { kind: "reviewIntegration" as const, href: `/manage/integrations?${params.toString()}` };
+    }
+    return { kind: "viewRepresentation" as const, href: "/manage/apps" };
+  }
   if (candidate.state === "newRecognized" && candidate.match) {
     const params = new URLSearchParams({ kind: candidate.match.kind, name: candidate.container.name });
     if (url) params.set("url", url);

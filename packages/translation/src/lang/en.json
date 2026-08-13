@@ -281,11 +281,6 @@
         "description": "Start a new dashboard and add its first widget.",
         "keywords": "dashboard page"
       },
-      "importBoard": {
-        "label": "Import board",
-        "description": "Bring an existing Homarr board configuration into this instance.",
-        "keywords": "upload oldmarr migrate"
-      },
       "workshop": {
         "label": "Browse Workshop",
         "description": "Discover community-built widgets and install them.",
@@ -2072,8 +2067,8 @@
       "tryAgain": "Try again",
       "loading": "Loading",
       "show": "Show",
-      "hide": "Hide"
-      ,"undo": "Undo"
+      "hide": "Hide",
+      "undo": "Undo"
     },
     "here": "here",
     "iconPicker": {

@@ -169,6 +169,36 @@ describe("item actions create-item", () => {
     ]);
   });
 
+  test("sizes a new item for its requested rail and omits layouts where that rail is hidden", () => {
+    const board = new BoardMockBuilder()
+      .addLayout({ id: "mobile", name: "Mobile", role: "mobile", columnCount: 3, breakpoint: 0 })
+      .addEmptySection({ id: "canvas" })
+      .addEmptySection({ id: "left-rail", xOffset: -1 })
+      .build();
+    const baseLayout = board.layouts.find((layout) => layout.role === "base");
+    if (!baseLayout) throw new Error("Expected a base layout");
+    baseLayout.leftGutterColumnCount = 2;
+
+    const result = createItemCallback({ id: "missing", kind: "mediaMissing", targetSectionId: "left-rail" })(board);
+
+    expect(result.items.find((item) => item.id === "missing")?.layouts).toEqual([
+      expect.objectContaining({ layoutId: baseLayout.id, sectionId: "left-rail", width: 2 }),
+    ]);
+  });
+
+  test("falls back to the main canvas instead of creating a ghost item for a disabled rail", () => {
+    const board = new BoardMockBuilder()
+      .addEmptySection({ id: "canvas" })
+      .addEmptySection({ id: "left-rail", xOffset: -1 })
+      .build();
+
+    const result = createItemCallback({ id: "clock", kind: "clock", targetSectionId: "left-rail" })(board);
+
+    expect(result.items.find((item) => item.id === "clock")?.layouts).toEqual([
+      expect.objectContaining({ sectionId: "canvas" }),
+    ]);
+  });
+
   test("falls back to the main canvas when a requested destination no longer exists", () => {
     const board = new BoardMockBuilder().addEmptySection({ id: "canvas" }).build();
     const layout = board.layouts.at(0);

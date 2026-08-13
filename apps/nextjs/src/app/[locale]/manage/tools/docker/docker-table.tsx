@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { MantineColor } from "@mantine/core";
 import { ActionIcon, Alert, Avatar, Badge, Box, Button, Group, Menu, Stack, Text, Tooltip } from "@mantine/core";
@@ -190,26 +189,31 @@ interface DockerTableProps {
 export function DockerTable({ initialData }: DockerTableProps) {
   const t = useI18n();
   const tDocker = useScopedI18n("docker");
-  const { data, isFetching, refetch } = clientApi.docker.getContainers.useQuery(undefined, {
+  const utils = clientApi.useUtils();
+  const { data, isFetching } = clientApi.docker.getContainers.useQuery(undefined, {
     initialData,
     refetchOnMount: false,
   });
+  const refreshInventory = clientApi.docker.refreshInventory.useMutation({
+    async onSuccess() {
+      await Promise.all([
+        utils.docker.getContainers.invalidate(),
+        utils.docker.reconcileServices.invalidate(),
+        utils.docker.getServiceHealth.invalidate(),
+      ]);
+      showSuccessNotification({
+        title: tDocker("action.refresh.notification.success.title"),
+        message: tDocker("action.refresh.notification.success.message"),
+      });
+    },
+    onError() {
+      showErrorNotification({
+        title: tDocker("action.refresh.notification.error.title"),
+        message: tDocker("action.refresh.notification.error.message"),
+      });
+    },
+  });
   const relativeTime = useTimeAgo(data?.timestamp ?? new Date());
-  const mutate = useCallback(() => {
-    void refetch().then((result) => {
-      if (result.isError) {
-        showErrorNotification({
-          title: tDocker("action.refresh.notification.error.title"),
-          message: tDocker("action.refresh.notification.error.message"),
-        });
-      } else {
-        showSuccessNotification({
-          title: tDocker("action.refresh.notification.success.title"),
-          message: tDocker("action.refresh.notification.success.message"),
-        });
-      }
-    });
-  }, [refetch, tDocker]);
 
   const containers = data?.containers ?? [];
   const unavailableEndpoints = data?.endpoints.filter(({ status }) => status === "unavailable") ?? [];
@@ -217,7 +221,7 @@ export function DockerTable({ initialData }: DockerTableProps) {
   const table = useTranslatedMantineReactTable({
     data: containers,
     getRowId: (row) => row.resourceId,
-    state: { isLoading: isFetching },
+    state: { isLoading: isFetching || refreshInventory.isPending },
     enableDensityToggle: false,
     enableColumnActions: false,
     enableColumnFilters: false,
@@ -252,8 +256,8 @@ export function DockerTable({ initialData }: DockerTableProps) {
       <Button
         variant="default"
         rightSection={<IconRefresh size="1rem" />}
-        onClick={() => mutate()}
-        loading={isFetching}
+        onClick={() => refreshInventory.mutate()}
+        loading={isFetching || refreshInventory.isPending}
       >
         {tDocker("action.refresh.label")}
       </Button>

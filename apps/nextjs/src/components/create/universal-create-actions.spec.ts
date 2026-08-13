@@ -10,7 +10,7 @@ describe("getUniversalCreateActionDefinitions", () => {
       permissions: ["board-create", "integration-create"],
     });
 
-    expect(actions.map(({ key }) => key)).toEqual(["integration", "board", "importBoard"]);
+    expect(actions.map(({ key }) => key)).toEqual(["integration", "board"]);
   });
 
   test("places globally-created apps in the library group", () => {
@@ -37,7 +37,6 @@ describe("getUniversalCreateActionDefinitions", () => {
       "integration",
       "container",
       "board",
-      "importBoard",
       "workshop",
       "customWidget",
     ]);

@@ -247,9 +247,19 @@ export default function DockerWidget({
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const isAdvanced = displayMode === "advanced";
 
+  const utils = clientApi.useUtils();
   const containersQuery = clientApi.docker.getContainers.useQuery();
   const data = getUsableWidgetQueryData(containersQuery);
-  const { refetch, isFetching } = containersQuery;
+  const { isFetching } = containersQuery;
+  const refreshInventory = clientApi.docker.refreshInventory.useMutation({
+    async onSuccess() {
+      await Promise.all([
+        utils.docker.getContainers.invalidate(),
+        utils.docker.reconcileServices.invalidate(),
+        utils.docker.getServiceHealth.invalidate(),
+      ]);
+    },
+  });
   const containers = useMemo(() => data?.containers ?? [], [data?.containers]);
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
@@ -437,8 +447,8 @@ export default function DockerWidget({
                 size="sm"
                 variant="transparent"
                 c="var(--mantine-color-text)"
-                loading={isFetching}
-                onClick={() => void refetch()}
+                loading={isFetching || refreshInventory.isPending}
+                onClick={() => refreshInventory.mutate()}
                 aria-label={t("table.refresh.lastUpdated", { when: relativeTime })}
               >
                 <IconRefresh size={16} />

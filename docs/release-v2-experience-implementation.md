@@ -107,7 +107,7 @@ Universal Create ranks permission-aware actions for the current context:
 
 - Add Widget, App, or Container to the current Board.
 - Connect a service.
-- Create or import a Board.
+- Create a Board.
 - Open Workshop.
 - Create a Custom Widget.
 

@@ -31,6 +31,10 @@ export class KubernetesClient {
     return KubernetesClient.getRegistry().getClient(contextId);
   }
 
+  public static getDefaultInstance(): KubernetesClient {
+    return KubernetesClient.getRegistry().getDefaultClient();
+  }
+
   public static async getContextsAsync() {
     return await KubernetesClient.getRegistry().getContextsAsync();
   }
@@ -66,6 +70,10 @@ export class KubernetesClientRegistry {
     const client = this.clients.get(contextId);
     if (!client) throw new KubernetesContextNotFoundError(contextId);
     return client;
+  }
+
+  public getDefaultClient() {
+    return this.getClient(this.defaultContextId);
   }
 
   public async getContextsAsync() {

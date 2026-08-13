@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Box, Center, Loader, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 import {
   IconDeviceFloppy,
   IconLayoutBoard,
@@ -98,6 +99,9 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
 
   latestBoardRef.current = board;
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
+    onMutate(boardToSave) {
+      boardToSave.items.forEach(({ id }) => notifications.hide(`board-item-created:${id}`));
+    },
     onSuccess() {
       showSuccessNotification({
         title: t("notification.success.title"),

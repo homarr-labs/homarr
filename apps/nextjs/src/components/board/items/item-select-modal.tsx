@@ -1,14 +1,16 @@
 import { useMemo, useRef, useState } from "react";
 import { Avatar, Badge, Box, Button, Center, Divider, Group, Image, Select, Stack, Text, Tooltip } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { IconApi } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { createId } from "@homarr/common";
 import {
   getIconUrl,
+  getBoardLaneColumnCount,
   getIntegrationName,
   getRootSectionLane,
   widgetIntegrationSupport,
@@ -61,6 +63,8 @@ const ItemSelectModalContent = ({
   const [search, setSearch] = useState(initialSearch);
   const t = useI18n();
   const board = useRequiredBoard();
+  const currentLayoutId = useCurrentLayout();
+  const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
   const mainCanvasSection = board.sections
     .filter(
       (section): section is EmptySection => section.kind === "empty" && getRootSectionLane(section.xOffset) === "main",
@@ -73,7 +77,7 @@ const ItemSelectModalContent = ({
       ...board.sections.flatMap((section) => {
         if (section.kind !== "empty") return [];
         const lane = getRootSectionLane(section.xOffset);
-        if (lane === "main") return [];
+        if (lane === "main" || !currentLayout || getBoardLaneColumnCount(currentLayout, lane) === 0) return [];
         return [
           {
             value: section.id,
@@ -88,7 +92,7 @@ const ItemSelectModalContent = ({
           label: section.options.title.trim() || t("section.container.untitled"),
         })),
     ],
-    [board.sections, mainCanvasSection, t],
+    [board.sections, currentLayout, mainCanvasSection, t],
   );
   const [targetSectionId, setTargetSectionId] = useState<string | null>(mainCanvasSection?.id ?? null);
   const [loadingSelection, setLoadingSelection] = useState<string | null>(null);
@@ -149,12 +153,21 @@ const ItemSelectModalContent = ({
   };
 
   const notifyCreated = (itemId: string, name: string) => {
+    const notificationId = `board-item-created:${itemId}`;
     showSuccessNotification({
+      id: notificationId,
       title: t("item.create.notification.success.title"),
       message: (
         <Group justify="space-between" wrap="nowrap">
           <Text size="sm">{t("item.create.notification.success.message", { name })}</Text>
-          <Button variant="subtle" size="compact-xs" onClick={() => removeItem({ itemId })}>
+          <Button
+            variant="subtle"
+            size="compact-xs"
+            onClick={() => {
+              removeItem({ itemId });
+              notifications.hide(notificationId);
+            }}
+          >
             {t("common.action.undo")}
           </Button>
         </Group>

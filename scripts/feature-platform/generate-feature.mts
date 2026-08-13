@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { mkdirSync } from "node:fs";
+import { format } from "oxfmt";
 
 export interface IntegrationFeature {
   kind: string;
@@ -112,8 +113,8 @@ const validate = (request: FeatureRequest) => {
     if (!feature) continue;
     if (!/^[a-z][A-Za-z0-9]*$/.test(feature.kind))
       throw new Error(`Generator stopped: ${feature.kind} must be lower camel case.`);
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(feature.slug))
-      throw new Error(`Generator stopped: ${feature.slug} must be kebab-case.`);
+    if (!/^[a-z][a-z0-9]*(?:-[a-z][a-z0-9]*)*$/.test(feature.slug))
+      throw new Error(`Generator stopped: ${feature.slug} must start with a lowercase letter and use kebab-case.`);
   }
   if (request.widget && !/^Icon[A-Z][A-Za-z0-9]+$/.test(request.widget.icon)) {
     throw new Error(`Generator stopped: ${request.widget.icon} must be a Tabler icon export such as IconBox.`);
@@ -173,12 +174,12 @@ describe("${className}", () => {
   test("exposes its public integration data", () => {
     const integration = new ${className}({
       id: "test",
-      name: "${feature.name}",
+      name: ${JSON.stringify(feature.name)},
       url: "http://localhost",
       externalUrl: null,
       decryptedSecrets: [],
     });
-    expect(integration.publicIntegration.name).toBe("${feature.name}");
+    expect(integration.publicIntegration.name).toBe(${JSON.stringify(feature.name)});
   });
 
   test("parses documented response fixtures", async () => {
@@ -187,7 +188,10 @@ describe("${className}", () => {
       { name: "invalid response", payload: null, rejects: true },
     ]);
 
-    expect(results.every((result) => result.passed), results).toBe(true);
+    expect(
+      results.every((result) => result.passed),
+      results,
+    ).toBe(true);
   });
 });
 `;
@@ -294,14 +298,14 @@ const planWidget = (root: string, feature: WidgetFeature, changes: PlannedChange
     changes,
     root,
     `${widgetPath}/component.tsx`,
-    `"use client";\n\nimport { Center, Text } from "@mantine/core";\n\nimport type { WidgetComponentProps } from "../definition";\n\nexport default function ${pascalCase(feature.slug)}Widget(_props: WidgetComponentProps<"${feature.kind}">) {\n  return (\n    <Center h="100%">\n      <Text>${feature.name}</Text>\n    </Center>\n  );\n}\n`,
+    `"use client";\n\nimport { Center, Text } from "@mantine/core";\n\nimport type { WidgetComponentProps } from "../definition";\n\nexport default function ${pascalCase(feature.slug)}Widget(_props: WidgetComponentProps<"${feature.kind}">) {\n  return (\n    <Center h="100%">\n      <Text>{${JSON.stringify(feature.name)}}</Text>\n    </Center>\n  );\n}\n`,
     "create",
   );
   addChange(
     changes,
     root,
     `${widgetPath}/definition.spec.ts`,
-    `import { describe, expect, test } from "vitest";\n\nimport { componentLoader, definition } from ".";\n\ndescribe("${feature.name} widget definition", () => {\n  test("registers its kind and loader", () => {\n    expect(definition.kind).toBe("${feature.kind}");\n    expect(componentLoader).toBeTypeOf("function");\n  });\n});\n`,
+    `import { describe, expect, test } from "vitest";\n\nimport { componentLoader, definition } from ".";\n\ndescribe(${JSON.stringify(`${feature.name} widget definition`)}, () => {\n  test("registers its kind and loader", () => {\n    expect(definition.kind).toBe("${feature.kind}");\n    expect(componentLoader).toBeTypeOf("function");\n  });\n});\n`,
     "create",
   );
 
@@ -444,8 +448,25 @@ export const planFeatureGeneration = (root: string, request: FeatureRequest): Pl
   return changes;
 };
 
-export const generateFeature = (root: string, request: FeatureRequest) => {
-  const changes = planFeatureGeneration(root, request);
+const isFormatterManaged = (path: string) =>
+  /\.(?:json|mdx|ts|tsx)$/.test(path) && path !== "packages/translation/src/lang/en.json";
+
+export const formatFeatureChanges = async (changes: PlannedChange[]) =>
+  await Promise.all(
+    changes.map(async (change) => {
+      if (!isFormatterManaged(change.path)) return change;
+      const result = await format(change.path, change.content, { endOfLine: "lf", printWidth: 120 });
+      if (result.errors.length > 0) {
+        throw new Error(
+          `Generator stopped: oxfmt could not format ${change.path}: ${result.errors.map(({ message }) => message).join("; ")}`,
+        );
+      }
+      return { ...change, content: result.code };
+    }),
+  );
+
+export const generateFeature = async (root: string, request: FeatureRequest) => {
+  const changes = await formatFeatureChanges(planFeatureGeneration(root, request));
   for (const change of changes) {
     mkdirSync(dirname(join(root, change.path)), { recursive: true });
     writeFileSync(join(root, change.path), change.content);

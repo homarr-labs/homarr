@@ -6,7 +6,6 @@ export const universalCreateActionKeys = [
   "integration",
   "container",
   "board",
-  "importBoard",
   "workshop",
   "customWidget",
 ] as const;
@@ -58,12 +57,6 @@ const definitions: readonly UniversalCreateActionDefinition[] = [
     key: "board",
     group: "boards",
     priority: 60,
-    isVisible: (context) => hasPermission(context, "board-create"),
-  },
-  {
-    key: "importBoard",
-    group: "boards",
-    priority: 50,
     isVisible: (context) => hasPermission(context, "board-create"),
   },
   {

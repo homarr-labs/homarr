@@ -13,6 +13,7 @@ import { dockerRouter } from "../../docker/docker-router";
 
 const findDockerContainerAsyncMock = vi.hoisted(() => vi.fn());
 const hasDockerEndpointCapabilityMock = vi.hoisted(() => vi.fn(() => true));
+const invalidateDockerCacheMock = vi.hoisted(() => vi.fn());
 const getDockerDataAsyncMock = vi.hoisted(() =>
   vi.fn<
     () => Promise<{
@@ -75,6 +76,7 @@ vi.mock("@homarr/request-handler/docker", () => ({
     return () => undefined;
   },
   dockerContainersRequestHandler: {
+    invalidateCache: invalidateDockerCacheMock,
     handler: () => ({
       getDataAsync: getDockerDataAsyncMock,
     }),
@@ -103,6 +105,7 @@ const validInputs: {
 } = {
   reconcileServices: undefined,
   getServiceHealth: undefined,
+  refreshInventory: undefined,
   getContainers: undefined,
   startAll: { targets: [{ endpointId: "one", id: "1" }] },
   stopAll: { targets: [{ endpointId: "one", id: "1" }] },
@@ -317,6 +320,136 @@ test("does not adopt an ambiguous existing integration", async () => {
   expect(result.candidates[0]?.representation.integration).toBeNull();
   expect(result.candidates[0]?.representation.signals.ambiguous).toBe(true);
   expect(result.candidates[0]?.state).toBe("newRecognized");
+  expect(result.candidates[0]?.nextAction).toBe("reviewIntegration");
+});
+
+test("prefers a unique exact integration match over duplicate name matches", async () => {
+  getDockerDataAsyncMock.mockResolvedValueOnce({
+    data: {
+      containers: [createInventoryContainer({ endpointId: "home", id: "one", name: "sonarr", publicPort: 8989 })],
+      endpoints: [{ id: "home", name: "Home", status: "available" }],
+    },
+    timestamp: new Date(),
+  });
+  findIntegrationsAsyncMock.mockResolvedValueOnce([
+    {
+      id: "exact",
+      name: "Primary",
+      kind: "sonarr",
+      url: "http://home.example:8989",
+      appId: null,
+      items: [],
+      secrets: [],
+    },
+    {
+      id: "name-one",
+      name: "sonarr",
+      kind: "sonarr",
+      url: "http://other.example:8989",
+      appId: null,
+      items: [],
+      secrets: [],
+    },
+    {
+      id: "name-two",
+      name: "sonarr",
+      kind: "sonarr",
+      url: "http://third.example:8989",
+      appId: null,
+      items: [],
+      secrets: [],
+    },
+  ]);
+
+  const result = await createAdminCaller().reconcileServices();
+
+  expect(result.candidates[0]?.representation.integration?.id).toBe("exact");
+  expect(result.candidates[0]?.representation.signals.ambiguous).toBe(false);
+});
+
+test("does not fall back to a unique name when exact integration matches are ambiguous", async () => {
+  getDockerDataAsyncMock.mockResolvedValueOnce({
+    data: {
+      containers: [createInventoryContainer({ endpointId: "home", id: "one", name: "sonarr", publicPort: 8989 })],
+      endpoints: [{ id: "home", name: "Home", status: "available" }],
+    },
+    timestamp: new Date(),
+  });
+  findIntegrationsAsyncMock.mockResolvedValueOnce([
+    { id: "named", name: "sonarr", kind: "sonarr", url: "http://home.example:8989", appId: null },
+    { id: "other", name: "Other", kind: "sonarr", url: "http://home.example:8989", appId: null },
+  ]);
+
+  const result = await createAdminCaller().reconcileServices();
+
+  expect(result.candidates[0]?.representation.integration).toBeNull();
+  expect(result.candidates[0]?.representation.signals.ambiguous).toBe(true);
+  expect(result.candidates[0]?.nextAction).toBe("reviewIntegration");
+});
+
+test("prefers an explicitly linked app over duplicate app matches", async () => {
+  getDockerDataAsyncMock.mockResolvedValueOnce({
+    data: {
+      containers: [createInventoryContainer({ endpointId: "home", id: "one", name: "sonarr", publicPort: 8989 })],
+      endpoints: [{ id: "home", name: "Home", status: "available" }],
+    },
+    timestamp: new Date(),
+  });
+  findIntegrationsAsyncMock.mockResolvedValueOnce([
+    {
+      id: "integration",
+      name: "Sonarr",
+      kind: "sonarr",
+      url: "http://home.example:8989",
+      appId: "linked",
+      items: [],
+      secrets: [],
+    },
+  ]);
+  findAppsAsyncMock.mockResolvedValueOnce([
+    { id: "linked", name: "Sonarr", href: "http://home.example:8989", iconUrl: "" },
+    { id: "duplicate", name: "Sonarr duplicate", href: "http://home.example:8989", iconUrl: "" },
+  ]);
+
+  const result = await createAdminCaller().reconcileServices();
+
+  expect(result.candidates[0]?.representation.app?.id).toBe("linked");
+  expect(result.candidates[0]?.representation.signals.ambiguous).toBe(false);
+  expect(result.candidates[0]?.state).toBe("linked");
+});
+
+test("does not offer to create an app when existing app matches are ambiguous", async () => {
+  const dockerData = {
+    data: {
+      containers: [createInventoryContainer({ endpointId: "home", id: "one", name: "sonarr", publicPort: 8989 })],
+      endpoints: [{ id: "home", name: "Home", status: "available" }],
+    },
+    timestamp: new Date(),
+  } satisfies Awaited<ReturnType<typeof getDockerDataAsyncMock>>;
+  getDockerDataAsyncMock.mockResolvedValueOnce(dockerData).mockResolvedValueOnce(dockerData);
+  const apps = [
+    { id: "first", name: "Sonarr one", href: "http://home.example:8989", iconUrl: "" },
+    { id: "second", name: "Sonarr two", href: "http://home.example:8989", iconUrl: "" },
+  ] satisfies Awaited<ReturnType<typeof findAppsAsyncMock>>;
+  findAppsAsyncMock.mockResolvedValueOnce(apps).mockResolvedValueOnce(apps);
+
+  const reconciliation = await createAdminCaller().reconcileServices();
+  const health = await createAdminCaller().getServiceHealth();
+
+  expect(reconciliation.candidates[0]?.representation.app).toBeNull();
+  expect(reconciliation.candidates[0]?.representation.signals.ambiguous).toBe(true);
+  expect(reconciliation.candidates[0]?.nextAction).toBe("viewRepresentation");
+  expect(health.services[0]?.layers).toContainEqual({
+    layer: "appRepresentation",
+    status: "missing",
+    nextAction: "viewRepresentation",
+  });
+});
+
+test("invalidates the shared Docker inventory on explicit refresh", async () => {
+  await createAdminCaller().refreshInventory();
+
+  expect(invalidateDockerCacheMock).toHaveBeenCalledOnce();
 });
 
 test("projects persisted service layers without inventing runtime health", async () => {

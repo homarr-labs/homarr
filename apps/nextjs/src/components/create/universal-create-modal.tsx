@@ -7,7 +7,6 @@ import {
   IconApps,
   IconBox,
   IconCode,
-  IconFileImport,
   IconLayoutDashboard,
   IconLayoutGridAdd,
   IconPlugConnected,
@@ -17,7 +16,7 @@ import {
 import { useSession } from "@homarr/auth/client";
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { createModal, useModalAction } from "@homarr/modals";
-import { AddBoardModal, ImportBoardModal } from "@homarr/modals-collection";
+import { AddBoardModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -44,7 +43,6 @@ const actionIcons = {
   integration: IconPlugConnected,
   container: IconLayoutGridAdd,
   board: IconLayoutDashboard,
-  importBoard: IconFileImport,
   workshop: IconSearch,
   customWidget: IconCode,
 } satisfies Record<UniversalCreateActionKey, TablerIcon>;
@@ -54,7 +52,6 @@ export const UniversalCreateModal = createModal<UniversalCreateModalProps>(({ ac
   const router = useRouter();
   const t = useScopedI18n("universalCreate");
   const { openModal: openAddBoardModal } = useModalAction(AddBoardModal);
-  const { openModal: openImportBoardModal } = useModalAction(ImportBoardModal);
   const [query, setQuery] = useState("");
   const trackedOpen = useRef(false);
   const boardActions = innerProps.boardActions;
@@ -99,9 +96,6 @@ export const UniversalCreateModal = createModal<UniversalCreateModalProps>(({ ac
         break;
       case "board":
         openAddBoardModal(undefined);
-        break;
-      case "importBoard":
-        openImportBoardModal(undefined);
         break;
       case "workshop":
         router.push("/manage/workshop");

@@ -36,11 +36,16 @@ export const createItemCallback =
             section.id === targetSectionId && (section.kind === "empty" || section.kind === "container"),
         )
       : undefined;
-    const targetSection = requestedSection ?? firstCanvasSection;
+    let targetSection = requestedSection ?? firstCanvasSection;
 
     if (!targetSection) return previous;
 
-    const itemLayouts = createItemLayouts(previous, targetSection, kind);
+    let itemLayouts = createItemLayouts(previous, targetSection, kind);
+    if (itemLayouts.length === 0 && firstCanvasSection && targetSection.id !== firstCanvasSection.id) {
+      targetSection = firstCanvasSection;
+      itemLayouts = createItemLayouts(previous, targetSection, kind);
+    }
+    if (itemLayouts.length === 0) return previous;
     const widget = {
       id: id ?? createId(),
       kind,
@@ -73,15 +78,16 @@ const createItemLayouts = (
   const layouts = getBoardLayouts(board);
   const itemSize = getWidgetItemSize(kind);
 
-  return layouts.map((layoutId) => {
+  return layouts.flatMap((layoutId) => {
     const boardLayout = board.layouts.find((layout) => layout.id === layoutId);
     const elements = getSectionElements(board, { sectionId: currentSection.id, layoutId });
     const containerLayout =
       currentSection.kind === "container"
         ? currentSection.layouts.find((layout) => layout.layoutId === layoutId)
         : undefined;
-    const columnCount =
-      containerLayout?.width ?? (boardLayout ? getBoardLaneColumnCount(boardLayout, "main") : itemSize.width);
+    const lane = currentSection.kind === "empty" ? getRootSectionLane(currentSection.xOffset) : "main";
+    const columnCount = containerLayout?.width ?? (boardLayout ? getBoardLaneColumnCount(boardLayout, lane) : 0);
+    if (columnCount === 0) return [];
     const size = {
       width: Math.min(itemSize.width, columnCount),
       height: itemSize.height,
@@ -95,12 +101,14 @@ const createItemLayouts = (
       throw new Error("Your board is full");
     }
 
-    return {
-      width: size.width,
-      height: size.height,
-      ...emptyPosition,
-      sectionId: currentSection.id,
-      layoutId,
-    };
+    return [
+      {
+        width: size.width,
+        height: size.height,
+        ...emptyPosition,
+        sectionId: currentSection.id,
+        layoutId,
+      },
+    ];
   });
 };

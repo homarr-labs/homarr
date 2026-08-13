@@ -29,6 +29,12 @@ export const dockerRouter = createTRPCRouter({
     .requiresPermission("admin")
     .concat(dockerMiddleware())
     .query(async ({ ctx }) => await getDockerServiceHealthAsync(ctx.db)),
+  refreshInventory: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .concat(dockerMiddleware())
+    .mutation(() => {
+      dockerContainersRequestHandler.invalidateCache();
+    }),
   getContainers: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({

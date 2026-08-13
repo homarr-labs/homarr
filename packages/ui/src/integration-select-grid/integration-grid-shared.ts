@@ -47,10 +47,15 @@ export interface IntegrationGridItem {
 }
 
 export const buildSortedIntegrations = (
-  options: { enableMockIntegration?: boolean; onboarding?: boolean } = {},
+  options: {
+    enableMockIntegration?: boolean;
+    onboarding?: boolean;
+    allowedKinds?: readonly IntegrationKind[];
+  } = {},
 ): IntegrationGridItem[] =>
   integrationKinds
     .filter((kind) => {
+      if (options.allowedKinds && !options.allowedKinds.includes(kind)) return false;
       if (options.onboarding && hiddenFromOnboarding.has(kind)) return false;
       if (!options.enableMockIntegration && kind === "mock") return false;
       return true;

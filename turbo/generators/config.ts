@@ -1,6 +1,7 @@
 import type { PlopTypes } from "@turbo/gen";
 
-import { generateFeature, type FeatureRequest } from "../../scripts/feature-platform/generate-feature.mts";
+import type { FeatureRequest } from "../../scripts/feature-platform/generate-feature.mts";
+import { generateFeature } from "../../scripts/feature-platform/generate-feature.mts";
 
 type Answers = Record<string, unknown> & { turbo: { paths: { root: string } } };
 
@@ -13,7 +14,8 @@ const list = (value: unknown) =>
 const lowerCamel = (value: string) =>
   /^[a-z][A-Za-z0-9]*$/.test(value) || "Use lower camel case (for example, mediaServer).";
 const kebab = (value: string) =>
-  /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value) || "Use kebab-case (for example, media-server).";
+  /^[a-z][a-z0-9]*(?:-[a-z][a-z0-9]*)*$/.test(value) ||
+  "Start with a lowercase letter and use kebab-case (for example, media-server).";
 const required = (value: string) => value.trim().length > 0 || "This value is required.";
 const integrationCategories = [
   "dnsHole",
@@ -142,7 +144,7 @@ const action =
   (request: (answers: Answers) => FeatureRequest): PlopTypes.CustomActionFunction =>
   async (rawAnswers) => {
     const answers = rawAnswers as Answers;
-    const changes = generateFeature(answers.turbo.paths.root, request(answers));
+    const changes = await generateFeature(answers.turbo.paths.root, request(answers));
     return `Created or updated ${changes.length} feature files. Run pnpm check:feature-contracts next.`;
   };
 
