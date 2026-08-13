@@ -1191,14 +1191,9 @@ const Connections = (props: StudioSectionProps) => {
                       <Avatar src={app.iconUrl} size="sm" radius="sm">
                         {app.containerName.at(0)}
                       </Avatar>
-                      <Stack gap={0} miw={0} style={{ flex: 1 }}>
-                        <Text size="sm" fw={600} truncate>
-                          {app.containerName}
-                        </Text>
-                        <Text size="xs" c="dimmed" truncate>
-                          {app.detectedType ?? t("appType")}
-                        </Text>
-                      </Stack>
+                      <Text size="sm" fw={600} truncate style={{ flex: 1, minWidth: 0 }}>
+                        {app.containerName}
+                      </Text>
                     </Group>
                   </Checkbox.Card>
                   {selected ? (
