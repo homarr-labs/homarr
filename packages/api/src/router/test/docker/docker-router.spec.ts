@@ -12,6 +12,23 @@ import { dockerRouter } from "../../docker/docker-router";
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
+vi.mock("@homarr/docker", () => ({
+  DockerSingleton: {
+    getInstances: () => [
+      {
+        instance: {
+          getContainer: () => ({
+            inspect: (callback: (error: null, data: object) => void) => callback(null, {}),
+            start: () => Promise.resolve(),
+            stop: () => Promise.resolve(),
+            restart: () => Promise.resolve(),
+            remove: () => Promise.resolve(),
+          }),
+        },
+      },
+    ],
+  },
+}));
 vi.mock("@homarr/request-handler/docker", () => ({
   getContainerLogsAsync: async () => {
     await Promise.resolve();
