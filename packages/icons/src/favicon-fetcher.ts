@@ -63,6 +63,9 @@ const fetchPageAsync = async (websiteUrl: URL): Promise<{ html: string; url: URL
     response = await fetchWithTrustedCertificatesAsync(websiteUrl, {
       headers: { Accept: "text/html" },
       timeout: requestTimeoutInMs,
+      // The timeout above ends once the headers are there, so the body needs its own
+      // limit to keep a stalled page from holding the request open forever.
+      bodyTimeout: requestTimeoutInMs,
     });
   } catch (error) {
     logger.debug("Unable to load website for favicon detection", { url: websiteUrl.href, error });
@@ -70,7 +73,8 @@ const fetchPageAsync = async (websiteUrl: URL): Promise<{ html: string; url: URL
   }
 
   const body = response.body;
-  if (!response.ok || !response.headers.get("content-type")?.includes("text/html") || body === null) {
+  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+  if (!response.ok || !contentType.includes("text/html") || body === null) {
     await cancelBodyAsync(response);
     return null;
   }

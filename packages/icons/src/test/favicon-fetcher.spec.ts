@@ -118,6 +118,29 @@ describe("fetchFaviconUrlAsync", () => {
     expect(result).toBeNull();
   });
 
+  test("reads a page that declares its media type in a different case", async () => {
+    mockResponses({
+      [websiteUrl]: createResponse({
+        contentType: "Text/HTML; charset=UTF-8",
+        body: '<html><head><link rel="icon" href="/icon.png"></head></html>',
+      }),
+    });
+
+    const result = await fetchFaviconUrlAsync(websiteUrl);
+
+    expect(result).toBe("https://app.example.com/icon.png");
+  });
+
+  test("bounds the page body and not only the response headers", async () => {
+    mockResponses({ [websiteUrl]: createPage('<link rel="icon" href="/icon.png">') });
+
+    await fetchFaviconUrlAsync(websiteUrl);
+
+    const requestOptions = mockedFetch.mock.calls[0]?.[1];
+    expect(requestOptions?.timeout).toBeGreaterThan(0);
+    expect(requestOptions?.bodyTimeout).toBe(requestOptions?.timeout);
+  });
+
   test("returns null when the website cannot be reached", async () => {
     mockedFetch.mockRejectedValue(new Error("connection refused"));
 
