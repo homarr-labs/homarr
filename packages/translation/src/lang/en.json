@@ -129,8 +129,7 @@
         "openGuide": "Open Homarr's setup guide for this service",
         "needsConfiguration": "Needs configuration",
         "configured": "Configured",
-        "validationError": "Complete the URL and required credentials for {name}, or remove it from the selection.",
-        "incompleteConfirmation": "Some integrations need to be configured, are you sure?"
+        "incompleteConfirmation": "Unfinished integrations will be skipped. Continue without them?"
       },
       "board": {
         "title": "Shape the board before it is built",
