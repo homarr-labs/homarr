@@ -51,8 +51,30 @@ describe("getIntegrationApiKeyUrl", () => {
     },
   );
 
-  it("returns null for empty URL", () => {
-    expect(getIntegrationApiKeyUrl("", "sonarr")).toBeNull();
+  it.each(["", "javascript:alert(1)", "data:text/html,test", "file:///etc/passwd"])(
+    "returns null for an empty or unsafe URL: %s",
+    (url) => {
+      expect(getIntegrationApiKeyUrl(url, "sonarr")).toBeNull();
+    },
+  );
+
+  it.each([
+    ["sonarr.local:8989", "http://sonarr.local:8989/settings/general"],
+    ["0.0.0.0:8989", "http://0.0.0.0:8989/settings/general"],
+  ])("normalizes a self-hosted address without a scheme: %s", (url, expected) => {
+    expect(getIntegrationApiKeyUrl(url, "sonarr")).toBe(expected);
+  });
+
+  it("joins onto a reverse-proxy pathname without retaining stale query or fragment state", () => {
+    expect(getIntegrationApiKeyUrl("https://home.example.com/services/sonarr/?from=old#section", "sonarr")).toBe(
+      "https://home.example.com/services/sonarr/settings/general",
+    );
+  });
+
+  it("preserves configured credential fragments while joining pathnames", () => {
+    expect(getIntegrationApiKeyUrl("https://home.example.com/services/jellyfin/", "jellyfin")).toBe(
+      "https://home.example.com/services/jellyfin/web/index.html#!/dashboard/keys",
+    );
   });
 
   it("strips trailing slash from base URL", () => {

@@ -9,20 +9,6 @@ import type { DockerDiscoveryHostResult, DockerDiscoveryResult } from "./types";
 const logger = createLogger({ module: "dockerDiscovery" });
 export const dockerDiscoveryHostTimeoutMs = 5_000;
 
-const withTimeoutAsync = async <T>(promise: Promise<T>, timeoutMs: number, host: string) => {
-  let timeout: ReturnType<typeof setTimeout> | undefined;
-  try {
-    return await Promise.race([
-      promise,
-      new Promise<never>((_, reject) => {
-        timeout = setTimeout(() => reject(new Error(`Docker discovery timed out for ${host}`)), timeoutMs);
-      }),
-    ]);
-  } finally {
-    if (timeout) clearTimeout(timeout);
-  }
-};
-
 const reasonFromError = (error: unknown) => {
   if (error instanceof Error && error.message.trim()) return error.message;
   return "Docker is not reachable";
@@ -35,11 +21,29 @@ export const listDiscoveredContainersAsync = async (
   const dockerInstances = DockerSingleton.getInstances();
   const settled = await Promise.allSettled(
     dockerInstances.map(async ({ instance, host }): Promise<DockerDiscoveryHostResult> => {
-      const containers = await withTimeoutAsync(instance.listContainers({ all: false }), timeoutMs, host);
-      const services = containers
-        .map((container) => parseContainerLabels(container, host, options))
-        .filter((service) => service !== null);
-      return { host, status: "success", containers, services };
+      const controller = new AbortController();
+      const timeoutError = new Error(`Docker discovery timed out for ${host}`);
+      let timeout: ReturnType<typeof setTimeout> | undefined;
+      try {
+        const containers = await Promise.race([
+          instance.listContainers({ all: false, abortSignal: controller.signal }),
+          new Promise<never>((_, reject) => {
+            timeout = setTimeout(() => {
+              controller.abort(timeoutError);
+              reject(timeoutError);
+            }, timeoutMs);
+          }),
+        ]);
+        const services = containers
+          .map((container) => parseContainerLabels(container, host, options))
+          .filter((service) => service !== null);
+        return { host, status: "success", containers, services };
+      } catch (error) {
+        if (controller.signal.aborted) throw timeoutError;
+        throw error;
+      } finally {
+        if (timeout) clearTimeout(timeout);
+      }
     }),
   );
 

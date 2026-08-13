@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Group, Paper, Stack, Text, TextInput, ThemeIcon, Title } from "@mantine/core";
 import { IconArrowRight, IconShieldCheck, IconUserPlus } from "@tabler/icons-react";
 import type { z } from "zod/v4";
@@ -10,9 +11,11 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { UserCreatePasswordFields } from "@homarr/forms-collection";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 import { groupCreateSchema } from "@homarr/validation/group";
 import { userInitSchema } from "@homarr/validation/user";
 
+import { didCredentialsSignInFail } from "./account-recovery";
 import type { OnboardingStudioProps } from "./types";
 import classes from "./onboarding-studio.module.css";
 
@@ -56,6 +59,8 @@ export const AccountSetup = ({ environment }: OnboardingStudioProps) => {
 
 const CredentialsSetup = () => {
   const t = useScopedI18n("init.studio.account");
+  const [requiresSignIn, setRequiresSignIn] = useState(false);
+  const recoveryActionRef = useRef<HTMLAnchorElement>(null);
   const mutation = clientApi.user.initUser.useMutation();
   const form = useZodForm(userInitSchema, {
     initialValues: { username: "", password: "", confirmPassword: "" },
@@ -64,17 +69,46 @@ const CredentialsSetup = () => {
   const submitAsync = async (values: z.infer<typeof userInitSchema>) => {
     try {
       await mutation.mutateAsync(values);
+    } catch (error) {
+      form.setErrors({ username: error instanceof Error ? error.message : t("unknownError") });
+      return;
+    }
+
+    try {
       const result = await signIn("credentials", {
         name: values.username,
         password: values.password,
         redirect: false,
       });
-      if (result?.error) throw new Error(t("signInError"));
-      await revalidatePathActionAsync("/init");
-    } catch (error) {
-      form.setErrors({ username: error instanceof Error ? error.message : t("unknownError") });
+      if (didCredentialsSignInFail(result)) throw new Error();
+    } catch {
+      setRequiresSignIn(true);
+      await revalidatePathActionAsync("/init").catch(() => undefined);
+      return;
     }
+
+    await revalidatePathActionAsync("/init");
   };
+
+  useEffect(() => {
+    if (requiresSignIn) recoveryActionRef.current?.focus();
+  }, [requiresSignIn]);
+
+  if (requiresSignIn) {
+    return (
+      <AccountShell title={t("recoveryTitle")} description={t("recoveryDescription")}>
+        <Button
+          component={Link}
+          href="/auth/login?callbackUrl=/init"
+          ref={recoveryActionRef}
+          size="md"
+          rightSection={<IconArrowRight size={18} />}
+        >
+          {t("recoveryAction")}
+        </Button>
+      </AccountShell>
+    );
+  }
 
   return (
     <AccountShell title={t("title")} description={t("description")}>

@@ -71,6 +71,7 @@ import type {
   IntegrationKind,
   IntegrationSecretKind,
   UrlTemplateMode,
+  WidgetKind,
 } from "@homarr/definitions";
 import {
   assistantProviderCanUseOpenRouterServerTools,
@@ -79,19 +80,23 @@ import {
   buildAppUrl,
   buildIntegrationUrl,
   getAllSecretKindOptions,
+  getDefaultWidgetConfig,
   getIntegrationApiKeyUrl,
   getIntegrationDefaultUrl,
   getIntegrationDocumentationUrl,
   getIntegrationName,
+  getWidgetKindsForIntegration,
+  generalWidgets,
 } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import type { SupportedLanguage } from "@homarr/translation";
 import { localeConfigurations, supportedLanguages } from "@homarr/translation";
-import { useChangeLocale, useCurrentLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentLocale, useScopedI18n } from "@homarr/translation/client";
 import { IntegrationAvatar, Link } from "@homarr/ui";
 import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
 
 import type { OnboardingStudioProps } from "./types";
+import { isHttpUrl, resolveDiscoveredAppUrl, takeNewSourceIds } from "./discovery-selection";
 import classes from "./onboarding-studio.module.css";
 
 type StudioSection = "essentials" | "discover" | "connect" | "board" | "extend" | "review";
@@ -100,19 +105,22 @@ type LayoutPreset = "balanced" | "wide" | "focused";
 interface IntegrationDraft {
   id: string;
   sourceId?: string;
-  integrationId?: string;
-  appId?: string;
   kind: IntegrationKind;
   name: string;
   url: string;
   source: "manual" | "docker";
   secretOption: number;
   secrets: { kind: IntegrationSecretKind; value: string }[];
-  saved: boolean;
   error: string | null;
 }
 
 type DockerDiscoveryData = RouterOutputs["onboard"]["discoverDockerServices"];
+type RuntimeCapabilitiesQuery = Omit<
+  ReturnType<typeof clientApi.onboard.detectRuntimeCapabilities.useQuery>,
+  "data"
+> & {
+  data: RouterOutputs["onboard"]["detectRuntimeCapabilities"] | undefined;
+};
 
 const sectionDefinitions = [
   { id: "essentials", icon: IconAdjustments },
@@ -126,21 +134,22 @@ const sectionDefinitions = [
 const radiusValues = ["xs", "sm", "md", "lg", "xl"] as const;
 const emptyDiscoveredIntegrations: DockerDiscoveryData["integrations"] = [];
 const emptyDiscoveredApps: DockerDiscoveryData["apps"] = [];
-
 export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
   const t = useScopedI18n("init.studio");
   const currentLocale = useCurrentLocale();
-  const { changeLocale, isPending: localePending } = useChangeLocale();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const reduceMotion = useReducedMotion();
   const [activeSection, setActiveSection] = useState<StudioSection>("essentials");
+  const [selectedLocale, setSelectedLocale] = useState(currentLocale);
   const [serverOrigin, setServerOrigin] = useState("");
   const [urlMode, setUrlMode] = useState<UrlTemplateMode>("hostPort");
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
   const [selectedKinds, setSelectedKinds] = useState<IntegrationKind[]>([]);
+  const [selectedIntegrationSourceIds, setSelectedIntegrationSourceIds] = useState<string[]>([]);
   const [drafts, setDrafts] = useState<IntegrationDraft[]>([]);
   const [selectedAppIds, setSelectedAppIds] = useState<string[]>([]);
-  const [createdAppIdsBySource, setCreatedAppIdsBySource] = useState<Record<string, string>>({});
+  const [appUrlOverrides, setAppUrlOverrides] = useState<Record<string, string>>({});
+  const [appErrorSourceId, setAppErrorSourceId] = useState<string | null>(null);
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(environment.initialBoard?.id ?? null);
   const [boardName, setBoardName] = useState(environment.initialBoard?.name ?? "dashboard");
   const [primaryColor, setPrimaryColor] = useState("#fa5252");
@@ -156,20 +165,38 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
   const sectionHeadingRef = useRef<HTMLHeadingElement>(null);
   const initialSection = useRef(true);
   const focusSectionHeading = useRef(true);
+  const seenIntegrationSourceIds = useRef(new Set<string>());
+  const seenAppSourceIds = useRef(new Set<string>());
 
   const docker = clientApi.onboard.discoverDockerServices.useQuery(undefined, {
     enabled: environment.dockerConfigured,
     retry: false,
     refetchOnWindowFocus: false,
   });
-  const createIntegration = clientApi.onboard.createIntegration.useMutation();
-  const createApps = clientApi.onboard.createAppsFromDiscovery.useMutation();
+  const runtimeCapabilities = clientApi.onboard.detectRuntimeCapabilities.useQuery(undefined, {
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
   const complete = clientApi.onboard.completeSetup.useMutation();
-  const isApplying = complete.isPending || createIntegration.isPending || createApps.isPending;
+  const isApplying = complete.isPending;
 
   const dockerData = docker.data;
   const discoveredIntegrations = dockerData?.integrations ?? emptyDiscoveredIntegrations;
   const discoveredApps = dockerData?.apps ?? emptyDiscoveredApps;
+  const discoveredAppUrls = useMemo(
+    () =>
+      Object.fromEntries(
+        discoveredApps.map((app) => [
+          app.sourceId,
+          resolveDiscoveredAppUrl(
+            appUrlOverrides[app.sourceId],
+            app.suggestedUrl,
+            serverOrigin ? buildAppUrl(app.containerName, serverOrigin, urlMode, app.publishedPort ?? undefined) : null,
+          ),
+        ]),
+      ),
+    [appUrlOverrides, discoveredApps, serverOrigin, urlMode],
+  );
   const detectedKinds = useMemo(
     () => new Set(discoveredIntegrations.map((integration) => integration.kind)),
     [discoveredIntegrations],
@@ -177,10 +204,20 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
 
   useEffect(() => {
     if (!docker.data) return;
-    setSelectedKinds((current) => [...new Set([...current, ...discoveredIntegrations.map((item) => item.kind)])]);
-    setSelectedAppIds((current) =>
-      current.length > 0 ? current : discoveredApps.map((application) => application.sourceId),
+    const newIntegrationSourceIds = takeNewSourceIds(
+      discoveredIntegrations.map((integration) => integration.sourceId),
+      seenIntegrationSourceIds.current,
     );
+    if (newIntegrationSourceIds.length > 0) {
+      setSelectedIntegrationSourceIds((current) => [...new Set([...current, ...newIntegrationSourceIds])]);
+    }
+    const newAppSourceIds = takeNewSourceIds(
+      discoveredApps.map((application) => application.sourceId),
+      seenAppSourceIds.current,
+    );
+    if (newAppSourceIds.length > 0) {
+      setSelectedAppIds((current) => [...new Set([...current, ...newAppSourceIds])]);
+    }
   }, [docker.data, discoveredApps, discoveredIntegrations]);
 
   useEffect(() => {
@@ -188,7 +225,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
       const next: IntegrationDraft[] = [];
       const existing = new Map(current.map((draft) => [draft.id, draft]));
       for (const discovered of discoveredIntegrations) {
-        if (!selectedKinds.includes(discovered.kind)) continue;
+        if (!selectedIntegrationSourceIds.includes(discovered.sourceId)) continue;
         const id = discovered.sourceId;
         const generatedUrl =
           discovered.suggestedUrl ||
@@ -212,7 +249,6 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
         );
       }
       for (const kind of selectedKinds) {
-        if (discoveredIntegrations.some((item) => item.kind === kind)) continue;
         const id = `manual:${kind}`;
         const generatedUrl = serverOrigin
           ? buildIntegrationUrl(kind, serverOrigin, urlMode)
@@ -235,7 +271,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
       }
       return next;
     });
-  }, [discoveredIntegrations, selectedKinds, serverOrigin, urlMode]);
+  }, [discoveredIntegrations, selectedIntegrationSourceIds, selectedKinds, serverOrigin, urlMode]);
 
   useEffect(() => {
     if (initialSection.current) {
@@ -282,9 +318,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
   };
 
   const updateDraft = (id: string, patch: Partial<IntegrationDraft>) => {
-    setDrafts((current) =>
-      current.map((draft) => (draft.id === id ? { ...draft, ...patch, saved: patch.saved ?? false } : draft)),
-    );
+    setDrafts((current) => current.map((draft) => (draft.id === id ? { ...draft, ...patch } : draft)));
   };
 
   const selectSecretOption = (draft: IntegrationDraft, option: number) => {
@@ -301,6 +335,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
   const applySetupAsync = async (includeSelections = true) => {
     setApplyError(null);
     setAppError(null);
+    setAppErrorSourceId(null);
     setApplyProgress(5);
     try {
       if (!selectedBoardId && environment.availableBoards.length > 0) {
@@ -313,7 +348,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
       }
       const draftsToApply = includeSelections ? drafts : [];
       const invalidDraft = draftsToApply.find(
-        (draft) => !draft.url.trim() || draft.secrets.some((secret) => secret.value.trim().length === 0),
+        (draft) => !isHttpUrl(draft.url) || draft.secrets.some((secret) => secret.value.trim().length === 0),
       );
       if (invalidDraft) {
         const message = t("connect.validationError", { name: invalidDraft.name });
@@ -321,85 +356,24 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
         setActiveSection("connect");
         throw new Error(message);
       }
-
-      const unsaved = draftsToApply.filter((draft) => !draft.saved);
-      const selectedIntegrationIds = draftsToApply.flatMap((draft) =>
-        draft.integrationId ? [draft.integrationId] : [],
-      );
-      const integrationAppIds = draftsToApply.flatMap((draft) => (draft.appId ? [draft.appId] : []));
-      for (const [index, draft] of unsaved.entries()) {
-        setApplyMessage(t("review.progress.integration", { name: draft.name }));
-        setApplyProgress(10 + Math.round(((index + 1) / Math.max(unsaved.length, 1)) * 45));
-        try {
-          const discovered = draft.sourceId
-            ? discoveredIntegrations.find((integration) => integration.sourceId === draft.sourceId)
-            : undefined;
-          const result = await createIntegration.mutateAsync({
-            name: draft.name,
-            url: draft.url,
-            kind: draft.kind,
-            secrets: draft.secrets,
-            sourceId: draft.sourceId,
-            iconUrl: discovered?.iconUrl ?? null,
-            description: discovered?.description ?? null,
-            pingUrl: discovered?.pingUrl ?? null,
-          });
-          if (result && "error" in result && result.error) {
-            throw new Error(t("connect.connectionError", { name: draft.name }));
-          }
-          selectedIntegrationIds.push(result.id);
-          integrationAppIds.push(result.appId);
-          updateDraft(draft.id, { saved: true, error: null, integrationId: result.id, appId: result.appId });
-        } catch (error) {
-          const message = error instanceof Error ? error.message : t("common.unknownError");
-          updateDraft(draft.id, { error: message });
-          throw error;
-        }
-      }
-
       const appsToCreate = includeSelections
         ? discoveredApps.filter((app) => selectedAppIds.includes(app.sourceId))
         : [];
-      let createdAppIds = appsToCreate.flatMap((app) => {
-        const appId = createdAppIdsBySource[app.sourceId];
-        return appId ? [appId] : [];
-      });
-      if (appsToCreate.length > 0) {
-        setApplyMessage(t("review.progress.apps"));
-        setApplyProgress(68);
-        try {
-          const result = await createApps.mutateAsync(
-            appsToCreate.map((app) => ({
-              sourceId: app.sourceId,
-              name: app.containerName,
-              href:
-                app.suggestedUrl ||
-                (serverOrigin
-                  ? buildAppUrl(app.containerName, serverOrigin, urlMode, app.publishedPort ?? undefined)
-                  : null),
-              pingUrl: app.pingUrl ?? null,
-              iconUrl: app.iconUrl,
-              description: app.description ?? null,
-            })),
-          );
-          const createdApps = Object.fromEntries(
-            result.apps.flatMap((app) => (app.sourceId ? [[app.sourceId, app.id]] : [])),
-          );
-          setCreatedAppIdsBySource((current) => ({ ...current, ...createdApps }));
-          createdAppIds = result.apps.map((app) => app.id);
-        } catch (error) {
-          setAppError(error instanceof Error ? error.message : t("common.unknownError"));
-          setActiveSection("connect");
-          throw error;
-        }
+      const appWithoutAddress = appsToCreate.find((app) => !isHttpUrl(discoveredAppUrls[app.sourceId] ?? ""));
+      if (appWithoutAddress) {
+        const message = t("connect.appAddressRequired", { name: appWithoutAddress.containerName });
+        setAppError(message);
+        setAppErrorSourceId(appWithoutAddress.sourceId);
+        setActiveSection("connect");
+        throw new Error(message);
       }
 
-      setApplyMessage(t("review.progress.board"));
-      setApplyProgress(84);
+      setApplyMessage(t("review.progress.applying"));
+      setApplyProgress(20);
       const selectedSourceIds = new Set(draftsToApply.flatMap((draft) => (draft.sourceId ? [draft.sourceId] : [])));
       const completion = await complete.mutateAsync({
         server: {
-          defaultLocale: currentLocale,
+          defaultLocale: selectedLocale,
           defaultColorScheme: colorScheme as ColorScheme,
           analyticsEnabled,
         },
@@ -413,8 +387,38 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
           leftSidebar,
           rightSidebar,
         },
-        selectedIntegrationIds,
-        selectedAppIds: [...new Set([...integrationAppIds, ...createdAppIds])],
+        integrations: draftsToApply.map((draft) => {
+          const discovered = draft.sourceId
+            ? discoveredIntegrations.find((integration) => integration.sourceId === draft.sourceId)
+            : undefined;
+          return {
+            sourceId: draft.sourceId ?? draft.id,
+            name: draft.name,
+            url: draft.url,
+            kind: draft.kind,
+            secrets: draft.secrets,
+            iconUrl: discovered?.iconUrl ?? null,
+            description: discovered?.description ?? null,
+            pingUrl: discovered?.pingUrl ?? null,
+          };
+        }),
+        apps: appsToCreate.flatMap((app) => {
+          const href = discoveredAppUrls[app.sourceId];
+          return href
+            ? [
+                {
+                  sourceId: app.sourceId,
+                  name: app.containerName,
+                  href,
+                  pingUrl: app.pingUrl ?? null,
+                  iconUrl: app.iconUrl,
+                  description: app.description ?? null,
+                },
+              ]
+            : [];
+        }),
+        selectedIntegrationIds: [],
+        selectedAppIds: [],
         selectedDockerSourceIds: [
           ...new Set([
             ...discoveredIntegrations
@@ -428,9 +432,12 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
         selectedWidgetKinds: [
           ...new Set(
             [
+              ...generalWidgets,
               ...discoveredIntegrations.filter((integration) => selectedSourceIds.has(integration.sourceId)),
               ...appsToCreate,
-            ].flatMap((discovery) => (discovery.widgetKind ? [discovery.widgetKind] : [])),
+            ].flatMap((selection) =>
+              typeof selection === "string" ? [selection] : selection.widgetKind ? [selection.widgetKind] : [],
+            ),
           ),
         ],
       });
@@ -462,20 +469,31 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
     setUrlMode,
     analyticsEnabled,
     setAnalyticsEnabled,
-    currentLocale,
-    changeLocale,
-    localePending,
+    selectedLocale,
+    setSelectedLocale,
     colorScheme: colorScheme as ColorScheme,
     setColorScheme,
     docker,
     dockerData,
+    runtimeCapabilities,
     selectedKinds,
     setSelectedKinds,
+    discoveredIntegrations,
+    selectedIntegrationSourceIds,
+    setSelectedIntegrationSourceIds,
     detectedKinds,
     drafts,
     updateDraft,
     selectSecretOption,
     discoveredApps,
+    discoveredAppUrls,
+    setDiscoveredAppUrl: (sourceId, url) => {
+      setAppUrlOverrides((current) => ({ ...current, [sourceId]: url }));
+      if (appErrorSourceId === sourceId) {
+        setAppErrorSourceId(null);
+        setAppError(null);
+      }
+    },
     selectedAppIds,
     setSelectedAppIds,
     boardName,
@@ -498,6 +516,7 @@ export const SetupStudio = ({ environment }: OnboardingStudioProps) => {
     applyMessage,
     applyError,
     appError,
+    appErrorSourceId,
   };
 
   return (
@@ -638,20 +657,25 @@ interface StudioSectionProps {
   setUrlMode: (value: UrlTemplateMode) => void;
   analyticsEnabled: boolean;
   setAnalyticsEnabled: (value: boolean) => void;
-  currentLocale: SupportedLanguage;
-  changeLocale: (value: SupportedLanguage) => void;
-  localePending: boolean;
+  selectedLocale: SupportedLanguage;
+  setSelectedLocale: (value: SupportedLanguage) => void;
   colorScheme: ColorScheme;
   setColorScheme: (value: ColorScheme) => void;
   docker: ReturnType<typeof clientApi.onboard.discoverDockerServices.useQuery>;
   dockerData: DockerDiscoveryData | undefined;
+  runtimeCapabilities: RuntimeCapabilitiesQuery;
   selectedKinds: IntegrationKind[];
   setSelectedKinds: (value: IntegrationKind[]) => void;
+  discoveredIntegrations: DockerDiscoveryData["integrations"];
+  selectedIntegrationSourceIds: string[];
+  setSelectedIntegrationSourceIds: (value: string[]) => void;
   detectedKinds: Set<IntegrationKind>;
   drafts: IntegrationDraft[];
   updateDraft: (id: string, patch: Partial<IntegrationDraft>) => void;
   selectSecretOption: (draft: IntegrationDraft, option: number) => void;
   discoveredApps: DockerDiscoveryData["apps"];
+  discoveredAppUrls: Record<string, string>;
+  setDiscoveredAppUrl: (sourceId: string, url: string) => void;
   selectedAppIds: string[];
   setSelectedAppIds: (value: string[]) => void;
   boardName: string;
@@ -674,6 +698,7 @@ interface StudioSectionProps {
   applyMessage: string;
   applyError: string | null;
   appError: string | null;
+  appErrorSourceId: string | null;
 }
 
 const StudioSectionContent = ({ section, ...props }: StudioSectionProps & { section: StudioSection }) => {
@@ -694,20 +719,15 @@ const StudioSectionContent = ({ section, ...props }: StudioSectionProps & { sect
 };
 
 const SectionHeading = ({
-  eyebrow,
   title,
   description,
   headingRef,
 }: {
-  eyebrow: string;
   title: string;
   description: string;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
 }) => (
   <Stack gap={4} mb="xl">
-    <Text size="xs" tt="uppercase" lts="0.12em" fw={700} c="dimmed">
-      {eyebrow}
-    </Text>
     <Title id="studio-section-title" ref={headingRef} order={2} tabIndex={-1}>
       {title}
     </Title>
@@ -721,12 +741,7 @@ const Essentials = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.essentials");
   return (
     <Stack gap="lg">
-      <SectionHeading
-        headingRef={props.headingRef}
-        eyebrow={t("eyebrow")}
-        title={t("title")}
-        description={t("description")}
-      />
+      <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
       <SimpleGrid cols={{ base: 1, sm: 2 }}>
         <Select
           label={t("language")}
@@ -734,9 +749,8 @@ const Essentials = (props: StudioSectionProps) => {
             value: locale,
             label: `${localeConfigurations[locale].name} · ${localeConfigurations[locale].translatedName}`,
           }))}
-          value={props.currentLocale}
-          onChange={(value) => value && props.changeLocale(value as SupportedLanguage)}
-          rightSection={props.localePending ? <Loader size="xs" /> : undefined}
+          value={props.selectedLocale}
+          onChange={(value) => value && props.setSelectedLocale(value as SupportedLanguage)}
           searchable
           allowDeselect={false}
         />
@@ -780,6 +794,7 @@ const Essentials = (props: StudioSectionProps) => {
             data={[
               { value: "hostPort", label: t("hostPort") },
               { value: "subdomain", label: t("subdomain") },
+              { value: "path", label: t("path") },
             ]}
           />
           {props.serverOrigin ? (
@@ -811,15 +826,38 @@ const Discovery = (props: StudioSectionProps) => {
           : props.dockerData?.status === "partial"
             ? "partial"
             : "unavailable";
+  const kubernetesStatus: CapabilityStatus = !props.environment.kubernetesConfigured
+    ? "disabled"
+    : props.runtimeCapabilities.isPending
+      ? "checking"
+      : props.runtimeCapabilities.data?.kubernetes.status === "available"
+        ? "available"
+        : "unavailable";
+  const workshopStatus: CapabilityStatus = props.runtimeCapabilities.isPending
+    ? "checking"
+    : props.runtimeCapabilities.data?.workshop.status === "available"
+      ? "available"
+      : "unavailable";
+  const kubernetesVersion =
+    props.runtimeCapabilities.data?.kubernetes.status === "available"
+      ? props.runtimeCapabilities.data.kubernetes.detail
+      : undefined;
+
+  const runtimeRetryAction = (label: string) => (
+    <ActionIcon
+      size={44}
+      variant="subtle"
+      aria-label={label}
+      onClick={() => void props.runtimeCapabilities.refetch()}
+      loading={props.runtimeCapabilities.isFetching}
+    >
+      <IconRefresh size={18} />
+    </ActionIcon>
+  );
 
   return (
     <Stack gap="lg">
-      <SectionHeading
-        headingRef={props.headingRef}
-        eyebrow={t("eyebrow")}
-        title={t("title")}
-        description={t("description")}
-      />
+      <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
       <Stack gap="sm">
         <CapabilityRow
           icon={IconDatabase}
@@ -856,14 +894,28 @@ const Discovery = (props: StudioSectionProps) => {
         <CapabilityRow
           icon={IconServer}
           title={t("kubernetes")}
-          status={props.environment.kubernetesConfigured ? "available" : "disabled"}
-          detail={t(props.environment.kubernetesConfigured ? "kubernetesAvailable" : "kubernetesDisabled")}
+          status={kubernetesStatus}
+          detail={
+            kubernetesStatus === "checking"
+              ? t("status.checking")
+              : kubernetesStatus === "available"
+                ? t("kubernetesAvailable", {
+                    version: kubernetesVersion ?? t("unknownVersion"),
+                  })
+                : t(kubernetesStatus === "disabled" ? "kubernetesDisabled" : "kubernetesUnavailable")
+          }
+          action={props.environment.kubernetesConfigured ? runtimeRetryAction(t("retryKubernetes")) : undefined}
         />
         <CapabilityRow
           icon={IconSparkles}
           title={t("assistantWorkshop")}
-          status={props.environment.workshopEnabled ? "available" : "unavailable"}
-          detail={t(props.environment.workshopEnabled ? "workshopAvailable" : "workshopUnavailable")}
+          status={workshopStatus}
+          detail={
+            workshopStatus === "checking"
+              ? t("status.checking")
+              : t(workshopStatus === "available" ? "workshopAvailable" : "workshopUnavailable")
+          }
+          action={runtimeRetryAction(t("retryWorkshop"))}
         />
       </Stack>
 
@@ -917,7 +969,15 @@ const CapabilityRow = ({
           ? "yellow"
           : "gray";
   return (
-    <Paper className={classes.sectionCard} radius="lg" p="md">
+    <Paper
+      component="output"
+      className={classes.sectionCard}
+      radius="lg"
+      p="md"
+      aria-live="polite"
+      aria-atomic="true"
+      aria-busy={status === "checking"}
+    >
       <Group justify="space-between" wrap="nowrap">
         <Group wrap="nowrap" miw={0}>
           <ThemeIcon variant="light" color={color} size="lg">
@@ -945,52 +1005,102 @@ const Connections = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.connect");
   return (
     <Stack gap="xl">
-      <SectionHeading
-        headingRef={props.headingRef}
-        eyebrow={t("eyebrow")}
-        title={t("title")}
-        description={t("description")}
-      />
-      <IntegrationMultiSelectGrid
-        selectedKinds={props.selectedKinds}
-        onSelectionChange={props.setSelectedKinds}
-        detectedKinds={props.detectedKinds}
-        onboarding
-      />
+      <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
+      {props.discoveredIntegrations.length > 0 ? (
+        <Fieldset legend={t("discoveredIntegrations", { count: String(props.discoveredIntegrations.length) })}>
+          <Checkbox.Group value={props.selectedIntegrationSourceIds} onChange={props.setSelectedIntegrationSourceIds}>
+            <SimpleGrid cols={{ base: 1, xs: 2, md: 3 }}>
+              {props.discoveredIntegrations.map((integration) => (
+                <Checkbox.Card
+                  className={classes.discoveryChoice}
+                  key={integration.sourceId}
+                  value={integration.sourceId}
+                  aria-label={t("detectedIntegrationLabel", {
+                    name: integration.containerName,
+                    kind: getIntegrationName(integration.kind),
+                  })}
+                  p="sm"
+                  radius="md"
+                >
+                  <Group wrap="nowrap">
+                    <Checkbox.Indicator />
+                    <IntegrationAvatar kind={integration.kind} size="sm" radius="sm" />
+                    <Stack gap={0} miw={0}>
+                      <Text size="sm" fw={600} truncate>
+                        {integration.containerName}
+                      </Text>
+                      <Text size="xs" c="dimmed" truncate>
+                        {getIntegrationName(integration.kind)} · {integration.suggestedUrl || t("addressNeeded")}
+                      </Text>
+                    </Stack>
+                  </Group>
+                </Checkbox.Card>
+              ))}
+            </SimpleGrid>
+          </Checkbox.Group>
+        </Fieldset>
+      ) : null}
+
+      <Fieldset legend={t("otherIntegrations")}>
+        <IntegrationMultiSelectGrid
+          selectedKinds={props.selectedKinds}
+          onSelectionChange={props.setSelectedKinds}
+          detectedKinds={props.detectedKinds}
+          onboarding
+        />
+      </Fieldset>
 
       {props.discoveredApps.length > 0 ? (
         <Fieldset legend={t("discoveredApps", { count: String(props.discoveredApps.length) })}>
           <SimpleGrid cols={{ base: 1, xs: 2, md: 3 }}>
-            {props.discoveredApps.map((app) => (
-              <Checkbox.Card
-                key={app.sourceId}
-                value={app.sourceId}
-                checked={props.selectedAppIds.includes(app.sourceId)}
-                onChange={() =>
-                  props.setSelectedAppIds(
-                    props.selectedAppIds.includes(app.sourceId)
-                      ? props.selectedAppIds.filter((id) => id !== app.sourceId)
-                      : [...props.selectedAppIds, app.sourceId],
-                  )
-                }
-                p="sm"
-                radius="md"
-              >
-                <Group wrap="nowrap">
-                  <Avatar src={app.iconUrl} size="sm" radius="sm">
-                    {app.containerName.at(0)}
-                  </Avatar>
-                  <Stack gap={0} miw={0}>
-                    <Text size="sm" fw={600} truncate>
-                      {app.containerName}
-                    </Text>
-                    <Text size="xs" c="dimmed" truncate>
-                      {app.suggestedUrl || t("addressNeeded")}
-                    </Text>
-                  </Stack>
-                </Group>
-              </Checkbox.Card>
-            ))}
+            {props.discoveredApps.map((app) => {
+              const selected = props.selectedAppIds.includes(app.sourceId);
+              return (
+                <Stack key={app.sourceId} gap="xs">
+                  <Checkbox.Card
+                    className={classes.discoveryChoice}
+                    value={app.sourceId}
+                    checked={selected}
+                    aria-label={t("detectedAppLabel", { name: app.containerName })}
+                    onChange={() =>
+                      props.setSelectedAppIds(
+                        selected
+                          ? props.selectedAppIds.filter((id) => id !== app.sourceId)
+                          : [...props.selectedAppIds, app.sourceId],
+                      )
+                    }
+                    p="sm"
+                    radius="md"
+                  >
+                    <Group wrap="nowrap">
+                      <Checkbox.Indicator />
+                      <Avatar src={app.iconUrl} size="sm" radius="sm">
+                        {app.containerName.at(0)}
+                      </Avatar>
+                      <Stack gap={0} miw={0}>
+                        <Text size="sm" fw={600} truncate>
+                          {app.containerName}
+                        </Text>
+                        <Text size="xs" c="dimmed" truncate>
+                          {props.discoveredAppUrls[app.sourceId] || t("addressNeeded")}
+                        </Text>
+                      </Stack>
+                    </Group>
+                  </Checkbox.Card>
+                  {selected ? (
+                    <TextInput
+                      label={t("appUrl", { name: app.containerName })}
+                      value={props.discoveredAppUrls[app.sourceId] ?? ""}
+                      onChange={(event) => props.setDiscoveredAppUrl(app.sourceId, event.currentTarget.value)}
+                      error={props.appErrorSourceId === app.sourceId ? props.appError : undefined}
+                      placeholder="https://service.example"
+                      type="url"
+                      required
+                    />
+                  ) : null}
+                </Stack>
+              );
+            })}
           </SimpleGrid>
         </Fieldset>
       ) : null}
@@ -1045,7 +1155,6 @@ const IntegrationEditor = ({
               {getIntegrationName(draft.kind)} · {draft.source === "docker" ? t("dockerSource") : t("manualSource")}
             </Text>
           </Stack>
-          {draft.saved ? <Badge color="green">{t("ready")}</Badge> : null}
         </Group>
       </Accordion.Control>
       <Accordion.Panel>
@@ -1122,14 +1231,11 @@ const formatSecretKind = (kind: IntegrationSecretKind) =>
 const BoardBuilder = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.board");
   const reduceMotion = useReducedMotion();
+  const previewWidgetKinds = getPreviewWidgetKinds(props);
+  const previewAppCount = getPreviewAppCount(props);
   return (
     <Stack gap="xl">
-      <SectionHeading
-        headingRef={props.headingRef}
-        eyebrow={t("eyebrow")}
-        title={t("title")}
-        description={t("description")}
-      />
+      <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
       <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl">
         <Stack>
           {props.environment.availableBoards.length > 1 ? (
@@ -1166,6 +1272,7 @@ const BoardBuilder = (props: StudioSectionProps) => {
               {t("radius")}
             </Text>
             <SegmentedControl
+              aria-label={t("radius")}
               fullWidth
               value={props.itemRadius}
               onChange={(value) => props.setItemRadius(value as MantineSize)}
@@ -1194,6 +1301,7 @@ const BoardBuilder = (props: StudioSectionProps) => {
 
         <Stack>
           <SegmentedControl
+            aria-label={t("layoutPreset")}
             fullWidth
             value={props.layoutPreset}
             onChange={(value) => props.setLayoutPreset(value as LayoutPreset)}
@@ -1208,8 +1316,11 @@ const BoardBuilder = (props: StudioSectionProps) => {
             primaryColor={props.primaryColor}
             secondaryColor={props.secondaryColor}
             itemRadius={props.itemRadius}
+            layoutPreset={props.layoutPreset}
             leftSidebar={props.leftSidebar}
             rightSidebar={props.rightSidebar}
+            widgetKinds={previewWidgetKinds}
+            appCount={previewAppCount}
           />
           <SimpleGrid cols={{ base: 1, sm: 2 }}>
             <Switch
@@ -1227,15 +1338,15 @@ const BoardBuilder = (props: StudioSectionProps) => {
       </SimpleGrid>
 
       <Divider label={t("widgetPrimer")} labelPosition="left" />
-      <SimpleGrid cols={{ base: 1, sm: 3 }}>
-        <PrimerCard icon={IconApps} title={t("primerAppsTitle")} description={t("primerAppsDescription")} />
-        <PrimerCard
+      <Stack gap="lg">
+        <PrimerRow icon={IconApps} title={t("primerAppsTitle")} description={t("primerAppsDescription")} />
+        <PrimerRow
           icon={IconPlugConnected}
           title={t("primerWidgetsTitle")}
           description={t("primerWidgetsDescription")}
         />
-        <PrimerCard icon={IconTool} title={t("primerEditTitle")} description={t("primerEditDescription")} />
-      </SimpleGrid>
+        <PrimerRow icon={IconTool} title={t("primerEditTitle")} description={t("primerEditDescription")} />
+      </Stack>
     </Stack>
   );
 };
@@ -1245,51 +1356,105 @@ const BoardPreview = ({
   primaryColor,
   secondaryColor,
   itemRadius,
+  layoutPreset,
   leftSidebar,
   rightSidebar,
+  widgetKinds,
+  appCount,
 }: {
   ariaLabel: string;
   primaryColor: string;
   secondaryColor: string;
   itemRadius: MantineSize;
+  layoutPreset: LayoutPreset;
   leftSidebar: boolean;
   rightSidebar: boolean;
+  widgetKinds: WidgetKind[];
+  appCount: number;
 }) => {
+  const t = useScopedI18n("init.studio.board");
   const reduceMotion = useReducedMotion();
+  const [layoutRole, setLayoutRole] = useState<"mobile" | "base">("base");
+  const baseColumnCount = { focused: 8, balanced: 10, wide: 12 }[layoutPreset];
+  const columnCount =
+    layoutRole === "mobile" ? 3 : Math.max(1, baseColumnCount - Number(leftSidebar) - Number(rightSidebar));
+  const showLeftSidebar = layoutRole === "base" && leftSidebar;
+  const showRightSidebar = layoutRole === "base" && rightSidebar;
+  const previewItems = [
+    ...widgetKinds.map((kind) => {
+      const config = getDefaultWidgetConfig(kind);
+      return {
+        id: `widget:${kind}`,
+        width: config.width,
+        height: config.height,
+      };
+    }),
+    ...Array.from({ length: appCount }, (_, index) => ({ id: `app:${index}`, width: 1, height: 1 })),
+  ].slice(0, 12);
+
   return (
-    <figure
-      className={classes.preview}
-      aria-label={ariaLabel}
-      style={
-        {
-          gridTemplateColumns: [leftSidebar ? "0.24fr" : null, "minmax(0, 1fr)", rightSidebar ? "0.24fr" : null]
-            .filter(Boolean)
-            .join(" "),
-        } as CSSProperties
-      }
-    >
-      {leftSidebar ? <div className={classes.previewLane} /> : null}
-      <div className={classes.previewLane}>
-        <div className={classes.previewTiles}>
-          {Array.from({ length: 5 }, (_, index) => (
-            <motion.div
-              key={index}
-              className={classes.previewTile}
-              animate={reduceMotion ? undefined : { borderRadius: `var(--mantine-radius-${itemRadius})` }}
-              style={{
-                borderRadius: `var(--mantine-radius-${itemRadius})`,
-                background: `linear-gradient(135deg, color-mix(in srgb, ${primaryColor} 45%, transparent), color-mix(in srgb, ${secondaryColor} 38%, transparent))`,
-              }}
-            />
-          ))}
+    <Stack gap="xs">
+      <SegmentedControl<"mobile" | "base">
+        aria-label={t("previewLayout")}
+        value={layoutRole}
+        onChange={setLayoutRole}
+        data={[
+          { value: "mobile", label: t("previewMobile") },
+          { value: "base", label: t("previewBase") },
+        ]}
+        fullWidth
+      />
+      <figure
+        className={classes.preview}
+        aria-label={ariaLabel}
+        data-layout-role={layoutRole}
+        data-layout-columns={columnCount}
+        style={
+          {
+            gridTemplateColumns: [
+              showLeftSidebar ? "0.24fr" : null,
+              "minmax(0, 1fr)",
+              showRightSidebar ? "0.24fr" : null,
+            ]
+              .filter(Boolean)
+              .join(" "),
+          } as CSSProperties
+        }
+      >
+        {showLeftSidebar ? <div className={classes.previewLane} /> : null}
+        <div className={classes.previewLane}>
+          <div
+            className={classes.previewTiles}
+            style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}
+          >
+            {previewItems.map((item, index) => (
+              <motion.div
+                key={item.id}
+                className={classes.previewTile}
+                aria-hidden
+                initial={reduceMotion ? false : { opacity: 0.65, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1, borderRadius: `var(--mantine-radius-${itemRadius})` }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.18,
+                  delay: reduceMotion ? 0 : Math.min(index * 0.015, 0.12),
+                }}
+                style={{
+                  gridColumn: `span ${Math.min(columnCount, item.width)}`,
+                  gridRow: `span ${Math.min(3, item.height)}`,
+                  borderRadius: `var(--mantine-radius-${itemRadius})`,
+                  background: `linear-gradient(135deg, color-mix(in srgb, ${primaryColor} 45%, transparent), color-mix(in srgb, ${secondaryColor} 38%, transparent))`,
+                }}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-      {rightSidebar ? <div className={classes.previewLane} /> : null}
-    </figure>
+        {showRightSidebar ? <div className={classes.previewLane} /> : null}
+      </figure>
+    </Stack>
   );
 };
 
-const PrimerCard = ({
+const PrimerRow = ({
   icon: Icon,
   title,
   description,
@@ -1298,33 +1463,26 @@ const PrimerCard = ({
   title: string;
   description: string;
 }) => (
-  <Paper className={classes.sectionCard} radius="lg" p="md">
-    <Stack>
-      <ThemeIcon variant="light" size="lg">
-        <Icon size={20} />
-      </ThemeIcon>
-      <Stack gap={3}>
-        <Text fw={650}>{title}</Text>
-        <Text size="sm" c="dimmed">
-          {description}
-        </Text>
-      </Stack>
+  <Group wrap="nowrap" align="flex-start">
+    <ThemeIcon variant="light" size="lg" flex="0 0 auto">
+      <Icon size={20} />
+    </ThemeIcon>
+    <Stack gap={3}>
+      <Text fw={650}>{title}</Text>
+      <Text size="sm" c="dimmed" maw="65ch">
+        {description}
+      </Text>
     </Stack>
-  </Paper>
+  </Group>
 );
 
 const Extensions = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.extend");
   return (
     <Stack gap="lg">
-      <SectionHeading
-        headingRef={props.headingRef}
-        eyebrow={t("eyebrow")}
-        title={t("title")}
-        description={t("description")}
-      />
+      <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
       <Tabs defaultValue="assistant" variant="outline">
-        <Tabs.List grow>
+        <Tabs.List grow aria-label={t("tabsLabel")}>
           <Tabs.Tab value="assistant" leftSection={<IconBrain size={16} />}>
             {t("assistant")}
           </Tabs.Tab>
@@ -1339,7 +1497,7 @@ const Extensions = (props: StudioSectionProps) => {
           <AssistantSetup environment={props.environment} />
         </Tabs.Panel>
         <Tabs.Panel value="workshop" pt="md">
-          <WorkshopSetup environment={props.environment} />
+          <WorkshopSetup environment={props.environment} runtimeCapabilities={props.runtimeCapabilities} />
         </Tabs.Panel>
         <Tabs.Panel value="mcp" pt="md">
           <McpSetup environment={props.environment} />
@@ -1363,7 +1521,10 @@ const AssistantSetup = ({ environment }: { environment: StudioSectionProps["envi
     retry: false,
   });
   const models = clientApi.assistant.discoverModels.useQuery(undefined, {
-    enabled: false,
+    enabled:
+      environment.canConfigurePrivileged &&
+      configuration.data?.connectionConfigured === true &&
+      configuration.data.modelDiscoveryPath !== null,
     retry: false,
   });
   const updateConnection = clientApi.assistant.updateConnection.useMutation({
@@ -1381,7 +1542,31 @@ const AssistantSetup = ({ environment }: { environment: StudioSectionProps["envi
     },
   });
 
+  useEffect(() => {
+    const saved = configuration.data;
+    if (!saved?.connectionConfigured) return;
+    setProvider(saved.provider);
+    setBaseUrl(saved.baseUrl);
+    setModelId(saved.modelId ?? "");
+    setEnabled(saved.enabled);
+    setWebSearch(saved.webSearchEnabled);
+    setApiKey("");
+  }, [configuration.data]);
+
   const preset = assistantProviderPresets[provider];
+  const normalizedBaseUrl = baseUrl.trim().replace(/\/$/, "");
+  const connectionChanged =
+    configuration.data?.connectionConfigured === true &&
+    (configuration.data.provider !== provider || configuration.data.baseUrl !== normalizedBaseUrl);
+  const modelControlsDisabled = configuration.data?.connectionConfigured !== true || connectionChanged;
+  const useManualModelInput =
+    !modelControlsDisabled &&
+    !models.isFetching &&
+    (configuration.data?.modelDiscoveryPath === null || models.isError || models.data?.length === 0);
+  const modelOptions = (models.data ?? []).map((model) => ({ value: model.id, label: model.name }));
+  if (modelId && !modelOptions.some((model) => model.value === modelId)) {
+    modelOptions.unshift({ value: modelId, label: modelId });
+  }
   const selectProvider = (value: string | null) => {
     if (!value || !assistantProviderIds.includes(value as AssistantProvider)) return;
     const next = value as AssistantProvider;
@@ -1467,15 +1652,26 @@ const AssistantSetup = ({ environment }: { environment: StudioSectionProps["envi
       </Group>
       {models.error ? <Alert color="orange">{models.error.message}</Alert> : null}
       {updateConnection.error ? <Alert color="red">{updateConnection.error.message}</Alert> : null}
-      <Select
-        label={t("model")}
-        searchable
-        data={(models.data ?? []).map((model) => ({ value: model.id, label: model.name }))}
-        value={modelId}
-        onChange={(value) => setModelId(value ?? "")}
-        placeholder={models.isFetching ? t("discovering") : t("modelPlaceholder")}
-        disabled={models.isFetching}
-      />
+      {useManualModelInput ? (
+        <TextInput
+          label={t("model")}
+          value={modelId}
+          onChange={(event) => setModelId(event.currentTarget.value)}
+          placeholder={t("manualModelPlaceholder")}
+          description={t("manualModelDescription")}
+        />
+      ) : (
+        <Select
+          label={t("model")}
+          searchable
+          data={modelControlsDisabled ? [] : modelOptions}
+          value={modelId || null}
+          onChange={(value) => setModelId(value ?? "")}
+          placeholder={models.isFetching ? t("discovering") : t("modelPlaceholder")}
+          disabled={modelControlsDisabled || models.isFetching}
+          allowDeselect={false}
+        />
+      )}
       <Group grow>
         <Switch checked={enabled} onChange={(event) => setEnabled(event.currentTarget.checked)} label={t("enable")} />
         <Switch
@@ -1501,8 +1697,19 @@ const AssistantSetup = ({ environment }: { environment: StudioSectionProps["envi
   );
 };
 
-const WorkshopSetup = ({ environment }: { environment: StudioSectionProps["environment"] }) => {
+const WorkshopSetup = ({
+  environment,
+  runtimeCapabilities,
+}: {
+  environment: StudioSectionProps["environment"];
+  runtimeCapabilities: StudioSectionProps["runtimeCapabilities"];
+}) => {
   const t = useScopedI18n("init.studio.extend.workshopSetup");
+  const status = runtimeCapabilities.isPending
+    ? "checking"
+    : runtimeCapabilities.data?.workshop.status === "available"
+      ? "available"
+      : "unavailable";
   return (
     <Stack>
       <Paper className={classes.sectionCard} radius="lg" p="xl">
@@ -1515,8 +1722,8 @@ const WorkshopSetup = ({ environment }: { environment: StudioSectionProps["envir
               <Text fw={700} size="lg">
                 {t("title")}
               </Text>
-              <Badge color={environment.workshopEnabled ? "green" : "gray"} variant="light">
-                {environment.workshopEnabled ? t("available") : t("unavailable")}
+              <Badge color={status === "available" ? "green" : status === "checking" ? "blue" : "gray"} variant="light">
+                {t(status)}
               </Badge>
             </Group>
             <Text c="dimmed">{t("description")}</Text>
@@ -1647,7 +1854,7 @@ const Review = (props: StudioSectionProps) => {
     {
       icon: IconPalette,
       label: t("appearance"),
-      value: `${props.currentLocale} · ${props.colorScheme} · ${props.itemRadius}`,
+      value: `${props.selectedLocale} · ${props.colorScheme} · ${props.itemRadius}`,
     },
     {
       icon: IconBrandDocker,
@@ -1662,12 +1869,7 @@ const Review = (props: StudioSectionProps) => {
   ];
   return (
     <Stack gap="lg">
-      <SectionHeading
-        headingRef={props.headingRef}
-        eyebrow={t("eyebrow")}
-        title={t("title")}
-        description={t("description")}
-      />
+      <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
       <SimpleGrid cols={{ base: 1, sm: 2 }}>
         {summary.map(({ icon: Icon, label, value }) => (
           <Paper key={label} className={classes.sectionCard} radius="lg" p="md">
@@ -1692,8 +1894,11 @@ const Review = (props: StudioSectionProps) => {
         primaryColor={props.primaryColor}
         secondaryColor={props.secondaryColor}
         itemRadius={props.itemRadius}
+        layoutPreset={props.layoutPreset}
         leftSidebar={props.leftSidebar}
         rightSidebar={props.rightSidebar}
+        widgetKinds={getPreviewWidgetKinds(props)}
+        appCount={getPreviewAppCount(props)}
       />
       <Alert icon={<IconSparkles size={18} />} title={t("automaticTitle")}>
         {t("automaticDescription")}
@@ -1722,6 +1927,19 @@ const Review = (props: StudioSectionProps) => {
   );
 };
 
+const getPreviewWidgetKinds = (props: StudioSectionProps) => [
+  ...new Set([
+    ...generalWidgets,
+    ...props.drafts.flatMap((draft) => getWidgetKindsForIntegration(draft.kind)),
+    ...props.discoveredApps
+      .filter((app) => props.selectedAppIds.includes(app.sourceId))
+      .flatMap((app) => (app.widgetKind ? [app.widgetKind] : [])),
+  ]),
+];
+
+const getPreviewAppCount = (props: StudioSectionProps) =>
+  props.drafts.length + props.discoveredApps.filter((app) => props.selectedAppIds.includes(app.sourceId)).length;
+
 const createDraft = ({
   id,
   sourceId,
@@ -1740,6 +1958,5 @@ const createDraft = ({
   source,
   secretOption: 0,
   secrets: getAllSecretKindOptions(kind)[0].map((secretKind) => ({ kind: secretKind, value: "" })),
-  saved: false,
   error: null,
 });

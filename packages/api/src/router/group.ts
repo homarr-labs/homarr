@@ -1,3 +1,5 @@
+import type { MySqlRawQueryResult } from "drizzle-orm/mysql2";
+import type { QueryResult } from "pg";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
@@ -193,16 +195,32 @@ export const groupRouter = createTRPCRouter({
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
+            const transitionResult = (await transaction
+              .update(schema.onboarding)
+              .set({ previousStep: "group", step: "setup" })
+              .where(eq(schema.onboarding.step, "group"))) as MySqlRawQueryResult | QueryResult;
+            const transitionedRows = Array.isArray(transitionResult)
+              ? transitionResult[0].affectedRows
+              : (transitionResult.rowCount ?? 0);
+            if (transitionedRows !== 1) {
+              throw new TRPCError({ code: "CONFLICT", message: "The initial external group was already created." });
+            }
             await transaction.insert(schema.groups).values(groupRow);
             await transaction.insert(schema.groupPermissions).values({ groupId, permission: "admin" });
-            await transaction.update(schema.onboarding).set({ previousStep: "group", step: "setup" });
           });
         },
         handleSync(db) {
           db.transaction((transaction) => {
+            const transitionResult = transaction
+              .update(onboarding)
+              .set({ previousStep: "group", step: "setup" })
+              .where(eq(onboarding.step, "group"))
+              .run();
+            if (transitionResult.changes !== 1) {
+              throw new TRPCError({ code: "CONFLICT", message: "The initial external group was already created." });
+            }
             transaction.insert(groups).values(groupRow).run();
             transaction.insert(groupPermissions).values({ groupId, permission: "admin" }).run();
-            transaction.update(onboarding).set({ previousStep: "group", step: "setup" }).run();
           });
         },
       });

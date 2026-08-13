@@ -34,6 +34,15 @@ describe("buildIntegrationUrl", () => {
     );
   });
 
+  it("builds reverse-proxy path URLs and preserves the configured base path", () => {
+    expect(buildIntegrationUrl("sonarr", "https://home.example.com/services", "path")).toBe(
+      "https://home.example.com/services/sonarr",
+    );
+    expect(buildAppUrl("My Service", "home.lan/apps/", "path", 9999)).toBe(
+      "http://home.lan/apps/my-service",
+    );
+  });
+
   it("replaces a supplied base port instead of producing a double port", () => {
     expect(buildIntegrationUrl("sonarr", "https://home.example.com:8443/homarr", "hostPort")).toBe(
       "http://home.example.com:8989",

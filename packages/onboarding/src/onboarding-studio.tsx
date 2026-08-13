@@ -8,6 +8,7 @@ import { Link } from "@homarr/ui";
 
 import type { OnboardingStudioProps } from "./types";
 import { AccountSetup } from "./account";
+import { getOnboardingAccessState } from "./claim-state";
 import { Finish } from "./finish";
 import { SetupStudio } from "./setup-studio";
 import { Welcome } from "./welcome";
@@ -15,22 +16,15 @@ import { Welcome } from "./welcome";
 export const OnboardingStudio = (props: OnboardingStudioProps) => {
   const t = useScopedI18n("init.studio.claim");
   const tCommon = useScopedI18n("common.action");
+  const accessState = getOnboardingAccessState(props.environment);
   const [claimState, setClaimState] = useState<"checking" | "ready" | "locked" | "signIn" | "error">(
-    props.environment.currentStep === "start" || props.environment.currentStep === "finish" ? "ready" : "checking",
+    accessState === "claim" ? "checking" : accessState,
   );
   const [claimError, setClaimError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (props.environment.currentStep === "start" || props.environment.currentStep === "finish") return;
-    if (props.environment.canConfigurePrivileged) {
-      setClaimState("ready");
-      return;
-    }
-    if (
-      props.environment.hasUsers ||
-      (props.environment.externalAuthEnabled && props.environment.currentStep === "setup")
-    ) {
-      setClaimState("signIn");
+    if (accessState !== "claim") {
+      setClaimState(accessState);
       return;
     }
 
@@ -51,13 +45,7 @@ export const OnboardingStudio = (props: OnboardingStudioProps) => {
         setClaimState("error");
       });
     return () => controller.abort();
-  }, [
-    props.environment.canConfigurePrivileged,
-    props.environment.currentStep,
-    props.environment.externalAuthEnabled,
-    props.environment.hasUsers,
-    t,
-  ]);
+  }, [accessState, t]);
 
   if (claimState !== "ready") {
     const signIn = claimState === "signIn";

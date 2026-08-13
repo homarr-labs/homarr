@@ -55,6 +55,7 @@ describe("listDiscoveredContainersAsync", () => {
   it("times out a blackholed host without losing another host's result", async () => {
     vi.useFakeTimers();
     try {
+      let blackholedSignal: AbortSignal | undefined;
       listContainersA.mockResolvedValue([
         {
           Id: "sonarr",
@@ -65,7 +66,10 @@ describe("listDiscoveredContainersAsync", () => {
           },
         },
       ]);
-      listContainersB.mockReturnValue(new Promise(() => undefined));
+      listContainersB.mockImplementation(({ abortSignal }: { abortSignal: AbortSignal }) => {
+        blackholedSignal = abortSignal;
+        return new Promise(() => undefined);
+      });
 
       const resultPromise = listDiscoveredContainersAsync({}, 25);
       await vi.advanceTimersByTimeAsync(25);
@@ -76,6 +80,8 @@ describe("listDiscoveredContainersAsync", () => {
         expect.objectContaining({ host: "good", status: "success" }),
         expect.objectContaining({ host: "bad", status: "unavailable", reason: "Docker discovery timed out for bad" }),
       ]);
+      expect(blackholedSignal?.aborted).toBe(true);
+      expect(listContainersB).toHaveBeenCalledWith({ all: false, abortSignal: blackholedSignal });
     } finally {
       vi.useRealTimers();
     }

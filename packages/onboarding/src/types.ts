@@ -5,11 +5,9 @@ import type { OnboardingStep } from "@homarr/definitions";
 export interface OnboardingEnvironment {
   currentStep: OnboardingStep;
   databaseDriver: "sqlite" | "mysql" | "postgresql";
-  credentialsEnabled: boolean;
   externalAuthEnabled: boolean;
   dockerConfigured: boolean;
   kubernetesConfigured: boolean;
-  workshopEnabled: boolean;
   workshopApiUrl: string;
   workshopUrl: string;
   mcpEndpoint: string;

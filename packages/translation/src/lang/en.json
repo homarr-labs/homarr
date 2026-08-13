@@ -53,7 +53,9 @@
         "username": "Administrator username",
         "create": "Create administrator",
         "errorTitle": "Administrator could not be created",
-        "signInError": "The account was created, but automatic sign-in failed. Sign in and setup will resume.",
+        "recoveryTitle": "Administrator account created",
+        "recoveryDescription": "Automatic sign-in did not complete. Sign in with the administrator credentials you just created to continue setup.",
+        "recoveryAction": "Sign in and continue",
         "unknownError": "The administrator could not be created."
       },
       "externalGroup": {
@@ -65,7 +67,6 @@
         "errorTitle": "Group could not be saved"
       },
       "essentials": {
-        "eyebrow": "01 · Your Homarr",
         "title": "Start with familiar defaults",
         "description": "Set the language and appearance everyone sees first, then give Homarr the address pattern used by your services.",
         "language": "Default language",
@@ -76,14 +77,14 @@
         "serverTitle": "Usual server address",
         "serverDescription": "This is a shortcut, not a restriction. Every detected service remains editable.",
         "serverOrigin": "Domain, IP, or reverse-proxy path",
-        "serverOriginDescription": "Examples: home.lan, 192.168.1.10, or https://homarr.example.com. URL paths are ignored when suggesting service addresses.",
+        "serverOriginDescription": "Examples: home.lan, 192.168.1.10, or https://home.example.com/services. Choose how each service is appended below.",
         "hostPort": "Same host, different ports",
         "subdomain": "One subdomain per service",
+        "path": "One path per service",
         "analytics": "Share anonymous product analytics",
         "analyticsDescription": "Helps Homarr improve feature reliability. No service credentials or dashboard content are sent."
       },
       "discover": {
-        "eyebrow": "02 · Capabilities",
         "title": "See what this installation can actually reach",
         "description": "Homarr checks capabilities in place. A missing Docker socket or Kubernetes context never blocks a manual setup.",
         "database": "Database",
@@ -92,13 +93,17 @@
         "assistantWorkshop": "Assistant and Workshop",
         "found": "Found {integrations} integrations and {apps} additional apps",
         "retryDocker": "Scan Docker again",
-        "kubernetesAvailable": "Kubernetes tooling is enabled for this installation",
+        "retryKubernetes": "Check Kubernetes again",
+        "retryWorkshop": "Check Workshop again",
+        "unknownVersion": "unknown version",
+        "kubernetesAvailable": "Connected to Kubernetes {version}",
         "kubernetesDisabled": "Not enabled; continue with Docker or manual services",
+        "kubernetesUnavailable": "Kubernetes is enabled but cannot be reached from this Homarr process",
         "workshopAvailable": "Community Workshop and hosted Assistant services are reachable",
         "workshopUnavailable": "Local and custom Assistant providers remain available",
         "partialTitle": "Some sources could not be scanned",
         "partialDescription": "Results from reachable hosts are kept. Check socket permissions or add services manually in the next section.",
-        "platformTitle": "Docker, Synology, Kubernetes, bare metal—all welcome",
+        "platformTitle": "Docker, Synology, Kubernetes, and bare metal are all welcome",
         "platformDescription": "Homarr uses capabilities rather than guessing your platform. Detected values are suggestions you can review before anything is created.",
         "status": {
           "checking": "Checking availability…",
@@ -110,14 +115,19 @@
         }
       },
       "connect": {
-        "eyebrow": "03 · Services",
         "title": "Connect what makes the board useful",
         "description": "Select several services at once. Docker labels take priority, image matching fills gaps, and every URL and credential stays reviewable.",
         "search": "Search integrations",
         "widgets": "{count} widgets",
         "detected": "Detected",
+        "discoveredIntegrations": "Detected integration instances ({count})",
+        "detectedIntegrationLabel": "Import {name}, detected as {kind}",
+        "detectedAppLabel": "Import detected app {name}",
+        "otherIntegrations": "Add another integration",
         "discoveredApps": "Additional detected apps ({count})",
         "addressNeeded": "Address needed",
+        "appUrl": "Address for {name}",
+        "appAddressRequired": "Add an HTTP or HTTPS address for {name}, or remove it from the selection.",
         "empty": "No integrations selected. Homarr will still create a useful starter board with general widgets.",
         "dockerSource": "Docker",
         "manualSource": "Manual",
@@ -127,12 +137,9 @@
         "noCredentialsDescription": "This integration does not need credentials.",
         "getApiKey": "Open the API key settings for this service",
         "openGuide": "Open Homarr's setup guide for this service",
-        "ready": "Ready",
-        "validationError": "Complete the URL and required credentials for {name}, or remove it from the selection.",
-        "connectionError": "Homarr could not connect to {name}. Check its URL and credentials; the rest of setup was not discarded."
+        "validationError": "Complete the URL and required credentials for {name}, or remove it from the selection."
       },
       "board": {
-        "eyebrow": "04 · First board",
         "title": "Shape the board before it is built",
         "description": "Homarr creates protected Mobile and Base layouts, then places apps and compatible widgets from the services you selected.",
         "target": "Board to configure",
@@ -144,12 +151,16 @@
         "primaryColor": "Primary color",
         "secondaryColor": "Secondary color",
         "radius": "Widget corner radius",
+        "layoutPreset": "Board width preset",
         "layoutFocused": "Focused",
         "layoutBalanced": "Balanced",
         "layoutWide": "Wide",
         "leftSidebar": "Left sidebar",
         "rightSidebar": "Right sidebar",
         "previewLabel": "Live preview of the first board layout",
+        "previewLayout": "Layout to preview",
+        "previewMobile": "Mobile",
+        "previewBase": "Base",
         "widgetPrimer": "A 30-second Homarr primer",
         "primerAppsTitle": "Apps open things",
         "primerAppsDescription": "App tiles are fast links with icons, status, and optional ping checks.",
@@ -159,9 +170,9 @@
         "primerEditDescription": "Enter edit mode to move, resize, group, or add items independently on Mobile and Base layouts."
       },
       "extend": {
-        "eyebrow": "05 · Power tools",
         "title": "Add intelligence when it helps",
         "description": "Assistant, Workshop, and MCP work together but remain independent. Configure any now or return later.",
+        "tabsLabel": "Assistant, Workshop, and MCP setup",
         "assistant": "Assistant",
         "workshop": "Workshop",
         "mcp": "MCP",
@@ -178,6 +189,8 @@
           "connectHint": "Keys are encrypted and never returned by the API.",
           "model": "Default model",
           "modelPlaceholder": "Connect a provider first",
+          "manualModelPlaceholder": "Enter a model ID",
+          "manualModelDescription": "Model discovery is unavailable. Enter the exact model ID exposed by your provider.",
           "discovering": "Discovering models…",
           "enable": "Enable Assistant",
           "webSearch": "Allow supported web search",
@@ -191,6 +204,7 @@
           "title": "Homarr Workshop",
           "description": "Browse community Custom Widgets, inspect their requested capabilities, install them, and publish your own work without copying code between servers.",
           "available": "Available",
+          "checking": "Checking…",
           "unavailable": "Unavailable",
           "discoverTitle": "Discover",
           "discoverDescription": "Find widgets built for real self-hosted workflows.",
@@ -216,7 +230,6 @@
         }
       },
       "review": {
-        "eyebrow": "06 · Review",
         "title": "One board, built around your services",
         "description": "Homarr tests unsaved connections, imports the selected apps, applies appearance and layouts, then opens the exact board it configured.",
         "appearance": "Language and appearance",
@@ -232,9 +245,7 @@
         "dockerWarningDescription": "{count, plural, one {# selected Docker result could not be applied because its service changed, targeted another board, or its widget was incompatible} other {# selected Docker results could not be applied because services changed, targeted another board, or their widgets were incompatible}}.",
         "errorTitle": "Setup paused safely",
         "progress": {
-          "integration": "Testing and saving {name}",
-          "apps": "Importing selected apps",
-          "board": "Building Mobile and Base layouts",
+          "applying": "Testing connections and building your board",
           "done": "Your board is ready"
         }
       },
@@ -6821,6 +6832,10 @@
             "complete": {
               "title": "Restore Complete",
               "message": "Database has been restored successfully. The server is restarting — please refresh the page in a few seconds."
+            },
+            "timeout": {
+              "title": "Server did not come back online",
+              "message": "The database restore finished, but Homarr did not become ready again. Retry the connection check or refresh this page manually."
             },
             "failed": {
               "title": "Restore Failed"
