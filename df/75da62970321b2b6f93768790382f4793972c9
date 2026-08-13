@@ -1,0 +1,46 @@
+apps/workshop/pb_migrations/1786381200_report_summaries.js
+  s_093d61b162b9ca::t_880a3d1cc98b82 1-24
+apps/nextjs/src/components/workshop/workshop-publish-definition.ts
+  s_093d61b162b9ca::t_f84aac7047f256 6
+apps/nextjs/src/components/workshop/workshop-browser.tsx
+  s_093d61b162b9ca::t_3f8faa3f0e5a8c 46,134,158,373-394,475,480
+apps/nextjs/src/components/workshop/workshop-css-import-button.tsx
+  s_093d61b162b9ca::t_3f8faa3f0e5a8c 3-4,9-16,18-20,24-29,32-57
+packages/workshop/src/schema.ts
+  s_093d61b162b9ca::t_f84aac7047f256 159-160,194-202,232-238
+  s_093d61b162b9ca::t_c089bc19c489a8 239-240
+packages/workshop/src/schema.spec.ts
+  s_093d61b162b9ca::t_88e4deefbf2b1b 60-70
+apps/workshop/README.md
+  s_093d61b162b9ca::t_01ca0d0f5099ae 12-13
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_093d61b162b9ca::t_41a249124aa8ae 38,702,707
+  s_093d61b162b9ca::t_cf6072f1c03985 538
+apps/workshop/tests/workshop.integration.mjs
+  s_093d61b162b9ca::t_01ca0d0f5099ae 31-38,288-304
+apps/nextjs/src/components/workshop/workshop-install-flow.spec.ts
+  s_093d61b162b9ca::t_88e4deefbf2b1b 34-47
+apps/nextjs/src/components/workshop/workshop-publish-definition.spec.ts
+  s_093d61b162b9ca::t_88e4deefbf2b1b 29-34
+packages/workshop/src/backend.ts
+  s_093d61b162b9ca::t_b4d029c5807e77 625-631
+  s_093d61b162b9ca::t_c191894ccfa252 17,32,127-133,149,521-532,624,653-659,740-743,756-757,799-805
+apps/docs/docs/management/workshop/index.mdx
+  s_093d61b162b9ca::t_10860cd529be7c 38,56-58,86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "df75da62970321b2b6f93768790382f4793972c9",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
