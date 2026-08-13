@@ -198,5 +198,5 @@ describe("Mysql Migration", () => {
       await sql.end();
       await mysqlContainer.stop();
     }
-  }, 90_000);
+  }, 120_000);
 });

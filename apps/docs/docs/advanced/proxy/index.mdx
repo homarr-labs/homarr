@@ -9,16 +9,17 @@ tags:
   - Security
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
 ## Allowing self-signed certificates
+
 Some users may come across a barrier, where they're unable to receive a 200 response from the Ping widget for some apps, while using self-signed certificates or a local certificate authory.
 
 :::note What's going on?
 
 Homarr is trying to communicate to your apps via the integrations.
-It usually doesn't matter if Homarr is running on ``http`` or ``https``.
+It usually doesn't matter if Homarr is running on `http` or `https`.
 Your apps have a self-signed certificate - Homarr will recognize that the certificate was signed by an unknown authority and requests will be blocked.
 
 :::
@@ -28,8 +29,9 @@ To allow self-signed certificates, you can configure them on the certificates ma
 ## Securing Homarr with Traefik
 
 Copying the configuration straight from the docker-compose file won't work if you are running Homarr behind Traefik, such as a Portainer setup, or docker-swarm. In that case, you should use the following slightly modified configuration:
+
 ```yaml
-version: '3'
+version: "3"
 services:
   homarr:
     container_name: homarr
@@ -53,11 +55,12 @@ networks:
     external: true
 ```
 
-<br/>
+<br />
 
 A sample Traefik docker-compose.yml using Cloudflare for certificate generation that works with the configuration above would be:
+
 ```yaml
-version: '3'
+version: "3"
 
 apps:
   traefik:
@@ -103,7 +106,6 @@ networks:
     external: true
 ```
 
-
 :::tip
 Of particular note here is that both configurations explicitly define which network they are using, in this case "proxy", but it can be named anything. It just has to be the same across all apps for which Traefik is serving as a proxy. These are marked as external because the proxy network was manually created by running: `docker network create proxy` but this might be unnecessary depending on HOW exactly you are running Traefik. For example, if running [Traefik with Portainer](https://docs.portainer.io/advanced/reverse-proxy/traefik#deploying-in-a-docker-standalone-scenario), you can follow their official docs on how to set up Traefik and Portainer together, and you can just focus on the Homarr docker labels instead.
 :::
@@ -114,7 +116,6 @@ If you are using Caddy as the reverse proxy for your setup, your `docker-compose
 
 ```yaml
 services:
-  
   # <-- [Homarr installation]
 
   caddy:
@@ -140,14 +141,17 @@ networks:
   proxy:
     external: true
 ```
+
 :::important
 Homarr needs to be on the same network so you will need to add the following property to your homarr install:
+
 ```yaml
 homarr:
   ...
   networks:
     - proxy
 ```
+
 :::
 
 Next, create a file named `Caddyfile` at the same level as your `docker-compose.yml` file with the following content:
