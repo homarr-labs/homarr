@@ -63,7 +63,7 @@ describe("Board advanced interactions", () => {
     await stopContainerAsync?.();
   });
 
-  test.skip("opens advanced view from Shift-hover, keyboard, and the widget context menu", async () => {
+  test("opens advanced view from Shift-hover, keyboard, and the widget context menu", async () => {
     const { context, page } = await openBoardAsync(browser, baseUrl, ownerCredentials);
 
     try {
@@ -290,7 +290,7 @@ describe("Board advanced interactions", () => {
     }
   }, 60_000);
 
-  test.skip("keeps advanced controls below the fixed header on short screens", async () => {
+  test("keeps advanced controls below the fixed header on short screens", async () => {
     const { context, page } = await openBoardAsync(browser, baseUrl, ownerCredentials, { width: 1366, height: 768 });
 
     try {
@@ -337,7 +337,7 @@ describe("Board advanced interactions", () => {
     }
   }, 60_000);
 
-  test.skip("keeps read-only advanced viewing", async () => {
+  test("keeps read-only advanced viewing", async () => {
     const { context, page } = await openBoardAsync(browser, baseUrl, viewerCredentials);
 
     try {
