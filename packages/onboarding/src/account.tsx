@@ -91,7 +91,6 @@ const CredentialsSetup = () => {
       if (didCredentialsSignInFail(result)) throw new Error();
     } catch {
       setRequiresSignIn(true);
-      await revalidatePathActionAsync("/init").catch(() => undefined);
       return;
     }
 

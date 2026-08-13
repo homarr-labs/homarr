@@ -115,7 +115,13 @@ describe("Management collections", () => {
       await page.goto(`${baseUrl}/manage/integrations`);
       await page.getByRole("heading", { name: "Integrations", exact: true }).waitFor();
       expect(await page.getByRole("list", { name: "Configured integrations" }).getByRole("listitem").count()).toBe(1);
-      expect(await page.getByText("Sonarr", { exact: true }).isVisible()).toBe(true);
+      expect(
+        await page
+          .getByRole("list", { name: "Configured integrations" })
+          .getByRole("listitem")
+          .getByText("Sonarr", { exact: true })
+          .isVisible(),
+      ).toBe(true);
 
       await page.goto(`${baseUrl}/manage/search-engines`);
       await page.getByRole("heading", { name: "Search engines", exact: true }).waitFor();
@@ -131,7 +137,7 @@ describe("Management collections", () => {
       await page.setViewportSize({ width: 375, height: 812 });
       for (const route of ["apps", "integrations", "search-engines", "boards"]) {
         await page.goto(`${baseUrl}/manage/${route}`);
-        await page.locator("h1").waitFor();
+        await page.locator("h1:visible").last().waitFor();
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
       }
       await captureScreenshotAsync(page, "mobile-boards");
