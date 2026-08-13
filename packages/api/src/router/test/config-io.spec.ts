@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
+import { stringify } from "superjson";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
@@ -15,11 +16,13 @@ import {
   integrationSecrets,
   layouts,
   searchEngines,
+  serverSettings,
   sections,
   users,
 } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
+import { defaultServerSettings } from "@homarr/server-settings";
 
 import { boardRouter } from "../board";
 import { configRouter } from "../config/config-router";
@@ -364,6 +367,21 @@ describe("config export and import", () => {
 
     await expect(
       createConfigCaller(db).import({ version: 1, settings: { board: { homeBoardId: boardId } } }),
+    ).rejects.toThrow("must reference public boards");
+  });
+
+  test("should reject replacing the configured home board with a private board", async () => {
+    const source = await createSourceInstanceAsync();
+    const document = await createConfigCaller(source.db).export();
+    const db = await createTargetInstanceAsync();
+    await db.insert(boards).values({ id: source.boardId, name: "homelab", isPublic: true });
+    await db.insert(serverSettings).values({
+      settingKey: "board",
+      value: stringify({ ...defaultServerSettings.board, homeBoardId: source.boardId }),
+    });
+
+    await expect(
+      createConfigCaller(db).import({ ...document, settings: undefined, onConflict: "replace" }),
     ).rejects.toThrow("must reference public boards");
   });
 

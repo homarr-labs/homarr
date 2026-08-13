@@ -172,15 +172,15 @@ export const importConfigDocumentAsync = async (
   document: ConfigImportDocument,
   creatorId: string,
 ): Promise<{ created: Record<string, number>; updated: Record<string, number> }> => {
-  const [existingApps, existingIntegrations, existingSearchEngines, existingGroups, existingBoards] = await Promise.all(
-    [
+  const [existingApps, existingIntegrations, existingSearchEngines, existingGroups, existingBoards, currentSettings] =
+    await Promise.all([
       db.query.apps.findMany({ columns: { id: true } }),
       db.query.integrations.findMany({ columns: { id: true } }),
       db.query.searchEngines.findMany({ columns: { id: true, short: true } }),
       db.query.groups.findMany({ columns: { id: true, name: true } }),
       db.query.boards.findMany({ columns: { id: true, name: true, isPublic: true } }),
-    ],
-  );
+      getServerSettingsAsync(db),
+    ]);
 
   const appMatches = matchEntities(document.apps, existingApps);
   const integrationMatches = matchEntities(document.integrations, existingIntegrations);
@@ -253,9 +253,10 @@ export const importConfigDocumentAsync = async (
     else publicBoardIds.delete(match.effectiveId);
   }
 
+  const finalBoardSettings = { ...currentSettings.board, ...document.settings?.board };
   const configuredHomeBoardIds = [
-    referencedBoardId(document.settings?.board?.homeBoardId),
-    referencedBoardId(document.settings?.board?.mobileHomeBoardId),
+    referencedBoardId(finalBoardSettings.homeBoardId),
+    referencedBoardId(finalBoardSettings.mobileHomeBoardId),
   ].filter((id) => id !== null);
   const invalidHomeBoardIds = configuredHomeBoardIds.filter((id) => !publicBoardIds.has(id));
   if (invalidHomeBoardIds.length > 0) {
@@ -500,7 +501,6 @@ export const importConfigDocumentAsync = async (
 
   // Server settings have no identity of their own, so they are always merged
   if (document.settings) {
-    const currentSettings = await getServerSettingsAsync(db);
     const existingKeys = new Set(
       (await db.query.serverSettings.findMany({ columns: { settingKey: true } })).map(({ settingKey }) => settingKey),
     );
