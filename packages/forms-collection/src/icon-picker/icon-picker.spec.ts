@@ -113,6 +113,7 @@ const advanceDebounce = async () => {
 describe("IconPicker", () => {
   let container: HTMLDivElement;
   let root: Root;
+  let rerenderPicker: () => Promise<void>;
 
   beforeAll(() => {
     Object.defineProperty(globalThis, "IS_REACT_ACT_ENVIRONMENT", { value: true, writable: true });
@@ -157,9 +158,12 @@ describe("IconPicker", () => {
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
-    await act(async () => {
-      root.render(createElement(MantineProvider, null, createElement(IconPicker, { value: "", onChange, ...props })));
-    });
+    rerenderPicker = async () => {
+      await act(async () => {
+        root.render(createElement(MantineProvider, null, createElement(IconPicker, { value: "", onChange, ...props })));
+      });
+    };
+    await rerenderPicker();
     const input = container.querySelector("input");
     if (!input) throw new Error("Icon picker input was not rendered");
     return input;
@@ -317,6 +321,33 @@ describe("IconPicker", () => {
     await act(async () => option.click());
 
     expect(onChange).toHaveBeenCalledWith("https://app.example.com/favicon.ico");
+  });
+
+  test("keeps the keyboard selection on the same image when the website icon arrives later", async () => {
+    queryResult = { data: { icons: iconGroups, countIcons: 3 }, isLoading: false, isFetching: false, isError: false };
+    const onChange = vi.fn();
+    const input = await renderPicker(onChange, { faviconSourceUrl: "https://app.example.com" });
+    await focusInput(input);
+
+    await act(async () => pressKey(input, "ArrowDown"));
+    expect(document.body.querySelector("[data-combobox-selected]")?.getAttribute("value")).toBe(
+      "/api/user-medias/local-icon",
+    );
+
+    // The detection answers only after the user already navigated, which puts the website
+    // icon in front of the library images and moves every one of them one position down.
+    faviconResult = { data: { url: "https://app.example.com/favicon.ico" } };
+    await rerenderPicker();
+
+    expect(document.body.textContent).toContain("iconPicker.websiteIcon");
+    expect(document.body.querySelector("[data-combobox-selected]")?.getAttribute("value")).toBe(
+      "/api/user-medias/local-icon",
+    );
+
+    await act(async () => pressKey(input, "Enter"));
+
+    expect(onChange).toHaveBeenCalledWith("/api/user-medias/local-icon");
+    expect(onChange).not.toHaveBeenCalledWith("https://app.example.com/favicon.ico");
   });
 
   test("detects the website icon only while the dropdown is open", async () => {
