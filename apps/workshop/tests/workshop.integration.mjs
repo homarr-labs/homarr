@@ -178,6 +178,12 @@ if (
 ) {
   throw new Error(`Unexpected initial Homarr provider allowance: ${JSON.stringify(initialUsage)}`);
 }
+const forgedDateUsage = await request("/api/ai/usage", {
+  headers: { ...authorSession.headers, date: "Thu, 01 Jan 2099 00:00:00 GMT" },
+});
+if (forgedDateUsage.resetsAt !== initialUsage.resetsAt || forgedDateUsage.remaining !== initialUsage.remaining) {
+  throw new Error(`A client-controlled date changed the server allowance: ${JSON.stringify(forgedDateUsage)}`);
+}
 
 await expectStatus(
   "/api/ai/v1/chat/completions",
