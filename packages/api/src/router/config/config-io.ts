@@ -178,7 +178,7 @@ export const importConfigDocumentAsync = async (
       db.query.integrations.findMany({ columns: { id: true } }),
       db.query.searchEngines.findMany({ columns: { id: true, short: true } }),
       db.query.groups.findMany({ columns: { id: true, name: true } }),
-      db.query.boards.findMany({ columns: { id: true, name: true } }),
+      db.query.boards.findMany({ columns: { id: true, name: true, isPublic: true } }),
     ],
   );
 
@@ -203,6 +203,7 @@ export const importConfigDocumentAsync = async (
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const matchOf = (matches: Map<string, EntityMatch>, id: string) => matches.get(id)!;
   const effectiveId = (matches: Map<string, EntityMatch>, id: string) => matchOf(matches, id).effectiveId;
+  const replaces = document.onConflict === "replace";
 
   if (document.onConflict === "fail") {
     throwOnConflicts([
@@ -243,6 +244,27 @@ export const importConfigDocumentAsync = async (
   const referencedSearchEngineId = (searchEngineId: string | null | undefined) =>
     followMatch(searchEngineMatches, searchEngineId);
 
+  const publicBoardIds = new Set(existingBoards.filter((board) => board.isPublic).map((board) => board.id));
+  for (const board of document.boards) {
+    const match = matchOf(boardMatches, board.id);
+    if (match.exists && !replaces) continue;
+
+    if (board.isPublic) publicBoardIds.add(match.effectiveId);
+    else publicBoardIds.delete(match.effectiveId);
+  }
+
+  const configuredHomeBoardIds = [
+    referencedBoardId(document.settings?.board?.homeBoardId),
+    referencedBoardId(document.settings?.board?.mobileHomeBoardId),
+  ].filter((id) => id !== null);
+  const invalidHomeBoardIds = configuredHomeBoardIds.filter((id) => !publicBoardIds.has(id));
+  if (invalidHomeBoardIds.length > 0) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: `Board settings home board IDs must reference public boards: ${invalidHomeBoardIds.join(", ")}`,
+    });
+  }
+
   throwOnMissingReferences([
     ...document.integrations
       .filter((integration) => integration.appId !== null && !knownAppIds.has(integration.appId))
@@ -269,7 +291,6 @@ export const importConfigDocumentAsync = async (
       .map(({ board, groupId }) => `group '${groupId}' with access to board '${board.name}'`),
   ]);
 
-  const replaces = document.onConflict === "replace";
   const operations: DbOperation[] = [];
   const created: Record<string, number> = {};
   const updated: Record<string, number> = {};

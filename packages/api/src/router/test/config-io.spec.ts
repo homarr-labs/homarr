@@ -357,6 +357,16 @@ describe("config export and import", () => {
     expect(settings.settings.appearance).toMatchObject({ defaultColorScheme: "dark" });
   });
 
+  test("should reject a private global home board", async () => {
+    const db = await createTargetInstanceAsync();
+    const boardId = createId();
+    await db.insert(boards).values({ id: boardId, name: "private", isPublic: false });
+
+    await expect(
+      createConfigCaller(db).import({ version: 1, settings: { board: { homeBoardId: boardId } } }),
+    ).rejects.toThrow("must reference public boards");
+  });
+
   test("should reject unknown or invalid server settings", async () => {
     const db = await createTargetInstanceAsync();
     const caller = createConfigCaller(db);

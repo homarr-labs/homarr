@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
 import {
   getServerSettingByKeyAsync,
@@ -18,6 +19,29 @@ import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 const boardServerSettingsSchema = serverSettingSchemas.board;
 
 const boardServerSettingsUpdateSchema = boardServerSettingsSchema.partial();
+
+const validateBoardHomeIdsAsync = async (
+  db: Database,
+  input: { homeBoardId?: string | null; mobileHomeBoardId?: string | null },
+) => {
+  const inputBoardIds = [input.homeBoardId, input.mobileHomeBoardId].filter((id) => id !== undefined && id !== null);
+
+  if (inputBoardIds.length === 0) return;
+
+  const publicBoards = await db.query.boards.findMany({
+    columns: { id: true },
+    where: and(inArray(boards.id, inputBoardIds), eq(boards.isPublic, true)),
+  });
+  const publicBoardIds = new Set(publicBoards.map((board) => board.id));
+  const invalidBoardIds = inputBoardIds.filter((id) => !publicBoardIds.has(id));
+
+  if (invalidBoardIds.length > 0) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: `Board settings home board IDs must reference public boards: ${invalidBoardIds.join(", ")}`,
+    });
+  }
+};
 
 export const serverSettingsRouter = createTRPCRouter({
   getCulture: publicProcedure.query(async ({ ctx }) => {
@@ -66,24 +90,7 @@ export const serverSettingsRouter = createTRPCRouter({
     .input(boardServerSettingsUpdateSchema)
     .output(boardServerSettingsSchema)
     .mutation(async ({ ctx, input }) => {
-      const inputBoardIds = [input.homeBoardId, input.mobileHomeBoardId].filter(
-        (id) => id !== undefined && id !== null,
-      );
-
-      if (inputBoardIds.length > 0) {
-        const publicBoards = await ctx.db.query.boards.findMany({
-          columns: { id: true },
-          where: and(inArray(boards.id, inputBoardIds), eq(boards.isPublic, true)),
-        });
-        const publicBoardIds = new Set(publicBoards.map((board) => board.id));
-        const invalidBoardIds = inputBoardIds.filter((id) => !publicBoardIds.has(id));
-        if (invalidBoardIds.length > 0) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: `Board settings home board IDs must reference public boards: ${invalidBoardIds.join(", ")}`,
-          });
-        }
-      }
+      await validateBoardHomeIdsAsync(ctx.db, input);
 
       const current = await getServerSettingByKeyAsync(ctx.db, "board");
       const next = { ...current, ...input };
@@ -119,6 +126,11 @@ export const serverSettingsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
       const value = serverSettingSchemas[input.settingsKey].partial().parse(input.value);
+
+      if (input.settingsKey === "board") {
+        await validateBoardHomeIdsAsync(ctx.db, boardServerSettingsUpdateSchema.parse(value));
+      }
+
       await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {
         ...current,
         ...value,

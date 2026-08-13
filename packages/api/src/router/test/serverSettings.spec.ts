@@ -98,6 +98,17 @@ describe("saveSettings", () => {
       caller.saveSettings({ settingsKey: "appearance", value: { enableGeneral: true } }),
     ).rejects.toThrowError("Unrecognized key");
   });
+
+  test("saveSettings should reject a private home board", async () => {
+    const db = createDb();
+    const caller = serverSettingsRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const boardId = createId();
+    await db.insert(boards).values({ id: boardId, name: "private", isPublic: false });
+
+    await expect(caller.saveSettings({ settingsKey: "board", value: { homeBoardId: boardId } })).rejects.toThrow(
+      "must reference public boards",
+    );
+  });
 });
 
 describe("board settings API", () => {
