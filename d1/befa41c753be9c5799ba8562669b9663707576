@@ -1,0 +1,21 @@
+packages/api/src/router/test/onboard.spec.ts
+  s_06f8fd8d11bc0e::t_0643021cc46d7b 155-186
+packages/onboarding/src/setup-studio.tsx
+  s_06f8fd8d11bc0e::t_9451b1351d5084 1310-1329,1332,1338
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "d1befa41c753be9c5799ba8562669b9663707576",
+  "prompts": {},
+  "sessions": {
+    "s_06f8fd8d11bc0e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffc43-219d-71d3-99c9-a8969fe772c8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
