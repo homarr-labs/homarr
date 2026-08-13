@@ -5,9 +5,9 @@ import Layout from "@theme/Layout";
 import HomepageFeatures from "../components/pages/home/features/features";
 import HomepageUserReviews from "../components/pages/home/review-list/review-list";
 import HomeHero from "../components/pages/home/hero/hero";
+import { DataflowVisualizationComponent } from "../components/pages/home/dataflow/dataflow";
 
 import styles from "./index.module.css";
-import BrowserOnly from "@docusaurus/BrowserOnly";
 import { SectionContainer } from "@site/src/components/pages/home/container/section-container";
 import { DragAndDropShowcase } from "@site/src/components/pages/home/drag-and-drop/drag-and-drop-showcase";
 import { AvailableIntegrations } from "@site/src/components/pages/home/integrations/available-integrations";
@@ -32,13 +32,7 @@ export default function Home() {
       <SectionContainer>
         <HomepageFeatures />
       </SectionContainer>
-      <BrowserOnly fallback={<span>loading...</span>}>
-        {() => {
-          const DataflowVisualizationComponent =
-            require("../components/pages/home/dataflow/dataflow").DataflowVisualizationComponent;
-          return <DataflowVisualizationComponent />;
-        }}
-      </BrowserOnly>
+      <DataflowVisualizationComponent />
       <DragAndDropShowcase />
       <AvailableIntegrations />
       <SectionContainer>

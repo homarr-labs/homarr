@@ -1,147 +1,86 @@
-import React, { useRef } from "react";
+import styles from "../../../../pages/index.module.css";
+import { supportedIntegrations } from "../../../../constants/supported-integrations";
 
-import LeaderLine, { SocketType } from "leader-line-new";
+const featuredIntegrations = [
+  { name: "Radarr", position: styles.dataflowNodeTopLeft },
+  { name: "Sonarr", position: styles.dataflowNodeMiddleLeft },
+  { name: "Lidarr", position: styles.dataflowNodeBottomLeft },
+  { name: "SABnzbd", position: styles.dataflowNodeTopRight },
+  { name: "Jellyfin", position: styles.dataflowNodeMiddleRight },
+].map((node) => ({
+  ...node,
+  image: supportedIntegrations.find((integration) => integration.name === node.name)?.iconUrl ?? "",
+}));
 
-export const DataflowVisualizationComponent = () => {
-  const homarrRef = useRef<HTMLImageElement>(null);
-  const sonarrRef = useRef<HTMLImageElement>(null);
-  const lidarrRef = useRef<HTMLImageElement>(null);
-  const radarrRef = useRef<HTMLImageElement>(null);
-  const jellyfinRef = useRef<HTMLImageElement>(null);
-  const plexRef = useRef<HTMLImageElement>(null);
-  const sabnzbdRef = useRef<HTMLImageElement>(null);
+const featuredNames = new Set(["Homarr", ...featuredIntegrations.map((integration) => integration.name)]);
+const otherIntegrations = supportedIntegrations.filter((integration) => !featuredNames.has(integration.name));
+const iconCycleStepInSeconds = 1.4;
 
-  return (
-    <div className={"bg-black/[.10] py-20"}>
-      <h2 className={"text-center lg:text-5xl text-3xl font-extrabold mb-24"}>
+const paths = [
+  "M145 82 C330 82 330 235 480 260",
+  "M145 260 C300 260 360 260 480 260",
+  "M145 438 C330 438 330 285 480 260",
+  "M480 260 C630 235 630 82 815 82",
+  "M480 260 C600 260 660 260 815 260",
+  "M480 260 C630 285 630 438 815 438",
+];
+
+export const DataflowVisualizationComponent = () => (
+  <section className={styles.dataflowSection}>
+    <div className={styles.dataflowHeading}>
+      <h2>
         No YAML configurations.
         <br />
         Easy and quick to manage integrations.
       </h2>
+      <p>Homarr brings status, controls, and updates together in one dashboard.</p>
+    </div>
 
-      <div className="relative max-w-128 h-80 mx-auto animated-dataflow mx-5">
-        <img
-          ref={homarrRef}
-          className={"absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 aspect-square object-contain"}
-          src={"/img/logo.png"}
-          alt={"Homarr Logo"}
-          width={100}
-          height={50}
-        />
+    <div
+      className={styles.dataflowDiagram}
+      role="img"
+      aria-label="Information flowing both ways between Homarr and six connected services"
+    >
+      <svg className={styles.dataflowLines} viewBox="0 0 960 520" preserveAspectRatio="none" aria-hidden="true">
+        {paths.map((path) => (
+          <g key={path}>
+            <path className={styles.dataflowLine} d={path} pathLength="1" />
+            <path className={styles.dataflowSignal} d={path} pathLength="1" />
+            <path className={styles.dataflowSignalReverse} d={path} pathLength="1" />
+          </g>
+        ))}
+      </svg>
 
-        <img
-          ref={radarrRef}
-          className={"absolute left-0 top-0"}
-          src={"https://github.com/walkxcode/dashboard-icons/blob/main/png/radarr.png?raw=true"}
-          alt={"Radarr"}
-          width={50}
-          height={50}
-        />
-        <img
-          ref={sonarrRef}
-          className={"absolute left-0 top-1/2 -translate-y-1/2"}
-          src={"https://github.com/walkxcode/dashboard-icons/blob/main/png/sonarr.png?raw=true"}
-          alt={"Sonarr"}
-          width={50}
-          height={50}
-        />
-        <img
-          ref={lidarrRef}
-          className={"absolute left-0 bottom-0"}
-          src={"https://github.com/walkxcode/dashboard-icons/blob/main/png/lidarr.png?raw=true"}
-          alt={"Lidarr"}
-          width={50}
-          height={50}
-        />
+      {featuredIntegrations.map((integration) => (
+        <div className={`${styles.dataflowNode} ${integration.position}`} key={integration.name}>
+          <img src={integration.image} alt="" width={54} height={54} />
+          <span>{integration.name}</span>
+        </div>
+      ))}
 
-        <img
-          ref={jellyfinRef}
-          className={"absolute right-0 top-1/2 -translate-y-1/2"}
-          src={"https://github.com/walkxcode/dashboard-icons/blob/main/png/jellyfin.png?raw=true"}
-          alt={"Jellyfin"}
-          width={50}
-          height={50}
-        />
+      <div className={`${styles.dataflowNode} ${styles.dataflowNodeBottomRight}`}>
+        <div className={styles.dataflowMoreIcons} aria-hidden="true">
+          {otherIntegrations.map((integration, index) => (
+            <img
+              src={integration.iconUrl}
+              alt=""
+              width={54}
+              height={54}
+              key={integration.name}
+              style={{
+                animationDelay: `${-index * iconCycleStepInSeconds}s`,
+                animationDuration: `${otherIntegrations.length * iconCycleStepInSeconds}s`,
+              }}
+            />
+          ))}
+        </div>
+        <span>+{otherIntegrations.length} more</span>
+      </div>
 
-        <img
-          ref={plexRef}
-          className={"absolute right-0 bottom-0"}
-          src={"https://github.com/walkxcode/dashboard-icons/blob/main/png/plex.png?raw=true"}
-          alt={"Plex"}
-          width={50}
-          height={50}
-        />
-
-        <img
-          ref={sabnzbdRef}
-          className={"absolute right-0 top-0"}
-          src={"https://github.com/walkxcode/dashboard-icons/blob/main/png/sabnzbd.png?raw=true"}
-          alt={"Sabnzbd"}
-          width={50}
-          height={50}
-        />
-
-        <LineTree start={sonarrRef} end={homarrRef} startSocket={"right"} endSocket={"left"} />
-        <LineTree start={radarrRef} end={homarrRef} startSocket={"right"} endSocket={"left"} />
-        <LineTree start={lidarrRef} end={homarrRef} startSocket={"right"} endSocket={"left"} />
-        <LineTree start={plexRef} end={homarrRef} startSocket={"left"} endSocket={"right"} x={100} />
-        <LineTree start={jellyfinRef} end={homarrRef} startSocket={"left"} endSocket={"right"} x={100} />
-        <LineTree start={sabnzbdRef} end={homarrRef} startSocket={"left"} endSocket={"right"} x={100} />
+      <div className={`${styles.dataflowNode} ${styles.dataflowHub}`}>
+        <img src="/img/logo.png" alt="" width={86} height={86} />
+        <span>Homarr</span>
       </div>
     </div>
-  );
-};
-
-export const LineTree = ({
-  start,
-  end,
-  startSocket,
-  endSocket,
-  x = 0,
-}: {
-  start: any;
-  end: any;
-  startSocket: SocketType;
-  endSocket: SocketType;
-  x?: number;
-}) => {
-  const line = useRef<LeaderLine | null>(null);
-  let leaderLine: LeaderLine;
-
-  React.useEffect(() => {
-    const drawLine = () => {
-      leaderLine = new LeaderLine(start.current, LeaderLine.pointAnchor(end.current, { x: `${x}%` }), {
-        startSocket: startSocket,
-        endSocket: endSocket,
-        color: "var(--ifm-color-primary)",
-        size: 3,
-        dash: {
-          animation: true,
-        },
-      });
-    };
-    const timer = setInterval(() => {
-      if (start.current) {
-        clearInterval(timer);
-        drawLine();
-      }
-    }, 5);
-    return () => {
-      timer && clearInterval(timer);
-      leaderLine.remove();
-    };
-  }, []);
-
-  React.useEffect(() => {
-    // scroll and resize listeners could be assigned here
-    setTimeout(() => {
-      // skip current even loop and wait
-      // the end of parent's render call
-      if (line.current && end?.current) {
-        (line.current as any).position();
-      }
-    }, 0);
-  });
-
-  return null;
-};
+  </section>
+);
