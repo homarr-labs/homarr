@@ -1,0 +1,369 @@
+packages/widgets/src/coolify/instance-card.tsx
+  s_bc3b2ff5afd321::t_f7e03e7e7d860c 3-4,12,22,27-28,39,47-48,81,83-101,142-143,151,160-165
+apps/docs/docs/widgets/dns-hole-controls/index.mdx
+  s_bc3b2ff5afd321::t_aa2ea22ae02ac5 23-25
+apps/docs/docs/widgets/beszel-alerts/index.mdx
+  s_bc3b2ff5afd321::t_aa2ea22ae02ac5 37-39
+apps/docs/docs/widgets/archive-team-warrior/index.mdx
+  s_bc3b2ff5afd321::t_aa2ea22ae02ac5 17
+apps/docs/docs/widgets/beszel-system-grid/index.mdx
+  s_bc3b2ff5afd321::t_aa2ea22ae02ac5 7-8,40-42
+packages/widgets/src/app/component.tsx
+  s_bc3b2ff5afd321::t_f7e03e7e7d860c 119-122
+apps/docs/docs/widgets/beszel-system-table/index.mdx
+  s_bc3b2ff5afd321::t_aa2ea22ae02ac5 7-8,41-43
+apps/docs/docs/widgets/immich-album-carousel/index.mdx
+  s_bc3b2ff5afd321::t_aa2ea22ae02ac5 36
+apps/docs/docs/widgets/whats-up-docker/index.mdx
+  s_bc3b2ff5afd321::t_aa2ea22ae02ac5 30-32
+packages/widgets/src/coolify/single-instance-layout.tsx
+  s_bc3b2ff5afd321::t_f7e03e7e7d860c 3,22,27-35,44,63-81,89-90,98,107-112
+packages/widgets/src/notebook/notebook.tsx
+  s_bc3b2ff5afd321::t_f7e03e7e7d860c 73,102,344-350,387-389,517,533
+packages/widgets/src/wud/component.tsx
+  s_bc3b2ff5afd321::t_f7e03e7e7d860c 14-15,19,22-29,36,41,44,47,54-56,89,118-123,143,148,202,223,226,228
+apps/docs/docs/widgets/anchor-note/index.mdx
+  s_bc3b2ff5afd321::t_a0b4236f7f4a25 20-21
+apps/docs/docs/widgets/bazarr/index.mdx
+  s_bc3b2ff5afd321::t_bc4173d1af4819 39-41
+apps/docs/docs/widgets/bookmarks/index.mdx
+  s_bc3b2ff5afd321::t_acdb56a1a8fc15 19
+apps/docs/docs/widgets/calendar/index.mdx
+  s_bc3b2ff5afd321::t_a063bdcb4aa62b 73
+apps/docs/docs/widgets/clock/index.mdx
+  s_bc3b2ff5afd321::t_d4fb9f7e9f3135 18-19
+apps/docs/docs/widgets/coolify/index.mdx
+  s_bc3b2ff5afd321::t_26740fd4d98f38 30-34
+apps/docs/docs/widgets/dns-hole-summary/index.mdx
+  s_bc3b2ff5afd321::t_949e805f0d263e 20-21
+apps/docs/docs/widgets/health-monitoring/index.mdx
+  s_bc3b2ff5afd321::t_4701487c6ec5fd 26-27
+apps/docs/docs/widgets/indexer-manager/index.mdx
+  s_bc3b2ff5afd321::t_f822485194964e 42-44
+apps/docs/docs/widgets/media-missing/index.mdx
+  s_bc3b2ff5afd321::t_825eca7d89ff16 21-22
+apps/docs/docs/widgets/media-releases/index.mdx
+  s_bc3b2ff5afd321::t_a193bc117e7a7a 22-25
+apps/docs/docs/widgets/media-server/index.mdx
+  s_bc3b2ff5afd321::t_6cf6f770bb65a7 27
+apps/docs/docs/widgets/media-transcoding/index.mdx
+  s_bc3b2ff5afd321::t_c383be5c1b0ed4 23
+apps/docs/docs/widgets/network-controller-status/index.mdx
+  s_bc3b2ff5afd321::t_6ed241c1d5c72a 23-24
+apps/docs/docs/widgets/network-controller-summary/index.mdx
+  s_bc3b2ff5afd321::t_f9d8aced9314dc 39-41
+apps/docs/docs/widgets/notebook/index.mdx
+  s_bc3b2ff5afd321::t_eac4a43c0cf24b 29,49-52
+apps/docs/docs/widgets/notebook/index.ts
+  s_bc3b2ff5afd321::t_ce67f86d93ca0f 13-14
+apps/docs/docs/widgets/notifications/index.mdx
+  s_bc3b2ff5afd321::t_c73b958b3fbba5 37-39
+apps/docs/docs/widgets/patchmon/index.mdx
+  s_bc3b2ff5afd321::t_c0dd7f0e0ea6bc 75-78,90
+apps/docs/docs/widgets/releases/index.mdx
+  s_bc3b2ff5afd321::t_0769e7a6b8bba3 38-40
+apps/docs/docs/widgets/rss-feed/index.mdx
+  s_bc3b2ff5afd321::t_a5b5e7394ce766 24-26
+apps/docs/docs/widgets/smart-home-entity-state/index.mdx
+  s_bc3b2ff5afd321::t_acb6ace7f4fe26 25-26
+apps/docs/docs/widgets/smart-home-execute-automation/index.mdx
+  s_bc3b2ff5afd321::t_0425a4680234ea 23-24
+apps/docs/docs/widgets/speedtest-tracker/index.mdx
+  s_bc3b2ff5afd321::t_8c6bcf677baced 21-24
+apps/docs/docs/widgets/stock-price/index.mdx
+  s_bc3b2ff5afd321::t_e27d7e9d8c0012 19-20,39
+apps/docs/docs/widgets/system-disks/index.mdx
+  s_bc3b2ff5afd321::t_039c8da43a174b 47-49
+apps/docs/docs/widgets/tracearr/index.mdx
+  s_bc3b2ff5afd321::t_349b62deb460f2 20-21
+apps/docs/docs/widgets/traefik/index.mdx
+  s_bc3b2ff5afd321::t_9b1a44efb2a3ba 20-23
+apps/docs/docs/widgets/ups/index.mdx
+  s_bc3b2ff5afd321::t_a30fe20af64278 22-25
+apps/docs/docs/widgets/uptime-kuma/index.mdx
+  s_bc3b2ff5afd321::t_94965f4c40f7b2 20-23
+packages/api/src/router/docker/docker-operation-results.ts
+  s_bc3b2ff5afd321::t_b639c1dcbc0e4d 1-10
+packages/api/src/router/docker/docker-router.ts
+  s_bc3b2ff5afd321::t_bf6a6b49911281 15,49,55,68,74,88,94,108,114
+packages/api/src/router/test/docker/docker-operation-results.spec.ts
+  s_bc3b2ff5afd321::t_476d81ed18ffc7 1-26
+packages/api/src/router/test/docker/docker-router.spec.ts
+  s_bc3b2ff5afd321::t_502c8ba608e20e 15-31
+packages/api/src/router/test/widgets/partial-integration-failures.spec.ts
+  s_bc3b2ff5afd321::t_2f4fd32875aefa 11-19,23-24,27,32,34-38,64-122,157-238,285,292,308-357,398-521
+packages/api/src/router/widgets/__tests__/media-release-result.spec.ts
+  s_bc3b2ff5afd321::t_ab7f53d4fb9b95 1-68
+packages/api/src/router/widgets/coolify.ts
+  s_bc3b2ff5afd321::t_8221033b6b340d 1,5,8-16,21-25,27-46
+packages/api/src/router/widgets/dns-hole.ts
+  s_bc3b2ff5afd321::t_90f74dfd41a201 3,6,10,13-25,37-58
+packages/api/src/router/widgets/downloads.ts
+  s_bc3b2ff5afd321::t_19a644c8318d70 3,5,11,17-44,57-79
+packages/api/src/router/widgets/health-monitoring.ts
+  s_bc3b2ff5afd321::t_2583f7dedbeb57 2,7,20-27,39-59
+packages/api/src/router/widgets/media-release-result.ts
+  s_bc3b2ff5afd321::t_24237a4009bbbc 1-61
+packages/api/src/router/widgets/media-release.ts
+  s_bc3b2ff5afd321::t_7e35168da94ecd 6,12,18
+packages/api/src/router/widgets/network-controller.ts
+  s_bc3b2ff5afd321::t_00960693f23fd7 1,3,7,10-22,27-31,33-51
+packages/api/src/router/widgets/speedtest-tracker.ts
+  s_bc3b2ff5afd321::t_2eefea8ebd7ecc 4,11-15,17-37
+packages/api/src/router/widgets/tracearr.ts
+  s_bc3b2ff5afd321::t_1588f2287acbbc 4,9-13,15-35
+packages/api/src/router/widgets/traefik.ts
+  s_bc3b2ff5afd321::t_7713ac3bace11b 4,18-22,24-44
+packages/api/src/router/widgets/ups.ts
+  s_bc3b2ff5afd321::t_46e64307bf3c8c 5,12-16,18-38
+packages/api/src/router/widgets/uptime-kuma.ts
+  s_bc3b2ff5afd321::t_7938963a6923ea 4,11-15,17-37
+packages/spotlight/src/components/actions/items/children-action-item.tsx
+  s_bc3b2ff5afd321::t_ac96aec4fe5d4e 3,19
+packages/spotlight/src/components/actions/items/group-action-item.tsx
+  s_bc3b2ff5afd321::t_ac2b8e9eb165ce 3,35
+packages/translation/src/lang/en.json
+  s_bc3b2ff5afd321::t_13f2b3591aec4d 2816-2821,3224,3253-3255,3268-3275,3464-3468,3526-3529,3648-3654,3673-3677,4213-4215,4814-4823,4842-4844,4976-4977,5192-5194,5315-5320,5381-5388
+packages/widgets/src/advanced-focus-support.spec.ts
+  s_bc3b2ff5afd321::t_bec3d82e9c61d7 10-13,17,23,29-34,38-39,48
+packages/widgets/src/anchor-note/component.tsx
+  s_bc3b2ff5afd321::t_2fb90f57fdb47b 17,205,207,239-254,256-272
+packages/widgets/src/archive-team-warrior/component.tsx
+  s_bc3b2ff5afd321::t_6ca24210a1312b 11,52,75-80,83,85,113-134,137-141,154-158
+packages/widgets/src/archive-team-warrior/layout.spec.ts
+  s_bc3b2ff5afd321::t_00ccc98935d87d 23-30
+packages/widgets/src/audio-stats/audio-stats-content.tsx
+  s_bc3b2ff5afd321::t_29c032dc7f10d9 39,44-51,54
+packages/widgets/src/audio-stats/audio-stats-shared.spec.ts
+  s_bc3b2ff5afd321::t_5f58ebe249ebf8 99-113
+packages/widgets/src/audio-stats/component.tsx
+  s_bc3b2ff5afd321::t_29646882fefa2b 3,9,13,26,50,55-64,75,77-78
+packages/widgets/src/audio-stats/shared.ts
+  s_bc3b2ff5afd321::t_05f92154a457fe 136,143
+packages/widgets/src/bazarr/component.module.css
+  s_bc3b2ff5afd321::t_56d381a36660dc 72-73
+packages/widgets/src/bazarr/component.tsx
+  s_bc3b2ff5afd321::t_e4a666105429a2 5,14-32,39-41,56-62,77-80,82,109-112,117-119,131-138
+packages/widgets/src/bazarr/index.ts
+  s_bc3b2ff5afd321::t_3874c384ed4df7 7
+packages/widgets/src/bazarr/layout.spec.ts
+  s_bc3b2ff5afd321::t_10661cee8a0220 3,18-31
+packages/widgets/src/beszel-alerts/component.tsx
+  s_bc3b2ff5afd321::t_954e27a5a007fb 19,31-34,58-59,62,64-70,73-79,82-83,86-94,99-109,113-115,128-131,156,160-161,181,185-186,205-206,210,224,253,279,299
+packages/widgets/src/beszel-alerts/display.spec.ts
+  s_bc3b2ff5afd321::t_842147c9b2a99e 1-26
+packages/widgets/src/beszel-alerts/display.ts
+  s_bc3b2ff5afd321::t_f474880ae0f762 1-22
+packages/widgets/src/beszel-alerts/index.ts
+  s_bc3b2ff5afd321::t_efd75bf72688ae 4,9,11-15,19-20
+packages/widgets/src/beszel-alerts/system-name-map.spec.ts
+  s_bc3b2ff5afd321::t_24d91f25e22b25 1-19
+packages/widgets/src/beszel-alerts/system-name-map.ts
+  s_bc3b2ff5afd321::t_640688e9fa1c6e 1-24
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_bc3b2ff5afd321::t_908641bc63fcb4 4,22,42,45,123-124,126,128,176,182-183,200-201,215-216,229-230,244-245,258-259,272-273,286-287,304-305,318-319,332-333,346-347,351-362,399-412,425-435,442,451-452,467-470,483-484,487,492,496-499,511-512,518,525-526
+packages/widgets/src/beszel-system-grid/display.spec.ts
+  s_bc3b2ff5afd321::t_0b5b58765004b0 1-15
+packages/widgets/src/beszel-system-grid/display.ts
+  s_bc3b2ff5afd321::t_2578ebe57ee8de 1-2
+packages/widgets/src/beszel-system-grid/index.ts
+  s_bc3b2ff5afd321::t_4dcc516ee07e66 9
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_bc3b2ff5afd321::t_b2bd9e118e6c1d 22,50-51,145-148,185-188
+packages/widgets/src/beszel-system-table/component.spec.ts
+  s_bc3b2ff5afd321::t_e48930bb6c7032 4,36-55
+packages/widgets/src/beszel-system-table/component.tsx
+  s_bc3b2ff5afd321::t_4d5c127b029227 23,44,47,51,55-60,72,125,133-134,136,138-141,159-170,184,186,193,217-264,421,435,452-455,466
+packages/widgets/src/beszel-system-table/display.ts
+  s_bc3b2ff5afd321::t_b9c8b26397f39c 1-28
+packages/widgets/src/beszel-system-table/index.ts
+  s_bc3b2ff5afd321::t_9c5c9740344e5e 28
+packages/widgets/src/beszel/_shared/hooks.ts
+  s_bc3b2ff5afd321::t_2a3e49baefca24 7,16
+packages/widgets/src/bookmarks/component.tsx
+  s_bc3b2ff5afd321::t_72b3867fe8f6e0 114,286,293
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_bc3b2ff5afd321::t_f454a24d5c8d83 27-30,32-33,41,79,85,92-96,102-106,132,136,139-143,181,188
+packages/widgets/src/calendar/calendar-events.ts
+  s_bc3b2ff5afd321::t_027185e7563d75 13-14,17,34-35
+packages/widgets/src/calendar/calendar.spec.ts
+  s_bc3b2ff5afd321::t_a047f57fe74a6b 93-101
+packages/widgets/src/calendar/component.tsx
+  s_bc3b2ff5afd321::t_cc54a498a16a2c 14,19,30,57,84-97,109,120,123,135,141,173-174,185,188,268,271-272,283-284,330-333,342
+packages/widgets/src/clock/component.tsx
+  s_bc3b2ff5afd321::t_04d16dc3752b07 4,18,25-26,32,45,47,61,66,79,84-90,110-115,118-130,132-150,157-158
+packages/widgets/src/coolify/component.tsx
+  s_bc3b2ff5afd321::t_cb1cc562431b56 3,9-12,15,17-23,34-45,53,56,63-66,70,82,84-89,93-99,101-102,104,106-129,132-155
+packages/widgets/src/coolify/coolify-utils.spec.ts
+  s_bc3b2ff5afd321::t_870eb82d51debe 5-11,36-83
+packages/widgets/src/coolify/coolify-utils.ts
+  s_bc3b2ff5afd321::t_15350e03760a62 113-135
+packages/widgets/src/coolify/index.ts
+  s_bc3b2ff5afd321::t_7eb2b919acbc0c 7
+packages/widgets/src/coolify/servers-section.tsx
+  s_bc3b2ff5afd321::t_7689f05f4357ce 4-11,18,25,35,41,79,99,103,106-107,109-112,118,120,147,150-155,159-173
+packages/widgets/src/coolify/services-section.tsx
+  s_bc3b2ff5afd321::t_5e7516e2bfe474 3,9-11,18,21,40-52,64-105
+packages/widgets/src/definition.spec.ts
+  s_bc3b2ff5afd321::t_e1c5cc19feb8e4 5,28
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_bc3b2ff5afd321::t_d5dc6bee019b86 9,37,39,47-55,70-71,100,163,165-170,283
+packages/widgets/src/dns-hole/summary/component.tsx
+  s_bc3b2ff5afd321::t_6fb71c09b92500 8,33,35,51-52,54,67-73,91,106,110,113
+packages/widgets/src/downloads/component.tsx
+  s_bc3b2ff5afd321::t_6ee5dd0fec1744 56,58,62-67,94,154-155,313-314,318-323,370,399,422,459,472-475,477-478,691,736,738-745,767-769,773
+packages/widgets/src/downloads/helpers.spec.ts
+  s_bc3b2ff5afd321::t_25e436db91b98f 3-8,25-31
+packages/widgets/src/downloads/helpers.ts
+  s_bc3b2ff5afd321::t_35194b6d8f6728 5-31
+packages/widgets/src/downloads/index.ts
+  s_bc3b2ff5afd321::t_1d7b66455c4325 8,23,40
+packages/widgets/src/health-monitoring/cluster/accordion-state.spec.ts
+  s_bc3b2ff5afd321::t_470ede2e715995 3-13
+packages/widgets/src/health-monitoring/cluster/accordion-state.ts
+  s_bc3b2ff5afd321::t_47a804af56122a 1-9
+packages/widgets/src/health-monitoring/cluster/cluster-health.tsx
+  s_bc3b2ff5afd321::t_9da0017e63fb78 2,11,14,43-47,69,72-76,86,90,94,102,118,134,150
+packages/widgets/src/health-monitoring/system-health.tsx
+  s_bc3b2ff5afd321::t_b949c247f5b682 27-28,46-48,67-71,77-86,88-98,103-106,177-178,181,188,198,274-276,319-326
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_bc3b2ff5afd321::t_801b3cae31e333 23,35,37-42,44,73-92
+packages/widgets/src/immich/server-stats/component.tsx
+  s_bc3b2ff5afd321::t_f2c1a591f86980 50,52-55,60,68,76,84,200-209
+packages/widgets/src/immich/server-stats/layout.spec.ts
+  s_bc3b2ff5afd321::t_184fc9f5a1c7cd 3,15-26
+packages/widgets/src/indexer-manager/component.tsx
+  s_bc3b2ff5afd321::t_617f8bf579762a 3-18,23,30-32,35-41,50,53-55,58-62,65-66,68-73,78-84,95,120-121,127,129,132,147-165,168-221
+packages/widgets/src/indexer-manager/index.ts
+  s_bc3b2ff5afd321::t_05d78e2c709cf9 16
+packages/widgets/src/indexer-manager/status.spec.ts
+  s_bc3b2ff5afd321::t_46ee3a661ec93f 1-12
+packages/widgets/src/indexer-manager/status.ts
+  s_bc3b2ff5afd321::t_a35ab7197cef8a 1-12
+packages/widgets/src/media-missing/component.tsx
+  s_bc3b2ff5afd321::t_8eec7fbacadaa6 31,49-50,54-61,69,84,107-112,131,136-139,141,152,178-181,183,188,195,200,324-332,349-353
+packages/widgets/src/media-releases/component.tsx
+  s_bc3b2ff5afd321::t_5aeed3712d3082 34,48,51-53,59-75,77,84,224,243-253
+packages/widgets/src/media-server/component.tsx
+  s_bc3b2ff5afd321::t_771441633f6d3b 40,78-83,87-88,147-148,180,290,305,310,312
+packages/widgets/src/media-transcoding/component.tsx
+  s_bc3b2ff5afd321::t_b550779737c1b0 7,30,71-72,100-104,108-109,139-140
+packages/widgets/src/network-controller/network-status/component.tsx
+  s_bc3b2ff5afd321::t_6e60845784e6e8 4,7,10-12,24,27-34,37,39-42,44-50,52-63,65,67-100,105-106,129
+packages/widgets/src/network-controller/network-status/layout.spec.ts
+  s_bc3b2ff5afd321::t_aaa40c1d9e1b7a 25-32,37-44,62-64
+packages/widgets/src/network-controller/network-status/layout.ts
+  s_bc3b2ff5afd321::t_d28cc078be5720 16,36
+packages/widgets/src/network-controller/summary/component.tsx
+  s_bc3b2ff5afd321::t_eabdfcd30c18a4 11-12,15,18-20,30,35-39,43,53-59,63-146,152,245-258
+packages/widgets/src/network-controller/summary/display.spec.ts
+  s_bc3b2ff5afd321::t_b3a21f298b434c 1-45
+packages/widgets/src/network-controller/summary/display.ts
+  s_bc3b2ff5afd321::t_6ba3543f7a7a59 1-40
+packages/widgets/src/network-controller/summary/index.ts
+  s_bc3b2ff5afd321::t_371f8b08c31596 9
+packages/widgets/src/notebook/display.spec.ts
+  s_bc3b2ff5afd321::t_8e088ffac575aa 1-18
+packages/widgets/src/notebook/display.ts
+  s_bc3b2ff5afd321::t_a99a4872856560 1-13
+packages/widgets/src/notebook/index.ts
+  s_bc3b2ff5afd321::t_081b0de7cecf45 8
+packages/widgets/src/notifications/component.tsx
+  s_bc3b2ff5afd321::t_a88537104bb4b2 14-16,23,29-30,56-61,68-72,113,131,139-143
+packages/widgets/src/notifications/display.spec.ts
+  s_bc3b2ff5afd321::t_543f1a1b83a717 1-25
+packages/widgets/src/notifications/display.ts
+  s_bc3b2ff5afd321::t_5d5becc4ba09ac 1-20
+packages/widgets/src/notifications/index.ts
+  s_bc3b2ff5afd321::t_c0065099ebc12e 9
+packages/widgets/src/patchmon/component.module.css
+  s_bc3b2ff5afd321::t_0fc565caec1072 2,13-38
+packages/widgets/src/patchmon/component.tsx
+  s_bc3b2ff5afd321::t_e0b4fc5795b402 23-24,27,69-75,78-79,81,95-96,99,103,106,108-112,122,124-125,129-133,266-267,276,280-282,299
+packages/widgets/src/patchmon/index.ts
+  s_bc3b2ff5afd321::t_af14884da5ec17 10
+packages/widgets/src/patchmon/layout-utils.ts
+  s_bc3b2ff5afd321::t_38868fa06caf56 1-2,10-29
+packages/widgets/src/patchmon/test/layout-utils.spec.ts
+  s_bc3b2ff5afd321::t_95b7a964dc7c20 3,37-64
+packages/widgets/src/releases/component.tsx
+  s_bc3b2ff5afd321::t_e66a7b0aa59dba 41-44,46,56,67,131,163-167,169,193-195,251,331
+packages/widgets/src/releases/display.spec.ts
+  s_bc3b2ff5afd321::t_ed90cb39e384d0 1-32
+packages/widgets/src/releases/display.ts
+  s_bc3b2ff5afd321::t_ccd908f11fb737 1-30
+packages/widgets/src/releases/index.ts
+  s_bc3b2ff5afd321::t_d43f9665bd635f 16
+packages/widgets/src/rssFeed/component.tsx
+  s_bc3b2ff5afd321::t_6f309c0f1d3b86 13-15,32,41,46,64,72-84,90,93-100,127,141-147,150-151,157,159-163,193-217,224-230
+packages/widgets/src/rssFeed/feed-display.spec.ts
+  s_bc3b2ff5afd321::t_d0368e4913e0b0 3,16-33
+packages/widgets/src/rssFeed/index.ts
+  s_bc3b2ff5afd321::t_dfd1d533b71db7 14
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_bc3b2ff5afd321::t_1d8c5ecd9359cc 160-164
+packages/widgets/src/smart-home/execute-automation/component.tsx
+  s_bc3b2ff5afd321::t_6767c07ee0392f 141-159,164
+packages/widgets/src/speedtest-tracker/component.tsx
+  s_bc3b2ff5afd321::t_268b0a1af5bdc6 4,10,12,15,19-20,29-30,32-33,36-37,40,44-51,54-55,57-58,67-70,72-146,148-150,160
+packages/widgets/src/speedtest-tracker/helpers.spec.ts
+  s_bc3b2ff5afd321::t_dbdd4e57200905 5,30-46
+packages/widgets/src/speedtest-tracker/helpers.ts
+  s_bc3b2ff5afd321::t_e12a36c405d6aa 8-24
+packages/widgets/src/stocks/component.spec.ts
+  s_bc3b2ff5afd321::t_fe703b89458228 13,16-17,21-31
+packages/widgets/src/stocks/component.tsx
+  s_bc3b2ff5afd321::t_e1cdb873435e2e 4,11-12,30,33-34,63,66-67,72-77,82-83,85,96-170,172-183,187-193,195-201,203-216
+packages/widgets/src/stocks/index.ts
+  s_bc3b2ff5afd321::t_daeb3c4e272df3 15
+packages/widgets/src/system-disks/component.tsx
+  s_bc3b2ff5afd321::t_d2b7b3990306e8 12-14,19-21,25-26,35-36,41,47-54,65-67,81-83,112-114,156-165,168,193,195,197-215,217-218,237-240,242,248-283
+packages/widgets/src/system-disks/display.spec.ts
+  s_bc3b2ff5afd321::t_d862717942bf17 3,14-27
+packages/widgets/src/system-disks/index.ts
+  s_bc3b2ff5afd321::t_f209309221dfcd 8
+packages/widgets/src/system-resources/component.tsx
+  s_bc3b2ff5afd321::t_fded24ba0cd1e2 7,10,13,22-24,60-79,87,89-92,98-103,141,160-169,173-176,185-194,201,213,222-228,230,257,267,276,287,293,301
+packages/widgets/src/system-resources/history.spec.ts
+  s_bc3b2ff5afd321::t_51677264e4ee6c 3-9,45-68
+packages/widgets/src/tracearr/component.spec.ts
+  s_bc3b2ff5afd321::t_ceb947a2b12b0b 3-20,58-68
+packages/widgets/src/tracearr/component.tsx
+  s_bc3b2ff5afd321::t_73698b529962dd 3,10,12,16,25-36,86-90,93-95,157-159,162-172,175-178,181,185-217,222-251
+packages/widgets/src/tracearr/recent-activity-section.tsx
+  s_bc3b2ff5afd321::t_bd399a9bfe0a21 6-16,38,48
+packages/widgets/src/tracearr/source.ts
+  s_bc3b2ff5afd321::t_8598f1e160f73d 1-19
+packages/widgets/src/tracearr/streams-section.tsx
+  s_bc3b2ff5afd321::t_4066ae9ecd41fd 8-20,34,40-48,138-139,141,143-144
+packages/widgets/src/tracearr/violations-section.tsx
+  s_bc3b2ff5afd321::t_03f18e165b4c23 7-17,33,53
+packages/widgets/src/traefik/component.spec.ts
+  s_bc3b2ff5afd321::t_3cbd9ef4efb5db 1-52
+packages/widgets/src/traefik/component.tsx
+  s_bc3b2ff5afd321::t_40237f34016d1c 4,19,22,55-95,112-113,116-118,120,136,145-147,153-162,167-176,196,198-202,208-218,220-221,227-229,232-233,239-240,263-274,279-288
+packages/widgets/src/ups/component.spec.ts
+  s_bc3b2ff5afd321::t_cfbac161d6df33 1-25
+packages/widgets/src/ups/component.tsx
+  s_bc3b2ff5afd321::t_a4cb5e1f60445e 24,27,72-73,77-78,81-89,100,104,113-129,141-158,161,168-172,203-207,248-252,263-272,292,296,308
+packages/widgets/src/uptime-kuma/component.tsx
+  s_bc3b2ff5afd321::t_356f20742d29e4 12,15,133-134,137-139,141-142,154,157,160-166,169,251-261,273,290-301,306-315
+packages/widgets/src/wud/index.ts
+  s_bc3b2ff5afd321::t_1a764a882f090c 8,11-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "bbd4372eb223cffa918e3dd74b2df7af382cae25",
+  "prompts": {},
+  "sessions": {
+    "s_bc3b2ff5afd321": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa77-6fff-7222-aeba-e870dc5f1496",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
