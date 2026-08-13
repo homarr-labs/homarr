@@ -1,0 +1,19 @@
+packages/onboarding/src/setup-studio.tsx
+  s_bc3b2ff5afd321::t_f869f8f0d58156 37,1253-1254,1288-1305
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "abdfffa7e84e5ec7e98b9d17ee8baea05e7d44d9",
+  "prompts": {},
+  "sessions": {
+    "s_bc3b2ff5afd321": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa77-6fff-7222-aeba-e870dc5f1496",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
