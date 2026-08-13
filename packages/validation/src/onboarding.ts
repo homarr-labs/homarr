@@ -85,6 +85,7 @@ export const onboardingCompleteSetupSchema = z
       secondaryColor: hexColorSchema,
       itemRadius: z.enum(["xs", "sm", "md", "lg", "xl"]),
       layoutPreset: z.enum(onboardingLayoutPresets).default("balanced"),
+      columnCount: z.number().int().min(8).max(24).optional(),
       leftSidebar: z.boolean().default(false),
       rightSidebar: z.boolean().default(false),
     }),

@@ -1,8 +1,7 @@
 "use client";
 
-import { Alert, Button, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
-import { IconArrowRight, IconBook2, IconLayoutDashboard, IconSparkles, IconTool } from "@tabler/icons-react";
-import { motion, useReducedMotion } from "motion/react";
+import { Button, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
+import { IconArrowRight, IconBook2, IconSparkles, IconTool } from "@tabler/icons-react";
 
 import { createDocumentationLink } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -13,7 +12,6 @@ import classes from "./onboarding-studio.module.css";
 
 export const Finish = ({ environment }: OnboardingStudioProps) => {
   const t = useScopedI18n("init.studio.finish");
-  const reduceMotion = useReducedMotion();
   const boardHref = `/boards/${encodeURIComponent(environment.initialBoard?.name ?? "dashboard")}`;
   const destination = environment.canConfigurePrivileged ? boardHref : "/auth/login?callbackUrl=%2Finit";
 
@@ -21,22 +19,14 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
     <main className={classes.page}>
       <div className={classes.shell}>
         <Stack mih="calc(100dvh - 6rem)" justify="center" align="center">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 22, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.4 }}
-            style={{ width: "100%", maxWidth: "52rem" }}
-          >
+          <div style={{ width: "100%", maxWidth: "52rem" }}>
             <Paper className={classes.studio} radius="lg" p={{ base: "lg", sm: "xl" }}>
               <Stack gap="xl" align="center">
-                <motion.div
-                  animate={reduceMotion ? undefined : { rotate: [0, 7, -7, 0], scale: [1, 1.08, 1] }}
-                  transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 1.4 }}
-                >
+                <div>
                   <ThemeIcon size={78} radius="xl" variant="light" color="green">
                     <IconSparkles size={36} />
                   </ThemeIcon>
-                </motion.div>
+                </div>
                 <Stack gap="xs" align="center">
                   <Title ta="center">{t("title")}</Title>
                   <Text c="dimmed" ta="center" maw="42rem">
@@ -46,9 +36,6 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
                 <Button component={Link} href={destination} size="lg" rightSection={<IconArrowRight size={18} />}>
                   {t("openBoard")}
                 </Button>
-                <Alert variant="light" w="100%" icon={<IconLayoutDashboard size={18} />}>
-                  {t("tutorial")}
-                </Alert>
                 <SimpleGrid cols={{ base: 1, sm: 3 }} w="100%">
                   <NextCard
                     icon={IconTool}
@@ -72,7 +59,7 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
                 </SimpleGrid>
               </Stack>
             </Paper>
-          </motion.div>
+          </div>
         </Stack>
       </div>
     </main>

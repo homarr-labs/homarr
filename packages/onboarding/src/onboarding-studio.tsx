@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Button, Center, Loader, Paper, Stack, Text, Title } from "@mantine/core";
+import { Alert, Button, Center, Paper, Stack, Text, Title } from "@mantine/core";
 
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
@@ -61,7 +61,6 @@ export const OnboardingStudio = (props: OnboardingStudioProps) => {
       <Center mih="100dvh" p="md">
         <Paper withBorder radius="lg" p="xl" maw="32rem" w="100%">
           <Stack align="center">
-            {claimState === "checking" ? <Loader aria-label={t("checking")} /> : null}
             <Title order={1} size="h2" ta="center">
               {claimState === "checking"
                 ? t("checkingTitle")

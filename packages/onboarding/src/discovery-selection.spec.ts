@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { isHttpUrl, normalizeServiceUrl, resolveDiscoveredAppUrl, takeNewSourceIds } from "./discovery-selection";
+import {
+  isHttpUrl,
+  normalizeServiceUrl,
+  resolveDiscoveredAppUrl,
+  resolveIntegrationDraftUrl,
+  takeNewSourceIds,
+} from "./discovery-selection";
 
 describe("takeNewSourceIds", () => {
   it("keeps same-kind service instances independent and does not reselect them after refresh", () => {
@@ -20,6 +26,25 @@ describe("takeNewSourceIds", () => {
     );
     expect(resolveDiscoveredAppUrl(undefined, null, "http://host:3000")).toBe("http://host:3000");
     expect(resolveDiscoveredAppUrl(undefined, null, null)).toBe("");
+  });
+
+  it("regenerates integration URLs from the usual server address without replacing manual edits", () => {
+    expect(
+      resolveIntegrationDraftUrl({
+        currentUrl: "http://docker-host:8989",
+        overridden: false,
+        serverUrl: "http://home.lan:8989",
+        fallbackUrl: "http://docker-host:8989",
+      }),
+    ).toBe("http://home.lan:8989");
+    expect(
+      resolveIntegrationDraftUrl({
+        currentUrl: "https://sonarr.custom.example",
+        overridden: true,
+        serverUrl: "http://home.lan:8989",
+        fallbackUrl: "http://docker-host:8989",
+      }),
+    ).toBe("https://sonarr.custom.example");
   });
 
   it("normalizes HTTP, HTTPS, and bare self-hosted service addresses", () => {

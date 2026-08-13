@@ -59,6 +59,18 @@ const createConfiguredAssistantAsync = async () => {
   return db;
 };
 
+describe("assistantRouter.getAdminConfiguration", () => {
+  test("defaults an unconfigured Assistant to the Homarr provider", async () => {
+    const caller = assistantRouter.createCaller({ db: createDb(), deviceType: undefined, session: adminSession });
+
+    await expect(caller.getAdminConfiguration()).resolves.toMatchObject({
+      connectionConfigured: false,
+      provider: "homarr",
+      baseUrl: "https://homarr.dev/api/ai/v1",
+    });
+  });
+});
+
 describe("assistantRouter.updateConnection", () => {
   test("clears the persisted model when the discovery path changes without clearing credentials", async () => {
     const db = await createConfiguredAssistantAsync();

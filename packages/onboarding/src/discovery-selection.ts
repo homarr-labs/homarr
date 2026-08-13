@@ -11,6 +11,18 @@ export const resolveDiscoveredAppUrl = (
   generatedUrl: string | null,
 ) => override ?? suggestedUrl ?? generatedUrl ?? "";
 
+export const resolveIntegrationDraftUrl = ({
+  currentUrl,
+  overridden,
+  serverUrl,
+  fallbackUrl,
+}: {
+  currentUrl: string;
+  overridden: boolean;
+  serverUrl: string | null;
+  fallbackUrl: string | null;
+}) => (overridden ? currentUrl : serverUrl || fallbackUrl || "");
+
 export const normalizeServiceUrl = (value: string) => {
   try {
     const trimmed = value.trim();

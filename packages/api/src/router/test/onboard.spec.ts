@@ -307,6 +307,7 @@ describe("onboard.completeSetup", () => {
         ...completionInput("missing").board,
         id: undefined,
         name: "Recovered-board",
+        columnCount: 14,
         leftSidebar: true,
         rightSidebar: true,
       },
@@ -328,7 +329,7 @@ describe("onboard.completeSetup", () => {
         expect.objectContaining({ role: "mobile", columnCount: 3, breakpoint: 0 }),
         expect.objectContaining({
           role: "base",
-          columnCount: 10,
+          columnCount: 14,
           breakpoint: 768,
           leftGutterColumnCount: 1,
           rightGutterColumnCount: 1,
