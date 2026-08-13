@@ -28,9 +28,8 @@
         "review": "Review"
       },
       "welcome": {
-        "title": "Welcome home",
-        "version": "Welcome to Homarr v{version}",
-        "description": "Let's get you started with homarr",
+        "title": "Make home feel organized.",
+        "description": "Welcome to Homarr v{version}. We’ll guide you through the essentials and help you build your first board.",
         "start": "Get started",
         "restore": "Come from a backup",
         "restoreTitle": "Restore this Homarr",

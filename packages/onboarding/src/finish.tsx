@@ -1,6 +1,6 @@
 "use client";
 
-import type { MouseEvent as ReactMouseEvent } from "react";
+import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react";
 import { Button, Group, Paper, SimpleGrid, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { IconArrowRight, IconBook2, IconSparkles, IconTool } from "@tabler/icons-react";
 import confetti from "canvas-confetti";
@@ -10,14 +10,20 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { OnboardingBackdrop } from "./onboarding-backdrop";
+import { OnboardingWordmark } from "./onboarding-wordmark";
 import type { OnboardingStudioProps } from "./types";
+import { useOnboardingSounds } from "./use-onboarding-sounds";
 import classes from "./onboarding-studio.module.css";
 
 export const Finish = ({ environment }: OnboardingStudioProps) => {
   const t = useScopedI18n("init.studio.finish");
+  const sounds = useOnboardingSounds();
+  const primaryColor = environment.initialBoard?.primaryColor ?? "#fa5252";
+  const secondaryColor = environment.initialBoard?.secondaryColor ?? "#fd7e14";
   const boardHref = `/boards/${encodeURIComponent(environment.initialBoard?.name ?? "dashboard")}`;
   const destination = environment.canConfigurePrivileged ? boardHref : "/auth/login?callbackUrl=%2Finit";
   const openBoard = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    sounds.success();
     if (
       event.button !== 0 ||
       event.metaKey ||
@@ -45,18 +51,22 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
   };
 
   return (
-    <main className={classes.page}>
+    <main
+      className={classes.page}
+      style={
+        {
+          "--studio-glow-color": primaryColor,
+          "--studio-secondary-glow-color": secondaryColor,
+        } as CSSProperties
+      }
+    >
       <OnboardingBackdrop />
       <div className={classes.shell}>
         <Stack mih="calc(100dvh - 6rem)" justify="center" align="center">
           <div style={{ width: "100%", maxWidth: "52rem" }}>
             <Paper className={classes.studio} radius="lg" p={{ base: "lg", sm: "xl" }}>
               <Stack gap="xl" align="center">
-                <div>
-                  <ThemeIcon size={78} radius="xl" variant="light" color="green">
-                    <IconSparkles size={36} />
-                  </ThemeIcon>
-                </div>
+                <OnboardingWordmark primaryColor={primaryColor} secondaryColor={secondaryColor} />
                 <Stack gap="xs" align="center">
                   <Title ta="center">{t("title")}</Title>
                   <Text c="dimmed" ta="center" maw="42rem">
@@ -67,6 +77,7 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
                   component={Link}
                   href={destination}
                   size="lg"
+                  className={classes.finishPrimaryAction}
                   rightSection={<IconArrowRight size={18} />}
                   onClick={openBoard}
                 >

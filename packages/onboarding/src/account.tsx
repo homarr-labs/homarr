@@ -19,6 +19,7 @@ import { userInitSchema } from "@homarr/validation/user";
 import { didCredentialsSignInFail } from "./account-recovery";
 import { OnboardingBackdrop } from "./onboarding-backdrop";
 import type { OnboardingStudioProps } from "./types";
+import { useOnboardingSounds } from "./use-onboarding-sounds";
 import classes from "./onboarding-studio.module.css";
 
 const AccountShell = ({
@@ -65,8 +66,10 @@ const CredentialsSetup = () => {
   const [requiresSignIn, setRequiresSignIn] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const recoveryActionRef = useRef<HTMLAnchorElement>(null);
+  const sounds = useOnboardingSounds();
   const mutation = clientApi.user.initUser.useMutation({
     onError() {
+      sounds.error();
       const message = t("unknownError");
       setSubmitError(message);
       showErrorNotification({ title: t("errorTitle"), message });
@@ -92,6 +95,7 @@ const CredentialsSetup = () => {
       });
       if (didCredentialsSignInFail(result)) throw new Error();
     } catch {
+      sounds.warning();
       setRequiresSignIn(true);
       return;
     }
@@ -148,11 +152,14 @@ const CredentialsSetup = () => {
 const ExternalGroupSetup = () => {
   const t = useScopedI18n("init.studio.externalGroup");
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const sounds = useOnboardingSounds();
   const mutation = clientApi.group.createInitialExternalGroup.useMutation({
     async onSuccess() {
+      sounds.success();
       await revalidatePathActionAsync("/init");
     },
     onError() {
+      sounds.error();
       const message = t("unknownError");
       setSubmitError(message);
       showErrorNotification({ title: t("errorTitle"), message });
@@ -164,6 +171,7 @@ const ExternalGroupSetup = () => {
     <AccountShell title={t("title")} description={t("description")}>
       <form
         onSubmit={form.onSubmit((values) => {
+          sounds.click();
           setSubmitError(null);
           mutation.mutate(values);
         })}

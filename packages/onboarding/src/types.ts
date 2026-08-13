@@ -14,7 +14,7 @@ export interface OnboardingEnvironment {
   mcpEndpoint: string;
   canConfigurePrivileged: boolean;
   hasUsers: boolean;
-  initialBoard: { id: string; name: string } | null;
+  initialBoard: { id: string; name: string; primaryColor: string; secondaryColor: string } | null;
   availableBoards: { id: string; name: string }[];
 }
 

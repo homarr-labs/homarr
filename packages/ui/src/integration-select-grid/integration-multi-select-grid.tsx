@@ -58,7 +58,6 @@ export const IntegrationMultiSelectGrid = ({
       onSearchChange={setSearch}
       placeholder={`${t("integration.page.list.search")}...`}
       ariaLabel={t("integration.page.list.search")}
-      disableScroll={onboarding}
       disableAutoFocus={onboarding}
     >
       {filtered.map((integration) => {
