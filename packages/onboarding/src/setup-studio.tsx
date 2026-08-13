@@ -34,6 +34,7 @@ import {
   Title,
   UnstyledButton,
   useMantineColorScheme,
+  useMantineTheme,
 } from "@mantine/core";
 import type { MantineSize } from "@mantine/core";
 import {
@@ -1249,6 +1250,8 @@ const formatSecretKind = (kind: IntegrationSecretKind) =>
 const BoardBuilder = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.board");
   const reduceMotion = useReducedMotion();
+  const theme = useMantineTheme();
+  const colorSwatches = Object.values(theme.colors).map((color) => color[6]);
   const previewWidgetKinds = getPreviewWidgetKinds(props);
   const previewAppCount = getPreviewAppCount(props);
   return (
@@ -1282,8 +1285,24 @@ const BoardBuilder = (props: StudioSectionProps) => {
             withAsterisk
           />
           <SimpleGrid cols={2}>
-            <ColorInput label={t("primaryColor")} value={props.primaryColor} onChange={props.setPrimaryColor} />
-            <ColorInput label={t("secondaryColor")} value={props.secondaryColor} onChange={props.setSecondaryColor} />
+            <ColorInput
+              label={t("primaryColor")}
+              value={props.primaryColor}
+              onChange={props.setPrimaryColor}
+              format="hex"
+              swatches={colorSwatches}
+              withPicker={false}
+              disallowInput
+            />
+            <ColorInput
+              label={t("secondaryColor")}
+              value={props.secondaryColor}
+              onChange={props.setSecondaryColor}
+              format="hex"
+              swatches={colorSwatches}
+              withPicker={false}
+              disallowInput
+            />
           </SimpleGrid>
           <Stack gap="xs">
             <Text size="sm" fw={500}>
