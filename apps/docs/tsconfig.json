@@ -26,5 +26,10 @@
     "**/*.md",
     "**/*.mdx",
   ],
-  "exclude": ["node_modules"],
+  // `include` sweeps up **/*.js and allowJs is on, so anything the build emits into this package is
+  // typechecked as source. The turbo `typecheck` task only dependsOn ["^topo"], not on its own
+  // package's `build`, so `docusaurus build` and `tsc --noEmit` run concurrently - and tsc can observe
+  // Docusaurus's transient `build/__server/` bundles and fail with TS1473 before the build removes
+  // them. Excluding generated output makes typecheck independent of that scheduling.
+  "exclude": ["node_modules", "build", ".docusaurus"],
 }
