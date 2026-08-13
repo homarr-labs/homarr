@@ -61,13 +61,7 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
   }),
 );
 
-export const NewIntegrationForm = ({
-  kind,
-  initialUrl,
-  initialName,
-  onSuccess,
-  onCancel,
-}: NewIntegrationFormProps) => {
+export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, onCancel }: NewIntegrationFormProps) => {
   const t = useI18n();
   const secretKinds = getAllSecretKindOptions(kind);
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
