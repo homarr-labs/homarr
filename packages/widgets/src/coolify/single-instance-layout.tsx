@@ -113,9 +113,7 @@ export function SingleInstanceLayout({
           )}
         </Accordion>
 
-        {!hideFooter && (
-          <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />
-        )}
+        {!hideFooter && <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />}
       </Stack>
     </ScrollArea>
   );

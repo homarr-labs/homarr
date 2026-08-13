@@ -166,9 +166,7 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
         )}
       </Accordion>
 
-      {!hideFooter && (
-        <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />
-      )}
+      {!hideFooter && <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />}
     </Card>
   );
 }
