@@ -1,0 +1,46 @@
+apps/nextjs/src/components/board/sections/grid/test/grid-entry-memo.spec.tsx
+  s_7cfb890e45839e::t_b32282d064d9b6 8,18-26,28-31,38,79-109,111-120,124,162
+  s_7cfb890e45839e::t_5d8628231fe5b3 110
+  s_7cfb890e45839e::t_b9e5b9cbdce560 13-14
+apps/nextjs/src/components/board/sections/grid/grid-preview-geometry.ts
+  s_7cfb890e45839e::t_d90ea7c73897db 1-49,51-69,71-83,85-101
+  s_7cfb890e45839e::t_d74547cae74266 50,70,84
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_7cfb890e45839e::t_9a66a6a82bd53d 11-17
+apps/nextjs/src/components/board/sections/grid/test/grid-resize-outline.spec.ts
+  s_7cfb890e45839e::t_b9e5b9cbdce560 9,11,17-20,27
+  s_7cfb890e45839e::t_16835c7fc59c0f 1-8,10,12-16,21-26,28-49
+apps/nextjs/src/components/board/sections/grid/test/grid-preview-geometry.spec.ts
+  s_7cfb890e45839e::t_d74547cae74266 1
+  s_7cfb890e45839e::t_16835c7fc59c0f 2,4-86
+  s_7cfb890e45839e::t_24896c4cbe74f5 3
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_7cfb890e45839e::t_22df7ca9b570c7 66,909,937-946,992-996
+  s_7cfb890e45839e::t_f762320048c7b1 982,989-991,997-998,1038,1041,1044-1045,1092,1115
+  s_7cfb890e45839e::t_adf282aa177cde 3,67,779,795,814-817,843,848,857,861-868,879-908,910-923,925-936,947-974
+  s_7cfb890e45839e::t_5d8628231fe5b3 924
+  s_7cfb890e45839e::t_8492f9814eb3d4 1328-1332
+  s_7cfb890e45839e::t_ddeec74ddd08dd 975
+apps/nextjs/src/components/board/sections/grid/grid-resize-outline.ts
+  s_7cfb890e45839e::t_5effc06ab12df6 27-28,58-62
+  s_7cfb890e45839e::t_3f9736547324c8 1,31-35
+  s_7cfb890e45839e::t_d90ea7c73897db 2-26,29-30,36-57,63-72
+apps/nextjs/src/components/board/sections/grid/grid-entry-memo.ts
+  s_7cfb890e45839e::t_0d7b6d8a38f19d 9,17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "73517814f7426d5debd0c134601e0e74cda3aa49",
+  "prompts": {},
+  "sessions": {
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

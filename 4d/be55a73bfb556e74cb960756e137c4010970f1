@@ -1,0 +1,66 @@
+e2e/board-grid.spec.ts
+  s_7cfb890e45839e::t_7f69f64da67e4f 846-847
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_7cfb890e45839e::t_1e5d431908f76d 78-79
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_7cfb890e45839e::t_cbcfa589997436 3,39,62-63
+  s_7cfb890e45839e::t_8b8845ba10a334 925
+  s_7cfb890e45839e::t_8a6ebfda09c7cb 698
+  s_7cfb890e45839e::t_80b52e5e50c6fb 743,834,1053
+  s_7cfb890e45839e::t_a882360643da1d 778-784,897,963
+  s_7cfb890e45839e::t_48f9a007c4a7eb 978,997,1013,1017,1024-1032,1046-1052,1054-1083,1105,1112-1113,1129,1145,1159
+  s_7cfb890e45839e::t_53fa8908229d8c 59
+  s_7cfb890e45839e::t_37e5c885aedb2c 741,835
+apps/nextjs/src/components/board/sections/grid/test/grid-drag-handle.spec.ts
+  s_7cfb890e45839e::t_6fd0fd0c655e25 1-5,7-11,21,28-33
+  s_7cfb890e45839e::t_5c5a5812989e96 6,12-20,22-27
+apps/nextjs/src/components/board/sections/grid/grid-resize-outline.ts
+  s_7cfb890e45839e::t_1e5d431908f76d 4-5,9,11,14,40
+apps/nextjs/src/components/board/sections/grid/grid-preview-geometry.ts
+  s_7cfb890e45839e::t_1e5d431908f76d 9,11-12,23,30,61,63
+apps/nextjs/src/components/board/sections/grid/test/grid-entry-memo.spec.tsx
+  s_7cfb890e45839e::t_54298e667d6857 84-87,102-116,128-129,156-157
+  s_7cfb890e45839e::t_eeb6c0251fc81a 9-10
+  s_7cfb890e45839e::t_e481922b156016 8,81,83,97-101,117-122,127,130-140,148-149
+apps/nextjs/src/components/board/sections/grid/grid-drag-handle.ts
+  s_7cfb890e45839e::t_5c5a5812989e96 6-9,11-13,16-19,22
+  s_7cfb890e45839e::t_1e5d431908f76d 1-5,10,14-15,20-21,23-25
+apps/nextjs/src/components/board/sections/grid/grid-preview-layer.tsx
+  s_7cfb890e45839e::t_eeb6c0251fc81a 1-136
+apps/docs/docs/widgets/whats-up-docker/index.ts
+  s_093d61b162b9ca::t_1cf86c2728e643 13,31-32
+apps/workshop/pb_hooks/report-email.html
+  s_667f6174514794::t_009547dbe4013b 24-26,34-36,46-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4dbe55a73bfb556e74cb960756e137c4010970f1",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_667f6174514794": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fefc2-aead-7331-85fc-7d646a0e5452",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

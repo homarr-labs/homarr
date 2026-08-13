@@ -1,0 +1,47 @@
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_7cfb890e45839e::t_65561278541b32 40
+e2e/board-grid.spec.ts
+  s_7cfb890e45839e::t_65561278541b32 154-160
+packages/integrations/test/home-assistant.spec.ts
+  s_093d61b162b9ca::t_441a828ae0b411 44-45,47-48,50-55,59-60,62-63,65-67,69-74,82,86,88,90,94,98,100,103-104
+package.json
+  h_d6e478ca18e517 53
+  s_093d61b162b9ca::t_68b01e9c1c2a72 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "39cc88d4441802831679501c3e3e2e751c3492db",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_5dcfe7e44b75bf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9bcd108a-daea-48a5-b53c-d927f15a1b24",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
