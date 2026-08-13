@@ -1,0 +1,31 @@
+packages/api/src/router/widgets/smart-home.ts
+  s_2984ddaab912e1::t_40644d1704fc65 46-49
+  s_2984ddaab912e1::t_f821c2d654df46 1,45,50,64-71
+apps/docs/docs/widgets/smart-home-execute-automation/index.mdx
+  s_2984ddaab912e1::t_f821c2d654df46 50-52
+packages/request-handler/src/smart-home-entity-state.ts
+  s_2984ddaab912e1::t_f821c2d654df46 21-22
+packages/integrations/test/home-assistant-unit.spec.ts
+  s_2984ddaab912e1::t_f821c2d654df46 1-24,26-48
+  s_2984ddaab912e1::t_40644d1704fc65 25
+apps/docs/docs/widgets/smart-home-entity-state/index.mdx
+  s_2984ddaab912e1::t_f821c2d654df46 46,68
+packages/integrations/src/homeassistant/homeassistant-integration.ts
+  s_2984ddaab912e1::t_f821c2d654df46 137-140
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "e761c10f3282ea490b2ab4300cf028a2ac3b5240",
+  "prompts": {},
+  "sessions": {
+    "s_2984ddaab912e1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffb79-5fd7-7371-8241-13d2e482b41c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
