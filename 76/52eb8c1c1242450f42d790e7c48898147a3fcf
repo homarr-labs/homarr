@@ -1,0 +1,19 @@
+packages/api/src/router/widgets/smart-home.ts
+  s_2984ddaab912e1::t_a194b46fcb231d 51-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "7652eb8c1c1242450f42d790e7c48898147a3fcf",
+  "prompts": {},
+  "sessions": {
+    "s_2984ddaab912e1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffb79-5fd7-7371-8241-13d2e482b41c",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
