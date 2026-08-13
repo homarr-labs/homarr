@@ -272,7 +272,6 @@ export const onboardRouter = createTRPCRouter({
             suggestedUrl,
             publishedPort,
             iconUrl,
-            detectedType: dbIcon.name,
             source: "docker",
             host: container.host,
           });
@@ -284,6 +283,7 @@ export const onboardRouter = createTRPCRouter({
             suggestedUrl,
             publishedPort,
             iconUrl,
+            detectedType: dbIcon.name,
             source: "docker",
             host: container.host,
           });
