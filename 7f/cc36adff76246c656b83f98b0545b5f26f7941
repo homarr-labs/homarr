@@ -1,0 +1,21 @@
+packages/onboarding/src/setup-studio.tsx
+  s_bc3b2ff5afd321::t_1d5a5e85dd6242 1194-1196
+apps/docs/docs/integrations/docker-labels/index.mdx
+  s_bc3b2ff5afd321::t_1d5a5e85dd6242 72-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "7fcc36adff76246c656b83f98b0545b5f26f7941",
+  "prompts": {},
+  "sessions": {
+    "s_bc3b2ff5afd321": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa77-6fff-7222-aeba-e870dc5f1496",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
