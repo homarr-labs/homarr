@@ -1,6 +1,6 @@
 import { generateResponsiveGridFor } from "@homarr/common";
 import type { GridAlgorithmItem } from "@homarr/common";
-import type { BoardLane, LayoutRole } from "@homarr/definitions";
+import type { BoardLane, LayoutRole, WidgetKind } from "@homarr/definitions";
 import { boardLanes, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 
 export interface BoardPreviewLayout {
@@ -35,6 +35,8 @@ export interface BoardPreviewData {
   sections: readonly BoardPreviewSection[];
   items: readonly {
     id: string;
+    kind?: WidgetKind;
+    iconUrl?: string | null;
     layouts: readonly BoardPreviewItemLayout[];
   }[];
 }

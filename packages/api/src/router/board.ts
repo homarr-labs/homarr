@@ -23,6 +23,7 @@ import {
   integrationItems,
   integrationUserPermissions,
   integrations,
+  apps,
   itemLayouts,
   items,
   layouts,
@@ -295,6 +296,11 @@ export const boardRouter = createTRPCRouter({
                 width: true,
                 height: true,
               },
+              with: {
+                item: {
+                  columns: { kind: true, options: true },
+                },
+              },
               where: and(
                 inArray(itemLayouts.layoutId, previewLayoutIds),
                 inArray(itemLayouts.sectionId, rootSectionIds),
@@ -333,6 +339,27 @@ export const boardRouter = createTRPCRouter({
           ])
         : [[], []];
 
+    const appIdByItemId = new Map(
+      previewItemLayouts.flatMap((layout) => {
+        if (layout.item.kind !== "app") return [];
+        try {
+          const { appId } = superjson.parse<{ appId?: unknown }>(layout.item.options);
+          return typeof appId === "string" ? [[layout.itemId, appId] as const] : [];
+        } catch {
+          return [];
+        }
+      }),
+    );
+    const previewAppIds = [...new Set(appIdByItemId.values())];
+    const previewApps =
+      previewAppIds.length > 0
+        ? await ctx.db.query.apps.findMany({
+            columns: { id: true, iconUrl: true },
+            where: inArray(apps.id, previewAppIds),
+          })
+        : [];
+    const appIconUrlById = new Map(previewApps.map((app) => [app.id, app.iconUrl]));
+
     return dbBoards.map(({ layouts: boardLayouts, sections: boardSections, ...board }) => {
       const previewLayout = boardLayouts.at(0);
 
@@ -365,7 +392,15 @@ export const boardRouter = createTRPCRouter({
       const itemPreview = previewLayout
         ? previewItemLayouts
             .filter((layout) => layout.layoutId === previewLayout.id && isInsideRootLane(layout))
-            .map((layout) => ({ id: layout.itemId, layouts: [layout] }))
+            .map((layout) => {
+              const appId = appIdByItemId.get(layout.itemId);
+              return {
+                id: layout.itemId,
+                kind: layout.item.kind,
+                iconUrl: appId ? appIconUrlById.get(appId) : undefined,
+                layouts: [layout],
+              };
+            })
         : [];
       const containerPreview = previewLayout
         ? previewSectionLayouts

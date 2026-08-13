@@ -6,6 +6,7 @@ import { createId } from "@homarr/common";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import {
+  apps,
   boardGroupPermissions,
   boards,
   boardUserPermissions,
@@ -457,6 +458,7 @@ describe("getManageOverview", () => {
         items: [
           {
             id: itemId,
+            kind: "clock",
             layouts: [{ layoutId: baseLayoutId, sectionId: rootSectionId, width: 4, height: 2 }],
           },
         ],
@@ -473,6 +475,64 @@ describe("getManageOverview", () => {
     expect(result[0]?.preview?.layouts).toHaveLength(1);
     expect(result[0]?.preview?.items.map((item) => item.id)).toEqual([itemId]);
     expect(result[0]?.preview?.sections).toHaveLength(2);
+  });
+
+  test("includes app and widget icons in compact previews", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const boardId = createId();
+    const layoutId = createId();
+    const rootSectionId = createId();
+    const appId = createId();
+    const appItemId = createId();
+
+    await db.insert(users).values({ id: defaultCreatorId });
+    await db.insert(boards).values({ id: boardId, name: "icon-overview", creatorId: defaultCreatorId });
+    await db.insert(layouts).values({
+      id: layoutId,
+      name: "Base",
+      boardId,
+      columnCount: 12,
+      breakpoint: 768,
+      role: "base",
+    });
+    await db.insert(sections).values({
+      id: rootSectionId,
+      boardId,
+      kind: "empty",
+      xOffset: 0,
+      yOffset: 0,
+    });
+    await db.insert(apps).values({
+      id: appId,
+      name: "Sonarr",
+      iconUrl: "https://example.com/sonarr.svg",
+    });
+    await db.insert(items).values({
+      id: appItemId,
+      boardId,
+      kind: "app",
+      options: SuperJSON.stringify({ appId }),
+    });
+    await db.insert(itemLayouts).values({
+      itemId: appItemId,
+      sectionId: rootSectionId,
+      layoutId,
+      xOffset: 0,
+      yOffset: 0,
+      width: 2,
+      height: 2,
+    });
+
+    const result = await caller.getManageOverview();
+
+    expect(result[0]?.preview?.items).toEqual([
+      expect.objectContaining({
+        id: appItemId,
+        kind: "app",
+        iconUrl: "https://example.com/sonarr.svg",
+      }),
+    ]);
   });
 
   test("uses the highest-breakpoint layout when a board has no base layout", async () => {

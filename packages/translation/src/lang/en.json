@@ -31,7 +31,7 @@
         "title": "Make home feel organized.",
         "description": "Welcome to Homarr v{version}. We’ll guide you through the essentials and help you build your first board.",
         "start": "Get started",
-        "restore": "Come from a backup",
+        "restore": "Restore backup",
         "restoreTitle": "Restore this Homarr",
         "restoreDescription": "A full SQLite backup restores boards, people, apps, integrations, and settings. Homarr validates it before replacing anything.",
         "errorTitle": "Setup could not start",

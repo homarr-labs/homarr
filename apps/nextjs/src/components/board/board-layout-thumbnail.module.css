@@ -47,12 +47,27 @@
 }
 
 .tile {
+  position: relative;
   min-width: 0;
   min-height: 0;
+  overflow: hidden;
   border: rem(1px) solid color-mix(in srgb, var(--mantine-primary-color-filled) 32%, transparent);
   border-radius: max(rem(2px), calc(var(--mantine-radius-default) / 2));
   background: color-mix(in srgb, var(--mantine-primary-color-filled) 18%, var(--mantine-color-body));
   box-shadow: 0 rem(1px) rem(3px) rgb(0 0 0 / 8%);
+}
+
+.itemIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: rem(16px) !important;
+  height: rem(16px) !important;
+  max-width: 55%;
+  max-height: 55%;
+  object-fit: contain;
+  color: var(--mantine-color-text);
+  transform: translate(-50%, -50%);
 }
 
 .container {
