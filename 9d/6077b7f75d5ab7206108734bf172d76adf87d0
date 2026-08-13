@@ -1,0 +1,34 @@
+apps/docs/docs/widgets/beszel-system-table/index.mdx
+  s_3818b2bc75a8b0::t_f371410b6bc9bf 40
+apps/docs/docs/widgets/notebook/index.ts
+  s_3818b2bc75a8b0::t_f371410b6bc9bf 13
+apps/docs/docs/widgets/beszel-alerts/index.mdx
+  s_3818b2bc75a8b0::t_f371410b6bc9bf 37
+apps/docs/docs/widgets/beszel-system-grid/index.mdx
+  s_3818b2bc75a8b0::t_f371410b6bc9bf 39
+packages/widgets/src/definition.spec.ts
+  s_3818b2bc75a8b0::t_bfb3767b6d6ecb 3-7,12-13,35-46
+  s_3818b2bc75a8b0::t_6b842256ea6a97 47-48
+apps/docs/docs/widgets/clock/index.mdx
+  s_3818b2bc75a8b0::t_f371410b6bc9bf 30
+apps/docs/docs/widgets/indexer-manager/index.mdx
+  s_3818b2bc75a8b0::t_f371410b6bc9bf 42
+apps/docs/docs/widgets/notebook/index.mdx
+  s_3818b2bc75a8b0::t_f371410b6bc9bf 29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "9d6077b7f75d5ab7206108734bf172d76adf87d0",
+  "prompts": {},
+  "sessions": {
+    "s_3818b2bc75a8b0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa66-f26c-7c32-8090-19f178bd36bd",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
