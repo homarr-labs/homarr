@@ -170,6 +170,14 @@ const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
     return {
       ...(current.modelId ? { modelId: current.modelId } : {}),
       reasoning: current.reasoning,
+      ...(typeof window === "undefined"
+        ? {}
+        : {
+            clientContext: {
+              pathname: window.location.pathname,
+              timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            },
+          }),
     };
   }, []);
   const getRequestHeaders = useCallback((): Record<string, string> => {

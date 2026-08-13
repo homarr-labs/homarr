@@ -72,6 +72,10 @@ policy before enabling the assistant.
 Conversations are stored per user. Users can edit or retry messages, copy responses, export a conversation as Markdown,
 and delete conversations.
 
+Each request includes the signed-in user's name, server time, current page and board, home board, browser time zone,
+and a bounded snapshot of the Homarr resources they can access. Live service and system status is loaded with tools
+only when needed.
+
 ## If setup does not work
 
 - **No models found:** check the base URL, model discovery path, and API key. You can enter a model ID manually.
