@@ -304,8 +304,11 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  box-sizing: border-box;
   width: clamp(4.5rem, 10vw, 7.5rem);
+  aspect-ratio: 1;
   padding: clamp(0.6rem, 1.5vw, 1rem);
   border-radius: 0.875rem;
   color: var(--ifm-font-color-base);
@@ -385,11 +388,6 @@ section {
   width: clamp(3rem, 7vw, 5.4rem);
   height: clamp(3rem, 7vw, 5.4rem);
   filter: brightness(0) invert(1);
-}
-
-.dataflowHub span {
-  color: #171717;
-  font-size: clamp(0.8rem, 1.8vw, 1rem);
 }
 
 @keyframes dataflow-signal {

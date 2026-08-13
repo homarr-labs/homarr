@@ -39,7 +39,7 @@ export const DataflowVisualizationComponent = () => (
     <div
       className={styles.dataflowDiagram}
       role="img"
-      aria-label="Information flowing both ways between Homarr and six connected services"
+      aria-label="Information flowing both ways between Homarr, Radarr, Sonarr, Lidarr, SABnzbd, Jellyfin, and 19 more integrations"
     >
       <svg className={styles.dataflowLines} viewBox="0 0 960 520" preserveAspectRatio="none" aria-hidden="true">
         {paths.map((path) => (
@@ -54,7 +54,6 @@ export const DataflowVisualizationComponent = () => (
       {featuredIntegrations.map((integration) => (
         <div className={`${styles.dataflowNode} ${integration.position}`} key={integration.name}>
           <img src={integration.image} alt="" width={54} height={54} />
-          <span>{integration.name}</span>
         </div>
       ))}
 
@@ -79,7 +78,6 @@ export const DataflowVisualizationComponent = () => (
 
       <div className={`${styles.dataflowNode} ${styles.dataflowHub}`}>
         <img src="/img/logo.png" alt="" width={86} height={86} />
-        <span>Homarr</span>
       </div>
     </div>
   </section>
