@@ -101,9 +101,9 @@ describe("Onboarding", () => {
         await page.locator("css=button[type='submit']").click();
         await page.getByRole("heading", { name: "Start with familiar defaults" }).waitFor({ timeout: 30_000 });
 
-        const serverOrigin = page.getByLabel("Domain, IP, or reverse-proxy path");
+        const serverOrigin = page.getByLabel("Usual server address");
         await serverOrigin.fill("https://home.example/homarr");
-        await page.getByRole("combobox", { name: "Default language" }).click();
+        await page.getByLabel("Default language").click();
         await page.getByRole("option", { name: /Français/ }).click();
         expect(await serverOrigin.inputValue()).toBe("https://home.example/homarr");
         expect(await page.getByRole("heading", { name: "Start with familiar defaults" }).isVisible()).toBe(true);
@@ -129,7 +129,7 @@ describe("Onboarding", () => {
           ["Discover", "See what this installation can actually reach"],
           ["Connect", "Connect what makes the board useful"],
           ["Board", "Shape the board before it is built"],
-          ["Extend", "Add intelligence when it helps"],
+          ["Extend", "Advanced features"],
         ] as const;
         for (const [section, heading] of sections) {
           await page.getByRole("button", { name: new RegExp(`^${section}`) }).click();
@@ -147,7 +147,6 @@ describe("Onboarding", () => {
         expect(await boardPreview.getAttribute("data-layout-columns")).toBe("12");
 
         await page.getByRole("button", { name: /^Connect/ }).click();
-        await page.getByRole("button", { name: "Add another integration" }).click();
         const sonarr = page.locator('button[aria-label="Sonarr"]');
         await sonarr.click();
         await page.getByLabel("Service URL").waitFor();
@@ -449,15 +448,18 @@ describe("Onboarding", () => {
       expect(await page.locator('meta[name="homarr-workshop-api-url"]').getAttribute("content")).toBe(
         configuredWorkshopApiUrl,
       );
-      await page.getByRole("button", { name: /^Extend/ }).click();
-      await page.getByRole("heading", { name: "Add intelligence when it helps" }).waitFor();
-      await page.getByLabel("Provider URL").waitFor();
+      await page.getByRole("button", { name: "Extend (5/6)" }).click();
+      await page.getByRole("heading", { name: "Advanced features" }).waitFor();
+      await page.getByRole("tab", { name: "Assistant" }).click();
+      await page.getByLabel("API base URL").waitFor();
 
       const provider = page.getByRole("combobox", { name: "Provider", exact: true });
       await expect.poll(() => provider.inputValue(), { timeout: 10_000 }).toBe("Custom endpoint");
-      expect(await page.getByLabel("Provider URL").inputValue()).toBe("http://assistant.local/v1");
+      expect(await page.getByLabel("API base URL").inputValue()).toBe("http://assistant.local/v1");
       expect(await page.locator('input[value="local-model"]').inputValue()).toBe("local-model");
-      expect(await page.getByText("Model discovery is unavailable.").count()).toBe(1);
+      expect(await page.getByText("Discovery is unavailable. You can still enter a model ID manually.").count()).toBe(
+        1,
+      );
     } finally {
       try {
         await Promise.all([browser.close(), homarrContainer.stop()]);
