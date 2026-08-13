@@ -1,0 +1,21 @@
+packages/onboarding/src/onboarding-studio.module.css
+  s_bc3b2ff5afd321::t_0d42706ec9ecc5 186-198
+packages/onboarding/src/setup-studio.tsx
+  s_bc3b2ff5afd321::t_0d42706ec9ecc5 1166,1170,1211
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "016c05ad340567a64fcb207f5fc9f2575893d20b",
+  "prompts": {},
+  "sessions": {
+    "s_bc3b2ff5afd321": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa77-6fff-7222-aeba-e870dc5f1496",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
