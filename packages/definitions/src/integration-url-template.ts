@@ -8,10 +8,24 @@ export type UrlTemplateMode = "hostPort" | "subdomain";
 
 const getSlugForKind = (kind: IntegrationKind): string => integrationIconSlugs[kind];
 
-const buildUrl = (slug: string, host: string, mode: UrlTemplateMode, port?: number): string => {
+const normalizeBaseHost = (value: string) => {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  try {
+    const parsed = new URL(trimmed.includes("://") ? trimmed : `http://${trimmed}`);
+    return { hostname: parsed.hostname, port: parsed.port ? Number(parsed.port) : undefined };
+  } catch {
+    return null;
+  }
+};
+
+const buildUrl = (slug: string, rawHost: string, mode: UrlTemplateMode, port?: number): string => {
+  const base = normalizeBaseHost(rawHost);
+  if (!base) return "";
+  const effectivePort = port ?? base.port;
   const modeBuilders: Record<UrlTemplateMode, () => string> = {
-    subdomain: () => `https://${slug}.${host}`,
-    hostPort: () => (port ? `http://${host}:${port}` : `http://${host}`),
+    subdomain: () => (base.hostname.startsWith("[") ? "" : `https://${slug}.${base.hostname}`),
+    hostPort: () => (effectivePort ? `http://${base.hostname}:${effectivePort}` : `http://${base.hostname}`),
   };
   return modeBuilders[mode]();
 };
@@ -23,7 +37,6 @@ export const buildIntegrationUrl = (
   dockerPort?: number,
 ): string => {
   const host = removeTrailingSlash(baseHost.trim());
-  if (!host) return "";
   const port = dockerPort ?? getIntegrationDefaultPort(kind);
   return buildUrl(getSlugForKind(kind), host, mode, port ?? undefined);
 };
@@ -35,7 +48,6 @@ export const buildAppUrl = (
   dockerPort?: number,
 ): string => {
   const host = removeTrailingSlash(baseHost.trim());
-  if (!host) return "";
   const slug = containerName.toLowerCase().replace(/[^a-z0-9-]/g, "-");
   return buildUrl(slug, host, mode, dockerPort);
 };

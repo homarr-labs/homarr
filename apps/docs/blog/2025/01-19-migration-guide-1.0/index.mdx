@@ -28,25 +28,12 @@ Please note that if you are using docker you need to specify a diffrent external
 So in your compose file the ports would be `7576:7575` instead of `7575:7575`.
 
 ## Import your data
-Once the installation is completed you can access the new installation. During the onboarding you'll need to select `Import from Homarr before 1.0`.
 
-![Onboarding initial step](./img/onboarding-step-1.png)
+:::warning Legacy guide
 
-After that you can upload the zip file you downloaded in the first step.
+The pre-1.0 ZIP importer described by this historical migration guide is no longer included in current Homarr releases. Keep the old installation and export available while you recreate the required apps and boards in a supported release. SQLite database backups from current Homarr releases can still be restored from the onboarding welcome screen.
 
-![Onboarding import dropzone](./img/old-homarr-import-dropzone.png)
-
-After that you'll get a list with all your boards that can be imported. You can configure how it should be imported and can select which screensizes it should import.
-
-![Onboarding import list](./img/old-homarr-import-choose-imported-data.png)
-
-Once you have selected everything you can click on `Confirm import and continue` which will open the encryption key input dialog where you can input the secret key you got during the export.
-
-![Onboarding import key input](./img/old-homarr-import-decryption-token.png)
-
-After that you can continue the onboarding and you should see all your boards and data in the new installation.
-
-See [After the installation](https://homarr.dev/docs/getting-started/after-the-installation) for more information.
+:::
 
 ## Remove the old installation
 

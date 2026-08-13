@@ -4,9 +4,9 @@ import { Box, Paper, Stack, Text } from "@mantine/core";
 
 import { useCurrentLayout, useInitialViewportWidth, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { getRepresentativeLayoutWidth } from "../_layout-utils";
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
 import {
   getBoardLaneColumnCount,

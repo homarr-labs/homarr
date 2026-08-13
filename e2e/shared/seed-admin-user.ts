@@ -17,13 +17,13 @@ export const seedAdminUserAsync = async (db: SqliteDatabase, input: SeedAdminUse
   if (existingOnboarding) {
     await db.update(sqliteSchema.onboarding).set({
       step: "finish",
-      previousStep: "settings",
+      previousStep: "setup",
     });
   } else {
     await db.insert(sqliteSchema.onboarding).values({
       id: createId(),
       step: "finish",
-      previousStep: "settings",
+      previousStep: "setup",
     });
   }
 

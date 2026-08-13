@@ -71,7 +71,11 @@ export default async function MediaListPage(props: MediaListPageProps) {
       }
       toolbar={
         <Group>
-          <SearchInput placeholder={`${t("media.search")}...`} defaultValue={searchParams.search} />
+          <SearchInput
+            placeholder={`${t("media.search")}...`}
+            ariaLabel={t("media.search")}
+            defaultValue={searchParams.search}
+          />
           {session.user.permissions.includes("media-view-all") && (
             <IncludeFromAllUsersSwitch defaultChecked={searchParams.includeFromAllUsers} />
           )}

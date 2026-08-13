@@ -196,6 +196,7 @@ const ItemSelectModalContent = ({
       search={search}
       onSearchChange={setSearch}
       placeholder={`${t("item.create.search")}...`}
+      ariaLabel={t("item.create.search")}
       onSearchKeyDown={(event) => {
         if (event.key === "Enter" && loadingSelection === null && filteredItems.length === 1) {
           const [item] = filteredItems;

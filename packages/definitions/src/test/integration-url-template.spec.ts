@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { getIntegrationDefaultPort } from "../integration";
-import { buildIntegrationUrl } from "../integration-url-template";
+import { buildAppUrl, buildIntegrationUrl } from "../integration-url-template";
 
 describe("buildIntegrationUrl", () => {
   it("builds subdomain URL", () => {
@@ -25,6 +25,31 @@ describe("buildIntegrationUrl", () => {
     expect(buildIntegrationUrl("sonarr", "homelab.local///", "subdomain")).toBe("https://sonarr.homelab.local");
   });
 
+  it("accepts full URLs but ignores their path when suggesting service URLs", () => {
+    expect(buildIntegrationUrl("sonarr", "https://home.example.com/homarr", "hostPort")).toBe(
+      "http://home.example.com:8989",
+    );
+    expect(buildAppUrl("My Service", "http://home.example.com/path", "subdomain")).toBe(
+      "https://my-service.home.example.com",
+    );
+  });
+
+  it("replaces a supplied base port instead of producing a double port", () => {
+    expect(buildIntegrationUrl("sonarr", "https://home.example.com:8443/homarr", "hostPort")).toBe(
+      "http://home.example.com:8989",
+    );
+    expect(buildAppUrl("My Service", "https://home.example.com:8443/homarr", "hostPort")).toBe(
+      "http://home.example.com:8443",
+    );
+  });
+
+  it("formats IPv6 hosts safely in host-port mode", () => {
+    expect(buildIntegrationUrl("sonarr", "https://[2001:db8::1]:8443/homarr", "hostPort")).toBe(
+      "http://[2001:db8::1]:8989",
+    );
+    expect(buildIntegrationUrl("sonarr", "[2001:db8::1]", "subdomain")).toBe("");
+  });
+
   it("returns empty string for empty host", () => {
     expect(buildIntegrationUrl("sonarr", "", "subdomain")).toBe("");
   });
@@ -37,5 +62,11 @@ describe("buildIntegrationUrl", () => {
     expect(getIntegrationDefaultPort("radarr")).toBe(7878);
     expect(getIntegrationDefaultPort("prowlarr")).toBe(9696);
     expect(getIntegrationDefaultPort("jellyfin")).toBe(8096);
+    expect(getIntegrationDefaultPort("technitiumDns")).toBe(5380);
+    expect(getIntegrationDefaultPort("dashDot")).toBe(3001);
+    expect(getIntegrationDefaultPort("gotify")).toBe(80);
+    expect(getIntegrationDefaultPort("peaNut")).toBe(8080);
+    expect(getIntegrationDefaultPort("gluetun")).toBe(8000);
+    expect(getIntegrationDefaultPort("archiveTeamWarrior")).toBe(8001);
   });
 });

@@ -263,15 +263,6 @@ Even hidden options need translation keys or the translation test fails:
 "widget.mywidget.option.columnWidths.label": "Column widths"
 ```
 
-### Old-import mappings
-
-Add to `packages/old-import/src/widgets/options.ts`:
-
-```typescript
-columnOrder: () => undefined,
-columnWidths: () => undefined,
-```
-
 ### Dynamic storeKey
 
 Use a key that includes `itemId` and sorted column names. This prevents cross-widget localStorage bleeding:
@@ -610,13 +601,12 @@ if (isEditMode) rowContextMenuHandler = undefined;
 4. Add CSS file for transparent backgrounds (if widget context)
 5. Add responsive column visibility (if widget context)
 6. Add hidden options + hydration logic (if column persistence needed)
-7. Add old-import mappings for new options
-8. Add translation keys (including hidden option labels)
-9. Add context menu if row actions exist
-10. Add row expansion if detail view exists
-11. Add error handling on all mutations
-12. Add accessibility attributes
-13. Test at multiple widget widths
-14. Update docs in `apps/docs/docs/widgets/` if applicable
-15. Run `pnpm turbo typecheck` — catches old-import mismatches
-16. Run translation spec — catches missing keys
+7. Add translation keys (including hidden option labels)
+8. Add context menu if row actions exist
+9. Add row expansion if detail view exists
+10. Add error handling on all mutations
+11. Add accessibility attributes
+12. Test at multiple widget widths
+13. Update docs in `apps/docs/docs/widgets/` if applicable
+14. Run `pnpm turbo typecheck`
+15. Run translation spec — catches missing keys

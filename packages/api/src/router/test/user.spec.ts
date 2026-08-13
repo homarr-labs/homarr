@@ -8,6 +8,7 @@ import { invites, onboarding, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
+import { claimOnboardingAsync } from "../../onboarding-claim";
 import { userRouter } from "../user";
 
 const defaultOwnerId = createId();
@@ -40,11 +41,12 @@ vi.mock("@homarr/auth/env", () => {
 describe("initUser should initialize the first user", () => {
   it("should create a user if none exists", async () => {
     const db = createDb();
-    await createOnboardingStepAsync(db, "user");
+    const onboardingClaimToken = await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
       deviceType: undefined,
       session: null,
+      onboardingClaimToken,
     });
 
     await caller.initUser({
@@ -64,11 +66,12 @@ describe("initUser should initialize the first user", () => {
 
   it("should not create a user if the password and confirmPassword do not match", async () => {
     const db = createDb();
-    await createOnboardingStepAsync(db, "user");
+    const onboardingClaimToken = await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
       deviceType: undefined,
       session: null,
+      onboardingClaimToken,
     });
 
     const actAsync = async () =>
@@ -83,11 +86,12 @@ describe("initUser should initialize the first user", () => {
 
   it.each([["aB2%"], ["short"]])("should reject passwords shorter than 8 characters for '%s'", async (password) => {
     const db = createDb();
-    await createOnboardingStepAsync(db, "user");
+    const onboardingClaimToken = await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
       deviceType: undefined,
       session: null,
+      onboardingClaimToken,
     });
 
     const actAsync = async () =>
@@ -102,11 +106,12 @@ describe("initUser should initialize the first user", () => {
 
   it("should accept passwords without complexity requirements", async () => {
     const db = createDb();
-    await createOnboardingStepAsync(db, "user");
+    const onboardingClaimToken = await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
       deviceType: undefined,
       session: null,
+      onboardingClaimToken,
     });
 
     await caller.initUser({
@@ -126,11 +131,12 @@ describe("initUser should initialize the first user", () => {
 
   it("should accept passwords with special characters like LoveHomarr<3", async () => {
     const db = createDb();
-    await createOnboardingStepAsync(db, "user");
+    const onboardingClaimToken = await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
       deviceType: undefined,
       session: null,
+      onboardingClaimToken,
     });
 
     await caller.initUser({
@@ -439,4 +445,7 @@ const createOnboardingStepAsync = async (db: Database, step: OnboardingStep) => 
     id: createId(),
     step,
   });
+  const claim = await claimOnboardingAsync(db);
+  if (claim.status !== "issued") throw new Error("Expected an onboarding claim");
+  return claim.token;
 };

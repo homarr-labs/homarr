@@ -8,6 +8,11 @@ import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
+import {
+  getOnboardingClaimTokenFromCookieHeader,
+  isClaimOnlyOnboardingAccessAllowedAsync,
+} from "@homarr/api/onboarding-claim";
+import { normalizeOnboardingStep } from "@homarr/api/onboarding-step";
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
@@ -75,13 +80,17 @@ const reEncryptSecrets = (tempDb: InstanceType<typeof Database>, importedKeyHex:
 const isOnboardingActiveAsync = async (): Promise<boolean> => {
   const onboardingRow = await db.query.onboarding.findFirst();
   if (!onboardingRow) return false;
-  return onboardingRow.step === "start";
+  return normalizeOnboardingStep(onboardingRow.step) === "start";
 };
 
 export async function POST(req: Request) {
   const session = await auth();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
-  const isOnboarding = !isAdmin && (await isOnboardingActiveAsync());
+  const hasOnboardingClaim = await isClaimOnlyOnboardingAccessAllowedAsync(
+    db,
+    getOnboardingClaimTokenFromCookieHeader(req.headers.get("cookie")),
+  );
+  const isOnboarding = !isAdmin && hasOnboardingClaim && (await isOnboardingActiveAsync());
 
   if (!isAdmin && !isOnboarding) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });

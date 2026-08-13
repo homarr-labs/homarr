@@ -20,6 +20,7 @@ import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
 import { env } from "./env";
+import { getOnboardingClaimTokenFromCookieHeader, isClaimOnlyOnboardingAccessAllowedAsync } from "./onboarding-claim";
 import { getOnboardingOrFallbackAsync } from "./router/onboard/onboard-queries";
 import type { McpMeta } from "./mcp-tools";
 
@@ -41,6 +42,7 @@ interface ApiContext {
   session: Session | null;
   deviceType: DeviceType;
   baseUrl?: `${string}://${string}`;
+  onboardingClaimToken?: string;
   db: typeof db;
 }
 
@@ -58,6 +60,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
     session,
     deviceType: userAgent(opts.headers).device.type,
     baseUrl: extractBaseUrlFromHeaders(opts.headers),
+    onboardingClaimToken: getOnboardingClaimTokenFromCookieHeader(opts.headers.get("cookie")),
     db,
   };
 };
@@ -129,6 +132,19 @@ const baseProcedure = isDemoReadOnly ? t.procedure.use(enforceDemoModeReadOnly) 
  */
 export const publicProcedure = baseProcedure;
 
+const enforceOnboardingAccess = t.middleware(async ({ ctx, next }) => {
+  const isAdmin = ctx.session?.user.permissions.includes("admin") ?? false;
+  if (!isAdmin) {
+    const hasValidClaim = await isClaimOnlyOnboardingAccessAllowedAsync(ctx.db, ctx.onboardingClaimToken);
+    if (!hasValidClaim) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "This onboarding session is not claimed." });
+    }
+  }
+  return next({ ctx });
+});
+
+export const onboardingClaimedProcedure = baseProcedure.use(enforceOnboardingAccess);
+
 export const internalProcedure = t.procedure;
 
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
@@ -177,7 +193,7 @@ export const permissionRequiredProcedure = {
 
 export const onboardingProcedure = {
   requiresStep: (step: OnboardingStep) => {
-    return publicProcedure.use(async ({ ctx, input, next }) => {
+    return onboardingClaimedProcedure.use(async ({ ctx, input, next }) => {
       const currentStep = await getOnboardingOrFallbackAsync(ctx.db).then(({ current }) => current);
       if (currentStep !== step) {
         throw new TRPCError({

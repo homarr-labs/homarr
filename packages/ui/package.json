@@ -13,6 +13,7 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./integration-select-grid": "./src/integration-select-grid/index.ts",
     "./styles.css": "./src/styles.css",
     "./hooks": "./src/hooks/index.ts",
     "./icons": "./src/icons/index.ts"

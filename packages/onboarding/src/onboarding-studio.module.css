@@ -1,0 +1,504 @@
+.page {
+  --studio-surface: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
+  min-height: 100dvh;
+  overflow-x: clip;
+  position: relative;
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      color-mix(in srgb, var(--mantine-primary-color-filled) 14%, transparent),
+      transparent 34rem
+    ),
+    radial-gradient(
+      circle at 90% 5%,
+      color-mix(in srgb, var(--mantine-color-orange-6) 10%, transparent),
+      transparent 30rem
+    ),
+    var(--mantine-color-body);
+}
+
+.page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  background-image: radial-gradient(circle, var(--mantine-color-dimmed) 0.7px, transparent 0.7px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom, black, transparent 75%);
+}
+
+.shell {
+  position: relative;
+  width: min(100% - 2rem, 76rem);
+  margin-inline: auto;
+  padding-block: clamp(1rem, 3vw, 2.5rem) 5rem;
+}
+
+.topbar {
+  min-height: 3rem;
+  gap: var(--mantine-spacing-sm);
+}
+
+.wordmark {
+  display: block;
+  width: clamp(9.5rem, 22vw, 14rem);
+  height: auto;
+  padding: 0.4rem 0.55rem;
+  border-radius: var(--mantine-radius-md);
+  background: rgba(12, 12, 14, 0.86);
+  filter: drop-shadow(0 0.8rem 1.6rem color-mix(in srgb, black 22%, transparent));
+}
+
+.hero {
+  min-height: calc(100dvh - 8rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.heroTitle {
+  font-size: clamp(2.5rem, 7vw, 5.8rem);
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+  max-width: 11ch;
+}
+
+.heroPanel,
+.studio {
+  background: var(--studio-surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 76%, transparent);
+  box-shadow: var(--mantine-shadow-sm);
+}
+
+.heroPanel {
+  position: relative;
+  min-height: 27rem;
+  overflow: hidden;
+}
+
+.orbit {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 18rem;
+  height: 18rem;
+  margin: -9rem;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--mantine-primary-color-filled) 35%, transparent);
+}
+
+.orbitItem {
+  position: absolute;
+  width: 3.25rem;
+  height: 3.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--mantine-radius-lg);
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-default-border);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.orbitItem:nth-child(1) {
+  inset: -1.6rem auto auto calc(50% - 1.6rem);
+}
+.orbitItem:nth-child(2) {
+  inset: calc(50% - 1.6rem) -1.6rem auto auto;
+}
+.orbitItem:nth-child(3) {
+  inset: auto auto -1.6rem calc(50% - 1.6rem);
+}
+.orbitItem:nth-child(4) {
+  inset: calc(50% - 1.6rem) auto auto -1.6rem;
+}
+
+.studio {
+  overflow: clip;
+}
+
+.studioGrid {
+  display: grid;
+  grid-template-columns: 17rem minmax(0, 1fr);
+  min-height: 40rem;
+}
+
+.rail {
+  padding: 1.25rem;
+  border-right: 1px solid var(--mantine-color-default-border);
+  background: color-mix(in srgb, var(--mantine-color-default) 40%, transparent);
+}
+
+.railButton {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--mantine-radius-md);
+  color: var(--mantine-color-dimmed);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+}
+
+.railButton[data-active="true"] {
+  color: var(--mantine-color-text);
+  background: var(--mantine-color-default-hover);
+}
+
+.railButton:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.content {
+  min-width: 0;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.sectionCard {
+  background: var(--studio-surface);
+  border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 76%, transparent);
+}
+
+.choiceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--mantine-spacing-sm);
+}
+
+.choice {
+  min-height: 9rem;
+  text-align: left;
+  border-radius: var(--mantine-radius-lg);
+  border: 1px solid var(--mantine-color-default-border);
+  background: var(--mantine-color-body);
+  padding: var(--mantine-spacing-md);
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    transform 150ms ease;
+}
+
+.choice[data-selected="true"] {
+  border-color: var(--mantine-primary-color-filled);
+  background: color-mix(in srgb, var(--mantine-primary-color-light) 70%, var(--mantine-color-body));
+}
+
+.choice:hover {
+  transform: translateY(-2px);
+}
+
+.choice:focus-visible {
+  outline: 3px solid var(--mantine-primary-color-light-color);
+  outline-offset: 2px;
+}
+
+.preview {
+  margin: 0;
+  aspect-ratio: 16 / 9;
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  overflow: hidden;
+  border-radius: var(--mantine-radius-lg);
+  background: color-mix(in srgb, var(--mantine-color-default) 66%, transparent);
+  border: 1px solid var(--mantine-color-default-border);
+}
+
+.previewLane {
+  min-width: 0;
+  border-radius: calc(var(--mantine-radius-lg) * 0.65);
+  background: color-mix(in srgb, var(--mantine-color-body) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 70%, transparent);
+  padding: 0.35rem;
+}
+
+.previewTiles {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(0.8rem, 1fr);
+  gap: 0.3rem;
+}
+
+.previewTile {
+  border-radius: calc(var(--mantine-radius-lg) * 0.45);
+  background: linear-gradient(
+    135deg,
+    var(--mantine-primary-color-light),
+    color-mix(in srgb, var(--mantine-color-orange-light) 60%, transparent)
+  );
+  border: 1px solid color-mix(in srgb, var(--mantine-primary-color-filled) 22%, transparent);
+}
+
+.previewTile:nth-child(1) {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+.previewTile:nth-child(2) {
+  grid-column: span 2;
+}
+.previewTile:nth-child(3) {
+  grid-column: span 1;
+}
+.previewTile:nth-child(4) {
+  grid-column: span 1;
+}
+.previewTile:nth-child(5) {
+  grid-column: span 4;
+}
+
+.assistantStage {
+  position: relative;
+  min-height: 13rem;
+  overflow: hidden;
+  border-radius: var(--mantine-radius-lg);
+  background: color-mix(in srgb, var(--mantine-primary-color-light) 44%, var(--mantine-color-body));
+}
+
+.assistantGlow {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 12rem;
+  height: 12rem;
+  margin: -6rem;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--mantine-primary-color-filled) 35%, transparent),
+    transparent 68%
+  );
+}
+
+.stickyActions {
+  position: sticky;
+  z-index: 2;
+  bottom: 0;
+  margin: 1.5rem -2rem -2rem;
+  padding: 1rem 2rem;
+  background: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
+  border-top: 1px solid var(--mantine-color-default-border);
+  backdrop-filter: blur(16px);
+}
+
+.applyError {
+  margin-top: var(--mantine-spacing-lg);
+}
+
+.nextCard {
+  color: inherit;
+  text-decoration: none;
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease;
+}
+
+.nextCard:hover {
+  background: var(--mantine-color-default-hover);
+  transform: translateY(-2px);
+}
+
+.nextCard:focus-visible {
+  outline: 3px solid var(--mantine-primary-color-light-color);
+  outline-offset: 2px;
+}
+
+.content :global(.mantine-Button-root),
+.content :global(.mantine-SegmentedControl-label),
+.page :global(.mantine-Input-input),
+.page :global(.mantine-Tabs-tab) {
+  min-height: 2.75rem;
+}
+
+.page :global(.mantine-Switch-body) {
+  min-height: 2.75rem;
+  align-items: center;
+}
+
+@media (max-width: 62em) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-block: 3rem;
+  }
+
+  .heroPanel {
+    min-height: 22rem;
+  }
+
+  .studioGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .rail {
+    border-right: 0;
+    border-bottom: 1px solid var(--mantine-color-default-border);
+    overflow-x: auto;
+  }
+
+  .railList {
+    min-width: max-content;
+    flex-direction: row;
+  }
+
+  .railButton {
+    width: auto;
+    min-width: 10rem;
+  }
+}
+
+@media (max-width: 48em) {
+  .shell {
+    width: min(100% - 1rem, 76rem);
+  }
+
+  .heroTitle {
+    font-size: clamp(2.35rem, 14vw, 4.5rem);
+  }
+
+  .choiceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .stickyActions {
+    margin: 1rem -1rem -1rem;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  }
+
+  .primaryActions {
+    width: 100%;
+  }
+
+  .primaryActions > * {
+    flex: 1 1 12rem;
+  }
+
+  .content :global(.mantine-SegmentedControl-root) {
+    overflow-x: auto;
+  }
+
+  .content :global(.mantine-Tabs-list) {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 30em) {
+  .shell {
+    width: calc(100% - 0.75rem);
+    padding-top: 0.75rem;
+  }
+
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .wordmark {
+    width: 9.5rem;
+  }
+
+  .hero {
+    min-height: auto;
+    gap: 2rem;
+    padding-block: 2rem 3rem;
+  }
+
+  .heroPanel {
+    min-height: 19rem;
+  }
+
+  .orbit {
+    scale: 0.78;
+  }
+
+  .rail {
+    padding: 0.75rem;
+  }
+
+  .railButton {
+    min-width: 8.5rem;
+  }
+
+  .stickyActions {
+    gap: var(--mantine-spacing-xs);
+  }
+
+  .backAction {
+    flex: 0 0 2.75rem;
+    width: 2.75rem;
+    padding-inline: 0;
+  }
+
+  .backAction :global(.mantine-Button-section) {
+    margin-inline: 0;
+  }
+
+  .backAction :global(.mantine-Button-label) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .primaryActions {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .fastAction {
+    flex: 1.15 1 0;
+    min-width: 0;
+    padding-inline: 0.25rem;
+  }
+
+  .primaryActions > :global(.mantine-Button-root):last-child {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-inline: 0.25rem;
+  }
+
+  .primaryActions > :global(.mantine-Button-root) {
+    font-size: var(--mantine-font-size-sm);
+  }
+
+  .content :global(.mantine-SegmentedControl-label) {
+    min-width: 0;
+    height: auto;
+    padding: 0.45rem 0.3rem;
+    line-height: 1.15;
+    white-space: normal;
+  }
+
+  .sectionCard :global(.mantine-Group-root) {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page {
+    scroll-behavior: auto;
+  }
+
+  .choice,
+  .railButton,
+  .nextCard {
+    transition: none;
+  }
+
+  .choice:hover {
+    transform: none;
+  }
+
+  .nextCard:hover {
+    transform: none;
+  }
+}

@@ -57,6 +57,6 @@ export class OnboardingAssertions {
   }
 
   public async assertFinishStepVisibleAsync() {
-    await this.page.waitForSelector("text=completed the setup", { timeout: 30_000 });
+    await this.page.getByRole("heading", { name: "Your first board is ready." }).waitFor({ timeout: 30_000 });
   }
 }

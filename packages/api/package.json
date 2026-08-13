@@ -17,7 +17,9 @@
     "./websocket": "./src/websocket.ts",
     "./shared": "./src/shared.ts",
     "./open-api": "./src/open-api.ts",
+    "./onboarding-claim": "./src/onboarding-claim.ts",
     "./assistant": "./src/assistant.ts",
+    "./onboarding-step": "./src/onboarding-step.ts",
     "./custom-widget/display-data": "./src/router/custom-widget/display-data.ts",
     "./mcp": "./src/mcp.ts",
     "./custom-widget-configuration": "./src/custom-widget-configuration.ts"
@@ -41,8 +43,6 @@
     "@homarr/docker": "workspace:^0.1.0",
     "@homarr/icons": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
-    "@homarr/old-import": "workspace:^0.1.0",
-    "@homarr/old-schema": "workspace:^0.1.0",
     "@homarr/ping": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/request-handler": "workspace:^0.1.0",
