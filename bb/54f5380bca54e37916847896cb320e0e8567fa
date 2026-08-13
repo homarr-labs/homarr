@@ -1,0 +1,21 @@
+packages/onboarding/src/setup-studio.tsx
+  s_f88a182f44b431::t_afef8778699887 126-128,415,576,582,679,1224,1258,1263,1744,1822,1830-1831
+packages/translation/src/lang/en.json
+  s_f88a182f44b431::t_afef8778699887 132
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "bb54f5380bca54e37916847896cb320e0e8567fa",
+  "prompts": {},
+  "sessions": {
+    "s_f88a182f44b431": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffc43-a969-7140-a8d1-074d9b38b745",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
