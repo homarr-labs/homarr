@@ -88,7 +88,7 @@ import {
   getWidgetKindsForIntegration,
   generalWidgets,
 } from "@homarr/definitions";
-import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
+import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import type { SupportedLanguage } from "@homarr/translation";
 import { useCurrentLocale, useScopedI18n } from "@homarr/translation/client";
 import { BoardColorInput, ColorSchemeCombobox, IntegrationAvatar, LanguageCombobox, Link } from "@homarr/ui";
@@ -1222,6 +1222,22 @@ const IntegrationEditor = ({
   const apiKeyUrl = getIntegrationApiKeyUrl(draft.url, draft.kind);
   const documentationUrl = getIntegrationDocumentationUrl(draft.kind);
   const needsConfiguration = !isIntegrationDraftComplete(draft);
+  const testConnection = clientApi.onboard.testIntegration.useMutation({
+    onSuccess(result) {
+      if (result.success) {
+        showSuccessNotification({ title: t("testSuccess"), message: t("testSuccessDescription") });
+      } else {
+        showErrorNotification({ title: t("testError"), message: t("testErrorDescription") });
+      }
+    },
+    onError() {
+      showErrorNotification({ title: t("testError"), message: t("testErrorDescription") });
+    },
+  });
+  const updateAndResetTest = (patch: Partial<IntegrationDraft>) => {
+    testConnection.reset();
+    update(patch);
+  };
   return (
     <Accordion.Item value={draft.id}>
       <Accordion.Control
@@ -1255,19 +1271,22 @@ const IntegrationEditor = ({
             <TextInput
               label={t("name")}
               value={draft.name}
-              onChange={(event) => update({ name: event.currentTarget.value })}
+              onChange={(event) => updateAndResetTest({ name: event.currentTarget.value })}
             />
             <TextInput
               label={t("url")}
               value={draft.url}
-              onChange={(event) => update({ url: event.currentTarget.value, urlOverridden: true })}
+              onChange={(event) => updateAndResetTest({ url: event.currentTarget.value, urlOverridden: true })}
             />
           </SimpleGrid>
           {options.length > 1 ? (
             <OnboardingFloatingControl
               ariaLabel={t("credentialMethod")}
               value={String(draft.secretOption)}
-              onChange={(value) => selectSecretOption(Number(value))}
+              onChange={(value) => {
+                testConnection.reset();
+                selectSecretOption(Number(value));
+              }}
               options={options.map((secretKinds, index) => ({
                 value: String(index),
                 label: secretKinds.length === 0 ? t("noCredentials") : secretKinds.map(formatSecretKind).join(" + "),
@@ -1280,7 +1299,7 @@ const IntegrationEditor = ({
               label={formatSecretKind(secret.kind)}
               value={secret.value}
               onChange={(event) =>
-                update({
+                updateAndResetTest({
                   secrets: draft.secrets.map((item, itemIndex) =>
                     itemIndex === index ? { ...item, value: event.currentTarget.value } : item,
                   ),
@@ -1293,6 +1312,29 @@ const IntegrationEditor = ({
               {t("noCredentialsDescription")}
             </Text>
           ) : null}
+          <Group justify="flex-end">
+            <Button
+              variant="default"
+              size="compact-sm"
+              disabled={needsConfiguration}
+              loading={testConnection.isPending}
+              color={
+                testConnection.data?.success ? "green" : testConnection.data?.success === false ? "red" : undefined
+              }
+              leftSection={testConnection.data?.success ? <IconCheck size={15} /> : <IconPlugConnected size={15} />}
+              onClick={() =>
+                testConnection.mutate({
+                  sourceId: draft.sourceId ?? draft.id,
+                  name: draft.name,
+                  url: normalizeServiceUrl(draft.url) ?? draft.url,
+                  kind: draft.kind,
+                  secrets: draft.secrets,
+                })
+              }
+            >
+              {t("testConnection")}
+            </Button>
+          </Group>
           {apiKeyUrl ? (
             <Anchor href={apiKeyUrl} target="_blank" rel="noopener noreferrer" size="sm">
               <Group gap={4}>

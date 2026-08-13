@@ -43,7 +43,7 @@ import {
   widgetIntegrationLimits,
 } from "@homarr/definitions";
 import type { IntegrationKind, OnboardingLayoutPreset, WidgetKind } from "@homarr/definitions";
-import { onboardingCompleteSetupSchema } from "@homarr/validation/onboarding";
+import { onboardingCompleteSetupSchema, onboardingIntegrationDraftSchema } from "@homarr/validation/onboarding";
 
 import { onboardingClaimSettingKey } from "../../onboarding-claim";
 import { env } from "../../env";
@@ -147,6 +147,24 @@ export const onboardRouter = createTRPCRouter({
     }
     await nextOnboardingStepAsync(ctx.db);
   }),
+
+  testIntegration: onboardingProcedure
+    .requiresStep("setup")
+    .input(onboardingIntegrationDraftSchema)
+    .mutation(async ({ input }) => {
+      const result = await testConnectionAsync({
+        id: stableOnboardingId("integration", input.sourceId),
+        name: input.name,
+        url: input.url,
+        kind: input.kind,
+        secrets: input.secrets,
+      }).catch((error) => {
+        if (!(error instanceof MissingSecretError)) throw error;
+        throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
+      });
+
+      return { success: result.success };
+    }),
 
   detectRuntimeCapabilities: onboardingProcedure
     .requiresStep("setup")

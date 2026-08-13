@@ -127,6 +127,11 @@
         "credentialMethod": "Credential method",
         "getApiKey": "Open the API key settings for this service",
         "openGuide": "Open Homarr's setup guide for this service",
+        "testConnection": "Test connection",
+        "testSuccess": "Connection works",
+        "testSuccessDescription": "Homarr connected with the current address and credentials.",
+        "testError": "Connection failed",
+        "testErrorDescription": "Check the service address and credentials, then try again.",
         "needsConfiguration": "Needs configuration",
         "configured": "Configured",
         "incompleteConfirmation": "Unfinished integrations will be skipped. Continue without them?"
