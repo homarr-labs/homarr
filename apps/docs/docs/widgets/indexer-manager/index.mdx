@@ -1,37 +1,37 @@
 ---
-title: 'Indexer manager status'
-description: 'View the status of your indexers.'
+title: "Indexer manager status"
+description: "View the status of your indexers."
 hide_title: true
 ---
 
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { indexerManagerWidget } from '.';
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetIntegrations } from "@site/src/components/widgets/integrations";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { indexerManagerWidget } from ".";
 
-
-<WidgetHeader
-  widget={indexerManagerWidget}
-  categories={['Indexer']}
-/>
+<WidgetHeader widget={indexerManagerWidget} categories={["Indexer"]} />
 
 ### Screenshots
 
-import bigItem from './img/big.png';
-import smallItem from './img/small.png';
-import { prowlarrIntegration } from '@site/docs/integrations/prowlarr';
+import bigItem from "./img/big.png";
+import smallItem from "./img/small.png";
+import { prowlarrIntegration } from "@site/docs/integrations/prowlarr";
 
-<div className='flex gap-1'>
+<div className="flex gap-1">
   <img src={bigItem} height={256} alt="indexer-manager size-big" />
   <img src={smallItem} height={128} alt="indexer-manager size-small" />
 </div>
 
 ### Supported Integrations
 
-<WidgetIntegrations items={[{
-  integration: prowlarrIntegration,
-}]} />
+<WidgetIntegrations
+  items={[
+    {
+      integration: prowlarrIntegration,
+    },
+  ]}
+/>
 
 ### Interactions
 
@@ -41,7 +41,6 @@ import { prowlarrIntegration } from '@site/docs/integrations/prowlarr';
 
 <AddingWidget />
 
-
 ### Configuration
-<WidgetConfig configuration={indexerManagerWidget.configuration} />
 
+<WidgetConfig configuration={indexerManagerWidget.configuration} />

@@ -1,36 +1,41 @@
 ---
-title: 'NZBGet'
+title: "NZBGet"
 description: "NZBGet is a lightweight and efficient Usenet downloader."
 hide_title: true
 ---
 
-import { IntegrationHeader } from '@site/src/components/integrations/header';
-import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
-import { AddingIntegration } from '@site/src/components/integrations/adding';
-import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { IntegrationHeader } from "@site/src/components/integrations/header";
+import { IntegrationCapabilites } from "@site/src/components/integrations/widgets";
+import { AddingIntegration } from "@site/src/components/integrations/adding";
+import { IntegrationSecrets } from "@site/src/components/integrations/secrets";
 import { IconDownload } from "@tabler/icons-react";
-import { nzbgetIntegration } from '.';
-import Alert from '@theme/Admonition';
-import { downloadsWidget } from '@site/docs/widgets/downloads';
+import { nzbgetIntegration } from ".";
+import Alert from "@theme/Admonition";
+import { downloadsWidget } from "@site/docs/widgets/downloads";
 
-
-<IntegrationHeader
-  integration={nzbgetIntegration}
-  categories={['Usenet client']}
-/>
+<IntegrationHeader integration={nzbgetIntegration} categories={["Usenet client"]} />
 
 ### Widgets & Capabilities
+
 <IntegrationCapabilites
-    items={[{
-        widget: downloadsWidget,
-    }]}
+  items={[
+    {
+      widget: downloadsWidget,
+    },
+  ]}
 />
 
 ### Adding the integration
+
 <AddingIntegration />
 
 ### Secrets
-<IntegrationSecrets secrets={[{
-    credentials: ['username', 'password'],
-    steps: [],
-}]} />
+
+<IntegrationSecrets
+  secrets={[
+    {
+      credentials: ["username", "password"],
+      steps: [],
+    },
+  ]}
+/>

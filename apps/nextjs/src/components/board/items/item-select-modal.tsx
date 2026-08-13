@@ -1,53 +1,68 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Avatar, Box, Button, Card, Center, Divider, Group, Image, Stack, Text, Tooltip } from "@mantine/core";
 import { IconApi } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { createId, objectEntries } from "@homarr/common";
-import { getIconUrl, getIntegrationName } from "@homarr/definitions";
+import { createId } from "@homarr/common";
+import { getIconUrl, getIntegrationName, widgetIntegrationSupport, widgetKinds } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
+import { showErrorNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { SelectGridLayout, selectGridCardHeight } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
-import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
-import { WidgetEditModal } from "@homarr/widgets/modals";
+import { widgetCatalogIcons } from "@homarr/widgets/catalog";
+import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import { WorkshopInstallButton } from "~/components/workshop/workshop-install-button";
 import { useItemActions } from "./item-actions";
+import { resolveMatchingIntegrationsAsync, tryLockSelection, unlockSelection } from "./item-select-data";
+import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
+import classes from "./item-select-modal.module.css";
 
-export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, innerProps }) => {
-  const { data: session } = useSession();
-  const isAdmin = session?.user.permissions.includes("admin") ?? false;
+interface ItemSelectModalContentProps {
+  actions: { closeModal: () => void };
+  integrationData: RouterOutputs["integration"]["all"] | undefined;
+  customWidgetDefs: RouterOutputs["customWidget"]["available"] | undefined;
+  ensureIntegrationDataAsync: () => Promise<RouterOutputs["integration"]["all"]>;
+  isAdmin: boolean;
+}
+
+const ItemSelectModalContent = ({
+  actions,
+  integrationData,
+  customWidgetDefs,
+  ensureIntegrationDataAsync,
+  isAdmin,
+}: ItemSelectModalContentProps) => {
   const [search, setSearch] = useState("");
+  const [loadingSelection, setLoadingSelection] = useState<string | null>(null);
+  const selectionLock = useRef(false);
   const t = useI18n();
   const { createItem, updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
-  const { openModal: openEditModal } = useModalAction(WidgetEditModal);
-  const { data: integrationData } = clientApi.integration.all.useQuery();
-  const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery(
-    { boardId: innerProps.boardId },
-    { enabled: isAdmin },
-  );
+  const { openModal: openEditModal } = useModalAction(LazyWidgetEditModal);
   const settings = useSettings();
 
   const availableKinds = useMemo(() => new Set((integrationData ?? []).map((i) => i.kind)), [integrationData]);
 
   const items = useMemo(
     () =>
-      objectEntries(widgetImports)
-        .filter(([kind]) => kind !== "customApi")
-        .map(([kind, value]) => ({
-          kind,
-          supportedIntegrations:
-            "supportedIntegrations" in value.definition
-              ? value.definition.supportedIntegrations.filter((integration) => integration !== "mock")
-              : [],
-          icon: value.definition.icon,
-          name: t(`widget.${kind}.name`),
-          description: t(`widget.${kind}.description`),
-        }))
+      widgetKinds
+        .filter((kind) => kind !== "customApi")
+        .map((kind) => {
+          return {
+            kind,
+            supportedIntegrations: (widgetIntegrationSupport[kind] ?? []).filter(
+              (integration) => integration !== "mock",
+            ),
+            icon: widgetCatalogIcons[kind],
+            name: t(`widget.${kind}.name`),
+            description: t(`widget.${kind}.description`),
+          };
+        })
         .sort((itemA, itemB) => {
           if (itemA.kind === "app") return -1;
           if (itemB.kind === "app") return 1;
@@ -72,77 +87,108 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
     [customWidgetDefs, search],
   );
 
-  const handleAddCustomWidget = (definition: NonNullable<typeof customWidgetDefs>[number]) => {
-    const itemId = createId();
-    const defaultOptions = reduceWidgetOptionsWithDefaultValues("customApi", settings);
-    const options = {
-      ...defaultOptions,
-      definitionId: definition.id,
-      configuration: definition.defaultOptions,
-      configurationVersion: definition.updatedAt.getTime(),
-    };
-    actions.closeModal();
-    openEditModal(
-      {
-        kind: "customApi",
-        value: {
-          advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
-          options,
-          integrationIds: [],
-        },
-        onSuccessfulEdit: ({ options: configuredOptions, advancedOptions }) => {
-          createItem({ id: itemId, kind: "customApi", integrationIds: [] });
-          updateItemOptions({ itemId, newOptions: configuredOptions });
-          updateItemAdvancedOptions({ itemId, newAdvancedOptions: advancedOptions });
-        },
-        integrationData: [],
-        integrationSupport: false,
-        settings,
-      },
-      {
-        title: (titleT) => `${titleT("item.edit.title")} - ${definition.name}`,
-      },
-    );
+  const notifyDefinitionLoadError = (error: unknown) => {
+    showErrorNotification({
+      title: t("common.error"),
+      message: error instanceof Error ? error.message : String(error),
+    });
   };
 
-  const handleAdd = (kind: WidgetKind) => {
-    const definition = widgetImports[kind].definition;
-    const hasIntegrationSupport = "supportedIntegrations" in definition;
-
-    const matchingIntegrations = hasIntegrationSupport
-      ? (integrationData ?? []).filter((integration) =>
-          (definition.supportedIntegrations as string[]).includes(integration.kind),
-        )
-      : [];
-
-    const integrationIds = matchingIntegrations.map((i) => i.id);
-    const itemId = createId();
-    const defaultOptions = reduceWidgetOptionsWithDefaultValues(kind, settings);
-
-    createItem({ id: itemId, kind, integrationIds });
-    actions.closeModal();
-
-    openEditModal(
-      {
-        kind,
-        value: {
-          advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
-          options: defaultOptions,
-          integrationIds,
+  const handleAddCustomWidget = async (customWidgetDefinition: NonNullable<typeof customWidgetDefs>[number]) => {
+    if (!tryLockSelection(selectionLock)) return;
+    setLoadingSelection(`custom:${customWidgetDefinition.id}`);
+    preloadWidgetEditModal();
+    try {
+      const definition = await loadWidgetDefinition("customApi");
+      const itemId = createId();
+      const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
+      const options = {
+        ...defaultOptions,
+        definitionId: customWidgetDefinition.id,
+        configuration: customWidgetDefinition.defaultOptions,
+        configurationVersion: customWidgetDefinition.updatedAt.getTime(),
+      };
+      actions.closeModal();
+      openEditModal(
+        {
+          kind: "customApi",
+          definition,
+          value: {
+            advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
+            options,
+            integrationIds: [],
+          },
+          onSuccessfulEdit: ({ options: configuredOptions, advancedOptions }) => {
+            createItem({ id: itemId, kind: "customApi", integrationIds: [] });
+            updateItemOptions({ itemId, newOptions: configuredOptions });
+            updateItemAdvancedOptions({ itemId, newAdvancedOptions: advancedOptions });
+          },
+          integrationData: [],
+          integrationSupport: false,
+          settings,
         },
-        onSuccessfulEdit: ({ options, integrationIds: newIntegrationIds, advancedOptions }) => {
-          updateItemOptions({ itemId, newOptions: options });
-          updateItemAdvancedOptions({ itemId, newAdvancedOptions: advancedOptions });
-          updateItemIntegrations({ itemId, newIntegrations: newIntegrationIds });
+        {
+          title: (titleT) => `${titleT("item.edit.title")} - ${customWidgetDefinition.name}`,
         },
-        integrationData: matchingIntegrations,
-        integrationSupport: hasIntegrationSupport,
-        settings,
-      },
-      {
-        title: (titleT) => `${titleT("item.edit.title")} - ${titleT(`widget.${kind}.name`)}`,
-      },
-    );
+      );
+    } catch (error) {
+      notifyDefinitionLoadError(error);
+    } finally {
+      unlockSelection(selectionLock);
+      setLoadingSelection(null);
+    }
+  };
+
+  const handleAdd = async (kind: WidgetKind) => {
+    if (!tryLockSelection(selectionLock)) return;
+    setLoadingSelection(kind);
+    preloadWidgetEditModal();
+    try {
+      const definition = await loadWidgetDefinition(kind);
+      const hasIntegrationSupport = "supportedIntegrations" in definition;
+
+      const matchingIntegrations = await resolveMatchingIntegrationsAsync({
+        hasIntegrationSupport,
+        supportedIntegrations: definition.supportedIntegrations ?? [],
+        currentData: integrationData,
+        ensureDataAsync: ensureIntegrationDataAsync,
+      });
+
+      const integrationIds = matchingIntegrations.map((i) => i.id);
+      const itemId = createId();
+      const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
+
+      createItem({ id: itemId, kind, integrationIds });
+      actions.closeModal();
+
+      openEditModal(
+        {
+          kind,
+          definition,
+          value: {
+            advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
+            options: defaultOptions,
+            integrationIds,
+          },
+          onSuccessfulEdit: ({ options, integrationIds: newIntegrationIds, advancedOptions }) => {
+            updateItemOptions({ itemId, newOptions: options });
+            updateItemAdvancedOptions({ itemId, newAdvancedOptions: advancedOptions });
+            updateItemIntegrations({ itemId, newIntegrations: newIntegrationIds });
+          },
+          integrationData: matchingIntegrations,
+          integrationSupport: hasIntegrationSupport,
+          settings,
+        },
+        {
+          title: (titleT) => `${titleT("item.edit.title")} - ${titleT(`widget.${kind}.name`)}`,
+        },
+      );
+    } catch (error) {
+      notifyDefinitionLoadError(error);
+    } finally {
+      unlockSelection(selectionLock);
+      setLoadingSelection(null);
+    }
   };
 
   return (
@@ -151,9 +197,9 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
       onSearchChange={setSearch}
       placeholder={`${t("item.create.search")}...`}
       onSearchKeyDown={(event) => {
-        if (event.key === "Enter" && filteredItems.length === 1) {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          handleAdd(filteredItems[0]!.kind);
+        if (event.key === "Enter" && loadingSelection === null && filteredItems.length === 1) {
+          const [item] = filteredItems;
+          if (item) void handleAdd(item.kind);
         }
       }}
     >
@@ -161,7 +207,13 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
         <WidgetItem
           key={item.kind}
           item={item}
-          onSelect={() => handleAdd(item.kind)}
+          onSelect={() => void handleAdd(item.kind)}
+          onIntent={() => {
+            void loadWidgetDefinition(item.kind).catch(() => undefined);
+            preloadWidgetEditModal();
+          }}
+          disabled={loadingSelection !== null}
+          loading={loadingSelection === item.kind}
           hasMatchingIntegration={item.supportedIntegrations.some((kind) => availableKinds.has(kind))}
         />
       ))}
@@ -177,12 +229,12 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
           {filteredCustomWidgets.map((def) => (
             <Card
               key={def.id}
+              className={classes.card}
               h={selectGridCardHeight}
               withBorder
               pos="relative"
-              style={{ overflow: "hidden", "--_hover-opacity": "0" }}
-              onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
-              onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
+              style={{ overflow: "hidden" }}
+              onPointerEnter={() => void loadWidgetDefinition("customApi").catch(() => undefined)}
             >
               <Stack h="100%" gap="xs">
                 <Group gap="sm" wrap="nowrap" align="flex-start">
@@ -200,18 +252,24 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
                 </Text>
               </Stack>
               <Box
+                className={classes.action}
                 pos="absolute"
                 bottom={0}
                 left={0}
                 right={0}
                 p="xs"
                 style={{
-                  opacity: "var(--_hover-opacity)",
-                  transition: "opacity 150ms ease",
                   background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
                 }}
               >
-                <Button onClick={() => handleAddCustomWidget(def)} variant="light" size="xs" fullWidth>
+                <Button
+                  onClick={() => void handleAddCustomWidget(def)}
+                  variant="light"
+                  size="xs"
+                  fullWidth
+                  disabled={loadingSelection !== null}
+                  loading={loadingSelection === `custom:${def.id}`}
+                >
                   {t("item.create.addToBoard")}
                 </Button>
               </Box>
@@ -231,7 +289,38 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
       )}
     </SelectGridLayout>
   );
-}).withOptions({
+};
+
+const ItemSelectModalFrame = ({
+  actions,
+  innerProps,
+}: {
+  actions: { closeModal: () => void };
+  innerProps: { boardId: string };
+}) => {
+  const utils = clientApi.useUtils();
+  const { data: session } = useSession();
+  const isAdmin = session?.user.permissions.includes("admin") ?? false;
+  const { data: integrationData } = clientApi.integration.all.useQuery();
+  const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery(
+    { boardId: innerProps.boardId },
+    { enabled: isAdmin },
+  );
+
+  return (
+    <ItemSelectModalContent
+      actions={actions}
+      integrationData={integrationData}
+      customWidgetDefs={customWidgetDefs}
+      ensureIntegrationDataAsync={() => utils.integration.all.ensureData()}
+      isAdmin={isAdmin}
+    />
+  );
+};
+
+export const ItemSelectModal = createModal<{ boardId: string }>((props) => (
+  <ItemSelectModalFrame {...props} />
+)).withOptions({
   defaultTitle: (t) => t("item.create.title"),
   size: modalSizeSelect,
 });
@@ -239,6 +328,9 @@ export const ItemSelectModal = createModal<{ boardId: string }>(({ actions, inne
 const WidgetItem = ({
   item,
   onSelect,
+  onIntent,
+  disabled,
+  loading,
   hasMatchingIntegration,
 }: {
   item: {
@@ -249,23 +341,27 @@ const WidgetItem = ({
     icon: TablerIcon;
   };
   onSelect: () => void;
+  onIntent: () => void;
+  disabled: boolean;
+  loading: boolean;
   hasMatchingIntegration: boolean;
 }) => {
   const t = useI18n();
 
   return (
     <Card
+      className={classes.card}
       h={selectGridCardHeight}
       withBorder
       pos="relative"
       style={{
         overflow: "hidden",
-        "--_hover-opacity": "0",
         borderColor: hasMatchingIntegration ? "var(--mantine-color-blue-6)" : undefined,
         borderWidth: hasMatchingIntegration ? 2 : undefined,
       }}
-      onMouseEnter={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "1")}
-      onMouseLeave={(e) => e.currentTarget.style.setProperty("--_hover-opacity", "0")}
+      onFocus={onIntent}
+      onPointerEnter={onIntent}
+      aria-busy={loading || undefined}
     >
       <Stack h="100%" gap="xs">
         <Group gap="sm" wrap="nowrap" align="flex-start">
@@ -282,18 +378,17 @@ const WidgetItem = ({
         <SupportedIntegrations integrations={item.supportedIntegrations} />
       </Stack>
       <Box
+        className={classes.action}
         pos="absolute"
         bottom={0}
         left={0}
         right={0}
         p="xs"
         style={{
-          opacity: "var(--_hover-opacity)",
-          transition: "opacity 150ms ease",
           background: "linear-gradient(transparent, var(--mantine-color-body) 30%)",
         }}
       >
-        <Button onClick={onSelect} variant="light" size="xs" fullWidth>
+        <Button onClick={onSelect} variant="light" size="xs" fullWidth disabled={disabled} loading={loading}>
           {t(`item.create.addToBoard`)}
         </Button>
       </Box>

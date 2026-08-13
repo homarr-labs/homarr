@@ -101,9 +101,7 @@ describe("patchmonRouter.getStats access control", () => {
     });
     const caller = createCaller(db, null);
 
-    await expect(caller.getStats({ integrationId })).rejects.toThrow(
-      new TRPCError({ code: "UNAUTHORIZED" }),
-    );
+    await expect(caller.getStats({ integrationId })).rejects.toThrow(new TRPCError({ code: "UNAUTHORIZED" }));
   });
 
   test("should throw FORBIDDEN for authenticated users without board or integration access", async () => {

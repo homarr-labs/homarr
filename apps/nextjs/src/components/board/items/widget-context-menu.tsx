@@ -94,12 +94,12 @@ type WidgetContextMenuDropdownProps = Omit<WidgetContextMenuProps, "children"> &
 };
 
 const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings }: WidgetContextMenuDropdownProps) => {
-  const { data: session } = useSession();
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const tItem = useScopedI18n("item");
   const tMenu = useScopedI18n("item.menu.label");
   const t = useI18n();
+  const { data: session } = useSession();
   const canConfigureWidget = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const hasSupportedIntegrations =
     "supportedIntegrations" in definition && (definition.supportedIntegrations?.length ?? 0) > 0;
