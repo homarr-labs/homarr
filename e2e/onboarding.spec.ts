@@ -197,7 +197,7 @@ describe("Onboarding", () => {
     try {
       const initialBaseUrl = `http://${initialContainer.getHost()}:${initialContainer.getMappedPort(7575)}`;
       await page.goto(`${initialBaseUrl}/init`);
-      await page.getByRole("button", { name: "Come from a backup" }).click();
+      await page.getByRole("button", { name: "Restore backup" }).click();
       const fileInput = page.locator('input[type="file"]');
       await fileInput.setInputFiles({
         name: "missing-metadata.zip",

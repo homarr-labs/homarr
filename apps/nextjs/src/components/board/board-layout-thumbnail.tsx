@@ -1,9 +1,10 @@
-import { Box, Center } from "@mantine/core";
+import { Box, Center, Image } from "@mantine/core";
 import { IconLayoutGrid } from "@tabler/icons-react";
 
 import type { BoardPreviewData } from "@homarr/boards/layout-preview";
 import { projectBoardLayout } from "@homarr/boards/layout-preview";
 import { boardLanes, getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
+import { widgetCatalogIcons } from "@homarr/widgets/catalog";
 
 import classes from "./board-layout-thumbnail.module.css";
 
@@ -73,17 +74,27 @@ export const BoardLayoutThumbnail = ({ preview, label }: BoardLayoutThumbnailPro
                 gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
               }}
             >
-              {laneElements.map((element) => (
-                <span
-                  key={`${element.type}-${element.id}`}
-                  aria-hidden
-                  className={`${classes.tile} ${element.type === "section" ? classes.container : ""}`}
-                  style={{
-                    gridColumn: `${element.xOffset + 1} / span ${Math.min(element.width, columnCount - element.xOffset)}`,
-                    gridRow: `${element.yOffset + 1} / span ${Math.min(element.height, rowCount - element.yOffset)}`,
-                  }}
-                />
-              ))}
+              {laneElements.map((element) => {
+                const item = element.type === "item" ? preview.items.find((item) => item.id === element.id) : undefined;
+                const WidgetIcon = item?.kind ? widgetCatalogIcons[item.kind] : undefined;
+                return (
+                  <span
+                    key={`${element.type}-${element.id}`}
+                    aria-hidden
+                    className={`${classes.tile} ${element.type === "section" ? classes.container : ""}`}
+                    style={{
+                      gridColumn: `${element.xOffset + 1} / span ${Math.min(element.width, columnCount - element.xOffset)}`,
+                      gridRow: `${element.yOffset + 1} / span ${Math.min(element.height, rowCount - element.yOffset)}`,
+                    }}
+                  >
+                    {item?.iconUrl ? (
+                      <Image className={classes.itemIcon} src={item.iconUrl} alt="" fit="contain" />
+                    ) : WidgetIcon ? (
+                      <WidgetIcon className={classes.itemIcon} stroke={1.7} />
+                    ) : null}
+                  </span>
+                );
+              })}
             </div>
           );
         })}

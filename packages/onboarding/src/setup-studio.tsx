@@ -231,6 +231,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [columnCount, setColumnCount] = useState(10);
   const [leftSidebar, setLeftSidebar] = useState(false);
   const [rightSidebar, setRightSidebar] = useState(false);
+  const [isApplying, setIsApplying] = useState(false);
   const [applyProgress, setApplyProgress] = useState(0);
   const [applyMessage, setApplyMessage] = useState("");
   const [appError, setAppError] = useState<string | null>(null);
@@ -256,7 +257,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     },
   });
   const validateIntegration = clientApi.onboard.testIntegration.useMutation();
-  const isApplying = complete.isPending || validateIntegration.isPending;
 
   const dockerData = docker.data;
   const discoveredIntegrations = dockerData?.integrations ?? emptyDiscoveredIntegrations;
@@ -279,6 +279,10 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     () => new Set(discoveredIntegrations.map((integration) => integration.kind)),
     [discoveredIntegrations],
   );
+
+  useEffect(() => {
+    setServerOrigin((current) => current || window.location.origin);
+  }, []);
 
   useEffect(() => {
     if (!docker.data) return;
@@ -412,6 +416,8 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   };
 
   const applySetupAsync = async () => {
+    if (isApplying) return;
+    setIsApplying(true);
     setAppError(null);
     setAppErrorSourceId(null);
     setApplyProgress(5);
@@ -438,19 +444,15 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       setApplyMessage(t("review.progress.applying"));
       for (const [index, draft] of draftsToApply.entries()) {
         setApplyProgress(5 + Math.round(((index + 1) / Math.max(1, draftsToApply.length)) * 15));
-        try {
-          const result = await validateIntegration.mutateAsync({
+        await validateIntegration
+          .mutateAsync({
             sourceId: draft.sourceId ?? draft.id,
             name: draft.name,
             url: normalizeServiceUrl(draft.url) ?? draft.url,
             kind: draft.kind,
             secrets: draft.secrets,
-          });
-          if (result.success) sounds.success();
-          else sounds.error();
-        } catch {
-          sounds.error();
-        }
+          })
+          .catch(() => undefined);
       }
       setApplyProgress(20);
       await new Promise((resolve) => setTimeout(resolve, 300));
@@ -543,6 +545,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     } catch {
       sounds.error();
       setApplyProgress(0);
+      setIsApplying(false);
     }
   };
 
@@ -1439,6 +1442,7 @@ const formatSecretKind = (kind: IntegrationSecretKind) =>
 
 const BoardBuilder = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.board");
+  const sounds = useOnboardingSounds();
   const previewWidgetKinds = getPreviewWidgetKinds(props);
   const previewAppCount = getPreviewAppCount(props);
   const colorsCustomized =
@@ -1495,6 +1499,7 @@ const BoardBuilder = (props: StudioSectionProps) => {
                 size="compact-sm"
                 leftSection={<IconRefresh size={14} />}
                 onClick={() => {
+                  sounds.pop();
                   props.setPrimaryColor(initialPrimaryColor);
                   props.setSecondaryColor(initialSecondaryColor);
                 }}
