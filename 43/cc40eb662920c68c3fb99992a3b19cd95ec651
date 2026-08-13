@@ -1,0 +1,23 @@
+docs/perf/WIDGET-AUDIT.md
+  s_a70c07ac5b7a5a::t_ba0277785414ab 170-193
+docs/perf/REJECTED.md
+  s_a70c07ac5b7a5a::t_cd25c1bfdb4445 6-34
+apps/nextjs/next.config.ts
+  s_a70c07ac5b7a5a::t_d50adee712d4f3 87-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "43cc40eb662920c68c3fb99992a3b19cd95ec651",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
