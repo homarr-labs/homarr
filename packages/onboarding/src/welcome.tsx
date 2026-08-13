@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Alert, Button, Group, Paper, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { IconArrowRight, IconDatabaseImport } from "@tabler/icons-react";
 
@@ -12,6 +12,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { OnboardingBackdrop } from "./onboarding-backdrop";
 import { OnboardingWordmark } from "./onboarding-wordmark";
 import type { OnboardingStudioProps } from "./types";
+import { useOnboardingSounds, useWelcomeSound } from "./use-onboarding-sounds";
 import classes from "./onboarding-studio.module.css";
 
 export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) => {
@@ -20,11 +21,16 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
   const [showRestore, setShowRestore] = useState(false);
   const [claimPending, setClaimPending] = useState(false);
   const [claimError, setClaimError] = useState<string | null>(null);
+  const sounds = useOnboardingSounds();
+  const welcomeSound = useWelcomeSound();
+  const welcomeSoundPlayed = useRef(false);
   const start = clientApi.onboard.nextStep.useMutation({
     async onSuccess() {
+      sounds.swoosh();
       await revalidatePathActionAsync("/init");
     },
     onError() {
+      sounds.error();
       showErrorNotification({ title: t("errorTitle"), message: t("errorDescription") });
     },
   });
@@ -55,6 +61,7 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
       }
       return true;
     } catch (error) {
+      sounds.error();
       setClaimError(error instanceof Error ? error.message : t("errorTitle"));
       return false;
     } finally {
@@ -63,15 +70,28 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
   };
 
   const startOnboardingAsync = async () => {
+    if (!welcomeSoundPlayed.current) {
+      welcomeSoundPlayed.current = true;
+      welcomeSound.notify();
+    } else sounds.click();
     if (await claimOnboardingAsync()) await start.mutateAsync();
   };
 
   const toggleRestoreAsync = async () => {
+    const playedWelcomeSound = !welcomeSoundPlayed.current;
+    if (playedWelcomeSound) {
+      welcomeSoundPlayed.current = true;
+      welcomeSound.notify();
+    }
     if (showRestore) {
+      if (!playedWelcomeSound) sounds.toggle(false);
       setShowRestore(false);
       return;
     }
-    if (await claimOnboardingAsync()) setShowRestore(true);
+    if (await claimOnboardingAsync()) {
+      if (!playedWelcomeSound) sounds.toggle(true);
+      setShowRestore(true);
+    }
   };
 
   return (
@@ -85,11 +105,8 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
               <Title id="onboarding-welcome-title" className={classes.heroTitle} ta="center">
                 {t("title")}
               </Title>
-              <Text fw={600} size="lg" ta="center">
-                {t("version", { version: environment.version })}
-              </Text>
               <Text size="lg" c="dimmed" maw="38rem" ta="center">
-                {t("description")}
+                {t("description", { version: environment.version })}
               </Text>
             </Stack>
 

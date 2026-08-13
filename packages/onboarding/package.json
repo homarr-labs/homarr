@@ -35,6 +35,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "catalog:",
     "@mantine/hooks": "catalog:",
+    "@rexa-developer/tiks": "catalog:",
     "@tabler/icons-react": "catalog:",
     "canvas-confetti": "catalog:",
     "react": "catalog:",

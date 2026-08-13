@@ -156,6 +156,9 @@ catalogs:
     '@playwright/test':
       specifier: ^1.61.1
       version: 1.61.1
+    '@rexa-developer/tiks':
+      specifier: ^0.3.0
+      version: 0.3.0
     '@scalar/api-reference-react':
       specifier: ^0.9.54
       version: 0.9.54
@@ -1114,6 +1117,9 @@ importers:
       '@modelcontextprotocol/server':
         specifier: 'catalog:'
         version: 2.0.0
+      '@rexa-developer/tiks':
+        specifier: 'catalog:'
+        version: 0.3.0(react@19.2.7)(vue@3.5.35(typescript@7.0.2))
       '@scalar/api-reference-react':
         specifier: 'catalog:'
         version: 0.9.54(nprogress@0.2.0)(react@19.2.7)(supports-color@10.2.2)(tailwindcss@4.3.2)(typescript@7.0.2)(zod@4.4.3)
@@ -2444,6 +2450,9 @@ importers:
       '@mantine/hooks':
         specifier: 'catalog:'
         version: 9.4.1(react@19.2.7)
+      '@rexa-developer/tiks':
+        specifier: 'catalog:'
+        version: 0.3.0(react@19.2.7)(vue@3.5.35(typescript@7.0.2))
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
@@ -7942,6 +7951,17 @@ packages:
       '@codemirror/language': ^6.0.0
       '@codemirror/state': ^6.0.0
       '@codemirror/view': ^6.0.0
+
+  '@rexa-developer/tiks@0.3.0':
+    resolution: {integrity: sha512-7tW/lb53Nr8U0dn9ZlWOvDXtsZ7fK3dZN90Xvp/S4AkjruopuP8992+3KhFCrIQ7bXFEsaVFUZsm/+NC3ufA1w==}
+    peerDependencies:
+      react: '>=18.0.0'
+      vue: '>=3.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      vue:
+        optional: true
 
   '@rolldown/binding-android-arm64@1.1.4':
     resolution: {integrity: sha512-EZLpf/8y7GXkkra90ML47kzik/GMP3EMcE9bPyHmRfxLC6z9+aW5A8poCsoxjrT5GfEcNAAvWwUHjvP1pUQkfw==}
@@ -22853,6 +22873,11 @@ snapshots:
       '@codemirror/state': 6.6.0
       '@codemirror/view': 6.43.0
 
+  '@rexa-developer/tiks@0.3.0(react@19.2.7)(vue@3.5.35(typescript@7.0.2))':
+    optionalDependencies:
+      react: 19.2.7
+      vue: 3.5.35(typescript@7.0.2)
+
   '@rolldown/binding-android-arm64@1.1.4':
     optional: true
 
@@ -24766,7 +24791,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.0.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.10(@opentelemetry/api@1.9.0)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.10)(@vitest/ui@4.1.10)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.3)(typescript@7.0.2))(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(sugarss@5.0.0(postcss@8.5.16))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
+      vitest: 4.1.10(@opentelemetry/api@1.9.0)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.10)(@vitest/ui@4.1.10)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.3)(typescript@7.0.2))(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(sugarss@5.0.0(postcss@8.5.16))(terser@5.46.1)(tsx@4.20.4)(yaml@2.9.0))
 
   '@vitest/expect@4.1.10':
     dependencies:
@@ -24822,7 +24847,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vitest: 4.1.10(@opentelemetry/api@1.9.0)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.10)(@vitest/ui@4.1.10)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.3)(typescript@7.0.2))(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(sugarss@5.0.0(postcss@8.5.16))(terser@5.46.1)(tsx@4.21.0)(yaml@2.9.0))
+      vitest: 4.1.10(@opentelemetry/api@1.9.0)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.10)(@vitest/ui@4.1.10)(jsdom@29.1.1(@noble/hashes@2.0.1))(msw@2.14.6(@types/node@24.13.3)(typescript@7.0.2))(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.101.0)(sugarss@5.0.0(postcss@8.5.16))(terser@5.46.1)(tsx@4.20.4)(yaml@2.9.0))
 
   '@vitest/utils@4.1.10':
     dependencies:

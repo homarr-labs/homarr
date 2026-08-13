@@ -83,8 +83,25 @@
   max-width: min(92vw, 42rem);
 }
 
-:global([data-mantine-color-scheme="light"]) .wordmark:not([data-recolored="true"]) {
-  filter: brightness(0);
+.celebratingWordmark {
+  animation: wordmarkJump 360ms ease-out;
+}
+
+@keyframes wordmarkJump {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  45% {
+    transform: translateY(-0.4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebratingWordmark {
+    animation: none;
+  }
 }
 
 .hero {
@@ -249,16 +266,37 @@
 }
 
 .nextCard {
+  --next-card-accent: var(--studio-glow-color);
   color: inherit;
   text-decoration: none;
+  border-color: color-mix(in srgb, var(--next-card-accent) 42%, var(--mantine-color-default-border));
+}
+
+.nextCard:nth-child(2) {
+  --next-card-accent: var(--studio-secondary-glow-color);
+}
+
+.nextCard :global(.mantine-ThemeIcon-root) {
+  color: var(--next-card-accent);
+  background: color-mix(in srgb, var(--next-card-accent) 14%, transparent);
+}
+
+.finishPrimaryAction {
+  color: var(--mantine-color-white);
+  background: linear-gradient(135deg, var(--studio-glow-color), var(--studio-secondary-glow-color));
+  text-shadow: 0 1px 2px rgb(0 0 0 / 35%);
+}
+
+.finishPrimaryAction:hover {
+  filter: brightness(0.94);
 }
 
 .nextCard:hover {
-  background: var(--mantine-color-default-hover);
+  background: color-mix(in srgb, var(--next-card-accent) 9%, var(--mantine-color-body));
 }
 
 .nextCard:focus-visible {
-  outline: 3px solid var(--mantine-primary-color-light-color);
+  outline: 3px solid color-mix(in srgb, var(--next-card-accent) 55%, transparent);
   outline-offset: 2px;
 }
 

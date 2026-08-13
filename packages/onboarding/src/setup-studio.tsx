@@ -98,6 +98,7 @@ import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
 import type { OnboardingStudioProps } from "./types";
 import { OnboardingBackdrop } from "./onboarding-backdrop";
 import { OnboardingWordmark } from "./onboarding-wordmark";
+import { useOnboardingSounds } from "./use-onboarding-sounds";
 import {
   isHttpUrl,
   normalizeServiceUrl,
@@ -146,6 +147,8 @@ const sectionDefinitions = [
 ] as const;
 
 const radiusValues = ["xs", "sm", "md", "lg", "xl"] as const;
+const initialPrimaryColor = "#fa5252";
+const initialSecondaryColor = "#fd7e14";
 const emptyDiscoveredIntegrations: DockerDiscoveryData["integrations"] = [];
 const emptyDiscoveredApps: DockerDiscoveryData["apps"] = [];
 
@@ -164,6 +167,7 @@ const OnboardingFloatingControl = <T extends string>({
 }: OnboardingFloatingControlProps<T>) => {
   const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
   const controlRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const sounds = useOnboardingSounds();
 
   return (
     <div className={classes.floatingControlScroller}>
@@ -185,7 +189,10 @@ const OnboardingFloatingControl = <T extends string>({
               className={classes.floatingControl}
               data-active={selected}
               aria-pressed={selected}
-              onClick={() => onChange(option.value)}
+              onClick={() => {
+                sounds.click();
+                onChange(option.value);
+              }}
             >
               {option.label}
             </UnstyledButton>
@@ -201,6 +208,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const tCommon = useScopedI18n("common.action");
   const currentLocale = useCurrentLocale();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const sounds = useOnboardingSounds();
   const [activeSection, setActiveSection] = useState<StudioSection>("essentials");
   const [incompleteIntegrationConfirmationOpened, setIncompleteIntegrationConfirmationOpened] = useState(false);
   const [selectedLocale, setSelectedLocale] = useState(currentLocale);
@@ -217,9 +225,8 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     environment.initialBoard ?? (environment.availableBoards.length === 1 ? environment.availableBoards[0] : null);
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(initialBoard?.id ?? null);
   const [boardName, setBoardName] = useState(initialBoard?.name ?? "dashboard");
-  const [primaryColor, setPrimaryColor] = useState("#fa5252");
-  const [secondaryColor, setSecondaryColor] = useState("#fd7e14");
-  const [boardColorsDirty, setBoardColorsDirty] = useState(false);
+  const [primaryColor, setPrimaryColor] = useState(initialPrimaryColor);
+  const [secondaryColor, setSecondaryColor] = useState(initialSecondaryColor);
   const [itemRadius, setItemRadius] = useState<MantineSize>("lg");
   const [columnCount, setColumnCount] = useState(10);
   const [leftSidebar, setLeftSidebar] = useState(false);
@@ -248,7 +255,8 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       showErrorNotification({ title: t("review.errorTitle"), message: error.message });
     },
   });
-  const isApplying = complete.isPending;
+  const validateIntegration = clientApi.onboard.testIntegration.useMutation();
+  const isApplying = complete.isPending || validateIntegration.isPending;
 
   const dockerData = docker.data;
   const discoveredIntegrations = dockerData?.integrations ?? emptyDiscoveredIntegrations;
@@ -364,6 +372,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   };
 
   const selectSection = (section: StudioSection) => {
+    if (section !== activeSection) sounds.swoosh();
     setActiveSection(section);
   };
 
@@ -427,6 +436,22 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       }
 
       setApplyMessage(t("review.progress.applying"));
+      for (const [index, draft] of draftsToApply.entries()) {
+        setApplyProgress(5 + Math.round(((index + 1) / Math.max(1, draftsToApply.length)) * 15));
+        try {
+          const result = await validateIntegration.mutateAsync({
+            sourceId: draft.sourceId ?? draft.id,
+            name: draft.name,
+            url: normalizeServiceUrl(draft.url) ?? draft.url,
+            kind: draft.kind,
+            secrets: draft.secrets,
+          });
+          if (result.success) sounds.success();
+          else sounds.error();
+        } catch {
+          sounds.error();
+        }
+      }
       setApplyProgress(20);
       await new Promise((resolve) => setTimeout(resolve, 300));
       const selectedSourceIds = new Set(draftsToApply.flatMap((draft) => (draft.sourceId ? [draft.sourceId] : [])));
@@ -506,15 +531,17 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
         completion.docker.ignoredSourceIds.length +
         completion.docker.skippedWidgets.length;
       if (dockerWarningCount > 0) {
+        sounds.warning();
         showWarningNotification({
           title: t("review.dockerWarningTitle"),
           message: t("review.dockerWarningDescription", { count: dockerWarningCount }),
         });
-      }
+      } else sounds.success();
       setApplyMessage(t("review.progress.done"));
       setApplyProgress(100);
       await revalidatePathActionAsync("/init");
     } catch {
+      sounds.error();
       setApplyProgress(0);
     }
   };
@@ -528,19 +555,31 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     urlMode,
     setUrlMode,
     analyticsEnabled,
-    setAnalyticsEnabled,
+    setAnalyticsEnabled: (value) => {
+      sounds.toggle(value);
+      setAnalyticsEnabled(value);
+    },
     selectedLocale,
-    setSelectedLocale,
+    setSelectedLocale: (value) => {
+      sounds.click();
+      setSelectedLocale(value);
+    },
     colorScheme: colorScheme as ColorScheme,
     setColorScheme,
     docker,
     dockerData,
     runtimeCapabilities,
     selectedKinds,
-    setSelectedKinds,
+    setSelectedKinds: (value) => {
+      sounds.click();
+      setSelectedKinds(value);
+    },
     discoveredIntegrations,
     selectedIntegrationSourceIds,
-    setSelectedIntegrationSourceIds,
+    setSelectedIntegrationSourceIds: (value) => {
+      sounds.click();
+      setSelectedIntegrationSourceIds(value);
+    },
     detectedKinds,
     drafts,
     updateDraft,
@@ -555,29 +594,35 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       }
     },
     selectedAppIds,
-    setSelectedAppIds,
+    setSelectedAppIds: (value) => {
+      sounds.click();
+      setSelectedAppIds(value);
+    },
     boardName,
     setBoardName,
     selectedBoardId,
-    setSelectedBoardId,
+    setSelectedBoardId: (value) => {
+      sounds.click();
+      setSelectedBoardId(value);
+    },
     primaryColor,
-    setPrimaryColor: (value) => {
-      setPrimaryColor(value);
-      setBoardColorsDirty(true);
-    },
+    setPrimaryColor,
     secondaryColor,
-    setSecondaryColor: (value) => {
-      setSecondaryColor(value);
-      setBoardColorsDirty(true);
-    },
+    setSecondaryColor,
     itemRadius,
     setItemRadius,
     columnCount,
     setColumnCount,
     leftSidebar,
-    setLeftSidebar,
+    setLeftSidebar: (value) => {
+      sounds.toggle(value);
+      setLeftSidebar(value);
+    },
     rightSidebar,
-    setRightSidebar,
+    setRightSidebar: (value) => {
+      sounds.toggle(value);
+      setRightSidebar(value);
+    },
     applyProgress,
     applyMessage,
     appError,
@@ -607,10 +652,10 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     >
       <OnboardingBackdrop />
       <div className={classes.shell}>
-        <Group className={classes.topbar} mb="lg">
+        <Group className={classes.topbar} justify="center" mb="lg">
           <OnboardingWordmark
-            primaryColor={boardColorsDirty ? primaryColor : undefined}
-            secondaryColor={boardColorsDirty ? secondaryColor : undefined}
+            primaryColor={primaryColor}
+            secondaryColor={secondaryColor.toLowerCase() === initialSecondaryColor ? undefined : secondaryColor}
           />
         </Group>
 
@@ -680,12 +725,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                   {t("back")}
                 </Button>
                 {activeSection === "review" ? (
-                  <Button
-                    size="sm"
-                    loading={isApplying}
-                    rightSection={<IconSparkles size={16} />}
-                    onClick={continueOnboarding}
-                  >
+                  <Button size="sm" loading={isApplying} onClick={continueOnboarding}>
                     {t("buildBoard")}
                   </Button>
                 ) : (
@@ -1232,6 +1272,7 @@ const IntegrationEditor = ({
   selectSecretOption: (option: number) => void;
 }) => {
   const t = useScopedI18n("init.studio.connect");
+  const sounds = useOnboardingSounds();
   const options = getAllSecretKindOptions(draft.kind);
   const apiKeyUrl = getIntegrationApiKeyUrl(draft.url, draft.kind);
   const documentationUrl = getIntegrationDocumentationUrl(draft.kind);
@@ -1239,12 +1280,15 @@ const IntegrationEditor = ({
   const testConnection = clientApi.onboard.testIntegration.useMutation({
     onSuccess(result) {
       if (result.success) {
+        sounds.success();
         showSuccessNotification({ title: t("testSuccess"), message: t("testSuccessDescription") });
       } else {
+        sounds.error();
         showErrorNotification({ title: t("testError"), message: t("testErrorDescription") });
       }
     },
     onError() {
+      sounds.error();
       showErrorNotification({ title: t("testError"), message: t("testErrorDescription") });
     },
   });
@@ -1370,15 +1414,16 @@ const IntegrationEditor = ({
                   <IconPlugConnected size={14} />
                 )
               }
-              onClick={() =>
+              onClick={() => {
+                sounds.click();
                 testConnection.mutate({
                   sourceId: draft.sourceId ?? draft.id,
                   name: draft.name,
                   url: normalizeServiceUrl(draft.url) ?? draft.url,
                   kind: draft.kind,
                   secrets: draft.secrets,
-                })
-              }
+                });
+              }}
             >
               {t("testConnection")}
             </Button>
@@ -1396,6 +1441,9 @@ const BoardBuilder = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.board");
   const previewWidgetKinds = getPreviewWidgetKinds(props);
   const previewAppCount = getPreviewAppCount(props);
+  const colorsCustomized =
+    props.primaryColor.toLowerCase() !== initialPrimaryColor ||
+    props.secondaryColor.toLowerCase() !== initialSecondaryColor;
   return (
     <Stack gap="xl">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
@@ -1426,14 +1474,36 @@ const BoardBuilder = (props: StudioSectionProps) => {
             onChange={(event) => props.setBoardName(event.currentTarget.value.replace(/[^A-Za-z0-9-_]/g, ""))}
             withAsterisk
           />
-          <SimpleGrid cols={2}>
-            <BoardColorInput label={t("primaryColor")} value={props.primaryColor} onChange={props.setPrimaryColor} />
-            <BoardColorInput
-              label={t("secondaryColor")}
-              value={props.secondaryColor}
-              onChange={props.setSecondaryColor}
-            />
-          </SimpleGrid>
+          <Stack gap="xs">
+            <SimpleGrid cols={2}>
+              <BoardColorInput
+                label={t("primaryColor")}
+                value={props.primaryColor}
+                onChange={props.setPrimaryColor}
+                defaultColor={initialPrimaryColor}
+              />
+              <BoardColorInput
+                label={t("secondaryColor")}
+                value={props.secondaryColor}
+                onChange={props.setSecondaryColor}
+                defaultColor={initialSecondaryColor}
+              />
+            </SimpleGrid>
+            {colorsCustomized ? (
+              <Button
+                variant="subtle"
+                size="compact-sm"
+                leftSection={<IconRefresh size={14} />}
+                onClick={() => {
+                  props.setPrimaryColor(initialPrimaryColor);
+                  props.setSecondaryColor(initialSecondaryColor);
+                }}
+                w="fit-content"
+              >
+                Reset colors
+              </Button>
+            ) : null}
+          </Stack>
           <Stack gap="xs">
             <Text size="sm" fw={500}>
               {t("radius")}
@@ -1583,23 +1653,23 @@ const Extensions = (props: StudioSectionProps) => {
       <Title id="studio-section-title" ref={props.headingRef} order={2} tabIndex={-1} mb="xs">
         {t("title")}
       </Title>
-      <Tabs defaultValue="assistant">
+      <Tabs defaultValue="workshop">
         <Tabs.List grow aria-label={t("tabsLabel")}>
-          <Tabs.Tab value="assistant" leftSection={<IconRobot size={16} />}>
-            {t("assistant")}
-          </Tabs.Tab>
           <Tabs.Tab value="workshop" leftSection={<IconSparkles size={16} />}>
             {t("workshop")}
+          </Tabs.Tab>
+          <Tabs.Tab value="assistant" leftSection={<IconRobot size={16} />}>
+            {t("assistant")}
           </Tabs.Tab>
           <Tabs.Tab value="mcp" leftSection={<IconCode size={16} />}>
             {t("mcp")}
           </Tabs.Tab>
         </Tabs.List>
-        <Tabs.Panel value="assistant" pt="xs">
-          <AssistantSetup environment={props.environment} configuration={props.assistantConfiguration} />
-        </Tabs.Panel>
         <Tabs.Panel value="workshop" pt="xs">
           <WorkshopSetup environment={props.environment} runtimeCapabilities={props.runtimeCapabilities} />
+        </Tabs.Panel>
+        <Tabs.Panel value="assistant" pt="xs">
+          <AssistantSetup environment={props.environment} configuration={props.assistantConfiguration} />
         </Tabs.Panel>
         <Tabs.Panel value="mcp" pt="xs">
           <McpSetup environment={props.environment} />
@@ -1700,11 +1770,14 @@ const WorkshopFeature = ({ title, description }: { title: string; description: s
 const McpSetup = ({ environment }: { environment: StudioSectionProps["environment"] }) => {
   const t = useScopedI18n("init.studio.extend.mcpSetup");
   const [apiKey, setApiKey] = useState<string | null>(null);
+  const sounds = useOnboardingSounds();
   const createKey = clientApi.apiKeys.create.useMutation({
     onSuccess(data) {
+      sounds.success();
       setApiKey(data.apiKey);
     },
     onError(error) {
+      sounds.error();
       showErrorNotification({ title: t("errorTitle"), message: error.message });
     },
   });
@@ -1735,7 +1808,15 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
                 <Code style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>{apiKey}</Code>
                 <CopyButton value={apiKey}>
                   {({ copied, copy }) => (
-                    <ActionIcon size={44} onClick={copy} aria-label={t("copyKey")} color={copied ? "green" : undefined}>
+                    <ActionIcon
+                      size={44}
+                      onClick={() => {
+                        sounds.pop();
+                        copy();
+                      }}
+                      aria-label={t("copyKey")}
+                      color={copied ? "green" : undefined}
+                    >
                       {copied ? <IconCheck size={18} /> : <IconCopy size={18} />}
                     </ActionIcon>
                   )}
@@ -1749,7 +1830,10 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
               variant="light"
               leftSection={<IconKey size={16} />}
               loading={createKey.isPending}
-              onClick={() => createKey.mutate()}
+              onClick={() => {
+                sounds.click();
+                createKey.mutate();
+              }}
             >
               {t("createKey")}
             </Button>
@@ -1769,7 +1853,10 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
               <Button
                 variant="subtle"
                 size="compact-sm"
-                onClick={copy}
+                onClick={() => {
+                  sounds.pop();
+                  copy();
+                }}
                 leftSection={copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
               >
                 {copied ? t("copied") : t("copy")}
