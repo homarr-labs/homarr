@@ -88,6 +88,7 @@ interface DiscoveredApp {
   suggestedUrl: string;
   publishedPort: number | null;
   iconUrl: string | null;
+  detectedType?: string;
   source: "label" | "docker";
   group?: string;
   boardName?: string;
@@ -207,8 +208,8 @@ export const onboardRouter = createTRPCRouter({
         const normalized = imageName.toLowerCase().trim();
         if (normalized.length < 3) return null;
         return (
-          dbIcons.find((icon) => icon.name.toLowerCase() === normalized)?.url ??
-          dbIcons.find((icon) => icon.name.toLowerCase().startsWith(normalized))?.url ??
+          dbIcons.find((icon) => icon.name.toLowerCase() === normalized) ??
+          dbIcons.find((icon) => icon.name.toLowerCase().startsWith(normalized)) ??
           null
         );
       };
@@ -257,7 +258,7 @@ export const onboardRouter = createTRPCRouter({
         const imageName = extractContainerImageName(container.Image);
         const containerName = container.Names[0]?.split("/")[1] ?? "Unknown";
         const dbIcon = strictIconMatch(imageName);
-        const iconUrl = dbIcon ?? cdnIconUrl(imageName.toLowerCase());
+        const iconUrl = dbIcon?.url ?? cdnIconUrl(imageName.toLowerCase());
         const { url: suggestedUrl, publishedPort } = buildSuggestedUrl(container.Ports, container.host);
         const kind = matchIntegrationKindFromContainer({ image: container.Image, name: containerName });
         const sourceId = createDockerSourceId(container.host, container.Id);
@@ -271,6 +272,7 @@ export const onboardRouter = createTRPCRouter({
             suggestedUrl,
             publishedPort,
             iconUrl,
+            detectedType: dbIcon.name,
             source: "docker",
             host: container.host,
           });
