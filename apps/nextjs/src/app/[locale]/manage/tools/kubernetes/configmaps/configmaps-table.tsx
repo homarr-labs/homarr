@@ -16,6 +16,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 dayjs.extend(relativeTime);
 
 interface ConfigMapsTableComponentProps {
+  contextId: string;
   initialConfigMaps: RouterOutputs["kubernetes"]["configMaps"]["getConfigMaps"];
 }
 
@@ -39,15 +40,18 @@ const createColumns = (
   },
 ];
 
-export function ConfigmapsTable(initialData: ConfigMapsTableComponentProps) {
+export function ConfigmapsTable({ contextId, initialConfigMaps }: ConfigMapsTableComponentProps) {
   const tConfigMaps = useScopedI18n("kubernetes.configmaps");
 
-  const { data } = clientApi.kubernetes.configMaps.getConfigMaps.useQuery(undefined, {
-    initialData: initialData.initialConfigMaps,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = clientApi.kubernetes.configMaps.getConfigMaps.useQuery(
+    { contextId },
+    {
+      initialData: initialConfigMaps,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  );
 
   const table = useTranslatedMantineReactTable({
     data,

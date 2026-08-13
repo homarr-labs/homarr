@@ -8,7 +8,7 @@ import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import { extractContainerImageName } from "@homarr/definitions";
-import type { ContainerState, Port } from "@homarr/docker";
+import type { ContainerState, DockerContainerTarget, DockerEndpointStatus, Port } from "@homarr/docker";
 import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
 import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-decode";
@@ -173,7 +173,26 @@ const mockContainers: {
 export const dockerContainersRequestHandler = createWidgetRequestHandler({
   async requestAsync() {
     if (isDemoMode) {
-      return mockContainers;
+      return {
+        containers: mockContainers.map((container) => ({
+          ...container,
+          endpointId: "demo",
+          endpointName: "Demo Docker",
+          resourceId: `demo:${container.id}`,
+        })),
+        endpoints: [
+          {
+            id: "demo",
+            name: "Demo Docker",
+            status: "available",
+            kind: "docker",
+            transport: "socket",
+            capabilities: ["inventory"],
+            source: "default",
+            scope: "admin",
+          },
+        ] satisfies DockerEndpointStatus[],
+      };
     }
     return await getContainersWithStatsAsync();
   },
@@ -181,29 +200,26 @@ export const dockerContainersRequestHandler = createWidgetRequestHandler({
 
 const extractImage = (container: ContainerInfo) => extractContainerImageName(container.Image);
 
-const findContainerByIdAsync = async (id: string) => {
-  const dockerInstances = DockerSingleton.getInstances();
-  const containers = await Promise.all(
-    dockerInstances.map(async ({ instance }) => {
-      const container = instance.getContainer(id);
+export const hasDockerEndpointCapability = (
+  endpointId: string,
+  capability: "inventory" | "logs" | "lifecycle" | "remove",
+) => DockerSingleton.hasCapability(endpointId, capability);
 
-      return await new Promise<Container | null>((resolve) => {
-        container.inspect((err, data) => {
-          if (err || !data) {
-            resolve(null);
-          } else {
-            resolve(container);
-          }
-        });
-      });
-    }),
-  );
+export const findDockerContainerAsync = async (
+  { endpointId, id }: DockerContainerTarget,
+  requiredCapability: "inventory" | "logs" | "lifecycle" | "remove" = "inventory",
+) => {
+  const dockerInstance = DockerSingleton.findInstance(endpointId);
+  if (!dockerInstance || !hasDockerEndpointCapability(endpointId, requiredCapability)) return null;
 
-  return containers.find((container) => container) ?? null;
+  const container = dockerInstance.instance.getContainer(id);
+  return await new Promise<Container | null>((resolve) => {
+    container.inspect((err, data) => resolve(err || !data ? null : container));
+  });
 };
 
-export const getContainerLogsAsync = async (id: string, tail = 200) => {
-  const container = await findContainerByIdAsync(id);
+export const getContainerLogsAsync = async (target: DockerContainerTarget, tail = 200) => {
+  const container = await findDockerContainerAsync(target, "logs");
   if (!container) {
     return null;
   }
@@ -219,12 +235,12 @@ export const getContainerLogsAsync = async (id: string, tail = 200) => {
 };
 
 export const streamContainerLogsAsync = async (
-  id: string,
+  target: DockerContainerTarget,
   tail: number,
   onData: (data: string) => void,
   onError: (err: Error) => void,
 ) => {
-  const container = await findContainerByIdAsync(id);
+  const container = await findDockerContainerAsync(target, "logs");
   if (!container) {
     onError(new Error("Container not found"));
     return () => undefined;
@@ -259,25 +275,40 @@ export const streamContainerLogsAsync = async (
   };
 };
 
-async function getContainersWithStatsAsync() {
+export async function getContainersWithStatsAsync() {
   const dockerInstances = DockerSingleton.getInstances();
   const results = await Promise.allSettled(
-    dockerInstances.map(async ({ instance, host }) => {
+    dockerInstances.map(async ({ instance, host, endpointId, endpointName }) => {
       const instanceContainers = await instance.listContainers({ all: true });
       return instanceContainers
         .filter((container) => !(dockerLabels.hide in container.Labels))
-        .map((container) => ({ ...container, instance: host }));
+        .map((container) => ({ ...container, instance: host, endpointId, endpointName }));
     }),
   );
 
+  const endpoints = results.map((result, index) => {
+    const dockerInstance = dockerInstances.at(index);
+    if (!dockerInstance) throw new Error("Docker endpoint result did not match a configured endpoint");
+    return {
+      id: dockerInstance.endpointId,
+      name: dockerInstance.endpointName,
+      status: result.status === "fulfilled" ? "available" : "unavailable",
+      kind: dockerInstance.descriptor.kind,
+      transport: dockerInstance.descriptor.transport.type,
+      capabilities: dockerInstance.descriptor.capabilities,
+      source: dockerInstance.descriptor.source,
+      scope: dockerInstance.descriptor.scope,
+    } satisfies DockerEndpointStatus;
+  });
+
   const containers = results.flatMap((result, index) => {
     if (result.status === "fulfilled") return result.value;
+    const dockerInstance = dockerInstances.at(index);
     logger.warn(
       new ErrorWithMetadata(
         "Failed to list containers from Docker host",
         {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          host: dockerInstances[index]!.host,
+          host: dockerInstance?.host ?? "unknown",
         },
         { cause: result.reason },
       ),
@@ -295,7 +326,7 @@ async function getContainersWithStatsAsync() {
       : [];
 
   const containerStatsPromises = containers.map(async (container) => {
-    const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
+    const instance = DockerSingleton.findInstance(container.endpointId)?.instance;
     if (!instance) return null;
 
     const stats = await instance
@@ -314,6 +345,9 @@ async function getContainersWithStatsAsync() {
 
     return {
       id: container.Id,
+      endpointId: container.endpointId,
+      endpointName: container.endpointName,
+      resourceId: `${container.endpointId}:${container.Id}`,
       name: container.Names[0]?.split("/")[1] ?? "Unknown",
       host: container.instance,
       state: container.State as ContainerState,
@@ -325,7 +359,10 @@ async function getContainersWithStatsAsync() {
     };
   });
 
-  return (await Promise.all(containerStatsPromises)).filter((container) => container !== null);
+  return {
+    containers: (await Promise.all(containerStatsPromises)).filter((container) => container !== null),
+    endpoints,
+  };
 }
 
 export function calculateCpuUsage(stats: ContainerStats): number {

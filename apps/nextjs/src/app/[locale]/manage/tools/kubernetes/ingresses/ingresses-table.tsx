@@ -19,6 +19,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 dayjs.extend(relativeTime);
 
 interface IngressesTableComponentProps {
+  contextId: string;
   initialIngresses: RouterOutputs["kubernetes"]["ingresses"]["getIngresses"];
 }
 
@@ -72,15 +73,18 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.ingresses">): MR
   },
 ];
 
-export function IngressesTable(initialData: IngressesTableComponentProps) {
+export function IngressesTable({ contextId, initialIngresses }: IngressesTableComponentProps) {
   const tIngresses = useScopedI18n("kubernetes.ingresses");
 
-  const { data } = clientApi.kubernetes.ingresses.getIngresses.useQuery(undefined, {
-    initialData: initialData.initialIngresses,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = clientApi.kubernetes.ingresses.getIngresses.useQuery(
+    { contextId },
+    {
+      initialData: initialIngresses,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  );
 
   const table = useTranslatedMantineReactTable({
     data,

@@ -1,0 +1,21 @@
+.root {
+  position: absolute;
+  z-index: 4;
+  bottom: calc(var(--mantine-spacing-md) * var(--board-canvas-inverse-scale, 1));
+  left: calc(var(--mantine-spacing-md) * var(--board-canvas-inverse-scale, 1));
+  max-width: min(24rem, calc(100% - 2 * var(--mantine-spacing-md)));
+  pointer-events: auto;
+}
+
+.panel {
+  width: min(24rem, calc(100vw - 2rem));
+}
+
+.step {
+  border-radius: var(--mantine-radius-md);
+  padding: var(--mantine-spacing-xs);
+}
+
+.step[data-complete] {
+  background: light-dark(var(--mantine-color-green-0), rgba(47, 158, 68, 0.1));
+}

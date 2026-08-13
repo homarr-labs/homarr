@@ -368,6 +368,16 @@ export const integrationRouter = createTRPCRouter({
         kind: input.kind,
         url: input.url,
       });
+
+      return {
+        integration: {
+          id: integrationId,
+          name: input.name,
+          kind: input.kind,
+          url: input.url,
+        },
+        appId,
+      };
     }),
   update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");

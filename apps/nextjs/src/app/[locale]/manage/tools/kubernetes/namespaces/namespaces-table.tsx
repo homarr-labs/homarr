@@ -18,6 +18,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 dayjs.extend(relativeTime);
 
 interface NamespacesTableComponentProps {
+  contextId: string;
   initialNamespaces: RouterOutputs["kubernetes"]["namespaces"]["getNamespaces"];
 }
 
@@ -56,15 +57,18 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.namespaces">): M
   },
 ];
 
-export function NamespacesTable(initialData: NamespacesTableComponentProps) {
+export function NamespacesTable({ contextId, initialNamespaces }: NamespacesTableComponentProps) {
   const tNamespaces = useScopedI18n("kubernetes.namespaces");
 
-  const { data } = clientApi.kubernetes.namespaces.getNamespaces.useQuery(undefined, {
-    initialData: initialData.initialNamespaces,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = clientApi.kubernetes.namespaces.getNamespaces.useQuery(
+    { contextId },
+    {
+      initialData: initialNamespaces,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  );
 
   const table = useTranslatedMantineReactTable({
     data,

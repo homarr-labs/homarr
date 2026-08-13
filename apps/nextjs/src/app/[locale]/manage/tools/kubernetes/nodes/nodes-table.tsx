@@ -18,6 +18,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 dayjs.extend(relativeTime);
 
 interface NodesListComponentProps {
+  contextId: string;
   initialNodes: RouterOutputs["kubernetes"]["nodes"]["getNodes"];
 }
 
@@ -49,14 +50,14 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.nodes">): MRT_Co
     accessorKey: "allocatableCpuPercentage",
     header: t("field.cpu.label"),
     Cell({ cell }) {
-      return getRingProgress(cell.row.original.allocatableCpuPercentage);
+      return getRingProgress(cell.row.original.allocatableCpuPercentage, t("field.metricsUnavailable"));
     },
   },
   {
     accessorKey: "allocatableRamPercentage",
     header: t("field.memory.label"),
     Cell({ cell }) {
-      return getRingProgress(cell.row.original.allocatableRamPercentage);
+      return getRingProgress(cell.row.original.allocatableRamPercentage, t("field.metricsUnavailable"));
     },
   },
   {
@@ -82,15 +83,18 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.nodes">): MRT_Co
   },
 ];
 
-export function NodesTable(initialData: NodesListComponentProps) {
+export function NodesTable({ contextId, initialNodes }: NodesListComponentProps) {
   const tNodes = useScopedI18n("kubernetes.nodes");
 
-  const { data } = clientApi.kubernetes.nodes.getNodes.useQuery(undefined, {
-    initialData: initialData.initialNodes,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = clientApi.kubernetes.nodes.getNodes.useQuery(
+    { contextId },
+    {
+      initialData: initialNodes,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  );
 
   const table = useTranslatedMantineReactTable({
     data,
@@ -115,7 +119,11 @@ export function NodesTable(initialData: NodesListComponentProps) {
   return <MantineReactTable table={table} />;
 }
 
-function getRingProgress(value: number) {
+function getRingProgress(value: number | null, unavailableLabel: string) {
+  if (value === null) {
+    return <Text c="dimmed">{unavailableLabel}</Text>;
+  }
+
   return (
     <RingProgress
       size={70}

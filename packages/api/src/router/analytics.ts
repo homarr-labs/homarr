@@ -7,6 +7,7 @@ import { db } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import { getTrackedFeatureProperties } from "./analytics-properties";
 
 const getInstanceId = async (): Promise<string | null> => {
   if (env.NO_EXTERNAL_CONNECTION) return null;
@@ -34,10 +35,11 @@ export const analyticsRouter = createTRPCRouter({
       const instanceId = await getInstanceId();
       if (!instanceId) return;
 
-      trackEvent(instanceId, `feature:${input.feature}`, {
-        ...input.properties,
-        userId: ctx.session.user.id,
-      });
+      trackEvent(
+        instanceId,
+        `feature:${input.feature}`,
+        getTrackedFeatureProperties(input.feature, input.properties, ctx.session.user.id),
+      );
     }),
 
   heartbeat: protectedProcedure.mutation(async ({ ctx }) => {

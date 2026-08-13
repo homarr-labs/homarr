@@ -566,9 +566,11 @@ export const boardRouter = createTRPCRouter({
       },
     })
     .input(boardCreateSchema)
-    .output(z.object({ boardId: z.string() }))
+    .output(z.object({ boardId: z.string(), name: z.string(), layoutId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const boardId = createId();
+      const mobileLayoutId = createId();
+      const baseLayoutId = createId();
 
       const user = await ctx.db.query.users.findFirst({
         where: eq(users.id, ctx.session.user.id),
@@ -594,7 +596,7 @@ export const boardRouter = createTRPCRouter({
       });
       createBoardCollection.layouts.push(
         {
-          id: createId(),
+          id: mobileLayoutId,
           name: "Mobile",
           columnCount: 3,
           leftGutterColumnCount: 0,
@@ -604,7 +606,7 @@ export const boardRouter = createTRPCRouter({
           boardId,
         },
         {
-          id: createId(),
+          id: baseLayoutId,
           name: "Base",
           columnCount: input.columnCount,
           leftGutterColumnCount: 0,
@@ -621,7 +623,7 @@ export const boardRouter = createTRPCRouter({
         await ctx.db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, ctx.session.user.id));
       }
 
-      return { boardId };
+      return { boardId, name: input.name, layoutId: baseLayoutId };
     }),
   duplicateBoard: permissionRequiredProcedure
     .requiresPermission("board-create")

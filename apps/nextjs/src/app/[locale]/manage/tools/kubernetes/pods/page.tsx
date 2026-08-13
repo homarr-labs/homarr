@@ -8,21 +8,25 @@ import { getScopedI18n } from "@homarr/translation/server";
 
 import { PodsTable } from "~/app/[locale]/manage/tools/kubernetes/pods/pods-table";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import type { KubernetesContextSearchParams } from "../kubernetes-context";
+import { getSelectedKubernetesContextAsync } from "../kubernetes-context";
 
-export default async function PodsPage() {
+export default async function PodsPage({ searchParams }: { searchParams: Promise<KubernetesContextSearchParams> }) {
   const session = await auth();
   if (!(session?.user.permissions.includes("admin") && env.ENABLE_KUBERNETES)) {
     notFound();
   }
 
-  const pods = await api.kubernetes.pods.getPods();
+  const context = await getSelectedKubernetesContextAsync(searchParams);
+  const pods =
+    context.status === "unavailable" ? [] : await api.kubernetes.pods.getPods({ contextId: context.contextId });
   const tPods = await getScopedI18n("kubernetes.pods");
   return (
     <>
       <DynamicBreadcrumb />
       <Stack>
         <Title order={1}>{tPods("label")}</Title>
-        <PodsTable initialPods={pods} />
+        <PodsTable contextId={context.contextId} initialPods={pods} />
       </Stack>
     </>
   );

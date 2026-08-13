@@ -7,7 +7,7 @@ import type { KubernetesPod } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
-import { KubernetesClient } from "../kubernetes-client";
+import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
 
 const logger = createLogger({ module: "podsRouter" });
 
@@ -15,8 +15,9 @@ export const podsRouter = createTRPCRouter({
   getPods: permissionRequiredProcedure
     .requiresPermission("admin")
     .concat(kubernetesMiddleware())
-    .query(async (): Promise<KubernetesPod[]> => {
-      const { coreApi, kubeConfig } = KubernetesClient.getInstance();
+    .input(kubernetesContextInput)
+    .query(async ({ input }): Promise<KubernetesPod[]> => {
+      const { coreApi, kubeConfig } = getKubernetesClient(input.contextId);
       try {
         const podsResp = await coreApi.listPodForAllNamespaces();
 

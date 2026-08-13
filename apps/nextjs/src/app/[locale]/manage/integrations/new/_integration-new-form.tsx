@@ -19,6 +19,7 @@ import {
 import { IconCheck, IconExternalLink, IconInfoCircle, IconKey } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -49,9 +50,11 @@ interface NewIntegrationFormProps {
   kind: IntegrationKind;
   initialUrl?: string;
   initialName?: string;
-  onSuccess: () => void;
+  onSuccess: (result?: CreatedIntegrationResult) => void;
   onCancel?: () => void;
 }
+
+export type CreatedIntegrationResult = Extract<RouterOutputs["integration"]["create"], { integration: unknown }>;
 
 const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
   z.object({
@@ -101,7 +104,9 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
       ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
       : values.url;
 
-    const onMutationSuccess = (data: { error?: AnyMappedTestConnectionError } | undefined | void) => {
+    const onMutationSuccess = (
+      data: CreatedIntegrationResult | { error?: AnyMappedTestConnectionError } | undefined | void,
+    ) => {
       if (data && "error" in data && data.error) {
         setError(data.error);
         showErrorNotification({
@@ -116,7 +121,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
         message: t("integration.page.create.notification.success.message"),
       });
 
-      onSuccess();
+      onSuccess(data && "integration" in data ? data : undefined);
     };
 
     const onMutationError = () => {

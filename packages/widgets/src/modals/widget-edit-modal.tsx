@@ -172,13 +172,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           onClick={() =>
             openModal({
               advancedOptions,
-              onSuccess(options) {
-                setAdvancedOptions(options);
-                innerProps.onSuccessfulEdit({
-                  ...innerProps.value,
-                  advancedOptions: options,
-                });
-              },
+              onSuccess: setAdvancedOptions,
             })
           }
         >
@@ -194,13 +188,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
               onClick={() =>
                 openModal({
                   advancedOptions,
-                  onSuccess(options) {
-                    setAdvancedOptions(options);
-                    innerProps.onSuccessfulEdit({
-                      ...innerProps.value,
-                      advancedOptions: options,
-                    });
-                  },
+                  onSuccess: setAdvancedOptions,
                 })
               }
             >
@@ -250,4 +238,6 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     return t("item.edit.title");
   },
   size: modalSizeForm,
+  presentation: "inspector",
+  closeOnClickOutside: false,
 });

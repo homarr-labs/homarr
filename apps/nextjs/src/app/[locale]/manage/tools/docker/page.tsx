@@ -7,6 +7,7 @@ import { env } from "@homarr/docker/env";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { DockerReconciliation } from "./docker-reconciliation";
 import { DockerTable } from "./docker-table";
 
 export default async function DockerPage() {
@@ -15,7 +16,7 @@ export default async function DockerPage() {
     notFound();
   }
 
-  const { containers, timestamp } = await api.docker.getContainers();
+  const { containers, endpoints, timestamp } = await api.docker.getContainers();
   const tDocker = await getScopedI18n("docker");
 
   return (
@@ -23,7 +24,8 @@ export default async function DockerPage() {
       <DynamicBreadcrumb />
       <Stack>
         <Title order={1}>{tDocker("title")}</Title>
-        <DockerTable initialData={{ containers, timestamp }} />
+        <DockerReconciliation />
+        <DockerTable initialData={{ containers, endpoints, timestamp }} />
       </Stack>
     </>
   );

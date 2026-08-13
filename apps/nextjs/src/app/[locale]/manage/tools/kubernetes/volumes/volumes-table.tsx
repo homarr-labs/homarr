@@ -16,6 +16,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 dayjs.extend(relativeTime);
 
 interface VolumesTableComponentProps {
+  contextId: string;
   initialVolumes: RouterOutputs["kubernetes"]["volumes"]["getVolumes"];
 }
 
@@ -66,15 +67,18 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.volumes">): MRT_
   },
 ];
 
-export function VolumesTable(initialData: VolumesTableComponentProps) {
+export function VolumesTable({ contextId, initialVolumes }: VolumesTableComponentProps) {
   const tVolumes = useScopedI18n("kubernetes.volumes");
 
-  const { data } = clientApi.kubernetes.volumes.getVolumes.useQuery(undefined, {
-    initialData: initialData.initialVolumes,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = clientApi.kubernetes.volumes.getVolumes.useQuery(
+    { contextId },
+    {
+      initialData: initialVolumes,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  );
 
   const table = useTranslatedMantineReactTable({
     data,

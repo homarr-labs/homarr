@@ -8,6 +8,8 @@ import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
+import { BoardEmptyState } from "~/components/board/board-empty-state";
+import { BoardSetupChecklist } from "~/components/board/board-setup-checklist";
 import {
   getBoardLaneColumnCount,
   getInitialBoardLogicalHeight,
@@ -64,6 +66,8 @@ export const ClientBoard = () => {
     <BoardAdvancedFocusProvider>
       <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
         <BoardBackgroundVideo />
+        <BoardEmptyState />
+        <BoardSetupChecklist />
         <BoardSectionCollapseProvider>
           <BoardGridPortalHost>
             <ScaledBoardCanvas

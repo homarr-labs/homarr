@@ -13,7 +13,7 @@ import { ClientSideDockerLogsTerminal } from "./client";
 
 interface DockerContainerLogsPageProps {
   params: Promise<{ containerId: string }>;
-  searchParams: Promise<{ name?: string }>;
+  searchParams: Promise<{ endpointId?: string; name?: string }>;
 }
 
 export default async function DockerContainerLogsPage({ params, searchParams }: DockerContainerLogsPageProps) {
@@ -23,10 +23,11 @@ export default async function DockerContainerLogsPage({ params, searchParams }: 
   }
 
   const { containerId } = await params;
-  const { name } = await searchParams;
+  const { endpointId, name } = await searchParams;
+  if (!endpointId) notFound();
 
   try {
-    await api.docker.logs({ id: containerId, tail: 1 });
+    await api.docker.logs({ endpointId, id: containerId, tail: 1 });
   } catch {
     notFound();
   }
@@ -40,7 +41,7 @@ export default async function DockerContainerLogsPage({ params, searchParams }: 
         />
       </Group>
       <Box style={{ borderRadius: 6 }} h={fullHeightWithoutHeaderAndFooter} p="md" bg="black">
-        <ClientSideDockerLogsTerminal containerId={containerId} />
+        <ClientSideDockerLogsTerminal endpointId={endpointId} containerId={containerId} />
       </Box>
     </>
   );

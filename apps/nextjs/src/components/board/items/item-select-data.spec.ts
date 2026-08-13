@@ -1,6 +1,44 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { resolveMatchingIntegrationsAsync, tryLockSelection, unlockSelection } from "./item-select-data";
+import {
+  getWidgetConnectionStatus,
+  resolveMatchingIntegrationsAsync,
+  tryLockSelection,
+  unlockSelection,
+} from "./item-select-data";
+
+describe("getWidgetConnectionStatus", () => {
+  const availableKinds = new Set(["sonarr" as const]);
+
+  it("reports widgets with a configured compatible integration as ready", () => {
+    expect(
+      getWidgetConnectionStatus({
+        supportedIntegrations: ["sonarr", "radarr"],
+        availableKinds,
+        connectionOptional: false,
+      }),
+    ).toBe("ready");
+  });
+
+  it("reports required integrations that are not configured as needing setup", () => {
+    expect(
+      getWidgetConnectionStatus({
+        supportedIntegrations: ["radarr"],
+        availableKinds,
+        connectionOptional: false,
+      }),
+    ).toBe("needsSetup");
+  });
+
+  it.each([
+    { supportedIntegrations: [], connectionOptional: false },
+    { supportedIntegrations: ["radarr" as const], connectionOptional: true },
+  ])("reports a widget without a required connection", ({ supportedIntegrations, connectionOptional }) => {
+    expect(getWidgetConnectionStatus({ supportedIntegrations, availableKinds, connectionOptional })).toBe(
+      "noConnectionRequired",
+    );
+  });
+});
 
 describe("widget selection lock", () => {
   it("rejects repeated selection synchronously until the active selection finishes", () => {

@@ -95,6 +95,9 @@ jobs:
       - name: Validate checked-in OpenAPI schema
         run: pnpm check:openapi
 
+      - name: Validate feature contracts
+        run: pnpm check:feature-contracts
+
       - name: Validate Custom Widget bundle budget
         run: |
           pnpm --filter nextjs build

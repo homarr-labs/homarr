@@ -149,6 +149,48 @@ describe("item actions create-item", () => {
     });
   });
 
+  test("places a new item directly in the requested container", () => {
+    const board = new BoardMockBuilder()
+      .addEmptySection({ id: "canvas" })
+      .addSection(
+        new ContainerSectionMockBuilder({ id: "media" })
+          .addLayout({ layoutId: "layout", parentSectionId: "canvas", width: 4, height: 3 })
+          .build(),
+      )
+      .build();
+    const layout = board.layouts.at(0);
+    if (!layout) throw new Error("Expected a board layout");
+    layout.id = "layout";
+
+    const result = createItemCallback({ id: "calendar", kind: "mediaMissing", targetSectionId: "media" })(board);
+
+    expect(result.items.find((item) => item.id === "calendar")?.layouts).toEqual([
+      expect.objectContaining({ layoutId: "layout", sectionId: "media", width: 4 }),
+    ]);
+  });
+
+  test("falls back to the main canvas when a requested destination no longer exists", () => {
+    const board = new BoardMockBuilder().addEmptySection({ id: "canvas" }).build();
+    const layout = board.layouts.at(0);
+    if (!layout) throw new Error("Expected a board layout");
+    layout.id = "layout";
+
+    const result = createItemCallback({ id: "clock", kind: "clock", targetSectionId: "removed" })(board);
+
+    expect(result.items.find((item) => item.id === "clock")?.layouts).toEqual([
+      expect.objectContaining({ layoutId: "layout", sectionId: "canvas" }),
+    ]);
+  });
+
+  test("commits configured advanced options in the creation transaction", () => {
+    const board = new BoardMockBuilder().addEmptySection({ id: "canvas" }).build();
+    const advancedOptions = { title: "Kitchen", customCssClasses: ["compact"], borderColor: "#abc" };
+
+    const result = createItemCallback({ id: "clock", kind: "clock", advancedOptions })(board);
+
+    expect(result.items.find((item) => item.id === "clock")?.advancedOptions).toEqual(advancedOptions);
+  });
+
   test("clamps wide defaults and places below a full automatic canvas", () => {
     const board = new BoardMockBuilder().addEmptySection({ id: "canvas", yOffset: 0 }).build();
     const layout = board.layouts[0];

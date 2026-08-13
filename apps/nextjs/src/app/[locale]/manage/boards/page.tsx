@@ -54,7 +54,12 @@ export default async function ManageBoardsPage() {
       floatingPrimaryAction={canCreateBoards}
     >
       {boards.length === 0 && (
-        <NoResults icon={IconLayoutDashboard} title={t("noResults.title")} description={t("noResults.description")} />
+        <NoResults
+          icon={IconLayoutDashboard}
+          title={t("noResults.title")}
+          description={t("noResults.description")}
+          action={{ label: t("action.new.label"), href: "?create=true", hidden: !canCreateBoards }}
+        />
       )}
       {boards.length > 0 && (
         <TourTarget id="manage-boards-list">

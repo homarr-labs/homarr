@@ -60,6 +60,70 @@ default data; use `pnpm db:seed` to seed it explicitly later.
 Workshop contributors can set up PocketBase and Docusaurus with the dedicated
 [Workshop development guide](../../workshop/development).
 
+### Scaffold a native feature
+
+Run `pnpm generate:feature` and choose `native-integration`, `widget`, or `integration-widget`. The generator creates
+implementation, focused test, documentation, and English translation skeletons and updates the current explicit
+registries. It stops before writing if a target exists, a registry anchor is ambiguous, or a supported integration is
+unknown.
+
+The generated code is a starting contract, not a finished feature. Replace the placeholder request, UI, tests, secrets,
+categories, configuration, error states, and documentation with behavior specific to the service. Then run:
+
+```sh
+pnpm check:feature-contracts
+pnpm test:feature-platform
+```
+
+The contract check reports the exact registry, docs path, translation, support mapping, or package export that needs
+repair. It intentionally follows today's explicit registries; a future canonical feature descriptor can replace those
+patches without changing the contributor-facing generator names.
+
+Integration-capable widgets declare their server-safe relationship in `nativeFeatureCapabilities`. Homarr derives the
+widget-to-integration map, reverse integration-to-widget map, optional-connection set, and server selection limits from
+that descriptor. Widget definitions still mirror the supported list for client-side type inference; the focused widget
+manifest test and `check:feature-contracts` prevent drift until those definition types can consume the descriptor
+directly.
+
+New integration skeletons also include response fixtures using `simulateResponseContractAsync`. Replace the generated
+minimal schema and fixtures with representative upstream payloads: at least one successful response, important optional
+or version-specific shapes, and a malformed response that must be rejected. The simulator uses the real parser without
+network access and reports every fixture mismatch, so parser contracts can be reviewed before credentials are available.
+
+### Review native feature states
+
+In a development server, administrators can open `/manage/tools/feature-workbench` to inspect the shared `CatalogItem`
+and integration response-contract fixtures. The workbench uses the application Mantine theme and the same segmented
+fixture controls as the custom-widget preview. It covers ready, setup-required, standalone, connection-error, selected,
+loading, disabled, parser-success, and parser-failure states without requiring a live service.
+
+Use the workbench after changing shared catalog presentation or generated parser contracts, then run the focused test:
+
+```sh
+pnpm exec vitest run "apps/nextjs/src/app/[locale]/manage/tools/feature-workbench/_feature-state-workbench.spec.tsx"
+```
+
+The workbench is deliberately development-only and is not linked from management navigation. It does not yet exercise
+real integration branding, long translated labels, right-to-left text, high-contrast screenshots, touch interaction,
+small viewport clipping, live network latency, retry transitions, or service-specific response schemas. Those remain
+manual review items until screenshot and browser-automation coverage is added.
+
+### Check one native feature
+
+Run `pnpm check:feature <kind>` before submitting an integration or widget change. The command resolves the kind through
+`integrationDefs`, `widgetKinds`, the widget manifest, creator registry, documentation slug maps, and capability
+descriptor. When an integration and widget share a kind, such as `wud`, both sides are checked together.
+
+```sh
+pnpm check:feature wud --plan
+pnpm check:feature wud
+```
+
+`--plan` (or `--dry-run`) prints the deterministic affected files and commands without executing them. The normal mode
+runs feature contracts, nearby fixture and unit tests, affected package typechecks, and lint and formatting for only the
+resolved files. Unknown kinds fail before any command runs. Live-service, container, and visual checks are printed as
+optional and are never executed implicitly because they may require credentials, images, or a running development app.
+
 ### Useful commands
 
 - `pnpm dev` — Next.js on port 3000.
@@ -76,6 +140,8 @@ Workshop contributors can set up PocketBase and Docusaurus with the dedicated
 - `pnpm db:seed` — seed the default database data explicitly.
 - `pnpm db:studio` — inspect the database.
 - `pnpm format` / `pnpm format:fix` — check or apply oxfmt.
+- `pnpm generate:feature` — scaffold a native integration, widget, or paired feature.
+- `pnpm check:feature-contracts` — validate native feature registries, docs, translations, support maps, and exports.
 - `pnpm lint` / `pnpm lint:fix` — check or apply oxlint.
 - `pnpm typecheck` — typecheck all workspaces.
 - `pnpm test` — unit and contract suites.

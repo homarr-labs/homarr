@@ -6,6 +6,7 @@ const mockEnv = vi.hoisted(() => ({
   DOCKER_SOCKET_PATHS: undefined as string | undefined,
   DOCKER_HOSTNAMES: undefined as string | undefined,
   DOCKER_PORTS: undefined as string | undefined,
+  DOCKER_ENDPOINTS: undefined as string | undefined,
   ENABLE_DOCKER: true,
   ENABLE_KUBERNETES: false,
 }));
@@ -32,6 +33,7 @@ describe("DockerSingleton", () => {
     mockEnv.DOCKER_SOCKET_PATHS = undefined;
     mockEnv.DOCKER_HOSTNAMES = undefined;
     mockEnv.DOCKER_PORTS = undefined;
+    mockEnv.DOCKER_ENDPOINTS = undefined;
   });
 
   test("should return default socket when no env vars set", () => {
@@ -39,6 +41,7 @@ describe("DockerSingleton", () => {
 
     expect(instances).toHaveLength(1);
     expect(instances[0]?.host).toBe("socket");
+    expect(instances[0]).toMatchObject({ endpointId: "socket:default", endpointName: "Local Docker" });
   });
 
   test("should return TCP instances only when DOCKER_HOSTNAMES and DOCKER_PORTS set", () => {
@@ -60,6 +63,7 @@ describe("DockerSingleton", () => {
     expect(instances).toHaveLength(2);
     expect(instances[0]?.host).toBe("host1:2375");
     expect(instances[1]?.host).toBe("host2:2376");
+    expect(instances.map(({ endpointId }) => endpointId)).toEqual(["tcp:host1:2375", "tcp:host2:2376"]);
   });
 
   test("should throw when hostname and port counts do not match", () => {
@@ -86,6 +90,7 @@ describe("DockerSingleton", () => {
     expect(instances).toHaveLength(2);
     expect(instances[0]?.host).toBe("/var/run/docker.sock");
     expect(instances[1]?.host).toBe("/run/user/1000/podman/podman.sock");
+    expect(DockerSingleton.findInstance("socket:/run/user/1000/podman/podman.sock")).toBe(instances[1]);
   });
 
   test("should combine socket and TCP instances", () => {
@@ -106,5 +111,24 @@ describe("DockerSingleton", () => {
     const second = DockerSingleton.getInstances();
 
     expect(first).toBe(second);
+  });
+
+  test("uses the structured endpoint descriptor and exposes scoped capabilities", () => {
+    mockEnv.DOCKER_ENDPOINTS = JSON.stringify([
+      {
+        id: "readonly-podman",
+        name: "Read-only Podman",
+        kind: "podman",
+        transport: { type: "socket", path: "/run/podman/podman.sock" },
+        capabilities: ["inventory", "logs"],
+      },
+    ]);
+
+    const [endpoint] = DockerSingleton.getInstances();
+
+    expect(endpoint).toMatchObject({ endpointId: "readonly-podman", endpointName: "Read-only Podman" });
+    expect(endpoint?.descriptor).toMatchObject({ kind: "podman", source: "environment" });
+    expect(DockerSingleton.hasCapability("readonly-podman", "logs")).toBe(true);
+    expect(DockerSingleton.hasCapability("readonly-podman", "remove")).toBe(false);
   });
 });

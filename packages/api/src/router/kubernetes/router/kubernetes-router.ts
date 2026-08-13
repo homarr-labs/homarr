@@ -3,6 +3,7 @@ import { lazy } from "@trpc/server";
 import { createTRPCRouter } from "../../../trpc";
 
 export const kubernetesRouter = createTRPCRouter({
+  contexts: lazy(() => import("./contexts").then((mod) => mod.contextsRouter)),
   nodes: lazy(() => import("./nodes").then((mod) => mod.nodesRouter)),
   cluster: lazy(() => import("./cluster").then((mod) => mod.clusterRouter)),
   namespaces: lazy(() => import("./namespaces").then((mod) => mod.namespacesRouter)),

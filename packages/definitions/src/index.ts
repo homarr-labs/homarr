@@ -16,6 +16,7 @@ export * from "./widget-integration-map";
 export * from "./emptysuperjson";
 export * from "./hotkeys";
 export * from "./docker-integration-match";
+export * from "./docker-service-discovery";
 export * from "./integration-url-template";
 export * from "./release-provider";
 export * from "./assistant";
