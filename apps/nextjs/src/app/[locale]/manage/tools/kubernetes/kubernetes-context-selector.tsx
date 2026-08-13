@@ -14,7 +14,12 @@ export const KubernetesContextSelector = () => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { data } = clientApi.kubernetes.contexts.getContexts.useQuery();
+  const { data } = clientApi.kubernetes.contexts.getContexts.useQuery(undefined, {
+    refetchInterval: 30_000,
+    refetchOnMount: "always",
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true,
+  });
   const [storedContextId, setStoredContextId] = useLocalStorage<string | null>({
     key: "homarr-kubernetes-context",
     defaultValue: null,
@@ -77,7 +82,11 @@ export const KubernetesContextSelector = () => {
 
 export const useSelectedKubernetesContextId = () => {
   const searchParams = useSearchParams();
-  const { data } = clientApi.kubernetes.contexts.getContexts.useQuery();
+  const { data } = clientApi.kubernetes.contexts.getContexts.useQuery(undefined, {
+    refetchInterval: 30_000,
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true,
+  });
   const requested = searchParams.get("context");
   if (data?.contexts.some(({ contextId }) => contextId === requested)) return requested;
   return (

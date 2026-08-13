@@ -90,21 +90,14 @@ export const integrationRouter = createTRPCRouter({
       });
       return integrations
         .map((integration) => {
-          const permissions = integration.userPermissions
-            .map(({ permission }) => permission)
-            .concat(integration.groupPermissions.map(({ permission }) => permission));
+          const permissions = constructIntegrationPermissions(integration, ctx.session);
 
           return {
             id: integration.id,
             name: integration.name,
             kind: integration.kind,
             url: integration.url,
-            permissions: {
-              hasUseAccess:
-                permissions.includes("use") || permissions.includes("interact") || permissions.includes("full"),
-              hasInteractAccess: permissions.includes("interact") || permissions.includes("full"),
-              hasFullAccess: permissions.includes("full"),
-            },
+            permissions,
           };
         })
         .toSorted(
@@ -138,21 +131,14 @@ export const integrationRouter = createTRPCRouter({
     });
     return integrationsFromDb
       .map((integration) => {
-        const permissions = integration.userPermissions
-          .map(({ permission }) => permission)
-          .concat(integration.groupPermissions.map(({ permission }) => permission));
+        const permissions = constructIntegrationPermissions(integration, ctx.session);
 
         return {
           id: integration.id,
           name: integration.name,
           kind: integration.kind,
           url: integration.url,
-          permissions: {
-            hasUseAccess:
-              permissions.includes("use") || permissions.includes("interact") || permissions.includes("full"),
-            hasInteractAccess: permissions.includes("interact") || permissions.includes("full"),
-            hasFullAccess: permissions.includes("full"),
-          },
+          permissions,
         };
       })
       .toSorted(
@@ -189,21 +175,14 @@ export const integrationRouter = createTRPCRouter({
       });
       return integrationsFromDb
         .map((integration) => {
-          const permissions = integration.userPermissions
-            .map(({ permission }) => permission)
-            .concat(integration.groupPermissions.map(({ permission }) => permission));
+          const permissions = constructIntegrationPermissions(integration, ctx.session);
 
           return {
             id: integration.id,
             name: integration.name,
             kind: integration.kind,
             url: integration.url,
-            permissions: {
-              hasUseAccess:
-                permissions.includes("use") || permissions.includes("interact") || permissions.includes("full"),
-              hasInteractAccess: permissions.includes("interact") || permissions.includes("full"),
-              hasFullAccess: permissions.includes("full"),
-            },
+            permissions,
           };
         })
         .toSorted(

@@ -50,9 +50,10 @@ export function SecretsTable({ contextId, initialSecrets }: SecretsTableComponen
     { contextId },
     {
       initialData: initialSecrets,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      refetchOnMount: "always",
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
     },
   );
 

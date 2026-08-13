@@ -30,6 +30,18 @@ describe("constructIntegrationPermissions", () => {
     expect(result.hasUseAccess).toBe(true);
   });
 
+  test("should derive lower access levels from an unexpanded full permission", () => {
+    const result = constructIntegrationPermissions(
+      { userPermissions: [], groupPermissions: [] },
+      {
+        user: { id: "2", permissions: ["integration-full-all"], colorScheme: "light" },
+        expires: new Date().toISOString(),
+      },
+    );
+
+    expect(result).toEqual({ hasFullAccess: true, hasInteractAccess: true, hasUseAccess: true });
+  });
+
   test("should return hasInteractAccess as true when session permissions include integration-interact-all", () => {
     // Arrange
     const integration = {

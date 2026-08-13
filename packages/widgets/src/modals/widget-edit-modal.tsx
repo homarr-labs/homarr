@@ -2,8 +2,9 @@
 
 import { useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { Button, Group, Stack, Tabs } from "@mantine/core";
+import { Button, Group, Stack, Tabs, Text } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
+import { IconPencil } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { objectEntries } from "@homarr/common";
@@ -13,6 +14,7 @@ import type { WidgetKind } from "@homarr/definitions";
 import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
+import { IntegrationAvatar } from "@homarr/ui";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
 
 import { getInputForType } from "../_inputs";
@@ -44,7 +46,14 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   itemId?: string;
   boardId?: string;
   appId?: string;
+  onEditIntegration?: (integrationId: string) => void;
+  onIntegrationSaved?: () => void;
 }
+
+export const getSelectedWidgetIntegrations = (
+  integrationData: readonly IntegrationSelectOption[],
+  selectedIds: readonly string[],
+) => integrationData.filter((integration) => selectedIds.includes(integration.id));
 
 export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ actions, innerProps }) => {
   const t = useI18n();
@@ -61,6 +70,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const integrationsRequired =
     innerProps.integrationSupport &&
     (!("integrationsRequired" in definition) || definition.integrationsRequired !== false);
+  const maxIntegrations = (definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity;
   const options = definition.createOptions(innerProps.settings) as Record<string, OptionsBuilderResult[string]>;
   const optionsSuperRefine = (options as Record<symbol, unknown>)[OPTIONS_SUPER_REFINE] as
     | ((data: Record<string, unknown>, ctx: z.RefinementCtx) => void)
@@ -79,13 +89,17 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     ? z.object(optionsFieldSchema).superRefine(optionsSuperRefine)
     : z.object(optionsFieldSchema);
 
+  let integrationIdsSchema = z.array(z.string());
+  if (integrationsRequired) integrationIdsSchema = integrationIdsSchema.min(1);
+  if (Number.isFinite(maxIntegrations)) integrationIdsSchema = integrationIdsSchema.max(maxIntegrations);
+
   const form = useForm({
     mode: "controlled",
     initialValues: innerProps.value,
     validate: schemaResolver(
       z.object({
         options: optionsSchema,
-        integrationIds: integrationsRequired ? z.array(z.string()).min(1) : z.array(z.string()),
+        integrationIds: integrationIdsSchema,
         advancedOptions: z.object({
           customCssClasses: z.array(z.string()),
           borderColor: z.string(),
@@ -102,6 +116,10 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const canConfigureWidget = innerProps.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const appId = innerProps.appId;
   const showAppTab = innerProps.kind === "app" && canModifyApps && Boolean(appId);
+  const canModifyAllIntegrations = session?.user.permissions.includes("integration-full-all") ?? false;
+  const selectedIntegrations = getSelectedWidgetIntegrations(innerProps.integrationData, form.values.integrationIds);
+  const showIntegrationTab = Boolean(innerProps.onEditIntegration) && selectedIntegrations.length > 0;
+  const showResourceTabs = showAppTab || showIntegrationTab;
 
   const handleSubmit = form.onSubmit(async (values) => {
     setIsSubmitting(true);
@@ -132,7 +150,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
         <WidgetIntegrationSelect
           label={t("item.edit.field.integrations.label")}
           data={innerProps.integrationData}
-          canSelectMultiple={((definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity) > 1}
+          canSelectMultiple={maxIntegrations > 1}
           withAsterisk={integrationsRequired}
           {...form.getInputProps("integrationIds")}
         />
@@ -165,7 +183,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
             />
           );
         })}
-      {showAppTab ? (
+      {showResourceTabs ? (
         <Button
           variant="subtle"
           type="button"
@@ -203,19 +221,64 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   return (
     <form onSubmit={onFormSubmit}>
       <FormProvider form={form}>
-        {showAppTab ? (
+        {showResourceTabs ? (
           <Stack>
             <Tabs defaultValue="widget">
               <Tabs.List grow>
                 <Tabs.Tab value="widget">{t("item.edit.tab.widget")}</Tabs.Tab>
-                <Tabs.Tab value="app">{t("item.edit.tab.app")}</Tabs.Tab>
+                {showAppTab && <Tabs.Tab value="app">{t("item.edit.tab.app")}</Tabs.Tab>}
+                {showIntegrationTab && <Tabs.Tab value="integration">{t("item.edit.tab.integration")}</Tabs.Tab>}
               </Tabs.List>
               <Tabs.Panel value="widget" pt="md">
                 {widgetFormContent}
               </Tabs.Panel>
-              <Tabs.Panel value="app" pt="md">
-                {appId && <EmbeddedAppEditForm appId={appId} handleRef={appEditRef} />}
-              </Tabs.Panel>
+              {showAppTab && (
+                <Tabs.Panel value="app" pt="md">
+                  {appId && <EmbeddedAppEditForm appId={appId} handleRef={appEditRef} />}
+                </Tabs.Panel>
+              )}
+              {showIntegrationTab && (
+                <Tabs.Panel value="integration" pt="md">
+                  <Stack>
+                    <Text size="sm" c="dimmed">
+                      {t("item.edit.integration.description")}
+                    </Text>
+                    {selectedIntegrations.map((integration) => {
+                      const canEdit = canModifyAllIntegrations || integration.permissions?.hasFullAccess === true;
+                      return (
+                        <Group key={integration.id} justify="space-between" wrap="nowrap" gap="sm">
+                          <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
+                            <IntegrationAvatar kind={integration.kind} size="sm" />
+                            <Stack gap={0} style={{ minWidth: 0 }}>
+                              <Text fw={600} size="sm" truncate>
+                                {integration.name}
+                              </Text>
+                              <Text size="xs" c="dimmed" truncate>
+                                {integration.url}
+                              </Text>
+                            </Stack>
+                          </Group>
+                          {canEdit ? (
+                            <Button
+                              type="button"
+                              variant="light"
+                              leftSection={<IconPencil size={16} />}
+                              onClick={() => innerProps.onEditIntegration?.(integration.id)}
+                              aria-label={t("item.edit.integration.editLabel", { name: integration.name })}
+                            >
+                              {t("item.edit.integration.action")}
+                            </Button>
+                          ) : (
+                            <Text size="xs" c="dimmed" ta="end">
+                              {t("item.edit.integration.fullAccessRequired")}
+                            </Text>
+                          )}
+                        </Group>
+                      );
+                    })}
+                  </Stack>
+                </Tabs.Panel>
+              )}
             </Tabs>
             <Group justify="end">
               <Button onClick={actions.closeModal} variant="subtle" color="gray">

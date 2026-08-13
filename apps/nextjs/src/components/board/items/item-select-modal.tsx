@@ -104,7 +104,10 @@ const ItemSelectModalContent = ({
   const trackSetup = useSetupAnalytics();
   const flowStartedAt = useRef<number | null>(null);
 
-  const availableKinds = useMemo(() => new Set((integrationData ?? []).map((i) => i.kind)), [integrationData]);
+  const availableKinds = useMemo(
+    () => new Set((integrationData ?? []).filter(({ permissions }) => permissions.hasUseAccess).map((i) => i.kind)),
+    [integrationData],
+  );
 
   const items = useMemo(
     () =>
@@ -244,13 +247,16 @@ const ItemSelectModalContent = ({
         ensureDataAsync: ensureIntegrationDataAsync,
       });
 
-      const integrationIds = matchingIntegrations.map((i) => i.id);
+      const maxIntegrations = (definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity;
+      const integrationIds = matchingIntegrations.slice(0, maxIntegrations).map((i) => i.id);
       const itemId = createId();
       const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
       const openEditor = (
         availableIntegrations: { id: string; name: string; url: string; kind: IntegrationKind }[],
       ) => {
-        const selectedIntegrationIds = availableIntegrations.map((integration) => integration.id);
+        const selectedIntegrationIds = availableIntegrations
+          .slice(0, maxIntegrations)
+          .map((integration) => integration.id);
         openEditModal(
           {
             kind,

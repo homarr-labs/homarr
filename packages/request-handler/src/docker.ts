@@ -15,6 +15,31 @@ import { createDockerLogStreamProcessor, decodeDockerLogs } from "./docker-log-d
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 const logger = createLogger({ module: "dockerRequestHandler" });
+export const dockerWidgetEndpointTimeoutMs = 5_000;
+
+const withDockerTimeoutAsync = async <T>(
+  operation: (signal: AbortSignal) => Promise<T>,
+  message: string,
+  timeoutMs: number,
+) => {
+  const controller = new AbortController();
+  const timeoutError = new Error(message);
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    return await Promise.race([
+      operation(controller.signal),
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => {
+          controller.abort(timeoutError);
+          reject(timeoutError);
+        }, timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+};
 
 const isDemoMode = ["1", "yes", "t", "true"].includes((process.env.DEMO_MODE ?? "").toLowerCase());
 
@@ -275,11 +300,15 @@ export const streamContainerLogsAsync = async (
   };
 };
 
-export async function getContainersWithStatsAsync() {
+export async function getContainersWithStatsAsync(timeoutMs = dockerWidgetEndpointTimeoutMs) {
   const dockerInstances = DockerSingleton.getInstances();
   const results = await Promise.allSettled(
     dockerInstances.map(async ({ instance, host, endpointId, endpointName }) => {
-      const instanceContainers = await instance.listContainers({ all: true });
+      const instanceContainers = await withDockerTimeoutAsync(
+        async (signal) => await instance.listContainers({ all: true, abortSignal: signal }),
+        `Timed out listing containers from Docker host ${host}`,
+        timeoutMs,
+      );
       return instanceContainers
         .filter((container) => !(dockerLabels.hide in container.Labels))
         .map((container) => ({ ...container, instance: host, endpointId, endpointName }));
@@ -329,16 +358,20 @@ export async function getContainersWithStatsAsync() {
     const instance = DockerSingleton.findInstance(container.endpointId)?.instance;
     if (!instance) return null;
 
-    const stats = await instance
-      .getContainer(container.Id)
-      .stats({ stream: false, "one-shot": true })
-      .catch(
-        () =>
-          ({
-            cpu_stats: { online_cpus: 0, cpu_usage: { total_usage: 0 }, system_cpu_usage: 0 },
-            memory_stats: { usage: 0 },
-          }) as ContainerStats,
-      );
+    const stats = await withDockerTimeoutAsync(
+      async (signal) => {
+        const options = { stream: false as const, "one-shot": true, abortSignal: signal };
+        return await instance.getContainer(container.Id).stats(options);
+      },
+      `Timed out reading Docker container stats for ${container.Id}`,
+      timeoutMs,
+    ).catch(
+      () =>
+        ({
+          cpu_stats: { online_cpus: 0, cpu_usage: { total_usage: 0 }, system_cpu_usage: 0 },
+          memory_stats: { usage: 0 },
+        }) as ContainerStats,
+    );
 
     const cpuUsage = calculateCpuUsage(stats);
     const memoryUsage = calculateMemoryUsage(stats);

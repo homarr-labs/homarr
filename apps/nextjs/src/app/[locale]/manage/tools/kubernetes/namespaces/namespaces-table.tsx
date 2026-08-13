@@ -64,9 +64,10 @@ export function NamespacesTable({ contextId, initialNamespaces }: NamespacesTabl
     { contextId },
     {
       initialData: initialNamespaces,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      refetchOnMount: "always",
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
     },
   );
 

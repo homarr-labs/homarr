@@ -42,10 +42,10 @@ describe("KubernetesClientRegistry", () => {
     for (const contextId of ["home", "remote", "metrics-degraded"]) {
       const client = registry.getClient(contextId);
       vi.spyOn(client.versionApi, "getCode").mockResolvedValue({} as never);
-      vi.spyOn(client.metricsApi, "getNodeMetrics").mockResolvedValue({ items: [] } as never);
+      vi.spyOn(client.metricsProbeApi, "listClusterCustomObject").mockResolvedValue({ items: [] } as never);
     }
     registry.getClient("remote").versionApi.getCode = vi.fn().mockRejectedValue(new Error("offline"));
-    registry.getClient("metrics-degraded").metricsApi.getNodeMetrics = vi
+    registry.getClient("metrics-degraded").metricsProbeApi.listClusterCustomObject = vi
       .fn()
       .mockRejectedValue(new Error("no metrics"));
 
@@ -65,6 +65,40 @@ describe("KubernetesClientRegistry", () => {
     ]);
   });
 
+  test("times out an unresponsive context without delaying healthy contexts", async () => {
+    vi.useFakeTimers();
+    try {
+      const registry = createRegistry();
+      for (const contextId of ["home", "remote", "metrics-degraded"]) {
+        const client = registry.getClient(contextId);
+        vi.spyOn(client.versionApi, "getCode").mockResolvedValue({} as never);
+        vi.spyOn(client.metricsProbeApi, "listClusterCustomObject").mockResolvedValue({ items: [] } as never);
+      }
+      let observedSignal: AbortSignal | undefined;
+      vi.spyOn(registry.getClient("remote").versionApi, "getCode").mockImplementation(async (_request, options) => {
+        const middleware = (
+          options as { middleware?: { pre?: (request: unknown) => { toPromise: () => Promise<unknown> } }[] }
+        ).middleware?.[0];
+        await middleware?.pre?.({ setSignal: (signal: AbortSignal) => (observedSignal = signal) }).toPromise();
+        return await new Promise<never>(() => undefined);
+      });
+
+      const resultPromise = registry.getContextsAsync(50);
+      await vi.advanceTimersByTimeAsync(50);
+      const result = await resultPromise;
+
+      expect(observedSignal?.aborted).toBe(true);
+      expect(result.contexts).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ contextId: "home", status: "available" }),
+          expect.objectContaining({ contextId: "remote", status: "unavailable" }),
+        ]),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   test("rejects unknown context IDs", () => {
     expect(() => createRegistry().getClient("missing")).toThrow(KubernetesContextNotFoundError);
   });
@@ -80,7 +114,7 @@ describe("KubernetesClientRegistry", () => {
     const registry = new KubernetesClientRegistry(kubeConfig);
     const client = registry.getClient("first");
     vi.spyOn(client.versionApi, "getCode").mockResolvedValue({} as never);
-    vi.spyOn(client.metricsApi, "getNodeMetrics").mockResolvedValue({ items: [] } as never);
+    vi.spyOn(client.metricsProbeApi, "listClusterCustomObject").mockResolvedValue({ items: [] } as never);
 
     const result = await registry.getContextsAsync();
 

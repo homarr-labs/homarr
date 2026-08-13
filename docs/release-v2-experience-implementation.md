@@ -115,6 +115,12 @@ The same action is visible in the header and ordinary Spotlight results, not onl
 
 When a Widget or Assistant action lacks a required Integration, the user can create a compatible one inline and return to the pending Widget editor with that Integration selected. Integration creation returns the created Integration and linked App details, then opens a completion sheet with up to three capability-derived Widget recipes. Recommendations exclude Widget kinds already present, honor permission/access data, explain why they fit, and can be dismissed per Board and Integration kind.
 
+Existing connections now have the same continuity. The Widget editor exposes an **Edit integration** tab for its selected
+connections. A user with full access can open the native connection form in a nested inspector, test credentials, inspect
+the complete diagnostic, repair the connection, and return without losing unsaved Widget settings. The editor is loaded
+only when requested, failed module and record loads are retryable, and a successful repair invalidates Integration and
+Widget data before resetting the affected Widget error state.
+
 Setup analytics use the existing opt-in gate but enforce a special anonymous allowlist for `setup:*` events: coarse entry point, intent, outcome, elapsed time, Board-context presence, and inline-resolution ability. Record IDs, URLs, queries, credentials, provider responses, and session user IDs are excluded.
 
 ## 5. Canonical feature platform and contributor experience
@@ -178,6 +184,10 @@ The continuous reconciliation surface:
 - Avoids automatic adoption when matching is ambiguous.
 - Supports filters, refresh, local dismissal, and restore.
 
+Inventory and stats calls are independently time-bounded and aborted, so one unresponsive endpoint or container cannot
+hold healthy endpoints open. Browser URL suggestions reject wildcard and loopback addresses, and a linked App no longer
+hides a stale Integration URL that still needs repair.
+
 The Service health projection joins Docker availability, Integration configuration, App representation, and Widget attachment. Authentication, live API request success, and Widget query success are explicitly Not observed until Homarr has trustworthy evidence; absence of evidence is never shown as healthy.
 
 ```mermaid
@@ -217,6 +227,9 @@ Legacy socket and hostname/port variables remain compatible but are ignored when
 The Kubernetes client registry creates a distinct client per kubeconfig context. All routers require `contextId`; all server and client calls propagate it; React Query cache keys therefore stay context-specific. Resource-tile navigation preserves the context query to avoid a default-cluster flash.
 
 The context selector reports Available, Metrics unavailable, or Unavailable independently. An unreachable context does not hide healthy contexts. An empty kubeconfig `current-context` deterministically falls back to the first configured context. When `KUBECONFIG` is absent in production, the existing in-cluster service-account path remains the default.
+
+Version and Metrics API probes are abortable and bounded per context. Resource tables retry after a failed request and
+resume automatically when the selected context recovers, while healthy empty results remain idle.
 
 Inventory and optional metrics are separated. Cluster and Node pages show counts and resource identity even when Metrics Server is absent, while percentages become unavailable rather than zero or a fatal page error.
 
@@ -305,6 +318,10 @@ Completed locally:
 - `check:feature wud --plan` resolves the intended full feature slice.
 - Board static-dependency graph guard passes after keeping the Spotlight store behind its lazy boundary.
 - `git diff --check` passes.
+
+The final review-hardening pass also completed seven affected-package typechecks, 119 focused cross-layer tests, all 74
+request-handler tests in their server-side Vitest project, the feature-platform contract suite, and a production docs
+build. Three independent re-review passes found no remaining blocker in the changed paths.
 
 The broad non-E2E suite was also attempted: 3,258 tests passed and 91 were skipped. It caught one change-related static-graph regression, which was fixed and re-tested. The remaining failures require facilities unavailable in this sandbox: a container runtime for Integration and database migration suites, loopback socket permission for Custom Widget network-policy suites, external HTTP access for Integration documentation checks, and the existing child-process bundle fixture. They do not overlap the focused green suites above.
 

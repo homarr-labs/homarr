@@ -77,7 +77,11 @@ export const buildDockerServiceUrlCandidates = ({
 
   for (const port of tcpPorts) {
     if (port.PublicPort) {
-      const publishedHost = isUsablePublishedAddress(port.IP) ? port.IP : endpointHostname;
+      const publishedHost = isUsablePublishedAddress(port.IP)
+        ? port.IP
+        : isUsablePublishedAddress(endpointHostname ?? undefined)
+          ? endpointHostname
+          : null;
       if (publishedHost) {
         addCandidate({
           url: `http://${formatUrlHost(publishedHost)}:${port.PublicPort}`,
@@ -120,8 +124,16 @@ export const normalizeDockerServiceUrl = (value: string | null | undefined) => {
   }
 };
 
-const isUsablePublishedAddress = (value: string | undefined): value is string =>
-  Boolean(value && !["0.0.0.0", "::", "::0"].includes(value));
+const isUsablePublishedAddress = (value: string | undefined): value is string => {
+  if (!value) return false;
+  const host = value.toLowerCase().replace(/^\[|\]$/gu, "");
+  return (
+    !["0.0.0.0", "::", "::0", "::1", "localhost"].includes(host) &&
+    !host.endsWith(".localhost") &&
+    !/^127(?:\.\d{1,3}){3}$/.test(host) &&
+    !host.startsWith("::ffff:127.")
+  );
+};
 
 const getEndpointHostname = (host: string) => {
   if (host === "socket" || host.startsWith("/")) return null;

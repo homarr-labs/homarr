@@ -178,8 +178,11 @@ export const WidgetContextMenu = ({
             ),
           }));
         },
-        integrationData: integrationData.filter((integration) =>
-          definition.supportedIntegrations?.some((kind) => kind === integration.kind),
+        onIntegrationSaved: handleRefetch,
+        integrationData: integrationData.filter(
+          (integration) =>
+            definition.supportedIntegrations?.some((kind) => kind === integration.kind) &&
+            integration.permissions.hasUseAccess,
         ),
         integrationSupport: definition.supportedIntegrations !== undefined,
         settings,
@@ -192,6 +195,7 @@ export const WidgetContextMenu = ({
     definition,
     integrationData,
     item,
+    handleRefetch,
     openModal,
     persistBoard,
     settings,

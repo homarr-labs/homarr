@@ -1,5 +1,7 @@
 import * as fs from "fs";
-import { CoreV1Api, KubeConfig, Metrics, NetworkingV1Api, VersionApi } from "@kubernetes/client-node";
+import type { RequestContext, ResponseContext } from "@kubernetes/client-node";
+import { CoreV1Api, CustomObjectsApi, KubeConfig, Metrics, NetworkingV1Api, VersionApi } from "@kubernetes/client-node";
+import { of } from "@kubernetes/client-node/dist/gen/rxjsStub.js";
 
 import { env } from "../../env";
 
@@ -11,12 +13,50 @@ export interface KubernetesContextStatus {
   isDefault: boolean;
 }
 
+export const kubernetesContextProbeTimeoutMs = 5_000;
+
+const withKubernetesProbeTimeoutAsync = async <T>(
+  operation: (signal: AbortSignal) => Promise<T>,
+  timeoutMs: number,
+) => {
+  const controller = new AbortController();
+  const timeoutError = new Error("Kubernetes context probe timed out");
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    return await Promise.race([
+      operation(controller.signal),
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => {
+          controller.abort(timeoutError);
+          reject(timeoutError);
+        }, timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+};
+
+const abortableKubernetesRequest = (signal: AbortSignal) => ({
+  middleware: [
+    {
+      pre: (request: RequestContext) => {
+        request.setSignal(signal);
+        return of(request);
+      },
+      post: (response: ResponseContext) => of(response),
+    },
+  ],
+});
+
 export class KubernetesClient {
   private static registry: KubernetesClientRegistry | null = null;
   public kubeConfig: KubeConfig;
   public coreApi: CoreV1Api;
   public networkingApi: NetworkingV1Api;
   public metricsApi: Metrics;
+  public metricsProbeApi: CustomObjectsApi;
   public versionApi: VersionApi;
 
   public constructor(kubeConfig: KubeConfig) {
@@ -24,6 +64,7 @@ export class KubernetesClient {
     this.coreApi = kubeConfig.makeApiClient(CoreV1Api);
     this.networkingApi = kubeConfig.makeApiClient(NetworkingV1Api);
     this.metricsApi = new Metrics(kubeConfig);
+    this.metricsProbeApi = kubeConfig.makeApiClient(CustomObjectsApi);
     this.versionApi = kubeConfig.makeApiClient(VersionApi);
   }
 
@@ -76,12 +117,22 @@ export class KubernetesClientRegistry {
     return this.getClient(this.defaultContextId);
   }
 
-  public async getContextsAsync() {
+  public async getContextsAsync(timeoutMs = kubernetesContextProbeTimeoutMs) {
     const contexts = await Promise.all(
       [...this.clients.entries()].map(async ([contextId, client]): Promise<KubernetesContextStatus> => {
         const [api, metrics] = await Promise.allSettled([
-          client.versionApi.getCode(),
-          client.metricsApi.getNodeMetrics(),
+          withKubernetesProbeTimeoutAsync(
+            async (signal) => await client.versionApi.getCode(undefined, abortableKubernetesRequest(signal)),
+            timeoutMs,
+          ),
+          withKubernetesProbeTimeoutAsync(
+            async (signal) =>
+              await client.metricsProbeApi.listClusterCustomObject(
+                { group: "metrics.k8s.io", version: "v1beta1", plural: "nodes" },
+                abortableKubernetesRequest(signal),
+              ),
+            timeoutMs,
+          ),
         ]);
         const status =
           api.status === "rejected" ? "unavailable" : metrics.status === "rejected" ? "degraded" : "available";

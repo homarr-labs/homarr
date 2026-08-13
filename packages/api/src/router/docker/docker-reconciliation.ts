@@ -71,15 +71,16 @@ export const getDockerReconciliationAsync = async (db: Database) => {
     const app = linkedApp ?? exactApp ?? nameApp;
     const exactUrl = Boolean(exactIntegration || exactApp);
     const linked = Boolean(integration?.appId && linkedApp);
+    const integrationMoved = Boolean(integration && !exactIntegration);
     const integrationAmbiguous =
       exactIntegrationMatches.length > 1 || (exactIntegrationMatches.length === 0 && nameIntegrationMatches.length > 1);
     const appAmbiguous =
       !linkedApp && (exactAppMatches.length > 1 || (exactAppMatches.length === 0 && nameAppMatches.length > 1));
     const ambiguous = integrationAmbiguous || appAmbiguous;
-    const state: DockerReconciliationState = linked
-      ? "linked"
-      : integration && !exactUrl
-        ? "moved"
+    const state: DockerReconciliationState = integrationMoved
+      ? "moved"
+      : linked
+        ? "linked"
         : integration || app
           ? "represented"
           : match
@@ -115,6 +116,8 @@ export const getDockerReconciliationAsync = async (db: Database) => {
         app: app ? { id: app.id, name: app.name, href: app.href } : null,
         signals: {
           exactUrl,
+          exactIntegrationUrl: Boolean(exactIntegration),
+          exactAppUrl: Boolean(exactApp),
           nameMatch: Boolean(nameIntegration || nameApp),
           linked,
           ambiguous,

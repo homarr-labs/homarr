@@ -418,6 +418,40 @@ test("prefers an explicitly linked app over duplicate app matches", async () => 
   expect(result.candidates[0]?.state).toBe("linked");
 });
 
+test("marks a linked integration as moved when only its app URL still matches", async () => {
+  getDockerDataAsyncMock.mockResolvedValueOnce({
+    data: {
+      containers: [createInventoryContainer({ endpointId: "home", id: "one", name: "sonarr", publicPort: 8989 })],
+      endpoints: [{ id: "home", name: "Home", status: "available" }],
+    },
+    timestamp: new Date(),
+  });
+  findIntegrationsAsyncMock.mockResolvedValueOnce([
+    {
+      id: "integration",
+      name: "Sonarr",
+      kind: "sonarr",
+      url: "http://old.example:8989",
+      appId: "linked",
+      items: [],
+      secrets: [],
+    },
+  ]);
+  findAppsAsyncMock.mockResolvedValueOnce([
+    { id: "linked", name: "Sonarr", href: "http://home.example:8989", iconUrl: "" },
+  ]);
+
+  const result = await createAdminCaller().reconcileServices();
+
+  expect(result.candidates[0]?.state).toBe("moved");
+  expect(result.candidates[0]?.nextAction).toBe("reviewIntegration");
+  expect(result.candidates[0]?.representation.signals).toMatchObject({
+    exactIntegrationUrl: false,
+    exactAppUrl: true,
+    linked: true,
+  });
+});
+
 test("does not offer to create an app when existing app matches are ambiguous", async () => {
   const dockerData = {
     data: {

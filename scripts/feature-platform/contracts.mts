@@ -97,7 +97,10 @@ const documentationPath = (definition: string | undefined) => {
 };
 
 const collectWidgetDefinitions = (root: string) => {
-  const definitions = new Map<string, { path: string; hasSupportedIntegrations: boolean }>();
+  const definitions = new Map<
+    string,
+    { path: string; hasSupportedIntegrations: boolean; maxIntegrations: number | undefined }
+  >();
   for (const path of walkFiles(join(root, "packages/widgets/src"))) {
     if (!/\/index\.tsx?$/.test(path)) continue;
     const source = readFileSync(path, "utf8");
@@ -111,6 +114,7 @@ const collectWidgetDefinitions = (root: string) => {
       definitions.set(kind, {
         path: relative(root, path),
         hasSupportedIntegrations: /\n  supportedIntegrations:/.test(body),
+        maxIntegrations: Number(body.match(/\n  maxIntegrations:\s*(\d+)/)?.[1]) || undefined,
       });
     }
   }
@@ -282,6 +286,13 @@ export const checkFeatureContracts = (root: string): ContractProblem[] => {
         message: `Widget ${kind} integration support differs between ${definition?.path ?? "its definition"} and nativeFeatureCapabilities`,
         repair:
           "Declare supportedIntegrations in both the widget definition and nativeFeatureCapabilities, or in neither.",
+      });
+    }
+    const serverMaxIntegrations = Number(support.get(kind)?.match(/serverMaxIntegrations:\s*(\d+)/)?.[1]) || undefined;
+    if (definition?.maxIntegrations !== serverMaxIntegrations) {
+      problems.push({
+        message: `Widget ${kind} maxIntegrations ${String(definition?.maxIntegrations)} differs from nativeFeatureCapabilities serverMaxIntegrations ${String(serverMaxIntegrations)}`,
+        repair: "Declare the same integration limit in the widget definition and nativeFeatureCapabilities.",
       });
     }
   }

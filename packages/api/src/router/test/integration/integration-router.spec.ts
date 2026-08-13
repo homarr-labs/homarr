@@ -56,6 +56,7 @@ describe("all should return all integrations", () => {
     expect(result.length).toBe(2);
     expect(result[0]!.kind).toBe("plex");
     expect(result[1]!.kind).toBe("homeAssistant");
+    expect(result.every(({ permissions }) => permissions.hasFullAccess && permissions.hasUseAccess)).toBe(true);
   });
 });
 

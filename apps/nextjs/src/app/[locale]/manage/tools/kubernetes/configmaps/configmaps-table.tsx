@@ -47,9 +47,10 @@ export function ConfigmapsTable({ contextId, initialConfigMaps }: ConfigMapsTabl
     { contextId },
     {
       initialData: initialConfigMaps,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      refetchOnMount: "always",
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
     },
   );
 

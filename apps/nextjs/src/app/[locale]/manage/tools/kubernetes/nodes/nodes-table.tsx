@@ -90,9 +90,10 @@ export function NodesTable({ contextId, initialNodes }: NodesListComponentProps)
     { contextId },
     {
       initialData: initialNodes,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      refetchOnMount: "always",
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
     },
   );
 

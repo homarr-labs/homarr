@@ -47,6 +47,15 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: "request-handler-node",
+          environment: "node",
+          setupFiles: ["./vitest.setup.ts", "./vitest.setup.node.ts"],
+          include: ["packages/request-handler/**/*.spec.{ts,tsx}"],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: "dom",
           environment: "jsdom",
           include: ["**/*.spec.{ts,tsx}"],
@@ -56,6 +65,7 @@ export default defineConfig({
             "packages/api/**",
             "packages/custom-widgets/**",
             "packages/db/**",
+            "packages/request-handler/**",
             "e2e/**",
           ],
         },

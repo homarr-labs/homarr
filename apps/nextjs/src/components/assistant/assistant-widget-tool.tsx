@@ -24,7 +24,7 @@ import type { ConfigureWidgetArgs, ConfigureWidgetResult } from "./assistant-too
 import { IntegrationSelectModal } from "../integration/integration-select-modal";
 
 interface AssistantIntegration extends IntegrationSelectOption {
-  permissions: { hasUseAccess: boolean };
+  permissions: NonNullable<IntegrationSelectOption["permissions"]>;
 }
 
 export const getAssistantWidgetConfiguration = (

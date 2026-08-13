@@ -1613,6 +1613,10 @@
         "label": "Create app",
         "description": "Create an app with the same name and icon as the integration. Leave the input field below empty to create the app with the integration URL."
       },
+      "linkApp": {
+        "label": "Link an existing app",
+        "description": "Connect this integration to an app you can already use."
+      },
       "appHref": {
         "placeholder": "Custom app URL"
       },
@@ -2742,10 +2746,20 @@
       "title": "Edit item",
       "tab": {
         "widget": "Edit widget",
-        "app": "Edit app"
+        "app": "Edit app",
+        "integration": "Edit integration"
       },
       "app": {
         "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards."
+      },
+      "integration": {
+        "action": "Edit connection",
+        "description": "Test or repair a selected connection without leaving this widget.",
+        "editLabel": "Edit {name} integration",
+        "fullAccessRequired": "Full access required",
+        "propagationNotice": "Changes to this integration apply everywhere it is used. The connection is tested before it is saved.",
+        "loading": "Loading integration",
+        "loadError": "This integration could not be loaded. Try again before changing its connection settings."
       },
       "advancedOptions": {
         "label": "Advanced options",
@@ -2753,7 +2767,8 @@
       },
       "field": {
         "integrations": {
-          "label": "Integrations"
+          "label": "Integrations",
+          "removeLabel": "Remove {name} integration"
         },
         "title": {
           "label": "Title"
@@ -3974,7 +3989,8 @@
       },
       "integration": {
         "noData": "No integration found",
-        "description": "Click <here></here> to create a new integration"
+        "description": "Click <here></here> to create a new integration",
+        "manage": "Manage integrations"
       },
       "app": {
         "noData": "No app found",

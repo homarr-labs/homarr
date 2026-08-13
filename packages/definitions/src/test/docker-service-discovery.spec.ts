@@ -50,4 +50,30 @@ describe("buildDockerServiceUrlCandidates", () => {
       reason: "dockerEndpointHost",
     });
   });
+
+  test.each(["127.0.0.1", "127.12.0.9", "::1", "::ffff:127.0.0.1", "localhost"])(
+    "does not advertise loopback address %s to browsers",
+    (address) => {
+      const candidates = buildDockerServiceUrlCandidates({
+        containerName: "sonarr",
+        endpointHost: "socket",
+        preferredPort: 8989,
+        ports: [{ IP: address, PrivatePort: 8989, PublicPort: 8989, Type: "tcp" }],
+      });
+
+      expect(candidates.some(({ source }) => source === "publishedAddress")).toBe(false);
+      expect(candidates.some(({ url, scopes }) => url.includes(address) && scopes.includes("browser"))).toBe(false);
+    },
+  );
+
+  test("does not use a loopback Docker endpoint as a browser URL", () => {
+    const candidates = buildDockerServiceUrlCandidates({
+      containerName: "sonarr",
+      endpointHost: "[::1]:2375",
+      preferredPort: 8989,
+      ports: [{ IP: "0.0.0.0", PrivatePort: 8989, PublicPort: 8989, Type: "tcp" }],
+    });
+
+    expect(candidates.some(({ source }) => source === "endpointHost")).toBe(false);
+  });
 });

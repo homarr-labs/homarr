@@ -2,8 +2,9 @@ import type { ContainerStats } from "dockerode";
 import { describe, expect, test, vi } from "vitest";
 
 import { createDb } from "@homarr/db/test";
+import { DockerSingleton } from "@homarr/docker";
 
-import { calculateCpuUsage, calculateMemoryUsage } from "../docker";
+import { calculateCpuUsage, calculateMemoryUsage, getContainersWithStatsAsync } from "../docker";
 
 vi.mock("@homarr/db", async (importActual) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -118,4 +119,77 @@ describe("calculateMemoryUsage", () => {
     const stats = createStats({ memory_stats: { usage: 512 } });
     expect(calculateMemoryUsage(stats)).toBe(512);
   });
+});
+
+describe("getContainersWithStatsAsync", () => {
+  test("marks a timed-out endpoint unavailable without blocking healthy endpoints", async () => {
+    vi.useFakeTimers();
+    try {
+      vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([
+        createDockerInstance("stalled", () => new Promise(() => undefined)),
+        createDockerInstance("healthy", async () => []),
+      ] as never);
+
+      const resultPromise = getContainersWithStatsAsync(50);
+      await vi.advanceTimersByTimeAsync(50);
+      const result = await resultPromise;
+
+      expect(result.endpoints).toEqual([
+        expect.objectContaining({ id: "stalled", status: "unavailable" }),
+        expect.objectContaining({ id: "healthy", status: "available" }),
+      ]);
+    } finally {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+    }
+  });
+
+  test("returns a container with zeroed stats when its stats request times out", async () => {
+    vi.useFakeTimers();
+    try {
+      const dockerInstance = createDockerInstance("healthy", async () => [
+        {
+          Id: "container-1",
+          Image: "sonarr:latest",
+          Labels: {},
+          Names: ["/sonarr"],
+          State: "running",
+          Ports: [],
+        },
+      ]);
+      let observedSignal: AbortSignal | undefined;
+      dockerInstance.instance.getContainer = (() => ({
+        stats: (options: { abortSignal?: AbortSignal }) => {
+          observedSignal = options.abortSignal;
+          return new Promise(() => undefined);
+        },
+      })) as never;
+      vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([dockerInstance] as never);
+      vi.spyOn(DockerSingleton, "findInstance").mockReturnValue(dockerInstance as never);
+
+      const resultPromise = getContainersWithStatsAsync(50);
+      await vi.advanceTimersByTimeAsync(50);
+      const result = await resultPromise;
+
+      expect(observedSignal?.aborted).toBe(true);
+      expect(result.containers).toEqual([expect.objectContaining({ id: "container-1", cpuUsage: 0, memoryUsage: 0 })]);
+    } finally {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+    }
+  });
+});
+
+const createDockerInstance = (endpointId: string, listContainers: () => Promise<unknown[]>) => ({
+  endpointId,
+  endpointName: endpointId,
+  host: endpointId,
+  descriptor: {
+    kind: "docker",
+    transport: { type: "socket" },
+    capabilities: ["inventory"],
+    source: "environment",
+    scope: "admin",
+  },
+  instance: { listContainers, getContainer: () => ({}) },
 });

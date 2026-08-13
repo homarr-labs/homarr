@@ -28,6 +28,20 @@ describe("native feature capability descriptor", () => {
 
   test("derives optional connections and server selection limits", () => {
     expect(widgetKindsWithOptionalIntegrations).toEqual(new Set(["calendar"]));
-    expect(widgetIntegrationLimits).toEqual({ audioStats: 1 });
+    expect(widgetIntegrationLimits).toEqual({
+      "smartHome-entityState": 1,
+      "smartHome-executeAutomation": 1,
+      mediaTranscoding: 1,
+      "immich-serverStats": 1,
+      "immich-albumCarousel": 1,
+      paperlessNgx: 1,
+      patchmon: 1,
+      bazarr: 1,
+      audioStats: 1,
+      umami: 1,
+      archiveTeamWarrior: 1,
+      anchorNote: 1,
+      wud: 1,
+    });
   });
 });

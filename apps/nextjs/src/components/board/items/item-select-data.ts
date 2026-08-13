@@ -26,7 +26,9 @@ export const unlockSelection = (lock: { current: boolean }) => {
   lock.current = false;
 };
 
-export const resolveMatchingIntegrationsAsync = async <TIntegration extends { kind: IntegrationKind }>({
+export const resolveMatchingIntegrationsAsync = async <
+  TIntegration extends { kind: IntegrationKind; permissions?: { hasUseAccess: boolean } },
+>({
   hasIntegrationSupport,
   supportedIntegrations,
   currentData,
@@ -40,5 +42,8 @@ export const resolveMatchingIntegrationsAsync = async <TIntegration extends { ki
   if (!hasIntegrationSupport) return [];
 
   const integrations = currentData ?? (await ensureDataAsync());
-  return integrations.filter((integration) => supportedIntegrations.includes(integration.kind));
+  return integrations.filter(
+    (integration) =>
+      integration.permissions?.hasUseAccess !== false && supportedIntegrations.includes(integration.kind),
+  );
 };

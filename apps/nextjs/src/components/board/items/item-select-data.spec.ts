@@ -83,4 +83,20 @@ describe("resolveMatchingIntegrationsAsync", () => {
     ).resolves.toEqual([]);
     expect(ensureDataAsync).not.toHaveBeenCalled();
   });
+
+  it("excludes matching integrations the user cannot use", async () => {
+    const currentData = [
+      { id: "allowed", kind: "sonarr" as const, permissions: { hasUseAccess: true } },
+      { id: "blocked", kind: "sonarr" as const, permissions: { hasUseAccess: false } },
+    ];
+
+    await expect(
+      resolveMatchingIntegrationsAsync({
+        hasIntegrationSupport: true,
+        supportedIntegrations: ["sonarr"],
+        currentData,
+        ensureDataAsync: vi.fn(),
+      }),
+    ).resolves.toEqual([currentData[0]]);
+  });
 });

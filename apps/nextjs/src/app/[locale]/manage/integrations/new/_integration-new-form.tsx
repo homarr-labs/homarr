@@ -70,12 +70,18 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
   const { data: session } = useSession();
   const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
+  const validationSchema = canCreateApps
+    ? formSchema
+    : formSchema.superRefine((values, context) => {
+        if (!values.hasApp || values.appId !== null) return;
+        context.addIssue({ code: "custom", message: t("common.zod.errors.required"), path: ["appId"] });
+      });
 
   let url = initialUrl ?? getIntegrationDefaultUrl(kind) ?? "";
   if (hasUrlSecret) {
     url = "http://localhost";
   }
-  const form = useZodForm(formSchema, {
+  const form = useZodForm(validationSchema, {
     initialValues: {
       name: initialName ?? getIntegrationName(kind),
       url,
@@ -84,7 +90,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
         value: "",
       })),
       attemptSearchEngineCreation: true,
-      hasApp: true,
+      hasApp: canCreateApps,
       appHref: url,
       appId: null,
     },
@@ -136,13 +142,15 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
     const app = hasApp
       ? appId !== null
         ? { id: appId }
-        : {
-            name: values.name,
-            href: hasCustomHref ? appHref : url,
-            iconUrl: getIconUrl(kind),
-            description: null,
-            pingUrl: url,
-          }
+        : canCreateApps
+          ? {
+              name: values.name,
+              href: hasCustomHref ? appHref : url,
+              iconUrl: getIconUrl(kind),
+              description: null,
+              pingUrl: url,
+            }
+          : undefined
       : undefined;
 
     await createIntegrationAsync(
@@ -234,8 +242,10 @@ const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; c
             checkboxInputProps.onChange(event);
           });
         }}
-        label={t("integration.field.createApp.label")}
-        description={t("integration.field.createApp.description")}
+        label={t(canCreateApps ? "integration.field.createApp.label" : "integration.field.linkApp.label")}
+        description={t(
+          canCreateApps ? "integration.field.createApp.description" : "integration.field.linkApp.description",
+        )}
       />
 
       <Collapse expanded={form.values.hasApp}>
