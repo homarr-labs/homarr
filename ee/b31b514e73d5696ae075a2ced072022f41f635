@@ -1,0 +1,39 @@
+packages/widgets/src/media-releases/component.tsx
+  s_35353883291841::t_8060e4d3644ff0 112-113,115-116,245-250,252-253
+apps/docs/docs/widgets/umami/index.mdx
+  s_35353883291841::t_d9f695119681d1 45
+packages/api/src/router/widgets/umami.ts
+  s_35353883291841::t_faf368d22bfc05 141,147
+packages/integrations/src/immich/immich-integration.ts
+  s_35353883291841::t_275f19faeabfb8 48-49,78,129-137,145-174
+packages/integrations/src/immich/test/immich-integration.spec.ts
+  s_35353883291841::t_b4bcd90afcf24c 1-95
+packages/integrations/src/umami/test/umami-integration.spec.ts
+  s_35353883291841::t_7fd09f11dd6b69 1-281
+packages/integrations/src/umami/umami-integration.ts
+  s_35353883291841::t_b95d15d14ab8c2 13,24,31-32,36-43,68,145,153,181,183-190,192-193,195,243-271,312-328,333-344,346,348
+packages/integrations/src/umami/umami-types.ts
+  s_35353883291841::t_5f0a405d47a43c 34-41
+packages/widgets/src/_inputs/widget-umami-event-names-input.tsx
+  s_35353883291841::t_98b212fe858132 39
+packages/widgets/src/video/component.tsx
+  s_35353883291841::t_df7d43eb8bb19f 3,13-16,68
+packages/widgets/src/video/player.tsx
+  s_35353883291841::t_6457677bd52acc 1-64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "eeb31b514e73d5696ae075a2ced072022f41f635",
+  "prompts": {},
+  "sessions": {
+    "s_35353883291841": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa61-1f37-7901-b3f7-3f6a6ba68f69",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
