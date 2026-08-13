@@ -4,8 +4,6 @@ description: "Table view of all Beszel-monitored systems with sortable columns a
 hide_title: true
 ---
 
-import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
-
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -38,7 +36,9 @@ Select a system row to open the complete statistics view.
   ]}
 />
 
-<WidgetInteractionGuide advancedView={false} />
+In advanced view, the table removes its compact width budget and shows every Beszel metric even when its compact visibility option is disabled. It also adds the integration source, hostname, operating system, CPU model, core count, and total memory columns. Sorting, saved column order and widths, and row selection continue to work the same way.
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 
