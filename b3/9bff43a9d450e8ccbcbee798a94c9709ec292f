@@ -1,0 +1,22 @@
+apps/nextjs/src/components/board/sections/container-section.tsx
+  s_7b8a552cf9f1f8::t_08c23b8b99f540 75,149
+e2e/board-grid.spec.ts
+  s_7b8a552cf9f1f8::t_08c23b8b99f540 108,113-117,223,1058
+  s_7b8a552cf9f1f8::t_95278d6af7ca80 88,118-123,228-233
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "b39bff43a9d450e8ccbcbee798a94c9709ec292f",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

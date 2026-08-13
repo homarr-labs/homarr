@@ -1,0 +1,23 @@
+packages/widgets/src/rssFeed/component.tsx
+  s_909ca8cf5b6e15::t_a09b43ca021ae1 18,30,38
+  s_909ca8cf5b6e15::t_096ac7a8479408 4,14,19-21,27,35,43,50-61,63-64,84
+  s_909ca8cf5b6e15::t_d25fbe8d9acb32 24
+packages/widgets/src/bookmarks/component.tsx
+  s_909ca8cf5b6e15::t_83fd68d66815d2 3,103-106
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "bbcfc505bc905673ce0924967044694ad111c748",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

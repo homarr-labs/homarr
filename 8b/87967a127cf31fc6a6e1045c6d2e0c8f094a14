@@ -1,0 +1,14 @@
+packages/db/migrations/seed.ts
+  h_d6e478ca18e517 648
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "8b87967a127cf31fc6a6e1045c6d2e0c8f094a14",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

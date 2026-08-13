@@ -1,0 +1,40 @@
+packages/widgets/src/stocks/component.tsx
+  s_909ca8cf5b6e15::t_cbe860224734fd 8,76-77,125,130,133
+packages/widgets/src/media-releases/component.tsx
+  s_909ca8cf5b6e15::t_cbe860224734fd 15,91,95,225
+packages/widgets/src/anchor-note/component.tsx
+  s_909ca8cf5b6e15::t_cbe860224734fd 17,183,331
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_909ca8cf5b6e15::t_cbe860224734fd 17,142,218
+packages/widgets/src/smart-home/execute-automation/component.tsx
+  s_909ca8cf5b6e15::t_cbe860224734fd 22,64,154
+packages/widgets/src/dns-hole/summary/component.tsx
+  s_909ca8cf5b6e15::t_ba8e7d8b0084a3 5,168
+  s_909ca8cf5b6e15::t_cbe860224734fd 172,215
+packages/widgets/src/tracearr/recent-activity-section.tsx
+  s_909ca8cf5b6e15::t_cbe860224734fd 4,8,46
+packages/widgets/src/immich/server-stats/component.tsx
+  s_909ca8cf5b6e15::t_cbe860224734fd 9,27,54,62,70,107
+packages/widgets/src/umami/umami-content.tsx
+  s_909ca8cf5b6e15::t_cbe860224734fd 9,47,221-222,233,243,254,257,260,265
+packages/widgets/src/immich/albums-query.spec.ts
+  s_909ca8cf5b6e15::t_812d343b865e1b 23
+packages/widgets/src/tracearr/violations-section.tsx
+  s_909ca8cf5b6e15::t_cbe860224734fd 5,9,57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "6c8dbc182f9e2fff2fa78c4c28d3e8caca9c3940",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

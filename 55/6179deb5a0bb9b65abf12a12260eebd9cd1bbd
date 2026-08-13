@@ -1,0 +1,36 @@
+apps/nextjs/src/components/board/sections/grid/grid-interaction-store.ts
+  s_093d61b162b9ca::t_f3908e9b5d1629 1-58
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_093d61b162b9ca::t_1b5f765e9e3c9b 163,166-170,174-180,598-625,631-635,637,640-643,724
+  s_093d61b162b9ca::t_f3908e9b5d1629 64,153-155,192
+  s_093d61b162b9ca::t_59ceb08ea5990a 4-15,164-165,171,213,215,290,307,322,431,627,676-687,691,717-720,725-733,735-737,749
+  s_093d61b162b9ca::t_aba6b48bf2226e 61-62,141,152,157-158,172-173,654,690,692-716,721-723,752,756,759,776,796-806,890,893,920-927,929,1063,1076-1077,1085-1088
+  s_093d61b162b9ca::t_d6809b7f9e5c94 734,775
+  s_093d61b162b9ca::t_075d696e4aa492 688-689
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_093d61b162b9ca::t_aba6b48bf2226e 143-150
+apps/nextjs/src/components/board/sections/grid/grid-entry-memo.ts
+  s_093d61b162b9ca::t_aba6b48bf2226e 1-25
+apps/nextjs/src/components/board/sections/grid/test/grid-entry-memo.spec.tsx
+  s_093d61b162b9ca::t_37f664a8cae3cd 44-63,68-74,84-95
+  s_093d61b162b9ca::t_aba6b48bf2226e 1-43,64-67,75-83,96-106
+apps/nextjs/src/components/board/sections/grid/test/grid-interaction-store.spec.ts
+  s_093d61b162b9ca::t_a3c9e0ac098fdd 1-2,4-6,8-43,45,52-54
+  s_093d61b162b9ca::t_f3908e9b5d1629 3,7,44,46-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "556179deb5a0bb9b65abf12a12260eebd9cd1bbd",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

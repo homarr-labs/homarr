@@ -1,0 +1,33 @@
+packages/widgets/src/vpn/component.tsx
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 6,24,60
+packages/widgets/src/network-controller/network-status/component.tsx
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 11,35-36,38,46-47,52
+  s_909ca8cf5b6e15::t_42e01bca98be01 28-32
+packages/widgets/src/paperless-ngx/component.tsx
+  s_909ca8cf5b6e15::t_42e01bca98be01 82-86
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 99
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 3209-3213
+packages/widgets/src/coolify/resource-row.tsx
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 6-7,30,70,85
+packages/widgets/src/vpn/vpn-card.tsx
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 105,108-110,121,188,190-192,202
+packages/widgets/src/coolify/servers-section.tsx
+  s_909ca8cf5b6e15::t_0fb3e5d0425f66 45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "c7431ef1f59b08ab331237cab9f88247bdcb82e2",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

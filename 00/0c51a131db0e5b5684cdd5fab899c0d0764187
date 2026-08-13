@@ -1,0 +1,19 @@
+packages/definitions/src/test/integration.spec.ts
+  s_7cfb890e45839e::t_9ea605111e62f0 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "000c51a131db0e5b5684cdd5fab899c0d0764187",
+  "prompts": {},
+  "sessions": {
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+Dockerfile
+  s_093d61b162b9ca::t_053f4246aeeb14 25,34
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_093d61b162b9ca::t_495d23955c0230 112-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "db9f42520ae7a084bdeff19d627c3a2077c3ee6e",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,89 @@
+packages/widgets/src/advanced-focus-support.spec.ts
+  s_093d61b162b9ca::t_1a6c520ba74e7e 6-34,39-40,44
+packages/widgets/src/media-server/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 10
+packages/widgets/src/immich/server-stats/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 8
+packages/widgets/src/smart-home/entity-state/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 10
+packages/widgets/src/archive-team-warrior/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 8
+packages/widgets/src/calendar/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 12
+packages/widgets/src/immich/album-carousel/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 54
+packages/widgets/src/definition.spec.ts
+  s_093d61b162b9ca::t_1a6c520ba74e7e 8,11,49-53
+packages/widgets/src/health-monitoring/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 11
+packages/widgets/src/umami/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 11
+packages/widgets/src/system-resources/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 17
+packages/widgets/src/clock/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 9
+packages/widgets/src/speedtest-tracker/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 8
+packages/widgets/src/timetable/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 12
+packages/widgets/src/tracearr/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 8
+packages/widgets/src/downloads/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 45
+packages/widgets/src/traefik/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 8
+packages/widgets/src/anchor-note/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 8
+packages/widgets/src/definition.ts
+  s_093d61b162b9ca::t_44910b340bb600 130
+packages/widgets/src/media-missing/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 12
+packages/widgets/src/network-controller/network-status/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 10
+packages/widgets/src/weather/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 10
+packages/widgets/src/uptime-kuma/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 8
+packages/widgets/src/smart-home/execute-automation/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 10
+packages/widgets/src/media-transcoding/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 14
+packages/widgets/src/docker/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 28
+packages/widgets/src/audio-stats/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 16
+apps/docs/docs/widgets/custom-api/index.mdx
+  s_093d61b162b9ca::t_44910b340bb600 21
+packages/widgets/src/bookmarks/index.tsx
+  s_093d61b162b9ca::t_44910b340bb600 13
+packages/widgets/src/ups/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 10
+packages/widgets/src/firewall/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 10
+packages/widgets/src/media-releases/index.ts
+  s_093d61b162b9ca::t_44910b340bb600 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "f404f770028416c7f7e233ca071740d4aaff5009",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

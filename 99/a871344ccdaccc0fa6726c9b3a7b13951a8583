@@ -1,0 +1,305 @@
+packages/widgets/src/notebook/read-only-task-item.ts
+  s_909ca8cf5b6e15::t_f375ac3093a258 2-3,12,14-18,24
+  s_909ca8cf5b6e15::t_27c9b99f8c867f 1,4-11,13,19-23,25-66
+apps/docs/docs/widgets/dns-hole-controls/index.mdx
+  s_909ca8cf5b6e15::t_4821f2c4253106 3
+packages/widgets/src/indexer-manager/component.tsx
+  s_909ca8cf5b6e15::t_56e6c5a8822c51 36-38
+packages/api/src/router/widgets/timetable.ts
+  s_909ca8cf5b6e15::t_2524d8b86d85b4 11
+  s_909ca8cf5b6e15::t_f38900325fdf16 49,56,80-88,92-100,115,132,134,138-140,155-161,163-167,173,178-182,184-185,188-189,191-193,198,204,213,217,229,241,243-245
+  s_909ca8cf5b6e15::t_13f0c71fae7fcf 29-30,64-65,110-112
+  s_909ca8cf5b6e15::t_5338e792c5634c 135-137
+  s_909ca8cf5b6e15::t_871ae1585829c3 177,183,187
+  s_909ca8cf5b6e15::t_68d9cfbf415cf6 1-2,27,31-46,50-55,57-63,66-79,89-91,101-109,113-114,116-131,133,141-154,162,174,190
+  s_909ca8cf5b6e15::t_e30d45be674bdd 48
+  s_909ca8cf5b6e15::t_db03f8d76ccb49 47
+  s_909ca8cf5b6e15::t_80e90284925976 28
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_909ca8cf5b6e15::t_4d0aa57b722f2a 16,32,50-68
+  s_909ca8cf5b6e15::t_1744603bdae6b2 202
+packages/widgets/src/archive-team-warrior/component.tsx
+  s_909ca8cf5b6e15::t_56e6c5a8822c51 8,50,100
+packages/widgets/src/media-missing/component.tsx
+  s_909ca8cf5b6e15::t_ec5537becbc2ee 48-52
+  s_909ca8cf5b6e15::t_67eb02e13a98ee 29,41,46-47
+packages/widgets/src/umami/index.ts
+  s_909ca8cf5b6e15::t_2c87eddd1849f4 11-17
+  s_909ca8cf5b6e15::t_2c5a49c2ea6213 4,18
+packages/widgets/src/notebook/read-only-task-item.spec.ts
+  s_909ca8cf5b6e15::t_27c9b99f8c867f 3-4,6-7,9-26,76-96
+  s_909ca8cf5b6e15::t_2881086d70eb91 1-2,5,8,27-75
+packages/widgets/src/notifications/index.ts
+  s_909ca8cf5b6e15::t_0ad32e1ba44a03 5,11-16
+packages/widgets/src/index.tsx
+  s_909ca8cf5b6e15::t_adcb543e8698bb 70,75-76,78
+packages/api/src/router/widgets/immich.ts
+  s_909ca8cf5b6e15::t_c92bf2396e40ee 37-48
+packages/widgets/src/weather/component.tsx
+  s_909ca8cf5b6e15::t_213dea2d1ea303 238
+packages/widgets/src/media-requests/list/index.ts
+  s_909ca8cf5b6e15::t_2f93aca548c98c 7,14-23
+packages/widgets/src/media-requests/stats/index.ts
+  s_909ca8cf5b6e15::t_2f93aca548c98c 10
+packages/widgets/src/beszel-alerts/index.ts
+  s_909ca8cf5b6e15::t_2f93aca548c98c 9
+  s_909ca8cf5b6e15::t_5e519bb4d4da68 4,10-15
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_909ca8cf5b6e15::t_56e6c5a8822c51 433-435
+packages/widgets/src/uptime-kuma/component.tsx
+  s_909ca8cf5b6e15::t_56e6c5a8822c51 204-205
+packages/widgets/src/beszel-system-table/index.ts
+  s_909ca8cf5b6e15::t_bf730897cdefdd 3,28-32
+packages/widgets/src/clock/component.tsx
+  s_909ca8cf5b6e15::t_56e6c5a8822c51 11,92
+packages/widgets/src/iframe/component.spec.ts
+  s_909ca8cf5b6e15::t_5436f604daf868 3,26-28
+  s_909ca8cf5b6e15::t_4d1095c5633855 29-33
+packages/widgets/src/indexer-manager/index.ts
+  s_909ca8cf5b6e15::t_1744603bdae6b2 18,20
+packages/widgets/src/coolify/instance-card.tsx
+  s_909ca8cf5b6e15::t_d45cc5f45e8f39 3,36-44,46-56
+packages/widgets/src/downloads/index.ts
+  s_909ca8cf5b6e15::t_0ad32e1ba44a03 7,45-50
+apps/docs/docs/widgets/media-server/index.mdx
+  s_909ca8cf5b6e15::t_4821f2c4253106 24
+packages/widgets/src/beszel-system-table/component.tsx
+  s_909ca8cf5b6e15::t_bf730897cdefdd 437-438
+packages/widgets/src/iframe/component.tsx
+  s_909ca8cf5b6e15::t_5436f604daf868 141
+  s_5126ece19484bf::t_0f405842dfbed6 31,143
+packages/widgets/src/app/component.tsx
+  s_909ca8cf5b6e15::t_1744603bdae6b2 72
+apps/nextjs/src/components/board/items/widget-query-scope.ts
+  s_909ca8cf5b6e15::t_81a28b86580c13 2,4-5,9-10,12-21,24-26,28-33,36-37,75
+  s_909ca8cf5b6e15::t_7c923f01f52f44 50
+  s_909ca8cf5b6e15::t_8d0d6d1868266b 52-67
+  s_909ca8cf5b6e15::t_9b12bf8acdc586 1,3,6-8,11,22-23,27,34-35,38-49,51,68,70-74,76-94
+  s_909ca8cf5b6e15::t_79f5bdec234ecb 69
+packages/widgets/src/app/index.ts
+  s_909ca8cf5b6e15::t_4949cc5e5c7781 18
+apps/docs/docs/widgets/media-request-stats/index.mdx
+  s_909ca8cf5b6e15::t_4821f2c4253106 22
+packages/api/src/router/test/widgets/rssFeed.spec.ts
+  s_909ca8cf5b6e15::t_77ebe9d579f357 2,20-31,43-68
+packages/widgets/src/rssFeed/index.ts
+  s_909ca8cf5b6e15::t_7dc1b167bd75aa 4,15-20
+packages/api/src/router/widgets/rssFeed.ts
+  s_909ca8cf5b6e15::t_16fbb02d45adae 50-51,56-57,66
+  s_909ca8cf5b6e15::t_d15e9a46679ba9 1,18-25,52-53,55,59-62
+  s_909ca8cf5b6e15::t_6f474394ca0c82 54
+packages/widgets/src/firewall/component.tsx
+  s_909ca8cf5b6e15::t_d45cc5f45e8f39 151-152,180,202,225
+  s_909ca8cf5b6e15::t_094d564f0d622c 130-132
+  s_909ca8cf5b6e15::t_033a7338ccb50e 143-145,153-154,173-174,182-183,195-196,204-205,255-256,261-262,264,319-320,325-326,328,334-335,340-341,343,356-363,367-381,384-390,392,394
+packages/widgets/src/beszel-system-stats/selection.spec.ts
+  s_909ca8cf5b6e15::t_d9b447881fe352 3,26,30-44
+  s_909ca8cf5b6e15::t_d1c2e0e79c790d 17
+  s_909ca8cf5b6e15::t_5436f604daf868 16,18-25
+  s_909ca8cf5b6e15::t_1744603bdae6b2 27-29
+packages/request-handler/src/timetable.spec.ts
+  s_909ca8cf5b6e15::t_5338e792c5634c 4
+  s_909ca8cf5b6e15::t_20727185b49005 9-12,15-17,19-22,67-108,116
+  s_909ca8cf5b6e15::t_ce62f2c89e3e1a 109-111,113-115
+  s_909ca8cf5b6e15::t_2b504c2cc5ff53 117-118
+  s_7ff310e1508244::t_3de55fc4e6a0c8 112
+apps/nextjs/src/components/board/sections/gridstack/board-empty-space-context-menu.module.css
+  s_909ca8cf5b6e15::t_ed34c48d0e3b27 1-4
+packages/api/src/router/test/widgets/immich.spec.ts
+  s_909ca8cf5b6e15::t_7a4117aaef4661 13-16
+  s_909ca8cf5b6e15::t_c92bf2396e40ee 3-12,17-76
+  s_909ca8cf5b6e15::t_755898145d5d2d 1-2
+packages/widgets/src/media-missing/index.ts
+  s_909ca8cf5b6e15::t_2c87eddd1849f4 12
+  s_909ca8cf5b6e15::t_67eb02e13a98ee 5,13
+packages/widgets/src/coolify/single-instance-layout.tsx
+  s_909ca8cf5b6e15::t_d45cc5f45e8f39 3,35-43,45-55
+packages/request-handler/src/timetable.ts
+  s_909ca8cf5b6e15::t_615a1a7408e5e8 1,40-44,47,50,73-114,116-139
+  s_909ca8cf5b6e15::t_5338e792c5634c 5
+packages/widgets/src/immich/server-stats/index.ts
+  s_909ca8cf5b6e15::t_1829e84a0a915e 3,9
+  s_909ca8cf5b6e15::t_346640403ac239 8
+packages/api/src/router/test/widgets/timetable.spec.ts
+  s_909ca8cf5b6e15::t_ab6012f0227cc4 234,249
+  s_909ca8cf5b6e15::t_48c321aa55da16 121-126
+  s_909ca8cf5b6e15::t_4efca1f396f222 250-261
+  s_909ca8cf5b6e15::t_e30d45be674bdd 143-156
+  s_909ca8cf5b6e15::t_769aea5f9e6cfb 116-118,127-128,172-233,246-247,262
+  s_909ca8cf5b6e15::t_d1a9cec71a187c 2,7,13,36-40,77-84,108,110,115,119-120,136,142,157-171,235-245
+  s_909ca8cf5b6e15::t_2490201d77b104 15
+  s_909ca8cf5b6e15::t_1a8bb4bac2bcc6 129-135,137-141
+  s_909ca8cf5b6e15::t_a4e9fbf03fbcc8 14
+  s_909ca8cf5b6e15::t_cd59e2899055f7 248
+packages/core/src/infrastructure/http/request.ts
+  s_909ca8cf5b6e15::t_908a8c6911e52a 44-45,50-52
+  s_909ca8cf5b6e15::t_8a68287f2018f6 3,6,34,37-42,49
+  s_909ca8cf5b6e15::t_5338e792c5634c 46
+packages/widgets/src/releases/index.ts
+  s_909ca8cf5b6e15::t_2c87eddd1849f4 7,17-18
+packages/widgets/src/weather/index.ts
+  s_909ca8cf5b6e15::t_003207cc419fe4 13
+  s_909ca8cf5b6e15::t_0ad32e1ba44a03 5,10-12,14-20
+packages/widgets/src/custom-api/index.ts
+  s_909ca8cf5b6e15::t_4949cc5e5c7781 4,9
+  s_909ca8cf5b6e15::t_1744603bdae6b2 18,20
+  s_909ca8cf5b6e15::t_346640403ac239 10
+packages/widgets/src/stocks/index.ts
+  s_909ca8cf5b6e15::t_0ad32e1ba44a03 3,16-22
+packages/widgets/src/system-resources/component.tsx
+  s_909ca8cf5b6e15::t_1744603bdae6b2 139
+packages/widgets/src/tracearr/component.tsx
+  s_909ca8cf5b6e15::t_2f9c51de934185 18-19,133-137,171-172
+  s_909ca8cf5b6e15::t_1744603bdae6b2 140,142
+  s_909ca8cf5b6e15::t_9fc2c6ec877c7a 17,20,129-130,169-170,173
+packages/widgets/src/minecraft/server-status/index.ts
+  s_909ca8cf5b6e15::t_0ad32e1ba44a03 4,9-15
+packages/widgets/src/calendar/index.ts
+  s_909ca8cf5b6e15::t_c093adc1e4ef83 7,12-13
+packages/widgets/src/audio-stats/component.tsx
+  s_909ca8cf5b6e15::t_f54ef0e00429fb 11,20,22-25,29-32
+  s_909ca8cf5b6e15::t_ec5537becbc2ee 26-27
+packages/widgets/src/immich/album-carousel/index.ts
+  s_909ca8cf5b6e15::t_1744603bdae6b2 28,31
+  s_909ca8cf5b6e15::t_2f93aca548c98c 7,13-21
+apps/docs/docs/widgets/minecraft-server-status/index.mdx
+  s_909ca8cf5b6e15::t_4821f2c4253106 29,45
+packages/widgets/src/beszel-system-grid/index.ts
+  s_909ca8cf5b6e15::t_2f93aca548c98c 9
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_909ca8cf5b6e15::t_56e6c5a8822c51 10,23,127
+packages/widgets/src/calendar/component.tsx
+  s_909ca8cf5b6e15::t_56e6c5a8822c51 89,174
+  s_909ca8cf5b6e15::t_4d0aa57b722f2a 16,26,38-46,54
+apps/nextjs/src/components/board/sections/gridstack/long-press.spec.ts
+  s_909ca8cf5b6e15::t_fbcf44e43172de 1-17
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_909ca8cf5b6e15::t_9f2c0d1b45fa65 138
+packages/api/src/test/settle-integrations.spec.ts
+  s_909ca8cf5b6e15::t_dd7cc55dce36b2 43,73
+  s_909ca8cf5b6e15::t_16fbb02d45adae 40,42,44-46,72,74-76
+  s_909ca8cf5b6e15::t_76587fd4b65399 1,22-23,47
+packages/widgets/src/immich/server-stats/component.tsx
+  s_909ca8cf5b6e15::t_ec5537becbc2ee 32-33,43
+  s_909ca8cf5b6e15::t_c92bf2396e40ee 27,31,37,79
+  s_909ca8cf5b6e15::t_56e6c5a8822c51 16-17
+  s_909ca8cf5b6e15::t_e29ac999512e67 13,23,26,28-30,35-36,38,71
+packages/widgets/src/audio-stats/index.ts
+  s_909ca8cf5b6e15::t_346640403ac239 16
+  s_909ca8cf5b6e15::t_f54ef0e00429fb 3,17
+packages/widgets/src/umami/component.tsx
+  s_909ca8cf5b6e15::t_2c5a49c2ea6213 8,16,19,23-63
+  s_909ca8cf5b6e15::t_37dd99def51c29 64
+apps/docs/docs/widgets/bookmarks/index.mdx
+  s_909ca8cf5b6e15::t_4821f2c4253106 24,29
+packages/widgets/src/beszel-system-stats/selection.ts
+  s_909ca8cf5b6e15::t_d9b447881fe352 34-47
+  s_909ca8cf5b6e15::t_5436f604daf868 27-32
+  s_909ca8cf5b6e15::t_f4f7cef4069273 33
+apps/docs/docs/widgets/iframe/index.mdx
+  s_909ca8cf5b6e15::t_4821f2c4253106 42,45,48-49,88,92
+packages/widgets/src/notebook/notebook.tsx
+  s_909ca8cf5b6e15::t_27c9b99f8c867f 71,210,212,215-219,221,248-250,252-258
+packages/request-handler/src/immich.ts
+  s_909ca8cf5b6e15::t_c92bf2396e40ee 25,27,29-40,44
+  s_909ca8cf5b6e15::t_c99993736bcdbb 45
+apps/nextjs/src/components/board/items/widget-query-scope.spec.ts
+  s_909ca8cf5b6e15::t_00fce932df4d0b 39,41-50,52-55,70-85,108-109,189-199,201,205,207,210-211,256-268,270-281,285
+  s_909ca8cf5b6e15::t_bf730897cdefdd 165-188
+  s_909ca8cf5b6e15::t_9b12bf8acdc586 2-3,7,11,13-15,25-27,88,90-91,105,113-114,132,137-138,140,145-147,163-164,202,208,212,220-221,227-229,235-237,243-244,316,439
+  s_909ca8cf5b6e15::t_eaa8648d75a5bd 1,4-6,8-9,12,16-20,22-23,28-38,40,51,56-68,86-87,89,92-104,106,115-131,133-136,139,141-144,148-150,155-162,200,203-204,206,209,213-219,222-226,230-234,238-242,245-255,269,286-315,414-415,418-421,425-429,433-435
+  s_909ca8cf5b6e15::t_346640403ac239 21,24,422-424
+  s_909ca8cf5b6e15::t_07a4a2ad1880b1 10,69
+  s_909ca8cf5b6e15::t_003207cc419fe4 326,328,330,333,341-343,354-356
+  s_909ca8cf5b6e15::t_12a9b4f1abc3c2 107,110-112,282-284
+  s_909ca8cf5b6e15::t_7c923f01f52f44 317,416-417,430-432,436-438
+  s_909ca8cf5b6e15::t_0b7ac4be137a90 318-325,327,329,331-332,334-340,344-353,357-413
+  s_909ca8cf5b6e15::t_32f8d14d730a12 151-154
+packages/widgets/src/beszel-system-stats/index.ts
+  s_909ca8cf5b6e15::t_346640403ac239 5,20
+  s_909ca8cf5b6e15::t_bc99e9737ba746 7,21-42
+packages/widgets/src/speedtest-tracker/component.tsx
+  s_909ca8cf5b6e15::t_56e6c5a8822c51 40,43-46,49,76-81
+packages/widgets/src/clock/index.ts
+  s_909ca8cf5b6e15::t_0ad32e1ba44a03 4,9-25
+packages/widgets/src/media-server/index.ts
+  s_909ca8cf5b6e15::t_2f93aca548c98c 5,10-15
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_909ca8cf5b6e15::t_582c437427033c 8,31,71-85,91,112-113,120-121,122-128,142,204-205,306,311,314
+  s_909ca8cf5b6e15::t_346640403ac239 92-99,101,103
+apps/nextjs/src/components/board/sections/gridstack/long-press.ts
+  s_909ca8cf5b6e15::t_fbcf44e43172de 1-7
+packages/widgets/src/media-transcoding/component.tsx
+  s_909ca8cf5b6e15::t_4d0aa57b722f2a 26,48,63
+packages/widgets/src/media-transcoding/index.ts
+  s_909ca8cf5b6e15::t_c093adc1e4ef83 7,14-15
+packages/api/src/settle-integrations.ts
+  s_909ca8cf5b6e15::t_16fbb02d45adae 1-2,55,57-59
+  s_909ca8cf5b6e15::t_dd7cc55dce36b2 56
+packages/integrations/src/overseerr/overseerr-integration.spec.ts
+  s_909ca8cf5b6e15::t_16fbb02d45adae 28,36-37
+  s_909ca8cf5b6e15::t_2490201d77b104 29-35
+packages/widgets/src/umami/umami-content.tsx
+  s_909ca8cf5b6e15::t_1744603bdae6b2 220-235
+  s_909ca8cf5b6e15::t_3cd30506b33696 219
+packages/request-handler/src/immich.spec.ts
+  s_909ca8cf5b6e15::t_c92bf2396e40ee 1-50
+packages/widgets/src/immich/albums-query.spec.ts
+  s_909ca8cf5b6e15::t_c92bf2396e40ee 1-49,51-59
+  s_909ca8cf5b6e15::t_afa0cef5fe2e7c 50
+apps/docs/docs/management/boards/index.mdx
+  s_909ca8cf5b6e15::t_4821f2c4253106 47
+apps/nextjs/src/components/board/sections/gridstack/board-empty-space-context-menu.tsx
+  s_909ca8cf5b6e15::t_ed34c48d0e3b27 20,47,52-55,57,104
+  s_909ca8cf5b6e15::t_fbcf44e43172de 21,46,58,103,112-127,167-170
+  s_909ca8cf5b6e15::t_aef837bd83095f 23,56,64,105
+  s_909ca8cf5b6e15::t_d9dc86c1bf3521 22
+packages/widgets/src/definition.ts
+  s_909ca8cf5b6e15::t_adcb543e8698bb 4,53-67,108,147,151-152,155-168
+  s_909ca8cf5b6e15::t_4726dd4796d56a 169
+packages/widgets/src/definition.spec.ts
+  s_909ca8cf5b6e15::t_2ec2a145c60f6d 5
+  s_909ca8cf5b6e15::t_e5c1d592ba8946 3,17-20,24-32
+  s_5126ece19484bf::t_03663b33ddfb2a 4,33
+apps/docs/docs/widgets/media-releases/index.mdx
+  s_909ca8cf5b6e15::t_4821f2c4253106 3
+packages/api/src/router/widgets/firewall.ts
+  s_909ca8cf5b6e15::t_16fbb02d45adae 40
+e2e/board-advanced-interactions.spec.ts
+  s_909ca8cf5b6e15::t_582c437427033c 284,314
+  s_909ca8cf5b6e15::t_9f2c0d1b45fa65 79
+packages/widgets/src/tracearr/component.spec.ts
+  s_909ca8cf5b6e15::t_9fc2c6ec877c7a 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "99a871344ccdaccc0fa6726c9b3a7b13951a8583",
+  "prompts": {},
+  "sessions": {
+    "s_5126ece19484bf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019faf09-9790-7e51-a9e2-60e0f621e2b9",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7ff310e1508244": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbef6-416d-7053-97f3-5b1b7619701c",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

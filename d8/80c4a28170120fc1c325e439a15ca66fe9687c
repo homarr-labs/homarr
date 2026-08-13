@@ -1,0 +1,37 @@
+packages/widgets/src/speedtest-tracker/latest-result.tsx
+  s_909ca8cf5b6e15::t_d4dfc998208484 7,15
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_909ca8cf5b6e15::t_d4dfc998208484 10,23
+packages/translation/src/config.ts
+  s_909ca8cf5b6e15::t_d4dfc998208484 441-448
+packages/widgets/src/media-releases/component.tsx
+  s_909ca8cf5b6e15::t_d4dfc998208484 27,81
+packages/translation/src/config.spec.ts
+  s_909ca8cf5b6e15::t_d4dfc998208484 1-16
+packages/translation/src/client/use-current-locale.ts
+  s_909ca8cf5b6e15::t_d4dfc998208484 3-4,6-7
+packages/translation/src/client/index.ts
+  s_909ca8cf5b6e15::t_d4dfc998208484 9
+packages/widgets/src/archive-team-warrior/component.tsx
+  s_909ca8cf5b6e15::t_d4dfc998208484 8,50
+packages/widgets/src/vpn/component.tsx
+  s_909ca8cf5b6e15::t_d4dfc998208484 6,24
+packages/widgets/src/calendar/component.tsx
+  s_909ca8cf5b6e15::t_d4dfc998208484 142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "d880c4a28170120fc1c325e439a15ca66fe9687c",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+apps/nextjs/src/components/assistant/assistant-panel.tsx
+  h_d6e478ca18e517 926-927
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3c3232e85af24c97104d47dbdbc564d96cef37ab",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

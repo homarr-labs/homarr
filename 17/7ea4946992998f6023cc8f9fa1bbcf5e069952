@@ -1,0 +1,19 @@
+e2e/board-advanced-interactions.spec.ts
+  s_909ca8cf5b6e15::t_8264c869d4e082 330,332
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "177ea4946992998f6023cc8f9fa1bbcf5e069952",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

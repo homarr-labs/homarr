@@ -1,0 +1,70 @@
+packages/widgets/src/notebook/notebook.tsx
+  s_909ca8cf5b6e15::t_534254801ed0d6 103-105,112
+  s_909ca8cf5b6e15::t_f5f65c01a3382b 120,129-131,538,557
+  s_909ca8cf5b6e15::t_f5ba6cb170edb0 115,138,153-154,283,295,310,320,330,384-385,486
+  s_909ca8cf5b6e15::t_13d95bbe37d93f 125-127,139,152,157,318,321-323,355-357,548-549,567
+  s_909ca8cf5b6e15::t_987ee19566d2a6 128
+apps/nextjs/src/components/board/advanced-focus/geometry.ts
+  s_909ca8cf5b6e15::t_875f1e4437f985 14-17
+packages/widgets/src/anchor-note/component.tsx
+  s_909ca8cf5b6e15::t_534254801ed0d6 187-190
+packages/boards/src/updater.ts
+  s_909ca8cf5b6e15::t_08307e90b19919 49,54,59
+packages/widgets/src/downloads/component.tsx
+  s_909ca8cf5b6e15::t_534254801ed0d6 325-326,328,356-359
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_909ca8cf5b6e15::t_875f1e4437f985 25,61-75,87,101
+apps/nextjs/src/components/board/items/item-actions.tsx
+  s_909ca8cf5b6e15::t_ae30168e6b7c5b 35
+packages/widgets/src/firewall/component.tsx
+  s_909ca8cf5b6e15::t_cb9188cccc4d45 36-49,80
+  s_909ca8cf5b6e15::t_59229ff744f5a0 87-89
+  s_909ca8cf5b6e15::t_a715c035de938a 117,138-141
+  s_909ca8cf5b6e15::t_ae30168e6b7c5b 98
+  s_909ca8cf5b6e15::t_605f61105df412 65-66,69,72,75-79,91-97,99-102,131,136-137
+  s_909ca8cf5b6e15::t_72e7cd9244a757 90
+packages/widgets/src/calendar/component.tsx
+  s_909ca8cf5b6e15::t_534254801ed0d6 3,22
+packages/widgets/src/firewall/firewall-version.tsx
+  s_909ca8cf5b6e15::t_605f61105df412 24,35
+packages/widgets/src/system-resources/history.spec.ts
+  s_909ca8cf5b6e15::t_1443e438b1dffb 3
+packages/widgets/src/network-controller/network-status/component.tsx
+  s_909ca8cf5b6e15::t_875f1e4437f985 24,39
+packages/widgets/src/smart-home/execute-automation/component.tsx
+  s_909ca8cf5b6e15::t_875f1e4437f985 4,6-15,90-98
+  s_909ca8cf5b6e15::t_899545f8b9c5c8 5,89,100-126,128-162
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_909ca8cf5b6e15::t_899545f8b9c5c8 30-31
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_875f1e4437f985 2785-2788
+packages/widgets/src/system-resources/component.tsx
+  s_909ca8cf5b6e15::t_534254801ed0d6 54
+packages/widgets/src/immich/server-stats/component.tsx
+  s_909ca8cf5b6e15::t_875f1e4437f985 33-36
+packages/widgets/src/firewall/failure-state.spec.ts
+  s_909ca8cf5b6e15::t_cb9188cccc4d45 3,5-10,12-18,20-23
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_909ca8cf5b6e15::t_875f1e4437f985 5,243,245-246
+apps/nextjs/src/components/board/advanced-focus/geometry.spec.ts
+  s_909ca8cf5b6e15::t_82adb53abda555 7-9,11-12
+  s_909ca8cf5b6e15::t_48e665f497f2b0 10
+e2e/board-advanced-interactions.spec.ts
+  s_909ca8cf5b6e15::t_46277fd7e96d8c 79-80,161-162,165-169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.19",
+  "base_commit_sha": "777bbd89a12b8f249bfbc9c5bb45a63385d63357",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

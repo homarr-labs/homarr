@@ -1,0 +1,29 @@
+apps/docs/docs/widgets/whats-up-docker/index.ts
+  s_093d61b162b9ca::t_1cf86c2728e643 13,31-32
+apps/workshop/pb_hooks/report-email.html
+  s_667f6174514794::t_009547dbe4013b 24-26,34-36,46-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "5dc4dbeaef50d3c92ccd50f2cba815eaef600c46",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_667f6174514794": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fefc2-aead-7331-85fc-7d646a0e5452",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

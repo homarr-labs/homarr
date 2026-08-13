@@ -1,0 +1,57 @@
+apps/nextjs/src/components/board/sections/grid/dnd/coordinates.ts
+  s_7b8a552cf9f1f8::t_f55745e7611f5c 2-3,59-75,80-81,84-133
+apps/nextjs/src/components/board/sections/container-section.tsx
+  s_7b8a552cf9f1f8::t_dac164f924f9f9 41,65,67,69,71-75,77-78,80,82-85,87,106,134-137
+apps/docs/docs/management/boards/index.mdx
+  s_7b8a552cf9f1f8::t_321c52b16828e8 177
+  s_7b8a552cf9f1f8::t_dac164f924f9f9 187
+e2e/board-grid.spec.ts
+  s_7b8a552cf9f1f8::t_12411b81d9e566 107-108,200-201,650-668,671,674-675
+  s_7b8a552cf9f1f8::t_d3d89b11ca4380 676-677
+  s_7b8a552cf9f1f8::t_f5d079a493d54c 109-110,202-205
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_7b8a552cf9f1f8::t_321c52b16828e8 338
+  s_7b8a552cf9f1f8::t_dac164f924f9f9 343
+apps/nextjs/src/components/board/sections/grid/grid-portal-host.tsx
+  s_7b8a552cf9f1f8::t_40c74f32b38078 141,145
+apps/nextjs/src/components/board/sections/grid/dnd/index.ts
+  s_7b8a552cf9f1f8::t_f55745e7611f5c 9-15
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_7b8a552cf9f1f8::t_ed8995edb8ee7c 131
+  s_7b8a552cf9f1f8::t_dbfcaff49010bb 76-77,102-119,267
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_7b8a552cf9f1f8::t_84e17f38b507b8 606-609
+  s_7b8a552cf9f1f8::t_6cff1c2a4c30e3 942
+  s_7b8a552cf9f1f8::t_ab3cff5d0aab89 39-40,664-682,684-690,722,736,811-820,827,849-850,853,857-860,943-949,968-976,982-983,988,999-1000,1005,1015-1016,1021,1069,1073-1088
+  s_7b8a552cf9f1f8::t_0215373fcbf145 724-727,729
+  s_7b8a552cf9f1f8::t_0133d3c4635ab9 1089,1097,1126
+apps/nextjs/src/components/board/sections/item.module.css
+  s_7b8a552cf9f1f8::t_dac164f924f9f9 24-43
+apps/nextjs/src/components/board/sections/grid/dnd/coordinates.spec.ts
+  s_7b8a552cf9f1f8::t_8a870f77cc2dbd 4-10,73-121
+  s_8c1f355365c9af::t_77bfd97d0fc3ae 122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "07e6598f755613335352551d458acdc50f0e8b2d",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8c1f355365c9af": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb819-9df1-71e3-bf79-61683d5d9203",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

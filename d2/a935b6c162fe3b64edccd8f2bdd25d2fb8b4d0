@@ -1,0 +1,30 @@
+packages/widgets/src/beszel/_shared/disk-usage.tsx
+  s_909ca8cf5b6e15::t_2655e358aef591 31
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_909ca8cf5b6e15::t_a262f077e9c115 201,203-215
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_909ca8cf5b6e15::t_2655e358aef591 204
+e2e/board-advanced-interactions.spec.ts
+  s_909ca8cf5b6e15::t_a262f077e9c115 123,128-134,138-143,145
+  s_909ca8cf5b6e15::t_2655e358aef591 135-137,146
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_909ca8cf5b6e15::t_2655e358aef591 38
+packages/integrations/src/interfaces/media-server/media-server-types.ts
+  s_909ca8cf5b6e15::t_2655e358aef591 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "d2a935b6c162fe3b64edccd8f2bdd25d2fb8b4d0",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

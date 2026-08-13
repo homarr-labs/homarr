@@ -1,0 +1,86 @@
+packages/widgets/src/smart-home/entity-state/state.spec.ts
+  s_909ca8cf5b6e15::t_5b9dbd46425ab2 1-16
+packages/widgets/src/network-controller/summary/component.tsx
+  s_909ca8cf5b6e15::t_facb9e0b4ca514 134
+  s_909ca8cf5b6e15::t_3f5e9ee895a083 79,91,106-107,119,132
+packages/widgets/src/umami/umami-content.tsx
+  s_909ca8cf5b6e15::t_2474fd63685b90 185-199
+  s_909ca8cf5b6e15::t_15a97b1a4b4257 12,100-104
+apps/nextjs/src/components/layout/header.tsx
+  s_909ca8cf5b6e15::t_4a5dfde40f2de8 21-25,27
+packages/ui/src/styles.css
+  s_909ca8cf5b6e15::t_3b03abaf5f97bf 12
+  s_909ca8cf5b6e15::t_4a5dfde40f2de8 6-11,13
+packages/translation/src/lang/he.json
+  s_909ca8cf5b6e15::t_38e3c3f762adac 1203-1204,1908-1913,3379-3382,3384
+  s_909ca8cf5b6e15::t_facb9e0b4ca514 3385
+packages/widgets/src/smart-home/entity-state/state.ts
+  s_909ca8cf5b6e15::t_5b9dbd46425ab2 1-11
+packages/widgets/src/beszel/_shared/disk-usage.module.css
+  s_909ca8cf5b6e15::t_5f4a803bf8ff4d 2,8
+  s_909ca8cf5b6e15::t_92911dcfdbed5d 1,3-7,9-11
+packages/widgets/src/smart-home/execute-automation/component.tsx
+  s_909ca8cf5b6e15::t_15a97b1a4b4257 24,87
+apps/nextjs/src/components/board/advanced-focus/manual-surface.tsx
+  s_909ca8cf5b6e15::t_4a5dfde40f2de8 62
+packages/widgets/src/beszel/_shared/stats-view.tsx
+  s_909ca8cf5b6e15::t_3b03abaf5f97bf 23,29-39,69,81,87,269,283,297,310,323,339,353,366
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_909ca8cf5b6e15::t_4a5dfde40f2de8 232-244,260
+packages/widgets/src/smart-home/layout.ts
+  s_909ca8cf5b6e15::t_15a97b1a4b4257 1
+packages/widgets/src/umami/umami-layout.spec.ts
+  s_909ca8cf5b6e15::t_5b9dbd46425ab2 6-17
+  s_909ca8cf5b6e15::t_15a97b1a4b4257 1-5,18-30
+packages/widgets/src/umami/umami-layout.ts
+  s_909ca8cf5b6e15::t_15a97b1a4b4257 1-16
+packages/widgets/src/beszel/_shared/disk-usage.tsx
+  s_909ca8cf5b6e15::t_ebc5f9768051ad 1,32-35,41-50,92-98,100-117
+  s_909ca8cf5b6e15::t_4a5dfde40f2de8 3-4,24
+  s_909ca8cf5b6e15::t_5f4a803bf8ff4d 27,52
+  s_909ca8cf5b6e15::t_92911dcfdbed5d 9,53
+  s_909ca8cf5b6e15::t_fb6c7dbc0925a1 2,25,54-57
+packages/translation/src/lang/de.json
+  s_909ca8cf5b6e15::t_facb9e0b4ca514 3439
+  s_909ca8cf5b6e15::t_38e3c3f762adac 1257-1258,1962-1967,3433-3436,3438
+packages/translation/src/lang/fr.json
+  s_909ca8cf5b6e15::t_38e3c3f762adac 1408-1409,2113-2118,3584-3587,3589
+  s_909ca8cf5b6e15::t_facb9e0b4ca514 3590
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_3f5e9ee895a083 2740-2745,4353-4355
+e2e/board-advanced-interactions.spec.ts
+  s_909ca8cf5b6e15::t_4a5dfde40f2de8 78-79,98-99,143-144,219-220
+packages/widgets/src/beszel/_shared/tooltip.tsx
+  s_909ca8cf5b6e15::t_4a5dfde40f2de8 4,57
+packages/widgets/src/beszel/_shared/system-stats-modal.tsx
+  s_909ca8cf5b6e15::t_3b03abaf5f97bf 53
+packages/widgets/src/dns-hole/summary/component.tsx
+  s_909ca8cf5b6e15::t_4a5dfde40f2de8 122,132,142,158
+  s_909ca8cf5b6e15::t_c78a87da81dc00 48
+packages/widgets/src/weather/component.tsx
+  s_909ca8cf5b6e15::t_4a5dfde40f2de8 38,79
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_909ca8cf5b6e15::t_4a5dfde40f2de8 73
+packages/widgets/src/smart-home/layout.spec.ts
+  s_909ca8cf5b6e15::t_15a97b1a4b4257 1-14
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_909ca8cf5b6e15::t_15a97b1a4b4257 14,100
+  s_909ca8cf5b6e15::t_5b9dbd46425ab2 15,116
+  s_909ca8cf5b6e15::t_3f5e9ee895a083 110-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "747ccdfa9ef1062e8382add41dca5b752e8e4a3d",
+  "prompts": {},
+  "sessions": {
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    }
+  }
+}

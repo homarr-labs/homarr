@@ -1,0 +1,49 @@
+packages/widgets/src/vpn/component.tsx
+  s_909ca8cf5b6e15::t_d66f856e0ac3a1 35
+packages/widgets/src/video/component.tsx
+  s_909ca8cf5b6e15::t_8a44793a4ddb98 4
+packages/widgets/src/beszel-system-table/component.tsx
+  s_909ca8cf5b6e15::t_a198d86e0eb22d 436
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_909ca8cf5b6e15::t_cd1daeca506791 134
+packages/widgets/src/patchmon/component.tsx
+  s_909ca8cf5b6e15::t_7146849e8b3e27 100,279
+packages/widgets/src/dns-hole/summary/component.tsx
+  s_909ca8cf5b6e15::t_cd1daeca506791 115
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_909ca8cf5b6e15::t_cd1daeca506791 257,262-266
+packages/widgets/src/paperless-ngx/component.tsx
+  s_909ca8cf5b6e15::t_7146849e8b3e27 164
+packages/widgets/src/media-requests/stats/component.tsx
+  s_909ca8cf5b6e15::t_42bcc6408dc47a 192
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_7b8a552cf9f1f8::t_64d6574efdb79d 200-201,206-223
+packages/widgets/src/iframe/component.tsx
+  s_909ca8cf5b6e15::t_af3dc33b15b312 3,13
+packages/widgets/src/rssFeed/component.tsx
+  s_909ca8cf5b6e15::t_42bcc6408dc47a 136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "3079eb176786744c9a7da81861c45b2de9bcf0d3",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

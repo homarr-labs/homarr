@@ -1,0 +1,105 @@
+apps/nextjs/src/app/api/mcp/_handler.ts
+  s_093d61b162b9ca::t_d7df281e3205ba 3-4
+apps/nextjs/src/app/api/mcp/[transport]/route.spec.ts
+  s_093d61b162b9ca::t_0fd56d52489518 104
+packages/validation/src/shared.ts
+  s_7cfb890e45839e::t_0758c4ece48772 96-100
+packages/validation/src/board.spec.ts
+  s_7cfb890e45839e::t_fa4d19449d126e 96-102,104
+apps/docs/docs/management/boards/index.mdx
+  s_7cfb890e45839e::t_ace5924311b1f8 142
+  s_7cfb890e45839e::t_d0aa0690856521 41
+  s_7cfb890e45839e::t_36213bab41e104 105,116-117
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_7cfb890e45839e::t_af674efe232f7f 6,32
+e2e/board-grid.spec.ts
+  s_7cfb890e45839e::t_af674efe232f7f 257-264
+  s_7cfb890e45839e::t_31cc5cfbd7b5b9 1847,1850,1859-1863,1865-1866,1868-1869,1871
+  s_7cfb890e45839e::t_62d3efe628e940 185-186,188,190,416-418,420,449,799,803-804,877-885,888-889,891,896
+  s_7cfb890e45839e::t_9e054e14cea8e6 1867
+  s_7cfb890e45839e::t_2f103981079238 9,1858
+  s_7cfb890e45839e::t_b84ccba1d93244 189
+  s_7cfb890e45839e::t_93036980eac95b 193
+  s_7cfb890e45839e::t_2df42d790f6a5e 974
+  s_7cfb890e45839e::t_36aa3235f5a1ae 450,890,973,1875-1876
+apps/nextjs/src/app/[locale]/boards/(content)/_client.module.css
+  s_7cfb890e45839e::t_af674efe232f7f 12-18,20-21,25-35,37-52
+apps/nextjs/src/components/board/layout/test/geometry.spec.ts
+  s_7cfb890e45839e::t_3a32ef5a01fdb9 3-9,33-39
+  s_7cfb890e45839e::t_5d139cc801c872 40
+apps/nextjs/src/components/board/layout/test/scaled-board-canvas.spec.ts
+  s_7cfb890e45839e::t_3a32ef5a01fdb9 3,6,17,22-23,26,34-35
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_7cfb890e45839e::t_f8f5c062353e86 24,886-893,904
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_7cfb890e45839e::t_62d3efe628e940 91-94
+  s_7cfb890e45839e::t_36aa3235f5a1ae 190,206,229-230
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  s_7cfb890e45839e::t_3a32ef5a01fdb9 18,36-37,61,84
+  s_7cfb890e45839e::t_2df42d790f6a5e 86
+apps/nextjs/src/components/board/layout/scaled-board-canvas.module.css
+  s_7cfb890e45839e::t_3a32ef5a01fdb9 5
+apps/nextjs/src/components/board/layout/geometry.ts
+  s_7cfb890e45839e::t_3a32ef5a01fdb9 24-30
+apps/nextjs/src/components/board/sections/empty-section.tsx
+  s_7cfb890e45839e::t_e121eaa32a9cbf 21
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_7cfb890e45839e::t_f8f5c062353e86 3,16,23,86,152,208-223
+  s_7cfb890e45839e::t_c69adc84054909 224-225
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_093d61b162b9ca::t_ff33662f9a50f5 19-20,24-25
+  s_7cfb890e45839e::t_413d240e3d151a 26-27
+  s_093d61b162b9ca::t_a357e4ffeeccbd 101,122,127,196
+  s_093d61b162b9ca::t_3867f4e2a5e49a 91-100,102-121,123-126,128-142,171-176,183-187,195,197-211
+apps/nextjs/src/components/board/advanced-focus/entrance.spec.ts
+  s_093d61b162b9ca::t_7dadbbd6bee97f 1-33,35-36,38-59,61-62
+  s_093d61b162b9ca::t_dbd764f1260fe9 34,37,60
+apps/nextjs/src/components/board/advanced-focus/entrance.ts
+  s_093d61b162b9ca::t_7dadbbd6bee97f 1-13
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_093d61b162b9ca::t_7dadbbd6bee97f 30,249-254
+  s_093d61b162b9ca::t_afb879a56cdc7f 2,157,218-239,244-248,255-263
+  s_093d61b162b9ca::t_92344c2abeefb9 240-243
+  s_093d61b162b9ca::t_29a11457437b37 374,380,397,437,511
+apps/nextjs/src/components/board/advanced-focus/context.spec.tsx
+  s_093d61b162b9ca::t_e9cbafb0caaa96 83-84,96-97,159-160,167-168
+  s_093d61b162b9ca::t_d5ed42619791c3 123-130,136-146
+  s_093d61b162b9ca::t_a4575b992d1a9c 1-35,41-82,85-95,98-122,131-135,147-158,161-166,169-177,194-195
+  s_093d61b162b9ca::t_6346b537abb292 36-40,178-193
+apps/docs/docs/advanced/keyboard-shortcuts/index.mdx
+  s_093d61b162b9ca::t_3867f4e2a5e49a 14-16,23
+  s_093d61b162b9ca::t_755be798fa113a 9-13
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_093d61b162b9ca::t_55bb56c4035334 3,333
+  s_093d61b162b9ca::t_3867f4e2a5e49a 39-40,50,55,57-59,65-71,89,102,108,119-129,131-133,140-144,155,164,169-179,186-193,195,208-211,220,224-230,237-238,240,247,251,290,293,320-332,334-341
+  s_093d61b162b9ca::t_6346b537abb292 145-149,182-185
+  s_093d61b162b9ca::t_909fbe2d2b850d 130
+e2e/board-advanced-interactions.spec.ts
+  s_093d61b162b9ca::t_55145a0988c699 132-134,136
+apps/nextjs/src/components/board/layout/README.md
+  s_7cfb890e45839e::t_36aa3235f5a1ae 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3148ecb8232a5d0ee1053885f492d044554e1204",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

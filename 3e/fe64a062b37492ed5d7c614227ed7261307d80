@@ -1,0 +1,53 @@
+packages/workshop/src/schema.ts
+  s_093d61b162b9ca::t_ad41e00e437733 76-83
+apps/workshop/tests/workshop.integration.mjs
+  s_093d61b162b9ca::t_ad41e00e437733 271,276
+apps/docs/src/components/workshop/useWorkshop.ts
+  s_093d61b162b9ca::t_9666c19e81095b 165
+apps/docs/src/components/workshop/WorkshopApp.tsx
+  s_093d61b162b9ca::t_c50cf76892981f 11,18,121,132,135-144,422,424-429
+apps/nextjs/src/components/workshop/workshop-browser.tsx
+  s_093d61b162b9ca::t_9666c19e81095b 433
+apps/docs/docs/management/workshop/index.mdx
+  s_093d61b162b9ca::t_1cda4d6f5749d9 38-39,56-57
+  s_a70c07ac5b7a5a::t_878e298ee5f22d 58
+packages/workshop/src/schema.spec.ts
+  s_093d61b162b9ca::t_ad41e00e437733 11,44-47
+apps/workshop/README.md
+  s_093d61b162b9ca::t_1cda4d6f5749d9 11-12
+apps/workshop/pb_migrations/1784240000_workshop_widgets.js
+  s_093d61b162b9ca::t_ad41e00e437733 219
+apps/docs/src/components/workshop/DetailPage.tsx
+  s_093d61b162b9ca::t_9666c19e81095b 454,884
+apps/docs/docusaurus.config.ts
+  s_093d61b162b9ca::t_7110cd5933fd92 405
+apps/workshop/tests/workshop-contracts.mjs
+  s_093d61b162b9ca::t_7110cd5933fd92 72
+  s_093d61b162b9ca::t_98ddba9f43767f 73-74,76
+apps/docs/src/components/workshop/WorkshopAdmin.tsx
+  s_093d61b162b9ca::t_9666c19e81095b 112-116
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3efe64a062b37492ed5d7c614227ed7261307d80",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

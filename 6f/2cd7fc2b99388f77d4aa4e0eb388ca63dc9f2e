@@ -1,0 +1,987 @@
+packages/widgets/src/bookmarks/layout.spec.ts
+  s_909ca8cf5b6e15::t_3682b79d37596c 1-17
+packages/widgets/src/media-requests/stats/index.ts
+  s_909ca8cf5b6e15::t_64bbc49ef72b14 10
+packages/widgets/src/calendar/calendar.spec.ts
+  s_909ca8cf5b6e15::t_31a39f9e0a969f 5,66-93
+  s_909ca8cf5b6e15::t_18589c1d44ea0f 56-63,65
+  s_909ca8cf5b6e15::t_ac26f7581a1723 64
+  s_909ca8cf5b6e15::t_7cdc830d240171 94
+packages/api/src/router/widgets/media-requests.ts
+  s_909ca8cf5b6e15::t_4623923c918632 37,103
+packages/widgets/src/beszel-alerts/component.tsx
+  s_909ca8cf5b6e15::t_cd50947d02a035 38-39,72-73,124,126,147
+apps/docs/docs/widgets/system-disks/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,47
+  s_909ca8cf5b6e15::t_e033df80df9cfa 48
+apps/docs/docs/advanced/keyboard-shortcuts/index.mdx
+  s_909ca8cf5b6e15::t_d088593e440169 17,23-24
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 9-16
+  s_909ca8cf5b6e15::t_6692119805386f 25
+packages/widgets/src/smart-home/execute-automation/index.ts
+  s_909ca8cf5b6e15::t_64bbc49ef72b14 10
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_909ca8cf5b6e15::t_3c2ea70df174e1 10,145
+  s_909ca8cf5b6e15::t_9ed933717094cd 5,18,26-27,77,94,123-134,137,154,186-189,193-195
+  s_909ca8cf5b6e15::t_19e625db33d1ae 19,34,47,60-65,70,78,87-93,95,136,178,198-202
+  s_909ca8cf5b6e15::t_88129a9c4c30ba 1-4,6-9,11-17,20-25,28-33,35-46,48-59,66-67,69,71-76,79-80,82-86,96-122,135,138,140-144,148-151,153,155-177,179,181-185,190-192,196-197,203-213
+  s_909ca8cf5b6e15::t_ee6af6366562a7 146
+  s_909ca8cf5b6e15::t_7880a6184af051 68,81,152,180
+  s_909ca8cf5b6e15::t_ccb9f3d74c5046 147
+  s_909ca8cf5b6e15::t_b6e3288925c29c 139
+packages/widgets/src/health-monitoring/integration-selection.spec.ts
+  s_909ca8cf5b6e15::t_3efbcb0e2d5d74 1-25
+apps/docs/docs/widgets/rss-feed/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-12,14,20,31,35,37,51
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 24
+  s_909ca8cf5b6e15::t_2f29a39c58d6ef 25
+packages/widgets/src/health-monitoring/index.ts
+  s_909ca8cf5b6e15::t_d1bb844317c972 12
+apps/nextjs/src/components/layout/constants.ts
+  s_909ca8cf5b6e15::t_a6c5331084ec9b 1
+packages/widgets/src/app/component.tsx
+  s_909ca8cf5b6e15::t_bd20a5991a7fc3 22,54,87,97,103,113-117,128,163-170
+packages/widgets/src/system-resources/component.tsx
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 166,169-171
+  s_909ca8cf5b6e15::t_c989de3f76d49f 3-4,15-16,18-25,30,35,40-41,51-55,57,61-62,71,74-77,83-86,92-94,107-109,138-139,141-164,167-168,174-178,180-184,188-194,198-203,208-234,237
+  s_909ca8cf5b6e15::t_d1bb844317c972 47-49
+  s_909ca8cf5b6e15::t_eef8569d509e45 43-46,56,63-67,69-70,97-102,104-105
+  s_909ca8cf5b6e15::t_e1d3ec40d343be 68,87-89,91,103,106,112-113
+  s_909ca8cf5b6e15::t_5f5287231197c1 110-111,115-136,140
+  s_909ca8cf5b6e15::t_61835a8c17140a 42,90,114,137
+packages/widgets/src/anchor-note/component.tsx
+  s_909ca8cf5b6e15::t_64a19a3035547f 6,13,110-116,130-135,137,152-159,161-162,178-180,184-190,192,230-231,244,327,345-347,349,351-352,354-356,358-360,384-408
+  s_909ca8cf5b6e15::t_54a53032c11ff6 136,160,165-171,181,191,194-195,203,205-206,208-209,211-219,348,350,353,357
+  s_909ca8cf5b6e15::t_1fff137fb56af7 202,204,207,210
+  s_909ca8cf5b6e15::t_708c7409e1ad87 163-164
+apps/docs/docs/widgets/health-monitoring/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,67
+  s_909ca8cf5b6e15::t_140a5a39dd0069 68
+apps/nextjs/src/components/board/items/actions/test/empty-position.spec.ts
+  s_909ca8cf5b6e15::t_92e27ca68c7188 4,109-139
+packages/widgets/src/clock/component.tsx
+  s_909ca8cf5b6e15::t_2928cc47fab0c1 59
+  s_909ca8cf5b6e15::t_bd20a5991a7fc3 24,35-36,67,69-70,81,131,151
+packages/widgets/src/definition.ts
+  s_909ca8cf5b6e15::t_88129a9c4c30ba 179
+  s_909ca8cf5b6e15::t_be8f55f407a8a1 30
+  s_909ca8cf5b6e15::t_5713340b390708 107,140,151
+  s_7b8a552cf9f1f8::t_1ffd53008432ce 152
+apps/docs/docs/widgets/ups/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 45-46
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-16,24-26,30-34,38-44,53
+packages/widgets/src/vpn/index.ts
+  s_909ca8cf5b6e15::t_7c2da3c0764378 10
+packages/widgets/src/downloads/helpers.ts
+  s_909ca8cf5b6e15::t_ac09547aacb0e1 1-27
+packages/api/src/router/widgets/indexer-manager.ts
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 19-23,25-38,40-41
+  s_909ca8cf5b6e15::t_8b1fdef42f9019 39
+apps/docs/docs/widgets/patchmon/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-14,16,40-46,63-65,67-69,77-84,93
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 85-86
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_909ca8cf5b6e15::t_660e5429fa0f71 11,51
+  s_909ca8cf5b6e15::t_69555db7969b4a 45
+packages/widgets/src/weather/component.spec.ts
+  s_909ca8cf5b6e15::t_18589c1d44ea0f 1-16
+packages/widgets/src/uptime-kuma/component.tsx
+  s_909ca8cf5b6e15::t_99e8d7232d9d4a 4,79-85,90-98,105-106,109,140,193-194,196-198,206-209,212-224,233-234,236-243,246
+  s_909ca8cf5b6e15::t_e646cd8ab9c41e 116-121,195,199
+  s_909ca8cf5b6e15::t_79fa69414346d7 15,115,123
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 200-203,205,225-232
+  s_909ca8cf5b6e15::t_3021fc3892c0ab 204,235
+  s_a570dbe25d2998::t_1358eadfcc9aa3 247
+packages/integrations/src/audiobookshelf/audiobookshelf-integration.ts
+  s_909ca8cf5b6e15::t_3da078c81631d3 57,79-86
+apps/docs/docs/widgets/minecraft-server-status/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-16,18,24-25,27,39,45
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 32
+  s_909ca8cf5b6e15::t_f07a0e9d3f74e3 33
+packages/widgets/src/firewall/index.ts
+  s_909ca8cf5b6e15::t_e01a58447c3436 10
+packages/widgets/src/immich/server-stats/index.ts
+  s_909ca8cf5b6e15::t_0b1dda49960fd9 12
+packages/boards/src/updater.spec.ts
+  s_909ca8cf5b6e15::t_c544218744fff0 1-18
+apps/docs/docs/widgets/umami/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 29-30
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-16,22-28,42-47
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+packages/widgets/src/downloads/index.ts
+  s_909ca8cf5b6e15::t_64bbc49ef72b14 45
+packages/widgets/src/audio-stats/index.ts
+  s_909ca8cf5b6e15::t_d1bb844317c972 16
+packages/widgets/src/releases/component.tsx
+  s_909ca8cf5b6e15::t_b17aa214c6cb82 4,40,51,178,321-322
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 179-186,188-205,208-212,214-222,224-229,231-258,260,262-270,272-277,279-287,289,291-304,306-320
+apps/docs/docs/widgets/firewall/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-15,17,25-31
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 32-33
+packages/widgets/src/releases/index.ts
+  s_909ca8cf5b6e15::t_7c2da3c0764378 17
+packages/api/src/router/widgets/beszel-failures.ts
+  s_909ca8cf5b6e15::t_9663f552240f47 1-5
+packages/widgets/src/rssFeed/index.ts
+  s_909ca8cf5b6e15::t_7c2da3c0764378 15
+packages/widgets/src/traefik/component.tsx
+  s_909ca8cf5b6e15::t_3c2ea70df174e1 52-53,57-60
+  s_909ca8cf5b6e15::t_99538e284f8346 156,171,185
+  s_909ca8cf5b6e15::t_32dcd490603532 4,39-40,61-66,76-77,89-93,97-101,140-141,143-145,148-154,158-159,166,173,186-191,195
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 102-105,107-121,123-137,139,146-147,155,157,160-165,167-170,172,174-184
+  s_909ca8cf5b6e15::t_65f7fc86224642 196
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_909ca8cf5b6e15::t_a812b3316c3604 27,67
+  s_909ca8cf5b6e15::t_e5c738491dda97 318-319,347-348,359-360
+  s_909ca8cf5b6e15::t_9c4c37dabeb0f1 3,38
+  s_909ca8cf5b6e15::t_5713340b390708 4,11,68-69,90,114-118,144-149,213-221,312-313,315
+  s_909ca8cf5b6e15::t_6d22dd8e81b2a9 14,53
+  s_909ca8cf5b6e15::t_da9774a463269f 17,28,52
+  s_909ca8cf5b6e15::t_d1bb844317c972 106-110
+  s_909ca8cf5b6e15::t_382b217c7ba66d 105
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 57,115,122,189,201,206,210
+  s_909ca8cf5b6e15::t_55080e087a438b 192
+  s_909ca8cf5b6e15::t_d088593e440169 194
+  s_909ca8cf5b6e15::t_c7d7f014f899c1 193
+packages/widgets/src/minecraft/server-status/component.tsx
+  s_909ca8cf5b6e15::t_a5f05da282c2ae 3,8,13-18,20,26-28,36,41-47,50,54-61,67,80,83-91,94-98
+packages/integrations/src/audiobookshelf/audiobookshelf-types.ts
+  s_909ca8cf5b6e15::t_3da078c81631d3 33-40
+packages/widgets/src/health-monitoring/system-health.tsx
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 73-102,104-108,110-111,113-187,189-191,194-212,215-222,240-245,266-267
+  s_909ca8cf5b6e15::t_b5429e430b9aa3 3-4,16,35,57,63,66-67,72,223,227-239,246-265,268-271
+  s_909ca8cf5b6e15::t_f19458044c02b9 272
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_909ca8cf5b6e15::t_aeae0c4b5a9140 4,26-27,59-60,62-65,67-68,151-156,163-164,170,175-179
+  s_909ca8cf5b6e15::t_daf2b8aadfc45b 157-162
+  s_909ca8cf5b6e15::t_dbb0d7175167c1 19,43-47,104,141-142,167-168
+  s_909ca8cf5b6e15::t_587c8c21876a95 61,66
+  s_a570dbe25d2998::t_bc8c2bad02a395 165
+apps/docs/docs/widgets/media-server/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-20,22,33,39-56,64
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 57
+apps/docs/docs/widgets/bookmarks/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 34,37
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-12,14,21-24,44
+apps/docs/docs/management/boards/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 12-16,27,33,38,45,51,63,65,73,82,87,142,168-170,191,193,198,202,206,213,215,217,219,221,223,225,227,230,236,239,248,266,271,290,292,296,301,306,318,328,331-333,340,346,348-349,353,355-356,360-363,370-372
+  s_909ca8cf5b6e15::t_0c88004860567d 251-254,258-264,381
+packages/widgets/src/beszel-system-stats/selection.ts
+  s_909ca8cf5b6e15::t_1762e63f61dd80 1-32
+apps/docs/docs/widgets/bazarr/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 38-39
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-16,22,30-37,46
+apps/docs/docs/widgets/beszel-system-table/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-14,16,31-38,47
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 39-40
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+apps/docs/docs/widgets/notebook/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,29
+  s_909ca8cf5b6e15::t_26156c5014fb1f 30
+apps/docs/docs/widgets/video/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-12,14,37
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 30
+  s_909ca8cf5b6e15::t_c84db40edbcb76 31
+packages/widgets/src/calendar/component.tsx
+  s_909ca8cf5b6e15::t_2928cc47fab0c1 78
+  s_909ca8cf5b6e15::t_866005f821349c 5,18,48,60-69,81,92-99,106,179-181,183,185-187
+  s_909ca8cf5b6e15::t_beb10b3522c3ba 107-108,111-165,168-178
+  s_909ca8cf5b6e15::t_3309e7737d2a14 109-110
+  s_909ca8cf5b6e15::t_31a39f9e0a969f 17,100-103,166,182,184
+  s_909ca8cf5b6e15::t_ca4d27457ebba7 3,22-34
+  s_a570dbe25d2998::t_9b0fe88f90155b 167
+apps/nextjs/src/components/board/advanced-focus/geometry.ts
+  s_909ca8cf5b6e15::t_88129a9c4c30ba 3-9,11-12,14-18,23-26
+  s_909ca8cf5b6e15::t_a6c5331084ec9b 1-2,13,19-22
+  s_909ca8cf5b6e15::t_3dd948e622f81b 10
+apps/docs/docs/widgets/custom-api/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-11,13
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_32d8d7364690e8 22
+packages/widgets/src/clock/index.ts
+  s_909ca8cf5b6e15::t_0f91619288c013 9
+packages/api/src/router/widgets/__tests__/beszel-failures.spec.ts
+  s_909ca8cf5b6e15::t_6e4f783757b652 1-2,4,6,8-9,12-14,16-17
+  s_909ca8cf5b6e15::t_5f92622bcb3094 3,5,7,10-11,15
+packages/widgets/src/beszel-system-stats/index.ts
+  s_909ca8cf5b6e15::t_1762e63f61dd80 7,34
+apps/nextjs/src/components/board/items/actions/test/create-item.spec.ts
+  s_909ca8cf5b6e15::t_92e27ca68c7188 1,13-16,117,129,132,137,139,142-143
+apps/docs/docs/widgets/stock-price/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 35-36
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-12,14,20-23,43,47,49,64
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+e2e/board-advanced-interactions.spec.ts
+  s_909ca8cf5b6e15::t_884b635da2d683 75,80,84
+  s_909ca8cf5b6e15::t_56b43b94f310d0 173,175-182,188
+  s_909ca8cf5b6e15::t_6374fc8f5b0db6 2-3,6-8,18-51,55-67,71,76-78,81-82,85,101-111,163-172,174,187,189-198,200-215,217-220,222-236,238,240-254,256-263,276-279,282,285-286,291,334-345,347-355,358-364
+  s_909ca8cf5b6e15::t_5f959f7bd5d2fc 131,139
+  s_909ca8cf5b6e15::t_0c6aa562318dd5 9-17
+  s_909ca8cf5b6e15::t_0e24938d9ef07a 1,4,255
+  s_909ca8cf5b6e15::t_7e1a17b9222506 68-69,72-74,79,83,199,216
+  s_909ca8cf5b6e15::t_e852c4d3c9a04f 70,221
+  s_909ca8cf5b6e15::t_7d9a38373e8fff 5,52-54,346
+  s_909ca8cf5b6e15::t_93028e022a6cae 86-98,100,112-130,132-138,140-154,161-162,237,239,280-281,283-284,287-290,292-329
+  s_909ca8cf5b6e15::t_6da88d8974a150 155-157,160,330-333,356-357
+  s_909ca8cf5b6e15::t_4824c599982106 99
+  s_909ca8cf5b6e15::t_e1d8e660ddee6b 158-159
+  s_909ca8cf5b6e15::t_b2a45739ddb9ff 183-186,264-275
+packages/translation/src/lang/en.json
+  s_909ca8cf5b6e15::t_ea341ce145fd6a 2157-2158,2159-2165
+  s_909ca8cf5b6e15::t_89b956cc41755a 2337-2340,2347-2362,2430-2433,2459-2460,2670,2672-2680,2739,2746-2747,2749-2756,2758,2774-2776,2784-2786
+  s_909ca8cf5b6e15::t_3ccb8825d93d77 3241-3247,3520-3524,3811-3820,4543-4546,4582-4593,4776
+  s_909ca8cf5b6e15::t_da9774a463269f 2146-2151
+packages/widgets/src/index.tsx
+  s_909ca8cf5b6e15::t_5713340b390708 75
+packages/widgets/src/tracearr/index.ts
+  s_909ca8cf5b6e15::t_7c2da3c0764378 8
+packages/common/src/bounded-response.ts
+  s_909ca8cf5b6e15::t_6ca5fdfdba225b 1-2,9-28,30-45
+  s_909ca8cf5b6e15::t_dfb921d89c5ec5 3-8,29
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_909ca8cf5b6e15::t_bdf6ebcdd0d6b7 94
+  s_909ca8cf5b6e15::t_5229fff6909c1f 24
+  s_909ca8cf5b6e15::t_b599aa9455f5a1 32-33
+  s_a570dbe25d2998::t_a9cf75f0f4fd59 12
+packages/widgets/src/firewall/bandwidth.spec.ts
+  s_909ca8cf5b6e15::t_48046714d91446 1-40
+apps/docs/docs/widgets/speedtest-tracker/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-16,23,29-35,44
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 36-37
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+packages/widgets/src/beszel-alerts/index.ts
+  s_909ca8cf5b6e15::t_e01a58447c3436 9
+apps/nextjs/src/components/board/advanced-focus/escape.ts
+  s_909ca8cf5b6e15::t_3c2ea70df174e1 1-13
+packages/widgets/src/uptime-kuma/aggregate.spec.ts
+  s_909ca8cf5b6e15::t_79fa69414346d7 1-31
+packages/request-handler/src/smart-home-entity-state.ts
+  s_909ca8cf5b6e15::t_4e63f2e2455ba3 7-24
+  s_909ca8cf5b6e15::t_e871db6baa2201 3,26,38
+packages/widgets/src/media-missing/index.ts
+  s_909ca8cf5b6e15::t_e01a58447c3436 12
+packages/widgets/src/video/component.tsx
+  s_909ca8cf5b6e15::t_bd20a5991a7fc3 4,19,24,28,31-39,67-71,114-115,131-135,139-146
+  s_909ca8cf5b6e15::t_beb10b3522c3ba 129
+packages/widgets/src/network-controller/network-status/variants/stat-row.tsx
+  s_909ca8cf5b6e15::t_a0cb01c8cdcaf7 14,17
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 3-11
+packages/widgets/src/firewall/bandwidth.ts
+  s_909ca8cf5b6e15::t_48046714d91446 1-13,15,17-39
+  s_909ca8cf5b6e15::t_36e56abb3c53a7 14,16
+apps/docs/docs/widgets/media-releases/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 47-48
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-16,18,24-25,34-46,55
+packages/widgets/src/downloads/helpers.spec.ts
+  s_909ca8cf5b6e15::t_ac09547aacb0e1 1-28
+packages/widgets/src/coolify/instance-card.tsx
+  s_909ca8cf5b6e15::t_0b495d7042a770 3,22,25,36-41,101-107
+packages/api/src/router/widgets/rssFeed.ts
+  s_909ca8cf5b6e15::t_a6e2cc3ffa0845 40-44
+packages/widgets/src/health-monitoring/cluster/accordion-state.ts
+  s_909ca8cf5b6e15::t_0c5c1bd909b9b5 1-4
+packages/widgets/src/archive-team-warrior/index.ts
+  s_909ca8cf5b6e15::t_0f91619288c013 8-9
+packages/widgets/src/downloads/component.tsx
+  s_909ca8cf5b6e15::t_ac09547aacb0e1 46-48,300-302,343,369,376,409-410,722
+  s_909ca8cf5b6e15::t_675bf173238090 166-167,297-298,329,471,754
+  s_909ca8cf5b6e15::t_6101df5df1aa2e 168-169
+  s_909ca8cf5b6e15::t_beb10b3522c3ba 802-803,805-820
+  s_909ca8cf5b6e15::t_677c27c34e4767 323,360,362-365
+packages/api/src/router/widgets/notifications.ts
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 16-20,22-43,45-46
+  s_909ca8cf5b6e15::t_8b1fdef42f9019 44
+packages/widgets/src/media-transcoding/component.tsx
+  s_909ca8cf5b6e15::t_7c5e5268a5f53b 3,50-55,59,65-67,69-82,86,106,154,183-202
+  s_909ca8cf5b6e15::t_64acada0e5adc6 4,208-210
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 5-16,204
+  s_909ca8cf5b6e15::t_3cffb1040fc007 45-46,48-49,87-105,107-111,178-182,203,205-207,211-214
+  s_909ca8cf5b6e15::t_21d2a0a499b70f 68
+  s_909ca8cf5b6e15::t_194f96919a5144 156-159
+packages/widgets/src/media-missing/tabs.spec.ts
+  s_909ca8cf5b6e15::t_c5d008bb8dddb2 1-18
+apps/nextjs/src/components/board/advanced-focus/geometry.spec.ts
+  s_909ca8cf5b6e15::t_88129a9c4c30ba 1-8,10-17,19,21,29-30
+  s_909ca8cf5b6e15::t_a6c5331084ec9b 9,18,20,22-28
+packages/widgets/src/bazarr/layout.spec.ts
+  s_909ca8cf5b6e15::t_c67e8b4bfb5590 1-18
+packages/widgets/src/uptime-kuma/index.ts
+  s_909ca8cf5b6e15::t_7c2da3c0764378 8
+packages/widgets/src/iframe/component.spec.ts
+  s_909ca8cf5b6e15::t_18589c1d44ea0f 1-26
+packages/widgets/src/timetable/index.ts
+  s_909ca8cf5b6e15::t_69555db7969b4a 18,22
+  s_909ca8cf5b6e15::t_437f398304edbe 21
+apps/nextjs/src/components/layout/shell.tsx
+  s_909ca8cf5b6e15::t_a6c5331084ec9b 8,27
+packages/widgets/src/audio-stats/component.tsx
+  s_909ca8cf5b6e15::t_2b8eb3cd4d7fc5 3-4,6-7,13-19,23-26,30-38,43-49,67-72,79-90
+  s_909ca8cf5b6e15::t_9663f552240f47 40-42,50-66
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 73-78
+  s_909ca8cf5b6e15::t_9423aa05dc2a2d 39
+apps/nextjs/src/components/board/advanced-focus/advanced-focus.module.css
+  s_909ca8cf5b6e15::t_de7763c2c4539f 18,39-59,73,82
+  s_909ca8cf5b6e15::t_b3075069698a63 11,22
+  s_909ca8cf5b6e15::t_88129a9c4c30ba 5-10,12-17,19-21,23,25-26,35-38,60-63,72,74-81,83-101,116-132
+  s_909ca8cf5b6e15::t_c512acabe4c1c4 1-4,64-71
+  s_909ca8cf5b6e15::t_923474a08fd9d7 24
+  s_909ca8cf5b6e15::t_19e625db33d1ae 27-34,102-115
+apps/nextjs/src/components/board/sections/gridstack/board-empty-space-context-menu.tsx
+  s_909ca8cf5b6e15::t_b599aa9455f5a1 10,39,165-167
+  s_909ca8cf5b6e15::t_945864a8810867 164
+  s_909ca8cf5b6e15::t_38bc180b88f532 3,58,78,144-146,153-156
+  s_909ca8cf5b6e15::t_131d866575c688 64,69,110
+  s_909ca8cf5b6e15::t_b505ebe4d2b799 65-68,70-71
+  s_909ca8cf5b6e15::t_78f8619f11b35a 1-2,5-9,11-38,40-41,43-49,57,59-63,72-77,79-109,111-115,117-132,134-139,141-143,157-163,168-170,172-177
+  s_909ca8cf5b6e15::t_62c5ca51fac0b0 51-56
+  s_909ca8cf5b6e15::t_f7964506608948 42,116,147-152
+  s_a570dbe25d2998::t_914fbf9d6488ae 4,50,133,140,171
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_909ca8cf5b6e15::t_cf3f49d2985566 28
+  s_909ca8cf5b6e15::t_41faf576accab6 5-6,27,106-107,137-138,143-150,153,155-156,158,164,169-170,173-174,176-179,181-191,193-200,202-215,221-225,227-234,242-252,254,256
+  s_909ca8cf5b6e15::t_46caaa61870185 30-36,52-87,108-109,139-140,151-152,166,168,226
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 7-14,216-220
+  s_909ca8cf5b6e15::t_670893ea57ff0b 17,154,175,180,192,201,235-241
+packages/widgets/src/patchmon/component.tsx
+  s_909ca8cf5b6e15::t_326bc8ebf1a4b6 78-84,107-109,112,119-120,131,133-134,283,286
+packages/widgets/src/weather/index.ts
+  s_909ca8cf5b6e15::t_0f91619288c013 10
+packages/api/src/router/widgets/firewall.ts
+  s_909ca8cf5b6e15::t_8b1fdef42f9019 40
+  s_909ca8cf5b6e15::t_48046714d91446 21,24-35,37-39,41-42,46-49
+  s_909ca8cf5b6e15::t_24cacdb9bee2f6 36
+apps/docs/docs/widgets/media-request-stats/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-18,20,26-35,39
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 47
+  s_909ca8cf5b6e15::t_c211adaabcfd4c 48
+apps/docs/docs/widgets/traefik/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,31
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_bb44916cfe56f2 32
+packages/widgets/src/rssFeed/feed-display.spec.ts
+  s_909ca8cf5b6e15::t_a0e31a6ee55942 1-2,4-14,22-23
+  s_909ca8cf5b6e15::t_a6c04e62100076 3,15-18,20-21
+  s_909ca8cf5b6e15::t_b769b8b5b712fa 19
+apps/docs/docs/widgets/downloads/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,100
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-22,28-29,32,38,57-88,107
+  s_909ca8cf5b6e15::t_a3a418ec426f19 101
+packages/api/src/test/settle-integrations.spec.ts
+  s_909ca8cf5b6e15::t_8b1fdef42f9019 55
+  s_909ca8cf5b6e15::t_24cacdb9bee2f6 50-54,56-66
+packages/widgets/src/health-monitoring/cluster/accordion-state.spec.ts
+  s_909ca8cf5b6e15::t_0c5c1bd909b9b5 1-10,12-17
+  s_909ca8cf5b6e15::t_21d2a0a499b70f 11
+packages/api/src/router/widgets/beszel.ts
+  s_909ca8cf5b6e15::t_5f92622bcb3094 16,25,27-28,34-35
+  s_909ca8cf5b6e15::t_9663f552240f47 24,26,29-33
+  s_909ca8cf5b6e15::t_6e4f783757b652 36-37,81,155
+packages/widgets/src/vpn/component.tsx
+  s_909ca8cf5b6e15::t_e41cb81b682404 41-45
+  s_909ca8cf5b6e15::t_1dc348c3ad99ab 3,10-15,22,25-29,34-37,46-49
+  s_909ca8cf5b6e15::t_587c8c21876a95 38-40,56,58-60
+  s_909ca8cf5b6e15::t_8525715e319c4b 50-52
+packages/widgets/src/calendar/index.ts
+  s_909ca8cf5b6e15::t_64bbc49ef72b14 12
+packages/widgets/src/media-transcoding/layout.spec.ts
+  s_909ca8cf5b6e15::t_7c5e5268a5f53b 3,15-29
+  s_909ca8cf5b6e15::t_3cffb1040fc007 1-2,4-14,30-35
+packages/widgets/src/docker/layout.ts
+  s_909ca8cf5b6e15::t_61879c4b4f1c6f 1-19
+packages/widgets/src/network-controller/network-status/variants/wifi-variant.tsx
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 8-16
+  s_909ca8cf5b6e15::t_a0cb01c8cdcaf7 20,26-28
+packages/widgets/src/media-requests/list/index.ts
+  s_909ca8cf5b6e15::t_64bbc49ef72b14 14
+apps/docs/docs/widgets/archive-team-warrior/index.mdx
+  s_909ca8cf5b6e15::t_571516494b2790 1-38
+packages/widgets/src/media-server/index.ts
+  s_909ca8cf5b6e15::t_64bbc49ef72b14 10
+packages/widgets/src/umami/umami-content.tsx
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 95-150,220-231,235
+  s_909ca8cf5b6e15::t_dcce7bd33248b0 4,26-27,40-41,151,204-213,216-219,232-233
+packages/widgets/src/patchmon/index.ts
+  s_909ca8cf5b6e15::t_0b1dda49960fd9 14
+  s_909ca8cf5b6e15::t_7c2da3c0764378 11
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 193-228
+packages/widgets/src/stocks/component.spec.ts
+  s_909ca8cf5b6e15::t_18589c1d44ea0f 1-18
+packages/widgets/src/notifications/component.tsx
+  s_909ca8cf5b6e15::t_744232869246d8 4,10,14-19,25,32-34,36-38,42-46,49-61,63-64,103-104,107,115,119,124-129
+  s_909ca8cf5b6e15::t_36e56abb3c53a7 35,66
+  s_909ca8cf5b6e15::t_64acada0e5adc6 65,67-84,86-93,96-100,102
+apps/docs/docs/widgets/dns-hole-summary/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 54-55
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2,9-16,18,24-29,31,33,41-53,62
+  s_909ca8cf5b6e15::t_e3e4b3e41758fc 20
+packages/widgets/src/traefik/index.ts
+  s_909ca8cf5b6e15::t_7c2da3c0764378 8
+apps/docs/docs/widgets/vpn/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-15,25,33-39
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 40-41
+packages/widgets/src/paperless-ngx/component.tsx
+  s_909ca8cf5b6e15::t_e2ad76763d3f2d 73-79,104-106,113-114
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 117,151-155
+packages/widgets/src/speedtest-tracker/latest-result.tsx
+  s_909ca8cf5b6e15::t_a1a40a953b61b9 13,22-23
+packages/widgets/src/smart-home/entity-state/index.ts
+  s_909ca8cf5b6e15::t_64bbc49ef72b14 11-12
+apps/docs/docs/widgets/calendar/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,78
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-12,14-25,32-34,36-41,46-70,85
+  s_909ca8cf5b6e15::t_0280bbfc359573 79
+packages/widgets/src/umami/index.ts
+  s_909ca8cf5b6e15::t_0b1dda49960fd9 14-15
+  s_909ca8cf5b6e15::t_7c2da3c0764378 11
+packages/integrations/src/index.ts
+  s_909ca8cf5b6e15::t_e871db6baa2201 65
+packages/widgets/src/calendar/calendar-events.ts
+  s_909ca8cf5b6e15::t_3309e7737d2a14 52,55,60,68,76
+  s_909ca8cf5b6e15::t_31a39f9e0a969f 1-51,53-54,56-59,61-67,69-75,77
+apps/docs/docs/widgets/uptime-kuma/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-14,16,22-29,38
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 30-31
+packages/widgets/src/bookmarks/index.tsx
+  s_909ca8cf5b6e15::t_e01a58447c3436 14
+packages/request-handler/src/timetable.ts
+  s_909ca8cf5b6e15::t_437f398304edbe 7,35-37,70,74-75,108,112-116,159
+  s_909ca8cf5b6e15::t_d28e0f2d190d02 60
+  s_909ca8cf5b6e15::t_02aea69196aa37 160
+packages/api/src/router/widgets/calendar.ts
+  s_909ca8cf5b6e15::t_a6e2cc3ffa0845 8,30
+  s_909ca8cf5b6e15::t_9202769abbe26d 31-33,35-42
+packages/widgets/src/media-missing/tabs.ts
+  s_909ca8cf5b6e15::t_c5d008bb8dddb2 1-13
+packages/widgets/src/custom-api/component.tsx
+  s_909ca8cf5b6e15::t_5875804136bddd 17-18,22,79,87-88,98,106,129
+apps/nextjs/src/components/board/items/actions/empty-position.ts
+  s_909ca8cf5b6e15::t_bdf6ebcdd0d6b7 10
+packages/widgets/src/anchor-note/index.ts
+  s_909ca8cf5b6e15::t_0f91619288c013 9-10
+packages/widgets/src/health-monitoring/cluster/cluster-health.tsx
+  s_909ca8cf5b6e15::t_36e56abb3c53a7 63
+  s_909ca8cf5b6e15::t_7e9c15e3fdf75b 1,46-47,94
+  s_909ca8cf5b6e15::t_0c5c1bd909b9b5 12,44-45,89-93,95
+  s_909ca8cf5b6e15::t_39dd0eabfac69c 38,67,69
+packages/widgets/src/tracearr/bitrate.spec.ts
+  s_909ca8cf5b6e15::t_ac09547aacb0e1 1-14,16-18
+  s_909ca8cf5b6e15::t_282d5972933929 15
+packages/widgets/src/indexer-manager/index.ts
+  s_909ca8cf5b6e15::t_95d67c8cb2f74f 1,11-15,20-25
+  s_909ca8cf5b6e15::t_e01a58447c3436 10
+  s_909ca8cf5b6e15::t_37a2b9a6d28db0 16-19
+packages/widgets/src/media-transcoding/panels/statistics.panel.tsx
+  s_909ca8cf5b6e15::t_3cffb1040fc007 74,76
+apps/docs/docs/widgets/beszel-alerts/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 36-37
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-14,16-18,28-35,44
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_909ca8cf5b6e15::t_a812b3316c3604 28-29,155,158,160-161,173,188,197,199,432
+  s_909ca8cf5b6e15::t_6e6603b13da31c 170-172,185,187,351,376,400,402
+  s_909ca8cf5b6e15::t_ca2ed33bdc94ac 186
+  s_7b8a552cf9f1f8::t_782d83425bbb27 17
+apps/docs/docs/widgets/timetable/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,28
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 24-25
+  s_909ca8cf5b6e15::t_e904f8ec748421 29
+apps/docs/docs/widgets/tracearr/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 39
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-14,16,22-27,31-32,47-53,56
+  s_909ca8cf5b6e15::t_ef7b3104917be7 40
+packages/widgets/src/speedtest-tracker/averages.tsx
+  s_909ca8cf5b6e15::t_a1a40a953b61b9 13,21
+packages/widgets/src/health-monitoring/integration-selection.ts
+  s_909ca8cf5b6e15::t_3efbcb0e2d5d74 1-8,10-12
+  s_909ca8cf5b6e15::t_d1bb844317c972 9
+apps/docs/docs/widgets/system-resources/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,70
+  s_909ca8cf5b6e15::t_d33928034d3d66 71
+packages/widgets/src/firewall/component.tsx
+  s_909ca8cf5b6e15::t_5b6b185ca5c9bf 23,124,148,165,185,190,197-208,224-229,232,234-235,239-243,251,257,262-267
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 4-17
+  s_909ca8cf5b6e15::t_83bbc77bd8afc0 22,27,29,36-45,48,67-75,83-90,92-95,97-123,125-129,134-147,151-164,166-184,186-189,191-194,196,209,211-222,233,237-238,244-250,252-256,258-261,268-277,279-333
+  s_a570dbe25d2998::t_840a70b4a582b4 149-150,236
+packages/widgets/src/media-releases/component.tsx
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 4-17,48-53,89-92
+  s_909ca8cf5b6e15::t_225388be770ee4 33-38,43-44,46-47,54-55,62,78,88,93,101-110,112,131-133,178,182-186,189,191,202
+apps/docs/docs/widgets/immich-server-stats/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 33-34
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-14,16,20,26-32,42
+packages/api/src/router/widgets/media-organizer.ts
+  s_909ca8cf5b6e15::t_8b1fdef42f9019 44
+  s_909ca8cf5b6e15::t_8aba366752f6aa 7,22-24,29,31,33-43,45
+packages/widgets/src/_inputs/widget-dynamic-select-input.tsx
+  s_909ca8cf5b6e15::t_437f398304edbe 37
+  s_909ca8cf5b6e15::t_69555db7969b4a 20-26,38
+packages/widgets/src/system-resources/history.spec.ts
+  s_909ca8cf5b6e15::t_c989de3f76d49f 1-2,4-19,28-29
+  s_909ca8cf5b6e15::t_eef8569d509e45 3,20-27
+packages/widgets/src/weather/component.tsx
+  s_909ca8cf5b6e15::t_e03e4f7dc483a0 18-24,43-48,50,60,141-163,168-173,205,210-215,219,236-240,272-273,278-289
+PRODUCT.md
+  s_909ca8cf5b6e15::t_de9391b94e40c2 1-8,10-12,14-16,18-20,24-27,36-38
+packages/integrations/src/overseerr/overseerr-integration.spec.ts
+  s_909ca8cf5b6e15::t_5683f0a41bd0c6 1-27,29-30
+  s_909ca8cf5b6e15::t_c73d3d98449e2b 28
+packages/widgets/src/stocks/index.ts
+  s_909ca8cf5b6e15::t_64bbc49ef72b14 16
+packages/request-handler/src/timetable.spec.ts
+  s_909ca8cf5b6e15::t_4976200aea25ae 36-40
+  s_909ca8cf5b6e15::t_d28e0f2d190d02 3,5,15-23,79
+  s_909ca8cf5b6e15::t_8f51243fd3fc28 1-2,4,6-14,24-35,41-78
+packages/widgets/src/bookmarks/component.tsx
+  s_909ca8cf5b6e15::t_3682b79d37596c 3,15,51-60,72,156-226,330,377
+  s_909ca8cf5b6e15::t_36e56abb3c53a7 18-19
+packages/widgets/src/definition.spec.ts
+  s_909ca8cf5b6e15::t_6d9da75148003d 1-14,16-19
+  s_909ca8cf5b6e15::t_d1bb844317c972 15
+apps/docs/docs/widgets/network-controller-status/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-17,19,25-26,33-39,48
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 40-41
+apps/docs/docs/widgets/docker-containers/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,7-15,17,27,33-39,46
+packages/api/src/router/widgets/timetable.ts
+  s_909ca8cf5b6e15::t_660e5429fa0f71 28,40
+  s_909ca8cf5b6e15::t_bb8ee7983d2760 73,85
+  s_909ca8cf5b6e15::t_818b5aecc6c21e 74-75,86-87
+  s_909ca8cf5b6e15::t_69f0bfa08ca76f 31-39
+  s_909ca8cf5b6e15::t_437f398304edbe 1,5-8,13,16,18,25-27,29-30,41-53,55-62,67,72,80-81,84
+  s_909ca8cf5b6e15::t_6a1eaf5a81e7c2 2,54
+  s_909ca8cf5b6e15::t_69555db7969b4a 19-23,68
+  s_909ca8cf5b6e15::t_c8e7ab96aa4683 24
+apps/docs/docs/widgets/network-controller-summary/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 38-39
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-17,19,25,31-37
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+packages/widgets/src/coolify/single-instance-layout.tsx
+  s_909ca8cf5b6e15::t_0b495d7042a770 3,22,25,35-40,67-73
+apps/docs/docs/widgets/app/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 30-31
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-12,14,21-23,25,37
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+apps/docs/docs/widgets/beszel-system-grid/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-14,16-18,30-37,46
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 38-39
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+packages/widgets/src/system-disks/display.spec.ts
+  s_909ca8cf5b6e15::t_4766c7ef8a0cc1 1-11,13-14
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 12
+packages/widgets/src/dns-hole/summary/component.tsx
+  s_909ca8cf5b6e15::t_013fca7bb5c520 50
+  s_909ca8cf5b6e15::t_7552cc0fa31ac9 34-38,49,69-77,79-81,83
+  s_909ca8cf5b6e15::t_17578c105ece94 46
+  s_909ca8cf5b6e15::t_c0431029b8ba56 78
+  s_909ca8cf5b6e15::t_beb10b3522c3ba 5-17,51-68
+apps/docs/docs/widgets/media-missing/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,63
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-17,23-25,35-44,48-49,51
+  s_909ca8cf5b6e15::t_78ed82c5376cf4 64
+packages/widgets/src/network-controller/network-status/variants/wired-variant.tsx
+  s_909ca8cf5b6e15::t_a0cb01c8cdcaf7 20,26-28
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 8-16
+packages/widgets/src/coolify/index.ts
+  s_909ca8cf5b6e15::t_e01a58447c3436 8
+packages/request-handler/src/vpn.ts
+  s_909ca8cf5b6e15::t_b11ccdf718644d 8,13-14
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_909ca8cf5b6e15::t_a812b3316c3604 9,60,62,121-122
+apps/docs/docs/widgets/dns-hole-controls/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 55-56
+  s_909ca8cf5b6e15::t_e3e4b3e41758fc 23,51-54
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2,9-19,21,27-28,35-47,63
+packages/widgets/src/beszel-system-grid/component.tsx
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 423-425
+  s_909ca8cf5b6e15::t_be168aa170f61a 333-335,367-371,382,422,428-430,433,443
+apps/docs/docs/widgets/media-transcoding/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-17,19,21,26-28,38-44,53
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 45-46
+packages/integrations/src/traefik/traefik-bounds.spec.ts
+  s_909ca8cf5b6e15::t_03463ee6423c94 1
+  s_909ca8cf5b6e15::t_47398c73217f88 2-12
+packages/widgets/src/beszel-system-table/component.tsx
+  s_909ca8cf5b6e15::t_613a10a362a2ac 126,263,275,287,307,319,341,357,369,380,392,404,447,470
+packages/integrations/src/traefik/traefik-bounds.ts
+  s_909ca8cf5b6e15::t_6ca5fdfdba225b 3-4,11
+  s_909ca8cf5b6e15::t_47398c73217f88 5-10,12
+  s_909ca8cf5b6e15::t_366ca62f567178 1-2
+packages/widgets/src/firewall/firewall-version.tsx
+  s_909ca8cf5b6e15::t_6322f141a1cda8 4,22-23,25-44,50
+apps/docs/docs/widgets/archive-team-warrior/index.ts
+  s_909ca8cf5b6e15::t_571516494b2790 1-19
+packages/widgets/src/tracearr/bitrate.ts
+  s_909ca8cf5b6e15::t_ac09547aacb0e1 1-20
+packages/integrations/src/overseerr/overseerr-integration.ts
+  s_909ca8cf5b6e15::t_5683f0a41bd0c6 3,262,268-269,275,281-282
+packages/widgets/src/immich/album-carousel/index.ts
+  s_909ca8cf5b6e15::t_670893ea57ff0b 27,34,41
+  s_909ca8cf5b6e15::t_46caaa61870185 23,26,28-33,35-39,43
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 25,40,42,44-45
+  s_909ca8cf5b6e15::t_cf3f49d2985566 1,18-22,24,46-47
+  s_909ca8cf5b6e15::t_0b1dda49960fd9 17
+apps/docs/docs/widgets/system-disks/index.ts
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 22-26
+packages/boards/src/updater.ts
+  s_909ca8cf5b6e15::t_7a8a030061e443 61-62,64,66,72
+  s_909ca8cf5b6e15::t_96fcefac004337 8-10,17,20,30-36,45-60,63,65,67-71,73-77
+  s_909ca8cf5b6e15::t_c544218744fff0 19
+  s_909ca8cf5b6e15::t_48964a023b1464 18
+  s_909ca8cf5b6e15::t_628dd70d5e177e 78
+packages/api/src/router/test/widgets/timetable.spec.ts
+  s_909ca8cf5b6e15::t_aafb5d81cb8ccc 2-53,55-81,92-104,106-108,112-114
+  s_909ca8cf5b6e15::t_2e2da96ee0fa53 1,54
+  s_909ca8cf5b6e15::t_69f0bfa08ca76f 82-91,105,109-111
+apps/nextjs/src/components/board/items/item-select-modal.module.css
+  s_909ca8cf5b6e15::t_5229fff6909c1f 4,7,8-9,12-16,18-20
+apps/docs/docs/widgets/coolify/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-16,22-28,42-44,46
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 29-30
+packages/widgets/src/speedtest-tracker/component.tsx
+  s_909ca8cf5b6e15::t_a1a40a953b61b9 3-4,12,16-22,25,28,32-34,41-55,59-75,80-81
+  s_909ca8cf5b6e15::t_a2b637a2fc9b3e 56-58
+packages/widgets/src/ups/component.tsx
+  s_909ca8cf5b6e15::t_54bb2e9558e148 3-15,153,160
+  s_909ca8cf5b6e15::t_4c1d7687dc06cb 267-276
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 48-56,73-77,92-99,105-107,109-111
+  s_909ca8cf5b6e15::t_37f663f509dff7 37-43,63-64,67,88-91,100,104,108,112,117-124,129,133,265-266,277-278
+packages/widgets/src/umami/component.tsx
+  s_909ca8cf5b6e15::t_dcce7bd33248b0 10-15,31-32
+packages/api/src/router/widgets/vpn.ts
+  s_909ca8cf5b6e15::t_03463ee6423c94 23
+  s_909ca8cf5b6e15::t_24cacdb9bee2f6 12-22,24-37,39-40
+  s_909ca8cf5b6e15::t_8b1fdef42f9019 38
+apps/docs/docs/widgets/weather/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 28
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-12,14,20-21,35,41
+  s_909ca8cf5b6e15::t_fd554a66749a92 29
+packages/request-handler/src/smart-home-entity-state.spec.ts
+  s_909ca8cf5b6e15::t_4e63f2e2455ba3 1-24
+packages/widgets/src/smart-home/entity-state/component.tsx
+  s_909ca8cf5b6e15::t_e871db6baa2201 8,19-20,32,35,39-42,49,57,74,77,79,88,96,102,104-106,109,112-114,116,118-120,124,128-131,137
+  s_909ca8cf5b6e15::t_17578c105ece94 90
+  s_909ca8cf5b6e15::t_30ae403fca8040 4,10,22,80-84,91,115,117,121-123,125-127,132-136
+  s_909ca8cf5b6e15::t_c859b6f3d5e9e6 31,36
+packages/widgets/src/custom-api/index.ts
+  s_909ca8cf5b6e15::t_273171fd412869 14
+  s_909ca8cf5b6e15::t_e01a58447c3436 9
+  s_909ca8cf5b6e15::t_6ce5c5dfd38540 1,11-13,15,18-24
+  s_909ca8cf5b6e15::t_a6e302a41bcb3b 10,16-17
+apps/docs/docs/widgets/beszel-system-stats/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,37
+  s_909ca8cf5b6e15::t_fa1ea9c9d19385 38
+packages/integrations/src/interfaces/smart-home/smart-home-types.ts
+  s_909ca8cf5b6e15::t_e871db6baa2201 1
+packages/widgets/src/network-controller/network-status/component.tsx
+  s_909ca8cf5b6e15::t_a0cb01c8cdcaf7 4,23,30-34,37-49
+apps/docs/docs/widgets/paperless-ngx/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 30-31
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-14,16,22-29,38
+apps/docs/docs/widgets/notifications/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-12,14-21,27,34
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,37
+  s_909ca8cf5b6e15::t_b9895d967441a2 38
+packages/widgets/src/ups/index.ts
+  s_909ca8cf5b6e15::t_7c2da3c0764378 10
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_909ca8cf5b6e15::t_5582c47c8c4f1d 123,227,230-235
+  s_909ca8cf5b6e15::t_f2d3d85a956818 250
+  s_909ca8cf5b6e15::t_7552cc0fa31ac9 47-48,75,99,101,116-117,120-122,124-130,148-149,169,185-186,217-219,225-226,228-229,257-259,271-273,279,283,370-371
+  s_909ca8cf5b6e15::t_415348801b3071 61-65,68-72,236-237,242,343,353,383
+packages/api/src/router/widgets/smart-home.ts
+  s_909ca8cf5b6e15::t_17578c105ece94 62-64
+  s_909ca8cf5b6e15::t_c859b6f3d5e9e6 32-46,65,83
+  s_909ca8cf5b6e15::t_e871db6baa2201 2,79-82
+  s_909ca8cf5b6e15::t_4e63f2e2455ba3 6-9,47
+packages/widgets/src/iframe/component.tsx
+  s_909ca8cf5b6e15::t_e03e4f7dc483a0 3,12,24-25,27-34,47-48,54,89,104,140-147
+  s_909ca8cf5b6e15::t_13fc2e7d75fbab 26,35
+  s_909ca8cf5b6e15::t_beb10b3522c3ba 36-46
+  s_909ca8cf5b6e15::t_12e202e98dcaa8 94-99
+  s_909ca8cf5b6e15::t_2928cc47fab0c1 130-132,139
+packages/widgets/src/bazarr/index.ts
+  s_909ca8cf5b6e15::t_e01a58447c3436 8,11
+packages/widgets/src/media-requests/stats/component.tsx
+  s_909ca8cf5b6e15::t_c859b6f3d5e9e6 93
+  s_909ca8cf5b6e15::t_4623923c918632 3,37-38,94,117,141-142,185-195
+  s_909ca8cf5b6e15::t_beb10b3522c3ba 95-98,143-153,155-180,183-184
+  s_909ca8cf5b6e15::t_a4144684276bf0 154
+packages/api/src/settle-integrations.ts
+  s_909ca8cf5b6e15::t_8b1fdef42f9019 14,51
+  s_909ca8cf5b6e15::t_24cacdb9bee2f6 41-42,49-50,52
+packages/request-handler/src/timetable-url.ts
+  s_909ca8cf5b6e15::t_437f398304edbe 5-7,20-24,26
+  s_909ca8cf5b6e15::t_6ca5fdfdba225b 3-4,25
+  s_909ca8cf5b6e15::t_eaae14844953f0 8-19
+  s_909ca8cf5b6e15::t_366ca62f567178 1-2
+apps/docs/docs/widgets/media-request-list/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,50
+  s_909ca8cf5b6e15::t_86a98973fc2241 51
+packages/widgets/src/beszel-system-stats/selection.spec.ts
+  s_909ca8cf5b6e15::t_1762e63f61dd80 1-19
+apps/docs/docs/widgets/anchor-note/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 42
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-14,16,22,28-34
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_792c8d9f62d4f7 43
+apps/docs/docs/widgets/indexer-manager/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-13,15,19-21,23,30-36,50
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 42
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_1bf85e8f91d376 43
+packages/widgets/src/timetable/component.tsx
+  s_909ca8cf5b6e15::t_437f398304edbe 14,23-29,36,44
+  s_909ca8cf5b6e15::t_bad280aaae2c95 1,37-38,46,50-51,53,55-69,80-81,113,115
+  s_909ca8cf5b6e15::t_660e5429fa0f71 41
+  s_909ca8cf5b6e15::t_7c58574c8e2b36 82-99,102-112
+  s_909ca8cf5b6e15::t_b3879299c64d43 71-77,79
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 10-13,15,22,30
+packages/widgets/src/media-requests/list/component.tsx
+  s_909ca8cf5b6e15::t_c859b6f3d5e9e6 72
+  s_909ca8cf5b6e15::t_4623923c918632 21,39-40,42-46,73-74,105-106,110,167-171,206-210,225,228,239,248,255-256,270-271
+  s_909ca8cf5b6e15::t_beb10b3522c3ba 230-234
+packages/integrations/src/traefik/traefik-integration.spec.ts
+  s_909ca8cf5b6e15::t_7f04424252488d 1-43
+packages/common/src/server.ts
+  s_909ca8cf5b6e15::t_6ca5fdfdba225b 5
+packages/widgets/src/media-server/component.tsx
+  s_909ca8cf5b6e15::t_397a289d4e24db 297,299,302
+  s_909ca8cf5b6e15::t_2928cc47fab0c1 31,278-280
+  s_909ca8cf5b6e15::t_a516cf547b4e28 70-77,86,189,191,202,204,210,239,271-277,295-296,298,300-301,303,314-315
+  s_909ca8cf5b6e15::t_beb10b3522c3ba 90-91,136-140,142-144,150-151,154,170-179,318-322,324-327,338,353-354
+  s_909ca8cf5b6e15::t_e0cab070bea16d 92-94,116-118,134-135
+  s_909ca8cf5b6e15::t_013fca7bb5c520 95-97,99-100,102-103,105-115
+apps/docs/docs/widgets/smart-home-entity-state/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 49
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-17,19,22,27-29,37-43,56,62,69,73
+  s_909ca8cf5b6e15::t_03bb3ce2a1019a 50
+packages/api/src/router/test/widgets/patchmon.spec.ts
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 104
+packages/widgets/src/paperless-ngx/index.ts
+  s_909ca8cf5b6e15::t_7c2da3c0764378 8
+  s_909ca8cf5b6e15::t_0b1dda49960fd9 12
+packages/widgets/src/options.ts
+  s_909ca8cf5b6e15::t_437f398304edbe 59
+  s_909ca8cf5b6e15::t_69555db7969b4a 60
+packages/widgets/src/network-controller/summary/component.tsx
+  s_909ca8cf5b6e15::t_a0cb01c8cdcaf7 3,21-22,30-31,34-80,89-90
+packages/widgets/src/health-monitoring/component.tsx
+  s_909ca8cf5b6e15::t_39dd0eabfac69c 41-46,48,50-51
+  s_909ca8cf5b6e15::t_3efbcb0e2d5d74 3,12,21,23,27-35,39-40,47,49,66,68
+  s_909ca8cf5b6e15::t_c6585ac0c3a942 36-38
+packages/widgets/src/media-missing/component.tsx
+  s_909ca8cf5b6e15::t_c5d008bb8dddb2 4,31-32,48-53,149-152
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 5-20,66-67,70,80,82-85,124-126,135-137,199-206,273-291
+  s_909ca8cf5b6e15::t_8aba366752f6aa 34-40,42-43,72-75,77-78,103-123,127-134,138-145,156
+  s_7b8a552cf9f1f8::t_4dcae2f76b384b 146
+packages/widgets/src/system-disks/component.tsx
+  s_909ca8cf5b6e15::t_bfed9e5199ebf7 189
+  s_909ca8cf5b6e15::t_4766c7ef8a0cc1 13,41-50,58-60,70-72,102,108,114-121,126-130,142,153-158,162-164,170-185,188,192,199-201,204-205
+  s_909ca8cf5b6e15::t_64acada0e5adc6 4
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 18-21,132-133,165-169,190,203
+  s_909ca8cf5b6e15::t_2675267a9e1520 131
+packages/widgets/src/coolify/component.tsx
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 13-18,29-36,54-62
+  s_909ca8cf5b6e15::t_0b495d7042a770 3,43,46,49,67,75,78
+packages/widgets/src/bazarr/component.tsx
+  s_909ca8cf5b6e15::t_c67e8b4bfb5590 62,65-66,101-108,111
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 39-45
+packages/api/src/router/widgets/media-server.ts
+  s_909ca8cf5b6e15::t_a516cf547b4e28 30-35
+packages/api/src/router/widgets/custom-api-security.ts
+  s_909ca8cf5b6e15::t_04b5d6af2df871 3-19,21
+  s_909ca8cf5b6e15::t_6ca5fdfdba225b 1-2,20
+packages/api/src/router/widgets/__tests__/custom-api-security.spec.ts
+  s_909ca8cf5b6e15::t_04b5d6af2df871 1-18
+apps/docs/docs/widgets/video/index.tsx
+  s_909ca8cf5b6e15::t_571516494b2790 8
+packages/widgets/src/notebook/notebook.tsx
+  s_909ca8cf5b6e15::t_17578c105ece94 291-295
+  s_909ca8cf5b6e15::t_c859b6f3d5e9e6 397
+  s_909ca8cf5b6e15::t_beb10b3522c3ba 273-290,298
+  s_909ca8cf5b6e15::t_a574a36b449f86 169-180,184,188
+  s_909ca8cf5b6e15::t_8bd569bf620c3e 18,94-101,110,112-121,137-150
+  s_909ca8cf5b6e15::t_fefb9db6737f75 102-109,111,129-136,160-168,181-183,185-187,189-190,245-246,248,301-304,306-311,338-351,361-363,365,373,380,407,535-537,550-551,553-555,569
+  s_909ca8cf5b6e15::t_2928cc47fab0c1 16
+  s_909ca8cf5b6e15::t_6101df5df1aa2e 4,368-372
+  s_909ca8cf5b6e15::t_107037bda1f8f8 267,538-549,552
+  s_909ca8cf5b6e15::t_58cdb3142e1c89 128
+packages/widgets/src/_inputs/common.tsx
+  s_909ca8cf5b6e15::t_69555db7969b4a 12
+apps/docs/docs/widgets/audio-stats/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,41
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_1feb762016dc34 42
+packages/integrations/src/traefik/traefik-integration.ts
+  s_909ca8cf5b6e15::t_47398c73217f88 7,39,110-125,129-131,159,165,211
+  s_909ca8cf5b6e15::t_98612eed311e60 12,29-30,67-98,126,132-133,143-154
+  s_909ca8cf5b6e15::t_bd24205e8e9896 155-156
+packages/widgets/src/uptime-kuma/aggregate.ts
+  s_909ca8cf5b6e15::t_79fa69414346d7 1-30
+packages/widgets/src/app/index.ts
+  s_909ca8cf5b6e15::t_d1bb844317c972 18
+packages/widgets/src/archive-team-warrior/component.tsx
+  s_909ca8cf5b6e15::t_bd20a5991a7fc3 3,15-17,25-33,39-41,45-47,57,71,79,92-95,97-98,100-114,117-123
+  s_909ca8cf5b6e15::t_ee63f7a08873dc 8,49,53-54,66-67,80-83,88-89,96,99,115-116,141-170
+  s_909ca8cf5b6e15::t_0f87075c0c50f3 124
+packages/widgets/src/rssFeed/component.tsx
+  s_909ca8cf5b6e15::t_b769b8b5b712fa 41,110,113
+  s_909ca8cf5b6e15::t_a0e31a6ee55942 20,30-32,35-36,46,52,54-61,64-65,73-76,79-82,87,92-95,100-106,117-133
+  s_909ca8cf5b6e15::t_a6c04e62100076 44,107-109,111-112,114-116
+  s_909ca8cf5b6e15::t_353ff2e16ca21d 96-99
+  s_909ca8cf5b6e15::t_64acada0e5adc6 3
+apps/nextjs/src/components/board/advanced-focus/escape.spec.ts
+  s_909ca8cf5b6e15::t_3c2ea70df174e1 1-25,37-54
+  s_909ca8cf5b6e15::t_2bdb94ff55818c 26-36
+apps/docs/docs/widgets/releases/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 8,38
+  s_909ca8cf5b6e15::t_3ce8901442d172 39
+apps/docs/docs/widgets/iframe/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 31
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-12,14,23-24,53,60,72,81,83,90,99,104
+  s_909ca8cf5b6e15::t_b70a54be8db38c 32
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_909ca8cf5b6e15::t_0cd08fa288394f 1,22,27-28,31-40,52,70-80,196-197
+  s_909ca8cf5b6e15::t_21d2a0a499b70f 53-56,65-69,81-108,111-121,123-130,132,135-144,146,148-152,154-155,157-195
+  s_909ca8cf5b6e15::t_bacf0166049cb3 57-63
+packages/widgets/src/stocks/component.tsx
+  s_909ca8cf5b6e15::t_beb10b3522c3ba 57
+  s_909ca8cf5b6e15::t_e03e4f7dc483a0 22,26-46,54-56,58,67,84,92,95,97-100,104
+apps/nextjs/src/components/board/items/item-actions.tsx
+  s_909ca8cf5b6e15::t_f64044121f707c 6,38
+  s_909ca8cf5b6e15::t_bdf6ebcdd0d6b7 39-43
+apps/docs/docs/widgets/clock/index.mdx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-12,14,20-22,24-27,37
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 30
+packages/widgets/src/immich/server-stats/component.tsx
+  s_909ca8cf5b6e15::t_449a51d823879c 4,18-19,25-28,32-33,58-90
+packages/widgets/src/speedtest-tracker/helpers.spec.ts
+  s_909ca8cf5b6e15::t_5587ed05caf6b8 1-28
+packages/widgets/src/smart-home/execute-automation/component.tsx
+  s_909ca8cf5b6e15::t_1725bb3d5aa266 4,85,102-106,117-135
+  s_909ca8cf5b6e15::t_e871db6baa2201 9,20-21,23-24,39,50,69,72,75,80-84,116,136
+  s_909ca8cf5b6e15::t_415348801b3071 25,31,33,42-49
+  s_909ca8cf5b6e15::t_17578c105ece94 99-101,107-109
+packages/widgets/src/indexer-manager/component.tsx
+  s_909ca8cf5b6e15::t_95d67c8cb2f74f 3-4,20-22,32-40,42-47,60-71,79,97,99-112,130-134,163
+  s_909ca8cf5b6e15::t_36e56abb3c53a7 41
+packages/widgets/src/tracearr/component.tsx
+  s_909ca8cf5b6e15::t_158a2768c19902 3,17-23,28-36,43-44,47,119-128,132-142,147-149
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 129-131
+  s_909ca8cf5b6e15::t_ac09547aacb0e1 11,52,73,105-114
+packages/widgets/src/media-transcoding/index.ts
+  s_909ca8cf5b6e15::t_e01a58447c3436 14-15
+apps/docs/src/components/widgets/interactions.tsx
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 13-14,29-31
+  s_909ca8cf5b6e15::t_2c7683f726fe9e 20
+  s_909ca8cf5b6e15::t_7c615b5722895d 19
+  s_909ca8cf5b6e15::t_12e984baebd234 1-6,9-12,15-18,21-28,32-47
+  s_909ca8cf5b6e15::t_a45153e3758ea2 7-8
+packages/integrations/src/traefik/traefik-types.ts
+  s_909ca8cf5b6e15::t_98612eed311e60 34-41,45-46
+packages/widgets/src/speedtest-tracker/index.ts
+  s_909ca8cf5b6e15::t_7c2da3c0764378 8
+packages/widgets/src/speedtest-tracker/helpers.ts
+  s_909ca8cf5b6e15::t_5587ed05caf6b8 14-15,19,24,27,33,36,41,45-64
+  s_909ca8cf5b6e15::t_b68abe4ac5b3fb 16
+  s_909ca8cf5b6e15::t_202cf611f5b97a 65
+packages/widgets/src/docker/layout.spec.ts
+  s_909ca8cf5b6e15::t_61879c4b4f1c6f 1-37
+apps/docs/docs/widgets/immich-album-carousel/index.mdx
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-14,16,20,26-32,41
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 33-34
+packages/widgets/src/docker/component.tsx
+  s_909ca8cf5b6e15::t_36e56abb3c53a7 247
+  s_909ca8cf5b6e15::t_61879c4b4f1c6f 227-231,235,242
+apps/docs/docs/widgets/smart-home-execute-automation/index.mdx
+  s_909ca8cf5b6e15::t_69e68e88ddc4d0 52
+  s_909ca8cf5b6e15::t_4e39349f26fa5e 7
+  s_909ca8cf5b6e15::t_8cb37a2540cb9d 2-3,9-17,19,25-26,30-35,40-46,59
+  s_909ca8cf5b6e15::t_8ae026acca5b2b 53
+packages/integrations/src/patchmon/patchmon-types.ts
+  s_909ca8cf5b6e15::t_c375b9609fe782 55-57,85
+packages/integrations/src/plex/test/plex-integration.spec.ts
+  s_909ca8cf5b6e15::t_223cd4ff32e864 140
+packages/widgets/src/filter-storage-volumes.spec.ts
+  s_909ca8cf5b6e15::t_da9734e62e080f 3
+packages/widgets/src/filter-storage-volumes.ts
+  s_909ca8cf5b6e15::t_0f86c438f6588d 38
+packages/widgets/src/patchmon/os-distribution-section.tsx
+  s_909ca8cf5b6e15::t_82602a39f37ca5 12,67,103-108
+packages/widgets/src/patchmon/stat-colors.ts
+  s_909ca8cf5b6e15::t_e0565ca4372de0 16
+packages/widgets/src/patchmon/test/stat-colors.spec.ts
+  s_909ca8cf5b6e15::t_b6527e92a0a1c9 120-129
+packages/widgets/src/patchmon/test/threshold-validation.spec.ts
+  s_909ca8cf5b6e15::t_72a649416c63c3 26-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.19",
+  "base_commit_sha": "6f2cd7fc2b99388f77d4aa4e0eb388ca63dc9f2e",
+  "prompts": {},
+  "sessions": {
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a570dbe25d2998": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc64-228f-7723-a9d8-e1cd6d8945fa",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

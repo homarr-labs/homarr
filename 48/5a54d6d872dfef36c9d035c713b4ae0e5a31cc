@@ -1,0 +1,29 @@
+packages/db/migrations/postgresql/meta/_journal.json
+  s_093d61b162b9ca::t_327c7b1b50f81b 97
+packages/db/migrations/mysql/meta/_journal.json
+  s_093d61b162b9ca::t_327c7b1b50f81b 335
+packages/db/migrations/sqlite/meta/_journal.json
+  s_093d61b162b9ca::t_327c7b1b50f81b 321
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_093d61b162b9ca::t_51259774a647ab 5-6
+apps/docs/docs/management/api/index.mdx
+  s_093d61b162b9ca::t_51259774a647ab 4-6
+apps/docs/docs/advanced/keyboard-shortcuts/index.mdx
+  s_093d61b162b9ca::t_51259774a647ab 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "485a54d6d872dfef36c9d035c713b4ae0e5a31cc",
+  "prompts": {},
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
