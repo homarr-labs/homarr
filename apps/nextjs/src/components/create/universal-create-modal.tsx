@@ -173,6 +173,6 @@ export const UniversalCreateModal = createModal<UniversalCreateModalProps>(({ ac
     </Stack>
   );
 }).withOptions({
-  defaultTitle: "universalCreate.title",
+  defaultTitle: (t) => t("universalCreate.title"),
   size: "lg",
 });

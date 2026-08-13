@@ -15,12 +15,13 @@ export const nodesRouter = createTRPCRouter({
     .concat(kubernetesMiddleware())
     .input(kubernetesContextInput)
     .query(async ({ input }): Promise<KubernetesNode[]> => {
-      const { coreApi, metricsApi } = getKubernetesClient(input.contextId);
+      const client = getKubernetesClient(input.contextId);
+      const { coreApi } = client;
 
       try {
         const [nodes, nodeMetricsClient] = await Promise.all([
           coreApi.listNode(),
-          metricsApi.getNodeMetrics().catch(() => null),
+          client.getNodeMetricsAsync().catch(() => null),
         ]);
         const cpuResourceParser = new CpuResourceParser();
         const memoryResourceParser = new MemoryResourceParser();

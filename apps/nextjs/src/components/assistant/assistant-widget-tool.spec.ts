@@ -46,7 +46,7 @@ describe("getAssistantWidgetConfiguration", () => {
         boardName: "Home",
         kind: "audioStats",
         summary: "Show audio statistics",
-        integrationIds: ["navidrome-1", "audiobookshelf-1", "plex-1"],
+        integrationIds: ["navidrome-private", "navidrome-1", "audiobookshelf-1", "plex-1"],
       },
       settings,
       [

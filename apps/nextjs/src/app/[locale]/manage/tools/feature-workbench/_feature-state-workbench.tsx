@@ -17,6 +17,7 @@ import {
 } from "@mantine/core";
 import { IconAlertCircle, IconCircleCheck, IconPlugConnected, IconPlugConnectedX } from "@tabler/icons-react";
 
+import { useScopedI18n } from "@homarr/translation/client";
 import { CatalogItem } from "@homarr/ui";
 
 import { catalogInteractionFixtures, catalogStateFixtures, responseStateFixtures } from "./_feature-state-fixtures";
@@ -28,6 +29,7 @@ interface FeatureStateWorkbenchProps {
 }
 
 export function FeatureStateWorkbench({ responseResults }: FeatureStateWorkbenchProps) {
+  const t = useScopedI18n("featureWorkbench");
   const [catalogFixtureId, setCatalogFixtureId] = useState<CatalogFixtureId>("ready");
   const [interactionId, setInteractionId] = useState<CatalogInteractionId>("default");
   const [responseFixtureId, setResponseFixtureId] = useState<ResponseFixtureId>("loading");
@@ -38,6 +40,8 @@ export function FeatureStateWorkbench({ responseResults }: FeatureStateWorkbench
   const busy = interactionId === "loading";
   const disabled = interactionId === "disabled";
   const selected = interactionId === "selected";
+  const catalogLabel = t(`catalog.state.${catalogFixture.id}.label`);
+  const catalogStatus = busy ? t("catalog.loading") : t(`catalog.state.${catalogFixture.id}.status`);
 
   return (
     <Stack gap="xl" maw={960}>
@@ -45,34 +49,40 @@ export function FeatureStateWorkbench({ responseResults }: FeatureStateWorkbench
         <Stack gap="lg">
           <div>
             <Title id="catalog-workbench-title" order={2} size="h3">
-              Catalog item states
+              {t("catalog.title")}
             </Title>
             <Text c="dimmed" size="sm" maw={680}>
-              Compare the shared selection surface with stable service and interaction fixtures.
+              {t("catalog.description")}
             </Text>
           </div>
 
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
             <Stack gap="xs">
               <Text size="sm" fw={600} id="catalog-fixture-label">
-                Service state
+                {t("catalog.serviceState")}
               </Text>
               <SegmentedControl
                 aria-labelledby="catalog-fixture-label"
                 value={catalogFixtureId}
                 onChange={(value) => setCatalogFixtureId(value as CatalogFixtureId)}
-                data={catalogStateFixtures.map((fixture) => ({ value: fixture.id, label: fixture.status }))}
+                data={catalogStateFixtures.map((fixture) => ({
+                  value: fixture.id,
+                  label: t(`catalog.state.${fixture.id}.status`),
+                }))}
               />
             </Stack>
             <Stack gap="xs">
               <Text size="sm" fw={600} id="catalog-interaction-label">
-                Interaction state
+                {t("catalog.interactionState")}
               </Text>
               <SegmentedControl
                 aria-labelledby="catalog-interaction-label"
                 value={interactionId}
                 onChange={(value) => setInteractionId(value as CatalogInteractionId)}
-                data={catalogInteractionFixtures.map((fixture) => ({ value: fixture.id, label: fixture.label }))}
+                data={catalogInteractionFixtures.map((id) => ({
+                  value: id,
+                  label: t(`catalog.interaction.${id}`),
+                }))}
               />
             </Stack>
           </SimpleGrid>
@@ -80,15 +90,15 @@ export function FeatureStateWorkbench({ responseResults }: FeatureStateWorkbench
           <SimpleGrid cols={{ base: 1, xs: 2 }} spacing="md">
             <CatalogItem
               height={140}
-              label={catalogFixture.label}
-              status={busy ? "Loading" : catalogFixture.status}
+              label={catalogLabel}
+              status={catalogStatus}
               selected={selected}
               busy={busy}
               disabled={disabled}
               onSelect={() => setInteractionId(selected ? "default" : "selected")}
             >
               {busy ? (
-                <Stack gap="sm" aria-label="Loading catalog item">
+                <Stack gap="sm" aria-label={t("catalog.loadingAriaLabel")}>
                   <Skeleton height={24} width="65%" />
                   <Skeleton height={16} />
                   <Skeleton height={20} width="40%" />
@@ -105,15 +115,15 @@ export function FeatureStateWorkbench({ responseResults }: FeatureStateWorkbench
                     </ThemeIcon>
                     <Stack gap={2}>
                       <Text fw={600} size="sm">
-                        {catalogFixture.label}
+                        {catalogLabel}
                       </Text>
                       <Text size="xs" c="dimmed">
-                        {catalogFixture.description}
+                        {t(`catalog.state.${catalogFixture.id}.description`)}
                       </Text>
                     </Stack>
                   </Group>
                   <Badge color={catalogFixture.color} variant="light" size="sm" w="fit-content">
-                    {catalogFixture.status}
+                    {t(`catalog.state.${catalogFixture.id}.status`)}
                   </Badge>
                 </Stack>
               )}
@@ -121,13 +131,13 @@ export function FeatureStateWorkbench({ responseResults }: FeatureStateWorkbench
 
             <Stack gap="xs" justify="center">
               <Text size="sm" fw={600}>
-                Semantic output
+                {t("catalog.semanticOutput")}
               </Text>
               <Code
                 block
-              >{`aria-label="${catalogFixture.label}, ${busy ? "Loading" : catalogFixture.status}"\naria-pressed=${selected}\ndisabled=${busy || disabled}\naria-busy=${busy}`}</Code>
+              >{`aria-label="${catalogLabel}, ${catalogStatus}"\naria-pressed=${selected}\ndisabled=${busy || disabled}\naria-busy=${busy}`}</Code>
               <Text size="xs" c="dimmed">
-                Tab to the item to inspect its visible focus ring. Select it with Enter or Space.
+                {t("catalog.instructions")}
               </Text>
             </Stack>
           </SimpleGrid>
@@ -138,23 +148,25 @@ export function FeatureStateWorkbench({ responseResults }: FeatureStateWorkbench
         <Stack gap="lg">
           <div>
             <Title id="response-workbench-title" order={2} size="h3">
-              Integration response contract
+              {t("response.title")}
             </Title>
             <Text c="dimmed" size="sm" maw={680}>
-              Inspect waiting, accepted, and rejected response fixtures using the same parser contract as generated
-              integrations.
+              {t("response.description")}
             </Text>
           </div>
 
           <SegmentedControl
-            aria-label="Response fixture"
+            aria-label={t("response.fixtureLabel")}
             value={responseFixtureId}
             onChange={(value) => setResponseFixtureId(value as ResponseFixtureId)}
-            data={responseStateFixtures.map((fixture) => ({ value: fixture.id, label: fixture.label }))}
+            data={responseStateFixtures.map((fixture) => ({
+              value: fixture.id,
+              label: t(`response.state.${fixture.id}.label`),
+            }))}
           />
 
           {responseFixture.id === "loading" ? (
-            <Stack gap="sm" role="status" aria-label="Checking response">
+            <Stack component="output" gap="sm" aria-label={t("response.checking")}>
               <Group justify="space-between">
                 <Skeleton height={22} width={180} />
                 <Skeleton height={22} width={72} />
@@ -165,16 +177,14 @@ export function FeatureStateWorkbench({ responseResults }: FeatureStateWorkbench
             <Alert
               color={responseFixture.id === "success" ? "green" : "red"}
               icon={responseFixture.id === "success" ? <IconCircleCheck /> : <IconAlertCircle />}
-              title={responseFixture.title}
+              title={t(`response.state.${responseFixture.id}.title`)}
               role={responseFixture.id === "failure" ? "alert" : "status"}
             >
               <Stack gap="sm">
-                <Text size="sm">{responseFixture.description}</Text>
+                <Text size="sm">{t(`response.state.${responseFixture.id}.description`)}</Text>
                 <Code block>{JSON.stringify(responseFixture.payload, null, 2)}</Code>
                 <Badge color={responseResult?.passed ? "green" : "red"} variant="light" w="fit-content">
-                  {responseResult?.passed
-                    ? "Fixture contract passed"
-                    : (responseResult?.message ?? "Fixture contract failed")}
+                  {responseResult?.passed ? t("response.contractPassed") : t("response.contractFailed")}
                 </Badge>
               </Stack>
             </Alert>

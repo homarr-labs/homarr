@@ -1,4 +1,73 @@
 {
+  "featureWorkbench": {
+    "page": {
+      "title": "Native feature state workbench",
+      "description": "A development-only fixture surface for reviewing shared catalog and integration response states without live services."
+    },
+    "catalog": {
+      "title": "Catalog item states",
+      "description": "Compare the shared selection surface with stable service and interaction fixtures.",
+      "serviceState": "Service state",
+      "interactionState": "Interaction state",
+      "loading": "Loading",
+      "loadingAriaLabel": "Loading catalog item",
+      "semanticOutput": "Semantic output",
+      "instructions": "Tab to the item to inspect its visible focus ring. Select it with Enter or Space.",
+      "interaction": {
+        "default": "Default",
+        "selected": "Selected",
+        "loading": "Loading",
+        "disabled": "Disabled"
+      },
+      "state": {
+        "ready": {
+          "label": "Ready service",
+          "status": "Ready",
+          "description": "Configured and available to three widgets."
+        },
+        "needsSetup": {
+          "label": "Service needing setup",
+          "status": "Needs setup",
+          "description": "Credentials or a service URL are still required."
+        },
+        "noConnection": {
+          "label": "Standalone feature",
+          "status": "No connection required",
+          "description": "This feature works without a configured integration."
+        },
+        "error": {
+          "label": "Unreachable service",
+          "status": "Connection failed",
+          "description": "The saved connection could not be reached."
+        }
+      }
+    },
+    "response": {
+      "title": "Integration response contract",
+      "description": "Inspect waiting, accepted, and rejected response fixtures using the same parser contract as generated integrations.",
+      "fixtureLabel": "Response fixture",
+      "checking": "Checking response",
+      "contractPassed": "Fixture contract passed",
+      "contractFailed": "Fixture contract failed",
+      "state": {
+        "loading": {
+          "label": "Loading",
+          "title": "Checking response",
+          "description": "The parser is waiting for the integration response."
+        },
+        "success": {
+          "label": "Success",
+          "title": "Response accepted",
+          "description": "The upstream payload matched the integration contract."
+        },
+        "failure": {
+          "label": "Failure",
+          "title": "Response rejected",
+          "description": "The upstream payload failed schema validation and stays isolated from the widget."
+        }
+      }
+    }
+  },
   "init": {
     "studio": {
       "navigationLabel": "Onboarding sections",
@@ -241,6 +310,7 @@
   },
   "universalCreate": {
     "title": "Create",
+    "analyticsError": "Usage metrics could not be recorded. Your action was not affected.",
     "trigger": {
       "label": "Create something",
       "description": "Add content, connect a service, or create a board from one place."
@@ -2703,7 +2773,8 @@
       "notification": {
         "success": {
           "title": "Widget added",
-          "message": "{name} was added to this board."
+          "message": "{name} was added to this board.",
+          "relocatedMessage": "{name} was added to {destination} because the selected destination was unavailable."
         },
         "error": {
           "title": "Unable to add item",
@@ -7051,7 +7122,9 @@
       },
       "url": {
         "label": "Service address",
-        "manual": "Enter an address manually"
+        "inputLabel": "Service URL",
+        "manual": "Enter an address manually",
+        "invalid": "Enter a valid HTTP or HTTPS URL"
       },
       "reason": {
         "publishedAddress": "Published address reported by Docker",
@@ -7083,12 +7156,21 @@
       },
       "action": {
         "refresh": "Refresh",
+        "retry": "Try again",
         "dismiss": "Dismiss",
         "restoreDismissed": "Restore dismissed ({count})",
         "setupIntegration": "Set up integration",
         "createApp": "Create app",
         "reviewIntegration": "Review integration",
         "viewRepresentation": "View setup"
+      },
+      "loadError": {
+        "title": "Service setup could not be loaded",
+        "message": "Docker service information is unavailable. Try again without leaving this page."
+      },
+      "refreshError": {
+        "title": "Containers not refreshed",
+        "message": "Something went wrong while refreshing the containers"
       }
     },
     "table": {
@@ -7187,8 +7269,8 @@
         "label": "Remove",
         "confirm": "Click again to remove permanently",
         "confirmation": {
-          "title": "Remove {count} container(s)?",
-          "message": "This permanently removes {count} container(s): {names}"
+          "title": "{count, plural, one {Remove # container?} other {Remove # containers?}}",
+          "message": "{count, plural, one {This permanently removes # container: {names}} other {This permanently removes # containers: {names}}}"
         },
         "notification": {
           "success": {
@@ -7204,7 +7286,7 @@
       "result": {
         "failure": {
           "title": "Some container actions failed",
-          "message": "{failed} of {total} action(s) failed: {names}"
+          "message": "{total, plural, one {{failed} of # action failed: {names}} other {{failed} of # actions failed: {names}}}"
         }
       },
       "refresh": {
@@ -7239,13 +7321,18 @@
     },
     "error": {
       "internalServerError": "Failed to fetch Docker containers",
-      "endpointUnavailable": "{count} Docker endpoint(s) unavailable: {names}",
+      "endpointUnavailable": "{count, plural, one {# Docker endpoint unavailable: {names}} other {# Docker endpoints unavailable: {names}}}",
       "noColumns": "Select at least one column in the widget settings"
     }
   },
   "kubernetes": {
     "context": {
       "label": "Kubernetes context",
+      "loadError": {
+        "title": "Kubernetes contexts could not be loaded",
+        "message": "Context information is unavailable. Try again without leaving this page.",
+        "retry": "Try again"
+      },
       "status": {
         "available": "Available",
         "degraded": "Metrics unavailable",

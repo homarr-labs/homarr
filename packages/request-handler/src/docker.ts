@@ -41,7 +41,7 @@ const withDockerTimeoutAsync = async <T>(
   }
 };
 
-const isDemoMode = ["1", "yes", "t", "true"].includes((process.env.DEMO_MODE ?? "").toLowerCase());
+const isDemoMode = () => ["1", "yes", "t", "true"].includes((process.env.DEMO_MODE ?? "").toLowerCase());
 
 const port = (privatePort: number, publicPort: number, type: string): Port => ({
   IP: "0.0.0.0",
@@ -197,7 +197,7 @@ const mockContainers: {
 
 export const dockerContainersRequestHandler = createWidgetRequestHandler({
   async requestAsync() {
-    if (isDemoMode) {
+    if (isDemoMode()) {
       return {
         containers: mockContainers.map((container) => ({
           ...container,
@@ -228,7 +228,10 @@ const extractImage = (container: ContainerInfo) => extractContainerImageName(con
 export const hasDockerEndpointCapability = (
   endpointId: string,
   capability: "inventory" | "logs" | "lifecycle" | "remove",
-) => DockerSingleton.hasCapability(endpointId, capability);
+) =>
+  isDemoMode()
+    ? endpointId === "demo" && capability === "inventory"
+    : DockerSingleton.hasCapability(endpointId, capability);
 
 export const findDockerContainerAsync = async (
   { endpointId, id }: DockerContainerTarget,
@@ -302,6 +305,7 @@ export const streamContainerLogsAsync = async (
 
 export async function getContainersWithStatsAsync(timeoutMs = dockerWidgetEndpointTimeoutMs) {
   const dockerInstances = DockerSingleton.getInstances();
+  const initializationFailures = DockerSingleton.getInitializationFailures();
   const results = await Promise.allSettled(
     dockerInstances.map(async ({ instance, host, endpointId, endpointName }) => {
       const instanceContainers = await withDockerTimeoutAsync(
@@ -315,20 +319,32 @@ export async function getContainersWithStatsAsync(timeoutMs = dockerWidgetEndpoi
     }),
   );
 
-  const endpoints = results.map((result, index) => {
-    const dockerInstance = dockerInstances.at(index);
-    if (!dockerInstance) throw new Error("Docker endpoint result did not match a configured endpoint");
-    return {
-      id: dockerInstance.endpointId,
-      name: dockerInstance.endpointName,
-      status: result.status === "fulfilled" ? "available" : "unavailable",
-      kind: dockerInstance.descriptor.kind,
-      transport: dockerInstance.descriptor.transport.type,
-      capabilities: dockerInstance.descriptor.capabilities,
-      source: dockerInstance.descriptor.source,
-      scope: dockerInstance.descriptor.scope,
-    } satisfies DockerEndpointStatus;
-  });
+  const endpoints = [
+    ...results.map((result, index) => {
+      const dockerInstance = dockerInstances.at(index);
+      if (!dockerInstance) throw new Error("Docker endpoint result did not match a configured endpoint");
+      return {
+        id: dockerInstance.endpointId,
+        name: dockerInstance.endpointName,
+        status: result.status === "fulfilled" ? ("available" as const) : ("unavailable" as const),
+        kind: dockerInstance.descriptor.kind,
+        transport: dockerInstance.descriptor.transport.type,
+        capabilities: dockerInstance.descriptor.capabilities,
+        source: dockerInstance.descriptor.source,
+        scope: dockerInstance.descriptor.scope,
+      } satisfies DockerEndpointStatus;
+    }),
+    ...initializationFailures.map(({ descriptor }) => ({
+      id: descriptor.id,
+      name: descriptor.name,
+      status: "unavailable" as const,
+      kind: descriptor.kind,
+      transport: descriptor.transport.type,
+      capabilities: descriptor.capabilities,
+      source: descriptor.source,
+      scope: descriptor.scope,
+    })),
+  ] satisfies DockerEndpointStatus[];
 
   const containers = results.flatMap((result, index) => {
     if (result.status === "fulfilled") return result.value;
@@ -354,24 +370,35 @@ export async function getContainersWithStatsAsync(timeoutMs = dockerWidgetEndpoi
         })
       : [];
 
+  const degradedEndpointIds = new Set<string>();
   const containerStatsPromises = containers.map(async (container) => {
     const instance = DockerSingleton.findInstance(container.endpointId)?.instance;
     if (!instance) return null;
 
-    const stats = await withDockerTimeoutAsync(
-      async (signal) => {
-        const options = { stream: false as const, "one-shot": true, abortSignal: signal };
-        return await instance.getContainer(container.Id).stats(options);
-      },
-      `Timed out reading Docker container stats for ${container.Id}`,
-      timeoutMs,
-    ).catch(
-      () =>
-        ({
-          cpu_stats: { online_cpus: 0, cpu_usage: { total_usage: 0 }, system_cpu_usage: 0 },
-          memory_stats: { usage: 0 },
-        }) as ContainerStats,
-    );
+    let stats: ContainerStats;
+    try {
+      stats = await withDockerTimeoutAsync(
+        async (signal) => {
+          const options = { stream: false as const, "one-shot": true, abortSignal: signal };
+          return await instance.getContainer(container.Id).stats(options);
+        },
+        `Timed out reading Docker container stats for ${container.Id}`,
+        timeoutMs,
+      );
+    } catch (error) {
+      degradedEndpointIds.add(container.endpointId);
+      logger.warn(
+        new ErrorWithMetadata(
+          "Failed to read Docker container stats",
+          { endpointId: container.endpointId, containerId: container.Id, host: container.instance },
+          { cause: error },
+        ),
+      );
+      stats = {
+        cpu_stats: { online_cpus: 0, cpu_usage: { total_usage: 0 }, system_cpu_usage: 0 },
+        memory_stats: { usage: 0 },
+      } as ContainerStats;
+    }
 
     const cpuUsage = calculateCpuUsage(stats);
     const memoryUsage = calculateMemoryUsage(stats);
@@ -392,9 +419,14 @@ export async function getContainersWithStatsAsync(timeoutMs = dockerWidgetEndpoi
     };
   });
 
+  const resolvedContainers = (await Promise.all(containerStatsPromises)).filter((container) => container !== null);
   return {
-    containers: (await Promise.all(containerStatsPromises)).filter((container) => container !== null),
-    endpoints,
+    containers: resolvedContainers,
+    endpoints: endpoints.map((endpoint) =>
+      endpoint.status === "available" && degradedEndpointIds.has(endpoint.id)
+        ? { ...endpoint, status: "degraded" as const }
+        : endpoint,
+    ),
   };
 }
 

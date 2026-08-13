@@ -26,6 +26,11 @@ export const getDockerReconciliationAsync = async (db: Database) => {
     }),
     db.query.apps.findMany(),
   ]);
+  const normalizedIntegrations = integrations.map((integration) => ({
+    integration,
+    normalizedUrl: normalizeDockerServiceUrl(integration.url),
+  }));
+  const normalizedApps = apps.map((app) => ({ app, normalizedUrl: normalizeDockerServiceUrl(app.href) }));
   const containerNameCounts = new Map<string, number>();
   for (const container of data.containers) {
     const name = normalizeName(container.name);
@@ -44,13 +49,16 @@ export const getDockerReconciliationAsync = async (db: Database) => {
       urlCandidates.map(({ url }) => normalizeDockerServiceUrl(url)).filter((url) => url !== null),
     );
     const uniqueName = containerNameCounts.get(normalizeName(container.name)) === 1;
-    const sameKindIntegrations = match ? integrations.filter(({ kind }) => kind === match.kind) : [];
-    const exactIntegrationMatches = sameKindIntegrations.filter(({ url }) => {
-      const normalizedUrl = normalizeDockerServiceUrl(url);
-      return normalizedUrl ? candidateUrls.has(normalizedUrl) : false;
-    });
+    const sameKindIntegrations = match
+      ? normalizedIntegrations.filter(({ integration }) => integration.kind === match.kind)
+      : [];
+    const exactIntegrationMatches = sameKindIntegrations
+      .filter(({ normalizedUrl }) => normalizedUrl !== null && candidateUrls.has(normalizedUrl))
+      .map(({ integration }) => integration);
     const nameIntegrationMatches = uniqueName
-      ? sameKindIntegrations.filter(({ name }) => normalizeName(name) === normalizeName(container.name))
+      ? sameKindIntegrations
+          .filter(({ integration }) => normalizeName(integration.name) === normalizeName(container.name))
+          .map(({ integration }) => integration)
       : [];
     const exactIntegration = exactIntegrationMatches.length === 1 ? exactIntegrationMatches[0] : undefined;
     const nameIntegration =
@@ -58,10 +66,9 @@ export const getDockerReconciliationAsync = async (db: Database) => {
         ? nameIntegrationMatches[0]
         : undefined;
     const integration = exactIntegration ?? nameIntegration;
-    const exactAppMatches = apps.filter(({ href }) => {
-      const normalizedUrl = normalizeDockerServiceUrl(href);
-      return normalizedUrl ? candidateUrls.has(normalizedUrl) : false;
-    });
+    const exactAppMatches = normalizedApps
+      .filter(({ normalizedUrl }) => normalizedUrl !== null && candidateUrls.has(normalizedUrl))
+      .map(({ app }) => app);
     const nameAppMatches = uniqueName
       ? apps.filter(({ name }) => normalizeName(name) === normalizeName(container.name))
       : [];

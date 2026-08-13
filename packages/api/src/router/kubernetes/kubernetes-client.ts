@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import type { RequestContext, ResponseContext } from "@kubernetes/client-node";
-import { CoreV1Api, CustomObjectsApi, KubeConfig, Metrics, NetworkingV1Api, VersionApi } from "@kubernetes/client-node";
+import type { NodeMetricsList, RequestContext, ResponseContext } from "@kubernetes/client-node";
+import { CoreV1Api, CustomObjectsApi, KubeConfig, NetworkingV1Api, VersionApi } from "@kubernetes/client-node";
 import { of } from "@kubernetes/client-node/dist/gen/rxjsStub.js";
 
 import { env } from "../../env";
@@ -55,7 +55,6 @@ export class KubernetesClient {
   public kubeConfig: KubeConfig;
   public coreApi: CoreV1Api;
   public networkingApi: NetworkingV1Api;
-  public metricsApi: Metrics;
   public metricsProbeApi: CustomObjectsApi;
   public versionApi: VersionApi;
 
@@ -63,9 +62,20 @@ export class KubernetesClient {
     this.kubeConfig = kubeConfig;
     this.coreApi = kubeConfig.makeApiClient(CoreV1Api);
     this.networkingApi = kubeConfig.makeApiClient(NetworkingV1Api);
-    this.metricsApi = new Metrics(kubeConfig);
     this.metricsProbeApi = kubeConfig.makeApiClient(CustomObjectsApi);
     this.versionApi = kubeConfig.makeApiClient(VersionApi);
+  }
+
+  public async getNodeMetricsAsync(timeoutMs = kubernetesContextProbeTimeoutMs): Promise<NodeMetricsList> {
+    const result: unknown = await withKubernetesProbeTimeoutAsync(
+      async (signal) =>
+        await this.metricsProbeApi.listClusterCustomObject(
+          { group: "metrics.k8s.io", version: "v1beta1", plural: "nodes" },
+          abortableKubernetesRequest(signal),
+        ),
+      timeoutMs,
+    );
+    return result as NodeMetricsList;
   }
 
   public static getInstance(contextId: string): KubernetesClient {
@@ -125,14 +135,7 @@ export class KubernetesClientRegistry {
             async (signal) => await client.versionApi.getCode(undefined, abortableKubernetesRequest(signal)),
             timeoutMs,
           ),
-          withKubernetesProbeTimeoutAsync(
-            async (signal) =>
-              await client.metricsProbeApi.listClusterCustomObject(
-                { group: "metrics.k8s.io", version: "v1beta1", plural: "nodes" },
-                abortableKubernetesRequest(signal),
-              ),
-            timeoutMs,
-          ),
+          client.getNodeMetricsAsync(timeoutMs),
         ]);
         const status =
           api.status === "rejected" ? "unavailable" : metrics.status === "rejected" ? "degraded" : "available";

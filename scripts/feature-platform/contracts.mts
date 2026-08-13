@@ -74,10 +74,12 @@ const compareKeys = (
   });
 };
 
+const ignoredDirectories = new Set([".git", ".turbo", ".next", "node_modules", "dist", "build", "coverage"]);
+
 const walkFiles = (directory: string): string[] => {
   if (!existsSync(directory)) return [];
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    if (entry.isDirectory() && [".git", ".turbo", "node_modules"].includes(entry.name)) return [];
+    if (entry.isDirectory() && ignoredDirectories.has(entry.name)) return [];
     const path = join(directory, entry.name);
     return entry.isDirectory() ? walkFiles(path) : [path];
   });

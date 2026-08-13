@@ -19,18 +19,40 @@ const dockerContainerTargetSchema = z.object({
   endpointId: z.string().min(1),
   id: z.string().min(1),
 });
+const dockerContainerTargetsSchema = z.array(dockerContainerTargetSchema).min(1).max(100);
 
 export const dockerRouter = createTRPCRouter({
   reconcileServices: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Reconcile Docker container inventory with Homarr integrations and apps, including URL matches and recommended setup or repair actions. Requires admin permission.",
+      },
+    })
     .concat(dockerMiddleware())
     .query(async ({ ctx }) => await getDockerReconciliationAsync(ctx.db)),
   getServiceHealth: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get Docker endpoint and discovered-service health projected across Docker, integration, app, and widget setup layers. Requires admin permission.",
+      },
+    })
     .concat(dockerMiddleware())
     .query(async ({ ctx }) => await getDockerServiceHealthAsync(ctx.db)),
   refreshInventory: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Invalidate the cached Docker inventory so the next Docker query performs a fresh user-requested discovery. Requires admin permission.",
+      },
+    })
     .concat(dockerMiddleware())
     .mutation(() => {
       dockerContainersRequestHandler.invalidateCache();
@@ -65,7 +87,7 @@ export const dockerRouter = createTRPCRouter({
       },
     })
     .concat(dockerMiddleware())
-    .input(z.object({ targets: z.array(dockerContainerTargetSchema) }))
+    .input(z.object({ targets: dockerContainerTargetsSchema }))
     .mutation(async ({ input }) => {
       return await performDockerContainerActionsAsync(input.targets, "start");
     }),
@@ -78,7 +100,7 @@ export const dockerRouter = createTRPCRouter({
       },
     })
     .concat(dockerMiddleware())
-    .input(z.object({ targets: z.array(dockerContainerTargetSchema) }))
+    .input(z.object({ targets: dockerContainerTargetsSchema }))
     .mutation(async ({ input }) => {
       return await performDockerContainerActionsAsync(input.targets, "stop");
     }),
@@ -91,7 +113,7 @@ export const dockerRouter = createTRPCRouter({
       },
     })
     .concat(dockerMiddleware())
-    .input(z.object({ targets: z.array(dockerContainerTargetSchema) }))
+    .input(z.object({ targets: dockerContainerTargetsSchema }))
     .mutation(async ({ input }) => {
       return await performDockerContainerActionsAsync(input.targets, "restart");
     }),
@@ -105,7 +127,7 @@ export const dockerRouter = createTRPCRouter({
       },
     })
     .concat(dockerMiddleware())
-    .input(z.object({ targets: z.array(dockerContainerTargetSchema) }))
+    .input(z.object({ targets: dockerContainerTargetsSchema }))
     .mutation(async ({ input }) => {
       return await performDockerContainerActionsAsync(input.targets, "remove");
     }),

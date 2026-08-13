@@ -3,6 +3,8 @@
 import { useCallback } from "react";
 
 import { clientApi } from "@homarr/api/client";
+import { showErrorNotification } from "@homarr/notifications";
+import { useI18n } from "@homarr/translation/client";
 
 export type SetupMetricEvent =
   | "surface-opened"
@@ -30,7 +32,15 @@ export interface SetupMetricProperties {
  * Never pass record IDs, names, URLs, search text, credentials, or provider responses here.
  */
 export const useSetupAnalytics = () => {
-  const { mutate } = clientApi.analytics.trackFeature.useMutation();
+  const t = useI18n();
+  const { mutate } = clientApi.analytics.trackFeature.useMutation({
+    onError() {
+      showErrorNotification({
+        title: t("common.error"),
+        message: t("universalCreate.analyticsError"),
+      });
+    },
+  });
 
   return useCallback(
     (event: SetupMetricEvent, properties: SetupMetricProperties) => {

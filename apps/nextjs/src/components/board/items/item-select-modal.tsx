@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Avatar, Badge, Box, Button, Center, Divider, Group, Image, Select, Stack, Text, Tooltip } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconApi } from "@tabler/icons-react";
@@ -94,10 +94,16 @@ const ItemSelectModalContent = ({
     ],
     [board.sections, currentLayout, mainCanvasSection, t],
   );
-  const [targetSectionId, setTargetSectionId] = useState<string | null>(mainCanvasSection?.id ?? null);
+  const [targetSectionId, setTargetSectionId] = useState<string | null>(placementOptions[0]?.value ?? null);
   const [loadingSelection, setLoadingSelection] = useState<string | null>(null);
   const selectionLock = useRef(false);
   const { createItem, removeItem } = useItemActions();
+
+  useEffect(() => {
+    if (placementOptions.some(({ value }) => value === targetSectionId)) return;
+    setTargetSectionId(placementOptions[0]?.value ?? null);
+  }, [placementOptions, targetSectionId]);
+
   const { openModal: openEditModal } = useModalAction(LazyWidgetEditModal);
   const { openModal: openIntegrationModal } = useModalAction(IntegrationSelectModal);
   const settings = useSettings();
@@ -155,14 +161,32 @@ const ItemSelectModalContent = ({
     });
   };
 
-  const notifyCreated = (itemId: string, name: string) => {
+  const notifyCreated = (updatedBoard: ReturnType<typeof createItem>, itemId: string, name: string) => {
+    const createdItem = updatedBoard?.items.find((item) => item.id === itemId);
+    if (!createdItem) {
+      showErrorNotification({
+        title: t("item.create.notification.error.title"),
+        message: t("item.create.notification.error.message"),
+      });
+      return false;
+    }
+
+    const actualSectionId =
+      createdItem.layouts.find(({ layoutId }) => layoutId === currentLayoutId)?.sectionId ??
+      createdItem.layouts[0]?.sectionId;
+    const actualDestination = placementOptions.find(({ value }) => value === actualSectionId)?.label;
+    const wasRelocated = targetSectionId !== null && actualSectionId !== targetSectionId && actualDestination;
     const notificationId = `board-item-created:${itemId}`;
     showSuccessNotification({
       id: notificationId,
       title: t("item.create.notification.success.title"),
       message: (
         <Group justify="space-between" wrap="nowrap">
-          <Text size="sm">{t("item.create.notification.success.message", { name })}</Text>
+          <Text size="sm">
+            {wasRelocated
+              ? t("item.create.notification.success.relocatedMessage", { name, destination: actualDestination })
+              : t("item.create.notification.success.message", { name })}
+          </Text>
           <Button
             variant="subtle"
             size="compact-xs"
@@ -177,6 +201,7 @@ const ItemSelectModalContent = ({
       ),
       autoClose: 10_000,
     });
+    return true;
   };
 
   const handleAddCustomWidget = async (customWidgetDefinition: NonNullable<typeof customWidgetDefs>[number]) => {
@@ -204,7 +229,7 @@ const ItemSelectModalContent = ({
             integrationIds: [],
           },
           onSuccessfulEdit: ({ options: configuredOptions, advancedOptions }) => {
-            createItem({
+            const updatedBoard = createItem({
               id: itemId,
               kind: "customApi",
               integrationIds: [],
@@ -212,7 +237,7 @@ const ItemSelectModalContent = ({
               targetSectionId: targetSectionId ?? undefined,
               advancedOptions,
             });
-            notifyCreated(itemId, customWidgetDefinition.name);
+            notifyCreated(updatedBoard, itemId, customWidgetDefinition.name);
           },
           integrationData: [],
           integrationSupport: false,
@@ -247,8 +272,8 @@ const ItemSelectModalContent = ({
         ensureDataAsync: ensureIntegrationDataAsync,
       });
 
-      const maxIntegrations = (definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity;
-      const integrationIds = matchingIntegrations.slice(0, maxIntegrations).map((i) => i.id);
+      const maxIntegrations = "maxIntegrations" in definition ? (definition.maxIntegrations ?? Infinity) : Infinity;
+      const matchingIntegrationCount = Math.min(matchingIntegrations.length, maxIntegrations);
       const itemId = createId();
       const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
       const openEditor = (
@@ -267,7 +292,7 @@ const ItemSelectModalContent = ({
               integrationIds: selectedIntegrationIds,
             },
             onSuccessfulEdit: ({ options, integrationIds: newIntegrationIds, advancedOptions }) => {
-              createItem({
+              const updatedBoard = createItem({
                 id: itemId,
                 kind,
                 options,
@@ -275,7 +300,7 @@ const ItemSelectModalContent = ({
                 targetSectionId: targetSectionId ?? undefined,
                 advancedOptions,
               });
-              notifyCreated(itemId, t(`widget.${kind}.name`));
+              if (!notifyCreated(updatedBoard, itemId, t(`widget.${kind}.name`))) return;
               trackSetup("widget-completed", {
                 entryPoint: "board",
                 intent: kind,
@@ -295,7 +320,7 @@ const ItemSelectModalContent = ({
       const integrationsRequired =
         hasIntegrationSupport && (!("integrationsRequired" in definition) || definition.integrationsRequired !== false);
 
-      if (integrationsRequired && integrationIds.length === 0) {
+      if (integrationsRequired && matchingIntegrationCount === 0) {
         trackSetup("dependency-blocked", {
           entryPoint: "board",
           intent: kind,

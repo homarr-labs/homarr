@@ -66,7 +66,10 @@ export const BoardSetupChecklist = () => {
               </ActionIcon>
             </Tooltip>
           </Group>
-          <Progress value={(progress.completedCount / progress.totalCount) * 100} aria-label={t("progress")} />
+          <Progress
+            value={progress.totalCount === 0 ? 0 : (progress.completedCount / progress.totalCount) * 100}
+            aria-label={t("progress")}
+          />
           <ChecklistStep
             complete={progress.steps.content}
             label={t("step.content.label")}

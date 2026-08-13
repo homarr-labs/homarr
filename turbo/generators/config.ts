@@ -1,79 +1,22 @@
 import type { PlopTypes } from "@turbo/gen";
 
 import type { FeatureRequest } from "../../scripts/feature-platform/generate-feature.mts";
-import { generateFeature } from "../../scripts/feature-platform/generate-feature.mts";
+import { generateFeature, getIntegrationGeneratorChoices } from "../../scripts/feature-platform/generate-feature.mts";
 
 type Answers = Record<string, unknown> & { turbo: { paths: { root: string } } };
 
 const text = (value: unknown) => String(value ?? "").trim();
 const list = (value: unknown) =>
-  text(value)
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
+  (Array.isArray(value) ? value : text(value).split(",")).map((item) => text(item)).filter(Boolean);
 const lowerCamel = (value: string) =>
   /^[a-z][A-Za-z0-9]*$/.test(value) || "Use lower camel case (for example, mediaServer).";
 const kebab = (value: string) =>
   /^[a-z][a-z0-9]*(?:-[a-z][a-z0-9]*)*$/.test(value) ||
   "Start with a lowercase letter and use kebab-case (for example, media-server).";
 const required = (value: string) => value.trim().length > 0 || "This value is required.";
-const integrationCategories = [
-  "dnsHole",
-  "mediaService",
-  "calendar",
-  "mediaOrganizer",
-  "mediaSearch",
-  "mediaRelease",
-  "mediaRequest",
-  "downloadClient",
-  "usenet",
-  "torrent",
-  "miscellaneous",
-  "smartHomeServer",
-  "indexerManager",
-  "healthMonitoring",
-  "beszel",
-  "search",
-  "mediaTranscoding",
-  "networkController",
-  "notifications",
-  "firewall",
-  "timetable",
-  "photoService",
-  "notes",
-  "mediaMonitoring",
-  "speedtest",
-  "analytics",
-  "vpn",
-  "archiving",
-  "ups",
-  "documents",
-  "mediaLibrary",
-  "uptimeMonitoring",
-  "subtitleManager",
-  "reverseProxy",
-];
-const integrationSecretKinds = [
-  "apiKey",
-  "username",
-  "password",
-  "tokenId",
-  "realm",
-  "personalAccessToken",
-  "topic",
-  "opnsenseApiKey",
-  "opnsenseApiSecret",
-  "patchmonApiKey",
-  "patchmonApiSecret",
-  "url",
-  "privateKey",
-  "githubAppId",
-  "githubInstallationId",
-  "slug",
-];
-
-const integrationPrompts = (prefix = "") =>
-  [
+const integrationPrompts = (root: string, prefix = "") => {
+  const choices = getIntegrationGeneratorChoices(root);
+  return [
     { type: "input", name: `${prefix}Kind`, message: "Integration kind", validate: lowerCamel },
     { type: "input", name: `${prefix}Name`, message: "Integration display name", validate: required },
     { type: "input", name: `${prefix}Slug`, message: "Integration docs and folder slug", validate: kebab },
@@ -87,14 +30,14 @@ const integrationPrompts = (prefix = "") =>
       type: "list",
       name: `${prefix}Category`,
       message: "Existing integration category",
-      choices: integrationCategories,
+      choices: choices.categories,
       default: "miscellaneous",
     },
     {
       type: "checkbox",
       name: `${prefix}SecretKinds`,
       message: "Credential kinds (leave empty for an unauthenticated integration)",
-      choices: integrationSecretKinds,
+      choices: choices.secretKinds,
     },
     {
       type: "input",
@@ -105,6 +48,7 @@ const integrationPrompts = (prefix = "") =>
       validate: required,
     },
   ] satisfies PlopTypes.PromptQuestion[];
+};
 
 const widgetPrompts = (prefix = "") =>
   [
@@ -149,9 +93,10 @@ const action =
   };
 
 export default function generator(plop: PlopTypes.NodePlopAPI) {
+  const root = plop.getDestBasePath();
   plop.setGenerator("native-integration", {
     description: "Scaffold a native integration, tests, docs, translations, and current explicit registries",
-    prompts: integrationPrompts(),
+    prompts: integrationPrompts(root),
     actions: [action((answers) => ({ integration: integrationFrom(answers) }))],
   });
   plop.setGenerator("widget", {
@@ -161,7 +106,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI) {
   });
   plop.setGenerator("integration-widget", {
     description: "Scaffold a paired native integration and widget contract",
-    prompts: [...integrationPrompts("integration"), ...widgetPrompts("widget")],
+    prompts: [...integrationPrompts(root, "integration"), ...widgetPrompts("widget")],
     actions: [
       action((answers) => {
         const integration = integrationFrom(answers, "integration");

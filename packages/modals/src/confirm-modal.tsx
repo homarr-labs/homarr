@@ -61,7 +61,7 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
       setLoading(true);
       try {
         if (typeof confirmProps?.onClick === "function") {
-          confirmProps.onClick(event);
+          await confirmProps.onClick(event);
         }
 
         if (typeof onConfirm === "function") {

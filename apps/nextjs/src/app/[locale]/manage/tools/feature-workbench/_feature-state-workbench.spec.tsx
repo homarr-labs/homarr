@@ -10,6 +10,21 @@ import { FeatureStateWorkbench } from "./_feature-state-workbench";
 import { catalogStateFixtures, responseStateFixtures } from "./_feature-state-fixtures";
 import { getResponseContractFixtureResultsAsync } from "./_response-contract-fixtures";
 
+vi.mock("@homarr/translation/client", () => ({
+  useScopedI18n: () => (key: string) =>
+    ({
+      "catalog.state.needsSetup.label": "Service needing setup",
+      "catalog.state.needsSetup.status": "Needs setup",
+      "catalog.interaction.loading": "Loading",
+      "catalog.interaction.disabled": "Disabled",
+      "response.state.failure.label": "Failure",
+      "response.state.failure.title": "Response rejected",
+      "response.contractPassed": "Fixture contract passed",
+      "catalog.loadingAriaLabel": "Loading catalog item",
+      "catalog.loading": "Loading",
+    })[key] ?? key,
+}));
+
 let root: Root;
 let host: HTMLDivElement;
 

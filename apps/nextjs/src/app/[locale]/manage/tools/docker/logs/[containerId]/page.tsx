@@ -24,10 +24,11 @@ export default async function DockerContainerLogsPage({ params, searchParams }: 
 
   const { containerId } = await params;
   const { endpointId, name } = await searchParams;
-  if (!endpointId) notFound();
+  const resolvedEndpointId = endpointId ?? (await getOnlyDockerEndpointIdAsync());
+  if (!resolvedEndpointId) notFound();
 
   try {
-    await api.docker.logs({ endpointId, id: containerId, tail: 1 });
+    await api.docker.logs({ endpointId: resolvedEndpointId, id: containerId, tail: 1 });
   } catch {
     notFound();
   }
@@ -41,8 +42,17 @@ export default async function DockerContainerLogsPage({ params, searchParams }: 
         />
       </Group>
       <Box style={{ borderRadius: 6 }} h={fullHeightWithoutHeaderAndFooter} p="md" bg="black">
-        <ClientSideDockerLogsTerminal endpointId={endpointId} containerId={containerId} />
+        <ClientSideDockerLogsTerminal endpointId={resolvedEndpointId} containerId={containerId} />
       </Box>
     </>
   );
 }
+
+const getOnlyDockerEndpointIdAsync = async () => {
+  try {
+    const { endpoints } = await api.docker.getContainers();
+    return endpoints.length === 1 ? endpoints[0]?.id : undefined;
+  } catch {
+    return undefined;
+  }
+};

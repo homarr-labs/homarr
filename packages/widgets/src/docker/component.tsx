@@ -259,6 +259,12 @@ export default function DockerWidget({
         utils.docker.getServiceHealth.invalidate(),
       ]);
     },
+    onError() {
+      showErrorNotification({
+        title: t("action.refresh.notification.error.title"),
+        message: t("action.refresh.notification.error.message"),
+      });
+    },
   });
   const containers = useMemo(() => data?.containers ?? [], [data?.containers]);
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);

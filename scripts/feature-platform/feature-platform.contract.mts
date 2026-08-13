@@ -3,7 +3,7 @@ import { test } from "node:test";
 import { resolve } from "node:path";
 
 import { checkFeatureContracts } from "./contracts.mts";
-import { formatFeatureChanges, planFeatureGeneration } from "./generate-feature.mts";
+import { formatFeatureChanges, getIntegrationGeneratorChoices, planFeatureGeneration } from "./generate-feature.mts";
 // oxlint-disable-next-line import/no-unassigned-import -- Registers shared contract tests in this suite.
 import "./check-feature.contract.mts";
 
@@ -11,6 +11,55 @@ const root = resolve(import.meta.dirname, "../..");
 
 test("the checked-in feature contracts are consistent", () => {
   assert.deepEqual(checkFeatureContracts(root), []);
+});
+
+test("reads generator choices from the canonical integration definitions", () => {
+  const choices = getIntegrationGeneratorChoices(root);
+
+  assert.ok(choices.categories.includes("miscellaneous"));
+  assert.ok(choices.secretKinds.includes("apiKey"));
+});
+
+test("adds translations to empty JSON registries without a leading comma", async () => {
+  const fs = await import("node:fs");
+  const os = await import("node:os");
+  const path = await import("node:path");
+  const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "homarr-feature-generator-"));
+  try {
+    for (const sourcePath of [
+      "packages/definitions/src/integration.ts",
+      "packages/definitions/src/widget.ts",
+      "packages/definitions/src/widget-integration-map.ts",
+      "packages/definitions/src/docs/widget-doc-slugs.ts",
+      "packages/widgets/src/manifest.ts",
+      "packages/widgets/src/catalog.ts",
+      "packages/widgets/src/index.tsx",
+    ]) {
+      const target = path.join(temporaryRoot, sourcePath);
+      fs.mkdirSync(path.dirname(target), { recursive: true });
+      fs.copyFileSync(path.join(root, sourcePath), target);
+    }
+    const translationPath = path.join(temporaryRoot, "packages/translation/src/lang/en.json");
+    fs.mkdirSync(path.dirname(translationPath), { recursive: true });
+    fs.writeFileSync(translationPath, '{\n  "integration": {},\n  "widget": {}\n}\n');
+
+    const changes = planFeatureGeneration(temporaryRoot, {
+      widget: {
+        kind: "exampleEmptyRegistry",
+        name: "Example empty registry",
+        slug: "example-empty-registry",
+        description: "Verifies empty translation registry insertion.",
+        icon: "IconBox",
+        supportedIntegrations: [],
+      },
+    });
+    const translation = changes.find((change) => change.path === "packages/translation/src/lang/en.json");
+
+    assert.ok(translation);
+    assert.doesNotThrow(() => JSON.parse(translation.content));
+  } finally {
+    fs.rmSync(temporaryRoot, { recursive: true, force: true });
+  }
 });
 
 test("paired generation plans every formatter-clean contract without writing", async () => {

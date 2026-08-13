@@ -86,6 +86,7 @@ const createItemLayouts = (
         ? currentSection.layouts.find((layout) => layout.layoutId === layoutId)
         : undefined;
     const lane = currentSection.kind === "empty" ? getRootSectionLane(currentSection.xOffset) : "main";
+    if (currentSection.kind === "container" && !containerLayout) return [];
     const columnCount = containerLayout?.width ?? (boardLayout ? getBoardLaneColumnCount(boardLayout, lane) : 0);
     if (columnCount === 0) return [];
     const size = {

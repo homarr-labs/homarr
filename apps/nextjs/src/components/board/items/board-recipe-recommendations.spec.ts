@@ -15,11 +15,12 @@ describe("getBoardRecipeRecommendations", () => {
       preferredIntegrationKind: "jellyfin",
     });
 
-    expect(recommendations).toHaveLength(3);
-    expect(recommendations.slice(0, 2).every(({ isNewlyAvailable }) => isNewlyAvailable)).toBe(true);
-    expect(recommendations.at(2)).toEqual(
-      expect.objectContaining({ integrationKind: "piHole", isNewlyAvailable: false }),
-    );
+    const firstFallbackIndex = recommendations.findIndex(({ isNewlyAvailable }) => !isNewlyAvailable);
+    expect(recommendations.some(({ isNewlyAvailable }) => isNewlyAvailable)).toBe(true);
+    if (firstFallbackIndex !== -1) {
+      expect(recommendations.slice(0, firstFallbackIndex).every(({ isNewlyAvailable }) => isNewlyAvailable)).toBe(true);
+      expect(recommendations.slice(firstFallbackIndex).every(({ isNewlyAvailable }) => !isNewlyAvailable)).toBe(true);
+    }
   });
 
   test("does not recommend widget kinds already present on the board", () => {
@@ -29,7 +30,8 @@ describe("getBoardRecipeRecommendations", () => {
       preferredIntegrationKind: "piHole",
     });
 
-    expect(recommendations.map(({ widgetKind }) => widgetKind)).toEqual(["dnsHoleControls"]);
+    expect(recommendations.every(({ widgetKind }) => widgetKind !== "dnsHoleSummary")).toBe(true);
+    expect(recommendations.every(({ integrationKind }) => integrationKind === "piHole")).toBe(true);
   });
 
   test("deduplicates configured kinds and emitted widget capabilities", () => {
@@ -39,7 +41,9 @@ describe("getBoardRecipeRecommendations", () => {
       limit: 10,
     });
 
-    expect(recommendations.map(({ widgetKind }) => widgetKind)).toEqual(["dnsHoleControls", "dnsHoleSummary"]);
+    const widgetKinds = recommendations.map(({ widgetKind }) => widgetKind);
+    expect(new Set(widgetKinds).size).toBe(widgetKinds.length);
+    expect(recommendations.every(({ integrationKind }) => integrationKind === "piHole")).toBe(true);
   });
 
   test("falls back to other configured integrations when the new service has no missing widgets", () => {

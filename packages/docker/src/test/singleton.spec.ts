@@ -40,8 +40,10 @@ describe("DockerSingleton", () => {
     const instances = DockerSingleton.getInstances();
 
     expect(instances).toHaveLength(1);
-    expect(instances[0]?.host).toBe("socket");
+    expect(instances[0]?.host).toBe("/var/run/docker.sock");
     expect(instances[0]).toMatchObject({ endpointId: "socket:default", endpointName: "Local Docker" });
+    const options = (instances[0]?.instance as unknown as { opts: { socketPath: string } } | undefined)?.opts;
+    expect(options?.socketPath).toBe("/var/run/docker.sock");
   });
 
   test("should return TCP instances only when DOCKER_HOSTNAMES and DOCKER_PORTS set", () => {
@@ -130,5 +132,21 @@ describe("DockerSingleton", () => {
     expect(endpoint?.descriptor).toMatchObject({ kind: "podman", source: "environment" });
     expect(DockerSingleton.hasCapability("readonly-podman", "logs")).toBe(true);
     expect(DockerSingleton.hasCapability("readonly-podman", "remove")).toBe(false);
+  });
+
+  test("isolates an unreadable TLS endpoint from healthy endpoints", () => {
+    mockEnv.DOCKER_ENDPOINTS = JSON.stringify([
+      { id: "local", name: "Local", transport: { type: "socket", path: "/var/run/docker.sock" } },
+      {
+        id: "broken-tls",
+        name: "Broken TLS",
+        transport: { type: "tls", host: "broken.example", port: 2376, caPath: "/missing/docker-ca.pem" },
+      },
+    ]);
+
+    expect(DockerSingleton.getInstances().map(({ endpointId }) => endpointId)).toEqual(["local"]);
+    expect(DockerSingleton.getInitializationFailures()).toEqual([
+      expect.objectContaining({ descriptor: expect.objectContaining({ id: "broken-tls" }) }),
+    ]);
   });
 });

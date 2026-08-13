@@ -68,4 +68,41 @@ describe("ConfirmModal", () => {
     expect(confirmButton.disabled).toBe(false);
     expect(closeModal).not.toHaveBeenCalled();
   });
+
+  test("waits for a rejecting confirmation button callback", async () => {
+    const closeModal = vi.fn();
+    const onConfirm = vi.fn();
+    let rejectClick!: (error: Error) => void;
+    const onClick = vi.fn(
+      () =>
+        new Promise<void>((_resolve, reject) => {
+          rejectClick = reject;
+        }),
+    );
+
+    await act(async () =>
+      root.render(
+        <MantineProvider>
+          <ConfirmModalComponent
+            actions={{ closeModal }}
+            innerProps={{ children: "Remove containers?", confirmProps: { onClick }, onConfirm }}
+          />
+        </MantineProvider>,
+      ),
+    );
+
+    const confirmButton = host.querySelectorAll("button").item(1);
+    await act(async () => confirmButton.click());
+    expect(confirmButton.disabled).toBe(true);
+    expect(onConfirm).not.toHaveBeenCalled();
+
+    await act(async () => {
+      rejectClick(new Error("Callback failed"));
+      await Promise.resolve();
+    });
+
+    expect(confirmButton.disabled).toBe(false);
+    expect(onConfirm).not.toHaveBeenCalled();
+    expect(closeModal).not.toHaveBeenCalled();
+  });
 });

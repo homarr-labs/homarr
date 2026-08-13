@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Alert, Badge, Group, Select } from "@mantine/core";
+import { Alert, Badge, Button, Group, Select, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
@@ -14,7 +14,7 @@ export const KubernetesContextSelector = () => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { data } = clientApi.kubernetes.contexts.getContexts.useQuery(undefined, {
+  const { data, isError, refetch } = clientApi.kubernetes.contexts.getContexts.useQuery(undefined, {
     refetchInterval: 30_000,
     refetchOnMount: "always",
     refetchOnReconnect: true,
@@ -39,6 +39,19 @@ export const KubernetesContextSelector = () => {
     next.set("context", contextId);
     router.replace(`${pathname}?${next.toString()}`);
   }, [contextId, pathname, requestedContextId, router, searchParams]);
+
+  if (isError) {
+    return (
+      <Alert color="red" icon={<IconAlertTriangle size={16} />} title={t("loadError.title")}>
+        <Stack gap="sm">
+          <Text size="sm">{t("loadError.message")}</Text>
+          <Button variant="light" color="red" size="xs" w="fit-content" onClick={() => void refetch()}>
+            {t("loadError.retry")}
+          </Button>
+        </Stack>
+      </Alert>
+    );
+  }
 
   if (!data || !contextId) return null;
 

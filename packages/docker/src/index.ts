@@ -1,7 +1,7 @@
 import type Docker from "dockerode";
 import type { DockerEndpointCapability } from "./endpoint-descriptor";
 
-export type { DockerInstance } from "./singleton";
+export type { DockerEndpointInitializationFailure, DockerInstance } from "./singleton";
 export { DockerSingleton } from "./singleton";
 export * from "./endpoint-descriptor";
 export type { ContainerInfo, Container, Port } from "dockerode";
@@ -19,7 +19,7 @@ export interface DockerContainerTarget {
 export interface DockerEndpointStatus {
   id: string;
   name: string;
-  status: "available" | "unavailable";
+  status: "available" | "degraded" | "unavailable";
   kind?: "docker" | "podman";
   transport?: "socket" | "tcp" | "tls";
   capabilities?: DockerEndpointCapability[];

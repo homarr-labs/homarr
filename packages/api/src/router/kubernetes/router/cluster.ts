@@ -16,14 +16,15 @@ export const clusterRouter = createTRPCRouter({
     .concat(kubernetesMiddleware())
     .input(kubernetesContextInput)
     .query(async ({ input }): Promise<KubernetesCluster> => {
-      const { coreApi, metricsApi, versionApi, kubeConfig } = getKubernetesClient(input.contextId);
+      const client = getKubernetesClient(input.contextId);
+      const { coreApi, versionApi, kubeConfig } = client;
 
       try {
         const [versionInfo, nodes, listPodForAllNamespaces, nodeMetricsClient] = await Promise.all([
           versionApi.getCode(),
           coreApi.listNode(),
           coreApi.listPodForAllNamespaces(),
-          metricsApi.getNodeMetrics().catch(() => null),
+          client.getNodeMetricsAsync().catch(() => null),
         ]);
 
         let totalCPUCapacity = 0;

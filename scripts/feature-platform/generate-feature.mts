@@ -91,7 +91,20 @@ const addJsonProperty = (source: string, property: "integration" | "widget", nam
     .join("\n");
   const beforeClose = source.slice(0, end);
   const trimmed = beforeClose.trimEnd();
-  return `${trimmed},\n    ${JSON.stringify(name)}: ${serialized}\n  ${source.slice(end)}`;
+  const separator = body.trim().length === 0 ? "" : ",";
+  return `${trimmed}${separator}\n    ${JSON.stringify(name)}: ${serialized}\n  ${source.slice(end)}`;
+};
+
+export const getIntegrationGeneratorChoices = (root: string) => {
+  const source = read(root, "packages/definitions/src/integration.ts");
+  const categoryRange = containerRange(source, "const integrationCategories", "[");
+  const secretRange = containerRange(source, "const integrationSecretKindObject", "{");
+  return {
+    categories: [...source.slice(categoryRange.start, categoryRange.end).matchAll(/"([^"]+)"/g)].map(
+      (match) => match[1],
+    ),
+    secretKinds: [...source.slice(secretRange.start, secretRange.end).matchAll(/^  (\w+):/gm)].map((match) => match[1]),
+  };
 };
 
 const addChange = (
@@ -123,19 +136,11 @@ const validate = (request: FeatureRequest) => {
 
 const planIntegration = (root: string, feature: IntegrationFeature, changes: PlannedChange[]) => {
   const definitionSource = read(root, "packages/definitions/src/integration.ts");
-  const categoryRange = containerRange(definitionSource, "const integrationCategories", "[");
-  const categories = new Set(
-    [...definitionSource.slice(categoryRange.start, categoryRange.end).matchAll(/"([^"]+)"/g)].map((match) => match[1]),
-  );
-  if (!categories.has(feature.category)) {
+  const choices = getIntegrationGeneratorChoices(root);
+  if (!choices.categories.includes(feature.category)) {
     throw new Error(`Generator stopped: ${feature.category} is not a current integration category.`);
   }
-  const secretObject = definitionSource.slice(
-    definitionSource.indexOf("const integrationSecretKindObject"),
-    definitionSource.indexOf("satisfies Record<string", definitionSource.indexOf("const integrationSecretKindObject")),
-  );
-  const validSecrets = new Set([...secretObject.matchAll(/^  (\w+):/gm)].map((match) => match[1]));
-  const unknownSecrets = feature.secretKinds.filter((kind) => !validSecrets.has(kind));
+  const unknownSecrets = feature.secretKinds.filter((kind) => !choices.secretKinds.includes(kind));
   if (unknownSecrets.length > 0) {
     throw new Error(`Generator stopped: unknown credential kind(s): ${unknownSecrets.join(", ")}.`);
   }

@@ -169,6 +169,27 @@ describe("item actions create-item", () => {
     ]);
   });
 
+  test("omits layouts where the requested container has no layout entry", () => {
+    const board = new BoardMockBuilder()
+      .addLayout({ id: "mobile", name: "Mobile", role: "mobile", columnCount: 3, breakpoint: 0 })
+      .addEmptySection({ id: "canvas" })
+      .addSection(
+        new ContainerSectionMockBuilder({ id: "media" })
+          .addLayout({ layoutId: "base", parentSectionId: "canvas", width: 4, height: 3 })
+          .build(),
+      )
+      .build();
+    const baseLayout = board.layouts.find((layout) => layout.role === "base");
+    if (!baseLayout) throw new Error("Expected a base layout");
+    baseLayout.id = "base";
+
+    const result = createItemCallback({ id: "calendar", kind: "clock", targetSectionId: "media" })(board);
+
+    expect(result.items.find((item) => item.id === "calendar")?.layouts).toEqual([
+      expect.objectContaining({ layoutId: "base", sectionId: "media" }),
+    ]);
+  });
+
   test("sizes a new item for its requested rail and omits layouts where that rail is hidden", () => {
     const board = new BoardMockBuilder()
       .addLayout({ id: "mobile", name: "Mobile", role: "mobile", columnCount: 3, breakpoint: 0 })

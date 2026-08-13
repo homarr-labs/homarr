@@ -14,6 +14,13 @@ const logger = createLogger({ module: "podsRouter" });
 export const podsRouter = createTRPCRouter({
   getPods: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "List Kubernetes pod inventory and inferred workload types for a context. Get the required contextId from kubernetes_contexts_getContexts. Requires admin permission.",
+      },
+    })
     .concat(kubernetesMiddleware())
     .input(kubernetesContextInput)
     .query(async ({ input }): Promise<KubernetesPod[]> => {

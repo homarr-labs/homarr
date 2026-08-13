@@ -56,6 +56,15 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: "docker-node",
+          environment: "node",
+          setupFiles: ["./vitest.setup.ts", "./vitest.setup.node.ts"],
+          include: ["packages/docker/**/*.spec.{ts,tsx}"],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: "dom",
           environment: "jsdom",
           include: ["**/*.spec.{ts,tsx}"],
@@ -65,6 +74,7 @@ export default defineConfig({
             "packages/api/**",
             "packages/custom-widgets/**",
             "packages/db/**",
+            "packages/docker/**",
             "packages/request-handler/**",
             "e2e/**",
           ],

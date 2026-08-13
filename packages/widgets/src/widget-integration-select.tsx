@@ -141,7 +141,7 @@ export const WidgetIntegrationSelect = ({
                     combobox.closeDropdown();
                     return;
                   }
-                  if (event.key === "Backspace" && multiSelectValues.length > 0) {
+                  if (event.key === "Backspace" && canSelectMultiple && multiSelectValues.length > 0) {
                     event.preventDefault();
                     const lastValue = multiSelectValues.at(-1);
                     if (lastValue) handleValueRemove(lastValue);

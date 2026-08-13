@@ -84,7 +84,7 @@ describe("CatalogItem", () => {
     expect(getCatalogKeyboardDirection("Enter")).toBeNull();
   });
 
-  it("offers arrow-key movement without replacing native Enter and Space activation", async () => {
+  it("moves focus only for navigation keys", async () => {
     const onSelect = vi.fn();
     const onMoveFocus = vi.fn();
     await act(async () =>
@@ -102,6 +102,7 @@ describe("CatalogItem", () => {
     expect(onMoveFocus).toHaveBeenCalledWith("next");
 
     await act(async () => button?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })));
+    await act(async () => button?.dispatchEvent(new KeyboardEvent("keydown", { key: " ", bubbles: true })));
     expect(onMoveFocus).toHaveBeenCalledOnce();
   });
 

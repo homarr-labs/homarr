@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Avatar,
@@ -23,10 +23,15 @@ import { clientApi } from "@homarr/api/client";
 import { getIntegrationName } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr } from "@homarr/modals-collection";
+import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import type { DockerReconciliationInboxFilter } from "./docker-reconciliation-inbox";
-import { dismissDockerReconciliationCandidate, filterDockerReconciliationInbox } from "./docker-reconciliation-inbox";
+import {
+  dismissDockerReconciliationCandidate,
+  filterDockerReconciliationInbox,
+  getValidDockerServiceUrl,
+} from "./docker-reconciliation-inbox";
 
 type ReconciliationCandidate = RouterOutputs["docker"]["reconcileServices"]["candidates"][number];
 type ServiceHealth = RouterOutputs["docker"]["getServiceHealth"]["services"][number];
@@ -44,12 +49,31 @@ export const DockerReconciliation = () => {
         utils.docker.getServiceHealth.invalidate(),
       ]);
     },
+    onError() {
+      showErrorNotification({
+        title: t("refreshError.title"),
+        message: t("refreshError.message"),
+      });
+    },
   });
   const [filter, setFilter] = useState<DockerReconciliationInboxFilter>("attention");
   const [dismissedCandidateKeys, setDismissedCandidateKeys] = useLocalStorage<string[]>({
     key: "homarr-docker-reconciliation-dismissed",
     defaultValue: [],
   });
+
+  if (reconciliation.isError) {
+    return (
+      <Alert color="red" icon={<IconAlertTriangle size={16} />} title={t("loadError.title")}>
+        <Stack gap="sm">
+          <Text size="sm">{t("loadError.message")}</Text>
+          <Button variant="light" color="red" size="xs" w="fit-content" onClick={() => void reconciliation.refetch()}>
+            {t("action.retry")}
+          </Button>
+        </Stack>
+      </Alert>
+    );
+  }
 
   if (!reconciliation.data) return null;
 
@@ -156,7 +180,16 @@ const DockerReconciliationCandidate = ({
   const [selectedCandidateId, setSelectedCandidateId] = useState(initialUrlCandidate?.id ?? null);
   const [url, setUrl] = useState(initialUrlCandidate?.url ?? "");
   const selectedCandidate = candidate.urlCandidates.find(({ id }) => id === selectedCandidateId);
-  const target = getCandidateTarget(candidate, url);
+  const validatedUrl = getValidDockerServiceUrl(url);
+  const isInvalidUrl = url.length > 0 && validatedUrl === null;
+  const target = getCandidateTarget(candidate, validatedUrl ?? "");
+  const actionNeedsUrl = target.kind === "createApp" || target.kind === "setupIntegration";
+  const isActionDisabled = actionNeedsUrl && validatedUrl === null;
+
+  useEffect(() => {
+    setSelectedCandidateId(initialUrlCandidate?.id ?? null);
+    setUrl(initialUrlCandidate?.url ?? "");
+  }, [initialUrlCandidate?.id, initialUrlCandidate?.url]);
 
   return (
     <Card withBorder padding="md">
@@ -224,8 +257,11 @@ const DockerReconciliationCandidate = ({
           }}
         />
         <TextInput
+          label={t("url.inputLabel")}
+          aria-label={t("url.inputLabel")}
           value={url}
           placeholder="https://service.example.com"
+          error={isInvalidUrl ? t("url.invalid") : undefined}
           onChange={(event) => setUrl(event.currentTarget.value)}
         />
 
@@ -237,14 +273,27 @@ const DockerReconciliationCandidate = ({
             <Button
               variant="light"
               rightSection={<IconArrowRight size={16} />}
+              disabled={isActionDisabled}
               onClick={() =>
-                openModal({ selectedContainers: [candidate.container], initialUrls: url ? [url] : undefined })
+                openModal({
+                  selectedContainers: [candidate.container],
+                  initialUrls: validatedUrl ? [validatedUrl] : undefined,
+                })
               }
             >
               {t("action.createApp")}
             </Button>
           ) : (
-            <Button component={Link} href={target.href} variant="light" rightSection={<IconArrowRight size={16} />}>
+            <Button
+              component={Link}
+              href={target.href}
+              variant="light"
+              rightSection={<IconArrowRight size={16} />}
+              disabled={isActionDisabled}
+              onClick={(event) => {
+                if (isActionDisabled) event.preventDefault();
+              }}
+            >
               {t(`action.${target.kind}`)}
             </Button>
           )}

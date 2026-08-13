@@ -184,6 +184,20 @@ describe("All procedures should only be accessible for users with admin permissi
 });
 
 describe("Docker action targeting", () => {
+  test.each(["startAll", "stopAll", "restartAll", "removeAll"] as const)(
+    "%s requires a bounded non-empty target list",
+    async (procedure) => {
+      const caller = createAdminCaller();
+
+      await expect(caller[procedure]({ targets: [] })).rejects.toThrow();
+      await expect(
+        caller[procedure]({
+          targets: Array.from({ length: 101 }, (_, index) => ({ endpointId: "endpoint", id: String(index) })),
+        }),
+      ).rejects.toThrow();
+    },
+  );
+
   test("enforces endpoint capabilities before running a lifecycle action", async () => {
     hasDockerEndpointCapabilityMock.mockReturnValueOnce(false);
 

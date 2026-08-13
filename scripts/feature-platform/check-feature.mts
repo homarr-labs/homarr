@@ -155,10 +155,22 @@ export const createFeatureCheckPlan = (root: string, kind: string): FeatureCheck
       executable: "node",
       args: ["--experimental-strip-types", "scripts/check-feature-contracts.mts"],
     },
-    { label: "Focused fixture and unit tests", executable: "pnpm", args: ["exec", "vitest", "run", ...sortedTests] },
+    ...(sortedTests.length > 0
+      ? [
+          {
+            label: "Focused fixture and unit tests",
+            executable: "pnpm",
+            args: ["exec", "vitest", "run", ...sortedTests],
+          },
+        ]
+      : []),
     packageCommand("Affected package typechecks", sortedPackages),
-    { label: "Affected file lint", executable: "pnpm", args: ["exec", "oxlint", ...lintFiles] },
-    { label: "Affected file formatting", executable: "pnpm", args: ["exec", "oxfmt", "--check", ...sortedFiles] },
+    ...(lintFiles.length > 0
+      ? [{ label: "Affected file lint", executable: "pnpm", args: ["exec", "oxlint", ...lintFiles] }]
+      : []),
+    ...(sortedFiles.length > 0
+      ? [{ label: "Affected file formatting", executable: "pnpm", args: ["exec", "oxfmt", "--check", ...sortedFiles] }]
+      : []),
   ];
 
   return {

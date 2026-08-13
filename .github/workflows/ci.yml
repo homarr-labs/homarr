@@ -98,6 +98,9 @@ jobs:
       - name: Validate feature contracts
         run: pnpm check:feature-contracts
 
+      - name: Test feature platform
+        run: pnpm test:feature-platform
+
       - name: Validate Custom Widget bundle budget
         run: |
           pnpm --filter nextjs build

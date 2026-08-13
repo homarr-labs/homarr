@@ -89,7 +89,7 @@ const parseTransport = (value: unknown, index: number): DockerEndpointTransport 
 };
 
 const parseCapabilities = (value: unknown, index: number): DockerEndpointCapability[] => {
-  if (value === undefined) return allCapabilities;
+  if (value === undefined) return [...allCapabilities];
   if (!Array.isArray(value) || value.some((capability) => !dockerEndpointCapabilities.includes(capability))) {
     throw new Error(`DOCKER_ENDPOINTS[${index}].capabilities contains an unsupported capability`);
   }
@@ -136,7 +136,7 @@ export const createLegacySocketDescriptor = (path: string): DockerEndpointDescri
   name: path,
   kind: path.toLowerCase().includes("podman") ? "podman" : "docker",
   transport: { type: "socket", path },
-  capabilities: allCapabilities,
+  capabilities: [...allCapabilities],
   scope: "admin",
   source: "legacy",
 });
@@ -146,7 +146,7 @@ export const createLegacyTcpDescriptor = (host: string, port: number): DockerEnd
   name: `${host}:${port}`,
   kind: "docker",
   transport: { type: "tcp", host, port, allowInsecure: true },
-  capabilities: allCapabilities,
+  capabilities: [...allCapabilities],
   scope: "admin",
   source: "legacy",
 });

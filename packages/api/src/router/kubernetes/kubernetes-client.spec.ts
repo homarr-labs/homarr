@@ -99,6 +99,30 @@ describe("KubernetesClientRegistry", () => {
     }
   });
 
+  test("aborts a timed-out node metrics request", async () => {
+    vi.useFakeTimers();
+    try {
+      const client = createRegistry().getClient("home");
+      let observedSignal: AbortSignal | undefined;
+      vi.spyOn(client.metricsProbeApi, "listClusterCustomObject").mockImplementation(async (_request, options) => {
+        const middleware = (
+          options as { middleware?: { pre?: (request: unknown) => { toPromise: () => Promise<unknown> } }[] }
+        ).middleware?.[0];
+        await middleware?.pre?.({ setSignal: (signal: AbortSignal) => (observedSignal = signal) }).toPromise();
+        return await new Promise<never>(() => undefined);
+      });
+
+      const resultPromise = client.getNodeMetricsAsync(50);
+      const rejection = expect(resultPromise).rejects.toThrow("Kubernetes context probe timed out");
+      await vi.advanceTimersByTimeAsync(50);
+
+      await rejection;
+      expect(observedSignal?.aborted).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   test("rejects unknown context IDs", () => {
     expect(() => createRegistry().getClient("missing")).toThrow(KubernetesContextNotFoundError);
   });

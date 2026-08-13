@@ -10,6 +10,13 @@ import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-conte
 export const ingressesRouter = createTRPCRouter({
   getIngresses: permissionRequiredProcedure
     .requiresPermission("admin")
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "List Kubernetes ingress inventory for a context. Get the required contextId from kubernetes_contexts_getContexts. Requires admin permission.",
+      },
+    })
     .concat(kubernetesMiddleware())
     .input(kubernetesContextInput)
     .query(async ({ input }): Promise<KubernetesIngress[]> => {

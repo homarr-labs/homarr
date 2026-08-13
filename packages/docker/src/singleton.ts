@@ -1,6 +1,9 @@
 import { readFileSync } from "node:fs";
 import Docker from "dockerode";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+
 import { env } from "./env";
 import type { DockerEndpointCapability, DockerEndpointDescriptor } from "./endpoint-descriptor";
 import {
@@ -18,11 +21,40 @@ export interface DockerInstance {
   instance: Docker;
 }
 
+export interface DockerEndpointInitializationFailure {
+  descriptor: DockerEndpointDescriptor;
+  host: string;
+}
+
+const logger = createLogger({ module: "dockerSingleton" });
+
 export class DockerSingleton {
   private static instances: DockerInstance[] | null = null;
+  private static initializationFailures: DockerEndpointInitializationFailure[] = [];
+
+  private createInstanceSafely(descriptor: DockerEndpointDescriptor): DockerInstance[] {
+    try {
+      return [createInstance(descriptor)];
+    } catch (error) {
+      const host = getDockerEndpointHost(descriptor);
+      DockerSingleton.initializationFailures.push({ descriptor, host });
+      logger.warn(
+        new ErrorWithMetadata(
+          "Failed to initialize Docker endpoint",
+          { endpointId: descriptor.id, host },
+          { cause: error },
+        ),
+      );
+      return [];
+    }
+  }
 
   private createInstances() {
-    if (env.DOCKER_ENDPOINTS) return parseDockerEndpointDescriptors(env.DOCKER_ENDPOINTS).map(createInstance);
+    if (env.DOCKER_ENDPOINTS) {
+      return parseDockerEndpointDescriptors(env.DOCKER_ENDPOINTS).flatMap((descriptor) =>
+        this.createInstanceSafely(descriptor),
+      );
+    }
 
     const socketPaths = env.DOCKER_SOCKET_PATHS;
     const hostVariable = env.DOCKER_HOSTNAMES;
@@ -30,7 +62,9 @@ export class DockerSingleton {
 
     // Socket instances from DOCKER_SOCKET_PATHS
     const socketInstances: DockerInstance[] = socketPaths
-      ? socketPaths.split(",").map((socketPath) => createInstance(createLegacySocketDescriptor(socketPath)))
+      ? socketPaths
+          .split(",")
+          .flatMap((socketPath) => this.createInstanceSafely(createLegacySocketDescriptor(socketPath)))
       : [];
 
     // TCP instances from existing DOCKER_HOSTNAMES/DOCKER_PORTS
@@ -43,9 +77,9 @@ export class DockerSingleton {
         throw new Error("The number of hosts and ports must match");
       }
 
-      tcpInstances = hostnames.map((host, i) =>
+      tcpInstances = hostnames.flatMap((host, i) =>
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        createInstance(createLegacyTcpDescriptor(host, parseInt(ports[i]!, 10))),
+        this.createInstanceSafely(createLegacyTcpDescriptor(host, parseInt(ports[i]!, 10))),
       );
     }
 
@@ -59,7 +93,7 @@ export class DockerSingleton {
         name: "Local Docker",
         source: "default" as const,
       };
-      return [{ ...createInstance(descriptor), host: "socket", instance: new Docker() }];
+      return [createInstance(descriptor)];
     }
 
     return instances;
@@ -78,8 +112,14 @@ export class DockerSingleton {
       return this.instances;
     }
 
+    this.initializationFailures = [];
     this.instances = new DockerSingleton().createInstances();
     return this.instances;
+  }
+
+  public static getInitializationFailures(): DockerEndpointInitializationFailure[] {
+    this.getInstances();
+    return [...this.initializationFailures];
   }
 }
 

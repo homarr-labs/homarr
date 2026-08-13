@@ -174,6 +174,10 @@ Every resource uses `{ endpointId, id }` from inventory through query keys, acti
 
 Bulk lifecycle and removal mutations return a result for every target. Management and Widget surfaces report partial failures instead of treating a resolved request as universal success. Removal uses one shared confirmation contract on both surfaces.
 
+This changes the tRPC and MCP action input from `{ ids: string[] }` to endpoint-qualified
+`{ targets: Array<{ endpointId: string; id: string }> }`. Existing automation must read both fields from the container
+inventory and pass them unchanged to start, stop, restart, and remove actions.
+
 The continuous reconciliation surface:
 
 - Preserves multiple instances of the same Integration kind.

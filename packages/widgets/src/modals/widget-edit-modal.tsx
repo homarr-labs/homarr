@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { Button, Group, Stack, Tabs, Text } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
@@ -70,7 +70,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const integrationsRequired =
     innerProps.integrationSupport &&
     (!("integrationsRequired" in definition) || definition.integrationsRequired !== false);
-  const maxIntegrations = (definition as { maxIntegrations?: number }).maxIntegrations ?? Infinity;
+  const maxIntegrations = "maxIntegrations" in definition ? (definition.maxIntegrations ?? Infinity) : Infinity;
   const options = definition.createOptions(innerProps.settings) as Record<string, OptionsBuilderResult[string]>;
   const optionsSuperRefine = (options as Record<symbol, unknown>)[OPTIONS_SUPER_REFINE] as
     | ((data: Record<string, unknown>, ctx: z.RefinementCtx) => void)
@@ -120,6 +120,12 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const selectedIntegrations = getSelectedWidgetIntegrations(innerProps.integrationData, form.values.integrationIds);
   const showIntegrationTab = Boolean(innerProps.onEditIntegration) && selectedIntegrations.length > 0;
   const showResourceTabs = showAppTab || showIntegrationTab;
+  const [activeTab, setActiveTab] = useState<string | null>("widget");
+
+  useEffect(() => {
+    if (activeTab === "integration" && !showIntegrationTab) setActiveTab("widget");
+    if (activeTab === "app" && !showAppTab) setActiveTab("widget");
+  }, [activeTab, showAppTab, showIntegrationTab]);
 
   const handleSubmit = form.onSubmit(async (values) => {
     setIsSubmitting(true);
@@ -223,7 +229,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
       <FormProvider form={form}>
         {showResourceTabs ? (
           <Stack>
-            <Tabs defaultValue="widget">
+            <Tabs value={activeTab} onChange={setActiveTab}>
               <Tabs.List grow>
                 <Tabs.Tab value="widget">{t("item.edit.tab.widget")}</Tabs.Tab>
                 {showAppTab && <Tabs.Tab value="app">{t("item.edit.tab.app")}</Tabs.Tab>}

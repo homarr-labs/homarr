@@ -57,4 +57,15 @@ describe("parseDockerEndpointDescriptors", () => {
       ),
     ).toThrow("must include inventory");
   });
+
+  test("returns independent default capability arrays", () => {
+    const [first, second] = parseDockerEndpointDescriptors(
+      JSON.stringify([
+        { id: "first", name: "First", transport: { type: "socket", path: "/first.sock" } },
+        { id: "second", name: "Second", transport: { type: "socket", path: "/second.sock" } },
+      ]),
+    );
+
+    expect(first?.capabilities).not.toBe(second?.capabilities);
+  });
 });
