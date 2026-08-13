@@ -234,7 +234,7 @@ section {
   margin-bottom: 0;
   padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 4vw, 3rem);
   overflow: hidden;
-  background: color-mix(in srgb, var(--ifm-background-color) 88%, var(--ifm-color-primary));
+  background: rgb(0 0 0 / 10%);
 }
 
 .dataflowHeading {
@@ -369,14 +369,11 @@ section {
 .dataflowHub {
   left: 50%;
   width: clamp(6rem, 13vw, 9rem);
-  background: var(--ifm-color-primary);
-  box-shadow: 0 8px 16px color-mix(in srgb, var(--ifm-color-primary-darkest) 35%, transparent);
 }
 
 .dataflowHub img {
   width: clamp(3rem, 7vw, 5.4rem);
   height: clamp(3rem, 7vw, 5.4rem);
-  filter: brightness(0) invert(1);
 }
 
 @keyframes dataflow-signal {
