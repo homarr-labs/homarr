@@ -15,6 +15,7 @@ import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
 import { DatabaseRestoreFlow } from "~/components/backup";
 import { env } from "~/env";
+import { getPackageVersion } from "~/versions/package-reader";
 import { AssistantConfiguration } from "../manage/assistant/_components/assistant-configuration";
 
 export default async function InitPage() {
@@ -55,6 +56,7 @@ export default async function InitPage() {
   return (
     <OnboardingStudio
       environment={{
+        version: getPackageVersion(),
         currentStep,
         databaseDriver,
         externalAuthEnabled: isProviderEnabled("ldap") || isProviderEnabled("oidc"),

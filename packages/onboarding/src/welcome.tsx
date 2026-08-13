@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Alert, Badge, Button, Group, Paper, Stack, Text, ThemeIcon, Title } from "@mantine/core";
+import { Alert, Button, Group, Paper, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { IconArrowRight, IconDatabaseImport } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -9,6 +9,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { OnboardingBackdrop } from "./onboarding-backdrop";
 import { OnboardingWordmark } from "./onboarding-wordmark";
 import type { OnboardingStudioProps } from "./types";
 import classes from "./onboarding-studio.module.css";
@@ -75,20 +76,18 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
 
   return (
     <main className={classes.page}>
+      <OnboardingBackdrop />
       <div className={classes.shell}>
-        <Group className={classes.topbar} justify="space-between">
-          <OnboardingWordmark />
-          <Badge variant="light" size="lg">
-            {t("badge")}
-          </Badge>
-        </Group>
-
         <section className={classes.hero} aria-labelledby="onboarding-welcome-title">
           <Stack gap="xl" align="center">
+            <OnboardingWordmark large />
             <Stack gap="sm" align="center">
               <Title id="onboarding-welcome-title" className={classes.heroTitle} ta="center">
                 {t("title")}
               </Title>
+              <Text fw={600} size="lg" ta="center">
+                {t("version", { version: environment.version })}
+              </Text>
               <Text size="lg" c="dimmed" maw="38rem" ta="center">
                 {t("description")}
               </Text>

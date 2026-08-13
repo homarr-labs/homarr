@@ -36,11 +36,13 @@
     "@mantine/core": "catalog:",
     "@mantine/hooks": "catalog:",
     "@tabler/icons-react": "catalog:",
+    "canvas-confetti": "catalog:",
     "react": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/canvas-confetti": "catalog:",
     "@types/react": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { OnboardingStep } from "@homarr/definitions";
 
 export interface OnboardingEnvironment {
+  version: string;
   currentStep: OnboardingStep;
   databaseDriver: "sqlite" | "mysql" | "postgresql";
   externalAuthEnabled: boolean;

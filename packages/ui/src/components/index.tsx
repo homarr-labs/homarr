@@ -18,6 +18,7 @@ export { LanguageIcon } from "./language-icon";
 export { LanguageCombobox } from "./language-combobox";
 export { ColorSchemeCombobox } from "./color-scheme-combobox";
 export { BoardColorInput } from "./board-color-input";
+export { IntegrationMarquee } from "./integration-marquee";
 export { Link } from "./link";
 export {
   SelectGridLayout,
