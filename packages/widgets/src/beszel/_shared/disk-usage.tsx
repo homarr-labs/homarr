@@ -45,50 +45,44 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
       <Text size={fontSize} fw={500} w={valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
         {formatPercent(system.disk)}
       </Text>
-      <HoverCard
-        position="right"
-        withArrow
-        shadow="md"
-        openDelay={200}
-        closeDelay={100}
-      >
+      <HoverCard position="right" withArrow shadow="md" openDelay={200} closeDelay={100}>
         <HoverCard.Target>
           <UnstyledButton
-              aria-label={`Show usage for ${filesystems.length + 1} filesystems`}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                flex: 1,
-                minWidth: 24,
-                cursor: "pointer",
-              }}
-            >
-              <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
-                <Progress value={system.disk} color={thresholdColor(system.disk)} size={trackSize} />
-                <Group
-                  gap={dotGap}
-                  wrap="nowrap"
-                  aria-hidden
-                  pos="absolute"
-                  top="50%"
-                  right={Math.max(2, dotGap)}
-                  style={{ transform: "translateY(-50%)" }}
-                >
-                  {filesystems.map(([path, value]) => (
-                    <Box
-                      key={path}
-                      w={dotSize}
-                      h={dotSize}
-                      style={{
-                        borderRadius: "50%",
-                        backgroundColor: severityColor(value),
-                        boxShadow: "0 0 0 0.5px var(--mantine-color-body)",
-                        flex: "0 0 auto",
-                      }}
-                    />
-                  ))}
-                </Group>
-              </Box>
+            aria-label={`Show usage for ${filesystems.length + 1} filesystems`}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flex: 1,
+              minWidth: 24,
+              cursor: "pointer",
+            }}
+          >
+            <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
+              <Progress value={system.disk} color={thresholdColor(system.disk)} size={trackSize} />
+              <Group
+                gap={dotGap}
+                wrap="nowrap"
+                aria-hidden
+                pos="absolute"
+                top="50%"
+                right={Math.max(2, dotGap)}
+                style={{ transform: "translateY(-50%)" }}
+              >
+                {filesystems.map(([path, value]) => (
+                  <Box
+                    key={path}
+                    w={dotSize}
+                    h={dotSize}
+                    style={{
+                      borderRadius: "50%",
+                      backgroundColor: severityColor(value),
+                      boxShadow: "0 0 0 0.5px var(--mantine-color-body)",
+                      flex: "0 0 auto",
+                    }}
+                  />
+                ))}
+              </Group>
+            </Box>
           </UnstyledButton>
         </HoverCard.Target>
         <HoverCard.Dropdown p={8}>
