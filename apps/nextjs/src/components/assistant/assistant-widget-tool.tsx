@@ -213,6 +213,7 @@ export const AssistantConfigureWidgetTool = ({
           openModal(
             {
               kind: args.kind,
+              definition: widgetImports[args.kind].definition,
               value: configuration.value,
               integrationData: configuration.integrationData,
               integrationSupport: configuration.integrationSupport,
