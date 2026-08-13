@@ -19,6 +19,7 @@ packages/onboarding/src/setup-studio.tsx
   s_06f8fd8d11bc0e::t_7f973ba4441e5f 1409-1415
   s_06f8fd8d11bc0e::t_ab0195967b2f18 67,1299-1306,1312,1325,1329,1331,1407-1408
   s_06f8fd8d11bc0e::t_48209bc8b08c12 607,656,659
+  s_bc3b2ff5afd321::t_a41928157b9bb5 101,150-151,170,192-195,211,228-229,258-259,375,439-454,534,539,544,558-561,563-566,573-576,579-582,597-600,604-606,608-609,611,617-620,622-625,655,657-658,728,1275,1283,1286,1291,1417-1418,1425-1426,1444-1446,1477-1506,1656,1661-1663,1671-1673,1773,1776,1780,1811-1819,1833-1836,1856-1859
 packages/onboarding/src/finish.tsx
   s_9e3e8866e477c7::t_f0d4bd0d16939f 6,25,27-51,76-79,81-83
   s_f88a182f44b431::t_3b3714daf097dd 12,63
@@ -77,6 +78,14 @@ pnpm-lock.yaml
       "agent_id": {
         "tool": "codex",
         "id": "019ffc40-9362-7f41-b5f1-170ea5f2fb0a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_bc3b2ff5afd321": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa77-6fff-7222-aeba-e870dc5f1496",
         "model": "gpt-5.6-sol"
       },
       "human_author": "Thomas Camlong <thomas@ajnart.fr>"
