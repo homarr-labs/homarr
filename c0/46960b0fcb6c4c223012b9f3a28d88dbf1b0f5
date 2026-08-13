@@ -1,0 +1,29 @@
+e2e/manage-collections.spec.ts
+  s_bc3b2ff5afd321::t_a833de47ed9f19 118-124
+  s_bc3b2ff5afd321::t_cd732d9dbbeed3 140
+e2e/onboarding.spec.ts
+  s_bc3b2ff5afd321::t_a833de47ed9f19 106,458
+  s_bc3b2ff5afd321::t_92e823e60cc063 141
+  s_bc3b2ff5afd321::t_cd732d9dbbeed3 144,147-148,302
+  s_bc3b2ff5afd321::t_d7a3a8963a894d 460
+apps/nextjs/src/components/onboarding/tour-shell.tsx
+  s_bc3b2ff5afd321::t_9b5af85b08b3db 184-185
+apps/nextjs/src/components/onboarding/board-tour.tsx
+  s_bc3b2ff5afd321::t_34f6b62cccf921 96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c046960b0fcb6c4c223012b9f3a28d88dbf1b0f5",
+  "prompts": {},
+  "sessions": {
+    "s_bc3b2ff5afd321": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa77-6fff-7222-aeba-e870dc5f1496",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
