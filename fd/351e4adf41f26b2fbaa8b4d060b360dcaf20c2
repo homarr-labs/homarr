@@ -1,0 +1,25 @@
+packages/widgets/src/common/tabs-keep-mounted.spec.ts
+  s_a70c07ac5b7a5a::t_b08b4b36ce4594 50-51,53-56,59
+  s_a70c07ac5b7a5a::t_2d5a0544eb4335 1-49,52,57-58,60-102
+docs/perf/WIDGET-AUDIT.md
+  s_a70c07ac5b7a5a::t_be9883e1bd2bd0 168
+  s_a70c07ac5b7a5a::t_043cef84d4b4fb 5-10
+  s_a70c07ac5b7a5a::t_7be0c081693cf3 50-60
+  s_a70c07ac5b7a5a::t_fe53389f8cf34c 167
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "fd351e4adf41f26b2fbaa8b4d060b360dcaf20c2",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
