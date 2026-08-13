@@ -1,0 +1,31 @@
+packages/api/src/router/test/config-io.spec.ts
+  s_ca2323b7f96e59::t_ee01f059225e04 2
+  s_ca2323b7f96e59::t_1c5f9bd7215bb9 19,25,373-384
+  s_bc3b2ff5afd321::t_5bfcb2925db03a 385-387
+packages/api/src/router/config/config-io.ts
+  s_ca2323b7f96e59::t_1c5f9bd7215bb9 175-176,182-183,256,258-259
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "6535af85ca03305310fcbbb30db2f1ed6e7b3f38",
+  "prompts": {},
+  "sessions": {
+    "s_bc3b2ff5afd321": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa77-6fff-7222-aeba-e870dc5f1496",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_ca2323b7f96e59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5b-9d67-7470-9988-648d9d7016d2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
