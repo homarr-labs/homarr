@@ -302,6 +302,7 @@ apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-preview-panel.
   s_f3d4850db94e77::t_2467761454b1ca 4,86,92-115,120-122,124-127,153-166
 apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
   s_f3d4850db94e77::t_43386528985430 3-4,31-37,40-43
+  s_35353883291841::t_62964b28f5ae3d 38-39
 ---
 {
   "schema_version": "authorship/3.0.0",
@@ -313,6 +314,14 @@ apps/nextjs/src/app/[locale]/manage/custom-widgets/_copy-ai-prompt-button.tsx
       "agent_id": {
         "tool": "codex",
         "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_35353883291841": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa61-1f37-7901-b3f7-3f6a6ba68f69",
         "model": "gpt-5.6-sol"
       },
       "human_author": "Thomas Camlong <thomas@ajnart.fr>"
