@@ -1,0 +1,384 @@
+apps/docs/docs/management/boards/index.mdx
+  s_bc3b2ff5afd321::t_20babd3a2a6f30 26
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_bc3b2ff5afd321::t_20babd3a2a6f30 30-32,36,41,43-44,46-48,50,52,54-59,61-63,65-66,69,74
+  s_bc3b2ff5afd321::t_39e6b29b6d534e 82
+.cursor/rules/mantine-datatable-migration.mdc
+  s_bc3b2ff5afd321::t_2ca5ed6aca42f5 604-612
+.gitignore
+  s_bc3b2ff5afd321::t_58bc43f559736e 87-94
+MANTINE.md
+  s_bc3b2ff5afd321::t_23162369cc6405 57
+apps/docs/blog/2025/01-19-migration-guide-1.0/index.mdx
+  s_bc3b2ff5afd321::t_0aafc53ea1002b 13,15-17,31,33,35,41
+apps/docs/docs/management/apps/index.mdx
+  s_bc3b2ff5afd321::t_31d098d20b549a 54,56
+apps/docs/docs/management/integrations/index.mdx
+  s_bc3b2ff5afd321::t_6c120fdc391690 16,18
+apps/docs/docs/management/search-engines/index.mdx
+  s_bc3b2ff5afd321::t_a3844fb0507a75 11
+apps/nextjs/next.config.ts
+  s_bc3b2ff5afd321::t_2c18ba3f58f289 49
+apps/nextjs/package.json
+  s_bc3b2ff5afd321::t_22bb40acb61742 51
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_bc3b2ff5afd321::t_29817a030cd785 7
+apps/nextjs/src/app/[locale]/boards/[name]/settings/_layout-preview.tsx
+  s_bc3b2ff5afd321::t_056b2aeb1aee2d 7-8,19-21
+apps/nextjs/src/app/[locale]/init/page.tsx
+  s_bc3b2ff5afd321::t_8decab329aaec1 1,3-14,16-17,20-52,55-71
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_bc3b2ff5afd321::t_bc7fb19958fa9f 176-181
+apps/nextjs/src/app/[locale]/manage/apps/_app-delete-button.tsx
+  s_bc3b2ff5afd321::t_7c8a1c73656f1d 20,54-61
+apps/nextjs/src/app/[locale]/manage/apps/edit/[id]/page.tsx
+  s_bc3b2ff5afd321::t_dc94d5f6850c9a 19
+apps/nextjs/src/app/[locale]/manage/apps/new/page.tsx
+  s_bc3b2ff5afd321::t_c6e88d227ae230 13
+apps/nextjs/src/app/[locale]/manage/apps/page.tsx
+  s_bc3b2ff5afd321::t_a7c14bc72abb98 2-3,10,12,16,23-34,43,49-51,53-70,72-74,84-96,99-108,110-111,114-118,121-123,126-151,153-160,162,168-169,171,174,176-177
+apps/nextjs/src/app/[locale]/manage/boards/_components/board-card-menu-dropdown.tsx
+  s_bc3b2ff5afd321::t_8cdf86e2545d49 25
+apps/nextjs/src/app/[locale]/manage/boards/_components/create-board-button.tsx
+  s_bc3b2ff5afd321::t_355cacb8fe564d 3-4,7,14,18-20
+apps/nextjs/src/app/[locale]/manage/boards/page.tsx
+  s_bc3b2ff5afd321::t_cf492415eab7eb 27,31,41,56-58,64-81,92-104,107,111-114,116-118,121-123,126,128,130,136,138,144,146,159,162,170-171
+apps/nextjs/src/app/[locale]/manage/integrations/_integration-buttons.tsx
+  s_bc3b2ff5afd321::t_8a2e36018cce88 16,18,28,56
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_bc3b2ff5afd321::t_a121fc897e91c8 64,69,83-85,184,194,206
+apps/nextjs/src/app/[locale]/manage/integrations/page.tsx
+  s_bc3b2ff5afd321::t_901363d61e56ab 2,4,9,12,15,19-20,23,28,30,33-51,53-75,77,85-93,95-102,104-105,108-110,113,115-116,119-162
+apps/nextjs/src/app/[locale]/manage/medias/page.tsx
+  s_bc3b2ff5afd321::t_8802b1f720c8df 74-78
+apps/nextjs/src/app/[locale]/manage/search-engines/_search-engine-delete-button.tsx
+  s_bc3b2ff5afd321::t_3050d8e19a3eab 20,54-61
+apps/nextjs/src/app/[locale]/manage/search-engines/page.tsx
+  s_bc3b2ff5afd321::t_616f8e7ed8d544 2,9,11,14,31,35,37-39,42-66,70,74-86,89-97,101,103-104,107,109-113,116-143,145-152,154,160-161,163,166,168-169
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/members/page.tsx
+  s_bc3b2ff5afd321::t_5fce93fd7149b9 69-73
+apps/nextjs/src/app/api/backup/import/route.ts
+  s_bc3b2ff5afd321::t_71e1069bdd6df7 11-15,27-121,178,184-188,203-205,208-209,212-215,217-225,227-233,235-240,242-246,248-258,306,309-316,322-328,330-332
+apps/nextjs/src/app/api/backup/test/import-route.spec.ts
+  s_bc3b2ff5afd321::t_93bd452a709449 1-40,43-78,80-81,83-88,90-142,144,146-257
+apps/nextjs/src/app/api/onboarding/claim/route.ts
+  s_bc3b2ff5afd321::t_aef87c5cb30a10 1-53
+apps/nextjs/src/components/backup/database-restore-flow.spec.ts
+  s_bc3b2ff5afd321::t_a6d323ff5c0a1c 1,3,5,7-10,12-14,16-25,27-28,30-31,33-35,38-53,55,57-58,61-68,70-75
+apps/nextjs/src/components/backup/database-restore-flow.tsx
+  s_bc3b2ff5afd321::t_5498fec443eb6e 3,9,25-104,110-111,114-120,128,138-140,144-148,150-159,165-167,169,174-177,180-191,194-196,199-201,307-309
+apps/nextjs/src/components/backup/restore-progress-panel.spec.tsx
+  s_bc3b2ff5afd321::t_b39f08d73d04d6 1-99
+apps/nextjs/src/components/backup/restore-progress-panel.tsx
+  s_bc3b2ff5afd321::t_8783944a2508b0 3-5,7,9,13-15,18-21,23,25-27,30-38,40-63,66-75
+apps/nextjs/src/components/board/board-layout-thumbnail.module.css
+  s_bc3b2ff5afd321::t_e83b681b58ee46 1-13,15-20,22-42,44-68
+apps/nextjs/src/components/board/board-layout-thumbnail.tsx
+  s_bc3b2ff5afd321::t_573dd0f837373f 1-2,4-6,8,10-12,15-43,45-91
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_bc3b2ff5afd321::t_13f215237c1e50 199
+apps/nextjs/src/components/board/sections/content.tsx
+  s_bc3b2ff5afd321::t_c5f7c238f9ec6d 42-53,55-56,64,66-77
+apps/nextjs/src/components/integration/integration-grid-shared.ts
+  s_bc3b2ff5afd321::t_cf0302a5fb5ce1 1-6
+apps/nextjs/src/components/integration/integration-multi-select-grid.tsx
+  s_bc3b2ff5afd321::t_2b5f468e045197 1-2
+apps/nextjs/src/components/integration/integration-select-grid.tsx
+  s_bc3b2ff5afd321::t_ce088d77ea412d 1-2
+apps/nextjs/src/components/manage/manage-collection.tsx
+  s_bc3b2ff5afd321::t_536f6ce08f3e56 1-2,4-5,7-30,32-38,41-62,64-67
+apps/nextjs/src/components/manage/manage-page-layout.tsx
+  s_bc3b2ff5afd321::t_ebd5263413d98a 9
+apps/nextjs/src/components/no-results.tsx
+  s_bc3b2ff5afd321::t_8e225556ef95f5 1,9,17,25-29
+apps/nextjs/src/proxy.spec.ts
+  s_bc3b2ff5afd321::t_26237764473387 65-85
+apps/nextjs/src/proxy.ts
+  s_bc3b2ff5afd321::t_0669dd1bf84a3e 45-49,51
+e2e/manage-collections.spec.ts
+  s_bc3b2ff5afd321::t_3285a0f7b48e5f 1-142
+e2e/onboarding.spec.ts
+  s_bc3b2ff5afd321::t_1f1ae300bc3cac 1-3,5-9,11,16-73,76-239,242-243,259-267,281-321,325,327-328,352,358-361,363,365-369,372-471
+e2e/shared/actions/onboarding-actions.ts
+  s_bc3b2ff5afd321::t_1b27a5f71ed1a5 30-31,35,37,45-46,51,55
+e2e/shared/assertions/onboarding-assertions.ts
+  s_bc3b2ff5afd321::t_d5ebc6cf5862a3 60
+e2e/shared/seed-admin-user.ts
+  s_bc3b2ff5afd321::t_265049e391ba70 20,26
+packages/api/package.json
+  s_bc3b2ff5afd321::t_d9f9482fe5a9d0 20,22
+packages/api/src/onboarding-claim.ts
+  s_bc3b2ff5afd321::t_b805187b77b703 1,4-5,7-9,11-14,16-69,71-72,74-116
+packages/api/src/onboarding-step.ts
+  s_bc3b2ff5afd321::t_776a10bafe8695 1
+packages/api/src/router/app.ts
+  s_bc3b2ff5afd321::t_1f7cefc67a1dcf 21,35-36
+packages/api/src/router/board.ts
+  s_bc3b2ff5afd321::t_fea38d7d0fc9ce 11,34,41-42,87,193-194,216,219,223-224,227-399,2006,2018-2019,2025,2027-2032,2485-2537
+packages/api/src/router/group.ts
+  s_bc3b2ff5afd321::t_cd85cbed983371 1-2,11,189,193,195-225
+packages/api/src/router/home.ts
+  s_bc3b2ff5afd321::t_711257d973b76b 104
+packages/api/src/router/onboard/capability-probes.spec.ts
+  s_bc3b2ff5afd321::t_74145f86c1d663 1,3,5-8,10-11,13-18,20-22,24-35,37-39,41,43-69
+packages/api/src/router/onboard/capability-probes.ts
+  s_bc3b2ff5afd321::t_3c754f1e7eea6a 1,3,5-8,10-13,15-19,21-35,39-79
+packages/api/src/router/onboard/onboard-queries.ts
+  s_bc3b2ff5afd321::t_bd9d818d75eedd 3,6,8-9,11,18-21,24-29,31-34
+packages/api/src/router/onboard/onboard-router.ts
+  s_bc3b2ff5afd321::t_977ac3ff8d5d79 1-4,6,11-14,17,25,27-29,32,35-36,38-40,42-43,45-46,48-50,53-55,67-102,105-108,110-116,118-125,127-128,130-138,140-141,143-149,151-158,162-163,165-173,175-184,191-195,198-238,244-245,247,249,256-257,259,261,267-268,273-290,292-294,298-301,303-381,383-402,404-441,443-472,474-483,485-613,615-655,657-759,761-827,829-1182
+packages/api/src/router/serverSettings.ts
+  s_bc3b2ff5afd321::t_efa114237d94f8 15
+packages/api/src/router/test/app.spec.ts
+  s_bc3b2ff5afd321::t_953769bba484d6 79-80,84,87,90,95
+packages/api/src/router/test/board.spec.ts
+  s_bc3b2ff5afd321::t_0aa7384f3dc8d5 290-548
+packages/api/src/router/test/group-onboarding.spec.ts
+  s_bc3b2ff5afd321::t_fe5dbecce2b8f6 1,3-5,7,9-12,14-18,20-23,25-27,29-36
+packages/api/src/router/test/onboard.spec.ts
+  s_bc3b2ff5afd321::t_378e490924d14d 1-1111
+packages/api/src/router/test/onboarding-claim.spec.ts
+  s_bc3b2ff5afd321::t_d6f8de057d466c 1-84
+packages/api/src/router/test/user.spec.ts
+  s_bc3b2ff5afd321::t_2185fc59150332 11,44,49,69,74,89,94,109,114,134,139,448-450
+packages/api/src/router/user.ts
+  s_bc3b2ff5afd321::t_bd49bc78561cdc 7,13,55,58-59,61-67,72-93
+packages/api/src/trpc.ts
+  s_bc3b2ff5afd321::t_31cedd19f93d87 23,45,63,135-147,196
+packages/boards/package.json
+  s_bc3b2ff5afd321::t_14a3ca62dec085 17,29-30
+packages/boards/src/layout-preview.spec.ts
+  s_bc3b2ff5afd321::t_bc5e97d3c105e6 3-4,12-13,20-21,28-31,34,43-65,68,72-121,125,131,133,138,140,143,147-211
+packages/boards/src/layout-preview.ts
+  s_bc3b2ff5afd321::t_19e795c438d436 3,6-13,15-22,24-61,73-77,91,142
+packages/db/migrations/seed.ts
+  s_bc3b2ff5afd321::t_75b3bdb3feffd6 689
+packages/definitions/src/integration-url-template.ts
+  s_bc3b2ff5afd321::t_e89dd4485083a9 7,11-37,39-41
+packages/definitions/src/integration.ts
+  s_bc3b2ff5afd321::t_2cd6f1d11cd1c5 1,225,234,250,257,299,308,316,332,357,366,375,382,401,410,417,419,426,435,452-453,469,484-485,543-545,549-561
+packages/definitions/src/onboarding.ts
+  s_bc3b2ff5afd321::t_681c6ad9be15ab 1,3-5
+packages/definitions/src/test/api-key-url.spec.ts
+  s_bc3b2ff5afd321::t_bff31a0b915880 3,6-13,32-71,74-77
+packages/definitions/src/test/integration-url-template.spec.ts
+  s_bc3b2ff5afd321::t_22f55f5932af2d 4,28-65,78-83
+packages/definitions/src/widget-integration-map.ts
+  s_bc3b2ff5afd321::t_7e2bbfbc6ef2c1 5,67-100,125-129
+packages/docker/package.json
+  s_bc3b2ff5afd321::t_464232f10603a4 28,34-35
+packages/docker/src/discovery/index.ts
+  s_bc3b2ff5afd321::t_d7c148732a85f3 1-3
+packages/docker/src/discovery/list-discovered-containers.spec.ts
+  s_bc3b2ff5afd321::t_c545f42464a60a 1,3-4,6-13,15-17,19,21-25,27-28,30-35,37-44,46-50,54-88
+packages/docker/src/discovery/list-discovered-containers.ts
+  s_bc3b2ff5afd321::t_dc40653eacf103 4-7,9-10,12-14,17-52,54,56-60,65-66
+packages/docker/src/discovery/parse-container-labels.spec.ts
+  s_bc3b2ff5afd321::t_0904161e70b031 1-38,40,42-58,60,62-65,67-69,72-74,77-87,90-101,103-115,117-130,132-152
+packages/docker/src/discovery/parse-container-labels.ts
+  s_bc3b2ff5afd321::t_8c0261e40fe12f 1,3-52,54-66
+packages/docker/src/discovery/types.ts
+  s_bc3b2ff5afd321::t_46ccf5ad4e87e3 1-39
+packages/docker/src/index.ts
+  s_bc3b2ff5afd321::t_c422d6ab23a57b 12
+packages/docker/src/labels.ts
+  s_bc3b2ff5afd321::t_5aeb6fe6f20a90 3-20
+packages/integrations/src/adguard-home/adguard-home-integration.ts
+  s_bc3b2ff5afd321::t_f608b7204cc94a 14-21
+packages/integrations/src/adguard-home/test/adguard-home-integration.spec.ts
+  s_bc3b2ff5afd321::t_0d1ec5dc8f3829 1-94
+packages/integrations/src/dashdot/dashdot-integration.ts
+  s_bc3b2ff5afd321::t_e2c8ef797ff37d 29-38
+packages/integrations/src/dashdot/test/dashdot-integration.spec.ts
+  s_bc3b2ff5afd321::t_3419ea472030c4 1-25,28-56,58-60,62-113
+packages/integrations/src/download-client/nzbget/nzbget-integration.ts
+  s_bc3b2ff5afd321::t_7bd5246f576ddb 26-30
+packages/integrations/src/download-client/nzbget/test/nzbget-integration.spec.ts
+  s_bc3b2ff5afd321::t_01563020bbb279 1-75
+packages/integrations/src/download-client/sabnzbd/sabnzbd-integration.ts
+  s_bc3b2ff5afd321::t_355df60dba2748 28-37
+packages/integrations/src/download-client/sabnzbd/test/sabnzbd-integration.spec.ts
+  s_bc3b2ff5afd321::t_5815a45461a630 1,3-4,6-9,11,13-14,16-18,20-21,23-35,37-52,55-60,62-64,66-69,71
+packages/integrations/src/immich/immich-integration.ts
+  s_bc3b2ff5afd321::t_5029ed07f8638c 48,77,128-136
+packages/integrations/src/immich/test/immich-integration.spec.ts
+  s_bc3b2ff5afd321::t_e2f29225a40d88 1,3,5-6,8-12,14-26,28-32,34-41,43-57,59-71,74-76,78-86
+packages/integrations/src/truenas/test/truenas-integration.spec.ts
+  s_bc3b2ff5afd321::t_27b1125dc1a9e0 1-2,5-9,18,68-76,98,223-250
+packages/integrations/src/truenas/truenas-integration.ts
+  s_bc3b2ff5afd321::t_28896a93aa9559 27-32
+packages/integrations/src/umami/test/umami-integration.spec.ts
+  s_bc3b2ff5afd321::t_aad292fe3ec8b0 1-199
+packages/integrations/src/umami/umami-integration.ts
+  s_bc3b2ff5afd321::t_fc71ec0fcdb3f8 32-34,38-47,186,188-195,197-198,200,248-259,310-316,318-337,339-363,371-372,375-385
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_bc3b2ff5afd321::t_a11a88609b3fa7 51
+packages/onboarding/package.json
+  s_bc3b2ff5afd321::t_df30e6dd957ac2 2,15-16,22,26-27,31,38-39,41,45-47
+packages/onboarding/src/account-recovery.spec.ts
+  s_bc3b2ff5afd321::t_c04dc7c12be19a 1,3,5-13
+packages/onboarding/src/account-recovery.ts
+  s_bc3b2ff5afd321::t_563dd54af31ecb 1-3,5-7
+packages/onboarding/src/account.tsx
+  s_bc3b2ff5afd321::t_c5e53798df6c6f 3-5,13,15-16,19-70,73-75,77-83,85-98,101-120,122-125,127-128,130-136,140,144-187
+packages/onboarding/src/claim-state.spec.ts
+  s_bc3b2ff5afd321::t_495fb265beadb9 1,3,5-12,14-25
+packages/onboarding/src/claim-state.ts
+  s_bc3b2ff5afd321::t_1d5c6fab6579f3 1-14
+packages/onboarding/src/discovery-selection.spec.ts
+  s_bc3b2ff5afd321::t_d03ac5430cd27e 1,3,5-8,10-11,14-22,25-33
+packages/onboarding/src/discovery-selection.ts
+  s_bc3b2ff5afd321::t_3cfa78b2085cff 1-6,8-12,14,16-19,21,24-25
+packages/onboarding/src/finish.tsx
+  s_bc3b2ff5afd321::t_7865b2e61c2b46 1-5,8,11-12,14-18,21-28,30-78,82-85,87-88,90-114,116-139
+packages/onboarding/src/index.ts
+  s_bc3b2ff5afd321::t_74cdd92363dad1 1-2
+packages/onboarding/src/onboarding-studio.module.css
+  s_bc3b2ff5afd321::t_19cb16eacf2feb 1-510
+packages/onboarding/src/onboarding-studio.tsx
+  s_bc3b2ff5afd321::t_2edaea91d7c513 3-4,7,9-14,16-56,58-59,61-99,103-113
+packages/onboarding/src/setup-studio.tsx
+  s_bc3b2ff5afd321::t_cf4627969faaeb 3-4,6,9,11,13-18,20,23,26,29-30,34-36,38,40-42,45,47-61,63,66-96,98-100,102-103,106-107,109-110,112-114,117-123,125-132,134-172,174-188,190-210,213-219,221-226,228-277,281-290,292-327,330-345,347-363,365-448,450-465,469-525,528-543,545-726,728,730-819,821-823,825-865,868-929,931-932,934-944,947,949-954,956,958-1053,1055-1057,1060,1062-1297,1299-1302,1305-1308,1310-1356,1358,1362-1401,1403-1463,1465-1488,1490-1516,1518-1597,1599-1601,1603-1614,1616-1738,1740-1749,1751-1859,1861-1864,1867-1980
+packages/onboarding/src/types.ts
+  s_bc3b2ff5afd321::t_eb382a1e4ec884 1,5-17,20-23
+packages/onboarding/src/welcome.tsx
+  s_bc3b2ff5afd321::t_8d029691060795 3-6,10-23,27-29,32-44,47-63,65-67,69-75,78-106,108-154,156-199
+packages/onboarding/tsconfig.json
+  s_bc3b2ff5afd321::t_5b32aa81e3334f 3-4
+packages/request-handler/src/media-request-stats.spec.ts
+  s_bc3b2ff5afd321::t_3e4aad22fd32e2 1,3,5,7-9,11-18,20-24,26-37,39-49,51-60
+packages/request-handler/src/media-request-stats.ts
+  s_bc3b2ff5afd321::t_4fd01e564de059 14-17,19-20
+packages/request-handler/src/media-transcoding.spec.ts
+  s_bc3b2ff5afd321::t_83ff2e949610cb 1-52
+packages/request-handler/src/media-transcoding.ts
+  s_bc3b2ff5afd321::t_5d807589a49c42 14-18,20-22
+packages/spotlight/src/modes/command/global-group.tsx
+  s_bc3b2ff5afd321::t_67c8b95c10d542 13,73
+packages/spotlight/src/modes/page/pages-search-group.tsx
+  s_bc3b2ff5afd321::t_ecacb57f18dc3a 79
+packages/translation/src/lang/en.json
+  s_bc3b2ff5afd321::t_f72a8b5d336c50 3-139,141-249,253-262,264,738-742,745-749,1473,1475-1478,1480-1485,6002-6005,6007-6008,6769-6772,7817-7821,7824-7834
+packages/ui/package.json
+  s_bc3b2ff5afd321::t_4d21a29ed07864 16
+packages/ui/src/components/overflow-badge.tsx
+  s_bc3b2ff5afd321::t_677e17c7e16955 22-45,47,49-50
+packages/ui/src/components/search-input.tsx
+  s_bc3b2ff5afd321::t_313d48fb099d6a 4,13,17-18,22-27,29-34,36-37,43,53,56
+packages/ui/src/components/user-avatar.tsx
+  s_bc3b2ff5afd321::t_f9ecb2250a3d17 12
+packages/ui/src/integration-select-grid/index.ts
+  s_bc3b2ff5afd321::t_1af7b06c6d9dfd 1-6
+packages/ui/src/integration-select-grid/integration-grid-shared.spec.ts
+  s_bc3b2ff5afd321::t_682037a37d80ca 1,3,5-12,14
+packages/ui/src/integration-select-grid/integration-grid-shared.ts
+  s_bc3b2ff5afd321::t_6b5afd9fb856c4 1-9,11-39,42-47,49-71,73-76
+packages/ui/src/integration-select-grid/integration-multi-select-grid.tsx
+  s_bc3b2ff5afd321::t_8cf2a8968033cf 3-5,8,10-13,15-20,23-53,56-62,64-88,90,92-113,115,117-139
+packages/ui/src/integration-select-grid/integration-select-grid.module.css
+  s_bc3b2ff5afd321::t_c669c7b8ae9fe6 1-2,4,7-10,12-16,18-19,22-24
+packages/ui/src/integration-select-grid/integration-select-grid.module.d.css.ts
+  s_bc3b2ff5afd321::t_fd6505eeb78d72 1-2
+packages/ui/src/integration-select-grid/integration-select-grid.tsx
+  s_bc3b2ff5afd321::t_251bc0dc17fa43 3-5,7,10-13,15-21,23-24,26-60,62-63,65-96
+packages/ui/src/select-grid-layout.tsx
+  s_bc3b2ff5afd321::t_2b61a26813e39f 7,15,26,45
+packages/validation/src/onboarding.spec.ts
+  s_bc3b2ff5afd321::t_cd2bb252b68e41 3-7,9-15,17-27,30-54,56-74,76-77,79-86,88-95,97-103
+packages/validation/src/onboarding.ts
+  s_bc3b2ff5afd321::t_2a57feaab14f1c 3-10,12-13,15-25,27-33,36-44,47-53,56-58,61-72,74-114
+packages/widgets/src/_inputs/widget-multiReleasesRepositories-input.tsx
+  s_bc3b2ff5afd321::t_3597a897d03e87 64-65
+packages/widgets/src/_inputs/widget-sortable-item-list-input.tsx
+  s_bc3b2ff5afd321::t_f8ed4b7fde6831 209-219
+packages/widgets/src/anchor-note/component.tsx
+  s_bc3b2ff5afd321::t_d0566798dc9842 18,22,275-276,278
+packages/widgets/src/anchor-note/content.spec.ts
+  s_bc3b2ff5afd321::t_d6938dce3f931b 1,3,5-9,11-16,19-22,24-25,27
+packages/widgets/src/anchor-note/content.ts
+  s_bc3b2ff5afd321::t_05fe78daeb8dc1 3-5,8-9,12-34,36-40
+packages/widgets/src/anchor-note/editor.tsx
+  s_bc3b2ff5afd321::t_6ba278ccc22040 3-13,15-70,73-81,83
+packages/widgets/src/app/component.tsx
+  s_bc3b2ff5afd321::t_74489deec5bf8c 62-64,118,140-162
+packages/widgets/src/beszel-system-table/component.tsx
+  s_bc3b2ff5afd321::t_0aaa463288e49a 92-107,216,228,260
+packages/widgets/src/beszel/_shared/chart.tsx
+  s_bc3b2ff5afd321::t_d6aaf325636932 34
+packages/widgets/src/bookmarks/index.tsx
+  s_bc3b2ff5afd321::t_b2b91deeabeee8 31,35
+packages/widgets/src/calendar/calender-day.tsx
+  s_bc3b2ff5afd321::t_6a810c24d5b402 25-48,60
+packages/widgets/src/coolify/instance-card.tsx
+  s_bc3b2ff5afd321::t_1ca7e27f48014e 125-132,151,155-173
+packages/widgets/src/coolify/single-instance-layout.tsx
+  s_bc3b2ff5afd321::t_7760727e38abd3 66-73,92,97-118
+packages/widgets/src/dns-hole/controls/index.ts
+  s_bc3b2ff5afd321::t_82bbf712d8aa9a 14
+packages/widgets/src/dns-hole/summary/index.ts
+  s_bc3b2ff5afd321::t_e55a0b890a2143 14
+packages/widgets/src/downloads/index.ts
+  s_bc3b2ff5afd321::t_ee3f2ed8a422e2 52
+packages/widgets/src/firewall/index.ts
+  s_bc3b2ff5afd321::t_2eb7d3d6c4d847 11
+packages/widgets/src/health-monitoring/index.ts
+  s_bc3b2ff5afd321::t_659f29aa5ee093 13
+packages/widgets/src/iframe/component.tsx
+  s_bc3b2ff5afd321::t_b90e75545a4997 29
+packages/widgets/src/immich/album-carousel/component.tsx
+  s_bc3b2ff5afd321::t_8ad3848a08d1a5 238
+packages/widgets/src/manifest.spec.ts
+  s_bc3b2ff5afd321::t_0ee8954a9d5188 153-171
+packages/widgets/src/media-missing/component.tsx
+  s_bc3b2ff5afd321::t_90c63fb7c958c6 160,183,188
+packages/widgets/src/media-releases/component.module.css
+  s_bc3b2ff5afd321::t_561b926f6dc78d 20-24
+packages/widgets/src/media-releases/component.tsx
+  s_bc3b2ff5afd321::t_ed8a10a894e28b 120,163
+packages/widgets/src/media-server/index.ts
+  s_bc3b2ff5afd321::t_0c53e3a6ece689 17
+packages/widgets/src/notebook/notebook.tsx
+  s_bc3b2ff5afd321::t_298c6a8224140e 868,871-886,904
+packages/widgets/src/options.ts
+  s_bc3b2ff5afd321::t_8335f987a91ca3 40
+packages/widgets/src/refetch-intervals.ts
+  s_bc3b2ff5afd321::t_0eeacf3d27e909 10-15
+packages/widgets/src/releases/component.tsx
+  s_bc3b2ff5afd321::t_db0747f1c78ebe 128,133
+packages/widgets/src/rssFeed/component.tsx
+  s_bc3b2ff5afd321::t_ee5891b848a5d8 102
+packages/widgets/src/system-disks/component.tsx
+  s_bc3b2ff5afd321::t_801cfec180d782 97,99
+packages/widgets/src/system-disks/index.ts
+  s_bc3b2ff5afd321::t_1ecf133bfdc617 11
+packages/widgets/src/system-resources/index.ts
+  s_bc3b2ff5afd321::t_3495736f284356 19
+packages/widgets/src/tracearr/index.ts
+  s_bc3b2ff5afd321::t_93ca026bd9c147 9
+packages/widgets/src/umami/umami-content.tsx
+  s_bc3b2ff5afd321::t_5c399213c7d18a 66,109,111
+packages/widgets/src/umami/umami-events-content.tsx
+  s_bc3b2ff5afd321::t_6bb513d4f49435 9,12,14,20,22,30
+packages/widgets/src/wud/component.tsx
+  s_bc3b2ff5afd321::t_ffd80d44393bb6 189-194,203
+pnpm-lock.yaml
+  s_bc3b2ff5afd321::t_9b0618ca9b0951 498-500,1054,1056,1636-1641,2081-2083,2097-2099,2406,2408,2410-2411,2413-2414,2416,2423,2425,2444,2446-2447,2449,2460,2462,2466,2468,11895-11905,13487-13503,27274-27282,29229-29242
+pnpm-workspace.yaml
+  s_bc3b2ff5afd321::t_68fe9c618d4a57 169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "2581447f646f8c143ddca5527324b5208fd78b7f",
+  "prompts": {},
+  "sessions": {
+    "s_bc3b2ff5afd321": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa77-6fff-7222-aeba-e870dc5f1496",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
