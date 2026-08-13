@@ -50,7 +50,6 @@ export const BeszelSystemStatsModal = createModal<BeszelSystemStatsModalProps>((
         timePeriod={timePeriod}
         visibility={allCharts}
         columns={2}
-        tooltipLayer="modal"
         onSwitchToHistorical={() => setTimePeriod("1h")}
       />
     </Stack>
