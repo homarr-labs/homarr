@@ -172,7 +172,7 @@ describe("matchesWidgetItemQuery", () => {
         integrationIds: ["beszel-1"],
         systemId: "system-1",
         timePeriod: "1h",
-        includeDocker: false,
+        includeDocker: true,
       },
     };
     const scope = createScope({ integrationIds: ["beszel-1"], runtimeQueries: [activeQuery] });

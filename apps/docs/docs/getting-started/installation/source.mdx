@@ -28,15 +28,29 @@ This method is only useful, when you want to develop on Homarr or extend it with
 ## Steps
 
 <ol>
-  <li>Clone the Repository using <code>git clone https://github.com/homarr-labs/homarr.git</code></li>
-  <li>Enter the created directory using <code>cd homarr</code></li>
-  <li>Install all dependencies using <code>pnpm install</code></li>
-  <li>Copy the `.env.example` file to `.env` and replace `DB_URL` with the full path you want to use for the sqlite database file. For example `DB_URL='/home/username/homarr/db.sqlite`</li>
-  <li>Replace `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY` both with a secure random string by using `openssl rand -hex 32`</li>
+  <li>
+    Clone the Repository using <code>git clone https://github.com/homarr-labs/homarr.git</code>
+  </li>
+  <li>
+    Enter the created directory using <code>cd homarr</code>
+  </li>
+  <li>
+    Install all dependencies using <code>pnpm install</code>
+  </li>
+  <li>
+    Copy the `.env.example` file to `.env` and replace `DB_URL` with the full path you want to use for the sqlite
+    database file. For example `DB_URL='/home/username/homarr/db.sqlite`
+  </li>
+  <li>
+    Replace `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY` both with a secure random string by using `openssl rand -hex 32`
+  </li>
   <li>Replace `CRON_JOB_API_KEY` with a secure random string by using `openssl rand -base64 32`</li>
   <li>Run `pnpm run db:migration:sqlite:run` and wait that it completes</li>
   <li>Build the source using `pnpm build`</li>
-  <li>Copy better-sqlite3.node files with `mkdir build` and `cp ./node_modules/better-sqlite3/build/Release/better_sqlite3.node ./build/better_sqlite3.node`</li>
+  <li>
+    Copy better-sqlite3.node files with `mkdir build` and `cp
+    ./node_modules/better-sqlite3/build/Release/better_sqlite3.node ./build/better_sqlite3.node`
+  </li>
   <li>Start a redis server using `redis-server`</li>
   <li>Run the server using `pnpm start`</li>
   <li>Open `http://localhost:3000` in your browser</li>

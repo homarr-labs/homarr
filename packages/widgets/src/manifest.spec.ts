@@ -15,6 +15,7 @@ import {
 } from "./manifest";
 import { widgetQueryRefetchIntervals } from "./refetch-intervals";
 import { widgetCatalogIcons } from "./catalog";
+import { getWidgetQueryKeys } from "./definition";
 
 describe("widget manifest promise stability", () => {
   it("returns the same module promise for every render", () => {
@@ -111,11 +112,11 @@ describe("widget manifest promise stability", () => {
     const definitions = await loadAllWidgetDefinitions();
     const expectedQueryKeys = new Map([
       ["anchorNote", [["widget", "anchorNotes"]]],
-      ["beszelAlerts", [["widget", "beszel"]]],
-      ["clock", [["widget", "weather"]]],
-      ["mediaMissing", [["widget", "mediaOrganizer"]]],
-      ["mediaRequests-requestList", [["widget", "mediaRequests"]]],
-      ["mediaRequests-requestStats", [["widget", "mediaRequests"]]],
+      ["beszelAlerts", [["widget", "beszel", "getAlerts"]]],
+      ["clock", [["widget", "weather", "atLocation"]]],
+      ["mediaMissing", [["widget", "mediaOrganizer", "getData"]]],
+      ["mediaRequests-requestList", [["widget", "mediaRequests", "getLatestRequests"]]],
+      ["mediaRequests-requestStats", [["widget", "mediaRequests", "getStats"]]],
       ["smartHome-entityState", [["widget", "smartHome"]]],
     ] as const);
 
@@ -133,14 +134,15 @@ describe("widget manifest promise stability", () => {
       const definition = definitions.get(kind);
       if (definition?.refetchInterval === undefined) continue;
 
-      const entry = {
-        queryKey: definition.queryKey ?? [["widget", kind]],
-        intervalSeconds: definition.refetchInterval,
-      } as const;
-      const serializedQueryKey = JSON.stringify(entry.queryKey);
-      const existing = expectedByQueryKey.get(serializedQueryKey);
-      expect(existing?.intervalSeconds ?? entry.intervalSeconds).toBe(entry.intervalSeconds);
-      expectedByQueryKey.set(serializedQueryKey, entry);
+      for (const queryKey of getWidgetQueryKeys(definition, kind)) {
+        const path = queryKey[0];
+        if (!Array.isArray(path) || (path[0] !== "widget" && path[0] !== "docker")) continue;
+        const entry = { queryKey, intervalSeconds: definition.refetchInterval } as const;
+        const serializedQueryKey = JSON.stringify(entry.queryKey);
+        const existing = expectedByQueryKey.get(serializedQueryKey);
+        expect(existing?.intervalSeconds ?? entry.intervalSeconds).toBe(entry.intervalSeconds);
+        expectedByQueryKey.set(serializedQueryKey, entry);
+      }
     }
 
     const serializePolicy = (entry: PollingPolicy) => JSON.stringify(entry);
