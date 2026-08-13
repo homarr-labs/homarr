@@ -1,6 +1,10 @@
 import { describe, expect, test } from "vitest";
 
-import { onboardingCreateIntegrationSchema, onboardingDiscoveredAppSchema } from "./onboarding";
+import {
+  onboardingCompleteSetupSchema,
+  onboardingCreateIntegrationSchema,
+  onboardingDiscoveredAppSchema,
+} from "./onboarding";
 
 describe("onboarding URL validation", () => {
   test.each(["javascript:alert(1)", "data:text/html,hello", "file:///etc/passwd"])(
@@ -52,5 +56,26 @@ describe("onboarding URL validation", () => {
         iconUrl: null,
       }).success,
     ).toBe(false);
+  });
+
+  test("requires every app submitted to completeSetup to have an HTTP(S) href", () => {
+    const input = {
+      server: { defaultLocale: "en", defaultColorScheme: "dark" },
+      board: {
+        name: "dashboard",
+        primaryColor: "#228BE6",
+        secondaryColor: "#15AABF",
+        itemRadius: "md",
+      },
+      apps: [{ sourceId: "docker:status", name: "Status", href: null, iconUrl: null }],
+    };
+
+    expect(onboardingCompleteSetupSchema.safeParse(input).success).toBe(false);
+    expect(
+      onboardingCompleteSetupSchema.safeParse({
+        ...input,
+        apps: [{ ...input.apps[0], href: "https://status.example.com" }],
+      }).success,
+    ).toBe(true);
   });
 });

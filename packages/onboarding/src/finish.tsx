@@ -15,9 +15,7 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
   const t = useScopedI18n("init.studio.finish");
   const reduceMotion = useReducedMotion();
   const boardHref = `/boards/${encodeURIComponent(environment.initialBoard?.name ?? "dashboard")}`;
-  const destination = environment.canConfigurePrivileged
-    ? boardHref
-    : `/auth/login?callbackUrl=${encodeURIComponent(boardHref)}`;
+  const destination = environment.canConfigurePrivileged ? boardHref : "/auth/login?callbackUrl=%2Finit";
 
   return (
     <main className={classes.page}>

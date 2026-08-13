@@ -74,7 +74,7 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
         <section className={classes.hero} aria-labelledby="onboarding-welcome-title">
           <Stack gap="xl" align="flex-start">
             <Stack gap="md">
-              <Text c="dimmed" fw={650} tt="uppercase" fz="xs" lts="0.14em">
+              <Text c="dimmed" fw={650} size="sm">
                 {t("eyebrow")}
               </Text>
               <Title id="onboarding-welcome-title" className={classes.heroTitle}>

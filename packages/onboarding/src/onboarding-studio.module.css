@@ -163,6 +163,22 @@
   border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 76%, transparent);
 }
 
+.discoveryChoice {
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.discoveryChoice[data-checked] {
+  border-color: var(--mantine-primary-color-filled);
+  background: color-mix(in srgb, var(--mantine-primary-color-light) 62%, var(--mantine-color-body));
+}
+
+.discoveryChoice:focus-visible {
+  outline: 3px solid var(--mantine-primary-color-light-color);
+  outline-offset: 2px;
+}
+
 .choiceGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -208,6 +224,12 @@
   border: 1px solid var(--mantine-color-default-border);
 }
 
+.preview[data-layout-role="mobile"] {
+  width: min(100%, 28rem);
+  margin-inline: auto;
+  aspect-ratio: 4 / 3;
+}
+
 .previewLane {
   min-width: 0;
   border-radius: calc(var(--mantine-radius-lg) * 0.65);
@@ -219,8 +241,8 @@
 .previewTiles {
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-auto-rows: minmax(0.8rem, 1fr);
+  grid-auto-flow: dense;
   gap: 0.3rem;
 }
 
@@ -232,23 +254,6 @@
     color-mix(in srgb, var(--mantine-color-orange-light) 60%, transparent)
   );
   border: 1px solid color-mix(in srgb, var(--mantine-primary-color-filled) 22%, transparent);
-}
-
-.previewTile:nth-child(1) {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-.previewTile:nth-child(2) {
-  grid-column: span 2;
-}
-.previewTile:nth-child(3) {
-  grid-column: span 1;
-}
-.previewTile:nth-child(4) {
-  grid-column: span 1;
-}
-.previewTile:nth-child(5) {
-  grid-column: span 4;
 }
 
 .assistantStage {
@@ -490,7 +495,8 @@
 
   .choice,
   .railButton,
-  .nextCard {
+  .nextCard,
+  .discoveryChoice {
     transition: none;
   }
 

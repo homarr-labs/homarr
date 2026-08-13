@@ -8,7 +8,7 @@ import type { GridAlgorithmItem } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database, InferInsertModel, InferSelectModel, SQL } from "@homarr/db";
-import { and, asc, eq, handleTransactionsAsync, inArray, isNull, like, not, or, sql } from "@homarr/db";
+import { and, asc, eq, gt, gte, handleTransactionsAsync, inArray, isNull, like, lt, not, or, sql } from "@homarr/db";
 import { createDbInsertCollectionWithoutTransaction } from "@homarr/db/collection";
 import { seedProtectedBoardLayoutsAsync } from "@homarr/db/migrations/seed";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
@@ -84,6 +84,7 @@ interface BoardItemPlacementRectangle {
 }
 
 const boardItemPlacementTails = new Map<string, Promise<void>>();
+const maxManageOverviewPreviewRows = 12;
 
 const serializeBoardItemPlacementAsync = async <T>(boardId: string, operation: () => Promise<T>) => {
   const previous = boardItemPlacementTails.get(boardId) ?? Promise.resolve();
@@ -261,6 +262,11 @@ export const boardRouter = createTRPCRouter({
             breakpoint: true,
             role: true,
           },
+          orderBy: (layout, { desc, sql }) => [
+            sql`CASE WHEN ${layout.role} = 'base' THEN 0 ELSE 1 END`,
+            desc(layout.breakpoint),
+          ],
+          limit: 1,
         },
         sections: {
           columns: {
@@ -268,26 +274,21 @@ export const boardRouter = createTRPCRouter({
             kind: true,
             xOffset: true,
           },
-          with: {
-            layouts: {
-              columns: {
-                layoutId: true,
-                parentSectionId: true,
-                xOffset: true,
-                yOffset: true,
-                width: true,
-                height: true,
-              },
-            },
-          },
+          where: eq(sections.kind, "empty"),
+          orderBy: (section, { asc }) => [asc(section.xOffset), asc(section.id)],
         },
-        items: {
-          columns: {
-            id: true,
-          },
-          with: {
-            layouts: {
+      },
+      where: getAccessibleBoardsWhere(ctx.session?.user.permissions.includes("board-view-all"), userId, boardIds),
+    });
+
+    const previewLayoutIds = dbBoards.flatMap((board) => board.layouts.map((layout) => layout.id));
+    const rootSectionIds = dbBoards.flatMap((board) => board.sections.map((section) => section.id));
+    const [previewItemLayouts, previewSectionLayouts] =
+      previewLayoutIds.length > 0 && rootSectionIds.length > 0
+        ? await Promise.all([
+            ctx.db.query.itemLayouts.findMany({
               columns: {
+                itemId: true,
                 layoutId: true,
                 sectionId: true,
                 xOffset: true,
@@ -295,17 +296,93 @@ export const boardRouter = createTRPCRouter({
                 width: true,
                 height: true,
               },
-            },
-          },
-        },
-      },
-      where: getAccessibleBoardsWhere(ctx.session?.user.permissions.includes("board-view-all"), userId, boardIds),
-    });
+              where: and(
+                inArray(itemLayouts.layoutId, previewLayoutIds),
+                inArray(itemLayouts.sectionId, rootSectionIds),
+                gte(itemLayouts.xOffset, 0),
+                gte(itemLayouts.yOffset, 0),
+                lt(itemLayouts.yOffset, maxManageOverviewPreviewRows),
+                gt(itemLayouts.width, 0),
+                gt(itemLayouts.height, 0),
+              ),
+            }),
+            ctx.db.query.sectionLayouts.findMany({
+              columns: {
+                sectionId: true,
+                layoutId: true,
+                parentSectionId: true,
+                xOffset: true,
+                yOffset: true,
+                width: true,
+                height: true,
+              },
+              with: {
+                section: {
+                  columns: { kind: true },
+                },
+              },
+              where: and(
+                inArray(sectionLayouts.layoutId, previewLayoutIds),
+                inArray(sectionLayouts.parentSectionId, rootSectionIds),
+                gte(sectionLayouts.xOffset, 0),
+                gte(sectionLayouts.yOffset, 0),
+                lt(sectionLayouts.yOffset, maxManageOverviewPreviewRows),
+                gt(sectionLayouts.width, 0),
+                gt(sectionLayouts.height, 0),
+              ),
+            }),
+          ])
+        : [[], []];
 
-    return dbBoards.map(({ layouts: boardLayouts, sections: boardSections, items: boardItems, ...board }) => {
-      const previewLayout =
-        boardLayouts.find((layout) => layout.role === "base") ??
-        boardLayouts.toSorted((first, second) => second.breakpoint - first.breakpoint).at(0);
+    return dbBoards.map(({ layouts: boardLayouts, sections: boardSections, ...board }) => {
+      const previewLayout = boardLayouts.at(0);
+
+      const rootsByLane = new Map<BoardLane, (typeof boardSections)[number]>();
+      for (const section of boardSections) {
+        const lane = getRootSectionLane(section.xOffset);
+        if (!rootsByLane.has(lane)) rootsByLane.set(lane, section);
+      }
+      const previewRoots = boardLanes.flatMap((lane) => {
+        const root = rootsByLane.get(lane);
+        return root ? [{ id: root.id, kind: "empty" as const, xOffset: root.xOffset, layouts: [] }] : [];
+      });
+
+      const rootColumnCountById = new Map(
+        boardLanes.flatMap((lane) => {
+          const root = rootsByLane.get(lane);
+          return root && previewLayout ? [[root.id, getBoardLaneColumnCount(previewLayout, lane)] as const] : [];
+        }),
+      );
+      const isInsideRootLane = (layout: { sectionId: string; xOffset: number }) => {
+        const columnCount = rootColumnCountById.get(layout.sectionId);
+        return columnCount !== undefined && columnCount > 0 && layout.xOffset < columnCount;
+      };
+      const isInsideParentRootLane = (layout: { parentSectionId: string | null; xOffset: number }) => {
+        if (!layout.parentSectionId) return false;
+        const columnCount = rootColumnCountById.get(layout.parentSectionId);
+        return columnCount !== undefined && columnCount > 0 && layout.xOffset < columnCount;
+      };
+
+      const itemPreview = previewLayout
+        ? previewItemLayouts
+            .filter((layout) => layout.layoutId === previewLayout.id && isInsideRootLane(layout))
+            .map((layout) => ({ id: layout.itemId, layouts: [layout] }))
+        : [];
+      const containerPreview = previewLayout
+        ? previewSectionLayouts
+            .filter(
+              (layout) =>
+                layout.layoutId === previewLayout.id &&
+                layout.section.kind === "container" &&
+                isInsideParentRootLane(layout),
+            )
+            .map((layout) => ({
+              id: layout.sectionId,
+              kind: "container" as const,
+              xOffset: null,
+              layouts: [layout],
+            }))
+        : [];
 
       return {
         ...board,
@@ -314,14 +391,8 @@ export const boardRouter = createTRPCRouter({
         preview: previewLayout
           ? {
               layouts: [previewLayout],
-              sections: boardSections.map((section) => ({
-                ...section,
-                layouts: section.layouts.filter((layout) => layout.layoutId === previewLayout.id),
-              })),
-              items: boardItems.map((item) => ({
-                ...item,
-                layouts: item.layouts.filter((layout) => layout.layoutId === previewLayout.id),
-              })),
+              sections: [...previewRoots, ...containerPreview],
+              items: itemPreview,
             }
           : null,
       };

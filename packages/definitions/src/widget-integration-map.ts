@@ -2,6 +2,7 @@ import { createDocumentationLink } from "./docs";
 import type { IntegrationKind } from "./integration";
 import { getIntegrationKindsByCategory } from "./integration";
 import type { WidgetKind } from "./widget";
+import { widgetDefaultSizes } from "./widget";
 
 /**
  * Static mapping of widget kinds to the integration kinds they support.
@@ -120,6 +121,11 @@ export const defaultWidgetConfigs: DefaultWidgetConfig[] = [
   { kind: "weather", width: 2, height: 1, options: { showCity: true, hasForecast: true, forecastDayCount: 3 } },
   { kind: "bookmarks", width: 2, height: 2, options: { title: "Useful Links", layout: "grid", openNewTab: true } },
 ];
+
+const defaultWidgetConfigByKind = new Map(defaultWidgetConfigs.map((config) => [config.kind, config]));
+
+export const getDefaultWidgetConfig = (kind: WidgetKind): DefaultWidgetConfig =>
+  defaultWidgetConfigByKind.get(kind) ?? { kind, ...(widgetDefaultSizes[kind] ?? { width: 1, height: 1 }) };
 
 export const generalWidgets: WidgetKind[] = defaultWidgetConfigs
   .filter((config) => !config.skip)

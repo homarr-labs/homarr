@@ -6,7 +6,7 @@ import type { OnboardingStep } from "@homarr/definitions";
 export const nextOnboardingStepAsync = async (db: Database) => {
   const { current } = await getOnboardingOrFallbackAsync(db);
   if (current !== "start") return;
-  const nextStep = getNextOnboardingStep();
+  const nextStep = await getNextOnboardingStepAsync(db);
   if (!nextStep) return;
 
   await db.update(onboarding).set({ previousStep: current, step: nextStep });
@@ -22,8 +22,9 @@ export const getOnboardingOrFallbackAsync = async (db: Database) => {
   };
 };
 
-const getNextOnboardingStep = (): OnboardingStep => {
-  if (isProviderEnabled("credentials")) return "user";
+const getNextOnboardingStepAsync = async (db: Database): Promise<OnboardingStep> => {
+  const existingUser = await db.query.users.findFirst({ columns: { id: true } });
+  if (isProviderEnabled("credentials") && !existingUser) return "user";
   if (isProviderEnabled("ldap") || isProviderEnabled("oidc")) return "group";
   return "setup";
 };

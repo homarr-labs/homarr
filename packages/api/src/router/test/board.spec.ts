@@ -330,7 +330,11 @@ describe("getManageOverview", () => {
     const baseLayoutId = createId();
     const mobileLayoutId = createId();
     const rootSectionId = createId();
+    const containerSectionId = createId();
     const itemId = createId();
+    const mobileItemId = createId();
+    const offscreenItemId = createId();
+    const nestedItemId = createId();
 
     await db.insert(users).values({ id: defaultCreatorId });
     await db.insert(boards).values([
@@ -356,23 +360,75 @@ describe("getManageOverview", () => {
         role: "base",
       },
     ]);
-    await db.insert(sections).values({
-      id: rootSectionId,
-      boardId,
-      kind: "empty",
-      xOffset: 0,
-      yOffset: 0,
-    });
-    await db.insert(items).values({ id: itemId, boardId, kind: "clock" });
-    await db.insert(itemLayouts).values({
-      itemId,
-      sectionId: rootSectionId,
+    await db.insert(sections).values([
+      {
+        id: rootSectionId,
+        boardId,
+        kind: "empty",
+        xOffset: 0,
+        yOffset: 0,
+      },
+      {
+        id: containerSectionId,
+        boardId,
+        kind: "container",
+        xOffset: null,
+        yOffset: null,
+      },
+    ]);
+    await db.insert(sectionLayouts).values({
+      sectionId: containerSectionId,
+      parentSectionId: rootSectionId,
       layoutId: baseLayoutId,
-      xOffset: 2,
-      yOffset: 1,
-      width: 4,
-      height: 2,
+      xOffset: 0,
+      yOffset: 4,
+      width: 6,
+      height: 3,
     });
+    await db.insert(items).values([
+      { id: itemId, boardId, kind: "clock" },
+      { id: mobileItemId, boardId, kind: "clock" },
+      { id: offscreenItemId, boardId, kind: "clock" },
+      { id: nestedItemId, boardId, kind: "clock" },
+    ]);
+    await db.insert(itemLayouts).values([
+      {
+        itemId,
+        sectionId: rootSectionId,
+        layoutId: baseLayoutId,
+        xOffset: 2,
+        yOffset: 1,
+        width: 4,
+        height: 2,
+      },
+      {
+        itemId: mobileItemId,
+        sectionId: rootSectionId,
+        layoutId: mobileLayoutId,
+        xOffset: 0,
+        yOffset: 0,
+        width: 3,
+        height: 1,
+      },
+      {
+        itemId: offscreenItemId,
+        sectionId: rootSectionId,
+        layoutId: baseLayoutId,
+        xOffset: 0,
+        yOffset: 12,
+        width: 2,
+        height: 1,
+      },
+      {
+        itemId: nestedItemId,
+        sectionId: containerSectionId,
+        layoutId: baseLayoutId,
+        xOffset: 0,
+        yOffset: 0,
+        width: 2,
+        height: 1,
+      },
+    ]);
 
     const result = await caller.getManageOverview();
 
@@ -388,9 +444,89 @@ describe("getManageOverview", () => {
             layouts: [{ layoutId: baseLayoutId, sectionId: rootSectionId, width: 4, height: 2 }],
           },
         ],
+        sections: [
+          { id: rootSectionId, kind: "empty" },
+          {
+            id: containerSectionId,
+            kind: "container",
+            layouts: [{ layoutId: baseLayoutId, parentSectionId: rootSectionId, yOffset: 4 }],
+          },
+        ],
       },
     });
     expect(result[0]?.preview?.layouts).toHaveLength(1);
+    expect(result[0]?.preview?.items.map((item) => item.id)).toEqual([itemId]);
+    expect(result[0]?.preview?.sections).toHaveLength(2);
+  });
+
+  test("uses the highest-breakpoint layout when a board has no base layout", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const boardId = createId();
+    const mobileLayoutId = createId();
+    const tabletLayoutId = createId();
+    const rootSectionId = createId();
+    const mobileItemId = createId();
+    const tabletItemId = createId();
+
+    await db.insert(users).values({ id: defaultCreatorId });
+    await db.insert(boards).values({ id: boardId, name: "fallback-overview", creatorId: defaultCreatorId });
+    await db.insert(layouts).values([
+      {
+        id: mobileLayoutId,
+        name: "Mobile",
+        boardId,
+        columnCount: 3,
+        breakpoint: 0,
+        role: "mobile",
+      },
+      {
+        id: tabletLayoutId,
+        name: "Tablet",
+        boardId,
+        columnCount: 8,
+        breakpoint: 600,
+        role: "custom",
+      },
+    ]);
+    await db.insert(sections).values({
+      id: rootSectionId,
+      boardId,
+      kind: "empty",
+      xOffset: 0,
+      yOffset: 0,
+    });
+    await db.insert(items).values([
+      { id: mobileItemId, boardId, kind: "clock" },
+      { id: tabletItemId, boardId, kind: "clock" },
+    ]);
+    await db.insert(itemLayouts).values([
+      {
+        itemId: mobileItemId,
+        sectionId: rootSectionId,
+        layoutId: mobileLayoutId,
+        xOffset: 0,
+        yOffset: 0,
+        width: 3,
+        height: 1,
+      },
+      {
+        itemId: tabletItemId,
+        sectionId: rootSectionId,
+        layoutId: tabletLayoutId,
+        xOffset: 0,
+        yOffset: 0,
+        width: 4,
+        height: 1,
+      },
+    ]);
+
+    const result = await caller.getManageOverview();
+
+    expect(result[0]?.preview?.layouts).toEqual([
+      expect.objectContaining({ id: tabletLayoutId, breakpoint: 600, role: "custom" }),
+    ]);
+    expect(result[0]?.preview?.items.map((item) => item.id)).toEqual([tabletItemId]);
   });
 });
 

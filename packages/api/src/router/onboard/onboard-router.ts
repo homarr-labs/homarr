@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 
+import type { MySqlRawQueryResult } from "drizzle-orm/mysql2";
+import type { QueryResult } from "pg";
 import { TRPCError } from "@trpc/server";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
@@ -25,34 +27,28 @@ import {
   serverSettings,
 } from "@homarr/db/schema";
 import {
-  defaultWidgetConfigs,
   emptySuperJSON,
   everyoneGroup,
   extractContainerImageName,
   getBoardLaneColumnCount,
+  getDefaultWidgetConfig,
   getIconUrl,
   getRootSectionLane,
   getWidgetIntegrationIssue,
   getWidgetKindsForIntegration,
-  integrationKinds,
-  integrationSecretKinds,
   matchIntegrationKindFromContainer,
   rootSectionOffsets,
   widgetIntegrationLimits,
 } from "@homarr/definitions";
 import type { IntegrationKind, OnboardingLayoutPreset, WidgetKind } from "@homarr/definitions";
-import {
-  onboardingCompleteSetupSchema,
-  onboardingCreateIntegrationSchema,
-  onboardingDiscoveredAppSchema,
-} from "@homarr/validation/onboarding";
-import { zodEnumFromArray } from "@homarr/validation/enums";
+import { onboardingCompleteSetupSchema } from "@homarr/validation/onboarding";
 
 import { onboardingClaimSettingKey } from "../../onboarding-claim";
+import { env } from "../../env";
 import { createTRPCRouter, onboardingClaimedProcedure, onboardingProcedure, publicProcedure } from "../../trpc";
 import { MissingSecretError, testConnectionAsync } from "../integration/integration-test-connection";
-import { mapTestConnectionError } from "../integration/map-test-connection-error";
 import { getOnboardingOrFallbackAsync, nextOnboardingStepAsync } from "./onboard-queries";
+import { probeRuntimeCapabilitiesAsync } from "./capability-probes";
 
 interface PortInfo {
   IP?: string;
@@ -125,8 +121,17 @@ const getLayoutPresetColumnCount = (preset: OnboardingLayoutPreset) => {
 };
 
 const normalizeLabelBoardName = (name: string) => name.replace(/[^A-Za-z0-9-_]+/g, "-").replace(/^-+|-+$/g, "");
+const defaultAppIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
 
-const defaultWidgetConfigByKind = new Map(defaultWidgetConfigs.map((config) => [config.kind, config]));
+const runtimeCapabilitySchema = z.discriminatedUnion("status", [
+  z.object({ status: z.literal("available"), detail: z.string().optional() }),
+  z.object({ status: z.literal("disabled") }),
+  z.object({ status: z.literal("unavailable") }),
+]);
+const runtimeCapabilitiesSchema = z.object({
+  kubernetes: runtimeCapabilitySchema,
+  workshop: runtimeCapabilitySchema,
+});
 
 export const onboardRouter = createTRPCRouter({
   currentStep: publicProcedure.query(async ({ ctx }) => await getOnboardingOrFallbackAsync(ctx.db)),
@@ -139,102 +144,15 @@ export const onboardRouter = createTRPCRouter({
     await nextOnboardingStepAsync(ctx.db);
   }),
 
-  createIntegration: onboardingProcedure
+  detectRuntimeCapabilities: onboardingProcedure
     .requiresStep("setup")
-    .input(
-      onboardingCreateIntegrationSchema.extend({
-        kind: zodEnumFromArray(integrationKinds),
-        secrets: z.array(
-          z.object({
-            kind: zodEnumFromArray(integrationSecretKinds),
-            value: z.string().nonempty(),
-          }),
-        ),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const testResult = await testConnectionAsync({
-        id: "new",
-        name: input.name,
-        url: input.url,
-        kind: input.kind,
-        secrets: input.secrets,
-      }).catch((error) => {
-        if (!(error instanceof MissingSecretError)) throw error;
-        throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
+    .output(runtimeCapabilitiesSchema)
+    .query(async () => {
+      const { env: dockerEnv } = await import("@homarr/docker/env");
+      return await probeRuntimeCapabilitiesAsync({
+        kubernetesEnabled: dockerEnv.ENABLE_KUBERNETES,
+        workshopApiUrl: env.WORKSHOP_API_URL ?? env.HOMARR_WEBSITE_URL,
       });
-
-      if (!testResult.success) return { error: mapTestConnectionError(testResult.error) };
-
-      const integrationId = input.sourceId ? stableOnboardingId("integration", input.sourceId) : createId();
-      const existingIntegration = await ctx.db.query.integrations.findFirst({
-        where: eq(integrations.id, integrationId),
-      });
-      const appId =
-        existingIntegration?.appId ?? (input.sourceId ? stableOnboardingId("app", input.sourceId) : createId());
-      const existingApp = await ctx.db.query.apps.findFirst({ where: eq(apps.id, appId) });
-      const appRow = {
-        id: appId,
-        name: input.name,
-        iconUrl: input.iconUrl ?? getIconUrl(input.kind),
-        href: input.url,
-        pingUrl: input.pingUrl ?? input.url,
-        description: input.description ?? null,
-      };
-      const integrationRow = {
-        id: integrationId,
-        name: input.name,
-        url: input.url,
-        kind: input.kind,
-        appId,
-      };
-      const secretRows = input.secrets.map((secret) => ({
-        kind: secret.kind,
-        value: encryptSecret(secret.value),
-        integrationId,
-      }));
-
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            if (existingApp) {
-              await transaction.update(schema.apps).set(appRow).where(eq(schema.apps.id, appId));
-            } else {
-              await transaction.insert(schema.apps).values(appRow);
-            }
-            if (existingIntegration) {
-              await transaction
-                .update(schema.integrations)
-                .set(integrationRow)
-                .where(eq(schema.integrations.id, integrationId));
-              await transaction
-                .delete(schema.integrationSecrets)
-                .where(eq(schema.integrationSecrets.integrationId, integrationId));
-            } else {
-              await transaction.insert(schema.integrations).values(integrationRow);
-            }
-            if (secretRows.length > 0) await transaction.insert(schema.integrationSecrets).values(secretRows);
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            if (existingApp) {
-              transaction.update(apps).set(appRow).where(eq(apps.id, appId)).run();
-            } else {
-              transaction.insert(apps).values(appRow).run();
-            }
-            if (existingIntegration) {
-              transaction.update(integrations).set(integrationRow).where(eq(integrations.id, integrationId)).run();
-              transaction.delete(integrationSecrets).where(eq(integrationSecrets.integrationId, integrationId)).run();
-            } else {
-              transaction.insert(integrations).values(integrationRow).run();
-            }
-            if (secretRows.length > 0) transaction.insert(integrationSecrets).values(secretRows).run();
-          });
-        },
-      });
-
-      return { id: integrationId, appId };
     }),
 
   discoverDockerServices: onboardingProcedure.requiresStep("setup").query(async ({ ctx }) => {
@@ -372,72 +290,6 @@ export const onboardRouter = createTRPCRouter({
     }
   }),
 
-  createAppsFromDiscovery: onboardingProcedure
-    .requiresStep("setup")
-    .input(z.array(onboardingDiscoveredAppSchema).max(128))
-    .mutation(async ({ ctx, input }) => {
-      const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
-      const planned = [] as Array<{
-        id: string;
-        sourceId?: string;
-        existing: boolean;
-        row: typeof apps.$inferInsert;
-      }>;
-      const seenIds = new Set<string>();
-
-      for (const app of input) {
-        const stableId = app.sourceId ? stableOnboardingId("app", app.sourceId) : undefined;
-        const existing = stableId
-          ? await ctx.db.query.apps.findFirst({ where: eq(apps.id, stableId) })
-          : app.href
-            ? await ctx.db.query.apps.findFirst({ where: eq(apps.href, app.href) })
-            : undefined;
-        const id = existing?.id ?? stableId ?? createId();
-        if (seenIds.has(id)) continue;
-        seenIds.add(id);
-        planned.push({
-          id,
-          sourceId: app.sourceId,
-          existing: Boolean(existing),
-          row: {
-            id,
-            name: app.name,
-            iconUrl: app.iconUrl ?? defaultIcon,
-            href: app.href,
-            pingUrl: app.pingUrl ?? app.href,
-            description: app.description ?? null,
-          },
-        });
-      }
-
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            for (const app of planned) {
-              if (app.existing) {
-                await transaction.update(schema.apps).set(app.row).where(eq(schema.apps.id, app.id));
-              } else {
-                await transaction.insert(schema.apps).values(app.row);
-              }
-            }
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            for (const app of planned) {
-              if (app.existing) {
-                transaction.update(apps).set(app.row).where(eq(apps.id, app.id)).run();
-              } else {
-                transaction.insert(apps).values(app.row).run();
-              }
-            }
-          });
-        },
-      });
-
-      return { apps: planned.map(({ id, sourceId }) => ({ id, sourceId })) };
-    }),
-
   completeSetup: onboardingProcedure
     .requiresStep("setup")
     .input(onboardingCompleteSetupSchema)
@@ -518,20 +370,114 @@ export const onboardRouter = createTRPCRouter({
           message: "Select the exact board to configure when more than one board exists.",
         });
       }
-      const selectedIntegrations =
+
+      await Promise.all(
+        input.integrations.map(async (integration) => {
+          const result = await testConnectionAsync({
+            id: stableOnboardingId("integration", integration.sourceId),
+            name: integration.name,
+            url: integration.url,
+            kind: integration.kind,
+            secrets: integration.secrets,
+          }).catch((error) => {
+            if (!(error instanceof MissingSecretError)) throw error;
+            throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
+          });
+          if (!result.success) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: `Unable to connect to ${integration.name}: ${result.error.message}`,
+            });
+          }
+        }),
+      );
+
+      const plannedIntegrationIds = input.integrations.map((integration) =>
+        stableOnboardingId("integration", integration.sourceId),
+      );
+      const existingPlannedIntegrations =
+        plannedIntegrationIds.length > 0
+          ? await ctx.db.query.integrations.findMany({ where: inArray(integrations.id, plannedIntegrationIds) })
+          : [];
+      const existingIntegrationById = new Map(
+        existingPlannedIntegrations.map((integration) => [integration.id, integration]),
+      );
+      const integrationPlans = input.integrations.map((integration) => {
+        const id = stableOnboardingId("integration", integration.sourceId);
+        const existing = existingIntegrationById.get(id);
+        const appId = existing?.appId ?? stableOnboardingId("app", integration.sourceId);
+        return {
+          id,
+          existing: existing !== undefined,
+          row: {
+            id,
+            name: integration.name,
+            url: integration.url,
+            kind: integration.kind,
+            appId,
+          } satisfies typeof integrations.$inferSelect,
+          appRow: {
+            id: appId,
+            name: integration.name,
+            iconUrl: integration.iconUrl ?? getIconUrl(integration.kind),
+            href: integration.url,
+            pingUrl: integration.pingUrl ?? integration.url,
+            description: integration.description ?? null,
+          } satisfies typeof apps.$inferSelect,
+          secretRows: integration.secrets.map((secret) => ({
+            kind: secret.kind,
+            value: encryptSecret(secret.value),
+            integrationId: id,
+          })),
+        };
+      });
+      const plannedAppRows = [
+        ...integrationPlans.map((plan) => plan.appRow),
+        ...input.apps.map(
+          (app) =>
+            ({
+              id: stableOnboardingId("app", app.sourceId),
+              name: app.name,
+              iconUrl: app.iconUrl ?? defaultAppIcon,
+              href: app.href,
+              pingUrl: app.pingUrl ?? app.href,
+              description: app.description ?? null,
+            }) satisfies typeof apps.$inferSelect,
+        ),
+      ];
+      const plannedAppIds = plannedAppRows.map((app) => app.id);
+      if (new Set(plannedAppIds).size !== plannedAppIds.length) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Onboarding app source IDs resolve to the same app." });
+      }
+      const existingPlannedApps =
+        plannedAppIds.length > 0 ? await ctx.db.query.apps.findMany({ where: inArray(apps.id, plannedAppIds) }) : [];
+      const existingPlannedAppIds = new Set(existingPlannedApps.map((app) => app.id));
+      const appPlans = plannedAppRows.map((row) => ({ id: row.id, existing: existingPlannedAppIds.has(row.id), row }));
+
+      const plannedIntegrationIdSet = new Set(plannedIntegrationIds);
+      const plannedAppIdSet = new Set(plannedAppIds);
+      if (input.selectedIntegrationIds.some((id) => plannedIntegrationIdSet.has(id))) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "A new integration cannot also be selected by ID." });
+      }
+      if (input.selectedAppIds.some((id) => plannedAppIdSet.has(id))) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "A new app cannot also be selected by ID." });
+      }
+      const persistedSelectedIntegrations =
         input.selectedIntegrationIds.length > 0
           ? await ctx.db.query.integrations.findMany({ where: inArray(integrations.id, input.selectedIntegrationIds) })
           : [];
-      const selectedApps =
+      const persistedSelectedApps =
         input.selectedAppIds.length > 0
           ? await ctx.db.query.apps.findMany({ where: inArray(apps.id, input.selectedAppIds) })
           : [];
-      if (selectedIntegrations.length !== input.selectedIntegrationIds.length) {
+      if (persistedSelectedIntegrations.length !== input.selectedIntegrationIds.length) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "One or more selected integrations no longer exist." });
       }
-      if (selectedApps.length !== input.selectedAppIds.length) {
+      if (persistedSelectedApps.length !== input.selectedAppIds.length) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "One or more selected apps no longer exist." });
       }
+      const selectedIntegrations = [...persistedSelectedIntegrations, ...integrationPlans.map((plan) => plan.row)];
+      const selectedApps = [...persistedSelectedApps, ...plannedAppRows];
 
       const selectedDockerSources =
         input.selectedDockerSourceIds.length > 0
@@ -571,7 +517,11 @@ export const onboardRouter = createTRPCRouter({
         }
         targetBoardName = parsedName.data;
       }
-      if (boardList.some((board) => board.id !== targetBoard.id && board.name === targetBoardName)) {
+      if (
+        boardList.some(
+          (board) => board.id !== targetBoard.id && board.name.toLowerCase() === targetBoardName.toLowerCase(),
+        )
+      ) {
         throw new TRPCError({ code: "CONFLICT", message: "A board with this name already exists." });
       }
       const targetBoardNames = new Set([targetBoard.name, targetBoardName]);
@@ -770,8 +720,8 @@ export const onboardRouter = createTRPCRouter({
         }
       }
       for (const [kind, integrationIdsForWidget] of selectedIntegrationIdsByWidget) {
-        const config = defaultWidgetConfigByKind.get(kind);
-        if (config?.skip) continue;
+        const config = getDefaultWidgetConfig(kind);
+        if (config.skip) continue;
         const existing = existingItemsByKind.get(kind);
         const limit = widgetIntegrationLimits[kind] ?? Number.POSITIVE_INFINITY;
         let unlinkedIntegrationIds = integrationIdsForWidget;
@@ -795,9 +745,9 @@ export const onboardRouter = createTRPCRouter({
           if (getWidgetIntegrationIssue(kind, integrationKindsForItem)) continue;
           const itemId = placeNewItem(
             kind,
-            config?.options ? SuperJSON.stringify(config.options) : emptySuperJSON,
-            config?.width ?? 2,
-            config?.height ?? 2,
+            config.options ? SuperJSON.stringify(config.options) : emptySuperJSON,
+            config.width,
+            config.height,
           );
           newIntegrationItems.push(...integrationIdsForItem.map((integrationId) => ({ itemId, integrationId })));
         }
@@ -808,13 +758,13 @@ export const onboardRouter = createTRPCRouter({
       for (const kind of input.selectedWidgetKinds.filter((kind) => !selectedLabelWidgetKinds.has(kind))) {
         if (existingItemsByKind.has(kind) || newItems.some((item) => item.kind === kind)) continue;
         if (getWidgetIntegrationIssue(kind, [])) continue;
-        const config = defaultWidgetConfigByKind.get(kind);
-        if (config?.skip) continue;
+        const config = getDefaultWidgetConfig(kind);
+        if (config.skip) continue;
         placeNewItem(
           kind,
-          config?.options ? SuperJSON.stringify(config.options) : emptySuperJSON,
-          config?.width ?? 2,
-          config?.height ?? 2,
+          config.options ? SuperJSON.stringify(config.options) : emptySuperJSON,
+          config.width,
+          config.height,
         );
       }
       const dockerSourceByAppId = new Map(
@@ -863,13 +813,13 @@ export const onboardRouter = createTRPCRouter({
         } else if (existing) {
           continue;
         }
-        const config = defaultWidgetConfigByKind.get(service.widgetKind);
-        if (config?.skip) continue;
+        const config = getDefaultWidgetConfig(service.widgetKind);
+        if (config.skip) continue;
         const itemId = placeNewItem(
           service.widgetKind,
-          config?.options ? SuperJSON.stringify(config.options) : emptySuperJSON,
-          config?.width ?? 2,
-          config?.height ?? 2,
+          config.options ? SuperJSON.stringify(config.options) : emptySuperJSON,
+          config.width,
+          config.height,
         );
         if (integration) newIntegrationItems.push({ itemId, integrationId: integration.id });
       }
@@ -942,13 +892,13 @@ export const onboardRouter = createTRPCRouter({
             continue;
           }
 
-          const config = defaultWidgetConfigByKind.get(service.widgetKind);
-          if (config?.skip) continue;
+          const config = getDefaultWidgetConfig(service.widgetKind);
+          if (config.skip) continue;
           groupedItemPlans.push({
             kind: service.widgetKind,
-            options: config?.options ? SuperJSON.stringify(config.options) : emptySuperJSON,
-            width: config?.width ?? 2,
-            height: config?.height ?? 2,
+            options: config.options ? SuperJSON.stringify(config.options) : emptySuperJSON,
+            width: config.width,
+            height: config.height,
             integrationId: integration?.id,
           });
         }
@@ -1053,6 +1003,36 @@ export const onboardRouter = createTRPCRouter({
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
+            const transitionResult = (await transaction
+              .update(schema.onboarding)
+              .set({ previousStep: "setup", step: "finish" })
+              .where(eq(schema.onboarding.step, "setup"))) as MySqlRawQueryResult | QueryResult;
+            const transitionedRows = Array.isArray(transitionResult)
+              ? transitionResult[0].affectedRows
+              : (transitionResult.rowCount ?? 0);
+            if (transitionedRows !== 1) {
+              throw new TRPCError({ code: "CONFLICT", message: "Onboarding setup was already completed." });
+            }
+            for (const plan of appPlans) {
+              if (plan.existing) {
+                await transaction.update(schema.apps).set(plan.row).where(eq(schema.apps.id, plan.id));
+              } else {
+                await transaction.insert(schema.apps).values(plan.row);
+              }
+            }
+            for (const plan of integrationPlans) {
+              if (plan.existing) {
+                await transaction.update(schema.integrations).set(plan.row).where(eq(schema.integrations.id, plan.id));
+                await transaction
+                  .delete(schema.integrationSecrets)
+                  .where(eq(schema.integrationSecrets.integrationId, plan.id));
+              } else {
+                await transaction.insert(schema.integrations).values(plan.row);
+              }
+              if (plan.secretRows.length > 0) {
+                await transaction.insert(schema.integrationSecrets).values(plan.secretRows);
+              }
+            }
             const boardValues = {
               name: targetBoardName,
               primaryColor: input.board.primaryColor,
@@ -1113,11 +1093,36 @@ export const onboardRouter = createTRPCRouter({
             await transaction
               .delete(schema.serverSettings)
               .where(eq(schema.serverSettings.settingKey, onboardingClaimSettingKey));
-            await transaction.update(schema.onboarding).set({ previousStep: "setup", step: "finish" });
           });
         },
         handleSync(db) {
           db.transaction((transaction) => {
+            const transitionResult = transaction
+              .update(onboarding)
+              .set({ previousStep: "setup", step: "finish" })
+              .where(eq(onboarding.step, "setup"))
+              .run();
+            if (transitionResult.changes !== 1) {
+              throw new TRPCError({ code: "CONFLICT", message: "Onboarding setup was already completed." });
+            }
+            for (const plan of appPlans) {
+              if (plan.existing) {
+                transaction.update(apps).set(plan.row).where(eq(apps.id, plan.id)).run();
+              } else {
+                transaction.insert(apps).values(plan.row).run();
+              }
+            }
+            for (const plan of integrationPlans) {
+              if (plan.existing) {
+                transaction.update(integrations).set(plan.row).where(eq(integrations.id, plan.id)).run();
+                transaction.delete(integrationSecrets).where(eq(integrationSecrets.integrationId, plan.id)).run();
+              } else {
+                transaction.insert(integrations).values(plan.row).run();
+              }
+              if (plan.secretRows.length > 0) {
+                transaction.insert(integrationSecrets).values(plan.secretRows).run();
+              }
+            }
             const boardValues = {
               name: targetBoardName,
               primaryColor: input.board.primaryColor,
@@ -1176,7 +1181,6 @@ export const onboardRouter = createTRPCRouter({
               .where(eq(groups.name, everyoneGroup))
               .run();
             transaction.delete(serverSettings).where(eq(serverSettings.settingKey, onboardingClaimSettingKey)).run();
-            transaction.update(onboarding).set({ previousStep: "setup", step: "finish" }).run();
           });
         },
       });

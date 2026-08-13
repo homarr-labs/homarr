@@ -20,12 +20,14 @@ import {
 } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { WidgetKind } from "@homarr/definitions";
+import type { OnboardingCompleteSetupInput } from "@homarr/validation/onboarding";
 
 import { claimOnboardingAsync, isOnboardingClaimValidAsync } from "../../onboarding-claim";
 import * as integrationConnection from "../integration/integration-test-connection";
 
 const listDiscoveredContainersAsync = vi.hoisted(() => vi.fn());
 const createIdMock = vi.hoisted(() => vi.fn());
+const isProviderEnabled = vi.hoisted(() => vi.fn<(provider: string) => boolean>(() => false));
 const stableAppIdForSource = (sourceId: string) => {
   const digest = createHash("sha256").update(sourceId).digest("hex").slice(0, 32);
   return `onboarding_app_${digest}`;
@@ -35,7 +37,7 @@ const stableIntegrationIdForSource = (sourceId: string) => {
   return `onboarding_integration_${digest}`;
 };
 
-vi.mock("@homarr/auth/server", () => ({ isProviderEnabled: () => false }));
+vi.mock("@homarr/auth/server", () => ({ isProviderEnabled }));
 vi.mock("@homarr/common", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@homarr/common")>()),
   createId: createIdMock,
@@ -51,7 +53,7 @@ import { normalizeOnboardingStep } from "../onboard/onboard-queries";
 const createCaller = (db: ReturnType<typeof createDb>, onboardingClaimToken?: string) =>
   onboardRouter.createCaller({ db, deviceType: undefined, session: null, onboardingClaimToken });
 
-const completionInput = (boardId: string, name = "Configured-board") => ({
+const completionInput = (boardId: string, name = "Configured-board"): OnboardingCompleteSetupInput => ({
   server: {
     defaultLocale: "en" as const,
     defaultColorScheme: "dark" as const,
@@ -69,6 +71,8 @@ const completionInput = (boardId: string, name = "Configured-board") => ({
   },
   selectedIntegrationIds: [] as string[],
   selectedAppIds: [] as string[],
+  integrations: [],
+  apps: [],
   selectedDockerSourceIds: [] as string[],
   selectedWidgetKinds: [] as WidgetKind[],
 });
@@ -188,6 +192,63 @@ describe("onboard.completeSetup", () => {
     expect(await isOnboardingClaimValidAsync(db, claimToken)).toBe(false);
   });
 
+  it("rejects a stale completion after another submission claims the setup transition", async () => {
+    const db = createDb();
+    const claimToken = await seedOnboardingAsync(db);
+    await seedBoardAsync(db, { boardId: "target" });
+    const input = completionInput("target");
+    input.selectedDockerSourceIds = ["docker:missing"];
+    input.selectedWidgetKinds = ["clock"];
+
+    let releaseDiscovery: () => void = () => undefined;
+    const discoveryGate = new Promise<void>((resolve) => {
+      releaseDiscovery = resolve;
+    });
+    listDiscoveredContainersAsync.mockImplementation(async () => {
+      await discoveryGate;
+      return { hosts: [], services: [] };
+    });
+
+    const submission = Promise.allSettled([createCaller(db, claimToken).completeSetup(input)]);
+    try {
+      await vi.waitFor(() => expect(listDiscoveredContainersAsync).toHaveBeenCalledOnce());
+      await db.update(onboarding).set({ previousStep: "setup", step: "finish" });
+    } finally {
+      releaseDiscovery();
+    }
+    const [result] = await submission;
+
+    expect(result).toMatchObject({
+      status: "rejected",
+      reason: expect.objectContaining({ message: "Onboarding setup was already completed." }),
+    });
+    expect(await db.query.items.findMany({ where: eq(items.kind, "clock") })).toHaveLength(0);
+    expect(await db.query.boards.findFirst({ where: eq(boards.id, "target") })).toMatchObject({ name: "target" });
+    expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "finish", previousStep: "setup" });
+  });
+
+  it("uses canonical widget sizes for automatically generated integration widgets", async () => {
+    const db = createDb();
+    const claimToken = await seedOnboardingAsync(db);
+    await seedBoardAsync(db, { boardId: "target" });
+    await db.insert(integrations).values({
+      id: "sonarr",
+      name: "Sonarr",
+      url: "http://sonarr:8989",
+      kind: "sonarr",
+    });
+    const input = completionInput("target");
+    input.selectedIntegrationIds = ["sonarr"];
+
+    await createCaller(db, claimToken).completeSetup(input);
+
+    const mediaMissing = await db.query.items.findFirst({ where: eq(items.kind, "mediaMissing") });
+    expect(mediaMissing).toBeDefined();
+    expect(
+      await db.query.itemLayouts.findFirst({ where: eq(itemLayouts.itemId, mediaMissing?.id ?? "missing") }),
+    ).toMatchObject({ width: 4, height: 3 });
+  });
+
   it("requires an exact board id when more than one board exists", async () => {
     const db = createDb();
     const claimToken = await seedOnboardingAsync(db);
@@ -203,6 +264,21 @@ describe("onboard.completeSetup", () => {
     );
     expect(await db.query.boards.findFirst({ where: eq(boards.id, "target") })).toMatchObject({ name: "target" });
     expect(await db.query.boards.findFirst({ where: eq(boards.id, "other") })).toMatchObject({ name: "other" });
+    expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "setup", previousStep: "group" });
+  });
+
+  it("rejects a board rename that only differs by case from another board", async () => {
+    const db = createDb();
+    const claimToken = await seedOnboardingAsync(db);
+    await seedBoardAsync(db, { boardId: "target" });
+    await seedBoardAsync(db, { boardId: "existing" });
+    await db.update(boards).set({ name: "Media" }).where(eq(boards.id, "existing"));
+
+    await expect(createCaller(db, claimToken).completeSetup(completionInput("target", "media"))).rejects.toThrow(
+      "A board with this name already exists.",
+    );
+
+    expect(await db.query.boards.findFirst({ where: eq(boards.id, "target") })).toMatchObject({ name: "target" });
     expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "setup", previousStep: "group" });
   });
 
@@ -334,11 +410,12 @@ describe("onboard.completeSetup", () => {
     expect(await db.query.items.findMany()).toEqual([expect.objectContaining({ boardId: "target", kind: "clock" })]);
   });
 
-  it("persists discovery metadata on created apps and integration companion apps", async () => {
+  it("creates selected apps, integrations, secrets, and companion apps in completeSetup", async () => {
     const db = createDb();
     const claimToken = await seedOnboardingAsync(db);
-    const caller = createCaller(db, claimToken);
-    const appResult = await caller.createAppsFromDiscovery([
+    await seedBoardAsync(db, { boardId: "target" });
+    const input = completionInput("target");
+    input.apps = [
       {
         sourceId: "docker:good:status",
         name: "Status",
@@ -347,18 +424,9 @@ describe("onboard.completeSetup", () => {
         iconUrl: "https://icons.example/status.svg",
         description: "Internal status page",
       },
-    ]);
-    const createdApp = appResult.apps[0];
-    assert(createdApp);
-    expect(await db.query.apps.findFirst({ where: eq(apps.id, createdApp.id) })).toMatchObject({
-      pingUrl: "http://status:3001/health",
-      iconUrl: "https://icons.example/status.svg",
-      description: "Internal status page",
-    });
-
-    const testConnection = vi.spyOn(integrationConnection, "testConnectionAsync").mockResolvedValue({ success: true });
-    try {
-      const integrationResult = await caller.createIntegration({
+    ];
+    input.integrations = [
+      {
         sourceId: "docker:good:sonarr",
         name: "Sonarr",
         url: "http://sonarr:8989",
@@ -367,45 +435,85 @@ describe("onboard.completeSetup", () => {
         pingUrl: "http://sonarr:8989/ping",
         iconUrl: "https://icons.example/sonarr.svg",
         description: "TV automation",
+      },
+    ];
+
+    const testConnection = vi.spyOn(integrationConnection, "testConnectionAsync").mockResolvedValue({ success: true });
+    try {
+      await createCaller(db, claimToken).completeSetup(input);
+
+      expect(
+        await db.query.apps.findFirst({ where: eq(apps.id, stableAppIdForSource("docker:good:status")) }),
+      ).toMatchObject({
+        href: "http://status:3001",
+        pingUrl: "http://status:3001/health",
+        iconUrl: "https://icons.example/status.svg",
+        description: "Internal status page",
       });
-      const createdAppId = "appId" in integrationResult ? integrationResult.appId : undefined;
-      expect(createdAppId).toBeDefined();
-      if (!createdAppId) throw new Error("Expected integration creation to succeed");
-      expect(await db.query.apps.findFirst({ where: eq(apps.id, createdAppId) })).toMatchObject({
+      expect(
+        await db.query.apps.findFirst({ where: eq(apps.id, stableAppIdForSource("docker:good:sonarr")) }),
+      ).toMatchObject({
+        href: "http://sonarr:8989",
         pingUrl: "http://sonarr:8989/ping",
         iconUrl: "https://icons.example/sonarr.svg",
         description: "TV automation",
       });
+      expect(
+        await db.query.integrations.findFirst({
+          where: eq(integrations.id, stableIntegrationIdForSource("docker:good:sonarr")),
+        }),
+      ).toMatchObject({
+        appId: stableAppIdForSource("docker:good:sonarr"),
+        name: "Sonarr",
+        url: "http://sonarr:8989",
+        kind: "sonarr",
+      });
+      const savedSecrets = await db.query.integrationSecrets.findMany({
+        where: eq(integrationSecrets.integrationId, stableIntegrationIdForSource("docker:good:sonarr")),
+      });
+      expect(savedSecrets).toEqual([expect.objectContaining({ kind: "apiKey" })]);
+      expect(savedSecrets[0]?.value).not.toBe("secret");
+      expect(await db.query.items.findMany({ where: eq(items.kind, "app") })).toHaveLength(2);
     } finally {
       testConnection.mockRestore();
     }
   });
 
-  it("reuses a manual integration and companion app across retries", async () => {
+  it("rolls draft records back with board writes and reuses stable IDs on retry", async () => {
     const db = createDb();
     const claimToken = await seedOnboardingAsync(db);
-    const caller = createCaller(db, claimToken);
+    await seedBoardAsync(db, { boardId: "target", itemId: "generated-id" });
     const sourceId = "manual:sonarr";
-    const createInput = {
-      sourceId,
-      name: "Sonarr",
-      url: "http://sonarr:8989",
-      kind: "sonarr" as const,
-      secrets: [{ kind: "apiKey" as const, value: "secret" }],
-    };
+    const input = completionInput("target", "Retried-board");
+    input.integrations = [
+      {
+        sourceId,
+        name: "Sonarr",
+        url: "http://sonarr:8989",
+        kind: "sonarr",
+        secrets: [{ kind: "apiKey", value: "secret" }],
+      },
+    ];
+    createIdMock.mockReturnValue("generated-id");
     const testConnection = vi.spyOn(integrationConnection, "testConnectionAsync").mockResolvedValue({ success: true });
 
     try {
-      const first = await caller.createIntegration(createInput);
-      const second = await caller.createIntegration(createInput);
+      await expect(createCaller(db, claimToken).completeSetup(input)).rejects.toThrow();
+      expect(await db.query.integrations.findMany()).toHaveLength(0);
+      expect(await db.query.apps.findMany()).toHaveLength(0);
+      expect(await db.query.integrationSecrets.findMany()).toHaveLength(0);
+      expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "setup", previousStep: "group" });
 
-      expect(first).toEqual(second);
-      expect(first).toEqual({
+      let nextRetryId = 0;
+      createIdMock.mockImplementation(() => `retry-${++nextRetryId}`);
+      await createCaller(db, claimToken).completeSetup(input);
+
+      expect(await db.query.integrations.findMany()).toHaveLength(1);
+      expect(await db.query.apps.findMany()).toHaveLength(1);
+      expect(await db.query.integrations.findFirst()).toMatchObject({
         id: stableIntegrationIdForSource(sourceId),
         appId: stableAppIdForSource(sourceId),
       });
-      expect(await db.query.integrations.findMany()).toHaveLength(1);
-      expect(await db.query.apps.findMany()).toHaveLength(1);
       expect(
         await db.query.integrationSecrets.findMany({
           where: eq(integrationSecrets.integrationId, stableIntegrationIdForSource(sourceId)),
@@ -938,6 +1046,10 @@ describe("onboard.completeSetup", () => {
 });
 
 describe("onboard.nextStep", () => {
+  beforeEach(() => {
+    isProviderEnabled.mockReturnValue(false);
+  });
+
   it("advances welcome exactly once", async () => {
     const db = createDb();
     await db.insert(onboarding).values({ id: "onboarding", step: "start" });
@@ -949,6 +1061,29 @@ describe("onboard.nextStep", () => {
     expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "setup", previousStep: "start" });
     await expect(caller.nextStep()).rejects.toThrow("The welcome step is already complete.");
     expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "setup", previousStep: "start" });
+  });
+
+  it("skips duplicate credential account creation when an administrator resumes a legacy step", async () => {
+    isProviderEnabled.mockImplementation((provider: string) => provider === "credentials");
+    const db = createDb();
+    await db.insert(onboarding).values({ id: "onboarding", step: "import" as never });
+    await db.insert(users).values({ id: "existing-admin", name: "admin", provider: "credentials" });
+
+    const { nextOnboardingStepAsync } = await import("../onboard/onboard-queries");
+    await nextOnboardingStepAsync(db);
+
+    expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "setup", previousStep: "start" });
+  });
+
+  it("still requires credential account creation on a fresh installation", async () => {
+    isProviderEnabled.mockImplementation((provider: string) => provider === "credentials");
+    const db = createDb();
+    await db.insert(onboarding).values({ id: "onboarding", step: "start" });
+
+    const { nextOnboardingStepAsync } = await import("../onboard/onboard-queries");
+    await nextOnboardingStepAsync(db);
+
+    expect(await db.query.onboarding.findFirst()).toMatchObject({ step: "user", previousStep: "start" });
   });
 });
 

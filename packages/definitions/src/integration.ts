@@ -1,4 +1,4 @@
-import { objectKeys, removeTrailingSlash } from "@homarr/common";
+import { objectKeys } from "@homarr/common";
 import type { AtLeastOneOf } from "@homarr/common/types";
 
 import { createDocumentationLink } from "./docs";
@@ -546,9 +546,19 @@ export const getIntegrationDocumentationUrl = (kind: IntegrationKind): string | 
 export const getIntegrationApiKeyUrl = (integrationUrl: string, kind: IntegrationKind): string | null => {
   const definition = integrationDefs[kind];
   if (!("apiKeySettingsPath" in definition)) return null;
-  const base = removeTrailingSlash(integrationUrl);
-  if (!base) return null;
-  return `${base}${definition.apiKeySettingsPath}`;
+  try {
+    const value = integrationUrl.trim();
+    if (!value) return null;
+    const base = new URL(/^[a-z][a-z0-9+.-]*:\/\//iu.test(value) ? value : `http://${value}`);
+    if (base.protocol !== "http:" && base.protocol !== "https:") return null;
+    const settings = new URL(definition.apiKeySettingsPath, "http://localhost");
+    base.pathname = `${base.pathname.replace(/\/+$/, "")}/${settings.pathname.replace(/^\/+/, "")}`;
+    base.search = settings.search;
+    base.hash = settings.hash;
+    return base.toString();
+  } catch {
+    return null;
+  }
 };
 
 /**
