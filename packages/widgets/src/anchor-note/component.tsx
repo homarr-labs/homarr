@@ -19,6 +19,7 @@ import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client"
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import actionTargetClasses from "../common/action-target.module.css";
 
 import "react-quill-new/dist/quill.snow.css";
@@ -307,9 +308,9 @@ const AnchorNoteWidgetContent = ({
           {isEditing ? (
             <TextInput value={draftTitle} onChange={(event) => setDraftTitle(event.currentTarget.value)} size="sm" />
           ) : (
-            options.showTitle && <Text fw={600}>{note.title || t("untitled")}</Text>
+            (isAdvanced || options.showTitle) && <Text fw={600}>{note.title || t("untitled")}</Text>
           )}
-          {!isEditing && options.showUpdatedAt && (
+          {!isEditing && (isAdvanced || options.showUpdatedAt) && (
             <Text size="xs" c="dimmed">
               {t("updatedAt", { date: updatedAtRelative })}
             </Text>
@@ -341,37 +342,40 @@ const AnchorNoteWidgetContent = ({
             </Text>
           )}
         </Stack>
-        {(isEditing || canEdit) && (
-          <Group className="homarr-anchor-actions" data-visible={isEditing || isAdvanced || undefined} gap="xs">
-            {isEditing ? (
-              <>
-                <Button size="xs" onClick={handleSave} loading={isUpdating} disabled={!hasChanges || !canEdit}>
-                  {t("save")}
+        <Group gap="xs" wrap="nowrap">
+          <WidgetQueryErrorIndicator error={noteQuery.error} label={t("name")} />
+          {(isEditing || canEdit) && (
+            <Group className="homarr-anchor-actions" data-visible={isEditing || isAdvanced || undefined} gap="xs">
+              {isEditing ? (
+                <>
+                  <Button size="xs" onClick={handleSave} loading={isUpdating} disabled={!hasChanges || !canEdit}>
+                    {t("save")}
+                  </Button>
+                  <Button size="xs" variant="subtle" onClick={handleCancel} disabled={isUpdating}>
+                    {t("cancel")}
+                  </Button>
+                </>
+              ) : isAdvanced ? (
+                <Button size="xs" variant="light" onClick={handleEdit} disabled={isUpdating}>
+                  {t("edit")}
                 </Button>
-                <Button size="xs" variant="subtle" onClick={handleCancel} disabled={isUpdating}>
-                  {t("cancel")}
-                </Button>
-              </>
-            ) : isAdvanced ? (
-              <Button size="xs" variant="light" onClick={handleEdit} disabled={isUpdating}>
-                {t("edit")}
-              </Button>
-            ) : (
-              <Tooltip label={t("edit")}>
-                <ActionIcon
-                  className={actionTargetClasses.root}
-                  aria-label={t("edit")}
-                  size="md"
-                  variant="light"
-                  onClick={handleEdit}
-                  disabled={isUpdating}
-                >
-                  <IconEdit size={16} />
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </Group>
-        )}
+              ) : (
+                <Tooltip label={t("edit")}>
+                  <ActionIcon
+                    className={actionTargetClasses.root}
+                    aria-label={t("edit")}
+                    size="md"
+                    variant="light"
+                    onClick={handleEdit}
+                    disabled={isUpdating}
+                  >
+                    <IconEdit size={16} />
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </Group>
+          )}
+        </Group>
       </Group>
       {isEditing || isAdvanced ? (
         <div

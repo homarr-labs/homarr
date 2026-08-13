@@ -20,6 +20,7 @@ import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import { useWidgetRuntimeActions } from "../../runtime-hooks";
 import { getUsableWidgetQueryData } from "../../common/query-state";
+import { WidgetQueryErrorIndicator } from "../../common/query-state-indicator";
 import classes from "./component.module.css";
 import { ALL_PHOTOS_ALBUM_ID } from "./constants";
 
@@ -31,16 +32,16 @@ export default function ImmichAlbumCarouselWidget({
 }: WidgetComponentProps<"immich-albumCarousel">) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const t = useI18n();
 
-  const album = getUsableWidgetQueryData(
-    clientApi.widget.immich.getAlbum.useQuery(
-      {
-        integrationId: integrationIds[0] ?? "",
-        albumId: options.albumId && options.albumId !== ALL_PHOTOS_ALBUM_ID ? options.albumId : undefined,
-      },
-      { enabled: integrationIds.length > 0 },
-    ),
+  const albumQuery = clientApi.widget.immich.getAlbum.useQuery(
+    {
+      integrationId: integrationIds[0] ?? "",
+      albumId: options.albumId && options.albumId !== ALL_PHOTOS_ALBUM_ID ? options.albumId : undefined,
+    },
+    { enabled: integrationIds.length > 0 },
   );
+  const album = getUsableWidgetQueryData(albumQuery);
 
   const photoAssets = useMemo(() => {
     const assets = album?.assets.filter((asset) => asset.type === "IMAGE") ?? [];
@@ -68,26 +69,27 @@ export default function ImmichAlbumCarouselWidget({
 
   if (!album) return <WidgetEmptyState />;
 
-  if (album.assets.length === 0) {
-    return <NoPhotosInAlbum />;
-  }
-
-  if (photoAssets.length === 0) {
-    return <NoPhotosInAlbum />;
-  }
-
   return (
-    <Carousel
-      assets={photoAssets}
-      currentIndex={currentPhotoIndex}
-      setCurrentIndex={setCurrentPhotoIndex}
-      rotationInterval={options.rotationIntervalSeconds}
-      showPhotoInfo={options.showPhotoInfo}
-      albumName={album.albumName}
-      advanced={displayMode === "advanced"}
-      paused={paused}
-      setPaused={setPaused}
-    />
+    <Box h="100%" pos="relative">
+      <Box pos="absolute" top={4} right={8} style={{ zIndex: 3 }}>
+        <WidgetQueryErrorIndicator error={albumQuery.error} label={t("widget.immich-albumCarousel.name")} />
+      </Box>
+      {album.assets.length === 0 || photoAssets.length === 0 ? (
+        <NoPhotosInAlbum />
+      ) : (
+        <Carousel
+          assets={photoAssets}
+          currentIndex={currentPhotoIndex}
+          setCurrentIndex={setCurrentPhotoIndex}
+          rotationInterval={options.rotationIntervalSeconds}
+          showPhotoInfo={options.showPhotoInfo}
+          albumName={album.albumName}
+          advanced={displayMode === "advanced"}
+          paused={paused}
+          setPaused={setPaused}
+        />
+      )}
+    </Box>
   );
 }
 

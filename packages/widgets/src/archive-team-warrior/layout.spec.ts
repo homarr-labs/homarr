@@ -20,4 +20,12 @@ describe("archive team warrior compact layout", () => {
       showSecondaryCounts: true,
     });
   });
+
+  test("keeps all display sections available in advanced mode", () => {
+    expect(getArchiveCompactLayout(180, 100, true)).toMatchObject({
+      showBandwidth: true,
+      showBroadcast: true,
+      showSecondaryCounts: true,
+    });
+  });
 });

@@ -8,6 +8,7 @@ import { getIconUrl } from "@homarr/definitions";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 
 export default function ArchiveTeamWarriorWidget({
   integrationIds,
@@ -48,7 +49,7 @@ const ArchiveTeamWarriorWidgetContent = ({
 }) => {
   const t = useScopedI18n("widget.archiveTeamWarrior");
   const locale = useCurrentIntlLocale();
-  const [data] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({ integrationId });
+  const [data, statusQuery] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({ integrationId });
 
   const status = data.status;
   const projectName = status.project?.title ?? status.selectedProject ?? t("noProjectSelected");
@@ -71,14 +72,17 @@ const ArchiveTeamWarriorWidgetContent = ({
           </Text>
         </Group>
 
-        <Badge size="sm" color={getStatusColor(statusKey)}>
-          {t(`status.${statusKey}`)}
-        </Badge>
+        <Group gap={4} wrap="nowrap">
+          <WidgetQueryErrorIndicator error={statusQuery.error} label={t("name")} />
+          <Badge size="sm" color={getStatusColor(statusKey)}>
+            {t(`status.${statusKey}`)}
+          </Badge>
+        </Group>
       </Group>
 
-      {options.showBroadcastMessage && status.broadcastMessage && layout.showBroadcast && (
+      {(isAdvanced || options.showBroadcastMessage) && status.broadcastMessage && layout.showBroadcast && (
         <Card withBorder p="xs">
-          <Text size="xs" lineClamp={3}>
+          <Text size="xs" lineClamp={isAdvanced ? undefined : 3}>
             {status.broadcastMessage}
           </Text>
         </Card>
