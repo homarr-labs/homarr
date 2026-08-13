@@ -5,8 +5,10 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { createPortal } from "react-dom";
 
 import type { RouterOutputs } from "@homarr/api";
-import { useIntegrations } from "@homarr/auth/client";
+import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { useEditMode } from "@homarr/boards/edit-mode";
 import { getRootSectionLane } from "@homarr/definitions";
 
 import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
@@ -33,7 +35,11 @@ const GridPortalHostContext = createContext<GridPortalHostContextValue | null>(n
  */
 export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
   const board = useRequiredBoard();
-  const integrations = useIntegrations();
+  const { data: session } = useSession();
+  const [isEditMode] = useEditMode();
+  const { data: integrations } = clientApi.integration.all.useQuery(undefined, {
+    enabled: Boolean(session) && isEditMode,
+  });
   const containersRef = useRef<Map<string, HTMLElement>>(new Map());
   const [containers, setContainers] = useState<Map<string, HTMLElement>>(() => new Map());
   const [announcement, setAnnouncement] = useState({ id: 0, message: "" });
