@@ -688,211 +688,6 @@
       "add": ""
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Προσαρμοσμένα Widgets",
-        "noResults": "Δεν υπάρχουν ακόμα προσαρμοσμένα widgets. Δημιουργήστε το πρώτο σας!",
-        "loading": "Φόρτωση..."
-      },
-      "create": {
-        "title": "Δημιουργία Προσαρμοσμένου Widget",
-        "subtitle": "Ορίστε μια διεύθυνση URL API, πιστοποίηση και τον τρόπο εμφάνισης των δεδομένων απόκρισης."
-      },
-      "edit": {
-        "title": "Επεξεργασία Προσαρμοσμένου Widget"
-      }
-    },
-    "action": {
-      "create": "Δημιουργία",
-      "import": "Εισαγωγή",
-      "save": "Αποθήκευση",
-      "delete": "Διαγραφή Προσαρμοσμένου Widget",
-      "deleteConfirm": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το \"{name}\"; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
-      "export": "Εξαγωγή",
-      "addMapping": "Προσθήκη Αντιστοίχισης",
-      "addColumn": "Προσθήκη Στήλης",
-      "edit": "Επεξεργασία",
-      "removeMapping": "Αφαίρεση αντιστοίχισης",
-      "removeColumn": "Αφαίρεση στήλης",
-      "addItem": "Προσθήκη Στοιχείου",
-      "removeItem": "Αφαίρεση στοιχείου",
-      "addBar": "Προσθήκη Μπάρας",
-      "duplicate": "Αντιγραφή",
-      "copyAiPrompt": "Αντιγραφή προτροπής AI",
-      "enable": "Ενεργοποίηση",
-      "disable": "Απενεργοποίηση",
-      "menu": "Ενέργειες"
-    },
-    "field": {
-      "name": "Όνομα",
-      "description": "Περιγραφή",
-      "iconUrl": "URL Εικονιδίου",
-      "url": "URL",
-      "authType": "Τύπος Πιστοποίησης",
-      "headerName": "Όνομα Παραμέτρου Κεφαλίδας/Ερωτήματος",
-      "method": "Μέθοδος",
-      "requestBody": "Σώμα Αιτήματος",
-      "displayType": "Τύπος Εμφάνισης",
-      "jsonPath": "Διαδρομή JSON",
-      "jsonPathHint": "Χρησιμοποιήστε σύνταξη JSONPath για εξαγωγή τιμών, π.χ. $.data.temperature ή $.items[0].name",
-      "label": "Ετικέτα",
-      "unit": "Μονάδα",
-      "mappings": "Αντιστοιχίσεις",
-      "tablePath": "Διαδρομή JSON Πίνακα",
-      "tablePathHint": "Διαδρομή προς τον πίνακα στην απόκριση, π.χ. $.data.items",
-      "columns": "Στήλες",
-      "header": "Κεφαλίδα",
-      "items": "Στοιχεία",
-      "gridColumns": "Στήλες Πλέγματος",
-      "cardStyle": "Στυλ Κάρτας",
-      "bars": "Μπάρες",
-      "valuePath": "Διαδρομή JSON Τιμής",
-      "maxPath": "Διαδρομή JSON Μέγιστης Τιμής",
-      "showPercentage": "Εμφάνιση Ποσοστού",
-      "barSize": "Μέγεθος Μπάρας",
-      "goodValues": "Καλές Τιμές (διαχωρισμένες με κόμμα)",
-      "dotSize": "Μέγεθος Κουκκίδας",
-      "valueSize": "Μέγεθος Τιμής",
-      "labelPosition": "Θέση Ετικέτας",
-      "kvLayout": "Διάταξη",
-      "striped": "Ριγωτές Γραμμές",
-      "compact": "Συμπαγής Λειτουργία",
-      "maxHeight": "Μέγιστο Ύψος (px)",
-      "color": "Χρώμα",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
-      "template": {
-        "label": "",
-        "description": ""
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
-    },
-    "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
-    },
-    "layoutOption": {
-      "list": "",
-      "grid": ""
-    },
-    "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
-    },
-    "labelPositionOption": {
-      "above": "",
-      "below": ""
-    },
-    "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
-    },
-    "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
-    },
-    "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
-    },
-    "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
-    },
-    "secret": {
-      "apiKey": "",
-      "username": "",
-      "password": "",
-      "savedPlaceholder": ""
-    },
-    "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
-    },
-    "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
-    },
-    "table": {
-      "name": "",
-      "url": "",
-      "display": ""
-    },
-    "widget": {
-      "disabled": ""
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -2828,193 +2623,6 @@
         "internalServerError": "Αποτυχία λήψης δεδομένων Paperless-ngx"
       }
     },
-    "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
-      "option": {
-        "showTotalHosts": {
-          "label": "",
-          "description": ""
-        },
-        "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showSecurityUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showUpToDateHosts": {
-          "label": "",
-          "description": ""
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
-        },
-        "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
-        },
-        "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
-        },
-        "showTotalRepos": {
-          "label": "",
-          "description": ""
-        },
-        "enableThresholdColors": {
-          "label": "",
-          "description": ""
-        },
-        "useCustomThresholds": {
-          "label": "",
-          "description": ""
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "",
-            "percent": ""
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
-        },
-        "showOsDistribution": {
-          "label": "",
-          "description": ""
-        },
-        "osDistributionLimit": {
-          "label": "",
-          "description": "",
-          "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
-          }
-        },
-        "showOsVersion": {
-          "label": "",
-          "description": ""
-        },
-        "showComplianceHero": {
-          "label": "",
-          "description": ""
-        },
-        "osDisplayMode": {
-          "label": "",
-          "description": "",
-          "option": {
-            "bars": "",
-            "donut": ""
-          }
-        }
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
-    "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "",
-          "description": ""
-        },
-        "showMissingMovies": {
-          "label": "",
-          "description": ""
-        },
-        "showProviderIssues": {
-          "label": "",
-          "description": ""
-        },
-        "showHealthIssues": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
     "immich-serverStats": {
       "name": "",
       "description": "",
@@ -3387,35 +2995,6 @@
         }
       }
     },
-    "mediaMissing": {
-      "name": "",
-      "description": "",
-      "option": {
-        "showMissing": {
-          "label": ""
-        },
-        "showQueued": {
-          "label": ""
-        },
-        "pageSize": {
-          "label": ""
-        }
-      },
-      "tab": {
-        "missing": "",
-        "queued": ""
-      },
-      "type": {
-        "movie": "",
-        "episode": ""
-      },
-      "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
-      },
-      "timeLeft": ""
-    },
     "rssFeed": {
       "name": "",
       "description": "",
@@ -3744,40 +3323,6 @@
         "internalServerError": "Αποτυχία λήψης δεδομένων διαθεσιμότητας"
       }
     },
-    "traefik": {
-      "name": "",
-      "description": "",
-      "option": {
-        "showTcp": {
-          "label": ""
-        },
-        "showUdp": {
-          "label": ""
-        },
-        "showEntryPoints": {
-          "label": ""
-        }
-      },
-      "instances": "",
-      "versionUnknown": "",
-      "summary": {
-        "routers": "",
-        "entryPoints": ""
-      },
-      "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
-      },
-      "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
-      },
-      "error": {
-        "internalServerError": ""
-      }
-    },
     "audioStats": {
       "name": "Στατιστικά Ήχου",
       "description": "Στατιστικά βιβλιοθήκης και αναπαραγωγής από Navidrome ή Audiobookshelf",
@@ -3900,26 +3445,6 @@
       "status": {
         "unhealthy": ""
       }
-    },
-    "customApi": {
-      "name": "",
-      "description": "",
-      "option": {
-        "definitionId": {
-          "label": ""
-        },
-        "refreshInterval": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
     },
     "beszelSystemTable": {
       "name": "Beszel Συστήματα (Πίνακας)",
@@ -4170,6 +3695,256 @@
           "title": "I/O Δικτύου Docker",
           "subtitle": "Κίνηση δικτύου των docker containers"
         }
+      }
+    },
+    "patchmon": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "totalHosts": "",
+      "hostsNeedingUpdates": "",
+      "securityUpdates": "",
+      "upToDateHosts": "",
+      "hostsWithSecurityUpdates": "",
+      "recentUpdates24h": "",
+      "totalOutdatedPackages": "",
+      "totalRepos": "",
+      "osDistribution": "",
+      "compliance": "",
+      "complianceRatio": "",
+      "lastUpdated": "",
+      "option": {
+        "showTotalHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsNeedingUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showUpToDateHosts": {
+          "label": "",
+          "description": ""
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "",
+          "description": ""
+        },
+        "showRecentUpdates24h": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalOutdatedPackages": {
+          "label": "",
+          "description": ""
+        },
+        "showTotalRepos": {
+          "label": "",
+          "description": ""
+        },
+        "enableThresholdColors": {
+          "label": "",
+          "description": ""
+        },
+        "useCustomThresholds": {
+          "label": "",
+          "description": ""
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "",
+            "percent": ""
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "",
+          "description": ""
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "",
+          "description": ""
+        },
+        "showOsDistribution": {
+          "label": "",
+          "description": ""
+        },
+        "osDistributionLimit": {
+          "label": "",
+          "description": "",
+          "option": {
+            "3": "",
+            "5": "",
+            "10": "",
+            "all": ""
+          }
+        },
+        "showOsVersion": {
+          "label": "",
+          "description": ""
+        },
+        "showComplianceHero": {
+          "label": "",
+          "description": ""
+        },
+        "osDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "bars": "",
+            "donut": ""
+          }
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "bazarr": {
+      "name": "",
+      "description": "",
+      "episodes": "",
+      "movies": "",
+      "providers": "",
+      "status": "",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "",
+          "description": ""
+        },
+        "showMissingMovies": {
+          "label": "",
+          "description": ""
+        },
+        "showProviderIssues": {
+          "label": "",
+          "description": ""
+        },
+        "showHealthIssues": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "error": {
+        "internalServerError": ""
+      }
+    },
+    "mediaMissing": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showMissing": {
+          "label": ""
+        },
+        "showQueued": {
+          "label": ""
+        },
+        "pageSize": {
+          "label": ""
+        }
+      },
+      "tab": {
+        "missing": "",
+        "queued": ""
+      },
+      "type": {
+        "movie": "",
+        "episode": ""
+      },
+      "empty": {
+        "missing": "",
+        "queued": "",
+        "noTabsEnabled": ""
+      },
+      "timeLeft": ""
+    },
+    "traefik": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTcp": {
+          "label": ""
+        },
+        "showUdp": {
+          "label": ""
+        },
+        "showEntryPoints": {
+          "label": ""
+        }
+      },
+      "instances": "",
+      "versionUnknown": "",
+      "summary": {
+        "routers": "",
+        "entryPoints": ""
+      },
+      "resource": {
+        "routers": "",
+        "services": "",
+        "middlewares": ""
+      },
+      "status": {
+        "healthy": "",
+        "errors": "",
+        "warnings": ""
+      },
+      "error": {
+        "internalServerError": ""
       }
     }
   },
@@ -4551,11 +4326,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Αρχική",
         "boards": "Πίνακες",
         "apps": "Εφαρμογές",
         "integrations": "",
-        "customWidgets": "",
         "searchEngies": "",
         "medias": "",
         "users": {
@@ -5694,6 +5469,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Διαχείριση",
       "boards": {
         "label": "Πίνακες"
@@ -5726,18 +5504,6 @@
         },
         "edit": {
           "label": "Επεξεργασία"
-        }
-      },
-      "custom-widgets": {
-        "label": "",
-        "new": {
-          "label": ""
-        },
-        "edit": {
-          "label": "",
-          "flow": {
-            "label": ""
-          }
         }
       },
       "users": {

@@ -21,7 +21,7 @@
     "verify:search": "node ./scripts/verify-algolia-search.mjs"
   },
   "dependencies": {
-    "@base-ui/react": "catalog:",
+    "@base-ui/react": "^1.5.0",
     "@docusaurus/core": "^3.10.1",
     "@docusaurus/faster": "^3.10.1",
     "@docusaurus/plugin-content-docs": "^3.10.1",
@@ -37,7 +37,7 @@
     "@shadcn/react": "catalog:",
     "@tabler/icons-react": "catalog:",
     "@tailwindcss/postcss": "^4.3.2",
-    "class-variance-authority": "catalog:",
+    "class-variance-authority": "^0.7.1",
     "clsx": "catalog:",
     "cmdk": "catalog:",
     "date-fns": "catalog:",
@@ -59,9 +59,8 @@
     "recharts": "3.8.0",
     "sonner": "catalog:",
     "swiper": "^14.0.5",
-    "tailwind-merge": "catalog:",
-    "tailwindcss": "^4.3.2",
-    "zod": "catalog:"
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.2"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.1",
@@ -72,7 +71,8 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "cheerio": "^1.2.0",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "zod": "catalog:"
   },
   "peerDependencies": {
     "@docusaurus/theme-common": "^3.10.1",

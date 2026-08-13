@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { use, useCallback, useMemo } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
@@ -6,9 +6,10 @@ import { getSafeAppHref } from "@homarr/common";
 import { useConfirmModal } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
+import type { WidgetComponentProps } from "@homarr/widgets/definition";
+import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { Item } from "~/app/[locale]/boards/_types";
-import { filterByItemKind } from "./filter-by-item-kind";
 
 interface SectionItemLayout {
   layoutId: string;
@@ -80,10 +81,27 @@ export const useOpenSectionApps = (sectionId: string, enabled: boolean) => {
   const settings = useSettings();
   const { openConfirmModal } = useConfirmModal();
   const t = useI18n();
+  const appDefinition = use(loadWidgetDefinition("app"));
   const appIds = useMemo(() => {
     const items: Item[] = getSectionItemsForLayout(board, sectionId, currentLayoutId);
-    return Array.from(new Set(filterByItemKind(items, settings, "app").map((item) => item.options.appId)));
-  }, [board, currentLayoutId, sectionId, settings]);
+    return Array.from(
+      new Set(
+        items
+          .filter((item) => item.kind === "app")
+          .map(
+            (item) =>
+              (
+                reduceWidgetOptionsWithDefinition(
+                  appDefinition,
+                  settings,
+                  item.options,
+                ) as WidgetComponentProps<"app">["options"]
+              ).appId,
+          )
+          .filter((appId): appId is string => typeof appId === "string"),
+      ),
+    );
+  }, [appDefinition, board, currentLayoutId, sectionId, settings]);
   const { data: apps = [], isLoading } = clientApi.app.byIds.useQuery(appIds, {
     enabled: enabled && appIds.length > 0,
     staleTime: 30_000,

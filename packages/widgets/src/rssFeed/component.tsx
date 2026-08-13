@@ -9,8 +9,10 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import type { WidgetComponentProps } from "../definition";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { WidgetEmptyState } from "../common/empty-state";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
+import type { WidgetComponentProps } from "../definition";
 import { BaseWidgetError } from "../errors/base-component";
 import classes from "./component.module.scss";
 
@@ -27,6 +29,7 @@ const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
       hasError: false as const,
       entries: normalizedData,
       failedFeedCount: 0,
+      isPending: query.isPending,
       isStale: Boolean(query.error),
     };
   }
@@ -35,11 +38,12 @@ const useLiveFeed = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
     hasError: false as const,
     entries: normalizedData?.entries ?? [],
     failedFeedCount: normalizedData?.failedFeedCount ?? 0,
+    isPending: query.isPending,
     isStale: Boolean(query.error),
   };
 };
 
-export default function RssFeed({ options, width, height }: WidgetComponentProps<"rssFeed">) {
+export default function RssFeed({ options, width, height, displayMode }: WidgetComponentProps<"rssFeed">) {
   const feed = useLiveFeed({
     urls: options.feedUrls,
     maximumAmountPosts: typeof options.maximumAmountPosts === "number" ? options.maximumAmountPosts : 100,
@@ -57,6 +61,7 @@ export default function RssFeed({ options, width, height }: WidgetComponentProps
       />
     );
   }
+  if (feed.isPending) return <WidgetQueryLoadingState />;
 
   const warning = feed.isStale
     ? t("warning.stale")
@@ -64,13 +69,35 @@ export default function RssFeed({ options, width, height }: WidgetComponentProps
       ? t("warning.partial", { count: feed.failedFeedCount })
       : undefined;
 
+  if (feed.entries.length === 0) {
+    return (
+      <Flex direction="column" h="100%" p="xs">
+        {warning && (
+          <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size={16} />} p="xs">
+            <output>{warning}</output>
+          </Alert>
+        )}
+        <WidgetEmptyState />
+      </Flex>
+    );
+  }
+
   const languageDir = options.enableRtl ? "RTL" : "LTR";
 
   const isDense = width < 420 || height < 180;
   const isTiny = width < 260 || height < 110;
   const isRoomy = width >= 420 && height >= 240;
+  const isAdvanced = displayMode === "advanced";
   const columns = width >= 720 && height >= 260 ? 2 : 1;
   const descriptionLines = isRoomy ? Math.max(options.textLinesClamp, 6) : isDense ? 1 : options.textLinesClamp;
+  const entryDisplay = getRssEntryDisplay({
+    isAdvanced,
+    isDense,
+    isTiny,
+    hideDescription: options.hideDescription,
+    showPosterImage: options.showPosterImage,
+    descriptionLines,
+  });
   const spacing = isRoomy ? "sm" : "xs";
 
   return (
@@ -97,7 +124,7 @@ export default function RssFeed({ options, width, height }: WidgetComponentProps
               title={feedEntry.title}
             >
               <Group wrap="nowrap" align="flex-start" gap={isDense ? "xs" : "md"}>
-                {feedEntry.enclosure !== undefined && options.showPosterImage && !isTiny && (
+                {feedEntry.enclosure !== undefined && entryDisplay.showImage && (
                   <Image
                     className={classes.poster}
                     src={feedEntry.enclosure}
@@ -110,18 +137,29 @@ export default function RssFeed({ options, width, height }: WidgetComponentProps
                 )}
 
                 <Flex gap={isRoomy ? "sm" : 6} direction="column" w="100%" miw={0}>
-                  <Text dir={languageDir} fz={isRoomy ? "md" : "sm"} fw={600} lh={1.25} lineClamp={2}>
+                  <Text
+                    dir={languageDir}
+                    fz={isRoomy ? "md" : "sm"}
+                    fw={600}
+                    lh={1.25}
+                    lineClamp={isAdvanced ? undefined : 2}
+                  >
                     {feedEntry.title}
                   </Text>
-                  {!options.hideDescription && feedEntry.description && !isTiny && (
-                    <Text dir={languageDir} c="dimmed" size="sm" lineClamp={descriptionLines}>
+                  {entryDisplay.showDescription && feedEntry.description && (
+                    <Text dir={languageDir} c="dimmed" size="sm" lineClamp={entryDisplay.descriptionLineClamp}>
                       {feedDescriptionToText(feedEntry.description)}
                     </Text>
                   )}
 
                   <InfoDisplay
-                    source={!isDense ? getHostname(feedEntry.feedUrl) : undefined}
+                    source={entryDisplay.showSource ? getHostname(feedEntry.feedUrl) : undefined}
                     date={feedEntry.published ? dayjs(feedEntry.published).fromNow() : undefined}
+                    timestamp={
+                      isAdvanced && feedEntry.published
+                        ? dayjs(feedEntry.published).format("YYYY-MM-DD HH:mm:ss Z")
+                        : undefined
+                    }
                   />
                 </Flex>
               </Group>
@@ -151,15 +189,44 @@ export const getHostname = (url: string): string => {
   }
 };
 
-const InfoDisplay = ({ date, source }: { date?: string; source?: string }) => (
-  <Group gap={5} align="center" wrap="nowrap">
+interface RssEntryDisplayInput {
+  isAdvanced: boolean;
+  isDense: boolean;
+  isTiny: boolean;
+  hideDescription: boolean;
+  showPosterImage: boolean;
+  descriptionLines: number;
+}
+
+export const getRssEntryDisplay = ({
+  isAdvanced,
+  isDense,
+  isTiny,
+  hideDescription,
+  showPosterImage,
+  descriptionLines,
+}: RssEntryDisplayInput) => ({
+  showDescription: isAdvanced || (!hideDescription && !isTiny),
+  showImage: isAdvanced || (showPosterImage && !isTiny),
+  showSource: isAdvanced || !isDense,
+  descriptionLineClamp: isAdvanced ? undefined : descriptionLines,
+});
+
+const InfoDisplay = ({ date, timestamp, source }: { date?: string; timestamp?: string; source?: string }) => (
+  <Group gap={5} align="center" wrap={timestamp ? "wrap" : "nowrap"}>
     {date && <IconClock size="1rem" color="var(--mantine-color-dimmed)" />}
     {date && (
       <Text size="xs" c="dimmed">
         {date}
       </Text>
     )}
-    {date && source && <Text c="dimmed">•</Text>}
+    {timestamp && <Text c="dimmed">•</Text>}
+    {timestamp && (
+      <Text size="xs" c="dimmed" ff="monospace">
+        {timestamp}
+      </Text>
+    )}
+    {(date || timestamp) && source && <Text c="dimmed">•</Text>}
     {source && (
       <Text size="xs" c="dimmed" truncate="end">
         {source}

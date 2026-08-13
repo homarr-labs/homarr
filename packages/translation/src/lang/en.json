@@ -2338,6 +2338,12 @@
       "noProjectSelected": "No project selected",
       "runnerStatus": "Runner: {status}",
       "updatedAt": "Updated {date}",
+      "projectId": "Project: {id}",
+      "sessionReceived": "Session received: {value}",
+      "sessionSent": "Session sent: {value}",
+      "sessionId": "Session: {id}",
+      "startedAt": "Started {date}",
+      "emptyItems": "No active or recent jobs in this snapshot",
       "metric": {
         "running": "Running",
         "completed": "Done",
@@ -2739,6 +2745,7 @@
       },
       "advanced": {
         "entityId": "Entity ID: {id}",
+        "lastChanged": "Changed {date}",
         "lastUpdated": "Updated {date}",
         "attribute": {
           "unit": "Unit",
@@ -2767,7 +2774,9 @@
       },
       "advanced": {
         "lastExecuted": "Last run at {time}",
-        "automationId": "Automation ID: {id}"
+        "automationId": "Automation ID: {id}",
+        "ready": "Ready to run",
+        "noPermission": "No permission to run this automation"
       },
       "status": {
         "running": "Running automation",
@@ -2780,6 +2789,14 @@
     "stockPrice": {
       "name": "Stock Price",
       "description": "Displays the current stock price of a company",
+      "advanced": {
+        "currentPrice": "Current price",
+        "previousClose": "Previous close",
+        "change": "Change",
+        "changePercentage": "Change (%)",
+        "minimum": "Minimum",
+        "maximum": "Maximum"
+      },
       "option": {
         "stock": {
           "label": "Stock symbol"
@@ -2968,6 +2985,11 @@
       },
       "title": "Indexer manager",
       "testAll": "Test all",
+      "status": {
+        "healthy": "Healthy",
+        "unhealthy": "Unhealthy",
+        "disabled": "Disabled"
+      },
       "error": {
         "internalServerError": "Failed to fetch indexers status"
       }
@@ -3025,7 +3047,10 @@
         "minutes": "{count} minutes",
         "used": "Used",
         "available": "Available",
-        "lastSeen": "Last status update: {lastSeen}"
+        "lastSeen": "Last status update: {lastSeen}",
+        "updatesAvailable": "{count, plural, one {# update available} other {# updates available}}",
+        "rebootRequired": "Reboot required",
+        "rebootNotRequired": "No reboot required"
       },
       "memory": {},
       "error": {
@@ -3144,7 +3169,13 @@
       },
       "server": {
         "buildServer": "Build",
-        "resourceCounts": "{applications, plural, one {# app} other {# apps}} / {services, plural, one {# service} other {# services}}"
+        "resourceCounts": "{applications, plural, one {# app} other {# apps}} / {services, plural, one {# service} other {# services}}",
+        "reachability": "Reachability",
+        "usability": "Usability"
+      },
+      "source": {
+        "url": "Source: {url}",
+        "unavailable": "{source}: unavailable"
       },
       "instances": {
         "title": "Instances"
@@ -3163,7 +3194,11 @@
         "restarting": "Restarting",
         "unknown": "Unknown",
         "online": "Online",
-        "offline": "Offline"
+        "offline": "Offline",
+        "reachable": "Reachable",
+        "unreachable": "Unreachable",
+        "usable": "Usable",
+        "unusable": "Unusable"
       }
     },
     "vpn": {
@@ -3699,6 +3734,9 @@
       "movies": "Missing Movies",
       "providers": "Provider Issues",
       "status": "Health Issues",
+      "sonarrSignalr": "Sonarr SignalR",
+      "radarrSignalr": "Radarr SignalR",
+      "announcements": "Announcements",
       "option": {
         "showMissingEpisodes": {
           "label": "Show missing episodes",
@@ -4297,6 +4335,16 @@
     },
     "networkControllerSummary": {
       "option": {},
+      "advanced": {
+        "updated": "Updated",
+        "metric": {
+          "latency": "Latency",
+          "ping": "Ping",
+          "uptime": "Uptime",
+          "users": "Users",
+          "guests": "Guests"
+        }
+      },
       "card": {
         "vpn": {
           "countConnected": "{count, plural, one {# connected} other {# connected}}",
@@ -4315,6 +4363,9 @@
       "description": "Displays the summary of a Network Controller (like UniFi Controller)"
     },
     "networkControllerStatus": {
+      "advanced": {
+        "updatedAt": "Updated {date}"
+      },
       "card": {
         "variants": {
           "wired": {
@@ -4446,7 +4497,8 @@
       "range": {
         "twelveHours": "12h",
         "oneDay": "24h",
-        "all": "All"
+        "all": "All",
+        "lastThirty": "Last 30"
       }
     },
     "uptimeKuma": {
@@ -4661,7 +4713,9 @@
         }
       },
       "status": {
-        "unhealthy": "Unhealthy"
+        "unhealthy": "Unhealthy",
+        "smart": "SMART",
+        "free": "{percentage}% free"
       }
     },
     "customApi": {
@@ -4782,6 +4836,12 @@
       },
       "column": {
         "system": "System",
+        "source": "Source",
+        "hostname": "Hostname",
+        "os": "OS",
+        "cpuModel": "CPU model",
+        "cores": "Cores",
+        "memoryTotal": "Memory total",
         "cpu": "CPU",
         "memory": "Memory",
         "disk": "Disk",
@@ -4841,6 +4901,14 @@
       },
       "empty": {
         "noSystems": "No systems found"
+      },
+      "metadata": {
+        "hostname": "Hostname",
+        "os": "OS",
+        "cpuModel": "CPU model",
+        "cores": "Cores",
+        "memoryTotal": "Memory total",
+        "source": "Source"
       },
       "metric": {
         "cpu": "CPU",

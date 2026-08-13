@@ -688,211 +688,6 @@
       "add": "Bir uygulama ekle"
     }
   },
-  "customWidget": {
-    "page": {
-      "list": {
-        "title": "Özel Widget'lar",
-        "noResults": "Henüz özel widget yok. İlk widget'ınızı oluşturun!",
-        "loading": "Yükleniyor..."
-      },
-      "create": {
-        "title": "Özel Widget Oluştur",
-        "subtitle": "API URL'sini, kimlik doğrulamasını ve yanıt verilerinin nasıl görüntüleneceğini tanımlayın."
-      },
-      "edit": {
-        "title": "Özel Widget'ı Düzenle"
-      }
-    },
-    "action": {
-      "create": "Oluştur",
-      "import": "İçe aktar",
-      "save": "Kaydet",
-      "delete": "Özel Widget'ı Sil",
-      "deleteConfirm": "“{name}” adlı widget'ı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
-      "export": "Dışa aktar",
-      "addMapping": "Eşleme Ekle",
-      "addColumn": "Sütun Ekle",
-      "edit": "Düzenle",
-      "removeMapping": "Eşlemeyi kaldır",
-      "removeColumn": "Sütunu kaldır",
-      "addItem": "Öğe Ekle",
-      "removeItem": "Öğeyi kaldır",
-      "addBar": "Çubuk Ekle",
-      "duplicate": "Çoğalt",
-      "copyAiPrompt": "Yapay zekâ istemini kopyala",
-      "enable": "Etkinleştir",
-      "disable": "Devre dışı bırak",
-      "menu": "Eylemler"
-    },
-    "field": {
-      "name": "Ad",
-      "description": "Açıklama",
-      "iconUrl": "Simge URL'si",
-      "url": "URL",
-      "authType": "Kimlik Doğrulama Türü",
-      "headerName": "Üst Bilgi/Sorgu Parametresi Adı",
-      "method": "Yöntem",
-      "requestBody": "İstek Gövdesi",
-      "displayType": "Görüntüleme Türü",
-      "jsonPath": "JSON Yolu",
-      "jsonPathHint": "Değerleri ayıklamak için JSONPath söz dizimini kullanın; ör. $.data.temperature veya $.items[0].name",
-      "label": "Etiket",
-      "unit": "Birim",
-      "mappings": "Eşlemeler",
-      "tablePath": "Dizi JSON Yolu",
-      "tablePathHint": "Yanıttaki dizinin yolu; ör. $.data.items",
-      "columns": "Sütunlar",
-      "header": "Başlık",
-      "items": "Öğeler",
-      "gridColumns": "Izgara Sütunları",
-      "cardStyle": "Kart Stili",
-      "bars": "Çubuklar",
-      "valuePath": "Değer JSON Yolu",
-      "maxPath": "En Yüksek Değer JSON Yolu",
-      "showPercentage": "Yüzdeyi Göster",
-      "barSize": "Çubuk Boyutu",
-      "goodValues": "İyi Değerler (virgülle ayrılmış)",
-      "dotSize": "Nokta Boyutu",
-      "valueSize": "Değer Boyutu",
-      "labelPosition": "Etiket Konumu",
-      "kvLayout": "Düzen",
-      "striped": "Şeritli Satırlar",
-      "compact": "Kompakt Mod",
-      "maxHeight": "En Fazla Yükseklik (px)",
-      "color": "Renk",
-      "buttonLabel": "Düğme Etiketi",
-      "buttonColor": "Düğme Rengi",
-      "confirmText": "Onay Metni",
-      "confirmTextHint": "Ayarlanırsa istek yürütülmeden önce bir onay iletişim kutusu gösterilir",
-      "successMessage": "Başarı Mesajı",
-      "successMessageHint": "Başarılı yürütmeden sonra gösterilecek mesaj",
-      "enabled": "Etkin",
-      "template": {
-        "label": "JSX Şablonu",
-        "description": "Mantine JSX şablonu. API yanıt alanlarına veri bağlamalarıyla (ör. data.name) erişin. Yalnızca izin verilen bileşenleri kullanın. Yasak: constructor, __proto__, eval, Function, window, document."
-      }
-    },
-    "placeholder": {
-      "exampleLabel": "CPU Sıcaklığı",
-      "exampleLabelShort": "CPU Sıcaklığı",
-      "exampleHeader": "Ad",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "mavi"
-    },
-    "cardStyleOption": {
-      "filled": "Dolu",
-      "outline": "Çerçeveli",
-      "subtle": "Hafif"
-    },
-    "layoutOption": {
-      "list": "Liste",
-      "grid": "Izgara"
-    },
-    "sizeOption": {
-      "sm": "Küçük",
-      "md": "Orta",
-      "lg": "Büyük",
-      "xl": "Çok Büyük"
-    },
-    "labelPositionOption": {
-      "above": "Üstte",
-      "below": "Altta"
-    },
-    "fieldset": {
-      "general": "Genel",
-      "connection": "API Bağlantısı",
-      "display": "Görüntüleme Yapılandırması"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Ayıklanan tek bir değeri etiket ve birimle gösterir",
-      "keyValue": "Birden fazla etiketli değeri yan yana gösterir",
-      "table": "Veri satırlarını tablo biçiminde gösterir",
-      "statGrid": "Pi-hole veya Speedtest widget'ları gibi, ızgara içinde renkli istatistik kartları gösterir",
-      "progressBars": "Disk, bellek veya kotalar için kullanımı ya da tamamlanmayı gösteren ilerleme çubukları",
-      "statusIndicator": "Çevrimiçi/çevrimdışı ya da sağlık durumlarını gösteren renkli durum noktaları",
-      "countGrid": "Sıkı bir ızgarada kompakt sayı ve etiket sayaçları",
-      "raw": "Hata ayıklama için okunaklı biçimlendirilmiş JSON çıktısı",
-      "actionButton": "Tıklandığında istek başlatan bir düğme",
-      "customJsx": "Tam API veri bağlamasıyla izin verilen Mantine bileşenlerini kullanan özel JSX düzeni"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "Yok",
-      "bearer": "Bearer Token",
-      "basic": "Temel Kimlik Doğrulama",
-      "apiKeyHeader": "API Anahtarı (Üst Bilgi)",
-      "apiKeyQuery": "API Anahtarı (Sorgu)"
-    },
-    "displayType": {
-      "singleValue": "Tek Değer",
-      "keyValue": "Anahtar-Değer",
-      "table": "Tablo",
-      "statGrid": "İstatistik Izgarası",
-      "progressBars": "İlerleme Çubukları",
-      "statusIndicator": "Durum Göstergesi",
-      "countGrid": "Sayaç Izgarası",
-      "raw": "Ham JSON",
-      "actionButton": "Eylem Düğmesi",
-      "customJsx": "Özel JSX"
-    },
-    "secret": {
-      "apiKey": "API Anahtarı / Token",
-      "username": "Kullanıcı adı",
-      "password": "Parola",
-      "savedPlaceholder": "••••••• (kaydedildi, korumak için boş bırakın)"
-    },
-    "preview": {
-      "title": "Önizleme",
-      "test": "Test Et",
-      "hint": "Geçerli yapılandırmanızla API yanıtını önizlemek için Test Et'e tıklayın.",
-      "rawResponse": "Ham JSON yanıtı"
-    },
-    "notification": {
-      "created": "“{name}” widget'ı başarıyla oluşturuldu.",
-      "updated": "“{name}” widget'ı başarıyla güncellendi.",
-      "deleted": "“{name}” widget'ı silindi.",
-      "imported": "Widget başarıyla içe aktarıldı.",
-      "aiPromptCopied": "Yapay zekâ istemi panoya kopyalandı",
-      "aiPromptDescription": "Herhangi bir yapay zekâ sohbet botuna (ChatGPT, Claude, Gemini...) yapıştırmak üzere önceden hazırlanmış bir istemi kopyalayın. İstem, yapay zekânın içe aktarmaya hazır bir JSON yapılandırması oluşturabilmesi için widget şemasının tamamını ve API yanıtınızı içerir.",
-      "aiPromptCopy": "Panoya kopyala",
-      "aiPromptNoResponse": "İpucu: Daha iyi sonuçlar için önce bir test çalıştırarak API yanıtınızı isteme ekleyin.",
-      "aiPromptCopyError": "İstem panoya kopyalanamadı. Tarayıcınız bu özelliği desteklemiyor olabilir.",
-      "createError": "Widget oluşturulamadı. API uç noktanızın erişilebilir olduğunu kontrol edin.",
-      "updateError": "Widget güncellenemedi. Değişiklikleriniz kaydedilmedi.",
-      "importError": "Widget içe aktarılamadı. Dosyanın geçerli bir özel widget JSON dışa aktarımı olduğundan emin olun.",
-      "exportError": "Widget dışa aktarılamadı.",
-      "duplicated": "“{name}” widget'ı çoğaltıldı.",
-      "duplicateError": "Widget çoğaltılamadı.",
-      "toggleError": "Widget durumu değiştirilemedi.",
-      "deleteError": "Widget silinemedi.",
-      "previewError": "Önizleme alınamadı. URL'yi kontrol edip yeniden deneyin.",
-      "executed": "Eylem başarıyla yürütüldü.",
-      "executeError": "Eylem başarısız oldu: {error}"
-    },
-    "table": {
-      "name": "Ad",
-      "url": "URL",
-      "display": "Görüntüleme"
-    },
-    "widget": {
-      "disabled": "Bu widget devre dışı"
-    }
-  },
   "integration": {
     "page": {
       "list": {
@@ -2828,193 +2623,6 @@
         "internalServerError": "Paperless-ngx verileri alınamadı"
       }
     },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "PatchMon'daki ana makine yama durumunun genel görünümü",
-      "title": "PatchMon İstatistikleri",
-      "totalHosts": "Toplam Ana Makine",
-      "hostsNeedingUpdates": "Güncelleme Gerekiyor",
-      "securityUpdates": "Güvenlik Güncellemeleri",
-      "upToDateHosts": "Güncel Ana Makineler",
-      "hostsWithSecurityUpdates": "Güvenlik Güncellemesi Olan Ana Makineler",
-      "recentUpdates24h": "Güncellemeler (24 sa.)",
-      "totalOutdatedPackages": "Güncel Olmayan Paketler",
-      "totalRepos": "Depolar",
-      "osDistribution": "İşletim Sistemi Dağılımı",
-      "compliance": "Yama Uyumluluğu",
-      "complianceRatio": "{upToDate} / {total}",
-      "lastUpdated": "Güncellendi: {time}",
-      "option": {
-        "showTotalHosts": {
-          "label": "Toplam ana makine sayısını göster",
-          "description": "İzlenen toplam ana makine sayısını gösterir"
-        },
-        "showHostsNeedingUpdates": {
-          "label": "Güncelleme gereken ana makineleri göster",
-          "description": "En az bir güncel olmayan paketi bulunan ana makineleri gösterir"
-        },
-        "showSecurityUpdates": {
-          "label": "Güvenlik güncellemelerini göster",
-          "description": "Kullanılabilir toplam güvenlik güncellemesi sayısını gösterir"
-        },
-        "showUpToDateHosts": {
-          "label": "Güncel ana makineleri göster",
-          "description": "Güncel olmayan paketi bulunmayan ana makineleri gösterir"
-        },
-        "showHostsWithSecurityUpdates": {
-          "label": "Güvenlik güncellemesi olan ana makineleri göster",
-          "description": "Güvenlik yaması gereken ana makineleri gösterir"
-        },
-        "showRecentUpdates24h": {
-          "label": "Son güncellemeleri göster (24 sa.)",
-          "description": "Son 24 saatte uygulanan güncelleme sayısını gösterir"
-        },
-        "showTotalOutdatedPackages": {
-          "label": "Güncel olmayan paketleri göster",
-          "description": "Tüm ana makinelerdeki güncel olmayan paketlerin toplam sayısını gösterir"
-        },
-        "showTotalRepos": {
-          "label": "Depoları göster",
-          "description": "İzlenen etkin depo sayısını gösterir"
-        },
-        "enableThresholdColors": {
-          "label": "Eşik renklerini etkinleştir",
-          "description": "İstatistik değerlerini önem düzeyi ön ayarlarına göre yeşil, sarı veya kırmızı renklendirir"
-        },
-        "useCustomThresholds": {
-          "label": "Gelişmiş eşikler",
-          "description": "Her istatistik için uyarı ve kritik eşikleri mutlak sayılarla veya toplam ana makine yüzdesiyle özelleştirin"
-        },
-        "thresholdMode": {
-          "option": {
-            "absolute": "Mutlak sayı",
-            "percent": "Toplam ana makinelerin yüzdesi"
-          }
-        },
-        "hostsNeedingUpdatesThresholdMode": {
-          "label": "Güncelleme gereksinimi eşik modu",
-          "description": "Güncelleme gerekenlerin sayısını mutlak değer veya toplam ana makinelerin yüzdesi olarak karşılaştırır"
-        },
-        "hostsNeedingUpdatesWarningAt": {
-          "label": "Güncelleme gereksinimi uyarı eşiği",
-          "description": "Değer bu eşiğe ulaştığında sarı renge geçer"
-        },
-        "hostsNeedingUpdatesCriticalAt": {
-          "label": "Güncelleme gereksinimi kritik eşiği",
-          "description": "Değer bu eşiğe ulaştığında kırmızı renge geçer"
-        },
-        "securityUpdatesThresholdMode": {
-          "label": "Güvenlik güncellemeleri eşik modu",
-          "description": "Güvenlik güncellemesi sayısını mutlak değer veya toplam ana makinelerin yüzdesi olarak karşılaştırır"
-        },
-        "securityUpdatesWarningAt": {
-          "label": "Güvenlik güncellemeleri uyarı eşiği",
-          "description": "Değer bu eşiğe ulaştığında sarı renge geçer"
-        },
-        "securityUpdatesCriticalAt": {
-          "label": "Güvenlik güncellemeleri kritik eşiği",
-          "description": "Değer bu eşiğe ulaştığında kırmızı renge geçer"
-        },
-        "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "Güvenlik güncellemesi olan ana makineler için eşik modu",
-          "description": "Ana makine sayısını mutlak değer veya toplam ana makinelerin yüzdesi olarak karşılaştırır"
-        },
-        "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Güvenlik güncellemesi olan ana makineler için uyarı eşiği",
-          "description": "Değer bu eşiğe ulaştığında sarı renge geçer"
-        },
-        "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Güvenlik güncellemesi olan ana makineler için kritik eşik",
-          "description": "Değer bu eşiğe ulaştığında kırmızı renge geçer"
-        },
-        "upToDateHostsThresholdMode": {
-          "label": "Güncel ana makineler için eşik modu",
-          "description": "Güncel ana makine sayısını mutlak değer veya toplam ana makinelerin yüzdesi olarak karşılaştırır"
-        },
-        "upToDateHostsWarningAt": {
-          "label": "Güncel ana makineler için uyarı eşiği",
-          "description": "Değer bu eşikte veya üzerinde, ancak tam kapsamanın altındaysa sarı renge geçer"
-        },
-        "upToDateHostsCriticalAt": {
-          "label": "Güncel ana makineler için kritik eşik",
-          "description": "Değer bu eşiğin altına düştüğünde kırmızı renge geçer"
-        },
-        "totalOutdatedPackagesThresholdMode": {
-          "label": "Güncel olmayan paketler için eşik modu",
-          "description": "Güncel olmayan paketlerin sayısını mutlak değer veya toplam ana makinelerin yüzdesi olarak karşılaştırır"
-        },
-        "totalOutdatedPackagesWarningAt": {
-          "label": "Güncel olmayan paketler için uyarı eşiği",
-          "description": "Değer bu eşiğe ulaştığında sarı renge geçer"
-        },
-        "totalOutdatedPackagesCriticalAt": {
-          "label": "Güncel olmayan paketler için kritik eşik",
-          "description": "Değer bu eşiğe ulaştığında kırmızı renge geçer"
-        },
-        "showOsDistribution": {
-          "label": "İşletim sistemi dağılımını göster",
-          "description": "İzlenen ana makinelerin işletim sistemine göre dağılımını gösterir"
-        },
-        "osDistributionLimit": {
-          "label": "İşletim sistemi dağılımı sınırı",
-          "description": "Gösterilecek en fazla işletim sistemi sayısı",
-          "option": {
-            "3": "İlk 3",
-            "5": "İlk 5",
-            "10": "İlk 10",
-            "all": "Tümü"
-          }
-        },
-        "showOsVersion": {
-          "label": "İşletim sistemi sürümünü göster",
-          "description": "Mevcut olduğunda işletim sistemi sürümünü her dağılım etiketine ekler"
-        },
-        "showComplianceHero": {
-          "label": "Uyumluluk özetini göster",
-          "description": "Güncel ana makinelerin yüzdesini gösteren bir uyumluluk halkası görüntüler"
-        },
-        "osDisplayMode": {
-          "label": "İşletim sistemi görüntüleme modu",
-          "description": "İşletim sistemi dağılımının nasıl gösterileceğini seçin",
-          "option": {
-            "bars": "Yatay çubuklar",
-            "donut": "Halka grafik"
-          }
-        }
-      },
-      "error": {
-        "internalServerError": "PatchMon verileri alınamadı"
-      }
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Bazarr örneğinizdeki eksik altyazıların ve sağlık durumunun genel görünümü",
-      "episodes": "Eksik Bölümler",
-      "movies": "Eksik Filmler",
-      "providers": "Sağlayıcı Sorunları",
-      "status": "Sağlık Sorunları",
-      "option": {
-        "showMissingEpisodes": {
-          "label": "Eksik bölümleri göster",
-          "description": "Altyazısı eksik bölüm sayısını gösterir"
-        },
-        "showMissingMovies": {
-          "label": "Eksik filmleri göster",
-          "description": "Altyazısı eksik film sayısını gösterir"
-        },
-        "showProviderIssues": {
-          "label": "Sağlayıcı sorunlarını göster",
-          "description": "Sorun yaşayan altyazı sağlayıcılarının sayısını gösterir"
-        },
-        "showHealthIssues": {
-          "label": "Sağlık sorunlarını göster",
-          "description": "Bazarr sağlık sorunlarının sayısını gösterir"
-        }
-      },
-      "error": {
-        "internalServerError": "Bazarr verileri alınamadı"
-      }
-    },
     "immich-serverStats": {
       "name": "Immich Sunucu İstatistikleri",
       "description": "Immich örneğiniz hakkında bilgiler",
@@ -3387,35 +2995,6 @@
         }
       }
     },
-    "mediaMissing": {
-      "name": "Eksik ve Kuyruktaki Medya",
-      "description": "Radarr ve Sonarr'daki eksik ve kuyruğa alınmış film ve bölümleri gösterir",
-      "option": {
-        "showMissing": {
-          "label": "Eksik öğeleri göster"
-        },
-        "showQueued": {
-          "label": "Kuyruktaki öğeleri göster"
-        },
-        "pageSize": {
-          "label": "Sayfa başına öğe"
-        }
-      },
-      "tab": {
-        "missing": "Eksik",
-        "queued": "Kuyrukta"
-      },
-      "type": {
-        "movie": "Film",
-        "episode": "Bölüm"
-      },
-      "empty": {
-        "missing": "Eksik öğe yok",
-        "queued": "Kuyrukta öğe yok",
-        "noTabsEnabled": "Widget ayarlarında en az bir sekmeyi etkinleştirin"
-      },
-      "timeLeft": "Kalan süre"
-    },
     "rssFeed": {
       "name": "RSS Beslemeleri",
       "description": "Bir veya daha fazla RSS, ATOM veya JSON beslemesini takip edin ve görüntüleyin",
@@ -3744,40 +3323,6 @@
         "internalServerError": "Çalışma süresi verileri alınamadı"
       }
     },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Traefik yönlendiricilerinin, hizmetlerinin, ara yazılımlarının ve giriş noktalarının genel görünümü",
-      "option": {
-        "showTcp": {
-          "label": "TCP'yi göster"
-        },
-        "showUdp": {
-          "label": "UDP'yi göster"
-        },
-        "showEntryPoints": {
-          "label": "Giriş noktalarını göster"
-        }
-      },
-      "instances": "Traefik örnekleri",
-      "versionUnknown": "Sürüm bilinmiyor",
-      "summary": {
-        "routers": "Yönlendiriciler",
-        "entryPoints": "Giriş noktaları"
-      },
-      "resource": {
-        "routers": "Yönlendiriciler",
-        "services": "Hizmetler",
-        "middlewares": "Ara Yazılımlar"
-      },
-      "status": {
-        "healthy": "Sağlıklı",
-        "errors": "{count} hata",
-        "warnings": "{count} uyarı"
-      },
-      "error": {
-        "internalServerError": "Traefik verileri alınamadı"
-      }
-    },
     "audioStats": {
       "name": "Ses İstatistikleri",
       "description": "Navidrome veya Audiobookshelf'ten kütüphane ve oynatma istatistikleri",
@@ -3900,26 +3445,6 @@
       "status": {
         "unhealthy": "Sağlıksız"
       }
-    },
-    "customApi": {
-      "name": "Özel API",
-      "description": "Özel yapılandırmayla herhangi bir harici API'den veri gösterir.",
-      "option": {
-        "definitionId": {
-          "label": "Tanım Kimliği"
-        },
-        "refreshInterval": {
-          "label": "Yenileme aralığı",
-          "description": "Verilerin API'den hangi sıklıkta yeniden alınacağı (saniye)"
-        }
-      },
-      "noDefinition": "Tanım seçilmedi",
-      "definitionNotFound": "Widget tanımı bulunamadı. Silinmiş olabilir.",
-      "noDisplayOutput": "Görüntülenecek çıktı yok",
-      "executeConfirm": "Bu eylemi yürütmek istediğinizden emin misiniz?",
-      "executing": "Yürütülüyor...",
-      "executeSuccess": "Eylem başarıyla yürütüldü",
-      "executeFailed": "Eylem başarısız oldu. Widget yapılandırmasını kontrol edin."
     },
     "beszelSystemTable": {
       "name": "Beszel Sistemleri (Tablo)",
@@ -4170,6 +3695,256 @@
           "title": "Docker Ağ G/Ç",
           "subtitle": "Docker konteynerlerinin ağ trafiği"
         }
+      }
+    },
+    "patchmon": {
+      "name": "PatchMon",
+      "description": "PatchMon'daki ana makine yama durumunun genel görünümü",
+      "title": "PatchMon İstatistikleri",
+      "totalHosts": "Toplam Ana Makine",
+      "hostsNeedingUpdates": "Güncelleme Gerekiyor",
+      "securityUpdates": "Güvenlik Güncellemeleri",
+      "upToDateHosts": "Güncel Ana Makineler",
+      "hostsWithSecurityUpdates": "Güvenlik Güncellemesi Olan Ana Makineler",
+      "recentUpdates24h": "Güncellemeler (24 sa.)",
+      "totalOutdatedPackages": "Güncel Olmayan Paketler",
+      "totalRepos": "Depolar",
+      "osDistribution": "İşletim Sistemi Dağılımı",
+      "compliance": "Yama Uyumluluğu",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Güncellendi: {time}",
+      "option": {
+        "showTotalHosts": {
+          "label": "Toplam ana makine sayısını göster",
+          "description": "İzlenen toplam ana makine sayısını gösterir"
+        },
+        "showHostsNeedingUpdates": {
+          "label": "Güncelleme gereken ana makineleri göster",
+          "description": "En az bir güncel olmayan paketi bulunan ana makineleri gösterir"
+        },
+        "showSecurityUpdates": {
+          "label": "Güvenlik güncellemelerini göster",
+          "description": "Kullanılabilir toplam güvenlik güncellemesi sayısını gösterir"
+        },
+        "showUpToDateHosts": {
+          "label": "Güncel ana makineleri göster",
+          "description": "Güncel olmayan paketi bulunmayan ana makineleri gösterir"
+        },
+        "showHostsWithSecurityUpdates": {
+          "label": "Güvenlik güncellemesi olan ana makineleri göster",
+          "description": "Güvenlik yaması gereken ana makineleri gösterir"
+        },
+        "showRecentUpdates24h": {
+          "label": "Son güncellemeleri göster (24 sa.)",
+          "description": "Son 24 saatte uygulanan güncelleme sayısını gösterir"
+        },
+        "showTotalOutdatedPackages": {
+          "label": "Güncel olmayan paketleri göster",
+          "description": "Tüm ana makinelerdeki güncel olmayan paketlerin toplam sayısını gösterir"
+        },
+        "showTotalRepos": {
+          "label": "Depoları göster",
+          "description": "İzlenen etkin depo sayısını gösterir"
+        },
+        "enableThresholdColors": {
+          "label": "Eşik renklerini etkinleştir",
+          "description": "İstatistik değerlerini önem düzeyi ön ayarlarına göre yeşil, sarı veya kırmızı renklendirir"
+        },
+        "useCustomThresholds": {
+          "label": "Gelişmiş eşikler",
+          "description": "Her istatistik için uyarı ve kritik eşikleri mutlak sayılarla veya toplam ana makine yüzdesiyle özelleştirin"
+        },
+        "thresholdMode": {
+          "option": {
+            "absolute": "Mutlak sayı",
+            "percent": "Toplam ana makinelerin yüzdesi"
+          }
+        },
+        "hostsNeedingUpdatesThresholdMode": {
+          "label": "Güncelleme gereksinimi eşik modu",
+          "description": "Güncelleme gerekenlerin sayısını mutlak değer veya toplam ana makinelerin yüzdesi olarak karşılaştırır"
+        },
+        "hostsNeedingUpdatesWarningAt": {
+          "label": "Güncelleme gereksinimi uyarı eşiği",
+          "description": "Değer bu eşiğe ulaştığında sarı renge geçer"
+        },
+        "hostsNeedingUpdatesCriticalAt": {
+          "label": "Güncelleme gereksinimi kritik eşiği",
+          "description": "Değer bu eşiğe ulaştığında kırmızı renge geçer"
+        },
+        "securityUpdatesThresholdMode": {
+          "label": "Güvenlik güncellemeleri eşik modu",
+          "description": "Güvenlik güncellemesi sayısını mutlak değer veya toplam ana makinelerin yüzdesi olarak karşılaştırır"
+        },
+        "securityUpdatesWarningAt": {
+          "label": "Güvenlik güncellemeleri uyarı eşiği",
+          "description": "Değer bu eşiğe ulaştığında sarı renge geçer"
+        },
+        "securityUpdatesCriticalAt": {
+          "label": "Güvenlik güncellemeleri kritik eşiği",
+          "description": "Değer bu eşiğe ulaştığında kırmızı renge geçer"
+        },
+        "hostsWithSecurityUpdatesThresholdMode": {
+          "label": "Güvenlik güncellemesi olan ana makineler için eşik modu",
+          "description": "Ana makine sayısını mutlak değer veya toplam ana makinelerin yüzdesi olarak karşılaştırır"
+        },
+        "hostsWithSecurityUpdatesWarningAt": {
+          "label": "Güvenlik güncellemesi olan ana makineler için uyarı eşiği",
+          "description": "Değer bu eşiğe ulaştığında sarı renge geçer"
+        },
+        "hostsWithSecurityUpdatesCriticalAt": {
+          "label": "Güvenlik güncellemesi olan ana makineler için kritik eşik",
+          "description": "Değer bu eşiğe ulaştığında kırmızı renge geçer"
+        },
+        "upToDateHostsThresholdMode": {
+          "label": "Güncel ana makineler için eşik modu",
+          "description": "Güncel ana makine sayısını mutlak değer veya toplam ana makinelerin yüzdesi olarak karşılaştırır"
+        },
+        "upToDateHostsWarningAt": {
+          "label": "Güncel ana makineler için uyarı eşiği",
+          "description": "Değer bu eşikte veya üzerinde, ancak tam kapsamanın altındaysa sarı renge geçer"
+        },
+        "upToDateHostsCriticalAt": {
+          "label": "Güncel ana makineler için kritik eşik",
+          "description": "Değer bu eşiğin altına düştüğünde kırmızı renge geçer"
+        },
+        "totalOutdatedPackagesThresholdMode": {
+          "label": "Güncel olmayan paketler için eşik modu",
+          "description": "Güncel olmayan paketlerin sayısını mutlak değer veya toplam ana makinelerin yüzdesi olarak karşılaştırır"
+        },
+        "totalOutdatedPackagesWarningAt": {
+          "label": "Güncel olmayan paketler için uyarı eşiği",
+          "description": "Değer bu eşiğe ulaştığında sarı renge geçer"
+        },
+        "totalOutdatedPackagesCriticalAt": {
+          "label": "Güncel olmayan paketler için kritik eşik",
+          "description": "Değer bu eşiğe ulaştığında kırmızı renge geçer"
+        },
+        "showOsDistribution": {
+          "label": "İşletim sistemi dağılımını göster",
+          "description": "İzlenen ana makinelerin işletim sistemine göre dağılımını gösterir"
+        },
+        "osDistributionLimit": {
+          "label": "İşletim sistemi dağılımı sınırı",
+          "description": "Gösterilecek en fazla işletim sistemi sayısı",
+          "option": {
+            "3": "İlk 3",
+            "5": "İlk 5",
+            "10": "İlk 10",
+            "all": "Tümü"
+          }
+        },
+        "showOsVersion": {
+          "label": "İşletim sistemi sürümünü göster",
+          "description": "Mevcut olduğunda işletim sistemi sürümünü her dağılım etiketine ekler"
+        },
+        "showComplianceHero": {
+          "label": "Uyumluluk özetini göster",
+          "description": "Güncel ana makinelerin yüzdesini gösteren bir uyumluluk halkası görüntüler"
+        },
+        "osDisplayMode": {
+          "label": "İşletim sistemi görüntüleme modu",
+          "description": "İşletim sistemi dağılımının nasıl gösterileceğini seçin",
+          "option": {
+            "bars": "Yatay çubuklar",
+            "donut": "Halka grafik"
+          }
+        }
+      },
+      "error": {
+        "internalServerError": "PatchMon verileri alınamadı"
+      }
+    },
+    "bazarr": {
+      "name": "Bazarr",
+      "description": "Bazarr örneğinizdeki eksik altyazıların ve sağlık durumunun genel görünümü",
+      "episodes": "Eksik Bölümler",
+      "movies": "Eksik Filmler",
+      "providers": "Sağlayıcı Sorunları",
+      "status": "Sağlık Sorunları",
+      "option": {
+        "showMissingEpisodes": {
+          "label": "Eksik bölümleri göster",
+          "description": "Altyazısı eksik bölüm sayısını gösterir"
+        },
+        "showMissingMovies": {
+          "label": "Eksik filmleri göster",
+          "description": "Altyazısı eksik film sayısını gösterir"
+        },
+        "showProviderIssues": {
+          "label": "Sağlayıcı sorunlarını göster",
+          "description": "Sorun yaşayan altyazı sağlayıcılarının sayısını gösterir"
+        },
+        "showHealthIssues": {
+          "label": "Sağlık sorunlarını göster",
+          "description": "Bazarr sağlık sorunlarının sayısını gösterir"
+        }
+      },
+      "error": {
+        "internalServerError": "Bazarr verileri alınamadı"
+      }
+    },
+    "mediaMissing": {
+      "name": "Eksik ve Kuyruktaki Medya",
+      "description": "Radarr ve Sonarr'daki eksik ve kuyruğa alınmış film ve bölümleri gösterir",
+      "option": {
+        "showMissing": {
+          "label": "Eksik öğeleri göster"
+        },
+        "showQueued": {
+          "label": "Kuyruktaki öğeleri göster"
+        },
+        "pageSize": {
+          "label": "Sayfa başına öğe"
+        }
+      },
+      "tab": {
+        "missing": "Eksik",
+        "queued": "Kuyrukta"
+      },
+      "type": {
+        "movie": "Film",
+        "episode": "Bölüm"
+      },
+      "empty": {
+        "missing": "Eksik öğe yok",
+        "queued": "Kuyrukta öğe yok",
+        "noTabsEnabled": "Widget ayarlarında en az bir sekmeyi etkinleştirin"
+      },
+      "timeLeft": "Kalan süre"
+    },
+    "traefik": {
+      "name": "Traefik",
+      "description": "Traefik yönlendiricilerinin, hizmetlerinin, ara yazılımlarının ve giriş noktalarının genel görünümü",
+      "option": {
+        "showTcp": {
+          "label": "TCP'yi göster"
+        },
+        "showUdp": {
+          "label": "UDP'yi göster"
+        },
+        "showEntryPoints": {
+          "label": "Giriş noktalarını göster"
+        }
+      },
+      "instances": "Traefik örnekleri",
+      "versionUnknown": "Sürüm bilinmiyor",
+      "summary": {
+        "routers": "Yönlendiriciler",
+        "entryPoints": "Giriş noktaları"
+      },
+      "resource": {
+        "routers": "Yönlendiriciler",
+        "services": "Hizmetler",
+        "middlewares": "Ara Yazılımlar"
+      },
+      "status": {
+        "healthy": "Sağlıklı",
+        "errors": "{count} hata",
+        "warnings": "{count} uyarı"
+      },
+      "error": {
+        "internalServerError": "Traefik verileri alınamadı"
       }
     }
   },
@@ -4551,11 +4326,11 @@
     },
     "navbar": {
       "items": {
+        "workshop": "Workshop",
         "home": "Ana Sayfa",
         "boards": "Paneller",
         "apps": "Uygulamalar",
         "integrations": "Entegrasyonlar",
-        "customWidgets": "Özel Widget'lar",
         "searchEngies": "Arama Motorları",
         "medias": "Medyalar",
         "users": {
@@ -5694,6 +5469,9 @@
   },
   "navigationStructure": {
     "manage": {
+      "workshop": {
+        "label": "Workshop"
+      },
       "label": "Yönet",
       "boards": {
         "label": "Paneller"
@@ -5726,18 +5504,6 @@
         },
         "edit": {
           "label": "Düzenle"
-        }
-      },
-      "custom-widgets": {
-        "label": "Özel widget'lar",
-        "new": {
-          "label": "Yeni"
-        },
-        "edit": {
-          "label": "Düzenle",
-          "flow": {
-            "label": "Akış"
-          }
         }
       },
       "users": {

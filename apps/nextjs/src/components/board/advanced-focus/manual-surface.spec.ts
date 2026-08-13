@@ -83,7 +83,7 @@ describe("AdvancedFocusManualSurface", () => {
     expect(dialog?.id).toBe("advanced-focus-test");
     expect(dialog?.getAttribute("aria-modal")).toBe("true");
     expect(dialog?.closest("[data-portal]")).not.toBeNull();
-    expect(dialog?.closest(".grid-stack-item")).toBeNull();
+    expect(dialog?.closest("[data-grid-item-id]")).toBeNull();
     expect(document.getElementById(dialog?.getAttribute("aria-labelledby") ?? "")?.textContent).toBe(
       "Test widget advanced view",
     );
