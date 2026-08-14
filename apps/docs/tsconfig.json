@@ -15,16 +15,10 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
+      "@/*": ["./src/*"],
       "@site/*": ["./*"]
-    },
+    }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.jsx",
-    "**/*.js",
-    "**/*.tsx",
-    "**/*.md",
-    "**/*.mdx",
-  ],
-  "exclude": ["node_modules"],
+  "include": ["**/*.ts", "**/*.jsx", "**/*.js", "**/*.tsx", "**/*.md", "**/*.mdx"],
+  "exclude": ["build", "node_modules"]
 }

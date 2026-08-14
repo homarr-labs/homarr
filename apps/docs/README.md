@@ -21,7 +21,13 @@ pnpm dev:docs
 
 # Or from within this directory
 pnpm dev
+
+# Point the docs at a local PocketBase instance
+WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
 ```
+
+The standalone docs use `WORKSHOP_API_URL` for PocketBase and `HOMARR_WEBSITE_URL` for the public site origin. The old
+`WORKSHOP_URL` name is a deprecated one-release alias.
 
 ## Build
 
@@ -40,7 +46,7 @@ Uses oxlint and oxfmt (same as the rest of the monorepo):
 ```bash
 pnpm lint        # oxlint
 pnpm format      # oxfmt (check)
-pnpm format -- --write  # oxfmt (fix)
+pnpm format:fix    # oxfmt (fix)
 ```
 
 ## Typecheck
@@ -71,7 +77,7 @@ Each integration/widget doc follows a consistent pattern:
 The docs app has `@homarr/definitions` as a workspace dependency. You can import integration kinds, widget kinds, and other definitions directly:
 
 ```typescript
-import { IntegrationKind } from '@homarr/definitions';
+import { IntegrationKind } from "@homarr/definitions";
 ```
 
 This enables type-safe references to homarr domain concepts within documentation code.
@@ -90,15 +96,15 @@ pnpm verify:search
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
+| Layer          | Technology                                  |
+| -------------- | ------------------------------------------- |
 | Site generator | Docusaurus 3 (`@docusaurus/preset-classic`) |
-| Styling | Tailwind CSS 3 + Docusaurus Infima |
-| Icons | `@tabler/icons-react` |
-| Diagrams | Mermaid (`@docusaurus/theme-mermaid`) |
-| Search | Algolia DocSearch |
-| Analytics | PostHog |
-| Charts | @nivo/line |
+| Styling        | Tailwind CSS 4 + Docusaurus Infima          |
+| Icons          | `@tabler/icons-react`                       |
+| Diagrams       | Mermaid (`@docusaurus/theme-mermaid`)       |
+| Search         | Algolia DocSearch                           |
+| Analytics      | PostHog                                     |
+| Charts         | @nivo/line                                  |
 
 ## Contributing
 

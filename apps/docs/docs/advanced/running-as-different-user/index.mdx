@@ -8,7 +8,7 @@ tags:
   - PUID
 ---
 
-By default the container is running with user `root` and group `root`. 
+By default the container is running with user `root` and group `root`.
 You can change the user and group by using the `PUID` and `PGID` environment variables.
 Important to note is, that you'll also need to change the permissions for the mounted directories accordingly.
 
@@ -32,11 +32,11 @@ services:
     volumes:
       - ./homarr/appdata:/appdata
     environment:
-        - SECRET_ENCRYPTION_KEY=your_64_character_hex_string # <--- can be generated with `openssl rand -hex 32`
-        - PUID=1000
-        - PGID=1000
+      - SECRET_ENCRYPTION_KEY=your_64_character_hex_string # <--- can be generated with `openssl rand -hex 32`
+      - PUID=1000
+      - PGID=1000
     ports:
-      - '7575:7575'
+      - "7575:7575"
 ```
 
 After that you'll need to create the appdata directory and set the correct permissions:
@@ -76,11 +76,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./homarr/appdata:/appdata
     environment:
-        - SECRET_ENCRYPTION_KEY=your_64_character_hex_string # <--- can be generated with `openssl rand -hex 32`
-        - PUID=1000
-        - PGID=999
+      - SECRET_ENCRYPTION_KEY=your_64_character_hex_string # <--- can be generated with `openssl rand -hex 32`
+      - PUID=1000
+      - PGID=999
     ports:
-      - '7575:7575'
+      - "7575:7575"
 ```
 
 And set the permissions for the mounted directories:

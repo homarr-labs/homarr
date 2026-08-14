@@ -1,0 +1,38 @@
+# Create a Custom Widget
+
+import { CanonicalCustomWidgetExample } from "@site/src/components/custom-widget-code";
+
+The workbench is visual-first: configure the default API connection, add request cards, add option rows, then write JSX. Additional sources and raw manifest JSON remain under Advanced. Code and preview sit side by side on desktop and use tabs on mobile.
+
+## Manual workflow
+
+1. Configure the default API source, network scope, authentication, and credential.
+2. Add query/action cards. Values can be literals, widget options, or invocation parameters.
+3. Add widget options with their control and default value.
+4. Write responsive JSX using `data`, `status`, `options`, and temporary `inputs`.
+5. Test and preview, inspect Data and the redacted request journal, then save.
+
+<CanonicalCustomWidgetExample
+  id="named-widget-requests"
+  label="Named queries and actions"
+  example="requests"
+  height="420px"
+/>
+
+<CanonicalCustomWidgetExample id="widget-options" label="Widget options" example="options" height="360px" />
+
+Every option has a default. Supported controls include text, textarea, number, switch, select, multi-select, slider, date, time, color, icon, URL, duration, time zone, and JSON. Dynamic choices use `choicesFrom` with a query ID and value/label paths.
+
+## ChatGPT or Claude
+
+Open **Create or fix with any AI**, enter the desired widget and optional API documentation URL, then select the copy action beside the accordion title. The single self-contained prompt is below 12,000 characters, starts with your request, includes the lean contract and two polished examples, and never claims that an offline chat has MCP tools.
+
+The model must return one fenced `json` block containing the complete widget, including the JSX in its `template`
+field. Copy that single block and select **Paste**. Homarr fills the visual builders and the JSX editor
+without any placeholder replacement or second paste.
+
+Homarr shows all actionable schema or JSX errors inline. Enter credentials separately. The prompt deliberately
+recommends a focused Mantine component set, visual hierarchy, responsive layout, theme compatibility, and loading,
+empty, failure, and success states.
+
+Connected agents should use the skills.sh skill and retrieve the live schema and individual component metadata only as needed.

@@ -78,13 +78,22 @@ describe("lazy widget application graph", () => {
       await page.goto(`${baseUrl}/auth/login`);
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
+      const signedIn = page.waitForURL(baseUrl, { waitUntil: "commit", timeout: 15_000 });
       await page.locator("css=button[type='submit']").click();
+      await signedIn;
 
       await expect(page.locator("[data-homarr-dev-benchmark-board]")).toBeVisible({ timeout: 30_000 });
-      await expect(page.locator(`[data-id="${itemId}"] .clock-widget-container`)).toBeVisible({ timeout: 15_000 });
+      const clockWidget = page.locator(
+        `[data-id="${itemId}"] .clock-widget-container, [data-grid-item-id="${itemId}"] .clock-widget-container`,
+      );
+      await expect(clockWidget).toBeVisible({ timeout: 15_000 });
 
+      await expect(page.locator("[data-homarr-dev-benchmark-spotlight-preloaded]")).toHaveCount(1, {
+        timeout: 15_000,
+      });
       await page.keyboard.press("Control+K");
-      await expect(page.locator("[data-homarr-dev-benchmark-spotlight]")).toBeVisible();
+      await expect(page.locator("[data-homarr-dev-benchmark-spotlight-feedback]")).toHaveCount(0);
+      await expect(page.locator("[data-homarr-dev-benchmark-spotlight]")).toBeVisible({ timeout: 15_000 });
       await page.keyboard.press("Escape");
       await expect(page.locator("[data-homarr-dev-benchmark-spotlight]")).not.toBeVisible();
 
@@ -100,7 +109,7 @@ describe("lazy widget application graph", () => {
         .toBe(`${baseUrl}/`);
 
       await page.reload();
-      await expect(page.locator(`[data-id="${itemId}"] .clock-widget-container`)).toBeVisible({ timeout: 15_000 });
+      await expect(clockWidget).toBeVisible({ timeout: 15_000 });
       expect(pageErrors).toEqual([]);
     } finally {
       await browser.close();

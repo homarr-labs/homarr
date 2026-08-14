@@ -388,6 +388,19 @@
           }
         }
       },
+      "custom-widget": {
+        "title": "Custom widgets",
+        "item": {
+          "manage": {
+            "label": "Manage custom widgets",
+            "description": "Allow members to create, edit, and delete custom widget definitions"
+          },
+          "secret-write": {
+            "label": "Configure custom widget secrets",
+            "description": "Allow members and their API keys to set encrypted custom widget credentials"
+          }
+        }
+      },
       "app": {
         "title": "Apps",
         "item": {
@@ -689,15 +702,46 @@
     }
   },
   "customWidget": {
+    "betaBanner": {
+      "title": "Custom Widgets are in Beta",
+      "description": "This feature is experimental and will probably change significantly. If you encounter bugs, want additional capabilities, or find something confusing, please share your feedback in the",
+      "discussionLink": "official discussion forum",
+      "closing": "so it can be considered. Happy hacking!"
+    },
+    "secretEntry": {
+      "title": "Configure API source",
+      "description": "Confirm the server URL and enter credentials. Secret values are encrypted by Homarr and never returned to the requesting agent.",
+      "loading": "Loading secure request…",
+      "saved": "API source configured. You can close this page.",
+      "unavailable": "Request unavailable",
+      "saveError": "Unable to configure API source",
+      "source": "API source: {name}",
+      "baseUrl": "Server URL",
+      "networkScope": "Network access",
+      "save": "Save API configuration",
+      "expires": "This one-time request expires at {time}.",
+      "field": {
+        "apiKey": "API key or token",
+        "username": "Username",
+        "password": "Password"
+      }
+    },
     "page": {
       "list": {
         "title": "Custom Widgets",
         "noResults": "No custom widgets yet. Create your first one!",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "invalidDefinition": "Invalid definition",
+        "invalidDefinitionDescription": "This stored widget no longer matches the current Custom Widget schema. Delete it and recreate or import a valid definition.",
+        "migrationRequired": "Migration required",
+        "migrationDescription": "This v1 custom widget is preserved but cannot run until it is migrated to Custom JSX v2.",
+        "migrationInstructions": "Open Actions, copy the redacted migration prompt into an LLM, then copy its single JSON response and choose Paste migrated widget. Existing board placements keep working after migration.",
+        "missingCredentials": "{count, plural, one {Credential missing} other {# credentials missing}}",
+        "missingCredentialsDescription": "{count, plural, one {This widget still needs one credential.} other {This widget still needs # credentials.}} Edit it to configure the encrypted values."
       },
       "create": {
         "title": "Create Custom Widget",
-        "subtitle": "Define an API URL, authentication, and how to display the response data."
+        "subtitle": "Build a safe JSX widget with inline API sources, options, queries, and actions."
       },
       "edit": {
         "title": "Edit Custom Widget"
@@ -706,192 +750,464 @@
     "action": {
       "create": "Create",
       "import": "Import",
+      "pasteImportHint": "Paste a full custom widget JSON with Ctrl+V or Command+V",
       "save": "Save",
       "delete": "Delete Custom Widget",
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
       "export": "Export",
-      "addMapping": "Add Mapping",
-      "addColumn": "Add Column",
       "edit": "Edit",
-      "removeMapping": "Remove mapping",
-      "removeColumn": "Remove column",
-      "addItem": "Add Item",
-      "removeItem": "Remove item",
-      "addBar": "Add Bar",
       "duplicate": "Duplicate",
       "copyAiPrompt": "Copy AI prompt",
       "enable": "Enable",
       "disable": "Disable",
-      "menu": "Actions"
+      "menu": "Actions",
+      "downloadSkill": "View Custom Widget Skill",
+      "publishWorkshop": "Publish to Workshop",
+      "migrate": "Migrate Custom Widget",
+      "copyMigrationPrompt": "Copy LLM migration prompt",
+      "pasteMigration": "Paste migrated widget",
+      "importMigration": "Import migrated JSON file"
     },
     "field": {
       "name": "Name",
       "description": "Description",
-      "iconUrl": "Icon URL",
-      "url": "URL",
-      "authType": "Auth Type",
-      "headerName": "Header/Query Parameter Name",
-      "method": "Method",
-      "requestBody": "Request Body",
-      "displayType": "Display Type",
-      "jsonPath": "JSON Path",
-      "jsonPathHint": "Use JSONPath syntax to extract values, e.g. $.data.temperature or $.items[0].name",
-      "label": "Label",
-      "unit": "Unit",
-      "mappings": "Mappings",
-      "tablePath": "Array JSON Path",
-      "tablePathHint": "Path to the array in the response, e.g. $.data.items",
-      "columns": "Columns",
-      "header": "Header",
-      "items": "Items",
-      "gridColumns": "Grid Columns",
-      "cardStyle": "Card Style",
-      "bars": "Bars",
-      "valuePath": "Value JSON Path",
-      "maxPath": "Max Value JSON Path",
-      "showPercentage": "Show Percentage",
-      "barSize": "Bar Size",
-      "goodValues": "Good Values (comma-separated)",
-      "dotSize": "Dot Size",
-      "valueSize": "Value Size",
-      "labelPosition": "Label Position",
-      "kvLayout": "Layout",
-      "striped": "Striped Rows",
-      "compact": "Compact Mode",
-      "maxHeight": "Max Height (px)",
-      "color": "Color",
-      "buttonLabel": "Button Label",
-      "buttonColor": "Button Color",
-      "confirmText": "Confirmation Text",
-      "confirmTextHint": "If set, a confirmation dialog will appear before executing the request",
-      "successMessage": "Success Message",
-      "successMessageHint": "Message shown after successful execution",
-      "enabled": "Enabled",
-      "template": {
-        "label": "JSX Template",
-        "description": "Mantine JSX template. Access API response fields via data bindings (e.g. data.name). Use whitelisted components only. Forbidden: constructor, __proto__, eval, Function, window, document."
+      "iconUrl": "Icon URL"
+    },
+    "editor": {
+      "errorBoundary": {
+        "title": "Something went wrong",
+        "retry": "Try again"
+      },
+      "language": {
+        "jsx": "JSX",
+        "json": "JSON"
+      },
+      "action": {
+        "components": "Components",
+        "format": "Format",
+        "insertStarter": "Insert starter",
+        "undo": "Undo",
+        "redo": "Redo",
+        "copy": "Copy",
+        "copied": "Copied",
+        "schema": "Schema"
+      },
+      "reference": {
+        "schema": "JSON Schema",
+        "minimal": "Minimal example",
+        "full": "Full example"
+      },
+      "componentReference": {
+        "search": "Search components",
+        "empty": "No matching components",
+        "count": "{count, number} components available"
+      },
+      "status": {
+        "errors": "{count, number} errors",
+        "warnings": "{count, number} warnings",
+        "ready": "No issues found",
+        "position": "Ln {line, number}, Col {column, number}",
+        "characters": "{count, number} characters",
+        "charactersWithLimit": "{count, number} / {limit, number}"
+      },
+      "diagnostics": {
+        "title": "Template diagnostics",
+        "line": "Line {line, number}",
+        "ast": "{value}",
+        "bindingTypeConflict": "The input \"{value}\" is shared by controls with incompatible value types.",
+        "dynamicRequestId": "A literal requestId is required. Dynamic request IDs are not accepted.",
+        "dynamicInputBinding": "A literal input name is required for bind.",
+        "inlineRequestProps": "Network components accept requestId and params; inline URL, method, header, and body props are blocked.",
+        "invalidRequestManifest": "Named requests must be a valid request map. {value}",
+        "missingRequestId": "This network component requires a literal requestId.",
+        "templateEmpty": "Enter a JSX template.",
+        "templateTooLong": "The template exceeds the 50,000 character limit.",
+        "unknownRequest": "No named request with ID \"{value}\" exists."
       }
     },
-    "placeholder": {
-      "exampleLabel": "CPU Temperature",
-      "exampleLabelShort": "CPU Temp",
-      "exampleHeader": "Name",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "blue"
-    },
-    "cardStyleOption": {
-      "filled": "Filled",
-      "outline": "Outline",
-      "subtle": "Subtle"
-    },
-    "layoutOption": {
-      "list": "List",
-      "grid": "Grid"
-    },
-    "sizeOption": {
-      "sm": "Small",
-      "md": "Medium",
-      "lg": "Large",
-      "xl": "Extra Large"
-    },
-    "labelPositionOption": {
-      "above": "Above",
-      "below": "Below"
-    },
-    "fieldset": {
-      "general": "General",
-      "connection": "API Connection",
-      "display": "Display Configuration"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Show one extracted value with a label and unit",
-      "keyValue": "Show multiple labeled values side by side",
-      "table": "Show rows of data in a table format",
-      "statGrid": "Colored stat cards in a grid — like Pi-Hole or Speedtest widgets",
-      "progressBars": "Progress bars showing usage or completion — for disk, memory, quotas",
-      "statusIndicator": "Colored status dots showing online/offline or health states",
-      "countGrid": "Compact number + label counters in a tight grid",
-      "raw": "Pretty-printed JSON output for debugging",
-      "actionButton": "A button that triggers a request when clicked",
-      "customJsx": "Custom JSX layout using whitelisted Mantine components with full API data binding"
-    },
-    "method": {
-      "GET": "GET",
-      "POST": "POST",
-      "PUT": "PUT",
-      "DELETE": "DELETE",
-      "PATCH": "PATCH"
-    },
-    "authType": {
-      "none": "None",
-      "bearer": "Bearer Token",
-      "basic": "Basic Auth",
-      "apiKeyHeader": "API Key (Header)",
-      "apiKeyQuery": "API Key (Query)"
-    },
-    "displayType": {
-      "singleValue": "Single Value",
-      "keyValue": "Key-Value",
-      "table": "Table",
-      "statGrid": "Stat Grid",
-      "progressBars": "Progress Bars",
-      "statusIndicator": "Status Indicator",
-      "countGrid": "Count Grid",
-      "raw": "Raw JSON",
-      "actionButton": "Action Button",
-      "customJsx": "Custom JSX"
-    },
-    "secret": {
-      "apiKey": "API Key / Token",
-      "username": "Username",
-      "password": "Password",
-      "savedPlaceholder": "••••••• (saved, leave empty to keep)"
+    "workbench": {
+      "configure": "Configure",
+      "sectionNavigation": "Custom widget sections",
+      "widgetPreview": "Widget preview",
+      "generalInformation": "General information",
+      "invalidWidget": "Invalid widget",
+      "section": {
+        "general": "General",
+        "sources": "API sources",
+        "requests": "Requests",
+        "options": "Options",
+        "jsx": "JSX",
+        "preview": "Preview"
+      },
+      "status": {
+        "unsaved": "Unsaved changes",
+        "invalid": "Needs attention",
+        "ready": "Ready"
+      },
+      "saveError": {
+        "title": "Widget was not saved",
+        "description": "Fix these validation errors and save again.",
+        "more": "+{count} more errors are shown in the workbench.",
+        "errors": "Validation errors",
+        "copy": "Copy errors",
+        "copied": "Errors copied"
+      },
+      "action": {
+        "preview": "Test and preview",
+        "previewLoading": "Testing requests",
+        "create": "Create",
+        "save": "Save"
+      },
+      "requests": {
+        "title": "Named queries and actions",
+        "label": "Requests",
+        "description": "Queries load data; actions only run after user interaction. Any HTTP method is valid for either kind."
+      },
+      "options": {
+        "title": "Widget options",
+        "schema": "Options schema",
+        "defaults": "Default option values"
+      },
+      "builder": {
+        "advancedManifest": "Advanced raw manifest",
+        "manifestFilename": "widget.json",
+        "advancedJson": "Advanced manifest JSON",
+        "request": "Request {count, number}",
+        "requestId": "Request ID",
+        "type": "Type",
+        "method": "Method",
+        "source": "API source",
+        "run": "Run",
+        "runLoad": "When the widget loads",
+        "runManual": "From SubFetch",
+        "permission": "Permission",
+        "path": "Path",
+        "pathDescription": "Use '{option:name}' for widget options and '{param:name}' for invocation values.",
+        "requestDetails": "Query, body and behavior",
+        "queryValues": "Query values",
+        "queryKey": "Query key",
+        "queryKeyInvalid": "Use a unique ID that starts with a letter and contains only letters, numbers, - or _.",
+        "valueSource": "Value source",
+        "literal": "Literal",
+        "widgetOption": "Widget option",
+        "invocationParameter": "Invocation parameter",
+        "option": "Option",
+        "parameterName": "Parameter name",
+        "value": "Value",
+        "removeQueryValue": "Remove query value",
+        "addQueryValue": "Add query value",
+        "jsonBody": "JSON body",
+        "jsonBodyDescription": "Optional. Insert $option and $param references at any depth.",
+        "insertOptionReference": "Insert option reference",
+        "insertParameterReference": "Insert parameter reference",
+        "confirmation": "Confirmation message",
+        "invalidation": "Refresh after success",
+        "invalidationDescription": "Comma-separated query IDs",
+        "noAuth": "Send without source authentication",
+        "moveRequestUp": "Move request up",
+        "moveRequestDown": "Move request down",
+        "removeRequest": "Remove request",
+        "addRequest": "Add request",
+        "optionName": "Option name",
+        "label": "Label",
+        "control": "Control",
+        "description": "Description",
+        "default": "Default",
+        "optionDetails": "Constraints and dynamic choices",
+        "minimum": "Minimum",
+        "maximum": "Maximum",
+        "step": "Step",
+        "choiceLabel": "Choice label",
+        "choiceValue": "Choice value",
+        "newChoice": "New choice",
+        "addChoice": "Add choice",
+        "removeChoice": "Remove choice",
+        "choicesRequest": "Load choices from request",
+        "itemsPath": "Items path",
+        "itemsPathPlaceholder": "items (optional)",
+        "valuePath": "Value path",
+        "labelPath": "Label path",
+        "group": "Group",
+        "advancedOption": "Advanced option",
+        "moveOptionUp": "Move option up",
+        "moveOptionDown": "Move option down",
+        "removeOption": "Remove option",
+        "addOption": "Add option",
+        "invalidJson": "Invalid JSON",
+        "invalidWidget": "Invalid widget"
+      },
+      "jsx": {
+        "title": "JSX template",
+        "label": "Template"
+      },
+      "sources": {
+        "title": "API sources and credentials",
+        "newName": "API {count, number}",
+        "duplicateSourceId": "API source IDs must be unique.",
+        "credentialRemoved": "Credential removed",
+        "credentialRemovedDescription": "The stored value was deleted.",
+        "primary": "Primary API",
+        "id": "Source ID",
+        "name": "Name",
+        "baseUrl": "Base URL",
+        "baseUrlError": {
+          "invalid": "Enter a complete URL.",
+          "protocol": "Use an HTTP or HTTPS URL.",
+          "credentials": "Remove the username and password from this URL. Configure credentials below instead.",
+          "queryOrFragment": "Remove the query string or fragment from this base URL. Add query values to a named request."
+        },
+        "networkScope": "Network access",
+        "authentication": "Authentication",
+        "headerName": "Header name",
+        "queryParameter": "Query parameter",
+        "configured": "Configured — enter a replacement",
+        "clear": "Clear",
+        "remove": "Remove source and its requests",
+        "advanced": "Advanced",
+        "add": "Add another API source",
+        "secret": {
+          "apiKey": "API key or token",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "ai": {
+        "title": "Create or fix with any AI",
+        "description": "Copy one prompt, then paste the AI's single JSON block. Homarr loads its JSX into the editor automatically.",
+        "request": "What should this widget do?",
+        "documentationUrl": "API documentation URL (optional)",
+        "paste": "Paste",
+        "response": "AI response",
+        "loaded": "Widget loaded into the editor",
+        "invalidResponse": "Clipboard does not contain a valid v2 widget",
+        "invalidResponseDetail": "The AI response is invalid: {message}"
+      },
+      "preview": {
+        "invalid": "Fix validation errors to preview this widget.",
+        "fixtureError": "Preview fixture error",
+        "requestData": "Request data",
+        "status": {
+          "idle": "Requests have not been tested",
+          "loading": "Testing requests",
+          "success": "All load requests succeeded",
+          "error": "One or more load requests failed"
+        },
+        "result": {
+          "loading": {
+            "title": "Testing API requests",
+            "description": "Homarr is creating a preview session and loading the widget data."
+          },
+          "success": {
+            "title": "Preview ready",
+            "description": "{succeeded, plural, =0 {This widget has no load requests.} one {# load request succeeded.} other {# load requests succeeded.}} Open Data to inspect the response."
+          },
+          "error": {
+            "title": "Preview completed with request errors",
+            "description": "{succeeded, number} succeeded and {failed, number} failed. Open Data for the response and error details."
+          }
+        },
+        "instanceOptions": "Instance options",
+        "liveActions": "Run actions against the configured API",
+        "liveActionsDescription": "Off is safe simulation. Turning this on affects the real service.",
+        "noActions": "No actions are defined.",
+        "containedFailures": "Runtime failures are contained inside this widget. Request journals never include secret values.",
+        "validation": {
+          "title": "Validation",
+          "ready": "The widget definition is valid."
+        },
+        "accessibility": {
+          "title": "Accessibility checks",
+          "ready": "No common accessibility omissions detected.",
+          "pending": "Accessibility checks will run when the widget definition is valid.",
+          "imageAlt": "Add alt text to every Image, using an empty alt only for decorative images.",
+          "actionIconLabel": "Add an aria-label or title to every ActionIcon.",
+          "inputLabel": "Add a visible label or accessible name to every input."
+        },
+        "journal": "Redacted request journal",
+        "actionParameters": "Action parameters (JSON)",
+        "invalidParameters": "Use the declared string, number, and boolean parameter types.",
+      "runDestructive": "Run destructive action",
+      "runAction": "Run action",
+      "deleteConfirmation": "This preview action sends a DELETE request to the configured API.",
+        "simulated": "Action simulated",
+        "httpStatus": "HTTP {status, number}",
+        "tab": {
+          "widget": "Widget",
+          "data": "Data",
+          "options": "Options",
+          "state": "State",
+          "actions": "Actions",
+          "diagnostics": "Diagnostics"
+        },
+        "size": {
+          "compact": "Compact",
+          "standard": "Standard",
+          "wide": "Wide"
+        },
+        "fixture": {
+          "live": "Live",
+          "loading": "Loading",
+          "empty": "Empty",
+          "error": "Error"
+        }
+      }
     },
     "preview": {
-      "title": "Preview",
-      "test": "Test",
-      "hint": "Click Test to preview the API response with your current configuration.",
-      "rawResponse": "Raw JSON response"
+      "request": {
+        "permission": {
+          "view": "View",
+          "modify": "Modify",
+          "full": "Full"
+        }
+      }
     },
     "notification": {
       "created": "Widget \"{name}\" created successfully.",
       "updated": "Widget \"{name}\" updated successfully.",
       "deleted": "Widget \"{name}\" deleted.",
       "imported": "Widget imported successfully.",
+      "migrated": "Legacy widget migrated successfully. Existing board placements now use the v2 definition.",
+      "migrationError": "Failed to migrate the legacy widget. Ensure the file uses the homarr-custom-widget-v2 schema.",
+      "migrationPromptCopied": "A redacted migration prompt was copied. Paste it into an LLM, copy its single JSON response, then choose Paste migrated widget here.",
+      "migrationPromptCopyError": "Failed to copy the migration prompt.",
       "aiPromptCopied": "AI prompt copied to clipboard",
-      "aiPromptDescription": "Copy a pre-built prompt to paste into any AI chatbot (ChatGPT, Claude, Gemini...). It includes the full widget schema and your API response so the AI can generate a ready-to-import JSON config for you.",
-      "aiPromptCopy": "Copy to clipboard",
-      "aiPromptNoResponse": "Tip: Run a test first to include your API response in the prompt for better results.",
-      "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
-      "createError": "Failed to create widget. Check your API endpoint is reachable.",
+      "aiPromptCopiedWithCount": "AI prompt copied to clipboard ({count, number} characters).",
+      "aiPromptCopyError": "Failed to copy the prompt to the clipboard.",
       "updateError": "Failed to update widget. Your changes were not saved.",
-      "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
+      "importError": "Failed to import widget. Ensure the file uses the homarr-custom-widget-v2 schema.",
       "exportError": "Failed to export widget.",
       "duplicated": "Widget \"{name}\" duplicated.",
       "duplicateError": "Failed to duplicate widget.",
       "toggleError": "Failed to toggle widget status.",
       "deleteError": "Failed to delete widget.",
-      "previewError": "Failed to fetch preview. Check the URL and try again.",
-      "executed": "Action executed successfully.",
-      "executeError": "Action failed: {error}"
+      "previewError": "Failed to create the preview. Check the API source and try again."
     },
-    "table": {
+    "importReview": {
+      "title": "Review custom widget import",
+      "description": "Check where this widget connects and what board access its controls require before importing it.",
+      "migrationTitle": "Review migrated v2 replacement",
+      "migrationDescription": "Review and confirm this generated v2 definition. Confirming atomically replaces the preserved v1 record while keeping existing board placements linked to the same widget ID.",
+      "fileLabel": "Choose a custom widget JSON file",
       "name": "Name",
-      "url": "URL",
-      "display": "Display"
-    },
-    "widget": {
-      "disabled": "This widget is disabled"
+      "origin": "Base origin",
+      "authentication": "Authentication",
+      "networkScope": "Network scope",
+      "methods": "HTTP methods",
+      "permissions": "Required board permissions",
+      "credentials": {
+        "title": "Configure credentials now",
+        "description": "Secrets are encrypted locally and never added to the imported widget. You can leave a field blank and configure it later.",
+        "header": "Sent through the {name} header",
+        "query": "Sent through the {name} query parameter",
+        "field": {
+          "apiKey": "API key or token",
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "sourceSetup": {
+        "title": "Configure API sources",
+        "description": "Confirm where this widget connects and add credentials. Private and loopback URLs are specific to your Homarr installation.",
+        "suggestedUrl": "Suggested URL",
+        "confirmUrl": "I confirm that this server URL is correct for my Homarr installation",
+        "ready": "URL ready",
+        "needsUrl": "Confirm URL",
+        "credentialsMissing": "Credentials missing",
+        "credentialsOptional": "You can install without credentials and configure them later, but requests will fail until they are added."
+      },
+      "actionWarning": {
+        "title": "This widget can change remote data",
+        "description": "Review every named action, inherited credential, and destructive confirmation after import. Secrets are not included in the file."
+      },
+      "cancel": "Cancel import",
+      "confirm": "Import widget",
+      "confirmMigration": "Confirm v2 replacement"
     }
+  },
+  "workshop": {
+    "installSuccess": "Custom widget installed",
+    "installSuccessDescription": "Add its credentials, test the requests, and save when it is ready.",
+    "installError": "Could not install widget",
+    "installErrorDescription": "The Workshop submission is not a valid Custom JSX v2 widget.",
+    "title": "Workshop",
+    "importFromWorkshop": "Import from Workshop",
+    "openCommunity": "Open Workshop",
+    "description": "Community Custom JSX v2 widgets. Inspect the source and network capabilities before installing.",
+    "descriptionCss": "Community Custom CSS themes. Preview every rule before importing it into a board.",
+    "securityNotice": "Workshop widgets can call their declared API sources and perform declared actions with credentials you configure locally. Secrets are never included.",
+    "securityNoticeCss": "Community CSS can change the appearance and usability of a board. Review it before importing; nothing is saved until you save board settings.",
+    "signIn": "Sign in with GitHub",
+    "signInError": "GitHub sign-in failed. Check that the Workshop OAuth provider is configured and that popups are allowed.",
+    "signOut": "Sign out",
+    "search": "Search widgets",
+    "searchCss": "Search CSS themes",
+    "sort": "Sort",
+    "sortTop": "Top rated",
+    "sortNewest": "Newest",
+    "unavailableTitle": "Homarr Workshop seems to be unavailable",
+    "unavailable": "The community service may be temporarily down. Try again in a moment. Your installed widgets are unaffected.",
+    "retry": "Try again",
+    "empty": "No widgets match this search.",
+    "emptyCss": "No CSS themes match this search.",
+    "noDescription": "No description",
+    "author": "by {name}",
+    "communityMember": "Community member",
+    "outdated": "Outdated",
+    "outdatedWarning": "The author marked this submission as outdated. Review it carefully before importing.",
+    "reportCount": "{count, plural, one {# report} other {# reports}}",
+    "reportWarning": "{count, plural, one {This submission has # open community report.} other {This submission has # open community reports.}} It remains installable, but you should review its content first.",
+    "reportVisibility": "Report details are visible only to this submission's author and Workshop admins.",
+    "screenshotAlt": "{title} screenshot {count, number}",
+    "upvote": "Upvote, {count, plural, one {# vote} other {# votes}}",
+    "downvote": "Downvote, {count, plural, one {# vote} other {# votes}}",
+    "inspectCss": "Inspect CSS",
+    "sourceCode": "Workshop entry",
+    "loadError": "This submission could not be loaded.",
+    "sources": "Declared API sources",
+    "requests": "Declared queries and actions",
+    "noRequests": "This widget does not declare network requests.",
+    "export": "Export",
+    "report": "Report",
+    "install": "Install widget",
+    "continueInstall": "Continue installation",
+    "confirmInstallTitle": "Confirm widget installation",
+    "confirmInstallDescription": "Confirm where this widget connects and add any credentials required by your Homarr installation.",
+    "backToWidget": "Back to widget",
+    "useCss": "Import CSS",
+    "signInHint": "Sign in to vote or report. Installing does not require a Workshop account.",
+    "reportTitle": "Report submission",
+    "reportReason": "Reason",
+    "reportExplanation": "What should the Workshop moderators know?",
+    "reportSend": "Send report",
+    "reportSent": "Report sent",
+    "reportSentDescription": "Workshop moderators can now review this submission.",
+    "reportCategory": {
+      "outdated": "Outdated or no longer working",
+      "malicious": "Malicious",
+      "spam": "Spam",
+      "copyright": "Copyright",
+      "inappropriate": "Inappropriate",
+      "other": "Other"
+    },
+    "voteError": "The vote could not be saved.",
+    "publish": {
+      "title": "Publish to Workshop",
+      "success": "Published immediately. Community members can now install and report this widget.",
+      "signInHint": "Sign in to publish under your Workshop identity.",
+      "titleField": "Title",
+      "descriptionField": "Description",
+      "screenshots": "Screenshots",
+      "screenshotsDescription": "Up to five PNG, JPEG, or WebP images",
+      "invalidScreenshot": "Use PNG, JPEG, or WebP images no larger than 5 MB each.",
+      "privateSourceWarning": "This widget contains private source URLs for: {sources}. Replace personal hosts or IP addresses with safe service placeholders before publishing.",
+      "privateSourceConfirmation": "I reviewed these source URLs and they do not expose private infrastructure details",
+      "action": "Publish now",
+      "definitionChanged": "The widget changed while publication was being prepared. Review its private source URLs again, then retry.",
+      "error": "Publication failed"
+    },
+    "installDialog": "Install from Workshop",
+    "installed": "Widget installed",
+    "installedDescription": "{name} is ready to configure."
   },
   "integration": {
     "page": {
@@ -3948,11 +4264,31 @@
       }
     },
     "customApi": {
-      "name": "Custom API",
-      "description": "Display data from any external API with custom configuration.",
+      "name": "Custom widget",
+      "description": "Render a configured Custom JSX definition.",
+      "customJsx": {
+        "noTemplate": "No JSX template is configured.",
+        "templateWarnings": "{count} template warnings:",
+        "requestIdRequired": "This network control requires a named requestId.",
+        "unsavedPreview": "Run a GET test in the editor before testing named requests.",
+        "invalidParams": "The request parameters are invalid.",
+        "loading": "Loading request...",
+        "loadRequest": "Load request",
+        "requestFailed": "The request failed.",
+        "retry": "Retry request",
+        "actionCompleted": "Action completed successfully.",
+        "actionSimulated": "Action simulated; no request was sent.",
+        "actionsDisabledEditMode": "Actions are disabled while the board is in edit mode.",
+        "widgetItemUnavailable": "This widget item is not available.",
+        "toggle": "Toggle",
+        "refresh": "Refresh",
+        "copy": "Copy",
+        "copied": "Copied",
+        "confirmDelete": "Confirm this destructive action."
+      },
       "option": {
         "definitionId": {
-          "label": "Definition ID"
+          "label": "Custom widget"
         },
         "refreshInterval": {
           "label": "Refresh interval",
@@ -3960,12 +4296,29 @@
         }
       },
       "noDefinition": "No definition selected",
-      "definitionNotFound": "Widget definition not found. It may have been deleted.",
-      "noDisplayOutput": "No display output",
-      "executeConfirm": "Are you sure you want to execute this action?",
-      "executing": "Executing...",
-      "executeSuccess": "Action executed successfully",
-      "executeFailed": "Action failed. Check the widget configuration."
+      "definitionNotFound": "Custom widget unavailable",
+      "migrationRequired": "This legacy custom widget is preserved, but it must be migrated to Custom JSX v2 from Manage custom widgets before it can run.",
+      "manageMigration": "Open Manage custom widgets",
+      "contactAdmin": "Contact an administrator.",
+      "configurationNeedsRepair": "This widget's options changed. Edit the widget to repair its configuration.",
+      "removeFromBoard": "Remove from board",
+      "editModePending": "Save the board to load this widget.",
+      "picker": {
+        "group": "Custom JSX widgets",
+        "empty": "No custom widgets found",
+        "preview": "Preview",
+        "sources": "{count, plural, one {# source} other {# sources}}",
+        "requests": "{count, plural, one {# request} other {# requests}}",
+        "migrationRequired": "Migration required",
+        "migrationDescription": "This placed v1 widget cannot run yet. Copy its redacted prompt to an LLM, then paste the single JSON response into Homarr.",
+        "manageMigration": "Open Manage custom widgets",
+        "contactAdmin": "Contact an administrator."
+      },
+      "configuration": {
+        "needsAttention": "Configuration needs attention: {message}",
+        "advancedOptions": "Advanced options",
+        "invalidJson": "Invalid JSON"
+      }
     },
     "beszelSystemTable": {
       "name": "Beszel Systems (Table)",
@@ -4230,6 +4583,7 @@
   },
   "board": {
     "action": {
+      "addContent": "Add board content",
       "duplicate": {
         "title": "Duplicate board",
         "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
@@ -4602,6 +4956,7 @@
         "apps": "Apps",
         "integrations": "Integrations",
         "customWidgets": "Custom Widgets",
+        "workshop": "Workshop",
         "searchEngies": "Search engines",
         "medias": "Medias",
         "users": {
@@ -4872,6 +5227,7 @@
           }
         },
         "section": {
+          "analyticsDocumentation": "See exactly what analytics data Homarr collects",
           "analytics": {
             "title": "Analytics",
             "general": {
@@ -5785,6 +6141,9 @@
             "label": "Flow"
           }
         }
+      },
+      "workshop": {
+        "label": "Workshop"
       },
       "users": {
         "label": "Users",

@@ -1,5 +1,9 @@
 "use client";
 
+import { Anchor } from "@mantine/core";
+import { IconExternalLink } from "@tabler/icons-react";
+
+import { createDocumentationLink } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -12,11 +16,25 @@ interface AnalyticsSettingsProps {
 }
 
 export const AnalyticsSettings = ({ form }: AnalyticsSettingsProps) => {
-  const t = useScopedI18n("management.page.settings.section.analytics");
+  const t = useScopedI18n("management.page.settings.section");
 
   return (
-    <SectionCard title={t("title")}>
-      <SwitchSetting form={form} formKey="enableGeneral" title={t("general.title")} text={t("general.text")} />
+    <SectionCard title={t("analytics.title")}>
+      <SwitchSetting
+        form={form}
+        formKey="enableGeneral"
+        title={t("analytics.general.title")}
+        text={t("analytics.general.text")}
+      />
+      <Anchor
+        href={createDocumentationLink("/docs/management/settings", "#analytics")}
+        target="_blank"
+        rel="noopener noreferrer"
+        size="sm"
+      >
+        {t("analyticsDocumentation")}
+        <IconExternalLink size={14} style={{ marginInlineStart: 4, verticalAlign: "middle" }} />
+      </Anchor>
     </SectionCard>
   );
 };

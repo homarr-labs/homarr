@@ -1,35 +1,50 @@
 import { createServer } from "node:http";
+import { getContainerRuntimeClient, TestContainers } from "testcontainers";
 
 import type { Server } from "node:http";
 
+const TESTCONTAINERS_SSHD_LABEL = "org.testcontainers.sshd";
+
 export interface MockApiServer {
   url: string;
-  port: number;
   close: () => Promise<void>;
 }
 
-export const startMockApiServerAsync = async (responseBody: unknown): Promise<MockApiServer> => {
+export async function startMockApiServerAsync(responseBody: unknown): Promise<MockApiServer> {
   const body = JSON.stringify(responseBody);
-
   const server: Server = await new Promise((resolve) => {
-    const s = createServer((_req, res) => {
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(body);
+    const candidate = createServer((_request, response) => {
+      response.writeHead(200, { "content-type": "application/json" });
+      response.end(body);
     });
-    s.listen(0, "0.0.0.0", () => resolve(s));
+    candidate.listen(0, "0.0.0.0", () => resolve(candidate));
   });
-
   const address = server.address();
   if (!address || typeof address === "string") {
+    server.close();
     throw new Error("Failed to start mock API server");
   }
 
-  return {
-    port: address.port,
-    url: `http://host.docker.internal:${address.port}`,
-    close: () =>
-      new Promise((resolve, reject) => {
-        server.close((error) => (error ? reject(error) : resolve()));
-      }),
-  };
-};
+  try {
+    await TestContainers.exposeHostPorts(address.port);
+    const client = await getContainerRuntimeClient();
+    const forwarder = (await client.container.list()).find(
+      (container) => container.State === "running" && container.Labels[TESTCONTAINERS_SSHD_LABEL] === "true",
+    );
+    const forwarderAddress = forwarder
+      ? Object.values(forwarder.NetworkSettings.Networks).find((network) => network.IPAddress)?.IPAddress
+      : undefined;
+    if (!forwarderAddress) throw new Error("Failed to locate the Testcontainers host-port forwarder");
+
+    return {
+      url: `http://${forwarderAddress}:${address.port}`,
+      close: () =>
+        new Promise((resolve, reject) => {
+          server.close((error) => (error ? reject(error) : resolve()));
+        }),
+    };
+  } catch (error) {
+    server.close();
+    throw error;
+  }
+}

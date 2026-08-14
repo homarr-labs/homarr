@@ -9,16 +9,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
 
-const OS_COLORS = [
-  "blue.6",
-  "orange.6",
-  "green.6",
-  "grape.6",
-  "cyan.6",
-  "pink.6",
-  "yellow.6",
-  "teal.6",
-] as const;
+const OS_COLORS = ["blue.6", "orange.6", "green.6", "grape.6", "cyan.6", "pink.6", "yellow.6", "teal.6"] as const;
 
 interface OsDistributionSectionProps {
   entries: PatchMonOsDistributionEntry[];
@@ -73,13 +64,7 @@ export function OsDistributionSection({
         )}
         <div className={`${classes.osDonutContent} ${showLegend ? classes.osDonutContentWithLegend : ""}`}>
           <div className={classes.osDonut}>
-            <DonutChart
-              data={chartData}
-              size={donutSize}
-              withTooltip
-              tooltipDataSource="segment"
-              paddingAngle={2}
-            />
+            <DonutChart data={chartData} size={donutSize} withTooltip tooltipDataSource="segment" paddingAngle={2} />
           </div>
           {showLegend && (
             <div className={classes.osLegend}>
@@ -115,7 +100,12 @@ export function OsDistributionSection({
       <div className={classes.compactOsBars}>
         {compactEntries.map((entry, i) => (
           <div key={`${entry.name}-${entry.osVersion ?? ""}`} className={classes.compactOsBar}>
-            <Text size="xs" className={classes.compactOsLabel} truncate="end" title={formatOsLabel(entry, showOsVersion)}>
+            <Text
+              size="xs"
+              className={classes.compactOsLabel}
+              truncate="end"
+              title={formatOsLabel(entry, showOsVersion)}
+            >
               {formatOsLabel(entry, showOsVersion)}
             </Text>
             <Group gap={6} wrap="nowrap" className={classes.osBarGroup}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Box, Center, Loader, Menu, ScrollArea } from "@mantine/core";
@@ -65,6 +65,11 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const board = useRequiredBoard();
   const utils = clientApi.useUtils();
   const t = useScopedI18n("board.action.edit");
+  const commonT = useI18n();
+  const latestBoardRef = useRef(board);
+
+  latestBoardRef.current = board;
+
   const { mutate: saveBoard, isPending } = clientApi.board.saveBoard.useMutation({
     onSuccess() {
       showSuccessNotification({
@@ -72,6 +77,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
         message: t("notification.success.message"),
       });
       void utils.board.getBoardByName.invalidate({ name: board.name });
+      void utils.widget.customApi.getData.invalidate();
       void revalidatePathActionAsync(`/boards/${board.name}`);
       close();
     },
@@ -91,10 +97,10 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
   const toggle = useCallback(() => {
     if (isEditMode) {
       if (demoReadOnly) return discardDemoChanges();
-      return saveBoard(board);
+      return saveBoard(latestBoardRef.current);
     }
     open();
-  }, [board, isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
+  }, [isEditMode, demoReadOnly, saveBoard, open, discardDemoChanges]);
 
   useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
@@ -104,6 +110,9 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
       <HeaderButton
         onClick={toggle}
         loading={isPending}
+        data-testid="board-edit-mode-toggle"
+        aria-label={isEditMode ? commonT("common.action.save") : commonT("common.action.edit")}
+        aria-pressed={isEditMode}
         onFocus={preloadBoardAddMenu}
         onPointerEnter={preloadBoardAddMenu}
       >

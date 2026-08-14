@@ -5,6 +5,7 @@ import { Group, Menu } from "@mantine/core";
 import { IconBox, IconBoxAlignTop, IconChevronDown, IconPlug, IconPlus, IconResize } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
@@ -19,6 +20,7 @@ import { HeaderButton } from "~/components/layout/header/button";
 
 export const BoardAddMenu = () => {
   const { data: session } = useSession();
+  const board = useRequiredBoard();
   const { openModal: openCategoryEditModal } = useModalAction(CategoryEditModal);
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
   const { openModal: openAppSelectModal } = useModalAction(AppSelectModal);
@@ -46,7 +48,7 @@ export const BoardAddMenu = () => {
   return (
     <Menu position="bottom-end">
       <Menu.Target>
-        <HeaderButton w="auto" px={4}>
+        <HeaderButton w="auto" px={4} aria-label={t("board.action.addContent")}>
           <Group gap={4} wrap="nowrap">
             <IconPlus stroke={1.5} />
             <IconChevronDown color="gray" size={16} />
@@ -54,7 +56,7 @@ export const BoardAddMenu = () => {
         </HeaderButton>
       </Menu.Target>
       <Menu.Dropdown style={{ transform: "translate(-3px, 0)" }}>
-        <Menu.Item leftSection={<IconResize size={20} />} onClick={() => openItemSelectModal()}>
+        <Menu.Item leftSection={<IconResize size={20} />} onClick={() => openItemSelectModal({ boardId: board.id })}>
           {t("item.action.create")}
         </Menu.Item>
         <Menu.Item
