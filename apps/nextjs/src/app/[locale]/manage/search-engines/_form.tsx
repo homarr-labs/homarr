@@ -57,7 +57,10 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
             />
           </Grid.Col>
         </Grid>
-        <IconPicker {...form.getInputProps("iconUrl")} />
+        <IconPicker
+          {...form.getInputProps("iconUrl")}
+          suggestedSearch={initialValues === undefined ? form.values.name : undefined}
+        />
 
         <Fieldset legend={t("search.engine.page.edit.configControl")}>
           <SegmentedControl
