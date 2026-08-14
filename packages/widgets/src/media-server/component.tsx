@@ -11,28 +11,31 @@ import {
   Progress,
   SimpleGrid,
   Stack,
+  Table,
   Text,
+  TextInput,
   UnstyledButton,
 } from "@mantine/core";
 import {
+  IconArrowsSort,
+  IconChevronDown,
+  IconChevronUp,
   IconDeviceTv,
   IconHeadphones,
   IconMovie,
   IconPlayerPause,
+  IconSearch,
   IconVideo,
   IconWifi,
   IconWorld,
 } from "@tabler/icons-react";
-import type { MRT_ColumnDef } from "mantine-react-table";
-import { MantineReactTable } from "mantine-react-table";
 
 import { clientApi } from "@homarr/api/client";
 import { objectEntries } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
-import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -43,6 +46,8 @@ import classes from "./component.module.css";
 type TranscodingDecision = NonNullable<NonNullable<StreamSession["currentlyPlaying"]>["metadata"]>["transcoding"];
 
 type PlaybackStatus = "directPlay" | "directStream" | "transcodeVideo" | "transcodeAudio" | "transcoding";
+type SortColumn = "user" | "currentlyPlaying" | "status";
+type SortState = { column: SortColumn; descending: boolean } | null;
 
 export const getMediaServerColumnVisibility = (width: number, isAdvanced: boolean) => ({
   user: isAdvanced || width >= 300,
@@ -72,6 +77,64 @@ function formatBitrate(bitrateKbps: number | null | undefined): string | null {
   return bitrateKbps >= 1000 ? `${(bitrateKbps / 1000).toFixed(1)} Mbps` : `${Math.round(bitrateKbps)} kbps`;
 }
 
+const getSessionSortValue = (session: StreamSession, column: SortColumn) => {
+  if (column === "user") return session.user?.username ?? session.sessionName;
+  if (column === "currentlyPlaying") return session.currentlyPlaying?.name ?? session.sessionName;
+  return getPlaybackStatus(session.currentlyPlaying?.metadata?.transcoding);
+};
+
+const filterAndSortSessions = <T extends StreamSession>(sessions: T[], query: string, sort: SortState): T[] => {
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  const filtered = normalizedQuery
+    ? sessions.filter((session) =>
+        [session.user?.username, session.sessionName, session.currentlyPlaying?.name]
+          .filter(Boolean)
+          .some((value) => value?.toLocaleLowerCase().includes(normalizedQuery)),
+      )
+    : sessions;
+
+  if (!sort) return filtered;
+
+  return filtered.toSorted((left, right) => {
+    const comparison = getSessionSortValue(left, sort.column).localeCompare(getSessionSortValue(right, sort.column));
+    return sort.descending ? -comparison : comparison;
+  });
+};
+
+function StreamTableHeader({
+  column,
+  label,
+  sortable,
+  sort,
+  onSort,
+}: {
+  column: SortColumn;
+  label: string;
+  sortable: boolean;
+  sort: SortState;
+  onSort: (column: SortColumn) => void;
+}) {
+  const active = sort?.column === column;
+  const SortIcon = !active ? IconArrowsSort : sort.descending ? IconChevronDown : IconChevronUp;
+
+  return (
+    <Table.Th aria-sort={active ? (sort.descending ? "descending" : "ascending") : "none"}>
+      {sortable ? (
+        <UnstyledButton className={classes.sortButton} onClick={() => onSort(column)}>
+          <Text component="span" size="xs" fw={600} truncate>
+            {label}
+          </Text>
+          <SortIcon size={13} aria-hidden />
+        </UnstyledButton>
+      ) : (
+        <Text size="xs" fw={600} truncate>
+          {label}
+        </Text>
+      )}
+    </Table.Th>
+  );
+}
+
 export default function MediaServerWidget({
   options,
   integrationIds,
@@ -88,96 +151,14 @@ export default function MediaServerWidget({
   const currentStreams = useMemo(() => currentStreamsData ?? [], [currentStreamsData]);
 
   const t = useScopedI18n("widget.mediaServer");
+  const tGlobal = useI18n();
   const isAdvanced = displayMode === "advanced";
   const showLocation = isAdvanced || options.showLocation;
   const showBitrate = isAdvanced || options.showBitrate;
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
-  const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(() => {
-    const result: MRT_ColumnDef<StreamSession>[] = [
-      {
-        id: "user",
-        accessorFn: (session) => session.user?.username,
-        header: t("items.user"),
-        size: 160,
-
-        Cell: ({ row }) => (
-          <Group gap="xs" wrap="nowrap">
-            <Avatar size={28} src={row.original.user?.profilePictureUrl} />
-            <Stack gap={0} style={{ minWidth: 0 }}>
-              <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {row.original.user?.username ?? t("items.unknownUser")}
-              </Text>
-              <Text
-                size="10px"
-                c="dimmed"
-                style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-              >
-                {row.original.sessionName}
-              </Text>
-            </Stack>
-          </Group>
-        ),
-      },
-      {
-        accessorKey: "currentlyPlaying", // currentlyPlaying.name can be undefined which results in a warning. This is why we use currentlyPlaying instead of currentlyPlaying.name
-        header: t("items.currentlyPlaying"),
-
-        Cell: ({ row }) => {
-          return (
-            <SessionDetailsPopover
-              item={row.original}
-              opened={selectedRowId === row.id}
-              onChange={(opened) => setSelectedRowId(opened ? row.id : null)}
-            >
-              <CurrentlyPlaying item={row.original} />
-            </SessionDetailsPopover>
-          );
-        },
-      } satisfies MRT_ColumnDef<StreamSession>,
-      {
-        id: "status",
-        header: t("items.status"),
-        size: 110,
-
-        Cell: ({ row }) => {
-          const currentlyPlaying = row.original.currentlyPlaying;
-          if (!currentlyPlaying) return null;
-
-          const status = getPlaybackStatus(currentlyPlaying.metadata?.transcoding);
-          const location = showLocation ? currentlyPlaying.location : null;
-          const bitrateLabel = showBitrate ? formatBitrate(currentlyPlaying.metadata?.bitrateKbps) : null;
-
-          return (
-            <Stack gap={4} align="flex-start">
-              <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
-                {t(`items.${status}` as never)}
-              </Badge>
-              {(location ?? bitrateLabel) && (
-                <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
-                  <Group gap={4} align="center">
-                    {location && (location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />)}
-                    {location && (
-                      <Text size="10px" c="dimmed" tt="uppercase">
-                        {location}
-                      </Text>
-                    )}
-                  </Group>
-                  {bitrateLabel && (
-                    <Text size="10px" c="dimmed">
-                      {bitrateLabel}
-                    </Text>
-                  )}
-                </Group>
-              )}
-            </Stack>
-          );
-        },
-      },
-    ];
-    return result;
-  }, [selectedRowId, showBitrate, showLocation, t]);
-
   const columnVisibility = getMediaServerColumnVisibility(width, isAdvanced);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<SortState>(null);
 
   // Only render the flat list of sessions when the currentStreams change
   // Otherwise it will always create a new array reference and cause the table to re-render
@@ -194,82 +175,15 @@ export default function MediaServerWidget({
       ),
     [currentStreams],
   );
+  const visibleSessions = useMemo(
+    () => filterAndSortSessions(flatSessions, isAdvanced ? search : "", isAdvanced ? sort : null),
+    [flatSessions, isAdvanced, search, sort],
+  );
 
-  const table = useTranslatedMantineReactTable({
-    columns,
-    data: flatSessions,
-    enablePagination: false,
-    enableTopToolbar: isAdvanced,
-    enableBottomToolbar: false,
-    enableSorting: isAdvanced,
-    enableColumnActions: false,
-    enableStickyHeader: false,
-    enableColumnOrdering: false,
-    enableRowSelection: false,
-    enableFullScreenToggle: false,
-    enableGlobalFilter: isAdvanced,
-    enableDensityToggle: false,
-    enableFilters: false,
-    enableHiding: false,
-    enableColumnPinning: false,
-    initialState: {
-      density: "xs",
-    },
-    state: {
-      columnVisibility,
-    },
-    mantineTableHeadProps: {
-      fz: "xs",
-    },
-    mantineTableHeadCellProps: {
-      py: 4,
-    },
-    mantinePaperProps: {
-      flex: 1,
-      withBorder: false,
-      shadow: undefined,
-      className: classes.tablePaper,
-    },
-    mantineTableProps: {
-      className: "media-server-widget-table",
-      style: {
-        tableLayout: "fixed",
-      },
-    },
-    mantineTableContainerProps: {
-      className: classes.tableContainer,
-      style: {
-        pointerEvents: isEditMode ? "none" : undefined,
-      },
-    },
-    mantineTableBodyRowProps: ({ row }) => {
-      const toggleDetails = () => setSelectedRowId((current) => (current === row.id ? null : row.id));
-
-      return {
-        className: isEditMode ? undefined : classes.sessionRow,
-        tabIndex: isEditMode ? -1 : 0,
-        "aria-label": row.original.sessionName,
-        "aria-haspopup": isEditMode ? undefined : "dialog",
-        "aria-expanded": isEditMode ? undefined : selectedRowId === row.id,
-        onClick: isEditMode ? undefined : toggleDetails,
-        onKeyDown: isEditMode
-          ? undefined
-          : (event) => {
-              if (event.currentTarget !== event.target) return;
-              if (event.key !== "Enter" && event.key !== " ") return;
-              event.preventDefault();
-              toggleDetails();
-            },
-      };
-    },
-    mantineTableBodyCellProps: () => ({
-      py: 4,
-      style: {
-        overflowX: "hidden",
-        overflowY: "visible",
-      },
-    }),
-  });
+  const toggleSort = (column: SortColumn) =>
+    setSort((current) =>
+      current?.column === column ? { column, descending: !current.descending } : { column, descending: false },
+    );
 
   const uniqueIntegrations = currentStreams.map((stream) => ({
     integrationId: stream.integrationId,
@@ -305,6 +219,14 @@ export default function MediaServerWidget({
             {t("summary.transcoding", { count: transcodingCount })}
           </Badge>
           <Group ml="auto">
+            <TextInput
+              size="xs"
+              value={search}
+              onChange={(event) => setSearch(event.currentTarget.value)}
+              placeholder={tGlobal("search.placeholder")}
+              aria-label={tGlobal("search.placeholder")}
+              leftSection={<IconSearch size={14} aria-hidden />}
+            />
             <WidgetQueryErrorIndicator error={currentStreamsQuery.error} label={t("name")} />
             <IntegrationErrorIndicator results={currentStreams} />
           </Group>
@@ -316,7 +238,128 @@ export default function MediaServerWidget({
           <IntegrationErrorIndicator results={currentStreams} />
         </Group>
       )}
-      <MantineReactTable table={table} />
+      <div
+        className={classes.tableViewport}
+        data-media-server-streams
+        style={{ pointerEvents: isEditMode ? "none" : undefined }}
+      >
+        <Table stickyHeader highlightOnHover={!isEditMode} layout="fixed" className="media-server-widget-table">
+          <Table.Thead>
+            <Table.Tr>
+              {columnVisibility.user && (
+                <StreamTableHeader
+                  column="user"
+                  label={t("items.user")}
+                  sortable={isAdvanced}
+                  sort={sort}
+                  onSort={toggleSort}
+                />
+              )}
+              <StreamTableHeader
+                column="currentlyPlaying"
+                label={t("items.currentlyPlaying")}
+                sortable={isAdvanced}
+                sort={sort}
+                onSort={toggleSort}
+              />
+              {columnVisibility.status && (
+                <StreamTableHeader
+                  column="status"
+                  label={t("items.status")}
+                  sortable={isAdvanced}
+                  sort={sort}
+                  onSort={toggleSort}
+                />
+              )}
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {visibleSessions.map((session) => {
+              const rowId = `${session.integrationId}:${session.sessionId}`;
+              const currentlyPlaying = session.currentlyPlaying;
+              const status = getPlaybackStatus(currentlyPlaying?.metadata?.transcoding);
+              const location = showLocation ? currentlyPlaying?.location : null;
+              const bitrateLabel = showBitrate ? formatBitrate(currentlyPlaying?.metadata?.bitrateKbps) : null;
+              const toggleDetails = () => setSelectedRowId((current) => (current === rowId ? null : rowId));
+
+              return (
+                <Table.Tr
+                  key={rowId}
+                  className={isEditMode ? undefined : classes.sessionRow}
+                  tabIndex={isEditMode ? -1 : 0}
+                  aria-label={session.sessionName}
+                  aria-haspopup={isEditMode ? undefined : "dialog"}
+                  aria-expanded={isEditMode ? undefined : selectedRowId === rowId}
+                  onClick={isEditMode ? undefined : toggleDetails}
+                  onKeyDown={
+                    isEditMode
+                      ? undefined
+                      : (event) => {
+                          if (event.currentTarget !== event.target) return;
+                          if (event.key !== "Enter" && event.key !== " ") return;
+                          event.preventDefault();
+                          toggleDetails();
+                        }
+                  }
+                >
+                  {columnVisibility.user && (
+                    <Table.Td>
+                      <Group gap="xs" wrap="nowrap">
+                        <Avatar size={28} src={session.user?.profilePictureUrl} />
+                        <Stack gap={0} className={classes.cellContent}>
+                          <Text size="xs" truncate>
+                            {session.user?.username ?? t("items.unknownUser")}
+                          </Text>
+                          <Text size="10px" c="dimmed" truncate>
+                            {session.sessionName}
+                          </Text>
+                        </Stack>
+                      </Group>
+                    </Table.Td>
+                  )}
+                  <Table.Td>
+                    <SessionDetailsPopover
+                      item={session}
+                      opened={selectedRowId === rowId}
+                      onChange={(opened) => setSelectedRowId(opened ? rowId : null)}
+                    >
+                      <CurrentlyPlaying item={session} />
+                    </SessionDetailsPopover>
+                  </Table.Td>
+                  {columnVisibility.status && (
+                    <Table.Td>
+                      {currentlyPlaying && (
+                        <Stack gap={4} align="flex-start" className={classes.cellContent}>
+                          <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
+                            {t(`items.${status}` as never)}
+                          </Badge>
+                          {(location ?? bitrateLabel) && (
+                            <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                              <Group gap={4} align="center" wrap="nowrap">
+                                {location && (location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />)}
+                                {location && (
+                                  <Text size="10px" c="dimmed" tt="uppercase">
+                                    {location}
+                                  </Text>
+                                )}
+                              </Group>
+                              {bitrateLabel && (
+                                <Text size="10px" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                                  {bitrateLabel}
+                                </Text>
+                              )}
+                            </Group>
+                          )}
+                        </Stack>
+                      )}
+                    </Table.Td>
+                  )}
+                </Table.Tr>
+              );
+            })}
+          </Table.Tbody>
+        </Table>
+      </div>
       {(isAdvanced || height >= 144) && (
         <Group
           gap="xs"
