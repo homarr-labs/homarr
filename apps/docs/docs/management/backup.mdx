@@ -53,6 +53,9 @@ Before restoring, Homarr uses **sql.js WASM** to analyze the backup directly in 
 
 Type `I understand` to acknowledge that restoring will replace your current database. This cannot be undone.
 
+During first-run onboarding, the database is still empty, so the restore preview goes directly to **Restore Database**
+without the extra typed confirmation. After Homarr restarts, onboarding opens the restored default home board.
+
 ### 4. Restore
 
 The backup ZIP is sent to the server, validated, and applied. After a successful restore:

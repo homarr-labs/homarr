@@ -135,7 +135,7 @@ export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) =
             </Group>
 
             {showRestore && sqliteRestore ? (
-              <Paper id="sqlite-restore-flow" withBorder p="lg" radius="lg" w="100%" maw="38rem">
+              <Paper id="sqlite-restore-flow" withBorder p="lg" radius="lg" w="100%" maw="56rem">
                 <Stack>
                   <Group gap="xs">
                     <ThemeIcon variant="light" color="orange">
