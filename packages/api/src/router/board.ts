@@ -341,9 +341,7 @@ export const boardRouter = createTRPCRouter({
 
     const previewContainerSectionIds = [
       ...new Set(
-        previewSectionLayouts
-          .filter((layout) => layout.section.kind === "container")
-          .map((layout) => layout.sectionId),
+        previewSectionLayouts.filter((layout) => layout.section.kind === "container").map((layout) => layout.sectionId),
       ),
     ];
     const nestedPreviewItemLayouts =
@@ -456,8 +454,7 @@ export const boardRouter = createTRPCRouter({
         ? previewItemLayouts
             .filter(
               (layout) =>
-                layout.layoutId === previewLayout.id &&
-                (isInsideRootLane(layout) || isInsideVisibleContainer(layout)),
+                layout.layoutId === previewLayout.id && (isInsideRootLane(layout) || isInsideVisibleContainer(layout)),
             )
             .map((layout) => {
               const appId = appIdByItemId.get(layout.itemId);
