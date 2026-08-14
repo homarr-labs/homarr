@@ -55,6 +55,20 @@ panel discards nothing.
 This also corrects three verdicts in the table below: `coolify` was recorded as "clean (bounded)" and
 `firewall` and `health-monitoring` as triaged/fixed on other grounds. All three were carrying this cost.
 
+### What else #6582 had, and what was declined
+
+Mining the rest of that PR's perf-shaped hunks:
+
+| their change | taken? |
+| --- | --- |
+| `keepMounted={false}` on 2 accordions | **taken, and extended to 4 sites** — above |
+| `loading="lazy"` on the `iframe` widget | **taken** — an iframe is a whole browsing context, so one scrolled off a tall board is the most expensive thing a widget can load eagerly |
+| `loading="lazy"` on media-releases and rssFeed | already done here |
+| `dynamic()` for `BoardItemMenu` | **declined, and it does not work as written.** `BoardItemMenu` already early-returns `null` outside edit mode, so there is no overlay-per-item cost to begin with — but it is *rendered* unconditionally, and `dynamic()` fetches its chunk when the component renders, not when it returns something. So the chunk still loads on every board render. It would only pay off with the `isEditMode` guard hoisted to the call site, which is a board-rendering change worth measuring first |
+| `loading="lazy"` on the immich carousel | declined — the carousel's image *is* the visible content, so there is nothing off-screen to defer |
+| `memo()` on `item-content` / `grid-editor` | not extractable — entangled with that PR's new advanced-focus feature, portals and viewport hooks, not a standalone perf change |
+| 5 `<Suspense>` boundaries | mostly in that PR's new components; not applicable here |
+
 ## The systemic finding this pass: inactive tab panels render in full
 
 **Mantine's `Tabs` keeps inactive panels mounted by default.** In Mantine 9 on React 19 that is

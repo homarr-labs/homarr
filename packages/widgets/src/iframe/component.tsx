@@ -26,6 +26,9 @@ export default function IFrameWidget({ options, isEditMode }: WidgetComponentPro
         style={isEditMode ? { userSelect: "none", pointerEvents: "none" } : undefined}
         className={classes.iframe}
         src={embedUrl}
+        // An iframe is a whole browsing context, so one scrolled off a tall board is by far the most
+        // expensive thing a widget can load eagerly.
+        loading="lazy"
         title="widget iframe"
         allow={allowedPermissions}
         scrolling={allowScrolling ? "yes" : "no"}
