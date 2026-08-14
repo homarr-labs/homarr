@@ -45,4 +45,41 @@ describe("convertAssistantMessagesToModelMessages", () => {
     expect(serialized).toContain('"name":"Home"');
     expect(result.at(-1)).toEqual({ role: "user", content: [{ type: "text", text: "Continue." }] });
   });
+
+  test("compacts oversized custom widget preview query results from conversation history", async () => {
+    const oversizedData = Array.from({ length: 1_000 }, (_, index) => ({
+      id: index,
+      title: `Result ${index}`,
+      description: "x".repeat(100),
+    }));
+    const messages: UIMessage[] = [
+      {
+        id: "assistant-1",
+        role: "assistant",
+        parts: [
+          {
+            type: "dynamic-tool",
+            toolName: "customWidget_previewQuery",
+            toolCallId: "preview-query-1",
+            state: "output-available",
+            input: { sessionId: "preview-1", requestId: "results", params: {} },
+            output: { ok: true, status: 200, data: oversizedData },
+          },
+        ],
+      },
+      {
+        id: "user-1",
+        role: "user",
+        parts: [{ type: "text", text: "Continue building the widget." }],
+      },
+    ];
+
+    const result = await convertAssistantMessagesToModelMessages(messages);
+    const serialized = JSON.stringify(result);
+
+    expect(serialized).toContain('"truncated":true');
+    expect(serialized).toContain('"status":200');
+    expect(serialized).toContain("Continue building the widget.");
+    expect(serialized.length).toBeLessThan(10_000);
+  });
 });

@@ -50,7 +50,7 @@ import { assistantExecutionPolicy } from "./assistant-execution-policy";
 import { getAssistantStreamErrorMessage } from "./assistant-stream-error";
 import { getSafeAssistantToolError } from "./assistant-tool-error";
 import { repairAssistantToolInput } from "./assistant-tool-input-repair";
-import { toAssistantToolOutput } from "./assistant-tool-output";
+import { customWidgetPreviewQueryOutputMaxCharacters, toAssistantToolOutput } from "./assistant-tool-output";
 import {
   createCustomWidgetComponentDocumentBudget,
   createCustomWidgetDynamicContextController,
@@ -537,7 +537,12 @@ export async function POST(request: Request) {
               const result = await (procedure as (value: unknown) => Promise<unknown>)(
                 input && Object.keys(input as object).length > 0 ? input : undefined,
               );
-              return toAssistantToolOutput(result);
+              return toAssistantToolOutput(
+                result,
+                mcpTool.name === "customWidget_previewQuery"
+                  ? { maxCharacters: customWidgetPreviewQueryOutputMaxCharacters }
+                  : undefined,
+              );
             } catch (error) {
               logger.error("Assistant tool call failed", {
                 toolName: mcpTool.name,

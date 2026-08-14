@@ -74,7 +74,7 @@ These interfaces do not return an archive URL or archive hash.
 4. Build one definition, using `templateLines` for multiline JSX tool input.
 5. Validate the definition without saving it and repair every reported issue.
 6. Create a preview session.
-7. Run `customWidget_previewQuery` for every query returned by the preview and inspect its actual status and data shape. Use
+7. Run `customWidget_previewQuery` for every query returned by the preview and inspect its actual status and data shape. Assistant conversations retain a bounded response preview so large APIs cannot exhaust the model context. Use
    `{}` for load queries; manual queries require exactly the returned primitive `parameterNames`.
 8. Test relevant actions in simulation mode.
 9. Open the returned preview path with browser tools.
