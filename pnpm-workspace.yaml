@@ -169,7 +169,7 @@ catalog:
   motion: ^13.0.0
   maria2: ^0.4.1
   mysql2: 3.22.6
-  next: 16.3.0-preview.9
+  next: 16.3.1
   next-auth: 5.0.0-beta.31
   next-intl: 4.13.1
   next-themes: ^0.4.6
