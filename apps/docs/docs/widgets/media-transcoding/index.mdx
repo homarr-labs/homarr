@@ -4,6 +4,8 @@ description: "Statistics, current queue and worker status of your media transcod
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -18,6 +20,7 @@ import { tdarrIntegration } from "@site/docs/integrations/tdarr";
 
 The media transcoding widget provides you with an overview of your media transcoding status.
 It shows you the current queue, worker status, and statistics about your transcoding jobs.
+Advanced view presents all three panels together. If refreshes fail after data has loaded, Homarr keeps the last useful result visible and marks it as stale.
 
 ### Screenshots
 
@@ -40,6 +43,8 @@ import statisticsCard from "./img/statistics.png";
     },
   ]}
 />
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

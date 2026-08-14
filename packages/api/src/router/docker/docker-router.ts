@@ -12,6 +12,7 @@ import {
 
 import { dockerMiddleware } from "../../middlewares/docker";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
+import { throwIfDockerOperationsFailed } from "./docker-operation-results";
 
 export const dockerRouter = createTRPCRouter({
   getContainers: permissionRequiredProcedure
@@ -45,12 +46,13 @@ export const dockerRouter = createTRPCRouter({
     .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
-      await Promise.allSettled(
+      const results = await Promise.allSettled(
         input.ids.map(async (id) => {
           const container = await getContainerOrThrowAsync(id);
           await container.start();
         }),
       );
+      throwIfDockerOperationsFailed(results);
     }),
   stopAll: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -63,12 +65,13 @@ export const dockerRouter = createTRPCRouter({
     .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
-      await Promise.allSettled(
+      const results = await Promise.allSettled(
         input.ids.map(async (id) => {
           const container = await getContainerOrThrowAsync(id);
           await container.stop();
         }),
       );
+      throwIfDockerOperationsFailed(results);
     }),
   restartAll: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -82,12 +85,13 @@ export const dockerRouter = createTRPCRouter({
     .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
-      await Promise.allSettled(
+      const results = await Promise.allSettled(
         input.ids.map(async (id) => {
           const container = await getContainerOrThrowAsync(id);
           await container.restart();
         }),
       );
+      throwIfDockerOperationsFailed(results);
     }),
   removeAll: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -101,12 +105,13 @@ export const dockerRouter = createTRPCRouter({
     .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
-      await Promise.allSettled(
+      const results = await Promise.allSettled(
         input.ids.map(async (id) => {
           const container = await getContainerOrThrowAsync(id);
           await container.remove();
         }),
       );
+      throwIfDockerOperationsFailed(results);
     }),
   logs: permissionRequiredProcedure
     .requiresPermission("admin")

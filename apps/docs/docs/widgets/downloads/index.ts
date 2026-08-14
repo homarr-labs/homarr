@@ -67,7 +67,7 @@ export const downloadsWidget: WidgetDefinition = {
       {
         name: "Hide completed torrent under this threshold (in kiB/s)",
         description:
-          "This will hide completed torrent entries that have a download speed below the specified threshold.",
+          "This will hide completed torrent entries that have an upload speed below the specified threshold.",
         values: "Any number above 0, 0 to disable",
         defaultValue: "0",
       },

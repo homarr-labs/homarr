@@ -24,3 +24,18 @@
   pointer-events: none !important;
   user-select: none !important;
 }
+
+.advancedFocusTrigger {
+  position: absolute;
+  top: var(--mantine-spacing-xs);
+  left: 50%;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.advancedFocusTrigger:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}

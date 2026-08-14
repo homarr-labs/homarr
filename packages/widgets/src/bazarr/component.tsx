@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { Text } from "@mantine/core";
-import { IconAlertTriangle, IconDeviceTv, IconMovie, IconPlugConnected } from "@tabler/icons-react";
+import { IconAlertTriangle, IconBell, IconDeviceTv, IconMovie, IconPlugConnected } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -11,21 +11,38 @@ import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
-const statVisibilityByOption = {
-  showMissingEpisodes: "episodes",
-  showMissingMovies: "movies",
-  showProviderIssues: "providers",
-  showHealthIssues: "status",
-} as const;
+const compactStatOptions = [
+  { option: "showMissingEpisodes", stat: "episodes" },
+  { option: "showMissingMovies", stat: "movies" },
+  { option: "showProviderIssues", stat: "providers" },
+  { option: "showHealthIssues", stat: "status" },
+] as const;
+
+const allStatKeys = [
+  "episodes",
+  "movies",
+  "providers",
+  "status",
+  "sonarrSignalr",
+  "radarrSignalr",
+  "announcements",
+] as const;
+
+type BazarrStatKey = (typeof allStatKeys)[number];
+type BazarrVisibilityOptions = Record<(typeof compactStatOptions)[number]["option"], boolean>;
 
 const statIcons = {
   episodes: IconDeviceTv,
   movies: IconMovie,
   providers: IconPlugConnected,
   status: IconAlertTriangle,
+  sonarrSignalr: IconPlugConnected,
+  radarrSignalr: IconPlugConnected,
+  announcements: IconBell,
 } as const;
 
 const gridColsByWidth = [
+  { minWidth: 640, cols: 4 },
   { minWidth: 380, cols: 2 },
   { minWidth: 0, cols: 1 },
 ] as const;
@@ -36,13 +53,20 @@ const iconSizeByWidth = [
   { minWidth: 0, size: 16 },
 ] as const;
 
-export default function BazarrWidget({ integrationIds, options, width }: WidgetComponentProps<"bazarr">) {
+export default function BazarrWidget({
+  integrationIds,
+  options,
+  width,
+  height,
+  displayMode,
+}: WidgetComponentProps<"bazarr">) {
   const t = useScopedI18n("widget.bazarr");
-  const { data: badges } = clientApi.widget.bazarr.getBadges.useQuery(
+  const { data: badges, error } = clientApi.widget.bazarr.getBadges.useQuery(
     { integrationId: integrationIds[0] ?? "" },
     { enabled: Boolean(integrationIds[0]) },
   );
 
+  if (error && !badges) throw error;
   if (!badges) return <WidgetEmptyState />;
 
   const statValues = {
@@ -50,14 +74,15 @@ export default function BazarrWidget({ integrationIds, options, width }: WidgetC
     movies: badges.movies,
     providers: badges.providers,
     status: badges.status,
-  } as const;
+    sonarrSignalr: badges.sonarr_signalr,
+    radarrSignalr: badges.radarr_signalr,
+    announcements: badges.announcements,
+  } satisfies Record<BazarrStatKey, number | string>;
 
-  const visibleStatKeys = Object.entries(statVisibilityByOption)
-    .filter(([optionKey]) => options[optionKey as keyof typeof options])
-    .map(([, statKey]) => statKey);
+  const visibleStatKeys = getVisibleBazarrStatKeys(options, displayMode);
 
-  const gridCols = getGridCols(width);
-  const iconSize = getIconSize(width);
+  const gridCols = getGridCols(width, height, visibleStatKeys.length);
+  const iconSize = getIconSize(Math.min(width, height));
 
   if (visibleStatKeys.length === 0) {
     return (
@@ -73,17 +98,28 @@ export default function BazarrWidget({ integrationIds, options, width }: WidgetC
 
   return (
     <div className={classes.root}>
-      <div className={classes.grid} style={{ "--stat-cols": gridCols } as CSSProperties}>
+      <div
+        className={classes.grid}
+        data-short={height < 120 || undefined}
+        style={{ "--stat-cols": gridCols } as CSSProperties}
+      >
         {visibleStatKeys.map((statKey) => {
           const Icon = statIcons[statKey];
           const value = statValues[statKey];
-          const isWarning = (statKey === "providers" || statKey === "status") && value > 0;
+          const isWarning =
+            typeof value === "number" &&
+            (statKey === "providers" || statKey === "status" || statKey === "announcements") &&
+            value > 0;
 
           return (
             <div key={statKey} className={`${classes.statTile} ${isWarning ? classes.statTileWarning : ""}`}>
               <Icon className={classes.statIcon} size={iconSize} stroke={1.5} />
-              <span className={`${classes.statValue} ${isWarning ? classes.statValueWarning : ""}`}>{value}</span>
-              <span className={classes.statLabel}>{t(statKey)}</span>
+              <span className={`${classes.statValue} ${isWarning ? classes.statValueWarning : ""}`}>
+                {typeof value === "string" && value.trim() === "" ? "—" : value}
+              </span>
+              <span className={classes.statLabel} title={t(statKey)}>
+                {t(statKey)}
+              </span>
             </div>
           );
         })}
@@ -92,12 +128,25 @@ export default function BazarrWidget({ integrationIds, options, width }: WidgetC
   );
 }
 
-function getGridCols(width: number): number {
-  const match = gridColsByWidth.find(({ minWidth }) => width >= minWidth);
-  return match?.cols ?? 1;
+export const getVisibleBazarrStatKeys = (
+  options: BazarrVisibilityOptions,
+  displayMode?: "compact" | "advanced",
+): BazarrStatKey[] => {
+  if (displayMode === "advanced") return [...allStatKeys];
+  return compactStatOptions.filter(({ option }) => options[option]).map(({ stat }) => stat);
+};
+
+export function getGridCols(width: number, height: number, itemCount: number): number {
+  if (itemCount <= 1) return 1;
+
+  const preferredColumns = gridColsByWidth.find(({ minWidth }) => width >= minWidth)?.cols ?? 1;
+  const maxColumnsByWidth = Math.max(1, Math.floor(width / 100));
+  const maxRowsByHeight = Math.max(1, Math.floor(height / 72));
+  const columnsNeededToFit = Math.ceil(itemCount / maxRowsByHeight);
+  return Math.min(itemCount, maxColumnsByWidth, Math.max(preferredColumns, columnsNeededToFit));
 }
 
-function getIconSize(width: number): number {
+export function getIconSize(width: number): number {
   const match = iconSizeByWidth.find(({ minWidth }) => width >= minWidth);
   return match?.size ?? 16;
 }

@@ -4,6 +4,8 @@ description: "Statistics about your media requests"
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -17,7 +19,7 @@ import { overseerrIntegration } from "@site/docs/integrations/overseerr";
 
 <WidgetHeader widget={mediaRequestStatsWidget} categories={["Media requests"]} />
 
-Provide a statistics overview of your media requests, such as mount of requests, open requests, approvement and rejections.
+Provides an overview of media requests, including totals, availability, approvals, and rejections. Resize the widget to reveal denser stat tiles; the user ranking remains scrollable instead of being truncated.
 
 ### Supported Integrations
 
@@ -41,6 +43,9 @@ import mediaRequestStats from "./img/stats.png";
 ### Interactions
 
 - Hover over the widget to reveal a **search button** that opens Spotlight in media request search mode, scoped to the widget's integrations.
+- A warning indicator identifies unavailable integrations while totals from healthy integrations remain visible.
+
+<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 

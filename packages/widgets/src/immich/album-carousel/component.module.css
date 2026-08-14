@@ -14,6 +14,11 @@
   background-color: var(--mantine-color-gray-8);
 }
 
+.carouselImage[data-fit="contain"] {
+  object-fit: contain;
+  background-color: var(--mantine-color-black);
+}
+
 .photoInfo {
   position: absolute;
   bottom: 0;
@@ -24,29 +29,42 @@
   border-radius: 0;
 }
 
-.dots {
+.carouselControls {
   position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
+  inset-block-start: 8px;
+  inset-inline-end: 8px;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-2px);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
 }
 
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  transition: all 0.2s ease;
+.carouselContainer:hover .carouselControls,
+.carouselContainer:focus-within .carouselControls,
+.carouselControls[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
 
-  &[data-active="true"] {
-    background-color: rgba(255, 255, 255, 1);
-    width: 24px;
-    border-radius: 4px;
+@media (any-pointer: coarse) {
+  .carouselControls {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
   }
 
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.8);
+  .carouselControls button {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carouselControls {
+    transition: none;
   }
 }

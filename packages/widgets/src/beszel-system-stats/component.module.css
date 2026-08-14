@@ -1,14 +1,38 @@
-.beszelStatsSystemToggle {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  z-index: 1;
+.beszelStatsControls {
   opacity: 0;
-  transition: opacity 0.15s ease;
+  transition: opacity 150ms ease-out;
   pointer-events: none;
 }
 
-.beszelStatsContainer:hover .beszelStatsSystemToggle {
+.beszelStatsContainer:hover .beszelStatsControls,
+.beszelStatsContainer:focus-within .beszelStatsControls {
   opacity: 1;
   pointer-events: auto;
+}
+
+.beszelStatsSystemToggle {
+  max-width: 50%;
+  flex-shrink: 0;
+}
+
+.beszelStatsPeriodToggle {
+  flex: 1;
+  min-width: 0;
+}
+
+.beszelStatsPeriodButton {
+  flex: 1;
+}
+
+@media (any-pointer: coarse) {
+  .beszelStatsControls {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beszelStatsControls {
+    transition: none;
+  }
 }

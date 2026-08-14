@@ -71,8 +71,9 @@ const StatisticRingProgress = ({ items, label }: StatisticRingProgressProps) => 
   );
 };
 
-function toRingProgressSections(segments: TdarrPieSegment[]): RingProgressProps["sections"] {
+export function toRingProgressSections(segments: TdarrPieSegment[]): RingProgressProps["sections"] {
   const total = segments.reduce((prev, curr) => prev + curr.value, 0);
+  if (total <= 0) return [];
   return segments.map((segment, index) => ({
     value: (segment.value * 100) / total,
     tooltip: `${segment.name}: ${segment.value}`,

@@ -22,6 +22,7 @@ export const categoryTranslationKeys: Record<string, string> = {
   smartHomeServer: "integration.category.smartHomeServer",
   indexerManager: "integration.category.indexerManager",
   healthMonitoring: "integration.category.healthMonitoring",
+  beszel: "integration.category.beszel",
   search: "integration.category.search",
   mediaTranscoding: "integration.category.mediaTranscoding",
   networkController: "integration.category.networkController",

@@ -4,6 +4,8 @@ description: "Displays information showing the health and status of your system(
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -20,6 +22,8 @@ import { glancesIntegration } from "@site/docs/integrations/glances";
 <WidgetHeader widget={healthMonitoringWidget} categories={["Health monitoring"]} />
 
 This widget displays information about the health and status of your system(s), including CPU, memory, disk usage, and more.
+
+Advanced view is a complete health workspace: it shows every available CPU, temperature, memory, GPU, filesystem, update, reboot, and system-information section even when compact visibility switches hide some of them on the board. Proxmox clusters likewise show uptime, CPU, memory, and every node, VM, container, and storage section. Storage-volume filters, units, and permissions remain in effect.
 
 ### Screenshots
 
@@ -61,6 +65,8 @@ import { synologyIntegration } from "@site/docs/integrations/synology";
     },
   ]}
 />
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

@@ -1,12 +1,27 @@
 import { z } from "zod/v4";
 
+import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
+import type { DnsHoleSummary } from "@homarr/integrations/types";
 import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+
+interface DnsHoleSummaryResult {
+  integrationId: string;
+  integrationName: string;
+  integration: {
+    id: string;
+    name: string;
+    kind: IntegrationKindByCategory<"dnsHole">;
+    updatedAt?: Date;
+  };
+  summary: DnsHoleSummary | null;
+  error?: string;
+}
 
 export const dnsHoleRouter = createTRPCRouter({
   summary: publicProcedure
@@ -19,13 +34,28 @@ export const dnsHoleRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const { data, timestamp } = await dnsHoleRequestHandler.handler(integration, {}).getDataAsync();
-        return {
-          integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
-          summary: data,
-        };
-      });
+      return await settleIntegrationQueries<(typeof ctx.integrations)[number], DnsHoleSummaryResult>(
+        ctx.integrations,
+        async (integration) => {
+          const { data, timestamp } = await dnsHoleRequestHandler.handler(integration, {}).getDataAsync();
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
+            summary: data,
+          };
+        },
+        {
+          fallback: (integration) => ({
+            integrationId: integration.id,
+            integrationName: integration.name,
+            integration: { id: integration.id, name: integration.name, kind: integration.kind },
+            summary: null,
+            error: PUBLIC_INTEGRATION_ERROR,
+          }),
+          throwOnAllFailures: true,
+        },
+      );
     }),
 
   enable: protectedProcedure

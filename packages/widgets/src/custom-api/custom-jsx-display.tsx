@@ -77,7 +77,6 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
     </WidgetDefinitionProvider>
   );
 }
-
 function sameStatus(left: CustomWidgetPublishedQueryState["status"], right: CustomWidgetPublishedQueryState["status"]) {
   return (
     left.loading === right.loading &&

@@ -5,39 +5,80 @@ import type {
   SpeedtestTrackerStats,
 } from "@homarr/integrations/types";
 
+export interface SpeedtestDashboardSource {
+  integrationId: string;
+  integrationName: string;
+  dashboard: SpeedtestTrackerDashboardData;
+}
+
+export const getAvailableSpeedtestDashboards = (
+  results: readonly {
+    integrationId: string;
+    integrationName: string;
+    dashboard: SpeedtestTrackerDashboardData | null;
+  }[],
+): SpeedtestDashboardSource[] =>
+  results.flatMap(({ integrationId, integrationName, dashboard }) =>
+    dashboard === null ? [] : [{ integrationId, integrationName, dashboard }],
+  );
+
 export const mergeStats = (
   statsA: SpeedtestTrackerDashboardData["stats"],
   statsB: SpeedtestTrackerDashboardData["stats"],
 ): SpeedtestTrackerDashboardData["stats"] => {
   if (!statsB) return statsA;
   if (!statsA) return statsB;
+  const totalResults = statsA.total_results + statsB.total_results;
+  const weightedAverage = (left: number, right: number) =>
+    totalResults > 0 ? (left * statsA.total_results + right * statsB.total_results) / totalResults : (left + right) / 2;
   return {
     ping: {
-      avg: (statsA.ping.avg + statsB.ping.avg) / 2,
+      avg: weightedAverage(statsA.ping.avg, statsB.ping.avg),
       min: Math.min(statsA.ping.min, statsB.ping.min),
       max: Math.max(statsA.ping.max, statsB.ping.max),
     },
     download: {
-      avg: (statsA.download.avg + statsB.download.avg) / 2,
+      avg: weightedAverage(statsA.download.avg, statsB.download.avg),
       avg_bits:
         statsA.download.avg_bits !== undefined && statsB.download.avg_bits !== undefined
-          ? (statsA.download.avg_bits + statsB.download.avg_bits) / 2
+          ? weightedAverage(statsA.download.avg_bits, statsB.download.avg_bits)
           : (statsA.download.avg_bits ?? statsB.download.avg_bits),
       min: Math.min(statsA.download.min, statsB.download.min),
       max: Math.max(statsA.download.max, statsB.download.max),
     },
     upload: {
-      avg: (statsA.upload.avg + statsB.upload.avg) / 2,
+      avg: weightedAverage(statsA.upload.avg, statsB.upload.avg),
       avg_bits:
         statsA.upload.avg_bits !== undefined && statsB.upload.avg_bits !== undefined
-          ? (statsA.upload.avg_bits + statsB.upload.avg_bits) / 2
+          ? weightedAverage(statsA.upload.avg_bits, statsB.upload.avg_bits)
           : (statsA.upload.avg_bits ?? statsB.upload.avg_bits),
       min: Math.min(statsA.upload.min, statsB.upload.min),
       max: Math.max(statsA.upload.max, statsB.upload.max),
     },
-    total_results: statsA.total_results + statsB.total_results,
+    total_results: totalResults,
   };
 };
+
+export const selectLatestResult = (
+  current: SpeedtestTrackerResult | null,
+  candidate: SpeedtestTrackerResult | null,
+): SpeedtestTrackerResult | null => {
+  if (!candidate) return current;
+  if (!current) return candidate;
+  return candidate.created_at.getTime() > current.created_at.getTime() ? candidate : current;
+};
+
+export const combineSpeedtestDashboards = (
+  dashboards: SpeedtestTrackerDashboardData[],
+): SpeedtestTrackerDashboardData =>
+  dashboards.reduce<SpeedtestTrackerDashboardData>(
+    (combined, dashboard) => ({
+      latestResult: selectLatestResult(combined.latestResult, dashboard.latestResult),
+      stats: mergeStats(combined.stats, dashboard.stats),
+      recentResults: [...combined.recentResults, ...dashboard.recentResults],
+    }),
+    { latestResult: null, stats: null, recentResults: [] },
+  );
 
 export const formatBitsPerSec = (bps: number): string => `${formatNumber(bps, 2)}bps`;
 
@@ -50,4 +91,22 @@ export const formatResultSpeed = (result: SpeedtestTrackerResult, dir: "download
 export const formatStatsSpeed = (band: SpeedtestTrackerStats["download"]): string => {
   if (band.avg_bits != null) return formatBitsPerSec(band.avg_bits);
   return formatBitsPerSec(band.avg * 8);
+};
+
+type CompactSection = "latest" | "chart" | "averages";
+
+export const getCompactSections = (
+  height: number,
+  available: Record<CompactSection, boolean>,
+): Record<CompactSection, boolean> => {
+  const budget = height < 240 ? 1 : height < 360 ? 2 : 3;
+  const visible = new Set(
+    (["latest", "chart", "averages"] as const).filter((section) => available[section]).slice(0, budget),
+  );
+
+  return {
+    latest: visible.has("latest"),
+    chart: visible.has("chart"),
+    averages: visible.has("averages"),
+  };
 };

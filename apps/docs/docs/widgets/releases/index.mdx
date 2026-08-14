@@ -4,6 +4,8 @@ description: "Displays a list of the current version of the given repositories w
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
@@ -32,6 +34,10 @@ GitHub, Docker Hub, GitLab, NPM, Codeberg, GitHub Container Registry, Quay, and 
 
 For GitHub Container Registry, use `owner/package` identifiers such as `homarr-labs/homarr`.
 Full image references such as `ghcr.io/homarr-labs/homarr:latest` are also accepted.
+
+Advanced view shows every configured repository even when compact view is limited to highlighted or top releases. Repository names and details remain visible, and selecting a repository still expands its description and links.
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

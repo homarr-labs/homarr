@@ -107,7 +107,6 @@ describe("get first empty position", () => {
     expect(result).toEqual(expectedX !== undefined ? { xOffset: expectedX, yOffset: expectedY } : undefined);
   });
 });
-
 const createElementsFromLayout = (layout: string[][]) => {
   const elements: (Pick<Item["layouts"][number], "xOffset" | "yOffset" | "width" | "height"> & { char: string })[] = [];
   for (let yOffset = 0; yOffset < layout.length; yOffset++) {

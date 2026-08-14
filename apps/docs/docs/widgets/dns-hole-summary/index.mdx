@@ -4,6 +4,8 @@ description: "Displays the summary of your DNS Hole."
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -15,7 +17,9 @@ import { dnsHoleSummaryWidget } from ".";
 
 <WidgetHeader widget={dnsHoleSummaryWidget} categories={["DNS Hole"]} />
 
-This widget allows you to display statistics about your DNS Hole like total queries, blocked queries, and more.
+When several DNS integrations are selected, Homarr keeps healthy sources visible if one source fails and shows a warning identifying the unavailable integration.
+
+This widget combines statistics from every selected DNS service, including total queries, blocked queries, and blocklist size. Its data is cached under the same DNS query family as DNS Hole Controls, so placing both widgets on a board does not create a second integration request. When the widget has enough room, it adds a scrollable status row naming each selected source.
 
 ### Screenshots
 
@@ -49,6 +53,8 @@ import { technitiumDnsIntegration } from "@site/docs/integrations/technitium-dns
     },
   ]}
 />
+
+<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 

@@ -2,28 +2,10 @@ import { IconDownload } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 
-import { createWidgetDefinition } from "../definition";
+import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
-
-const columnsList = [
-  "name",
-  "progress",
-  "size",
-  "downSpeed",
-  "upSpeed",
-  "time",
-  "state",
-  "added",
-  "ratio",
-  "received",
-  "sent",
-  "category",
-  "integration",
-  "index",
-  "type",
-] as const satisfies (keyof ExtendedDownloadClientItem)[];
+import { DOWNLOAD_COLUMN_ACCESSORS } from "./helpers";
 
 const sortColumns = [
   "name",
@@ -38,17 +20,24 @@ const sortColumns = [
   "sent",
   "index",
   "type",
-] as const satisfies readonly (typeof columnsList)[number][];
+] as const satisfies readonly (typeof DOWNLOAD_COLUMN_ACCESSORS)[number][];
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
+  supportsAdvancedFocus: true,
+  queryKey: [["widget", "downloads", "getJobsAndStatuses"]],
+  queryMatcher: ({ input }, scope) =>
+    widgetQueryInputMatches(input, {
+      integrationIds: scope.integrationIds,
+      limitPerIntegration: scope.options.limitPerIntegration,
+    }),
   refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
         columns: factory.multiSelect({
           defaultValue: ["name", "progress", "downSpeed", "time", "state"],
-          options: columnsList.map((value) => ({
+          options: DOWNLOAD_COLUMN_ACCESSORS.map((value) => ({
             value,
             label: (t) => t(`widget.downloads.items.${value}.columnTitle`),
           })),

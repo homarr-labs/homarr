@@ -4,6 +4,8 @@ description: "Allows you to view and manage your Downloads from both Torrent and
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { aria2Integration } from "@site/docs/integrations/aria2";
 import { delugeIntegration } from "@site/docs/integrations/deluge";
 import { nzbgetIntegration } from "@site/docs/integrations/nzbget";
@@ -41,12 +43,12 @@ import contextMenuImg from "./img/context-menu.png";
 - **Responsive table** — columns automatically adapt to widget width, hiding less important columns at smaller sizes
 - **Sortable columns** — click any column header to sort ascending/descending
 - **Column customization** — choose which columns to display, then hover a header to reveal its grab handle for reordering or drag its edge to resize it; layouts save automatically per widget
-- **Right-click context menu** — pause, resume, delete downloads, or copy download names directly from the context menu
+- **Right-click context menu** — copy download names, or pause, resume, and delete when your account has Interact access and the client supports those actions
 - **Row expansion** — click any row to see full details inline without opening a separate modal
-- **Hover tooltips** — hover a download name to see size, speeds, ETA, ratio, and category
+- **Hover tooltips** — hover a download name to see size, speeds, ETA, ratio, and category; open tooltips close when switching between compact and advanced mode
 - **Global stats bar** — toggle a summary bar showing queue progress, total size, speeds, ratio, and per-state counts
 - **Client filtering** — filter downloads by integration or status using the footer filter panel
-- **Global controls** — pause/resume all downloads across all clients from the footer bar
+- **Global controls** — pause/resume downloads from supported clients when your account has Interact access; read-only clients such as slskd do not expose these controls
 - **Status indicators** — color-coded badges show download state at a glance
 - **Speed overview** — total download and upload speeds displayed in the footer
 
@@ -87,13 +89,15 @@ import contextMenuImg from "./img/context-menu.png";
 
 ### Interactions
 
-- **Right-click** any download to open a context menu with pause/resume, delete, and copy actions
+- **Right-click** any download to copy its name; pause/resume and delete require Interact access and client support
 - **Click** any row to expand it and see full download details inline
 - **Hover** a download name for a quick stats tooltip
 - **Stats toggle** — show or hide the global stats bar from the footer
-- **Pause / Resume** all downloads using the footer controls
+- **Pause / Resume** downloads from supported clients using the footer controls when you have Interact access; slskd remains read-only
 - **Filter** by integration or status using the filter button in the footer
-- **Sort** by clicking column headers (with persistent sort direction)
+- **Sort** the current view by clicking column headers to switch direction
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

@@ -33,6 +33,16 @@
   overflow: hidden;
 }
 
+.grid[data-short] .statTile {
+  flex-direction: row;
+  gap: 3px;
+  padding: 3px 4px;
+}
+
+.grid[data-short] .statLabel {
+  text-align: left;
+}
+
 .statTileWarning {
   background-color: light-dark(var(--mantine-color-orange-0), var(--mantine-color-dark-5));
 }
@@ -59,6 +69,8 @@
   color: var(--mantine-primary-color-filled);
   line-height: 1.1;
   text-align: center;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .statValueWarning {

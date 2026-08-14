@@ -4,6 +4,8 @@ description: "Shows a slideshow of pictures from an Immich album or your full li
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { immichIntegration } from "../../integrations/immich";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -28,6 +30,10 @@ import screen from "./img/screen.png";
     },
   ]}
 />
+
+<WidgetInteractionGuide />
+
+Hover or focus the widget to pause its slideshow; touch devices keep the control available. A paused slideshow keeps its resume control visible. The advanced view displays the complete photo without cropping, groups previous, pause or resume, and next together, and includes every loaded photo in its thumbnail strip. If an Immich refresh fails, the last loaded album stays visible with a stale-data warning.
 
 ### Adding the widget
 

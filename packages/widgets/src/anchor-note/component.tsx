@@ -3,19 +3,24 @@
 import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
 import type { ComponentProps } from "react";
 import dynamic from "next/dynamic";
-import { Button, Center, Group, Stack, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Badge, Button, Center, Group, Stack, Text, TextInput, Tooltip } from "@mantine/core";
+import { IconEdit } from "@tabler/icons-react";
 import { Quill } from "react-quill-new";
 import type { DeltaStatic } from "react-quill-new";
 import type ReactQuillComponent from "react-quill-new";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useTimeAgo } from "@homarr/common";
 import type { AnchorNotePermission } from "@homarr/integrations";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
+import { getUsableWidgetQueryData } from "../common/query-state";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
+import actionTargetClasses from "../common/action-target.module.css";
 
 import "react-quill-new/dist/quill.snow.css";
 import "./anchor-note.css";
@@ -106,6 +111,13 @@ const stringifyDelta = (delta: unknown): string => {
   return JSON.stringify(emptyDelta());
 };
 
+export const storedContentToPlainText = (content?: string | null): string => {
+  return parseStoredContent(content)
+    .ops.map(({ insert }) => (typeof insert === "string" ? insert : ""))
+    .join("")
+    .trim();
+};
+
 const canEditPermission = (permission: AnchorNotePermission) => {
   return permission === "owner" || permission === "editor";
 };
@@ -119,7 +131,13 @@ const isForbiddenError = (error: unknown): boolean => {
   return (data as { code?: unknown }).code === "FORBIDDEN";
 };
 
-export default function AnchorNoteWidget({ options, integrationIds }: WidgetComponentProps<"anchorNote">) {
+export default function AnchorNoteWidget({
+  options,
+  integrationIds,
+  width,
+  height,
+  displayMode,
+}: WidgetComponentProps<"anchorNote">) {
   const t = useScopedI18n("widget.anchorNote");
   const noteId = options.noteId.trim();
   if (!noteId) {
@@ -134,21 +152,43 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const integrationId = integrationIds[0]!;
 
-  return <AnchorNoteWidgetContent options={options} integrationId={integrationId} noteId={noteId} />;
+  return (
+    <AnchorNoteWidgetContent
+      options={options}
+      integrationId={integrationId}
+      noteId={noteId}
+      width={width}
+      height={height}
+      isAdvanced={displayMode === "advanced"}
+    />
+  );
 }
 
 interface AnchorNoteWidgetContentProps {
   options: WidgetComponentProps<"anchorNote">["options"];
   integrationId: string;
   noteId: string;
+  width: number;
+  height: number;
+  isAdvanced: boolean;
 }
 
-const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteWidgetContentProps) => {
+const AnchorNoteWidgetContent = ({
+  options,
+  integrationId,
+  noteId,
+  width,
+  height,
+  isAdvanced,
+}: AnchorNoteWidgetContentProps) => {
   const t = useScopedI18n("widget.anchorNote");
-  const { data: note, refetch } = clientApi.widget.anchorNotes.getNote.useQuery({
+  const locale = useCurrentIntlLocale();
+  const noteQuery = clientApi.widget.anchorNotes.getNote.useQuery({
     integrationId,
     noteId,
   });
+  const note = getUsableWidgetQueryData(noteQuery);
+  const { refetch } = noteQuery;
   const { mutateAsync: updateNoteAsync, isPending: isUpdating } = clientApi.widget.anchorNotes.updateNote.useMutation();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -165,7 +205,8 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
     });
   }, [isEditing, note]);
 
-  const canEdit = canEditPermission(note?.permission ?? "viewer");
+  const hasInteractAccess = useIntegrationsWithInteractAccess().some(({ id }) => id === integrationId);
+  const canEdit = canEditPermission(note?.permission ?? "viewer") && hasInteractAccess;
   const isViewer = !note || note.permission === "viewer";
   const updatedAt = useMemo(() => (note ? new Date(note.updatedAt) : new Date()), [note]);
   const updatedAtRelative = useTimeAgo(updatedAt, 30000);
@@ -178,6 +219,7 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
 
   const editorValue = useMemo(() => parseStoredContent(draftContent), [draftContent]);
   const readOnlyValue = useMemo(() => parseStoredContent(note?.content), [note?.content]);
+  const plainText = useMemo(() => storedContentToPlainText(note?.content), [note?.content]);
   const handleEditorChange = useCallback<ReactQuillOnChange>(
     (_html, _delta, source, editor) => {
       if (!isEditing || source !== "user") return;
@@ -260,15 +302,15 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
   if (!note) return <WidgetEmptyState />;
 
   return (
-    <Stack h="100%" gap="xs" p="sm">
+    <Stack className="homarr-anchor-note" h="100%" gap="xs" p={height < 120 ? "xs" : "sm"}>
       <Group justify="space-between" align="flex-start">
         <Stack gap={2} style={{ flex: 1 }}>
           {isEditing ? (
             <TextInput value={draftTitle} onChange={(event) => setDraftTitle(event.currentTarget.value)} size="sm" />
           ) : (
-            options.showTitle && <Text fw={600}>{note.title || t("untitled")}</Text>
+            (isAdvanced || options.showTitle) && <Text fw={600}>{note.title || t("untitled")}</Text>
           )}
-          {!isEditing && options.showUpdatedAt && (
+          {!isEditing && (isAdvanced || options.showUpdatedAt) && (
             <Text size="xs" c="dimmed">
               {t("updatedAt", { date: updatedAtRelative })}
             </Text>
@@ -278,40 +320,88 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
               {t("readOnlyViewer")}
             </Text>
           )}
+          {!isEditing && isAdvanced && (
+            <Group gap={4}>
+              <Badge size="xs" variant="light">
+                {t(`permission.${note.permission}`)}
+              </Badge>
+              {note.isPinned && <Badge size="xs">{t("status.pinned")}</Badge>}
+              {note.isArchived && (
+                <Badge size="xs" color="gray">
+                  {t("status.archived")}
+                </Badge>
+              )}
+              <Text size="xs" c="dimmed">
+                {t("createdAt", { date: new Date(note.createdAt).toLocaleDateString(locale) })}
+              </Text>
+            </Group>
+          )}
           {saveError && (
             <Text size="xs" c="red">
               {saveError}
             </Text>
           )}
         </Stack>
-        <Group gap="xs">
-          {isEditing ? (
-            <>
-              <Button size="xs" onClick={handleSave} loading={isUpdating} disabled={!hasChanges || !canEdit}>
-                {t("save")}
-              </Button>
-              <Button size="xs" variant="subtle" onClick={handleCancel} disabled={isUpdating}>
-                {t("cancel")}
-              </Button>
-            </>
-          ) : (
-            <Button size="xs" variant="light" onClick={handleEdit} disabled={!canEdit || isUpdating}>
-              {t("edit")}
-            </Button>
+        <Group gap="xs" wrap="nowrap">
+          <WidgetQueryErrorIndicator error={noteQuery.error} label={t("name")} />
+          {(isEditing || canEdit) && (
+            <Group className="homarr-anchor-actions" data-visible={isEditing || isAdvanced || undefined} gap="xs">
+              {isEditing ? (
+                <>
+                  <Button size="xs" onClick={handleSave} loading={isUpdating} disabled={!hasChanges || !canEdit}>
+                    {t("save")}
+                  </Button>
+                  <Button size="xs" variant="subtle" onClick={handleCancel} disabled={isUpdating}>
+                    {t("cancel")}
+                  </Button>
+                </>
+              ) : isAdvanced ? (
+                <Button size="xs" variant="light" onClick={handleEdit} disabled={isUpdating}>
+                  {t("edit")}
+                </Button>
+              ) : (
+                <Tooltip label={t("edit")}>
+                  <ActionIcon
+                    className={actionTargetClasses.root}
+                    aria-label={t("edit")}
+                    size="md"
+                    variant="light"
+                    onClick={handleEdit}
+                    disabled={isUpdating}
+                  >
+                    <IconEdit size={16} />
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </Group>
           )}
         </Group>
       </Group>
-      <div className={`homarr-anchor-quill${isEditing ? "" : " homarr-anchor-quill--readonly"}`} style={{ flex: 1 }}>
-        <ReactQuill
-          theme="snow"
-          readOnly={!isEditing}
-          value={isEditing ? editorValue : readOnlyValue}
-          onChange={handleEditorChange}
-          modules={isEditing ? quillModules : readOnlyModules}
-          formats={quillFormats}
-          placeholder={t("emptyContent")}
-        />
-      </div>
+      {isEditing || isAdvanced ? (
+        <div
+          className={`homarr-anchor-quill${isEditing ? "" : " homarr-anchor-quill--readonly"}`}
+          style={{ flex: 1, minHeight: 0 }}
+        >
+          <ReactQuill
+            theme="snow"
+            readOnly={!isEditing}
+            value={isEditing ? editorValue : readOnlyValue}
+            onChange={handleEditorChange}
+            modules={isEditing ? quillModules : readOnlyModules}
+            formats={quillFormats}
+            placeholder={t("emptyContent")}
+          />
+        </div>
+      ) : (
+        <Text
+          size={width < 180 || height < 100 ? "xs" : "sm"}
+          c={plainText ? undefined : "dimmed"}
+          style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
+          lineClamp={Math.max(2, Math.floor((height - 70) / 18))}
+        >
+          {plainText || t("emptyContent")}
+        </Text>
+      )}
     </Stack>
   );
 };

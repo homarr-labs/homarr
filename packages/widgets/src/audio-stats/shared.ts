@@ -133,13 +133,14 @@ export const getVisibleStats = (
   backend: AudioStatsBackend,
   options: AudioStatsDisplayOptions,
   stats: NavidromeDashboardData | AudiobookshelfDashboardData,
+  showAll = false,
 ): VisibleStat[] => {
   const visibilityOptions = statVisibilityOptionsByBackend[backend];
   const statIcons = statIconsByBackend[backend];
   const statValues = statValueGetterByBackend[backend](stats);
 
   return Object.entries(visibilityOptions)
-    .filter(([optionKey]) => Boolean(options[optionKey as keyof typeof visibilityOptions]))
+    .filter(([optionKey]) => showAll || Boolean(options[optionKey as keyof typeof visibilityOptions]))
     .map(([optionKey, statKey]) => ({
       optionKey,
       statKey,
@@ -153,6 +154,23 @@ export const getGridCols = (width: number, visibleCount: number, compact: boolea
   const match = colsTable.find(({ minWidth }) => width >= minWidth);
   const maxCols = match?.cols ?? 1;
   return Math.min(maxCols, Math.max(visibleCount, 1));
+};
+
+export const getVisibleStatLimit = (width: number, height: number, visibleCount: number, compact: boolean): number => {
+  if (!compact) return visibleCount;
+
+  const columns = getGridCols(width, visibleCount, true);
+  const rows = Math.max(1, Math.floor(Math.max(0, height - 8) / 44));
+  return Math.min(visibleCount, columns * rows);
+};
+
+export const prioritizeVisibleStats = (stats: VisibleStat[], compact: boolean): VisibleStat[] => {
+  if (!compact) return stats;
+  return stats.toSorted(
+    (left, right) =>
+      Number(right.statKey === "activeSessions" && Number(right.value) > 0) -
+      Number(left.statKey === "activeSessions" && Number(left.value) > 0),
+  );
 };
 
 const fallbackIconSize = { true: 14, false: 16 } as const;

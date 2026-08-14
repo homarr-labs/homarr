@@ -2,14 +2,25 @@ import { Avatar, Badge, Group, Paper, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import type { TracearrViolation } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
-export function ViolationsList({ violations }: { violations: TracearrViolation[] }) {
+import type { SourcedTracearrItem } from "./source";
+
+type SourcedTracearrViolation = SourcedTracearrItem<TracearrViolation>;
+
+export function ViolationsList({
+  violations,
+  showSource,
+}: {
+  violations: SourcedTracearrViolation[];
+  showSource: boolean;
+}) {
   const t = useScopedI18n("widget.tracearr");
+  const locale = useCurrentIntlLocale();
 
   return (
     <Stack gap={4}>
-      <Text size="xs" fw={600} c="dimmed" tt="uppercase">
+      <Text size="xs" fw={600} c="dimmed">
         {t("violations.title")}
       </Text>
       {violations.length === 0 ? (
@@ -19,7 +30,7 @@ export function ViolationsList({ violations }: { violations: TracearrViolation[]
       ) : (
         <Stack gap="xs">
           {violations.map((violation) => (
-            <Paper key={violation.id} p="xs" radius="lg">
+            <Paper key={violation.key} p="xs" radius="lg">
               <Group justify="space-between" wrap="nowrap">
                 <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
                   <IconAlertTriangle
@@ -39,6 +50,7 @@ export function ViolationsList({ violations }: { violations: TracearrViolation[]
                     </Text>
                     <Text size="xs" c="dimmed" lineClamp={1}>
                       {t("violations.rule")}: {violation.rule.name}
+                      {showSource ? ` · ${violation.integrationName}` : ""}
                     </Text>
                   </Stack>
                 </Group>
@@ -53,7 +65,7 @@ export function ViolationsList({ violations }: { violations: TracearrViolation[]
                     {violation.severity}
                   </Badge>
                   <Text size="xs" c="dimmed" lineClamp={1}>
-                    {new Date(violation.createdAt).toLocaleDateString()}
+                    {new Date(violation.createdAt).toLocaleDateString(locale)}
                   </Text>
                 </Stack>
               </Group>

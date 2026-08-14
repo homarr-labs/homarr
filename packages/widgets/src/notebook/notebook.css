@@ -70,3 +70,31 @@
 .ProseMirror {
   height: 100%;
 }
+
+.homarr-notebook-action {
+  opacity: 0;
+  transform: translateX(2px);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.homarr-notebook:hover .homarr-notebook-action,
+.homarr-notebook:focus-within .homarr-notebook-action,
+.homarr-notebook-action[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (any-pointer: coarse) {
+  .homarr-notebook-action {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homarr-notebook-action {
+    transition: none;
+  }
+}

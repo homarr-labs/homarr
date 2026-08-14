@@ -20,25 +20,16 @@ import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
-import { getGridCols, shouldShowComplianceHeroText } from "./layout-utils";
+import { getGridCols, getVisiblePatchMonStatKeys, shouldShowComplianceHeroText } from "./layout-utils";
 import { OsDistributionSection } from "./os-distribution-section";
 import type { PatchMonStatKey } from "./stat-colors";
 import { resolveStatColor, severityToIconColor, severityToMantineBgColor, severityToMantineColor } from "./stat-colors";
 
 dayjs.extend(relativeTime);
-
-const statVisibilityByOption = {
-  showTotalHosts: "totalHosts",
-  showHostsNeedingUpdates: "hostsNeedingUpdates",
-  showSecurityUpdates: "securityUpdates",
-  showUpToDateHosts: "upToDateHosts",
-  showHostsWithSecurityUpdates: "hostsWithSecurityUpdates",
-  showRecentUpdates24h: "recentUpdates24h",
-  showTotalOutdatedPackages: "totalOutdatedPackages",
-  showTotalRepos: "totalRepos",
-} as const;
 
 const statIcons: Record<PatchMonStatKey, TablerIcon> = {
   totalHosts: IconServer,
@@ -75,11 +66,19 @@ const getLayoutMode = (width: number, height: number): LayoutMode => {
   return "comfortable";
 };
 
-export default function PatchMonWidget({ integrationIds, options, width, height }: WidgetComponentProps<"patchmon">) {
+export default function PatchMonWidget({
+  integrationIds,
+  options,
+  width,
+  height,
+  displayMode,
+}: WidgetComponentProps<"patchmon">) {
   const t = useScopedI18n("widget.patchmon");
   const integrationId = integrationIds[0] ?? "";
-  const { data: stats } = clientApi.widget.patchmon.getStats.useQuery({ integrationId }, { staleTime: 60 * 1000 });
+  const statsQuery = clientApi.widget.patchmon.getStats.useQuery({ integrationId }, { staleTime: 60 * 1000 });
+  const stats = getUsableWidgetQueryData(statsQuery);
 
+  if (isInitialWidgetQueryPending(statsQuery)) return <WidgetQueryLoadingState />;
   if (!stats) return <WidgetEmptyState />;
 
   const statValues: Record<PatchMonStatKey, number> = {
@@ -93,24 +92,24 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
     totalRepos: stats.totalRepos,
   };
 
-  const visibleStatKeys = Object.entries(statVisibilityByOption)
-    .filter(([optionKey]) => options[optionKey as keyof typeof options])
-    .map(([, statKey]) => statKey);
+  const isAdvanced = displayMode === "advanced";
+  const visibleStatKeys = getVisiblePatchMonStatKeys(options, isAdvanced);
 
   const colorContext = { totalHosts: stats.totalHosts };
-  const layout = getLayoutMode(width, height);
+  const layout = isAdvanced ? "spacious" : getLayoutMode(width, height);
   const isLandscape = width / height > 2.5;
   const isTinySquare = width < 160 && height < 160;
   const isShortLandscape = width >= 160 && height < 160;
-  const isCompactSurface = isTinySquare || isShortLandscape;
+  const isCompactSurface = !isAdvanced && (isTinySquare || isShortLandscape);
   const isNarrow = width < 180;
   const osDisplayMode = options.osDisplayMode as "bars" | "donut";
-  const showOsData = options.showOsDistribution && stats.osDistribution.length > 0;
+  const showOsData = (isAdvanced || options.showOsDistribution) && stats.osDistribution.length > 0;
 
-  const showIcons = layout !== "mini";
-  const showLabels = layout !== "mini";
-  const showHero = options.showComplianceHero && (!isLandscape || isCompactSurface) && width >= 90 && height >= 90;
-  const showHeroText = showHero && shouldShowComplianceHeroText(width);
+  const showIcons = isAdvanced || layout !== "mini";
+  const showLabels = isAdvanced || layout !== "mini";
+  const showHero =
+    isAdvanced || (options.showComplianceHero && (!isLandscape || isCompactSurface) && width >= 90 && height >= 90);
+  const showHeroText = showHero && (isAdvanced || shouldShowComplianceHeroText(width));
   const showHeroRingOnly = showHero && !showHeroText;
   const compactPrimaryContent = isCompactSurface
     ? getCompactPrimaryContent({
@@ -120,16 +119,18 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
       })
     : null;
   const showStats = visibleStatKeys.length > 0 && !isCompactSurface;
-  const showOsSection = showOsData && !isCompactSurface && height > 200;
+  const showOsSection = showOsData && !isCompactSurface && (isAdvanced || height > 200);
   const showCompactFooter = isCompactSurface && height >= 110;
-  const showFooter = isCompactSurface ? showCompactFooter : !isLandscape && height > 220;
-  const showOsLegend = osDisplayMode === "donut" && width >= 380 && height >= 300;
+  const showFooter = isAdvanced || (isCompactSurface ? showCompactFooter : !isLandscape && height > 220);
+  const showOsLegend = osDisplayMode === "donut" && (isAdvanced || (width >= 380 && height >= 300));
 
   const hasContent = compactPrimaryContent !== null || showStats || showOsSection || showHero;
 
-  const gridCols = isLandscape
-    ? Math.min(visibleStatKeys.length, 4)
-    : Math.min(getGridCols(width), visibleStatKeys.length || 1);
+  const gridCols = isAdvanced
+    ? Math.min(visibleStatKeys.length, width >= 500 ? 4 : width >= 220 ? 2 : 1)
+    : isLandscape
+      ? Math.min(visibleStatKeys.length, 4)
+      : Math.min(getGridCols(width), visibleStatKeys.length || 1);
   const iconSize = getIconSize(width);
   const ringSize = getRingSize(width, height, showHeroRingOnly);
 
@@ -262,8 +263,8 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
     <div className={`${classes.osSectionWrapper} ${visibleStatKeys.length > 0 ? classes.osSectionWithStats : ""}`}>
       <OsDistributionSection
         entries={stats.osDistribution}
-        limit={Number(options.osDistributionLimit)}
-        showOsVersion={options.showOsVersion}
+        limit={isAdvanced ? 0 : Number(options.osDistributionLimit)}
+        showOsVersion={isAdvanced || options.showOsVersion}
         displayMode={osDisplayMode}
         width={width}
         height={height}
@@ -272,10 +273,13 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
     </div>
   );
 
-  const needsScroll = layout === "mini" || layout === "compact";
+  const needsScroll = isAdvanced || layout === "mini" || layout === "compact";
 
   return (
     <div className={classes.root}>
+      <div className={classes.queryIndicator}>
+        <WidgetQueryErrorIndicator error={statsQuery.error} label={t("name")} />
+      </div>
       {showHero && (
         <ComplianceHero
           compliancePercent={compliancePercent}
@@ -292,7 +296,7 @@ export default function PatchMonWidget({ integrationIds, options, width, height 
       {(statGridContent || osContent) &&
         (needsScroll ? (
           <ScrollArea style={{ flex: 1, minHeight: 0 }} scrollbars="y">
-            <div className={classes.content}>
+            <div className={`${classes.content} ${isAdvanced ? classes.advancedContent : ""}`}>
               {statGridContent}
               {osContent}
             </div>

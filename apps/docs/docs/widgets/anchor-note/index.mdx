@@ -4,6 +4,8 @@ description: "Display and edit a selected note from Anchor"
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -14,6 +16,8 @@ import { anchorIntegration } from "@site/docs/integrations/anchor";
 <WidgetHeader widget={anchorNoteWidget} categories={["Notes"]} />
 
 The Anchor Note widget shows a selected note from your Anchor integration. If your note permissions allow it, you can also edit the note title and content directly in Homarr.
+
+Advanced view always shows the note title and update time alongside the complete formatted document, permission, creation date, and pinned or archived state. Compact title and update-time switches do not hide that information in advanced view.
 
 ### Screenshots
 
@@ -33,9 +37,11 @@ import anchorNoteWidgetScreenshot from "./img/widget.png";
 
 ### Interactions
 
-- Click **Edit** to start editing the selected note.
+- Hover the widget, focus within it, or use a touch device to reveal **Edit**, then select it to start editing the note.
 - Click **Save** to persist changes to Anchor.
 - Click **Cancel** to discard unsaved changes.
+
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

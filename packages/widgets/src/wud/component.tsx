@@ -11,36 +11,49 @@ import type { WudContainerUpdate } from "@homarr/integrations";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
-export default function WudWidget({ integrationIds, options, width }: WidgetComponentProps<"wud">) {
+export default function WudWidget({ integrationIds, options, width, displayMode }: WidgetComponentProps<"wud">) {
   const integrationId = integrationIds[0];
   if (!integrationId) return null;
-  return <WudWidgetContent integrationId={integrationId} options={options} width={width} />;
+  return (
+    <WudWidgetContent
+      integrationId={integrationId}
+      options={options}
+      width={width}
+      isAdvanced={displayMode === "advanced"}
+    />
+  );
 }
 
 const WudWidgetContent = ({
   integrationId,
   options,
   width,
+  isAdvanced,
 }: {
   integrationId: string;
   options: WidgetComponentProps<"wud">["options"];
   width: number;
+  isAdvanced: boolean;
 }) => {
   const t = useScopedI18n("widget.wud");
-  const [data] = clientApi.widget.wud.getStats.useSuspenseQuery({ integrationId });
+  const [data, statsQuery] = clientApi.widget.wud.getStats.useSuspenseQuery({ integrationId });
   const board = useRequiredBoard();
 
-  const isTiny = width < 256;
+  const isTiny = !isAdvanced && width < 256;
   const stats = data.stats;
 
   if (stats.totalContainers === 0) return <WidgetEmptyState />;
 
   const updatePercentage = Math.round((stats.updatesAvailable / stats.totalContainers) * 100);
   const badgeColor = stats.updatesAvailable === 0 ? "green" : progressColor(updatePercentage);
-  const showUpdateList = options.showUpdateList && stats.updates.length > 0;
+  const showTitle = isAdvanced || options.showTitle;
+  const showRing = isAdvanced || options.showRing;
+  const showUpdateList = (isAdvanced || options.showUpdateList) && stats.updates.length > 0;
 
   const ring = (
     <RingProgress
@@ -73,7 +86,7 @@ const WudWidgetContent = ({
     </Stack>
   );
 
-  const tinyContent = options.showRing ? (
+  const tinyContent = showRing ? (
     <Tooltip
       label={
         <Stack gap={2}>
@@ -102,7 +115,12 @@ const WudWidgetContent = ({
 
   return (
     <Stack p="xs" gap="xs" h="100%">
-      {options.showTitle && !isTiny && (
+      {Boolean(statsQuery.error) && (
+        <Group justify="flex-end">
+          <WidgetQueryErrorIndicator error={statsQuery.error} label={t("name")} />
+        </Group>
+      )}
+      {showTitle && !isTiny && (
         <Group gap="xs" wrap="nowrap" justify="space-between" miw={0}>
           <Group gap="xs" wrap="nowrap" miw={0}>
             <Avatar size={20} radius="sm" src={getIconUrl("wud")} />
@@ -122,12 +140,12 @@ const WudWidgetContent = ({
         tinyContent
       ) : options.layout === "horizontal" ? (
         <Group justify="center" wrap="nowrap" gap="md">
-          {options.showRing && ring}
+          {showRing && ring}
           {summary}
         </Group>
       ) : (
         <Stack align="center" gap="xs">
-          {options.showRing && ring}
+          {showRing && ring}
           {summary}
         </Stack>
       )}
@@ -181,6 +199,7 @@ const UpdateCard = ({
   className: string | undefined;
 }) => {
   const t = useScopedI18n("widget.wud");
+  const href = getSafeApplicationUrl(update.link);
   const isDigestUpdate = isDigestVersion(update.newVersion);
   const fullVersionText = buildVersionText(update.currentVersion, update.newVersion);
   const versionText = isDigestUpdate
@@ -201,12 +220,12 @@ const UpdateCard = ({
               </Badge>
             </Tooltip>
           )}
-          {update.link && (
+          {href && (
             <ActionIcon
               component="a"
-              href={update.link}
+              href={href}
               target="_blank"
-              rel="noreferrer noopener"
+              rel={SAFE_NEW_TAB_REL}
               variant="subtle"
               color="gray"
               size="sm"

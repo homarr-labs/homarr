@@ -1,7 +1,7 @@
 "use client";
 
 import type { MouseEvent as ReactMouseEvent } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import {
   ActionIcon,
   Box,
@@ -13,7 +13,9 @@ import {
   Popover,
   ScrollArea,
   Stack,
+  Text,
   TextInput,
+  Tooltip,
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
@@ -51,7 +53,6 @@ import { Table } from "@tiptap/extension-table";
 import { TableCell } from "@tiptap/extension-table-cell";
 import { TableHeader } from "@tiptap/extension-table-header";
 import { TableRow } from "@tiptap/extension-table-row";
-import { TaskItem } from "@tiptap/extension-task-item";
 import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
@@ -59,7 +60,6 @@ import type { Editor } from "@tiptap/react";
 import { useEditor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import { StarterKit } from "@tiptap/starter-kit";
-import type { Node } from "prosemirror-model";
 
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
@@ -68,6 +68,9 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
+import actionTargetClasses from "../common/action-target.module.css";
+import { createReadOnlyTaskItemTransaction, ReadOnlyTaskItem } from "./read-only-task-item";
+import { getNotebookDisplay } from "./display";
 import { NotebookTextDirection, setTextDirection } from "./text-direction";
 
 import "@mantine/tiptap/styles.css";
@@ -89,9 +92,18 @@ const controlIconProps = {
   stroke: 1.5,
 };
 
-export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: WidgetComponentProps<"notebook">) {
+export function Notebook({
+  options,
+  setOptions,
+  isEditMode,
+  boardId,
+  itemId,
+  height,
+  displayMode = "compact",
+}: WidgetComponentProps<"notebook">) {
   const [content, setContent] = useState(options.content);
-  const previousContentRef = useRef(content);
+  const previousContentRef = useRef(options.content);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const board = useRequiredBoard();
   const { data: session } = useSession();
@@ -99,14 +111,52 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
 
   const canChange = !isEditMode && hasChangeAccess;
   const [isEditing, setIsEditing] = useState(false);
+  const canChangeRef = useRef(canChange);
+  const allowReadOnlyCheckRef = useRef(options.allowReadOnlyCheck);
+  const savingRef = useRef(false);
+  const readOnlyCheckEventName = `homarr:notebook-read-only-check:${useId()}`;
+
+  useEffect(() => {
+    allowReadOnlyCheckRef.current = options.allowReadOnlyCheck;
+  }, [options.allowReadOnlyCheck]);
 
   const { primaryColor } = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
 
-  const { mutateAsync } = clientApi.widget.notebook.updateContent.useMutation();
+  const { mutateAsync, isPending: isSaving } = clientApi.widget.notebook.updateContent.useMutation({
+    scope: { id: `notebook-content:${boardId ?? "preview"}:${itemId ?? "preview"}` },
+  });
+
+  useEffect(() => {
+    canChangeRef.current = canChange && !isSaving;
+  }, [canChange, isSaving]);
 
   const tControls = useScopedI18n("widget.notebook.controls");
   const t = useI18n();
+
+  const handleContentUpdate = useCallback(
+    async (contentUpdate: string) => {
+      savingRef.current = true;
+      canChangeRef.current = false;
+      setSaveError(null);
+
+      try {
+        if (boardId && itemId) {
+          await mutateAsync({ boardId, itemId, content: contentUpdate });
+        }
+        previousContentRef.current = contentUpdate;
+        setOptions({ newOptions: { content: contentUpdate } });
+        return true;
+      } catch {
+        setSaveError(t("widget.notebook.saveFailed"));
+        return false;
+      } finally {
+        savingRef.current = false;
+        canChangeRef.current = canChange;
+      }
+    },
+    [boardId, canChange, itemId, mutateAsync, setOptions, t],
+  );
 
   const editor = useEditor(
     {
@@ -159,17 +209,20 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
         }),
         TableHeader,
         TableRow,
-        TaskItem.configure({
+        ReadOnlyTaskItem.configure({
           nested: true,
-          onReadOnlyChecked: (node, checked) => {
-            if (!options.allowReadOnlyCheck) return false;
-            if (!canChange) return false;
-
-            const event = new CustomEvent("onReadOnlyCheck", {
-              detail: { node, checked },
+          onReadOnlyChecked: () => {
+            if (!allowReadOnlyCheckRef.current) return false;
+            if (!canChangeRef.current) return false;
+            return true;
+          },
+          onReadOnlyCheckedAtPosition: (position, checked) => {
+            if (!allowReadOnlyCheckRef.current) return;
+            if (!canChangeRef.current) return;
+            const event = new CustomEvent(readOnlyCheckEventName, {
+              detail: { position, checked },
             });
             dispatchEvent(event);
-            return true;
           },
         }),
         TaskList.configure({ itemTypeName: "taskItem" }),
@@ -184,62 +237,46 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
         setContent(editor.getHTML());
       },
       onCreate: ({ editor }) => {
-        editor.setEditable(false);
+        editor.setEditable(isEditing);
       },
     },
     [],
   );
 
-  const handleOnReadOnlyCheck = (event: CustomEventInit<{ node: Node; checked: boolean }>) => {
-    if (!options.allowReadOnlyCheck) return;
-    if (!editor) return;
+  const handleOnReadOnlyCheck = useCallback(
+    (event: Event) => {
+      if (!allowReadOnlyCheckRef.current) return;
+      if (!editor) return;
+      const { detail } = event as CustomEvent<{ position: number; checked: boolean }>;
+      const transaction = createReadOnlyTaskItemTransaction(editor.state, detail.position, detail.checked);
+      if (!transaction) return;
 
-    editor.state.doc.descendants((subnode, pos) => {
-      if (!event.detail) return;
-      if (!subnode.eq(event.detail.node)) return;
-
-      const { tr } = editor.state;
-      tr.setNodeMarkup(pos, undefined, {
-        ...event.detail.node.attrs,
-        checked: event.detail.checked,
+      editor.view.dispatch(transaction);
+      const nextContent = editor.getHTML();
+      setContent(nextContent);
+      void handleContentUpdate(nextContent).then((wasSaved) => {
+        if (wasSaved) return;
+        setContent(previousContentRef.current);
+        editor.commands.setContent(previousContentRef.current);
       });
-      editor.view.dispatch(tr);
-      setContent(editor.getHTML());
-      handleContentUpdate(editor.getHTML());
-    });
-  };
-
-  addEventListener("onReadOnlyCheck", handleOnReadOnlyCheck);
-
-  const handleContentUpdate = useCallback(
-    (contentUpdate: string) => {
-      previousContentRef.current = contentUpdate;
-      setOptions({ newOptions: { content: contentUpdate } });
-
-      // This is not available in preview mode
-      if (boardId && itemId) {
-        void mutateAsync({ boardId, itemId, content: contentUpdate });
-      }
     },
-    [boardId, itemId, mutateAsync, setOptions],
+    [editor, handleContentUpdate],
   );
 
-  const handleEditToggleCallback = useCallback(
-    (previous: boolean) => {
-      const current = !previous;
-      if (!editor) return current;
-      editor.setEditable(current);
+  useEffect(() => {
+    addEventListener(readOnlyCheckEventName, handleOnReadOnlyCheck);
+    return () => removeEventListener(readOnlyCheckEventName, handleOnReadOnlyCheck);
+  }, [handleOnReadOnlyCheck, readOnlyCheckEventName]);
 
-      if (previous) {
-        handleContentUpdate(content);
-      }
-
-      return current;
-    },
-    [content, editor, handleContentUpdate],
-  );
+  useEffect(() => {
+    if (isEditing || !editor || options.content === previousContentRef.current) return;
+    previousContentRef.current = options.content;
+    setContent(options.content);
+    editor.commands.setContent(options.content);
+  }, [editor, isEditing, options.content]);
 
   const handleEditCancelCallback = useCallback(() => {
+    if (savingRef.current) return true;
     if (!editor) return false;
     editor.setEditable(false);
 
@@ -251,6 +288,7 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
 
   const { openConfirmModal } = useConfirmModal();
   const handleEditCancel = useCallback(() => {
+    if (savingRef.current) return;
     openConfirmModal({
       title: t("widget.notebook.dismiss.title"),
       children: t("widget.notebook.dismiss.message"),
@@ -264,30 +302,62 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
     });
   }, [setIsEditing, handleEditCancelCallback, openConfirmModal, t]);
 
-  const handleEditToggle = useCallback(() => {
-    setIsEditing(handleEditToggleCallback);
-  }, [setIsEditing, handleEditToggleCallback]);
+  const handleEditToggle = useCallback(async () => {
+    if (!editor || savingRef.current) return;
+    if (!isEditing) {
+      setSaveError(null);
+      editor.setEditable(true);
+      setIsEditing(true);
+      return;
+    }
+
+    editor.setEditable(false);
+    const wasSaved = await handleContentUpdate(content);
+    if (!wasSaved) {
+      editor.setEditable(true);
+      return;
+    }
+    editor.setEditable(false);
+    setIsEditing(false);
+  }, [content, editor, handleContentUpdate, isEditing]);
 
   const handleDoubleClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement>) => {
-      if (!canChange || isEditing) return;
+      if (!canChange || isEditing || savingRef.current) return;
       // Ignore double-clicks bubbling up from interactive controls (e.g. the
       // edit/save ActionIcon), which would otherwise toggle edit mode twice.
       if (event.target instanceof Element && event.target.closest("button, a")) {
         return;
       }
-      setIsEditing(handleEditToggleCallback);
+      setSaveError(null);
+      editor?.setEditable(true);
+      setIsEditing(true);
     },
-    [canChange, isEditing, setIsEditing, handleEditToggleCallback],
+    [canChange, editor, isEditing],
   );
 
+  const documentText = editor?.getText().trim() ?? "";
+  const documentStats = {
+    characters: documentText.length,
+    words: documentText.length === 0 ? 0 : documentText.split(/\s+/).length,
+  };
+  const display = getNotebookDisplay({
+    height,
+    isAdvanced: displayMode === "advanced",
+    isEditing,
+    isSaving,
+    showToolbar: options.showToolbar,
+  });
+
   return (
-    <Box h="100%" onDoubleClick={handleDoubleClick}>
+    <Box className="homarr-notebook" h="100%" onDoubleClick={handleDoubleClick}>
       <RichTextEditor
         p={0}
         mt={0}
         h="100%"
-        onKeyDown={isEditing ? getHotkeyHandler([[hotkeys.saveNotebook, handleEditToggle]]) : undefined}
+        onKeyDown={
+          isEditing && !isSaving ? getHotkeyHandler([[hotkeys.saveNotebook, () => void handleEditToggle()]]) : undefined
+        }
         editor={editor}
         styles={(theme) => ({
           root: {
@@ -304,7 +374,7 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
           },
           content: {
             backgroundColor: "transparent",
-            padding: "0.5rem",
+            padding: height < 120 ? "0.25rem" : "0.5rem",
             height: "100%",
           },
           typographyStylesProvider: {
@@ -314,7 +384,9 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
       >
         <RichTextEditor.Toolbar
           style={{
-            display: isEditing && options.showToolbar === true ? "flex" : "none",
+            display: display.showToolbar ? "flex" : "none",
+            maxHeight: display.toolbarMaxHeight,
+            overflowY: display.toolbarMaxHeight === undefined ? undefined : "auto",
           }}
         >
           <RichTextEditor.ControlsGroup>
@@ -415,7 +487,7 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
             <RichTextEditor.Redo />
           </RichTextEditor.ControlsGroup>
         </RichTextEditor.Toolbar>
-        {editor && (
+        {editor && isEditing && !isSaving && (
           <BubbleMenu editor={editor}>
             <RichTextEditor.ControlsGroup>
               <RichTextEditor.Bold title={tControls("bold")} />
@@ -442,41 +514,61 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
           <RichTextEditor.Content />
         </ScrollArea>
       </RichTextEditor>
+      {(saveError || display.showDocumentStats) && (
+        <Group pos="absolute" bottom={4} right={8} gap="xs" style={{ pointerEvents: saveError ? undefined : "none" }}>
+          {saveError && (
+            <Tooltip label={saveError} multiline>
+              <Text
+                size="xs"
+                c="red"
+                lineClamp={1}
+                maw={320}
+                tabIndex={0}
+                aria-label={`${t("widget.notebook.saveFailed")}. ${saveError}`}
+              >
+                {t("widget.notebook.saveFailed")}
+              </Text>
+            </Tooltip>
+          )}
+          {display.showDocumentStats && (
+            <Text size="xs" c="dimmed">
+              {t("widget.notebook.documentStats", documentStats)}
+            </Text>
+          )}
+        </Group>
+      )}
       {canChange && (
-        <>
+        <Stack pos="absolute" top={7} right={7} gap={7} style={{ zIndex: 1 }}>
           <ActionIcon
+            className={`homarr-notebook-action ${actionTargetClasses.root}`}
+            data-visible={isEditing || undefined}
             title={isEditing ? t("common.action.save") : t("common.action.edit")}
-            style={{
-              zIndex: 1,
-            }}
-            top={7}
-            right={7}
-            pos="absolute"
+            aria-label={isEditing ? t("common.action.save") : t("common.action.edit")}
             color={primaryColor}
             variant="light"
             size={30}
-            onClick={handleEditToggle}
+            loading={isSaving}
+            disabled={isSaving}
+            onClick={() => void handleEditToggle()}
           >
             {isEditing ? <IconDeviceFloppy {...iconProps} /> : <IconEdit {...iconProps} />}
           </ActionIcon>
           {isEditing && (
             <ActionIcon
+              className={`homarr-notebook-action ${actionTargetClasses.root}`}
+              data-visible
               title={t("common.action.cancel")}
-              style={{
-                zIndex: 1,
-              }}
-              top={44}
-              right={7}
-              pos="absolute"
+              aria-label={t("common.action.cancel")}
               color={primaryColor}
               variant="light"
               size={30}
+              disabled={isSaving}
               onClick={handleEditCancel}
             >
               <IconX {...iconProps} />
             </ActionIcon>
           )}
-        </>
+        </Stack>
       )}
     </Box>
   );
@@ -654,13 +746,31 @@ const ColorControl = ({ defaultColor, getCurrent, update, icon: Icon, ariaLabel 
         <Stack gap={8}>
           <ColorPicker value={color} onChange={setColor} format="hexa" swatches={palette} swatchesPerRow={6} />
           <Group justify="right" gap={8}>
-            <ActionIcon title={t("common.action.cancel")} variant="default" onClick={close}>
+            <ActionIcon
+              className={actionTargetClasses.root}
+              title={t("common.action.cancel")}
+              aria-label={t("common.action.cancel")}
+              variant="default"
+              onClick={close}
+            >
               <IconX stroke={1.5} size="1rem" />
             </ActionIcon>
-            <ActionIcon title={t("common.action.apply")} variant="default" onClick={handleApplyColor}>
+            <ActionIcon
+              className={actionTargetClasses.root}
+              title={t("common.action.apply")}
+              aria-label={t("common.action.apply")}
+              variant="default"
+              onClick={handleApplyColor}
+            >
               <IconCheck stroke={1.5} size="1rem" />
             </ActionIcon>
-            <ActionIcon title={t("widget.notebook.popover.clearColor")} variant="default" onClick={handleClearColor}>
+            <ActionIcon
+              className={actionTargetClasses.root}
+              title={t("widget.notebook.popover.clearColor")}
+              aria-label={t("widget.notebook.popover.clearColor")}
+              variant="default"
+              onClick={handleClearColor}
+            >
               <IconCircleOff stroke={1.5} size="1rem" />
             </ActionIcon>
           </Group>
@@ -772,9 +882,18 @@ function ListIndentIncrease() {
     editor?.chain().focus().sinkListItem(itemType).run();
   }, [editor, itemType]);
 
-  editor?.on("selectionUpdate", ({ editor }) => {
-    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
-  });
+  useEffect(() => {
+    if (!editor) return;
+
+    const handleSelectionUpdate = ({ editor: updatedEditor }: { editor: Editor }) => {
+      setItemType(updatedEditor.isActive("taskItem") ? "taskItem" : "listItem");
+    };
+
+    editor.on("selectionUpdate", handleSelectionUpdate);
+    return () => {
+      editor.off("selectionUpdate", handleSelectionUpdate);
+    };
+  }, [editor]);
 
   return (
     <RichTextEditor.Control
@@ -796,9 +915,18 @@ function ListIndentDecrease() {
     editor?.chain().focus().liftListItem(itemType).run();
   }, [editor, itemType]);
 
-  editor?.on("selectionUpdate", ({ editor }) => {
-    setItemType(editor.isActive("taskItem") ? "taskItem" : "listItem");
-  });
+  useEffect(() => {
+    if (!editor) return;
+
+    const handleSelectionUpdate = ({ editor: updatedEditor }: { editor: Editor }) => {
+      setItemType(updatedEditor.isActive("taskItem") ? "taskItem" : "listItem");
+    };
+
+    editor.on("selectionUpdate", handleSelectionUpdate);
+    return () => {
+      editor.off("selectionUpdate", handleSelectionUpdate);
+    };
+  }, [editor]);
 
   return (
     <RichTextEditor.Control

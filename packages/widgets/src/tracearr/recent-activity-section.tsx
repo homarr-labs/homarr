@@ -1,14 +1,25 @@
 import { Avatar, Badge, Group, Paper, Stack, Text } from "@mantine/core";
 
 import type { TracearrHistorySession } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
-export function RecentActivityList({ sessions }: { sessions: TracearrHistorySession[] }) {
+import type { SourcedTracearrItem } from "./source";
+
+type SourcedTracearrHistorySession = SourcedTracearrItem<TracearrHistorySession>;
+
+export function RecentActivityList({
+  sessions,
+  showSource,
+}: {
+  sessions: SourcedTracearrHistorySession[];
+  showSource: boolean;
+}) {
   const t = useScopedI18n("widget.tracearr");
+  const locale = useCurrentIntlLocale();
 
   return (
     <Stack gap={4}>
-      <Text size="xs" fw={600} c="dimmed" tt="uppercase">
+      <Text size="xs" fw={600} c="dimmed">
         {t("recentActivity.title")}
       </Text>
       {sessions.length === 0 ? (
@@ -24,7 +35,7 @@ export function RecentActivityList({ sessions }: { sessions: TracearrHistorySess
                 : session.mediaTitle;
 
             return (
-              <Paper key={session.id} p="sm" radius="lg">
+              <Paper key={session.key} p="sm" radius="lg">
                 <Group justify="space-between" wrap="nowrap">
                   <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
                     <Avatar src={session.user.avatarUrl} alt={session.user.username} radius="xl" size="sm" />
@@ -34,6 +45,7 @@ export function RecentActivityList({ sessions }: { sessions: TracearrHistorySess
                       </Text>
                       <Text size="xs" c="dimmed" lineClamp={1}>
                         {session.user.username} • {session.serverName}
+                        {showSource ? ` • ${session.integrationName}` : ""}
                       </Text>
                     </Stack>
                   </Group>
@@ -42,7 +54,7 @@ export function RecentActivityList({ sessions }: { sessions: TracearrHistorySess
                       {session.watched ? t("recentActivity.watched") : t("recentActivity.partial")}
                     </Badge>
                     <Text size="xs" c="dimmed" lineClamp={1}>
-                      {new Date(session.startedAt).toLocaleDateString()}
+                      {new Date(session.startedAt).toLocaleDateString(locale)}
                     </Text>
                   </Stack>
                 </Group>

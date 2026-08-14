@@ -4,6 +4,8 @@ description: "Overview of your Coolify instance with servers, applications, and 
 hide_title: true
 ---
 
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { AddingWidget } from "@site/src/components/widgets/adding";
 import { WidgetConfig } from "@site/src/components/widgets/configuration";
@@ -24,6 +26,12 @@ The Coolify widget displays a compact overview of your Coolify instance. It can 
     },
   ]}
 />
+
+Advanced view opens the Servers, Applications, and Services sections regardless of their compact visibility switches. It identifies each Coolify integration, shows server `is_reachable` and `is_usable` values, and lists applications nested in services when the API provides them. Healthy integrations remain visible if another source fails, with the failed source identified by a warning.
+
+IP addresses remain masked in advanced view until you explicitly use the eye control. Public resource, Coolify dashboard, and log links retain the widget's safe new-tab handling.
+
+<WidgetInteractionGuide advancedView />
 
 ### Adding the widget
 

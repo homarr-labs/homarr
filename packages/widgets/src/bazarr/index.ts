@@ -4,9 +4,11 @@ import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("bazarr", {
+  supportsAdvancedFocus: true,
   icon: IconBadgeCc,
   supportedIntegrations: ["bazarr"],
   integrationsRequired: true,
+  maxIntegrations: 1,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showMissingEpisodes: factory.switch({
