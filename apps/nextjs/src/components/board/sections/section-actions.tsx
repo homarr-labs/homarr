@@ -29,7 +29,7 @@ export const useSectionActions = () => {
         sections: previous.sections.map((section) => {
           // Return same section if section is not the one we're moving
           if (section.id !== innerSectionId) return section;
-          if (section.kind !== "dynamic") return section;
+          if (section.kind !== "container") return section;
 
           const currentLayout = getCurrentLayout(previous);
 
@@ -57,7 +57,7 @@ export const useSectionActions = () => {
           sections: previous.sections.map((section) => {
             // Return section without changes when not the section we're moving
             if (section.id !== innerSectionId) return section;
-            if (section.kind !== "dynamic") return section;
+            if (section.kind !== "container") return section;
 
             const currentLayout = getCurrentLayout(previous);
 

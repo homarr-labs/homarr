@@ -2347,7 +2347,7 @@
         }
       },
       "uniqueConstraints": {},
-      "checkConstraints": {}
+      "checkConstraint": {}
     }
   },
   "views": {},

@@ -316,6 +316,13 @@
       "when": 1784305537309,
       "tag": "0044_custom_widget_v2_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "5",
+      "when": 1786212549933,
+      "tag": "0045_add_layout_gutters",
+      "breakpoints": true
     }
   ]
 }

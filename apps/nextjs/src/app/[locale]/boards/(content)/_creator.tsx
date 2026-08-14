@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import { cache } from "react";
 import { TRPCError } from "@trpc/server";
 
-// Placed here because gridstack styles are used for board content
-import "~/styles/gridstack.scss";
-
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { makeQueryClient } from "@homarr/api/shared";
 import { IntegrationProvider } from "@homarr/auth/client";
@@ -21,7 +18,7 @@ import { createMetaTitle } from "~/metadata";
 import { env } from "~/env";
 import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
-import { DynamicClientBoard } from "./_dynamic-client";
+import { ClientBoard } from "./_client";
 import { BoardContentHeaderActions } from "./_header-actions";
 
 const logger = createLogger({ module: "createBoardContentPage" });
@@ -76,7 +73,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       return (
         <HydrationBoundary state={dehydrate(queryClient)}>
           <IntegrationProvider integrations={integrations}>
-            <DynamicClientBoard />
+            <ClientBoard />
           </IntegrationProvider>
         </HydrationBoundary>
       );

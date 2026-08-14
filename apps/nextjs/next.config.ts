@@ -80,6 +80,10 @@ const nextConfig: NextConfig = {
         source: "/(.*)", // Apply CSP to all routes
         headers: [
           {
+            key: "Accept-CH",
+            value: "Sec-CH-Viewport-Width",
+          },
+          {
             key: "Content-Security-Policy",
             // worker-src / media-src with blob: is necessary for video.js, see https://github.com/homarr-labs/homarr/issues/3912 and https://stackoverflow.com/questions/65792855/problem-with-video-js-and-content-security-policy-csp
             value: `

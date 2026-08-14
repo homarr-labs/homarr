@@ -324,6 +324,8 @@ export const layouts = sqliteTable("layout", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   columnCount: int().notNull(),
+  leftGutterColumnCount: int().notNull().default(0),
+  rightGutterColumnCount: int().notNull().default(0),
   breakpoint: int().notNull().default(0),
 });
 

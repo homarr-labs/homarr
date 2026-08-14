@@ -1,5 +1,6 @@
 import type { ComponentType, MutableRefObject } from "react";
 import { Suspense, use, useRef } from "react";
+import dynamic from "next/dynamic";
 import type { CardProps } from "@mantine/core";
 import { Badge, Card, Center, Loader } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
@@ -21,18 +22,22 @@ import type { SectionItem } from "~/app/[locale]/boards/_types";
 import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
-import { BoardItemMenu } from "./item-menu";
 import { WidgetContextMenu } from "./widget-context-menu";
 import { removeWidgetDataQueries } from "./widget-query-recovery";
+
+const BoardItemMenu = dynamic(() => import("./item-menu").then((module) => module.BoardItemMenu), {
+  ssr: false,
+});
 
 interface BoardItemContentProps {
   item: SectionItem;
 }
 
-const getOverflowFromKind = (kind: SectionItem["kind"]) => {
-  if (kind === "iframe") return "hidden";
-  if (kind === "systemResources") return "visible";
-  return undefined;
+const getOverflowFromKind = (kind: SectionItem["kind"], hasCustomCssClasses: boolean) => {
+  if (kind === "systemResources") return { overflowX: "visible", overflowY: "visible" } as const;
+  if (kind === "iframe") return { overflowX: "hidden", overflowY: "hidden" } as const;
+  if (hasCustomCssClasses) return {};
+  return { overflowX: "hidden", overflowY: "auto" } as const;
 };
 
 type BoardItemCardProps = CardProps & {
@@ -47,10 +52,13 @@ const BoardItemCard = ({ item, innerRef, children, ...cardProps }: BoardItemCard
     <Card
       {...cardProps}
       ref={innerRef}
+      w="100%"
+      h="100%"
+      data-grid-item-content
       className={combineClasses(
         classes.itemCard,
         `${item.kind}-wrapper`,
-        "grid-stack-item-content",
+        "board-grid-item-content",
         item.advancedOptions.customCssClasses.join(" "),
       )}
       radius={board.itemRadius}
@@ -58,7 +66,7 @@ const BoardItemCard = ({ item, innerRef, children, ...cardProps }: BoardItemCard
         root: {
           "--opacity": board.opacity / 100,
           containerType: "size",
-          overflow: getOverflowFromKind(item.kind),
+          ...getOverflowFromKind(item.kind, item.advancedOptions.customCssClasses.length > 0),
           "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
         },
       }}
@@ -142,6 +150,7 @@ interface LoadedBoardItemContentProps extends Omit<InnerContentProps, "definitio
 
 const LoadedBoardItemContent = ({ item, innerRef, ...innerContentProps }: LoadedBoardItemContentProps) => {
   const { definition, Component } = use(loadWidgetResources(item.kind));
+  const [isEditMode] = useEditMode();
 
   return (
     <WidgetContextMenu item={item} definition={definition} widgetStateRef={innerContentProps.widgetStateRef}>
@@ -150,8 +159,14 @@ const LoadedBoardItemContent = ({ item, innerRef, ...innerContentProps }: Loaded
           resetKeys={[item.kind]}
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
-              <BoardItemMenu offset={4} item={item} definition={definition} resetErrorBoundary={resetErrorBoundary} />
-              <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
+              <BoardItemMenu item={item} definition={definition} resetErrorBoundary={resetErrorBoundary} />
+              <div
+                className={itemContentClasses.editModeInertContent}
+                data-board-grid-inert-content={isEditMode ? "true" : undefined}
+                inert={isEditMode}
+              >
+                <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
+              </div>
             </>
           )}
         >
@@ -195,13 +210,16 @@ const InnerContent = ({ item, definition, Component, ...dimensions }: InnerConte
           }}
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
-              <BoardItemMenu
-                offset={4}
-                item={newItem}
-                definition={definition}
-                resetErrorBoundary={resetErrorBoundary}
-              />
-              <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
+              {isEditMode && (
+                <BoardItemMenu item={newItem} definition={definition} resetErrorBoundary={resetErrorBoundary} />
+              )}
+              <div
+                className={itemContentClasses.editModeInertContent}
+                data-board-grid-inert-content={isEditMode ? "true" : undefined}
+                inert={isEditMode}
+              >
+                <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
+              </div>
             </>
           )}
         >
@@ -213,8 +231,13 @@ const InnerContent = ({ item, definition, Component, ...dimensions }: InnerConte
               (!("integrationsRequired" in definition) || definition.integrationsRequired !== false)
             }
           />
-          <BoardItemMenu offset={4} item={newItem} definition={definition} />
-          <div data-homarr-widget-ready={item.kind} style={{ display: "contents" }}>
+          {isEditMode && <BoardItemMenu item={newItem} definition={definition} />}
+          <div
+            className={itemContentClasses.editModeInertContent}
+            data-board-grid-inert-content={isEditMode ? "true" : undefined}
+            data-homarr-widget-ready={item.kind}
+            inert={isEditMode}
+          >
             <Component
               options={options as never}
               integrationIds={item.integrationIds}

@@ -1,0 +1,280 @@
+.board-grid-editor {
+  position: absolute;
+  inset: 0 auto auto 0;
+  overflow: visible;
+  border-radius: var(--mantine-radius-md);
+}
+
+.board-grid-entry {
+  z-index: 1;
+  overflow: visible;
+}
+
+.board-grid-entry[data-grid-preview="true"] {
+  width: var(--board-grid-preview-width) !important;
+  height: var(--board-grid-preview-height) !important;
+  translate: var(--board-grid-preview-x) var(--board-grid-preview-y);
+  will-change: translate;
+}
+
+.board-grid-entry[data-dnd-active="true"],
+.board-grid-entry[data-dnd-drag-source="true"] {
+  z-index: 1000;
+  transition: none;
+}
+
+.board-grid-entry[data-dnd-drag-source="true"] {
+  opacity: 0.42;
+}
+
+.board-grid-drag-overlay[data-dnd-dragging] {
+  position: fixed !important;
+  z-index: 10000;
+  top: var(--dnd-top, 0) !important;
+  left: var(--dnd-left, 0) !important;
+  width: var(--dnd-width, auto);
+  max-width: var(--dnd-width, auto);
+  height: var(--dnd-height, auto);
+  max-height: var(--dnd-height, auto);
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  color: inherit;
+  pointer-events: none !important;
+  background: transparent;
+  border: 0;
+  transform: var(--dnd-transform, none) !important;
+  transition: var(--dnd-transition) !important;
+  will-change: translate;
+}
+
+.board-grid-drag-overlay[data-dnd-dragging]:not([data-dnd-dropping]) {
+  translate: var(--dnd-translate) !important;
+}
+
+.board-grid-drag-overlay[data-dnd-dragging][style*="--dnd-scale"] {
+  scale: var(--dnd-scale) !important;
+  transform-origin: var(--dnd-transform-origin) !important;
+}
+
+.board-grid-drag-overlay-card {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  padding: var(--mantine-spacing-md);
+  overflow: hidden;
+  font-weight: 600;
+  color: var(--mantine-color-text);
+  text-align: center;
+  overflow-wrap: anywhere;
+  place-items: center;
+  background: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  box-shadow: var(--mantine-shadow-lg);
+  zoom: var(--board-grid-overlay-content-zoom, 1);
+}
+
+body[data-board-grid-interacting] .board-grid-entry,
+body[data-board-grid-interacting] .board-grid-placeholder {
+  transition: none;
+}
+
+.board-grid-content-mount,
+.board-grid-portal-content,
+.board-grid-portal-content > [data-editor-grid-entry] {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="true"] > .board-grid-content-mount {
+  overflow: clip;
+}
+
+.board-grid-placeholder {
+  z-index: 0;
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 16%, transparent);
+  border: 2px dashed var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  pointer-events: none;
+  transition:
+    left 100ms ease,
+    top 100ms ease,
+    width 100ms ease,
+    height 100ms ease;
+}
+
+.board-grid-placeholder[data-grid-placeholder-mode="resize"] {
+  z-index: 1001;
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 10%, transparent);
+}
+
+.board-grid-resize-outline {
+  z-index: 1002;
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 6%, transparent);
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  pointer-events: none;
+}
+
+.board-grid-editor[data-dnd-drop-target="true"] {
+  outline: 2px solid color-mix(in srgb, var(--mantine-primary-color-filled) 60%, transparent);
+  outline-offset: 4px;
+}
+
+.board-grid-editor[data-dnd-drop-target="true"][data-dnd-drop-valid="false"] {
+  outline-color: var(--mantine-color-red-filled);
+}
+
+.board-grid-resize-handle {
+  position: absolute;
+  z-index: 20;
+  display: block;
+  padding: 0;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  touch-action: none;
+}
+
+.board-grid-resize-handle[data-grid-resize-disabled="true"] {
+  pointer-events: none;
+}
+
+body[data-board-grid-interacting] .board-grid-resize-handle {
+  pointer-events: none;
+}
+
+body[data-board-grid-interacting] .board-grid-resize-handle::after {
+  opacity: 0;
+}
+
+.board-grid-entry[data-grid-item-type="section"][data-grid-section-chrome-active="true"] {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 4px;
+}
+
+.board-grid-entry[data-grid-item-type="section"][data-grid-section-chrome-active="true"]
+  > .board-grid-resize-handle:not([data-grid-resize-disabled="true"])::after {
+  opacity: 1;
+}
+
+.board-grid-resize-handle::after {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 12px;
+  height: 3px;
+  content: "";
+  background: color-mix(in srgb, var(--mantine-color-text) 70%, transparent);
+  border-radius: var(--mantine-radius-xl);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 100ms ease;
+}
+
+.board-grid-entry:hover > .board-grid-resize-handle:not([data-grid-resize-disabled="true"])::after,
+.board-grid-resize-handle:not([data-grid-resize-disabled="true"]):focus-visible::after {
+  opacity: 1;
+}
+
+.board-grid-resize-handle:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -8px;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="n"],
+.board-grid-resize-handle[data-grid-resize-handle="s"] {
+  right: 44px;
+  left: 44px;
+  height: max(32px, calc(25px * var(--board-canvas-inverse-scale, 1)));
+  cursor: ns-resize;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="n"] {
+  top: 0;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="s"] {
+  bottom: 0;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="e"],
+.board-grid-resize-handle[data-grid-resize-handle="w"] {
+  top: 44px;
+  bottom: 44px;
+  width: max(32px, calc(25px * var(--board-canvas-inverse-scale, 1)));
+  cursor: ew-resize;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="e"] {
+  right: 0;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="w"] {
+  left: 0;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="e"]::after,
+.board-grid-resize-handle[data-grid-resize-handle="w"]::after {
+  width: 3px;
+  height: 12px;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="ne"],
+.board-grid-resize-handle[data-grid-resize-handle="se"],
+.board-grid-resize-handle[data-grid-resize-handle="sw"],
+.board-grid-resize-handle[data-grid-resize-handle="nw"] {
+  z-index: 9;
+  width: max(44px, calc(25px * var(--board-canvas-inverse-scale, 1)));
+  height: max(44px, calc(25px * var(--board-canvas-inverse-scale, 1)));
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="ne"] {
+  top: 0;
+  right: 0;
+  cursor: nesw-resize;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="se"] {
+  right: 0;
+  bottom: 0;
+  cursor: nwse-resize;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="sw"] {
+  bottom: 0;
+  left: 0;
+  cursor: nesw-resize;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="nw"] {
+  top: 0;
+  left: 0;
+  cursor: nwse-resize;
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="ne"]::after,
+.board-grid-resize-handle[data-grid-resize-handle="sw"]::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.board-grid-resize-handle[data-grid-resize-handle="se"]::after,
+.board-grid-resize-handle[data-grid-resize-handle="nw"]::after {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .board-grid-resize-handle:not([data-grid-resize-disabled="true"])::after {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board-grid-entry,
+  .board-grid-placeholder,
+  .board-grid-resize-outline,
+  .board-grid-resize-handle::after {
+    transition: none;
+  }
+}

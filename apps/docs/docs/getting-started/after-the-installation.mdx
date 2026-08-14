@@ -137,7 +137,8 @@ It is important that you first migrate correctly using [the list of breaking cha
 ## Creating your first board
 
 In Homarr, you organize your apps and widgets on boards.
-Boards can be organized using the interactive drag and drop.
+Boards use fixed-size tiles so the same widget keeps the same proportions on every screen.
+Drag, resize, and section controls are available in edit mode.
 Let's create your first board by navigating here: `Manage` > `Boards` > `New board`:
 ![](./img/manage-create-board-button.png)
 
@@ -188,7 +189,7 @@ When entering the edit mode, you'll get some additional buttons to work with:
 <img src={manageBoardHeaderEditMode} alt={"Screenshot of buttons in the edit mode"} width={200} />
 
 - **Add item**: Click this button to add new elements to your page.
-- **Exit edit mode**: Click this btuton to save your changes and exit edit mode.
+- **Exit edit mode**: Click this button to save your changes and exit edit mode.
 
 To continue, click the option "New Item":
 
@@ -213,21 +214,29 @@ In the modal you can edit the app that you want to display:
 ![](./img/manage-board-choose-app.png)
 
 As soon as you save your changes, the tile on the board will refresh and display your app.
-Using the small bidirectional arrow at the bottom right you can resize the element.
-Start pressing with your mouse button down, move your mouse to resize and release your finger as soon your you're happy with the size.
+Use the resize handle at the bottom right to resize the tile.
+Press and hold the handle, move the pointer, and release it when the tile has the size you want.
 
 ![](./img/resize-item.gif)
 
-To move your item to a different position on the board, simply hold the mouse button anywhere on the item and move with the mouse to the desired position.
-As soon as you release your finger, the item will snap in place in the grid.
+To move a tile in edit mode, press and hold its content, move it to the desired position, and release it.
+Widget content is disabled while editing so its controls do not intercept the drag; use the tile's settings button for edit actions.
+The tile snaps to the grid. Equally-sized tiles swap when one is dropped into the other's slot, while other neighboring tiles move out of the way automatically.
 
 ![](./img/move-item.gif)
 
+Every `1 × 1` tile has a logical content size of `200 × 200` pixels.
+Larger tiles use multiples of that fixed unit, with a consistent gap between cells.
+Homarr scales the complete board uniformly, like zooming a page.
+The complete canvas always fits the available width without horizontal board scrolling.
+Below 100%, Homarr preserves the widget's readable typography and control density instead of shrinking each widget independently.
+It does not squeeze or reflow the content of individual widgets, so a widget keeps the same design and proportions across screen sizes.
+
 :::note
 
-You cannot move items freely on the vertical axis.
-We always align all items to the top of the page to simply organization.
-To move items to the bottom, you must add more items or resize items.
+Viewing a board initially uses the lightweight, non-interactive layout.
+For users with edit access, Homarr prepares drag-and-drop and resize controls in the background after the board becomes interactive.
+If you enter edit mode before that finishes, the existing board stays visible until the editor is ready.
 
 :::
 
@@ -238,8 +247,10 @@ This helps you to explore the capabilities of Homarr before you build your board
 
 :::
 
-Users on touch or mobile devices may not be able to drag and drop or move items.
-They can use the "Move / resize item" option in the edit menu of items instead:
+Keyboard users can focus a tile, press Enter or Space, then use arrow keys to move and Shift plus arrow keys to resize.
+Press Escape to stop.
+For precise numeric controls or touch input, choose **Move / resize item** from the tile's edit menu.
+The dialog can also move the tile to another section or fixed sidebar:
 
 ![](./img/manage-board-move-resize-item-menu.png)
 
@@ -311,43 +322,36 @@ As with every change, don't forget to save your changes using the exit edit mode
 
 ![](./img/exit-edit-mode.png)
 
-## Grouping your items
+## Organizing items with Containers
 
-As the last step, let's organize your freshly created items using two different options.
-You can choose either or both of them on your boards.
+Containers are resizable areas for apps, widgets, and nested Containers.
+The same Container works on the main canvas, inside a fixed rail, or inside another Container.
+Each Container can configure:
 
-### Using dynamic sections
+- Its label and whether that label is visible.
+- Allow or disable collapsing.
+- Show or hide **Open all in new tabs**.
+- Change its border color and custom CSS classes.
 
-Dynamic sections are a simple, resizable visual group to group items.
+Open the add-content menu and choose **New Container**.
+In edit mode, move and resize it like any other item, then drag items into or out of it.
+Nested content stays within the Container's bounds.
+While resizing, the solid outline follows the pointer continuously and the dashed grid preview shows the size that will be saved on release.
 
-![](./img/create-dynamic-section.png)
+### Collapsing and opening apps
 
-After adding a dynamic section, you can simply drag and drop items into the section:
+Users can collapse an eligible Container like an accordion in view mode without changing its saved expanded size.
+The full-width header becomes the compact expansion bar, so the half-row state has no empty pill-shaped spacer.
+Expanding it restores its bounds and makes room for its contents.
+If **Open all in new tabs** is enabled, the Container menu can open every app link it contains.
 
-![](./img/dynamic-section.gif)
+### Fixed rails
 
-### Using categories
-
-Categories are more advanced and complicated than dynamic sections.
-To create a category, open the add item modal and choose "new category":
-
-![](./img/add-category.png)
-
-Every category must have a name. After you click "Add category", you will get a new item on your board:
-
-![](./img/category.gif)
-
-You can drag and drop items in to this category in the edit mode.
-Categories will have a big space before and after them in the edit mode to
-enable you to drag and drop items outside the category.
-You can also collapse or open categories in edit mode to facilitate your editing process.
-
-:::note
-
-A current limitation of categories is, that they will always have a width of 100%.
-You cannot reduce their horizontal width.
-
-:::
+Open the board's **Layout** settings to enable the left or right rail for each responsive layout.
+Choose one, two, or three columns with the slider and use the preview to check the remaining canvas width.
+The rail reserves those columns from the dashboard, so Homarr moves canvas items into the next available positions.
+Rail content stays visible while the page scrolls and remains editable.
+Each responsive layout keeps its own rail widths, item positions, and item sizes.
 
 ## Guided tours
 

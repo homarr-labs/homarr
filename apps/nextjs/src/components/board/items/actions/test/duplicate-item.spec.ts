@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 
 import { duplicateItemCallback } from "../duplicate-item";
 import * as emptyPositionModule from "../empty-position";
@@ -7,6 +7,10 @@ import { ItemMockBuilder } from "./mocks/item-mock";
 import { LayoutMockBuilder } from "./mocks/layout-mock";
 
 describe("item actions duplicate-item", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   test("should copy it in the same section", () => {
     // Arrange
     const itemKind = "minecraftServerStatus";
@@ -58,6 +62,30 @@ describe("item actions duplicate-item", () => {
             sectionId: currentSectionId,
           }),
         ],
+      }),
+    );
+  });
+
+  test("uses the next automatic canvas row when it is the first available space", () => {
+    const board = new BoardMockBuilder().addEmptySection({ id: "canvas", yOffset: 0 }).build();
+    const layout = board.layouts[0];
+    if (!layout) throw new Error("Expected a board layout");
+    layout.id = "layout";
+    layout.columnCount = 1;
+    const currentItem = new ItemMockBuilder({ id: "source" })
+      .addLayout({ layoutId: layout.id, sectionId: "canvas", width: 1, height: 1 })
+      .build();
+    board.items.push(currentItem);
+
+    const result = duplicateItemCallback({ itemId: currentItem.id })(board);
+    const duplicated = result.items.find((item) => item.id !== currentItem.id);
+
+    expect(duplicated?.layouts[0]).toEqual(
+      expect.objectContaining({
+        layoutId: layout.id,
+        sectionId: "canvas",
+        xOffset: 0,
+        yOffset: 1,
       }),
     );
   });
