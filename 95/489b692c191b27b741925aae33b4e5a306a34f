@@ -1,0 +1,25 @@
+apps/docs/docs/workshop/operator.mdx
+  s_6e0be238e2da5e::t_807360b16fcf4c 119-120
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_6e0be238e2da5e::t_eb4e3212099c8f 28-37
+apps/docs/docs/workshop/development.mdx
+  s_6e0be238e2da5e::t_807360b16fcf4c 50-52
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_6e0be238e2da5e::t_807360b16fcf4c 112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "95489b692c191b27b741925aae33b4e5a306a34f",
+  "prompts": {},
+  "sessions": {
+    "s_6e0be238e2da5e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a001a0-6135-7812-ac65-22c3a7a0f35b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
