@@ -5418,6 +5418,7 @@
     "assistant": {
       "name": "Assistant",
       "description": "Have a complete assistant conversation directly on your board.",
+      "option": {},
       "unavailable": {
         "title": "Assistant unavailable",
         "description": "Sign in and ask an administrator to configure the Assistant from the management panel."
