@@ -1,0 +1,21 @@
+packages/widgets/src/iframe/component.tsx
+  s_a70c07ac5b7a5a::t_c7eab868c48a4b 29-31
+docs/perf/WIDGET-AUDIT.md
+  s_a70c07ac5b7a5a::t_05e147fec8b67b 58-71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "839b4721fbda018fe6238085af72521172db5d17",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
