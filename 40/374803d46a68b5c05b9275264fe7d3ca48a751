@@ -1,0 +1,31 @@
+packages/widgets/src/coolify/single-instance-layout.tsx
+  s_a70c07ac5b7a5a::t_7bdc356f089760 59-66
+packages/widgets/src/coolify/instance-card.tsx
+  s_a70c07ac5b7a5a::t_ce4ea0d89efe4e 93-102
+packages/widgets/src/health-monitoring/cluster/cluster-health.tsx
+  s_a70c07ac5b7a5a::t_7d1599005e6a05 84
+packages/widgets/src/firewall/component.tsx
+  s_a70c07ac5b7a5a::t_39663e6cdf2e8d 123
+docs/perf/WIDGET-AUDIT.md
+  s_a70c07ac5b7a5a::t_54df4735d54e30 31-57
+  s_a70c07ac5b7a5a::t_f74e0207af0c07 92-94
+  s_a70c07ac5b7a5a::t_3df59e4e98b591 79,126,128
+packages/widgets/src/common/keep-mounted.spec.ts
+  s_a70c07ac5b7a5a::t_fe3689dcea85dc 1,103-170
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "40374803d46a68b5c05b9275264fe7d3ca48a751",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
