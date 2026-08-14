@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Accordion,
   ActionIcon,
@@ -140,6 +141,7 @@ const ConfigurationSkeleton = ({ label }: { label: string }) => (
 
 export const AssistantConfiguration = () => {
   const t = useScopedI18n("management.page.settings.section.assistant");
+  const router = useRouter();
   const utils = clientApi.useUtils();
   const { data: configuration, isLoading } = clientApi.assistant.getAdminConfiguration.useQuery();
   const [provider, setProvider] = useState<AssistantProvider>("openrouter");
@@ -268,6 +270,7 @@ export const AssistantConfiguration = () => {
         utils.assistant.getAvailability.invalidate(),
         utils.assistant.getRuntimeOptions.invalidate(),
       ]);
+      router.refresh();
       showSuccessNotification({
         title: t("notification.saved.title"),
         message: t("notification.saved.message"),

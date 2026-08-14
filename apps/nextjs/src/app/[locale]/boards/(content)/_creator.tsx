@@ -44,9 +44,11 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     page: async ({ params }: { params: Promise<TParams> }) => {
       const resolvedParams = await params;
       const queryClient = getQueryClient();
-      const session = await auth();
+      const sessionPromise = auth();
+      const boardPromise = getInitialBoard(resolvedParams);
+      const session = await sessionPromise;
 
-      const board = await getInitialBoard(resolvedParams).catch((error) => {
+      const board = await boardPromise.catch((error) => {
         if (error instanceof TRPCError && error.code === "NOT_FOUND") {
           if (!session) {
             logger.debug("No home board found for anonymous user, redirecting to login");

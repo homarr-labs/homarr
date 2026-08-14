@@ -8,16 +8,9 @@ describe("assistant widget definition", () => {
     expect(supportsAdvancedFocus(definition)).toBe(false);
   });
 
-  it("follows the current conversation by default", () => {
+  it("does not persist private conversation data in board options", () => {
     const options = definition.createOptions();
 
-    expect(options.conversationMode.defaultValue).toBe("current");
-    expect(options.conversation.shouldHide?.({ conversationMode: "current", conversation: null }, [])).toBe(true);
-  });
-
-  it("reveals the conversation selector only when a conversation is pinned", () => {
-    const options = definition.createOptions();
-
-    expect(options.conversation.shouldHide?.({ conversationMode: "pinned", conversation: null }, [])).toBe(false);
+    expect(options).toEqual({});
   });
 });

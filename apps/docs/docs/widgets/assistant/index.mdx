@@ -5,7 +5,6 @@ hide_title: true
 ---
 
 import { AddingWidget } from "@site/src/components/widgets/adding";
-import { WidgetConfig } from "@site/src/components/widgets/configuration";
 import { WidgetHeader } from "@site/src/components/widgets/header";
 import { assistantWidget } from ".";
 
@@ -28,15 +27,8 @@ touch devices. When a board layout does not provide enough height for conversati
 a compact **Open assistant** action instead of squeezing an unusable composer into the card. Increase its height
 in that layout to keep the complete conversation inline.
 
-### Configuration
-
-<WidgetConfig configuration={assistantWidget.configuration} />
-
-**Current conversation** follows whichever conversation is active in the user-menu panel, `Shift + A`, or
-the command menu. This is the default and keeps every assistant entry point synchronized.
-
-**Pinned conversation** reveals a searchable conversation selector. A pinned widget never changes the
-active conversation silently: select **Open conversation** inside the widget before continuing that thread.
+The widget follows whichever conversation is active in the user-menu panel, `Shift + A`, or the command menu. This
+keeps every assistant entry point synchronized without storing a user's private conversation details in board settings.
 
 ### Conversation features
 

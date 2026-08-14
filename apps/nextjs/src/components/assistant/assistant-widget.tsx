@@ -1,10 +1,9 @@
 "use client";
 
 import type { CSSProperties, ReactNode } from "react";
-import { useCallback, useState } from "react";
+import { ActionIcon, Box, Center, Group, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
+import { IconArrowsMaximize, IconRobot } from "@tabler/icons-react";
 import { useAui, useAuiState } from "@assistant-ui/react";
-import { ActionIcon, Box, Button, Center, Group, Loader, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
-import { IconAlertTriangle, IconArrowsMaximize, IconMessage, IconRobot } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "@homarr/widgets";
@@ -30,80 +29,21 @@ export const AssistantBoardWidget = (props: WidgetComponentProps<"assistant">) =
   );
 };
 
-const EnabledAssistantBoardWidget = ({ options, width, height, isEditMode }: WidgetComponentProps<"assistant">) => {
-  const t = useI18n();
+const EnabledAssistantBoardWidget = ({ width, height, isEditMode }: WidgetComponentProps<"assistant">) => {
   const board = useRequiredBoard();
   const assistant = useHomarrAssistant();
   const preferences = useAssistantPreferences();
   const aui = useAui();
-  const currentThreadId = useAuiState((state) => state.threadListItem.remoteId);
   const messages = useAuiState((state) => state.thread.messages);
   const isLoading = useAuiState((state) => state.thread.isLoading);
   const latestAssistantMessage = messages.findLast((message) => message.role === "assistant");
   const pendingAction = getPendingAssistantAction(latestAssistantMessage);
-  const pinnedConversation = options.conversationMode === "pinned" ? options.conversation : null;
-  const pinnedConversationIsActive = pinnedConversation === null || pinnedConversation.value === currentThreadId;
-  const [switching, setSwitching] = useState(false);
-  const [switchErrorConversationId, setSwitchErrorConversationId] = useState<string | null>(null);
-  const hasSwitchError = switchErrorConversationId === pinnedConversation?.value;
-
-  const selectModel = useCallback(
-    (modelId: string) => {
-      preferences.setModelId(modelId);
-      const threadListItem = aui.threadListItem();
-      if (!threadListItem.getState().remoteId) return;
-      threadListItem.updateCustom({ ...threadListItem.getState().custom, modelId });
-    },
-    [aui, preferences],
-  );
-
-  const openPinnedConversation = async () => {
-    if (!pinnedConversation) return;
-    setSwitchErrorConversationId(null);
-    setSwitching(true);
-    try {
-      await aui.threads().switchToThread(pinnedConversation.value);
-    } catch {
-      setSwitchErrorConversationId(pinnedConversation.value);
-    } finally {
-      setSwitching(false);
-    }
+  const selectModel = (modelId: string) => {
+    preferences.setModelId(modelId);
+    const threadListItem = aui.threadListItem();
+    if (!threadListItem.getState().remoteId) return;
+    threadListItem.updateCustom({ ...threadListItem.getState().custom, modelId });
   };
-
-  if (options.conversationMode === "pinned" && pinnedConversation === null) {
-    return (
-      <AssistantWidgetState
-        icon={IconMessage}
-        title={t("widget.assistant.pinned.selectTitle")}
-        description={t("widget.assistant.pinned.selectDescription")}
-      />
-    );
-  }
-
-  if (!pinnedConversationIsActive && pinnedConversation) {
-    return (
-      <AssistantWidgetState
-        icon={hasSwitchError ? IconAlertTriangle : IconMessage}
-        color={hasSwitchError ? "red" : "gray"}
-        title={t("widget.assistant.pinned.title")}
-        description={
-          hasSwitchError
-            ? t("widget.assistant.pinned.error")
-            : t("widget.assistant.pinned.description", { conversation: pinnedConversation.label })
-        }
-      >
-        <Button
-          variant="light"
-          color={hasSwitchError ? "red" : "gray"}
-          onClick={() => void openPinnedConversation()}
-          loading={switching}
-          leftSection={switching ? <Loader type="bars" size="xs" /> : <IconMessage size={16} />}
-        >
-          {switching ? t("widget.assistant.pinned.opening") : t("widget.assistant.pinned.open")}
-        </Button>
-      </AssistantWidgetState>
-    );
-  }
 
   if (width < 300 || height < 280) {
     return <CompactAssistantWidget onOpen={assistant.open} />;

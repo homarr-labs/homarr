@@ -159,6 +159,7 @@ import { getAssistantIconSearchQuery } from "./assistant-tool-label";
 import { getAssistantProviderQuotaLevel, isAssistantProviderUnavailable } from "./assistant-provider-quota";
 import { getAssistantToolTraceTarget } from "./assistant-tool-trace";
 import { getSafeAssistantHttpUrl } from "./assistant-url";
+import { isEscapeOwnedByNestedOverlay } from "../board/advanced-focus/escape";
 
 // Shiki's web grammar bundle is intentionally loaded only when a settled response contains a code
 // block. Most assistant conversations never need it, so it should not inflate the global dashboard
@@ -407,7 +408,27 @@ type MarkdownSpanProps = ComponentPropsWithoutRef<"span"> & {
   "data-directive-type"?: string;
 };
 
-const AssistantDirectiveEntitiesContext = createContext<AssistantDirectiveEntity[]>([]);
+interface AssistantDirectiveEntitiesState {
+  entities: AssistantDirectiveEntity[];
+  isLoading: boolean;
+}
+
+const AssistantDirectiveEntitiesContext = createContext<AssistantDirectiveEntitiesState>({
+  entities: [],
+  isLoading: false,
+});
+
+const AssistantDirectiveEntitiesProvider = ({ children }: { children: ReactNode }) => {
+  const { data: entities = [], isLoading } = clientApi.assistant.getContextEntities.useQuery(undefined, {
+    staleTime: 60_000,
+  });
+
+  return (
+    <AssistantDirectiveEntitiesContext.Provider value={{ entities, isLoading }}>
+      {children}
+    </AssistantDirectiveEntitiesContext.Provider>
+  );
+};
 
 const AssistantMarkdownSpan = ({
   children,
@@ -417,7 +438,7 @@ const AssistantMarkdownSpan = ({
   "data-directive-type": directiveType,
   ...props
 }: MarkdownSpanProps) => {
-  const entities = useContext(AssistantDirectiveEntitiesContext);
+  const { entities } = useContext(AssistantDirectiveEntitiesContext);
   if (assistantDirective === "true" && directiveId && directiveLabel && directiveType) {
     const entity = resolveAssistantDirectiveEntity(entities, {
       id: directiveId,
@@ -444,26 +465,20 @@ const assistantMarkdownComponents = unstable_memoizeMarkdownComponents({
   SyntaxHighlighter: AssistantSyntaxHighlighter,
 });
 
-const AssistantTextPart = () => {
-  const { data: entities = [] } = clientApi.assistant.getContextEntities.useQuery(undefined, { staleTime: 60_000 });
-
-  return (
-    <AssistantDirectiveEntitiesContext.Provider value={entities}>
-      <MarkdownTextPrimitive
-        className={classes.messageMarkdown}
-        preprocess={normalizeAssistantMarkdown}
-        remarkPlugins={markdownRemarkPlugins}
-        components={assistantMarkdownComponents}
-        componentsByLanguage={{ mermaid: { SyntaxHighlighter: MermaidDiagram } }}
-        defer
-      />
-    </AssistantDirectiveEntitiesContext.Provider>
-  );
-};
+const AssistantTextPart = () => (
+  <MarkdownTextPrimitive
+    className={classes.messageMarkdown}
+    preprocess={normalizeAssistantMarkdown}
+    remarkPlugins={markdownRemarkPlugins}
+    components={assistantMarkdownComponents}
+    componentsByLanguage={{ mermaid: { SyntaxHighlighter: MermaidDiagram } }}
+    defer
+  />
+);
 
 const UserTextPart = () => {
   const { text } = useMessagePartText();
-  const { data: entities = [] } = clientApi.assistant.getContextEntities.useQuery(undefined, { staleTime: 60_000 });
+  const { entities } = useContext(AssistantDirectiveEntitiesContext);
   const segments = parseAssistantDirectives(text);
   return (
     <span className={classes.messageText}>
@@ -548,7 +563,7 @@ const SentAttachment = () => <Attachment />;
 const HiddenMessagePart = () => null;
 
 const ReasoningPart = (_props: ReasoningMessagePartProps) => (
-  <AssistantDirectiveEntitiesContext.Provider value={[]}>
+  <AssistantDirectiveEntitiesContext.Provider value={{ entities: [], isLoading: false }}>
     <MarkdownTextPrimitive
       className={`${classes.messageMarkdown} ${classes.reasoningText}`}
       preprocess={normalizeAssistantMarkdown}
@@ -2264,9 +2279,7 @@ const ComposerTriggers = () => {
   const aui = useAui();
   const mentionViewportRef = useRef<HTMLDivElement>(null);
   const slashViewportRef = useRef<HTMLDivElement>(null);
-  const { data: entities = [], isLoading } = clientApi.assistant.getContextEntities.useQuery(undefined, {
-    staleTime: 60_000,
-  });
+  const { entities, isLoading } = useContext(AssistantDirectiveEntitiesContext);
   const categories = useMemo(
     () =>
       (["app", "integration", "board", "widget"] as const).map((type) => ({
@@ -2914,7 +2927,7 @@ const AssistantActivityBar = ({
 
   return (
     <Box component="output" className={classes.activityBar} aria-live="polite">
-      <UnstyledButton className={classes.activityTrigger} onClick={onOpen} aria-label={t("activity.expand")}>
+      <UnstyledButton className={classes.activityTrigger} onClick={onOpen}>
         <Group gap="sm" wrap="nowrap">
           <ThemeIcon variant="light" color={activityColor} radius="xl">
             <AssistantDotMatrix state={activityState} label={title} role="presentation" aria-hidden />
@@ -2996,7 +3009,7 @@ export const AssistantConversationSurface = ({
   const scrollToLatestBehavior = isRunning || reducedMotion ? "instant" : "smooth";
 
   return (
-    <>
+    <AssistantDirectiveEntitiesProvider>
       <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
         {onWindowClose && onMinimize && (
           <Group
@@ -3107,7 +3120,7 @@ export const AssistantConversationSurface = ({
           </ThreadPrimitive.Root>
         </ReasoningVisibilityContext.Provider>
       </AssistantQuestionPortalProvider>
-    </>
+    </AssistantDirectiveEntitiesProvider>
   );
 };
 
@@ -3135,9 +3148,19 @@ export const AssistantPanel = ({
 }: AssistantPanelProps) => {
   const t = useScopedI18n("common.assistant");
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const panelRef = useRef<HTMLDialogElement>(null);
 
   useWindowEvent("keydown", (event) => {
-    if (opened && event.key === "Escape") onClose();
+    if (
+      !opened ||
+      event.key !== "Escape" ||
+      event.defaultPrevented ||
+      event.isComposing ||
+      isEscapeOwnedByNestedOverlay(event.target, panelRef.current)
+    )
+      return;
+    event.preventDefault();
+    onClose();
   });
   useEffect(() => {
     if (!opened) {
@@ -3174,7 +3197,7 @@ export const AssistantPanel = ({
         />
       )}
       {opened && (
-        <dialog className={classes.floatingPanel} aria-label={t("title")} open>
+        <dialog ref={panelRef} className={classes.floatingPanel} aria-label={t("title")} open>
           <AssistantConversationSurface
             isRunning={isRunning}
             pendingAction={pendingAction}
