@@ -6,7 +6,7 @@
   display: grid;
   gap: 6px;
   width: 100%;
-  min-height: 112px;
+  min-height: 88px;
   padding: 8px;
   overflow: hidden;
   background: var(--mantine-color-body);

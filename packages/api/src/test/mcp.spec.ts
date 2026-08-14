@@ -67,6 +67,7 @@ const MCP_TOOL_ALLOWLIST = {
     "board_deleteBoard",
     "board_duplicateBoard",
     "board_renameBoard",
+    "board_resetLayout",
     "board_savePartialBoardSettings",
     "board_setHomeBoard",
     "board_setMobileHomeBoard",

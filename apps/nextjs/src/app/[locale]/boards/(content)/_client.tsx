@@ -1,11 +1,12 @@
 "use client";
 
-import { Box } from "@mantine/core";
+import { Box, Paper, Stack, Text } from "@mantine/core";
 
-import { useCurrentLayout, useInitialViewportWidth, useRequiredBoard } from "@homarr/boards/context";
+import { useCurrentLayout, useInitialViewportWidth, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import { getRepresentativeLayoutWidth } from "../_layout-utils";
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
 import {
   getBoardLaneColumnCount,
@@ -27,9 +28,11 @@ const APP_SHELL_INLINE_PADDING = 32;
 export const ClientBoard = () => {
   const board = useRequiredBoard();
   const t = useScopedI18n("board.landmark");
+  const tPreview = useScopedI18n("board.setting.section.layout.preview");
   const [isEditMode] = useEditMode();
   const currentLayoutId = useCurrentLayout();
   const initialViewportWidth = useInitialViewportWidth();
+  const layoutOverrideId = useLayoutOverride();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId) ?? board.layouts.at(0);
   if (!currentLayout) throw new Error("Expected the board to contain a layout");
 
@@ -47,7 +50,8 @@ export const ClientBoard = () => {
   const logicalWidth =
     laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * LOGICAL_GRID_GAP;
   const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId) + LOGICAL_GRID_GAP;
-  const initialAvailableWidth = Math.max(1, initialViewportWidth - APP_SHELL_INLINE_PADDING);
+  const representativeWidth = layoutOverrideId ? getRepresentativeLayoutWidth(currentLayout, board.layouts) : null;
+  const initialAvailableWidth = Math.max(1, (representativeWidth ?? initialViewportWidth) - APP_SHELL_INLINE_PADDING);
   const gridTemplateColumns = [
     leftColumnCount > 0 ? `${getLogicalTrackSize(leftColumnCount)}px` : null,
     `${getLogicalTrackSize(mainColumnCount)}px`,
@@ -56,7 +60,7 @@ export const ClientBoard = () => {
     .filter((value) => value !== null)
     .join(" ");
 
-  return (
+  const content = (
     <BoardAdvancedFocusProvider>
       <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
         <BoardBackgroundVideo />
@@ -120,5 +124,25 @@ export const ClientBoard = () => {
         </BoardSectionCollapseProvider>
       </Box>
     </BoardAdvancedFocusProvider>
+  );
+
+  if (representativeWidth === null) return content;
+
+  return (
+    <Stack align="center" gap="xs" p="md" mih="100%">
+      <Text size="xs" c="dimmed" fw={500}>
+        {tPreview("editorWidthLabel", { layoutName: currentLayout.name, width: representativeWidth })}
+      </Text>
+      <Paper
+        withBorder
+        shadow="sm"
+        radius="md"
+        w={`min(${representativeWidth}px, calc(100vw - 2rem))`}
+        mih="calc(100dvh - 8rem)"
+        style={{ overflow: "hidden" }}
+      >
+        {content}
+      </Paper>
+    </Stack>
   );
 };

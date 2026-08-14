@@ -16,6 +16,7 @@ describe("board lanes", () => {
       leftGutterColumnCount: 2,
       rightGutterColumnCount: 3,
       breakpoint: 0,
+      role: "base",
     } satisfies Board["layouts"][number];
 
     expect(getBoardLaneColumnCount(layout, "left")).toBe(2);
@@ -31,10 +32,27 @@ describe("board lanes", () => {
       leftGutterColumnCount: 3,
       rightGutterColumnCount: 3,
       breakpoint: 0,
+      role: "base",
     } satisfies Board["layouts"][number];
 
     expect(getBoardLaneColumnCount(layout, "left")).toBe(3);
     expect(getBoardLaneColumnCount(layout, "main")).toBe(1);
+    expect(getBoardLaneColumnCount(layout, "right")).toBe(0);
+  });
+
+  test("disables gutters for mobile layouts", () => {
+    const layout = {
+      id: "mobile",
+      name: "Mobile",
+      columnCount: 12,
+      leftGutterColumnCount: 2,
+      rightGutterColumnCount: 3,
+      breakpoint: 0,
+      role: "mobile",
+    } satisfies Board["layouts"][number];
+
+    expect(getBoardLaneColumnCount(layout, "left")).toBe(0);
+    expect(getBoardLaneColumnCount(layout, "main")).toBe(12);
     expect(getBoardLaneColumnCount(layout, "right")).toBe(0);
   });
 
@@ -104,6 +122,7 @@ describe("board lanes", () => {
         leftGutterColumnCount: 1,
         rightGutterColumnCount: 0,
         breakpoint: 0,
+        role: "base",
       },
     ];
 
