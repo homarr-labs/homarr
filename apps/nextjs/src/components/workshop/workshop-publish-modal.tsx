@@ -6,6 +6,7 @@ import { Alert, Button, Checkbox, FileInput, Group, Modal, Stack, Textarea, Text
 import { clientApi } from "@homarr/api/client";
 import { showErrorNotification } from "@homarr/notifications";
 import { useWorkshopCreateMutation } from "@homarr/workshop/backend";
+import { workshopScreenshotsSchema } from "@homarr/workshop/schema";
 import type { WorkshopUser } from "@homarr/workshop/schema";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -59,6 +60,9 @@ export function WorkshopPublishModal({
     setError(null);
     try {
       if (!definition.data) throw new Error(t("publish.error"));
+      if (!workshopScreenshotsSchema.safeParse(screenshots).success) {
+        throw new Error(t("publish.invalidScreenshot"));
+      }
       const inspectedDefinition = definition.data;
       const result = await publishWorkshopDefinition({
         inspectedDefinition,

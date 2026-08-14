@@ -87,7 +87,9 @@ export function CustomWidgetSourcesEditor({
     form.setFieldValue("secrets", [...current, { sourceId, kind, value, hasValue: existing?.hasValue }]);
   };
   const addSource = () => {
-    const id = sources.length === 0 ? "default" : `source-${sources.length + 1}`;
+    let suffix = sources.length + 1;
+    while (sources.some(({ id }) => id === `source-${suffix}`)) suffix += 1;
+    const id = sources.length === 0 ? "default" : `source-${suffix}`;
     form.setFieldValue(
       "sources",
       JSON.stringify(

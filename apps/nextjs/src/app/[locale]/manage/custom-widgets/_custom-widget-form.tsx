@@ -145,6 +145,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
             key={id}
             component="a"
             href={`#${id}`}
+            onClick={() => setMobilePane(id === "preview" ? "preview" : "configure")}
             size="compact-sm"
             variant="subtle"
             color={invalidSections.has(id) ? "red" : undefined}

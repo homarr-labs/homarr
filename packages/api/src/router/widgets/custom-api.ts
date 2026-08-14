@@ -195,6 +195,13 @@ const executeRequest = async (
 };
 
 export const customApiRouter = createTRPCRouter({
+  refresh: publicProcedure.input(itemInputSchema).mutation(async ({ ctx, input }) => {
+    const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
+    invalidateCustomWidgetResponseCache([
+      `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:`,
+    ]);
+  }),
+
   getData: publicProcedure.input(itemInputSchema).query(async ({ ctx, input }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
     const loadRequests = Object.entries(resolved.definition.requests).filter(

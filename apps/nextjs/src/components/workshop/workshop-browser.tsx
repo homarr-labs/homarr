@@ -295,19 +295,15 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
               <Stack gap="xs" mt="md">
                 <Group justify="space-between">
                   <Text size="xs" c="dimmed">
-                    {t("author", { name: item.authorName || "Community member" })}
+                    {t("author", { name: item.authorName || t("communityMember") })}
                   </Text>
                   <Text size="sm" c="dimmed">
                     <IconThumbUp size={13} /> {item.upvotes} · <IconThumbDown size={13} /> {item.downvotes}
                   </Text>
                 </Group>
                 <Group gap="xs">
-                  {item.outdated && <Badge color="yellow">Outdated</Badge>}
-                  {item.reportCount > 0 && (
-                    <Badge color="red">
-                      {item.reportCount} report{item.reportCount === 1 ? "" : "s"}
-                    </Badge>
-                  )}
+                  {item.outdated && <Badge color="yellow">{t("outdated")}</Badge>}
+                  {item.reportCount > 0 && <Badge color="red">{t("reportCount", { count: item.reportCount })}</Badge>}
                 </Group>
                 <Text fw={700} lineClamp={1}>
                   {item.title}
@@ -349,7 +345,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
               <Box>
                 <Title order={3}>{detail.data.title}</Title>
                 <Text size="sm" c="dimmed">
-                  {t("author", { name: detail.data.authorName || "Community member" })}
+                  {t("author", { name: detail.data.authorName || t("communityMember") })}
                 </Text>
               </Box>
               <Button
@@ -366,20 +362,18 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
             {detail.data.description && <Text>{detail.data.description}</Text>}
             {detail.data.outdated && (
               <Alert color="yellow" icon={<IconAlertTriangle size={18} />}>
-                The author marked this submission as outdated. Review it carefully before importing.
+                {t("outdatedWarning")}
               </Alert>
             )}
             {detail.data.reportCount > 0 && (
               <Stack gap="xs">
                 <Alert color="red" icon={<IconAlertTriangle size={18} />}>
-                  This submission has {detail.data.reportCount} open community report
-                  {detail.data.reportCount === 1 ? "" : "s"}. It remains installable, but you should review its content
-                  first.
+                  {t("reportWarning", { count: detail.data.reportCount })}
                 </Alert>
                 {reportSummaries.data?.map((summary) => (
                   <Card key={summary.id} withBorder p="sm">
                     <Badge color="red" variant="light" mb="xs">
-                      {summary.category}
+                      {t(`reportCategory.${summary.category}`)}
                     </Badge>
                     <Text size="sm" style={{ whiteSpace: "pre-wrap" }}>
                       {summary.explanation}
@@ -388,7 +382,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
                 ))}
                 {reportSummaries.data?.length === 0 && (
                   <Text size="xs" c="dimmed">
-                    Report details are visible only to this submission's author and Workshop admins.
+                    {t("reportVisibility")}
                   </Text>
                 )}
               </Stack>
@@ -400,7 +394,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
                     key={file}
                     src={client.fileUrl(detail.data.id, file, "960x640")}
                     radius="md"
-                    alt={`${detail.data.title} screenshot ${index + 1}`}
+                    alt={t("screenshotAlt", { title: detail.data.title, count: index + 1 })}
                   />
                 ))}
               </SimpleGrid>
@@ -433,6 +427,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
                   leftSection={<IconThumbUp size={16} />}
                   loading={vote.isPending && vote.variables?.value === 1}
                   disabled={!user || vote.isPending}
+                  aria-label={t("upvote", { count: detail.data.upvotes })}
                   onClick={() => vote.mutate({ submission: detail.data.id, value: 1 })}
                 >
                   {detail.data.upvotes}
@@ -442,6 +437,7 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
                   leftSection={<IconThumbDown size={16} />}
                   loading={vote.isPending && vote.variables?.value === -1}
                   disabled={!user || vote.isPending}
+                  aria-label={t("downvote", { count: detail.data.downvotes })}
                   onClick={() => vote.mutate({ submission: detail.data.id, value: -1 })}
                 >
                   {detail.data.downvotes}
@@ -508,7 +504,10 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
             label={t("reportReason")}
             value={reportCategory}
             onChange={(value) => setReportCategory((value as WorkshopReport["category"]) ?? "other")}
-            data={["outdated", "malicious", "spam", "copyright", "inappropriate", "other"]}
+            data={(["outdated", "malicious", "spam", "copyright", "inappropriate", "other"] as const).map((value) => ({
+              value,
+              label: t(`reportCategory.${value}`),
+            }))}
             allowDeselect={false}
           />
           <Textarea

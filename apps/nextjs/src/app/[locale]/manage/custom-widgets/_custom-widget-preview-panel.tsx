@@ -172,6 +172,7 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
               label={t("requestData")}
               language="json"
               value={JSON.stringify({ data: props.preview.data, status: props.preview.status }, null, 2)}
+              readOnly
               onChange={() => undefined}
             />
           </Tabs.Panel>
@@ -251,6 +252,7 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
                   label={t("journal")}
                   language="json"
                   value={JSON.stringify(journalQuery.data ?? [], null, 2)}
+                  readOnly
                   onChange={() => undefined}
                 />
               )}

@@ -53,8 +53,10 @@ export function SubFetch(props: SubFetchProps) {
     (props.trigger !== "manual" || manualRun),
   );
   const refreshMs = normalizeRefreshInterval(props.refreshInterval);
+  const scope = itemId ? "item" : "preview";
+  const scopeId = itemId ?? previewSessionId;
   const query = useQuery({
-    queryKey: ["custom-widget", itemId ?? previewSessionId, props.requestId, paramsKey],
+    queryKey: ["custom-widget", scope, scopeId, props.requestId, paramsKey],
     queryFn: ({ signal }) =>
       port.query({ itemId, previewSessionId, requestId: props.requestId ?? "", params: params ?? {} }, signal),
     enabled,

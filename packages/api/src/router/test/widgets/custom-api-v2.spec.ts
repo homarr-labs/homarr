@@ -10,11 +10,12 @@ import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 
 const mocks = vi.hoisted(() => ({
   executeRequest: vi.fn(async () => ({ ok: true, status: 200, statusText: "OK", data: { value: 42 } })),
+  invalidateResponseCache: vi.fn(),
 }));
 
 vi.mock("../../custom-widget/request-executor", () => ({
   executeCustomWidgetRequest: mocks.executeRequest,
-  invalidateCustomWidgetResponseCache: vi.fn(),
+  invalidateCustomWidgetResponseCache: mocks.invalidateResponseCache,
 }));
 
 vi.mock("../../custom-widget/request-limits", () => ({
@@ -111,7 +112,21 @@ async function setup(
 }
 
 describe("Custom JSX v2 board router", () => {
-  beforeEach(() => mocks.executeRequest.mockClear());
+  beforeEach(() => {
+    mocks.executeRequest.mockClear();
+    mocks.invalidateResponseCache.mockClear();
+  });
+
+  test("refreshes the server response cache for a placed widget", async () => {
+    const { db, itemId } = await setup();
+    const caller = customApiRouter.createCaller({ db, deviceType: undefined, session: null });
+
+    await caller.refresh({ itemId });
+
+    expect(mocks.invalidateResponseCache).toHaveBeenCalledWith([
+      expect.stringMatching(new RegExp(`^custom-jsx:${itemId}:\\d+:$`, "u")),
+    ]);
+  });
 
   test("loads placed widgets and public queries for anonymous visitors on public boards", async () => {
     const { db, itemId } = await setup();

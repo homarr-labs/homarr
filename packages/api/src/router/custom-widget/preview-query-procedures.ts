@@ -8,12 +8,20 @@ import {
   recordPreviewJournal,
   resolvePreviewRequestParams,
 } from "./preview-procedure-helpers";
-import { executeCustomWidgetRequest } from "./request-executor";
+import { executeCustomWidgetRequest, invalidateCustomWidgetResponseCache } from "./request-executor";
 import { hashRuntimeParams, renderRequestBody, renderRequestTarget } from "./request-manifest";
 import { acquireCustomWidgetRequestLimit } from "./request-limits";
 import { getPreviewJournal, getPreviewSession, setPreviewSessionLiveActions } from "./preview-sessions";
 
 export const previewQueryProcedures = {
+  previewRefresh: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ sessionId: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
+      invalidateCustomWidgetResponseCache([`custom-jsx:preview:${session.id}:`]);
+    }),
+
   previewQuery: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({

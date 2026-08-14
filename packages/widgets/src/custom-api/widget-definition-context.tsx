@@ -107,26 +107,42 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
             confirmed: input.confirmed,
           }),
     invalidate: async ({ itemId, previewSessionId, targets }) => {
+      const invalidateAll = targets.includes("*");
       if (previewSessionId) {
+        if (invalidateAll) {
+          await fetchApi.customWidget.previewRefresh.mutate({ sessionId: previewSessionId });
+        }
         await queryClient.invalidateQueries({
           predicate: (query) => {
             const key = query.queryKey;
-            return key[0] === "custom-widget" && key[1] === previewSessionId && targets.includes(String(key[2]));
+            return (
+              key[0] === "custom-widget" &&
+              key[1] === "preview" &&
+              key[2] === previewSessionId &&
+              (invalidateAll || targets.includes(String(key[3])))
+            );
           },
         });
         return;
       }
       if (!itemId) return;
       if (targets.length === 0) return;
+      if (invalidateAll) await fetchApi.widget.customApi.refresh.mutate({ itemId });
       const tasks: Promise<unknown>[] = [
         queryClient.invalidateQueries({
           predicate: (query) => {
             const key = query.queryKey;
-            return key[0] === "custom-widget" && key[1] === itemId && targets.includes(String(key[2]));
+            return (
+              key[0] === "custom-widget" &&
+              key[1] === "item" &&
+              key[2] === itemId &&
+              (invalidateAll || targets.includes(String(key[3])))
+            );
           },
         }),
       ];
       if (
+        invalidateAll ||
         (props.requestCapabilities ?? []).some((request) => request.trigger === "load" && targets.includes(request.id))
       ) {
         tasks.push(utils.widget.customApi.getData.invalidate({ itemId }));

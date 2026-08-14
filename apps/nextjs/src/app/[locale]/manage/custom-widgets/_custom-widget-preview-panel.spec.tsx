@@ -22,6 +22,7 @@ vi.mock("@homarr/api/client", () => ({
 vi.mock("@homarr/translation/client", () => ({ useScopedI18n: () => (key: string) => key }));
 vi.mock("@homarr/notifications", () => ({ showErrorNotification: vi.fn() }));
 const rendererAttempt = vi.hoisted(() => vi.fn());
+const codeEditorProps = vi.hoisted(() => vi.fn());
 
 vi.mock("@homarr/widgets/custom-api/custom-jsx-display", () => ({
   default: ({ data }: { data: Record<string, unknown> }) => {
@@ -32,7 +33,12 @@ vi.mock("@homarr/widgets/custom-api/custom-jsx-display", () => ({
     return <div>widget-renderer</div>;
   },
 }));
-vi.mock("./_code-editor", () => ({ CodeEditor: ({ label }: { label: string }) => <div>{label}</div> }));
+vi.mock("./_code-editor", () => ({
+  CodeEditor: (props: { label: string; readOnly?: boolean }) => {
+    codeEditorProps(props);
+    return <div>{props.label}</div>;
+  },
+}));
 vi.mock("./_custom-widget-preview-action", () => ({ PreviewActionControl: () => <div>action-control</div> }));
 
 let root: Root;
@@ -109,6 +115,7 @@ describe("Custom Widget preview panel", () => {
     );
     await act(async () => dataTab?.click());
     expect(host.textContent).toContain("requestData");
+    expect(codeEditorProps).toHaveBeenCalledWith(expect.objectContaining({ label: "requestData", readOnly: true }));
     expect(host.textContent).not.toContain("invalid");
 
     const optionsTab = [...host.querySelectorAll<HTMLElement>('[role="tab"]')].find((element) =>

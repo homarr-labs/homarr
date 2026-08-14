@@ -48,4 +48,17 @@ describe("custom widget unsaved changes guard", () => {
     expect(listLink.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 }))).toBe(true);
     expect(confirmNavigation).not.toHaveBeenCalled();
   });
+
+  it("restores the current page and confirms browser history navigation", () => {
+    window.history.replaceState(null, "", "/en/manage/custom-widgets");
+    window.history.pushState(null, "", "/en/manage/custom-widgets/edit/widget-1");
+    const confirmNavigation = vi.fn();
+    cleanups.push(registerUnsavedChangesGuard({ isDirty: () => true, confirmNavigation }));
+
+    window.history.replaceState(null, "", "/en/manage/custom-widgets");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+
+    expect(window.location.pathname).toBe("/en/manage/custom-widgets/edit/widget-1");
+    expect(confirmNavigation).toHaveBeenCalledWith("/en/manage/custom-widgets");
+  });
 });

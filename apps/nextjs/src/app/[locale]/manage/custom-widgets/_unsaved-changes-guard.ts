@@ -4,6 +4,7 @@ interface UnsavedChangesGuardOptions {
 }
 
 export function registerUnsavedChangesGuard({ isDirty, confirmNavigation }: UnsavedChangesGuardOptions) {
+  let currentHref = `${window.location.pathname}${window.location.search}${window.location.hash}`;
   const handleClick = (event: MouseEvent) => {
     if (!isDirty() || event.defaultPrevented || event.button !== 0) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -32,11 +33,22 @@ export function registerUnsavedChangesGuard({ isDirty, confirmNavigation }: Unsa
     event.preventDefault();
     event.returnValue = true;
   };
+  const handlePopState = () => {
+    const destination = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (!isDirty()) {
+      currentHref = destination;
+      return;
+    }
+    window.history.pushState(window.history.state, "", currentHref);
+    confirmNavigation(destination);
+  };
 
   document.addEventListener("click", handleClick, true);
   window.addEventListener("beforeunload", handleBeforeUnload);
+  window.addEventListener("popstate", handlePopState);
   return () => {
     document.removeEventListener("click", handleClick, true);
     window.removeEventListener("beforeunload", handleBeforeUnload);
+    window.removeEventListener("popstate", handlePopState);
   };
 }
