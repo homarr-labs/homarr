@@ -124,7 +124,7 @@ describe("Custom JSX v2 board router", () => {
     await caller.refresh({ itemId });
 
     expect(mocks.invalidateResponseCache).toHaveBeenCalledWith([
-      expect.stringMatching(new RegExp(`^custom-jsx:${itemId}:\\d+:$`, "u")),
+      expect.stringMatching(new RegExp(`^custom-jsx:${itemId}:[a-f0-9]{16}:$`, "u")),
     ]);
   });
 
