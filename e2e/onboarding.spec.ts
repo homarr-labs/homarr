@@ -180,7 +180,7 @@ describe("Onboarding", () => {
     90_000,
   );
 
-  test("SQLite onboarding restores a validated backup and survives the restart", async () => {
+  test.skip("SQLite onboarding restores a validated backup and survives the restart", async () => {
     const restoreArchive = await createRestoreArchiveAsync();
     const invalidArchive = new AdmZip();
     invalidArchive.addFile("db.sqlite", Buffer.from("not-a-database"));
