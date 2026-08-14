@@ -13,10 +13,7 @@ import { boardNameSchema } from "./board";
 import { zodEnumFromArray } from "./enums";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
-const httpUrlSchema = z.url().refine((value) => {
-  const protocol = new URL(value).protocol;
-  return protocol === "http:" || protocol === "https:";
-}, "Only HTTP and HTTPS URLs are permitted");
+const serviceAddressSchema = z.string().trim().min(1).max(2048);
 const uniqueIdsSchema = (maxLength = 255) =>
   z
     .array(z.string().trim().min(1).max(maxLength))
@@ -26,11 +23,11 @@ const sourceIdSchema = z.string().trim().min(1).max(512);
 
 export const onboardingCreateIntegrationSchema = z.object({
   name: z.string().trim().min(1).max(127),
-  url: httpUrlSchema,
+  url: serviceAddressSchema,
   sourceId: sourceIdSchema.optional(),
   iconUrl: z.string().trim().min(1).max(2048).nullable().optional(),
   description: z.string().trim().max(512).nullable().optional(),
-  pingUrl: httpUrlSchema.nullable().optional(),
+  pingUrl: serviceAddressSchema.nullable().optional(),
 });
 
 export const onboardingIntegrationDraftSchema = onboardingCreateIntegrationSchema.extend({
@@ -47,15 +44,15 @@ export const onboardingIntegrationDraftSchema = onboardingCreateIntegrationSchem
 export const onboardingDiscoveredAppSchema = z.object({
   sourceId: sourceIdSchema.optional(),
   name: z.string().trim().min(1).max(127),
-  href: httpUrlSchema.nullable(),
-  pingUrl: httpUrlSchema.nullable().optional(),
+  href: serviceAddressSchema.nullable(),
+  pingUrl: serviceAddressSchema.nullable().optional(),
   iconUrl: z.string().trim().min(1).nullable(),
   description: z.string().trim().max(512).nullable().optional(),
 });
 
 export const onboardingAppDraftSchema = onboardingDiscoveredAppSchema.extend({
   sourceId: sourceIdSchema,
-  href: httpUrlSchema,
+  href: serviceAddressSchema,
 });
 
 const integrationDraftsSchema = z

@@ -114,7 +114,7 @@
         "otherIntegrations": "Add another integration",
         "configureIntegrations": "Configure integrations",
         "discoveredApps": "Detected apps ({count})",
-        "appAddressRequired": "Add an HTTP or HTTPS address for {name}, or remove it from the selection.",
+        "appAddressRequired": "Add an address for {name}, or remove it from the selection.",
         "empty": "No integrations selected. Homarr will still create a useful starter board with general widgets.",
         "dockerSource": "Docker",
         "manualSource": "Manual",
