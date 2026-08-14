@@ -1,0 +1,33 @@
+apps/nextjs/src/app/api/backup/test/import-route.spec.ts
+  s_bc3b2ff5afd321::t_b4f2d7d6a00b24 131-135
+apps/nextjs/src/components/backup/use-backup-analysis.ts
+  s_bc3b2ff5afd321::t_7e81d550ec024d 12-13,125,163
+packages/onboarding/src/welcome.tsx
+  s_bc3b2ff5afd321::t_7e81d550ec024d 138
+apps/nextjs/src/components/backup/database-restore-flow.tsx
+  s_bc3b2ff5afd321::t_7e81d550ec024d 112,145,147,155-156,180,206,208-209,254-255,257-258,261,266,292-296
+  s_bc3b2ff5afd321::t_62efcc63c45cab 173,198,207
+packages/onboarding/src/onboarding-studio.module.css
+  s_bc3b2ff5afd321::t_7e81d550ec024d 109
+apps/nextjs/src/app/api/backup/import/route.ts
+  s_bc3b2ff5afd321::t_7e81d550ec024d 175-177,192-197,315-316,341
+  s_bc3b2ff5afd321::t_62efcc63c45cab 178-191
+apps/docs/docs/management/backup.mdx
+  s_bc3b2ff5afd321::t_7e81d550ec024d 56-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c224e62f302521b1ab4e66004c8843f1cee33bf8",
+  "prompts": {},
+  "sessions": {
+    "s_bc3b2ff5afd321": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa77-6fff-7222-aeba-e870dc5f1496",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
