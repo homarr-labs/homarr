@@ -8,6 +8,7 @@ import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options
 
 export const { definition, componentLoader } = createWidgetDefinition("healthMonitoring", {
   icon: IconHeartRateMonitor,
+  queryKeys: [[["widget", "healthMonitoring"]], [["integration", "byIds"]]],
   refetchInterval: 5,
   createOptions() {
     return optionsBuilder.from(
@@ -112,7 +113,9 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
       },
     );
   },
-  supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring").filter((kind) => kind !== "patchmon"),
+  supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring").filter(
+    (kind) => kind !== "patchmon" && kind !== "wud",
+  ),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

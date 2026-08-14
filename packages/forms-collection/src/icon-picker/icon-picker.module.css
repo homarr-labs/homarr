@@ -1,3 +1,89 @@
-[data-combobox-selected="true"] .iconCard {
+.dropdown {
+  min-width: min(32rem, calc(100vw - 2rem));
+}
+
+.options {
+  max-height: min(28rem, 60vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.iconGrid {
+  grid-template-columns: repeat(auto-fill, minmax(3.25rem, 1fr));
+}
+
+.iconOption {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 3.25rem;
+  padding: var(--mantine-spacing-xs);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-body);
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.iconOption:hover,
+.iconOption[data-combobox-selected="true"] {
   border-color: var(--mantine-primary-color-6);
+  background: var(--mantine-primary-color-light);
+}
+
+.iconOption:active {
+  transform: scale(0.96);
+}
+
+.formatBadge,
+.sectionBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--mantine-radius-xs);
+  background: var(--mantine-color-red-9);
+  color: var(--mantine-color-white);
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.formatBadge {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.2rem;
+  padding: 0.15rem 0.2rem;
+}
+
+.sectionBadge {
+  padding: 0.2rem 0.3rem;
+}
+
+.urlPreview {
+  background: var(--mantine-color-default-hover);
+}
+
+.previewFrame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 3rem;
+}
+
+.previewLoader {
+  position: absolute;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconOption {
+    transition: none;
+  }
 }

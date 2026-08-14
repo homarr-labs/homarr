@@ -5,31 +5,32 @@ import { IconDeviceDesktop, IconMoon, IconSun } from "@tabler/icons-react";
 
 import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemes } from "@homarr/definitions";
-import type { ServerSettings } from "@homarr/server-settings";
+import type { UseFormReturnType } from "@homarr/form";
 import { useScopedI18n } from "@homarr/translation/client";
 import { SelectWithCustomItems } from "@homarr/ui";
 
-import { CommonSettingsForm } from "./common-form";
+import { SectionCard } from "~/components/manage/section-card";
+import type { FormValues } from "./settings-form";
 
-export const AppearanceSettingsForm = ({ defaultValues }: { defaultValues: ServerSettings["appearance"] }) => {
-  const tApperance = useScopedI18n("management.page.settings.section.appearance");
+interface AppearanceSettingsFormProps {
+  form: UseFormReturnType<FormValues>;
+}
+
+export const AppearanceSettingsForm = ({ form }: AppearanceSettingsFormProps) => {
+  const tAppearance = useScopedI18n("management.page.settings.section.appearance");
 
   return (
-    <CommonSettingsForm settingKey="appearance" defaultValues={defaultValues}>
-      {(form) => (
-        <>
-          <SelectWithCustomItems
-            label={tApperance("defaultColorScheme.label")}
-            data={colorSchemes.map((scheme) => ({
-              value: scheme,
-              label: tApperance(`defaultColorScheme.options.${scheme}`),
-            }))}
-            {...form.getInputProps("defaultColorScheme")}
-            SelectOption={ApperanceCustomOption}
-          />
-        </>
-      )}
-    </CommonSettingsForm>
+    <SectionCard title={tAppearance("title")}>
+      <SelectWithCustomItems
+        label={tAppearance("defaultColorScheme.label")}
+        data={colorSchemes.map((scheme) => ({
+          value: scheme,
+          label: tAppearance(`defaultColorScheme.options.${scheme}`),
+        }))}
+        {...form.getInputProps("defaultColorScheme")}
+        SelectOption={AppearanceCustomOption}
+      />
+    </SectionCard>
   );
 };
 
@@ -39,7 +40,7 @@ const appearanceIcons = {
   dark: IconMoon,
 };
 
-const ApperanceCustomOption = ({ value, label }: { value: ColorScheme; label: string }) => {
+const AppearanceCustomOption = ({ value, label }: { value: ColorScheme; label: string }) => {
   const Icon = appearanceIcons[value];
 
   return (

@@ -1,8 +1,6 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { createPortal } from "react-dom";
-import { useCallback, useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 
@@ -47,7 +45,7 @@ export interface TooltipPayloadItem {
   payload?: Record<string, unknown>;
 }
 
-interface PortalTooltipProps {
+interface BeszelTooltipProps {
   active?: boolean;
   label?: string;
   payload?: TooltipPayloadItem[];
@@ -55,53 +53,8 @@ interface PortalTooltipProps {
   showTotal?: boolean;
 }
 
-const MARGIN = 14;
-
-const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: PortalTooltipProps) => {
-  const mouseRef = useRef({ x: 0, y: 0 });
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-  const rafRef = useRef(0);
-  const tooltipRef = useRef<HTMLDivElement>(null);
-
-  const handleMouse = useCallback((e: MouseEvent) => {
-    mouseRef.current = { x: e.clientX, y: e.clientY };
-    cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      const el = tooltipRef.current;
-      const mx = mouseRef.current.x;
-      const my = mouseRef.current.y;
-
-      if (!el) {
-        setPos({ x: mx + MARGIN, y: my });
-        return;
-      }
-
-      const { width, height } = el.getBoundingClientRect();
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-
-      let x = mx + MARGIN;
-      let y = my - height / 2;
-
-      if (x + width > vw - MARGIN) x = mx - width - MARGIN;
-      if (y < MARGIN) y = MARGIN;
-      if (y + height > vh - MARGIN) y = vh - MARGIN - height;
-
-      setPos({ x, y });
-    });
-  }, []);
-
+const BeszelTooltipContent = ({ active, label, payload, formatter, showTotal }: BeszelTooltipProps) => {
   const isActive = active && (payload?.length ?? 0) > 0;
-
-  useEffect(() => {
-    if (!isActive) return;
-    document.addEventListener("mousemove", handleMouse);
-    return () => {
-      document.removeEventListener("mousemove", handleMouse);
-      cancelAnimationFrame(rafRef.current);
-    };
-  }, [isActive, handleMouse]);
-
   if (!isActive) return null;
 
   const deduped = new Map<string, TooltipPayloadItem>();
@@ -116,41 +69,30 @@ const PortalTooltipContent = ({ active, label, payload, formatter, showTotal }: 
   const tooltipLabel = rawTime ? dayjs(rawTime).format("MMM D, LT") : label;
   const total = sorted.reduce((sum, p) => sum + p.value, 0);
 
-  const portalStyle: CSSProperties = {
-    position: "fixed",
-    left: pos.x,
-    top: pos.y,
-    zIndex: 10000,
-    pointerEvents: "none",
-  };
-
-  return createPortal(
-    <div ref={tooltipRef} style={portalStyle}>
-      <div style={styles.wrapper}>
-        <div style={styles.header}>{tooltipLabel}</div>
-        {sorted.map((item) => (
-          <div key={item.dataKey} style={styles.row}>
-            <div style={{ ...styles.indicator, background: item.color }} />
-            <span style={styles.name}>{item.name}</span>
-            <span style={styles.value}>{formatter(item.value)}</span>
-          </div>
-        ))}
-        {showTotal && sorted.length > 1 && (
-          <div style={{ ...styles.row, ...styles.separator }}>
-            <span style={styles.name}>Total</span>
-            <span style={styles.value}>{formatter(total)}</span>
-          </div>
-        )}
-      </div>
-    </div>,
-    document.body,
+  return (
+    <div style={styles.wrapper}>
+      <div style={styles.header}>{tooltipLabel}</div>
+      {sorted.map((item) => (
+        <div key={item.dataKey} style={styles.row}>
+          <div style={{ ...styles.indicator, background: item.color }} />
+          <span style={styles.name}>{item.name}</span>
+          <span style={styles.value}>{formatter(item.value)}</span>
+        </div>
+      ))}
+      {showTotal && sorted.length > 1 && (
+        <div style={{ ...styles.row, ...styles.separator }}>
+          <span style={styles.name}>Total</span>
+          <span style={styles.value}>{formatter(total)}</span>
+        </div>
+      )}
+    </div>
   );
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const makeTooltipProps = (formatter: (v: number) => string, showTotal = false) => ({
   content: (props: any) => (
-    <PortalTooltipContent
+    <BeszelTooltipContent
       active={props.active}
       label={props.label != null ? String(props.label) : undefined}
       payload={props.payload}
@@ -158,6 +100,6 @@ export const makeTooltipProps = (formatter: (v: number) => string, showTotal = f
       showTotal={showTotal}
     />
   ),
-  wrapperStyle: { visibility: "hidden" as const, position: "absolute" as const, width: 0, height: 0 },
+  wrapperStyle: { zIndex: 10000, pointerEvents: "none" as const },
   isAnimationActive: false,
 });

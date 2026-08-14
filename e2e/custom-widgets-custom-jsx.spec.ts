@@ -45,8 +45,12 @@ describe("Custom JSX custom widgets", () => {
       await page.goto(`${baseUrl}/auth/login`);
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
+      const loginNavigation = page.waitForURL((url) => url.origin === baseUrl && url.pathname !== "/auth/login", {
+        timeout: 60_000,
+        waitUntil: "commit",
+      });
       await page.locator("css=button[type='submit']").click();
-      await page.waitForURL(baseUrl, { timeout: 15_000 });
+      await loginNavigation;
 
       await page.goto(`${baseUrl}/manage/custom-widgets/new`);
       await page.waitForURL("**/manage/custom-widgets/new", { timeout: 15_000 });

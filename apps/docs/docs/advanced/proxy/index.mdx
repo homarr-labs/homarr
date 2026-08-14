@@ -47,7 +47,6 @@ services:
       traefik.http.routers.homarr.rule: Host(`your.internal.dns.address.here.com`)
       traefik.http.routers.homarr.entrypoints: websecure
       traefik.http.routers.homarr-secure.app: homarr
-      traefik.http.apps.homarr.loadbalancer.server.port: 7575
 
 networks:
   proxy:

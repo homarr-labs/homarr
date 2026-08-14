@@ -78,6 +78,7 @@ export const synologyStorageV2VolumeSchema = z
 
 export const synologyStorageV2DataSchema = z.object({
   volumes: z.array(synologyStorageV2VolumeSchema).optional(),
+  vol_info: z.array(synologyVolumeInfoSchema).optional(),
 });
 
 export const synologyUtilizationCpuSchema = z.object({

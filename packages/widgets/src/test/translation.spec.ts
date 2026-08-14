@@ -1,15 +1,16 @@
 import { describe, expect, it } from "vitest";
 
-import { objectEntries } from "@homarr/common";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { createLanguageMapping } from "@homarr/translation";
 
-import { widgetImports } from "..";
+import { loadAllWidgetDefinitions } from "../manifest";
 
-describe("Widget properties with description should have matching translations", async () => {
-  const enTranslation = await createLanguageMapping().en();
-  objectEntries(widgetImports).forEach(([key, value]) => {
-    Object.entries(value.definition.createOptions({} as SettingsContextProps)).forEach(([optionKey, optionValue_]) => {
+const widgetDefinitions = await loadAllWidgetDefinitions();
+const enTranslation = await createLanguageMapping().en();
+
+describe("Widget properties with description should have matching translations", () => {
+  for (const [key, definition] of widgetDefinitions) {
+    Object.entries(definition.createOptions({} as SettingsContextProps)).forEach(([optionKey, optionValue_]) => {
       const optionValue = optionValue_ as { withDescription: boolean };
       it(`should have matching translations for ${optionKey} option description of ${key} widget`, () => {
         const option = enTranslation.default.widget[key].option;
@@ -21,13 +22,12 @@ describe("Widget properties with description should have matching translations",
         expect("description" in value).toBe(optionValue.withDescription);
       });
     });
-  });
+  }
 });
 
-describe("Widget properties should have matching name translations", async () => {
-  const enTranslation = await createLanguageMapping().en();
-  objectEntries(widgetImports).forEach(([key, value]) => {
-    Object.keys(value.definition.createOptions({} as SettingsContextProps)).forEach((optionKey) => {
+describe("Widget properties should have matching name translations", () => {
+  for (const [key, definition] of widgetDefinitions) {
+    Object.keys(definition.createOptions({} as SettingsContextProps)).forEach((optionKey) => {
       it(`should have matching translations for ${optionKey} option name of ${key} widget`, () => {
         const option = enTranslation.default.widget[key].option;
         if (!(optionKey in option)) {
@@ -38,5 +38,5 @@ describe("Widget properties should have matching name translations", async () =>
         expect("label" in value).toBe(true);
       });
     });
-  });
+  }
 });

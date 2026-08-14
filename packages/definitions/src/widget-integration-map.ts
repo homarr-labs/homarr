@@ -24,10 +24,12 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   networkControllerSummary: getIntegrationKindsByCategory("networkController"),
   networkControllerStatus: getIntegrationKindsByCategory("networkController"),
   indexerManager: getIntegrationKindsByCategory("indexerManager"),
-  healthMonitoring: getIntegrationKindsByCategory("healthMonitoring").filter((kind) => kind !== "patchmon"),
+  healthMonitoring: getIntegrationKindsByCategory("healthMonitoring").filter(
+    (kind) => kind !== "patchmon" && kind !== "wud",
+  ),
   firewall: getIntegrationKindsByCategory("firewall"),
   notifications: getIntegrationKindsByCategory("notifications"),
-  mediaReleases: ["emby", "jellyfin", "plex"],
+  mediaReleases: ["mock", "emby", "jellyfin", "plex"],
   systemResources: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
   systemDisks: ["dashDot", "openmediavault", "truenas", "unraid", "synology"],
   coolify: ["coolify"],
@@ -40,10 +42,17 @@ export const widgetIntegrationSupport: Partial<Record<WidgetKind, readonly Integ
   speedtestTracker: ["speedtestTracker"],
   uptimeKuma: ["uptimeKuma"],
   audioStats: ["navidrome", "audiobookshelf"],
+  umami: ["umami"],
   vpn: getIntegrationKindsByCategory("vpn"),
+  ups: getIntegrationKindsByCategory("ups"),
+  beszelSystemTable: ["beszel", "mock"],
+  beszelSystemGrid: ["beszel", "mock"],
+  beszelAlerts: ["beszel", "mock"],
+  beszelSystemStats: ["beszel", "mock"],
   archiveTeamWarrior: ["archiveTeamWarrior"],
   anchorNote: ["anchor"],
   traefik: ["traefik"],
+  wud: ["wud"],
 };
 
 export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {
