@@ -48,6 +48,7 @@ export default async function InitPage() {
     ? resolveHomarrUrlConfig({
         homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,
         workshopApiUrl: env.WORKSHOP_API_URL,
+        workshopWebUrl: env.WORKSHOP_WEB_URL,
       })
     : { workshopApiUrl: "", workshopWebUrl: "" };
   const baseUrl = extractBaseUrlFromHeaders(requestHeaders);

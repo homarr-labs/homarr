@@ -24,6 +24,7 @@ import {
   assistantProviderRequiresApiKey,
   assistantReasoningModes,
 } from "@homarr/definitions";
+import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
 import { browserToolContracts } from "~/components/assistant/assistant-tool-contracts";
 import { env as appEnv } from "~/env";
@@ -461,6 +462,11 @@ export async function POST(request: Request) {
     entities: contextEntities,
     messages: parsed.data.messages,
     userName: session.user.name,
+    workshopWebUrl: resolveHomarrUrlConfig({
+      homarrWebsiteUrl: appEnv.HOMARR_WEBSITE_URL,
+      workshopApiUrl: appEnv.WORKSHOP_API_URL,
+      workshopWebUrl: appEnv.WORKSHOP_WEB_URL,
+    }).workshopWebUrl,
   });
   if (modelLookup.error !== null) {
     logger.warn("Assistant model discovery failed before the response started", {

@@ -35,6 +35,7 @@ describe("assistant chat input", () => {
       clientContext: { pathname: "/en/boards/Home/settings", timeZone: "Europe/Paris" },
       currentTime: new Date("2026-08-13T08:00:00.000Z"),
       userName: "Alex",
+      workshopWebUrl: "https://community.example.com/workshop",
       entities: [
         { id: "board-1", type: "board", label: "Home", description: "Home board" },
         { id: "app-1", type: "app", label: "Jellyfin", description: "Media" },
@@ -51,6 +52,7 @@ describe("assistant chat input", () => {
 
     expect(context).toContain('"currentTimeUtc":"2026-08-13T08:00:00.000Z"');
     expect(context).toContain('"currentUser":"Alex"');
+    expect(context).toContain('"workshopWebUrl":"https://community.example.com/workshop"');
     expect(context).toContain('"currentBoard":{"id":"board-1","name":"Home"}');
     expect(context).toContain('"availableResources":{"boards":1,"apps":1,"integrations":1,"widgets":1}');
     expect(context).toContain('"explicitMentions":[{"type":"app","id":"app-1","label":"Jellyfin"');

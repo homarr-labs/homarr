@@ -59,12 +59,14 @@ export const buildAssistantRequestContext = ({
   entities,
   messages,
   userName,
+  workshopWebUrl,
 }: {
   clientContext?: AssistantClientContext;
   currentTime: Date;
   entities: AssistantContextEntity[];
   messages: { role: "user" | "assistant"; parts: unknown[] }[];
   userName: string | null | undefined;
+  workshopWebUrl?: string;
 }) => {
   const boards = entities.filter((entity) => entity.type === "board");
   const homeBoard = boards.find((board) => board.description === "Home board");
@@ -88,6 +90,7 @@ export const buildAssistantRequestContext = ({
       currentTimeUtc: currentTime.toISOString(),
       userTimeZone: clientContext?.timeZone ?? "UTC",
       currentUser: userName?.trim() || "Signed-in user",
+      workshopWebUrl: workshopWebUrl ?? null,
       currentPage: clientContext?.pathname ?? null,
       currentBoard: currentBoard ? { id: currentBoard.id, name: currentBoard.label } : null,
       homeBoard: homeBoard ? { id: homeBoard.id, name: homeBoard.label } : null,

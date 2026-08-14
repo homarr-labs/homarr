@@ -37,21 +37,23 @@ store duplicate profile metadata or avatar files. Configure SMTP for comment, re
 
 The public URL contract and Workshop-only server configuration are:
 
-| Variable                               | Purpose                                           | Default                        |
-| -------------------------------------- | ------------------------------------------------- | ------------------------------ |
-| `HOMARR_WEBSITE_URL`                   | Documentation/site base used by Homarr links      | `https://homarr.dev`           |
-| `WORKSHOP_API_URL`                     | PocketBase API used by Homarr and standalone docs | `HOMARR_WEBSITE_URL`           |
-| `WORKSHOP_PUBLIC_ORIGIN`               | PocketBase-generated links and email              | Required in production         |
-| `PB_ALLOWED_ORIGINS`                   | PocketBase browser origins                        | `*` for the central community  |
-| `OPENROUTER_API_KEY`                   | Server-only key for the Homarr provider proxy     | Provider disabled when empty   |
-| `HOMARR_AI_DAILY_REQUEST_LIMIT`        | Per-user daily provider allowance                 | `50`                           |
-| `HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT` | Shared daily ceiling across all users             | `10000`                        |
-| `HOMARR_AI_OPENROUTER_BASE_URL`        | OpenRouter-compatible proxy upstream              | `https://openrouter.ai/api/v1` |
-| `HOMARR_AI_OPENROUTER_MODEL`           | Server-selected upstream model                    | Selected by the Homarr team    |
+| Variable                               | Purpose                                       | Default                        |
+| -------------------------------------- | --------------------------------------------- | ------------------------------ |
+| `HOMARR_WEBSITE_URL`                   | Documentation/site base used by Homarr links  | `https://homarr.dev`           |
+| `WORKSHOP_API_URL`                     | PocketBase API used by Homarr and docs        | `HOMARR_WEBSITE_URL`           |
+| `WORKSHOP_WEB_URL`                     | Public Workshop links in Homarr               | `HOMARR_WEBSITE_URL/workshop`  |
+| `WORKSHOP_PUBLIC_ORIGIN`               | PocketBase-generated links and email          | Required in production         |
+| `PB_ALLOWED_ORIGINS`                   | PocketBase browser origins                    | `*` for the central community  |
+| `OPENROUTER_API_KEY`                   | Server-only key for the Homarr provider proxy | Provider disabled when empty   |
+| `HOMARR_AI_DAILY_REQUEST_LIMIT`        | Per-user daily provider allowance             | `50`                           |
+| `HOMARR_AI_GLOBAL_DAILY_REQUEST_LIMIT` | Shared daily ceiling across all users         | `10000`                        |
+| `HOMARR_AI_OPENROUTER_BASE_URL`        | OpenRouter-compatible proxy upstream          | `https://openrouter.ai/api/v1` |
+| `HOMARR_AI_OPENROUTER_MODEL`           | Server-selected upstream model                | Selected by the Homarr team    |
 
 All public URL variables reject non-HTTP protocols, embedded credentials, query strings, and fragments, and normalize
 trailing slashes when Homarr or Docusaurus starts. The deprecated docs-only `WORKSHOP_URL` alias remains for one
-release; `WORKSHOP_API_URL` takes precedence. The combined Workshop image writes the public URLs into its browser
+release; `WORKSHOP_API_URL` takes precedence for API calls and `WORKSHOP_WEB_URL` takes precedence for public Workshop
+links. The combined Workshop image writes the public URLs into its browser
 runtime configuration whenever the container starts; the Docker build arguments remain fallbacks. Restart the
 container after changing these values, without rebuilding it.
 

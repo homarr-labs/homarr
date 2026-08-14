@@ -1,7 +1,24 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Button, Checkbox, FileInput, Group, Modal, Stack, Textarea, TextInput } from "@mantine/core";
+import {
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  Divider,
+  FileInput,
+  Group,
+  Modal,
+  Paper,
+  Stack,
+  Text,
+  Textarea,
+  TextInput,
+  ThemeIcon,
+  Title,
+} from "@mantine/core";
+import { IconBuildingStore, IconCheck, IconExternalLink, IconPhoto, IconShieldCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { showErrorNotification } from "@homarr/notifications";
@@ -10,7 +27,7 @@ import { workshopScreenshotsSchema } from "@homarr/workshop/schema";
 import type { WorkshopUser } from "@homarr/workshop/schema";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { createWorkshopClient } from "./workshop-client";
+import { createWorkshopClient, getWorkshopWebUrl } from "./workshop-client";
 import {
   getPrivateWorkshopSourceNames,
   publishWorkshopDefinition,
@@ -34,7 +51,7 @@ export function WorkshopPublishModal({
   const [screenshots, setScreenshots] = useState<File[]>([]);
   const createSubmission = useWorkshopCreateMutation(client);
   const [error, setError] = useState<string | null>(null);
-  const [published, setPublished] = useState(false);
+  const [publishedSubmissionId, setPublishedSubmissionId] = useState<string | null>(null);
   const [sourceUrlsReviewed, setSourceUrlsReviewed] = useState(false);
   const definition = clientApi.customWidget.export.useQuery({ id: widget.id }, { enabled: opened });
   const privateSourceNames = getPrivateWorkshopSourceNames(definition.data);
@@ -51,7 +68,7 @@ export function WorkshopPublishModal({
     setDescription("");
     setScreenshots([]);
     setError(null);
-    setPublished(false);
+    setPublishedSubmissionId(null);
     setSourceUrlsReviewed(false);
   }, [opened, widget.name]);
   useEffect(() => setSourceUrlsReviewed(false), [definitionFingerprint]);
@@ -64,11 +81,12 @@ export function WorkshopPublishModal({
         throw new Error(t("publish.invalidScreenshot"));
       }
       const inspectedDefinition = definition.data;
+      let submissionId: string | null = null;
       const result = await publishWorkshopDefinition({
         inspectedDefinition,
         refetchDefinition: async () => (await definition.refetch()).data,
-        publish: (content) =>
-          createSubmission.mutateAsync({
+        publish: async (content) => {
+          const submission = await createSubmission.mutateAsync({
             input: {
               type: "customWidget",
               title,
@@ -76,7 +94,9 @@ export function WorkshopPublishModal({
               content,
             },
             screenshots,
-          }),
+          });
+          submissionId = submission.id;
+        },
       });
       if (result === "unavailable") throw new Error(t("publish.error"));
       if (result === "changed") {
@@ -84,19 +104,72 @@ export function WorkshopPublishModal({
         setError(t("publish.definitionChanged"));
         return;
       }
-      setPublished(true);
+      if (!submissionId) throw new Error(t("publish.error"));
+      setPublishedSubmissionId(submissionId);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : t("publish.error"));
     }
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={t("publish.title")} size="lg">
-      <Stack>
-        {published ? (
-          <Alert color="green">{t("publish.success")}</Alert>
+    <Modal opened={opened} onClose={onClose} title={t("publish.title")} size="lg" radius="lg">
+      <Stack gap="lg">
+        {publishedSubmissionId ? (
+          <Stack align="center" gap="lg" py="md">
+            <ThemeIcon size={64} radius="xl" color="green" variant="light">
+              <IconCheck size={32} stroke={2} />
+            </ThemeIcon>
+            <Box ta="center">
+              <Title order={3}>{t("publish.successTitle")}</Title>
+              <Text c="dimmed" size="sm" maw={480} mt={6}>
+                {t("publish.success")}
+              </Text>
+            </Box>
+            <Paper withBorder radius="md" p="md" w="100%">
+              <Group wrap="nowrap" align="flex-start">
+                <ThemeIcon variant="light" color="blue" radius="md" size="lg">
+                  <IconBuildingStore size={20} />
+                </ThemeIcon>
+                <Box>
+                  <Text fw={600} size="sm">
+                    {t("publish.manageTitle")}
+                  </Text>
+                  <Text c="dimmed" size="sm" mt={2}>
+                    {t("publish.manageDescription")}
+                  </Text>
+                </Box>
+              </Group>
+            </Paper>
+            <Group justify="center">
+              <Button variant="default" onClick={onClose}>
+                {t("publish.done")}
+              </Button>
+              <Button
+                component="a"
+                href={getWorkshopWebUrl(publishedSubmissionId)}
+                target="_blank"
+                rel="noopener noreferrer"
+                rightSection={<IconExternalLink size={16} />}
+              >
+                {t("publish.viewSubmission")}
+              </Button>
+            </Group>
+          </Stack>
         ) : (
           <>
+            <Paper withBorder radius="md" p="md" bg="var(--mantine-color-default-hover)">
+              <Group wrap="nowrap" align="flex-start">
+                <ThemeIcon variant="light" radius="md" size="lg">
+                  <IconBuildingStore size={20} />
+                </ThemeIcon>
+                <Box>
+                  <Text fw={600}>{t("publish.introTitle")}</Text>
+                  <Text c="dimmed" size="sm" mt={2}>
+                    {t("publish.introDescription")}
+                  </Text>
+                </Box>
+              </Group>
+            </Paper>
             {!user && (
               <Alert color="blue">
                 <Group justify="space-between">
@@ -118,28 +191,45 @@ export function WorkshopPublishModal({
                 </Group>
               </Alert>
             )}
-            <TextInput
-              label={t("publish.titleField")}
-              value={title}
-              onChange={(event) => setTitle(event.currentTarget.value)}
-              required
-            />
-            <Textarea
-              label={t("publish.descriptionField")}
-              value={description}
-              onChange={(event) => setDescription(event.currentTarget.value)}
-              minRows={3}
-            />
-            <FileInput
-              label={t("publish.screenshots")}
-              description={t("publish.screenshotsDescription")}
-              accept="image/png,image/jpeg,image/webp"
-              multiple
-              value={screenshots}
-              onChange={setScreenshots}
-            />
+            <Paper withBorder radius="md" p="md">
+              <Stack gap="md">
+                <Box>
+                  <Text fw={600} size="sm">
+                    {t("publish.listingDetails")}
+                  </Text>
+                  <Text c="dimmed" size="xs" mt={2}>
+                    {t("publish.listingDetailsDescription")}
+                  </Text>
+                </Box>
+                <TextInput
+                  label={t("publish.titleField")}
+                  value={title}
+                  onChange={(event) => setTitle(event.currentTarget.value)}
+                  required
+                />
+                <Textarea
+                  label={t("publish.descriptionField")}
+                  value={description}
+                  onChange={(event) => setDescription(event.currentTarget.value)}
+                  minRows={4}
+                  autosize
+                  maxRows={7}
+                />
+                <FileInput
+                  label={t("publish.screenshots")}
+                  description={t("publish.screenshotsDescription")}
+                  placeholder={t("publish.screenshotsPlaceholder")}
+                  leftSection={<IconPhoto size={16} />}
+                  accept="image/png,image/jpeg,image/webp"
+                  multiple
+                  value={screenshots}
+                  onChange={setScreenshots}
+                  clearable
+                />
+              </Stack>
+            </Paper>
             {privateSourceNames.length > 0 && (
-              <Alert color="yellow">
+              <Alert color="yellow" icon={<IconShieldCheck size={18} />} title={t("publish.reviewSourcesTitle")}>
                 {t("publish.privateSourceWarning", {
                   sources: privateSourceNames.join(", "),
                 })}
@@ -153,19 +243,30 @@ export function WorkshopPublishModal({
             )}
             {definition.isError && <Alert color="red">{t("publish.error")}</Alert>}
             {error && <Alert color="red">{error}</Alert>}
-            <Button
-              loading={createSubmission.isPending || definition.isFetching}
-              disabled={
-                !user ||
-                !definition.data ||
-                definition.isError ||
-                title.trim().length < 3 ||
-                (privateSourceNames.length > 0 && !sourceUrlsReviewed)
-              }
-              onClick={() => void publish()}
-            >
-              {t("publish.action")}
-            </Button>
+            <Divider />
+            <Group justify="space-between" align="center">
+              <Text c="dimmed" size="xs" maw={360}>
+                {t("publish.publicationNote")}
+              </Text>
+              <Group gap="sm">
+                <Button variant="default" onClick={onClose}>
+                  {t("publish.cancel")}
+                </Button>
+                <Button
+                  loading={createSubmission.isPending || definition.isFetching}
+                  disabled={
+                    !user ||
+                    !definition.data ||
+                    definition.isError ||
+                    title.trim().length < 3 ||
+                    (privateSourceNames.length > 0 && !sourceUrlsReviewed)
+                  }
+                  onClick={() => void publish()}
+                >
+                  {t("publish.action")}
+                </Button>
+              </Group>
+            </Group>
           </>
         )}
       </Stack>

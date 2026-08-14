@@ -23,6 +23,7 @@ export const env = createEnv({
     DEMO_READ_ONLY: createBooleanSchema(true),
     HOMARR_WEBSITE_URL: publicHttpUrl("HOMARR_WEBSITE_URL").default("https://homarr.dev"),
     WORKSHOP_API_URL: publicHttpUrl("WORKSHOP_API_URL").optional(),
+    WORKSHOP_WEB_URL: publicHttpUrl("WORKSHOP_WEB_URL").optional(),
   },
   runtimeEnv: {
     KUBERNETES_SERVICE_ACCOUNT_NAME: process.env.KUBERNETES_SERVICE_ACCOUNT_NAME,
@@ -30,5 +31,6 @@ export const env = createEnv({
     DEMO_READ_ONLY: process.env.DEMO_READ_ONLY,
     HOMARR_WEBSITE_URL: process.env.HOMARR_WEBSITE_URL,
     WORKSHOP_API_URL: process.env.WORKSHOP_API_URL,
+    WORKSHOP_WEB_URL: process.env.WORKSHOP_WEB_URL,
   },
 });

@@ -32,6 +32,20 @@ describe("Workshop URL configuration", () => {
     });
   });
 
+  test("uses an explicit Workshop web URL for public Workshop links", () => {
+    expect(
+      resolveHomarrUrlConfig({
+        homarrWebsiteUrl: "https://homarr.example.com",
+        workshopApiUrl: "https://api.example.com",
+        workshopWebUrl: "https://community.example.com/workshop",
+      }),
+    ).toEqual({
+      homarrWebsiteUrl: "https://homarr.example.com",
+      workshopApiUrl: "https://api.example.com",
+      workshopWebUrl: "https://community.example.com/workshop",
+    });
+  });
+
   test("rejects unsafe or ambiguous public URLs", () => {
     expect(() => normalizeHttpUrl("file:///tmp/workshop", "WORKSHOP_API_URL")).toThrow("HTTP or HTTPS");
     expect(() => normalizeHttpUrl("https://user:secret@example.com", "WORKSHOP_API_URL")).toThrow("credentials");

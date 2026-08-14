@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { Button } from "@mantine/core";
-import { IconExternalLink } from "@tabler/icons-react";
+import { Alert, Button, Stack } from "@mantine/core";
+import { IconExternalLink, IconInfoCircle } from "@tabler/icons-react";
 
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
@@ -17,6 +17,7 @@ export default async function WorkshopPage() {
   const { workshopWebUrl } = resolveHomarrUrlConfig({
     homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,
     workshopApiUrl: env.WORKSHOP_API_URL,
+    workshopWebUrl: env.WORKSHOP_WEB_URL,
   });
   return (
     <ManagePageLayout
@@ -34,7 +35,12 @@ export default async function WorkshopPage() {
         </Button>
       }
     >
-      <WorkshopInstaller />
+      <Stack gap="lg">
+        <Alert icon={<IconInfoCircle size={18} />} title={t("manageSubmissionsTitle")} color="blue">
+          {t("manageSubmissionsDescription")}
+        </Alert>
+        <WorkshopInstaller />
+      </Stack>
     </ManagePageLayout>
   );
 }

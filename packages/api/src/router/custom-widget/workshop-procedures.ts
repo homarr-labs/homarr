@@ -23,8 +23,11 @@ const logger = createLogger({ module: "custom-widget:workshop" });
 const workshopUrls = resolveHomarrUrlConfig({
   homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,
   workshopApiUrl: env.WORKSHOP_API_URL,
+  workshopWebUrl: env.WORKSHOP_WEB_URL,
 });
 const workshop = new WorkshopBackend(workshopUrls.workshopApiUrl);
+const getWorkshopSubmissionUrl = (submissionId: string) =>
+  `${workshopUrls.workshopWebUrl}/${encodeURIComponent(submissionId)}`;
 
 function throwWorkshopUnavailable(
   message: string,
@@ -94,6 +97,7 @@ export const workshopProcedures = {
             .filter((item) => item.widgetSchema === CUSTOM_WIDGET_SCHEMA)
             .map((item) => ({
               id: item.id,
+              url: getWorkshopSubmissionUrl(item.id),
               title: item.title,
               description: item.description,
               authorName: item.authorName,
@@ -117,6 +121,7 @@ export const workshopProcedures = {
       return {
         submission: {
           id: submission.id,
+          url: getWorkshopSubmissionUrl(submission.id),
           title: submission.title,
           description: submission.description,
           authorName: submission.authorName,

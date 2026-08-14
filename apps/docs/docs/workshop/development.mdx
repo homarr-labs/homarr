@@ -47,13 +47,14 @@ Workshop moderator promotion, logs, tests, backup, restore, stopping, and intent
 
 ## URL testing
 
-Docusaurus reads `HOMARR_WEBSITE_URL` and `WORKSHOP_API_URL` when it starts or builds. Homarr derives the public
-Workshop page by appending `/workshop` to `HOMARR_WEBSITE_URL`, so these values do not rely on `NEXT_PUBLIC_*` build
-variables. Test a separate API origin before release:
+Docusaurus reads `HOMARR_WEBSITE_URL`, `WORKSHOP_API_URL`, and `WORKSHOP_WEB_URL` when it starts or builds. Homarr uses
+`WORKSHOP_WEB_URL` for public Workshop links while API and documentation origins remain independent. These values do
+not rely on `NEXT_PUBLIC_*` build variables. Test separate origins before release:
 
 ```sh
 HOMARR_WEBSITE_URL=http://127.0.0.1:3003 \
 WORKSHOP_API_URL=http://127.0.0.1:8090 \
+WORKSHOP_WEB_URL=http://127.0.0.1:3003/workshop \
 pnpm dev:docs
 ```
 
