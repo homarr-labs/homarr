@@ -1,0 +1,28 @@
+docs/perf/NEXT-STEPS.md
+  s_a70c07ac5b7a5a::t_ffaf5370ae923e 97
+docs/perf/README.md
+  s_a70c07ac5b7a5a::t_86ae4c3d18e820 40-41,44-46
+  s_a70c07ac5b7a5a::t_d33c7747e7e467 47
+docs/perf/REJECTED.md
+  s_a70c07ac5b7a5a::t_a2ff6aca69b49e 34-48
+docs/perf/SERVER-MEMORY.md
+  s_a70c07ac5b7a5a::t_43f9bb785d986c 459-473
+pnpm-lock.yaml
+  s_a70c07ac5b7a5a::t_5f67394b0e9bb0 1783,23649,23658,23663,29221
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "2ebfe659b271593b54e37fe44653a0feb0ea55d5",
+  "prompts": {},
+  "sessions": {
+    "s_a70c07ac5b7a5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d517cf8-5d84-4b46-8418-378798d948e5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
