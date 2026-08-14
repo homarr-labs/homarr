@@ -199,6 +199,18 @@ describe("TrueNasIntegration", () => {
     // JSON-RPC does not use the legacy "connect" session handshake.
     expect(ws.sentPayloads.some((payload) => payload.msg === "connect")).toBe(false);
 
+    const datasetPayload = ws.sentPayloads.find((payload) => payload.method === "pool.dataset.query");
+    expect(datasetPayload).toMatchObject({
+      params: [
+        [["id", "in", ["tank"]]],
+        {
+          extra: {
+            properties: ["used", "available"],
+          },
+        },
+      ],
+    });
+
     expect(result).toMatchObject({
       version: "TrueNAS-SCALE-24.10",
       cpuModelName: "Intel Xeon",

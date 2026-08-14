@@ -122,7 +122,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     if (activePools.length === 0) return [];
 
     const datasets = await this.requestAsync("pool.dataset.query", [
-      [["id", "IN", activePools.map((pool) => pool.name)]],
+      [["id", "in", activePools.map((pool) => pool.name)]],
       {
         extra: {
           properties: ["used", "available"],
