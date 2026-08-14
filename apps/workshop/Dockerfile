@@ -2,6 +2,17 @@
 
 ARG POCKETBASE_IMAGE=ghcr.io/muchobien/pocketbase:0.39.9@sha256:c0667fe6c5197ff226ff642120ab1ad870c3f2f27300940a61e5a7fa082b6816
 
+FROM golang:1.25.7-alpine AS pocketbase-builder
+WORKDIR /src
+COPY apps/workshop/go.mod apps/workshop/go.sum ./
+RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go mod download
+COPY apps/workshop/*.go ./
+RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod \
+  CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/pocketbase .
+
+FROM pocketbase-builder AS pocketbase-test
+RUN --mount=type=cache,id=workshop-go-mod,target=/go/pkg/mod go test ./...
+
 FROM node:24.18.0-alpine AS dependencies
 WORKDIR /app
 ENV COREPACK_HOME=/corepack
@@ -26,6 +37,7 @@ RUN CI=true SKIP_ENV_VALIDATION=true pnpm turbo build --filter=@homarr/docs
 
 FROM ${POCKETBASE_IMAGE} AS pocketbase-runtime
 ENV PORT=8090
+COPY --from=pocketbase-builder /out/pocketbase /usr/local/bin/pocketbase
 RUN addgroup -S pocketbase && adduser -S -G pocketbase pocketbase
 COPY apps/workshop/entrypoint.sh /usr/local/bin/workshop-entrypoint
 RUN chmod 755 /usr/local/bin/workshop-entrypoint && mkdir -p /pb_data /pb_public && chown pocketbase:pocketbase /pb_data /pb_public

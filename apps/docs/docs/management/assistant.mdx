@@ -1,0 +1,68 @@
+---
+description: Configure and use Homarr Assistant.
+tags:
+  - Assistant
+  - AI
+  - Administration
+---
+
+# Assistant
+
+Homarr Assistant can answer questions and manage Homarr for you. It uses the signed-in user's permissions and asks for
+approval before making changes.
+
+![Homarr Assistant conversation with suggested prompts](/img/assistant/conversation.png)
+
+## Set it up
+
+Open **Management → Assistant**.
+
+![Assistant provider, credentials, and model configuration](/img/assistant/configuration.png)
+
+1. Select a provider and check its API URL.
+2. Enter an API key when required, then save the connection.
+3. Refresh the model list and select a model.
+4. Enable the assistant and save.
+
+Choose a provider preset or use **Custom endpoint** with an OpenAI-compatible Chat Completions API. The
+[Homarr provider](../workshop/homarr-provider) needs no administrator API key; users sign in to the Community Workshop
+and receive a daily allowance.
+
+:::info Local model servers
+
+Inside a container, `localhost` means the Homarr container. Use the model server's container name, local DNS name, or
+host gateway address.
+
+:::
+
+## Use it
+
+- Select **Assistant** in the user menu or press `Shift + A`.
+- Ask from `Cmd/Ctrl + K`.
+- Add the [Assistant widget](../widgets/assistant) to a board.
+
+The assistant can work with boards, apps, integrations, widgets, Custom Widgets, and connected services. Use `@` to
+add Homarr items as context, `/` for shortcuts, and the paperclip for supported files.
+
+Each request includes the user's name, current page and board, home board, server time, browser time zone, and a small
+summary of accessible Homarr resources. Live status is fetched only when needed.
+
+## Permissions and privacy
+
+- Read-only actions can run automatically. Changes require approval.
+- Homarr permissions apply to every tool call and mentioned item.
+- API keys and custom headers are encrypted and never returned to the browser.
+- Conversations are stored per user and can be exported or deleted.
+
+Prompts, attachments, tool definitions, and tool results are sent to the selected model provider. Review that
+provider's privacy policy before enabling the assistant.
+
+## Troubleshooting
+
+- **No models found:** check the base URL, model discovery path, and API key. You can enter a model ID manually.
+- **Assistant is unavailable:** enable it and save the configuration.
+- **Tool calls stop:** select a model that supports streaming and tool calls.
+- **Local endpoint is unreachable:** check container networking and the server's listen address.
+
+See [MCP](./mcp) for external AI clients and [Custom Widget agent authoring](./custom-widgets/agent-authoring) for the
+widget authoring workflow.

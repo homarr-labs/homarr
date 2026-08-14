@@ -17,7 +17,9 @@ Install the Agent Skill from the verified Homarr repository:
 npx skills add https://github.com/homarr-labs/homarr --skill homarr-custom-widget
 ```
 
-The portable skill gives concise authoring guidance. The Homarr MCP prompt gives connected agents a retrieval workflow: read the live schema, then fetch only the component documentation needed for the widget.
+The portable skill gives concise authoring guidance. For connected agents, Homarr returns the complete `SKILL.md` and
+all bundled skill references once in one lazy tool response. The Homarr MCP prompt then gives the agent a
+retrieval workflow: read the live schema and fetch only the component documentation needed for the widget.
 
 The workbench's **Copy AI prompt** action is separate. It creates a self-contained prompt below 12,000 characters for an ordinary ChatGPT or Claude conversation. It includes the lean contract, bindings, recommended components, and two polished examples. It never tells an offline model to call MCP tools.
 
@@ -37,38 +39,55 @@ Repository code cannot give this attribution.
 
 The authoring-prompt tool description contains one sentence. The prompt contains the workflow instructions and resource links.
 
-`GET /api/custom-widgets/skill` and the MCP tool return the concise skill discovery payload:
+`GET /api/custom-widgets/skill` and `customWidget_getSkill` return a self-contained structured skill payload:
 
 ```ts
 {
   name: "homarr-custom-widget";
   version: string;
-  skillMd: string;
+  skillMd: string; // Complete SKILL.md
+  references: Record<string, string>;
   skillsShUrl: string;
   sourceUrl: string;
   installCommand: string;
 }
 ```
 
-The full installed component catalog stays available through `homarr://custom-widgets/components` and per-component resources. It is deliberately not embedded in the skill or clipboard prompt.
+The `homarr://custom-widgets/skill` MCP resource returns the same `SKILL.md` and references once as bundled Markdown.
+
+The component catalog is a compact index of names, categories, safety levels, shared prop names, policies, and example
+IDs. Per-component results contain only component-specific props and a reference to shared prop documentation. Use
+`customWidget_getSharedProps` once with only the shared prop names needed across the selected components. This avoids
+repeating hundreds of global props in every tool result. The catalog is deliberately not embedded in the skill or
+clipboard prompt; the skill response still contains the complete authoring, schema, runtime, and security references.
 
 These interfaces do not return an archive URL or archive hash.
 
 ## Create a Custom Widget with MCP
 
-1. Get the prompt, live schema, and component catalog.
-2. Read the external API documentation.
-3. Build one definition.
-4. Validate the definition without saving it.
-5. Create a preview session.
-6. Test the queries and actions.
-7. Open the preview URL with browser tools.
-8. Inspect the redacted journal and revise the local candidate until it is valid.
-9. Create the widget, including any source URLs and credentials the user already supplied.
-10. Otherwise, ask the user to configure the saved definition with the ten-minute Homarr source-setup URL.
-11. Create a final preview with the saved definition ID so Homarr loads its stored credentials, then test it again.
-12. Update the saved definition if the final verification finds a problem.
-13. Repeat the procedure for the next widget.
+1. Load `customWidget_getSkill`, then get the prompt and live schema.
+2. Call `customWidget_getComponentCatalog`, followed by `customWidget_getComponent` for only the relevant installed
+   components and `customWidget_getExample` when one catalog example matches the interaction pattern. If shared props
+   are needed, collect their catalog names and call `customWidget_getSharedProps` once for that set.
+3. Read the external API documentation.
+4. Build one definition, using `templateLines` for multiline JSX tool input.
+5. Validate the definition without saving it and repair every reported issue.
+6. Create a preview session.
+7. Run `customWidget_previewQuery` for every query returned by the preview and inspect its actual status and data shape.
+8. Test relevant actions in simulation mode.
+9. Open the returned preview path with browser tools.
+10. Inspect the redacted journal and revise the local candidate until validation, data, and rendering all work.
+11. Create the widget, including any source URLs and credentials the user already supplied.
+12. Open its returned management path, and use a structured question when the user must choose whether to place it on a board.
+13. Otherwise, ask the user to configure the saved definition with the ten-minute Homarr source-setup URL.
+14. Create a final preview with the saved definition ID so Homarr loads its stored credentials, then test it again.
+15. Update the saved definition if the final verification finds a problem. `customWidget_update` also accepts
+    `templateLines` for multiline JSX without resetting omitted options.
+16. Repeat the procedure for the next widget.
+
+Successful validation returns a compact summary instead of echoing the full widget and template. Preview creation
+returns its session, links, and query checklist without repeating the submitted definition. Keep the candidate locally
+and reuse it for the next lifecycle step.
 
 Each source-configuration URL applies to one definition or preview and one source. It is short-lived, single-use, and
 can only be opened and completed by an authenticated Homarr administrator. The administrator confirms the server URL,
@@ -94,11 +113,51 @@ Homarr maintainers can run the same self-contained prompt that the workbench cop
 OPENROUTER_API_KEY=... pnpm --filter @homarr/custom-widgets test:ai
 ```
 
-The suite uses DeepSeek V4 Pro to author Pokédex, Portainer, football, Jellyfin, and Home Assistant widgets. Before DeepSeek V4 Flash judges a result, it must pass Homarr's real clipboard parser, canonical schema, and deterministic scenario checks for the documented API routes, authentication, bindings, actions, and essential runtime components. It saves every response, validated widget manifest, and detailed category scores under `packages/custom-widgets/.ai-evaluations/`.
+The manifest suite covers nine complex and public-API prompts. Its deterministic fixture-backed cases include a fake
+homelab health API, CoinMarketCap's keyless public API, Bored, Agify, and a multi-request Pokédex. Before the configured
+model judges a result, the candidate must pass Homarr's real clipboard parser, canonical schema, and deterministic
+checks for documented endpoints, authentication, request triggers, query bindings, response fields, and essential
+runtime components.
 
-Each scenario stops as soon as it passes and has a hard limit of ten generation attempts. Override the models or
-per-scenario limit with `OPENROUTER_GENERATOR_MODEL`, `OPENROUTER_JUDGE_MODEL`, and
+To exercise the real Homarr Assistant lifecycle instead of accepting a returned JSON block, run:
+
+```sh
+OPENROUTER_API_KEY=... pnpm --filter @homarr/custom-widgets test:assistant-ai
+```
+
+The same suites can target the Homarr provider with a Workshop PocketBase token instead of an OpenRouter key:
+
+```sh
+AI_PROVIDER_BASE_URL=https://homarr.dev/api/ai/v1 \
+AI_PROVIDER_API_KEY=<workshop-token> \
+AI_PROVIDER_MODEL=homarr/model \
+pnpm --filter @homarr/custom-widgets test:assistant-ai
+```
+
+`AI_PROVIDER_JUDGE_MODEL` can select a separate judge when the configured endpoint offers one. The Homarr provider
+offers exactly one model, so generation and review both use `homarr/model`.
+
+The assistant test exposes the same lazy skill, live schema, component catalog, targeted component references,
+validation, preview-query, and create-from-preview tools as the product. It refuses to save a definition that was not
+validated exactly or whose preview queries were not all tested. Multi-request fixtures return a different payload for
+each documented path and require manual-query parameters. Use `--case=pokedex`, `--case=coinmarketcap-keyless`,
+`--case=bored-activity`, or `--case=agify-name` for a focused run.
+
+Both suites use the configured provider models for generation and harsh review. They save tool traces, validated
+manifests, raw reviews, and detailed category scores under
+`packages/custom-widgets/.ai-evaluations/`. These live tests are maintainer-invoked rather than CI-required because
+they consume a configured provider account and exercise a nondeterministic model. The repository's ordinary tests
+cover the lifecycle enforcement, fixture routing, score calculation, and failure behavior without network access.
+
+Each scenario stops as soon as it passes and has a hard limit of ten generation attempts. Override the endpoint,
+models, or per-scenario limit with `AI_PROVIDER_BASE_URL`, `AI_PROVIDER_API_KEY`, `AI_PROVIDER_MODEL`,
+`AI_PROVIDER_JUDGE_MODEL`, and
 `CUSTOM_WIDGET_AI_MAX_LOOPS`. Generated artifacts are local and ignored by Git; promote a reviewed, validated result
 into the bundled-widget source deliberately.
 
 The reference API check uses a real PokeAPI list/detail request and a read-only Portainer container query when `PORTAINER_BASE_URL` and `PORTAINER_API_KEY` are set. Use `pnpm --filter @homarr/custom-widgets test:reference-apis -- --pokeapi-only` for the public PokeAPI check alone. To exercise start, restart, and stop against a disposable container, also set `PORTAINER_TEST_CONTAINER_ID` and the explicit safeguard `PORTAINER_ALLOW_MUTATIONS=1`; the script restores the container's original running state.
+
+Use `pnpm --filter @homarr/custom-widgets test:reference-apis -- --public-ai-apis-only` to verify the live Bored and
+CoinMarketCap response shapes used by the assistant fixtures. The same command also verifies Agify when
+`AGIFY_API_KEY` is configured; otherwise it reports the authenticated check as skipped without weakening the
+deterministic Agify fixture tests.

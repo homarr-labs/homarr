@@ -35,10 +35,12 @@ for (const required of [
   "reports",
   "workshop_listings",
   "workshop_report_summaries",
+  "assistant_quotas",
+  "assistant_global_quota",
 ]) {
   if (!collectionNames.has(required)) throw new Error(`Missing Workshop collection: ${required}`);
 }
-for (const removed of ["workshop_admin_actions", "workshop_admins"]) {
+for (const removed of ["workshop_admin_actions", "workshop_admins", "assistant_requests", "assistant_activity"]) {
   if (collectionNames.has(removed)) throw new Error(`Removed Workshop collection still exists: ${removed}`);
 }
 
@@ -99,6 +101,393 @@ if (unchangedAuthor.name !== "widget-author") {
 const visitorPassword = "WorkshopVisitor123!";
 const visitor = await createUser("widget-visitor@example.invalid", "widget-visitor", visitorPassword);
 const visitorSession = await signIn(visitor.email, visitorPassword);
+const concurrencyPassword = "WorkshopConcurrency123!";
+const concurrencyUser = await createUser(
+  "provider-concurrency@example.invalid",
+  "provider-concurrency",
+  concurrencyPassword,
+);
+const concurrencySession = await signIn(concurrencyUser.email, concurrencyPassword);
+
+const modelList = await request("/api/ai/v1/models");
+if (
+  modelList.object !== "list" ||
+  modelList.data.length !== 1 ||
+  modelList.data[0].id !== "homarr/model" ||
+  modelList.data[0].context_length !== 256 * 1024
+) {
+  throw new Error("The Homarr provider must advertise exactly one model");
+}
+await expectStatus("/api/ai/usage", {}, 401);
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    body: JSON.stringify({
+      model: "homarr/model",
+      messages: [{ role: "user", content: "unauthenticated" }],
+    }),
+  },
+  401,
+);
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    headers: { authorization: "Bearer forged-workshop-user-token" },
+    body: JSON.stringify({
+      model: "homarr/model",
+      messages: [{ role: "user", content: "forged identity" }],
+    }),
+  },
+  401,
+);
+
+const inFlightProbe = () =>
+  fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+    method: "POST",
+    headers: { "content-type": "application/json", ...concurrencySession.headers },
+    body: JSON.stringify({
+      model: "homarr/model",
+      messages: [{ role: "user", content: "in-flight probe" }],
+      stream: false,
+    }),
+  });
+const inFlightResponses = await Promise.all([inFlightProbe(), inFlightProbe(), inFlightProbe()]);
+if (
+  inFlightResponses
+    .map((response) => response.status)
+    .toSorted()
+    .join(",") !== "200,200,429"
+) {
+  throw new Error("The per-user in-flight request limit was not enforced");
+}
+const concurrencyUsage = await request("/api/ai/usage", { headers: concurrencySession.headers });
+if (concurrencyUsage.used !== 2) {
+  throw new Error(`Rejected in-flight requests must not consume allowance: ${JSON.stringify(concurrencyUsage)}`);
+}
+
+const initialUsage = await request("/api/ai/usage", { headers: authorSession.headers });
+const initialReset = new Date(initialUsage.resetsAt);
+if (
+  initialUsage.limit !== 50 ||
+  initialUsage.used !== 0 ||
+  initialUsage.remaining !== 50 ||
+  initialReset.getUTCHours() !== 0 ||
+  initialReset <= new Date()
+) {
+  throw new Error(`Unexpected initial Homarr provider allowance: ${JSON.stringify(initialUsage)}`);
+}
+
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    headers: authorSession.headers,
+    body: JSON.stringify({
+      model: "homarr/model",
+      messages: [
+        { role: "user", content: "too many tools" },
+        ...Array.from({ length: 1000 }, (_, index) => ({
+          role: "tool",
+          tool_call_id: `tool-${index}`,
+          content: "{}",
+        })),
+      ],
+    }),
+  },
+  400,
+);
+
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    headers: authorSession.headers,
+    body: JSON.stringify({
+      model: "homarr/model",
+      messages: [{ role: "user", content: "x".repeat(256 * 1024 + 1) }],
+    }),
+  },
+  413,
+);
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    headers: authorSession.headers,
+    body: JSON.stringify({
+      model: "homarr/model",
+      messages: [
+        {
+          role: "user",
+          content: [{ type: "image_url", image_url: { url: "https://attacker.example/tracker.png" } }],
+        },
+      ],
+    }),
+  },
+  413,
+);
+const usageAfterRejectedRequest = await request("/api/ai/usage", { headers: authorSession.headers });
+if (usageAfterRejectedRequest.used !== 0) {
+  throw new Error("A rejected oversized request-unit batch consumed allowance");
+}
+
+await expectStatus(
+  "/api/ai/v1/chat/completions",
+  {
+    method: "POST",
+    headers: authorSession.headers,
+    body: JSON.stringify({ model: "another-model", messages: [{ role: "user", content: "hello" }] }),
+  },
+  400,
+);
+
+const streamStartedAt = performance.now();
+const streamResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+  method: "POST",
+  headers: { "content-type": "application/json", ...authorSession.headers },
+  body: JSON.stringify({
+    model: "homarr/model",
+    messages: [{ role: "user", content: "hello" }],
+    stream: true,
+  }),
+});
+if (!streamResponse.ok || streamResponse.headers.get("x-homarr-quota-remaining") !== "49") {
+  throw new Error(`Streaming provider request failed: ${streamResponse.status}`);
+}
+const streamReader = streamResponse.body.getReader();
+const firstChunk = await streamReader.read();
+const firstChunkAt = performance.now();
+let streamText = new TextDecoder().decode(firstChunk.value ?? new Uint8Array());
+while (true) {
+  const chunk = await streamReader.read();
+  if (chunk.done) break;
+  streamText += new TextDecoder().decode(chunk.value);
+}
+const dataFrames = streamText.split(/\r?\n/u).filter((line) => line.startsWith("data:"));
+if (
+  firstChunk.done ||
+  !streamText.includes("Hello from ") ||
+  !streamText.includes("the Homarr provider") ||
+  streamText.includes("mock/team-selected-model") ||
+  !streamText.includes('"model":"homarr/model"') ||
+  dataFrames.length < 3 ||
+  dataFrames.at(-1)?.trim() !== "data: [DONE]" ||
+  firstChunkAt - streamStartedAt > 5_000
+) {
+  throw new Error("The Homarr provider did not preserve the upstream SSE stream");
+}
+const malformedStreamResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+  method: "POST",
+  headers: { "content-type": "application/json", ...concurrencySession.headers },
+  body: JSON.stringify({
+    model: "homarr/model",
+    messages: [{ role: "user", content: "malformed stream" }],
+    stream: true,
+  }),
+});
+const malformedStreamText = await malformedStreamResponse.text();
+if (
+  !malformedStreamResponse.ok ||
+  !malformedStreamText.includes('"type":"homarr_provider_error"') ||
+  malformedStreamText.includes('data: {"model":') ||
+  !malformedStreamText.endsWith("data: [DONE]\n\n")
+) {
+  throw new Error(`Malformed upstream streams did not terminate safely: ${malformedStreamText}`);
+}
+const toolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+  method: "POST",
+  headers: {
+    "content-type": "application/json",
+    ...authorSession.headers,
+    "http-referer": "https://attacker.example",
+    "x-openrouter-title": "Attacker",
+    "x-openrouter-metadata": "attacker",
+  },
+  body: JSON.stringify({
+    model: "homarr/model",
+    messages: [
+      { role: "user", content: "inspect my dashboard" },
+      { role: "assistant", content: null, tool_calls: [{ id: "one" }, { id: "two" }] },
+      { role: "tool", tool_call_id: "one", content: "{}" },
+      { role: "tool", tool_call_id: "two", content: "{}" },
+    ],
+    stream: false,
+    models: ["attacker/model"],
+    provider: { order: ["attacker"] },
+    route: "fallback",
+    plugins: ["web"],
+    transforms: ["middle-out"],
+    max_tokens: 1_000_000,
+    max_completion_tokens: 1_000_000,
+    n: 100,
+    parallel_tool_calls: true,
+    extra_body: { provider: { order: ["attacker"] } },
+    extra_headers: { Authorization: "Bearer attacker" },
+    metadata: { user: "must-not-reach-openrouter" },
+    audio: { format: "wav", voice: "alloy" },
+    modalities: ["text", "audio"],
+    logprobs: true,
+    top_logprobs: 20,
+    prediction: { content: "attacker-controlled prediction" },
+    service_tier: "priority",
+    reasoning: { effort: "high", max_tokens: 1_000_000 },
+    user: "must-not-reach-openrouter",
+    tools: [
+      { type: "function", function: { name: "board_list" } },
+      { type: "openrouter:web_search", parameters: { max_results: 1000, max_uses: 1000 } },
+      { type: "openrouter:web_search" },
+    ],
+  }),
+});
+if (!toolResponse.ok || toolResponse.headers.get("x-homarr-quota-remaining") !== "48") {
+  throw new Error("Every upstream inference must consume one Homarr provider request unit");
+}
+const toolCompletion = await toolResponse.json();
+if (
+  toolCompletion.model !== "homarr/model" ||
+  toolCompletion.choices?.[0]?.finish_reason !== "tool_calls" ||
+  toolCompletion.choices?.[0]?.message?.tool_calls?.[0]?.function?.name !== "board_list"
+) {
+  throw new Error(
+    `The public model alias or function tool response was not forwarded: ${JSON.stringify(toolCompletion)}`,
+  );
+}
+
+const streamedToolResponse = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+  method: "POST",
+  headers: { "content-type": "application/json", ...concurrencySession.headers },
+  body: JSON.stringify({
+    model: "homarr/model",
+    messages: [{ role: "user", content: "inspect my dashboard" }],
+    tools: [{ type: "function", function: { name: "board_list", parameters: { type: "object" } } }],
+    stream: true,
+  }),
+});
+const streamedToolText = await streamedToolResponse.text();
+if (
+  !streamedToolResponse.ok ||
+  streamedToolText.includes("mock/team-selected-model") ||
+  !streamedToolText.includes('"model":"homarr/model"') ||
+  !streamedToolText.includes('"name":"board_list"') ||
+  !streamedToolText.includes('"arguments":"{"') ||
+  !streamedToolText.includes('"arguments":"}"') ||
+  !streamedToolText.includes('"finish_reason":"tool_calls"') ||
+  !streamedToolText.endsWith("data: [DONE]\n\n")
+) {
+  throw new Error(`Streamed function tool calls were not preserved safely: ${streamedToolText}`);
+}
+
+const afterToolsUsage = await request("/api/ai/usage", { headers: authorSession.headers });
+if (afterToolsUsage.used !== 2 || afterToolsUsage.remaining !== 48) {
+  throw new Error(`Tool request accounting is incorrect: ${JSON.stringify(afterToolsUsage)}`);
+}
+
+const upstreamFailure = await fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+  method: "POST",
+  headers: { "content-type": "application/json", ...authorSession.headers },
+  body: JSON.stringify({
+    model: "homarr/model",
+    messages: [{ role: "user", content: "upstream failure" }],
+    stream: false,
+  }),
+});
+if (upstreamFailure.status !== 503 || upstreamFailure.headers.get("x-homarr-quota-remaining") !== "47") {
+  throw new Error("Every request forwarded upstream must consume Homarr provider allowance");
+}
+const upstreamFailureBody = await upstreamFailure.text();
+if (upstreamFailureBody.includes("Simulated upstream failure")) {
+  throw new Error("Upstream error details must not be exposed to clients");
+}
+const afterFailureUsage = await request("/api/ai/usage", { headers: authorSession.headers });
+if (afterFailureUsage.used !== 3 || afterFailureUsage.remaining !== 47) {
+  throw new Error(`Forwarded upstream failure escaped quota accounting: ${JSON.stringify(afterFailureUsage)}`);
+}
+const visitorUsage = await request("/api/ai/usage", { headers: visitorSession.headers });
+if (visitorUsage.used !== 0 || visitorUsage.remaining !== 50) {
+  throw new Error(`Provider allowance leaked across users: ${JSON.stringify(visitorUsage)}`);
+}
+
+await expectStatus("/api/collections/assistant_quotas/records", { headers: authorSession.headers }, 403);
+await expectStatus("/api/collections/assistant_global_quota/records", { headers: authorSession.headers }, 403);
+const quotas = await request("/api/collections/assistant_quotas/records?perPage=20", { headers: rootHeaders });
+const authorQuota = quotas.items.find((item) => item.user === author.id);
+if (
+  !authorQuota ||
+  authorQuota.used !== 3 ||
+  ["dailyLimit", "inputTokens", "outputTokens", "totalTokens", "model", "cost"].some((field) => field in authorQuota)
+) {
+  throw new Error(`Private provider quota is incorrect: ${JSON.stringify(authorQuota)}`);
+}
+
+await request(`/api/collections/assistant_quotas/records/${authorQuota.id}`, {
+  method: "PATCH",
+  headers: rootHeaders,
+  body: JSON.stringify({ day: "2000-01-01", used: 49 }),
+});
+const resetUsage = await request("/api/ai/usage", { headers: authorSession.headers });
+if (resetUsage.limit !== 50 || resetUsage.used !== 0 || resetUsage.remaining !== 50) {
+  throw new Error(`Quota did not reset at the UTC day boundary: ${JSON.stringify(resetUsage)}`);
+}
+const resetQuota = (
+  await request("/api/collections/assistant_quotas/records?perPage=20", { headers: rootHeaders })
+).items.find((item) => item.user === author.id);
+await request(`/api/collections/assistant_quotas/records/${resetQuota.id}`, {
+  method: "PATCH",
+  headers: rootHeaders,
+  body: JSON.stringify({ used: 49 }),
+});
+
+const allowanceProbe = () =>
+  fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+    method: "POST",
+    headers: { "content-type": "application/json", ...authorSession.headers },
+    body: JSON.stringify({
+      model: "homarr/model",
+      messages: [{ role: "user", content: "allowance probe" }],
+      stream: false,
+    }),
+  });
+const concurrentAllowanceResponses = await Promise.all([allowanceProbe(), allowanceProbe()]);
+const concurrentStatuses = concurrentAllowanceResponses.map((response) => response.status).toSorted();
+const exhaustedResponse = concurrentAllowanceResponses.find((response) => response.status === 429);
+if (
+  concurrentStatuses.join(",") !== "200,429" ||
+  exhaustedResponse?.headers.get("x-homarr-quota-remaining") !== "0" ||
+  !exhaustedResponse.headers.get("x-homarr-quota-reset")
+) {
+  throw new Error("The per-user allowance was not enforced atomically");
+}
+
+const globalQuota = (await request("/api/collections/assistant_global_quota/records", { headers: rootHeaders }))
+  .items[0];
+await request(`/api/collections/assistant_global_quota/records/${globalQuota.id}`, {
+  method: "PATCH",
+  headers: rootHeaders,
+  body: JSON.stringify({ day: new Date().toISOString().slice(0, 10), used: 9_999 }),
+});
+await request(`/api/collections/assistant_quotas/records/${resetQuota.id}`, {
+  method: "PATCH",
+  headers: rootHeaders,
+  body: JSON.stringify({ used: 0 }),
+});
+const globalResponses = await Promise.all([
+  allowanceProbe(),
+  fetch(`${baseUrl}/api/ai/v1/chat/completions`, {
+    method: "POST",
+    headers: { "content-type": "application/json", ...visitorSession.headers },
+    body: JSON.stringify({ model: "homarr/model", messages: [{ role: "user", content: "global allowance probe" }] }),
+  }),
+]);
+if (
+  globalResponses
+    .map((response) => response.status)
+    .toSorted()
+    .join(",") !== "200,429"
+) {
+  throw new Error("The shared upstream allowance was not enforced atomically across users");
+}
 
 const widget = {
   $schema: "homarr-custom-widget-v2",

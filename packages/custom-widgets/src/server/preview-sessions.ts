@@ -29,6 +29,8 @@ const sessionSchema = z.object({
   secrets: z.array(encryptedSecretSchema),
   requests: customWidgetRequestsSchema,
   name: z.string(),
+  description: z.string().optional(),
+  iconUrl: z.string().optional(),
   template: z.string(),
   optionDefinitions: customWidgetOptionsSchema,
   options: z.record(z.string(), z.unknown()),
@@ -46,6 +48,7 @@ const journalEntrySchema = z.object({
   status: z.number().nullable(),
   durationMs: z.number().nonnegative(),
   simulated: z.boolean(),
+  sessionRevision: z.number().int().nonnegative(),
   timestamp: z.number(),
 });
 export type CustomWidgetPreviewJournalEntry = z.infer<typeof journalEntrySchema>;
@@ -56,6 +59,8 @@ export interface CreatePreviewSessionInput {
   secrets: Array<{ sourceId: string; kind: (typeof customWidgetSecretKinds)[number]; value: string }>;
   requests: Record<string, CustomJsxRequest>;
   name: string;
+  description?: string;
+  iconUrl?: string;
   template: string;
   optionDefinitions: CustomWidgetOptions;
   options: Record<string, unknown>;
@@ -105,6 +110,8 @@ export class CustomWidgetPreviewSessionService {
       secrets: input.secrets.map((secret) => ({ ...secret, value: this.options.encrypt(secret.value) })),
       requests: input.requests,
       name: input.name,
+      description: input.description,
+      iconUrl: input.iconUrl,
       template: input.template,
       optionDefinitions: input.optionDefinitions,
       options: input.options,

@@ -757,6 +757,7 @@
       "export": "Export",
       "edit": "Edit",
       "duplicate": "Duplicate",
+      "aiPrompt": "Design with AI",
       "copyAiPrompt": "Copy AI prompt",
       "enable": "Enable",
       "disable": "Disable",
@@ -1127,6 +1128,7 @@
       "aiPromptCopied": "AI prompt copied to clipboard",
       "aiPromptCopiedWithCount": "AI prompt copied to clipboard ({count, number} characters).",
       "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
+      "aiPromptSent": "Prompt sent. You can keep editing while the assistant works in the background.",
       "updateError": "Failed to update widget. Your changes were not saved.",
       "importError": "Failed to import widget. Ensure the file is a valid custom widget JSON export.",
       "exportError": "Failed to export widget.",
@@ -1140,7 +1142,12 @@
       "aiPromptNoResponse": "Tip: Run a test first to include your API response in the prompt for better results.",
       "createError": "Failed to create widget. Check your API endpoint is reachable.",
       "executed": "Action executed successfully.",
-      "executeError": "Action failed: {error}"
+      "executeError": "Action failed: {error}",
+      "aiPromptRequestLabel": "What should the widget do?",
+      "aiPromptRequestPlaceholder": "For example, show service health as a compact status grid and highlight offline services.",
+      "aiPromptAssistant": "Ask Homarr Assistant",
+      "aiPromptAssistantBusy": "Assistant is working",
+      "aiPromptAssistantUnavailable": "Homarr Assistant is unavailable. You can still copy the prepared prompt."
     },
     "importReview": {
       "title": "Review custom widget import",
@@ -1974,7 +1981,10 @@
         "login": "Login",
         "homeBoard": "Your home board",
         "loggedOut": "Logged out",
-        "updateAvailable": "{countUpdates} updates available: {tag}"
+        "updateAvailable": "{countUpdates} updates available: {tag}",
+        "assistant": "Homarr Assistant",
+        "assistantThinking": "Thinking",
+        "modifier": "Mod"
       }
     },
     "dangerZone": "Danger zone",
@@ -2028,7 +2038,339 @@
       "stale": "Could not refresh {widget}; showing saved data"
     },
     "total": "Total",
-    "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}"
+    "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}",
+    "assistant": {
+      "title": "Homarr Assistant",
+      "open": "Open Homarr Assistant",
+      "close": "Close assistant",
+      "minimize": "Minimize assistant",
+      "windowControls": "Conversation window controls",
+      "spotlight": "Ask Homarr Assistant",
+      "spotlightDescription": "Type and send a prompt without leaving the command menu.",
+      "spotlightPrompt": {
+        "title": "Ask Assistant",
+        "description": "Type a prompt above. Enter sends it in the background.",
+        "send": "Send prompt",
+        "empty": "Type a prompt above"
+      },
+      "unavailable": {
+        "checking": "Checking whether the assistant is available…",
+        "error": "The assistant's availability could not be checked. Try again.",
+        "notConfigured": "An administrator must configure and enable the assistant first.",
+        "signIn": "Sign in to use Homarr Assistant."
+      },
+      "newConversation": "New conversation",
+      "conversations": "Conversations",
+      "delete": "Delete",
+      "closeHistory": "Close conversation history",
+      "openHistory": "Open conversation history",
+      "emptyTitle": "What can I help with?",
+      "emptyDescription": "Ask about your Homarr setup, inspect live instance data, or approve actions when you want me to make a change.",
+      "suggestions": {
+        "health": {
+          "label": "Check service health",
+          "prompt": "Check my integrations and summarize anything that needs attention."
+        },
+        "explore": {
+          "label": "Explore my Homarr",
+          "prompt": "Show me what I can view and manage in this Homarr instance."
+        },
+        "media": {
+          "label": "Find media to request",
+          "prompt": "Help me find a movie or series to request."
+        },
+        "style": {
+          "label": "Improve a dashboard",
+          "prompt": "Help me improve a board's appearance or custom CSS. Show me my boards first, then preserve my current settings while we make the change."
+        }
+      },
+      "composerPlaceholder": "Ask Homarr Assistant…",
+      "runtime": {
+        "model": "Model",
+        "searchModels": "Search models",
+        "noModels": "No models available",
+        "otherModels": "Other models",
+        "imageInput": "Accepts image input",
+        "thinking": "Thinking mode",
+        "reasoning": {
+          "auto": "Auto",
+          "none": "Off",
+          "minimal": "Minimal",
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        }
+      },
+      "providerQuota": {
+        "title": "Homarr provider",
+        "communityWorkshop": "Community Workshop",
+        "dailyAllowance": "Daily request allowance",
+        "remainingLabel": "{remaining} of {limit} Homarr provider requests remaining",
+        "loading": "Loading Homarr provider allowance",
+        "signInRequired": "Workshop sign-in required for the Homarr provider",
+        "signInDescription": "Sign in with GitHub through the Community Workshop to receive your separate daily allowance.",
+        "exhaustedDescription": "Your Homarr provider allowance is used for today. It resets at midnight UTC.",
+        "unavailableDescription": "Sign in to the Workshop or wait for your Homarr provider allowance to reset.",
+        "signIn": "Sign in with GitHub",
+        "signInError": "GitHub sign-in failed. Try again in a moment.",
+        "loadError": "The Homarr provider allowance could not be loaded.",
+        "reset": "Resets {relative} at <time></time>",
+        "toolCalls": "Each model request and completed tool call uses one request.",
+        "retry": "Reload allowance",
+        "level": {
+          "ok": "OK",
+          "warning": "Warning",
+          "bad": "Low",
+          "dead": "Used"
+        }
+      },
+      "stop": "Stop response",
+      "send": "Send message",
+      "copy": "Copy response",
+      "copyMessage": "Copy message",
+      "editMessage": "Edit message",
+      "cancelEdit": "Cancel",
+      "updateMessage": "Update message",
+      "regenerate": "Regenerate response",
+      "helpful": "Helpful",
+      "notHelpful": "Not helpful",
+      "feedbackError": "Your feedback could not be saved. Try again.",
+      "exportMarkdown": "Export as Markdown",
+      "exportConversation": {
+        "action": "Export conversation as Markdown",
+        "failedTitle": "Conversation could not be exported",
+        "failedDescription": "Homarr could not load this conversation. Try again."
+      },
+      "reasoning": "Thinking",
+      "previousResponse": "Previous response",
+      "nextResponse": "Next response",
+      "removeAttachment": "Remove attachment",
+      "downloadFile": "Download {name}",
+      "attachedImage": "Attached image",
+      "externalImageBlocked": "External image blocked for privacy",
+      "image": {
+        "loading": "Loading image",
+        "failed": "This image could not be loaded.",
+        "retry": "Try image again"
+      },
+      "quoteSelection": "Quote",
+      "dismissQuote": "Remove quote",
+      "attachments": {
+        "add": "Attach an image or document",
+        "errorTitle": "Attachment could not be added",
+        "imageUnsupported": "The selected model does not support image input."
+      },
+      "mentions": {
+        "menu": "Add Homarr context",
+        "hint": "Type @ to add context",
+        "context": "Context",
+        "app": "Apps",
+        "integration": "Integrations",
+        "board": "Boards",
+        "widget": "Widgets",
+        "tools": "Available tools"
+      },
+      "markdown": {
+        "diagram": "Diagram",
+        "renderingDiagram": "Rendering diagram…",
+        "diagramUnavailable": "This diagram could not be rendered."
+      },
+      "commands": {
+        "menu": "Assistant commands",
+        "hint": "Type / for shortcuts",
+        "health": "Prepare a service-health check",
+        "explore": "Prepare an overview of this Homarr instance",
+        "media": "Prepare a media search",
+        "style": "Prepare a board appearance or custom CSS change"
+      },
+      "usage": {
+        "tokens": "tokens",
+        "contextWindow": "Context window",
+        "requestDetails": "Request details",
+        "used": "Used",
+        "remaining": "Remaining",
+        "capacity": "Capacity",
+        "input": "Input",
+        "output": "Output",
+        "cached": "Cached input",
+        "cacheWrite": "Cache write",
+        "reasoning": "Reasoning",
+        "inputShort": "in",
+        "outputShort": "out",
+        "cachedShort": "cached",
+        "reasoningShort": "reasoning",
+        "firstOutput": "First output",
+        "homarrTiming": "Homarr observed",
+        "endToEnd": "End to end",
+        "observedThroughput": "Observed throughput",
+        "providerTiming": "Provider reported",
+        "loadingProviderDetails": "Loading generation details…",
+        "providerDetailsPending": "OpenRouter is still processing some generation details. Reopen to retry.",
+        "providerLatency": "Provider latency",
+        "generationTime": "Generation time",
+        "moderationLatency": "Moderation",
+        "providerThroughput": "Provider throughput",
+        "fallbacks": "Fallbacks",
+        "fallbackLatency": "Fallback latency",
+        "cacheDiscount": "Cache discount",
+        "normalizedTokens": "OpenRouter normalized input / output",
+        "byok": "BYOK",
+        "cost": "Cost",
+        "reported": "Reported by provider",
+        "estimated": "Estimated from model pricing",
+        "upstreamCost": "Upstream inference",
+        "webSearches": "Web searches",
+        "finishReason": "Finish reason",
+        "notReported": "Not reported",
+        "agentSteps": "Agent steps",
+        "step": "Step {number}",
+        "generation": "Generation"
+      },
+      "toolInput": "Input",
+      "toolOutput": "Output",
+      "toolActivity": {
+        "iconSearch": "Looking for “{query}” icons",
+        "iconBrowse": "Browsing available icons"
+      },
+      "toolNavigation": {
+        "openPreview": "Open preview",
+        "openWidget": "Open widget"
+      },
+      "webSearch": {
+        "title": "Web search",
+        "completed": "OpenRouter searched the live web for this response.",
+        "searches": "{count, plural, one {# search} other {# searches}}",
+        "sources": "{count, plural, one {# source} other {# sources}}"
+      },
+      "responseError": {
+        "title": "The assistant could not finish",
+        "description": "Try again. If the problem continues, ask an administrator to verify the configured model endpoint.",
+        "retry": "Try again"
+      },
+      "toolPreparationError": {
+        "title": "This request could not be prepared",
+        "description": "The model stopped before it supplied complete details. Retry the response or describe the request again. No change was made."
+      },
+      "busy": {
+        "title": "The assistant is already working",
+        "description": "Wait for the current response or open it to stop the run."
+      },
+      "pendingAction": {
+        "answerTitle": "Answer needed",
+        "answerFallback": "Choose an answer to continue",
+        "formTitle": "Review app details",
+        "boardFormTitle": "Review board changes",
+        "review": "Review",
+        "sendBlocked": "Resolve the pending request before sending"
+      },
+      "activity": {
+        "thinking": "Assistant is thinking",
+        "working": "Working on your prompt",
+        "ready": "Response ready",
+        "completed": "Open the response",
+        "approval": "Approval needed",
+        "failed": "Assistant needs attention",
+        "expand": "Open the assistant response",
+        "dismiss": "Dismiss assistant activity"
+      },
+      "scrollToLatest": "Scroll to latest",
+      "refresh": {
+        "action": "Refresh current view",
+        "working": "Refreshing current view",
+        "completeTitle": "View refreshed",
+        "completeDescription": "Visible Homarr data has been reloaded.",
+        "failedTitle": "View could not be refreshed",
+        "failedDescription": "The change may still be saved. Try the refresh action again."
+      },
+      "askUser": {
+        "preparing": "Preparing question",
+        "answered": "Your answer",
+        "other": "Other",
+        "otherLabel": "Your answer",
+        "otherPlaceholder": "Type another answer…",
+        "submit": "Send answer",
+        "cancelOther": "Cancel other answer",
+        "automaticAffirmative": "Choosing the affirmative answer automatically",
+        "optionKind": {
+          "affirmative": "Confirm",
+          "negative": "Decline",
+          "alternative": "Option",
+          "custom": "Custom"
+        }
+      },
+      "configureApp": {
+        "title": "Review app details",
+        "description": "Choose a local icon and adjust anything before the assistant requests creation approval.",
+        "preparing": "Preparing app details",
+        "continue": "Use these details",
+        "ready": "App details ready",
+        "automaticContinue": "Using these app details automatically"
+      },
+      "configureBoardSettings": {
+        "title": "Review board changes",
+        "loading": "Loading current board settings",
+        "loadErrorTitle": "Board settings could not be loaded",
+        "loadErrorDescription": "The board may no longer exist, or you may not have permission to modify it.",
+        "retry": "Try again",
+        "proposedCount": "Assistant proposed {count} fields",
+        "changeCount": "{count} changes ready",
+        "ready": "Board changes ready",
+        "cancelled": "Current board settings kept",
+        "noChanges": "No settings will change",
+        "keepCurrent": "Keep current settings",
+        "continue": "Continue to approval",
+        "automaticContinue": "Accepting the proposed board changes automatically",
+        "resetAll": "Reset all changes",
+        "tabs": {
+          "css": "Custom CSS",
+          "appearance": "Appearance",
+          "background": "Background",
+          "general": "General"
+        },
+        "cssDescription": "Edit the complete stylesheet. Existing rules are kept unless they are removed here.",
+        "cssCharacters": "{count} of 16384 characters",
+        "copy": "Copy",
+        "copyCss": "Copy CSS",
+        "copied": "Copied",
+        "restoreCss": "Restore current CSS",
+        "remoteCssTitle": "This CSS loads a remote resource",
+        "remoteCssDescription": "Imported stylesheets and remote URLs contact another server when the board loads. Review them before continuing."
+      },
+      "configureWidget": {
+        "title": "Review widget",
+        "preparing": "Preparing widget settings",
+        "review": "Review widget and integrations",
+        "ready": "Widget configuration ready",
+        "cancelled": "Widget was not added",
+        "automaticContinue": "Accepting the proposed widget configuration automatically",
+        "loadErrorTitle": "Integrations could not be loaded",
+        "loadErrorDescription": "Homarr could not load the integrations available for this widget.",
+        "retry": "Try again",
+        "noIntegrationTitle": "A compatible integration is required",
+        "noIntegrationDescription": "Configure an integration supported by this widget before adding it to the dashboard.",
+        "manageIntegrations": "Manage integrations",
+        "skip": "Do not add",
+        "errorTitle": "Widget settings could not be prepared",
+        "errorDescription": "The model did not provide a complete widget configuration. No widget was added."
+      },
+      "approvalRequired": "Approval required",
+      "complete": "Complete",
+      "denied": "Denied",
+      "failed": "Failed",
+      "working": "Working",
+      "approvalDescription": "Review this change before it runs.",
+      "approveAndRun": "Approve and run",
+      "deny": "Deny",
+      "autoApproval": {
+        "label": "Automatic approvals",
+        "title": "Automatic approvals",
+        "description": "Automatically approve protected changes, use presented form details, and choose answers categorized as affirmative. Neutral selections still wait for you. Your Homarr permissions still apply. This turns off when you switch conversations.",
+        "enable": "Enable for this conversation",
+        "disable": "Turn off automatic approvals",
+        "enabled": "Automatic approvals are on",
+        "approving": "Approving automatically"
+      }
+    }
   },
   "section": {
     "option": {
@@ -2573,7 +2915,8 @@
           "description": "Custom URLs must resolve to a public IP address. Private and local hosts are rejected."
         },
         "station": {
-          "label": "Station"
+          "label": "Station",
+          "placeholder": "Search for a station"
         }
       },
       "error": {
@@ -5067,6 +5410,24 @@
         "oneWeek": "1w",
         "thirtyDays": "30d"
       }
+    },
+    "dynamicSelect": {
+      "noResults": "No results found",
+      "loadError": "Failed to load options"
+    },
+    "assistant": {
+      "name": "Assistant",
+      "description": "Have a complete assistant conversation directly on your board.",
+      "option": {},
+      "unavailable": {
+        "title": "Assistant unavailable",
+        "description": "Sign in and ask an administrator to configure the Assistant from the management panel."
+      },
+      "compact": {
+        "title": "Assistant",
+        "description": "Resize this widget to chat here, or open the full conversation.",
+        "open": "Open assistant"
+      }
     }
   },
   "widgetPreview": {
@@ -5556,7 +5917,8 @@
             "sourceCode": "Source Code"
           }
         },
-        "about": "About"
+        "about": "About",
+        "assistant": "Assistant"
       }
     },
     "page": {
@@ -5870,6 +6232,190 @@
             "title": "Culture",
             "defaultLocale": {
               "label": "Default language"
+            }
+          },
+          "assistant": {
+            "loading": "Loading assistant configuration",
+            "title": "Assistant",
+            "description": "Connect an OpenAI-compatible model endpoint for the instance-wide assistant.",
+            "security": {
+              "title": "Server-side secrets",
+              "description": "API keys and additional header values are encrypted in the Homarr database. They are never returned to browsers. Model requests are sent from the Homarr server directly to the configured endpoint."
+            },
+            "overview": {
+              "connectionReady": "Connection ready",
+              "unsavedChanges": "Unsaved changes",
+              "setupRequired": "Setup required",
+              "available": "Available",
+              "disabled": "Disabled",
+              "noModel": "No model selected"
+            },
+            "connection": {
+              "title": "Provider connection",
+              "endpointTitle": "Provider and endpoint",
+              "description": "Choose a preset or connect any service that implements the OpenAI Chat Completions API.",
+              "saved": "Connection saved",
+              "notSaved": "Not configured",
+              "save": "Save provider connection"
+            },
+            "credentials": {
+              "title": "Credentials",
+              "description": "Add the secrets this endpoint needs. Stored values stay encrypted and cannot be read back.",
+              "required": "Key required",
+              "optional": "Key optional",
+              "workshop": "Per-user GitHub sign-in"
+            },
+            "provider": {
+              "title": "Provider",
+              "groups": {
+                "hosted": "Hosted providers",
+                "local": "Local providers",
+                "custom": "Custom"
+              },
+              "options": {
+                "homarr": {
+                  "label": "Homarr",
+                  "description": "Community-funded access to the model selected by the Homarr team. Each user signs in with the Community Workshop and receives a daily allowance."
+                },
+                "openrouter": {
+                  "label": "OpenRouter",
+                  "description": "Hosted model routing with a large tool-capable model catalog."
+                },
+                "openai": {
+                  "label": "OpenAI",
+                  "description": "OpenAI Chat Completions through the official API endpoint."
+                },
+                "anthropic": {
+                  "label": "Anthropic Claude",
+                  "description": "Claude through Anthropic's OpenAI SDK compatibility endpoint."
+                },
+                "google-gemini": {
+                  "label": "Google Gemini",
+                  "description": "Gemini through Google's OpenAI-compatible API endpoint."
+                },
+                "xai": {
+                  "label": "xAI",
+                  "description": "Grok models through xAI's OpenAI-compatible API."
+                },
+                "groq": {
+                  "label": "Groq",
+                  "description": "Fast hosted inference through Groq's OpenAI-compatible API."
+                },
+                "mistral": {
+                  "label": "Mistral AI",
+                  "description": "Mistral models through the official API."
+                },
+                "deepseek": {
+                  "label": "DeepSeek",
+                  "description": "DeepSeek models through its OpenAI-compatible API."
+                },
+                "together": {
+                  "label": "Together AI",
+                  "description": "Hosted open models through Together's OpenAI-compatible API."
+                },
+                "ollama": {
+                  "label": "Ollama",
+                  "description": "A local or network Ollama server using its OpenAI-compatible API."
+                },
+                "lm-studio": {
+                  "label": "LM Studio",
+                  "description": "An LM Studio local server with OpenAI compatibility enabled."
+                },
+                "custom": {
+                  "label": "Custom endpoint",
+                  "description": "Any other endpoint compatible with OpenAI Chat Completions."
+                }
+              },
+              "homarrAuth": {
+                "title": "No administrator API key required",
+                "description": "Homarr keeps the upstream OpenRouter credential on the Community Workshop server. Each user authorizes requests with their own Workshop GitHub session, so their daily allowance stays separate."
+              }
+            },
+            "baseUrl": {
+              "title": "API base URL",
+              "description": "Include the API prefix, usually /v1. In containers, localhost refers to the Homarr container."
+            },
+            "apiKey": {
+              "title": "API key",
+              "required": "Required by this provider. The value is encrypted and write-only.",
+              "optional": "Optional for local endpoints. Leave it blank when the service does not require bearer authentication.",
+              "placeholder": "Enter an API key",
+              "configuredBadge": "Saved key active",
+              "pendingRemoval": "Removal pending",
+              "savedTitle": "Encrypted API key saved",
+              "savedDescription": "Homarr can use this key, but it cannot display or recover its value.",
+              "remove": "Remove saved API key",
+              "removeDescription": "Deletes the saved key after you click Save provider connection.",
+              "removalPendingDescription": "The saved key will be deleted when you save the provider connection.",
+              "removeFlow": {
+                "title": "Remove the saved API key?",
+                "description": "This provider requires an API key. Removing it can stop model discovery and assistant responses until another key is saved.",
+                "optionalDescription": "The endpoint will stop receiving bearer authentication after this key is removed. Confirm that it accepts unauthenticated requests or uses another stored header.",
+                "cancel": "Keep saved key",
+                "confirm": "Remove API key"
+              }
+            },
+            "headers": {
+              "title": "Additional request headers",
+              "description": "Optional authentication or routing headers. Header values are encrypted and write-only.",
+              "add": "Add header",
+              "name": "Header name",
+              "value": "Header value",
+              "valuePlaceholder": "Secret or routing value",
+              "remove": "Remove header",
+              "configured": "Additional encrypted headers are configured. Adding headers replaces the complete stored set.",
+              "empty": "No additional headers are stored for this provider.",
+              "savedBadge": "Headers saved",
+              "pendingRemoval": "Removal pending",
+              "clear": "Remove stored headers when saving",
+              "keep": "Keep stored headers"
+            },
+            "model": {
+              "title": "Model",
+              "description": "Select a discovered model or enter an exact endpoint model ID.",
+              "placeholder": "Model ID",
+              "refresh": "Refresh models",
+              "chooseModel": "Choose the model used for new conversations.",
+              "discoveryPath": "Model discovery path",
+              "discoveryPathDescription": "Appended to the API base URL. Leave blank to disable discovery and use a manual model ID.",
+              "manual": "Enter a model ID manually or save the connection to discover models.",
+              "manualFallback": "Discovery is unavailable. You can still enter a model ID manually.",
+              "saveConnectionFirst": "Save the provider connection before choosing a model.",
+              "discovering": "Refreshing the models available from this provider…",
+              "discovered": "{count, plural, one {Discovered # model. Tool support depends on the selected endpoint and model.} other {Discovered # models. Tool support depends on the selected endpoint and model.}}",
+              "discoveryFailed": "Model discovery did not complete",
+              "context": "{count} context window",
+              "toolsConfirmed": "Tools advertised",
+              "toolsUnknown": "Verify tool support"
+            },
+            "serverTools": {
+              "title": "Server tools",
+              "beta": "Beta",
+              "webSearch": {
+                "label": "Web search",
+                "description": "Allow the model to search the live web through OpenRouter when a request needs current information. Search usage is charged separately by OpenRouter.",
+                "proxyDescription": "Send OpenRouter's web-search server tool to this endpoint. Enable this only when the custom endpoint forwards the OpenRouter server-tools format, such as a Homarr Router proxy.",
+                "limit": "The model decides when to search, with a limit of 3 searches and 5 results per search for each request."
+              }
+            },
+            "enabled": {
+              "label": "Enable Assistant",
+              "description": "Shows the assistant to all signed-in users. Existing Homarr permissions still apply to every internal tool call."
+            },
+            "save": "Save assistant",
+            "notification": {
+              "connectionSaved": {
+                "title": "Provider connection saved",
+                "message": "The endpoint and encrypted credentials are ready for model selection.",
+                "credentialsCleared": "The endpoint changed, so previous credentials were cleared. Add credentials for the new destination if required."
+              },
+              "saved": {
+                "title": "Assistant settings saved",
+                "message": "The new model and availability settings are active."
+              },
+              "error": {
+                "title": "Assistant settings could not be saved"
+              }
             }
           }
         }
@@ -6241,7 +6787,8 @@
               "toggleBoardEdit": "Toggle board edit mode",
               "toggleColorScheme": "Toggle light/dark mode",
               "saveNotebook": "Save notebook (only inside notebook widget)",
-              "openSpotlight": "Open search"
+              "openSpotlight": "Open search",
+              "openAssistant": "Open Homarr Assistant"
             },
             "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }
@@ -6780,6 +7327,9 @@
       },
       "about": {
         "label": "About"
+      },
+      "assistant": {
+        "label": "Assistant"
       }
     }
   },

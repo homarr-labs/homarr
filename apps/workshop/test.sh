@@ -3,12 +3,17 @@ set -eu
 
 WORKSHOP_TEST_PORT=${WORKSHOP_TEST_PORT:-18090}
 WORKSHOP_TEST_PROJECT="homarr-workshop-test-$$"
+export HOMARR_AI_OPENROUTER_BASE_URL=http://assistant-upstream:18091/api/v1
+export HOMARR_AI_OPENROUTER_MODEL=mock/team-selected-model
+export HOMARR_AI_ALLOW_INSECURE_UPSTREAM=true
+export OPENROUTER_API_KEY=workshop-test-openrouter-key
 
+docker build --target pocketbase-test -f apps/workshop/Dockerfile .
 node apps/workshop/tests/workshop-contracts.mjs
 node apps/workshop/tests/workshop-migration.mjs
 
 cleanup() {
-  PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
+  PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose --profile test -p "$WORKSHOP_TEST_PROJECT" \
     -f apps/workshop/docker-compose.yml down --volumes --remove-orphans >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
@@ -16,7 +21,7 @@ trap cleanup EXIT
 HOMARR_WEBSITE_URL=https://preview.example.invalid \
   WORKSHOP_API_URL=https://api.preview.example.invalid \
   WORKSHOP_WEB_URL=https://preview.example.invalid/workshop \
-  PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
+  PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose --profile test -p "$WORKSHOP_TEST_PROJECT" \
   -f apps/workshop/docker-compose.yml up --build -d
 
 for attempt in $(seq 1 60); do
@@ -58,6 +63,24 @@ for client_id in workshop-test-client workshop-rotated-client; do
   WORKSHOP_TEST_URL="http://127.0.0.1:$WORKSHOP_TEST_PORT" EXPECTED_GITHUB_CLIENT_ID="$client_id" \
     node apps/workshop/tests/oauth-sync.integration.mjs
 done
+
+OPENROUTER_API_KEY="" PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
+  -f apps/workshop/docker-compose.yml up -d --force-recreate workshop
+for attempt in $(seq 1 60); do
+  if curl --fail --silent "http://127.0.0.1:$WORKSHOP_TEST_PORT/api/health" >/dev/null; then
+    break
+  fi
+  if [ "$attempt" -eq 60 ]; then
+    exit 1
+  fi
+  sleep 1
+done
+models_status=$(curl --silent --output /dev/null --write-out '%{http_code}' \
+  "http://127.0.0.1:$WORKSHOP_TEST_PORT/api/ai/v1/models")
+if [ "$models_status" != "503" ]; then
+  echo "Expected an unconfigured Homarr provider to return 503, received $models_status"
+  exit 1
+fi
 
 PB_EXPOSE_PORT="$WORKSHOP_TEST_PORT" docker compose -p "$WORKSHOP_TEST_PROJECT" \
   -f apps/workshop/docker-compose.yml stop workshop

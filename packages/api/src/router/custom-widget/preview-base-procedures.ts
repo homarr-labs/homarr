@@ -3,22 +3,25 @@ import { z } from "zod/v4";
 
 import { decryptSecret } from "@homarr/common/server";
 import {
-  customWidgetDefinitionSchema,
+  collectCustomWidgetRequestReferences,
+  customWidgetAuthoringDefinitionSchema,
   customWidgetSecretsInputSchema,
   getCustomWidgetConfirmation,
   getCustomWidgetDefaultOptions,
+  normalizeCustomWidgetAuthoringDefinition,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
 import { eq } from "@homarr/db";
 import { customWidgetDefinitions } from "@homarr/db/schema";
 
 import { permissionRequiredProcedure } from "../../trpc";
+import { parseCustomWidgetAuthoringInput } from "./authoring-validation";
 import { createPreviewSession, getPreviewSession } from "./preview-sessions";
 import { hasSameSecretBinding, requiredSecretKinds } from "./secret-policy";
 import { parseStoredCustomWidgetDefinition } from "./stored-definition";
 
 const previewCreateInputSchema = z.object({
-  definition: customWidgetDefinitionSchema,
+  definition: customWidgetAuthoringDefinitionSchema,
   secrets: customWidgetSecretsInputSchema.default([]),
   definitionId: z.string().optional(),
   options: z.record(z.string(), z.unknown()).optional(),
@@ -26,11 +29,20 @@ const previewCreateInputSchema = z.object({
 
 const previewCreateProcedure = permissionRequiredProcedure
   .requiresPermission("admin")
-  .meta({ mcp: { enabled: true, description: "Create a short-lived preview session for one unsaved custom widget." } })
+  .meta({
+    mcp: {
+      enabled: true,
+      description:
+        "Create a short-lived preview for an unsaved custom widget after validation. Prefer templateLines for multiline JSX. The result lists every query that must be tested with customWidget_previewQuery before saving.",
+    },
+  })
   .input(previewCreateInputSchema)
   .mutation(async ({ ctx, input }) => {
-    const options = input.options ?? getCustomWidgetDefaultOptions(input.definition.options);
-    const optionIssues = validateCustomWidgetOptions(input.definition.options, options);
+    const definition = parseCustomWidgetAuthoringInput(() =>
+      normalizeCustomWidgetAuthoringDefinition(input.definition),
+    );
+    const options = input.options ?? getCustomWidgetDefaultOptions(definition.options);
+    const optionIssues = validateCustomWidgetOptions(definition.options, options);
     if (optionIssues.length > 0) {
       const issue = optionIssues[0];
       throw new TRPCError({
@@ -48,7 +60,7 @@ const previewCreateProcedure = permissionRequiredProcedure
       if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Custom widget definition not found" });
       const existingDefinition = parseStoredCustomWidgetDefinition(existing);
       for (const [sourceId, existingSource] of Object.entries(existingDefinition.sources)) {
-        const submittedSource = input.definition.sources[sourceId];
+        const submittedSource = definition.sources[sourceId];
         const hasStoredSecrets = existing.secrets.some((secret) => secret.sourceId === sourceId);
         if (!submittedSource || !hasStoredSecrets || hasSameSecretBinding(existingSource, submittedSource)) continue;
 
@@ -65,7 +77,7 @@ const previewCreateProcedure = permissionRequiredProcedure
       }
       for (const secret of existing.secrets) {
         const existingSource = existingDefinition.sources[secret.sourceId];
-        const submittedSource = input.definition.sources[secret.sourceId];
+        const submittedSource = definition.sources[secret.sourceId];
         if (
           existingSource &&
           submittedSource &&
@@ -78,7 +90,7 @@ const previewCreateProcedure = permissionRequiredProcedure
     }
 
     const invalid = secrets.find((secret) => {
-      const source = input.definition.sources[secret.sourceId];
+      const source = definition.sources[secret.sourceId];
       const authType = typeof source?.auth === "string" ? source.auth : source?.auth.type;
       const kinds =
         authType === "basic"
@@ -94,26 +106,34 @@ const previewCreateProcedure = permissionRequiredProcedure
 
     const previewSession = await createPreviewSession({
       userId: ctx.session.user.id,
-      sources: input.definition.sources,
-      requests: input.definition.requests,
-      name: input.definition.name,
-      template: input.definition.template,
-      optionDefinitions: input.definition.options,
+      sources: definition.sources,
+      requests: definition.requests,
+      name: definition.name,
+      description: definition.description,
+      iconUrl: definition.iconUrl,
+      template: definition.template,
+      optionDefinitions: definition.options,
       options,
       secrets,
       definitionId: input.definitionId,
     });
+    const previewPath = `/manage/custom-widgets/preview/${previewSession.id}`;
     return {
       success: true as const,
       previewSession,
-      previewUrl: new URL(
-        `/manage/custom-widgets/preview/${previewSession.id}`,
-        ctx.baseUrl ?? "http://localhost",
-      ).toString(),
-      definition: {
-        template: input.definition.template,
-        defaultOptions: getCustomWidgetDefaultOptions(input.definition.options),
-      },
+      previewPath,
+      previewUrl: new URL(previewPath, ctx.baseUrl ?? "http://localhost").toString(),
+      queries: Object.entries(definition.requests).flatMap(([requestId, request]) => {
+        if (request.kind !== "query") return [];
+        return [
+          {
+            requestId,
+            trigger: request.trigger,
+            parameterNames: [...collectCustomWidgetRequestReferences(request).params],
+            nextStep: `Call customWidget_previewQuery with sessionId '${previewSession.id}' and requestId '${requestId}'.`,
+          },
+        ];
+      }),
     };
   });
 
@@ -127,6 +147,8 @@ export const previewBaseProcedures = {
       return {
         id: session.id,
         name: session.name,
+        description: session.description,
+        iconUrl: session.iconUrl,
         expiresAt: session.expiresAt,
         template: session.template,
         optionDefinitions: session.optionDefinitions,

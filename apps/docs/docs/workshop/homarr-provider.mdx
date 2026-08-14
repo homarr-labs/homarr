@@ -1,0 +1,51 @@
+---
+title: Homarr provider
+sidebar_position: 2
+tags:
+  - Assistant
+  - AI
+  - Privacy
+  - Community
+---
+
+import { OpenCollectiveLink } from "@site/src/components/assistant-provider/open-collective-link";
+
+# Homarr provider
+
+The Homarr provider gives Community Workshop users access to the **Homarr model** without an administrator API key.
+The Homarr team chooses the upstream model based on quality, reliability, and cost.
+
+## Set it up
+
+1. Open **Management → Assistant**.
+2. Select **Homarr** as the provider.
+3. Save the provider connection.
+4. Select the available model, enable the assistant, and save.
+5. Open the assistant and sign in to the Workshop when asked.
+
+## Daily allowance
+
+- Each user gets **50 request units per UTC day**.
+- Each model request uses one unit. A tool loop can use several units.
+- Forwarded requests count even if the model later fails.
+- Allowances reset at 00:00 UTC. A shared daily limit also applies.
+
+The battery beside the model selector shows the remaining allowance and reset time. Workshop enforces all limits on
+its server; changing the browser clock cannot bypass them.
+
+## Privacy
+
+Workshop keeps the OpenRouter API key on its server. Homarr and the browser never receive it.
+
+Prompts, attachments, tools, and tool results pass through Workshop and OpenRouter. Workshop does not retain this
+content or the responses. It stores only the user, UTC day, and counters needed to enforce allowances. OpenRouter is
+configured for zero data retention with data collection disabled. Homarr does not use this content to train models.
+
+We would rather become millionaires in a more ethical manner.
+
+The community pays for these requests. Donations help cover the cost.
+
+<OpenCollectiveLink />
+
+Workshop operators can change the upstream model, per-user allowance, global allowance, and security limits in the
+[Workshop operator guide](./operator#homarr-provider-proxy).

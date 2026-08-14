@@ -31,6 +31,8 @@ vi.mock("@homarr/custom-widgets/authoring-prompt", () => ({ buildCustomWidgetMcp
 vi.mock("@homarr/custom-widgets/authoring-resources", () => ({
   getCustomWidgetComponent: mocks.getComponent,
   getCustomWidgetComponentCatalog: () => ({ components: [{ name: "Text Input" }] }),
+  getCustomWidgetExample: (name: string) =>
+    name === "status-card" ? { id: "status-card", title: "Status card", template: "<Text>Status</Text>" } : null,
   getCustomWidgetSkillContent: () => "# Custom Widget Skill",
 }));
 vi.mock("@homarr/custom-widgets/core", () => ({
@@ -99,7 +101,7 @@ async function callMcp(method: string, params: Record<string, unknown> = {}, id 
   const data = response.headers.get("content-type")?.includes("text/event-stream")
     ? text
         .split("\n")
-        .find((line) => line.startsWith("data: "))
+        .find((line: string) => line.startsWith("data: "))
         ?.slice("data: ".length)
     : text;
   if (!data) throw new Error(`MCP response did not contain JSON-RPC data: ${text}`);
@@ -220,13 +222,16 @@ describe("non-admin MCP discovery", () => {
     ]);
 
     const prompts = await callMcp("prompts/list");
-    expect(prompts.body.result).toEqual({ prompts: [] });
+    expect(prompts.body.result).toBeUndefined();
+    expect(prompts.body.error).toBeDefined();
 
     const resources = await callMcp("resources/list");
-    expect(resources.body.result).toEqual({ resources: [] });
+    expect(resources.body.result).toBeUndefined();
+    expect(resources.body.error).toBeDefined();
 
     const templates = await callMcp("resources/templates/list");
-    expect(templates.body.result).toEqual({ resourceTemplates: [] });
+    expect(templates.body.result).toBeUndefined();
+    expect(templates.body.error).toBeDefined();
 
     const prompt = await callMcp("prompts/get", { name: "homarr-custom-widget-author" });
     expect(prompt.body.result).toBeUndefined();

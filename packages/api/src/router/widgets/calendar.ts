@@ -14,13 +14,13 @@ export const calendarRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Get calendar events for upcoming and recent media releases. REQUIRED: integrationIds (array of integration IDs from integration_all, filter by kind sonarr/radarr/lidarr/readarr), year (number), month (number), releaseType (array of 'inCinemas'|'digitalRelease'|'physicalRelease'), showUnmonitored (boolean). Great for 'what's coming out this week/month?'",
+          "Get calendar events from calendar-capable integrations. REQUIRED: integrationIds (IDs from integration_all whose kinds include Sonarr, Radarr, Lidarr, Readarr, Home Assistant, Nextcloud, or iCal), year (four-digit number), month (human month number from 1=January through 12=December), releaseType (Radarr filters: 'inCinemas'|'digitalRelease'|'physicalRelease'), showUnmonitored (boolean). Great for 'what's coming out this week/month?'",
       },
     })
     .input(
       z.object({
-        year: z.number(),
-        month: z.number(),
+        year: z.number().int().min(1970).max(9999),
+        month: z.number().int().min(1).max(12),
         releaseType: z.array(z.enum(radarrReleaseTypes)),
         showUnmonitored: z.boolean(),
       }),
@@ -33,9 +33,12 @@ export const calendarRouter = createTRPCRouter({
           const { integrationIds: _integrationIds, ...handlerInput } = input;
           const innerHandler = calendarMonthRequestHandler.handler(integration, handlerInput);
           const { data } = await innerHandler.getDataAsync();
+          const events = data.filter(
+            (event) => event.metadata?.type !== "radarr" || input.releaseType.includes(event.metadata.releaseType),
+          );
 
           return {
-            events: data,
+            events,
             integration: {
               id: integration.id,
               name: integration.name,

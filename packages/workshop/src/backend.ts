@@ -13,6 +13,7 @@ import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 
 import type {
   WorkshopComment,
+  WorkshopAssistantUsage,
   WorkshopReport,
   WorkshopReportSummary,
   WorkshopSubmissionDetail,
@@ -28,6 +29,7 @@ import {
   WORKSHOP_REQUEST_TIMEOUT_MS,
   WORKSHOP_SCHEMA_BY_TYPE,
   workshopCommentSchema,
+  workshopAssistantUsageSchema,
   workshopReportSchema,
   workshopReportSummarySchema,
   workshopSubmissionDetailSchema,
@@ -271,13 +273,19 @@ export class WorkshopBackend {
   }
 
   public get currentUser(): WorkshopUser | null {
+    if (!this.pocketBase.authStore.isValid) return null;
     const record = this.pocketBase.authStore.record;
     if (!record) return null;
-    return workshopUserSchema.parse({
+    const parsed = workshopUserSchema.safeParse({
       id: record.id,
       name: record.name || "",
       isAdmin: record.isAdmin === true,
     });
+    return parsed.success ? parsed.data : null;
+  }
+
+  public get authToken(): string | null {
+    return this.pocketBase.authStore.isValid && this.currentUser ? this.pocketBase.authStore.token : null;
   }
 
   public subscribeToAuth(listener: (user: WorkshopUser | null) => void) {
@@ -285,7 +293,10 @@ export class WorkshopBackend {
   }
 
   public async refreshAuth() {
-    if (!this.pocketBase.authStore.isValid) return null;
+    if (!this.pocketBase.authStore.isValid) {
+      this.pocketBase.authStore.clear();
+      return null;
+    }
     try {
       await this.pocketBase.collection("users").authRefresh();
       return this.currentUser;
@@ -304,7 +315,9 @@ export class WorkshopBackend {
         provider: "github",
       });
       this.pocketBase.authStore.save(auth.token, auth.record);
-      return this.currentUser;
+      const user = this.currentUser;
+      if (!user) throw new Error("The Workshop returned an invalid user session.");
+      return user;
     } catch (error) {
       throw workshopError(error, "GitHub sign-in failed");
     }
@@ -312,6 +325,19 @@ export class WorkshopBackend {
 
   public signOut() {
     this.pocketBase.authStore.clear();
+  }
+
+  public async getAssistantUsage(signal?: AbortSignal): Promise<WorkshopAssistantUsage> {
+    try {
+      const value = await this.pocketBase.send("/api/ai/usage", {
+        method: "GET",
+        signal: requestSignal(signal),
+        requestKey: null,
+      });
+      return workshopAssistantUsageSchema.parse(value);
+    } catch (error) {
+      throw workshopError(error, "Failed to load the Homarr provider allowance");
+    }
   }
 
   public async list(options: WorkshopListOptions = {}): Promise<WorkshopPage<WorkshopSubmissionSummary>> {

@@ -29,12 +29,12 @@ vi.mock("../../integration/integration-test-connection", () => ({
 }));
 
 describe("all should return all integrations", () => {
-  test("with any session should return all integrations", async () => {
+  test("with integration full access should return all integrations", async () => {
     const db = createDb();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
-      session: defaultSessionWithPermissions(),
+      session: defaultSessionWithPermissions(["integration-full-all"]),
     });
 
     await db.insert(integrations).values([

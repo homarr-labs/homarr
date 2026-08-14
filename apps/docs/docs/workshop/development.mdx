@@ -1,0 +1,62 @@
+---
+title: Workshop development
+sidebar_position: 4
+tags:
+  - Workshop
+  - Developer
+  - Docusaurus
+  - PocketBase
+---
+
+# Workshop development
+
+Install the repository dependencies and make sure Docker is available before starting the Workshop services. See the
+[main development guide](../advanced/development/getting-started) for the repository prerequisites.
+
+## Run PocketBase and documentation
+
+Start PocketBase in one terminal:
+
+```sh
+cp apps/workshop/.env.example apps/workshop/.env
+docker compose --env-file apps/workshop/.env -f apps/workshop/docker-compose.yml up --build workshop
+```
+
+Then start Docusaurus in another terminal:
+
+```sh
+WORKSHOP_API_URL=http://127.0.0.1:8090 pnpm dev:docs
+```
+
+PocketBase runs on port 8090 and Docusaurus on port 3003. Stopping the services preserves the PocketBase volume.
+
+Open `http://127.0.0.1:8090/_/` and create the first PocketBase superuser. The Workshop UI is available at
+`http://127.0.0.1:3003/workshop`.
+
+Point Homarr at the local services with:
+
+```dotenv
+HOMARR_WEBSITE_URL=http://127.0.0.1:3003
+WORKSHOP_API_URL=http://127.0.0.1:8090
+WORKSHOP_WEB_URL=http://127.0.0.1:3003/workshop
+```
+
+Restart `pnpm dev:docs` after changing the Docusaurus URL variables. If Homarr is also running, restart its `pnpm dev`
+process after changing the Workshop URLs. GitHub OAuth is optional locally. See
+[`apps/workshop/README.md`](https://github.com/homarr-labs/homarr/blob/HEAD/apps/workshop/README.md) for OAuth,
+Workshop moderator promotion, logs, tests, backup, restore, stopping, and intentional volume reset.
+
+## URL testing
+
+Docusaurus reads `HOMARR_WEBSITE_URL` and `WORKSHOP_API_URL` when it starts or builds. Homarr also reads
+`WORKSHOP_WEB_URL` when its server starts, so these values do not rely on `NEXT_PUBLIC_*` build variables. Test a
+separate API origin before release:
+
+```sh
+HOMARR_WEBSITE_URL=http://127.0.0.1:3003 \
+WORKSHOP_API_URL=http://127.0.0.1:8090 \
+WORKSHOP_WEB_URL=http://127.0.0.1:3003/workshop \
+pnpm dev:docs
+```
+
+The [Workshop operator guide](./operator) covers production environment variables, staging, and service validation.

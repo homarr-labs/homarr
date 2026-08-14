@@ -465,6 +465,78 @@ export const serverSettings = sqliteTable("serverSetting", {
   value: text().default(emptySuperJSON).notNull(),
 });
 
+export const assistantConfigurations = sqliteTable("assistant_configuration", {
+  id: text().notNull().primaryKey().default("default"),
+  enabled: int({ mode: "boolean" }).notNull().default(false),
+  webSearchEnabled: int({ mode: "boolean" }).notNull().default(false),
+  provider: text()
+    .$type<
+      | "homarr"
+      | "openrouter"
+      | "openai"
+      | "anthropic"
+      | "google-gemini"
+      | "xai"
+      | "groq"
+      | "mistral"
+      | "deepseek"
+      | "together"
+      | "ollama"
+      | "lm-studio"
+      | "custom"
+    >()
+    .notNull()
+    .default("openrouter"),
+  baseUrl: text().notNull().default("https://openrouter.ai/api/v1"),
+  modelDiscoveryPath: text().default("/models"),
+  encryptedApiKey: text().$type<`${string}.${string}`>(),
+  encryptedHeaders: text().$type<`${string}.${string}`>(),
+  modelId: text(),
+  updatedAt: int({ mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});
+
+export const assistantThreads = sqliteTable(
+  "assistant_thread",
+  {
+    id: text().notNull().primaryKey(),
+    userId: text()
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    title: text(),
+    modelId: text(),
+    createdAt: int({ mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+    updatedAt: int({ mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (thread) => ({
+    userUpdatedAtIdx: index("assistant_thread__user_id_updated_at_idx").on(thread.userId, thread.updatedAt),
+  }),
+);
+
+export const assistantMessages = sqliteTable(
+  "assistant_message",
+  {
+    id: text().notNull().primaryKey(),
+    threadId: text()
+      .notNull()
+      .references(() => assistantThreads.id, { onDelete: "cascade" }),
+    parentId: text(),
+    format: text().notNull().default("ai-sdk/v6"),
+    content: text().notNull(),
+    createdAt: int({ mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (message) => ({
+    threadCreatedAtIdx: index("assistant_message__thread_id_created_at_idx").on(message.threadId, message.createdAt),
+  }),
+);
+
 export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
   user: one(users, {
     fields: [apiKeys.userId],

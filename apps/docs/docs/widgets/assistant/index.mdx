@@ -1,0 +1,51 @@
+---
+title: "Assistant"
+description: "Have a complete assistant conversation directly on a board."
+hide_title: true
+---
+
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { assistantWidget } from ".";
+
+<WidgetHeader widget={assistantWidget} categories={["Productivity"]} />
+
+The Assistant widget brings the same conversation available from the user menu and command menu onto a
+board. Messages, conversations, tool calls, approvals, files, mentions, model controls, reasoning controls,
+usage details, and response actions remain synchronized with the app-wide assistant.
+
+The assistant must be enabled by an administrator in **Management → Assistant**. Signed-out users and users
+on an instance without an enabled model see an unavailable state instead of a broken composer.
+
+### Adding the widget
+
+<AddingWidget />
+
+The default widget size is ten columns by four rows and automatically fits boards with fewer columns. Controls
+and labels condense as the widget becomes narrower, while the conversation remains scrollable and usable on
+touch devices. When a board layout does not provide enough height for conversation controls, the widget shows
+a compact **Open assistant** action instead of squeezing an unusable composer into the card. Increase its height
+in that layout to keep the complete conversation inline.
+
+The widget follows whichever conversation is active in the user-menu panel, `Shift + A`, or the command menu. This
+keeps every assistant entry point synchronized without storing a user's private conversation details in board settings.
+
+### Conversation features
+
+- Create, switch, rename, and delete conversations.
+- Send text and supported file or image attachments by picker, drag and drop, or image paste.
+- Mention permitted apps, integrations, boards, widgets, and tools with `@`.
+- Use `/` shortcuts for common dashboard tasks.
+- Review tool calls, approve mutations, and answer structured assistant questions inline.
+- Answer pending structured questions from the dock above the composer without scrolling through the conversation.
+- Enable conversation-scoped automatic approvals from the shield control to approve protected mutations, use presented form details, and choose answers categorized as affirmative without individual clicks.
+- Edit user messages and copy, regenerate, branch, quote, export, or rate responses.
+- Inspect syntax-highlighted Markdown, sources, generated files, tool results, streaming chain-of-thought,
+  cumulative conversation usage, per-turn token and context use, timing, speed, provider routing, and cost.
+- Change the model and reasoning effort for the active conversation.
+- Refresh the current board from the conversation header. Approved mutations also refresh visible board data automatically.
+
+The expanded assistant and board widget use the same persisted thread runtime. A response continues in the
+background when the widget leaves the viewport or the expanded panel is minimized. Each visible surface keeps an
+independent draft, attachments, selection, and focus, so typing in a board widget cannot move or overwrite the
+floating panel composer.
