@@ -4,21 +4,21 @@ import { Badge, Box, Group, Stack, Text, ThemeIcon, Tooltip } from "@mantine/cor
 import { IconLayoutGrid } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
+import type { BoardPreviewLayout } from "@homarr/boards/layout-preview";
+import { getRepresentativeLayoutWidth, projectBoardLayout } from "@homarr/boards/layout-preview";
 import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 import { widgetCatalogIcons } from "@homarr/widgets/catalog";
 
 import type { Board } from "../../_types";
-import type { BoardLayout } from "../../_layout-utils";
-import { getRepresentativeLayoutWidth, projectBoardLayout } from "../../_layout-utils";
 import classes from "./_layout-preview.module.css";
 
 interface Props {
   board: Board;
-  layout: BoardLayout;
-  layouts: BoardLayout[];
-  sourceLayout: BoardLayout;
+  layout: BoardPreviewLayout;
+  layouts: BoardPreviewLayout[];
+  sourceLayout: BoardPreviewLayout;
   apps: RouterOutputs["app"]["byIds"];
 }
 

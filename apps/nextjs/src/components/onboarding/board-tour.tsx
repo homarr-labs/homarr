@@ -93,7 +93,7 @@ export const BoardTourProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <TourTargetsProvider enabled={started}>
-      <TourShell steps={steps} started={started} onEnd={handleEnd} position={{ base: "bottom", sm: "left" }}>
+      <TourShell steps={steps} started={started} onEnd={handleEnd} position={{ base: "bottom", md: "left" }}>
         {children}
       </TourShell>
     </TourTargetsProvider>

@@ -54,7 +54,7 @@ For a single consolidated file with all content, use:
 - [How to integrate custom input with use-form hook?](https://mantine.dev/llms/q-custom-input-use-form.md): Learn how to add use-form support for custom inputs
 - [How to prevent Modal from closing?](https://mantine.dev/llms/q-how-to-prevent-modal-from-closing.md): Learn how to prevent Modal from closing when the user clicks outside of it or presses the Escape key
 - [How to scroll to the top of the form if the form is submitted with errors?](https://mantine.dev/llms/q-scroll-to-the-top-of-the-form.md): Learn how to call a function when the form is submitted with errors
-- [How to update Mantine dependencies?](https://mantine.dev/llms/q-how-to-update-dependencies.md): Learn how to update @mantine/_, @mantinex/_ and postcss-preset-mantine dependencies manually or with ncu script
+- [How to update Mantine dependencies?](https://mantine.dev/llms/q-how-to-update-dependencies.md): Learn how to update `@mantine/*`, `@mantinex/*` and `postcss-preset-mantine` dependencies manually or with ncu script
 - [How to use Dropzone with @mantine/form?](https://mantine.dev/llms/q-how-to-use-dropzone-with-form.md): Learn how to use Dropzone with @mantine/form to handle file selection state
 - [How to use Mantine template on GitHub?](https://mantine.dev/llms/q-templates-usage.md): Learn how to create a new repository based on Mantine template
 - [I get hydration warning about data-mantine-color-scheme attribute, what does it mean?](https://mantine.dev/llms/q-color-scheme-hydration-warning.md): Learn how hydration works and how to fix warnings

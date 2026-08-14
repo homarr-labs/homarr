@@ -1,0 +1,91 @@
+.canvas {
+  min-height: 8rem;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+  color: var(--mantine-color-dimmed);
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent),
+      transparent 35%
+    ),
+    var(--mantine-color-body);
+}
+
+.lanes {
+  display: grid;
+  height: 100%;
+  gap: rem(8px);
+  padding: rem(12px);
+}
+
+.lane {
+  display: grid;
+  min-width: 0;
+  gap: rem(3px);
+  padding: rem(4px);
+  overflow: hidden;
+  border: rem(1px) solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--mantine-color-dimmed) 8%, transparent) rem(1px),
+      transparent rem(1px)
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--mantine-color-dimmed) 8%, transparent) rem(1px),
+      transparent rem(1px)
+    );
+  background-size: rem(12px) rem(12px);
+}
+
+.lane[data-lane="left"],
+.lane[data-lane="right"] {
+  background-color: color-mix(in srgb, var(--mantine-primary-color-light) 40%, transparent);
+}
+
+.tile {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: rem(1px) solid color-mix(in srgb, var(--mantine-primary-color-filled) 32%, transparent);
+  border-radius: max(rem(2px), calc(var(--mantine-radius-default) / 2));
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 18%, var(--mantine-color-body));
+  box-shadow: 0 rem(1px) rem(3px) rgb(0 0 0 / 8%);
+}
+
+.itemIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: rem(16px) !important;
+  height: rem(16px) !important;
+  max-width: 55%;
+  max-height: 55%;
+  object-fit: contain;
+  color: var(--mantine-color-text);
+  transform: translate(-50%, -50%);
+}
+
+.container {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--mantine-color-teal-filled) 45%, transparent);
+  background: color-mix(in srgb, var(--mantine-color-teal-light) 55%, var(--mantine-color-body));
+}
+
+.containerContents {
+  position: absolute;
+  inset: rem(2px);
+  display: grid;
+  gap: rem(1px);
+  overflow: hidden;
+}
+
+@media (max-width: $mantine-breakpoint-xs) {
+  .canvas {
+    min-height: 7rem;
+  }
+}

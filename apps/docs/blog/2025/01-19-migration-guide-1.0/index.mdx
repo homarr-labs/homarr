@@ -10,12 +10,11 @@ If you are still on a version before 0.15.10, please update to 0.15.10 where we 
 
 <!-- truncate -->
 
-## Export your data
+## Preserve your old installation
 
-As 1.0 is a complete rewrite of Homarr and therefor not compatible with the old docker mounts, we need to export your data first.
-For this you can navigate to the `Migrate to 1.0` page which you can find under `Management` > `Tools` > `Migrate to 1.0`.
-Here you can select which things you want to export and download the zip file.
-It will also show you a secret key which you will need to import the secret data like user password hashes, salts and integration secrets.
+Homarr 1.0 is a complete rewrite and cannot reuse the old Docker mounts. Keep the 0.15 installation and its data intact while you build the replacement. The historical `Management` > `Tools` > `Migrate to 1.0` export can still be kept as a record, but current Homarr releases cannot import that ZIP or its secret key.
+
+Plan to recreate your apps, integrations, and boards manually in the new installation. A SQLite database backup can be restored from the onboarding welcome screen only when it was created by a compatible current Homarr release; it is not a conversion path for a 0.15 database.
 
 ![Export page](./img/old-homarr-export-data.png)
 
@@ -28,25 +27,12 @@ Please note that if you are using docker you need to specify a diffrent external
 So in your compose file the ports would be `7576:7575` instead of `7575:7575`.
 
 ## Import your data
-Once the installation is completed you can access the new installation. During the onboarding you'll need to select `Import from Homarr before 1.0`.
 
-![Onboarding initial step](./img/onboarding-step-1.png)
+:::warning Legacy guide
 
-After that you can upload the zip file you downloaded in the first step.
+The pre-1.0 ZIP importer is no longer included in current Homarr releases. Keep the old installation available until you have manually verified the replacement. Compatible SQLite backups from current releases can still be restored from the onboarding welcome screen.
 
-![Onboarding import dropzone](./img/old-homarr-import-dropzone.png)
-
-After that you'll get a list with all your boards that can be imported. You can configure how it should be imported and can select which screensizes it should import.
-
-![Onboarding import list](./img/old-homarr-import-choose-imported-data.png)
-
-Once you have selected everything you can click on `Confirm import and continue` which will open the encryption key input dialog where you can input the secret key you got during the export.
-
-![Onboarding import key input](./img/old-homarr-import-decryption-token.png)
-
-After that you can continue the onboarding and you should see all your boards and data in the new installation.
-
-See [After the installation](https://homarr.dev/docs/getting-started/after-the-installation) for more information.
+:::
 
 ## Remove the old installation
 

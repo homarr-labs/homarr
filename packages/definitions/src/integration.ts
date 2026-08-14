@@ -1,4 +1,4 @@
-import { objectKeys, removeTrailingSlash } from "@homarr/common";
+import { objectKeys } from "@homarr/common";
 import type { AtLeastOneOf } from "@homarr/common/types";
 
 import { createDocumentationLink } from "./docs";
@@ -222,6 +222,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/technitium.svg",
     category: ["dnsHole"],
     documentationUrl: createDocumentationLink("/docs/integrations/technitium-dns"),
+    defaultPort: 5380,
   },
   homeAssistant: {
     name: "Home Assistant",
@@ -230,6 +231,7 @@ export const integrationDefs = {
     category: ["smartHomeServer", "calendar"],
     documentationUrl: createDocumentationLink("/docs/integrations/home-assistant"),
     defaultPort: 8123,
+    apiKeySettingsPath: "/profile/security",
   },
   openmediavault: {
     name: "OpenMediaVault",
@@ -245,13 +247,14 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/dashdot.png",
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/dash-dot"),
+    defaultPort: 3001,
   },
   glances: {
     name: "Glances",
     secretKinds: [[]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/glances.svg",
     category: ["healthMonitoring"],
-    documentationUrl: null,
+    documentationUrl: createDocumentationLink("/docs/integrations/glances"),
     defaultPort: 61208,
   },
   tdarr: {
@@ -293,6 +296,7 @@ export const integrationDefs = {
     category: ["firewall"],
     documentationUrl: createDocumentationLink("/docs/integrations/opnsense"),
     defaultPort: 443,
+    apiKeySettingsPath: "/system_usermanager.php",
   },
   ntfy: {
     name: "ntfy",
@@ -301,6 +305,7 @@ export const integrationDefs = {
     category: ["notifications"],
     documentationUrl: createDocumentationLink("/docs/integrations/ntfy"),
     defaultPort: 80,
+    apiKeySettingsPath: "/account",
   },
   gotify: {
     name: "Gotify",
@@ -308,6 +313,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gotify.svg",
     category: ["notifications"],
     documentationUrl: createDocumentationLink("/docs/integrations/gotify"),
+    defaultPort: 80,
   },
   ical: {
     name: "iCal",
@@ -323,6 +329,7 @@ export const integrationDefs = {
     category: ["notes"],
     documentationUrl: createDocumentationLink("/docs/integrations/anchor"),
     defaultPort: 8080,
+    apiKeySettingsPath: "/settings",
   },
   truenas: {
     name: "TrueNAS",
@@ -347,6 +354,7 @@ export const integrationDefs = {
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/unraid"),
     defaultPort: 80,
+    apiKeySettingsPath: "/Settings/ManagementAccess",
   },
   coolify: {
     name: "Coolify",
@@ -355,6 +363,7 @@ export const integrationDefs = {
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
     defaultPort: 8000,
+    apiKeySettingsPath: "/security/api-tokens",
   },
   immich: {
     name: "Immich",
@@ -363,13 +372,14 @@ export const integrationDefs = {
     category: ["photoService"],
     documentationUrl: createDocumentationLink("/docs/integrations/immich"),
     defaultPort: 2283,
+    apiKeySettingsPath: "/user-settings",
   },
   paperlessNgx: {
     name: "Paperless-ngx",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/paperless-ngx.svg",
     category: ["documents"],
-    documentationUrl: null,
+    documentationUrl: createDocumentationLink("/docs/integrations/paperless-ngx"),
     defaultPort: 8000,
   },
   patchmon: {
@@ -388,6 +398,7 @@ export const integrationDefs = {
     category: ["mediaMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
     defaultPort: 7040,
+    apiKeySettingsPath: "/settings",
   },
   speedtestTracker: {
     name: "Speedtest Tracker",
@@ -396,21 +407,23 @@ export const integrationDefs = {
     category: ["speedtest"],
     documentationUrl: createDocumentationLink("/docs/integrations/speedtest-tracker"),
     defaultPort: 80,
+    apiKeySettingsPath: "/admin/api-tokens",
   },
   uptimeKuma: {
     name: "Uptime Kuma",
     secretKinds: [[], ["slug"], ["slug", "apiKey"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/uptime-kuma.svg",
     category: ["uptimeMonitoring"],
-    documentationUrl: null,
+    documentationUrl: createDocumentationLink("/docs/integrations/uptime-kuma"),
     defaultPort: 3001,
+    apiKeySettingsPath: "/settings/api-keys",
   },
   audiobookshelf: {
     name: "Audiobookshelf",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/audiobookshelf.svg",
     category: ["mediaLibrary"],
-    documentationUrl: null,
+    documentationUrl: createDocumentationLink("/docs/integrations/audiobookshelf"),
     defaultPort: 13378,
     apiKeySettingsPath: "/account",
   },
@@ -419,7 +432,7 @@ export const integrationDefs = {
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/navidrome.svg",
     category: ["mediaLibrary", "mediaService"],
-    documentationUrl: null,
+    documentationUrl: createDocumentationLink("/docs/integrations/navidrome"),
     defaultPort: 4533,
   },
   umami: {
@@ -436,7 +449,8 @@ export const integrationDefs = {
     secretKinds: [["username", "password"], []],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/peanut.svg",
     category: ["ups"],
-    documentationUrl: null,
+    documentationUrl: createDocumentationLink("/docs/integrations/peanut"),
+    defaultPort: 8080,
   },
   beszel: {
     name: "Beszel",
@@ -452,6 +466,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
     category: ["vpn"],
     documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
+    defaultPort: 8000,
   },
   traefik: {
     name: "Traefik",
@@ -466,7 +481,8 @@ export const integrationDefs = {
     secretKinds: [[], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/archiveteam-warrior.png",
     category: ["archiving"],
-    documentationUrl: null,
+    documentationUrl: createDocumentationLink("/docs/integrations/archiveteam-warrior"),
+    defaultPort: 8001,
   },
   wud: {
     name: "What's Up Docker",
@@ -524,12 +540,25 @@ export const getIntegrationDefaultPort = (kind: IntegrationKind): number | undef
   return "defaultPort" in definition ? definition.defaultPort : undefined;
 };
 
+export const getIntegrationDocumentationUrl = (kind: IntegrationKind): string | null =>
+  integrationDefs[kind].documentationUrl;
+
 export const getIntegrationApiKeyUrl = (integrationUrl: string, kind: IntegrationKind): string | null => {
   const definition = integrationDefs[kind];
   if (!("apiKeySettingsPath" in definition)) return null;
-  const base = removeTrailingSlash(integrationUrl);
-  if (!base) return null;
-  return `${base}${definition.apiKeySettingsPath}`;
+  try {
+    const value = integrationUrl.trim();
+    if (!value) return null;
+    const base = new URL(/^[a-z][a-z0-9+.-]*:\/\//iu.test(value) ? value : `http://${value}`);
+    if (base.protocol !== "http:" && base.protocol !== "https:") return null;
+    const settings = new URL(definition.apiKeySettingsPath, "http://localhost");
+    base.pathname = `${base.pathname.replace(/\/+$/, "")}/${settings.pathname.replace(/^\/+/, "")}`;
+    base.search = settings.search;
+    base.hash = settings.hash;
+    return base.toString();
+  } catch {
+    return null;
+  }
 };
 
 /**

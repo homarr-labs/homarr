@@ -4,12 +4,13 @@ import type { QueryResult } from "pg";
 import { z } from "zod/v4";
 
 import { comparePasswordsAsync, hashPasswordAsync } from "@homarr/auth";
+import { isProviderEnabled } from "@homarr/auth/server";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
-import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
+import { boards, groupMembers, groupPermissions, groups, invites, onboarding, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
@@ -41,7 +42,6 @@ import {
 } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { throwIfCredentialsDisabled } from "./invite/checks";
-import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 import { changeSearchPreferencesAsync, changeSearchPreferencesInputSchema } from "./user/change-search-preferences";
 
 const logger = createLogger({ module: "userRouter" });
@@ -52,25 +52,46 @@ export const userRouter = createTRPCRouter({
     .input(userInitSchema)
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
+      await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
       const maxPosition = await getMaxGroupPositionAsync(ctx.db);
-      const userId = await createUserAsync(ctx.db, input);
+      const hashedPassword = await hashPasswordAsync(input.password);
+      const userId = createId();
       const groupId = createId();
-      await ctx.db.insert(groups).values({
+      const userRow = {
+        id: userId,
+        name: input.username,
+        email: input.email,
+        password: hashedPassword,
+      };
+      const groupRow = {
         id: groupId,
         name: credentialsAdminGroup,
         ownerId: userId,
         position: maxPosition + 1,
+      };
+      const nextStep = isProviderEnabled("ldap") || isProviderEnabled("oidc") ? "group" : "setup";
+
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction.insert(schema.users).values(userRow);
+            await transaction.insert(schema.groups).values(groupRow);
+            await transaction.insert(schema.groupPermissions).values({ groupId, permission: "admin" });
+            await transaction.insert(schema.groupMembers).values({ groupId, userId });
+            await transaction.update(schema.onboarding).set({ previousStep: "user", step: nextStep });
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.insert(users).values(userRow).run();
+            transaction.insert(groups).values(groupRow).run();
+            transaction.insert(groupPermissions).values({ groupId, permission: "admin" }).run();
+            transaction.insert(groupMembers).values({ groupId, userId }).run();
+            transaction.update(onboarding).set({ previousStep: "user", step: nextStep }).run();
+          });
+        },
       });
-      await ctx.db.insert(groupPermissions).values({
-        groupId,
-        permission: "admin",
-      });
-      await ctx.db.insert(groupMembers).values({
-        groupId,
-        userId,
-      });
-      await nextOnboardingStepAsync(ctx.db, undefined);
     }),
   register: publicProcedure
     .input(userRegistrationApiSchema)

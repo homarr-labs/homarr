@@ -5,6 +5,7 @@ import "@gfazioli/mantine-onboarding-tour/styles.css";
 import "@homarr/notifications/styles.css";
 import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
+import "flag-icons/css/flag-icons.min.css";
 import "mantine-datatable/styles.css";
 import "~/styles/color-scheme.scss";
 import "~/styles/scroll-area.scss";
@@ -173,8 +174,12 @@ export default async function Layout(props: {
     >
       <head>
         <meta name="homarr-website-url" content={publicUrls.homarrWebsiteUrl} />
-        <meta name="homarr-workshop-api-url" content={publicUrls.workshopApiUrl} />
-        <meta name="homarr-workshop-web-url" content={publicUrls.workshopWebUrl} />
+        {session ? (
+          <>
+            <meta name="homarr-workshop-api-url" content={publicUrls.workshopApiUrl} />
+            <meta name="homarr-workshop-web-url" content={publicUrls.workshopWebUrl} />
+          </>
+        ) : null}
         <SearchEngineOptimization />
         <CrowdinLiveTranslation locale={locale} />
       </head>

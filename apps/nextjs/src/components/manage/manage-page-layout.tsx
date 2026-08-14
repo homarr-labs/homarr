@@ -6,7 +6,7 @@ import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { ManageContainer } from "./manage-container";
 import { MANAGE_FLOATING_ACTION_BOTTOM_OFFSET } from "./manage-page.constants";
 
-interface ManagePageLayoutProps {
+export interface ManagePageLayoutProps {
   title: ReactNode;
   primaryAction?: ReactNode;
   toolbar?: ReactNode;

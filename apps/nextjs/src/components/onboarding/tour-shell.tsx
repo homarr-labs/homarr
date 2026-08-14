@@ -181,8 +181,8 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
       focusRevealProps={{
         disableTargetInteraction: true,
         popoverProps: {
-          position: position ?? { base: "bottom", sm: "right" },
-          width: 420,
+          position: position ?? { base: "bottom", md: "right" },
+          width: { base: "calc(100vw - 32px)", md: 420 },
           shadow: "xl",
           radius: "lg",
           middlewares: { shift: { padding: 16 }, flip: true },

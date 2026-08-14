@@ -1,19 +1,9 @@
-import { Box, Grid, GridCol, Group, Image, Stack, Title } from "@mantine/core";
+import { Box, Group, Image, Stack, Title } from "@mantine/core";
 
-import { splitToNChunks } from "@homarr/common";
-import { integrationDefs } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
+import { IntegrationMarquee } from "@homarr/ui";
 
 import classes from "./hero-banner.module.css";
-
-const icons = Object.values(integrationDefs)
-  .filter((int) => int.name !== "Mock")
-  .map((int) => int.iconUrl);
-
-const countIconGroups = 3;
-const animationDurationInSeconds = icons.length;
-const arrayInChunks = splitToNChunks(icons, countIconGroups);
-const gridSpan = 12 / countIconGroups;
 
 export const HeroBanner = async () => {
   const t = await getScopedI18n("management.page.home");
@@ -30,41 +20,7 @@ export const HeroBanner = async () => {
         </Group>
       </Stack>
       <Box visibleFrom="md" className={classes.scrollContainer} w={"30%"} top={0} right={0} pos="absolute">
-        <Grid>
-          {Array(countIconGroups)
-            .fill(0)
-            .map((_, columnIndex) => (
-              <GridCol key={`grid-column-${columnIndex}`} span={gridSpan}>
-                <Stack
-                  className={classes.scrollAnimationContainer}
-                  style={{
-                    animationDuration: `${animationDurationInSeconds - columnIndex}s`,
-                  }}
-                >
-                  {arrayInChunks[columnIndex]?.map((icon, index) => (
-                    <Image
-                      key={`grid-column-${columnIndex}-scroll-1-${index}`}
-                      src={icon}
-                      fit={"contain"}
-                      w={50}
-                      h={50}
-                    />
-                  ))}
-
-                  {/* This is used for making the animation seem seamless */}
-                  {arrayInChunks[columnIndex]?.map((icon, index) => (
-                    <Image
-                      key={`grid-column-${columnIndex}-scroll-2-${index}`}
-                      src={icon}
-                      fit={"contain"}
-                      w={50}
-                      h={50}
-                    />
-                  ))}
-                </Stack>
-              </GridCol>
-            ))}
-        </Grid>
+        <IntegrationMarquee />
       </Box>
     </Box>
   );

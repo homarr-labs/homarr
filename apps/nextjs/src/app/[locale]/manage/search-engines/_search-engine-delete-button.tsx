@@ -17,6 +17,7 @@ interface SearchEngineDeleteButtonProps {
 
 export const SearchEngineDeleteButton = ({ searchEngine }: SearchEngineDeleteButtonProps) => {
   const t = useScopedI18n("search.engine.page.delete");
+  const tList = useScopedI18n("search.engine.page.list.action");
   const { openConfirmModal } = useConfirmModal();
   const { mutate, isPending } = clientApi.searchEngine.delete.useMutation();
 
@@ -50,7 +51,14 @@ export const SearchEngineDeleteButton = ({ searchEngine }: SearchEngineDeleteBut
   }, [searchEngine, mutate, t, openConfirmModal]);
 
   return (
-    <ActionIcon loading={isPending} variant="subtle" color="red" onClick={onClick} aria-label={t("title")}>
+    <ActionIcon
+      loading={isPending}
+      variant="subtle"
+      color="red"
+      size={44}
+      onClick={onClick}
+      aria-label={tList("delete", { name: searchEngine.name })}
+    >
       <IconTrash color="red" size={16} stroke={1.5} />
     </ActionIcon>
   );

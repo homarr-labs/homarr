@@ -18,10 +18,7 @@ import { AppAccessControl } from "./app/app-access-control";
 const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
 
 export const appRouter = createTRPCRouter({
-  getPaginated: permissionRequiredProcedure
-    .requiresPermission("board-modify-all")
-    .input(paginatedSchema)
-    .output(z.object({ items: z.array(selectAppSchema), totalCount: z.number() }))
+  getPaginated: protectedProcedure
     .meta({
       openapi: {
         method: "GET",
@@ -35,6 +32,8 @@ export const appRouter = createTRPCRouter({
           "List apps with pagination. OPTIONAL: search (string to filter by name), pageSize (number, default 10), page (number, default 1). All fields are optional — call with no arguments to get the first page",
       },
     })
+    .input(paginatedSchema)
+    .output(z.object({ items: z.array(selectAppSchema), totalCount: z.number() }))
     .query(async ({ input, ctx }) => {
       const whereQuery = input.search ? like(apps.name, `%${input.search.trim()}%`) : undefined;
       const totalCount = await ctx.db.$count(apps, whereQuery);

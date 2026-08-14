@@ -6,6 +6,7 @@ import { createId } from "@homarr/common";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import {
+  apps,
   boardGroupPermissions,
   boards,
   boardUserPermissions,
@@ -285,6 +286,336 @@ describe("getAllBoards should return all boards accessable to the current user",
       expect(result.map(({ name }) => name)).toStrictEqual(["public", "private1"]);
     },
   );
+});
+
+describe("getManageOverview", () => {
+  test("does not expose a public board creator email to anonymous callers", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: null });
+    const creatorId = createId();
+
+    await db.insert(users).values({ id: creatorId, name: "Board creator", email: "private@example.com" });
+    await db.insert(boards).values({ id: createId(), name: "public-overview", creatorId, isPublic: true });
+
+    const [board] = await caller.getManageOverview();
+
+    expect(board?.creator).toEqual({ id: creatorId, name: "Board creator", image: null });
+    expect(board?.creator).not.toHaveProperty("email");
+  });
+
+  test("returns the same accessible board set as getAllBoards", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const otherUserId = await createRandomUserAsync(db);
+    const publicBoardId = createId();
+    const creatorBoardId = createId();
+    const directBoardId = createId();
+    const groupBoardId = createId();
+    const hiddenBoardId = createId();
+    const groupId = createId();
+
+    await db.insert(users).values({ id: defaultCreatorId });
+    await db.insert(boards).values([
+      { id: publicBoardId, name: "public-overview", creatorId: otherUserId, isPublic: true },
+      { id: creatorBoardId, name: "creator-overview", creatorId: defaultCreatorId, isPublic: false },
+      { id: directBoardId, name: "direct-overview", creatorId: otherUserId, isPublic: false },
+      { id: groupBoardId, name: "group-overview", creatorId: otherUserId, isPublic: false },
+      { id: hiddenBoardId, name: "hidden-overview", creatorId: otherUserId, isPublic: false },
+    ]);
+    await db.insert(boardUserPermissions).values({
+      userId: defaultCreatorId,
+      boardId: directBoardId,
+      permission: "view",
+    });
+    await db.insert(groups).values({ id: groupId, name: "overview-group", position: 1 });
+    await db.insert(groupMembers).values({ userId: defaultCreatorId, groupId });
+    await db.insert(boardGroupPermissions).values({ groupId, boardId: groupBoardId, permission: "view" });
+
+    const [summaries, overview] = await Promise.all([caller.getAllBoards(), caller.getManageOverview()]);
+
+    expect(overview.map((board) => board.id).toSorted()).toEqual(summaries.map((board) => board.id).toSorted());
+    expect(overview.map((board) => board.id)).not.toContain(hiddenBoardId);
+  });
+
+  test("returns one compact base-layout preview for each accessible board", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const boardId = createId();
+    const hiddenBoardId = createId();
+    const baseLayoutId = createId();
+    const mobileLayoutId = createId();
+    const rootSectionId = createId();
+    const containerSectionId = createId();
+    const itemId = createId();
+    const mobileItemId = createId();
+    const offscreenItemId = createId();
+    const nestedItemId = createId();
+    const nestedAppId = createId();
+
+    await db.insert(users).values({ id: defaultCreatorId });
+    await db.insert(boards).values([
+      { id: boardId, name: "overview", creatorId: defaultCreatorId, isPublic: false },
+      { id: hiddenBoardId, name: "hidden", creatorId: await createRandomUserAsync(db), isPublic: false },
+    ]);
+    await db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, defaultCreatorId));
+    await db.insert(layouts).values([
+      {
+        id: mobileLayoutId,
+        name: "Mobile",
+        boardId,
+        columnCount: 3,
+        breakpoint: 0,
+        role: "mobile",
+      },
+      {
+        id: baseLayoutId,
+        name: "Base",
+        boardId,
+        columnCount: 12,
+        breakpoint: 768,
+        role: "base",
+      },
+    ]);
+    await db.insert(sections).values([
+      {
+        id: rootSectionId,
+        boardId,
+        kind: "empty",
+        xOffset: 0,
+        yOffset: 0,
+      },
+      {
+        id: containerSectionId,
+        boardId,
+        kind: "container",
+        xOffset: null,
+        yOffset: null,
+      },
+    ]);
+    await db.insert(sectionLayouts).values({
+      sectionId: containerSectionId,
+      parentSectionId: rootSectionId,
+      layoutId: baseLayoutId,
+      xOffset: 0,
+      yOffset: 4,
+      width: 6,
+      height: 3,
+    });
+    await db.insert(apps).values({
+      id: nestedAppId,
+      name: "Nested app",
+      iconUrl: "https://example.com/nested.svg",
+    });
+    await db.insert(items).values([
+      { id: itemId, boardId, kind: "clock" },
+      { id: mobileItemId, boardId, kind: "clock" },
+      { id: offscreenItemId, boardId, kind: "clock" },
+      { id: nestedItemId, boardId, kind: "app", options: SuperJSON.stringify({ appId: nestedAppId }) },
+    ]);
+    await db.insert(itemLayouts).values([
+      {
+        itemId,
+        sectionId: rootSectionId,
+        layoutId: baseLayoutId,
+        xOffset: 2,
+        yOffset: 1,
+        width: 4,
+        height: 2,
+      },
+      {
+        itemId: mobileItemId,
+        sectionId: rootSectionId,
+        layoutId: mobileLayoutId,
+        xOffset: 0,
+        yOffset: 0,
+        width: 3,
+        height: 1,
+      },
+      {
+        itemId: offscreenItemId,
+        sectionId: rootSectionId,
+        layoutId: baseLayoutId,
+        xOffset: 0,
+        yOffset: 12,
+        width: 2,
+        height: 1,
+      },
+      {
+        itemId: nestedItemId,
+        sectionId: containerSectionId,
+        layoutId: baseLayoutId,
+        xOffset: 0,
+        yOffset: 0,
+        width: 2,
+        height: 1,
+      },
+    ]);
+
+    const result = await caller.getManageOverview();
+
+    expect(result).toHaveLength(1);
+    expect(result[0]?.creator).toEqual({ id: defaultCreatorId, name: null, image: null });
+    expect(result[0]?.creator).not.toHaveProperty("email");
+    expect(result[0]).toMatchObject({
+      id: boardId,
+      isHome: true,
+      preview: {
+        layouts: [{ id: baseLayoutId, role: "base", columnCount: 12 }],
+        items: [
+          {
+            id: itemId,
+            kind: "clock",
+            layouts: [{ layoutId: baseLayoutId, sectionId: rootSectionId, width: 4, height: 2 }],
+          },
+          {
+            id: nestedItemId,
+            kind: "app",
+            iconUrl: "https://example.com/nested.svg",
+            layouts: [{ layoutId: baseLayoutId, sectionId: containerSectionId, width: 2, height: 1 }],
+          },
+        ],
+        sections: [
+          { id: rootSectionId, kind: "empty" },
+          {
+            id: containerSectionId,
+            kind: "container",
+            layouts: [{ layoutId: baseLayoutId, parentSectionId: rootSectionId, yOffset: 4 }],
+          },
+        ],
+      },
+    });
+    expect(result[0]?.preview?.layouts).toHaveLength(1);
+    expect(result[0]?.preview?.items.map((item) => item.id)).toEqual([itemId, nestedItemId]);
+    expect(result[0]?.preview?.sections).toHaveLength(2);
+  });
+
+  test("includes app and widget icons in compact previews", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const boardId = createId();
+    const layoutId = createId();
+    const rootSectionId = createId();
+    const appId = createId();
+    const appItemId = createId();
+
+    await db.insert(users).values({ id: defaultCreatorId });
+    await db.insert(boards).values({ id: boardId, name: "icon-overview", creatorId: defaultCreatorId });
+    await db.insert(layouts).values({
+      id: layoutId,
+      name: "Base",
+      boardId,
+      columnCount: 12,
+      breakpoint: 768,
+      role: "base",
+    });
+    await db.insert(sections).values({
+      id: rootSectionId,
+      boardId,
+      kind: "empty",
+      xOffset: 0,
+      yOffset: 0,
+    });
+    await db.insert(apps).values({
+      id: appId,
+      name: "Sonarr",
+      iconUrl: "https://example.com/sonarr.svg",
+    });
+    await db.insert(items).values({
+      id: appItemId,
+      boardId,
+      kind: "app",
+      options: SuperJSON.stringify({ appId }),
+    });
+    await db.insert(itemLayouts).values({
+      itemId: appItemId,
+      sectionId: rootSectionId,
+      layoutId,
+      xOffset: 0,
+      yOffset: 0,
+      width: 2,
+      height: 2,
+    });
+
+    const result = await caller.getManageOverview();
+
+    expect(result[0]?.preview?.items).toEqual([
+      expect.objectContaining({
+        id: appItemId,
+        kind: "app",
+        iconUrl: "https://example.com/sonarr.svg",
+      }),
+    ]);
+  });
+
+  test("uses the highest-breakpoint layout when a board has no base layout", async () => {
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const boardId = createId();
+    const mobileLayoutId = createId();
+    const tabletLayoutId = createId();
+    const rootSectionId = createId();
+    const mobileItemId = createId();
+    const tabletItemId = createId();
+
+    await db.insert(users).values({ id: defaultCreatorId });
+    await db.insert(boards).values({ id: boardId, name: "fallback-overview", creatorId: defaultCreatorId });
+    await db.insert(layouts).values([
+      {
+        id: mobileLayoutId,
+        name: "Mobile",
+        boardId,
+        columnCount: 3,
+        breakpoint: 0,
+        role: "mobile",
+      },
+      {
+        id: tabletLayoutId,
+        name: "Tablet",
+        boardId,
+        columnCount: 8,
+        breakpoint: 600,
+        role: "custom",
+      },
+    ]);
+    await db.insert(sections).values({
+      id: rootSectionId,
+      boardId,
+      kind: "empty",
+      xOffset: 0,
+      yOffset: 0,
+    });
+    await db.insert(items).values([
+      { id: mobileItemId, boardId, kind: "clock" },
+      { id: tabletItemId, boardId, kind: "clock" },
+    ]);
+    await db.insert(itemLayouts).values([
+      {
+        itemId: mobileItemId,
+        sectionId: rootSectionId,
+        layoutId: mobileLayoutId,
+        xOffset: 0,
+        yOffset: 0,
+        width: 3,
+        height: 1,
+      },
+      {
+        itemId: tabletItemId,
+        sectionId: rootSectionId,
+        layoutId: tabletLayoutId,
+        xOffset: 0,
+        yOffset: 0,
+        width: 4,
+        height: 1,
+      },
+    ]);
+
+    const result = await caller.getManageOverview();
+
+    expect(result[0]?.preview?.layouts).toEqual([
+      expect.objectContaining({ id: tabletLayoutId, breakpoint: 600, role: "custom" }),
+    ]);
+    expect(result[0]?.preview?.items.map((item) => item.id)).toEqual([tabletItemId]);
+  });
 });
 
 describe("createBoard should create a new board", () => {

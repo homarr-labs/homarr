@@ -51,8 +51,6 @@ interface NewIntegrationFormProps {
   initialName?: string;
   onSuccess: () => void;
   onCancel?: () => void;
-  onSkip?: () => void;
-  isOnboarding?: boolean;
 }
 
 const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
@@ -63,20 +61,12 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
   }),
 );
 
-export const NewIntegrationForm = ({
-  kind,
-  initialUrl,
-  initialName,
-  onSuccess,
-  onCancel,
-  onSkip,
-  isOnboarding = false,
-}: NewIntegrationFormProps) => {
+export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, onCancel }: NewIntegrationFormProps) => {
   const t = useI18n();
   const secretKinds = getAllSecretKindOptions(kind);
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
   const { data: session } = useSession();
-  const canCreateApps = !isOnboarding && (session?.user.permissions.includes("app-create") ?? false);
+  const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
 
   let url = initialUrl ?? getIntegrationDefaultUrl(kind) ?? "";
   if (hasUrlSecret) {
@@ -90,9 +80,9 @@ export const NewIntegrationForm = ({
         kind,
         value: "",
       })),
-      attemptSearchEngineCreation: !isOnboarding,
-      hasApp: !isOnboarding,
-      appHref: isOnboarding ? null : url,
+      attemptSearchEngineCreation: true,
+      hasApp: true,
+      appHref: url,
       appId: null,
     },
   });
@@ -104,13 +94,6 @@ export const NewIntegrationForm = ({
       await utils.integration.invalidate();
     },
   });
-  const { mutateAsync: createOnboardingIntegrationAsync, isPending: isOnboardingCreatePending } =
-    clientApi.onboard.createIntegration.useMutation({
-      async onSuccess() {
-        await utils.integration.invalidate();
-      },
-    });
-  const isPending = isCreatePending || isOnboardingCreatePending;
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
 
   const handleSubmitAsync = async ({ appId, appHref, hasApp, ...values }: FormType) => {
@@ -142,14 +125,6 @@ export const NewIntegrationForm = ({
         message: t("integration.page.create.notification.error.message"),
       });
     };
-
-    if (isOnboarding) {
-      await createOnboardingIntegrationAsync(
-        { kind, name: values.name, url, secrets: values.secrets },
-        { onSuccess: onMutationSuccess, onError: onMutationError },
-      );
-      return;
-    }
 
     const hasCustomHref = appHref !== null && appHref.trim().length >= 1;
 
@@ -206,7 +181,7 @@ export const NewIntegrationForm = ({
 
         {error !== null && <IntegrationTestConnectionError error={error} url={form.values.url} />}
 
-        {!isOnboarding && supportsSearchEngine && (
+        {supportsSearchEngine && (
           <Checkbox
             label={t("integration.field.attemptSearchEngineCreation.label")}
             description={t("integration.field.attemptSearchEngineCreation.description", {
@@ -216,7 +191,7 @@ export const NewIntegrationForm = ({
           />
         )}
 
-        {!isOnboarding && <AppForm form={form} canCreateApps={canCreateApps} />}
+        <AppForm form={form} canCreateApps={canCreateApps} />
 
         <Group justify="end" align="center">
           {onCancel ? (
@@ -228,12 +203,7 @@ export const NewIntegrationForm = ({
               {t("common.action.backToOverview")}
             </Button>
           )}
-          {onSkip && (
-            <Button variant="default" onClick={onSkip}>
-              {t("common.action.skip")}
-            </Button>
-          )}
-          <Button type="submit" loading={isPending}>
+          <Button type="submit" loading={isCreatePending}>
             {t("integration.testConnection.action.create")}
           </Button>
         </Group>

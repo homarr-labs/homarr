@@ -1,153 +1,245 @@
 {
   "init": {
-    "step": {
-      "start": {
-        "title": "Welcome to Homarr",
-        "subtitle": "Let's get started with setting up your Homarr instance.",
-        "description": "To get started, please select how you want to set up your Homarr instance.",
-        "action": {
-          "scratch": "Start from scratch",
-          "importOldmarr": "Import from Homarr before 1.0",
-          "restoreSqlite": "Restore from SQLite backup",
-          "restoreSqliteDescription": "Upload a full SQLite database backup from a previous Homarr instance. This will restore all boards, users, apps, integrations, and settings.",
-          "backToOptions": "← Back to setup options"
+    "studio": {
+      "navigationLabel": "Onboarding sections",
+      "back": "Back",
+      "continue": "Continue",
+      "buildBoard": "Build my board",
+      "common": {
+        "unknownError": "Something went wrong. Your choices are still here; try again."
+      },
+      "claim": {
+        "checking": "Securing this onboarding session…",
+        "checkingTitle": "Preparing secure setup",
+        "lockedTitle": "Setup is open in another browser",
+        "lockedDescription": "Continue there, or wait for its secure first-run session to expire before trying again.",
+        "signInTitle": "Administrator sign-in required",
+        "signInDescription": "An administrator already exists. Sign in to resume setup without exposing credentials or service access.",
+        "signIn": "Sign in and resume",
+        "errorTitle": "Setup could not be secured",
+        "errorDescription": "Reload the page to retry the secure first-run session."
+      },
+      "navigation": {
+        "essentials": "Essentials",
+        "discover": "Discover",
+        "connect": "Connect",
+        "board": "Board",
+        "extend": "Extend",
+        "review": "Review"
+      },
+      "welcome": {
+        "title": "Make home feel organized.",
+        "description": "Welcome to Homarr v{version}. We’ll guide you through the essentials and help you build your first board.",
+        "start": "Get started",
+        "restore": "Restore backup",
+        "restoreTitle": "Restore this Homarr",
+        "restoreDescription": "A full SQLite backup restores boards, people, apps, integrations, and settings. Homarr validates it before replacing anything.",
+        "errorTitle": "Setup could not start",
+        "errorDescription": "Your setup choices are still here. Try again, or reload the page if this continues."
+      },
+      "account": {
+        "title": "Create your administrator",
+        "description": "Specify the credentials for your administrator user.",
+        "username": "Administrator username",
+        "passwordHint": "Only the 8-character minimum is required. The other password-strength checks are suggestions.",
+        "create": "Create administrator",
+        "errorTitle": "Administrator could not be created",
+        "recoveryTitle": "Administrator account created",
+        "recoveryDescription": "Automatic sign-in did not complete. Sign in with the administrator credentials you just created to continue setup.",
+        "recoveryAction": "Sign in and continue",
+        "unknownError": "The administrator could not be created."
+      },
+      "externalGroup": {
+        "title": "Connect your administrator group",
+        "description": "Use the exact group name sent by LDAP or OIDC. Members of this group receive administrator access.",
+        "name": "External administrator group",
+        "nameDescription": "This is case-sensitive and must match your identity provider.",
+        "continue": "Save group and continue",
+        "errorTitle": "Group could not be saved",
+        "unknownError": "The administrator group could not be saved."
+      },
+      "essentials": {
+        "title": "Start with familiar defaults",
+        "description": "Set the language and appearance everyone sees first, then give Homarr the address pattern used by your services.",
+        "language": "Default language",
+        "theme": "Default theme",
+        "themeAuto": "System",
+        "themeLight": "Light",
+        "themeDark": "Dark",
+        "serverTitle": "Usual server address",
+        "serverOriginHelp": "Homarr uses this address to prefill detected service URLs. You can still edit every service individually.",
+        "serverDescription": "This is a shortcut, not a restriction. Every detected service remains editable.",
+        "serverOrigin": "Domain, IP, or reverse-proxy path",
+        "serverOriginDescription": "Examples: home.lan, 192.168.1.10, or https://home.example.com/services. Choose how each service is appended below.",
+        "urlModeLabel": "Service address pattern",
+        "hostPort": "Same host, different ports",
+        "subdomain": "One subdomain per service",
+        "path": "One path per service",
+        "analytics": "Share anonymous product analytics",
+        "analyticsDescription": "Helps Homarr improve feature reliability. No service credentials or dashboard content are sent."
+      },
+      "discover": {
+        "title": "See what this installation can actually reach",
+        "description": "Homarr checks capabilities in place. A missing Docker socket or Kubernetes context never blocks a manual setup.",
+        "database": "Database",
+        "docker": "Docker and compatible sockets",
+        "kubernetes": "Kubernetes",
+        "assistantWorkshop": "Assistant and Workshop",
+        "found": "Found {integrations} integrations and {apps} additional apps",
+        "retryKubernetes": "Check Kubernetes again",
+        "retryWorkshop": "Check Workshop again",
+        "unknownVersion": "unknown version",
+        "kubernetesAvailable": "Connected to Kubernetes {version}",
+        "kubernetesDisabled": "Not enabled; continue with Docker or manual services",
+        "kubernetesUnavailable": "Kubernetes is enabled but cannot be reached from this Homarr process",
+        "workshopAvailable": "Community Workshop and hosted Assistant services are reachable",
+        "workshopUnavailable": "Local and custom Assistant providers remain available",
+        "partialTitle": "Some sources could not be scanned",
+        "partialDescription": "Results from reachable hosts are kept. Check socket permissions or add services manually in the next section.",
+        "status": {
+          "checking": "Checking availability…",
+          "available": "Available",
+          "partial": "Partially available",
+          "empty": "Reachable, no matching running services",
+          "disabled": "Disabled by server configuration",
+          "unavailable": "Unavailable from this Homarr process"
         }
       },
-      "import": {
-        "title": "Import data",
-        "subtitle": "You can import data from an existing Homarr instance.",
-        "dropzone": {
-          "title": "Drag the zip file here or click to browse",
-          "description": "The uploaded zip will be processed and you'll be able to select what you want to import"
+      "connect": {
+        "title": "Connect what makes the board useful",
+        "description": "Select several services at once. Docker labels take priority, image matching fills gaps, and every URL and credential stays reviewable.",
+        "discoveredIntegrations": "Detected integration instances ({count})",
+        "detectedIntegrationLabel": "Import {name}, detected as {kind}",
+        "detectedAppLabel": "Import detected app {name}",
+        "otherIntegrations": "Add another integration",
+        "configureIntegrations": "Configure integrations",
+        "discoveredApps": "Detected apps ({count})",
+        "appAddressRequired": "Add an address for {name}, or remove it from the selection.",
+        "empty": "No integrations selected. Homarr will still create a useful starter board with general widgets.",
+        "dockerSource": "Docker",
+        "manualSource": "Manual",
+        "name": "Name",
+        "url": "Service URL",
+        "noCredentials": "No credentials",
+        "noCredentialsDescription": "This integration does not need credentials.",
+        "credentialMethod": "Credential method",
+        "getApiKey": "Open the API key settings for this service",
+        "openGuide": "Open Homarr's setup guide for this service",
+        "testConnection": "Test connection",
+        "testSuccess": "Connection works",
+        "testSuccessDescription": "Homarr connected with the current address and credentials.",
+        "testError": "Connection failed",
+        "testErrorDescription": "Check the service address and credentials, then try again.",
+        "needsConfiguration": "Needs configuration",
+        "tested": "Connection tested",
+        "testFailed": "Connection test failed",
+        "incompleteConfirmation": "Unfinished integrations will be skipped. Continue without them?"
+      },
+      "board": {
+        "title": "Shape the board before it is built",
+        "description": "Homarr creates protected Mobile and Base layouts, then places apps and compatible widgets from the services you selected.",
+        "target": "Board to configure",
+        "targetDescription": "Choose the exact existing board that this setup should update.",
+        "targetPlaceholder": "Select a board",
+        "targetRequired": "Select the board to configure before continuing.",
+        "name": "Board name",
+        "nameDescription": "Used in the board URL; letters, numbers, dashes, and underscores only.",
+        "nameRequired": "Enter a board name before continuing.",
+        "primaryColor": "Primary color",
+        "secondaryColor": "Secondary color",
+        "resetColors": "Reset colors",
+        "radius": "Widget corner radius",
+        "columns": "Board columns",
+        "columnsDescription": "Columns define the horizontal grid used to size and position items. 12 is plenty for most people.",
+        "columnCount": "{count, plural, one {# column} other {# columns}}",
+        "leftSidebar": "Left sidebar",
+        "rightSidebar": "Right sidebar",
+        "previewLabel": "Live preview of the first board layout"
+      },
+      "extend": {
+        "title": "Advanced features",
+        "tabsLabel": "Assistant, Workshop, and MCP setup",
+        "assistant": "Assistant",
+        "workshop": "Workshop",
+        "mcp": "MCP",
+        "assistantSetup": {
+          "loginTitle": "Administrator sign-in required",
+          "loginDescription": "Provider keys and model access are privileged. Finish setup, sign in, and Homarr will open the Assistant configuration directly.",
+          "loginAction": "Sign in to configure Assistant"
         },
-        "fileInfo": {
-          "action": {
-            "change": "Change file"
-          }
+        "workshopSetup": {
+          "title": "Homarr Workshop",
+          "description": "Browse community Custom Widgets, inspect their requested capabilities, install them, and publish your own work without copying code between servers.",
+          "available": "Available",
+          "checking": "Checking…",
+          "unavailable": "Unavailable",
+          "discoverTitle": "Discover",
+          "discoverDescription": "Find widgets built for real self-hosted workflows.",
+          "installTitle": "Review and install",
+          "installDescription": "See metadata and configuration before adding anything.",
+          "publishTitle": "Share",
+          "publishDescription": "Publish reusable widgets back to the community.",
+          "browse": "Browse Workshop"
         },
-        "importSettings": {
-          "title": "Import settings",
-          "description": "Configure the import behavior"
-        },
-        "boardSelection": {
-          "title": "Found {count} boards",
-          "description": "Choose all boards with the size you want to import",
-          "action": {
-            "selectAll": "Select all",
-            "unselectAll": "Unselect all"
-          }
-        },
-        "summary": {
-          "title": "Import summary",
-          "description": "In the below summary you can see what will be imported",
-          "action": {
-            "import": "Confirm import and continue"
-          },
-          "entities": {
-            "apps": "Apps",
-            "boards": "Boards",
-            "integrations": "Integrations",
-            "credentialUsers": "Credential users"
-          }
-        },
-        "tokenModal": {
-          "title": "Enter import token",
-          "field": {
-            "token": {
-              "label": "Token",
-              "description": "Enter the shown import token from your previous homarr instance"
-            }
-          },
-          "notification": {
-            "error": {
-              "title": "Invalid token",
-              "message": "The token you entered is invalid"
-            }
-          }
+        "mcpSetup": {
+          "title": "Homarr MCP",
+          "description": "Connect Claude, Codex, or another MCP client to Homarr's typed tools. API keys keep access explicit and revocable.",
+          "endpoint": "Streamable HTTP endpoint",
+          "keyTitle": "Copy this key now",
+          "keyDescription": "For security, Homarr cannot show this API key again.",
+          "copyKey": "Copy API key",
+          "createKey": "Create an MCP API key",
+          "errorTitle": "MCP API key could not be created",
+          "loginRequired": "Sign in as an administrator after setup to create an API key.",
+          "configuration": "Client configuration",
+          "copy": "Copy configuration",
+          "copied": "Copied",
+          "advanced": "Open MCP tools, permissions, and setup details"
         }
       },
-      "user": {
-        "title": "Admin user",
-        "subtitle": "Specify the credentials for your administrator user.",
-        "notification": {
-          "success": {
-            "title": "User created",
-            "message": "The user was successfully created"
-          },
-          "error": {
-            "title": "User creation failed"
-          }
-        }
-      },
-      "group": {
-        "title": "External group",
-        "subtitle": "Specify the group that should be used for external users.",
-        "form": {
-          "name": {
-            "label": "Group name",
-            "description": "Name has to match admin group of external provider"
-          }
-        }
-      },
-      "settings": {
-        "title": "Settings",
-        "subtitle": "Configure server settings."
-      },
-      "integrations": {
-        "title": "Integrations",
-        "subtitle": "Select the services you use.",
-        "description": "Choose the integrations you'd like to connect. We'll set up your dashboard with matching widgets automatically.",
-        "action": {
-          "continue": "Continue",
-          "skip": "Skip for now"
-        },
-        "configure": {
-          "progress": "{current} of {total}",
-          "skip": "Skip this integration",
-          "finishing": "Setting up your dashboard...",
-          "error": {
-            "title": "Setup failed",
-            "message": "Something went wrong while setting up your dashboard. Please try again."
-          },
-          "helpers": {
-            "tooltip": "URL helpers",
-            "description": "These helpers try to guess the URL for your services. If it doesn't work, just type the address manually."
-          }
-        },
-        "urlTemplate": {
-          "label": "Base URL",
-          "placeholder": "homelab.local or 192.168.1.1",
-          "hint": "Enter your base domain or IP to auto-fill integration URLs",
-          "warning": "Setting your base URL now will auto-fill all integration URLs, saving you time during setup",
-          "preview": "e.g. {example}",
-          "mode": {
-            "subdomain": "Subdomain",
-            "hostPort": "Host:Port"
-          }
-        },
-        "docker": {
-          "detected": "Docker detected {count} services",
-          "detectedBreakdown": "{integrations} integrations · {apps} apps",
-          "summary": "Homarr detected {apps} apps, {integrations} of which have integrations built-in",
-          "appBadge": "App",
-          "appSectionLabel": "Apps to add to dashboard ({count} selected)",
-          "scanning": "Scanning Docker...",
-          "scanningDescription": "Looking for running containers on your system"
+      "review": {
+        "title": "One board, built around your services",
+        "description": "Homarr tests unsaved connections, imports the selected apps, applies appearance and layouts, then opens the exact board it configured.",
+        "board": "First board",
+        "columns": "Board columns",
+        "columnsValue": "{count, plural, one {# column} other {# columns}}",
+        "sidebars": "Sidebars",
+        "sidebarsValue": "{count, plural, =0 {None} one {# sidebar} other {# sidebars}}",
+        "layouts": "Responsive layouts",
+        "layoutsValue": "Mobile + Base",
+        "integrations": "Integrations",
+        "integrationsValue": "{count, plural, =0 {None selected} one {# integration} other {# integrations}}",
+        "apps": "App tiles",
+        "appsValue": "{count, plural, =0 {Starter apps only} one {# app tile} other {# app tiles}}",
+        "language": "Language",
+        "theme": "Theme",
+        "themeAuto": "System preference",
+        "themeLight": "Light",
+        "themeDark": "Dark",
+        "colors": "Board colors",
+        "radius": "Widget radius",
+        "automaticTitle": "What Homarr will create",
+        "automaticDescription": "Compatible widgets, icons, app links, integration relationships, and responsive placement come from the shared Homarr catalog. You can edit every result later.",
+        "dockerWarningTitle": "Some Docker labels changed during setup",
+        "dockerWarningDescription": "{count, plural, one {# selected Docker result could not be applied because its service changed, targeted another board, or its widget was incompatible} other {# selected Docker results could not be applied because services changed, targeted another board, or their widgets were incompatible}}.",
+        "errorTitle": "Board could not be built",
+        "progress": {
+          "applying": "Testing connections and building your board",
+          "done": "Your board is ready"
         }
       },
       "finish": {
-        "title": "Finish setup",
-        "subtitle": "You are ready to go!",
-        "description": "You have successfully completed the setup process. You can now start using Homarr. Select your next action:",
-        "action": {
-          "goToBoard": "Go to {name} board",
-          "createBoard": "Create your first board",
-          "inviteUser": "Invite other users",
-          "docs": "Read the documentation"
-        }
+        "title": "Your first board is ready.",
+        "description": "Homarr connected the pieces you selected and kept the rest editable. Open the board now; the short in-product tour can show you edit mode, widgets, layouts, and search.",
+        "openBoard": "Open my board",
+        "manageTitle": "Manage",
+        "manageDescription": "Fine-tune apps, integrations, boards, users, and server settings.",
+        "workshopTitle": "Workshop",
+        "workshopDescription": "Discover and install community Custom Widgets.",
+        "docsTitle": "Learn Homarr",
+        "docsDescription": "Read the focused guides for boards, widgets, integrations, and tools."
       }
-    },
-    "backToStart": "Back to start"
+    }
   },
   "user": {
     "title": "Users",
@@ -621,9 +713,18 @@
     "page": {
       "list": {
         "title": "Apps",
+        "ariaLabel": "Configured apps",
+        "action": {
+          "edit": "Edit {name}",
+          "delete": "Delete {name}"
+        },
         "noResults": {
           "title": "There are no apps yet",
-          "action": "Create your first app"
+          "description": "Apps are links to the services and tools you want on your boards.",
+          "action": "Create your first app",
+          "filteredTitle": "No apps match your search",
+          "filteredDescription": "No apps match \"{search}\". Try another name or URL.",
+          "clearSearch": "Clear search"
         }
       },
       "create": {
@@ -1365,9 +1466,19 @@
     "page": {
       "list": {
         "title": "Integrations",
+        "ariaLabel": "Configured integrations",
         "search": "Search integrations",
+        "action": {
+          "edit": "Edit {name}",
+          "delete": "Delete {name}"
+        },
         "noResults": {
-          "title": "There are no integrations yet"
+          "title": "There are no integrations yet",
+          "description": "Connect a service to use its data and actions in Homarr widgets.",
+          "action": "Create your first integration",
+          "filteredTitle": "No integrations match your search",
+          "filteredDescription": "No integrations match \"{search}\". Try another name, type, or URL.",
+          "clearSearch": "Clear search"
         }
       },
       "create": {
@@ -5481,62 +5592,6 @@
           "message": "You have unsaved changes, are you sure you want to leave?"
         }
       },
-      "oldImport": {
-        "label": "Import from homarr before 1.0.0",
-        "notification": {
-          "success": {
-            "title": "Import successful",
-            "message": "The board was successfully imported"
-          },
-          "error": {
-            "title": "Import failed",
-            "message": "The board could not be imported, check the logs for further details"
-          }
-        },
-        "form": {
-          "file": {
-            "label": "Select JSON file",
-            "invalidError": "Invalid configuration file"
-          },
-          "apps": {
-            "label": "Apps",
-            "avoidDuplicates": {
-              "label": "Avoid duplicates",
-              "description": "Ignores apps where an app with the same href already exists"
-            },
-            "onlyImportApps": {
-              "label": "Only import apps",
-              "description": "Only adds the apps, the board need to be recreated manually"
-            }
-          },
-          "name": {
-            "label": "Board name"
-          },
-          "screenSize": {
-            "label": "Screen size",
-            "description": "In versions before 1.0 three different modes existed, so you were able to choose the amount of columns for each screen size.",
-            "option": {
-              "sm": "Small",
-              "md": "Medium",
-              "lg": "Large"
-            }
-          },
-          "sidebarBehavior": {
-            "label": "Sidebar behavior",
-            "description": "Sidebars were removed in 1.0, you can select what should happen with the items inside them.",
-            "option": {
-              "lastSection": {
-                "label": "Last section",
-                "description": "Sidebar will be displayed below the last section"
-              },
-              "removeItems": {
-                "label": "Remove items",
-                "description": "Items contained in the sidebar will be removed"
-              }
-            }
-          }
-        }
-      },
       "quickCreateApp": {
         "modal": {
           "title": "Create app on the fly",
@@ -5985,8 +6040,13 @@
           "public": "This board is public",
           "private": "This board is private"
         },
+        "preview": {
+          "label": "Layout preview for {name}, with {count} items",
+          "unknownCreator": "Unknown creator"
+        },
         "noResults": {
-          "title": "No boards yet"
+          "title": "No boards yet",
+          "description": "Create a board to arrange your apps and widgets in one place."
         },
         "modal": {
           "createBoard": {
@@ -6268,6 +6328,7 @@
             "provider": {
               "title": "Provider",
               "groups": {
+                "free": "Free with Homarr",
                 "hosted": "Hosted providers",
                 "local": "Local providers",
                 "custom": "Custom"
@@ -6275,7 +6336,7 @@
               "options": {
                 "homarr": {
                   "label": "Homarr",
-                  "description": "Community-funded access to the model selected by the Homarr team. Each user signs in with the Community Workshop and receives a daily allowance."
+                  "description": "A limited number of Assistant uses are free each day, paid for by the Homarr team. Sign in with the Community Workshop to use your allowance."
                 },
                 "openrouter": {
                   "label": "OpenRouter",
@@ -6327,8 +6388,8 @@
                 }
               },
               "homarrAuth": {
-                "title": "No administrator API key required",
-                "description": "Homarr keeps the upstream OpenRouter credential on the Community Workshop server. Each user authorizes requests with their own Workshop GitHub session, so their daily allowance stays separate."
+                "title": "Free daily Assistant uses included",
+                "description": "No API key is needed. The Homarr team covers a limited number of Assistant uses for you each day. Sign in with the Community Workshop to keep your allowance separate."
               }
             },
             "baseUrl": {
@@ -6746,6 +6807,10 @@
             "complete": {
               "title": "Restore Complete",
               "message": "Database has been restored successfully. The server is restarting — please refresh the page in a few seconds."
+            },
+            "timeout": {
+              "title": "Server did not come back online",
+              "message": "The database restore finished, but Homarr did not become ready again. Retry the connection check or refresh this page manually."
             },
             "failed": {
               "title": "Restore Failed"
@@ -7411,9 +7476,6 @@
               "newBoard": {
                 "label": "Create a new board"
               },
-              "importBoard": {
-                "label": "Import a board"
-              },
               "newApp": {
                 "label": "Create a new app"
               },
@@ -7794,11 +7856,24 @@
       "page": {
         "list": {
           "title": "Search engines",
+          "ariaLabel": "Configured search engines",
+          "action": {
+            "edit": "Edit {name}",
+            "delete": "Delete {name}"
+          },
           "noResults": {
             "title": "There are no search engines yet",
-            "action": "Create your first search engine"
+            "description": "Search engines let Spotlight send a query to a site or connected service.",
+            "action": "Create your first search engine",
+            "filteredTitle": "No search engines match your search",
+            "filteredDescription": "No search engines match \"{search}\". Try another name or URL.",
+            "clearSearch": "Clear search"
           },
-          "interactive": "Interactive, uses an integration"
+          "interactive": "Interactive, uses an integration",
+          "type": {
+            "generic": "URL template",
+            "fromIntegration": "Integration"
+          }
         },
         "create": {
           "title": "New search engine",

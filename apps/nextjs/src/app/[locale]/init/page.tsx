@@ -1,66 +1,78 @@
-import type { JSX } from "react";
-import { Box, Center, Stack, Text, Title } from "@mantine/core";
+import { headers } from "next/headers";
 
-import type { MaybePromise } from "@homarr/common/types";
-import { db } from "@homarr/db";
-import type { OnboardingStep } from "@homarr/definitions";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getOnboardingClaimTokenFromCookieHeader, isOnboardingClaimValidAsync } from "@homarr/api/onboarding-claim";
+import { normalizeOnboardingStep } from "@homarr/api/onboarding-step";
+import { auth } from "@homarr/auth/next";
+import { isProviderEnabled } from "@homarr/auth/server";
+import { extractBaseUrlFromHeaders } from "@homarr/common";
+import { dbEnv } from "@homarr/core/infrastructure/db/env";
+import { db, eq } from "@homarr/db";
+import { groups } from "@homarr/db/schema";
+import { everyoneGroup } from "@homarr/definitions";
+import { env as dockerEnv } from "@homarr/docker/env";
+import { OnboardingStudio } from "@homarr/onboarding";
+import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
-import { CurrentColorSchemeCombobox } from "~/components/color-scheme/current-color-scheme-combobox";
-import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
-import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
-import { onboardingContentWidth, onboardingMaxWidth } from "./_constants";
-import { BackToStart } from "./_steps/back";
-import { InitFinish } from "./_steps/finish/init-finish";
-import { InitGroup } from "./_steps/group/init-group";
-import { InitImport } from "./_steps/import/init-import";
-import { InitIntegrations } from "./_steps/integrations/init-integrations";
-import { InitSettings } from "./_steps/settings/init-settings";
-import { InitStart } from "./_steps/start/init-start";
-import { InitUser } from "./_steps/user/init-user";
-
-const stepComponents: Record<OnboardingStep, null | (() => MaybePromise<JSX.Element>)> = {
-  start: InitStart,
-  import: InitImport,
-  user: InitUser,
-  group: InitGroup,
-  settings: InitSettings,
-  integrations: InitIntegrations,
-  finish: InitFinish,
-};
-
-const getCurrentOnboardingStepAsync = async () => {
-  const value = await db.query.onboarding.findFirst();
-  if (!value) return { current: "start" as const, previous: null };
-
-  return { current: value.step, previous: value.previousStep };
-};
+import { DatabaseRestoreFlow } from "~/components/backup";
+import { env } from "~/env";
+import { getPackageVersion } from "~/versions/package-reader";
+import { AssistantConfiguration } from "../manage/assistant/_components/assistant-configuration";
 
 export default async function InitPage() {
-  const t = await getScopedI18n("init.step");
-  const currentStep = await getCurrentOnboardingStepAsync();
-
-  const CurrentComponent = stepComponents[currentStep.current];
+  const [state, session, requestHeaders, firstUser] = await Promise.all([
+    db.query.onboarding.findFirst(),
+    auth(),
+    headers(),
+    db.query.users.findFirst({ columns: { id: true } }),
+  ]);
+  const canConfigurePrivileged = session?.user.permissions.includes("admin") ?? false;
+  const onboardingClaim = getOnboardingClaimTokenFromCookieHeader(requestHeaders.get("cookie"));
+  const canReadSetupContext =
+    canConfigurePrivileged || (!firstUser && (await isOnboardingClaimValidAsync(db, onboardingClaim)));
+  const [defaultGroup, availableBoards] = canReadSetupContext
+    ? await Promise.all([
+        db.query.groups.findFirst({
+          where: eq(groups.name, everyoneGroup),
+          columns: { homeBoardId: true },
+        }),
+        db.query.boards.findMany({ columns: { id: true, name: true, primaryColor: true, secondaryColor: true } }),
+      ])
+    : [undefined, []];
+  const homeBoardId = defaultGroup?.homeBoardId;
+  const homeBoard = availableBoards.find((board) => board.id === homeBoardId);
+  const initialBoard = homeBoard ?? (availableBoards.length === 1 ? availableBoards[0] : null);
+  const currentStep = normalizeOnboardingStep(state?.step);
+  const databaseDriver =
+    dbEnv.DRIVER === "better-sqlite3" ? "sqlite" : dbEnv.DRIVER === "mysql2" ? "mysql" : "postgresql";
+  const { workshopApiUrl, workshopWebUrl } = canReadSetupContext
+    ? resolveHomarrUrlConfig({
+        homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,
+        workshopApiUrl: env.WORKSHOP_API_URL,
+        workshopWebUrl: env.WORKSHOP_WEB_URL,
+      })
+    : { workshopApiUrl: "", workshopWebUrl: "" };
+  const baseUrl = extractBaseUrlFromHeaders(requestHeaders);
 
   return (
-    <Box mih="100dvh">
-      <Center>
-        <Stack align="center" mt="xl" w={onboardingContentWidth} maw={onboardingMaxWidth}>
-          <HomarrLogoWithTitle size="lg" />
-          <Stack gap={6} align="center">
-            <Title order={3} fw={400} ta="center">
-              {t(`${currentStep.current}.title`)}
-            </Title>
-            <Text size="sm" c="gray.5" ta="center">
-              {t(`${currentStep.current}.subtitle`)}
-            </Text>
-          </Stack>
-          <CurrentLanguageCombobox width="100%" />
-          <CurrentColorSchemeCombobox w="100%" />
-          {CurrentComponent && <CurrentComponent />}
-          {currentStep.previous === "start" && <BackToStart />}
-        </Stack>
-      </Center>
-    </Box>
+    <OnboardingStudio
+      environment={{
+        version: getPackageVersion(),
+        currentStep,
+        databaseDriver,
+        externalAuthEnabled: isProviderEnabled("ldap") || isProviderEnabled("oidc"),
+        dockerConfigured: canReadSetupContext && dockerEnv.ENABLE_DOCKER,
+        kubernetesConfigured: canReadSetupContext && dockerEnv.ENABLE_KUBERNETES,
+        workshopApiUrl,
+        workshopUrl: workshopWebUrl,
+        serverOrigin: baseUrl,
+        mcpEndpoint: `${baseUrl}/api/mcp`,
+        canConfigurePrivileged,
+        hasUsers: Boolean(firstUser),
+        initialBoard: initialBoard ?? null,
+        availableBoards: availableBoards.map(({ id, name }) => ({ id, name })),
+      }}
+      sqliteRestore={databaseDriver === "sqlite" ? <DatabaseRestoreFlow variant="standalone" /> : undefined}
+      assistantConfiguration={canConfigurePrivileged ? <AssistantConfiguration /> : undefined}
+    />
   );
 }

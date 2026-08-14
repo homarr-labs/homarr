@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChangeEvent } from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Loader, TextInput } from "@mantine/core";
 import { useDebouncedCallback } from "@mantine/hooks";
@@ -10,25 +10,37 @@ import { IconSearch } from "@tabler/icons-react";
 interface SearchInputProps {
   defaultValue?: string;
   placeholder: string;
+  ariaLabel: string;
   flexExpand?: boolean;
 }
 
-export const SearchInput = ({ placeholder, defaultValue, flexExpand = false }: SearchInputProps) => {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  const { replace } = useRouter();
+export const SearchInput = ({ placeholder, ariaLabel, defaultValue, flexExpand = false }: SearchInputProps) => {
+  const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const handleSearchDebounced = useDebouncedCallback((value: string) => {
+  const [value, setValue] = useState(defaultValue ?? "");
+  useEffect(() => {
+    setValue(defaultValue ?? "");
+    setLoading(false);
+  }, [defaultValue]);
+  const handleSearchDebounced = useDebouncedCallback((nextValue: string) => {
     const params = new URLSearchParams(searchParams);
-    params.set("search", value.toString());
+    const normalizedValue = nextValue.trim();
+    if (normalizedValue.length === 0) {
+      params.delete("search");
+    } else {
+      params.set("search", normalizedValue);
+    }
     if (params.has("page")) params.set("page", "1"); // Reset page to 1
-    replace(`${pathName}?${params.toString()}`);
+    const query = params.toString();
+    router.replace(query ? `${pathName}?${query}` : pathName);
     setLoading(false);
   }, 250);
 
   const handleSearch = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
+      setValue(event.currentTarget.value);
       setLoading(true);
       handleSearchDebounced(event.currentTarget.value);
     },
@@ -38,9 +50,10 @@ export const SearchInput = ({ placeholder, defaultValue, flexExpand = false }: S
   return (
     <TextInput
       leftSection={<LeftSection loading={loading} />}
-      defaultValue={defaultValue}
+      value={value}
       onChange={handleSearch}
       placeholder={placeholder}
+      aria-label={ariaLabel}
       style={{ flex: flexExpand ? "1" : undefined }}
     />
   );

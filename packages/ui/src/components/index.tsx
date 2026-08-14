@@ -15,6 +15,10 @@ export { BetaBadge } from "./beta-badge";
 export { MaskedImage } from "./masked-image";
 export { MaskedOrNormalImage } from "./masked-or-normal-image";
 export { LanguageIcon } from "./language-icon";
+export { LanguageCombobox } from "./language-combobox";
+export { ColorSchemeCombobox } from "./color-scheme-combobox";
+export { BoardColorInput } from "./board-color-input";
+export { IntegrationMarquee } from "./integration-marquee";
 export { Link } from "./link";
 export {
   SelectGridLayout,

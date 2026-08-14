@@ -48,6 +48,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
       search={search}
       onSearchChange={setSearch}
       placeholder={`${t("app.action.select.search")}...`}
+      ariaLabel={t("app.action.select.search")}
       onSearchKeyDown={(event) => {
         if (event.key === "Enter" && filteredApps.length === 1 && filteredApps[0]) {
           handleSelect(filteredApps[0]);

@@ -8,7 +8,7 @@ import type { GridAlgorithmItem } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database, InferInsertModel, InferSelectModel, SQL } from "@homarr/db";
-import { and, asc, eq, handleTransactionsAsync, inArray, isNull, like, not, or, sql } from "@homarr/db";
+import { and, asc, eq, gt, gte, handleTransactionsAsync, inArray, isNull, like, lt, not, or, sql } from "@homarr/db";
 import { createDbInsertCollectionWithoutTransaction } from "@homarr/db/collection";
 import { seedProtectedBoardLayoutsAsync } from "@homarr/db/migrations/seed";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
@@ -23,6 +23,7 @@ import {
   integrationItems,
   integrationUserPermissions,
   integrations,
+  apps,
   itemLayouts,
   items,
   layouts,
@@ -31,26 +32,22 @@ import {
   sections,
   users,
 } from "@homarr/db/schema";
-import type { BoardLane, WidgetKind } from "@homarr/definitions";
+import type { BoardLane, IntegrationKind, WidgetKind } from "@homarr/definitions";
 import {
   boardLanes,
   emptySuperJSON,
   everyoneGroup,
   getBoardLaneColumnCount,
   getRootSectionLane,
+  getWidgetIntegrationIssue,
+  getWidgetIntegrationIssueMessage,
   getPermissionsWithChildren,
   getPermissionsWithParents,
   normalizeBoardLayoutRoles,
   rootSectionOffsets,
   widgetDefaultSizes,
-  widgetIntegrationLimits,
-  widgetIntegrationSupport,
-  widgetKindsWithOptionalIntegrations,
   widgetKinds,
 } from "@homarr/definitions";
-import { importOldmarrAsync } from "@homarr/old-import";
-import { importJsonFileSchema } from "@homarr/old-import/shared";
-import { oldmarrConfigSchema } from "@homarr/old-schema";
 import {
   addItemToBoardSchema,
   boardByNameSchema,
@@ -88,6 +85,7 @@ interface BoardItemPlacementRectangle {
 }
 
 const boardItemPlacementTails = new Map<string, Promise<void>>();
+const maxManageOverviewPreviewRows = 12;
 
 const serializeBoardItemPlacementAsync = async <T>(boardId: string, operation: () => Promise<T>) => {
   const previous = boardItemPlacementTails.get(boardId) ?? Promise.resolve();
@@ -193,31 +191,8 @@ export const boardRouter = createTRPCRouter({
     })
     .query(async ({ ctx }) => {
       const userId = ctx.session?.user.id;
-      const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
-        where: eq(boardUserPermissions.userId, userId ?? ""),
-      });
-
-      const permissionsOfCurrentUserGroupsWhenPresent = await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, userId ?? ""),
-        with: {
-          group: {
-            with: {
-              boardPermissions: {},
-            },
-          },
-        },
-      });
-      const boardIds = permissionsOfCurrentUserWhenPresent
-        .map((permission) => permission.boardId)
-        .concat(
-          permissionsOfCurrentUserGroupsWhenPresent
-            .map((groupMember) => groupMember.group.boardPermissions.map((permission) => permission.boardId))
-            .flat(),
-        );
-
-      const currentUserWhenPresent = await ctx.db.query.users.findFirst({
-        where: eq(users.id, userId ?? ""),
-      });
+      const { boardIds, currentUser, groupMemberships } = await getBoardAccessContextAsync(ctx.db, userId);
+      const groupPermissionWhere = getBoardGroupPermissionWhere(groupMemberships);
 
       const dbBoards = await ctx.db.query.boards.findMany({
         columns: {
@@ -239,30 +214,273 @@ export const boardRouter = createTRPCRouter({
             where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
           },
           groupPermissions: {
-            where:
-              permissionsOfCurrentUserGroupsWhenPresent.length >= 1
-                ? inArray(
-                    boardGroupPermissions.groupId,
-                    permissionsOfCurrentUserGroupsWhenPresent.map((groupMember) => groupMember.groupId),
-                  )
-                : undefined,
+            where: groupPermissionWhere,
           },
         },
-        // Allow viewing all boards if the user has the permission
-        where: ctx.session?.user.permissions.includes("board-view-all")
-          ? undefined
-          : or(
-              eq(boards.isPublic, true),
-              eq(boards.creatorId, ctx.session?.user.id ?? ""),
-              boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
-            ),
+        where: getAccessibleBoardsWhere(ctx.session?.user.permissions.includes("board-view-all"), userId, boardIds),
       });
       return dbBoards.map((board) => ({
         ...board,
-        isHome: currentUserWhenPresent?.homeBoardId === board.id,
-        isMobileHome: currentUserWhenPresent?.mobileHomeBoardId === board.id,
+        isHome: currentUser?.homeBoardId === board.id,
+        isMobileHome: currentUser?.mobileHomeBoardId === board.id,
       }));
     }),
+  getManageOverview: publicProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session?.user.id;
+    const { boardIds, currentUser, groupMemberships } = await getBoardAccessContextAsync(ctx.db, userId);
+    const groupPermissionWhere = getBoardGroupPermissionWhere(groupMemberships);
+
+    const dbBoards = await ctx.db.query.boards.findMany({
+      columns: {
+        id: true,
+        name: true,
+        logoImageUrl: true,
+        isPublic: true,
+      },
+      with: {
+        creator: {
+          columns: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        userPermissions: {
+          columns: { permission: true },
+          where: eq(boardUserPermissions.userId, userId ?? ""),
+        },
+        groupPermissions: {
+          columns: { permission: true },
+          where: groupPermissionWhere,
+        },
+        layouts: {
+          columns: {
+            id: true,
+            columnCount: true,
+            leftGutterColumnCount: true,
+            rightGutterColumnCount: true,
+            breakpoint: true,
+            role: true,
+          },
+          orderBy: (layout, { desc, sql }) => [
+            sql`CASE WHEN ${layout.role} = 'base' THEN 0 ELSE 1 END`,
+            desc(layout.breakpoint),
+          ],
+          limit: 1,
+        },
+        sections: {
+          columns: {
+            id: true,
+            kind: true,
+            xOffset: true,
+          },
+          where: eq(sections.kind, "empty"),
+          orderBy: (section, { asc }) => [asc(section.xOffset), asc(section.id)],
+        },
+      },
+      where: getAccessibleBoardsWhere(ctx.session?.user.permissions.includes("board-view-all"), userId, boardIds),
+    });
+
+    const previewLayoutIds = dbBoards.flatMap((board) => board.layouts.map((layout) => layout.id));
+    const rootSectionIds = dbBoards.flatMap((board) => board.sections.map((section) => section.id));
+    const [rootPreviewItemLayouts, previewSectionLayouts] =
+      previewLayoutIds.length > 0 && rootSectionIds.length > 0
+        ? await Promise.all([
+            ctx.db.query.itemLayouts.findMany({
+              columns: {
+                itemId: true,
+                layoutId: true,
+                sectionId: true,
+                xOffset: true,
+                yOffset: true,
+                width: true,
+                height: true,
+              },
+              with: {
+                item: {
+                  columns: { kind: true, options: true },
+                },
+              },
+              where: and(
+                inArray(itemLayouts.layoutId, previewLayoutIds),
+                inArray(itemLayouts.sectionId, rootSectionIds),
+                gte(itemLayouts.xOffset, 0),
+                gte(itemLayouts.yOffset, 0),
+                lt(itemLayouts.yOffset, maxManageOverviewPreviewRows),
+                gt(itemLayouts.width, 0),
+                gt(itemLayouts.height, 0),
+              ),
+            }),
+            ctx.db.query.sectionLayouts.findMany({
+              columns: {
+                sectionId: true,
+                layoutId: true,
+                parentSectionId: true,
+                xOffset: true,
+                yOffset: true,
+                width: true,
+                height: true,
+              },
+              with: {
+                section: {
+                  columns: { kind: true },
+                },
+              },
+              where: and(
+                inArray(sectionLayouts.layoutId, previewLayoutIds),
+                inArray(sectionLayouts.parentSectionId, rootSectionIds),
+                gte(sectionLayouts.xOffset, 0),
+                gte(sectionLayouts.yOffset, 0),
+                lt(sectionLayouts.yOffset, maxManageOverviewPreviewRows),
+                gt(sectionLayouts.width, 0),
+                gt(sectionLayouts.height, 0),
+              ),
+            }),
+          ])
+        : [[], []];
+
+    const previewContainerSectionIds = [
+      ...new Set(
+        previewSectionLayouts.filter((layout) => layout.section.kind === "container").map((layout) => layout.sectionId),
+      ),
+    ];
+    const nestedPreviewItemLayouts =
+      previewLayoutIds.length > 0 && previewContainerSectionIds.length > 0
+        ? await ctx.db.query.itemLayouts.findMany({
+            columns: {
+              itemId: true,
+              layoutId: true,
+              sectionId: true,
+              xOffset: true,
+              yOffset: true,
+              width: true,
+              height: true,
+            },
+            with: {
+              item: {
+                columns: { kind: true, options: true },
+              },
+            },
+            where: and(
+              inArray(itemLayouts.layoutId, previewLayoutIds),
+              inArray(itemLayouts.sectionId, previewContainerSectionIds),
+              gte(itemLayouts.xOffset, 0),
+              gte(itemLayouts.yOffset, 0),
+              lt(itemLayouts.yOffset, maxManageOverviewPreviewRows),
+              gt(itemLayouts.width, 0),
+              gt(itemLayouts.height, 0),
+            ),
+          })
+        : [];
+    const previewItemLayouts = [...rootPreviewItemLayouts, ...nestedPreviewItemLayouts];
+
+    const appIdByItemId = new Map(
+      previewItemLayouts.flatMap((layout) => {
+        if (layout.item.kind !== "app") return [];
+        try {
+          const { appId } = superjson.parse<{ appId?: unknown }>(layout.item.options);
+          return typeof appId === "string" ? [[layout.itemId, appId] as const] : [];
+        } catch {
+          return [];
+        }
+      }),
+    );
+    const previewAppIds = [...new Set(appIdByItemId.values())];
+    const previewApps =
+      previewAppIds.length > 0
+        ? await ctx.db.query.apps.findMany({
+            columns: { id: true, iconUrl: true },
+            where: inArray(apps.id, previewAppIds),
+          })
+        : [];
+    const appIconUrlById = new Map(previewApps.map((app) => [app.id, app.iconUrl]));
+
+    return dbBoards.map(({ layouts: boardLayouts, sections: boardSections, ...board }) => {
+      const previewLayout = boardLayouts.at(0);
+
+      const rootsByLane = new Map<BoardLane, (typeof boardSections)[number]>();
+      for (const section of boardSections) {
+        const lane = getRootSectionLane(section.xOffset);
+        if (!rootsByLane.has(lane)) rootsByLane.set(lane, section);
+      }
+      const previewRoots = boardLanes.flatMap((lane) => {
+        const root = rootsByLane.get(lane);
+        return root ? [{ id: root.id, kind: "empty" as const, xOffset: root.xOffset, layouts: [] }] : [];
+      });
+
+      const rootColumnCountById = new Map(
+        boardLanes.flatMap((lane) => {
+          const root = rootsByLane.get(lane);
+          return root && previewLayout ? [[root.id, getBoardLaneColumnCount(previewLayout, lane)] as const] : [];
+        }),
+      );
+      const isInsideRootLane = (layout: { sectionId: string; xOffset: number }) => {
+        const columnCount = rootColumnCountById.get(layout.sectionId);
+        return columnCount !== undefined && columnCount > 0 && layout.xOffset < columnCount;
+      };
+      const isInsideParentRootLane = (layout: { parentSectionId: string | null; xOffset: number }) => {
+        if (!layout.parentSectionId) return false;
+        const columnCount = rootColumnCountById.get(layout.parentSectionId);
+        return columnCount !== undefined && columnCount > 0 && layout.xOffset < columnCount;
+      };
+
+      const containerPreview = previewLayout
+        ? previewSectionLayouts
+            .filter(
+              (layout) =>
+                layout.layoutId === previewLayout.id &&
+                layout.section.kind === "container" &&
+                isInsideParentRootLane(layout),
+            )
+            .map((layout) => ({
+              id: layout.sectionId,
+              kind: "container" as const,
+              xOffset: null,
+              layouts: [layout],
+            }))
+        : [];
+      const visibleContainerSizeById = new Map(
+        containerPreview.map((section) => [section.id, section.layouts[0]] as const),
+      );
+      const isInsideVisibleContainer = (layout: { sectionId: string; xOffset: number; yOffset: number }) => {
+        const containerLayout = visibleContainerSizeById.get(layout.sectionId);
+        return (
+          containerLayout !== undefined &&
+          layout.xOffset < containerLayout.width &&
+          layout.yOffset < containerLayout.height
+        );
+      };
+      const itemPreview = previewLayout
+        ? previewItemLayouts
+            .filter(
+              (layout) =>
+                layout.layoutId === previewLayout.id && (isInsideRootLane(layout) || isInsideVisibleContainer(layout)),
+            )
+            .map((layout) => {
+              const appId = appIdByItemId.get(layout.itemId);
+              return {
+                id: layout.itemId,
+                kind: layout.item.kind,
+                iconUrl: appId ? appIconUrlById.get(appId) : undefined,
+                layouts: [layout],
+              };
+            })
+        : [];
+
+      return {
+        ...board,
+        isHome: currentUser?.homeBoardId === board.id,
+        isMobileHome: currentUser?.mobileHomeBoardId === board.id,
+        preview: previewLayout
+          ? {
+              layouts: [previewLayout],
+              sections: [...previewRoots, ...containerPreview],
+              items: itemPreview,
+            }
+          : null,
+      };
+    });
+  }),
   search: publicProcedure
     .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
     .query(async ({ ctx, input }) => {
@@ -1846,14 +2064,6 @@ export const boardRouter = createTRPCRouter({
       },
     });
   }),
-  importOldmarrConfig: permissionRequiredProcedure
-    .requiresPermission("board-create")
-    .input(importJsonFileSchema)
-    .mutation(async ({ input, ctx }) => {
-      const content = await input.file.text();
-      const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
-      await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
-    }),
   addItem: protectedProcedure
     .meta({
       openapi: { method: "POST", path: "/api/boards/items", tags: ["boards"], protect: true },
@@ -1877,25 +2087,7 @@ export const boardRouter = createTRPCRouter({
         await validateTimetableOptionsChangeAsync(input.options);
       }
 
-      const supportedIntegrations = widgetIntegrationSupport[input.kind];
-      const integrationLimit = widgetIntegrationLimits[input.kind] ?? Infinity;
-      if (input.integrationIds.length > integrationLimit) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: `${input.kind} supports at most ${integrationLimit} integration${integrationLimit === 1 ? "" : "s"}`,
-        });
-      }
-      if (supportedIntegrations === undefined && input.integrationIds.length > 0) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: `${input.kind} does not support integrations` });
-      }
-      if (
-        supportedIntegrations !== undefined &&
-        input.integrationIds.length === 0 &&
-        !widgetKindsWithOptionalIntegrations.has(input.kind)
-      ) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: `${input.kind} requires an integration` });
-      }
-
+      let selectedIntegrationKinds: IntegrationKind[] = [];
       if (input.integrationIds.length > 0) {
         const existing = await ctx.db.query.integrations.findMany({
           columns: { id: true, kind: true },
@@ -1907,19 +2099,21 @@ export const boardRouter = createTRPCRouter({
           throw new TRPCError({ code: "BAD_REQUEST", message: `Invalid integration IDs: ${invalid.join(", ")}` });
         }
 
+        selectedIntegrationKinds = existing.map((integration) => integration.kind);
+
         await Promise.all(
           input.integrationIds.map((integrationId) =>
             throwIfIntegrationActionForbiddenAsync(ctx, eq(integrations.id, integrationId), "use"),
           ),
         );
+      }
 
-        const incompatible = existing.filter((integration) => !supportedIntegrations?.includes(integration.kind));
-        if (incompatible.length > 0) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: `${input.kind} does not support integration kind${incompatible.length === 1 ? "" : "s"}: ${incompatible.map((integration) => integration.kind).join(", ")}`,
-          });
-        }
+      const integrationIssue = getWidgetIntegrationIssue(input.kind, selectedIntegrationKinds);
+      if (integrationIssue) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: getWidgetIntegrationIssueMessage(input.kind, integrationIssue),
+        });
       }
 
       return await serializeBoardItemPlacementAsync(input.boardId, async () => {
@@ -2371,6 +2565,59 @@ const getElementsForLayout = (board: BoardForLayoutProjection, layoutId: string)
 };
 
 const protectedLayoutRepairPromises = new Map<string, Promise<void>>();
+
+const getBoardAccessContextAsync = async (db: Database, userId: string | undefined) => {
+  const [userPermissions, groupMemberships, currentUser] = await Promise.all([
+    db.query.boardUserPermissions.findMany({
+      where: eq(boardUserPermissions.userId, userId ?? ""),
+    }),
+    db.query.groupMembers.findMany({
+      where: eq(groupMembers.userId, userId ?? ""),
+      with: {
+        group: {
+          with: {
+            boardPermissions: {},
+          },
+        },
+      },
+    }),
+    db.query.users.findFirst({
+      where: eq(users.id, userId ?? ""),
+      columns: {
+        homeBoardId: true,
+        mobileHomeBoardId: true,
+      },
+    }),
+  ]);
+  const boardIds = userPermissions
+    .map((permission) => permission.boardId)
+    .concat(
+      groupMemberships.flatMap((membership) =>
+        membership.group.boardPermissions.map((permission) => permission.boardId),
+      ),
+    );
+
+  return { boardIds, currentUser, groupMemberships };
+};
+
+const getBoardGroupPermissionWhere = (
+  groupMemberships: Awaited<ReturnType<typeof getBoardAccessContextAsync>>["groupMemberships"],
+) =>
+  groupMemberships.length > 0
+    ? inArray(
+        boardGroupPermissions.groupId,
+        groupMemberships.map((membership) => membership.groupId),
+      )
+    : eq(boardGroupPermissions.groupId, "");
+
+const getAccessibleBoardsWhere = (canViewAll: boolean | undefined, userId: string | undefined, boardIds: string[]) =>
+  canViewAll
+    ? undefined
+    : or(
+        eq(boards.isPublic, true),
+        eq(boards.creatorId, userId ?? ""),
+        boardIds.length > 0 ? inArray(boards.id, boardIds) : undefined,
+      );
 
 const getFullBoardWithWhereAsync = async (
   db: Database,

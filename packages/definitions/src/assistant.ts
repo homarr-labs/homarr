@@ -15,7 +15,7 @@ export const assistantProviderIds = [
 ] as const;
 
 export type AssistantProvider = (typeof assistantProviderIds)[number];
-export type AssistantProviderCategory = "hosted" | "local" | "custom";
+export type AssistantProviderCategory = "free" | "hosted" | "local" | "custom";
 export const assistantHomarrProviderTokenHeader = "X-Homarr-Provider-Token";
 
 export const assistantReasoningModes = ["auto", "none", "minimal", "low", "medium", "high"] as const;
@@ -50,7 +50,7 @@ export const assistantProviderPresets = {
     baseUrl: "https://homarr.dev/api/ai/v1",
     modelDiscoveryPath: "/models",
     requiresApiKey: false,
-    category: "hosted",
+    category: "free",
     discoveryAuthentication: "bearer",
     iconUrl: "https://homarr.dev/img/logo.png",
   },
