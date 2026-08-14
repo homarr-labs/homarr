@@ -3,6 +3,63 @@
 Each of these was implemented or configured, built, and measured. They are recorded with their
 numbers so nobody repeats them, and because several looked like wins until the measurement came in.
 
+## Cache Components — the app cannot prerender, and the prize is ~20 ms
+
+Tried properly: `cacheComponents: true` at top level on Next.js 16.3.0-preview.9. The flag is
+recognised (`- Cache Components enabled`) and the usual migration friction is absent — **zero** files
+export `dynamic`, `revalidate` or `fetchCache`, and `experimental.dynamicIO` was never set.
+
+**First blocker, and it is cheap.** Everything is routed through a `[locale]` dynamic root segment, so
+the build stops before prerendering: `A required root parameter (locale) was not provided in
+generateStaticParams`. That looks like 53 routes × 38 locales = 2,014 shells, but it is not: the guide
+is explicit that `generateStaticParams` need only return **one** value, because with Cache Components
+`dynamicParams: true` serves the App Shell for unlisted params and upgrades it in the background. One
+entry for `en` clears it.
+
+**Second blocker, and it is structural.** Past that, 111 routes fail with the *same* error:
+
+```
+Error occurred prerendering page "/en/manage/settings"
+SqliteError: no such table: serverSetting
+```
+
+Prerendering runs at build time, and the root layout unconditionally awaits real data:
+
+```ts
+const [session, user, serverSettings, colorScheme] = await Promise.all([
+  sessionPromise, userPromise, getRscServerSettingsAsync(), getCurrentColorSchemeAsync(),
+]);
+```
+
+For a self-hosted app whose database is created at runtime on the user's volume, there is nothing to
+query during a build. Fixing it means deferring those reads into `<Suspense>` — but all four feed
+providers that wrap `children` (`AuthProvider session=`, `SettingsProvider user=`), so deferring them
+puts essentially the whole app inside the boundary and leaves a static shell of little more than
+`<html><body>`. The build would report `◐` while shipping an empty shell, which is precisely the
+failure the migration guide warns about.
+
+**And the prize is small.** Measured against a running container, warm, five repeats:
+
+| request | TTFB |
+| --- | --- |
+| `/api/health/live` (skips the root layout) | ~3 ms |
+| `/auth/login` (through the root layout) | ~19–24 ms |
+
+So the layout's blocking work — auth, two DB reads, a cookie read — is worth **~16–21 ms**. Not
+perceptible, against a root-layout restructure affecting all 53 routes plus a standing constraint on
+every route added afterwards.
+
+**The main screen cannot benefit at all.** `DynamicClientBoard` is already
+`dynamic(..., { ssr: false })` with a skeleton `loading` shell, so the board already paints an instant
+shell and renders on the client. Cache Components has no server render to unblock there; the board's
+real cost is client JS and tRPC round-trips, which is what the rest of this work addresses.
+
+**Two honest caveats.** The ~20 ms is a warm local SQLite install; on a network database (MySQL,
+Postgres) or slow storage those four awaits could cost far more, and the win would scale with them.
+And the useful idea inside this — *do not block the first byte on auth plus two DB queries* — can be
+had without the migration, by streaming those reads in the existing layout. That is a much smaller,
+independently testable change and is the shape worth trying if first paint ever needs attention.
+
 ## `optimizePackageImports` — inert, because this app builds with Turbopack
 
 Seven Mantine entry points were absent from `experimental.optimizePackageImports` while
