@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { StreamSession } from "@homarr/integrations";
 
-import { SessionDetailsPopover } from "./component";
+import { getMediaServerColumnVisibility, SessionDetailsPopover } from "./component";
 
 vi.mock("@homarr/translation/client", () => ({
   useScopedI18n: () => (key: string) => key,
@@ -97,5 +97,14 @@ describe("SessionDetailsPopover", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
     expect(target?.getAttribute("aria-expanded")).toBe("false");
+  });
+});
+
+describe("getMediaServerColumnVisibility", () => {
+  test("keeps a stable responsive column model from the zero-sized first render", () => {
+    expect(getMediaServerColumnVisibility(0, false)).toEqual({ user: false, status: false });
+    expect(getMediaServerColumnVisibility(300, false)).toEqual({ user: true, status: false });
+    expect(getMediaServerColumnVisibility(420, false)).toEqual({ user: true, status: true });
+    expect(getMediaServerColumnVisibility(0, true)).toEqual({ user: true, status: true });
   });
 });

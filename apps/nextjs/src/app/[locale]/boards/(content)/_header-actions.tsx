@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Box, Center, Loader, Menu, ScrollArea } from "@mantine/core";
@@ -161,7 +161,7 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
     setIsEnteringEditMode(true);
     try {
       await prepareEditorAsync();
-      startTransition(open);
+      open();
     } catch {
       showErrorNotification({
         title: t("notification.loadError.title"),

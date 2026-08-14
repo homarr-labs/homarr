@@ -30,19 +30,20 @@ export const downloadsWidget: WidgetDefinition = {
       {
         name: "Columns to show",
         description:
-          "Select the columns you want to display in the widget. Columns automatically hide/show based on widget width.",
+          "Select the columns you want to display in the widget. Compact layouts automatically hide/show selected columns based on widget width and height; advanced view keeps the selected columns visible.",
         values: `List of columns: ${columnsList.join(", ")}`,
         defaultValue: ["name", "progress", "downSpeed", "time", "state"].join(", "),
       },
       {
         name: "Default sort column",
-        description: "The column used for initial sorting when the widget loads.",
+        description:
+          "The column used for initial sorting when the widget loads. Clicking a column header changes the current view only.",
         defaultValue: "progress",
         values: `List of columns: ${sortColumns.join(", ")}`,
       },
       {
         name: "Invert sorting",
-        description: "This will invert the default sorting order.",
+        description: "This sets the initial sorting direction.",
         values: { type: "boolean" },
         defaultValue: "no",
       },
@@ -66,8 +67,7 @@ export const downloadsWidget: WidgetDefinition = {
       },
       {
         name: "Hide completed torrent under this threshold (in kiB/s)",
-        description:
-          "This will hide completed torrent entries that have an upload speed below the specified threshold.",
+        description: "This will hide completed torrent entries whose upload speed is below the specified threshold.",
         values: "Any number above 0, 0 to disable",
         defaultValue: "0",
       },
@@ -85,15 +85,16 @@ export const downloadsWidget: WidgetDefinition = {
         defaultValue: "no",
       },
       {
-        name: "Use filter to calculate Ratio",
-        description: "This will use the category filter when calculating the global torrent ratio.",
+        name: "Use category filter for global torrent ratio",
+        description:
+          "When enabled, the configured category/label filter is applied to the global torrent ratio. Footer client/status filters do not change this ratio.",
         values: { type: "boolean" },
         defaultValue: "yes",
       },
       {
         name: "Limit items per integration",
         description: "This will limit the number of items shown per integration, not globally.",
-        values: "Any number above 1",
+        values: "Any whole number from 1 upward",
         defaultValue: "50",
       },
     ],

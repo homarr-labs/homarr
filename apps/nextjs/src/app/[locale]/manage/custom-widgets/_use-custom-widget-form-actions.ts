@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { useRouter } from "next/navigation";
 import type { UseFormReturnType } from "@mantine/form";
 
 import { clientApi } from "@homarr/api/client";
@@ -37,7 +36,6 @@ interface FormActionsInput {
 }
 
 export function useCustomWidgetFormActions(input: FormActionsInput) {
-  const router = useRouter();
   const t = useScopedI18n("customWidget");
   const w = useScopedI18n("customWidget.workbench");
   const utils = clientApi.useUtils();
@@ -70,7 +68,10 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
           title: t("action.create"),
           message: t("notification.created", { name: values.name }),
         });
-        router.push(`/manage/custom-widgets/edit/${result.id}`);
+        input.form.setInitialValues(values);
+        input.form.resetDirty();
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+        window.location.assign(result.managementPath);
       } else if (input.definitionId) {
         await updateMutation.mutateAsync({
           id: input.definitionId,

@@ -10,6 +10,11 @@
   overflow: visible;
 }
 
+.board-grid-entry:has([data-board-widget-header]):hover,
+.board-grid-entry:has([data-board-widget-header]):focus-within {
+  z-index: 10;
+}
+
 .board-grid-entry[data-grid-preview="true"] {
   width: var(--board-grid-preview-width) !important;
   height: var(--board-grid-preview-height) !important;

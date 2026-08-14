@@ -3,7 +3,7 @@ name: Workshop
 on:
   pull_request:
   push:
-    branches: [dev, v2, main]
+    branches: [dev, v2, release/v2, main]
 
 permissions:
   contents: read
@@ -28,7 +28,7 @@ jobs:
       - run: pnpm test:workshop-image
 
   publish:
-    if: github.event_name == 'push' && (github.ref_name == 'v2' || github.ref_name == 'main')
+    if: github.event_name == 'push' && (github.ref_name == 'v2' || github.ref_name == 'release/v2' || github.ref_name == 'main')
     needs: validate
     runs-on: ubuntu-24.04
     timeout-minutes: 30
@@ -50,7 +50,7 @@ jobs:
           images: ghcr.io/homarr-labs/workshop
           tags: |
             type=sha,prefix=sha-,format=long
-            type=raw,value=v2,enable=${{ github.ref_name == 'v2' }}
+            type=raw,value=v2,enable=${{ github.ref_name == 'v2' || github.ref_name == 'release/v2' }}
             type=raw,value=latest,enable=${{ github.ref_name == 'main' }}
       - uses: docker/build-push-action@v7
         with:
