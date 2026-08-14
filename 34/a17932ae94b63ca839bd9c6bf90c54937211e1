@@ -1,0 +1,22 @@
+packages/onboarding/src/finish.tsx
+  s_48a62fcd3a2c4e::t_a51d6c19db5ed0 24-26
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_48a62fcd3a2c4e::t_a51d6c19db5ed0 53-54
+  s_48a62fcd3a2c4e::t_71f39984ff4a1c 55-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "34a17932ae94b63ca839bd9c6bf90c54937211e1",
+  "prompts": {},
+  "sessions": {
+    "s_48a62fcd3a2c4e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffd9a-d7ff-7aa0-9807-98bb1a2ffac5",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
