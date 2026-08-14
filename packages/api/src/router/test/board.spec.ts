@@ -350,6 +350,7 @@ describe("getManageOverview", () => {
     const mobileItemId = createId();
     const offscreenItemId = createId();
     const nestedItemId = createId();
+    const nestedAppId = createId();
 
     await db.insert(users).values({ id: defaultCreatorId });
     await db.insert(boards).values([
@@ -400,11 +401,16 @@ describe("getManageOverview", () => {
       width: 6,
       height: 3,
     });
+    await db.insert(apps).values({
+      id: nestedAppId,
+      name: "Nested app",
+      iconUrl: "https://example.com/nested.svg",
+    });
     await db.insert(items).values([
       { id: itemId, boardId, kind: "clock" },
       { id: mobileItemId, boardId, kind: "clock" },
       { id: offscreenItemId, boardId, kind: "clock" },
-      { id: nestedItemId, boardId, kind: "clock" },
+      { id: nestedItemId, boardId, kind: "app", options: SuperJSON.stringify({ appId: nestedAppId }) },
     ]);
     await db.insert(itemLayouts).values([
       {
@@ -461,6 +467,12 @@ describe("getManageOverview", () => {
             kind: "clock",
             layouts: [{ layoutId: baseLayoutId, sectionId: rootSectionId, width: 4, height: 2 }],
           },
+          {
+            id: nestedItemId,
+            kind: "app",
+            iconUrl: "https://example.com/nested.svg",
+            layouts: [{ layoutId: baseLayoutId, sectionId: containerSectionId, width: 2, height: 1 }],
+          },
         ],
         sections: [
           { id: rootSectionId, kind: "empty" },
@@ -473,7 +485,7 @@ describe("getManageOverview", () => {
       },
     });
     expect(result[0]?.preview?.layouts).toHaveLength(1);
-    expect(result[0]?.preview?.items.map((item) => item.id)).toEqual([itemId]);
+    expect(result[0]?.preview?.items.map((item) => item.id)).toEqual([itemId, nestedItemId]);
     expect(result[0]?.preview?.sections).toHaveLength(2);
   });
 

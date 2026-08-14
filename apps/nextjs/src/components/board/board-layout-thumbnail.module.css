@@ -76,6 +76,14 @@
   background: color-mix(in srgb, var(--mantine-color-teal-light) 55%, var(--mantine-color-body));
 }
 
+.containerContents {
+  position: absolute;
+  inset: rem(2px);
+  display: grid;
+  gap: rem(1px);
+  overflow: hidden;
+}
+
 @media (max-width: $mantine-breakpoint-xs) {
   .canvas {
     min-height: 7rem;

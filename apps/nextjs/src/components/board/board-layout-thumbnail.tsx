@@ -42,6 +42,16 @@ export const BoardLayoutThumbnail = ({ preview, label }: BoardLayoutThumbnailPro
     );
   }
 
+  const renderItemIcon = (itemId: string) => {
+    const item = preview.items.find((candidate) => candidate.id === itemId);
+    const WidgetIcon = item?.kind ? widgetCatalogIcons[item.kind] : undefined;
+    return item?.iconUrl ? (
+      <Image className={classes.itemIcon} src={item.iconUrl} alt="" fit="contain" />
+    ) : WidgetIcon ? (
+      <WidgetIcon className={classes.itemIcon} stroke={1.7} />
+    ) : null;
+  };
+
   return (
     <Box className={classes.canvas} role="img" aria-label={label}>
       <div
@@ -75,8 +85,10 @@ export const BoardLayoutThumbnail = ({ preview, label }: BoardLayoutThumbnailPro
               }}
             >
               {laneElements.map((element) => {
-                const item = element.type === "item" ? preview.items.find((item) => item.id === element.id) : undefined;
-                const WidgetIcon = item?.kind ? widgetCatalogIcons[item.kind] : undefined;
+                const nestedItems =
+                  element.type === "section"
+                    ? elements.filter((candidate) => candidate.type === "item" && candidate.sectionId === element.id)
+                    : [];
                 return (
                   <span
                     key={`${element.type}-${element.id}`}
@@ -87,11 +99,36 @@ export const BoardLayoutThumbnail = ({ preview, label }: BoardLayoutThumbnailPro
                       gridRow: `${element.yOffset + 1} / span ${Math.min(element.height, rowCount - element.yOffset)}`,
                     }}
                   >
-                    {item?.iconUrl ? (
-                      <Image className={classes.itemIcon} src={item.iconUrl} alt="" fit="contain" />
-                    ) : WidgetIcon ? (
-                      <WidgetIcon className={classes.itemIcon} stroke={1.7} />
-                    ) : null}
+                    {element.type === "section" ? (
+                      <span
+                        className={classes.containerContents}
+                        style={{
+                          gridTemplateColumns: `repeat(${element.width}, minmax(0, 1fr))`,
+                          gridTemplateRows: `repeat(${element.height}, minmax(0, 1fr))`,
+                        }}
+                      >
+                        {nestedItems.map((nestedItem) => (
+                          <span
+                            key={nestedItem.id}
+                            className={classes.tile}
+                            style={{
+                              gridColumn: `${nestedItem.xOffset + 1} / span ${Math.min(
+                                nestedItem.width,
+                                element.width - nestedItem.xOffset,
+                              )}`,
+                              gridRow: `${nestedItem.yOffset + 1} / span ${Math.min(
+                                nestedItem.height,
+                                element.height - nestedItem.yOffset,
+                              )}`,
+                            }}
+                          >
+                            {renderItemIcon(nestedItem.id)}
+                          </span>
+                        ))}
+                      </span>
+                    ) : (
+                      renderItemIcon(element.id)
+                    )}
                   </span>
                 );
               })}

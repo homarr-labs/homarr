@@ -283,7 +283,7 @@ export const boardRouter = createTRPCRouter({
 
     const previewLayoutIds = dbBoards.flatMap((board) => board.layouts.map((layout) => layout.id));
     const rootSectionIds = dbBoards.flatMap((board) => board.sections.map((section) => section.id));
-    const [previewItemLayouts, previewSectionLayouts] =
+    const [rootPreviewItemLayouts, previewSectionLayouts] =
       previewLayoutIds.length > 0 && rootSectionIds.length > 0
         ? await Promise.all([
             ctx.db.query.itemLayouts.findMany({
@@ -339,6 +339,43 @@ export const boardRouter = createTRPCRouter({
           ])
         : [[], []];
 
+    const previewContainerSectionIds = [
+      ...new Set(
+        previewSectionLayouts
+          .filter((layout) => layout.section.kind === "container")
+          .map((layout) => layout.sectionId),
+      ),
+    ];
+    const nestedPreviewItemLayouts =
+      previewLayoutIds.length > 0 && previewContainerSectionIds.length > 0
+        ? await ctx.db.query.itemLayouts.findMany({
+            columns: {
+              itemId: true,
+              layoutId: true,
+              sectionId: true,
+              xOffset: true,
+              yOffset: true,
+              width: true,
+              height: true,
+            },
+            with: {
+              item: {
+                columns: { kind: true, options: true },
+              },
+            },
+            where: and(
+              inArray(itemLayouts.layoutId, previewLayoutIds),
+              inArray(itemLayouts.sectionId, previewContainerSectionIds),
+              gte(itemLayouts.xOffset, 0),
+              gte(itemLayouts.yOffset, 0),
+              lt(itemLayouts.yOffset, maxManageOverviewPreviewRows),
+              gt(itemLayouts.width, 0),
+              gt(itemLayouts.height, 0),
+            ),
+          })
+        : [];
+    const previewItemLayouts = [...rootPreviewItemLayouts, ...nestedPreviewItemLayouts];
+
     const appIdByItemId = new Map(
       previewItemLayouts.flatMap((layout) => {
         if (layout.item.kind !== "app") return [];
@@ -389,19 +426,6 @@ export const boardRouter = createTRPCRouter({
         return columnCount !== undefined && columnCount > 0 && layout.xOffset < columnCount;
       };
 
-      const itemPreview = previewLayout
-        ? previewItemLayouts
-            .filter((layout) => layout.layoutId === previewLayout.id && isInsideRootLane(layout))
-            .map((layout) => {
-              const appId = appIdByItemId.get(layout.itemId);
-              return {
-                id: layout.itemId,
-                kind: layout.item.kind,
-                iconUrl: appId ? appIconUrlById.get(appId) : undefined,
-                layouts: [layout],
-              };
-            })
-        : [];
       const containerPreview = previewLayout
         ? previewSectionLayouts
             .filter(
@@ -416,6 +440,34 @@ export const boardRouter = createTRPCRouter({
               xOffset: null,
               layouts: [layout],
             }))
+        : [];
+      const visibleContainerSizeById = new Map(
+        containerPreview.map((section) => [section.id, section.layouts[0]] as const),
+      );
+      const isInsideVisibleContainer = (layout: { sectionId: string; xOffset: number; yOffset: number }) => {
+        const containerLayout = visibleContainerSizeById.get(layout.sectionId);
+        return (
+          containerLayout !== undefined &&
+          layout.xOffset < containerLayout.width &&
+          layout.yOffset < containerLayout.height
+        );
+      };
+      const itemPreview = previewLayout
+        ? previewItemLayouts
+            .filter(
+              (layout) =>
+                layout.layoutId === previewLayout.id &&
+                (isInsideRootLane(layout) || isInsideVisibleContainer(layout)),
+            )
+            .map((layout) => {
+              const appId = appIdByItemId.get(layout.itemId);
+              return {
+                id: layout.itemId,
+                kind: layout.item.kind,
+                iconUrl: appId ? appIconUrlById.get(appId) : undefined,
+                layouts: [layout],
+              };
+            })
         : [];
 
       return {
