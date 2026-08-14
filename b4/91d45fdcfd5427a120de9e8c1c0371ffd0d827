@@ -1,0 +1,64 @@
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_2911ffdb88d3a2::t_4d558be9467c77 28-37
+  s_2911ffdb88d3a2::t_66bac37c243b1e 38
+packages/translation/src/lang/en.json
+  s_2911ffdb88d3a2::t_02943eedd878e9 1388-1389,1450-1453,1455-1459,1465,1468,1471-1472
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_2911ffdb88d3a2::t_66bac37c243b1e 124
+apps/docs/docs/workshop/index.mdx
+  s_2911ffdb88d3a2::t_b15261711ac973 35-40
+packages/api/src/router/custom-widget/workshop-procedures.ts
+  s_2911ffdb88d3a2::t_d51e7b2a2b2506 29-30,100,124
+  s_2911ffdb88d3a2::t_66bac37c243b1e 26
+packages/workshop/src/schema.spec.ts
+  s_2911ffdb88d3a2::t_a913dc01ee71f1 34,36-42,44-45
+  s_2911ffdb88d3a2::t_66bac37c243b1e 35,43
+  s_2911ffdb88d3a2::t_d165be8f28fcbb 46-47
+apps/docs/docs/workshop/development.mdx
+  s_2911ffdb88d3a2::t_66bac37c243b1e 50-52,57
+apps/nextjs/src/components/workshop/workshop-publish-modal.tsx
+  s_2911ffdb88d3a2::t_02943eedd878e9 4-21,30,54,71,84,88-89,97-99,107-108,115-157,160-172,194-230,232,246-269
+apps/nextjs/src/env.ts
+  s_2911ffdb88d3a2::t_66bac37c243b1e 26
+packages/api/src/env.ts
+  s_2911ffdb88d3a2::t_66bac37c243b1e 26,34
+.env.example
+  s_2911ffdb88d3a2::t_66bac37c243b1e 70-72,81
+apps/docs/docs/workshop/operator.mdx
+  s_2911ffdb88d3a2::t_97a9bca1e9ddd1 40-42,45-51
+  s_2911ffdb88d3a2::t_4d558be9467c77 43-44
+  s_2911ffdb88d3a2::t_66bac37c243b1e 55-56
+apps/nextjs/src/components/workshop/workshop-install-flow.spec.ts
+  s_2911ffdb88d3a2::t_a913dc01ee71f1 21,24-25,27-28
+  s_2911ffdb88d3a2::t_66bac37c243b1e 22-23,26
+  s_2911ffdb88d3a2::t_785f281a4611f6 20
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_2911ffdb88d3a2::t_b15261711ac973 112
+apps/nextjs/src/app/api/assistant/chat/route.ts
+  s_2911ffdb88d3a2::t_66bac37c243b1e 27,465-469
+apps/nextjs/src/app/api/assistant/chat/assistant-chat-input.spec.ts
+  s_2911ffdb88d3a2::t_66bac37c243b1e 38,55
+apps/nextjs/src/app/[locale]/manage/workshop/page.tsx
+  s_2911ffdb88d3a2::t_02943eedd878e9 2-3,38-43
+  s_2911ffdb88d3a2::t_66bac37c243b1e 20
+apps/nextjs/src/app/api/assistant/chat/assistant-chat-input.ts
+  s_2911ffdb88d3a2::t_66bac37c243b1e 62,69,93
+apps/nextjs/src/app/[locale]/init/page.tsx
+  s_2911ffdb88d3a2::t_66bac37c243b1e 51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "b491d45fdcfd5427a120de9e8c1c0371ffd0d827",
+  "prompts": {},
+  "sessions": {
+    "s_2911ffdb88d3a2": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a00205-f18f-7cf1-a660-eb028c06949d",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
