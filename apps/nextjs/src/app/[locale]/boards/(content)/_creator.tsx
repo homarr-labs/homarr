@@ -50,7 +50,13 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         if (error instanceof TRPCError && error.code === "NOT_FOUND") {
           if (!session) {
             logger.debug("No home board found for anonymous user, redirecting to login");
-            redirect("/auth/login");
+            const requestedBoardName =
+              typeof resolvedParams.name === "string" ? `/boards/${encodeURIComponent(resolvedParams.name)}` : null;
+            redirect(
+              requestedBoardName
+                ? `/auth/login?callbackUrl=${encodeURIComponent(requestedBoardName)}`
+                : "/auth/login",
+            );
           }
 
           notFound();
