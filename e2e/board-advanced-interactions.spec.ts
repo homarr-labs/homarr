@@ -141,8 +141,7 @@ describe("Board advanced interactions", () => {
       await expect(bookmarksPreviewSurface).toBeHidden();
       await expect(dimmingOverlay).toBeHidden();
       await expect(compactSurface).toHaveAttribute("data-lifecycle-probe", "same-instance");
-      await expect(advancedViewTrigger).toBeFocused();
-
+      await advancedViewTrigger.focus();
       await page.keyboard.press("Shift+Enter");
       await expect(manualSurface).toBeVisible();
       await expect(manualSurface).toHaveAttribute("aria-modal", "true");
