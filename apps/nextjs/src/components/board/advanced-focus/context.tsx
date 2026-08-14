@@ -3,7 +3,7 @@
 import type { CSSProperties, PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Overlay, Portal } from "@mantine/core";
-import { useIsomorphicEffect } from "@mantine/hooks";
+import { useIsomorphicEffect, useViewportSize } from "@mantine/hooks";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
 
@@ -14,6 +14,7 @@ import type { FocusRect } from "./geometry";
 interface ActiveFocus {
   itemId: string;
   source: HTMLElement;
+  restoreFocusTarget: HTMLElement;
   sourceRect: FocusRect;
   activation: "preview" | "manual";
   autofocusClose: boolean;
@@ -24,10 +25,12 @@ interface ActiveFocus {
 interface OpenAdvancedFocusOptions {
   activation?: ActiveFocus["activation"];
   autofocusClose?: boolean;
+  restoreFocusTarget?: HTMLElement;
 }
 
 interface AdvancedFocusContextValue {
   active: ActiveFocus | null;
+  viewportSize: { width: number; height: number };
   open: (itemId: string, source: HTMLElement, options?: OpenAdvancedFocusOptions) => void;
   close: (restoreFocus?: boolean) => void;
   dismiss: (itemId: string) => void;
@@ -46,6 +49,7 @@ const isEditableTarget = (target: EventTarget | null) =>
 
 export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
   const [isEditMode] = useEditMode();
+  const viewportSize = useViewportSize();
   const [active, setActive] = useState<ActiveFocus | null>(null);
   const [isHoldPending, setIsHoldPending] = useState(false);
   const activeRef = useRef<ActiveFocus | null>(null);
@@ -92,6 +96,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
       updateActive({
         itemId,
         source,
+        restoreFocusTarget: options.restoreFocusTarget ?? source,
         sourceRect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
         activation: options.activation ?? "manual",
         autofocusClose: options.autofocusClose ?? false,
@@ -113,7 +118,8 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
       closeTimerRef.current = setTimeout(() => {
         closeTimerRef.current = null;
         updateActive(null);
-        if (restoreFocus && current.source.isConnected) requestAnimationFrame(() => current.source.focus());
+        if (restoreFocus && current.restoreFocusTarget.isConnected)
+          requestAnimationFrame(() => current.restoreFocusTarget.focus());
       }, closeDuration);
     },
     [cancelHoverTimer, cancelPreviewLeaveTimer, updateActive],
@@ -210,7 +216,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
         return;
       }
 
-      if (underlyingSource.hasAttribute("aria-keyshortcuts")) {
+      if (underlyingSource.hasAttribute("data-advanced-focus-enabled")) {
         hover(itemId, underlyingSource);
         return;
       }
@@ -310,8 +316,8 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
   }, [active?.activation]);
 
   const value = useMemo(
-    () => ({ active, open, close, dismiss, hover, leave }),
-    [active, close, dismiss, hover, leave, open],
+    () => ({ active, viewportSize, open, close, dismiss, hover, leave }),
+    [active, close, dismiss, hover, leave, open, viewportSize],
   );
 
   return (

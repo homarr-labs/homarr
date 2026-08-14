@@ -68,6 +68,7 @@ describe("Board advanced interactions", () => {
 
     try {
       const widget = page.locator("[data-grid-item-id][data-kind='clock'] [data-advanced-focus-source]").first();
+      const advancedViewTrigger = widget.getByRole("button", { name: "Open advanced view" });
       const compactSurface = page.locator(".clock-wrapper").first();
       const previewSurface = page.getByRole("region", { name: "Date and time advanced view" });
       const manualSurface = page.getByRole("dialog", { name: "Date and time advanced view" });
@@ -83,7 +84,7 @@ describe("Board advanced interactions", () => {
         element.setAttribute("data-lifecycle-probe", "same-instance");
       });
       await widget.hover();
-      await widget.focus();
+      await advancedViewTrigger.focus();
       await page.keyboard.down("Shift");
       await expect(previewSurface).toBeVisible({ timeout: 2_000 });
       await expect(previewSurface).toHaveCSS("animation-name", "none");
@@ -95,7 +96,7 @@ describe("Board advanced interactions", () => {
       await expect(dimmingOverlay).toBeVisible();
       await expect(dimmingOverlay).toHaveCSS("pointer-events", "none");
       await expect(otherWidget).toBeVisible();
-      await expect(widget).toBeFocused();
+      await expect(advancedViewTrigger).toBeFocused();
       await expect(header).not.toHaveAttribute("inert", "");
       await expect(boardMain).not.toHaveAttribute("inert", "");
 
@@ -140,7 +141,7 @@ describe("Board advanced interactions", () => {
       await expect(bookmarksPreviewSurface).toBeHidden();
       await expect(dimmingOverlay).toBeHidden();
       await expect(compactSurface).toHaveAttribute("data-lifecycle-probe", "same-instance");
-      await expect(widget).toBeFocused();
+      await expect(advancedViewTrigger).toBeFocused();
 
       await page.keyboard.press("Shift+Enter");
       await expect(manualSurface).toBeVisible();
@@ -220,7 +221,7 @@ describe("Board advanced interactions", () => {
       await expect(manualSurface).toBeVisible();
       await page.keyboard.press("Escape");
       await expect(manualSurface).toBeHidden();
-      await expect(widget).toBeFocused();
+      await expect(advancedViewTrigger).toBeFocused();
       await expect(header).not.toHaveAttribute("inert", "");
       await expect(boardMain).not.toHaveAttribute("inert", "");
       expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).not.toBe("hidden");
@@ -232,13 +233,13 @@ describe("Board advanced interactions", () => {
       if (!viewport) throw new Error("Board page has no viewport");
       await page.mouse.click(4, viewport.height - 4);
       await expect(manualSurface).toBeHidden();
-      await expect(widget).toBeFocused();
+      await expect(advancedViewTrigger).toBeFocused();
 
       for (const compactOnlyKind of ["app", "iframe"]) {
         const compactOnlyWidget = page
           .locator(`[data-grid-item-id][data-kind='${compactOnlyKind}'] [data-advanced-focus-source]`)
           .first();
-        await expect(compactOnlyWidget).not.toHaveAttribute("aria-keyshortcuts", "Shift+Enter");
+        await expect(compactOnlyWidget.locator("[data-advanced-focus-trigger]")).toHaveCount(0);
         await compactOnlyWidget.dispatchEvent("contextmenu", { button: 2 });
         await expect(page.getByRole("menuitem", { name: "Open advanced view" })).toHaveCount(0);
         await page.keyboard.press("Escape");
@@ -266,7 +267,7 @@ describe("Board advanced interactions", () => {
       const frame = page.frameLocator("iframe[data-advanced-focus-probe='true']");
       await frame.locator("#state").fill("changed");
 
-      await expect(iframeSlot).not.toHaveAttribute("aria-keyshortcuts", "Shift+Enter");
+      await expect(iframeSlot.locator("[data-advanced-focus-trigger]")).toHaveCount(0);
       await iframeSlot.dispatchEvent("contextmenu", { button: 2 });
       await expect(page.getByRole("menuitem", { name: "Open advanced view" })).toHaveCount(0);
       await page.keyboard.press("Escape");
@@ -279,7 +280,7 @@ describe("Board advanced interactions", () => {
       const bookmarksSlot = page
         .locator("[data-grid-item-id][data-kind='bookmarks'] [data-advanced-focus-source]")
         .first();
-      await bookmarksSlot.focus();
+      await bookmarksSlot.getByRole("button", { name: "Open advanced view" }).focus();
       await page.keyboard.press("Shift+Enter");
       await expect(page.getByRole("dialog", { name: "Bookmarks advanced view" })).toBeVisible();
       await page.setViewportSize({ width: 800, height: 900 });
@@ -295,7 +296,7 @@ describe("Board advanced interactions", () => {
 
     try {
       const widget = page.locator("[data-grid-item-id][data-kind='clock'] [data-advanced-focus-source]").first();
-      await widget.focus();
+      await widget.getByRole("button", { name: "Open advanced view" }).focus();
       await page.keyboard.press("Shift+Enter");
       const closeButton = page.getByRole("button", { name: "Close advanced view" });
       const bounds = await closeButton.boundingBox();

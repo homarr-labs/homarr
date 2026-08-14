@@ -227,7 +227,12 @@ export const WidgetContextMenu = ({
               closeMenuOnClick
               leftSection={<IconMaximize size={16} />}
               onClick={() => {
-                if (sourceRef.current) openAdvancedFocus(item.id, sourceRef.current);
+                if (sourceRef.current)
+                  openAdvancedFocus(item.id, sourceRef.current, {
+                    restoreFocusTarget:
+                      sourceRef.current.querySelector<HTMLElement>("[data-advanced-focus-trigger]") ??
+                      sourceRef.current,
+                  });
               }}
             >
               {t("item.advancedFocus.open")}

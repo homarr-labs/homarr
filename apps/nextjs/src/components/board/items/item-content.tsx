@@ -1,10 +1,10 @@
-import type { ComponentType, CSSProperties, KeyboardEvent, MutableRefObject } from "react";
+import type { ComponentType, CSSProperties, MutableRefObject } from "react";
 import { memo, Suspense, use, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import type { CardProps } from "@mantine/core";
-import { Badge, Box, Card, Center, Loader, Portal } from "@mantine/core";
-import { useElementSize, useIsomorphicEffect, useViewportSize } from "@mantine/hooks";
+import { Badge, Box, Button, Card, Center, Loader, Portal } from "@mantine/core";
+import { useElementSize, useIsomorphicEffect } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
@@ -153,15 +153,16 @@ const LoadedBoardItemContent = ({
 }: LoadedBoardItemContentProps) => {
   const { definition, Component } = use(loadWidgetResources(item.kind));
   const sourceRef = useRef<HTMLDivElement>(null);
+  const advancedFocusTriggerRef = useRef<HTMLButtonElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const previewEntranceFrameRef = useRef<number | null>(null);
-  const { width: viewportWidth, height: viewportHeight } = useViewportSize();
   const board = useRequiredBoard();
   const t = useI18n();
   const [isEditMode] = useEditMode();
   const [manualSurface, setManualSurface] = useState<HTMLDivElement | null>(null);
   const [surfacePortalTarget, setSurfacePortalTarget] = useState<HTMLDivElement | null>(null);
-  const { active, open, close, dismiss, hover, leave } = useAdvancedFocus();
+  const { active, viewportSize, open, close, dismiss, hover, leave } = useAdvancedFocus();
+  const { width: viewportWidth, height: viewportHeight } = viewportSize;
   const supportsAdvancedFocus = definitionSupportsAdvancedFocus(definition);
   const widgetName = t(`widget.${item.kind}.name`);
   const advancedViewLabel = t("item.advancedFocus.label", { widget: widgetName });
@@ -185,17 +186,13 @@ const LoadedBoardItemContent = ({
 
   useEffect(() => () => dismiss(item.id), [dismiss, item.id]);
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (
-      event.currentTarget !== event.target ||
-      event.key !== "Enter" ||
-      !event.shiftKey ||
-      isEditMode ||
-      !supportsAdvancedFocus
-    )
-      return;
-    event.preventDefault();
-    if (sourceRef.current) open(item.id, sourceRef.current, { activation: "manual", autofocusClose: true });
+  const openAdvancedView = () => {
+    if (sourceRef.current)
+      open(item.id, sourceRef.current, {
+        activation: "manual",
+        autofocusClose: true,
+        restoreFocusTarget: advancedFocusTriggerRef.current ?? sourceRef.current,
+      });
   };
 
   useEffect(() => {
@@ -353,16 +350,10 @@ const LoadedBoardItemContent = ({
           w="100%"
           h="100%"
           data-advanced-focus-source
+          data-advanced-focus-enabled={supportsAdvancedFocus || undefined}
           data-item-id={item.id}
-          tabIndex={!isEditMode && supportsAdvancedFocus ? 0 : undefined}
           role={!isEditMode && supportsAdvancedFocus ? "group" : undefined}
-          aria-label={
-            !isEditMode && supportsAdvancedFocus ? `${widgetName}: ${t("item.advancedFocus.open")}` : undefined
-          }
-          aria-expanded={supportsAdvancedFocus ? isAdvanced : undefined}
-          aria-controls={isAdvanced ? advancedViewId : undefined}
-          aria-keyshortcuts={supportsAdvancedFocus ? "Shift+Enter" : undefined}
-          onKeyDown={supportsAdvancedFocus ? handleKeyDown : undefined}
+          aria-label={!isEditMode && supportsAdvancedFocus ? widgetName : undefined}
           onPointerEnter={() => {
             if (supportsAdvancedFocus && sourceRef.current) hover(item.id, sourceRef.current);
           }}
@@ -371,6 +362,21 @@ const LoadedBoardItemContent = ({
           }}
           className={combineClasses(isAdvanced && advancedFocusClasses.sourcePlaceholder)}
         >
+          {!isEditMode && supportsAdvancedFocus && (
+            <Button
+              ref={advancedFocusTriggerRef}
+              type="button"
+              size="compact-xs"
+              className={itemContentClasses.advancedFocusTrigger}
+              aria-expanded={isAdvanced}
+              aria-controls={isAdvanced ? advancedViewId : undefined}
+              aria-keyshortcuts="Shift+Enter"
+              data-advanced-focus-trigger
+              onClick={openAdvancedView}
+            >
+              {t("item.advancedFocus.open")}
+            </Button>
+          )}
           <div ref={mountCompactHost} className={advancedFocusClasses.surfaceHost}>
             {!supportsAdvancedFocus && widgetCard}
           </div>
