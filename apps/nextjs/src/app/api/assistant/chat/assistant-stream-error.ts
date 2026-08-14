@@ -14,15 +14,19 @@ const getStatusCode = (error: unknown): number | undefined => {
   return getStatusCode(record.cause) ?? getStatusCode(record.response);
 };
 
-const getErrorMessage = (error: unknown): string => {
+const getErrorMessage = (error: unknown, seen = new Set<object>()): string => {
   if (error instanceof Error) {
-    return `${error.message} ${getErrorMessage(error.cause)}`.trim();
+    if (seen.has(error)) return "";
+    seen.add(error);
+    return `${error.message} ${getErrorMessage(error.cause, seen)}`.trim();
   }
   const record = asRecord(error);
   if (!record) return typeof error === "string" ? error : "";
+  if (seen.has(record)) return "";
+  seen.add(record);
   const responseBody = typeof record.responseBody === "string" ? record.responseBody : "";
   const message = typeof record.message === "string" ? record.message : "";
-  return `${message} ${responseBody} ${getErrorMessage(record.cause)}`.trim();
+  return `${message} ${responseBody} ${getErrorMessage(record.error, seen)} ${getErrorMessage(record.cause, seen)}`.trim();
 };
 
 export const getAssistantStreamErrorMessage = (error: unknown) => {
@@ -65,5 +69,5 @@ export const getAssistantStreamErrorMessage = (error: unknown) => {
     return "The model provider interrupted the streamed response before the assistant could finish. Try again.";
   }
 
-  return "The model endpoint stopped the response. Try again, or ask an administrator to verify its URL, model, and credentials.";
+  return message || "The model endpoint stopped without providing an error message.";
 };

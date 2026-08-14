@@ -54,4 +54,20 @@ describe("assistant stream errors", () => {
   ])("prefers actionable status %s over a generic input-stream phrase", (statusCode, expected) => {
     expect(getAssistantStreamErrorMessage({ statusCode, responseBody: "Error in input stream" })).toBe(expected);
   });
+
+  test("returns the provider error instead of replacing it with a generic message", () => {
+    expect(getAssistantStreamErrorMessage(new Error("Provider connection failed: certificate expired"))).toBe(
+      "Provider connection failed: certificate expired",
+    );
+  });
+
+  test("returns nested provider error details", () => {
+    expect(
+      getAssistantStreamErrorMessage({
+        error: {
+          message: "No endpoints found for the selected model",
+        },
+      }),
+    ).toBe("No endpoints found for the selected model");
+  });
 });
