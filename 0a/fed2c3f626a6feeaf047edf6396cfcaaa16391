@@ -1,0 +1,35 @@
+e2e/media-server-layout.spec.ts
+  s_ca2323b7f96e59::t_b40d6335b5039c 1-8,19-81,85-100,103-132,174-178
+  s_ca2323b7f96e59::t_dbbe90679abd91 101-102
+  s_ca2323b7f96e59::t_cfff89ecd35813 133-138,140-147,154-168,173
+  s_ca2323b7f96e59::t_89158cc12fed5f 139
+  s_ca2323b7f96e59::t_0e468e66083a4d 82-84
+  s_ca2323b7f96e59::t_e38fc2b8cac867 148-153,169-172
+  s_ca2323b7f96e59::t_3d82f58cae87ec 9-18
+packages/widgets/src/media-server/component.tsx
+  s_ca2323b7f96e59::t_195c6f51777f03 14,16,20-22,27,37
+  s_ca2323b7f96e59::t_5e5e43d9719a06 49-50,80-85,87-102
+  s_ca2323b7f96e59::t_a40de10c7ff1f0 103
+  s_ca2323b7f96e59::t_c739bf04438609 104-137
+  s_ca2323b7f96e59::t_43370af9a1bc05 154,160-161,178-181,183-186
+  s_ca2323b7f96e59::t_6d9e697335da55 86
+  s_ca2323b7f96e59::t_5553e337e80ca6 222-229,241-362
+packages/widgets/src/media-server/component.module.css
+  s_ca2323b7f96e59::t_09192bf74ca1bc 2-5,11,16-26,30-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "0afed2c3f626a6feeaf047edf6396cfcaaa16391",
+  "prompts": {},
+  "sessions": {
+    "s_ca2323b7f96e59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5b-9d67-7470-9988-648d9d7016d2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    }
+  }
+}
