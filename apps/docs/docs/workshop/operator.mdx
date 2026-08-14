@@ -41,7 +41,6 @@ The public URL contract and Workshop-only server configuration are:
 | -------------------------------------- | ------------------------------------------------- | ------------------------------ |
 | `HOMARR_WEBSITE_URL`                   | Documentation/site base used by Homarr links      | `https://homarr.dev`           |
 | `WORKSHOP_API_URL`                     | PocketBase API used by Homarr and standalone docs | `HOMARR_WEBSITE_URL`           |
-| `WORKSHOP_WEB_URL`                     | Public Workshop page linked from Homarr           | `HOMARR_WEBSITE_URL/workshop`  |
 | `WORKSHOP_PUBLIC_ORIGIN`               | PocketBase-generated links and email              | Required in production         |
 | `PB_ALLOWED_ORIGINS`                   | PocketBase browser origins                        | `*` for the central community  |
 | `OPENROUTER_API_KEY`                   | Server-only key for the Homarr provider proxy     | Provider disabled when empty   |
@@ -100,7 +99,6 @@ preview. Copy `apps/workshop/.env.staging.example` to `.env.staging`; its defaul
 ```dotenv
 HOMARR_WEBSITE_URL=https://v2.preview.homarr.dev
 WORKSHOP_API_URL=https://v2.preview.homarr.dev
-WORKSHOP_WEB_URL=https://v2.preview.homarr.dev/workshop
 WORKSHOP_PUBLIC_ORIGIN=https://v2.preview.homarr.dev
 PB_ALLOWED_ORIGINS=*
 ```
@@ -118,8 +116,8 @@ curl --fail http://127.0.0.1:8090/api/health
 The service binds to `127.0.0.1:8090`. Terminate TLS at a reverse proxy and forward the **entire hostname**, including
 `/api`, `/_/`, and `/workshop-runtime-config.js`; forwarding only `/workshop` breaks PocketBase and runtime URL loading.
 This combined image serves both the documentation site and PocketBase, so use a dedicated Workshop hostname if the
-chosen hostname already serves Homarr itself. In that case, replace the hostname in all four URL values and keep
-`/workshop` only on `WORKSHOP_WEB_URL`.
+chosen hostname already serves Homarr itself. In that case, replace the hostname in all three URL values. Homarr
+derives the public Workshop page by appending `/workshop` to `HOMARR_WEBSITE_URL`.
 
 The Compose volume preserves PocketBase data across pulls and container recreation. The mutable `v2` tag is suitable
 for previews; use the `sha-<commit>` tag for promotion. For the public central Workshop, `PB_ALLOWED_ORIGINS=*` allows

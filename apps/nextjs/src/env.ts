@@ -23,7 +23,6 @@ export const env = createEnv({
     DEMO_READ_ONLY: createBooleanSchema(true),
     HOMARR_WEBSITE_URL: publicHttpUrl("HOMARR_WEBSITE_URL").default("https://homarr.dev"),
     WORKSHOP_API_URL: publicHttpUrl("WORKSHOP_API_URL").optional(),
-    WORKSHOP_WEB_URL: publicHttpUrl("WORKSHOP_WEB_URL").optional(),
   },
   experimental__runtimeEnv: process.env,
 });
