@@ -1,3 +1,5 @@
+import type { stringOrTranslation } from "@homarr/translation";
+
 const SYSTEM_SANS = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 const SYSTEM_MONO = 'ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace';
 const SYSTEM_SERIF = 'Georgia, Cambria, "Times New Roman", Times, serif';
@@ -158,80 +160,95 @@ export const HERMES_THEME_PRESETS = {
 export type HermesThemePresetId = keyof typeof HERMES_THEME_PRESETS;
 
 export const HERMES_THEME_PRESET_OPTIONS = [
-  { value: "default", label: "Hermes Teal" },
-  { value: "default-large", label: "Hermes Teal (Large)" },
-  { value: "nous-blue", label: "Nous Blue" },
-  { value: "midnight", label: "Midnight" },
-  { value: "ember", label: "Ember" },
-  { value: "mono", label: "Mono" },
-  { value: "cyberpunk", label: "Cyberpunk" },
-  { value: "rose", label: "Rosé" },
-] as const satisfies ReadonlyArray<{ value: HermesThemePresetId; label: string }>;
+  { value: "default", label: (t) => t("widget.hermesAgent.option.themePreset.option.default.label") },
+  {
+    value: "default-large",
+    label: (t) => t("widget.hermesAgent.option.themePreset.option.default-large.label"),
+  },
+  { value: "nous-blue", label: (t) => t("widget.hermesAgent.option.themePreset.option.nous-blue.label") },
+  { value: "midnight", label: (t) => t("widget.hermesAgent.option.themePreset.option.midnight.label") },
+  { value: "ember", label: (t) => t("widget.hermesAgent.option.themePreset.option.ember.label") },
+  { value: "mono", label: (t) => t("widget.hermesAgent.option.themePreset.option.mono.label") },
+  { value: "cyberpunk", label: (t) => t("widget.hermesAgent.option.themePreset.option.cyberpunk.label") },
+  { value: "rose", label: (t) => t("widget.hermesAgent.option.themePreset.option.rose.label") },
+] as const satisfies ReadonlyArray<{ value: HermesThemePresetId; label: stringOrTranslation }>;
 
 interface HermesFontChoice {
   id: string;
-  label: string;
+  label: stringOrTranslation;
   stack: string;
 }
 
 /** Curated font IDs from the Hermes dashboard font picker. */
 export const HERMES_FONT_CHOICES = [
-  { id: "system-sans", label: "System Sans", stack: SYSTEM_SANS },
-  { id: "system-serif", label: "System Serif", stack: SYSTEM_SERIF },
-  { id: "system-mono", label: "System Mono", stack: SYSTEM_MONO },
+  {
+    id: "system-sans",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.system-sans.label"),
+    stack: SYSTEM_SANS,
+  },
+  {
+    id: "system-serif",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.system-serif.label"),
+    stack: SYSTEM_SERIF,
+  },
+  {
+    id: "system-mono",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.system-mono.label"),
+    stack: SYSTEM_MONO,
+  },
   {
     id: "inter",
-    label: "Inter",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.inter.label"),
     stack: FONT_STACKS.inter,
   },
   {
     id: "ibm-plex-sans",
-    label: "IBM Plex Sans",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.ibm-plex-sans.label"),
     stack: FONT_STACKS.ibmPlexSans,
   },
   {
     id: "work-sans",
-    label: "Work Sans",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.work-sans.label"),
     stack: FONT_STACKS.workSans,
   },
   {
     id: "atkinson-hyperlegible",
-    label: "Atkinson Hyperlegible",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.atkinson-hyperlegible.label"),
     stack: FONT_STACKS.atkinsonHyperlegible,
   },
   {
     id: "dm-sans",
-    label: "DM Sans",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.dm-sans.label"),
     stack: FONT_STACKS.dmSans,
   },
   {
     id: "spectral",
-    label: "Spectral",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.spectral.label"),
     stack: FONT_STACKS.spectral,
   },
   {
     id: "fraunces",
-    label: "Fraunces",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.fraunces.label"),
     stack: FONT_STACKS.fraunces,
   },
   {
     id: "source-serif",
-    label: "Source Serif 4",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.source-serif.label"),
     stack: FONT_STACKS.sourceSerif,
   },
   {
     id: "jetbrains-mono",
-    label: "JetBrains Mono",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.jetbrains-mono.label"),
     stack: FONT_STACKS.jetBrainsMono,
   },
   {
     id: "ibm-plex-mono",
-    label: "IBM Plex Mono",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.ibm-plex-mono.label"),
     stack: FONT_STACKS.ibmPlexMono,
   },
   {
     id: "space-mono",
-    label: "Space Mono",
+    label: (t) => t("widget.hermesAgent.option.fontFamily.option.space-mono.label"),
     stack: FONT_STACKS.spaceMono,
   },
 ] as const satisfies readonly HermesFontChoice[];
@@ -239,9 +256,9 @@ export const HERMES_FONT_CHOICES = [
 export type HermesFontChoiceId = "theme" | (typeof HERMES_FONT_CHOICES)[number]["id"];
 
 export const HERMES_FONT_OPTIONS = [
-  { value: "theme", label: "Theme default" },
+  { value: "theme", label: (t) => t("widget.hermesAgent.option.fontFamily.option.theme.label") },
   ...HERMES_FONT_CHOICES.map(({ id, label }) => ({ value: id, label })),
-] satisfies ReadonlyArray<{ value: HermesFontChoiceId; label: string }>;
+] satisfies ReadonlyArray<{ value: HermesFontChoiceId; label: stringOrTranslation }>;
 
 export const HERMES_BRAND_THEME = HERMES_THEME_PRESETS.default;
 

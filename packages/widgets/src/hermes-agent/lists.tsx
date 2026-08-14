@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { Box, Group, Stack, Text, Tooltip, VisuallyHidden } from "@mantine/core";
 import {
   IconApi,
@@ -15,6 +16,7 @@ import {
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { DetailsTypographyScale } from "./layout";
+import { getDetailRowHeight } from "./layout";
 import {
   getJobDisplayState,
   getJobSortPriority,
@@ -24,6 +26,8 @@ import {
 } from "./utils";
 import { HERMES_TECHNICAL_TEXT_STYLE, useHermesTheme } from "./theme";
 import type { HermesJobDetail, HermesPlatformDetail, HermesSessionDetail, HermesSkillDetail } from "./types";
+
+dayjs.extend(relativeTime);
 
 export function PlatformsList({
   platforms,
@@ -51,7 +55,7 @@ export function PlatformsList({
           : null;
 
         return (
-          <Group key={platform.name} justify="space-between" wrap="nowrap" gap={4} mih={getRowMinHeight(typography)}>
+          <Group key={platform.name} justify="space-between" wrap="nowrap" gap={4} mih={getDetailRowHeight(typography)}>
             <Group gap={5} wrap="nowrap" miw={0} style={{ flex: "1 1 auto" }}>
               <Box
                 component="span"
@@ -125,7 +129,7 @@ export function SessionsList({
         const title = session.title ?? session.id;
 
         return (
-          <Group key={session.id} gap={5} wrap="nowrap" mih={getRowMinHeight(typography)}>
+          <Group key={session.id} gap={5} wrap="nowrap" mih={getDetailRowHeight(typography)}>
             <Text
               fz={typography.item}
               fw={500}
@@ -183,7 +187,7 @@ export function JobsList({
         const description = `${name} · ${status} · ${schedule}`;
 
         return (
-          <Group key={job.id} wrap="nowrap" mih={getRowMinHeight(typography)} miw={0}>
+          <Group key={job.id} wrap="nowrap" mih={getDetailRowHeight(typography)} miw={0}>
             <Text
               fz={typography.item}
               fw={600}
@@ -264,7 +268,7 @@ export function SkillsList({
   return (
     <Stack gap={typography.rowGap}>
       {visibleSkills.map((skill) => (
-        <Group key={skill.name} justify="space-between" wrap="nowrap" gap={5} mih={getRowMinHeight(typography)}>
+        <Group key={skill.name} justify="space-between" wrap="nowrap" gap={5} mih={getDetailRowHeight(typography)}>
           <Text
             fz={typography.item}
             fw={500}
@@ -313,7 +317,7 @@ function MoreRow({
   const title = isLowerBound ? t("overflow.moreAtLeastTitle", { count }) : label;
 
   return (
-    <Group wrap="nowrap" mih={getRowMinHeight(typography)}>
+    <Group wrap="nowrap" mih={getDetailRowHeight(typography)}>
       <Text
         fz={typography.auxiliary}
         fw={600}
@@ -337,8 +341,4 @@ function EmptyText({ text, fontSize }: { text: string; fontSize: number }) {
       {text}
     </Text>
   );
-}
-
-function getRowMinHeight(typography: DetailsTypographyScale) {
-  return Math.ceil(typography.item * 1.3);
 }

@@ -964,6 +964,89 @@ describe("HermesAgentIntegration", () => {
     expect(compareCalls).toBe(0);
   });
 
+  test("getOverviewAsync ignores an invalid local release tag before calling GitHub", async () => {
+    let githubCalls = 0;
+    mockFetchWithTrustedCertificates.mockImplementation((url) => {
+      const parsedUrl = getRequestUrl(url);
+
+      if (parsedUrl.hostname === "api.github.com") {
+        githubCalls += 1;
+      }
+      if (parsedUrl.pathname === "/api/status") {
+        return Promise.resolve(
+          createResponse({
+            version: "0.15.1",
+            release_date: "2099.6.1/invalid",
+            gateway_running: true,
+            gateway_state: "running",
+          }) as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+        );
+      }
+      if (parsedUrl.pathname === "/") {
+        return Promise.resolve(
+          new Response('<script>window.__HERMES_SESSION_TOKEN__="test-token";</script>', {
+            headers: { "content-type": "text/html" },
+          }) as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+        );
+      }
+
+      return Promise.resolve(
+        createResponse({ error: "Not Found" }, 404) as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+      );
+    });
+
+    const result = await createHermesAgentIntegration().getOverviewAsync();
+
+    expect(result.update).toBeNull();
+    expect(githubCalls).toBe(0);
+  });
+
+  test("getOverviewAsync ignores an invalid latest release tag without comparing commits", async () => {
+    let compareCalls = 0;
+    mockFetchWithTrustedCertificates.mockImplementation((url) => {
+      const parsedUrl = getRequestUrl(url);
+
+      if (parsedUrl.hostname === "api.github.com") {
+        if (parsedUrl.pathname === "/repos/NousResearch/hermes-agent/releases/latest") {
+          return Promise.resolve(
+            createResponse({
+              tag_name: "v2099.6.3/../../invalid",
+              html_url: "https://github.com/NousResearch/hermes-agent",
+            }) as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+          );
+        }
+
+        compareCalls += 1;
+      }
+      if (parsedUrl.pathname === "/api/status") {
+        return Promise.resolve(
+          createResponse({
+            version: "0.15.1",
+            release_date: "2099.6.2",
+            gateway_running: true,
+            gateway_state: "running",
+          }) as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+        );
+      }
+      if (parsedUrl.pathname === "/") {
+        return Promise.resolve(
+          new Response('<script>window.__HERMES_SESSION_TOKEN__="test-token";</script>', {
+            headers: { "content-type": "text/html" },
+          }) as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+        );
+      }
+
+      return Promise.resolve(
+        createResponse({ error: "Not Found" }, 404) as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
+      );
+    });
+
+    const result = await createHermesAgentIntegration().getOverviewAsync();
+
+    expect(result.update).toBeNull();
+    expect(compareCalls).toBe(0);
+  });
+
   test("getOverviewAsync does not report an update when the local release is newer", async () => {
     mockFetchWithTrustedCertificates.mockImplementation((url) => {
       const parsedUrl = getRequestUrl(url);

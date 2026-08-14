@@ -26,6 +26,7 @@ import {
   hermesJobsResponseSchema,
   parseHermesTimestamp,
   hermesReleaseSchema,
+  hermesReleaseTagSchema,
   hermesSessionsResponseSchema,
   hermesSkillsResponseSchema,
   hermesToolsetsResponseSchema,
@@ -368,7 +369,10 @@ export class HermesAgentIntegration extends Integration {
   }
 
   private async fetchUpdateStatusAsync(releaseDate: string): Promise<HermesUpdateStatus | null> {
-    const currentReleaseTag = `v${releaseDate}`;
+    const currentReleaseTagResult = hermesReleaseTagSchema.safeParse(`v${releaseDate}`);
+    if (!currentReleaseTagResult.success) return null;
+
+    const currentReleaseTag = currentReleaseTagResult.data;
     const latestReleaseResponse = await fetchWithTrustedCertificatesAsync(
       new URL("https://api.github.com/repos/NousResearch/hermes-agent/releases/latest"),
       { headers: githubHeaders },
@@ -378,7 +382,10 @@ export class HermesAgentIntegration extends Integration {
       return null;
     }
 
-    const latestRelease = hermesReleaseSchema.parse(await latestReleaseResponse.json());
+    const latestReleaseResult = hermesReleaseSchema.safeParse(await latestReleaseResponse.json());
+    if (!latestReleaseResult.success) return null;
+
+    const latestRelease = latestReleaseResult.data;
     if (latestRelease.tag_name === currentReleaseTag) {
       return {
         currentReleaseTag,
@@ -391,7 +398,7 @@ export class HermesAgentIntegration extends Integration {
 
     const compareResponse = await fetchWithTrustedCertificatesAsync(
       new URL(
-        `https://api.github.com/repos/NousResearch/hermes-agent/compare/${currentReleaseTag}...${latestRelease.tag_name}`,
+        `https://api.github.com/repos/NousResearch/hermes-agent/compare/${encodeURIComponent(currentReleaseTag)}...${encodeURIComponent(latestRelease.tag_name)}`,
       ),
       { headers: githubHeaders },
     );

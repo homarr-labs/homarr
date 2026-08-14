@@ -7,8 +7,9 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
+import { hermesFontVariables } from "./fonts";
 import { HermesAgentInstanceCard } from "./instance-card";
-import { getLayoutMode } from "./layout";
+import { getLayoutMode, isCompactLayoutMode } from "./layout";
 import type { HermesAgentSuccessInstance } from "./types";
 
 export default function HermesAgentWidget({
@@ -50,14 +51,14 @@ function HermesAgentContent({ options, integrationIds, width, height, isEditMode
 
   const estimatedCardHeight = Math.floor(height / Math.max(1, instances.length));
   const layoutMode = getLayoutMode(width, estimatedCardHeight);
-  const isCompactLayout = ["micro", "mini", "strip", "tall"].includes(layoutMode);
+  const isCompactLayout = isCompactLayoutMode(layoutMode);
   const gap = isCompactLayout ? 4 : 8;
   const padding = layoutMode === "strip" ? 2 : isCompactLayout ? 4 : 8;
   const availableHeight = height - padding * 2 - gap * Math.max(0, instances.length - 1);
   const cardHeight = Math.max(0, Math.floor(availableHeight / Math.max(1, instances.length)));
 
   return (
-    <Stack h="100%" gap={gap} p={padding} style={{ overflow: "hidden" }}>
+    <Stack className={hermesFontVariables} h="100%" gap={gap} p={padding} style={{ overflow: "hidden" }}>
       {instances.length === 0 && <HermesAgentErrorCard height={cardHeight} message={t("error.internalServerError")} />}
       {instances.map((instance) => {
         if (!instance.overview || !instance.updatedAt) {

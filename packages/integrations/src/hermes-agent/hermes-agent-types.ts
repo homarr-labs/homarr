@@ -123,8 +123,10 @@ export const hermesDashboardUpdateSchema = z.object({
   update_available: z.boolean(),
 });
 
+export const hermesReleaseTagSchema = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/);
+
 export const hermesReleaseSchema = z.object({
-  tag_name: z.string(),
+  tag_name: hermesReleaseTagSchema,
   html_url: z.string().nullish(),
 });
 

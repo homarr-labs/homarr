@@ -3,6 +3,7 @@ import { describe, expect, test } from "vitest";
 import {
   getDetailsLayout,
   getDetailItemLimit,
+  getDetailRowHeight,
   getDetailsTypography,
   getLayoutMode,
   getMetricColumns,
@@ -44,8 +45,13 @@ describe("Hermes Agent widget utilities", () => {
   });
 
   test("resolves every current Hermes theme and curated font override", () => {
-    expect(HERMES_THEME_PRESET_OPTIONS).toHaveLength(8);
-    expect(HERMES_FONT_OPTIONS).toHaveLength(15);
+    expect(HERMES_THEME_PRESET_OPTIONS.map((option) => option.value).toSorted()).toEqual(
+      Object.keys(HERMES_THEME_PRESETS).toSorted(),
+    );
+    expect(HERMES_FONT_OPTIONS.map((option) => option.value)).toEqual([
+      "theme",
+      ...HERMES_FONT_CHOICES.map((choice) => choice.id),
+    ]);
 
     const midnight = resolveHermesTheme(true, "midnight", "theme");
     expect(midnight.background).toBe("#0a0a1f");
@@ -185,6 +191,7 @@ describe("Hermes Agent widget utilities", () => {
     const typography = getDetailsTypography(730, 4);
 
     expect(getDetailItemLimit(694.5, typography)).toBe(36);
+    expect(getDetailRowHeight(typography)).toBe(Math.ceil(typography.item * 1.3));
   });
 
   test("scales card and detail typography to their available width", () => {

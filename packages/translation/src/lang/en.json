@@ -1027,7 +1027,8 @@
       "analytics": "Analytics",
       "vpn": "VPN",
       "mediaLibrary": "Media Library",
-      "uptimeMonitoring": "Uptime Monitoring"
+      "uptimeMonitoring": "Uptime Monitoring",
+      "automation": "Automation"
     },
     "testConnection": {
       "action": {
@@ -2573,11 +2574,84 @@
         },
         "themePreset": {
           "label": "Hermes theme",
-          "description": "Choose one of the built-in Hermes dashboard themes"
+          "description": "Choose one of the built-in Hermes dashboard themes",
+          "option": {
+            "default": {
+              "label": "Hermes Teal"
+            },
+            "default-large": {
+              "label": "Hermes Teal (Large)"
+            },
+            "nous-blue": {
+              "label": "Nous Blue"
+            },
+            "midnight": {
+              "label": "Midnight"
+            },
+            "ember": {
+              "label": "Ember"
+            },
+            "mono": {
+              "label": "Mono"
+            },
+            "cyberpunk": {
+              "label": "Cyberpunk"
+            },
+            "rose": {
+              "label": "Rosé"
+            }
+          }
         },
         "fontFamily": {
           "label": "Font",
-          "description": "Use the selected theme's font or override it with a font from the Hermes dashboard catalog"
+          "description": "Use the selected theme's font or override it with a font from the Hermes dashboard catalog",
+          "option": {
+            "theme": {
+              "label": "Theme default"
+            },
+            "system-sans": {
+              "label": "System Sans"
+            },
+            "system-serif": {
+              "label": "System Serif"
+            },
+            "system-mono": {
+              "label": "System Mono"
+            },
+            "inter": {
+              "label": "Inter"
+            },
+            "ibm-plex-sans": {
+              "label": "IBM Plex Sans"
+            },
+            "work-sans": {
+              "label": "Work Sans"
+            },
+            "atkinson-hyperlegible": {
+              "label": "Atkinson Hyperlegible"
+            },
+            "dm-sans": {
+              "label": "DM Sans"
+            },
+            "spectral": {
+              "label": "Spectral"
+            },
+            "fraunces": {
+              "label": "Fraunces"
+            },
+            "source-serif": {
+              "label": "Source Serif 4"
+            },
+            "jetbrains-mono": {
+              "label": "JetBrains Mono"
+            },
+            "ibm-plex-mono": {
+              "label": "IBM Plex Mono"
+            },
+            "space-mono": {
+              "label": "Space Mono"
+            }
+          }
         },
         "showPlatforms": {
           "label": "Show platforms",
@@ -2605,7 +2679,12 @@
         "dashboard": "Dashboard"
       },
       "status": {
-        "authError": "Authentication error",
+        "ok": "Running",
+        "busy": "Busy",
+        "warn": "Warning",
+        "auth": "Authentication error",
+        "error": "Error",
+        "wait": "Waiting",
         "short": {
           "ok": "OK",
           "busy": "BUSY",

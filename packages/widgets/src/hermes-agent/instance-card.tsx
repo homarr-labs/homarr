@@ -24,6 +24,7 @@ import {
   getContentStyle,
   getDetailsLayout,
   getLayoutMode,
+  isCompactLayoutMode,
   getLogoSize,
   getMetricColumns,
   getMetricSpacing,
@@ -75,19 +76,15 @@ export function HermesAgentInstanceCard({ instance, width, height, options }: He
   const release = overview.release;
   const commitsBehind = overview.update?.commitsBehind;
   const layoutMode = getLayoutMode(width, height);
-  const dense = layoutMode === "micro" || layoutMode === "mini" || layoutMode === "strip" || layoutMode === "tall";
+  const dense = isCompactLayoutMode(layoutMode);
   const isNarrowLayout = layoutMode === "micro" || layoutMode === "tall";
-  const usesCompactStatus = layoutMode === "micro" || layoutMode === "mini" || layoutMode === "tall";
-  const compactTypographyScale =
-    layoutMode === "micro" || layoutMode === "mini" || layoutMode === "strip" || layoutMode === "tall"
-      ? Math.min(theme.typographyScale, 1.08)
-      : theme.typographyScale;
+  const usesCompactStatus = dense && layoutMode !== "strip";
+  const compactTypographyScale = dense ? Math.min(theme.typographyScale, 1.08) : theme.typographyScale;
   const typography = scaleHermesTypography(getTypographyScale(width, height, layoutMode), compactTypographyScale);
-  const isMicroMetricMode =
-    layoutMode === "micro" || layoutMode === "mini" || layoutMode === "strip" || layoutMode === "tall";
-  const collapsesMetricValues = layoutMode === "micro" || layoutMode === "mini" || layoutMode === "tall";
+  const isMicroMetricMode = dense;
+  const collapsesMetricValues = usesCompactStatus;
   const isHeightOneCompact = layoutMode === "micro" || layoutMode === "mini";
-  const shouldFillMetricGrid = isHeightOneCompact || layoutMode === "strip" || layoutMode === "tall";
+  const shouldFillMetricGrid = dense;
   const compactVersion = collapsesMetricValues || (layoutMode === "standard" && width < 380);
   const metricColumns = getMetricColumns(layoutMode, width);
   const iconSize = Math.round(
@@ -141,9 +138,10 @@ export function HermesAgentInstanceCard({ instance, width, height, options }: He
       : commitsBehind != null && commitsBehind > 0
         ? `+${commitsBehind}`
         : t("update.availableShort");
-  const verboseStatusLabel =
-    gatewayState === "auth_error" ? t("status.authError") : (gatewayState?.replaceAll("_", " ") ?? t("unknown"));
   const compactStatusKey = gatewayState ? getCompactStatusKey(gatewayState) : null;
+  const verboseStatusLabel = compactStatusKey
+    ? t(`status.${compactStatusKey}`)
+    : (gatewayState?.replaceAll("_", " ") ?? t("unknown"));
   const compactStatusLabel = compactStatusKey
     ? t(`status.short.${compactStatusKey}`)
     : abbreviateStatus(gatewayState ?? t("unknown"));

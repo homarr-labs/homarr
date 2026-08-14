@@ -46,6 +46,23 @@ export function MetricTile({
   const valueTitle = `${label}: ${title ?? value}${detail && !hideDetail ? ` ${detail}` : ""}`;
   const isChip = mode === "standard" && hideDetail;
   const isDense = mode !== "showcase";
+  const withLink = (tile: ReactNode) =>
+    href ? (
+      <Anchor
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        h="100%"
+        title={valueTitle}
+        aria-label={valueTitle}
+        underline="never"
+        style={{ display: "block", minWidth: 0 }}
+      >
+        {tile}
+      </Anchor>
+    ) : (
+      tile
+    );
 
   if (mode === "micro" || mode === "mini") {
     const tile = (
@@ -62,49 +79,21 @@ export function MetricTile({
           overflow: "hidden",
         }}
       >
-        {mode === "micro" ? (
-          <Text
-            fz={typography.metricLabel}
-            lh={1.1}
-            c={theme.textSecondary}
-            lineClamp={1}
-            title={valueTitle}
-            style={{ ...HERMES_CHROME_TEXT_STYLE, letterSpacing: "0.02em", minWidth: 0 }}
-          >
-            {label}
-          </Text>
-        ) : (
-          <Text
-            fz={typography.metricLabel}
-            lh={1.1}
-            c={theme.textPrimary}
-            lineClamp={1}
-            title={valueTitle}
-            style={{ ...HERMES_CHROME_TEXT_STYLE, letterSpacing: "0.02em", minWidth: 0 }}
-          >
-            {label}
-          </Text>
-        )}
+        <Text
+          fz={typography.metricLabel}
+          lh={1.1}
+          c={mode === "micro" ? theme.textSecondary : theme.textPrimary}
+          lineClamp={1}
+          title={valueTitle}
+          style={{ ...HERMES_CHROME_TEXT_STYLE, letterSpacing: "0.02em", minWidth: 0 }}
+        >
+          {label}
+        </Text>
         <MetricValue value={value} title={valueTitle} color={color} fontSize={typography.metricValue} />
       </Stack>
     );
 
-    if (!href) return tile;
-
-    return (
-      <Anchor
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        h="100%"
-        title={valueTitle}
-        aria-label={valueTitle}
-        underline="never"
-        style={{ display: "block", minWidth: 0 }}
-      >
-        {tile}
-      </Anchor>
-    );
+    return withLink(tile);
   }
 
   if (mode === "tall") {
@@ -143,22 +132,7 @@ export function MetricTile({
       </Stack>
     );
 
-    if (!href) return tile;
-
-    return (
-      <Anchor
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        h="100%"
-        title={valueTitle}
-        aria-label={valueTitle}
-        underline="never"
-        style={{ display: "block", minWidth: 0 }}
-      >
-        {tile}
-      </Anchor>
-    );
+    return withLink(tile);
   }
 
   if (mode === "strip") {
@@ -197,22 +171,7 @@ export function MetricTile({
       </Stack>
     );
 
-    if (!href) return tile;
-
-    return (
-      <Anchor
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        h="100%"
-        title={valueTitle}
-        aria-label={valueTitle}
-        underline="never"
-        style={{ display: "block", minWidth: 0 }}
-      >
-        {tile}
-      </Anchor>
-    );
+    return withLink(tile);
   }
 
   if (isChip) {

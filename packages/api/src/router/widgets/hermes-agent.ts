@@ -18,6 +18,13 @@ interface HermesAgentRouterResult {
 
 export const hermesAgentRouter = createTRPCRouter({
   getOverviews: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get Hermes Agent gateway health, update status, activity counts, and privacy-safe widget details. REQUIRED: integrationIds (array of Hermes Agent integration IDs from integration_all). A result with detailsRestricted=true means the caller lacks use access to detailed integration data; it is not an endpoint failure.",
+      },
+    })
     .concat(createManyIntegrationMiddleware("query", "hermesAgent"))
     .query(async ({ ctx }) => {
       const integrationsWithPermissions =

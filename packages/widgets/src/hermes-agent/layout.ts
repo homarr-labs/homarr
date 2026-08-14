@@ -2,6 +2,10 @@ import type { HermesTheme } from "./theme";
 
 export type LayoutMode = "micro" | "mini" | "strip" | "tall" | "standard" | "showcase";
 
+export function isCompactLayoutMode(mode: LayoutMode) {
+  return mode === "micro" || mode === "mini" || mode === "strip" || mode === "tall";
+}
+
 export interface DetailsLayout {
   columns: number;
   maxSections: number;
@@ -97,10 +101,14 @@ export function getDetailItemLimit(sectionHeight: number, typography: DetailsTyp
   // Paper border + padding, the heading row, and the divider with its margins.
   // The external-link icon gives narrow headings a 16px minimum line box.
   const panelChromeHeight = 18 + Math.max(Math.ceil(typography.heading * 1.2), typography.icon + 4) + 9;
-  const rowHeight = Math.ceil(typography.item * 1.3);
+  const rowHeight = getDetailRowHeight(typography);
   const listHeight = Math.max(0, sectionHeight - panelChromeHeight);
 
   return Math.max(1, Math.floor((listHeight + typography.rowGap) / (rowHeight + typography.rowGap)));
+}
+
+export function getDetailRowHeight(typography: DetailsTypographyScale) {
+  return Math.ceil(typography.item * 1.3);
 }
 
 export function getTypographyScale(
@@ -462,6 +470,7 @@ function getFluidValue(
   minimumResult: number,
   maximumResult: number,
 ) {
-  const progress = Math.min(1, Math.max(0, (value - minimumValue) / (maximumValue - minimumValue)));
+  const range = maximumValue - minimumValue;
+  const progress = range <= 0 ? 1 : Math.min(1, Math.max(0, (value - minimumValue) / range));
   return Math.round((minimumResult + (maximumResult - minimumResult) * progress) * 2) / 2;
 }

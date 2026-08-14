@@ -134,7 +134,7 @@ export function DetailsGrid({
       : sectionPriority
           .flatMap((sectionId) => sections.filter((section) => section.id === sectionId))
           .slice(0, maxSections);
-  const visibleColumns = Math.min(columns, visibleSections.length);
+  const visibleColumns = Math.max(1, Math.min(columns, visibleSections.length));
   const gridRows = Math.ceil(visibleSections.length / visibleColumns);
 
   return (
