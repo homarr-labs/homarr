@@ -6,11 +6,11 @@ import {
   onboardingDiscoveredAppSchema,
 } from "./onboarding";
 
-describe("onboarding URL validation", () => {
-  test.each(["javascript:alert(1)", "data:text/html,hello", "file:///etc/passwd"])(
-    "rejects the %s scheme for integrations",
+describe("onboarding address validation", () => {
+  test.each(["server.local:8989", "0.0.0.0:3000", "sonarr", "/services/sonarr"])(
+    "accepts the self-hosted address %s",
     (url) => {
-      expect(onboardingCreateIntegrationSchema.safeParse({ name: "Unsafe", url }).success).toBe(false);
+      expect(onboardingCreateIntegrationSchema.safeParse({ name: "Service", url }).success).toBe(true);
     },
   );
 
@@ -27,7 +27,7 @@ describe("onboarding URL validation", () => {
     ).toBe(true);
   });
 
-  test("accepts bounded integration metadata and rejects invalid metadata", () => {
+  test("accepts bounded integration metadata and rejects empty or oversized metadata", () => {
     expect(
       onboardingCreateIntegrationSchema.safeParse({
         name: "Sonarr",
@@ -41,7 +41,7 @@ describe("onboarding URL validation", () => {
       onboardingCreateIntegrationSchema.safeParse({
         name: "Sonarr",
         url: "http://sonarr:8989",
-        pingUrl: "file:///etc/passwd",
+        pingUrl: "",
       }).success,
     ).toBe(false);
     expect(
@@ -53,18 +53,18 @@ describe("onboarding URL validation", () => {
     ).toBe(false);
   });
 
-  test("rejects non-web app and ping URLs", () => {
+  test("accepts custom app and ping addresses", () => {
     expect(
       onboardingDiscoveredAppSchema.safeParse({
-        name: "Unsafe",
-        href: "javascript:alert(1)",
-        pingUrl: "file:///etc/passwd",
+        name: "Database",
+        href: "postgres://database:5432",
+        pingUrl: "database.local:5432",
         iconUrl: null,
       }).success,
-    ).toBe(false);
+    ).toBe(true);
   });
 
-  test("requires every app submitted to completeSetup to have an HTTP(S) href", () => {
+  test("requires every app submitted to completeSetup to have a non-empty address", () => {
     const input = {
       server: { defaultLocale: "en", defaultColorScheme: "dark" },
       board: {
@@ -80,7 +80,7 @@ describe("onboarding URL validation", () => {
     expect(
       onboardingCompleteSetupSchema.safeParse({
         ...input,
-        apps: [{ ...input.apps[0], href: "https://status.example.com" }],
+        apps: [{ ...input.apps[0], href: "status.local:3001" }],
       }).success,
     ).toBe(true);
   });

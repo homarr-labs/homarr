@@ -100,7 +100,6 @@ import { OnboardingBackdrop } from "./onboarding-backdrop";
 import { OnboardingWordmark } from "./onboarding-wordmark";
 import { useOnboardingSounds } from "./use-onboarding-sounds";
 import {
-  isHttpUrl,
   normalizeServiceUrl,
   resolveDiscoveredAppUrl,
   resolveIntegrationDraftUrl,
@@ -127,7 +126,7 @@ interface IntegrationDraft {
 }
 
 const isIntegrationDraftComplete = (draft: IntegrationDraft) =>
-  isHttpUrl(draft.url) && draft.secrets.every((secret) => secret.value.trim().length > 0);
+  draft.url.trim().length > 0 && draft.secrets.every((secret) => secret.value.trim().length > 0);
 
 type DockerDiscoveryData = RouterOutputs["onboard"]["discoverDockerServices"];
 type RuntimeCapabilitiesQuery = Omit<
@@ -435,7 +434,9 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       }
       const draftsToApply = drafts.filter(isIntegrationDraftComplete);
       const appsToCreate = discoveredApps.filter((app) => selectedAppIds.includes(app.sourceId));
-      const appWithoutAddress = appsToCreate.find((app) => !isHttpUrl(discoveredAppUrls[app.sourceId] ?? ""));
+      const appWithoutAddress = appsToCreate.find(
+        (app) => (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0,
+      );
       if (appWithoutAddress) {
         const message = t("connect.appAddressRequired", { name: appWithoutAddress.containerName });
         setAppError(message);
@@ -493,7 +494,8 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
           };
         }),
         apps: appsToCreate.flatMap((app) => {
-          const href = normalizeServiceUrl(discoveredAppUrls[app.sourceId] ?? "");
+          const enteredAddress = (discoveredAppUrls[app.sourceId] ?? "").trim();
+          const href = normalizeServiceUrl(enteredAddress) ?? enteredAddress;
           return href
             ? [
                 {
@@ -635,13 +637,27 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     appErrorSourceId,
   };
   const hasIncompleteIntegrations = drafts.some((draft) => !isIntegrationDraftComplete(draft));
+  const selectedAppWithoutAddress = discoveredApps.find(
+    (app) => selectedAppIds.includes(app.sourceId) && (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0,
+  );
   const continueDisabled = isApplying || (activeSection === "essentials" && serverOrigin.trim().length === 0);
   const continueOnboarding = () => {
     if (continueDisabled) return;
     if (activeSection === "review") {
       void applySetupAsync();
-    } else if (activeSection === "connect" && hasIncompleteIntegrations) {
-      setIncompleteIntegrationConfirmationOpened(true);
+    } else if (activeSection === "connect") {
+      if (selectedAppWithoutAddress) {
+        setAppError(t("connect.appAddressRequired", { name: selectedAppWithoutAddress.containerName }));
+        setAppErrorSourceId(selectedAppWithoutAddress.sourceId);
+        return;
+      }
+      setAppError(null);
+      setAppErrorSourceId(null);
+      if (hasIncompleteIntegrations) {
+        setIncompleteIntegrationConfirmationOpened(true);
+      } else {
+        move(1);
+      }
     } else {
       move(1);
     }
