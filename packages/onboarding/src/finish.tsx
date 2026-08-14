@@ -21,7 +21,9 @@ export const Finish = ({ environment }: OnboardingStudioProps) => {
   const primaryColor = environment.initialBoard?.primaryColor ?? "#fa5252";
   const secondaryColor = environment.initialBoard?.secondaryColor ?? "#fd7e14";
   const boardHref = `/boards/${encodeURIComponent(environment.initialBoard?.name ?? "dashboard")}`;
-  const destination = environment.canConfigurePrivileged ? boardHref : "/auth/login?callbackUrl=%2Finit";
+  const destination = environment.canConfigurePrivileged
+    ? boardHref
+    : `/auth/login?callbackUrl=${encodeURIComponent(boardHref)}`;
   const openBoard = (event: ReactMouseEvent<HTMLAnchorElement>) => {
     sounds.success();
     if (
