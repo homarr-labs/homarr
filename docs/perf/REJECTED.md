@@ -31,12 +31,21 @@ const [session, user, serverSettings, colorScheme] = await Promise.all([
 ]);
 ```
 
-For a self-hosted app whose database is created at runtime on the user's volume, there is nothing to
-query during a build. Fixing it means deferring those reads into `<Suspense>` — but all four feed
-providers that wrap `children` (`AuthProvider session=`, `SettingsProvider user=`), so deferring them
-puts essentially the whole app inside the boundary and leaves a static shell of little more than
-`<html><body>`. The build would report `◐` while shipping an empty shell, which is precisely the
-failure the migration guide warns about.
+The immediate cause is mundane: no migration had been run, so the build had no tables. That is fixable
+— run the migration first and the build gets a database.
+
+**But making the error go away that way would be the wrong fix, and the error is the useful signal.**
+If a build needs the database in order to prerender a route, the route's content is being decided at
+build time rather than per request. For Homarr that is actively wrong: `serverSetting` is
+per-installation data on the user's own volume, so a shell prerendered against the build machine's
+database would bake one install's settings into every other install's first paint. The error is Next.js
+correctly reporting that a request-time read sits in the shell path.
+
+The honest fix is therefore to defer those reads into `<Suspense>`, not to feed the build a database.
+And that is where it stops being worth it: all four values feed providers that wrap `children`
+(`AuthProvider session=`, `SettingsProvider user=`), so deferring them puts essentially the whole app
+inside the boundary and leaves a static shell of little more than `<html><body>`. The build would
+report `◐` while shipping an empty shell — precisely the failure the migration guide warns about.
 
 **And the prize is small.** Measured against a running container, warm, five repeats:
 

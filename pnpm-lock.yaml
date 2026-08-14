@@ -585,8 +585,6 @@ overrides:
 
 patchedDependencies:
   '@types/node-unifi': 5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5
-  docker-modem@5.0.7: 4a1c50dc8b726af921a34a77c4942a768bed229123ab116baa06c4e62ad6815c
-  dockerode@5.0.1: 0f6e47505aa4a9aa6fabe6a42b070ca984c787d197bcac3aa6367961f2f7eac3
   trpc-to-openapi: 2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c
 
 importers:
@@ -1782,7 +1780,7 @@ importers:
         version: link:../core
       dockerode:
         specifier: 'catalog:'
-        version: 5.0.1(patch_hash=0f6e47505aa4a9aa6fabe6a42b070ca984c787d197bcac3aa6367961f2f7eac3)(supports-color@10.2.2)
+        version: 5.0.1(supports-color@10.2.2)
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -23648,7 +23646,7 @@ snapshots:
     dependencies:
       yaml: 2.9.0
 
-  docker-modem@5.0.7(patch_hash=4a1c50dc8b726af921a34a77c4942a768bed229123ab116baa06c4e62ad6815c)(supports-color@10.2.2):
+  docker-modem@5.0.7(supports-color@10.2.2):
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       readable-stream: 3.6.2
@@ -23657,12 +23655,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  dockerode@5.0.1(patch_hash=0f6e47505aa4a9aa6fabe6a42b070ca984c787d197bcac3aa6367961f2f7eac3)(supports-color@10.2.2):
+  dockerode@5.0.1(supports-color@10.2.2):
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@grpc/grpc-js': 1.12.5
       '@grpc/proto-loader': 0.7.13
-      docker-modem: 5.0.7(patch_hash=4a1c50dc8b726af921a34a77c4942a768bed229123ab116baa06c4e62ad6815c)(supports-color@10.2.2)
+      docker-modem: 5.0.7(supports-color@10.2.2)
       protobufjs: 7.4.0
       tar-fs: 2.1.4
     transitivePeerDependencies:
@@ -29220,7 +29218,7 @@ snapshots:
       byline: 5.0.0
       debug: 4.4.3(supports-color@10.2.2)
       docker-compose: 1.4.2
-      dockerode: 5.0.1(patch_hash=0f6e47505aa4a9aa6fabe6a42b070ca984c787d197bcac3aa6367961f2f7eac3)(supports-color@10.2.2)
+      dockerode: 5.0.1(supports-color@10.2.2)
       get-port: 5.1.1
       proper-lockfile: 4.1.2
       properties-reader: 3.0.1(supports-color@10.2.2)

@@ -37,8 +37,13 @@ No before/after range overlaps at any stage. The cost is **+18% CPU** (solid, no
 | `preloadEntriesOnStart: false` | **1 line** | −52% anon at idle, 310 fewer files even at full load |
 | Umami: stop fetching 100k raw events per refresh | 1 file | −26% peak, −93% transient buffers |
 | `serverExternalPackages` (mysql2/pg + 8 more) | 1 block | −21 MiB idle |
-| ssh2's 16 MiB WASM heap (docker-modem patch) | 1 patch | −15 to −18 MiB external |
+| Reuse the certificate agent instead of one per request | 1 file | 5.11 → 1.69 ms/request, 60 → 2 TLS handshakes |
+| Stream proxied images instead of buffering them | 2 files | −36% peak RSS under 30 concurrent 2 MiB images |
 | `content-visibility` on media-release cards | 4 lines | −59% image requests, −41% layout objects |
+
+The ssh2 / `@grpc/grpc-js` finding (−15 to −18 MiB external) is deliberately **not** in this table: it
+was implemented as two pnpm patches and then reverted, because patching a dependency breaks on every
+upstream bump. The finding is recorded in [SERVER-MEMORY.md](./SERVER-MEMORY.md) and belongs upstream.
 
 ## What is left, and why it is hard
 

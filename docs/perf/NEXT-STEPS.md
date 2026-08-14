@@ -94,7 +94,7 @@ lines-of-code to performance ratio. On the evidence, that set is:
 | Umami: stop fetching 100k raw events per refresh | 1 file | −26% peak, −93% transient buffers, largest allocation 46.4 → 2.4 MiB |
 | `serverExternalPackages` (mysql2/pg + 8 more) | 1 block | −21 MiB idle |
 | `content-visibility` on media-release cards | 4 lines | −59% image requests, −41% layout objects |
-| ssh2 WASM heap (docker-modem patch) | 1 patch | −15 to −18 MiB external at every stage |
+| ~~ssh2 WASM heap (docker-modem patch)~~ | ~~1 patch~~ | **dropped** — the gain was real (−15 to −18 MiB external) but patching a dependency breaks on every `dockerode`/`docker-modem` bump. Worth raising upstream instead: both packages require a module at file scope while using it in one already-guarded branch |
 | Reuse the certificate agent instead of one per request | 1 file | 5.11 → 1.69 ms/request, 60 → 2 TLS handshakes over 60 requests |
 | Stream proxied images instead of buffering | 2 files | −36% peak RSS on 30 concurrent 2 MiB images (116 → 74 MiB) |
 

@@ -456,9 +456,21 @@ Measured directly inside the image — requiring ssh2 and nothing else:
 heapUsed  +2.6 MiB     external  +0.9 MiB     rss  +14.0 MiB
 ```
 
-Fixed with a pnpm patch moving that one require inside the branch that uses it. SSH-based
-Docker hosts still work — `require` is cached, so they pay it once — and socket-based installs,
-which is everyone else, never load it.
+This was fixed with a pnpm patch moving that one require inside the branch that uses it, and the
+patch has since been **removed** — see below.
+
+> **Reverted, by decision.** Two pnpm patches came out of this work: `docker-modem@5.0.7` (the ssh2
+> require above) and `dockerode@5.0.1` (the same shape, hiding `@grpc/grpc-js` — 14.6 MiB across 61
+> files — behind `dialWithSession`). Both were dropped at the maintainer's request: patching a
+> dependency means every future `dockerode` or `docker-modem` bump fails until someone regenerates the
+> patch, and that recurring cost was judged not worth roughly 25 MiB of RSS.
+>
+> The finding itself stands and is worth keeping on record, because the fix belongs **upstream**: both
+> packages require a module at file scope while using it in exactly one already-guarded branch. A PR to
+> `docker-modem` and `dockerode` would fix it for every consumer, with no patch to maintain here.
+>
+> The two patches that remain — `@types/node-unifi` and `trpc-to-openapi` — predate this work and are
+> untouched.
 
 ### The same question asked of every dependency
 
