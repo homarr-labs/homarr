@@ -11,6 +11,7 @@ import "~/styles/color-scheme.scss";
 import "~/styles/scroll-area.scss";
 
 import { notFound } from "next/navigation";
+import { ColorSchemeScript } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { NextIntlClientProvider } from "next-intl";
 
@@ -161,17 +162,16 @@ export default async function Layout(props: {
   ]);
 
   return (
-    // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
     <html
       lang={locale}
       dir={direction}
-      data-mantine-color-scheme={colorScheme}
       style={{
         backgroundColor: colorScheme === "dark" ? "#242424" : colorScheme === "auto" ? undefined : "#fff",
       }}
       suppressHydrationWarning
     >
       <head>
+        <ColorSchemeScript defaultColorScheme={colorScheme} />
         <meta name="homarr-website-url" content={publicUrls.homarrWebsiteUrl} />
         {session ? (
           <>

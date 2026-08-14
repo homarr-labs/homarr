@@ -129,6 +129,31 @@
   overflow: clip;
 }
 
+.authShell {
+  display: grid;
+  min-height: 100dvh;
+  padding-block: clamp(1rem, 4vw, 3rem) calc(clamp(1rem, 4vw, 3rem) + env(safe-area-inset-bottom));
+}
+
+.authLayout {
+  width: min(100%, 36rem);
+  margin: auto;
+}
+
+.authBrand {
+  position: relative;
+  z-index: 1;
+}
+
+.authCard {
+  width: 100%;
+}
+
+.authFooter {
+  max-width: 32rem;
+  text-wrap: balance;
+}
+
 .studioGrid {
   display: grid;
   grid-template-columns: 15rem minmax(0, 1fr);

@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
-import { Card, Center, Stack, Text, Title } from "@mantine/core";
+import { IconUserPlus } from "@tabler/icons-react";
 
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { and, db, eq } from "@homarr/db";
 import { invites } from "@homarr/db/schema";
+import { OnboardingAuthShell } from "@homarr/onboarding";
 import { getScopedI18n } from "@homarr/translation/server";
 
-import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { RegistrationForm } from "./_registration-form";
 
 interface InviteUsagePageProps {
@@ -48,25 +48,14 @@ export default async function InviteUsagePage(props: InviteUsagePageProps) {
   const t = await getScopedI18n("user.page.invite");
 
   return (
-    <Center>
-      <Stack align="center" mt="xl">
-        <HomarrLogoWithTitle size="lg" />
-        <Stack gap={6} align="center">
-          <Title order={3} fw={400} ta="center">
-            {t("title")}
-          </Title>
-          <Text size="sm" c="gray.5" ta="center">
-            {t("subtitle")}
-          </Text>
-        </Stack>
-        <Card w={64 * 6} maw="90vw">
-          <RegistrationForm invite={invite} />
-        </Card>
-        <Text size="xs" c="gray.5" ta="center">
-          {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-          {t("description", { username: invite.creator.name! })}
-        </Text>
-      </Stack>
-    </Center>
+    <OnboardingAuthShell
+      title={t("title")}
+      description={t("subtitle")}
+      icon={<IconUserPlus size={24} />}
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      footer={t("description", { username: invite.creator.name! })}
+    >
+      <RegistrationForm invite={invite} />
+    </OnboardingAuthShell>
   );
 }
