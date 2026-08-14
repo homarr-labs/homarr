@@ -1,0 +1,35 @@
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_ca2323b7f96e59::t_4ec8cf9bf5b5f1 13-17
+packages/widgets/src/media-server/component.module.css
+  s_ca2323b7f96e59::t_4ec8cf9bf5b5f1 9,12,20-21
+apps/nextjs/src/components/board/items/widget-hover-overlay.module.css
+  s_ca2323b7f96e59::t_4ec8cf9bf5b5f1 5,9,18,34,127-130
+  s_ca2323b7f96e59::t_bfcded583af975 131-132
+packages/widgets/src/media-server/component.spec.tsx
+  s_ca2323b7f96e59::t_4ec8cf9bf5b5f1 12,102-108
+  s_ca2323b7f96e59::t_fd9c36c9b84f23 109-110
+e2e/board-advanced-interactions.spec.ts
+  s_ca2323b7f96e59::t_d1d9582a1bd6b9 13-14,258-270,274-275,279-301,303-307,434-435,445-451,495-501,503,542-548
+  s_ca2323b7f96e59::t_e76e118bf8eb8e 271-273,276-278
+  s_ca2323b7f96e59::t_85d242fb52e09f 302
+  s_ca2323b7f96e59::t_84b1b4f1169ff1 549-550
+packages/widgets/src/media-server/component.tsx
+  s_ca2323b7f96e59::t_4ec8cf9bf5b5f1 47-51,97-120,137-162,164-175,178-180,218-219
+  s_ca2323b7f96e59::t_c3a9e829a219d9 220
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c8516090419ffe72ae2ed733cd50387cfd48e8ef",
+  "prompts": {},
+  "sessions": {
+    "s_ca2323b7f96e59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5b-9d67-7470-9988-648d9d7016d2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
