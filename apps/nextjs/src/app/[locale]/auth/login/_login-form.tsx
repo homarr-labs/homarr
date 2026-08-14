@@ -116,19 +116,26 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
       <Stack gap="lg">
         {credentialInputsVisible && (
           <>
-            <form onSubmit={form.onSubmit((credentials) => void signInAsync(credentials.provider, credentials))}>
+            <form
+              autoComplete="on"
+              onSubmit={form.onSubmit((credentials) => void signInAsync(credentials.provider, credentials))}
+            >
               <Stack gap="lg">
                 <TextInput
                   label={t("field.username.label")}
                   id="username"
                   autoComplete="username"
+                  autoCapitalize="none"
+                  spellCheck={false}
                   {...form.getInputProps("name")}
+                  name="username"
                 />
                 <PasswordInput
                   label={t("field.password.label")}
                   id="password"
                   autoComplete="current-password"
                   {...form.getInputProps("password")}
+                  name="password"
                 />
 
                 {providers.includes("credentials") && (
@@ -152,7 +159,13 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
         )}
 
         {providers.includes("oidc") && (
-          <Button fullWidth variant="light" disabled={!isMounted} onClick={async () => await signInAsync("oidc")}>
+          <Button
+            type="button"
+            fullWidth
+            variant="light"
+            disabled={!isMounted || isPending}
+            onClick={() => void signInAsync("oidc")}
+          >
             {t("action.login.labelWith", { provider: oidcClientName })}
           </Button>
         )}
@@ -174,7 +187,8 @@ const SubmitButton = ({ isMounted, isPending, form, provider, children }: PropsW
   return (
     <Button
       type="submit"
-      name={provider}
+      name="provider"
+      value={provider}
       fullWidth
       onClick={() => form.setFieldValue("provider", provider)}
       loading={isPending && isCurrentProviderActive}

@@ -62,13 +62,16 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
 
   return (
     <Stack gap="xl">
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form autoComplete="on" onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="lg">
           <TextInput
             label={t("field.username.label")}
             id="username"
             autoComplete="username"
+            autoCapitalize="none"
+            spellCheck={false}
             {...form.getInputProps("username")}
+            name="username"
           />
           <CustomPasswordInput
             withPasswordRequirements
@@ -76,6 +79,7 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
             id="password"
             autoComplete="new-password"
             {...form.getInputProps("password")}
+            name="password"
           />
 
           <PasswordInput
@@ -83,6 +87,7 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
             id="password-confirm"
             autoComplete="new-password"
             {...form.getInputProps("confirmPassword")}
+            name="password-confirmation"
           />
           <Button type="submit" fullWidth loading={isPending}>
             {t("action.register.label")}
