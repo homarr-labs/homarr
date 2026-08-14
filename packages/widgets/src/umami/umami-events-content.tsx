@@ -3,27 +3,23 @@
 import { BarChart, LineChart } from "@mantine/charts";
 import { Box, Group, Stack, Text } from "@mantine/core";
 
-import { clientApi } from "@homarr/api/client";
 import type { UmamiEventSeries } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
-import { EVENT_COLORS, formatXLabel, umamiQueryOptions } from "./umami-utils";
-import { getUsableWidgetQueryData } from "../common/query-state";
+import { EVENT_COLORS, formatXLabel } from "./umami-utils";
 
 interface UmamiEventsContentProps {
-  integrationIds: string[];
-  websiteId: string;
+  series: UmamiEventSeries[];
   timeFrame: string;
-  eventNames: string[];
+  hasSelectedEvents: boolean;
   chartType: string;
   showXAxis: boolean;
 }
 
 export function UmamiEventsContent({
-  integrationIds,
-  websiteId,
+  series,
   timeFrame,
-  eventNames,
+  hasSelectedEvents,
   chartType,
   showXAxis,
 }: UmamiEventsContentProps) {
@@ -31,15 +27,7 @@ export function UmamiEventsContent({
   const locale = useCurrentIntlLocale();
   const tickColor = "var(--mantine-color-dimmed)";
 
-  const series =
-    getUsableWidgetQueryData(
-      clientApi.widget.umami.getMultiEventTimeSeries.useQuery(
-        { integrationId: integrationIds[0] ?? "", websiteId, timeFrame, eventNames: [...eventNames].toSorted() },
-        umamiQueryOptions,
-      ),
-    ) ?? [];
-
-  if (eventNames.length === 0) {
+  if (!hasSelectedEvents) {
     return (
       <Stack align="center" justify="center" h="100%">
         <Text c="dimmed" size="sm">

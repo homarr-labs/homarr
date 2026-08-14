@@ -23,9 +23,11 @@ export class NzbGetIntegration extends Integration implements IDownloadClientInt
 
   public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
-    const queue = await this.nzbGetApiCallAsync("listgroups");
-    const history = await this.nzbGetApiCallAsync("history");
-    const nzbGetStatus = await this.nzbGetApiCallAsync("status");
+    const [queue, history, nzbGetStatus] = await Promise.all([
+      this.nzbGetApiCallAsync("listgroups"),
+      this.nzbGetApiCallAsync("history"),
+      this.nzbGetApiCallAsync("status"),
+    ]);
     const status: DownloadClientStatus = {
       paused: nzbGetStatus.DownloadPaused,
       rates: { down: nzbGetStatus.DownloadRate },

@@ -11,7 +11,7 @@ export const { definition, componentLoader } = createWidgetDefinition(widgetKind
   supportsAdvancedFocus: false,
   icon: IconAd,
   queryKey: [["widget", "dnsHole"]],
-  refetchInterval: 5,
+  refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       usePiHoleColors: factory.switch({

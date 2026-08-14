@@ -205,6 +205,12 @@ const UpdateCard = ({
   const versionText = isDigestUpdate
     ? t("updateAvailable")
     : buildVersionText(truncateVersion(update.currentVersion), truncateVersion(update.newVersion));
+  const versionBadge = versionText ? (
+    <Badge size="xs" variant="light" color="gray" style={{ whiteSpace: "nowrap" }}>
+      {versionText}
+    </Badge>
+  ) : null;
+  const showVersionTooltip = versionText !== null && !isDigestUpdate && versionText !== fullVersionText;
 
   return (
     <Card className={combineClasses(className)} radius={radius} p="xs" style={{ overflow: "visible" }}>
@@ -213,13 +219,7 @@ const UpdateCard = ({
           {update.name}
         </Text>
         <Group gap={4} wrap="nowrap" style={{ flexShrink: 0 }}>
-          {versionText && (
-            <Tooltip label={fullVersionText} disabled={isDigestUpdate || versionText === fullVersionText}>
-              <Badge size="xs" variant="light" color="gray" style={{ whiteSpace: "nowrap" }}>
-                {versionText}
-              </Badge>
-            </Tooltip>
-          )}
+          {showVersionTooltip ? <Tooltip label={fullVersionText}>{versionBadge}</Tooltip> : versionBadge}
           {href && (
             <ActionIcon
               component="a"

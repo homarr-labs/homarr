@@ -10,7 +10,7 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
   icon: IconHeartRateMonitor,
   supportsAdvancedFocus: true,
   queryKeys: [[["integration", "byIds"]], [["widget", "healthMonitoring"]]],
-  refetchInterval: 5,
+  refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

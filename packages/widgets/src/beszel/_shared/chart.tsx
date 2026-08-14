@@ -31,7 +31,7 @@ function prepareRecords<T>(records: T[], timePeriod: BeszelTimePeriod, locale: s
   if (timePeriod === "1m") {
     return { fmt, ordered: records };
   }
-  return { fmt, ordered: [...records].toReversed() };
+  return { fmt, ordered: records.toReversed() };
 }
 
 function padTimeGrid(data: Record<string, unknown>[], timePeriod: BeszelTimePeriod, locale: string) {

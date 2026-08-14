@@ -11,9 +11,13 @@ export const mediaRequestStatsRequestHandler = createIntegrationRequestHandler<
 >({
   async requestAsync(integration, _input) {
     const integrationInstance = await createIntegrationAsync(integration);
+    const [stats, users] = await Promise.all([
+      integrationInstance.getStatsAsync(),
+      integrationInstance.getUsersAsync(),
+    ]);
     return {
-      stats: await integrationInstance.getStatsAsync(),
-      users: await integrationInstance.getUsersAsync(),
+      stats,
+      users,
     };
   },
   cacheTtlMs: 60_000,

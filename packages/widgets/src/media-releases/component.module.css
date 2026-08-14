@@ -17,6 +17,11 @@
   }
 }
 
+.item[data-defer-rendering] {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 88px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .item {
     transition: none;

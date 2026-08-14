@@ -1,14 +1,9 @@
 "use client";
 
 import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
-import type { ComponentProps } from "react";
 import dynamic from "next/dynamic";
 import { ActionIcon, Badge, Button, Center, Group, Stack, Text, TextInput, Tooltip } from "@mantine/core";
 import { IconEdit } from "@tabler/icons-react";
-import { Quill } from "react-quill-new";
-import type { DeltaStatic } from "react-quill-new";
-import type ReactQuillComponent from "react-quill-new";
-import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
@@ -21,102 +16,11 @@ import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import actionTargetClasses from "../common/action-target.module.css";
+import { storedContentToPlainText } from "./content";
 
-import "react-quill-new/dist/quill.snow.css";
 import "./anchor-note.css";
 
-type ReactQuillProps = ComponentProps<typeof ReactQuillComponent>;
-type ReactQuillOnChange = NonNullable<ReactQuillProps["onChange"]>;
-
-const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
-
-const quillDeltaOperationSchema = z.object({
-  insert: z.unknown().optional(),
-  attributes: z.record(z.string(), z.unknown()).optional(),
-});
-
-const quillDeltaSchema = z.object({
-  ops: z.array(quillDeltaOperationSchema),
-});
-
-type QuillDelta = z.infer<typeof quillDeltaSchema>;
-
-const DeltaConstructor = Quill.import("delta") as new (
-  ops?: QuillDelta["ops"] | { ops: QuillDelta["ops"] },
-) => DeltaStatic;
-
-const quillModules = {
-  toolbar: [
-    ["bold", "italic", "underline", "strike"],
-    [{ header: [1, 2, 3, 4, false] }],
-    [{ align: [] }],
-    [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-    [{ indent: "-1" }, { indent: "+1" }],
-    ["blockquote", "code-block"],
-    ["link"],
-    ["clean"],
-  ],
-  history: {
-    delay: 1000,
-    maxStack: 200,
-    userOnly: true,
-  },
-};
-
-const readOnlyModules = {
-  toolbar: false,
-};
-
-const quillFormats = [
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "header",
-  "align",
-  "list",
-  "indent",
-  "blockquote",
-  "code-block",
-  "link",
-];
-
-const emptyDelta = (): DeltaStatic => new DeltaConstructor([{ insert: "\n" }]);
-
-const toPlainTextDelta = (value: string): DeltaStatic => {
-  const normalized = value.endsWith("\n") ? value : `${value}\n`;
-  return new DeltaConstructor([{ insert: normalized }]);
-};
-
-const parseStoredContent = (content?: string | null): DeltaStatic => {
-  if (!content) return emptyDelta();
-
-  try {
-    const parsedDelta = quillDeltaSchema.safeParse(JSON.parse(content));
-    if (parsedDelta.success) {
-      return new DeltaConstructor(parsedDelta.data.ops);
-    }
-  } catch {
-    return toPlainTextDelta(content);
-  }
-
-  return toPlainTextDelta(content);
-};
-
-const stringifyDelta = (delta: unknown): string => {
-  const parsedDelta = quillDeltaSchema.safeParse(delta);
-  if (parsedDelta.success) {
-    return JSON.stringify(parsedDelta.data);
-  }
-  return JSON.stringify(emptyDelta());
-};
-
-export const storedContentToPlainText = (content?: string | null): string => {
-  return parseStoredContent(content)
-    .ops.map(({ insert }) => (typeof insert === "string" ? insert : ""))
-    .join("")
-    .trim();
-};
+const AnchorNoteEditor = dynamic(() => import("./editor"), { ssr: false });
 
 const canEditPermission = (permission: AnchorNotePermission) => {
   return permission === "owner" || permission === "editor";
@@ -217,17 +121,7 @@ const AnchorNoteWidgetContent = ({
     return normalizedTitle !== note.title || draftContent !== (note.content ?? "");
   }, [draftContent, draftTitle, note]);
 
-  const editorValue = useMemo(() => parseStoredContent(draftContent), [draftContent]);
-  const readOnlyValue = useMemo(() => parseStoredContent(note?.content), [note?.content]);
   const plainText = useMemo(() => storedContentToPlainText(note?.content), [note?.content]);
-  const handleEditorChange = useCallback<ReactQuillOnChange>(
-    (_html, _delta, source, editor) => {
-      if (!isEditing || source !== "user") return;
-      const next = stringifyDelta(editor.getContents());
-      setDraftContent(next);
-    },
-    [isEditing],
-  );
 
   const handleEdit = useCallback(() => {
     if (!canEdit || !note) return;
@@ -382,13 +276,10 @@ const AnchorNoteWidgetContent = ({
           className={`homarr-anchor-quill${isEditing ? "" : " homarr-anchor-quill--readonly"}`}
           style={{ flex: 1, minHeight: 0 }}
         >
-          <ReactQuill
-            theme="snow"
+          <AnchorNoteEditor
+            content={isEditing ? draftContent : note.content}
             readOnly={!isEditing}
-            value={isEditing ? editorValue : readOnlyValue}
-            onChange={handleEditorChange}
-            modules={isEditing ? quillModules : readOnlyModules}
-            formats={quillFormats}
+            onChange={setDraftContent}
             placeholder={t("emptyContent")}
           />
         </div>

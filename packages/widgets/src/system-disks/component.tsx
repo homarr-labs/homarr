@@ -104,8 +104,9 @@ const SystemDiskCard = ({
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(card);
+    observer.observe(value);
     return () => observer.disconnect();
-  }, [displayText, healthy]);
+  }, []);
 
   const unhealthyLabel = t("widget.systemDisks.status.unhealthy");
   const hasTemperature = temperature !== null && temperature !== undefined;

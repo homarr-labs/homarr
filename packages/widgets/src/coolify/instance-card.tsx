@@ -45,8 +45,6 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
 
   const baseUrl = getSafeApplicationUrl(instance.integrationUrl)?.replace(/\/+$/, "") ?? "";
   const displayUrl = baseUrl ? baseUrl.replace(/^https?:\/\//, "") : "—";
-  const relativeTime = useTimeAgo(instance.updatedAt);
-
   const onlineServers = instance.instanceInfo.servers.filter(isCoolifyServerOnline).length;
   const runningApps = instance.instanceInfo.applications.filter(
     (a) => parseStatus(a.status ?? "") === "running",
@@ -140,6 +138,7 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
         variant="filled"
         chevronPosition="right"
         multiple
+        keepMounted={false}
         value={isAdvanced ? advancedOpenSections : openSections}
         onChange={isAdvanced ? setAdvancedOpenSections : setOpenSections}
       >
@@ -167,20 +166,26 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
         )}
       </Accordion>
 
-      {!hideFooter && (
-        <Group
-          justify="space-between"
-          p={4}
-          style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
-        >
-          <Text size="10px" c="dimmed">
-            v{instance.instanceInfo.version}
-          </Text>
-          <Text size="10px" c="dimmed">
-            {t("footer.updated", { when: relativeTime })}
-          </Text>
-        </Group>
-      )}
+      {!hideFooter && <InstanceFooter version={instance.instanceInfo.version} updatedAt={instance.updatedAt} />}
     </Card>
   );
 }
+
+const InstanceFooter = ({ version, updatedAt }: { version: string; updatedAt: Date }) => {
+  const t = useScopedI18n("widget.coolify");
+  const relativeTime = useTimeAgo(updatedAt, 60_000);
+  return (
+    <Group
+      justify="space-between"
+      p={4}
+      style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
+    >
+      <Text size="10px" c="dimmed">
+        v{version}
+      </Text>
+      <Text size="10px" c="dimmed">
+        {t("footer.updated", { when: relativeTime })}
+      </Text>
+    </Group>
+  );
+};

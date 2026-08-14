@@ -29,8 +29,21 @@ import {
 
 // Umami event type ID for custom events (type 1 = page view, type 2 = custom event)
 const UMAMI_CUSTOM_EVENT_TYPE = 2;
+const UMAMI_EVENT_NAME_LIMIT = 5_000;
+const UMAMI_EVENT_PAGE_SIZE = 5_000;
+const UMAMI_EVENT_PAGE_MAX = 20;
 
 const logger = createLogger({ module: "umami-integration" });
+
+const pad = (number: number) => String(number).padStart(2, "0");
+
+const extractDataArray = (json: unknown): unknown[] => {
+  if (Array.isArray(json)) return json;
+  if (json && typeof json === "object" && "data" in json && Array.isArray((json as { data: unknown }).data)) {
+    return (json as { data: unknown[] }).data;
+  }
+  return [];
+};
 
 export class UmamiIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -170,32 +183,21 @@ export class UmamiIntegration extends Integration {
 
   public async getEventNamesAsync(websiteId: string): Promise<string[]> {
     const authHeaders = await this.getAuthHeadersAsync();
-    const now = Date.now();
+    const endAt = Date.now();
     const startAt = dayjs().subtract(30, "day").valueOf();
-    const url = this.url(`/websites/${websiteId}/events`, {
-      startAt: startAt.toString(),
-      endAt: now.toString(),
-      pageSize: "100000",
-    });
-    const response = await fetchWithTrustedCertificatesAsync(url, { headers: authHeaders });
-    if (!response.ok) {
-      logger.warn("Failed to load event names", { status: response.status, websiteId });
-      return [];
-    }
-    const json = await response.json();
-    const rawArray: unknown[] = Array.isArray(json)
-      ? json
-      : json && typeof json === "object" && "data" in json && Array.isArray((json as { data: unknown }).data)
-        ? (json as { data: unknown[] }).data
-        : [];
+    const metrics = await this.getWebsiteMetricsAsync(
+      websiteId,
+      startAt,
+      endAt,
+      "event",
+      authHeaders,
+      UMAMI_EVENT_NAME_LIMIT,
+    );
     const names = new Set<string>();
-    for (const item of rawArray) {
-      const record = item as Record<string, unknown>;
-      if (typeof record.eventName === "string" && record.eventName) {
-        names.add(record.eventName);
-      }
+    for (const metric of metrics) {
+      if (metric.x) names.add(metric.x);
     }
-    return [...names].sort();
+    return [...names].toSorted();
   }
 
   public async getActiveVisitorsAsync(websiteId: string): Promise<number> {
@@ -243,19 +245,18 @@ export class UmamiIntegration extends Integration {
   ): Promise<UmamiEventSeries[]> {
     const authHeaders = await this.getAuthHeadersAsync();
     const { startAt, endAt, unit } = this.computeTimeRange(timeFrame);
-    const results = await Promise.all(
-      eventNames.map(async (eventName) => {
-        const dataPoints = await this.getWebsiteEventTimeSeriesAsync(
-          websiteId,
-          startAt,
-          endAt,
-          unit,
-          eventName,
-          authHeaders,
-        );
-        return { eventName, dataPoints: dataPoints ?? [] };
-      }),
-    );
+    const results: UmamiEventSeries[] = [];
+    for (const eventName of eventNames) {
+      const dataPoints = await this.getWebsiteEventTimeSeriesAsync(
+        websiteId,
+        startAt,
+        endAt,
+        unit,
+        eventName,
+        authHeaders,
+      );
+      results.push({ eventName, dataPoints: dataPoints ?? [] });
+    }
     return results;
   }
 
@@ -306,79 +307,82 @@ export class UmamiIntegration extends Integration {
     eventName: string,
     authHeaders: Record<string, string>,
   ): Promise<UmamiPageviewDataPoint[] | undefined> {
-    const url = this.url(`/websites/${websiteId}/events`, {
-      startAt: startAt.toString(),
-      endAt: endAt.toString(),
-      unit,
-      timezone: "UTC",
-      eventName,
-      pageSize: "100000",
-    });
-    const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: authHeaders,
-    });
+    const truncate = (isoDate: string): string => {
+      const date = new Date(isoDate);
+      const dateString = `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
+      if (unit === "hour") return `${dateString} ${pad(date.getUTCHours())}:00:00`;
+      if (unit === "month") return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-01 00:00:00`;
+      return `${dateString} 00:00:00`;
+    };
 
-    if (!response.ok) {
-      logger.warn("Failed to load event time series", { status: response.status, websiteId, eventName });
-      return undefined;
-    }
+    const buckets = new Map<string, number>();
+    let previousFirstId: string | undefined;
+    let truncated = false;
 
-    const json = await response.json();
-    const rawArray: unknown[] = Array.isArray(json)
-      ? json
-      : json && typeof json === "object" && "data" in json && Array.isArray((json as { data: unknown }).data)
-        ? (json as { data: unknown[] }).data
-        : [];
+    for (let page = 1; ; page++) {
+      const url = this.url(`/websites/${websiteId}/events`, {
+        startAt: startAt.toString(),
+        endAt: endAt.toString(),
+        unit,
+        timezone: "UTC",
+        event: eventName,
+        eventName,
+        page: page.toString(),
+        pageSize: UMAMI_EVENT_PAGE_SIZE.toString(),
+      });
+      const response = await fetchWithTrustedCertificatesAsync(url, { headers: authHeaders });
+      if (!response.ok) {
+        logger.warn("Failed to load event time series", { status: response.status, websiteId, eventName, page });
+        return undefined;
+      }
 
-    if (rawArray.length === 0) return undefined;
+      const rawArray = extractDataArray(await response.json());
+      if (rawArray.length === 0) break;
+      if (page > UMAMI_EVENT_PAGE_MAX) {
+        truncated = true;
+        break;
+      }
 
-    const firstItem = rawArray[0] as Record<string, unknown>;
+      const firstItem = rawArray[0] as Record<string, unknown>;
+      if ("x" in firstItem && "y" in firstItem) {
+        const points = umamiPageviewDataPointSchema.array().parse(rawArray);
+        return points.length === 0 ? undefined : points;
+      }
+      if (!("createdAt" in firstItem)) return undefined;
 
-    // Two response shapes coexist:
-    //   - Umami self-hosted returns aggregated buckets: { x: timestamp, y: count }
-    //   - Umami Cloud returns raw event records: { createdAt, eventName, eventType }
-    // We aggregate the raw Cloud records ourselves into the same bucket grid so
-    // the result joins cleanly with /pageviews timestamps.
+      const firstId =
+        typeof firstItem.id === "string"
+          ? firstItem.id
+          : typeof firstItem.createdAt === "string"
+            ? `${String(firstItem.sessionId ?? "")}@${firstItem.createdAt}`
+            : undefined;
+      if (page > 1 && firstId !== undefined && firstId === previousFirstId) {
+        logger.warn("Umami ignored event paging, stopping after the first page", { websiteId, eventName });
+        break;
+      }
+      previousFirstId = firstId;
 
-    // Aggregated { x, y } format — parse directly (self-hosted instances)
-    if ("x" in firstItem && "y" in firstItem) {
-      const points = umamiPageviewDataPointSchema.array().parse(rawArray);
-      return points.length === 0 ? undefined : points;
-    }
-
-    // Raw event records — aggregate by time bucket (Umami Cloud)
-    if ("createdAt" in firstItem) {
-      const pad = (number: number) => String(number).padStart(2, "0");
-      // Format must match Umami's pageview x-axis timestamps: "YYYY-MM-DD HH:MM:SS"
-      const truncate = (isoDate: string): string => {
-        const date = new Date(isoDate);
-        const dateString = `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
-        if (unit === "hour") {
-          return `${dateString} ${pad(date.getUTCHours())}:00:00`;
-        }
-        if (unit === "month") {
-          return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-01 00:00:00`;
-        }
-        return `${dateString} 00:00:00`;
-      };
-
-      const buckets = new Map<string, number>();
       for (const item of rawArray) {
         const event = item as { eventType?: number; eventName?: string; createdAt: string };
         if (event.eventType !== UMAMI_CUSTOM_EVENT_TYPE || event.eventName !== eventName) continue;
         const bucket = truncate(event.createdAt);
         buckets.set(bucket, (buckets.get(bucket) ?? 0) + 1);
       }
-      if (buckets.size === 0) return undefined;
-      return (
-        Array.from(buckets.entries())
-          .sort(([itemA], [itemB]) => itemA.localeCompare(itemB))
-          // eslint-disable-next-line id-length
-          .map(([x, y]) => ({ x, y }))
-      );
+
+      if (rawArray.length < UMAMI_EVENT_PAGE_SIZE) break;
     }
 
-    return undefined;
+    if (truncated) {
+      logger.warn("Event time series hit the page ceiling, counts are a lower bound", {
+        websiteId,
+        eventName,
+        maxRecords: UMAMI_EVENT_PAGE_SIZE * UMAMI_EVENT_PAGE_MAX,
+      });
+    }
+    if (buckets.size === 0) return undefined;
+    return Array.from(buckets.entries())
+      .toSorted(([itemA], [itemB]) => itemA.localeCompare(itemB))
+      .map(([x, y]) => ({ x, y }));
   }
 
   private async getWebsiteStatsAsync(

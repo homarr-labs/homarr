@@ -1,6 +1,5 @@
 import type React from "react";
 import type { DraggableAttributes, UniqueIdentifier } from "@dnd-kit/core";
-import type { ActionIconProps } from "@mantine/core";
 import { z } from "zod/v4";
 import type { RefinementCtx, ZodType } from "zod/v4";
 
@@ -38,7 +37,7 @@ export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentif
     item: TItem;
     removeItem: () => void;
     rootAttributes: DraggableAttributes;
-    handle: (props: Partial<Pick<ActionIconProps, "size" | "color" | "variant">>) => React.ReactNode;
+    handle: React.ReactNode;
   }) => React.ReactNode;
   uniqueIdentifier: (item: TItem) => TOptionValue;
   useData: (values: TOptionValue[]) => { data: TItem[] | undefined; isLoading: boolean; error: unknown };

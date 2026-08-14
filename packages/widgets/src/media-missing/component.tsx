@@ -168,6 +168,7 @@ export default function MediaMissingWidget({
   return (
     <Tabs
       value={activeTab}
+      keepMounted={false}
       onChange={(value) => {
         if (value === "missing" || value === "queued") setSelectedTab(value);
       }}
@@ -193,12 +194,12 @@ export default function MediaMissingWidget({
 
       {showMissing && (
         <Tabs.Panel value="missing" flex={1} style={{ overflow: "hidden" }}>
-          {renderPanel(missing, t("empty.missing"))}
+          {activeTab === "missing" && renderPanel(missing, t("empty.missing"))}
         </Tabs.Panel>
       )}
       {showQueued && (
         <Tabs.Panel value="queued" flex={1} style={{ overflow: "hidden" }}>
-          {renderPanel(queued, t("empty.queued"))}
+          {activeTab === "queued" && renderPanel(queued, t("empty.queued"))}
         </Tabs.Panel>
       )}
     </Tabs>

@@ -126,6 +126,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
               <Group wrap="nowrap" align="flex-start" gap={isDense ? "xs" : "md"}>
                 {feedEntry.enclosure !== undefined && entryDisplay.showImage && (
                   <Image
+                    loading="lazy"
                     className={classes.poster}
                     src={feedEntry.enclosure}
                     alt=""

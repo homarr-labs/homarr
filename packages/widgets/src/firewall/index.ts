@@ -8,7 +8,7 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("firewall", {
   icon: IconWall,
   supportsAdvancedFocus: true,
-  refetchInterval: 5,
+  refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },

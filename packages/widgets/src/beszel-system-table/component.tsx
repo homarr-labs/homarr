@@ -98,6 +98,22 @@ const getSizeConfig = (width: number): SizeConfig => {
   };
 };
 
+const PercentCell = ({ value, size }: { value: number; size: SizeConfig }) => {
+  return (
+    <Group gap={8} wrap="nowrap" style={{ flex: 1 }}>
+      <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+        {formatPercent(value)}
+      </Text>
+      <Progress
+        value={value}
+        color={thresholdColor(value)}
+        size={getProgressTrackSize(size.progressSize)}
+        style={{ flex: 1 }}
+      />
+    </Group>
+  );
+};
+
 export default function BeszelSystemTableWidget({
   options,
   integrationIds,
@@ -175,20 +191,6 @@ export default function BeszelSystemTableWidget({
       return 0;
     });
   }, [systemsWithSource, sortStatus]);
-
-  const PercentCell = ({ value }: { value: number }) => (
-    <Group gap={8} wrap="nowrap" style={{ flex: 1 }}>
-      <Text size={size.fontSize} fw={500} w={size.valueMiw} ta="left" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
-        {formatPercent(value)}
-      </Text>
-      <Progress
-        value={value}
-        color={thresholdColor(value)}
-        size={getProgressTrackSize(size.progressSize)}
-        style={{ flex: 1 }}
-      />
-    </Group>
-  );
 
   const columns = useMemo((): DataTableColumn<SystemRowWithKey>[] => {
     const cols: (DataTableColumn<SystemRowWithKey> | false)[] = [
@@ -270,7 +272,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.cpu} />,
+        render: (record) => <PercentCell value={record.cpu} size={size} />,
       },
       visibleMetricKeys.has("showMemory") && {
         accessor: "memory",
@@ -282,7 +284,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.memory} />,
+        render: (record) => <PercentCell value={record.memory} size={size} />,
       },
       visibleMetricKeys.has("showDisk") && {
         accessor: "disk",
@@ -314,7 +316,7 @@ export default function BeszelSystemTableWidget({
           </Group>
         ),
         sortable: true,
-        render: (record) => <PercentCell value={record.gpu} />,
+        render: (record) => <PercentCell value={record.gpu} size={size} />,
       },
       visibleMetricKeys.has("showLoadAvg") && {
         accessor: "loadAvg",

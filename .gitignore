@@ -84,3 +84,11 @@ apps/docs/.docusaurus
 apps/docs/build
 .pnpm-store
 benchmark-results
+
+# local performance investigation (never ship benchmark data or restored backups)
+.widget-performance/
+.bench/
+homarr-backup*.zip
+*.sqlite-wal
+*.sqlite-shm
+/scripts/benchmarks/

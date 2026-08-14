@@ -150,4 +150,23 @@ describe("widget manifest promise stability", () => {
       [...expectedByQueryKey.values()].map(serializePolicy).toSorted(),
     );
   });
+
+  it("does not poll integration handlers faster than their cache can refresh", async () => {
+    const definitions = await loadAllWidgetDefinitions();
+    const cachedWidgetKinds = [
+      "dnsHoleControls",
+      "dnsHoleSummary",
+      "downloads",
+      "firewall",
+      "healthMonitoring",
+      "mediaServer",
+      "systemDisks",
+      "systemResources",
+      "tracearr",
+    ] as const;
+
+    for (const kind of cachedWidgetKinds) {
+      expect(definitions.get(kind)?.refetchInterval).toBe(10);
+    }
+  });
 });
