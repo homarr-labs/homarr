@@ -56,7 +56,14 @@ export function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: S
           </Anchor>
         </Group>
 
-        <Accordion variant="contained" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
+        <Accordion
+          variant="contained"
+          chevronPosition="right"
+          multiple
+          keepMounted={false}
+          value={openSections}
+          onChange={setOpenSections}
+        >
           {options.showServers && (
             <ServersSection
               servers={instance.instanceInfo.servers}

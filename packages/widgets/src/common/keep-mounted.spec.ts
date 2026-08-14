@@ -1,4 +1,4 @@
-import { MantineProvider, Tabs } from "@mantine/core";
+import { Accordion, MantineProvider, Tabs } from "@mantine/core";
 import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
@@ -95,6 +95,74 @@ describe("Mantine Tabs keepMounted", () => {
 
   it("does not render the inactive panel's children when keepMounted is false", async () => {
     const counts = await renderTabs(false);
+
+    expect(counts.shown).toBe(3);
+    expect(counts.offscreen).toBe(0);
+  });
+});
+
+/**
+ * `Accordion` has the same behaviour and the same prop, which the widget sweep originally missed - it
+ * checked `Tabs` and not `Accordion`. Collapsed panels matter more here, because a collapsed accordion
+ * section is the *normal* state rather than the exception: coolify renders three remote-data resource
+ * lists this way, cluster-health its node tables, firewall its interface rows.
+ */
+describe("Mantine Accordion keepMounted", () => {
+  let container: HTMLDivElement;
+  let root: Root;
+
+  afterEach(() => {
+    root?.unmount();
+    container?.remove();
+  });
+
+  const renderAccordion = async (keepMounted: boolean | undefined) => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+
+    const item = (value: string, marker: string) =>
+      createElement(Accordion.Item, { value, key: value }, [
+        createElement(Accordion.Control, { key: "control" }, value),
+        createElement(
+          Accordion.Panel,
+          { key: "panel" },
+          Array.from({ length: 3 }, (_unused, index) =>
+            createElement("span", { className: marker, key: index }, `${marker}-${index}`),
+          ),
+        ),
+      ]);
+
+    await act(async () => {
+      root.render(
+        createElement(
+          MantineProvider,
+          null,
+          createElement(
+            Accordion,
+            { defaultValue: "open", ...(keepMounted === undefined ? {} : { keepMounted }) },
+            item("open", "shown"),
+            item("collapsed", "offscreen"),
+          ),
+        ),
+      );
+    });
+
+    return {
+      shown: container.querySelectorAll(".shown").length,
+      offscreen: container.querySelectorAll(".offscreen").length,
+    };
+  };
+
+  it("renders collapsed panel children by default, which is the cost being avoided", async () => {
+    const counts = await renderAccordion(undefined);
+
+    expect(counts.shown).toBe(3);
+    expect(counts.offscreen).toBe(3);
+  });
+
+  it("does not render collapsed panel children when keepMounted is false", async () => {
+    const counts = await renderAccordion(false);
 
     expect(counts.shown).toBe(3);
     expect(counts.offscreen).toBe(0);

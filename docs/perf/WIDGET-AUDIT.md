@@ -28,6 +28,33 @@ Two companion scripts: `audit-widget-render.mjs` finds specific anti-patterns an
 whether they sit inside a `.map()`, and `measure-widget-cost.mts` counts components and fibers per
 widget on a real board.
 
+## The same cost in `Accordion`, which this sweep missed
+
+Credit where it is due: this came from reading [PR #6582](https://github.com/homarr-labs/homarr/pull/6582),
+which adds `keepMounted={false}` to the two coolify accordions. The sweep below checked `Tabs` and never
+checked `Accordion`, so it missed the problem entirely on five sites.
+
+**`Accordion` behaves exactly like `Tabs`: collapsed panels render their children.** Verified in the
+installed version — with three marker children per panel, the default renders **3 of 3** children of the
+*collapsed* panel, and `keepMounted={false}` renders **0**.
+
+It matters more here than in `Tabs`, because collapsed is the *normal* state of an accordion section
+rather than the exception:
+
+| widget | collapsed panels were building | verdict |
+| --- | --- | --- |
+| `coolify` instance-card | three remote-data lists — servers, applications, services | **fixed** |
+| `coolify` single-instance-layout | same three lists | **fixed** |
+| `health-monitoring` cluster-health | per-node resource tables | **fixed** — beyond what #6582 did |
+| `firewall` | interface rows | **fixed** — beyond what #6582 did |
+| `_inputs/widget-multiReleasesRepositories-input` | repository picker | left mounted — it holds selection state, and it is edit-modal only, not on the board render path |
+
+In every fixed case the open/closed state lives in the parent component, so unmounting a collapsed
+panel discards nothing.
+
+This also corrects three verdicts in the table below: `coolify` was recorded as "clean (bounded)" and
+`firewall` and `health-monitoring` as triaged/fixed on other grounds. All three were carrying this cost.
+
 ## The systemic finding this pass: inactive tab panels render in full
 
 **Mantine's `Tabs` keeps inactive panels mounted by default.** In Mantine 9 on React 19 that is
@@ -49,7 +76,7 @@ board showing one was building the other's whole tree as well.
 
 **The premise is verified, not inferred.** This started as a reading of Mantine's documentation, which
 is a weak basis for a prop that trades a remount cost for a mount saving — if Mantine ever stopped
-rendering inactive panels, the prop would be pure loss. `common/tabs-keep-mounted.spec.ts` pins the
+rendering inactive panels, the prop would be pure loss. `common/keep-mounted.spec.ts` pins the
 behaviour in the installed version: with three marker children per panel, the default renders **3 of 3**
 children of the *inactive* panel into the DOM, and `keepMounted={false}` renders **0**. If that ever
 changes, the test fails and the prop should come back out.
@@ -62,8 +89,9 @@ harness. The mechanism is confirmed; the size of the saving is not.
 
 | widget | change | why |
 | --- | --- | --- |
-| `health-monitoring` | `keepMounted={false}` | the hidden monitoring view was fully built |
-| `media-missing` | `keepMounted={false}` | both tabs built every card |
+| `health-monitoring` | `keepMounted={false}` on `Tabs` | the hidden monitoring view was fully built |
+| `media-missing` | `keepMounted={false}` on `Tabs` | both tabs built every card |
+| `coolify` ×2, `health-monitoring` cluster, `firewall` | `keepMounted={false}` on `Accordion` | collapsed panels built their lists; collapsed is an accordion's normal state |
 | `media-missing` | `offscreenRowStyle(CARD_HEIGHT[density])` | renders every card into a scrolling tile; the card height is fixed per density, so the intrinsic size is exact rather than a guess |
 | `media-missing` | `loading="lazy"` on the poster | a poster per card, all fetched regardless of scroll position |
 | `calendar` | inline SVG instead of `placehold.co` | a failed poster made a **third-party network request** from a self-hosted dashboard, once per failing event, to draw a grey square |
@@ -95,9 +123,9 @@ cannot get long" are different strengths of claim:
 | [x] | 7 | `media-requests` | 542 | fixed | `content-visibility` + `loading="lazy"` on both images |
 | [x] | 8 | `tracearr` | 445 | clean (read) | poster is a CSS background per stream card, and the list is active streams — a handful |
 | [x] | 9 | `custom-api` | 1014 | triaged | 6 index keys, all safe: stateless read-only rows from user JSONPath data with no stable id |
-| [x] | 10 | `firewall` | 334 | triaged | 4 inline-style-per-row, children not memoised so nothing is defeated |
+| [x] | 10 | `firewall` | 334 | **fixed** | its `Accordion` built the interface rows while collapsed. The 4 inline-style-per-row findings stay declined: children are not memoised, so nothing is defeated |
 | [x] | 11 | `releases` | 817 | fixed | `OverflowBadge` mounted a `Popover` per row even with nothing to overflow |
-| [x] | 12 | `coolify` | 752 | clean (bounded) | one map over configured instances; the icon is a fixed constant URL, not per-row data |
+| [x] | 12 | `coolify` | 752 | **fixed** | its `Accordion` built all three resource lists while collapsed; the icon is a fixed constant URL, not per-row data |
 | [x] | 13 | `notebook` | 1189 | clean (read) | rich-text editor. Deliberately **not** given `content-visibility`: it measures itself, and skipping its layout would be wrong |
 | [x] | 14 | `umami` | 595 | clean (read) | the top-list is bounded by the widget's own `limit` option and each row is three `<Text>` — containment would cost more than it saves |
 | [x] | 15 | `traefik` | 289 | clean (read) | already bounded: `.slice(0, getEntryPointLimit(width))` |
