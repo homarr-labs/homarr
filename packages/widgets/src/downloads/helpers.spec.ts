@@ -5,6 +5,7 @@ import {
   filterDownloadItemsByStatus,
   getAvailableDownloadStates,
   getDownloadColumnAccessors,
+  getDownloadsStatsDisplay,
 } from "./helpers";
 
 describe("downloads filters", () => {
@@ -27,5 +28,24 @@ describe("downloads advanced columns", () => {
   test("uses every column in advanced mode without changing the compact selection", () => {
     expect(getDownloadColumnAccessors(["name"], true)).toEqual(DOWNLOAD_COLUMN_ACCESSORS);
     expect(getDownloadColumnAccessors(["name"], false)).toEqual(["name"]);
+  });
+});
+
+describe("downloads stats display", () => {
+  test("keeps advanced stats independent from the compact toggle", () => {
+    const compactStatsVisible = false;
+
+    expect(
+      [true, false, true, false].map((isAdvanced) => getDownloadsStatsDisplay(compactStatsVisible, isAdvanced)),
+    ).toEqual([
+      { visible: true, canToggle: false },
+      { visible: false, canToggle: true },
+      { visible: true, canToggle: false },
+      { visible: false, canToggle: true },
+    ]);
+  });
+
+  test("preserves an explicitly enabled compact stats bar", () => {
+    expect(getDownloadsStatsDisplay(true, false)).toEqual({ visible: true, canToggle: true });
   });
 });

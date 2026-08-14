@@ -22,6 +22,13 @@ export const DOWNLOAD_COLUMN_ACCESSORS = [
 
 type DownloadColumnAccessor = (typeof DOWNLOAD_COLUMN_ACCESSORS)[number];
 
+export function getDownloadsStatsDisplay(showCompactStats: boolean, isAdvanced: boolean) {
+  return {
+    visible: showCompactStats || isAdvanced,
+    canToggle: !isAdvanced,
+  };
+}
+
 export function getDownloadColumnAccessors(
   configuredColumns: readonly DownloadColumnAccessor[],
   isAdvanced: boolean,

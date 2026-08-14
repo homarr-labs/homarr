@@ -64,6 +64,7 @@ import {
   filterDownloadItemsByStatus,
   getAvailableDownloadStates,
   getDownloadColumnAccessors,
+  getDownloadsStatsDisplay,
 } from "./helpers";
 
 dayjs.extend(relativeTime);
@@ -327,6 +328,7 @@ export default function DownloadClientsWidget({
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const [showStats, { toggle: toggleStats }] = useDisclosure(false);
   const isAdvanced = displayMode === "advanced";
+  const statsDisplay = getDownloadsStatsDisplay(showStats, isAdvanced);
 
   const utils = clientApi.useUtils();
   const mutationOptions = {
@@ -751,7 +753,7 @@ export default function DownloadClientsWidget({
 
   return (
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
-      {(showStats || isAdvanced) && (
+      {statsDisplay.visible && (
         <GlobalStatsBar
           key={displayMode}
           queueStats={queueStats}
@@ -814,8 +816,8 @@ export default function DownloadClientsWidget({
           availableStatuses={availableStatuses}
           pauseQueue={mutatePauseQueue}
           resumeQueue={mutateResumeQueue}
-          showStats={showStats}
-          toggleStats={toggleStats}
+          showStats={statsDisplay.visible}
+          toggleStats={statsDisplay.canToggle ? toggleStats : undefined}
         />
       )}
 
@@ -1185,7 +1187,7 @@ interface WidgetFooterProps {
   pauseQueue: (args: { integrationIds: string[] }) => void;
   resumeQueue: (args: { integrationIds: string[] }) => void;
   showStats: boolean;
-  toggleStats: () => void;
+  toggleStats?: () => void;
 }
 
 function WidgetFooter({
@@ -1323,11 +1325,13 @@ function WidgetFooter({
             </ActionIcon>
           </Tooltip>
 
-          <Tooltip label={statsTooltip}>
-            <ActionIcon size="xs" variant={statsIconVariant} aria-label={statsTooltip} onClick={toggleStats}>
-              <StatsIcon size={14} />
-            </ActionIcon>
-          </Tooltip>
+          {toggleStats ? (
+            <Tooltip label={statsTooltip}>
+              <ActionIcon size="xs" variant={statsIconVariant} aria-label={statsTooltip} onClick={toggleStats}>
+                <StatsIcon size={14} />
+              </ActionIcon>
+            </Tooltip>
+          ) : null}
 
           <Group gap={2}>
             {clients.map(({ integration }) => (
