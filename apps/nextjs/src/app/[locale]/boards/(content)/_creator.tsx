@@ -55,9 +55,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
             const requestedBoardName =
               typeof resolvedParams.name === "string" ? `/boards/${encodeURIComponent(resolvedParams.name)}` : null;
             redirect(
-              requestedBoardName
-                ? `/auth/login?callbackUrl=${encodeURIComponent(requestedBoardName)}`
-                : "/auth/login",
+              requestedBoardName ? `/auth/login?callbackUrl=${encodeURIComponent(requestedBoardName)}` : "/auth/login",
             );
           }
 
