@@ -1,0 +1,130 @@
+.github/workflows/ci.yml
+  s_7b8a552cf9f1f8::t_850bb569bc6ae1 87
+packages/widgets/src/audio-stats/component.tsx
+  s_909ca8cf5b6e15::t_943098ba775f6c 98-105
+Dockerfile
+  s_7b8a552cf9f1f8::t_80fa9f9c70c6a8 28
+packages/widgets/src/definition.ts
+  s_909ca8cf5b6e15::t_b6b6b6a6e8a529 18
+packages/widgets/src/vpn/component.tsx
+  s_909ca8cf5b6e15::t_d66f856e0ac3a1 35
+packages/widgets/src/video/component.tsx
+  s_909ca8cf5b6e15::t_8a44793a4ddb98 4
+packages/widgets/src/beszel-system-table/component.tsx
+  s_909ca8cf5b6e15::t_a198d86e0eb22d 438
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_909ca8cf5b6e15::t_cd1daeca506791 134
+packages/widgets/src/patchmon/component.tsx
+  s_909ca8cf5b6e15::t_7146849e8b3e27 100,279
+packages/widgets/src/dns-hole/summary/component.tsx
+  s_909ca8cf5b6e15::t_cd1daeca506791 115
+packages/widgets/src/beszel-system-stats/component.tsx
+  s_909ca8cf5b6e15::t_cd1daeca506791 259,264-268
+packages/widgets/src/paperless-ngx/component.tsx
+  s_909ca8cf5b6e15::t_7146849e8b3e27 164
+packages/widgets/src/media-requests/stats/component.tsx
+  s_909ca8cf5b6e15::t_42bcc6408dc47a 192
+apps/docs/docs/management/custom-widgets/index.mdx
+  s_909ca8cf5b6e15::t_bec701b716d4a6 44,49
+packages/widgets/src/calendar/calendar-event-list.tsx
+  s_7b8a552cf9f1f8::t_64d6574efdb79d 200-201,206-223
+packages/widgets/src/iframe/component.tsx
+  s_909ca8cf5b6e15::t_af3dc33b15b312 3,13
+packages/widgets/src/rssFeed/component.tsx
+  s_909ca8cf5b6e15::t_42bcc6408dc47a 137
+package.json
+  h_d6e478ca18e517 50
+packages/api/src/test/mcp.spec.ts
+  s_093d61b162b9ca::t_a033abde8dc284 76
+packages/db/migrations/sqlite/meta/_journal.json
+  s_093d61b162b9ca::t_b7eafce6f6bbe9 317
+  s_093d61b162b9ca::t_b202c408b40302 310
+packages/db/migrations/mysql/meta/_journal.json
+  s_093d61b162b9ca::t_b7eafce6f6bbe9 331
+  s_093d61b162b9ca::t_b202c408b40302 324
+packages/db/migrations/postgresql/meta/_journal.json
+  s_093d61b162b9ca::t_b7eafce6f6bbe9 93
+  s_093d61b162b9ca::t_b202c408b40302 86
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_093d61b162b9ca::t_909fbe2d2b850d 130
+apps/nextjs/src/components/board/layout/scaled-board-canvas.tsx
+  s_7cfb890e45839e::t_2df42d790f6a5e 86
+apps/nextjs/src/components/board/layout/README.md
+  s_7cfb890e45839e::t_36aa3235f5a1ae 8
+  s_7cfb890e45839e::t_47c2a0af2acbb4 13-15
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_7cfb890e45839e::t_36aa3235f5a1ae 190,206,229-230
+apps/nextjs/src/components/board/sections/grid/test/grid-import-boundary.spec.ts
+  s_7cfb890e45839e::t_8ab4167f88b81c 30
+apps/docs/docs/management/boards/index.mdx
+  s_7cfb890e45839e::t_47c2a0af2acbb4 46
+apps/nextjs/src/app/[locale]/boards/(content)/_client.module.css
+  s_7cfb890e45839e::t_fc6b73869ff4d9 36
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_7cfb890e45839e::t_6e26979161e21c 150
+packages/widgets/src/downloads/component.tsx
+  s_093d61b162b9ca::t_baf8f5dcbbe406 492,504,539-546,687,756,804
+apps/docs/docs/widgets/downloads/index.mdx
+  s_093d61b162b9ca::t_baf8f5dcbbe406 66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "e8cc5163f7f3652f2a04bfe8d40dba43ebaa8684",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  },
+  "sessions": {
+    "s_093d61b162b9ca": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe0d0-fc1f-73b1-9831-740365ab9fa8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_138640ab9b4dd8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fea8d-8e1d-7223-841c-13732edb270e",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7b8a552cf9f1f8": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fbc57-e6f4-7491-8c62-da59b6ac9a4f",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7cfb890e45839e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe562-6510-75c2-8080-22e1393f1a23",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8c1f355365c9af": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb819-9df1-71e3-bf79-61683d5d9203",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_909ca8cf5b6e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fb219-8cc2-7c41-a5df-a240df40b2f8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
