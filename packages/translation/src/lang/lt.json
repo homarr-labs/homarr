@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "Kas naujo, Docker",
+      "description": "Stebėkite, kuriems jūsų Docker konteineriams yra prieinami atvaizdų naujinimai."
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumentų valdymo sistema, skirta nuskaitytų dokumentų archyvavimui ir tvarkymui"
@@ -1437,8 +1441,18 @@
     "here": "čia",
     "iconPicker": {
       "label": "Piktogramos URL",
+      "description": "Ieškokite bibliotekoje, įklijuokite paveikslėlio URL arba įkelkite failą.",
       "header": "Įveskite pavadinimą ar objektus, kad filtruoti piktogramas... Homarr ieškos per {countIcons} piktogramas.",
-      "headerLoading": "",
+      "headerLoading": "Ieškoti paveikslėlių pagal pavadinimą",
+      "clear": "Pašalinti paveikslėlį",
+      "uploadImage": "Įkelti paveikslėlį",
+      "results": "Vaizdų paieškos rezultatai",
+      "localImages": "Jūsų vaizdai",
+      "svgIcons": "SVG piktogramos",
+      "otherImages": "Kiti vaizdai",
+      "urlLoading": "Tikrinamas vaizdas…",
+      "urlReady": "Vaizdas paruoštas naudoti",
+      "urlError": "Šio vaizdo nepavyko įkelti. Patikrinkite URL ir bandykite dar kartą.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "Kas naujo, Docker",
+      "description": "Rodo, kiek stebimų konteinerių turi prieinamų naujinimų.",
+      "title": "Kas naujo, Docker",
+      "monitored": "Stebimi",
+      "updatesAvailable": "{count, plural, one {# atnaujinimas prieinamas} few {# atnaujinimai prieinami} many {# atnaujinimų prieinama} other {# atnaujinimo prieinama}}",
+      "updateAvailable": "Galimas naujinimas",
+      "openReleaseNotes": "Atidaryti leidimo pastabas",
+      "option": {
+        "showTitle": {
+          "label": "Rodyti pavadinimą"
+        },
+        "showRing": {
+          "label": "Rodyti naujinimo žiedą"
+        },
+        "layout": {
+          "label": "Išdėstymas",
+          "option": {
+            "horizontal": {
+              "label": "Horizontalus"
+            },
+            "vertical": {
+              "label": "Vertikalus"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Rodyti konteinerių naujinimų sąrašą",
+          "description": "Išvardija kiekvieną stebimą konteinerį, kuriam yra prieinamas atvaizdo naujinimas"
         }
       }
     },

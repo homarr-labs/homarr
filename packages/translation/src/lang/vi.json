@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Theo dõi các container Docker của bạn có bản cập nhật hình ảnh."
+    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1437,8 +1441,18 @@
     "here": "tại đây",
     "iconPicker": {
       "label": "URL biểu tượng",
+      "description": "Tìm kiếm trong thư viện, dán URL hình ảnh hoặc tải lên tệp.",
       "header": "Nhập tên hoặc đối tượng để lọc biểu tượng... Homarr sẽ tìm qua {countIcons} biểu tượng cho bạn.",
-      "headerLoading": "",
+      "headerLoading": "Tìm kiếm hình ảnh theo tên",
+      "clear": "Xóa hình ảnh",
+      "uploadImage": "Tải lên hình ảnh",
+      "results": "Kết quả tìm kiếm hình ảnh",
+      "localImages": "Hình ảnh của bạn",
+      "svgIcons": "Biểu tượng SVG",
+      "otherImages": "Hình ảnh khác",
+      "urlLoading": "Đang kiểm tra hình ảnh…",
+      "urlReady": "Hình ảnh đã sẵn sàng để sử dụng",
+      "urlError": "Không thể tải hình ảnh này. Kiểm tra URL và thử lại.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Hiển thị số container được theo dõi có bản cập nhật.",
+      "title": "What's Up Docker",
+      "monitored": "Đã theo dõi",
+      "updatesAvailable": "{count, plural, other {# bản cập nhật có sẵn}}",
+      "updateAvailable": "Có bản cập nhật",
+      "openReleaseNotes": "Mở ghi chú phát hành",
+      "option": {
+        "showTitle": {
+          "label": "Hiển thị tiêu đề"
+        },
+        "showRing": {
+          "label": "Hiển thị vòng cập nhật"
+        },
+        "layout": {
+          "label": "Bố cục",
+          "option": {
+            "horizontal": {
+              "label": "Nằm ngang"
+            },
+            "vertical": {
+              "label": "Thẳng đứng"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Hiển thị danh sách cập nhật container",
+          "description": "Liệt kê từng container được giám sát có bản cập nhật image sẵn có"
         }
       }
     },

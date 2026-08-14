@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Sledujte, ktoré z vašich Docker kontajnerov majú k dispozícii aktualizácie obrazov."
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Systém správy dokumentov na archiváciu a organizáciu naskenovaných dokumentov"
@@ -1437,8 +1441,18 @@
     "here": "tu",
     "iconPicker": {
       "label": "URL ikony",
+      "description": "Vyhľadajte v knižnici, prilepte URL obrázka alebo nahrajte súbor.",
       "header": "Zadajte názov alebo objekty na filtrovanie ikon... Homarr pre vás vyhľadá ikony na stránke {countIcons} .",
-      "headerLoading": "",
+      "headerLoading": "Vyhľadať obrázky podľa názvu",
+      "clear": "Odstrániť obrázok",
+      "uploadImage": "Nahrať obrázok",
+      "results": "Výsledky vyhľadávania obrázkov",
+      "localImages": "Vaše obrázky",
+      "svgIcons": "SVG ikony",
+      "otherImages": "Ostatné obrázky",
+      "urlLoading": "Kontrolujem obrázok…",
+      "urlReady": "Obrázok je pripravený na použitie",
+      "urlError": "Tento obrázok sa nepodarilo načítať. Skontrolujte adresu URL a skúste to znova.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Zobrazuje, koľko sledovaných kontajnerov má k dispozícii aktualizácie.",
+      "title": "What's Up Docker",
+      "monitored": "Sledované",
+      "updatesAvailable": "{count, plural, one {# aktualizácia je k dispozícii} few {# aktualizácie sú k dispozícii} many {# aktualizácií je k dispozícii} other {# aktualizácie je k dispozícii}}",
+      "updateAvailable": "Dostupná aktualizácia",
+      "openReleaseNotes": "Otvorte poznámky k vydaniu",
+      "option": {
+        "showTitle": {
+          "label": "Zobraziť názov"
+        },
+        "showRing": {
+          "label": "Zobraziť prstenec aktualizácie"
+        },
+        "layout": {
+          "label": "Rozloženie",
+          "option": {
+            "horizontal": {
+              "label": "Horizontálne"
+            },
+            "vertical": {
+              "label": "Vertikálne"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Zobraziť zoznam aktualizácií kontajnerov",
+          "description": "Uvádza každý sledovaný kontajner, ktorý má dostupnú aktualizáciu obrazu."
         }
       }
     },
