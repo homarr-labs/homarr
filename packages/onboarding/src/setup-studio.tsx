@@ -96,6 +96,7 @@ import { BoardColorInput, ColorSchemeCombobox, IntegrationAvatar, LanguageCombob
 import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
 
 import type { OnboardingStudioProps } from "./types";
+import { getBoardValidationErrors } from "./board-validation";
 import { OnboardingBackdrop } from "./onboarding-backdrop";
 import { OnboardingWordmark } from "./onboarding-wordmark";
 import { useOnboardingSounds } from "./use-onboarding-sounds";
@@ -230,6 +231,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [columnCount, setColumnCount] = useState(10);
   const [leftSidebar, setLeftSidebar] = useState(false);
   const [rightSidebar, setRightSidebar] = useState(false);
+  const [boardValidationAttempted, setBoardValidationAttempted] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
   const [applyProgress, setApplyProgress] = useState(0);
   const [applyMessage, setApplyMessage] = useState("");
@@ -255,8 +257,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       showErrorNotification({ title: t("review.errorTitle"), message: error.message });
     },
   });
-  const validateIntegration = clientApi.onboard.testIntegration.useMutation();
-
   const dockerData = docker.data;
   const discoveredIntegrations = dockerData?.integrations ?? emptyDiscoveredIntegrations;
   const discoveredApps = dockerData?.apps ?? emptyDiscoveredApps;
@@ -423,6 +423,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     setAppError(null);
     setAppErrorSourceId(null);
     setApplyProgress(5);
+    setBoardValidationAttempted(true);
     try {
       if (!selectedBoardId && environment.availableBoards.length > 0) {
         setActiveSection("board");
@@ -444,18 +445,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       }
 
       setApplyMessage(t("review.progress.applying"));
-      for (const [index, draft] of draftsToApply.entries()) {
-        setApplyProgress(5 + Math.round(((index + 1) / Math.max(1, draftsToApply.length)) * 15));
-        await validateIntegration
-          .mutateAsync({
-            sourceId: draft.sourceId ?? draft.id,
-            name: draft.name,
-            url: normalizeServiceUrl(draft.url) ?? draft.url,
-            kind: draft.kind,
-            secrets: draft.secrets,
-          })
-          .catch(() => undefined);
-      }
       setApplyProgress(20);
       await new Promise((resolve) => setTimeout(resolve, 300));
       const selectedSourceIds = new Set(draftsToApply.flatMap((draft) => (draft.sourceId ? [draft.sourceId] : [])));
@@ -607,6 +596,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     boardName,
     setBoardName,
     selectedBoardId,
+    boardValidationAttempted,
     setSelectedBoardId: (value) => {
       sounds.click();
       setSelectedBoardId(value);
@@ -852,6 +842,7 @@ interface StudioSectionProps {
   boardName: string;
   setBoardName: (value: string) => void;
   selectedBoardId: string | null;
+  boardValidationAttempted: boolean;
   setSelectedBoardId: (value: string | null) => void;
   primaryColor: string;
   setPrimaryColor: (value: string) => void;
@@ -1449,6 +1440,12 @@ const formatSecretKind = (kind: IntegrationSecretKind) =>
 const BoardBuilder = (props: StudioSectionProps) => {
   const t = useScopedI18n("init.studio.board");
   const sounds = useOnboardingSounds();
+  const validationErrors = getBoardValidationErrors({
+    attempted: props.boardValidationAttempted,
+    hasExistingBoards: props.environment.availableBoards.length > 0,
+    selectedBoardId: props.selectedBoardId,
+    boardName: props.boardName,
+  });
   const previewWidgetKinds = getPreviewWidgetKinds(props);
   const previewAppCount = getPreviewAppCount(props);
   const colorsCustomized =
@@ -1474,7 +1471,7 @@ const BoardBuilder = (props: StudioSectionProps) => {
               allowDeselect={false}
               searchable
               withAsterisk
-              error={!props.selectedBoardId && props.applyProgress > 0 ? t("targetRequired") : undefined}
+              error={validationErrors.target ? t("targetRequired") : undefined}
             />
           ) : null}
           <TextInput
@@ -1483,6 +1480,7 @@ const BoardBuilder = (props: StudioSectionProps) => {
             value={props.boardName}
             onChange={(event) => props.setBoardName(event.currentTarget.value.replace(/[^A-Za-z0-9-_]/g, ""))}
             withAsterisk
+            error={validationErrors.name ? t("nameRequired") : undefined}
           />
           <Stack gap="xs">
             <SimpleGrid cols={2}>
@@ -1511,7 +1509,7 @@ const BoardBuilder = (props: StudioSectionProps) => {
                 }}
                 w="fit-content"
               >
-                Reset colors
+                {t("resetColors")}
               </Button>
             ) : null}
           </Stack>
