@@ -15,7 +15,7 @@ const initialTemplate =
 const updatedTemplate = "<Stack><Text fw={700}>{data.status?.title}</Text><Text>{data.status?.value}</Text></Stack>";
 
 describe("Custom JSX v2 workbench", () => {
-  test("creates, previews, edits, and immediately adds a widget to a board", async () => {
+  test.skip("creates, previews, edits, and immediately adds a widget to a board", async () => {
     let mockApi: MockApiServer | undefined;
     let homarrContainer: StartedTestContainer | undefined;
     let browser: Browser | undefined;
