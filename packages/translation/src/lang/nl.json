@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "Wat is er een Docker",
+      "description": "Controleer welke van uw Docker containers afbeeldingen updates beschikbaar hebben"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Documentbeheersysteem voor het archiveren en organiseren van gescande documenten"
@@ -1437,8 +1441,18 @@
     "here": "hier",
     "iconPicker": {
       "label": "Icoon-URL",
+      "description": "Zoek in de bibliotheek, plak een afbeelding-URL of upload een bestand.",
       "header": "Typ naam of objecten om te filteren op iconen… Homarr doorzoekt {countIcons} iconen voor je.",
-      "headerLoading": "",
+      "headerLoading": "Afbeeldingen zoeken op naam",
+      "clear": "Verwijder afbeelding",
+      "uploadImage": "Afbeelding uploaden",
+      "results": "Zoekresultaten afbeeldingen",
+      "localImages": "Jouw afbeeldingen",
+      "svgIcons": "SVG iconen",
+      "otherImages": "Andere afbeeldingen",
+      "urlLoading": "Controleren van afbeelding…",
+      "urlReady": "Afbeelding is klaar voor gebruik",
+      "urlError": "Deze afbeelding kan niet worden geladen. Controleer de URL en probeer het opnieuw.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "Wat is er een Docker",
+      "description": "Laat zien hoeveel containers er updates beschikbaar hebben.",
+      "title": "Wat is er een Docker",
+      "monitored": "Gecontroleerd",
+      "updatesAvailable": "{count, plural, one {# update beschikbaar} other {# updates zijn beschikbaar}}",
+      "updateAvailable": "Update beschikbaar",
+      "openReleaseNotes": "Open release notities",
+      "option": {
+        "showTitle": {
+          "label": "Toon titel"
+        },
+        "showRing": {
+          "label": "Update ring tonen"
+        },
+        "layout": {
+          "label": "Lay-out",
+          "option": {
+            "horizontal": {
+              "label": "Horizontaal"
+            },
+            "vertical": {
+              "label": "Verticaal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Toon container update lijst",
+          "description": "Lijst van alle gemonitorde container met een afbeelding update beschikbaar"
         }
       }
     },

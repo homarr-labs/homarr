@@ -1344,6 +1344,10 @@
       "name": "Traefik",
       "description": "클라우드 네이티브 리버스 프록시 및 로드 밸런서"
     },
+    "wud": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "스캔된 문서를 보관하고 정리하는 문서 관리 시스템"
@@ -1437,8 +1441,18 @@
     "here": "여기",
     "iconPicker": {
       "label": "아이콘 URL",
+      "description": "",
       "header": "이름 또는 주제를 입력해 아이콘을 필터링하세요... Homarr가 {countIcons}에서 아이콘을 검색합니다.",
       "headerLoading": "아이콘을 검색하려면 입력…",
+      "clear": "",
+      "uploadImage": "",
+      "results": "",
+      "localImages": "내 이미지",
+      "svgIcons": "",
+      "otherImages": "기타 이미지",
+      "urlLoading": "",
+      "urlReady": "",
+      "urlError": "",
       "noResults": "\"{search}\"에 일치하는 아이콘이 없습니다.",
       "error": "아이콘을 불러올 수 없습니다."
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": "방송 메시지 표시"
+        }
+      }
+    },
+    "wud": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "monitored": "",
+      "updatesAvailable": "",
+      "updateAvailable": "",
+      "openReleaseNotes": "",
+      "option": {
+        "showTitle": {
+          "label": ""
+        },
+        "showRing": {
+          "label": ""
+        },
+        "layout": {
+          "label": "레이아웃",
+          "option": {
+            "horizontal": {
+              "label": "가로"
+            },
+            "vertical": {
+              "label": "세로"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "",
+          "description": ""
         }
       }
     },

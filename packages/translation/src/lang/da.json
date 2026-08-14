@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "Hvad Er Opad Docker",
+      "description": "Overvåg hvilke af dine Docker-containere der er tilgængelige billedopdateringer"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumenthåndteringssystem til arkivering og organisering af scannede dokumenter"
@@ -1437,8 +1441,18 @@
     "here": "her",
     "iconPicker": {
       "label": "Ikon-URL",
+      "description": "Søg i biblioteket, indsæt en billed-URL, eller upload en fil.",
       "header": "Indtast navn eller objekter for at filtrere for ikoner... Homarr vil søge gennem {countIcons} ikoner for dig.",
-      "headerLoading": "",
+      "headerLoading": "Søg billeder efter navn",
+      "clear": "Ryd billede",
+      "uploadImage": "Upload billede",
+      "results": "Billede søgeresultater",
+      "localImages": "Dine billeder",
+      "svgIcons": "SVG ikoner",
+      "otherImages": "Andre billeder",
+      "urlLoading": "Kontrollerer billede…",
+      "urlReady": "Billedet er klar til brug",
+      "urlError": "Dette billede kunne ikke indlæses. Tjek URL'en og prøv igen.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "Hvad Er Opad Docker",
+      "description": "Vis hvor mange overvågede containere der er tilgængelige opdateringer.",
+      "title": "Hvad Er Opad Docker",
+      "monitored": "Overvåget",
+      "updatesAvailable": "{count, plural, one {# opdatering tilgængelig} other {# opdateringer tilgængelige}}",
+      "updateAvailable": "Opdatering tilgængelig",
+      "openReleaseNotes": "Åbn udgivelsesnoter",
+      "option": {
+        "showTitle": {
+          "label": "Vis titel"
+        },
+        "showRing": {
+          "label": "Vis opdateringsring"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Horisontal"
+            },
+            "vertical": {
+              "label": "Vertikal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Vis liste over container-opdatering",
+          "description": "Lister hver overvåget beholder, der har en billedopdatering tilgængelig"
         }
       }
     },

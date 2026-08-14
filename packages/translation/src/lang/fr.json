@@ -673,7 +673,7 @@
     },
     "action": {
       "select": {
-        "label": "Sélectionner l'app",
+        "label": "Sélectionner une app",
         "notFound": "Aucune app trouvée",
         "search": "Rechercher une application",
         "noResults": "Pas de résultats",
@@ -739,7 +739,7 @@
       "label": "Étiquette",
       "unit": "Unité",
       "mappings": "Correspondances",
-      "tablePath": "",
+      "tablePath": "Chemin du tableau JSON",
       "tablePathHint": "",
       "columns": "Colonnes",
       "header": "En-tête",
@@ -786,7 +786,7 @@
       "valuePath": "",
       "maxPath": "",
       "goodValues": "",
-      "color": ""
+      "color": "bleu"
     },
     "cardStyleOption": {
       "filled": "",
@@ -851,10 +851,10 @@
       "customJsx": "JSX personnalisé"
     },
     "secret": {
-      "apiKey": "",
+      "apiKey": "Clé API / jeton",
       "username": "Nom d'utilisateur",
       "password": "Mot de passe",
-      "savedPlaceholder": ""
+      "savedPlaceholder": "••••••• (sauvegardé, laisser vide pour garder)"
     },
     "preview": {
       "title": "Aperçu",
@@ -1291,10 +1291,10 @@
         },
         "patchmonApiKey": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "Nouvelle clé API"
         },
         "patchmonApiSecret": {
-          "label": "",
+          "label": "Clé secrète d'API",
           "newLabel": ""
         },
         "githubAppId": {
@@ -1329,7 +1329,7 @@
       "description": ""
     },
     "uptimeKuma": {
-      "name": "",
+      "name": "Uptime Kuma",
       "description": "",
       "secret": {
         "slug": {
@@ -1341,8 +1341,12 @@
       }
     },
     "traefik": {
-      "name": "",
+      "name": "Traefik",
       "description": ""
+    },
+    "wud": {
+      "name": "Qu'est ce que Docker",
+      "description": "Surveiller lequel de vos conteneurs Docker a des mises à jour d'images disponibles"
     },
     "paperlessNgx": {
       "name": "",
@@ -1437,8 +1441,18 @@
     "here": "ici",
     "iconPicker": {
       "label": "URL de l'icône :",
+      "description": "Recherchez dans la bibliothèque, collez une URL d'image, ou téléchargez un fichier.",
       "header": "Tapez le nom ou les objets pour filtrer les icônes... Homarr recherchera les icônes {countIcons} pour vous.",
       "headerLoading": "Tapez pour rechercher les icônes…",
+      "clear": "Effacer l'image",
+      "uploadImage": "Charger une image",
+      "results": "Résultats de la recherche d'images",
+      "localImages": "Vos images",
+      "svgIcons": "Icônes SVG",
+      "otherImages": "Autres images",
+      "urlLoading": "Vérification de l'image…",
+      "urlReady": "L'image est prête à être utilisée",
+      "urlError": "Cette image n'a pas pu être chargée. Vérifiez l'URL et réessayez.",
       "noResults": "Aucune icône ne correspond à \"{search}\".",
       "error": "Impossible de charger les icônes."
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Afficher les messages de diffusion"
+        }
+      }
+    },
+    "wud": {
+      "name": "Qu'est ce que Docker",
+      "description": "Afficher combien de conteneurs surveillés ont des mises à jour disponibles.",
+      "title": "Qu'est ce que Docker",
+      "monitored": "Surveillé",
+      "updatesAvailable": "{count, plural, one {# mise à jour disponible} other {# mises à jour disponibles}}",
+      "updateAvailable": "Mise à jour disponible",
+      "openReleaseNotes": "Ouvrir les notes de version",
+      "option": {
+        "showTitle": {
+          "label": "Afficher le titre"
+        },
+        "showRing": {
+          "label": "Afficher l'anneau de mise à jour"
+        },
+        "layout": {
+          "label": "Mise en page",
+          "option": {
+            "horizontal": {
+              "label": "Horizontale"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Afficher la liste de mise à jour du conteneur",
+          "description": "Liste chaque conteneur surveillé qui a une mise à jour d'image disponible"
         }
       }
     },
