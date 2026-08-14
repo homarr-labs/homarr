@@ -228,7 +228,8 @@ The tile snaps to the grid. Equally-sized tiles swap when one is dropped into th
 Every `1 × 1` tile has a logical content size of `200 × 200` pixels.
 Larger tiles use multiples of that fixed unit, with a consistent gap between cells.
 Homarr scales the complete board uniformly, like zooming a page.
-It stops shrinking at 75% and lets you scroll horizontally instead of making text and controls too small.
+The complete canvas always fits the available width without horizontal board scrolling.
+Below 100%, Homarr preserves the widget's readable typography and control density instead of shrinking each widget independently.
 It does not squeeze or reflow the content of individual widgets, so a widget keeps the same design and proportions across screen sizes.
 
 :::note

@@ -12,6 +12,20 @@ Homarr has the following keyboard shortcuts:
 | `MOD` + `J` | Toggles Dark Mode    |
 | `MOD` + `E` | Toggles Edit Mode    |
 
+## Board editing
+
+When a tile is focused in edit mode:
+
+| Shortcut             | Description                                                                 |
+| -------------------- | --------------------------------------------------------------------------- |
+| `Enter` or `Space`   | Starts or stops keyboard editing                                            |
+| Arrow keys           | Moves the focused tile within its current canvas, rail, or Container        |
+| `Shift` + Arrow keys | Resizes from the tile's lower-right corner: Left/Up shrink; Right/Down grow |
+| `Esc`                | Stops keyboard editing without undoing its changes                          |
+
+Keyboard moves and resizes apply immediately. To move an item between a canvas, rail, or Container, drag it there or use **Move / resize item** for precise numeric placement.
+Commands at a grid boundary or at the tile's minimum size are ignored and announced instead of moving or shrinking the tile.
+
 :::tip
 
 Here `MOD` refers to the modifier key, which is `Ctrl` on Windows and `Cmd` on macOS.
