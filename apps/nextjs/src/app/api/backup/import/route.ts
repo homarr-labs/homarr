@@ -172,6 +172,29 @@ const reEncryptSecrets = (tempDb: InstanceType<typeof Database>, importedKeyHex:
   transaction();
 };
 
+const getHomeBoardName = (tempDb: InstanceType<typeof Database>): string | null => {
+  const row = tempDb
+    .prepare(
+      `SELECT "name" FROM (
+         SELECT "board"."name" AS "name", 0 AS "priority"
+         FROM "group"
+         INNER JOIN "board" ON "board"."id" = "group"."home_board_id"
+         WHERE "group"."name" = 'everyone'
+         UNION ALL
+         SELECT "board"."name" AS "name", 1 AS "priority"
+         FROM "user"
+         INNER JOIN "board" ON "board"."id" = "user"."home_board_id"
+         UNION ALL
+         SELECT "board"."name" AS "name", 2 AS "priority"
+         FROM "board"
+       )
+       ORDER BY "priority", "name"
+       LIMIT 1`,
+    )
+    .get() as { name: string } | undefined;
+  return row?.name ?? null;
+};
+
 const isOnboardingActiveAsync = async (): Promise<boolean> => {
   const onboardingRow = await db.query.onboarding.findFirst();
   if (!onboardingRow) return false;
@@ -289,6 +312,8 @@ export async function POST(req: Request) {
       reEncryptSecrets(tempDb, importedKey);
     }
 
+    const homeBoardName = getHomeBoardName(tempDb);
+
     tempDb.close();
     tempDb = null;
 
@@ -313,6 +338,7 @@ export async function POST(req: Request) {
       success: true,
       message: "Database restored. Server is restarting...",
       restartAfterMs: RESTART_DELAY_MS,
+      homeBoardName,
     });
   } catch (error) {
     console.error("[backup/import] Restore failed:", error);

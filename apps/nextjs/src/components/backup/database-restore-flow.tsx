@@ -109,6 +109,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
   const [importError, setImportError] = useState<string | null>(null);
   const [restoreStatus, setRestoreStatus] = useState<"restoring" | "restarting" | "timedOut">("restoring");
   const restartControllerRef = useRef<AbortController | null>(null);
+  const restoreDestinationRef = useRef<string | null>(null);
   const { analysis, loading, error: analysisError, migrationProgress, analyzeFile, reset } = useBackupAnalysis();
 
   useEffect(
@@ -141,8 +142,9 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     reset();
   }, [reset]);
 
-  const startReadinessCheck = useCallback((restartAfterMs: number) => {
+  const startReadinessCheck = useCallback((restartAfterMs: number, destination = restoreDestinationRef.current) => {
     restartControllerRef.current?.abort();
+    restoreDestinationRef.current = destination;
     const restartController = new AbortController();
     restartControllerRef.current = restartController;
     setRestoreStatus("restarting");
@@ -150,7 +152,8 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     void waitForServerReadinessAsync({ restartAfterMs, signal: restartController.signal }).then((result) => {
       if (restartControllerRef.current !== restartController || result === "aborted") return;
       if (result === "ready") {
-        window.location.reload();
+        if (destination) window.location.assign(destination);
+        else window.location.reload();
         return;
       }
       restartControllerRef.current = null;
@@ -167,12 +170,14 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     restartControllerRef.current = null;
 
     let restartAfterMs = DEFAULT_RESTART_DELAY_MS;
+    let homeBoardName: string | null = null;
     try {
       const formData = new FormData();
       formData.append("file", file);
       const response = await fetch("/api/backup/import", { method: "POST", body: formData });
       const data = (await response.json().catch(() => null)) as {
         error?: unknown;
+        homeBoardName?: unknown;
         restartAfterMs?: unknown;
       } | null;
 
@@ -190,6 +195,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
       ) {
         restartAfterMs = data.restartAfterMs;
       }
+      if (typeof data?.homeBoardName === "string") homeBoardName = data.homeBoardName;
     } catch {
       setImportError(t("failed.title"));
       setStep("error");
@@ -197,8 +203,10 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
     }
 
     onRestoreComplete?.();
-    startReadinessCheck(restartAfterMs);
-  }, [file, onRestoreComplete, startReadinessCheck, t]);
+    const destination =
+      variant === "standalone" && homeBoardName ? `/boards/${encodeURIComponent(homeBoardName)}` : null;
+    startReadinessCheck(restartAfterMs, destination);
+  }, [file, onRestoreComplete, startReadinessCheck, t, variant]);
 
   if (step === "upload") {
     return (
@@ -243,19 +251,19 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
   if (step === "preview") {
     return (
       <Stack gap="md">
-        <Group justify="space-between">
-          <Group gap="sm">
+        <Group justify="space-between" wrap="nowrap">
+          <Group gap="sm" wrap="nowrap" miw={0}>
             <IconFileZip size={20} />
-            <div>
-              <Text size="sm" fw={500}>
+            <div style={{ minWidth: 0 }}>
+              <Text size="sm" fw={500} truncate>
                 {file?.name}
               </Text>
-              <Text size="xs" c="dimmed">
+              <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
                 {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : ""}
               </Text>
             </div>
           </Group>
-          <Button variant="subtle" size="xs" onClick={handleClear}>
+          <Button variant="subtle" size="xs" onClick={handleClear} style={{ flexShrink: 0 }}>
             {t("changeFile")}
           </Button>
         </Group>
@@ -281,8 +289,11 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
           <>
             <BackupPreviewPanel analysis={analysis} />
             <Group justify="flex-end">
-              <Button rightSection={<IconArrowRight size={16} />} onClick={() => setStep("confirm")}>
-                {t("continueToRestore")}
+              <Button
+                rightSection={<IconArrowRight size={16} />}
+                onClick={() => (variant === "standalone" ? void handleConfirm() : setStep("confirm"))}
+              >
+                {variant === "standalone" ? t("confirm.submit") : t("continueToRestore")}
               </Button>
             </Group>
           </>

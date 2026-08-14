@@ -128,7 +128,11 @@ describe("POST /api/backup/import", () => {
     const response = await POST(createImportRequest(backup));
 
     expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toMatchObject({ success: true, restartAfterMs: 500 });
+    await expect(response.json()).resolves.toMatchObject({
+      success: true,
+      restartAfterMs: 500,
+      homeBoardName: "Restored board",
+    });
     expect(readBoardNames(activeDatabasePath)).toEqual(["Restored board"]);
   });
 

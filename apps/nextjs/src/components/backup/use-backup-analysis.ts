@@ -9,6 +9,8 @@ import type { BackupAnalysis, MigrationFile, MigrationStatus } from "./types";
 import { PREVIEW_TABLE_KEYS } from "./types";
 
 const DRIZZLE_MIGRATIONS_TABLE = "__drizzle_migrations";
+const MIGRATION_PREVIEW_DELAY_MS = 250;
+const MIGRATION_COMPLETE_DELAY_MS = 100;
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -120,7 +122,7 @@ export const useBackupAnalysis = () => {
                 phase: "applying",
               });
 
-              await delay(100);
+              await delay(MIGRATION_PREVIEW_DELAY_MS);
 
               try {
                 const statements = migration.sql
@@ -158,7 +160,7 @@ export const useBackupAnalysis = () => {
               });
               sounds.success();
 
-              await delay(50);
+              await delay(MIGRATION_COMPLETE_DELAY_MS);
             }
           }
 
