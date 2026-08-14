@@ -1,0 +1,21 @@
+packages/integrations/src/truenas/truenas-integration.ts
+  s_944c8ca4ab9f73::t_8bab7ccc5269ee 125
+packages/integrations/src/truenas/test/truenas-integration.spec.ts
+  s_944c8ca4ab9f73::t_66e629a951c11a 202-213
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "5488bf4d18dad837a6efc716a33e438dbad8c667",
+  "prompts": {},
+  "sessions": {
+    "s_944c8ca4ab9f73": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ffd64903affegjyEe7OLQaohwl",
+        "model": "google/gemini-3.7-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
