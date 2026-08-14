@@ -2,11 +2,11 @@
   position: absolute;
   left: 10px;
   right: 10px;
-  top: 10px;
+  top: 0;
   z-index: 200;
   pointer-events: none;
   opacity: 0;
-  transform: translateY(-6px);
+  transform: translateY(calc(-100% - 2px));
   transition:
     opacity 150ms ease,
     transform 150ms ease;
@@ -15,7 +15,7 @@
 :global([data-type="item"]:not([data-kind="app"]):hover) .wrapper,
 :global([data-type="item"]:not([data-kind="app"]):focus-within) .wrapper {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(calc(-100% - 8px));
 }
 
 .panel {
@@ -31,7 +31,7 @@
   align-items: center;
   gap: 8px;
   min-height: 28px;
-  padding: 4px 36px 4px 8px;
+  padding: 4px 8px;
   border: 1px solid var(--border-color);
   border-radius: var(--mantine-radius-md);
   background-color: var(--background-color);
@@ -122,5 +122,11 @@
 @media (max-width: 768px) {
   .wrapper {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper {
+    transition: none;
   }
 }

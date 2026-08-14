@@ -10,6 +10,8 @@ import {
   apps,
   boardUserPermissions,
   boards,
+  integrationItems,
+  integrations,
   itemLayouts,
   items,
   layouts,
@@ -253,6 +255,56 @@ describe("Board advanced interactions", () => {
     }
   }, 60_000);
 
+  test("keeps media streams inside the widget and edit metadata above it", async () => {
+    const { context, page } = await openBoardAsync(browser, baseUrl, ownerCredentials);
+
+    try {
+      const mediaWidget = page.locator("[data-grid-item-id][data-kind='mediaServer']").first();
+      await expect(mediaWidget.getByText("Interstellar")).toBeVisible({ timeout: 15_000 });
+
+      const geometry = await mediaWidget.evaluate((element) => {
+        const card = element.querySelector<HTMLElement>("[data-grid-item-content]");
+        const paper = element.querySelector<HTMLElement>(".mrt-table-paper");
+        const container = element.querySelector<HTMLElement>(".mrt-table-container");
+        if (!card || !paper || !container) throw new Error("Media stream table did not render");
+
+        const cardBounds = card.getBoundingClientRect();
+        const paperBounds = paper.getBoundingClientRect();
+        const containerBounds = container.getBoundingClientRect();
+
+        return {
+          card: { top: cardBounds.top, bottom: cardBounds.bottom },
+          paper: { top: paperBounds.top, bottom: paperBounds.bottom },
+          container: { bottom: containerBounds.bottom },
+          paperOverflow: getComputedStyle(paper).overflow,
+          containerOverflowY: getComputedStyle(container).overflowY,
+        };
+      });
+
+      expect(geometry.paper.top).toBeGreaterThanOrEqual(geometry.card.top - 1);
+      expect(geometry.paper.bottom).toBeLessThanOrEqual(geometry.card.bottom + 1);
+      expect(geometry.container.bottom).toBeLessThanOrEqual(geometry.card.bottom + 1);
+      expect(geometry.paperOverflow).toBe("hidden");
+      expect(geometry.containerOverflowY).toBe("auto");
+
+      const editToggle = page.getByTestId("board-edit-mode-toggle");
+      await editToggle.click();
+      await expect(editToggle).toHaveAttribute("aria-pressed", "true", { timeout: 15_000 });
+
+      const mediaEntry = page.locator(".board-grid-entry:has([data-kind='mediaServer'])").first();
+      const hoverHeader = mediaEntry.locator("[data-board-widget-header]");
+      await mediaEntry.hover();
+      await expect(hoverHeader).toBeVisible();
+
+      const entryBounds = await mediaEntry.boundingBox();
+      const headerBounds = await hoverHeader.boundingBox();
+      if (!entryBounds || !headerBounds) throw new Error("Media widget hover header has no bounds");
+      expect(headerBounds.y + headerBounds.height).toBeLessThanOrEqual(entryBounds.y - 2);
+    } finally {
+      await context.close();
+    }
+  }, 60_000);
+
   test("keeps compact-only iframe state and dismisses retained focus when a responsive layout remounts", async () => {
     const { context, page } = await openBoardAsync(browser, baseUrl, ownerCredentials);
 
@@ -379,6 +431,8 @@ const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) =>
   const bookmarksItemId = createId();
   const iframeItemId = createId();
   const appItemId = createId();
+  const mediaServerItemId = createId();
+  const integrationId = createId();
   const appId = createId();
 
   await db.insert(boards).values({ id: boardId, name: boardName, creatorId: ownerId, isPublic: false });
@@ -387,6 +441,13 @@ const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) =>
     name: "Example app",
     iconUrl: "/favicon.ico",
     href: "https://example.com",
+  });
+  await db.insert(integrations).values({
+    id: integrationId,
+    name: "Demo Integration",
+    url: "https://demo.homarr.dev",
+    kind: "mock",
+    appId: null,
   });
   await db.insert(layouts).values([
     { id: baseLayoutId, name: "Base", columnCount: 12, breakpoint: 0, boardId },
@@ -431,7 +492,15 @@ const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) =>
       options: stringify({ appId, openInNewTab: true, showTitle: true, pingEnabled: false }),
       advancedOptions: stringify({ title: null, customCssClasses: [], borderColor: "" }),
     },
+    {
+      id: mediaServerItemId,
+      kind: "mediaServer",
+      boardId,
+      options: stringify({ showOnlyPlaying: true, showBitrate: true, showLocation: true }),
+      advancedOptions: stringify({ title: null, customCssClasses: [], borderColor: "" }),
+    },
   ]);
+  await db.insert(integrationItems).values({ itemId: mediaServerItemId, integrationId });
   await db.insert(itemLayouts).values(
     [baseLayoutId, desktopLayoutId].flatMap((layoutId) => [
       {
@@ -468,6 +537,15 @@ const seedInteractionBoardAsync = async (db: SqliteDatabase, ownerId: string) =>
         xOffset: 4,
         yOffset: 0,
         width: 3,
+        height: 3,
+      },
+      {
+        itemId: mediaServerItemId,
+        sectionId,
+        layoutId,
+        xOffset: 4,
+        yOffset: 3,
+        width: 8,
         height: 3,
       },
     ]),

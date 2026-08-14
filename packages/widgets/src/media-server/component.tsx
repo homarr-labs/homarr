@@ -44,6 +44,11 @@ type TranscodingDecision = NonNullable<NonNullable<StreamSession["currentlyPlayi
 
 type PlaybackStatus = "directPlay" | "directStream" | "transcodeVideo" | "transcodeAudio" | "transcoding";
 
+export const getMediaServerColumnVisibility = (width: number, isAdvanced: boolean) => ({
+  user: isAdvanced || width >= 300,
+  status: isAdvanced || width >= 420,
+});
+
 function getPlaybackStatus(transcoding: TranscodingDecision | undefined): PlaybackStatus {
   if (!transcoding) return "directPlay";
   const { isVideoDirect, isAudioDirect, containerChanged } = transcoding;
@@ -89,33 +94,30 @@ export default function MediaServerWidget({
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
   const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(() => {
     const result: MRT_ColumnDef<StreamSession>[] = [
-      ...(width >= 300 || isAdvanced
-        ? [
-            {
-              accessorKey: "user.username",
-              header: t("items.user"),
-              size: 160,
+      {
+        id: "user",
+        accessorFn: (session) => session.user?.username,
+        header: t("items.user"),
+        size: 160,
 
-              Cell: ({ row }) => (
-                <Group gap="xs" wrap="nowrap">
-                  <Avatar size={28} src={row.original.user?.profilePictureUrl} />
-                  <Stack gap={0} style={{ minWidth: 0 }}>
-                    <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {row.original.user?.username ?? t("items.unknownUser")}
-                    </Text>
-                    <Text
-                      size="10px"
-                      c="dimmed"
-                      style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-                    >
-                      {row.original.sessionName}
-                    </Text>
-                  </Stack>
-                </Group>
-              ),
-            } satisfies MRT_ColumnDef<StreamSession>,
-          ]
-        : []),
+        Cell: ({ row }) => (
+          <Group gap="xs" wrap="nowrap">
+            <Avatar size={28} src={row.original.user?.profilePictureUrl} />
+            <Stack gap={0} style={{ minWidth: 0 }}>
+              <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {row.original.user?.username ?? t("items.unknownUser")}
+              </Text>
+              <Text
+                size="10px"
+                c="dimmed"
+                style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+              >
+                {row.original.sessionName}
+              </Text>
+            </Stack>
+          </Group>
+        ),
+      },
       {
         accessorKey: "currentlyPlaying", // currentlyPlaying.name can be undefined which results in a warning. This is why we use currentlyPlaying instead of currentlyPlaying.name
         header: t("items.currentlyPlaying"),
@@ -132,52 +134,50 @@ export default function MediaServerWidget({
           );
         },
       } satisfies MRT_ColumnDef<StreamSession>,
-      ...(width >= 420 || isAdvanced
-        ? [
-            {
-              id: "status",
-              header: t("items.status"),
-              size: 110,
+      {
+        id: "status",
+        header: t("items.status"),
+        size: 110,
 
-              Cell: ({ row }) => {
-                const currentlyPlaying = row.original.currentlyPlaying;
-                if (!currentlyPlaying) return null;
+        Cell: ({ row }) => {
+          const currentlyPlaying = row.original.currentlyPlaying;
+          if (!currentlyPlaying) return null;
 
-                const status = getPlaybackStatus(currentlyPlaying.metadata?.transcoding);
-                const location = showLocation ? currentlyPlaying.location : null;
-                const bitrateLabel = showBitrate ? formatBitrate(currentlyPlaying.metadata?.bitrateKbps) : null;
+          const status = getPlaybackStatus(currentlyPlaying.metadata?.transcoding);
+          const location = showLocation ? currentlyPlaying.location : null;
+          const bitrateLabel = showBitrate ? formatBitrate(currentlyPlaying.metadata?.bitrateKbps) : null;
 
-                return (
-                  <Stack gap={4} align="flex-start">
-                    <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
-                      {t(`items.${status}` as never)}
-                    </Badge>
-                    {(location ?? bitrateLabel) && (
-                      <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
-                        <Group gap={4} align="center">
-                          {location && (location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />)}
-                          {location && (
-                            <Text size="10px" c="dimmed" tt="uppercase">
-                              {location}
-                            </Text>
-                          )}
-                        </Group>
-                        {bitrateLabel && (
-                          <Text size="10px" c="dimmed">
-                            {bitrateLabel}
-                          </Text>
-                        )}
-                      </Group>
+          return (
+            <Stack gap={4} align="flex-start">
+              <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
+                {t(`items.${status}` as never)}
+              </Badge>
+              {(location ?? bitrateLabel) && (
+                <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                  <Group gap={4} align="center">
+                    {location && (location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />)}
+                    {location && (
+                      <Text size="10px" c="dimmed" tt="uppercase">
+                        {location}
+                      </Text>
                     )}
-                  </Stack>
-                );
-              },
-            } satisfies MRT_ColumnDef<StreamSession>,
-          ]
-        : []),
+                  </Group>
+                  {bitrateLabel && (
+                    <Text size="10px" c="dimmed">
+                      {bitrateLabel}
+                    </Text>
+                  )}
+                </Group>
+              )}
+            </Stack>
+          );
+        },
+      },
     ];
     return result;
-  }, [isAdvanced, selectedRowId, showBitrate, showLocation, t, width]);
+  }, [selectedRowId, showBitrate, showLocation, t]);
+
+  const columnVisibility = getMediaServerColumnVisibility(width, isAdvanced);
 
   // Only render the flat list of sessions when the currentStreams change
   // Otherwise it will always create a new array reference and cause the table to re-render
@@ -214,6 +214,9 @@ export default function MediaServerWidget({
     enableColumnPinning: false,
     initialState: {
       density: "xs",
+    },
+    state: {
+      columnVisibility,
     },
     mantineTableHeadProps: {
       fz: "xs",

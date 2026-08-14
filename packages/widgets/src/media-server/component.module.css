@@ -6,8 +6,10 @@
 
 .tablePaper {
   display: flex;
+  flex: 1 1 0;
   flex-direction: column;
   width: 100%;
+  max-height: 100%;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
@@ -15,6 +17,8 @@
 
 .tableContainer {
   flex: 1;
+  height: 100%;
+  max-height: 100%;
   min-height: 0;
 }
 
