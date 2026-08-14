@@ -34,8 +34,10 @@ Images built by this CLI record their source checkout, revision, and optional pu
 ## Run images
 
 ```bash
+homarr --pr <number> --env HOMARR_WEBSITE_URL=https://app-v2.preview.homarr.dev/
 homarr run <name>
 homarr run --pr <number>
 ```
 
-Add `--detach` to run in the background, `--demo` to enable demo data, or repeat `--env KEY=VALUE` to provide additional environment variables.
+The direct `homarr --pr <number>` form is shorthand for `homarr run --pr <number>`. Add `--detach` to run in the
+background, `--demo` to enable demo data, or repeat `--env KEY=VALUE` to provide additional environment variables.

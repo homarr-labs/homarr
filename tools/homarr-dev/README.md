@@ -31,6 +31,7 @@ Checkout builds are tagged as `homarr:<name>`. The source checkout and revision 
 ## Launch
 
 ```sh
+homarr --pr 6441 --env WORKSHOP_WEB_URL=https://app-v2.preview.homarr.dev/
 pnpm dev:cli -- run dev
 pnpm dev:cli -- run --detach dev
 pnpm dev:cli -- run --pr 6441
@@ -39,6 +40,8 @@ pnpm dev:cli -- run --env FOO=bar --env FEATURE=true dev
 ```
 
 PR launches always pull the latest GHCR tag before starting. Local tags remain local.
+The installed binary accepts `--pr`, `--demo`, `--detach`, and repeatable `--env KEY=VALUE` flags directly, so
+`homarr --pr <number> --env KEY=VALUE` is shorthand for `homarr run --pr <number> --env KEY=VALUE`.
 The first launch generates a per-user encryption key in the OS config directory and reuses it for later launches. Set `HOMARR_DEV_SECRET_ENCRYPTION_KEY` to a 64-character hexadecimal key to override it.
 
 The command reference below assumes the optional `homarr` installation. Without it, prefix each command with `pnpm dev:cli --` (for example, `pnpm dev:cli -- dev`).
@@ -47,6 +50,7 @@ The command reference below assumes the optional `homarr` installation. Without 
 
 ```text
 homarr                     Interactive local and remote image browser
+homarr --pr <number>       Pull and launch a PR image, with optional --env overrides
 homarr dev                 Explicit alias for the main browser
 homarr dash                Start on the instance dashboard
 homarr build <name>        Build this checkout as homarr:<name>

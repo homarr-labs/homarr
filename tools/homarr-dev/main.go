@@ -21,6 +21,7 @@ var (
 	flagDetach  bool
 	flagBuildPR int
 	runMain     = tui.RunDev
+	runRootMain = runLaunch
 )
 
 func main() {
@@ -39,6 +40,8 @@ Start a local image, a PR test build from ghcr.io, browse open PRs,
 or manage running instances from an interactive dashboard.
 
 Examples:
+  homarr --pr 6390              # launch remote PR test image directly
+  homarr --pr 6390 -e FOO=bar   # PR image with environment overrides
   homarr run dev                # launch local homarr:dev image
   homarr run --pr 6390          # launch remote PR test image
   homarr run --pr 6390 --demo   # PR + demo mode
@@ -52,9 +55,7 @@ Examples:
   homarr logs homarr_pr_6390    # follow logs
   homarr doctor                 # check Docker and optional integrations`,
 	Args: cobra.NoArgs,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return runMain()
-	},
+	RunE: runRoot,
 }
 
 var dashCmd = &cobra.Command{
@@ -240,13 +241,27 @@ var doctorCmd = &cobra.Command{
 }
 
 func init() {
-	runCmd.Flags().BoolVarP(&flagDemo, "demo", "m", false, "Demo mode (mock integrations)")
-	runCmd.Flags().IntVarP(&flagPR, "pr", "p", 0, "Launch PR test image from ghcr.io")
-	runCmd.Flags().StringArrayVarP(&flagEnv, "env", "e", nil, "Extra env vars (repeatable, KEY=VALUE)")
-	runCmd.Flags().BoolVar(&flagDetach, "detach", false, "Start in the background")
+	addRunFlags(rootCmd)
+	addRunFlags(runCmd)
 	buildCmd.Flags().IntVarP(&flagBuildPR, "pr", "p", 0, "Build a pull request in a temporary checkout")
 
 	rootCmd.AddCommand(runCmd, dashCmd, devCmd, buildCmd, rebuildCmd, listCmd, logsCmd, stopCmd, restartCmd, removeCmd, openCmd, doctorCmd)
+}
+
+func addRunFlags(cmd *cobra.Command) {
+	cmd.Flags().BoolVarP(&flagDemo, "demo", "m", false, "Demo mode (mock integrations)")
+	cmd.Flags().IntVarP(&flagPR, "pr", "p", 0, "Launch PR test image from ghcr.io")
+	cmd.Flags().StringArrayVarP(&flagEnv, "env", "e", nil, "Extra env vars (repeatable, KEY=VALUE)")
+	cmd.Flags().BoolVar(&flagDetach, "detach", false, "Start in the background")
+}
+
+func runRoot(cmd *cobra.Command, args []string) error {
+	for _, name := range []string{"pr", "env", "demo", "detach"} {
+		if cmd.Flags().Changed(name) {
+			return runRootMain(cmd, args)
+		}
+	}
+	return runMain()
 }
 
 func runLaunch(cmd *cobra.Command, args []string) error {

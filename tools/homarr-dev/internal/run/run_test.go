@@ -33,6 +33,24 @@ func TestBuildPlanFailsWhenNoPortIsAvailable(t *testing.T) {
 	}
 }
 
+func TestBuildPlanPreservesEnvironmentOverrides(t *testing.T) {
+	want := []string{
+		"WORKSHOP_WEB_URL=https://app-v2.preview.homarr.dev/",
+		"FEATURE_OPTIONS=one=two",
+	}
+	plan, err := BuildPlan(Options{
+		PR:       1,
+		Env:      want,
+		FindPort: func(int) int { return 7575 },
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !slices.Equal(plan.Env, want) {
+		t.Fatalf("environment = %v, want %v", plan.Env, want)
+	}
+}
+
 func TestStartPRIntegration(t *testing.T) {
 	if os.Getenv("HOMARR_DOCKER_INTEGRATION_TEST") != "1" {
 		t.Skip("set HOMARR_DOCKER_INTEGRATION_TEST=1 and HOMARR_TEST_PR=<number>")

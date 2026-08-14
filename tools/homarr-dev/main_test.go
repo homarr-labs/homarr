@@ -4,6 +4,8 @@ import (
 	"errors"
 	"strings"
 	"testing"
+
+	"github.com/spf13/cobra"
 )
 
 func TestRootCommandLaunchesDevelopmentDashboard(t *testing.T) {
@@ -12,7 +14,25 @@ func TestRootCommandLaunchesDevelopmentDashboard(t *testing.T) {
 	t.Cleanup(func() { runMain = previous })
 	runMain = func() error { return want }
 
-	if err := rootCmd.RunE(rootCmd, nil); !errors.Is(err, want) {
+	cmd := &cobra.Command{}
+	if err := runRoot(cmd, nil); !errors.Is(err, want) {
+		t.Fatalf("root command error = %v", err)
+	}
+}
+
+func TestRootCommandLaunchesPRWhenRunFlagIsProvided(t *testing.T) {
+	want := errors.New("PR launched")
+	previous := runRootMain
+	t.Cleanup(func() { runRootMain = previous })
+	runRootMain = func(cmd *cobra.Command, args []string) error { return want }
+
+	cmd := &cobra.Command{}
+	cmd.Flags().Bool("pr", false, "")
+	if err := cmd.Flags().Set("pr", "true"); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := runRoot(cmd, nil); !errors.Is(err, want) {
 		t.Fatalf("root command error = %v", err)
 	}
 }
