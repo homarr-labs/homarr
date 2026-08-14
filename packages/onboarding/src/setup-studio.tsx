@@ -434,9 +434,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       }
       const draftsToApply = drafts.filter(isIntegrationDraftComplete);
       const appsToCreate = discoveredApps.filter((app) => selectedAppIds.includes(app.sourceId));
-      const appWithoutAddress = appsToCreate.find(
-        (app) => (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0,
-      );
+      const appWithoutAddress = appsToCreate.find((app) => (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0);
       if (appWithoutAddress) {
         const message = t("connect.appAddressRequired", { name: appWithoutAddress.containerName });
         setAppError(message);
