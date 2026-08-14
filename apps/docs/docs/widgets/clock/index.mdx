@@ -15,8 +15,6 @@ import { clockWidget } from ".";
 
 The clock widget displays the current date and time in a customizable format.
 
-Advanced view always exposes seconds, the full date, timezone and UTC offset. When weather is enabled, it also shows the configured location, conditions, today's high/low and humidity, wind, sunrise, and sunset from the same cached forecast.
-
 ### Screenshots
 
 import localClock from "./img/local.png";
@@ -29,7 +27,7 @@ import tokyoClock from "./img/tokyo-12-hour.png";
   <img src={tokyoClock} alt="clock format-12-hours timezone-tokyo" width={256} height={128} />
 </div>
 
-<WidgetInteractionGuide />
+<WidgetInteractionGuide advancedView={false} />
 
 ### Adding the widget
 
