@@ -128,7 +128,10 @@ export function HermesAgentInstanceCard({ instance, width, height, options }: He
     overview.summary.sessionsLast24HoursHasMore,
     t("unknownShort"),
   );
-  const sessionsValue = `${activeSessionsValue}/${sessionsLast24HoursValue}`;
+  const sessionsValue =
+    activeSessions == null && sessionsLast24Hours == null
+      ? t("unknownShort")
+      : `${activeSessionsValue}/${sessionsLast24HoursValue}`;
   const agentsValue =
     totalAgents === null ? overview.summary.activeAgents : `${overview.summary.activeAgents}/${totalAgents}`;
   const updateValue = !overview.update

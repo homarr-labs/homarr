@@ -404,6 +404,9 @@ describe("HermesAgentIntegration", () => {
         headers: expect.objectContaining({ Authorization: `Bearer ${TEST_API_KEY}` }),
       }),
     );
+    for (const [, options] of mockFetchWithTrustedCertificates.mock.calls) {
+      expect(options).toEqual(expect.objectContaining({ timeout: 10_000 }));
+    }
     const sessionsUrl = mockFetchWithTrustedCertificates.mock.calls
       .map(([url]) => getRequestUrl(url))
       .find((url) => url.pathname === "/api/sessions");
@@ -962,6 +965,13 @@ describe("HermesAgentIntegration", () => {
       releaseUrl: "https://github.com/NousResearch/hermes-agent",
     });
     expect(compareCalls).toBe(0);
+    const githubRequests = mockFetchWithTrustedCertificates.mock.calls.filter(
+      ([url]) => getRequestUrl(url).hostname === "api.github.com",
+    );
+    expect(githubRequests).not.toHaveLength(0);
+    for (const [, options] of githubRequests) {
+      expect(options).toEqual(expect.objectContaining({ timeout: 10_000 }));
+    }
   });
 
   test("getOverviewAsync ignores an invalid local release tag before calling GitHub", async () => {

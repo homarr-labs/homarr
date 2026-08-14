@@ -41,6 +41,7 @@ const githubHeaders = {
 
 const githubUpdateCacheDurationMs = 60 * 60 * 1000;
 const githubUpdateCacheMaxEntries = 32;
+const requestTimeoutMs = 10_000;
 const sessionFetchLimit = 100;
 const dashboardProfileRequestConcurrency = 4;
 const githubUpdateCache = new Map<
@@ -375,7 +376,7 @@ export class HermesAgentIntegration extends Integration {
     const currentReleaseTag = currentReleaseTagResult.data;
     const latestReleaseResponse = await fetchWithTrustedCertificatesAsync(
       new URL("https://api.github.com/repos/NousResearch/hermes-agent/releases/latest"),
-      { headers: githubHeaders },
+      { headers: githubHeaders, timeout: requestTimeoutMs },
     );
 
     if (!latestReleaseResponse.ok) {
@@ -400,7 +401,7 @@ export class HermesAgentIntegration extends Integration {
       new URL(
         `https://api.github.com/repos/NousResearch/hermes-agent/compare/${encodeURIComponent(currentReleaseTag)}...${encodeURIComponent(latestRelease.tag_name)}`,
       ),
-      { headers: githubHeaders },
+      { headers: githubHeaders, timeout: requestTimeoutMs },
     );
     if (!compareResponse.ok) return null;
 
@@ -419,6 +420,7 @@ export class HermesAgentIntegration extends Integration {
   private async getDashboardSessionTokenAsync() {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/"), {
       headers: { Accept: "text/html" },
+      timeout: requestTimeoutMs,
     });
 
     if (!response.ok) return null;
@@ -430,6 +432,7 @@ export class HermesAgentIntegration extends Integration {
   private async isApiServerAsync() {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/health"), {
       headers: { Accept: "application/json" },
+      timeout: requestTimeoutMs,
     });
     if (!response.ok) return false;
 
@@ -449,6 +452,7 @@ export class HermesAgentIntegration extends Integration {
         ...(includeAuth ? this.getAuthHeaders() : { Accept: "application/json" }),
         ...headers,
       },
+      timeout: requestTimeoutMs,
     });
 
     if (!response.ok) {

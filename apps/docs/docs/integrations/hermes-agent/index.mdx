@@ -26,7 +26,7 @@ Homarr can connect to either the Hermes Agent API server or its web dashboard. U
 ### Connection modes
 
 - **API server (recommended):** use `http://<hermes-host>:8642` with an API key for complete widget data.
-- **Web dashboard:** use `http://<hermes-host>:9119` without credentials for public status and any details exposed by the dashboard session API.
+- **Web dashboard (limited):** use `http://<hermes-host>:9119` without credentials only when Homarr can reach a dashboard that exposes the token-based session flow. Interactive password, OAuth, and session-cookie login are not supported.
 
 :::info URL configuration
 Enter the root URL without `/v1`. In a container, `127.0.0.1` refers to the Homarr container, not the Hermes Agent host.
@@ -51,7 +51,7 @@ Use a strong key and restrict port `8642` to a trusted network, firewall rule, o
 
 #### Web dashboard compatibility
 
-Select the credential option without an API key. Protected dashboard details are unavailable because Homarr does not perform an interactive login. The dashboard listens on loopback by default; follow the [Hermes Agent dashboard documentation](https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard) before exposing it to Homarr.
+Homarr reads the ephemeral session token embedded in the dashboard HTML; it does not perform an interactive login or retain authenticated session cookies. A non-loopback dashboard protected by the Hermes auth gate therefore cannot be connected directly. For remote or container deployments, use the API server, or provide a trusted endpoint that securely forwards the dashboard's loopback/token-based flow. Follow the [Hermes Agent dashboard documentation](https://hermes-agent.nousresearch.com/docs/user-guide/features/web-dashboard) and do not expose an unauthenticated dashboard publicly.
 
 ### Secrets
 
@@ -63,7 +63,9 @@ Select the credential option without an API key. Protected dashboard details are
     },
     {
       credentials: [],
-      steps: ["Use this option only with the web dashboard URL, for example http://hermes-host:9119."],
+      steps: [
+        "Use this option only for a reachable web dashboard that exposes the loopback/token-based session flow. Interactive session-cookie authentication is not supported.",
+      ],
     },
   ]}
 />

@@ -1,6 +1,6 @@
 "use client";
 
-import { Paper, Stack, Text } from "@mantine/core";
+import { Center, Loader, Paper, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -44,10 +44,26 @@ interface HermesAgentContentProps {
 
 function HermesAgentContent({ options, integrationIds, width, height, isEditMode }: HermesAgentContentProps) {
   const t = useScopedI18n("widget.hermesAgent");
-  const [instances] = clientApi.widget.hermesAgent.getOverviews.useSuspenseQuery(
+  const {
+    data: instances,
+    isError,
+    isPending,
+  } = clientApi.widget.hermesAgent.getOverviews.useQuery(
     { integrationIds },
     isEditMode ? { refetchInterval: false } : {},
   );
+
+  if (isPending) {
+    return (
+      <Center h="100%">
+        <Loader size="sm" />
+      </Center>
+    );
+  }
+
+  if (isError || !instances) {
+    return <HermesAgentErrorCard height={height} message={t("error.internalServerError")} />;
+  }
 
   const estimatedCardHeight = Math.floor(height / Math.max(1, instances.length));
   const layoutMode = getLayoutMode(width, estimatedCardHeight);
