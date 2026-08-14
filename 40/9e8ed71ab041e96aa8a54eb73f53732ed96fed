@@ -1,0 +1,36 @@
+packages/onboarding/src/onboarding-auth-shell.tsx
+  s_ca2323b7f96e59::t_d16c3ee32d10e2 1-4,6-15,17-20,24-48
+  s_ca2323b7f96e59::t_f1136ced1aa250 5,21-23
+  s_ca2323b7f96e59::t_98f2982592acbf 16
+apps/docs/docs/management/users/index.mdx
+  s_ca2323b7f96e59::t_d16c3ee32d10e2 223-224
+apps/nextjs/src/app/[locale]/auth/login/page.tsx
+  s_ca2323b7f96e59::t_d16c3ee32d10e2 2,7,33-36,38-46
+  s_ca2323b7f96e59::t_98f2982592acbf 32
+packages/onboarding/src/account.tsx
+  s_ca2323b7f96e59::t_d16c3ee32d10e2 4,20,33-35
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_ca2323b7f96e59::t_f1136ced1aa250 14,174
+packages/onboarding/src/index.ts
+  s_ca2323b7f96e59::t_d16c3ee32d10e2 1
+apps/nextjs/src/app/[locale]/auth/invite/[id]/page.tsx
+  s_ca2323b7f96e59::t_d16c3ee32d10e2 2,8,51-59
+packages/onboarding/src/onboarding-studio.module.css
+  s_ca2323b7f96e59::t_d16c3ee32d10e2 132-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "409e8ed71ab041e96aa8a54eb73f53732ed96fed",
+  "prompts": {},
+  "sessions": {
+    "s_ca2323b7f96e59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5b-9d67-7470-9988-648d9d7016d2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
