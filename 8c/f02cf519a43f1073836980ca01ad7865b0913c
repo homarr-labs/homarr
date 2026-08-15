@@ -1,0 +1,19 @@
+paseo.json
+  s_9ad5eab74e1fdb::t_07d953e28613fe 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8cf02cf519a43f1073836980ca01ad7865b0913c",
+  "prompts": {},
+  "sessions": {
+    "s_9ad5eab74e1fdb": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ffb2afba8ffemUjY79nEWrhzH6",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
