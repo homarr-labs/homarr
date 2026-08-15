@@ -30,6 +30,7 @@
     "cookie": "catalog:",
     "dayjs": "catalog:",
     "next": "catalog:",
+    "node-fetch": "catalog:",
     "octokit": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

@@ -40,6 +40,7 @@
     "@jellyfin/sdk": "catalog:",
     "ical.js": "catalog:",
     "maria2": "catalog:",
+    "node-fetch": "catalog:",
     "octokit": "catalog:",
     "proxmox-api": "catalog:",
     "timezones-ical-library": "catalog:",
@@ -52,6 +53,7 @@
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-unifi": "catalog:",
+    "@types/node-fetch": "catalog:",
     "@types/ws": "catalog:",
     "@types/xml2js": "catalog:",
     "typescript": "catalog:"
