@@ -31,8 +31,14 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
 }: CommonWidgetInputProps<"sortableItemList">) => {
   const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
-  const initialValues = useMemo(() => initialOptions[property] as TOptionValue[], [initialOptions, property]);
-  const values = form.values.options[property] as TOptionValue[];
+  const fieldPath = `options.${property}`;
+  const initialValues = useMemo(
+    () =>
+      Array.isArray(initialOptions[property]) ? (initialOptions[property] as TOptionValue[]) : options.defaultValue,
+    [initialOptions, options.defaultValue, property],
+  );
+  const currentValue = form.values.options[property];
+  const values = Array.isArray(currentValue) ? (currentValue as TOptionValue[]) : options.defaultValue;
   const { data, isLoading, error } = options.useData(initialValues);
   const dataMap = useMemo(
     () => new Map(data?.map((item) => [options.uniqueIdentifier(item), item as TItem])),
@@ -53,6 +59,11 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
   const activeIndex = activeId ? getIndex(activeId) : -1;
 
   useEffect(() => {
+    if (Array.isArray(currentValue)) return;
+    form.setFieldValue(fieldPath, options.defaultValue);
+  }, [currentValue, fieldPath, form, options.defaultValue]);
+
+  useEffect(() => {
     if (!activeId) {
       isFirstAnnouncement.current = true;
     }
@@ -71,9 +82,9 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
 
   const updateItems = useCallback(
     (callback: (prev: TOptionValue[]) => TOptionValue[]) => {
-      form.setFieldValue(`options.${property}`, callback);
+      form.setFieldValue(fieldPath, callback);
     },
-    [form, property],
+    [fieldPath, form],
   );
 
   const addItem = (item: TItem) => {
@@ -82,12 +93,12 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
       next.set(options.uniqueIdentifier(item) as TOptionValue, item);
       return next;
     });
-    updateItems((values) => [...values, options.uniqueIdentifier(item) as TOptionValue]);
+    updateItems((currentValues) => [...currentValues, options.uniqueIdentifier(item) as TOptionValue]);
   };
 
   const removeItem = useCallback(
     (value: TOptionValue) => {
-      updateItems((values) => values.filter((candidate) => candidate !== value));
+      updateItems((currentValues) => currentValues.filter((candidate) => candidate !== value));
       setTempMap((previous) => {
         if (!previous.has(value)) return previous;
         const next = new Map(previous);

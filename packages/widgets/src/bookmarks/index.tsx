@@ -1,9 +1,11 @@
 import { ActionIcon, Avatar, Group, Stack, Text } from "@mantine/core";
 import { IconBookmark, IconX } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 
+import { getSafeAppHref } from "../common/application-url";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 import { BookmarkAddButton } from "./add-button";
@@ -27,7 +29,11 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
       hideHostname: factory.switch({ defaultValue: false }),
       openNewTab: factory.switch({ defaultValue: true }),
       withBorder: factory.switch({ defaultValue: false }),
-      items: factory.sortableItemList<RouterOutputs["app"]["all"][number], string>({
+      customUrls: factory.multiText({
+        validate: z.string().refine((value) => getSafeAppHref(value) !== undefined),
+        withDescription: true,
+      }),
+      items: factory.sortableItemList<RouterOutputs["app"]["selectable"][number], string>({
         ItemComponent: ({ item, handle, removeItem, rootAttributes }) => {
           return (
             <Group {...rootAttributes} tabIndex={0} justify="space-between" wrap="nowrap">
