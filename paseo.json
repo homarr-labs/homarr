@@ -11,10 +11,16 @@
       "type": "service",
       "command": "PORT=$PASEO_PORT pnpm -F nextjs dev"
     },
+    "docs": {
+      "type": "service",
+      "command": "pnpm -F @homarr/docs dev --port $PASEO_PORT"
+    },
+    "build": { "command": "pnpm build" },
     "test": { "command": "pnpm test" },
     "test:e2e": { "command": "pnpm test:e2e" },
     "lint": { "command": "pnpm lint" },
     "typecheck": { "command": "pnpm typecheck" },
+    "db:seed": { "command": "pnpm db:seed" },
     "db:studio": { "command": "pnpm db:studio" }
   }
 }
