@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { WidgetDefinition } from "@homarr/widgets/definition";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
+import { BoardRemoveConfirmationMenuItem } from "../remove-confirmation-menu-item";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
 import { useOpenItemMoveModal } from "./item-move-modal";
@@ -36,7 +37,6 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
   const t = useI18n();
   const { openModal } = useModalAction(LazyWidgetEditModal);
   const openMoveModal = useOpenItemMoveModal();
-  const { openConfirmModal } = useConfirmModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
     useItemActions();
@@ -95,16 +95,6 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
     );
   };
 
-  const openRemoveModal = () => {
-    openConfirmModal({
-      title: tItem("remove.title"),
-      children: tItem("remove.message"),
-      onConfirm: () => {
-        removeItem({ itemId: item.id });
-      },
-    });
-  };
-
   return (
     <Menu withinPortal position="right-start" arrowPosition="center" opened={isMenuOpen} onChange={setIsMenuOpen}>
       <Menu.Target>
@@ -123,7 +113,6 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
-        <Menu.Label>{tItem("menu.label.settings")}</Menu.Label>
         <Menu.Item
           leftSection={<IconPencil size={16} />}
           onClick={openEditModal}
@@ -149,10 +138,11 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
           </Menu.Item>
         )}
         <Menu.Divider />
-        <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
-        <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>
-          {tItem("action.remove")}
-        </Menu.Item>
+        <BoardRemoveConfirmationMenuItem
+          label={tItem("action.remove")}
+          confirmationLabel={tItem("remove.message")}
+          onConfirm={() => removeItem({ itemId: item.id })}
+        />
       </Menu.Dropdown>
     </Menu>
   );

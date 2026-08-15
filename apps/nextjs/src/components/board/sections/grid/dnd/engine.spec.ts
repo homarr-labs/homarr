@@ -22,7 +22,7 @@ interface TestPlacement {
   y: number;
   w: number;
   h: number;
-  kind: "container" | "item";
+  type: "section" | "item";
   marker?: string;
 }
 
@@ -32,8 +32,8 @@ const placement = (
   y: number,
   w = 1,
   h = 1,
-  kind: TestPlacement["kind"] = "item",
-): TestPlacement => ({ id, x, y, w, h, kind, marker: `metadata:${id}` });
+  type: TestPlacement["type"] = "item",
+): TestPlacement => ({ id, x, y, w, h, type, marker: `metadata:${id}` });
 
 const grid = (
   id: string,
@@ -302,6 +302,55 @@ describe("same-grid movement", () => {
     expect(getPlacement(moved.preview, "far")).toMatchObject({ x: 3, y: 8 });
   });
 
+  test("keeps a container fixed when an item is moved onto it", () => {
+    const original = state(grid("root", 4, [placement("active", 0, 0), placement("container", 1, 0, 2, 2, "section")]));
+    const moved = accept(
+      previewGridMove(beginGridTransaction(original, { activeId: "active" }), {
+        targetGridId: "root",
+        x: 1,
+        y: 0,
+      }),
+    );
+
+    expect(getPlacement(moved.preview, "container")).toMatchObject({ x: 1, y: 0, w: 2, h: 2 });
+    expect(getPlacement(moved.preview, "active")).toMatchObject({ x: 1, y: 2 });
+  });
+
+  test("lets an active container push an item", () => {
+    const original = state(
+      grid("root", 4, [placement("container", 0, 0, 2, 2, "section"), placement("item", 2, 0, 2)]),
+    );
+    const moved = accept(
+      previewGridMove(beginGridTransaction(original, { activeId: "container" }), {
+        targetGridId: "root",
+        x: 2,
+        y: 0,
+      }),
+    );
+
+    expect(getPlacement(moved.preview, "container")).toMatchObject({ x: 2, y: 0, w: 2, h: 2 });
+    expect(getPlacement(moved.preview, "item")).toMatchObject({ x: 0, y: 0 });
+  });
+
+  test("does not let an active container displace another container", () => {
+    const original = state(
+      grid("root", 4, [
+        placement("active-container", 0, 0, 2, 2, "section"),
+        placement("fixed-container", 2, 0, 2, 2, "section"),
+      ]),
+    );
+    const moved = accept(
+      previewGridMove(beginGridTransaction(original, { activeId: "active-container" }), {
+        targetGridId: "root",
+        x: 2,
+        y: 0,
+      }),
+    );
+
+    expect(getPlacement(moved.preview, "fixed-container")).toMatchObject({ x: 2, y: 0 });
+    expect(getPlacement(moved.preview, "active-container")).toMatchObject({ x: 2, y: 2 });
+  });
+
   test.each([
     { requested: { x: -20, y: -10 }, expected: { x: 0, y: 0 } },
     { requested: { x: 99, y: 99 }, expected: { x: 2, y: 3 } },
@@ -408,9 +457,26 @@ describe("cross-grid movement", () => {
     expect(getPlacement(second.preview, "second-neighbor")).toMatchObject({ x: 0, y: 1 });
   });
 
+  test("keeps a destination container fixed when an item enters its grid", () => {
+    const original = state(
+      grid("source", 4, [placement("active", 0, 0)]),
+      grid("target", 4, [placement("container", 1, 0, 2, 2, "section")]),
+    );
+    const moved = accept(
+      previewGridMove(beginGridTransaction(original, { activeId: "active" }), {
+        targetGridId: "target",
+        x: 1,
+        y: 0,
+      }),
+    );
+
+    expect(getPlacement(moved.preview, "container")).toMatchObject({ x: 1, y: 0, w: 2, h: 2 });
+    expect(getPlacement(moved.preview, "active")).toMatchObject({ x: 1, y: 2 });
+  });
+
   test("moves a container's owned grid with it and supports commit/cancel", () => {
     const original = state(
-      grid("source", 3, [placement("container", 0, 0, 2, 2, "container")]),
+      grid("source", 3, [placement("container", 0, 0, 2, 2, "section")]),
       grid("target", 3, []),
       grid("container-content", 2, [placement("child", 0, 0)], {
         parentGridId: "source",
@@ -421,7 +487,7 @@ describe("cross-grid movement", () => {
     const moved = accept(previewGridMove(transaction, { targetGridId: "target", x: 1, y: 2 }));
 
     expect(getGrid(moved.preview, "container-content").parentGridId).toBe("target");
-    expect(getPlacement(moved.preview, "container")).toMatchObject({ x: 1, y: 2, kind: "container" });
+    expect(getPlacement(moved.preview, "container")).toMatchObject({ x: 1, y: 2, type: "section" });
     expect(cancelGridTransaction(moved)).toEqual(original);
     expect(commitGridTransaction(moved)).toEqual(moved.preview);
     expect(commitGridTransaction(moved)).not.toBe(moved.preview);
@@ -429,8 +495,8 @@ describe("cross-grid movement", () => {
 
   test.each(["child", "grandchild"])("rejects a container move into its %s grid", (targetGridId) => {
     const original = state(
-      grid("root", 4, [placement("container", 0, 0, 2, 2, "container")]),
-      grid("child", 3, [placement("nested-container", 0, 0, 2, 2, "container")], {
+      grid("root", 4, [placement("container", 0, 0, 2, 2, "section")]),
+      grid("child", 3, [placement("nested-container", 0, 0, 2, 2, "section")], {
         parentGridId: "root",
         ownerPlacementId: "container",
       }),
