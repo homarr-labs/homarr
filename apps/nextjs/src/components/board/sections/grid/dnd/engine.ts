@@ -150,7 +150,8 @@ const previewSameGridMove = <TPlacement extends GridPlacement>(
   const collisions = grid.placements.filter(
     (placement) => placement.id !== active.id && doGridPlacementsOverlap(placement, nextActive),
   );
-  const displaced = collisions.length === 1 ? collisions[0] : undefined;
+  const displacedCandidate = collisions.length === 1 ? collisions[0] : undefined;
+  const displaced = displacedCandidate && !isContainerPlacement(displacedCandidate) ? displacedCandidate : undefined;
 
   const swapped = displaced
     ? grid.placements.map((placement) => {
@@ -209,8 +210,10 @@ const previewCrossGridMove = <TPlacement extends GridPlacement>(
 };
 
 /**
- * Pins the active placement, keeps every non-colliding item at its persisted
- * coordinates, and pushes only the deterministic collision chain downward.
+ * Keeps stationary containers fixed, resolves the active placement around
+ * those obstacles, and then pushes only the deterministic item collision chain
+ * downward. A container can still be the active placement and push items, but
+ * no active placement can displace another container.
  */
 export const resolvePinnedGridCollisions = <TPlacement extends GridPlacement>(
   placements: readonly TPlacement[],
@@ -223,8 +226,24 @@ export const resolvePinnedGridCollisions = <TPlacement extends GridPlacement>(
   const pinned = normalized.find((placement) => placement.id === pinnedPlacement.id);
   if (!pinned) throw new Error(`Pinned grid item "${pinnedPlacement.id}" does not exist`);
 
-  const placed: TPlacement[] = [pinned];
-  const candidates = normalized.filter((placement) => placement.id !== pinned.id).toSorted(comparePlacements);
+  const fixedContainers = normalized.filter(
+    (placement) => placement.id !== pinned.id && isContainerPlacement(placement),
+  );
+  const placed: TPlacement[] = [...fixedContainers];
+  let resolvedPinned = pinned;
+  for (;;) {
+    const collisions = placed.filter((placement) => doGridPlacementsOverlap(resolvedPinned, placement));
+    if (collisions.length === 0) break;
+    resolvedPinned = {
+      ...resolvedPinned,
+      y: Math.max(...collisions.map((placement) => placement.y + placement.h)),
+    };
+  }
+  placed.push(resolvedPinned);
+
+  const candidates = normalized
+    .filter((placement) => placement.id !== pinned.id && !isContainerPlacement(placement))
+    .toSorted(comparePlacements);
   for (const candidate of candidates) {
     let resolved = candidate;
     for (;;) {
@@ -244,6 +263,8 @@ export const resolvePinnedGridCollisions = <TPlacement extends GridPlacement>(
 
 const comparePlacements = (first: GridPlacement, second: GridPlacement) =>
   first.y - second.y || first.x - second.x || first.id.localeCompare(second.id);
+
+const isContainerPlacement = (placement: GridPlacement) => "type" in placement && placement.type === "section";
 
 const clampMovePlacement = <TPlacement extends GridPlacement>(
   placement: TPlacement,

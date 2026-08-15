@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   ActionIcon,
   Alert,
@@ -29,14 +29,26 @@ import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
-export const WidgetLocationInput = ({ property, kind }: CommonWidgetInputProps<"location">) => {
+export const WidgetLocationInput = ({ property, kind, options }: CommonWidgetInputProps<"location">) => {
   const t = useWidgetInputTranslation(kind, property);
   const tLocation = useScopedI18n("widget.common.location");
   const form = useFormContext();
   const { openModal } = useModalAction(LocationSearchModal);
-  const inputProps = form.getInputProps(`options.${property}`);
-  const value = inputProps.value as OptionLocation;
+  const fieldPath = `options.${property}`;
+  const inputProps = form.getInputProps(fieldPath);
+  const value = isOptionLocation(inputProps.value) ? inputProps.value : options.defaultValue;
+  const nameInputProps = form.getInputProps(`options.${property}.name`);
+  const latitudeInputProps = form.getInputProps(`options.${property}.latitude`);
+  const longitudeInputProps = form.getInputProps(`options.${property}.longitude`);
   const selectionEnabled = value.name.length > 1;
+  const initializedFieldPathRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (initializedFieldPathRef.current === fieldPath) return;
+    initializedFieldPathRef.current = fieldPath;
+    if (isOptionLocation(inputProps.value)) return;
+    form.setFieldValue(fieldPath, options.defaultValue);
+  }, [fieldPath, form, inputProps.value, options.defaultValue]);
 
   const handleChange = inputProps.onChange as LocationOnChange;
   const unknownLocation = tLocation("unknownLocation");
@@ -73,7 +85,12 @@ export const WidgetLocationInput = ({ property, kind }: CommonWidgetInputProps<"
     <Fieldset legend={t("label")}>
       <Stack gap="xs">
         <Group wrap="nowrap" align="end">
-          <TextInput w="100%" label={tLocation("query")} {...form.getInputProps(`options.${property}.name`)} />
+          <TextInput
+            w="100%"
+            label={tLocation("query")}
+            {...nameInputProps}
+            value={nameInputProps.value ?? value.name}
+          />
           <Tooltip hidden={selectionEnabled} label={tLocation("disabledTooltip")}>
             <div>
               <Button
@@ -93,19 +110,31 @@ export const WidgetLocationInput = ({ property, kind }: CommonWidgetInputProps<"
             decimalScale={5}
             label={tLocation("latitude")}
             hideControls
-            {...form.getInputProps(`options.${property}.latitude`)}
+            {...latitudeInputProps}
+            value={latitudeInputProps.value ?? value.latitude}
           />
           <NumberInput
             decimalScale={5}
             label={tLocation("longitude")}
             hideControls
-            {...form.getInputProps(`options.${property}.longitude`)}
+            {...longitudeInputProps}
+            value={longitudeInputProps.value ?? value.longitude}
           />
         </Group>
       </Stack>
     </Fieldset>
   );
 };
+
+const isOptionLocation = (value: unknown): value is OptionLocation =>
+  typeof value === "object" &&
+  value !== null &&
+  "name" in value &&
+  typeof value.name === "string" &&
+  "latitude" in value &&
+  typeof value.latitude === "number" &&
+  "longitude" in value &&
+  typeof value.longitude === "number";
 
 type LocationOnChange = (
   location: Pick<OptionLocation, "name"> & {

@@ -172,8 +172,10 @@ export const SectionGrid = ({
       <Box
         {...canvasAttributes}
         className={combineClasses(classes.viewport, className)}
-        w={logicalWidth}
-        h={`var(--board-grid-drag-height, ${logicalHeight}px)`}
+        style={{
+          width: logicalWidth,
+          height: `var(--board-grid-drag-height, ${logicalHeight}px)`,
+        }}
         data-section-id={section.id}
         data-section-kind={section.kind}
         data-rail-placement={railPlacement}

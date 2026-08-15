@@ -6,7 +6,7 @@ import type { WidgetOptionOfType, WidgetOptionType } from "../options";
 export interface CommonWidgetInputProps<TKey extends WidgetOptionType> {
   kind: WidgetKind;
   property: string;
-  options: Omit<WidgetOptionOfType<TKey>, "defaultValue" | "type">;
+  options: Omit<WidgetOptionOfType<TKey>, "type">;
   initialOptions: Record<string, unknown>;
   itemId?: string;
   boardId?: string;

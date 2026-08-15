@@ -75,14 +75,14 @@ export const ScaledBoardCanvas = ({
       data-canvas-initial-width={initialAvailableWidth}
       aria-label={label}
     >
-      <Box className={classes.sizer} w={visualWidth} h={resolvedLogicalHeight * scale}>
+      <Box className={classes.sizer} style={{ width: visualWidth, height: resolvedLogicalHeight * scale }}>
         <Box
           ref={canvasRef}
           className={classes.canvas}
-          w={logicalWidth}
           style={{
             "--board-canvas-inverse-scale": inverseScale,
             "--board-canvas-ui-scale": uiScale,
+            width: logicalWidth,
             zoom: scale,
           }}
         >

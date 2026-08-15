@@ -32,7 +32,11 @@ export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentif
   CommonInput<TOptionValue[]>,
   "withDescription"
 > {
-  AddButton: (props: { addItem: (item: TItem) => void; values: TOptionValue[] }) => React.ReactNode;
+  AddButton: (props: {
+    addItem: (item: TItem) => void;
+    removeItem: (value: TOptionValue) => void;
+    values: TOptionValue[];
+  }) => React.ReactNode;
   ItemComponent: (props: {
     item: TItem;
     removeItem: () => void;

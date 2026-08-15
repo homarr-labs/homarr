@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import type { GridTargetGeometry } from "./targeting";
-import { getPreferredNestedExitTargetId } from "./targeting";
+import { getGridTargetFallbackIds, getPreferredNestedExitTargetId } from "./targeting";
 
 const grid = (
   id: string,
@@ -64,5 +64,32 @@ describe("nested grid exit targeting", () => {
         isEligible: (gridId) => gridId !== "canvas",
       }),
     ).toBe("container");
+  });
+});
+
+describe("nested grid fallback targeting", () => {
+  const grids = [
+    grid("canvas", { left: 0, top: 0, width: 1200, height: 800 }),
+    grid("container", { left: 200, top: 100, width: 600, height: 500 }, "canvas"),
+  ];
+
+  test("falls back from a blocked container to its parent canvas", () => {
+    expect(
+      getGridTargetFallbackIds({
+        grids,
+        targetGridId: "container",
+        isEligible: alwaysEligible,
+      }),
+    ).toEqual(["container", "canvas"]);
+  });
+
+  test("does not cross an ineligible hierarchy boundary", () => {
+    expect(
+      getGridTargetFallbackIds({
+        grids,
+        targetGridId: "container",
+        isEligible: (gridId) => gridId !== "canvas",
+      }),
+    ).toEqual(["container"]);
   });
 });

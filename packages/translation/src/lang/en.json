@@ -2710,7 +2710,7 @@
     },
     "remove": {
       "title": "Remove item",
-      "message": "Are you sure you want to remove this item?"
+      "message": "Are you sure?"
     },
     "advancedFocus": {
       "open": "Open advanced view",
@@ -2807,9 +2807,16 @@
         "withBorder": {
           "label": "Show border"
         },
+        "customUrls": {
+          "label": "Custom links",
+          "description": "Add URLs directly without creating an App first"
+        },
         "items": {
           "label": "Bookmarks",
-          "add": "Add bookmark"
+          "apps": {
+            "label": "Apps",
+            "placeholder": "Select one or more apps"
+          }
         }
       }
     },

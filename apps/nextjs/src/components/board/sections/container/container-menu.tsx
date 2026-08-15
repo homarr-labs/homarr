@@ -1,28 +1,27 @@
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconArrowsMove, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconArrowsMove, IconLayoutKanban, IconPencil } from "@tabler/icons-react";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useModalAction } from "@homarr/modals";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
+import { BoardRemoveConfirmationMenuItem } from "../../remove-confirmation-menu-item";
 import { useOpenItemMoveModal } from "../../items/item-move-modal";
 import { useSectionContext } from "../section-context";
 import { useContainerActions } from "./container-actions";
 import { ContainerEditModal } from "./container-edit-modal";
 
 export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem }) => {
-  const t = useI18n();
   const tContainer = useScopedI18n("section.container");
   const tItem = useScopedI18n("item");
   const { openModal } = useModalAction(ContainerEditModal);
   const openMoveModal = useOpenItemMoveModal();
   const { updateContainer, removeContainer } = useContainerActions();
-  const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
   const { section: parentSection } = useSectionContext();
   const label = section.options.title || tContainer("action.create");
-  const menuRightOffset = parentSection.kind === "container" ? 44 : 4;
+  const menuLeftOffset = parentSection.kind === "container" ? 36 : 4;
 
   if (!isEditMode) return null;
 
@@ -30,14 +29,6 @@ export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem 
     openModal({
       value: section.options,
       onSuccessfulEdit: (options) => updateContainer({ containerId: section.id, newOptions: options }),
-    });
-  };
-
-  const openRemoveModal = () => {
-    openConfirmModal({
-      title: tContainer("remove.title"),
-      children: tContainer("remove.message"),
-      onConfirm: () => removeContainer({ id: section.id }),
     });
   };
 
@@ -49,8 +40,8 @@ export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem 
           size={24}
           radius="sm"
           pos="absolute"
-          top={-24}
-          right={menuRightOffset}
+          top={4}
+          left={menuLeftOffset}
           style={{ zIndex: 10 }}
           aria-label={tItem("menu.label.settingsFor", { name: label })}
         >
@@ -58,7 +49,6 @@ export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem 
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
-        <Menu.Label>{tItem("menu.label.settings")}</Menu.Label>
         <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
           {tItem("action.edit")}
         </Menu.Item>
@@ -69,10 +59,11 @@ export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem 
           {tItem("action.moveResize")}
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
-        <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>
-          {tContainer("action.remove")}
-        </Menu.Item>
+        <BoardRemoveConfirmationMenuItem
+          label={tContainer("action.remove")}
+          confirmationLabel={tContainer("remove.message")}
+          onConfirm={() => removeContainer({ id: section.id })}
+        />
       </Menu.Dropdown>
     </Menu>
   );

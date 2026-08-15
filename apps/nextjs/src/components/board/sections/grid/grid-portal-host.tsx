@@ -12,7 +12,7 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import { getRootSectionLane } from "@homarr/definitions";
 
 import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
-import { getBoardLaneColumnCount } from "~/components/board/layout";
+import { getBoardLaneColumnCount, normalizeGridPlacement } from "~/components/board/layout";
 import { SectionContentItem } from "../content";
 import { SectionProvider } from "../section-context";
 import { useSectionItems } from "../use-section-items";
@@ -23,6 +23,7 @@ interface GridPortalHostContextValue {
   integrations: RouterOutputs["integration"]["all"] | undefined;
   containers: ReadonlyMap<string, HTMLElement>;
   acquireContainer: (id: string) => HTMLElement;
+  structureRevision: string;
 }
 
 const GridPortalHostContext = createContext<GridPortalHostContextValue | null>(null);
@@ -50,6 +51,7 @@ export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
     () => new Set([...board.items.map((item) => item.id), ...board.sections.map((section) => section.id)]),
     [board.items, board.sections],
   );
+  const structureRevision = useMemo(() => [...liveEntryIds].toSorted().join(":"), [liveEntryIds]);
 
   const acquireContainer = useCallback((id: string) => {
     const existing = containersRef.current.get(id);
@@ -81,8 +83,9 @@ export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
       integrations,
       containers,
       acquireContainer,
+      structureRevision,
     }),
-    [acquireContainer, announce, containers, integrations],
+    [acquireContainer, announce, containers, integrations, structureRevision],
   );
 
   return (
@@ -143,26 +146,23 @@ const GridPortalContent = ({ itemId, ownerSectionId, integrations, announce }: G
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const { items, innerSections } = useSectionItems(ownerSectionId);
-  const persistedEntry = [...items, ...innerSections].find((candidate) => candidate.id === itemId);
-  const entry = persistedEntry;
-  const rawSection = board.sections.find((section) => section.id === ownerSectionId);
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
-  const persistedSection = toGridSection(rawSection, currentLayoutId);
-  const section = persistedSection;
+  const section = currentLayout ? getRenderedSection(board, currentLayout, ownerSectionId) : null;
 
-  if (!entry || !section || !currentLayout) return null;
+  if (!section || !currentLayout) return null;
 
-  const columnCount =
-    section.kind === "container"
-      ? section.width
-      : section.kind === "empty"
-        ? getBoardLaneColumnCount(currentLayout, getRootSectionLane(section.xOffset))
-        : currentLayout.columnCount;
+  const columnCount = getSectionColumnCount(section, currentLayout);
+  if (columnCount < 1) return null;
+  const renderedItems = items.map((item) => normalizePortalEntry(item, columnCount));
+  const renderedInnerSections = innerSections.map((innerSection) => normalizePortalEntry(innerSection, columnCount));
+  const entry = [...renderedItems, ...renderedInnerSections].find((candidate) => candidate.id === itemId);
+  if (!entry) return null;
+
   const configuredMaxRowCount = section.kind === "container" ? section.height : null;
   const contentRowCount = Math.max(
     1,
-    ...items.map((item) => item.yOffset + item.height),
-    ...innerSections.map((innerSection) => innerSection.yOffset + innerSection.height),
+    ...renderedItems.map((item) => item.yOffset + item.height),
+    ...renderedInnerSections.map((innerSection) => innerSection.yOffset + innerSection.height),
   );
   const maxRowCount = configuredMaxRowCount === null ? null : Math.max(configuredMaxRowCount, contentRowCount);
 
@@ -170,8 +170,8 @@ const GridPortalContent = ({ itemId, ownerSectionId, integrations, announce }: G
     <SectionProvider
       value={{
         section,
-        items,
-        innerSections,
+        items: renderedItems,
+        innerSections: renderedInnerSections,
         integrations,
         columnCount,
         maxRowCount,
@@ -183,20 +183,63 @@ const GridPortalContent = ({ itemId, ownerSectionId, integrations, announce }: G
   );
 };
 
-const toGridSection = (
-  section: Section | undefined,
-  layoutId: string,
+const getRenderedSection = (
+  board: ReturnType<typeof useRequiredBoard>,
+  currentLayout: ReturnType<typeof useRequiredBoard>["layouts"][number],
+  sectionId: string,
+  visited = new Set<string>(),
 ): Exclude<Section, { kind: "container" }> | ContainerSectionItem | null => {
+  const section = board.sections.find((candidate) => candidate.id === sectionId);
   if (!section) return null;
   if (section.kind !== "container") return section;
+  if (visited.has(section.id)) return null;
 
-  const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
+  const layout = section.layouts.find((candidate) => candidate.layoutId === currentLayout.id);
   if (!layout) return null;
+  const parentSection = getRenderedSection(
+    board,
+    currentLayout,
+    layout.parentSectionId,
+    new Set(visited).add(section.id),
+  );
+  if (!parentSection) return null;
+  const parentColumnCount = getSectionColumnCount(parentSection, currentLayout);
+  if (parentColumnCount < 1) return null;
+  const normalized = normalizePortalEntry(layout, parentColumnCount);
 
   return {
     ...section,
-    ...layout,
+    ...normalized,
     type: "section",
+  };
+};
+
+const getSectionColumnCount = (
+  section: Exclude<Section, { kind: "container" }> | ContainerSectionItem,
+  currentLayout: ReturnType<typeof useRequiredBoard>["layouts"][number],
+) =>
+  section.kind === "container"
+    ? section.width
+    : section.kind === "empty"
+      ? getBoardLaneColumnCount(currentLayout, getRootSectionLane(section.xOffset))
+      : currentLayout.columnCount;
+
+const normalizePortalEntry = <
+  TEntry extends { id?: string; xOffset: number; yOffset: number; width: number; height: number },
+>(
+  entry: TEntry,
+  columnCount: number,
+) => {
+  const placement = normalizeGridPlacement(
+    { id: entry.id ?? "portal-entry", x: entry.xOffset, y: entry.yOffset, w: entry.width, h: entry.height },
+    columnCount,
+  );
+  return {
+    ...entry,
+    xOffset: placement.x,
+    yOffset: placement.y,
+    width: placement.w,
+    height: placement.h,
   };
 };
 

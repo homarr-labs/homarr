@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useMemo } from "react";
 import {
   Anchor,
@@ -14,9 +15,9 @@ import {
   Title,
   UnstyledButton,
 } from "@mantine/core";
+import { IconLink } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
-import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
@@ -28,6 +29,14 @@ import { getUsableWidgetQueryData } from "../common/query-state";
 import classes from "./bookmark.module.css";
 
 type BookmarkLayout = WidgetComponentProps<"bookmarks">["options"]["layout"];
+
+export interface BookmarkDisplayItem {
+  id: string;
+  name: string;
+  description: string | null;
+  iconUrl?: string;
+  href: string | null;
+}
 
 export interface CompactBookmarkLayout {
   columns: number;
@@ -67,14 +76,19 @@ export default function BookmarksWidget({
   displayMode,
 }: WidgetComponentProps<"bookmarks">) {
   const board = useRequiredBoard();
-  const data =
+  const apps =
     getUsableWidgetQueryData(
       clientApi.app.byIds.useQuery(options.items, {
-        select(apps) {
-          return apps.toSorted((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
+        select(selectedApps) {
+          return selectedApps.toSorted((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
         },
       }),
     ) ?? [];
+  const customLinks = useMemo(
+    () => options.customUrls.flatMap((url) => createCustomBookmark(url) ?? []),
+    [options.customUrls],
+  );
+  const data: BookmarkDisplayItem[] = [...apps, ...customLinks];
 
   useRegisterSpotlightContextResults(
     `bookmark-${itemId}`,
@@ -85,7 +99,7 @@ export default function BookmarksWidget({
             {
               id: app.id,
               name: app.name,
-              icon: app.iconUrl,
+              icon: app.iconUrl ?? IconLink,
               interaction() {
                 return {
                   type: "link",
@@ -161,7 +175,7 @@ export default function BookmarksWidget({
 }
 
 interface FlexLayoutProps {
-  data: RouterOutputs["app"]["byIds"];
+  data: BookmarkDisplayItem[];
   direction: "row" | "column";
   hideTitle: boolean;
   hideIcon: boolean;
@@ -235,7 +249,7 @@ const FlexLayout = ({
 };
 
 interface AdvancedBookmarksLayoutProps {
-  data: RouterOutputs["app"]["byIds"];
+  data: BookmarkDisplayItem[];
   width: number;
   openNewTab: boolean;
   withBorder: boolean;
@@ -248,6 +262,19 @@ export const getAdvancedBookmarkColumns = (width: number, itemCount: number): nu
 export const getBookmarkHostname = (href: string | null): string | undefined => {
   const safeHref = getSafeApplicationUrl(href);
   return safeHref ? new URL(safeHref).hostname : undefined;
+};
+
+export const createCustomBookmark = (url: string): BookmarkDisplayItem | null => {
+  const normalizedUrl = url.trim();
+  const href = getSafeAppHref(normalizedUrl);
+  if (!href) return null;
+
+  return {
+    id: `custom-link:${normalizedUrl}`,
+    name: getBookmarkHostname(href) ?? normalizedUrl,
+    description: null,
+    href,
+  };
 };
 
 const AdvancedBookmarksLayout = ({
@@ -275,10 +302,9 @@ const AdvancedBookmarksLayout = ({
             >
               <Card radius={board.itemRadius} className={classes.card} withBorder={withBorder} p="md" h="100%">
                 <Group align="flex-start" wrap="nowrap">
-                  <MaskedOrNormalImage
-                    imageUrl={app.iconUrl}
+                  <BookmarkIcon
+                    app={app}
                     hasColor={hasIconColor}
-                    alt={app.name}
                     className={classes.bookmarkIcon}
                     style={{ width: 40, height: 40, flex: "0 0 auto" }}
                   />
@@ -306,7 +332,7 @@ const AdvancedBookmarksLayout = ({
 };
 
 interface GridLayoutProps {
-  data: RouterOutputs["app"]["byIds"];
+  data: BookmarkDisplayItem[];
   hideTitle: boolean;
   hideIcon: boolean;
   hideHostname: boolean;
@@ -392,7 +418,7 @@ const VerticalItem = ({
   hideHostname,
   hasIconColor,
 }: {
-  app: RouterOutputs["app"]["byIds"][number];
+  app: BookmarkDisplayItem;
   hideTitle: boolean;
   hideIcon: boolean;
   hideHostname: boolean;
@@ -406,10 +432,9 @@ const VerticalItem = ({
         </Text>
       )}
       {!hideIcon && (
-        <MaskedOrNormalImage
-          imageUrl={app.iconUrl}
+        <BookmarkIcon
+          app={app}
           hasColor={hasIconColor}
-          alt={app.name}
           className={classes.bookmarkIcon}
           style={{
             width: hideHostname && hideTitle ? "min(max(100%, 16px), 40px)" : 40,
@@ -437,7 +462,7 @@ const HorizontalItem = ({
   hideHostname,
   hasIconColor,
 }: {
-  app: RouterOutputs["app"]["byIds"][number];
+  app: BookmarkDisplayItem;
   hideTitle: boolean;
   hideIcon: boolean;
   hideHostname: boolean;
@@ -446,10 +471,9 @@ const HorizontalItem = ({
   return (
     <Group wrap="nowrap" gap="xs" h="100%" justify="start">
       {!hideIcon && (
-        <MaskedOrNormalImage
-          imageUrl={app.iconUrl}
+        <BookmarkIcon
+          app={app}
           hasColor={hasIconColor}
-          alt={app.name}
           className={classes.bookmarkIcon}
           style={{
             overflow: "auto",
@@ -479,3 +503,23 @@ const HorizontalItem = ({
     </Group>
   );
 };
+
+interface BookmarkIconProps {
+  app: BookmarkDisplayItem;
+  hasColor: boolean;
+  className?: string;
+  style?: CSSProperties;
+}
+
+const BookmarkIcon = ({ app, hasColor, className, style }: BookmarkIconProps) =>
+  app.iconUrl ? (
+    <MaskedOrNormalImage
+      imageUrl={app.iconUrl}
+      hasColor={hasColor}
+      alt={app.name}
+      className={className}
+      style={style}
+    />
+  ) : (
+    <IconLink aria-label={app.name} className={className} style={style} />
+  );

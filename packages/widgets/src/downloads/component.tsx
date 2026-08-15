@@ -755,7 +755,7 @@ export default function DownloadClientsWidget({
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
       {statsDisplay.visible && (
         <GlobalStatsBar
-          key={displayMode}
+          key={`stats-${displayMode}`}
           queueStats={queueStats}
           totalSpeed={totalSpeed}
           totalUpSpeed={totalUpSpeed}
@@ -803,7 +803,7 @@ export default function DownloadClientsWidget({
 
       {(isAdvanced || height >= 96) && (
         <WidgetFooter
-          key={displayMode}
+          key={`footer-${displayMode}`}
           clients={clients}
           totalSpeed={totalSpeed}
           totalUpSpeed={totalUpSpeed}

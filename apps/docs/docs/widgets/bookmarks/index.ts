@@ -47,8 +47,14 @@ export const bookmarksWidget: WidgetDefinition = {
       {
         name: "Bookmarks",
         description: "List of bookmarks to display in the widget.",
-        values: "Select of all your apps and order them as you like.",
+        values: "Select one or more Apps directly, then order them as you like.",
         defaultValue: "No bookmarks selected",
+      },
+      {
+        name: "Custom links",
+        description: "URLs to display without first creating an App.",
+        values: "List of URLs.",
+        defaultValue: "No custom links",
       },
     ],
   },

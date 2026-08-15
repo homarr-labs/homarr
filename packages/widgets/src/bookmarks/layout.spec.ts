@@ -1,6 +1,11 @@
 import { describe, expect, test } from "vitest";
 
-import { getAdvancedBookmarkColumns, getBookmarkHostname, getCompactBookmarkLayout } from "./component";
+import {
+  createCustomBookmark,
+  getAdvancedBookmarkColumns,
+  getBookmarkHostname,
+  getCompactBookmarkLayout,
+} from "./component";
 
 describe("bookmark display helpers", () => {
   test("uses bounded advanced columns", () => {
@@ -29,5 +34,21 @@ describe("bookmark display helpers", () => {
     expect(getBookmarkHostname("https://homarr.dev/docs")).toBe("homarr.dev");
     expect(getBookmarkHostname("not a URL")).toBeUndefined();
     expect(getBookmarkHostname(null)).toBeUndefined();
+  });
+
+  test("creates standalone bookmarks without app records", () => {
+    expect(createCustomBookmark("https://homarr.dev/docs")).toEqual({
+      id: "custom-link:https://homarr.dev/docs",
+      name: "homarr.dev",
+      description: null,
+      href: "https://homarr.dev/docs",
+    });
+    expect(createCustomBookmark("  https://homarr.dev/docs  ")).toEqual({
+      id: "custom-link:https://homarr.dev/docs",
+      name: "homarr.dev",
+      description: null,
+      href: "https://homarr.dev/docs",
+    });
+    expect(createCustomBookmark("javascript:alert(1)")).toBeNull();
   });
 });

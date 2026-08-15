@@ -31,8 +31,14 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
 }: CommonWidgetInputProps<"sortableItemList">) => {
   const t = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
-  const initialValues = useMemo(() => initialOptions[property] as TOptionValue[], [initialOptions, property]);
-  const values = form.values.options[property] as TOptionValue[];
+  const fieldPath = `options.${property}`;
+  const initialValues = useMemo(
+    () =>
+      Array.isArray(initialOptions[property]) ? (initialOptions[property] as TOptionValue[]) : options.defaultValue,
+    [initialOptions, options.defaultValue, property],
+  );
+  const currentValue = form.values.options[property];
+  const values = Array.isArray(currentValue) ? (currentValue as TOptionValue[]) : options.defaultValue;
   const { data, isLoading, error } = options.useData(initialValues);
   const dataMap = useMemo(
     () => new Map(data?.map((item) => [options.uniqueIdentifier(item), item as TItem])),
@@ -53,6 +59,11 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
   const activeIndex = activeId ? getIndex(activeId) : -1;
 
   useEffect(() => {
+    if (Array.isArray(currentValue)) return;
+    form.setFieldValue(fieldPath, options.defaultValue);
+  }, [currentValue, fieldPath, form, options.defaultValue]);
+
+  useEffect(() => {
     if (!activeId) {
       isFirstAnnouncement.current = true;
     }
@@ -69,22 +80,39 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
     [tempMap, dataMap],
   );
 
-  const updateItems = (callback: (prev: TOptionValue[]) => TOptionValue[]) => {
-    form.setFieldValue(`options.${property}`, callback);
-  };
+  const updateItems = useCallback(
+    (callback: (prev: TOptionValue[]) => TOptionValue[]) => {
+      form.setFieldValue(fieldPath, callback);
+    },
+    [fieldPath, form],
+  );
 
   const addItem = (item: TItem) => {
     setTempMap((prev) => {
-      prev.set(options.uniqueIdentifier(item) as TOptionValue, item);
-      return prev;
+      const next = new Map(prev);
+      next.set(options.uniqueIdentifier(item) as TOptionValue, item);
+      return next;
     });
-    updateItems((values) => [...values, options.uniqueIdentifier(item) as TOptionValue]);
+    updateItems((currentValues) => [...currentValues, options.uniqueIdentifier(item) as TOptionValue]);
   };
+
+  const removeItem = useCallback(
+    (value: TOptionValue) => {
+      updateItems((currentValues) => currentValues.filter((candidate) => candidate !== value));
+      setTempMap((previous) => {
+        if (!previous.has(value)) return previous;
+        const next = new Map(previous);
+        next.delete(value);
+        return next;
+      });
+    },
+    [updateItems],
+  );
 
   return (
     <Fieldset legend={t("label")}>
       <Stack>
-        <options.addButton addItem={addItem} values={values} />
+        <options.addButton addItem={addItem} removeItem={removeItem} values={values} />
 
         <DndContext
           sensors={sensors}
@@ -114,19 +142,6 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
               <React.Fragment>
                 {values.map((value, index) => {
                   const item = getItem(value);
-                  const removeItem = () => {
-                    form.setValues((previous) => {
-                      const previousValues = previous.options?.[property] as TOptionValue[];
-                      return {
-                        ...previous,
-                        options: {
-                          ...previous.options,
-                          [property]: previousValues.filter((id) => id !== value),
-                        },
-                      };
-                    });
-                  };
-
                   if (!item) {
                     return null;
                   }
@@ -137,7 +152,7 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
                       id={value}
                       index={index}
                       item={item}
-                      removeItem={removeItem}
+                      removeItem={() => removeItem(value)}
                       options={options}
                     />
                   );

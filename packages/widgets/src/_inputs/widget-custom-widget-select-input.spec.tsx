@@ -114,7 +114,7 @@ async function renderInput() {
       <WidgetCustomWidgetSelectInput
         kind="customApi"
         property="definitionId"
-        options={{ withDescription: false }}
+        options={{ defaultValue: "", withDescription: false }}
         initialOptions={{}}
       />,
     );
