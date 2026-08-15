@@ -1,0 +1,19 @@
+.github/workflows/ci.yml
+  s_58013a811abbcd::t_2cccbcc5d9fb82 6,9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "b699fdcd3422387d3181003960d790b3c354da41",
+  "prompts": {},
+  "sessions": {
+    "s_58013a811abbcd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a00226-3a04-7533-b035-01881a737063",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
