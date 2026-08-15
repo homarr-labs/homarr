@@ -1,0 +1,23 @@
+scripts/install.sh
+  s_9ad5eab74e1fdb::t_5c3c8dcfb5f1a0 1-34
+paseo.json
+  s_9ad5eab74e1fdb::t_e2616bdd284c21 3
+  s_9ad5eab74e1fdb::t_744f7a7a405cc2 1-2
+  s_9ad5eab74e1fdb::t_5824dc7eee66aa 4-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c3e786cf284a09a4213f7d65d6384789d7ea729a",
+  "prompts": {},
+  "sessions": {
+    "s_9ad5eab74e1fdb": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ffb2afba8ffemUjY79nEWrhzH6",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
