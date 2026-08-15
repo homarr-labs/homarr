@@ -1,16 +1,24 @@
 .clickableCard {
+  position: relative;
   transition: background-color 150ms;
   cursor: pointer;
 }
 
 .clickableCard:hover,
-.clickableCard:focus-visible {
+.clickableCard:focus-within {
   background-color: color-mix(in srgb, var(--mantine-color-default-hover) 40%, transparent) !important;
 }
 
-.clickableCard:focus-visible {
+.clickableCard:focus-within {
   outline: 2px solid var(--mantine-primary-color-filled);
   outline-offset: -2px;
+}
+
+.cardAction {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
 }
 
 @media (prefers-reduced-motion: reduce) {

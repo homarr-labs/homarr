@@ -2710,7 +2710,7 @@
     },
     "remove": {
       "title": "Remove item",
-      "message": "Are you sure you want to remove this item?"
+      "message": "Are you sure?"
     },
     "advancedFocus": {
       "open": "Open advanced view",

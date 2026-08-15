@@ -21,7 +21,7 @@ export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem 
   const [isEditMode] = useEditMode();
   const { section: parentSection } = useSectionContext();
   const label = section.options.title || tContainer("action.create");
-  const menuRightOffset = parentSection.kind === "container" ? 44 : 4;
+  const menuLeftOffset = parentSection.kind === "container" ? 36 : 4;
 
   if (!isEditMode) return null;
 
@@ -40,8 +40,8 @@ export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem 
           size={24}
           radius="sm"
           pos="absolute"
-          top={-24}
-          right={menuRightOffset}
+          top={4}
+          left={menuLeftOffset}
           style={{ zIndex: 10 }}
           aria-label={tItem("menu.label.settingsFor", { name: label })}
         >

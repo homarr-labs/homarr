@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Combobox, Pill, PillsInput, useCombobox } from "@mantine/core";
 
 import { useScopedI18n } from "@homarr/translation/client";
@@ -18,9 +18,15 @@ export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetIn
   const [search, setSearch] = useState("");
 
   const form = useFormContext();
-  const inputProps = form.getInputProps(`options.${property}`);
-  const values = inputProps.value as string[];
+  const fieldPath = `options.${property}`;
+  const inputProps = form.getInputProps(fieldPath);
+  const values = Array.isArray(inputProps.value) ? (inputProps.value as string[]) : options.defaultValue;
   const onChange = inputProps.onChange as (values: string[]) => void;
+
+  useEffect(() => {
+    if (Array.isArray(inputProps.value)) return;
+    form.setFieldValue(fieldPath, options.defaultValue);
+  }, [fieldPath, form, inputProps.value, options.defaultValue]);
 
   const handleRemove = (optionIndex: number) => {
     onChange(values.filter((_, index) => index !== optionIndex));

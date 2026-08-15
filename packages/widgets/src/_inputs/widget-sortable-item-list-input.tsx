@@ -69,22 +69,39 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
     [tempMap, dataMap],
   );
 
-  const updateItems = (callback: (prev: TOptionValue[]) => TOptionValue[]) => {
-    form.setFieldValue(`options.${property}`, callback);
-  };
+  const updateItems = useCallback(
+    (callback: (prev: TOptionValue[]) => TOptionValue[]) => {
+      form.setFieldValue(`options.${property}`, callback);
+    },
+    [form, property],
+  );
 
   const addItem = (item: TItem) => {
     setTempMap((prev) => {
-      prev.set(options.uniqueIdentifier(item) as TOptionValue, item);
-      return prev;
+      const next = new Map(prev);
+      next.set(options.uniqueIdentifier(item) as TOptionValue, item);
+      return next;
     });
     updateItems((values) => [...values, options.uniqueIdentifier(item) as TOptionValue]);
   };
 
+  const removeItem = useCallback(
+    (value: TOptionValue) => {
+      updateItems((values) => values.filter((candidate) => candidate !== value));
+      setTempMap((previous) => {
+        if (!previous.has(value)) return previous;
+        const next = new Map(previous);
+        next.delete(value);
+        return next;
+      });
+    },
+    [updateItems],
+  );
+
   return (
     <Fieldset legend={t("label")}>
       <Stack>
-        <options.addButton addItem={addItem} values={values} />
+        <options.addButton addItem={addItem} removeItem={removeItem} values={values} />
 
         <DndContext
           sensors={sensors}
@@ -114,19 +131,6 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
               <React.Fragment>
                 {values.map((value, index) => {
                   const item = getItem(value);
-                  const removeItem = () => {
-                    form.setValues((previous) => {
-                      const previousValues = previous.options?.[property] as TOptionValue[];
-                      return {
-                        ...previous,
-                        options: {
-                          ...previous.options,
-                          [property]: previousValues.filter((id) => id !== value),
-                        },
-                      };
-                    });
-                  };
-
                   if (!item) {
                     return null;
                   }
@@ -137,7 +141,7 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
                       id={value}
                       index={index}
                       item={item}
-                      removeItem={removeItem}
+                      removeItem={() => removeItem(value)}
                       options={options}
                     />
                   );

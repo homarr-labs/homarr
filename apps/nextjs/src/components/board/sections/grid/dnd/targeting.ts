@@ -11,6 +11,12 @@ export interface GridTargetGeometry {
   rectangle: RectangleLike;
 }
 
+interface GridTargetFallbackInput {
+  grids: readonly Pick<GridTargetGeometry, "id" | "parentGridId">[];
+  targetGridId: string;
+  isEligible: (gridId: string) => boolean;
+}
+
 interface PreferredNestedExitTargetInput {
   grids: readonly GridTargetGeometry[];
   pointerTargetId: string;
@@ -46,6 +52,26 @@ export const getPreferredNestedExitTargetId = ({
   }
 
   return current.id;
+};
+
+/**
+ * Tries the visible nested grid first, then its ancestors. A full or too-small
+ * container must not trap an item that can still move in the parent grid.
+ */
+export const getGridTargetFallbackIds = ({ grids, targetGridId, isEligible }: GridTargetFallbackInput) => {
+  const byId = new Map(grids.map((grid) => [grid.id, grid]));
+  const ids: string[] = [];
+  const visited = new Set<string>();
+  let current = byId.get(targetGridId);
+
+  while (current && !visited.has(current.id)) {
+    visited.add(current.id);
+    if (!isEligible(current.id)) break;
+    ids.push(current.id);
+    current = current.parentGridId ? byId.get(current.parentGridId) : undefined;
+  }
+
+  return ids;
 };
 
 const isSameGridOrAncestor = (

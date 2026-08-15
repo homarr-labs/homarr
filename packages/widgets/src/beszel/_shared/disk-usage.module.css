@@ -1,4 +1,6 @@
 .target {
+  position: relative;
+  z-index: 2;
   min-width: 24px;
   min-height: 24px;
 }

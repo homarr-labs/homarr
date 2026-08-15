@@ -49,7 +49,7 @@ export const ClientBoard = () => {
     .map(getLogicalTrackSize);
   const logicalWidth =
     laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * LOGICAL_GRID_GAP;
-  const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId) + LOGICAL_GRID_GAP;
+  const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId);
   const representativeWidth = layoutOverrideId ? getRepresentativeLayoutWidth(currentLayout, board.layouts) : null;
   const initialAvailableWidth = Math.max(1, (representativeWidth ?? initialViewportWidth) - APP_SHELL_INLINE_PADDING);
   const gridTemplateColumns = [
@@ -74,7 +74,7 @@ export const ClientBoard = () => {
             >
               <BoardGridEditorBoundary key={currentLayoutId}>
                 <BoardGridPortalRenderer />
-                <div className={classes.columns} style={{ gridTemplateColumns, paddingTop: LOGICAL_GRID_GAP }}>
+                <div className={classes.columns} style={{ gridTemplateColumns }}>
                   {leftColumnCount > 0 && leftSection && (
                     <aside
                       className={`${classes.lane} ${classes.gutter}`}

@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { ActionIcon, Badge, Box, Button, Card } from "@mantine/core";
-import { IconChevronDown, IconChevronUp, IconExternalLink, IconGripVertical } from "@tabler/icons-react";
+import { IconChevronDown, IconChevronUp, IconExternalLink } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -38,7 +38,7 @@ export const BoardContainerSection = ({ section }: Props) => {
   });
   const label = options.title.trim() || t("untitled");
   const contentId = `board-container-${section.id}-content`;
-  const labelLeft = isEditMode ? 40 : 8;
+  const labelLeft = 8;
   const labelRight = isEditMode ? 48 : options.showOpenAll ? 40 : 8;
 
   return (
@@ -101,22 +101,6 @@ export const BoardContainerSection = ({ section }: Props) => {
             )}
           </Button>
         )}
-        {isEditMode && (
-          <ActionIcon
-            component="span"
-            pos="absolute"
-            top={4}
-            left={4}
-            style={{ zIndex: 10, cursor: "grab", touchAction: "none" }}
-            variant="default"
-            size={24}
-            radius="sm"
-            data-grid-container-drag-handle
-            aria-hidden="true"
-          >
-            <IconGripVertical size={16} />
-          </ActionIcon>
-        )}
         {!isVisuallyCollapsed && (!options.collapsible || isEditMode) && options.showLabel && options.title && (
           <Badge
             pos="absolute"
@@ -162,6 +146,7 @@ export const BoardContainerSection = ({ section }: Props) => {
           id={contentId}
           className={classes.containerBody}
           h="100%"
+          data-board-container-body
           data-collapsed={isVisuallyCollapsed ? "true" : "false"}
           aria-hidden={isVisuallyCollapsed}
           inert={isVisuallyCollapsed}

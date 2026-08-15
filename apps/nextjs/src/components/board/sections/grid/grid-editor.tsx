@@ -37,7 +37,6 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
 
 import { getLogicalItemStyle, getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
-import type { GridPlacement } from "~/components/board/layout";
 import { useSectionContext } from "../section-context";
 import {
   beginGridTransaction,
@@ -45,6 +44,7 @@ import {
   commitGridTransaction,
   getContinuousGridDelta,
   getContinuousResizePlacement,
+  getGridTargetFallbackIds,
   getPreferredNestedExitTargetId,
   getPointerProjectedShape,
   getSnappedGridCoordinates,
@@ -56,7 +56,6 @@ import type { DragProjectionOrigin, GridResizeDirection, GridTransaction, Transa
 import type { DndGridEntryProps } from "./grid-entry-memo";
 import { areDndGridEntryPropsEqual } from "./grid-entry-memo";
 import { getGridDepth } from "./grid-depth";
-import { observeGridDragHandle } from "./grid-drag-handle";
 import { createGridInteractionStore } from "./grid-interaction-store";
 import { useBoardGridPortalHost } from "./grid-portal-host";
 import type { GridInteraction } from "./grid-preview-layer";
@@ -195,7 +194,10 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
     document.body.removeAttribute("data-board-grid-interacting");
   }, [interactionStore]);
 
-  useEffect(() => clearInteraction, [clearInteraction, currentLayoutId]);
+  useLayoutEffect(() => {
+    clearInteraction();
+    return clearInteraction;
+  }, [board.items, board.sections, clearInteraction, currentLayoutId]);
 
   const registerGrid = useCallback((grid: RegisteredGrid) => {
     gridsRef.current.set(grid.id, grid);
@@ -348,66 +350,56 @@ export const BoardGridEditorProvider = ({ children }: PropsWithChildren) => {
         return;
       }
 
-      const coordinates = getSnappedGridCoordinates({
-        dragShape: shape,
-        target: targetGrid.element.getBoundingClientRect(),
-        columnCount: targetGrid.columnCount,
+      const fallbackIds = getGridTargetFallbackIds({
+        grids: Array.from(gridsRef.current.values()),
+        targetGridId: targetGrid.id,
+        isEligible: (targetGridId) => isDropTargetEligible(source, targetGridId),
       });
-      if (!coordinates) {
-        showInvalidPreview(targetGrid.id, `invalid:${targetGrid.id}:coordinates`);
-        return;
-      }
-      const { x, y } = coordinates;
-      const targetAcceptsSource = canAcceptDrop(source, targetGrid.id);
-      const previewKey = `${targetGrid.id}:${x}:${y}:${targetAcceptsSource ? "candidate" : "invalid"}`;
-      if (active.lastPreviewKey === previewKey) return;
-      if (!targetAcceptsSource) {
-        showInvalidPreview(targetGrid.id, previewKey);
-        return;
-      }
+      let invalidPreviewKey = `invalid:${targetGrid.id}:no-candidate`;
 
-      const result = previewGridMove(active.transaction, { targetGridId: targetGrid.id, x, y });
-      if (
-        result.accepted &&
-        doesPreviewDisplaceNestedGridOwner(
-          active.transaction.snapshot,
-          result.transaction.preview,
-          targetGrid.id,
-          active.transaction.activeId,
-        )
-      ) {
-        showInvalidPreview(targetGrid.id, `${previewKey}:nested-owner`);
-        return;
-      }
-      active.lastPreviewKey = previewKey;
-      active.targetGridId = targetGrid.id;
-      active.valid = result.accepted;
-      if (!result.accepted) {
+      for (const candidateId of fallbackIds) {
+        const candidate = gridsRef.current.get(candidateId);
+        if (!candidate) continue;
+        const coordinates = getSnappedGridCoordinates({
+          dragShape: shape,
+          target: candidate.element.getBoundingClientRect(),
+          columnCount: candidate.columnCount,
+        });
+        if (!coordinates) {
+          invalidPreviewKey = `invalid:${candidate.id}:coordinates`;
+          continue;
+        }
+
+        const { x, y } = coordinates;
+        const targetAcceptsSource = canAcceptDrop(source, candidate.id);
+        const previewKey = `${candidate.id}:${x}:${y}:${targetAcceptsSource ? "candidate" : "invalid"}`;
+        invalidPreviewKey = previewKey;
+        if (!targetAcceptsSource) continue;
+
+        const result = previewGridMove(active.transaction, { targetGridId: candidate.id, x, y });
+        if (!result.accepted) continue;
+        if (active.lastPreviewKey === previewKey) return;
+
+        active.lastPreviewKey = previewKey;
+        active.targetGridId = candidate.id;
+        active.valid = true;
+        active.transaction = result.transaction;
+        const targetPlacement = result.transaction.preview.grids
+          .find((grid) => grid.id === candidate.id)
+          ?.placements.find((placement) => placement.id === sourceData.placement.id);
         publishPreview({
           activeId: active.transaction.activeId,
           sourceGridId: active.transaction.sourceGridId,
-          targetGridId: targetGrid.id,
-          targetPlacement: null,
-          state: cancelGridTransaction(active.transaction),
+          targetGridId: candidate.id,
+          targetPlacement: targetPlacement ?? null,
+          state: result.transaction.preview,
           mode: "drag",
-          valid: false,
+          valid: true,
         });
         return;
       }
 
-      active.transaction = result.transaction;
-      const targetPlacement = result.transaction.preview.grids
-        .find((grid) => grid.id === targetGrid.id)
-        ?.placements.find((placement) => placement.id === sourceData.placement.id);
-      publishPreview({
-        activeId: active.transaction.activeId,
-        sourceGridId: active.transaction.sourceGridId,
-        targetGridId: targetGrid.id,
-        targetPlacement: targetPlacement ?? null,
-        state: result.transaction.preview,
-        mode: "drag",
-        valid: true,
-      });
+      showInvalidPreview(targetGrid.id, invalidPreviewKey);
     },
     [canAcceptDrop, interactionStore, isDropTargetEligible],
   );
@@ -852,9 +844,8 @@ const DndGridEntryComponent = ({
   maxRowCount,
   registerElement,
 }: DndGridEntryProps) => {
-  const { acquireContainer } = useBoardGridPortalHost();
+  const { acquireContainer, structureRevision } = useBoardGridPortalHost();
   const { beginResize, previewResize, completeResize, cancelResize } = useBoardGridEditorActions();
-  const [isSectionChromeActive, setIsSectionChromeActive] = useState(false);
   const mountRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const placementRef = useRef(placement);
@@ -908,8 +899,9 @@ const DndGridEntryComponent = ({
       shellRef.current = element;
       registerElement(placement.id, element);
       draggableRef(element);
+      handleRef(element);
     },
-    [draggableRef, placement.id, registerElement],
+    [draggableRef, handleRef, placement.id, registerElement],
   );
 
   useEffect(() => () => resizeOutlineController.destroy(), [resizeOutlineController]);
@@ -918,35 +910,12 @@ const DndGridEntryComponent = ({
     const mount = mountRef.current;
     if (!mount) return;
     const container = acquireContainer(placement.id);
-    mount.appendChild(container);
+    mount.replaceChildren(container);
 
-    const handleSelector =
-      placement.type === "section" ? "[data-grid-container-drag-handle]" : "[data-editor-grid-entry]";
-    return observeGridDragHandle(container, handleSelector, handleRef);
-  }, [acquireContainer, handleRef, placement.id, placement.type]);
-
-  useLayoutEffect(() => {
-    const shell = shellRef.current;
-    if (placement.type !== "section" || !shell) return;
-
-    const handlePointerDownCapture = (event: PointerEvent) => {
-      if (!(event.target instanceof Element)) return;
-      const grip = event.target.closest("[data-grid-container-drag-handle]");
-      if (grip) {
-        const owner = grip.closest('.board-grid-entry[data-grid-item-type="section"]');
-        setIsSectionChromeActive(owner === shell);
-        return;
-      }
-
-      const resizeHandle = event.target.closest(".board-grid-resize-handle");
-      if (!resizeHandle || resizeHandle.parentElement !== shell) {
-        setIsSectionChromeActive(false);
-      }
+    return () => {
+      if (container.parentElement === mount) container.remove();
     };
-
-    shell.addEventListener("pointerdown", handlePointerDownCapture, { capture: true });
-    return () => shell.removeEventListener("pointerdown", handlePointerDownCapture, { capture: true });
-  }, [placement.type]);
+  }, [acquireContainer, placement.id, structureRevision]);
 
   return (
     <div
@@ -959,7 +928,6 @@ const DndGridEntryComponent = ({
       data-grid-y={placement.y}
       data-grid-w={placement.w}
       data-grid-h={placement.h}
-      data-grid-section-chrome-active={placement.type === "section" ? String(isSectionChromeActive) : undefined}
       data-dnd-drag-source={isDragSource ? "true" : undefined}
       data-dnd-dropping={isDropping ? "true" : undefined}
     >
@@ -968,7 +936,7 @@ const DndGridEntryComponent = ({
         sectionId={sectionId}
         placement={placement}
         label={label}
-        disabled={placement.type === "section" && !isSectionChromeActive}
+        disabled={false}
         columnCount={columnCount}
         maxRowCount={maxRowCount}
         beginResize={beginResize}
@@ -1281,40 +1249,17 @@ const getPreferredRegisteredGridTarget = (
   return registeredGrids.find((grid) => grid.id === preferredId) ?? pointerTarget;
 };
 
-const doesPreviewDisplaceNestedGridOwner = (
-  snapshot: TransactionalGridState<SectionGridPlacement>,
-  preview: TransactionalGridState<SectionGridPlacement>,
-  targetGridId: string,
-  activeId: string,
-) => {
-  const ownerIds = new Set(
-    snapshot.grids
-      .filter((grid) => grid.parentGridId === targetGridId && grid.ownerPlacementId !== activeId)
-      .flatMap((grid) => (grid.ownerPlacementId ? [grid.ownerPlacementId] : [])),
-  );
-  if (ownerIds.size === 0) return false;
-
-  const original = snapshot.grids.find((grid) => grid.id === targetGridId);
-  const candidate = preview.grids.find((grid) => grid.id === targetGridId);
-  if (!original || !candidate) return false;
-  const originalById = new Map(original.placements.map((placement) => [placement.id, placement]));
-  return candidate.placements.some((placement) => {
-    const previous = originalById.get(placement.id);
-    return Boolean(previous && ownerIds.has(placement.id) && !areGridPlacementCoordinatesEqual(previous, placement));
-  });
-};
-
-const areGridPlacementCoordinatesEqual = (first: GridPlacement, second: GridPlacement) =>
-  first.x === second.x && first.y === second.y && first.w === second.w && first.h === second.h;
-
 const preventGridDragActivation = (event: PointerEvent, source: DomDraggable) => {
   if (document.body.hasAttribute("data-board-grid-interacting")) return true;
   const target = event.target;
-  if (!(target instanceof Element) || target === source.handle) return false;
+  const activationElement = source.handle ?? source.element;
+  if (!(target instanceof Element) || target === activationElement) return false;
+  const targetShell = target.closest(".board-grid-entry");
+  if (targetShell && targetShell !== activationElement) return true;
   const interactive = target.closest(
     'a,button,input,textarea,select,option,[contenteditable="true"],[role="button"],[data-grid-no-drag],.board-grid-resize-handle',
   );
-  return Boolean(interactive && source.handle?.contains(interactive));
+  return Boolean(interactive && activationElement?.contains(interactive));
 };
 
 const getEntryVisualScale = (element: HTMLElement | null, placement: SectionGridPlacement) => {

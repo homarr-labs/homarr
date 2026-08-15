@@ -1,7 +1,7 @@
 "use client";
 
 import type { MantineSize } from "@mantine/core";
-import { Badge, Box, Card, Center, Group, Loader, Progress, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Badge, Box, Card, Center, Group, Loader, Progress, SimpleGrid, Stack, Text, UnstyledButton } from "@mantine/core";
 import {
   Activity,
   Battery,
@@ -365,14 +365,10 @@ const SystemCard = ({
 
   return (
     <Card
-      component="button"
-      type="button"
-      disabled={!onClick}
       padding={size.cardPadding}
       radius={itemRadius}
       bg="transparent"
       h="100%"
-      onClick={onClick}
       className={onClick ? classes.clickableCard : undefined}
       style={{
         overflow: "hidden",
@@ -385,6 +381,14 @@ const SystemCard = ({
         width: "100%",
       }}
     >
+      {onClick && (
+        <UnstyledButton
+          type="button"
+          className={classes.cardAction}
+          aria-label={system.name}
+          onClick={onClick}
+        />
+      )}
       <Group gap="xs" mb={2}>
         <Badge
           size={size.badgeSize}
