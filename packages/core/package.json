@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "catalog:",
+    "axios": "catalog:",
     "better-sqlite3": "catalog:",
     "dns-caching": "catalog:",
     "drizzle-orm": "catalog:",
@@ -44,12 +45,15 @@
     "mysql2": "catalog:",
     "pg": "catalog:",
     "superjson": "catalog:",
+    "undici": "catalog:",
     "winston": "catalog:",
+    "winston-transport": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "catalog:",
+    "@types/node": "catalog:",
     "@types/pg": "catalog:",
     "typescript": "catalog:"
   }
