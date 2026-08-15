@@ -1,0 +1,56 @@
+packages/widgets/src/_inputs/widget-custom-widget-select-input.spec.tsx
+  s_76010887883d22::t_d378d5da5b0bbd 117
+apps/docs/docs/widgets/bookmarks/index.ts
+  s_76010887883d22::t_fc238a73ab872c 50,53-55,57
+  s_76010887883d22::t_6a7217e009dd9e 56
+  s_76010887883d22::t_f43fee62db402f 58
+packages/widgets/src/bookmarks/add-button.tsx
+  s_76010887883d22::t_b785cf48abae79 3-5,7-8,12-19,21-36,39-58,61-77
+packages/widgets/src/_inputs/widget-sortable-item-list-input.tsx
+  s_76010887883d22::t_515de6b647ace0 96,101
+  s_76010887883d22::t_ead6a5ca144247 34-41,61-65,85,87
+packages/widgets/src/bookmarks/component.tsx
+  s_76010887883d22::t_fce43730b5fc00 178,252,267-278,334,420,464
+  s_76010887883d22::t_4f1c45f340abb7 3,18,33-40,79,87-91
+  s_76010887883d22::t_5583e56d7f5945 83
+  s_76010887883d22::t_515de6b647ace0 82
+  s_76010887883d22::t_d378d5da5b0bbd 102
+  s_76010887883d22::t_a5f29e968edae8 304-305,434-435,473-474,505-524
+packages/widgets/src/bookmarks/index.tsx
+  s_76010887883d22::t_deafef67f0a07a 8,33
+  s_76010887883d22::t_a40d583075e087 3,32,34-36
+apps/docs/docs/widgets/bookmarks/index.mdx
+  s_76010887883d22::t_fc238a73ab872c 16-18
+packages/widgets/src/bookmarks/layout.spec.ts
+  s_76010887883d22::t_b21c727981d5f2 3-8,38-46
+  s_76010887883d22::t_d0dca839192ba4 47
+packages/spotlight/src/modes/home/context.tsx
+  s_b3670e07e51bbc::t_7923c89c7c4e03 64-65,69
+  s_b3670e07e51bbc::t_e09cea458498f4 22-24,31,33,59,68,70,89,107
+packages/translation/src/lang/en.json
+  s_76010887883d22::t_a40d583075e087 2810-2813,2816-2819
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "0af940b37880a951274a1aecaf12b834a1fcc323",
+  "prompts": {},
+  "sessions": {
+    "s_76010887883d22": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a00471-c57d-7a11-99d3-2f1979461ea2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b3670e07e51bbc": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a00474-1bf1-7bb2-90db-ae9496d237ef",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
