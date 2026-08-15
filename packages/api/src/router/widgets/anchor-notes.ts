@@ -7,6 +7,7 @@ import { anchorNotesListInputSchema, anchorNoteUpdateInputSchema, createIntegrat
 import { anchorNoteRequestHandler, anchorNotesListRequestHandler } from "@homarr/request-handler/anchor-notes";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { invalidateIntegrationDataCache } from "../../integration-data-cache";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const noteIdInput = z.object({
@@ -75,6 +76,9 @@ export const anchorNotesRouter = createTRPCRouter({
           ...(normalizedContent !== undefined ? { content: normalizedContent } : {}),
         });
 
+        invalidateIntegrationDataCache(ctx.integration.id);
+        anchorNoteRequestHandler.invalidateCache();
+        anchorNotesListRequestHandler.invalidateCache();
         return updatedNote;
       } catch (error) {
         if (error instanceof ResponseError && error.statusCode === 400) {

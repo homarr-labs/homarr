@@ -120,7 +120,7 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
       {firewallsInterfacesData
         .filter(({ integration }) => integration.id === (selectedFirewall || initialSelectedFirewall))
         .map(({ summary }) => (
-          <Accordion key="interfaces" value={accordionValue} onChange={setAccordionValue}>
+          <Accordion key="interfaces" keepMounted={false} value={accordionValue} onChange={setAccordionValue}>
             <Accordion.Item value="interfaces">
               <Accordion.Control icon={isTiny ? null : <IconTopologyBus size={16} />}>
                 <Text size={isTiny ? "8px" : "xs"}> {t("widget.firewall.widget.interfaces.title")} </Text>

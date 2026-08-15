@@ -1,7 +1,7 @@
 "use client";
 
 import type { MutableRefObject, ReactNode } from "react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { Group, Loader, Menu, Switch, Text, Tooltip } from "@mantine/core";
 import {
   IconAlertTriangle,
@@ -16,12 +16,12 @@ import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { partialMatchKey, useIsFetching, useQueryClient } from "@tanstack/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
+
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useTimeAgo } from "@homarr/common";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { useSettings } from "@homarr/settings";
+import type { useSettings } from "@homarr/settings";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TranslationFunction } from "@homarr/translation";
@@ -30,7 +30,9 @@ import { getWidgetQueryKeys } from "@homarr/widgets/definition";
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
+import type { UseGridstackRefs } from "../sections/gridstack/use-gridstack";
 import { useSectionContext } from "../sections/section-context";
+import { useWidgetContextMenu } from "./widget-context-menu-provider";
 import { useItemActions } from "./item-actions";
 import { LazyItemMoveModal, preloadItemMoveModal } from "./lazy-item-move-modal";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
@@ -42,58 +44,68 @@ interface WidgetContextMenuProps {
   children: ReactNode;
 }
 
+const LONG_PRESS_DELAY_MS = 500;
+
+/**
+ * Per-item trigger only. The menu itself lives once at board level — see
+ * WidgetContextMenuProvider for why.
+ */
 export const WidgetContextMenu = ({ item, definition, widgetStateRef, children }: WidgetContextMenuProps) => {
-  const { data: session } = useSession();
-  const settings = useSettings();
+  const { open } = useWidgetContextMenu();
+  const { gridstack } = useSectionContext().refs;
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  if (!session || !settings.enableRightClickOnWidgets) return <>{children}</>;
+  const cancelLongPress = useCallback(() => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  }, []);
 
-  return (
-    <WidgetContextMenuInner item={item} definition={definition} widgetStateRef={widgetStateRef} settings={settings}>
-      {children}
-    </WidgetContextMenuInner>
-  );
-};
-
-const WidgetContextMenuInner = ({
-  item,
-  definition,
-  widgetStateRef,
-  children,
-  settings,
-}: WidgetContextMenuProps & { settings: ReturnType<typeof useSettings> }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  if (!open) return <>{children}</>;
 
   return (
-    <Menu
-      shadow="md"
-      width={300}
-      closeOnItemClick={false}
-      position="right-start"
-      offset={4}
-      opened={isMenuOpen}
-      onChange={setIsMenuOpen}
+    // display:contents keeps GridStack's layout maths seeing the original child box.
+    <div
+      style={{ display: "contents" }}
+      onContextMenu={(event) => {
+        event.preventDefault();
+        open({ item, definition, widgetStateRef, gridstack, x: event.clientX, y: event.clientY });
+      }}
+      onTouchStart={(event) => {
+        const touch = event.touches[0];
+        if (!touch) return;
+        const { clientX, clientY } = touch;
+        longPressTimer.current = setTimeout(
+          () => open({ item, definition, widgetStateRef, gridstack, x: clientX, y: clientY }),
+          LONG_PRESS_DELAY_MS,
+        );
+      }}
+      onTouchEnd={cancelLongPress}
+      onTouchMove={cancelLongPress}
+      onTouchCancel={cancelLongPress}
     >
-      <Menu.ContextMenu>{children}</Menu.ContextMenu>
-      <Menu.Dropdown>
-        {isMenuOpen && (
-          <WidgetContextMenuDropdown
-            item={item}
-            definition={definition}
-            widgetStateRef={widgetStateRef}
-            settings={settings}
-          />
-        )}
-      </Menu.Dropdown>
-    </Menu>
+      {children}
+    </div>
   );
 };
 
 type WidgetContextMenuDropdownProps = Omit<WidgetContextMenuProps, "children"> & {
   settings: ReturnType<typeof useSettings>;
+  /**
+   * Passed in rather than read from SectionContext: the menu is mounted once at board
+   * level, outside any section, while the item that opened it is inside one.
+   */
+  gridstack: UseGridstackRefs["gridstack"];
 };
 
-const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings }: WidgetContextMenuDropdownProps) => {
+export const WidgetContextMenuDropdown = ({
+  item,
+  definition,
+  widgetStateRef,
+  settings,
+  gridstack,
+}: WidgetContextMenuDropdownProps) => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const tItem = useScopedI18n("item");
@@ -110,7 +122,6 @@ const WidgetContextMenuDropdown = ({ item, definition, widgetStateRef, settings 
     enabled: hasSupportedIntegrations,
   });
   const { mutate: saveBoard } = clientApi.board.saveBoard.useMutation();
-  const { gridstack } = useSectionContext().refs;
   const queryClient = useQueryClient();
 
   const widgetQueryKeys = useMemo(() => getWidgetQueryKeys(definition, item.kind), [definition, item.kind]);

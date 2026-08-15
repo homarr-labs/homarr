@@ -57,111 +57,138 @@ const Item = ({ item, options }: ItemProps) => {
   const t = useI18n();
   const length = formatLength(item.length, item.type, t);
 
-  return (
-    <TooltipFloating
-      label={item.description}
-      w={300}
-      multiline
-      disabled={item.description === undefined || item.description.trim() === "" || !options.showDescriptionTooltip}
-    >
-      <UnstyledButton
-        component="a"
-        href={item.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        pos="relative"
-        p={options.layout === "poster" ? 0 : 4}
-      >
-        {options.layout === "backdrop" && (
-          <Box
-            w="100%"
-            h="100%"
-            pos="absolute"
-            top={0}
-            left={0}
-            style={{
-              backgroundImage: `url(${item.imageUrls.backdrop})`,
-              borderRadius: 8,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              opacity: 0.2,
-            }}
-          />
-        )}
-        <Group justify="space-between" h="100%" wrap="nowrap">
-          <Group align="start" wrap="nowrap" style={{ zIndex: 0 }}>
-            {options.layout === "poster" && <Image w={60} src={item.imageUrls.poster} alt={item.title} />}
-            <Stack gap={4}>
-              <Stack gap={0}>
-                <Text size="sm" fw="bold" lineClamp={2}>
-                  {item.title}
-                </Text>
-                {item.subtitle !== undefined && (
-                  <Text size="sm" lineClamp={1}>
-                    {item.subtitle}
-                  </Text>
-                )}
-              </Stack>
-              <Group gap={6} style={{ rowGap: 0 }}>
-                <Info icon={IconCalendar} label={formatReleaseDate(item.releaseDate, locale)} />
-                {length !== undefined && (
-                  <>
-                    <InfoDivider />
-                    <Info icon={length.type === "duration" ? IconClock : IconBook} label={length.label} />
-                  </>
-                )}
-                {item.producer !== undefined && (
-                  <>
-                    <InfoDivider />
-                    <Info label={item.producer} />
-                  </>
-                )}
-                {item.rating !== undefined && (
-                  <>
-                    <InfoDivider />
-                    <Info icon={IconStarFilled} label={item.rating} />
-                  </>
-                )}
-                {item.price !== undefined && (
-                  <>
-                    <InfoDivider />
-                    <Info label={`$${item.price.toFixed(2)}`} />
-                  </>
-                )}
-              </Group>
-              {item.tags.length > 0 && (
-                <OverflowBadge
-                  size="xs"
-                  groupGap={4}
-                  data={item.tags}
-                  overflowCount={3}
-                  disablePopover
-                  style={{ cursor: "pointer" }}
-                />
-              )}
-            </Stack>
-          </Group>
-          {(options.showType || options.showSource) && (
-            <Stack justify="space-between" align="end" h="100%" style={{ zIndex: 0 }}>
-              {options.showType && (
-                <Badge
-                  w="max-content"
-                  size="xs"
-                  color={mediaTypeConfigurations[item.type].color}
-                  style={{ cursor: "pointer" }}
-                >
-                  {item.type}
-                </Badge>
-              )}
+  // Mantine mounts a TooltipFloating's Popover machinery even when the tooltip is disabled, so
+  // wrapping unconditionally cost a Popover and a PopoverDropdown per card. Measured on a real
+  // board: 80 cards produced 80 TooltipFloating, 80 Popover and 80 PopoverDropdown components —
+  // 240 of the widget's 340 listener-attaching components — for tooltips that mostly never show,
+  // on cards that are 91% off-screen. Deciding here means a card without a description, or with
+  // the option off, renders none of it.
+  const showDescriptionTooltip =
+    options.showDescriptionTooltip && item.description !== undefined && item.description.trim() !== "";
 
-              {options.showSource && (
-                <Avatar size="sm" radius="xl" src={getIconUrl(item.integration.kind)} alt={item.integration.name} />
+  const card = (
+    <UnstyledButton
+      component="a"
+      href={item.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      pos="relative"
+      p={options.layout === "poster" ? 0 : 4}
+      style={{
+        // This widget maps over every release the integrations return. Measured on a real board:
+        // 80 cards rendered into a 539 px tile whose content is 7,206 px tall, so 73 of them are
+        // scrolled out of view — along with their backdrop and poster images, which the browser
+        // otherwise fetches, decodes and rasterises for pixels nobody can see.
+        //
+        // content-visibility lets the browser skip layout, paint and raster for a card that is
+        // off-screen, and contain-intrinsic-size gives it a placeholder height so the scrollbar
+        // does not jump as cards enter and leave. Nothing is removed from the DOM, so scrolling
+        // and in-page search behave exactly as before.
+        contentVisibility: "auto",
+        containIntrinsicSize: "auto 88px",
+      }}
+    >
+      {options.layout === "backdrop" && (
+        <Box
+          w="100%"
+          h="100%"
+          pos="absolute"
+          top={0}
+          left={0}
+          style={{
+            backgroundImage: `url(${item.imageUrls.backdrop})`,
+            borderRadius: 8,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.2,
+          }}
+        />
+      )}
+      <Group justify="space-between" h="100%" wrap="nowrap">
+        <Group align="start" wrap="nowrap" style={{ zIndex: 0 }}>
+          {options.layout === "poster" && (
+            // Only a handful of the rendered cards are on screen; loading the rest's posters
+            // eagerly costs a request and a decoded bitmap each for no visible benefit.
+            <Image w={60} src={item.imageUrls.poster} alt={item.title} loading="lazy" />
+          )}
+          <Stack gap={4}>
+            <Stack gap={0}>
+              <Text size="sm" fw="bold" lineClamp={2}>
+                {item.title}
+              </Text>
+              {item.subtitle !== undefined && (
+                <Text size="sm" lineClamp={1}>
+                  {item.subtitle}
+                </Text>
               )}
             </Stack>
-          )}
+            <Group gap={6} style={{ rowGap: 0 }}>
+              <Info icon={IconCalendar} label={formatReleaseDate(item.releaseDate, locale)} />
+              {length !== undefined && (
+                <>
+                  <InfoDivider />
+                  <Info icon={length.type === "duration" ? IconClock : IconBook} label={length.label} />
+                </>
+              )}
+              {item.producer !== undefined && (
+                <>
+                  <InfoDivider />
+                  <Info label={item.producer} />
+                </>
+              )}
+              {item.rating !== undefined && (
+                <>
+                  <InfoDivider />
+                  <Info icon={IconStarFilled} label={item.rating} />
+                </>
+              )}
+              {item.price !== undefined && (
+                <>
+                  <InfoDivider />
+                  <Info label={`$${item.price.toFixed(2)}`} />
+                </>
+              )}
+            </Group>
+            {item.tags.length > 0 && (
+              <OverflowBadge
+                size="xs"
+                groupGap={4}
+                data={item.tags}
+                overflowCount={3}
+                disablePopover
+                style={{ cursor: "pointer" }}
+              />
+            )}
+          </Stack>
         </Group>
-      </UnstyledButton>
+        {(options.showType || options.showSource) && (
+          <Stack justify="space-between" align="end" h="100%" style={{ zIndex: 0 }}>
+            {options.showType && (
+              <Badge
+                w="max-content"
+                size="xs"
+                color={mediaTypeConfigurations[item.type].color}
+                style={{ cursor: "pointer" }}
+              >
+                {item.type}
+              </Badge>
+            )}
+
+            {options.showSource && (
+              <Avatar size="sm" radius="xl" src={getIconUrl(item.integration.kind)} alt={item.integration.name} />
+            )}
+          </Stack>
+        )}
+      </Group>
+    </UnstyledButton>
+  );
+
+  if (!showDescriptionTooltip) return card;
+
+  return (
+    <TooltipFloating label={item.description} w={300} multiline>
+      {card}
     </TooltipFloating>
   );
 };

@@ -81,7 +81,7 @@ export const ClusterHealthMonitoring = ({
         isTiny={isTiny}
       />
       {options.visibleClusterSections.length >= 1 && (
-        <Accordion variant="contained" chevronPosition="right" multiple defaultValue={defaultValue}>
+        <Accordion variant="contained" chevronPosition="right" multiple keepMounted={false} defaultValue={defaultValue}>
           {options.visibleClusterSections.includes("node") && (
             <ResourceAccordionItem
               value="node"

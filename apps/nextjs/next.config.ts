@@ -15,18 +15,27 @@ const withNextIntl = createNextIntlPlugin({
   requestConfig: "../../packages/translation/src/request.ts",
 });
 
-const getDevelopmentServiceAliases = () => {
-  if (process.env.NODE_ENV !== "development") {
-    return undefined;
-  }
-
-  return {
-    "@homarr/tasks": "./src/instrumentation-noop.ts",
-    "@homarr/websocket": "./src/instrumentation-noop.ts",
-  };
-};
+/**
+ * Profiling build. React's production bundle strips the hooks React DevTools needs,
+ * which is why the Profiler tab reports "Profiling not supported"; the profiling
+ * variant keeps them. Source maps are emitted alongside so heap snapshots and flame
+ * charts show real component names instead of minified ones like `y`.
+ *
+ * Build with:
+ *   docker build --build-arg HOMARR_PROFILING=true . -t homarr:performance
+ *
+ * `reactProductionProfiling` in this config is only read by the webpack path — under
+ * Turbopack it comes from `next build --profile`, which apps/nextjs/package.json
+ * passes when HOMARR_PROFILING=true. Both are set so either bundler works.
+ *
+ * Off by default: the profiling variant is slower and source maps are large, so this
+ * must never be what ships to users.
+ */
+const isProfilingBuild = process.env.HOMARR_PROFILING === "true";
 
 const nextConfig: NextConfig = {
+  reactProductionProfiling: isProfilingBuild,
+  productionBrowserSourceMaps: isProfilingBuild,
   // Next previews otherwise create agent instruction files in the application
   // directory during development.
   agentRules: false,
@@ -41,19 +50,73 @@ const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: true },
   /**
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
-   * isomorphic-dompurify and jsdom are required, see https://github.com/kkomelin/isomorphic-dompurify/issues/356
+   *
+   * Everything else here is a server-only dependency that is cheaper left as a
+   * runtime require than inlined into the server bundle. Bundling pulls a package's
+   * whole transitive graph into a chunk that is loaded and compiled at boot even
+   * when the code path never runs — measurably so for the DB drivers: only
+   * better-sqlite3 is ever used, yet inlining mysql2 and pg cost ~21 MiB of
+   * resident memory at idle.
    */
-  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom", "better-sqlite3"],
+  serverExternalPackages: [
+    "dockerode",
+    "better-sqlite3",
+    "mysql2",
+    "pg",
+    "winston",
+    "drizzle-orm",
+    "ical.js",
+    "jszip",
+    "ldapts",
+    "node-unifi",
+    "@kubernetes/client-node",
+    "linkedom",
+    // Only reachable through /api/mcp/[transport].
+    "@modelcontextprotocol/sdk",
+    // Bundling inlines a copy per chunk: a server heap snapshot found this package's
+    // command table in 10 chunks and resident 6 times over (2.1 MiB of duplication).
+    // Safe to externalise because ioredis is already external and owns this as a
+    // direct dependency, so it is always traced alongside it. Bundle hygiene — it did
+    // not move measured memory (idle 89.7 -> 89.4 MiB, inside run-to-run noise).
+    // got and @octokit/request-error duplicate similarly but are only transitive
+    // deps here, so externalising them risks a runtime require that was never traced,
+    // for no measured gain.
+    "@ioredis/commands",
+  ],
   experimental: {
+    /**
+     * Dead config under Turbopack, which this app builds with: "Turbopack automatically analyzes and
+     * optimizes imports without requiring this configuration."
+     *
+     * Measured rather than assumed - adding the seven Mantine entry points that are missing here
+     * (charts, dates, dropzone, form, notifications, spotlight, tiptap) produced a client bundle that
+     * was byte-for-byte identical, 482 files and 18050.7 KiB in both arms, down to the chunk hashes.
+     * Kept only as a fallback for a webpack build; do not add to it expecting an effect.
+     */
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForBuild: true,
     useTypeScriptCli: true,
+    /**
+     * Next otherwise loads the module graph for every route at startup. Measured here: 74 route
+     * bundles and 1,114 files, 24 MiB of source, resident before the first request — and one
+     * shared 16 MiB subtree behind the API routes that reaches every integration. A dashboard
+     * serves a handful of routes per session, so preloading the rest is pure cost.
+     *
+     * The trade is that the first request to a route pays its module load instead of the boot
+     * paying for all of them. That suits a long-lived self-hosted server, where boot happens
+     * once and routes warm up as they are used.
+     */
+    preloadEntriesOnStart: false,
   },
   turbopack: {
     root: path.resolve(import.meta.dirname, "../.."),
-    // Development runs tasks and WebSocket as separate processes. These aliases
-    // keep their production-only instrumentation imports out of the dev graph.
-    resolveAlias: getDevelopmentServiceAliases(),
+    resolveAlias:
+      process.env.NODE_ENV === "development"
+        ? {
+            "@homarr/tasks": path.resolve(import.meta.dirname, "src/instrumentation-noop.ts"),
+            "@homarr/websocket": path.resolve(import.meta.dirname, "src/instrumentation-noop.ts"),
+          }
+        : {},
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {

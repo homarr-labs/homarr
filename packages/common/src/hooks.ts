@@ -18,7 +18,14 @@ export const useTimeAgo = (timestamp: Date, updateFrequency = 1000) => {
   }, [timestamp]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => setTimeAgo(calculateTimeAgo(timestamp)), updateFrequency);
+    // Only re-render when the rendered text actually changes. The label is coarse
+    // ("3 minutes ago" holds for a whole minute) but the timer ticks every second,
+    // so setting state unconditionally re-rendered the subtree ~60x/minute per
+    // consumer for an identical string.
+    const intervalId = setInterval(() => {
+      const next = calculateTimeAgo(timestamp);
+      setTimeAgo((previous) => (previous === next ? previous : next));
+    }, updateFrequency);
 
     return () => clearInterval(intervalId); // clear interval on hook unmount
   }, [timestamp, updateFrequency]);

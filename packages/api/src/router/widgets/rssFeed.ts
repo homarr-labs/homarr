@@ -9,7 +9,7 @@ import { items, users } from "@homarr/db/schema";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
-import type { WidgetComponentProps } from "../../../../widgets/src";
+import type { WidgetComponentProps } from "../../../../widgets/src/definition";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "rssFeed" });

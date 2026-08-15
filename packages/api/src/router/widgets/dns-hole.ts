@@ -5,7 +5,8 @@ import { createIntegrationAsync } from "@homarr/integrations";
 import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { invalidateIntegrationDataCache } from "../../integration-data-cache";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 export const dnsHoleRouter = createTRPCRouter({
@@ -19,13 +20,17 @@ export const dnsHoleRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const { data, timestamp } = await dnsHoleRequestHandler.handler(integration, {}).getDataAsync();
-        return {
-          integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
-          summary: data,
-        };
-      });
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const { data, timestamp } = await dnsHoleRequestHandler.handler(integration, {}).getDataAsync();
+          return {
+            integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
+            summary: data,
+          };
+        },
+        { queryKey: integrationQueryKey("dns-hole", "summary") },
+      );
     }),
 
   enable: protectedProcedure
@@ -40,6 +45,8 @@ export const dnsHoleRouter = createTRPCRouter({
     .mutation(async ({ ctx: { integration } }) => {
       const client = await createIntegrationAsync(integration);
       await client.enableAsync();
+      invalidateIntegrationDataCache(integration.id);
+      dnsHoleRequestHandler.invalidateCache();
     }),
 
   disable: protectedProcedure
@@ -59,5 +66,7 @@ export const dnsHoleRouter = createTRPCRouter({
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
       await client.disableAsync(input.duration);
+      invalidateIntegrationDataCache(integration.id);
+      dnsHoleRequestHandler.invalidateCache();
     }),
 });

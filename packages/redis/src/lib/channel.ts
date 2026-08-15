@@ -8,6 +8,8 @@ import { createRedisConnection } from "./connection";
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
 
+const LAST_DATA_TTL_SECONDS = 86_400;
+
 /**
  * Creates a new pub/sub channel.
  * @param name name of the channel
@@ -39,7 +41,9 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
      */
     publishAsync: async (data: TData) => {
       if (persist) {
-        await lastDataClient.set(lastChannelName, superjson.stringify(data));
+        // Without an expiry these keys accumulate one payload per channel forever.
+        // getLastDataAsync already tolerates a miss, so expiring them is safe.
+        await lastDataClient.set(lastChannelName, superjson.stringify(data), "EX", LAST_DATA_TTL_SECONDS);
       }
       await publisher.publish(channelName, superjson.stringify(data));
     },

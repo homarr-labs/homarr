@@ -6,7 +6,8 @@ import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-ma
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { invalidateIntegrationDataCache } from "../../integration-data-cache";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const createIndexerManagerIntegrationMiddleware = (action: IntegrationAction) =>
@@ -16,15 +17,19 @@ export const indexerManagerRouter = createTRPCRouter({
   getIndexersStatus: publicProcedure
     .concat(createIndexerManagerIntegrationMiddleware("query"))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const innerHandler = indexerManagerRequestHandler.handler(integration, {});
-        const { data: indexers } = await innerHandler.getDataAsync();
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const innerHandler = indexerManagerRequestHandler.handler(integration, {});
+          const { data: indexers } = await innerHandler.getDataAsync();
 
-        return {
-          integrationId: integration.id,
-          indexers,
-        };
-      });
+          return {
+            integrationId: integration.id,
+            indexers,
+          };
+        },
+        { queryKey: integrationQueryKey("indexer-manager", "getIndexersStatus") },
+      );
     }),
   testAllIndexers: protectedProcedure
     .concat(createIndexerManagerIntegrationMiddleware("interact"))
@@ -41,5 +46,9 @@ export const indexerManagerRouter = createTRPCRouter({
           });
         }),
       );
+      for (const integration of ctx.integrations) {
+        invalidateIntegrationDataCache(integration.id);
+      }
+      indexerManagerRequestHandler.invalidateCache();
     }),
 });

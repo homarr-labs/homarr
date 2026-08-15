@@ -84,7 +84,7 @@ Docker will mount the configuration files and icons to your host machine. Please
 ### Updating
 To update Homarr, you must remove your container first. Make sure that you've mounted your data and that you have access to it, so your configuration doesn't get lost.
 
-1. Run ``docker rm homarr`` to remove the container.
+1. Run ``docker rm -f homarr`` to stop and remove the container.
 2. Pull the latest Homarr image ``docker pull ghcr.io/homarr-labs/homarr:latest``.
 3. Re-run the command you used to install Homarr.
 
@@ -98,8 +98,8 @@ Want to update all your containers automatically? Checkout [Watchtower](https://
 
 ### Uninstalling
 
-1. Obtain the container ID of your Homarr container using ``docker ps | grep homarr``.
-2. Delete the container using ``docker rm <your-container-id>``
+1. Obtain the container ID of your Homarr container using ``docker ps -a | grep homarr``.
+2. Delete the container using ``docker rm -f <your-container-id>``
 3. Prune unused Docker images using ``docker image prune`` (*Warning: this also removes you other unused images - not just Homarr*)
 4. (Optional): Prune any network or volumes if you use any.
 5. (Optional): Remove Homarr from your reverse proxy, VPNs or tunnels if you use any.

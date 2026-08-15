@@ -2,6 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
+import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
+import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
@@ -37,6 +39,7 @@ import {
 import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { invalidateIntegrationDataCache } from "../../integration-data-cache";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
@@ -368,6 +371,9 @@ export const integrationRouter = createTRPCRouter({
         kind: input.kind,
         url: input.url,
       });
+
+      await invalidateIntegrationCacheAsync(integrationId);
+      invalidateIntegrationDataCache(integrationId);
     }),
   update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
@@ -474,6 +480,7 @@ export const integrationRouter = createTRPCRouter({
     // Invalidate all cached data for this integration so that widgets pick up the
     // new configuration immediately instead of serving stale (or errored) data.
     await invalidateIntegrationCacheAsync(input.id);
+    invalidateIntegrationDataCache(input.id);
   }),
   delete: protectedProcedure
     .meta({
@@ -498,6 +505,7 @@ export const integrationRouter = createTRPCRouter({
 
       // Clean up any cached data left behind by the deleted integration.
       await invalidateIntegrationCacheAsync(input.id);
+      invalidateIntegrationDataCache(input.id);
     }),
   getIntegrationPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
@@ -616,6 +624,8 @@ export const integrationRouter = createTRPCRouter({
           });
         },
       });
+
+      invalidateIntegrationDataCache(input.entityId);
     }),
   saveGroupIntegrationPermissions: protectedProcedure
     .input(integrationSavePermissionsSchema)
@@ -662,6 +672,8 @@ export const integrationRouter = createTRPCRouter({
           });
         },
       });
+
+      invalidateIntegrationDataCache(input.entityId);
     }),
   searchInIntegration: protectedProcedure
     .meta({
@@ -781,7 +793,11 @@ export const integrationRouter = createTRPCRouter({
     .input(mediaRequestRequestSchema)
     .mutation(async ({ ctx, input }) => {
       const integration = await createIntegrationAsync(ctx.integration);
-      return await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
+      const result = await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
+      invalidateIntegrationDataCache(ctx.integration.id);
+      mediaRequestListRequestHandler.invalidateCache();
+      mediaRequestStatsRequestHandler.invalidateCache();
+      return result;
     }),
 });
 

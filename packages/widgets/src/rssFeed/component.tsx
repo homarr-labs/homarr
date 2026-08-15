@@ -10,6 +10,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
+import { offscreenRowStyle } from "../common/offscreen-rows";
 
 const useLiveFeedEntries = (input: RouterInputs["widget"]["rssFeed"]["getFeeds"]) => {
   const { data: feedEntries = [] } = clientApi.widget.rssFeed.getFeeds.useQuery(input);
@@ -37,18 +38,19 @@ export default function RssFeed({ options, width }: WidgetComponentProps<"rssFee
             key={feedEntry.id}
             component={"a"}
             href={feedEntry.link}
+            style={offscreenRowStyle(96)}
             radius={board.itemRadius}
             target="_blank"
             w="100%"
             p="sm"
           >
             {feedEntry.enclosure !== undefined && (
-              <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />
+              <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" loading="lazy" />
             )}
 
             <Group wrap="nowrap">
               {feedEntry.enclosure !== undefined && options.showPosterImage && !isNarrow && (
-                <Image src={feedEntry.enclosure} alt={feedEntry.title} w={140} h={140} radius="sm" />
+                <Image src={feedEntry.enclosure} alt={feedEntry.title} w={140} h={140} radius="sm" loading="lazy" />
               )}
 
               <Flex gap="sm" direction="column" w="100%">

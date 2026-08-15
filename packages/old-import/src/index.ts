@@ -9,5 +9,5 @@ export const importOldmarrAsync = async (
   old: OldmarrConfig,
   configuration: OldmarrImportConfiguration,
 ) => {
-  await importSingleOldmarrConfigAsync(db, old, configuration);
+  return await importSingleOldmarrConfigAsync(db, old, configuration);
 };

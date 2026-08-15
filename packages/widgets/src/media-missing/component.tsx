@@ -1,7 +1,21 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Badge, Box, Center, Group, Image, Paper, RingProgress, ScrollArea, SimpleGrid, Stack, Tabs, Text, ThemeIcon } from "@mantine/core";
+import {
+  Badge,
+  Box,
+  Center,
+  Group,
+  Image,
+  Paper,
+  RingProgress,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Tabs,
+  Text,
+  ThemeIcon,
+} from "@mantine/core";
 import { IconDownload, IconMovie, IconQuestionMark, IconVideo } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -9,11 +23,17 @@ import type { MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/typ
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
+import { offscreenRowStyle } from "../common/offscreen-rows";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
 
-export default function MediaMissingWidget({ integrationIds, options, width, height }: WidgetComponentProps<"mediaMissing">) {
+export default function MediaMissingWidget({
+  integrationIds,
+  options,
+  width,
+  height,
+}: WidgetComponentProps<"mediaMissing">) {
   const t = useScopedI18n("widget.mediaMissing");
   const pageSize = Number(options.pageSize);
   const { data } = clientApi.widget.mediaOrganizer.getData.useQuery(
@@ -32,12 +52,8 @@ export default function MediaMissingWidget({ integrationIds, options, width, hei
       </Center>
     );
 
-  const missing = data.flatMap((entry) =>
-    entry.missing.map((item) => ({ item, integrationId: entry.integrationId })),
-  );
-  const queued = data.flatMap((entry) =>
-    entry.queued.map((item) => ({ item, integrationId: entry.integrationId })),
-  );
+  const missing = data.flatMap((entry) => entry.missing.map((item) => ({ item, integrationId: entry.integrationId })));
+  const queued = data.flatMap((entry) => entry.queued.map((item) => ({ item, integrationId: entry.integrationId })));
   const missingCount = data.reduce((sum, entry) => sum + entry.missingCount, 0);
   const queuedCount = data.reduce((sum, entry) => sum + entry.queuedCount, 0);
 
@@ -47,10 +63,12 @@ export default function MediaMissingWidget({ integrationIds, options, width, hei
   const columns = width > 0 ? Math.max(1, Math.min(Math.floor(width / targetCardWidth), 4)) : 1;
   const density: Density = isThin ? "thin" : width > 0 && width / columns < 180 ? "compact" : "comfortable";
 
-  const tabLabel = (label: string, shown: number, total: number) =>
-    isThin ? total : `${label} (${shown}/${total})`;
+  const tabLabel = (label: string, shown: number, total: number) => (isThin ? total : `${label} (${shown}/${total})`);
 
-  const renderPanel = (entries: { item: MissingMediaItem | QueuedMediaItem; integrationId: string }[], emptyLabel: string) => (
+  const renderPanel = (
+    entries: { item: MissingMediaItem | QueuedMediaItem; integrationId: string }[],
+    emptyLabel: string,
+  ) => (
     <ScrollArea h="100%" scrollbarSize={4}>
       <Box p="xs">
         {entries.length === 0 ? (
@@ -70,6 +88,9 @@ export default function MediaMissingWidget({ integrationIds, options, width, hei
 
   return (
     <Tabs
+      // Without this Mantine keeps the inactive panel mounted, so both tabs build their full card
+      // list - and fetch every backdrop - when only one is ever visible.
+      keepMounted={false}
       defaultValue={options.showMissing ? "missing" : "queued"}
       h="100%"
       style={{ display: "flex", flexDirection: "column" }}
@@ -112,11 +133,18 @@ const Poster = ({ src, type, density }: { src?: string | null; type: "movie" | "
   const w = Math.round(size * 0.68);
 
   if (src) {
-    return <Image className={classes.poster} src={src} h={size} w={w} radius="sm" alt="" />;
+    return <Image className={classes.poster} src={src} h={size} w={w} radius="sm" alt="" loading="lazy" />;
   }
 
   return (
-    <ThemeIcon className={classes.poster} h={size} w={w} radius="sm" variant="light" color={type === "movie" ? "yellow" : "blue"}>
+    <ThemeIcon
+      className={classes.poster}
+      h={size}
+      w={w}
+      radius="sm"
+      variant="light"
+      color={type === "movie" ? "yellow" : "blue"}
+    >
       {type === "movie" ? <IconMovie size={size * 0.5} /> : <IconVideo size={size * 0.5} />}
     </ThemeIcon>
   );
@@ -183,8 +211,27 @@ const ProgressRing = ({ percent, density }: { percent: number; density: Density 
   );
 };
 
-const CardShell = ({ item, density, children }: { item: MissingMediaItem | QueuedMediaItem; density: Density; children: ReactNode }) => (
-  <Paper className={classes.card} component="a" href={item.link} target="_blank" rel="noreferrer" radius="sm" p="xs" h={CARD_HEIGHT[density]}>
+const CardShell = ({
+  item,
+  density,
+  children,
+}: {
+  item: MissingMediaItem | QueuedMediaItem;
+  density: Density;
+  children: ReactNode;
+}) => (
+  <Paper
+    className={classes.card}
+    component="a"
+    href={item.link}
+    target="_blank"
+    rel="noreferrer"
+    radius="sm"
+    p="xs"
+    h={CARD_HEIGHT[density]}
+    // The card height is fixed per density, so it is an exact intrinsic size rather than a guess.
+    style={offscreenRowStyle(CARD_HEIGHT[density])}
+  >
     {item.imageUrl && (
       <span className={classes.backdrop} style={{ backgroundImage: `url("${item.imageUrl}")` }} aria-hidden />
     )}

@@ -90,7 +90,16 @@ export function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceC
         </Group>
       </Group>
 
-      <Accordion variant="filled" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
+      {/* Collapsed panels are rendered by default, so all three resource lists were built even when
+          none is open. The open sections are parent state, so nothing is lost by unmounting. */}
+      <Accordion
+        variant="filled"
+        chevronPosition="right"
+        multiple
+        keepMounted={false}
+        value={openSections}
+        onChange={setOpenSections}
+      >
         {options.showServers && (
           <ServersSection
             servers={instance.instanceInfo.servers}

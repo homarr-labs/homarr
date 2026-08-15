@@ -1,9 +1,8 @@
 import { createIntegrationAsync } from "@homarr/integrations";
-import { SynologyIntegration } from "@homarr/integrations";
 import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
-import { settleIntegrationQueries } from "../../settle-integrations";
+import { integrationQueryKey, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const healthMonitoringIntegrationKinds = [
@@ -27,15 +26,19 @@ export const healthMonitoringRouter = createTRPCRouter({
     })
     .concat(createManyIntegrationMiddleware("query", ...healthMonitoringIntegrationKinds))
     .query(async ({ ctx }) => {
-      return await settleIntegrationQueries(ctx.integrations, async (integration) => {
-        const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
-        return {
-          integrationId: integration.id,
-          integrationName: integration.name,
-          healthInfo: data,
-          updatedAt: timestamp,
-        };
-      });
+      return await settleIntegrationQueries(
+        ctx.integrations,
+        async (integration) => {
+          const { data, timestamp } = await systemInfoRequestHandler.handler(integration, {}).getDataAsync();
+          return {
+            integrationId: integration.id,
+            integrationName: integration.name,
+            healthInfo: data,
+            updatedAt: timestamp,
+          };
+        },
+        { queryKey: integrationQueryKey("health-monitoring", "getSystemHealthStatus") },
+      );
     }),
   listStorageVolumes: publicProcedure
     .meta({
@@ -47,10 +50,11 @@ export const healthMonitoringRouter = createTRPCRouter({
     })
     .concat(createOneIntegrationMiddleware("query", "synology"))
     .query(async ({ ctx }) => {
-      const integrationInstance = await createIntegrationAsync(ctx.integration);
-      if (!(integrationInstance instanceof SynologyIntegration)) {
+      if (ctx.integration.kind !== "synology") {
         throw new Error("Expected Synology integration");
       }
+
+      const integrationInstance = await createIntegrationAsync(ctx.integration);
 
       return await integrationInstance.listStorageVolumesAsync();
     }),

@@ -30,7 +30,38 @@ import {
 // Umami event type ID for custom events (type 1 = page view, type 2 = custom event)
 const UMAMI_CUSTOM_EVENT_TYPE = 2;
 
+/**
+ * Records per page when /events returns raw event rows rather than aggregated buckets.
+ *
+ * Requesting the whole list at once makes the server hold all of it: one measured refresh
+ * pulled a 46.3 MiB JSON body assembled from 3,946 socket chunks, and `Response.json()`
+ * keeps the chunk list and the joined copy alive at the same time, so the true peak was
+ * roughly double. Pages are folded into the bucket map and released, so only one page is
+ * ever resident.
+ *
+ * 5,000 rather than something smaller because this trades against round trips, not just
+ * memory: a page is ~2.3 MiB, so the peak stays small, while any site with fewer than 5,000
+ * events in the window — which is most of them — still completes in a single request.
+ */
+const UMAMI_EVENT_PAGE_SIZE = 5_000;
+/**
+ * Ceiling on pages, so a very busy site degrades into an undercount that is logged rather
+ * than into unbounded memory. Preserves the previous 100k-record ceiling.
+ */
+const UMAMI_EVENT_PAGE_MAX = 20;
+
 const logger = createLogger({ module: "umami-integration" });
+
+const pad = (number: number) => String(number).padStart(2, "0");
+
+/** Umami returns either a bare array or `{ data: [...] }` depending on endpoint and version. */
+const extractDataArray = (json: unknown): unknown[] => {
+  if (Array.isArray(json)) return json;
+  if (json && typeof json === "object" && "data" in json && Array.isArray((json as { data: unknown }).data)) {
+    return (json as { data: unknown[] }).data;
+  }
+  return [];
+};
 
 export class UmamiIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -168,34 +199,31 @@ export class UmamiIntegration extends Integration {
     };
   }
 
+  /**
+   * Distinct custom event names over the last 30 days.
+   *
+   * Uses the aggregated `/metrics?type=event` endpoint, which returns one row per event
+   * name. The obvious alternative — listing `/events` and collecting the distinct
+   * `eventName` values — downloads every raw event record to compute a handful of strings:
+   * on a busy site that measured a 46.3 MiB JSON response, and `Response.json()` holds the
+   * socket chunks and the joined copy simultaneously, so the real cost was about twice that.
+   *
+   * The two are not exactly equivalent: /metrics returns the top names by count, so an
+   * extremely rare event could fall outside it. The list endpoint was bounded too — it
+   * capped at a record count, which on a busy site does not even span the 30-day window —
+   * so this trades one incomplete answer for a much cheaper one, in a picker where the
+   * names worth choosing are the ones with traffic.
+   */
   public async getEventNamesAsync(websiteId: string): Promise<string[]> {
     const authHeaders = await this.getAuthHeadersAsync();
-    const now = Date.now();
+    const endAt = Date.now();
     const startAt = dayjs().subtract(30, "day").valueOf();
-    const url = this.url(`/websites/${websiteId}/events`, {
-      startAt: startAt.toString(),
-      endAt: now.toString(),
-      pageSize: "100000",
-    });
-    const response = await fetchWithTrustedCertificatesAsync(url, { headers: authHeaders });
-    if (!response.ok) {
-      logger.warn("Failed to load event names", { status: response.status, websiteId });
-      return [];
-    }
-    const json = await response.json();
-    const rawArray: unknown[] = Array.isArray(json)
-      ? json
-      : json && typeof json === "object" && "data" in json && Array.isArray((json as { data: unknown }).data)
-        ? (json as { data: unknown[] }).data
-        : [];
+    const metrics = await this.getWebsiteMetricsAsync(websiteId, startAt, endAt, "event", authHeaders);
     const names = new Set<string>();
-    for (const item of rawArray) {
-      const record = item as Record<string, unknown>;
-      if (typeof record.eventName === "string" && record.eventName) {
-        names.add(record.eventName);
-      }
+    for (const metric of metrics) {
+      if (metric.x) names.add(metric.x);
     }
-    return [...names].sort();
+    return [...names].toSorted();
   }
 
   public async getActiveVisitorsAsync(websiteId: string): Promise<number> {
@@ -243,19 +271,23 @@ export class UmamiIntegration extends Integration {
   ): Promise<UmamiEventSeries[]> {
     const authHeaders = await this.getAuthHeadersAsync();
     const { startAt, endAt, unit } = this.computeTimeRange(timeFrame);
-    const results = await Promise.all(
-      eventNames.map(async (eventName) => {
-        const dataPoints = await this.getWebsiteEventTimeSeriesAsync(
-          websiteId,
-          startAt,
-          endAt,
-          unit,
-          eventName,
-          authHeaders,
-        );
-        return { eventName, dataPoints: dataPoints ?? [] };
-      }),
-    );
+
+    // Sequentially, not with Promise.all over every name. Each series can be several pages
+    // of raw events on a busy site, and running them all at once multiplies the resident
+    // pages by the number of tracked events — which is how one widget refresh was able to
+    // put well over a hundred megabytes in flight at the same time.
+    const results: UmamiEventSeries[] = [];
+    for (const eventName of eventNames) {
+      const dataPoints = await this.getWebsiteEventTimeSeriesAsync(
+        websiteId,
+        startAt,
+        endAt,
+        unit,
+        eventName,
+        authHeaders,
+      );
+      results.push({ eventName, dataPoints: dataPoints ?? [] });
+    }
     return results;
   }
 
@@ -298,6 +330,16 @@ export class UmamiIntegration extends Integration {
     return [];
   }
 
+  /**
+   * Per-event time series.
+   *
+   * Two response shapes coexist:
+   *   - Umami self-hosted returns aggregated buckets: { x: timestamp, y: count }
+   *   - Umami Cloud returns raw event records: { createdAt, eventName, eventType }
+   * The raw records are bucketed here onto the same grid so the result joins cleanly with
+   * /pageviews timestamps. Raw pages are folded in one at a time — see UMAMI_EVENT_PAGE_SIZE
+   * for why fetching them in a single page was the largest allocation in the server.
+   */
   private async getWebsiteEventTimeSeriesAsync(
     websiteId: string,
     startAt: number,
@@ -306,79 +348,98 @@ export class UmamiIntegration extends Integration {
     eventName: string,
     authHeaders: Record<string, string>,
   ): Promise<UmamiPageviewDataPoint[] | undefined> {
-    const url = this.url(`/websites/${websiteId}/events`, {
-      startAt: startAt.toString(),
-      endAt: endAt.toString(),
-      unit,
-      timezone: "UTC",
-      eventName,
-      pageSize: "100000",
-    });
-    const response = await fetchWithTrustedCertificatesAsync(url, {
-      headers: authHeaders,
-    });
+    // Format must match Umami's pageview x-axis timestamps: "YYYY-MM-DD HH:MM:SS"
+    const truncate = (isoDate: string): string => {
+      const date = new Date(isoDate);
+      const dateString = `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
+      if (unit === "hour") {
+        return `${dateString} ${pad(date.getUTCHours())}:00:00`;
+      }
+      if (unit === "month") {
+        return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-01 00:00:00`;
+      }
+      return `${dateString} 00:00:00`;
+    };
 
-    if (!response.ok) {
-      logger.warn("Failed to load event time series", { status: response.status, websiteId, eventName });
-      return undefined;
-    }
+    const buckets = new Map<string, number>();
+    let previousFirstId: string | undefined;
+    let truncated = false;
 
-    const json = await response.json();
-    const rawArray: unknown[] = Array.isArray(json)
-      ? json
-      : json && typeof json === "object" && "data" in json && Array.isArray((json as { data: unknown }).data)
-        ? (json as { data: unknown[] }).data
-        : [];
+    for (let page = 1; ; page++) {
+      const url = this.url(`/websites/${websiteId}/events`, {
+        startAt: startAt.toString(),
+        endAt: endAt.toString(),
+        unit,
+        timezone: "UTC",
+        eventName,
+        page: page.toString(),
+        pageSize: UMAMI_EVENT_PAGE_SIZE.toString(),
+      });
+      const response = await fetchWithTrustedCertificatesAsync(url, {
+        headers: authHeaders,
+      });
 
-    if (rawArray.length === 0) return undefined;
+      if (!response.ok) {
+        logger.warn("Failed to load event time series", { status: response.status, websiteId, eventName, page });
+        break;
+      }
 
-    const firstItem = rawArray[0] as Record<string, unknown>;
+      const rawArray = extractDataArray(await response.json());
+      if (rawArray.length === 0) break;
 
-    // Two response shapes coexist:
-    //   - Umami self-hosted returns aggregated buckets: { x: timestamp, y: count }
-    //   - Umami Cloud returns raw event records: { createdAt, eventName, eventType }
-    // We aggregate the raw Cloud records ourselves into the same bucket grid so
-    // the result joins cleanly with /pageviews timestamps.
+      const firstItem = rawArray[0] as Record<string, unknown>;
 
-    // Aggregated { x, y } format — parse directly (self-hosted instances)
-    if ("x" in firstItem && "y" in firstItem) {
-      const points = umamiPageviewDataPointSchema.array().parse(rawArray);
-      return points.length === 0 ? undefined : points;
-    }
+      // Aggregated { x, y }: this instance ignored paging and returned the whole series, so
+      // there is nothing to accumulate across pages.
+      if ("x" in firstItem && "y" in firstItem) {
+        const points = umamiPageviewDataPointSchema.array().parse(rawArray);
+        return points.length === 0 ? undefined : points;
+      }
+      if (!("createdAt" in firstItem)) return undefined;
 
-    // Raw event records — aggregate by time bucket (Umami Cloud)
-    if ("createdAt" in firstItem) {
-      const pad = (number: number) => String(number).padStart(2, "0");
-      // Format must match Umami's pageview x-axis timestamps: "YYYY-MM-DD HH:MM:SS"
-      const truncate = (isoDate: string): string => {
-        const date = new Date(isoDate);
-        const dateString = `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
-        if (unit === "hour") {
-          return `${dateString} ${pad(date.getUTCHours())}:00:00`;
-        }
-        if (unit === "month") {
-          return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-01 00:00:00`;
-        }
-        return `${dateString} 00:00:00`;
-      };
+      // An instance that accepts pageSize but ignores page would hand back the same rows
+      // forever, and each pass would count them into the buckets again. Falls back to
+      // session+timestamp where records carry no id, so the guard still holds.
+      const firstId =
+        typeof firstItem.id === "string"
+          ? firstItem.id
+          : typeof firstItem.createdAt === "string"
+            ? `${String(firstItem.sessionId ?? "")}@${firstItem.createdAt}`
+            : undefined;
+      if (page > 1 && firstId !== undefined && firstId === previousFirstId) {
+        logger.warn("Umami ignored event paging, stopping after the first page", { websiteId, eventName });
+        break;
+      }
+      previousFirstId = firstId;
 
-      const buckets = new Map<string, number>();
       for (const item of rawArray) {
         const event = item as { eventType?: number; eventName?: string; createdAt: string };
         if (event.eventType !== UMAMI_CUSTOM_EVENT_TYPE || event.eventName !== eventName) continue;
         const bucket = truncate(event.createdAt);
         buckets.set(bucket, (buckets.get(bucket) ?? 0) + 1);
       }
-      if (buckets.size === 0) return undefined;
-      return (
-        Array.from(buckets.entries())
-          .sort(([itemA], [itemB]) => itemA.localeCompare(itemB))
-          // eslint-disable-next-line id-length
-          .map(([x, y]) => ({ x, y }))
-      );
+
+      if (rawArray.length < UMAMI_EVENT_PAGE_SIZE) break;
+      if (page >= UMAMI_EVENT_PAGE_MAX) {
+        truncated = true;
+        break;
+      }
     }
 
-    return undefined;
+    if (truncated) {
+      logger.warn("Event time series hit the page ceiling, counts are a lower bound", {
+        websiteId,
+        eventName,
+        maxRecords: UMAMI_EVENT_PAGE_SIZE * UMAMI_EVENT_PAGE_MAX,
+      });
+    }
+    if (buckets.size === 0) return undefined;
+    return (
+      Array.from(buckets.entries())
+        .toSorted(([itemA], [itemB]) => itemA.localeCompare(itemB))
+        // eslint-disable-next-line id-length
+        .map(([x, y]) => ({ x, y }))
+    );
   }
 
   private async getWebsiteStatsAsync(

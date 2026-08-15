@@ -6,6 +6,7 @@ import { smartHomeEntityStateRequestHandler } from "@homarr/request-handler/smar
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { invalidateIntegrationDataCache } from "../../integration-data-cache";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const createSmartHomeIntegrationMiddleware = (action: IntegrationAction) =>
@@ -41,6 +42,8 @@ export const smartHomeRouter = createTRPCRouter({
       const client = await createIntegrationAsync(integration);
       const success = await client.triggerToggleAsync(input.entityId);
 
+      invalidateIntegrationDataCache(integration.id);
+      smartHomeEntityStateRequestHandler.invalidateCache();
       return success;
     }),
   executeAutomation: protectedProcedure
@@ -56,5 +59,7 @@ export const smartHomeRouter = createTRPCRouter({
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
       await client.triggerAutomationAsync(input.automationId);
+      invalidateIntegrationDataCache(integration.id);
+      smartHomeEntityStateRequestHandler.invalidateCache();
     }),
 });

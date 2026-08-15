@@ -46,9 +46,10 @@ const getImageFromStringAsFallback = (feedUrl: string, content: string) => {
     return null;
   }
 
-  console.debug(
-    `Falling back to regex image search for '${feedUrl}'. Found ${result.length} matches in content: ${content}`,
-  );
+  // This used to log the entire serialised feed entry through a raw console.debug, so it could not be
+  // suppressed by log level and produced one enormous line per entry of every feed. It also reported
+  // `result.length`, which is the capture-group count and so was always 2 rather than a match count.
+  logger.debug(`Falling back to regex image search for '${feedUrl}'`, { image: result[0] });
   return result[0];
 };
 
