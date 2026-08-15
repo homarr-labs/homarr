@@ -1,0 +1,20 @@
+paseo.json
+  s_9ad5eab74e1fdb::t_6f22cc28cb046c 12
+  s_9ad5eab74e1fdb::t_0c541d02b2188f 3-11,13-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "5d9adc709b8f5e90ef6b5dc8b0348580e9005e38",
+  "prompts": {},
+  "sessions": {
+    "s_9ad5eab74e1fdb": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ffb2afba8ffemUjY79nEWrhzH6",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
