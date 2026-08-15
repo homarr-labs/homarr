@@ -1,0 +1,35 @@
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_58013a811abbcd::t_cc71c8bead1a5e 757-759
+  s_58013a811abbcd::t_aac2257a1956c0 1051
+packages/widgets/src/bookmarks/add-button.tsx
+  s_58013a811abbcd::t_cc71c8bead1a5e 9,20-22,42-43,51,53
+packages/widgets/src/_inputs/widget-location-input.spec.tsx
+  s_58013a811abbcd::t_5f9493c10bc261 1-118
+packages/widgets/src/bookmarks/layout.spec.ts
+  s_58013a811abbcd::t_cc71c8bead1a5e 46-51
+apps/nextjs/src/components/board/sections/grid/grid-portal-host.tsx
+  s_58013a811abbcd::t_cc71c8bead1a5e 154-155,206-207,217-225
+  s_58013a811abbcd::t_3a05814ae431e7 226
+packages/widgets/src/bookmarks/component.tsx
+  s_58013a811abbcd::t_cc71c8bead1a5e 268-269,273-274
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_58013a811abbcd::t_cc71c8bead1a5e 210-211,302
+packages/widgets/src/_inputs/widget-location-input.tsx
+  s_58013a811abbcd::t_cc71c8bead1a5e 3,44,47-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "342b58d3165c40227a0508aa74d14846c2b9a1df",
+  "prompts": {},
+  "sessions": {
+    "s_58013a811abbcd": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a00226-3a04-7533-b035-01881a737063",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
