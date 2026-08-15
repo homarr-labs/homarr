@@ -1,0 +1,5 @@
+{
+  "worktree": {
+    "setup": ["bash scripts/install.sh"]
+  }
+}
