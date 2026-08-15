@@ -1,5 +1,20 @@
 {
   "worktree": {
-    "setup": "mise trust\nmise install\npnpm install\n\nif [ -n \"${PASEO_SOURCE_CHECKOUT_PATH:-}\" ] && [ -f \"$PASEO_SOURCE_CHECKOUT_PATH/.env\" ]; then\n  cp \"$PASEO_SOURCE_CHECKOUT_PATH/.env\" .env\nelse\n  cp .env.example .env\nfi\n\nDB_PATH=\"$PWD/homarr.sqlite\"\nif grep -q '^DB_DRIVER=' .env; then\n  sed -i.bak \"s|^DB_DRIVER=.*|DB_DRIVER='better-sqlite3'|\" .env\nelse\n  printf \"DB_DRIVER='better-sqlite3'\\n\" >> .env\nfi\nif grep -q '^DB_URL=' .env; then\n  sed -i.bak \"s|^DB_URL=.*|DB_URL='$DB_PATH'|\" .env\nelse\n  printf \"DB_URL='%s'\\n\" \"$DB_PATH\" >> .env\nfi\nrm -f .env.bak\n\nrm -f homarr.sqlite\npnpm db:migration:sqlite:run"
+    "setup": "mise trust\nmise install\npnpm install\n\nif [ -n \"${PASEO_SOURCE_CHECKOUT_PATH:-}\" ] && [ -f \"$PASEO_SOURCE_CHECKOUT_PATH/.env\" ]; then\n  cp \"$PASEO_SOURCE_CHECKOUT_PATH/.env\" .env\nelse\n  cp .env.example .env\nfi\n\nDB_PATH=\"$PWD/homarr.sqlite\"\nif grep -q '^DB_DRIVER=' .env; then\n  sed -i.bak \"s|^DB_DRIVER=.*|DB_DRIVER='better-sqlite3'|\" .env\nelse\n  printf \"DB_DRIVER='better-sqlite3'\\n\" >> .env\nfi\nif grep -q '^DB_URL=' .env; then\n  sed -i.bak \"s|^DB_URL=.*|DB_URL='$DB_PATH'|\" .env\nelse\n  printf \"DB_URL='%s'\\n\" \"$DB_PATH\" >> .env\nfi\nrm -f .env.bak\n\nrm -f homarr.sqlite\npnpm db:migration:sqlite:run",
+    "teardown": "rm -f homarr.sqlite",
+    "servicePorts": {
+      "range": "3000-4000"
+    }
+  },
+  "scripts": {
+    "dev": {
+      "type": "service",
+      "command": "PORT=$PASEO_PORT pnpm -F nextjs dev"
+    },
+    "test": { "command": "pnpm test" },
+    "test:e2e": { "command": "pnpm test:e2e" },
+    "lint": { "command": "pnpm lint" },
+    "typecheck": { "command": "pnpm typecheck" },
+    "db:studio": { "command": "pnpm db:studio" }
   }
 }
