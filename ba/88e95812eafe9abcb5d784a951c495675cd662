@@ -1,0 +1,127 @@
+packages/ui/package.json
+  s_8899e3f3b27754::t_56d52b2f411e4f 52-53
+  s_8899e3f3b27754::t_753a1c6c1ef45b 27,33,38-39,41,54
+packages/server-settings/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 29
+packages/widgets/package.json
+  s_8899e3f3b27754::t_708ebe1c6bb0f9 106-107
+  s_8899e3f3b27754::t_65629b406d7481 62,65,67,84-85,93-94,108
+packages/request-handler/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 32,34,36,43
+  s_8899e3f3b27754::t_c03e10c7fe98fe 44
+packages/old-schema/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 29
+packages/modals/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 33
+  s_8899e3f3b27754::t_56d52b2f411e4f 32
+packages/docker/package.json
+  s_8899e3f3b27754::t_89cbb029f138b9 28,30
+  s_8899e3f3b27754::t_753a1c6c1ef45b 29,35
+packages/validation/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 26,32
+packages/old-import/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 54
+  s_8899e3f3b27754::t_56d52b2f411e4f 52-53
+apps/nextjs/package.json
+  s_8899e3f3b27754::t_65629b406d7481 53,56,93,95,106
+packages/form/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 29,35
+  s_8899e3f3b27754::t_56d52b2f411e4f 34
+packages/settings/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 36
+  s_8899e3f3b27754::t_56d52b2f411e4f 34-35
+packages/api/package.json
+  s_8899e3f3b27754::t_65629b406d7481 50,52,57,61,74
+  s_8899e3f3b27754::t_1f858e2ec7f841 67-68
+  s_8899e3f3b27754::t_218ad40008251d 72-73
+packages/cron-jobs-core/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 33
+packages/db/package.json
+  s_8899e3f3b27754::t_65629b406d7481 54,70
+packages/cron-job-status/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 29
+packages/translation/package.json
+  s_8899e3f3b27754::t_56d52b2f411e4f 42-43
+  s_8899e3f3b27754::t_753a1c6c1ef45b 44
+packages/integrations/package.json
+  s_8899e3f3b27754::t_65629b406d7481 41-44,47,50,60-61
+packages/auth/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 35,48
+  s_8899e3f3b27754::t_c57ae372d88d9b 47
+pnpm-workspace.yaml
+  s_8899e3f3b27754::t_3d7a73c51f9b4c 88
+  s_8899e3f3b27754::t_a441eb7044f163 49,99-103,114,198
+  s_8899e3f3b27754::t_86b447bdac93dc 167
+  s_8899e3f3b27754::t_cc4aae6f370346 38
+  s_8899e3f3b27754::t_601036a8a7f534 95
+Dockerfile
+  s_8899e3f3b27754::t_c30d0851799b20 20
+  s_8899e3f3b27754::t_7da8c1f8d084bf 24-26,28
+packages/ping/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 30
+  s_8899e3f3b27754::t_89cbb029f138b9 25-26
+packages/image-proxy/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 32
+packages/common/package.json
+  s_8899e3f3b27754::t_56d52b2f411e4f 48,50
+  s_8899e3f3b27754::t_c03e10c7fe98fe 51
+  s_8899e3f3b27754::t_753a1c6c1ef45b 29,31-33,37,39,49
+apps/websocket/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 29,36
+packages/redis/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 33
+packages/forms-collection/package.json
+  s_8899e3f3b27754::t_56d52b2f411e4f 43-44
+  s_8899e3f3b27754::t_21246be37357fe 36
+  s_8899e3f3b27754::t_89cbb029f138b9 33-35
+  s_8899e3f3b27754::t_753a1c6c1ef45b 38,45
+packages/analytics/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 33
+packages/icons/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 31
+packages/cron-jobs/package.json
+  s_8899e3f3b27754::t_89cbb029f138b9 41-42
+  s_8899e3f3b27754::t_753a1c6c1ef45b 43,50
+  s_8899e3f3b27754::t_c03e10c7fe98fe 49
+packages/boards/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 28,36
+  s_8899e3f3b27754::t_89cbb029f138b9 27
+  s_8899e3f3b27754::t_56d52b2f411e4f 34-35
+package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 64,70
+apps/docs/package.json
+  s_8899e3f3b27754::t_65629b406d7481 33,56
+packages/cli/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 36
+packages/definitions/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 33
+packages/modals-collection/package.json
+  s_8899e3f3b27754::t_56d52b2f411e4f 48-49
+  s_8899e3f3b27754::t_753a1c6c1ef45b 36-37,40,50
+packages/core/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 40,50,56
+  s_8899e3f3b27754::t_89cbb029f138b9 48
+packages/spotlight/package.json
+  s_8899e3f3b27754::t_56d52b2f411e4f 53-54
+  s_8899e3f3b27754::t_753a1c6c1ef45b 39,43-44,55
+packages/notifications/package.json
+  s_8899e3f3b27754::t_753a1c6c1ef45b 31
+pnpm-lock.yaml
+  s_8899e3f3b27754::t_6bc09d21bd27b4 99-101,111-113,138-140,255-257,303-305,342-344,387-389,447-449,456-458,471-473,483-485,576-578,661-663,679-681,754-756,818-820,947-949,956-958,1067-1069,1073-1075,1106-1108,1267-1269,1283-1285,1320-1322,1389-1391,1395-1397,1410-1412,1422-1424,1443-1445,1450-1458,1492-1494,1523-1528,1538-1543,1554-1562,1591-1593,1606-1608,1612-1620,1630-1632,1636-1638,1658-1666,1676-1678,1700-1702,1706-1708,1719-1721,1738-1740,1795-1803,1814-1819,1842-1844,1872-1874,1915-1917,1949-1951,1967-1969,1973-1975,1983-1985,2004-2006,2014-2019,2053-2064,2068-2070,2078-2086,2106-2108,2134-2136,2185-2196,2203-2205,2212-2214,2237-2242,2277-2282,2325-2330,2337-2339,2356-2364,2384-2386,2460-2468,2485-2487,2500-2502,2507-2509,2538-2540,2571-2573,2577-2579,2583-2585,2599-2604,2621-2623,2652-2660,2703-2705,2715-2720,2740-2748,2786-2794,2801-2803,2819-2821,2834-2839,2843-2845,2871-2879,2892-2894,2905-2907,2989-2991,2998-3000,3004-3006,3055-3060,3082-3087,3116-3124,9833,19416,19584,20647,20650,20991,22023,22032,22036,22047,22051,22058,22197,22203,22214,22246,22276,22350,22357,22366,22376,22380,22384,22396,22417,22421,24727,26056,26070,28461,28737,28744
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ba88e95812eafe9abcb5d784a951c495675cd662",
+  "prompts": {},
+  "sessions": {
+    "s_8899e3f3b27754": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ffb30644affeA9SOiZWIOtCRgS",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
