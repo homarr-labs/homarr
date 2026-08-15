@@ -1,5 +1,5 @@
 {
   "worktree": {
-    "setup": ["bash scripts/install.sh"]
+    "setup": "mise trust\nmise install\npnpm install\n\nif [ -n \"${PASEO_SOURCE_CHECKOUT_PATH:-}\" ] && [ -f \"$PASEO_SOURCE_CHECKOUT_PATH/.env\" ]; then\n  cp \"$PASEO_SOURCE_CHECKOUT_PATH/.env\" .env\nelse\n  cp .env.example .env\nfi\n\nDB_PATH=\"$PWD/homarr.sqlite\"\nif grep -q '^DB_DRIVER=' .env; then\n  sed -i.bak \"s|^DB_DRIVER=.*|DB_DRIVER='better-sqlite3'|\" .env\nelse\n  printf \"DB_DRIVER='better-sqlite3'\\n\" >> .env\nfi\nif grep -q '^DB_URL=' .env; then\n  sed -i.bak \"s|^DB_URL=.*|DB_URL='$DB_PATH'|\" .env\nelse\n  printf \"DB_URL='%s'\\n\" \"$DB_PATH\" >> .env\nfi\nrm -f .env.bak\n\nrm -f homarr.sqlite\npnpm db:migration:sqlite:run"
   }
 }
