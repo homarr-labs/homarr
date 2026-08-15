@@ -76,7 +76,7 @@ catalog:
   "@turbo/gen": ^2.10.10
   "@types/adm-zip": 0.5.8
   "@types/bcrypt": 6.0.0
-  "@types/better-sqlite3": 9.6.0
+  "@types/better-sqlite3": 7.6.13
   "@types/chroma-js": 3.1.2
   "@types/cookies": 0.9.2
   "@types/crypto-js": ^4.2.2
@@ -105,7 +105,7 @@ catalog:
   "sql.js": ^1.14.2
   babel-plugin-react-compiler: ^1.0.0
   bcrypt: ^6.0.0
-  "better-sqlite3": ^13.0.3
+  "better-sqlite3": ^12.11.1
   chroma-js: ^3.2.0
   clsx: ^2.1.1
   "concurrently": ^10.0.5
