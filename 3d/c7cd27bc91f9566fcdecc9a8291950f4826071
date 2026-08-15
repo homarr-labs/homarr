@@ -1,0 +1,19 @@
+packages/integrations/package.json
+  s_16e363cc6ebe3e::t_3cbae09ccc4217 56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "3dc7cd27bc91f9566fcdecc9a8291950f4826071",
+  "prompts": {},
+  "sessions": {
+    "s_16e363cc6ebe3e": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ffb2d8dddffeSrYoiQ34WKVMhy",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
