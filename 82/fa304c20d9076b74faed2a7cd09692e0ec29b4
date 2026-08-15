@@ -1,0 +1,35 @@
+apps/nextjs/src/components/board/sections/grid/dnd/engine.spec.ts
+  s_89f565f69d646d::t_73f816025dcc23 460-476
+  s_89f565f69d646d::t_6986a81d612bdb 306
+  s_89f565f69d646d::t_590a2837250102 25,35-36,305,307-353,479,490,498-499
+apps/nextjs/src/components/board/remove-confirmation-menu-item.tsx
+  s_89f565f69d646d::t_fbd0c0129efd3b 1-39
+apps/nextjs/src/components/board/items/item-menu.tsx
+  s_89f565f69d646d::t_fbd0c0129efd3b 13,141,143
+  s_89f565f69d646d::t_1f33ec3cb5fbc8 3,7,142,144-145
+apps/nextjs/src/components/board/sections/container/container-menu.tsx
+  s_89f565f69d646d::t_78e884f07df025 6
+  s_89f565f69d646d::t_fbd0c0129efd3b 9
+  s_89f565f69d646d::t_1f33ec3cb5fbc8 2,5,62-63
+  s_89f565f69d646d::t_08a5829165bd32 64-66
+apps/nextjs/src/components/board/sections/grid/dnd/engine.ts
+  s_89f565f69d646d::t_73f816025dcc23 153-154
+  s_89f565f69d646d::t_590a2837250102 213-216,229-246,267
+  s_89f565f69d646d::t_311b28b76e26d5 268
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "82fa304c20d9076b74faed2a7cd09692e0ec29b4",
+  "prompts": {},
+  "sessions": {
+    "s_89f565f69d646d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0045a-2f07-7152-9664-97ca99443fbe",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
