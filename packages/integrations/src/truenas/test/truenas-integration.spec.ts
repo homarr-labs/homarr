@@ -148,6 +148,14 @@ const happyResponder = (method: string) => {
       ];
     case "pool.query":
       return [{ name: "tank", status: "ONLINE", healthy: true, free: 500, size: 1000, allocated: 500 }];
+    case "pool.dataset.query":
+      return [
+        {
+          id: "tank",
+          used: { parsed: 200 },
+          available: { parsed: 300 },
+        },
+      ];
     case "interface.query":
       return [{ id: "eth0", name: "eth0" }];
     case "reporting.netdata_get_data":
@@ -191,6 +199,18 @@ describe("TrueNasIntegration", () => {
     // JSON-RPC does not use the legacy "connect" session handshake.
     expect(ws.sentPayloads.some((payload) => payload.msg === "connect")).toBe(false);
 
+    const datasetPayload = ws.sentPayloads.find((payload) => payload.method === "pool.dataset.query");
+    expect(datasetPayload).toMatchObject({
+      params: [
+        [["id", "in", ["tank"]]],
+        {
+          extra: {
+            properties: ["used", "available"],
+          },
+        },
+      ],
+    });
+
     expect(result).toMatchObject({
       version: "TrueNAS-SCALE-24.10",
       cpuModelName: "Intel Xeon",
@@ -204,10 +224,23 @@ describe("TrueNasIntegration", () => {
       loadAverage: null,
       gpu: [],
       network: { up: 20_000, down: 10_000 },
-      // `available` is the free space left on the pool (free = 500), not its total size.
-      fileSystem: [{ deviceName: "tank", available: "500", used: "500", percentage: 50 }],
+      // `available` and `used` come from the root dataset, not the physical pool.
+      fileSystem: [{ deviceName: "tank", available: "300", used: "200", percentage: 40 }],
       smart: [{ deviceName: "tank", healthy: true, overallStatus: "ONLINE", temperature: null }],
     });
+  });
+
+  test("reports zero usage for an empty root dataset", async () => {
+    ws.setResponder((method) =>
+      method === "pool.dataset.query"
+        ? [{ id: "tank", used: { parsed: 0 }, available: { parsed: 0 } }]
+        : happyResponder(method),
+    );
+    const integration = createIntegration(credentials);
+
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.fileSystem[0]?.percentage).toBe(0);
   });
 
   test("authenticates with an API key when one is configured", async () => {

@@ -49,9 +49,10 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       memUsedInBytes,
       fileSystem: datasets.map((dataset) => ({
         deviceName: dataset.name,
-        available: `${dataset.free}`, // free space left on the pool
-        used: `${dataset.allocated}`,
-        percentage: (dataset.allocated / dataset.size) * 100,
+        available: `${dataset.available}`,
+        used: `${dataset.used}`,
+        percentage:
+          dataset.used + dataset.available === 0 ? 0 : (dataset.used / (dataset.used + dataset.available)) * 100,
       })),
       availablePkgUpdates: 0,
       network: {
@@ -117,12 +118,40 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
         return null;
       })
       .filter((pool) => pool !== null);
+
+    if (activePools.length === 0) return [];
+
+    const datasets = await this.requestAsync("pool.dataset.query", [
+      [["id", "in", activePools.map((pool) => pool.name)]],
+      {
+        extra: {
+          properties: ["used", "available"],
+        },
+      },
+    ]);
+    const parsedDatasets = await poolDatasetSchema.parseAsync(datasets);
+
+    const poolsWithUsableSpace = activePools
+      .map((pool) => {
+        const dataset = parsedDatasets.find((candidate) => candidate.id === pool.name);
+        if (!dataset || dataset.used.parsed === null || dataset.available.parsed === null) return null;
+
+        return {
+          name: pool.name,
+          status: pool.status,
+          healthy: pool.healthy,
+          used: dataset.used.parsed,
+          available: dataset.available.parsed,
+        };
+      })
+      .filter((pool) => pool !== null);
+
     logger.debug("Retrieved pools", {
       url: this.integration.url,
       totalCount: result.length,
-      activeCount: activePools.length,
+      activeCount: poolsWithUsableSpace.length,
     });
-    return activePools;
+    return poolsWithUsableSpace;
   }
 
   /**
@@ -260,6 +289,14 @@ const poolSchema = z.array(
     free: z.number().min(0).nullable(),
     size: z.number().nullable(),
     allocated: z.number().nullable(),
+  }),
+);
+
+const poolDatasetSchema = z.array(
+  z.object({
+    id: z.string(),
+    used: z.object({ parsed: z.number().min(0).nullable() }),
+    available: z.object({ parsed: z.number().min(0).nullable() }),
   }),
 );
 
