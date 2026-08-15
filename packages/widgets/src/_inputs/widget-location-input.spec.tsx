@@ -7,8 +7,12 @@ import type { Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { WidgetLocationInput } from "./widget-location-input";
+import { optionsBuilder } from "../options";
 
 const defaultLocation = { name: "Paris", latitude: 48.8566, longitude: 2.3522 };
+const locationOptions = optionsBuilder.from((factory) => ({
+  location: factory.location({ defaultValue: defaultLocation }),
+})).location;
 
 const mocks = vi.hoisted(() => ({
   values: {} as Record<string, unknown>,
@@ -79,12 +83,7 @@ afterEach(async () => {
 const renderInput = async () => {
   await act(async () => {
     root.render(
-      <WidgetLocationInput
-        kind="weather"
-        property="location"
-        options={{ defaultValue: defaultLocation }}
-        initialOptions={{}}
-      />,
+      <WidgetLocationInput kind="weather" property="location" options={locationOptions} initialOptions={{}} />,
     );
   });
 };
