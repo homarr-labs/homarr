@@ -6,7 +6,7 @@ import { IconCheck } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useI18n } from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { SortableItemListInput } from "../options";
 
@@ -17,7 +17,9 @@ export const BookmarkAddButton: SortableItemListInput<SelectableApp, string>["Ad
   removeItem,
   values,
 }) => {
-  const t = useI18n();
+  const t = useScopedI18n("widget.bookmarks.option.items.apps");
+  const tCommon = useScopedI18n("common");
+  const tSelect = useScopedI18n("app.action.select");
   const { data: apps = [], isPending, error } = clientApi.app.selectable.useQuery();
   const appsById = new Map(apps.map((app) => [app.id, app]));
 
@@ -37,8 +39,8 @@ export const BookmarkAddButton: SortableItemListInput<SelectableApp, string>["Ad
 
   return (
     <MultiSelect
-      label={t("widget.bookmarks.option.items.apps.label")}
-      placeholder={t("widget.bookmarks.option.items.apps.placeholder")}
+      label={t("label")}
+      placeholder={t("placeholder")}
       value={values}
       onChange={handleChange}
       searchable
@@ -46,9 +48,9 @@ export const BookmarkAddButton: SortableItemListInput<SelectableApp, string>["Ad
       clearSearchOnChange
       hidePickedOptions
       disabled={isPending || Boolean(error)}
-      error={error ? t("common.error") : undefined}
+      error={error ? tCommon("error") : undefined}
       rightSection={isPending ? <Loader size="xs" /> : undefined}
-      nothingFoundMessage={t("app.action.select.notFound")}
+      nothingFoundMessage={tSelect("notFound")}
       renderOption={renderAppOption}
       data={apps.map((app) => ({
         value: app.id,

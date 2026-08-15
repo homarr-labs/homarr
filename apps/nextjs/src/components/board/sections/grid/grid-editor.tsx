@@ -754,9 +754,9 @@ export default function GridEditor({
     data: { kind: GRID_TARGET_TYPE, sectionId },
     collisionDetector: pointerIntersection,
     collisionPriority: CollisionPriority.Highest + depth,
-    // `accept` only removes the active container's own subtree. Size limits
-    // are validated after collision so an invalid nested target cannot fall
-    // through to an accepting parent grid underneath the pointer.
+    // `accept` removes only the active container's own subtree. Size limits
+    // are evaluated during preview targeting, which can fall back from an
+    // invalid nested grid to an eligible parent.
     accept: (source) => isDropTargetEligible(source, sectionId),
   });
 
@@ -936,7 +936,6 @@ const DndGridEntryComponent = ({
         sectionId={sectionId}
         placement={placement}
         label={label}
-        disabled={false}
         columnCount={columnCount}
         maxRowCount={maxRowCount}
         beginResize={beginResize}
@@ -955,7 +954,6 @@ interface GridResizeHandlesProps {
   sectionId: string;
   placement: SectionGridPlacement;
   label: string;
-  disabled: boolean;
   columnCount: number;
   maxRowCount: number | null;
   beginResize: BoardGridEditorActionsContextValue["beginResize"];
@@ -971,7 +969,6 @@ const GridResizeHandles = ({
   sectionId,
   placement,
   label,
-  disabled,
   columnCount,
   maxRowCount,
   beginResize,
@@ -1051,15 +1048,7 @@ const GridResizeHandles = ({
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLSpanElement>, direction: GridResizeDirection) => {
     const visualScale = getEntryVisualScale(event.currentTarget.parentElement, placement);
-    if (
-      disabled ||
-      !event.isPrimary ||
-      event.button !== 0 ||
-      pointerStartRef.current ||
-      !visualScale ||
-      !start(direction)
-    )
-      return;
+    if (!event.isPrimary || event.button !== 0 || pointerStartRef.current || !visualScale || !start(direction)) return;
     event.preventDefault();
     event.stopPropagation();
     try {
@@ -1118,7 +1107,6 @@ const GridResizeHandles = ({
       key={direction}
       className="board-grid-resize-handle"
       data-grid-resize-handle={direction}
-      data-grid-resize-disabled={disabled ? "true" : undefined}
       aria-hidden="true"
       onPointerDown={(event) => handlePointerDown(event, direction)}
       onPointerMove={handlePointerMove}

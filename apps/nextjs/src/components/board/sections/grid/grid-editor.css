@@ -186,10 +186,6 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
   touch-action: none;
 }
 
-.board-grid-resize-handle[data-grid-resize-disabled="true"] {
-  pointer-events: none;
-}
-
 body[data-board-grid-interacting] .board-grid-resize-handle {
   pointer-events: none;
 }
@@ -211,8 +207,8 @@ body[data-board-grid-interacting] .board-grid-resize-handle::after {
   transition: opacity 100ms ease;
 }
 
-.board-grid-entry:hover > .board-grid-resize-handle:not([data-grid-resize-disabled="true"])::after,
-.board-grid-resize-handle:not([data-grid-resize-disabled="true"]):focus-visible::after {
+.board-grid-entry:hover > .board-grid-resize-handle::after,
+.board-grid-resize-handle:focus-visible::after {
   opacity: 1;
 }
 
@@ -303,7 +299,7 @@ body[data-board-grid-interacting] .board-grid-resize-handle::after {
 }
 
 @media (hover: none), (pointer: coarse) {
-  .board-grid-resize-handle:not([data-grid-resize-disabled="true"])::after {
+  .board-grid-resize-handle::after {
     opacity: 1;
   }
 }

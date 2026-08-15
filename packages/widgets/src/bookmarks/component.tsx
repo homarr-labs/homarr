@@ -265,12 +265,13 @@ export const getBookmarkHostname = (href: string | null): string | undefined => 
 };
 
 export const createCustomBookmark = (url: string): BookmarkDisplayItem | null => {
-  const href = getSafeAppHref(url);
+  const normalizedUrl = url.trim();
+  const href = getSafeAppHref(normalizedUrl);
   if (!href) return null;
 
   return {
-    id: `custom-link:${url}`,
-    name: getBookmarkHostname(href) ?? url,
+    id: `custom-link:${normalizedUrl}`,
+    name: getBookmarkHostname(href) ?? normalizedUrl,
     description: null,
     href,
   };

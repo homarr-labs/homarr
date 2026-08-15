@@ -43,6 +43,12 @@ describe("bookmark display helpers", () => {
       description: null,
       href: "https://homarr.dev/docs",
     });
+    expect(createCustomBookmark("  https://homarr.dev/docs  ")).toEqual({
+      id: "custom-link:https://homarr.dev/docs",
+      name: "homarr.dev",
+      description: null,
+      href: "https://homarr.dev/docs",
+    });
     expect(createCustomBookmark("javascript:alert(1)")).toBeNull();
   });
 });

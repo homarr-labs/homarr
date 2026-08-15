@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   ActionIcon,
   Alert,
@@ -41,8 +41,11 @@ export const WidgetLocationInput = ({ property, kind, options }: CommonWidgetInp
   const latitudeInputProps = form.getInputProps(`options.${property}.latitude`);
   const longitudeInputProps = form.getInputProps(`options.${property}.longitude`);
   const selectionEnabled = value.name.length > 1;
+  const initializedFieldPathRef = useRef<string | null>(null);
 
   useEffect(() => {
+    if (initializedFieldPathRef.current === fieldPath) return;
+    initializedFieldPathRef.current = fieldPath;
     if (isOptionLocation(inputProps.value)) return;
     form.setFieldValue(fieldPath, options.defaultValue);
   }, [fieldPath, form, inputProps.value, options.defaultValue]);

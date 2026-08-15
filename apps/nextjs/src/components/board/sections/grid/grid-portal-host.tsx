@@ -151,12 +151,8 @@ const GridPortalContent = ({ itemId, ownerSectionId, integrations, announce }: G
 
   if (!section || !currentLayout) return null;
 
-  const columnCount =
-    section.kind === "container"
-      ? section.width
-      : section.kind === "empty"
-        ? getBoardLaneColumnCount(currentLayout, getRootSectionLane(section.xOffset))
-        : currentLayout.columnCount;
+  const columnCount = getSectionColumnCount(section, currentLayout);
+  if (columnCount < 1) return null;
   const renderedItems = items.map((item) => normalizePortalEntry(item, columnCount));
   const renderedInnerSections = innerSections.map((innerSection) => normalizePortalEntry(innerSection, columnCount));
   const entry = [...renderedItems, ...renderedInnerSections].find((candidate) => candidate.id === itemId);
@@ -207,12 +203,8 @@ const getRenderedSection = (
     new Set(visited).add(section.id),
   );
   if (!parentSection) return null;
-  const parentColumnCount =
-    parentSection.kind === "container"
-      ? parentSection.width
-      : parentSection.kind === "empty"
-        ? getBoardLaneColumnCount(currentLayout, getRootSectionLane(parentSection.xOffset))
-        : currentLayout.columnCount;
+  const parentColumnCount = getSectionColumnCount(parentSection, currentLayout);
+  if (parentColumnCount < 1) return null;
   const normalized = normalizePortalEntry(layout, parentColumnCount);
 
   return {
@@ -221,6 +213,16 @@ const getRenderedSection = (
     type: "section",
   };
 };
+
+const getSectionColumnCount = (
+  section: Exclude<Section, { kind: "container" }> | ContainerSectionItem,
+  currentLayout: ReturnType<typeof useRequiredBoard>["layouts"][number],
+) =>
+  section.kind === "container"
+    ? section.width
+    : section.kind === "empty"
+      ? getBoardLaneColumnCount(currentLayout, getRootSectionLane(section.xOffset))
+      : currentLayout.columnCount;
 
 const normalizePortalEntry = <
   TEntry extends { id?: string; xOffset: number; yOffset: number; width: number; height: number },

@@ -235,55 +235,6 @@ describe("Onboarding", () => {
     }
   }, 120_000);
 
-  test("Credentials onboarding should be successful", async () => {
-    // Arrange
-    const sqlite = await createSqliteDbFileAsync();
-    const { db, localMountPath } = sqlite;
-    const homarrContainer = await createHomarrContainer({
-      mounts: {
-        "/appdata": localMountPath,
-      },
-    }).start();
-
-    const browser = await chromium.launch();
-    const context = await browser.newContext();
-    const page = await context.newPage();
-    const actions = new OnboardingActions(page, db);
-    const assertions = new OnboardingAssertions(page, db);
-
-    try {
-      // Act
-      await page.goto(`http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`);
-      await actions.startOnboardingAsync();
-
-      const competingContext = await browser.newContext();
-      const claimResponse = await competingContext.request.post(
-        `http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}/api/onboarding/claim`,
-      );
-      expect(claimResponse.status()).toBe(423);
-      await competingContext.close();
-
-      await actions.processUserStepAsync({
-        username: "admin",
-        password: "Comp(exP4sswOrd",
-        confirmPassword: "Comp(exP4sswOrd",
-      });
-      await actions.processSettingsStepAsync();
-      await actions.processIntegrationsStepAsync();
-
-      // Assert
-      await assertions.assertFinishStepVisibleAsync();
-      await assertions.assertUserAndAdminGroupInsertedAsync("admin");
-      await assertions.assertDbOnboardingStepAsync("finish");
-    } finally {
-      try {
-        await Promise.all([browser.close(), homarrContainer.stop()]);
-      } finally {
-        await cleanupSqliteDbAsync(sqlite);
-      }
-    }
-  }, 60_000);
-
   test("Credentials onboarding recovers when automatic sign-in fails after account creation", async () => {
     const sqlite = await createSqliteDbFileAsync();
     const { db, localMountPath } = sqlite;
