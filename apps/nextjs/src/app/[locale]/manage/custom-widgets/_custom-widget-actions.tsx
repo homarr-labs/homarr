@@ -62,6 +62,22 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
     }
   };
 
+  const copyLegacyDefinition = async () => {
+    try {
+      const data = await utils.customWidget.exportLegacy.fetch({ id: widget.id });
+      await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+      showSuccessNotification({
+        title: t("action.copyLegacyDefinition"),
+        message: t("notification.legacyDefinitionCopied"),
+      });
+    } catch (error) {
+      showErrorNotification({
+        title: t("action.copyLegacyDefinition"),
+        message: error instanceof Error ? error.message : t("notification.legacyDefinitionCopyError"),
+      });
+    }
+  };
+
   const queueMigratedWidget = (text: string) => {
     const result = parseCustomWidgetClipboardDetailed(text);
     if (!result.success) {
@@ -119,6 +135,15 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
       URL.revokeObjectURL(url);
     } catch {
       showErrorNotification({ title: t("action.export"), message: t("notification.exportError") });
+    }
+  };
+
+  const exportLegacyDefinition = async () => {
+    try {
+      const data = await utils.customWidget.exportLegacy.fetch({ id: widget.id });
+      downloadJson(data, `${widget.name}.legacy.json`);
+    } catch {
+      showErrorNotification({ title: t("action.exportLegacyDefinition"), message: t("notification.exportError") });
     }
   };
 
@@ -195,6 +220,13 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
           )}
           {widget.migrationRequired && (
             <>
+              <Menu.Item onClick={() => void copyLegacyDefinition()} leftSection={<IconCopy {...iconProps} />}>
+                {t("action.copyLegacyDefinition")}
+              </Menu.Item>
+              <Menu.Item onClick={() => void exportLegacyDefinition()} leftSection={<IconDownload {...iconProps} />}>
+                {t("action.exportLegacyDefinition")}
+              </Menu.Item>
+              <Menu.Divider />
               <Menu.Item onClick={() => void copyMigrationPrompt()} leftSection={<IconSparkles {...iconProps} />}>
                 {t("action.copyMigrationPrompt")}
               </Menu.Item>
@@ -247,3 +279,13 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
     </>
   );
 };
+
+function downloadJson(data: unknown, filename: string) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}

@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
 
 import { encryptSecret } from "@homarr/common/server";
@@ -24,6 +25,32 @@ export const transferProcedures = {
       });
       if (!definition) throw new TRPCError({ code: "NOT_FOUND" });
       return parseStoredCustomWidgetDefinition(definition);
+    }),
+
+  exportLegacy: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const definition = await ctx.db.query.legacyCustomWidgetDefinitions.findFirst({
+        where: eq(legacyCustomWidgetDefinitions.id, input.id),
+        with: { secrets: true },
+      });
+      if (!definition) throw new TRPCError({ code: "NOT_FOUND", message: "Legacy custom widget not found" });
+
+      return {
+        $schema: "homarr-custom-widget-v1" as const,
+        name: definition.name,
+        description: definition.description,
+        iconUrl: definition.iconUrl,
+        url: definition.url,
+        authType: definition.authType,
+        headerName: definition.headerName,
+        method: definition.method,
+        requestBody: definition.requestBody,
+        displayType: definition.displayType,
+        displayConfig: parseLegacyDisplayConfig(definition.displayConfig),
+        configuredSecretKinds: definition.secrets.map(({ kind }) => kind),
+      };
     }),
 
   import: permissionRequiredProcedure
@@ -116,6 +143,14 @@ export const transferProcedures = {
       return { id: legacy.id, preservedSecretCount: preservedSecrets.length };
     }),
 };
+
+function parseLegacyDisplayConfig(value: string): unknown {
+  try {
+    return parseSuperJson(value);
+  } catch {
+    return value;
+  }
+}
 
 function canPreserveLegacySecrets(
   legacy: typeof legacyCustomWidgetDefinitions.$inferSelect,
