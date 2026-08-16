@@ -25,6 +25,21 @@ const installFlowModalProps = {
   },
 } satisfies Pick<ModalProps, "size" | "styles">;
 
+const installReviewModalProps = {
+  size: "90%",
+  styles: {
+    content: { display: "flex", flexDirection: "column", height: "min(85dvh, 900px)" },
+    body: {
+      display: "flex",
+      flex: 1,
+      flexDirection: "column",
+      minHeight: 0,
+      overflow: "hidden",
+      padding: 0,
+    },
+  },
+} satisfies Pick<ModalProps, "size" | "styles">;
+
 export function WorkshopInstallButton({ children, fullWidth }: WorkshopInstallButtonProps = {}) {
   const t = useScopedI18n("workshop");
   const stack = useModalsStack(["workshop", "details", "report", "review"]);
@@ -74,7 +89,7 @@ export function WorkshopInstallButton({ children, fullWidth }: WorkshopInstallBu
         <CustomWidgetImportDialog
           {...stack.register("review")}
           widget={pendingWidget}
-          modalProps={installFlowModalProps}
+          modalProps={installReviewModalProps}
           labels={{
             title: t("confirmInstallTitle"),
             description: t("confirmInstallDescription"),

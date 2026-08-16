@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useMemo, useState } from "react";
 import {
+  Accordion,
   Alert,
   Badge,
   Box,
@@ -21,16 +22,21 @@ import {
   Textarea,
   TextInput,
   Title,
+  VisuallyHidden,
 } from "@mantine/core";
 import type { ModalProps } from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import {
   IconAlertTriangle,
+  IconArrowBigDown,
+  IconArrowBigUp,
   IconArrowRight,
   IconBuildingStore,
   IconDownload,
+  IconEye,
   IconExternalLink,
   IconFlag,
+  IconMessageCircle,
   IconRefresh,
   IconSearch,
   IconThumbDown,
@@ -62,7 +68,7 @@ import {
   workshopExportFilename,
 } from "@homarr/workshop/schema";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCurrentLocale, useScopedI18n } from "@homarr/translation/client";
 
 import { createWorkshopClient, getWorkshopWebUrl } from "./workshop-client";
 
@@ -95,9 +101,27 @@ interface WorkshopModalStep {
   close(): void;
 }
 
+const detailsModalStyles = {
+  content: {
+    display: "flex",
+    flexDirection: "column" as const,
+    height: "min(85dvh, 800px)",
+  },
+  body: {
+    display: "flex",
+    flex: 1,
+    flexDirection: "column" as const,
+    minHeight: 0,
+    overflow: "hidden",
+    padding: 0,
+  },
+};
+
 export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, modalStack }: WorkshopBrowserProps) {
   const t = useScopedI18n("workshop");
+  const currentLocale = useCurrentLocale();
   const client = useMemo(createWorkshopClient, []);
+  const dateFormatter = useMemo(() => new Intl.DateTimeFormat(currentLocale, { dateStyle: "medium" }), [currentLocale]);
   const [user, setUser] = useState<WorkshopUser | null>(null);
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState<"top" | "newest">("top");
@@ -276,45 +300,86 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
       ) : list.data?.items.length ? (
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>
           {list.data.items.map((item) => (
-            <Card key={item.id} withBorder radius="md" p="md">
+            <Card
+              key={item.id}
+              withBorder
+              radius="lg"
+              p={0}
+              h={440}
+              w="100%"
+              style={{ display: "flex", flexDirection: "column", overflow: "hidden" }}
+            >
               {item.screenshots[0] ? (
                 <Card.Section>
-                  <Image src={client.fileUrl(item.id, item.screenshots[0], "480x320")} h={170} alt="" />
+                  <Image
+                    src={client.fileUrl(item.id, item.screenshots[0], "480x320")}
+                    h={190}
+                    fit="cover"
+                    alt={t("screenshotAlt", { title: item.title, count: 1 })}
+                  />
                 </Card.Section>
               ) : (
                 <Card.Section>
                   <Box
-                    h={170}
+                    h={190}
                     bg="var(--mantine-color-default-hover)"
                     style={{ display: "grid", placeItems: "center" }}
                   >
-                    <Code>{item.type === "customCss" ? "CSS" : "JSX"}</Code>
+                    <Code fz="md">{item.type === "customCss" ? "CSS" : "JSX"}</Code>
                   </Box>
                 </Card.Section>
               )}
-              <Stack gap="xs" mt="md">
-                <Group justify="space-between">
-                  <Text size="xs" c="dimmed">
-                    {t("author", { name: item.authorName || t("communityMember") })}
+              <Stack gap="sm" p="md" style={{ flex: 1 }}>
+                <Group justify="space-between" align="flex-start" wrap="nowrap">
+                  <Text fw={700} size="lg" lineClamp={1} miw={0}>
+                    {item.title}
                   </Text>
-                  <Text size="sm" c="dimmed">
-                    <IconThumbUp size={13} /> {item.upvotes} · <IconThumbDown size={13} /> {item.downvotes}
-                  </Text>
+                  <Group
+                    gap={7}
+                    wrap="nowrap"
+                    px="xs"
+                    py={6}
+                    bg="var(--mantine-color-default-hover)"
+                    style={{ borderRadius: "var(--mantine-radius-md)", flexShrink: 0 }}
+                  >
+                    <VisuallyHidden>
+                      {t("voteSummary", { upvotes: item.upvotes, downvotes: item.downvotes })}
+                    </VisuallyHidden>
+                    <IconArrowBigUp aria-hidden size={16} color="var(--mantine-primary-color-filled)" />
+                    <Text aria-hidden size="sm" fw={700} lh={1}>
+                      {item.score}
+                    </Text>
+                    <IconArrowBigDown aria-hidden size={16} color="var(--mantine-color-dimmed)" />
+                  </Group>
                 </Group>
+                <Text size="xs" c="dimmed">
+                  {t("author", { name: item.authorName || t("communityMember") })} · v{item.revision} ·{" "}
+                  {dateFormatter.format(new Date(item.updated))}
+                </Text>
                 <Group gap="xs">
                   {item.outdated && <Badge color="yellow">{t("outdated")}</Badge>}
                   {item.reportCount > 0 && <Badge color="red">{t("reportCount", { count: item.reportCount })}</Badge>}
                 </Group>
-                <Text fw={700} lineClamp={1}>
-                  {item.title}
-                </Text>
-                <Text size="sm" c="dimmed" lineClamp={2}>
+                <Text size="sm" c="dimmed" lineClamp={3}>
                   {item.description || t("noDescription")}
                 </Text>
-                <Button variant="light" onClick={() => openDetails(item.id)}>
-                  {type === "customCss" ? t("inspectCss") : t("install")}
-                </Button>
               </Stack>
+              <Card.Section withBorder p="sm" bg="var(--mantine-color-default-hover)">
+                <Group justify="space-between" wrap="nowrap">
+                  <Group gap={6} c="dimmed" wrap="nowrap">
+                    <IconMessageCircle size={16} />
+                    <Text size="xs">{t("comments", { count: item.commentCount })}</Text>
+                  </Group>
+                  <Button
+                    size="xs"
+                    variant="light"
+                    leftSection={<IconEye size={15} />}
+                    onClick={() => openDetails(item.id)}
+                  >
+                    {t("viewDetails")}
+                  </Button>
+                </Group>
+              </Card.Section>
             </Card>
           ))}
         </SimpleGrid>
@@ -334,161 +399,198 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
         stackId={modalStack?.details.stackId}
         title={type === "customCss" ? t("inspectCss") : t("install")}
         size={modalStack?.modalProps.size ?? "xl"}
+        styles={detailsModalStyles}
       >
         {detail.isPending ? (
-          <Skeleton h={400} />
+          <Box p="lg">
+            <Skeleton h={400} />
+          </Box>
         ) : detail.isError || !detail.data ? (
-          <Alert color="red">{detail.error instanceof Error ? detail.error.message : t("loadError")}</Alert>
+          <Box p="lg">
+            <Alert color="red">{detail.error instanceof Error ? detail.error.message : t("loadError")}</Alert>
+          </Box>
         ) : (
-          <Stack gap="lg">
-            <Group justify="space-between" align="flex-start">
-              <Box>
-                <Title order={3}>{detail.data.title}</Title>
-                <Text size="sm" c="dimmed">
-                  {t("author", { name: detail.data.authorName || t("communityMember") })}
-                </Text>
-              </Box>
-              <Button
-                component="a"
-                href={getWorkshopWebUrl(detail.data.id)}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="default"
-                leftSection={<IconExternalLink size={16} />}
-              >
-                {t("openCommunity")}
-              </Button>
-            </Group>
-            {detail.data.description && <Text>{detail.data.description}</Text>}
-            {detail.data.outdated && (
-              <Alert color="yellow" icon={<IconAlertTriangle size={18} />}>
-                {t("outdatedWarning")}
-              </Alert>
-            )}
-            {detail.data.reportCount > 0 && (
-              <Stack gap="xs">
-                <Alert color="red" icon={<IconAlertTriangle size={18} />}>
-                  {t("reportWarning", { count: detail.data.reportCount })}
-                </Alert>
-                {reportSummaries.data?.map((summary) => (
-                  <Card key={summary.id} withBorder p="sm">
-                    <Badge color="red" variant="light" mb="xs">
-                      {t(`reportCategory.${summary.category}`)}
-                    </Badge>
-                    <Text size="sm" style={{ whiteSpace: "pre-wrap" }}>
-                      {summary.explanation}
+          <>
+            <Box p="lg" style={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
+              <Stack gap="lg">
+                <Group justify="space-between" align="flex-start">
+                  <Box>
+                    <Title order={3}>{detail.data.title}</Title>
+                    <Text size="sm" c="dimmed">
+                      {t("author", { name: detail.data.authorName || t("communityMember") })}
                     </Text>
-                  </Card>
-                ))}
-                {reportSummaries.data?.length === 0 && (
+                  </Box>
+                  <Button
+                    component="a"
+                    href={getWorkshopWebUrl(detail.data.id)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="subtle"
+                    size="compact-sm"
+                    rightSection={<IconExternalLink size={14} />}
+                  >
+                    {t("openCommunity")}
+                  </Button>
+                </Group>
+                {detail.data.description && <Text c="dimmed">{detail.data.description}</Text>}
+                {detail.data.outdated && (
+                  <Alert color="yellow" icon={<IconAlertTriangle size={18} />}>
+                    {t("outdatedWarning")}
+                  </Alert>
+                )}
+                {detail.data.reportCount > 0 && (
+                  <Stack gap="xs">
+                    <Alert color="red" icon={<IconAlertTriangle size={18} />}>
+                      {t("reportWarning", { count: detail.data.reportCount })}
+                    </Alert>
+                    {reportSummaries.data?.map((summary) => (
+                      <Card key={summary.id} withBorder p="sm">
+                        <Badge color="red" variant="light" mb="xs">
+                          {t(`reportCategory.${summary.category}`)}
+                        </Badge>
+                        <Text size="sm" style={{ whiteSpace: "pre-wrap" }}>
+                          {summary.explanation}
+                        </Text>
+                      </Card>
+                    ))}
+                    {reportSummaries.data?.length === 0 && (
+                      <Text size="xs" c="dimmed">
+                        {t("reportVisibility")}
+                      </Text>
+                    )}
+                  </Stack>
+                )}
+                {detail.data.screenshots.length > 0 && (
+                  <SimpleGrid cols={{ base: 1, sm: 2 }}>
+                    {detail.data.screenshots.map((file, index) => (
+                      <Image
+                        key={file}
+                        src={client.fileUrl(detail.data.id, file, "960x640")}
+                        radius="md"
+                        alt={t("screenshotAlt", { title: detail.data.title, count: index + 1 })}
+                      />
+                    ))}
+                  </SimpleGrid>
+                )}
+                {detailValidation && !detailValidation.success && (
+                  <Alert color="red" icon={<IconAlertTriangle size={18} />}>
+                    {t("installErrorDescription")} {detailValidation.error}
+                  </Alert>
+                )}
+                {detailValidation?.success && !detailCompatible && (
+                  <Alert color="red" icon={<IconAlertTriangle size={18} />}>
+                    {t("installErrorDescription")}
+                  </Alert>
+                )}
+                <Accordion variant="contained" radius="md">
+                  <Accordion.Item value="technical-details">
+                    <Accordion.Control>{t("technicalDetails")}</Accordion.Control>
+                    <Accordion.Panel>
+                      <Stack gap="md">
+                        {type === "customWidget" &&
+                          detailValidation?.success &&
+                          typeof detailValidation.data !== "string" && (
+                            <CapabilitySummary widget={detailValidation.data} />
+                          )}
+                        <WorkshopCodeViewer
+                          value={detail.data.content}
+                          language={type === "customCss" ? "css" : "json"}
+                        />
+                      </Stack>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                </Accordion>
+                {!user && (
                   <Text size="xs" c="dimmed">
-                    {t("reportVisibility")}
+                    {t("signInHint")}
                   </Text>
                 )}
+                {vote.error && <Alert color="red">{vote.error.message || t("voteError")}</Alert>}
+                {install.error && <Alert color="red">{install.error.message}</Alert>}
+                {useCss.error && <Alert color="red">{useCss.error.message}</Alert>}
               </Stack>
-            )}
-            {detail.data.screenshots.length > 0 && (
-              <SimpleGrid cols={{ base: 1, sm: 2 }}>
-                {detail.data.screenshots.map((file, index) => (
-                  <Image
-                    key={file}
-                    src={client.fileUrl(detail.data.id, file, "960x640")}
-                    radius="md"
-                    alt={t("screenshotAlt", { title: detail.data.title, count: index + 1 })}
-                  />
-                ))}
-              </SimpleGrid>
-            )}
-            {type === "customWidget" && detailValidation?.success && typeof detailValidation.data !== "string" && (
-              <CapabilitySummary widget={detailValidation.data} />
-            )}
-            {detailValidation && !detailValidation.success && (
-              <Alert color="red" icon={<IconAlertTriangle size={18} />}>
-                {t("installErrorDescription")} {detailValidation.error}
-              </Alert>
-            )}
-            {detailValidation?.success && !detailCompatible && (
-              <Alert color="red" icon={<IconAlertTriangle size={18} />}>
-                {t("installErrorDescription")}
-              </Alert>
-            )}
-            <WorkshopCodeViewer value={detail.data.content} language={type === "customCss" ? "css" : "json"} />
-            <Group justify="space-between">
-              <Group gap="xs">
-                <Button
-                  variant="default"
-                  leftSection={<IconDownload size={16} />}
-                  onClick={() => downloadWorkshopSubmission(detail.data)}
-                >
-                  {t("export")}
-                </Button>
-                <Button
-                  variant="subtle"
-                  leftSection={<IconThumbUp size={16} />}
-                  loading={vote.isPending && vote.variables?.value === 1}
-                  disabled={!user || vote.isPending}
-                  aria-label={t("upvote", { count: detail.data.upvotes })}
-                  onClick={() => vote.mutate({ submission: detail.data.id, value: 1 })}
-                >
-                  {detail.data.upvotes}
-                </Button>
-                <Button
-                  variant="subtle"
-                  leftSection={<IconThumbDown size={16} />}
-                  loading={vote.isPending && vote.variables?.value === -1}
-                  disabled={!user || vote.isPending}
-                  aria-label={t("downvote", { count: detail.data.downvotes })}
-                  onClick={() => vote.mutate({ submission: detail.data.id, value: -1 })}
-                >
-                  {detail.data.downvotes}
-                </Button>
-                <Button
-                  variant="subtle"
-                  color="red"
-                  leftSection={<IconFlag size={16} />}
-                  disabled={!user}
-                  onClick={openReport}
-                >
-                  {t("report")}
-                </Button>
+            </Box>
+            <Box
+              px="lg"
+              py="md"
+              bg="var(--mantine-color-body)"
+              style={{ borderTop: "1px solid var(--mantine-color-default-border)", flexShrink: 0 }}
+            >
+              <Group justify="space-between" gap="sm">
+                <Group gap="xs">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    leftSection={<IconDownload size={16} />}
+                    onClick={() => downloadWorkshopSubmission(detail.data)}
+                  >
+                    {t("export")}
+                  </Button>
+                  <Button
+                    variant="subtle"
+                    size="compact-sm"
+                    leftSection={<IconThumbUp size={16} />}
+                    loading={vote.isPending && vote.variables?.value === 1}
+                    disabled={!user || vote.isPending}
+                    aria-label={t("upvote", { count: detail.data.upvotes })}
+                    onClick={() => vote.mutate({ submission: detail.data.id, value: 1 })}
+                  >
+                    {detail.data.upvotes}
+                  </Button>
+                  <Button
+                    variant="subtle"
+                    size="compact-sm"
+                    leftSection={<IconThumbDown size={16} />}
+                    loading={vote.isPending && vote.variables?.value === -1}
+                    disabled={!user || vote.isPending}
+                    aria-label={t("downvote", { count: detail.data.downvotes })}
+                    onClick={() => vote.mutate({ submission: detail.data.id, value: -1 })}
+                  >
+                    {detail.data.downvotes}
+                  </Button>
+                  <Button
+                    variant="subtle"
+                    size="compact-sm"
+                    color="red"
+                    leftSection={<IconFlag size={16} />}
+                    disabled={!user}
+                    onClick={openReport}
+                  >
+                    {t("report")}
+                  </Button>
+                </Group>
+                {onInstall && (
+                  <Button
+                    size="sm"
+                    loading={install.isPending}
+                    disabled={!detailCompatible}
+                    rightSection={<IconArrowRight size={16} />}
+                    onClick={() =>
+                      detailValidation?.success &&
+                      typeof detailValidation.data !== "string" &&
+                      install.mutate(detailValidation.data)
+                    }
+                  >
+                    {t("continueInstall")}
+                  </Button>
+                )}
+                {onUseCss && (
+                  <Button
+                    size="sm"
+                    loading={useCss.isPending}
+                    disabled={!detailCompatible}
+                    onClick={() =>
+                      detailValidation?.success &&
+                      typeof detailValidation.data === "string" &&
+                      useCss.mutate(detailValidation.data)
+                    }
+                  >
+                    {t("useCss")}
+                  </Button>
+                )}
               </Group>
-              {onInstall && (
-                <Button
-                  loading={install.isPending}
-                  disabled={!detailCompatible}
-                  rightSection={<IconArrowRight size={16} />}
-                  onClick={() =>
-                    detailValidation?.success &&
-                    typeof detailValidation.data !== "string" &&
-                    install.mutate(detailValidation.data)
-                  }
-                >
-                  {t("continueInstall")}
-                </Button>
-              )}
-              {onUseCss && (
-                <Button
-                  loading={useCss.isPending}
-                  disabled={!detailCompatible}
-                  onClick={() =>
-                    detailValidation?.success &&
-                    typeof detailValidation.data === "string" &&
-                    useCss.mutate(detailValidation.data)
-                  }
-                >
-                  {t("useCss")}
-                </Button>
-              )}
-            </Group>
-            {!user && (
-              <Text size="xs" c="dimmed">
-                {t("signInHint")}
-              </Text>
-            )}
-            {vote.error && <Alert color="red">{vote.error.message || t("voteError")}</Alert>}
-            {install.error && <Alert color="red">{install.error.message}</Alert>}
-            {useCss.error && <Alert color="red">{useCss.error.message}</Alert>}
-          </Stack>
+            </Box>
+          </>
         )}
       </Modal>
 
