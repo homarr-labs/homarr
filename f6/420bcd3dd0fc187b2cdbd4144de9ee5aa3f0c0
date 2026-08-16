@@ -1,0 +1,41 @@
+packages/db/package.json
+  s_450ffa5020b033::t_1688883dc22085 12
+apps/nextjs/src/app/api/backup/test/import-route.spec.ts
+  s_450ffa5020b033::t_1688883dc22085 26,46-48,108,142-155
+apps/nextjs/src/app/api/backup/import/route.ts
+  s_450ffa5020b033::t_fee6a719b58068 21
+  s_f0c6629ea8d749::t_846a6d5ee84b65 30-40,279,295,306
+  s_450ffa5020b033::t_1688883dc22085 7,22-23,137,189,251,301-302,304
+apps/nextjs/src/components/backup/database-restore-flow.tsx
+  s_f0c6629ea8d749::t_1fa76294d1595c 257-258,263,266
+  s_f0c6629ea8d749::t_37b83c876c5313 259-260
+apps/nextjs/src/components/backup/use-backup-analysis.ts
+  s_f0c6629ea8d749::t_846a6d5ee84b65 17-18,97,99
+  s_f0c6629ea8d749::t_cdb00cf73094f5 5,16
+apps/nextjs/src/app/api/backup/shared.ts
+  s_f0c6629ea8d749::t_1841dc2f01e1c7 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f6420bcd3dd0fc187b2cdbd4144de9ee5aa3f0c0",
+  "prompts": {},
+  "sessions": {
+    "s_450ffa5020b033": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a00c07-3c73-7631-83d2-c24f08229106",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_f0c6629ea8d749": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a00c11-6fba-7873-85fe-97fdb1b7e7e6",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
