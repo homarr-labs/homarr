@@ -1,0 +1,46 @@
+apps/nextjs/src/components/workshop/workshop-browser.tsx
+  s_202aab12977943::t_74b9f064313315 309,334-335
+  s_202aab12977943::t_d2516c25c7da49 308
+  s_202aab12977943::t_176149daffa216 71,122,357
+  s_202aab12977943::t_6301e6e32eada5 124
+  s_ca2323b7f96e59::t_a8fdf03337aafb 5,104-119,402,405-407,409-411,413-420,422-503,505,508-510,512-519,592-593
+  s_202aab12977943::t_961ea8a7d02ed1 345-347
+  s_202aab12977943::t_6f62162ba2e13a 25,348-349,352
+  s_202aab12977943::t_55d9ac531c2a63 31-32,36,39,303-307,310-311,314-319,324,328,332-333,337-344,350-351,353,355-356,358,363,367-382
+  s_ca2323b7f96e59::t_7560e3f617ede9 520-590
+packages/custom-widgets/src/workbench/import-review.tsx
+  s_ca2323b7f96e59::t_7662a6b391b99d 2-14
+  s_ca2323b7f96e59::t_21a2132f48266b 164-169
+  s_ca2323b7f96e59::t_80cb3fa934cca3 51-66,101,104-108,110-163,170-172
+apps/nextjs/src/components/workshop/workshop-install-button.tsx
+  s_ca2323b7f96e59::t_80cb3fa934cca3 28-31,40-42,92
+  s_ca2323b7f96e59::t_7662a6b391b99d 32-39
+packages/translation/src/lang/en.json
+  s_ca2323b7f96e59::t_a8fdf03337aafb 1422
+  s_202aab12977943::t_af2ca084159033 1412
+  s_202aab12977943::t_55d9ac531c2a63 1410-1411
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "960551f5730bb86c7cf028e28360b886c74d3245",
+  "prompts": {},
+  "sessions": {
+    "s_202aab12977943": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a00c66-9004-74e3-bb35-d76a86b9b197",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_ca2323b7f96e59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5b-9d67-7470-9988-648d9d7016d2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
