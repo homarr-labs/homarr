@@ -1,0 +1,378 @@
+packages/api/src/router/kubernetes/kubernetes-client.spec.ts
+  s_4d7147561ceda1::t_db618a6a06d3e4 1-148
+packages/api/src/router/kubernetes/router/namespaces.ts
+  s_4d7147561ceda1::t_149c0393d94da2 7,13-15
+apps/nextjs/src/components/board/items/item-select-data.spec.ts
+  s_4d7147561ceda1::t_63a68c32bf1ce6 3-41,86-101
+apps/nextjs/src/components/board/board-setup-progress.ts
+  s_4d7147561ceda1::t_5c0a8776937c8e 1-22
+apps/nextjs/src/app/[locale]/manage/tools/docker/page.tsx
+  s_4d7147561ceda1::t_2f6a22c94f2651 10,19,27-28
+packages/spotlight/src/modes/command/global-group.tsx
+  s_4d7147561ceda1::t_10e4865ed524e1 14
+  s_4d7147561ceda1::t_eaacfcaf95b354 72-74
+  s_4d7147561ceda1::t_d14b1aac695994 1,7,53-55,58-71,75
+apps/nextjs/src/components/create/universal-create-trigger.tsx
+  s_4d7147561ceda1::t_f6dee8b128cfa3 1-49
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/nodes-table.tsx
+  s_4d7147561ceda1::t_f6ad6dda3fbd78 18
+  s_4d7147561ceda1::t_4863ed5b9cd9ce 19
+  s_4d7147561ceda1::t_a982857dad7dae 91
+  s_4d7147561ceda1::t_6f4aa22aba7479 122-124
+  s_4d7147561ceda1::t_a9b9571ea42e0d 23,55,62,88,92-100,129-133
+  s_4d7147561ceda1::t_ff96c238940925 125
+packages/ui/src/integration-select-grid/integration-select-grid.tsx
+  s_4d7147561ceda1::t_591cdbc72cd5b8 18,21-25,28-31
+packages/modals-collection/src/docker/index.ts
+  s_4d7147561ceda1::t_f43ce14b315963 2-5
+apps/nextjs/src/components/assistant/assistant-widget-tool.spec.ts
+  s_4d7147561ceda1::t_0ad8b7ef23d110 49,58,65,72,79
+packages/translation/src/lang/en.json
+  s_4d7147561ceda1::t_0a6e9c435697fb 244-298,1536-1552,1652-1655,2110-2111,2554,2723-2738,2740-2744,2786-2787,2792-2800,2807-2808,3741,4036-4037,5688-5719,5724-5739,7048-7125,7221-7224,7236-7241,7274,7279-7293,7302,7323,7751-7753
+packages/api/src/router/integration/integration-router.ts
+  s_4d7147561ceda1::t_0ccbd8accf8e5e 93,100,134,141,178,185,283,350-359
+packages/docker/src/endpoint-descriptor.ts
+  s_4d7147561ceda1::t_97ab2872d1c022 1-152
+packages/modals/src/modal-presentation.spec.ts
+  s_4d7147561ceda1::t_a283584605faf2 1-19
+packages/ui/src/integration-select-grid/integration-grid-shared.spec.ts
+  s_4d7147561ceda1::t_836ab79a6d652a 14-22
+packages/api/src/router/kubernetes/router/kubernetes-router.ts
+  s_4d7147561ceda1::t_6e232b7ab692b0 6
+packages/modals/src/modal-presentation.module.d.css.ts
+  s_4d7147561ceda1::t_b77ba8ea3b66f7 1-5
+packages/api/src/router/docker/docker-router.ts
+  s_4d7147561ceda1::t_c718fac349cae6 60
+  s_4d7147561ceda1::t_75bff935637819 11
+  s_4d7147561ceda1::t_b2110f9ff958f5 84-93
+  s_4d7147561ceda1::t_22e5fb86b347e6 5,9,12,18-24,27-59,61-62,79-80,99,103,105,112,116,118,125,129,131,139,143,145,153,159,164-165,183,188,196,236,238-250,252-265,267-272,276-278
+apps/nextjs/src/app/[locale]/manage/integrations/edit/[id]/_integration-edit-form.tsx
+  s_4d7147561ceda1::t_9605bed919b856 72-79,87,89,92-95,97-98,100-109,111-113,118-129
+  s_4d7147561ceda1::t_7d963617fd253b 3,28,30-31,47,81,86,88,90-91,96,99,110,114-117,130,207-211,214-218
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_4d7147561ceda1::t_ed17bf65b7558c 11-12,69-70
+apps/nextjs/src/app/[locale]/manage/integrations/new/_integration-new-form.tsx
+  s_4d7147561ceda1::t_9572c162a641b0 22,53,57-58,73-78,84,93,113-115,130,145-153,245-248
+packages/request-handler/src/test/docker.spec.ts
+  s_4d7147561ceda1::t_68bcb87c3dfa21 5,7-12,128-239
+apps/nextjs/src/app/[locale]/boards/(content)/_header-actions.tsx
+  s_4d7147561ceda1::t_2e0d0ac5539a01 8,102-104
+packages/modals/src/modal-presentation.ts
+  s_4d7147561ceda1::t_9ab0278c802d5b 1-18
+apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/terminal.tsx
+  s_4d7147561ceda1::t_89341507675ddf 14,18,35
+packages/modals/src/index.tsx
+  s_4d7147561ceda1::t_4a2b07ee2a2234 17-18,99-103,122
+packages/api/src/router/kubernetes/kubernetes-client.ts
+  s_4d7147561ceda1::t_f48b991060122a 2-4,8-52,54,58,61-79,81-83,85-91,93-97,99-101,103-106,108-118,120-124,126-128,130-141,143-152,154,156,158-160,163-196
+packages/ui/src/components/catalog-item.tsx
+  s_4d7147561ceda1::t_61d727a872f437 1-88
+packages/definitions/src/docs/homarr-docs-sitemap.ts
+  s_4d7147561ceda1::t_16f0dc5c50877e 335
+apps/nextjs/src/app/[locale]/boards/(content)/_edit-actions.tsx
+  s_4d7147561ceda1::t_3c5022b3a78d1b 3-5,11-12,21-22,24-38,41-55
+apps/docs/docs/management/boards/index.mdx
+  s_4d7147561ceda1::t_eecb60de4586a2 230-234
+  s_fc96e2c72b7dad::t_b39c1de77a0511 207-215
+packages/api/src/router/kubernetes/router/contexts.ts
+  s_4d7147561ceda1::t_43c17a498dd978 1-17
+apps/docs/docs/integrations/kubernetes/index.mdx
+  s_4d7147561ceda1::t_79c09a75b39525 17-18,30,50-68
+apps/nextjs/src/app/api/mcp/_handler.ts
+  s_4d7147561ceda1::t_be96cdd796af5e 249
+packages/api/src/test/mcp.spec.ts
+  s_4d7147561ceda1::t_d0671188fd18bb 41
+  s_4d7147561ceda1::t_1c774c0eff794d 42,44,88
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_4d7147561ceda1::t_dd6b96b417c781 1-3,9,11-19,22,25,31-33,35-41,50-51,60-61,63-97,100-106,108,110-111,113-116,164-206,232-240,260-261,275-276,279-321,323-336,338-350,352-357,379-390,402-406,419,421-427,444,446,468,473-474,488-495,500-504,515,528,531,534-537,540-542,556,559-570,583
+packages/integrations/package.json
+  s_4d7147561ceda1::t_40ba386eca622d 16
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-table.tsx
+  s_4d7147561ceda1::t_3f8dbc15596b8d 5,7,23,26,35-55,57-69,192-193,197-215,219,223-224,249-254,259-260,276,285-293,296,307,309,313,320-321,348,359-364,384,387,394-401,419-420,425,427-434,443-455,457-464,473,481-483
+packages/widgets/src/docker/component.tsx
+  s_4d7147561ceda1::t_43ffb7579c3abb 38,41,53,63,72-75,216-220,244,250,253-268,279-283,285,297-301,306,390-397,415,456-457,529,541,546-551,554-561,576-578
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context-selector.tsx
+  s_4d7147561ceda1::t_b1ba7b216adebc 1-115
+packages/docker/src/test/endpoint-descriptor.spec.ts
+  s_4d7147561ceda1::t_c5cb8b93689d50 1-71
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/types.ts
+  s_4d7147561ceda1::t_5a71f5453e7033 3-5
+packages/modals/index.ts
+  s_4d7147561ceda1::t_7006865a7d923a 5
+apps/nextjs/src/app/[locale]/manage/tools/docker/logs/[containerId]/page.tsx
+  s_4d7147561ceda1::t_72153656c45b18 53
+  s_4d7147561ceda1::t_7f0bbfe49d8ff1 16,26-28,31,45,50-52,54-58
+packages/docker/src/env.ts
+  s_4d7147561ceda1::t_22f11e95977345 12-13
+packages/auth/permissions/test/integration-permissions.spec.ts
+  s_4d7147561ceda1::t_829e9a46422a69 33-44
+packages/api/src/router/board.ts
+  s_4d7147561ceda1::t_4005073911c775 565,569,572-573,599,609,626,752-762,779-783,798-806,1526-1534,1556-1564,1722-1730,1757-1765
+packages/modals-collection/src/boards/add-board-modal.tsx
+  s_4d7147561ceda1::t_4f9b4c8cbd81ba 1,16,39,42-43,45-47,51-52,118,130
+pnpm-lock.yaml
+  s_4d7147561ceda1::t_5b1ad9a13c650c 2349-2351
+  s_4d7147561ceda1::t_6744d49981c0e9 1114-1116
+packages/api/src/router/kubernetes/router/cluster.ts
+  s_4d7147561ceda1::t_32be17f10fe615 8-9,17-20,23-28,56,69-73,81,87,93-103,110,116-126,133,152-155
+packages/modals-collection/src/docker/confirm-docker-container-removal.ts
+  s_4d7147561ceda1::t_75ff20385ab2ae 1-36
+packages/definitions/src/docs/integration-doc-slugs.ts
+  s_4d7147561ceda1::t_7152b3b78b303c 56
+apps/nextjs/src/components/create/universal-create-modal.tsx
+  s_4d7147561ceda1::t_30fcd4020329ba 1-178
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/page.tsx
+  s_4d7147561ceda1::t_a9f29b13221561 11-12,14,20-22,29
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/services/services-table.tsx
+  s_4d7147561ceda1::t_3e31c40ab05242 20,65,68-77
+apps/nextjs/src/components/board/board-setup-checklist.tsx
+  s_4d7147561ceda1::t_2ab5d384823564 1-131
+apps/nextjs/src/components/assistant/assistant-widget-tool.tsx
+  s_4d7147561ceda1::t_f20dfb4c7dc2d2 9,24,27,71,86-87,90,161-180,195-220,255
+packages/modals/src/modal-presentation.module.css
+  s_4d7147561ceda1::t_782bb0dcda088d 1-30
+e2e/onboarding.spec.ts
+  s_4d7147561ceda1::t_0a07c8f89b29ed 183
+apps/nextjs/src/components/board/board-setup-checklist.module.d.css.ts
+  s_4d7147561ceda1::t_42ff816cfc2e78 1-6
+packages/docker/src/test/singleton.spec.ts
+  s_4d7147561ceda1::t_4c08d07ef8a11d 9,36,43-46,68,95,117-151
+packages/api/src/router/analytics-properties.spec.ts
+  s_4d7147561ceda1::t_65fd3317992b93 1-63
+vitest.config.mts
+  s_4d7147561ceda1::t_19463b707f9dbf 47-64,77-78
+packages/integrations/src/base/response-contract.spec.ts
+  s_4d7147561ceda1::t_f2a9688524842c 26-31
+  s_4d7147561ceda1::t_b357a99eb7bdb9 1-25,32-43
+packages/api/src/router/kubernetes/router/ingresses.ts
+  s_4d7147561ceda1::t_7b241853838107 8,13-19,21-23
+packages/docker/src/singleton.ts
+  s_4d7147561ceda1::t_f01aa43a67c61b 1,4-6,8-14,17-18,20,24-30,33-50,53-58,65-67,80,82-83,90-96,102-107,115,119-123,130-152
+  s_4d7147561ceda1::t_d8ac540ed21b0e 124-128
+apps/nextjs/src/components/board/board-empty-state.tsx
+  s_4d7147561ceda1::t_4565fcfb1747ff 1-54
+apps/nextjs/src/components/integration/integration-completion-modal.tsx
+  s_4d7147561ceda1::t_ab38738d4cf60e 1-194
+packages/api/src/router/kubernetes/router/nodes.ts
+  s_4d7147561ceda1::t_95e497cbd5e4ac 7-8,16-19,22-25,42,48-53,58-61
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/volumes-table.tsx
+  s_4d7147561ceda1::t_aa3abc65db45ff 19,70,73-82
+packages/api/src/router/test/board.spec.ts
+  s_4d7147561ceda1::t_99c7420e6896ba 639,666-670
+apps/nextjs/src/components/integration/embedded-integration-edit-modal.tsx
+  s_4d7147561ceda1::t_5fe4356bebee25 1-86
+packages/definitions/src/test/widget-integration-map.spec.ts
+  s_4d7147561ceda1::t_fd82dbe2fd1d8f 1-47
+packages/ui/src/integration-select-grid/integration-grid-shared.ts
+  s_4d7147561ceda1::t_3ca923e8a6c32b 50-54,58
+apps/nextjs/src/components/board/use-board-add-actions.ts
+  s_4d7147561ceda1::t_e6ffad5f0c44f9 1-46
+apps/nextjs/src/components/layout/header.tsx
+  s_4d7147561ceda1::t_9d00c2cc7785a0 6-7,41,49-50
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/secrets-table.tsx
+  s_4d7147561ceda1::t_d3d0e4b3ca48bb 19,46,49-58
+packages/integrations/src/index.ts
+  s_4d7147561ceda1::t_685422e1116912 105-106
+packages/api/src/router/kubernetes/resource-percentage.ts
+  s_4d7147561ceda1::t_489019e6317728 1-2
+packages/api/src/router/kubernetes/router/services.ts
+  s_4d7147561ceda1::t_86c5e4c9651d66 7,13-15
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/page.tsx
+  s_4d7147561ceda1::t_2b4147d82973a0 11-12,14,20-22,29
+packages/api/src/router/kubernetes/router/pods.ts
+  s_4d7147561ceda1::t_e9a1bb932ccfab 10,17-23,25-27
+apps/nextjs/src/app/[locale]/manage/boards/page.tsx
+  s_4d7147561ceda1::t_000cad91b32741 57-62
+apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx
+  s_4d7147561ceda1::t_956f524d3d60bd 9,11,14-17,32-84,93-106,139-140
+apps/nextjs/src/components/integration/integration-select-modal.tsx
+  s_4d7147561ceda1::t_1003e1ad31fb1d 9,13,15,18,20-21,27,39,41-45,61-67
+packages/request-handler/src/docker.ts
+  s_4d7147561ceda1::t_15fe543eb5b06f 11,18,20-44,200-220,228-234,236-246,249-250,266,271,334-336,338-343,346,350-376,379,384,401,403,406-423,425-429,436-438,450-458
+  s_4d7147561ceda1::t_a81f29d7bbd546 306,308-333
+packages/modals-collection/src/docker/confirm-docker-container-removal.spec.ts
+  s_4d7147561ceda1::t_34a4ab960b6f3e 1-19
+packages/modals/src/type.ts
+  s_4d7147561ceda1::t_1ff8afb6fba693 6-7,28,40
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/ingresses-table.tsx
+  s_4d7147561ceda1::t_15bd6d1034ff6f 81
+  s_4d7147561ceda1::t_77d39c1e5c6668 20
+  s_4d7147561ceda1::t_dd12db50902fe7 19
+  s_4d7147561ceda1::t_4dbedd93a63392 24,78,82-90
+  s_4d7147561ceda1::t_7658ccbe50d82f 113-115
+  s_4d7147561ceda1::t_c61495bbb0bf7b 116
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_4d7147561ceda1::t_4e8ddeba1f1748 3,5,7,17,49-50,53-57,73,92-95,102,119-128,159,192,199,215,230,232,235-236,241-287,310-311
+packages/widgets/src/widget-integration-select.tsx
+  s_4d7147561ceda1::t_2e709ea0e75130 40,82,96,113-115,119-120,125,129-132,135-148,176-180,187,190,197-207
+apps/nextjs/src/components/create/setup-analytics.spec.ts
+  s_4d7147561ceda1::t_d982c85781f06f 1-28
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-reconciliation-inbox.ts
+  s_4d7147561ceda1::t_d9567ce0b2510d 1-34
+packages/definitions/src/docker-service-discovery.ts
+  s_4d7147561ceda1::t_d1224841e36b94 139
+  s_4d7147561ceda1::t_c76a1ddaa6457f 1-138,140-147
+apps/nextjs/src/components/board/items/item-menu.tsx
+  s_4d7147561ceda1::t_d2e7929a0586c4 43,80-81,83
+apps/docs/static/api/open-api-schema.json
+  s_4d7147561ceda1::t_8c030b27cc97a0 1269-1274,1277
+apps/nextjs/src/components/create/universal-create-modal.module.d.css.ts
+  s_4d7147561ceda1::t_1cf5bf06c1d33e 1-5
+packages/definitions/src/kubernetes.ts
+  s_4d7147561ceda1::t_97f1cba3d251b6 76-77,91
+packages/modals/src/confirm-modal.tsx
+  s_4d7147561ceda1::t_15b5d558697652 39-40,62-77
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/page.tsx
+  s_4d7147561ceda1::t_814765fe15cd4a 11-12,14-18,24-28,36
+packages/modals/src/confirm-modal.spec.tsx
+  s_4d7147561ceda1::t_a142735ba48f90 1-108
+packages/definitions/src/test/docker-service-discovery.spec.ts
+  s_4d7147561ceda1::t_bac5e7166ceef1 79-92
+  s_4d7147561ceda1::t_f2e5c21a04277d 1-78,93
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/ingresses/page.tsx
+  s_4d7147561ceda1::t_97ba5017067575 11-12,14-18,24-28,35
+apps/nextjs/src/components/create/setup-analytics.ts
+  s_4d7147561ceda1::t_71ce0ae1b0bdae 1-51
+apps/nextjs/src/components/board/items/board-recipe-recommendations.spec.ts
+  s_4d7147561ceda1::t_d3b4fc0e65cfdc 1-77
+packages/ui/src/components/index.tsx
+  s_4d7147561ceda1::t_e0f0b13a7a52ea 15
+packages/api/src/router/kubernetes/router/configMaps.ts
+  s_4d7147561ceda1::t_dfe7e6d5dfba01 7,13-15
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/configmaps/configmaps-table.tsx
+  s_4d7147561ceda1::t_c51b59a0335216 19,43,46-55
+apps/nextjs/src/components/create/universal-create-actions.spec.ts
+  s_4d7147561ceda1::t_47825b8d271169 1-77
+packages/api/src/router/kubernetes/router/secrets.ts
+  s_4d7147561ceda1::t_c4276910140e6b 7,13-15
+apps/nextjs/src/components/board/items/item-select-data.ts
+  s_4d7147561ceda1::t_b032aa2c7d232a 3-18,29-31,45-48
+packages/api/src/router/analytics.ts
+  s_4d7147561ceda1::t_1297629219620c 10,38-42
+packages/api/src/router/docker/docker-reconciliation.ts
+  s_4d7147561ceda1::t_ecda8f63884b5f 1-246
+packages/definitions/src/index.ts
+  s_4d7147561ceda1::t_13f93071d0e496 19
+apps/nextjs/src/components/board/items/board-recipe-recommendations.ts
+  s_4d7147561ceda1::t_e1ca8ff8ef56b6 58
+  s_4d7147561ceda1::t_ec0a2e00d3bdaa 1-57,59-60
+packages/api/src/router/test/docker/docker-router.spec.ts
+  s_4d7147561ceda1::t_ef5aaad92ac049 9,11,14-47,69-70,81,83,108-110,113-118,121-141,146,188-567
+  s_4d7147561ceda1::t_da3f8fd96a6f00 65,71
+  s_4d7147561ceda1::t_495c8b2b16ea46 111
+packages/api/src/router/analytics-properties.ts
+  s_4d7147561ceda1::t_d9af1102ef81b4 1-39
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/namespaces-table.tsx
+  s_4d7147561ceda1::t_dc82acf3024dd3 21,60,63-72
+packages/api/src/router/test/integration/integration-router.spec.ts
+  s_4d7147561ceda1::t_7c6e06ba286278 59,316,331-339,360,376
+apps/nextjs/src/components/create/universal-create-actions.ts
+  s_4d7147561ceda1::t_90f0f588a4153f 1-120
+packages/docker/src/index.ts
+  s_4d7147561ceda1::t_e386aecf620c40 2,4,6,13-29
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/nodes/page.tsx
+  s_4d7147561ceda1::t_102918cd157bb4 11-12,14,20-22,29
+apps/nextjs/src/app/[locale]/manage/integrations/_components/test-connection/integration-test-connection-error.tsx
+  s_4d7147561ceda1::t_36adb16604af46 45-49,57-61,77
+packages/ui/src/components/catalog-item.spec.tsx
+  s_4d7147561ceda1::t_87f34d112ab5ec 1-136
+packages/api/src/router/onboard/capability-probes.ts
+  s_4d7147561ceda1::t_8c6a54ade19edd 44
+apps/nextjs/src/components/board/items/actions/test/create-item.spec.ts
+  s_4d7147561ceda1::t_170ebb13d6fc98 152-244
+apps/docs/docs/advanced/environment-variables/index.mdx
+  s_4d7147561ceda1::t_fa277f5eb37918 61-66
+packages/auth/permissions/integration-permissions.ts
+  s_4d7147561ceda1::t_ca1b5ed76f0d47 18-22,25-27
+packages/ui/src/components/catalog-item.module.css
+  s_4d7147561ceda1::t_5f2131f61c9290 1-29
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-reconciliation.tsx
+  s_4d7147561ceda1::t_b761f9863a86ed 1-344
+packages/api/src/router/kubernetes/router/volumes.ts
+  s_4d7147561ceda1::t_590042309a66ef 7,13-15
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/pods/pods-table.tsx
+  s_4d7147561ceda1::t_5624930a56f18a 19,51,54-63
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/kubernetes-context.ts
+  s_4d7147561ceda1::t_5996586c5324b8 1-16
+packages/integrations/src/base/response-contract.ts
+  s_4d7147561ceda1::t_cb919e27681113 34
+  s_4d7147561ceda1::t_634b3447e7bb37 1-33,35-51
+apps/nextjs/package.json
+  s_4d7147561ceda1::t_7a9bc8bd9d455a 69
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/namespaces/page.tsx
+  s_4d7147561ceda1::t_207119fdfb4783 11-12,14-18,24-28,35
+packages/api/src/router/kubernetes/resource-percentage.spec.ts
+  s_4d7147561ceda1::t_18f2f934c792aa 1-13
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-tile/resource-tile.tsx
+  s_4d7147561ceda1::t_811f5e5143f09d 14,21-25
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  s_4d7147561ceda1::t_e040d47bb2ecea 7,9,19-20,24,26,33-39,41,43-48,55,73-77,81,84-91,105-113
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/layout.tsx
+  s_4d7147561ceda1::t_f3a40372bd842a 1-15
+apps/nextjs/src/components/board/board-empty-state.module.css
+  s_4d7147561ceda1::t_285b3baca18e5d 1-16
+apps/nextjs/src/components/board/board-setup-progress.spec.ts
+  s_4d7147561ceda1::t_efcb151c1f1cc0 1-22
+packages/api/src/router/kubernetes/kubernetes-context.ts
+  s_4d7147561ceda1::t_1c3145309b83de 1-17
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_4d7147561ceda1::t_86191c254192b5 181-185,198
+packages/definitions/src/widget-integration-map.ts
+  s_4d7147561ceda1::t_63b77cdeb353af 3,8-10,12-80,83-84,86-90,93-98,101-102,137-143,148-153
+apps/nextjs/src/components/create/universal-create-spotlight.tsx
+  s_4d7147561ceda1::t_59900fdbacc8f1 1-35
+apps/docs/docs/management/integrations/index.mdx
+  s_4d7147561ceda1::t_3e5f9bc490d1c8 62-77
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/volumes/page.tsx
+  s_4d7147561ceda1::t_3ffefd00ebb41a 11-12,14,20-22,29
+apps/docs/docs/management/api/index.mdx
+  s_4d7147561ceda1::t_461da5ac7dba27 89-112
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-reconciliation-inbox.spec.ts
+  s_4d7147561ceda1::t_ab724f22c607ae 1-45
+packages/modals-collection/src/docker/add-docker-app-to-homarr.tsx
+  s_4d7147561ceda1::t_2859b629adb2bd 6,14,25-27
+  s_4d7147561ceda1::t_d605a080f02762 29-35
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/cluster-dashboard/cluster-dashboard.tsx
+  s_4d7147561ceda1::t_0f830c36ffa312 3-4,15,20,26,32-35,56-57,59-61,79-80,83
+  s_4d7147561ceda1::t_a7dfaf3da57246 19
+  s_4d7147561ceda1::t_c75a507c8d2d0f 9
+  s_4d7147561ceda1::t_9907f4286f1726 58
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_4d7147561ceda1::t_996b03f90d3fd8 2,9,59-63,75,77-79,83,85-88,102,104-106
+packages/modals-collection/package.json
+  s_4d7147561ceda1::t_5e6ced113a2ddf 26
+apps/nextjs/src/components/create/universal-create-modal.module.css
+  s_4d7147561ceda1::t_82949ddc9fc01a 1-21
+apps/docs/docs/integrations/docker/index.mdx
+  s_4d7147561ceda1::t_629808d38c19ae 125-171,175-195
+apps/nextjs/src/app/[locale]/manage/tools/kubernetes/secrets/page.tsx
+  s_4d7147561ceda1::t_c73a6f1629852c 11-12,14,20-22,29
+apps/nextjs/src/components/board/board-setup-checklist.module.css
+  s_4d7147561ceda1::t_80f5a5f14edd26 1-21
+packages/ui/src/components/catalog-item.module.d.css.ts
+  s_4d7147561ceda1::t_0e9c611f062897 1-2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "8ecdd13cd5d1a14fe4596d59dc700a0320653a97",
+  "prompts": {},
+  "sessions": {
+    "s_4d7147561ceda1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff551c16cffeywsHf1e64t0zSd",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": null
+    },
+    "s_fc96e2c72b7dad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bd6545f8-3d5b-42c6-955e-7cd798abb519",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
