@@ -107,6 +107,12 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
               : null;
           const remainingMinutes =
             positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
+          const seasonNumber = currentlyPlaying.seasonName?.match(/\d+/)?.[0];
+          const episodeNumber = currentlyPlaying.episodeCount;
+          const seasonEpisodeLabel =
+            seasonNumber !== undefined && episodeNumber !== undefined && episodeNumber !== null
+              ? `S${seasonNumber.padStart(2, "0")} E${String(episodeNumber).padStart(2, "0")}`
+              : null;
 
           return (
             <Stack gap={4} style={{ minWidth: 0 }}>
@@ -119,6 +125,11 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
                 <Text size="xs" lineClamp={1} style={{ minWidth: 0 }}>
                   {currentlyPlaying.name}
                 </Text>
+                {seasonEpisodeLabel && (
+                  <Text size="10px" c="dimmed" style={{ flexShrink: 0 }}>
+                    {seasonEpisodeLabel}
+                  </Text>
+                )}
                 {isPaused && (
                   <Text size="xs" c="yellow" style={{ flexShrink: 0 }}>
                     {t("items.paused")}
