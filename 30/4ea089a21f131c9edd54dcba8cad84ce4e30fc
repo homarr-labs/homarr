@@ -1,0 +1,19 @@
+apps/nextjs/src/app/api/backup/shared.ts
+  s_ca2323b7f96e59::t_ed99eefd944105 4,8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "304ea089a21f131c9edd54dcba8cad84ce4e30fc",
+  "prompts": {},
+  "sessions": {
+    "s_ca2323b7f96e59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5b-9d67-7470-9988-648d9d7016d2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
