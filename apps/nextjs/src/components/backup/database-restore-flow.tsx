@@ -254,14 +254,14 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
         <Group justify="space-between" wrap="nowrap">
           <Group gap="sm" wrap="nowrap" miw={0}>
             <IconFileZip size={20} />
-            <div style={{ minWidth: 0 }}>
+            <Group>
               <Text size="sm" fw={500} truncate>
                 {file?.name}
               </Text>
               <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
                 {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : ""}
               </Text>
-            </div>
+            </Group>
           </Group>
           <Button variant="subtle" size="xs" onClick={handleClear} style={{ flexShrink: 0 }}>
             {t("changeFile")}

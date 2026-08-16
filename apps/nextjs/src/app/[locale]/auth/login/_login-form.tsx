@@ -4,7 +4,7 @@ import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Anchor, Button, Card, Code, Collapse, Divider, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
-import { useDisclosure, useMounted } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { z } from "zod/v4";
 
 import { signIn } from "@homarr/auth/client";
@@ -32,7 +32,6 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
   const searchParams = useSearchParams();
   const isError = searchParams.has("error");
   const router = useRouter();
-  const isMounted = useMounted();
   const [isPending, setIsPending] = useState(false);
   const form = useZodForm(extendedValidation, {
     initialValues: {
@@ -140,7 +139,7 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
 
                 {providers.includes("credentials") && (
                   <Stack gap="sm">
-                    <SubmitButton isMounted={isMounted} isPending={isPending} form={form} provider="credentials">
+                    <SubmitButton isPending={isPending} form={form} provider="credentials">
                       {t("action.login.label")}
                     </SubmitButton>
                     <PasswordForgottenCollapse username={form.values.name} />
@@ -148,7 +147,7 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
                 )}
 
                 {providers.includes("ldap") && (
-                  <SubmitButton isMounted={isMounted} isPending={isPending} form={form} provider="ldap">
+                  <SubmitButton isPending={isPending} form={form} provider="ldap">
                     {t("action.login.labelWith", { provider: "LDAP" })}
                   </SubmitButton>
                 )}
@@ -159,13 +158,7 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
         )}
 
         {providers.includes("oidc") && (
-          <Button
-            type="button"
-            fullWidth
-            variant="light"
-            disabled={!isMounted || isPending}
-            onClick={() => void signInAsync("oidc")}
-          >
+          <Button type="button" fullWidth variant="light" disabled={isPending} onClick={() => void signInAsync("oidc")}>
             {t("action.login.labelWith", { provider: oidcClientName })}
           </Button>
         )}
@@ -175,13 +168,12 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
 };
 
 interface SubmitButtonProps {
-  isMounted: boolean;
   isPending: boolean;
   form: UseFormReturnType<FormType>;
   provider: "credentials" | "ldap";
 }
 
-const SubmitButton = ({ isMounted, isPending, form, provider, children }: PropsWithChildren<SubmitButtonProps>) => {
+const SubmitButton = ({ isPending, form, provider, children }: PropsWithChildren<SubmitButtonProps>) => {
   const isCurrentProviderActive = form.getValues().provider === provider;
 
   return (
@@ -192,7 +184,7 @@ const SubmitButton = ({ isMounted, isPending, form, provider, children }: PropsW
       fullWidth
       onClick={() => form.setFieldValue("provider", provider)}
       loading={isPending && isCurrentProviderActive}
-      disabled={!isMounted || (isPending && !isCurrentProviderActive)}
+      disabled={isPending && !isCurrentProviderActive}
     >
       {children}
     </Button>

@@ -1,41 +1,9 @@
-.root {
-  --integration-marquee-accent: var(--mantine-primary-color-filled);
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--mantine-spacing-xl);
-  height: 100%;
-  overflow: hidden;
-  transform: rotate(10deg);
-}
-
-.track {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--mantine-spacing-xl);
-  animation: integrationMarquee var(--marquee-duration) linear infinite;
-}
-
-.iconFrame {
-  display: grid;
-  flex: 0 0 4.5rem;
-  width: 4.5rem;
-  height: 4.5rem;
-  place-items: center;
-  border: 1px solid color-mix(in srgb, var(--integration-marquee-accent) 24%, transparent);
-  border-radius: var(--mantine-radius-lg);
-  background: color-mix(in srgb, var(--integration-marquee-accent) 8%, var(--mantine-color-body));
-  box-shadow: var(--mantine-shadow-sm);
-}
-
-@keyframes integrationMarquee {
-  to {
-    transform: translateY(-50%);
-  }
+.marquee {
+  mask-image: linear-gradient(to bottom, transparent, black 14%, black 86%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .track {
+  .content {
     animation: none;
   }
 }
