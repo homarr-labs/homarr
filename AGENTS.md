@@ -84,6 +84,12 @@ When modifying user-facing code, you MUST also update the corresponding document
 - Lint: oxlint (not ESLint)
 - Format: oxfmt (not Prettier)
 - UI: Mantine (not Tailwind) — Tailwind is only used in docs app
+- Mantine: use the `mantine` MCP server (`get_item_doc` / `get_item_props` / `search_docs`) for current v9 APIs before writing component code. Prefer built-in primitives (`Combobox`/`useCombobox` for selects, the polymorphic `component` prop, `@mantine/hooks`) over hand-rolled equivalents. Check `packages/ui/` for existing conventions first.
+
+## Agent Skills
+
+Portable agent skills live in `.agents/skills/` (the Agent Skills open standard) and are mirrored into `.cursor/skills/` and `.claude/skills/` so they work across Claude Code, Cursor, Codex, and OpenCode. Install at `.agents/skills/<name>/SKILL.md`; mirror new skills into the other two directories. See `.agents/skills/` for available skills (documentation-sync, mcp-integration, codebase-context, datatable-migration).
+
 - Icons: @tabler/icons-react
 - Docs app can import from `@homarr/definitions` for shared types
 - Run `pnpm dev:cli -- dev` to browse local `homarr:*` images and remote PR images.
