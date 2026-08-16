@@ -86,6 +86,30 @@ Board layout responses identify each layout with a `mobile`, `base`, or `custom`
 
 Use the interactive API reference to inspect the exact request body for each endpoint under the `boards` and `settings` tags.
 
+## Docker action payload migration
+
+Docker lifecycle and removal actions now identify each container with both its Docker endpoint and container ID. This is a
+breaking change for tRPC and MCP clients that previously sent an `ids` array to the start, stop, restart, or remove action.
+
+Replace the old payload:
+
+```json
+{ "ids": ["container-id"] }
+```
+
+with endpoint-qualified targets:
+
+```json
+{
+  "targets": [{ "endpointId": "local", "id": "container-id" }]
+}
+```
+
+Read `endpointId` and `id` from `docker.getContainers` (MCP tool `docker_getContainers`) immediately before the action.
+Pass those pairs unchanged to `docker.startAll`, `docker.stopAll`, `docker.restartAll`, or `docker.removeAll`; their MCP tool
+names use underscores, such as `docker_restartAll`. Endpoint qualification prevents identical container IDs on different
+Docker or Podman endpoints from targeting the wrong service.
+
 ## Partial integration failures
 
 Multi-integration widget queries keep data from integrations that remain available. Calendar and media-server results include

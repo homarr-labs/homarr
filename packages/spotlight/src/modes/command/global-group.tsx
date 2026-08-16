@@ -1,14 +1,17 @@
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Group, Text } from "@mantine/core";
 import {
   IconBox,
   IconCategoryPlus,
   IconMailForward,
+  IconPlus,
   IconPlug,
   IconUserPlus,
   IconUsersGroup,
 } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
+import type { GroupPermissionKey } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { AddBoardModal, AddGroupModal, InviteCreateModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -47,8 +50,29 @@ export const globalCommandGroup = createGroup<Command>({
   useOptions() {
     const tOption = useScopedI18n("search.mode.command.group.globalCommand.option");
     const { data: session } = useSession();
+    const pathname = usePathname();
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     const commands: (Command & { hidden?: boolean })[] = [
+      {
+        commandKey: "create",
+        icon: IconPlus,
+        name: tOption("create.label"),
+        useInteraction() {
+          return {
+            type: "javaScript",
+            onSelect() {
+              const nextSearchParams = new URLSearchParams(searchParams.toString());
+              nextSearchParams.set("create", "true");
+              router.replace(`${pathname}?${nextSearchParams.toString()}`, { scroll: false });
+            },
+          };
+        },
+        hidden: !["board-create", "app-create", "integration-create"].some((permission) =>
+          session?.user.permissions.includes(permission as GroupPermissionKey),
+        ),
+      },
       {
         commandKey: "newBoard",
         icon: IconCategoryPlus,

@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { buildDockerServiceUrlCandidates } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -10,6 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 
 interface AddDockerAppToHomarrProps {
   selectedContainers: RouterOutputs["docker"]["getContainers"]["containers"];
+  initialUrls?: string[];
 }
 
 export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(({ actions, innerProps }) => {
@@ -20,12 +22,17 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
     }),
     {
       initialValues: {
-        containerUrls: innerProps.selectedContainers.map((container) => {
-          if (Array.isArray(container.ports) && container.ports[0]) {
-            return `http://${container.ports[0].IP}:${container.ports[0].PublicPort}`;
-          }
+        containerUrls: innerProps.selectedContainers.map((container, index) => {
+          const initialUrl = innerProps.initialUrls?.[index];
+          if (initialUrl) return initialUrl;
 
-          return null;
+          const candidates = buildDockerServiceUrlCandidates({
+            containerName: container.name,
+            endpointHost: container.host,
+            ports: container.ports,
+          }).filter(({ url }) => url.length > 0);
+
+          return candidates.find(({ scopes }) => scopes.includes("browser"))?.url ?? candidates[0]?.url ?? null;
         }),
       },
     },

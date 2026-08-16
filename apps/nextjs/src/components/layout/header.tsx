@@ -3,6 +3,8 @@ import { AppShellHeader, Group, UnstyledButton } from "@mantine/core";
 
 import { Link } from "@homarr/ui";
 
+import { UniversalCreateHeaderAction, UniversalCreateQueryGate } from "~/components/create/universal-create-trigger";
+import { UniversalCreateSpotlightResult } from "~/components/create/universal-create-spotlight";
 import { ClientBurger } from "./header/burger";
 import { DesktopSearchInput, MobileSearchButton } from "./header/search";
 import { TourTarget } from "./header/tour-target";
@@ -36,6 +38,7 @@ export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
           <DesktopSearchInput />
         </TourTarget>
         <Group h="100%" align="center" justify="end" style={{ flex: 1 }} wrap="nowrap">
+          {hasNavigation && <UniversalCreateHeaderAction />}
           {actions}
           <MobileSearchButton />
           <TourTarget id="board-user-menu">
@@ -43,6 +46,8 @@ export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
           </TourTarget>
         </Group>
       </Group>
+      <UniversalCreateQueryGate />
+      <UniversalCreateSpotlightResult />
       <LazySpotlight />
     </AppShellHeader>
   );

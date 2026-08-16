@@ -73,8 +73,8 @@ export interface KubernetesNamespace extends KubernetesBaseResource {
 export interface KubernetesNode {
   name: string;
   status: KubernetesNodeState;
-  allocatableCpuPercentage: number;
-  allocatableRamPercentage: number;
+  allocatableCpuPercentage: number | null;
+  allocatableRamPercentage: number | null;
   podsCount: number;
   operatingSystem?: string;
   architecture?: string;
@@ -88,6 +88,7 @@ export interface KubernetesCluster {
   kubernetesVersion: string;
   architecture: string;
   nodeCount: number;
+  metricsAvailable: boolean;
   capacity: KubernetesCapacity[];
 }
 

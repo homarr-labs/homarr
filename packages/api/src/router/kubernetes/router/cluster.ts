@@ -5,7 +5,8 @@ import type { ClusterResourceCount, KubernetesCluster } from "@homarr/definition
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
-import { KubernetesClient } from "../kubernetes-client";
+import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
+import { calculateResourcePercentage } from "../resource-percentage";
 import { CpuResourceParser } from "../resource-parser/cpu-resource-parser";
 import { MemoryResourceParser } from "../resource-parser/memory-resource-parser";
 
@@ -13,14 +14,18 @@ export const clusterRouter = createTRPCRouter({
   getCluster: permissionRequiredProcedure
     .requiresPermission("admin")
     .concat(kubernetesMiddleware())
-    .query(async (): Promise<KubernetesCluster> => {
-      const { coreApi, metricsApi, versionApi, kubeConfig } = KubernetesClient.getInstance();
+    .input(kubernetesContextInput)
+    .query(async ({ input }): Promise<KubernetesCluster> => {
+      const client = getKubernetesClient(input.contextId);
+      const { coreApi, versionApi, kubeConfig } = client;
 
       try {
-        const versionInfo = await versionApi.getCode();
-        const nodes = await coreApi.listNode();
-        const nodeMetricsClient = await metricsApi.getNodeMetrics();
-        const listPodForAllNamespaces = await coreApi.listPodForAllNamespaces();
+        const [versionInfo, nodes, listPodForAllNamespaces, nodeMetricsClient] = await Promise.all([
+          versionApi.getCode(),
+          coreApi.listNode(),
+          coreApi.listPodForAllNamespaces(),
+          client.getNodeMetricsAsync().catch(() => null),
+        ]);
 
         let totalCPUCapacity = 0;
         let totalCPUAllocatable = 0;
@@ -48,7 +53,7 @@ export const clusterRouter = createTRPCRouter({
           totalMemoryAllocatable += memoryAllocatable;
 
           const nodeName = node.metadata?.name;
-          const nodeMetric = nodeMetricsClient.items.find((metric) => metric.metadata.name === nodeName);
+          const nodeMetric = nodeMetricsClient?.items.find((metric) => metric.metadata.name === nodeName);
           if (nodeMetric) {
             const cpuUsage = cpuResourceParser.parse(nodeMetric.usage.cpu);
             totalCPUUsage += cpuUsage;
@@ -61,13 +66,11 @@ export const clusterRouter = createTRPCRouter({
         const reservedCPU = totalCPUCapacity - totalCPUAllocatable;
         const reservedMemory = totalMemoryCapacity - totalMemoryAllocatable;
 
-        const reservedCPUPercentage = (reservedCPU / totalCPUCapacity) * 100;
-        const reservedMemoryPercentage = (reservedMemory / totalMemoryCapacity) * 100;
-
-        const usagePercentageAllocatable = (totalCPUUsage / totalCPUAllocatable) * 100;
-        const usagePercentageMemoryAllocatable = (totalMemoryUsage / totalMemoryAllocatable) * 100;
-
-        const usedPodsPercentage = (listPodForAllNamespaces.items.length / totalCapacityPods) * 100;
+        const reservedCPUPercentage = calculateResourcePercentage(reservedCPU, totalCPUCapacity);
+        const reservedMemoryPercentage = calculateResourcePercentage(reservedMemory, totalMemoryCapacity);
+        const usagePercentageAllocatable = calculateResourcePercentage(totalCPUUsage, totalCPUAllocatable);
+        const usagePercentageMemoryAllocatable = calculateResourcePercentage(totalMemoryUsage, totalMemoryAllocatable);
+        const usedPodsPercentage = calculateResourcePercentage(listPodForAllNamespaces.items.length, totalCapacityPods);
 
         return {
           name: kubeConfig.getCurrentContext(),
@@ -75,50 +78,59 @@ export const clusterRouter = createTRPCRouter({
           kubernetesVersion: versionInfo.gitVersion,
           architecture: versionInfo.platform,
           nodeCount: nodes.items.length,
+          metricsAvailable: nodeMetricsClient !== null,
           capacity: [
             {
               type: "CPU",
               resourcesStats: [
                 {
-                  percentageValue: Number(reservedCPUPercentage.toFixed(2)),
+                  percentageValue: reservedCPUPercentage,
                   type: "Reserved",
                   capacityUnit: "Cores",
                   usedValue: Number(reservedCPU.toFixed(2)),
                   maxUsedValue: Number(totalCPUCapacity.toFixed(2)),
                 },
-                {
-                  percentageValue: Number(usagePercentageAllocatable.toFixed(2)),
-                  type: "Used",
-                  capacityUnit: "Cores",
-                  usedValue: Number(totalCPUUsage.toFixed(2)),
-                  maxUsedValue: Number(totalCPUAllocatable.toFixed(2)),
-                },
+                ...(nodeMetricsClient
+                  ? [
+                      {
+                        percentageValue: usagePercentageAllocatable,
+                        type: "Used" as const,
+                        capacityUnit: "Cores",
+                        usedValue: Number(totalCPUUsage.toFixed(2)),
+                        maxUsedValue: Number(totalCPUAllocatable.toFixed(2)),
+                      },
+                    ]
+                  : []),
               ],
             },
             {
               type: "Memory",
               resourcesStats: [
                 {
-                  percentageValue: Number(reservedMemoryPercentage.toFixed(2)),
+                  percentageValue: reservedMemoryPercentage,
                   type: "Reserved",
                   capacityUnit: "GiB",
                   usedValue: Number(reservedMemory.toFixed(2)),
                   maxUsedValue: Number(totalMemoryCapacity.toFixed(2)),
                 },
-                {
-                  percentageValue: Number(usagePercentageMemoryAllocatable.toFixed(2)),
-                  type: "Used",
-                  capacityUnit: "GiB",
-                  usedValue: Number(totalMemoryUsage.toFixed(2)),
-                  maxUsedValue: Number(totalMemoryAllocatable.toFixed(2)),
-                },
+                ...(nodeMetricsClient
+                  ? [
+                      {
+                        percentageValue: usagePercentageMemoryAllocatable,
+                        type: "Used" as const,
+                        capacityUnit: "GiB",
+                        usedValue: Number(totalMemoryUsage.toFixed(2)),
+                        maxUsedValue: Number(totalMemoryAllocatable.toFixed(2)),
+                      },
+                    ]
+                  : []),
               ],
             },
             {
               type: "Pods",
               resourcesStats: [
                 {
-                  percentageValue: Number(usedPodsPercentage.toFixed(2)),
+                  percentageValue: usedPodsPercentage,
                   type: "Used",
                   usedValue: listPodForAllNamespaces.items.length,
                   maxUsedValue: totalCapacityPods,
@@ -137,8 +149,10 @@ export const clusterRouter = createTRPCRouter({
     }),
   getClusterResourceCounts: permissionRequiredProcedure
     .requiresPermission("admin")
-    .query(async (): Promise<ClusterResourceCount[]> => {
-      const { coreApi, networkingApi } = KubernetesClient.getInstance();
+    .concat(kubernetesMiddleware())
+    .input(kubernetesContextInput)
+    .query(async ({ input }): Promise<ClusterResourceCount[]> => {
+      const { coreApi, networkingApi } = getKubernetesClient(input.contextId);
 
       try {
         const [pods, ingresses, services, configMaps, namespaces, nodes, secrets, volumes] = await Promise.all([

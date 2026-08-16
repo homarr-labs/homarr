@@ -36,8 +36,8 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
   const closeOnConfirm = innerProps.closeOnConfirm ?? true;
   const closeOnCancel = innerProps.closeOnCancel ?? true;
 
-  const cancelLabel = labels?.cancel ?? ((t: TranslationFunction) => t("common.action.cancel"));
-  const confirmLabel = labels?.confirm ?? ((t: TranslationFunction) => t("common.action.confirm"));
+  const cancelLabel = labels?.cancel ?? ((translate: TranslationFunction) => translate("common.action.cancel"));
+  const confirmLabel = labels?.confirm ?? ((translate: TranslationFunction) => translate("common.action.confirm"));
 
   const handleCancel = useCallback(
     async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -59,19 +59,23 @@ export const ConfirmModal = createModal<Omit<ConfirmModalProps, "title">>(({ act
   const handleConfirm = useCallback(
     async (event: React.MouseEvent<HTMLButtonElement>) => {
       setLoading(true);
+      try {
+        if (typeof confirmProps?.onClick === "function") {
+          await confirmProps.onClick(event);
+        }
 
-      if (typeof confirmProps?.onClick === "function") {
-        confirmProps.onClick(event);
-      }
+        if (typeof onConfirm === "function") {
+          await onConfirm();
+        }
 
-      if (typeof onConfirm === "function") {
-        await onConfirm();
+        if (closeOnConfirm) {
+          actions.closeModal();
+        }
+      } catch {
+        // Keep the modal open. Callers own action-specific error feedback.
+      } finally {
+        setLoading(false);
       }
-
-      if (closeOnConfirm) {
-        actions.closeModal();
-      }
-      setLoading(false);
     },
     [confirmProps, onConfirm, closeOnConfirm, actions],
   );

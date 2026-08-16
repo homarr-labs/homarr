@@ -56,6 +56,7 @@ describe("all should return all integrations", () => {
     expect(result.length).toBe(2);
     expect(result[0]!.kind).toBe("plex");
     expect(result[1]!.kind).toBe("homeAssistant");
+    expect(result.every(({ permissions }) => permissions.hasFullAccess && permissions.hasUseAccess)).toBe(true);
   });
 });
 
@@ -312,7 +313,7 @@ describe("create should create a new integration", () => {
     const fakeNow = new Date("2023-07-01T00:00:00Z");
     vi.useFakeTimers();
     vi.setSystemTime(fakeNow);
-    await caller.create(input);
+    const result = await caller.create(input);
     vi.useRealTimers();
 
     const dbIntegration = await db.query.integrations.findFirst();
@@ -327,6 +328,15 @@ describe("create should create a new integration", () => {
     expect(dbSecret!.kind).toBe(input.secrets[0]!.kind);
     expect(dbSecret!.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
     expect(dbSecret!.updatedAt).toEqual(fakeNow);
+    expect(result).toEqual({
+      integration: {
+        id: dbIntegration!.id,
+        name: input.name,
+        kind: input.kind,
+        url: input.url,
+      },
+      appId: null,
+    });
   });
 
   test("with create integration access should not create a search engine for media request search integrations", async () => {
@@ -347,7 +357,7 @@ describe("create should create a new integration", () => {
     const fakeNow = new Date("2023-07-01T00:00:00Z");
     vi.useFakeTimers();
     vi.setSystemTime(fakeNow);
-    await caller.create(input);
+    const result = await caller.create(input);
     vi.useRealTimers();
 
     const dbIntegration = await db.query.integrations.findFirst();
@@ -363,6 +373,7 @@ describe("create should create a new integration", () => {
     expect(dbSecret!.kind).toBe(input.secrets[0]!.kind);
     expect(dbSecret!.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
     expect(dbSecret!.updatedAt).toEqual(fakeNow);
+    expect(result).toMatchObject({ appId: dbIntegration!.appId, integration: { id: dbIntegration!.id } });
 
     expect(dbSearchEngine).toBeUndefined();
   });

@@ -8,21 +8,31 @@ import { getScopedI18n } from "@homarr/translation/server";
 
 import { NamespacesTable } from "~/app/[locale]/manage/tools/kubernetes/namespaces/namespaces-table";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import type { KubernetesContextSearchParams } from "../kubernetes-context";
+import { getSelectedKubernetesContextAsync } from "../kubernetes-context";
 
-export default async function NamespacesPage() {
+export default async function NamespacesPage({
+  searchParams,
+}: {
+  searchParams: Promise<KubernetesContextSearchParams>;
+}) {
   const session = await auth();
   if (!(session?.user.permissions.includes("admin") && env.ENABLE_KUBERNETES)) {
     notFound();
   }
 
-  const namespaces = await api.kubernetes.namespaces.getNamespaces();
+  const context = await getSelectedKubernetesContextAsync(searchParams);
+  const namespaces =
+    context.status === "unavailable"
+      ? []
+      : await api.kubernetes.namespaces.getNamespaces({ contextId: context.contextId });
   const tNamespaces = await getScopedI18n("kubernetes.namespaces");
   return (
     <>
       <DynamicBreadcrumb />
       <Stack>
         <Title order={1}>{tNamespaces("label")}</Title>
-        <NamespacesTable initialNamespaces={namespaces} />
+        <NamespacesTable contextId={context.contextId} initialNamespaces={namespaces} />
       </Stack>
     </>
   );

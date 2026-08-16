@@ -102,3 +102,5 @@ export { downloadClientItemSchema } from "./interfaces/downloads/download-client
 
 // Helpers
 export { createIntegrationAsync } from "./base/creator";
+export { simulateResponseContractAsync } from "./base/response-contract";
+export type { ResponseContractFixture, ResponseContractParser } from "./base/response-contract";
