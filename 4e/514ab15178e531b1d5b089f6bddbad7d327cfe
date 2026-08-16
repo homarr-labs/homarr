@@ -1,0 +1,24 @@
+packages/translation/src/lang/en.json
+  s_ca2323b7f96e59::t_17fce40c6e1854 1421
+apps/nextjs/src/components/workshop/workshop-browser.tsx
+  s_ca2323b7f96e59::t_17fce40c6e1854 529
+  s_ca2323b7f96e59::t_38fc5391e3b5e4 528
+  s_ca2323b7f96e59::t_2e8845fe273f54 530-532
+  s_ca2323b7f96e59::t_b30577b08aa1dd 6,533,535-559
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4e514ab15178e531b1d5b089f6bddbad7d327cfe",
+  "prompts": {},
+  "sessions": {
+    "s_ca2323b7f96e59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5b-9d67-7470-9988-648d9d7016d2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
