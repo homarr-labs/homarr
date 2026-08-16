@@ -1,0 +1,64 @@
+apps/nextjs/src/app/[locale]/auth/login/_login-form.tsx
+  s_c147b71718c1ca::t_1680cba6a7baca 161
+  s_a6c3726a544d01::t_34119dd3f47a8f 7,142,150,176,187
+packages/onboarding/src/onboarding-studio.tsx
+  s_3a87701914aa4c::t_ddf9c09c75b789 3,17-23,28,65-99,105,108,110
+packages/ui/src/components/integration-marquee.module.css
+  s_a6c3726a544d01::t_86518cb455ca52 6
+  s_a6c3726a544d01::t_57524515c6395b 1-2
+packages/ui/src/components/integration-marquee.tsx
+  s_a6c3726a544d01::t_57524515c6395b 35
+  s_a6c3726a544d01::t_86518cb455ca52 27,29-34,36,38-39,41,43
+  s_a6c3726a544d01::t_0a6a2ce6d7a37e 17-25
+  s_d7332a8440ce1c::t_4cfb5302fc4606 1
+apps/nextjs/src/components/backup/database-restore-flow.tsx
+  s_ca2323b7f96e59::t_d8618971caa090 257,264
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c53852fdb6201ccd96b6358da41e7b2e30f36586",
+  "prompts": {},
+  "sessions": {
+    "s_3a87701914aa4c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a00c4c-4caf-78a0-b4d1-b29bc938d442",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a6c3726a544d01": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a00c4a-0cfc-7980-afa8-316152999fa5",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_c147b71718c1ca": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "937e5b2d-9262-46ec-84da-2e431d6e585b",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_ca2323b7f96e59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5b-9d67-7470-9988-648d9d7016d2",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_d7332a8440ce1c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff3bab839ffeeNpNbQ23HFgVDU",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
