@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ActionIcon, ActionIconGroup, Anchor, Avatar, Text } from "@mantine/core";
 import { IconBox, IconPencil } from "@tabler/icons-react";
 import { z } from "zod/v4";
@@ -41,12 +41,12 @@ interface AppsPageProps {
 export default async function AppsPage(props: AppsPageProps) {
   const session = await auth();
   if (!session) redirect("/auth/login");
+  if (!session.user.permissions.includes("app-modify-all")) notFound();
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: apps, totalCount } = await api.app.getPaginated(searchParams);
   const t = await getScopedI18n("app");
   const canCreate = session.user.permissions.includes("app-create");
-  const canModify = session.user.permissions.includes("app-modify-all");
   const canDelete = session.user.permissions.includes("app-full-all");
   const hasSearch = Boolean(searchParams.search?.trim());
 
@@ -100,7 +100,6 @@ export default async function AppsPage(props: AppsPageProps) {
         <AppItem
           key={app.id}
           app={app}
-          canModify={canModify}
           canDelete={canDelete}
           editLabel={t("page.list.action.edit", { name: app.name })}
         />
@@ -113,12 +112,11 @@ export default async function AppsPage(props: AppsPageProps) {
 
 interface AppItemProps {
   app: RouterOutputs["app"]["getPaginated"]["items"][number];
-  canModify: boolean;
   canDelete: boolean;
   editLabel: string;
 }
 
-const AppItem = ({ app, canModify, canDelete, editLabel }: AppItemProps) => {
+const AppItem = ({ app, canDelete, editLabel }: AppItemProps) => {
   const descriptionLines = app.description?.split("\n");
   const safeHref = getSafeAppHref(app.href);
 
@@ -157,23 +155,19 @@ const AppItem = ({ app, canModify, canDelete, editLabel }: AppItemProps) => {
         ) : undefined
       }
       actions={
-        canModify || canDelete ? (
-          <ActionIconGroup>
-            {canModify && (
-              <ActionIcon
-                component={Link}
-                href={`/manage/apps/edit/${app.id}`}
-                variant="subtle"
-                color="gray"
-                size={44}
-                aria-label={editLabel}
-              >
-                <IconPencil size={18} stroke={1.5} />
-              </ActionIcon>
-            )}
-            {canDelete && <AppDeleteButton app={app} />}
-          </ActionIconGroup>
-        ) : undefined
+        <ActionIconGroup>
+          <ActionIcon
+            component={Link}
+            href={`/manage/apps/edit/${app.id}`}
+            variant="subtle"
+            color="gray"
+            size={44}
+            aria-label={editLabel}
+          >
+            <IconPencil size={18} stroke={1.5} />
+          </ActionIcon>
+          {canDelete && <AppDeleteButton app={app} />}
+        </ActionIconGroup>
       }
     />
   );

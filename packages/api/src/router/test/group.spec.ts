@@ -449,6 +449,89 @@ describe("savePermissions should save permissions for group", () => {
     expect(permissions.map(({ permission }) => permission)).toEqual(["integration-use-all", "board-full-all"]);
   });
 
+  test("with a create permission it should also persist its parent permission", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(groups).values({
+      id: groupId,
+      name: "Group",
+      position: 1,
+    });
+
+    // Act
+    await caller.savePermissions({
+      groupId,
+      permissions: ["app-create"],
+    });
+
+    // Assert
+    const permissions = await db.query.groupPermissions.findMany({
+      where: eq(groupPermissions.groupId, groupId),
+    });
+
+    expect(permissions.map(({ permission }) => permission).toSorted()).toEqual(["app-create", "app-modify-all"]);
+  });
+
+  test("with a create permission and its parent it should persist exactly two rows", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(groups).values({
+      id: groupId,
+      name: "Group",
+      position: 1,
+    });
+
+    // Act
+    await caller.savePermissions({
+      groupId,
+      permissions: ["app-create", "app-modify-all"],
+    });
+
+    // Assert
+    const permissions = await db.query.groupPermissions.findMany({
+      where: eq(groupPermissions.groupId, groupId),
+    });
+
+    expect(permissions.length).toBe(2);
+    expect(permissions.map(({ permission }) => permission).toSorted()).toEqual(["app-create", "app-modify-all"]);
+  });
+
+  test("with an empty permission list it should clear all existing permissions", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(groups).values({
+      id: groupId,
+      name: "Group",
+      position: 1,
+    });
+    await db.insert(groupPermissions).values([
+      { groupId, permission: "admin" },
+      { groupId, permission: "board-full-all" },
+    ]);
+
+    // Act
+    await caller.savePermissions({
+      groupId,
+      permissions: [],
+    });
+
+    // Assert
+    const permissions = await db.query.groupPermissions.findMany({
+      where: eq(groupPermissions.groupId, groupId),
+    });
+
+    expect(permissions.length).toBe(0);
+  });
+
   test("with non existing group it should throw not found error", async () => {
     // Arrange
     const db = createDb();

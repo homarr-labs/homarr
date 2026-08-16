@@ -117,3 +117,44 @@ export const groupPermissionKeys = objectKeys(groupPermissions).reduce((acc, key
   }
   return acc;
 }, [] as GroupPermissionKey[]);
+
+/**
+ * Ordered access levels per category used by the group permission matrix UI.
+ * Each level entry is a full {@link GroupPermissionKey}; higher levels imply the lower ones
+ * through {@link groupPermissionParents}.
+ */
+export const permissionMatrix = {
+  board: { levels: ["board-view-all", "board-modify-all", "board-full-all"] },
+  app: { levels: ["app-use-all", "app-modify-all", "app-full-all"] },
+  integration: { levels: ["integration-use-all", "integration-interact-all", "integration-full-all"] },
+  "search-engine": { levels: ["search-engine-modify-all", "search-engine-full-all"] },
+  media: { levels: ["media-view-all", "media-full-all"] },
+  other: { levels: ["other-view-logs"] },
+  admin: { levels: ["admin"] },
+} as const satisfies Record<string, { levels: readonly GroupPermissionKey[] }>;
+
+export type PermissionMatrixCategory = keyof typeof permissionMatrix;
+
+export type PermissionMatrixState = Record<PermissionMatrixCategory, { level: number }>;
+
+export const permissionsToMatrixState = (permissions: GroupPermissionKey[]): PermissionMatrixState => {
+  const permissionSet = new Set(permissions);
+
+  return objectKeys(permissionMatrix).reduce((acc, category) => {
+    let level = 0;
+    permissionMatrix[category].levels.forEach((key, index) => {
+      if (permissionSet.has(key)) {
+        level = index + 1;
+      }
+    });
+    acc[category] = { level };
+    return acc;
+  }, {} as PermissionMatrixState);
+};
+
+export const matrixStateToPermissions = (state: PermissionMatrixState): GroupPermissionKey[] => {
+  return objectKeys(permissionMatrix).reduce((acc, category) => {
+    acc.push(...permissionMatrix[category].levels.slice(0, state[category].level));
+    return acc;
+  }, [] as GroupPermissionKey[]);
+};
