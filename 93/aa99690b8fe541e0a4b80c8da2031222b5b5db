@@ -1,0 +1,21 @@
+.mcp.json
+  s_d38029cd5fc65b::t_52744b615b1a6c 1-8
+AGENTS.md
+  s_d38029cd5fc65b::t_b16edcef8ab3d3 87-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "93aa99690b8fe541e0a4b80c8da2031222b5b5db",
+  "prompts": {},
+  "sessions": {
+    "s_d38029cd5fc65b": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff540179cffezhwIuowH82UjHt",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
