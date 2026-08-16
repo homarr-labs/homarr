@@ -28,8 +28,8 @@ import {
   users,
 } from "@homarr/db/schema";
 import { env as dockerEnv } from "@homarr/docker/env";
-import { VERSION } from "@homarr/version";
 
+import packageJson from "../../../package.json";
 import { getPostHogClient } from "./client";
 
 const logger = createLogger({ module: "analytics" });
@@ -121,7 +121,7 @@ export const sendServerAnalyticsAsync = async (): Promise<AnalyticsResult> => {
     const enabledAuthProviders = (["credentials", "oidc", "ldap"] as const).filter(isProviderEnabled);
 
     const properties: Record<string, unknown> = {
-      homarrVersion: VERSION,
+      homarrVersion: packageJson.version,
       databaseType: isMysql() ? "mysql" : isPostgresql() ? "postgresql" : "sqlite",
       dockerEnabled: Boolean(dockerEnv.ENABLE_DOCKER),
       kubernetesEnabled: Boolean(dockerEnv.ENABLE_KUBERNETES),

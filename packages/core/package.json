@@ -36,7 +36,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@homarr/version": "workspace:^0.1.0",
     "@t3-oss/env-nextjs": "catalog:",
     "better-sqlite3": "catalog:",
     "dns-caching": "catalog:",

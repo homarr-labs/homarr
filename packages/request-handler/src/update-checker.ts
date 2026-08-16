@@ -6,7 +6,8 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createGetSetChannel, createLockChannel } from "@homarr/redis";
-import { VERSION } from "@homarr/version";
+
+import packageJson from "../../../package.json";
 
 const logger = createLogger({ module: "updateCheckerRequestHandler" });
 
@@ -21,7 +22,7 @@ type UpdateCheckCacheEntry = {
   checkedAt: number | null;
 };
 
-const updateCheckCacheVersion = `v2:${VERSION}`;
+const updateCheckCacheVersion = `v2:${packageJson.version}`;
 const freshUpdateCheckChannel = createGetSetChannel<UpdateCheckCacheEntry>(
   `update-checker:fresh:${updateCheckCacheVersion}`,
 );
@@ -68,7 +69,7 @@ const getCachedAvailableUpdatesAsync = async (): Promise<UpdateCheckCacheEntry> 
 
   try {
     const attemptedAt = Date.now();
-    const availableUpdates = await getAvailableUpdatesAsync(VERSION);
+    const availableUpdates = await getAvailableUpdatesAsync(packageJson.version);
     const result: UpdateCheckCacheEntry = {
       availableUpdates,
       attemptedAt,

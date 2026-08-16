@@ -26,7 +26,6 @@
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/docker": "workspace:^0.1.0",
-    "@homarr/version": "workspace:^0.1.0",
     "posthog-node": "catalog:"
   },
   "devDependencies": {

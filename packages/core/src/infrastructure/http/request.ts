@@ -3,27 +3,20 @@ import { Agent as HttpsAgent } from "node:https";
 import { checkServerIdentity } from "node:tls";
 import axios from "axios";
 import type { Agent as UndiciAgent, RequestInfo, RequestInit, Response } from "undici";
-import { Headers, fetch } from "undici";
+import { fetch } from "undici";
 
 import {
   getAllTrustedCertificatesAsync,
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/core/infrastructure/certificates";
 import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
-import { VERSION } from "@homarr/version";
 
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
 import { withTimeoutAsync } from "./timeout";
 
-export const getDefaultUserAgent = () => `Homarr/${VERSION} (+https://homarr.dev)`;
+import packageJson from "../../../../../package.json";
 
-const createFetchHeaders = (initial: RequestInit["headers"]): Headers => {
-  const headers = new Headers(initial);
-  if (!headers.has("User-Agent")) {
-    headers.set("User-Agent", getDefaultUserAgent());
-  }
-  return headers;
-};
+export const getDefaultUserAgent = () => `Homarr/${packageJson.version} (+https://homarr.dev)`;
 
 export const createCustomCheckServerIdentity = (
   trustedHostnames: TrustedCertificateHostname[],
@@ -90,7 +83,10 @@ export const fetchWithTrustedCertificatesAsync = async (
       async (signal) =>
         fetch(url, {
           ...fetchOptions,
-          headers: createFetchHeaders(fetchOptions.headers),
+          headers: {
+            "User-Agent": getDefaultUserAgent(),
+            ...fetchOptions.headers,
+          },
           signal,
           dispatcher: agent,
         }),
@@ -101,7 +97,10 @@ export const fetchWithTrustedCertificatesAsync = async (
   const { bodyTimeout: _bodyTimeout, dispatcher: _dispatcher, ...fetchOptions } = options ?? {};
   return fetch(url, {
     ...fetchOptions,
-    headers: createFetchHeaders(fetchOptions.headers),
+    headers: {
+      "User-Agent": getDefaultUserAgent(),
+      ...fetchOptions.headers,
+    },
     dispatcher: agent,
   });
 };
