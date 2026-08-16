@@ -1,0 +1,45 @@
+.agents/skills/documentation-sync/SKILL.md
+  s_d38029cd5fc65b::t_58267eaaf62327 1-44
+AGENTS.md
+  s_d38029cd5fc65b::t_9bcaf820766ad9 87-92
+.agents/skills/datatable-migration/SKILL.md
+  s_d38029cd5fc65b::t_76d294804f7d6f 1-691
+.gitignore
+  s_d38029cd5fc65b::t_9ef24cbda2be75 74-75
+.agents/skills/mcp-integration/SKILL.md
+  s_d38029cd5fc65b::t_149924dd5d73f2 1-108
+.agents/skills/codebase-context/SKILL.md
+  s_d38029cd5fc65b::t_d901dea364bda8 1-195
+.claude/skills/codebase-context/SKILL.md
+  s_d38029cd5fc65b::t_4bb61f1d747e11 1-195
+.claude/skills/datatable-migration/SKILL.md
+  s_d38029cd5fc65b::t_af912b0b334710 1-691
+.claude/skills/documentation-sync/SKILL.md
+  s_d38029cd5fc65b::t_5b0c190f8729db 1-44
+.claude/skills/mcp-integration/SKILL.md
+  s_d38029cd5fc65b::t_dd54d860d92de2 1-108
+.cursor/skills/codebase-context/SKILL.md
+  s_d38029cd5fc65b::t_cf960030bb3d76 1-195
+.cursor/skills/datatable-migration/SKILL.md
+  s_d38029cd5fc65b::t_abc64e9951ced1 1-691
+.cursor/skills/documentation-sync/SKILL.md
+  s_d38029cd5fc65b::t_73722954d6b47b 1-44
+.cursor/skills/mcp-integration/SKILL.md
+  s_d38029cd5fc65b::t_45a31f9760d255 1-108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "3f13aa79d5a009a81cc62463cdeb2e5beac9125f",
+  "prompts": {},
+  "sessions": {
+    "s_d38029cd5fc65b": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff540179cffezhwIuowH82UjHt",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
