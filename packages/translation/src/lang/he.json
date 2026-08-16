@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1437,8 +1441,18 @@
     "here": "כאן",
     "iconPicker": {
       "label": "קישור של הסמל",
+      "description": "",
       "header": "הקלד שם או אובייקטים לסינון עבור אייקונים... Homarr יחפש עבורך סמלים של {countIcons} .",
       "headerLoading": "",
+      "clear": "",
+      "uploadImage": "",
+      "results": "",
+      "localImages": "התמונות שלך",
+      "svgIcons": "",
+      "otherImages": "תמונות אחרות",
+      "urlLoading": "",
+      "urlReady": "",
+      "urlError": "",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "monitored": "",
+      "updatesAvailable": "",
+      "updateAvailable": "",
+      "openReleaseNotes": "",
+      "option": {
+        "showTitle": {
+          "label": ""
+        },
+        "showRing": {
+          "label": ""
+        },
+        "layout": {
+          "label": "פריסה",
+          "option": {
+            "horizontal": {
+              "label": "אופקי"
+            },
+            "vertical": {
+              "label": "אנכי"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "",
+          "description": ""
         }
       }
     },

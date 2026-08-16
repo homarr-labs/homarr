@@ -1,0 +1,26 @@
+{
+  "worktree": {
+    "setup": "mise trust\nmise install\npnpm install\n\nif [ -n \"${PASEO_SOURCE_CHECKOUT_PATH:-}\" ] && [ -f \"$PASEO_SOURCE_CHECKOUT_PATH/.env\" ]; then\n  cp \"$PASEO_SOURCE_CHECKOUT_PATH/.env\" .env\nelse\n  cp .env.example .env\nfi\n\nDB_PATH=\"$PWD/homarr.sqlite\"\nZERO_KEY=\"0000000000000000000000000000000000000000000000000000000000000000\"\nsed -i.bak \\\n  -e \"s|^DB_DRIVER=.*|DB_DRIVER='better-sqlite3'|\" \\\n  -e \"s|^DB_URL=.*|DB_URL='$DB_PATH'|\" \\\n  -e \"s|^SECRET_ENCRYPTION_KEY=.*|SECRET_ENCRYPTION_KEY=$ZERO_KEY|\" \\\n  .env\nrm -f .env.bak\n\nrm -f homarr.sqlite\npnpm db:migration:sqlite:run",
+    "teardown": "rm -f homarr.sqlite",
+    "servicePorts": {
+      "range": "3000-4000"
+    }
+  },
+  "scripts": {
+    "dev": {
+      "type": "service",
+      "command": "PORT=$PASEO_PORT pnpm -F nextjs dev"
+    },
+    "docs": {
+      "type": "service",
+      "command": "pnpm -F @homarr/docs dev --port $PASEO_PORT"
+    },
+    "build": { "command": "pnpm build" },
+    "test": { "command": "pnpm test" },
+    "test:e2e": { "command": "pnpm test:e2e" },
+    "lint": { "command": "pnpm lint" },
+    "typecheck": { "command": "pnpm typecheck" },
+    "db:seed": { "command": "pnpm db:seed" },
+    "db:studio": { "command": "pnpm db:studio" }
+  }
+}

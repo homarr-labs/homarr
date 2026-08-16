@@ -2,51 +2,51 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Tere tulemast Homarri",
+        "subtitle": "Alustame sinu Homarri seadistamisega.",
+        "description": "Alustamiseks vali, kuidas soovid oma Homarri seadistada.",
         "action": {
-          "scratch": "",
-          "importOldmarr": "",
-          "restoreSqlite": "",
-          "restoreSqliteDescription": "",
-          "backToOptions": ""
+          "scratch": "Alustage nullist",
+          "importOldmarr": "Impordi Homarrist enne versiooni 1.0",
+          "restoreSqlite": "Taasta SQLite-varukoopiast",
+          "restoreSqliteDescription": "Laadi üles eelmise Homarri täielik SQLite-andmebaasi varukoopia. See taastab kõik paneelid, kasutajad, rakendused, integratsioonid ja seaded.",
+          "backToOptions": "​← Tagasi seadistusvalikute juurde"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Impordi andmed",
+        "subtitle": "Saad importida andmeid olemasolevast Homarrist.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Lohista zip-fail siia või klõpsa sirvimiseks",
+          "description": "Üleslaaditud zip-fail töödeldakse ja saad valida, mida soovid importida"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Muuda faili"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Impordi sätted",
+          "description": "Seadista importimise parameetrid"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "Leiti {count} paneeli",
+          "description": "Vali kõik paneelid koos nende suurustega, mida soovid importida",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Vali kõik",
+            "unselectAll": "Eemalda valikud"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Impordi kokkuvõte",
+          "description": "Allolevas kokkuvõttes näed, mida imporditakse",
           "action": {
-            "import": ""
+            "import": "Kinnita import ja jätka"
           },
           "entities": {
-            "apps": "",
-            "boards": "",
-            "integrations": "",
+            "apps": "Rakendused",
+            "boards": "Paneelid",
+            "integrations": "Integratsioonid",
             "credentialUsers": ""
           }
         },
@@ -90,13 +90,13 @@
         }
       },
       "settings": {
-        "title": "",
-        "subtitle": ""
+        "title": "Seaded",
+        "subtitle": "Määra serveri seaded."
       },
       "integrations": {
         "title": "",
         "subtitle": "",
-        "description": "",
+        "description": "Vali integratsioonid, mida soovid ühendada. Seadistame sinu juhtpaneeli automaatselt vastavate vidinatega.",
         "action": {
           "continue": "",
           "skip": ""
@@ -104,10 +104,10 @@
         "configure": {
           "progress": "",
           "skip": "",
-          "finishing": "",
+          "finishing": "Sinu juhtpaneeli seadistamine...",
           "error": {
             "title": "",
-            "message": ""
+            "message": "Juhtpaneeli seadistamisel läks midagi valesti. Palun proovi uuesti."
           },
           "helpers": {
             "tooltip": "",
@@ -130,7 +130,7 @@
           "detectedBreakdown": "",
           "summary": "",
           "appBadge": "",
-          "appSectionLabel": "",
+          "appSectionLabel": "Juhtpaneelile lisatavad rakendused ({count} valitud)",
           "scanning": "",
           "scanningDescription": ""
         }
@@ -140,8 +140,8 @@
         "subtitle": "",
         "description": "",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
+          "goToBoard": "Mine paneelile {name}",
+          "createBoard": "Loo oma esimene paneel",
           "inviteUser": "",
           "docs": ""
         }
@@ -193,7 +193,7 @@
         "label": "Eelmine parool"
       },
       "homeBoard": {
-        "label": "Kodujuhtpaneel"
+        "label": "Kodupaneel"
       },
       "pingIconsEnabled": {
         "label": "Kasuta pingide jaoks ikoone"
@@ -262,7 +262,7 @@
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": "Kodujuhtpaneel edukalt muudetud"
+            "message": "Kodupaneel edukalt muudetud"
           },
           "error": {
             "message": "Kodujuhtpaneeli ei saanud muuta"
@@ -370,12 +370,12 @@
       "name": "Nimi",
       "members": "Liikmed",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Kodupaneel",
+        "description": "Valida saab ainult rühmale kättesaadavaid paneele"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Mobiilipaneel",
+        "description": "Valida saab ainult rühmale kättesaadavaid paneele"
       }
     },
     "permission": {
@@ -577,12 +577,12 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Sätted salvestati",
+              "message": "Paneeli seaded on salvestatud"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Seadistuste salvestamine nurjus",
+              "message": "Paneeli seadete salvestamine ebaõnnestus"
             }
           }
         }
@@ -678,7 +678,7 @@
         "search": "",
         "noResults": "",
         "action": "",
-        "title": ""
+        "title": "Vali rakendus, mida sellele paneelile lisada"
       },
       "create": {
         "title": "",
@@ -867,11 +867,11 @@
       "updated": "",
       "deleted": "",
       "imported": "",
-      "aiPromptCopied": "",
+      "aiPromptCopied": "AI viip kopeeritud lõikelauale",
       "aiPromptDescription": "",
-      "aiPromptCopy": "",
+      "aiPromptCopy": "Kopeeri lõikelauale",
       "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
+      "aiPromptCopyError": "Viiba kopeerimine lõikelauale nurjus. Sinu veebibrauser ei pruugi seda funktsiooni toetada.",
       "createError": "",
       "updateError": "",
       "importError": "",
@@ -924,7 +924,7 @@
               "title": "",
               "url": {
                 "label": "",
-                "description": ""
+                "description": "Veebiaadress, mille rakendus juhtpaneelilt avab"
               }
             }
           }
@@ -987,7 +987,7 @@
         "placeholder": ""
       },
       "apiKeySettings": {
-        "label": ""
+        "label": "Hangi API võti"
       }
     },
     "action": {
@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1437,8 +1441,18 @@
     "here": "siin",
     "iconPicker": {
       "label": "Ikooni URL",
+      "description": "",
       "header": "Sisesta nimi või objektid ikoonide filtreerimiseks... Homarr otsib {countIcons} ikooni seast.",
       "headerLoading": "",
+      "clear": "",
+      "uploadImage": "",
+      "results": "",
+      "localImages": "",
+      "svgIcons": "",
+      "otherImages": "",
+      "urlLoading": "",
+      "urlReady": "",
+      "urlError": "",
       "noResults": "",
       "error": ""
     },
@@ -1602,7 +1616,7 @@
         "label": {
           "create": "Uus kategooria",
           "changePosition": "Muuda asukohta",
-          "settings": ""
+          "settings": "Seaded"
         }
       },
       "openAllInNewTabs": {
@@ -1663,7 +1677,7 @@
         "app": ""
       },
       "app": {
-        "propagationNotice": ""
+        "propagationNotice": "Selle äpi muudatused rakenduvad kõigil juhtpaneelidel."
       },
       "advancedOptions": {
         "label": "Täpsemad valikud",
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "monitored": "",
+      "updatesAvailable": "",
+      "updateAvailable": "",
+      "openReleaseNotes": "",
+      "option": {
+        "showTitle": {
+          "label": ""
+        },
+        "showRing": {
+          "label": ""
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "horizontal": {
+              "label": ""
+            },
+            "vertical": {
+              "label": ""
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -3412,7 +3458,7 @@
       "empty": {
         "missing": "",
         "queued": "",
-        "noTabsEnabled": ""
+        "noTabsEnabled": "Luba vidina seadetes vähemalt üks vahekaart"
       },
       "timeLeft": ""
     },
@@ -3816,7 +3862,7 @@
         },
         "compactMode": {
           "label": "",
-          "description": ""
+          "description": "Kasuta tihedamat paigutust väiksemate kaartidega, mis sobib ideaalselt väikeste vidinate jaoks"
         }
       },
       "artists": "",
@@ -3976,7 +4022,7 @@
       },
       "noRecords": "",
       "error": {
-        "internalServerError": "",
+        "internalServerError": "Beszeliga ei õnnestunud ühendust luua. Kontrolli oma integratsiooni seadeid.",
         "layoutSaveTitle": "",
         "layoutSaveMessage": ""
       },
@@ -4037,7 +4083,7 @@
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Beszeliga ei õnnestunud ühendust luua. Kontrolli oma integratsiooni seadeid."
       },
       "empty": {
         "noSystems": ""
@@ -4069,7 +4115,7 @@
       },
       "empty": "",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Beszeliga ei õnnestunud ühendust luua. Kontrolli oma integratsiooni seadeid."
       },
       "history": "",
       "resolved": "",
@@ -4119,7 +4165,7 @@
         "noSystems": ""
       },
       "error": {
-        "internalServerError": "",
+        "internalServerError": "Beszeliga ei õnnestunud ühendust luua. Kontrolli oma integratsiooni seadeid.",
         "liveConnectionFailed": "",
         "switchToHistorical": "",
         "systemNotFound": ""
@@ -4185,16 +4231,16 @@
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "Tee paneelist koopia",
+        "message": "See teeb paneelist {name} ja kogu selle sisust koopia. Kui vidinad viitavad integratsioonidele, mille kasutamiseks sul puudub õigus, eemaldatakse need.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Paneelist tehti koopia",
+            "message": "Paneel on edukalt kopeeritud"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Paneelist koopia tegemine nurjus",
+            "message": "Paneeli kopeerimine nurjus"
           }
         }
       },
@@ -4202,11 +4248,11 @@
         "notification": {
           "success": {
             "title": "Muudatused rakendati edukalt",
-            "message": "Töölaud salvestati edukalt"
+            "message": "Paneel salvestati edukalt"
           },
           "error": {
             "title": "Muudatusi ei saa rakendada",
-            "message": "Töölauda ei saanud salvestada"
+            "message": "Paneeli ei saanud salvestada"
           }
         },
         "confirmLeave": {
@@ -4219,11 +4265,11 @@
         "notification": {
           "success": {
             "title": "Importimine õnnestus",
-            "message": "Töölaud imporditi edukalt"
+            "message": "Paneel imporditi edukalt"
           },
           "error": {
             "title": "Importimine ebaõnnestus",
-            "message": "Töölauda ei saanud importida, vaadake logisid täpsema teabe saamiseks"
+            "message": "Paneeli ei saanud importida, vaata täpsema teabe saamiseks logisid"
           }
         },
         "form": {
@@ -4239,15 +4285,15 @@
             },
             "onlyImportApps": {
               "label": "Impordi ainult rakendusi",
-              "description": "Lisab ainult rakendused, töölaud tuleb käsitsi uuesti luua"
+              "description": "Lisab ainult rakendused, paneel tuleb käsitsi uuesti luua"
             }
           },
           "name": {
-            "label": "Töölaua nimi"
+            "label": "Paneeli nimi"
           },
           "screenSize": {
             "label": "Ekraani suurus",
-            "description": "",
+            "description": "Versioonides enne 1.0 oli kolm eri režiimi, mis võimaldasid valida iga ekraanisuuruse jaoks veergude arvu.",
             "option": {
               "sm": "Väike",
               "md": "Keskmine",
@@ -4272,8 +4318,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "Loo rakendus käigu pealt",
+          "createAndUse": "Loo ja kasuta"
         }
       }
     },
@@ -4292,10 +4338,10 @@
       },
       "backgroundImageUrl": {
         "label": "Taustapildi URL",
-        "placeholder": "",
+        "placeholder": "​Kohalike piltide otsimiseks alusta tippimist",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "Sinu pildid",
+          "other": "Teised pildid"
         }
       },
       "backgroundImageAttachment": {
@@ -4355,35 +4401,35 @@
         "label": "Läbipaistmatus"
       },
       "iconColor": {
-        "label": ""
+        "label": "Ikooni värv"
       },
       "clearColor": {
-        "label": ""
+        "label": "Eemalda värv"
       },
       "customCss": {
-        "label": "Kohandatud css sellele töölauale",
+        "label": "Kohandatud css sellele paneelile",
         "description": "Kohanda oma juhtpaneeli CSS-i abil, soovitatav ainult kogenud kasutajatele",
         "customClassesAlert": {
           "title": "Kohandatud klassid",
-          "description": "Saate lisada kohandatud klasse oma töölaua üksustele iga üksuse täpsemates valikutes ja kasutada neid ülaltoodud kohandatud CSS-is."
+          "description": "Saad paneeli iga elemendi täpsemate seadete alt lisada elementidele kohandatud klasse ning kasutada neid ülalolevas kohandatud CSS-is."
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "Ära näita rakenduse olekut",
+        "description": "Keelab selle paneeli kõigi rakenduste olekukontrolli"
       },
       "columnCount": {
         "label": "Veergude arv"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "Elementide ümarus",
+        "description": "Muudab paneelil olevate kaartide ümarust",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "Väga väike",
+          "sm": "Väike",
+          "md": "Keskmine",
+          "lg": "Suur",
+          "xl": "Väga suur"
         }
       },
       "name": {
@@ -4391,14 +4437,14 @@
       },
       "isPublic": {
         "label": "Avalik",
-        "description": "Avalikud töölauad on kõigile juurdepääsetavad, isegi ilma kontota."
+        "description": "Avalikud paneelid on kõigile juurdepääsetavad, isegi ilma kontota."
       }
     },
     "content": {
-      "metaTitle": "{boardName} töölaud"
+      "metaTitle": "{boardName}-paneel"
     },
     "setting": {
-      "title": "{boardName} töölaua seaded",
+      "title": "Paneeli {boardName} seaded",
       "section": {
         "general": {
           "title": "Üldine",
@@ -4407,9 +4453,9 @@
         "layout": {
           "title": "Paigutus",
           "responsive": {
-            "title": "",
+            "title": "Kohanduvad paigutused",
             "action": {
-              "add": ""
+              "add": "Lisa paigutus"
             }
           }
         },
@@ -4417,23 +4463,23 @@
           "title": "Taust"
         },
         "appearance": {
-          "title": ""
+          "title": "Välimus"
         },
         "customCss": {
           "title": "Kohandatud css"
         },
         "behavior": {
-          "title": ""
+          "title": "Käitumine"
         },
         "access": {
           "title": "Juurdepääsukontroll",
           "permission": {
             "item": {
               "view": {
-                "label": "Vaata töölauda"
+                "label": "Vaata paneeli"
               },
               "modify": {
-                "label": "Muuda töölauda"
+                "label": "Muuda paneeli"
               },
               "full": {
                 "label": "Täielik juurdepääs"
@@ -4445,18 +4491,18 @@
           "title": "Ohtlik tsoon",
           "action": {
             "rename": {
-              "label": "Nimeta töölaud ümber",
-              "description": "Nime muutmine lõhub kõik selle töölaua lingid.",
+              "label": "Nimeta paneel ümber",
+              "description": "Nime muutmine lõhub kõik selle paneeli lingid.",
               "button": "Muuda nime",
               "modal": {
-                "title": "Nimeta töölaud ümber"
+                "title": "Nimeta paneel ümber"
               }
             },
             "visibility": {
-              "label": "Muuda töölaua nähtavust",
+              "label": "Muuda paneeli nähtavust",
               "description": {
-                "public": "See töölaud on praegu avalik.",
-                "private": "See töölaud on praegu privaatne."
+                "public": "See paneel on praegu avalik.",
+                "private": "See paneel on praegu privaatne."
               },
               "button": {
                 "public": "Muuda privaatseks",
@@ -4464,22 +4510,22 @@
               },
               "confirm": {
                 "public": {
-                  "title": "Muuda töölaud privaatseks",
-                  "description": "Kas olete kindel, et soovite selle töölaua privaatseks muuta? See peidab töölaua avalikkuse eest. Lingid külaliskasutajatele lõhutakse."
+                  "title": "Muuda paneel privaatseks",
+                  "description": "Kas soovid kindlasti teha selle paneeli privaatseks? See peidab paneeli avalikkuse eest. Külaliskasutajate lingid lakkavad töötamast."
                 },
                 "private": {
-                  "title": "Muuda töölaud avalikuks",
-                  "description": "Kas olete kindel, et soovite selle töölaua avalikuks muuta? See muudab töölaua kõigile juurdepääsetavaks."
+                  "title": "Muuda paneel avalikuks",
+                  "description": "Kas soovid kindlasti teha selle paneeli avalikuks? See muudab paneeli kõigile kättesaadavaks."
                 }
               }
             },
             "delete": {
-              "label": "Kustuta see töölaud",
-              "description": "Kui olete töölaua kustutanud, pole seda võimalik tagasi võtta. Palun olge kindel.",
-              "button": "Kustuta see töölaud",
+              "label": "Kustuta see paneel",
+              "description": "Kui paneel on kustutatud, ei saa seda enam taastada. Palun ole täiesti kindel.",
+              "button": "Kustuta see paneel",
               "confirm": {
-                "title": "Kustuta töölaud",
-                "description": "Kas olete kindel, et soovite selle töölaua kustutada? See kustutab töölaua ja kogu selle sisu jäädavalt."
+                "title": "Kustuta paneel",
+                "description": "​Kas soovid kindlasti selle paneeli kustutada? See kustutab jäädavalt paneeli ja kogu selle sisu."
               }
             }
           }
@@ -4488,33 +4534,33 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Tere tulemast Homarri",
+        "description": "Stiilne ja kaasaegne juhtpaneel, mis toob kõik sinu rakendused ja teenused käeulatusse.",
+        "link": "Loo oma esimene paneel",
+        "notice": "Selle lehe peitmiseks loo paneel ja määra see kodupaneeliks"
       },
       "notFound": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Paneeli ei leitud",
+        "description": "Osutatud paneeli ei leitud või sul puudub sellele juurdepääs.",
+        "link": "Kuva kõik paneelid",
+        "notice": "​Kontrolli linki või võta ühendust administraatoriga, kui arvad, et see peaks olema kättesaadav"
       },
       "homeBoard": {
-        "title": "",
+        "title": "Kodupaneel puudub",
         "admin": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Serverile ei ole veel kodupaneeli määratud.",
+          "link": "Seadista serveriülene kodupaneel",
+          "notice": "Selle lehe eemaldamiseks kõigi kasutajate jaoks määra serveriülene kodupaneel"
         },
         "user": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "​Sa ei ole veel kodupaneeli määranud.",
+          "link": "Seadista oma kodupaneel",
+          "notice": "Selle lehe eemaldamiseks määra eelistustes kodupaneel"
         },
         "anonymous": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Serveri administraator pole veel kodupaneeli määranud.",
+          "link": "Kuva avalikud paneelid",
+          "notice": "Selle lehe eemaldamiseks palu administraatoril määrata serveriülene kodupaneel"
         }
       }
     }
@@ -4552,7 +4598,7 @@
     "navbar": {
       "items": {
         "home": "Kodu",
-        "boards": "Töölauad",
+        "boards": "Paneelid",
         "apps": "Rakendused",
         "integrations": "Integratsioonid",
         "customWidgets": "",
@@ -4594,7 +4640,7 @@
     "page": {
       "home": {
         "statistic": {
-          "board": "",
+          "board": "Paneelid",
           "user": "",
           "invite": "",
           "integration": "",
@@ -4604,65 +4650,65 @@
           "media": ""
         },
         "statisticLabel": {
-          "boards": "",
+          "boards": "Paneelid",
           "resources": "",
           "authentication": "",
           "authorization": ""
         },
         "heroBanner": {
           "title": "",
-          "subtitle": ""
+          "subtitle": "{app} paneel"
         }
       },
       "board": {
-        "title": "",
+        "title": "Sinu paneelid",
         "action": {
           "new": {
-            "label": ""
+            "label": "Uus paneel"
           },
           "open": {
-            "label": ""
+            "label": "Ava paneel"
           },
           "settings": {
-            "label": ""
+            "label": "Seaded"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "​Määra kodupaneeliks",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Avaleht",
+              "tooltip": "Seda paneeli kuvatakse sinu kodupaneelina"
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Määra oma mobiilipaneeliks",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Mobiilne",
+              "tooltip": "Seda paneeli kuvatakse sinu mobiilipaneelina"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Tee paneelist koopia"
           },
           "delete": {
-            "label": "",
+            "label": "Kustuta jäädavalt",
             "confirm": {
-              "title": "",
-              "description": ""
+              "title": "Kustuta paneel",
+              "description": "Kas oled kindel, et soovid paneeli {name} kustutada?"
             }
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "See paneel on avalik",
+          "private": "See paneel on privaatne"
         },
         "noResults": {
-          "title": ""
+          "title": "Paneele pole veel"
         },
         "modal": {
           "createBoard": {
             "field": {
               "name": {
-                "label": ""
+                "label": "Nimi"
               }
             }
           }
@@ -4680,30 +4726,30 @@
             "item": {
               "language": "",
               "board": {
-                "title": "",
+                "title": "Kodupaneel",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Üldine",
+                  "mobile": "Mobiilne"
                 }
               },
               "search": "",
               "firstDayOfWeek": "",
               "accessibility": "",
               "onboardingTours": {
-                "title": "",
-                "description": "",
-                "reset": "",
+                "title": "Õpetused",
+                "description": "Lähtesta õpetused, et näha neid uuesti järgmisel haldusala või juhtpaneeli külastusel.",
+                "reset": "Lähtesta õpetused",
                 "resetSuccess": {
-                  "title": "",
-                  "message": ""
+                  "title": "Õpetused lähtestatud",
+                  "message": "Õpetusi kuvatakse uuesti sinu järgmisel külastusel"
                 },
                 "status": {
-                  "completed": "",
-                  "notStarted": ""
+                  "completed": "Lõpetatud",
+                  "notStarted": "Alustamata"
                 },
                 "name": {
-                  "management": "",
-                  "dashboard": ""
+                  "management": "Haldus",
+                  "dashboard": "Juhtpaneel"
                 }
               }
             }
@@ -4712,7 +4758,7 @@
             "title": ""
           },
           "board": {
-            "title": ""
+            "title": "Paneelid"
           }
         },
         "list": {
@@ -4796,10 +4842,10 @@
             "ownerOfGroupDeleted": ""
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "Seaded",
+            "alert": "Grupi seaded seatakse tähtsuse järjekorda vastavalt gruppide järjestusele loendis. Ülalasuvad seaded tühistavad allpool asuvad.",
             "board": {
-              "title": ""
+              "title": "Paneelid"
             }
           },
           "members": {
@@ -4816,91 +4862,91 @@
         }
       },
       "settings": {
-        "title": "",
+        "title": "Seaded",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Seaded edukalt salvestatud"
           },
           "error": {
-            "message": ""
+            "message": "Seadete salvestamine nurjus"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "Analüütika",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "​Aita meil Homarri täiustada",
+              "text": "See aitab meil mõista, mida inimesed tegelikult kasutavad, et teaksime, kuhu oma aega panustada. Näeme näiteks seda, kui palju vidinaid või integratsioone sul on, millist Homarri versiooni ja andmebaasi sa kasutad. Ja see ongi kõik — ei mingit isiklikku teavet, URL-e, nimesid ega midagi muud, mis saaks tuvastada sind või sinu seadistust."
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
-            "warning": "",
+            "title": "Kammimine ja indekseerimine",
+            "warning": "​Siinsete seadete lubamine või keelamine mõjutab oluliselt seda, kuidas otsingumootorid sinu lehte indekseerivad ja kammivad. Iga seadistus on päring ning otsingumootori roboti otsustada on, kas ta neid reegleid rakendab. Muudatuste jõustumiseks võib kuluda päevi või nädalaid. Mõned seaded võivad olla otsingumootoripõhised.",
             "noIndex": {
-              "title": "",
-              "text": ""
+              "title": "​Ära indekseeri",
+              "text": "Ära indekseeri veebilehte otsingumootorites ja ära kuva seda otsingutulemustes"
             },
             "noFollow": {
-              "title": "",
-              "text": ""
+              "title": "Ära jälgi linke",
+              "text": "​Ära jälgi indekseerimise ajal ühtegi linki. Selle funktsiooni väljalülitamisel üritavad otsingurobotid jälgida kõiki Homarris olevaid linke."
             },
             "noTranslate": {
-              "title": "",
-              "text": ""
+              "title": "Ära tõlgi",
+              "text": "Kui lehe keel pole tõenäoliselt see, mida kasutaja lugeda soovib, kuvab Google otsingutulemustes tõlkelinki"
             },
             "noSiteLinksSearchBox": {
-              "title": "",
-              "text": ""
+              "title": "Ära kuva lehe otsingukasti",
+              "text": "Google loob kogutud linkide ja muude otselinkide põhjal otsingukasti. Selle sätte lubamine palub Google'il kõnealuse otsingukasti keelata."
             }
           },
           "board": {
-            "title": "",
+            "title": "Paneelid",
             "homeBoard": {
-              "label": "",
-              "mobileLabel": "",
-              "description": ""
+              "label": "Üldine kodupaneel",
+              "mobileLabel": "Üldine mobiilipaneel",
+              "description": "Valimiseks on saadaval ainult avalikud paneelid"
             },
             "status": {
-              "title": "",
+              "title": "Rakenduse olek",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Luba olek vaikimisi",
+                "description": "Rakenduse lisamisel on olek vaikimisi lubatud"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Lülita olek jõuga välja",
+                "description": "Rakenduste olek keelatakse kõigile kasutajatele ja seda ei saa sisse lülitada"
               }
             }
           },
           "user": {
-            "title": "",
+            "title": "Kasutajad",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Luba Gravatar",
+              "description": "Kui kohandatud avatari pole määratud ja e-posti aadress on seadistatud, kasutatakse varuvariandina Libravatari/Gravatari profiilipilti"
             }
           },
           "search": {
-            "title": "",
+            "title": "Otsing",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "Üldine vaikimisi otsingumootor",
+              "description": "Integratsioonide otsingumootoreid ei saa siin valida"
             }
           },
           "appearance": {
-            "title": "",
+            "title": "Välimus",
             "defaultColorScheme": {
-              "label": "",
+              "label": "Vaikimisi värviskeem",
               "options": {
-                "auto": "",
-                "light": "",
-                "dark": ""
+                "auto": "Automaatne",
+                "light": "Hele",
+                "dark": "Tume"
               }
             }
           },
           "culture": {
-            "title": "",
+            "title": "Kultuur",
             "defaultLocale": {
-              "label": ""
+              "label": "Vaikimisi keel"
             }
           }
         }
@@ -4941,7 +4987,7 @@
             }
           },
           "settings": {
-            "title": ""
+            "title": "Ülesande \"{jobName}\" seaded"
           },
           "field": {
             "name": {
@@ -5061,10 +5107,10 @@
                   "title": "",
                   "worksWith": "",
                   "addToConfig": "",
-                  "cursor": "",
+                  "cursor": "​{name}: {file} sinu projekti või üldseadetes",
                   "claudeDesktop": "",
                   "claudeCode": "",
-                  "vsCodeCopilot": "",
+                  "vsCodeCopilot": "{name}: {file} tööala seadetes",
                   "replaceHint": ""
                 },
                 "stdio": {
@@ -5126,13 +5172,13 @@
           "metaTitle": "",
           "export": {
             "title": "",
-            "description": "",
+            "description": "​Laadi alla oma SQLite andmebaasi täielik varukoopia, mis sisaldab kõiki seadeid, kasutajaid, paneele ja krüpteeritud integratsioonisaladusi. Varukoopia on pakitud ZIP-failina koos krüpoteerimisvõtme ja metaandmetega.",
             "button": "",
             "error": "",
             "confirm": {
               "title": "",
               "warningTitle": "",
-              "warningBody": "",
+              "warningBody": "Varukoopia sisaldab kõiki kasutajaid, integratsioonisaladusi (krüpteeritud), API-võtmeid, paneelide konfigureerimisi ja rakenduste andmeid. Hoia eksporditud faili turvaliselt ega jaga seda teistega.",
               "typePrompt": "",
               "submit": "",
               "cancel": ""
@@ -5161,9 +5207,9 @@
             "errorTitle": "",
             "entity": "",
             "count": "",
-            "boards": "",
+            "boards": "Paneelid",
             "entities": {
-              "board": "",
+              "board": "Paneelid",
               "user": "",
               "app": "",
               "integration": "",
@@ -5190,9 +5236,9 @@
               "exported": "",
               "entity": "",
               "count": "",
-              "boards": "",
+              "boards": "Paneelid",
               "entities": {
-                "board": "",
+                "board": "Paneelid",
                 "user": "",
                 "app": "",
                 "integration": "",
@@ -5215,7 +5261,7 @@
             "confirm": {
               "title": "",
               "warningTitle": "",
-              "warningBody": "",
+              "warningBody": "Kõik praegused paneelid, kasutajad, rakendused, integratsioonid, seaded ja sessioonid kustutatakse. Seda toimingut ei saa tagasi võtta. Rakendus taaskäivitub pärast taastamist.",
               "typePrompt": "",
               "cancel": "",
               "submit": ""
@@ -5263,13 +5309,13 @@
           },
           "hotkeys": {
             "title": "",
-            "subtitle": "",
+            "subtitle": "Klaviatuuri kiirklahvid töövoo tõhustamiseks",
             "field": {
               "shortcut": "",
               "action": ""
             },
             "action": {
-              "toggleBoardEdit": "",
+              "toggleBoardEdit": "Vaheta paneeli muutmisrežiimi",
               "toggleColorScheme": "",
               "saveNotebook": "",
               "openSpotlight": ""
@@ -5420,12 +5466,12 @@
     },
     "error": {
       "internalServerError": "",
-      "noColumns": ""
+      "noColumns": "Vali vidina seadetes vähemalt üks tulp"
     }
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
+      "title": "Klastri juhtpaneel",
       "label": "",
       "providers": "",
       "version": "",
@@ -5696,7 +5742,7 @@
     "manage": {
       "label": "",
       "boards": {
-        "label": ""
+        "label": "Paneelid"
       },
       "integrations": {
         "label": "",
@@ -5747,7 +5793,7 @@
         },
         "general": "",
         "security": "",
-        "board": "",
+        "board": "Paneelid",
         "groups": {
           "label": ""
         },
@@ -5804,7 +5850,7 @@
         }
       },
       "settings": {
-        "label": ""
+        "label": "Seaded"
       },
       "about": {
         "label": ""
@@ -5819,48 +5865,48 @@
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Otsi rakendusi, integratsioone või paneele",
         "group": {
           "app": {
-            "title": "",
+            "title": "Rakendused",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Ava rakenduse URL"
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Muuda rakendust"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Vali rakendusele toiming"
               }
             }
           },
           "board": {
-            "title": "",
+            "title": "Paneelid",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Ava paneel"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "​Määra kodupaneeliks"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Määra mobiilipaneeliks"
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Ava seaded"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Vali paneelile toiming"
               }
             }
           },
           "integration": {
-            "title": ""
+            "title": "Integratsioonid"
           }
         }
       },
@@ -5887,10 +5933,10 @@
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "Loo uus paneel"
               },
               "importBoard": {
-                "label": ""
+                "label": "Impordi paneel"
               },
               "newApp": {
                 "label": ""
@@ -5937,8 +5983,8 @@
                 "disabled": ""
               },
               "board": {
-                "none": "",
-                "unavailable": ""
+                "none": "Pole",
+                "unavailable": "Praegu valitud (pole saadaval)"
               },
               "searchEngine": {
                 "none": "",
@@ -5993,18 +6039,18 @@
                 }
               },
               "homeBoardId": {
-                "label": "",
+                "label": "Kodupaneel",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Vali oma kodupaneel"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "",
+                "label": "Mobiili kodupaneel",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Vali oma mobiili kodupaneel"
                   }
                 }
               },
@@ -6164,7 +6210,7 @@
                 "label": ""
               },
               "manageBoard": {
-                "label": ""
+                "label": "Halda paneele"
               },
               "manageApp": {
                 "label": ""
@@ -6200,13 +6246,13 @@
                 "label": ""
               },
               "manageSettings": {
-                "label": ""
+                "label": "Üldseaded"
               },
               "about": {
                 "label": ""
               },
               "homeBoard": {
-                "label": ""
+                "label": "Kodupaneel"
               },
               "preferences": {
                 "label": "Teie eelistused"
@@ -6448,69 +6494,69 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Loe dokumentatsiooni",
+    "next": "Edasi",
+    "prev": "Tagasi",
+    "done": "Tehtud",
+    "skip": "Jäta õpetus vahele",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Tere tulemast Homarri!",
+        "description": "See on sinu juhtimiskeskus. Siit saad hallata paneele, rakendusi, integratsioone, kasutajaid ja serveri seadeid. Teeme igast jaotisest ülevaate."
       },
       "boardsList": {
-        "title": "",
-        "description": ""
+        "title": "Sinu paneelid",
+        "description": "Siin on kõik sinu juhtpaneelid. Igal töölaual on oma paigutus, taust ja juurdepääsuseaded. Näed, kes on iga töölaua loonud ning kas see on avalik või privaatne."
       },
       "boardsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Loo uus paneel",
+        "description": "​Uue paneeli loomiseks või varasemast Homarri paigaldusest importimiseks klõpsa siia. Iga paneel saab oma lingi, mida saad jagada."
       },
       "appsList": {
-        "title": "",
-        "description": ""
+        "title": "Sinu rakendused",
+        "description": "Siin on kõik sinu lisatud rakendused — lingid sinu majutatavatele teenustele. Igal rakendusel on ikoon, valikuline olekukontroll ja olekumärk paneelil."
       },
       "appsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Lisa rakendus",
+        "description": "Registreeri siin uus teenus. Määra sellele nimi, URL ja ikoon — see ilmub sinu paneelidele reaalajas olekuseirega kaardina."
       },
       "integrationsList": {
-        "title": "",
-        "description": ""
+        "title": "Sinu integratsioonid",
+        "description": "Need on Homarriga ühendatud teenused — Sonarr, Radarr, Plex, Jellyfin ja üle 50 muu. Kõik pääsuandmed on krüpteeritult salvestatud."
       },
       "integrationsCreate": {
-        "title": "",
-        "description": ""
+        "title": "Lisa integratsioon",
+        "description": "Ühenda siin uus teenus. Vali tüüp, sisesta URL ja API-võti — Homarr kontrollib ühendust enne salvestamist."
       },
       "usersList": {
-        "title": "",
-        "description": ""
+        "title": "Sinu kasutajad",
+        "description": "Vaata kõiki juurdepääsuga kasutajaid. Grupeeri kasutajad ja halda, kes saab paneele vaadata või redigeerida."
       },
       "usersCreate": {
-        "title": "",
-        "description": ""
+        "title": "Loo kasutaja",
+        "description": "Lisa siin uus kasutajakonto. Lihtsaks kasutajate kaasamiseks saad kasutada ka kutselinke. See oli kogu ülevaade — oledki valmis!"
       }
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "See on sinu paneel",
+        "description": "Lohistatav juhtpaneel rakenduste ja vidinate paigutamiseks. Vajuta igal ajal Ctrl+K, et otsida rakendusi, paneele ja toiminguid."
       },
       "editMode": {
-        "title": "",
-        "description": ""
+        "title": "Muutmisrežiim",
+        "description": "Muutmisrežiimi sisenemiseks klõpsa siia. Seejärel saad lisada vidinaid, rakendusi ja sektsioone — asukoha muutmiseks lohista neid ning suuruse muutmiseks kasuta nurga käepidet. Muudatuste salvestamiseks klõpsa uuesti."
       },
       "settings": {
-        "title": "",
-        "description": ""
+        "title": "Paneeli seaded",
+        "description": "​Muuda selle paneeli nime, veerge, tausta, värve ja juurdepääsuõigusi. Iga paneel saab olla avalik või privaatne."
       },
       "switcher": {
-        "title": "",
-        "description": ""
+        "title": "Vaheta paneeli",
+        "description": "Hüppa kiiresti paneelide vahel. Loo eri otstarvete jaoks eraldi juhtpaneele — meedia, võrgundus, kasutusseadistused iga kasutaja jaoks või mis iganes sulle meeldib."
       },
       "userMenu": {
-        "title": "",
-        "description": ""
+        "title": "Sinu profiil",
+        "description": "​Muuda oma värviteemat, keelt, kodupaneeli ja eelistusi. Siit saad ka otse haldusalasse liikuda."
       }
     }
   }

@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Pratite koji od vaših Docker kontejnera imaju dostupna ažuriranja slika."
+    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1437,8 +1441,18 @@
     "here": "ovdje",
     "iconPicker": {
       "label": "URL ikone",
+      "description": "Pretražite biblioteku, zalijepite URL slike ili prenesite datoteku.",
       "header": "Upišite naziv ili objekte za filtriranje ikona... Homarr će pretražiti {countIcons} ikona za vas.",
-      "headerLoading": "",
+      "headerLoading": "Pretražite slike po nazivu",
+      "clear": "Očisti sliku",
+      "uploadImage": "Prenesi sliku",
+      "results": "Rezultati pretraživanja slika",
+      "localImages": "Vaše slike",
+      "svgIcons": "SVG ikone",
+      "otherImages": "Ostale slike",
+      "urlLoading": "Provjera slike…",
+      "urlReady": "Slika je spremna za upotrebu",
+      "urlError": "Ova se slika nije mogla učitati. Provjerite URL i pokušajte ponovno.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Prikaži koliko praćenih kontejnera ima dostupna ažuriranja.",
+      "title": "What's Up Docker",
+      "monitored": "Praćeno",
+      "updatesAvailable": "{count, plural, one {# dostupno ažuriranje} few {# dostupna ažuriranja} other {# dostupnih ažuriranja}}",
+      "updateAvailable": "Dostupno ažuriranje",
+      "openReleaseNotes": "Otvori bilješke o izdanju",
+      "option": {
+        "showTitle": {
+          "label": "Prikaži naslov"
+        },
+        "showRing": {
+          "label": "Prikaži prsten ažuriranja"
+        },
+        "layout": {
+          "label": "Raspored",
+          "option": {
+            "horizontal": {
+              "label": "Horizontalno"
+            },
+            "vertical": {
+              "label": "Okomito"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Prikaži popis ažuriranja kontejnera",
+          "description": "Nabraja svaki nadzirani kontejner za koji je dostupno ažuriranje slike."
         }
       }
     },

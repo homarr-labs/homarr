@@ -1344,6 +1344,10 @@
       "name": "Traefik",
       "description": "雲原生反向代理和負載平衡器"
     },
+    "wud": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "用於歸檔和組織掃描文件的文件管理系統"
@@ -1437,8 +1441,18 @@
     "here": "此處",
     "iconPicker": {
       "label": "Icon 網址",
+      "description": "",
       "header": "輸入名稱或物件來篩選 icons，Homarr 會自動搜尋 {countIcons}",
       "headerLoading": "輸入以搜尋圖示…",
+      "clear": "",
+      "uploadImage": "",
+      "results": "",
+      "localImages": "你的圖像",
+      "svgIcons": "",
+      "otherImages": "其他圖像",
+      "urlLoading": "",
+      "urlReady": "",
+      "urlError": "",
       "noResults": "沒有符合 \"{search}\" 的圖示。",
       "error": "無法載入圖示。"
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": "顯示廣播訊息"
+        }
+      }
+    },
+    "wud": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "monitored": "",
+      "updatesAvailable": "",
+      "updateAvailable": "",
+      "openReleaseNotes": "",
+      "option": {
+        "showTitle": {
+          "label": ""
+        },
+        "showRing": {
+          "label": ""
+        },
+        "layout": {
+          "label": "顯示布局",
+          "option": {
+            "horizontal": {
+              "label": "橫向"
+            },
+            "vertical": {
+              "label": "垂直"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "",
+          "description": ""
         }
       }
     },
