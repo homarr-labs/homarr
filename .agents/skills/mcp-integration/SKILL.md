@@ -7,6 +7,8 @@ description: Expose tRPC procedures as MCP tools for AI clients. Use when modify
 
 Every new tRPC procedure that provides useful functionality should be exposed as an MCP tool so AI assistants (Claude, Cursor, etc.) can use it. This is a first-class feature of Homarr.
 
+Exposing a procedure makes it callable by any AI client with an API key. Before adding `.meta({ mcp })`, review what the tool exposes: authorization requirements, sensitive data, tenant isolation, auditability, and whether the action is destructive. Prefer exposing read-only queries over mutations unless the mutation is safe and permission-scoped. When in doubt, ask for a security review before shipping a new MCP tool.
+
 ## Adding MCP to a procedure
 
 Add `.meta({ mcp: { enabled: true, description: "..." } })` to the procedure chain:
@@ -45,19 +47,19 @@ The description is the **only thing** an AI sees to decide when and how to use t
 
 **Good:**
 
-```
+```text
 "Get calendar events for upcoming and recent media releases. Fetches from all connected Sonarr (TV), Radarr (movies), Lidarr (music), and Readarr (books) integrations. Requires integrationIds from integration_all"
 ```
 
 **Bad:**
 
-```
+```text
 "Get calendar events"
 ```
 
 **For tools that return permission fields**, explain what they mean:
 
-```
+```text
 "List all integrations. Returns permissions.hasUseAccess (read) and permissions.hasInteractAccess (actions) — false means the API key lacks that permission, not an error"
 ```
 

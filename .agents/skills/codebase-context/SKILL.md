@@ -27,7 +27,7 @@ Homarr is an open-source, self-hosted dashboard for managing homelab services. I
 
 ## Repository Structure
 
-```
+```text
 homarr/
 ├── apps/
 │   ├── nextjs/          # Main Next.js application (port 3000)
