@@ -1,0 +1,21 @@
+AGENTS.md
+  s_d38029cd5fc65b::t_aebdfca5cb1255 91
+.claude/skills
+  s_d38029cd5fc65b::t_87e8d0b12ae12b 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4a5b29f4fec609f77be0533628ee1fdfe7802853",
+  "prompts": {},
+  "sessions": {
+    "s_d38029cd5fc65b": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff540179cffezhwIuowH82UjHt",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
