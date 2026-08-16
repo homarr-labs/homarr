@@ -14,6 +14,10 @@ import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
 import { withTimeoutAsync } from "./timeout";
 
+import packageJson from "../../../../../package.json";
+
+export const getDefaultUserAgent = () => `Homarr/${packageJson.version} (+https://homarr.dev)`;
+
 export const createCustomCheckServerIdentity = (
   trustedHostnames: TrustedCertificateHostname[],
 ): typeof checkServerIdentity => {
@@ -79,6 +83,10 @@ export const fetchWithTrustedCertificatesAsync = async (
       async (signal) =>
         fetch(url, {
           ...fetchOptions,
+          headers: {
+            "User-Agent": getDefaultUserAgent(),
+            ...fetchOptions.headers,
+          },
           signal,
           dispatcher: agent,
         }),
@@ -89,6 +97,10 @@ export const fetchWithTrustedCertificatesAsync = async (
   const { bodyTimeout: _bodyTimeout, dispatcher: _dispatcher, ...fetchOptions } = options ?? {};
   return fetch(url, {
     ...fetchOptions,
+    headers: {
+      "User-Agent": getDefaultUserAgent(),
+      ...fetchOptions.headers,
+    },
     dispatcher: agent,
   });
 };
