@@ -88,7 +88,7 @@ When modifying user-facing code, you MUST also update the corresponding document
 
 ## Agent Skills
 
-Portable agent skills live in `.agents/skills/` (the Agent Skills open standard) and are mirrored into `.cursor/skills/` and `.claude/skills/` so they work across Claude Code, Cursor, Codex, and OpenCode. Install at `.agents/skills/<name>/SKILL.md`; mirror new skills into the other two directories. See `.agents/skills/` for available skills (documentation-sync, mcp-integration, codebase-context, datatable-migration).
+Portable agent skills live in `.agents/skills/` (the Agent Skills open standard). Cursor, Codex, and OpenCode read `.agents/skills/` natively. Claude Code does not scan it, so `.claude/skills/` is a symlink back to `.agents/skills/`. Install skills at `.agents/skills/<name>/SKILL.md` — that single copy is used everywhere. See `.agents/skills/` for available skills (documentation-sync, mcp-integration, codebase-context, datatable-migration).
 
 - Icons: @tabler/icons-react
 - Docs app can import from `@homarr/definitions` for shared types
