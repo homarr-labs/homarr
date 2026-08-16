@@ -1,24 +1,11 @@
 import type { ReactNode } from "react";
-import {
-  Alert,
-  Badge,
-  Box,
-  Button,
-  Code,
-  Group,
-  Modal,
-  Paper,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Alert, Badge, Box, Button, Code, Group, Modal, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
 import type { ModalProps } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import type { ImportReview } from "../core/import";
 
-export interface ImportReviewMessages {
-  title: string;
+export interface ImportReviewContentMessages {
   description: string;
   name: string;
   origin: string;
@@ -28,9 +15,13 @@ export interface ImportReviewMessages {
   permissions: string;
   actionWarningTitle: string;
   actionWarningDescription: string;
+  permission(permission: string): string;
+}
+
+export interface ImportReviewMessages extends ImportReviewContentMessages {
+  title: string;
   cancel: string;
   confirm: string;
-  permission(permission: string): string;
 }
 
 export interface ImportReviewDialogProps {
@@ -75,6 +66,71 @@ function ImportFact({ label, value }: { label: string; value: string }) {
   );
 }
 
+export interface ImportReviewContentProps {
+  review: ImportReview;
+  messages: ImportReviewContentMessages;
+  children?: ReactNode;
+}
+
+/**
+ * The security facts a user has to review before a custom widget is installed.
+ * Shared by the import modal and the Workshop install page so both read identically.
+ */
+export function ImportReviewContent({ review, messages, children }: ImportReviewContentProps) {
+  return (
+    <Stack gap="md">
+      <Text size="sm" c="dimmed">
+        {messages.description}
+      </Text>
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
+        <ImportFact label={messages.name} value={review.name} />
+        <ImportFact label={messages.origin} value={review.origins.join(", ")} />
+        <ImportFact label={messages.authentication} value={review.authTypes.join(", ")} />
+        <ImportFact label={messages.networkScope} value={review.networkScopes.join(", ")} />
+      </SimpleGrid>
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+        <div>
+          <Text size="sm" fw={600} mb={6}>
+            {messages.methods}
+          </Text>
+          <Group gap={6}>
+            {review.methods.map((method) => (
+              <Badge
+                key={method}
+                color={method === "DELETE" ? "red" : method === "GET" ? "blue" : "orange"}
+                variant="light"
+              >
+                {method}
+              </Badge>
+            ))}
+          </Group>
+        </div>
+        <div>
+          <Text size="sm" fw={600} mb={6}>
+            {messages.permissions}
+          </Text>
+          <Group gap={6}>
+            {review.permissions.map((permission) => (
+              <Badge key={permission} color="gray" variant="light">
+                {messages.permission(permission)}
+              </Badge>
+            ))}
+          </Group>
+        </div>
+      </SimpleGrid>
+      {review.hasActions && (
+        <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
+          <Text size="sm" fw={600}>
+            {messages.actionWarningTitle}
+          </Text>
+          <Text size="sm">{messages.actionWarningDescription}</Text>
+        </Alert>
+      )}
+      {children}
+    </Stack>
+  );
+}
+
 export function ImportReviewDialog({
   opened,
   review,
@@ -103,56 +159,9 @@ export function ImportReviewDialog({
       {review && (
         <>
           <Box p="lg" style={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
-            <Stack gap="md">
-              <Text size="sm" c="dimmed">
-                {messages.description}
-              </Text>
-              <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="xs">
-                <ImportFact label={messages.name} value={review.name} />
-                <ImportFact label={messages.origin} value={review.origins.join(", ")} />
-                <ImportFact label={messages.authentication} value={review.authTypes.join(", ")} />
-                <ImportFact label={messages.networkScope} value={review.networkScopes.join(", ")} />
-              </SimpleGrid>
-              <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-                <div>
-                  <Text size="sm" fw={600} mb={6}>
-                    {messages.methods}
-                  </Text>
-                  <Group gap={6}>
-                    {review.methods.map((method) => (
-                      <Badge
-                        key={method}
-                        color={method === "DELETE" ? "red" : method === "GET" ? "blue" : "orange"}
-                        variant="light"
-                      >
-                        {method}
-                      </Badge>
-                    ))}
-                  </Group>
-                </div>
-                <div>
-                  <Text size="sm" fw={600} mb={6}>
-                    {messages.permissions}
-                  </Text>
-                  <Group gap={6}>
-                    {review.permissions.map((permission) => (
-                      <Badge key={permission} color="gray" variant="light">
-                        {messages.permission(permission)}
-                      </Badge>
-                    ))}
-                  </Group>
-                </div>
-              </SimpleGrid>
-              {review.hasActions && (
-                <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
-                  <Text size="sm" fw={600}>
-                    {messages.actionWarningTitle}
-                  </Text>
-                  <Text size="sm">{messages.actionWarningDescription}</Text>
-                </Alert>
-              )}
+            <ImportReviewContent review={review} messages={messages}>
               {children}
-            </Stack>
+            </ImportReviewContent>
           </Box>
           <Box
             px="lg"

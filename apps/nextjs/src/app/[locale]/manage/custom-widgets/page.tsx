@@ -10,9 +10,9 @@ import { Link } from "@homarr/ui";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { CustomWidgetBetaBanner } from "./_beta-banner";
-import { WorkshopInstallButton } from "~/components/workshop/workshop-install-button";
-import { ImportCustomWidgetButton } from "./_import-custom-widget-button";
 import { CustomWidgetList } from "./_custom-widget-list";
+import { CustomWidgetTabs } from "./_custom-widget-tabs";
+import { ImportCustomWidgetButton } from "./_import-custom-widget-button";
 
 export default async function CustomWidgetsPage() {
   const session = await auth();
@@ -38,13 +38,13 @@ export default async function CustomWidgetsPage() {
           >
             {t("action.downloadSkill")}
           </MobileAffixButton>
-          <WorkshopInstallButton />
           <ImportCustomWidgetButton />
           <MobileAffixButton component={Link} href="/manage/custom-widgets/new" leftSection={<IconPlus size={16} />}>
             {t("action.create")}
           </MobileAffixButton>
         </Group>
       }
+      toolbar={<CustomWidgetTabs active="installed" />}
     >
       <CustomWidgetBetaBanner />
       <CustomWidgetList definitions={definitions} />

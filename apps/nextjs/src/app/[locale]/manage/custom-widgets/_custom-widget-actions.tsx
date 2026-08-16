@@ -9,6 +9,8 @@ import {
   IconCopy,
   IconDots,
   IconDownload,
+  IconPlayerPause,
+  IconPlayerPlay,
   IconSparkles,
   IconTrash,
   IconUpload,
@@ -21,9 +23,9 @@ import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
-import { WorkshopPublishModal } from "~/components/workshop/workshop-publish-modal";
 
 const iconProps = { size: 16, stroke: 1.5 };
 
@@ -40,8 +42,8 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const { openConfirmModal } = useConfirmModal();
   const deleteMutation = clientApi.customWidget.delete.useMutation();
   const duplicateMutation = clientApi.customWidget.duplicate.useMutation();
+  const toggleMutation = clientApi.customWidget.toggleEnabled.useMutation();
   const utils = clientApi.useUtils();
-  const [publishOpened, publishControls] = useDisclosure(false);
   const [migrationOpened, migrationControls] = useDisclosure(false);
   const migrationFileInputRef = useRef<HTMLInputElement>(null);
   const [migratedWidget, setMigratedWidget] = useState<HomarrCustomWidgetV2 | null>(null);
@@ -147,6 +149,26 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
     }
   };
 
+  const handleToggleEnabled = () => {
+    toggleMutation.mutate(
+      { id: widget.id, enabled: !widget.enabled },
+      {
+        onSuccess: async () => {
+          await utils.widget.customApi.getData.cancel();
+          void utils.customWidget.list.invalidate();
+          void utils.widget.customApi.getData.invalidate();
+          void revalidatePathActionAsync("/manage/custom-widgets");
+        },
+        onError: () => {
+          showErrorNotification({
+            title: widget.enabled ? t("action.disable") : t("action.enable"),
+            message: t("notification.toggleError"),
+          });
+        },
+      },
+    );
+  };
+
   const handleDuplicate = () => {
     duplicateMutation.mutate(
       { id: widget.id },
@@ -203,6 +225,14 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
           {widget.valid && (
             <>
               <Menu.Item
+                onClick={handleToggleEnabled}
+                leftSection={widget.enabled ? <IconPlayerPause {...iconProps} /> : <IconPlayerPlay {...iconProps} />}
+                disabled={toggleMutation.isPending}
+              >
+                {widget.enabled ? t("action.disable") : t("action.enable")}
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Item
                 onClick={handleDuplicate}
                 leftSection={<IconCopy {...iconProps} />}
                 disabled={duplicateMutation.isPending}
@@ -212,7 +242,11 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
               <Menu.Item onClick={() => void handleExport()} leftSection={<IconDownload {...iconProps} />}>
                 {t("action.export")}
               </Menu.Item>
-              <Menu.Item onClick={publishControls.open} leftSection={<IconBuildingStore {...iconProps} />}>
+              <Menu.Item
+                component={Link}
+                href={`/manage/custom-widgets/publish/${widget.id}`}
+                leftSection={<IconBuildingStore {...iconProps} />}
+              >
                 {t("action.publishWorkshop")}
               </Menu.Item>
               <Menu.Divider />
@@ -254,7 +288,6 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
           )}
         </Menu.Dropdown>
       </Menu>
-      {widget.valid && <WorkshopPublishModal opened={publishOpened} onClose={publishControls.close} widget={widget} />}
       {widget.migrationRequired && (
         <>
           <input

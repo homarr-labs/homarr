@@ -831,7 +831,12 @@
       "list": {
         "title": "Custom Widgets",
         "noResults": "No custom widgets yet. Create your first one!",
+        "noDescription": "No description",
         "loading": "Loading...",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "disabledDescription": "This widget stays configured but will not load on any board.",
+        "requestCount": "{count, plural, one {# request} other {# requests}}",
         "invalidDefinition": "Invalid definition",
         "invalidDefinitionDescription": "This stored widget no longer matches the current Custom Widget schema. Delete it and recreate or import a valid definition.",
         "migrationRequired": "Migration required",
@@ -846,6 +851,11 @@
       },
       "edit": {
         "title": "Edit Custom Widget"
+      },
+      "tabs": {
+        "ariaLabel": "Custom widget sections",
+        "installed": "Installed",
+        "workshop": "Workshop"
       }
     },
     "action": {
@@ -1382,69 +1392,68 @@
     }
   },
   "workshop": {
-    "installSuccess": "Custom widget installed",
-    "installSuccessDescription": "Add its credentials, test the requests, and save when it is ready.",
-    "installError": "Could not install widget",
-    "installErrorDescription": "The Workshop submission is not a valid Custom JSX v2 widget.",
     "title": "Workshop",
-    "importFromWorkshop": "Import from Workshop",
+    "browseWorkshop": "Browse Workshop",
     "openCommunity": "Open Workshop",
-    "manageSubmissionsTitle": "Manage submissions on Workshop",
-    "manageSubmissionsDescription": "Publishing starts in Homarr, but updates, reports, outdated status, and deletion are managed directly on the Workshop website. Sign in there and select Yours to find your submissions.",
-    "description": "Community Custom JSX v2 widgets. Inspect the source and network capabilities before installing.",
-    "descriptionCss": "Community Custom CSS themes. Preview every rule before importing it into a board.",
-    "securityNotice": "Workshop widgets can call their declared API sources and perform declared actions with credentials you configure locally. Secrets are never included.",
-    "securityNoticeCss": "Community CSS can change the appearance and usability of a board. Review it before importing; nothing is saved until you save board settings.",
-    "signIn": "Sign in with GitHub",
-    "signInError": "GitHub sign-in failed. Check that the Workshop OAuth provider is configured and that popups are allowed.",
-    "signOut": "Sign out",
+    "openOnWorkshop": "Open {title} on the Workshop website",
+    "back": "Back to Workshop",
+    "cancel": "Cancel",
     "search": "Search widgets",
     "searchCss": "Search CSS themes",
     "sort": "Sort",
     "sortTop": "Top rated",
     "sortNewest": "Newest",
+    "listAriaLabel": "Workshop widgets",
+    "listAriaLabelCss": "Workshop CSS themes",
+    "empty": "No widgets match this search.",
+    "emptyDescription": "Community widgets published to the Workshop show up here.",
+    "emptyFilteredTitle": "No widgets match this search",
+    "emptyFilteredDescription": "No Workshop widget matches \"{search}\".",
+    "clearSearch": "Clear search",
+    "emptyCss": "No CSS themes match this search.",
     "unavailableTitle": "Homarr Workshop seems to be unavailable",
     "unavailable": "The community service may be temporarily down. Try again in a moment. Your installed widgets are unaffected.",
     "retry": "Try again",
-    "empty": "No widgets match this search.",
-    "emptyCss": "No CSS themes match this search.",
+    "loadError": "This submission could not be loaded.",
     "noDescription": "No description",
     "author": "by {name}",
     "communityMember": "Community member",
-    "comments": "{count, plural, one {# comment} other {# comments}}",
-    "viewDetails": "View details",
-    "voteSummary": "{upvotes, plural, one {# upvote} other {# upvotes}}, {downvotes, plural, one {# downvote} other {# downvotes}}",
     "outdated": "Outdated",
     "outdatedWarning": "The author marked this submission as outdated. Review it carefully before importing.",
-    "reportCount": "{count, plural, one {# report} other {# reports}}",
-    "reportWarning": "{count, plural, one {This submission has # open community report.} other {This submission has # open community reports.}} It remains installable, but you should review its content first.",
-    "reportVisibility": "Report details are visible only to this submission's author and Workshop admins.",
-    "screenshotAlt": "{title} screenshot {count, number}",
-    "upvote": "Upvote, {count, plural, one {# vote} other {# votes}}",
-    "downvote": "Downvote, {count, plural, one {# vote} other {# votes}}",
     "score": "Score: {count, number}",
-    "inspectCss": "Inspect CSS",
+    "upvote": "Upvote",
+    "downvote": "Downvote",
+    "voteError": "The vote could not be saved.",
+    "signIn": "Sign in with GitHub",
+    "signInError": "GitHub sign-in failed. Check that the Workshop OAuth provider is configured and that popups are allowed.",
+    "signOut": "Sign out",
+    "signInHint": "Sign in to vote or report. Installing does not require a Workshop account.",
+    "securityNotice": "Workshop widgets can call their declared API sources and perform declared actions with credentials you configure locally. Secrets are never included.",
+    "securityNoticeCss": "Community CSS can change the appearance and usability of a board. Review it before importing; nothing is saved until you save board settings.",
+    "install": "Install",
+    "installReviewTitle": "Review before installing",
+    "installError": "This widget cannot be installed",
+    "installErrorDescription": "The Workshop submission is not a valid Custom JSX v2 widget.",
+    "useCss": "Import CSS",
+    "importCss": "Import CSS from Workshop",
+    "importCssConfirm": "Replace the current custom CSS with \"{title}\"? Nothing is saved until you save the board settings.",
+    "screenshotAlt": "{title} screenshot {count, number}",
+    "zoomScreenshot": "View full size",
+    "previousScreenshot": "Previous screenshot",
+    "nextScreenshot": "Next screenshot",
     "technicalDetails": "Technical details",
     "sourceCode": "Workshop entry",
-    "loadError": "This submission could not be loaded.",
-    "sources": "Declared API sources",
-    "requests": "Declared queries and actions",
-    "noRequests": "This widget does not declare network requests.",
     "export": "Export",
     "report": "Report",
-    "install": "Install widget",
-    "continueInstall": "Continue installation",
-    "confirmInstallTitle": "Confirm widget installation",
-    "confirmInstallDescription": "Confirm where this widget connects and add any credentials required by your Homarr installation.",
-    "backToWidget": "Back to widget",
-    "useCss": "Import CSS",
-    "signInHint": "Sign in to vote or report. Installing does not require a Workshop account.",
     "reportTitle": "Report submission",
     "reportReason": "Reason",
     "reportExplanation": "What should the Workshop moderators know?",
     "reportSend": "Send report",
     "reportSent": "Report sent",
     "reportSentDescription": "Workshop moderators can now review this submission.",
+    "reportCount": "{count, plural, one {# report} other {# reports}}",
+    "reportWarning": "{count, plural, one {This submission has # open community report.} other {This submission has # open community reports.}} It remains installable, but you should review its content first.",
+    "reportVisibility": "Report details are visible only to this submission's author and Workshop admins.",
     "reportCategory": {
       "outdated": "Outdated or no longer working",
       "malicious": "Malicious",
@@ -1453,7 +1462,6 @@
       "inappropriate": "Inappropriate",
       "other": "Other"
     },
-    "voteError": "The vote could not be saved.",
     "publish": {
       "title": "Publish to Workshop",
       "introTitle": "Share this widget with the community",
@@ -1462,7 +1470,6 @@
       "listingDetailsDescription": "These details appear publicly alongside the exported widget definition.",
       "success": "Published immediately. Community members can now install and report this widget.",
       "successTitle": "Your widget is live",
-      "manageTitle": "Continue on Workshop",
       "manageDescription": "Open the submission to update its listing, review reports, mark it outdated, or delete it. Submission management is handled directly on the Workshop website.",
       "viewSubmission": "View and manage submission",
       "done": "Done",
@@ -1481,10 +1488,7 @@
       "publicationNote": "Publishing is immediate. You can manage the submission afterward on Workshop.",
       "definitionChanged": "The widget changed while publication was being prepared. Review its private source URLs again, then retry.",
       "error": "Publication failed"
-    },
-    "installDialog": "Install from Workshop",
-    "installed": "Widget installed",
-    "installedDescription": "{name} is ready to configure."
+    }
   },
   "integration": {
     "page": {
@@ -5970,7 +5974,6 @@
         "apps": "Apps",
         "integrations": "Integrations",
         "customWidgets": "Custom Widgets",
-        "workshop": "Workshop",
         "searchEngies": "Search engines",
         "medias": "Medias",
         "users": {
@@ -7350,10 +7353,13 @@
           "flow": {
             "label": "Flow"
           }
+        },
+        "workshop": {
+          "label": "Workshop"
+        },
+        "publish": {
+          "label": "Publish to Workshop"
         }
-      },
-      "workshop": {
-        "label": "Workshop"
       },
       "users": {
         "label": "Users",

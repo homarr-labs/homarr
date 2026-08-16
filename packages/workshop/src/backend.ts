@@ -657,6 +657,8 @@ export const workshopQueryKeys = {
     ] as const,
   comments: (backend: WorkshopBackend, submission: string) =>
     [...workshopQueryKeys.all, "comments", backend.baseUrl, submission] as const,
+  userVotes: (backend: WorkshopBackend) =>
+    [...workshopQueryKeys.all, "user-votes", backend.baseUrl, backend.currentUser?.id ?? "anonymous"] as const,
 };
 
 export const workshopListQueryOptions = (backend: WorkshopBackend, options: WorkshopListOptions = {}) =>
@@ -681,6 +683,14 @@ export const workshopReportSummariesQueryOptions = (backend: WorkshopBackend, su
     queryKey: workshopQueryKeys.reportSummaries(backend, submission),
     queryFn: () => backend.listReportSummaries(submission),
     enabled: submission.length > 0,
+  });
+
+/** The votes the signed-in user already cast, so controls can render their own choice. */
+export const workshopUserVotesQueryOptions = (backend: WorkshopBackend) =>
+  queryOptions({
+    queryKey: workshopQueryKeys.userVotes(backend),
+    queryFn: () => backend.listVotesForCurrentUser(),
+    enabled: backend.currentUser !== null,
   });
 
 export const workshopCommentsQueryOptions = (backend: WorkshopBackend, submission: string) =>
@@ -771,12 +781,17 @@ export function useWorkshopCommentsQuery(backend: WorkshopBackend, submission: s
   return useQuery(workshopCommentsQueryOptions(backend, submission));
 }
 
+export function useWorkshopUserVotesQuery(backend: WorkshopBackend) {
+  return useQuery(workshopUserVotesQueryOptions(backend));
+}
+
 function useWorkshopInvalidation(backend: WorkshopBackend) {
   const queryClient = useQueryClient();
   return {
     lists: () => queryClient.invalidateQueries({ queryKey: workshopQueryKeys.lists(backend.baseUrl) }),
     details: () => queryClient.invalidateQueries({ queryKey: workshopQueryKeys.details(backend.baseUrl) }),
     detail: (id: string) => queryClient.invalidateQueries({ queryKey: workshopQueryKeys.detail(backend, id) }),
+    userVotes: () => queryClient.invalidateQueries({ queryKey: workshopQueryKeys.userVotes(backend) }),
     removeDetail: (id: string) => queryClient.removeQueries({ queryKey: workshopQueryKeys.detail(backend, id) }),
     reports: () => queryClient.invalidateQueries({ queryKey: workshopQueryKeys.reports(backend) }),
     reportSummaries: (submission: string) =>
@@ -814,7 +829,7 @@ export function useWorkshopVoteMutation(backend: WorkshopBackend) {
   const invalidation = useWorkshopInvalidation(backend);
   return useMutation({
     ...workshopVoteMutationOptions(backend),
-    onSuccess: async () => Promise.all([invalidation.lists(), invalidation.details()]),
+    onSuccess: async () => Promise.all([invalidation.lists(), invalidation.details(), invalidation.userVotes()]),
   });
 }
 
