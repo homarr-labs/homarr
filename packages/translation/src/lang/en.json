@@ -1418,6 +1418,7 @@
     "screenshotAlt": "{title} screenshot {count, number}",
     "upvote": "Upvote, {count, plural, one {# vote} other {# votes}}",
     "downvote": "Downvote, {count, plural, one {# vote} other {# votes}}",
+    "score": "Score: {count, number}",
     "inspectCss": "Inspect CSS",
     "technicalDetails": "Technical details",
     "sourceCode": "Workshop entry",

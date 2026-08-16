@@ -3,6 +3,7 @@
 import { useEffect, useId, useMemo, useState } from "react";
 import {
   Accordion,
+  ActionIcon,
   Alert,
   Badge,
   Box,
@@ -39,8 +40,6 @@ import {
   IconMessageCircle,
   IconRefresh,
   IconSearch,
-  IconThumbDown,
-  IconThumbUp,
 } from "@tabler/icons-react";
 import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
@@ -526,28 +525,38 @@ export function WorkshopBrowser({ type = "customWidget", onInstall, onUseCss, mo
                   >
                     {t("export")}
                   </Button>
-                  <Button
-                    variant="subtle"
-                    size="compact-sm"
-                    leftSection={<IconThumbUp size={16} />}
-                    loading={vote.isPending && vote.variables?.value === 1}
-                    disabled={!user || vote.isPending}
-                    aria-label={t("upvote", { count: detail.data.upvotes })}
-                    onClick={() => vote.mutate({ submission: detail.data.id, value: 1 })}
+                  <Group
+                    gap={4}
+                    wrap="nowrap"
+                    p={4}
+                    bg="var(--mantine-color-default-hover)"
+                    style={{ borderRadius: "var(--mantine-radius-md)" }}
                   >
-                    {detail.data.upvotes}
-                  </Button>
-                  <Button
-                    variant="subtle"
-                    size="compact-sm"
-                    leftSection={<IconThumbDown size={16} />}
-                    loading={vote.isPending && vote.variables?.value === -1}
-                    disabled={!user || vote.isPending}
-                    aria-label={t("downvote", { count: detail.data.downvotes })}
-                    onClick={() => vote.mutate({ submission: detail.data.id, value: -1 })}
-                  >
-                    {detail.data.downvotes}
-                  </Button>
+                    <ActionIcon
+                      variant="subtle"
+                      color="red"
+                      size="lg"
+                      loading={vote.isPending && vote.variables?.value === 1}
+                      disabled={!user || vote.isPending}
+                      aria-label={t("upvote", { count: detail.data.upvotes })}
+                      onClick={() => vote.mutate({ submission: detail.data.id, value: 1 })}
+                    >
+                      <IconArrowBigUp size={20} />
+                    </ActionIcon>
+                    <Text miw={24} ta="center" fw={700} aria-label={t("score", { count: detail.data.score })}>
+                      {detail.data.score}
+                    </Text>
+                    <ActionIcon
+                      variant="subtle"
+                      size="lg"
+                      loading={vote.isPending && vote.variables?.value === -1}
+                      disabled={!user || vote.isPending}
+                      aria-label={t("downvote", { count: detail.data.downvotes })}
+                      onClick={() => vote.mutate({ submission: detail.data.id, value: -1 })}
+                    >
+                      <IconArrowBigDown size={20} />
+                    </ActionIcon>
+                  </Group>
                   <Button
                     variant="subtle"
                     size="compact-sm"
