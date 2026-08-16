@@ -1,0 +1,181 @@
+packages/api/src/router/app.ts
+  s_cf26c9caabb8d3::t_8732346d08599d 54-55
+  s_cf26c9caabb8d3::t_b32b1a4e55d7c3 21-22
+  s_cf26c9caabb8d3::t_9adb12b05e38bf 72-73
+packages/api/src/router/group.ts
+  s_64ffb8e83255c4::t_6c03aa3b5997c7 313-315,319-322
+  s_64ffb8e83255c4::t_9c13a3784b8c1a 12
+  s_64ffb8e83255c4::t_cc3722dc63d8a7 26-32
+  s_64ffb8e83255c4::t_d8413649e21673 316-318
+  s_fc96e2c72b7dad::t_ceee70244e9398 324-358
+packages/translation/src/lang/en.json
+  s_e85c5baee69d90::t_3fd8a6292b92e6 1503,1514-1516
+  s_7b1a39fd766958::t_7e071f014960ed 605
+  s_e85c5baee69d90::t_2e29c8739d410e 5970-5971
+  s_25ca5d2079f5db::t_993834c91876ff 601-604,606-617
+apps/nextjs/src/app/[locale]/manage/apps/page.tsx
+  s_56cc48d204c794::t_855b6e60f49d4d 44
+  s_56cc48d204c794::t_d7c8d51cec6139 2
+  s_cf26c9caabb8d3::t_b8cae365a768ca 119
+  s_cf26c9caabb8d3::t_0ac839b749e076 158-170
+apps/nextjs/src/app/[locale]/manage/not-found.tsx
+  s_e85c5baee69d90::t_6604a04a3f68b3 1,4,13-15
+packages/api/src/router/test/group.spec.ts
+  s_fc96e2c72b7dad::t_e3717a7094d306 478-534
+  s_64ffb8e83255c4::t_16e358b4f6686c 452-474,476-477
+  s_64ffb8e83255c4::t_9373759021da18 475
+packages/api/src/router/home.ts
+  s_d2f5497463edf4::t_e2840891e62c3c 139
+  s_cf26c9caabb8d3::t_66a01e05f3d4f5 2-3,11-12,24-27,29-44,48
+  s_cf26c9caabb8d3::t_6d778eefa3fc2a 126-130,134
+  s_cf26c9caabb8d3::t_8e894c55175394 23,45-47
+  s_cf26c9caabb8d3::t_471ceb8e3b00e5 28
+  s_cf26c9caabb8d3::t_b0261c5129783c 49
+apps/nextjs/src/app/[locale]/manage/integrations/page.tsx
+  s_e85c5baee69d90::t_bdfc317014bff1 110-124
+  s_56cc48d204c794::t_1a9b0e54e9e3bb 36,39
+  s_cf26c9caabb8d3::t_f39f6dcb008e8b 35,105,131,164-176
+  s_e85c5baee69d90::t_9426d78b639d50 59-65
+  s_e85c5baee69d90::t_16c49f6165934a 2
+packages/api/src/router/integration/integration-router.ts
+  s_fc96e2c72b7dad::t_4b6692c21669eb 743
+  s_64ffb8e83255c4::t_7636273acf8a0d 705-713,722-742,744-760
+  s_64ffb8e83255c4::t_b82136c73fe4af 4
+  s_fc96e2c72b7dad::t_222b3edfbccd12 137
+  s_cf26c9caabb8d3::t_52a218ba3bd3ae 10
+  s_64ffb8e83255c4::t_cc3afbe4496e5e 75,78-80,86
+  s_64ffb8e83255c4::t_0236ecba7ddfaf 95-98,138-140
+  s_64ffb8e83255c4::t_7bc6458f225178 115-119,123-133,135-136
+  s_fc96e2c72b7dad::t_0bb901b1238473 714-721
+  s_fc96e2c72b7dad::t_c4ffa7123a7e8c 21
+apps/docs/docs/management/users/index.mdx
+  s_7b1a39fd766958::t_c93f266ea8c6a2 176,178-179
+  s_7b1a39fd766958::t_dc2d63ae906ad6 166-168,170-172
+  s_25ca5d2079f5db::t_778001305ed81d 173-175,177,180-190,192-193
+  s_7b1a39fd766958::t_71389a34a50355 191,194-197,200-206,208-218
+packages/api/src/router/test/integration/integration-router.spec.ts
+  s_64ffb8e83255c4::t_9602f864d4f7e7 60-121
+  s_fc96e2c72b7dad::t_cd0e4c6643fa92 122-194
+packages/definitions/src/permissions.ts
+  s_25ca5d2079f5db::t_ac4397d179e425 120-160
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/_group-permission-form.tsx
+  s_7b1a39fd766958::t_ccc4303fbff745 101-102,104-105,107-110
+  s_25ca5d2079f5db::t_e881ccf7adf920 17,21,34
+  s_cf26c9caabb8d3::t_89cdd69f8bce72 262
+  s_7b1a39fd766958::t_610c9b614fa455 73-78,80-81,85-87
+  s_7b1a39fd766958::t_5b20b2cba3373b 5-16,18,22-29
+  s_25ca5d2079f5db::t_9bd300b198a598 71,79,82-84,89-99,103,106,111-139,141-154,204-231,233-250,263-286
+  s_7b1a39fd766958::t_d23a331f23c487 155-203
+  s_7b1a39fd766958::t_d1b772cb929e03 251-261
+  s_7b1a39fd766958::t_f04f962cb532f9 63
+  s_25ca5d2079f5db::t_0b33d98cf5f396 100
+  s_25ca5d2079f5db::t_c38a7400599b9b 140
+  s_25ca5d2079f5db::t_2c1fb06d853028 35
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_d51e388c871e10::t_9f3d3de2b294e2 70,75
+  s_56cc48d204c794::t_9b67e00005c5a9 93
+  s_e85c5baee69d90::t_8191f7ca296ed2 71-74
+  s_e85c5baee69d90::t_0e1c838e76036d 32
+  s_e85c5baee69d90::t_0b551b12f3ef9e 103
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/page.tsx
+  s_7b1a39fd766958::t_990561a4fb2141 2,14
+  s_25ca5d2079f5db::t_0609a095746178 8,11-13,15-18,37-38,45-46,52-53,62-63,65-67,70,72-73,76
+  s_25ca5d2079f5db::t_5615fa772f912f 68,71
+  s_7b1a39fd766958::t_1202425210b680 47-51
+apps/docs/docs/management/integrations/index.mdx
+  s_56cc48d204c794::t_abaa1dd3892f7b 20-21
+apps/nextjs/src/app/[locale]/manage/page.tsx
+  s_e85c5baee69d90::t_afb3bef50f419e 32-37,50
+packages/api/src/router/test/app.spec.ts
+  s_64ffb8e83255c4::t_5c7f503ea6a437 77-90
+  s_64ffb8e83255c4::t_6fb537ceb020ad 104,109
+  s_64ffb8e83255c4::t_242538be7e0984 36
+  s_fc96e2c72b7dad::t_04e72c8e6d3c22 118-139
+apps/docs/docs/management/apps/index.mdx
+  s_56cc48d204c794::t_a79f593f735d82 56
+packages/definitions/src/test/permissions.spec.ts
+  s_7b1a39fd766958::t_ce9db458850eec 104-113
+  s_25ca5d2079f5db::t_4355cae63e4e3b 4-9
+  s_25ca5d2079f5db::t_641c3073e630d4 53-82,96-103,114-119
+  s_7b1a39fd766958::t_2a40c57b6e07fe 83-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c424f310d56f63df57e67f964b6ff9a2eab5b081",
+  "prompts": {},
+  "sessions": {
+    "s_25ca5d2079f5db": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5977c85b-da51-44e4-83af-aedfaf892f05",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_56cc48d204c794": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dbd32b81-ce74-43e1-bba3-3756cc8c4a46",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_64ffb8e83255c4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8b678d08-9ea1-4b0a-a177-bb865b2d7be5",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_7b1a39fd766958": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a3e04717-1f68-4a94-bc29-f21c2aa89ec1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_cf26c9caabb8d3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff55fc8b9ffeav6SDTPcgtDQmg",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_d2f5497463edf4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ef14526b-4021-4cfa-8697-ad001d394f53",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_d51e388c871e10": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a00add-7b6e-7e0d-872a-d3c31f41d4f6",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_e85c5baee69d90": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff5168003ffeJaipWNoNkhySFB",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_fc96e2c72b7dad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bd6545f8-3d5b-42c6-955e-7cd798abb519",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
