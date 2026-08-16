@@ -1,0 +1,25 @@
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  s_ca2323b7f96e59::t_b889e1c6331b4c 65-80,141-149,223-229,282-291
+packages/translation/src/lang/en.json
+  s_ca2323b7f96e59::t_228f57b73745eb 1229-1230
+  s_ca2323b7f96e59::t_b889e1c6331b4c 839,869-870
+packages/api/src/router/custom-widget/transfer-procedures.ts
+  s_ca2323b7f96e59::t_b889e1c6331b4c 2,30-55,147-153
+  s_ca2323b7f96e59::t_8c53ccbcbc77e7 154
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "50537d077c371f4a2c78a484ad335f372a2d664a",
+  "prompts": {},
+  "sessions": {
+    "s_ca2323b7f96e59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5b-9d67-7470-9988-648d9d7016d2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
