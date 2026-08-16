@@ -9,6 +9,7 @@ import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups, onboarding, users } from "@homarr/db/schema";
+import type { GroupPermissionKey } from "@homarr/definitions";
 import { everyoneGroup } from "@homarr/definitions";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import {
@@ -21,6 +22,13 @@ import {
 } from "@homarr/validation/group";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+
+const createPermissionParents = {
+  "app-create": "app-modify-all",
+  "integration-create": "integration-full-all",
+  "board-create": "board-modify-all",
+  "search-engine-create": "search-engine-modify-all",
+} satisfies Partial<Record<GroupPermissionKey, GroupPermissionKey>>;
 
 export const groupRouter = createTRPCRouter({
   getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
@@ -302,16 +310,52 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
 
-      await ctx.db.delete(groupPermissions).where(eq(groupPermissions.groupId, input.groupId));
+      const permissions = [
+        ...new Set(
+          input.permissions.flatMap((permission) => {
+            const parent = createPermissionParents[permission as keyof typeof createPermissionParents] as
+              | GroupPermissionKey
+              | undefined;
+            return parent ? [permission, parent] : [permission];
+          }),
+        ),
+      ];
 
-      if (input.permissions.length > 0) {
-        await ctx.db.insert(groupPermissions).values(
-          input.permissions.map((permission) => ({
-            groupId: input.groupId,
-            permission,
-          })),
-        );
-      }
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.groupPermissions)
+              .where(eq(schema.groupPermissions.groupId, input.groupId));
+            if (permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.groupPermissions).values(
+              permissions.map((permission) => ({
+                groupId: input.groupId,
+                permission,
+              })),
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.delete(groupPermissions).where(eq(groupPermissions.groupId, input.groupId)).run();
+            if (permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(groupPermissions)
+              .values(
+                permissions.map((permission) => ({
+                  groupId: input.groupId,
+                  permission,
+                })),
+              )
+              .run();
+          });
+        },
+      });
     }),
   transferOwnership: permissionRequiredProcedure
     .requiresPermission("admin")

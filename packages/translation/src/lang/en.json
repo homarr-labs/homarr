@@ -720,6 +720,23 @@
             "description": "Allow members to manage and delete any search engine"
           }
         }
+      },
+      "matrix": {
+        "none": "None",
+        "impliedHint": "also grants: {permissions}",
+        "grantedViaAdmin": "Granted via Administrator",
+        "preset": {
+          "label": "Presets",
+          "viewer": "Viewer",
+          "editor": "Editor",
+          "admin": "Admin",
+          "custom": "Custom"
+        },
+        "effective": {
+          "title": "Effective permissions",
+          "description": "Everything members of this group will be able to do, including implied permissions",
+          "empty": "No permissions selected"
+        }
       }
     },
     "memberNotice": {
@@ -1589,6 +1606,7 @@
         "title": "Integrations",
         "ariaLabel": "Configured integrations",
         "search": "Search integrations",
+        "scopedNote": "Showing only integrations you have full access to",
         "action": {
           "edit": "Edit {name}",
           "delete": "Delete {name}"
@@ -1599,7 +1617,9 @@
           "action": "Create your first integration",
           "filteredTitle": "No integrations match your search",
           "filteredDescription": "No integrations match \"{search}\". Try another name, type, or URL.",
-          "clearSearch": "Clear search"
+          "clearSearch": "Clear search",
+          "noPermissionTitle": "No manageable integrations",
+          "noPermissionDescription": "You don't have full management access to any integrations. Ask your administrator."
         }
       },
       "create": {
@@ -6157,7 +6177,8 @@
     },
     "notFound": {
       "title": "Not Found",
-      "text": "Could not find requested resource"
+      "text": "Could not find requested resource",
+      "backToHome": "Back to management home"
     },
     "error": {
       "title": "This page couldn't load",

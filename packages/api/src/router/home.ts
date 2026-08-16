@@ -1,4 +1,6 @@
 import { isProviderEnabled } from "@homarr/auth/server";
+import { constructIntegrationPermissions } from "@homarr/auth/shared";
+import type { Database } from "@homarr/db";
 import { db, eq, inArray, or } from "@homarr/db";
 import {
   apps,
@@ -6,6 +8,8 @@ import {
   boardUserPermissions,
   groupMembers,
   groups,
+  integrationGroupPermissions,
+  integrationUserPermissions,
   integrations,
   invites,
   medias,
@@ -15,6 +19,33 @@ import {
 import type { TranslationObject } from "@homarr/translation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
+
+const getFullAccessIntegrationIdsAsync = async (db: Database, userId: string) => {
+  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, userId),
+  });
+
+  const accessibleIntegrations = await db.query.integrations.findMany({
+    columns: {
+      id: true,
+    },
+    with: {
+      userPermissions: {
+        where: eq(integrationUserPermissions.userId, userId),
+      },
+      groupPermissions: {
+        where: inArray(
+          integrationGroupPermissions.groupId,
+          groupsOfCurrentUser.map((group) => group.groupId),
+        ),
+      },
+    },
+  });
+
+  return accessibleIntegrations
+    .filter((integration) => constructIntegrationPermissions(integration, null).hasFullAccess)
+    .map((integration) => integration.id);
+};
 
 interface HomeStatistic {
   titleKey: keyof TranslationObject["management"]["page"]["home"]["statistic"];
@@ -92,16 +123,20 @@ export const homeRouter = createTRPCRouter({
       });
     }
 
-    if (ctx.session?.user.permissions.includes("integration-create")) {
+    const hasGlobalFullIntegrationAccess = ctx.session?.user.permissions.includes("integration-full-all") ?? false;
+    const fullAccessIntegrationIds = hasGlobalFullIntegrationAccess
+      ? []
+      : await getFullAccessIntegrationIdsAsync(ctx.db, ctx.session?.user.id ?? "");
+    if (hasGlobalFullIntegrationAccess || fullAccessIntegrationIds.length > 0) {
       statistics.push({
         titleKey: "integration",
         subtitleKey: "resources",
-        count: await db.$count(integrations),
+        count: hasGlobalFullIntegrationAccess ? await db.$count(integrations) : fullAccessIntegrationIds.length,
         path: "/manage/integrations",
       });
     }
 
-    if (ctx.session?.user.permissions.includes("app-create")) {
+    if (ctx.session?.user.permissions.includes("app-modify-all")) {
       statistics.push({
         titleKey: "app",
         subtitleKey: "resources",
