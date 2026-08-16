@@ -1,0 +1,165 @@
+apps/nextjs/src/components/custom-widgets/custom-widget-import-dialog.tsx
+  s_339e022ba9e78e::t_9c6ea9ca4ac611 5,9-10,40-47,55-57,59,61,64,71-74
+  s_339e022ba9e78e::t_21580a10559590 6,65
+  s_339e022ba9e78e::t_4064cef55d5200 18-23
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  s_c147b71718c1ca::t_94d9e5c4d6c170 12-13,45,152-171,227-228,230-234
+  s_339e022ba9e78e::t_e8cb2b20dce088 26,245-249
+  s_c147b71718c1ca::t_ceb3b8e9930aad 229
+apps/nextjs/src/components/workshop/workshop-install-flow.spec.ts
+  s_339e022ba9e78e::t_49b4157ca4fe44 8-9,14,42-52,54-55,57-59,62-64,93-103,105-107,150-155,158-160
+  s_c147b71718c1ca::t_9d9ec9f475db37 110-122
+  s_c147b71718c1ca::t_33f95f369cdea3 53,56,60-61,65-92,104,156-157
+  s_339e022ba9e78e::t_21580a10559590 10-13
+  s_c147b71718c1ca::t_e82ea6847f3dbc 108,123-149
+  s_c147b71718c1ca::t_2f3215b4ba9c48 109
+packages/custom-widgets/src/workbench/import-review.tsx
+  s_339e022ba9e78e::t_10e50049ae2b02 131-133
+  s_339e022ba9e78e::t_5a2277c5244330 2
+  s_339e022ba9e78e::t_4d43d63fd390de 8,18-22,69-130,162,164
+packages/custom-widgets/src/test/workshop-translations.spec.ts
+  s_339e022ba9e78e::t_43eae6bfee5c8a 28-29,66,70
+  s_339e022ba9e78e::t_d0f8084e2298db 9,12,20-21,24-27,30-35,39-44,64-65,67-69,71-72
+  s_339e022ba9e78e::t_4064cef55d5200 13-19,59-61
+  s_339e022ba9e78e::t_15ed2731fe60eb 73
+apps/nextjs/src/app/[locale]/manage/custom-widgets/page.tsx
+  s_339e022ba9e78e::t_385026608c0a21 14-15,47
+apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/[id]/_workshop-detail.tsx
+  s_c147b71718c1ca::t_5f41bf932a3735 55-56,208-211
+  s_c147b71718c1ca::t_bba31899b7ceea 176-181
+  s_339e022ba9e78e::t_4064cef55d5200 89-95,112-114,275-277
+  s_339e022ba9e78e::t_21580a10559590 21,25,28,30,53,58,62,72,77,86,88,121,168,192
+  s_c147b71718c1ca::t_30addef207d4ff 44,254-255
+  s_c147b71718c1ca::t_8eb3e17274364d 39
+  s_c147b71718c1ca::t_3cc37af7a2d37e 5-19,234-248
+  s_339e022ba9e78e::t_54a2564e2f09fa 1-4,20,22-24,26-27,29,31-38,40-43,45-52,54,57,59-61,63-65,69-71,73-76,78-85,87,96-111,115-120,122-167,169-175,182-191,193-207,212-233,249-253,256-274,278-284
+  s_c147b71718c1ca::t_457a7dd96965ea 66-68
+apps/nextjs/src/components/navigation/dynamic-breadcrumb.spec.ts
+  s_c147b71718c1ca::t_9d9ec9f475db37 1-17
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_339e022ba9e78e::t_e8cb2b20dce088 3,280-291
+apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/[id]/page.tsx
+  s_339e022ba9e78e::t_6183bece269c64 1-10,12,14-18
+  s_339e022ba9e78e::t_21580a10559590 11,13
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/_workshop-publish-form.tsx
+  s_c147b71718c1ca::t_3cc37af7a2d37e 66-68,135
+  s_339e022ba9e78e::t_8ed3cb5ef425eb 1-18,27-42,44-46,48-54,56-59,61-62,64-65,69-71,73-100,102-113,115-134,136-154,156-209,214-216,218-248
+  s_339e022ba9e78e::t_21580a10559590 43,47,55,60,63,72,101,114,155,210,217
+  s_339e022ba9e78e::t_4064cef55d5200 19-26,211-213
+apps/nextjs/src/components/workshop/workshop-screenshots.tsx
+  s_c147b71718c1ca::t_3cc37af7a2d37e 100
+  s_c147b71718c1ca::t_6be2a27e8cdebf 1-99,101-141
+apps/nextjs/src/app/[locale]/manage/workshop/page.tsx
+  s_339e022ba9e78e::t_22dae07a8152d2 1,3-5
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-tabs.tsx
+  s_339e022ba9e78e::t_9a5d89038fe423 1-18,21-38
+  s_c147b71718c1ca::t_3cc37af7a2d37e 19-20
+apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/_workshop-browse.tsx
+  s_c147b71718c1ca::t_1a6c064a21d39e 5,16-17
+  s_c147b71718c1ca::t_25a1a81637b2ee 70
+  s_339e022ba9e78e::t_89867b93f423f5 1-4,6-14,18-62,64-67,69,71-79,84-85,87-88,118-155
+  s_339e022ba9e78e::t_21580a10559590 15,63,68,86
+  s_339e022ba9e78e::t_4064cef55d5200 80-83
+  s_c147b71718c1ca::t_72e94a895452c2 89-117
+apps/nextjs/src/components/workshop/workshop-code-viewer.tsx
+  s_339e022ba9e78e::t_b4032411e8213e 3-4,7,9-18,48,55,63
+apps/nextjs/src/components/workshop/workshop-submission-grid.tsx
+  s_c147b71718c1ca::t_db59dd4b7cd94c 1-84
+apps/nextjs/src/components/manage/manage-sticky-footer.tsx
+  s_339e022ba9e78e::t_21580a10559590 15
+  s_339e022ba9e78e::t_86b5692a8118a1 1-14,16-35
+apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/page.tsx
+  s_339e022ba9e78e::t_21580a10559590 24,26,28,30
+  s_339e022ba9e78e::t_05eb77118bf538 1-23,25,27,29,31
+packages/workshop/src/backend.ts
+  s_c147b71718c1ca::t_c167362e66d6fd 688-695
+  s_c147b71718c1ca::t_263968c5663801 794
+  s_c147b71718c1ca::t_27b644be40912a 660-661
+  s_c147b71718c1ca::t_e27570ca62efb8 832
+  s_c147b71718c1ca::t_0c91fe90dc3f8b 784-787
+apps/nextjs/src/components/workshop/workshop-session.tsx
+  s_339e022ba9e78e::t_c915c41a68b1a3 1-52,54-73,75-79
+  s_339e022ba9e78e::t_21580a10559590 53,74
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-legacy-migration.spec.ts
+  s_339e022ba9e78e::t_3f2e94c08d5765 22-23,26,30-34
+  s_339e022ba9e78e::t_770338d264f35e 27-29
+apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/page.tsx
+  s_339e022ba9e78e::t_21580a10559590 13,15,18
+  s_339e022ba9e78e::t_14cfc5a3858f8b 1-12,14,16-17,19-21
+apps/nextjs/src/components/manage/manage-collection.tsx
+  s_339e022ba9e78e::t_e8cb2b20dce088 22,26-30
+  s_339e022ba9e78e::t_ef2ae9f49a03bd 31-32
+apps/nextjs/src/components/workshop/workshop-vote-control.tsx
+  s_339e022ba9e78e::t_1ef20321a08f2c 6,52,76
+  s_c147b71718c1ca::t_c8614ee2a3f52d 9,17,20-24,27-29,33,35-39,45-47,49,54,57-64,69-71,73,78
+  s_339e022ba9e78e::t_97f12bb24240ce 1-3,5,7-8,10-16,18-19,25-26,40,42,44,48,50-51,53,55,65-66,68,72,74-75,77,79,81-82,87
+  s_339e022ba9e78e::t_23ba390dca980f 30-32,34
+  s_c147b71718c1ca::t_2e062dec1640cc 4
+  s_c147b71718c1ca::t_91e361c8a81f62 41,43,56,67,80,83-86,88-90
+apps/nextjs/src/components/workshop/workshop-submission-card.tsx
+  s_c147b71718c1ca::t_d56e418da8e759 1-84
+apps/nextjs/src/components/navigation/dynamic-breadcrumb.tsx
+  s_c147b71718c1ca::t_56ae81641b3f2b 68-72,75,80
+apps/nextjs/src/components/manage/manage-page-layout.tsx
+  s_339e022ba9e78e::t_e8cb2b20dce088 11-12,23,35
+apps/nextjs/src/components/workshop/workshop-css-import-button.tsx
+  s_c147b71718c1ca::t_9eb4c712f6accd 6,16,18,104,108,110-111,138
+  s_c147b71718c1ca::t_283844c3f73556 4,19,112-137
+  s_339e022ba9e78e::t_5d44ab0adbcade 11,22-24,54,65-68,70-71,73-85
+  s_339e022ba9e78e::t_39e0d8a33309a9 72
+  s_339e022ba9e78e::t_f747a5680ede18 3,5,9-10,12-13,15,17,21,25,27-28,33,36-42,46-53,55-64,86-103,105-107,109,139-140,142
+  s_fe6f0f79bcb0c6::t_926ab7c97a642a 8
+  s_339e022ba9e78e::t_21580a10559590 32,69,141
+  s_fe6f0f79bcb0c6::t_a94eb8c5461bc8 35
+  s_339e022ba9e78e::t_6984081b5215a5 143-144
+packages/translation/src/lang/en.json
+  s_c147b71718c1ca::t_646fc7de83c88a 834,836-839
+  s_339e022ba9e78e::t_fbce051dca063f 854-858,1396,1399-1400,1406-1413,1417,1424-1439,1454-1456,1491,7356-7361
+  s_c147b71718c1ca::t_5aad65a967d37a 1398,1440-1443
+apps/nextjs/src/components/custom-widgets/use-custom-widget-import.ts
+  s_c147b71718c1ca::t_5ad0643c572eec 70-74,76,84-85,87
+  s_339e022ba9e78e::t_4064cef55d5200 9-12,15,96-103,114-119
+  s_c147b71718c1ca::t_54e52802a7de6d 40-49
+  s_339e022ba9e78e::t_21580a10559590 13-14,20,35,50-51,68,79,92,111,124,133
+  s_c147b71718c1ca::t_8896ee48f72b0e 105-106,108
+  s_c147b71718c1ca::t_54d80565767078 160-162
+  s_339e022ba9e78e::t_3a327373316ee9 1-8,16-19,21-34,36-39,52-67,69,75,77-78,80-83,86,88-91,93-95,104,107,109-110,112-113,120-123,125-132,134-159,163-167
+apps/nextjs/src/components/workshop/workshop-report-modal.tsx
+  s_339e022ba9e78e::t_ad604d1eb67d48 1-3,5-11,13-20,22-37,42-47,49-52,58-71,73-79
+  s_339e022ba9e78e::t_21580a10559590 4,12,21,48,53,72
+  s_339e022ba9e78e::t_4064cef55d5200 38-41,54-57
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-list.tsx
+  s_c147b71718c1ca::t_a8d1316c98421d 3,10,32-34,36,42,44,47-58,60-78,80,82-84,86-94,106-165
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "206905ea2d08e48a58206cc0bf6ba455be7d4c88",
+  "prompts": {},
+  "sessions": {
+    "s_339e022ba9e78e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "209b1bcd-fbf3-47a7-9162-fc37b225ef97",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_c147b71718c1ca": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "937e5b2d-9262-46ec-84da-2e431d6e585b",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_fe6f0f79bcb0c6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff3534623ffeBmehYI2hm4qQZZ",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
