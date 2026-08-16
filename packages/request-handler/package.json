@@ -29,6 +29,7 @@
     "@homarr/docker": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
+    "@homarr/version": "workspace:^0.1.0",
     "dayjs": "catalog:",
     "octokit": "catalog:",
     "superjson": "catalog:",

@@ -10,13 +10,12 @@ import {
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/core/infrastructure/certificates";
 import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
+import { VERSION } from "@homarr/version";
 
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
 import { withTimeoutAsync } from "./timeout";
 
-import packageJson from "../../../../../package.json";
-
-export const getDefaultUserAgent = () => `Homarr/${packageJson.version} (+https://homarr.dev)`;
+export const getDefaultUserAgent = () => `Homarr/${VERSION} (+https://homarr.dev)`;
 
 export const createCustomCheckServerIdentity = (
   trustedHostnames: TrustedCertificateHostname[],

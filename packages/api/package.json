@@ -46,6 +46,7 @@
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
+    "@homarr/version": "workspace:^0.1.0",
     "@kubernetes/client-node": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@trpc/client": "catalog:",

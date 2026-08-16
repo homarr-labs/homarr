@@ -1241,6 +1241,9 @@ importers:
       '@homarr/docker':
         specifier: workspace:^0.1.0
         version: link:../docker
+      '@homarr/version':
+        specifier: workspace:^0.1.0
+        version: link:../version
       posthog-node:
         specifier: 'catalog:'
         version: 5.41.0(rxjs@7.8.2)
@@ -1311,6 +1314,9 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
+      '@homarr/version':
+        specifier: workspace:^0.1.0
+        version: link:../version
       '@kubernetes/client-node':
         specifier: 'catalog:'
         version: 1.4.0(supports-color@10.2.2)
@@ -1520,6 +1526,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@homarr/version':
+        specifier: workspace:^0.1.0
+        version: link:../version
       '@t3-oss/env-nextjs':
         specifier: 'catalog:'
         version: 0.13.11(arktype@2.1.20)(typescript@7.0.2)(zod@4.4.3)
@@ -2256,6 +2265,9 @@ importers:
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
+      '@homarr/version':
+        specifier: workspace:^0.1.0
+        version: link:../version
       dayjs:
         specifier: 'catalog:'
         version: 1.11.21
@@ -2505,6 +2517,15 @@ importers:
       zod-form-data:
         specifier: 'catalog:'
         version: 3.0.2(zod@4.4.3)
+    devDependencies:
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+
+  packages/version:
     devDependencies:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
@@ -9407,6 +9428,7 @@ packages:
 
   crypto-js@4.2.0:
     resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    deprecated: Active development of CryptoJS has been discontinued. This library is no longer maintained.
 
   crypto-random-string@4.0.0:
     resolution: {integrity: sha512-x8dy3RnvYdlUcPOjkEHqozhiwzKNSq7GcPuXFbnyMOCHxX8V3OgIg/pYuabl2sbUPfIJaeAQB7PMOK8DFIdoRA==}

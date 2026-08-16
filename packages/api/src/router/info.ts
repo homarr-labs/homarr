@@ -1,6 +1,7 @@
 import z from "zod/v4";
 
-import packageJson from "../../../../package.json";
+import { VERSION } from "@homarr/version";
+
 import { createTRPCRouter, isDemoMode, isDemoReadOnly, publicProcedure, protectedProcedure } from "../trpc";
 
 export const infoRouter = createTRPCRouter({
@@ -16,7 +17,7 @@ export const infoRouter = createTRPCRouter({
     })
     .query(() => {
       return {
-        version: packageJson.version,
+        version: VERSION,
       };
     }),
   isDemoMode: publicProcedure.query(() => isDemoMode),
