@@ -1,0 +1,47 @@
+packages/api/src/router/integration/integration-router.ts
+  s_c2cacc33a4693d::t_dd430e4cb3544e 746-748
+  s_c2cacc33a4693d::t_b7598ebaef5d18 134
+  s_9ffe95c2c793ee::t_edf9c09a1a666e 709-717,725-728
+  s_9ffe95c2c793ee::t_47b25029d64612 122-125,130-133
+packages/api/src/router/test/app.spec.ts
+  s_9ffe95c2c793ee::t_4756914eb590f5 130-131,140-153
+  s_9ffe95c2c793ee::t_3717ea394bbff2 154
+packages/api/src/router/app.ts
+  s_9ffe95c2c793ee::t_429838a1122ee6 72,93-102
+packages/api/src/router/home.ts
+  s_c2cacc33a4693d::t_7a2faa127fdf26 127-130
+packages/api/src/router/test/integration/integration-router.spec.ts
+  s_9ffe95c2c793ee::t_aa6410eb893152 61,87
+  s_9ffe95c2c793ee::t_8bb0613018344d 62-86,88-90
+packages/definitions/src/test/permissions.spec.ts
+  s_9ffe95c2c793ee::t_d11e503e5479fd 119-123
+packages/api/src/router/group.ts
+  s_9ffe95c2c793ee::t_4fd249b0800ae4 315-316
+  s_c2cacc33a4693d::t_a1ef0f5aa94294 29,325
+packages/api/src/router/test/group.spec.ts
+  s_9ffe95c2c793ee::t_733b0d96e36bea 478-506
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c369df01332c4b1d4cea21d6b7c9a1e86e16c6ec",
+  "prompts": {},
+  "sessions": {
+    "s_9ffe95c2c793ee": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff3fb70a0ffe9CaiaOkFX9GIV8",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_c2cacc33a4693d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff4f21231ffe9FnbHah0VHvouI",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
