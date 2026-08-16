@@ -29,8 +29,6 @@ const RESTART_REQUEST_TIMEOUT_MS = 5_000;
 
 export type ServerReadinessResult = "ready" | "timedOut" | "aborted";
 
-export const getStepAfterRestorePreview = (): RestoreStep => "confirm";
-
 interface WaitForServerReadinessOptions {
   restartAfterMs: number;
   signal: AbortSignal;
@@ -291,8 +289,11 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
           <>
             <BackupPreviewPanel analysis={analysis} />
             <Group justify="flex-end">
-              <Button rightSection={<IconArrowRight size={16} />} onClick={() => setStep(getStepAfterRestorePreview())}>
-                {t("continueToRestore")}
+              <Button
+                rightSection={<IconArrowRight size={16} />}
+                onClick={() => (variant === "standalone" ? void handleConfirm() : setStep("confirm"))}
+              >
+                {variant === "standalone" ? t("confirm.submit") : t("continueToRestore")}
               </Button>
             </Group>
           </>
