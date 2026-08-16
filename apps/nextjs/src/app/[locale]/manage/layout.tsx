@@ -28,6 +28,7 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 
+import { api } from "@homarr/api/server";
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
@@ -65,6 +66,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     sessionPromise,
     shouldRunManageTourPromise,
   ]);
+  const hasGlobalIntegrationFullAccess = session?.user.permissions.includes("integration-full-all") ?? false;
+  const hasDelegatedIntegrationFullAccess =
+    !hasGlobalIntegrationFullAccess && session
+      ? (await api.integration.all()).some((integration) => integration.permissions.hasFullAccess)
+      : false;
+  const canManageIntegrations = hasGlobalIntegrationFullAccess || hasDelegatedIntegrationFullAccess;
   const navigationLinks: NavigationLink[] = [
     {
       label: t("items.home"),
@@ -82,7 +89,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconBox,
       href: "/manage/apps",
       label: t("items.apps"),
-      hidden: !session?.user.permissions.includes("app-create"),
+      hidden: !session?.user.permissions.includes("app-modify-all"),
       iconProps: {
         strokeWidth: 2.5,
       },
@@ -92,7 +99,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconAffiliateFilled,
       href: "/manage/integrations",
       label: t("items.integrations"),
-      hidden: !session?.user.permissions.includes("integration-create"),
+      hidden: !canManageIntegrations,
       "data-onboarding-tour-id": "manage-integrations",
     },
     {

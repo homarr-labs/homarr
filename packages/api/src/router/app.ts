@@ -18,7 +18,8 @@ import { AppAccessControl } from "./app/app-access-control";
 const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
 
 export const appRouter = createTRPCRouter({
-  getPaginated: protectedProcedure
+  getPaginated: permissionRequiredProcedure
+    .requiresPermission("app-modify-all")
     .meta({
       openapi: {
         method: "GET",
@@ -50,7 +51,8 @@ export const appRouter = createTRPCRouter({
         totalCount,
       };
     }),
-  all: protectedProcedure
+  all: permissionRequiredProcedure
+    .requiresPermission("app-modify-all")
     .input(z.void())
     .output(z.array(selectAppSchema))
     .meta({
@@ -67,7 +69,8 @@ export const appRouter = createTRPCRouter({
         orderBy: asc(apps.name),
       });
     }),
-  search: protectedProcedure
+  search: permissionRequiredProcedure
+    .requiresPermission("app-modify-all")
     .input(
       z.object({
         query: z.string(),

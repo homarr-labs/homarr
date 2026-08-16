@@ -163,19 +163,59 @@ Members can be removed from the group using the remove button at the end:
 #### Permissions tab
 
 In this tab, you manage what permissions the members of this group will have.
-Currently, the following permissions are available:
+Permissions are organized by category (boards, apps, integrations, and so on). Each category is a row with a
+segmented control that lets you pick a single access level. Selecting a level grants that level and every lower
+level in the same category. Choosing **None** removes all permissions for that category.
 
-- Boards
-  - **Create boards**: Allow members to create boards
+Selecting **Administrator** grants full access to everything. While the administrator level is selected, every
+other category is disabled and shows a **Granted via Administrator** caption, because administrators already have
+all permissions. Deselecting it (choosing **None** on the administrator row) re-enables the other categories.
+
+##### Presets
+
+Above the rows you can apply a preset to fill in a common configuration in one click:
+
+- **Viewer**: view access to boards, use access to apps and integrations, and viewing media.
+- **Editor**: modify access to boards and apps, interact with integrations, modify search engines (includes creating), and viewing media.
+- **Admin**: grants the administrator permission (full access to everything).
+
+When the current selection does not match any preset, a **Custom** badge is shown.
+
+##### Implied permissions
+
+Some levels include additional permissions automatically. When a level implies extra permissions (for example,
+full board access also allows creating boards), a dimmed `also grants: …` hint is shown under the category row.
+
+##### Effective permissions
+
+Below the rows, the **Effective permissions** panel can be expanded to review everything members of this group
+will be able to do, including implied permissions, grouped by category with a count for each.
+
+Each category below is a segmented control that starts with **None**; the remaining segments are the access levels
+in ascending order (higher levels include the lower ones and may imply extra permissions shown in the hint):
+
+- Boards — None
   - **View all boards**: Allow members to view all boards
   - **Modify all boards**: Allow members to modify all boards (Does not include access control and danger zone)
-  - **Full board access**: Allow members to view, modify, and delete all boards (Including access control and danger zone)
-- Integrations
-  - **Create integrations**: Allow members to create integrations
-  - **Use all integrations**: Allows members to add any integrations to their boards
+  - **Full board access**: Allow members to view, modify, and delete all boards (Including access control and danger zone; includes creating boards)
+- Apps — None
+  - **Use all apps**: Allow members to add any apps to their boards
+  - **Modify all apps**: Allow members to modify all apps (includes creating apps)
+  - **Full app access**: Allow members to manage, use and delete any app
+- Integrations — None
+  - **Use all integrations**: Allow members to add any integrations to their boards
   - **Interact with any integration**: Allow members to interact with any integration
-  - **Full integration access**: Allow members to manage, use and interact with any integration
-- **Administrator**: Members with this permission have full access to all features and settings
+  - **Full integration access**: Allow members to manage, use and interact with any integration (includes creating integrations)
+- Search engines — None
+  - **Modify all search engines**: Allow members to modify all search engines (includes creating search engines)
+  - **Full search engine access**: Allow members to manage and delete any search engine
+- Medias — None
+  - **View all medias**: Allow members to view all medias
+  - **Full media access**: Allow members to manage and delete any media (includes uploading medias)
+- Other — None
+  - **View logs**: Allow members to view logs
+- Administrator — None
+  - **Administrator**: Members with this permission have full access to all features and settings
 
 Custom Widget authoring, import, migration, preview, secrets, Workshop access, and placement configuration are reserved
 for administrators and are not separate assignable group permissions. Board modifiers can still move, resize, change
