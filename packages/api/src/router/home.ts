@@ -124,9 +124,10 @@ export const homeRouter = createTRPCRouter({
     }
 
     const hasGlobalFullIntegrationAccess = ctx.session?.user.permissions.includes("integration-full-all") ?? false;
-    const fullAccessIntegrationIds = hasGlobalFullIntegrationAccess
-      ? []
-      : await getFullAccessIntegrationIdsAsync(ctx.db, ctx.session?.user.id ?? "");
+    const fullAccessIntegrationIds =
+      hasGlobalFullIntegrationAccess || !ctx.session?.user
+        ? []
+        : await getFullAccessIntegrationIdsAsync(ctx.db, ctx.session.user.id);
     if (hasGlobalFullIntegrationAccess || fullAccessIntegrationIds.length > 0) {
       statistics.push({
         titleKey: "integration",

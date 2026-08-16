@@ -26,7 +26,7 @@ import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, pro
 const createPermissionParents = {
   "app-create": "app-modify-all",
   "integration-create": "integration-full-all",
-  "board-create": "board-modify-all",
+  "board-create": "board-full-all",
   "search-engine-create": "search-engine-modify-all",
 } satisfies Partial<Record<GroupPermissionKey, GroupPermissionKey>>;
 
@@ -312,10 +312,8 @@ export const groupRouter = createTRPCRouter({
 
       const permissions = [
         ...new Set(
-          input.permissions.flatMap((permission) => {
-            const parent = createPermissionParents[permission as keyof typeof createPermissionParents] as
-              | GroupPermissionKey
-              | undefined;
+          input.permissions.flatMap((permission): GroupPermissionKey[] => {
+            const parent = permission in createPermissionParents ? createPermissionParents[permission] : null;
             return parent ? [permission, parent] : [permission];
           }),
         ),
@@ -324,9 +322,7 @@ export const groupRouter = createTRPCRouter({
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
           await db.transaction(async (transaction) => {
-            await transaction
-              .delete(schema.groupPermissions)
-              .where(eq(schema.groupPermissions.groupId, input.groupId));
+            await transaction.delete(schema.groupPermissions).where(eq(schema.groupPermissions.groupId, input.groupId));
             if (permissions.length === 0) {
               return;
             }

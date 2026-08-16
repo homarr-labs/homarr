@@ -116,4 +116,9 @@ describe("matrix helpers should round-trip stably", () => {
     expect(roundTripped).toEqual(expect.arrayContaining(permissions));
     expect(roundTripped).toHaveLength(permissions.length);
   });
+
+  test("expect a single higher-level key to expand to its full set on round-trip", () => {
+    const roundTripped = matrixStateToPermissions(permissionsToMatrixState(["board-full-all"]));
+    expect(roundTripped).toEqual(["board-view-all", "board-modify-all", "board-full-all"]);
+  });
 });

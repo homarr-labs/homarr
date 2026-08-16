@@ -475,6 +475,35 @@ describe("savePermissions should save permissions for group", () => {
     expect(permissions.map(({ permission }) => permission).toSorted()).toEqual(["app-create", "app-modify-all"]);
   });
 
+  test("with an integration create permission it should persist its parent permission", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(groups).values({
+      id: groupId,
+      name: "Group",
+      position: 1,
+    });
+
+    // Act
+    await caller.savePermissions({
+      groupId,
+      permissions: ["integration-create"],
+    });
+
+    // Assert
+    const permissions = await db.query.groupPermissions.findMany({
+      where: eq(groupPermissions.groupId, groupId),
+    });
+
+    expect(permissions.map(({ permission }) => permission).toSorted()).toEqual([
+      "integration-create",
+      "integration-full-all",
+    ]);
+  });
+
   test("with a create permission and its parent it should persist exactly two rows", async () => {
     // Arrange
     const db = createDb();
