@@ -84,7 +84,11 @@ When modifying user-facing code, you MUST also update the corresponding document
 - Lint: oxlint (not ESLint)
 - Format: oxfmt (not Prettier)
 - UI: Mantine (not Tailwind) — Tailwind is only used in docs app
-- Mantine: use the `mantine` MCP server (`get_item_doc` / `get_item_props` / `search_docs`) for current v9 APIs before writing component code. Prefer built-in primitives (`Combobox`/`useCombobox` for selects, the polymorphic `component` prop, `@mantine/hooks`) over hand-rolled equivalents. Check `packages/ui/` for existing conventions first.
+- Mantine: use the `mantine` MCP server (configured in `.mcp.json`; tools `get_item_doc` / `get_item_props` / `search_docs`) for current v9 APIs before writing component code. Prefer built-in primitives (`Combobox`/`useCombobox` for selects, the polymorphic `component` prop, `@mantine/hooks`) over hand-rolled equivalents. Check `packages/ui/` for existing conventions first.
+
+## MCP servers
+
+`.mcp.json` at the repo root declares project-scoped MCP servers (the standard Claude Code layout; other tools can import the same `mcpServers` block). See the `mantine` entry there for the Mantine v9 server, and the upstream docs at https://mantine.dev/guides/llms/ for per-tool setup (OpenCode: `.opencode/opencode.json`, Codex: `.codex/config.toml`). Only keyless server definitions belong in `.mcp.json`; anything needing secrets stays in local dotfiles.
 
 ## Agent Skills
 
