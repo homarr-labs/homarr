@@ -47,9 +47,10 @@ export function WorkshopInstallButton({ children, fullWidth }: WorkshopInstallBu
   const detailsModal = stack.register("details");
   const reportModal = stack.register("report");
 
-  const closeReview = () => {
+  const returnToDetails = () => {
     stack.close("review");
     setPendingWidget(null);
+    stack.open("details");
   };
 
   return (
@@ -82,6 +83,7 @@ export function WorkshopInstallButton({ children, fullWidth }: WorkshopInstallBu
             }}
             onInstall={async (widget) => {
               setPendingWidget(widget);
+              stack.close("details");
               stack.open("review");
             }}
           />
@@ -96,7 +98,7 @@ export function WorkshopInstallButton({ children, fullWidth }: WorkshopInstallBu
             cancel: t("backToWidget"),
             confirm: t("install"),
           }}
-          onClose={closeReview}
+          onClose={returnToDetails}
           onImported={() => {
             stack.closeAll();
             setPendingWidget(null);
