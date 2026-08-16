@@ -69,8 +69,7 @@ export const appRouter = createTRPCRouter({
         orderBy: asc(apps.name),
       });
     }),
-  search: permissionRequiredProcedure
-    .requiresPermission("app-modify-all")
+  search: protectedProcedure
     .input(
       z.object({
         query: z.string(),
@@ -91,6 +90,16 @@ export const appRouter = createTRPCRouter({
       },
     })
     .query(({ ctx, input }) => {
+      if (
+        !ctx.session.user.permissions.includes("app-modify-all") &&
+        !ctx.session.user.permissions.includes("board-modify-all")
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Permission denied",
+        });
+      }
+
       return ctx.db.query.apps.findMany({
         where: like(apps.name, `%${input.query}%`),
         orderBy: asc(apps.name),

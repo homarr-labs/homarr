@@ -127,8 +127,8 @@ describe("getPaginated should return apps to authenticated users", () => {
   });
 });
 
-describe("search should return apps to authenticated users", () => {
-  test("should throw FORBIDDEN without app-modify-all permission", async () => {
+describe("search should require app-modify-all or board-modify-all permission", () => {
+  test("should throw FORBIDDEN without app-modify-all or board-modify-all permission", async () => {
     const caller = appRouter.createCaller({
       db: createDb(),
       deviceType: undefined,
@@ -136,6 +136,21 @@ describe("search should return apps to authenticated users", () => {
     });
 
     await expect(caller.search({ query: "Homarr" })).rejects.toThrow("Permission denied");
+  });
+
+  test("should return apps with board-modify-all permission", async () => {
+    const db = createDb();
+    const caller = appRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: createDefaultSession(["board-modify-all"]),
+    });
+    await db.insert(apps).values({ id: "1", name: "Homarr", iconUrl: "https://homarr.dev/icon.svg" });
+
+    const result = await caller.search({ query: "Homarr" });
+
+    expect(result).toHaveLength(1);
+    expect(result[0]!.id).toBe("1");
   });
 });
 
