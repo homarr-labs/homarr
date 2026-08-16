@@ -1,0 +1,22 @@
+.agents/skills/mcp-integration/SKILL.md
+  s_d38029cd5fc65b::t_d73850653ff44d 10-11
+  s_d38029cd5fc65b::t_3c5ecf6bd1c362 50,56,62
+.agents/skills/codebase-context/SKILL.md
+  s_d38029cd5fc65b::t_fad0ac85da565b 30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "0125e6d72c6f8a45cee40de54cb7fbc68cb93ec1",
+  "prompts": {},
+  "sessions": {
+    "s_d38029cd5fc65b": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff540179cffezhwIuowH82UjHt",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
