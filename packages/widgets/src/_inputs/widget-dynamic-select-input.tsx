@@ -89,7 +89,7 @@ export const WidgetDynamicSelectInput = ({
                 style={{ marginInlineStart: "auto" }}
                 color="currentColor"
                 opacity={0.6}
-                size={18}
+                size="var(--mantine-font-size-lg)"
                 stroke={1.5}
               />
             )}

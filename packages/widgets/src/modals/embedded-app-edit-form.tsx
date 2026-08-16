@@ -76,7 +76,7 @@ export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormPro
 
   return (
     <Stack>
-      <Alert icon={<IconInfoCircle size={16} />} color="blue" variant="light">
+      <Alert icon={<IconInfoCircle size="var(--mantine-font-size-md)" />} color="blue" variant="light">
         {t("item.edit.app.propagationNotice")}
       </Alert>
       <AppForm

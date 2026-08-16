@@ -90,7 +90,7 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
         <Button
           variant="light"
           color="red"
-          leftSection={<IconClockPause size={20} />}
+          leftSection={<IconClockPause size="var(--mantine-font-size-xl)" />}
           h="2rem"
           w="12rem"
           onClick={handleSetTimer}

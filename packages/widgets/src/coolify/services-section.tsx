@@ -25,7 +25,7 @@ export function ServicesSection({ services, baseUrl, isTiny, isAdvanced }: Servi
 
   return (
     <Accordion.Item value="services">
-      <Accordion.Control icon={isTiny ? null : <IconStack2 size={16} />}>
+      <Accordion.Control icon={isTiny ? null : <IconStack2 size="var(--mantine-font-size-md)" />}>
         <Group gap="xs">
           <Text size="xs">{tCommon("services")}</Text>
           <Badge variant="dot" color={getBadgeColor(runningServices, services.length)} size="xs">

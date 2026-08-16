@@ -115,7 +115,7 @@ export const WidgetCustomWidgetSelectInput = ({
                 >
                   <Group wrap="nowrap" gap="sm">
                     <Avatar src={def.iconUrl} size={36} radius="md" color="blue">
-                      <IconApi size={18} />
+                      <IconApi size="var(--mantine-font-size-lg)" />
                     </Avatar>
                     <Stack gap={1} style={{ minWidth: 0 }}>
                       <Text size="sm" fw={600} truncate>
@@ -152,7 +152,7 @@ export const WidgetCustomWidgetSelectInput = ({
         <Alert
           color="yellow"
           variant="light"
-          icon={<IconAlertTriangle size={18} />}
+          icon={<IconAlertTriangle size="var(--mantine-font-size-lg)" />}
           title={labels("migrationRequired")}
         >
           <Text size="xs">{labels("migrationDescription")}</Text>

@@ -445,7 +445,7 @@ function CompactStatGrid({
               style={{ "--stat-bg": severityToMantineBgColor(severity) } as CSSProperties}
             >
               {showIcon && (
-                <Icon className={classes.statIcon} size={18} stroke={1.5} color={severityToIconColor(severity)} />
+                <Icon className={classes.statIcon} size="var(--mantine-font-size-lg)" stroke={1.5} color={severityToIconColor(severity)} />
               )}
               <span className={classes.compactStatValue}>
                 <Text component="span" fw={700} size="inherit" c={severityToMantineColor(severity)}>

@@ -133,7 +133,7 @@ export default function IndexerManagerWidget({
             }}
             aria-label={t("widget.indexerManager.testAll")}
           >
-            <IconTestPipe size={14} />
+            <IconTestPipe size="var(--mantine-font-size-sm)" />
           </ActionIcon>
         </Tooltip>
       </Group>

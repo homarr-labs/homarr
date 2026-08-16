@@ -25,7 +25,7 @@ export function IntegrationErrorIndicator({ results }: IntegrationErrorIndicator
   return (
     <Tooltip label={label} position="left" withArrow>
       <ActionIcon variant="transparent" color="orange" size={28} aria-label={label} style={{ cursor: "help" }}>
-        <IconAlertTriangle aria-hidden size={14} />
+        <IconAlertTriangle aria-hidden size="var(--mantine-font-size-sm)" />
       </ActionIcon>
     </Tooltip>
   );

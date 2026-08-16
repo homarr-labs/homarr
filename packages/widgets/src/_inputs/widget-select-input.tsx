@@ -51,20 +51,20 @@ export const WidgetSelectInput = ({ property, kind, options }: CommonWidgetInput
               label: translateIfNecessary(t, option.label) ?? option.value,
             },
       )}
-      leftSection={CurrentIcon && <CurrentIcon size={16} stroke={1.5} />}
+      leftSection={CurrentIcon && <CurrentIcon size="var(--mantine-font-size-md)" stroke={1.5} />}
       renderOption={({ option, checked }) => {
         const Icon = getIconFor(options.options, String(option.value));
 
         return (
           <Group flex="1" gap="xs">
-            {Icon && <Icon color="currentColor" opacity={0.6} size={18} stroke={1.5} />}
+            {Icon && <Icon color="currentColor" opacity={0.6} size="var(--mantine-font-size-lg)" stroke={1.5} />}
             {option.label}
             {checked && (
               <IconCheck
                 style={{ marginInlineStart: "auto" }}
                 color="currentColor"
                 opacity={0.6}
-                size={18}
+                size="var(--mantine-font-size-lg)"
                 stroke={1.5}
               />
             )}

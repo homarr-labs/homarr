@@ -135,7 +135,7 @@ export default function BeszelAlertsWidget({
           {alerts.length === 0 && (
             <Stack align="center" justify="center" py="xl" gap="xs">
               <ThemeIcon variant="light" color="gray" size="lg" radius="xl">
-                <IconBellOff size={18} />
+                <IconBellOff size="var(--mantine-font-size-lg)" />
               </ThemeIcon>
               <Text size="sm" c="dimmed">
                 {t("empty")}
@@ -146,7 +146,7 @@ export default function BeszelAlertsWidget({
           {triggeredAlerts.length > 0 && (
             <Stack gap={6}>
               <Group gap={6}>
-                <IconFlame size={14} color="var(--mantine-color-red-6)" />
+                <IconFlame size="var(--mantine-font-size-sm)" color="var(--mantine-color-red-6)" />
                 <Text size="xs" fw={600} c="red">
                   {t("status.triggered")} ({triggeredAlerts.length})
                 </Text>
@@ -171,7 +171,7 @@ export default function BeszelAlertsWidget({
           {showOkAlerts && okAlerts.length > 0 && (
             <Stack gap={6}>
               <Group gap={6}>
-                <IconCircleCheck size={14} color="var(--mantine-color-green-6)" />
+                <IconCircleCheck size="var(--mantine-font-size-sm)" color="var(--mantine-color-green-6)" />
                 <Text size="xs" fw={600} c="dimmed">
                   {t("status.ok")} ({okAlerts.length})
                 </Text>
@@ -196,7 +196,7 @@ export default function BeszelAlertsWidget({
               <Divider />
               <Stack gap={6}>
                 <Group gap={6}>
-                  <IconHistory size={14} opacity={0.5} />
+                  <IconHistory size="var(--mantine-font-size-sm)" opacity={0.5} />
                   <Text size="xs" fw={600} c="dimmed">
                     {t("history")}
                   </Text>
@@ -215,7 +215,7 @@ export default function BeszelAlertsWidget({
                           style={{ borderRadius: 2, flexShrink: 0 }}
                           bg={isResolved ? "green.6" : "red.6"}
                         />
-                        <HistoryIcon size={12} opacity={0.5} style={{ flexShrink: 0 }} />
+                        <HistoryIcon size="var(--mantine-font-size-xs)" opacity={0.5} style={{ flexShrink: 0 }} />
                         <Stack gap={0} style={{ minWidth: 0 }}>
                           <Text size="xs" fw={500} truncate>
                             {entry.name}
@@ -292,7 +292,7 @@ function AlertRow({ name, value, min, systemName, integrationName, triggered, sh
           backgroundColor: triggered ? "var(--mantine-color-red-light)" : "var(--mantine-color-default-hover)",
         }}
       >
-        <Icon size={14} opacity={0.7} style={{ flexShrink: 0 }} />
+        <Icon size="var(--mantine-font-size-sm)" opacity={0.7} style={{ flexShrink: 0 }} />
         <Stack gap={0} style={{ flex: 1, minWidth: 0 }}>
           <Group gap={6} wrap="nowrap">
             <Text size="xs" fw={600} truncate>

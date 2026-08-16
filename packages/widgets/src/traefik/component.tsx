@@ -308,7 +308,7 @@ function ProtocolCard({ protocol, data }: { protocol: ProtocolKey; data: Traefik
         {rows.map(({ key, icon: Icon, summary }) => (
           <div key={key} className={classes.protocolRow}>
             <Group gap={4} wrap="nowrap" className={classes.protocolLabel}>
-              <Icon size={14} />
+              <Icon size="var(--mantine-font-size-sm)" />
               <Text>{t(`resource.${key}`)}</Text>
             </Group>
             <StatusCount summary={summary} />
@@ -354,7 +354,7 @@ function HealthBadge({ errors, warnings }: { errors: number; warnings: number })
 
   if (errors > 0) {
     return (
-      <Badge color="red" variant="light" leftSection={<IconAlertTriangle size={12} />} radius="sm">
+      <Badge color="red" variant="light" leftSection={<IconAlertTriangle size="var(--mantine-font-size-xs)" />} radius="sm">
         {t("status.errors", { count: errors })}
       </Badge>
     );
@@ -362,14 +362,14 @@ function HealthBadge({ errors, warnings }: { errors: number; warnings: number })
 
   if (warnings > 0) {
     return (
-      <Badge color="yellow" variant="light" leftSection={<IconAlertTriangle size={12} />} radius="sm">
+      <Badge color="yellow" variant="light" leftSection={<IconAlertTriangle size="var(--mantine-font-size-xs)" />} radius="sm">
         {t("status.warnings", { count: warnings })}
       </Badge>
     );
   }
 
   return (
-    <Badge color="green" variant="light" leftSection={<IconCircleCheck size={12} />} radius="sm">
+    <Badge color="green" variant="light" leftSection={<IconCircleCheck size="var(--mantine-font-size-xs)" />} radius="sm">
       {t("status.healthy")}
     </Badge>
   );

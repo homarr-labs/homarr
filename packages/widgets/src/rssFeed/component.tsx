@@ -73,7 +73,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
     return (
       <Flex direction="column" h="100%" p="xs">
         {warning && (
-          <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size={16} />} p="xs">
+          <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size="var(--mantine-font-size-md)" />} p="xs">
             <output>{warning}</output>
           </Alert>
         )}
@@ -103,7 +103,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
   return (
     <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isTiny ? 4 : "xs"}>
       {warning && (
-        <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size={16} />} p="xs" mb="xs">
+        <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size="var(--mantine-font-size-md)" />} p="xs" mb="xs">
           <output>{warning}</output>
         </Alert>
       )}

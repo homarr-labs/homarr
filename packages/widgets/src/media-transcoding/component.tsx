@@ -153,7 +153,7 @@ export default function MediaTranscodingWidget({
             return {
               label: (
                 <Center style={{ gap: 4 }}>
-                  <Icon size={12} />
+                  <Icon size="var(--mantine-font-size-xs)" />
                   {footerLayout.showTabLabels ? (
                     <Text span size="xs">
                       {t(`tab.${value}`)}
@@ -259,7 +259,7 @@ export const resolveQueuePagination = (
 const AdvancedPanel = ({ title, icon: Icon, children }: { title: string; icon: TablerIcon; children: ReactNode }) => (
   <Paper withBorder radius="sm" p="xs" mih={280} style={{ display: "flex", flexDirection: "column" }}>
     <Group gap="xs" mb="xs">
-      <Icon size={16} />
+      <Icon size="var(--mantine-font-size-md)" />
       <Text size="sm" fw={600}>
         {title}
       </Text>

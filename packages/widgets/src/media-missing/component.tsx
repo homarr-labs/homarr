@@ -141,7 +141,7 @@ export default function MediaMissingWidget({
           {showMissing && (
             <Paper withBorder radius="sm" style={{ minHeight: 0, overflow: "hidden" }}>
               <Group p="xs" gap="xs">
-                <IconQuestionMark size={16} />
+                <IconQuestionMark size="var(--mantine-font-size-md)" />
                 <Text size="sm" fw={600}>
                   {tabLabel(t("tab.missing"), missing.length, missingCount)}
                 </Text>
@@ -152,7 +152,7 @@ export default function MediaMissingWidget({
           {showQueued && (
             <Paper withBorder radius="sm" style={{ minHeight: 0, overflow: "hidden" }}>
               <Group p="xs" gap="xs">
-                <IconDownload size={16} />
+                <IconDownload size="var(--mantine-font-size-md)" />
                 <Text size="sm" fw={600}>
                   {tabLabel(t("tab.queued"), queued.length, queuedCount)}
                 </Text>
@@ -181,12 +181,12 @@ export default function MediaMissingWidget({
       </Group>
       <Tabs.List grow>
         {showMissing && (
-          <Tabs.Tab value="missing" px={isThin ? 6 : undefined} leftSection={<IconQuestionMark size={14} />}>
+          <Tabs.Tab value="missing" px={isThin ? 6 : undefined} leftSection={<IconQuestionMark size="var(--mantine-font-size-sm)" />}>
             {tabLabel(t("tab.missing"), missing.length, missingCount)}
           </Tabs.Tab>
         )}
         {showQueued && (
-          <Tabs.Tab value="queued" px={isThin ? 6 : undefined} leftSection={<IconDownload size={14} />}>
+          <Tabs.Tab value="queued" px={isThin ? 6 : undefined} leftSection={<IconDownload size="var(--mantine-font-size-sm)" />}>
             {tabLabel(t("tab.queued"), queued.length, queuedCount)}
           </Tabs.Tab>
         )}

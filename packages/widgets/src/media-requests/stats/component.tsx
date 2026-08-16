@@ -132,7 +132,7 @@ export default function MediaServerWidget({
                 <Tooltip label={t(`titles.stats.${stat.name}`)}>
                   <Card p={0} radius={board.itemRadius} className={classes.card}>
                     <Group className="mediaRequests-stats-stat-stack" justify="center" align="center" gap="xs" w="100%">
-                      <stat.icon className="mediaRequests-stats-stat-icon" size={16} />
+                      <stat.icon className="mediaRequests-stats-stat-icon" size="var(--mantine-font-size-md)" />
                       <Text className="mediaRequests-stats-stat-value" size="md">
                         {stat.number}
                       </Text>
@@ -226,7 +226,7 @@ const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[]
         aria-label={t("action.search.label")}
         onClick={() => openMediaRequestSearch({ integrationIds })}
       >
-        <IconSearch size={16} />
+        <IconSearch size="var(--mantine-font-size-md)" />
       </ActionIcon>
     </Tooltip>
   );

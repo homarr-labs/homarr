@@ -27,7 +27,7 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
       <Popover.Target>
         <ActionIcon className={actionTargetClasses.root} variant="subtle" size="sm" aria-label={t("title")}>
           <Indicator color={textColor(indicatorColor, colorScheme)} size={6} display="flex">
-            <IconHeartbeat size={16} />
+            <IconHeartbeat size="var(--mantine-font-size-md)" />
           </Indicator>
         </ActionIcon>
       </Popover.Target>
@@ -38,7 +38,7 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
       >
         <Stack gap="sm" align="center">
           <Group gap="xs">
-            <IconHeartbeat size={18} />
+            <IconHeartbeat size="var(--mantine-font-size-lg)" />
             <Text size="sm">{t("title")}</Text>
           </Group>
           <Divider

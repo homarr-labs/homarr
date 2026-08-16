@@ -95,15 +95,15 @@ export const WeatherDescription = ({
       <Text fz="24px">{formatWeatherDate(time, locale, dateFormat)}</Text>
       <Text fz="16px">{t(`kind.${name}`)}</Text>
       <List>
-        <List.Item icon={<IconTemperaturePlus size={15} />}>{`${tCommon("information.max")}: ${maxTemp}`}</List.Item>
-        <List.Item icon={<IconTemperatureMinus size={15} />}>{`${tCommon("information.min")}: ${minTemp}`}</List.Item>
-        <List.Item icon={<IconSun size={15} />}>{`${t("dailyForecast.sunrise")}: ${sunrise}`}</List.Item>
-        <List.Item icon={<IconMoon size={15} />}>{`${t("dailyForecast.sunset")}: ${sunset}`}</List.Item>
+        <List.Item icon={<IconTemperaturePlus size="var(--mantine-font-size-sm)" />}>{`${tCommon("information.max")}: ${maxTemp}`}</List.Item>
+        <List.Item icon={<IconTemperatureMinus size="var(--mantine-font-size-sm)" />}>{`${tCommon("information.min")}: ${minTemp}`}</List.Item>
+        <List.Item icon={<IconSun size="var(--mantine-font-size-sm)" />}>{`${t("dailyForecast.sunrise")}: ${sunrise}`}</List.Item>
+        <List.Item icon={<IconMoon size="var(--mantine-font-size-sm)" />}>{`${t("dailyForecast.sunset")}: ${sunset}`}</List.Item>
         {humidity !== undefined && (
-          <List.Item icon={<IconDroplets size={15} />}>{t("dailyForecast.humidity", { humidity })}</List.Item>
+          <List.Item icon={<IconDroplets size="var(--mantine-font-size-sm)" />}>{t("dailyForecast.humidity", { humidity })}</List.Item>
         )}
         {maxWindSpeed !== undefined && (
-          <List.Item icon={<IconWind size={15} />}>
+          <List.Item icon={<IconWind size="var(--mantine-font-size-sm)" />}>
             {t("dailyForecast.maxWindSpeed", {
               maxWindSpeed: (useImperialSpeed ? metricToImperial(maxWindSpeed) : maxWindSpeed).toFixed(1),
               unit: useImperialSpeed ? tCommon("unit.speed.milesPerHour") : tCommon("unit.speed.kilometersPerHour"),
@@ -111,7 +111,7 @@ export const WeatherDescription = ({
           </List.Item>
         )}
         {maxWindGusts !== undefined && (
-          <List.Item icon={<IconWind size={15} />}>
+          <List.Item icon={<IconWind size="var(--mantine-font-size-sm)" />}>
             {t("dailyForecast.maxWindGusts", {
               maxWindGusts: (useImperialSpeed ? metricToImperial(maxWindGusts) : maxWindGusts).toFixed(1),
               unit: useImperialSpeed ? tCommon("unit.speed.milesPerHour") : tCommon("unit.speed.kilometersPerHour"),

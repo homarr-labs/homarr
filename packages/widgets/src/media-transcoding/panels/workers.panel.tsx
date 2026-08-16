@@ -66,11 +66,11 @@ export function WorkersPanel(props: WorkersPanelProps) {
                     <div>
                       {worker.jobType === "transcode" ? (
                         <Tooltip label={t("table.transcode")}>
-                          <IconTransform size={14} />
+                          <IconTransform size="var(--mantine-font-size-sm)" />
                         </Tooltip>
                       ) : (
                         <Tooltip label={t("table.healthCheck")}>
-                          <IconHeartbeat size={14} />
+                          <IconHeartbeat size="var(--mantine-font-size-sm)" />
                         </Tooltip>
                       )}
                     </div>

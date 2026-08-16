@@ -18,14 +18,14 @@ export function StatsBar({
 
   return (
     <SimpleGrid cols={cols} spacing="xs">
-      <StatCard icon={<IconVideo size={16} />} label={t("stats.activeStreams")} value={stats.activeStreams} />
-      <StatCard icon={<IconUsers size={16} />} label={t("stats.totalUsers")} value={stats.totalUsers} />
+      <StatCard icon={<IconVideo size="var(--mantine-font-size-md)" />} label={t("stats.activeStreams")} value={stats.activeStreams} />
+      <StatCard icon={<IconUsers size="var(--mantine-font-size-md)" />} label={t("stats.totalUsers")} value={stats.totalUsers} />
       <StatCard
-        icon={<IconDevices size={16} />}
+        icon={<IconDevices size="var(--mantine-font-size-md)" />}
         label={t("stats.transcodes")}
         value={`${summary.transcodes}/${summary.total}`}
       />
-      <StatCard icon={<IconNetwork size={16} />} label={t("stats.bandwidth")} value={summary.totalBitrate} />
+      <StatCard icon={<IconNetwork size="var(--mantine-font-size-md)" />} label={t("stats.bandwidth")} value={summary.totalBitrate} />
     </SimpleGrid>
   );
 }

@@ -87,7 +87,7 @@ export const WidgetIntegrationSelect = ({
     return (
       <Combobox.Option value={item.id} key={item.id} active={multiSelectValues.includes(item.id)}>
         <Group gap="sm" align="center">
-          {multiSelectValues.includes(item.id) ? <CheckIcon size={12} /> : null}
+          {multiSelectValues.includes(item.id) ? <CheckIcon size="var(--mantine-font-size-xs)" /> : null}
           <Group gap={7} align="center">
             <Avatar src={getIconUrl(item.kind)} size="sm" />
             <Stack gap={0}>

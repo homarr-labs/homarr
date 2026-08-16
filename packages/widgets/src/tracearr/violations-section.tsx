@@ -34,7 +34,7 @@ export function ViolationsList({
               <Group justify="space-between" wrap="nowrap">
                 <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
                   <IconAlertTriangle
-                    size={14}
+                    size="var(--mantine-font-size-sm)"
                     color={
                       violation.severity === "high"
                         ? "var(--mantine-color-red-6)"

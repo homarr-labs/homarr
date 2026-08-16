@@ -76,7 +76,7 @@ export const WidgetCustomWidgetConfigurationInput = ({
   return (
     <Stack gap="md">
       {issues[0] && (
-        <Alert color="yellow" variant="light" icon={<IconAlertTriangle size={16} />}>
+        <Alert color="yellow" variant="light" icon={<IconAlertTriangle size="var(--mantine-font-size-md)" />}>
           <Text size="sm">{labels("needsAttention", { message: issues[0].message })}</Text>
         </Alert>
       )}

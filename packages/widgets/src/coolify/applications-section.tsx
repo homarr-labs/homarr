@@ -22,7 +22,7 @@ export function ApplicationsSection({ applications, baseUrl, isTiny }: Applicati
 
   return (
     <Accordion.Item value="applications">
-      <Accordion.Control icon={isTiny ? null : <IconCloud size={16} />}>
+      <Accordion.Control icon={isTiny ? null : <IconCloud size="var(--mantine-font-size-md)" />}>
         <Group gap="xs">
           <Text size="xs">{tCommon("applications")}</Text>
           <Badge variant="dot" color={getBadgeColor(runningApps, applications.length)} size="xs">
