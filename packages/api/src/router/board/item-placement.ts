@@ -158,13 +158,15 @@ const findCollision = (
 /**
  * Finds the first free position from top left that fits the given size.
  *
- * The cost of this must not depend on the column count of the section: a board can have a large
- * grid and scanning every single column of every row would let a single request occupy the server
- * for a long time. Two properties keep it bounded instead:
+ * The cost of this must not depend on the size of the grid: a board can describe a large one and
+ * walking every single cell would let a single request occupy the server for a long time. A free
+ * slot can only begin where another one ends, which bounds both axes by the amount of content
+ * rather than by the dimensions:
  *
- * - A free slot always starts either at the left edge or directly right of an occupied area, so
- *   only those positions are worth testing rather than every column.
- * - Everything below the lowest occupied row is empty, so there is nothing to search past it.
+ * - Its left edge is either column zero or the right edge of an occupied area.
+ * - Its top edge is either row zero or the bottom edge of an occupied area.
+ *
+ * Everything below the lowest occupied row is empty, so appending there is the guaranteed fallback.
  */
 const findFreePosition = (
   size: { width: number; height: number },
