@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Accordion,
   ActionIcon,
@@ -21,7 +21,6 @@ import {
   Tooltip,
 } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
-import { useDebouncedValue } from "@mantine/hooks";
 import {
   IconAlertTriangleFilled,
   IconBrandDocker,
@@ -48,7 +47,7 @@ import {
   normalizeReleaseProviderIdentifier,
   releaseProviderKinds,
 } from "@homarr/definitions";
-import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
+import { IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -417,13 +416,6 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
   const [loading, setLoading] = useState(false);
   const [tempRepository, setTempRepository] = useState(() => ({ ...innerProps.repository }));
   const [formErrors, setFormErrors] = useState<FormErrors>({});
-  // Allows user to not select an icon by removing the url from the input,
-  // will only try and get an icon if the name or identifier changes
-  const [autoSetIcon, setAutoSetIcon] = useState(false);
-
-  // Debounce the name value with 200ms delay
-  const [debouncedName] = useDebouncedValue(tempRepository.name, 800);
-
   const handleConfirm = useCallback(() => {
     setLoading(true);
 
@@ -447,25 +439,6 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
   const handleChange = useCallback((changedValue: Partial<ReleasesRepository>) => {
     setTempRepository((prev) => ({ ...prev, ...changedValue }));
   }, []);
-
-  // Auto-select icon based on identifier formatted name with debounced search
-  const { data: iconsData } = clientApi.icon.findIcons.useQuery(
-    {
-      searchText: debouncedName,
-    },
-    {
-      enabled: autoSetIcon && (debouncedName?.length ?? 0) > 3,
-    },
-  );
-
-  useEffect(() => {
-    if (autoSetIcon && debouncedName && !tempRepository.iconUrl && iconsData?.icons) {
-      const bestMatch = findBestIconMatch(debouncedName, iconsData.icons);
-      if (bestMatch) {
-        handleChange({ iconUrl: bestMatch });
-      }
-    }
-  }, [debouncedName, iconsData, tempRepository, handleChange, autoSetIcon]);
 
   return (
     <Stack>
@@ -498,8 +471,6 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
               identifier: event.currentTarget.value,
               name,
             });
-
-            if (event.currentTarget.value) setAutoSetIcon(true);
           }}
           error={formErrors[`${innerProps.fieldPath}.identifier`]}
           style={{ flex: 0.7 }}
@@ -520,11 +491,7 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
         <TextInput
           label={tRepository("name.label")}
           value={tempRepository.name ?? ""}
-          onChange={(event) => {
-            handleChange({ name: event.currentTarget.value });
-
-            if (event.currentTarget.value) setAutoSetIcon(true);
-          }}
+          onChange={(event) => handleChange({ name: event.currentTarget.value })}
           error={formErrors[`${innerProps.fieldPath}.name`]}
           style={{ flex: 0.3 }}
         />
@@ -533,9 +500,9 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
           <IconPicker
             withAsterisk={false}
             value={tempRepository.iconUrl ?? ""}
+            suggestedSearch={tempRepository.name || tempRepository.identifier}
             onChange={(url) => {
               if (url === "") {
-                setAutoSetIcon(false);
                 handleChange({ iconUrl: undefined });
               } else {
                 handleChange({ iconUrl: url });

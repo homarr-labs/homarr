@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Controla quins contenidors Docker tenen actualitzacions d'imatges disponibles."
+    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1437,8 +1441,18 @@
     "here": "aquí",
     "iconPicker": {
       "label": "URL de la icona",
-      "header": "Escriviu un nom o objectes per filtrar icones... Homarr cercarà entre {countIcons} icones per a vosaltres.",
-      "headerLoading": "",
+      "description": "Cerca a la biblioteca, enganxa l'URL d'una imatge o puja un fitxer.",
+      "header": "Cerca {countIcons} imatges per nom",
+      "headerLoading": "Cerca imatges per nom",
+      "clear": "Esborra la imatge",
+      "uploadImage": "Puja una imatge",
+      "results": "Resultats de la cerca d'imatges",
+      "localImages": "Les teves imatges",
+      "svgIcons": "Icones SVG",
+      "otherImages": "Altres imatges",
+      "urlLoading": "Comprovant la imatge…",
+      "urlReady": "La imatge està a punt per utilitzar",
+      "urlError": "No s'ha pogut carregar aquesta imatge. Comprova l'URL i torna-ho a provar.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Mostra quants contenidors supervisats tenen actualitzacions disponibles.",
+      "title": "What's Up Docker",
+      "monitored": "Monitoritzats",
+      "updatesAvailable": "{count, plural, one {# actualització disponible} other {# actualitzacions disponibles}}",
+      "updateAvailable": "Actualització disponible",
+      "openReleaseNotes": "Obre les notes de versió",
+      "option": {
+        "showTitle": {
+          "label": "Mostra el títol"
+        },
+        "showRing": {
+          "label": "Mostra l'anell d'actualització"
+        },
+        "layout": {
+          "label": "Disposició",
+          "option": {
+            "horizontal": {
+              "label": "Horitzontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Mostra la llista d'actualitzacions de contenidors",
+          "description": "Llista cada contenidor monitoritzat que té una actualització d'imatge disponible"
         }
       }
     },

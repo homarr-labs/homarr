@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Uzrauga, kuriem no jūsu Docker konteineriem ir pieejami attēlu atjauninājumi"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumentu pārvaldības sistēma skenētu dokumentu arhivēšanai un organizēšanai"
@@ -1437,8 +1441,18 @@
     "here": "šeit",
     "iconPicker": {
       "label": "Ikonas URL",
+      "description": "Meklējiet bibliotēkā, ielīmējiet attēla URL vai augšupielādējiet failu.",
       "header": "Rakstiet nosaukumu vai objektus, lai filtrētu ikonas... Homarr pārmeklēs {countIcons} ikonas jūsu vietā.",
-      "headerLoading": "",
+      "headerLoading": "Meklēt attēlus pēc nosaukuma",
+      "clear": "Notīrīt attēlu",
+      "uploadImage": "Augšupielādēt attēlu",
+      "results": "Attēlu meklēšanas rezultāti",
+      "localImages": "Jūsu attēli",
+      "svgIcons": "SVG ikonas",
+      "otherImages": "Citi attēli",
+      "urlLoading": "Pārbauda attēlu…",
+      "urlReady": "Attēls ir gatavs lietošanai",
+      "urlError": "Šo attēlu nevarēja ielādēt. Pārbaudiet URL un mēģiniet vēlreiz.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Parāda, cik uzraudzītajiem konteineriem ir pieejami atjauninājumi.",
+      "title": "What's Up Docker",
+      "monitored": "Uzraudzītie",
+      "updatesAvailable": "{count, plural, zero {# atjauninājumu pieejami} one {# atjauninājums pieejams} other {# atjauninājumi pieejami}}",
+      "updateAvailable": "Pieejams atjauninājums",
+      "openReleaseNotes": "Atvērt laidiena piezīmes",
+      "option": {
+        "showTitle": {
+          "label": "Rādīt nosaukumu"
+        },
+        "showRing": {
+          "label": "Rādīt atjaunināšanas gredzenu"
+        },
+        "layout": {
+          "label": "Izkārtojums",
+          "option": {
+            "horizontal": {
+              "label": "Horizontāli"
+            },
+            "vertical": {
+              "label": "Vertikāli"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Rādīt konteineru atjauninājumu sarakstu",
+          "description": "Uzskaita katru uzraudzīto konteineru, kuram ir pieejams attēla atjauninājums"
         }
       }
     },

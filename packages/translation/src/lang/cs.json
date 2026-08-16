@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "Co je Docker nahoru",
+      "description": "Sledujte, které z vašich kontejnerů v Dockeru mají k dispozici aktualizace obrázků"
+    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1437,8 +1441,18 @@
     "here": "zde",
     "iconPicker": {
       "label": "URL ikony",
-      "header": "",
-      "headerLoading": "",
+      "description": "Vyhledejte knihovnu, vložte URL obrázku, nebo nahrajte soubor.",
+      "header": "Hledat {countIcons} obrázky podle jména",
+      "headerLoading": "Hledat obrázky podle jména",
+      "clear": "Vymazat obrázek",
+      "uploadImage": "Nahrát obrázek",
+      "results": "Výsledky vyhledávání obrázků",
+      "localImages": "Vaše obrázky",
+      "svgIcons": "SVG ikony",
+      "otherImages": "Ostatní obrázky",
+      "urlLoading": "Kontrola obrázku…",
+      "urlReady": "Obrázek je připraven k použití",
+      "urlError": "Tento obrázek nelze načíst. Zkontrolujte URL a zkuste to znovu.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "Co je Docker nahoru",
+      "description": "Zobrazit, kolik sledovaných kontejnerů je k dispozici aktualizace.",
+      "title": "Co je Docker nahoru",
+      "monitored": "Monitorováno",
+      "updatesAvailable": "{count, plural, one {K dispozici je # aktualizace} other {# dostupných aktualizací}}",
+      "updateAvailable": "K dispozici je aktualizace",
+      "openReleaseNotes": "Otevřít poznámky k vydání",
+      "option": {
+        "showTitle": {
+          "label": "Zobrazit název"
+        },
+        "showRing": {
+          "label": "Zobrazit vyzvánění aktualizace"
+        },
+        "layout": {
+          "label": "Rozložení",
+          "option": {
+            "horizontal": {
+              "label": "Horizontální"
+            },
+            "vertical": {
+              "label": "Vertikální"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Zobrazit seznam aktualizací kontejneru",
+          "description": "Zobrazí seznam každého monitorovaného kontejneru, který má k dispozici aktualizaci obrázku"
         }
       }
     },

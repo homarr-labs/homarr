@@ -1,3 +1,8 @@
+---
+name: datatable-migration
+description: Playbook for migrating tables from mantine-react-table (MRT) to mantine-datatable. Use when converting any table component from mantine-react-table to mantine-datatable, working on DataTable column/sort/expansion/context-menu code, or implementing responsive column visibility, column persistence, or transparent tables in widgets.
+---
+
 # Migrating Tables from mantine-react-table to mantine-datatable
 
 This document captures every pattern, fix, and decision from the downloads widget rework (PR #6430). Use it as a playbook when porting other tables.
@@ -7,10 +12,12 @@ This document captures every pattern, fix, and decision from the downloads widge
 Current `mantine-react-table` consumers that could be migrated:
 
 **Widgets (in `packages/widgets/`):**
+
 - `docker/component.tsx` — Docker container table
 - `media-server/component.tsx` — Media server sessions
 
 **Admin pages (in `apps/nextjs/src/app/[locale]/manage/`):**
+
 - `tools/docker/docker-table.tsx`
 - `tools/tasks/_components/tasks-table.tsx`
 - `tools/api/components/api-keys.tsx`
@@ -19,12 +26,12 @@ Current `mantine-react-table` consumers that could be migrated:
 - `tools/kubernetes/` — 8 Kubernetes resource tables
 
 **Modals:**
+
 - `packages/modals-collection/src/search-engines/request-media-modal.tsx`
 
 **Shared hook to remove once all migrated:**
-- `packages/ui/src/hooks/use-translated-mantine-react-table.ts`
 
----
+- `packages/ui/src/hooks/use-translated-mantine-react-table.ts`
 
 ## 1. Core Migration: mantine-react-table → mantine-datatable
 
@@ -67,6 +74,7 @@ const columns: DataTableColumn<MyRow>[] = [
 ```
 
 Key differences:
+
 - `accessorKey` → `accessor`
 - `header` → `title`
 - `size` → `width`
@@ -118,8 +126,6 @@ const sortedData = useMemo(() => {
 <DataTable records={sortedData} sortStatus={sortStatus} onSortStatusChange={setSortStatus} />
 ```
 
----
-
 ## 2. Making Tables Transparent (Widget Context)
 
 Widgets sit inside board cards that have user-controlled opacity. The table must be fully transparent so the card background shows through. mantine-datatable defaults to `var(--mantine-color-body)` which is opaque.
@@ -144,13 +150,21 @@ Create a CSS file alongside the component:
 
 /* Hover: translucent instead of opaque */
 .my-table .mantine-datatable-table tbody tr:hover {
-  background-color: color-mix(in srgb, var(--mantine-color-default-hover) 40%, transparent) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--mantine-color-default-hover) 40%,
+    transparent
+  ) !important;
 }
 
 /* Headers: frosted glass effect */
 .my-table th {
   white-space: nowrap;
-  background-color: color-mix(in srgb, var(--mantine-color-body) 60%, transparent) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--mantine-color-body) 60%,
+    transparent
+  ) !important;
   backdrop-filter: blur(8px);
 }
 
@@ -172,13 +186,15 @@ Create a CSS file alongside the component:
 
 /* Row expansion area */
 .my-table .mantine-datatable-row-expansion-cell {
-  background-color: color-mix(in srgb, var(--mantine-color-body) 40%, transparent) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--mantine-color-body) 40%,
+    transparent
+  ) !important;
 }
 ```
 
 Import it: `import "./styles.css";` and apply via `className="my-table"`.
-
----
 
 ## 3. Responsive Column Visibility
 
@@ -195,11 +211,38 @@ interface SizeConfig {
 }
 
 const SIZE_BREAKPOINTS: { maxWidth: number; config: SizeConfig }[] = [
-  { maxWidth: 300, config: { fontSize: "xs", iconSize: 12, cellPadding: 2, showSpeedColumns: false, showTimeColumn: false, showStateColumn: false } },
-  { maxWidth: 500, config: { fontSize: "xs", iconSize: 14, cellPadding: 4, showSpeedColumns: false, showTimeColumn: true, showStateColumn: false } },
+  {
+    maxWidth: 300,
+    config: {
+      fontSize: "xs",
+      iconSize: 12,
+      cellPadding: 2,
+      showSpeedColumns: false,
+      showTimeColumn: false,
+      showStateColumn: false,
+    },
+  },
+  {
+    maxWidth: 500,
+    config: {
+      fontSize: "xs",
+      iconSize: 14,
+      cellPadding: 4,
+      showSpeedColumns: false,
+      showTimeColumn: true,
+      showStateColumn: false,
+    },
+  },
 ];
 
-const DEFAULT_SIZE_CONFIG: SizeConfig = { fontSize: "sm", iconSize: 14, cellPadding: 4, showSpeedColumns: true, showTimeColumn: true, showStateColumn: true };
+const DEFAULT_SIZE_CONFIG: SizeConfig = {
+  fontSize: "sm",
+  iconSize: 14,
+  cellPadding: 4,
+  showSpeedColumns: true,
+  showTimeColumn: true,
+  showStateColumn: true,
+};
 
 function getSizeConfig(width: number): SizeConfig {
   for (const { maxWidth, config } of SIZE_BREAKPOINTS) {
@@ -215,7 +258,9 @@ const size = useMemo(() => getSizeConfig(width), [width]);
 Then use a visibility check lookup table for columns:
 
 ```typescript
-const columnVisibilityChecks: Partial<Record<string, (ctx: ColumnContext) => boolean>> = {
+const columnVisibilityChecks: Partial<
+  Record<string, (ctx: ColumnContext) => boolean>
+> = {
   upSpeed: (ctx) => ctx.hasTorrents && ctx.size.showSpeedColumns,
   downSpeed: (ctx) => ctx.size.showSpeedColumns,
   time: (ctx) => ctx.size.showTimeColumn,
@@ -229,8 +274,6 @@ function shouldIncludeColumn(accessor: string, ctx: ColumnContext): boolean {
   return true;
 }
 ```
-
----
 
 ## 4. Column Persistence (Drag/Resize → Server)
 
@@ -263,15 +306,6 @@ Even hidden options need translation keys or the translation test fails:
 "widget.mywidget.option.columnWidths.label": "Column widths"
 ```
 
-### Old-import mappings
-
-Add to `packages/old-import/src/widgets/options.ts`:
-
-```typescript
-columnOrder: () => undefined,
-columnWidths: () => undefined,
-```
-
 ### Dynamic storeKey
 
 Use a key that includes `itemId` and sorted column names. This prevents cross-widget localStorage bleeding:
@@ -285,8 +319,13 @@ const storeKey = `mytable-${itemId ?? "preview"}-${[...options.columns].toSorted
 On mount, seed `useDataTableColumns` with server-persisted values. Use a `hydrated` ref to prevent the persist effect from immediately writing defaults back:
 
 ```typescript
-const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths } =
-  useDataTableColumns<MyRow>({ key: storeKey, columns });
+const {
+  effectiveColumns,
+  columnsOrder,
+  columnsWidth,
+  setColumnsOrder,
+  setMultipleColumnWidths,
+} = useDataTableColumns<MyRow>({ key: storeKey, columns });
 
 const lastStoreKey = useRef(storeKey);
 const hydrated = useRef(false);
@@ -300,11 +339,22 @@ useEffect(() => {
   if (savedOrder.length > 0) setColumnsOrder(savedOrder);
   if (Object.keys(savedWidths).length > 0) {
     setMultipleColumnWidths(
-      Object.entries(savedWidths).map(([accessor, w]) => ({ accessor, width: w })),
+      Object.entries(savedWidths).map(([accessor, w]) => ({
+        accessor,
+        width: w,
+      })),
     );
   }
-  requestAnimationFrame(() => { hydrated.current = true; });
-}, [storeKey, savedOrder, savedWidths, setColumnsOrder, setMultipleColumnWidths]);
+  requestAnimationFrame(() => {
+    hydrated.current = true;
+  });
+}, [
+  storeKey,
+  savedOrder,
+  savedWidths,
+  setColumnsOrder,
+  setMultipleColumnWidths,
+]);
 ```
 
 ### Persist localStorage → server
@@ -317,22 +367,26 @@ const prevWidths = useRef(columnsWidth);
 
 useEffect(() => {
   if (!hydrated.current) return;
-  const orderChanged = JSON.stringify(columnsOrder) !== JSON.stringify(prevOrder.current);
-  const widthsChanged = JSON.stringify(columnsWidth) !== JSON.stringify(prevWidths.current);
+  const orderChanged =
+    JSON.stringify(columnsOrder) !== JSON.stringify(prevOrder.current);
+  const widthsChanged =
+    JSON.stringify(columnsWidth) !== JSON.stringify(prevWidths.current);
   prevOrder.current = columnsOrder;
   prevWidths.current = columnsWidth;
 
   if (!orderChanged && !widthsChanged) return;
 
-  if (orderChanged) persistOption({ columnOrder: JSON.stringify(columnsOrder) });
+  if (orderChanged)
+    persistOption({ columnOrder: JSON.stringify(columnsOrder) });
   if (widthsChanged) {
     const widthMap: Record<string, number> = {};
     for (const entry of columnsWidth) {
       const key = Object.keys(entry)[0];
       if (!key) continue;
-      const w = entry[key as keyof typeof entry];
-      if (typeof w === "number") widthMap[key] = w;
-      else if (typeof w === "string" && w.endsWith("px")) widthMap[key] = parseInt(w, 10);
+      const v = entry[key as keyof typeof entry];
+      if (typeof v === "number") widthMap[key] = v;
+      else if (typeof v === "string" && v.endsWith("px"))
+        widthMap[key] = parseInt(v, 10);
     }
     persistOption({ columnWidths: JSON.stringify(widthMap) });
   }
@@ -340,8 +394,6 @@ useEffect(() => {
 ```
 
 The `persistOption` helper calls both `setOptions` (local state) and `saveItemOptions` (server mutation).
-
----
 
 ## 5. Context Menu (Right-Click)
 
@@ -374,15 +426,41 @@ const handleContextMenu = useCallback(
 The menu component uses `Portal` for correct z-index:
 
 ```tsx
-function RowContextMenu({ state, onClose }: { state: ContextMenuState; onClose: () => void }) {
+function RowContextMenu({
+  state,
+  onClose,
+}: {
+  state: ContextMenuState;
+  onClose: () => void;
+}) {
   return (
     <Portal>
-      <Menu opened onClose={onClose} closeOnItemClick={false} position="right-start" offset={0}>
+      <Menu
+        opened
+        onClose={onClose}
+        closeOnItemClick={false}
+        position="right-start"
+        offset={0}
+      >
         <Menu.Target>
-          <Box style={{ position: "fixed", left: state.x, top: state.y, width: 0, height: 0 }} />
+          <Box
+            style={{
+              position: "fixed",
+              left: state.x,
+              top: state.y,
+              width: 0,
+              height: 0,
+            }}
+          />
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Item onClick={() => { /* action */ onClose(); }}>Action</Menu.Item>
+          <Menu.Item
+            onClick={() => {
+              /* action */ onClose();
+            }}
+          >
+            Action
+          </Menu.Item>
         </Menu.Dropdown>
       </Menu>
     </Portal>
@@ -391,8 +469,6 @@ function RowContextMenu({ state, onClose }: { state: ContextMenuState; onClose: 
 ```
 
 **Key fix:** Use `closeOnItemClick={false}` if any menu item needs a two-step confirmation (like delete → confirm). Close the menu on scroll: `onScroll={() => { if (contextMenu) closeContextMenu(); }}`.
-
----
 
 ## 6. Row Expansion
 
@@ -412,8 +488,6 @@ function RowContextMenu({ state, onClose }: { state: ContextMenuState; onClose: 
 ```
 
 **Critical:** Do NOT set `onRowClick` when using `rowExpansion` with `trigger: "click"`. They conflict and the expansion won't work.
-
----
 
 ## 7. Common Pitfalls & Fixes
 
@@ -475,8 +549,11 @@ Always wrap in try/catch:
 ```typescript
 function parseJsonOption<T>(value: string | undefined, fallback: T): T {
   if (!value) return fallback;
-  try { return JSON.parse(value) as T; }
-  catch { return fallback; }
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return fallback;
+  }
 }
 ```
 
@@ -494,19 +571,18 @@ If the widget has configurable default sort, sync it:
 
 ```typescript
 useEffect(() => {
-  setSortStatus({ columnAccessor: options.defaultSort, direction: defaultSortDirection });
+  setSortStatus({
+    columnAccessor: options.defaultSort,
+    direction: defaultSortDirection,
+  });
 }, [options.defaultSort, defaultSortDirection]);
 ```
-
----
 
 ## 8. Accessibility
 
 - All `ActionIcon` components need `aria-label`
 - Filter toggles (client badges, status badges) need `aria-pressed={isActive}`
 - `textSelectionDisabled` on DataTable prevents accidental text selection during drag/resize
-
----
 
 ## 9. Error Handling
 
@@ -518,11 +594,13 @@ useEffect(() => {
 ```typescript
 const mutationOptions = {
   onSettled: () => void utils.myQuery.invalidate(),
-  onError: () => showErrorNotification({ title: t("errors.actionFailed"), message: t("errors.actionFailedMessage") }),
+  onError: () =>
+    showErrorNotification({
+      title: t("errors.actionFailed"),
+      message: t("errors.actionFailedMessage"),
+    }),
 };
 ```
-
----
 
 ## 10. i18n
 
@@ -533,8 +611,6 @@ const mutationOptions = {
 - Actions: `t("actions.{action}")`
 - Errors: `t("errors.{errorKey}")`
 - Hidden options still need `.label` translation keys
-
----
 
 ## 11. Edit Mode
 
@@ -549,8 +625,6 @@ if (isEditMode) rowContextMenuHandler = undefined;
 
 <DataTable style={{ pointerEvents: tablePointerEvents }} />
 ```
-
----
 
 ## 12. DataTable Props Reference (Commonly Used)
 
@@ -590,8 +664,6 @@ if (isEditMode) rowContextMenuHandler = undefined;
 />
 ```
 
----
-
 ## 13. Layout Stability
 
 - Don't use `table-layout: fixed` — it fights mantine-datatable's resize logic
@@ -599,8 +671,6 @@ if (isEditMode) rowContextMenuHandler = undefined;
 - Use `ellipsis: true` on the name column — it handles `text-overflow: ellipsis` internally
 - Names should truncate at the cell boundary, not a character count, so the layout is stable regardless of content length
 - `flexShrink: 0` on badges/icons prevents them from being squeezed by long names
-
----
 
 ## 14. Checklist for Each Migration
 
@@ -610,13 +680,12 @@ if (isEditMode) rowContextMenuHandler = undefined;
 4. Add CSS file for transparent backgrounds (if widget context)
 5. Add responsive column visibility (if widget context)
 6. Add hidden options + hydration logic (if column persistence needed)
-7. Add old-import mappings for new options
-8. Add translation keys (including hidden option labels)
-9. Add context menu if row actions exist
-10. Add row expansion if detail view exists
-11. Add error handling on all mutations
-12. Add accessibility attributes
-13. Test at multiple widget widths
-14. Update docs in `apps/docs/docs/widgets/` if applicable
-15. Run `pnpm turbo typecheck` — catches old-import mismatches
-16. Run translation spec — catches missing keys
+7. Add translation keys (including hidden option labels)
+8. Add context menu if row actions exist
+9. Add row expansion if detail view exists
+10. Add error handling on all mutations
+11. Add accessibility attributes
+12. Test at multiple widget widths
+13. Update docs in `apps/docs/docs/widgets/` if applicable
+14. Run `pnpm turbo typecheck`
+15. Run translation spec — catches missing keys

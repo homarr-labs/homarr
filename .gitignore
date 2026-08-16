@@ -71,7 +71,8 @@ apps/nextjs/public/images/background.png
 
 # personal agent config
 .opencode
-.agents/
+.agents/*
+!.agents/skills/
 skills-lock.json
 
 # docusaurus

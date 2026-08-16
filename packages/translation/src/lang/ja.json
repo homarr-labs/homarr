@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "どのDockerコンテナがイメージアップデートを利用できるかを監視します"
+    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1437,8 +1441,18 @@
     "here": "こちら",
     "iconPicker": {
       "label": "アイコン URL",
+      "description": "ライブラリを検索し、画像の URL を貼り付けるか、ファイルをアップロードします。",
       "header": "アイコンをフィルタするために、名前またはオブジェクトを入力してください... Homarrは {countIcons} アイコンを検索します。",
-      "headerLoading": "",
+      "headerLoading": "名前で画像を検索",
+      "clear": "画像をクリア",
+      "uploadImage": "画像をアップロード",
+      "results": "画像検索結果",
+      "localImages": "あなたの画像",
+      "svgIcons": "SVGアイコン",
+      "otherImages": "その他の画像",
+      "urlLoading": "",
+      "urlReady": "画像を使用する準備ができました",
+      "urlError": "この画像を読み込めませんでした。URLを確認して再度お試し下さい。",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "利用可能な更新があるコンテナの数を表示します。",
+      "title": "What's Up Docker",
+      "monitored": "監視中",
+      "updatesAvailable": "{count, plural, one {# アップデートが} other {# アップデートが}}",
+      "updateAvailable": "アップデートがあります",
+      "openReleaseNotes": "リリースノートを開く",
+      "option": {
+        "showTitle": {
+          "label": "タイトルを表示"
+        },
+        "showRing": {
+          "label": "更新の着信音を表示"
+        },
+        "layout": {
+          "label": "レイアウト",
+          "option": {
+            "horizontal": {
+              "label": "水平方向"
+            },
+            "vertical": {
+              "label": "垂直方向"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "コンテナ更新リストを表示",
+          "description": "利用可能な画像の更新がある各監視対象のコンテナを一覧表示します"
         }
       }
     },

@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "Vad är Upp Docker",
+      "description": "Övervaka vilken av dina Docker behållare har bilduppdateringar tillgängliga"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumenthanteringssystem för arkivering och organisering av skannade dokument"
@@ -1437,8 +1441,18 @@
     "here": "",
     "iconPicker": {
       "label": "",
-      "header": "",
-      "headerLoading": "",
+      "description": "Sök i biblioteket, klistra in en bild-URL eller ladda upp en fil.",
+      "header": "Sök {countIcons} bilder efter namn",
+      "headerLoading": "Sök bilder med namn",
+      "clear": "Rensa bild",
+      "uploadImage": "Ladda upp bild",
+      "results": "Sökresultat för bild",
+      "localImages": "Dina bilder",
+      "svgIcons": "SVG ikoner",
+      "otherImages": "Andra bilder",
+      "urlLoading": "Kontrollerar bild…",
+      "urlReady": "Bilden är klar att användas",
+      "urlError": "Bilden kunde inte laddas. Kontrollera URL:en och försök igen.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "Vad är Upp Docker",
+      "description": "Visa hur många bevakade behållare som har uppdateringar tillgängliga.",
+      "title": "Vad är Upp Docker",
+      "monitored": "Övervakad",
+      "updatesAvailable": "{count, plural, one {# uppdatering tillgänglig} other {# uppdateringar tillgängliga}}",
+      "updateAvailable": "Uppdatering tillgänglig",
+      "openReleaseNotes": "Öppna versionsfakta",
+      "option": {
+        "showTitle": {
+          "label": "Visa titel"
+        },
+        "showRing": {
+          "label": "Visa uppdateringsring"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Horisontell"
+            },
+            "vertical": {
+              "label": "Vertikal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Visa uppdateringslista för behållare",
+          "description": "Listar varje övervakad behållare som har en bild uppdatering tillgänglig"
         }
       }
     },

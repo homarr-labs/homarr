@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "Qué hay de nuevo Docker",
+      "description": "Controlar cuál de sus contenedores Docker tiene actualizaciones de imagen disponibles"
+    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1437,8 +1441,18 @@
     "here": "aquí",
     "iconPicker": {
       "label": "URL del icono",
+      "description": "Busca en la biblioteca, pega una URL de imagen o sube un archivo.",
       "header": "Escribe nombre u objetos para filtrar iconos... Homarr buscará a través de iconos {countIcons} por ti.",
-      "headerLoading": "",
+      "headerLoading": "Buscar imágenes por nombre",
+      "clear": "Borrar imagen",
+      "uploadImage": "Subir imagen",
+      "results": "Resultados de búsqueda de imágenes",
+      "localImages": "Tus imágenes",
+      "svgIcons": "Iconos SVG",
+      "otherImages": "Otras imágenes",
+      "urlLoading": "Comprobando imagen…",
+      "urlReady": "La imagen está lista para usar",
+      "urlError": "Esta imagen no se pudo cargar. Compruebe la URL e inténtelo de nuevo.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "Qué hay de nuevo Docker",
+      "description": "Mostrar cuántos contenedores vistos tienen actualizaciones disponibles.",
+      "title": "Qué hay de nuevo Docker",
+      "monitored": "Monitoreado",
+      "updatesAvailable": "{count, plural, one {# actualización disponible} other {# actualizaciones disponibles}}",
+      "updateAvailable": "Actualización disponible",
+      "openReleaseNotes": "Notas de la versión abierta",
+      "option": {
+        "showTitle": {
+          "label": "Mostrar título"
+        },
+        "showRing": {
+          "label": "Mostrar anillo de actualización"
+        },
+        "layout": {
+          "label": "Diseño",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Mostrar lista de actualización del contenedor",
+          "description": "Lista cada contenedor supervisado que tiene una actualización de imagen disponible"
         }
       }
     },

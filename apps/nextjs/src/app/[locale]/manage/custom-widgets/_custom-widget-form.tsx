@@ -697,7 +697,11 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
             <Stack gap="sm">
               <TextInput label={t("field.name")} required {...form.getInputProps("name")} />
               <Textarea label={t("field.description")} {...form.getInputProps("description")} />
-              <IconPicker withAsterisk={false} {...form.getInputProps("iconUrl")} />
+              <IconPicker
+                withAsterisk={false}
+                suggestedSearch={mode === "create" ? form.values.name : undefined}
+                {...form.getInputProps("iconUrl")}
+              />
             </Stack>
           </Fieldset>
 
