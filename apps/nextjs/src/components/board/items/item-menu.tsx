@@ -105,7 +105,7 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
           pos="absolute"
           top={12}
           right={8}
-          style={{ zIndex: 10 }}
+          style={{ zIndex: 30 }}
           data-board-widget-settings
           aria-label={tItem("menu.label.settingsFor", { name: label })}
         >
