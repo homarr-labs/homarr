@@ -1,0 +1,19 @@
+packages/api/src/router/group.ts
+  s_cf26c9caabb8d3::t_f110ba450cfebb 315-316
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "447968d2b44eb3d99b393366dabe07de73e32569",
+  "prompts": {},
+  "sessions": {
+    "s_cf26c9caabb8d3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff55fc8b9ffeav6SDTPcgtDQmg",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
