@@ -107,7 +107,7 @@ jobs:
     name: Container and E2E
     needs: [fast-gate, preview-amd64]
     if: |
-      !cancelled() &&
+      !cancelled() && needs.fast-gate.result == 'success' &&
       (
         github.event_name == 'merge_group' ||
         (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
