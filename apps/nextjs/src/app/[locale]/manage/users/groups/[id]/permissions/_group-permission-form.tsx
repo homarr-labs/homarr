@@ -132,6 +132,10 @@ export const MatrixImpliedHint = ({ category, permissionLabels }: MatrixImpliedH
   const form = useFormContext();
   const tPermissions = useScopedI18n("group.permission");
 
+  if (category === "admin") {
+    return null;
+  }
+
   const level = getMatrixLevel(form.getValues(), category);
   if (level === 0) {
     return null;
