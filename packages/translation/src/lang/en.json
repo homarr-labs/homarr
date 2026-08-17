@@ -843,7 +843,7 @@
         "migrationDescription": "This v1 custom widget is preserved but cannot run until it is migrated to Custom JSX v2.",
         "migrationInstructions": "Open Actions to copy or export the original v1 definition for manual recreation. You can also use the migration prompt with an LLM. Existing board placements keep working after migration.",
         "missingCredentials": "{count, plural, one {Credential missing} other {# credentials missing}}",
-        "missingCredentialsDescription": "{count, plural, one {This widget still needs one credential.} other {This widget still needs # credentials.}} Edit it to configure the encrypted values."
+        "missingCredentialsDescription": "{count, plural, one {This widget still needs one credential.} other {This widget still needs # credentials.}} Select this badge to configure the URL and encrypted values."
       },
       "create": {
         "title": "Create Custom Widget",
@@ -876,6 +876,7 @@
       "downloadSkill": "View Custom Widget Skill",
       "publishWorkshop": "Publish to Workshop",
       "migrate": "Migrate Custom Widget",
+      "configureSources": "Configure sources",
       "copyLegacyDefinition": "Copy original widget content",
       "exportLegacyDefinition": "Export original widget content",
       "copyMigrationPrompt": "Copy LLM migration prompt",
@@ -888,6 +889,13 @@
       "addItem": "Add Item",
       "removeItem": "Remove item",
       "addBar": "Add Bar"
+    },
+    "sourceSetupDialog": {
+      "title": "Configure widget sources",
+      "description": "Review where this widget connects and add or replace its encrypted credentials.",
+      "credentialsRequired": "Requests will fail until the required credentials are added.",
+      "cancel": "Cancel",
+      "save": "Save configuration"
     },
     "field": {
       "name": "Name",
@@ -1240,6 +1248,8 @@
       "legacyDefinitionCopyError": "Failed to copy the original widget content.",
       "migrationPromptCopied": "A redacted migration prompt was copied. Paste it into an LLM, copy its single JSON response, then choose Paste migrated widget here.",
       "migrationPromptCopyError": "Failed to copy the migration prompt.",
+      "sourcesConfigured": "Widget sources and credentials saved.",
+      "sourceConfigurationError": "Failed to configure widget sources.",
       "aiPromptCopied": "AI prompt copied to clipboard",
       "aiPromptCopiedWithCount": "AI prompt copied to clipboard ({count, number} characters).",
       "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
