@@ -173,33 +173,6 @@ jobs:
           DOCKER_BUILDKIT=1 docker build --platform linux/amd64 \
             --tag homarr-ci --tag homarr-e2e "${secret_args[@]}" .
 
-      - name: Cache Playwright browsers
-        if: "!env.ACT"
-        id: playwright-cache
-        uses: actions/cache@v6
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Install Playwright Chromium
-        if: steps.playwright-cache.outputs.cache-hit != 'true' || env.ACT
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Install Playwright system deps
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm exec playwright install-deps chromium
-
-      - name: Run E2E tests
-        run: pnpm test:e2e
-
-      - name: Upload E2E artifacts
-        if: failure() && !env.ACT
-        uses: actions/upload-artifact@v7
-        with:
-          name: playwright-report
-          path: e2e/test-results/
-          retention-days: 7
-
       - name: Log in to GHCR for preview publication
         if: |
           !env.ACT &&
@@ -239,6 +212,36 @@ jobs:
       - name: Show Act publication result
         if: env.ACT
         run: echo "Act validated the publication path; external GHCR writes are disabled locally."
+
+      - name: Cache Playwright browsers
+        if: "!env.ACT"
+        id: playwright-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Playwright Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true' || env.ACT
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Install Playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps chromium
+
+      - name: Run E2E tests
+        env:
+          NODE_ENV: development
+          CI: "true"
+        run: pnpm exec vitest e2e --retry 1 --maxWorkers 4
+
+      - name: Upload E2E artifacts
+        if: failure() && !env.ACT
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: e2e/test-results/
+          retention-days: 7
 
   preview-arm64:
     name: Build arm64 preview image
@@ -296,6 +299,7 @@ jobs:
     name: Publish multi-platform preview image
     needs: [container, preview-arm64]
     if: |
+      always() &&
       (
         (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
         (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
