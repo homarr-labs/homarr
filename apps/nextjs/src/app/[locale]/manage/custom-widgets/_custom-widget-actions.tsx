@@ -26,6 +26,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
+import { downloadJson } from "~/components/custom-widgets/download";
 
 const iconProps = { size: 16, stroke: 1.5 };
 
@@ -47,7 +48,6 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const [migrationOpened, migrationControls] = useDisclosure(false);
   const migrationFileInputRef = useRef<HTMLInputElement>(null);
   const [migratedWidget, setMigratedWidget] = useState<HomarrCustomWidgetV2 | null>(null);
-
   const copyMigrationPrompt = async () => {
     try {
       const result = await utils.customWidget.legacyMigrationPrompt.fetch({ id: widget.id });
@@ -83,27 +83,22 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const queueMigratedWidget = (text: string) => {
     const result = parseCustomWidgetClipboardDetailed(text);
     if (!result.success) {
-      showErrorNotification({
-        title: t("action.migrate"),
-        message: formatCustomWidgetImportIssues(result.issues),
-      });
+      showErrorNotification({ title: t("action.migrate"), message: formatCustomWidgetImportIssues(result.issues) });
       return;
     }
     setMigratedWidget(result.widget);
     migrationControls.open();
   };
+  const notifyMigrationError = () =>
+    showErrorNotification({ title: t("action.migrate"), message: t("notification.migrationError") });
 
   const pasteMigratedWidget = async () => {
     try {
       queueMigratedWidget(await navigator.clipboard.readText());
     } catch {
-      showErrorNotification({
-        title: t("action.migrate"),
-        message: t("notification.migrationError"),
-      });
+      notifyMigrationError();
     }
   };
-
   const handleMigrationFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -112,15 +107,10 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
       try {
         queueMigratedWidget(loadEvent.target?.result as string);
       } catch {
-        showErrorNotification({
-          title: t("action.migrate"),
-          message: t("notification.migrationError"),
-        });
+        notifyMigrationError();
       }
     });
-    reader.addEventListener("error", () => {
-      showErrorNotification({ title: t("action.migrate"), message: t("notification.migrationError") });
-    });
+    reader.addEventListener("error", notifyMigrationError);
     reader.readAsText(file);
     event.target.value = "";
   };
@@ -128,13 +118,7 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
   const handleExport = async () => {
     try {
       const data = await utils.customWidget.export.fetch({ id: widget.id });
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${widget.name}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
+      downloadJson(data, `${widget.name}.json`);
     } catch {
       showErrorNotification({ title: t("action.export"), message: t("notification.exportError") });
     }
@@ -193,22 +177,24 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
       title: t("action.delete"),
       children: t("action.deleteConfirm", { name: widget.name }),
       onConfirm: () => {
-        const callbacks = {
-          onSuccess: () => {
-            showSuccessNotification({
-              title: t("action.delete"),
-              message: t("notification.deleted", { name: widget.name }),
-            });
-            void utils.customWidget.list.invalidate();
-            void utils.customWidget.available.invalidate();
-            void utils.widget.customApi.getData.invalidate();
-            void revalidatePathActionAsync("/manage/custom-widgets");
+        deleteMutation.mutate(
+          { id: widget.id },
+          {
+            onSuccess: () => {
+              showSuccessNotification({
+                title: t("action.delete"),
+                message: t("notification.deleted", { name: widget.name }),
+              });
+              void utils.customWidget.list.invalidate();
+              void utils.customWidget.available.invalidate();
+              void utils.widget.customApi.getData.invalidate();
+              void revalidatePathActionAsync("/manage/custom-widgets");
+            },
+            onError: () => {
+              showErrorNotification({ title: t("action.delete"), message: t("notification.deleteError") });
+            },
           },
-          onError: () => {
-            showErrorNotification({ title: t("action.delete"), message: t("notification.deleteError") });
-          },
-        };
-        deleteMutation.mutate({ id: widget.id }, callbacks);
+        );
       },
     });
   };
@@ -312,13 +298,3 @@ export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
     </>
   );
 };
-
-function downloadJson(data: unknown, filename: string) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = filename;
-  anchor.click();
-  URL.revokeObjectURL(url);
-}

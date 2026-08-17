@@ -1,4 +1,4 @@
-import { Image, Marquee, SimpleGrid, ThemeIcon } from "@mantine/core";
+import { Image, Marquee, SimpleGrid } from "@mantine/core";
 
 import { splitToNChunks } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
