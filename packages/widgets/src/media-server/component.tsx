@@ -304,16 +304,16 @@ export default function MediaServerWidget({
                 >
                   {columnVisibility.user && (
                     <Table.Td>
-                      <Group gap="xs" wrap="nowrap">
-                        <Avatar size={28} src={session.user?.profilePictureUrl} />
-                        <Stack gap={0} className={classes.cellContent}>
-                          <Text size="xs" truncate>
+                      <Group gap="xs" wrap="nowrap" style={{ minWidth: 0 }}>
+                        <Avatar size={28} src={session.user?.profilePictureUrl} style={{ flexShrink: 0 }} />
+                        <div className={classes.userIdentity}>
+                          <Text component="div" size="xs" truncate className={classes.userIdentityLine}>
                             {session.user?.username ?? t("items.unknownUser")}
                           </Text>
-                          <Text size="10px" c="dimmed" truncate>
+                          <Text component="div" size="10px" c="dimmed" truncate className={classes.userIdentityLine}>
                             {session.sessionName}
                           </Text>
-                        </Stack>
+                        </div>
                       </Group>
                     </Table.Td>
                   )}
