@@ -1,0 +1,23 @@
+packages/widgets/src/modals/widget-edit-modal.tsx
+  s_f6216de8f07e30::t_ce32fd858dd488 300-320
+apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx
+  s_f6216de8f07e30::t_9dcb7edc5214b9 82
+apps/nextjs/src/components/integration/embedded-integration-edit-modal.tsx
+  s_f6216de8f07e30::t_28d05a279a0c1d 85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c6d6f43c85e3989a6ce72ced93b48ec6e9c227f7",
+  "prompts": {},
+  "sessions": {
+    "s_f6216de8f07e30": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff0c4a8b9ffesHDKZUOyv7vcQn",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
