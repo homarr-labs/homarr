@@ -1,0 +1,19 @@
+packages/definitions/src/test/integration.spec.ts
+  s_f6216de8f07e30::t_d3a9940eb03963 1,8-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "bd9e0f7565494ebc68741d6ae56fa692a2b4086c",
+  "prompts": {},
+  "sessions": {
+    "s_f6216de8f07e30": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff0c4a8b9ffesHDKZUOyv7vcQn",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
