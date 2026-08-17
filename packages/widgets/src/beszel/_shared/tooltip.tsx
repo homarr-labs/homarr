@@ -11,7 +11,7 @@ const styles: Record<string, CSSProperties> = {
     border: "1px solid var(--mantine-color-dark-4)",
     borderRadius: 6,
     padding: "6px 10px",
-    fontSize: 12,
+    fontSize: "var(--mantine-font-size-xs)",
     lineHeight: 1.5,
     pointerEvents: "none",
     overflowX: "hidden",

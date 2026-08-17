@@ -59,7 +59,7 @@ interface SizeConfig {
 
 const defaultSizeConfig: SizeConfig = {
   iconSize: 10,
-  fontSize: "10px",
+  fontSize: "xs",
   progressSize: "xs",
   labelMiw: 40,
   valueMiw: 30,
@@ -418,7 +418,7 @@ const SystemCard = ({
         {visibleMetrics.map((m) => m.render(system, t, size))}
       </Stack>
       {hiddenMetricCount > 0 && (
-        <Text size="10px" c="dimmed" ta="right">
+        <Text size="xs" c="dimmed" ta="right">
           +{hiddenMetricCount}
         </Text>
       )}
@@ -428,7 +428,7 @@ const SystemCard = ({
 
 const SystemMetadata = ({ label, value }: { label: string; value: string }) => (
   <Box style={{ minWidth: 0 }}>
-    <Text size="10px" c="dimmed">
+    <Text size="xs" c="dimmed">
       {label}
     </Text>
     <Text size="xs" fw={500} truncate title={value}>
