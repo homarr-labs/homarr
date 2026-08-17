@@ -55,6 +55,16 @@ function formatBitrate(bitrateKbps: number | null | undefined): string | null {
   return bitrateKbps >= 1000 ? `${(bitrateKbps / 1000).toFixed(1)} Mbps` : `${Math.round(bitrateKbps)} kbps`;
 }
 
+export function getSeasonEpisodeParams(
+  seasonNumber: number | null | undefined,
+  episodeNumber: number | null | undefined,
+): { season: string; episode: string } | null {
+  if (seasonNumber === null || seasonNumber === undefined || episodeNumber === null || episodeNumber === undefined) {
+    return null;
+  }
+  return { season: String(seasonNumber).padStart(2, "0"), episode: String(episodeNumber).padStart(2, "0") };
+}
+
 export default function MediaServerWidget({ options, integrationIds }: WidgetComponentProps<"mediaServer">) {
   const { data: currentStreams = [] } = clientApi.widget.mediaServer.getCurrentStreams.useQuery({
     integrationIds,
@@ -107,12 +117,11 @@ export default function MediaServerWidget({ options, integrationIds }: WidgetCom
               : null;
           const remainingMinutes =
             positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
-          const seasonNumber = currentlyPlaying.seasonName?.match(/\d+/)?.[0];
-          const episodeNumber = currentlyPlaying.episodeCount;
-          const seasonEpisodeLabel =
-            seasonNumber !== undefined && episodeNumber !== undefined && episodeNumber !== null
-              ? `S${seasonNumber.padStart(2, "0")} E${String(episodeNumber).padStart(2, "0")}`
-              : null;
+          const seasonEpisodeParams = getSeasonEpisodeParams(
+            currentlyPlaying.seasonNumber,
+            currentlyPlaying.episodeNumber,
+          );
+          const seasonEpisodeLabel = seasonEpisodeParams ? t("items.seasonEpisode", seasonEpisodeParams) : null;
 
           return (
             <Stack gap={4} style={{ minWidth: 0 }}>
