@@ -1,5 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Avatar, Badge, Box, Button, Center, Divider, Group, Image, Select, Stack, Text, Tooltip } from "@mantine/core";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  Center,
+  Divider,
+  Flex,
+  Group,
+  Image,
+  Select,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconApi } from "@tabler/icons-react";
 
@@ -31,6 +45,7 @@ import { WorkshopInstallButton } from "~/components/workshop/workshop-install-bu
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { useSetupAnalytics } from "~/components/create/setup-analytics";
 import type { EmptySection } from "~/app/[locale]/boards/_types";
+import { WidgetPreviewPanel } from "./widget-preview-panel";
 import { useItemActions } from "./item-actions";
 import type { WidgetConnectionStatus } from "./item-select-data";
 import {
@@ -96,6 +111,7 @@ const ItemSelectModalContent = ({
   );
   const [targetSectionId, setTargetSectionId] = useState<string | null>(placementOptions[0]?.value ?? null);
   const [loadingSelection, setLoadingSelection] = useState<string | null>(null);
+  const [previewKind, setPreviewKind] = useState<WidgetKind | null>(null);
   const selectionLock = useRef(false);
   const { createItem, removeItem } = useItemActions();
 
@@ -114,6 +130,15 @@ const ItemSelectModalContent = ({
     () => new Set((integrationData ?? []).filter(({ permissions }) => permissions.hasUseAccess).map((i) => i.kind)),
     [integrationData],
   );
+
+  const previewIntegrationIds = useMemo(() => {
+    if (!previewKind) return [];
+    const supported = (widgetIntegrationSupport[previewKind] ?? []).filter((integration) => integration !== "mock");
+    return (integrationData ?? [])
+      .filter(({ permissions }) => permissions.hasUseAccess)
+      .filter(({ kind }) => (supported as readonly string[]).includes(kind))
+      .map(({ id }) => id);
+  }, [integrationData, previewKind]);
 
   const items = useMemo(
     () =>
@@ -364,100 +389,115 @@ const ItemSelectModalContent = ({
   };
 
   return (
-    <SelectGridLayout
-      search={search}
-      onSearchChange={setSearch}
-      placeholder={`${t("item.create.search")}...`}
-      ariaLabel={t("item.create.search")}
-      onSearchKeyDown={(event) => {
-        if (event.key === "Enter" && loadingSelection === null && filteredItems.length === 1) {
-          const [item] = filteredItems;
-          if (item) void handleAdd(item.kind);
-        }
-      }}
-    >
-      {placementOptions.length > 1 && (
-        <Box style={{ gridColumn: "1 / -1" }}>
-          <Select
-            label={t("item.create.destination.label")}
-            description={t("item.create.destination.description")}
-            data={placementOptions}
-            value={targetSectionId}
-            onChange={setTargetSectionId}
-            allowDeselect={false}
-          />
-        </Box>
-      )}
-      {filteredItems.map((item) => (
-        <WidgetItem
-          key={item.kind}
-          item={item}
-          onSelect={() => void handleAdd(item.kind)}
-          onIntent={() => {
-            void loadWidgetDefinition(item.kind).catch(() => undefined);
-            preloadWidgetEditModal();
+    <Flex gap="md" align="stretch">
+      <Box style={{ flex: "1 1 0%", minWidth: 0 }}>
+        <SelectGridLayout
+          search={search}
+          onSearchChange={setSearch}
+          placeholder={`${t("item.create.search")}...`}
+          ariaLabel={t("item.create.search")}
+          onSearchKeyDown={(event) => {
+            if (event.key === "Enter" && loadingSelection === null && filteredItems.length === 1) {
+              const [item] = filteredItems;
+              if (item) void handleAdd(item.kind);
+            }
           }}
-          disabled={loadingSelection !== null}
-          loading={loadingSelection === item.kind}
-          connectionStatus={getWidgetConnectionStatus({
-            supportedIntegrations: item.supportedIntegrations,
-            availableKinds,
-            connectionOptional: widgetKindsWithOptionalIntegrations.has(item.kind),
-          })}
-        />
-      ))}
-
-      {isAdmin && (
-        <>
-          <Divider
-            label={t("customWidget.page.list.title")}
-            labelPosition="center"
-            my="sm"
-            style={{ gridColumn: "1 / -1" }}
-          />
-          {filteredCustomWidgets.map((def) => (
-            <CatalogItem
-              key={def.id}
-              height={selectGridCardHeight}
-              label={def.name}
-              status={t("item.create.connectionStatus.noConnectionRequired")}
+        >
+          {placementOptions.length > 1 && (
+            <Box style={{ gridColumn: "1 / -1" }}>
+              <Select
+                label={t("item.create.destination.label")}
+                description={t("item.create.destination.description")}
+                data={placementOptions}
+                value={targetSectionId}
+                onChange={setTargetSectionId}
+                allowDeselect={false}
+              />
+            </Box>
+          )}
+          {filteredItems.map((item) => (
+            <WidgetItem
+              key={item.kind}
+              item={item}
+              onSelect={() => void handleAdd(item.kind)}
+              onFocus={() => {
+                void loadWidgetDefinition(item.kind).catch(() => undefined);
+                preloadWidgetEditModal();
+                setPreviewKind(item.kind);
+              }}
+              onPointerEnter={() => {
+                void loadWidgetDefinition(item.kind).catch(() => undefined);
+                preloadWidgetEditModal();
+                setPreviewKind(item.kind);
+              }}
               disabled={loadingSelection !== null}
-              busy={loadingSelection === `custom:${def.id}`}
-              onSelect={() => void handleAddCustomWidget(def)}
-              onFocus={() => void loadWidgetDefinition("customApi").catch(() => undefined)}
-              onPointerEnter={() => void loadWidgetDefinition("customApi").catch(() => undefined)}
-            >
-              <Stack h="100%" gap="xs">
-                <Group gap="sm" wrap="nowrap" align="flex-start">
-                  {def.iconUrl ? (
-                    <Image src={def.iconUrl} w={22} h={22} fit="contain" style={{ flexShrink: 0, marginTop: 2 }} />
-                  ) : (
-                    <IconApi size={22} style={{ flexShrink: 0, marginTop: 2 }} />
-                  )}
-                  <Text lh={1.2} style={{ whiteSpace: "normal" }} fw={500} size="sm" lineClamp={2}>
-                    {def.name}
-                  </Text>
-                </Group>
-                <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
-                  {def.description ?? ""}
-                </Text>
-                <ConnectionStatusBadge status="noConnectionRequired" />
-              </Stack>
-            </CatalogItem>
+              loading={loadingSelection === item.kind}
+              connectionStatus={getWidgetConnectionStatus({
+                supportedIntegrations: item.supportedIntegrations,
+                availableKinds,
+                connectionOptional: widgetKindsWithOptionalIntegrations.has(item.kind),
+              })}
+            />
           ))}
 
-          <Box style={{ gridColumn: "1 / -1" }}>
-            <WorkshopInstallButton fullWidth>{t("workshop.installDialog")}</WorkshopInstallButton>
-          </Box>
-        </>
-      )}
+          {isAdmin && (
+            <>
+              <Divider
+                label={t("customWidget.page.list.title")}
+                labelPosition="center"
+                my="sm"
+                style={{ gridColumn: "1 / -1" }}
+              />
+              {filteredCustomWidgets.map((def) => (
+                <CatalogItem
+                  key={def.id}
+                  height={selectGridCardHeight}
+                  label={def.name}
+                  status={t("item.create.connectionStatus.noConnectionRequired")}
+                  disabled={loadingSelection !== null}
+                  busy={loadingSelection === `custom:${def.id}`}
+                  onSelect={() => void handleAddCustomWidget(def)}
+                  onFocus={() => void loadWidgetDefinition("customApi").catch(() => undefined)}
+                  onPointerEnter={() => void loadWidgetDefinition("customApi").catch(() => undefined)}
+                >
+                  <Stack h="100%" gap="xs">
+                    <Group gap="sm" wrap="nowrap" align="flex-start">
+                      {def.iconUrl ? (
+                        <Image src={def.iconUrl} w={22} h={22} fit="contain" style={{ flexShrink: 0, marginTop: 2 }} />
+                      ) : (
+                        <IconApi size={22} style={{ flexShrink: 0, marginTop: 2 }} />
+                      )}
+                      <Text lh={1.2} style={{ whiteSpace: "normal" }} fw={500} size="sm" lineClamp={2}>
+                        {def.name}
+                      </Text>
+                    </Group>
+                    <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" c="dimmed" lineClamp={1}>
+                      {def.description ?? ""}
+                    </Text>
+                    <ConnectionStatusBadge status="noConnectionRequired" />
+                  </Stack>
+                </CatalogItem>
+              ))}
 
-      {filteredItems.length === 0 && (!isAdmin || filteredCustomWidgets.length === 0) && (
-        <Center p="xl">
-          <Text c="dimmed">{t("common.noResults")}</Text>
-        </Center>
+              <Box style={{ gridColumn: "1 / -1" }}>
+                <WorkshopInstallButton fullWidth>{t("workshop.installDialog")}</WorkshopInstallButton>
+              </Box>
+            </>
+          )}
+
+          {filteredItems.length === 0 && (!isAdmin || filteredCustomWidgets.length === 0) && (
+            <Center p="xl">
+              <Text c="dimmed">{t("common.noResults")}</Text>
+            </Center>
+          )}
+        </SelectGridLayout>
+      </Box>
+      {previewKind && (
+        <Box w={320} style={{ flexShrink: 0 }}>
+          <WidgetPreviewPanel kind={previewKind} integrationIds={previewIntegrationIds} />
+        </Box>
       )}
-    </SelectGridLayout>
+    </Flex>
   );
 };
 const ItemSelectModalFrame = ({
@@ -509,7 +549,8 @@ export const ItemSelectModal = createModal<{
 const WidgetItem = ({
   item,
   onSelect,
-  onIntent,
+  onFocus,
+  onPointerEnter,
   disabled,
   loading,
   connectionStatus,
@@ -522,7 +563,8 @@ const WidgetItem = ({
     icon: TablerIcon;
   };
   onSelect: () => void;
-  onIntent: () => void;
+  onFocus: () => void;
+  onPointerEnter: () => void;
   disabled: boolean;
   loading: boolean;
   connectionStatus: WidgetConnectionStatus;
@@ -535,8 +577,8 @@ const WidgetItem = ({
       height={selectGridCardHeight}
       label={item.name}
       status={statusLabel}
-      onFocus={onIntent}
-      onPointerEnter={onIntent}
+      onFocus={onFocus}
+      onPointerEnter={onPointerEnter}
       onSelect={onSelect}
       disabled={disabled}
       busy={loading}

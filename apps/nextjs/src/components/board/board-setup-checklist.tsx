@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionIcon, Button, Group, Paper, Progress, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
+import { ActionIcon, Affix, Button, Group, Paper, Progress, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { IconCheck, IconChevronDown, IconChecklist } from "@tabler/icons-react";
 
@@ -10,6 +10,7 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { useSetupAnalytics } from "~/components/create/setup-analytics";
+import { appShellHeaderHeight } from "~/components/layout/constants";
 import { getBoardSetupProgress } from "./board-setup-progress";
 import { useBoardAddActions } from "./use-board-add-actions";
 import classes from "./board-setup-checklist.module.css";
@@ -34,7 +35,7 @@ export const BoardSetupChecklist = () => {
 
   if (collapsed) {
     return (
-      <div className={classes.root}>
+      <Affix position={{ top: appShellHeaderHeight + 16, left: 16 }} className={classes.root} withinPortal zIndex={300}>
         <Button
           variant="default"
           leftSection={<IconChecklist size={18} />}
@@ -45,12 +46,12 @@ export const BoardSetupChecklist = () => {
         >
           {t("resume", { completed: progress.completedCount, total: progress.totalCount })}
         </Button>
-      </div>
+      </Affix>
     );
   }
 
   return (
-    <div className={classes.root}>
+    <Affix position={{ top: appShellHeaderHeight + 16, left: 16 }} className={classes.root} withinPortal zIndex={300}>
       <Paper className={classes.panel} withBorder shadow="md" radius="md" p="md">
         <Stack gap="sm">
           <Group justify="space-between" wrap="nowrap">
@@ -93,7 +94,7 @@ export const BoardSetupChecklist = () => {
           />
         </Stack>
       </Paper>
-    </div>
+    </Affix>
   );
 };
 

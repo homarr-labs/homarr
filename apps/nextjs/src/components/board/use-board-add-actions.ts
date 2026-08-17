@@ -26,7 +26,9 @@ export const useBoardAddActions = () => {
   const addApp = useCallback(
     () =>
       openAppSelectModal({
-        onSelect: (app) => createItem({ kind: "app", options: { appId: app.id } }),
+        onSelectMany: (apps) => {
+          apps.forEach((app) => createItem({ kind: "app", options: { appId: app.id } }));
+        },
         withCreate: canCreateApp,
       }),
     [canCreateApp, createItem, openAppSelectModal],

@@ -847,7 +847,10 @@
         "search": "Search for an app",
         "noResults": "No results",
         "action": "Select {app}",
-        "title": "Select an app to add to this board"
+        "title": "Select an app to add to this board",
+        "toggle": "Click to select",
+        "selected": "Selected",
+        "multiple": "Add {count}"
       },
       "create": {
         "title": "Create new app",
@@ -2746,6 +2749,9 @@
           "title": "Unable to add item",
           "message": "The item could not be added to this board"
         }
+      },
+      "preview": {
+        "label": "Live preview"
       }
     },
     "moveResize": {

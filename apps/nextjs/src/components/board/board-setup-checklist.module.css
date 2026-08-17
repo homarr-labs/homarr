@@ -1,10 +1,6 @@
 .root {
-  position: absolute;
-  z-index: 4;
-  bottom: calc(var(--mantine-spacing-md) * var(--board-canvas-inverse-scale, 1));
-  left: calc(var(--mantine-spacing-md) * var(--board-canvas-inverse-scale, 1));
-  max-width: min(24rem, calc(100% - 2 * var(--mantine-spacing-md)));
   pointer-events: auto;
+  max-width: min(24rem, calc(100vw - 2rem));
 }
 
 .panel {
