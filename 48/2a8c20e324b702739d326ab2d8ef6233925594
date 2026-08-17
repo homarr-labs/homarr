@@ -1,0 +1,20 @@
+e2e/lazy-widgets.spec.ts
+  s_f6216de8f07e30::t_3cb1a0f512a6aa 81,89
+  s_f6216de8f07e30::t_ca54259dc06aae 112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "482a8c20e324b702739d326ab2d8ef6233925594",
+  "prompts": {},
+  "sessions": {
+    "s_f6216de8f07e30": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff0c4a8b9ffesHDKZUOyv7vcQn",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
