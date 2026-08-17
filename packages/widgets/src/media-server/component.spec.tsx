@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { StreamSession } from "@homarr/integrations";
 
-import { getMediaServerColumnVisibility, SessionDetailsPopover } from "./component";
+import { getMediaServerColumnVisibility, getSeasonEpisodeParams, SessionDetailsPopover } from "./component";
 
 vi.mock("@homarr/translation/client", () => ({
   useScopedI18n: () => (key: string) => key,
@@ -106,5 +106,21 @@ describe("getMediaServerColumnVisibility", () => {
     expect(getMediaServerColumnVisibility(300, false)).toEqual({ user: true, status: false });
     expect(getMediaServerColumnVisibility(420, false)).toEqual({ user: true, status: true });
     expect(getMediaServerColumnVisibility(0, true)).toEqual({ user: true, status: true });
+  });
+});
+
+describe("getSeasonEpisodeParams", () => {
+  test("zero-pads season and episode numbers", () => {
+    expect(getSeasonEpisodeParams(4, 12)).toEqual({ season: "04", episode: "12" });
+  });
+
+  test("does not pad numbers already two digits or longer", () => {
+    expect(getSeasonEpisodeParams(12, 104)).toEqual({ season: "12", episode: "104" });
+  });
+
+  test("returns null when either number is missing", () => {
+    expect(getSeasonEpisodeParams(undefined, 12)).toBeNull();
+    expect(getSeasonEpisodeParams(4, null)).toBeNull();
+    expect(getSeasonEpisodeParams(null, undefined)).toBeNull();
   });
 });

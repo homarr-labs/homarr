@@ -77,6 +77,16 @@ function formatBitrate(bitrateKbps: number | null | undefined): string | null {
   return bitrateKbps >= 1000 ? `${(bitrateKbps / 1000).toFixed(1)} Mbps` : `${Math.round(bitrateKbps)} kbps`;
 }
 
+export function getSeasonEpisodeParams(
+  seasonNumber: number | null | undefined,
+  episodeNumber: number | null | undefined,
+): { season: string; episode: string } | null {
+  if (seasonNumber === null || seasonNumber === undefined || episodeNumber === null || episodeNumber === undefined) {
+    return null;
+  }
+  return { season: String(seasonNumber).padStart(2, "0"), episode: String(episodeNumber).padStart(2, "0") };
+}
+
 const getSessionSortValue = (session: StreamSession, column: SortColumn) => {
   if (column === "user") return session.user?.username ?? session.sessionName;
   if (column === "currentlyPlaying") return session.currentlyPlaying?.name ?? session.sessionName;
@@ -429,17 +439,17 @@ function CurrentlyPlaying({ item }: { item: StreamSession }) {
       : null;
   const remainingMinutes =
     positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
-  const seasonNumber = currentlyPlaying.seasonName?.match(/\d+/)?.[0];
-  const episodeNumber = currentlyPlaying.episodeCount;
-  const seasonEpisodeLabel =
-    seasonNumber !== undefined && episodeNumber !== undefined && episodeNumber !== null
-      ? `S${seasonNumber.padStart(2, "0")} E${String(episodeNumber).padStart(2, "0")}`
-      : null;
+  const seasonEpisodeParams = getSeasonEpisodeParams(currentlyPlaying.seasonNumber, currentlyPlaying.episodeNumber);
+  const seasonEpisodeLabel = seasonEpisodeParams ? t("items.seasonEpisode", seasonEpisodeParams) : null;
 
   return (
     <Stack gap={6} style={{ minWidth: 0 }}>
       <Group gap="xs" align="center" wrap="nowrap" style={{ minWidth: 0 }}>
-        <Icon size="var(--mantine-font-size-xs)" color={isPaused ? "var(--mantine-color-yellow-6)" : undefined} style={{ flexShrink: 0 }} />
+        <Icon
+          size="var(--mantine-font-size-xs)"
+          color={isPaused ? "var(--mantine-color-yellow-6)" : undefined}
+          style={{ flexShrink: 0 }}
+        />
         <Text size="xs" lineClamp={1} style={{ minWidth: 0 }}>
           {currentlyPlaying.name}
         </Text>

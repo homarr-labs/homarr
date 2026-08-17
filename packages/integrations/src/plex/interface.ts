@@ -80,6 +80,7 @@ interface Session {
   $: {
     grandparentTitle?: string;
     parentTitle?: string;
+    parentIndex?: number;
     title?: string;
     index?: number;
     type: string;

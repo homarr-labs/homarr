@@ -78,7 +78,12 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, he
       )}
       {compactStaleWarning && displayMode === "compact" && (
         <Group gap={2} wrap="nowrap">
-          <IconAlertTriangle aria-hidden size="var(--mantine-font-size-xs)" color="var(--mantine-color-orange-light-color)" />
+          <IconAlertTriangle
+            aria-hidden
+            size="var(--mantine-font-size-xs)"
+            color="var(--mantine-color-orange-light-color)"
+            style={{ flexShrink: 0 }}
+          />
           <Text component="output" size="xs" c="var(--mantine-color-text)" style={{ whiteSpace: "nowrap" }}>
             {compactStaleWarning}
           </Text>

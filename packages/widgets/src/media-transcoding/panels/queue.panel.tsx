@@ -59,11 +59,11 @@ export function QueuePanel(props: QueuePanelProps) {
                 <Group gap={4} wrap="nowrap">
                   {item.type === "transcode" ? (
                     <Tooltip label={t("table.transcode")}>
-                      <IconTransform size="var(--mantine-font-size-xs)" />
+                      <IconTransform size="var(--mantine-font-size-xs)" style={{ flexShrink: 0 }} />
                     </Tooltip>
                   ) : (
                     <Tooltip label={t("table.healthCheck")}>
-                      <IconHeartbeat size="var(--mantine-font-size-xs)" />
+                      <IconHeartbeat size="var(--mantine-font-size-xs)" style={{ flexShrink: 0 }} />
                     </Tooltip>
                   )}
                   <Text lineClamp={1} size="xs">

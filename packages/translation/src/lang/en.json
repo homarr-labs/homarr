@@ -3992,6 +3992,7 @@
         "transcoding": "Transcoding",
         "paused": "Paused",
         "remaining": "{minutes} min left",
+        "seasonEpisode": "S{season} E{episode}",
         "metadata": {
           "title": "Stats for nerds",
           "video": {
