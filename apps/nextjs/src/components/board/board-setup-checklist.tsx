@@ -35,7 +35,7 @@ export const BoardSetupChecklist = () => {
 
   if (collapsed) {
     return (
-      <Affix position={{ top: appShellHeaderHeight + 16, left: 16 }} className={classes.root} withinPortal zIndex={300}>
+      <Affix position={{ top: appShellHeaderHeight + 16, left: 16 }} className={classes.root}>
         <Button
           variant="default"
           leftSection={<IconChecklist size={18} />}
@@ -51,7 +51,7 @@ export const BoardSetupChecklist = () => {
   }
 
   return (
-    <Affix position={{ top: appShellHeaderHeight + 16, left: 16 }} className={classes.root} withinPortal zIndex={300}>
+    <Affix position={{ top: appShellHeaderHeight + 16, left: 16 }} className={classes.root}>
       <Paper className={classes.panel} withBorder shadow="md" radius="md" p="md">
         <Stack gap="sm">
           <Group justify="space-between" wrap="nowrap">

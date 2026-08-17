@@ -34,10 +34,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
     [apps, search],
   );
 
-  const selectedApps = useMemo(
-    () => filteredApps.filter((app) => selectedAppIds.has(app.id)),
-    [filteredApps, selectedAppIds],
-  );
+  const selectedApps = useMemo(() => apps.filter((app) => selectedAppIds.has(app.id)), [apps, selectedAppIds]);
 
   const handleSelect = (app: SelectableApp) => {
     if (multiSelect) {
