@@ -18,7 +18,7 @@ export const appIntegrationBoardMode = {
     }
 
     return groups.concat(
-      session.user.permissions.includes("app-modify-all") || session.user.permissions.includes("board-modify-all")
+      session.user.permissions.includes("board-modify-all")
         ? [appsSearchGroup, integrationsSearchGroup]
         : [integrationsSearchGroup],
     );

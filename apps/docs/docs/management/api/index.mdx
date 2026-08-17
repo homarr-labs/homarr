@@ -63,10 +63,6 @@ curl -H 'ApiKey: <id>.<token>' http://localhost:7575/api/health/live
 curl -H 'ApiKey: <id>.<token>' http://localhost:7575/api/trpc/app.all
 ```
 
-### App Endpoint Permissions
-
-The app endpoints (`/api/apps/paginated`, `/api/apps`, `/api/apps/search` and the corresponding tRPC procedures and MCP tools) require the `app-modify-all` permission. API keys inherit the permissions of the user who created them, so a key can only list apps when its owner can manage apps. Endpoints that only read app metadata for board placement (`/api/apps/selectable`, `/api/apps/{id}`) remain available to signed-in users without this permission.
-
 ### Use Cases
 
 API key authentication enables programmatic access for:
