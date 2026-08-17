@@ -23,12 +23,12 @@ import {
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 
-const createPermissionParents = {
-  "app-create": "app-modify-all",
-  "integration-create": "integration-full-all",
-  "board-create": "board-full-all",
-  "search-engine-create": "search-engine-modify-all",
-} satisfies Partial<Record<GroupPermissionKey, GroupPermissionKey>>;
+const createPermissionParents = new Map<GroupPermissionKey, GroupPermissionKey>([
+  ["app-create", "app-modify-all"],
+  ["integration-create", "integration-full-all"],
+  ["board-create", "board-full-all"],
+  ["search-engine-create", "search-engine-modify-all"],
+]);
 
 export const groupRouter = createTRPCRouter({
   getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
@@ -312,8 +312,8 @@ export const groupRouter = createTRPCRouter({
 
       const permissions = [
         ...new Set(
-          input.permissions.flatMap((permission): GroupPermissionKey[] => {
-            const parent = permission in createPermissionParents ? createPermissionParents[permission] : null;
+          input.permissions.flatMap((permission) => {
+            const parent = createPermissionParents.get(permission);
             return parent ? [permission, parent] : [permission];
           }),
         ),
