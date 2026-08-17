@@ -4,6 +4,7 @@ import { ActionIcon, Center, Loader, Tooltip, VisuallyHidden } from "@mantine/co
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { useScopedI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 interface WidgetQueryErrorIndicatorProps {
   error: unknown;
@@ -28,7 +29,7 @@ export function WidgetQueryErrorIndicator({ error, label }: WidgetQueryErrorIndi
         tabIndex={0}
         style={{ cursor: "help" }}
       >
-        <IconAlertTriangle aria-hidden size={14} />
+        <IconAlertTriangle aria-hidden style={iconSizes.sm} />
       </ActionIcon>
     </Tooltip>
   );

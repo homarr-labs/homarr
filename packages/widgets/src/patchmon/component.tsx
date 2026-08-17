@@ -17,6 +17,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
@@ -445,7 +446,7 @@ function CompactStatGrid({
               style={{ "--stat-bg": severityToMantineBgColor(severity) } as CSSProperties}
             >
               {showIcon && (
-                <Icon className={classes.statIcon} size={18} stroke={1.5} color={severityToIconColor(severity)} />
+                <Icon className={classes.statIcon} style={iconSizes.lg} stroke={1.5} color={severityToIconColor(severity)} />
               )}
               <span className={classes.compactStatValue}>
                 <Text component="span" fw={700} size="inherit" c={severityToMantineColor(severity)}>

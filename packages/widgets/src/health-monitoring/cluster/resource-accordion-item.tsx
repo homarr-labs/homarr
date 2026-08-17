@@ -2,6 +2,7 @@ import type { PropsWithChildren } from "react";
 import type { MantineColor } from "@mantine/core";
 import { Accordion, Badge, Group, Text } from "@mantine/core";
 
+import { iconSizes } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 interface ResourceAccordionItemProps {
@@ -26,7 +27,7 @@ export const ResourceAccordionItem = ({
 }: PropsWithChildren<ResourceAccordionItemProps>) => {
   return (
     <Accordion.Item value={value}>
-      <Accordion.Control icon={isTiny ? null : <Icon size={16} />}>
+      <Accordion.Control icon={isTiny ? null : <Icon style={iconSizes.md} />}>
         <Group style={{ rowGap: "0" }} gap="xs">
           <Text size="xs">{title}</Text>
           <Badge variant="dot" color={badge.color} size="xs">

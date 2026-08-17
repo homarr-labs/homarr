@@ -30,7 +30,7 @@ import { useIntegrationConnected } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { MaskedOrNormalImage } from "@homarr/ui";
+import { iconSizes, MaskedOrNormalImage } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
@@ -184,7 +184,7 @@ export default function DnsHoleControlsWidget({
               radius={board.itemRadius}
               flex={1}
             >
-              <IconPlayerPlay className="dns-hole-controls-enable-all-icon" size={16} />
+              <IconPlayerPlay className="dns-hole-controls-enable-all-icon" style={iconSizes.md} />
             </Button>
           </Tooltip>
 
@@ -205,7 +205,7 @@ export default function DnsHoleControlsWidget({
               radius={board.itemRadius}
               flex={1}
             >
-              <IconClockPause className="dns-hole-controls-timer-all-icon" size={16} />
+              <IconClockPause className="dns-hole-controls-timer-all-icon" style={iconSizes.md} />
             </Button>
           </Tooltip>
 
@@ -223,7 +223,7 @@ export default function DnsHoleControlsWidget({
               radius={board.itemRadius}
               flex={1}
             >
-              <IconPlayerStop className="dns-hole-controls-disable-all-icon" size={16} />
+              <IconPlayerStop className="dns-hole-controls-disable-all-icon" style={iconSizes.md} />
             </Button>
           </Tooltip>
         </Flex>
@@ -378,7 +378,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                       color="green"
                       variant="light"
                     >
-                      <IconPlayerPlay size={12} />
+                      <IconPlayerPlay style={iconSizes.xs} />
                     </ActionIcon>
                   ) : (
                     <ActionIcon
@@ -390,7 +390,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                       color="red"
                       variant="light"
                     >
-                      <IconPlayerStop size={12} />
+                      <IconPlayerStop style={iconSizes.xs} />
                     </ActionIcon>
                   )}
                   <ActionIcon
@@ -406,7 +406,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                     display={isInteractPermitted ? undefined : "none"}
                     disabled={!controlEnabled || !isEnabled}
                   >
-                    <IconClockPause size={12} />
+                    <IconClockPause style={iconSizes.xs} />
                   </ActionIcon>
                 </Group>
               )}
@@ -436,7 +436,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                         <IconCircleFilled
                           className="dns-hole-controls-item-status-icon"
                           color={dnsLightStatus(isEnabled)}
-                          size={16}
+                          style={iconSizes.md}
                         />
                       )
                     }
@@ -474,7 +474,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                 open();
               }}
             >
-              <IconClockPause className="dns-hole-controls-item-timer-icon" size={20} />
+              <IconClockPause className="dns-hole-controls-item-timer-icon" style={iconSizes.xl} />
             </ActionIcon>
           )}
         </Flex>

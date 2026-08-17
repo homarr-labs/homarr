@@ -35,7 +35,7 @@ import { createId, isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } f
 import type { ReleaseProviderKind } from "@homarr/definitions";
 import { getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
-import { MaskedOrNormalImage } from "@homarr/ui";
+import { iconSizes, MaskedOrNormalImage } from "@homarr/ui";
 
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { isInitialWidgetQueryPending } from "../common/query-state";
@@ -303,20 +303,20 @@ export default function ReleasesWidget({ options, itemId, width, displayMode }: 
                     {hasError ? (
                       <IconTriangleFilled
                         className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-error"
-                        size={10}
+                        style={iconSizes.xs}
                         color="var(--mantine-color-red-filled)"
                       />
                     ) : repository.viewed ? (
                       <IconCheck
                         className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-confirmed"
-                        size={10}
+                        style={iconSizes.xs}
                         color="green"
                       />
                     ) : (
                       (repository.isNewRelease || repository.isStaleRelease) && (
                         <IconCircleFilled
                           className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-marker"
-                          size={10}
+                          style={iconSizes.xs}
                           color={
                             repository.isNewRelease
                               ? "var(--mantine-color-primaryColor-filled)"
@@ -390,7 +390,7 @@ const DetailsDisplay = ({ repository, isExpanded, toggleExpandedDisplay }: Detai
                   "releases-repository-details-icon",
                   "releases-repository-details-icon-preRelease",
                 )}
-                size={13}
+                style={iconSizes.sm}
                 color={
                   repository.isPreRelease ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"
                 }
@@ -411,7 +411,7 @@ const DetailsDisplay = ({ repository, isExpanded, toggleExpandedDisplay }: Detai
                   "releases-repository-details-icon",
                   "releases-repository-details-icon-archived",
                 )}
-                size={13}
+                style={iconSizes.sm}
                 color={
                   repository.isArchived ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"
                 }
@@ -432,7 +432,7 @@ const DetailsDisplay = ({ repository, isExpanded, toggleExpandedDisplay }: Detai
                   "releases-repository-details-icon",
                   "releases-repository-details-icon-forked",
                 )}
-                size={13}
+                style={iconSizes.sm}
                 color={repository.isFork ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
               />
             </Tooltip>
@@ -459,7 +459,7 @@ const DetailsDisplay = ({ repository, isExpanded, toggleExpandedDisplay }: Detai
                     "releases-repository-details-stats-icon",
                     "releases-repository-details-stats-stars-icon",
                   )}
-                  size={12}
+                  style={iconSizes.xs}
                   color={!repository.starsCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
                 />
                 <Text
@@ -501,7 +501,7 @@ const DetailsDisplay = ({ repository, isExpanded, toggleExpandedDisplay }: Detai
                     "releases-repository-details-stats-icon",
                     "releases-repository-details-stats-forks-icon",
                   )}
-                  size={12}
+                  style={iconSizes.xs}
                   color={!repository.forksCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
                 />
                 <Text
@@ -543,7 +543,7 @@ const DetailsDisplay = ({ repository, isExpanded, toggleExpandedDisplay }: Detai
                     "releases-repository-details-stats-icon",
                     "releases-repository-details-stats-issues-icon",
                   )}
-                  size={12}
+                  style={iconSizes.xs}
                   color={!repository.openIssues ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
                 />
                 <Text

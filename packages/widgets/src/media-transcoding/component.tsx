@@ -21,6 +21,7 @@ import { IconClipboardList, IconCpu2, IconReportAnalytics } from "@tabler/icons-
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import { views } from ".";
@@ -153,7 +154,7 @@ export default function MediaTranscodingWidget({
             return {
               label: (
                 <Center style={{ gap: 4 }}>
-                  <Icon size={12} />
+                  <Icon style={iconSizes.xs} />
                   {footerLayout.showTabLabels ? (
                     <Text span size="xs">
                       {t(`tab.${value}`)}
@@ -259,7 +260,7 @@ export const resolveQueuePagination = (
 const AdvancedPanel = ({ title, icon: Icon, children }: { title: string; icon: TablerIcon; children: ReactNode }) => (
   <Paper withBorder radius="sm" p="xs" mih={280} style={{ display: "flex", flexDirection: "column" }}>
     <Group gap="xs" mb="xs">
-      <Icon size={16} />
+      <Icon style={iconSizes.md} />
       <Text size="sm" fw={600}>
         {title}
       </Text>

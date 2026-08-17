@@ -4,6 +4,7 @@ import { ActionIcon, Button, Flex, Group, Modal, NumberInput, rem, Stack, Text }
 import { IconClockPause } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 interface TimerModalProps {
   opened: boolean;
@@ -90,7 +91,7 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
         <Button
           variant="light"
           color="red"
-          leftSection={<IconClockPause size={20} />}
+          leftSection={<IconClockPause style={iconSizes.xl} />}
           h="2rem"
           w="12rem"
           onClick={handleSetTimer}

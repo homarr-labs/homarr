@@ -26,7 +26,7 @@ import { mediaTypeConfigurations } from "@homarr/integrations/types";
 import type { TranslationFunction } from "@homarr/translation";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
-import { OverflowBadge } from "@homarr/ui";
+import { iconSizes, OverflowBadge } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
@@ -273,7 +273,7 @@ const InfoDivider = () => (
 const Info = ({ icon: Icon, label }: IconAndLabelProps) => {
   return (
     <Group gap={4} wrap="nowrap" miw={0}>
-      {Icon && <Icon size={12} color={getMantineColor("gray", 5)} style={{ flexShrink: 0 }} />}
+      {Icon && <Icon color={getMantineColor("gray", 5)} style={iconSizes.xs} />}
       <Text size="xs" c="dimmed" truncate="end">
         {label}
       </Text>

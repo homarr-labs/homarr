@@ -19,6 +19,7 @@ import duration from "dayjs/plugin/duration";
 import { capitalize, formatBytes, formatBytesPair } from "@homarr/common";
 import type { ComputeResource, Resource, StorageResource } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 dayjs.extend(duration);
 
@@ -97,20 +98,20 @@ const ComputeResourceDetails = ({ item }: { item: ComputeResource }) => {
   const storage = formatBytesPair(item.storage.used, item.storage.total);
   return (
     <List>
-      <List.Item icon={<IconCpu size={16} />}>
+      <List.Item icon={<IconCpu style={iconSizes.md} />}>
         {t("cpu")} - {item.cpu.cores}
       </List.Item>
-      <List.Item icon={<IconBrain size={16} />}>
+      <List.Item icon={<IconBrain style={iconSizes.md} />}>
         {t("memory")} - {memory.used} / {memory.available}
       </List.Item>
-      <List.Item icon={<IconDatabase size={16} />}>
+      <List.Item icon={<IconDatabase style={iconSizes.md} />}>
         {t("storage")} - {storage.used} / {storage.available}
       </List.Item>
-      <List.Item icon={<IconClockHour3 size={16} />}>
+      <List.Item icon={<IconClockHour3 style={iconSizes.md} />}>
         {t("uptime")} - {dayjs(dayjs().add(-item.uptime, "seconds")).fromNow(true)}
       </List.Item>
       {item.haState && (
-        <List.Item icon={<IconHeartBolt size={16} />}>
+        <List.Item icon={<IconHeartBolt style={iconSizes.md} />}>
           {t("haState")} - {capitalize(item.haState)}
         </List.Item>
       )}
@@ -152,15 +153,15 @@ const DiskStats = ({ item }: { item: ComputeResource }) => {
     return null;
   }
   return (
-    <List.Item icon={<IconDatabase size={16} />}>
+    <List.Item icon={<IconDatabase style={iconSizes.md} />}>
       <Group gap="sm">
         <Group gap={0}>
           <Text>{formatBytes(item.storage.write)}</Text>
-          <IconArrowNarrowDown size={14} />
+          <IconArrowNarrowDown style={iconSizes.sm} />
         </Group>
         <Group gap={0}>
           <Text>{formatBytes(item.storage.read)}</Text>
-          <IconArrowNarrowUp size={14} />
+          <IconArrowNarrowUp style={iconSizes.sm} />
         </Group>
       </Group>
     </List.Item>
@@ -172,15 +173,15 @@ const NetStats = ({ item }: { item: ComputeResource }) => {
     return null;
   }
   return (
-    <List.Item icon={<IconNetwork size={16} />}>
+    <List.Item icon={<IconNetwork style={iconSizes.md} />}>
       <Group gap="sm">
         <Group gap={0}>
           <Text>{formatBytes(item.network.in)}</Text>
-          <IconArrowNarrowDown size={14} />
+          <IconArrowNarrowDown style={iconSizes.sm} />
         </Group>
         <Group gap={0}>
           <Text>{formatBytes(item.network.out)}</Text>
-          <IconArrowNarrowUp size={14} />
+          <IconArrowNarrowUp style={iconSizes.sm} />
         </Group>
       </Group>
     </List.Item>

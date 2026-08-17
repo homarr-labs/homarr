@@ -12,6 +12,8 @@ import {
   IconToggleLeft,
 } from "@tabler/icons-react";
 
+import { iconSizes } from "@homarr/ui";
+
 const VALUE_TRUNCATE_LENGTH = 80;
 const LEVEL_OFFSET = 14;
 const BASE_PADDING = 8;
@@ -314,7 +316,7 @@ export function JsonPathTreePicker({
         {hasData && (
           <Combobox.Header>
             <Group gap="xs" px="xs" pt="xs" pb={4}>
-              <Badge size="sm" color="teal" variant="light" leftSection={<IconCircleCheck size={12} />}>
+              <Badge size="sm" color="teal" variant="light" leftSection={<IconCircleCheck style={iconSizes.xs} />}>
                 {loadedHint}
               </Badge>
               <Text size="xs" c="dimmed">
@@ -353,16 +355,15 @@ function TreeNodeOption({ node, selected, isSearching }: { node: FlatNode; selec
       <Group gap={4} wrap="nowrap" style={{ minWidth: 0 }}>
         {node.hasChildren && (
           <IconChevronDown
-            size={14}
             style={{
-              flexShrink: 0,
+              ...iconSizes.sm,
               color: "var(--mantine-color-dimmed)",
               transform: node.isExpanded ? "rotate(0deg)" : "rotate(-90deg)",
               transition: "transform 150ms ease",
             }}
           />
         )}
-        <TypeIcon size={14} style={{ flexShrink: 0, opacity: 0.5 }} />
+        <TypeIcon style={{ ...iconSizes.sm, flexShrink: 0, opacity: 0.5 }} />
         <Text
           size="sm"
           fw={selected ? 600 : 400}

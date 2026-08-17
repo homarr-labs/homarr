@@ -22,6 +22,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import { formatLocalizedCompactNumber } from "../common/locale";
 import type { OptionLocation } from "../options";
@@ -97,7 +98,7 @@ export const WidgetLocationInput = ({ property, kind, options }: CommonWidgetInp
                 disabled={!selectionEnabled}
                 onClick={onSearch}
                 variant="light"
-                leftSection={<IconListSearch size={16} />}
+                leftSection={<IconListSearch style={iconSizes.md} />}
               >
                 {tLocation("search")}
               </Button>
@@ -257,7 +258,7 @@ const LocationSelectTableRow = ({ city, onLocationSelect, closeModal }: Location
           })}
         >
           <ActionIcon color="red" variant="subtle" onClick={onSelect}>
-            <IconClick size={16} />
+            <IconClick style={iconSizes.md} />
           </ActionIcon>
         </Tooltip>
       </Table.Td>

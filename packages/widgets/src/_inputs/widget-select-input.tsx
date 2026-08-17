@@ -6,6 +6,7 @@ import { IconCheck } from "@tabler/icons-react";
 import { translateIfNecessary } from "@homarr/translation";
 import type { stringOrTranslation } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { CommonWidgetInputProps } from "./common";
@@ -51,20 +52,19 @@ export const WidgetSelectInput = ({ property, kind, options }: CommonWidgetInput
               label: translateIfNecessary(t, option.label) ?? option.value,
             },
       )}
-      leftSection={CurrentIcon && <CurrentIcon size={16} stroke={1.5} />}
+      leftSection={CurrentIcon && <CurrentIcon style={iconSizes.md} stroke={1.5} />}
       renderOption={({ option, checked }) => {
         const Icon = getIconFor(options.options, String(option.value));
 
         return (
           <Group flex="1" gap="xs">
-            {Icon && <Icon color="currentColor" opacity={0.6} size={18} stroke={1.5} />}
+            {Icon && <Icon color="currentColor" opacity={0.6} style={iconSizes.lg} stroke={1.5} />}
             {option.label}
             {checked && (
               <IconCheck
-                style={{ marginInlineStart: "auto" }}
+                style={{ ...iconSizes.lg, marginInlineStart: "auto" }}
                 color="currentColor"
                 opacity={0.6}
-                size={18}
                 stroke={1.5}
               />
             )}

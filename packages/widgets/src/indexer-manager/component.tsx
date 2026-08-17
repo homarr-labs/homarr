@@ -23,6 +23,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeActions } from "../runtime-hooks";
@@ -133,7 +134,7 @@ export default function IndexerManagerWidget({
             }}
             aria-label={t("widget.indexerManager.testAll")}
           >
-            <IconTestPipe size={14} />
+            <IconTestPipe style={iconSizes.sm} />
           </ActionIcon>
         </Tooltip>
       </Group>

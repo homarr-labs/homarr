@@ -41,6 +41,7 @@ import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -394,7 +395,7 @@ export default function DockerWidget({
           wrap="nowrap"
         >
           <Group gap={4} wrap="nowrap">
-            <IconBrandDocker size={20} style={{ flexShrink: 0 }} />
+            <IconBrandDocker style={iconSizes.xl} />
             <Text size="sm" truncate>
               {t("table.footer", { count: containers.length.toString() })}
             </Text>
@@ -414,14 +415,14 @@ export default function DockerWidget({
             <Tooltip label={t("table.refresh.lastUpdated", { when: relativeTime })}>
               <ActionIcon
                 className={actionTargetClasses.root}
-                size="sm"
+                size="lg"
                 variant="transparent"
                 c="var(--mantine-color-text)"
                 loading={isFetching}
                 onClick={() => void refetch()}
                 aria-label={t("table.refresh.lastUpdated", { when: relativeTime })}
               >
-                <IconRefresh size={16} />
+                <IconRefresh size={22} />
               </ActionIcon>
             </Tooltip>
           </Group>
@@ -451,11 +452,11 @@ function ContainerMenuButton({
           className={actionTargetClasses.root}
           variant="subtle"
           color="gray"
-          size="sm"
+          size="lg"
           aria-label={t("title")}
           onClick={(event) => event.stopPropagation()}
         >
-          <IconDots size={16} />
+          <IconDots size={22} />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown w={containerMenuWidth} miw={containerMenuWidth} maw={containerMenuWidth}>
@@ -490,7 +491,7 @@ function ContainerActionItems({
         {container.name}
       </Menu.Label>
       <Menu.Item
-        leftSection={<IconFileText size={14} />}
+        leftSection={<IconFileText style={iconSizes.sm} />}
         onClick={() => {
           handlers.onOpenLogs(container);
           onClose();
@@ -501,26 +502,26 @@ function ContainerActionItems({
       <Menu.Divider />
       <Menu.Item
         color={stateAction === "start" ? "green" : "red"}
-        leftSection={<StateIcon size={14} />}
+        leftSection={<StateIcon style={iconSizes.sm} />}
         onClick={() => invokeAction(stateAction)}
       >
         {t(`${stateAction}.label`)}
       </Menu.Item>
-      <Menu.Item color="orange" leftSection={<IconRotateClockwise size={14} />} onClick={() => invokeAction("restart")}>
+      <Menu.Item color="orange" leftSection={<IconRotateClockwise style={iconSizes.sm} />} onClick={() => invokeAction("restart")}>
         {t("restart.label")}
       </Menu.Item>
       {!confirmRemove ? (
-        <Menu.Item color="red" leftSection={<IconTrash size={14} />} onClick={() => setConfirmRemove(true)}>
+        <Menu.Item color="red" leftSection={<IconTrash style={iconSizes.sm} />} onClick={() => setConfirmRemove(true)}>
           {t("remove.label")}
         </Menu.Item>
       ) : (
-        <Menu.Item color="red" leftSection={<IconTrash size={14} />} onClick={() => invokeAction("remove")}>
+        <Menu.Item color="red" leftSection={<IconTrash style={iconSizes.sm} />} onClick={() => invokeAction("remove")}>
           {t("remove.confirm")}
         </Menu.Item>
       )}
       <Menu.Divider />
       <Menu.Item
-        leftSection={<IconCategoryPlus size={14} />}
+        leftSection={<IconCategoryPlus style={iconSizes.sm} />}
         onClick={() => {
           handlers.onAddToHomarr(container);
           onClose();

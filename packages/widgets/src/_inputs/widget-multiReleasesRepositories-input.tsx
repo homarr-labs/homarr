@@ -49,7 +49,7 @@ import { IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import { MaskedImage } from "@homarr/ui";
+import { iconSizes, MaskedImage } from "@homarr/ui";
 
 import type { ReleasesRepository, ReleasesVersionFilter } from "../releases/releases-repository";
 import type { CommonWidgetInputProps } from "./common";
@@ -229,19 +229,19 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                     })
                   }
                   variant="light"
-                  leftSection={<IconEdit size={15} />}
+                  leftSection={<IconEdit style={iconSizes.sm} />}
                   size="xs"
                 >
                   {tRepository("edit.label")}
                 </Button>
 
                 <ActionIcon variant="transparent" color="red" onClick={() => onRepositoryRemove(index)}>
-                  <IconTrash size={15} />
+                  <IconTrash style={iconSizes.sm} />
                 </ActionIcon>
               </Group>
               {Object.keys(form.errors).filter((key) => key.startsWith(`options.${property}.${index}.`)).length > 0 && (
                 <Group align="center" justify="center" gap="xs" bg="red.1">
-                  <IconTriangleFilled size={15} color="var(--mantine-color-red-filled)" />
+                  <IconTriangleFilled style={iconSizes.sm} color="var(--mantine-color-red-filled)" />
                   <Text size="sm" c="red">
                     {tRepository("invalid")}
                   </Text>
@@ -371,7 +371,7 @@ const ProviderTokenInput = ({
         }}
         style={{ flex: 1 }}
         size="xs"
-        leftSection={<IconKey size={14} />}
+        leftSection={<IconKey style={iconSizes.sm} />}
       />
       {editing && value.trim() && (
         <Button size="xs" onClick={handleSave} loading={saving}>
@@ -380,7 +380,7 @@ const ProviderTokenInput = ({
       )}
       {hasToken && !editing && (
         <ActionIcon variant="light" color="red" size="sm" onClick={handleDelete} loading={saving}>
-          <IconTrash size={14} />
+          <IconTrash style={iconSizes.sm} />
         </ActionIcon>
       )}
     </Group>

@@ -35,6 +35,7 @@ import { objectEntries } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
@@ -75,6 +76,16 @@ const playbackStatusColorMap = {
 function formatBitrate(bitrateKbps: number | null | undefined): string | null {
   if (!bitrateKbps || bitrateKbps <= 0) return null;
   return bitrateKbps >= 1000 ? `${(bitrateKbps / 1000).toFixed(1)} Mbps` : `${Math.round(bitrateKbps)} kbps`;
+}
+
+export function getSeasonEpisodeParams(
+  seasonNumber: number | null | undefined,
+  episodeNumber: number | null | undefined,
+): { season: string; episode: string } | null {
+  if (seasonNumber === null || seasonNumber === undefined || episodeNumber === null || episodeNumber === undefined) {
+    return null;
+  }
+  return { season: String(seasonNumber).padStart(2, "0"), episode: String(episodeNumber).padStart(2, "0") };
 }
 
 const getSessionSortValue = (session: StreamSession, column: SortColumn) => {
@@ -124,7 +135,7 @@ function StreamTableHeader({
           <Text component="span" size="xs" fw={600} truncate>
             {label}
           </Text>
-          <SortIcon size={13} aria-hidden />
+          <SortIcon style={iconSizes.xs} aria-hidden />
         </UnstyledButton>
       ) : (
         <Text size="xs" fw={600} truncate>
@@ -225,7 +236,7 @@ export default function MediaServerWidget({
               onChange={(event) => setSearch(event.currentTarget.value)}
               placeholder={tGlobal("search.placeholder")}
               aria-label={tGlobal("search.placeholder")}
-              leftSection={<IconSearch size={14} aria-hidden />}
+              leftSection={<IconSearch style={iconSizes.xs} aria-hidden />}
             />
             <WidgetQueryErrorIndicator error={currentStreamsQuery.error} label={t("name")} />
             <IntegrationErrorIndicator results={currentStreams} />
@@ -304,13 +315,13 @@ export default function MediaServerWidget({
                 >
                   {columnVisibility.user && (
                     <Table.Td>
-                      <Group gap="xs" wrap="nowrap">
+                      <Group gap="xs" wrap="nowrap" w="100%">
                         <Avatar size={28} src={session.user?.profilePictureUrl} />
-                        <Stack gap={0} className={classes.cellContent}>
+                        <Stack gap={2} className={classes.cellContent}>
                           <Text size="xs" truncate>
                             {session.user?.username ?? t("items.unknownUser")}
                           </Text>
-                          <Text size="10px" c="dimmed" truncate>
+                          <Text size="xs" c="dimmed" truncate>
                             {session.sessionName}
                           </Text>
                         </Stack>
@@ -329,22 +340,27 @@ export default function MediaServerWidget({
                   {columnVisibility.status && (
                     <Table.Td>
                       {currentlyPlaying && (
-                        <Stack gap={4} align="flex-start" className={classes.cellContent}>
+                        <Stack gap={4} align="flex-start" w="100%" className={classes.cellContent}>
                           <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
                             {t(`items.${status}` as never)}
                           </Badge>
                           {(location ?? bitrateLabel) && (
                             <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
                               <Group gap={4} align="center" wrap="nowrap">
-                                {location && (location === "lan" ? <IconWifi size={12} /> : <IconWorld size={12} />)}
+                                {location &&
+                                  (location === "lan" ? (
+                                    <IconWifi style={iconSizes.xs} />
+                                  ) : (
+                                    <IconWorld style={iconSizes.xs} />
+                                  ))}
                                 {location && (
-                                  <Text size="10px" c="dimmed" tt="uppercase">
+                                  <Text size="xs" c="dimmed" tt="uppercase">
                                     {location}
                                   </Text>
                                 )}
                               </Group>
                               {bitrateLabel && (
-                                <Text size="10px" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                                <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
                                   {bitrateLabel}
                                 </Text>
                               )}
@@ -372,7 +388,7 @@ export default function MediaServerWidget({
           }}
         >
           <Group gap={4} wrap="nowrap">
-            <IconVideo size={16} style={{ flexShrink: 0 }} />
+            <IconVideo style={iconSizes.xs} />
             <Text size="sm" style={{ whiteSpace: "nowrap" }}>
               {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
                 count: flatSessions.length,
@@ -424,14 +440,24 @@ function CurrentlyPlaying({ item }: { item: StreamSession }) {
       : null;
   const remainingMinutes =
     positionMs !== null && durationMs !== null ? Math.max(0, Math.round((durationMs - positionMs) / 60_000)) : null;
+  const seasonEpisodeParams = getSeasonEpisodeParams(currentlyPlaying.seasonNumber, currentlyPlaying.episodeNumber);
+  const seasonEpisodeLabel = seasonEpisodeParams ? t("items.seasonEpisode", seasonEpisodeParams) : null;
 
   return (
-    <Stack gap={4} style={{ minWidth: 0 }}>
+    <Stack gap={6} style={{ minWidth: 0 }}>
       <Group gap="xs" align="center" wrap="nowrap" style={{ minWidth: 0 }}>
-        <Icon size={16} color={isPaused ? "var(--mantine-color-yellow-6)" : undefined} style={{ flexShrink: 0 }} />
+        <Icon
+          color={isPaused ? "var(--mantine-color-yellow-6)" : undefined}
+          style={iconSizes.xs}
+        />
         <Text size="xs" lineClamp={1} style={{ minWidth: 0 }}>
           {currentlyPlaying.name}
         </Text>
+        {seasonEpisodeLabel && (
+          <Text size="xs" c="dimmed" style={{ flexShrink: 0 }}>
+            {seasonEpisodeLabel}
+          </Text>
+        )}
         {isPaused ? (
           <Text size="xs" c="yellow" style={{ flexShrink: 0 }}>
             {t("items.paused")}

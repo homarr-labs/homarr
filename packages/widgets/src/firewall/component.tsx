@@ -22,6 +22,7 @@ import { clientApi } from "@homarr/api/client";
 import type { FirewallInterfacesSummary } from "@homarr/integrations";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import { calculateBandwidth, formatBitsPerSec } from "./bandwidth";
@@ -386,7 +387,7 @@ const InterfacesPanel = ({
       variant={isAdvanced ? "contained" : "default"}
     >
       <Accordion.Item value="interfaces">
-        <Accordion.Control icon={<IconTopologyBus size={16} />}>
+        <Accordion.Control icon={<IconTopologyBus style={iconSizes.md} />}>
           <Group justify="space-between" wrap="nowrap" gap="xs">
             <Text size="xs">{label}</Text>
             {hasError && (
@@ -410,7 +411,7 @@ const InterfacesPanel = ({
                 </Text>
                 <Group gap={4} wrap="nowrap">
                   <IconArrowBarUp
-                    size={12}
+                    style={iconSizes.xs}
                     color="light-dark(var(--mantine-color-green-8), var(--mantine-color-green-3))"
                   />
                   <Text size="xs" c="light-dark(var(--mantine-color-green-8), var(--mantine-color-green-3))">
@@ -419,7 +420,7 @@ const InterfacesPanel = ({
                 </Group>
                 <Group gap={4} wrap="nowrap">
                   <IconArrowBarDown
-                    size={12}
+                    style={iconSizes.xs}
                     color="light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-3))"
                   />
                   <Text size="xs" c="light-dark(var(--mantine-color-yellow-9), var(--mantine-color-yellow-3))">

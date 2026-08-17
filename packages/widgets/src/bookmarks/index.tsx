@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { iconSizes } from "@homarr/ui";
 
 import { getSafeAppHref } from "../common/application-url";
 import { createWidgetDefinition } from "../definition";
@@ -49,7 +50,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
               </Group>
 
               <ActionIcon variant="transparent" color="red" onClick={removeItem}>
-                <IconX size={20} />
+                <IconX style={iconSizes.xl} />
               </ActionIcon>
             </Group>
           );

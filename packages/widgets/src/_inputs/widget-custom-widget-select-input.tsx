@@ -20,7 +20,7 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
+import { iconSizes, Link } from "@homarr/ui";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -115,7 +115,7 @@ export const WidgetCustomWidgetSelectInput = ({
                 >
                   <Group wrap="nowrap" gap="sm">
                     <Avatar src={def.iconUrl} size={36} radius="md" color="blue">
-                      <IconApi size={18} />
+                      <IconApi style={iconSizes.lg} />
                     </Avatar>
                     <Stack gap={1} style={{ minWidth: 0 }}>
                       <Text size="sm" fw={600} truncate>
@@ -152,7 +152,7 @@ export const WidgetCustomWidgetSelectInput = ({
         <Alert
           color="yellow"
           variant="light"
-          icon={<IconAlertTriangle size={18} />}
+          icon={<IconAlertTriangle style={iconSizes.lg} />}
           title={labels("migrationRequired")}
         >
           <Text size="xs">{labels("migrationDescription")}</Text>

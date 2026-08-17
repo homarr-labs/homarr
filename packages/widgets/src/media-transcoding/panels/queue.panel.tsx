@@ -17,6 +17,7 @@ import { IconHeartbeat, IconTransform } from "@tabler/icons-react";
 import { formatBytes } from "@homarr/common";
 import type { TdarrQueue } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 interface QueuePanelProps {
   queue: TdarrQueue;
@@ -59,11 +60,11 @@ export function QueuePanel(props: QueuePanelProps) {
                 <Group gap={4} wrap="nowrap">
                   {item.type === "transcode" ? (
                     <Tooltip label={t("table.transcode")}>
-                      <IconTransform size={12} />
+                      <IconTransform style={iconSizes.xs} />
                     </Tooltip>
                   ) : (
                     <Tooltip label={t("table.healthCheck")}>
-                      <IconHeartbeat size={12} />
+                      <IconHeartbeat style={iconSizes.xs} />
                     </Tooltip>
                   )}
                   <Text lineClamp={1} size="xs">

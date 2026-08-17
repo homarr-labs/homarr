@@ -8,6 +8,7 @@ import { getQueryKey } from "@trpc/react-query";
 import { clientApi } from "@homarr/api/client";
 import { formatBytes } from "@homarr/common";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
@@ -59,7 +60,7 @@ export default function ImmichServerStatsWidget({
     <SimpleGrid cols={statsLayout.columns} spacing={statsLayout.dense ? 4 : "sm"}>
       {statVisibility.showUsers && (
         <StatItem
-          icon={<IconUsers size={20} />}
+          icon={<IconUsers style={iconSizes.xl} />}
           label={t("widget.immich-serverStats.users")}
           value={stats.userCount.toLocaleString(locale)}
           dense={statsLayout.dense}
@@ -67,7 +68,7 @@ export default function ImmichServerStatsWidget({
       )}
       {statVisibility.showPhotos && (
         <StatItem
-          icon={<IconPhoto size={20} />}
+          icon={<IconPhoto style={iconSizes.xl} />}
           label={t("widget.immich-serverStats.photos")}
           value={stats.photoCount.toLocaleString(locale)}
           dense={statsLayout.dense}
@@ -75,7 +76,7 @@ export default function ImmichServerStatsWidget({
       )}
       {statVisibility.showVideos && (
         <StatItem
-          icon={<IconVideo size={20} />}
+          icon={<IconVideo style={iconSizes.xl} />}
           label={t("widget.immich-serverStats.videos")}
           value={stats.videoCount.toLocaleString(locale)}
           dense={statsLayout.dense}
@@ -83,7 +84,7 @@ export default function ImmichServerStatsWidget({
       )}
       {statVisibility.showStorage && (
         <StatItem
-          icon={<IconDatabase size={20} />}
+          icon={<IconDatabase style={iconSizes.xl} />}
           label={t("widget.immich-serverStats.storage")}
           value={formatBytes(stats.totalLibraryUsageInBytes)}
           dense={statsLayout.dense}

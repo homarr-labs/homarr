@@ -1,5 +1,7 @@
 "use client";
 
+import type { CSSProperties } from "react";
+
 import { Badge, Card, Center, Group, List, ScrollArea, SimpleGrid, Stack, Text, useMantineTheme } from "@mantine/core";
 import { IconCircleCheckFilled, IconCircleXFilled } from "@tabler/icons-react";
 import dayjs from "dayjs";
@@ -10,6 +12,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { clientApi } from "@homarr/api/client";
 import type { TranslationFunction } from "@homarr/translation";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
@@ -111,7 +114,7 @@ export default function NetworkControllerSummaryWidget({
                             <StatusIcon
                               status={section.status}
                               label={statusLabels[getBinaryStatusKey(section.status)]}
-                              size={16}
+                              style={iconSizes.md}
                             />
                             <Text size="sm" fw={600}>
                               {getMatrixSectionLabel(section.key, t)}
@@ -210,7 +213,7 @@ export default function NetworkControllerSummaryWidget({
                       <StatusIcon
                         status={summary.lan.status}
                         label={statusLabels[getBinaryStatusKey(summary.lan.status)]}
-                        size={20}
+                        style={iconSizes.xl}
                       />
                     }
                   >
@@ -256,13 +259,23 @@ const getMatrixSectionLabel = (key: NetworkControllerMatrixSectionKey, t: Transl
   return t(`widget.networkControllerSummary.card.${key}`);
 };
 
-const StatusIcon = ({ status, label, size }: { status?: "enabled" | "disabled"; label: string; size: number }) => {
+const StatusIcon = ({
+  status,
+  label,
+  size,
+  style,
+}: {
+  status?: "enabled" | "disabled";
+  label: string;
+  size?: number;
+  style?: CSSProperties;
+}) => {
   const mantineTheme = useMantineTheme();
   if (status === "enabled") {
-    return <IconCircleCheckFilled aria-label={label} size={size} color={mantineTheme.colors.green[6]} />;
+    return <IconCircleCheckFilled aria-label={label} size={size} style={style} color={mantineTheme.colors.green[6]} />;
   }
   if (status === "disabled") {
-    return <IconCircleXFilled aria-label={label} size={size} color={mantineTheme.colors.red[6]} />;
+    return <IconCircleXFilled aria-label={label} size={size} style={style} color={mantineTheme.colors.red[6]} />;
   }
-  return <IconCircleXFilled aria-label={label} size={size} color={mantineTheme.colors.gray[6]} />;
+  return <IconCircleXFilled aria-label={label} size={size} style={style} color={mantineTheme.colors.gray[6]} />;
 };

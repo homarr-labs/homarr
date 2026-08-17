@@ -12,6 +12,7 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
 import { useCurrentIntlLocale, useI18n, useScopedI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import actionTargetClasses from "../common/action-target.module.css";
 import type { WidgetComponentProps } from "../definition";
@@ -303,7 +304,7 @@ const CalendarAgenda = ({
               disabled={isEditMode}
               onClick={() => setMonth(moveCalendarMonth(month, -1))}
             >
-              <IconChevronLeft size={18} aria-hidden />
+              <IconChevronLeft style={iconSizes.lg} aria-hidden />
             </ActionIcon>
           </Tooltip>
           <Stack gap={0} miw={0}>
@@ -323,7 +324,7 @@ const CalendarAgenda = ({
               disabled={isEditMode}
               onClick={() => setMonth(moveCalendarMonth(month, 1))}
             >
-              <IconChevronRight size={18} aria-hidden />
+              <IconChevronRight style={iconSizes.lg} aria-hidden />
             </ActionIcon>
           </Tooltip>
         </Group>

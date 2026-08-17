@@ -18,6 +18,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { metricToImperial } from "@homarr/common";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { formatLocalizedDate, formatLocalizedTime } from "../common/locale";
@@ -116,11 +117,11 @@ const AdvancedWeather = ({ options, weather }: WeatherProps) => {
 
         <Group gap="lg" wrap="wrap">
           <Group gap={5} wrap="nowrap">
-            <IconMapPin size={16} aria-hidden />
+            <IconMapPin style={iconSizes.md} aria-hidden />
             <Text size="sm">{options.location.name}</Text>
           </Group>
           <Group gap={5} wrap="nowrap">
-            <IconWind size={16} aria-hidden />
+            <IconWind style={iconSizes.md} aria-hidden />
             <Text size="sm">
               {t("currentWindSpeed", {
                 currentWindSpeed: getPreferredWindSpeed(weather.current.windspeed, options.useImperialSpeed),
@@ -196,7 +197,7 @@ const AdvancedWeather = ({ options, weather }: WeatherProps) => {
                   </Table.Td>
                   <Table.Td>
                     <Group gap={4} wrap="nowrap">
-                      <IconArrowUpRight size={15} aria-hidden />
+                      <IconArrowUpRight style={iconSizes.sm} aria-hidden />
                       <Text size="sm">
                         {getPreferredUnit(
                           dayWeather.maxTemp,
@@ -207,7 +208,7 @@ const AdvancedWeather = ({ options, weather }: WeatherProps) => {
                       <Text size="sm" c="dimmed">
                         /
                       </Text>
-                      <IconArrowDownRight size={15} aria-hidden />
+                      <IconArrowDownRight style={iconSizes.sm} aria-hidden />
                       <Text size="sm">
                         {getPreferredUnit(
                           dayWeather.minTemp,
@@ -219,13 +220,13 @@ const AdvancedWeather = ({ options, weather }: WeatherProps) => {
                   </Table.Td>
                   <Table.Td>
                     <Group gap={5} wrap="nowrap">
-                      <IconDroplets size={15} aria-hidden />
+                      <IconDroplets style={iconSizes.sm} aria-hidden />
                       <Text size="sm">{dayWeather.humidity === undefined ? "?" : `${dayWeather.humidity}%`}</Text>
                     </Group>
                   </Table.Td>
                   <Table.Td>
                     <Group gap={5} wrap="nowrap">
-                      <IconWind size={15} aria-hidden />
+                      <IconWind style={iconSizes.sm} aria-hidden />
                       <Text size="sm">
                         {getPreferredWindSpeed(dayWeather.maxWindSpeed, options.useImperialSpeed)} /{" "}
                         {getPreferredWindSpeed(dayWeather.maxWindGusts, options.useImperialSpeed)}
@@ -235,14 +236,14 @@ const AdvancedWeather = ({ options, weather }: WeatherProps) => {
                   <Table.Td>
                     <Group gap="xs" wrap="nowrap">
                       <Group gap={3} wrap="nowrap">
-                        <IconSunrise size={15} aria-hidden />
+                        <IconSunrise style={iconSizes.sm} aria-hidden />
                         <Text size="sm">{getPreferredTime(dayWeather.sunrise, locale)}</Text>
                       </Group>
                       <Text size="sm" c="dimmed">
                         /
                       </Text>
                       <Group gap={3} wrap="nowrap">
-                        <IconSunset size={15} aria-hidden />
+                        <IconSunset style={iconSizes.sm} aria-hidden />
                         <Text size="sm">{getPreferredTime(dayWeather.sunset, locale)}</Text>
                       </Group>
                     </Group>
@@ -285,7 +286,7 @@ const DailyWeather = ({ options, weather, isEditMode }: CompactWeatherProps) => 
       <Stack gap="xs" align="center">
         {options.showCurrentWindSpeed && (
           <Group className="weather-current-wind-speed-group" wrap="nowrap" gap="xs">
-            <IconWind size={16} />
+            <IconWind style={iconSizes.md} />
             <Text fz={16}>
               {t("currentWindSpeed", {
                 currentWindSpeed: (options.useImperialSpeed
@@ -301,13 +302,13 @@ const DailyWeather = ({ options, weather, isEditMode }: CompactWeatherProps) => 
         )}
         {weather.daily[0]?.humidity !== undefined && (
           <Group className="weather-humidity-group" wrap="nowrap" gap="xs">
-            <IconDroplets size={16} />
+            <IconDroplets style={iconSizes.md} />
             <Text fz={16}>{t("dailyForecast.humidity", { humidity: weather.daily[0].humidity })}</Text>
           </Group>
         )}
         <Group className="weather-max-min-temp-group" wrap="nowrap" gap="sm">
           <Group gap="xs" wrap="nowrap">
-            <IconArrowUpRight size={16} />
+            <IconArrowUpRight style={iconSizes.md} />
             <Text fz={16}>
               {getPreferredUnit(
                 weather.daily[0]?.maxTemp,
@@ -317,7 +318,7 @@ const DailyWeather = ({ options, weather, isEditMode }: CompactWeatherProps) => 
             </Text>
           </Group>
           <Group gap="xs" wrap="nowrap">
-            <IconArrowDownRight size={16} />
+            <IconArrowDownRight style={iconSizes.md} />
             <Text fz={16}>
               {getPreferredUnit(
                 weather.daily[0]?.minTemp,
@@ -331,7 +332,7 @@ const DailyWeather = ({ options, weather, isEditMode }: CompactWeatherProps) => 
       {options.showCity && (
         <>
           <Group className="weather-city-group" wrap="nowrap" gap="xs">
-            <IconMapPin size={16} />
+            <IconMapPin style={iconSizes.md} />
             <Text fz={16} style={{ whiteSpace: "nowrap" }}>
               {options.location.name}
             </Text>
@@ -350,7 +351,7 @@ const WeeklyForecast = ({ options, weather, isEditMode, maxDays }: CompactWeathe
       <Group className="weather-forecast-city-temp-group" wrap="nowrap" gap="md">
         {options.showCity && (
           <Group gap="xs" wrap="nowrap">
-            <IconMapPin size={16} />
+            <IconMapPin style={iconSizes.md} />
             <Text fz={16} style={{ whiteSpace: "nowrap" }}>
               {options.location.name}
             </Text>

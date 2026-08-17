@@ -12,6 +12,7 @@ import type { MediaRequestStatus } from "@homarr/integrations/types";
 import { mediaAvailabilityConfiguration, mediaRequestStatusConfiguration } from "@homarr/integrations/types";
 import { openMediaRequestSearch } from "@homarr/spotlight";
 import { useScopedI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../../common/application-url";
@@ -94,7 +95,7 @@ const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[]
         aria-label={t("action.search.label")}
         onClick={() => openMediaRequestSearch({ integrationIds })}
       >
-        <IconSearch size={16} />
+        <IconSearch style={iconSizes.md} />
       </ActionIcon>
     </Tooltip>
   );
@@ -281,7 +282,7 @@ const DecisionButtons = ({ requestId, integrationId, canInteract, alwaysVisible 
             handleDecision("approve");
           }}
         >
-          <IconThumbUp size={16} />
+          <IconThumbUp style={iconSizes.md} />
         </ActionIcon>
       </Tooltip>
       <Tooltip label={t("pending.decline")}>
@@ -296,7 +297,7 @@ const DecisionButtons = ({ requestId, integrationId, canInteract, alwaysVisible 
             handleDecision("decline");
           }}
         >
-          <IconThumbDown size={16} />
+          <IconThumbDown style={iconSizes.md} />
         </ActionIcon>
       </Tooltip>
     </Group>
