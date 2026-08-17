@@ -105,16 +105,20 @@ jobs:
 
   container:
     name: Container and E2E
-    needs: fast-gate
+    needs: [fast-gate, preview-amd64]
     if: |
-      github.event_name == 'merge_group' ||
-      (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
-      (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
-      (github.event_name == 'workflow_dispatch' && (inputs.operation == 'validate' || inputs.operation == 'publish'))
+      always() &&
+      (
+        github.event_name == 'merge_group' ||
+        (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
+        (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
+        (github.event_name == 'workflow_dispatch' && (inputs.operation == 'validate' || inputs.operation == 'publish'))
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v7
         if: "!env.ACT"
@@ -129,8 +133,18 @@ jobs:
         if: "!env.ACT"
         uses: docker/setup-buildx-action@v4
 
+      - name: Reuse amd64 preview image
+        if: needs.preview-amd64.outputs.digest != '' && !env.ACT
+        env:
+          DIGEST: ${{ needs.preview-amd64.outputs.digest }}
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker pull "${PREVIEW_IMAGE}@${DIGEST}"
+          docker tag "${PREVIEW_IMAGE}@${DIGEST}" homarr-ci
+          docker tag "${PREVIEW_IMAGE}@${DIGEST}" homarr-e2e
+
       - name: Build container once
-        if: "!env.ACT"
+        if: needs.preview-amd64.outputs.digest == '' && !env.ACT
         uses: docker/build-push-action@v7
         with:
           context: .
