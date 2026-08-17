@@ -1,0 +1,25 @@
+packages/ui/src/components/integration-marquee.tsx
+  s_fe6f0f79bcb0c6::t_f2040f93e934c4 1
+apps/nextjs/src/components/custom-widgets/download.ts
+  s_fe6f0f79bcb0c6::t_da143fe0855290 1-9
+apps/nextjs/src/app/[locale]/manage/custom-widgets/_custom-widget-actions.tsx
+  s_fe6f0f79bcb0c6::t_fa515132526081 29
+  s_fe6f0f79bcb0c6::t_ff09b64c0afe2d 86,92-93,99,110,113,121
+  s_fe6f0f79bcb0c6::t_c7eaa4325f233a 180-195,197
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "bd171bf73b4b592c4915bb97784a46976117bf37",
+  "prompts": {},
+  "sessions": {
+    "s_fe6f0f79bcb0c6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff3534623ffeBmehYI2hm4qQZZ",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
