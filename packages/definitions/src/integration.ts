@@ -124,7 +124,7 @@ export const integrationDefs = {
   readarr: {
     name: "Readarr",
     secretKinds: [["apiKey"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/readarr.svg",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@main/png/readarr.png",
     category: ["calendar"],
     documentationUrl: createDocumentationLink("/docs/integrations/readarr"),
     defaultPort: 8787,
