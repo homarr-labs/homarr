@@ -15,7 +15,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IconApi } from "@tabler/icons-react";
+import { IconApi, IconBuildingStore } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -41,7 +41,6 @@ import type { TablerIcon } from "@homarr/ui";
 import { widgetCatalogIcons } from "@homarr/widgets/catalog";
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
-import { WorkshopInstallButton } from "~/components/workshop/workshop-install-button";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { useSetupAnalytics } from "~/components/create/setup-analytics";
 import type { EmptySection } from "~/app/[locale]/boards/_types";
@@ -506,7 +505,18 @@ const ItemSelectModalContent = ({
               ))}
 
               <Box style={{ gridColumn: "1 / -1" }}>
-                <WorkshopInstallButton fullWidth>{t("workshop.installDialog")}</WorkshopInstallButton>
+                {/* Opens in a new tab so unsaved board changes survive the detour. */}
+                <Button
+                  component="a"
+                  href="/manage/custom-widgets/workshop"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="default"
+                  fullWidth
+                  leftSection={<IconBuildingStore size={16} />}
+                >
+                  {t("workshop.browseWorkshop")}
+                </Button>
               </Box>
             </>
           )}

@@ -94,7 +94,7 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
             <Stack gap={6} miw={145}>
               {[["/", system.disk] as const, ...filesystems].map(([path, value]) => (
                 <Stack key={path} gap={1}>
-                  <Text size="10px" c="dimmed" fw={500} lh={1.2}>
+                  <Text size="xs" c="dimmed" fw={500} lh={1.2}>
                     {mountLabel(path)}
                   </Text>
                   <Group gap={8} wrap="nowrap">

@@ -4,7 +4,7 @@ import path from "path";
 
 import { NextResponse } from "next/server";
 import AdmZip from "adm-zip";
-import Database from "better-sqlite3";
+import BetterSqlite3 from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
@@ -18,6 +18,9 @@ import { env } from "@homarr/common/env";
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { db } from "@homarr/db";
+import type { Database } from "@homarr/db";
+import { applyCustomMigrationsAsync } from "@homarr/db/migrations/custom";
+import { schema } from "@homarr/db/schema";
 
 import { findMigrationsFolder } from "../shared";
 
@@ -120,7 +123,7 @@ const assertArchiveSizeLimits = (zip: AdmZip) => {
   }
 };
 
-const reEncryptSecrets = (tempDb: InstanceType<typeof Database>, importedKeyHex: string) => {
+const reEncryptSecrets = (tempDb: InstanceType<typeof BetterSqlite3>, importedKeyHex: string) => {
   const currentKeyHex = env.SECRET_ENCRYPTION_KEY;
   if (importedKeyHex === currentKeyHex) return;
 
@@ -172,7 +175,7 @@ const reEncryptSecrets = (tempDb: InstanceType<typeof Database>, importedKeyHex:
   transaction();
 };
 
-const getHomeBoardName = (tempDb: InstanceType<typeof Database>): string | null => {
+const getHomeBoardName = (tempDb: InstanceType<typeof BetterSqlite3>): string | null => {
   const row = tempDb
     .prepare(
       `SELECT "name" FROM (
@@ -234,7 +237,7 @@ export async function POST(req: Request) {
 
   restoreInProgress = true;
   let tempDirectory: string | null = null;
-  let tempDb: InstanceType<typeof Database> | null = null;
+  let tempDb: InstanceType<typeof BetterSqlite3> | null = null;
 
   try {
     let formData: FormData;
@@ -285,9 +288,10 @@ export async function POST(req: Request) {
     }
     fs.writeFileSync(tempPath, dbEntry.getData());
 
-    tempDb = new Database(tempPath);
-    const drizzleDb = drizzle(tempDb, { casing: DB_CASING });
+    tempDb = new BetterSqlite3(tempPath);
+    const drizzleDb = drizzle(tempDb, { casing: DB_CASING, schema });
     migrate(drizzleDb, { migrationsFolder });
+    await applyCustomMigrationsAsync(drizzleDb as unknown as Database);
 
     const metadataEntry = zip.getEntry("metadata.json");
     if (!metadataEntry) {

@@ -19,14 +19,15 @@ export const ManageCollectionPage = ({
   ...layoutProps
 }: ManageCollectionPageProps) => (
   <ManagePageLayout {...layoutProps}>
-    {itemCount === 0 ? (
-      emptyState
-    ) : (
-      <Stack component="ul" aria-label={ariaLabel} gap="sm" m={0} p={0} style={{ listStyle: "none" }}>
-        {children}
-      </Stack>
-    )}
+    {itemCount === 0 ? emptyState : <ManageCollectionList ariaLabel={ariaLabel}>{children}</ManageCollectionList>}
   </ManagePageLayout>
+);
+
+/** The `ul` wrapper used by every manage list, so collections rendered outside `ManageCollectionPage` still match. */
+export const ManageCollectionList = ({ ariaLabel, children }: { ariaLabel: string; children: ReactNode }) => (
+  <Stack component="ul" aria-label={ariaLabel} gap="sm" m={0} p={0} style={{ listStyle: "none" }}>
+    {children}
+  </Stack>
 );
 
 export interface ManageCollectionItemProps {

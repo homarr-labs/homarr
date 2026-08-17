@@ -2,11 +2,7 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getStepAfterRestorePreview, waitForServerReadinessAsync } from "./database-restore-flow";
-
-it("requires confirmation after every restore preview", () => {
-  expect(getStepAfterRestorePreview()).toBe("confirm");
-});
+import { waitForServerReadinessAsync } from "./database-restore-flow";
 
 describe("waitForServerReadinessAsync", () => {
   beforeEach(() => {

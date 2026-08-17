@@ -8,7 +8,7 @@ on:
     types: [closed]
     branches: ["**"]
   push:
-    branches: [main, dev, beta, next, v2]
+    branches: [main, dev, beta, next, v2, release/v2]
   merge_group:
   workflow_dispatch:
     inputs:
@@ -108,6 +108,7 @@ jobs:
     needs: fast-gate
     if: |
       github.event_name == 'merge_group' ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
       (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
       (github.event_name == 'workflow_dispatch' && (inputs.operation == 'validate' || inputs.operation == 'publish'))
     runs-on: ubuntu-latest
@@ -204,6 +205,7 @@ jobs:
           !env.ACT &&
           (
             (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+            (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
             (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
           )
         uses: docker/login-action@v4
@@ -218,6 +220,7 @@ jobs:
           !env.ACT &&
           (
             (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+            (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
             (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
           )
         uses: docker/build-push-action@v7
@@ -243,6 +246,7 @@ jobs:
     if: |
       (
         (github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository) ||
+        (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
         (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
       )
     runs-on: ubuntu-24.04-arm
@@ -294,6 +298,7 @@ jobs:
     if: |
       (
         (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+        (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
         (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
       )
     runs-on: ubuntu-latest
@@ -303,7 +308,7 @@ jobs:
       packages: write
       pull-requests: read
     env:
-      PREVIEW_TAG: pr-${{ github.event.pull_request.number || inputs.pr_number }}
+      PREVIEW_TAG: ${{ github.event_name == 'push' && 'v2' || format('pr-{0}', github.event.pull_request.number || inputs.pr_number) }}
     steps:
       - name: Log in to GHCR
         if: "!env.ACT"
