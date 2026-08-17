@@ -1,0 +1,20 @@
+.github/workflows/skip-renovate-stability-days.yml
+  s_f6216de8f07e30::t_8b7908414ac4ec 3
+  s_f6216de8f07e30::t_4c379cf292cf61 20-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "679cede4ae9fd92264843fd266c8e17117bee6b2",
+  "prompts": {},
+  "sessions": {
+    "s_f6216de8f07e30": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff0c4a8b9ffesHDKZUOyv7vcQn",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
