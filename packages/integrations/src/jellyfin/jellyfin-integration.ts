@@ -59,14 +59,15 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
           const bitrateBps =
             sessionInfo.TranscodingInfo?.Bitrate ?? sessionInfo.NowPlayingItem.MediaSources?.[0]?.Bitrate ?? null;
           const bitrateKbps = bitrateBps !== null ? Math.round(bitrateBps / 1000) : null;
+          const isEpisode = sessionInfo.NowPlayingItem.Type === BaseItemKind.Episode;
 
           currentlyPlaying = {
             type: convertJellyfinType(sessionInfo.NowPlayingItem.Type),
             name: sessionInfo.NowPlayingItem.SeriesName ?? sessionInfo.NowPlayingItem.Name ?? "",
             seasonName: sessionInfo.NowPlayingItem.SeasonName ?? "",
-            seasonNumber: sessionInfo.NowPlayingItem.ParentIndexNumber ?? null,
-            episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
-            episodeNumber: sessionInfo.NowPlayingItem.IndexNumber ?? null,
+            seasonNumber: isEpisode ? (sessionInfo.NowPlayingItem.ParentIndexNumber ?? null) : null,
+            episodeName: isEpisode ? sessionInfo.NowPlayingItem.EpisodeTitle : null,
+            episodeNumber: isEpisode ? (sessionInfo.NowPlayingItem.IndexNumber ?? null) : null,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
             playback: {
