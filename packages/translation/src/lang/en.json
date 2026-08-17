@@ -2762,10 +2762,6 @@
           "title": "Unable to add item",
           "message": "The item could not be added to this board"
         }
-      },
-      "preview": {
-        "label": "Live preview",
-        "placeholder": "Select a widget to preview its appearance"
       }
     },
     "moveResize": {

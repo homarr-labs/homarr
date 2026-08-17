@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { Button, Group, Stack, Tabs, Text } from "@mantine/core";
+import { Box, Button, Group, Stack, Tabs, Text } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
 import { IconPencil } from "@tabler/icons-react";
 import { z } from "zod/v4";
@@ -127,6 +127,17 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     if (activeTab === "app" && !showAppTab) setActiveTab("widget");
   }, [activeTab, showAppTab, showIntegrationTab]);
 
+  const handleTabChange = (value: string | null) => {
+    if (value === "integration" && selectedIntegrations.length === 1) {
+      const integration = selectedIntegrations[0];
+      if (integration) {
+        innerProps.onEditIntegration?.(integration.id);
+        return;
+      }
+    }
+    setActiveTab(value);
+  };
+
   const handleSubmit = form.onSubmit(async (values) => {
     setIsSubmitting(true);
     try {
@@ -229,7 +240,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
       <FormProvider form={form}>
         {showResourceTabs ? (
           <Stack>
-            <Tabs value={activeTab} onChange={setActiveTab}>
+            <Tabs value={activeTab} onChange={handleTabChange}>
               <Tabs.List grow>
                 <Tabs.Tab value="widget">{t("item.edit.tab.widget")}</Tabs.Tab>
                 {showAppTab && <Tabs.Tab value="app">{t("item.edit.tab.app")}</Tabs.Tab>}
@@ -286,14 +297,27 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
                 </Tabs.Panel>
               )}
             </Tabs>
-            <Group justify="end">
-              <Button onClick={actions.closeModal} variant="subtle" color="gray">
-                {t("common.action.cancel")}
-              </Button>
-              <Button type="submit" loading={isSubmitting}>
-                {t("common.action.saveChanges")}
-              </Button>
-            </Group>
+            <Box
+              pos="sticky"
+              bottom={0}
+              style={{
+                marginInline: "calc(var(--mantine-spacing-md) * -1)",
+                marginBottom: "calc(var(--mantine-spacing-md) * -1)",
+                paddingInline: "var(--mantine-spacing-md)",
+                paddingBlock: "var(--mantine-spacing-sm)",
+                background: "var(--mantine-color-body)",
+                borderTop: "1px solid var(--mantine-color-default-border)",
+              }}
+            >
+              <Group justify="end">
+                <Button onClick={actions.closeModal} variant="subtle" color="gray">
+                  {t("common.action.cancel")}
+                </Button>
+                <Button type="submit" loading={isSubmitting}>
+                  {t("common.action.saveChanges")}
+                </Button>
+              </Group>
+            </Box>
           </Stack>
         ) : (
           widgetFormContent

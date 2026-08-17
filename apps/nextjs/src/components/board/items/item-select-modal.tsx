@@ -44,7 +44,6 @@ import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import { useSetupAnalytics } from "~/components/create/setup-analytics";
 import type { EmptySection } from "~/app/[locale]/boards/_types";
-import { WidgetPreviewPanel } from "./widget-preview-panel";
 import { useItemActions } from "./item-actions";
 import type { WidgetConnectionStatus } from "./item-select-data";
 import {
@@ -64,8 +63,6 @@ interface ItemSelectModalContentProps {
   canCreateIntegration: boolean;
   initialSearch?: string;
 }
-
-type PreviewState = { kind: WidgetKind; options?: Record<string, unknown>; label?: string } | null;
 
 const ItemSelectModalContent = ({
   actions,
@@ -112,7 +109,6 @@ const ItemSelectModalContent = ({
   );
   const [targetSectionId, setTargetSectionId] = useState<string | null>(placementOptions[0]?.value ?? null);
   const [loadingSelection, setLoadingSelection] = useState<string | null>(null);
-  const [preview, setPreview] = useState<PreviewState>(null);
   const selectionLock = useRef(false);
   const { createItem, removeItem } = useItemActions();
 
@@ -131,33 +127,6 @@ const ItemSelectModalContent = ({
     () => new Set((integrationData ?? []).filter(({ permissions }) => permissions.hasUseAccess).map((i) => i.kind)),
     [integrationData],
   );
-
-  const previewIntegrationIds = useMemo(() => {
-    if (!preview?.kind) return [];
-    const supported = (widgetIntegrationSupport[preview.kind] ?? []).filter((integration) => integration !== "mock");
-    return (integrationData ?? [])
-      .filter(({ permissions }) => permissions.hasUseAccess)
-      .filter(({ kind }) => (supported as readonly string[]).includes(kind))
-      .map(({ id }) => id);
-  }, [integrationData, preview]);
-
-  const handlePreviewCustomWidget = (customWidgetDefinition: NonNullable<typeof customWidgetDefs>[number]) => {
-    void loadWidgetDefinition("customApi")
-      .then((definition) => {
-        const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
-        setPreview({
-          kind: "customApi",
-          label: customWidgetDefinition.name,
-          options: {
-            ...defaultOptions,
-            definitionId: customWidgetDefinition.id,
-            configuration: customWidgetDefinition.defaultOptions,
-            configurationVersion: customWidgetDefinition.updatedAt.getTime(),
-          },
-        });
-      })
-      .catch(() => undefined);
-  };
 
   const items = useMemo(
     () =>
@@ -442,12 +411,10 @@ const ItemSelectModalContent = ({
               onFocus={() => {
                 void loadWidgetDefinition(item.kind).catch(() => undefined);
                 preloadWidgetEditModal();
-                setPreview({ kind: item.kind });
               }}
               onPointerEnter={() => {
                 void loadWidgetDefinition(item.kind).catch(() => undefined);
                 preloadWidgetEditModal();
-                setPreview({ kind: item.kind });
               }}
               disabled={loadingSelection !== null}
               loading={loadingSelection === item.kind}
@@ -478,11 +445,9 @@ const ItemSelectModalContent = ({
                   onSelect={() => void handleAddCustomWidget(def)}
                   onFocus={() => {
                     void loadWidgetDefinition("customApi").catch(() => undefined);
-                    handlePreviewCustomWidget(def);
                   }}
                   onPointerEnter={() => {
                     void loadWidgetDefinition("customApi").catch(() => undefined);
-                    handlePreviewCustomWidget(def);
                   }}
                 >
                   <Stack h="100%" gap="xs">
@@ -527,14 +492,6 @@ const ItemSelectModalContent = ({
             </Center>
           )}
         </SelectGridLayout>
-      </Box>
-      <Box visibleFrom="lg" w={320} style={{ flexShrink: 0 }}>
-        <WidgetPreviewPanel
-          kind={preview?.kind ?? null}
-          integrationIds={previewIntegrationIds}
-          options={preview?.options ?? undefined}
-          label={preview?.label ?? undefined}
-        />
       </Box>
     </Flex>
   );

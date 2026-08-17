@@ -82,5 +82,5 @@ export const EmbeddedIntegrationEditModal = createModal<EmbeddedIntegrationEditM
   defaultTitle: (t) => t("item.edit.tab.integration"),
   size: modalSizeForm,
   presentation: "inspector",
-  closeOnClickOutside: false,
+  closeOnClickOutside: true,
 });
