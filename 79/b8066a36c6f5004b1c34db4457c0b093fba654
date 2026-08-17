@@ -1,0 +1,19 @@
+apps/nextjs/src/components/navigation/dynamic-breadcrumb.tsx
+  s_cf26c9caabb8d3::t_e224632bc27e8d 68-72,75,80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "79b8066a36c6f5004b1c34db4457c0b093fba654",
+  "prompts": {},
+  "sessions": {
+    "s_cf26c9caabb8d3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff55fc8b9ffeav6SDTPcgtDQmg",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
