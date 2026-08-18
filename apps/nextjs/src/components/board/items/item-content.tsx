@@ -1,5 +1,5 @@
 import type { ComponentType, CSSProperties, MutableRefObject } from "react";
-import { memo, Suspense, use, useCallback, useEffect, useRef, useState } from "react";
+import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import type { CardProps } from "@mantine/core";
@@ -159,6 +159,11 @@ const LoadedBoardItemContent = ({
   const board = useRequiredBoard();
   const t = useI18n();
   const [isEditMode] = useEditMode();
+  const settings = useSettings();
+  const menuItem = useMemo(
+    () => ({ ...item, options: reduceWidgetOptionsWithDefinition(definition, settings, item.options) }),
+    [definition, item, settings],
+  );
   const [manualSurface, setManualSurface] = useState<HTMLDivElement | null>(null);
   const [surfacePortalTarget, setSurfacePortalTarget] = useState<HTMLDivElement | null>(null);
   const { active, viewportSize, open, close, dismiss, hover, leave } = useAdvancedFocus();
@@ -305,20 +310,15 @@ const LoadedBoardItemContent = ({
     >
       <Box ref={contentRef} w="100%" h="100%" mih={0}>
         <ErrorBoundary
-          resetKeys={[item.kind]}
+          resetKeys={[item]}
           fallbackRender={({ resetErrorBoundary, error }) => (
-            <>
-              {isEditMode && (
-                <BoardItemMenu item={item} definition={definition} resetErrorBoundary={resetErrorBoundary} />
-              )}
-              <div
-                className={itemContentClasses.editModeInertContent}
-                data-board-grid-inert-content={isEditMode ? "true" : undefined}
-                inert={isEditMode}
-              >
-                <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
-              </div>
-            </>
+            <div
+              className={itemContentClasses.editModeInertContent}
+              data-board-grid-inert-content={isEditMode ? "true" : undefined}
+              inert={isEditMode}
+            >
+              <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
+            </div>
           )}
         >
           <InnerContent
@@ -338,6 +338,7 @@ const LoadedBoardItemContent = ({
 
   return (
     <>
+      {isEditMode && <BoardItemMenu item={menuItem} definition={definition} />}
       <WidgetContextMenu
         item={item}
         definition={definition}
@@ -445,7 +446,6 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
   const options = reduceWidgetOptionsWithDefinition(definition, settings, item.options);
-  const newItem = { ...item, options };
   const { removeItem, updateItemOptions } = useItemActions();
   const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
     updateItemOptions({ itemId: item.id, newOptions });
@@ -462,19 +462,15 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
             removeWidgetDataQueries(queryClient, widgetQueryKeys);
             reset();
           }}
+          resetKeys={[item]}
           fallbackRender={({ resetErrorBoundary, error }) => (
-            <>
-              {isEditMode && (
-                <BoardItemMenu item={newItem} definition={definition} resetErrorBoundary={resetErrorBoundary} />
-              )}
-              <div
-                className={itemContentClasses.editModeInertContent}
-                data-board-grid-inert-content={isEditMode ? "true" : undefined}
-                inert={isEditMode}
-              >
-                <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
-              </div>
-            </>
+            <div
+              className={itemContentClasses.editModeInertContent}
+              data-board-grid-inert-content={isEditMode ? "true" : undefined}
+              inert={isEditMode}
+            >
+              <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
+            </div>
           )}
         >
           <Throw
@@ -485,7 +481,6 @@ const InnerContent = memo(function InnerContent({ item, definition, Component, .
               (!("integrationsRequired" in definition) || definition.integrationsRequired !== false)
             }
           />
-          {isEditMode && <BoardItemMenu item={newItem} definition={definition} />}
           <div
             className={itemContentClasses.editModeInertContent}
             data-board-grid-inert-content={isEditMode ? "true" : undefined}

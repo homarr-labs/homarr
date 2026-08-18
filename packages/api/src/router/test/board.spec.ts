@@ -636,7 +636,7 @@ describe("createBoard should create a new board", () => {
     });
 
     // Act
-    await caller.createBoard({ name: "newBoard", columnCount: 24, isPublic: true });
+    const result = await caller.createBoard({ name: "newBoard", columnCount: 24, isPublic: true });
 
     // Assert
     const dbBoard = await db.query.boards.findFirst({
@@ -663,6 +663,11 @@ describe("createBoard should create a new board", () => {
         expect.objectContaining({ name: "Base", role: "base", columnCount: 24, breakpoint: 768 }),
       ]),
     );
+    expect(result).toEqual({
+      boardId: dbBoard?.id,
+      name: "newBoard",
+      layoutId: dbBoard?.layouts.find((layout) => layout.role === "base")?.id,
+    });
   });
 
   test("should throw error when user has no board-create permission", async () => {

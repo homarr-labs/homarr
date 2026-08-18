@@ -66,6 +66,7 @@
     "@mantine/form": "catalog:",
     "@mantine/hooks": "catalog:",
     "@mantine/modals": "catalog:",
+    "@mantine/notifications": "catalog:",
     "@mantine/tiptap": "catalog:",
     "@modelcontextprotocol/server": "catalog:",
     "@rexa-developer/tiks": "catalog:",

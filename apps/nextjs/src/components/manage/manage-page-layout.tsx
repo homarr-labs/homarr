@@ -8,6 +8,8 @@ import { MANAGE_FLOATING_ACTION_BOTTOM_OFFSET } from "./manage-page.constants";
 
 export interface ManagePageLayoutProps {
   title: ReactNode;
+  /** Overrides the default breadcrumb, e.g. to map a dynamic route segment onto a readable name. */
+  breadcrumb?: ReactNode;
   primaryAction?: ReactNode;
   toolbar?: ReactNode;
   footer?: ReactNode;
@@ -18,6 +20,7 @@ export interface ManagePageLayoutProps {
 
 export const ManagePageLayout = ({
   title,
+  breadcrumb,
   primaryAction,
   toolbar,
   footer,
@@ -29,7 +32,7 @@ export const ManagePageLayout = ({
 
   return (
     <ManageContainer size={size}>
-      <DynamicBreadcrumb />
+      {breadcrumb ?? <DynamicBreadcrumb />}
       <Stack pb={floatingPrimaryAction ? { base: MANAGE_FLOATING_ACTION_BOTTOM_OFFSET, md: 0 } : undefined}>
         <Group justify="space-between" align="center">
           {titleNode}

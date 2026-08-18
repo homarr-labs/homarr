@@ -35,10 +35,10 @@ import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { formatBytes, useTimeAgo } from "@homarr/common";
-import type { ContainerState } from "@homarr/docker";
+import type { ContainerState, DockerEndpointCapability } from "@homarr/docker";
 import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
-import { AddDockerAppToHomarr } from "@homarr/modals-collection";
+import { AddDockerAppToHomarr, useDockerContainerRemovalConfirmation } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -50,6 +50,7 @@ import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/us
 import { getDockerColumnVisibility, getDockerFooterVisibility } from "./layout";
 
 type DockerContainer = RouterOutputs["docker"]["getContainers"]["containers"][number];
+type DockerEndpoint = RouterOutputs["docker"]["getContainers"]["endpoints"][number];
 type ContainerAction = "start" | "stop" | "restart" | "remove";
 
 interface ContextMenuState {
@@ -59,6 +60,7 @@ interface ContextMenuState {
 }
 
 interface ContainerActionHandlers {
+  canUse: (container: DockerContainer, capability: DockerEndpointCapability) => boolean;
   onAction: (action: ContainerAction, container: DockerContainer) => void;
   onAddToHomarr: (container: DockerContainer) => void;
   onOpenLogs: (container: DockerContainer) => void;
@@ -67,8 +69,10 @@ interface ContainerActionHandlers {
 const columnAccessors = ["name", "state", "host", "cpuUsage", "memoryUsage", "actions"] as const;
 const containerMenuWidth = 240;
 
-const createContainerLogsPath = (container: Pick<DockerContainer, "id" | "name">) =>
-  `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}`;
+const createContainerLogsPath = (container: Pick<DockerContainer, "endpointId" | "id" | "name">) =>
+  `/manage/tools/docker/logs/${container.id}?name=${encodeURIComponent(container.name)}&endpointId=${encodeURIComponent(container.endpointId)}`;
+
+const getContainerTarget = ({ endpointId, id }: DockerContainer) => ({ endpointId, id });
 
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useScopedI18n("docker.field.state.option");
@@ -209,10 +213,11 @@ const useContainerAction = (action: ContainerAction) => {
     async onSettled() {
       await utils.docker.getContainers.invalidate();
     },
-    onSuccess() {
-      showSuccessNotification({
-        title: t(`${action}.notification.success.title`),
-        message: t(`${action}.notification.success.message`),
+    onSuccess(results) {
+      const failed = results.some((result) => !result.success);
+      (failed ? showErrorNotification : showSuccessNotification)({
+        title: t(`${action}.notification.${failed ? "error" : "success"}.title`),
+        message: t(`${action}.notification.${failed ? "error" : "success"}.message`),
       });
     },
     onError() {
@@ -236,14 +241,31 @@ export default function DockerWidget({
   const t = useScopedI18n("docker");
   const tWidget = useScopedI18n("widget.dockerContainers");
   const { openModal } = useModalAction(AddDockerAppToHomarr);
+  const confirmRemoval = useDockerContainerRemovalConfirmation();
   const board = useOptionalBoard();
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
   const isAdvanced = displayMode === "advanced";
 
+  const utils = clientApi.useUtils();
   const containersQuery = clientApi.docker.getContainers.useQuery();
   const data = getUsableWidgetQueryData(containersQuery);
-  const { refetch, isFetching } = containersQuery;
+  const { isFetching } = containersQuery;
+  const refreshInventory = clientApi.docker.refreshInventory.useMutation({
+    async onSuccess() {
+      await Promise.all([
+        utils.docker.getContainers.invalidate(),
+        utils.docker.reconcileServices.invalidate(),
+        utils.docker.getServiceHealth.invalidate(),
+      ]);
+    },
+    onError() {
+      showErrorNotification({
+        title: t("action.refresh.notification.error.title"),
+        message: t("action.refresh.notification.error.message"),
+      });
+    },
+  });
   const containers = useMemo(() => data?.containers ?? [], [data?.containers]);
   const timestamp = useMemo(() => data?.timestamp ?? new Date(), [data?.timestamp]);
   const relativeTime = useTimeAgo(timestamp);
@@ -254,12 +276,13 @@ export default function DockerWidget({
   const { mutate: removeContainer } = useContainerAction("remove");
   const handleContainerAction = useCallback(
     (action: ContainerAction, container: DockerContainer) => {
-      if (action === "start") startContainer({ ids: [container.id] });
-      else if (action === "stop") stopContainer({ ids: [container.id] });
-      else if (action === "restart") restartContainer({ ids: [container.id] });
-      else removeContainer({ ids: [container.id] });
+      const target = { targets: [getContainerTarget(container)] };
+      if (action === "start") startContainer(target);
+      else if (action === "stop") stopContainer(target);
+      else if (action === "restart") restartContainer(target);
+      else confirmRemoval([container], () => removeContainer(target));
     },
-    [removeContainer, restartContainer, startContainer, stopContainer],
+    [confirmRemoval, removeContainer, restartContainer, startContainer, stopContainer],
   );
   const handleOpenLogs = useCallback(
     (container: DockerContainer) => window.location.assign(createContainerLogsPath(container)),
@@ -271,11 +294,16 @@ export default function DockerWidget({
   );
   const actionHandlers = useMemo<ContainerActionHandlers>(
     () => ({
+      canUse: (container, capability) =>
+        endpointHasCapability(
+          data?.endpoints.find(({ id }) => id === container.endpointId),
+          capability,
+        ),
       onAction: handleContainerAction,
       onAddToHomarr: handleAddToHomarr,
       onOpenLogs: handleOpenLogs,
     }),
-    [handleAddToHomarr, handleContainerAction, handleOpenLogs],
+    [data?.endpoints, handleAddToHomarr, handleContainerAction, handleOpenLogs],
   );
 
   const { mutate: saveItemOptions } = clientApi.widget.options.saveItemOptions.useMutation({
@@ -359,6 +387,14 @@ export default function DockerWidget({
     );
   }
 
+  if (containers.length === 0 && data?.endpoints.some(({ status }) => status === "unavailable")) {
+    return (
+      <Center h="100%">
+        <Text>{tWidget("error.endpointsUnavailable")}</Text>
+      </Center>
+    );
+  }
+
   const footerVisibility = getDockerFooterVisibility(width, isAdvanced);
 
   return (
@@ -376,7 +412,7 @@ export default function DockerWidget({
           storeColumnsKey={storeKey}
           sortStatus={sortStatus}
           onSortStatusChange={(isAdvanced || options.enableRowSorting) && !isEditMode ? setSortStatus : undefined}
-          idAccessor="id"
+          idAccessor="resourceId"
           onRowContextMenu={isEditMode ? undefined : handleContextMenu}
           onScroll={() => {
             if (contextMenu) closeContextMenu();
@@ -417,8 +453,8 @@ export default function DockerWidget({
                 size="sm"
                 variant="transparent"
                 c="var(--mantine-color-text)"
-                loading={isFetching}
-                onClick={() => void refetch()}
+                loading={isFetching || refreshInventory.isPending}
+                onClick={() => refreshInventory.mutate()}
                 aria-label={t("table.refresh.lastUpdated", { when: relativeTime })}
               >
                 <IconRefresh size="var(--mantine-font-size-md)" />
@@ -475,7 +511,6 @@ function ContainerActionItems({
   onClose: () => void;
 }) {
   const t = useScopedI18n("docker.action");
-  const [confirmRemove, setConfirmRemove] = useState(false);
   const stateAction = container.state === "running" ? "stop" : "start";
   const StateIcon = stateAction === "stop" ? IconPlayerStop : IconPlayerPlay;
 
@@ -491,6 +526,7 @@ function ContainerActionItems({
       </Menu.Label>
       <Menu.Item
         leftSection={<IconFileText size="var(--mantine-font-size-sm)" />}
+        disabled={!handlers.canUse(container, "logs")}
         onClick={() => {
           handlers.onOpenLogs(container);
           onClose();
@@ -502,6 +538,7 @@ function ContainerActionItems({
       <Menu.Item
         color={stateAction === "start" ? "green" : "red"}
         leftSection={<StateIcon size="var(--mantine-font-size-sm)" />}
+        disabled={!handlers.canUse(container, "lifecycle")}
         onClick={() => invokeAction(stateAction)}
       >
         {t(`${stateAction}.label`)}
@@ -509,23 +546,19 @@ function ContainerActionItems({
       <Menu.Item
         color="orange"
         leftSection={<IconRotateClockwise size="var(--mantine-font-size-sm)" />}
+        disabled={!handlers.canUse(container, "lifecycle")}
         onClick={() => invokeAction("restart")}
       >
         {t("restart.label")}
       </Menu.Item>
-      {!confirmRemove ? (
-        <Menu.Item
-          color="red"
-          leftSection={<IconTrash size="var(--mantine-font-size-sm)" />}
-          onClick={() => setConfirmRemove(true)}
-        >
-          {t("remove.label")}
-        </Menu.Item>
-      ) : (
-        <Menu.Item color="red" leftSection={<IconTrash size="var(--mantine-font-size-sm)" />} onClick={() => invokeAction("remove")}>
-          {t("remove.confirm")}
-        </Menu.Item>
-      )}
+      <Menu.Item
+        color="red"
+        leftSection={<IconTrash size="var(--mantine-font-size-sm)" />}
+        disabled={!handlers.canUse(container, "remove")}
+        onClick={() => invokeAction("remove")}
+      >
+        {t("remove.label")}
+      </Menu.Item>
       <Menu.Divider />
       <Menu.Item
         leftSection={<IconCategoryPlus size="var(--mantine-font-size-sm)" />}
@@ -539,6 +572,9 @@ function ContainerActionItems({
     </>
   );
 }
+
+const endpointHasCapability = (endpoint: DockerEndpoint | undefined, capability: DockerEndpointCapability) =>
+  endpoint && "capabilities" in endpoint ? endpoint.capabilities.includes(capability) : true;
 
 function ContainerContextMenu({
   state,

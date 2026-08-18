@@ -17,6 +17,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 dayjs.extend(relativeTime);
 
 interface ServicesTableComponentProps {
+  contextId: string;
   initialServices: RouterOutputs["kubernetes"]["services"]["getServices"];
 }
 
@@ -61,15 +62,19 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.services">): MRT
   },
 ];
 
-export function ServicesTable(initialData: ServicesTableComponentProps) {
+export function ServicesTable({ contextId, initialServices }: ServicesTableComponentProps) {
   const tServices = useScopedI18n("kubernetes.services");
 
-  const { data } = clientApi.kubernetes.services.getServices.useQuery(undefined, {
-    initialData: initialData.initialServices,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = clientApi.kubernetes.services.getServices.useQuery(
+    { contextId },
+    {
+      initialData: initialServices,
+      refetchOnMount: "always",
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
+    },
+  );
 
   const table = useTranslatedMantineReactTable({
     data,

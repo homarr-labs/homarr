@@ -8,21 +8,25 @@ import { getScopedI18n } from "@homarr/translation/server";
 
 import { ServicesTable } from "~/app/[locale]/manage/tools/kubernetes/services/services-table";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import type { KubernetesContextSearchParams } from "../kubernetes-context";
+import { getSelectedKubernetesContextAsync } from "../kubernetes-context";
 
-export default async function ServicesPage() {
+export default async function ServicesPage({ searchParams }: { searchParams: Promise<KubernetesContextSearchParams> }) {
   const session = await auth();
   if (!(session?.user.permissions.includes("admin") && env.ENABLE_KUBERNETES)) {
     notFound();
   }
 
-  const services = await api.kubernetes.services.getServices();
+  const context = await getSelectedKubernetesContextAsync(searchParams);
+  const services =
+    context.status === "unavailable" ? [] : await api.kubernetes.services.getServices({ contextId: context.contextId });
   const tServices = await getScopedI18n("kubernetes.services");
   return (
     <>
       <DynamicBreadcrumb />
       <Stack>
         <Title order={1}>{tServices("label")}</Title>
-        <ServicesTable initialServices={services} />
+        <ServicesTable contextId={context.contextId} initialServices={services} />
       </Stack>
     </>
   );

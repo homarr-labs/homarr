@@ -9,6 +9,7 @@
   "exports": {
     ".": "./index.ts",
     "./collection": "./collection.ts",
+    "./migrations/custom": "./migrations/custom/index.ts",
     "./migrations/seed": "./migrations/seed.ts",
     "./proxy-reader": "./proxy-reader.ts",
     "./schema": "./schema/index.ts",

@@ -90,21 +90,14 @@ export const integrationRouter = createTRPCRouter({
       });
       return integrations
         .map((integration) => {
-          const permissions = integration.userPermissions
-            .map(({ permission }) => permission)
-            .concat(integration.groupPermissions.map(({ permission }) => permission));
+          const permissions = constructIntegrationPermissions(integration, ctx.session);
 
           return {
             id: integration.id,
             name: integration.name,
             kind: integration.kind,
             url: integration.url,
-            permissions: {
-              hasUseAccess:
-                permissions.includes("use") || permissions.includes("interact") || permissions.includes("full"),
-              hasInteractAccess: permissions.includes("interact") || permissions.includes("full"),
-              hasFullAccess: permissions.includes("full"),
-            },
+            permissions,
           };
         })
         .toSorted(
@@ -138,21 +131,14 @@ export const integrationRouter = createTRPCRouter({
     });
     return integrationsFromDb
       .map((integration) => {
-        const permissions = integration.userPermissions
-          .map(({ permission }) => permission)
-          .concat(integration.groupPermissions.map(({ permission }) => permission));
+        const permissions = constructIntegrationPermissions(integration, ctx.session);
 
         return {
           id: integration.id,
           name: integration.name,
           kind: integration.kind,
           url: integration.url,
-          permissions: {
-            hasUseAccess:
-              permissions.includes("use") || permissions.includes("interact") || permissions.includes("full"),
-            hasInteractAccess: permissions.includes("interact") || permissions.includes("full"),
-            hasFullAccess: permissions.includes("full"),
-          },
+          permissions,
         };
       })
       .toSorted(
@@ -189,21 +175,14 @@ export const integrationRouter = createTRPCRouter({
       });
       return integrationsFromDb
         .map((integration) => {
-          const permissions = integration.userPermissions
-            .map(({ permission }) => permission)
-            .concat(integration.groupPermissions.map(({ permission }) => permission));
+          const permissions = constructIntegrationPermissions(integration, ctx.session);
 
           return {
             id: integration.id,
             name: integration.name,
             kind: integration.kind,
             url: integration.url,
-            permissions: {
-              hasUseAccess:
-                permissions.includes("use") || permissions.includes("interact") || permissions.includes("full"),
-              hasInteractAccess: permissions.includes("interact") || permissions.includes("full"),
-              hasFullAccess: permissions.includes("full"),
-            },
+            permissions,
           };
         })
         .toSorted(
@@ -301,7 +280,7 @@ export const integrationRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Create a new integration (connection to an external service). REQUIRED fields: name, url (http/https), kind, secrets, attemptSearchEngineCreation. The 'secrets' field is REQUIRED and must be a non-empty array — call integration_getKinds first to see which secret kinds each integration type needs. Example for Radarr: secrets=[{kind:'apiKey', value:'your-radarr-api-key'}]. Example for Proxmox: secrets=[{kind:'tokenId', value:'...'}, {kind:'personalAccessToken', value:'...'}, {kind:'realm', value:'pam'}]. The connection is tested before saving — if secrets are wrong, an error is returned. Set attemptSearchEngineCreation to false unless explicitly requested. The 'app' field is optional — pass {id:'...'} to link to an existing app, or omit it.",
+          "Create a new integration (connection to an external service). REQUIRED fields: name, url (http/https), kind, secrets, attemptSearchEngineCreation. The 'secrets' field is REQUIRED and must be a non-empty array — call integration_getKinds first to see which secret kinds each integration type needs. Example for Radarr: secrets=[{kind:'apiKey', value:'your-radarr-api-key'}]. Example for Proxmox: secrets=[{kind:'tokenId', value:'...'}, {kind:'personalAccessToken', value:'...'}, {kind:'realm', value:'pam'}]. The connection is tested before saving — if secrets are wrong, an error is returned. Set attemptSearchEngineCreation to false unless explicitly requested. The 'app' field is optional — pass {id:'...'} to link to an existing app, or omit it. Returns integration details and appId, which is null when no app is linked or created.",
       },
     })
     .input(integrationCreateSchema)
@@ -368,6 +347,16 @@ export const integrationRouter = createTRPCRouter({
         kind: input.kind,
         url: input.url,
       });
+
+      return {
+        integration: {
+          id: integrationId,
+          name: input.name,
+          kind: input.kind,
+          url: input.url,
+        },
+        appId,
+      };
     }),
   update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");

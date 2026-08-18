@@ -40,7 +40,7 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
     useItemActions();
-  const { integrations: integrationData = [], section } = useSectionContext();
+  const { integrations: integrationData, section } = useSectionContext();
   const settings = useSettings();
   const label = item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`);
 
@@ -77,8 +77,10 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
           });
           refResetErrorBoundaryOnNextRender.current = true;
         },
-        integrationData: integrationData.filter(
+        onIntegrationSaved: resetErrorBoundary,
+        integrationData: (integrationData ?? []).filter(
           (integration) =>
+            integration.permissions.hasUseAccess &&
             "supportedIntegrations" in definition &&
             (definition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
         ),
@@ -105,7 +107,7 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
           pos="absolute"
           top={12}
           right={8}
-          style={{ zIndex: 10 }}
+          style={{ zIndex: 30 }}
           data-board-widget-settings
           aria-label={tItem("menu.label.settingsFor", { name: label })}
         >

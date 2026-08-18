@@ -1,15 +1,15 @@
 "use client";
 
-import { ActionIcon, Avatar, Badge, Card, Group, Stack, Switch, Text, Tooltip } from "@mantine/core";
+import { Avatar, Badge, Button, Group, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { IconAlertTriangle, IconApi, IconPencil, IconSparkles } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
-import { clientApi } from "@homarr/api/client";
-import { revalidatePathActionAsync } from "@homarr/common/client";
-import { showErrorNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
+import { CustomWidgetSourceSetupDialog } from "~/components/custom-widgets/custom-widget-source-setup-dialog";
+import { ManageCollectionItem, ManageCollectionList } from "~/components/manage/manage-collection";
 import { NoResults } from "~/components/no-results";
 import { CustomWidgetRowActions } from "./_custom-widget-actions";
 
@@ -31,173 +31,164 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
   }
 
   return (
-    <Stack gap="sm">
-      {definitions.map((def) => (
-        <CustomWidgetCard key={def.id} widget={def} />
+    <ManageCollectionList ariaLabel={t("page.list.title")}>
+      {definitions.map((definition) => (
+        <CustomWidgetRow key={definition.id} widget={definition} />
       ))}
-    </Stack>
+    </ManageCollectionList>
   );
 };
 
 type WidgetDef = RouterOutputs["customWidget"]["list"][number];
 
-function CustomWidgetCard({ widget }: { widget: WidgetDef }) {
+function CustomWidgetRow({ widget }: { widget: WidgetDef }) {
   const t = useScopedI18n("customWidget");
-  const toggleMutation = clientApi.customWidget.toggleEnabled.useMutation();
-  const utils = clientApi.useUtils();
-
-  const handleToggle = () => {
-    toggleMutation.mutate(
-      { id: widget.id, enabled: !widget.enabled },
-      {
-        onSuccess: async () => {
-          await utils.widget.customApi.getData.cancel();
-          void utils.customWidget.list.invalidate();
-          void utils.widget.customApi.getData.invalidate();
-          void revalidatePathActionAsync("/manage/custom-widgets");
-        },
-        onError: () => {
-          showErrorNotification({
-            title: widget.enabled ? t("action.disable") : t("action.enable"),
-            message: t("notification.toggleError"),
-          });
-        },
-      },
-    );
-  };
+  const [sourceSetupOpened, sourceSetupControls] = useDisclosure(false);
+  const origins = [...new Set(widget.sources.map((source) => source.origin))];
 
   return (
-    <Card
-      padding="sm"
-      withBorder={!widget.valid}
-      bd={
-        widget.migrationRequired
-          ? "1px solid var(--mantine-color-yellow-6)"
-          : !widget.valid
-            ? "1px solid var(--mantine-color-red-6)"
-            : undefined
-      }
-      style={{
-        opacity: widget.valid && !widget.enabled ? 0.55 : 1,
-        transition: "opacity 150ms ease",
-      }}
-    >
-      <Group justify="space-between" wrap="nowrap" gap="md">
-        <Group wrap="nowrap" gap="sm" style={{ flex: 1, minWidth: 0 }}>
-          {widget.iconUrl ? (
-            <Avatar size={36} radius="sm" src={widget.iconUrl} styles={{ image: { objectFit: "contain" } }} />
-          ) : (
-            <Avatar size={36} radius="sm" color="red">
-              <IconApi size={18} />
-            </Avatar>
-          )}
-          <Stack gap={2} style={{ minWidth: 0, flex: 1 }}>
-            <Text size="sm" fw={600} lineClamp={1} style={{ minWidth: 0 }}>
-              {widget.name}
+    <>
+      <ManageCollectionItem
+        leading={
+          <Avatar
+            size={40}
+            radius="sm"
+            src={widget.iconUrl}
+            color={widget.valid ? "pink" : "red"}
+            styles={{ image: { objectFit: "contain" } }}
+            alt=""
+          >
+            <IconApi size={20} stroke={1.5} />
+          </Avatar>
+        }
+        title={
+          <Text component="span" fw={600} lineClamp={1} c={widget.enabled || !widget.valid ? undefined : "dimmed"}>
+            {widget.name}
+          </Text>
+        }
+        badges={<CustomWidgetStatusBadges widget={widget} onConfigureSources={sourceSetupControls.open} />}
+        description={
+          <Text size="sm" c="dimmed" lineClamp={2}>
+            {widget.description || t("page.list.noDescription")}
+          </Text>
+        }
+        metadata={
+          <Group gap={6} wrap="wrap">
+            <Text size="xs" c="dimmed">
+              {t("page.list.requestCount", { count: widget.requestCount })}
             </Text>
-            {widget.migrationRequired ? (
-              <Text size="xs" c="yellow.8">
-                {t("page.list.migrationDescription")}
+            {origins.map((origin) => (
+              <Text key={origin} size="xs" c="dimmed" ff="monospace" style={{ wordBreak: "break-all" }}>
+                · {origin}
               </Text>
-            ) : !widget.valid ? (
-              <Text size="xs" c="red">
-                {t("page.list.invalidDefinitionDescription")}
-              </Text>
-            ) : null}
-            {widget.sources[0] && (
-              <Text size="xs" c="dimmed" ff="monospace" lineClamp={1} style={{ wordBreak: "break-all", minWidth: 0 }}>
-                {widget.sources.map((source) => source.origin).join(" · ")}
-              </Text>
-            )}
-          </Stack>
-          {widget.migrationRequired ? (
-            <Tooltip label={t("page.list.migrationInstructions")} multiline maw={420}>
-              <Badge
-                color="yellow"
-                size="sm"
-                variant="light"
-                leftSection={<IconSparkles size={12} />}
-                style={{ flexShrink: 0 }}
-              >
-                {t("page.list.migrationRequired")}
-              </Badge>
-            </Tooltip>
-          ) : widget.valid ? (
-            <Badge color="pink" size="sm" variant="light" style={{ flexShrink: 0 }}>
-              JSX · {widget.requestCount}
-            </Badge>
-          ) : (
-            <Tooltip
-              label={widget.validationIssues
-                .map((issue) => (issue.path ? `${issue.path}: ${issue.message}` : issue.message))
-                .join("\n")}
-              multiline
-              maw={520}
-            >
-              <Badge
-                color="red"
-                size="sm"
-                variant="light"
-                leftSection={<IconAlertTriangle size={12} />}
-                style={{ flexShrink: 0 }}
-              >
-                {t("page.list.invalidDefinition")}
-              </Badge>
-            </Tooltip>
-          )}
-          {widget.missingSecrets.length > 0 && (
-            <Tooltip
-              label={t("page.list.missingCredentialsDescription", { count: widget.missingSecrets.length })}
-              multiline
-              maw={320}
-            >
-              <Badge
-                color="yellow"
-                size="sm"
-                variant="light"
-                leftSection={<IconAlertTriangle size={12} />}
-                style={{ flexShrink: 0 }}
-              >
-                {t("page.list.missingCredentials", { count: widget.missingSecrets.length })}
-              </Badge>
-            </Tooltip>
-          )}
-        </Group>
-
-        <Group gap="xs" wrap="nowrap" style={{ flexShrink: 0 }}>
-          {widget.valid && (
-            <>
-              <Tooltip label={widget.enabled ? t("action.disable") : t("action.enable")}>
-                <Switch
-                  size="sm"
-                  checked={widget.enabled}
-                  onChange={handleToggle}
-                  disabled={toggleMutation.isPending}
-                  aria-label={widget.enabled ? t("action.disable") : t("action.enable")}
-                />
-              </Tooltip>
-              <ActionIcon
+            ))}
+          </Group>
+        }
+        actions={
+          <Group gap="xs" wrap="nowrap">
+            {widget.valid && (
+              <Button
                 component={Link}
                 href={`/manage/custom-widgets/edit/${widget.id}`}
-                variant="subtle"
-                color="gray"
-                aria-label={t("action.edit")}
+                variant="default"
+                size="sm"
+                leftSection={<IconPencil size={16} stroke={1.5} />}
               >
-                <IconPencil size={16} stroke={1.5} />
-              </ActionIcon>
-            </>
-          )}
-          <CustomWidgetRowActions
-            widget={{
-              id: widget.id,
-              name: widget.name,
-              enabled: widget.enabled,
-              valid: widget.valid,
-              migrationRequired: widget.migrationRequired,
-            }}
-          />
-        </Group>
-      </Group>
-    </Card>
+                {t("action.edit")}
+              </Button>
+            )}
+            <CustomWidgetRowActions
+              widget={{
+                id: widget.id,
+                name: widget.name,
+                enabled: widget.enabled,
+                valid: widget.valid,
+                migrationRequired: widget.migrationRequired,
+              }}
+            />
+          </Group>
+        }
+        actionsAlignment="center"
+      />
+      {widget.valid && (
+        <CustomWidgetSourceSetupDialog
+          definitionId={widget.id}
+          opened={sourceSetupOpened}
+          onClose={sourceSetupControls.close}
+        />
+      )}
+    </>
+  );
+}
+
+/** Everything that decides whether this widget can actually run right now. */
+function CustomWidgetStatusBadges({
+  widget,
+  onConfigureSources,
+}: {
+  widget: WidgetDef;
+  onConfigureSources(): void;
+}) {
+  const t = useScopedI18n("customWidget");
+
+  if (widget.migrationRequired) {
+    return (
+      <Tooltip label={t("page.list.migrationInstructions")} multiline maw={420}>
+        <Badge color="yellow" size="sm" variant="light" leftSection={<IconSparkles size={12} />}>
+          {t("page.list.migrationRequired")}
+        </Badge>
+      </Tooltip>
+    );
+  }
+
+  if (!widget.valid) {
+    return (
+      <Tooltip
+        label={widget.validationIssues
+          .map((issue) => (issue.path ? `${issue.path}: ${issue.message}` : issue.message))
+          .join("\n")}
+        multiline
+        maw={520}
+      >
+        <Badge color="red" size="sm" variant="light" leftSection={<IconAlertTriangle size={12} />}>
+          {t("page.list.invalidDefinition")}
+        </Badge>
+      </Tooltip>
+    );
+  }
+
+  return (
+    <Group gap={6} wrap="nowrap">
+      {widget.enabled ? (
+        <Badge color="green" size="sm" variant="light">
+          {t("page.list.enabled")}
+        </Badge>
+      ) : (
+        <Tooltip label={t("page.list.disabledDescription")}>
+          <Badge color="gray" size="sm" variant="light">
+            {t("page.list.disabled")}
+          </Badge>
+        </Tooltip>
+      )}
+      {widget.missingSecrets.length > 0 && (
+        <Tooltip
+          label={t("page.list.missingCredentialsDescription", { count: widget.missingSecrets.length })}
+          multiline
+          maw={320}
+        >
+          <UnstyledButton onClick={onConfigureSources} aria-label={t("action.configureSources")}>
+            <Badge
+              color="yellow"
+              size="sm"
+              variant="light"
+              leftSection={<IconAlertTriangle size={12} />}
+              style={{ cursor: "pointer" }}
+            >
+              {t("page.list.missingCredentials", { count: widget.missingSecrets.length })}
+            </Badge>
+          </UnstyledButton>
+        </Tooltip>
+      )}
+    </Group>
   );
 }

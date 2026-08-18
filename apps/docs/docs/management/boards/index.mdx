@@ -204,6 +204,15 @@ changes, Homarr asks whether to discard them. If the editor cannot load, the boa
   style={{ maxWidth: "100%" }}
 />
 
+While edit mode is active, **Add board content** opens the same Universal Create surface as the global header action and
+Spotlight. It can add a widget, app, integration, Container, board, Workshop item, or Custom Widget when the
+current user and context allow it. Widget setup offers the main canvas, enabled rails, and existing Containers as
+destinations before the widget is created, so the common flow does not require a second move step.
+
+The widget editor also lists its selected integrations. Users with full access can choose **Edit connection** to test,
+diagnose, and repair an integration without leaving the board. A successful repair refreshes the affected widget; the
+saved integration changes apply everywhere that connection is used.
+
 Pointer users can drag from the inert widget area; interactive controls are excluded. Containers use the grab button at their top-left corner.
 Widgets can be resized from any edge or corner handle. Activate a Container's chrome with its top-left grip before using
 its resize handles.
@@ -218,7 +227,11 @@ During a pointer or touch interaction, Escape cancels the move or resize and res
 Invalid, outside, or otherwise forbidden drops are cancelled in the same way.
 The **Move / resize item** action in the edit menu remains available for precise numeric input.
 
-<img src={keyboardTileEditingImage} alt="A focused board tile in keyboard editing mode" style={{ maxWidth: "100%" }} />
+<img
+  src={keyboardTileEditingImage}
+  alt="A focused board tile in keyboard editing mode"
+  style={{ maxWidth: "100%" }}
+/>
 
 #### Preview
 

@@ -42,7 +42,11 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
               <Text size="md">
                 {t.rich("integration.testConnection.error.statusCode.otherDescription", {
                   statusCode: error.data.statusCode.toString(),
-                  url: () => <Anchor href={error.data.url}>{error.data.url}</Anchor>,
+                  url: () => (
+                    <Anchor href={error.data.url} target="_blank" rel="noopener noreferrer">
+                      {error.data.url}
+                    </Anchor>
+                  ),
                 })}
               </Text>
             ) : (
@@ -50,7 +54,11 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
                 {t.rich("integration.testConnection.error.statusCode.description", {
                   reason: t(`integration.testConnection.error.statusCode.reason.${error.data.reason}`),
                   statusCode: error.data.statusCode.toString(),
-                  url: () => <Anchor href={error.data.url}>{error.data.url}</Anchor>,
+                  url: () => (
+                    <Anchor href={error.data.url} target="_blank" rel="noopener noreferrer">
+                      {error.data.url}
+                    </Anchor>
+                  ),
                 })}
               </Text>
             )
@@ -66,7 +74,7 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
                 {t("integration.testConnection.error.common.cause.title")}
               </Accordion.Control>
               <Accordion.Panel>
-                <pre style={{ whiteSpace: "pre-wrap" }}>
+                <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>
                   {error.name}: {error.message}
                   {"\n"}
                   {causeArray

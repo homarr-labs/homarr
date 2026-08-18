@@ -65,24 +65,19 @@ export const DynamicBreadcrumb = ({
         const isNonInteractable =
           nonInteractable?.includes(pathnamePart) === true || categorySegments.has(pathnamePart);
 
-        if (mappedValue) {
-          if (isNonInteractable) {
-            return <Text key={href}>{mappedValue}</Text>;
-          }
-          return (
-            <Anchor key={href} href={href}>
-              {mappedValue}
-            </Anchor>
-          );
-        }
+        // Dynamic segments (ids) have no translation and may not be mapped yet while
+        // their page is still loading. Fall back to the raw segment instead of
+        // raising MISSING_MESSAGE.
+        const labelKey = `${translationKey}.label` as TranslationKeys;
+        const label = mappedValue ?? (t.has(labelKey) ? t(labelKey) : pathnamePart);
 
         if (isNonInteractable) {
-          return <Text key={href}>{t(`${translationKey}.label` as TranslationKeys)}</Text>;
+          return <Text key={href}>{label}</Text>;
         }
 
         return (
           <Anchor key={href} href={href}>
-            {t(`${translationKey}.label` as TranslationKeys)}
+            {label}
           </Anchor>
         );
       })}

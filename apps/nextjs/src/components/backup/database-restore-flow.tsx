@@ -29,8 +29,6 @@ const RESTART_REQUEST_TIMEOUT_MS = 5_000;
 
 export type ServerReadinessResult = "ready" | "timedOut" | "aborted";
 
-export const getStepAfterRestorePreview = (): RestoreStep => "confirm";
-
 interface WaitForServerReadinessOptions {
   restartAfterMs: number;
   signal: AbortSignal;
@@ -256,14 +254,14 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
         <Group justify="space-between" wrap="nowrap">
           <Group gap="sm" wrap="nowrap" miw={0}>
             <IconFileZip size={20} />
-            <div style={{ minWidth: 0 }}>
+            <Group>
               <Text size="sm" fw={500} truncate>
                 {file?.name}
               </Text>
               <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
                 {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : ""}
               </Text>
-            </div>
+            </Group>
           </Group>
           <Button variant="subtle" size="xs" onClick={handleClear} style={{ flexShrink: 0 }}>
             {t("changeFile")}
@@ -291,8 +289,11 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
           <>
             <BackupPreviewPanel analysis={analysis} />
             <Group justify="flex-end">
-              <Button rightSection={<IconArrowRight size={16} />} onClick={() => setStep(getStepAfterRestorePreview())}>
-                {t("continueToRestore")}
+              <Button
+                rightSection={<IconArrowRight size={16} />}
+                onClick={() => (variant === "standalone" ? void handleConfirm() : setStep("confirm"))}
+              >
+                {variant === "standalone" ? t("confirm.submit") : t("continueToRestore")}
               </Button>
             </Group>
           </>

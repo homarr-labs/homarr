@@ -8,7 +8,7 @@ on:
     types: [closed]
     branches: ["**"]
   push:
-    branches: [main, dev, beta, next, v2]
+    branches: [main, dev, beta, next, v2, release/v2]
   merge_group:
   workflow_dispatch:
     inputs:
@@ -105,18 +105,20 @@ jobs:
 
   container:
     name: Container and E2E
-    needs: fast-gate
+    needs: [fast-gate, preview-amd64]
     if: |
-      github.event_name == 'merge_group' ||
-      (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
-      (github.event_name == 'workflow_dispatch' && (inputs.operation == 'validate' || inputs.operation == 'publish'))
+      !cancelled() && needs.fast-gate.result == 'success' &&
+      (
+        github.event_name == 'merge_group' ||
+        (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
+        (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
+        (github.event_name == 'workflow_dispatch' && (inputs.operation == 'validate' || inputs.operation == 'publish'))
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
-      packages: write
-    outputs:
-      digest: ${{ steps.preview-build.outputs.digest }}
+      packages: read
     steps:
       - uses: actions/checkout@v7
         if: "!env.ACT"
@@ -131,8 +133,18 @@ jobs:
         if: "!env.ACT"
         uses: docker/setup-buildx-action@v4
 
+      - name: Reuse amd64 preview image
+        if: needs.preview-amd64.outputs.digest != '' && !env.ACT
+        env:
+          DIGEST: ${{ needs.preview-amd64.outputs.digest }}
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker pull "${PREVIEW_IMAGE}@${DIGEST}"
+          docker tag "${PREVIEW_IMAGE}@${DIGEST}" homarr-ci
+          docker tag "${PREVIEW_IMAGE}@${DIGEST}" homarr-e2e
+
       - name: Build container once
-        if: "!env.ACT"
+        if: needs.preview-amd64.outputs.digest == '' && !env.ACT
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -147,8 +159,8 @@ jobs:
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.ref.name=pr-${{ github.event.pull_request.number || inputs.pr_number || 'none' }}
-          cache-from: type=gha,scope=homarr-linux-amd64
-          cache-to: type=gha,scope=homarr-linux-amd64,mode=max
+          cache-from: type=gha,scope=homarr-e2e
+          cache-to: type=gha,scope=homarr-e2e,mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
@@ -189,7 +201,10 @@ jobs:
         run: pnpm exec playwright install-deps chromium
 
       - name: Run E2E tests
-        run: pnpm test:e2e
+        env:
+          NODE_ENV: development
+          CI: "true"
+        run: pnpm exec vitest e2e --retry 1 --maxWorkers 4
 
       - name: Upload E2E artifacts
         if: failure() && !env.ACT
@@ -199,27 +214,44 @@ jobs:
           path: e2e/test-results/
           retention-days: 7
 
-      - name: Log in to GHCR for preview publication
-        if: |
-          !env.ACT &&
-          (
-            (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
-            (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
-          )
+  preview-amd64:
+    name: Build amd64 preview image
+    needs: fast-gate
+    if: |
+      (
+        (github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository) ||
+        (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
+        (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.preview-build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v7
+        if: "!env.ACT"
+        with:
+          persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || '' }}
+
+      - name: Log in to GHCR
+        if: "!env.ACT"
         uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push amd64 preview image by digest
+      - name: Set up Docker Buildx
+        if: "!env.ACT"
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and push amd64 preview image by digest
         id: preview-build
-        if: |
-          !env.ACT &&
-          (
-            (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
-            (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
-          )
+        if: "!env.ACT"
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -227,15 +259,12 @@ jobs:
           platforms: linux/amd64
           outputs: type=image,"name=${{ env.PREVIEW_IMAGE }}",push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=homarr-linux-amd64
+          cache-to: type=gha,scope=homarr-linux-amd64,mode=max
           secrets: |
             TURBO_API=${{ secrets.TURBO_API }}
             TURBO_TEAM=${{ secrets.TURBO_TEAM }}
             TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}
             TURBO_REMOTE_CACHE_SIGNATURE_KEY=${{ secrets.TURBO_REMOTE_CACHE_SIGNATURE_KEY }}
-
-      - name: Show Act publication result
-        if: env.ACT
-        run: echo "Act validated the publication path; external GHCR writes are disabled locally."
 
   preview-arm64:
     name: Build arm64 preview image
@@ -243,6 +272,7 @@ jobs:
     if: |
       (
         (github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository) ||
+        (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
         (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
       )
     runs-on: ubuntu-24.04-arm
@@ -290,10 +320,11 @@ jobs:
 
   publish-preview:
     name: Publish multi-platform preview image
-    needs: [container, preview-arm64]
+    needs: [preview-amd64, preview-arm64]
     if: |
       (
         (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+        (github.event_name == 'push' && github.ref == 'refs/heads/release/v2') ||
         (github.event_name == 'workflow_dispatch' && inputs.operation == 'publish')
       )
     runs-on: ubuntu-latest
@@ -303,7 +334,7 @@ jobs:
       packages: write
       pull-requests: read
     env:
-      PREVIEW_TAG: pr-${{ github.event.pull_request.number || inputs.pr_number }}
+      PREVIEW_TAG: ${{ github.event_name == 'push' && 'v2' || format('pr-{0}', github.event.pull_request.number || inputs.pr_number) }}
     steps:
       - name: Log in to GHCR
         if: "!env.ACT"
@@ -340,7 +371,7 @@ jobs:
       - name: Publish preview manifest
         if: "!env.ACT"
         env:
-          AMD64_DIGEST: ${{ needs.container.outputs.digest }}
+          AMD64_DIGEST: ${{ needs.preview-amd64.outputs.digest }}
           ARM64_DIGEST: ${{ needs.preview-arm64.outputs.digest }}
         run: |
           docker buildx imagetools create -t "${PREVIEW_IMAGE}:${PREVIEW_TAG}" \

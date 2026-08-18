@@ -229,7 +229,7 @@ export default function BeszelAlertsWidget({
                         <Badge size="xs" variant="dot" color={isResolved ? "green" : "red"}>
                           {isResolved ? t("resolved") : t("status.triggered")}
                         </Badge>
-                        <Text size="10px" c="dimmed">
+                        <Text size="xs" c="dimmed">
                           {dayjs(entry.created).fromNow()}
                         </Text>
                       </Stack>

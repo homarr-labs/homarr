@@ -13,8 +13,8 @@
   },
   "exports": {
     ".": "./index.ts",
+    "./response-contract": "./src/base/response-contract.ts",
     "./test-connection": "./src/base/test-connection/index.ts",
-    "./client": "./src/client.ts",
     "./types": "./src/types.ts"
   },
   "scripts": {

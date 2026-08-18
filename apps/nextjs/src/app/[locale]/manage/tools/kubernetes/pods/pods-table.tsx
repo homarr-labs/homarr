@@ -16,6 +16,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 dayjs.extend(relativeTime);
 
 interface PodsTableComponentProps {
+  contextId: string;
   initialPods: RouterOutputs["kubernetes"]["pods"]["getPods"];
 }
 
@@ -47,15 +48,19 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.pods">): MRT_Col
   },
 ];
 
-export function PodsTable(initialData: PodsTableComponentProps) {
+export function PodsTable({ contextId, initialPods }: PodsTableComponentProps) {
   const tPods = useScopedI18n("kubernetes.pods");
 
-  const { data } = clientApi.kubernetes.pods.getPods.useQuery(undefined, {
-    initialData: initialData.initialPods,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = clientApi.kubernetes.pods.getPods.useQuery(
+    { contextId },
+    {
+      initialData: initialPods,
+      refetchOnMount: "always",
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
+    },
+  );
 
   const table = useTranslatedMantineReactTable({
     data,

@@ -241,6 +241,61 @@
       }
     }
   },
+  "universalCreate": {
+    "title": "Create",
+    "analyticsError": "Usage metrics could not be recorded. Your action was not affected.",
+    "trigger": {
+      "label": "Create something",
+      "description": "Add content, connect a service, or create a board from one place."
+    },
+    "search": {
+      "label": "Search create actions",
+      "placeholder": "What do you want to create?",
+      "noResults": "No matching actions"
+    },
+    "group": {
+      "currentBoard": "Current board",
+      "library": "Apps and services",
+      "boards": "Boards"
+    },
+    "action": {
+      "widget": {
+        "label": "Add widget",
+        "description": "Add live information or controls to this board.",
+        "keywords": "item dashboard content"
+      },
+      "app": {
+        "label": "Add or create app",
+        "description": "Place an app shortcut on this board or create one for your library.",
+        "keywords": "shortcut bookmark application"
+      },
+      "integration": {
+        "label": "Connect service",
+        "description": "Connect a service so widgets can use its data.",
+        "keywords": "integration provider connection"
+      },
+      "container": {
+        "label": "Add container",
+        "description": "Group related board content into a resizable section.",
+        "keywords": "section group layout"
+      },
+      "board": {
+        "label": "Create board",
+        "description": "Start a new dashboard and add its first widget.",
+        "keywords": "dashboard page"
+      },
+      "workshop": {
+        "label": "Browse Workshop",
+        "description": "Discover community-built widgets and install them.",
+        "keywords": "community discover install"
+      },
+      "customWidget": {
+        "label": "Create custom widget",
+        "description": "Build a widget tailored to your own workflow.",
+        "keywords": "code jsx developer"
+      }
+    }
+  },
   "user": {
     "title": "Users",
     "name": "User",
@@ -792,7 +847,10 @@
         "search": "Search for an app",
         "noResults": "No results",
         "action": "Select {app}",
-        "title": "Select an app to add to this board"
+        "title": "Select an app to add to this board",
+        "toggle": "Click to select",
+        "selected": "Selected",
+        "multiple": "Add {count}"
       },
       "create": {
         "title": "Create new app",
@@ -831,14 +889,19 @@
       "list": {
         "title": "Custom Widgets",
         "noResults": "No custom widgets yet. Create your first one!",
+        "noDescription": "No description",
         "loading": "Loading...",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "disabledDescription": "This widget stays configured but will not load on any board.",
+        "requestCount": "{count, plural, one {# request} other {# requests}}",
         "invalidDefinition": "Invalid definition",
         "invalidDefinitionDescription": "This stored widget no longer matches the current Custom Widget schema. Delete it and recreate or import a valid definition.",
         "migrationRequired": "Migration required",
         "migrationDescription": "This v1 custom widget is preserved but cannot run until it is migrated to Custom JSX v2.",
-        "migrationInstructions": "Open Actions, copy the redacted migration prompt into an LLM, then copy its single JSON response and choose Paste migrated widget. Existing board placements keep working after migration.",
+        "migrationInstructions": "Open Actions to copy or export the original v1 definition for manual recreation. You can also use the migration prompt with an LLM. Existing board placements keep working after migration.",
         "missingCredentials": "{count, plural, one {Credential missing} other {# credentials missing}}",
-        "missingCredentialsDescription": "{count, plural, one {This widget still needs one credential.} other {This widget still needs # credentials.}} Edit it to configure the encrypted values."
+        "missingCredentialsDescription": "{count, plural, one {This widget still needs one credential.} other {This widget still needs # credentials.}} Select this badge to configure the URL and encrypted values."
       },
       "create": {
         "title": "Create Custom Widget",
@@ -846,6 +909,11 @@
       },
       "edit": {
         "title": "Edit Custom Widget"
+      },
+      "tabs": {
+        "ariaLabel": "Custom widget sections",
+        "installed": "Installed",
+        "workshop": "Workshop"
       }
     },
     "action": {
@@ -866,6 +934,9 @@
       "downloadSkill": "View Custom Widget Skill",
       "publishWorkshop": "Publish to Workshop",
       "migrate": "Migrate Custom Widget",
+      "configureSources": "Configure sources",
+      "copyLegacyDefinition": "Copy original widget content",
+      "exportLegacyDefinition": "Export original widget content",
       "copyMigrationPrompt": "Copy LLM migration prompt",
       "pasteMigration": "Paste migrated widget",
       "importMigration": "Import migrated JSON file",
@@ -876,6 +947,13 @@
       "addItem": "Add Item",
       "removeItem": "Remove item",
       "addBar": "Add Bar"
+    },
+    "sourceSetupDialog": {
+      "title": "Configure widget sources",
+      "description": "Review where this widget connects and add or replace its encrypted credentials.",
+      "credentialsRequired": "Requests will fail until the required credentials are added.",
+      "cancel": "Cancel",
+      "save": "Save configuration"
     },
     "field": {
       "name": "Name",
@@ -1224,8 +1302,12 @@
       "imported": "Widget imported successfully.",
       "migrated": "Legacy widget migrated successfully. Existing board placements now use the v2 definition.",
       "migrationError": "Failed to migrate the legacy widget. Ensure the file uses the homarr-custom-widget-v2 schema.",
+      "legacyDefinitionCopied": "The original widget content was copied. Stored credential values are not included.",
+      "legacyDefinitionCopyError": "Failed to copy the original widget content.",
       "migrationPromptCopied": "A redacted migration prompt was copied. Paste it into an LLM, copy its single JSON response, then choose Paste migrated widget here.",
       "migrationPromptCopyError": "Failed to copy the migration prompt.",
+      "sourcesConfigured": "Widget sources and credentials saved.",
+      "sourceConfigurationError": "Failed to configure widget sources.",
       "aiPromptCopied": "AI prompt copied to clipboard",
       "aiPromptCopiedWithCount": "AI prompt copied to clipboard ({count, number} characters).",
       "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
@@ -1378,64 +1460,68 @@
     }
   },
   "workshop": {
-    "installSuccess": "Custom widget installed",
-    "installSuccessDescription": "Add its credentials, test the requests, and save when it is ready.",
-    "installError": "Could not install widget",
-    "installErrorDescription": "The Workshop submission is not a valid Custom JSX v2 widget.",
     "title": "Workshop",
-    "importFromWorkshop": "Import from Workshop",
+    "browseWorkshop": "Browse Workshop",
     "openCommunity": "Open Workshop",
-    "manageSubmissionsTitle": "Manage submissions on Workshop",
-    "manageSubmissionsDescription": "Publishing starts in Homarr, but updates, reports, outdated status, and deletion are managed directly on the Workshop website. Sign in there and select Yours to find your submissions.",
-    "description": "Community Custom JSX v2 widgets. Inspect the source and network capabilities before installing.",
-    "descriptionCss": "Community Custom CSS themes. Preview every rule before importing it into a board.",
-    "securityNotice": "Workshop widgets can call their declared API sources and perform declared actions with credentials you configure locally. Secrets are never included.",
-    "securityNoticeCss": "Community CSS can change the appearance and usability of a board. Review it before importing; nothing is saved until you save board settings.",
-    "signIn": "Sign in with GitHub",
-    "signInError": "GitHub sign-in failed. Check that the Workshop OAuth provider is configured and that popups are allowed.",
-    "signOut": "Sign out",
+    "openOnWorkshop": "Open {title} on the Workshop website",
+    "back": "Back to Workshop",
+    "cancel": "Cancel",
     "search": "Search widgets",
     "searchCss": "Search CSS themes",
     "sort": "Sort",
     "sortTop": "Top rated",
     "sortNewest": "Newest",
+    "listAriaLabel": "Workshop widgets",
+    "listAriaLabelCss": "Workshop CSS themes",
+    "empty": "No widgets match this search.",
+    "emptyDescription": "Community widgets published to the Workshop show up here.",
+    "emptyFilteredTitle": "No widgets match this search",
+    "emptyFilteredDescription": "No Workshop widget matches \"{search}\".",
+    "clearSearch": "Clear search",
+    "emptyCss": "No CSS themes match this search.",
     "unavailableTitle": "Homarr Workshop seems to be unavailable",
     "unavailable": "The community service may be temporarily down. Try again in a moment. Your installed widgets are unaffected.",
     "retry": "Try again",
-    "empty": "No widgets match this search.",
-    "emptyCss": "No CSS themes match this search.",
+    "loadError": "This submission could not be loaded.",
     "noDescription": "No description",
     "author": "by {name}",
     "communityMember": "Community member",
     "outdated": "Outdated",
     "outdatedWarning": "The author marked this submission as outdated. Review it carefully before importing.",
-    "reportCount": "{count, plural, one {# report} other {# reports}}",
-    "reportWarning": "{count, plural, one {This submission has # open community report.} other {This submission has # open community reports.}} It remains installable, but you should review its content first.",
-    "reportVisibility": "Report details are visible only to this submission's author and Workshop admins.",
+    "score": "Score: {count, number}",
+    "upvote": "Upvote",
+    "downvote": "Downvote",
+    "voteError": "The vote could not be saved.",
+    "signIn": "Sign in with GitHub",
+    "signInError": "GitHub sign-in failed. Check that the Workshop OAuth provider is configured and that popups are allowed.",
+    "signOut": "Sign out",
+    "signInHint": "Sign in to vote or report. Installing does not require a Workshop account.",
+    "securityNotice": "Workshop widgets can call their declared API sources and perform declared actions with credentials you configure locally. Secrets are never included.",
+    "securityNoticeCss": "Community CSS can change the appearance and usability of a board. Review it before importing; nothing is saved until you save board settings.",
+    "install": "Install",
+    "installReviewTitle": "Review before installing",
+    "installError": "This widget cannot be installed",
+    "installErrorDescription": "The Workshop submission is not a valid Custom JSX v2 widget.",
+    "useCss": "Import CSS",
+    "importCss": "Import CSS from Workshop",
+    "importCssConfirm": "Replace the current custom CSS with \"{title}\"? Nothing is saved until you save the board settings.",
     "screenshotAlt": "{title} screenshot {count, number}",
-    "upvote": "Upvote, {count, plural, one {# vote} other {# votes}}",
-    "downvote": "Downvote, {count, plural, one {# vote} other {# votes}}",
-    "inspectCss": "Inspect CSS",
+    "zoomScreenshot": "View full size",
+    "previousScreenshot": "Previous screenshot",
+    "nextScreenshot": "Next screenshot",
+    "technicalDetails": "Technical details",
     "sourceCode": "Workshop entry",
-    "loadError": "This submission could not be loaded.",
-    "sources": "Declared API sources",
-    "requests": "Declared queries and actions",
-    "noRequests": "This widget does not declare network requests.",
     "export": "Export",
     "report": "Report",
-    "install": "Install widget",
-    "continueInstall": "Continue installation",
-    "confirmInstallTitle": "Confirm widget installation",
-    "confirmInstallDescription": "Confirm where this widget connects and add any credentials required by your Homarr installation.",
-    "backToWidget": "Back to widget",
-    "useCss": "Import CSS",
-    "signInHint": "Sign in to vote or report. Installing does not require a Workshop account.",
     "reportTitle": "Report submission",
     "reportReason": "Reason",
     "reportExplanation": "What should the Workshop moderators know?",
     "reportSend": "Send report",
     "reportSent": "Report sent",
     "reportSentDescription": "Workshop moderators can now review this submission.",
+    "reportCount": "{count, plural, one {# report} other {# reports}}",
+    "reportWarning": "{count, plural, one {This submission has # open community report.} other {This submission has # open community reports.}} It remains installable, but you should review its content first.",
+    "reportVisibility": "Report details are visible only to this submission's author and Workshop admins.",
     "reportCategory": {
       "outdated": "Outdated or no longer working",
       "malicious": "Malicious",
@@ -1444,7 +1530,6 @@
       "inappropriate": "Inappropriate",
       "other": "Other"
     },
-    "voteError": "The vote could not be saved.",
     "publish": {
       "title": "Publish to Workshop",
       "introTitle": "Share this widget with the community",
@@ -1453,7 +1538,6 @@
       "listingDetailsDescription": "These details appear publicly alongside the exported widget definition.",
       "success": "Published immediately. Community members can now install and report this widget.",
       "successTitle": "Your widget is live",
-      "manageTitle": "Continue on Workshop",
       "manageDescription": "Open the submission to update its listing, review reports, mark it outdated, or delete it. Submission management is handled directly on the Workshop website.",
       "viewSubmission": "View and manage submission",
       "done": "Done",
@@ -1472,12 +1556,26 @@
       "publicationNote": "Publishing is immediate. You can manage the submission afterward on Workshop.",
       "definitionChanged": "The widget changed while publication was being prepared. Review its private source URLs again, then retry.",
       "error": "Publication failed"
-    },
-    "installDialog": "Install from Workshop",
-    "installed": "Widget installed",
-    "installedDescription": "{name} is ready to configure."
+    }
   },
   "integration": {
+    "completion": {
+      "modalTitle": "Service ready",
+      "title": "{name} is connected",
+      "description": "The connection passed its test. Choose what to show on this board next.",
+      "connectionReady": "Service connection is ready",
+      "appReady": "App shortcut is ready",
+      "compatibleWidgets": "{count, plural, =0 {No compatible widgets} one {# compatible widget} other {# compatible widgets}} available",
+      "chooseWidget": "Choose widget",
+      "recipes": {
+        "title": "Recommended for this board",
+        "description": "Based on connected services and widgets already on this board.",
+        "newConnectionReason": "Now available through {integration}",
+        "existingConnectionReason": "Works with a service you already connected",
+        "add": "Add",
+        "dismiss": "Dismiss recommendations for this service on this board"
+      }
+    },
     "page": {
       "list": {
         "title": "Integrations",
@@ -1576,6 +1674,10 @@
       "createApp": {
         "label": "Create app",
         "description": "Create an app with the same name and icon as the integration. Leave the input field below empty to create the app with the integration URL."
+      },
+      "linkApp": {
+        "label": "Link an existing app",
+        "description": "Connect this integration to an app you can already use."
       },
       "appHref": {
         "placeholder": "Custom app URL"
@@ -2031,7 +2133,8 @@
       "tryAgain": "Try again",
       "loading": "Loading",
       "show": "Show",
-      "hide": "Hide"
+      "hide": "Hide",
+      "undo": "Undo"
     },
     "here": "here",
     "iconPicker": {
@@ -2474,6 +2577,7 @@
         "retry": "Try again",
         "noIntegrationTitle": "A compatible integration is required",
         "noIntegrationDescription": "Configure an integration supported by this widget before adding it to the dashboard.",
+        "connectIntegration": "Connect service",
         "manageIntegrations": "Manage integrations",
         "skip": "Do not add",
         "errorTitle": "Widget settings could not be prepared",
@@ -2642,7 +2746,28 @@
       "search": "Filter items",
       "addToBoard": "Add to board",
       "addAtPosition": "Add item here",
+      "destination": {
+        "label": "Add to",
+        "description": "Choose where the widget should appear. You can still move it later.",
+        "mainCanvas": "Main canvas",
+        "leftRail": "Left rail",
+        "rightRail": "Right rail"
+      },
+      "connectionStatus": {
+        "ready": "Ready",
+        "needsSetup": "Needs setup",
+        "noConnectionRequired": "No connection required"
+      },
+      "missingIntegration": {
+        "title": "Connect a service first",
+        "noPermission": "This widget needs a compatible service connection. Ask an administrator to connect one, then try again."
+      },
       "notification": {
+        "success": {
+          "title": "Widget added",
+          "message": "{name} was added to this board.",
+          "relocatedMessage": "{name} was added to {destination} because the selected destination was unavailable."
+        },
         "error": {
           "title": "Unable to add item",
           "message": "The item could not be added to this board"
@@ -2684,10 +2809,20 @@
       "title": "Edit item",
       "tab": {
         "widget": "Edit widget",
-        "app": "Edit app"
+        "app": "Edit app",
+        "integration": "Edit integration"
       },
       "app": {
         "propagationNotice": "Changes to this app will be applied everywhere it is used across all dashboards."
+      },
+      "integration": {
+        "action": "Edit connection",
+        "description": "Test or repair a selected connection without leaving this widget.",
+        "editLabel": "Edit {name} integration",
+        "fullAccessRequired": "Full access required",
+        "propagationNotice": "Changes to this integration apply everywhere it is used. The connection is tested before it is saved.",
+        "loading": "Loading integration",
+        "loadError": "This integration could not be loaded. Try again before changing its connection settings."
       },
       "advancedOptions": {
         "label": "Advanced options",
@@ -2695,7 +2830,8 @@
       },
       "field": {
         "integrations": {
-          "label": "Integrations"
+          "label": "Integrations",
+          "removeLabel": "Remove {name} integration"
         },
         "title": {
           "label": "Title"
@@ -3628,6 +3764,7 @@
       },
       "error": {
         "internalServerError": "Failed to fetch containers stats",
+        "endpointsUnavailable": "Docker endpoints are unavailable",
         "layoutSaveTitle": "Table layout not saved",
         "layoutSaveMessage": "The Docker table layout could not be saved. Try moving or resizing the column again."
       },
@@ -3922,7 +4059,8 @@
       },
       "integration": {
         "noData": "No integration found",
-        "description": "Click <here></here> to create a new integration"
+        "description": "Click <here></here> to create a new integration",
+        "manage": "Manage integrations"
       },
       "app": {
         "noData": "No app found",
@@ -5574,10 +5712,58 @@
     }
   },
   "board": {
+    "emptyState": {
+      "title": "Build your first view",
+      "description": "Add a widget or app, or connect a service and use its data on this board.",
+      "addWidget": "Add widget",
+      "addApp": "Add app",
+      "connectService": "Connect service"
+    },
+    "setupChecklist": {
+      "title": "Make this board useful",
+      "description": "Pick up where you left off. Progress follows the content already on this board.",
+      "collapse": "Collapse setup checklist",
+      "resume": "Continue setup ({completed}/{total})",
+      "progress": "Board setup progress",
+      "step": {
+        "content": {
+          "label": "Add useful content",
+          "description": "Choose a widget and configure it before it is placed.",
+          "action": "Add"
+        },
+        "app": {
+          "label": "Pin an app",
+          "description": "Keep a service or tool one click away from this board.",
+          "action": "Add"
+        },
+        "service": {
+          "label": "Connect a service",
+          "description": "Unlock live data and actions for compatible widgets.",
+          "permissionDescription": "An administrator can connect a service to unlock live data.",
+          "action": "Connect"
+        }
+      }
+    },
     "action": {
       "addContent": "Add board content",
       "settings": "Board settings",
       "switch": "Switch board",
+      "create": {
+        "availability": {
+          "checking": "Checking availability…",
+          "available": "{name} is available"
+        },
+        "notification": {
+          "success": {
+            "title": "Board created",
+            "message": "Board {name} has been created"
+          },
+          "error": {
+            "title": "Unable to create board",
+            "message": "Board {name} could not be created"
+          }
+        }
+      },
       "duplicate": {
         "title": "Duplicate board",
         "message": "This will duplicate the board {name} with all its content. If widgets reference integrations, that you are not allowed to use, they will be removed.",
@@ -5962,7 +6148,6 @@
         "apps": "Apps",
         "integrations": "Integrations",
         "customWidgets": "Custom Widgets",
-        "workshop": "Workshop",
         "searchEngies": "Search engines",
         "medias": "Medias",
         "users": {
@@ -6886,6 +7071,84 @@
   },
   "docker": {
     "title": "Containers",
+    "reconciliation": {
+      "title": "Service setup",
+      "description": "Docker services are compared with your apps and integrations. Review every suggestion before Homarr changes anything.",
+      "attention": "{count} need attention",
+      "endpointUnavailable": "Some services could not be checked because these endpoints are unavailable: {names}",
+      "empty": "No visible Docker services were found.",
+      "emptyFilter": "No services match this view.",
+      "ambiguous": "More than one existing item could match this service. Homarr will not choose one automatically.",
+      "match": "{confidence} confidence match",
+      "filter": {
+        "attention": "Needs attention",
+        "represented": "Already set up",
+        "all": "All"
+      },
+      "confidence": {
+        "high": "High",
+        "medium": "Medium"
+      },
+      "state": {
+        "newRecognized": "Ready to connect",
+        "newApp": "New service",
+        "represented": "Already represented",
+        "linked": "Linked",
+        "moved": "Address changed"
+      },
+      "url": {
+        "label": "Service address",
+        "inputLabel": "Service URL",
+        "manual": "Enter an address manually",
+        "invalid": "Enter a valid HTTP or HTTPS URL"
+      },
+      "reason": {
+        "publishedAddress": "Published address reported by Docker",
+        "dockerEndpointHost": "Docker endpoint host combined with the published port",
+        "sharedContainerNetwork": "Server-only address for services sharing the container network",
+        "manualHostRequired": "Enter the address that your browser or Homarr server can reach"
+      },
+      "health": {
+        "title": "Observed service layers",
+        "layer": {
+          "docker": "Docker",
+          "integrationConfiguration": "Integration",
+          "authentication": "Authentication",
+          "apiRequest": "API",
+          "appRepresentation": "App",
+          "widgetConfiguration": "Widget",
+          "widgetQuery": "Widget query"
+        },
+        "status": {
+          "available": "Available",
+          "configured": "Configured",
+          "linked": "Linked",
+          "missing": "Missing",
+          "changed": "Changed",
+          "unused": "Not used",
+          "notApplicable": "Not applicable",
+          "notObserved": "Not observed"
+        }
+      },
+      "action": {
+        "refresh": "Refresh",
+        "retry": "Try again",
+        "dismiss": "Dismiss",
+        "restoreDismissed": "Restore dismissed ({count})",
+        "setupIntegration": "Set up integration",
+        "createApp": "Create app",
+        "reviewIntegration": "Review integration",
+        "viewRepresentation": "View setup"
+      },
+      "loadError": {
+        "title": "Service setup could not be loaded",
+        "message": "Docker service information is unavailable. Try again without leaving this page."
+      },
+      "refreshError": {
+        "title": "Containers not refreshed",
+        "message": "Something went wrong while refreshing the containers"
+      }
+    },
     "table": {
       "updated": "Updated {when}",
       "refresh": {
@@ -6981,6 +7244,10 @@
       "remove": {
         "label": "Remove",
         "confirm": "Click again to remove permanently",
+        "confirmation": {
+          "title": "{count, plural, one {Remove # container?} other {Remove # containers?}}",
+          "message": "{count, plural, one {This permanently removes # container: {names}} other {This permanently removes # containers: {names}}}"
+        },
         "notification": {
           "success": {
             "title": "Containers removed",
@@ -6990,6 +7257,12 @@
             "title": "Containers not removed",
             "message": "The containers could not be removed"
           }
+        }
+      },
+      "result": {
+        "failure": {
+          "title": "Some container actions failed",
+          "message": "{total, plural, one {{failed} of # action failed: {names}} other {{failed} of # actions failed: {names}}}"
         }
       },
       "refresh": {
@@ -7024,10 +7297,26 @@
     },
     "error": {
       "internalServerError": "Failed to fetch Docker containers",
+      "endpointUnavailable": "{count, plural, one {# Docker endpoint unavailable: {names}} other {# Docker endpoints unavailable: {names}}}",
       "noColumns": "Select at least one column in the widget settings"
     }
   },
   "kubernetes": {
+    "context": {
+      "label": "Kubernetes context",
+      "loadError": {
+        "title": "Kubernetes contexts could not be loaded",
+        "message": "Context information is unavailable. Try again without leaving this page.",
+        "retry": "Try again"
+      },
+      "status": {
+        "available": "Available",
+        "degraded": "Metrics unavailable",
+        "unavailable": "Unavailable"
+      },
+      "unavailable": "This Kubernetes context cannot be reached. Select another context or verify its credentials and endpoint.",
+      "metricsUnavailable": "This context is reachable, but Metrics Server is unavailable. Inventory remains available without live CPU and memory usage."
+    },
     "cluster": {
       "title": "Cluster Dashboard",
       "label": "Cluster",
@@ -7036,6 +7325,7 @@
       "architecture": "Architecture",
       "capacity": {
         "title": "Capacity",
+        "metricsUnavailable": "Metrics Server is unavailable. Inventory and reserved capacity remain visible, but live CPU and memory usage cannot be shown.",
         "resource": {
           "reserved": "Reserved",
           "used": "Used"
@@ -7056,6 +7346,7 @@
     "nodes": {
       "label": "Nodes",
       "field": {
+        "metricsUnavailable": "Unavailable",
         "name": {
           "label": "Name"
         },
@@ -7342,10 +7633,13 @@
           "flow": {
             "label": "Flow"
           }
+        },
+        "workshop": {
+          "label": "Workshop"
+        },
+        "publish": {
+          "label": "Publish to Workshop"
         }
-      },
-      "workshop": {
-        "label": "Workshop"
       },
       "users": {
         "label": "Users",
@@ -7483,6 +7777,9 @@
           "globalCommand": {
             "title": "Global commands",
             "option": {
+              "create": {
+                "label": "Create something"
+              },
               "colorScheme": {
                 "auto": "Toggle appearance mode",
                 "light": "Switch to light mode",

@@ -19,12 +19,18 @@ describe("legacy custom widget migration UI", () => {
   });
 
   it("replaces the legacy record through migration and refreshes every consumer", () => {
+    // The import pipeline is shared by the dialog and the Workshop install page.
+    const importer = readSource("apps/nextjs/src/components/custom-widgets/use-custom-widget-import.ts");
     const dialog = readSource("apps/nextjs/src/components/custom-widgets/custom-widget-import-dialog.tsx");
 
-    expect(dialog).toContain("customWidget.migrateLegacy.useMutation");
-    expect(dialog).toContain("migrateMutation.mutate({ id: legacyId, widget: configuredWidget, secrets })");
-    expect(dialog).toContain("utils.customWidget.list.invalidate()");
-    expect(dialog).toContain("utils.customWidget.available.invalidate()");
-    expect(dialog).toContain("utils.widget.customApi.getData.invalidate()");
+    expect(importer).toContain("customWidget.migrateLegacy.useMutation");
+    expect(importer).toMatch(
+      /migrateMutation\.mutate\(\{\s*id: legacyId,\s*widget: configuredWidget,\s*secrets,?\s*\}\)/u,
+    );
+    expect(importer).toContain("utils.customWidget.list.invalidate()");
+    expect(importer).toContain("utils.customWidget.available.invalidate()");
+    expect(importer).toContain("utils.widget.customApi.getData.invalidate()");
+    expect(dialog).toContain("useCustomWidgetImport({");
+    expect(dialog).toContain("legacyId,");
   });
 });

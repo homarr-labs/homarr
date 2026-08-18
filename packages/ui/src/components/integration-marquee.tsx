@@ -1,5 +1,4 @@
-import type { CSSProperties } from "react";
-import { Image } from "@mantine/core";
+import { Image, Marquee, SimpleGrid } from "@mantine/core";
 
 import { splitToNChunks } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
@@ -15,19 +14,31 @@ const iconGroups = splitToNChunks(
 const animationDuration = iconGroups.flat().length * 2;
 
 export const IntegrationMarquee = ({ className }: { className?: string }) => (
-  <div className={[classes.root, className].filter(Boolean).join(" ")} aria-hidden>
+  <SimpleGrid
+    className={className}
+    cols={3}
+    spacing="xl"
+    h="calc(100% + 6rem)"
+    my="-3rem"
+    style={{ transform: "rotate(10deg)" }}
+    aria-hidden
+  >
     {iconGroups.map((icons, columnIndex) => (
-      <div
+      <Marquee
         key={columnIndex}
-        className={classes.track}
-        style={{ "--marquee-duration": `${animationDuration - columnIndex * 3}s` } as CSSProperties}
+        orientation="vertical"
+        repeat={2}
+        duration={(animationDuration - columnIndex * 3) * 1000}
+        gap="xl"
+        fadeEdges={false}
+        h="100%"
+        className={classes.marquee}
+        classNames={{ content: classes.content }}
       >
-        {[...icons, ...icons].map((icon, iconIndex) => (
-          <div key={`${icon}-${iconIndex}`} className={classes.iconFrame}>
-            <Image src={icon} alt="" fit="contain" w={52} h={52} />
-          </div>
+        {icons.map((icon) => (
+          <Image key={`${icon}-${columnIndex}`} src={icon} alt="" fit="contain" w={52} h={52} />
         ))}
-      </div>
+      </Marquee>
     ))}
-  </div>
+  </SimpleGrid>
 );

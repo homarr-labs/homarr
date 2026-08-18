@@ -6,6 +6,7 @@ import { Alert, Box, Button, Group, Skeleton, Stack, Text, ThemeIcon } from "@ma
 import { IconAlertTriangle, IconCheck, IconSettings } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import type { IntegrationKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
@@ -20,9 +21,10 @@ import { useAssistantAutomaticAction } from "./assistant-auto-approval";
 import { AssistantAutomaticActionProgress } from "./assistant-automatic-action-progress";
 import { hasCompleteAssistantToolArguments, hasFailedAssistantToolArguments } from "./assistant-human-tool-status";
 import type { ConfigureWidgetArgs, ConfigureWidgetResult } from "./assistant-tool-contracts";
+import { IntegrationSelectModal } from "../integration/integration-select-modal";
 
 interface AssistantIntegration extends IntegrationSelectOption {
-  permissions: { hasUseAccess: boolean };
+  permissions: NonNullable<IntegrationSelectOption["permissions"]>;
 }
 
 export const getAssistantWidgetConfiguration = (
@@ -66,6 +68,7 @@ export const AssistantConfigureWidgetTool = ({
 }: ToolCallMessagePartProps<ConfigureWidgetArgs, ConfigureWidgetResult>) => {
   const t = useScopedI18n("common.assistant.configureWidget");
   const fullT = useI18n();
+  const { data: session } = useSession();
   const settings = useSettings();
   const hasCompleteArguments = hasCompleteAssistantToolArguments(status);
   const definition = args?.kind ? widgetImports[args.kind].definition : undefined;
@@ -80,10 +83,11 @@ export const AssistantConfigureWidgetTool = ({
   }, [args, hasCompleteArguments, integrations.data, needsIntegrations, settings]);
   const missingRequiredIntegration =
     configuration?.integrationsRequired === true && configuration.value.integrationIds.length === 0;
-  const { openModal } = useModalAction(WidgetEditModal);
+  const { openModal: openWidgetModal } = useModalAction(WidgetEditModal);
+  const { openModal: openIntegrationModal } = useModalAction(IntegrationSelectModal);
   const autoConfirming = useAssistantAutomaticAction({
     toolCallId,
-    ready: result === undefined && configuration !== null,
+    ready: result === undefined && configuration !== null && !missingRequiredIntegration,
     completed: result !== undefined,
     confirm: () => {
       if (!args || !configuration) return;
@@ -154,6 +158,26 @@ export const AssistantConfigureWidgetTool = ({
 
   if (!configuration) return null;
 
+  const openConfigurationModal = (
+    value = configuration.value,
+    integrationData: IntegrationSelectOption[] = configuration.integrationData,
+  ) =>
+    openWidgetModal(
+      {
+        kind: args.kind,
+        definition: widgetImports[args.kind].definition,
+        value,
+        integrationData,
+        integrationSupport: configuration.integrationSupport,
+        settings,
+        onSuccessfulEdit: ({ options, integrationIds }) =>
+          addResult({ boardId: args.boardId, kind: args.kind, options, integrationIds }),
+      },
+      {
+        title: (titleT) => `${titleT("item.edit.title")} - ${titleT(`widget.${args.kind}.name`)}`,
+      },
+    );
+
   if (autoConfirming) {
     return (
       <Box className={classes.appTool}>
@@ -168,9 +192,32 @@ export const AssistantConfigureWidgetTool = ({
         <Stack gap="sm">
           <Text size="sm">{t("noIntegrationDescription")}</Text>
           <Group gap="xs">
-            <Button component="a" href="/manage/integrations" size="compact-sm" variant="light">
-              {t("manageIntegrations")}
-            </Button>
+            {session?.user.permissions.includes("integration-create") ? (
+              <Button
+                size="compact-sm"
+                variant="light"
+                onClick={() =>
+                  openIntegrationModal({
+                    allowedKinds:
+                      definition && "supportedIntegrations" in definition
+                        ? (definition.supportedIntegrations as readonly IntegrationKind[])
+                        : [],
+                    onSuccess: (created) => {
+                      if (!created) return;
+                      openConfigurationModal({ ...configuration.value, integrationIds: [created.integration.id] }, [
+                        created.integration,
+                      ]);
+                    },
+                  })
+                }
+              >
+                {t("connectIntegration")}
+              </Button>
+            ) : (
+              <Button component="a" href="/manage/integrations" size="compact-sm" variant="light">
+                {t("manageIntegrations")}
+              </Button>
+            )}
             <Button
               size="compact-sm"
               variant="default"
@@ -205,28 +252,7 @@ export const AssistantConfigureWidgetTool = ({
           </Text>
         </Box>
       </Group>
-      <Button
-        mt="md"
-        fullWidth
-        leftSection={<IconSettings size={17} />}
-        onClick={() =>
-          openModal(
-            {
-              kind: args.kind,
-              definition: widgetImports[args.kind].definition,
-              value: configuration.value,
-              integrationData: configuration.integrationData,
-              integrationSupport: configuration.integrationSupport,
-              settings,
-              onSuccessfulEdit: ({ options, integrationIds }) =>
-                addResult({ boardId: args.boardId, kind: args.kind, options, integrationIds }),
-            },
-            {
-              title: (titleT) => `${titleT("item.edit.title")} - ${titleT(`widget.${args.kind}.name`)}`,
-            },
-          )
-        }
-      >
+      <Button mt="md" fullWidth leftSection={<IconSettings size={17} />} onClick={() => openConfigurationModal()}>
         {t("review")}
       </Button>
     </Box>
