@@ -113,7 +113,8 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
           apiErrorRef.current = `Server returned ${response.status}`;
         }
       }
-    } catch {
+    } catch (error) {
+      console.error("Restore request failed", error);
       apiErrorRef.current = t("failed.title");
     } finally {
       apiDoneRef.current = true;
