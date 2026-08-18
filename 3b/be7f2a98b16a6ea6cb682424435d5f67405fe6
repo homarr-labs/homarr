@@ -1,0 +1,22 @@
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/_group-permission-form.tsx
+  s_a310a97643c2a6::t_df25e42610931e 218-222
+  s_a310a97643c2a6::t_4dedef2a52ae84 217,223
+  s_a310a97643c2a6::t_6473359d3ef24d 7,233,242-258
+  s_a310a97643c2a6::t_ce1e757af5557b 48-49,405-406,408
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "3bbe7f2a98b16a6ea6cb682424435d5f67405fe6",
+  "prompts": {},
+  "sessions": {
+    "s_a310a97643c2a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "58fe908b-fdc8-4fdc-b8ee-cf38d9240db9",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+apps/docs/docs/management/integrations/index.mdx
+  s_fca937443aeda7::t_57860e85204b41 20-36
+apps/docs/docs/management/apps/index.mdx
+  s_fca937443aeda7::t_71a2959eeb6690 54-55,57-67
+apps/docs/docs/management/users/index.mdx
+  s_fca937443aeda7::t_0ee75e3b122fb1 166-168,170,173-177,179-181,185-208,214-215,220,223-224,228-230
+  s_a310a97643c2a6::t_611b544a0a3582 171,182-184
+  s_fca937443aeda7::t_9bf9d4216448d1 178
+  s_a310a97643c2a6::t_5459a9014c3324 172
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "78da52588320019430d6b8c37c61030c00fe17ee",
+  "prompts": {},
+  "sessions": {
+    "s_a310a97643c2a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "58fe908b-fdc8-4fdc-b8ee-cf38d9240db9",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_fca937443aeda7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_febd57803ffeoJy2wljKwLXvUZ",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

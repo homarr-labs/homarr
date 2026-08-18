@@ -1,0 +1,84 @@
+packages/api/src/router/test/group.spec.ts
+  s_a310a97643c2a6::t_199a32c7d9b3df 452,467,475,478-504,519,527-528,531,546,554-578
+packages/translation/src/lang/en.json
+  s_a310a97643c2a6::t_b282f8fe66781f 660,664,666,668,673,675-683,811-813,1615,1627-1628
+  s_8da912af181d79::t_6ca6c4f455da81 658-659
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/_group-permission-form.tsx
+  s_a310a97643c2a6::t_5f213d896fc0a8 83,92,225
+  s_a310a97643c2a6::t_7cc8a293254005 9,11,16,29,79,84-89,98-104,108-122,127,129,153-164,209-210,214-220,224,227-229,231-232,239-262,264-271,281,305,310-318
+  s_a310a97643c2a6::t_3d993cda8cd63b 96-97
+  s_a310a97643c2a6::t_aea71e2f1b14bf 198,201,223,277-280,282-297
+  s_8da912af181d79::t_1e39c964e111a4 333,348,367
+  s_8da912af181d79::t_6f634190b5d516 359
+  s_a310a97643c2a6::t_fa45d0bcf03111 4,165,226,298
+apps/nextjs/src/app/[locale]/manage/integrations/page.tsx
+  s_a310a97643c2a6::t_3ffc7b5c0fec01 1,18,33-39,41-45,48,68,71-73
+packages/definitions/src/permissions.ts
+  s_a310a97643c2a6::t_3d993cda8cd63b 192-193,195
+  s_a310a97643c2a6::t_469396dc58f99c 122-131,134-144,148-168,180-184,194,196-197
+apps/nextjs/src/app/[locale]/manage/apps/page.tsx
+  s_a310a97643c2a6::t_535ab3b0c20508 19,45-46,49-53,55,57-64,96-103
+packages/api/src/router/group.ts
+  s_a310a97643c2a6::t_abfde14c09ebee 305-307
+packages/definitions/src/test/permissions.spec.ts
+  s_a310a97643c2a6::t_a44e15d1b7fcf1 3,7-8,10,14-24,68-81,84,93-103,105-132,137-140,144-160,180-183,191-195
+apps/nextjs/src/app/[locale]/manage/layout.tsx
+  s_a310a97643c2a6::t_9134baee0f4fbc 47
+  s_a310a97643c2a6::t_f6270900632ebc 69-70,88,98
+packages/api/src/router/home.ts
+  s_a310a97643c2a6::t_7463a634c3e77b 126-127,129,134,143-144,148
+apps/nextjs/src/app/[locale]/manage/_access.ts
+  s_a310a97643c2a6::t_4a9dad3cce6c06 1-45,51,54-57,59-65,78
+  s_a310a97643c2a6::t_3afc47d7cf716e 46-50,52-53,58,66-77
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/page.tsx
+  s_a310a97643c2a6::t_84be81cb1c051a 8,15
+  s_a310a97643c2a6::t_aea71e2f1b14bf 37,47,58,60,70,74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "6728d0a63d829d606aac6ebcc0baa6eca062c5a9",
+  "prompts": {},
+  "sessions": {
+    "s_128f8d82e69488": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff4f027e7ffetPTd0PZkPwgLak",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_8da912af181d79": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_febe8a114ffe274Lv0p98Ycwzz",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": null
+    },
+    "s_a310a97643c2a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "58fe908b-fdc8-4fdc-b8ee-cf38d9240db9",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_c2cacc33a4693d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff4f21231ffe9FnbHah0VHvouI",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_cf26c9caabb8d3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff55fc8b9ffeav6SDTPcgtDQmg",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
