@@ -1,0 +1,19 @@
+packages/widgets/src/health-monitoring/component.tsx
+  s_40c713847b3bc8::t_84488b4c1b2ceb 21,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "a9960a67e0dc509608176f74c1da6ee822585fc1",
+  "prompts": {},
+  "sessions": {
+    "s_40c713847b3bc8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_febdce46fffeeofIuuTXf2gxTK",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
