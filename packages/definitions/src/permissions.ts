@@ -119,23 +119,53 @@ export const groupPermissionKeys = objectKeys(groupPermissions).reduce((acc, key
 }, [] as GroupPermissionKey[]);
 
 /**
- * Ordered access levels per category used by the group permission matrix UI.
- * Each level entry is a full {@link GroupPermissionKey}; higher levels imply the lower ones
- * through {@link groupPermissionParents}.
+ * Describes how each permission category is presented in the group permission matrix UI.
+ *
+ * `levels` is an ordered escalation of access: picking level N grants every key up to N.
+ * `create` is orthogonal to `levels` - it is the "may add new resources" capability and can be
+ * granted on its own (e.g. "members may create their own boards but not see anyone else's").
+ * Some levels already imply the create key through {@link groupPermissionParents}; use
+ * {@link isCreateImpliedByLevel} to detect that instead of hard-coding it.
+ *
+ * Together, `levels` and `create` cover every key in {@link groupPermissionKeys}, so the matrix
+ * is a lossless representation of a group's permissions.
  */
 export const permissionMatrix = {
-  board: { levels: ["board-view-all", "board-modify-all", "board-full-all"] },
-  app: { levels: ["app-use-all", "app-modify-all", "app-full-all"] },
-  integration: { levels: ["integration-use-all", "integration-interact-all", "integration-full-all"] },
-  "search-engine": { levels: ["search-engine-modify-all", "search-engine-full-all"] },
-  media: { levels: ["media-view-all", "media-full-all"] },
-  other: { levels: ["other-view-logs"] },
-  admin: { levels: ["admin"] },
-} as const satisfies Record<string, { levels: readonly GroupPermissionKey[] }>;
+  board: { levels: ["board-view-all", "board-modify-all", "board-full-all"], create: "board-create" },
+  app: { levels: ["app-use-all", "app-modify-all", "app-full-all"], create: "app-create" },
+  integration: {
+    levels: ["integration-use-all", "integration-interact-all", "integration-full-all"],
+    create: "integration-create",
+  },
+  "search-engine": { levels: ["search-engine-modify-all", "search-engine-full-all"], create: "search-engine-create" },
+  media: { levels: ["media-view-all", "media-full-all"], create: "media-upload" },
+  other: { levels: ["other-view-logs"], create: null },
+  admin: { levels: ["admin"], create: null },
+} as const satisfies Record<string, { levels: readonly GroupPermissionKey[]; create: GroupPermissionKey | null }>;
 
 export type PermissionMatrixCategory = keyof typeof permissionMatrix;
 
-export type PermissionMatrixState = Record<PermissionMatrixCategory, { level: number }>;
+export interface PermissionMatrixCategoryState {
+  /** 0 = no access, N = every key up to `permissionMatrix[category].levels[N - 1]` */
+  level: number;
+  /** Whether the category's create/upload key is granted */
+  create: boolean;
+}
+
+export type PermissionMatrixState = Record<PermissionMatrixCategory, PermissionMatrixCategoryState>;
+
+/**
+ * Whether the given level already grants the category's create key through permission inheritance.
+ * For example board level 3 (`board-full-all`) implies `board-create`.
+ */
+export const isCreateImpliedByLevel = (category: PermissionMatrixCategory, level: number) => {
+  const createKey = permissionMatrix[category].create;
+  if (createKey === null || level <= 0) {
+    return false;
+  }
+
+  return getPermissionsWithChildren([...permissionMatrix[category].levels.slice(0, level)]).includes(createKey);
+};
 
 export const permissionsToMatrixState = (permissions: GroupPermissionKey[]): PermissionMatrixState => {
   const permissionSet = new Set(permissions);
@@ -147,7 +177,11 @@ export const permissionsToMatrixState = (permissions: GroupPermissionKey[]): Per
         level = index + 1;
       }
     });
-    acc[category] = { level };
+    const createKey = permissionMatrix[category].create;
+    acc[category] = {
+      level,
+      create: createKey !== null && (permissionSet.has(createKey) || isCreateImpliedByLevel(category, level)),
+    };
     return acc;
   }, {} as PermissionMatrixState);
 };
@@ -155,6 +189,12 @@ export const permissionsToMatrixState = (permissions: GroupPermissionKey[]): Per
 export const matrixStateToPermissions = (state: PermissionMatrixState): GroupPermissionKey[] => {
   return objectKeys(permissionMatrix).reduce((acc, category) => {
     acc.push(...permissionMatrix[category].levels.slice(0, state[category].level));
+    // Skip the create key when the chosen level already implies it, so the stored permissions
+    // stay minimal and a state -> permissions -> state round-trip is exact.
+    const createKey = permissionMatrix[category].create;
+    if (createKey !== null && state[category].create && !isCreateImpliedByLevel(category, state[category].level)) {
+      acc.push(createKey);
+    }
     return acc;
   }, [] as GroupPermissionKey[]);
 };

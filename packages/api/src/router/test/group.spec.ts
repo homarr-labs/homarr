@@ -449,7 +449,7 @@ describe("savePermissions should save permissions for group", () => {
     expect(permissions.map(({ permission }) => permission)).toEqual(["integration-use-all", "board-full-all"]);
   });
 
-  test("with a create permission it should also persist its parent permission", async () => {
+  test("with a standalone create permission it should not escalate to its parent permission", async () => {
     // Arrange
     const db = createDb();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
@@ -464,7 +464,7 @@ describe("savePermissions should save permissions for group", () => {
     // Act
     await caller.savePermissions({
       groupId,
-      permissions: ["app-create"],
+      permissions: ["board-create"],
     });
 
     // Assert
@@ -472,37 +472,34 @@ describe("savePermissions should save permissions for group", () => {
       where: eq(groupPermissions.groupId, groupId),
     });
 
-    expect(permissions.map(({ permission }) => permission).toSorted()).toEqual(["app-create", "app-modify-all"]);
+    expect(permissions.map(({ permission }) => permission)).toEqual(["board-create"]);
   });
 
-  test("with an integration create permission it should persist its parent permission", async () => {
-    // Arrange
-    const db = createDb();
-    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+  test.each([["app-create"], ["integration-create"], ["search-engine-create"], ["media-upload"]] as const)(
+    "with %s alone it should persist exactly that permission",
+    async (permission) => {
+      // Arrange
+      const db = createDb();
+      const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
-    const groupId = createId();
-    await db.insert(groups).values({
-      id: groupId,
-      name: "Group",
-      position: 1,
-    });
+      const groupId = createId();
+      await db.insert(groups).values({
+        id: groupId,
+        name: "Group",
+        position: 1,
+      });
 
-    // Act
-    await caller.savePermissions({
-      groupId,
-      permissions: ["integration-create"],
-    });
+      // Act
+      await caller.savePermissions({ groupId, permissions: [permission] });
 
-    // Assert
-    const permissions = await db.query.groupPermissions.findMany({
-      where: eq(groupPermissions.groupId, groupId),
-    });
+      // Assert
+      const permissions = await db.query.groupPermissions.findMany({
+        where: eq(groupPermissions.groupId, groupId),
+      });
 
-    expect(permissions.map(({ permission }) => permission).toSorted()).toEqual([
-      "integration-create",
-      "integration-full-all",
-    ]);
-  });
+      expect(permissions.map(({ permission: key }) => key)).toEqual([permission]);
+    },
+  );
 
   test("with a create permission and its parent it should persist exactly two rows", async () => {
     // Arrange
@@ -529,6 +526,56 @@ describe("savePermissions should save permissions for group", () => {
 
     expect(permissions.length).toBe(2);
     expect(permissions.map(({ permission }) => permission).toSorted()).toEqual(["app-create", "app-modify-all"]);
+  });
+
+  test("with duplicate permissions it should persist each permission only once", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(groups).values({
+      id: groupId,
+      name: "Group",
+      position: 1,
+    });
+
+    // Act
+    await caller.savePermissions({
+      groupId,
+      permissions: ["board-view-all", "board-view-all", "board-modify-all"],
+    });
+
+    // Assert
+    const permissions = await db.query.groupPermissions.findMany({
+      where: eq(groupPermissions.groupId, groupId),
+    });
+
+    expect(permissions.map(({ permission }) => permission).toSorted()).toEqual(["board-modify-all", "board-view-all"]);
+  });
+
+  test("saving the same permissions twice should be idempotent", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+
+    const groupId = createId();
+    await db.insert(groups).values({
+      id: groupId,
+      name: "Group",
+      position: 1,
+    });
+
+    // Act
+    await caller.savePermissions({ groupId, permissions: ["board-create", "media-upload"] });
+    await caller.savePermissions({ groupId, permissions: ["board-create", "media-upload"] });
+
+    // Assert
+    const permissions = await db.query.groupPermissions.findMany({
+      where: eq(groupPermissions.groupId, groupId),
+    });
+
+    expect(permissions.map(({ permission }) => permission).toSorted()).toEqual(["board-create", "media-upload"]);
   });
 
   test("with an empty permission list it should clear all existing permissions", async () => {

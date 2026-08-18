@@ -5,14 +5,14 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { objectKeys } from "@homarr/common";
 import type { GroupPermissionKey } from "@homarr/definitions";
-import { groupPermissions, permissionMatrix } from "@homarr/definitions";
+import { groupPermissions } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
 import type { PermissionLabels } from "./_group-permission-form";
 import {
   EffectivePermissionPreview,
-  MatrixRow,
   PermissionForm,
+  PermissionMatrix,
   PresetButtons,
   SaveAffix,
 } from "./_group-permission-form";
@@ -34,7 +34,7 @@ export default async function GroupPermissionsPage(props: GroupPermissionsPagePr
   const group = await api.group.getById({ id: params.id });
   const t = await getI18n();
 
-  const permissionLabels = await buildPermissionLabels();
+  const { permissionLabels, permissionDescriptions } = await buildPermissionTextsAsync();
 
   return (
     <Stack>
@@ -44,11 +44,7 @@ export default async function GroupPermissionsPage(props: GroupPermissionsPagePr
         <Stack pos="relative">
           <PresetButtons />
 
-          <Stack gap="md">
-            {objectKeys(permissionMatrix).map((category) => (
-              <MatrixRow key={category} category={category} permissionLabels={permissionLabels} />
-            ))}
-          </Stack>
+          <PermissionMatrix permissionLabels={permissionLabels} permissionDescriptions={permissionDescriptions} />
 
           <EffectivePermissionPreview permissionLabels={permissionLabels} />
 
@@ -59,8 +55,9 @@ export default async function GroupPermissionsPage(props: GroupPermissionsPagePr
   );
 }
 
-const buildPermissionLabels = async (): Promise<PermissionLabels> => {
+const buildPermissionTextsAsync = async () => {
   const permissionLabels: PermissionLabels = {};
+  const permissionDescriptions: PermissionLabels = {};
 
   for (const category of objectKeys(groupPermissions)) {
     const tItem = await getScopedI18n(`group.permission.${category}.item`);
@@ -70,8 +67,9 @@ const buildPermissionLabels = async (): Promise<PermissionLabels> => {
     suffixes.forEach((suffix) => {
       const key = (typeof item !== "boolean" ? `${category}-${suffix}` : "admin") as GroupPermissionKey;
       permissionLabels[key] = tItem(`${suffix}.label`);
+      permissionDescriptions[key] = tItem(`${suffix}.description`);
     });
   }
 
-  return permissionLabels;
+  return { permissionLabels, permissionDescriptions };
 };

@@ -123,12 +123,15 @@ export const homeRouter = createTRPCRouter({
       });
     }
 
+    // These mirror the access rules of /manage/integrations and /manage/apps exactly: a card is only
+    // shown when the page behind it is reachable, and it counts only what the user is allowed to see.
     const hasGlobalFullIntegrationAccess = ctx.session?.user.permissions.includes("integration-full-all") ?? false;
+    const canCreateIntegrations = ctx.session?.user.permissions.includes("integration-create") ?? false;
     const fullAccessIntegrationIds =
       hasGlobalFullIntegrationAccess || !ctx.session?.user
         ? []
         : await getFullAccessIntegrationIdsAsync(ctx.db, ctx.session.user.id);
-    if (hasGlobalFullIntegrationAccess || fullAccessIntegrationIds.length > 0) {
+    if (hasGlobalFullIntegrationAccess || canCreateIntegrations || fullAccessIntegrationIds.length > 0) {
       statistics.push({
         titleKey: "integration",
         subtitleKey: "resources",
@@ -137,11 +140,12 @@ export const homeRouter = createTRPCRouter({
       });
     }
 
-    if (ctx.session?.user.permissions.includes("app-modify-all")) {
+    const canManageAllApps = ctx.session?.user.permissions.includes("app-modify-all") ?? false;
+    if (canManageAllApps || (ctx.session?.user.permissions.includes("app-create") ?? false)) {
       statistics.push({
         titleKey: "app",
         subtitleKey: "resources",
-        count: await db.$count(apps),
+        count: canManageAllApps ? await db.$count(apps) : 0,
         path: "/manage/apps",
       });
     }

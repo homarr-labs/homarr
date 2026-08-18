@@ -28,7 +28,6 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 
-import { api } from "@homarr/api/server";
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
@@ -45,6 +44,7 @@ import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
 import { ManageTourGate } from "~/components/onboarding/manage-tour-gate";
 import { env as nextEnv } from "~/env";
+import { getAppsSectionAccess, getIntegrationsSectionAccessAsync } from "./_access";
 
 const logger = createLogger({ module: "manageLayout" });
 
@@ -66,12 +66,8 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     sessionPromise,
     shouldRunManageTourPromise,
   ]);
-  const hasGlobalIntegrationFullAccess = session?.user.permissions.includes("integration-full-all") ?? false;
-  const hasDelegatedIntegrationFullAccess =
-    !hasGlobalIntegrationFullAccess && session
-      ? (await api.integration.all()).some((integration) => integration.permissions.hasFullAccess)
-      : false;
-  const canManageIntegrations = hasGlobalIntegrationFullAccess || hasDelegatedIntegrationFullAccess;
+  const appsAccess = getAppsSectionAccess(session);
+  const integrationsAccess = await getIntegrationsSectionAccessAsync(session);
   const navigationLinks: NavigationLink[] = [
     {
       label: t("items.home"),
@@ -89,7 +85,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconBox,
       href: "/manage/apps",
       label: t("items.apps"),
-      hidden: !session?.user.permissions.includes("app-modify-all"),
+      hidden: !appsAccess.canAccess,
       iconProps: {
         strokeWidth: 2.5,
       },
@@ -99,7 +95,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconAffiliateFilled,
       href: "/manage/integrations",
       label: t("items.integrations"),
-      hidden: !canManageIntegrations,
+      hidden: !integrationsAccess.canAccess,
       "data-onboarding-tour-id": "manage-integrations",
     },
     {

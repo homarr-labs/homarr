@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ActionIcon, ActionIconGroup, Anchor, Badge, Stack, Text } from "@mantine/core";
 import { IconPencil, IconPlugX } from "@tabler/icons-react";
 import { z } from "zod/v4";
@@ -15,6 +15,7 @@ import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { NoResults } from "~/components/no-results";
+import { getIntegrationsSectionAccess } from "../_access";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
 
 const searchParamsSchema = z.object({ search: z.string().optional() });
@@ -29,14 +30,22 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
   const integrations = await api.integration.all();
+  const {
+    canManageAll: hasGlobalFullAccess,
+    canCreate,
+    canAccess,
+  } = getIntegrationsSectionAccess(session, integrations);
+  if (!canAccess) notFound();
+
   const t = await getScopedI18n("integration");
-  const canCreate = session.user.permissions.includes("integration-create");
-  const hasGlobalFullAccess = session.user.permissions.includes("integration-full-all");
-  const canSee = hasGlobalFullAccess || integrations.some((integration) => integration.permissions.hasFullAccess);
+  // Without integration-full-all only the integrations that were explicitly delegated to the user
+  // are manageable, so the list never shows an integration they cannot open.
+  const manageableIntegrations = integrations.filter(
+    (integration) => hasGlobalFullAccess || integration.permissions.hasFullAccess,
+  );
 
   const query = searchParams.search?.trim().toLocaleLowerCase() ?? "";
-  const filteredIntegrations = integrations
-    .filter((integration) => hasGlobalFullAccess || integration.permissions.hasFullAccess)
+  const filteredIntegrations = manageableIntegrations
     .filter((integration) => {
       if (!query) return true;
       return [integration.name, getIntegrationName(integration.kind), integration.url].some((value) =>
@@ -56,11 +65,12 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
       ariaLabel={t("page.list.ariaLabel")}
       itemCount={filteredIntegrations.length}
       emptyState={
-        !canSee ? (
+        manageableIntegrations.length === 0 && !hasGlobalFullAccess ? (
           <NoResults
             icon={IconPlugX}
-            title={t("page.list.noResults.noPermissionTitle")}
-            description={t("page.list.noResults.noPermissionDescription")}
+            title={t("page.list.noResults.createOnlyTitle")}
+            description={t("page.list.noResults.createOnlyDescription")}
+            action={{ label: t("page.list.noResults.action"), href: "/manage/integrations/new" }}
           />
         ) : hasSearch ? (
           <NoResults

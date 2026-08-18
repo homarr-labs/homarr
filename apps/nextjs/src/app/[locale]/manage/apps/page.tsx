@@ -16,6 +16,7 @@ import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { NoResults } from "~/components/no-results";
+import { getAppsSectionAccess } from "../_access";
 import { AppDeleteButton } from "./_app-delete-button";
 
 const searchParamsSchema = z.object({
@@ -41,16 +42,26 @@ interface AppsPageProps {
 export default async function AppsPage(props: AppsPageProps) {
   const session = await auth();
   if (!session) redirect("/auth/login");
-  if (!session.user.permissions.includes("app-modify-all")) notFound();
+  const { canManageAll, canCreate, canDelete, canAccess } = getAppsSectionAccess(session);
+  if (!canAccess) notFound();
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
-  const { items: apps, totalCount } = await api.app.getPaginated(searchParams);
+  // Without app-modify-all the user may add apps but not browse the ones they cannot manage,
+  // so the list stays empty instead of leaking every app name and URL.
+  const { items: apps, totalCount } = canManageAll
+    ? await api.app.getPaginated(searchParams)
+    : { items: [], totalCount: 0 };
   const t = await getScopedI18n("app");
-  const canCreate = session.user.permissions.includes("app-create");
-  const canDelete = session.user.permissions.includes("app-full-all");
-  const hasSearch = Boolean(searchParams.search?.trim());
+  const hasSearch = canManageAll && Boolean(searchParams.search?.trim());
 
-  const emptyState = hasSearch ? (
+  const emptyState = !canManageAll ? (
+    <NoResults
+      icon={IconBox}
+      title={t("page.list.noResults.createOnlyTitle")}
+      description={t("page.list.noResults.createOnlyDescription")}
+      action={{ label: t("page.list.noResults.action"), href: "/manage/apps/new" }}
+    />
+  ) : hasSearch ? (
     <NoResults
       icon={IconBox}
       title={t("page.list.noResults.filteredTitle")}
@@ -82,12 +93,14 @@ export default async function AppsPage(props: AppsPageProps) {
         ) : undefined
       }
       toolbar={
-        <SearchInput
-          placeholder={`${t("search")}...`}
-          ariaLabel={t("search")}
-          defaultValue={searchParams.search}
-          flexExpand
-        />
+        canManageAll ? (
+          <SearchInput
+            placeholder={`${t("search")}...`}
+            ariaLabel={t("search")}
+            defaultValue={searchParams.search}
+            flexExpand
+          />
+        ) : undefined
       }
       footer={
         totalCount > searchParams.pageSize ? (

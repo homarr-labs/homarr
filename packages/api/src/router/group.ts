@@ -9,7 +9,6 @@ import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups, onboarding, users } from "@homarr/db/schema";
-import type { GroupPermissionKey } from "@homarr/definitions";
 import { everyoneGroup } from "@homarr/definitions";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import {
@@ -22,13 +21,6 @@ import {
 } from "@homarr/validation/group";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
-
-const createPermissionParents = new Map<GroupPermissionKey, GroupPermissionKey>([
-  ["app-create", "app-modify-all"],
-  ["integration-create", "integration-full-all"],
-  ["board-create", "board-full-all"],
-  ["search-engine-create", "search-engine-modify-all"],
-]);
 
 export const groupRouter = createTRPCRouter({
   getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
@@ -310,14 +302,9 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
 
-      const permissions = [
-        ...new Set(
-          input.permissions.flatMap((permission) => {
-            const parent = createPermissionParents.get(permission);
-            return parent ? [permission, parent] : [permission];
-          }),
-        ),
-      ];
+      // Stored exactly as selected - implied permissions are resolved at read time through
+      // getPermissionsWithChildren, so nothing is silently escalated here.
+      const permissions = [...new Set(input.permissions)];
 
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
