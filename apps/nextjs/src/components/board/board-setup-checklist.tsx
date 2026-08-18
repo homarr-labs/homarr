@@ -10,7 +10,6 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { useSetupAnalytics } from "~/components/create/setup-analytics";
-import { appShellHeaderHeight } from "~/components/layout/constants";
 import { getBoardSetupProgress } from "./board-setup-progress";
 import { useBoardAddActions } from "./use-board-add-actions";
 import classes from "./board-setup-checklist.module.css";
@@ -35,7 +34,7 @@ export const BoardSetupChecklist = () => {
 
   if (collapsed) {
     return (
-      <Affix position={{ top: appShellHeaderHeight + 16, left: 16 }} className={classes.root}>
+      <Affix position={{ bottom: 16, left: 16 }} className={classes.root}>
         <Button
           variant="default"
           leftSection={<IconChecklist size={18} />}
@@ -51,7 +50,7 @@ export const BoardSetupChecklist = () => {
   }
 
   return (
-    <Affix position={{ top: appShellHeaderHeight + 16, left: 16 }} className={classes.root}>
+    <Affix position={{ bottom: 16, left: 16 }} className={classes.root}>
       <Paper className={classes.panel} withBorder shadow="md" radius="md" p="md">
         <Stack gap="sm">
           <Group justify="space-between" wrap="nowrap">
