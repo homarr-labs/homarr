@@ -71,6 +71,7 @@ packages/api/src/router/integration/integration-router.ts
   s_cf26c9caabb8d3::t_7d04ee293cc768 95-98,115-119,122-132,134-136,138-140
   s_cf26c9caabb8d3::t_54af145f1f02a1 705-760
   s_cf26c9caabb8d3::t_6d8e553d811ee3 75,78-80,86
+  s_a310a97643c2a6::t_3d1c38d6a64b43 137
 packages/definitions/src/permissions.ts
   s_25ca5d2079f5db::t_ac4397d179e425 120-160
 packages/translation/src/lang/en.json
@@ -128,6 +129,14 @@ apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/page.tsx
         "tool": "claude",
         "id": "a3e04717-1f68-4a94-bc29-f21c2aa89ec1",
         "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a310a97643c2a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "58fe908b-fdc8-4fdc-b8ee-cf38d9240db9",
+        "model": "claude-opus-5"
       },
       "human_author": "Thomas Camlong <thomas@ajnart.fr>"
     },
