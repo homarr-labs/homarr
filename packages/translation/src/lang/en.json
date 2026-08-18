@@ -7140,8 +7140,6 @@
       "action": {
         "review": "Review",
         "hide": "Hide",
-        "showDetails": "Details",
-        "hideDetails": "Hide details",
         "refresh": "Refresh",
         "retry": "Try again",
         "dismiss": "Dismiss",

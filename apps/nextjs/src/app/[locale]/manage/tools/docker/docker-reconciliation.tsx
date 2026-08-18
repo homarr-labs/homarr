@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 import {
+  Accordion,
   ActionIcon,
   Alert,
   Avatar,
@@ -183,7 +184,7 @@ export const DockerReconciliation = () => {
                 {reconciliation.data.candidates.length === 0 ? t("empty") : t("emptyFilter")}
               </Text>
             ) : (
-              <Stack gap="xs">
+              <Accordion multiple variant="separated" radius="sm" chevronPosition="left">
                 {candidates.map((candidate) => (
                   <DockerReconciliationCandidate
                     key={candidate.candidateKey}
@@ -196,7 +197,7 @@ export const DockerReconciliation = () => {
                     }
                   />
                 ))}
-              </Stack>
+              </Accordion>
             )}
           </Stack>
         </Collapse>
@@ -228,9 +229,6 @@ const DockerReconciliationCandidate = ({
   const target = getCandidateTarget(candidate, validatedUrl ?? "");
   const actionNeedsUrl = target.kind === "createApp" || target.kind === "setupIntegration";
   const isActionDisabled = actionNeedsUrl && validatedUrl === null;
-  const detailsId = useId();
-  const [detailsOpen, setDetailsOpen] = useState(isActionDisabled || candidate.representation.signals.ambiguous);
-  const detailsLabel = detailsOpen ? t("action.hideDetails") : t("action.showDetails");
 
   useEffect(() => {
     setSelectedCandidateId(initialUrlCandidate?.id ?? null);
@@ -238,9 +236,9 @@ const DockerReconciliationCandidate = ({
   }, [initialUrlCandidate?.id, initialUrlCandidate?.url]);
 
   return (
-    <Paper withBorder p="sm">
-      <Stack gap="xs">
-        <Group justify="space-between" align="center">
+    <Accordion.Item value={candidate.candidateKey}>
+      <Group wrap="nowrap" gap={4} pr="sm">
+        <Accordion.Control style={{ flex: 1 }}>
           <Group wrap="nowrap" style={{ minWidth: 0 }}>
             <Avatar src={candidate.container.iconUrl} radius="sm" size="sm">
               {candidate.container.name.at(0)?.toUpperCase()}
@@ -259,130 +257,110 @@ const DockerReconciliationCandidate = ({
               </Text>
             </div>
           </Group>
-          <Group gap={4} justify="flex-end">
+        </Accordion.Control>
+        <Group gap={4} wrap="nowrap">
+          {target.kind === "createApp" ? (
             <Button
-              variant="subtle"
-              color="gray"
+              variant="light"
               size="compact-xs"
-              rightSection={
-                <IconChevronDown
-                  size={14}
-                  style={{
-                    transform: detailsOpen ? "rotate(180deg)" : undefined,
-                    transition: "transform 150ms ease",
-                  }}
-                />
+              rightSection={<IconArrowRight size={14} />}
+              disabled={isActionDisabled}
+              onClick={() =>
+                openModal({
+                  selectedContainers: [candidate.container],
+                  initialUrls: validatedUrl ? [validatedUrl] : undefined,
+                })
               }
-              aria-expanded={detailsOpen}
-              aria-controls={detailsId}
-              onClick={() => setDetailsOpen((current) => !current)}
             >
-              {detailsLabel}
+              {t("action.createApp")}
             </Button>
-            {target.kind === "createApp" ? (
-              <Button
-                variant="light"
-                size="compact-xs"
-                rightSection={<IconArrowRight size={14} />}
-                disabled={isActionDisabled}
-                onClick={() =>
-                  openModal({
-                    selectedContainers: [candidate.container],
-                    initialUrls: validatedUrl ? [validatedUrl] : undefined,
-                  })
-                }
-              >
-                {t("action.createApp")}
-              </Button>
-            ) : (
-              <Button
-                component={Link}
-                href={target.href}
-                variant="light"
-                size="compact-xs"
-                rightSection={<IconArrowRight size={14} />}
-                disabled={isActionDisabled}
-                onClick={(event) => {
-                  if (isActionDisabled) event.preventDefault();
-                }}
-              >
-                {t(`action.${target.kind}`)}
-              </Button>
-            )}
-            <Tooltip label={t("action.dismiss")} events={{ hover: true, focus: true, touch: false }}>
-              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("action.dismiss")} onClick={onDismiss}>
-                <IconEyeOff size={15} />
-              </ActionIcon>
-            </Tooltip>
-          </Group>
+          ) : (
+            <Button
+              component={Link}
+              href={target.href}
+              variant="light"
+              size="compact-xs"
+              rightSection={<IconArrowRight size={14} />}
+              disabled={isActionDisabled}
+              onClick={(event) => {
+                if (isActionDisabled) event.preventDefault();
+              }}
+            >
+              {t(`action.${target.kind}`)}
+            </Button>
+          )}
+          <Tooltip label={t("action.dismiss")} events={{ hover: true, focus: true, touch: false }}>
+            <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("action.dismiss")} onClick={onDismiss}>
+              <IconEyeOff size={15} />
+            </ActionIcon>
+          </Tooltip>
         </Group>
+      </Group>
 
-        <Collapse id={detailsId} expanded={detailsOpen}>
-          <Divider mb="sm" />
-          <Stack gap="sm">
-            {candidate.match && (
-              <Group gap="xs">
-                <Badge variant="outline" size="sm">
-                  {candidate.match.kind}
-                </Badge>
-                <Text c="dimmed" size="xs">
-                  {t("match", { confidence: t(`confidence.${candidate.match.confidence}`) })}
-                </Text>
+      <Accordion.Panel>
+        <Stack gap="sm">
+          {candidate.match && (
+            <Group gap="xs">
+              <Badge variant="outline" size="sm">
+                {candidate.match.kind}
+              </Badge>
+              <Text c="dimmed" size="xs">
+                {t("match", { confidence: t(`confidence.${candidate.match.confidence}`) })}
+              </Text>
+            </Group>
+          )}
+
+          {candidate.representation.signals.ambiguous && (
+            <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
+              {t("ambiguous")}
+            </Alert>
+          )}
+
+          {health && (
+            <div>
+              <Text c="dimmed" size="xs" mb={4}>
+                {t("health.title")}
+              </Text>
+              <Group gap={4}>
+                {health.layers.map((layer) => (
+                  <Badge key={layer.layer} color={healthStatusColor(layer.status)} variant="dot" size="sm">
+                    {t(`health.layer.${layer.layer}`)}: {t(`health.status.${layer.status}`)}
+                  </Badge>
+                ))}
               </Group>
-            )}
+            </div>
+          )}
 
-            {candidate.representation.signals.ambiguous && (
-              <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
-                {t("ambiguous")}
-              </Alert>
-            )}
-
-            {health && (
-              <div>
-                <Text c="dimmed" size="xs" mb={4}>
-                  {t("health.title")}
-                </Text>
-                <Group gap={4}>
-                  {health.layers.map((layer) => (
-                    <Badge key={layer.layer} color={healthStatusColor(layer.status)} variant="dot" size="sm">
-                      {t(`health.layer.${layer.layer}`)}: {t(`health.status.${layer.status}`)}
-                    </Badge>
-                  ))}
-                </Group>
-              </div>
-            )}
-
-            {actionNeedsUrl && (
-              <SimpleGrid cols={{ base: 1, sm: 2 }}>
-                <Select
-                  label={t("url.label")}
-                  description={
-                    selectedCandidate ? t(`reason.${selectedCandidate.reason}`) : t("reason.manualHostRequired")
-                  }
-                  value={selectedCandidateId}
-                  data={candidate.urlCandidates.map((item) => ({
-                    value: item.id,
-                    label: item.url || t("url.manual"),
-                  }))}
-                  onChange={(value) => {
-                    setSelectedCandidateId(value);
-                    setUrl(candidate.urlCandidates.find(({ id }) => id === value)?.url ?? "");
-                  }}
-                />
-                <TextInput
-                  label={t("url.inputLabel")}
-                  aria-label={t("url.inputLabel")}
-                  value={url}
-                  placeholder="https://service.example.com"
-                  error={isInvalidUrl ? t("url.invalid") : undefined}
-                  onChange={(event) => setUrl(event.currentTarget.value)}
-                />
-              </SimpleGrid>
-            )}
-          </Stack>
-        </Collapse>
-      </Stack>
-    </Paper>
+          {actionNeedsUrl && (
+            <SimpleGrid cols={{ base: 1, sm: 2 }}>
+              <Select
+                label={t("url.label")}
+                description={
+                  selectedCandidate ? t(`reason.${selectedCandidate.reason}`) : t("reason.manualHostRequired")
+                }
+                value={selectedCandidateId}
+                data={candidate.urlCandidates.map((item) => ({
+                  value: item.id,
+                  label: item.url || t("url.manual"),
+                }))}
+                onChange={(value) => {
+                  setSelectedCandidateId(value);
+                  setUrl(candidate.urlCandidates.find(({ id }) => id === value)?.url ?? "");
+                }}
+              />
+              <TextInput
+                label={t("url.inputLabel")}
+                aria-label={t("url.inputLabel")}
+                value={url}
+                placeholder="https://service.example.com"
+                error={isInvalidUrl ? t("url.invalid") : undefined}
+                onChange={(event) => setUrl(event.currentTarget.value)}
+              />
+            </SimpleGrid>
+          )}
+        </Stack>
+      </Accordion.Panel>
+    </Accordion.Item>
   );
 };
 
