@@ -37,6 +37,7 @@ export interface ManageCollectionItemProps {
   metadata?: ReactNode;
   badges?: ReactNode;
   actions?: ReactNode;
+  actionsAlignment?: "flex-start" | "center";
 }
 
 export const ManageCollectionItem = ({
@@ -46,6 +47,7 @@ export const ManageCollectionItem = ({
   metadata,
   badges,
   actions,
+  actionsAlignment = "flex-start",
 }: ManageCollectionItemProps) => (
   <Paper component="li" p="sm" withBorder radius="md">
     <Group justify="space-between" align="flex-start" wrap="nowrap" gap="sm">
@@ -59,7 +61,7 @@ export const ManageCollectionItem = ({
         {metadata}
       </Stack>
       {actions && (
-        <Group gap={4} wrap="nowrap" style={{ flexShrink: 0 }}>
+        <Group gap={4} wrap="nowrap" style={{ flexShrink: 0, alignSelf: actionsAlignment }}>
           {actions}
         </Group>
       )}

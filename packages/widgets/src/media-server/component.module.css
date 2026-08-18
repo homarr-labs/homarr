@@ -44,6 +44,20 @@
   overflow: hidden;
 }
 
+.userIdentity {
+  display: grid;
+  flex: 1 1 0;
+  grid-template-rows: auto auto;
+  min-width: 0;
+  overflow: hidden;
+  row-gap: 1px;
+}
+
+.userIdentityLine {
+  min-width: 0;
+  line-height: 1.2;
+}
+
 .sessionRow {
   cursor: pointer;
 
