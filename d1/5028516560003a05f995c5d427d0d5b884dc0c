@@ -1,0 +1,14 @@
+apps/nextjs/src/components/board/board-setup-checklist.tsx
+  h_d6e478ca18e517 37,53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "d15028516560003a05f995c5d427d0d5b884dc0c",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
