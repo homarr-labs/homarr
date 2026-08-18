@@ -28,7 +28,7 @@ import {
   IconChevronDown,
   IconEyeOff,
   IconRefresh,
-  IconSparkles,
+  IconBrandDocker,
 } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -110,7 +110,7 @@ export const DockerReconciliation = () => {
         <Group justify="space-between" align="start">
           <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
             <ThemeIcon variant="light" size="lg" radius="md">
-              <IconSparkles size={18} />
+              <IconBrandDocker size={18} />
             </ThemeIcon>
             <div>
               <Group gap="xs">
