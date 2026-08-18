@@ -7079,22 +7079,16 @@
     "title": "Containers",
     "reconciliation": {
       "title": "Assisted Docker setup",
-      "description": "Optional suggestions to connect Docker services with Homarr apps and integrations.",
       "suggestions": "{count, plural, =0 {No suggestions} one {# suggestion} other {# suggestions}}",
       "attention": "{count} need attention",
       "endpointUnavailable": "Some services could not be checked because these endpoints are unavailable: {names}",
       "empty": "No visible Docker services were found.",
       "emptyFilter": "No services match this view.",
       "ambiguous": "More than one existing item could match this service. Homarr will not choose one automatically.",
-      "match": "{confidence} confidence match",
       "filter": {
         "attention": "Needs attention",
         "represented": "Already set up",
         "all": "All"
-      },
-      "confidence": {
-        "high": "High",
-        "medium": "Medium"
       },
       "state": {
         "newRecognized": "Ready to connect",
@@ -7104,19 +7098,9 @@
         "moved": "Address changed"
       },
       "url": {
-        "label": "Service address",
-        "inputLabel": "Service URL",
-        "manual": "Enter an address manually",
-        "invalid": "Enter a valid HTTP or HTTPS URL"
-      },
-      "reason": {
-        "publishedAddress": "Published address reported by Docker",
-        "dockerEndpointHost": "Docker endpoint host combined with the published port",
-        "sharedContainerNetwork": "Server-only address for services sharing the container network",
-        "manualHostRequired": "Enter the address that your browser or Homarr server can reach"
+        "manual": "Enter an address manually"
       },
       "health": {
-        "title": "Observed service layers",
         "layer": {
           "docker": "Docker",
           "integrationConfiguration": "Integration",

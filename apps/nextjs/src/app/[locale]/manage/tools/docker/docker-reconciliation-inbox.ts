@@ -23,12 +23,3 @@ export const filterDockerReconciliationInbox = <Candidate extends DockerReconcil
 
 export const dismissDockerReconciliationCandidate = (dismissedCandidateKeys: string[], candidateKey: string) =>
   dismissedCandidateKeys.includes(candidateKey) ? dismissedCandidateKeys : [...dismissedCandidateKeys, candidateKey];
-
-export const getValidDockerServiceUrl = (value: string) => {
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null;
-  } catch {
-    return null;
-  }
-};

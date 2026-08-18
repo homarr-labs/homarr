@@ -19,11 +19,14 @@ interface IntegrationSelectModalProps {
   enableMockIntegration?: boolean;
   allowedKinds?: readonly IntegrationKind[];
   completionBoardId?: string;
+  initialKind?: IntegrationKind;
+  initialUrl?: string;
+  initialName?: string;
 }
 
 export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>(({ actions, innerProps }) => {
-  const [step, setStep] = useState<"select" | "form">("select");
-  const [selectedKind, setSelectedKind] = useState<IntegrationKind | null>(null);
+  const [step, setStep] = useState<"select" | "form">(innerProps.initialKind ? "form" : "select");
+  const [selectedKind, setSelectedKind] = useState<IntegrationKind | null>(innerProps.initialKind ?? null);
   const { openModal: openCompletionModal } = useModalAction(IntegrationCompletionModal);
 
   const handleSelect = (kind: IntegrationKind) => {
@@ -35,6 +38,7 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
     setStep("select");
     setSelectedKind(null);
   };
+  const handleFormBack = innerProps.initialKind ? actions.closeModal : handleBack;
 
   const handleSuccess = (result?: CreatedIntegrationResult) => {
     actions.closeModal();
@@ -48,12 +52,18 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
   if (step === "form" && selectedKind) {
     return (
       <ScrollArea.Autosize mah="80vh">
-        <Group gap="xs" mb="md" style={{ cursor: "pointer" }} onClick={handleBack}>
+        <Group gap="xs" mb="md" style={{ cursor: "pointer" }} onClick={handleFormBack}>
           <IconArrowLeft size={18} />
           <IntegrationAvatar kind={selectedKind} size="sm" />
           <Title order={4}>{getIntegrationName(selectedKind)}</Title>
         </Group>
-        <NewIntegrationForm kind={selectedKind} onSuccess={handleSuccess} onCancel={handleBack} />
+        <NewIntegrationForm
+          kind={selectedKind}
+          initialUrl={innerProps.initialUrl}
+          initialName={innerProps.initialName}
+          onSuccess={handleSuccess}
+          onCancel={handleFormBack}
+        />
       </ScrollArea.Autosize>
     );
   }

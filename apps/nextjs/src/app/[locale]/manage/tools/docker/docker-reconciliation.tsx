@@ -5,6 +5,7 @@ import {
   Accordion,
   ActionIcon,
   Alert,
+  Autocomplete,
   Avatar,
   Badge,
   Button,
@@ -13,43 +14,45 @@ import {
   Group,
   Paper,
   SegmentedControl,
-  Select,
   SimpleGrid,
   Stack,
   Text,
-  TextInput,
   ThemeIcon,
   Tooltip,
 } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import {
   IconAlertTriangle,
-  IconArrowRight,
+  IconApps,
+  IconCheck,
   IconChevronDown,
+  IconEye,
   IconEyeOff,
-  IconRefresh,
   IconBrandDocker,
+  IconMinus,
+  IconPlugConnected,
+  IconRefresh,
+  IconSettings,
 } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { getIntegrationName } from "@homarr/definitions";
+import type { UrlTemplateMode } from "@homarr/definitions";
+import { buildAppUrl, buildIntegrationUrl, getIntegrationDefaultPort, getIntegrationName } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr } from "@homarr/modals-collection";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { normalizeServiceUrl, ServiceUrlTemplate } from "@homarr/onboarding";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
+import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import type { DockerReconciliationInboxFilter } from "./docker-reconciliation-inbox";
-import {
-  dismissDockerReconciliationCandidate,
-  filterDockerReconciliationInbox,
-  getValidDockerServiceUrl,
-} from "./docker-reconciliation-inbox";
+import { dismissDockerReconciliationCandidate, filterDockerReconciliationInbox } from "./docker-reconciliation-inbox";
 
 type ReconciliationCandidate = RouterOutputs["docker"]["reconcileServices"]["candidates"][number];
 type ServiceHealth = RouterOutputs["docker"]["getServiceHealth"]["services"][number];
 
-export const DockerReconciliation = () => {
+export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOrigin: string }) => {
   const t = useScopedI18n("docker.reconciliation");
   const utils = clientApi.useUtils();
   const panelId = useId();
@@ -78,6 +81,14 @@ export const DockerReconciliation = () => {
   const [dismissedCandidateKeys, setDismissedCandidateKeys] = useLocalStorage<string[]>({
     key: "homarr-docker-reconciliation-dismissed",
     defaultValue: [],
+  });
+  const [serverOrigin, setServerOrigin] = useLocalStorage({
+    key: "homarr-docker-service-origin",
+    defaultValue: defaultServerOrigin,
+  });
+  const [urlMode, setUrlMode] = useLocalStorage<UrlTemplateMode>({
+    key: "homarr-docker-service-url-mode",
+    defaultValue: "hostPort",
   });
 
   if (reconciliation.isError) {
@@ -119,9 +130,6 @@ export const DockerReconciliation = () => {
                   {t("suggestions", { count: String(attentionCount) })}
                 </Badge>
               </Group>
-              <Text c="dimmed" size="sm">
-                {t("description")}
-              </Text>
             </div>
           </Group>
           <Button
@@ -144,6 +152,13 @@ export const DockerReconciliation = () => {
         <Collapse id={panelId} expanded={isOpen}>
           <Divider mb="sm" />
           <Stack gap="sm">
+            <ServiceUrlTemplate
+              serverOrigin={serverOrigin}
+              onServerOriginChange={setServerOrigin}
+              mode={urlMode}
+              onModeChange={setUrlMode}
+            />
+
             <Group justify="space-between">
               <SegmentedControl
                 size="xs"
@@ -184,12 +199,14 @@ export const DockerReconciliation = () => {
                 {reconciliation.data.candidates.length === 0 ? t("empty") : t("emptyFilter")}
               </Text>
             ) : (
-              <Accordion multiple variant="separated" radius="sm" chevronPosition="left">
+              <Accordion multiple variant="separated" radius="sm" chevron={null}>
                 {candidates.map((candidate) => (
                   <DockerReconciliationCandidate
                     key={candidate.candidateKey}
                     candidate={candidate}
                     health={health.data?.services.find(({ key }) => key === candidate.candidateKey)}
+                    serverOrigin={serverOrigin}
+                    urlMode={urlMode}
                     onDismiss={() =>
                       setDismissedCandidateKeys((current) =>
                         dismissDockerReconciliationCandidate(current, candidate.candidateKey),
@@ -209,82 +226,99 @@ export const DockerReconciliation = () => {
 const DockerReconciliationCandidate = ({
   candidate,
   health,
+  serverOrigin,
+  urlMode,
   onDismiss,
 }: {
   candidate: ReconciliationCandidate;
   health: ServiceHealth | undefined;
+  serverOrigin: string;
+  urlMode: UrlTemplateMode;
   onDismiss: () => void;
 }) => {
   const t = useScopedI18n("docker.reconciliation");
-  const { openModal } = useModalAction(AddDockerAppToHomarr);
-  const initialUrlCandidate =
-    candidate.urlCandidates.find(
-      ({ url, scopes }) => url.length > 0 && (candidate.match ? true : scopes.includes("browser")),
-    ) ?? candidate.urlCandidates.find(({ source }) => source === "manual");
-  const [selectedCandidateId, setSelectedCandidateId] = useState(initialUrlCandidate?.id ?? null);
-  const [url, setUrl] = useState(initialUrlCandidate?.url ?? "");
-  const selectedCandidate = candidate.urlCandidates.find(({ id }) => id === selectedCandidateId);
-  const validatedUrl = getValidDockerServiceUrl(url);
-  const isInvalidUrl = url.length > 0 && validatedUrl === null;
-  const target = getCandidateTarget(candidate, validatedUrl ?? "");
+  const tGlobal = useI18n();
+  const { openModal: openAppModal } = useModalAction(AddDockerAppToHomarr);
+  const { openModal: openIntegrationModal } = useModalAction(IntegrationSelectModal);
+  const templateUrl = getTemplateUrl(candidate, serverOrigin, urlMode);
+  const urlSuggestions = Array.from(
+    new Set([templateUrl, ...candidate.urlCandidates.map(({ url }) => url)].filter((url) => url.length > 0)),
+  );
+  const initialUrl = urlSuggestions[0] ?? "";
+  const [url, setUrl] = useState(initialUrl);
+  const target = getCandidateTarget(candidate);
   const actionNeedsUrl = target.kind === "createApp" || target.kind === "setupIntegration";
-  const isActionDisabled = actionNeedsUrl && validatedUrl === null;
+  const visibleHealthLayers =
+    health?.layers.filter(({ status }) => status !== "notApplicable" && status !== "notObserved") ?? [];
 
   useEffect(() => {
-    setSelectedCandidateId(initialUrlCandidate?.id ?? null);
-    setUrl(initialUrlCandidate?.url ?? "");
-  }, [initialUrlCandidate?.id, initialUrlCandidate?.url]);
+    setUrl(initialUrl);
+  }, [initialUrl]);
 
   return (
     <Accordion.Item value={candidate.candidateKey}>
       <Group wrap="nowrap" gap={4} pr="sm">
-        <Accordion.Control style={{ flex: 1 }}>
-          <Group wrap="nowrap" style={{ minWidth: 0 }}>
+        <Accordion.Control
+          style={{ flex: 1 }}
+          icon={
             <Avatar src={candidate.container.iconUrl} radius="sm" size="sm">
               {candidate.container.name.at(0)?.toUpperCase()}
             </Avatar>
-            <div style={{ minWidth: 0 }}>
-              <Group gap="xs" wrap="nowrap">
-                <Text fw={600} size="sm" truncate>
-                  {candidate.container.name}
-                </Text>
-                <Badge color={stateColor(candidate.state)} variant="light" size="xs">
-                  {t(`state.${candidate.state}`)}
-                </Badge>
-              </Group>
-              <Text c="dimmed" size="xs">
-                {candidate.endpointName}
+          }
+        >
+          <div style={{ minWidth: 0 }}>
+            <Group gap="xs" wrap="nowrap">
+              <Text fw={600} size="sm" truncate>
+                {candidate.container.name}
               </Text>
-            </div>
-          </Group>
+              <Badge color={stateColor(candidate.state)} variant="light" size="xs">
+                {t(`state.${candidate.state}`)}
+              </Badge>
+            </Group>
+            <Text c="dimmed" size="xs">
+              {candidate.endpointName}
+            </Text>
+          </div>
         </Accordion.Control>
         <Group gap={4} wrap="nowrap">
-          {target.kind === "createApp" ? (
+          {target.kind === "createApp" && (
             <Button
               variant="light"
               size="compact-xs"
-              rightSection={<IconArrowRight size={14} />}
-              disabled={isActionDisabled}
+              leftSection={<IconApps size={14} />}
               onClick={() =>
-                openModal({
+                openAppModal({
                   selectedContainers: [candidate.container],
-                  initialUrls: validatedUrl ? [validatedUrl] : undefined,
+                  initialUrls: [(normalizeServiceUrl(url) ?? url) || null],
                 })
               }
             >
               {t("action.createApp")}
             </Button>
-          ) : (
+          )}
+          {target.kind === "setupIntegration" && (
+            <Button
+              variant="light"
+              size="compact-xs"
+              leftSection={<IconPlugConnected size={14} />}
+              onClick={() =>
+                openIntegrationModal({
+                  initialKind: target.integrationKind,
+                  initialName: candidate.container.name,
+                  initialUrl: normalizeServiceUrl(url) ?? url,
+                })
+              }
+            >
+              {t("action.setupIntegration")}
+            </Button>
+          )}
+          {(target.kind === "reviewIntegration" || target.kind === "viewRepresentation") && (
             <Button
               component={Link}
               href={target.href}
               variant="light"
               size="compact-xs"
-              rightSection={<IconArrowRight size={14} />}
-              disabled={isActionDisabled}
-              onClick={(event) => {
-                if (isActionDisabled) event.preventDefault();
-              }}
+              leftSection={target.kind === "reviewIntegration" ? <IconSettings size={14} /> : <IconEye size={14} />}
             >
               {t(`action.${target.kind}`)}
             </Button>
@@ -299,64 +333,36 @@ const DockerReconciliationCandidate = ({
 
       <Accordion.Panel>
         <Stack gap="sm">
-          {candidate.match && (
-            <Group gap="xs">
-              <Badge variant="outline" size="sm">
-                {candidate.match.kind}
-              </Badge>
-              <Text c="dimmed" size="xs">
-                {t("match", { confidence: t(`confidence.${candidate.match.confidence}`) })}
-              </Text>
-            </Group>
-          )}
-
           {candidate.representation.signals.ambiguous && (
             <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
               {t("ambiguous")}
             </Alert>
           )}
 
-          {health && (
-            <div>
-              <Text c="dimmed" size="xs" mb={4}>
-                {t("health.title")}
-              </Text>
-              <Group gap={4}>
-                {health.layers.map((layer) => (
-                  <Badge key={layer.layer} color={healthStatusColor(layer.status)} variant="dot" size="sm">
-                    {t(`health.layer.${layer.layer}`)}: {t(`health.status.${layer.status}`)}
-                  </Badge>
-                ))}
-              </Group>
-            </div>
+          {visibleHealthLayers.length > 0 && (
+            <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="xs">
+              {visibleHealthLayers.map((layer) => (
+                <Group key={layer.layer} gap="xs" wrap="nowrap">
+                  <HealthStatusIcon status={layer.status} />
+                  <Text size="xs">
+                    {t(`health.layer.${layer.layer}`)} ·{" "}
+                    <Text component="span" c="dimmed" inherit>
+                      {t(`health.status.${layer.status}`)}
+                    </Text>
+                  </Text>
+                </Group>
+              ))}
+            </SimpleGrid>
           )}
 
           {actionNeedsUrl && (
-            <SimpleGrid cols={{ base: 1, sm: 2 }}>
-              <Select
-                label={t("url.label")}
-                description={
-                  selectedCandidate ? t(`reason.${selectedCandidate.reason}`) : t("reason.manualHostRequired")
-                }
-                value={selectedCandidateId}
-                data={candidate.urlCandidates.map((item) => ({
-                  value: item.id,
-                  label: item.url || t("url.manual"),
-                }))}
-                onChange={(value) => {
-                  setSelectedCandidateId(value);
-                  setUrl(candidate.urlCandidates.find(({ id }) => id === value)?.url ?? "");
-                }}
-              />
-              <TextInput
-                label={t("url.inputLabel")}
-                aria-label={t("url.inputLabel")}
-                value={url}
-                placeholder="https://service.example.com"
-                error={isInvalidUrl ? t("url.invalid") : undefined}
-                onChange={(event) => setUrl(event.currentTarget.value)}
-              />
-            </SimpleGrid>
+            <Autocomplete
+              label={tGlobal("integration.field.url.label")}
+              value={url}
+              data={urlSuggestions}
+              placeholder={t("url.manual")}
+              onChange={setUrl}
+            />
           )}
         </Stack>
       </Accordion.Panel>
@@ -364,7 +370,7 @@ const DockerReconciliationCandidate = ({
   );
 };
 
-const getCandidateTarget = (candidate: ReconciliationCandidate, url: string) => {
+const getCandidateTarget = (candidate: ReconciliationCandidate) => {
   if (candidate.representation.signals.ambiguous) {
     if (candidate.nextAction === "reviewIntegration" && candidate.match) {
       const params = new URLSearchParams({ search: getIntegrationName(candidate.match.kind) });
@@ -373,9 +379,7 @@ const getCandidateTarget = (candidate: ReconciliationCandidate, url: string) => 
     return { kind: "viewRepresentation" as const, href: "/manage/apps" };
   }
   if (candidate.state === "newRecognized" && candidate.match) {
-    const params = new URLSearchParams({ kind: candidate.match.kind, name: candidate.container.name });
-    if (url) params.set("url", url);
-    return { kind: "setupIntegration" as const, href: `/manage/integrations/new?${params.toString()}` };
+    return { kind: "setupIntegration" as const, integrationKind: candidate.match.kind };
   }
 
   if (candidate.state === "newApp") return { kind: "createApp" as const };
@@ -398,8 +402,39 @@ const stateColor = (state: ReconciliationCandidate["state"]) => {
   return "blue";
 };
 
-const healthStatusColor = (status: ServiceHealth["layers"][number]["status"]) => {
-  if (["available", "configured", "linked"].includes(status)) return "green";
-  if (["missing", "changed", "unused"].includes(status)) return "yellow";
-  return "gray";
+const getTemplateUrl = (candidate: ReconciliationCandidate, serverOrigin: string, urlMode: UrlTemplateMode) => {
+  if (!serverOrigin.trim()) return "";
+
+  const tcpPorts = candidate.container.ports?.filter(({ Type }) => Type.toLowerCase() === "tcp") ?? [];
+  let publishedPort = tcpPorts.find(({ PublicPort }) => PublicPort)?.PublicPort;
+
+  if (candidate.match) {
+    const defaultPort = getIntegrationDefaultPort(candidate.match.kind);
+    const preferredPort = tcpPorts.find(
+      ({ PrivatePort, PublicPort }) => PrivatePort === defaultPort && PublicPort !== undefined,
+    );
+    publishedPort = preferredPort?.PublicPort ?? publishedPort;
+    return buildIntegrationUrl(candidate.match.kind, serverOrigin, urlMode, publishedPort);
+  }
+
+  return buildAppUrl(candidate.container.name, serverOrigin, urlMode, publishedPort);
+};
+
+const HealthStatusIcon = ({ status }: { status: ServiceHealth["layers"][number]["status"] }) => {
+  let color = "gray";
+  let icon = <IconMinus size={12} />;
+
+  if (["available", "configured", "linked"].includes(status)) {
+    color = "green";
+    icon = <IconCheck size={12} />;
+  } else if (["missing", "changed", "unused"].includes(status)) {
+    color = "yellow";
+    icon = <IconAlertTriangle size={12} />;
+  }
+
+  return (
+    <ThemeIcon color={color} variant="light" radius="xl" size="sm">
+      {icon}
+    </ThemeIcon>
+  );
 };
