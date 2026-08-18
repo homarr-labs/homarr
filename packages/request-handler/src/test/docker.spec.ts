@@ -7,6 +7,8 @@ import { DockerSingleton } from "@homarr/docker";
 import {
   calculateCpuUsage,
   calculateMemoryUsage,
+  dockerContainersRequestHandler,
+  getDockerEndpointsAsync,
   getContainersWithStatsAsync,
   hasDockerEndpointCapability,
 } from "../docker";
@@ -236,14 +238,26 @@ describe("getContainersWithStatsAsync", () => {
   });
 });
 
-test("demo capabilities match the advertised inventory-only endpoint", () => {
+test("demo mode advertises and filters the same inventory-only endpoint", async () => {
   const previousDemoMode = process.env.DEMO_MODE;
   process.env.DEMO_MODE = "true";
   try {
+    expect(getDockerEndpointsAsync()).toEqual([
+      expect.objectContaining({ id: "demo", name: "Demo Docker", capabilities: ["inventory"] }),
+    ]);
+
+    const selected = await dockerContainersRequestHandler.handler({ endpointIds: ["demo"] }).getDataAsync();
+    expect(selected.data.endpoints).toEqual([expect.objectContaining({ id: "demo" })]);
+    expect(selected.data.containers.length).toBeGreaterThan(0);
+
+    const excluded = await dockerContainersRequestHandler.handler({ endpointIds: ["other"] }).getDataAsync();
+    expect(excluded.data).toEqual({ containers: [], endpoints: [] });
+
     expect(hasDockerEndpointCapability("demo", "inventory")).toBe(true);
     expect(hasDockerEndpointCapability("demo", "logs")).toBe(false);
     expect(hasDockerEndpointCapability("other", "inventory")).toBe(false);
   } finally {
+    dockerContainersRequestHandler.invalidateCache();
     if (previousDemoMode === undefined) delete process.env.DEMO_MODE;
     else process.env.DEMO_MODE = previousDemoMode;
   }
