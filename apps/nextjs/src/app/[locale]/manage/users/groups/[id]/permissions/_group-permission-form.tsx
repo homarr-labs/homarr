@@ -4,6 +4,7 @@ import type { PropsWithChildren } from "react";
 import { useCallback, useId } from "react";
 import {
   Badge,
+  Box,
   Button,
   Card,
   Checkbox,
@@ -44,23 +45,13 @@ interface PermissionFormProps {
 }
 
 export const PermissionForm = ({ children, initialPermissions }: PropsWithChildren<PermissionFormProps>) => {
+  // Mantine compares each field against the values snapshot, so toggling a control back to its
+  // saved value clears the dirty state on its own - no manual bookkeeping needed here.
   const form = useForm({
     initialValues: groupPermissionKeys.reduce((acc, key) => {
       acc[key] = initialPermissions.includes(key);
       return acc;
     }, {} as FormType),
-    onValuesChange(values) {
-      const currentKeys = objectEntries(values)
-        .filter(([_key, value]) => Boolean(value))
-        .map(([key]) => key);
-
-      if (
-        currentKeys.every((key) => initialPermissions.includes(key)) &&
-        initialPermissions.every((key) => currentKeys.includes(key))
-      ) {
-        form.resetDirty(); // Reset dirty state if all keys are the same as initial
-      }
-    },
   });
 
   return (
@@ -220,12 +211,15 @@ export const MatrixRow = ({ category, permissionLabels, permissionDescriptions }
     }),
   ];
 
-  const selectedKey = level === 0 ? undefined : levels[level - 1];
-  const description =
-    selectedKey === undefined ? tPermissions("matrix.noneDescription") : (permissionDescriptions[selectedKey] ?? "");
-
   const createImplied = isCreateImpliedByLevel(category, level);
   const createChecked = hasMatrixCreate(values, category);
+
+  const selectedKey = level === 0 ? undefined : levels[level - 1];
+  // With no access level but the create capability granted, describing the row as "no access" would
+  // contradict the checkbox next to it, so the create permission describes the row instead.
+  const describedKey = selectedKey ?? (createChecked ? (createKey ?? undefined) : undefined);
+  const description =
+    describedKey === undefined ? tPermissions("matrix.noneDescription") : (permissionDescriptions[describedKey] ?? "");
 
   return (
     <Stack gap={6}>
@@ -236,7 +230,7 @@ export const MatrixRow = ({ category, permissionLabels, permissionDescriptions }
             {tPermissions(`${category}.title`)}
           </Text>
         </Group>
-        <Group gap="sm" wrap="wrap" align="center">
+        <Group gap="md" wrap="wrap" align="center">
           <SegmentedControl
             size="sm"
             data={data}
@@ -245,20 +239,23 @@ export const MatrixRow = ({ category, permissionLabels, permissionDescriptions }
             aria-label={tPermissions(`${category}.title`)}
             onChange={(value) => applyMatrixLevel(form, category, Number(value))}
           />
-          {createKey !== null && (
-            <Tooltip
-              label={tPermissions("matrix.createIncluded", { level: data[level]?.label ?? "" })}
-              disabled={!createImplied}
-            >
-              <Checkbox
-                size="sm"
-                label={permissionLabels[createKey] ?? createKey}
-                checked={createChecked}
-                disabled={disabledByAdmin || createImplied}
-                onChange={(event) => applyMatrixCreate(form, category, event.currentTarget.checked)}
-              />
-            </Tooltip>
-          )}
+          {/* Fixed-width column so every level control lines up, with or without a create option. */}
+          <Box w={{ base: "auto", sm: 190 }}>
+            {createKey !== null && (
+              <Tooltip
+                label={tPermissions("matrix.createIncluded", { level: data[level]?.label ?? "" })}
+                disabled={!createImplied}
+              >
+                <Checkbox
+                  size="sm"
+                  label={permissionLabels[createKey] ?? createKey}
+                  checked={createChecked}
+                  disabled={disabledByAdmin || createImplied}
+                  onChange={(event) => applyMatrixCreate(form, category, event.currentTarget.checked)}
+                />
+              </Tooltip>
+            )}
+          </Box>
         </Group>
       </Group>
       <Text size="xs" c="dimmed">
@@ -405,8 +402,10 @@ export const SaveAffix = ({ groupId }: SaveAffixProps) => {
       },
       {
         onSuccess: () => {
-          // Set new initial values for discard and reset dirty state
+          // setInitialValues moves the snapshot so Discard returns here, but only resetDirty clears
+          // the dirty flags that keep the unsaved-changes bar on screen.
           form.setInitialValues(values);
+          form.resetDirty(values);
           showSuccessNotification({
             title: tNotification("success.title"),
             message: tNotification("success.message"),
