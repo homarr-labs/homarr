@@ -1,16 +1,18 @@
 import { describe, expect, test } from "vitest";
 
-import {
-  filterStorageVolumes,
-  normalizeStorageDeviceName,
-  toScopedStorageVolumeValue,
-} from "./filter-storage-volumes";
+import { filterStorageVolumes, normalizeStorageDeviceName, toScopedStorageVolumeValue } from "./filter-storage-volumes";
 import { matchFileSystemAndSmart } from "./health-monitoring/system-health";
 
 describe("normalizeStorageDeviceName", () => {
   test("strips partition suffixes from block device paths", () => {
     expect(normalizeStorageDeviceName("/dev/sda1")).toBe("/dev/sda");
     expect(normalizeStorageDeviceName("/dev/sda")).toBe("/dev/sda");
+  });
+
+  test("strips partition suffixes from unprefixed device names (OpenMediaVault)", () => {
+    expect(normalizeStorageDeviceName("sda1")).toBe("sda");
+    expect(normalizeStorageDeviceName("sda")).toBe("sda");
+    expect(normalizeStorageDeviceName("nvme0n1p1")).toBe("nvme0n1");
   });
 
   test("preserves Synology-style volume names", () => {
@@ -142,5 +144,37 @@ describe("matchFileSystemAndSmart", () => {
       temperature: null,
       overallStatus: "",
     });
+  });
+
+  test("joins unprefixed OMV partitions with their base device SMART data", () => {
+    const result = matchFileSystemAndSmart(
+      [
+        { deviceName: "sda1", used: "3.13 GiB", available: "26853056512", percentage: 12 },
+        { deviceName: "sdb1", used: "396.24 GiB", available: "1542365618176", percentage: 22 },
+      ],
+      [
+        { deviceName: "sda", temperature: 0, overallStatus: "BAD_STATUS" },
+        { deviceName: "sdb", temperature: 33, overallStatus: "GOOD" },
+      ],
+    );
+
+    expect(result).toEqual([
+      {
+        deviceName: "sda",
+        used: "3.13 GiB",
+        available: "26853056512",
+        percentage: 12,
+        temperature: 0,
+        overallStatus: "BAD_STATUS",
+      },
+      {
+        deviceName: "sdb",
+        used: "396.24 GiB",
+        available: "1542365618176",
+        percentage: 22,
+        temperature: 33,
+        overallStatus: "GOOD",
+      },
+    ]);
   });
 });
