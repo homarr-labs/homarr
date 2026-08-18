@@ -23,6 +23,11 @@ const dockerContainerTargetSchema = z.object({
 });
 const dockerContainerTargetsSchema = z.array(dockerContainerTargetSchema).min(1).max(100);
 
+const normalizeGetContainersInput = (input: { endpointIds?: string[] } | undefined) => {
+  if (!input?.endpointIds || input.endpointIds.length === 0) return {};
+  return input;
+};
+
 export const dockerRouter = createTRPCRouter({
   reconcileServices: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -72,7 +77,7 @@ export const dockerRouter = createTRPCRouter({
     .concat(dockerMiddleware())
     .input(z.object({ endpointIds: z.array(z.string().min(1)).max(100).optional() }).optional())
     .query(async ({ input }) => {
-      const innerHandler = dockerContainersRequestHandler.handler(input ?? {});
+      const innerHandler = dockerContainersRequestHandler.handler(normalizeGetContainersInput(input));
       const result = await innerHandler.getDataAsync();
 
       const { data, timestamp } = result;

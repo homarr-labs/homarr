@@ -24,12 +24,11 @@ import { dockerContainersWidget } from "@site/docs/widgets/docker-containers";
   ]}
 />
 
-## Enabling the Docker integration
+## Connecting Docker to Homarr
 
-This integration must first be enabled.
-If you directly run on the host system and you have docker installed, it will be enabled by default.
-Otherwise, you'll need to mount the [docker socket](https://docs.docker.com/engine/security/protect-access/) to the Homarr container,
-so Homarr can interact with the Docker service.
+Docker connections come directly from Homarr's environment variables. They are automatically available in the Docker management table and Docker widget; you do not create a Docker integration under **Management → Integrations**.
+
+If Homarr runs directly on a host with Docker installed, it uses `/var/run/docker.sock` by default. When Homarr runs in a container, mount the [Docker socket](https://docs.docker.com/engine/security/protect-access/) into it so Homarr can interact with Docker.
 
 In Docker Compose, you can simply add this line:
 
@@ -122,7 +121,23 @@ services:
       DOCKER_SOCKET_PATHS: /var/run/docker.sock,/var/run/podman.sock
 ```
 
-For named endpoints, transport security, or least-privilege actions, prefer `DOCKER_ENDPOINTS`. It is a JSON array where every endpoint declares its identity, transport, and capabilities:
+For remote socket proxies, list the hostnames and matching ports in the same order:
+
+```yaml
+environment:
+  DOCKER_HOSTNAMES: docker-proxy-home,docker-proxy-lab
+  DOCKER_PORTS: 2375,2375
+```
+
+Homarr automatically discovers each comma-separated entry as a separate Docker environment. All environments are selected by default; the Docker widget lets you select one or more without any additional setup.
+
+:::warning[Plaintext TCP]
+Plaintext Docker TCP can grant unauthenticated control of the Docker host. Prefer a local socket, a least-privilege socket proxy on a private Docker network, or TLS.
+:::
+
+### Advanced endpoint configuration
+
+Most users should use the comma-separated variables above. Use `DOCKER_ENDPOINTS` only when you need custom names, TLS, or restricted capabilities. It is a JSON array where every endpoint declares its identity, transport, and capabilities:
 
 ```yaml
 services:
@@ -163,36 +178,7 @@ Supported transports are:
 - `tls`: `host`, `port`, and an absolute `caPath`; add both `certPath` and `keyPath` for mutual TLS
 - `tcp`: `host`, `port`, and the explicit acknowledgement `allowInsecure: true`
 
-:::warning[Plaintext TCP]
-Plaintext Docker TCP can grant unauthenticated control of the Docker host. Prefer a local socket, a least-privilege socket proxy, or TLS. The structured configuration refuses TCP unless `allowInsecure` is explicitly set to `true`.
-:::
-
-For example, two socket proxies can be configured as separate environments:
-
-```yaml
-environment:
-  DOCKER_ENDPOINTS: >-
-    [
-      {
-        "id": "home",
-        "name": "Home Docker",
-        "kind": "docker",
-        "transport": { "type": "tcp", "host": "docker-proxy-home", "port": 2375, "allowInsecure": true },
-        "capabilities": ["inventory", "logs", "lifecycle"]
-      },
-      {
-        "id": "lab",
-        "name": "Lab Docker",
-        "kind": "docker",
-        "transport": { "type": "tcp", "host": "docker-proxy-lab", "port": 2375, "allowInsecure": true },
-        "capabilities": ["inventory", "logs"]
-      }
-    ]
-```
-
-Homarr must be attached to the Docker network of each proxy, and every configured host must be reachable from the Homarr container.
-
-When `DOCKER_ENDPOINTS` is set, it takes precedence over the legacy `DOCKER_SOCKET_PATHS`, `DOCKER_HOSTNAMES`, and `DOCKER_PORTS` variables.
+The structured configuration refuses TCP unless `allowInsecure` is explicitly set to `true`. When `DOCKER_ENDPOINTS` is set, it takes precedence over `DOCKER_SOCKET_PATHS`, `DOCKER_HOSTNAMES`, and `DOCKER_PORTS`.
 
 ### Managing your Docker containers within Homarr
 
