@@ -248,7 +248,7 @@ export default function DockerWidget({
   const isAdvanced = displayMode === "advanced";
 
   const utils = clientApi.useUtils();
-  const containersQuery = clientApi.docker.getContainers.useQuery();
+  const containersQuery = clientApi.docker.getContainers.useQuery({ endpointIds: options.endpointIds });
   const data = getUsableWidgetQueryData(containersQuery);
   const { isFetching } = containersQuery;
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({

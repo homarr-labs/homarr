@@ -127,6 +127,31 @@ describe("calculateMemoryUsage", () => {
 });
 
 describe("getContainersWithStatsAsync", () => {
+  test("queries only selected Docker endpoints and leaves an empty selection as all", async () => {
+    const firstListContainers = vi.fn(async () => []);
+    const secondListContainers = vi.fn(async () => []);
+    vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([
+      createDockerInstance("first", firstListContainers),
+      createDockerInstance("second", secondListContainers),
+    ] as never);
+    vi.spyOn(DockerSingleton, "getInitializationFailures").mockReturnValue([]);
+
+    try {
+      const selectedResult = await getContainersWithStatsAsync(50, ["second"]);
+
+      expect(firstListContainers).not.toHaveBeenCalled();
+      expect(secondListContainers).toHaveBeenCalledOnce();
+      expect(selectedResult.endpoints.map(({ id }) => id)).toEqual(["second"]);
+
+      await getContainersWithStatsAsync(50, []);
+
+      expect(firstListContainers).toHaveBeenCalledOnce();
+      expect(secondListContainers).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.restoreAllMocks();
+    }
+  });
+
   test("marks a timed-out endpoint unavailable without blocking healthy endpoints", async () => {
     vi.useFakeTimers();
     try {

@@ -65,12 +65,14 @@ export const dockerRouter = createTRPCRouter({
     .meta({
       mcp: {
         enabled: true,
-        description: "List all Docker containers with their state, image, CPU/memory usage, and ports",
+        description:
+          "List Docker containers with their state, image, CPU/memory usage, and ports. Optionally filter by endpoint IDs; omitted or empty means all endpoints.",
       },
     })
     .concat(dockerMiddleware())
-    .query(async () => {
-      const innerHandler = dockerContainersRequestHandler.handler({});
+    .input(z.object({ endpointIds: z.array(z.string().min(1)).max(100).optional() }).optional())
+    .query(async ({ input }) => {
+      const innerHandler = dockerContainersRequestHandler.handler(input ?? {});
       const result = await innerHandler.getDataAsync();
 
       const { data, timestamp } = result;

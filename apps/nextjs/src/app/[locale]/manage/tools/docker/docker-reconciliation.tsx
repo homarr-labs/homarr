@@ -1,22 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import {
+  ActionIcon,
   Alert,
   Avatar,
   Badge,
   Button,
-  Card,
+  Collapse,
+  Divider,
   Group,
+  Paper,
   SegmentedControl,
   Select,
   SimpleGrid,
   Stack,
   Text,
   TextInput,
+  ThemeIcon,
+  Tooltip,
 } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import { IconAlertTriangle, IconArrowRight, IconEyeOff, IconPlugConnected, IconRefresh } from "@tabler/icons-react";
+import {
+  IconAlertTriangle,
+  IconArrowRight,
+  IconChevronDown,
+  IconEyeOff,
+  IconRefresh,
+  IconSparkles,
+} from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -39,8 +51,13 @@ type ServiceHealth = RouterOutputs["docker"]["getServiceHealth"]["services"][num
 export const DockerReconciliation = () => {
   const t = useScopedI18n("docker.reconciliation");
   const utils = clientApi.useUtils();
+  const panelId = useId();
+  const [isOpen, setIsOpen] = useLocalStorage({
+    key: "homarr-docker-reconciliation-open",
+    defaultValue: false,
+  });
   const reconciliation = clientApi.docker.reconcileServices.useQuery();
-  const health = clientApi.docker.getServiceHealth.useQuery();
+  const health = clientApi.docker.getServiceHealth.useQuery(undefined, { enabled: isOpen });
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({
     async onSuccess() {
       await Promise.all([
@@ -79,86 +96,112 @@ export const DockerReconciliation = () => {
 
   const unavailableEndpoints = reconciliation.data.endpoints.filter(({ status }) => status === "unavailable");
   const candidates = filterDockerReconciliationInbox(reconciliation.data.candidates, filter, dismissedCandidateKeys);
-  const attentionCount = health.data
-    ? health.data.services.filter(
-        ({ key, status }) =>
-          ["newRecognized", "newApp", "moved"].includes(status) && !dismissedCandidateKeys.includes(key),
-      ).length
-    : 0;
+  const attentionCount = reconciliation.data.candidates.filter(
+    ({ candidateKey, state }) =>
+      ["newRecognized", "newApp", "moved"].includes(state) && !dismissedCandidateKeys.includes(candidateKey),
+  ).length;
   const isRefreshing = refreshInventory.isPending || reconciliation.isFetching || health.isFetching;
+  const toggleLabel = isOpen ? t("action.hide") : t("action.review");
 
   return (
-    <Card withBorder>
-      <Stack>
+    <Paper withBorder p="sm">
+      <Stack gap={isOpen ? "sm" : 0}>
         <Group justify="space-between" align="start">
-          <div>
-            <Group gap="xs">
-              <IconPlugConnected size={20} />
-              <Text fw={600}>{t("title")}</Text>
-            </Group>
-            <Text c="dimmed" size="sm">
-              {t("description")}
-            </Text>
-          </div>
-          {health.data && <Badge variant="light">{t("attention", { count: String(attentionCount) })}</Badge>}
-        </Group>
-
-        <Group justify="space-between">
-          <SegmentedControl
-            value={filter}
-            onChange={(value) => setFilter(value as DockerReconciliationInboxFilter)}
-            data={[
-              { value: "attention", label: t("filter.attention") },
-              { value: "represented", label: t("filter.represented") },
-              { value: "all", label: t("filter.all") },
-            ]}
-          />
-          <Group gap="xs">
-            {dismissedCandidateKeys.length > 0 && (
-              <Button variant="subtle" size="xs" onClick={() => setDismissedCandidateKeys([])}>
-                {t("action.restoreDismissed", { count: String(dismissedCandidateKeys.length) })}
-              </Button>
-            )}
-            <Button
-              variant="light"
-              size="xs"
-              loading={isRefreshing}
-              leftSection={<IconRefresh size={14} />}
-              onClick={() => refreshInventory.mutate()}
-            >
-              {t("action.refresh")}
-            </Button>
+          <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
+            <ThemeIcon variant="light" size="lg" radius="md">
+              <IconSparkles size={18} />
+            </ThemeIcon>
+            <div>
+              <Group gap="xs">
+                <Text fw={600}>{t("title")}</Text>
+                <Badge variant="light" color={attentionCount > 0 ? "blue" : "gray"} aria-live="polite">
+                  {t("suggestions", { count: String(attentionCount) })}
+                </Badge>
+              </Group>
+              <Text c="dimmed" size="sm">
+                {t("description")}
+              </Text>
+            </div>
           </Group>
+          <Button
+            variant="subtle"
+            size="compact-sm"
+            rightSection={
+              <IconChevronDown
+                size={15}
+                style={{ transform: isOpen ? "rotate(180deg)" : undefined, transition: "transform 150ms ease" }}
+              />
+            }
+            aria-expanded={isOpen}
+            aria-controls={panelId}
+            onClick={() => setIsOpen((current) => !current)}
+          >
+            {toggleLabel}
+          </Button>
         </Group>
 
-        {unavailableEndpoints.length > 0 && (
-          <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
-            {t("endpointUnavailable", { names: unavailableEndpoints.map(({ name }) => name).join(", ") })}
-          </Alert>
-        )}
-
-        {candidates.length === 0 ? (
-          <Text c="dimmed" size="sm">
-            {reconciliation.data.candidates.length === 0 ? t("empty") : t("emptyFilter")}
-          </Text>
-        ) : (
-          <SimpleGrid cols={{ base: 1, lg: 2 }}>
-            {candidates.map((candidate) => (
-              <DockerReconciliationCandidate
-                key={candidate.candidateKey}
-                candidate={candidate}
-                health={health.data?.services.find(({ key }) => key === candidate.candidateKey)}
-                onDismiss={() =>
-                  setDismissedCandidateKeys((current) =>
-                    dismissDockerReconciliationCandidate(current, candidate.candidateKey),
-                  )
-                }
+        <Collapse id={panelId} expanded={isOpen}>
+          <Divider mb="sm" />
+          <Stack gap="sm">
+            <Group justify="space-between">
+              <SegmentedControl
+                size="xs"
+                value={filter}
+                onChange={(value) => setFilter(value as DockerReconciliationInboxFilter)}
+                data={[
+                  { value: "attention", label: t("filter.attention") },
+                  { value: "represented", label: t("filter.represented") },
+                  { value: "all", label: t("filter.all") },
+                ]}
               />
-            ))}
-          </SimpleGrid>
-        )}
+              <Group gap="xs">
+                {dismissedCandidateKeys.length > 0 && (
+                  <Button variant="subtle" size="compact-xs" onClick={() => setDismissedCandidateKeys([])}>
+                    {t("action.restoreDismissed", { count: String(dismissedCandidateKeys.length) })}
+                  </Button>
+                )}
+                <Button
+                  variant="light"
+                  size="compact-xs"
+                  loading={isRefreshing}
+                  leftSection={<IconRefresh size={14} />}
+                  onClick={() => refreshInventory.mutate()}
+                >
+                  {t("action.refresh")}
+                </Button>
+              </Group>
+            </Group>
+
+            {unavailableEndpoints.length > 0 && (
+              <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
+                {t("endpointUnavailable", { names: unavailableEndpoints.map(({ name }) => name).join(", ") })}
+              </Alert>
+            )}
+
+            {candidates.length === 0 ? (
+              <Text c="dimmed" size="sm">
+                {reconciliation.data.candidates.length === 0 ? t("empty") : t("emptyFilter")}
+              </Text>
+            ) : (
+              <Stack gap="xs">
+                {candidates.map((candidate) => (
+                  <DockerReconciliationCandidate
+                    key={candidate.candidateKey}
+                    candidate={candidate}
+                    health={health.data?.services.find(({ key }) => key === candidate.candidateKey)}
+                    onDismiss={() =>
+                      setDismissedCandidateKeys((current) =>
+                        dismissDockerReconciliationCandidate(current, candidate.candidateKey),
+                      )
+                    }
+                  />
+                ))}
+              </Stack>
+            )}
+          </Stack>
+        </Collapse>
       </Stack>
-    </Card>
+    </Paper>
   );
 };
 
@@ -185,6 +228,9 @@ const DockerReconciliationCandidate = ({
   const target = getCandidateTarget(candidate, validatedUrl ?? "");
   const actionNeedsUrl = target.kind === "createApp" || target.kind === "setupIntegration";
   const isActionDisabled = actionNeedsUrl && validatedUrl === null;
+  const detailsId = useId();
+  const [detailsOpen, setDetailsOpen] = useState(isActionDisabled || candidate.representation.signals.ambiguous);
+  const detailsLabel = detailsOpen ? t("action.hideDetails") : t("action.showDetails");
 
   useEffect(() => {
     setSelectedCandidateId(initialUrlCandidate?.id ?? null);
@@ -192,114 +238,151 @@ const DockerReconciliationCandidate = ({
   }, [initialUrlCandidate?.id, initialUrlCandidate?.url]);
 
   return (
-    <Card withBorder padding="md">
-      <Stack gap="sm">
-        <Group justify="space-between" align="start" wrap="nowrap">
-          <Group wrap="nowrap">
-            <Avatar src={candidate.container.iconUrl} radius="sm">
+    <Paper withBorder p="sm">
+      <Stack gap="xs">
+        <Group justify="space-between" align="center">
+          <Group wrap="nowrap" style={{ minWidth: 0 }}>
+            <Avatar src={candidate.container.iconUrl} radius="sm" size="sm">
               {candidate.container.name.at(0)?.toUpperCase()}
             </Avatar>
-            <div>
-              <Text fw={600} lineClamp={1}>
-                {candidate.container.name}
-              </Text>
+            <div style={{ minWidth: 0 }}>
+              <Group gap="xs" wrap="nowrap">
+                <Text fw={600} size="sm" truncate>
+                  {candidate.container.name}
+                </Text>
+                <Badge color={stateColor(candidate.state)} variant="light" size="xs">
+                  {t(`state.${candidate.state}`)}
+                </Badge>
+              </Group>
               <Text c="dimmed" size="xs">
                 {candidate.endpointName}
               </Text>
             </div>
           </Group>
-          <Badge color={stateColor(candidate.state)} variant="light">
-            {t(`state.${candidate.state}`)}
-          </Badge>
-        </Group>
-
-        {candidate.match && (
-          <Group gap="xs">
-            <Badge variant="outline">{candidate.match.kind}</Badge>
-            <Text c="dimmed" size="xs">
-              {t("match", { confidence: t(`confidence.${candidate.match.confidence}`) })}
-            </Text>
-          </Group>
-        )}
-
-        {candidate.representation.signals.ambiguous && (
-          <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
-            {t("ambiguous")}
-          </Alert>
-        )}
-
-        {health && (
-          <div>
-            <Text c="dimmed" size="xs" mb={4}>
-              {t("health.title")}
-            </Text>
-            <Group gap={4}>
-              {health.layers.map((layer) => (
-                <Badge key={layer.layer} color={healthStatusColor(layer.status)} variant="dot" size="sm">
-                  {t(`health.layer.${layer.layer}`)}: {t(`health.status.${layer.status}`)}
-                </Badge>
-              ))}
-            </Group>
-          </div>
-        )}
-
-        <Select
-          label={t("url.label")}
-          description={selectedCandidate ? t(`reason.${selectedCandidate.reason}`) : t("reason.manualHostRequired")}
-          value={selectedCandidateId}
-          data={candidate.urlCandidates.map((item) => ({
-            value: item.id,
-            label: item.url || t("url.manual"),
-          }))}
-          onChange={(value) => {
-            setSelectedCandidateId(value);
-            setUrl(candidate.urlCandidates.find(({ id }) => id === value)?.url ?? "");
-          }}
-        />
-        <TextInput
-          label={t("url.inputLabel")}
-          aria-label={t("url.inputLabel")}
-          value={url}
-          placeholder="https://service.example.com"
-          error={isInvalidUrl ? t("url.invalid") : undefined}
-          onChange={(event) => setUrl(event.currentTarget.value)}
-        />
-
-        <Group justify="space-between">
-          <Button variant="subtle" color="gray" leftSection={<IconEyeOff size={16} />} onClick={onDismiss}>
-            {t("action.dismiss")}
-          </Button>
-          {target.kind === "createApp" ? (
+          <Group gap={4} justify="flex-end">
             <Button
-              variant="light"
-              rightSection={<IconArrowRight size={16} />}
-              disabled={isActionDisabled}
-              onClick={() =>
-                openModal({
-                  selectedContainers: [candidate.container],
-                  initialUrls: validatedUrl ? [validatedUrl] : undefined,
-                })
+              variant="subtle"
+              color="gray"
+              size="compact-xs"
+              rightSection={
+                <IconChevronDown
+                  size={14}
+                  style={{
+                    transform: detailsOpen ? "rotate(180deg)" : undefined,
+                    transition: "transform 150ms ease",
+                  }}
+                />
               }
+              aria-expanded={detailsOpen}
+              aria-controls={detailsId}
+              onClick={() => setDetailsOpen((current) => !current)}
             >
-              {t("action.createApp")}
+              {detailsLabel}
             </Button>
-          ) : (
-            <Button
-              component={Link}
-              href={target.href}
-              variant="light"
-              rightSection={<IconArrowRight size={16} />}
-              disabled={isActionDisabled}
-              onClick={(event) => {
-                if (isActionDisabled) event.preventDefault();
-              }}
-            >
-              {t(`action.${target.kind}`)}
-            </Button>
-          )}
+            {target.kind === "createApp" ? (
+              <Button
+                variant="light"
+                size="compact-xs"
+                rightSection={<IconArrowRight size={14} />}
+                disabled={isActionDisabled}
+                onClick={() =>
+                  openModal({
+                    selectedContainers: [candidate.container],
+                    initialUrls: validatedUrl ? [validatedUrl] : undefined,
+                  })
+                }
+              >
+                {t("action.createApp")}
+              </Button>
+            ) : (
+              <Button
+                component={Link}
+                href={target.href}
+                variant="light"
+                size="compact-xs"
+                rightSection={<IconArrowRight size={14} />}
+                disabled={isActionDisabled}
+                onClick={(event) => {
+                  if (isActionDisabled) event.preventDefault();
+                }}
+              >
+                {t(`action.${target.kind}`)}
+              </Button>
+            )}
+            <Tooltip label={t("action.dismiss")} events={{ hover: true, focus: true, touch: false }}>
+              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("action.dismiss")} onClick={onDismiss}>
+                <IconEyeOff size={15} />
+              </ActionIcon>
+            </Tooltip>
+          </Group>
         </Group>
+
+        <Collapse id={detailsId} expanded={detailsOpen}>
+          <Divider mb="sm" />
+          <Stack gap="sm">
+            {candidate.match && (
+              <Group gap="xs">
+                <Badge variant="outline" size="sm">
+                  {candidate.match.kind}
+                </Badge>
+                <Text c="dimmed" size="xs">
+                  {t("match", { confidence: t(`confidence.${candidate.match.confidence}`) })}
+                </Text>
+              </Group>
+            )}
+
+            {candidate.representation.signals.ambiguous && (
+              <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
+                {t("ambiguous")}
+              </Alert>
+            )}
+
+            {health && (
+              <div>
+                <Text c="dimmed" size="xs" mb={4}>
+                  {t("health.title")}
+                </Text>
+                <Group gap={4}>
+                  {health.layers.map((layer) => (
+                    <Badge key={layer.layer} color={healthStatusColor(layer.status)} variant="dot" size="sm">
+                      {t(`health.layer.${layer.layer}`)}: {t(`health.status.${layer.status}`)}
+                    </Badge>
+                  ))}
+                </Group>
+              </div>
+            )}
+
+            {actionNeedsUrl && (
+              <SimpleGrid cols={{ base: 1, sm: 2 }}>
+                <Select
+                  label={t("url.label")}
+                  description={
+                    selectedCandidate ? t(`reason.${selectedCandidate.reason}`) : t("reason.manualHostRequired")
+                  }
+                  value={selectedCandidateId}
+                  data={candidate.urlCandidates.map((item) => ({
+                    value: item.id,
+                    label: item.url || t("url.manual"),
+                  }))}
+                  onChange={(value) => {
+                    setSelectedCandidateId(value);
+                    setUrl(candidate.urlCandidates.find(({ id }) => id === value)?.url ?? "");
+                  }}
+                />
+                <TextInput
+                  label={t("url.inputLabel")}
+                  aria-label={t("url.inputLabel")}
+                  value={url}
+                  placeholder="https://service.example.com"
+                  error={isInvalidUrl ? t("url.invalid") : undefined}
+                  onChange={(event) => setUrl(event.currentTarget.value)}
+                />
+              </SimpleGrid>
+            )}
+          </Stack>
+        </Collapse>
       </Stack>
-    </Card>
+    </Paper>
   );
 };
 

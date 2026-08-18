@@ -1,6 +1,7 @@
 import { IconBrandDocker, IconServerOff } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -30,6 +31,18 @@ export const { definition, componentLoader } = createWidgetDefinition("dockerCon
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
+        endpointIds: factory.dynamicMultiSelect({
+          defaultValue: [],
+          withDescription: true,
+          useOptions: () => {
+            const { data = [], isPending, isError } = clientApi.docker.getEndpoints.useQuery();
+            return {
+              data: data.map((endpoint) => ({ value: endpoint.id, label: endpoint.name })),
+              isPending,
+              isError,
+            };
+          },
+        }),
         columns: factory.multiSelect({
           defaultValue: [...allColumnsList],
           options: allColumnsList.map((value) => ({

@@ -167,12 +167,37 @@ Supported transports are:
 Plaintext Docker TCP can grant unauthenticated control of the Docker host. Prefer a local socket, a least-privilege socket proxy, or TLS. The structured configuration refuses TCP unless `allowInsecure` is explicitly set to `true`.
 :::
 
+For example, two socket proxies can be configured as separate environments:
+
+```yaml
+environment:
+  DOCKER_ENDPOINTS: >-
+    [
+      {
+        "id": "home",
+        "name": "Home Docker",
+        "kind": "docker",
+        "transport": { "type": "tcp", "host": "docker-proxy-home", "port": 2375, "allowInsecure": true },
+        "capabilities": ["inventory", "logs", "lifecycle"]
+      },
+      {
+        "id": "lab",
+        "name": "Lab Docker",
+        "kind": "docker",
+        "transport": { "type": "tcp", "host": "docker-proxy-lab", "port": 2375, "allowInsecure": true },
+        "capabilities": ["inventory", "logs"]
+      }
+    ]
+```
+
+Homarr must be attached to the Docker network of each proxy, and every configured host must be reachable from the Homarr container.
+
 When `DOCKER_ENDPOINTS` is set, it takes precedence over the legacy `DOCKER_SOCKET_PATHS`, `DOCKER_HOSTNAMES`, and `DOCKER_PORTS` variables.
 
 ### Managing your Docker containers within Homarr
 
 Homarr allows you to interact with Docker containers running on your system.
-The **Service setup** section compares the visible containers with your existing Homarr apps and integrations. It keeps every service distinct by Docker endpoint and container ID, including multiple containers that use the same integration type.
+The collapsed **Assisted Docker setup** helper optionally compares visible containers with your existing Homarr apps and integrations. Open it only when you want setup suggestions; it never blocks normal container management. Every service stays distinct by Docker endpoint and container ID, including multiple containers that use the same integration type.
 
 Homarr can show a service as:
 
@@ -187,7 +212,7 @@ Suggested addresses are ranked and explain where they came from. A published add
 Service discovery is read-only. Homarr never creates or changes an app or integration automatically; use the action on an individual suggestion to review and confirm its setup.
 :::
 
-Use the inbox filters to focus on services that need attention or those already represented in Homarr. Refresh runs discovery again. Dismissed suggestions are stored in the current browser using their endpoint-qualified service identity and can be restored from the same panel. If multiple existing items could match, Homarr marks the result as ambiguous and does not choose one automatically.
+Suggestions appear as a compact task list. Expand an item only when you want to inspect its address, match confidence, or observed health layers. Use the filters to focus on services that need attention or those already represented in Homarr. Refresh runs discovery again. Dismissed suggestions are stored in the current browser using their endpoint-qualified service identity and can be restored from the same helper. If multiple existing items could match, Homarr marks the result as ambiguous and does not choose one automatically.
 
 The health badges are an evidence-based projection across Docker, integration configuration, app representation, and persisted widget links. Authentication, API request success, and widget query execution are labeled **Not observed** because Homarr does not currently retain trustworthy last-run results for these layers. Use the suggested integration test or board action to diagnose them live; **Not observed** is never presented as healthy.
 
@@ -215,6 +240,10 @@ This opens a dedicated page with an xterm.js terminal that streams the container
 
 The Docker management table supports optional **CPU usage** and **Memory usage** columns.
 These columns are hidden by default and can be toggled on from the table column visibility settings.
+
+#### Choosing Docker environments in the widget
+
+The Docker widget can show one or more configured Docker environments. Leave **Docker environments** empty to include every endpoint, which is also the default for existing widgets. Selecting one or more entries limits container and statistics requests to those endpoints.
 
 #### Add apps from containers
 
