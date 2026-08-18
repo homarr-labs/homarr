@@ -1,0 +1,16 @@
+.root {
+  position: absolute;
+  z-index: 3;
+  top: calc(var(--mantine-spacing-xl) * var(--board-canvas-inverse-scale, 1));
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  padding-inline: var(--mantine-spacing-md);
+  pointer-events: none;
+}
+
+.panel {
+  max-width: 42rem;
+  pointer-events: auto;
+}

@@ -16,6 +16,7 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 dayjs.extend(relativeTime);
 
 interface SecretsTableComponentProps {
+  contextId: string;
   initialSecrets: RouterOutputs["kubernetes"]["secrets"]["getSecrets"];
 }
 
@@ -42,15 +43,19 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.secrets">): MRT_
   },
 ];
 
-export function SecretsTable(initialData: SecretsTableComponentProps) {
+export function SecretsTable({ contextId, initialSecrets }: SecretsTableComponentProps) {
   const tSecrets = useScopedI18n("kubernetes.secrets");
 
-  const { data } = clientApi.kubernetes.secrets.getSecrets.useQuery(undefined, {
-    initialData: initialData.initialSecrets,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data } = clientApi.kubernetes.secrets.getSecrets.useQuery(
+    { contextId },
+    {
+      initialData: initialSecrets,
+      refetchOnMount: "always",
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
+    },
+  );
 
   const table = useTranslatedMantineReactTable({
     data,

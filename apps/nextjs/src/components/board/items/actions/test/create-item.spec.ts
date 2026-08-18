@@ -149,6 +149,99 @@ describe("item actions create-item", () => {
     });
   });
 
+  test("places a new item directly in the requested container", () => {
+    const board = new BoardMockBuilder()
+      .addEmptySection({ id: "canvas" })
+      .addSection(
+        new ContainerSectionMockBuilder({ id: "media" })
+          .addLayout({ layoutId: "layout", parentSectionId: "canvas", width: 4, height: 3 })
+          .build(),
+      )
+      .build();
+    const layout = board.layouts.at(0);
+    if (!layout) throw new Error("Expected a board layout");
+    layout.id = "layout";
+
+    const result = createItemCallback({ id: "calendar", kind: "mediaMissing", targetSectionId: "media" })(board);
+
+    expect(result.items.find((item) => item.id === "calendar")?.layouts).toEqual([
+      expect.objectContaining({ layoutId: "layout", sectionId: "media", width: 4 }),
+    ]);
+  });
+
+  test("omits layouts where the requested container has no layout entry", () => {
+    const board = new BoardMockBuilder()
+      .addLayout({ id: "mobile", name: "Mobile", role: "mobile", columnCount: 3, breakpoint: 0 })
+      .addEmptySection({ id: "canvas" })
+      .addSection(
+        new ContainerSectionMockBuilder({ id: "media" })
+          .addLayout({ layoutId: "base", parentSectionId: "canvas", width: 4, height: 3 })
+          .build(),
+      )
+      .build();
+    const baseLayout = board.layouts.find((layout) => layout.role === "base");
+    if (!baseLayout) throw new Error("Expected a base layout");
+    baseLayout.id = "base";
+
+    const result = createItemCallback({ id: "calendar", kind: "clock", targetSectionId: "media" })(board);
+
+    expect(result.items.find((item) => item.id === "calendar")?.layouts).toEqual([
+      expect.objectContaining({ layoutId: "base", sectionId: "media" }),
+    ]);
+  });
+
+  test("sizes a new item for its requested rail and omits layouts where that rail is hidden", () => {
+    const board = new BoardMockBuilder()
+      .addLayout({ id: "mobile", name: "Mobile", role: "mobile", columnCount: 3, breakpoint: 0 })
+      .addEmptySection({ id: "canvas" })
+      .addEmptySection({ id: "left-rail", xOffset: -1 })
+      .build();
+    const baseLayout = board.layouts.find((layout) => layout.role === "base");
+    if (!baseLayout) throw new Error("Expected a base layout");
+    baseLayout.leftGutterColumnCount = 2;
+
+    const result = createItemCallback({ id: "missing", kind: "mediaMissing", targetSectionId: "left-rail" })(board);
+
+    expect(result.items.find((item) => item.id === "missing")?.layouts).toEqual([
+      expect.objectContaining({ layoutId: baseLayout.id, sectionId: "left-rail", width: 2 }),
+    ]);
+  });
+
+  test("falls back to the main canvas instead of creating a ghost item for a disabled rail", () => {
+    const board = new BoardMockBuilder()
+      .addEmptySection({ id: "canvas" })
+      .addEmptySection({ id: "left-rail", xOffset: -1 })
+      .build();
+
+    const result = createItemCallback({ id: "clock", kind: "clock", targetSectionId: "left-rail" })(board);
+
+    expect(result.items.find((item) => item.id === "clock")?.layouts).toEqual([
+      expect.objectContaining({ sectionId: "canvas" }),
+    ]);
+  });
+
+  test("falls back to the main canvas when a requested destination no longer exists", () => {
+    const board = new BoardMockBuilder().addEmptySection({ id: "canvas" }).build();
+    const layout = board.layouts.at(0);
+    if (!layout) throw new Error("Expected a board layout");
+    layout.id = "layout";
+
+    const result = createItemCallback({ id: "clock", kind: "clock", targetSectionId: "removed" })(board);
+
+    expect(result.items.find((item) => item.id === "clock")?.layouts).toEqual([
+      expect.objectContaining({ layoutId: "layout", sectionId: "canvas" }),
+    ]);
+  });
+
+  test("commits configured advanced options in the creation transaction", () => {
+    const board = new BoardMockBuilder().addEmptySection({ id: "canvas" }).build();
+    const advancedOptions = { title: "Kitchen", customCssClasses: ["compact"], borderColor: "#abc" };
+
+    const result = createItemCallback({ id: "clock", kind: "clock", advancedOptions })(board);
+
+    expect(result.items.find((item) => item.id === "clock")?.advancedOptions).toEqual(advancedOptions);
+  });
+
   test("clamps wide defaults and places below a full automatic canvas", () => {
     const board = new BoardMockBuilder().addEmptySection({ id: "canvas", yOffset: 0 }).build();
     const layout = board.layouts[0];

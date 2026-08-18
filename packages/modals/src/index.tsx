@@ -14,6 +14,8 @@ import { ConfirmModal } from "./confirm-modal";
 import type { ModalsState, ModalStateWithReference } from "./reducer";
 import { modalReducer } from "./reducer";
 import type { inferInnerProps, ModalDefinition } from "./type";
+import presentationClasses from "./modal-presentation.module.css";
+import { getModalPresentationClassNames } from "./modal-presentation";
 
 interface ModalContextProps {
   openModalInner: <TModal extends ModalDefinition>(props: {
@@ -94,7 +96,11 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
     setTimeout(() => setOpened(true), 0);
   }, []);
 
-  const { defaultTitle: _ignored, ...otherModalProps } = modal.reference.modalProps;
+  const { defaultTitle: _ignored, presentation, ...otherModalProps } = modal.reference.modalProps;
+  const presentationClassNames = getModalPresentationClassNames(presentation, {
+    inner: presentationClasses.inspectorInner,
+    content: presentationClasses.inspectorContent,
+  });
 
   return (
     <Modal
@@ -113,6 +119,7 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
         },
       }}
       trapFocus={modal.id === state.current?.id}
+      classNames={presentationClassNames}
       {...otherModalProps}
       title={translateIfNecessary(t, modal.props.defaultTitle)}
       opened={opened}

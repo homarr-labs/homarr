@@ -2,8 +2,14 @@ import type { ContainerStats } from "dockerode";
 import { describe, expect, test, vi } from "vitest";
 
 import { createDb } from "@homarr/db/test";
+import { DockerSingleton } from "@homarr/docker";
 
-import { calculateCpuUsage, calculateMemoryUsage } from "../docker";
+import {
+  calculateCpuUsage,
+  calculateMemoryUsage,
+  getContainersWithStatsAsync,
+  hasDockerEndpointCapability,
+} from "../docker";
 
 vi.mock("@homarr/db", async (importActual) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -118,4 +124,116 @@ describe("calculateMemoryUsage", () => {
     const stats = createStats({ memory_stats: { usage: 512 } });
     expect(calculateMemoryUsage(stats)).toBe(512);
   });
+});
+
+describe("getContainersWithStatsAsync", () => {
+  test("marks a timed-out endpoint unavailable without blocking healthy endpoints", async () => {
+    vi.useFakeTimers();
+    try {
+      vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([
+        createDockerInstance("stalled", () => new Promise(() => undefined)),
+        createDockerInstance("healthy", async () => []),
+      ] as never);
+
+      const resultPromise = getContainersWithStatsAsync(50);
+      await vi.advanceTimersByTimeAsync(50);
+      const result = await resultPromise;
+
+      expect(result.endpoints).toEqual([
+        expect.objectContaining({ id: "stalled", status: "unavailable" }),
+        expect.objectContaining({ id: "healthy", status: "available" }),
+      ]);
+    } finally {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+    }
+  });
+
+  test("marks an endpoint degraded and returns zeroed stats when its stats request times out", async () => {
+    vi.useFakeTimers();
+    try {
+      const dockerInstance = createDockerInstance("healthy", async () => [
+        {
+          Id: "container-1",
+          Image: "sonarr:latest",
+          Labels: {},
+          Names: ["/sonarr"],
+          State: "running",
+          Ports: [],
+        },
+      ]);
+      let observedSignal: AbortSignal | undefined;
+      dockerInstance.instance.getContainer = (() => ({
+        stats: (options: { abortSignal?: AbortSignal }) => {
+          observedSignal = options.abortSignal;
+          return new Promise(() => undefined);
+        },
+      })) as never;
+      vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([dockerInstance] as never);
+      vi.spyOn(DockerSingleton, "findInstance").mockReturnValue(dockerInstance as never);
+
+      const resultPromise = getContainersWithStatsAsync(50);
+      await vi.advanceTimersByTimeAsync(50);
+      const result = await resultPromise;
+
+      expect(observedSignal?.aborted).toBe(true);
+      expect(result.containers).toEqual([expect.objectContaining({ id: "container-1", cpuUsage: 0, memoryUsage: 0 })]);
+      expect(result.endpoints).toEqual([expect.objectContaining({ id: "healthy", status: "degraded" })]);
+    } finally {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+    }
+  });
+
+  test("includes endpoints that failed during TLS initialization", async () => {
+    vi.spyOn(DockerSingleton, "getInstances").mockReturnValue([]);
+    vi.spyOn(DockerSingleton, "getInitializationFailures").mockReturnValue([
+      {
+        host: "broken.example:2376",
+        descriptor: {
+          id: "broken-tls",
+          name: "Broken TLS",
+          kind: "docker",
+          transport: { type: "tls", host: "broken.example", port: 2376, caPath: "/missing/ca.pem" },
+          capabilities: ["inventory"],
+          scope: "admin",
+          source: "environment",
+        },
+      },
+    ]);
+
+    const result = await getContainersWithStatsAsync(50);
+
+    expect(result.endpoints).toEqual([
+      expect.objectContaining({ id: "broken-tls", status: "unavailable", transport: "tls" }),
+    ]);
+    vi.restoreAllMocks();
+  });
+});
+
+test("demo capabilities match the advertised inventory-only endpoint", () => {
+  const previousDemoMode = process.env.DEMO_MODE;
+  process.env.DEMO_MODE = "true";
+  try {
+    expect(hasDockerEndpointCapability("demo", "inventory")).toBe(true);
+    expect(hasDockerEndpointCapability("demo", "logs")).toBe(false);
+    expect(hasDockerEndpointCapability("other", "inventory")).toBe(false);
+  } finally {
+    if (previousDemoMode === undefined) delete process.env.DEMO_MODE;
+    else process.env.DEMO_MODE = previousDemoMode;
+  }
+});
+
+const createDockerInstance = (endpointId: string, listContainers: () => Promise<unknown[]>) => ({
+  endpointId,
+  endpointName: endpointId,
+  host: endpointId,
+  descriptor: {
+    kind: "docker",
+    transport: { type: "socket" },
+    capabilities: ["inventory"],
+    source: "environment",
+    scope: "admin",
+  },
+  instance: { listContainers, getContainer: () => ({}) },
 });

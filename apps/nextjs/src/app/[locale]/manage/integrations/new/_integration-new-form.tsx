@@ -19,6 +19,7 @@ import {
 import { IconCheck, IconExternalLink, IconInfoCircle, IconKey } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -49,9 +50,11 @@ interface NewIntegrationFormProps {
   kind: IntegrationKind;
   initialUrl?: string;
   initialName?: string;
-  onSuccess: () => void;
+  onSuccess: (result?: CreatedIntegrationResult) => void;
   onCancel?: () => void;
 }
+
+export type CreatedIntegrationResult = Extract<RouterOutputs["integration"]["create"], { integration: unknown }>;
 
 const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
   z.object({
@@ -67,12 +70,18 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
   const { data: session } = useSession();
   const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
+  const validationSchema = canCreateApps
+    ? formSchema
+    : formSchema.superRefine((values, context) => {
+        if (!values.hasApp || values.appId !== null) return;
+        context.addIssue({ code: "custom", message: t("common.zod.errors.required"), path: ["appId"] });
+      });
 
   let url = initialUrl ?? getIntegrationDefaultUrl(kind) ?? "";
   if (hasUrlSecret) {
     url = "http://localhost";
   }
-  const form = useZodForm(formSchema, {
+  const form = useZodForm(validationSchema, {
     initialValues: {
       name: initialName ?? getIntegrationName(kind),
       url,
@@ -81,7 +90,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
         value: "",
       })),
       attemptSearchEngineCreation: true,
-      hasApp: true,
+      hasApp: canCreateApps,
       appHref: url,
       appId: null,
     },
@@ -101,7 +110,9 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
       ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
       : values.url;
 
-    const onMutationSuccess = (data: { error?: AnyMappedTestConnectionError } | undefined | void) => {
+    const onMutationSuccess = (
+      data: CreatedIntegrationResult | { error?: AnyMappedTestConnectionError } | undefined | void,
+    ) => {
       if (data && "error" in data && data.error) {
         setError(data.error);
         showErrorNotification({
@@ -116,7 +127,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
         message: t("integration.page.create.notification.success.message"),
       });
 
-      onSuccess();
+      onSuccess(data && "integration" in data ? data : undefined);
     };
 
     const onMutationError = () => {
@@ -131,13 +142,15 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
     const app = hasApp
       ? appId !== null
         ? { id: appId }
-        : {
-            name: values.name,
-            href: hasCustomHref ? appHref : url,
-            iconUrl: getIconUrl(kind),
-            description: null,
-            pingUrl: url,
-          }
+        : canCreateApps
+          ? {
+              name: values.name,
+              href: hasCustomHref ? appHref : url,
+              iconUrl: getIconUrl(kind),
+              description: null,
+              pingUrl: url,
+            }
+          : undefined
       : undefined;
 
     await createIntegrationAsync(
@@ -229,8 +242,10 @@ const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; c
             checkboxInputProps.onChange(event);
           });
         }}
-        label={t("integration.field.createApp.label")}
-        description={t("integration.field.createApp.description")}
+        label={t(canCreateApps ? "integration.field.createApp.label" : "integration.field.linkApp.label")}
+        description={t(
+          canCreateApps ? "integration.field.createApp.description" : "integration.field.linkApp.description",
+        )}
       />
 
       <Collapse expanded={form.values.hasApp}>

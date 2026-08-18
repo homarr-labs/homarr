@@ -562,13 +562,15 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Create a new board with a name, column count (1-24), and isPublic flag. Returns { boardId }. Requires board-create permission",
+          "Create a new board with a name, column count (1-24), and isPublic flag. Returns { boardId, name, layoutId }. Requires board-create permission",
       },
     })
     .input(boardCreateSchema)
-    .output(z.object({ boardId: z.string() }))
+    .output(z.object({ boardId: z.string(), name: z.string(), layoutId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const boardId = createId();
+      const mobileLayoutId = createId();
+      const baseLayoutId = createId();
 
       const user = await ctx.db.query.users.findFirst({
         where: eq(users.id, ctx.session.user.id),
@@ -594,7 +596,7 @@ export const boardRouter = createTRPCRouter({
       });
       createBoardCollection.layouts.push(
         {
-          id: createId(),
+          id: mobileLayoutId,
           name: "Mobile",
           columnCount: 3,
           leftGutterColumnCount: 0,
@@ -604,7 +606,7 @@ export const boardRouter = createTRPCRouter({
           boardId,
         },
         {
-          id: createId(),
+          id: baseLayoutId,
           name: "Base",
           columnCount: input.columnCount,
           leftGutterColumnCount: 0,
@@ -621,7 +623,7 @@ export const boardRouter = createTRPCRouter({
         await ctx.db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, ctx.session.user.id));
       }
 
-      return { boardId };
+      return { boardId, name: input.name, layoutId: baseLayoutId };
     }),
   duplicateBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
@@ -747,19 +749,17 @@ export const boardRouter = createTRPCRouter({
 
       const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = boardSections
         .flatMap((section) =>
-          section.layouts.map(
-            (layoutSection): InferInsertModel<typeof sectionLayouts> => ({
-              ...layoutSection,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              layoutId: layoutsMap.get(layoutSection.layoutId)!,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              sectionId: sectionMap.get(layoutSection.sectionId)!,
-              parentSectionId: layoutSection.parentSectionId
-                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  sectionMap.get(layoutSection.parentSectionId)!
-                : layoutSection.parentSectionId,
-            }),
-          ),
+          section.layouts.map((layoutSection): InferInsertModel<typeof sectionLayouts> => ({
+            ...layoutSection,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            layoutId: layoutsMap.get(layoutSection.layoutId)!,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            sectionId: sectionMap.get(layoutSection.sectionId)!,
+            parentSectionId: layoutSection.parentSectionId
+              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                sectionMap.get(layoutSection.parentSectionId)!
+              : layoutSection.parentSectionId,
+          })),
         )
         .concat(
           (generatedMobilePositions?.sectionLayouts ?? []).map((layoutSection) => ({
@@ -776,13 +776,11 @@ export const boardRouter = createTRPCRouter({
         );
       const sectionCollapseStatesToInsert: InferInsertModel<typeof sectionCollapseStates>[] = boardSections.flatMap(
         (section) =>
-          section.collapseStates.map(
-            (collapseState): InferInsertModel<typeof sectionCollapseStates> => ({
-              ...collapseState,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              sectionId: sectionMap.get(collapseState.sectionId)!,
-            }),
-          ),
+          section.collapseStates.map((collapseState): InferInsertModel<typeof sectionCollapseStates> => ({
+            ...collapseState,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            sectionId: sectionMap.get(collapseState.sectionId)!,
+          })),
       );
 
       const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
@@ -797,17 +795,15 @@ export const boardRouter = createTRPCRouter({
 
       const itemLayoutsToInsert: InferInsertModel<typeof itemLayouts>[] = boardItems
         .flatMap((item) =>
-          item.layouts.map(
-            (layoutSection): InferInsertModel<typeof itemLayouts> => ({
-              ...layoutSection,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              sectionId: sectionMap.get(layoutSection.sectionId)!,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              itemId: itemMap.get(layoutSection.itemId)!,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              layoutId: layoutsMap.get(layoutSection.layoutId)!,
-            }),
-          ),
+          item.layouts.map((layoutSection): InferInsertModel<typeof itemLayouts> => ({
+            ...layoutSection,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            sectionId: sectionMap.get(layoutSection.sectionId)!,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            itemId: itemMap.get(layoutSection.itemId)!,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            layoutId: layoutsMap.get(layoutSection.layoutId)!,
+          })),
         )
         .concat(
           (generatedMobilePositions?.itemSectionLayouts ?? []).map((layoutSection) => ({
@@ -1527,17 +1523,15 @@ export const boardRouter = createTRPCRouter({
             const sectionLayoutsToInsert = addedSections
               .filter((section) => section.kind === "container")
               .flatMap((section) =>
-                section.layouts.map(
-                  (sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
-                    layoutId: sectionLayout.layoutId,
-                    sectionId: section.id,
-                    parentSectionId: sectionLayout.parentSectionId,
-                    height: sectionLayout.height,
-                    width: sectionLayout.width,
-                    xOffset: sectionLayout.xOffset,
-                    yOffset: sectionLayout.yOffset,
-                  }),
-                ),
+                section.layouts.map((sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
+                  layoutId: sectionLayout.layoutId,
+                  sectionId: section.id,
+                  parentSectionId: sectionLayout.parentSectionId,
+                  height: sectionLayout.height,
+                  width: sectionLayout.width,
+                  xOffset: sectionLayout.xOffset,
+                  yOffset: sectionLayout.yOffset,
+                })),
               );
 
             if (sectionLayoutsToInsert.length > 0) {
@@ -1559,17 +1553,15 @@ export const boardRouter = createTRPCRouter({
             );
             await transaction.insert(schema.itemLayouts).values(
               addedItems.flatMap((item) =>
-                item.layouts.map(
-                  (layoutSection): InferInsertModel<typeof schema.itemLayouts> => ({
-                    layoutId: layoutSection.layoutId,
-                    sectionId: layoutSection.sectionId,
-                    itemId: item.id,
-                    height: layoutSection.height,
-                    width: layoutSection.width,
-                    xOffset: layoutSection.xOffset,
-                    yOffset: layoutSection.yOffset,
-                  }),
-                ),
+                item.layouts.map((layoutSection): InferInsertModel<typeof schema.itemLayouts> => ({
+                  layoutId: layoutSection.layoutId,
+                  sectionId: layoutSection.sectionId,
+                  itemId: item.id,
+                  height: layoutSection.height,
+                  width: layoutSection.width,
+                  xOffset: layoutSection.xOffset,
+                  yOffset: layoutSection.yOffset,
+                })),
               ),
             );
           }
@@ -1727,17 +1719,15 @@ export const boardRouter = createTRPCRouter({
             const sectionLayoutsToInsert = addedSections
               .filter((section) => section.kind === "container")
               .flatMap((section) =>
-                section.layouts.map(
-                  (sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
-                    layoutId: sectionLayout.layoutId,
-                    sectionId: section.id,
-                    parentSectionId: sectionLayout.parentSectionId,
-                    height: sectionLayout.height,
-                    width: sectionLayout.width,
-                    xOffset: sectionLayout.xOffset,
-                    yOffset: sectionLayout.yOffset,
-                  }),
-                ),
+                section.layouts.map((sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
+                  layoutId: sectionLayout.layoutId,
+                  sectionId: section.id,
+                  parentSectionId: sectionLayout.parentSectionId,
+                  height: sectionLayout.height,
+                  width: sectionLayout.width,
+                  xOffset: sectionLayout.xOffset,
+                  yOffset: sectionLayout.yOffset,
+                })),
               );
 
             if (sectionLayoutsToInsert.length > 0) {
@@ -1764,17 +1754,15 @@ export const boardRouter = createTRPCRouter({
               .insert(itemLayouts)
               .values(
                 addedItems.flatMap((item) =>
-                  item.layouts.map(
-                    (layoutSection): InferInsertModel<typeof itemLayouts> => ({
-                      layoutId: layoutSection.layoutId,
-                      sectionId: layoutSection.sectionId,
-                      itemId: item.id,
-                      height: layoutSection.height,
-                      width: layoutSection.width,
-                      xOffset: layoutSection.xOffset,
-                      yOffset: layoutSection.yOffset,
-                    }),
-                  ),
+                  item.layouts.map((layoutSection): InferInsertModel<typeof itemLayouts> => ({
+                    layoutId: layoutSection.layoutId,
+                    sectionId: layoutSection.sectionId,
+                    itemId: item.id,
+                    height: layoutSection.height,
+                    width: layoutSection.width,
+                    xOffset: layoutSection.xOffset,
+                    yOffset: layoutSection.yOffset,
+                  })),
                 ),
               )
               .run();

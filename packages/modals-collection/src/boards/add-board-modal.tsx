@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { Button, Group, InputWrapper, Slider, Stack, Switch, TextInput } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
@@ -12,6 +13,7 @@ import { boardColumnCountSchema, boardCreateSchema, boardNameSchema } from "@hom
 
 export const AddBoardModal = createModal(({ actions }) => {
   const t = useI18n();
+  const router = useRouter();
   const form = useZodForm(boardCreateSchema, {
     mode: "controlled",
     initialValues: {
@@ -34,17 +36,20 @@ export const AddBoardModal = createModal(({ actions }) => {
         // Prevent submit before name availability check
         if (!boardNameStatus.canSubmit) return;
         mutate(values, {
-          onSuccess: () => {
+          onSuccess: (result) => {
             actions.closeModal();
             showSuccessNotification({
-              title: "Board created",
-              message: `Board ${values.name} has been created`,
+              title: t("board.action.create.notification.success.title"),
+              message: t("board.action.create.notification.success.message", { name: values.name }),
             });
+            const name = encodeURIComponent(result.name);
+            const layoutId = encodeURIComponent(result.layoutId);
+            router.push(`/boards/${name}?layout=${layoutId}&edit=true&add=true`);
           },
           onError() {
             showErrorNotification({
-              title: "Failed to create board",
-              message: `Board ${values.name} could not be created`,
+              title: t("board.action.create.notification.error.title"),
+              message: t("board.action.create.notification.error.message", { name: values.name }),
             });
           },
         });
@@ -110,7 +115,7 @@ export const useBoardNameStatus = (name: string) => {
         ? undefined
         : isLoading
           ? {
-              label: "Checking availability...",
+              label: t("board.action.create.availability.checking"),
             }
           : boardExists === undefined
             ? undefined
@@ -122,7 +127,7 @@ export const useBoardNameStatus = (name: string) => {
                 }
               : {
                   icon: IconCircleCheck,
-                  label: `${debouncedName} is available`,
+                  label: t("board.action.create.availability.available", { name: debouncedName }),
                   color: "green",
                 },
   };

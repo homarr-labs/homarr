@@ -15,12 +15,20 @@ import classes from "./integration-select-grid.module.css";
 export interface IntegrationSelectGridProps {
   onSelect: (kind: IntegrationKind) => void;
   enableMockIntegration?: boolean;
+  allowedKinds?: readonly IntegrationKind[];
 }
 
-export const IntegrationSelectGrid = ({ onSelect, enableMockIntegration = false }: IntegrationSelectGridProps) => {
+export const IntegrationSelectGrid = ({
+  onSelect,
+  enableMockIntegration = false,
+  allowedKinds,
+}: IntegrationSelectGridProps) => {
   const [search, setSearch] = useState("");
   const t = useI18n();
-  const integrations = useMemo(() => buildSortedIntegrations({ enableMockIntegration }), [enableMockIntegration]);
+  const integrations = useMemo(
+    () => buildSortedIntegrations({ enableMockIntegration, allowedKinds }),
+    [allowedKinds, enableMockIntegration],
+  );
   const filtered = useMemo(() => filterIntegrations(integrations, search), [integrations, search]);
 
   return (

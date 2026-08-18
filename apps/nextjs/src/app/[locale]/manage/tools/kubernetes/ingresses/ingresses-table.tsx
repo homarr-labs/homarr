@@ -16,9 +16,12 @@ import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
+import KubernetesErrorPage from "../cluster-dashboard/error";
+
 dayjs.extend(relativeTime);
 
 interface IngressesTableComponentProps {
+  contextId: string;
   initialIngresses: RouterOutputs["kubernetes"]["ingresses"]["getIngresses"];
 }
 
@@ -72,15 +75,19 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.ingresses">): MR
   },
 ];
 
-export function IngressesTable(initialData: IngressesTableComponentProps) {
+export function IngressesTable({ contextId, initialIngresses }: IngressesTableComponentProps) {
   const tIngresses = useScopedI18n("kubernetes.ingresses");
 
-  const { data } = clientApi.kubernetes.ingresses.getIngresses.useQuery(undefined, {
-    initialData: initialData.initialIngresses,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data, isError } = clientApi.kubernetes.ingresses.getIngresses.useQuery(
+    { contextId },
+    {
+      initialData: initialIngresses,
+      refetchOnMount: "always",
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      refetchInterval: (query) => (query.state.status === "error" ? 30_000 : false),
+    },
+  );
 
   const table = useTranslatedMantineReactTable({
     data,
@@ -102,6 +109,10 @@ export function IngressesTable(initialData: IngressesTableComponentProps) {
 
     columns: createColumns(tIngresses),
   });
+
+  if (isError) {
+    return <KubernetesErrorPage />;
+  }
 
   return <MantineReactTable table={table} />;
 }

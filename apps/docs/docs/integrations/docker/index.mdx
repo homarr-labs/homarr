@@ -122,9 +122,77 @@ services:
       DOCKER_SOCKET_PATHS: /var/run/docker.sock,/var/run/podman.sock
 ```
 
+For named endpoints, transport security, or least-privilege actions, prefer `DOCKER_ENDPOINTS`. It is a JSON array where every endpoint declares its identity, transport, and capabilities:
+
+```yaml
+services:
+  homarr:
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker-ca.pem:/run/secrets/docker-ca.pem:ro
+    environment:
+      DOCKER_ENDPOINTS: >-
+        [
+          {
+            "id": "local",
+            "name": "Local Docker",
+            "kind": "docker",
+            "transport": { "type": "socket", "path": "/var/run/docker.sock" },
+            "capabilities": ["inventory", "logs", "lifecycle", "remove"]
+          },
+          {
+            "id": "remote-read-only",
+            "name": "Production inventory",
+            "kind": "docker",
+            "transport": {
+              "type": "tls",
+              "host": "docker.example.com",
+              "port": 2376,
+              "caPath": "/run/secrets/docker-ca.pem"
+            },
+            "capabilities": ["inventory", "logs"]
+          }
+        ]
+```
+
+The stable `id` keeps containers from different endpoints distinct. `name` is shown in the interface, and `kind` can be `docker` or `podman`. Every endpoint must include the `inventory` capability; optionally add `logs`, `lifecycle`, and `remove`. Homarr hides or disables actions the endpoint does not allow and also enforces the same capabilities on the server.
+
+Supported transports are:
+
+- `socket`: an absolute in-container `path`
+- `tls`: `host`, `port`, and an absolute `caPath`; add both `certPath` and `keyPath` for mutual TLS
+- `tcp`: `host`, `port`, and the explicit acknowledgement `allowInsecure: true`
+
+:::warning[Plaintext TCP]
+Plaintext Docker TCP can grant unauthenticated control of the Docker host. Prefer a local socket, a least-privilege socket proxy, or TLS. The structured configuration refuses TCP unless `allowInsecure` is explicitly set to `true`.
+:::
+
+When `DOCKER_ENDPOINTS` is set, it takes precedence over the legacy `DOCKER_SOCKET_PATHS`, `DOCKER_HOSTNAMES`, and `DOCKER_PORTS` variables.
+
 ### Managing your Docker containers within Homarr
 
 Homarr allows you to interact with Docker containers running on your system.
+The **Service setup** section compares the visible containers with your existing Homarr apps and integrations. It keeps every service distinct by Docker endpoint and container ID, including multiple containers that use the same integration type.
+
+Homarr can show a service as:
+
+- **Ready to connect** when its image or name matches a supported integration
+- **New service** when it can be added as an app but no integration is recognized
+- **Already represented** or **Linked** when an app or integration already matches
+- **Address changed** when a service appears to match an integration but its reachable address has changed
+
+Suggested addresses are ranked and explain where they came from. A published address or Docker endpoint host is normally usable from a browser; a container-name address is server-only and requires Homarr to share the container network. Wildcard addresses such as `0.0.0.0` are never offered as browser destinations. You can edit every suggestion before continuing.
+
+:::info[Review before changing]
+Service discovery is read-only. Homarr never creates or changes an app or integration automatically; use the action on an individual suggestion to review and confirm its setup.
+:::
+
+Use the inbox filters to focus on services that need attention or those already represented in Homarr. Refresh runs discovery again. Dismissed suggestions are stored in the current browser using their endpoint-qualified service identity and can be restored from the same panel. If multiple existing items could match, Homarr marks the result as ambiguous and does not choose one automatically.
+
+The health badges are an evidence-based projection across Docker, integration configuration, app representation, and persisted widget links. Authentication, API request success, and widget query execution are labeled **Not observed** because Homarr does not currently retain trustworthy last-run results for these layers. Use the suggested integration test or board action to diagnose them live; **Not observed** is never presented as healthy.
+
+If one Docker endpoint is unavailable, Homarr reports that endpoint while continuing to show services from healthy endpoints. An unavailable endpoint is not treated as an empty Docker installation.
+
 Each container row has an action menu with the following options:
 
 - **View logs** - opens a dedicated logs page with a live terminal
