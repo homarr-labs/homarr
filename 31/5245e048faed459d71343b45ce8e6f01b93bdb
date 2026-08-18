@@ -1,0 +1,19 @@
+packages/widgets/src/media-server/component.tsx
+  s_fe6f0f79bcb0c6::t_cb645684d76c12 326
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "315245e048faed459d71343b45ce8e6f01b93bdb",
+  "prompts": {},
+  "sessions": {
+    "s_fe6f0f79bcb0c6": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff3534623ffeBmehYI2hm4qQZZ",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
