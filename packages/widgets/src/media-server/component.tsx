@@ -323,7 +323,7 @@ export default function MediaServerWidget({
                           <Text size="xs" c="dimmed" truncate>
                             {session.sessionName}
                           </Text>
-                        </div>
+                        </Stack>
                       </Group>
                     </Table.Td>
                   )}
