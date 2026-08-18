@@ -1,0 +1,29 @@
+apps/nextjs/src/components/backup/types.ts
+  s_2124d26929a6ae::t_e57d1b76f61fe9 28
+packages/translation/src/lang/en.json
+  s_2124d26929a6ae::t_940d338f9f3f94 5279-5280
+apps/nextjs/src/components/backup/database-restore-flow.tsx
+  s_2124d26929a6ae::t_25c33c6ffa94df 33,36-42
+  s_2124d26929a6ae::t_a086187b86cd76 3-4,7
+  s_2124d26929a6ae::t_0f0cea831b11b8 239-255
+  s_2124d26929a6ae::t_0b0dc77db92615 81-84,87-93
+  s_2124d26929a6ae::t_41e207924849fe 57-60
+  s_2124d26929a6ae::t_8ebf8829f1ffaa 43
+  s_2124d26929a6ae::t_bd8fe850bbd070 94
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "2a76bb185ba3af52c2465b466f1ca3dd87241dc0",
+  "prompts": {},
+  "sessions": {
+    "s_2124d26929a6ae": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_febe2c5a1ffeAn7u4sc43y3L6D",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
