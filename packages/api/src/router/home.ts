@@ -16,6 +16,7 @@ import {
   searchEngines,
   users,
 } from "@homarr/db/schema";
+import { getAppManagementAccess, getIntegrationManagementAccess } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
@@ -123,29 +124,30 @@ export const homeRouter = createTRPCRouter({
       });
     }
 
-    // These mirror the access rules of /manage/integrations and /manage/apps exactly: a card is only
-    // shown when the page behind it is reachable, and it counts only what the user is allowed to see.
-    const hasGlobalFullIntegrationAccess = ctx.session?.user.permissions.includes("integration-full-all") ?? false;
-    const canCreateIntegrations = ctx.session?.user.permissions.includes("integration-create") ?? false;
+    // A card is only shown when the page behind it is reachable, and it counts only what the user is
+    // allowed to see. The rules come from @homarr/definitions so this cannot drift from the pages.
+    const permissions = ctx.session?.user.permissions ?? [];
+    const hasGlobalFullIntegrationAccess = permissions.includes("integration-full-all");
     const fullAccessIntegrationIds =
       hasGlobalFullIntegrationAccess || !ctx.session?.user
         ? []
         : await getFullAccessIntegrationIdsAsync(ctx.db, ctx.session.user.id);
-    if (hasGlobalFullIntegrationAccess || canCreateIntegrations || fullAccessIntegrationIds.length > 0) {
+    const integrationAccess = getIntegrationManagementAccess(permissions, fullAccessIntegrationIds.length > 0);
+    if (integrationAccess.canAccess) {
       statistics.push({
         titleKey: "integration",
         subtitleKey: "resources",
-        count: hasGlobalFullIntegrationAccess ? await db.$count(integrations) : fullAccessIntegrationIds.length,
+        count: integrationAccess.canManageAll ? await db.$count(integrations) : fullAccessIntegrationIds.length,
         path: "/manage/integrations",
       });
     }
 
-    const canManageAllApps = ctx.session?.user.permissions.includes("app-modify-all") ?? false;
-    if (canManageAllApps || (ctx.session?.user.permissions.includes("app-create") ?? false)) {
+    const appAccess = getAppManagementAccess(permissions);
+    if (appAccess.canAccess) {
       statistics.push({
         titleKey: "app",
         subtitleKey: "resources",
-        count: canManageAllApps ? await db.$count(apps) : 0,
+        count: appAccess.canManageAll ? await db.$count(apps) : 0,
         path: "/manage/apps",
       });
     }

@@ -198,3 +198,43 @@ export const matrixStateToPermissions = (state: PermissionMatrixState): GroupPer
     return acc;
   }, [] as GroupPermissionKey[]);
 };
+
+export interface ManagementSectionAccess {
+  /** May see and manage every resource of the section */
+  canManageAll: boolean;
+  /** May add new resources to the section */
+  canCreate: boolean;
+  /** May open the section at all */
+  canAccess: boolean;
+}
+
+/**
+ * A management section is reachable when the user can do at least one thing in it. Both rules live
+ * here so the navigation, the pages themselves and the management home statistics cannot drift
+ * apart - each of them consumes the same function.
+ */
+export const getAppManagementAccess = (permissions: readonly GroupPermissionKey[]): ManagementSectionAccess => {
+  const canManageAll = permissions.includes("app-modify-all");
+  const canCreate = permissions.includes("app-create");
+
+  return { canManageAll, canCreate, canAccess: canManageAll || canCreate };
+};
+
+/**
+ * `hasDelegatedFullAccess` is whether the user was granted full access to at least one specific
+ * integration; it has to be looked up per request, so the caller resolves it.
+ */
+export const getIntegrationManagementAccess = (
+  permissions: readonly GroupPermissionKey[],
+  hasDelegatedFullAccess: boolean,
+): ManagementSectionAccess & { hasDelegatedFullAccess: boolean } => {
+  const canManageAll = permissions.includes("integration-full-all");
+  const canCreate = permissions.includes("integration-create");
+
+  return {
+    canManageAll,
+    canCreate,
+    hasDelegatedFullAccess,
+    canAccess: canManageAll || canCreate || hasDelegatedFullAccess,
+  };
+};

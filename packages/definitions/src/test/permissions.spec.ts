@@ -2,6 +2,8 @@ import { describe, expect, test } from "vitest";
 
 import type { GroupPermissionKey, PermissionMatrixState } from "../permissions";
 import {
+  getAppManagementAccess,
+  getIntegrationManagementAccess,
   getPermissionsWithChildren,
   getPermissionsWithParents,
   groupPermissionKeys,
@@ -187,11 +189,58 @@ describe("matrix helpers should round-trip stably", () => {
     expect(roundTripped).toHaveLength(permissions.length);
   });
 
+  test("expect a redundant create key to be normalised away by the level that implies it", () => {
+    // app-modify-all already grants app-create, so the matrix stores the minimal set. The permission
+    // is not lost: getPermissionsWithChildren re-derives it whenever permissions are read.
+    const roundTripped = matrixStateToPermissions(permissionsToMatrixState(["app-create", "app-modify-all"]));
+    expect(roundTripped).toEqual(["app-use-all", "app-modify-all"]);
+    expect(getPermissionsWithChildren(roundTripped)).toContain("app-create");
+  });
+
   test("expect a single higher-level key to expand to its full set on round-trip", () => {
     expect(matrixStateToPermissions(permissionsToMatrixState(["board-full-all"]))).toEqual([
       "board-view-all",
       "board-modify-all",
       "board-full-all",
     ]);
+  });
+});
+
+describe("management section access", () => {
+  test.each([
+    [[], false, false],
+    [["app-create"], true, false],
+    [["app-modify-all"], true, true],
+    [["app-full-all", "app-modify-all"], true, true],
+    [["app-use-all"], false, false],
+    [["board-modify-all"], false, false],
+  ] satisfies [GroupPermissionKey[], boolean, boolean][])(
+    "expect apps with %s to be reachable: %s, manage-all: %s",
+    (permissions, canAccess, canManageAll) => {
+      const access = getAppManagementAccess(permissions);
+      expect(access.canAccess).toBe(canAccess);
+      expect(access.canManageAll).toBe(canManageAll);
+    },
+  );
+
+  test.each([
+    [[], false, false, false],
+    [[], true, true, false],
+    [["integration-create"], false, true, false],
+    [["integration-full-all"], false, true, true],
+    [["integration-use-all"], false, false, false],
+    [["integration-interact-all"], false, false, false],
+    [["integration-interact-all"], true, true, false],
+  ] satisfies [GroupPermissionKey[], boolean, boolean, boolean][])(
+    "expect integrations with %s and delegated access %s to be reachable: %s, manage-all: %s",
+    (permissions, hasDelegatedFullAccess, canAccess, canManageAll) => {
+      const access = getIntegrationManagementAccess(permissions, hasDelegatedFullAccess);
+      expect(access.canAccess).toBe(canAccess);
+      expect(access.canManageAll).toBe(canManageAll);
+    },
+  );
+
+  test("a user who can only use integrations cannot reach the management section", () => {
+    expect(getIntegrationManagementAccess(["integration-use-all"], false).canAccess).toBe(false);
   });
 });

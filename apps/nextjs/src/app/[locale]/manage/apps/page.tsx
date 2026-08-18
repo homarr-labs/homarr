@@ -42,8 +42,9 @@ interface AppsPageProps {
 export default async function AppsPage(props: AppsPageProps) {
   const session = await auth();
   if (!session) redirect("/auth/login");
-  const { canManageAll, canCreate, canDelete, canAccess } = getAppsSectionAccess(session);
+  const { canManageAll, canCreate, canAccess } = getAppsSectionAccess(session);
   if (!canAccess) notFound();
+  const canDelete = session.user.permissions.includes("app-full-all");
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
   // Without app-modify-all the user may add apps but not browse the ones they cannot manage,
