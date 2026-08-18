@@ -94,7 +94,7 @@ const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[]
         aria-label={t("action.search.label")}
         onClick={() => openMediaRequestSearch({ integrationIds })}
       >
-        <IconSearch size={16} />
+        <IconSearch size="var(--mantine-font-size-md)" />
       </ActionIcon>
     </Tooltip>
   );
@@ -281,7 +281,7 @@ const DecisionButtons = ({ requestId, integrationId, canInteract, alwaysVisible 
             handleDecision("approve");
           }}
         >
-          <IconThumbUp size={16} />
+          <IconThumbUp size="var(--mantine-font-size-md)" />
         </ActionIcon>
       </Tooltip>
       <Tooltip label={t("pending.decline")}>
@@ -296,7 +296,7 @@ const DecisionButtons = ({ requestId, integrationId, canInteract, alwaysVisible 
             handleDecision("decline");
           }}
         >
-          <IconThumbDown size={16} />
+          <IconThumbDown size="var(--mantine-font-size-md)" />
         </ActionIcon>
       </Tooltip>
     </Group>

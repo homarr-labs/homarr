@@ -229,19 +229,19 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                     })
                   }
                   variant="light"
-                  leftSection={<IconEdit size={15} />}
+                  leftSection={<IconEdit size="var(--mantine-font-size-sm)" />}
                   size="xs"
                 >
                   {tRepository("edit.label")}
                 </Button>
 
                 <ActionIcon variant="transparent" color="red" onClick={() => onRepositoryRemove(index)}>
-                  <IconTrash size={15} />
+                  <IconTrash size="var(--mantine-font-size-sm)" />
                 </ActionIcon>
               </Group>
               {Object.keys(form.errors).filter((key) => key.startsWith(`options.${property}.${index}.`)).length > 0 && (
                 <Group align="center" justify="center" gap="xs" bg="red.1">
-                  <IconTriangleFilled size={15} color="var(--mantine-color-red-filled)" />
+                  <IconTriangleFilled size="var(--mantine-font-size-sm)" color="var(--mantine-color-red-filled)" />
                   <Text size="sm" c="red">
                     {tRepository("invalid")}
                   </Text>
@@ -371,7 +371,7 @@ const ProviderTokenInput = ({
         }}
         style={{ flex: 1 }}
         size="xs"
-        leftSection={<IconKey size={14} />}
+        leftSection={<IconKey size="var(--mantine-font-size-sm)" />}
       />
       {editing && value.trim() && (
         <Button size="xs" onClick={handleSave} loading={saving}>
@@ -380,7 +380,7 @@ const ProviderTokenInput = ({
       )}
       {hasToken && !editing && (
         <ActionIcon variant="light" color="red" size="sm" onClick={handleDelete} loading={saving}>
-          <IconTrash size={14} />
+          <IconTrash size="var(--mantine-font-size-sm)" />
         </ActionIcon>
       )}
     </Group>

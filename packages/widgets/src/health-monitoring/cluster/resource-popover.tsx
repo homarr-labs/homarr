@@ -97,20 +97,20 @@ const ComputeResourceDetails = ({ item }: { item: ComputeResource }) => {
   const storage = formatBytesPair(item.storage.used, item.storage.total);
   return (
     <List>
-      <List.Item icon={<IconCpu size={16} />}>
+      <List.Item icon={<IconCpu size="var(--mantine-font-size-md)" />}>
         {t("cpu")} - {item.cpu.cores}
       </List.Item>
-      <List.Item icon={<IconBrain size={16} />}>
+      <List.Item icon={<IconBrain size="var(--mantine-font-size-md)" />}>
         {t("memory")} - {memory.used} / {memory.available}
       </List.Item>
-      <List.Item icon={<IconDatabase size={16} />}>
+      <List.Item icon={<IconDatabase size="var(--mantine-font-size-md)" />}>
         {t("storage")} - {storage.used} / {storage.available}
       </List.Item>
-      <List.Item icon={<IconClockHour3 size={16} />}>
+      <List.Item icon={<IconClockHour3 size="var(--mantine-font-size-md)" />}>
         {t("uptime")} - {dayjs(dayjs().add(-item.uptime, "seconds")).fromNow(true)}
       </List.Item>
       {item.haState && (
-        <List.Item icon={<IconHeartBolt size={16} />}>
+        <List.Item icon={<IconHeartBolt size="var(--mantine-font-size-md)" />}>
           {t("haState")} - {capitalize(item.haState)}
         </List.Item>
       )}
@@ -152,15 +152,15 @@ const DiskStats = ({ item }: { item: ComputeResource }) => {
     return null;
   }
   return (
-    <List.Item icon={<IconDatabase size={16} />}>
+    <List.Item icon={<IconDatabase size="var(--mantine-font-size-md)" />}>
       <Group gap="sm">
         <Group gap={0}>
           <Text>{formatBytes(item.storage.write)}</Text>
-          <IconArrowNarrowDown size={14} />
+          <IconArrowNarrowDown size="var(--mantine-font-size-sm)" />
         </Group>
         <Group gap={0}>
           <Text>{formatBytes(item.storage.read)}</Text>
-          <IconArrowNarrowUp size={14} />
+          <IconArrowNarrowUp size="var(--mantine-font-size-sm)" />
         </Group>
       </Group>
     </List.Item>
@@ -172,15 +172,15 @@ const NetStats = ({ item }: { item: ComputeResource }) => {
     return null;
   }
   return (
-    <List.Item icon={<IconNetwork size={16} />}>
+    <List.Item icon={<IconNetwork size="var(--mantine-font-size-md)" />}>
       <Group gap="sm">
         <Group gap={0}>
           <Text>{formatBytes(item.network.in)}</Text>
-          <IconArrowNarrowDown size={14} />
+          <IconArrowNarrowDown size="var(--mantine-font-size-sm)" />
         </Group>
         <Group gap={0}>
           <Text>{formatBytes(item.network.out)}</Text>
-          <IconArrowNarrowUp size={14} />
+          <IconArrowNarrowUp size="var(--mantine-font-size-sm)" />
         </Group>
       </Group>
     </List.Item>

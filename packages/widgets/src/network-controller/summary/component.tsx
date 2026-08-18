@@ -111,7 +111,7 @@ export default function NetworkControllerSummaryWidget({
                             <StatusIcon
                               status={section.status}
                               label={statusLabels[getBinaryStatusKey(section.status)]}
-                              size={16}
+                              size="var(--mantine-font-size-md)"
                             />
                             <Text size="sm" fw={600}>
                               {getMatrixSectionLabel(section.key, t)}
@@ -210,7 +210,7 @@ export default function NetworkControllerSummaryWidget({
                       <StatusIcon
                         status={summary.lan.status}
                         label={statusLabels[getBinaryStatusKey(summary.lan.status)]}
-                        size={20}
+                        size="var(--mantine-font-size-xl)"
                       />
                     }
                   >
@@ -256,7 +256,15 @@ const getMatrixSectionLabel = (key: NetworkControllerMatrixSectionKey, t: Transl
   return t(`widget.networkControllerSummary.card.${key}`);
 };
 
-const StatusIcon = ({ status, label, size }: { status?: "enabled" | "disabled"; label: string; size: number }) => {
+const StatusIcon = ({
+  status,
+  label,
+  size,
+}: {
+  status?: "enabled" | "disabled";
+  label: string;
+  size: number | string;
+}) => {
   const mantineTheme = useMantineTheme();
   if (status === "enabled") {
     return <IconCircleCheckFilled aria-label={label} size={size} color={mantineTheme.colors.green[6]} />;

@@ -201,7 +201,7 @@ export default function BeszelSystemStatsWidget({
                     <Button
                       variant="default"
                       size="compact-xs"
-                      leftSection={<IconServer size={14} />}
+                      leftSection={<IconServer size="var(--mantine-font-size-sm)" />}
                       className={classes.beszelStatsSystemToggle}
                       disabled={isSelectionSavePending}
                     >

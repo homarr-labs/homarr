@@ -263,7 +263,7 @@ const AnchorNoteWidgetContent = ({
                     onClick={handleEdit}
                     disabled={isUpdating}
                   >
-                    <IconEdit size={16} />
+                    <IconEdit size="var(--mantine-font-size-md)" />
                   </ActionIcon>
                 </Tooltip>
               )}

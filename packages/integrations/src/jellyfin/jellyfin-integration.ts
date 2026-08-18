@@ -64,7 +64,9 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
             type: convertJellyfinType(sessionInfo.NowPlayingItem.Type),
             name: sessionInfo.NowPlayingItem.SeriesName ?? sessionInfo.NowPlayingItem.Name ?? "",
             seasonName: sessionInfo.NowPlayingItem.SeasonName ?? "",
+            seasonNumber: sessionInfo.NowPlayingItem.ParentIndexNumber ?? null,
             episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
+            episodeNumber: sessionInfo.NowPlayingItem.IndexNumber ?? null,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
             playback: {

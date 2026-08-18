@@ -43,7 +43,7 @@ export function ServersSection({
   return (
     <Accordion.Item value="servers">
       <Group gap={0} wrap="nowrap">
-        <Accordion.Control icon={isTiny ? null : <IconServer size={16} />} style={{ flex: 1, minWidth: 0 }}>
+        <Accordion.Control icon={isTiny ? null : <IconServer size="var(--mantine-font-size-md)" />} style={{ flex: 1, minWidth: 0 }}>
           <Group gap="xs">
             <Text size="xs">{tCommon("servers")}</Text>
             <Badge variant="dot" color={getBadgeColor(onlineServers, servers.length)} size="xs">
@@ -61,7 +61,7 @@ export function ServersSection({
           mr="xs"
           onClick={onToggleIp}
         >
-          {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
+          {showIp ? <IconEye size="var(--mantine-font-size-xs)" /> : <IconEyeOff size="var(--mantine-font-size-xs)" />}
         </ActionIcon>
       </Group>
       <Accordion.Panel p={4}>

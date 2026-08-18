@@ -430,7 +430,7 @@ export default function DockerWidget({
           wrap="nowrap"
         >
           <Group gap={4} wrap="nowrap">
-            <IconBrandDocker size={20} style={{ flexShrink: 0 }} />
+            <IconBrandDocker size="var(--mantine-font-size-xl)" style={{ flexShrink: 0 }} />
             <Text size="sm" truncate>
               {t("table.footer", { count: containers.length.toString() })}
             </Text>
@@ -457,7 +457,7 @@ export default function DockerWidget({
                 onClick={() => refreshInventory.mutate()}
                 aria-label={t("table.refresh.lastUpdated", { when: relativeTime })}
               >
-                <IconRefresh size={16} />
+                <IconRefresh size="var(--mantine-font-size-md)" />
               </ActionIcon>
             </Tooltip>
           </Group>
@@ -491,7 +491,7 @@ function ContainerMenuButton({
           aria-label={t("title")}
           onClick={(event) => event.stopPropagation()}
         >
-          <IconDots size={16} />
+          <IconDots size="var(--mantine-font-size-md)" />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown w={containerMenuWidth} miw={containerMenuWidth} maw={containerMenuWidth}>
@@ -525,7 +525,7 @@ function ContainerActionItems({
         {container.name}
       </Menu.Label>
       <Menu.Item
-        leftSection={<IconFileText size={14} />}
+        leftSection={<IconFileText size="var(--mantine-font-size-sm)" />}
         disabled={!handlers.canUse(container, "logs")}
         onClick={() => {
           handlers.onOpenLogs(container);
@@ -537,7 +537,7 @@ function ContainerActionItems({
       <Menu.Divider />
       <Menu.Item
         color={stateAction === "start" ? "green" : "red"}
-        leftSection={<StateIcon size={14} />}
+        leftSection={<StateIcon size="var(--mantine-font-size-sm)" />}
         disabled={!handlers.canUse(container, "lifecycle")}
         onClick={() => invokeAction(stateAction)}
       >
@@ -545,7 +545,7 @@ function ContainerActionItems({
       </Menu.Item>
       <Menu.Item
         color="orange"
-        leftSection={<IconRotateClockwise size={14} />}
+        leftSection={<IconRotateClockwise size="var(--mantine-font-size-sm)" />}
         disabled={!handlers.canUse(container, "lifecycle")}
         onClick={() => invokeAction("restart")}
       >
@@ -553,7 +553,7 @@ function ContainerActionItems({
       </Menu.Item>
       <Menu.Item
         color="red"
-        leftSection={<IconTrash size={14} />}
+        leftSection={<IconTrash size="var(--mantine-font-size-sm)" />}
         disabled={!handlers.canUse(container, "remove")}
         onClick={() => invokeAction("remove")}
       >
@@ -561,7 +561,7 @@ function ContainerActionItems({
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item
-        leftSection={<IconCategoryPlus size={14} />}
+        leftSection={<IconCategoryPlus size="var(--mantine-font-size-sm)" />}
         onClick={() => {
           handlers.onAddToHomarr(container);
           onClose();

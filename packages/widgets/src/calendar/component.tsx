@@ -303,7 +303,7 @@ const CalendarAgenda = ({
               disabled={isEditMode}
               onClick={() => setMonth(moveCalendarMonth(month, -1))}
             >
-              <IconChevronLeft size={18} aria-hidden />
+              <IconChevronLeft size="var(--mantine-font-size-lg)" aria-hidden />
             </ActionIcon>
           </Tooltip>
           <Stack gap={0} miw={0}>
@@ -323,7 +323,7 @@ const CalendarAgenda = ({
               disabled={isEditMode}
               onClick={() => setMonth(moveCalendarMonth(month, 1))}
             >
-              <IconChevronRight size={18} aria-hidden />
+              <IconChevronRight size="var(--mantine-font-size-lg)" aria-hidden />
             </ActionIcon>
           </Tooltip>
         </Group>

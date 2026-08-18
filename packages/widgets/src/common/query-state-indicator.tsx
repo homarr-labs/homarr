@@ -28,7 +28,7 @@ export function WidgetQueryErrorIndicator({ error, label }: WidgetQueryErrorIndi
         tabIndex={0}
         style={{ cursor: "help" }}
       >
-        <IconAlertTriangle aria-hidden size={14} />
+        <IconAlertTriangle aria-hidden size="var(--mantine-font-size-sm)" />
       </ActionIcon>
     </Tooltip>
   );

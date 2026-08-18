@@ -97,7 +97,7 @@ export const WidgetLocationInput = ({ property, kind, options }: CommonWidgetInp
                 disabled={!selectionEnabled}
                 onClick={onSearch}
                 variant="light"
-                leftSection={<IconListSearch size={16} />}
+                leftSection={<IconListSearch size="var(--mantine-font-size-md)" />}
               >
                 {tLocation("search")}
               </Button>
@@ -257,7 +257,7 @@ const LocationSelectTableRow = ({ city, onLocationSelect, closeModal }: Location
           })}
         >
           <ActionIcon color="red" variant="subtle" onClick={onSelect}>
-            <IconClick size={16} />
+            <IconClick size="var(--mantine-font-size-md)" />
           </ActionIcon>
         </Tooltip>
       </Table.Td>

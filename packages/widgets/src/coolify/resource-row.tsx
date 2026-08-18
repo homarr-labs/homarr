@@ -106,7 +106,7 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             variant="subtle"
             c="dimmed"
           >
-            <IconLink size={12} />
+            <IconLink size="var(--mantine-font-size-xs)" />
           </ActionIcon>
         )}
         {!isTiny && logsUrl && (
@@ -121,7 +121,7 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
             variant="subtle"
             c="dimmed"
           >
-            <IconFileText size={12} />
+            <IconFileText size="var(--mantine-font-size-xs)" />
           </ActionIcon>
         )}
         {!isTiny && (

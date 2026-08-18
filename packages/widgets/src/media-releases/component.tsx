@@ -273,7 +273,7 @@ const InfoDivider = () => (
 const Info = ({ icon: Icon, label }: IconAndLabelProps) => {
   return (
     <Group gap={4} wrap="nowrap" miw={0}>
-      {Icon && <Icon size={12} color={getMantineColor("gray", 5)} style={{ flexShrink: 0 }} />}
+      {Icon && <Icon size="var(--mantine-font-size-xs)" color={getMantineColor("gray", 5)} style={{ flexShrink: 0 }} />}
       <Text size="xs" c="dimmed" truncate="end">
         {label}
       </Text>

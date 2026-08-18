@@ -49,7 +49,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
               </Group>
 
               <ActionIcon variant="transparent" color="red" onClick={removeItem}>
-                <IconX size={20} />
+                <IconX size="var(--mantine-font-size-xl)" />
               </ActionIcon>
             </Group>
           );
