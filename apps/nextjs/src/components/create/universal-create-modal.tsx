@@ -10,6 +10,7 @@ import {
   IconLayoutDashboard,
   IconLayoutGridAdd,
   IconPlugConnected,
+  IconSearch,
 } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
