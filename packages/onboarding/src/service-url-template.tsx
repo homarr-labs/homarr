@@ -78,7 +78,7 @@ export const ServiceUrlTemplate = ({
   readOnly,
   required,
 }: ServiceUrlTemplateProps) => {
-  const t = useScopedI18n("init.studio.essentials");
+  const t = useScopedI18n("common.serviceUrlTemplate");
 
   return (
     <Stack gap="sm">

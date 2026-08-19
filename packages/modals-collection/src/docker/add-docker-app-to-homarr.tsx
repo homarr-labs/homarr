@@ -58,7 +58,7 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
         name: container.name,
         iconUrl: container.iconUrl,
         description: null,
-        href: containerUrls[index] ?? null,
+        href: containerUrls[index] || null,
         pingUrl: null,
       })),
     );
@@ -68,28 +68,31 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
       <LoadingOverlay visible={isPending} />
       <Stack>
         <List spacing={"xs"}>
-          {innerProps.selectedContainers.map((container, index) => (
-            <List.Item
-              styles={{ itemWrapper: { width: "100%" }, itemLabel: { flex: 1 } }}
-              icon={
-                <Avatar
-                  variant="outline"
-                  radius={container.iconUrl ? "sm" : "md"}
-                  size={30}
-                  styles={{ image: { objectFit: "contain" } }}
-                  src={container.iconUrl}
-                >
-                  {container.name.at(0)?.toUpperCase()}
-                </Avatar>
-              }
-              key={container.id}
-            >
-              <Group justify="space-between" wrap={"nowrap"}>
-                <Text lineClamp={1}>{container.name}</Text>
-                <TextInput {...form.getInputProps(`containerUrls.${index}`)} />
-              </Group>
-            </List.Item>
-          ))}
+          {innerProps.selectedContainers.map((container, index) => {
+            const inputProps = form.getInputProps(`containerUrls.${index}`);
+            return (
+              <List.Item
+                styles={{ itemWrapper: { width: "100%" }, itemLabel: { flex: 1 } }}
+                icon={
+                  <Avatar
+                    variant="outline"
+                    radius={container.iconUrl ? "sm" : "md"}
+                    size={30}
+                    styles={{ image: { objectFit: "contain" } }}
+                    src={container.iconUrl}
+                  >
+                    {container.name.at(0)?.toUpperCase()}
+                  </Avatar>
+                }
+                key={container.id}
+              >
+                <Group justify="space-between" wrap={"nowrap"}>
+                  <Text lineClamp={1}>{container.name}</Text>
+                  <TextInput {...inputProps} value={inputProps.value ?? ""} />
+                </Group>
+              </List.Item>
+            );
+          })}
         </List>
         <Group justify="end">
           <Button onClick={actions.closeModal} variant="light" px={"xl"}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
   Accordion,
   ActionIcon,
@@ -38,7 +38,7 @@ import {
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { UrlTemplateMode } from "@homarr/definitions";
-import { buildAppUrl, buildIntegrationUrl, getIntegrationDefaultPort, getIntegrationName } from "@homarr/definitions";
+import { getIntegrationName } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr } from "@homarr/modals-collection";
 import { showErrorNotification } from "@homarr/notifications";
@@ -47,7 +47,11 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import type { DockerReconciliationInboxFilter } from "./docker-reconciliation-inbox";
-import { dismissDockerReconciliationCandidate, filterDockerReconciliationInbox } from "./docker-reconciliation-inbox";
+import {
+  dismissDockerReconciliationCandidate,
+  filterDockerReconciliationInbox,
+  getTemplateUrl,
+} from "./docker-reconciliation-inbox";
 
 type ReconciliationCandidate = RouterOutputs["docker"]["reconcileServices"]["candidates"][number];
 type ServiceHealth = RouterOutputs["docker"]["getServiceHealth"]["services"][number];
@@ -247,12 +251,14 @@ const DockerReconciliationCandidate = ({
   );
   const initialUrl = urlSuggestions[0] ?? "";
   const [url, setUrl] = useState(initialUrl);
+  const isUrlEdited = useRef(false);
   const target = getCandidateTarget(candidate);
   const actionNeedsUrl = target.kind === "createApp" || target.kind === "setupIntegration";
   const visibleHealthLayers =
     health?.layers.filter(({ status }) => status !== "notApplicable" && status !== "notObserved") ?? [];
 
   useEffect(() => {
+    if (isUrlEdited.current) return;
     setUrl(initialUrl);
   }, [initialUrl]);
 
@@ -362,7 +368,10 @@ const DockerReconciliationCandidate = ({
               value={url}
               data={urlSuggestions}
               placeholder={t("url.manual")}
-              onChange={setUrl}
+              onChange={(value) => {
+                isUrlEdited.current = true;
+                setUrl(value);
+              }}
             />
           )}
         </Stack>
@@ -401,24 +410,6 @@ const stateColor = (state: ReconciliationCandidate["state"]) => {
   if (state === "linked" || state === "represented") return "green";
   if (state === "moved") return "yellow";
   return "blue";
-};
-
-const getTemplateUrl = (candidate: ReconciliationCandidate, serverOrigin: string, urlMode: UrlTemplateMode) => {
-  if (!serverOrigin.trim()) return "";
-
-  const tcpPorts = candidate.container.ports?.filter(({ Type }) => Type.toLowerCase() === "tcp") ?? [];
-  let publishedPort = tcpPorts.find(({ PublicPort }) => PublicPort)?.PublicPort;
-
-  if (candidate.match) {
-    const defaultPort = getIntegrationDefaultPort(candidate.match.kind);
-    const preferredPort = tcpPorts.find(
-      ({ PrivatePort, PublicPort }) => PrivatePort === defaultPort && PublicPort !== undefined,
-    );
-    publishedPort = preferredPort?.PublicPort ?? publishedPort;
-    return buildIntegrationUrl(candidate.match.kind, serverOrigin, urlMode, publishedPort);
-  }
-
-  return buildAppUrl(candidate.container.name, serverOrigin, urlMode, publishedPort);
 };
 
 const HealthStatusIcon = ({ status }: { status: ServiceHealth["layers"][number]["status"] }) => {

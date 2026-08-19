@@ -66,15 +66,10 @@
         "themeAuto": "System",
         "themeLight": "Light",
         "themeDark": "Dark",
-        "serverTitle": "Usual server address",
         "serverOriginHelp": "Homarr uses this address to prefill detected service URLs. You can still edit every service individually.",
         "serverDescription": "This is a shortcut, not a restriction. Every detected service remains editable.",
         "serverOrigin": "Domain, IP, or reverse-proxy path",
         "serverOriginDescription": "Examples: home.lan, 192.168.1.10, or https://home.example.com/services. Choose how each service is appended below.",
-        "urlModeLabel": "Service address pattern",
-        "hostPort": "Same host, different ports",
-        "subdomain": "One subdomain per service",
-        "path": "One path per service",
         "analytics": "Share anonymous product analytics",
         "analyticsDescription": "Helps Homarr improve feature reliability. No service credentials or dashboard content are sent."
       },
@@ -2137,6 +2132,13 @@
       "undo": "Undo"
     },
     "here": "here",
+    "serviceUrlTemplate": {
+      "serverTitle": "Usual server address",
+      "urlModeLabel": "Service address pattern",
+      "hostPort": "Same host, different ports",
+      "subdomain": "One subdomain per service",
+      "path": "One path per service"
+    },
     "iconPicker": {
       "label": "Icon URL",
       "description": "Search the library, paste an image URL, or upload a file.",

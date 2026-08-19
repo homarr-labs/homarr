@@ -35,6 +35,7 @@ export const WidgetDynamicMultiSelectInput = ({
       leftSection={isPending ? <Loader size="xs" /> : undefined}
       searchable
       clearable
+      maxValues={options.maxValues}
       nothingFoundMessage={t("noResults")}
       data={data}
       disabled={isError}

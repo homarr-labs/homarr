@@ -33,6 +33,7 @@ export const { definition, componentLoader } = createWidgetDefinition("dockerCon
       (factory) => ({
         endpointIds: factory.dynamicMultiSelect({
           defaultValue: [],
+          maxValues: 100,
           withDescription: true,
           useOptions: () => {
             const { data = [], isPending, isError } = clientApi.docker.getEndpoints.useQuery();
