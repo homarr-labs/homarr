@@ -44,7 +44,9 @@ export const fetchFaviconUrlAsync = async (href: string): Promise<string | null>
   const declaredIconUrl = page === null ? null : findDeclaredIconUrl(page.html, page.url);
   if (declaredIconUrl !== null) return declaredIconUrl;
 
-  const wellKnownUrl = new URL("/favicon.ico", websiteUrl.origin);
+  // The well known icon belongs to the origin that actually served the page, which is a
+  // different one than the requested address whenever the app redirects across origins.
+  const wellKnownUrl = new URL("/favicon.ico", page?.url.origin ?? websiteUrl.origin);
   return (await isImageAsync(wellKnownUrl)) ? wellKnownUrl.href : null;
 };
 
