@@ -18,7 +18,8 @@ import { AppAccessControl } from "./app/app-access-control";
 const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/homarr.svg";
 
 export const appRouter = createTRPCRouter({
-  getPaginated: protectedProcedure
+  getPaginated: permissionRequiredProcedure
+    .requiresPermission("app-modify-all")
     .meta({
       openapi: {
         method: "GET",
@@ -50,7 +51,8 @@ export const appRouter = createTRPCRouter({
         totalCount,
       };
     }),
-  all: protectedProcedure
+  all: permissionRequiredProcedure
+    .requiresPermission("app-modify-all")
     .input(z.void())
     .output(z.array(selectAppSchema))
     .meta({
@@ -88,6 +90,16 @@ export const appRouter = createTRPCRouter({
       },
     })
     .query(({ ctx, input }) => {
+      if (
+        !ctx.session.user.permissions.includes("app-modify-all") &&
+        !ctx.session.user.permissions.includes("board-modify-all")
+      ) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Permission denied",
+        });
+      }
+
       return ctx.db.query.apps.findMany({
         where: like(apps.name, `%${input.query}%`),
         orderBy: asc(apps.name),

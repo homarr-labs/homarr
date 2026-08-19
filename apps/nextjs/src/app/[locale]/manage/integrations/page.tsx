@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
-import { ActionIcon, ActionIconGroup, Anchor, Badge, Text } from "@mantine/core";
+import { notFound, redirect } from "next/navigation";
+import { ActionIcon, ActionIconGroup, Anchor, Badge, Stack, Text } from "@mantine/core";
 import { IconPencil, IconPlugX } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
@@ -15,6 +15,7 @@ import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { NoResults } from "~/components/no-results";
+import { getIntegrationsSectionAccess } from "../_access";
 import { DeleteIntegrationActionButton } from "./_integration-buttons";
 
 const searchParamsSchema = z.object({ search: z.string().optional() });
@@ -29,11 +30,22 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
   const integrations = await api.integration.all();
+  const {
+    canManageAll: hasGlobalFullAccess,
+    canCreate,
+    canAccess,
+  } = getIntegrationsSectionAccess(session, integrations);
+  if (!canAccess) notFound();
+
   const t = await getScopedI18n("integration");
-  const canCreate = session.user.permissions.includes("integration-create");
-  const hasGlobalFullAccess = session.user.permissions.includes("integration-full-all");
+  // Without integration-full-all only the integrations that were explicitly delegated to the user
+  // are manageable, so the list never shows an integration they cannot open.
+  const manageableIntegrations = integrations.filter(
+    (integration) => hasGlobalFullAccess || integration.permissions.hasFullAccess,
+  );
+
   const query = searchParams.search?.trim().toLocaleLowerCase() ?? "";
-  const filteredIntegrations = integrations
+  const filteredIntegrations = manageableIntegrations
     .filter((integration) => {
       if (!query) return true;
       return [integration.name, getIntegrationName(integration.kind), integration.url].some((value) =>
@@ -53,7 +65,14 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
       ariaLabel={t("page.list.ariaLabel")}
       itemCount={filteredIntegrations.length}
       emptyState={
-        hasSearch ? (
+        manageableIntegrations.length === 0 && !hasGlobalFullAccess ? (
+          <NoResults
+            icon={IconPlugX}
+            title={t("page.list.noResults.createOnlyTitle")}
+            description={t("page.list.noResults.createOnlyDescription")}
+            action={{ label: t("page.list.noResults.action"), href: "/manage/integrations/new" }}
+          />
+        ) : hasSearch ? (
           <NoResults
             icon={IconPlugX}
             title={t("page.list.noResults.filteredTitle")}
@@ -93,24 +112,33 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
       floatingPrimaryAction={canCreate}
     >
       {filteredIntegrations.map((integration) => (
-        <IntegrationItem
-          key={integration.id}
-          integration={integration}
-          canManage={hasGlobalFullAccess || integration.permissions.hasFullAccess}
-        />
+        <IntegrationItem key={integration.id} integration={integration} />
       ))}
     </ManageCollectionPage>
   );
 
-  return filteredIntegrations.length > 0 ? <TourTarget id="manage-integrations-list">{page}</TourTarget> : page;
+  const pageContent =
+    filteredIntegrations.length > 0 ? <TourTarget id="manage-integrations-list">{page}</TourTarget> : page;
+
+  if (hasGlobalFullAccess) {
+    return pageContent;
+  }
+
+  return (
+    <Stack gap="sm">
+      <Text size="sm" c="dimmed">
+        {t("page.list.scopedNote")}
+      </Text>
+      {pageContent}
+    </Stack>
+  );
 }
 
 interface IntegrationItemProps {
   integration: RouterOutputs["integration"]["all"][number];
-  canManage: boolean;
 }
 
-const IntegrationItem = async ({ integration, canManage }: IntegrationItemProps) => {
+const IntegrationItem = async ({ integration }: IntegrationItemProps) => {
   const t = await getScopedI18n("integration");
   const kindName = getIntegrationName(integration.kind);
   const safeUrl = getSafeApplicationUrl(integration.url);
@@ -143,21 +171,19 @@ const IntegrationItem = async ({ integration, canManage }: IntegrationItemProps)
         ) : undefined
       }
       actions={
-        canManage ? (
-          <ActionIconGroup>
-            <ActionIcon
-              component={Link}
-              href={`/manage/integrations/edit/${integration.id}`}
-              variant="subtle"
-              color="gray"
-              size={44}
-              aria-label={t("page.list.action.edit", { name: integration.name })}
-            >
-              <IconPencil size={18} stroke={1.5} />
-            </ActionIcon>
-            <DeleteIntegrationActionButton integration={integration} />
-          </ActionIconGroup>
-        ) : undefined
+        <ActionIconGroup>
+          <ActionIcon
+            component={Link}
+            href={`/manage/integrations/edit/${integration.id}`}
+            variant="subtle"
+            color="gray"
+            size={44}
+            aria-label={t("page.list.action.edit", { name: integration.name })}
+          >
+            <IconPencil size={18} stroke={1.5} />
+          </ActionIcon>
+          <DeleteIntegrationActionButton integration={integration} />
+        </ActionIconGroup>
       }
     />
   );

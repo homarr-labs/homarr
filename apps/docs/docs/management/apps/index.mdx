@@ -51,6 +51,17 @@ Note that the ping URL only accepts `http://` and `https://` URLs — custom URI
 
 ## List of apps
 
-On the apps management page you find all apps that exist in your Homarr instance. Search by name or URL, open an app directly, or use its row actions to edit and delete it. A filtered search can be cleared without leaving the page.
+On the apps management page you find all apps that exist in your Homarr instance. Search by name or URL, open an app
+directly, or use its row actions to edit and delete it. A filtered search can be cleared without leaving the page.
 
-Any signed-in user can view this list. Creating, editing, and deleting apps requires the corresponding app permission; board permissions are not required.
+### Accessing the page
+
+The `/manage/apps` page is reachable when you can manage all apps (`app-modify-all`) or create apps (`app-create`):
+
+- **Manage all (`app-modify-all`)**: the full list of apps is shown and searchable, and each row can be edited.
+- **Create only (`app-create`)**: the page shows an empty "create an app" state instead of the list, so the names and
+  URLs of existing apps are never disclosed. The create action is still available.
+- **Neither**: the page is not reachable and returns a not-found page.
+
+Creating an app requires `app-create`, editing requires `app-modify-all`, and deleting requires `app-full-all`;
+board permissions are not required.

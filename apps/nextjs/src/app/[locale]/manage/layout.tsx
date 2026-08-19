@@ -44,6 +44,7 @@ import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
 import { ManageTourGate } from "~/components/onboarding/manage-tour-gate";
 import { env as nextEnv } from "~/env";
+import { getAppsSectionAccess, getIntegrationsSectionAccessAsync } from "./_access";
 
 const logger = createLogger({ module: "manageLayout" });
 
@@ -65,6 +66,8 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     sessionPromise,
     shouldRunManageTourPromise,
   ]);
+  const appsAccess = getAppsSectionAccess(session);
+  const integrationsAccess = await getIntegrationsSectionAccessAsync(session);
   const navigationLinks: NavigationLink[] = [
     {
       label: t("items.home"),
@@ -82,7 +85,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconBox,
       href: "/manage/apps",
       label: t("items.apps"),
-      hidden: !session?.user.permissions.includes("app-create"),
+      hidden: !appsAccess.canAccess,
       iconProps: {
         strokeWidth: 2.5,
       },
@@ -92,7 +95,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       icon: IconAffiliateFilled,
       href: "/manage/integrations",
       label: t("items.integrations"),
-      hidden: !session?.user.permissions.includes("integration-create"),
+      hidden: !integrationsAccess.canAccess,
       "data-onboarding-tour-id": "manage-integrations",
     },
     {

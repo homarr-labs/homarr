@@ -302,16 +302,43 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
 
-      await ctx.db.delete(groupPermissions).where(eq(groupPermissions.groupId, input.groupId));
+      // Stored exactly as selected - implied permissions are resolved at read time through
+      // getPermissionsWithChildren, so nothing is silently escalated here.
+      const permissions = [...new Set(input.permissions)];
 
-      if (input.permissions.length > 0) {
-        await ctx.db.insert(groupPermissions).values(
-          input.permissions.map((permission) => ({
-            groupId: input.groupId,
-            permission,
-          })),
-        );
-      }
+      await handleTransactionsAsync(ctx.db, {
+        async handleAsync(db, schema) {
+          await db.transaction(async (transaction) => {
+            await transaction.delete(schema.groupPermissions).where(eq(schema.groupPermissions.groupId, input.groupId));
+            if (permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.groupPermissions).values(
+              permissions.map((permission) => ({
+                groupId: input.groupId,
+                permission,
+              })),
+            );
+          });
+        },
+        handleSync(db) {
+          db.transaction((transaction) => {
+            transaction.delete(groupPermissions).where(eq(groupPermissions.groupId, input.groupId)).run();
+            if (permissions.length === 0) {
+              return;
+            }
+            transaction
+              .insert(groupPermissions)
+              .values(
+                permissions.map((permission) => ({
+                  groupId: input.groupId,
+                  permission,
+                })),
+              )
+              .run();
+          });
+        },
+      });
     }),
   transferOwnership: permissionRequiredProcedure
     .requiresPermission("admin")

@@ -33,7 +33,7 @@ describe("all should return all apps", () => {
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
-      session: createDefaultSession(),
+      session: createDefaultSession(["app-modify-all"]),
     });
 
     await db.insert(apps).values([
@@ -74,6 +74,20 @@ describe("all should return all apps", () => {
     // Assert
     await expect(actAsync()).rejects.toThrow("UNAUTHORIZED");
   });
+  test("should throw FORBIDDEN without app-modify-all permission", async () => {
+    // Arrange
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(),
+    });
+
+    // Act
+    const actAsync = async () => await caller.all();
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Permission denied");
+  });
 });
 
 describe("getPaginated should return apps to authenticated users", () => {
@@ -87,12 +101,12 @@ describe("getPaginated should return apps to authenticated users", () => {
     await expect(caller.getPaginated({ page: 1, pageSize: 10 })).rejects.toThrow("UNAUTHORIZED");
   });
 
-  test("should return apps without board permissions", async () => {
+  test("should return apps with app-modify-all permission", async () => {
     const db = createDb();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
-      session: createDefaultSession(),
+      session: createDefaultSession(["app-modify-all"]),
     });
     await db.insert(apps).values({ id: "1", name: "Homarr", iconUrl: "https://homarr.dev/icon.svg" });
 
@@ -100,6 +114,43 @@ describe("getPaginated should return apps to authenticated users", () => {
       totalCount: 1,
       items: [{ id: "1" }],
     });
+  });
+
+  test("should throw FORBIDDEN without app-modify-all permission", async () => {
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(),
+    });
+
+    await expect(caller.getPaginated({ page: 1, pageSize: 10 })).rejects.toThrow("Permission denied");
+  });
+});
+
+describe("search should require app-modify-all or board-modify-all permission", () => {
+  test("should throw FORBIDDEN without app-modify-all or board-modify-all permission", async () => {
+    const caller = appRouter.createCaller({
+      db: createDb(),
+      deviceType: undefined,
+      session: createDefaultSession(),
+    });
+
+    await expect(caller.search({ query: "Homarr" })).rejects.toThrow("Permission denied");
+  });
+
+  test("should return apps with board-modify-all permission", async () => {
+    const db = createDb();
+    const caller = appRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: createDefaultSession(["board-modify-all"]),
+    });
+    await db.insert(apps).values({ id: "1", name: "Homarr", iconUrl: "https://homarr.dev/icon.svg" });
+
+    const result = await caller.search({ query: "Homarr" });
+
+    expect(result).toHaveLength(1);
+    expect(result[0]!.id).toBe("1");
   });
 });
 

@@ -648,6 +648,35 @@
             "description": "Allow members to manage and delete any search engine"
           }
         }
+      },
+      "matrix": {
+        "none": "No access",
+        "impliedHint": "Also grants: {permissions}",
+        "grantedViaAdmin": "Administrators already have this. Set Admin to “No access” to configure it separately.",
+        "preset": {
+          "label": "Presets",
+          "viewer": "Viewer",
+          "viewerDescription": "Read-only: view boards and medias, use apps and integrations that already exist.",
+          "editor": "Editor",
+          "editorDescription": "Day-to-day management: create and edit boards, apps, integrations and search engines.",
+          "admin": "Admin",
+          "adminDescription": "Unrestricted access to every feature and setting, including user management.",
+          "custom": "Custom"
+        },
+        "effective": {
+          "title": "Effective permissions",
+          "description": "The full, de-duplicated set of actions members of this group can perform, including permissions granted indirectly.",
+          "empty": "No permissions selected"
+        },
+        "noneDescription": "Members get no access to this area.",
+        "level": {
+          "view": "View",
+          "use": "Use",
+          "interact": "Interact",
+          "modify": "Modify",
+          "full": "Full"
+        },
+        "capabilityIncluded": "Already included in “{level}”"
       }
     },
     "memberNotice": {
@@ -774,7 +803,9 @@
           "action": "Create your first app",
           "filteredTitle": "No apps match your search",
           "filteredDescription": "No apps match \"{search}\". Try another name or URL.",
-          "clearSearch": "Clear search"
+          "clearSearch": "Clear search",
+          "createOnlyTitle": "You can only add apps",
+          "createOnlyDescription": "Your permissions let you create apps but not browse existing ones. Ask an administrator for app management access to see the full list."
         }
       },
       "create": {
@@ -1576,6 +1607,7 @@
         "title": "Integrations",
         "ariaLabel": "Configured integrations",
         "search": "Search integrations",
+        "scopedNote": "Showing only the integrations you are allowed to manage.",
         "action": {
           "edit": "Edit {name}",
           "delete": "Delete {name}"
@@ -1586,7 +1618,9 @@
           "action": "Create your first integration",
           "filteredTitle": "No integrations match your search",
           "filteredDescription": "No integrations match \"{search}\". Try another name, type, or URL.",
-          "clearSearch": "Clear search"
+          "clearSearch": "Clear search",
+          "createOnlyTitle": "You can only add integrations",
+          "createOnlyDescription": "Your permissions let you create integrations but not manage existing ones. Ask an administrator for access to the ones you need."
         }
       },
       "create": {
@@ -6142,7 +6176,8 @@
     },
     "notFound": {
       "title": "Not Found",
-      "text": "Could not find requested resource"
+      "text": "Could not find requested resource",
+      "backToHome": "Back to management home"
     },
     "error": {
       "title": "This page couldn't load",
