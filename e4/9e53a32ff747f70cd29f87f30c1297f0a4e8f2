@@ -1,0 +1,32 @@
+packages/definitions/src/permissions.ts
+  s_a310a97643c2a6::t_17a3a52e3bb3bf 124-125,127-137,140-141,144-148,150-156,163-164,170,173-178,182,195,198-200,208-212
+apps/nextjs/src/app/[locale]/manage/users/groups/[id]/permissions/_group-permission-form.tsx
+  s_a310a97643c2a6::t_879c9e960e9ca0 102-105,108-112,114,122
+  s_a310a97643c2a6::t_ca6e94940d6f0a 202,216-220,223-225,247-265
+  s_a310a97643c2a6::t_5c017735154b04 30,70,79-83,86-88,92-93,96-97
+apps/docs/docs/management/api/index.mdx
+  s_a310a97643c2a6::t_9eef2fdcb1ae87 75-102
+packages/translation/src/lang/en.json
+  s_a310a97643c2a6::t_ca6e94940d6f0a 683-684
+apps/docs/docs/management/users/index.mdx
+  s_a310a97643c2a6::t_190d57285d5c20 167-168,173,175-181,191-201,203-205,210,220-221,229
+packages/definitions/src/test/permissions.spec.ts
+  s_a310a97643c2a6::t_c78b413ca158e7 72
+  s_a310a97643c2a6::t_dd4229b7f97ef4 10,17-23,79-88,102-104,108-114,117-119,122-134,138,140-155,162,169-175,178-181,184-187,190-191,205,210-212,219,223
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "e49e53a32ff747f70cd29f87f30c1297f0a4e8f2",
+  "prompts": {},
+  "sessions": {
+    "s_a310a97643c2a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "58fe908b-fdc8-4fdc-b8ee-cf38d9240db9",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
