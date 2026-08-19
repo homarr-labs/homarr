@@ -1,0 +1,19 @@
+packages/spotlight/src/modes/app-integration-board/index.tsx
+  s_a310a97643c2a6::t_3a76b3e73228b4 20-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "7f7ee3263cd55ec30cc756921a14a711d84bc12b",
+  "prompts": {},
+  "sessions": {
+    "s_a310a97643c2a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "58fe908b-fdc8-4fdc-b8ee-cf38d9240db9",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
