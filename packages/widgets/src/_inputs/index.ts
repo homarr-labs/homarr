@@ -4,6 +4,7 @@ import { WidgetAppInput } from "./widget-app-input";
 import { WidgetCustomWidgetSelectInput } from "./widget-custom-widget-select-input";
 import { WidgetCustomWidgetConfigurationInput } from "./widget-custom-widget-configuration-input";
 import { WidgetDynamicSelectInput } from "./widget-dynamic-select-input";
+import { WidgetDynamicMultiSelectInput } from "./widget-dynamic-multiselect-input";
 import { WidgetLocationInput } from "./widget-location-input";
 import { WidgetMultiTextInput } from "./widget-multi-text-input";
 import { WidgetMultiReleasesRepositoriesInput } from "./widget-multiReleasesRepositories-input";
@@ -36,6 +37,7 @@ const mapping = {
   sortableItemList: WidgetSortedItemListInput,
   multiReleasesRepositories: WidgetMultiReleasesRepositoriesInput,
   dynamicSelect: WidgetDynamicSelectInput,
+  dynamicMultiSelect: WidgetDynamicMultiSelectInput,
   umamiEventName: WidgetUmamiEventInput,
   umamiEventNames: WidgetUmamiEventNamesInput,
   umamiWebsite: WidgetUmamiWebsiteInput,

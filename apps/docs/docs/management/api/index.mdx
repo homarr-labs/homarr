@@ -110,6 +110,10 @@ Pass those pairs unchanged to `docker.startAll`, `docker.stopAll`, `docker.resta
 names use underscores, such as `docker_restartAll`. Endpoint qualification prevents identical container IDs on different
 Docker or Podman endpoints from targeting the wrong service.
 
+`docker.getContainers` also accepts an optional `endpointIds` array. Omit it or pass an empty array to query every configured
+Docker environment, or pass one or more IDs returned by `docker.getEndpoints` to query only those Dockerode clients. The
+Docker widget uses the same behavior for its environment selector.
+
 ## Partial integration failures
 
 Multi-integration widget queries keep data from integrations that remain available. Calendar and media-server results include

@@ -66,15 +66,10 @@
         "themeAuto": "System",
         "themeLight": "Light",
         "themeDark": "Dark",
-        "serverTitle": "Usual server address",
         "serverOriginHelp": "Homarr uses this address to prefill detected service URLs. You can still edit every service individually.",
         "serverDescription": "This is a shortcut, not a restriction. Every detected service remains editable.",
         "serverOrigin": "Domain, IP, or reverse-proxy path",
         "serverOriginDescription": "Examples: home.lan, 192.168.1.10, or https://home.example.com/services. Choose how each service is appended below.",
-        "urlModeLabel": "Service address pattern",
-        "hostPort": "Same host, different ports",
-        "subdomain": "One subdomain per service",
-        "path": "One path per service",
         "analytics": "Share anonymous product analytics",
         "analyticsDescription": "Helps Homarr improve feature reliability. No service credentials or dashboard content are sent."
       },
@@ -2137,6 +2132,13 @@
       "undo": "Undo"
     },
     "here": "here",
+    "serviceUrlTemplate": {
+      "serverTitle": "Usual server address",
+      "urlModeLabel": "Service address pattern",
+      "hostPort": "Same host, different ports",
+      "subdomain": "One subdomain per service",
+      "path": "One path per service"
+    },
     "iconPicker": {
       "label": "Icon URL",
       "description": "Search the library, paste an image URL, or upload a file.",
@@ -3737,6 +3739,11 @@
       "name": "Docker stats",
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
+        "endpointIds": {
+          "label": "Docker environments",
+          "description": "Leave empty to show containers from every Docker environment",
+          "placeholder": "All Docker environments"
+        },
         "columns": {
           "label": "Columns to show"
         },
@@ -5685,6 +5692,7 @@
     },
     "dynamicSelect": {
       "noResults": "No results found",
+      "loading": "Loading...",
       "loadError": "Failed to load options"
     },
     "assistant": {
@@ -7072,22 +7080,17 @@
   "docker": {
     "title": "Containers",
     "reconciliation": {
-      "title": "Service setup",
-      "description": "Docker services are compared with your apps and integrations. Review every suggestion before Homarr changes anything.",
+      "title": "Assisted Docker setup",
+      "suggestions": "{count, plural, =0 {No suggestions} one {# suggestion} other {# suggestions}}",
       "attention": "{count} need attention",
       "endpointUnavailable": "Some services could not be checked because these endpoints are unavailable: {names}",
       "empty": "No visible Docker services were found.",
       "emptyFilter": "No services match this view.",
       "ambiguous": "More than one existing item could match this service. Homarr will not choose one automatically.",
-      "match": "{confidence} confidence match",
       "filter": {
         "attention": "Needs attention",
         "represented": "Already set up",
         "all": "All"
-      },
-      "confidence": {
-        "high": "High",
-        "medium": "Medium"
       },
       "state": {
         "newRecognized": "Ready to connect",
@@ -7097,19 +7100,9 @@
         "moved": "Address changed"
       },
       "url": {
-        "label": "Service address",
-        "inputLabel": "Service URL",
-        "manual": "Enter an address manually",
-        "invalid": "Enter a valid HTTP or HTTPS URL"
-      },
-      "reason": {
-        "publishedAddress": "Published address reported by Docker",
-        "dockerEndpointHost": "Docker endpoint host combined with the published port",
-        "sharedContainerNetwork": "Server-only address for services sharing the container network",
-        "manualHostRequired": "Enter the address that your browser or Homarr server can reach"
+        "manual": "Enter an address manually"
       },
       "health": {
-        "title": "Observed service layers",
         "layer": {
           "docker": "Docker",
           "integrationConfiguration": "Integration",
@@ -7131,17 +7124,15 @@
         }
       },
       "action": {
-        "refresh": "Refresh",
-        "retry": "Try again",
+        "review": "Review",
         "dismiss": "Dismiss",
         "restoreDismissed": "Restore dismissed ({count})",
         "setupIntegration": "Set up integration",
-        "createApp": "Create app",
         "reviewIntegration": "Review integration",
         "viewRepresentation": "View setup"
       },
       "loadError": {
-        "title": "Service setup could not be loaded",
+        "title": "Docker setup assistant could not be loaded",
         "message": "Docker service information is unavailable. Try again without leaving this page."
       },
       "refreshError": {

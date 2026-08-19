@@ -74,6 +74,11 @@ const createContainerLogsPath = (container: Pick<DockerContainer, "endpointId" |
 
 const getContainerTarget = ({ endpointId, id }: DockerContainer) => ({ endpointId, id });
 
+const getContainersQueryInput = (endpointIds: string[]) => {
+  if (endpointIds.length === 0) return undefined;
+  return { endpointIds };
+};
+
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useScopedI18n("docker.field.state.option");
 
@@ -248,7 +253,7 @@ export default function DockerWidget({
   const isAdvanced = displayMode === "advanced";
 
   const utils = clientApi.useUtils();
-  const containersQuery = clientApi.docker.getContainers.useQuery();
+  const containersQuery = clientApi.docker.getContainers.useQuery(getContainersQueryInput(options.endpointIds));
   const data = getUsableWidgetQueryData(containersQuery);
   const { isFetching } = containersQuery;
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({

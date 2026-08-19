@@ -69,6 +69,15 @@ interface DynamicSelectInput extends CommonInput<DynamicSelectOption | null> {
   };
 }
 
+interface DynamicMultiSelectInput extends CommonInput<string[]> {
+  maxValues?: number;
+  useOptions: () => {
+    data: DynamicSelectOption[];
+    isPending: boolean;
+    isError: boolean;
+  };
+}
+
 interface IntegrationSelectInput extends CommonInput<string> {
   clearable?: boolean;
   searchable?: boolean;
@@ -138,6 +147,13 @@ const optionsFactory = {
   dynamicSelect: (input: DynamicSelectInput) => ({
     type: "dynamicSelect" as const,
     defaultValue: input.defaultValue ?? null,
+    useOptions: input.useOptions,
+    withDescription: input.withDescription ?? false,
+  }),
+  dynamicMultiSelect: (input: DynamicMultiSelectInput) => ({
+    type: "dynamicMultiSelect" as const,
+    defaultValue: input.defaultValue ?? [],
+    maxValues: input.maxValues,
     useOptions: input.useOptions,
     withDescription: input.withDescription ?? false,
   }),

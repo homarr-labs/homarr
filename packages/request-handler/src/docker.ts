@@ -195,9 +195,24 @@ const mockContainers: {
   },
 ];
 
+const demoDockerEndpoint = {
+  id: "demo",
+  name: "Demo Docker",
+  status: "available",
+  kind: "docker",
+  transport: "socket",
+  capabilities: ["inventory"],
+  source: "default",
+  scope: "admin",
+} satisfies DockerEndpointStatus;
+
 export const dockerContainersRequestHandler = createWidgetRequestHandler({
-  async requestAsync() {
+  async requestAsync({ endpointIds }: { endpointIds?: string[] }) {
     if (isDemoMode()) {
+      const includesDemoEndpoint =
+        endpointIds === undefined || endpointIds.length === 0 || endpointIds.includes("demo");
+      if (!includesDemoEndpoint) return { containers: [], endpoints: [] };
+
       return {
         containers: mockContainers.map((container) => ({
           ...container,
@@ -205,21 +220,10 @@ export const dockerContainersRequestHandler = createWidgetRequestHandler({
           endpointName: "Demo Docker",
           resourceId: `demo:${container.id}`,
         })),
-        endpoints: [
-          {
-            id: "demo",
-            name: "Demo Docker",
-            status: "available",
-            kind: "docker",
-            transport: "socket",
-            capabilities: ["inventory"],
-            source: "default",
-            scope: "admin",
-          },
-        ] satisfies DockerEndpointStatus[],
+        endpoints: [demoDockerEndpoint],
       };
     }
-    return await getContainersWithStatsAsync();
+    return await getContainersWithStatsAsync(dockerWidgetEndpointTimeoutMs, endpointIds);
   },
 });
 
@@ -304,6 +308,8 @@ export const streamContainerLogsAsync = async (
 };
 
 export const getDockerEndpointsAsync = (): DockerEndpointStatus[] => {
+  if (isDemoMode()) return [demoDockerEndpoint];
+
   const dockerInstances = DockerSingleton.getInstances();
   const initializationFailures = DockerSingleton.getInitializationFailures();
 
@@ -331,9 +337,18 @@ export const getDockerEndpointsAsync = (): DockerEndpointStatus[] => {
   ];
 };
 
-export async function getContainersWithStatsAsync(timeoutMs = dockerWidgetEndpointTimeoutMs) {
-  const dockerInstances = DockerSingleton.getInstances();
-  const initializationFailures = DockerSingleton.getInitializationFailures();
+export async function getContainersWithStatsAsync(
+  timeoutMs = dockerWidgetEndpointTimeoutMs,
+  endpointIds: string[] = [],
+) {
+  const selectedEndpointIds = new Set(endpointIds);
+  const includesAllEndpoints = selectedEndpointIds.size === 0;
+  const dockerInstances = DockerSingleton.getInstances().filter(
+    ({ endpointId }) => includesAllEndpoints || selectedEndpointIds.has(endpointId),
+  );
+  const initializationFailures = DockerSingleton.getInitializationFailures().filter(
+    ({ descriptor }) => includesAllEndpoints || selectedEndpointIds.has(descriptor.id),
+  );
   const results = await Promise.allSettled(
     dockerInstances.map(async ({ instance, host, endpointId, endpointName }) => {
       const instanceContainers = await withDockerTimeoutAsync(

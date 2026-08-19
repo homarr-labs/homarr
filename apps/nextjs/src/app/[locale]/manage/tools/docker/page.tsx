@@ -1,8 +1,10 @@
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
+import { extractBaseUrlFromHeaders } from "@homarr/common";
 import { env } from "@homarr/docker/env";
 import { getScopedI18n } from "@homarr/translation/server";
 
@@ -16,7 +18,10 @@ export default async function DockerPage() {
     notFound();
   }
 
-  const { containers, endpoints, timestamp } = await api.docker.getContainers();
+  const [{ containers, endpoints, timestamp }, requestHeaders] = await Promise.all([
+    api.docker.getContainers(),
+    headers(),
+  ]);
   const tDocker = await getScopedI18n("docker");
 
   return (
@@ -24,7 +29,7 @@ export default async function DockerPage() {
       <DynamicBreadcrumb />
       <Stack>
         <Title order={1}>{tDocker("title")}</Title>
-        <DockerReconciliation />
+        <DockerReconciliation defaultServerOrigin={extractBaseUrlFromHeaders(requestHeaders)} />
         <DockerTable initialData={{ containers, endpoints, timestamp }} />
       </Stack>
     </>
