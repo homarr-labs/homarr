@@ -1,0 +1,24 @@
+apps/nextjs/src/app/api/mcp/oauth/authorize/route.ts
+  s_2341724b7a23a2::t_c4ec10822d952f 3
+  s_2341724b7a23a2::t_f1aa6290ff13f3 141-142
+apps/nextjs/next.config.ts
+  s_2341724b7a23a2::t_b27aead37ce096 69,74-75
+  s_2341724b7a23a2::t_4bf0c9aad7137d 70-73
+  s_2341724b7a23a2::t_54cc5b1490767c 67-68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "a07e0e5ab6145f4122bd2ae270ded35fa5efe1f8",
+  "prompts": {},
+  "sessions": {
+    "s_2341724b7a23a2": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fe6ff4853ffe4v9ao3DOhp06Ss",
+        "model": "~deepseek/deepseek-v4-flash-latest"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
