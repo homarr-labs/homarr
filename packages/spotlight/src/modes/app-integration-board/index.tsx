@@ -17,10 +17,11 @@ export const appIntegrationBoardMode = {
       return groups;
     }
 
-    return groups.concat(
-      session.user.permissions.includes("board-modify-all")
-        ? [appsSearchGroup, integrationsSearchGroup]
-        : [integrationsSearchGroup],
-    );
+    // Mirrors the gate on app.search: either permission may browse the app catalogue, so an app
+    // administrator without board access still gets the group instead of a FORBIDDEN response.
+    const canSearchApps =
+      session.user.permissions.includes("board-modify-all") || session.user.permissions.includes("app-modify-all");
+
+    return groups.concat(canSearchApps ? [appsSearchGroup, integrationsSearchGroup] : [integrationsSearchGroup]);
   },
 } satisfies SearchMode;
