@@ -56,8 +56,17 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
         if (sessionInfo.NowPlayingItem) {
           const positionMs = ticksToMs(sessionInfo.PlayState?.PositionTicks);
           const durationMs = ticksToMs(sessionInfo.NowPlayingItem.RunTimeTicks);
+          // Jellyfin only reliably fills in MediaSources[].Bitrate for a transcoding session -
+          // /Sessions has no `fields` selector to force it, so fall back to summing the individual
+          // media streams' own bitrates (populated from the source file's metadata) for direct play.
+          const mediaStreamsBitrateBps = sessionInfo.NowPlayingItem.MediaStreams?.reduce(
+            (sum, stream) => sum + (stream.BitRate ?? 0),
+            0,
+          );
           const bitrateBps =
-            sessionInfo.TranscodingInfo?.Bitrate ?? sessionInfo.NowPlayingItem.MediaSources?.[0]?.Bitrate ?? null;
+            sessionInfo.TranscodingInfo?.Bitrate ??
+            sessionInfo.NowPlayingItem.MediaSources?.[0]?.Bitrate ??
+            (mediaStreamsBitrateBps || null);
           const bitrateKbps = bitrateBps !== null ? Math.round(bitrateBps / 1000) : null;
           const isEpisode = sessionInfo.NowPlayingItem.Type === BaseItemKind.Episode;
 
