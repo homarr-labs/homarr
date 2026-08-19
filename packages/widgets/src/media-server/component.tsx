@@ -77,6 +77,17 @@ function formatBitrate(bitrateKbps: number | null | undefined): string | null {
   return bitrateKbps >= 1000 ? `${(bitrateKbps / 1000).toFixed(1)} Mbps` : `${Math.round(bitrateKbps)} kbps`;
 }
 
+const RESOLUTION_TIER_HEIGHTS = [4320, 2160, 1440, 1080, 720, 480, 360, 240] as const;
+
+export function getResolutionLabel(width: number, height: number): string {
+  // Letterboxed/cinemascope sources are cropped shorter than their nominal resolution class
+  // (a 1920x804 encode is still "1080p"), so classify off the width-derived 16:9 height instead
+  // of the raw (possibly cropped) height - matches how Plex/Jellyfin label these themselves.
+  const effectiveHeight = Math.max(height, Math.round((width * 9) / 16));
+  const tier = RESOLUTION_TIER_HEIGHTS.find((candidate) => effectiveHeight >= candidate * 0.9);
+  return `${tier ?? effectiveHeight}p`;
+}
+
 export function getSeasonEpisodeParams(
   seasonNumber: number | null | undefined,
   episodeNumber: number | null | undefined,
@@ -305,7 +316,7 @@ export default function MediaServerWidget({
               // touches audio/container and leaves the video resolution untouched).
               const resolution =
                 currentlyPlaying?.metadata?.transcoding.resolution ?? currentlyPlaying?.metadata?.video.resolution;
-              const resolutionLabel = resolution ? `${resolution.height}p` : null;
+              const resolutionLabel = resolution ? getResolutionLabel(resolution.width, resolution.height) : null;
               const toggleDetails = () => setSelectedRowId((current) => (current === rowId ? null : rowId));
 
               return (

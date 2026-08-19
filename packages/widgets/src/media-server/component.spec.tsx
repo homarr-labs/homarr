@@ -9,7 +9,12 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { StreamSession } from "@homarr/integrations";
 
-import { getMediaServerColumnVisibility, getSeasonEpisodeParams, SessionDetailsPopover } from "./component";
+import {
+  getMediaServerColumnVisibility,
+  getResolutionLabel,
+  getSeasonEpisodeParams,
+  SessionDetailsPopover,
+} from "./component";
 
 vi.mock("@homarr/translation/client", () => ({
   useScopedI18n: () => (key: string) => key,
@@ -122,5 +127,26 @@ describe("getSeasonEpisodeParams", () => {
     expect(getSeasonEpisodeParams(undefined, 12)).toBeNull();
     expect(getSeasonEpisodeParams(4, null)).toBeNull();
     expect(getSeasonEpisodeParams(null, undefined)).toBeNull();
+  });
+});
+
+describe("getResolutionLabel", () => {
+  test("labels a standard 16:9 resolution by its exact height", () => {
+    expect(getResolutionLabel(1920, 1080)).toBe("1080p");
+    expect(getResolutionLabel(1280, 720)).toBe("720p");
+  });
+
+  test("classifies a cinemascope source by its width, not its cropped height", () => {
+    // A 1920x804 encode (2.35:1, cropped top and bottom) is still a 1080p source.
+    expect(getResolutionLabel(1920, 804)).toBe("1080p");
+    expect(getResolutionLabel(1280, 640)).toBe("720p");
+  });
+
+  test("rounds a near-standard resolution up to its nearest tier", () => {
+    expect(getResolutionLabel(1912, 796)).toBe("1080p");
+  });
+
+  test("falls back to the raw height when it doesn't clear any known tier", () => {
+    expect(getResolutionLabel(100, 100)).toBe("100p");
   });
 });
