@@ -195,12 +195,14 @@ export default function MediaServerWidget({
       current?.column === column ? { column, descending: !current.descending } : { column, descending: false },
     );
 
-  const uniqueIntegrations = currentStreams.map((stream) => ({
-    integrationId: stream.integrationId,
-    integrationKind: stream.integrationKind,
-    integrationIcon: getIconUrl(stream.integrationKind),
-    integrationName: stream.integrationName,
-  }));
+  const uniqueIntegrations = currentStreams
+    .filter((stream) => stream.sessions.length > 0)
+    .map((stream) => ({
+      integrationId: stream.integrationId,
+      integrationKind: stream.integrationKind,
+      integrationIcon: getIconUrl(stream.integrationKind),
+      integrationName: stream.integrationName,
+    }));
 
   const playingCount = flatSessions.filter(
     (session) => session.currentlyPlaying && session.currentlyPlaying.playback?.state !== "paused",
@@ -386,25 +388,42 @@ export default function MediaServerWidget({
             borderTop: "1px solid var(--border-color)",
           }}
         >
-          <Group gap={4} wrap="nowrap">
+          <Group gap={6} wrap="nowrap">
             <IconVideo size="var(--mantine-font-size-xs)" style={{ flexShrink: 0 }} />
-            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+            <Text size="sm" fw={500} style={{ whiteSpace: "nowrap" }}>
               {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
                 count: flatSessions.length,
               })}
             </Text>
             {totalBitrateLabel && (isAdvanced || width >= 300) && (
-              <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
-                {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
-              </Text>
+              <>
+                <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                  •
+                </Text>
+                <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                  {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
+                </Text>
+              </>
             )}
           </Group>
-          <Group gap="xs">
+          <Group gap={6}>
             {uniqueIntegrations.map((integration) => (
-              <Group key={integration.integrationId} gap="xs" align="center">
-                <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
+              <Group
+                key={integration.integrationId}
+                gap={6}
+                align="center"
+                wrap="nowrap"
+                pl={2}
+                pr={8}
+                py={2}
+                style={{
+                  backgroundColor: "var(--mantine-color-default-hover)",
+                  borderRadius: 999,
+                }}
+              >
+                <Avatar className="media-server-icon" src={integration.integrationIcon} radius="xl" size={18} />
                 {(isAdvanced || width >= 480) && (
-                  <Text className="media-server-name" size="sm" truncate="end">
+                  <Text className="media-server-name" size="xs" fw={500} truncate="end">
                     {integration.integrationName}
                   </Text>
                 )}
