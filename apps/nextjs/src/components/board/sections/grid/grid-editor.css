@@ -286,6 +286,21 @@ body[data-board-grid-interacting] .board-grid-resize-handle::after {
   top: 0;
   left: 0;
   cursor: nwse-resize;
+  /* Leaves a thin draggable border around the corner instead of a solid 44x44 hit area,
+     so it doesn't sit on top of the container menu button anchored in this same corner. */
+  clip-path: polygon(
+    evenodd,
+    0 0,
+    100% 0,
+    100% 100%,
+    0 100%,
+    0 0,
+    4px 4px,
+    4px 40px,
+    40px 40px,
+    40px 4px,
+    4px 4px
+  );
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="ne"]::after,
