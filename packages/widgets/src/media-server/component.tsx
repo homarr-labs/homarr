@@ -288,7 +288,7 @@ export default function MediaServerWidget({
                   sortable={isAdvanced}
                   sort={sort}
                   onSort={toggleSort}
-                  width={170}
+                  width={190}
                 />
               )}
             </Table.Tr>
