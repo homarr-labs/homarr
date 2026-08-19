@@ -51,7 +51,9 @@ type SortState = { column: SortColumn; descending: boolean } | null;
 
 export const getMediaServerColumnVisibility = (width: number, isAdvanced: boolean) => ({
   user: isAdvanced || width >= 300,
-  status: isAdvanced || width >= 420,
+  // The user (200px) and status (190px) columns together need a floor here, otherwise the
+  // currentlyPlaying column - the primary content - gets squeezed to almost nothing.
+  status: isAdvanced || width >= 540,
 });
 
 function getPlaybackStatus(transcoding: TranscodingDecision | undefined): PlaybackStatus {
@@ -75,6 +77,21 @@ const playbackStatusColorMap = {
 function formatBitrate(bitrateKbps: number | null | undefined): string | null {
   if (!bitrateKbps || bitrateKbps <= 0) return null;
   return bitrateKbps >= 1000 ? `${(bitrateKbps / 1000).toFixed(1)} Mbps` : `${Math.round(bitrateKbps)} kbps`;
+}
+
+const RESOLUTION_TIER_HEIGHTS = [4320, 2160, 1440, 1080, 720, 480, 360, 240] as const;
+
+export function getResolutionLabel(width: number, height: number): string {
+  // Classify off the short axis (height for landscape, width for portrait) so orientation
+  // doesn't flip which dimension drives the label. Letterboxed/cinemascope sources are cropped
+  // shorter than their nominal resolution class (a 1920x804 encode is still "1080p"), so derive
+  // a floor for the short axis from the long axis assuming 16:9 - matches how Plex/Jellyfin label these themselves.
+  const isPortrait = height > width;
+  const shortAxis = isPortrait ? width : height;
+  const longAxis = isPortrait ? height : width;
+  const effectiveShortAxis = Math.max(shortAxis, Math.round((longAxis * 9) / 16));
+  const tier = RESOLUTION_TIER_HEIGHTS.find((candidate) => effectiveShortAxis >= candidate * 0.9);
+  return `${tier ?? effectiveShortAxis}p`;
 }
 
 export function getSeasonEpisodeParams(
@@ -117,27 +134,33 @@ function StreamTableHeader({
   sortable,
   sort,
   onSort,
+  width,
 }: {
   column: SortColumn;
   label: string;
   sortable: boolean;
   sort: SortState;
   onSort: (column: SortColumn) => void;
+  width?: number;
 }) {
   const active = sort?.column === column;
   const SortIcon = !active ? IconArrowsSort : sort.descending ? IconChevronDown : IconChevronUp;
 
   return (
-    <Table.Th aria-sort={active ? (sort.descending ? "descending" : "ascending") : "none"}>
+    <Table.Th w={width} aria-sort={active ? (sort.descending ? "descending" : "ascending") : "none"}>
       {sortable ? (
         <UnstyledButton className={classes.sortButton} onClick={() => onSort(column)}>
-          <Text component="span" size="xs" fw={600} truncate>
+          <Text component="span" size="xs" fw={600} c="dimmed" style={{ letterSpacing: "0.02em" }} truncate>
             {label}
           </Text>
-          <SortIcon size="var(--mantine-font-size-xs)" aria-hidden />
+          <SortIcon
+            size="var(--mantine-font-size-xs)"
+            aria-hidden
+            color={active ? undefined : "var(--mantine-color-dimmed)"}
+          />
         </UnstyledButton>
       ) : (
-        <Text size="xs" fw={600} truncate>
+        <Text size="xs" fw={600} c="dimmed" style={{ letterSpacing: "0.02em" }} truncate>
           {label}
         </Text>
       )}
@@ -195,12 +218,14 @@ export default function MediaServerWidget({
       current?.column === column ? { column, descending: !current.descending } : { column, descending: false },
     );
 
-  const uniqueIntegrations = currentStreams.map((stream) => ({
-    integrationId: stream.integrationId,
-    integrationKind: stream.integrationKind,
-    integrationIcon: getIconUrl(stream.integrationKind),
-    integrationName: stream.integrationName,
-  }));
+  const uniqueIntegrations = currentStreams
+    .filter((stream) => stream.sessions.length > 0)
+    .map((stream) => ({
+      integrationId: stream.integrationId,
+      integrationKind: stream.integrationKind,
+      integrationIcon: getIconUrl(stream.integrationKind),
+      integrationName: stream.integrationName,
+    }));
 
   const playingCount = flatSessions.filter(
     (session) => session.currentlyPlaying && session.currentlyPlaying.playback?.state !== "paused",
@@ -263,6 +288,7 @@ export default function MediaServerWidget({
                   sortable={isAdvanced}
                   sort={sort}
                   onSort={toggleSort}
+                  width={200}
                 />
               )}
               <StreamTableHeader
@@ -279,6 +305,7 @@ export default function MediaServerWidget({
                   sortable={isAdvanced}
                   sort={sort}
                   onSort={toggleSort}
+                  width={190}
                 />
               )}
             </Table.Tr>
@@ -290,6 +317,12 @@ export default function MediaServerWidget({
               const status = getPlaybackStatus(currentlyPlaying?.metadata?.transcoding);
               const location = showLocation ? currentlyPlaying?.location : null;
               const bitrateLabel = showBitrate ? formatBitrate(currentlyPlaying?.metadata?.bitrateKbps) : null;
+              // The transcoding resolution reflects what's actually being streamed - fall back to the
+              // source's own resolution when it isn't set (direct play, or a transcode that only
+              // touches audio/container and leaves the video resolution untouched).
+              const resolution =
+                currentlyPlaying?.metadata?.transcoding.resolution ?? currentlyPlaying?.metadata?.video.resolution;
+              const resolutionLabel = resolution ? getResolutionLabel(resolution.width, resolution.height) : null;
               const toggleDetails = () => setSelectedRowId((current) => (current === rowId ? null : rowId));
 
               return (
@@ -315,7 +348,7 @@ export default function MediaServerWidget({
                   {columnVisibility.user && (
                     <Table.Td>
                       <Group gap="xs" wrap="nowrap" w="100%">
-                        <Avatar size={28} src={session.user?.profilePictureUrl} />
+                        <Avatar size={28} src={session.user?.profilePictureUrl} style={{ flexShrink: 0 }} />
                         <Stack gap={2} className={classes.cellContent}>
                           <Text size="xs" truncate>
                             {session.user?.username ?? t("items.unknownUser")}
@@ -340,24 +373,30 @@ export default function MediaServerWidget({
                     <Table.Td>
                       {currentlyPlaying && (
                         <Stack gap={4} align="flex-start" w="100%" className={classes.cellContent}>
-                          <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
-                            {t(`items.${status}` as never)}
-                          </Badge>
-                          {(location ?? bitrateLabel) && (
-                            <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                          <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                            <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
+                              {t(`items.${status}` as never)}
+                            </Badge>
+                            {location && (
                               <Group gap={4} align="center" wrap="nowrap">
-                                {location &&
-                                  (location === "lan" ? (
-                                    <IconWifi size="var(--mantine-font-size-xs)" />
-                                  ) : (
-                                    <IconWorld size="var(--mantine-font-size-xs)" />
-                                  ))}
-                                {location && (
-                                  <Text size="xs" c="dimmed" tt="uppercase">
-                                    {location}
-                                  </Text>
+                                {location === "lan" ? (
+                                  <IconWifi size="var(--mantine-font-size-xs)" />
+                                ) : (
+                                  <IconWorld size="var(--mantine-font-size-xs)" />
                                 )}
+                                <Text size="xs" c="dimmed" tt="uppercase">
+                                  {location}
+                                </Text>
                               </Group>
+                            )}
+                          </Group>
+                          {(resolutionLabel ?? bitrateLabel) && (
+                            <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                              {resolutionLabel && (
+                                <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                                  {resolutionLabel}
+                                </Text>
+                              )}
                               {bitrateLabel && (
                                 <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
                                   {bitrateLabel}
@@ -386,25 +425,42 @@ export default function MediaServerWidget({
             borderTop: "1px solid var(--border-color)",
           }}
         >
-          <Group gap={4} wrap="nowrap">
+          <Group gap={6} wrap="nowrap">
             <IconVideo size="var(--mantine-font-size-xs)" style={{ flexShrink: 0 }} />
-            <Text size="sm" style={{ whiteSpace: "nowrap" }}>
+            <Text size="sm" fw={500} style={{ whiteSpace: "nowrap" }}>
               {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
                 count: flatSessions.length,
               })}
             </Text>
             {totalBitrateLabel && (isAdvanced || width >= 300) && (
-              <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
-                {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
-              </Text>
+              <>
+                <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                  •
+                </Text>
+                <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                  {t("footer.totalBitrate", { bitrate: totalBitrateLabel })}
+                </Text>
+              </>
             )}
           </Group>
-          <Group gap="xs">
+          <Group gap={6}>
             {uniqueIntegrations.map((integration) => (
-              <Group key={integration.integrationId} gap="xs" align="center">
-                <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
+              <Group
+                key={integration.integrationId}
+                gap={6}
+                align="center"
+                wrap="nowrap"
+                pl={2}
+                pr={8}
+                py={2}
+                style={{
+                  backgroundColor: "var(--mantine-color-default-hover)",
+                  borderRadius: 999,
+                }}
+              >
+                <Avatar className="media-server-icon" src={integration.integrationIcon} radius="xl" size={18} />
                 {(isAdvanced || width >= 480) && (
-                  <Text className="media-server-name" size="sm" truncate="end">
+                  <Text className="media-server-name" size="xs" fw={500} truncate="end">
                     {integration.integrationName}
                   </Text>
                 )}
