@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Group, Stack, Text, TextInput, ThemeIcon, UnstyledButton } from "@mantine/core";
+import { Group, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
 import {
   IconApps,
   IconBox,
@@ -10,7 +10,6 @@ import {
   IconLayoutDashboard,
   IconLayoutGridAdd,
   IconPlugConnected,
-  IconSearch,
 } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
@@ -26,7 +25,7 @@ import type {
   UniversalCreateActionGroup,
   UniversalCreateActionKey,
 } from "./universal-create-actions";
-import { filterAndRankUniversalCreateActions, getUniversalCreateActionDefinitions } from "./universal-create-actions";
+import { getUniversalCreateActionDefinitions } from "./universal-create-actions";
 import type { SetupMetricEntryPoint } from "./setup-analytics";
 import { useSetupAnalytics } from "./setup-analytics";
 
@@ -52,7 +51,6 @@ export const UniversalCreateModal = createModal<UniversalCreateModalProps>(({ ac
   const router = useRouter();
   const t = useScopedI18n("universalCreate");
   const { openModal: openAddBoardModal } = useModalAction(AddBoardModal);
-  const [query, setQuery] = useState("");
   const trackedOpen = useRef(false);
   const boardActions = innerProps.boardActions;
   const entryPoint = innerProps.entryPoint ?? (boardActions ? "board" : "header");
@@ -118,58 +116,43 @@ export const UniversalCreateModal = createModal<UniversalCreateModalProps>(({ ac
         keywords: t(`action.${definition.key}.keywords`).split(" "),
       }) satisfies RankedUniversalCreateAction,
   );
-  const visibleActions = filterAndRankUniversalCreateActions(resolvedActions, query);
+  const orderedActions = resolvedActions.toSorted((left, right) => right.priority - left.priority);
   const groups = ["currentBoard", "library", "boards"] satisfies UniversalCreateActionGroup[];
 
   return (
     <Stack gap="md">
-      <TextInput
-        data-autofocus
-        value={query}
-        onChange={(event) => setQuery(event.currentTarget.value)}
-        leftSection={<IconSearch size={16} />}
-        placeholder={t("search.placeholder")}
-        aria-label={t("search.label")}
-      />
+      {groups.map((group) => {
+        const groupActions = orderedActions.filter((action) => action.group === group);
+        if (groupActions.length === 0) return null;
 
-      {visibleActions.length === 0 ? (
-        <Text c="dimmed" ta="center" py="lg">
-          {t("search.noResults")}
-        </Text>
-      ) : (
-        groups.map((group) => {
-          const groupActions = visibleActions.filter((action) => action.group === group);
-          if (groupActions.length === 0) return null;
-
-          return (
-            <Stack key={group} gap={4}>
-              <Text c="dimmed" fw={600} size="xs" tt="uppercase" px="sm">
-                {t(`group.${group}`)}
-              </Text>
-              {groupActions.map((action) => {
-                const Icon = actionIcons[action.key];
-                return (
-                  <UnstyledButton key={action.key} className={classes.action} onClick={() => invokeAction(action.key)}>
-                    <Group wrap="nowrap" align="flex-start">
-                      <ThemeIcon className={classes.actionIcon} variant="light" radius="md">
-                        <Icon size={18} stroke={1.5} />
-                      </ThemeIcon>
-                      <Stack gap={1}>
-                        <Text fw={600} size="sm">
-                          {action.name}
-                        </Text>
-                        <Text c="dimmed" size="xs">
-                          {action.description}
-                        </Text>
-                      </Stack>
-                    </Group>
-                  </UnstyledButton>
-                );
-              })}
-            </Stack>
-          );
-        })
-      )}
+        return (
+          <Stack key={group} gap={4}>
+            <Text c="dimmed" fw={600} size="xs" tt="uppercase" px="sm">
+              {t(`group.${group}`)}
+            </Text>
+            {groupActions.map((action) => {
+              const Icon = actionIcons[action.key];
+              return (
+                <UnstyledButton key={action.key} className={classes.action} onClick={() => invokeAction(action.key)}>
+                  <Group wrap="nowrap" align="flex-start">
+                    <ThemeIcon className={classes.actionIcon} variant="light" radius="md">
+                      <Icon size={18} stroke={1.5} />
+                    </ThemeIcon>
+                    <Stack gap={1}>
+                      <Text fw={600} size="sm">
+                        {action.name}
+                      </Text>
+                      <Text c="dimmed" size="xs">
+                        {action.description}
+                      </Text>
+                    </Stack>
+                  </Group>
+                </UnstyledButton>
+              );
+            })}
+          </Stack>
+        );
+      })}
     </Stack>
   );
 }).withOptions({
