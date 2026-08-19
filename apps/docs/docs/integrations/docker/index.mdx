@@ -24,12 +24,11 @@ import { dockerContainersWidget } from "@site/docs/widgets/docker-containers";
   ]}
 />
 
-## Enabling the Docker integration
+## Connecting Docker to Homarr
 
-This integration must first be enabled.
-If you directly run on the host system and you have docker installed, it will be enabled by default.
-Otherwise, you'll need to mount the [docker socket](https://docs.docker.com/engine/security/protect-access/) to the Homarr container,
-so Homarr can interact with the Docker service.
+Docker connections come directly from Homarr's environment variables. They are automatically available in the Docker management table and Docker widget; you do not create a Docker integration under **Management → Integrations**.
+
+If Homarr runs directly on a host with Docker installed, it uses `/var/run/docker.sock` by default. When Homarr runs in a container, mount the [Docker socket](https://docs.docker.com/engine/security/protect-access/) into it so Homarr can interact with Docker.
 
 In Docker Compose, you can simply add this line:
 
@@ -122,7 +121,23 @@ services:
       DOCKER_SOCKET_PATHS: /var/run/docker.sock,/var/run/podman.sock
 ```
 
-For named endpoints, transport security, or least-privilege actions, prefer `DOCKER_ENDPOINTS`. It is a JSON array where every endpoint declares its identity, transport, and capabilities:
+For remote socket proxies, list the hostnames and matching ports in the same order:
+
+```yaml
+environment:
+  DOCKER_HOSTNAMES: docker-proxy-home,docker-proxy-lab
+  DOCKER_PORTS: 2375,2375
+```
+
+Homarr automatically discovers each comma-separated entry as a separate Docker environment. All environments are selected by default; the Docker widget lets you select one or more without any additional setup.
+
+:::warning[Plaintext TCP]
+Plaintext Docker TCP can grant unauthenticated control of the Docker host. Prefer a local socket, a least-privilege socket proxy on a private Docker network, or TLS.
+:::
+
+### Advanced endpoint configuration
+
+Most users should use the comma-separated variables above. Use `DOCKER_ENDPOINTS` only when you need custom names, TLS, or restricted capabilities. It is a JSON array where every endpoint declares its identity, transport, and capabilities:
 
 ```yaml
 services:
@@ -163,16 +178,12 @@ Supported transports are:
 - `tls`: `host`, `port`, and an absolute `caPath`; add both `certPath` and `keyPath` for mutual TLS
 - `tcp`: `host`, `port`, and the explicit acknowledgement `allowInsecure: true`
 
-:::warning[Plaintext TCP]
-Plaintext Docker TCP can grant unauthenticated control of the Docker host. Prefer a local socket, a least-privilege socket proxy, or TLS. The structured configuration refuses TCP unless `allowInsecure` is explicitly set to `true`.
-:::
-
-When `DOCKER_ENDPOINTS` is set, it takes precedence over the legacy `DOCKER_SOCKET_PATHS`, `DOCKER_HOSTNAMES`, and `DOCKER_PORTS` variables.
+The structured configuration refuses TCP unless `allowInsecure` is explicitly set to `true`. When `DOCKER_ENDPOINTS` is set, it takes precedence over `DOCKER_SOCKET_PATHS`, `DOCKER_HOSTNAMES`, and `DOCKER_PORTS`.
 
 ### Managing your Docker containers within Homarr
 
 Homarr allows you to interact with Docker containers running on your system.
-The **Service setup** section compares the visible containers with your existing Homarr apps and integrations. It keeps every service distinct by Docker endpoint and container ID, including multiple containers that use the same integration type.
+The collapsed **Assisted Docker setup** helper optionally compares visible containers with your existing Homarr apps and integrations. Open it only when you want setup suggestions; it never blocks normal container management. Every service stays distinct by Docker endpoint and container ID, including multiple containers that use the same integration type.
 
 Homarr can show a service as:
 
@@ -181,15 +192,15 @@ Homarr can show a service as:
 - **Already represented** or **Linked** when an app or integration already matches
 - **Address changed** when a service appears to match an integration but its reachable address has changed
 
-Suggested addresses are ranked and explain where they came from. A published address or Docker endpoint host is normally usable from a browser; a container-name address is server-only and requires Homarr to share the container network. Wildcard addresses such as `0.0.0.0` are never offered as browser destinations. You can edit every suggestion before continuing.
+Set the usual server address once, then choose whether services normally use different ports, subdomains, or paths. Homarr uses that pattern to prefill every detected service. Each suggestion has one editable URL field with the generated and Docker-reported addresses available as autocomplete options, so you can select a suggestion or type any address directly.
 
 :::info[Review before changing]
-Service discovery is read-only. Homarr never creates or changes an app or integration automatically; use the action on an individual suggestion to review and confirm its setup.
+Service discovery is read-only. Homarr never creates or changes an app or integration automatically. **Set up integration** opens the standard prefilled integration form, while **Create app** opens the existing Docker app form, so you can review and confirm the final setup.
 :::
 
-Use the inbox filters to focus on services that need attention or those already represented in Homarr. Refresh runs discovery again. Dismissed suggestions are stored in the current browser using their endpoint-qualified service identity and can be restored from the same panel. If multiple existing items could match, Homarr marks the result as ambiguous and does not choose one automatically.
+Suggestions appear as a compact task list. Expand an item only when you want to edit its URL or inspect relevant setup statuses. Use the filters to focus on services that need attention or those already represented in Homarr. Refresh runs discovery again. Dismissed suggestions are stored in the current browser using their endpoint-qualified service identity and can be restored from the same helper. If multiple existing items could match, Homarr marks the result as ambiguous and does not choose one automatically.
 
-The health badges are an evidence-based projection across Docker, integration configuration, app representation, and persisted widget links. Authentication, API request success, and widget query execution are labeled **Not observed** because Homarr does not currently retain trustworthy last-run results for these layers. Use the suggested integration test or board action to diagnose them live; **Not observed** is never presented as healthy.
+Compact status icons summarize the setup information Homarr can act on. Unknown and non-applicable runtime layers are omitted to keep the helper focused; use the integration form's connection test or the relevant board action for live diagnostics.
 
 If one Docker endpoint is unavailable, Homarr reports that endpoint while continuing to show services from healthy endpoints. An unavailable endpoint is not treated as an empty Docker installation.
 
@@ -215,6 +226,10 @@ This opens a dedicated page with an xterm.js terminal that streams the container
 
 The Docker management table supports optional **CPU usage** and **Memory usage** columns.
 These columns are hidden by default and can be toggled on from the table column visibility settings.
+
+#### Choosing Docker environments in the widget
+
+The Docker widget can show one or more configured Docker environments. Leave **Docker environments** empty to include every endpoint, which is also the default for existing widgets. Selecting one or more entries limits container and statistics requests to those endpoints.
 
 #### Add apps from containers
 

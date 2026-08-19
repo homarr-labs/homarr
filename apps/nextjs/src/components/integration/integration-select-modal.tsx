@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Group, ScrollArea, Title } from "@mantine/core";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { Group, ScrollArea, Title, UnstyledButton } from "@mantine/core";
+import { IconArrowLeft, IconX } from "@tabler/icons-react";
 
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName } from "@homarr/definitions";
 import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
+import { useI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "@homarr/ui";
 
 import { NewIntegrationForm } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
@@ -19,11 +20,15 @@ interface IntegrationSelectModalProps {
   enableMockIntegration?: boolean;
   allowedKinds?: readonly IntegrationKind[];
   completionBoardId?: string;
+  initialKind?: IntegrationKind;
+  initialUrl?: string;
+  initialName?: string;
 }
 
 export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>(({ actions, innerProps }) => {
-  const [step, setStep] = useState<"select" | "form">("select");
-  const [selectedKind, setSelectedKind] = useState<IntegrationKind | null>(null);
+  const t = useI18n();
+  const [step, setStep] = useState<"select" | "form">(innerProps.initialKind ? "form" : "select");
+  const [selectedKind, setSelectedKind] = useState<IntegrationKind | null>(innerProps.initialKind ?? null);
   const { openModal: openCompletionModal } = useModalAction(IntegrationCompletionModal);
 
   const handleSelect = (kind: IntegrationKind) => {
@@ -35,6 +40,7 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
     setStep("select");
     setSelectedKind(null);
   };
+  const handleFormBack = innerProps.initialKind ? actions.closeModal : handleBack;
 
   const handleSuccess = (result?: CreatedIntegrationResult) => {
     actions.closeModal();
@@ -46,14 +52,29 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
   };
 
   if (step === "form" && selectedKind) {
+    let HeaderIcon = IconArrowLeft;
+    let headerLabel = t("common.action.previous");
+    if (innerProps.initialKind) {
+      HeaderIcon = IconX;
+      headerLabel = t("common.action.close");
+    }
+
     return (
       <ScrollArea.Autosize mah="80vh">
-        <Group gap="xs" mb="md" style={{ cursor: "pointer" }} onClick={handleBack}>
-          <IconArrowLeft size={18} />
-          <IntegrationAvatar kind={selectedKind} size="sm" />
-          <Title order={4}>{getIntegrationName(selectedKind)}</Title>
-        </Group>
-        <NewIntegrationForm kind={selectedKind} onSuccess={handleSuccess} onCancel={handleBack} />
+        <UnstyledButton mb="md" onClick={handleFormBack} aria-label={headerLabel}>
+          <Group gap="xs">
+            <HeaderIcon size={18} />
+            <IntegrationAvatar kind={selectedKind} size="sm" />
+            <Title order={4}>{getIntegrationName(selectedKind)}</Title>
+          </Group>
+        </UnstyledButton>
+        <NewIntegrationForm
+          kind={selectedKind}
+          initialUrl={innerProps.initialUrl}
+          initialName={innerProps.initialName}
+          onSuccess={handleSuccess}
+          onCancel={handleFormBack}
+        />
       </ScrollArea.Autosize>
     );
   }

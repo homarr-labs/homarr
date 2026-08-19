@@ -15,7 +15,6 @@ import {
   ColorSwatch,
   CopyButton,
   Fieldset,
-  FloatingIndicator,
   Group,
   Paper,
   PasswordInput,
@@ -99,6 +98,7 @@ import type { OnboardingStudioProps } from "./types";
 import { getBoardValidationErrors } from "./board-validation";
 import { OnboardingBackdrop } from "./onboarding-backdrop";
 import { OnboardingWordmark } from "./onboarding-wordmark";
+import { OnboardingFloatingControl, ServiceUrlTemplate } from "./service-url-template";
 import { useOnboardingSounds } from "./use-onboarding-sounds";
 import {
   normalizeServiceUrl,
@@ -151,57 +151,6 @@ const initialPrimaryColor = "#fa5252";
 const initialSecondaryColor = "#fd7e14";
 const emptyDiscoveredIntegrations: DockerDiscoveryData["integrations"] = [];
 const emptyDiscoveredApps: DockerDiscoveryData["apps"] = [];
-
-interface OnboardingFloatingControlProps<T extends string> {
-  value: T;
-  onChange: (value: T) => void;
-  options: readonly { value: T; label: ReactNode }[];
-  ariaLabel: string;
-}
-
-const OnboardingFloatingControl = <T extends string>({
-  value,
-  onChange,
-  options,
-  ariaLabel,
-}: OnboardingFloatingControlProps<T>) => {
-  const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
-  const controlRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const sounds = useOnboardingSounds();
-
-  return (
-    <div className={classes.floatingControlScroller}>
-      <div ref={setRootRef} className={classes.floatingControlRoot} role="group" aria-label={ariaLabel}>
-        <FloatingIndicator
-          target={controlRefs.current[value] ?? null}
-          parent={rootRef}
-          className={classes.floatingControlIndicator}
-        />
-        {options.map((option) => {
-          const selected = value === option.value;
-          return (
-            <UnstyledButton
-              key={option.value}
-              ref={(node) => {
-                controlRefs.current[option.value] = node;
-              }}
-              type="button"
-              className={classes.floatingControl}
-              data-active={selected}
-              aria-pressed={selected}
-              onClick={() => {
-                sounds.click();
-                onChange(option.value);
-              }}
-            >
-              {option.label}
-            </UnstyledButton>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
 
 export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingStudioProps) => {
   const t = useScopedI18n("init.studio");
@@ -924,24 +873,13 @@ const Essentials = (props: StudioSectionProps) => {
         <Alert variant="light" icon={<IconInfoCircle size={18} />} my="xs">
           {t("serverOriginHelp")}
         </Alert>
-        <TextInput
-          label={t("serverTitle")}
-          placeholder="home.lan · 192.168.1.10 · https://homarr.example.com"
-          value={props.serverOrigin}
-          onChange={(event) => props.setServerOrigin(event.currentTarget.value)}
+        <ServiceUrlTemplate
+          serverOrigin={props.serverOrigin}
+          onServerOriginChange={props.setServerOrigin}
+          mode={props.urlMode}
+          onModeChange={props.setUrlMode}
           readOnly={!isHydrated}
           required
-          withAsterisk
-        />
-        <OnboardingFloatingControl
-          ariaLabel={t("urlModeLabel")}
-          value={props.urlMode}
-          onChange={props.setUrlMode}
-          options={[
-            { value: "hostPort", label: t("hostPort") },
-            { value: "subdomain", label: t("subdomain") },
-            { value: "path", label: t("path") },
-          ]}
         />
         {props.serverOrigin ? (
           <Code block>{buildIntegrationUrl("sonarr", props.serverOrigin, props.urlMode)}</Code>

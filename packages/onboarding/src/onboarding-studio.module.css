@@ -358,6 +358,7 @@
   display: flex;
   width: max-content;
   min-width: 100%;
+  margin: 0;
   padding: 0.2rem;
   border-radius: var(--mantine-radius-md);
   background: var(--mantine-color-default);
