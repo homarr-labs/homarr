@@ -288,7 +288,7 @@ export default function MediaServerWidget({
                   sortable={isAdvanced}
                   sort={sort}
                   onSort={toggleSort}
-                  width={140}
+                  width={170}
                 />
               )}
             </Table.Tr>
@@ -300,6 +300,8 @@ export default function MediaServerWidget({
               const status = getPlaybackStatus(currentlyPlaying?.metadata?.transcoding);
               const location = showLocation ? currentlyPlaying?.location : null;
               const bitrateLabel = showBitrate ? formatBitrate(currentlyPlaying?.metadata?.bitrateKbps) : null;
+              const resolution = currentlyPlaying?.metadata?.video.resolution;
+              const resolutionLabel = resolution ? `${resolution.width}x${resolution.height}` : null;
               const toggleDetails = () => setSelectedRowId((current) => (current === rowId ? null : rowId));
 
               return (
@@ -350,24 +352,30 @@ export default function MediaServerWidget({
                     <Table.Td>
                       {currentlyPlaying && (
                         <Stack gap={4} align="flex-start" w="100%" className={classes.cellContent}>
-                          <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
-                            {t(`items.${status}` as never)}
-                          </Badge>
-                          {(location ?? bitrateLabel) && (
-                            <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                          <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                            <Badge size="xs" variant="light" color={playbackStatusColorMap[status]}>
+                              {t(`items.${status}` as never)}
+                            </Badge>
+                            {location && (
                               <Group gap={4} align="center" wrap="nowrap">
-                                {location &&
-                                  (location === "lan" ? (
-                                    <IconWifi size="var(--mantine-font-size-xs)" />
-                                  ) : (
-                                    <IconWorld size="var(--mantine-font-size-xs)" />
-                                  ))}
-                                {location && (
-                                  <Text size="xs" c="dimmed" tt="uppercase">
-                                    {location}
-                                  </Text>
+                                {location === "lan" ? (
+                                  <IconWifi size="var(--mantine-font-size-xs)" />
+                                ) : (
+                                  <IconWorld size="var(--mantine-font-size-xs)" />
                                 )}
+                                <Text size="xs" c="dimmed" tt="uppercase">
+                                  {location}
+                                </Text>
                               </Group>
+                            )}
+                          </Group>
+                          {(resolutionLabel ?? bitrateLabel) && (
+                            <Group gap={4} align="center" justify="space-between" wrap="nowrap" w="100%">
+                              {resolutionLabel && (
+                                <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
+                                  {resolutionLabel}
+                                </Text>
+                              )}
                               {bitrateLabel && (
                                 <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap" }}>
                                   {bitrateLabel}
