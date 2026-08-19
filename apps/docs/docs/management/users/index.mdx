@@ -164,18 +164,21 @@ Members can be removed from the group using the remove button at the end:
 
 In this tab, you manage what permissions the members of this group will have.
 Permissions are shown as a matrix with one row per category (boards, apps, integrations, and so on). Each row has a
-segmented control that lets you pick a single **access level** and, where the category supports it, a separate
-**create** checkbox.
+segmented control that lets you pick a single **access level**, plus a checkbox for each **capability** the category
+has.
 
 Levels in a category are cumulative: selecting a level grants that level and every level below it in the same
 category. Choosing **No access** grants no access level for that category.
 
-##### Create is separate from the access level
+##### Capabilities are separate from the access level
 
-Creating is a distinct capability, independent of the access level. It can be granted on its own, so you can for
-example let members create their own boards without letting them view or modify anyone else's boards. Some access
-levels already include the create capability through permission inheritance (marked in the table below); the
-checkbox is then disabled and labeled as already included.
+A capability is something you can grant on its own, independently of how much of everyone else's data the members
+can see. Creating is the usual example: you can let members create their own boards without letting them view or
+modify anyone else's boards. Apps additionally have **use all apps**, which lets members put any app on a board
+without being able to edit apps.
+
+Some access levels already include a capability through permission inheritance (marked in the table below); the
+checkbox is then ticked, disabled, and explains which level includes it.
 
 ##### Administration
 
@@ -185,23 +188,26 @@ is disabled and explains that administrators already have that access. Setting t
 
 ##### Access levels
 
-The access levels below are cumulative, in ascending order, with the category's create capability listed separately.
-A level that already includes the create capability is marked:
+The access levels below are cumulative, in ascending order, with the category's capabilities listed separately:
 
-| Category       | Create capability     | Access levels (ascending)                                                                | Create included at                                   |
-| -------------- | --------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| Boards         | Create boards         | view all boards &rarr; modify all boards &rarr; full board access                        | full board access                                    |
-| Apps           | Create apps           | use all apps &rarr; modify all apps &rarr; full app access                               | modify all apps, full app access                     |
-| Integrations   | Create integrations   | use all integrations &rarr; interact with any integration &rarr; full integration access | full integration access                              |
-| Search engines | Create search engines | modify all search engines &rarr; full search engine access                               | modify all search engines, full search engine access |
-| Medias         | Upload medias         | view all medias &rarr; full media access                                                 | full media access                                    |
-| Other          | —                     | view logs                                                                                | —                                                    |
-| Administrator  | —                     | administrator                                                                            | —                                                    |
+| Category       | Access levels (ascending)                                                                | Capabilities                    | Already included at                                  |
+| -------------- | ---------------------------------------------------------------------------------------- | ------------------------------- | ---------------------------------------------------- |
+| Boards         | view all boards &rarr; modify all boards &rarr; full board access                        | create boards                   | full board access                                    |
+| Apps           | modify all apps &rarr; full app access                                                   | use all apps, create apps       | create apps: modify all apps and full app access; use all apps: full app access |
+| Integrations   | use all integrations &rarr; interact with any integration &rarr; full integration access | create integrations             | full integration access                              |
+| Search engines | modify all search engines &rarr; full search engine access                               | create search engines           | modify all search engines, full search engine access |
+| Medias         | view all medias &rarr; full media access                                                 | upload medias                   | full media access                                    |
+| Other          | view logs                                                                                | —                               | —                                                    |
+| Administrator  | administrator                                                                            | —                               | —                                                    |
+
+Apps are the one category where "use" is not a level. Being able to modify every app does **not** imply being able
+to put any app on a board — only full app access grants both — so the two are kept independent rather than stacked,
+and picking **Modify** never silently grants use of every app.
 
 The levels grant the following:
 
 - **Boards**: view all boards; modify all boards (not access control and danger zone); full board access (view, modify and delete every board, including access control and the danger zone).
-- **Apps**: use all apps (add any app to a board); modify all apps; full app access (manage, use and delete any app).
+- **Apps**: modify all apps; full app access (manage, use and delete any app).
 - **Integrations**: use all integrations; interact with any integration; full integration access (manage, use and interact with any integration).
 - **Search engines**: modify all search engines; full search engine access (manage and delete any search engine).
 - **Medias**: view all medias; full media access (manage and delete any media).
@@ -211,8 +217,8 @@ The levels grant the following:
 
 Above the rows you can apply a preset to fill in a common configuration in one click:
 
-- **Viewer**: read-only - view boards and medias, use existing apps and integrations.
-- **Editor**: day-to-day management - create and modify boards, apps, integrations and search engines, interact with integrations, and upload medias, without deleting resources or managing access.
+- **Viewer**: read-only - view all boards and medias, use any app on a board, and use existing integrations.
+- **Editor**: day-to-day management - modify all boards and apps, create boards and integrations, interact with any integration, modify search engines, and upload medias, without deleting resources or managing access.
 - **Admin**: grants the administrator permission (full access to everything).
 
 When the current selection does not match any preset, a **Custom** badge is shown.
@@ -220,7 +226,7 @@ When the current selection does not match any preset, a **Custom** badge is show
 ##### Also grants
 
 Some levels include additional permissions automatically. When a level implies extra permissions (for example,
-full board access also allows creating boards), a dimmed **Also grants: …** hint is shown below the category row,
+modifying all apps also allows creating apps), a dimmed **Also grants: …** hint is shown below the category row,
 listing the implied permissions.
 
 ##### Effective permissions

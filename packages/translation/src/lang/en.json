@@ -674,14 +674,14 @@
           "empty": "No permissions selected"
         },
         "noneDescription": "Members get no access to this area.",
-        "createIncluded": "Already included in “{level}”",
         "level": {
           "view": "View",
           "use": "Use",
           "interact": "Interact",
           "modify": "Modify",
           "full": "Full"
-        }
+        },
+        "capabilityIncluded": "Already included in “{level}”"
       }
     },
     "memberNotice": {

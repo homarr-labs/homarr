@@ -27,7 +27,7 @@ import type { GroupPermissionKey, PermissionMatrixCategory, PermissionMatrixStat
 import {
   getPermissionsWithChildren,
   groupPermissionKeys,
-  isCreateImpliedByLevel,
+  isCapabilityImpliedByLevel,
   matrixStateToPermissions,
   permissionMatrix,
   permissionsToMatrixState,
@@ -67,7 +67,7 @@ type MatrixForm = ReturnType<typeof useFormContext>;
 
 const emptyMatrixState = (): PermissionMatrixState =>
   objectKeys(permissionMatrix).reduce((acc, category) => {
-    acc[category] = { level: 0, create: false };
+    acc[category] = { level: 0, capabilities: [] };
     return acc;
   }, {} as PermissionMatrixState);
 
@@ -76,40 +76,42 @@ const matrixStateOf = (values: FormType) => permissionsToMatrixState(groupPermis
 export const getMatrixLevel = (values: FormType, category: PermissionMatrixCategory): number =>
   matrixStateOf(values)[category].level;
 
-export const hasMatrixCreate = (values: FormType, category: PermissionMatrixCategory): boolean =>
-  matrixStateOf(values)[category].create;
+export const hasMatrixCapability = (
+  values: FormType,
+  category: PermissionMatrixCategory,
+  capability: GroupPermissionKey,
+): boolean => matrixStateOf(values)[category].capabilities.includes(capability);
 
 export const applyMatrixLevel = (form: MatrixForm, category: PermissionMatrixCategory, level: number) => {
-  const targetKeys = new Set(matrixStateToPermissions({ ...emptyMatrixState(), [category]: { level, create: false } }));
+  const targetKeys = new Set(
+    matrixStateToPermissions({ ...emptyMatrixState(), [category]: { level, capabilities: [] } }),
+  );
   permissionMatrix[category].levels.forEach((key) => {
     form.setFieldValue(key, targetKeys.has(key));
   });
-  // The create key is deliberately left untouched: a level that implies creating already covers it,
-  // and an explicitly granted create must survive lowering the level again.
+  // Capability keys are deliberately left untouched: a level that implies one already covers it,
+  // and an explicitly granted capability must survive lowering the level again.
 };
 
-export const applyMatrixCreate = (form: MatrixForm, category: PermissionMatrixCategory, create: boolean) => {
-  const createKey = permissionMatrix[category].create;
-  if (createKey !== null) {
-    form.setFieldValue(createKey, create);
-  }
+export const applyMatrixCapability = (form: MatrixForm, capability: GroupPermissionKey, granted: boolean) => {
+  form.setFieldValue(capability, granted);
 };
 
 const presets = {
   viewer: {
-    board: { level: 1, create: false },
-    app: { level: 1, create: false },
-    integration: { level: 1, create: false },
-    media: { level: 1, create: false },
+    board: { level: 1, capabilities: [] },
+    app: { level: 0, capabilities: ["app-use-all"] },
+    integration: { level: 1, capabilities: [] },
+    media: { level: 1, capabilities: [] },
   },
   editor: {
-    board: { level: 2, create: true },
-    app: { level: 2, create: true },
-    integration: { level: 2, create: true },
-    "search-engine": { level: 1, create: true },
-    media: { level: 1, create: true },
+    board: { level: 2, capabilities: ["board-create"] },
+    app: { level: 1, capabilities: ["app-use-all"] },
+    integration: { level: 2, capabilities: ["integration-create"] },
+    "search-engine": { level: 1, capabilities: [] },
+    media: { level: 1, capabilities: ["media-upload"] },
   },
-  admin: { admin: { level: 1, create: false } },
+  admin: { admin: { level: 1, capabilities: [] } },
 } satisfies Record<string, Partial<PermissionMatrixState>>;
 
 export type PermissionPreset = keyof typeof presets;
@@ -117,7 +119,7 @@ export type PermissionPreset = keyof typeof presets;
 const presetToFormState = (preset: PermissionPreset): FormType => {
   const presetState: Partial<PermissionMatrixState> = presets[preset];
   const state = objectKeys(permissionMatrix).reduce((acc, category) => {
-    acc[category] = presetState[category] ?? { level: 0, create: false };
+    acc[category] = presetState[category] ?? { level: 0, capabilities: [] };
     return acc;
   }, {} as PermissionMatrixState);
   const enabledKeys = new Set(matrixStateToPermissions(state));
@@ -197,7 +199,7 @@ export const MatrixRow = ({ category, permissionLabels, permissionDescriptions }
   const level = getMatrixLevel(values, category);
   const isDanger = category === "admin";
   const disabledByAdmin = !isDanger && getMatrixLevel(values, "admin") > 0;
-  const { levels, create: createKey } = permissionMatrix[category];
+  const { levels, capabilities } = permissionMatrix[category];
   const hasSingleLevel = levels.length === 1;
 
   const data = [
@@ -211,13 +213,16 @@ export const MatrixRow = ({ category, permissionLabels, permissionDescriptions }
     }),
   ];
 
-  const createImplied = isCreateImpliedByLevel(category, level);
-  const createChecked = hasMatrixCreate(values, category);
+  const capabilityStates = capabilities.map((capability) => ({
+    capability,
+    checked: hasMatrixCapability(values, category, capability),
+    implied: isCapabilityImpliedByLevel(category, capability, level),
+  }));
 
   const selectedKey = level === 0 ? undefined : levels[level - 1];
-  // With no access level but the create capability granted, describing the row as "no access" would
-  // contradict the checkbox next to it, so the create permission describes the row instead.
-  const describedKey = selectedKey ?? (createChecked ? (createKey ?? undefined) : undefined);
+  // With no access level but a capability granted, describing the row as "no access" would
+  // contradict the checkbox next to it, so the granted capability describes the row instead.
+  const describedKey = selectedKey ?? capabilityStates.find(({ checked }) => checked)?.capability;
   const description =
     describedKey === undefined ? tPermissions("matrix.noneDescription") : (permissionDescriptions[describedKey] ?? "");
 
@@ -239,22 +244,25 @@ export const MatrixRow = ({ category, permissionLabels, permissionDescriptions }
             aria-label={tPermissions(`${category}.title`)}
             onChange={(value) => applyMatrixLevel(form, category, Number(value))}
           />
-          {/* Fixed-width column so every level control lines up, with or without a create option. */}
-          <Box w={{ base: "auto", sm: 190 }}>
-            {createKey !== null && (
-              <Tooltip
-                label={tPermissions("matrix.createIncluded", { level: data[level]?.label ?? "" })}
-                disabled={!createImplied}
-              >
-                <Checkbox
-                  size="sm"
-                  label={permissionLabels[createKey] ?? createKey}
-                  checked={createChecked}
-                  disabled={disabledByAdmin || createImplied}
-                  onChange={(event) => applyMatrixCreate(form, category, event.currentTarget.checked)}
-                />
-              </Tooltip>
-            )}
+          {/* Fixed-width column so every level control lines up, whatever capabilities a row has. */}
+          <Box w={{ base: "auto", sm: 230 }}>
+            <Stack gap={4}>
+              {capabilityStates.map(({ capability, checked, implied }) => (
+                <Tooltip
+                  key={capability}
+                  label={tPermissions("matrix.capabilityIncluded", { level: data[level]?.label ?? "" })}
+                  disabled={!implied}
+                >
+                  <Checkbox
+                    size="sm"
+                    label={permissionLabels[capability] ?? capability}
+                    checked={checked}
+                    disabled={disabledByAdmin || implied}
+                    onChange={(event) => applyMatrixCapability(form, capability, event.currentTarget.checked)}
+                  />
+                </Tooltip>
+              ))}
+            </Stack>
           </Box>
         </Group>
       </Group>

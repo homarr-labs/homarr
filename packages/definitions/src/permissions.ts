@@ -121,50 +121,65 @@ export const groupPermissionKeys = objectKeys(groupPermissions).reduce((acc, key
 /**
  * Describes how each permission category is presented in the group permission matrix UI.
  *
- * `levels` is an ordered escalation of access: picking level N grants every key up to N.
- * `create` is orthogonal to `levels` - it is the "may add new resources" capability and can be
- * granted on its own (e.g. "members may create their own boards but not see anyone else's").
- * Some levels already imply the create key through {@link groupPermissionParents}; use
- * {@link isCreateImpliedByLevel} to detect that instead of hard-coding it.
+ * `levels` is an ordered escalation of access: every level implies the one below it through
+ * {@link groupPermissionParents}, so picking level N grants everything up to N.
  *
- * Together, `levels` and `create` cover every key in {@link groupPermissionKeys}, so the matrix
- * is a lossless representation of a group's permissions.
+ * `capabilities` are the keys that are NOT part of that ladder - "may add new resources", "may
+ * upload", "may put any app on a board". They can be granted on their own (e.g. "members may create
+ * their own boards but not see anyone else's") and some levels already imply them; use
+ * {@link isCapabilityImpliedByLevel} to detect that instead of hard-coding it.
+ *
+ * Only keys that genuinely imply each other may share a ladder. `app-modify-all` implies
+ * `app-create` but NOT `app-use-all` (only `app-full-all` does), so `app-use-all` is a capability -
+ * putting it in the ladder would make picking "Modify" silently grant use of every app.
+ *
+ * Together, `levels` and `capabilities` cover every key in {@link groupPermissionKeys}, so the
+ * matrix is a lossless representation of a group's permissions.
  */
 export const permissionMatrix = {
-  board: { levels: ["board-view-all", "board-modify-all", "board-full-all"], create: "board-create" },
-  app: { levels: ["app-use-all", "app-modify-all", "app-full-all"], create: "app-create" },
+  board: { levels: ["board-view-all", "board-modify-all", "board-full-all"], capabilities: ["board-create"] },
+  app: { levels: ["app-modify-all", "app-full-all"], capabilities: ["app-use-all", "app-create"] },
   integration: {
     levels: ["integration-use-all", "integration-interact-all", "integration-full-all"],
-    create: "integration-create",
+    capabilities: ["integration-create"],
   },
-  "search-engine": { levels: ["search-engine-modify-all", "search-engine-full-all"], create: "search-engine-create" },
-  media: { levels: ["media-view-all", "media-full-all"], create: "media-upload" },
-  other: { levels: ["other-view-logs"], create: null },
-  admin: { levels: ["admin"], create: null },
-} as const satisfies Record<string, { levels: readonly GroupPermissionKey[]; create: GroupPermissionKey | null }>;
+  "search-engine": {
+    levels: ["search-engine-modify-all", "search-engine-full-all"],
+    capabilities: ["search-engine-create"],
+  },
+  media: { levels: ["media-view-all", "media-full-all"], capabilities: ["media-upload"] },
+  other: { levels: ["other-view-logs"], capabilities: [] },
+  admin: { levels: ["admin"], capabilities: [] },
+} as const satisfies Record<
+  string,
+  { levels: readonly GroupPermissionKey[]; capabilities: readonly GroupPermissionKey[] }
+>;
 
 export type PermissionMatrixCategory = keyof typeof permissionMatrix;
 
 export interface PermissionMatrixCategoryState {
   /** 0 = no access, N = every key up to `permissionMatrix[category].levels[N - 1]` */
   level: number;
-  /** Whether the category's create/upload key is granted */
-  create: boolean;
+  /** The category's granted capability keys, including the ones the level already implies */
+  capabilities: readonly GroupPermissionKey[];
 }
 
 export type PermissionMatrixState = Record<PermissionMatrixCategory, PermissionMatrixCategoryState>;
 
 /**
- * Whether the given level already grants the category's create key through permission inheritance.
+ * Whether the given level already grants a capability through permission inheritance.
  * For example board level 3 (`board-full-all`) implies `board-create`.
  */
-export const isCreateImpliedByLevel = (category: PermissionMatrixCategory, level: number) => {
-  const createKey = permissionMatrix[category].create;
-  if (createKey === null || level <= 0) {
+export const isCapabilityImpliedByLevel = (
+  category: PermissionMatrixCategory,
+  capability: GroupPermissionKey,
+  level: number,
+) => {
+  if (level <= 0) {
     return false;
   }
 
-  return getPermissionsWithChildren([...permissionMatrix[category].levels.slice(0, level)]).includes(createKey);
+  return getPermissionsWithChildren([...permissionMatrix[category].levels.slice(0, level)]).includes(capability);
 };
 
 export const permissionsToMatrixState = (permissions: GroupPermissionKey[]): PermissionMatrixState => {
@@ -177,10 +192,12 @@ export const permissionsToMatrixState = (permissions: GroupPermissionKey[]): Per
         level = index + 1;
       }
     });
-    const createKey = permissionMatrix[category].create;
+
     acc[category] = {
       level,
-      create: createKey !== null && (permissionSet.has(createKey) || isCreateImpliedByLevel(category, level)),
+      capabilities: permissionMatrix[category].capabilities.filter(
+        (capability) => permissionSet.has(capability) || isCapabilityImpliedByLevel(category, capability, level),
+      ),
     };
     return acc;
   }, {} as PermissionMatrixState);
@@ -188,13 +205,11 @@ export const permissionsToMatrixState = (permissions: GroupPermissionKey[]): Per
 
 export const matrixStateToPermissions = (state: PermissionMatrixState): GroupPermissionKey[] => {
   return objectKeys(permissionMatrix).reduce((acc, category) => {
-    acc.push(...permissionMatrix[category].levels.slice(0, state[category].level));
-    // Skip the create key when the chosen level already implies it, so the stored permissions
-    // stay minimal and a state -> permissions -> state round-trip is exact.
-    const createKey = permissionMatrix[category].create;
-    if (createKey !== null && state[category].create && !isCreateImpliedByLevel(category, state[category].level)) {
-      acc.push(createKey);
-    }
+    const { level, capabilities } = state[category];
+    acc.push(...permissionMatrix[category].levels.slice(0, level));
+    // Skip capabilities the chosen level already implies, so the stored permissions stay minimal
+    // and a state -> permissions -> state round-trip is exact.
+    acc.push(...capabilities.filter((capability) => !isCapabilityImpliedByLevel(category, capability, level)));
     return acc;
   }, [] as GroupPermissionKey[]);
 };
