@@ -66,6 +66,15 @@ const nextConfig: NextConfig = {
   },
   // skipcq: JS-0116
   // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax
+  async rewrites() {
+    return [
+      { source: "/.well-known/:path*", destination: "/well-known/:path*" },
+      { source: "/api/mcp/:transport/.well-known/:path*", destination: "/well-known/:path*" },
+    ];
+  },
+
+  // skipcq: JS-0116
+  // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax
   async headers() {
     return [
       {
