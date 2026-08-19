@@ -107,6 +107,17 @@ describe("fetchFaviconUrlAsync", () => {
     expect(result).toBe(faviconUrl);
   });
 
+  test("falls back to the well known favicon of the origin that answered the request", async () => {
+    mockResponses({
+      [websiteUrl]: createPage("", "https://auth.example.net/login"),
+      "https://auth.example.net/favicon.ico": createResponse({ contentType: "image/x-icon", body: "binary" }),
+    });
+
+    const result = await fetchFaviconUrlAsync(websiteUrl);
+
+    expect(result).toBe("https://auth.example.net/favicon.ico");
+  });
+
   test("ignores a well known favicon that answers with a page instead of an image", async () => {
     mockResponses({
       [websiteUrl]: createPage(""),
