@@ -1,3 +1,4 @@
+import { BlockList, isIP } from "node:net";
 import { Jellyfin } from "@jellyfin/sdk";
 import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
 import { getSessionApi } from "@jellyfin/sdk/lib/utils/api/session-api";
@@ -19,6 +20,34 @@ import type { IMediaReleasesIntegration, MediaRelease, MediaType } from "../type
 
 function ticksToMs(ticks: number | null | undefined): number | null {
   return ticks ? Math.round(ticks / 10_000) : null;
+}
+
+// Unlike Plex, Jellyfin doesn't report a session's network location directly - only the
+// client's RemoteEndPoint (an IP, optionally with a port). Classify it ourselves.
+const privateAddresses = new BlockList();
+privateAddresses.addSubnet("10.0.0.0", 8, "ipv4");
+privateAddresses.addSubnet("172.16.0.0", 12, "ipv4");
+privateAddresses.addSubnet("192.168.0.0", 16, "ipv4");
+privateAddresses.addSubnet("127.0.0.0", 8, "ipv4");
+privateAddresses.addSubnet("fc00::", 7, "ipv6");
+privateAddresses.addAddress("::1", "ipv6");
+
+function extractHost(remoteEndPoint: string): string {
+  if (remoteEndPoint.startsWith("[")) {
+    const end = remoteEndPoint.indexOf("]");
+    return end === -1 ? remoteEndPoint : remoteEndPoint.slice(1, end);
+  }
+  // A bare IPv6 address (no brackets, no port) has more than one colon.
+  const isIPv4WithPort = remoteEndPoint.split(":").length === 2;
+  return isIPv4WithPort ? remoteEndPoint.slice(0, remoteEndPoint.lastIndexOf(":")) : remoteEndPoint;
+}
+
+function parseLocation(remoteEndPoint: string | null | undefined): "lan" | "wan" | null {
+  if (!remoteEndPoint) return null;
+  const host = extractHost(remoteEndPoint);
+  const family = isIP(host);
+  if (!family) return null;
+  return privateAddresses.check(host, family === 4 ? "ipv4" : "ipv6") ? "lan" : "wan";
 }
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
@@ -84,7 +113,7 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
               positionMs,
               durationMs,
             },
-            location: null,
+            location: parseLocation(sessionInfo.RemoteEndPoint),
             metadata: {
               video: {
                 resolution:
