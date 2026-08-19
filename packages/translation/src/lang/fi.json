@@ -1344,6 +1344,10 @@
       "name": "Traefik",
       "description": "Pilvinatiivi käänteinen välityspalvelin ja kuormantasaaja"
     },
+    "wud": {
+      "name": "Mikä Ylös Docker",
+      "description": "Tarkkaile missä Docker-säiliöissä on saatavilla kuvapäivityksiä"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Asiakirjojen hallintajärjestelmä skannattujen dokumenttien arkistointiin ja järjestelyyn"
@@ -1437,8 +1441,18 @@
     "here": "",
     "iconPicker": {
       "label": "Kuvakkeen URL-osoite",
+      "description": "Etsi kirjastosta, liitä kuvan URL-osoite tai lataa tiedosto.",
       "header": "Suodata kuvakkeita syöttämällä nimi tai objekti... Homarr etsii {countIcons} kuvakkeesta.",
       "headerLoading": "Kirjoita hakeaksesi kuvakkeita…",
+      "clear": "Tyhjennä kuva",
+      "uploadImage": "Lataa kuva",
+      "results": "Haun tulokset",
+      "localImages": "Omat kuvat",
+      "svgIcons": "SVG kuvakkeet",
+      "otherImages": "Muut kuvat",
+      "urlLoading": "",
+      "urlReady": "Kuva on valmis käytettäväksi",
+      "urlError": "Kuvaa ei voitu ladata. Tarkista URL-osoite ja yritä uudelleen.",
       "noResults": "Ei kuvakkeita haulla \"{search}\".",
       "error": "Kuvakkeiden lataaminen epäonnistui."
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Näytä yleislähetysviestit"
+        }
+      }
+    },
+    "wud": {
+      "name": "Mikä Ylös Docker",
+      "description": "Näytä kuinka monta katsottua astiaa on saatavilla päivityksiä.",
+      "title": "Mikä Ylös Docker",
+      "monitored": "Valvottu",
+      "updatesAvailable": "{count, plural, one {# päivitys saatavilla} other {# päivitystä saatavilla}}",
+      "updateAvailable": "Päivitys saatavilla",
+      "openReleaseNotes": "Avaa julkaisutiedot",
+      "option": {
+        "showTitle": {
+          "label": "Näytä otsikko"
+        },
+        "showRing": {
+          "label": "Näytä päivitysrengas"
+        },
+        "layout": {
+          "label": "Asettelu",
+          "option": {
+            "horizontal": {
+              "label": "Vaaka"
+            },
+            "vertical": {
+              "label": "Pysty"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Näytä kontin päivityslista",
+          "description": "Luettele jokaisen seuratun säiliön joka on saatavilla päivityksessä"
         }
       }
     },

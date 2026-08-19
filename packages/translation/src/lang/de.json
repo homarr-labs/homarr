@@ -1344,6 +1344,10 @@
       "name": "Traefik",
       "description": "Cloud-nativer Reverse-Proxy und Lastverteiler"
     },
+    "wud": {
+      "name": "Was ist Docker hoch",
+      "description": "Überwachen Sie, welche Docker-Container Bildupdates verfügbar sind"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumentenverwaltungssystem zum Archivieren und Organisieren gescannter Dokumente"
@@ -1437,8 +1441,18 @@
     "here": "Hier",
     "iconPicker": {
       "label": "Icon URL",
+      "description": "Suchen Sie die Bibliothek, fügen Sie eine Bild-URL ein oder laden Sie eine Datei hoch.",
       "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie.",
       "headerLoading": "Tippe um die Symbole zu durchsuchen…",
+      "clear": "Bild löschen",
+      "uploadImage": "Bild hochladen",
+      "results": "Bildsuchergebnisse",
+      "localImages": "Ihre Bilder",
+      "svgIcons": "SVG-Symbole",
+      "otherImages": "Andere Bilder",
+      "urlLoading": "Bild wird überprüft…",
+      "urlReady": "Bild ist bereit zur Verwendung",
+      "urlError": "Dieses Bild konnte nicht geladen werden. Überprüfen Sie die URL und versuchen Sie es erneut.",
       "noResults": "Keine Symbole stimmen mit \"{search}\" überein.",
       "error": "Konnte Symbole nicht laden."
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Broadcast Nachrichten anzeigen"
+        }
+      }
+    },
+    "wud": {
+      "name": "Was ist Docker hoch",
+      "description": "Zeigt an, wie viele überwachte Container über Updates verfügen.",
+      "title": "Was ist Docker hoch",
+      "monitored": "Überwacht",
+      "updatesAvailable": "{count, plural, one {# Update verfügbar} other {# Updates verfügbar}}",
+      "updateAvailable": "Update verfügbar",
+      "openReleaseNotes": "Versionshinweise öffnen",
+      "option": {
+        "showTitle": {
+          "label": "Titel anzeigen"
+        },
+        "showRing": {
+          "label": "Update-Ring anzeigen"
+        },
+        "layout": {
+          "label": "Ansicht",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertikal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Container-Update-Liste anzeigen",
+          "description": "Listet jeden überwachten Container auf, der eine Bildaktualisierung zur Verfügung hat"
         }
       }
     },
@@ -2739,10 +2785,10 @@
         },
         "showBitrate": {
           "label": "Zeigt die Bitrate an",
-          "description": ""
+          "description": "Zeige die aktuelle Wiedergabe-Bitrate neben dem Ort an"
         },
         "showLocation": {
-          "label": "",
+          "label": "Standort anzeigen",
           "description": "Zeigt an, ob der Stream über das LAN oder WAN läuft"
         }
       },
@@ -2758,8 +2804,8 @@
         "status": "Status",
         "directPlay": "Direkte Wiedergabe",
         "directStream": "Direkter Stream",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
+        "transcodeVideo": "Video wird transkodiert",
+        "transcodeAudio": "Audio wird transkodiert",
         "transcoding": "Transkodierung",
         "paused": "Pausiert",
         "remaining": "{minutes} Min. verbleibend",
@@ -2966,8 +3012,8 @@
           }
         },
         "showOsVersion": {
-          "label": "",
-          "description": ""
+          "label": "Betriebssystem-Version anzeigen",
+          "description": "Füge die Betriebssystemversion jedem Verteilungsetikett hinzu, sofern verfügbar"
         },
         "showComplianceHero": {
           "label": "",
@@ -4057,11 +4103,11 @@
       }
     },
     "beszelAlerts": {
-      "name": "",
-      "description": "",
+      "name": "Beszel-Alarme",
+      "description": "Zeige Beszels Alarmeinstellungen und -verlauf",
       "option": {
         "showHistory": {
-          "label": ""
+          "label": "Alarmverlauf anzeigen"
         },
         "maxHistoryItems": {
           "label": ""
@@ -4072,9 +4118,9 @@
         "internalServerError": ""
       },
       "history": "Verlauf",
-      "resolved": "",
+      "resolved": "Gelöst",
       "status": {
-        "triggered": "",
+        "triggered": "Ausgelöst",
         "ok": "Ok"
       }
     },
@@ -4083,43 +4129,43 @@
       "description": "",
       "option": {
         "systemId": {
-          "label": "",
+          "label": "System",
           "description": ""
         },
         "timePeriod": {
-          "label": ""
+          "label": "Zeitraum"
         },
         "showCpu": {
-          "label": ""
+          "label": "CPU-Diagramm anzeigen"
         },
         "showMemory": {
-          "label": ""
+          "label": "RAM-Diagramm anzeigen"
         },
         "showDisk": {
-          "label": ""
+          "label": "Festplatten-Diagramm anzeigen"
         },
         "showDiskIO": {
-          "label": ""
+          "label": "Festplatten-E/A-Diagramm anzeigen"
         },
         "showNetwork": {
-          "label": ""
+          "label": "Netzwerk-Diagramm anzeigen"
         },
         "showDockerCpu": {
-          "label": ""
+          "label": "Docker-CPU-Diagramm anzeigen"
         },
         "showDockerMemory": {
-          "label": ""
+          "label": "Docker-RAM-Diagramm anzeigen"
         },
         "showDockerNetwork": {
-          "label": ""
+          "label": "Docker-Netzwerk-Diagramm anzeigen"
         }
       },
       "selectSystem": "System auswählen",
       "empty": {
-        "noSystems": ""
+        "noSystems": "Keine Systeme gefunden"
       },
       "error": {
-        "internalServerError": "",
+        "internalServerError": "Keine Verbindung zu Beszel möglich. Überprüfe deine Integrations-Einstellungen.",
         "liveConnectionFailed": "",
         "switchToHistorical": "",
         "systemNotFound": ""
@@ -4139,36 +4185,36 @@
         "disk": {
           "title": "Festplattenbelegung",
           "subtitle": "",
-          "series": ""
+          "series": "Root"
         },
         "diskIO": {
-          "title": "",
+          "title": "Festplatten-E/A",
           "subtitle": "",
-          "read": "",
-          "write": ""
+          "read": "Lesen",
+          "write": "Schreiben"
         },
         "storage": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Speicher",
+          "subtitle": "Festplattenverbrauch pro Dateisystem",
+          "series": "Belegt"
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Bandbreite",
+          "subtitle": "Netzwerkverkehr öffentlicher Schnittstellen",
+          "sent": "Gesendet",
+          "recv": "Empfangen"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker-CPU-Nutzung",
+          "subtitle": "Durchschnittliche CPU-Nutzung der Container"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker-RAM-Nutzung",
+          "subtitle": "RAM-Nutzung der Docker-Container"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker-Netzwerk-E/A",
+          "subtitle": "Netzwerkverkehr der Docker-Container"
         }
       }
     }
@@ -4545,7 +4591,7 @@
       "text": "Konnte die angeforderte Ressource nicht finden"
     },
     "error": {
-      "title": "",
+      "title": "Diese Seite konnte nicht geladen werden",
       "text": "",
       "digest": ""
     },
@@ -5110,7 +5156,7 @@
               "copy": "",
               "oneClick": {
                 "title": "",
-                "subtitle": "",
+                "subtitle": "OAuth wird verwendet. Authentifiziere dich bei der ersten Nutzung im Browser",
                 "vsCode": "In VS Code installieren",
                 "cursor": "In Cursor installieren",
                 "copyUrl": "MCP URL kopieren",
@@ -5130,7 +5176,7 @@
             "button": "Sicherung herunterladen",
             "error": "Export fehlgeschlagen",
             "confirm": {
-              "title": "",
+              "title": "Export sensibler Daten",
               "warningTitle": "Dieser Export enthält Ihre gesamte Datenbank.",
               "warningBody": "Das Backup umfasst alle Benutzer, Integrationsgeheimnisse (verschlüsselt), API-Keys, Board-Konfigurationen und App-Daten. Speichern Sie die exportierte Datei sicher ab und teilen Sie diese nicht.",
               "typePrompt": "Geben Sie \"{phrase}\" ein, um fortzufahren",
@@ -5140,8 +5186,8 @@
           },
           "import": {
             "title": "Datenbank wiederherstellen",
-            "description": "",
-            "warning": "",
+            "description": "Lade ein zuvor exportiertes Backup-ZIP‑File hoch, um deine Datenbank wiederherzustellen. Damit ersetzt du deine gesamte jetzige Datenbank. Falls das Backup mit einem anderen Verschlüsselungs-Key erstellt wurde, werden vertrauliche Daten (Secrets) automatisch neu verschlüsselt.",
+            "warning": "Ein Backup wiederherzustellen, wird deine jetzige Datenbank komplett ersetzen und das Programm neu starten. Diese Aktion kann nicht rückgängig gemacht werden.",
             "dropzone": {
               "title": "Ziehen Sie Ihre Backup-ZIP hierher oder klicken Sie zum Durchsuchen",
               "description": "Nur .zip Dateien aus einer Homarr SQLite-Sicherung werden akzeptiert"
@@ -6332,10 +6378,10 @@
               "header": {
                 "season": "Staffel",
                 "episodes": "Episoden",
-                "status": ""
+                "status": "Status"
               },
               "status": {
-                "requested": ""
+                "requested": "Angefragt"
               }
             },
             "button": {
@@ -6448,18 +6494,18 @@
     }
   },
   "onboardingTour": {
-    "learnMore": "",
-    "next": "",
-    "prev": "",
-    "done": "",
-    "skip": "",
+    "learnMore": "Lese die Dokumentation",
+    "next": "Weiter",
+    "prev": "Zurück",
+    "done": "Fertig",
+    "skip": "Überspringe die Einführung",
     "manage": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Willkommen bei Homarr!",
+        "description": "Das ist dein Kontrollzentrum. Von hier steuerst du Boards, Apps, Integrationen, Benutzer und die Servereinstellungen. Lass uns eine Einführung in jeden Bereich machen."
       },
       "boardsList": {
-        "title": "",
+        "title": "Deine Boards",
         "description": ""
       },
       "boardsCreate": {
@@ -6493,15 +6539,15 @@
     },
     "board": {
       "welcome": {
-        "title": "",
-        "description": ""
+        "title": "Das ist dein Board",
+        "description": "Ein Drag-and-drop-Dashboard, wo du Apps und Widgets anordnen kannst. Du kannst jederzeit Strg+K drücken, um nach Apps, Boards und Aktionen zu suchen."
       },
       "editMode": {
         "title": "Bearbeitungsmodus",
-        "description": ""
+        "description": "Drücke hier, um in den Bearbeitungsmodus zu kommen. Dort kannst du Widgets, Apps und Abschnitte hinzufügen, welche du durch anschließendes Ziehen neu anordnen und an den Ecken in der Größe anpassen kannst."
       },
       "settings": {
-        "title": "",
+        "title": "Board-Einstellungen",
         "description": ""
       },
       "switcher": {

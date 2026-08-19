@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Spremljajte, kateri vaši Docker vsebniki imajo na voljo posodobitve slik."
+    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1437,8 +1441,18 @@
     "here": "tukaj",
     "iconPicker": {
       "label": "URL ikone",
+      "description": "Iščite po knjižnici, prilepite URL slike ali naložite datoteko.",
       "header": "Vnesite ime ali predmete za filtriranje ikon... Homarr bo za vas iskal med {countIcons} ikonami.",
-      "headerLoading": "",
+      "headerLoading": "Išči slike po imenu",
+      "clear": "Počisti sliko",
+      "uploadImage": "Naloži sliko",
+      "results": "Rezultati iskanja slik",
+      "localImages": "Vaše slike",
+      "svgIcons": "Ikone SVG",
+      "otherImages": "Druge slike",
+      "urlLoading": "Preverjanje slike…",
+      "urlReady": "Slika je pripravljena za uporabo",
+      "urlError": "Te slike ni bilo mogoče naložiti. Preverite URL in poskusite znova.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Prikaže, koliko spremljanih vsebnikov ima na voljo posodobitve.",
+      "title": "What's Up Docker",
+      "monitored": "Spremljani",
+      "updatesAvailable": "{count, plural, one {# posodobitev na voljo} two {# posodobitvi na voljo} few {# posodobitve na voljo} other {# posodobitev na voljo}}",
+      "updateAvailable": "Na voljo je posodobitev",
+      "openReleaseNotes": "Odpri opombe ob izdaji",
+      "option": {
+        "showTitle": {
+          "label": "Pokaži naslov"
+        },
+        "showRing": {
+          "label": "Pokaži obroč posodobitev"
+        },
+        "layout": {
+          "label": "Postavitev",
+          "option": {
+            "horizontal": {
+              "label": "Vodoravno"
+            },
+            "vertical": {
+              "label": "Navpično"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Pokaži seznam posodobitev vsebnikov",
+          "description": "Prikaže seznam vseh nadzorovanih vsebnikov, ki imajo na voljo posodobitev slike."
         }
       }
     },

@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
       "name": "",
       "description": ""
@@ -1437,8 +1441,18 @@
     "here": "Hier",
     "iconPicker": {
       "label": "",
+      "description": "",
       "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie.",
       "headerLoading": "",
+      "clear": "",
+      "uploadImage": "",
+      "results": "",
+      "localImages": "",
+      "svgIcons": "",
+      "otherImages": "",
+      "urlLoading": "",
+      "urlReady": "",
+      "urlError": "",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "monitored": "",
+      "updatesAvailable": "",
+      "updateAvailable": "",
+      "openReleaseNotes": "",
+      "option": {
+        "showTitle": {
+          "label": ""
+        },
+        "showRing": {
+          "label": ""
+        },
+        "layout": {
+          "label": "Ansicht",
+          "option": {
+            "horizontal": {
+              "label": ""
+            },
+            "vertical": {
+              "label": "Vertikal"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "",
+          "description": ""
         }
       }
     },

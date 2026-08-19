@@ -1344,6 +1344,10 @@
       "name": "Traefik",
       "description": "Cloud-native reverse proxy e bilanciatore del carico"
     },
+    "wud": {
+      "name": "Cos'è Il Docker",
+      "description": "Monitora quali dei tuoi contenitori Docker sono disponibili aggiornamenti delle immagini"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Sistema di gestione documentale per archiviare e organizzare documenti scansionati"
@@ -1437,8 +1441,18 @@
     "here": "qui",
     "iconPicker": {
       "label": "Icona URL",
+      "description": "Cerca nella libreria, incolla un URL di immagine, o carica un file.",
       "header": "Digita il nome o gli oggetti da filtrare per le icone... Homarr cercherà tra le icone {countIcons} per te.",
       "headerLoading": "Digita per cercare icone…",
+      "clear": "Cancella immagine",
+      "uploadImage": "Carica immagine",
+      "results": "Risultati della ricerca immagini",
+      "localImages": "Le tue immagini",
+      "svgIcons": "Icone SVG",
+      "otherImages": "Altre immagini",
+      "urlLoading": "Controllo immagine…",
+      "urlReady": "L'immagine è pronta per l'uso",
+      "urlError": "Questa immagine non può essere caricata. Controlla l'URL e riprova.",
       "noResults": "Nessuna icona corrisponde a \"{search}\".",
       "error": "Impossibile caricare le icone."
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Mostra messaggi broadcast"
+        }
+      }
+    },
+    "wud": {
+      "name": "Cos'è Il Docker",
+      "description": "Mostra quanti contenitori visti hanno aggiornamenti disponibili.",
+      "title": "Cos'è Il Docker",
+      "monitored": "Monitorato",
+      "updatesAvailable": "{count, plural, one {# aggiornamento disponibile} other {# aggiornamenti disponibili}}",
+      "updateAvailable": "Aggiornamento disponibile",
+      "openReleaseNotes": "Apri note di rilascio",
+      "option": {
+        "showTitle": {
+          "label": "Mostra titolo"
+        },
+        "showRing": {
+          "label": "Mostra anello di aggiornamento"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Orizzontale"
+            },
+            "vertical": {
+              "label": "Verticale"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Mostra elenco aggiornamenti container",
+          "description": "Elenca ogni contenitore monitorato che ha un aggiornamento dell'immagine disponibile"
         }
       }
     },

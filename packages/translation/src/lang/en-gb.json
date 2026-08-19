@@ -1344,6 +1344,10 @@
       "name": "Traefik",
       "description": "Cloud-native reverse proxy and load balancer"
     },
+    "wud": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Document management system for archiving and organizing scanned documents"
@@ -1437,8 +1441,18 @@
     "here": "here",
     "iconPicker": {
       "label": "Icon URL",
+      "description": "",
       "header": "Please enter a name or object to filter for the icon. Homarr will search throughout {countIcons} different icons to find the right one.",
       "headerLoading": "Type to search icons…",
+      "clear": "",
+      "uploadImage": "",
+      "results": "",
+      "localImages": "",
+      "svgIcons": "",
+      "otherImages": "",
+      "urlLoading": "",
+      "urlReady": "",
+      "urlError": "",
       "noResults": "No icons match \"{search}\".",
       "error": "Couldn't load icons."
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Show broadcast messages"
+        }
+      }
+    },
+    "wud": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "monitored": "",
+      "updatesAvailable": "",
+      "updateAvailable": "",
+      "openReleaseNotes": "",
+      "option": {
+        "showTitle": {
+          "label": "Show title"
+        },
+        "showRing": {
+          "label": ""
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "",
+          "description": ""
         }
       }
     },
