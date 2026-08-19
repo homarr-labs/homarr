@@ -29,7 +29,9 @@ privateAddresses.addSubnet("10.0.0.0", 8, "ipv4");
 privateAddresses.addSubnet("172.16.0.0", 12, "ipv4");
 privateAddresses.addSubnet("192.168.0.0", 16, "ipv4");
 privateAddresses.addSubnet("127.0.0.0", 8, "ipv4");
+privateAddresses.addSubnet("169.254.0.0", 16, "ipv4");
 privateAddresses.addSubnet("fc00::", 7, "ipv6");
+privateAddresses.addSubnet("fe80::", 10, "ipv6");
 privateAddresses.addAddress("::1", "ipv6");
 
 export function extractHost(remoteEndPoint: string): string {

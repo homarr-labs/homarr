@@ -109,7 +109,8 @@ describe("getMediaServerColumnVisibility", () => {
   test("keeps a stable responsive column model from the zero-sized first render", () => {
     expect(getMediaServerColumnVisibility(0, false)).toEqual({ user: false, status: false });
     expect(getMediaServerColumnVisibility(300, false)).toEqual({ user: true, status: false });
-    expect(getMediaServerColumnVisibility(420, false)).toEqual({ user: true, status: true });
+    expect(getMediaServerColumnVisibility(420, false)).toEqual({ user: true, status: false });
+    expect(getMediaServerColumnVisibility(540, false)).toEqual({ user: true, status: true });
     expect(getMediaServerColumnVisibility(0, true)).toEqual({ user: true, status: true });
   });
 });
@@ -148,5 +149,11 @@ describe("getResolutionLabel", () => {
 
   test("falls back to the raw height when it doesn't clear any known tier", () => {
     expect(getResolutionLabel(100, 100)).toBe("100p");
+  });
+
+  test("classifies a portrait video by its width, not its long-axis height", () => {
+    // A 1080x1920 portrait phone recording is still a 1080p source, not a 1440p one.
+    expect(getResolutionLabel(1080, 1920)).toBe("1080p");
+    expect(getResolutionLabel(720, 1280)).toBe("720p");
   });
 });

@@ -51,7 +51,9 @@ type SortState = { column: SortColumn; descending: boolean } | null;
 
 export const getMediaServerColumnVisibility = (width: number, isAdvanced: boolean) => ({
   user: isAdvanced || width >= 300,
-  status: isAdvanced || width >= 420,
+  // The user (200px) and status (190px) columns together need a floor here, otherwise the
+  // currentlyPlaying column - the primary content - gets squeezed to almost nothing.
+  status: isAdvanced || width >= 540,
 });
 
 function getPlaybackStatus(transcoding: TranscodingDecision | undefined): PlaybackStatus {
@@ -80,12 +82,16 @@ function formatBitrate(bitrateKbps: number | null | undefined): string | null {
 const RESOLUTION_TIER_HEIGHTS = [4320, 2160, 1440, 1080, 720, 480, 360, 240] as const;
 
 export function getResolutionLabel(width: number, height: number): string {
-  // Letterboxed/cinemascope sources are cropped shorter than their nominal resolution class
-  // (a 1920x804 encode is still "1080p"), so classify off the width-derived 16:9 height instead
-  // of the raw (possibly cropped) height - matches how Plex/Jellyfin label these themselves.
-  const effectiveHeight = Math.max(height, Math.round((width * 9) / 16));
-  const tier = RESOLUTION_TIER_HEIGHTS.find((candidate) => effectiveHeight >= candidate * 0.9);
-  return `${tier ?? effectiveHeight}p`;
+  // Classify off the short axis (height for landscape, width for portrait) so orientation
+  // doesn't flip which dimension drives the label. Letterboxed/cinemascope sources are cropped
+  // shorter than their nominal resolution class (a 1920x804 encode is still "1080p"), so derive
+  // a floor for the short axis from the long axis assuming 16:9 - matches how Plex/Jellyfin label these themselves.
+  const isPortrait = height > width;
+  const shortAxis = isPortrait ? width : height;
+  const longAxis = isPortrait ? height : width;
+  const effectiveShortAxis = Math.max(shortAxis, Math.round((longAxis * 9) / 16));
+  const tier = RESOLUTION_TIER_HEIGHTS.find((candidate) => effectiveShortAxis >= candidate * 0.9);
+  return `${tier ?? effectiveShortAxis}p`;
 }
 
 export function getSeasonEpisodeParams(

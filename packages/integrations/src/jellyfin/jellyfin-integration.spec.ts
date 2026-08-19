@@ -55,4 +55,11 @@ describe("parseLocation", () => {
     expect(parseLocation("[::ffff:192.168.1.5]:8096")).toBe("lan");
     expect(parseLocation("[::ffff:8.8.8.8]:8096")).toBe("wan");
   });
+
+  test("classifies link-local addresses as lan", () => {
+    // Link-local traffic can't traverse a router, so it's always LAN even though
+    // it isn't a private range in the traditional (RFC 1918 / ULA) sense.
+    expect(parseLocation("169.254.1.5:8096")).toBe("lan");
+    expect(parseLocation("[fe80::1]:8096")).toBe("lan");
+  });
 });
