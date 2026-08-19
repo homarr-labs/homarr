@@ -1266,9 +1266,15 @@
                   "properties": {
                     "boardId": {
                       "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "layoutId": {
+                      "type": "string"
                     }
                   },
-                  "required": ["boardId"],
+                  "required": ["boardId", "name", "layoutId"],
                   "additionalProperties": false
                 }
               }

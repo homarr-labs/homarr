@@ -20,7 +20,9 @@ const sessionSchema = z.object({
       SeriesName: z.string().nullish(),
       Name: z.string().nullish(),
       SeasonName: z.string().nullish(),
+      ParentIndexNumber: z.number().nullish(),
       EpisodeTitle: z.string().nullish(),
+      IndexNumber: z.number().nullish(),
       Album: z.string().nullish(),
       EpisodeCount: z.number().nullish(),
     })
@@ -114,7 +116,9 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
             type: convertJellyfinType(sessionInfo.NowPlayingItem.Type),
             name: sessionInfo.NowPlayingItem.SeriesName ?? sessionInfo.NowPlayingItem.Name ?? "",
             seasonName: sessionInfo.NowPlayingItem.SeasonName ?? "",
+            seasonNumber: sessionInfo.NowPlayingItem.ParentIndexNumber ?? null,
             episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
+            episodeNumber: sessionInfo.NowPlayingItem.IndexNumber ?? null,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
             playback: {

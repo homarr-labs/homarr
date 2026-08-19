@@ -64,7 +64,7 @@ export const integrationDefs = {
   transmission: {
     name: "Transmission",
     secretKinds: [["username", "password"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/transmission.svg",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/transmission.svg",
     category: ["downloadClient", "torrent"],
     documentationUrl: createDocumentationLink("/docs/integrations/transmission"),
     defaultPort: 9091,
@@ -350,7 +350,7 @@ export const integrationDefs = {
   unraid: {
     name: "Unraid",
     secretKinds: [["apiKey"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/unraid.svg",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/unraid.svg",
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/unraid"),
     defaultPort: 80,
@@ -359,7 +359,7 @@ export const integrationDefs = {
   coolify: {
     name: "Coolify",
     secretKinds: [["apiKey"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/coolify.svg",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/coolify.svg",
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
     defaultPort: 8000,
@@ -463,7 +463,7 @@ export const integrationDefs = {
   gluetun: {
     name: "Gluetun",
     secretKinds: [["username", "password"], ["apiKey"], []],
-    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/gluetun.svg",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
     category: ["vpn"],
     documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
     defaultPort: 8000,
@@ -471,7 +471,7 @@ export const integrationDefs = {
   traefik: {
     name: "Traefik",
     secretKinds: [[], ["username", "password"], ["apiKey"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/traefik.svg",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/traefik.svg",
     category: ["reverseProxy"],
     documentationUrl: createDocumentationLink("/docs/integrations/traefik"),
     defaultPort: 8080,

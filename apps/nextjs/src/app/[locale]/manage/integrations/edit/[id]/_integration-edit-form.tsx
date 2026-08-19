@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, Anchor, Button, ButtonGroup, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
 import { IconInfoCircle, IconPencil, IconPlus, IconUnlink } from "@tabler/icons-react";
@@ -25,8 +25,10 @@ import { SecretKindsSegmentedControl } from "../../_components/secrets/integrati
 import { IntegrationTestConnectionError } from "../../_components/test-connection/integration-test-connection-error";
 import type { AnyMappedTestConnectionError } from "../../_components/test-connection/types";
 
-interface EditIntegrationForm {
+interface EditIntegrationFormProps {
   integration: RouterOutputs["integration"]["byId"];
+  embedded?: boolean;
+  onSuccess?: () => void;
 }
 
 const formSchema = integrationUpdateSchema.omit({ id: true, appId: true }).and(
@@ -42,7 +44,7 @@ const formSchema = integrationUpdateSchema.omit({ id: true, appId: true }).and(
   }),
 );
 
-export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
+export const EditIntegrationForm = ({ integration, embedded = false, onSuccess }: EditIntegrationFormProps) => {
   const t = useI18n();
   const { openConfirmModal } = useConfirmModal();
   const allSecretKinds = getAllSecretKindOptions(integration.kind);
@@ -67,53 +69,65 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
       app: integration.app ?? null,
     },
   });
-  const { mutateAsync, isPending } = clientApi.integration.update.useMutation();
+  const { mutateAsync, isPending } = clientApi.integration.update.useMutation({
+    onError() {
+      showErrorNotification({
+        title: t("integration.page.edit.notification.error.title"),
+        message: t("integration.page.edit.notification.error.message"),
+      });
+    },
+  });
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
+  const errorRef = useRef<HTMLDivElement>(null);
 
   const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
 
   const handleSubmitAsync = async ({ app, ...values }: FormType) => {
-    const url = hasUrlSecret
-      ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
-      : values.url;
-    await mutateAsync(
-      {
-        id: integration.id,
-        ...values,
-        url,
-        secrets: values.secrets.map((secret) => ({
-          kind: secret.kind,
-          value: secret.value === "" ? null : secret.value,
-        })),
-        appId: app?.id ?? null,
-      },
-      {
-        onSuccess: (data) => {
-          // We do it this way as we are unable to send a typesafe error through onError
-          if (data?.error) {
-            setError(data.error);
-            showErrorNotification({
-              title: t("integration.page.edit.notification.error.title"),
-              message: t("integration.page.edit.notification.error.message"),
-            });
-            return;
-          }
+    setError(null);
+    let url: string;
+    try {
+      url = hasUrlSecret
+        ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
+        : values.url;
+    } catch {
+      showErrorNotification({
+        title: t("integration.page.edit.notification.error.title"),
+        message: t("integration.page.edit.notification.error.message"),
+      });
+      return;
+    }
 
-          showSuccessNotification({
-            title: t("integration.page.edit.notification.success.title"),
-            message: t("integration.page.edit.notification.success.message"),
-          });
-          void utils.integration.invalidate();
-          void revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
-        },
-        onError: () => {
-          showErrorNotification({
-            title: t("integration.page.edit.notification.error.title"),
-            message: t("integration.page.edit.notification.error.message"),
-          });
-        },
-      },
-    );
+    const data = await mutateAsync({
+      id: integration.id,
+      ...values,
+      url,
+      secrets: values.secrets.map((secret) => ({
+        kind: secret.kind,
+        value: secret.value === "" ? null : secret.value,
+      })),
+      appId: app?.id ?? null,
+    });
+
+    // We do it this way as we are unable to send a typesafe error through onError
+    if (data?.error) {
+      setError(data.error);
+      showErrorNotification({
+        title: t("integration.page.edit.notification.error.title"),
+        message: t("integration.page.edit.notification.error.message"),
+      });
+      requestAnimationFrame(() => errorRef.current?.focus());
+      return;
+    }
+
+    showSuccessNotification({
+      title: t("integration.page.edit.notification.success.title"),
+      message: t("integration.page.edit.notification.success.message"),
+    });
+    void Promise.allSettled([utils.integration.invalidate(), utils.widget.invalidate()]);
+    onSuccess?.();
+    if (!embedded) {
+      void revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
+    }
   };
 
   const isInitialSecretKinds =
@@ -190,12 +204,18 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
 
         <IntegrationLinkApp value={form.values.app} onChange={(app) => form.setFieldValue("app", app)} />
 
-        {error !== null && <IntegrationTestConnectionError error={error} url={form.values.url} />}
+        {error !== null && (
+          <div ref={errorRef} role="alert" tabIndex={-1}>
+            <IntegrationTestConnectionError error={error} url={form.values.url} />
+          </div>
+        )}
 
         <Group justify="end" align="center">
-          <Button variant="default" component={Link} href="/manage/integrations">
-            {t("common.action.backToOverview")}
-          </Button>
+          {!embedded && (
+            <Button variant="default" component={Link} href="/manage/integrations">
+              {t("common.action.backToOverview")}
+            </Button>
+          )}
           <Button type="submit" loading={isPending}>
             {t("integration.testConnection.action.edit")}
           </Button>

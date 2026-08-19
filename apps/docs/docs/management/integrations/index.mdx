@@ -59,6 +59,22 @@ It is not allowed to create an integration without passing the test.
 This is to ensure that you minimize the amount of broken applications on your Homarr instance.
 The test and create button will perform a network request to the application and authenticate if required.
 
+When you connect a service from a board, Homarr keeps you in the same setup flow. After the connection succeeds, it
+confirms whether an application shortcut was linked and offers the widgets that support the new integration. Selecting a
+widget returns to its settings with the new integration already selected.
+
+Users with full access can also test and update a selected integration from **Edit widget → Edit integration** on a
+board. Failed tests keep the editor open and show the same connection diagnostics as the management page. Successful
+changes apply to every app and widget that uses the integration.
+
+When app creation is not permitted, the setup form offers linking an existing accessible app instead of attempting to
+create one.
+
+When the connection unlocks useful widgets that are not on the current board yet, the confirmation also shows up to
+three explainable recommendations. A recommendation is based only on the services you can use and the widget kinds
+already present on that board. You can open the existing widget picker prefiltered to the recommendation, or dismiss
+recommendations for that service on that board.
+
 ## Managing permissions
 
 On the edit page of an integration, you can manage which users / groups can

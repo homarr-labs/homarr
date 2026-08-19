@@ -4,14 +4,15 @@ import type { KubernetesVolume } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
-import { KubernetesClient } from "../kubernetes-client";
+import { getKubernetesClient, kubernetesContextInput } from "../kubernetes-context";
 
 export const volumesRouter = createTRPCRouter({
   getVolumes: permissionRequiredProcedure
     .requiresPermission("admin")
     .concat(kubernetesMiddleware())
-    .query(async (): Promise<KubernetesVolume[]> => {
-      const { coreApi } = KubernetesClient.getInstance();
+    .input(kubernetesContextInput)
+    .query(async ({ input }): Promise<KubernetesVolume[]> => {
+      const { coreApi } = getKubernetesClient(input.contextId);
 
       try {
         const volumes = await coreApi.listPersistentVolumeClaimForAllNamespaces();

@@ -8,14 +8,24 @@ import { getScopedI18n } from "@homarr/translation/server";
 
 import { ConfigmapsTable } from "~/app/[locale]/manage/tools/kubernetes/configmaps/configmaps-table";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import type { KubernetesContextSearchParams } from "../kubernetes-context";
+import { getSelectedKubernetesContextAsync } from "../kubernetes-context";
 
-export default async function ConfigMapsPage() {
+export default async function ConfigMapsPage({
+  searchParams,
+}: {
+  searchParams: Promise<KubernetesContextSearchParams>;
+}) {
   const session = await auth();
   if (!(session?.user.permissions.includes("admin") && env.ENABLE_KUBERNETES)) {
     notFound();
   }
 
-  const configMaps = await api.kubernetes.configMaps.getConfigMaps();
+  const context = await getSelectedKubernetesContextAsync(searchParams);
+  const configMaps =
+    context.status === "unavailable"
+      ? []
+      : await api.kubernetes.configMaps.getConfigMaps({ contextId: context.contextId });
   const tConfigMaps = await getScopedI18n("kubernetes.configmaps");
 
   return (
@@ -23,7 +33,7 @@ export default async function ConfigMapsPage() {
       <DynamicBreadcrumb />
       <Stack>
         <Title order={1}>{tConfigMaps("label")}</Title>
-        <ConfigmapsTable initialConfigMaps={configMaps} />
+        <ConfigmapsTable contextId={context.contextId} initialConfigMaps={configMaps} />
       </Stack>
     </>
   );

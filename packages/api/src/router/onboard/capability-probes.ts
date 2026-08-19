@@ -41,7 +41,7 @@ export const probeRuntimeCapabilitiesAsync = async ({
   workshopApiUrl,
   fetchImpl = fetch,
   getKubernetesVersionAsync = async (signal) =>
-    await KubernetesClient.getInstance().versionApi.getCode({
+    await KubernetesClient.getDefaultInstance().versionApi.getCode({
       middleware: [
         {
           pre: async (request: RequestContext) => {

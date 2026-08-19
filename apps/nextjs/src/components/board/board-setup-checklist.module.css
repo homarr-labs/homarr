@@ -1,0 +1,17 @@
+.root {
+  pointer-events: auto;
+  max-width: min(24rem, calc(100vw - 2rem));
+}
+
+.panel {
+  width: min(24rem, calc(100vw - 2rem));
+}
+
+.step {
+  border-radius: var(--mantine-radius-md);
+  padding: var(--mantine-spacing-xs);
+}
+
+.step[data-complete] {
+  background: light-dark(var(--mantine-color-green-0), rgba(47, 158, 68, 0.1));
+}

@@ -324,7 +324,7 @@ export default function MediaServerWidget({
                           <Text size="xs" c="dimmed" truncate>
                             {session.sessionName}
                           </Text>
-                        </div>
+                        </Stack>
                       </Group>
                     </Table.Td>
                   )}
@@ -388,7 +388,7 @@ export default function MediaServerWidget({
           }}
         >
           <Group gap={4} wrap="nowrap">
-            <IconVideo style={iconSizes.xs} />
+            <IconVideo style={{ ...iconSizes.xs, flexShrink: 0 }} />
             <Text size="sm" style={{ whiteSpace: "nowrap" }}>
               {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
                 count: flatSessions.length,
@@ -448,7 +448,7 @@ function CurrentlyPlaying({ item }: { item: StreamSession }) {
       <Group gap="xs" align="center" wrap="nowrap" style={{ minWidth: 0 }}>
         <Icon
           color={isPaused ? "var(--mantine-color-yellow-6)" : undefined}
-          style={iconSizes.xs}
+          style={{ ...iconSizes.xs, flexShrink: 0 }}
         />
         <Text size="xs" lineClamp={1} style={{ minWidth: 0 }}>
           {currentlyPlaying.name}
