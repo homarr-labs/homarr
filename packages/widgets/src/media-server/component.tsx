@@ -131,13 +131,17 @@ function StreamTableHeader({
     <Table.Th aria-sort={active ? (sort.descending ? "descending" : "ascending") : "none"}>
       {sortable ? (
         <UnstyledButton className={classes.sortButton} onClick={() => onSort(column)}>
-          <Text component="span" size="xs" fw={600} truncate>
+          <Text component="span" size="xs" fw={600} c="dimmed" style={{ letterSpacing: "0.02em" }} truncate>
             {label}
           </Text>
-          <SortIcon size="var(--mantine-font-size-xs)" aria-hidden />
+          <SortIcon
+            size="var(--mantine-font-size-xs)"
+            aria-hidden
+            color={active ? undefined : "var(--mantine-color-dimmed)"}
+          />
         </UnstyledButton>
       ) : (
-        <Text size="xs" fw={600} truncate>
+        <Text size="xs" fw={600} c="dimmed" style={{ letterSpacing: "0.02em" }} truncate>
           {label}
         </Text>
       )}
