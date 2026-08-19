@@ -7,7 +7,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 
 import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
 import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
-import { extractBaseUrlFromHeaders } from "@homarr/common";
+import { extractBaseUrlFromHeaders, removeTrailingSlash } from "@homarr/common";
 import { ipAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
@@ -265,13 +265,16 @@ const handler = async (req: NextRequest) => {
   if (!apiKeyValue) {
     recordAuthFailure(ipAddress);
     const baseUrl = extractBaseUrlFromHeaders(req.headers);
+    const resourcePath = removeTrailingSlash(new URL(req.url).pathname);
     return jsonErrorResponse(
       401,
       {
         error: "unauthorized",
         hint: "Authenticate with an ApiKey header or via OAuth at /.well-known/oauth-authorization-server",
       },
-      { "WWW-Authenticate": `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource"` },
+      {
+        "WWW-Authenticate": `Bearer resource_metadata="${baseUrl}${resourcePath}/.well-known/oauth-protected-resource"`,
+      },
     );
   }
 
