@@ -54,6 +54,7 @@ type ServiceHealth = RouterOutputs["docker"]["getServiceHealth"]["services"][num
 
 export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOrigin: string }) => {
   const t = useScopedI18n("docker.reconciliation");
+  const tGlobal = useI18n();
   const utils = clientApi.useUtils();
   const panelId = useId();
   const [isOpen, setIsOpen] = useLocalStorage({
@@ -97,7 +98,7 @@ export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOri
         <Stack gap="sm">
           <Text size="sm">{t("loadError.message")}</Text>
           <Button variant="light" color="red" size="xs" w="fit-content" onClick={() => void reconciliation.refetch()}>
-            {t("action.retry")}
+            {tGlobal("common.action.tryAgain")}
           </Button>
         </Stack>
       </Alert>
@@ -113,7 +114,7 @@ export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOri
       ["newRecognized", "newApp", "moved"].includes(state) && !dismissedCandidateKeys.includes(candidateKey),
   ).length;
   const isRefreshing = refreshInventory.isPending || reconciliation.isFetching || health.isFetching;
-  const toggleLabel = isOpen ? t("action.hide") : t("action.review");
+  const toggleLabel = isOpen ? tGlobal("common.action.hide") : t("action.review");
 
   return (
     <Paper withBorder p="sm">
@@ -183,7 +184,7 @@ export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOri
                   leftSection={<IconRefresh size={14} />}
                   onClick={() => refreshInventory.mutate()}
                 >
-                  {t("action.refresh")}
+                  {tGlobal("docker.action.refresh.label")}
                 </Button>
               </Group>
             </Group>
@@ -293,7 +294,7 @@ const DockerReconciliationCandidate = ({
                 })
               }
             >
-              {t("action.createApp")}
+              {tGlobal("integration.field.createApp.label")}
             </Button>
           )}
           {target.kind === "setupIntegration" && (

@@ -7123,13 +7123,9 @@
       },
       "action": {
         "review": "Review",
-        "hide": "Hide",
-        "refresh": "Refresh",
-        "retry": "Try again",
         "dismiss": "Dismiss",
         "restoreDismissed": "Restore dismissed ({count})",
         "setupIntegration": "Set up integration",
-        "createApp": "Create app",
         "reviewIntegration": "Review integration",
         "viewRepresentation": "View setup"
       },
