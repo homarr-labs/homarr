@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Box, LoadingOverlay } from "@mantine/core";
 import combineClasses from "clsx";
@@ -151,7 +151,7 @@ export const SectionGrid = ({
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   const maxRowCount = section.kind === "container" || railPlacement !== "main" ? rowCount : null;
-  const isScrollableContainer = section.kind === "container" && section.options.scrollable && !isEditMode;
+  const isScrollableContainer = section.kind === "container" && section.options.scrollable;
   const viewportRowCount = isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount;
   const logicalWidth = getLogicalTrackSize(columnCount);
   const logicalHeight = getLogicalTrackSize(rowCount);
@@ -159,6 +159,18 @@ export const SectionGrid = ({
   const canvasAttributes = isEditMode
     ? getEditableCanvasAttributes({ label, columnCount, rowCount })
     : getReadonlyCanvasAttributes({ label });
+
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const previousItemIdsRef = useRef<Set<string> | null>(null);
+  useEffect(() => {
+    const currentIds = new Set([...items, ...innerSections].map((item) => item.id));
+    const previousIds = previousItemIdsRef.current;
+    const hasNewItem = previousIds !== null && [...currentIds].some((id) => !previousIds.has(id));
+    previousItemIdsRef.current = currentIds;
+    if (hasNewItem && isScrollableContainer) {
+      viewportRef.current?.scrollTo({ top: viewportRef.current.scrollHeight, behavior: "smooth" });
+    }
+  }, [innerSections, isScrollableContainer, items]);
 
   return (
     <SectionProvider
@@ -173,6 +185,7 @@ export const SectionGrid = ({
       }}
     >
       <Box
+        ref={viewportRef}
         {...canvasAttributes}
         className={combineClasses(classes.viewport, isScrollableContainer && classes.scrollableViewport, className)}
         style={{
