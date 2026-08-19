@@ -117,18 +117,20 @@ function StreamTableHeader({
   sortable,
   sort,
   onSort,
+  width,
 }: {
   column: SortColumn;
   label: string;
   sortable: boolean;
   sort: SortState;
   onSort: (column: SortColumn) => void;
+  width?: number;
 }) {
   const active = sort?.column === column;
   const SortIcon = !active ? IconArrowsSort : sort.descending ? IconChevronDown : IconChevronUp;
 
   return (
-    <Table.Th aria-sort={active ? (sort.descending ? "descending" : "ascending") : "none"}>
+    <Table.Th w={width} aria-sort={active ? (sort.descending ? "descending" : "ascending") : "none"}>
       {sortable ? (
         <UnstyledButton className={classes.sortButton} onClick={() => onSort(column)}>
           <Text component="span" size="xs" fw={600} c="dimmed" style={{ letterSpacing: "0.02em" }} truncate>
@@ -285,6 +287,7 @@ export default function MediaServerWidget({
                   sortable={isAdvanced}
                   sort={sort}
                   onSort={toggleSort}
+                  width={140}
                 />
               )}
             </Table.Tr>
