@@ -3,6 +3,11 @@
   overflow: visible;
 }
 
+.scrollableViewport {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 .staticGrid,
 .editorGrid {
   position: relative;

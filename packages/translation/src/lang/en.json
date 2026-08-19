@@ -2615,6 +2615,10 @@
       "showOpenAll": {
         "label": "Show open-all action",
         "description": "Show an action that opens every app in this container in new tabs."
+      },
+      "scrollable": {
+        "label": "Scrollable",
+        "description": "Keep this container at its set size and scroll its contents instead of growing to fit them."
       }
     },
     "action": {

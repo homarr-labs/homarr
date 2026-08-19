@@ -151,8 +151,11 @@ export const SectionGrid = ({
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   const maxRowCount = section.kind === "container" || railPlacement !== "main" ? rowCount : null;
+  const isScrollableContainer = section.kind === "container" && section.options.scrollable && !isEditMode;
+  const viewportRowCount = isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount;
   const logicalWidth = getLogicalTrackSize(columnCount);
   const logicalHeight = getLogicalTrackSize(rowCount);
+  const viewportHeight = getLogicalTrackSize(viewportRowCount);
   const canvasAttributes = isEditMode
     ? getEditableCanvasAttributes({ label, columnCount, rowCount })
     : getReadonlyCanvasAttributes({ label });
@@ -171,14 +174,15 @@ export const SectionGrid = ({
     >
       <Box
         {...canvasAttributes}
-        className={combineClasses(classes.viewport, className)}
+        className={combineClasses(classes.viewport, isScrollableContainer && classes.scrollableViewport, className)}
         style={{
           width: logicalWidth,
-          height: `var(--board-grid-drag-height, ${logicalHeight}px)`,
+          height: `var(--board-grid-drag-height, ${viewportHeight}px)`,
         }}
         data-section-id={section.id}
         data-section-kind={section.kind}
         data-rail-placement={railPlacement}
+        data-scrollable={isScrollableContainer ? "true" : undefined}
       >
         {isEditMode && editorRuntimeStatus === "ready" ? (
           <GridEditor
@@ -233,6 +237,10 @@ const getContainerMinimumSize = (
 ): { width: number; height: number } => {
   if (visited.has(sectionId)) return { width: 1, height: 1 };
   const nextVisited = new Set(visited).add(sectionId);
+  const section = board.sections.find((candidate) => candidate.id === sectionId);
+  // A scrollable container isn't forced to grow with its content - it scrolls internally instead,
+  // so it shouldn't have a content-derived height floor imposed by its parent's grid.
+  const isScrollable = section?.kind === "container" && section.options.scrollable;
   const directItems: PlacementBounds[] = board.items.flatMap((item) => {
     const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
     return layout?.sectionId === sectionId ? [layout] : [];
@@ -254,7 +262,7 @@ const getContainerMinimumSize = (
 
   return {
     width: Math.max(1, ...children.map((child) => child.xOffset + child.width)),
-    height: Math.max(1, ...children.map((child) => child.yOffset + child.height)),
+    height: isScrollable ? 1 : Math.max(1, ...children.map((child) => child.yOffset + child.height)),
   };
 };
 
