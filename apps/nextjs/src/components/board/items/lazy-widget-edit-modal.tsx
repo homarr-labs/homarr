@@ -3,16 +3,16 @@
 import { Suspense, use } from "react";
 import { Center, Loader } from "@mantine/core";
 import { ErrorBoundary } from "react-error-boundary";
+import type { FallbackProps } from "react-error-boundary";
 
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal, modalSizeForm } from "@homarr/modals";
-import { useModalAction } from "@homarr/modals";
 import { WidgetError } from "@homarr/widgets/errors";
 import type * as WidgetModalsModule from "@homarr/widgets/modals";
 import type { WidgetEditModalProps } from "@homarr/widgets/modals";
 
-import type * as IntegrationEditModalModule from "~/components/integration/embedded-integration-edit-modal";
-import type { EmbeddedIntegrationEditModalProps } from "~/components/integration/embedded-integration-edit-modal";
+import type * as IntegrationEditFormModule from "~/components/integration/embedded-integration-edit-form";
+import type { EmbeddedIntegrationEditFormProps } from "~/components/integration/embedded-integration-edit-form";
 
 let widgetEditModalPromise: Promise<typeof WidgetModalsModule> | undefined;
 
@@ -29,42 +29,38 @@ export const loadWidgetEditModal = () => {
 
 export const preloadWidgetEditModal = () => void loadWidgetEditModal().catch(() => undefined);
 
-let integrationEditModalPromise: Promise<typeof IntegrationEditModalModule> | undefined;
+let integrationEditFormPromise: Promise<typeof IntegrationEditFormModule> | undefined;
 
-const loadIntegrationEditModal = () => {
-  if (integrationEditModalPromise) return integrationEditModalPromise;
+const loadIntegrationEditForm = () => {
+  if (integrationEditFormPromise) return integrationEditFormPromise;
 
-  const currentPromise = import("~/components/integration/embedded-integration-edit-modal");
-  integrationEditModalPromise = currentPromise;
+  const currentPromise = import("~/components/integration/embedded-integration-edit-form");
+  integrationEditFormPromise = currentPromise;
   void currentPromise.catch(() => {
-    if (integrationEditModalPromise === currentPromise) integrationEditModalPromise = undefined;
+    if (integrationEditFormPromise === currentPromise) integrationEditFormPromise = undefined;
   });
   return currentPromise;
 };
 
-const LazyIntegrationEditModalContent = (props: {
-  actions: { closeModal: () => void };
-  innerProps: EmbeddedIntegrationEditModalProps;
-}) => {
-  const { EmbeddedIntegrationEditModal } = use(loadIntegrationEditModal());
-  const Component = EmbeddedIntegrationEditModal.component;
-  return <Component {...props} />;
+const LazyIntegrationEditFormContent = (props: EmbeddedIntegrationEditFormProps) => {
+  const { EmbeddedIntegrationEditForm } = use(loadIntegrationEditForm());
+  return <EmbeddedIntegrationEditForm {...props} />;
 };
 
-const LazyIntegrationEditModal = createModal<EmbeddedIntegrationEditModalProps>((props) => (
-  <ErrorBoundary
-    fallbackRender={({ error, resetErrorBoundary }) => (
-      <Center py="xl">
-        <WidgetError
-          error={error}
-          resetErrorBoundary={() => {
-            integrationEditModalPromise = undefined;
-            resetErrorBoundary();
-          }}
-        />
-      </Center>
-    )}
-  >
+const IntegrationEditErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => (
+  <Center py="xl">
+    <WidgetError
+      error={error}
+      resetErrorBoundary={() => {
+        integrationEditFormPromise = undefined;
+        resetErrorBoundary();
+      }}
+    />
+  </Center>
+);
+
+const LazyIntegrationEditForm = (props: EmbeddedIntegrationEditFormProps) => (
+  <ErrorBoundary FallbackComponent={IntegrationEditErrorFallback}>
     <Suspense
       fallback={
         <Center py="xl">
@@ -72,15 +68,10 @@ const LazyIntegrationEditModal = createModal<EmbeddedIntegrationEditModalProps>(
         </Center>
       }
     >
-      <LazyIntegrationEditModalContent {...props} />
+      <LazyIntegrationEditFormContent {...props} />
     </Suspense>
   </ErrorBoundary>
-)).withOptions({
-  defaultTitle: (t) => t("item.edit.tab.integration"),
-  size: modalSizeForm,
-  presentation: "inspector",
-  closeOnClickOutside: true,
-});
+);
 
 interface LazyWidgetEditModalContentProps {
   actions: { closeModal: () => void };
@@ -90,17 +81,12 @@ interface LazyWidgetEditModalContentProps {
 const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
   const { WidgetEditModal } = use(loadWidgetEditModal());
   const Component = WidgetEditModal.component;
-  const { openModal: openIntegrationEditModal } = useModalAction(LazyIntegrationEditModal);
   return (
     <Component
       {...props}
       innerProps={{
         ...props.innerProps,
-        onEditIntegration: (integrationId) =>
-          openIntegrationEditModal({
-            integrationId,
-            onSuccess: props.innerProps.onIntegrationSaved,
-          }),
+        integrationEditForm: LazyIntegrationEditForm,
       }}
     />
   );

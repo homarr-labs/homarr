@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { FormEvent } from "react";
+import type { ComponentType, FormEvent } from "react";
 import { Box, Button, Group, Stack, Tabs, Text } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
-import { IconPencil } from "@tabler/icons-react";
+import { IconArrowLeft, IconPencil } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { objectEntries } from "@homarr/common";
@@ -35,6 +35,16 @@ export interface WidgetEditModalState {
   advancedOptions: BoardItemAdvancedOptions;
 }
 
+export interface EmbeddedIntegrationEditFormHandle {
+  submitIfDirty: () => Promise<boolean>;
+}
+
+export interface EmbeddedIntegrationEditFormProps {
+  integrationId: string;
+  handleRef: React.Ref<EmbeddedIntegrationEditFormHandle>;
+  onSuccess?: () => void;
+}
+
 export interface WidgetEditModalProps<TSort extends WidgetKind> {
   kind: TSort;
   definition: WidgetDefinition;
@@ -46,7 +56,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   itemId?: string;
   boardId?: string;
   appId?: string;
-  onEditIntegration?: (integrationId: string) => void;
+  integrationEditForm?: ComponentType<EmbeddedIntegrationEditFormProps>;
   onIntegrationSaved?: () => void;
 }
 
@@ -61,6 +71,12 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const { data: session } = useSession();
   const [advancedOptions, setAdvancedOptions] = useState<BoardItemAdvancedOptions>(innerProps.value.advancedOptions);
   const appEditRef = useRef<EmbeddedAppEditFormHandle>(null);
+  const integrationEditHandles = useRef(new Map<string, EmbeddedIntegrationEditFormHandle>());
+  const integrationEditRefCallbacks = useRef(
+    new Map<string, (handle: EmbeddedIntegrationEditFormHandle | null) => void>(),
+  );
+  const [mountedIntegrationIds, setMountedIntegrationIds] = useState<string[]>([]);
+  const [activeIntegrationId, setActiveIntegrationId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   z.config({
@@ -118,7 +134,24 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const showAppTab = innerProps.kind === "app" && canModifyApps && Boolean(appId);
   const canModifyAllIntegrations = session?.user.permissions.includes("integration-full-all") ?? false;
   const selectedIntegrations = getSelectedWidgetIntegrations(innerProps.integrationData, form.values.integrationIds);
-  const showIntegrationTab = Boolean(innerProps.onEditIntegration) && selectedIntegrations.length > 0;
+  const editableIntegrationIds = selectedIntegrations
+    .filter((integration) => canModifyAllIntegrations || integration.permissions?.hasFullAccess === true)
+    .map((integration) => integration.id);
+  let soleEditableIntegrationId: string | null = null;
+  if (selectedIntegrations.length === 1) {
+    soleEditableIntegrationId = editableIntegrationIds[0] ?? null;
+  }
+
+  let displayedIntegrationId = soleEditableIntegrationId;
+  if (activeIntegrationId && editableIntegrationIds.includes(activeIntegrationId)) {
+    displayedIntegrationId = activeIntegrationId;
+  }
+  const integrationIdsToRender = mountedIntegrationIds.filter((id) => editableIntegrationIds.includes(id));
+  if (displayedIntegrationId && !integrationIdsToRender.includes(displayedIntegrationId)) {
+    integrationIdsToRender.push(displayedIntegrationId);
+  }
+  const IntegrationEditForm = innerProps.integrationEditForm;
+  const showIntegrationTab = Boolean(IntegrationEditForm) && selectedIntegrations.length > 0;
   const showResourceTabs = showAppTab || showIntegrationTab;
   const [activeTab, setActiveTab] = useState<string | null>("widget");
 
@@ -127,15 +160,31 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     if (activeTab === "app" && !showAppTab) setActiveTab("widget");
   }, [activeTab, showAppTab, showIntegrationTab]);
 
-  const handleTabChange = (value: string | null) => {
-    if (value === "integration" && selectedIntegrations.length === 1) {
-      const integration = selectedIntegrations[0];
-      if (integration) {
-        innerProps.onEditIntegration?.(integration.id);
-        return;
-      }
+  const getIntegrationEditRef = (integrationId: string) => {
+    const existingCallback = integrationEditRefCallbacks.current.get(integrationId);
+    if (existingCallback) {
+      return existingCallback;
     }
-    setActiveTab(value);
+
+    const callback = (handle: EmbeddedIntegrationEditFormHandle | null) => {
+      if (handle) {
+        integrationEditHandles.current.set(integrationId, handle);
+      } else {
+        integrationEditHandles.current.delete(integrationId);
+      }
+    };
+    integrationEditRefCallbacks.current.set(integrationId, callback);
+    return callback;
+  };
+
+  const beginEditingIntegration = (integrationId: string) => {
+    setMountedIntegrationIds((current) => {
+      if (current.includes(integrationId)) {
+        return current;
+      }
+      return [...current, integrationId];
+    });
+    setActiveIntegrationId(integrationId);
   };
 
   const handleSubmit = form.onSubmit(async (values) => {
@@ -145,6 +194,13 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
 
       if (!appSaved) {
         return;
+      }
+
+      for (const integrationEditHandle of integrationEditHandles.current.values()) {
+        const integrationSaved = await integrationEditHandle.submitIfDirty();
+        if (!integrationSaved) {
+          return;
+        }
       }
 
       innerProps.onSuccessfulEdit({
@@ -240,7 +296,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
       <FormProvider form={form}>
         {showResourceTabs ? (
           <Stack>
-            <Tabs value={activeTab} onChange={handleTabChange}>
+            <Tabs value={activeTab} onChange={setActiveTab}>
               <Tabs.List grow>
                 <Tabs.Tab value="widget">{t("item.edit.tab.widget")}</Tabs.Tab>
                 {showAppTab && <Tabs.Tab value="app">{t("item.edit.tab.app")}</Tabs.Tab>}
@@ -257,42 +313,68 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
               {showIntegrationTab && (
                 <Tabs.Panel value="integration" pt="md">
                   <Stack>
-                    <Text size="sm" c="dimmed">
-                      {t("item.edit.integration.description")}
-                    </Text>
-                    {selectedIntegrations.map((integration) => {
-                      const canEdit = canModifyAllIntegrations || integration.permissions?.hasFullAccess === true;
-                      return (
-                        <Group key={integration.id} justify="space-between" wrap="nowrap" gap="sm">
-                          <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
-                            <IntegrationAvatar kind={integration.kind} size="sm" />
-                            <Stack gap={0} style={{ minWidth: 0 }}>
-                              <Text fw={600} size="sm" truncate>
-                                {integration.name}
-                              </Text>
-                              <Text size="xs" c="dimmed" truncate>
-                                {integration.url}
-                              </Text>
-                            </Stack>
-                          </Group>
-                          {canEdit ? (
-                            <Button
-                              type="button"
-                              variant="light"
-                              leftSection={<IconPencil size={16} />}
-                              onClick={() => innerProps.onEditIntegration?.(integration.id)}
-                              aria-label={t("item.edit.integration.editLabel", { name: integration.name })}
-                            >
-                              {t("item.edit.integration.action")}
-                            </Button>
-                          ) : (
-                            <Text size="xs" c="dimmed" ta="end">
-                              {t("item.edit.integration.fullAccessRequired")}
-                            </Text>
-                          )}
-                        </Group>
-                      );
-                    })}
+                    {displayedIntegrationId === null && (
+                      <>
+                        <Text size="sm" c="dimmed">
+                          {t("item.edit.integration.description")}
+                        </Text>
+                        {selectedIntegrations.map((integration) => {
+                          const canEdit = editableIntegrationIds.includes(integration.id);
+                          return (
+                            <Group key={integration.id} justify="space-between" wrap="nowrap" gap="sm">
+                              <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
+                                <IntegrationAvatar kind={integration.kind} size="sm" />
+                                <Stack gap={0} style={{ minWidth: 0 }}>
+                                  <Text fw={600} size="sm" truncate>
+                                    {integration.name}
+                                  </Text>
+                                  <Text size="xs" c="dimmed" truncate>
+                                    {integration.url}
+                                  </Text>
+                                </Stack>
+                              </Group>
+                              {canEdit ? (
+                                <Button
+                                  type="button"
+                                  variant="light"
+                                  leftSection={<IconPencil size={16} />}
+                                  onClick={() => beginEditingIntegration(integration.id)}
+                                  aria-label={t("item.edit.integration.editLabel", { name: integration.name })}
+                                >
+                                  {t("item.edit.integration.action")}
+                                </Button>
+                              ) : (
+                                <Text size="xs" c="dimmed" ta="end">
+                                  {t("item.edit.integration.fullAccessRequired")}
+                                </Text>
+                              )}
+                            </Group>
+                          );
+                        })}
+                      </>
+                    )}
+                    {displayedIntegrationId !== null && selectedIntegrations.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="subtle"
+                        leftSection={<IconArrowLeft size={16} />}
+                        onClick={() => setActiveIntegrationId(null)}
+                        style={{ alignSelf: "start" }}
+                      >
+                        {t("common.action.previous")}
+                      </Button>
+                    )}
+                    {integrationIdsToRender.map((integrationId) => (
+                      <Box key={integrationId} hidden={displayedIntegrationId !== integrationId}>
+                        {IntegrationEditForm && (
+                          <IntegrationEditForm
+                            integrationId={integrationId}
+                            handleRef={getIntegrationEditRef(integrationId)}
+                            onSuccess={innerProps.onIntegrationSaved}
+                          />
+                        )}
+                      </Box>
+                    ))}
                   </Stack>
                 </Tabs.Panel>
               )}
