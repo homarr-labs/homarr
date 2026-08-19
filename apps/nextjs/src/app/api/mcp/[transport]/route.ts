@@ -273,7 +273,7 @@ const handler = async (req: NextRequest) => {
         hint: "Authenticate with an ApiKey header or via OAuth at /.well-known/oauth-authorization-server",
       },
       {
-        "WWW-Authenticate": `Bearer resource_metadata="${baseUrl}${resourcePath}/.well-known/oauth-protected-resource"`,
+        "WWW-Authenticate": `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource${resourcePath}"`,
       },
     );
   }
