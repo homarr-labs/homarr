@@ -300,8 +300,12 @@ export default function MediaServerWidget({
               const status = getPlaybackStatus(currentlyPlaying?.metadata?.transcoding);
               const location = showLocation ? currentlyPlaying?.location : null;
               const bitrateLabel = showBitrate ? formatBitrate(currentlyPlaying?.metadata?.bitrateKbps) : null;
-              const resolution = currentlyPlaying?.metadata?.video.resolution;
-              const resolutionLabel = resolution ? `${resolution.width}x${resolution.height}` : null;
+              // The transcoding resolution reflects what's actually being streamed - fall back to the
+              // source's own resolution when it isn't set (direct play, or a transcode that only
+              // touches audio/container and leaves the video resolution untouched).
+              const resolution =
+                currentlyPlaying?.metadata?.transcoding.resolution ?? currentlyPlaying?.metadata?.video.resolution;
+              const resolutionLabel = resolution ? `${resolution.height}p` : null;
               const toggleDetails = () => setSelectedRowId((current) => (current === rowId ? null : rowId));
 
               return (
