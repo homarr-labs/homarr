@@ -32,7 +32,7 @@ privateAddresses.addSubnet("127.0.0.0", 8, "ipv4");
 privateAddresses.addSubnet("fc00::", 7, "ipv6");
 privateAddresses.addAddress("::1", "ipv6");
 
-function extractHost(remoteEndPoint: string): string {
+export function extractHost(remoteEndPoint: string): string {
   if (remoteEndPoint.startsWith("[")) {
     const end = remoteEndPoint.indexOf("]");
     return end === -1 ? remoteEndPoint : remoteEndPoint.slice(1, end);
@@ -42,10 +42,16 @@ function extractHost(remoteEndPoint: string): string {
   return isIPv4WithPort ? remoteEndPoint.slice(0, remoteEndPoint.lastIndexOf(":")) : remoteEndPoint;
 }
 
-function parseLocation(remoteEndPoint: string | null | undefined): "lan" | "wan" | null {
+export function parseLocation(remoteEndPoint: string | null | undefined): "lan" | "wan" | null {
   if (!remoteEndPoint) return null;
-  const host = extractHost(remoteEndPoint);
-  const family = isIP(host);
+  let host = extractHost(remoteEndPoint);
+  let family = isIP(host);
+  // A dual-stack server can report an IPv4 client as an IPv4-mapped IPv6 address
+  // (e.g. "::ffff:192.168.1.5") - unwrap it so the IPv4 private ranges still apply.
+  if (family === 6 && host.toLowerCase().startsWith("::ffff:") && isIP(host.slice(7)) === 4) {
+    host = host.slice(7);
+    family = 4;
+  }
   if (!family) return null;
   return privateAddresses.check(host, family === 4 ? "ipv4" : "ipv6") ? "lan" : "wan";
 }
