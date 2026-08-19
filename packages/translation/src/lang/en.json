@@ -4150,6 +4150,15 @@
         "showNetwork": {
           "label": "Show network chart"
         },
+        "showGpuUsage": {
+          "label": "Show GPU usage chart"
+        },
+        "showGpuMemory": {
+          "label": "Show GPU memory chart"
+        },
+        "showGpuPower": {
+          "label": "Show GPU power chart"
+        },
         "showDockerCpu": {
           "label": "Show Docker CPU chart"
         },
@@ -4203,6 +4212,18 @@
           "subtitle": "Network traffic of public interfaces",
           "sent": "Sent",
           "recv": "Received"
+        },
+        "gpuUsage": {
+          "title": "GPU Usage",
+          "subtitle": "Utilization by GPU"
+        },
+        "gpuMemory": {
+          "title": "GPU Memory",
+          "subtitle": "VRAM used by GPU"
+        },
+        "gpuPower": {
+          "title": "GPU Power",
+          "subtitle": "Power draw by GPU"
         },
         "dockerCpu": {
           "title": "Docker CPU Usage",

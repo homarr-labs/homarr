@@ -194,9 +194,9 @@ export interface BeszelExtraFsStats {
 export interface BeszelGPUData {
   /** GPU name/model */
   n: string;
-  /** memory used (bytes) */
+  /** memory used (MB) */
   mu?: number;
-  /** memory total (bytes) */
+  /** memory total (MB) */
   mt?: number;
   /** GPU utilization (%) */
   u: number;
