@@ -315,7 +315,7 @@ export default function MediaServerWidget({
                   {columnVisibility.user && (
                     <Table.Td>
                       <Group gap="xs" wrap="nowrap" w="100%">
-                        <Avatar size={28} src={session.user?.profilePictureUrl} />
+                        <Avatar size={28} src={session.user?.profilePictureUrl} style={{ flexShrink: 0 }} />
                         <Stack gap={2} className={classes.cellContent}>
                           <Text size="xs" truncate>
                             {session.user?.username ?? t("items.unknownUser")}
