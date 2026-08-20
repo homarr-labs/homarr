@@ -46,6 +46,78 @@ const RESTART_DELAY_MS = 500;
 let restoreInProgress = false;
 
 class BackupTooLargeError extends Error {}
+class BackupUploadTimeoutError extends Error {}
+
+class BackupInfrastructureError extends Error {
+  public readonly cause: unknown;
+
+  constructor(message: string, cause: unknown) {
+    super(message);
+    this.cause = cause;
+  }
+}
+
+const FILE_SYSTEM_ERROR_CODES = new Set([
+  "EACCES",
+  "EDQUOT",
+  "EEXIST",
+  "EIO",
+  "EISDIR",
+  "EMFILE",
+  "ENFILE",
+  "ENOENT",
+  "ENOMEM",
+  "ENOSPC",
+  "ENOTDIR",
+  "EPERM",
+  "EROFS",
+]);
+
+const isInfrastructureError = (error: unknown) => {
+  if (error instanceof BackupInfrastructureError) return true;
+  if (!(error instanceof Error)) return false;
+
+  const code = (error as NodeJS.ErrnoException).code;
+  return typeof code === "string" && FILE_SYSTEM_ERROR_CODES.has(code);
+};
+
+const pipeToNewFileAsync = async (source: Readable, outputPath: string, failureMessage: string) => {
+  let destination: fs.WriteStream;
+  try {
+    destination = fs.createWriteStream(outputPath, { flags: "wx" });
+  } catch (error) {
+    throw new BackupInfrastructureError(failureMessage, error);
+  }
+
+  const errors: { origin: "source" | "destination"; error: unknown }[] = [];
+  let sourceEnded = false;
+  let sourceClosedPrematurely = false;
+  source.once("end", () => {
+    sourceEnded = true;
+  });
+  source.once("close", () => {
+    sourceClosedPrematurely = !sourceEnded;
+  });
+  source.once("error", (error) => {
+    errors.push({ origin: "source", error });
+  });
+  destination.once("error", (error) => {
+    if (errors.length === 0 && sourceClosedPrematurely) {
+      errors.push({ origin: "source", error });
+      return;
+    }
+    errors.push({ origin: "destination", error });
+  });
+
+  try {
+    await pipeline(source, destination);
+  } catch (error) {
+    const firstError = errors[0];
+    if (!firstError) throw error;
+    if (firstError.origin === "source") throw firstError.error;
+    throw new BackupInfrastructureError(failureMessage, firstError.error);
+  }
+};
 
 const assertDeclaredRequestSize = (request: Request) => {
   const declaredLength = request.headers.get("content-length");
@@ -84,7 +156,10 @@ const createUploadIdleTimeout = () => {
   });
   const resetTimeout = () => {
     if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => stream.destroy(new Error("Backup upload timed out")), UPLOAD_IDLE_TIMEOUT_MS);
+    timeout = setTimeout(
+      () => stream.destroy(new BackupUploadTimeoutError("Backup upload timed out")),
+      UPLOAD_IDLE_TIMEOUT_MS,
+    );
     timeout.unref();
   };
   resetTimeout();
@@ -112,6 +187,7 @@ const streamUploadedBackupAsync = async (request: Request, uploadPath: string): 
   let uploadSize = 0;
   let uploadFound = false;
   let uploadWrite = Promise.resolve();
+  let uploadWriteError: unknown;
   let parseError: Error | null = null;
 
   parser.on("file", (fieldName, file) => {
@@ -129,8 +205,9 @@ const streamUploadedBackupAsync = async (request: Request, uploadPath: string): 
       parseError = new BackupTooLargeError("Backup upload exceeds the 256 MB limit");
     });
 
-    uploadWrite = pipeline(file, fs.createWriteStream(uploadPath, { flags: "wx" }));
+    uploadWrite = pipeToNewFileAsync(file, uploadPath, "Failed to store backup upload");
     void uploadWrite.catch((error: unknown) => {
+      uploadWriteError = error;
       parser.destroy(error instanceof Error ? error : new Error("Failed to store backup upload"));
     });
   });
@@ -155,6 +232,7 @@ const streamUploadedBackupAsync = async (request: Request, uploadPath: string): 
     await uploadWrite;
   } catch (error) {
     await uploadWrite.catch(() => undefined);
+    if (uploadWriteError instanceof BackupInfrastructureError) throw uploadWriteError;
     throw error;
   }
 
@@ -287,7 +365,7 @@ const openEntryStreamAsync = (zip: ZipFile, entry: ZipEntry) =>
 
 const extractEntryToFileAsync = async (zip: ZipFile, entry: ZipEntry, outputPath: string) => {
   const source = await openEntryStreamAsync(zip, entry);
-  await pipeline(source, fs.createWriteStream(outputPath, { flags: "wx" }));
+  await pipeToNewFileAsync(source, outputPath, `Failed to extract ${entry.fileName}`);
 };
 
 const readBoundedEntryAsync = async (zip: ZipFile, entry: ZipEntry, maximumBytes: number) => {
@@ -435,6 +513,10 @@ export async function POST(req: Request) {
       if (error instanceof BackupTooLargeError) {
         return NextResponse.json({ error: error.message }, { status: 413 });
       }
+      if (error instanceof BackupUploadTimeoutError) {
+        return NextResponse.json({ error: error.message }, { status: 408 });
+      }
+      if (isInfrastructureError(error)) throw error;
       return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
     }
 
@@ -448,7 +530,8 @@ export async function POST(req: Request) {
     let zip: ZipFile;
     try {
       zip = await openArchiveAsync(uploadPath);
-    } catch {
+    } catch (error) {
+      if (isInfrastructureError(error)) throw error;
       return NextResponse.json({ error: "Invalid ZIP file" }, { status: 400 });
     }
 
@@ -471,6 +554,7 @@ export async function POST(req: Request) {
       if (error instanceof BackupTooLargeError) {
         return NextResponse.json({ error: error.message }, { status: 413 });
       }
+      if (isInfrastructureError(error)) throw error;
       const message =
         error instanceof Error && error.message.startsWith("Invalid backup:") ? error.message : "Invalid ZIP file";
       return NextResponse.json({ error: message }, { status: 400 });

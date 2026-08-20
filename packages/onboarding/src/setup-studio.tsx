@@ -207,7 +207,15 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     retry: false,
     refetchOnWindowFocus: false,
   });
-  const complete = clientApi.onboard.completeSetup.useMutation();
+  const complete = clientApi.onboard.completeSetup.useMutation({
+    onError(error) {
+      let message = t("common.unknownError");
+      if (error.message.trim().length > 0) {
+        message = error.message;
+      }
+      showErrorNotification({ title: t("review.errorTitle"), message });
+    },
+  });
   const dockerData = docker.data;
   const discoveredIntegrations = dockerData?.integrations ?? emptyDiscoveredIntegrations;
   const discoveredApps = dockerData?.apps ?? emptyDiscoveredApps;
@@ -532,7 +540,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       }
       sounds.error();
       setApplyError(message);
-      showErrorNotification({ title: t("review.errorTitle"), message });
       setApplyProgress(0);
       setIsApplying(false);
     }
