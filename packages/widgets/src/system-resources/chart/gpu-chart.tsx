@@ -1,7 +1,7 @@
 import { Paper, Text } from "@mantine/core";
 import { IconDeviceDesktop } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 
 import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
@@ -16,14 +16,13 @@ export const SystemResourceGPUChart = ({
   labelDisplayMode: LabelDisplayModeOption;
 }) => {
   const chartData = gpuUsageOverTime.map((usage, index) => ({ index, usage }));
-  const t = useScopedI18n("widget.systemResources.card");
 
   return (
     <CommonChart
       data={chartData}
       dataKey={"index"}
       series={[{ name: "usage", color: "grape.5" }]}
-      title={t("gpu")}
+      title={invariantTechnicalLabels.gpu}
       icon={IconDeviceDesktop}
       lastValue={
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

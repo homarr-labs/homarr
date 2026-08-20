@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Box, Card, Group, ScrollArea, SegmentedControl, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -25,7 +25,7 @@ export default function SpeedtestTrackerWidget({
   height,
   displayMode = "compact",
 }: WidgetComponentProps<"speedtestTracker">) {
-  const t = useScopedI18n("widget.speedtestTracker");
+  const t = useI18n("widget.speedtestTracker");
   const dashboardQuery = clientApi.widget.speedtestTracker.getDashboard.useQuery({ integrationIds });
   const dashboardData = getUsableWidgetQueryData(dashboardQuery) ?? emptyDashboardData;
   const [advancedRange, setAdvancedRange] = useState("24");

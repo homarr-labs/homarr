@@ -9,7 +9,8 @@ import { useI18n } from "@homarr/translation/client";
 import { groupCreateSchema } from "@homarr/validation/group";
 
 export const AddGroupModal = createModal<void>(({ actions }) => {
-  const t = useI18n();
+  const tGroup = useI18n("group");
+  const tCommon = useI18n("common");
   const { mutate, isPending } = clientApi.group.createGroup.useMutation();
   const form = useZodForm(groupCreateSchema, {
     initialValues: {
@@ -25,27 +26,27 @@ export const AddGroupModal = createModal<void>(({ actions }) => {
             actions.closeModal();
             void revalidatePathActionAsync("/manage/users/groups");
             showSuccessNotification({
-              title: t("common.notification.create.success"),
-              message: t("group.action.create.notification.success.message"),
+              title: tCommon("notification.create.success"),
+              message: tGroup("action.create.notification.success.message"),
             });
           },
           onError() {
             showErrorNotification({
-              title: t("common.notification.create.error"),
-              message: t("group.action.create.notification.error.message"),
+              title: tCommon("notification.create.error"),
+              message: tGroup("action.create.notification.error.message"),
             });
           },
         });
       })}
     >
       <Stack>
-        <TextInput label={t("group.field.name")} data-autofocus {...form.getInputProps("name")} />
+        <TextInput label={tCommon("field.name")} data-autofocus {...form.getInputProps("name")} />
         <Group justify="right">
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
-            {t("common.action.cancel")}
+            {tCommon("action.cancel")}
           </Button>
           <Button loading={isPending} type="submit">
-            {t("common.action.create")}
+            {tCommon("action.create")}
           </Button>
         </Group>
       </Stack>

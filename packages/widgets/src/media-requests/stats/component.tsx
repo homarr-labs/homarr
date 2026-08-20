@@ -19,7 +19,7 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { RequestStats } from "@homarr/integrations/types";
 import { openMediaRequestSearch } from "@homarr/spotlight";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../../common/application-url";
@@ -40,7 +40,8 @@ export default function MediaServerWidget({
   width,
   height,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
-  const t = useScopedI18n("widget.mediaRequests-requestStats");
+  const t = useI18n("widget.mediaRequests-requestStats");
+  const tCommon = useI18n("common");
   const requestStats = getUsableWidgetQueryData(clientApi.widget.mediaRequests.getStats.useQuery({ integrationIds }));
 
   const board = useRequiredBoard();
@@ -129,7 +130,7 @@ export default function MediaServerWidget({
                 key={stat.name}
                 span={isTiny ? 6 : 3}
               >
-                <Tooltip label={t(`titles.stats.${stat.name}`)}>
+                <Tooltip label={stat.name === "total" ? tCommon("total") : t(`titles.stats.${stat.name}`)}>
                   <Card p={0} radius={board.itemRadius} className={classes.card}>
                     <Group className="mediaRequests-stats-stat-stack" justify="center" align="center" gap="xs" w="100%">
                       <stat.icon className="mediaRequests-stats-stat-icon" size="var(--mantine-font-size-md)" />
@@ -215,7 +216,7 @@ export default function MediaServerWidget({
 }
 
 const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[] }) => {
-  const t = useScopedI18n("search.mode.media");
+  const t = useI18n("search.mode.media");
 
   return (
     <Tooltip label={t("action.search.label")}>

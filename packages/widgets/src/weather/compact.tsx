@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Group, Popover, Stack, Text, UnstyledButton } from "@mantine/core";
 import { IconArrowDownRight, IconArrowUpRight, IconDroplets, IconMapPin, IconWind } from "@tabler/icons-react";
 
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetProps } from "../definition";
 import { AnimatedWeatherIcon } from "./animated-icon";
@@ -23,8 +23,8 @@ interface CompactWeatherProps {
 
 export const CompactWeather = ({ height, isEditMode, options, weather, width }: CompactWeatherProps) => {
   const locale = useCurrentIntlLocale();
-  const t = useScopedI18n("widget.weather");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.weather");
+  const tCommon = useI18n("common");
   const layout = useMemo(
     () => getCompactWeatherLayout(width, height, options.hasForecast, options.forecastDayCount),
     [height, options.forecastDayCount, options.hasForecast, width],

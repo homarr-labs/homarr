@@ -64,7 +64,7 @@ import { StarterKit } from "@tiptap/starter-kit";
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import type { TranslationObject } from "@homarr/translation";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
@@ -131,8 +131,9 @@ export function Notebook({
     canChangeRef.current = canChange && !isSaving;
   }, [canChange, isSaving]);
 
-  const tControls = useScopedI18n("widget.notebook.controls");
-  const t = useI18n();
+  const tControls = useI18n("widget.notebook.controls");
+  const t = useI18n("widget.notebook");
+  const tCommon = useI18n("common");
 
   const handleContentUpdate = useCallback(
     async (contentUpdate: string) => {
@@ -148,7 +149,7 @@ export function Notebook({
         setOptions({ newOptions: { content: contentUpdate } });
         return true;
       } catch {
-        setSaveError(t("widget.notebook.saveFailed"));
+        setSaveError(t("saveFailed"));
         return false;
       } finally {
         savingRef.current = false;
@@ -162,7 +163,7 @@ export function Notebook({
     {
       extensions: [
         Placeholder.configure({
-          placeholder: `${t("widget.notebook.placeholder")}…`,
+          placeholder: `${t("placeholder")}…`,
         }),
         Color,
         Highlight.configure({ multicolor: true }),
@@ -290,11 +291,11 @@ export function Notebook({
   const handleEditCancel = useCallback(() => {
     if (savingRef.current) return;
     openConfirmModal({
-      title: t("widget.notebook.dismiss.title"),
-      children: t("widget.notebook.dismiss.message"),
+      title: t("dismiss.title"),
+      children: t("dismiss.message"),
       labels: {
-        confirm: t("widget.notebook.dismiss.action.discard"),
-        cancel: t("widget.notebook.dismiss.action.keepEditing"),
+        confirm: t("dismiss.action.discard"),
+        cancel: t("dismiss.action.keepEditing"),
       },
       onConfirm: () => {
         setIsEditing(handleEditCancelCallback);
@@ -410,17 +411,17 @@ export function Notebook({
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.AlignLeft
               title={tControls("align", {
-                position: t("widget.notebook.align.left"),
+                position: t("align.left"),
               })}
             />
             <RichTextEditor.AlignCenter
               title={tControls("align", {
-                position: t("widget.notebook.align.center"),
+                position: t("align.center"),
               })}
             />
             <RichTextEditor.AlignRight
               title={tControls("align", {
-                position: t("widget.notebook.align.right"),
+                position: t("align.right"),
               })}
             />
             <RichTextEditor.Control
@@ -524,15 +525,15 @@ export function Notebook({
                 lineClamp={1}
                 maw={320}
                 tabIndex={0}
-                aria-label={`${t("widget.notebook.saveFailed")}. ${saveError}`}
+                aria-label={`${t("saveFailed")}. ${saveError}`}
               >
-                {t("widget.notebook.saveFailed")}
+                {t("saveFailed")}
               </Text>
             </Tooltip>
           )}
           {display.showDocumentStats && (
             <Text size="xs" c="dimmed">
-              {t("widget.notebook.documentStats", documentStats)}
+              {t("documentStats", documentStats)}
             </Text>
           )}
         </Group>
@@ -542,8 +543,8 @@ export function Notebook({
           <ActionIcon
             className={`homarr-notebook-action ${actionTargetClasses.root}`}
             data-visible={isEditing || undefined}
-            title={isEditing ? t("common.action.save") : t("common.action.edit")}
-            aria-label={isEditing ? t("common.action.save") : t("common.action.edit")}
+            title={isEditing ? tCommon("action.save") : tCommon("action.edit")}
+            aria-label={isEditing ? tCommon("action.save") : tCommon("action.edit")}
             color={primaryColor}
             variant="light"
             size={30}
@@ -557,8 +558,8 @@ export function Notebook({
             <ActionIcon
               className={`homarr-notebook-action ${actionTargetClasses.root}`}
               data-visible
-              title={t("common.action.cancel")}
-              aria-label={t("common.action.cancel")}
+              title={tCommon("action.cancel")}
+              aria-label={tCommon("action.cancel")}
               color={primaryColor}
               variant="light"
               size={30}
@@ -575,7 +576,7 @@ export function Notebook({
 }
 
 function TextHighlightControl() {
-  const tControls = useScopedI18n("widget.notebook.controls");
+  const tControls = useI18n("widget.notebook.controls");
   const { editor } = useRichTextEditorContext();
   const defaultColor = "transparent";
 
@@ -606,7 +607,7 @@ function TextHighlightControl() {
 }
 
 function TextColorControl() {
-  const tControls = useScopedI18n("widget.notebook.controls");
+  const tControls = useI18n("widget.notebook.controls");
   const { editor } = useRichTextEditorContext();
   const { black, colors } = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
@@ -639,7 +640,7 @@ function TextColorControl() {
 }
 
 function ColorCellControl() {
-  const tControls = useScopedI18n("widget.notebook.controls");
+  const tControls = useI18n("widget.notebook.controls");
   const { editor } = useRichTextEditorContext();
 
   const getCurrent = useCallback(() => {
@@ -678,7 +679,8 @@ const ColorControl = ({ defaultColor, getCurrent, update, icon: Icon, ariaLabel 
   const { colors, white } = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
   const [opened, { close, toggle }] = useDisclosure(false);
-  const t = useI18n();
+  const tCommon = useI18n("common");
+  const tNotebook = useI18n("widget.notebook");
 
   const palette = [
     "#000000",
@@ -748,8 +750,8 @@ const ColorControl = ({ defaultColor, getCurrent, update, icon: Icon, ariaLabel 
           <Group justify="right" gap={8}>
             <ActionIcon
               className={actionTargetClasses.root}
-              title={t("common.action.cancel")}
-              aria-label={t("common.action.cancel")}
+              title={tCommon("action.cancel")}
+              aria-label={tCommon("action.cancel")}
               variant="default"
               onClick={close}
             >
@@ -757,8 +759,8 @@ const ColorControl = ({ defaultColor, getCurrent, update, icon: Icon, ariaLabel 
             </ActionIcon>
             <ActionIcon
               className={actionTargetClasses.root}
-              title={t("common.action.apply")}
-              aria-label={t("common.action.apply")}
+              title={tCommon("action.apply")}
+              aria-label={tCommon("action.apply")}
               variant="default"
               onClick={handleApplyColor}
             >
@@ -766,8 +768,8 @@ const ColorControl = ({ defaultColor, getCurrent, update, icon: Icon, ariaLabel 
             </ActionIcon>
             <ActionIcon
               className={actionTargetClasses.root}
-              title={t("widget.notebook.popover.clearColor")}
-              aria-label={t("widget.notebook.popover.clearColor")}
+              title={tNotebook("popover.clearColor")}
+              aria-label={tNotebook("popover.clearColor")}
               variant="default"
               onClick={handleClearColor}
             >
@@ -781,8 +783,9 @@ const ColorControl = ({ defaultColor, getCurrent, update, icon: Icon, ariaLabel 
 };
 
 function EmbedImage() {
-  const tControls = useScopedI18n("widget.notebook.controls");
-  const t = useI18n();
+  const tControls = useI18n("widget.notebook.controls");
+  const t = useI18n("widget.notebook");
+  const tCommon = useI18n("common");
   const { editor } = useRichTextEditorContext();
   const { colors, white } = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
@@ -836,18 +839,14 @@ function EmbedImage() {
       <Popover.Dropdown>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack gap={5}>
+            <TextInput label={t("popover.source")} placeholder="https://example.com/" {...form.getInputProps("src")} />
             <TextInput
-              label={t("widget.notebook.popover.source")}
-              placeholder="https://example.com/"
-              {...form.getInputProps("src")}
-            />
-            <TextInput
-              label={t("widget.notebook.popover.width")}
-              placeholder={t("widget.notebook.popover.widthPlaceholder")}
+              label={t("popover.width")}
+              placeholder={t("popover.widthPlaceholder")}
               {...form.getInputProps("width")}
             />
             <Button type="submit" variant="default" mt={10} mb={5}>
-              {t("common.action.save")}
+              {tCommon("action.save")}
             </Button>
           </Stack>
         </form>
@@ -858,7 +857,7 @@ function EmbedImage() {
 
 function TaskListToggle() {
   const { editor } = useRichTextEditorContext();
-  const tControls = useScopedI18n("widget.notebook.controls");
+  const tControls = useI18n("widget.notebook.controls");
   const handleToggleTaskList = useCallback(() => {
     editor?.chain().focus().toggleTaskList().run();
   }, [editor]);
@@ -893,7 +892,7 @@ function useActiveListItemType() {
 
 function ListIndentIncrease() {
   const { editor, itemType } = useActiveListItemType();
-  const tControls = useScopedI18n("widget.notebook.controls");
+  const tControls = useI18n("widget.notebook.controls");
   const handleIncreaseIndent = useCallback(() => {
     editor?.chain().focus().sinkListItem(itemType).run();
   }, [editor, itemType]);
@@ -911,7 +910,7 @@ function ListIndentIncrease() {
 
 function ListIndentDecrease() {
   const { editor, itemType } = useActiveListItemType();
-  const tControls = useScopedI18n("widget.notebook.controls");
+  const tControls = useI18n("widget.notebook.controls");
 
   const handleDecreaseIndent = useCallback(() => {
     editor?.chain().focus().liftListItem(itemType).run();
@@ -980,7 +979,7 @@ interface TableControlProps {
 
 const TableControl = ({ title, onClick, icon: Icon }: TableControlProps) => {
   const { editor } = useRichTextEditorContext();
-  const tControls = useScopedI18n("widget.notebook.controls");
+  const tControls = useI18n("widget.notebook.controls");
   const handleControlClick = useCallback(() => {
     if (!editor) return;
     onClick(editor);
@@ -995,7 +994,7 @@ const TableControl = ({ title, onClick, icon: Icon }: TableControlProps) => {
 
 function TableToggleMerge() {
   const { editor } = useRichTextEditorContext();
-  const tControls = useScopedI18n("widget.notebook.controls");
+  const tControls = useI18n("widget.notebook.controls");
   const handleToggleMerge = useCallback(() => {
     editor?.commands.mergeOrSplit();
   }, [editor]);
@@ -1032,8 +1031,9 @@ function TableToggle() {
   const { colorScheme } = useMantineColorScheme();
 
   const [opened, { open, close, toggle }] = useDisclosure(false);
-  const t = useI18n();
-  const tControls = useScopedI18n("widget.notebook.controls");
+  const t = useI18n("widget.notebook");
+  const tCommon = useI18n("common");
+  const tControls = useI18n("widget.notebook.controls");
   const form = useForm({
     initialValues: {
       cols: 3,
@@ -1086,10 +1086,10 @@ function TableToggle() {
       <Popover.Dropdown>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack gap={5}>
-            <NumberInput label={t("widget.notebook.popover.columns")} min={1} {...form.getInputProps("cols")} />
-            <NumberInput label={t("widget.notebook.popover.rows")} min={1} {...form.getInputProps("rows")} />
+            <NumberInput label={t("popover.columns")} min={1} {...form.getInputProps("cols")} />
+            <NumberInput label={t("popover.rows")} min={1} {...form.getInputProps("rows")} />
             <Button type="submit" variant="default" mt={10} mb={5}>
-              {t("common.action.insert")}
+              {tCommon("action.insert")}
             </Button>
           </Stack>
         </form>

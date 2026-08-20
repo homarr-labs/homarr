@@ -2,12 +2,13 @@ import { usePathname } from "next/navigation";
 import { Button, CopyButton, Mark, Stack, Text } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import { createModal } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 export const InviteCopyModal = createModal<RouterOutputs["invite"]["createInvite"]>(({ actions, innerProps }) => {
-  const t = useScopedI18n("management.page.user.invite");
+  const t = useI18n("management.page.user.invite");
   const inviteUrl = useInviteUrl(innerProps);
 
   return (
@@ -19,7 +20,7 @@ export const InviteCopyModal = createModal<RouterOutputs["invite"]["createInvite
       </Text>
       <Link href={createPath(innerProps)}>{t("action.copy.link")}</Link>
       <Stack gap="xs">
-        <Text fw="bold">{t("field.id.label")}:</Text>
+        <Text fw="bold">{invariantTechnicalLabels.id}:</Text>
         <Mark style={{ borderRadius: 4 }} color="gray" px={5}>
           {innerProps.id}
         </Mark>

@@ -3,7 +3,8 @@
 import { Badge, Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { getIntegrationName } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 
 import { getUsableWidgetQueryData } from "../common/query-state";
 import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
@@ -21,7 +22,7 @@ export default function CoolifyWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"coolify">) {
-  const t = useScopedI18n("widget.coolify");
+  const t = useI18n("widget.coolify");
 
   if (integrationIds.length === 0) {
     return (
@@ -54,7 +55,7 @@ interface CoolifyContentProps {
 }
 
 function CoolifyContent({ integrationIds, options, width, height, isAdvanced }: CoolifyContentProps) {
-  const t = useScopedI18n("common");
+  const t = useI18n("common");
   const instancesQuery = clientApi.widget.coolify.getInstancesInfo.useQuery({
     integrationIds,
   });
@@ -137,7 +138,7 @@ const FailedSourceBadges = ({
   sources: { integrationId: string; integrationName: string }[];
   queryError: unknown;
 }) => {
-  const t = useScopedI18n("widget.coolify");
+  const t = useI18n("widget.coolify");
   if (sources.length === 0 && !queryError) return null;
 
   return (
@@ -148,7 +149,7 @@ const FailedSourceBadges = ({
         </Badge>
       ))}
       <Box ml="auto">
-        <WidgetQueryErrorIndicator error={queryError} label={t("name")} />
+        <WidgetQueryErrorIndicator error={queryError} label={getIntegrationName("coolify")} />
       </Box>
     </Group>
   );

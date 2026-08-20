@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { CustomWidgetPublishedQueryState } from "@homarr/custom-widgets/runtime";
 import { CustomJsxRenderer, parseRequestCapabilities } from "@homarr/custom-widgets/runtime";
 
@@ -12,9 +12,13 @@ import { InactiveWidgetDefinitionProvider, WidgetDefinitionProvider } from "./wi
 export { CUSTOM_JSX_METHOD_COLORS } from "@homarr/custom-widgets/runtime";
 
 export default function CustomJsxDisplay({ data }: { data: Record<string, unknown> }) {
-  const t = useScopedI18n("widget.customApi.customJsx");
+  const t = useI18n("widget.customApi.customJsx");
+  const actionT = useI18n("common.action");
   const capabilities = useMemo(() => parseRequestCapabilities(data.requestCapabilities), [data.requestCapabilities]);
-  const components = useMemo(() => createCustomWidgetComponents({ copy: t("copy"), copied: t("copied") }), [t]);
+  const components = useMemo(
+    () => createCustomWidgetComponents({ copy: actionT("copy"), copied: t("copied") }),
+    [actionT, t],
+  );
   const [queryState, setQueryState] = useState<Record<string, CustomWidgetPublishedQueryState>>({});
   useEffect(
     () => setQueryState({}),

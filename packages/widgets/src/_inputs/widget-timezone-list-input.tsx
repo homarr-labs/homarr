@@ -22,7 +22,7 @@ import { IconGripVertical, IconPlus, IconTrash } from "@tabler/icons-react";
 
 import { createId } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { OptionTimezone } from "../options";
 import type { CommonWidgetInputProps } from "./common";
@@ -246,4 +246,4 @@ type TimezoneListTranslationKey =
 type TimezoneListTranslation = (key: TimezoneListTranslationKey, values?: Record<string, string | number>) => string;
 
 const useTimezoneListTranslation = (kind: WidgetKind) =>
-  useScopedI18n(`widget.${kind}.timezoneList` as never) as unknown as TimezoneListTranslation;
+  useI18n(`widget.${kind}.timezoneList` as never) as unknown as TimezoneListTranslation;

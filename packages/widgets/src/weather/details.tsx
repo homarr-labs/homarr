@@ -10,7 +10,7 @@ import {
   IconWind,
 } from "@tabler/icons-react";
 
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetProps } from "../definition";
 import { AnimatedWeatherIcon } from "./animated-icon";
@@ -79,8 +79,8 @@ export const DailyWeatherDetails = ({
   useImperialSpeed,
 }: DailyWeatherDetailsProps) => {
   const locale = useCurrentIntlLocale();
-  const t = useScopedI18n("widget.weather");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.weather");
+  const tCommon = useI18n("common");
   const speedUnit = useImperialSpeed ? tCommon("unit.speed.milesPerHour") : tCommon("unit.speed.kilometersPerHour");
 
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Combobox, Pill, PillsInput, useCombobox } from "@mantine/core";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -9,7 +9,7 @@ import { useFormContext } from "./form";
 
 export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetInputProps<"multiText">) => {
   const t = useWidgetInputTranslation(kind, property);
-  const tCommon = useScopedI18n("common");
+  const tCommon = useI18n("common");
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),

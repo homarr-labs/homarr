@@ -38,7 +38,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { formatBytes } from "@homarr/common";
-import type { TranslationFunction } from "@homarr/translation";
+import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
@@ -63,7 +63,7 @@ export const SystemHealthMonitoring = ({
   displayMode,
   withScrollArea = true,
 }: WidgetComponentProps<"healthMonitoring"> & { withScrollArea?: boolean }) => {
-  const t = useI18n();
+  const t = useI18n("widget.healthMonitoring");
   const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
   const healthResults = getUsableWidgetQueryData(healthQuery) ?? [];
   const healthData = healthResults.filter(
@@ -81,7 +81,7 @@ export const SystemHealthMonitoring = ({
   const queryIndicators = (
     <Group gap={0}>
       <IntegrationErrorIndicator results={healthResults} />
-      <WidgetQueryErrorIndicator error={healthQuery.error} label={t("widget.healthMonitoring.name")} />
+      <WidgetQueryErrorIndicator error={healthQuery.error} label={t("name")} />
     </Group>
   );
 
@@ -155,7 +155,7 @@ export const SystemHealthMonitoring = ({
                     size="sm"
                     radius={board.itemRadius}
                     onClick={() => setOpenedIntegrationId(integrationId)}
-                    aria-label={t("widget.healthMonitoring.popover.information")}
+                    aria-label={t("popover.information")}
                   >
                     <IconInfoCircle className="health-monitoring-information-icon" size={30} />
                   </ActionIcon>
@@ -164,7 +164,7 @@ export const SystemHealthMonitoring = ({
                   opened={openedIntegrationId === integrationId}
                   onClose={() => setOpenedIntegrationId(null)}
                   size="auto"
-                  title={t("widget.healthMonitoring.popover.information")}
+                  title={t("popover.information")}
                   centered
                 >
                   <Stack gap="10px" className="health-monitoring-modal-stack">
@@ -253,10 +253,10 @@ export const SystemHealthMonitoring = ({
                         </Progress.Root>
                         <Group justify="space-between" gap={8} wrap="nowrap">
                           <Text className="health-monitoring-disk-use-value" size="xs" c="dimmed">
-                            {t("widget.healthMonitoring.popover.used")} {formatFileSize(disk.used)}
+                            {t("popover.used")} {formatFileSize(disk.used)}
                           </Text>
                           <Text className="health-monitoring-disk-available-value" size="xs" c="dimmed">
-                            {formatFileSize(disk.available)} {t("widget.healthMonitoring.popover.available")}
+                            {formatFileSize(disk.available)} {t("popover.available")}
                           </Text>
                         </Group>
                       </Stack>
@@ -283,7 +283,7 @@ const SystemInformationList = ({
 }: {
   healthInfo: HealthInfo;
   memoryUsage: ReturnType<typeof formatMemoryUsage>;
-  t: TranslationFunction;
+  t: ScopedTranslationFunction<"widget.healthMonitoring">;
   compact?: boolean;
 }) => (
   <List
@@ -293,48 +293,46 @@ const SystemInformationList = ({
     size={compact ? "sm" : undefined}
   >
     <List.Item className="health-monitoring-information-processor" icon={<IconCpu2 size={compact ? 18 : 30} />}>
-      {t("widget.healthMonitoring.popover.processor", { cpuModelName: healthInfo.cpuModelName })}
+      {t("popover.processor", { cpuModelName: healthInfo.cpuModelName })}
     </List.Item>
     <List.Item className="health-monitoring-information-memory" icon={<IconBrain size={compact ? 18 : 30} />}>
-      {t("widget.healthMonitoring.popover.memory", { memory: memoryUsage.memTotal.GB })}
+      {t("popover.memory", { memory: memoryUsage.memTotal.GB })}
     </List.Item>
     <List.Item className="health-monitoring-information-memory" icon={<IconBrain size={compact ? 18 : 30} />}>
-      {t("widget.healthMonitoring.popover.memoryAvailable", {
+      {t("popover.memoryAvailable", {
         memoryAvailable: memoryUsage.memFree.GB,
         percent: String(memoryUsage.memFree.percent),
       })}
     </List.Item>
     <List.Item className="health-monitoring-information-version" icon={<IconVersions size={compact ? 18 : 30} />}>
-      {t("widget.healthMonitoring.popover.version", { version: healthInfo.version })}
+      {t("popover.version", { version: healthInfo.version })}
     </List.Item>
     <List.Item className="health-monitoring-information-uptime" icon={<IconClock size={compact ? 18 : 30} />}>
       {formatUptime(healthInfo.uptime, t)}
     </List.Item>
     {healthInfo.loadAverage && (
       <List.Item className="health-monitoring-information-load-average" icon={<IconCpu size={compact ? 18 : 30} />}>
-        {t("widget.healthMonitoring.popover.loadAverage")}: {healthInfo.loadAverage["1min"]}% /{" "}
-        {healthInfo.loadAverage["5min"]}% / {healthInfo.loadAverage["15min"]}%
+        {t("popover.loadAverage")}: {healthInfo.loadAverage["1min"]}% / {healthInfo.loadAverage["5min"]}% /{" "}
+        {healthInfo.loadAverage["15min"]}%
       </List.Item>
     )}
     <List.Item className="health-monitoring-information-updates" icon={<IconPackages size={compact ? 18 : 30} />}>
-      {t("widget.healthMonitoring.popover.updatesAvailable", { count: healthInfo.availablePkgUpdates })}
+      {t("popover.updatesAvailable", { count: healthInfo.availablePkgUpdates })}
     </List.Item>
     <List.Item className="health-monitoring-information-reboot" icon={<IconRefreshAlert size={compact ? 18 : 30} />}>
-      {healthInfo.rebootRequired
-        ? t("widget.healthMonitoring.popover.rebootRequired")
-        : t("widget.healthMonitoring.popover.rebootNotRequired")}
+      {healthInfo.rebootRequired ? t("popover.rebootRequired") : t("popover.rebootNotRequired")}
     </List.Item>
   </List>
 );
 
-export const formatUptime = (uptimeInSeconds: number, t: TranslationFunction) => {
+export const formatUptime = (uptimeInSeconds: number, t: ScopedTranslationFunction<"widget.healthMonitoring">) => {
   const uptimeDuration = dayjs.duration(uptimeInSeconds, "seconds");
   const months = uptimeDuration.months();
   const days = uptimeDuration.days();
   const hours = uptimeDuration.hours();
   const minutes = uptimeDuration.minutes();
 
-  return t("widget.healthMonitoring.popover.uptime", {
+  return t("popover.uptime", {
     months: String(months),
     days: String(days),
     hours: String(hours),

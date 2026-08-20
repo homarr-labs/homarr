@@ -9,7 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useTimeAgo } from "@homarr/common";
 import type { AnchorNotePermission } from "@homarr/integrations";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
@@ -42,7 +42,7 @@ export default function AnchorNoteWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"anchorNote">) {
-  const t = useScopedI18n("widget.anchorNote");
+  const t = useI18n("widget.anchorNote");
   const noteId = options.noteId.trim();
   if (!noteId) {
     return (
@@ -85,7 +85,9 @@ const AnchorNoteWidgetContent = ({
   height,
   isAdvanced,
 }: AnchorNoteWidgetContentProps) => {
-  const t = useScopedI18n("widget.anchorNote");
+  const t = useI18n("widget.anchorNote");
+  const tWidgetCommon = useI18n("widget.common");
+  const actionT = useI18n("common.action");
   const locale = useCurrentIntlLocale();
   const noteQuery = clientApi.widget.anchorNotes.getNote.useQuery({
     integrationId,
@@ -206,7 +208,7 @@ const AnchorNoteWidgetContent = ({
           )}
           {!isEditing && (isAdvanced || options.showUpdatedAt) && (
             <Text size="xs" c="dimmed">
-              {t("updatedAt", { date: updatedAtRelative })}
+              {tWidgetCommon("updatedAt", { date: updatedAtRelative })}
             </Text>
           )}
           {!isEditing && isViewer && (
@@ -243,21 +245,21 @@ const AnchorNoteWidgetContent = ({
               {isEditing ? (
                 <>
                   <Button size="xs" onClick={handleSave} loading={isUpdating} disabled={!hasChanges || !canEdit}>
-                    {t("save")}
+                    {actionT("save")}
                   </Button>
                   <Button size="xs" variant="subtle" onClick={handleCancel} disabled={isUpdating}>
-                    {t("cancel")}
+                    {actionT("cancel")}
                   </Button>
                 </>
               ) : isAdvanced ? (
                 <Button size="xs" variant="light" onClick={handleEdit} disabled={isUpdating}>
-                  {t("edit")}
+                  {actionT("edit")}
                 </Button>
               ) : (
-                <Tooltip label={t("edit")}>
+                <Tooltip label={actionT("edit")}>
                   <ActionIcon
                     className={actionTargetClasses.root}
-                    aria-label={t("edit")}
+                    aria-label={actionT("edit")}
                     size="md"
                     variant="light"
                     onClick={handleEdit}

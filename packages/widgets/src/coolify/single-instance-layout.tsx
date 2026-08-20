@@ -5,7 +5,7 @@ import { Accordion, Anchor, Group, Image, ScrollArea, Stack, Text } from "@manti
 import { useLocalStorage } from "@mantine/hooks";
 
 import { useTimeAgo } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { ApplicationsSection } from "./applications-section";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -32,7 +32,7 @@ export function SingleInstanceLayout({
   widgetKey,
   hideFooter,
 }: SingleInstanceLayoutProps) {
-  const t = useScopedI18n("widget.coolify");
+  const t = useI18n("widget.coolify");
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${widgetKey}`,
     defaultValue: false,
@@ -120,7 +120,7 @@ export function SingleInstanceLayout({
 }
 
 const InstanceFooter = ({ version, updatedAt }: { version: string; updatedAt: Date }) => {
-  const t = useScopedI18n("widget.coolify");
+  const t = useI18n("widget.coolify");
   const relativeTime = useTimeAgo(updatedAt, 60_000);
   return (
     <Group

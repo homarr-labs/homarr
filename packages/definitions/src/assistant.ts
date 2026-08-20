@@ -35,6 +35,7 @@ export const resolveAssistantModelId = (models: AssistantModelOption[], value: s
 const providerIconBaseUrl = "https://cdn.jsdelivr.net/npm/@lobehub/icons-static-svg@latest/icons";
 
 interface AssistantProviderPreset {
+  label?: string;
   baseUrl: string;
   modelDiscoveryPath: string | null;
   requiresApiKey: boolean;
@@ -46,6 +47,7 @@ interface AssistantProviderPreset {
 
 export const assistantProviderPresets = {
   homarr: {
+    label: "Homarr",
     // Browser and server code replace this public fallback with WORKSHOP_API_URL at runtime.
     baseUrl: "https://homarr.dev/api/ai/v1",
     modelDiscoveryPath: "/models",
@@ -55,6 +57,7 @@ export const assistantProviderPresets = {
     iconUrl: "https://homarr.dev/img/logo.png",
   },
   openrouter: {
+    label: "OpenRouter",
     baseUrl: "https://openrouter.ai/api/v1",
     modelDiscoveryPath: "/models",
     requiresApiKey: true,
@@ -63,6 +66,7 @@ export const assistantProviderPresets = {
     iconUrl: `${providerIconBaseUrl}/openrouter-color.svg`,
   },
   openai: {
+    label: "OpenAI",
     baseUrl: "https://api.openai.com/v1",
     modelDiscoveryPath: "/models",
     requiresApiKey: true,
@@ -71,6 +75,7 @@ export const assistantProviderPresets = {
     iconUrl: `${providerIconBaseUrl}/openai.svg`,
   },
   anthropic: {
+    label: "Anthropic Claude",
     baseUrl: "https://api.anthropic.com/v1",
     modelDiscoveryPath: "/models",
     requiresApiKey: true,
@@ -79,6 +84,7 @@ export const assistantProviderPresets = {
     iconUrl: `${providerIconBaseUrl}/anthropic.svg`,
   },
   "google-gemini": {
+    label: "Google Gemini",
     baseUrl: "https://generativelanguage.googleapis.com/v1beta/openai",
     modelDiscoveryPath: "/models",
     requiresApiKey: true,
@@ -87,6 +93,7 @@ export const assistantProviderPresets = {
     iconUrl: `${providerIconBaseUrl}/gemini-color.svg`,
   },
   xai: {
+    label: "xAI",
     baseUrl: "https://api.x.ai/v1",
     modelDiscoveryPath: "/models",
     requiresApiKey: true,
@@ -95,6 +102,7 @@ export const assistantProviderPresets = {
     iconUrl: `${providerIconBaseUrl}/xai.svg`,
   },
   groq: {
+    label: "Groq",
     baseUrl: "https://api.groq.com/openai/v1",
     modelDiscoveryPath: "/models",
     requiresApiKey: true,
@@ -104,6 +112,7 @@ export const assistantProviderPresets = {
     darkIconUrl: "https://cdn.jsdelivr.net/npm/@lobehub/icons-static-png@latest/dark/groq.png",
   },
   mistral: {
+    label: "Mistral AI",
     baseUrl: "https://api.mistral.ai/v1",
     modelDiscoveryPath: "/models",
     requiresApiKey: true,
@@ -112,6 +121,7 @@ export const assistantProviderPresets = {
     iconUrl: `${providerIconBaseUrl}/mistral-color.svg`,
   },
   deepseek: {
+    label: "DeepSeek",
     baseUrl: "https://api.deepseek.com",
     modelDiscoveryPath: "/models",
     requiresApiKey: true,
@@ -120,6 +130,7 @@ export const assistantProviderPresets = {
     iconUrl: `${providerIconBaseUrl}/deepseek-color.svg`,
   },
   together: {
+    label: "Together AI",
     baseUrl: "https://api.together.xyz/v1",
     modelDiscoveryPath: "/models",
     requiresApiKey: true,
@@ -128,6 +139,7 @@ export const assistantProviderPresets = {
     iconUrl: `${providerIconBaseUrl}/together-color.svg`,
   },
   ollama: {
+    label: "Ollama",
     baseUrl: "http://localhost:11434/v1",
     modelDiscoveryPath: "/models",
     requiresApiKey: false,
@@ -136,6 +148,7 @@ export const assistantProviderPresets = {
     iconUrl: `${providerIconBaseUrl}/ollama.svg`,
   },
   "lm-studio": {
+    label: "LM Studio",
     baseUrl: "http://localhost:1234/v1",
     modelDiscoveryPath: "/models",
     requiresApiKey: false,
@@ -144,6 +157,7 @@ export const assistantProviderPresets = {
     iconUrl: `${providerIconBaseUrl}/lmstudio.svg`,
   },
   custom: {
+    label: undefined,
     baseUrl: "",
     modelDiscoveryPath: "/models",
     requiresApiKey: false,

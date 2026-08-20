@@ -48,7 +48,7 @@ const userChildrenOptions = createChildrenOptions<User>({
 
 export const usersSearchGroup = createGroup<User>({
   keyPath: "id",
-  title: (t) => t("search.mode.userGroup.group.user.title"),
+  title: (t) => t("common.entity.users"),
   Component: (user) => (
     <Group px="md" py="sm">
       <UserAvatar user={user} size="sm" />

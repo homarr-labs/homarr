@@ -4,7 +4,7 @@ import { Stack, Text } from "@mantine/core";
 import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
@@ -90,7 +90,7 @@ export default function UmamiWidget({
 }
 
 function NoWebsiteConfigured() {
-  const t = useScopedI18n("widget.umami");
+  const t = useI18n("widget.umami");
   return (
     <Stack align="center" justify="center" h="100%">
       <Text c="dimmed" size="sm">

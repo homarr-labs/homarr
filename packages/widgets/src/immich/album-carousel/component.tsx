@@ -14,7 +14,7 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useCurrentIntlLocale, useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
@@ -32,7 +32,7 @@ export default function ImmichAlbumCarouselWidget({
 }: WidgetComponentProps<"immich-albumCarousel">) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const t = useI18n();
+  const t = useI18n("widget.immich-albumCarousel");
 
   const albumQuery = clientApi.widget.immich.getAlbum.useQuery(
     {
@@ -72,7 +72,7 @@ export default function ImmichAlbumCarouselWidget({
   return (
     <Box h="100%" pos="relative">
       <Box pos="absolute" top={4} right={8} style={{ zIndex: 3 }}>
-        <WidgetQueryErrorIndicator error={albumQuery.error} label={t("widget.immich-albumCarousel.name")} />
+        <WidgetQueryErrorIndicator error={albumQuery.error} label={t("name")} />
       </Box>
       {album.assets.length === 0 || photoAssets.length === 0 ? (
         <NoPhotosInAlbum />
@@ -133,7 +133,7 @@ function Carousel({
   paused,
   setPaused,
 }: CarouselProps) {
-  const t = useScopedI18n("widget.immich-albumCarousel");
+  const t = useI18n("widget.immich-albumCarousel");
   const locale = useCurrentIntlLocale();
   const reduceMotion = useReducedMotion();
 
@@ -189,7 +189,11 @@ function Carousel({
               size={advanced ? 40 : 32}
               onClick={() => setPaused((value) => !value)}
             >
-              {paused ? <IconPlayerPlay size="var(--mantine-font-size-lg)" /> : <IconPlayerPause size="var(--mantine-font-size-lg)" />}
+              {paused ? (
+                <IconPlayerPlay size="var(--mantine-font-size-lg)" />
+              ) : (
+                <IconPlayerPause size="var(--mantine-font-size-lg)" />
+              )}
             </ActionIcon>
             {advanced && (
               <ActionIcon
@@ -254,13 +258,13 @@ function Carousel({
 }
 
 function NoPhotosInAlbum() {
-  const t = useI18n();
+  const t = useI18n("widget.immich-albumCarousel");
   return (
     <Center h="100%">
       <Stack align="center" gap="xs">
         <IconAlertCircle size={32} />
         <Text size="sm" fw={500}>
-          {t("widget.immich-albumCarousel.noPhotos")}
+          {t("noPhotos")}
         </Text>
       </Stack>
     </Center>

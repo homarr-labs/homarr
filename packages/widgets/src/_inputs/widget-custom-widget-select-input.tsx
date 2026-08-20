@@ -19,7 +19,7 @@ import { IconAlertTriangle, IconApi } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import type { CommonWidgetInputProps } from "./common";
@@ -32,7 +32,7 @@ export const WidgetCustomWidgetSelectInput = ({
   options,
 }: CommonWidgetInputProps<"customWidgetSelect">) => {
   const t = useWidgetInputTranslation(kind, property);
-  const labels = useScopedI18n("widget.customApi.picker");
+  const labels = useI18n("widget.customApi.picker");
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const form = useFormContext();

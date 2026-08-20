@@ -25,11 +25,12 @@ interface WorkersPanelProps {
 
 export function WorkersPanel(props: WorkersPanelProps) {
   const t = useI18n("widget.mediaTranscoding.panel.workers");
+  const tCommon = useI18n("widget.mediaTranscoding.panel.common");
 
   if (props.workers.length === 0) {
     return (
       <Center style={{ flex: "1" }}>
-        <Title order={6}>{t("empty")}</Title>
+        <Title order={6}>{tCommon("empty")}</Title>
       </Center>
     );
   }
@@ -41,7 +42,7 @@ export function WorkersPanel(props: WorkersPanelProps) {
           <TableTr>
             <TableTh ta="start" py={4}>
               <Text size="xs" fw="bold">
-                {t("table.file")}
+                {tCommon("file")}
               </Text>
             </TableTh>
             <TableTh ta="start" py={4} w={50}>
@@ -65,11 +66,11 @@ export function WorkersPanel(props: WorkersPanelProps) {
                   <Group gap="xs" wrap="nowrap">
                     <div>
                       {worker.jobType === "transcode" ? (
-                        <Tooltip label={t("table.transcode")}>
+                        <Tooltip label={tCommon("transcode")}>
                           <IconTransform size="var(--mantine-font-size-sm)" style={{ flexShrink: 0 }} />
                         </Tooltip>
                       ) : (
-                        <Tooltip label={t("table.healthCheck")}>
+                        <Tooltip label={tCommon("healthCheck")}>
                           <IconHeartbeat size="var(--mantine-font-size-sm)" style={{ flexShrink: 0 }} />
                         </Tooltip>
                       )}

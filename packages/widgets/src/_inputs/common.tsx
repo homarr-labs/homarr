@@ -1,7 +1,11 @@
 import type { WidgetKind } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetOptionOfType, WidgetOptionType } from "../options";
+import {
+  getWidgetOptionDescriptionTranslationNamespace,
+  getWidgetOptionTranslationNamespace,
+} from "../option-translation";
 
 export interface CommonWidgetInputProps<TKey extends WidgetOptionType> {
   kind: WidgetKind;
@@ -25,7 +29,17 @@ type UseWidgetInputTranslationReturnType = (key: "label" | "description" | "plac
  *   is defined for the option. The method does sadly not reconize issues with those definitions. So it does not yell at you when you somewhere show the label without having it defined in the translations.
  */
 export const useWidgetInputTranslation = (kind: WidgetKind, property: string): UseWidgetInputTranslationReturnType => {
-  return useScopedI18n(
-    `widget.${kind}.option.${property}` as never, // Because the type is complex and not recognized by typescript, we need to cast it to never to make it work.
+  const inputNamespace = getWidgetOptionTranslationNamespace(kind, property);
+  const descriptionNamespace = getWidgetOptionDescriptionTranslationNamespace(kind, property);
+  const tInput = useI18n(
+    inputNamespace as never, // Because the type is complex and not recognized by typescript, we need to cast it to never to make it work.
   ) as unknown as UseWidgetInputTranslationReturnType;
+  const tDescription = useI18n(
+    (descriptionNamespace ?? inputNamespace) as never,
+  ) as unknown as UseWidgetInputTranslationReturnType;
+
+  return (key) => {
+    if (key === "description" && descriptionNamespace) return tDescription("description");
+    return tInput(key);
+  };
 };

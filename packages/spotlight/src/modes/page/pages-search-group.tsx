@@ -17,7 +17,7 @@ import {
 } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
@@ -59,7 +59,7 @@ export const pagesSearchGroup = createGroup<{
   },
   useOptions() {
     const { data: session } = useSession();
-    const t = useScopedI18n("search.mode.page.group.page.option");
+    const t = useI18n("search.mode.page.group.page.option");
 
     const managePages = [
       {

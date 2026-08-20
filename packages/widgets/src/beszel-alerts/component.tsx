@@ -23,7 +23,7 @@ import type { LucideIcon } from "lucide-react";
 import { Activity, Battery, Cpu, HardDrive, MemoryStick, Monitor, Network, Server, Thermometer } from "lucide-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -58,7 +58,7 @@ export default function BeszelAlertsWidget({
   displayMode,
   widgetRuntimeRef,
 }: WidgetComponentProps<"beszelAlerts">) {
-  const t = useScopedI18n("widget.beszelAlerts");
+  const t = useI18n("widget.beszelAlerts");
   const isAdvanced = displayMode === "advanced";
   const alertsInput = useMemo(
     () =>

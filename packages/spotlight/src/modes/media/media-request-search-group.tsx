@@ -9,7 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { getIntegrationName } from "@homarr/definitions";
 import type { MediaAvailability } from "@homarr/integrations/types";
 import { mediaAvailabilityConfiguration } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { createGroup } from "../../lib/group";
 import { mediaRequestSearchScopeAtom } from "../../spotlight-store";
@@ -37,7 +37,7 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
   keyPath: "key",
   title: (t) => t("search.mode.media.group.title"),
   Component(option) {
-    const tMedia = useScopedI18n("search.mode.media");
+    const tMedia = useI18n("search.mode.media");
 
     if (option.kind !== "result") {
       return (
@@ -96,7 +96,7 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
     return useMediaRequestSearchInteraction(option.result.integration, option.result);
   },
   useQueryOptions(query) {
-    const tMedia = useScopedI18n("search.mode.media");
+    const tMedia = useI18n("search.mode.media");
     const scope = useAtomValue(mediaRequestSearchScopeAtom);
     const [debouncedQuery] = useDebouncedValue(query.trim(), 150);
     const targetsQuery = clientApi.integration.mediaRequestSearchTargets.useQuery();

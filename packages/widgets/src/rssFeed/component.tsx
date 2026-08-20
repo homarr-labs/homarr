@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { WidgetEmptyState } from "../common/empty-state";
@@ -50,7 +50,7 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
   });
 
   const board = useRequiredBoard();
-  const t = useScopedI18n("widget.rssFeed");
+  const t = useI18n("widget.rssFeed");
   if (feed.hasError) {
     return (
       <BaseWidgetError
@@ -73,7 +73,12 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
     return (
       <Flex direction="column" h="100%" p="xs">
         {warning && (
-          <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size="var(--mantine-font-size-md)" />} p="xs">
+          <Alert
+            role="presentation"
+            color="orange"
+            icon={<IconAlertTriangle aria-hidden size="var(--mantine-font-size-md)" />}
+            p="xs"
+          >
             <output>{warning}</output>
           </Alert>
         )}
@@ -103,7 +108,13 @@ export default function RssFeed({ options, width, height, displayMode }: WidgetC
   return (
     <ScrollArea className="scroll-area-w100" w="100%" h="100%" p={isTiny ? 4 : "xs"}>
       {warning && (
-        <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size="var(--mantine-font-size-md)" />} p="xs" mb="xs">
+        <Alert
+          role="presentation"
+          color="orange"
+          icon={<IconAlertTriangle aria-hidden size="var(--mantine-font-size-md)" />}
+          p="xs"
+          mb="xs"
+        >
           <output>{warning}</output>
         </Alert>
       )}

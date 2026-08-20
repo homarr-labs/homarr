@@ -1,6 +1,6 @@
 import { Badge, Box, Group, Progress, Stack, Text } from "@mantine/core";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { TimeOfDayPhase } from "./world-clock";
 
@@ -36,7 +36,7 @@ export const TimeOfDayBar = ({
   showTicks = false,
   label,
 }: TimeOfDayBarProps) => {
-  const t = useScopedI18n("widget.clock");
+  const t = useI18n("widget.clock");
   const progress = Math.max(0, Math.min(100, (minuteOfDay / 1440) * 100));
   const remainingMinutes = Math.max(0, 1440 - Math.floor(minuteOfDay));
   const remainingHours = Math.floor(remainingMinutes / 60);

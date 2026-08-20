@@ -125,7 +125,7 @@ const boardChildrenOptions = createChildrenOptions<Board>({
 
 export const boardsSearchGroup = createGroup<Board>({
   keyPath: "id",
-  title: "Boards",
+  title: (t) => t("common.entity.boards"),
   Component: (board) => (
     <Group px="md" py="sm">
       {board.logoImageUrl ? (

@@ -25,7 +25,7 @@ import { SAFE_TABLER_ICON_NAMES } from "./jsx-icon-adapter";
 const CUSTOM_WIDGET_COMPONENTS = createCustomWidgetComponents({ copy: "Copy", copied: "Copied" });
 
 vi.mock("@homarr/translation/client", () => ({
-  useScopedI18n: () => (key: string, params?: Record<string, string>) =>
+  useI18n: () => (key: string, params?: Record<string, string>) =>
     key === "templateWarnings" ? `${params?.count ?? "0"} template warning(s):` : key,
 }));
 

@@ -1,7 +1,9 @@
+import { invariantTechnicalLabels } from "./invariant-technical-labels";
+
 export const kubernetesNodeStates = ["Ready", "NotReady"] as const;
 export const kubernetesNamespaceStates = ["Active", "Terminating"] as const;
 export const kubernetesResourceTypes = ["Reserved", "Used"] as const;
-export const kubernetesCapacityTypes = ["Pods", "CPU", "Memory"] as const;
+export const kubernetesCapacityTypes = ["Pods", invariantTechnicalLabels.cpu, "Memory"] as const;
 export const kubernetesLabelResourceTypes = [
   "configmaps",
   "pods",
@@ -12,7 +14,6 @@ export const kubernetesLabelResourceTypes = [
   "services",
   "volumes",
 ] as const;
-
 export type KubernetesNodeState = (typeof kubernetesNodeStates)[number];
 export type KubernetesNamespaceState = (typeof kubernetesNamespaceStates)[number];
 export type KubernetesResourceType = (typeof kubernetesResourceTypes)[number];

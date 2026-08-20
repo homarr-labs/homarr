@@ -38,27 +38,28 @@ export const isYouTubeUrl = (value: string): boolean => {
 };
 
 const NoUrl = () => {
-  const t = useI18n();
+  const t = useI18n("widget.video");
 
   return (
     <Center h="100%">
       <Stack align="center">
         <IconDeviceCctvOff />
-        <Title order={4}>{t("widget.video.error.noUrl")}</Title>
+        <Title order={4}>{t("error.noUrl")}</Title>
       </Stack>
     </Center>
   );
 };
 
 const ForYoutubeUseIframe = () => {
-  const t = useI18n();
+  const t = useI18n("widget.video");
+  const tCommon = useI18n("common");
 
   return (
     <Center h="100%">
       <Stack align="center" gap="xs">
         <IconBrandYoutube />
-        <Title order={4}>{t("widget.video.error.forYoutubeUseIframe")}</Title>
-        <Anchor href={createDocumentationLink("/docs/widgets/iframe")}>{t("common.action.checkoutDocs")}</Anchor>
+        <Title order={4}>{t("error.forYoutubeUseIframe")}</Title>
+        <Anchor href={createDocumentationLink("/docs/widgets/iframe")}>{tCommon("action.checkoutDocs")}</Anchor>
       </Stack>
     </Center>
   );

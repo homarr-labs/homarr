@@ -42,6 +42,7 @@ import {
   IconZoomQuestion,
 } from "@tabler/icons-react";
 
+import { getWidgetName } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
@@ -219,7 +220,7 @@ const IntegrationTiedWidgets = ({ widgets, limit }: { widgets: WidgetKind[]; lim
             leftSection={<WidgetIcon size={12} />}
             style={{ fontWeight: 500 }}
           >
-            {t(`widget.${widgetKind}.name`)}
+            {getWidgetName(widgetKind, t)}
           </Badge>
         );
       })}

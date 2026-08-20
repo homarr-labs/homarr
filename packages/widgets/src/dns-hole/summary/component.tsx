@@ -47,6 +47,9 @@ export default function DnsHoleSummaryWidget({
   const { isPending } = summaryQuery;
 
   const t = useI18n();
+  const tCommon = useI18n("common");
+  const tDns = useI18n("widget.dnsHoleSummary");
+  const tWidgetCommon = useI18n("widget.common");
 
   const successfulSummaries = summaries.filter(({ summary }) => summary !== null);
   const data = successfulSummaries.flatMap(({ summary }) => (summary ? [summary] : []));
@@ -57,7 +60,7 @@ export default function DnsHoleSummaryWidget({
     return (
       <Stack h="100%" justify="center" align="center">
         <Text c="dimmed" size="sm">
-          {t("common.action.loading")}
+          {tCommon("action.loading")}
         </Text>
       </Stack>
     );
@@ -68,7 +71,7 @@ export default function DnsHoleSummaryWidget({
       <Box pos="absolute" top={4} right={4} style={{ zIndex: 2 }}>
         <Group gap={0}>
           <IntegrationErrorIndicator results={summaries} />
-          <WidgetQueryErrorIndicator error={summaryQuery.error} label={t("widget.dnsHoleSummary.name")} />
+          <WidgetQueryErrorIndicator error={summaryQuery.error} label={tDns("name")} />
         </Group>
       </Box>
       <SimpleGrid cols={2} spacing="xs" p="xs" {...layoutProps} style={{ ...layoutProps.style, flex: 1, minHeight: 0 }}>
@@ -95,7 +98,7 @@ export default function DnsHoleSummaryWidget({
               ))}
             </AvatarGroup>
             <Text fz="md" ta="center">
-              {t("widget.dnsHoleSummary.error.integrationsDisconnected")}
+              {tWidgetCommon("integrationDisconnected")}
             </Text>
           </Stack>
         )}
@@ -110,7 +113,7 @@ export default function DnsHoleSummaryWidget({
                 color={summary?.status === "enabled" ? "green" : summary?.status === "disabled" ? "red" : "gray"}
                 style={{ flexShrink: 0 }}
               >
-                {integration.name}: {t(`widget.dnsHoleSummary.status.${summary?.status ?? "unknown"}` as never)}
+                {integration.name}: {tDns(`status.${summary?.status ?? "unknown"}` as never)}
               </Badge>
             ))}
           </Group>

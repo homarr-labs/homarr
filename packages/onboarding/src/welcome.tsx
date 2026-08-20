@@ -7,7 +7,7 @@ import { IconArrowRight, IconDatabaseImport } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { OnboardingBackdrop } from "./onboarding-backdrop";
 import { OnboardingWordmark } from "./onboarding-wordmark";
@@ -16,8 +16,8 @@ import { useOnboardingSounds, useWelcomeSound } from "./use-onboarding-sounds";
 import classes from "./onboarding-studio.module.css";
 
 export const Welcome = ({ environment, sqliteRestore }: OnboardingStudioProps) => {
-  const t = useScopedI18n("init.studio.welcome");
-  const claimT = useScopedI18n("init.studio.claim");
+  const t = useI18n("init.studio.welcome");
+  const claimT = useI18n("init.studio.claim");
   const [showRestore, setShowRestore] = useState(false);
   const [claimPending, setClaimPending] = useState(false);
   const [claimError, setClaimError] = useState<string | null>(null);
