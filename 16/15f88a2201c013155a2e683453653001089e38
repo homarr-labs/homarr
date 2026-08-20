@@ -1,0 +1,18 @@
+apps/nextjs/src/components/board/items/lazy-widget-edit-modal.tsx
+  h_d6e478ca18e517 3,8,10,14,16,86,88-117,123,125
+packages/widgets/src/modals/widget-edit-modal.tsx
+  h_d6e478ca18e517 61,221-230,239
+packages/widgets/src/widget-integration-select.tsx
+  h_d6e478ca18e517 35,44,114-126
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "1615f88a2201c013155a2e683453653001089e38",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
