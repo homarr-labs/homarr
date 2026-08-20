@@ -143,11 +143,6 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
                   </ThemeIcon>
                 }
                 title={t("app.action.create.title")}
-                topRight={
-                  <Badge variant="light" color="secondaryColor" size="xs">
-                    New
-                  </Badge>
-                }
                 description={t("app.action.create.description")}
                 footerLeft={
                   <Text size="xs" c="dimmed">
