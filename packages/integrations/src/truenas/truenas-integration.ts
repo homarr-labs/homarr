@@ -15,6 +15,20 @@ const logger = createLogger({ module: "trueNasIntegration" });
 
 const NETWORK_MULTIPLIER = 100;
 
+const ERROR_MESSAGE_LIMIT = 200;
+
+/**
+ * The error decorator replaces a rejected request with a generic message and moves the actionable
+ * reason to `cause`. TrueNAS puts its middleware traceback in there, several kilobytes of it, so the
+ * reason is truncated before it reaches a log line that repeats on every poll.
+ */
+const describeRequestError = (error: unknown) => {
+  const cause = error instanceof Error ? error.cause : undefined;
+  const reason = cause instanceof Error ? cause.message : error instanceof Error ? error.message : String(error);
+
+  return reason.length > ERROR_MESSAGE_LIMIT ? `${reason.slice(0, ERROR_MESSAGE_LIMIT)}…` : reason;
+};
+
 export class TrueNasIntegration extends Integration implements ISystemHealthMonitoringIntegration {
   private client?: TrueNasClient;
 
@@ -108,9 +122,10 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       .map((pool) => {
         if (pool.allocated !== null && pool.size !== null && pool.free !== null) {
           return {
-            ...pool,
+            name: pool.name,
+            status: pool.status,
+            healthy: pool.healthy,
             allocated: pool.allocated,
-            size: pool.size,
             free: pool.free,
           };
         }
@@ -119,39 +134,75 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       })
       .filter((pool) => pool !== null);
 
-    if (activePools.length === 0) return [];
-
-    const datasets = await this.requestAsync("pool.dataset.query", [
-      [["id", "in", activePools.map((pool) => pool.name)]],
-      {
-        extra: {
-          properties: ["used", "available"],
-        },
-      },
-    ]);
-    const parsedDatasets = await poolDatasetSchema.parseAsync(datasets);
-
-    const poolsWithUsableSpace = activePools
-      .map((pool) => {
-        const dataset = parsedDatasets.find((candidate) => candidate.id === pool.name);
-        if (!dataset || dataset.used.parsed === null || dataset.available.parsed === null) return null;
-
-        return {
-          name: pool.name,
-          status: pool.status,
-          healthy: pool.healthy,
-          used: dataset.used.parsed,
-          available: dataset.available.parsed,
-        };
-      })
-      .filter((pool) => pool !== null);
-
     logger.debug("Retrieved pools", {
       url: this.integration.url,
       totalCount: result.length,
-      activeCount: poolsWithUsableSpace.length,
+      activeCount: activePools.length,
     });
-    return poolsWithUsableSpace;
+
+    if (activePools.length === 0) return [];
+
+    const usableSpaceByPool = await this.getUsableSpaceByPoolAsync(activePools.map((pool) => pool.name));
+
+    return activePools.map((pool) => {
+      const usableSpace = usableSpaceByPool.get(pool.name);
+      if (!usableSpace) {
+        logger.warn("Falling back to physical pool space, the root dataset reported no usable space", {
+          url: this.integration.url,
+          pool: pool.name,
+        });
+      }
+
+      return {
+        name: pool.name,
+        status: pool.status,
+        healthy: pool.healthy,
+        used: usableSpace?.used ?? pool.allocated,
+        available: usableSpace?.available ?? pool.free,
+      };
+    });
+  }
+
+  /**
+   * Returns the usable space of each pool's root ZFS dataset, keyed by pool name. Unlike the physical
+   * `pool.query` values, these account for RAIDZ parity overhead and dataset limits, matching `zfs list`.
+   * See https://github.com/homarr-labs/homarr/issues/6566
+   *
+   * A pool is left out when its usable space is unavailable, so the caller keeps reporting the pool with
+   * its physical values instead of dropping it, which would also hide its health status:
+   *   - request rejected  → method or `extra.properties` unsupported, or the API key lacks the dataset role
+   *   - response rejected → the payload does not match the expected shape
+   *   - dataset missing   → the pool's root dataset was not returned by the query
+   *   - property absent   → the dataset does not report `used` / `available`, e.g. while locked
+   */
+  private async getUsableSpaceByPoolAsync(poolNames: string[]) {
+    const usableSpaceByPool = new Map<string, { used: number; available: number }>();
+
+    try {
+      const datasets = await this.requestAsync("pool.dataset.query", [
+        [["id", "in", poolNames]],
+        {
+          extra: {
+            properties: ["used", "available"],
+          },
+        },
+      ]);
+
+      for (const dataset of await poolDatasetSchema.parseAsync(datasets)) {
+        const used = dataset.used?.parsed;
+        const available = dataset.available?.parsed;
+        if (typeof used !== "number" || typeof available !== "number") continue;
+
+        usableSpaceByPool.set(dataset.id, { used, available });
+      }
+    } catch (error) {
+      logger.warn("Could not retrieve root dataset space, continuing with physical pool space", {
+        url: this.integration.url,
+        error: describeRequestError(error),
+      });
+    }
+
+    return usableSpaceByPool;
   }
 
   /**
@@ -292,11 +343,16 @@ const poolSchema = z.array(
   }),
 );
 
+// Properties are absent or unparsed for datasets that do not report them, e.g. while locked,
+// so they are optional here and the pool falls back to its physical values instead of failing
+// the whole request, which would also drop cpu, memory and network data
+const poolDatasetPropertySchema = z.object({ parsed: z.number().min(0).nullish() }).nullish();
+
 const poolDatasetSchema = z.array(
   z.object({
     id: z.string(),
-    used: z.object({ parsed: z.number().min(0).nullable() }),
-    available: z.object({ parsed: z.number().min(0).nullable() }),
+    used: poolDatasetPropertySchema,
+    available: poolDatasetPropertySchema,
   }),
 );
 
