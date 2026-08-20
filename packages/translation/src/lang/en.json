@@ -3465,50 +3465,6 @@
         "notificationsDenied": "Notifications are blocked in this browser."
       }
     },
-    "today": {
-      "name": "Today",
-      "description": "Displays the current date and progress through the calendar.",
-      "option": {
-        "weekConvention": {
-          "label": "Week numbering",
-          "options": {
-            "locale": "Use locale rules",
-            "iso": "ISO 8601"
-          }
-        },
-        "showWeekNumber": {
-          "label": "Show week number"
-        },
-        "showDayOfYear": {
-          "label": "Show day of year"
-        },
-        "showQuarter": {
-          "label": "Show quarter"
-        },
-        "showYearProgress": {
-          "label": "Show year progress"
-        }
-      },
-      "weekNumber": "Week {week}",
-      "dayOfYear": "Day {day} of {total}",
-      "quarter": "Quarter {quarter}",
-      "daysAfterToday": "{days, plural, =0 {Last day of the year} one {# day after today} other {# days after today}}",
-      "weekProgressLabel": "Week progress",
-      "monthProgressLabel": "Month progress",
-      "yearProgressLabel": "Year progress",
-      "yearProgress": "Year progress: {progress}%",
-      "weekConvention": {
-        "locale": "Week numbers follow your locale",
-        "iso": "ISO 8601 week numbers"
-      },
-      "advanced": {
-        "week": "Week number",
-        "dayOfYear": "Day of year",
-        "quarter": "Quarter",
-        "quarterValue": "Q{quarter}",
-        "daysRemaining": "Days after today"
-      }
-    },
     "minecraftServerStatus": {
       "name": "Minecraft Server Status",
       "description": "Displays the status of a Minecraft server",

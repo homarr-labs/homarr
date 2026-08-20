@@ -5,10 +5,12 @@ import type { stringOrTranslation } from "@homarr/translation";
 
 import type { ModalPresentation } from "./modal-presentation";
 
-export type ModalComponent<TInnerProps> = (props: {
-  actions: { closeModal: () => void };
-  innerProps: TInnerProps;
-}) => ReactNode;
+export interface ModalActions {
+  closeModal: () => void;
+  setCloseInterceptor?: (interceptor: (() => boolean) | null) => void;
+}
+
+export type ModalComponent<TInnerProps> = (props: { actions: ModalActions; innerProps: TInnerProps }) => ReactNode;
 
 export type CreateModalOptions = Pick<
   ModalOptions<unknown>,

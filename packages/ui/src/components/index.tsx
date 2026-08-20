@@ -13,6 +13,13 @@ export { CustomPasswordInput } from "./password-input/password-input";
 export { IntegrationAvatar } from "./integration-avatar";
 export { BetaBadge } from "./beta-badge";
 export { CatalogItem } from "./catalog-item";
+export { SelectableCard } from "./selectable-card";
+export type {
+  SelectableCardProps,
+  SelectableCardStylesNames,
+  SelectableCardCssVariables,
+  SelectableCardFactory,
+} from "./selectable-card";
 export { MaskedImage } from "./masked-image";
 export { MaskedOrNormalImage } from "./masked-or-normal-image";
 export { LanguageIcon } from "./language-icon";

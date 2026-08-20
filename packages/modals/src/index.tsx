@@ -102,6 +102,13 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
     content: presentationClasses.inspectorContent,
   });
 
+  const handleClose = useCallback(() => {
+    const canClose = modal.reference.onCloseRequest ? modal.reference.onCloseRequest() : true;
+    if (canClose) {
+      handleCloseModal();
+    }
+  }, [handleCloseModal, modal.reference]);
+
   return (
     <Modal
       key={modal.id}
@@ -123,7 +130,7 @@ const ActiveModal = ({ modal, state, handleCloseModal }: ActiveModalProps) => {
       {...otherModalProps}
       title={translateIfNecessary(t, modal.props.defaultTitle)}
       opened={opened}
-      onClose={handleCloseModal}
+      onClose={handleClose}
     >
       {modal.reference.content}
     </Modal>
@@ -144,7 +151,6 @@ export const useModalAction = <TModal extends ModalDefinition>(modal: TModal) =>
   return {
     openModal: (innerProps: inferInnerProps<TModal>, options: OpenModalOptions | void) => {
       // void actually is undefined
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       context.openModalInner({ modal, innerProps, options: options ?? {} });
     },
   };

@@ -2106,7 +2106,6 @@
                     "enum": [
                       "clock",
                       "weather",
-                      "today",
                       "airQuality",
                       "countdown",
                       "timer",

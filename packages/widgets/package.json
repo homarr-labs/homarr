@@ -13,7 +13,9 @@
   },
   "exports": {
     ".": "./index.ts",
-    "./_inputs/json-path-tree-picker": "./src/_inputs/json-path-tree-picker.tsx",
+    "./inputs": "./src/_inputs/index.ts",
+    "./inputs/form": "./src/_inputs/form.ts",
+    "./inputs/json-path-tree-picker": "./src/_inputs/json-path-tree-picker.tsx",
     "./custom-api/component": "./src/custom-api/component.tsx",
     "./custom-api/custom-jsx-display": "./src/custom-api/custom-jsx-display.tsx",
     "./custom-api/extract-display-data": "./src/custom-api/extract-display-data.ts",

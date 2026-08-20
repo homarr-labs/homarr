@@ -60,7 +60,6 @@ import type { TablerIcon } from "@homarr/ui";
 export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
   clock: IconClock,
   weather: IconCloud,
-  today: IconCalendarWeek,
   airQuality: IconWind,
   countdown: IconHourglass,
   timer: IconClockPlay,
