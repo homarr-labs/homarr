@@ -897,7 +897,6 @@ const ToolPart = ({
     toolCallId,
     ready: awaitingApproval,
     completed: !awaitingApproval,
-    mode: "approval",
     confirm: () => {
       respondToApproval({ approved: true, reason: "Approved automatically by the user." });
     },

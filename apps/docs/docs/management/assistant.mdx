@@ -41,32 +41,18 @@ host gateway address.
 - Ask from `Cmd/Ctrl + K`.
 - Add the [Assistant widget](../widgets/assistant) to a board.
 
-On desktop, the full conversation opens as a side panel so the current dashboard remains visible. On mobile, it uses
-the full screen. Homarr keeps one active conversation surface: while the side panel is open, the board widget becomes
-a compact return control, and a visible board widget replaces the floating activity bar. If a board contains multiple
-Assistant widgets, use a compact widget's action to move the active conversation there. Minimize returns the
-conversation to its widget or activity state; Close also dismisses completed activity.
-
 The assistant can work with boards, apps, integrations, widgets, Custom Widgets, and connected services. Use `@` to
 add Homarr items as context, `/` for shortcuts, and the paperclip for supported files.
 
-In supported browsers, use the response action menu to read an answer aloud.
-
-Suggested prompts fill the composer first so you can review or edit them before sending. Questions and approval requests
-stay next to the composer without hiding the transcript.
-
-Use **Conversations** to search and switch threads. Open a conversation's action menu to rename it, export it as
-Markdown, or delete it after confirmation.
+Use **Conversations** to search, switch, rename, export, or delete threads.
 
 Each request includes the user's name, current page and board, home board, server time, browser time zone, and a small
 summary of accessible Homarr resources. Live status is fetched only when needed.
 
 ## Permissions and privacy
 
-- Read-only actions can run automatically. Changes require approval by default.
-- **Automatic approvals** can prepare proposed form details and approve protected changes for the current conversation.
-  It turns off when you switch conversations and still respects Homarr permissions.
-- Questions always wait for your answer, even when automatic approvals are enabled.
+- Read-only actions can run automatically. Changes require approval by default. Automatic approvals apply only to the
+  current conversation, turn off when you switch conversations, and never answer questions for you.
 - Homarr permissions apply to every tool call and mentioned item.
 - API keys and custom headers are encrypted and never returned to the browser.
 - Conversations are stored per user and can be exported or deleted.
