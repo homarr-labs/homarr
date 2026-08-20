@@ -22,6 +22,7 @@ export const CultureSettingsForm = ({ form }: CultureSettingsFormProps) => {
         label={tCulture("defaultLocale.label")}
         {...localeInputProps}
         value={localeInputProps.value as SupportedLanguage}
+        withinPortal
       />
     </SectionCard>
   );

@@ -26,6 +26,7 @@ export const BoardSettingsForm = ({ form }: BoardSettingsFormProps) => {
         clearable
         boards={selectableBoards}
         {...form.getInputProps("homeBoardId")}
+        withinPortal
       />
 
       <BoardSelect
@@ -34,6 +35,7 @@ export const BoardSettingsForm = ({ form }: BoardSettingsFormProps) => {
         clearable
         boards={selectableBoards}
         {...form.getInputProps("mobileHomeBoardId")}
+        withinPortal
       />
 
       <Text fw={500}>{tBoard("status.title")}</Text>

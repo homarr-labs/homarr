@@ -1,0 +1,35 @@
+.list {
+  align-self: flex-start;
+  flex-wrap: nowrap;
+  min-width: 14rem;
+  position: sticky;
+  top: calc(var(--app-shell-header-height) + var(--mantine-spacing-md));
+}
+
+.tab {
+  justify-content: flex-start;
+}
+
+.panel {
+  flex: 1;
+  min-width: 0;
+  padding-inline-start: var(--mantine-spacing-xl);
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .list {
+    max-width: calc(100vw - var(--mantine-spacing-xl));
+    min-width: 0;
+    overflow-x: auto;
+    position: static;
+  }
+
+  .tab {
+    flex: 0 0 auto;
+  }
+
+  .panel {
+    padding-block-start: var(--mantine-spacing-lg);
+    padding-inline-start: 0;
+  }
+}
