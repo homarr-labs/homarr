@@ -32,6 +32,7 @@ interface WidgetIntegrationSelectProps {
   canSelectMultiple?: boolean;
   data: IntegrationSelectOption[];
   withAsterisk?: boolean;
+  onOpenNewIntegration?: () => void;
 }
 export const WidgetIntegrationSelect = ({
   data,
@@ -40,6 +41,7 @@ export const WidgetIntegrationSelect = ({
   label,
   canSelectMultiple = true,
   withAsterisk = false,
+  onOpenNewIntegration,
   ...props
 }: WidgetIntegrationSelectProps) => {
   const t = useI18n();
@@ -109,11 +111,19 @@ export const WidgetIntegrationSelect = ({
         <PillsInput
           inputWrapperOrder={["label", "input", "description", "error"]}
           description={
-            <Text size="xs" span>
-              <Anchor size="xs" component={Link} target="_blank" href="/manage/integrations">
-                {t("widget.common.integration.manage")}
-              </Anchor>
-            </Text>
+            onOpenNewIntegration ? (
+              <Text size="xs" span>
+                <Anchor size="xs" component="button" type="button" onClick={onOpenNewIntegration}>
+                  {t("integration.action.create")}
+                </Anchor>
+              </Text>
+            ) : (
+              <Text size="xs" span>
+                <Anchor size="xs" component={Link} target="_blank" href="/manage/integrations">
+                  {t("widget.common.integration.manage")}
+                </Anchor>
+              </Text>
+            )
           }
           pointer
           onClick={() => combobox.openDropdown()}
