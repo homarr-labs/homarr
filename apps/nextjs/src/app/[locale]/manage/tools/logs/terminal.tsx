@@ -15,7 +15,7 @@ import { useLogContext } from "./log-context";
 import classes from "./terminal.module.css";
 
 const ALL_LOG_LEVELS = [...logLevels];
-const TERMINAL_SCROLLBACK_LINES = LOG_HISTORY_MAX_ENTRIES * 4;
+const TERMINAL_SCROLLBACK_LINES = LOG_HISTORY_MAX_ENTRIES * 20;
 
 const getFocusMarker = (
   messages: LoggerMessage[],
