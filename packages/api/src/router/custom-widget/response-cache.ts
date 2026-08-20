@@ -7,12 +7,23 @@ import type { RedisClient } from "@homarr/core/infrastructure/redis";
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "@homarr/custom-widgets/server";
 
 const ENTRY_PREFIX = "custom-widget:response-cache:v2:entry:";
-const GENERATION_KEY = "custom-widget:response-cache:v2:generation";
+const GENERATION_PREFIX = "custom-widget:response-cache:v2:generation:";
 const LRU_KEY = "custom-widget:response-cache:v2:lru";
 const SIZE_KEY = "custom-widget:response-cache:v2:sizes";
 const TOTAL_BYTES_KEY = "custom-widget:response-cache:v2:bytes";
+// Outlive the one-hour response TTL and 45-second request deadline so a
+// generation cannot reset while an entry from the previous one is reachable.
+const GENERATION_RETENTION_SECONDS = 2 * 60 * 60;
 const MAX_ENTRIES = 1_000;
 const MAX_BYTES = 64 * 1024 * 1024;
+
+const INVALIDATE_GENERATIONS_SCRIPT = `
+for _, key in ipairs(KEYS) do
+  redis.call('INCR', key)
+  redis.call('EXPIRE', key, ARGV[1])
+end
+return #KEYS
+`;
 
 const STORE_SCRIPT = `
 local previousSize = tonumber(redis.call('HGET', KEYS[2], ARGV[1]) or '0')
@@ -34,7 +45,7 @@ return totalBytes
 `;
 
 const logger = createLogger({ module: "custom-widget:response-cache" });
-const inFlight = new Map<string, Promise<CustomWidgetHttpResponse>>();
+const inFlight = new Map<string, { cacheKey: string; request: Promise<CustomWidgetHttpResponse> }>();
 let redis: RedisClient | undefined;
 
 const useSharedCache = () => process.env.NODE_ENV !== "test";
@@ -44,9 +55,26 @@ const getRedis = () => {
   return redis;
 };
 
-const getGeneration = async (client: RedisClient) => Number((await client.get(GENERATION_KEY)) ?? 0);
+const getGenerationKey = (prefix: string) => `${GENERATION_PREFIX}${createHash("sha256").update(prefix).digest("hex")}`;
 
-const getEntryKey = (generation: number, cacheKey: string) => {
+const getCacheKeyPrefixes = (cacheKey: string) => {
+  const prefixes: string[] = [];
+  let separatorIndex = cacheKey.indexOf(":");
+  while (separatorIndex >= 0) {
+    prefixes.push(cacheKey.slice(0, separatorIndex + 1));
+    separatorIndex = cacheKey.indexOf(":", separatorIndex + 1);
+  }
+  prefixes.push(cacheKey);
+  return prefixes;
+};
+
+const getGeneration = async (client: RedisClient, cacheKey: string) => {
+  const keys = getCacheKeyPrefixes(cacheKey).map(getGenerationKey);
+  const generations = await client.mget(...keys);
+  return generations.map((generation) => generation ?? "0").join(":");
+};
+
+const getEntryKey = (generation: string, cacheKey: string) => {
   const digest = createHash("sha256").update(cacheKey).digest("hex");
   return `${ENTRY_PREFIX}${generation}:${digest}`;
 };
@@ -96,10 +124,10 @@ export async function executeWithCustomWidgetResponseCache(
   if (!useSharedCache()) return execute(input);
 
   let client: RedisClient;
-  let generation: number;
+  let generation: string;
   try {
     client = getRedis();
-    generation = await getGeneration(client);
+    generation = await getGeneration(client, cacheKey);
     if ((input.cacheTtlSeconds ?? 0) > 0) {
       const cached = await readCachedResponse(client, getEntryKey(generation, cacheKey));
       if (cached) return cached;
@@ -113,7 +141,7 @@ export async function executeWithCustomWidgetResponseCache(
 
   const pendingKey = `${generation}:${cacheKey}`;
   const pending = inFlight.get(pendingKey);
-  if (pending) return pending;
+  if (pending) return pending.request;
 
   let request: Promise<CustomWidgetHttpResponse>;
   request = execute({ ...input, cacheKey: undefined })
@@ -121,7 +149,7 @@ export async function executeWithCustomWidgetResponseCache(
       const ttlSeconds = input.cacheTtlSeconds ?? 0;
       if (!response.ok || ttlSeconds <= 0) return response;
       try {
-        const currentGeneration = await getGeneration(client);
+        const currentGeneration = await getGeneration(client, cacheKey);
         if (currentGeneration === generation) {
           await storeCachedResponse(client, getEntryKey(generation, cacheKey), response, ttlSeconds);
         }
@@ -133,19 +161,21 @@ export async function executeWithCustomWidgetResponseCache(
       return response;
     })
     .finally(() => {
-      if (inFlight.get(pendingKey) === request) inFlight.delete(pendingKey);
+      if (inFlight.get(pendingKey)?.request === request) inFlight.delete(pendingKey);
     });
-  inFlight.set(pendingKey, request);
+  inFlight.set(pendingKey, { cacheKey, request });
   return request;
 }
 
 export async function invalidateSharedCustomWidgetResponseCache(prefixes: readonly string[]) {
   if (prefixes.length === 0 || !useSharedCache()) return;
-  for (const key of inFlight.keys()) {
-    if (prefixes.some((prefix) => key.includes(prefix))) inFlight.delete(key);
+  const uniquePrefixes = [...new Set(prefixes)];
+  for (const [key, pending] of inFlight) {
+    if (uniquePrefixes.some((prefix) => pending.cacheKey.startsWith(prefix))) inFlight.delete(key);
   }
   try {
-    await getRedis().incr(GENERATION_KEY);
+    const keys = uniquePrefixes.map(getGenerationKey);
+    await getRedis().eval(INVALIDATE_GENERATIONS_SCRIPT, keys.length, ...keys, GENERATION_RETENTION_SECONDS);
   } catch (error) {
     logger.error("Failed to invalidate the shared custom widget response cache", {
       errorName: error instanceof Error ? error.name : "UnknownError",

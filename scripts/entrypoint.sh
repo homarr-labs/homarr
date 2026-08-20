@@ -30,8 +30,11 @@ if [ "${PUID}" != "0" ] || [ "${PGID}" != "0" ]; then
     chown -R "${PUID}:${PGID}" /var/cache/nginx
     chown -R "${PUID}:${PGID}" /var/log/nginx
     chown -R "${PUID}:${PGID}" /var/lib/nginx
-    chown -R "${PUID}:${PGID}" /run/nginx/nginx.pid
-    chown -R "${PUID}:${PGID}" /etc/nginx
+    mkdir -p /run/nginx
+    touch /run/nginx/nginx.pid
+    chown -R "${PUID}:${PGID}" /run/nginx
+    touch /etc/nginx/nginx.conf
+    chown "${PUID}:${PGID}" /etc/nginx/nginx.conf
     echo "Changing owner to $PUID:$PGID, done."
 fi
 

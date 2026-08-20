@@ -172,7 +172,7 @@ describe("UmamiIntegration", () => {
       expect(result[0]?.dataPoints.reduce((sum, point) => sum + point.y, 0)).toBe(20 * PAGE_SIZE);
     });
 
-    test("requests event series one at a time", async () => {
+    test("requests event series with bounded concurrency", async () => {
       let inFlight = 0;
       let maxInFlight = 0;
       mockFetch.mockImplementation(async () => {
@@ -186,14 +186,11 @@ describe("UmamiIntegration", () => {
         }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>;
       });
 
-      const result = await createIntegration().getMultiEventTimeSeriesAsync(WEBSITE_ID, "24h", [
-        "signup",
-        "purchase",
-        "refund",
-      ]);
+      const eventNames = ["signup", "purchase", "refund", "login", "logout", "download"];
+      const result = await createIntegration().getMultiEventTimeSeriesAsync(WEBSITE_ID, "24h", eventNames);
 
-      expect(result).toHaveLength(3);
-      expect(maxInFlight).toBe(1);
+      expect(result.map(({ eventName }) => eventName)).toEqual(eventNames);
+      expect(maxInFlight).toBe(4);
     });
   });
 });

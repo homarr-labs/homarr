@@ -40,6 +40,7 @@ const MAX_UNCOMPRESSED_ARCHIVE_BYTES = MAX_UNCOMPRESSED_DATABASE_BYTES + 2 * MEB
 const MAX_METADATA_BYTES = MEBIBYTE;
 const MAX_ENCRYPTION_KEY_BYTES = 1024;
 const MAX_ARCHIVE_ENTRIES = 1024;
+const UPLOAD_IDLE_TIMEOUT_MS = 60_000;
 const RESTART_DELAY_MS = 500;
 
 let restoreInProgress = false;
@@ -71,6 +72,26 @@ const createRequestSizeLimiter = () => {
       callback(null, chunk);
     },
   });
+};
+
+const createUploadIdleTimeout = () => {
+  let timeout: NodeJS.Timeout | undefined;
+  const stream = new Transform({
+    transform(chunk: Buffer, _encoding, callback) {
+      resetTimeout();
+      callback(null, chunk);
+    },
+  });
+  const resetTimeout = () => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => stream.destroy(new Error("Backup upload timed out")), UPLOAD_IDLE_TIMEOUT_MS);
+    timeout.unref();
+  };
+  resetTimeout();
+  stream.on("close", () => {
+    if (timeout) clearTimeout(timeout);
+  });
+  return stream;
 };
 
 const streamUploadedBackupAsync = async (request: Request, uploadPath: string): Promise<number | null> => {
@@ -128,7 +149,9 @@ const streamUploadedBackupAsync = async (request: Request, uploadPath: string): 
 
   const requestStream = Readable.fromWeb(request.body as NodeReadableStream<Uint8Array>);
   try {
-    await pipeline(requestStream, createRequestSizeLimiter(), parser);
+    await pipeline(requestStream, createUploadIdleTimeout(), createRequestSizeLimiter(), parser, {
+      signal: request.signal,
+    });
     await uploadWrite;
   } catch (error) {
     await uploadWrite.catch(() => undefined);
@@ -453,6 +476,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: message }, { status: 400 });
     } finally {
       zip.close();
+      try {
+        fs.rmSync(uploadPath, { force: true });
+      } catch {
+        // The outer restore-directory cleanup retries this path.
+      }
     }
 
     tempDb = new BetterSqlite3(tempPath);

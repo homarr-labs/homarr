@@ -2,11 +2,24 @@
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  overflow-x: auto;
-  overflow-y: visible;
+  overflow: visible;
 }
 
-.viewport[data-board-hydrated="false"] {
+.horizontalScroller {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  /*
+   * Horizontal scrolling computes the other overflow axis to auto. Keep the
+   * board chrome inside that scrollport without changing the sizer's height.
+   */
+  padding-block: var(--board-canvas-overflow-top) var(--board-canvas-overflow-bottom);
+  margin-block: calc(0px - var(--board-canvas-overflow-top)) calc(0px - var(--board-canvas-overflow-bottom));
+  overflow-x: auto;
+}
+
+.viewport[data-board-hydrated="false"] .horizontalScroller {
   overflow: clip;
 }
 

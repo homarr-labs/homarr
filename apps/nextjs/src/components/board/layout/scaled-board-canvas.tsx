@@ -9,6 +9,8 @@ import classes from "./scaled-board-canvas.module.css";
 
 const BoardCanvasScaleContext = createContext(1);
 const MIN_READABLE_CANVAS_SCALE = 0.5;
+const CANVAS_OVERFLOW_TOP = 48;
+const CANVAS_OVERFLOW_BOTTOM = 8;
 
 export const useBoardCanvasScale = () => useContext(BoardCanvasScaleContext);
 
@@ -76,18 +78,26 @@ export const ScaledBoardCanvas = ({
       data-canvas-initial-width={initialAvailableWidth}
       aria-label={label}
     >
-      <Box className={classes.sizer} style={{ width: visualWidth, height: resolvedLogicalHeight * scale }}>
-        <Box
-          ref={canvasRef}
-          className={classes.canvas}
-          style={{
-            "--board-canvas-inverse-scale": inverseScale,
-            "--board-canvas-ui-scale": uiScale,
-            width: logicalWidth,
-            zoom: scale,
-          }}
-        >
-          <BoardCanvasScaleContext.Provider value={scale}>{children}</BoardCanvasScaleContext.Provider>
+      <Box
+        className={classes.horizontalScroller}
+        style={{
+          "--board-canvas-overflow-top": `${CANVAS_OVERFLOW_TOP * Math.max(1, scale)}px`,
+          "--board-canvas-overflow-bottom": `${CANVAS_OVERFLOW_BOTTOM * Math.max(1, scale)}px`,
+        }}
+      >
+        <Box className={classes.sizer} style={{ width: visualWidth, height: resolvedLogicalHeight * scale }}>
+          <Box
+            ref={canvasRef}
+            className={classes.canvas}
+            style={{
+              "--board-canvas-inverse-scale": inverseScale,
+              "--board-canvas-ui-scale": uiScale,
+              width: logicalWidth,
+              zoom: scale,
+            }}
+          >
+            <BoardCanvasScaleContext.Provider value={scale}>{children}</BoardCanvasScaleContext.Provider>
+          </Box>
         </Box>
       </Box>
     </Box>

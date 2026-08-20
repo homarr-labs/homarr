@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { parse } from "superjson";
 
 import type { Session } from "@homarr/auth";
@@ -34,6 +34,14 @@ vi.mock("@homarr/core/infrastructure/logs", () => ({
 vi.mock("@homarr/core/infrastructure/db/env", () => ({
   dbEnv: { DRIVER: "better-sqlite3" },
 }));
+const mocks = vi.hoisted(() => ({ fetchWithTrustedCertificatesAsync: vi.fn() }));
+vi.mock("@homarr/core/infrastructure/http", () => ({
+  fetchWithTrustedCertificatesAsync: mocks.fetchWithTrustedCertificatesAsync,
+}));
+
+afterEach(() => {
+  mocks.fetchWithTrustedCertificatesAsync.mockReset();
+});
 
 const adminSession = {
   user: {
@@ -169,30 +177,23 @@ describe("assistantRouter.updateConfiguration", () => {
       .set({ encryptedHeaders: null })
       .where(eq(assistantConfigurations.id, "default"));
     const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue(
-        Response.json({
-          data: [
-            {
-              id: "deepseek/deepseek-v4-pro",
-              name: "DeepSeek: DeepSeek V4 Pro",
-              supported_parameters: ["tools"],
-              architecture: { output_modalities: ["text"] },
-            },
-          ],
-        }),
-      ),
+    mocks.fetchWithTrustedCertificatesAsync.mockResolvedValue(
+      Response.json({
+        data: [
+          {
+            id: "deepseek/deepseek-v4-pro",
+            name: "DeepSeek: DeepSeek V4 Pro",
+            supported_parameters: ["tools"],
+            architecture: { output_modalities: ["text"] },
+          },
+        ],
+      }),
     );
 
-    try {
-      await caller.updateConfiguration({
-        enabled: true,
-        modelId: "DeepSeek: DeepSeek V4 Pro (deepseek/deepseek-v4-pro)",
-      });
-    } finally {
-      vi.unstubAllGlobals();
-    }
+    await caller.updateConfiguration({
+      enabled: true,
+      modelId: "DeepSeek: DeepSeek V4 Pro (deepseek/deepseek-v4-pro)",
+    });
 
     const [configuration] = await db.select().from(assistantConfigurations);
     expect(configuration?.modelId).toBe("deepseek/deepseek-v4-pro");
@@ -221,31 +222,24 @@ describe("assistantRouter.updateConfiguration", () => {
       })
       .where(eq(assistantConfigurations.id, "default"));
     const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue(
-        Response.json({
-          data: [
-            {
-              id: "homarr/model",
-              name: "Homarr model",
-              supported_parameters: ["tools"],
-              architecture: { output_modalities: ["text"] },
-            },
-          ],
-        }),
-      ),
+    mocks.fetchWithTrustedCertificatesAsync.mockResolvedValue(
+      Response.json({
+        data: [
+          {
+            id: "homarr/model",
+            name: "Homarr model",
+            supported_parameters: ["tools"],
+            architecture: { output_modalities: ["text"] },
+          },
+        ],
+      }),
     );
 
-    try {
-      await caller.updateConfiguration({
-        enabled: true,
-        modelId: "homarr/model",
-        webSearchEnabled: true,
-      });
-    } finally {
-      vi.unstubAllGlobals();
-    }
+    await caller.updateConfiguration({
+      enabled: true,
+      modelId: "homarr/model",
+      webSearchEnabled: true,
+    });
 
     const [configuration] = await db.select().from(assistantConfigurations);
     expect(configuration?.webSearchEnabled).toBe(true);
@@ -277,56 +271,49 @@ describe("assistant conversation features", () => {
       })
       .where(eq(assistantConfigurations.id, "default"));
     const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue(
-        Response.json({
-          data: [
-            {
-              id: "example/model",
-              name: "Example Model",
-              supported_parameters: ["tools"],
-              architecture: { input_modalities: ["text", "image"], output_modalities: ["text"] },
-            },
-            {
-              id: "example/no-tools",
-              name: "No tools",
-              supported_parameters: [],
-              architecture: { output_modalities: ["text"] },
-            },
-            {
-              id: "example/unnamed",
-              name: "",
-              supported_parameters: ["tools"],
-              architecture: { output_modalities: ["text"] },
-            },
-          ],
-        }),
-      ),
-    );
-
-    try {
-      const options = await caller.getRuntimeOptions();
-
-      expect(options).toEqual({
-        provider: "openrouter",
-        defaultModelId: "example/model",
-        models: [
-          expect.objectContaining({
+    mocks.fetchWithTrustedCertificatesAsync.mockResolvedValue(
+      Response.json({
+        data: [
+          {
             id: "example/model",
             name: "Example Model",
-            inputModalities: ["text", "image"],
-          }),
-          expect.objectContaining({
+            supported_parameters: ["tools"],
+            architecture: { input_modalities: ["text", "image"], output_modalities: ["text"] },
+          },
+          {
+            id: "example/no-tools",
+            name: "No tools",
+            supported_parameters: [],
+            architecture: { output_modalities: ["text"] },
+          },
+          {
             id: "example/unnamed",
-            name: "example/unnamed",
-          }),
+            name: "",
+            supported_parameters: ["tools"],
+            architecture: { output_modalities: ["text"] },
+          },
         ],
-      });
-      expect(JSON.stringify(options)).not.toContain("encrypted");
-    } finally {
-      vi.unstubAllGlobals();
-    }
+      }),
+    );
+
+    const options = await caller.getRuntimeOptions();
+
+    expect(options).toEqual({
+      provider: "openrouter",
+      defaultModelId: "example/model",
+      models: [
+        expect.objectContaining({
+          id: "example/model",
+          name: "Example Model",
+          inputModalities: ["text", "image"],
+        }),
+        expect.objectContaining({
+          id: "example/unnamed",
+          name: "example/unnamed",
+        }),
+      ],
+    });
+    expect(JSON.stringify(options)).not.toContain("encrypted");
   });
 
   test("returns permission-checked entities for composer mentions", async () => {
@@ -383,33 +370,26 @@ describe("assistant conversation features", () => {
       .where(eq(assistantConfigurations.id, "default"));
     const caller = assistantRouter.createCaller({ db, deviceType: undefined, session: adminSession });
     const thread = await caller.createThread();
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue(
-        Response.json({
-          data: [
-            {
-              id: "example/model",
-              name: "Default",
-              supported_parameters: ["tools"],
-              architecture: { output_modalities: ["text"] },
-            },
-            {
-              id: "example/reasoning",
-              name: "Reasoning",
-              supported_parameters: ["tools"],
-              architecture: { output_modalities: ["text"] },
-            },
-          ],
-        }),
-      ),
+    mocks.fetchWithTrustedCertificatesAsync.mockResolvedValue(
+      Response.json({
+        data: [
+          {
+            id: "example/model",
+            name: "Default",
+            supported_parameters: ["tools"],
+            architecture: { output_modalities: ["text"] },
+          },
+          {
+            id: "example/reasoning",
+            name: "Reasoning",
+            supported_parameters: ["tools"],
+            architecture: { output_modalities: ["text"] },
+          },
+        ],
+      }),
     );
 
-    try {
-      await caller.updateThreadModel({ threadId: thread.id, modelId: "example/reasoning" });
-    } finally {
-      vi.unstubAllGlobals();
-    }
+    await caller.updateThreadModel({ threadId: thread.id, modelId: "example/reasoning" });
 
     const storedThread = await db.query.assistantThreads.findFirst({
       where: eq(assistantThreads.id, thread.id),

@@ -110,6 +110,7 @@ import classes from "./onboarding-studio.module.css";
 
 type StudioSection = "essentials" | "discover" | "connect" | "board" | "extend" | "review";
 type LayoutPreset = "balanced" | "wide" | "focused";
+type IncompleteIntegrationConfirmationIntent = "navigate" | "apply";
 
 const getLayoutPresetForColumnCount = (columnCount: number): LayoutPreset =>
   columnCount <= 8 ? "focused" : columnCount <= 10 ? "balanced" : "wide";
@@ -195,6 +196,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const focusSectionHeading = useRef(true);
   const seenIntegrationSourceIds = useRef(new Set<string>());
   const seenAppSourceIds = useRef(new Set<string>());
+  const incompleteIntegrationConfirmationIntent = useRef<IncompleteIntegrationConfirmationIntent | null>(null);
 
   const docker = clientApi.onboard.discoverDockerServices.useQuery(undefined, {
     enabled: environment.dockerConfigured,
@@ -234,16 +236,19 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     () => new Set(discoveredIntegrations.map((integration) => integration.kind)),
     [discoveredIntegrations],
   );
-  const incompleteIntegrationSignature = JSON.stringify(
-    drafts
-      .filter((draft) => !isIntegrationDraftComplete(draft))
-      .map((draft) => ({
-        id: draft.id,
-        hasUrl: draft.url.trim().length > 0,
-        secrets: draft.secrets.map((secret) => ({ kind: secret.kind, hasValue: secret.value.trim().length > 0 })),
-      })),
+  const incompleteDrafts = useMemo(() => drafts.filter((draft) => !isIntegrationDraftComplete(draft)), [drafts]);
+  const incompleteIntegrationSignature = useMemo(
+    () =>
+      JSON.stringify(
+        incompleteDrafts.map((draft) => ({
+          id: draft.id,
+          hasUrl: draft.url.trim().length > 0,
+          secrets: draft.secrets.map((secret) => ({ kind: secret.kind, hasValue: secret.value.trim().length > 0 })),
+        })),
+      ),
+    [incompleteDrafts],
   );
-  const hasIncompleteIntegrations = incompleteIntegrationSignature !== "[]";
+  const hasIncompleteIntegrations = incompleteDrafts.length > 0;
   const incompleteIntegrationsConfirmed =
     hasIncompleteIntegrations && confirmedIncompleteIntegrationSignature === incompleteIntegrationSignature;
 
@@ -350,16 +355,16 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       hasIncompleteIntegrations &&
       !incompleteIntegrationsConfirmed
     ) {
+      incompleteIntegrationConfirmationIntent.current = "navigate";
       setIncompleteIntegrationConfirmationOpened(true);
       return;
     }
     changeSection(section);
   };
 
-  const confirmReviewNavigation = () => {
-    setConfirmedIncompleteIntegrationSignature(incompleteIntegrationSignature);
+  const closeIncompleteIntegrationConfirmation = () => {
+    incompleteIntegrationConfirmationIntent.current = null;
     setIncompleteIntegrationConfirmationOpened(false);
-    changeSection("review");
   };
 
   const handleSectionKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -397,9 +402,10 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     });
   };
 
-  const applySetupAsync = async () => {
+  const applySetupAsync = async (skipIncompleteIntegrationConfirmation = false) => {
     if (isApplying) return;
-    if (hasIncompleteIntegrations && !incompleteIntegrationsConfirmed) {
+    if (!skipIncompleteIntegrationConfirmation && hasIncompleteIntegrations && !incompleteIntegrationsConfirmed) {
+      incompleteIntegrationConfirmationIntent.current = "apply";
       setIncompleteIntegrationConfirmationOpened(true);
       return;
     }
@@ -532,6 +538,20 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     }
   };
 
+  const confirmIncompleteIntegrations = () => {
+    const intent = incompleteIntegrationConfirmationIntent.current;
+    if (!intent) return;
+
+    incompleteIntegrationConfirmationIntent.current = null;
+    setConfirmedIncompleteIntegrationSignature(incompleteIntegrationSignature);
+    setIncompleteIntegrationConfirmationOpened(false);
+    if (intent === "apply") {
+      void applySetupAsync(true);
+      return;
+    }
+    changeSection("review");
+  };
+
   const sectionProps: StudioSectionProps = {
     headingRef: sectionHeadingRef,
     environment,
@@ -641,17 +661,17 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     <>
       <Modal
         opened={incompleteIntegrationConfirmationOpened}
-        onClose={() => setIncompleteIntegrationConfirmationOpened(false)}
-        title={t("connect.incompleteConfirmation")}
+        onClose={closeIncompleteIntegrationConfirmation}
+        title={t("connect.incompleteConfirmationTitle")}
         centered
       >
         <Stack gap="md">
           <Text size="sm">{t("connect.incompleteConfirmation")}</Text>
           <Group justify="flex-end" gap="xs">
-            <Button variant="default" onClick={() => setIncompleteIntegrationConfirmationOpened(false)}>
+            <Button variant="default" onClick={closeIncompleteIntegrationConfirmation}>
               {tCommon("cancel")}
             </Button>
-            <Button onClick={confirmReviewNavigation}>{tCommon("confirm")}</Button>
+            <Button onClick={confirmIncompleteIntegrations}>{tCommon("confirm")}</Button>
           </Group>
         </Stack>
       </Modal>

@@ -8,7 +8,6 @@
 .board-grid-entry {
   z-index: 1;
   overflow: visible;
-  touch-action: none;
 }
 
 .board-grid-entry:has([data-board-widget-header]):hover,
