@@ -4,6 +4,7 @@ import { useId } from "react";
 
 import { ReadOnlyCustomWidgetCode } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 /** Read-only source view of a Workshop submission, used for both widget JSON and Custom CSS. */
@@ -21,8 +22,8 @@ export function WorkshopCodeViewer({
   const tCommon = useI18n("common");
   const workshopT = useI18n("workshop");
   const messages: CustomWidgetEditorMessages = {
-    languageJsx: "JSX",
-    languageJson: "JSON",
+    languageJsx: invariantTechnicalLabels.jsx,
+    languageJson: invariantTechnicalLabels.json,
     undo: tCommon("action.undo"),
     redo: t("action.redo"),
     components: t("action.components"),
@@ -34,7 +35,7 @@ export function WorkshopCodeViewer({
     copy: tCommon("action.copy"),
     copied: t("action.copied"),
     schema: t("action.schema"),
-    schemaTab: "JSON Schema",
+    schemaTab: invariantTechnicalLabels.jsonSchema,
     minimalTab: t("reference.minimal"),
     fullTab: t("reference.full"),
     errors: (count) => t("status.errors", { count }),

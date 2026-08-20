@@ -15,7 +15,7 @@ import {
 
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
-import { hotkeys } from "@homarr/definitions";
+import { hotkeys, invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
@@ -110,7 +110,7 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled }: 
             </Menu.Item>
             {isDockerEnabled && (
               <Menu.Item leftSection={<IconBrandDocker size="1rem" />} onClick={() => openDockerModal()}>
-                Docker
+                {invariantTechnicalLabels.docker}
               </Menu.Item>
             )}
           </>

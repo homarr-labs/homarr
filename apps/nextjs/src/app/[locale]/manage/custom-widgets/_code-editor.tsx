@@ -3,6 +3,7 @@
 import type { ComponentProps } from "react";
 
 import { CustomWidgetCodeEditor } from "@homarr/custom-widgets/workbench";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 type SharedEditorProps = ComponentProps<typeof CustomWidgetCodeEditor>;
@@ -15,8 +16,8 @@ export function CodeEditor(props: CodeEditorProps) {
     <CustomWidgetCodeEditor
       {...props}
       messages={{
-        languageJsx: "JSX",
-        languageJson: "JSON",
+        languageJsx: invariantTechnicalLabels.jsx,
+        languageJson: invariantTechnicalLabels.json,
         undo: tCommon("action.undo"),
         redo: t("action.redo"),
         components: t("action.components"),
@@ -28,7 +29,7 @@ export function CodeEditor(props: CodeEditorProps) {
         copy: tCommon("action.copy"),
         copied: t("action.copied"),
         schema: t("action.schema"),
-        schemaTab: "JSON Schema",
+        schemaTab: invariantTechnicalLabels.jsonSchema,
         minimalTab: t("reference.minimal"),
         fullTab: t("reference.full"),
         errors: (count) => t("status.errors", { count }),

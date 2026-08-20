@@ -44,13 +44,13 @@ const showContainerActionResult = (
   action: "start" | "stop" | "restart" | "remove",
   containers: DockerContainer[],
   results: RouterOutputs["docker"]["startAll"],
-  t: ScopedTranslationFunction<"docker">,
+  t: ScopedTranslationFunction<"docker.action">,
 ) => {
   const failures = results.filter((result) => !result.success);
   if (failures.length === 0) {
     showSuccessNotification({
-      title: t(`action.${action}.notification.success.title`),
-      message: t(`action.${action}.notification.success.message`),
+      title: t(`${action}.notification.success.title`),
+      message: t(`${action}.notification.success.message`),
     });
     return;
   }
@@ -60,8 +60,8 @@ const showContainerActionResult = (
       containers.find(({ endpointId, id }) => endpointId === target.endpointId && id === target.id)?.name ?? target.id,
   );
   showErrorNotification({
-    title: t("action.result.failure.title"),
-    message: t("action.result.failure.message", {
+    title: t("result.failure.title"),
+    message: t("result.failure.message", {
       failed: String(failures.length),
       total: String(results.length),
       names: failedNames.join(", "),

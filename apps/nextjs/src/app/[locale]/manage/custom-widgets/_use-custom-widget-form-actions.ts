@@ -45,6 +45,8 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
   const [saveIssues, setSaveIssues] = useState<CustomWidgetSaveIssue[]>([]);
   const [previewPending, setPreviewPending] = useState(false);
+  let actionLabel = tCommon("action.save");
+  if (input.mode === "create") actionLabel = tCommon("action.create");
 
   const save = input.form.onSubmit(async (values) => {
     clearSaveIssues(input.form, saveIssues);
@@ -55,7 +57,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         input.form,
         definition.error.issues.map((issue) => ({ path: issue.path.join("."), message: issue.message })),
         setSaveIssues,
-        tCommon("action.save"),
+        actionLabel,
         (count) => w("saveError.more", { count }),
       );
       return;
@@ -94,11 +96,9 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     } catch (error) {
       const issues = extractCustomWidgetSaveIssues(error);
       if (issues.length > 0) {
-        reportSaveIssues(input.form, issues, setSaveIssues, tCommon("action.save"), (count) =>
-          w("saveError.more", { count }),
-        );
+        reportSaveIssues(input.form, issues, setSaveIssues, actionLabel, (count) => w("saveError.more", { count }));
       } else {
-        showErrorNotification({ title: tCommon("action.save"), message: t("notification.updateError") });
+        showErrorNotification({ title: actionLabel, message: t("notification.updateError") });
       }
     }
   });
