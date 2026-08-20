@@ -1,0 +1,14 @@
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  h_d6e478ca18e517 1,20,37,41,44,77-78,255,271,282,287,302-343,362,365,373,381,392,409,429-438,440-463,465-467,469-502,504-507,509-511,514,519,524-525,532-533,543-544,552,635-649,659
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "7690e5e542a0b386ea1d5ef43839a9b10b828939",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
