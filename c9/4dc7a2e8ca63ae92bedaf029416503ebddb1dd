@@ -1,0 +1,22 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  h_d6e478ca18e517 26-27,68-100,102,104-106,109-135
+apps/nextjs/src/components/board/audio/board-sounds.ts
+  h_d6e478ca18e517 1-114
+apps/nextjs/src/components/board/items/item-content.tsx
+  h_d6e478ca18e517 28,63-74,83-84,96-98,105-111
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  h_d6e478ca18e517 1-167
+apps/nextjs/src/components/board/selection/board-selection-toolbar.tsx
+  h_d6e478ca18e517 1-114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "c94dc7a2e8ca63ae92bedaf029416503ebddb1dd",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
