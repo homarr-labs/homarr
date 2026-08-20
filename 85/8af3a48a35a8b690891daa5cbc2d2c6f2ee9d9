@@ -1,0 +1,22 @@
+apps/nextjs/src/components/board/items/item-select-modal.spec.tsx
+  h_d6e478ca18e517 164,195-201
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  h_d6e478ca18e517 1,69,559,571
+packages/ui/src/components/selectable-card/selectable-card.module.d.css.ts
+  h_d6e478ca18e517 1-7
+packages/ui/src/components/selectable-card/selectable-card.spec.tsx
+  h_d6e478ca18e517 6
+packages/ui/src/components/selectable-card/selectable-card.tsx
+  h_d6e478ca18e517 56-79,81-93,95-106,108-137,139-140,143-144,147-148,150-161,163-175
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "858af3a48a35a8b690891daa5cbc2d2c6f2ee9d9",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
