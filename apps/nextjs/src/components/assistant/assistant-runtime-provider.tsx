@@ -157,9 +157,6 @@ const createSurfaceComposerHost = (
     get attachments() {
       return getThreadAdapters(threadCore)?.attachments ? attachments : undefined;
     },
-    get dictation() {
-      return getThreadAdapters(threadCore)?.dictation;
-    },
   };
 
   return new Proxy(threadCore as ThreadCoreWithAdapters, {
@@ -294,18 +291,21 @@ export const createAssistantSurfaceRuntime = (runtime: AssistantRuntime): Assist
     subscribe(callback) {
       let activeCore = sharedBinding.getState();
       let activeConversationId = getConversationId();
+      let activeComposer = getComposer(activeConversationId, activeCore);
       retainConversation(activeConversationId);
-      let unsubscribeComposer = getComposer(activeConversationId, activeCore).subscribe(callback);
+      let unsubscribeComposer = activeComposer.subscribe(callback);
       const handleSharedUpdate = () => {
         const nextCore = sharedBinding.getState();
         const nextConversationId = getConversationId();
         if (nextCore !== activeCore || nextConversationId !== activeConversationId) {
+          if (activeCore.speech !== undefined) activeCore.stopSpeaking();
           unsubscribeComposer();
           releaseConversation(activeConversationId);
           activeCore = nextCore;
           activeConversationId = nextConversationId;
           retainConversation(activeConversationId);
-          unsubscribeComposer = getComposer(activeConversationId, activeCore).subscribe(callback);
+          activeComposer = getComposer(activeConversationId, activeCore);
+          unsubscribeComposer = activeComposer.subscribe(callback);
         }
         callback();
       };
@@ -360,6 +360,13 @@ export const createAssistantSurfaceRuntime = (runtime: AssistantRuntime): Assist
     registerModelContextProvider: () => () => {},
     dispose() {
       activeConversationCounts.clear();
+      const threadCores = new Set([
+        ...Array.from(surfaceCoreByConversation.values(), (entry) => entry.source),
+        ...Array.from(composerByConversation.values(), (entry) => entry.source),
+      ]);
+      for (const threadCore of threadCores) {
+        if (threadCore.speech !== undefined) threadCore.stopSpeaking();
+      }
       for (const [conversationId, entry] of composerByConversation) disposeComposer(conversationId, entry);
     },
   };
@@ -373,7 +380,7 @@ const AssistantComposerSurfaceContext = createContext<AssistantComposerSurfaceVa
 
 export const useAssistantComposerSurface = () => {
   const value = useContext(AssistantComposerSurfaceContext);
-  if (!value) throw new Error("useAssistantComposerSurface must be used within AssistantComposerSurfaceProvider");
+  if (!value) throw new Error("useAssistantComposerSurface must be used within AssistantComposerSurfaceBoundary");
   return value;
 };
 
@@ -437,21 +444,23 @@ const AssistantComposerSurfaceEvents = () => {
   return null;
 };
 
-const AssistantComposerSurfaceBoundary = ({ children, surfaceId }: PropsWithChildren<{ surfaceId: string }>) => {
+export const AssistantComposerSurfaceBoundary = ({ children, surfaceId }: PropsWithChildren<{ surfaceId: string }>) => {
   const t = useScopedI18n("common.assistant");
   const aui = useAui();
+  const instanceId = useId();
+  const resolvedSurfaceId = `${surfaceId}:${instanceId}`;
   const elementRef = useRef<HTMLDivElement>(null);
-  const contextValue = useMemo(() => ({ id: surfaceId }), [surfaceId]);
+  const contextValue = useMemo(() => ({ id: resolvedSurfaceId }), [resolvedSurfaceId]);
 
   useLayoutEffect(() => {
     const element = elementRef.current;
     if (!element) return undefined;
-    surfaceElements.set(surfaceId, element);
+    surfaceElements.set(resolvedSurfaceId, element);
 
     return () => {
-      if (surfaceElements.get(surfaceId) === element) surfaceElements.delete(surfaceId);
+      if (surfaceElements.get(resolvedSurfaceId) === element) surfaceElements.delete(resolvedSurfaceId);
     };
-  }, [surfaceId]);
+  }, [resolvedSurfaceId]);
 
   const handlePasteCapture = (event: ClipboardEvent<HTMLDivElement>) => {
     const target = event.target;
@@ -507,7 +516,6 @@ const AssistantComposerSurfaceBoundary = ({ children, surfaceId }: PropsWithChil
         }}
         onPasteCapture={handlePasteCapture}
       >
-        <AssistantComposerSurfaceEvents />
         {children}
       </div>
     </AssistantComposerSurfaceContext.Provider>
@@ -566,18 +574,12 @@ export const AssistantRunFocusPreserver = () => {
   return null;
 };
 
-interface AssistantComposerSurfaceProviderProps extends PropsWithChildren {
-  surfaceId: string;
-}
-
 /**
- * Gives one rendered assistant surface a local composer while preserving the shared conversation.
- * Every component below this boundary can keep using the normal assistant-ui primitives and hooks.
+ * Gives every rendered assistant surface one shared local composer while preserving the shared
+ * conversation. Individual surfaces should add AssistantComposerSurfaceBoundary around their UI.
  */
-export const AssistantComposerSurfaceProvider = ({ children, surfaceId }: AssistantComposerSurfaceProviderProps) => {
+export const AssistantComposerRuntimeProvider = ({ children }: PropsWithChildren) => {
   const parentAui = useAui();
-  const instanceId = useId();
-  const resolvedSurfaceId = `${surfaceId}:${instanceId}`;
   // oxlint-disable-next-line no-underscore-dangle -- required to derive a scoped runtime without cloning the shared thread.
   const sharedRuntime = parentAui.threads().__internal_getAssistantRuntime?.();
   const surfaceRuntime = useMemo(() => {
@@ -588,7 +590,8 @@ export const AssistantComposerSurfaceProvider = ({ children, surfaceId }: Assist
 
   return (
     <AssistantRuntimeProvider aui={parentAui} runtime={surfaceRuntime}>
-      <AssistantComposerSurfaceBoundary surfaceId={resolvedSurfaceId}>{children}</AssistantComposerSurfaceBoundary>
+      <AssistantComposerSurfaceEvents />
+      {children}
     </AssistantRuntimeProvider>
   );
 };

@@ -15,6 +15,26 @@ import { clockWidget } from ".";
 
 The clock widget displays the current date and time in a customizable format.
 
+Advanced view turns it into a World Clock. The configured primary timezone stays prominent while New York, Paris, and
+Tokyo are included as secondary defaults. You can add, rename, remove, and reorder up to six cities in widget options;
+London, Sydney, and UTC are also available as quick presets.
+
+The digital advanced view keeps the primary timezone prominent and presents every secondary city as a concise,
+comparable card. The primary clock includes a segmented 24-hour rail with a current-time marker, elapsed and remaining
+time, six-hour ticks, and a legend for night, dawn, day, and dusk. These phases are based on local clock time and are not
+astronomical sunrise or sunset calculations. Secondary cards stop after their localized date and timezone offsets.
+
+The compact widget remains a single numeric clock. The time-format selector shows common Day.js presets with live
+examples and applies to the primary clock. Choosing a format with seconds enables second-level updates; 12-hour and
+24-hour display are selected through those same formats. The date-format selector likewise
+shows live Day.js examples and their tokens. Secondary cities always include a short localized date and a
+Yesterday, Today, or Tomorrow label relative to the primary timezone. UTC and relative offsets follow current timezone
+rules, including daylight-saving changes.
+
+Weather remains optional and uses its own configured location rather than a World Clock city. Its icon is static by
+default and can be animated explicitly; reduced-motion preferences always disable animation. An unsupported saved
+timezone is identified without preventing valid clocks from rendering.
+
 ### Screenshots
 
 import localClock from "./img/local.png";
@@ -27,7 +47,7 @@ import tokyoClock from "./img/tokyo-12-hour.png";
   <img src={tokyoClock} alt="clock format-12-hours timezone-tokyo" width={256} height={128} />
 </div>
 
-<WidgetInteractionGuide advancedView={false} />
+<WidgetInteractionGuide />
 
 ### Adding the widget
 

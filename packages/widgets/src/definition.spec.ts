@@ -38,7 +38,6 @@ describe("supportsAdvancedFocus", () => {
     beszelSystemGridDefinition,
     beszelSystemStatsDefinition,
     beszelSystemTableDefinition,
-    clockDefinition,
     customApiDefinition,
     dockerDefinition,
     indexerManagerDefinition,
@@ -49,6 +48,7 @@ describe("supportsAdvancedFocus", () => {
 
   test("requires an explicit opt-in", () => {
     expect(supportsAdvancedFocus({})).toBe(false);
+    expect(supportsAdvancedFocus(clockDefinition)).toBe(true);
     expect(supportsAdvancedFocus(downloadsDefinition)).toBe(true);
   });
 });
