@@ -236,61 +236,6 @@
       }
     }
   },
-  "universalCreate": {
-    "title": "Create",
-    "analyticsError": "Usage metrics could not be recorded. Your action was not affected.",
-    "trigger": {
-      "label": "Create something",
-      "description": "Add content, connect a service, or create a board from one place."
-    },
-    "search": {
-      "label": "Search create actions",
-      "placeholder": "What do you want to create?",
-      "noResults": "No matching actions"
-    },
-    "group": {
-      "currentBoard": "Current board",
-      "library": "Apps and services",
-      "boards": "Boards"
-    },
-    "action": {
-      "widget": {
-        "label": "Add widget",
-        "description": "Add live information or controls to this board.",
-        "keywords": "item dashboard content"
-      },
-      "app": {
-        "label": "Add or create app",
-        "description": "Place an app shortcut on this board or create one for your library.",
-        "keywords": "shortcut bookmark application"
-      },
-      "integration": {
-        "label": "Connect service",
-        "description": "Connect a service so widgets can use its data.",
-        "keywords": "integration provider connection"
-      },
-      "container": {
-        "label": "Add container",
-        "description": "Group related board content into a resizable section.",
-        "keywords": "section group layout"
-      },
-      "board": {
-        "label": "Create board",
-        "description": "Start a new dashboard and add its first widget.",
-        "keywords": "dashboard page"
-      },
-      "workshop": {
-        "label": "Browse Workshop",
-        "description": "Discover community-built widgets and install them.",
-        "keywords": "community discover install"
-      },
-      "customWidget": {
-        "label": "Create custom widget",
-        "description": "Build a widget tailored to your own workflow.",
-        "keywords": "code jsx developer"
-      }
-    }
-  },
   "user": {
     "title": "Users",
     "name": "User",

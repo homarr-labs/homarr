@@ -37,7 +37,7 @@ export const useSetupAnalytics = () => {
     onError() {
       showErrorNotification({
         title: t("common.error"),
-        message: t("universalCreate.analyticsError"),
+        message: t("common.error"),
       });
     },
   });
