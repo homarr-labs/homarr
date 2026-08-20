@@ -41,6 +41,14 @@ const AddMenu = () => {
           options: { appId: app.id },
         });
       },
+      onSelectMany: (apps) => {
+        for (const app of apps) {
+          createItem({
+            kind: "app",
+            options: { appId: app.id },
+          });
+        }
+      },
       withCreate: session?.user.permissions.includes("app-create") ?? false,
     });
   };

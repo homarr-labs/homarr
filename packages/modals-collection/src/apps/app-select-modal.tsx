@@ -51,7 +51,15 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
 
   const selectedApps = useMemo(() => apps.filter((app) => selectedAppIds.has(app.id)), [apps, selectedAppIds]);
 
-  const handleSelect = (app: SelectableApp) => {
+  const handleSelect = (app: SelectableApp, event?: React.MouseEvent) => {
+    const isModifierPressed = Boolean(event?.shiftKey || event?.ctrlKey || event?.metaKey);
+
+    if (innerProps.onSelect && !isModifierPressed && selectedAppIds.size === 0) {
+      innerProps.onSelect(app);
+      actions.closeModal();
+      return;
+    }
+
     if (multiSelect) {
       setSelectedAppIds((current) => {
         const next = new Set(current);
@@ -59,10 +67,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
         else next.add(app.id);
         return next;
       });
-      return;
     }
-    innerProps.onSelect?.(app);
-    actions.closeModal();
   };
 
   const handleAddNewApp = () => {
@@ -85,20 +90,34 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
 
   return (
     <Stack gap="md">
-      {/* Top Search Input */}
-      <Input
-        value={search}
-        onChange={(event) => setSearch(event.currentTarget.value)}
-        leftSection={<IconSearch size={16} />}
-        placeholder={`${t("app.action.select.search")}...`}
-        aria-label={t("app.action.select.search")}
-        data-autofocus
-        onKeyDown={(event) => {
-          if (event.key === "Enter" && filteredApps.length === 1 && filteredApps[0]) {
-            handleSelect(filteredApps[0]);
-          }
-        }}
-      />
+      {/* Top Search Input & Multi-Select Tip */}
+      <Stack gap={6}>
+        <Input
+          value={search}
+          onChange={(event) => setSearch(event.currentTarget.value)}
+          leftSection={<IconSearch size={16} />}
+          placeholder={`${t("app.action.select.search")}...`}
+          aria-label={t("app.action.select.search")}
+          data-autofocus
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && filteredApps.length === 1 && filteredApps[0]) {
+              handleSelect(filteredApps[0]);
+            }
+          }}
+        />
+        {multiSelect && (
+          <Group justify="space-between" px={2}>
+            <Text size="xs" c="dimmed">
+              Tip: Hold Shift or Ctrl / ⌘ to select multiple apps at once
+            </Text>
+            {selectedAppIds.size > 0 && (
+              <Badge variant="light" color="primaryColor" size="xs">
+                {selectedAppIds.size} selected
+              </Badge>
+            )}
+          </Group>
+        )}
+      </Stack>
 
       {/* Scrollable Container with App Cards */}
       <ScrollArea.Autosize mah="70vh" offsetScrollbars>
@@ -179,13 +198,13 @@ const AppCard = ({
   app: SelectableApp;
   isSelected: boolean;
   multiSelect: boolean;
-  onSelect: (app: SelectableApp) => void;
+  onSelect: (app: SelectableApp, event?: React.MouseEvent) => void;
 }) => {
   const t = useI18n();
 
   return (
     <SelectableCard
-      onClick={() => onSelect(app)}
+      onClick={(event) => onSelect(app, event)}
       aria-label={app.name}
       selected={isSelected}
       icon={<Image src={app.iconUrl} alt={app.name} w={28} h={28} fit="contain" style={{ flexShrink: 0 }} />}
@@ -200,7 +219,7 @@ const AppCard = ({
       description={app.description}
       footerLeft={
         <Text size="xs" c="dimmed">
-          {multiSelect ? (isSelected ? t("app.action.select.selected") : t("app.action.select.toggle")) : "Application"}
+          {multiSelect && isSelected ? t("app.action.select.selected") : "Application"}
         </Text>
       }
     />
