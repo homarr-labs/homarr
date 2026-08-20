@@ -1239,6 +1239,7 @@ const getPreferredRegisteredGridTarget = (
 
 const preventGridDragActivation = (event: PointerEvent, source: DomDraggable) => {
   if (document.body.hasAttribute("data-board-grid-interacting")) return true;
+  if (event.metaKey || event.ctrlKey) return true;
   const target = event.target;
   const activationElement = source.handle ?? source.element;
   if (!(target instanceof Element) || target === activationElement) return false;
