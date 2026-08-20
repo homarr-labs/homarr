@@ -29,6 +29,7 @@ export const AppearanceSettingsForm = ({ form }: AppearanceSettingsFormProps) =>
         }))}
         {...form.getInputProps("defaultColorScheme")}
         SelectOption={AppearanceCustomOption}
+        withinPortal
       />
     </SectionCard>
   );

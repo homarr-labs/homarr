@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Stack } from "@mantine/core";
 import { z } from "zod/v4";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
@@ -58,9 +59,11 @@ const buildInitialValues = (initialData: ServerSettings): FormValues => ({
 
 interface SettingsFormProps {
   initialData: ServerSettings;
+  selectableBoards: RouterOutputs["board"]["getPublicBoards"];
+  selectableSearchEngines: RouterOutputs["searchEngine"]["getSelectable"];
 }
 
-export const SettingsForm = ({ initialData }: SettingsFormProps) => {
+export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEngines }: SettingsFormProps) => {
   const t = useI18n();
   const tSettings = useScopedI18n("management.page.settings");
 
@@ -169,13 +172,13 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
   return (
     <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
       <Stack gap="xl">
-        <AnalyticsSettings form={form} />
-        <CrawlingAndIndexingSettings form={form} />
-        <BoardSettingsForm form={form} />
+        <BoardSettingsForm form={form} selectableBoards={selectableBoards} />
         <UserSettingsForm form={form} />
-        <SearchSettingsForm form={form} />
+        <SearchSettingsForm form={form} selectableSearchEngines={selectableSearchEngines} />
         <AppearanceSettingsForm form={form} />
         <CultureSettingsForm form={form} />
+        <AnalyticsSettings form={form} />
+        <CrawlingAndIndexingSettings form={form} />
 
         {form.isDirty() && (
           <UnsavedChangesBar>
