@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActionIcon,
@@ -15,6 +16,7 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
+import { useMediaQuery, useReducedMotion } from "@mantine/hooks";
 import { IconBell, IconPlayerPause, IconPlayerPlay, IconRefresh, IconSettings, IconVolume } from "@tabler/icons-react";
 import { useTiks } from "@rexa-developer/tiks/react";
 
@@ -29,7 +31,6 @@ import {
 import { useLocalWidgetState } from "../common/use-local-widget-state";
 import { useWidgetNow } from "../common/use-widget-now";
 import type { WidgetComponentProps } from "../definition";
-import classes from "./component.module.css";
 import {
   createTimerRuntime,
   getRemainingMs,
@@ -58,6 +59,8 @@ export default function TimerWidget({
 }: WidgetComponentProps<"timer">) {
   const now = useWidgetNow("second");
   const t = useScopedI18n("widget.timer");
+  const reducedMotion = useReducedMotion();
+  const forcedColors = useMediaQuery("(forced-colors: active)") ?? false;
   const { click: playResetSound, toggle: playRunningSound } = useTiks({
     theme: "soft",
     volume: 0.12,
@@ -97,13 +100,31 @@ export default function TimerWidget({
     migrate: migrateTimerRuntimeState,
   });
   const [notificationPermission, setNotificationPermission] = useState(() => getBrowserNotificationPermission());
+  const [attentionFlash, setAttentionFlash] = useState(false);
   const historyInitializedRef = useRef(false);
   const handledHistoryIdRef = useRef<string | null>(null);
   const completionSoundTimeoutRef = useRef<number | null>(null);
+  const attentionFlashTimeoutRef = useRef<number | null>(null);
   const stopCompletionSoundSequence = useCallback(() => {
-    if (completionSoundTimeoutRef.current === null) return;
-    window.clearTimeout(completionSoundTimeoutRef.current);
-    completionSoundTimeoutRef.current = null;
+    if (completionSoundTimeoutRef.current !== null) {
+      window.clearTimeout(completionSoundTimeoutRef.current);
+      completionSoundTimeoutRef.current = null;
+    }
+    if (attentionFlashTimeoutRef.current !== null) {
+      window.clearTimeout(attentionFlashTimeoutRef.current);
+      attentionFlashTimeoutRef.current = null;
+    }
+    setAttentionFlash(false);
+  }, []);
+  const flashAttention = useCallback(() => {
+    if (attentionFlashTimeoutRef.current !== null) {
+      window.clearTimeout(attentionFlashTimeoutRef.current);
+    }
+    setAttentionFlash(true);
+    attentionFlashTimeoutRef.current = window.setTimeout(() => {
+      attentionFlashTimeoutRef.current = null;
+      setAttentionFlash(false);
+    }, 180);
   }, []);
 
   useEffect(() => {
@@ -138,12 +159,14 @@ export default function TimerWidget({
     stopCompletionSoundSequence();
     playCompletionSound();
     if (!runtime.awaitingManualStart) return;
+    flashAttention();
 
     let remainingSounds = completionSoundCount - 1;
     const playNextSound = () => {
       completionSoundTimeoutRef.current = window.setTimeout(() => {
         completionSoundTimeoutRef.current = null;
         playCompletionSound();
+        flashAttention();
         remainingSounds -= 1;
         if (remainingSounds > 0) playNextSound();
       }, completionSoundIntervalMs);
@@ -151,6 +174,7 @@ export default function TimerWidget({
     playNextSound();
   }, [
     playCompletionSound,
+    flashAttention,
     runtime.alerts.notifications,
     runtime.alerts.sound,
     runtime.awaitingManualStart,
@@ -180,6 +204,12 @@ export default function TimerWidget({
   const phaseDurationMs = runtime.totalDurationMs;
   const progress = Math.min(100, Math.max(0, ((phaseDurationMs - remainingMs) / phaseDurationMs) * 100));
   const controlSize = getTimerControlSize(width, height, displayMode);
+  const attentionStyle = getTimerAttentionStyle({
+    awaitingManualStart: runtime.awaitingManualStart,
+    flash: attentionFlash,
+    forcedColors,
+    reducedMotion,
+  });
   const toggleRunning = () => {
     if (runtime.alerts.sound) playRunningSound(runtime.status !== "running");
     if (runtime.status === "running") {
@@ -210,12 +240,15 @@ export default function TimerWidget({
 
   const shared = {
     disabled: isEditMode,
+    attentionStyle,
     controlSize,
+    height,
     onReset: reset,
     onToggleRunning: toggleRunning,
     progress,
     remainingMs,
     runtime,
+    width,
   };
 
   if (displayMode !== "advanced") return <CompactTimer {...shared} />;
@@ -234,51 +267,63 @@ export default function TimerWidget({
 type TimerControlSize = "sm" | "md" | "lg";
 
 interface TimerDisplayProps {
+  attentionStyle: CSSProperties;
   controlSize: TimerControlSize;
   disabled: boolean;
+  height: number;
   onReset: () => void;
   onToggleRunning: () => void;
   progress: number;
   remainingMs: number;
   runtime: TimerRuntimeState;
+  width: number;
 }
 
 const CompactTimer = ({
+  attentionStyle,
   controlSize,
   disabled,
+  height,
   onReset,
   onToggleRunning,
   progress,
   remainingMs,
   runtime,
+  width,
 }: TimerDisplayProps) => {
   const t = useScopedI18n("widget.timer");
   const phaseLabel = getTimerPhaseLabel(runtime, t);
+  const showPhaseBadge = height >= 110;
+  const showCompletedFocus = runtime.mode === "pomodoro" && width >= 210;
+  const showProgress = height >= 125;
   return (
     <Stack
-      className={classes.root}
-      data-needs-attention={runtime.awaitingManualStart}
       h="100%"
       w="100%"
       align="center"
       justify="center"
-      gap={5}
+      gap="xs"
       p="xs"
+      style={{ ...attentionStyle, overflow: "hidden" }}
     >
       <Group gap="xs" wrap="nowrap">
-        <Badge className={classes.phaseBadge} variant="light" aria-live="polite">
-          {phaseLabel}
-        </Badge>
-        {runtime.mode === "pomodoro" && (
-          <Text className={classes.completedFocus} size="xs" c="dimmed">
+        {showPhaseBadge && (
+          <Badge variant="light" size="xs" maw="70%" aria-live="polite">
+            {phaseLabel}
+          </Badge>
+        )}
+        {showCompletedFocus && (
+          <Text size="xs" c="dimmed">
             {t("compact.completedFocus", { count: runtime.completedFocusSessions })}
           </Text>
         )}
       </Group>
-      <Text className={classes.time} fz={36} fw={750} lh={1} component="time">
+      <Text component="time" fz="xl" fw={700} lh={1} style={{ fontVariantNumeric: "tabular-nums" }}>
         {formatTimerDuration(remainingMs)}
       </Text>
-      <Progress w="100%" value={progress} aria-label={t("progress", { progress: Math.round(progress) })} />
+      {showProgress && (
+        <Progress w="100%" value={progress} aria-label={t("progress", { progress: Math.round(progress) })} />
+      )}
       <TimerControls
         controlSize={controlSize}
         disabled={disabled}
@@ -298,6 +343,7 @@ interface AdvancedTimerProps extends TimerDisplayProps {
 }
 
 const AdvancedTimer = ({
+  attentionStyle,
   controlSize,
   disabled,
   durations,
@@ -315,12 +361,26 @@ const AdvancedTimer = ({
   return (
     <ScrollArea h="100%" w="100%" type="auto" offsetScrollbars scrollbarSize={6}>
       <Stack gap="md" p="md">
-        <Paper className={classes.hero} data-needs-attention={runtime.awaitingManualStart} withBorder p="lg">
+        <Paper
+          withBorder
+          p="lg"
+          style={{
+            ...attentionStyle,
+            background:
+              "linear-gradient(145deg, var(--mantine-primary-color-light), var(--mantine-color-secondaryColor-light))",
+          }}
+        >
           <Stack align="center" gap="sm">
-            <Badge variant="light" size="lg" aria-live="polite">
+            <Badge variant="light" size="sm" aria-live="polite">
               {phaseLabel}
             </Badge>
-            <Text className={classes.time} fz={64} fw={750} lh={1} component="time">
+            <Text
+              component="time"
+              fz="var(--mantine-h1-font-size)"
+              fw={700}
+              lh={1}
+              style={{ fontVariantNumeric: "tabular-nums" }}
+            >
               {formatTimerDuration(remainingMs)}
             </Text>
             <Progress w="100%" value={progress} aria-label={t("progress", { progress: Math.round(progress) })} />
@@ -440,6 +500,42 @@ const getTimerControlSize = (
   if (width < 150 || height < 115) return "sm";
   if (width < 220 || height < 150) return "md";
   return "lg";
+};
+
+const getTimerAttentionStyle = ({
+  awaitingManualStart,
+  flash,
+  forcedColors,
+  reducedMotion,
+}: {
+  awaitingManualStart: boolean;
+  flash: boolean;
+  forcedColors: boolean;
+  reducedMotion: boolean;
+}): CSSProperties => {
+  if (forcedColors && awaitingManualStart) {
+    return {
+      outline: "0.125rem solid Highlight",
+      outlineOffset: "0.125rem",
+    };
+  }
+  if (reducedMotion && awaitingManualStart) {
+    return {
+      boxShadow:
+        "inset 0 0 1rem 0.125rem color-mix(in srgb, var(--mantine-color-secondaryColor-filled) 45%, transparent)",
+    };
+  }
+  if (!flash) {
+    return {
+      boxShadow: "none",
+      transition: "box-shadow 0.12s ease-out",
+    };
+  }
+  return {
+    boxShadow:
+      "inset 0 0 1rem 0.125rem color-mix(in srgb, var(--mantine-color-secondaryColor-filled) 45%, transparent), 0 0 3rem 0.875rem color-mix(in srgb, var(--mantine-color-secondaryColor-filled) 40%, transparent)",
+    transition: "box-shadow 0.12s ease-out",
+  };
 };
 
 const PomodoroSequence = ({ runtime, durations }: { runtime: TimerRuntimeState; durations: TimerDurations }) => {
