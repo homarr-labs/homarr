@@ -59,6 +59,9 @@ export const AssistantAutoApprovalProvider = ({
   const trackerRef = useRef(createAssistantAutoApprovalTracker(AUTO_APPROVAL_MAX_ATTEMPTS));
   const retryTimersRef = useRef(new Map<string, { timer: number; mode: AssistantAutomaticActionMode }>());
   const previousConversationIdRef = useRef(conversationId);
+  const conversationMatches = previousConversationIdRef.current === conversationId;
+  const effectivePreparationEnabled = conversationMatches && preparationEnabled;
+  const effectiveApprovalEnabled = conversationMatches && approvalEnabled;
 
   const clearRetryTimer = useCallback((toolCallId: string) => {
     const retry = retryTimersRef.current.get(toolCallId);
@@ -115,7 +118,7 @@ export const AssistantAutoApprovalProvider = ({
 
   const requestAction = useCallback(
     (toolCallId: string, confirm: () => void, mode: AssistantAutomaticActionMode = "preparation") => {
-      const modeEnabled = mode === "approval" ? approvalEnabled : preparationEnabled;
+      const modeEnabled = mode === "approval" ? effectiveApprovalEnabled : effectivePreparationEnabled;
       if (!modeEnabled || !trackerRef.current.claim(toolCallId)) return false;
 
       try {
@@ -135,7 +138,7 @@ export const AssistantAutoApprovalProvider = ({
         return false;
       }
     },
-    [approvalEnabled, clearRetryTimer, preparationEnabled],
+    [clearRetryTimer, effectiveApprovalEnabled, effectivePreparationEnabled],
   );
 
   const completeAction = useCallback(
@@ -147,12 +150,12 @@ export const AssistantAutoApprovalProvider = ({
   );
 
   const value = useMemo(() => {
-    const enabled = preparationEnabled || approvalEnabled;
+    const enabled = effectivePreparationEnabled || effectiveApprovalEnabled;
     return {
       enabled,
       setEnabled,
-      preparationEnabled,
-      approvalEnabled,
+      preparationEnabled: effectivePreparationEnabled,
+      approvalEnabled: effectiveApprovalEnabled,
       setPreparationEnabled,
       setApprovalEnabled,
       requestAction,
@@ -160,9 +163,9 @@ export const AssistantAutoApprovalProvider = ({
       retryRevision,
     };
   }, [
-    approvalEnabled,
     completeAction,
-    preparationEnabled,
+    effectiveApprovalEnabled,
+    effectivePreparationEnabled,
     requestAction,
     retryRevision,
     setApprovalEnabled,

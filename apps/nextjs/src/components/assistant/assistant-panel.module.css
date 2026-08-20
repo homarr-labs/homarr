@@ -181,23 +181,6 @@
   flex: 0 0 auto;
 }
 
-.windowControls {
-  flex: 0 0 auto;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.windowControl {
-  width: 2.25rem;
-  height: 2.25rem;
-}
-
-.windowControl:focus-visible {
-  outline: 2px solid var(--mantine-primary-color-filled);
-  outline-offset: 2px;
-}
-
 .panelAction {
   width: 2.625rem;
   height: 2.625rem;
@@ -207,10 +190,6 @@
   .panelHeader {
     min-height: 3.25rem;
     padding: 0.45rem 0.5rem 0.45rem 0.65rem;
-  }
-
-  .composerHints {
-    display: none;
   }
 
   .historyButton {
@@ -447,6 +426,9 @@
 
 .message {
   margin-block: 0.9rem;
+}
+
+.message[data-static] {
   contain-intrinsic-size: auto 12rem;
   content-visibility: auto;
 }
@@ -1224,6 +1206,11 @@
   background: var(--mantine-color-default-hover);
 }
 
+.messageMoreItem:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -2px;
+}
+
 .messageMoreSeparator {
   height: 1px;
   margin-block: 0.2rem;
@@ -1554,10 +1541,6 @@
   pointer-events: none;
 }
 
-.composerHints {
-  padding-inline: 0.45rem;
-}
-
 .composerFooter {
   min-width: 0;
   max-width: 100%;
@@ -1824,10 +1807,6 @@
 
   .composerFooter {
     padding-inline: 0.1rem;
-  }
-
-  .composerHints {
-    display: none;
   }
 
   .runtimeSelectorTrigger {

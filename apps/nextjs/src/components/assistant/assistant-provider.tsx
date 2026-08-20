@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type {
   AttachmentAdapter,
-  DictationAdapter,
   MessageFormatAdapter,
   RemoteThreadListAdapter,
   SpeechSynthesisAdapter,
@@ -19,7 +18,6 @@ import {
   useAuiEvent,
   useAuiState,
   useRemoteThreadListRuntime,
-  WebSpeechDictationAdapter,
   WebSpeechSynthesisAdapter,
 } from "@assistant-ui/react";
 import { useChat } from "@ai-sdk/react";
@@ -486,10 +484,8 @@ const AssistantThreadRuntime = () => {
       ),
     [selectedModel],
   );
-  const [dictation, setDictation] = useState<DictationAdapter>();
   const [speech, setSpeech] = useState<SpeechSynthesisAdapter>();
   useEffect(() => {
-    if (WebSpeechDictationAdapter.isSupported()) setDictation(new WebSpeechDictationAdapter());
     if ("speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined") {
       setSpeech(new WebSpeechSynthesisAdapter());
     }
@@ -530,7 +526,6 @@ const AssistantThreadRuntime = () => {
     adapters: {
       history,
       attachments,
-      dictation,
       feedback,
       speech,
     },

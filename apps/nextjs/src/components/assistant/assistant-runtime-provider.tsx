@@ -42,7 +42,6 @@ class AssistantSurfaceComposerRuntimeCore extends INTERNAL.DefaultThreadComposer
   }
 
   public dispose() {
-    if (this.dictation !== undefined) this.stopDictation();
     composerConnectionDisposers.get(this)?.();
     composerConnectionDisposers.delete(this);
   }
@@ -157,9 +156,6 @@ const createSurfaceComposerHost = (
   const adapters = {
     get attachments() {
       return getThreadAdapters(threadCore)?.attachments ? attachments : undefined;
-    },
-    get dictation() {
-      return getThreadAdapters(threadCore)?.dictation;
     },
   };
 
@@ -302,7 +298,6 @@ export const createAssistantSurfaceRuntime = (runtime: AssistantRuntime): Assist
         const nextCore = sharedBinding.getState();
         const nextConversationId = getConversationId();
         if (nextCore !== activeCore || nextConversationId !== activeConversationId) {
-          if (activeComposer.dictation !== undefined) activeComposer.stopDictation();
           if (activeCore.speech !== undefined) activeCore.stopSpeaking();
           unsubscribeComposer();
           releaseConversation(activeConversationId);
@@ -365,7 +360,10 @@ export const createAssistantSurfaceRuntime = (runtime: AssistantRuntime): Assist
     registerModelContextProvider: () => () => {},
     dispose() {
       activeConversationCounts.clear();
-      const threadCores = new Set(Array.from(surfaceCoreByConversation.values(), (entry) => entry.source));
+      const threadCores = new Set([
+        ...Array.from(surfaceCoreByConversation.values(), (entry) => entry.source),
+        ...Array.from(composerByConversation.values(), (entry) => entry.source),
+      ]);
       for (const threadCore of threadCores) {
         if (threadCore.speech !== undefined) threadCore.stopSpeaking();
       }
@@ -382,7 +380,7 @@ const AssistantComposerSurfaceContext = createContext<AssistantComposerSurfaceVa
 
 export const useAssistantComposerSurface = () => {
   const value = useContext(AssistantComposerSurfaceContext);
-  if (!value) throw new Error("useAssistantComposerSurface must be used within AssistantComposerSurfaceProvider");
+  if (!value) throw new Error("useAssistantComposerSurface must be used within AssistantComposerSurfaceBoundary");
   return value;
 };
 
@@ -576,10 +574,6 @@ export const AssistantRunFocusPreserver = () => {
   return null;
 };
 
-interface AssistantComposerSurfaceProviderProps extends PropsWithChildren {
-  surfaceId: string;
-}
-
 /**
  * Gives every rendered assistant surface one shared local composer while preserving the shared
  * conversation. Individual surfaces should add AssistantComposerSurfaceBoundary around their UI.
@@ -601,13 +595,3 @@ export const AssistantComposerRuntimeProvider = ({ children }: PropsWithChildren
     </AssistantRuntimeProvider>
   );
 };
-
-/**
- * Convenience boundary for a standalone surface. Use AssistantComposerRuntimeProvider with
- * localized boundaries when multiple surfaces need to share one draft and attachment queue.
- */
-export const AssistantComposerSurfaceProvider = ({ children, surfaceId }: AssistantComposerSurfaceProviderProps) => (
-  <AssistantComposerRuntimeProvider>
-    <AssistantComposerSurfaceBoundary surfaceId={surfaceId}>{children}</AssistantComposerSurfaceBoundary>
-  </AssistantComposerRuntimeProvider>
-);

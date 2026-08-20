@@ -99,7 +99,6 @@ import {
   IconFileExport,
   IconLink,
   IconMessage,
-  IconMicrophone,
   IconMinus,
   IconPaperclip,
   IconPalette,
@@ -1259,7 +1258,7 @@ const UserMessage = () => {
   const isEditing = useAuiState((state) => state.composer.isEditing);
   if (isEditing) return <EditComposer />;
   return (
-    <MessagePrimitive.Root className={`${classes.message} ${classes.userMessageWrap}`}>
+    <MessagePrimitive.Root className={`${classes.message} ${classes.userMessageWrap}`} data-static>
       <Box className={classes.userMessage}>
         <MessagePrimitive.Quote>
           {(quote) => (
@@ -1941,51 +1940,58 @@ const WebSearchActivity = () => {
   );
 };
 
-const AssistantMessage = () => (
-  <MessagePrimitive.Root className={`${classes.message} ${classes.assistantMessage}`}>
-    <MessagePrimitive.GroupedParts groupBy={assistantMessageGroupBy} indicator="empty">
-      {({ part, children }) => {
-        switch (part.type) {
-          case "group-agent-trace": {
-            const startIndex = part.indices[0];
-            const endIndex = part.indices.at(-1);
-            if (startIndex === undefined || endIndex === undefined) return null;
-            return (
-              <ChainOfThoughtByIndicesProvider startIndex={startIndex} endIndex={endIndex}>
-                <AssistantChainOfThought>{children}</AssistantChainOfThought>
-              </ChainOfThoughtByIndicesProvider>
-            );
+const AssistantMessage = () => {
+  const isComplete = useAuiState((state) => state.message.status?.type === "complete");
+
+  return (
+    <MessagePrimitive.Root
+      className={`${classes.message} ${classes.assistantMessage}`}
+      data-static={isComplete || undefined}
+    >
+      <MessagePrimitive.GroupedParts groupBy={assistantMessageGroupBy} indicator="empty">
+        {({ part, children }) => {
+          switch (part.type) {
+            case "group-agent-trace": {
+              const startIndex = part.indices[0];
+              const endIndex = part.indices.at(-1);
+              if (startIndex === undefined || endIndex === undefined) return null;
+              return (
+                <ChainOfThoughtByIndicesProvider startIndex={startIndex} endIndex={endIndex}>
+                  <AssistantChainOfThought>{children}</AssistantChainOfThought>
+                </ChainOfThoughtByIndicesProvider>
+              );
+            }
+            case "group-reasoning":
+              return <>{children}</>;
+            case "group-tool":
+              return <AgentTraceToolGroup>{children}</AgentTraceToolGroup>;
+            case "indicator":
+              return <AssistantMessagePending status={{ type: "running" }} />;
+            case "text":
+              return <AssistantTextPart />;
+            case "reasoning":
+              return <ReasoningPart {...part} />;
+            case "tool-call":
+              return part.toolUI ?? <ToolPart {...part} />;
+            case "source":
+              return <SourcePart {...part} />;
+            case "file":
+              return <FilePart {...part} />;
+            case "image":
+              return <ImagePart {...part} />;
+            case "data":
+              return part.dataRendererUI;
+            default:
+              return null;
           }
-          case "group-reasoning":
-            return <>{children}</>;
-          case "group-tool":
-            return <AgentTraceToolGroup>{children}</AgentTraceToolGroup>;
-          case "indicator":
-            return <AssistantMessagePending status={{ type: "running" }} />;
-          case "text":
-            return <AssistantTextPart />;
-          case "reasoning":
-            return <ReasoningPart {...part} />;
-          case "tool-call":
-            return part.toolUI ?? <ToolPart {...part} />;
-          case "source":
-            return <SourcePart {...part} />;
-          case "file":
-            return <FilePart {...part} />;
-          case "image":
-            return <ImagePart {...part} />;
-          case "data":
-            return part.dataRendererUI;
-          default:
-            return null;
-        }
-      }}
-    </MessagePrimitive.GroupedParts>
-    <RuntimeError />
-    <WebSearchActivity />
-    <AssistantMessageActions />
-  </MessagePrimitive.Root>
-);
+        }}
+      </MessagePrimitive.GroupedParts>
+      <RuntimeError />
+      <WebSearchActivity />
+      <AssistantMessageActions />
+    </MessagePrimitive.Root>
+  );
+};
 
 const assistantThreadMessageComponents = { UserMessage, AssistantMessage };
 
@@ -2001,7 +2007,13 @@ const ThreadListItem = () => {
   const [exporting, setExporting] = useState(false);
   const [actionsOpened, setActionsOpened] = useState(false);
   const [renameOpened, setRenameOpened] = useState(false);
+  const [renaming, setRenaming] = useState(false);
   const [nextTitle, setNextTitle] = useState(title ?? "");
+  const renameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (renameOpened) renameInputRef.current?.focus();
+  }, [renameOpened]);
 
   const exportConversation = async () => {
     if (!remoteId || exporting) return;
@@ -2023,12 +2035,22 @@ const ThreadListItem = () => {
     }
   };
 
-  const renameConversation = () => {
+  const renameConversation = async () => {
     const trimmedTitle = nextTitle.trim();
-    if (!trimmedTitle) return;
-    aui.threadListItem().rename(trimmedTitle);
-    setRenameOpened(false);
-    setActionsOpened(false);
+    if (!trimmedTitle || renaming) return;
+    setRenaming(true);
+    try {
+      await aui.threadListItem().rename(trimmedTitle);
+      setRenameOpened(false);
+      setActionsOpened(false);
+    } catch {
+      showErrorNotification({
+        title: t("renameConversation.failedTitle"),
+        message: t("renameConversation.failedDescription"),
+      });
+    } finally {
+      setRenaming(false);
+    }
   };
 
   const deleteConversation = () => {
@@ -2037,7 +2059,16 @@ const ThreadListItem = () => {
       children: t("deleteConversation.description", { title: title ?? t("newConversation") }),
       confirmProps: { color: "red" },
       labels: { confirm: t("delete"), cancel: t("cancel") },
-      onConfirm: () => aui.threadListItem().delete(),
+      onConfirm: async () => {
+        try {
+          await aui.threadListItem().delete();
+        } catch {
+          showErrorNotification({
+            title: t("deleteConversation.failedTitle"),
+            message: t("deleteConversation.failedDescription"),
+          });
+        }
+      },
     });
   };
 
@@ -2045,16 +2076,16 @@ const ThreadListItem = () => {
     return (
       <ThreadListItemPrimitive.Root className={classes.historyItem}>
         <TextInput
+          ref={renameInputRef}
           className={classes.historyRenameInput}
           value={nextTitle}
           onChange={(event) => setNextTitle(event.currentTarget.value)}
           aria-label={t("renameConversation.label")}
           maxLength={72}
           size="xs"
-          data-autofocus
           onKeyDown={(event) => {
-            if (event.key === "Enter") renameConversation();
-            if (event.key === "Escape") setRenameOpened(false);
+            if (event.key === "Enter") void renameConversation();
+            if (event.key === "Escape" && !renaming) setRenameOpened(false);
           }}
         />
         <ActionIcon
@@ -2063,7 +2094,9 @@ const ThreadListItem = () => {
           size="sm"
           aria-label={t("renameConversation.save")}
           disabled={!nextTitle.trim()}
-          onClick={renameConversation}
+          loading={renaming}
+          loaderProps={{ type: "bars" }}
+          onClick={() => void renameConversation()}
         >
           <IconCheck size={15} />
         </ActionIcon>
@@ -2072,6 +2105,7 @@ const ThreadListItem = () => {
           color="gray"
           size="sm"
           aria-label={t("cancel")}
+          disabled={renaming}
           onClick={() => setRenameOpened(false)}
         >
           <IconX size={15} />
@@ -2902,26 +2936,6 @@ const Composer = (props: ComposerProps) => {
                     </ActionIcon>
                   </ComposerPrimitive.AddAttachment>
                 </Tooltip>
-                <AuiIf
-                  condition={(state) => state.thread.capabilities.dictation && state.composer.dictation === undefined}
-                >
-                  <Tooltip label={t("startVoiceInput")}>
-                    <ComposerPrimitive.Dictate asChild>
-                      <ActionIcon variant="subtle" color="gray" size="lg" aria-label={t("startVoiceInput")}>
-                        <IconMicrophone size={17} />
-                      </ActionIcon>
-                    </ComposerPrimitive.Dictate>
-                  </Tooltip>
-                </AuiIf>
-                <AuiIf condition={(state) => state.composer.dictation !== undefined}>
-                  <Tooltip label={t("stopVoiceInput")}>
-                    <ComposerPrimitive.StopDictation asChild>
-                      <ActionIcon variant="light" color="red" size="lg" aria-label={t("stopVoiceInput")}>
-                        <IconPlayerStop size={16} />
-                      </ActionIcon>
-                    </ComposerPrimitive.StopDictation>
-                  </Tooltip>
-                </AuiIf>
               </Group>
               <LexicalComposerInput
                 ref={composerInputRef}
@@ -3334,15 +3348,13 @@ export const AssistantPanel = ({
   const aui = useAui();
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const panelRef = useRef<HTMLDialogElement>(null);
-  const stopVoiceActivityWithoutSurface = () => {
+  const stopSpeechWithoutSurface = () => {
     if (hasVisibleWidget) return;
-    const composer = aui.composer();
-    if (composer.getState().dictation !== undefined) composer.stopDictation();
     const thread = aui.thread();
     if (thread.getState().speech !== undefined) thread.stopSpeaking();
   };
   const minimize = () => {
-    stopVoiceActivityWithoutSurface();
+    stopSpeechWithoutSurface();
     onClose();
   };
 
@@ -3408,7 +3420,7 @@ export const AssistantPanel = ({
             autoFocusComposer
             onMinimize={minimize}
             onDismiss={() => {
-              stopVoiceActivityWithoutSurface();
+              stopSpeechWithoutSurface();
               onDismissActivity();
               onClose();
             }}
