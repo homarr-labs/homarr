@@ -3331,8 +3331,20 @@ export const AssistantPanel = ({
   onReasoningChange,
 }: AssistantPanelProps) => {
   const t = useScopedI18n("common.assistant");
+  const aui = useAui();
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const panelRef = useRef<HTMLDialogElement>(null);
+  const stopVoiceActivityWithoutSurface = () => {
+    if (hasVisibleWidget) return;
+    const composer = aui.composer();
+    if (composer.getState().dictation !== undefined) composer.stopDictation();
+    const thread = aui.thread();
+    if (thread.getState().speech !== undefined) thread.stopSpeaking();
+  };
+  const minimize = () => {
+    stopVoiceActivityWithoutSurface();
+    onClose();
+  };
 
   useWindowEvent("keydown", (event) => {
     if (
@@ -3344,7 +3356,7 @@ export const AssistantPanel = ({
     )
       return;
     event.preventDefault();
-    onClose();
+    minimize();
   });
   useEffect(() => {
     if (!opened) {
@@ -3394,8 +3406,9 @@ export const AssistantPanel = ({
             onModelChange={onModelChange}
             onReasoningChange={onReasoningChange}
             autoFocusComposer
-            onMinimize={onClose}
+            onMinimize={minimize}
             onDismiss={() => {
+              stopVoiceActivityWithoutSurface();
               onDismissActivity();
               onClose();
             }}

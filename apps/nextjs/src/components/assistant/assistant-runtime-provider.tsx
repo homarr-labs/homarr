@@ -42,6 +42,7 @@ class AssistantSurfaceComposerRuntimeCore extends INTERNAL.DefaultThreadComposer
   }
 
   public dispose() {
+    if (this.dictation !== undefined) this.stopDictation();
     composerConnectionDisposers.get(this)?.();
     composerConnectionDisposers.delete(this);
   }
@@ -294,18 +295,22 @@ export const createAssistantSurfaceRuntime = (runtime: AssistantRuntime): Assist
     subscribe(callback) {
       let activeCore = sharedBinding.getState();
       let activeConversationId = getConversationId();
+      let activeComposer = getComposer(activeConversationId, activeCore);
       retainConversation(activeConversationId);
-      let unsubscribeComposer = getComposer(activeConversationId, activeCore).subscribe(callback);
+      let unsubscribeComposer = activeComposer.subscribe(callback);
       const handleSharedUpdate = () => {
         const nextCore = sharedBinding.getState();
         const nextConversationId = getConversationId();
         if (nextCore !== activeCore || nextConversationId !== activeConversationId) {
+          if (activeComposer.dictation !== undefined) activeComposer.stopDictation();
+          if (activeCore.speech !== undefined) activeCore.stopSpeaking();
           unsubscribeComposer();
           releaseConversation(activeConversationId);
           activeCore = nextCore;
           activeConversationId = nextConversationId;
           retainConversation(activeConversationId);
-          unsubscribeComposer = getComposer(activeConversationId, activeCore).subscribe(callback);
+          activeComposer = getComposer(activeConversationId, activeCore);
+          unsubscribeComposer = activeComposer.subscribe(callback);
         }
         callback();
       };
@@ -360,6 +365,10 @@ export const createAssistantSurfaceRuntime = (runtime: AssistantRuntime): Assist
     registerModelContextProvider: () => () => {},
     dispose() {
       activeConversationCounts.clear();
+      const threadCores = new Set(Array.from(surfaceCoreByConversation.values(), (entry) => entry.source));
+      for (const threadCore of threadCores) {
+        if (threadCore.speech !== undefined) threadCore.stopSpeaking();
+      }
       for (const [conversationId, entry] of composerByConversation) disposeComposer(conversationId, entry);
     },
   };
@@ -509,7 +518,6 @@ export const AssistantComposerSurfaceBoundary = ({ children, surfaceId }: PropsW
         }}
         onPasteCapture={handlePasteCapture}
       >
-        <AssistantComposerSurfaceEvents />
         {children}
       </div>
     </AssistantComposerSurfaceContext.Provider>
@@ -588,6 +596,7 @@ export const AssistantComposerRuntimeProvider = ({ children }: PropsWithChildren
 
   return (
     <AssistantRuntimeProvider aui={parentAui} runtime={surfaceRuntime}>
+      <AssistantComposerSurfaceEvents />
       {children}
     </AssistantRuntimeProvider>
   );
