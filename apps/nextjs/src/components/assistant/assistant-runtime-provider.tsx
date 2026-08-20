@@ -437,21 +437,23 @@ const AssistantComposerSurfaceEvents = () => {
   return null;
 };
 
-const AssistantComposerSurfaceBoundary = ({ children, surfaceId }: PropsWithChildren<{ surfaceId: string }>) => {
+export const AssistantComposerSurfaceBoundary = ({ children, surfaceId }: PropsWithChildren<{ surfaceId: string }>) => {
   const t = useScopedI18n("common.assistant");
   const aui = useAui();
+  const instanceId = useId();
+  const resolvedSurfaceId = `${surfaceId}:${instanceId}`;
   const elementRef = useRef<HTMLDivElement>(null);
-  const contextValue = useMemo(() => ({ id: surfaceId }), [surfaceId]);
+  const contextValue = useMemo(() => ({ id: resolvedSurfaceId }), [resolvedSurfaceId]);
 
   useLayoutEffect(() => {
     const element = elementRef.current;
     if (!element) return undefined;
-    surfaceElements.set(surfaceId, element);
+    surfaceElements.set(resolvedSurfaceId, element);
 
     return () => {
-      if (surfaceElements.get(surfaceId) === element) surfaceElements.delete(surfaceId);
+      if (surfaceElements.get(resolvedSurfaceId) === element) surfaceElements.delete(resolvedSurfaceId);
     };
-  }, [surfaceId]);
+  }, [resolvedSurfaceId]);
 
   const handlePasteCapture = (event: ClipboardEvent<HTMLDivElement>) => {
     const target = event.target;
@@ -571,13 +573,11 @@ interface AssistantComposerSurfaceProviderProps extends PropsWithChildren {
 }
 
 /**
- * Gives one rendered assistant surface a local composer while preserving the shared conversation.
- * Every component below this boundary can keep using the normal assistant-ui primitives and hooks.
+ * Gives every rendered assistant surface one shared local composer while preserving the shared
+ * conversation. Individual surfaces should add AssistantComposerSurfaceBoundary around their UI.
  */
-export const AssistantComposerSurfaceProvider = ({ children, surfaceId }: AssistantComposerSurfaceProviderProps) => {
+export const AssistantComposerRuntimeProvider = ({ children }: PropsWithChildren) => {
   const parentAui = useAui();
-  const instanceId = useId();
-  const resolvedSurfaceId = `${surfaceId}:${instanceId}`;
   // oxlint-disable-next-line no-underscore-dangle -- required to derive a scoped runtime without cloning the shared thread.
   const sharedRuntime = parentAui.threads().__internal_getAssistantRuntime?.();
   const surfaceRuntime = useMemo(() => {
@@ -588,7 +588,17 @@ export const AssistantComposerSurfaceProvider = ({ children, surfaceId }: Assist
 
   return (
     <AssistantRuntimeProvider aui={parentAui} runtime={surfaceRuntime}>
-      <AssistantComposerSurfaceBoundary surfaceId={resolvedSurfaceId}>{children}</AssistantComposerSurfaceBoundary>
+      {children}
     </AssistantRuntimeProvider>
   );
 };
+
+/**
+ * Convenience boundary for a standalone surface. Use AssistantComposerRuntimeProvider with
+ * localized boundaries when multiple surfaces need to share one draft and attachment queue.
+ */
+export const AssistantComposerSurfaceProvider = ({ children, surfaceId }: AssistantComposerSurfaceProviderProps) => (
+  <AssistantComposerRuntimeProvider>
+    <AssistantComposerSurfaceBoundary surfaceId={surfaceId}>{children}</AssistantComposerSurfaceBoundary>
+  </AssistantComposerRuntimeProvider>
+);

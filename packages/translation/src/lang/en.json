@@ -2327,6 +2327,21 @@
       "newConversation": "New conversation",
       "conversations": "Conversations",
       "delete": "Delete",
+      "cancel": "Cancel",
+      "conversationActions": "Conversation actions",
+      "searchConversations": "Search conversations",
+      "noMatchingConversations": "No matching conversations",
+      "moreActions": "More response actions",
+      "renameConversation": {
+        "action": "Rename",
+        "title": "Rename conversation",
+        "label": "Conversation name",
+        "save": "Save name"
+      },
+      "deleteConversation": {
+        "title": "Delete conversation?",
+        "description": "“{title}” and its messages will be permanently deleted."
+      },
       "closeHistory": "Close conversation history",
       "openHistory": "Open conversation history",
       "emptyTitle": "What can I help with?",
@@ -2399,10 +2414,15 @@
       "regenerate": "Regenerate response",
       "helpful": "Helpful",
       "notHelpful": "Not helpful",
+      "readAloud": "Read response aloud",
+      "stopReading": "Stop reading response",
+      "startVoiceInput": "Start voice input",
+      "stopVoiceInput": "Stop voice input",
       "feedbackError": "Your feedback could not be saved. Try again.",
       "exportMarkdown": "Export as Markdown",
       "exportConversation": {
         "action": "Export conversation as Markdown",
+        "working": "Exporting conversation…",
         "failedTitle": "Conversation could not be exported",
         "failedDescription": "Homarr could not load this conversation. Try again."
       },
@@ -2630,7 +2650,7 @@
       "autoApproval": {
         "label": "Automatic approvals",
         "title": "Automatic approvals",
-        "description": "Automatically approve protected changes, use presented form details, and choose answers categorized as affirmative. Neutral selections still wait for you. Your Homarr permissions still apply. This turns off when you switch conversations.",
+        "description": "Automatically prepare forms and approve protected changes for this conversation. Questions still wait for your answer, and your Homarr permissions still apply. This turns off when you switch conversations.",
         "enable": "Enable for this conversation",
         "disable": "Turn off automatic approvals",
         "enabled": "Automatic approvals are on",
@@ -5744,7 +5764,13 @@
       "compact": {
         "title": "Assistant",
         "description": "Resize this widget to chat here, or open the full conversation.",
-        "open": "Open assistant"
+        "open": "Open assistant",
+        "openTitle": "Assistant open in side panel",
+        "openDescription": "The conversation stays in one active surface.",
+        "returnToWidget": "Return the conversation to this widget",
+        "otherWidgetTitle": "Assistant active in another widget",
+        "otherWidgetDescription": "Only one conversation surface stays active at a time.",
+        "useHere": "Use the assistant in this widget"
       }
     }
   },

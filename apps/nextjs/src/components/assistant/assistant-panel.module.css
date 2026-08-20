@@ -98,18 +98,18 @@
   container-type: size;
   position: fixed;
   z-index: 290;
-  inset-inline-start: 50%;
-  bottom: 1rem;
+  inset-block: 1rem;
+  inset-inline-end: 1rem;
+  inset-inline-start: auto;
   display: flex;
-  width: min(46rem, calc(100vw - 2rem));
-  height: min(36rem, calc(100dvh - 5rem));
-  min-height: min(22rem, calc(100dvh - 5rem));
+  width: min(34rem, calc(100vw - 2rem));
+  height: auto;
+  min-height: min(30rem, calc(100dvh - 2rem));
   margin: 0;
-  transform: translateX(-50%);
   flex-direction: column;
   overflow: hidden;
   padding: 0;
-  border: 0;
+  border: 1px solid var(--mantine-color-default-border);
   border-radius: var(--mantine-radius-lg);
   color: var(--mantine-color-text);
   background: var(--mantine-color-body);
@@ -157,10 +157,28 @@
   border-bottom: 1px solid var(--mantine-color-default-border);
 }
 
+.panelIdentity {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.panelIdentityIcon {
+  flex: 0 0 auto;
+}
+
+.panelIdentityTitle,
+.panelThreadTitle {
+  max-width: 14rem;
+}
+
 .panelActions {
   min-width: 0;
   flex: 0 0 auto;
   margin-inline-start: auto;
+}
+
+.newConversationButton {
+  flex: 0 0 auto;
 }
 
 .windowControls {
@@ -210,6 +228,21 @@
     display: none;
   }
 
+  .newConversationButton {
+    width: 2.625rem;
+    max-width: 2.625rem;
+    height: 2.625rem;
+    padding-inline: 0.75rem;
+  }
+
+  .newConversationButton :global(.mantine-Button-section) {
+    margin-inline: 0;
+  }
+
+  .newConversationButton :global(.mantine-Button-label) {
+    display: none;
+  }
+
   .messages {
     padding: 0.5rem 0.65rem 1rem;
   }
@@ -246,9 +279,27 @@
   }
 }
 
+@container assistant-widget (max-width: 36rem) {
+  .historyButton {
+    width: 2.625rem;
+    max-width: 2.625rem;
+    height: 2.625rem;
+    padding-inline: 0.75rem;
+  }
+
+  .historyButtonSection {
+    margin-inline-end: 0;
+  }
+
+  .historyButtonLabel {
+    display: none;
+  }
+}
+
 @container assistant-widget (max-width: 22rem) {
   .panelAction,
-  .historyButton {
+  .historyButton,
+  .newConversationButton {
     width: 2.25rem;
     max-width: 2.25rem;
     height: 2.25rem;
@@ -268,7 +319,11 @@
     padding-inline: 0.15rem;
   }
 
-  .composerContext > :last-child {
+  .composerContextLabel {
+    display: none;
+  }
+
+  .panelThreadTitle {
     display: none;
   }
 }
@@ -298,15 +353,68 @@
 }
 
 .historyMenu {
+  min-width: 0;
+  overflow: hidden;
   background: var(--mantine-color-body);
 }
 
+.historyMenu :global(.mantine-ScrollArea-content) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
 .historyItem {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 0.2rem;
+  overflow: hidden;
+  padding: 0.15rem 0.2rem 0.15rem 0.35rem;
   border-radius: var(--mantine-radius-md);
 }
 
-.historyItem:hover {
+.historyItem:hover,
+.historyItem[data-active] {
   background: var(--mantine-color-default-hover);
+}
+
+.historyItemTrigger {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  padding: 0.35rem 0.25rem;
+  text-align: start;
+}
+
+.historyItemTrigger > span {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.historyRenameInput {
+  min-width: 0;
+  flex: 1;
+}
+
+.historyItemTrigger:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: -1px;
+}
+
+.historyItemMenu {
+  flex: 0 0 auto;
+  opacity: 1;
+}
+
+.historyItemActions {
+  flex: 0 0 auto;
 }
 
 .thread {
@@ -339,6 +447,8 @@
 
 .message {
   margin-block: 0.9rem;
+  contain-intrinsic-size: auto 12rem;
+  content-visibility: auto;
 }
 
 .userMessageWrap {
@@ -706,24 +816,21 @@
 
 .pendingQuestionDock {
   min-height: 0;
-  flex: 1 1 auto;
+  max-height: min(22rem, 48dvh);
+  flex: 0 1 auto;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 0.75rem;
+  border-top: 1px solid var(--mantine-color-default-border);
   background: var(--mantine-color-body);
-}
-
-.thread[data-pending-question] .viewport {
-  display: none;
 }
 
 .pendingQuestionTarget {
   display: flex;
   width: 100%;
-  min-height: 100%;
   max-width: 44rem;
   margin-inline: auto;
-  align-items: safe center;
+  align-items: flex-start;
 }
 
 .pendingQuestionTarget .humanTool {
@@ -1091,6 +1198,38 @@
   flex: 0 1 auto;
 }
 
+.messageMoreMenu {
+  z-index: 410;
+  min-width: 11rem;
+  padding: 0.25rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  color: var(--mantine-color-text);
+  background: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.messageMoreItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: var(--mantine-radius-sm);
+  font-size: var(--mantine-font-size-sm);
+  cursor: pointer;
+  outline: 0;
+}
+
+.messageMoreItem[data-highlighted] {
+  background: var(--mantine-color-default-hover);
+}
+
+.messageMoreSeparator {
+  height: 1px;
+  margin-block: 0.2rem;
+  background: var(--mantine-color-default-border);
+}
+
 .userActions {
   min-height: 1.75rem;
 }
@@ -1173,13 +1312,13 @@
 
 .composerContext {
   display: flex;
-  width: 1.75rem;
+  width: auto;
   height: 1.75rem;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  padding-inline: 0.3rem 0.42rem;
   border: 1px solid var(--mantine-color-default-border);
-  border-radius: 50%;
+  border-radius: var(--mantine-radius-sm);
   color: var(--mantine-color-text);
   background: var(--mantine-color-body);
 }
@@ -1641,12 +1780,12 @@
 @keyframes assistant-panel-in {
   from {
     opacity: 0;
-    transform: translate(-50%, 0.75rem) scale(0.985);
+    transform: translateY(0.75rem) scale(0.985);
   }
 
   to {
     opacity: 1;
-    transform: translate(-50%, 0) scale(1);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -1656,10 +1795,11 @@
   }
 
   .floatingPanel {
-    bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
-    width: calc(100vw - 1rem);
-    height: min(44rem, calc(100dvh - 1rem - env(safe-area-inset-bottom, 0px)));
-    min-height: min(20rem, calc(100dvh - 1rem - env(safe-area-inset-bottom, 0px)));
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    border-radius: 0;
   }
 
   .panelHeader {
@@ -1705,6 +1845,10 @@
 }
 
 @media (max-width: 30em) {
+  .historyItemMenu {
+    opacity: 1;
+  }
+
   .historyButton {
     width: 2.625rem;
     max-width: 2.625rem;

@@ -36,10 +36,16 @@ export const createAssistantAutoApprovalTracker = (maximumAttempts = Number.POSI
 interface AssistantAutoApprovalContextValue {
   enabled: boolean;
   setEnabled: (enabled: boolean) => void;
-  requestAction: (toolCallId: string, confirm: () => void) => boolean;
+  preparationEnabled: boolean;
+  approvalEnabled: boolean;
+  setPreparationEnabled: (enabled: boolean) => void;
+  setApprovalEnabled: (enabled: boolean) => void;
+  requestAction: (toolCallId: string, confirm: () => void, mode?: AssistantAutomaticActionMode) => boolean;
   completeAction: (toolCallId: string) => void;
   retryRevision: number;
 }
+
+export type AssistantAutomaticActionMode = "preparation" | "approval";
 
 const AssistantAutoApprovalContext = createContext<AssistantAutoApprovalContextValue | null>(null);
 
@@ -47,28 +53,50 @@ export const AssistantAutoApprovalProvider = ({
   children,
   conversationId,
 }: PropsWithChildren<{ conversationId: string }>) => {
-  const [enabled, setEnabledState] = useState(false);
+  const [preparationEnabled, setPreparationEnabledState] = useState(false);
+  const [approvalEnabled, setApprovalEnabledState] = useState(false);
   const [retryRevision, setRetryRevision] = useState(0);
   const trackerRef = useRef(createAssistantAutoApprovalTracker(AUTO_APPROVAL_MAX_ATTEMPTS));
-  const retryTimersRef = useRef(new Map<string, number>());
+  const retryTimersRef = useRef(new Map<string, { timer: number; mode: AssistantAutomaticActionMode }>());
   const previousConversationIdRef = useRef(conversationId);
 
   const clearRetryTimer = useCallback((toolCallId: string) => {
-    const timer = retryTimersRef.current.get(toolCallId);
-    if (timer !== undefined) window.clearTimeout(timer);
+    const retry = retryTimersRef.current.get(toolCallId);
+    if (retry !== undefined) window.clearTimeout(retry.timer);
     retryTimersRef.current.delete(toolCallId);
   }, []);
 
-  const clearAutomaticActions = useCallback(() => {
-    for (const timer of retryTimersRef.current.values()) window.clearTimeout(timer);
-    retryTimersRef.current.clear();
-    trackerRef.current.clear();
+  const clearAutomaticActions = useCallback((mode?: AssistantAutomaticActionMode) => {
+    for (const [toolCallId, retry] of retryTimersRef.current) {
+      if (mode !== undefined && retry.mode !== mode) continue;
+      window.clearTimeout(retry.timer);
+      retryTimersRef.current.delete(toolCallId);
+      trackerRef.current.complete(toolCallId);
+    }
+    if (mode === undefined) trackerRef.current.clear();
   }, []);
 
   const setEnabled = useCallback(
     (nextEnabled: boolean) => {
       if (!nextEnabled) clearAutomaticActions();
-      setEnabledState(nextEnabled);
+      setPreparationEnabledState(nextEnabled);
+      setApprovalEnabledState(nextEnabled);
+    },
+    [clearAutomaticActions],
+  );
+
+  const setPreparationEnabled = useCallback(
+    (nextEnabled: boolean) => {
+      if (!nextEnabled) clearAutomaticActions("preparation");
+      setPreparationEnabledState(nextEnabled);
+    },
+    [clearAutomaticActions],
+  );
+
+  const setApprovalEnabled = useCallback(
+    (nextEnabled: boolean) => {
+      if (!nextEnabled) clearAutomaticActions("approval");
+      setApprovalEnabledState(nextEnabled);
     },
     [clearAutomaticActions],
   );
@@ -79,33 +107,35 @@ export const AssistantAutoApprovalProvider = ({
 
     if (previousConversationId === conversationId) return;
     clearAutomaticActions();
-    setEnabledState(false);
+    setPreparationEnabledState(false);
+    setApprovalEnabledState(false);
   }, [clearAutomaticActions, conversationId]);
 
   useEffect(() => clearAutomaticActions, [clearAutomaticActions]);
 
   const requestAction = useCallback(
-    (toolCallId: string, confirm: () => void) => {
-      if (!enabled || !trackerRef.current.claim(toolCallId)) return false;
+    (toolCallId: string, confirm: () => void, mode: AssistantAutomaticActionMode = "preparation") => {
+      const modeEnabled = mode === "approval" ? approvalEnabled : preparationEnabled;
+      if (!modeEnabled || !trackerRef.current.claim(toolCallId)) return false;
 
       try {
         confirm();
         clearRetryTimer(toolCallId);
-        retryTimersRef.current.set(
-          toolCallId,
-          window.setTimeout(() => {
+        retryTimersRef.current.set(toolCallId, {
+          mode,
+          timer: window.setTimeout(() => {
             retryTimersRef.current.delete(toolCallId);
             trackerRef.current.release(toolCallId);
             setRetryRevision((revision) => revision + 1);
           }, AUTO_APPROVAL_RETRY_TIMEOUT_MS),
-        );
+        });
         return true;
       } catch {
         trackerRef.current.release(toolCallId);
         return false;
       }
     },
-    [clearRetryTimer, enabled],
+    [approvalEnabled, clearRetryTimer, preparationEnabled],
   );
 
   const completeAction = useCallback(
@@ -116,10 +146,29 @@ export const AssistantAutoApprovalProvider = ({
     [clearRetryTimer],
   );
 
-  const value = useMemo(
-    () => ({ enabled, setEnabled, requestAction, completeAction, retryRevision }),
-    [completeAction, enabled, requestAction, retryRevision, setEnabled],
-  );
+  const value = useMemo(() => {
+    const enabled = preparationEnabled || approvalEnabled;
+    return {
+      enabled,
+      setEnabled,
+      preparationEnabled,
+      approvalEnabled,
+      setPreparationEnabled,
+      setApprovalEnabled,
+      requestAction,
+      completeAction,
+      retryRevision,
+    };
+  }, [
+    approvalEnabled,
+    completeAction,
+    preparationEnabled,
+    requestAction,
+    retryRevision,
+    setApprovalEnabled,
+    setEnabled,
+    setPreparationEnabled,
+  ]);
 
   return <AssistantAutoApprovalContext.Provider value={value}>{children}</AssistantAutoApprovalContext.Provider>;
 };
@@ -135,16 +184,20 @@ export const useAssistantAutomaticAction = ({
   ready,
   completed,
   confirm,
+  mode = "preparation",
 }: {
   toolCallId: string;
   ready: boolean;
   completed: boolean;
   confirm: () => void;
+  mode?: AssistantAutomaticActionMode;
 }) => {
-  const { completeAction, enabled, requestAction, retryRevision } = useAssistantAutoApproval();
+  const { approvalEnabled, completeAction, preparationEnabled, requestAction, retryRevision } =
+    useAssistantAutoApproval();
   const [inProgress, setInProgress] = useState(false);
   const confirmRef = useRef(confirm);
   confirmRef.current = confirm;
+  const enabled = mode === "approval" ? approvalEnabled : preparationEnabled;
 
   useEffect(() => {
     if (!ready || completed || !enabled) {
@@ -153,9 +206,9 @@ export const useAssistantAutomaticAction = ({
       return;
     }
 
-    const requested = requestAction(toolCallId, () => confirmRef.current());
+    const requested = requestAction(toolCallId, () => confirmRef.current(), mode);
     setInProgress(requested);
-  }, [completeAction, completed, enabled, ready, requestAction, retryRevision, toolCallId]);
+  }, [completeAction, completed, enabled, mode, ready, requestAction, retryRevision, toolCallId]);
 
   return inProgress;
 };

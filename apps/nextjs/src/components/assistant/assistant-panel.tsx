@@ -25,6 +25,8 @@ import type {
 import type { MessageStatus } from "@assistant-ui/react";
 import {
   ActionBarPrimitive,
+  ActionBarMorePrimitive,
+  AuiIf,
   AttachmentPrimitive,
   BranchPickerPrimitive,
   ChainOfThoughtByIndicesProvider,
@@ -66,6 +68,7 @@ import {
   SegmentedControl,
   Stack,
   Text,
+  TextInput,
   ThemeIcon,
   Tooltip,
   UnstyledButton,
@@ -91,10 +94,12 @@ import {
   IconChevronUp,
   IconCopy,
   IconDownload,
+  IconDotsVertical,
   IconFile,
   IconFileExport,
   IconLink,
   IconMessage,
+  IconMicrophone,
   IconMinus,
   IconPaperclip,
   IconPalette,
@@ -112,6 +117,8 @@ import {
   IconThumbUp,
   IconTool,
   IconTrash,
+  IconVolume,
+  IconVolumeOff,
   IconX,
 } from "@tabler/icons-react";
 import remarkBreaks from "remark-breaks";
@@ -124,6 +131,7 @@ import { useTimeAgo } from "@homarr/common";
 import { assistantProviderIds, assistantProviderPresets, assistantReasoningModes } from "@homarr/definitions";
 import type { AssistantProvider } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useConfirmModal } from "@homarr/modals";
 import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
@@ -184,6 +192,7 @@ interface AssistantPanelProps extends AssistantConversationControls {
   onClose: () => void;
   onDismissActivity: () => void;
   activityDismissed: boolean;
+  hasVisibleWidget: boolean;
   isRunning: boolean;
   unreadCount: number;
   latestAssistantText: string;
@@ -889,6 +898,7 @@ const ToolPart = ({
     toolCallId,
     ready: awaitingApproval,
     completed: !awaitingApproval,
+    mode: "approval",
     confirm: () => {
       respondToApproval({ approved: true, reason: "Approved automatically by the user." });
     },
@@ -1107,63 +1117,43 @@ const downloadAssistantMarkdown = (markdown: string, filename: string) => {
   setTimeout(() => URL.revokeObjectURL(blobUrl), 0);
 };
 
-const AssistantMessageExportAction = () => {
-  const t = useScopedI18n("common.assistant");
-  const message = useAuiState((state) => state.message);
-
-  return (
-    <Tooltip label={t("exportMarkdown")}>
-      <ActionIcon
-        variant="subtle"
-        color="gray"
-        size="sm"
-        aria-label={t("exportMarkdown")}
-        onClick={() => {
-          const markdown = buildAssistantMessageMarkdown({
-            id: message.id,
-            parentId: message.parentId,
-            format: "assistant-ui/runtime",
-            content: message,
-            createdAt: message.createdAt,
-          });
-          downloadAssistantMarkdown(markdown, `assistant-message-${message.id.slice(0, 8)}.md`);
-        }}
-      >
-        <IconFileExport size={14} />
-      </ActionIcon>
-    </Tooltip>
-  );
-};
-
 const AssistantMessageActions = () => {
   const t = useScopedI18n("common.assistant");
+  const aui = useAui();
+  const exportMessage = () => {
+    const message = aui.message().getState();
+    const markdown = buildAssistantMessageMarkdown({
+      id: message.id,
+      parentId: message.parentId,
+      format: "assistant-ui/runtime",
+      content: message,
+      createdAt: message.createdAt,
+    });
+    downloadAssistantMarkdown(markdown, `assistant-message-${message.id.slice(0, 8)}.md`);
+  };
+
   return (
     <Box className={classes.messageActions}>
-      <ActionBarPrimitive.Root hideWhenRunning className={classes.messageActionBar}>
-        <Group gap={2} wrap="wrap">
+      <ActionBarPrimitive.Root
+        hideWhenRunning
+        autohide="not-last"
+        autohideFloat="single-branch"
+        className={classes.messageActionBar}
+      >
+        <Group gap={2} wrap="nowrap">
           <ProviderMessageInfo />
           <Tooltip label={t("copy")}>
             <ActionBarPrimitive.Copy asChild>
               <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("copy")}>
-                <IconCopy size={14} />
+                <AuiIf condition={(state) => !state.message.isCopied}>
+                  <IconCopy size={14} />
+                </AuiIf>
+                <AuiIf condition={(state) => state.message.isCopied}>
+                  <IconCheck size={14} />
+                </AuiIf>
               </ActionIcon>
             </ActionBarPrimitive.Copy>
           </Tooltip>
-          <Tooltip label={t("helpful")}>
-            <ActionBarPrimitive.FeedbackPositive asChild>
-              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("helpful")}>
-                <IconThumbUp size={14} />
-              </ActionIcon>
-            </ActionBarPrimitive.FeedbackPositive>
-          </Tooltip>
-          <Tooltip label={t("notHelpful")}>
-            <ActionBarPrimitive.FeedbackNegative asChild>
-              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("notHelpful")}>
-                <IconThumbDown size={14} />
-              </ActionIcon>
-            </ActionBarPrimitive.FeedbackNegative>
-          </Tooltip>
-          <AssistantMessageExportAction />
           <Tooltip label={t("regenerate")}>
             <ActionBarPrimitive.Reload asChild>
               <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("regenerate")}>
@@ -1171,6 +1161,50 @@ const AssistantMessageActions = () => {
               </ActionIcon>
             </ActionBarPrimitive.Reload>
           </Tooltip>
+          <ActionBarMorePrimitive.Root>
+            <ActionBarMorePrimitive.Trigger asChild>
+              <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("moreActions")}>
+                <IconDotsVertical size={14} />
+              </ActionIcon>
+            </ActionBarMorePrimitive.Trigger>
+            <ActionBarMorePrimitive.Content className={classes.messageMoreMenu} sideOffset={4} align="end">
+              <ActionBarPrimitive.FeedbackPositive asChild>
+                <ActionBarMorePrimitive.Item className={classes.messageMoreItem}>
+                  <IconThumbUp size={15} />
+                  {t("helpful")}
+                </ActionBarMorePrimitive.Item>
+              </ActionBarPrimitive.FeedbackPositive>
+              <ActionBarPrimitive.FeedbackNegative asChild>
+                <ActionBarMorePrimitive.Item className={classes.messageMoreItem}>
+                  <IconThumbDown size={15} />
+                  {t("notHelpful")}
+                </ActionBarMorePrimitive.Item>
+              </ActionBarPrimitive.FeedbackNegative>
+              <AuiIf condition={(state) => state.thread.capabilities.speech && state.message.speech === undefined}>
+                <ActionBarPrimitive.Speak asChild>
+                  <ActionBarMorePrimitive.Item className={classes.messageMoreItem}>
+                    <IconVolume size={15} />
+                    {t("readAloud")}
+                  </ActionBarMorePrimitive.Item>
+                </ActionBarPrimitive.Speak>
+              </AuiIf>
+              <AuiIf condition={(state) => state.message.speech !== undefined}>
+                <ActionBarPrimitive.StopSpeaking asChild>
+                  <ActionBarMorePrimitive.Item className={classes.messageMoreItem}>
+                    <IconVolumeOff size={15} />
+                    {t("stopReading")}
+                  </ActionBarMorePrimitive.Item>
+                </ActionBarPrimitive.StopSpeaking>
+              </AuiIf>
+              <ActionBarMorePrimitive.Separator className={classes.messageMoreSeparator} />
+              <ActionBarPrimitive.ExportMarkdown onExport={() => exportMessage()} asChild>
+                <ActionBarMorePrimitive.Item className={classes.messageMoreItem}>
+                  <IconFileExport size={15} />
+                  {t("exportMarkdown")}
+                </ActionBarMorePrimitive.Item>
+              </ActionBarPrimitive.ExportMarkdown>
+            </ActionBarMorePrimitive.Content>
+          </ActionBarMorePrimitive.Root>
         </Group>
       </ActionBarPrimitive.Root>
       <BranchPicker />
@@ -1181,7 +1215,7 @@ const AssistantMessageActions = () => {
 const UserMessageActions = () => {
   const t = useScopedI18n("common.assistant");
   return (
-    <ActionBarPrimitive.Root hideWhenRunning className={classes.userActions}>
+    <ActionBarPrimitive.Root hideWhenRunning autohide="not-last" className={classes.userActions}>
       <Group gap={2}>
         <Tooltip label={t("copyMessage")}>
           <ActionBarPrimitive.Copy asChild>
@@ -1732,12 +1766,17 @@ const ConversationContext = () => {
           aria-haspopup="dialog"
           onClick={() => setOpened((value) => !value)}
         >
-          <RingProgress
-            size={24}
-            thickness={3}
-            roundCaps
-            sections={hasContext ? [{ value: contextPercentage, color: getContextColor(contextPercentage) }] : []}
-          />
+          <Group gap={5} wrap="nowrap">
+            <RingProgress
+              size={22}
+              thickness={3}
+              roundCaps
+              sections={hasContext ? [{ value: contextPercentage, color: getContextColor(contextPercentage) }] : []}
+            />
+            <Text className={classes.composerContextLabel} component="span" size="xs" fw={650}>
+              {hasContext ? `${contextPercentage}%` : t("mentions.context")}
+            </Text>
+          </Group>
         </UnstyledButton>
       </Popover.Target>
       <Popover.Dropdown className={classes.conversationContextPopover}>
@@ -1948,14 +1987,21 @@ const AssistantMessage = () => (
   </MessagePrimitive.Root>
 );
 
+const assistantThreadMessageComponents = { UserMessage, AssistantMessage };
+
 const HistorySelectContext = createContext<() => void>(() => undefined);
 
 const ThreadListItem = () => {
   const t = useScopedI18n("common.assistant");
+  const aui = useAui();
+  const { openConfirmModal } = useConfirmModal();
   const onSelect = useContext(HistorySelectContext);
   const remoteId = useAuiState((state) => state.threadListItem.remoteId);
   const title = useAuiState((state) => state.threadListItem.title);
   const [exporting, setExporting] = useState(false);
+  const [actionsOpened, setActionsOpened] = useState(false);
+  const [renameOpened, setRenameOpened] = useState(false);
+  const [nextTitle, setNextTitle] = useState(title ?? "");
 
   const exportConversation = async () => {
     if (!remoteId || exporting) return;
@@ -1977,23 +2023,87 @@ const ThreadListItem = () => {
     }
   };
 
+  const renameConversation = () => {
+    const trimmedTitle = nextTitle.trim();
+    if (!trimmedTitle) return;
+    aui.threadListItem().rename(trimmedTitle);
+    setRenameOpened(false);
+    setActionsOpened(false);
+  };
+
+  const deleteConversation = () => {
+    openConfirmModal({
+      title: t("deleteConversation.title"),
+      children: t("deleteConversation.description", { title: title ?? t("newConversation") }),
+      confirmProps: { color: "red" },
+      labels: { confirm: t("delete"), cancel: t("cancel") },
+      onConfirm: () => aui.threadListItem().delete(),
+    });
+  };
+
+  if (renameOpened) {
+    return (
+      <ThreadListItemPrimitive.Root className={classes.historyItem}>
+        <TextInput
+          className={classes.historyRenameInput}
+          value={nextTitle}
+          onChange={(event) => setNextTitle(event.currentTarget.value)}
+          aria-label={t("renameConversation.label")}
+          maxLength={72}
+          size="xs"
+          data-autofocus
+          onKeyDown={(event) => {
+            if (event.key === "Enter") renameConversation();
+            if (event.key === "Escape") setRenameOpened(false);
+          }}
+        />
+        <ActionIcon
+          variant="subtle"
+          color="green"
+          size="sm"
+          aria-label={t("renameConversation.save")}
+          disabled={!nextTitle.trim()}
+          onClick={renameConversation}
+        >
+          <IconCheck size={15} />
+        </ActionIcon>
+        <ActionIcon
+          variant="subtle"
+          color="gray"
+          size="sm"
+          aria-label={t("cancel")}
+          onClick={() => setRenameOpened(false)}
+        >
+          <IconX size={15} />
+        </ActionIcon>
+      </ThreadListItemPrimitive.Root>
+    );
+  }
+
   return (
     <ThreadListItemPrimitive.Root className={classes.historyItem}>
-      <Group gap={4} wrap="nowrap">
-        <ThreadListItemPrimitive.Trigger asChild>
-          <Button
+      <ThreadListItemPrimitive.Trigger asChild>
+        <UnstyledButton className={classes.historyItemTrigger} title={title} onClick={onSelect}>
+          <Text component="span" size="sm" fw={500} truncate>
+            <ThreadListItemPrimitive.Title fallback={t("newConversation")} />
+          </Text>
+        </UnstyledButton>
+      </ThreadListItemPrimitive.Trigger>
+      {actionsOpened && (
+        <Group className={classes.historyItemActions} gap={1} wrap="nowrap">
+          <ActionIcon
             variant="subtle"
             color="gray"
-            size="compact-sm"
-            justify="flex-start"
-            flex={1}
-            style={{ minWidth: 0 }}
-            onClick={onSelect}
+            size="sm"
+            title={t("renameConversation.action")}
+            aria-label={t("renameConversation.action")}
+            onClick={() => {
+              setNextTitle(title ?? "");
+              setRenameOpened(true);
+            }}
           >
-            <ThreadListItemPrimitive.Title fallback={t("newConversation")} />
-          </Button>
-        </ThreadListItemPrimitive.Trigger>
-        <Tooltip label={t("exportConversation.action")}>
+            <IconPencil size={14} />
+          </ActionIcon>
           <ActionIcon
             variant="subtle"
             color="gray"
@@ -2001,24 +2111,49 @@ const ThreadListItem = () => {
             loading={exporting}
             loaderProps={{ type: "bars" }}
             disabled={!remoteId}
+            title={t("exportConversation.action")}
             aria-label={t("exportConversation.action")}
             onClick={() => void exportConversation()}
           >
             <IconFileExport size={14} />
           </ActionIcon>
-        </Tooltip>
-        <ThreadListItemPrimitive.Delete asChild>
-          <ActionIcon variant="subtle" color="red" size="sm" aria-label={t("delete")}>
+          <ActionIcon
+            variant="subtle"
+            color="red"
+            size="sm"
+            title={t("delete")}
+            aria-label={t("delete")}
+            onClick={deleteConversation}
+          >
             <IconTrash size={14} />
           </ActionIcon>
-        </ThreadListItemPrimitive.Delete>
-      </Group>
+        </Group>
+      )}
+      <ActionIcon
+        className={classes.historyItemMenu}
+        variant="subtle"
+        color="gray"
+        size="sm"
+        title={t("conversationActions")}
+        aria-label={t("conversationActions")}
+        aria-expanded={actionsOpened}
+        onClick={() => setActionsOpened((current) => !current)}
+      >
+        {actionsOpened ? <IconX size={15} /> : <IconDotsVertical size={15} />}
+      </ActionIcon>
     </ThreadListItemPrimitive.Root>
   );
 };
 
 const ThreadHistory = ({ onSelect }: { onSelect: () => void }) => {
   const t = useScopedI18n("common.assistant");
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLocaleLowerCase();
+  const threadItems = useAuiState((state) => state.threads.threadItems);
+  const hasMatchingConversation = threadItems.some((item) => {
+    const itemTitle = item.title ?? t("newConversation");
+    return itemTitle.toLocaleLowerCase().includes(normalizedQuery);
+  });
   return (
     <HistorySelectContext.Provider value={onSelect}>
       <Stack className={classes.historyMenu} gap="xs" p="xs">
@@ -2035,9 +2170,28 @@ const ThreadHistory = ({ onSelect }: { onSelect: () => void }) => {
             {t("conversations")}
           </Text>
         </Group>
-        <ScrollArea.Autosize mah="min(24rem, 55dvh)" type="auto" offsetScrollbars>
+        <TextInput
+          value={query}
+          onChange={(event) => setQuery(event.currentTarget.value)}
+          leftSection={<IconSearch size={15} />}
+          placeholder={t("searchConversations")}
+          aria-label={t("searchConversations")}
+          size="xs"
+        />
+        <ScrollArea.Autosize mah="min(24rem, 55dvh)" type="auto" scrollbars="y" offsetScrollbars>
           <Stack gap={3}>
-            <ThreadListPrimitive.Items components={{ ThreadListItem }} />
+            <ThreadListPrimitive.Items>
+              {({ threadListItem }) => {
+                const itemTitle = threadListItem.title ?? t("newConversation");
+                if (normalizedQuery && !itemTitle.toLocaleLowerCase().includes(normalizedQuery)) return null;
+                return <ThreadListItem />;
+              }}
+            </ThreadListPrimitive.Items>
+            {normalizedQuery && !hasMatchingConversation && (
+              <Text size="xs" c="dimmed" ta="center" py="md">
+                {t("noMatchingConversations")}
+              </Text>
+            )}
           </Stack>
         </ScrollArea.Autosize>
       </Stack>
@@ -2052,7 +2206,6 @@ const ConversationHistory = () => {
     <Popover
       opened={opened}
       onChange={setOpened}
-      onDismiss={() => setOpened(false)}
       position="bottom-end"
       width="min(22rem, calc(100vw - 1rem))"
       shadow="md"
@@ -2191,7 +2344,7 @@ const EmptyThread = () => {
             </Text>
           </Stack>
           <Box className={classes.suggestions}>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send asChild>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.health.prompt")} send={false} clearComposer asChild>
               <Button
                 variant="default"
                 className={classes.suggestion}
@@ -2200,17 +2353,17 @@ const EmptyThread = () => {
                 {t("suggestions.health.label")}
               </Button>
             </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.explore.prompt")} send asChild>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.explore.prompt")} send={false} clearComposer asChild>
               <Button variant="default" className={classes.suggestion} leftSection={<IconApps size={18} />}>
                 {t("suggestions.explore.label")}
               </Button>
             </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.media.prompt")} send asChild>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.media.prompt")} send={false} clearComposer asChild>
               <Button variant="default" className={classes.suggestion} leftSection={<IconSearch size={18} />}>
                 {t("suggestions.media.label")}
               </Button>
             </ThreadPrimitive.Suggestion>
-            <ThreadPrimitive.Suggestion prompt={t("suggestions.style.prompt")} send asChild>
+            <ThreadPrimitive.Suggestion prompt={t("suggestions.style.prompt")} send={false} clearComposer asChild>
               <Button variant="default" className={classes.suggestion} leftSection={<IconPalette size={18} />}>
                 {t("suggestions.style.label")}
               </Button>
@@ -2749,6 +2902,26 @@ const Composer = (props: ComposerProps) => {
                     </ActionIcon>
                   </ComposerPrimitive.AddAttachment>
                 </Tooltip>
+                <AuiIf
+                  condition={(state) => state.thread.capabilities.dictation && state.composer.dictation === undefined}
+                >
+                  <Tooltip label={t("startVoiceInput")}>
+                    <ComposerPrimitive.Dictate asChild>
+                      <ActionIcon variant="subtle" color="gray" size="lg" aria-label={t("startVoiceInput")}>
+                        <IconMicrophone size={17} />
+                      </ActionIcon>
+                    </ComposerPrimitive.Dictate>
+                  </Tooltip>
+                </AuiIf>
+                <AuiIf condition={(state) => state.composer.dictation !== undefined}>
+                  <Tooltip label={t("stopVoiceInput")}>
+                    <ComposerPrimitive.StopDictation asChild>
+                      <ActionIcon variant="light" color="red" size="lg" aria-label={t("stopVoiceInput")}>
+                        <IconPlayerStop size={16} />
+                      </ActionIcon>
+                    </ComposerPrimitive.StopDictation>
+                  </Tooltip>
+                </AuiIf>
               </Group>
               <LexicalComposerInput
                 ref={composerInputRef}
@@ -2791,14 +2964,6 @@ const Composer = (props: ComposerProps) => {
                 <RuntimeControls {...props} />
                 <HomarrProviderQuota />
                 <ConversationContext />
-              </Group>
-              <Group className={classes.composerHints} gap="xs" wrap="nowrap">
-                <Text size="xs" c="dimmed">
-                  {t("mentions.hint")}
-                </Text>
-                <Text size="xs" c="dimmed">
-                  {t("commands.hint")}
-                </Text>
               </Group>
             </Group>
           </ComposerPrimitive.Root>
@@ -2979,8 +3144,29 @@ interface AssistantConversationSurfaceProps extends AssistantConversationControl
   pendingAction: AssistantPendingAction | undefined;
   onExpand?: () => void;
   onMinimize?: () => void;
-  onWindowClose?: () => void;
+  onDismiss?: () => void;
 }
+
+const AssistantPanelIdentity = () => {
+  const t = useScopedI18n("common.assistant");
+  const threadTitle = useAuiState((state) => state.threadListItem.title);
+
+  return (
+    <Group className={classes.panelIdentity} gap="xs" wrap="nowrap">
+      <ThemeIcon className={classes.panelIdentityIcon} variant="light" color="red" radius="xl" size="md">
+        <IconRobot size={16} />
+      </ThemeIcon>
+      <Box miw={0}>
+        <Text className={classes.panelIdentityTitle} size="sm" fw={700} truncate>
+          {t("title")}
+        </Text>
+        <Text className={classes.panelThreadTitle} size="xs" c="dimmed" truncate>
+          {threadTitle ?? t("newConversation")}
+        </Text>
+      </Box>
+    </Group>
+  );
+};
 
 export const AssistantConversationSurface = ({
   isRunning,
@@ -2996,7 +3182,7 @@ export const AssistantConversationSurface = ({
   onReasoningChange,
   onExpand,
   onMinimize,
-  onWindowClose,
+  onDismiss,
 }: AssistantConversationSurfaceProps) => {
   const t = useScopedI18n("common.assistant");
   const reducedMotion = useReducedMotion();
@@ -3011,52 +3197,23 @@ export const AssistantConversationSurface = ({
   return (
     <AssistantDirectiveEntitiesProvider>
       <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
-        {onWindowClose && onMinimize && (
-          <Group
-            component="fieldset"
-            className={classes.windowControls}
-            gap={4}
-            wrap="nowrap"
-            aria-label={t("windowControls")}
-          >
-            <Tooltip label={t("close")}>
-              <ActionIcon
-                className={classes.windowControl}
-                variant="subtle"
-                color="gray"
-                onClick={onWindowClose}
-                aria-label={t("close")}
-              >
-                <IconX size={16} />
-              </ActionIcon>
-            </Tooltip>
-            <Tooltip label={t("minimize")}>
-              <ActionIcon
-                className={classes.windowControl}
-                variant="subtle"
-                color="gray"
-                onClick={onMinimize}
-                aria-label={t("minimize")}
-              >
-                <IconMinus size={17} />
-              </ActionIcon>
-            </Tooltip>
-          </Group>
-        )}
+        <AssistantPanelIdentity />
         <Group className={classes.panelActions} gap={2} wrap="nowrap">
           <ConversationHistory />
           <ViewRefreshAction isRefreshing={isRefreshing} onRefresh={onRefresh} />
           <AutoApprovalControl />
           <Tooltip label={t("newConversation")}>
             <ThreadListPrimitive.New asChild>
-              <ActionIcon
-                className={classes.panelAction}
+              <Button
+                className={classes.newConversationButton}
                 variant="subtle"
                 color="gray"
+                size="compact-sm"
+                leftSection={<IconPlus size={17} />}
                 aria-label={t("newConversation")}
               >
-                <IconPlus size={17} />
-              </ActionIcon>
+                {t("newConversation")}
+              </Button>
             </ThreadListPrimitive.New>
           </Tooltip>
           {onExpand && (
@@ -3072,6 +3229,32 @@ export const AssistantConversationSurface = ({
               </ActionIcon>
             </Tooltip>
           )}
+          {onMinimize && (
+            <Tooltip label={t("minimize")}>
+              <ActionIcon
+                className={classes.panelAction}
+                variant="subtle"
+                color="gray"
+                onClick={onMinimize}
+                aria-label={t("minimize")}
+              >
+                <IconMinus size={17} />
+              </ActionIcon>
+            </Tooltip>
+          )}
+          {onDismiss && (
+            <Tooltip label={t("close")}>
+              <ActionIcon
+                className={classes.panelAction}
+                variant="subtle"
+                color="gray"
+                onClick={onDismiss}
+                aria-label={t("close")}
+              >
+                <IconX size={16} />
+              </ActionIcon>
+            </Tooltip>
+          )}
         </Group>
       </Group>
       <AssistantQuestionPortalProvider target={questionPortalTarget}>
@@ -3083,7 +3266,7 @@ export const AssistantConversationSurface = ({
             <ThreadPrimitive.Viewport className={classes.viewport} autoScroll>
               <Box className={classes.messages}>
                 <EmptyThread />
-                <ThreadPrimitive.Messages components={{ UserMessage, AssistantMessage }} />
+                <ThreadPrimitive.Messages components={assistantThreadMessageComponents} />
               </Box>
               <SelectionToolbarPrimitive.Root className={classes.selectionToolbar}>
                 <SelectionToolbarPrimitive.Quote asChild>
@@ -3130,6 +3313,7 @@ export const AssistantPanel = ({
   onClose,
   onDismissActivity,
   activityDismissed,
+  hasVisibleWidget,
   isRunning,
   unreadCount,
   latestAssistantText,
@@ -3182,7 +3366,7 @@ export const AssistantPanel = ({
 
   return (
     <>
-      {!opened && (
+      {!opened && !hasVisibleWidget && (
         <AssistantActivityBar
           onOpen={onOpen}
           onDismissActivity={onDismissActivity}
@@ -3211,7 +3395,7 @@ export const AssistantPanel = ({
             onReasoningChange={onReasoningChange}
             autoFocusComposer
             onMinimize={onClose}
-            onWindowClose={() => {
+            onDismiss={() => {
               onDismissActivity();
               onClose();
             }}
