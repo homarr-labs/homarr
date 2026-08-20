@@ -8,7 +8,7 @@
   min-height: 175px;
   height: 100%;
   padding: var(--mantine-spacing-sm);
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--selectable-card-radius, var(--mantine-radius-md));
   background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
   border: 1px solid var(--mantine-color-default-border);
   box-shadow: var(--mantine-shadow-xs);

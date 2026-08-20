@@ -139,9 +139,7 @@ const IntegrationCard = ({
           <Badge variant="light" color="teal" size="xs" radius="xs">
             {connectedCount} connected
           </Badge>
-        ) : (
-          <IntegrationCategoryBadges categories={integration.categories} limit={1} />
-        )
+        ) : null
       }
     >
       <Text size="10px" tt="uppercase" fw={700} c="dimmed">

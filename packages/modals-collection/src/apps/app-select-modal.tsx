@@ -52,7 +52,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
   const selectedApps = useMemo(() => apps.filter((app) => selectedAppIds.has(app.id)), [apps, selectedAppIds]);
 
   const handleSelect = (app: SelectableApp, event?: React.MouseEvent) => {
-    const isModifierPressed = Boolean(event?.shiftKey || event?.ctrlKey || event?.metaKey);
+    const isModifierPressed = multiSelect && Boolean(event?.shiftKey || event?.ctrlKey || event?.metaKey);
 
     if (innerProps.onSelect && !isModifierPressed && selectedAppIds.size === 0) {
       innerProps.onSelect(app);

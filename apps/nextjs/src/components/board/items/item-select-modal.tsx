@@ -557,8 +557,8 @@ export const WidgetItem = ({
 };
 
 export const ConnectionStatusBadge = ({ status }: { status: WidgetConnectionStatus }) => {
-  if (status === "noConnectionRequired") return null;
   const t = useI18n();
+  if (status === "noConnectionRequired") return null;
   const color = status === "ready" ? "green" : status === "needsSetup" ? "yellow" : "gray";
 
   return (

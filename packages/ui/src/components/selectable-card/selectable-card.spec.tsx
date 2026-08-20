@@ -289,7 +289,7 @@ describe("SelectableCard", () => {
   });
 
   describe("interactions and accessibility", () => {
-    it("supports keyboard activation via Enter and Space", async () => {
+    it("supports focus and click activation", async () => {
       const onClick = vi.fn();
       await act(async () =>
         root.render(
@@ -304,7 +304,7 @@ describe("SelectableCard", () => {
       expect(document.activeElement).toBe(button);
 
       await act(async () => {
-        button?.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+        button?.click();
       });
       expect(onClick).toHaveBeenCalledOnce();
     });

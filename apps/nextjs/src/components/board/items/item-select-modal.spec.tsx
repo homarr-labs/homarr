@@ -13,9 +13,9 @@ import { ConnectionStatusBadge, SupportedIntegrations, WidgetItem } from "./item
 vi.mock("@homarr/translation/client", () => ({
   useI18n: () => (key: string) => {
     const translations: Record<string, string> = {
-      "item.select.connection.ready": "Ready",
-      "item.select.connection.needsSetup": "Needs setup",
-      "item.select.connection.noConnectionRequired": "No connection required",
+      "item.create.connectionStatus.ready": "Ready",
+      "item.create.connectionStatus.needsSetup": "Needs setup",
+      "item.create.connectionStatus.noConnectionRequired": "No connection required",
       "widget.mediaServer.name": "Media Server",
       "widget.mediaServer.description": "Stream your media",
       "widget.clock.name": "Clock",
@@ -87,7 +87,7 @@ describe("Advanced Add App - Modal Subcomponents", () => {
       expect(host.textContent).toContain("Needs setup");
     });
 
-    it("renders 'No connection required' badge with gray color when status is 'noConnectionRequired'", async () => {
+    it("renders null when status is 'noConnectionRequired'", async () => {
       await act(async () =>
         root.render(
           <MantineProvider>
@@ -96,18 +96,18 @@ describe("Advanced Add App - Modal Subcomponents", () => {
         ),
       );
 
-      expect(host.textContent).toContain("No connection required");
+      expect(host.textContent?.trim()).toBe("");
     });
   });
 
   describe("SupportedIntegrations", () => {
-    it("renders up to 3 avatars for supported integrations", async () => {
+    it("renders up to 5 avatars for supported integrations", async () => {
       const integrations: IntegrationKind[] = ["sonarr", "radarr", "plex"];
 
       await act(async () =>
         root.render(
           <MantineProvider>
-            <SupportedIntegrations supportedIntegrations={integrations} />
+            <SupportedIntegrations integrations={integrations} />
           </MantineProvider>,
         ),
       );
@@ -117,31 +117,31 @@ describe("Advanced Add App - Modal Subcomponents", () => {
       expect(host.textContent).not.toContain("+");
     });
 
-    it("renders overflow indicator when more than 3 integrations are supported", async () => {
-      const integrations: IntegrationKind[] = ["sonarr", "radarr", "plex", "jellyfin", "emby"];
+    it("renders overflow indicator when 6 or more integrations are supported", async () => {
+      const integrations: IntegrationKind[] = ["sonarr", "radarr", "plex", "jellyfin", "emby", "kavita"];
 
       await act(async () =>
         root.render(
           <MantineProvider>
-            <SupportedIntegrations supportedIntegrations={integrations} />
+            <SupportedIntegrations integrations={integrations} />
           </MantineProvider>,
         ),
       );
 
-      // 5 integrations total: 3 shown, +2 in badge
+      // 6 integrations total: 4 shown, +2 in badge
       expect(host.textContent).toContain("+2");
     });
 
-    it("renders empty when supportedIntegrations is empty", async () => {
+    it("renders Standalone label when integrations list is empty", async () => {
       await act(async () =>
         root.render(
           <MantineProvider>
-            <SupportedIntegrations supportedIntegrations={[]} />
+            <SupportedIntegrations integrations={[]} />
           </MantineProvider>,
         ),
       );
 
-      expect(host.textContent?.trim()).toBe("");
+      expect(host.textContent).toContain("Standalone");
     });
   });
 

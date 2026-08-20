@@ -50,6 +50,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
     [app, href, options.openInNewTab],
   );
 
+  if (!options.appId) return <WidgetEmptyState />;
   if (isInitialWidgetQueryPending(appQuery)) return <WidgetQueryLoadingState />;
   if (!app) return <WidgetEmptyState />;
 

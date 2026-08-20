@@ -102,13 +102,13 @@ describe("IntegrationSelectGrid", () => {
     await act(async () =>
       root.render(
         <MantineProvider>
-          <IntegrationSelectGrid onSelect={onSelect} allowedKinds={["homeAssistant"]} />
+          <IntegrationSelectGrid onSelect={onSelect} allowedKinds={["google"]} />
         </MantineProvider>,
       ),
     );
 
-    const homeAssistantCard = host.querySelector("button");
-    expect(homeAssistantCard).not.toBeNull();
+    expect(host.querySelector("button")).not.toBeNull();
+    expect(host.textContent).toContain("No widgets tied to this service");
   });
 
   it("displays '{count} connected' in footerLeft when integration instances exist", async () => {
