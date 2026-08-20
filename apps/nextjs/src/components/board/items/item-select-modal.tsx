@@ -1,23 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { ComponentType } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Avatar,
   Badge,
   Box,
   Button,
-  Card,
   Center,
-  CloseButton,
   Divider,
-  Flex,
   Group,
   Image,
   Input,
-  Loader,
-  LoadingOverlay,
-  Paper,
-  ScrollArea,
-  SegmentedControl,
   Select,
   SimpleGrid,
   Stack,
@@ -26,10 +17,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useElementSize } from "@mantine/hooks";
-import { IconApi, IconBuildingStore, IconPlus, IconSearch } from "@tabler/icons-react";
-import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import { ErrorBoundary } from "react-error-boundary";
+import { IconApi, IconBuildingStore, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -46,26 +34,15 @@ import {
   widgetKindsWithOptionalIntegrations,
 } from "@homarr/definitions";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
-import { createModal, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import { IntegrationAvatar, SelectableCard } from "@homarr/ui";
+import { SelectableCard } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 import { widgetCatalogIcons } from "@homarr/widgets/catalog";
-import { WidgetError } from "@homarr/widgets/errors";
-import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
-import { getInputForType } from "@homarr/widgets/inputs";
-import { FormProvider, useForm } from "@homarr/widgets/inputs/form";
-import { loadWidgetDefinition, loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
-import type { WidgetComponentProps, WidgetDefinition } from "@homarr/widgets/definition";
-import type { OptionsBuilderResult } from "@homarr/widgets/options";
-import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
-import { WidgetIntegrationSelect } from "@homarr/widgets/widget-integration-select";
+import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
-import { NewIntegrationForm } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
-import type { CreatedIntegrationResult } from "~/app/[locale]/manage/integrations/new/_integration-new-form";
-import type { WidgetEditModalState } from "@homarr/widgets/modals";
 import type { EmptySection } from "~/app/[locale]/boards/_types";
 import { useSetupAnalytics } from "~/components/create/setup-analytics";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
@@ -87,7 +64,6 @@ interface ItemSelectModalContentProps {
   isAdmin: boolean;
   canCreateIntegration: boolean;
   initialSearch?: string;
-  initialWidgetKind?: WidgetKind;
 }
 
 interface WidgetItemData {
@@ -98,6 +74,8 @@ interface WidgetItemData {
   description: string;
 }
 
+const selectGridCols = { base: 1, xs: 2, sm: 2, md: 3, lg: 4 };
+
 const ItemSelectModalContent = ({
   actions,
   integrationData,
@@ -106,7 +84,6 @@ const ItemSelectModalContent = ({
   isAdmin,
   canCreateIntegration,
   initialSearch = "",
-  initialWidgetKind,
 }: ItemSelectModalContentProps) => {
   const [search, setSearch] = useState(initialSearch);
   const t = useI18n();
@@ -201,9 +178,6 @@ const ItemSelectModalContent = ({
     [customWidgetDefs, search],
   );
 
-  // Selected item state for live preview pane - only shown when explicitly selected
-  const [selectedKind, setSelectedKind] = useState<WidgetKind | null>(initialWidgetKind ?? null);
-
   const notifyDefinitionLoadError = (error: unknown) => {
     showErrorNotification({
       title: t("common.error"),
@@ -278,7 +252,7 @@ const ItemSelectModalContent = ({
             options,
             integrationIds: [],
           },
-          onSuccessfulEdit: ({ options: configuredOptions, advancedOptions }: WidgetEditModalState) => {
+          onSuccessfulEdit: ({ options: configuredOptions, advancedOptions }) => {
             const updatedBoard = createItem({
               id: itemId,
               kind: "customApi",
@@ -294,9 +268,7 @@ const ItemSelectModalContent = ({
           settings,
         },
         {
-          title(translate) {
-            return `${translate("item.edit.title")} - ${customWidgetDefinition.name}`;
-          },
+          title: (titleT) => `${titleT("item.edit.title")} - ${customWidgetDefinition.name}`,
         },
       );
     } catch (error) {
@@ -307,15 +279,12 @@ const ItemSelectModalContent = ({
     }
   };
 
-  const handleDirectAdd = async (
-    kind: WidgetKind,
-    configuredOptions?: Record<string, unknown>,
-    integrationIds?: string[],
-  ) => {
+  const handleAdd = async (kind: WidgetKind) => {
     if (!tryLockSelection(selectionLock)) return;
     flowStartedAt.current = performance.now();
     trackSetup("widget-started", { entryPoint: "board", intent: kind });
     setLoadingSelection(kind);
+    preloadWidgetEditModal();
     try {
       const definition = await loadWidgetDefinition(kind);
       const hasIntegrationSupport = "supportedIntegrations" in definition;
@@ -330,10 +299,48 @@ const ItemSelectModalContent = ({
       const maxIntegrations = "maxIntegrations" in definition ? (definition.maxIntegrations ?? Infinity) : Infinity;
       const matchingIntegrationCount = Math.min(matchingIntegrations.length, maxIntegrations);
       const itemId = createId();
-      const defaultOptions = configuredOptions ?? reduceWidgetOptionsWithDefinition(definition, settings);
-      const selectedIntegrationIds =
-        integrationIds ?? matchingIntegrations.slice(0, maxIntegrations).map((integration) => integration.id);
-
+      const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
+      const openEditor = (
+        availableIntegrations: { id: string; name: string; url: string; kind: IntegrationKind }[],
+      ) => {
+        const selectedIntegrationIds = availableIntegrations
+          .slice(0, maxIntegrations)
+          .map((integration) => integration.id);
+        openEditModal(
+          {
+            kind,
+            definition,
+            value: {
+              advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
+              options: defaultOptions,
+              integrationIds: selectedIntegrationIds,
+            },
+            onSuccessfulEdit: ({ options, integrationIds: newIntegrationIds, advancedOptions }) => {
+              const updatedBoard = createItem({
+                id: itemId,
+                kind,
+                options,
+                integrationIds: newIntegrationIds,
+                targetSectionId: effectiveSectionId ?? undefined,
+                advancedOptions,
+              });
+              if (!notifyCreated(updatedBoard, itemId, t(`widget.${kind}.name`))) return;
+              trackSetup("widget-completed", {
+                entryPoint: "board",
+                intent: kind,
+                outcome: "completed",
+                elapsedMs: flowStartedAt.current ? Math.round(performance.now() - flowStartedAt.current) : undefined,
+              });
+            },
+            integrationData: availableIntegrations,
+            integrationSupport: hasIntegrationSupport,
+            settings,
+          },
+          {
+            title: (titleT) => `${titleT("item.edit.title")} - ${titleT(`widget.${kind}.name`)}`,
+          },
+        );
+      };
       const integrationsRequired =
         hasIntegrationSupport && (!("integrationsRequired" in definition) || definition.integrationsRequired !== false);
 
@@ -352,9 +359,10 @@ const ItemSelectModalContent = ({
           return;
         }
 
+        actions.closeModal();
         openIntegrationModal({
           allowedKinds: (definition.supportedIntegrations ?? []).filter((integration) => integration !== "mock"),
-          onSuccess: (result: CreatedIntegrationResult | undefined) => {
+          onSuccess: (result) => {
             if (result) {
               trackSetup("dependency-resolved-inline", {
                 entryPoint: "board",
@@ -362,15 +370,7 @@ const ItemSelectModalContent = ({
                 outcome: "continued",
                 canResolveInline: true,
               });
-              const updatedBoard = createItem({
-                id: itemId,
-                kind,
-                options: defaultOptions,
-                integrationIds: [result.integration.id],
-                targetSectionId: effectiveSectionId ?? undefined,
-                advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
-              });
-              notifyCreated(updatedBoard, itemId, t(`widget.${kind}.name`));
+              openEditor([result.integration]);
             }
           },
         });
@@ -378,21 +378,7 @@ const ItemSelectModalContent = ({
       }
 
       actions.closeModal();
-      const updatedBoard = createItem({
-        id: itemId,
-        kind,
-        options: defaultOptions,
-        integrationIds: selectedIntegrationIds,
-        targetSectionId: effectiveSectionId ?? undefined,
-        advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
-      });
-      if (!notifyCreated(updatedBoard, itemId, t(`widget.${kind}.name`))) return;
-      trackSetup("widget-completed", {
-        entryPoint: "board",
-        intent: kind,
-        outcome: "completed",
-        elapsedMs: flowStartedAt.current ? Math.round(performance.now() - flowStartedAt.current) : undefined,
-      });
+      openEditor(matchingIntegrations);
     } catch (error) {
       notifyDefinitionLoadError(error);
     } finally {
@@ -401,12 +387,9 @@ const ItemSelectModalContent = ({
     }
   };
 
-  const selectedItemData = selectedKind ? items.find((item) => item.kind === selectedKind) : null;
-  const isPreviewOpen = Boolean(selectedItemData);
-
   return (
     <Stack gap="md">
-      {/* Top Search and Placement Controls */}
+      {/* Top Search & Destination Selector */}
       <Group justify="space-between" align="flex-end" wrap="wrap" gap="sm">
         <Box style={{ flex: "1 1 240px", minWidth: 200 }}>
           <Input
@@ -423,7 +406,7 @@ const ItemSelectModalContent = ({
                 filteredItems.length === 1 &&
                 filteredItems[0]
               ) {
-                void handleDirectAdd(filteredItems[0].kind);
+                void handleAdd(filteredItems[0].kind);
               }
             }}
           />
@@ -443,741 +426,122 @@ const ItemSelectModalContent = ({
         )}
       </Group>
 
-      {/* Animated Split Container */}
-      <Flex
-        gap="md"
-        align="stretch"
-        direction={{ base: "column", lg: "row" }}
-        style={{ minHeight: 480, position: "relative" }}
-      >
-        {/* Left Column: Widget Cards Grid */}
-        <Box
-          display={{ base: isPreviewOpen ? "none" : "block", lg: "block" }}
-          style={{
-            flex: isPreviewOpen ? "0 0 440px" : "1 1 100%",
-            maxWidth: isPreviewOpen ? "460px" : "100%",
-            width: "100%",
-            transition: "flex-basis 300ms cubic-bezier(0.4, 0, 0.2, 1), max-width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
-          }}
-        >
-          <ScrollArea.Autosize mah="72vh" offsetScrollbars>
-            <Stack gap="md" pt="xs" pr="xs" px={4}>
-              <SimpleGrid
-                cols={isPreviewOpen ? { base: 1, sm: 2 } : { base: 1, xs: 2, sm: 2, md: 3, lg: 4 }}
-                spacing="sm"
-              >
-                {filteredItems.map((item) => (
-                  <WidgetItem
-                    key={item.kind}
-                    item={item}
-                    isSelected={selectedKind === item.kind}
-                    onSelect={() => setSelectedKind((current) => (current === item.kind ? null : item.kind))}
-                    disabled={loadingSelection !== null}
-                    loading={loadingSelection === item.kind}
-                    connectionStatus={getWidgetConnectionStatus({
-                      supportedIntegrations: item.supportedIntegrations,
-                      availableKinds,
-                      connectionOptional: widgetKindsWithOptionalIntegrations.has(item.kind),
-                    })}
-                  />
-                ))}
-              </SimpleGrid>
-
-              {/* Custom Widgets Section for Admins */}
-              {isAdmin && (
-                <>
-                  <Divider
-                    label={
-                      <Group gap="xs">
-                        <IconApi size={14} />
-                        <Text size="xs" fw={600}>
-                          {t("customWidget.page.list.title")}
-                        </Text>
-                      </Group>
-                    }
-                    labelPosition="center"
-                    my="md"
-                  />
-
-                  <SimpleGrid
-                    cols={isPreviewOpen ? { base: 1, sm: 2 } : { base: 1, xs: 2, sm: 2, md: 3, lg: 4 }}
-                    spacing="sm"
-                  >
-                    {filteredCustomWidgets.map((def) => (
-                      <SelectableCard
-                        key={def.id}
-                        onClick={() => void handleAddCustomWidget(def)}
-                        aria-label={def.name}
-                        icon={
-                          def.iconUrl ? (
-                            <Image src={def.iconUrl} w={24} h={24} fit="contain" style={{ flexShrink: 0 }} />
-                          ) : (
-                            <ThemeIcon size={34} radius="md" variant="light" color="primaryColor">
-                              <IconApi size={20} />
-                            </ThemeIcon>
-                          )
-                        }
-                        title={def.name}
-                        description={def.description ?? ""}
-                        footerLeft={
-                          <Text size="xs" c="dimmed">
-                            Custom Widget
-                          </Text>
-                        }
-                      />
-                    ))}
-                  </SimpleGrid>
-
-                  <Box mt="xs">
-                    <Button
-                      component="a"
-                      href="/manage/custom-widgets/workshop"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      variant="default"
-                      fullWidth
-                      leftSection={<IconBuildingStore size={16} />}
-                    >
-                      {t("workshop.browseWorkshop")}
-                    </Button>
-                  </Box>
-                </>
-              )}
-
-              {filteredItems.length === 0 && (!isAdmin || filteredCustomWidgets.length === 0) && (
-                <Center p="xl">
-                  <Text c="dimmed">{t("common.noResults")}</Text>
-                </Center>
-              )}
-            </Stack>
-          </ScrollArea.Autosize>
-        </Box>
-
-        {/* Right Column: Live Preview & Interactive Settings Panel (Only shown when an item is selected) */}
-        {selectedItemData && (
-          <Box
-            style={{
-              flex: "1 1 0%",
-              minWidth: 0,
-              animation: "fadeIn 250ms ease forwards",
+      {/* Grid of Widgets */}
+      <SimpleGrid cols={selectGridCols} spacing="sm">
+        {filteredItems.map((item) => (
+          <WidgetItem
+            key={item.kind}
+            item={item}
+            onSelect={() => void handleAdd(item.kind)}
+            onFocus={() => {
+              void loadWidgetDefinition(item.kind).catch(() => undefined);
+              preloadWidgetEditModal();
             }}
-          >
-            <WidgetLivePreviewAndConfigPane
-              key={selectedItemData.kind}
-              item={selectedItemData}
-              boardId={board.id}
-              integrationData={integrationData ?? []}
-              canCreateIntegration={canCreateIntegration}
-              onClose={() => setSelectedKind(null)}
-              onOpenConnectIntegration={() => {
-                const supported = widgetIntegrationSupport[selectedItemData.kind] ?? [];
-                openIntegrationModal({
-                  allowedKinds: supported.filter((i) => i !== "mock"),
-                  onSuccess: (result) => {
-                    if (result) {
-                      void ensureIntegrationDataAsync();
-                    }
-                  },
-                });
-              }}
-              onAddWidget={(configuredOptions, integrationIds) =>
-                void handleDirectAdd(selectedItemData.kind, configuredOptions, integrationIds)
+            onPointerEnter={() => {
+              void loadWidgetDefinition(item.kind).catch(() => undefined);
+              preloadWidgetEditModal();
+            }}
+            disabled={loadingSelection !== null}
+            loading={loadingSelection === item.kind}
+            connectionStatus={getWidgetConnectionStatus({
+              supportedIntegrations: item.supportedIntegrations,
+              availableKinds,
+              connectionOptional: widgetKindsWithOptionalIntegrations.has(item.kind),
+            })}
+          />
+        ))}
+
+        {isAdmin && (
+          <>
+            <Divider
+              label={
+                <Group gap="xs">
+                  <IconApi size={14} />
+                  <Text size="xs" fw={600}>
+                    {t("customWidget.page.list.title")}
+                  </Text>
+                </Group>
               }
-              isAdding={loadingSelection === selectedItemData.kind}
+              labelPosition="center"
+              my="sm"
+              style={{ gridColumn: "1 / -1" }}
             />
-          </Box>
+            {filteredCustomWidgets.map((def) => (
+              <SelectableCard
+                key={def.id}
+                onClick={() => void handleAddCustomWidget(def)}
+                aria-label={def.name}
+                icon={
+                  def.iconUrl ? (
+                    <Image src={def.iconUrl} w={24} h={24} fit="contain" style={{ flexShrink: 0 }} />
+                  ) : (
+                    <ThemeIcon size={34} radius="md" variant="light" color="primaryColor">
+                      <IconApi size={20} />
+                    </ThemeIcon>
+                  )
+                }
+                title={def.name}
+                description={def.description ?? ""}
+                footerLeft={
+                  <Text size="xs" c="dimmed">
+                    Custom Widget
+                  </Text>
+                }
+              />
+            ))}
+            <Box mt="xs" style={{ gridColumn: "1 / -1" }}>
+              <Button
+                component="a"
+                href="/manage/custom-widgets/workshop"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="default"
+                fullWidth
+                leftSection={<IconBuildingStore size={16} />}
+              >
+                {t("workshop.browseWorkshop")}
+              </Button>
+            </Box>
+          </>
         )}
-      </Flex>
+      </SimpleGrid>
+
+      {filteredItems.length === 0 && (!isAdmin || filteredCustomWidgets.length === 0) && (
+        <Center p="xl">
+          <Text c="dimmed">{t("common.noResults")}</Text>
+        </Center>
+      )}
     </Stack>
   );
 };
 
 // =========================================================================
-// WidgetLivePreviewAndConfigPane: Asynchronously Loads Resources & Renders Content
-// =========================================================================
-interface WidgetLivePreviewAndConfigPaneProps {
-  item: WidgetItemData;
-  boardId: string;
-  integrationData: RouterOutputs["integration"]["all"];
-  canCreateIntegration: boolean;
-  onClose: () => void;
-  onOpenConnectIntegration: () => void;
-  onAddWidget: (options: Record<string, unknown>, integrationIds: string[]) => void;
-  isAdding: boolean;
-}
-
-const WidgetLivePreviewAndConfigPane = ({
-  item,
-  boardId,
-  integrationData,
-  canCreateIntegration,
-  onClose,
-  onOpenConnectIntegration,
-  onAddWidget,
-  isAdding,
-}: WidgetLivePreviewAndConfigPaneProps) => {
-  const t = useI18n();
-  const [resources, setResources] = useState<{
-    definition: WidgetDefinition;
-    Component: ComponentType<WidgetComponentProps<WidgetKind>>;
-  } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState<Error | null>(null);
-
-  const loadResources = useCallback(() => {
-    let active = true;
-    setIsLoading(true);
-    setLoadError(null);
-    loadWidgetResources(item.kind)
-      .then((res) => {
-        if (active) {
-          setResources(res);
-          setIsLoading(false);
-        }
-      })
-      .catch((err) => {
-        if (active) {
-          setLoadError(err instanceof Error ? err : new Error(String(err)));
-          setIsLoading(false);
-        }
-      });
-    return () => {
-      active = false;
-    };
-  }, [item.kind]);
-
-  useEffect(() => {
-    return loadResources();
-  }, [loadResources]);
-
-  if (loadError) {
-    return (
-      <Card withBorder radius="md" padding="md" h="100%" shadow="xs">
-        <Center h={320}>
-          <Stack align="center" gap="xs">
-            <ThemeIcon size={40} radius="xl" color="red" variant="light">
-              <IconApi size={24} />
-            </ThemeIcon>
-            <Text size="sm" fw={600} c="red">
-              {t("common.error")}
-            </Text>
-            <Text size="xs" c="dimmed" ta="center" maw={300}>
-              {loadError.message}
-            </Text>
-            <Group gap="xs" mt="xs">
-              <Button size="xs" variant="light" onClick={loadResources}>
-                {t("common.action.retry")}
-              </Button>
-              <Button size="xs" variant="subtle" onClick={onClose}>
-                {t("common.action.close")}
-              </Button>
-            </Group>
-          </Stack>
-        </Center>
-      </Card>
-    );
-  }
-
-  if (isLoading || !resources) {
-    return (
-      <Card withBorder radius="md" padding="md" h="100%" shadow="xs">
-        <Center h={320}>
-          <Loader size="md" />
-        </Center>
-      </Card>
-    );
-  }
-
-  return (
-    <ErrorBoundary
-      fallbackRender={({ resetErrorBoundary, error }) => (
-        <Card withBorder radius="md" padding="md" h="100%" shadow="xs">
-          <Center h={320}>
-            <Stack align="center" gap="xs">
-              <ThemeIcon size={40} radius="xl" color="red" variant="light">
-                <IconApi size={24} />
-              </ThemeIcon>
-              <Text size="sm" fw={600} c="red">
-                Failed to load widget preview
-              </Text>
-              <Text size="xs" c="dimmed" ta="center" maw={300}>
-                {error instanceof Error ? error.message : String(error)}
-              </Text>
-              <Group gap="xs" mt="xs">
-                <Button size="xs" variant="light" onClick={resetErrorBoundary}>
-                  Retry
-                </Button>
-                <Button size="xs" variant="subtle" onClick={onClose}>
-                  Close
-                </Button>
-              </Group>
-            </Stack>
-          </Center>
-        </Card>
-      )}
-    >
-      <WidgetLivePreviewAndConfigContent
-        key={item.kind}
-        item={item}
-        definition={resources.definition}
-        Component={resources.Component}
-        boardId={boardId}
-        integrationData={integrationData}
-        canCreateIntegration={canCreateIntegration}
-        onClose={onClose}
-        onOpenConnectIntegration={onOpenConnectIntegration}
-        onAddWidget={onAddWidget}
-        isAdding={isAdding}
-      />
-    </ErrorBoundary>
-  );
-};
-
-// =========================================================================
-// WidgetLivePreviewAndConfigContent: Form State & Real-time Live Preview
-// =========================================================================
-interface WidgetLivePreviewAndConfigContentProps {
-  item: WidgetItemData;
-  definition: WidgetDefinition;
-  Component: ComponentType<WidgetComponentProps<WidgetKind>>;
-  boardId: string;
-  integrationData: RouterOutputs["integration"]["all"];
-  canCreateIntegration: boolean;
-  onClose: () => void;
-  onOpenConnectIntegration: () => void;
-  onAddWidget: (options: Record<string, unknown>, integrationIds: string[]) => void;
-  isAdding: boolean;
-}
-
-const WidgetLivePreviewAndConfigContent = ({
-  item,
-  definition,
-  Component,
-  boardId,
-  integrationData,
-  canCreateIntegration,
-  onClose,
-  onOpenConnectIntegration,
-  onAddWidget,
-  isAdding,
-}: WidgetLivePreviewAndConfigContentProps) => {
-  const t = useI18n();
-  const settings = useSettings();
-
-  const { data: selectableApps } = clientApi.app.selectable.useQuery(undefined, {
-    enabled: item.kind === "app",
-  });
-
-  const utils = clientApi.useUtils();
-  const supportedKinds = useMemo(() => {
-    if (!("supportedIntegrations" in definition)) return [];
-    return (definition.supportedIntegrations ?? []).filter((k) => k !== "mock");
-  }, [definition]);
-
-  const [optimisticIntegrations, setOptimisticIntegrations] = useState<IntegrationSelectOption[]>([]);
-
-  // Filter integrations compatible with this widget
-  const compatibleIntegrations: IntegrationSelectOption[] = useMemo(() => {
-    if (!("supportedIntegrations" in definition)) return [];
-    const supported = definition.supportedIntegrations ?? [];
-    const existing = (integrationData ?? [])
-      .filter((i) => supported.includes(i.kind))
-      .map((i) => ({
-        id: i.id,
-        name: i.name,
-        kind: i.kind,
-        url: i.url,
-      }));
-    const newOptimistic = optimisticIntegrations.filter(
-      (opt) => !existing.some((e) => e.id === opt.id) && supported.includes(opt.kind),
-    );
-    return [...existing, ...newOptimistic];
-  }, [definition, integrationData, optimisticIntegrations]);
-
-  const [showInlineConnect, setShowInlineConnect] = useState<boolean>(compatibleIntegrations.length === 0);
-  const [inlineConnectKind, setInlineConnectKind] = useState<IntegrationKind | null>(supportedKinds[0] ?? null);
-
-  const supportsMock =
-    "supportedIntegrations" in definition && (definition.supportedIntegrations ?? []).includes("mock");
-  const mockIntegration = supportsMock ? (integrationData ?? []).find((i) => i.kind === "mock") : null;
-
-  // Initial options
-  const initialOptions = useMemo(() => {
-    const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
-    if (item.kind === "app" && !defaultOptions.appId && selectableApps?.[0]) {
-      return {
-        ...defaultOptions,
-        appId: selectableApps[0].id,
-      };
-    }
-    return defaultOptions;
-  }, [definition, item.kind, selectableApps, settings]);
-
-  // Initial integration IDs: auto-select single choice if available
-  const initialIntegrationIds = useMemo(() => {
-    if (!("supportedIntegrations" in definition)) return [];
-    const maxIntegrations = "maxIntegrations" in definition ? (definition.maxIntegrations ?? Infinity) : Infinity;
-    if (compatibleIntegrations.length === 1 && compatibleIntegrations[0]) {
-      return [compatibleIntegrations[0].id];
-    }
-    return compatibleIntegrations.slice(0, maxIntegrations).map((i) => i.id);
-  }, [compatibleIntegrations, definition]);
-
-  const form = useForm({
-    initialValues: {
-      options: initialOptions,
-      integrationIds: initialIntegrationIds,
-    },
-  });
-
-  // Auto-sync selectable apps when loaded
-  useEffect(() => {
-    if (item.kind === "app" && !form.values.options.appId && selectableApps?.[0]?.id) {
-      form.setFieldValue("options.appId", selectableApps[0].id);
-    }
-  }, [item.kind, selectableApps, form]);
-
-  const validIntegrationIds = useMemo(() => {
-    const compatibleIds = new Set(compatibleIntegrations.map((i) => i.id));
-    return form.values.integrationIds.filter((id) => compatibleIds.has(id));
-  }, [form.values.integrationIds, compatibleIntegrations]);
-
-  const previewIntegrationIds = useMemo(() => {
-    if (validIntegrationIds.length > 0) return validIntegrationIds;
-    if (supportsMock && mockIntegration) return [mockIntegration.id];
-    return [];
-  }, [validIntegrationIds, supportsMock, mockIntegration]);
-
-  const handleInlineCreateSuccess = (result?: CreatedIntegrationResult) => {
-    void utils.integration.all.invalidate();
-    if (result?.integration?.id) {
-      const newOption: IntegrationSelectOption = {
-        id: result.integration.id,
-        name: result.integration.name,
-        kind: result.integration.kind,
-        url: result.integration.url,
-      };
-      setOptimisticIntegrations((prev) => [...prev, newOption]);
-      const nextIds = [...(maxIntegrations > 1 ? form.values.integrationIds : []), result.integration.id].slice(
-        -maxIntegrations,
-      );
-      form.setFieldValue("integrationIds", nextIds);
-    }
-    setShowInlineConnect(false);
-    showSuccessNotification({
-      message: t("integration.page.create.notification.success.message"),
-    });
-  };
-
-  const optionsDefinition = useMemo(() => {
-    return definition.createOptions(settings) as Record<string, OptionsBuilderResult[string]>;
-  }, [definition, settings]);
-
-  const hasIntegrationSupport = "supportedIntegrations" in definition;
-  const integrationsRequired =
-    hasIntegrationSupport && (!("integrationsRequired" in definition) || definition.integrationsRequired !== false);
-  const maxIntegrations = "maxIntegrations" in definition ? (definition.maxIntegrations ?? Infinity) : Infinity;
-
-  const { ref: previewContainerRef, width: previewWidth, height: previewHeight } = useElementSize();
-  const board = useRequiredBoard();
-
-  const handleUpdatePartialOptions = useCallback(
-    ({ newOptions }: { newOptions: Record<string, unknown> }) => {
-      form.setValues((prev) => ({
-        ...prev,
-        options: {
-          ...prev.options,
-          ...newOptions,
-        },
-      }));
-    },
-    [form],
-  );
-
-  const handleAddCurrentWidget = () => {
-    const validation = form.validate();
-    if (validation.hasErrors) return;
-    if (integrationsRequired && validIntegrationIds.length === 0) {
-      showErrorNotification({
-        title: t("common.error"),
-        message: t("widget.common.error.noIntegration"),
-      });
-      return;
-    }
-    onAddWidget(form.values.options, validIntegrationIds);
-  };
-
-  return (
-    <Card withBorder radius="md" padding="md" h="100%" shadow="xs" style={{ display: "flex", flexDirection: "column" }}>
-      {/* Header Banner */}
-      <Group
-        justify="space-between"
-        align="center"
-        pb="sm"
-        mb="xs"
-        style={{ borderBottom: "1px solid var(--mantine-color-default-border)" }}
-      >
-        <Group gap="xs">
-          <ThemeIcon size={36} radius="md" variant="light" color="primaryColor">
-            <item.icon size={22} />
-          </ThemeIcon>
-          <Box>
-            <Text fw={700} size="md" lh={1.2}>
-              {item.name}
-            </Text>
-            <Text size="xs" c="dimmed">
-              Live Preview & Options
-            </Text>
-          </Box>
-        </Group>
-
-        <Group gap="xs">
-          <Button
-            color="primaryColor"
-            size="sm"
-            leftSection={<IconPlus size={16} />}
-            loading={isAdding}
-            onClick={handleAddCurrentWidget}
-          >
-            {t("common.action.add")}
-          </Button>
-          <CloseButton onClick={onClose} aria-label="Close preview" />
-        </Group>
-      </Group>
-
-      {/* Live Widget Preview Frame (Simulating a 5x3 board widget tile) */}
-      <Box mb="md">
-        <Group justify="space-between" align="center" mb={6}>
-          <Text size="xs" fw={600} c="dimmed" tt="uppercase" lts="0.5px">
-            Preview (5×3)
-          </Text>
-        </Group>
-
-        <Center w="100%">
-          <Paper
-            ref={previewContainerRef}
-            withBorder
-            radius={board.itemRadius}
-            p={0}
-            bg="light-dark(var(--mantine-color-body), var(--mantine-color-dark-7))"
-            style={{
-              width: "100%",
-              maxWidth: 500,
-              height: 300,
-              aspectRatio: "5 / 3",
-              overflow: "hidden",
-              position: "relative",
-              containerType: "size",
-            }}
-          >
-            <Box w="100%" h="100%" style={{ overflow: "hidden", position: "relative" }}>
-              <QueryErrorResetBoundary>
-                {({ reset }) => (
-                  <ErrorBoundary
-                    onReset={reset}
-                    resetKeys={[form.values.options, previewIntegrationIds]}
-                    fallbackRender={({ resetErrorBoundary, error }) => (
-                      <Center h="100%" p="md">
-                        <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
-                      </Center>
-                    )}
-                  >
-                    <Throw
-                      error={new NoIntegrationSelectedError()}
-                      when={hasIntegrationSupport && previewIntegrationIds.length === 0 && integrationsRequired}
-                    />
-                    <Component
-                      options={form.values.options as never}
-                      integrationIds={previewIntegrationIds}
-                      width={previewWidth || 500}
-                      height={previewHeight || 300}
-                      isEditMode={true}
-                      displayMode="compact"
-                      boardId={boardId}
-                      itemId="preview"
-                      setOptions={handleUpdatePartialOptions}
-                    />
-                  </ErrorBoundary>
-                )}
-              </QueryErrorResetBoundary>
-            </Box>
-          </Paper>
-        </Center>
-      </Box>
-
-      {/* Scrollable Configuration Form */}
-      <Box style={{ flex: "1 1 0%", minHeight: 0, display: "flex", flexDirection: "column" }}>
-        <Text size="xs" fw={600} c="dimmed" tt="uppercase" lts="0.5px" mb={6}>
-          Widget Settings
-        </Text>
-        <ScrollArea.Autosize mah="36vh" offsetScrollbars>
-          <FormProvider form={form}>
-            <Stack gap="sm" pr="xs" pb="xs">
-              {/* Integration Configuration / In-Place Connection */}
-              {hasIntegrationSupport && (
-                <Paper
-                  withBorder
-                  p="sm"
-                  radius="md"
-                  bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))"
-                >
-                  <Stack gap="xs">
-                    {/* Existing Integrations Dropdown (when not creating inline) */}
-                    {compatibleIntegrations.length > 0 && !showInlineConnect && (
-                      <Stack gap="xs">
-                        <WidgetIntegrationSelect
-                          label={t("item.edit.field.integrations.label")}
-                          data={compatibleIntegrations}
-                          canSelectMultiple={maxIntegrations > 1}
-                          withAsterisk={integrationsRequired}
-                          {...form.getInputProps("integrationIds")}
-                        />
-                        {canCreateIntegration && supportedKinds.length > 0 && (
-                          <Group justify="flex-end">
-                            <Button
-                              variant="subtle"
-                              color="primaryColor"
-                              size="xs"
-                              leftSection={<IconPlus size={14} />}
-                              onClick={() => {
-                                setInlineConnectKind(supportedKinds[0] ?? null);
-                                setShowInlineConnect(true);
-                              }}
-                            >
-                              {t("integration.action.create")}
-                            </Button>
-                          </Group>
-                        )}
-                      </Stack>
-                    )}
-
-                    {/* Inline Connect Form */}
-                    {showInlineConnect && canCreateIntegration && supportedKinds.length > 0 && (
-                      <Stack gap="sm">
-                        <Group justify="space-between" align="center">
-                          <Group gap="xs">
-                            <IntegrationAvatar kind={inlineConnectKind ?? supportedKinds[0]!} size="sm" />
-                            <Text fw={700} size="sm">
-                              Connect {getIntegrationName(inlineConnectKind ?? supportedKinds[0]!)}
-                            </Text>
-                          </Group>
-                          {compatibleIntegrations.length > 0 && (
-                            <Button variant="subtle" size="xs" onClick={() => setShowInlineConnect(false)}>
-                              {t("common.action.cancel")}
-                            </Button>
-                          )}
-                        </Group>
-
-                        {/* Multiple choice selector if widget supports >1 integration kind */}
-                        {supportedKinds.length > 1 && (
-                          <SegmentedControl
-                            size="xs"
-                            value={inlineConnectKind ?? supportedKinds[0]!}
-                            onChange={(val) => setInlineConnectKind(val as IntegrationKind)}
-                            data={supportedKinds.map((kind) => ({
-                              value: kind,
-                              label: getIntegrationName(kind),
-                            }))}
-                          />
-                        )}
-
-                        <NewIntegrationForm
-                          key={inlineConnectKind ?? supportedKinds[0]!}
-                          kind={inlineConnectKind ?? supportedKinds[0]!}
-                          onSuccess={handleInlineCreateSuccess}
-                          onCancel={compatibleIntegrations.length > 0 ? () => setShowInlineConnect(false) : undefined}
-                        />
-                      </Stack>
-                    )}
-
-                    {/* No Connected Services and cannot create */}
-                    {compatibleIntegrations.length === 0 && !canCreateIntegration && (
-                      <Stack gap="xs">
-                        <Text size="xs" fw={700}>
-                          No Connected Services
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          This widget requires a connected service (
-                          {definition?.supportedIntegrations?.map(getIntegrationName).join(", ")}).
-                        </Text>
-                      </Stack>
-                    )}
-                  </Stack>
-                </Paper>
-              )}
-
-              {/* Dynamic Option Inputs */}
-              {Object.entries(optionsDefinition).map(([key, value]) => {
-                const InputComponent = getInputForType(value.type);
-                if (
-                  !InputComponent ||
-                  value.shouldHide?.(
-                    form.values.options as never,
-                    compatibleIntegrations
-                      .filter(({ id }) => form.values.integrationIds.includes(id))
-                      .map(({ kind }) => kind),
-                  )
-                ) {
-                  return null;
-                }
-
-                return (
-                  <InputComponent
-                    key={key}
-                    kind={item.kind as never}
-                    property={key}
-                    options={value as never}
-                    initialOptions={form.values.options}
-                    boardId={boardId}
-                  />
-                );
-              })}
-
-              {Object.keys(optionsDefinition).length === 0 &&
-                (!hasIntegrationSupport || compatibleIntegrations.length === 0) && (
-                  <Center p="md">
-                    <Text size="xs" c="dimmed">
-                      This widget does not require additional configuration.
-                    </Text>
-                  </Center>
-                )}
-            </Stack>
-          </FormProvider>
-        </ScrollArea.Autosize>
-      </Box>
-    </Card>
-  );
-};
-
-const Throw = ({ when, error }: { when: boolean; error: Error }) => {
-  if (when) throw error;
-  return null;
-};
-
-// =========================================================================
-// WidgetItem: Variant 3 (Dashboard Inset) with Variant 4 (Fuller Icon & MD text)
+// WidgetItem: SelectableCard with Inset, Title, Status Badge, and Footer
 // =========================================================================
 export const WidgetItem = ({
   item,
-  isSelected,
   onSelect,
+  onFocus,
+  onPointerEnter,
   disabled,
   loading,
   connectionStatus,
 }: {
   item: WidgetItemData;
-  isSelected?: boolean;
   onSelect: () => void;
+  onFocus?: () => void;
+  onPointerEnter?: () => void;
   disabled: boolean;
   loading: boolean;
   connectionStatus: WidgetConnectionStatus;
 }) => {
   return (
     <SelectableCard
-      selected={isSelected}
       disabled={disabled}
       loading={loading}
       onClick={onSelect}
+      onFocus={onFocus}
+      onPointerEnter={onPointerEnter}
       aria-label={item.name}
       icon={
         <ThemeIcon size={34} radius="md" variant="light" color="primaryColor">
@@ -1185,7 +549,7 @@ export const WidgetItem = ({
         </ThemeIcon>
       }
       title={item.name}
-      topRight={!isSelected ? <ConnectionStatusBadge status={connectionStatus} /> : null}
+      topRight={<ConnectionStatusBadge status={connectionStatus} />}
       description={item.description}
       footerLeft={<SupportedIntegrations integrations={item.supportedIntegrations} />}
     />
@@ -1268,40 +632,21 @@ const ItemSelectModalFrame = ({
   );
 
   return (
-    <ErrorBoundary
-      fallbackRender={({ resetErrorBoundary, error }) => (
-        <Center p="xl">
-          <Stack align="center" gap="sm">
-            <Text size="sm" c="red" fw={600}>
-              {t("common.error")}
-            </Text>
-            <Text size="xs" c="dimmed">
-              {error instanceof Error ? error.message : String(error)}
-            </Text>
-            <Button size="xs" variant="light" onClick={resetErrorBoundary}>
-              {t("common.action.retry")}
-            </Button>
-          </Stack>
-        </Center>
-      )}
-    >
-      <ItemSelectModalContent
-        actions={actions}
-        integrationData={integrationData}
-        customWidgetDefs={customWidgetDefs}
-        ensureIntegrationDataAsync={() => utils.integration.all.ensureData()}
-        isAdmin={isAdmin}
-        canCreateIntegration={canCreateIntegration}
-        initialWidgetKind={innerProps.initialWidgetKind}
-        initialSearch={
-          innerProps.initialWidgetKind
-            ? t(`widget.${innerProps.initialWidgetKind}.name`)
-            : innerProps.initialIntegrationKind
-              ? getIntegrationName(innerProps.initialIntegrationKind)
-              : undefined
-        }
-      />
-    </ErrorBoundary>
+    <ItemSelectModalContent
+      actions={actions}
+      integrationData={integrationData}
+      customWidgetDefs={customWidgetDefs}
+      ensureIntegrationDataAsync={() => utils.integration.all.ensureData()}
+      isAdmin={isAdmin}
+      canCreateIntegration={canCreateIntegration}
+      initialSearch={
+        innerProps.initialWidgetKind
+          ? t(`widget.${innerProps.initialWidgetKind}.name`)
+          : innerProps.initialIntegrationKind
+            ? getIntegrationName(innerProps.initialIntegrationKind)
+            : undefined
+      }
+    />
   );
 };
 
@@ -1311,5 +656,5 @@ export const ItemSelectModal = createModal<{
   initialWidgetKind?: WidgetKind;
 }>((props) => <ItemSelectModalFrame {...props} />).withOptions({
   defaultTitle: (t) => t("item.create.title"),
-  size: "xxl",
+  size: modalSizeSelect,
 });
