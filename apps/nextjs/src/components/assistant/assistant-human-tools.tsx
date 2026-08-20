@@ -29,7 +29,7 @@ import { AppForm } from "@homarr/forms-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
 
-import { getAssistantAffirmativeResult, getAssistantAskUserOptionKind } from "./assistant-ask-user";
+import { getAssistantAskUserOptionKind } from "./assistant-ask-user";
 import { useAssistantAutomaticAction } from "./assistant-auto-approval";
 import { AssistantAutomaticActionProgress } from "./assistant-automatic-action-progress";
 import classes from "./assistant-panel.module.css";
@@ -67,7 +67,6 @@ export const AssistantAskUserTool = ({
   result,
   addResult,
   status,
-  toolCallId,
 }: ToolCallMessagePartProps<AskUserArgs, AskUserResult>) => {
   const t = useScopedI18n("common.assistant.askUser");
   const [showOther, setShowOther] = useState(false);
@@ -75,17 +74,6 @@ export const AssistantAskUserTool = ({
   const [submitting, setSubmitting] = useState(false);
   const otherInputRef = useRef<HTMLInputElement>(null);
   const options = Array.isArray(args?.options) ? args.options : [];
-  const affirmativeResult = getAssistantAffirmativeResult(options);
-  const hasValidQuestion = hasCompleteAssistantToolArguments(status) && Boolean(args?.question) && options.length >= 2;
-  const autoConfirming = useAssistantAutomaticAction({
-    toolCallId,
-    ready: result === undefined && hasValidQuestion && affirmativeResult !== undefined,
-    completed: result !== undefined,
-    confirm: () => {
-      if (!affirmativeResult) return;
-      addResult(affirmativeResult);
-    },
-  });
 
   useEffect(() => {
     if (showOther) otherInputRef.current?.focus();
@@ -165,67 +153,62 @@ export const AssistantAskUserTool = ({
         </Group>
 
         <Stack gap="xs" mt="md">
-          {autoConfirming ? (
-            <AssistantAutomaticActionProgress label={t("automaticAffirmative")} />
-          ) : (
-            options.map((option, index) => {
-              const kind = getAssistantAskUserOptionKind(option);
-              const icon =
-                kind === "affirmative" ? (
-                  <IconCheck size={17} />
-                ) : kind === "negative" ? (
-                  <IconX size={17} />
-                ) : (
-                  <IconArrowRight size={17} />
-                );
-              const color = kind === "affirmative" ? "green" : kind === "negative" ? "red" : "gray";
-
-              return (
-                <UnstyledButton
-                  key={`${option.id}:${index}`}
-                  className={classes.humanToolOption}
-                  data-kind={kind}
-                  disabled={submitting}
-                  onClick={() =>
-                    submitResult({ answer: option.label, optionId: option.id, optionKind: kind, source: "option" })
-                  }
-                >
-                  <ThemeIcon className={classes.humanToolOptionIcon} variant="light" color={color} size="sm">
-                    {icon}
-                  </ThemeIcon>
-                  <Box className={classes.humanToolOptionText} ta="start">
-                    <Text component="span" size="sm" fw={650} className={classes.humanToolOptionLabel}>
-                      {option.label}
-                    </Text>
-                    {option.description && (
-                      <Text
-                        component="span"
-                        display="block"
-                        size="xs"
-                        c="dimmed"
-                        fw={400}
-                        className={classes.humanToolOptionDescription}
-                      >
-                        {option.description}
-                      </Text>
-                    )}
-                  </Box>
-                  <Badge
-                    className={classes.humanToolOptionBadge}
-                    classNames={{ label: classes.humanToolOptionBadgeLabel }}
-                    variant="light"
-                    color={color}
-                    size="xs"
-                  >
-                    {t(`optionKind.${kind}`)}
-                  </Badge>
-                </UnstyledButton>
+          {options.map((option, index) => {
+            const kind = getAssistantAskUserOptionKind(option);
+            const icon =
+              kind === "affirmative" ? (
+                <IconCheck size={17} />
+              ) : kind === "negative" ? (
+                <IconX size={17} />
+              ) : (
+                <IconArrowRight size={17} />
               );
-            })
-          )}
+            const color = kind === "affirmative" ? "green" : kind === "negative" ? "red" : "gray";
 
-          {!autoConfirming &&
-            args.allowOther !== false &&
+            return (
+              <UnstyledButton
+                key={`${option.id}:${index}`}
+                className={classes.humanToolOption}
+                data-kind={kind}
+                disabled={submitting}
+                onClick={() =>
+                  submitResult({ answer: option.label, optionId: option.id, optionKind: kind, source: "option" })
+                }
+              >
+                <ThemeIcon className={classes.humanToolOptionIcon} variant="light" color={color} size="sm">
+                  {icon}
+                </ThemeIcon>
+                <Box className={classes.humanToolOptionText} ta="start">
+                  <Text component="span" size="sm" fw={650} className={classes.humanToolOptionLabel}>
+                    {option.label}
+                  </Text>
+                  {option.description && (
+                    <Text
+                      component="span"
+                      display="block"
+                      size="xs"
+                      c="dimmed"
+                      fw={400}
+                      className={classes.humanToolOptionDescription}
+                    >
+                      {option.description}
+                    </Text>
+                  )}
+                </Box>
+                <Badge
+                  className={classes.humanToolOptionBadge}
+                  classNames={{ label: classes.humanToolOptionBadgeLabel }}
+                  variant="light"
+                  color={color}
+                  size="xs"
+                >
+                  {t(`optionKind.${kind}`)}
+                </Badge>
+              </UnstyledButton>
+            );
+          })}
+
+          {args.allowOther !== false &&
             (showOther ? (
               <Group align="flex-end" gap="xs" wrap="nowrap">
                 <TextInput

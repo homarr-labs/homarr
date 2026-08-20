@@ -1,0 +1,34 @@
+---
+title: "Today"
+description: "Displays the current date and progress through the calendar."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { todayWidget } from ".";
+
+<WidgetHeader widget={todayWidget} categories={["Date", "Time"]} />
+
+The Today widget presents the current local date without duplicating a live clock. It progressively adds the week
+number, day of year, quarter, remaining days, and calendar progress as more space becomes available.
+
+The advanced view shows week, month, and year progress together with a twelve-month overview. Week numbers can follow
+your locale or the ISO 8601 convention. “Days after today” excludes the current day to keep the remaining-day count
+unambiguous.
+
+The widget runs entirely in your browser and does not send date or location data to an external service. It follows
+the timezone and locale of the device viewing the board, so viewers in different regions can see their own local date.
+
+<WidgetInteractionGuide />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={todayWidget.configuration} />

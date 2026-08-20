@@ -17,6 +17,8 @@ import { widgetQueryRefetchIntervals } from "./refetch-intervals";
 import { widgetCatalogIcons } from "./catalog";
 import { getWidgetQueryKeys } from "./definition";
 
+const serializePollingPolicy = (entry: { queryKey: QueryKey; intervalSeconds: number | null }) => JSON.stringify(entry);
+
 describe("widget manifest promise stability", () => {
   it("returns the same module promise for every render", () => {
     expect(loadWidgetModule("clock")).toBe(loadWidgetModule("clock"));
@@ -145,9 +147,8 @@ describe("widget manifest promise stability", () => {
       }
     }
 
-    const serializePolicy = (entry: PollingPolicy) => JSON.stringify(entry);
-    expect(widgetQueryRefetchIntervals.map(serializePolicy).toSorted()).toEqual(
-      [...expectedByQueryKey.values()].map(serializePolicy).toSorted(),
+    expect(widgetQueryRefetchIntervals.map(serializePollingPolicy).toSorted()).toEqual(
+      [...expectedByQueryKey.values()].map(serializePollingPolicy).toSorted(),
     );
   });
 

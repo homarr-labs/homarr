@@ -1,0 +1,47 @@
+---
+title: "Air Quality & UV"
+description: "Displays air quality, ultraviolet index, pollutants and pollen for a location."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { airQualityWidget } from ".";
+
+<WidgetHeader widget={airQualityWidget} categories={["Health", "Weather"]} />
+
+The Air Quality & UV widget shows the current air quality index for a selected location. It adds the UV index,
+dominant pollutant, particulate matter and the highest available pollen reading as space allows. Open the advanced
+view for a 24-hour AQI and UV chart, all available pollutant and pollen readings, and seven-day daily maxima.
+
+Select the European or US AQI scale, or use the automatic setting. Automatic uses the US scale for viewers whose
+locale region is the United States and the European scale everywhere else. The selected scale stays in widget options
+instead of being repeated beside every reading. Pollen values are individual measured concentrations; the widget does
+not combine them into a single pollen index.
+
+The categories and colors summarize published index bands and are not medical advice. Pollutant concentrations use
+micrograms per cubic meter (`µg/m³`), and pollen uses grains per cubic meter.
+
+<WidgetInteractionGuide />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={airQualityWidget.configuration} />
+
+### Data source
+
+Homarr uses the free Open-Meteo Air Quality API. The widget refreshes active data every 15 minutes and requests a
+seven-day forecast for European AQI, US AQI, UV, particulate matter, ozone, nitrogen dioxide, sulphur dioxide, carbon
+monoxide, and available alder, birch, grass, mugwort, olive and ragweed pollen. Identical location requests reuse the
+server response for 15 minutes. If a refresh fails, Homarr can keep a recent successful response visible for up to 24
+hours instead of replacing it with an empty state.
+
+Set `NO_EXTERNAL_CONNECTION=true` to disable this and other internet-backed requests. If you need to allowlist the
+service, use `https://air-quality-api.open-meteo.com`.

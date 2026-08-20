@@ -1,8 +1,9 @@
 "use client";
 
 import type { CSSProperties, ReactNode } from "react";
+import { useEffect, useId, useRef } from "react";
 import { ActionIcon, Box, Center, Group, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
-import { IconArrowsMaximize, IconRobot } from "@tabler/icons-react";
+import { IconArrowsMaximize, IconArrowsMinimize, IconRobot } from "@tabler/icons-react";
 import { useAui, useAuiState } from "@assistant-ui/react";
 
 import { useI18n } from "@homarr/translation/client";
@@ -13,23 +14,47 @@ import classes from "./assistant-panel.module.css";
 import { AssistantConversationSurface } from "./assistant-panel";
 import { getPendingAssistantAction } from "./assistant-pending-action";
 import { useAssistantPreferences, useHomarrAssistant } from "./assistant-context";
-import { AssistantComposerSurfaceProvider } from "./assistant-runtime-provider";
+import { AssistantComposerSurfaceBoundary } from "./assistant-runtime-provider";
 
 export const AssistantBoardWidget = (props: WidgetComponentProps<"assistant">) => {
   const assistant = useHomarrAssistant();
+  const { enabled, setWidgetVisible } = assistant;
+  const generatedWidgetId = useId();
+  const widgetId = props.itemId ?? generatedWidgetId;
+  const widgetRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const widget = widgetRef.current;
+    if (!enabled || !widget) return;
+    const observer = new IntersectionObserver(([entry]) => setWidgetVisible(widgetId, entry?.isIntersecting === true), {
+      threshold: 0.15,
+    });
+    observer.observe(widget);
+    return () => {
+      observer.disconnect();
+      setWidgetVisible(widgetId, false);
+    };
+  }, [enabled, setWidgetVisible, widgetId]);
 
   if (!assistant.enabled) {
     return <UnavailableAssistantWidget description={assistant.unavailableDescription} />;
   }
 
   return (
-    <AssistantComposerSurfaceProvider surfaceId={`board-widget-${props.itemId ?? "preview"}`}>
-      <EnabledAssistantBoardWidget {...props} />
-    </AssistantComposerSurfaceProvider>
+    <AssistantComposerSurfaceBoundary surfaceId={`assistant-widget-${widgetId}`}>
+      <Box ref={widgetRef} w="100%" h="100%">
+        <EnabledAssistantBoardWidget {...props} assistantWidgetId={widgetId} />
+      </Box>
+    </AssistantComposerSurfaceBoundary>
   );
 };
 
-const EnabledAssistantBoardWidget = ({ width, height, isEditMode }: WidgetComponentProps<"assistant">) => {
+const EnabledAssistantBoardWidget = ({
+  width,
+  height,
+  isEditMode,
+  assistantWidgetId,
+}: WidgetComponentProps<"assistant"> & { assistantWidgetId: string }) => {
   const board = useRequiredBoard();
   const assistant = useHomarrAssistant();
   const preferences = useAssistantPreferences();
@@ -44,6 +69,14 @@ const EnabledAssistantBoardWidget = ({ width, height, isEditMode }: WidgetCompon
     if (!threadListItem.getState().remoteId) return;
     threadListItem.updateCustom({ ...threadListItem.getState().custom, modelId });
   };
+
+  if (assistant.opened) {
+    return <CompactAssistantWidget onOpen={assistant.close} location="panel" />;
+  }
+
+  if (assistant.activeWidgetId !== null && assistant.activeWidgetId !== assistantWidgetId) {
+    return <CompactAssistantWidget onOpen={() => assistant.activateWidget(assistantWidgetId)} location="widget" />;
+  }
 
   if (width < 300 || height < 280) {
     return <CompactAssistantWidget onOpen={assistant.open} />;
@@ -75,8 +108,30 @@ const EnabledAssistantBoardWidget = ({ width, height, isEditMode }: WidgetCompon
   );
 };
 
-const CompactAssistantWidget = ({ onOpen }: { onOpen: () => void }) => {
+const CompactAssistantWidget = ({
+  onOpen,
+  location = "compact",
+}: {
+  onOpen: () => void;
+  location?: "compact" | "panel" | "widget";
+}) => {
   const t = useI18n();
+  let title = t("widget.assistant.compact.title");
+  let description = t("widget.assistant.compact.description");
+  let actionLabel = t("widget.assistant.compact.open");
+  let actionIcon = <IconArrowsMaximize size={18} />;
+
+  if (location === "panel") {
+    title = t("widget.assistant.compact.openTitle");
+    description = t("widget.assistant.compact.openDescription");
+    actionLabel = t("widget.assistant.compact.returnToWidget");
+    actionIcon = <IconArrowsMinimize size={18} />;
+  }
+  if (location === "widget") {
+    title = t("widget.assistant.compact.otherWidgetTitle");
+    description = t("widget.assistant.compact.otherWidgetDescription");
+    actionLabel = t("widget.assistant.compact.useHere");
+  }
 
   return (
     <Box className={classes.widgetPanel}>
@@ -87,23 +142,16 @@ const CompactAssistantWidget = ({ onOpen }: { onOpen: () => void }) => {
           </ThemeIcon>
           <Stack className={classes.compactCopy} gap={1}>
             <Text className={classes.compactTitle} size="sm" fw={700} lineClamp={1}>
-              {t("widget.assistant.compact.title")}
+              {title}
             </Text>
             <Text className={classes.compactDescription} size="xs" c="dimmed" lineClamp={2}>
-              {t("widget.assistant.compact.description")}
+              {description}
             </Text>
           </Stack>
         </Group>
-        <Tooltip label={t("widget.assistant.compact.open")}>
-          <ActionIcon
-            variant="light"
-            color="red"
-            size={44}
-            radius="md"
-            onClick={onOpen}
-            aria-label={t("widget.assistant.compact.open")}
-          >
-            <IconArrowsMaximize size={18} />
+        <Tooltip label={actionLabel}>
+          <ActionIcon variant="light" color="red" size={44} radius="md" onClick={onOpen} aria-label={actionLabel}>
+            {actionIcon}
           </ActionIcon>
         </Tooltip>
       </Group>

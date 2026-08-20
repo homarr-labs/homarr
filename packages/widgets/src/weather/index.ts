@@ -9,6 +9,7 @@ export const { definition, componentLoader } = createWidgetDefinition("weather",
   icon: IconCloud,
   supportsAdvancedFocus: true,
   queryKey: [["widget", "weather", "atLocation"]],
+  refetchInterval: 600,
   queryMatcher: ({ input }, scope) => {
     const location = scope.options.location;
     if (location === null || typeof location !== "object" || !("latitude" in location) || !("longitude" in location)) {
@@ -24,6 +25,8 @@ export const { definition, componentLoader } = createWidgetDefinition("weather",
       (factory) => ({
         isFormatFahrenheit: factory.switch(),
         disableTemperatureDecimals: factory.switch(),
+        animateIcons: factory.switch(),
+        showHumidity: factory.switch({ defaultValue: true, withDescription: true }),
         showCurrentWindSpeed: factory.switch({ withDescription: true }),
         useImperialSpeed: factory.switch(),
         location: factory.location({
@@ -47,10 +50,10 @@ export const { definition, componentLoader } = createWidgetDefinition("weather",
           defaultValue: "dddd, MMMM D",
           withDescription: true,
         }),
-        showCity: factory.switch(),
-        hasForecast: factory.switch(),
+        showCity: factory.switch({ defaultValue: true }),
+        hasForecast: factory.switch({ defaultValue: true }),
         forecastDayCount: factory.slider({
-          defaultValue: 5,
+          defaultValue: 3,
           validate: z.number().min(1).max(7),
           step: 1,
           withDescription: true,

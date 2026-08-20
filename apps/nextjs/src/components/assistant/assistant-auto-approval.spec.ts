@@ -104,6 +104,46 @@ describe("assistant automatic approval tracker", () => {
     await act(async () => root.unmount());
   });
 
+  test("does not approve a ready action while switching conversations", async () => {
+    const container = document.createElement("div");
+    containers.push(container);
+    document.body.append(container);
+    const root = createRoot(container);
+    let confirmationCount = 0;
+    const renderConversation = async (conversationId: string, ready: boolean) => {
+      await act(async () => {
+        root.render(
+          createElement(
+            AssistantAutoApprovalProvider,
+            { conversationId },
+            createElement(
+              Fragment,
+              null,
+              createElement(AutoApprovalProbe),
+              createElement(AutomaticActionProbe, {
+                ready,
+                completed: false,
+                confirm: () => {
+                  confirmationCount += 1;
+                },
+              }),
+            ),
+          ),
+        );
+      });
+    };
+
+    await renderConversation("local-thread-1", false);
+    act(() => currentAutoApproval?.setEnabled(true));
+    await renderConversation("local-thread-2", true);
+
+    expect(confirmationCount).toBe(0);
+    expect(currentAutoApproval?.enabled).toBe(false);
+    expect(automaticActionInProgress).toBe(false);
+
+    await act(async () => root.unmount());
+  });
+
   test("clears claimed calls when automatic approvals are turned off", async () => {
     const container = document.createElement("div");
     containers.push(container);

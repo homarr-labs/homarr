@@ -1,0 +1,42 @@
+.root {
+  container-type: size;
+  overflow: hidden;
+}
+
+.duration {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+
+.compactDuration {
+  font-size: var(--mantine-font-size-xl);
+  white-space: nowrap;
+}
+
+.compactProgress {
+  width: 100%;
+  max-width: 14rem;
+}
+
+.eventCard {
+  min-width: 0;
+}
+
+@container (max-width: 10.625rem) {
+  .compactStatus,
+  .compactTarget {
+    display: none;
+  }
+}
+
+@container (max-width: 8.75rem) {
+  .compactDuration {
+    font-size: clamp(var(--mantine-font-size-sm), 15cqw, var(--mantine-font-size-md));
+  }
+}
+
+@container (max-height: 6.5625rem) {
+  .compactTarget {
+    display: none;
+  }
+}

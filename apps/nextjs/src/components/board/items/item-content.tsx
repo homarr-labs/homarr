@@ -228,7 +228,9 @@ const LoadedBoardItemContent = ({
     (host: HTMLDivElement | null) => {
       if (!host || !surfacePortalTarget || isAdvanced) return;
       cancelPreviewEntrance();
-      host.append(surfacePortalTarget);
+      if (host.childNodes.length !== 1 || host.firstChild !== surfacePortalTarget) {
+        host.replaceChildren(surfacePortalTarget);
+      }
     },
     [cancelPreviewEntrance, isAdvanced, surfacePortalTarget],
   );

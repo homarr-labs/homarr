@@ -2106,6 +2106,10 @@
                     "enum": [
                       "clock",
                       "weather",
+                      "today",
+                      "airQuality",
+                      "countdown",
+                      "timer",
                       "app",
                       "iframe",
                       "video",
