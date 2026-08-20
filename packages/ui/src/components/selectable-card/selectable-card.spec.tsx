@@ -3,7 +3,7 @@
 import { act, createRef } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
-import { Badge, MantineProvider, Text } from "@mantine/core";
+import { Badge, MantineProvider } from "@mantine/core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { SelectableCard } from "./selectable-card";

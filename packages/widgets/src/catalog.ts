@@ -15,7 +15,6 @@ import {
   IconBuildingBank,
   IconBusStop,
   IconCalendar,
-  IconCalendarWeek,
   IconChartAreaLine,
   IconChartBar,
   IconClock,

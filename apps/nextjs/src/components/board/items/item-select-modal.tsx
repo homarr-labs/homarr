@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   Avatar,
   Badge,
@@ -66,7 +66,7 @@ interface ItemSelectModalContentProps {
   initialSearch?: string;
 }
 
-interface WidgetItemData {
+export interface WidgetItemData {
   kind: WidgetKind;
   supportedIntegrations: IntegrationKind[];
   icon: TablerIcon;
@@ -556,7 +556,7 @@ export const WidgetItem = ({
   );
 };
 
-const ConnectionStatusBadge = ({ status }: { status: WidgetConnectionStatus }) => {
+export const ConnectionStatusBadge = ({ status }: { status: WidgetConnectionStatus }) => {
   if (status === "noConnectionRequired") return null;
   const t = useI18n();
   const color = status === "ready" ? "green" : status === "needsSetup" ? "yellow" : "gray";
@@ -568,7 +568,7 @@ const ConnectionStatusBadge = ({ status }: { status: WidgetConnectionStatus }) =
   );
 };
 
-const SupportedIntegrations = ({ integrations }: { integrations: IntegrationKind[] }) => {
+export const SupportedIntegrations = ({ integrations }: { integrations: IntegrationKind[] }) => {
   if (integrations.length === 0) {
     return (
       <Text size="xs" c="dimmed" fs="italic">

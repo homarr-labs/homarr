@@ -161,7 +161,7 @@ describe("Advanced Add App - Modal Subcomponents", () => {
       await act(async () =>
         root.render(
           <MantineProvider>
-            <WidgetItem item={item} isSelected={false} connectionStatus="ready" onSelect={onSelect} />
+            <WidgetItem item={item} disabled={false} loading={false} connectionStatus="ready" onSelect={onSelect} />
           </MantineProvider>,
         ),
       );
@@ -192,7 +192,13 @@ describe("Advanced Add App - Modal Subcomponents", () => {
       await act(async () =>
         root.render(
           <MantineProvider>
-            <WidgetItem item={item} isSelected={true} connectionStatus="noConnectionRequired" onSelect={vi.fn()} />
+            <WidgetItem
+              item={item}
+              disabled={false}
+              loading={false}
+              connectionStatus="noConnectionRequired"
+              onSelect={vi.fn()}
+            />
           </MantineProvider>,
         ),
       );

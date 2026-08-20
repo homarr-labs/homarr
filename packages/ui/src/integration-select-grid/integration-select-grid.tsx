@@ -13,7 +13,6 @@ import {
   IconBuildingBank,
   IconBusStop,
   IconCalendar,
-  IconCalendarWeek,
   IconChartBar,
   IconClock,
   IconClockPlay,
