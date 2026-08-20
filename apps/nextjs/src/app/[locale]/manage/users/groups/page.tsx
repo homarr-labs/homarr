@@ -19,13 +19,14 @@ export default async function GroupsListPage() {
     return notFound();
   }
 
-  const t = await getI18n();
+  const tCommon = await getI18n("common");
+  const tGroup = await getI18n("group");
   const groups = await api.group.getAll();
   const dbEveryoneGroup = groups.find((group) => group.name === everyoneGroup);
   const groupsWithoutEveryone = groups.filter((group) => group.name !== everyoneGroup);
 
   return (
-    <ManagePageLayout title={t("group.title")} primaryAction={<AddGroupButton />} floatingPrimaryAction>
+    <ManagePageLayout title={tCommon("entity.groups")} primaryAction={<AddGroupButton />} floatingPrimaryAction>
       <Stack>
         {dbEveryoneGroup && (
           <UnstyledButton component={Link} href={`/manage/users/groups/${dbEveryoneGroup.id}`}>
@@ -36,9 +37,9 @@ export default async function GroupsListPage() {
                 </ThemeIcon>
 
                 <Stack gap={0} flex={1}>
-                  <Text fw={500}>{t("group.defaultGroup.name")}</Text>
+                  <Text fw={500}>{tGroup("defaultGroup.name")}</Text>
                   <Text size="sm" c="gray.6">
-                    {t("group.defaultGroup.description", { name: everyoneGroup })}
+                    {tGroup("defaultGroup.description", { name: everyoneGroup })}
                   </Text>
                 </Stack>
                 <IconChevronRight size={20} />

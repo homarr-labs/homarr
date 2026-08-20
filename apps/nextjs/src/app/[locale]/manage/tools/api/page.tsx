@@ -7,7 +7,7 @@ import { openApiDocument } from "@homarr/api/open-api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { createMetaTitle } from "~/metadata";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -60,7 +60,7 @@ export async function generateMetadata() {
     return {};
   }
 
-  const t = await getScopedI18n("management");
+  const t = await getI18n("management");
 
   return {
     title: createMetaTitle(t("metaTitle")),
@@ -76,7 +76,7 @@ export default async function ApiPage() {
   const baseUrl = extractBaseUrlFromHeaders(requestHeaders);
   const document = openApiDocument(baseUrl);
   const apiKeys = await api.apiKeys.getAll();
-  const t = await getScopedI18n("management.page.tool.api.tab");
+  const t = await getI18n("management.page.tool.api.tab");
   const toolGroups = getMcpToolGroups();
 
   return (

@@ -14,9 +14,11 @@ interface HeaderCardProps {
 }
 
 export function HeaderCard(props: HeaderCardProps) {
-  const t = useI18n();
+  const tCluster = useI18n("kubernetes.cluster");
+  const tField = useI18n("kubernetes.field");
   const currentLocale = useCurrentLocale();
   const isRTL = isLocaleRTL(currentLocale);
+  const label = props.headerType === "architecture" ? tField("architecture.label") : tCluster(props.headerType);
 
   return (
     <Card className={classes.header}>
@@ -33,9 +35,7 @@ export function HeaderCard(props: HeaderCardProps) {
           <HeaderIcon type={props.headerType} />
         </ThemeIcon>
         <Text size="xl" fw={500} dir={isRTL ? "rtl" : "ltr"}>
-          {isRTL
-            ? `${props.value} : ${t(`kubernetes.cluster.${props.headerType}`)}`
-            : `${t(`kubernetes.cluster.${props.headerType}`)} : ${props.value}`}
+          {isRTL ? `${props.value} : ${label}` : `${label} : ${props.value}`}
         </Text>
       </Flex>
     </Card>

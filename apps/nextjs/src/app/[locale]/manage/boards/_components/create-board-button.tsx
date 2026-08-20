@@ -10,13 +10,13 @@ import { useI18n } from "@homarr/translation/client";
 import { ManageMobilePrimaryAction } from "~/components/manage/manage-mobile-primary-action";
 
 export const CreateBoardButton = () => {
-  const t = useI18n();
+  const t = useI18n("management.page.board.action");
   const { openModal } = useModalAction(AddBoardModal);
 
   return (
     <ManageMobilePrimaryAction>
       <Button leftSection={<IconCategoryPlus size="1rem" />} onClick={openModal}>
-        {t("management.page.board.action.new.label")}
+        {t("new.label")}
       </Button>
     </ManageMobilePrimaryAction>
   );

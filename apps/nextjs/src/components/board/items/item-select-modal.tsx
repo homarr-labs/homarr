@@ -28,6 +28,7 @@ import {
   getBoardLaneColumnCount,
   getIconUrl,
   getIntegrationName,
+  getWidgetName,
   getRootSectionLane,
   widgetIntegrationSupport,
   widgetKinds,
@@ -144,14 +145,24 @@ const ItemSelectModalContent = ({
       widgetKinds
         .filter((kind) => kind !== "customApi")
         .map((kind) => {
+          let description: string;
+          if (kind === "mediaMissing") {
+            description = t("widget.mediaMissing.description", {
+              radarr: getIntegrationName("radarr"),
+              sonarr: getIntegrationName("sonarr"),
+            });
+          } else {
+            description = t(`widget.${kind}.description`);
+          }
+
           return {
             kind,
             supportedIntegrations: (widgetIntegrationSupport[kind] ?? []).filter(
               (integration) => integration !== "mock",
             ),
             icon: widgetCatalogIcons[kind],
-            name: t(`widget.${kind}.name`),
-            description: t(`widget.${kind}.description`),
+            name: getWidgetName(kind, t),
+            description,
           };
         })
         .sort((itemA, itemB) => {
@@ -324,7 +335,7 @@ const ItemSelectModalContent = ({
                 targetSectionId: effectiveSectionId ?? undefined,
                 advancedOptions,
               });
-              if (!notifyCreated(updatedBoard, itemId, t(`widget.${kind}.name`))) return;
+              if (!notifyCreated(updatedBoard, itemId, getWidgetName(kind, t))) return;
               trackSetup("widget-completed", {
                 entryPoint: "board",
                 intent: kind,
@@ -337,7 +348,7 @@ const ItemSelectModalContent = ({
             settings,
           },
           {
-            title: (titleT) => `${titleT("item.edit.title")} - ${titleT(`widget.${kind}.name`)}`,
+            title: (titleT) => `${titleT("item.edit.title")} - ${getWidgetName(kind, titleT)}`,
           },
         );
       };
@@ -458,7 +469,7 @@ const ItemSelectModalContent = ({
                 <Group gap="xs">
                   <IconApi size={14} />
                   <Text size="xs" fw={600}>
-                    {t("customWidget.page.list.title")}
+                    {t("common.entity.customWidgets")}
                   </Text>
                 </Group>
               }
@@ -643,7 +654,7 @@ const ItemSelectModalFrame = ({
       canCreateIntegration={canCreateIntegration}
       initialSearch={
         innerProps.initialWidgetKind
-          ? t(`widget.${innerProps.initialWidgetKind}.name`)
+          ? getWidgetName(innerProps.initialWidgetKind, t)
           : innerProps.initialIntegrationKind
             ? getIntegrationName(innerProps.initialIntegrationKind)
             : undefined

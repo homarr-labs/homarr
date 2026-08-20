@@ -54,14 +54,15 @@ export default async function MediaListPage(props: MediaListPageProps) {
     return notFound();
   }
 
-  const t = await getI18n();
+  const tMedia = await getI18n("media");
+  const [tCommon, tEntities] = await Promise.all([getI18n("common"), getI18n("common.entity")]);
   const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: medias, totalCount } = await api.media.getPaginated(searchParams);
   const canUpload = session.user.permissions.includes("media-upload");
 
   return (
     <ManagePageLayout
-      title={t("media.plural")}
+      title={tEntities("media")}
       primaryAction={
         canUpload ? (
           <ManageMobilePrimaryAction>
@@ -72,8 +73,8 @@ export default async function MediaListPage(props: MediaListPageProps) {
       toolbar={
         <Group>
           <SearchInput
-            placeholder={`${t("media.search")}...`}
-            ariaLabel={t("media.search")}
+            placeholder={`${tMedia("search")}...`}
+            ariaLabel={tMedia("search")}
             defaultValue={searchParams.search}
           />
           {session.user.permissions.includes("media-view-all") && (
@@ -84,15 +85,15 @@ export default async function MediaListPage(props: MediaListPageProps) {
       footer={<TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />}
       floatingPrimaryAction={canUpload}
     >
-      {medias.length === 0 && <NoResults icon={IconPhoto} title={t("media.noResults.title")} />}
+      {medias.length === 0 && <NoResults icon={IconPhoto} title={tMedia("noResults.title")} />}
       {medias.length > 0 && (
         <Table striped highlightOnHover>
           <TableThead>
             <TableTr>
               <TableTh></TableTh>
-              <TableTh>{t("media.field.name")}</TableTh>
-              <TableTh>{t("media.field.size")}</TableTh>
-              <TableTh>{t("media.field.creator")}</TableTh>
+              <TableTh>{tCommon("field.name")}</TableTh>
+              <TableTh>{tMedia("field.size")}</TableTh>
+              <TableTh>{tMedia("field.creator")}</TableTh>
               <TableTh></TableTh>
             </TableTr>
           </TableThead>
@@ -113,7 +114,7 @@ interface RowProps {
 
 const Row = async ({ media }: RowProps) => {
   const session = await auth();
-  const t = await getI18n();
+  const tMedia = await getI18n("media");
   const canDelete = media.creatorId === session?.user.id || session?.user.permissions.includes("media-full-all");
 
   return (
@@ -145,7 +146,7 @@ const Row = async ({ media }: RowProps) => {
       <TableTd w={64}>
         <Group wrap="nowrap" gap="xs">
           <CopyMedia media={media} />
-          <Tooltip label={t("media.action.open.label")} openDelay={500}>
+          <Tooltip label={tMedia("action.open.label")} openDelay={500}>
             <ActionIcon
               component="a"
               href={createLocalImageUrl(media.id)}

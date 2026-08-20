@@ -10,8 +10,9 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useConfirmModal } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 dayjs.extend(relativeTime);
@@ -21,7 +22,7 @@ interface InviteListComponentProps {
 }
 
 export const InviteListComponent = ({ initialInvites }: InviteListComponentProps) => {
-  const t = useScopedI18n("management.page.user.invite");
+  const t = useI18n("management.page.user.invite");
   const { data, isLoading } = clientApi.invite.getAll.useQuery(undefined, {
     initialData: initialInvites,
     refetchOnMount: false,
@@ -33,7 +34,7 @@ export const InviteListComponent = ({ initialInvites }: InviteListComponentProps
     () => [
       {
         accessorKey: "id",
-        header: t("field.id.label"),
+        header: invariantTechnicalLabels.id,
         grow: 100,
         Cell: ({ renderedCellValue }) => renderedCellValue,
       },
@@ -76,7 +77,7 @@ export const InviteListComponent = ({ initialInvites }: InviteListComponentProps
 };
 
 const RenderRowActions = ({ row }: { row: MRT_Row<RouterOutputs["invite"]["getAll"][number]> }) => {
-  const t = useScopedI18n("management.page.user.invite");
+  const t = useI18n("management.page.user.invite");
   const { mutate, isPending } = clientApi.invite.deleteInvite.useMutation();
   const utils = clientApi.useUtils();
   const { openConfirmModal } = useConfirmModal();

@@ -17,7 +17,8 @@ interface GroupHomeBoardsProps {
 }
 
 export const GroupHomeBoards = ({ homeBoardId, mobileHomeBoardId, groupId }: GroupHomeBoardsProps) => {
-  const t = useI18n();
+  const tGroup = useI18n("group");
+  const tCommon = useI18n("common");
   const [availableBoards] = clientApi.board.getBoardsForGroup.useSuspenseQuery({ groupId });
   const form = useZodForm(groupSettingsSchema.pick({ homeBoardId: true, mobileHomeBoardId: true }), {
     initialValues: {
@@ -37,14 +38,14 @@ export const GroupHomeBoards = ({ homeBoardId, mobileHomeBoardId, groupId }: Gro
         onSuccess() {
           form.setInitialValues(values);
           showSuccessNotification({
-            title: t("group.action.settings.board.notification.success.title"),
-            message: t("group.action.settings.board.notification.success.message"),
+            title: tGroup("action.settings.board.notification.success.title"),
+            message: tGroup("action.settings.board.notification.success.message"),
           });
         },
         onError() {
           showErrorNotification({
-            title: t("group.action.settings.board.notification.error.title"),
-            message: t("group.action.settings.board.notification.error.message"),
+            title: tGroup("action.settings.board.notification.error.title"),
+            message: tGroup("action.settings.board.notification.error.message"),
           });
         },
       },
@@ -55,16 +56,16 @@ export const GroupHomeBoards = ({ homeBoardId, mobileHomeBoardId, groupId }: Gro
     <form onSubmit={handleSubmit}>
       <Stack gap="md">
         <BoardSelect
-          label={t("group.field.homeBoard.label")}
-          description={t("group.field.homeBoard.description")}
+          label={tGroup("field.homeBoard.label")}
+          description={tGroup("field.homeBoard.description")}
           clearable
           boards={availableBoards}
           {...form.getInputProps("homeBoardId")}
         />
 
         <BoardSelect
-          label={t("group.field.mobileBoard.label")}
-          description={t("group.field.mobileBoard.description")}
+          label={tGroup("field.mobileBoard.label")}
+          description={tGroup("field.mobileBoard.description")}
           clearable
           boards={availableBoards}
           {...form.getInputProps("mobileHomeBoardId")}
@@ -72,7 +73,7 @@ export const GroupHomeBoards = ({ homeBoardId, mobileHomeBoardId, groupId }: Gro
 
         <Group justify="end">
           <Button type="submit" loading={isPending}>
-            {t("common.action.save")}
+            {tCommon("action.save")}
           </Button>
         </Group>
       </Stack>

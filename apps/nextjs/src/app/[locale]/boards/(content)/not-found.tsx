@@ -16,15 +16,15 @@ export default async function NotFoundBoardHomePage() {
 
 const getPropsAsync = async (): Promise<BoardNotFoundProps> => {
   const boardCount = await db.$count(boards);
-  const t = await getI18n();
+  const t = await getI18n("board");
 
   if (boardCount === 0) {
     return {
       icon: { src: "/favicon.ico", alt: "Homarr logo" },
-      title: t("board.error.noBoard.title"),
-      description: t("board.error.noBoard.description"),
-      link: { label: t("board.error.noBoard.link"), href: "/manage/boards" },
-      notice: t("board.error.noBoard.notice"),
+      title: t("error.noBoard.title"),
+      description: t("error.noBoard.description"),
+      link: { label: t("error.noBoard.link"), href: "/manage/boards" },
+      notice: t("error.noBoard.notice"),
     };
   }
 
@@ -39,9 +39,9 @@ const getPropsAsync = async (): Promise<BoardNotFoundProps> => {
 
   return {
     icon: IconHomeOff,
-    title: t(`board.error.homeBoard.title`),
-    description: t(`board.error.homeBoard.${type}.description`),
-    link: { label: t(`board.error.homeBoard.${type}.link`), href },
-    notice: t(`board.error.homeBoard.${type}.notice`),
+    title: t("error.homeBoard.title"),
+    description: t(`error.homeBoard.${type}.description` as never),
+    link: { label: t(`error.homeBoard.${type}.link` as never), href },
+    notice: t(`error.homeBoard.${type}.notice` as never),
   };
 };

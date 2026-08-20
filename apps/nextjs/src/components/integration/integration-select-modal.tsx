@@ -27,7 +27,8 @@ interface IntegrationSelectModalProps {
 }
 
 export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>(({ actions, innerProps }) => {
-  const t = useI18n();
+  const tCommon = useI18n("common");
+  const tIntegration = useI18n("integration");
   const directKind =
     innerProps.initialKind ?? (innerProps.allowedKinds?.length === 1 ? innerProps.allowedKinds[0] : null);
   const isDirectForm = Boolean(directKind);
@@ -72,8 +73,12 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
   };
 
   if (step === "form" && selectedKind) {
-    const HeaderIcon = isDirectForm ? IconX : IconArrowLeft;
-    const headerLabel = isDirectForm ? t("common.action.close") : t("common.action.previous");
+    let HeaderIcon = IconArrowLeft;
+    let headerLabel = tCommon("action.previous");
+    if (isDirectForm) {
+      HeaderIcon = IconX;
+      headerLabel = tCommon("action.close");
+    }
 
     return (
       <ScrollArea.Autosize mah="80vh">
@@ -97,11 +102,11 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
 
   if (isIntegrationDataError) {
     return (
-      <Alert color="red" title={t("common.error")}>
+      <Alert color="red" title={tCommon("error")}>
         <Stack gap="sm">
-          <Text size="sm">{t("integration.grid.loadError")}</Text>
+          <Text size="sm">{tIntegration("grid.loadError")}</Text>
           <Button variant="light" color="red" onClick={() => void refetch()}>
-            {t("common.action.tryAgain")}
+            {tCommon("action.tryAgain")}
           </Button>
         </Stack>
       </Alert>

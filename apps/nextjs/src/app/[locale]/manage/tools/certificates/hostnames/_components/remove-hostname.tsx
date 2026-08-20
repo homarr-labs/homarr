@@ -21,25 +21,25 @@ export const RemoveHostnameActionIcon = (input: RemoveHostnameActionIconProps) =
     },
   });
   const { openConfirmModal } = useConfirmModal();
-  const t = useI18n();
+  const t = useI18n("certificate");
 
   const handleRemove = () => {
     openConfirmModal({
-      title: t("certificate.action.removeHostname.label"),
-      children: t("certificate.action.removeHostname.confirm"),
+      title: t("action.removeHostname.label"),
+      children: t("action.removeHostname.confirm"),
       // eslint-disable-next-line no-restricted-syntax
       async onConfirm() {
         await mutateAsync(input, {
           onSuccess() {
             showSuccessNotification({
-              title: t("certificate.action.removeHostname.notification.success.title"),
-              message: t("certificate.action.removeHostname.notification.success.message"),
+              title: t("action.removeHostname.notification.success.title"),
+              message: t("action.removeHostname.notification.success.message"),
             });
           },
           onError() {
             showErrorNotification({
-              title: t("certificate.action.removeHostname.notification.error.title"),
-              message: t("certificate.action.removeHostname.notification.error.message"),
+              title: t("action.removeHostname.notification.error.title"),
+              message: t("action.removeHostname.notification.error.message"),
             });
           },
         });

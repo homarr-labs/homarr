@@ -9,7 +9,7 @@ import { JsonPreviewEditor } from "./_json-preview-editor";
 
 const editorProps = vi.hoisted(() => vi.fn());
 
-vi.mock("@homarr/translation/client", () => ({ useScopedI18n: () => (key: string) => key }));
+vi.mock("@homarr/translation/client", () => ({ useI18n: () => (key: string) => key }));
 vi.mock("./_code-editor", () => ({
   CodeEditor: (props: { error?: string; onChange(value: string): void }) => {
     editorProps(props);

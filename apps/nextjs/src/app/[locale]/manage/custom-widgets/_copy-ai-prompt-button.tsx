@@ -5,7 +5,7 @@ import { IconCopy, IconRobot } from "@tabler/icons-react";
 
 import { buildCustomWidgetAiPrompt } from "@homarr/custom-widgets/authoring-prompt";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { useOptionalHomarrAssistant } from "~/components/assistant/assistant-context";
 
@@ -22,7 +22,7 @@ export const CopyAiPromptButton = ({
   request,
   documentationUrl,
 }: CopyAiPromptButtonProps) => {
-  const t = useScopedI18n("customWidget");
+  const t = useI18n("customWidget");
   const assistant = useOptionalHomarrAssistant();
   const prompt = () => buildCustomWidgetAiPrompt(undefined, rawResponse, currentConfig, request, documentationUrl);
 

@@ -2,7 +2,7 @@ import { Container, Fieldset, Group, Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { getIntegrationName } from "@homarr/definitions";
-import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { IntegrationAvatar } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -16,7 +16,7 @@ interface EditIntegrationPageProps {
 
 export default async function EditIntegrationPage(props: EditIntegrationPageProps) {
   const params = await props.params;
-  const editT = await getScopedI18n("integration.page.edit");
+  const editT = await getI18n("integration.page.edit");
   const t = await getI18n();
   const integration = await api.integration.byId({ id: params.id }).catch(catchTrpcNotFound);
   const integrationPermissions = await api.integration.getIntegrationPermissions({ id: integration.id });

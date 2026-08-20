@@ -8,7 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface DeleteGroupProps {
   group: {
@@ -21,8 +21,8 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
   const router = useRouter();
   const { mutateAsync } = clientApi.group.deleteGroup.useMutation();
   const { openConfirmModal } = useConfirmModal();
-  const tDelete = useScopedI18n("group.action.delete");
-  const tRoot = useI18n();
+  const tDelete = useI18n("group.action.delete");
+  const tCommon = useI18n("common");
 
   const handleDeletion = useCallback(() => {
     openConfirmModal({
@@ -41,7 +41,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
               void revalidatePathActionAsync("/manage/users/groups");
               router.push("/manage/users/groups");
               showSuccessNotification({
-                title: tRoot("common.notification.delete.success"),
+                title: tCommon("notification.delete.success"),
                 message: tDelete("notification.success.message", {
                   name: group.name,
                 }),
@@ -49,7 +49,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
             },
             onError() {
               showErrorNotification({
-                title: tRoot("common.notification.delete.error"),
+                title: tCommon("notification.delete.error"),
                 message: tDelete("notification.error.message", {
                   name: group.name,
                 }),
@@ -59,7 +59,7 @@ export const DeleteGroup = ({ group }: DeleteGroupProps) => {
         );
       },
     });
-  }, [tDelete, tRoot, openConfirmModal, group.id, group.name, mutateAsync, router]);
+  }, [tDelete, tCommon, openConfirmModal, group.id, group.name, mutateAsync, router]);
 
   const fullWidth = useMatches({
     xs: true,

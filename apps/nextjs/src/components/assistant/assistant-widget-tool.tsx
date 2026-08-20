@@ -7,11 +7,12 @@ import { IconAlertTriangle, IconCheck, IconSettings } from "@tabler/icons-react"
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import { getWidgetName } from "@homarr/definitions";
 import type { IntegrationKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useSettings } from "@homarr/settings";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
 import { WidgetEditModal } from "@homarr/widgets/modals";
@@ -66,7 +67,8 @@ export const AssistantConfigureWidgetTool = ({
   status,
   toolCallId,
 }: ToolCallMessagePartProps<ConfigureWidgetArgs, ConfigureWidgetResult>) => {
-  const t = useScopedI18n("common.assistant.configureWidget");
+  const t = useI18n("assistant.configureWidget");
+  const actionT = useI18n("common.action");
   const fullT = useI18n();
   const { data: session } = useSession();
   const settings = useSettings();
@@ -116,7 +118,7 @@ export const AssistantConfigureWidgetTool = ({
             {cancelled ? t("cancelled") : t("ready")}
           </Text>
           <Text size="sm" fw={600} truncate>
-            {args?.kind ? fullT(`widget.${args.kind}.name`) : t("title")}
+            {args?.kind ? getWidgetName(args.kind, fullT) : t("title")}
           </Text>
         </Box>
       </Box>
@@ -149,7 +151,7 @@ export const AssistantConfigureWidgetTool = ({
         <Stack gap="sm">
           <Text size="sm">{t("loadErrorDescription")}</Text>
           <Button variant="light" color="red" size="compact-sm" w="fit-content" onClick={() => integrations.refetch()}>
-            {t("retry")}
+            {actionT("tryAgain")}
           </Button>
         </Stack>
       </Alert>
@@ -174,7 +176,7 @@ export const AssistantConfigureWidgetTool = ({
           addResult({ boardId: args.boardId, kind: args.kind, options, integrationIds }),
       },
       {
-        title: (titleT) => `${titleT("item.edit.title")} - ${titleT(`widget.${args.kind}.name`)}`,
+        title: (titleT) => `${titleT("item.edit.title")} - ${getWidgetName(args.kind, titleT)}`,
       },
     );
 
@@ -246,7 +248,7 @@ export const AssistantConfigureWidgetTool = ({
           <WidgetIcon size={20} />
         </ThemeIcon>
         <Box miw={0} flex={1}>
-          <Text fw={700}>{fullT(`widget.${args.kind}.name`)}</Text>
+          <Text fw={700}>{getWidgetName(args.kind, fullT)}</Text>
           <Text size="sm" c="dimmed">
             {args.summary}
           </Text>

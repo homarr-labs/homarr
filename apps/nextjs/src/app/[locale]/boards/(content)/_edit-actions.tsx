@@ -29,7 +29,11 @@ const AddMenu = () => {
   const { openModal: openIntegrationSelectModal } = useModalAction(IntegrationSelectModal);
   const { addContainer } = useContainerActions();
   const { createItem } = useItemActions();
-  const t = useI18n();
+  const tApp = useI18n("app");
+  const tBoard = useI18n("board");
+  const tIntegration = useI18n("integration");
+  const tItem = useI18n("item");
+  const tContainer = useI18n("section.container");
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -77,7 +81,7 @@ const AddMenu = () => {
   return (
     <Menu position="bottom-end">
       <Menu.Target>
-        <HeaderButton w="auto" px={4} aria-label={t("board.action.addContent")}>
+        <HeaderButton w="auto" px={4} aria-label={tBoard("action.addContent")}>
           <Group gap={4} wrap="nowrap">
             <IconPlus stroke={1.5} />
             <IconChevronDown color="gray" size={16} />
@@ -86,19 +90,19 @@ const AddMenu = () => {
       </Menu.Target>
       <Menu.Dropdown style={{ transform: "translate(-3px, 0)" }}>
         <Menu.Item leftSection={<IconResize size={20} />} onClick={handleSelectItem}>
-          {t("item.action.create")}
+          {tItem("action.create")}
         </Menu.Item>
         <Menu.Item leftSection={<IconBox size={20} />} onClick={handleSelectApp}>
-          {t("app.action.add")}
+          {tApp("action.add")}
         </Menu.Item>
         {session?.user.permissions.includes("integration-create") && (
           <Menu.Item leftSection={<IconPlug size={20} />} onClick={handleAddIntegration}>
-            {t("integration.action.create")}
+            {tIntegration("action.create")}
           </Menu.Item>
         )}
         <Menu.Divider />
         <Menu.Item leftSection={<IconLayoutGridAdd size={20} />} onClick={addContainer}>
-          {t("section.container.action.create")}
+          {tContainer("action.create")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

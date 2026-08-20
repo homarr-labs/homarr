@@ -6,7 +6,7 @@ import { auth } from "@homarr/auth/next";
 import { objectKeys } from "@homarr/common";
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { groupPermissions } from "@homarr/definitions";
-import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import type { PermissionLabels } from "./_group-permission-form";
 import {
@@ -32,13 +32,13 @@ export default async function GroupPermissionsPage(props: GroupPermissionsPagePr
   }
 
   const group = await api.group.getById({ id: params.id });
-  const t = await getI18n();
+  const tPermissionsPage = await getI18n("management.page.group.setting.permissions");
 
   const { permissionLabels, permissionDescriptions } = await buildPermissionTextsAsync();
 
   return (
     <Stack>
-      <Title>{t("management.page.group.setting.permissions.title")}</Title>
+      <Title>{tPermissionsPage("title")}</Title>
 
       <PermissionForm initialPermissions={group.permissions}>
         <Stack pos="relative">
@@ -60,7 +60,7 @@ const buildPermissionTextsAsync = async () => {
   const permissionDescriptions: PermissionLabels = {};
 
   for (const category of objectKeys(groupPermissions)) {
-    const tItem = await getScopedI18n(`group.permission.${category}.item`);
+    const tItem = await getI18n(`group.permission.${category}.item`);
     const item = groupPermissions[category];
     const suffixes = typeof item !== "boolean" ? item : (["admin"] as const);
 

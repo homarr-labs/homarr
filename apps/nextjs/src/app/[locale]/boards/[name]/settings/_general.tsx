@@ -20,25 +20,21 @@ interface Props {
 }
 
 export const GeneralSettingsContent = ({ board, form }: Props) => {
-  const t = useI18n();
+  const t = useI18n("board");
 
   useLogoPreview(form.values.logoImageUrl);
   const metaTitleStatus = useMetaTitlePreview(form.values.metaTitle);
 
   return (
-    <SectionCard title={t("board.setting.section.general.title")}>
+    <SectionCard title={t("setting.section.general.title")}>
       <Grid>
         <Grid.Col span={{ xs: 12, md: 6 }}>
-          <TextInput
-            label={t("board.field.pageTitle.label")}
-            placeholder="Homarr"
-            {...form.getInputProps("pageTitle")}
-          />
+          <TextInput label={t("field.pageTitle.label")} placeholder="Homarr" {...form.getInputProps("pageTitle")} />
         </Grid.Col>
         <Grid.Col span={{ xs: 12, md: 6 }}>
           <TextInput
-            label={t("board.field.metaTitle.label")}
-            placeholder={createMetaTitle(t("board.content.metaTitle", { boardName: board.name }))}
+            label={t("field.metaTitle.label")}
+            placeholder={createMetaTitle(t("content.metaTitle", { boardName: board.name }))}
             rightSection={metaTitleStatus.isPending && <Loader size="xs" />}
             {...form.getInputProps("metaTitle")}
           />
@@ -46,7 +42,7 @@ export const GeneralSettingsContent = ({ board, form }: Props) => {
         <Grid.Col span={{ xs: 12, md: 6 }}>
           <IconPicker
             {...form.getInputProps("logoImageUrl")}
-            label={t("board.field.logoImageUrl.label")}
+            label={t("field.logoImageUrl.label")}
             placeholder="/logo/logo.png"
             withAsterisk={false}
           />
@@ -54,7 +50,7 @@ export const GeneralSettingsContent = ({ board, form }: Props) => {
         <Grid.Col span={{ xs: 12, md: 6 }}>
           <IconPicker
             {...form.getInputProps("faviconImageUrl")}
-            label={t("board.field.faviconImageUrl.label")}
+            label={t("field.faviconImageUrl.label")}
             placeholder="/logo/logo.png"
             withAsterisk={false}
           />

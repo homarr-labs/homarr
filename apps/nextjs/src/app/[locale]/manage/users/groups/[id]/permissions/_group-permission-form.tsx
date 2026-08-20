@@ -34,7 +34,7 @@ import {
 } from "@homarr/definitions";
 import { createFormContext } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 export type PermissionLabels = Partial<Record<GroupPermissionKey, string>>;
 
@@ -163,7 +163,7 @@ interface MatrixImpliedHintProps {
 
 export const MatrixImpliedHint = ({ category, permissionLabels }: MatrixImpliedHintProps) => {
   const form = useFormContext();
-  const tPermissions = useScopedI18n("group.permission");
+  const tPermissions = useI18n("group.permission");
 
   const level = getMatrixLevel(form.getValues(), category);
   if (level === 0) {
@@ -193,7 +193,7 @@ interface MatrixRowProps {
 
 export const MatrixRow = ({ category, permissionLabels, permissionDescriptions }: MatrixRowProps) => {
   const form = useFormContext();
-  const tPermissions = useScopedI18n("group.permission");
+  const tPermissions = useI18n("group.permission");
 
   const values = form.getValues();
   const level = getMatrixLevel(values, category);
@@ -303,7 +303,7 @@ export const PermissionMatrix = ({ permissionLabels, permissionDescriptions }: P
 
 export const PresetButtons = () => {
   const form = useFormContext();
-  const tPermissions = useScopedI18n("group.permission");
+  const tPermissions = useI18n("group.permission");
   const activePreset = getActivePreset(form.getValues());
 
   return (
@@ -333,7 +333,7 @@ interface EffectivePermissionPreviewProps {
 
 export const EffectivePermissionPreview = ({ permissionLabels }: EffectivePermissionPreviewProps) => {
   const form = useFormContext();
-  const tPermissions = useScopedI18n("group.permission");
+  const tPermissions = useI18n("group.permission");
   const [opened, { toggle }] = useDisclosure(false);
   const panelId = useId();
 
@@ -393,9 +393,8 @@ interface SaveAffixProps {
 }
 
 export const SaveAffix = ({ groupId }: SaveAffixProps) => {
-  const t = useI18n();
-  const tForm = useScopedI18n("management.page.group.setting.permissions.form");
-  const tNotification = useScopedI18n("group.action.changePermissions.notification");
+  const tCommon = useI18n("common");
+  const tNotification = useI18n("group.action.changePermissions.notification");
   const form = useFormContext();
   const { mutate, isPending } = clientApi.group.savePermissions.useMutation();
 
@@ -435,13 +434,13 @@ export const SaveAffix = ({ groupId }: SaveAffixProps) => {
         {(transitionStyles) => (
           <Card style={transitionStyles}>
             <Group justify="space-between">
-              <Text fw={500}>{tForm("unsavedChanges")}</Text>
+              <Text fw={500}>{tCommon("unsavedChanges")}</Text>
               <Group>
                 <Button disabled={isPending} onClick={form.reset}>
-                  {t("common.action.discard")}
+                  {tCommon("action.discard")}
                 </Button>
                 <Button loading={isPending} onClick={handleSubmit}>
-                  {t("common.action.saveChanges")}
+                  {tCommon("action.saveChanges")}
                 </Button>
               </Group>
             </Group>

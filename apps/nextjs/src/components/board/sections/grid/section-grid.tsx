@@ -37,7 +37,7 @@ const GridEditor = dynamic(loadGridEditorAsync, {
 });
 
 function GridEditorLoading() {
-  const t = useI18n();
+  const t = useI18n("common.action");
   const { items, innerSections } = useSectionContext();
 
   return (
@@ -45,7 +45,7 @@ function GridEditorLoading() {
       component="output"
       className={classes.editorLoading}
       data-testid="board-grid-editor-loading"
-      aria-label={t("common.action.loading")}
+      aria-label={t("loading")}
     >
       {[...items, ...innerSections].map((item) => (
         <Box

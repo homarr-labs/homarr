@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { CodeEditor } from "./_code-editor";
 import { isRecord, parseJson } from "./_custom-widget-form-utils";
@@ -18,7 +18,7 @@ export function JsonPreviewEditor({
   value: Record<string, unknown>;
   onChange(value: Record<string, unknown>): void;
 }) {
-  const t = useScopedI18n("customWidget.workbench.builder");
+  const t = useI18n("customWidget.workbench.builder");
   const serialized = JSON.stringify(value, null, 2);
   const [draft, setDraft] = useState(serialized);
   const [invalid, setInvalid] = useState(false);

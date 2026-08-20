@@ -10,7 +10,7 @@ import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { DuplicateBoardModal } from "@homarr/modals-collection";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { useBoardPermissions } from "~/components/board/permissions/client";
@@ -28,8 +28,9 @@ interface BoardCardMenuDropdownProps {
 }
 
 export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => {
-  const t = useScopedI18n("management.page.board.action");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("management.page.board.action");
+  const tRoot = useI18n();
+  const tCommon = useI18n("common");
 
   const { hasFullAccess, hasChangeAccess } = useBoardPermissions(board);
   const { data: session } = useSession();
@@ -57,7 +58,7 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
 
   const handleDeletion = useCallback(() => {
     openConfirmModal({
-      title: t("delete.confirm.title"),
+      title: tCommon("action.deleteNamed", { name: board.name }),
       children: t("delete.confirm.description", {
         name: board.name,
       }),
@@ -68,7 +69,7 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
         });
       },
     });
-  }, [board.id, board.name, deleteBoardMutation, openConfirmModal, t]);
+  }, [board.id, board.name, deleteBoardMutation, openConfirmModal, t, tCommon]);
 
   const handleSetHomeBoard = useCallback(async () => {
     await setHomeBoardMutation.mutateAsync({ id: board.id });
@@ -97,7 +98,7 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
       </Menu.Item>
       {session?.user.permissions.includes("board-create") && (
         <Menu.Item onClick={handleDuplicateBoard} leftSection={<IconCopy {...iconProps} />}>
-          {t("duplicate.label")}
+          {tRoot("board.action.duplicate.title")}
         </Menu.Item>
       )}
       {hasChangeAccess && (
@@ -122,7 +123,7 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
             onClick={handleDeletion}
             disabled={deleteBoardMutation.isPending}
           >
-            {t("delete.label")}
+            {tCommon("action.delete")}
           </Menu.Item>
         </>
       )}

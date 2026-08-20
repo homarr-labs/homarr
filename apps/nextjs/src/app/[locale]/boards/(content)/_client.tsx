@@ -5,7 +5,7 @@ import { Box, Paper, Stack, Text } from "@mantine/core";
 import { useCurrentLayout, useInitialViewportWidth, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
 import { BoardEmptyState } from "~/components/board/board-empty-state";
@@ -31,8 +31,8 @@ const APP_SHELL_INLINE_PADDING = 32;
 
 export const ClientBoard = () => {
   const board = useRequiredBoard();
-  const t = useScopedI18n("board.landmark");
-  const tPreview = useScopedI18n("board.setting.section.layout.preview");
+  const t = useI18n("board.landmark");
+  const tPreview = useI18n("board.setting.section.layout.preview");
   const [isEditMode] = useEditMode();
   const currentLayoutId = useCurrentLayout();
   const initialViewportWidth = useInitialViewportWidth();

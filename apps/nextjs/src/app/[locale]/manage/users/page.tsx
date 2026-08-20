@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
@@ -17,7 +17,7 @@ export async function generateMetadata() {
   if (!session?.user.permissions.includes("admin")) {
     return {};
   }
-  const t = await getScopedI18n("management.page.user.list");
+  const t = await getI18n("management.page.user.list");
 
   return {
     title: createMetaTitle(t("metaTitle")),
@@ -30,13 +30,14 @@ export default async function UsersPage() {
     return notFound();
   }
 
-  const t = await getScopedI18n("management.page.user");
+  const t = await getI18n("management.page.user");
+  const tCommon = await getI18n("common.entity");
   const userList = await api.user.getAll();
   const credentialsProviderEnabled = isProviderEnabled("credentials");
 
   return (
     <ManagePageLayout
-      title={t("list.title")}
+      title={tCommon("users")}
       primaryAction={
         credentialsProviderEnabled ? (
           <TourTarget id="manage-users-create">

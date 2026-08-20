@@ -1,11 +1,11 @@
 import { IconLayoutOff } from "@tabler/icons-react";
 
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { BoardNotFound } from "~/components/board/not-found";
 
 export default async function BoardNotFoundPage() {
-  const tNotFound = await getScopedI18n("board.error.notFound");
+  const tNotFound = await getI18n("board.error.notFound");
   return (
     <BoardNotFound
       icon={IconLayoutOff}

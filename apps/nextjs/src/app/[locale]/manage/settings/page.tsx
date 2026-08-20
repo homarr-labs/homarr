@@ -2,13 +2,13 @@ import { notFound } from "next/navigation";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { SettingsForm } from "./_components/settings-form";
 
 export async function generateMetadata() {
-  const t = await getScopedI18n("management");
+  const t = await getI18n("management");
   const metaTitle = `${t("metaTitle")} • Homarr`;
 
   return {
@@ -27,7 +27,7 @@ export default async function SettingsPage() {
     api.serverSettings.getAll(),
     api.board.getPublicBoards(),
     api.searchEngine.getSelectable({ withIntegrations: false }),
-    getScopedI18n("management.page.settings"),
+    getI18n("management.page.settings"),
   ]);
 
   return (

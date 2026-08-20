@@ -13,13 +13,13 @@ interface Props {
 }
 
 export const BehaviorSettingsContent = ({ form }: Props) => {
-  const t = useI18n();
+  const t = useI18n("board");
 
   return (
-    <SectionCard title={t("board.setting.section.behavior.title")}>
+    <SectionCard title={t("setting.section.behavior.title")}>
       <Switch
-        label={t("board.field.disableStatus.label")}
-        description={t("board.field.disableStatus.description")}
+        label={t("field.disableStatus.label")}
+        description={t("field.disableStatus.description")}
         {...form.getInputProps("disableStatus", { type: "checkbox" })}
       />
     </SectionCard>

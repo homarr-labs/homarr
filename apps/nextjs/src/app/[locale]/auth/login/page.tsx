@@ -5,7 +5,7 @@ import { IconLogin } from "@tabler/icons-react";
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
 import { OnboardingAuthShell } from "@homarr/onboarding";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { sanitizeRedirectionUrl } from "@homarr/validation/redirection-url";
 
 import { env as appEnv } from "~/env";
@@ -26,7 +26,7 @@ export default async function Login(props: LoginProps) {
     redirect(sanitizeRedirectionUrl(searchParams.callbackUrl));
   }
 
-  const t = await getScopedI18n("user.page.login");
+  const t = await getI18n("user.page.login");
 
   return (
     <OnboardingAuthShell title={t("title")} description={t("subtitle")} icon={<IconLogin size={24} />}>

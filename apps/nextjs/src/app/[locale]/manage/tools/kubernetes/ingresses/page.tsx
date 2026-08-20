@@ -4,7 +4,7 @@ import { Stack, Title } from "@mantine/core";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/docker/env";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { IngressesTable } from "~/app/[locale]/manage/tools/kubernetes/ingresses/ingresses-table";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -22,16 +22,16 @@ export default async function NamespacesPage({
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  const tResource = await getI18n("kubernetes.cluster.resources");
   const ingresses =
     context.status === "unavailable"
       ? []
       : await api.kubernetes.ingresses.getIngresses({ contextId: context.contextId });
-  const tIngresses = await getScopedI18n("kubernetes.ingresses");
   return (
     <>
       <DynamicBreadcrumb />
       <Stack>
-        <Title order={1}>{tIngresses("label")}</Title>
+        <Title order={1}>{tResource("ingresses")}</Title>
         <IngressesTable contextId={context.contextId} initialIngresses={ingresses} />
       </Stack>
     </>

@@ -12,7 +12,7 @@ import { colorSchemes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { ServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 import { AnalyticsSettings } from "./analytics.settings";
@@ -64,8 +64,8 @@ interface SettingsFormProps {
 }
 
 export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEngines }: SettingsFormProps) => {
-  const t = useI18n();
-  const tSettings = useScopedI18n("management.page.settings");
+  const tCommon = useI18n("common");
+  const tSettings = useI18n("management.page.settings");
 
   const initialValues = buildInitialValues(initialData);
   const initialValuesRef = useRef(initialValues);
@@ -81,7 +81,7 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
 
   const saveSettingsMutation = clientApi.serverSettings.saveSettings.useMutation({
     onError(error) {
-      showErrorNotification({ title: t("common.notification.update.error"), message: error.message });
+      showErrorNotification({ title: tCommon("notification.update.error"), message: error.message });
     },
   });
 
@@ -156,7 +156,7 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
       form.resetDirty();
       await revalidatePathActionAsync("/manage/settings");
       showSuccessNotification({
-        title: t("common.notification.update.success"),
+        title: tCommon("notification.update.success"),
         message: tSettings("notification.success.message"),
       });
     } finally {
@@ -183,10 +183,10 @@ export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEn
         {form.isDirty() && (
           <UnsavedChangesBar>
             <Button type="button" disabled={isSubmitting} variant="default" onClick={handleDiscard}>
-              {t("common.action.discard")}
+              {tCommon("action.discard")}
             </Button>
             <Button loading={isSubmitting} type="submit" disabled={!form.isValid()}>
-              {t("common.action.saveChanges")}
+              {tCommon("action.saveChanges")}
             </Button>
           </UnsavedChangesBar>
         )}

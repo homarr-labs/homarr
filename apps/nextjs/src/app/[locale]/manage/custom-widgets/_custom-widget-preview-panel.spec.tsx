@@ -19,7 +19,7 @@ vi.mock("@homarr/api/client", () => ({
     },
   },
 }));
-vi.mock("@homarr/translation/client", () => ({ useScopedI18n: () => (key: string) => key }));
+vi.mock("@homarr/translation/client", () => ({ useI18n: () => (key: string) => key }));
 vi.mock("@homarr/notifications", () => ({ showErrorNotification: vi.fn() }));
 const rendererAttempt = vi.hoisted(() => vi.fn());
 const codeEditorProps = vi.hoisted(() => vi.fn());

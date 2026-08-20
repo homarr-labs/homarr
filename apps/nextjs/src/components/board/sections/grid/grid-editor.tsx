@@ -35,6 +35,7 @@ import { DragDropProvider, DragOverlay, useDragDropManager, useDraggable, useDro
 import { IconGripHorizontal, IconGripVertical } from "@tabler/icons-react";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import { getLogicalItemStyle, getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
@@ -744,7 +745,7 @@ export default function GridEditor({
         [...items, ...innerSections].map((entry) => [
           entry.id,
           entry.type === "item"
-            ? entry.advancedOptions.title?.trim() || t(`widget.${entry.kind}.name`)
+            ? entry.advancedOptions.title?.trim() || getWidgetName(entry.kind, t)
             : entry.options.title.trim() || t("section.container.untitled"),
         ]),
       ),

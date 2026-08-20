@@ -1,10 +1,10 @@
 import { Anchor, Center, Stack, Text, Title } from "@mantine/core";
 
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
 export default async function NotFound() {
-  const t = await getScopedI18n("management.notFound");
+  const t = await getI18n("management.notFound");
   return (
     <Center h="100%">
       <Stack align="center">

@@ -15,7 +15,8 @@ interface DeleteUserButtonProps {
 }
 
 export const DeleteUserButton = ({ user }: DeleteUserButtonProps) => {
-  const t = useI18n();
+  const tUser = useI18n("user");
+  const tCommon = useI18n("common");
   const router = useRouter();
   const { mutateAsync: mutateUserDeletionAsync } = clientApi.user.delete.useMutation({
     async onSuccess() {
@@ -27,9 +28,9 @@ export const DeleteUserButton = ({ user }: DeleteUserButtonProps) => {
   const handleDelete = useCallback(
     () =>
       openConfirmModal({
-        title: t("user.action.delete.label"),
+        title: tUser("action.delete.label"),
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        children: t("user.action.delete.confirm", { username: user.name! }),
+        children: tUser("action.delete.confirm", { username: user.name! }),
         // eslint-disable-next-line no-restricted-syntax
         async onConfirm() {
           await mutateUserDeletionAsync({
@@ -37,12 +38,12 @@ export const DeleteUserButton = ({ user }: DeleteUserButtonProps) => {
           });
         },
       }),
-    [user, mutateUserDeletionAsync, openConfirmModal, t],
+    [user, mutateUserDeletionAsync, openConfirmModal, tUser],
   );
 
   return (
     <Button onClick={handleDelete} variant="subtle" color="red">
-      {t("common.action.delete")}
+      {tCommon("action.delete")}
     </Button>
   );
 };

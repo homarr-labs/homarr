@@ -6,7 +6,7 @@ import { api } from "@homarr/api/server";
 import { capitalize } from "@homarr/common";
 import { db } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { BoardSettingsForm } from "./_settings-form";
@@ -46,7 +46,7 @@ export default async function BoardSettingsPage(props: Props) {
   const { board, permissions } = await getBoardAndPermissionsAsync(params);
   const boardSettings = await getServerSettingByKeyAsync(db, "board");
   const { hasFullAccess, hasChangeAccess } = await getBoardPermissionsAsync(board);
-  const t = await getScopedI18n("board.setting");
+  const t = await getI18n("board.setting");
 
   if (!hasChangeAccess) {
     notFound();

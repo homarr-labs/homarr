@@ -12,7 +12,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { KubernetesNamespace } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 dayjs.extend(relativeTime);
@@ -22,10 +22,13 @@ interface NamespacesTableComponentProps {
   initialNamespaces: RouterOutputs["kubernetes"]["namespaces"]["getNamespaces"];
 }
 
-const createColumns = (t: ScopedTranslationFunction<"kubernetes.namespaces">): MRT_ColumnDef<KubernetesNamespace>[] => [
+const createColumns = (
+  t: ScopedTranslationFunction<"kubernetes.namespaces">,
+  tField: ScopedTranslationFunction<"kubernetes.field">,
+): MRT_ColumnDef<KubernetesNamespace>[] => [
   {
     accessorKey: "status",
-    header: t("field.state.label"),
+    header: tField("state.label"),
 
     Cell({ cell }) {
       const checkIcon = <IconCircleDashedCheck style={{ width: rem(12), height: rem(12) }} />;
@@ -47,18 +50,19 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.namespaces">): M
   },
   {
     accessorKey: "name",
-    header: t("field.name.label"),
+    header: tField("name.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "creationTimestamp",
-    header: t("field.creationTimestamp.label"),
+    header: tField("creationTimestamp.label"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function NamespacesTable({ contextId, initialNamespaces }: NamespacesTableComponentProps) {
-  const tNamespaces = useScopedI18n("kubernetes.namespaces");
+  const tNamespaces = useI18n("kubernetes.namespaces");
+  const tField = useI18n("kubernetes.field");
 
   const { data } = clientApi.kubernetes.namespaces.getNamespaces.useQuery(
     { contextId },
@@ -89,7 +93,7 @@ export function NamespacesTable({ contextId, initialNamespaces }: NamespacesTabl
       autoFocus: true,
     },
 
-    columns: createColumns(tNamespaces),
+    columns: createColumns(tNamespaces, tField),
   });
 
   return <MantineReactTable table={table} />;

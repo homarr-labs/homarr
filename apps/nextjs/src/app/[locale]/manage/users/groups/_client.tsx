@@ -29,7 +29,7 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
         .sort((groupA, groupB) => groupA.position - groupB.position),
     [groups, search],
   );
-  const t = useI18n();
+  const tGroup = useI18n("group");
 
   return (
     <>
@@ -37,7 +37,7 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
         leftSection={<IconSearch size={20} stroke={1.5} />}
         value={search}
         onChange={(event) => setSearch(event.currentTarget.value)}
-        placeholder={`${t("group.search")}...`}
+        placeholder={`${tGroup("search")}...`}
       />
       <GroupsTable groups={filteredGroups} initialGroupIds={initialGroupIds} hasFilter={search.length !== 0} />
     </>
@@ -45,8 +45,8 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
 };
 
 export const AddGroupButton = () => {
-  const t = useI18n();
+  const tGroup = useI18n("group");
   const { openModal } = useModalAction(AddGroupModal);
 
-  return <MobileAffixButton onClick={() => openModal()}>{t("group.action.create.label")}</MobileAffixButton>;
+  return <MobileAffixButton onClick={() => openModal()}>{tGroup("action.create.label")}</MobileAffixButton>;
 };

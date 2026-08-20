@@ -4,7 +4,7 @@ import { Stack, Title } from "@mantine/core";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/docker/env";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { VolumesTable } from "~/app/[locale]/manage/tools/kubernetes/volumes/volumes-table";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -18,14 +18,14 @@ export default async function VolumesPage({ searchParams }: { searchParams: Prom
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  const tResource = await getI18n("kubernetes.cluster.resources");
   const volumes =
     context.status === "unavailable" ? [] : await api.kubernetes.volumes.getVolumes({ contextId: context.contextId });
-  const tVolumes = await getScopedI18n("kubernetes.volumes");
   return (
     <>
       <DynamicBreadcrumb />
       <Stack>
-        <Title order={1}>{tVolumes("label")}</Title>
+        <Title order={1}>{tResource("volumes")}</Title>
         <VolumesTable contextId={context.contextId} initialVolumes={volumes} />
       </Stack>
     </>

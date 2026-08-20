@@ -7,6 +7,7 @@ import combineClasses from "clsx";
 
 import { useCurrentLayout } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
@@ -72,7 +73,7 @@ export const FixedGridItem = ({
   });
   const displayName =
     item.type === "item"
-      ? item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`)
+      ? item.advancedOptions.title?.trim() || getWidgetName(item.kind, t)
       : item.options.title.trim() || t("section.container.untitled");
   const accessibleLabel = t("item.moveResize.entryLabel", {
     name: displayName,

@@ -25,7 +25,8 @@ interface SecretCardProps {
 }
 
 export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
-  const t = useI18n();
+  const tIntegration = useI18n("integration");
+  const tCommon = useI18n("common");
   const { isPublic } = integrationSecretKindObject[secret.kind];
   const [publicSecretDisplayOpened, { toggle: togglePublicSecretDisplay }] = useDisclosure(false);
   const [editMode, setEditMode] = useState(false);
@@ -40,20 +41,20 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
             <Avatar>
               <KindIcon size={16} />
             </Avatar>
-            <Text fw={500}>{t(`integration.secrets.kind.${secret.kind}.label`)}</Text>
+            <Text fw={500}>{tIntegration(`secrets.kind.${secret.kind}.label` as never)}</Text>
             {publicSecretDisplayOpened ? <Kbd>{secret.value}</Kbd> : null}
           </Group>
           <Group>
             {secret.updatedAt ? (
               <Text c="gray.6" size="sm">
-                {t("integration.secrets.lastUpdated", {
+                {tIntegration("secrets.lastUpdated", {
                   date: dayjs().to(dayjs(secret.updatedAt)),
                 })}
               </Text>
             ) : (
-              <Tooltip label={t("integration.secrets.notSet.tooltip")} position="left">
+              <Tooltip label={tIntegration("secrets.notSet.tooltip")} position="left">
                 <Badge color="orange" variant="light" size="sm">
-                  {t("integration.secrets.notSet.label")}
+                  {tIntegration("secrets.notSet.label")}
                 </Badge>
               </Tooltip>
             )}
@@ -62,7 +63,7 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
                 color="gray"
                 variant="subtle"
                 onClick={togglePublicSecretDisplay}
-                aria-label={t(publicSecretDisplayOpened ? "common.action.hide" : "common.action.show")}
+                aria-label={tCommon(publicSecretDisplayOpened ? "action.hide" : "action.show")}
               >
                 <DisplayIcon size={16} stroke={1.5} />
               </ActionIcon>
@@ -80,7 +81,7 @@ export const SecretCard = ({ secret, children, onCancel }: SecretCardProps) => {
                 setEditMode(false);
               }}
             >
-              {editMode ? t("common.action.cancel") : t("common.action.edit")}
+              {editMode ? tCommon("action.cancel") : tCommon("action.edit")}
             </Button>
           </Group>
         </Group>

@@ -16,7 +16,7 @@ import {
 import { IconArrowDown, IconArrowUp, IconPlus, IconTrash } from "@tabler/icons-react";
 
 import { customWidgetOptionControls } from "@homarr/custom-widgets/core";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { isRecord, parseJson } from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
@@ -30,7 +30,7 @@ export function CustomWidgetOptionsEditor({
   form: CustomWidgetWorkbenchForm;
   onRename(currentName: string, nextName: string): void;
 }) {
-  const t = useScopedI18n("customWidget.workbench.builder");
+  const t = useI18n("customWidget.workbench.builder");
   const parsed = parseJson(form.values.options);
   const entries = isRecord(parsed) ? Object.entries(parsed) : [];
   const requests = parseJson(form.values.requests);

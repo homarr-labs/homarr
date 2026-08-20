@@ -7,7 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import type { CustomWidgetSource } from "@homarr/custom-widgets/core";
 import { useConfirmModal } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { filterSecretsForSourceAuthentication, isRecord, parseJson, parseSources } from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
@@ -21,8 +21,8 @@ export function CustomWidgetSourcesEditor({
   form: CustomWidgetWorkbenchForm;
   definitionId?: string;
 }) {
-  const t = useScopedI18n("customWidget.workbench.sources");
-  const w = useScopedI18n("customWidget.workbench");
+  const t = useI18n("customWidget.workbench.sources");
+  const w = useI18n("customWidget.workbench");
   const { openConfirmModal } = useConfirmModal();
   const utils = clientApi.useUtils();
   const clearSecretMutation = clientApi.customWidget.secretClear.useMutation();

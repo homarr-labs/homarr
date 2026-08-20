@@ -5,7 +5,7 @@ import { Button, Group, Text } from "@mantine/core";
 import { IconBrandGithub } from "@tabler/icons-react";
 
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { WorkshopUser } from "@homarr/workshop/schema";
 
 import { createWorkshopClient } from "./workshop-client";
@@ -15,7 +15,7 @@ import { createWorkshopClient } from "./workshop-client";
  * never to install, so every surface can render this without gating its content.
  */
 export function useWorkshopSession() {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
   const client = useMemo(createWorkshopClient, []);
   const [user, setUser] = useState<WorkshopUser | null>(null);
   const [pending, setPending] = useState(false);
@@ -51,7 +51,7 @@ export function useWorkshopSession() {
 export type WorkshopSession = ReturnType<typeof useWorkshopSession>;
 
 export function WorkshopAccountButton({ session }: { session: WorkshopSession }) {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
 
   if (!session.user) {
     return (

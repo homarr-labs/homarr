@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ActionIcon, Button, Group, Select, Stack, Tooltip } from "@mantine/core";
 import { IconBuildingStore, IconExternalLink } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
 import { useWorkshopQuery } from "@homarr/workshop/backend";
 
@@ -26,7 +26,8 @@ interface WorkshopBrowseProps {
 }
 
 export function WorkshopBrowse({ search, sort, page }: WorkshopBrowseProps) {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
+  const tCommon = useI18n("common.action");
   const session = useWorkshopSession();
   const query = useWorkshopQuery(session.client, {
     page,
@@ -78,7 +79,7 @@ export function WorkshopBrowse({ search, sort, page }: WorkshopBrowseProps) {
               title={t("emptyFilteredTitle")}
               description={t("emptyFilteredDescription", { search })}
               action={{
-                label: t("clearSearch"),
+                label: tCommon("clearSearch"),
                 href: "/manage/custom-widgets/workshop",
               }}
             />
@@ -122,7 +123,7 @@ export function WorkshopBrowse({ search, sort, page }: WorkshopBrowseProps) {
 }
 
 function WorkshopSortSelect({ value }: { value: "top" | "newest" }) {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

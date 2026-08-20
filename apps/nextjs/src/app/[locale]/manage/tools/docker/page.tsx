@@ -6,7 +6,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
 import { env } from "@homarr/docker/env";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { DockerReconciliation } from "./docker-reconciliation";
@@ -22,7 +22,7 @@ export default async function DockerPage() {
     api.docker.getContainers(),
     headers(),
   ]);
-  const tDocker = await getScopedI18n("docker");
+  const tDocker = await getI18n("docker");
 
   return (
     <>

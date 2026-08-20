@@ -10,7 +10,7 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
 
 interface UserProfileAvatarForm {
@@ -27,8 +27,8 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
   const [opened, { toggle }] = useDisclosure(false);
   const isMobile = useMediaQuery("(max-width: 48em)");
   const { openConfirmModal } = useConfirmModal();
-  const t = useI18n();
-  const tManageAvatar = useScopedI18n("user.action.manageAvatar");
+  const tCommon = useI18n("common");
+  const tManageAvatar = useI18n("user.action.manageAvatar");
 
   const handleAvatarChange = useCallback(
     async (file: File | null) => {
@@ -110,7 +110,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
               variant="default"
               leftSection={<IconPencil size={18} stroke={1.5} />}
             >
-              {t("common.action.edit")}
+              {tCommon("action.edit")}
             </Button>
           </UnstyledButton>
         </Menu.Target>

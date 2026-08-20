@@ -7,6 +7,7 @@ import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { clientApi } from "@homarr/api/client";
+import { getWidgetName } from "@homarr/definitions";
 import type { WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -73,7 +74,7 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
         },
         {
           title(translate) {
-            return `${translate("item.edit.title")} - ${translate(`widget.${kind}.name`)}`;
+            return `${translate("item.edit.title")} - ${getWidgetName(kind, translate)}`;
           },
         },
       );

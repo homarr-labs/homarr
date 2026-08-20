@@ -13,6 +13,7 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { getWidgetName } from "@homarr/definitions";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { WidgetError } from "@homarr/widgets/errors";
@@ -169,7 +170,7 @@ const LoadedBoardItemContent = ({
   const { active, viewportSize, open, close, dismiss, hover, leave } = useAdvancedFocus();
   const { width: viewportWidth, height: viewportHeight } = viewportSize;
   const supportsAdvancedFocus = definitionSupportsAdvancedFocus(definition);
-  const widgetName = t(`widget.${item.kind}.name`);
+  const widgetName = getWidgetName(item.kind, t);
   const advancedViewLabel = t("item.advancedFocus.label", { widget: widgetName });
   const advancedViewId = `advanced-focus-${item.id}`;
   const activeFocus = supportsAdvancedFocus && active?.itemId === item.id ? active : null;

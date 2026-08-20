@@ -12,7 +12,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { sanitizeRedirectionUrl } from "@homarr/validation/redirection-url";
 import { userSignInSchema } from "@homarr/validation/user";
 
@@ -28,7 +28,7 @@ interface LoginFormProps {
 const extendedValidation = userSignInSchema.extend({ provider: z.enum(["credentials", "ldap"]) });
 
 export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, callbackUrl }: LoginFormProps) => {
-  const t = useScopedI18n("user");
+  const t = useI18n("user");
   const searchParams = useSearchParams();
   const isError = searchParams.has("error");
   const router = useRouter();
@@ -196,7 +196,7 @@ interface PasswordForgottenCollapseProps {
 }
 const PasswordForgottenCollapse = ({ username }: PasswordForgottenCollapseProps) => {
   const [visible, { toggle }] = useDisclosure(false);
-  const tForgotPassword = useScopedI18n("user.action.login.forgotPassword");
+  const tForgotPassword = useI18n("user.action.login.forgotPassword");
 
   const commandUsername = username.trim().length >= 1 ? username.trim() : "<username>";
 

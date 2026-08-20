@@ -9,7 +9,7 @@ import { createDocumentationLink } from "@homarr/definitions";
 import { createModal, useConfirmModal, useModalAction } from "@homarr/modals";
 import { AddCertificateModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useCurrentLocale, useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentLocale, useI18n } from "@homarr/translation/client";
 
 import type { MappedCertificate, MappedTestConnectionCertificateError } from "./types";
 
@@ -19,7 +19,7 @@ interface CertificateErrorDetailsProps {
 }
 
 export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsProps) => {
-  const tError = useScopedI18n("integration.testConnection.error");
+  const tError = useI18n("integration.testConnection.error");
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const [showRetryButton, setShowRetryButton] = useState(false);
@@ -160,46 +160,35 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
 };
 
 const NotEnoughPermissionsAlert = () => {
-  const t = useI18n();
+  const t = useI18n("integration.testConnection.error.certificate.alert.permission");
   return (
-    <Alert
-      icon={<IconAlertTriangle size={16} />}
-      title={t("integration.testConnection.error.certificate.alert.permission.title")}
-      color="yellow"
-    >
-      {t("integration.testConnection.error.certificate.alert.permission.message")}
+    <Alert icon={<IconAlertTriangle size={16} />} title={t("title")} color="yellow">
+      {t("message")}
     </Alert>
   );
 };
 
 const HostnameMismatchAlert = () => {
-  const t = useI18n();
+  const t = useI18n("integration.testConnection.error.certificate.alert.hostnameMismatch");
   return (
-    <Alert
-      icon={<IconAlertTriangle size={16} />}
-      title={t("integration.testConnection.error.certificate.alert.hostnameMismatch.title")}
-      color="yellow"
-    >
-      {t("integration.testConnection.error.certificate.alert.hostnameMismatch.message")}
+    <Alert icon={<IconAlertTriangle size={16} />} title={t("title")} color="yellow">
+      {t("message")}
     </Alert>
   );
 };
 
 const CertificateExtractAlert = () => {
-  const t = useI18n();
+  const t = useI18n("integration.testConnection.error.certificate.alert.extract");
+  const tCommon = useI18n("common");
   return (
-    <Alert
-      icon={<IconExclamationCircle size={16} />}
-      title={t("integration.testConnection.error.certificate.alert.extract.title")}
-      color="red"
-    >
-      {t.rich("integration.testConnection.error.certificate.alert.extract.message", {
+    <Alert icon={<IconExclamationCircle size={16} />} title={t("title")} color="red">
+      {t.rich("message", {
         docsLink: () => (
           <Anchor
             href={createDocumentationLink("/docs/management/certificates", "#obtaining-certificates")}
             target="_blank"
           >
-            {t("common.here")}
+            {tCommon("here")}
           </Anchor>
         ),
       })}
@@ -214,8 +203,8 @@ interface CertificateDetailsProps {
 export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps) => {
   const { openModal } = useModalAction(PemContentModal);
   const locale = useCurrentLocale();
-  const tDetails = useScopedI18n("integration.testConnection.error.certificate.details");
-  const tCertificateField = useScopedI18n("certificate.field");
+  const tDetails = useI18n("integration.testConnection.error.certificate.details");
+  const tCertificateField = useI18n("certificate.field");
 
   return (
     <Card>
@@ -291,7 +280,7 @@ export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps)
 };
 
 const PemContentModal = createModal<{ content: string }>(({ actions, innerProps }) => {
-  const t = useI18n();
+  const tCommon = useI18n("common");
 
   return (
     <Stack>
@@ -318,7 +307,7 @@ const PemContentModal = createModal<{ content: string }>(({ actions, innerProps 
       </Card>
 
       <Button variant="light" color="gray" onClick={actions.closeModal}>
-        {t("common.action.close")}
+        {tCommon("action.close")}
       </Button>
     </Stack>
   );

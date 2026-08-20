@@ -5,7 +5,7 @@ import combineClasses from "clsx";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { SectionGrid } from "./grid/section-grid";
@@ -25,8 +25,8 @@ interface Props {
 export const BoardContainerSection = ({ section }: Props) => {
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
-  const t = useScopedI18n("section.container");
-  const tAll = useI18n();
+  const t = useI18n("section.container");
+  const tSection = useI18n("section");
   const options = section.options;
   const { open: openAllInNewTabs, isLoading: areAppsLoading } = useOpenSectionApps(
     section.id,
@@ -137,7 +137,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             radius="sm"
             loading={areAppsLoading}
             onClick={openAllInNewTabs}
-            aria-label={tAll("section.action.openAllInNewTabsFor", { name: label })}
+            aria-label={tSection("action.openAllInNewTabsFor", { name: label })}
           >
             <IconExternalLink size={16} />
           </ActionIcon>
