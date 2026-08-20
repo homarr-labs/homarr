@@ -13,23 +13,21 @@ import { weatherWidget } from ".";
 
 <WidgetHeader widget={weatherWidget} categories={["Weather"]} />
 
-The Weather Widget uses your location to display the current, highest and lowest temperature.
-In the compact view, select a condition icon or forecast day to open details with a mouse, keyboard or touch.
-The compact forecast shows up to the configured number of days. The advanced view combines current conditions with the
-available daily forecast, including humidity, wind, gusts, sunrise and sunset. Both views reuse the same cached Open
-Meteo response.
+The Weather Widget displays current conditions and a responsive forecast for a selected location. New widgets start
+with the city and a three-day forecast visible. As the widget gets smaller, it keeps the current condition and
+temperature readable before removing secondary details or forecast days.
 
-### Screenshots
+Select a forecast day to inspect precipitation, apparent temperature, humidity, wind, UV index, sunrise, sunset and
+daylight duration with a mouse, keyboard or touch. Open the advanced view for a current-condition summary, a 24-hour
+temperature and precipitation chart, and the complete seven-day forecast. The chart has an equivalent data table for
+assistive technologies.
 
-import forecastWeather from "./img/forecast.png";
-import currentWeather from "./img/current.png";
-import advancedWeather from "./img/advanced-view.png";
+The **Show humidity** option controls humidity across the compact current-conditions view, advanced summary, hourly
+details, and daily forecast details. Forecast cards use a roomier adaptive grid in advanced view, with four columns on
+the standard desktop surface and fewer columns as the surface narrows.
 
-<div className="flex flex-col gap-1">
-  <img src={forecastWeather} alt="Weather compact forecast" width={238} height={112} />
-  <img src={currentWeather} alt="Weather compact current conditions" width={198} height={93} />
-  <img src={advancedWeather} alt="Weather advanced view with seven-day forecast details" width={800} height={484} />
-</div>
+Weather icons are static by default. Animation can be enabled in the widget configuration, but the operating system's
+reduced-motion preference always disables it.
 
 <WidgetInteractionGuide />
 
@@ -43,5 +41,10 @@ import advancedWeather from "./img/advanced-view.png";
 
 ### Data source
 
-We use the Open Meteo API to fetch the weather and locations.
+We use the Open Meteo API to fetch the weather and locations. Active weather data refreshes every ten minutes, while
+identical location requests can reuse a server response for five minutes. A manual refresh may therefore return the
+same still-current server response. If a refresh fails, Homarr keeps the last successful data visible and shows an
+error indicator.
+
+Set `NO_EXTERNAL_CONNECTION=true` to disable this and other internet-backed requests.
 If you need to whitelist the api, please use the following URL: `https://open-meteo.com`

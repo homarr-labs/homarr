@@ -13,6 +13,7 @@ export const widgetRouter = createTRPCRouter({
   bazarr: lazy(() => import("./bazarr").then((mod) => mod.bazarrRouter)),
   notebook: lazy(() => import("./notebook").then((mod) => mod.notebookRouter)),
   weather: lazy(() => import("./weather").then((mod) => mod.weatherRouter)),
+  airQuality: lazy(() => import("./air-quality").then((mod) => mod.airQualityRouter)),
   app: lazy(() => import("./app").then((mod) => mod.appRouter)),
   dnsHole: lazy(() => import("./dns-hole").then((mod) => mod.dnsHoleRouter)),
   smartHome: lazy(() => import("./smart-home").then((mod) => mod.smartHomeRouter)),

@@ -1,6 +1,10 @@
 export const widgetKinds = [
   "clock",
   "weather",
+  "today",
+  "airQuality",
+  "countdown",
+  "timer",
   "app",
   "iframe",
   "video",
@@ -59,6 +63,10 @@ export const widgetKinds = [
 export type WidgetKind = (typeof widgetKinds)[number];
 
 export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; height: number }>> = {
+  today: { width: 2, height: 1 },
+  airQuality: { width: 2, height: 1 },
+  countdown: { width: 2, height: 1 },
+  timer: { width: 2, height: 1 },
   uptimeKuma: { width: 2, height: 3 },
   audioStats: { width: 2, height: 2 },
   paperlessNgx: { width: 2, height: 2 },
