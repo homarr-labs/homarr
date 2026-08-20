@@ -11,6 +11,18 @@
 .viewport.scrollableViewport {
   overflow-x: hidden;
   overflow-y: auto;
+  /* --board-grid-drag-height inherits down the DOM tree like any custom property. A capped
+     section's own GridPreviewLayer effect correctly avoids setting it on itself (see
+     grid-preview-layer.tsx), but that does nothing to stop it inheriting the value an
+     *uncapped* ancestor section (e.g. the board's root section) legitimately sets on itself
+     while growing during a drag happening anywhere else on the board - a nested scrollable
+     container sits inside that section's DOM tree, so the stray value cascades straight
+     through and silently defeats the `var(--board-grid-drag-height, ...px)` fallback in
+     section-grid.tsx, which only kicks in when the property is entirely unset, not merely
+     inherited. Reset it here so this element can never inherit a stray value from anywhere
+     above it, no matter what any ancestor's own drag state is doing.
+     https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables#custom_properties_and_inheritance */
+  --board-grid-drag-height: initial;
 }
 
 .staticGrid,
