@@ -1,4 +1,4 @@
-import superjson from "superjson";
+import superjson, { parse } from "superjson";
 
 import { createId } from "@homarr/common";
 
@@ -7,6 +7,12 @@ import { createRedisConnection } from "./connection";
 
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
+
+const deserializeCallback =
+  <TData>(callback: (data: TData) => void) =>
+  (message: string) => {
+    callback(parse(message));
+  };
 
 /**
  * Creates a new pub/sub channel.
@@ -29,9 +35,19 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
           }
         });
       }
-      return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
-        callback(superjson.parse(message));
-      });
+      return ChannelSubscriptionTracker.subscribe(channelName, deserializeCallback(callback));
+    },
+    /**
+     * Subscribes to the channel and resolves once Redis confirms the subscription.
+     */
+    subscribeAsync: async (callback: (data: TData) => void) => {
+      if (persist) {
+        const data = await lastDataClient.get(lastChannelName);
+        if (data) {
+          callback(superjson.parse(data));
+        }
+      }
+      return await ChannelSubscriptionTracker.subscribeAsync(channelName, deserializeCallback(callback));
     },
     /**
      * Publish data to the channel with last data saved.

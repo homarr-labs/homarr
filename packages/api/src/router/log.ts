@@ -11,6 +11,10 @@ import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
 
 const logger = createLogger({ module: "logRouter" });
 
+type LogSubscriptionEvent =
+  | { type: "history"; messages: LoggerMessage[] }
+  | { type: "message"; message: LoggerMessage };
+
 export const logRouter = createTRPCRouter({
   subscribe: permissionRequiredProcedure
     .requiresPermission("other-view-logs")
@@ -20,15 +24,61 @@ export const logRouter = createTRPCRouter({
       }),
     )
     .subscription(({ input }) => {
-      return observable<LoggerMessage>((emit) => {
-        const unsubscribe = loggingChannel.subscribe((data) => {
-          if (!input.levels.includes(data.level)) return;
-          emit.next(data);
-        });
-        logger.info("A tRPC client has connected to the logging procedure");
+      return observable<LogSubscriptionEvent>((emit) => {
+        let isClosed = false;
+        let unsubscribe: (() => void) | null = null;
+        let isHistoryLoaded = false;
+        const bufferedMessages: LoggerMessage[] = [];
+
+        const onMessage = (message: LoggerMessage) => {
+          if (!input.levels.includes(message.level)) return;
+
+          if (!isHistoryLoaded) {
+            bufferedMessages.push(message);
+            return;
+          }
+
+          emit.next({ type: "message", message });
+        };
+
+        void loggingChannel
+          .subscribeAsync(onMessage)
+          .then(async (unsubscribeFromLogging) => {
+            if (isClosed) {
+              unsubscribeFromLogging();
+              return;
+            }
+
+            unsubscribe = unsubscribeFromLogging;
+            logger.info("A tRPC client has connected to the logging procedure");
+
+            const history = (await loggingChannel.getRecentAsync()).filter((message) =>
+              input.levels.includes(message.level),
+            );
+            if (isClosed) return;
+
+            emit.next({ type: "history", messages: history });
+
+            const historyIds = new Set(history.map((message) => message.id));
+            isHistoryLoaded = true;
+            for (const message of bufferedMessages) {
+              if (!historyIds.has(message.id)) {
+                emit.next({ type: "message", message });
+              }
+            }
+            bufferedMessages.length = 0;
+          })
+          .catch((error: unknown) => {
+            unsubscribe?.();
+            unsubscribe = null;
+            if (!isClosed) {
+              emit.error(error);
+            }
+          });
 
         return () => {
-          unsubscribe();
+          isClosed = true;
+          unsubscribe?.();
         };
       });
     }),

@@ -8385,6 +8385,10 @@
     }
   },
   "log": {
+    "context": {
+      "widgetError": "Widget reported an error around this time",
+      "expiredWidgetError": "Logs around this widget error are no longer retained"
+    },
     "level": {
       "option": {
         "debug": "Debug",

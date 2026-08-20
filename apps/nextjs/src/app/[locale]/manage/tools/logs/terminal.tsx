@@ -7,25 +7,176 @@ import { FitAddon } from "@xterm/addon-fit";
 import { Terminal } from "@xterm/xterm";
 
 import { clientApi } from "@homarr/api/client";
+import type { LoggerMessage, LogLevel } from "@homarr/core/infrastructure/logs/constants";
+import { LOG_HISTORY_MAX_ENTRIES, logLevels } from "@homarr/core/infrastructure/logs/constants";
+import { useI18n } from "@homarr/translation/client";
 
 import { useLogContext } from "./log-context";
 import classes from "./terminal.module.css";
 
-export const TerminalComponent = () => {
+const ALL_LOG_LEVELS = [...logLevels];
+const TERMINAL_SCROLLBACK_LINES = LOG_HISTORY_MAX_ENTRIES * 4;
+
+interface FocusMarker {
+  index: number;
+  text: string;
+}
+
+const getFocusMarker = (
+  messages: LoggerMessage[],
+  visibleMessages: LoggerMessage[],
+  focusTimestamp: number | undefined,
+  markerText: string,
+  expiredMarkerText: string,
+): FocusMarker | null => {
+  if (focusTimestamp === undefined) return null;
+
+  let oldestTimestamp = Number.POSITIVE_INFINITY;
+  for (const message of messages) {
+    oldestTimestamp = Math.min(oldestTimestamp, message.timestamp.getTime());
+  }
+  if (oldestTimestamp === Number.POSITIVE_INFINITY || focusTimestamp < oldestTimestamp) {
+    return { index: 0, text: expiredMarkerText };
+  }
+
+  let markerIndex = 0;
+  for (const [index, message] of visibleMessages.entries()) {
+    if (message.timestamp.getTime() <= focusTimestamp) {
+      markerIndex = index + 1;
+    }
+  }
+
+  return {
+    index: markerIndex,
+    text: markerText,
+  };
+};
+
+const findMarkerLine = (terminal: Terminal, markerText: string) => {
+  const buffer = terminal.buffer.active;
+  let logicalLine = "";
+  let logicalLineStart = 0;
+
+  for (let index = 0; index < buffer.length; index++) {
+    const line = buffer.getLine(index);
+    if (!line) continue;
+
+    if (!line.isWrapped) {
+      logicalLine = "";
+      logicalLineStart = index;
+    }
+    logicalLine += line.translateToString(true);
+
+    if (logicalLine.includes(markerText)) {
+      return logicalLineStart;
+    }
+  }
+
+  return null;
+};
+
+const renderMessages = ({
+  terminal,
+  messages,
+  activeLevels,
+  focusTimestamp,
+  markerText,
+  expiredMarkerText,
+}: {
+  terminal: Terminal;
+  messages: LoggerMessage[];
+  activeLevels: LogLevel[];
+  focusTimestamp: number | undefined;
+  markerText: string;
+  expiredMarkerText: string;
+}) => {
+  const activeLevelSet = new Set(activeLevels);
+  const visibleMessages = messages.filter((message) => activeLevelSet.has(message.level));
+  const focusMarker = getFocusMarker(messages, visibleMessages, focusTimestamp, markerText, expiredMarkerText);
+  const output = visibleMessages.flatMap((message, index) => {
+    if (focusMarker?.index === index) {
+      return [`\x1b[33m--- ${focusMarker.text} ---\x1b[0m`, message.message];
+    }
+    return [message.message];
+  });
+
+  if (focusMarker?.index === visibleMessages.length) {
+    output.push(`\x1b[33m--- ${focusMarker.text} ---\x1b[0m`);
+  }
+
+  terminal.reset();
+  if (output.length === 0) return;
+
+  terminal.write(`${output.join("\r\n")}\r\n`, () => {
+    if (!focusMarker) {
+      terminal.scrollToBottom();
+      return;
+    }
+
+    const markerLine = findMarkerLine(terminal, focusMarker.text);
+    if (markerLine !== null) {
+      terminal.scrollToLine(markerLine);
+    }
+  });
+};
+
+interface TerminalComponentProps {
+  focusTimestamp?: number;
+}
+
+export const TerminalComponent = ({ focusTimestamp }: TerminalComponentProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const { activeLevels, fontSize } = useLogContext();
+  const t = useI18n();
 
   const terminalRef = useRef<Terminal>(null);
   const fitAddonRef = useRef<FitAddon>(null);
+  const messagesRef = useRef<LoggerMessage[]>([]);
+  const initialFontSizeRef = useRef(fontSize);
+  const activeLevelsRef = useRef(activeLevels);
+  const markerTextRef = useRef(t("log.context.widgetError"));
+  const expiredMarkerTextRef = useRef(t("log.context.expiredWidgetError"));
+  const focusTimestampRef = useRef(focusTimestamp);
+
+  activeLevelsRef.current = activeLevels;
+  markerTextRef.current = t("log.context.widgetError");
+  expiredMarkerTextRef.current = t("log.context.expiredWidgetError");
+  focusTimestampRef.current = focusTimestamp;
+
+  const redrawTerminal = () => {
+    const terminal = terminalRef.current;
+    if (!terminal) return;
+
+    renderMessages({
+      terminal,
+      messages: messagesRef.current,
+      activeLevels: activeLevelsRef.current,
+      focusTimestamp: focusTimestampRef.current,
+      markerText: markerTextRef.current,
+      expiredMarkerText: expiredMarkerTextRef.current,
+    });
+  };
 
   clientApi.log.subscribe.useSubscription(
     {
-      levels: activeLevels,
+      levels: ALL_LOG_LEVELS,
     },
     {
-      onData(data) {
-        terminalRef.current?.writeln(data.message);
-        terminalRef.current?.refresh(0, terminalRef.current.rows - 1);
+      onData(event) {
+        if (event.type === "history") {
+          messagesRef.current = event.messages.slice(-LOG_HISTORY_MAX_ENTRIES);
+          redrawTerminal();
+          return;
+        }
+
+        messagesRef.current.push(event.message);
+        if (messagesRef.current.length > LOG_HISTORY_MAX_ENTRIES) {
+          messagesRef.current.shift();
+        }
+
+        if (activeLevelsRef.current.includes(event.message.level)) {
+          terminalRef.current?.writeln(event.message.message);
+        }
       },
       onError(err) {
         alert(err);
@@ -44,22 +195,26 @@ export const TerminalComponent = () => {
       cursorBlink: false,
       disableStdin: true,
       convertEol: true,
-      fontSize,
+      fontSize: initialFontSizeRef.current,
+      scrollback: TERMINAL_SCROLLBACK_LINES,
     });
     terminalRef.current.open(ref.current);
     terminalRef.current.loadAddon(canvasAddon);
 
-    setTimeout(() => {
+    const fitTimeout = window.setTimeout(() => {
       const fitAddon = new FitAddon();
       fitAddonRef.current = fitAddon;
       terminalRef.current?.loadAddon(fitAddon);
       fitAddon.fit();
+      redrawTerminal();
     });
 
     return () => {
+      window.clearTimeout(fitTimeout);
       canvasAddon.dispose();
       terminalRef.current?.dispose();
       terminalRef.current = null;
+      fitAddonRef.current = null;
     };
   }, []);
 
@@ -68,6 +223,10 @@ export const TerminalComponent = () => {
     terminalRef.current.options.fontSize = fontSize;
     fitAddonRef.current?.fit();
   }, [fontSize]);
+
+  useEffect(() => {
+    redrawTerminal();
+  }, [activeLevels, focusTimestamp]);
 
   return <Box ref={ref} id="terminal" className={classes.outerTerminal} h="100%"></Box>;
 };
