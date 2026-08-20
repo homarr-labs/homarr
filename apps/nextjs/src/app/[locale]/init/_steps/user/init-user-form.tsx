@@ -15,7 +15,7 @@ import { userInitSchema } from "@homarr/validation/user";
 export const InitUserForm = () => {
   const t = useScopedI18n("user");
   const tUser = useScopedI18n("init.step.user");
-  const { mutateAsync, isPending } = clientApi.user.initUser.useMutation();
+  const { mutateAsync } = clientApi.user.initUser.useMutation();
   const form = useZodForm(userInitSchema, {
     initialValues: {
       username: "",
@@ -24,36 +24,49 @@ export const InitUserForm = () => {
     },
   });
 
+  /**
+   * The step advances only once the session exists and `/init` has been revalidated, so the submit
+   * resolves after both rather than after the user row is written. A sign-in that fails reports the
+   * reason and leaves the form on this step.
+   */
   const handleSubmitAsync = async (values: FormType) => {
-    await mutateAsync(values, {
-      onSuccess() {
-        showSuccessNotification({
-          title: tUser("notification.success.title"),
-          message: tUser("notification.success.message"),
-        });
+    try {
+      await mutateAsync(values);
+    } catch (error) {
+      showErrorNotification({
+        title: tUser("notification.error.title"),
+        message: error instanceof Error ? error.message : "",
+      });
+      return;
+    }
 
-        void signIn("credentials", {
-          name: values.username,
-          password: values.password,
-          redirect: false,
-        }).then(async () => {
-          await revalidatePathActionAsync("/init");
-        });
-      },
-      onError: (error) => {
-        showErrorNotification({
-          title: tUser("notification.error.title"),
-          message: error.message,
-        });
-      },
+    showSuccessNotification({
+      title: tUser("notification.success.title"),
+      message: tUser("notification.success.message"),
     });
+
+    const signInResult = await signIn("credentials", {
+      name: values.username,
+      password: values.password,
+      redirect: false,
+    });
+
+    if (signInResult?.error) {
+      showErrorNotification({
+        title: tUser("notification.error.title"),
+        message: signInResult.error,
+      });
+      return;
+    }
+
+    await revalidatePathActionAsync("/init");
   };
 
   return (
     <Stack gap="xl">
       <form
         onSubmit={form.onSubmit(
-          (values) => void handleSubmitAsync(values),
+          (values) => handleSubmitAsync(values),
           (err) => console.log(err),
         )}
       >
@@ -63,7 +76,7 @@ export const InitUserForm = () => {
             passwordInputProps={form.getInputProps("password")}
             confirmPasswordInputProps={form.getInputProps("confirmPassword")}
           />
-          <Button type="submit" fullWidth loading={isPending}>
+          <Button type="submit" fullWidth loading={form.submitting}>
             {t("action.create")}
           </Button>
         </Stack>
