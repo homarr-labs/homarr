@@ -104,7 +104,7 @@ const CredentialsSetup = () => {
 
   return (
     <AccountShell title={t("title")} description={t("description")}>
-      <form onSubmit={form.onSubmit((values) => void submitAsync(values))}>
+      <form onSubmit={form.onSubmit((values) => submitAsync(values))}>
         <Stack gap="md">
           <TextInput label={t("username")} autoComplete="username" withAsterisk {...form.getInputProps("username")} />
           <UserCreatePasswordFields
@@ -119,7 +119,7 @@ const CredentialsSetup = () => {
               {submitError}
             </Alert>
           ) : null}
-          <Button type="submit" size="md" loading={mutation.isPending} rightSection={<IconArrowRight size={18} />}>
+          <Button type="submit" size="md" loading={form.submitting} rightSection={<IconArrowRight size={18} />}>
             {t("create")}
           </Button>
         </Stack>
