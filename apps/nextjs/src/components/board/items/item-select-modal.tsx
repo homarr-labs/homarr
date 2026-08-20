@@ -951,11 +951,6 @@ const WidgetLivePreviewAndConfigContent = ({
           <Text size="xs" fw={600} c="dimmed" tt="uppercase" lts="0.5px">
             Preview (5×3)
           </Text>
-          {validIntegrationIds.length === 0 && Boolean(mockIntegration) && supportsMock && (
-            <Badge variant="subtle" color="teal" size="xs">
-              Showing Demo / Mock Data
-            </Badge>
-          )}
         </Group>
 
         <Center w="100%">
