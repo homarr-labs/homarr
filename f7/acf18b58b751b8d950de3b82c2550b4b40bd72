@@ -1,0 +1,16 @@
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  h_d6e478ca18e517 20,52-62,193-194
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  h_d6e478ca18e517 1242
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "f7acf18b58b751b8d950de3b82c2550b4b40bd72",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
