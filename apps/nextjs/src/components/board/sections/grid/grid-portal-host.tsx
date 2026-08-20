@@ -106,7 +106,10 @@ export const BoardGridPortalHost = ({ children }: PropsWithChildren) => {
 export const BoardGridPortalRenderer = () => {
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
+  const [isEditMode] = useEditMode();
   const { announce, containers, integrations } = useBoardGridPortalHost();
+
+  if (!isEditMode) return null;
 
   return (
     <>

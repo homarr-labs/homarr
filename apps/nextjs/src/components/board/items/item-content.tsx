@@ -26,7 +26,7 @@ import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
-import { useAdvancedFocus } from "../advanced-focus/context";
+import { useAdvancedFocusActions, useAdvancedFocusItem } from "../advanced-focus/context";
 import { startAdvancedFocusEntrance } from "../advanced-focus/entrance";
 import { getAdvancedFocusClosePosition, getAdvancedFocusRect } from "../advanced-focus/geometry";
 import { AdvancedFocusManualSurface } from "../advanced-focus/manual-surface";
@@ -166,13 +166,14 @@ const LoadedBoardItemContent = ({
   );
   const [manualSurface, setManualSurface] = useState<HTMLDivElement | null>(null);
   const [surfacePortalTarget, setSurfacePortalTarget] = useState<HTMLDivElement | null>(null);
-  const { active, viewportSize, open, close, dismiss, hover, leave } = useAdvancedFocus();
-  const { width: viewportWidth, height: viewportHeight } = viewportSize;
   const supportsAdvancedFocus = definitionSupportsAdvancedFocus(definition);
+  const focusItemId = supportsAdvancedFocus ? item.id : null;
+  const { active: activeFocus, viewportSize } = useAdvancedFocusItem(focusItemId);
+  const { open, close, dismiss, hover, leave } = useAdvancedFocusActions();
+  const { width: viewportWidth, height: viewportHeight } = viewportSize;
   const widgetName = t(`widget.${item.kind}.name`);
   const advancedViewLabel = t("item.advancedFocus.label", { widget: widgetName });
   const advancedViewId = `advanced-focus-${item.id}`;
-  const activeFocus = supportsAdvancedFocus && active?.itemId === item.id ? active : null;
   const isAdvanced = activeFocus !== null;
   const advancedRect = activeFocus
     ? getAdvancedFocusRect(activeFocus.sourceRect, { width: viewportWidth, height: viewportHeight })
@@ -339,13 +340,7 @@ const LoadedBoardItemContent = ({
   return (
     <>
       {isEditMode && <BoardItemMenu item={menuItem} definition={definition} />}
-      <WidgetContextMenu
-        item={item}
-        definition={definition}
-        widgetStateRef={widgetStateRef}
-        widgetRuntimeRef={widgetRuntimeRef}
-        sourceRef={sourceRef}
-      >
+      <WidgetContextMenu item={item} definition={definition} widgetRuntimeRef={widgetRuntimeRef} sourceRef={sourceRef}>
         <Box
           ref={sourceRef}
           w="100%"

@@ -3,11 +3,9 @@ import { describe, expect, test } from "vitest";
 import { getSafeAssistantAttachmentImageSource, getSafeAssistantMarkdownImageSource } from "./assistant-markdown-image";
 
 describe("getSafeAssistantMarkdownImageSource", () => {
-  test("allows Homarr-relative and ordinary remote images", () => {
+  test("allows Homarr-relative images without automatically loading remote images", () => {
     expect(getSafeAssistantMarkdownImageSource("/logo/logo.png")).toBe("/logo/logo.png");
-    expect(getSafeAssistantMarkdownImageSource("https://cdn.example.com/icons/discord.svg")).toBe(
-      "https://cdn.example.com/icons/discord.svg",
-    );
+    expect(getSafeAssistantMarkdownImageSource("https://cdn.example.com/icons/discord.svg")).toBeNull();
   });
 
   test("rejects unsafe protocols, protocol-relative URLs, and embedded credentials", () => {

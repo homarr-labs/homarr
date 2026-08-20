@@ -19,7 +19,7 @@ export const previewQueryProcedures = {
     .input(z.object({ sessionId: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       const session = await getPreviewSession(input.sessionId, ctx.session.user.id);
-      invalidateCustomWidgetResponseCache([`custom-jsx:preview:${session.id}:`]);
+      await invalidateCustomWidgetResponseCache([`custom-jsx:preview:${session.id}:`]);
     }),
 
   previewQuery: permissionRequiredProcedure

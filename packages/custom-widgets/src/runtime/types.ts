@@ -82,6 +82,7 @@ export interface CustomWidgetRuntimeValue {
   previewSessionId?: string;
   previewLiveActions?: boolean;
   queriesDisabled?: boolean;
+  canRefresh?: boolean;
   isEditMode: boolean;
   requestCapabilities: readonly CustomJsxRequestCapability[];
   port: CustomWidgetRuntimePort;

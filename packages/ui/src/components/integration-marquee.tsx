@@ -1,16 +1,24 @@
 import { Image, Marquee, SimpleGrid } from "@mantine/core";
 
 import { splitToNChunks } from "@homarr/common";
-import { integrationDefs } from "@homarr/definitions";
 
 import classes from "./integration-marquee.module.css";
 
-const iconGroups = splitToNChunks(
-  Object.values(integrationDefs)
-    .filter((integration) => integration.name !== "Mock")
-    .map((integration) => integration.iconUrl),
-  3,
-);
+const localIconPaths = [
+  "/images/apps/sonarr.svg",
+  "/images/apps/radarr.svg",
+  "/images/apps/lidarr.svg",
+  "/images/apps/readarr.svg",
+  "/images/apps/nextcloud.svg",
+  "/images/apps/truenas.svg",
+  "/images/apps/unraid-alt.svg",
+  "/images/apps/imdb.svg",
+  "/images/apps/lastfm.svg",
+  "/images/apps/tmdb.svg",
+  "/images/apps/the-tvdb.svg",
+  "/images/apps/vgmdb.svg",
+];
+const iconGroups = splitToNChunks(localIconPaths, 3);
 const animationDuration = iconGroups.flat().length * 2;
 
 export const IntegrationMarquee = ({ className }: { className?: string }) => (
@@ -36,7 +44,16 @@ export const IntegrationMarquee = ({ className }: { className?: string }) => (
         classNames={{ content: classes.content }}
       >
         {icons.map((icon) => (
-          <Image key={`${icon}-${columnIndex}`} src={icon} alt="" fit="contain" w={52} h={52} />
+          <Image
+            key={`${icon}-${columnIndex}`}
+            src={icon}
+            alt=""
+            fit="contain"
+            w={52}
+            h={52}
+            loading="lazy"
+            decoding="async"
+          />
         ))}
       </Marquee>
     ))}

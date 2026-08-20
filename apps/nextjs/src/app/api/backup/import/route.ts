@@ -1,12 +1,17 @@
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
+import { Readable, Transform } from "stream";
+import { pipeline } from "stream/promises";
+import type { ReadableStream as NodeReadableStream } from "stream/web";
 
 import { NextResponse } from "next/server";
-import AdmZip from "adm-zip";
 import BetterSqlite3 from "better-sqlite3";
+import busboy from "busboy";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import yauzl from "yauzl";
+import type { Entry as ZipEntry, ZipFile } from "yauzl";
 
 import {
   getOnboardingClaimTokenFromCookieHeader,
@@ -34,93 +39,249 @@ const MAX_UNCOMPRESSED_DATABASE_BYTES = 512 * MEBIBYTE;
 const MAX_UNCOMPRESSED_ARCHIVE_BYTES = MAX_UNCOMPRESSED_DATABASE_BYTES + 2 * MEBIBYTE;
 const MAX_METADATA_BYTES = MEBIBYTE;
 const MAX_ENCRYPTION_KEY_BYTES = 1024;
+const MAX_ARCHIVE_ENTRIES = 1024;
 const RESTART_DELAY_MS = 500;
 
 let restoreInProgress = false;
 
 class BackupTooLargeError extends Error {}
 
-const readBoundedRequestBodyAsync = async (request: Request): Promise<Uint8Array<ArrayBuffer>> => {
+const assertDeclaredRequestSize = (request: Request) => {
   const declaredLength = request.headers.get("content-length");
-  if (declaredLength !== null) {
-    const parsedLength = Number(declaredLength);
-    if (!Number.isSafeInteger(parsedLength) || parsedLength < 0) {
-      throw new Error("Invalid Content-Length header");
+  if (declaredLength === null) return;
+
+  const parsedLength = Number(declaredLength);
+  if (!Number.isSafeInteger(parsedLength) || parsedLength < 0) {
+    throw new Error("Invalid Content-Length header");
+  }
+  if (parsedLength > MAX_MULTIPART_REQUEST_BYTES) {
+    throw new BackupTooLargeError("Backup upload exceeds the 256 MB limit");
+  }
+};
+
+const createRequestSizeLimiter = () => {
+  let totalBytes = 0;
+  return new Transform({
+    transform(chunk: Buffer, _encoding, callback) {
+      totalBytes += chunk.byteLength;
+      if (totalBytes > MAX_MULTIPART_REQUEST_BYTES) {
+        callback(new BackupTooLargeError("Backup upload exceeds the 256 MB limit"));
+        return;
+      }
+      callback(null, chunk);
+    },
+  });
+};
+
+const streamUploadedBackupAsync = async (request: Request, uploadPath: string): Promise<number | null> => {
+  assertDeclaredRequestSize(request);
+  if (!request.body) return null;
+
+  const parser = busboy({
+    headers: Object.fromEntries(request.headers.entries()),
+    preservePath: false,
+    limits: {
+      fileSize: MAX_COMPRESSED_BACKUP_BYTES,
+      files: 1,
+      fields: 0,
+      parts: 2,
+      headerPairs: 200,
+    },
+  });
+  let uploadSize = 0;
+  let uploadFound = false;
+  let uploadWrite = Promise.resolve();
+  let parseError: Error | null = null;
+
+  parser.on("file", (fieldName, file) => {
+    if (fieldName !== "file" || uploadFound) {
+      parseError = new Error("Unexpected file field");
+      file.resume();
+      return;
     }
-    if (parsedLength > MAX_MULTIPART_REQUEST_BYTES) {
-      throw new BackupTooLargeError("Backup upload exceeds the 256 MB limit");
-    }
+    uploadFound = true;
+
+    file.on("data", (chunk: Buffer) => {
+      uploadSize += chunk.byteLength;
+    });
+    file.on("limit", () => {
+      parseError = new BackupTooLargeError("Backup upload exceeds the 256 MB limit");
+    });
+
+    uploadWrite = pipeline(file, fs.createWriteStream(uploadPath, { flags: "wx" }));
+    void uploadWrite.catch((error: unknown) => {
+      parser.destroy(error instanceof Error ? error : new Error("Failed to store backup upload"));
+    });
+  });
+  parser.on("field", () => {
+    parseError = new Error("Unexpected form field");
+  });
+  parser.on("filesLimit", () => {
+    parseError = new Error("Too many files");
+  });
+  parser.on("fieldsLimit", () => {
+    parseError = new Error("Unexpected form field");
+  });
+  parser.on("partsLimit", () => {
+    parseError = new Error("Too many form parts");
+  });
+
+  const requestStream = Readable.fromWeb(request.body as NodeReadableStream<Uint8Array>);
+  try {
+    await pipeline(requestStream, createRequestSizeLimiter(), parser);
+    await uploadWrite;
+  } catch (error) {
+    await uploadWrite.catch(() => undefined);
+    throw error;
   }
 
-  if (!request.body) return new Uint8Array();
+  if (parseError) throw parseError;
+  if (!uploadFound) return null;
+  return uploadSize;
+};
 
-  const reader = request.body.getReader();
-  const chunks: Uint8Array[] = [];
+interface BackupArchiveEntries {
+  database: ZipEntry;
+  metadata: ZipEntry;
+  encryptionKey: ZipEntry | null;
+}
+
+const openArchiveAsync = (archivePath: string) =>
+  new Promise<ZipFile>((resolve, reject) => {
+    yauzl.open(
+      archivePath,
+      { lazyEntries: true, autoClose: false, validateEntrySizes: true, strictFileNames: true },
+      (error, zip) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        if (!zip) {
+          reject(new Error("ZIP archive could not be opened"));
+          return;
+        }
+        resolve(zip);
+      },
+    );
+  });
+
+const inspectArchiveAsync = (zip: ZipFile) =>
+  new Promise<BackupArchiveEntries>((resolve, reject) => {
+    let database: ZipEntry | null = null;
+    let metadata: ZipEntry | null = null;
+    let encryptionKey: ZipEntry | null = null;
+    let totalSize = 0;
+    let entryCount = 0;
+    let settled = false;
+
+    const fail = (error: Error) => {
+      if (settled) return;
+      settled = true;
+      reject(error);
+    };
+
+    zip.once("error", fail);
+    zip.on("entry", (entry: ZipEntry) => {
+      entryCount += 1;
+      if (entryCount > MAX_ARCHIVE_ENTRIES) {
+        fail(new BackupTooLargeError(`Backup archive contains more than ${MAX_ARCHIVE_ENTRIES} entries`));
+        return;
+      }
+
+      const entrySize = entry.uncompressedSize;
+      if (!Number.isSafeInteger(entrySize) || entrySize < 0) {
+        fail(new Error(`Invalid uncompressed size for ${entry.fileName}`));
+        return;
+      }
+      totalSize += entrySize;
+      if (totalSize > MAX_UNCOMPRESSED_ARCHIVE_BYTES) {
+        fail(new BackupTooLargeError("Uncompressed backup archive exceeds the 514 MB limit"));
+        return;
+      }
+
+      if (entry.fileName === "db.sqlite") {
+        if (database) {
+          fail(new Error("Invalid backup: duplicate db.sqlite entry"));
+          return;
+        }
+        if (entrySize > MAX_UNCOMPRESSED_DATABASE_BYTES) {
+          fail(new BackupTooLargeError("Uncompressed SQLite database exceeds the 512 MB limit"));
+          return;
+        }
+        database = entry;
+      } else if (entry.fileName === "metadata.json") {
+        if (metadata) {
+          fail(new Error("Invalid backup: duplicate metadata.json entry"));
+          return;
+        }
+        if (entrySize > MAX_METADATA_BYTES) {
+          fail(new BackupTooLargeError("Backup metadata exceeds the 1 MB limit"));
+          return;
+        }
+        metadata = entry;
+      } else if (entry.fileName === "encryption-key.txt") {
+        if (encryptionKey) {
+          fail(new Error("Invalid backup: duplicate encryption-key.txt entry"));
+          return;
+        }
+        if (entrySize > MAX_ENCRYPTION_KEY_BYTES) {
+          fail(new BackupTooLargeError("Backup encryption key entry is too large"));
+          return;
+        }
+        encryptionKey = entry;
+      }
+
+      zip.readEntry();
+    });
+    zip.once("end", () => {
+      if (settled) return;
+      settled = true;
+      if (!database || !metadata) {
+        const presentNames = [database ? "db.sqlite" : null, metadata ? "metadata.json" : null];
+        const missingEntries = REQUIRED_ZIP_ENTRIES.filter((name) => !presentNames.includes(name));
+        reject(new Error(`Invalid backup: missing ${missingEntries.join(", ")}`));
+        return;
+      }
+      resolve({ database, metadata, encryptionKey });
+    });
+    zip.readEntry();
+  });
+
+const openEntryStreamAsync = (zip: ZipFile, entry: ZipEntry) =>
+  new Promise<Readable>((resolve, reject) => {
+    zip.openReadStream(entry, (error, stream) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      if (!stream) {
+        reject(new Error(`Could not read ${entry.fileName}`));
+        return;
+      }
+      resolve(stream);
+    });
+  });
+
+const extractEntryToFileAsync = async (zip: ZipFile, entry: ZipEntry, outputPath: string) => {
+  const source = await openEntryStreamAsync(zip, entry);
+  await pipeline(source, fs.createWriteStream(outputPath, { flags: "wx" }));
+};
+
+const readBoundedEntryAsync = async (zip: ZipFile, entry: ZipEntry, maximumBytes: number) => {
+  const source = await openEntryStreamAsync(zip, entry);
+  const chunks: Buffer[] = [];
   let totalBytes = 0;
 
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      totalBytes += value.byteLength;
-      if (totalBytes > MAX_MULTIPART_REQUEST_BYTES) {
-        await reader.cancel();
-        throw new BackupTooLargeError("Backup upload exceeds the 256 MB limit");
-      }
-      chunks.push(value);
+  for await (const chunk of source) {
+    const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    totalBytes += buffer.byteLength;
+    if (totalBytes > maximumBytes) {
+      source.destroy();
+      throw new BackupTooLargeError(`${entry.fileName} exceeds its size limit`);
     }
-  } finally {
-    reader.releaseLock();
+    chunks.push(buffer);
   }
-
-  const body = new Uint8Array(totalBytes);
-  let offset = 0;
-  for (const chunk of chunks) {
-    body.set(chunk, offset);
-    offset += chunk.byteLength;
-  }
-  return body;
-};
-
-const parseBoundedFormDataAsync = async (request: Request): Promise<FormData> => {
-  const contentType = request.headers.get("content-type");
-  if (!contentType) throw new Error("Missing Content-Type header");
-
-  const body = await readBoundedRequestBodyAsync(request);
-  return new Response(body, { headers: { "content-type": contentType } }).formData();
-};
-
-const assertArchiveSizeLimits = (zip: AdmZip) => {
-  const entries = zip.getEntries();
-  let totalSize = 0;
-
-  for (const entry of entries) {
-    if (entry.isDirectory) continue;
-    const entrySize = entry.header.size;
-    if (!Number.isSafeInteger(entrySize) || entrySize < 0) {
-      throw new Error(`Invalid uncompressed size for ${entry.entryName}`);
-    }
-    totalSize += entrySize;
-    if (totalSize > MAX_UNCOMPRESSED_ARCHIVE_BYTES) {
-      throw new BackupTooLargeError("Uncompressed backup archive exceeds the 514 MB limit");
-    }
-  }
-
-  const dbEntry = zip.getEntry("db.sqlite");
-  if (dbEntry && dbEntry.header.size > MAX_UNCOMPRESSED_DATABASE_BYTES) {
-    throw new BackupTooLargeError("Uncompressed SQLite database exceeds the 512 MB limit");
-  }
-
-  const metadataEntry = zip.getEntry("metadata.json");
-  if (metadataEntry && metadataEntry.header.size > MAX_METADATA_BYTES) {
-    throw new BackupTooLargeError("Backup metadata exceeds the 1 MB limit");
-  }
-
-  const encryptionKeyEntry = zip.getEntry("encryption-key.txt");
-  if (encryptionKeyEntry && encryptionKeyEntry.header.size > MAX_ENCRYPTION_KEY_BYTES) {
-    throw new BackupTooLargeError("Backup encryption key entry is too large");
-  }
+  return Buffer.concat(chunks, totalBytes);
 };
 
 const reEncryptSecrets = (tempDb: InstanceType<typeof BetterSqlite3>, importedKeyHex: string) => {
@@ -240,9 +401,13 @@ export async function POST(req: Request) {
   let tempDb: InstanceType<typeof BetterSqlite3> | null = null;
 
   try {
-    let formData: FormData;
+    tempDirectory = fs.mkdtempSync(path.join(path.dirname(dbPath), ".homarr-restore-"));
+    const uploadPath = path.join(tempDirectory, "backup.zip");
+    const tempPath = path.join(tempDirectory, "db.sqlite");
+
+    let uploadSize: number | null;
     try {
-      formData = await parseBoundedFormDataAsync(req);
+      uploadSize = await streamUploadedBackupAsync(req, uploadPath);
     } catch (error) {
       if (error instanceof BackupTooLargeError) {
         return NextResponse.json({ error: error.message }, { status: 413 });
@@ -250,56 +415,52 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
     }
 
-    const file = formData.get("file");
-    if (!(file instanceof File)) {
+    if (uploadSize === null) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
-    if (file.size > MAX_COMPRESSED_BACKUP_BYTES) {
+    if (uploadSize > MAX_COMPRESSED_BACKUP_BYTES) {
       return NextResponse.json({ error: "Backup upload exceeds the 256 MB limit" }, { status: 413 });
     }
 
-    let zip: AdmZip;
+    let zip: ZipFile;
     try {
-      zip = new AdmZip(Buffer.from(await file.arrayBuffer()));
+      zip = await openArchiveAsync(uploadPath);
     } catch {
       return NextResponse.json({ error: "Invalid ZIP file" }, { status: 400 });
     }
 
-    const entries = zip.getEntries().map((entry) => entry.entryName);
-    const missingEntries = REQUIRED_ZIP_ENTRIES.filter((name) => !entries.includes(name));
-    if (missingEntries.length > 0) {
-      return NextResponse.json({ error: `Invalid backup: missing ${missingEntries.join(", ")}` }, { status: 400 });
-    }
-
+    let metadata: { encryptionKey?: unknown };
+    let archivedEncryptionKey: string | undefined;
     try {
-      assertArchiveSizeLimits(zip);
+      const entries = await inspectArchiveAsync(zip);
+      await extractEntryToFileAsync(zip, entries.database, tempPath);
+      const metadataBuffer = await readBoundedEntryAsync(zip, entries.metadata, MAX_METADATA_BYTES);
+      const parsedMetadata: unknown = JSON.parse(metadataBuffer.toString());
+      if (typeof parsedMetadata !== "object" || parsedMetadata === null || Array.isArray(parsedMetadata)) {
+        throw new Error("Invalid backup: metadata.json must contain an object");
+      }
+      metadata = parsedMetadata as { encryptionKey?: unknown };
+      if (entries.encryptionKey) {
+        const keyBuffer = await readBoundedEntryAsync(zip, entries.encryptionKey, MAX_ENCRYPTION_KEY_BYTES);
+        archivedEncryptionKey = keyBuffer.toString().trim();
+      }
     } catch (error) {
       if (error instanceof BackupTooLargeError) {
         return NextResponse.json({ error: error.message }, { status: 413 });
       }
-      throw error;
+      const message =
+        error instanceof Error && error.message.startsWith("Invalid backup:") ? error.message : "Invalid ZIP file";
+      return NextResponse.json({ error: message }, { status: 400 });
+    } finally {
+      zip.close();
     }
-
-    tempDirectory = fs.mkdtempSync(path.join(path.dirname(dbPath), ".homarr-restore-"));
-    const tempPath = path.join(tempDirectory, "db.sqlite");
-    const dbEntry = zip.getEntry("db.sqlite");
-    if (!dbEntry) {
-      return NextResponse.json({ error: "Invalid backup: missing db.sqlite" }, { status: 400 });
-    }
-    fs.writeFileSync(tempPath, dbEntry.getData());
 
     tempDb = new BetterSqlite3(tempPath);
     const drizzleDb = drizzle(tempDb, { casing: DB_CASING, schema });
     migrate(drizzleDb, { migrationsFolder });
     await applyCustomMigrationsAsync(drizzleDb as unknown as Database);
 
-    const metadataEntry = zip.getEntry("metadata.json");
-    if (!metadataEntry) {
-      return NextResponse.json({ error: "Invalid backup: missing metadata.json" }, { status: 400 });
-    }
-    const metadata = JSON.parse(metadataEntry.getData().toString());
-
-    const rawKey = metadata.encryptionKey ?? zip.getEntry("encryption-key.txt")?.getData().toString().trim();
+    const rawKey = metadata.encryptionKey ?? archivedEncryptionKey;
     const importedKey = typeof rawKey === "string" && rawKey.length > 0 ? rawKey : undefined;
 
     const secretCount = (tempDb.prepare('SELECT COUNT(*) as count FROM "integrationSecret"').get() as { count: number })

@@ -24,6 +24,10 @@ export interface RenderSafeJsxOptions {
   budgets?: SafeJsxBudgets;
 }
 
+export interface RenderCompiledSafeJsxOptions extends Omit<RenderSafeJsxOptions, "template"> {
+  root: AstNode;
+}
+
 export interface SafeJsxRenderResult {
   node: ReactNode;
   warnings: string[];
@@ -351,11 +355,23 @@ class Interpreter {
   }
 }
 
-export function renderSafeJsx({ template, components, bindings, budgets }: RenderSafeJsxOptions): SafeJsxRenderResult {
+export function compileSafeJsx(template: string): AstNode {
+  return parseCustomJsxTemplate(template);
+}
+
+export function renderCompiledSafeJsx({
+  root,
+  components,
+  bindings,
+  budgets,
+}: RenderCompiledSafeJsxOptions): SafeJsxRenderResult {
   const limits: EvaluationBudgets = { ...DEFAULT_BUDGETS, ...budgets };
   for (const [name, value] of Object.entries(limits)) {
     if (!Number.isSafeInteger(value) || value <= 0) throw new SafeJsxError(`Invalid interpreter budget: ${name}`);
   }
-  const root = parseCustomJsxTemplate(template);
   return new Interpreter(components, new Environment(bindings), limits).render(root);
+}
+
+export function renderSafeJsx({ template, ...options }: RenderSafeJsxOptions): SafeJsxRenderResult {
+  return renderCompiledSafeJsx({ ...options, root: compileSafeJsx(template) });
 }

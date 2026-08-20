@@ -5,6 +5,7 @@ import { z } from "zod/v4";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { and, asc, desc, eq, handleTransactionsAsync, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import {
@@ -33,7 +34,7 @@ import { fetchOpenRouterGenerationTelemetryAsync } from "../assistant-generation
 import { env } from "../env";
 import { orderMessagesByParent } from "../assistant-message-order";
 import { verifyAssistantGenerationAccessToken } from "../assistant-generation-access";
-import { createTRPCRouter, isDemoMode, permissionRequiredProcedure, protectedProcedure } from "../trpc";
+import { createTRPCRouter, isDemoMode, isDemoReadOnly, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import { boardRouter, getHomeIdBoardAsync } from "./board";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
@@ -206,9 +207,9 @@ const fetchModelsAsync = async (configuration: AssistantConfiguration) => {
   }
 
   const endpoint = `${configuration.baseUrl}${configuration.modelDiscoveryPath}`;
-  let response: Response;
+  let response: Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>;
   try {
-    response = await fetch(endpoint, {
+    response = await fetchWithTrustedCertificatesAsync(endpoint, {
       headers: getProviderHeaders(configuration),
       signal: AbortSignal.timeout(15_000),
     });
@@ -454,7 +455,7 @@ const addFeedbackToMessageContent = (serializedContent: string, type: "positive"
 export const assistantRouter = createTRPCRouter({
   getAvailability: protectedProcedure.query(async ({ ctx }) => {
     if (isDemoMode) {
-      return { enabled: true };
+      return { enabled: !isDemoReadOnly };
     }
     const configuration = await getConfigurationAsync(ctx.db);
     const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;

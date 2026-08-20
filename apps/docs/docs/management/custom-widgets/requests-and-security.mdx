@@ -60,8 +60,8 @@ Queries default to view permission and actions to modify. DELETE always requires
 Management and runtime are intentionally separate. A Homarr administrator with board-modify permission places and
 configures the widget. After placement, query and action authorization follows the request's board permission. Public
 boards may execute queries for anonymous viewers, but mutations stay authenticated. This includes shared-cache
-invalidation: `RefreshButton` is disabled only without an active item or preview session, or in edit mode, while ordinary
-scheduled query rendering remains available to anonymous viewers.
+invalidation: `RefreshButton` is disabled for anonymous viewers, without an active item or preview session, and in edit
+mode, while ordinary scheduled query rendering remains available to anonymous viewers.
 
 Responses use bounded, versioned shared-Redis cache keys. Action invalidation advances the shared version so every
 Homarr replica stops serving the previous response without scanning or deleting a key prefix.

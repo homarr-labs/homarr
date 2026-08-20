@@ -4,8 +4,11 @@ export const getSafeAssistantMarkdownImageSource = (source: string | Blob | unde
   if (typeof source !== "string" || !source) return null;
   if (source.startsWith("/") && !source.startsWith("//")) return source;
 
-  return getSafeAssistantHttpUrl(source);
+  return null;
 };
+
+export const getSafeAssistantExternalMarkdownImageSource = (source: string | Blob | undefined) =>
+  getSafeAssistantHttpUrl(source);
 
 const safeAttachmentDataUrl =
   /^data:image\/(?:gif|jpeg|png|webp);base64,(?:[a-z\d+/]{4})*(?:[a-z\d+/]{2}==|[a-z\d+/]{3}=)?$/iu;

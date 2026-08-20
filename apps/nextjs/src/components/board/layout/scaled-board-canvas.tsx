@@ -8,6 +8,7 @@ import { useElementSize } from "@mantine/hooks";
 import classes from "./scaled-board-canvas.module.css";
 
 const BoardCanvasScaleContext = createContext(1);
+const MIN_READABLE_CANVAS_SCALE = 0.5;
 
 export const useBoardCanvasScale = () => useContext(BoardCanvasScaleContext);
 
@@ -15,7 +16,7 @@ export const calculateBoardCanvasScale = (availableWidth: number, logicalWidth: 
   if (!Number.isFinite(availableWidth) || !Number.isFinite(logicalWidth)) return 1;
   if (availableWidth <= 0 || logicalWidth <= 0) return 1;
 
-  return availableWidth / logicalWidth;
+  return Math.max(MIN_READABLE_CANVAS_SCALE, availableWidth / logicalWidth);
 };
 
 export const calculateBoardUiScale = (canvasScale: number) => {
@@ -33,8 +34,8 @@ interface ScaledBoardCanvasProps {
 
 /**
  * Scales the complete board as one surface while keeping widget layout in
- * fixed logical pixels. The complete canvas always fits its viewport so board
- * content can never widen the document or require horizontal scrolling.
+ * fixed logical pixels. Narrow viewports stop scaling at a readable threshold
+ * and scroll the remaining logical surface horizontally.
  */
 export const ScaledBoardCanvas = ({
   logicalWidth,

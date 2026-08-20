@@ -1,7 +1,16 @@
 "use client";
 
 import type { CSSProperties, PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { Overlay, Portal } from "@mantine/core";
 import { useIsomorphicEffect, useViewportSize } from "@mantine/hooks";
 
@@ -28,9 +37,12 @@ interface OpenAdvancedFocusOptions {
   restoreFocusTarget?: HTMLElement;
 }
 
-interface AdvancedFocusContextValue {
+interface AdvancedFocusState {
   active: ActiveFocus | null;
   viewportSize: { width: number; height: number };
+}
+
+interface AdvancedFocusActions {
   open: (itemId: string, source: HTMLElement, options?: OpenAdvancedFocusOptions) => void;
   close: (restoreFocus?: boolean) => void;
   dismiss: (itemId: string) => void;
@@ -38,7 +50,17 @@ interface AdvancedFocusContextValue {
   leave: (itemId: string) => void;
 }
 
-const AdvancedFocusContext = createContext<AdvancedFocusContextValue | null>(null);
+interface AdvancedFocusStore {
+  getSnapshot: () => AdvancedFocusState;
+  subscribe: (listener: () => void) => () => void;
+}
+
+const AdvancedFocusActionsContext = createContext<AdvancedFocusActions | null>(null);
+const AdvancedFocusStoreContext = createContext<AdvancedFocusStore | null>(null);
+const INACTIVE_FOCUS_STATE: AdvancedFocusState = {
+  active: null,
+  viewportSize: { width: 0, height: 0 },
+};
 const HOVER_DELAY_MS = 500;
 const POINTER_TRANSITION_GRACE_MS = 80;
 const CLOSE_DURATION_MS = 180;
@@ -61,6 +83,15 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
   const holdIndicatorRef = useRef<HTMLDivElement | null>(null);
   const pointerPositionRef = useRef({ x: -100, y: -100 });
   const pointerFrameRef = useRef<number | null>(null);
+  const focusStateRef = useRef<AdvancedFocusState>({ active: null, viewportSize });
+  const focusListenersRef = useRef(new Set<() => void>());
+  const [focusStore] = useState<AdvancedFocusStore>(() => ({
+    getSnapshot: () => focusStateRef.current,
+    subscribe: (listener) => {
+      focusListenersRef.current.add(listener);
+      return () => focusListenersRef.current.delete(listener);
+    },
+  }));
 
   const cancelHoverTimer = useCallback(() => {
     if (hoverTimerRef.current === null) return;
@@ -315,55 +346,83 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
     };
   }, [active?.activation]);
 
-  const value = useMemo(
-    () => ({ active, viewportSize, open, close, dismiss, hover, leave }),
-    [active, close, dismiss, hover, leave, open, viewportSize],
-  );
+  useIsomorphicEffect(() => {
+    focusStateRef.current = { active, viewportSize };
+    for (const listener of focusListenersRef.current) listener();
+  }, [active, viewportSize]);
+
+  const actions = useMemo(() => ({ open, close, dismiss, hover, leave }), [close, dismiss, hover, leave, open]);
 
   return (
-    <AdvancedFocusContext.Provider value={value}>
-      {children}
-      {isHoldPending && (
-        <Portal>
-          <div
-            ref={holdIndicatorRef}
-            data-advanced-focus-hold-indicator
-            className={classes.holdIndicator}
-            style={
-              {
-                "--advanced-focus-pointer-x": `${pointerPositionRef.current.x}px`,
-                "--advanced-focus-pointer-y": `${pointerPositionRef.current.y}px`,
-              } as CSSProperties
-            }
-            aria-hidden
-          >
-            <svg className={classes.holdIndicatorRing} viewBox="0 0 36 36">
-              <circle className={classes.holdIndicatorTrack} cx="18" cy="18" r="15" pathLength="1" />
-              <circle className={classes.holdIndicatorProgress} cx="18" cy="18" r="15" pathLength="1" />
-            </svg>
-            <span className={classes.holdIndicatorLabel}>&#8679;</span>
-          </div>
-        </Portal>
-      )}
-      {active?.activation === "preview" && (
-        <Portal>
-          <Overlay
-            fixed
-            data-advanced-focus-overlay
-            backgroundOpacity={0.38}
-            blur={0}
-            zIndex="var(--homarr-z-index-widget-preview-backdrop)"
-            className={`${classes.backdrop} ${active.phase === "closing" ? classes.backdropClosing : ""}`}
-            aria-hidden
-          />
-        </Portal>
-      )}
-    </AdvancedFocusContext.Provider>
+    <AdvancedFocusActionsContext.Provider value={actions}>
+      <AdvancedFocusStoreContext.Provider value={focusStore}>
+        {children}
+        {isHoldPending && (
+          <Portal>
+            <div
+              ref={holdIndicatorRef}
+              data-advanced-focus-hold-indicator
+              className={classes.holdIndicator}
+              style={
+                {
+                  "--advanced-focus-pointer-x": `${pointerPositionRef.current.x}px`,
+                  "--advanced-focus-pointer-y": `${pointerPositionRef.current.y}px`,
+                } as CSSProperties
+              }
+              aria-hidden
+            >
+              <svg className={classes.holdIndicatorRing} viewBox="0 0 36 36">
+                <circle className={classes.holdIndicatorTrack} cx="18" cy="18" r="15" pathLength="1" />
+                <circle className={classes.holdIndicatorProgress} cx="18" cy="18" r="15" pathLength="1" />
+              </svg>
+              <span className={classes.holdIndicatorLabel}>&#8679;</span>
+            </div>
+          </Portal>
+        )}
+        {active?.activation === "preview" && (
+          <Portal>
+            <Overlay
+              fixed
+              data-advanced-focus-overlay
+              backgroundOpacity={0.38}
+              blur={0}
+              zIndex="var(--homarr-z-index-widget-preview-backdrop)"
+              className={`${classes.backdrop} ${active.phase === "closing" ? classes.backdropClosing : ""}`}
+              aria-hidden
+            />
+          </Portal>
+        )}
+      </AdvancedFocusStoreContext.Provider>
+    </AdvancedFocusActionsContext.Provider>
   );
 };
 
+const useAdvancedFocusStore = () => {
+  const store = useContext(AdvancedFocusStoreContext);
+  if (!store) throw new Error("Advanced focus state must be used within BoardAdvancedFocusProvider");
+  return store;
+};
+
+export const useAdvancedFocusActions = () => {
+  const actions = useContext(AdvancedFocusActionsContext);
+  if (!actions) throw new Error("Advanced focus actions must be used within BoardAdvancedFocusProvider");
+  return actions;
+};
+
+export const useAdvancedFocusItem = (itemId: string | null) => {
+  const store = useAdvancedFocusStore();
+  const getItemSnapshot = useCallback(() => {
+    const snapshot = store.getSnapshot();
+    if (itemId && snapshot.active?.itemId === itemId) return snapshot;
+    return INACTIVE_FOCUS_STATE;
+  }, [itemId, store]);
+
+  return useSyncExternalStore(store.subscribe, getItemSnapshot, () => INACTIVE_FOCUS_STATE);
+};
+
 export const useAdvancedFocus = () => {
-  const context = useContext(AdvancedFocusContext);
-  if (!context) throw new Error("useAdvancedFocus must be used within BoardAdvancedFocusProvider");
-  return context;
+  const store = useAdvancedFocusStore();
+  const state = useSyncExternalStore(store.subscribe, store.getSnapshot, () => INACTIVE_FOCUS_STATE);
+  const actions = useAdvancedFocusActions();
+  return useMemo(() => ({ ...state, ...actions }), [actions, state]);
 };

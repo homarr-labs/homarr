@@ -49,7 +49,10 @@ summary of accessible Homarr resources. Live status is fetched only when needed.
 
 ## Permissions and privacy
 
-- Read-only actions can run automatically. Changes require approval.
+- Read-only actions can run automatically. Changes require approval by default.
+- **Automatic approvals** can be enabled for one conversation. While enabled, protected changes, submitted form details,
+  and affirmative answers run without another approval click. It turns off when you switch conversations; Homarr
+  permissions still apply to every action.
 - Homarr permissions apply to every tool call and mentioned item.
 - API keys and custom headers are encrypted and never returned to the browser.
 - Conversations are stored per user and can be exported or deleted.

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Badge,
   Box,
@@ -58,6 +58,10 @@ export default function MediaMissingWidget({
   });
   const data = getUsableWidgetQueryData(mediaQuery);
   const [selectedTab, setSelectedTab] = useState<MediaMissingTab>(showMissing ? "missing" : "queued");
+  const tabScrollPositionsRef = useRef<Record<MediaMissingTab, { x: number; y: number }>>({
+    missing: { x: 0, y: 0 },
+    queued: { x: 0, y: 0 },
+  });
   const activeTab = resolveMediaMissingTab(selectedTab, showMissing, showQueued);
 
   useEffect(() => {
@@ -92,10 +96,18 @@ export default function MediaMissingWidget({
   const tabLabel = (label: string, shown: number, total: number) => (isThin ? total : `${label} (${shown}/${total})`);
 
   const renderPanel = (
+    tab: MediaMissingTab,
     entries: { item: MissingMediaItem | QueuedMediaItem; integrationId: string }[],
     emptyLabel: string,
   ) => (
-    <ScrollArea h="100%" scrollbarSize={4}>
+    <ScrollArea
+      h="100%"
+      scrollbarSize={4}
+      startScrollPosition={tabScrollPositionsRef.current[tab]}
+      onScrollPositionChange={(position) => {
+        tabScrollPositionsRef.current[tab] = position;
+      }}
+    >
       <Box p="xs">
         {entries.length === 0 ? (
           <Text size="sm" c="dimmed" ta="center" py="md">
@@ -146,7 +158,7 @@ export default function MediaMissingWidget({
                   {tabLabel(t("tab.missing"), missing.length, missingCount)}
                 </Text>
               </Group>
-              <Box h="calc(100% - 40px)">{renderPanel(missing, t("empty.missing"))}</Box>
+              <Box h="calc(100% - 40px)">{renderPanel("missing", missing, t("empty.missing"))}</Box>
             </Paper>
           )}
           {showQueued && (
@@ -157,7 +169,7 @@ export default function MediaMissingWidget({
                   {tabLabel(t("tab.queued"), queued.length, queuedCount)}
                 </Text>
               </Group>
-              <Box h="calc(100% - 40px)">{renderPanel(queued, t("empty.queued"))}</Box>
+              <Box h="calc(100% - 40px)">{renderPanel("queued", queued, t("empty.queued"))}</Box>
             </Paper>
           )}
         </SimpleGrid>
@@ -181,12 +193,20 @@ export default function MediaMissingWidget({
       </Group>
       <Tabs.List grow>
         {showMissing && (
-          <Tabs.Tab value="missing" px={isThin ? 6 : undefined} leftSection={<IconQuestionMark size="var(--mantine-font-size-sm)" />}>
+          <Tabs.Tab
+            value="missing"
+            px={isThin ? 6 : undefined}
+            leftSection={<IconQuestionMark size="var(--mantine-font-size-sm)" />}
+          >
             {tabLabel(t("tab.missing"), missing.length, missingCount)}
           </Tabs.Tab>
         )}
         {showQueued && (
-          <Tabs.Tab value="queued" px={isThin ? 6 : undefined} leftSection={<IconDownload size="var(--mantine-font-size-sm)" />}>
+          <Tabs.Tab
+            value="queued"
+            px={isThin ? 6 : undefined}
+            leftSection={<IconDownload size="var(--mantine-font-size-sm)" />}
+          >
             {tabLabel(t("tab.queued"), queued.length, queuedCount)}
           </Tabs.Tab>
         )}
@@ -194,12 +214,12 @@ export default function MediaMissingWidget({
 
       {showMissing && (
         <Tabs.Panel value="missing" flex={1} style={{ overflow: "hidden" }}>
-          {activeTab === "missing" && renderPanel(missing, t("empty.missing"))}
+          {activeTab === "missing" && renderPanel("missing", missing, t("empty.missing"))}
         </Tabs.Panel>
       )}
       {showQueued && (
         <Tabs.Panel value="queued" flex={1} style={{ overflow: "hidden" }}>
-          {activeTab === "queued" && renderPanel(queued, t("empty.queued"))}
+          {activeTab === "queued" && renderPanel("queued", queued, t("empty.queued"))}
         </Tabs.Panel>
       )}
     </Tabs>

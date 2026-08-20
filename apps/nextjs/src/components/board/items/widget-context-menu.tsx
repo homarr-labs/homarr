@@ -1,6 +1,6 @@
 "use client";
 
-import type { MutableRefObject, ReactNode, RefObject } from "react";
+import type { ReactNode, RefObject } from "react";
 import { useCallback, useMemo, useState } from "react";
 import { Group, Loader, Menu, Text, Tooltip } from "@mantine/core";
 import { IconAlertTriangle, IconCircleCheck, IconMaximize, IconRefresh, IconSettings } from "@tabler/icons-react";
@@ -24,7 +24,7 @@ import { getWidgetQueryKeys, getWidgetRuntimeQueries, supportsAdvancedFocus } fr
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
-import { useAdvancedFocus } from "../advanced-focus/context";
+import { useAdvancedFocusActions } from "../advanced-focus/context";
 import { useBoardPermissions } from "../permissions/client";
 import { useItemActions } from "./item-actions";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
@@ -33,7 +33,6 @@ import { matchesWidgetItemQuery } from "./widget-query-scope";
 interface WidgetContextMenuProps {
   item: SectionItem;
   definition: WidgetDefinition;
-  widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   widgetRuntimeRef: WidgetRuntimeRef;
   sourceRef: RefObject<HTMLElement | null>;
   children: ReactNode;
@@ -46,6 +45,44 @@ export const WidgetContextMenu = ({
   sourceRef,
   children,
 }: WidgetContextMenuProps) => {
+  const { data: session } = useSession();
+  const [isEditMode] = useEditMode();
+  const settings = useSettings();
+  const [menuOpened, setMenuOpened] = useState(false);
+
+  if (!session || !settings.enableRightClickOnWidgets || isEditMode || item.kind === "app") return <>{children}</>;
+
+  return (
+    <Menu
+      shadow="md"
+      width={300}
+      closeOnItemClick={false}
+      position="right-start"
+      offset={4}
+      opened={menuOpened}
+      onChange={setMenuOpened}
+    >
+      <Menu.ContextMenu>{children}</Menu.ContextMenu>
+      {menuOpened && (
+        <WidgetContextMenuDropdown
+          item={item}
+          definition={definition}
+          widgetRuntimeRef={widgetRuntimeRef}
+          sourceRef={sourceRef}
+        />
+      )}
+    </Menu>
+  );
+};
+
+type WidgetContextMenuDropdownProps = Omit<WidgetContextMenuProps, "children">;
+
+const WidgetContextMenuDropdown = ({
+  item,
+  definition,
+  widgetRuntimeRef,
+  sourceRef,
+}: WidgetContextMenuDropdownProps) => {
   const { data: session } = useSession();
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
@@ -64,9 +101,8 @@ export const WidgetContextMenu = ({
     hasChangeAccess && (item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false));
   const canOpenAdvancedFocus = supportsAdvancedFocus(definition);
   const queryClient = useQueryClient();
-  const { open: openAdvancedFocus } = useAdvancedFocus();
+  const { open: openAdvancedFocus } = useAdvancedFocusActions();
   const integrationsWithInteractAccess = useIntegrationsWithInteractAccess();
-  const [menuOpened, setMenuOpened] = useState(false);
 
   const persistBoard = useCallback(
     (updater: (previous: typeof board) => typeof board) => {
@@ -209,104 +245,90 @@ export const WidgetContextMenu = ({
     [setItemOptions],
   );
 
-  if (!session || !settings.enableRightClickOnWidgets || isEditMode || item.kind === "app") return <>{children}</>;
-
   const visibleWidgetActions = widgetContextActions.filter((action) => !action.hidden);
 
   return (
-    <Menu
-      shadow="md"
-      width={300}
-      closeOnItemClick={false}
-      position="right-start"
-      offset={4}
-      opened={menuOpened}
-      onChange={setMenuOpened}
-    >
-      <Menu.ContextMenu>{children}</Menu.ContextMenu>
-      <Menu.Dropdown>
-        {canOpenAdvancedFocus && (
-          <>
-            <Menu.Item
-              closeMenuOnClick
-              leftSection={<IconMaximize size={16} />}
-              onClick={() => {
-                if (sourceRef.current)
-                  openAdvancedFocus(item.id, sourceRef.current, {
-                    restoreFocusTarget:
-                      sourceRef.current.querySelector<HTMLElement>("[data-advanced-focus-trigger]") ??
-                      sourceRef.current,
-                  });
-              }}
-            >
-              {t("item.advancedFocus.open")}
-            </Menu.Item>
-            <Menu.Divider />
-          </>
-        )}
+    <Menu.Dropdown>
+      {canOpenAdvancedFocus && (
+        <>
+          <Menu.Item
+            closeMenuOnClick
+            leftSection={<IconMaximize size={16} />}
+            onClick={() => {
+              if (sourceRef.current)
+                openAdvancedFocus(item.id, sourceRef.current, {
+                  restoreFocusTarget:
+                    sourceRef.current.querySelector<HTMLElement>("[data-advanced-focus-trigger]") ?? sourceRef.current,
+                });
+            }}
+          >
+            {t("item.advancedFocus.open")}
+          </Menu.Item>
+          <Menu.Divider />
+        </>
+      )}
 
-        {toggleOptions.length > 0 && (
-          <>
-            <Menu.Label>{tMenu("options")}</Menu.Label>
-            {toggleOptions.map(([key]) => (
-              <Menu.CheckboxItem key={key} checked={Boolean(options[key])} onChange={handleToggle(key)}>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {String(translateIfNecessary(t, ((fn: any) => fn(`widget.${item.kind}.option.${key}.label`)) as any))}
-              </Menu.CheckboxItem>
-            ))}
-          </>
-        )}
+      {toggleOptions.length > 0 && (
+        <>
+          <Menu.Label>{tMenu("options")}</Menu.Label>
+          {toggleOptions.map(([key]) => (
+            <Menu.CheckboxItem key={key} checked={Boolean(options[key])} onChange={handleToggle(key)}>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {String(translateIfNecessary(t, ((fn: any) => fn(`widget.${item.kind}.option.${key}.label`)) as any))}
+            </Menu.CheckboxItem>
+          ))}
+        </>
+      )}
 
-        {visibleWidgetActions.length > 0 && (
-          <>
-            {toggleOptions.length > 0 && <Menu.Divider />}
-            <Menu.Label>{tMenu("actions")}</Menu.Label>
-            {visibleWidgetActions.map((action) => {
-              const Icon = action.icon;
-              return (
-                <Menu.Item
-                  key={action.key}
-                  closeMenuOnClick
-                  leftSection={Icon ? <Icon size={16} /> : undefined}
-                  onClick={action.onClick}
-                  disabled={action.disabled}
-                  color={action.color}
-                >
-                  {translateIfNecessary(t, action.label)}
-                </Menu.Item>
-              );
-            })}
-          </>
-        )}
+      {visibleWidgetActions.length > 0 && (
+        <>
+          {toggleOptions.length > 0 && <Menu.Divider />}
+          <Menu.Label>{tMenu("actions")}</Menu.Label>
+          {visibleWidgetActions.map((action) => {
+            const Icon = action.icon;
+            return (
+              <Menu.Item
+                key={action.key}
+                closeMenuOnClick
+                leftSection={Icon ? <Icon size={16} /> : undefined}
+                onClick={action.onClick}
+                disabled={action.disabled}
+                color={action.color}
+              >
+                {translateIfNecessary(t, action.label)}
+              </Menu.Item>
+            );
+          })}
+        </>
+      )}
 
-        {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
-        <Menu.Item
-          leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
-          onClick={handleRefetch}
-          disabled={isWidgetFetching}
-        >
-          <Group justify="space-between" wrap="nowrap" gap="sm">
-            {tMenu("refresh")}
-            <WidgetQueryStatus
-              queryClient={queryClient}
-              matchesQuery={matchesWidgetQuery}
-              isFetching={isWidgetFetching}
-              t={t}
-            />
-          </Group>
-        </Menu.Item>
-        <Menu.Item
-          closeMenuOnClick
-          leftSection={<IconSettings size={16} />}
-          onClick={openEditModal}
-          onFocus={preloadWidgetEditModal}
-          onPointerEnter={preloadWidgetEditModal}
-          disabled={!canConfigureWidget || (hasSupportedIntegrations && isPending)}
-        >
-          {tMenu("settings")}
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+      {(toggleOptions.length > 0 || visibleWidgetActions.length > 0) && <Menu.Divider />}
+      <Menu.Item
+        leftSection={isWidgetFetching ? <Loader size={16} /> : <IconRefresh size={16} />}
+        onClick={handleRefetch}
+        disabled={isWidgetFetching}
+      >
+        <Group justify="space-between" wrap="nowrap" gap="sm">
+          {tMenu("refresh")}
+          <WidgetQueryStatus
+            queryClient={queryClient}
+            matchesQuery={matchesWidgetQuery}
+            isFetching={isWidgetFetching}
+            t={t}
+          />
+        </Group>
+      </Menu.Item>
+      <Menu.Item
+        closeMenuOnClick
+        leftSection={<IconSettings size={16} />}
+        onClick={openEditModal}
+        onFocus={preloadWidgetEditModal}
+        onPointerEnter={preloadWidgetEditModal}
+        disabled={!canConfigureWidget || (hasSupportedIntegrations && isPending)}
+      >
+        {tMenu("settings")}
+      </Menu.Item>
+    </Menu.Dropdown>
   );
 };
 

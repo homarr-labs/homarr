@@ -234,7 +234,6 @@ describe("POST /api/backup/import", () => {
   it("rejects a concurrent restore while the first request owns the restore lock", async () => {
     createMigratedDatabase(activeDatabasePath, "board-current", "Current board");
     const backup = createBackup(temporaryDirectory, "concurrent", "Concurrent restore");
-    const originalArrayBuffer = File.prototype.arrayBuffer;
     let signalStarted!: () => void;
     let releaseFirstRequest!: () => void;
     const started = new Promise<void>((resolve) => {
@@ -243,13 +242,25 @@ describe("POST /api/backup/import", () => {
     const release = new Promise<void>((resolve) => {
       releaseFirstRequest = resolve;
     });
-    vi.spyOn(File.prototype, "arrayBuffer").mockImplementationOnce(async function (this: File) {
-      signalStarted();
-      await release;
-      return originalArrayBuffer.call(this);
+    const originalRequest = createImportRequest(backup);
+    const requestBody = await originalRequest.arrayBuffer();
+    const delayedBody = new ReadableStream<Uint8Array>({
+      async pull(controller) {
+        signalStarted();
+        await release;
+        controller.enqueue(new Uint8Array(requestBody));
+        controller.close();
+      },
     });
+    const delayedRequestInit: RequestInit & { duplex: "half" } = {
+      method: "POST",
+      headers: originalRequest.headers,
+      body: delayedBody,
+      duplex: "half",
+    };
+    const delayedRequest = new Request(originalRequest.url, delayedRequestInit);
 
-    const firstRestore = POST(createImportRequest(backup));
+    const firstRestore = POST(delayedRequest);
     await started;
     const concurrentResponse = await POST(createImportRequest(backup));
     releaseFirstRequest();

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { parse as parseSuperJson } from "superjson";
 import { z } from "zod/v4";
 
+import { mapWithConcurrency } from "@homarr/common";
 import { decryptSecret } from "@homarr/common/server";
 import { eq } from "@homarr/db";
 import { boards, customWidgetDefinitions, items, legacyCustomWidgetDefinitions } from "@homarr/db/schema";
@@ -13,6 +14,7 @@ import {
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
 import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
+import { CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT } from "@homarr/custom-widgets/server";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
@@ -40,7 +42,7 @@ interface CustomWidgetItemOptions {
   refreshInterval?: number;
 }
 
-type RouterContext = Parameters<typeof throwIfActionForbiddenAsync>[0];
+type RouterContext = Parameters<typeof throwIfActionForbiddenAsync>[0] & { ipAddress?: string };
 type ResolvedDefinition = Awaited<ReturnType<typeof resolvePlacedDefinitionAsync>>;
 
 const parseItemOptions = (raw: string): CustomWidgetItemOptions => {
@@ -154,6 +156,7 @@ const withRequestLimit = async <T>(
   const release = await acquireCustomWidgetRequestLimit({
     category: request.kind === "query" ? "query" : request.method === "DELETE" ? "delete" : "action",
     userId: ctx.session?.user.id,
+    anonymousId: ctx.ipAddress,
     itemId: resolved.item.id,
     definitionId: resolved.stored.id,
   });
@@ -194,9 +197,9 @@ const executeRequest = async (
 };
 
 export const customApiRouter = createTRPCRouter({
-  refresh: publicProcedure.input(itemInputSchema).mutation(async ({ ctx, input }) => {
+  refresh: protectedProcedure.input(itemInputSchema).mutation(async ({ ctx, input }) => {
     const resolved = await resolvePlacedDefinitionAsync(ctx, input.itemId);
-    invalidateCustomWidgetResponseCache([
+    await invalidateCustomWidgetResponseCache([
       `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:`,
     ]);
   }),
@@ -206,8 +209,10 @@ export const customApiRouter = createTRPCRouter({
     const loadRequests = Object.entries(resolved.definition.requests).filter(
       ([, request]) => request.kind === "query" && request.trigger === "load",
     );
-    const entries = await Promise.all(
-      loadRequests.map(async ([requestId, request]) => {
+    const entries = await mapWithConcurrency(
+      loadRequests,
+      CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT,
+      async ([requestId, request]) => {
         try {
           const response = await executeRequest(ctx, resolved, { id: requestId, ...request }, {});
           return [
@@ -237,12 +242,13 @@ export const customApiRouter = createTRPCRouter({
             },
           ] as const;
         }
-      }),
+      },
     );
 
     return {
       type: "customJsx" as const,
       template: resolved.definition.template,
+      canRefresh: ctx.session !== null,
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
       status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),
       options: resolved.configuration,
@@ -285,7 +291,7 @@ export const customApiRouter = createTRPCRouter({
       }
       const response = await executeRequest(ctx, resolved, request, input.params);
       if (response.ok && request.invalidates?.length) {
-        invalidateCustomWidgetResponseCache(
+        await invalidateCustomWidgetResponseCache(
           request.invalidates.flatMap((requestId) => [
             `custom-jsx:${resolved.item.id}:${getCustomWidgetCacheVersion(resolved.stored)}:${requestId}:`,
             `custom-widget:options:${resolved.stored.id}:${getCustomWidgetCacheVersion(resolved.stored)}:${requestId}:`,

@@ -2416,7 +2416,8 @@
       "image": {
         "loading": "Loading image",
         "failed": "This image could not be loaded.",
-        "retry": "Try image again"
+        "retry": "Try image again",
+        "loadExternal": "Load external image from {host}"
       },
       "quoteSelection": "Quote",
       "dismissQuote": "Remove quote",

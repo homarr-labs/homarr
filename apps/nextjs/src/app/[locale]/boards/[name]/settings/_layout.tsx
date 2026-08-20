@@ -91,8 +91,7 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
         setResettingLayoutId(layout.id);
         void (async () => {
           try {
-            const savedValues = form.isDirty() ? await saveSettingsAsync() : form.values;
-            const canonicalLayout = savedValues ? findCanonicalLayout(savedValues.layouts, layout) : undefined;
+            const canonicalLayout = board.layouts.find((candidate) => candidate.id === layout.id);
             if (!canonicalLayout) return;
 
             await resetLayout({ boardId: board.id, layoutId: canonicalLayout.id });

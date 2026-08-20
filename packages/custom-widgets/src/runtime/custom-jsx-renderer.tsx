@@ -3,12 +3,14 @@ import { Component, useCallback, useEffect, useId, useMemo, useState } from "rea
 import { Alert, Box, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-import { renderSafeJsx } from "../jsx/interpreter";
+import { compileSafeJsx, renderCompiledSafeJsx } from "../jsx/interpreter";
 import { CustomJsxInputsProvider } from "../jsx/runtime-components";
 import type { WidgetInputType, WidgetInputValue } from "../jsx/runtime-components";
 import type { CustomJsxRequestCapability } from "./types";
 
 const EMPTY_RECORD: Record<string, never> = {};
+const referenceIds = new WeakMap<object, number>();
+let nextReferenceId = 1;
 
 const methodColors: Readonly<Record<string, string>> = {
   GET: "blue",
@@ -162,12 +164,27 @@ function CustomJsxRendererSession({
     },
     [inputTypes],
   );
+  const compiled = useMemo(() => {
+    try {
+      return { root: compileSafeJsx(template), error: null };
+    } catch (error) {
+      return { root: null, error: error instanceof Error ? error : new Error(String(error)) };
+    }
+  }, [template]);
   const rendered = useMemo(() => {
+    if (compiled.error || !compiled.root) {
+      return {
+        node: null,
+        warnings: [],
+        boundaryKey: `${template.length}:compile-error`,
+        error: compiled.error ?? new Error("Template compilation failed"),
+      };
+    }
     try {
       const bindings = { ...createBindings(data), status, options, inputs };
       return {
-        ...renderSafeJsx({ template, components, bindings }),
-        boundaryKey: createBoundaryKey(template, bindings),
+        ...renderCompiledSafeJsx({ root: compiled.root, components, bindings }),
+        boundaryKey: createBoundaryKey(template, [data, status, options, inputs]),
         error: null,
       };
     } catch (error) {
@@ -178,7 +195,7 @@ function CustomJsxRendererSession({
         error: error instanceof Error ? error : new Error(String(error)),
       };
     }
-  }, [components, createBindings, data, inputs, options, status, template]);
+  }, [compiled, components, createBindings, data, inputs, options, status, template]);
   useEffect(() => setParseErrors([]), [rendered.boundaryKey, template]);
   const handleError = useCallback(
     (error: Error) =>
@@ -228,9 +245,20 @@ function CustomJsxRendererSession({
   );
 }
 
-function createBoundaryKey(template: string, bindings: Readonly<Record<string, unknown>>) {
-  let hash = 0;
-  const value = `${template}\0${JSON.stringify(bindings)}`;
-  for (let index = 0; index < value.length; index += 1) hash = (hash * 31 + value.charCodeAt(index)) | 0;
-  return `${template.length}:${hash}`;
+function createBoundaryKey(template: string, values: readonly unknown[]) {
+  return `${template.length}:${values.map(referenceKey).join(":")}`;
+}
+
+function referenceKey(value: unknown): string {
+  if ((typeof value === "object" && value !== null) || typeof value === "function") {
+    const reference = value as object;
+    let id = referenceIds.get(reference);
+    if (!id) {
+      id = nextReferenceId;
+      nextReferenceId += 1;
+      referenceIds.set(reference, id);
+    }
+    return `r${id}`;
+  }
+  return `${typeof value}:${String(value)}`;
 }

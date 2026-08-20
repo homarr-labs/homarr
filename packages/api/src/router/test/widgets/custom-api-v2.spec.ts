@@ -118,8 +118,8 @@ describe("Custom JSX v2 board router", () => {
   });
 
   test("refreshes the server response cache for a placed widget", async () => {
-    const { db, itemId } = await setup();
-    const caller = customApiRouter.createCaller({ db, deviceType: undefined, session: null });
+    const { db, itemId, ownerId } = await setup();
+    const caller = customApiRouter.createCaller({ db, deviceType: undefined, session: createSession(ownerId) });
 
     await caller.refresh({ itemId });
 

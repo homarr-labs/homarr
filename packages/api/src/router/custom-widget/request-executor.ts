@@ -16,6 +16,7 @@ import {
 import type { CustomWidgetHttpRequest, CustomWidgetHttpResponse } from "@homarr/custom-widgets/server";
 
 import { toTrpcError } from "./domain-error";
+import { executeWithCustomWidgetResponseCache, invalidateSharedCustomWidgetResponseCache } from "./response-cache";
 
 export type {
   CustomWidgetAuthConfig,
@@ -74,14 +75,18 @@ export async function resolveAndValidateHost(hostname: string, scope: CustomWidg
 
 export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest): Promise<CustomWidgetHttpResponse> {
   try {
-    return await executeDomainRequest({
-      ...input,
-      logError: (event) => logger.error("Custom widget request failed", event),
-    });
+    return await executeWithCustomWidgetResponseCache(input, (request) =>
+      executeDomainRequest({
+        ...request,
+        logError: (event) => logger.error("Custom widget request failed", event),
+      }),
+    );
   } catch (error) {
     toTrpcError(error);
   }
 }
 
-export const invalidateCustomWidgetResponseCache = (prefixes: readonly string[]) =>
+export async function invalidateCustomWidgetResponseCache(prefixes: readonly string[]) {
   invalidateDomainResponseCache(prefixes);
+  await invalidateSharedCustomWidgetResponseCache(prefixes);
+}
