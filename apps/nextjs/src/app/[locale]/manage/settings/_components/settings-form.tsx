@@ -1,19 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Button, Stack, Tabs, TabsList, TabsPanel, TabsTab } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
-import {
-  IconChartBar,
-  IconLanguage,
-  IconLayoutDashboard,
-  IconPalette,
-  IconSearch,
-  IconUsers,
-  IconWorldSearch,
-} from "@tabler/icons-react";
+import { Button, Stack, TableOfContents } from "@mantine/core";
 import { z } from "zod/v4";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
@@ -69,12 +60,13 @@ const buildInitialValues = (initialData: ServerSettings): FormValues => ({
 
 interface SettingsFormProps {
   initialData: ServerSettings;
+  selectableBoards: RouterOutputs["board"]["getPublicBoards"];
+  selectableSearchEngines: RouterOutputs["searchEngine"]["getSelectable"];
 }
 
-export const SettingsForm = ({ initialData }: SettingsFormProps) => {
+export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEngines }: SettingsFormProps) => {
   const t = useI18n();
   const tSettings = useScopedI18n("management.page.settings");
-  const isDesktop = useMediaQuery("(min-width: 48em)");
 
   const initialValues = buildInitialValues(initialData);
   const initialValuesRef = useRef(initialValues);
@@ -178,56 +170,98 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
     form.resetDirty();
   };
 
+  const tableOfContentsData = [
+    { id: "settings-board", value: tSettings("section.board.title"), depth: 1 },
+    { id: "settings-user", value: tSettings("section.user.title"), depth: 1 },
+    { id: "settings-search", value: tSettings("section.search.title"), depth: 1 },
+    { id: "settings-appearance", value: tSettings("section.appearance.title"), depth: 1 },
+    { id: "settings-culture", value: tSettings("section.culture.title"), depth: 1 },
+    { id: "settings-analytics", value: tSettings("section.analytics.title"), depth: 1 },
+    { id: "settings-crawling", value: tSettings("section.crawlingAndIndexing.title"), depth: 1 },
+  ];
+
   return (
     <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
       <Stack gap="xl">
-        <Tabs defaultValue="board" orientation={isDesktop ? "vertical" : "horizontal"}>
-          <TabsList className={classes.list} aria-label={tSettings("title")}>
-            <TabsTab value="board" className={classes.tab} leftSection={<IconLayoutDashboard size={18} />}>
-              {tSettings("section.board.title")}
-            </TabsTab>
-            <TabsTab value="user" className={classes.tab} leftSection={<IconUsers size={18} />}>
-              {tSettings("section.user.title")}
-            </TabsTab>
-            <TabsTab value="search" className={classes.tab} leftSection={<IconSearch size={18} />}>
-              {tSettings("section.search.title")}
-            </TabsTab>
-            <TabsTab value="appearance" className={classes.tab} leftSection={<IconPalette size={18} />}>
-              {tSettings("section.appearance.title")}
-            </TabsTab>
-            <TabsTab value="culture" className={classes.tab} leftSection={<IconLanguage size={18} />}>
-              {tSettings("section.culture.title")}
-            </TabsTab>
-            <TabsTab value="analytics" className={classes.tab} leftSection={<IconChartBar size={18} />}>
-              {tSettings("section.analytics.title")}
-            </TabsTab>
-            <TabsTab value="crawling" className={classes.tab} leftSection={<IconWorldSearch size={18} />}>
-              {tSettings("section.crawlingAndIndexing.title")}
-            </TabsTab>
-          </TabsList>
+        <div className={classes.layout}>
+          <nav className={classes.navigation} aria-label={tSettings("title")}>
+            <TableOfContents
+              classNames={{ root: classes.tableOfContents, control: classes.control }}
+              initialData={tableOfContentsData}
+              minDepthToOffset={1}
+              scrollSpyOptions={{
+                selector: "[data-settings-section]",
+                getDepth: () => 1,
+                getValue: (element) => element.getAttribute("data-label") ?? "",
+                offset: 80,
+              }}
+              getControlProps={({ data }) => ({
+                onClick: () => data.getNode().scrollIntoView({ block: "start" }),
+                children: data.value,
+              })}
+              variant="light"
+            />
+          </nav>
 
-          <TabsPanel value="board" className={classes.panel}>
-            <BoardSettingsForm form={form} />
-          </TabsPanel>
-          <TabsPanel value="user" className={classes.panel}>
-            <UserSettingsForm form={form} />
-          </TabsPanel>
-          <TabsPanel value="search" className={classes.panel}>
-            <SearchSettingsForm form={form} />
-          </TabsPanel>
-          <TabsPanel value="appearance" className={classes.panel}>
-            <AppearanceSettingsForm form={form} />
-          </TabsPanel>
-          <TabsPanel value="culture" className={classes.panel}>
-            <CultureSettingsForm form={form} />
-          </TabsPanel>
-          <TabsPanel value="analytics" className={classes.panel}>
-            <AnalyticsSettings form={form} />
-          </TabsPanel>
-          <TabsPanel value="crawling" className={classes.panel}>
-            <CrawlingAndIndexingSettings form={form} />
-          </TabsPanel>
-        </Tabs>
+          <Stack className={classes.sections} gap="xl">
+            <section
+              id="settings-board"
+              className={classes.section}
+              data-settings-section
+              data-label={tSettings("section.board.title")}
+            >
+              <BoardSettingsForm form={form} selectableBoards={selectableBoards} />
+            </section>
+            <section
+              id="settings-user"
+              className={classes.section}
+              data-settings-section
+              data-label={tSettings("section.user.title")}
+            >
+              <UserSettingsForm form={form} />
+            </section>
+            <section
+              id="settings-search"
+              className={classes.section}
+              data-settings-section
+              data-label={tSettings("section.search.title")}
+            >
+              <SearchSettingsForm form={form} selectableSearchEngines={selectableSearchEngines} />
+            </section>
+            <section
+              id="settings-appearance"
+              className={classes.section}
+              data-settings-section
+              data-label={tSettings("section.appearance.title")}
+            >
+              <AppearanceSettingsForm form={form} />
+            </section>
+            <section
+              id="settings-culture"
+              className={classes.section}
+              data-settings-section
+              data-label={tSettings("section.culture.title")}
+            >
+              <CultureSettingsForm form={form} />
+            </section>
+            <section
+              id="settings-analytics"
+              className={classes.section}
+              data-settings-section
+              data-label={tSettings("section.analytics.title")}
+            >
+              <AnalyticsSettings form={form} />
+            </section>
+            <section
+              id="settings-crawling"
+              className={classes.section}
+              data-settings-section
+              data-label={tSettings("section.crawlingAndIndexing.title")}
+            >
+              <CrawlingAndIndexingSettings form={form} />
+            </section>
+          </Stack>
+        </div>
 
         {form.isDirty() && (
           <UnsavedChangesBar>

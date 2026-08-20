@@ -1,35 +1,53 @@
-.list {
-  align-self: flex-start;
-  flex-wrap: nowrap;
-  min-width: 14rem;
+.layout {
+  align-items: start;
+  display: grid;
+  gap: var(--mantine-spacing-xl);
+  grid-template-columns: minmax(12rem, 15rem) minmax(0, 1fr);
+}
+
+.navigation {
+  max-height: calc(100vh - var(--app-shell-header-height) - var(--mantine-spacing-xl));
+  overflow-y: auto;
   position: sticky;
   top: calc(var(--app-shell-header-height) + var(--mantine-spacing-md));
 }
 
-.tab {
-  justify-content: flex-start;
+.tableOfContents {
+  gap: var(--mantine-spacing-xs);
 }
 
-.panel {
-  flex: 1;
+.control {
+  text-align: start;
+}
+
+.sections {
   min-width: 0;
-  padding-inline-start: var(--mantine-spacing-xl);
+}
+
+.section {
+  scroll-margin-top: calc(var(--app-shell-header-height) + var(--mantine-spacing-md));
 }
 
 @mixin smaller-than $mantine-breakpoint-sm {
-  .list {
-    max-width: calc(100vw - var(--mantine-spacing-xl));
-    min-width: 0;
-    overflow-x: auto;
+  .layout {
+    gap: var(--mantine-spacing-lg);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .navigation {
+    max-height: none;
+    overflow: hidden;
     position: static;
   }
 
-  .tab {
-    flex: 0 0 auto;
+  .tableOfContents {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-block-end: var(--mantine-spacing-xs);
   }
 
-  .panel {
-    padding-block-start: var(--mantine-spacing-lg);
-    padding-inline-start: 0;
+  .control {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 }

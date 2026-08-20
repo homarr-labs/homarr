@@ -23,12 +23,20 @@ export default async function SettingsPage() {
     notFound();
   }
 
-  const serverSettings = await api.serverSettings.getAll();
-  const tSettings = await getScopedI18n("management.page.settings");
+  const [serverSettings, selectableBoards, selectableSearchEngines, tSettings] = await Promise.all([
+    api.serverSettings.getAll(),
+    api.board.getPublicBoards(),
+    api.searchEngine.getSelectable({ withIntegrations: false }),
+    getScopedI18n("management.page.settings"),
+  ]);
 
   return (
     <ManagePageLayout title={tSettings("title")}>
-      <SettingsForm initialData={serverSettings} />
+      <SettingsForm
+        initialData={serverSettings}
+        selectableBoards={selectableBoards}
+        selectableSearchEngines={selectableSearchEngines}
+      />
     </ManagePageLayout>
   );
 }

@@ -2,7 +2,7 @@
 
 import { Switch, Text } from "@mantine/core";
 
-import { clientApi } from "@homarr/api/client";
+import type { RouterOutputs } from "@homarr/api";
 import type { UseFormReturnType } from "@homarr/form";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -12,11 +12,11 @@ import type { FormValues } from "./settings-form";
 
 interface BoardSettingsFormProps {
   form: UseFormReturnType<FormValues>;
+  selectableBoards: RouterOutputs["board"]["getPublicBoards"];
 }
 
-export const BoardSettingsForm = ({ form }: BoardSettingsFormProps) => {
+export const BoardSettingsForm = ({ form, selectableBoards }: BoardSettingsFormProps) => {
   const tBoard = useScopedI18n("management.page.settings.section.board");
-  const [selectableBoards] = clientApi.board.getPublicBoards.useSuspenseQuery();
 
   return (
     <SectionCard title={tBoard("title")}>
