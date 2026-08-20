@@ -652,19 +652,47 @@ const WidgetLivePreviewAndConfigPane = ({
   }
 
   return (
-    <WidgetLivePreviewAndConfigContent
-      key={item.kind}
-      item={item}
-      definition={resources.definition}
-      Component={resources.Component}
-      boardId={boardId}
-      integrationData={integrationData}
-      canCreateIntegration={canCreateIntegration}
-      onClose={onClose}
-      onOpenConnectIntegration={onOpenConnectIntegration}
-      onAddWidget={onAddWidget}
-      isAdding={isAdding}
-    />
+    <ErrorBoundary
+      fallbackRender={({ resetErrorBoundary, error }) => (
+        <Card withBorder radius="md" padding="md" h="100%" shadow="xs">
+          <Center h={320}>
+            <Stack align="center" gap="xs">
+              <ThemeIcon size={40} radius="xl" color="red" variant="light">
+                <IconApi size={24} />
+              </ThemeIcon>
+              <Text size="sm" fw={600} c="red">
+                Failed to load widget preview
+              </Text>
+              <Text size="xs" c="dimmed" ta="center" maw={300}>
+                {error instanceof Error ? error.message : String(error)}
+              </Text>
+              <Group gap="xs" mt="xs">
+                <Button size="xs" variant="light" onClick={resetErrorBoundary}>
+                  Retry
+                </Button>
+                <Button size="xs" variant="subtle" onClick={onClose}>
+                  Close
+                </Button>
+              </Group>
+            </Stack>
+          </Center>
+        </Card>
+      )}
+    >
+      <WidgetLivePreviewAndConfigContent
+        key={item.kind}
+        item={item}
+        definition={resources.definition}
+        Component={resources.Component}
+        boardId={boardId}
+        integrationData={integrationData}
+        canCreateIntegration={canCreateIntegration}
+        onClose={onClose}
+        onOpenConnectIntegration={onOpenConnectIntegration}
+        onAddWidget={onAddWidget}
+        isAdding={isAdding}
+      />
+    </ErrorBoundary>
   );
 };
 
@@ -759,8 +787,16 @@ const WidgetLivePreviewAndConfigContent = ({
     },
   });
 
-  const previewIntegrationIds =
-    form.values.integrationIds.length > 0 ? form.values.integrationIds : mockIntegration ? [mockIntegration.id] : [];
+  const validIntegrationIds = useMemo(() => {
+    const compatibleIds = new Set(compatibleIntegrations.map((i) => i.id));
+    return form.values.integrationIds.filter((id) => compatibleIds.has(id));
+  }, [form.values.integrationIds, compatibleIntegrations]);
+
+  const previewIntegrationIds = useMemo(() => {
+    if (validIntegrationIds.length > 0) return validIntegrationIds;
+    if (supportsMock && mockIntegration) return [mockIntegration.id];
+    return [];
+  }, [validIntegrationIds, supportsMock, mockIntegration]);
 
   const { mutateAsync: createMockIntegration, isPending: isCreatingMock } = clientApi.integration.create.useMutation({
     async onSuccess(data) {
@@ -862,7 +898,7 @@ const WidgetLivePreviewAndConfigContent = ({
             size="sm"
             leftSection={<IconPlus size={16} />}
             loading={isAdding}
-            onClick={() => onAddWidget(form.values.options, form.values.integrationIds)}
+            onClick={() => onAddWidget(form.values.options, validIntegrationIds)}
           >
             {t("common.action.add")}
           </Button>
@@ -870,13 +906,13 @@ const WidgetLivePreviewAndConfigContent = ({
         </Group>
       </Group>
 
-      {/* Live Widget Preview Frame (Simulating a 3x3 board widget tile) */}
+      {/* Live Widget Preview Frame (Simulating a 5x3 board widget tile) */}
       <Box mb="md">
         <Group justify="space-between" align="center" mb={6}>
           <Text size="xs" fw={600} c="dimmed" tt="uppercase" lts="0.5px">
-            Preview (3×3)
+            Preview (5×3)
           </Text>
-          {form.values.integrationIds.length === 0 && Boolean(mockIntegration) && hasIntegrationSupport && (
+          {validIntegrationIds.length === 0 && Boolean(mockIntegration) && supportsMock && (
             <Badge variant="subtle" color="teal" size="xs">
               Showing Demo / Mock Data
             </Badge>
@@ -892,8 +928,9 @@ const WidgetLivePreviewAndConfigContent = ({
             bg="light-dark(var(--mantine-color-body), var(--mantine-color-dark-7))"
             style={{
               width: "100%",
-              maxWidth: 360,
-              height: 360,
+              maxWidth: 500,
+              height: 300,
+              aspectRatio: "5 / 3",
               overflow: "hidden",
               position: "relative",
               containerType: "size",
@@ -918,8 +955,8 @@ const WidgetLivePreviewAndConfigContent = ({
                     <Component
                       options={form.values.options as never}
                       integrationIds={previewIntegrationIds}
-                      width={previewWidth || 360}
-                      height={previewHeight || 360}
+                      width={previewWidth || 500}
+                      height={previewHeight || 300}
                       isEditMode={false}
                       displayMode="compact"
                       boardId={boardId}
@@ -1234,22 +1271,40 @@ const ItemSelectModalFrame = ({
   }, [integrationData, canCreateIntegration, autoCreateMock]);
 
   return (
-    <ItemSelectModalContent
-      actions={actions}
-      integrationData={integrationData}
-      customWidgetDefs={customWidgetDefs}
-      ensureIntegrationDataAsync={() => utils.integration.all.ensureData()}
-      isAdmin={isAdmin}
-      canCreateIntegration={canCreateIntegration}
-      initialWidgetKind={innerProps.initialWidgetKind}
-      initialSearch={
-        innerProps.initialWidgetKind
-          ? t(`widget.${innerProps.initialWidgetKind}.name`)
-          : innerProps.initialIntegrationKind
-            ? getIntegrationName(innerProps.initialIntegrationKind)
-            : undefined
-      }
-    />
+    <ErrorBoundary
+      fallbackRender={({ resetErrorBoundary, error }) => (
+        <Center p="xl">
+          <Stack align="center" gap="sm">
+            <Text size="sm" c="red" fw={600}>
+              {t("common.error")}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {error instanceof Error ? error.message : String(error)}
+            </Text>
+            <Button size="xs" variant="light" onClick={resetErrorBoundary}>
+              {t("common.action.retry")}
+            </Button>
+          </Stack>
+        </Center>
+      )}
+    >
+      <ItemSelectModalContent
+        actions={actions}
+        integrationData={integrationData}
+        customWidgetDefs={customWidgetDefs}
+        ensureIntegrationDataAsync={() => utils.integration.all.ensureData()}
+        isAdmin={isAdmin}
+        canCreateIntegration={canCreateIntegration}
+        initialWidgetKind={innerProps.initialWidgetKind}
+        initialSearch={
+          innerProps.initialWidgetKind
+            ? t(`widget.${innerProps.initialWidgetKind}.name`)
+            : innerProps.initialIntegrationKind
+              ? getIntegrationName(innerProps.initialIntegrationKind)
+              : undefined
+        }
+      />
+    </ErrorBoundary>
   );
 };
 
