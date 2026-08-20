@@ -3533,6 +3533,10 @@
               "label": "1 Month"
             }
           }
+        },
+        "showDetails": {
+          "label": "Show details",
+          "description": "Show the name, change, and time range in the compact view. Turn off for just the symbol and price."
         }
       }
     },
