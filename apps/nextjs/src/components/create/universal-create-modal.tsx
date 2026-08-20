@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Group, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
+import { Badge, Center, Divider, Input, ScrollArea, SimpleGrid, Stack, Text, ThemeIcon } from "@mantine/core";
 import {
   IconApps,
   IconBox,
+  IconBuildingStore,
   IconCode,
   IconLayoutDashboard,
   IconLayoutGridAdd,
@@ -15,18 +16,18 @@ import {
 
 import { useSession } from "@homarr/auth/client";
 import type { GroupPermissionKey } from "@homarr/definitions";
-import { createModal, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { AddBoardModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
+import { SelectableCard } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
-import classes from "./universal-create-modal.module.css";
 import type {
   RankedUniversalCreateAction,
   UniversalCreateActionGroup,
   UniversalCreateActionKey,
 } from "./universal-create-actions";
-import { getUniversalCreateActionDefinitions } from "./universal-create-actions";
+import { filterAndRankUniversalCreateActions, getUniversalCreateActionDefinitions } from "./universal-create-actions";
 import type { SetupMetricEntryPoint } from "./setup-analytics";
 import { useSetupAnalytics } from "./setup-analytics";
 
@@ -43,11 +44,20 @@ const actionIcons = {
   integration: IconPlugConnected,
   container: IconLayoutGridAdd,
   board: IconLayoutDashboard,
-  workshop: IconSearch,
+  workshop: IconBuildingStore,
   customWidget: IconCode,
 } satisfies Record<UniversalCreateActionKey, TablerIcon>;
 
+const groupColors: Record<UniversalCreateActionGroup, string> = {
+  currentBoard: "primaryColor",
+  library: "cyan",
+  boards: "teal",
+};
+
+const selectGridCols = { base: 1, sm: 2, md: 3 };
+
 export const UniversalCreateModal = createModal<UniversalCreateModalProps>(({ actions, innerProps }) => {
+  const [search, setSearch] = useState("");
   const { data: session } = useSession();
   const router = useRouter();
   const t = useScopedI18n("universalCreate");
@@ -97,7 +107,7 @@ export const UniversalCreateModal = createModal<UniversalCreateModalProps>(({ ac
         openAddBoardModal(undefined);
         break;
       case "workshop":
-        router.push("/manage/workshop");
+        router.push("/manage/custom-widgets/workshop");
         break;
       case "customWidget":
         router.push("/manage/custom-widgets/new");
@@ -108,55 +118,129 @@ export const UniversalCreateModal = createModal<UniversalCreateModalProps>(({ ac
     }
   };
 
-  const resolvedActions = definitions.map(
-    (definition) =>
-      ({
-        ...definition,
-        name: t(`action.${definition.key}.label`),
-        description: t(`action.${definition.key}.description`),
-        keywords: t(`action.${definition.key}.keywords`).split(" "),
-      }) satisfies RankedUniversalCreateAction,
+  const resolvedActions = useMemo(
+    () =>
+      definitions.map(
+        (definition) =>
+          ({
+            ...definition,
+            name: t(`action.${definition.key}.label`),
+            description: t(`action.${definition.key}.description`),
+            keywords: t(`action.${definition.key}.keywords`).split(" "),
+          }) satisfies RankedUniversalCreateAction,
+      ),
+    [definitions, t],
   );
-  const orderedActions = resolvedActions.toSorted((left, right) => right.priority - left.priority);
+
+  const filteredActions = useMemo(
+    () => filterAndRankUniversalCreateActions(resolvedActions, search),
+    [resolvedActions, search],
+  );
+
+  const isSearching = search.trim().length > 0;
   const groups = ["currentBoard", "library", "boards"] satisfies UniversalCreateActionGroup[];
 
   return (
     <Stack gap="md">
-      {groups.map((group) => {
-        const groupActions = orderedActions.filter((action) => action.group === group);
-        if (groupActions.length === 0) return null;
+      {/* Top Search Input */}
+      <Input
+        value={search}
+        onChange={(event) => setSearch(event.currentTarget.value)}
+        leftSection={<IconSearch size={16} />}
+        placeholder={t("search.placeholder")}
+        aria-label={t("search.label")}
+        data-autofocus
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && filteredActions.length === 1 && filteredActions[0]) {
+            invokeAction(filteredActions[0].key);
+          }
+        }}
+      />
 
-        return (
-          <Stack key={group} gap={4}>
-            <Text c="dimmed" fw={600} size="xs" tt="uppercase" px="sm">
-              {t(`group.${group}`)}
-            </Text>
-            {groupActions.map((action) => {
-              const Icon = actionIcons[action.key];
+      {/* Action Cards Grid */}
+      <ScrollArea.Autosize mah="70vh" offsetScrollbars>
+        <Stack gap="md" pt="xs" pr="xs" px={4}>
+          {isSearching ? (
+            <SimpleGrid cols={selectGridCols} spacing="sm">
+              {filteredActions.map((action) => {
+                const Icon = actionIcons[action.key];
+                return (
+                  <SelectableCard
+                    key={action.key}
+                    onClick={() => invokeAction(action.key)}
+                    aria-label={action.name}
+                    icon={
+                      <ThemeIcon size={34} radius="md" variant="light" color={groupColors[action.group]}>
+                        <Icon size={20} />
+                      </ThemeIcon>
+                    }
+                    title={action.name}
+                    topRight={
+                      <Badge variant="dot" color={groupColors[action.group]} size="xs">
+                        {t(`group.${action.group}`)}
+                      </Badge>
+                    }
+                    description={action.description}
+                  />
+                );
+              })}
+            </SimpleGrid>
+          ) : (
+            groups.map((group) => {
+              const groupActions = resolvedActions
+                .filter((action) => action.group === group)
+                .toSorted((left, right) => right.priority - left.priority);
+              if (groupActions.length === 0) return null;
+
               return (
-                <UnstyledButton key={action.key} className={classes.action} onClick={() => invokeAction(action.key)}>
-                  <Group wrap="nowrap" align="flex-start">
-                    <ThemeIcon className={classes.actionIcon} variant="light" radius="md">
-                      <Icon size={18} stroke={1.5} />
-                    </ThemeIcon>
-                    <Stack gap={1}>
-                      <Text fw={600} size="sm">
-                        {action.name}
+                <Stack key={group} gap="xs">
+                  <Divider
+                    label={
+                      <Text c="dimmed" fw={600} size="xs" tt="uppercase">
+                        {t(`group.${group}`)}
                       </Text>
-                      <Text c="dimmed" size="xs">
-                        {action.description}
-                      </Text>
-                    </Stack>
-                  </Group>
-                </UnstyledButton>
+                    }
+                    labelPosition="left"
+                  />
+                  <SimpleGrid cols={selectGridCols} spacing="sm">
+                    {groupActions.map((action) => {
+                      const Icon = actionIcons[action.key];
+                      return (
+                        <SelectableCard
+                          key={action.key}
+                          onClick={() => invokeAction(action.key)}
+                          aria-label={action.name}
+                          icon={
+                            <ThemeIcon size={34} radius="md" variant="light" color={groupColors[action.group]}>
+                              <Icon size={20} />
+                            </ThemeIcon>
+                          }
+                          title={action.name}
+                          topRight={
+                            <Badge variant="dot" color={groupColors[action.group]} size="xs">
+                              {t(`group.${action.group}`)}
+                            </Badge>
+                          }
+                          description={action.description}
+                        />
+                      );
+                    })}
+                  </SimpleGrid>
+                </Stack>
               );
-            })}
-          </Stack>
-        );
-      })}
+            })
+          )}
+
+          {filteredActions.length === 0 && (
+            <Center p="xl">
+              <Text c="dimmed">{t("search.noResults")}</Text>
+            </Center>
+          )}
+        </Stack>
+      </ScrollArea.Autosize>
     </Stack>
   );
 }).withOptions({
   defaultTitle: (t) => t("universalCreate.title"),
-  size: "lg",
+  size: modalSizeSelect,
 });
