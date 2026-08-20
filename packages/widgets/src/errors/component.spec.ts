@@ -11,6 +11,10 @@ vi.mock("@homarr/translation/client", () => ({
   useI18n: () => (key: string) => key,
 }));
 
+vi.mock("@homarr/auth/client", () => ({
+  useSession: () => ({ data: null }),
+}));
+
 const matchMedia = (query: string) => ({
   matches: false,
   media: query,

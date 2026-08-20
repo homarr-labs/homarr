@@ -58,14 +58,18 @@ export class ChannelSubscriptionTracker {
 
     const channelSubscriptions = this.subscriptions.get(channelName) ?? new Map<string, SubscriptionCallback>();
     const id = randomUUID();
-    let ready = this.subscriptionReadiness.get(channelName) ?? Promise.resolve();
+    let ready = this.subscriptionReadiness.get(channelName);
 
-    // If there are no subscriptions to the channel, subscribe to it
-    if (channelSubscriptions.size === 0) {
+    // Subscribe when this channel has no active or pending Redis subscription.
+    if (!ready) {
       logger.debug("Subscribing to redis channel", { channel: channelName });
       ready = this.redis.subscribe(channelName).then(() => undefined);
       this.subscriptionReadiness.set(channelName, ready);
-      void ready.catch(() => undefined);
+      void ready.catch(() => {
+        if (this.subscriptionReadiness.get(channelName) === ready) {
+          this.subscriptionReadiness.delete(channelName);
+        }
+      });
     }
 
     logger.debug("Adding redis channel callback", { channel: channelName, id });

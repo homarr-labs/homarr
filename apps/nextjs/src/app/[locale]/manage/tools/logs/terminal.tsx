@@ -17,37 +17,22 @@ import classes from "./terminal.module.css";
 const ALL_LOG_LEVELS = [...logLevels];
 const TERMINAL_SCROLLBACK_LINES = LOG_HISTORY_MAX_ENTRIES * 4;
 
-interface FocusMarker {
-  index: number;
-  text: string;
-}
-
 const getFocusMarker = (
   messages: LoggerMessage[],
   visibleMessages: LoggerMessage[],
   focusTimestamp: number | undefined,
   markerText: string,
   expiredMarkerText: string,
-): FocusMarker | null => {
+) => {
   if (focusTimestamp === undefined) return null;
 
-  let oldestTimestamp = Number.POSITIVE_INFINITY;
-  for (const message of messages) {
-    oldestTimestamp = Math.min(oldestTimestamp, message.timestamp.getTime());
-  }
-  if (oldestTimestamp === Number.POSITIVE_INFINITY || focusTimestamp < oldestTimestamp) {
+  const oldestTimestamp = messages[0]?.timestamp.getTime();
+  if (oldestTimestamp === undefined || focusTimestamp < oldestTimestamp) {
     return { index: 0, text: expiredMarkerText };
   }
 
-  let markerIndex = 0;
-  for (const [index, message] of visibleMessages.entries()) {
-    if (message.timestamp.getTime() <= focusTimestamp) {
-      markerIndex = index + 1;
-    }
-  }
-
   return {
-    index: markerIndex,
+    index: visibleMessages.findLastIndex((message) => message.timestamp.getTime() <= focusTimestamp) + 1,
     text: markerText,
   };
 };
@@ -104,10 +89,7 @@ const renderMessages = ({
     output.push(`\x1b[33m--- ${focusMarker.text} ---\x1b[0m`);
   }
 
-  terminal.reset();
-  if (output.length === 0) return;
-
-  terminal.write(`${output.join("\r\n")}\r\n`, () => {
+  terminal.write(`\x1bc${output.join("\r\n")}${output.length > 0 ? "\r\n" : ""}`, () => {
     if (!focusMarker) {
       terminal.scrollToBottom();
       return;
@@ -134,8 +116,8 @@ export const TerminalComponent = ({ focusTimestamp }: TerminalComponentProps) =>
   const messagesRef = useRef<LoggerMessage[]>([]);
   const initialFontSizeRef = useRef(fontSize);
   const activeLevelsRef = useRef(activeLevels);
-  const markerTextRef = useRef(t("log.context.widgetError"));
-  const expiredMarkerTextRef = useRef(t("log.context.expiredWidgetError"));
+  const markerTextRef = useRef("");
+  const expiredMarkerTextRef = useRef("");
   const focusTimestampRef = useRef(focusTimestamp);
 
   activeLevelsRef.current = activeLevels;

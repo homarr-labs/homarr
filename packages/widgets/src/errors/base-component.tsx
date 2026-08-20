@@ -19,14 +19,13 @@ export const BaseWidgetError = (props: BaseWidgetErrorProps) => {
   const t = useI18n();
   const { data: session } = useSession();
   const [errorTimestamp] = useState(Date.now);
-  const canViewLogs = session?.user.permissions.includes("other-view-logs") ?? false;
 
   return (
     <Stack h="100%" align="center" justify="center" gap="md" data-homarr-widget-error>
       <props.icon size={40} />
       <Stack gap={0}>
         <Text ta="center">{translateIfNecessary(t, props.message)}</Text>
-        {props.showLogsLink && canViewLogs && (
+        {props.showLogsLink && session?.user.permissions.includes("other-view-logs") && (
           <Anchor
             component={Link}
             href={`/manage/tools/logs?focus=${errorTimestamp}`}

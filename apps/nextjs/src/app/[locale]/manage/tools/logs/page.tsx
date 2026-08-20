@@ -39,14 +39,9 @@ export default async function LogsManagementPage({ searchParams }: LogsManagemen
     notFound();
   }
 
-  const { focus } = await searchParams;
-  let focusTimestamp: number | undefined;
-  if (focus !== undefined) {
-    const parsedFocusTimestamp = Number(focus);
-    if (Number.isSafeInteger(parsedFocusTimestamp) && parsedFocusTimestamp > 0) {
-      focusTimestamp = parsedFocusTimestamp;
-    }
-  }
+  const parsedFocusTimestamp = Number((await searchParams).focus);
+  const focusTimestamp =
+    Number.isSafeInteger(parsedFocusTimestamp) && parsedFocusTimestamp > 0 ? parsedFocusTimestamp : undefined;
 
   return (
     <LogContextProvider defaultLevel={logsEnv.LEVEL}>

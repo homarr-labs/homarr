@@ -25,9 +25,6 @@ export class RedisTransport extends Transport {
       this.emit("logged", info);
     });
 
-    // Is only initialized here because it did not work when initialized in the constructor or outside the class
-    this.redis ??= createRedisClient();
-
     const message: LoggerMessage = {
       id: randomUUID(),
       timestamp: new Date(),
@@ -36,15 +33,24 @@ export class RedisTransport extends Transport {
     };
     const serializedMessage = stringify(message);
 
-    this.redis
-      .multi()
-      .lpush(LOG_HISTORY_KEY, serializedMessage)
-      .ltrim(LOG_HISTORY_KEY, 0, LOG_HISTORY_MAX_ENTRIES - 1)
-      .publish(LOG_PUBLISH_CHANNEL, serializedMessage)
-      .exec()
-      .catch(() => {
-        // Ignore errors
+    callback();
+
+    void Promise.resolve()
+      .then(() => {
+        // Is only initialized here because it did not work when initialized in the constructor or outside the class
+        if (!this.redis) {
+          this.redis = createRedisClient();
+          this.redis.options.maxRetriesPerRequest = 1;
+          this.redis.on("error", () => undefined);
+        }
+
+        return this.redis
+          .multi()
+          .lpush(LOG_HISTORY_KEY, serializedMessage)
+          .ltrim(LOG_HISTORY_KEY, 0, LOG_HISTORY_MAX_ENTRIES - 1)
+          .publish(LOG_PUBLISH_CHANNEL, serializedMessage)
+          .exec();
       })
-      .finally(callback);
+      .catch(() => undefined);
   }
 }
