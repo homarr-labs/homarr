@@ -182,7 +182,7 @@ export const reconcileTimerRuntime = (
   if (reconciled < maximumReconciledPhases) return next;
   if (next.status !== "running") return next;
   const remainingMs = getPhaseDurationMs(next.phase, durations);
-  return { ...next, remainingMs, deadline: now + remainingMs };
+  return { ...next, remainingMs, totalDurationMs: remainingMs, deadline: now + remainingMs };
 };
 
 export const setTimerAlertPreference = (
