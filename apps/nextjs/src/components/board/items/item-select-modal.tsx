@@ -27,7 +27,7 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useElementSize } from "@mantine/hooks";
-import { IconApi, IconBuildingStore, IconPlus, IconSearch, IconSparkles } from "@tabler/icons-react";
+import { IconApi, IconBuildingStore, IconPlus, IconSearch } from "@tabler/icons-react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 
@@ -848,40 +848,6 @@ const WidgetLivePreviewAndConfigContent = ({
     return [];
   }, [validIntegrationIds, supportsMock, mockIntegration]);
 
-  const { mutateAsync: createMockIntegration, isPending: isCreatingMock } = clientApi.integration.create.useMutation({
-    async onSuccess(data) {
-      await utils.integration.all.invalidate();
-      if (data && "integration" in data && data.integration) {
-        const nextIds = [...(maxIntegrations > 1 ? form.values.integrationIds : []), data.integration.id].slice(
-          -maxIntegrations,
-        );
-        form.setFieldValue("integrationIds", nextIds);
-        setShowInlineConnect(false);
-        showSuccessNotification({
-          title: "Demo Service Connected",
-          message: "A mock integration was created and connected for testing.",
-        });
-      }
-    },
-  });
-
-  const handleCreateMockService = async () => {
-    try {
-      await createMockIntegration({
-        name: "Demo Service",
-        url: "https://demo.homarr.dev",
-        kind: "mock",
-        secrets: [],
-        attemptSearchEngineCreation: false,
-      });
-    } catch (error) {
-      showErrorNotification({
-        title: t("common.error"),
-        message: error instanceof Error ? error.message : String(error),
-      });
-    }
-  };
-
   const handleInlineCreateSuccess = (result?: CreatedIntegrationResult) => {
     void utils.integration.all.invalidate();
     if (result?.integration?.id) {
@@ -1100,25 +1066,11 @@ const WidgetLivePreviewAndConfigContent = ({
                               Connect {getIntegrationName(inlineConnectKind ?? supportedKinds[0]!)}
                             </Text>
                           </Group>
-                          <Group gap="xs">
-                            {supportsMock && (
-                              <Button
-                                variant="light"
-                                color="teal"
-                                size="xs"
-                                leftSection={<IconSparkles size={14} />}
-                                loading={isCreatingMock}
-                                onClick={handleCreateMockService}
-                              >
-                                Use Demo Service
-                              </Button>
-                            )}
-                            {compatibleIntegrations.length > 0 && (
-                              <Button variant="subtle" size="xs" onClick={() => setShowInlineConnect(false)}>
-                                {t("common.action.cancel")}
-                              </Button>
-                            )}
-                          </Group>
+                          {compatibleIntegrations.length > 0 && (
+                            <Button variant="subtle" size="xs" onClick={() => setShowInlineConnect(false)}>
+                              {t("common.action.cancel")}
+                            </Button>
+                          )}
                         </Group>
 
                         {/* Multiple choice selector if widget supports >1 integration kind */}

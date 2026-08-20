@@ -144,13 +144,6 @@ const IntegrationCard = ({
           <IntegrationCategoryBadges categories={integration.categories} limit={1} />
         )
       }
-      footerRight={
-        connectedCount > 0 ? (
-          <IntegrationCategoryBadges categories={integration.categories} limit={1} />
-        ) : (
-          <IntegrationCategoryBadges categories={integration.categories.slice(1)} limit={1} />
-        )
-      }
     >
       <Text size="10px" tt="uppercase" fw={700} c="dimmed">
         Tied Widgets

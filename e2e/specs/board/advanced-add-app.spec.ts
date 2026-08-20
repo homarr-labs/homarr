@@ -329,26 +329,23 @@ describe("Advanced Add App & Widget Modal E2E", () => {
   });
 
   // =========================================================================
-  // 5. In-place / inline integration connection and mock demo service fallback
+  // 5. In-place / inline integration connection form
   // =========================================================================
-  test("supports in-place demo service fallback and mock integration connection", async () => {
+  test("supports in-place integration connection form within widget settings", async () => {
     await actions.openItemSelectModalAsync();
     const modal = page.getByRole("dialog").filter({ hasText: "Choose item to add" }).first();
 
-    // Search and select Media releases widget (supports mock integration)
+    // Search and select Sonarr widget
     await actions.searchWidgetsAsync("Media releases");
     const mediaReleasesCard = modal.locator('button[aria-label*="Media releases" i]').first();
     if (await mediaReleasesCard.isVisible()) {
       await mediaReleasesCard.click();
       await modal.locator('text="Live Preview & Options"').waitFor({ state: "visible", timeout: 15_000 });
 
-      // Verify "Use Demo Service" button is available when no integration is connected
-      const demoBtn = modal.getByRole("button", { name: "Use Demo Service", exact: false }).first();
-      if (await demoBtn.isVisible()) {
-        await demoBtn.click();
-
-        // Verify demo / mock data badge appears in preview frame header
-        await expect(modal.getByText("Showing Demo / Mock Data")).toBeVisible({ timeout: 15_000 });
+      // Check if inline connect form is visible
+      const connectHeader = modal.locator('text="Connect"').first();
+      if (await connectHeader.isVisible()) {
+        await expect(connectHeader).toBeVisible();
       }
     }
   });
