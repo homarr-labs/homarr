@@ -29,10 +29,23 @@ export async function generateMetadata() {
   };
 }
 
-export default async function LogsManagementPage() {
+interface LogsManagementPageProps {
+  searchParams: Promise<{ focus?: string | string[] }>;
+}
+
+export default async function LogsManagementPage({ searchParams }: LogsManagementPageProps) {
   const session = await auth();
   if (!session?.user.permissions.includes("other-view-logs")) {
     notFound();
+  }
+
+  const focus = (await searchParams).focus;
+  let focusTimestamp: number | undefined;
+  if (typeof focus === "string") {
+    const parsedFocusTimestamp = Number(focus);
+    if (Number.isSafeInteger(parsedFocusTimestamp) && parsedFocusTimestamp > 0) {
+      focusTimestamp = parsedFocusTimestamp;
+    }
   }
 
   return (
@@ -45,7 +58,7 @@ export default async function LogsManagementPage() {
         </Group>
       </Group>
       <Box style={{ borderRadius: 6 }} h={fullHeightWithoutHeaderAndFooter} p="md" bg="black">
-        <ClientSideTerminalComponent />
+        <ClientSideTerminalComponent focusTimestamp={focusTimestamp} />
       </Box>
     </LogContextProvider>
   );
