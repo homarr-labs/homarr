@@ -1,0 +1,14 @@
+apps/nextjs/src/components/create/universal-create-modal.tsx
+  h_d6e478ca18e517 3,5,9,19,22,30,47,51-58,60,110,121-132,134-140,145-194,196-200,202-229,231-240,245
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "e0bc1d757ca5bd7abbe270549661678d5e681214",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
