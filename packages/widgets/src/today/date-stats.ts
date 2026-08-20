@@ -36,7 +36,7 @@ export const getTodayStats = (date: Date, weekConvention: WeekConvention, locale
   const weekStart = new Date(date.getFullYear(), date.getMonth(), date.getDate() - daysSinceWeekStart);
   const nextWeekStart = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + 7);
   const currentDayOfYear = value.dayOfYear();
-  const daysInYear = nextYearStart.diff(yearStart, "day");
+  const daysInYear = yearStart.endOf("year").dayOfYear();
 
   return {
     dayOfYear: currentDayOfYear,

@@ -130,7 +130,10 @@ const AdvancedToday = ({ now, locale, options, stats }: AdvancedTodayProps) => {
       label: t("advanced.dayOfYear"),
       value: `${numberFormatter.format(stats.dayOfYear)} / ${numberFormatter.format(stats.daysInYear)}`,
     },
-    options.showQuarter && { label: t("advanced.quarter"), value: `Q${stats.quarter}` },
+    options.showQuarter && {
+      label: t("advanced.quarter"),
+      value: t("advanced.quarterValue", { quarter: stats.quarter }),
+    },
     { label: t("advanced.daysRemaining"), value: numberFormatter.format(stats.daysAfterToday) },
   ].filter((metric): metric is { label: string; value: string } => Boolean(metric));
 

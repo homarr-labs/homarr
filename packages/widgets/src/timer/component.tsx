@@ -202,7 +202,10 @@ export default function TimerWidget({
   const nowMs = now.getTime();
   const remainingMs = getRemainingMs(runtime, nowMs);
   const phaseDurationMs = runtime.totalDurationMs;
-  const progress = Math.min(100, Math.max(0, ((phaseDurationMs - remainingMs) / phaseDurationMs) * 100));
+  let progress = 0;
+  if (phaseDurationMs > 0) {
+    progress = Math.min(100, Math.max(0, ((phaseDurationMs - remainingMs) / phaseDurationMs) * 100));
+  }
   const controlSize = getTimerControlSize(width, height, displayMode);
   const attentionStyle = getTimerAttentionStyle({
     awaitingManualStart: runtime.awaitingManualStart,

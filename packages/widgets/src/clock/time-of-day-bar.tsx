@@ -21,11 +21,13 @@ const phaseSections = [
 ] as const;
 
 const phaseLegend = [
-  { key: "night", range: "00–05 · 21–24", color: "indigo.8" },
-  { key: "dawn", range: "05–08", color: "orange.6" },
-  { key: "day", range: "08–18", color: "cyan.6" },
-  { key: "dusk", range: "18–21", color: "grape.6" },
+  { key: "night", color: "indigo.8" },
+  { key: "dawn", color: "orange.6" },
+  { key: "day", color: "cyan.6" },
+  { key: "dusk", color: "grape.6" },
 ] as const;
+
+const timeTicks = ["midnight", "morning", "noon", "evening", "end"] as const;
 
 export const TimeOfDayBar = ({
   minuteOfDay,
@@ -72,9 +74,9 @@ export const TimeOfDayBar = ({
       </Box>
       {showTicks && (
         <Group justify="space-between" wrap="nowrap">
-          {["00", "06", "12", "18", "24"].map((tick) => (
+          {timeTicks.map((tick) => (
             <Text key={tick} size="xs" c="dimmed" aria-hidden>
-              {tick}
+              {t(`worldClock.tick.${tick}`)}
             </Text>
           ))}
         </Group>
@@ -88,7 +90,7 @@ export const TimeOfDayBar = ({
             <Group key={item.key} gap={6} wrap="nowrap">
               <Box w={9} h={9} bg={item.color} style={{ borderRadius: "var(--mantine-radius-xl)" }} />
               <Text size="xs" c="dimmed">
-                {t(`worldClock.phase.${item.key}`)} · {item.range}
+                {t(`worldClock.phase.${item.key}`)} · {t(`worldClock.phaseRange.${item.key}`)}
               </Text>
             </Group>
           ))}

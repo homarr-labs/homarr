@@ -9,13 +9,25 @@ export interface CompactWeatherLayout {
   showSecondary: boolean;
 }
 
+const compactWeatherBreakpoints = [
+  { tier: "roomy", minWidth: 500, minHeight: 280 },
+  { tier: "standard", minWidth: 280, minHeight: 180 },
+  { tier: "compact", minWidth: 160, minHeight: 120 },
+  { tier: "micro", minWidth: 0, minHeight: 0 },
+] as const satisfies readonly { tier: CompactWeatherTier; minWidth: number; minHeight: number }[];
+
 export const getCompactWeatherLayout = (
   width: number,
   height: number,
   hasForecast: boolean,
   configuredDays: number,
 ): CompactWeatherLayout => {
-  if (height < 120 || width < 160) {
+  const breakpoint = compactWeatherBreakpoints.find(
+    ({ minHeight, minWidth }) => width >= minWidth && height >= minHeight,
+  );
+  const tier = breakpoint?.tier ?? "micro";
+
+  if (tier === "micro") {
     return {
       tier: "micro",
       forecastDays: 0,
@@ -26,7 +38,7 @@ export const getCompactWeatherLayout = (
     };
   }
 
-  if (height < 180 || width < 280) {
+  if (tier === "compact") {
     return {
       tier: "compact",
       forecastDays: hasForecast ? Math.min(configuredDays, Math.max(1, Math.floor(width / 92))) : 0,
@@ -37,10 +49,9 @@ export const getCompactWeatherLayout = (
     };
   }
 
-  const roomy = width >= 500 && height >= 280;
   const availableForecastWidth = Math.max(0, width - 24);
   return {
-    tier: roomy ? "roomy" : "standard",
+    tier,
     forecastDays: hasForecast ? Math.min(configuredDays, Math.max(1, Math.floor(availableForecastWidth / 64))) : 0,
     showCity: true,
     showCondition: true,

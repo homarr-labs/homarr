@@ -20,7 +20,8 @@ const getAnimationClass = (code: number): string => {
 };
 
 export const AnimatedWeatherIcon = ({ animated = false, code, isDay, size = 26 }: AnimatedWeatherIconProps) => {
-  const animationClass = animated ? getAnimationClass(code) : "";
+  let animationClass = "";
+  if (animated && (code !== 0 || isDay !== false)) animationClass = getAnimationClass(code);
   return (
     <span className={`weather-anim-wrapper ${animationClass}`}>
       <WeatherIcon code={code} isDay={isDay} size={size} />

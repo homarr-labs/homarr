@@ -11,10 +11,19 @@ const atLocationInput = z.object({
 });
 
 export const airQualityRouter = createTRPCRouter({
-  atLocation: publicProcedure.input(atLocationInput).query(async ({ input }) => {
-    if (env.NO_EXTERNAL_CONNECTION) return null;
+  atLocation: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description:
+          "Get current and forecast air quality, UV, pollutant, and pollen data for geographic coordinates. REQUIRED: latitude (-90 to 90) and longitude (-180 to 180).",
+      },
+    })
+    .input(atLocationInput)
+    .query(async ({ input }) => {
+      if (env.NO_EXTERNAL_CONNECTION) return null;
 
-    const handler = airQualityRequestHandler.handler(input);
-    return await handler.getDataAsync().then((result) => result.data);
-  }),
+      const handler = airQualityRequestHandler.handler(input);
+      return await handler.getDataAsync().then((result) => result.data);
+    }),
 });

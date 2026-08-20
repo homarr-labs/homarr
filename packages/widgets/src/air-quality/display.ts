@@ -65,6 +65,11 @@ export const getAqiValue = (point: AirQualityPoint, standard: AqiStandard): numb
   return point.europeanAqi;
 };
 
+export const getDailyAqiValue = (day: AirQualityData["daily"][number], standard: AqiStandard): number | null => {
+  if (standard === "us") return day.usAqiMax;
+  return day.europeanAqiMax;
+};
+
 export const getAqiCategory = (value: number | null, standard: AqiStandard): AqiCategory => {
   if (value === null) return "unknown";
 

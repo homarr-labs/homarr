@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Group, Popover, Stack, Text, UnstyledButton } from "@mantine/core";
 import { IconArrowDownRight, IconArrowUpRight, IconDroplets, IconMapPin, IconWind } from "@tabler/icons-react";
 
@@ -24,7 +25,10 @@ export const CompactWeather = ({ height, isEditMode, options, weather, width }: 
   const locale = useCurrentIntlLocale();
   const t = useScopedI18n("widget.weather");
   const tCommon = useScopedI18n("common");
-  const layout = getCompactWeatherLayout(width, height, options.hasForecast, options.forecastDayCount);
+  const layout = useMemo(
+    () => getCompactWeatherLayout(width, height, options.hasForecast, options.forecastDayCount),
+    [height, options.forecastDayCount, options.hasForecast, width],
+  );
   const today = weather.daily[0];
   const speedUnit = options.useImperialSpeed
     ? tCommon("unit.speed.milesPerHour")

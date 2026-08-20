@@ -13,9 +13,6 @@ import { AdvancedWeather } from "./advanced";
 import classes from "./component.module.css";
 import { CompactWeather } from "./compact";
 
-export { getPreferredTime, getPreferredUnit, getPreferredWindSpeed } from "./format";
-export { getCompactWeatherLayout } from "./layout";
-
 export default function WeatherWidget({
   isEditMode,
   options,

@@ -9,6 +9,7 @@ dayjs.extend(timezone);
 
 const minuteMs = 60_000;
 const dayMs = 86_400_000;
+const timeZoneSupportCache = new Map<string, boolean>();
 
 export interface WallDateTime {
   year: number;
@@ -28,10 +29,14 @@ export interface CountdownEventState {
 }
 
 export const isCountdownTimeZoneSupported = (timeZone: string) => {
+  const cached = timeZoneSupportCache.get(timeZone);
+  if (cached !== undefined) return cached;
   try {
     new Intl.DateTimeFormat("en", { timeZone }).format(0);
+    timeZoneSupportCache.set(timeZone, true);
     return true;
   } catch {
+    timeZoneSupportCache.set(timeZone, false);
     return false;
   }
 };
@@ -95,7 +100,8 @@ const resolveExactWallDateTime = (value: WallDateTime, timeZone: string): Date[]
     const candidate = new Date(naiveUtc - offset * minuteMs);
     if (wallDateTimeEquals(value, dayjs(candidate).tz(timeZone))) matches.push(candidate);
   }
-  return matches.toSorted((left, right) => left.getTime() - right.getTime());
+  // oxlint-disable-next-line unicorn/no-array-sort -- Array.toSorted is not supported in all target browsers.
+  return [...matches].sort((left, right) => left.getTime() - right.getTime());
 };
 
 /** Resolves a local wall-clock value, preferring the earlier repeated time and the first valid time after a DST gap. */

@@ -3225,6 +3225,19 @@
         "timeBarLabel": "24-hour time-of-day position for {city}",
         "dayProgress": "{percent}% elapsed · {hours}h {minutes}m remaining",
         "phaseLegend": "Time-of-day legend",
+        "tick": {
+          "midnight": "00",
+          "morning": "06",
+          "noon": "12",
+          "evening": "18",
+          "end": "24"
+        },
+        "phaseRange": {
+          "night": "00–05 · 21–24",
+          "dawn": "05–08",
+          "day": "08–18",
+          "dusk": "18–21"
+        },
         "phase": {
           "night": "Night",
           "dawn": "Dawn",
@@ -3283,7 +3296,12 @@
         }
       },
       "dominantPollutant": "Dominant pollutant",
+      "aqiLabel": "AQI",
       "strongestPollen": "Highest pollen",
+      "unit": {
+        "concentration": "{value} µg/m³",
+        "pollen": "{value} grains/m³"
+      },
       "pollutant": {
         "pm2_5": "PM2.5",
         "pm10": "PM10",
@@ -3478,6 +3496,7 @@
         "week": "Week number",
         "dayOfYear": "Day of year",
         "quarter": "Quarter",
+        "quarterValue": "Q{quarter}",
         "daysRemaining": "Days after today"
       }
     },

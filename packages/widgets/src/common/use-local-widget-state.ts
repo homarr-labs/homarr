@@ -57,6 +57,7 @@ export const useLocalWidgetState = <T>({
   const defaultValueRef = useRef(defaultValue);
   const validateRef = useRef(validate);
   const migrateRef = useRef(migrate);
+  defaultValueRef.current = defaultValue;
   validateRef.current = validate;
   migrateRef.current = migrate;
 

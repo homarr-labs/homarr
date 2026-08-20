@@ -20,6 +20,7 @@ import {
   getAqiStandard,
   getAqiValue,
   getCompactAirQualityLayout,
+  getDailyAqiValue,
   getDominantPollutant,
   getStrongestPollen,
   getUpcomingHours,
@@ -32,7 +33,7 @@ export default function AirQualityWidget({ options, width, height, displayMode }
     latitude: options.location.latitude,
     longitude: options.location.longitude,
   });
-  const airQuality = getUsableWidgetQueryData(query) as AirQualityData | null | undefined;
+  const airQuality = getUsableWidgetQueryData(query);
 
   if (isInitialWidgetQueryPending(query)) return <WidgetQueryLoadingState />;
   if (!airQuality) return <WidgetEmptyState />;
@@ -118,18 +119,18 @@ const CompactAirQuality = ({
             <>
               <MetricLine
                 label={labels.pollutants.pm2_5}
-                value={formatConcentration(airQuality.current.pollutants.pm2_5, locale)}
+                value={formatConcentration(airQuality.current.pollutants.pm2_5, locale, t)}
               />
               <MetricLine
                 label={labels.pollutants.pm10}
-                value={formatConcentration(airQuality.current.pollutants.pm10, locale)}
+                value={formatConcentration(airQuality.current.pollutants.pm10, locale, t)}
               />
             </>
           )}
           {options.showPollen && strongestPollen && (
             <MetricLine
               label={t("strongestPollen")}
-              value={`${labels.pollen[strongestPollen.key]} · ${formatPollen(strongestPollen.value, locale)}`}
+              value={`${labels.pollen[strongestPollen.key]} · ${formatPollen(strongestPollen.value, locale, t)}`}
             />
           )}
         </Group>
@@ -169,7 +170,7 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
     uv: hour.uvIndex ?? Number.NaN,
   }));
   const series = [
-    { name: "aqi", label: "AQI", color: getAqiColor(category), type: "line" as const },
+    { name: "aqi", label: t("aqiLabel"), color: getAqiColor(category), type: "line" as const },
     ...(options.showUv
       ? [{ name: "uv", label: t("uv.label"), color: "yellow.7", type: "line" as const, yAxisId: "right" as const }]
       : []),
@@ -201,7 +202,7 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
         </Group>
 
         <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="xs">
-          <MetricCard label="AQI" value={formatAqi(value, locale)} />
+          <MetricCard label={t("aqiLabel")} value={formatAqi(value, locale)} />
           {options.showUv && (
             <MetricCard label={t("uv.label")} value={formatDecimal(airQuality.current.uvIndex, locale)} />
           )}
@@ -209,11 +210,11 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
             <>
               <MetricCard
                 label={labels.pollutants.pm2_5}
-                value={formatConcentration(airQuality.current.pollutants.pm2_5, locale)}
+                value={formatConcentration(airQuality.current.pollutants.pm2_5, locale, t)}
               />
               <MetricCard
                 label={labels.pollutants.pm10}
-                value={formatConcentration(airQuality.current.pollutants.pm10, locale)}
+                value={formatConcentration(airQuality.current.pollutants.pm10, locale, t)}
               />
             </>
           )}
@@ -279,7 +280,7 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
                     <MetricLine
                       key={key}
                       label={labels.pollutants[key]}
-                      value={formatConcentration(airQuality.current.pollutants[key], locale)}
+                      value={formatConcentration(airQuality.current.pollutants[key], locale, t)}
                     />
                   ))}
                 </SimpleGrid>
@@ -295,7 +296,7 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
                   {pollenKeys.map((key) => {
                     const pollen = airQuality.current.pollen[key];
                     if (pollen === null) return null;
-                    return <MetricLine key={key} label={labels.pollen[key]} value={formatPollen(pollen, locale)} />;
+                    return <MetricLine key={key} label={labels.pollen[key]} value={formatPollen(pollen, locale, t)} />;
                   })}
                 </SimpleGrid>
               </Paper>
@@ -309,7 +310,7 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
           </Text>
           <SimpleGrid cols={{ base: 2, sm: 4, md: 7 }} spacing="xs">
             {airQuality.daily.map((day) => {
-              const dailyAqi = standard === "us" ? day.usAqiMax : day.europeanAqiMax;
+              const dailyAqi = getDailyAqiValue(day, standard);
               return (
                 <Stack key={day.date} gap={2} align="center">
                   <Text size="xs" c="dimmed">
@@ -388,7 +389,11 @@ const formatDecimal = (value: number | null, locale: string) => {
   return new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(value);
 };
 
-const formatConcentration = (value: number | null, locale: string) => `${formatDecimal(value, locale)} µg/m³`;
-const formatPollen = (value: number | null, locale: string) => `${formatDecimal(value, locale)} grains/m³`;
+type ScopedAirQualityTranslator = ReturnType<typeof useScopedI18n<"widget.airQuality">>;
+
+const formatConcentration = (value: number | null, locale: string, t: ScopedAirQualityTranslator) =>
+  t("unit.concentration", { value: formatDecimal(value, locale) });
+const formatPollen = (value: number | null, locale: string, t: ScopedAirQualityTranslator) =>
+  t("unit.pollen", { value: formatDecimal(value, locale) });
 const hasAvailableValue = (values: Record<string, number | null>) =>
   Object.values(values).some((value) => value !== null);
