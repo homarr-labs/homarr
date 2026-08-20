@@ -1,0 +1,16 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_edit-actions.tsx
+  h_d6e478ca18e517 44-51
+packages/modals-collection/src/apps/app-select-modal.tsx
+  h_d6e478ca18e517 54-62,93-120,201,207,222
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "7a7d4449c10c0fc60e8a52856458029b036a0ade",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
