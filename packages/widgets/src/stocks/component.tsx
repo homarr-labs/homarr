@@ -43,11 +43,11 @@ export interface StockLayout {
   priceOrder: 1 | 2;
 }
 
-export function getStockLayout(width: number, height: number): StockLayout {
+export function getStockLayout(width: number, height: number, showDetails: boolean): StockLayout {
   return {
-    showName: width >= 300 && height >= 190,
-    showChange: width >= 260 && height >= 130,
-    showRange: width >= 220 && height >= 130,
+    showName: showDetails && width >= 300 && height >= 190,
+    showChange: showDetails && width >= 260 && height >= 130,
+    showRange: showDetails && width >= 220 && height >= 130,
     graphHeight: height >= 320 ? "75%" : height >= 220 ? "68%" : "48%",
     priceOrder: width >= 280 && height >= 120 ? 1 : 2,
   };
@@ -92,7 +92,7 @@ export default function StockPriceWidget({
   const stockValuesChangePercentage = summary.changePercentage === null ? null : round(summary.changePercentage);
   const stockGraphValues = summary.graphValues;
   const trendColor = stockValuesChange > 0 ? "green.7" : stockValuesChange < 0 ? "red.7" : "gray.6";
-  const layout = getStockLayout(width, height);
+  const layout = getStockLayout(width, height, options.showDetails);
   const formatValue = (value: number) => numberFormatter.format(round(value));
   const formatSignedValue = (value: number) => `${value > 0 ? "+" : ""}${formatValue(value)}`;
 
