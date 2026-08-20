@@ -56,6 +56,8 @@ summary of accessible Homarr resources. Live status is fetched only when needed.
 - Homarr permissions apply to every tool call and mentioned item.
 - API keys and custom headers are encrypted and never returned to the browser.
 - Conversations are stored per user and can be exported or deleted.
+- Model-generated images from external websites are not loaded automatically. Homarr shows the destination host and
+  waits for you to approve each image URL, preventing a response from silently contacting another server from your browser.
 
 Prompts, attachments, tool definitions, and tool results are sent to the selected model provider. Review that
 provider's privacy policy before enabling the assistant.
