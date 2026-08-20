@@ -2,13 +2,13 @@ import { fetchApi } from "@homarr/api/client";
 import { mapWithConcurrency } from "@homarr/common";
 import {
   customWidgetDefinitionSchema,
+  CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT,
   getCustomWidgetDefaultOptions,
   getCustomWidgetRequiredSecretKinds,
   parseCustomWidgetAiResponse,
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource, HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
-import { CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT } from "@homarr/custom-widgets/server";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import type { UseFormReturnType } from "@mantine/form";
 

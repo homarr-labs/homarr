@@ -13,7 +13,8 @@ import {
   validateCustomWidgetUrl,
 } from "./network-policy";
 import { closeDispatcher } from "./request-dispatcher-lifecycle";
-import { parseResponseBody } from "./response";
+import { isCustomWidgetRequestTimeoutError } from "./request-timeout";
+import { normalizeResponseHeaders, parseResponseBody } from "./response";
 
 export {
   assertSafeStaticHeaders,
@@ -28,6 +29,7 @@ export {
   MAX_RESPONSE_JSON_DEPTH,
   MAX_RESPONSE_JSON_NODES,
 } from "./response";
+export { isCustomWidgetRequestTimeoutError } from "./request-timeout";
 
 export const MAX_REQUEST_BODY_BYTES = 10 * 1024;
 const REQUEST_TIMEOUT_MS = 10_000;
@@ -35,7 +37,6 @@ const MAX_QUERY_REDIRECTS = 3;
 const MAX_RESPONSE_CACHE_ENTRIES = 1_000;
 const MAX_RESPONSE_CACHE_BYTES = 64 * 1024 * 1024;
 export const MAX_REQUEST_DURATION_MS = 45_000;
-const TIMEOUT_ERROR_CODES = new Set(["UND_ERR_CONNECT_TIMEOUT", "UND_ERR_HEADERS_TIMEOUT", "UND_ERR_BODY_TIMEOUT"]);
 const RESPONSE_TOO_LARGE_ERROR_CODE = "UND_ERR_RES_EXCEEDED_MAX_SIZE";
 
 export interface CustomWidgetAuthConfig {
@@ -217,23 +218,6 @@ async function performRequestWithinDeadline(
     }
     currentUrl = redirected;
   }
-}
-
-export function isCustomWidgetRequestTimeoutError(error: unknown, ...signals: readonly AbortSignal[]): boolean {
-  if (signals.some((signal) => signal.aborted)) return true;
-  if (!(error instanceof Error)) return false;
-  if (error.name.includes("Timeout")) return true;
-  const code = "code" in error && typeof error.code === "string" ? error.code : undefined;
-  return code !== undefined && TIMEOUT_ERROR_CODES.has(code);
-}
-
-function normalizeResponseHeaders(values: Record<string, string | string[] | undefined>) {
-  const headers = new Headers();
-  for (const [name, value] of Object.entries(values)) {
-    if (Array.isArray(value)) value.forEach((entry) => headers.append(name, entry));
-    else if (value !== undefined) headers.set(name, value);
-  }
-  return headers;
 }
 
 function assertRequest(input: CustomWidgetHttpRequest): void {

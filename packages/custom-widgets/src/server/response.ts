@@ -1,9 +1,19 @@
+import { Headers } from "undici";
 import type { Response } from "undici";
 import { CustomWidgetDomainError } from "./errors";
 
 export const MAX_RESPONSE_BODY_BYTES = 1024 * 1024;
 export const MAX_RESPONSE_JSON_DEPTH = 32;
 export const MAX_RESPONSE_JSON_NODES = 50_000;
+
+export function normalizeResponseHeaders(values: Record<string, string | string[] | undefined>) {
+  const headers = new Headers();
+  for (const [name, value] of Object.entries(values)) {
+    if (Array.isArray(value)) value.forEach((entry) => headers.append(name, entry));
+    else if (value !== undefined) headers.set(name, value);
+  }
+  return headers;
+}
 
 export function assertJsonBudget(value: unknown): void {
   let nodes = 0;

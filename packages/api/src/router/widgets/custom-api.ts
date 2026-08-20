@@ -14,7 +14,7 @@ import {
   validateCustomWidgetOptions,
 } from "@homarr/custom-widgets/core";
 import type { CustomJsxRequest, CustomWidgetSource } from "@homarr/custom-widgets/core";
-import { CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT } from "@homarr/custom-widgets/server";
+import { CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT } from "@homarr/custom-widgets/core";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
