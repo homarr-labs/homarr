@@ -3153,9 +3153,6 @@
           "label": "24-hour format",
           "description": "Use 24-hour format instead of 12-hour format"
         },
-        "showSeconds": {
-          "label": "Display seconds"
-        },
         "useCustomTimezone": {
           "label": "Use a fixed timezone"
         },
@@ -3167,16 +3164,12 @@
           "label": "Show the date"
         },
         "dateFormat": {
-          "label": "Date Format",
-          "description": "How the date should look like"
+          "label": "Date format",
+          "description": "Choose a Day.js preset. Each option shows a live example and its format tokens."
         },
         "customTimeFormat": {
-          "label": "Custom time format",
-          "description": "Use ISO 8601 to format time (this will override other options)"
-        },
-        "customDateFormat": {
-          "label": "Custom date format",
-          "description": "Use ISO 8601 to format date (this will override other options)"
+          "label": "Time format",
+          "description": "Choose a Day.js preset. The selected format controls 12/24-hour display and whether the clock updates every second."
         },
         "showWeather": {
           "label": "Show weather",
@@ -3187,7 +3180,298 @@
         },
         "isWeatherFormatFahrenheit": {
           "label": "Use Fahrenheit"
+        },
+        "animateWeatherIcon": {
+          "label": "Animate weather icon",
+          "description": "Animate the weather icon. Disabled by default and always disabled when reduced motion is requested."
+        },
+        "worldClockCities": {
+          "label": "World clock cities",
+          "description": "Add and order up to six cities for advanced view."
         }
+      },
+      "timezoneList": {
+        "timezone": "Timezone",
+        "cityLabel": "City label",
+        "searchPlaceholder": "Search timezones",
+        "noResults": "No timezones found",
+        "unsupportedOption": "Unsupported: {timeZone}",
+        "add": "Add city",
+        "remove": "Remove {city}",
+        "reorder": "Reorder {city}",
+        "limit": "{count} of {maximum} cities configured"
+      },
+      "worldClock": {
+        "primary": "Primary clock",
+        "local": "Local time",
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "yesterday": "Yesterday",
+        "noSecondaryCities": "Add cities in widget options to compare them here.",
+        "unsupportedPrimaryTitle": "Primary timezone is unavailable",
+        "unsupportedPrimary": "{timeZone} is not supported in this browser. Showing UTC as a clearly marked fallback.",
+        "unsupportedTimeZone": "Unsupported timezone: {timeZone}",
+        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "advancedLabel": "Advanced world clock",
+        "cities": "World clocks",
+        "cityCount": "{count} timezones",
+        "timeBarLabel": "24-hour time-of-day position for {city}",
+        "dayProgress": "{percent}% elapsed · {hours}h {minutes}m remaining",
+        "phaseLegend": "Time-of-day legend",
+        "phase": {
+          "night": "Night",
+          "dawn": "Dawn",
+          "day": "Day",
+          "dusk": "Dusk"
+        }
+      }
+    },
+    "airQuality": {
+      "name": "Air Quality & UV",
+      "description": "Displays air quality, ultraviolet index, pollutants and pollen for a location.",
+      "option": {
+        "location": {
+          "label": "Air quality location"
+        },
+        "aqiStandard": {
+          "label": "AQI standard",
+          "options": {
+            "auto": "Automatic for locale",
+            "european": "European AQI",
+            "us": "US AQI"
+          }
+        },
+        "showUv": {
+          "label": "Show UV index"
+        },
+        "showPollutants": {
+          "label": "Show pollutant concentrations"
+        },
+        "showPollen": {
+          "label": "Show pollen concentrations"
+        }
+      },
+      "category": {
+        "good": "Good",
+        "fair": "Fair",
+        "moderate": "Moderate",
+        "unhealthySensitive": "Unhealthy for sensitive groups",
+        "unhealthy": "Unhealthy",
+        "poor": "Poor",
+        "veryPoor": "Very poor",
+        "veryUnhealthy": "Very unhealthy",
+        "extremelyPoor": "Extremely poor",
+        "hazardous": "Hazardous",
+        "unknown": "No AQI reading"
+      },
+      "uv": {
+        "label": "UV index",
+        "category": {
+          "low": "Low",
+          "moderate": "Moderate",
+          "high": "High",
+          "veryHigh": "Very high",
+          "extreme": "Extreme",
+          "unknown": "No reading"
+        }
+      },
+      "dominantPollutant": "Dominant pollutant",
+      "strongestPollen": "Highest pollen",
+      "pollutant": {
+        "pm2_5": "PM2.5",
+        "pm10": "PM10",
+        "ozone": "Ozone",
+        "nitrogenDioxide": "Nitrogen dioxide",
+        "sulphurDioxide": "Sulphur dioxide",
+        "carbonMonoxide": "Carbon monoxide"
+      },
+      "pollen": {
+        "alder": "Alder",
+        "birch": "Birch",
+        "grass": "Grass",
+        "mugwort": "Mugwort",
+        "olive": "Olive",
+        "ragweed": "Ragweed"
+      },
+      "compact": {
+        "sixHourTrend": "AQI trend for the next six hours"
+      },
+      "advanced": {
+        "observedAt": "Updated at {time}",
+        "next24Hours": "Next 24 hours",
+        "pollutants": "Pollutant concentrations",
+        "pollen": "Pollen concentrations",
+        "sevenDayForecast": "7-day maximum forecast",
+        "aqiValue": "AQI {value}",
+        "uvValue": "UV {value}",
+        "uvShort": "UV {value}",
+        "noForecast": "No forecast data available"
+      }
+    },
+    "countdown": {
+      "name": "Countdowns",
+      "description": "Tracks upcoming events and recurring anniversaries.",
+      "option": {
+        "events": {
+          "label": "Events",
+          "description": "Add and order up to 20 one-time or yearly countdowns. Dates are entered in the selected timezone."
+        },
+        "showProgress": {
+          "label": "Show progress"
+        },
+        "showSeconds": {
+          "label": "Show seconds",
+          "description": "Keep seconds visible for every upcoming event."
+        }
+      },
+      "dateTimeEventList": {
+        "newEvent": "New event",
+        "add": "Add event",
+        "remove": "Remove {event}",
+        "reorder": "Reorder {event}",
+        "eventLabel": "Event label",
+        "timezone": "Timezone",
+        "unsupportedOption": "Unsupported: {timeZone}",
+        "recurrence": "Repeats",
+        "recurrenceOption": {
+          "none": "Does not repeat",
+          "yearly": "Every year"
+        },
+        "target": "Event date and time",
+        "trackProgress": "Track progress from a start date",
+        "start": "Progress start date and time",
+        "confirmDateTime": "Confirm date and time",
+        "limit": "{count} of {maximum} events configured"
+      },
+      "empty": {
+        "title": "No countdowns yet",
+        "description": "Add an event in widget options to start counting down."
+      },
+      "completed": "Completed",
+      "yearly": "Yearly",
+      "progress": "Event progress",
+      "upcoming": "Upcoming",
+      "completedEvents": "Completed events",
+      "invalid": {
+        "title": "Some events cannot be displayed",
+        "description": "{count, plural, one {One event has an invalid date or unsupported timezone.} other {# events have an invalid date or unsupported timezone.}}",
+        "value": "Unavailable"
+      },
+      "alert": {
+        "notifications": "Browser notifications",
+        "permissionDenied": "Notifications are blocked in this browser.",
+        "reached": "The countdown has reached its target."
+      }
+    },
+    "timer": {
+      "name": "Timer / Pomodoro",
+      "description": "Runs a simple timer or a configurable Pomodoro sequence.",
+      "option": {
+        "mode": {
+          "label": "Mode",
+          "options": {
+            "timer": "Timer",
+            "pomodoro": "Pomodoro"
+          }
+        },
+        "timerMinutes": {
+          "label": "Timer minutes"
+        },
+        "focusMinutes": {
+          "label": "Focus minutes"
+        },
+        "shortBreakMinutes": {
+          "label": "Short break minutes"
+        },
+        "longBreakMinutes": {
+          "label": "Long break minutes"
+        },
+        "sessionsBeforeLongBreak": {
+          "label": "Focus sessions before a long break"
+        },
+        "autoStartBreaks": {
+          "label": "Automatically start breaks"
+        },
+        "autoStartFocus": {
+          "label": "Automatically start focus sessions"
+        }
+      },
+      "phase": {
+        "timer": "Timer",
+        "focus": "Focus",
+        "shortBreak": "Short break",
+        "longBreak": "Long break"
+      },
+      "action": {
+        "start": "Start",
+        "pause": "Pause",
+        "reset": "Reset"
+      },
+      "attention": {
+        "timerComplete": "Timer complete",
+        "phaseReady": "{phase} ready"
+      },
+      "progress": "Timer progress: {progress}%",
+      "compact": {
+        "completedFocus": "{count, plural, =0 {No focus sessions completed} one {# focus session completed} other {# focus sessions completed}}"
+      },
+      "alert": {
+        "title": "Timer complete",
+        "completed": "{phase} completed."
+      },
+      "advanced": {
+        "sequence": "Pomodoro sequence",
+        "focusSession": "Focus {session}",
+        "settings": "Permanent settings",
+        "settingsHint": "Use the widget context menu to edit these board settings.",
+        "localAlerts": "Local alerts",
+        "notifications": "Browser notifications",
+        "sound": "Timer sounds",
+        "localAlertsHint": "Timer sounds are enabled by default. Sounds and notifications apply only to this widget in this browser.",
+        "notificationsDenied": "Notifications are blocked in this browser."
+      }
+    },
+    "today": {
+      "name": "Today",
+      "description": "Displays the current date and progress through the calendar.",
+      "option": {
+        "weekConvention": {
+          "label": "Week numbering",
+          "options": {
+            "locale": "Use locale rules",
+            "iso": "ISO 8601"
+          }
+        },
+        "showWeekNumber": {
+          "label": "Show week number"
+        },
+        "showDayOfYear": {
+          "label": "Show day of year"
+        },
+        "showQuarter": {
+          "label": "Show quarter"
+        },
+        "showYearProgress": {
+          "label": "Show year progress"
+        }
+      },
+      "weekNumber": "Week {week}",
+      "dayOfYear": "Day {day} of {total}",
+      "quarter": "Quarter {quarter}",
+      "daysAfterToday": "{days, plural, =0 {Last day of the year} one {# day after today} other {# days after today}}",
+      "weekProgressLabel": "Week progress",
+      "monthProgressLabel": "Month progress",
+      "yearProgressLabel": "Year progress",
+      "yearProgress": "Year progress: {progress}%",
+      "weekConvention": {
+        "locale": "Week numbers follow your locale",
+        "iso": "ISO 8601 week numbers"
+      },
+      "advanced": {
+        "week": "Week number",
+        "dayOfYear": "Day of year",
+        "quarter": "Quarter",
+        "daysRemaining": "Days after today"
       }
     },
     "minecraftServerStatus": {
@@ -3583,6 +3867,13 @@
         "disableTemperatureDecimals": {
           "label": "Disable temperature decimals"
         },
+        "animateIcons": {
+          "label": "Animate weather icons"
+        },
+        "showHumidity": {
+          "label": "Show humidity",
+          "description": "Display humidity in current conditions, hourly details and daily forecasts"
+        },
         "showCurrentWindSpeed": {
           "label": "Show current wind speed",
           "description": "Only on current weather"
@@ -3636,11 +3927,40 @@
       "detailsFor": "Show weather details for {date}",
       "advanced": {
         "forecast": "7-day forecast",
+        "hourlyForecast": "Next 24 hours",
         "day": "Day",
+        "time": "Time",
         "conditions": "Conditions",
-        "temperature": "High / low",
+        "temperature": "Temperature",
+        "feelsLike": "Feels like {temperature}",
+        "feelsLikeLabel": "Feels like",
+        "feelsLikeRange": "Feels like: {maximum} / {minimum}",
+        "highLow": "High {maximum} · low {minimum}",
+        "observedAt": "Updated at {time}",
         "humidity": "Humidity",
+        "averageHumidity": "Average humidity: {humidity}%",
+        "currentHumidity": "Current humidity",
         "wind": "Wind / gusts ({unit})",
+        "currentWind": "Current wind / gusts",
+        "windValue": "{speed} / {gusts} {unit}",
+        "windDetail": "Max wind / gusts: {speed} / {gusts} {unit}",
+        "nextHourPrecipitation": "Precipitation next hour",
+        "precipitationChance": "Precipitation chance",
+        "precipitationValue": "{probability}% · {amount} mm",
+        "precipitationDetail": "Precipitation: {probability}% · {amount} mm",
+        "todayUv": "Today's max UV index",
+        "uvIndex": "Max UV index: {value}",
+        "daylight": "Daylight: {duration}",
+        "hourlyTooltip": "Feels like {feelsLike}{temperatureUnit} · {amount} mm · {humidity}% humidity · {speed} {speedUnit} wind",
+        "hourlyTooltipWithoutHumidity": "Feels like {feelsLike}{temperatureUnit} · {amount} mm · {speed} {speedUnit} wind",
+        "detailLabel": {
+          "feelsLike": "Feels like",
+          "precipitation": "Precipitation",
+          "humidity": "Average humidity",
+          "wind": "Max wind / gusts",
+          "uv": "Max UV index",
+          "daylight": "Daylight"
+        },
         "sun": "Sunrise / sunset",
         "noForecast": "No forecast data available"
       }

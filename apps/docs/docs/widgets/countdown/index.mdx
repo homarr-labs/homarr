@@ -1,0 +1,44 @@
+---
+title: "Countdowns"
+description: "Tracks upcoming events and recurring anniversaries."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { countdownWidget } from ".";
+
+<WidgetHeader widget={countdownWidget} categories={["Time"]} />
+
+The Countdowns widget tracks up to 20 events without an integration. Add each event in widget options, choose its local
+date and time, and select an IANA timezone. Events can be reordered by dragging them.
+
+The compact widget shows the first configured event, so dragging an event to the top selects the countdown displayed on
+the board. Advanced view uses that same event for its larger summary and preserves the configured order within its
+upcoming and completed groups. List cards keep their occurrence date at the bottom, below the optional progress bar.
+
+One-time events remain completed after their target. A yearly event keeps the same local date and wall-clock time in its
+configured timezone, including when daylight-saving offsets change. A February 29 event waits until the next leap year.
+If a configured local time falls in a daylight-saving gap, the first valid time afterward is used; if it occurs twice,
+the earlier occurrence is used.
+
+Progress is optional. One-time events need a start date before a percentage can be calculated. Yearly events show
+progress from the previous occurrence to the next. When enabled, seconds remain visible for every upcoming event.
+
+Browser notifications are an optional local preference in advanced view and are disabled by default. Permission is
+requested only after you enable notifications, and alerts can fire once per occurrence while Homarr is open. Browser
+storage uses the board and widget identifiers to keep preferences separate and prevent duplicate alerts; clearing site
+data resets them. Widget previews do not persist alert preferences.
+
+<WidgetInteractionGuide />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={countdownWidget.configuration} />

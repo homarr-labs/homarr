@@ -3,7 +3,9 @@ import "../widgets-common.css";
 import { WeatherIcon } from "./icon";
 
 interface AnimatedWeatherIconProps {
+  animated?: boolean;
   code: number;
+  isDay?: boolean;
   size?: string | number;
 }
 
@@ -17,10 +19,11 @@ const getAnimationClass = (code: number): string => {
   return "";
 };
 
-export const AnimatedWeatherIcon = ({ code, size = 26 }: AnimatedWeatherIconProps) => {
+export const AnimatedWeatherIcon = ({ animated = false, code, isDay, size = 26 }: AnimatedWeatherIconProps) => {
+  const animationClass = animated ? getAnimationClass(code) : "";
   return (
-    <span className={`weather-anim-wrapper ${getAnimationClass(code)}`}>
-      <WeatherIcon code={code} size={size} />
+    <span className={`weather-anim-wrapper ${animationClass}`}>
+      <WeatherIcon code={code} isDay={isDay} size={size} />
     </span>
   );
 };

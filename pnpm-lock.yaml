@@ -2910,6 +2910,9 @@ importers:
       '@mantine/hooks':
         specifier: 'catalog:'
         version: 9.4.1(react@19.2.7)
+      '@rexa-developer/tiks':
+        specifier: 'catalog:'
+        version: 0.3.0(react@19.2.7)(vue@3.5.35(typescript@7.0.2))
       '@tabler/icons-react':
         specifier: 'catalog:'
         version: 3.44.0(react@19.2.7)
