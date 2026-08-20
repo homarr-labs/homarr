@@ -15,7 +15,7 @@ dayjs.extend(advancedFormat);
 
 export default function ClockWidget({ options, width, height, displayMode }: WidgetComponentProps<"clock">) {
   const isAdvanced = displayMode === "advanced";
-  const showSeconds = clockTimeFormatShowsSeconds(options.customTimeFormat, options.showSeconds);
+  const showSeconds = clockTimeFormatShowsSeconds(options.customTimeFormat);
   const time = useCurrentTime({ showSeconds });
   const requestedTimeZone = options.useCustomTimezone ? options.timezone : getResolvedLocalTimeZone();
   const primaryTimeZoneInvalid = !isTimeZoneSupported(requestedTimeZone);
@@ -37,12 +37,7 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
     return <Center h="100%">--:--</Center>;
   }
 
-  const resolvedTimeFormat = resolveClockTimeFormat(
-    options.customTimeFormat,
-    options.is24HourFormat,
-    options.showSeconds,
-  );
-  const resolvedDateFormat = options.customDateFormat || options.dateFormat;
+  const resolvedTimeFormat = resolveClockTimeFormat(options.customTimeFormat, options.is24HourFormat);
   const minimumAxis = Math.min(width, height * 1.5);
   let sizing: "xs" | "sm" | "md" = "md";
   if (minimumAxis < 128) sizing = "xs";
@@ -76,7 +71,7 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
         </Title>
         {options.showDate && (
           <Text className="clock-date-text" size={sizing} lineClamp={1}>
-            {zonedTime?.format(resolvedDateFormat)}
+            {zonedTime?.format(options.dateFormat)}
           </Text>
         )}
       </Stack>
