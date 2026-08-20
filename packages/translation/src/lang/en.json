@@ -4853,11 +4853,7 @@
           "label": "Sort by"
         },
         "sortDirection": {
-          "label": "Sort direction",
-          "option": {
-            "asc": "Ascending",
-            "desc": "Descending"
-          }
+          "label": "Sort direction"
         }
       },
       "error": {
