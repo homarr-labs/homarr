@@ -16,7 +16,7 @@
   padding-inline-start: var(--mantine-spacing-xl);
 }
 
-@media (max-width: $mantine-breakpoint-sm) {
+@mixin smaller-than $mantine-breakpoint-sm {
   .list {
     max-width: calc(100vw - var(--mantine-spacing-xl));
     min-width: 0;
