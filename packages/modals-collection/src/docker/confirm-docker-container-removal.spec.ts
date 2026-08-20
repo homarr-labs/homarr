@@ -17,6 +17,7 @@ describe("createDockerRemovalConfirmation", () => {
     expect(remove).not.toHaveBeenCalled();
     expect(confirmation.title).toContain('"count":"2"');
     expect(confirmation.children).toContain('"names":"sonarr, radarr"');
+    expect(confirmation.confirmProps.children).toBe("Remove");
 
     confirmation.onConfirm();
     expect(remove).toHaveBeenCalledOnce();

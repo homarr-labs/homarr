@@ -22,9 +22,9 @@ const sortOptions = [
 ] satisfies SelectOption[];
 
 const sortDirectionOptions = [
-  { value: "asc", label: "Ascending" },
-  { value: "desc", label: "Descending" },
-];
+  { value: "asc", label: (t) => t("widget.beszelSystemTable.option.sortDirection.option.asc") },
+  { value: "desc", label: (t) => t("widget.beszelSystemTable.option.sortDirection.option.desc") },
+] satisfies SelectOption[];
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemTable", {
   icon: IconTable,

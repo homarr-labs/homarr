@@ -8,7 +8,7 @@ Snapshot: 4,462 leaf messages across 24 top-level namespaces (`next-intl` 4.13.1
 
 Phases 1–5 were implemented together on `feat/consolidate-translations`; phase 6 is intentionally excluded. The area reports below preserve the pre-implementation evidence and recommendations that drove the changes.
 
-- Against the current `release/v2` target, reduced the English catalog from 4,699 to 4,078 leaf messages and exact duplicate groups from 433 to 291.
+- Against the current `release/v2` target, reduced the English catalog from 4,699 to 4,080 leaf messages and exact duplicate groups from 433 to 291.
 - Consolidated generic actions, named CRUD labels, fields, entity nouns, and notification titles under `common` while retaining feature-specific prose and accessibility context.
 - Moved Assistant copy from `common.assistant` to the top-level `assistant` namespace and replaced its generic controls with shared action keys.
 - Standardized the translation facade on `useI18n` and `getI18n`, then reduced unscoped translator calls from 225 to 65.
