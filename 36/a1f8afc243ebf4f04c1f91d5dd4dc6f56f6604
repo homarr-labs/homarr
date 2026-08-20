@@ -1,0 +1,21 @@
+apps/nextjs/src/components/board/items/item-select-integration-sanitization.spec.ts
+  s_770aac9e47de12::t_79dcf2b973c44f 1-254
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_770aac9e47de12::t_b7fb8c086da6d2 455,619,625,627,630,638,640,649-680,777-778,783,791-795,833-839,855-858,888-898,920-926,931-943,974,1033
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "36a1f8afc243ebf4f04c1f91d5dd4dc6f56f6604",
+  "prompts": {},
+  "sessions": {
+    "s_770aac9e47de12": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d1a904f4-0746-4a3c-b258-2b4636dd54f8",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
