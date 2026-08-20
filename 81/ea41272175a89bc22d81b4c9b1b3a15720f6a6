@@ -1,0 +1,16 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_edit-actions.tsx
+  h_d6e478ca18e517 3-4,6,9,12-15,23,25-29,31-50,53-79
+apps/nextjs/src/components/create/setup-analytics.ts
+  h_d6e478ca18e517 40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "81ea41272175a89bc22d81b4c9b1b3a15720f6a6",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
