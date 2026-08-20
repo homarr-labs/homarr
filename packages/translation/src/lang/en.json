@@ -3153,6 +3153,9 @@
           "label": "24-hour format",
           "description": "Use 24-hour format instead of 12-hour format"
         },
+        "showSeconds": {
+          "label": "Display seconds"
+        },
         "useCustomTimezone": {
           "label": "Use a fixed timezone"
         },
@@ -3168,8 +3171,12 @@
           "description": "Choose a Day.js preset. Each option shows a live example and its format tokens."
         },
         "customTimeFormat": {
-          "label": "Time format",
-          "description": "Choose a Day.js preset. The selected format controls 12/24-hour display and whether the clock updates every second."
+          "label": "Custom time format",
+          "description": "Use Day.js tokens to override the 12/24-hour and seconds options."
+        },
+        "customDateFormat": {
+          "label": "Custom date format",
+          "description": "Use Day.js tokens to override the selected date format."
         },
         "showWeather": {
           "label": "Show weather",

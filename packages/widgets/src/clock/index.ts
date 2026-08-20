@@ -46,6 +46,9 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
           defaultValue: true,
           withDescription: true,
         }),
+        showSeconds: factory.switch({
+          defaultValue: false,
+        }),
         useCustomTimezone: factory.switch({ defaultValue: false }),
         timezone: factory.select({
           options: timeZoneOptions,
@@ -73,14 +76,12 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
           defaultValue: "dddd, MMMM D",
           withDescription: true,
         }),
-        customTimeFormat: factory.select({
-          options: [
-            { value: "HH:mm", label: `${dayjs().format("HH:mm")} · HH:mm` },
-            { value: "HH:mm:ss", label: `${dayjs().format("HH:mm:ss")} · HH:mm:ss` },
-            { value: "h:mm A", label: `${dayjs().format("h:mm A")} · h:mm A` },
-            { value: "h:mm:ss A", label: `${dayjs().format("h:mm:ss A")} · h:mm:ss A` },
-          ],
-          defaultValue: "HH:mm",
+        customTimeFormat: factory.text({
+          defaultValue: "",
+          withDescription: true,
+        }),
+        customDateFormat: factory.text({
+          defaultValue: "",
           withDescription: true,
         }),
         showWeather: factory.switch({
@@ -110,9 +111,6 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
         }),
       }),
       {
-        is24HourFormat: {
-          shouldHide: () => true,
-        },
         customTitle: {
           shouldHide: (options) => !options.customTitleToggle,
         },
@@ -120,6 +118,9 @@ export const { definition, componentLoader } = createWidgetDefinition("clock", {
           shouldHide: (options) => !options.useCustomTimezone,
         },
         dateFormat: {
+          shouldHide: (options) => !options.showDate,
+        },
+        customDateFormat: {
           shouldHide: (options) => !options.showDate,
         },
         weatherLocation: {

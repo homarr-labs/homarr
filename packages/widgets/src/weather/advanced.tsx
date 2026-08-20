@@ -101,7 +101,8 @@ export const AdvancedWeather = ({ height, options, weather, width }: AdvancedWea
   const tCommon = useScopedI18n("common");
   const layout = getAdvancedWeatherLayout(width, height);
   const today = weather.daily[0];
-  const nextHour = weather.hourly[0];
+  const observedAt = Date.parse(weather.current.observedAt);
+  const nextHour = weather.hourly.find((hour) => Date.parse(hour.observedAt) > observedAt) ?? weather.hourly[0];
   const hourly = getHourlyChartData(weather, options.isFormatFahrenheit);
   const speedUnit = options.useImperialSpeed
     ? tCommon("unit.speed.milesPerHour")

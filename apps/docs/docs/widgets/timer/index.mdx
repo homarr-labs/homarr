@@ -35,8 +35,9 @@ supplement the visible timer state rather than replacing it.
 When automatic start is disabled, a completed phase labels the next step as ready and flashes the widget edges with the
 board's secondary color. The border glow and completion chime run together as a five-beat alarm burst at
 300-millisecond intervals, then stop. Reduced-motion and forced-colors modes replace the flash with a static border.
-Compact labels, timer text, and controls use the dashboard theme's responsive size scale, with secondary details hidden
-when the widget preview is narrow or short.
+The current phase stays pinned to the compact widget's top-left corner and wraps when needed. Timer text and controls
+use the dashboard theme's responsive size scale, with secondary details hidden when the widget preview is narrow or
+short.
 
 Alerts can fire while Homarr is open. Browser and operating-system notification settings may still suppress them.
 The timer's mode, durations, session count, and automatic-start behavior are permanent board settings and are edited

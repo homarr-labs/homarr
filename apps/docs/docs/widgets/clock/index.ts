@@ -21,6 +21,18 @@ export const clockWidget: WidgetDefinition = {
         defaultValue: "-",
       },
       {
+        name: "24-hour format",
+        description: "Use 24-hour format instead of 12-hour format when no custom time format is set.",
+        values: { type: "boolean" },
+        defaultValue: "yes",
+      },
+      {
+        name: "Display seconds",
+        description: "Show seconds when no custom time format is set.",
+        values: { type: "boolean" },
+        defaultValue: "no",
+      },
+      {
         name: "Use fixed timezone",
         description: "Select custom timezone to display instead of the client timezone.",
         values: { type: "boolean" },
@@ -45,11 +57,16 @@ export const clockWidget: WidgetDefinition = {
         defaultValue: "dddd, MMMM D",
       },
       {
-        name: "Time format",
-        description:
-          "Choose a common Day.js time format with a live example. The format controls 12/24-hour display and seconds.",
-        values: "HH:mm, HH:mm:ss, h:mm A, or h:mm:ss A",
-        defaultValue: "HH:mm",
+        name: "Custom time format",
+        description: "Use Day.js tokens to override the 12/24-hour and seconds options.",
+        values: "A Day.js format such as HH:mm:ss or h:mm A",
+        defaultValue: "-",
+      },
+      {
+        name: "Custom date format",
+        description: "Use Day.js tokens to override the selected date format.",
+        values: "A Day.js format such as YYYY-MM-DD",
+        defaultValue: "-",
       },
       {
         name: "Show weather",

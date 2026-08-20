@@ -144,7 +144,8 @@ export const weatherRequestHandler = createWidgetRequestHandler({
   requestAsync: requestWeatherAsync,
 });
 
-const nullableNumberArray = z.array(z.number().nullable());
+const nullableNumberArray = z.array(z.number().nullable()).default([]);
+const nullableStringArray = z.array(z.string().nullable()).default([]);
 
 const atLocationOutput = z.object({
   timezone: z.string().min(1),
@@ -184,8 +185,8 @@ const atLocationOutput = z.object({
     wind_speed_10m_max: nullableNumberArray,
     wind_gusts_10m_max: nullableNumberArray,
     uv_index_max: nullableNumberArray,
-    sunrise: z.array(z.string().nullable()),
-    sunset: z.array(z.string().nullable()),
+    sunrise: nullableStringArray,
+    sunset: nullableStringArray,
     daylight_duration: nullableNumberArray,
   }),
 });

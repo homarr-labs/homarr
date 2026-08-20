@@ -92,13 +92,13 @@ export const WeatherDescription = ({
   const name = getWeatherKind(weatherCode);
 
   if (weatherOnly) {
-    return <Text fz="16px">{t(`kind.${name}`)}</Text>;
+    return <Text fz="md">{t(`kind.${name}`)}</Text>;
   }
 
   return (
     <Stack align="center" gap="0">
-      <Text fz="24px">{formatWeatherDate(time, locale, dateFormat)}</Text>
-      <Text fz="16px">{t(`kind.${name}`)}</Text>
+      <Text fz="xl">{formatWeatherDate(time, locale, dateFormat)}</Text>
+      <Text fz="md">{t(`kind.${name}`)}</Text>
       <List>
         <List.Item
           icon={<IconTemperaturePlus size="var(--mantine-font-size-sm)" />}

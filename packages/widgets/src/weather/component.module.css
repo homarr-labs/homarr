@@ -24,7 +24,7 @@
 }
 
 .locationSummary {
-  max-width: min(100%, 320px);
+  max-width: min(100%, 20rem);
 }
 
 .metricCard,
@@ -32,7 +32,7 @@
 .detailMetric,
 .solarDetails {
   background: color-mix(in srgb, var(--mantine-color-body) 72%, transparent);
-  border: 1px solid color-mix(in srgb, var(--mantine-color-default-border) 72%, transparent);
+  border: 0.0625rem solid color-mix(in srgb, var(--mantine-color-default-border) 72%, transparent);
 }
 
 .dailyCard {
@@ -48,7 +48,7 @@
 }
 
 .dailyDetailsDropdown {
-  width: min(390px, calc(100vw - 32px));
+  width: min(24.375rem, calc(100vw - 2rem));
   padding: var(--mantine-spacing-sm);
 }
 
@@ -58,7 +58,7 @@
 
 .dailyDetailsTemperature {
   flex-shrink: 0;
-  max-width: 132px;
+  max-width: 8.25rem;
 }
 
 .dailyCardFacts {
@@ -88,8 +88,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 24px;
-  min-height: 24px;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
 }
 
 .forecastButton,
@@ -106,8 +106,8 @@
 .detailsButton:focus-visible,
 .forecastButton:focus-visible,
 .dailyCardButton:focus-visible {
-  outline: 2px solid var(--mantine-primary-color-filled);
-  outline-offset: 2px;
+  outline: 0.125rem solid var(--mantine-primary-color-filled);
+  outline-offset: 0.125rem;
 }
 
 .errorIndicator {
@@ -118,8 +118,8 @@
   .detailsButton,
   .forecastButton,
   .dailyCardButton {
-    min-width: 44px;
-    min-height: 44px;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
   }
 }
 
@@ -134,6 +134,6 @@
   .dailyCard,
   .detailMetric,
   .solarDetails {
-    border: 1px solid CanvasText;
+    border: 0.0625rem solid CanvasText;
   }
 }

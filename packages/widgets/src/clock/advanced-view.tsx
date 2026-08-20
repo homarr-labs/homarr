@@ -222,11 +222,13 @@ const ClockTime = ({
   if (!entry.zonedTime) return null;
   let formattedTime = formatLocalizedTime(now, locale, {
     hour12: clockTimeFormatUses12Hours(options.customTimeFormat, options.is24HourFormat),
-    includeSeconds: clockTimeFormatShowsSeconds(options.customTimeFormat),
+    includeSeconds: clockTimeFormatShowsSeconds(options.customTimeFormat, options.showSeconds),
     timeZone: entry.timeZone,
   });
   if (primary) {
-    formattedTime = entry.zonedTime.format(resolveClockTimeFormat(options.customTimeFormat, options.is24HourFormat));
+    formattedTime = entry.zonedTime.format(
+      resolveClockTimeFormat(options.customTimeFormat, options.is24HourFormat, options.showSeconds),
+    );
   }
   const accessibleDate = formatLocalizedDate(now, locale, {
     dateStyle: "medium",

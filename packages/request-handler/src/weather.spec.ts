@@ -75,6 +75,7 @@ describe("weather request handler", () => {
   it("requests bounded useful forecasts and normalizes location times", async () => {
     const response = makeWeatherResponse();
     response.hourly.temperature_2m = [null];
+    Reflect.deleteProperty(response.hourly, "wind_gusts_10m");
     response.daily.sunrise[1] = null;
     mockFetch.mockResolvedValue(new Response(JSON.stringify(response)));
 
@@ -87,6 +88,7 @@ describe("weather request handler", () => {
     expect(first.data.daily[0]?.date).toBe("2026-07-01");
     expect(first.data.hourly[0]?.temperature).toBeNull();
     expect(first.data.hourly[1]?.temperature).toBeNull();
+    expect(first.data.hourly[0]?.windGusts).toBeNull();
     expect(first.data.daily[0]?.sunriseAt).toBeNull();
     expect(first.data.daily[1]?.sunriseAt).toBe("2026-07-02T03:00:00.000Z");
     expect(second.data).toStrictEqual(first.data);

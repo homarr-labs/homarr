@@ -293,9 +293,10 @@ const CompactTimer = ({
 }: TimerDisplayProps) => {
   const t = useScopedI18n("widget.timer");
   const phaseLabel = getTimerPhaseLabel(runtime, t);
-  const showPhaseBadge = height >= 110;
-  const showCompletedFocus = runtime.mode === "pomodoro" && width >= 210;
+  const showCompletedFocus = runtime.mode === "pomodoro" && width >= 320;
   const showProgress = height >= 125;
+  let phaseBadgeMaxWidth = "calc(100% - var(--mantine-spacing-md))";
+  if (showCompletedFocus) phaseBadgeMaxWidth = "60%";
   return (
     <Stack
       h="100%"
@@ -304,20 +305,44 @@ const CompactTimer = ({
       justify="center"
       gap="xs"
       p="xs"
-      style={{ ...attentionStyle, overflow: "hidden" }}
+      style={{ ...attentionStyle, overflow: "hidden", position: "relative" }}
     >
-      <Group gap="xs" wrap="nowrap">
-        {showPhaseBadge && (
-          <Badge variant="light" size="xs" maw="70%" aria-live="polite">
-            {phaseLabel}
-          </Badge>
-        )}
-        {showCompletedFocus && (
-          <Text size="xs" c="dimmed">
-            {t("compact.completedFocus", { count: runtime.completedFocusSessions })}
-          </Text>
-        )}
-      </Group>
+      <Badge
+        variant="light"
+        size="xs"
+        h="auto"
+        maw={phaseBadgeMaxWidth}
+        py="calc(var(--mantine-spacing-xs) / 2)"
+        aria-live="polite"
+        style={{
+          insetInlineStart: "var(--mantine-spacing-xs)",
+          position: "absolute",
+          top: "var(--mantine-spacing-xs)",
+        }}
+        styles={{
+          label: {
+            lineHeight: "var(--mantine-line-height-xs)",
+            overflow: "visible",
+            textOverflow: "clip",
+            whiteSpace: "normal",
+          },
+        }}
+      >
+        {phaseLabel}
+      </Badge>
+      {showCompletedFocus && (
+        <Text
+          size="xs"
+          c="dimmed"
+          style={{
+            insetInlineEnd: "var(--mantine-spacing-xs)",
+            position: "absolute",
+            top: "var(--mantine-spacing-xs)",
+          }}
+        >
+          {t("compact.completedFocus", { count: runtime.completedFocusSessions })}
+        </Text>
+      )}
       <Text component="time" fz="xl" fw={700} lh={1} style={{ fontVariantNumeric: "tabular-nums" }}>
         {formatTimerDuration(remainingMs)}
       </Text>
