@@ -900,6 +900,7 @@
       "builder": {
         "advancedManifest": "Advanced raw manifest",
         "advancedJson": "Advanced manifest JSON",
+        "manifestFilename": "widget.json",
         "request": "Request {count, number}",
         "requestId": "Request ID",
         "type": "Type",
@@ -924,6 +925,7 @@
         "value": "Value",
         "removeQueryValue": "Remove query value",
         "addQueryValue": "Add query value",
+        "jsonBody": "JSON body",
         "jsonBodyDescription": "Optional. Insert $option and $param references at any depth.",
         "insertOptionReference": "Insert option reference",
         "insertParameterReference": "Insert parameter reference",

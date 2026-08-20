@@ -162,7 +162,7 @@ export function RequestBodyEditor({
     <Stack gap="xs">
       <CodeEditor
         id={`${id}-request-body-editor`}
-        label="JSON body"
+        label={t("jsonBody")}
         description={t("jsonBodyDescription")}
         language="json"
         value={draft}

@@ -36,7 +36,7 @@ export function CustomWidgetAdvancedManifest({ form }: { form: CustomWidgetWorkb
         <Accordion.Panel>
           <CodeEditor
             id="raw-widget-manifest"
-            label="widget.json"
+            label={t("manifestFilename")}
             language="json"
             value={draft}
             error={error}
