@@ -37,27 +37,21 @@ const getFocusMarker = (
   };
 };
 
-const findMarkerLine = (terminal: Terminal, markerText: string) => {
+const findMarkerLine = (terminal: Terminal, linesFromEnd: number) => {
   const buffer = terminal.buffer.active;
-  let logicalLine = "";
-  let logicalLineStart = 0;
+  const logicalLineStarts: number[] = [];
+  const cursorLine = buffer.baseY + buffer.cursorY;
 
-  for (let index = 0; index < buffer.length; index++) {
+  for (let index = 0; index <= cursorLine; index++) {
     const line = buffer.getLine(index);
     if (!line) continue;
 
     if (!line.isWrapped) {
-      logicalLine = "";
-      logicalLineStart = index;
-    }
-    logicalLine += line.translateToString(true);
-
-    if (logicalLine.includes(markerText)) {
-      return logicalLineStart;
+      logicalLineStarts.push(index);
     }
   }
 
-  return null;
+  return logicalLineStarts.at(-linesFromEnd) ?? null;
 };
 
 const renderMessages = ({
@@ -78,24 +72,35 @@ const renderMessages = ({
   const activeLevelSet = new Set(activeLevels);
   const visibleMessages = messages.filter((message) => activeLevelSet.has(message.level));
   const focusMarker = getFocusMarker(messages, visibleMessages, focusTimestamp, markerText, expiredMarkerText);
-  const output = visibleMessages.flatMap((message, index) => {
+  const output: string[] = [];
+  let markerOutputIndex: number | null = null;
+
+  visibleMessages.forEach((message, index) => {
     if (focusMarker?.index === index) {
-      return [`\x1b[33m--- ${focusMarker.text} ---\x1b[0m`, message.message];
+      markerOutputIndex = output.length;
+      output.push(`\x1b[33m--- ${focusMarker.text} ---\x1b[0m`);
     }
-    return [message.message];
+    output.push(message.message);
   });
 
   if (focusMarker?.index === visibleMessages.length) {
+    markerOutputIndex = output.length;
     output.push(`\x1b[33m--- ${focusMarker.text} ---\x1b[0m`);
   }
 
+  let markerLinesFromEnd: number | null = null;
+  if (markerOutputIndex !== null) {
+    markerLinesFromEnd =
+      1 + output.slice(markerOutputIndex).reduce((lineCount, line) => lineCount + line.split(/\r?\n/).length, 0);
+  }
+
   terminal.write(`\x1bc${output.join("\r\n")}${output.length > 0 ? "\r\n" : ""}`, () => {
-    if (!focusMarker) {
+    if (markerLinesFromEnd === null) {
       terminal.scrollToBottom();
       return;
     }
 
-    const markerLine = findMarkerLine(terminal, focusMarker.text);
+    const markerLine = findMarkerLine(terminal, markerLinesFromEnd);
     if (markerLine !== null) {
       terminal.scrollToLine(markerLine);
     }

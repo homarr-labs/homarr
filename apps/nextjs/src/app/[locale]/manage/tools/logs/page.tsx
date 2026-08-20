@@ -30,7 +30,7 @@ export async function generateMetadata() {
 }
 
 interface LogsManagementPageProps {
-  searchParams: Promise<{ focus?: string }>;
+  searchParams: Promise<{ focus?: string | string[] }>;
 }
 
 export default async function LogsManagementPage({ searchParams }: LogsManagementPageProps) {
@@ -39,9 +39,14 @@ export default async function LogsManagementPage({ searchParams }: LogsManagemen
     notFound();
   }
 
-  const parsedFocusTimestamp = Number((await searchParams).focus);
-  const focusTimestamp =
-    Number.isSafeInteger(parsedFocusTimestamp) && parsedFocusTimestamp > 0 ? parsedFocusTimestamp : undefined;
+  const focus = (await searchParams).focus;
+  let focusTimestamp: number | undefined;
+  if (typeof focus === "string") {
+    const parsedFocusTimestamp = Number(focus);
+    if (Number.isSafeInteger(parsedFocusTimestamp) && parsedFocusTimestamp > 0) {
+      focusTimestamp = parsedFocusTimestamp;
+    }
+  }
 
   return (
     <LogContextProvider defaultLevel={logsEnv.LEVEL}>
