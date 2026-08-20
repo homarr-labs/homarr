@@ -99,6 +99,7 @@ export const SelectableCard = factory<SelectableCardFactory>((_props, ref) => {
       ref={ref}
       disabled={disabled || loading}
       data-selected={selected || undefined}
+      aria-pressed={selected !== undefined ? selected : undefined}
       {...getStyles("root")}
       {...others}
     >
@@ -114,10 +115,18 @@ export const SelectableCard = factory<SelectableCardFactory>((_props, ref) => {
             gap="xs"
             style={{ width: "100%", overflow: "hidden" }}
           >
-            <Group gap="xs" wrap="nowrap" style={{ flexShrink: 0, minWidth: 0 }}>
+            <Group gap="xs" wrap="nowrap" style={{ flex: "1 1 auto", minWidth: 0, overflow: "hidden" }}>
               {icon}
               {typeof title === "string" ? (
-                <Text fw={700} size="md" style={{ whiteSpace: "nowrap" }}>
+                <Text
+                  fw={700}
+                  size="md"
+                  style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
                   {title}
                 </Text>
               ) : (
@@ -128,10 +137,7 @@ export const SelectableCard = factory<SelectableCardFactory>((_props, ref) => {
               <Box
                 style={{
                   minWidth: 0,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  flexShrink: 1,
+                  flexShrink: 0,
                 }}
               >
                 {topRight}

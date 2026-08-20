@@ -452,6 +452,7 @@ const ItemSelectModalContent = ({
       >
         {/* Left Column: Widget Cards Grid */}
         <Box
+          display={{ base: isPreviewOpen ? "none" : "block", lg: "block" }}
           style={{
             flex: isPreviewOpen ? "0 0 440px" : "1 1 100%",
             maxWidth: isPreviewOpen ? "460px" : "100%",
@@ -615,15 +616,18 @@ const WidgetLivePreviewAndConfigPane = ({
   onAddWidget,
   isAdding,
 }: WidgetLivePreviewAndConfigPaneProps) => {
+  const t = useI18n();
   const [resources, setResources] = useState<{
     definition: WidgetDefinition;
     Component: ComponentType<WidgetComponentProps<WidgetKind>>;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<Error | null>(null);
 
-  useEffect(() => {
+  const loadResources = useCallback(() => {
     let active = true;
     setIsLoading(true);
+    setLoadError(null);
     loadWidgetResources(item.kind)
       .then((res) => {
         if (active) {
@@ -631,8 +635,9 @@ const WidgetLivePreviewAndConfigPane = ({
           setIsLoading(false);
         }
       })
-      .catch((_err) => {
+      .catch((err) => {
         if (active) {
+          setLoadError(err instanceof Error ? err : new Error(String(err)));
           setIsLoading(false);
         }
       });
@@ -640,6 +645,38 @@ const WidgetLivePreviewAndConfigPane = ({
       active = false;
     };
   }, [item.kind]);
+
+  useEffect(() => {
+    return loadResources();
+  }, [loadResources]);
+
+  if (loadError) {
+    return (
+      <Card withBorder radius="md" padding="md" h="100%" shadow="xs">
+        <Center h={320}>
+          <Stack align="center" gap="xs">
+            <ThemeIcon size={40} radius="xl" color="red" variant="light">
+              <IconApi size={24} />
+            </ThemeIcon>
+            <Text size="sm" fw={600} c="red">
+              {t("common.error")}
+            </Text>
+            <Text size="xs" c="dimmed" ta="center" maw={300}>
+              {loadError.message}
+            </Text>
+            <Group gap="xs" mt="xs">
+              <Button size="xs" variant="light" onClick={loadResources}>
+                {t("common.action.retry")}
+              </Button>
+              <Button size="xs" variant="subtle" onClick={onClose}>
+                {t("common.action.close")}
+              </Button>
+            </Group>
+          </Stack>
+        </Center>
+      </Card>
+    );
+  }
 
   if (isLoading || !resources) {
     return (
@@ -737,11 +774,13 @@ const WidgetLivePreviewAndConfigContent = ({
     return (definition.supportedIntegrations ?? []).filter((k) => k !== "mock");
   }, [definition]);
 
+  const [optimisticIntegrations, setOptimisticIntegrations] = useState<IntegrationSelectOption[]>([]);
+
   // Filter integrations compatible with this widget
   const compatibleIntegrations: IntegrationSelectOption[] = useMemo(() => {
     if (!("supportedIntegrations" in definition)) return [];
     const supported = definition.supportedIntegrations ?? [];
-    return (integrationData ?? [])
+    const existing = (integrationData ?? [])
       .filter((i) => supported.includes(i.kind))
       .map((i) => ({
         id: i.id,
@@ -749,7 +788,11 @@ const WidgetLivePreviewAndConfigContent = ({
         kind: i.kind,
         url: i.url,
       }));
-  }, [definition, integrationData]);
+    const newOptimistic = optimisticIntegrations.filter(
+      (opt) => !existing.some((e) => e.id === opt.id) && supported.includes(opt.kind),
+    );
+    return [...existing, ...newOptimistic];
+  }, [definition, integrationData, optimisticIntegrations]);
 
   const [showInlineConnect, setShowInlineConnect] = useState<boolean>(compatibleIntegrations.length === 0);
   const [inlineConnectKind, setInlineConnectKind] = useState<IntegrationKind | null>(supportedKinds[0] ?? null);
@@ -787,6 +830,13 @@ const WidgetLivePreviewAndConfigContent = ({
     },
   });
 
+  // Auto-sync selectable apps when loaded
+  useEffect(() => {
+    if (item.kind === "app" && !form.values.options.appId && selectableApps?.[0]?.id) {
+      form.setFieldValue("options.appId", selectableApps[0].id);
+    }
+  }, [item.kind, selectableApps, form]);
+
   const validIntegrationIds = useMemo(() => {
     const compatibleIds = new Set(compatibleIntegrations.map((i) => i.id));
     return form.values.integrationIds.filter((id) => compatibleIds.has(id));
@@ -802,10 +852,10 @@ const WidgetLivePreviewAndConfigContent = ({
     async onSuccess(data) {
       await utils.integration.all.invalidate();
       if (data && "integration" in data && data.integration) {
-        form.setFieldValue("integrationIds", [
-          ...(maxIntegrations > 1 ? form.values.integrationIds : []),
-          data.integration.id,
-        ]);
+        const nextIds = [...(maxIntegrations > 1 ? form.values.integrationIds : []), data.integration.id].slice(
+          -maxIntegrations,
+        );
+        form.setFieldValue("integrationIds", nextIds);
         setShowInlineConnect(false);
         showSuccessNotification({
           title: "Demo Service Connected",
@@ -835,10 +885,17 @@ const WidgetLivePreviewAndConfigContent = ({
   const handleInlineCreateSuccess = (result?: CreatedIntegrationResult) => {
     void utils.integration.all.invalidate();
     if (result?.integration?.id) {
-      form.setFieldValue("integrationIds", [
-        ...(maxIntegrations > 1 ? form.values.integrationIds : []),
-        result.integration.id,
-      ]);
+      const newOption: IntegrationSelectOption = {
+        id: result.integration.id,
+        name: result.integration.name,
+        kind: result.integration.kind,
+        url: result.integration.url,
+      };
+      setOptimisticIntegrations((prev) => [...prev, newOption]);
+      const nextIds = [...(maxIntegrations > 1 ? form.values.integrationIds : []), result.integration.id].slice(
+        -maxIntegrations,
+      );
+      form.setFieldValue("integrationIds", nextIds);
     }
     setShowInlineConnect(false);
     showSuccessNotification({
@@ -860,13 +917,29 @@ const WidgetLivePreviewAndConfigContent = ({
 
   const handleUpdatePartialOptions = useCallback(
     ({ newOptions }: { newOptions: Record<string, unknown> }) => {
-      form.setFieldValue("options", {
-        ...form.values.options,
-        ...newOptions,
-      });
+      form.setValues((prev) => ({
+        ...prev,
+        options: {
+          ...prev.options,
+          ...newOptions,
+        },
+      }));
     },
     [form],
   );
+
+  const handleAddCurrentWidget = () => {
+    const validation = form.validate();
+    if (validation.hasErrors) return;
+    if (integrationsRequired && validIntegrationIds.length === 0) {
+      showErrorNotification({
+        title: t("common.error"),
+        message: t("widget.common.error.noIntegration"),
+      });
+      return;
+    }
+    onAddWidget(form.values.options, validIntegrationIds);
+  };
 
   return (
     <Card withBorder radius="md" padding="md" h="100%" shadow="xs" style={{ display: "flex", flexDirection: "column" }}>
@@ -898,7 +971,7 @@ const WidgetLivePreviewAndConfigContent = ({
             size="sm"
             leftSection={<IconPlus size={16} />}
             loading={isAdding}
-            onClick={() => onAddWidget(form.values.options, validIntegrationIds)}
+            onClick={handleAddCurrentWidget}
           >
             {t("common.action.add")}
           </Button>
@@ -957,7 +1030,7 @@ const WidgetLivePreviewAndConfigContent = ({
                       integrationIds={previewIntegrationIds}
                       width={previewWidth || 500}
                       height={previewHeight || 300}
-                      isEditMode={false}
+                      isEditMode={true}
                       displayMode="compact"
                       boardId={boardId}
                       itemId="preview"
@@ -1246,29 +1319,6 @@ const ItemSelectModalFrame = ({
     { boardId: innerProps.boardId },
     { enabled: isAdmin },
   );
-
-  const { mutate: autoCreateMock } = clientApi.integration.create.useMutation({
-    onSuccess: () => {
-      void utils.integration.all.invalidate();
-    },
-  });
-
-  const attemptedMockRef = useRef(false);
-  useEffect(() => {
-    if (integrationData && canCreateIntegration && !attemptedMockRef.current) {
-      const hasMock = integrationData.some((i) => i.kind === "mock");
-      if (!hasMock) {
-        attemptedMockRef.current = true;
-        autoCreateMock({
-          name: "Demo Service",
-          url: "https://demo.homarr.dev",
-          kind: "mock",
-          secrets: [],
-          attemptSearchEngineCreation: false,
-        });
-      }
-    }
-  }, [integrationData, canCreateIntegration, autoCreateMock]);
 
   return (
     <ErrorBoundary

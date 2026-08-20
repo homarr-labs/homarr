@@ -85,35 +85,6 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
 
   return (
     <Stack gap="md">
-      {/* Embedded Dynamic Style for Card Hover & Focus */}
-      <style>{`
-        [data-app-card] {
-          cursor: pointer;
-          text-align: start;
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          width: 100%;
-          min-height: 175px;
-          height: 100%;
-          background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
-          transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
-        }
-        [data-app-card]:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: var(--mantine-shadow-sm);
-          border-color: var(--mantine-primary-color-filled);
-        }
-        [data-app-card][data-selected="true"] {
-          border-color: var(--mantine-primary-color-filled);
-          border-width: 2px;
-        }
-        [data-app-card]:focus-visible {
-          outline: 2px solid var(--mantine-primary-color-filled);
-          outline-offset: 2px;
-        }
-      `}</style>
-
       {/* Top Search Input */}
       <Input
         value={search}
