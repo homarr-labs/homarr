@@ -20,9 +20,18 @@ if [ "${PUID}" != "0" ] || [ "${PGID}" != "0" ]; then
     # existing content, so a persistent volume with stale or root-owned
     # entries stays writable after a PUID/PGID change. These trees are small
     # (a single sqlite db, a redis dump, a few certs), unlike the /app tree.
+    #
+    # /appdata is user-supplied storage and was never chowned before, so it can
+    # be a CIFS/SMB or NFS mount that rejects chown outright. Those mounts
+    # already assign ownership themselves, so a failure here is informational:
+    # `set -e` must not turn it into a container that refuses to start.
     mkdir -p /appdata/db /appdata/redis /appdata/trusted-certificates
-    chown "${PUID}:${PGID}" /appdata
-    chown -R "${PUID}:${PGID}" /appdata/db /appdata/redis /appdata/trusted-certificates
+    appdata_chown_failed=0
+    chown "${PUID}:${PGID}" /appdata || appdata_chown_failed=1
+    chown -R "${PUID}:${PGID}" /appdata/db /appdata/redis /appdata/trusted-certificates || appdata_chown_failed=1
+    if [ "${appdata_chown_failed}" = "1" ]; then
+        echo "Warning: could not change ownership of /appdata. This is expected on mounts that assign ownership themselves (CIFS/SMB, NFS with a fixed uid). Continuing."
+    fi
     # Next.js runtime cache (image optimization, fetch cache, ...)
     mkdir -p /app/apps/nextjs/.next/cache
     chown -R "${PUID}:${PGID}" /app/apps/nextjs/.next/cache

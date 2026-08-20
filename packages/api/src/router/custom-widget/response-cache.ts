@@ -25,6 +25,32 @@ end
 return #KEYS
 `;
 
+// Reading has to touch the LRU on a hit and reclaim the byte/LRU/size
+// bookkeeping on a miss: entry keys carry their own PX expiry, so a TTL-expired
+// response would otherwise keep occupying a slot and its bytes forever and
+// shrink the usable cache to nothing over a long uptime.
+const READ_SCRIPT = `
+local value = redis.call('GET', KEYS[1])
+if value then
+  redis.call('ZADD', KEYS[2], ARGV[1], KEYS[1])
+  return value
+end
+local size = tonumber(redis.call('HGET', KEYS[3], KEYS[1]) or '0')
+if size > 0 then redis.call('DECRBY', KEYS[4], size) end
+redis.call('ZREM', KEYS[2], KEYS[1])
+redis.call('HDEL', KEYS[3], KEYS[1])
+return false
+`;
+
+const FORGET_SCRIPT = `
+local size = tonumber(redis.call('HGET', KEYS[3], KEYS[1]) or '0')
+if size > 0 then redis.call('DECRBY', KEYS[4], size) end
+redis.call('DEL', KEYS[1])
+redis.call('ZREM', KEYS[2], KEYS[1])
+redis.call('HDEL', KEYS[3], KEYS[1])
+return 1
+`;
+
 const STORE_SCRIPT = `
 local previousSize = tonumber(redis.call('HGET', KEYS[2], ARGV[1]) or '0')
 if previousSize > 0 then redis.call('DECRBY', KEYS[3], previousSize) end
@@ -80,13 +106,14 @@ const getEntryKey = (generation: string, cacheKey: string) => {
 };
 
 const readCachedResponse = async (client: RedisClient, entryKey: string) => {
-  const serialized = await client.get(entryKey);
+  const serialized = (await client.eval(READ_SCRIPT, 4, entryKey, LRU_KEY, SIZE_KEY, TOTAL_BYTES_KEY, Date.now())) as
+    | string
+    | null;
   if (serialized === null) return undefined;
-  await client.zadd(LRU_KEY, Date.now(), entryKey);
   try {
     return JSON.parse(serialized) as CustomWidgetHttpResponse;
   } catch {
-    await client.del(entryKey);
+    await client.eval(FORGET_SCRIPT, 4, entryKey, LRU_KEY, SIZE_KEY, TOTAL_BYTES_KEY);
     return undefined;
   }
 };
@@ -136,7 +163,10 @@ export async function executeWithCustomWidgetResponseCache(
     logger.error("Shared custom widget response cache is unavailable", {
       errorName: error instanceof Error ? error.name : "UnknownError",
     });
-    return execute({ ...input, cacheKey: undefined });
+    // Keep the cache key so the caller's process-local cache still absorbs
+    // polling while Redis is down. Dropping it would send every refresh of
+    // every placed widget straight to the upstream API.
+    return execute(input);
   }
 
   const pendingKey = `${generation}:${cacheKey}`;

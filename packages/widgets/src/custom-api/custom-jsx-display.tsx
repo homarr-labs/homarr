@@ -11,6 +11,8 @@ import { InactiveWidgetDefinitionProvider, WidgetDefinitionProvider } from "./wi
 
 export { CUSTOM_JSX_METHOD_COLORS } from "@homarr/custom-widgets/runtime";
 
+const EMPTY_RECORD: Record<string, unknown> = {};
+
 export default function CustomJsxDisplay({ data }: { data: Record<string, unknown> }) {
   const t = useScopedI18n("widget.customApi.customJsx");
   const capabilities = useMemo(() => parseRequestCapabilities(data.requestCapabilities), [data.requestCapabilities]);
@@ -33,17 +35,33 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
       return { ...current, [requestId]: value };
     });
   }, []);
-  const baseData = isRecord(data.data) ? data.data : {};
-  const baseStatus = isRecord(data.status) ? data.status : {};
+  const baseData = isRecord(data.data) ? data.data : EMPTY_RECORD;
+  const baseStatus = isRecord(data.status) ? data.status : EMPTY_RECORD;
+  const options = isRecord(data.options) ? data.options : EMPTY_RECORD;
+  // The renderer memoizes the interpreted template and derives its error-boundary
+  // reset key from these prop identities. Merging into a fresh object on every
+  // render would re-run the interpreter and reset the boundary even when the
+  // response is byte-identical, so keep the merged records referentially stable.
+  const mergedData = useMemo(
+    () =>
+      Object.keys(queryState).length === 0
+        ? baseData
+        : { ...baseData, ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.data])) },
+    [baseData, queryState],
+  );
+  const mergedStatus = useMemo(
+    () =>
+      Object.keys(queryState).length === 0
+        ? baseStatus
+        : { ...baseStatus, ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.status])) },
+    [baseStatus, queryState],
+  );
   const renderer = (
     <CustomJsxRenderer
       template={String(data.template ?? "")}
-      data={{ ...baseData, ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.data])) }}
-      status={{
-        ...baseStatus,
-        ...Object.fromEntries(Object.entries(queryState).map(([id, value]) => [id, value.status])),
-      }}
-      options={isRecord(data.options) ? data.options : {}}
+      data={mergedData}
+      status={mergedStatus}
+      options={options}
       components={components}
       createBindings={SAFE_BINDINGS}
       messages={{

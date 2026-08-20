@@ -8,6 +8,17 @@
 .board-grid-entry {
   z-index: 1;
   overflow: visible;
+
+  /*
+   * This element is the dnd-kit draggable and its own drag handle. The touch
+   * activation constraint only fires after a 200 ms hold, but the browser
+   * decides who owns a touch gesture when it begins: without this rule the
+   * board's horizontal scrollport (or the page) claims the pan, emits
+   * `pointercancel`, and cancels the grid transaction instead of moving the
+   * widget. Only edit mode renders this element, so ordinary view-mode
+   * scrolling over widgets is unaffected.
+   */
+  touch-action: none;
 }
 
 .board-grid-entry:has([data-board-widget-header]):hover,

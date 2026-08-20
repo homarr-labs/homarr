@@ -541,7 +541,14 @@ export async function POST(req: Request) {
       const entries = await inspectArchiveAsync(zip);
       await extractEntryToFileAsync(zip, entries.database, tempPath);
       const metadataBuffer = await readBoundedEntryAsync(zip, entries.metadata, MAX_METADATA_BYTES);
-      const parsedMetadata: unknown = JSON.parse(metadataBuffer.toString());
+      let parsedMetadata: unknown;
+      try {
+        parsedMetadata = JSON.parse(metadataBuffer.toString());
+      } catch {
+        // Without this the archive itself gets blamed for a readable ZIP that
+        // simply carries malformed metadata.
+        throw new Error("Invalid backup: metadata.json is not valid JSON");
+      }
       if (typeof parsedMetadata !== "object" || parsedMetadata === null || Array.isArray(parsedMetadata)) {
         throw new Error("Invalid backup: metadata.json must contain an object");
       }

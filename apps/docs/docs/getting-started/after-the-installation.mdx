@@ -213,9 +213,11 @@ otherwise the collision chain reflows neighboring tiles automatically.
 Every `1 × 1` tile has a logical content size of `200 × 200` pixels.
 Larger tiles use multiples of that fixed unit, with a consistent gap between cells.
 Homarr scales the complete board uniformly, like zooming a page.
-Below 100%, Homarr preserves the widget's readable typography and control density instead of shrinking each widget
-independently. Scaling stops at 50%; if the selected layout is still wider than the viewport, the board scrolls
-horizontally instead of making tiles and controls unusably small.
+The complete canvas always fits the available width without horizontal board scrolling.
+Down to 50%, Homarr preserves the widget's readable typography and control density instead of shrinking each widget
+independently. Below 50% it stops compensating and scales text and controls together with the board, like zooming out a
+page, so tile content keeps its designed proportions instead of overlapping neighboring tiles. Add a narrow responsive
+layout — Homarr already creates and reflows the protected Mobile layout — when a board has to stay readable on small screens.
 It does not squeeze or reflow the content of individual widgets, so a widget keeps the same design and proportions across screen sizes.
 
 On a narrow screen, Homarr uses the **Mobile layout** for the selected board and stacks the board content vertically while
