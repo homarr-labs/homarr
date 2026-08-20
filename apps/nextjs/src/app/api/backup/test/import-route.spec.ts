@@ -101,7 +101,7 @@ describe("POST /api/backup/import", () => {
   let activeDatabasePath: string;
 
   beforeEach(() => {
-    vi.useFakeTimers();
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
     temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "homarr-import-route-test-"));
     activeDatabasePath = path.join(temporaryDirectory, "db.sqlite");
     routeMocks.dbEnv.DRIVER = "better-sqlite3";
