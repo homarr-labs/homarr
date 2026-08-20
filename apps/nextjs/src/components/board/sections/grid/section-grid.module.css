@@ -3,7 +3,12 @@
   overflow: visible;
 }
 
-.scrollableViewport {
+/* Chained with .viewport (rather than a standalone .scrollableViewport rule) so this always
+   wins on specificity, not source order. GridEditor loads as a separate async chunk in edit
+   mode, and a board mutation can trigger its stylesheet to re-register - at equal specificity,
+   that flips which of these two rules the cascade picks, silently un-capping the container even
+   though its height (set inline, see section-grid.tsx) stays correct throughout. */
+.viewport.scrollableViewport {
   overflow-x: hidden;
   overflow-y: auto;
 }
