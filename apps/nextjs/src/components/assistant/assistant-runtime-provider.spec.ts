@@ -26,7 +26,8 @@ import { z } from "zod/v4";
 import { showErrorNotification } from "@homarr/notifications";
 
 import {
-  AssistantComposerSurfaceProvider,
+  AssistantComposerRuntimeProvider,
+  AssistantComposerSurfaceBoundary,
   AssistantRunFocusPreserver,
   AssistantRuntimeProviderWithTools,
   assistantSurfaceComposerCacheLimit,
@@ -148,14 +149,22 @@ const SurfaceTestAssistant = ({
     { runtime, toolkit },
     createElement(AssistantRunFocusPreserver),
     createElement(
-      AssistantComposerSurfaceProvider,
-      { surfaceId: "surface-a" },
-      createElement(SurfaceProbe, { id: "a", onReady }),
+      AssistantComposerRuntimeProvider,
+      null,
+      createElement(
+        AssistantComposerSurfaceBoundary,
+        { surfaceId: "surface-a" },
+        createElement(SurfaceProbe, { id: "a", onReady }),
+      ),
     ),
     createElement(
-      AssistantComposerSurfaceProvider,
-      { surfaceId: "surface-b" },
-      createElement(SurfaceProbe, { id: "b", onReady }),
+      AssistantComposerRuntimeProvider,
+      null,
+      createElement(
+        AssistantComposerSurfaceBoundary,
+        { surfaceId: "surface-b" },
+        createElement(SurfaceProbe, { id: "b", onReady }),
+      ),
     ),
     simulateRunFocus ? createElement(LexicalRunFocusProbe) : null,
   );

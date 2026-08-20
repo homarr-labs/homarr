@@ -44,12 +44,15 @@ host gateway address.
 The assistant can work with boards, apps, integrations, widgets, Custom Widgets, and connected services. Use `@` to
 add Homarr items as context, `/` for shortcuts, and the paperclip for supported files.
 
+Use **Conversations** to search, switch, rename, export, or delete threads.
+
 Each request includes the user's name, current page and board, home board, server time, browser time zone, and a small
 summary of accessible Homarr resources. Live status is fetched only when needed.
 
 ## Permissions and privacy
 
-- Read-only actions can run automatically. Changes require approval.
+- Read-only actions can run automatically. Changes require approval by default. Automatic approvals apply only to the
+  current conversation, turn off when you switch conversations, and never answer questions for you.
 - Homarr permissions apply to every tool call and mentioned item.
 - API keys and custom headers are encrypted and never returned to the browser.
 - Conversations are stored per user and can be exported or deleted.
