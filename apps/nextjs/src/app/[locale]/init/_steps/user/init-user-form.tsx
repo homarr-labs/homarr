@@ -29,14 +29,18 @@ export const InitUserForm = () => {
    * resolves after both rather than after the user row is written. A sign-in that fails reports the
    * reason and leaves the form on this step.
    */
+  const showFailureNotification = (reason: unknown) => {
+    showErrorNotification({
+      title: tUser("notification.error.title"),
+      message: reason instanceof Error ? reason.message : typeof reason === "string" ? reason : "",
+    });
+  };
+
   const handleSubmitAsync = async (values: FormType) => {
     try {
       await mutateAsync(values);
     } catch (error) {
-      showErrorNotification({
-        title: tUser("notification.error.title"),
-        message: error instanceof Error ? error.message : "",
-      });
+      showFailureNotification(error);
       return;
     }
 
@@ -45,21 +49,22 @@ export const InitUserForm = () => {
       message: tUser("notification.success.message"),
     });
 
-    const signInResult = await signIn("credentials", {
-      name: values.username,
-      password: values.password,
-      redirect: false,
-    });
-
-    if (signInResult?.error) {
-      showErrorNotification({
-        title: tUser("notification.error.title"),
-        message: signInResult.error,
+    try {
+      const signInResult = await signIn("credentials", {
+        name: values.username,
+        password: values.password,
+        redirect: false,
       });
-      return;
-    }
 
-    await revalidatePathActionAsync("/init");
+      if (signInResult?.error) {
+        showFailureNotification(signInResult.error);
+        return;
+      }
+
+      await revalidatePathActionAsync("/init");
+    } catch (error) {
+      showFailureNotification(error);
+    }
   };
 
   return (
