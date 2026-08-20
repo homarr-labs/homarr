@@ -171,15 +171,15 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
    * A pool is left out when its usable space is unavailable, so the caller keeps reporting the pool with
    * its physical values instead of dropping it, which would also hide its health status:
    *   - request rejected  → method or `extra.properties` unsupported, or the API key lacks the dataset role
+   *   - response rejected → the payload does not match the expected shape
    *   - dataset missing   → the pool's root dataset was not returned by the query
    *   - property absent   → the dataset does not report `used` / `available`, e.g. while locked
    */
   private async getUsableSpaceByPoolAsync(poolNames: string[]) {
     const usableSpaceByPool = new Map<string, { used: number; available: number }>();
 
-    let datasets: unknown;
     try {
-      datasets = await this.requestAsync("pool.dataset.query", [
+      const datasets = await this.requestAsync("pool.dataset.query", [
         [["id", "in", poolNames]],
         {
           extra: {
@@ -187,21 +187,19 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
           },
         },
       ]);
+
+      for (const dataset of await poolDatasetSchema.parseAsync(datasets)) {
+        const used = dataset.used?.parsed;
+        const available = dataset.available?.parsed;
+        if (typeof used !== "number" || typeof available !== "number") continue;
+
+        usableSpaceByPool.set(dataset.id, { used, available });
+      }
     } catch (error) {
       logger.warn("Could not retrieve root dataset space, continuing with physical pool space", {
         url: this.integration.url,
         error: describeRequestError(error),
       });
-      return usableSpaceByPool;
-    }
-
-    const parsedDatasets = await poolDatasetSchema.parseAsync(datasets);
-    for (const dataset of parsedDatasets) {
-      const used = dataset.used?.parsed;
-      const available = dataset.available?.parsed;
-      if (typeof used !== "number" || typeof available !== "number") continue;
-
-      usableSpaceByPool.set(dataset.id, { used, available });
     }
 
     return usableSpaceByPool;

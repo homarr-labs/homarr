@@ -277,6 +277,19 @@ describe("TrueNasIntegration", () => {
     expect(result.fileSystem).toMatchObject(physicalFallbackFileSystem);
   });
 
+  test("falls back to physical pool space when the dataset response fails schema validation", async () => {
+    ws.setResponder((method) =>
+      method === "pool.dataset.query" ? { unexpected: "not an array" } : happyResponder(method),
+    );
+    const integration = createIntegration(credentials);
+
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.fileSystem).toMatchObject(physicalFallbackFileSystem);
+    // A malformed payload must not take the rest of the system info down with it.
+    expect(result).toMatchObject({ cpuTemp: 45, memAvailableInBytes: 6_000_000_000, uptime: 3600 });
+  });
+
   test("falls back to physical pool space when the dataset query is rejected", async () => {
     ws.setResponder((method) =>
       method === "pool.dataset.query"
