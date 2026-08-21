@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import type { DataTableColumn } from "mantine-datatable";
-import { useDataTableColumns } from "mantine-datatable";
+import { humanize, useDataTableColumns } from "mantine-datatable";
 
 import { ColumnResizeHandle } from "./column-resize-handle";
 
@@ -59,6 +59,11 @@ const toPixelWidth = (width: string | number): number | undefined => {
 
   const parsedWidth = Number.parseInt(width, 10);
   return Number.isFinite(parsedWidth) && parsedWidth > 0 ? parsedWidth : undefined;
+};
+
+const getColumnLabel = <T,>(column: DataTableColumn<T>): string => {
+  if (typeof column.title === "string") return column.title;
+  return humanize(String(column.accessor));
 };
 
 const getColumnWidthMap = (
@@ -240,11 +245,16 @@ export const usePersistedTableLayout = <T,>({
       title: (
         <span style={{ display: "flex", alignItems: "center", width: "100%" }}>
           {column.title}
-          <ColumnResizeHandle onResize={(width) => setColumnWidth(String(column.accessor), width)} />
+          <ColumnResizeHandle
+            columnLabel={getColumnLabel(column)}
+            currentWidth={toPixelWidth(column.width ?? "auto")}
+            onResizeStart={setMultipleColumnWidths}
+            onResize={(width) => setColumnWidth(String(column.accessor), `${width}px`)}
+          />
         </span>
       ),
     }));
-  }, [effectiveColumns, isEditMode, setColumnWidth]);
+  }, [effectiveColumns, isEditMode, setColumnWidth, setMultipleColumnWidths]);
 
   return { effectiveColumns: columnsWithResizeHandles, storeKey };
 };
