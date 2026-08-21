@@ -1,0 +1,27 @@
+apps/nextjs/src/components/board/selection/board-selection-toolbar.tsx
+  s_40f04ebdd68b8f::t_2ee21b3ea72ac9 18,34-35,209-218
+packages/translation/src/lang/en.json
+  s_40f04ebdd68b8f::t_2ee21b3ea72ac9 2792-2797
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  s_40f04ebdd68b8f::t_edac4a3ffaa42f 11,17,20-24,31,48,56,100-174,337,341-349
+apps/nextjs/src/components/board/items/actions/create-item.ts
+  s_40f04ebdd68b8f::t_edac4a3ffaa42f 21,25,44,47,78,81
+apps/nextjs/src/components/board/selection/board-item-clipboard.ts
+  s_40f04ebdd68b8f::t_f4d5ea6210353a 1-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "93ecd188ae21a930cdd3730bb8767b9eb6a614bd",
+  "prompts": {},
+  "sessions": {
+    "s_40f04ebdd68b8f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02415-bf29-7e10-bca3-4dbf8f475de5",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
