@@ -1,0 +1,86 @@
+apps/nextjs/src/components/board/sections/use-section-items.ts
+  s_20fe5c8b1eab45::t_f2a48392a90af3 10,13-14,17-60
+  s_20fe5c8b1eab45::t_4cda11104ef072 61
+apps/nextjs/src/components/board/sections/grid/grid-editor-registry.tsx
+  s_20fe5c8b1eab45::t_2a9db596d5122a 1-38,40,43-61,63-98,100,102-104,107-116
+apps/nextjs/src/components/board/sections/container-section.tsx
+  s_20fe5c8b1eab45::t_2f89b7b2a849fa 65,74,104
+apps/nextjs/src/components/board/sections/grid/grid-portal-host.tsx
+  s_20fe5c8b1eab45::t_837701d2c5f395 19
+  s_20fe5c8b1eab45::t_ae6af0959fc462 4,31-32
+apps/nextjs/src/components/board/sections/grid/grid-editor-loader.ts
+  s_20fe5c8b1eab45::t_c7507512a9dcb7 6,9-17,22
+  s_20fe5c8b1eab45::t_99bd450cb4f40a 23
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_20fe5c8b1eab45::t_b1012f48fd1c9c 874,878-880
+  s_20fe5c8b1eab45::t_54addcfea1765f 16,60,722-726,731-735,808,837,845,848,869,872,887-891,893-894,898-901,914-916
+  s_20fe5c8b1eab45::t_47af6b05d865d4 896
+  s_20fe5c8b1eab45::t_524a4cbac8c860 41
+apps/nextjs/src/components/board/sections/section-collapse.tsx
+  s_20fe5c8b1eab45::t_328a11805df1d7 103,116
+apps/nextjs/src/components/board/sections/grid/board-grid-editor-boundary.tsx
+  s_20fe5c8b1eab45::t_cad0c6ac05d23d 14,22-24,68
+  s_20fe5c8b1eab45::t_708c6782bf726a 5,9-10,26,29,35,44,46-54,56-66,69,71-72
+apps/nextjs/src/components/board/sections/grid/grid-entry-memo.ts
+  s_20fe5c8b1eab45::t_24f6427dd8df01 9,17
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_20fe5c8b1eab45::t_62e0d7b46b6b83 4-5,23,52-54,142-174,188,204-213
+  s_20fe5c8b1eab45::t_ffda6fb26d5c54 96-103,138-141
+  s_20fe5c8b1eab45::t_80b9dfc0b0b8f0 3,88-91,185,197-198
+  s_20fe5c8b1eab45::t_4d5c8714047c5b 27,120-127
+  s_20fe5c8b1eab45::t_b331a9cb1a6533 61-64,237-248,250-254,256-290,292-300
+  s_20fe5c8b1eab45::t_126fb8adb5cdcc 93-95,104-106,114,134-137,186,202
+apps/nextjs/src/components/board/sections/grid/section-grid.module.css
+  s_20fe5c8b1eab45::t_14909336a2d29f 25-27,31-32
+  s_20fe5c8b1eab45::t_f95f4d2b2963f6 17-20
+  s_a2425a68c28462::t_43e0ca1b92202e 33-34
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_20fe5c8b1eab45::t_b46ec57b05be61 6,26-32,112-113
+apps/nextjs/src/components/board/sections/grid/test/grid-import-boundary.spec.ts
+  s_20fe5c8b1eab45::t_6694edeba0abe4 8,37-39,41-46
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  s_20fe5c8b1eab45::t_80b9dfc0b0b8f0 74-75,118,120-121,145-146,204
+  s_20fe5c8b1eab45::t_126fb8adb5cdcc 49-50,68
+  s_20fe5c8b1eab45::t_0b1e587d5934b3 199-203
+  s_20fe5c8b1eab45::t_14909336a2d29f 225
+  s_20fe5c8b1eab45::t_1a04bf21e2a7e0 37
+  s_20fe5c8b1eab45::t_e628520596b2cd 4,55-58,195,205-210
+apps/nextjs/src/components/board/sections/grid/test/fixed-grid-item.spec.ts
+  s_20fe5c8b1eab45::t_126fb8adb5cdcc 91
+  s_20fe5c8b1eab45::t_2f6790d2db5c44 83-90
+  s_20fe5c8b1eab45::t_0f25d0f49221d5 15,93,112
+apps/nextjs/src/components/board/sections/grid/test/grid-entry-memo.spec.tsx
+  s_20fe5c8b1eab45::t_98a1076cb4cc9b 88,91,158,196
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_20fe5c8b1eab45::t_2d046f748b9a73 28,107,110-111
+apps/nextjs/src/components/board/sections/section-context.ts
+  s_20fe5c8b1eab45::t_e15e2b46e1a92c 6,19
+  s_20fe5c8b1eab45::t_126fb8adb5cdcc 17
+  s_20fe5c8b1eab45::t_80b9dfc0b0b8f0 7,16
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_20fe5c8b1eab45::t_96dd2ce21839c4 23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "5816f0855a39a34c623f78f626432e7fb8834f4f",
+  "prompts": {},
+  "sessions": {
+    "s_20fe5c8b1eab45": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02418-9e79-71b1-81dc-fae410529d07",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_a2425a68c28462": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e22590e-f874-404b-981f-12bd23c5e44e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
