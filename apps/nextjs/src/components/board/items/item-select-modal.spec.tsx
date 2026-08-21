@@ -16,6 +16,7 @@ vi.mock("@homarr/translation/client", () => ({
       "item.create.connectionStatus.ready": "Ready",
       "item.create.connectionStatus.needsSetup": "Needs setup",
       "item.create.connectionStatus.noConnectionRequired": "No connection required",
+      "item.create.standalone": "Standalone",
       "widget.mediaServer.name": "Media Server",
       "widget.mediaServer.description": "Stream your media",
       "widget.clock.name": "Clock",

@@ -16,6 +16,7 @@ import { BoardSelectionProvider, useBoardSelection } from "./board-selection-con
 
 vi.mock("@homarr/translation/client", () => ({
   useI18n: () => (key: string) => key,
+  useScopedI18n: () => (key: string) => key,
 }));
 
 vi.mock("../audio/board-sounds", () => ({
@@ -36,8 +37,8 @@ vi.mock("@homarr/boards/edit-mode", () => ({
 }));
 
 vi.mock("@homarr/boards/updater", () => ({
-  useUpdateBoard: () => ({
-    updateBoard: (updater: (prev: Board) => Board) => {
+  usePersistBoard: () => ({
+    updateAndPersistBoard: (updater: (prev: Board) => Board) => {
       mockUpdateBoard(updater);
     },
   }),
