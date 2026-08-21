@@ -1,15 +1,33 @@
 "use client";
 
-import { ActionIcon, Badge, Button, Group, Menu, Paper, Text, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Group,
+  HoverCard,
+  Menu,
+  Paper,
+  ScrollArea,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { IconCheck, IconFolderShare, IconTrash, IconX } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+import { widgetCatalogIcons } from "@homarr/widgets/catalog";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";
 import { useBoardSelection } from "./board-selection-context";
+
+const MAX_AVATARS_DISPLAYED = 5;
 
 export const BoardSelectionToolbar = () => {
   const [isEditMode] = useEditMode();
@@ -19,9 +37,48 @@ export const BoardSelectionToolbar = () => {
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
   const t = useI18n();
 
+  const selectedItems = board.items.filter((item) => selectedItemIds.has(item.id));
+  const hasAppWidgets = selectedItems.some((item) => item.kind === "app");
+  const { data: selectableApps } = clientApi.app.selectable.useQuery(undefined, {
+    enabled: hasAppWidgets,
+  });
+
   if (!isEditMode || selectedItemIds.size === 0) return null;
 
-  const count = selectedItemIds.size;
+  const appMap = new Map((selectableApps ?? []).map((app) => [app.id, app]));
+
+  // Sort items so apps appear first
+  const sortedSelectedItems = [...selectedItems].sort((itemA, itemB) => {
+    if (itemA.kind === "app" && itemB.kind !== "app") return -1;
+    if (itemA.kind !== "app" && itemB.kind === "app") return 1;
+    return 0;
+  });
+
+  const getItemDetails = (item: (typeof selectedItems)[number]) => {
+    let displayName = item.advancedOptions.title?.trim();
+    let iconUrl: string | undefined = undefined;
+    const IconComponent = widgetCatalogIcons[item.kind] ?? IconCheck;
+
+    if (item.kind === "app") {
+      const appId = (item.options as { appId?: string })?.appId;
+      const app = appId ? appMap.get(appId) : undefined;
+      if (!displayName) {
+        displayName = app?.name || t("widget.app.name");
+      }
+      if (app?.iconUrl) {
+        iconUrl = app.iconUrl;
+      }
+    }
+
+    if (!displayName) {
+      displayName = t(`widget.${item.kind}.name`);
+    }
+
+    return { displayName, iconUrl, IconComponent, kind: item.kind };
+  };
+
+  const visibleItems = sortedSelectedItems.slice(0, MAX_AVATARS_DISPLAYED);
+  const overflowCount = sortedSelectedItems.length - visibleItems.length;
 
   const mainCanvasSection = board.sections
     .filter(
@@ -64,50 +121,118 @@ export const BoardSelectionToolbar = () => {
         left: "50%",
         transform: "translateX(-50%)",
         zIndex: 1000,
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.24)",
-        backdropFilter: "blur(12px)",
+        maxWidth: "min(92vw, 760px)",
+        boxShadow: "0 12px 40px rgba(0, 0, 0, 0.28)",
+        backdropFilter: "blur(14px)",
         border: "1px solid var(--mantine-color-default-border)",
         animation: "slideUp 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards",
       }}
     >
-      <Group gap="sm" wrap="nowrap">
-        <Badge size="lg" radius="xl" variant="filled" color="primaryColor" leftSection={<IconCheck size={14} />}>
-          {count === 1 ? "1 item" : `${count} items`}
-        </Badge>
+      <Group gap="xs" wrap="nowrap">
+        {/* Avatar Group with HoverCard Popover showing all items */}
+        <HoverCard position="top" withArrow shadow="xl" radius="md" openDelay={100} closeDelay={200} withinPortal>
+          <HoverCard.Target>
+            <Box style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}>
+              <Avatar.Group>
+                {visibleItems.map((item) => {
+                  const { displayName, iconUrl, IconComponent } = getItemDetails(item);
+                  return (
+                    <Avatar
+                      key={item.id}
+                      src={iconUrl}
+                      radius="xl"
+                      size={32}
+                      color="primaryColor"
+                      variant="light"
+                      styles={{ image: { objectFit: "contain", padding: 2 } }}
+                      alt={displayName}
+                    >
+                      {!iconUrl && <IconComponent size={16} />}
+                    </Avatar>
+                  );
+                })}
+                {overflowCount > 0 && (
+                  <Avatar radius="xl" size={32} color="gray" variant="filled">
+                    +{overflowCount}
+                  </Avatar>
+                )}
+              </Avatar.Group>
+            </Box>
+          </HoverCard.Target>
 
-        {placementOptions.length > 1 && (
-          <Menu position="top" withArrow shadow="md">
-            <Menu.Target>
-              <Button size="xs" variant="light" color="primaryColor" leftSection={<IconFolderShare size={15} />}>
-                Move to section
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Label>Choose destination section</Menu.Label>
-              {placementOptions.map((opt) => (
-                <Menu.Item key={opt.value} onClick={() => moveSelectedItemsToSection(opt.value)}>
-                  {opt.label}
-                </Menu.Item>
-              ))}
-            </Menu.Dropdown>
-          </Menu>
-        )}
+          <HoverCard.Dropdown p={6} style={{ width: 220 }}>
+            <Stack gap={4}>
+              <Text size="10px" fw={700} c="dimmed" tt="uppercase" px={4}>
+                {sortedSelectedItems.length} selected
+              </Text>
 
-        <Button
-          size="xs"
-          variant="light"
-          color="red"
-          leftSection={<IconTrash size={15} />}
-          onClick={removeSelectedItems}
-        >
-          Remove
-        </Button>
+              <ScrollArea.Autosize mah={176} type="auto">
+                <Stack gap={2}>
+                  {sortedSelectedItems.map((item) => {
+                    const { displayName, iconUrl, IconComponent } = getItemDetails(item);
+                    return (
+                      <Group key={item.id} gap={6} wrap="nowrap" px={4} py={2}>
+                        <Avatar
+                          src={iconUrl}
+                          radius="sm"
+                          size={22}
+                          color="primaryColor"
+                          variant="light"
+                          styles={{ image: { objectFit: "contain", padding: 2 } }}
+                          alt={displayName}
+                        >
+                          {!iconUrl && <IconComponent size={12} />}
+                        </Avatar>
+                        <Text size="xs" fw={500} truncate>
+                          {displayName}
+                        </Text>
+                      </Group>
+                    );
+                  })}
+                </Stack>
+              </ScrollArea.Autosize>
+            </Stack>
+          </HoverCard.Dropdown>
+        </HoverCard>
 
-        <Tooltip label="Deselect (Escape)" withArrow>
-          <ActionIcon size="sm" variant="subtle" color="gray" onClick={clearSelection} aria-label="Clear selection">
-            <IconX size={14} />
-          </ActionIcon>
-        </Tooltip>
+        <Divider orientation="vertical" />
+
+        {/* Actions */}
+        <Group gap="xs" wrap="nowrap" style={{ flexShrink: 0 }}>
+          {placementOptions.length > 1 && (
+            <Menu position="top" withArrow shadow="md">
+              <Menu.Target>
+                <Button size="xs" variant="light" color="primaryColor" leftSection={<IconFolderShare size={15} />}>
+                  Move
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Label>Move selected to section</Menu.Label>
+                {placementOptions.map((opt) => (
+                  <Menu.Item key={opt.value} onClick={() => moveSelectedItemsToSection(opt.value)}>
+                    {opt.label}
+                  </Menu.Item>
+                ))}
+              </Menu.Dropdown>
+            </Menu>
+          )}
+
+          <Button
+            size="xs"
+            variant="light"
+            color="red"
+            leftSection={<IconTrash size={15} />}
+            onClick={removeSelectedItems}
+          >
+            Delete
+          </Button>
+
+          <Tooltip label="Deselect (Escape)" withArrow>
+            <ActionIcon size="sm" variant="subtle" color="gray" onClick={clearSelection} aria-label="Clear selection">
+              <IconX size={14} />
+            </ActionIcon>
+          </Tooltip>
+        </Group>
       </Group>
     </Paper>
   );

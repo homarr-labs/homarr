@@ -10,6 +10,17 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import { IntegrationSelectGrid } from "./integration-select-grid";
 
+vi.mock("@homarr/definitions", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@homarr/definitions")>();
+  return {
+    ...actual,
+    getWidgetKindsForIntegration: (kind: IntegrationKind) => {
+      if (kind === "wud") return [];
+      return actual.getWidgetKindsForIntegration(kind);
+    },
+  };
+});
+
 vi.mock("@homarr/translation/client", () => ({
   useI18n: () => (key: string) => {
     const translations: Record<string, string> = {
@@ -102,7 +113,7 @@ describe("IntegrationSelectGrid", () => {
     await act(async () =>
       root.render(
         <MantineProvider>
-          <IntegrationSelectGrid onSelect={onSelect} allowedKinds={["google"]} />
+          <IntegrationSelectGrid onSelect={onSelect} allowedKinds={["wud"]} />
         </MantineProvider>,
       ),
     );

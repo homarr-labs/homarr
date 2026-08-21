@@ -118,7 +118,7 @@ describe("Advanced Add App - Modal Subcomponents", () => {
     });
 
     it("renders overflow indicator when 6 or more integrations are supported", async () => {
-      const integrations: IntegrationKind[] = ["sonarr", "radarr", "plex", "jellyfin", "emby", "kavita"];
+      const integrations: IntegrationKind[] = ["sonarr", "radarr", "plex", "jellyfin", "emby", "deluge"];
 
       await act(async () =>
         root.render(

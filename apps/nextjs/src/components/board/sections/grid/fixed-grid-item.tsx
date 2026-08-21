@@ -49,16 +49,15 @@ export const FixedGridItem = ({
   const { section, items, innerSections, columnCount, maxRowCount, announce } = useSectionContext();
   const { commitSectionGrid } = useGridLayoutActions();
   const [isKeyboardEditing, setIsKeyboardEditing] = useState(false);
-  const { isSelected, toggleSelectItem, selectedItemIds } = useBoardSelection();
+  const { isSelected, toggleSelectItem } = useBoardSelection();
   const selected = item.type === "item" && isSelected(item.id);
 
   const handleClickCapture = (event: React.MouseEvent) => {
-    if (!isEditorActive || item.type !== "item") return;
-    if (event.metaKey || event.ctrlKey || (selectedItemIds.size > 0 && !event.shiftKey)) {
-      event.preventDefault();
-      event.stopPropagation();
-      toggleSelectItem(item.id);
-    }
+    if (!isEditorActive || item.type !== "item" || (!event.metaKey && !event.ctrlKey)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    toggleSelectItem(item.id);
   };
   const instructionsId = useId();
   const isEditorActive = isEditMode && runtimeStatus === "ready";

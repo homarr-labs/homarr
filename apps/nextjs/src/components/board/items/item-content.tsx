@@ -25,7 +25,6 @@ import type { WidgetComponentProps, WidgetDefinition, WidgetRuntimeRef } from "@
 import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
-import { useBoardSelection } from "../selection/board-selection-context";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { startAdvancedFocusEntrance } from "../advanced-focus/entrance";
@@ -60,18 +59,6 @@ type BoardItemCardProps = CardProps & {
 
 const BoardItemCard = ({ item, innerRef, children, ...cardProps }: BoardItemCardProps) => {
   const board = useRequiredBoard();
-  const [isEditMode] = useEditMode();
-  const { isSelected, toggleSelectItem, selectedItemIds } = useBoardSelection();
-  const selected = isSelected(item.id);
-
-  const handleClickCapture = (event: React.MouseEvent) => {
-    if (!isEditMode) return;
-    if (event.metaKey || event.ctrlKey || (selectedItemIds.size > 0 && !event.shiftKey)) {
-      event.preventDefault();
-      event.stopPropagation();
-      toggleSelectItem(item.id);
-    }
-  };
 
   return (
     <Card
@@ -80,8 +67,6 @@ const BoardItemCard = ({ item, innerRef, children, ...cardProps }: BoardItemCard
       w="100%"
       h="100%"
       data-grid-item-content
-      data-board-item-selected={selected ? "true" : undefined}
-      onClickCapture={handleClickCapture}
       className={combineClasses(
         classes.itemCard,
         `${item.kind}-wrapper`,
@@ -93,22 +78,12 @@ const BoardItemCard = ({ item, innerRef, children, ...cardProps }: BoardItemCard
         root: {
           "--opacity": board.opacity / 100,
           containerType: "size",
-          outline: selected ? "3px solid var(--mantine-primary-color-filled)" : undefined,
-          outlineOffset: selected ? "2px" : undefined,
-          transition: "outline 150ms ease, box-shadow 150ms ease",
           ...getOverflowFromKind(item.kind, item.advancedOptions.customCssClasses.length > 0),
           "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
         },
       }}
       p={0}
     >
-      {selected && (
-        <Box pos="absolute" top={6} left={6} style={{ zIndex: 10, pointerEvents: "none" }}>
-          <Badge size="xs" variant="filled" color="primaryColor" radius="xl">
-            ✓
-          </Badge>
-        </Box>
-      )}
       {children}
     </Card>
   );

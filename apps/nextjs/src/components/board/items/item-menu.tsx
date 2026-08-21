@@ -14,6 +14,7 @@ import { BoardRemoveConfirmationMenuItem } from "../remove-confirmation-menu-ite
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
 import { useOpenItemMoveModal } from "./item-move-modal";
+import itemContentClasses from "./item-content.module.css";
 import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-modal";
 
 interface BoardItemMenuProps {
@@ -105,9 +106,11 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
           size={24}
           radius="sm"
           pos="absolute"
-          top={12}
-          right={8}
+          top={4}
+          right={4}
           style={{ zIndex: 30 }}
+          className={itemContentClasses.settingsButton}
+          data-menu-open={isMenuOpen || undefined}
           data-board-widget-settings
           aria-label={tItem("menu.label.settingsFor", { name: label })}
         >

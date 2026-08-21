@@ -32,6 +32,7 @@ import type {
   DragStartEvent,
 } from "@dnd-kit/react";
 import { DragDropProvider, DragOverlay, useDragDropManager, useDraggable, useDroppable } from "@dnd-kit/react";
+import { IconGripHorizontal, IconGripVertical } from "@tabler/icons-react";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
@@ -61,6 +62,7 @@ import { useBoardGridPortalHost } from "./grid-portal-host";
 import type { GridInteraction } from "./grid-preview-layer";
 import { GridPreviewLayer } from "./grid-preview-layer";
 import { createGridResizeOutlineController } from "./grid-resize-outline";
+import { useBoardSelection } from "~/components/board/selection/board-selection-context";
 import type { CommitSectionGridInput, SectionGridPlacement } from "./use-grid-layout-actions";
 import { useGridLayoutActions } from "./use-grid-layout-actions";
 
@@ -846,6 +848,9 @@ const DndGridEntryComponent = ({
 }: DndGridEntryProps) => {
   const { acquireContainer, structureRevision } = useBoardGridPortalHost();
   const { beginResize, previewResize, completeResize, cancelResize } = useBoardGridEditorActions();
+  const { isSelected } = useBoardSelection();
+  const board = useRequiredBoard();
+  const isSelectedEntry = placement.type === "item" && isSelected(placement.id);
   const mountRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const placementRef = useRef(placement);
@@ -921,7 +926,12 @@ const DndGridEntryComponent = ({
     <div
       ref={setShellRef}
       className="board-grid-entry"
-      style={getLogicalItemStyle(placement) as CSSProperties}
+      style={
+        {
+          ...getLogicalItemStyle(placement),
+          "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
+        } as CSSProperties
+      }
       data-grid-item-id={placement.id}
       data-grid-item-type={placement.type}
       data-grid-x={placement.x}
@@ -930,6 +940,7 @@ const DndGridEntryComponent = ({
       data-grid-h={placement.h}
       data-dnd-drag-source={isDragSource ? "true" : undefined}
       data-dnd-dropping={isDropping ? "true" : undefined}
+      data-board-item-selected={isSelectedEntry ? "true" : undefined}
     >
       <div ref={mountRef} className="board-grid-content-mount" />
       <GridResizeHandles
@@ -1102,19 +1113,27 @@ const GridResizeHandles = ({
     finishResize(event.pointerId, { x: event.clientX, y: event.clientY }, canceled);
   };
 
-  return RESIZE_DIRECTIONS.map((direction) => (
-    <span
-      key={direction}
-      className="board-grid-resize-handle"
-      data-grid-resize-handle={direction}
-      aria-hidden="true"
-      onPointerDown={(event) => handlePointerDown(event, direction)}
-      onPointerMove={handlePointerMove}
-      onPointerUp={(event) => handlePointerEnd(event, false)}
-      onPointerCancel={(event) => handlePointerEnd(event, true)}
-      onLostPointerCapture={(event) => finishResize(event.pointerId, null, true)}
-    />
-  ));
+  return RESIZE_DIRECTIONS.map((direction) => {
+    const isHorizontalSide = direction === "n" || direction === "s";
+    const isVerticalSide = direction === "e" || direction === "w";
+    const GripIcon = isHorizontalSide ? IconGripHorizontal : IconGripVertical;
+
+    return (
+      <span
+        key={direction}
+        className="board-grid-resize-handle"
+        data-grid-resize-handle={direction}
+        aria-hidden="true"
+        onPointerDown={(event) => handlePointerDown(event, direction)}
+        onPointerMove={handlePointerMove}
+        onPointerUp={(event) => handlePointerEnd(event, false)}
+        onPointerCancel={(event) => handlePointerEnd(event, true)}
+        onLostPointerCapture={(event) => finishResize(event.pointerId, null, true)}
+      >
+        <GripIcon size={isHorizontalSide || isVerticalSide ? 13 : 15} stroke={2.25} />
+      </span>
+    );
+  });
 };
 
 const getProjectedDragShape = (

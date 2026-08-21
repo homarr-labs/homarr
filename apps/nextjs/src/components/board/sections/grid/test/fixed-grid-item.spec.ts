@@ -10,6 +10,8 @@ import { FixedGridItem } from "../fixed-grid-item";
 const mocks = vi.hoisted(() => ({
   announce: vi.fn(),
   commitSectionGrid: vi.fn(),
+  isSelected: vi.fn(() => false),
+  toggleSelectItem: vi.fn(),
   editMode: true,
   maxRowCount: null as number | null,
   items: [
@@ -42,6 +44,13 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@homarr/boards/edit-mode", () => ({
   useEditMode: () => [mocks.editMode],
+}));
+
+vi.mock("~/components/board/selection/board-selection-context", () => ({
+  useBoardSelection: () => ({
+    isSelected: mocks.isSelected,
+    toggleSelectItem: mocks.toggleSelectItem,
+  }),
 }));
 
 vi.mock("@homarr/boards/context", () => ({
