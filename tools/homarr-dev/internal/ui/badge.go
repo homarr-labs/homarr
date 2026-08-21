@@ -3,6 +3,7 @@ package ui
 import (
 	"fmt"
 	"image/color"
+	"strings"
 
 	"charm.land/lipgloss/v2"
 )
@@ -190,8 +191,8 @@ func Bar(percent float64, width int, colour color.Color) string {
 	}
 	filled := int(percent * float64(width))
 	empty := width - filled
-	return lipgloss.NewStyle().Foreground(colour).Render(repeat("█", filled)) +
-		lipgloss.NewStyle().Foreground(Faint).Render(repeat("░", empty))
+	return lipgloss.NewStyle().Foreground(colour).Render(strings.Repeat("█", filled)) +
+		lipgloss.NewStyle().Foreground(Faint).Render(strings.Repeat("░", empty))
 }
 
 // Percent formats a fraction for display next to a bar.

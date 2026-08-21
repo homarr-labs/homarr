@@ -53,25 +53,15 @@ func Panel(title string, focused bool) lipgloss.Style {
 // Rule draws a labelled separator across the given width.
 func Rule(label string, width int) string {
 	if width < 8 {
-		return Dim.Render(label)
+		return Dim.Render(Truncate(label, width))
 	}
 	prefix := "── " + label + " "
-	if lipgloss.Width(prefix) >= width {
-		return Dim.Render(prefix[:width])
+	prefixWidth := lipgloss.Width(prefix)
+	if prefixWidth >= width {
+		return Dim.Render(Truncate(prefix, width))
 	}
-	fill := width - lipgloss.Width(prefix)
-	return Dim.Render(prefix + repeat("─", fill))
-}
-
-func repeat(char string, count int) string {
-	if count <= 0 {
-		return ""
-	}
-	out := make([]byte, 0, count*len(char))
-	for range count {
-		out = append(out, char...)
-	}
-	return string(out)
+	fill := width - prefixWidth
+	return Dim.Render(prefix + strings.Repeat("─", fill))
 }
 
 // Blank reports whether a line would render as empty. Build tools emit lines
