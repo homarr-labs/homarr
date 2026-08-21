@@ -1,0 +1,21 @@
+.agents/skills/homarr-local-harness/SKILL.md
+  s_b389e2d17efbfb::t_33ff4708319474 1-60
+.agents/skills/homarr-local-harness/agents/openai.yaml
+  s_b389e2d17efbfb::t_7e11965e67c644 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "7c4c1ffbe7cd6191c80b9eeebc09563d3bf3517d",
+  "prompts": {},
+  "sessions": {
+    "s_b389e2d17efbfb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a024a1-940c-7511-9076-9f86fc9d7eb6",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
