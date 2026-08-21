@@ -373,7 +373,7 @@ const LoadedBoardItemContent = ({
               className={itemContentClasses.advancedFocusTrigger}
               aria-expanded={isAdvanced}
               aria-controls={isAdvanced ? advancedViewId : undefined}
-              aria-keyshortcuts="Shift+Enter"
+              aria-keyshortcuts="Shift+Control Shift+Meta"
               data-advanced-focus-trigger
               onClick={openAdvancedView}
             >
