@@ -1,0 +1,40 @@
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  s_20fe5c8b1eab45::t_ef75dc93ce1b40 124-125,137,145-146
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_20fe5c8b1eab45::t_ef75dc93ce1b40 35,109-110,141-144
+  s_20fe5c8b1eab45::t_ed8a60e715364f 145
+apps/nextjs/src/components/board/sections/grid/grid-portal-host.tsx
+  s_20fe5c8b1eab45::t_ef75dc93ce1b40 4,9,16,23,30,41-46,48-49
+  s_20fe5c8b1eab45::t_1a4f848fd48760 34-40
+apps/nextjs/src/components/board/sections/grid/grid-editor-registry.tsx
+  s_20fe5c8b1eab45::t_28715f902e2e22 49
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_20fe5c8b1eab45::t_28715f902e2e22 721,780
+  s_20fe5c8b1eab45::t_1a4f848fd48760 784
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_20fe5c8b1eab45::t_d94290d500d55a 87-90
+  s_20fe5c8b1eab45::t_1a4f848fd48760 61-64,211-217
+  s_20fe5c8b1eab45::t_28715f902e2e22 174,188
+  s_20fe5c8b1eab45::t_ef75dc93ce1b40 3,26,60,135-137,143-157,222-223,240-242
+  s_20fe5c8b1eab45::t_e94e6ab557a1bb 243
+apps/nextjs/src/components/board/sections/section-collapse.tsx
+  s_20fe5c8b1eab45::t_ef75dc93ce1b40 9,15,17,24,33,36-39,68-73,93-113,117-118,148-158
+  s_20fe5c8b1eab45::t_b8ad4f084ad80a 132,135,137
+  s_20fe5c8b1eab45::t_5ff750bc672353 114,119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "59b6f08a3650c812a5d33c52d7fe9082194a0f8d",
+  "prompts": {},
+  "sessions": {
+    "s_20fe5c8b1eab45": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02418-9e79-71b1-81dc-fae410529d07",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
