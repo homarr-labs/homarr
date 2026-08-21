@@ -62,7 +62,7 @@ export const BoardContainerSection = ({ section }: Props) => {
         radius={board.itemRadius}
         p={0}
       >
-        {options.collapsible && !isEditMode && (
+        {options.collapsible && (
           <Button
             className={classes.containerToggle}
             pos="absolute"
@@ -71,7 +71,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             w="100%"
             h={isVisuallyCollapsed ? "100%" : 24}
             px={12}
-            pe={options.showOpenAll ? 40 : 12}
+            pe={isEditMode ? 48 : options.showOpenAll ? 40 : 12}
             radius="sm"
             variant="default"
             justify={options.showLabel ? "flex-start" : "center"}
@@ -101,7 +101,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             )}
           </Button>
         )}
-        {!isVisuallyCollapsed && (!options.collapsible || isEditMode) && options.showLabel && options.title && (
+        {!isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
           <Badge
             pos="absolute"
             top={-24}

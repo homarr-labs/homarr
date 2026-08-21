@@ -20,7 +20,7 @@ import {
 import { ScaledBoardCanvas } from "~/components/board/layout/scaled-board-canvas";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
 import { BoardGridEditorBoundary } from "~/components/board/sections/grid/board-grid-editor-boundary";
-import { BoardGridPortalHost, BoardGridPortalRenderer } from "~/components/board/sections/grid/grid-portal-host";
+import { BoardGridPortalHost } from "~/components/board/sections/grid/grid-portal-host";
 import { BoardSectionCollapseProvider } from "~/components/board/sections/section-collapse";
 import { BoardBackgroundVideo } from "~/components/layout/background";
 import { BoardSelectionProvider } from "~/components/board/selection/board-selection-context";
@@ -80,7 +80,6 @@ export const ClientBoard = () => {
                 label={board.name}
               >
                 <BoardGridEditorBoundary key={currentLayoutId}>
-                  <BoardGridPortalRenderer />
                   <div className={classes.columns} style={{ gridTemplateColumns }}>
                     {leftColumnCount > 0 && leftSection && (
                       <aside

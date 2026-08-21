@@ -25,12 +25,14 @@ import type { WidgetComponentProps, WidgetDefinition, WidgetRuntimeRef } from "@
 import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
+import { getLogicalTrackSize } from "~/components/board/layout";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { startAdvancedFocusEntrance } from "../advanced-focus/entrance";
 import { getAdvancedFocusClosePosition, getAdvancedFocusRect } from "../advanced-focus/geometry";
 import { AdvancedFocusManualSurface } from "../advanced-focus/manual-surface";
 import { redirectShiftWheel } from "../advanced-focus/wheel";
+import { useBoardGridPortalHost } from "../sections/grid/grid-portal-host";
 import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
@@ -103,9 +105,11 @@ const WidgetDefinitionLoadError = ({
 );
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
-  const { ref, width, height } = useElementSize<HTMLDivElement>();
-  const widgetStateRef = useRef<Record<string, unknown> | null>(null);
-  const widgetRuntimeRef = useRef(createWidgetRuntimeState());
+  const { ref, width: measuredWidth, height: measuredHeight } = useElementSize<HTMLDivElement>();
+  const { getEntryRuntime } = useBoardGridPortalHost();
+  const { widgetStateRef, widgetRuntimeRef } = getEntryRuntime(item.id, createBoardItemRuntime);
+  const width = measuredWidth || getLogicalTrackSize(item.width);
+  const height = measuredHeight || getLogicalTrackSize(item.height);
 
   return (
     <ErrorBoundary
@@ -133,6 +137,11 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
     </ErrorBoundary>
   );
 };
+
+const createBoardItemRuntime = () => ({
+  widgetStateRef: { current: null } as MutableRefObject<Record<string, unknown> | null>,
+  widgetRuntimeRef: { current: createWidgetRuntimeState() } as WidgetRuntimeRef,
+});
 
 interface LoadedBoardItemContentProps {
   item: SectionItem;

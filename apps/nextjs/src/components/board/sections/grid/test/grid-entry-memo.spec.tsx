@@ -22,7 +22,6 @@ describe("grid entry memoization", () => {
       {
         "data-grid-id": props.placement.id,
         "data-x": props.placement.x,
-        ref: (element: HTMLSpanElement | null) => props.registerElement(props.placement.id, element),
       },
       createElement(WidgetProbe),
     );
@@ -79,21 +78,17 @@ describe("grid entry memoization", () => {
   });
 
   test("keeps 100 entry and widget renders frozen across interaction store previews", () => {
-    const elements = new Map<string, HTMLElement>();
     const interactionStore = createGridInteractionStore<GridInteraction>();
     const gridRef = { current: null as HTMLDivElement | null };
     const setGridRef = (element: HTMLDivElement | null) => {
       gridRef.current = element;
     };
-    const registerElement = (id: string, element: HTMLElement | null) => {
-      if (element) elements.set(id, element);
-      else elements.delete(id);
-    };
     const entries = Array.from({ length: 100 }, (_, index) => ({
       ...createProps(),
-      registerElement,
+      element: document.createElement("span"),
       placement: { ...createProps().placement, id: `item-${index}`, x: index % 10, y: Math.floor(index / 10) },
     }));
+    const elements = new Map(entries.map((entry) => [entry.placement.id, entry.element]));
     const renderPreviewBoard = (nextEntries: DndGridEntryProps[]) => {
       act(() =>
         root.render(
@@ -160,7 +155,7 @@ describe("grid entry memoization", () => {
   test.each([
     ["label", (props: DndGridEntryProps) => ({ ...props, label: "Changed" })],
     ["grid limits", (props: DndGridEntryProps) => ({ ...props, maxRowCount: 10 })],
-    ["element registration", (props: DndGridEntryProps) => ({ ...props, registerElement: () => undefined })],
+    ["bound element", (props: DndGridEntryProps) => ({ ...props, element: document.createElement("span") })],
     [
       "minimum size",
       (props: DndGridEntryProps) => ({
@@ -198,5 +193,5 @@ const createProps = (): DndGridEntryProps => ({
   label: "Weather",
   columnCount: 12,
   maxRowCount: null,
-  registerElement: () => undefined,
+  element: null,
 });

@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
   commitSectionGrid: vi.fn(),
   isSelected: vi.fn(() => false),
   toggleSelectItem: vi.fn(),
+  registerElement: vi.fn(),
   editMode: true,
   maxRowCount: null as number | null,
   items: [
@@ -79,7 +80,17 @@ vi.mock("../../section-context", () => ({
     innerSections: [],
     columnCount: 3,
     maxRowCount: mocks.maxRowCount,
+    placements: mocks.items.map((item) => ({
+      id: item.id,
+      type: item.type,
+      x: item.xOffset,
+      y: item.yOffset,
+      w: item.width,
+      h: item.height,
+    })),
+    interactionDisabled: false,
     announce: mocks.announce,
+    entryElementStore: { register: mocks.registerElement },
   }),
 }));
 
@@ -98,6 +109,7 @@ describe("fixed grid item behavior", () => {
   beforeEach(() => {
     mocks.announce.mockReset();
     mocks.commitSectionGrid.mockReset();
+    mocks.registerElement.mockReset();
     mocks.editMode = true;
     mocks.maxRowCount = null;
     getWeatherMock().advancedOptions.title = null;

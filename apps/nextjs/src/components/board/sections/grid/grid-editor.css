@@ -3,6 +3,7 @@
   inset: 0 auto auto 0;
   overflow: visible;
   border-radius: var(--mantine-radius-md);
+  pointer-events: none;
 }
 
 .board-grid-entry {
@@ -20,6 +21,13 @@
   height: var(--board-grid-preview-height) !important;
   translate: var(--board-grid-preview-x) var(--board-grid-preview-y);
   will-change: translate;
+}
+
+.board-grid-entry[data-grid-preview="true"]:not([data-dnd-active="true"]) {
+  transition:
+    translate 100ms ease,
+    width 100ms ease,
+    height 100ms ease;
 }
 
 .board-grid-entry[data-dnd-active="true"],
@@ -101,22 +109,10 @@
   zoom: var(--board-grid-overlay-content-zoom, 1);
 }
 
-body[data-board-grid-interacting] .board-grid-entry,
+body[data-board-grid-interacting] .board-grid-entry[data-dnd-active="true"],
+body[data-board-grid-interacting] .board-grid-entry[data-dnd-drag-source="true"],
 body[data-board-grid-interacting] .board-grid-placeholder {
   transition: none;
-}
-
-.board-grid-content-mount,
-.board-grid-portal-content,
-.board-grid-portal-content > [data-editor-grid-entry] {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.board-grid-content-mount {
-  position: absolute;
-  inset: 0;
 }
 
 body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="true"] > .board-grid-content-mount {
