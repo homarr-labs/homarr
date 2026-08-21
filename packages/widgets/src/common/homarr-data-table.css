@@ -12,6 +12,12 @@
   background-color: transparent;
 }
 
+.homarr-data-table .mantine-datatable-table {
+  width: 100% !important;
+  max-width: 100%;
+  table-layout: fixed !important;
+}
+
 .homarr-data-table .mantine-datatable-table tbody tr:hover {
   background-color: color-mix(in srgb, var(--mantine-color-default-hover) 40%, transparent) !important;
 }
