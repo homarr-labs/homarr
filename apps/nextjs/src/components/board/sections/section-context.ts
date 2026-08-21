@@ -3,6 +3,8 @@ import { createContext, useContext } from "react";
 import type { RouterOutputs } from "@homarr/api";
 
 import type { ContainerSectionItem, Section, SectionItem } from "~/app/[locale]/boards/_types";
+import type { GridEntryElementStore } from "./grid/grid-editor-registry";
+import type { SectionGridPlacement } from "./grid/use-grid-layout-actions";
 
 interface SectionContextProps {
   section: Exclude<Section, { kind: "container" }> | ContainerSectionItem;
@@ -11,7 +13,10 @@ interface SectionContextProps {
   integrations: RouterOutputs["integration"]["all"] | undefined;
   columnCount: number;
   maxRowCount: number | null;
+  placements: readonly SectionGridPlacement[];
+  interactionDisabled: boolean;
   announce: (message: string) => void;
+  entryElementStore: GridEntryElementStore;
 }
 
 const SectionContext = createContext<SectionContextProps | null>(null);

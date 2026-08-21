@@ -5,6 +5,7 @@ import { describe, expect, test } from "vitest";
 const gridDirectory = resolve(import.meta.dirname, "..");
 const nextjsSourceDirectory = resolve(gridDirectory, "../../../../");
 const sectionGridPath = resolve(gridDirectory, "section-grid.tsx");
+const editorBoundaryPath = resolve(gridDirectory, "board-grid-editor-boundary.tsx");
 const editorLoaderPath = resolve(gridDirectory, "grid-editor-loader.ts");
 
 describe("board grid import boundary", () => {
@@ -33,15 +34,16 @@ describe("board grid import boundary", () => {
     ]);
   });
 
-  test("loads the editor through next/dynamic only in the edit branch", () => {
-    const source = readFileSync(sectionGridPath, "utf8");
+  test("loads the editor only in edit mode without replacing static board content", () => {
+    const sectionSource = readFileSync(sectionGridPath, "utf8");
+    const boundarySource = readFileSync(editorBoundaryPath, "utf8");
 
-    expect(source).toMatch(/import dynamic from ["']next\/dynamic["']/);
-    expect(source).toMatch(
-      /const GridEditor = dynamic\(loadGridEditorAsync,\s*{[\s\S]*?loading:\s*GridEditorLoading,[\s\S]*?ssr:\s*false,[\s\S]*?}\);/,
-    );
-    expect(source.match(/<GridEditor\b/g)).toHaveLength(1);
-    expect(source).toMatch(/isEditMode\s*&&\s*editorRuntimeStatus\s*===\s*["']ready["']\s*\?\s*\(\s*<GridEditor\b/);
+    expect(sectionSource).not.toMatch(/import dynamic from ["']next\/dynamic["']/);
+    expect(sectionSource).toMatch(/<SectionContent\s*\/>/);
+    expect(sectionSource).toMatch(/<div ref={editorHostRef} className={classes\.editorPortalHost}\s*\/>/);
+    expect(boundarySource).toMatch(/loadGridEditorAsync\(\)/);
+    expect(boundarySource).toMatch(/isEditMode\s*&&\s*Provider\s*&&\s*GridEditor/);
+    expect(boundarySource).toMatch(/createPortal\(<GridEditor \{\.\.\.props} \/>, host, props\.sectionId\)/);
     expect(getRuntimeImports(sectionGridPath).filter(({ specifier }) => specifier === "./grid-editor")).toEqual([]);
     expect(
       getRuntimeImports(editorLoaderPath)

@@ -1,7 +1,7 @@
 "use client";
 
 import type { FocusEvent, KeyboardEvent, PropsWithChildren } from "react";
-import { useId, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 import { Box } from "@mantine/core";
 import combineClasses from "clsx";
 
@@ -35,7 +35,7 @@ interface FixedGridItemProps {
 /**
  * Static SSR geometry in view mode and the stable content/keyboard handle in
  * edit mode. The focused tile owns grid-based keyboard movement while dnd-kit
- * handles pointer and touch input on the outer editor shell.
+ * binds pointer and touch input to this same element without replacing it.
  */
 export const FixedGridItem = ({
   item,
@@ -47,11 +47,16 @@ export const FixedGridItem = ({
   const runtimeStatus = useGridEditorRuntimeStatus();
   const currentLayoutId = useCurrentLayout();
   const t = useI18n();
-  const { section, items, innerSections, columnCount, maxRowCount, announce } = useSectionContext();
+  const { section, columnCount, maxRowCount, placements, interactionDisabled, announce, entryElementStore } =
+    useSectionContext();
   const { commitSectionGrid } = useGridLayoutActions();
   const [isKeyboardEditing, setIsKeyboardEditing] = useState(false);
   const { isSelected, toggleSelectItem } = useBoardSelection();
   const selected = item.type === "item" && isSelected(item.id);
+  const registerElement = useCallback(
+    (element: HTMLDivElement | null) => entryElementStore.register(item.id, element),
+    [entryElementStore, item.id],
+  );
 
   const handleClickCapture = (event: React.MouseEvent) => {
     if (!isEditorActive || item.type !== "item" || (!event.metaKey && !event.ctrlKey)) return;
@@ -61,15 +66,14 @@ export const FixedGridItem = ({
     toggleSelectItem(item.id);
   };
   const instructionsId = useId();
-  const isEditorActive = isEditMode && runtimeStatus === "ready";
+  const isEditorActive = isEditMode && runtimeStatus === "ready" && !interactionDisabled;
   const placement = toPlacement(item);
-  const renderedPlacements = [...items, ...innerSections].map(toPlacement);
   const keyboardGridRef = useRef<{
     source: readonly SectionGridPlacement[];
     current: readonly SectionGridPlacement[];
   }>({
-    source: renderedPlacements,
-    current: renderedPlacements,
+    source: placements,
+    current: placements,
   });
   const displayName =
     item.type === "item"
@@ -112,14 +116,14 @@ export const FixedGridItem = ({
       setKeyboardEditing(false);
       return;
     }
-    if (!arePlacementListsEqual(keyboardGridRef.current.source, renderedPlacements)) {
+    if (!arePlacementListsEqual(keyboardGridRef.current.source, placements)) {
       keyboardGridRef.current = {
-        source: renderedPlacements,
-        current: renderedPlacements,
+        source: placements,
+        current: placements,
       };
     }
-    const placements = keyboardGridRef.current.current;
-    const current = placements.find((candidate) => candidate.id === item.id);
+    const currentPlacements = keyboardGridRef.current.current;
+    const current = currentPlacements.find((candidate) => candidate.id === item.id);
     if (!current) return;
 
     let transaction: GridTransaction<SectionGridPlacement>;
@@ -131,7 +135,7 @@ export const FixedGridItem = ({
               id: section.id,
               columnCount,
               maxRowCount,
-              placements,
+              placements: currentPlacements,
             },
           ],
         },
@@ -139,8 +143,8 @@ export const FixedGridItem = ({
       );
     } catch {
       keyboardGridRef.current = {
-        source: renderedPlacements,
-        current: renderedPlacements,
+        source: currentPlacements,
+        current: currentPlacements,
       };
       setKeyboardEditing(false);
       return;
@@ -189,13 +193,22 @@ export const FixedGridItem = ({
 
   return (
     <Box
+      ref={registerElement}
       {...semantics}
       onClickCapture={handleClickCapture}
       data-board-item-selected={selected ? "true" : undefined}
-      className={combineClasses(isEditorActive ? classes.editorEntry : classes.staticItem)}
-      style={isEditorActive ? { position: "relative", width: "100%", height: "100%" } : getLogicalItemStyle(placement)}
-      data-grid-item-id={isEditorActive ? undefined : item.id}
-      data-grid-item-type={isEditorActive ? undefined : item.type}
+      className={combineClasses(
+        classes.staticItem,
+        isEditorActive && "board-grid-entry",
+        isEditorActive && classes.editorEntry,
+      )}
+      style={getLogicalItemStyle(placement)}
+      data-grid-item-id={item.id}
+      data-grid-item-type={item.type}
+      data-grid-x={placement.x}
+      data-grid-y={placement.y}
+      data-grid-w={placement.w}
+      data-grid-h={placement.h}
       data-editor-grid-entry={isEditorActive ? "true" : undefined}
       data-type={item.type}
       data-kind={item.kind}
@@ -210,7 +223,7 @@ export const FixedGridItem = ({
       onBlur={isEditorActive ? handleBlur : undefined}
       onKeyDown={isEditorActive ? handleKeyboard : undefined}
     >
-      {children}
+      <div className={combineClasses("board-grid-content-mount", classes.contentMount)}>{children}</div>
       {isEditorActive && (
         <span id={instructionsId} className={classes.liveRegion}>
           {t("item.moveResize.keyboard.instructions")}

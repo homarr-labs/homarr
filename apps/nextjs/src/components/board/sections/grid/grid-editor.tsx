@@ -13,6 +13,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import { createPortal } from "react-dom";
 
 import "./grid-editor.css"; // oxlint-disable-line import/no-unassigned-import
 
@@ -38,8 +39,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
-import { getLogicalItemStyle, getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
-import { useSectionContext } from "../section-context";
+import { getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import {
   beginGridTransaction,
   cancelGridTransaction,
@@ -58,26 +58,17 @@ import type { DragProjectionOrigin, GridResizeDirection, GridTransaction, Transa
 import type { DndGridEntryProps } from "./grid-entry-memo";
 import { areDndGridEntryPropsEqual } from "./grid-entry-memo";
 import { getGridDepth } from "./grid-depth";
+import type { GridEditorRenderProps } from "./grid-editor-registry";
 import { createGridInteractionStore } from "./grid-interaction-store";
 import { useBoardGridPortalHost } from "./grid-portal-host";
 import type { GridInteraction } from "./grid-preview-layer";
 import { GridPreviewLayer } from "./grid-preview-layer";
 import { createGridResizeOutlineController } from "./grid-resize-outline";
-import { useBoardSelection } from "~/components/board/selection/board-selection-context";
 import type { CommitSectionGridInput, SectionGridPlacement } from "./use-grid-layout-actions";
 import { useGridLayoutActions } from "./use-grid-layout-actions";
 
 const GRID_ENTRY_TYPE = "homarr-board-grid-entry";
 const GRID_TARGET_TYPE = "homarr-board-grid-target";
-
-interface GridEditorProps {
-  sectionId: string;
-  columnCount: number;
-  rowCount: number;
-  maxRowCount: number | null;
-  placements: readonly SectionGridPlacement[];
-  className: string;
-}
 
 interface GridEntryData {
   kind: typeof GRID_ENTRY_TYPE;
@@ -728,14 +719,22 @@ export default function GridEditor({
   rowCount,
   maxRowCount,
   placements,
+  transactionPlacements,
   className,
-}: GridEditorProps) {
+  section,
+  items,
+  innerSections,
+  entryElementStore,
+}: GridEditorRenderProps) {
   const t = useI18n();
-  const { section, items, innerSections } = useSectionContext();
   const { registerGrid, getDepth, isDropTargetEligible } = useBoardGridEditorActions();
   const interactionStore = useBoardGridEditorInteractionStore();
   const gridRef = useRef<HTMLDivElement>(null);
-  const [entryElements] = useState(() => new Map<string, HTMLElement>());
+  const entryElements = useSyncExternalStore(
+    entryElementStore.subscribe,
+    entryElementStore.getSnapshot,
+    entryElementStore.getSnapshot,
+  ).elements;
   const parentGridId = "parentSectionId" in section ? section.parentSectionId : null;
   const ownerPlacementId = "parentSectionId" in section ? section.id : null;
   const depth = getDepth(sectionId);
@@ -770,14 +769,6 @@ export default function GridEditor({
     },
     [droppableRef],
   );
-  const registerEntryElement = useCallback(
-    (id: string, element: HTMLElement | null) => {
-      if (element) entryElements.set(id, element);
-      else entryElements.delete(id);
-    },
-    [entryElements],
-  );
-
   useLayoutEffect(() => {
     const element = gridRef.current;
     if (!element) return;
@@ -787,11 +778,11 @@ export default function GridEditor({
       maxRowCount,
       parentGridId,
       ownerPlacementId,
-      placements,
+      placements: transactionPlacements,
       depth,
       element,
     });
-  }, [columnCount, depth, maxRowCount, ownerPlacementId, parentGridId, placements, registerGrid, sectionId]);
+  }, [columnCount, depth, maxRowCount, ownerPlacementId, parentGridId, registerGrid, sectionId, transactionPlacements]);
 
   return (
     <div
@@ -816,7 +807,7 @@ export default function GridEditor({
             label={labelById.get(placement.id) ?? placement.id}
             columnCount={columnCount}
             maxRowCount={maxRowCount}
-            registerElement={registerEntryElement}
+            element={entryElements.get(placement.id) ?? null}
           />
         );
       })}
@@ -845,24 +836,18 @@ const DndGridEntryComponent = ({
   label,
   columnCount,
   maxRowCount,
-  registerElement,
+  element,
 }: DndGridEntryProps) => {
-  const { acquireContainer, structureRevision } = useBoardGridPortalHost();
   const { beginResize, previewResize, completeResize, cancelResize } = useBoardGridEditorActions();
-  const { isSelected } = useBoardSelection();
-  const board = useRequiredBoard();
-  const isSelectedEntry = placement.type === "item" && isSelected(placement.id);
-  const mountRef = useRef<HTMLDivElement>(null);
-  const shellRef = useRef<HTMLDivElement>(null);
   const placementRef = useRef(placement);
   placementRef.current = placement;
   const resizeOutlineController = useMemo(
     () =>
       createGridResizeOutlineController(
-        () => shellRef.current,
+        () => element,
         () => placementRef.current,
       ),
-    [],
+    [element],
   );
   const sourceData = useMemo<GridEntryData>(
     () => ({ kind: GRID_ENTRY_TYPE, sectionId, placement, label }),
@@ -883,67 +868,39 @@ const DndGridEntryComponent = ({
   const modifiers = useMemo(
     () => [
       RestrictToElement.configure({
-        element: () => shellRef.current?.closest('[data-testid="board-canvas"]') ?? null,
+        element: () => element?.closest('[data-testid="board-canvas"]') ?? null,
       }),
     ],
-    [],
+    [element],
   );
-  const {
-    ref: draggableRef,
-    handleRef,
-    isDragSource,
-    isDropping,
-  } = useDraggable<GridEntryData>({
+  const { isDragSource, isDropping } = useDraggable<GridEntryData>({
     id: placement.id,
     type: GRID_ENTRY_TYPE,
     data: sourceData,
+    element,
+    handle: element,
+    disabled: element === null,
     sensors,
     modifiers,
   });
-  const setShellRef = useCallback(
-    (element: HTMLDivElement | null) => {
-      shellRef.current = element;
-      registerElement(placement.id, element);
-      draggableRef(element);
-      handleRef(element);
-    },
-    [draggableRef, handleRef, placement.id, registerElement],
-  );
-
   useEffect(() => () => resizeOutlineController.destroy(), [resizeOutlineController]);
 
   useLayoutEffect(() => {
-    const mount = mountRef.current;
-    if (!mount) return;
-    const container = acquireContainer(placement.id);
-    mount.replaceChildren(container);
-
+    if (!element) return;
+    if (isDragSource) element.dataset.dndDragSource = "true";
+    else delete element.dataset.dndDragSource;
+    if (isDropping) element.dataset.dndDropping = "true";
+    else delete element.dataset.dndDropping;
     return () => {
-      if (container.parentElement === mount) container.remove();
+      delete element.dataset.dndDragSource;
+      delete element.dataset.dndDropping;
     };
-  }, [acquireContainer, placement.id, structureRevision]);
+  }, [element, isDragSource, isDropping]);
 
-  return (
-    <div
-      ref={setShellRef}
-      className="board-grid-entry"
-      style={
-        {
-          ...getLogicalItemStyle(placement),
-          "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
-        } as CSSProperties
-      }
-      data-grid-item-id={placement.id}
-      data-grid-item-type={placement.type}
-      data-grid-x={placement.x}
-      data-grid-y={placement.y}
-      data-grid-w={placement.w}
-      data-grid-h={placement.h}
-      data-dnd-drag-source={isDragSource ? "true" : undefined}
-      data-dnd-dropping={isDropping ? "true" : undefined}
-      data-board-item-selected={isSelectedEntry ? "true" : undefined}
-    >
-      <div ref={mountRef} className="board-grid-content-mount" />
+  if (!element) return null;
+
+  return createPortal(
+    <>
       <GridResizeHandles
         sectionId={sectionId}
         placement={placement}
@@ -956,7 +913,9 @@ const DndGridEntryComponent = ({
         cancelResize={cancelResize}
         scheduleResizeOutline={resizeOutlineController.schedule}
       />
-    </div>
+    </>,
+    element,
+    `board-grid-resize-handles:${placement.id}`,
   );
 };
 

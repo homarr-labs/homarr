@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import dynamic from "next/dynamic";
-import { Box, LoadingOverlay } from "@mantine/core";
+import type { CSSProperties, KeyboardEvent, PointerEvent } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Box } from "@mantine/core";
 import combineClasses from "clsx";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
 import {
@@ -15,55 +14,20 @@ import {
   getEditableCanvasAttributes,
   getGridRowCountForVisualHeight,
   getLayoutRowCount,
-  getLogicalItemStyle,
   getLogicalTrackSize,
   getReadonlyCanvasAttributes,
   normalizeGridPlacement,
 } from "~/components/board/layout";
 import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
-import { loadGridEditorAsync } from "./grid-editor-loader";
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
+import { createGridEntryElementStore, useGridEditorRegistry } from "./grid-editor-registry";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
 import { SectionContent } from "../content";
-import { useCollapsedSectionIds } from "../section-collapse";
-import { SectionProvider, useSectionContext } from "../section-context";
+import { useCollapsedSectionIds, useExpandSectionsForEditing } from "../section-collapse";
+import { SectionProvider } from "../section-context";
 import { useSectionItems } from "../use-section-items";
 import { useBoardGridPortalHost } from "./grid-portal-host";
 import classes from "./section-grid.module.css";
-
-const GridEditor = dynamic(loadGridEditorAsync, {
-  loading: GridEditorLoading,
-  ssr: false,
-});
-
-function GridEditorLoading() {
-  const t = useI18n("common.action");
-  const { items, innerSections } = useSectionContext();
-
-  return (
-    <Box
-      component="output"
-      className={classes.editorLoading}
-      data-testid="board-grid-editor-loading"
-      aria-label={t("loading")}
-    >
-      {[...items, ...innerSections].map((item) => (
-        <Box
-          key={item.id}
-          className={classes.editorLoadingItem}
-          style={getLogicalItemStyle({
-            x: item.xOffset,
-            y: item.yOffset,
-            w: item.width,
-            h: item.height,
-          })}
-          aria-hidden="true"
-        />
-      ))}
-      <LoadingOverlay visible />
-    </Box>
-  );
-}
 
 interface SectionGridProps {
   section: Exclude<Section, { kind: "container" }> | ContainerSectionItem;
@@ -85,21 +49,19 @@ export const SectionGrid = ({
   const [isEditMode] = useEditMode();
   const canvasScale = useBoardCanvasScale();
   const editorRuntimeStatus = useGridEditorRuntimeStatus();
+  const editorRegistry = useGridEditorRegistry();
+  const editorHostRef = useRef<HTMLDivElement>(null);
+  const [entryElementStore] = useState(createGridEntryElementStore);
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const { items, innerSections } = useSectionItems(section.id);
   const { announce, integrations } = useBoardGridPortalHost();
   const collapsedSectionIds = useCollapsedSectionIds();
-  const minimumBySectionId = useMemo(
-    () =>
-      new Map(
-        innerSections.map((innerSection) => [
-          innerSection.id,
-          getContainerMinimumSize(board, currentLayoutId, innerSection.id),
-        ]),
-      ),
-    [board, currentLayoutId, innerSections],
-  );
+  const expandSectionsForEditing = useExpandSectionsForEditing();
+  const minimumBySectionId = useMemo(() => {
+    const minimumSizes = getContainerMinimumSizes(board, currentLayoutId);
+    return new Map(innerSections.map((innerSection) => [innerSection.id, minimumSizes.get(innerSection.id)]));
+  }, [board, currentLayoutId, innerSections]);
 
   const placements = useMemo(
     () =>
@@ -121,41 +83,112 @@ export const SectionGrid = ({
       }),
     [columnCount, innerSections, items, minimumBySectionId],
   );
+  const collapsibleSectionIds = useMemo(
+    () =>
+      new Set(
+        innerSections.filter((innerSection) => innerSection.options.collapsible).map((innerSection) => innerSection.id),
+      ),
+    [innerSections],
+  );
 
+  const directCollapsedIds = useMemo(
+    () =>
+      new Set(
+        placements
+          .filter(
+            (placement) =>
+              placement.type === "section" &&
+              collapsedSectionIds.has(placement.id) &&
+              collapsibleSectionIds.has(placement.id),
+          )
+          .map((placement) => placement.id),
+      ),
+    [collapsedSectionIds, collapsibleSectionIds, placements],
+  );
   const displayPlacements = useMemo(() => {
-    const directCollapsedIds = new Set(
-      placements
-        .filter(
-          (placement) =>
-            placement.type === "section" &&
-            collapsedSectionIds.has(placement.id) &&
-            innerSections.find((innerSection) => innerSection.id === placement.id)?.options.collapsible,
-        )
-        .map((placement) => placement.id),
-    );
     if (directCollapsedIds.size === 0) return placements;
 
     return getCollapsedDisplayLayout(placements, {
       columnCount,
       collapsedItemIds: directCollapsedIds,
     });
-  }, [collapsedSectionIds, columnCount, innerSections, placements]);
+  }, [columnCount, directCollapsedIds, placements]);
 
   const placementById = useMemo(
     () => new Map(displayPlacements.map((placement) => [placement.id, placement])),
     [displayPlacements],
   );
-  const displayedItems = items.map((item) => withPlacement(item, placementById.get(item.id)));
-  const displayedInnerSections = innerSections.map((item) => withPlacement(item, placementById.get(item.id)));
+  const displayedItems = useMemo(
+    () => items.map((item) => withPlacement(item, placementById.get(item.id))),
+    [items, placementById],
+  );
+  const displayedInnerSections = useMemo(
+    () => innerSections.map((item) => withPlacement(item, placementById.get(item.id))),
+    [innerSections, placementById],
+  );
   const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty", canvasScale);
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   const maxRowCount = section.kind === "container" || railPlacement !== "main" ? rowCount : null;
   const logicalWidth = getLogicalTrackSize(columnCount);
   const logicalHeight = getLogicalTrackSize(rowCount);
-  const canvasAttributes = isEditMode
-    ? getEditableCanvasAttributes({ label, columnCount, rowCount })
-    : getReadonlyCanvasAttributes({ label });
+  // A collapsed container's compact coordinates are display-only. Its own
+  // nested grid stays inactive until an explicit edit interaction expands it.
+  const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
+  const canvasAttributes =
+    isEditMode && !isInteractionDisabled
+      ? getEditableCanvasAttributes({ label, columnCount, rowCount })
+      : getReadonlyCanvasAttributes({ label });
+  const editorClassName = combineClasses("board-grid-editor", classes.editorGrid);
+  const expandCollapsedSectionsForPointerEdit = (event: PointerEvent<HTMLDivElement>) => {
+    if (!isEditMode || directCollapsedIds.size === 0 || event.button !== 0) return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const entry = target.closest('[data-editor-grid-entry="true"]');
+    if (!entry || !event.currentTarget.contains(entry)) return;
+    if (!target.closest(".board-grid-resize-handle") && target.closest(INTERACTIVE_GRID_SELECTOR)) return;
+    expandSectionsForEditing(directCollapsedIds);
+  };
+  const expandCollapsedSectionsForKeyboardEdit = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!isEditMode || directCollapsedIds.size === 0 || !EDIT_ACTIVATION_KEYS.has(event.key)) return;
+    const target = event.target;
+    if (!(target instanceof Element) || !target.matches('[data-editor-grid-entry="true"]')) return;
+    expandSectionsForEditing(directCollapsedIds);
+  };
+
+  useLayoutEffect(() => {
+    const host = editorHostRef.current;
+    if (!host) return;
+
+    return editorRegistry.register({
+      host,
+      disabled: isInteractionDisabled,
+      sectionId: section.id,
+      section,
+      items: displayedItems,
+      innerSections: displayedInnerSections,
+      columnCount,
+      rowCount,
+      maxRowCount,
+      placements: displayPlacements,
+      transactionPlacements: placements,
+      className: editorClassName,
+      entryElementStore,
+    });
+  }, [
+    columnCount,
+    displayPlacements,
+    displayedInnerSections,
+    displayedItems,
+    editorClassName,
+    editorRegistry,
+    entryElementStore,
+    isInteractionDisabled,
+    maxRowCount,
+    placements,
+    rowCount,
+    section,
+  ]);
 
   return (
     <SectionProvider
@@ -166,46 +199,47 @@ export const SectionGrid = ({
         integrations,
         columnCount,
         maxRowCount,
+        placements: displayPlacements,
+        interactionDisabled: isInteractionDisabled,
         announce,
+        entryElementStore,
       }}
     >
       <Box
         {...canvasAttributes}
         className={combineClasses(classes.viewport, className)}
-        style={{
-          width: logicalWidth,
-          height: `var(--board-grid-drag-height, ${logicalHeight}px)`,
-        }}
+        style={
+          {
+            width: logicalWidth,
+            height: `var(--board-grid-drag-height, ${logicalHeight}px)`,
+            "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
+          } as CSSProperties
+        }
         data-section-id={section.id}
         data-section-kind={section.kind}
         data-rail-placement={railPlacement}
+        data-grid-interaction-disabled={isEditMode && isInteractionDisabled ? "true" : undefined}
+        onPointerDownCapture={expandCollapsedSectionsForPointerEdit}
+        onKeyDownCapture={expandCollapsedSectionsForKeyboardEdit}
       >
-        {isEditMode && editorRuntimeStatus === "ready" ? (
-          <GridEditor
-            sectionId={section.id}
-            columnCount={columnCount}
-            rowCount={rowCount}
-            maxRowCount={maxRowCount}
-            placements={displayPlacements}
-            className={combineClasses("board-grid-editor", classes.editorGrid)}
-          />
-        ) : isEditMode && editorRuntimeStatus === "loading" ? (
-          <GridEditorLoading />
-        ) : (
-          <Box
-            className={classes.staticGrid}
-            style={{ width: logicalWidth, height: logicalHeight }}
-            data-grid-section-id={section.id}
-            data-kind={section.kind}
-            data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}
-          >
-            <SectionContent />
-          </Box>
-        )}
+        <Box
+          className={classes.staticGrid}
+          style={{ width: logicalWidth, height: logicalHeight }}
+          data-grid-section-id={section.id}
+          data-kind={section.kind}
+          data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}
+        >
+          <SectionContent />
+        </Box>
+        <div ref={editorHostRef} className={classes.editorPortalHost} />
       </Box>
     </SectionProvider>
   );
 };
+
+const INTERACTIVE_GRID_SELECTOR =
+  'a,button,input,textarea,select,option,[contenteditable="true"],[role="button"],[data-grid-no-drag]';
+const EDIT_ACTIVATION_KEYS = new Set(["Enter", " ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"]);
 
 const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
   const [visualHeight, setVisualHeight] = useState(0);
@@ -225,37 +259,70 @@ const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
   return enabled ? getGridRowCountForVisualHeight(visualHeight, canvasScale) : 0;
 };
 
-const getContainerMinimumSize = (
-  board: ReturnType<typeof useRequiredBoard>,
-  layoutId: string,
-  sectionId: string,
-  visited = new Set<string>(),
-): { width: number; height: number } => {
-  if (visited.has(sectionId)) return { width: 1, height: 1 };
-  const nextVisited = new Set(visited).add(sectionId);
-  const directItems: PlacementBounds[] = board.items.flatMap((item) => {
-    const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
-    return layout?.sectionId === sectionId ? [layout] : [];
-  });
-  const directSections: PlacementBounds[] = board.sections.flatMap((candidate) => {
-    if (candidate.kind !== "container") return [];
-    const layout = candidate.layouts.find((candidateLayout) => candidateLayout.layoutId === layoutId);
-    if (!layout || layout.parentSectionId !== sectionId) return [];
-    const minimum = getContainerMinimumSize(board, layoutId, candidate.id, nextVisited);
-    return [
-      {
-        ...layout,
-        width: Math.max(layout.width, minimum.width),
-        height: Math.max(layout.height, minimum.height),
-      },
-    ];
-  });
-  const children = [...directItems, ...directSections];
+const containerMinimumSizeCache = new WeakMap<
+  ReturnType<typeof useRequiredBoard>,
+  Map<string, ReadonlyMap<string, { width: number; height: number }>>
+>();
 
-  return {
-    width: Math.max(1, ...children.map((child) => child.xOffset + child.width)),
-    height: Math.max(1, ...children.map((child) => child.yOffset + child.height)),
+const getContainerMinimumSizes = (board: ReturnType<typeof useRequiredBoard>, layoutId: string) => {
+  const cachedByLayout = containerMinimumSizeCache.get(board);
+  const cached = cachedByLayout?.get(layoutId);
+  if (cached) return cached;
+
+  const directItemsBySectionId = new Map<string, PlacementBounds[]>();
+  for (const item of board.items) {
+    const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
+    if (!layout) continue;
+    const entries = directItemsBySectionId.get(layout.sectionId) ?? [];
+    entries.push(layout);
+    directItemsBySectionId.set(layout.sectionId, entries);
+  }
+
+  const directSectionsBySectionId = new Map<string, { id: string; placement: PlacementBounds }[]>();
+  for (const section of board.sections) {
+    if (section.kind !== "container") continue;
+    const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
+    if (!layout) continue;
+    const entries = directSectionsBySectionId.get(layout.parentSectionId) ?? [];
+    entries.push({ id: section.id, placement: layout });
+    directSectionsBySectionId.set(layout.parentSectionId, entries);
+  }
+
+  const minimumBySectionId = new Map<string, { width: number; height: number }>();
+  const visiting = new Set<string>();
+  const resolve = (sectionId: string): { width: number; height: number } => {
+    const existing = minimumBySectionId.get(sectionId);
+    if (existing) return existing;
+    if (visiting.has(sectionId)) return { width: 1, height: 1 };
+    visiting.add(sectionId);
+
+    const itemBounds = directItemsBySectionId.get(sectionId) ?? [];
+    const sectionBounds = (directSectionsBySectionId.get(sectionId) ?? []).map(({ id, placement }) => {
+      const minimum = resolve(id);
+      return {
+        ...placement,
+        width: Math.max(placement.width, minimum.width),
+        height: Math.max(placement.height, minimum.height),
+      };
+    });
+    const children = [...itemBounds, ...sectionBounds];
+    const minimum = {
+      width: Math.max(1, ...children.map((child) => child.xOffset + child.width)),
+      height: Math.max(1, ...children.map((child) => child.yOffset + child.height)),
+    };
+    visiting.delete(sectionId);
+    minimumBySectionId.set(sectionId, minimum);
+    return minimum;
   };
+
+  for (const section of board.sections) {
+    if (section.kind === "container") resolve(section.id);
+  }
+
+  const nextByLayout = cachedByLayout ?? new Map();
+  nextByLayout.set(layoutId, minimumBySectionId);
+  containerMinimumSizeCache.set(board, nextByLayout);
+  return minimumBySectionId;
 };
 
 interface PlacementBounds {
