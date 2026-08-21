@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 
 import { act } from "react";
+import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
 import { MantineProvider } from "@mantine/core";
@@ -61,6 +62,29 @@ vi.mock("@homarr/modals", async () => {
   };
 });
 
+vi.mock("@homarr/ui", async () => {
+  const actual = await vi.importActual<Record<string, unknown>>("@homarr/ui");
+  return {
+    ...actual,
+    FloatingTip: ({
+      children,
+      dismissAfter,
+      opened,
+      showDelay,
+    }: {
+      children: ReactNode;
+      dismissAfter?: number | null;
+      opened: boolean;
+      showDelay?: number;
+    }) =>
+      opened ? (
+        <div data-testid="floating-tip" data-show-delay={showDelay} data-dismiss-after={dismissAfter}>
+          {children}
+        </div>
+      ) : null,
+  };
+});
+
 vi.mock("@homarr/translation/client", () => ({
   useI18n: () => (key: string, values?: { count?: number }) => {
     const count = values?.count ?? 0;
@@ -78,6 +102,7 @@ vi.mock("@homarr/translation/client", () => ({
       "app.action.create.description": "Configure custom URL and icon",
       "common.action.discard": "Discard",
       "common.action.add": "Add",
+      "tips.multiSelectApps": "Tip: Hold Ctrl / ⌘ to select multiple apps at once",
     };
     return translations[key] ?? key;
   },
@@ -166,6 +191,24 @@ describe("AppSelectModal", () => {
   });
 
   describe("multi selection mode", () => {
+    it("opens the configured multi-select tip", async () => {
+      const closeModal = vi.fn();
+      const onSelectMany = vi.fn();
+
+      await act(async () =>
+        root.render(
+          <MantineProvider>
+            <AppSelectModalComponent actions={{ closeModal }} innerProps={{ onSelectMany, withCreate: false }} />
+          </MantineProvider>,
+        ),
+      );
+
+      const tip = host.querySelector('[data-testid="floating-tip"]');
+      expect(tip?.textContent).toContain("Tip: Hold Ctrl / ⌘ to select multiple apps at once");
+      expect(tip?.getAttribute("data-show-delay")).toBe("2000");
+      expect(tip?.getAttribute("data-dismiss-after")).toBe("3000");
+    });
+
     it("toggles multiple app selections and submits batch on button click", async () => {
       const closeModal = vi.fn();
       const onSelectMany = vi.fn();

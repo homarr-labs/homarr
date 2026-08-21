@@ -13,13 +13,13 @@ import {
   Text,
   ThemeIcon,
 } from "@mantine/core";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
+import { IconBulb, IconPlus, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { selectGridCols, SelectableCard } from "@homarr/ui";
+import { FloatingTip, selectGridCols, SelectableCard } from "@homarr/ui";
 
 import { QuickAddAppModal } from "./quick-add-app/quick-add-app-modal";
 
@@ -88,6 +88,17 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
 
   return (
     <Stack gap="md">
+      <FloatingTip
+        opened={multiSelect}
+        showDelay={2_000}
+        dismissAfter={3_000}
+        transitionDuration={200}
+        closable={false}
+        alertProps={{ color: "primaryColor", icon: <IconBulb size={18} />, variant: "light" }}
+      >
+        {t("tips.multiSelectApps")}
+      </FloatingTip>
+
       {/* Top Search Input */}
       <Stack gap={6}>
         <Input
