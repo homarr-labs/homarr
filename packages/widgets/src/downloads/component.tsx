@@ -793,9 +793,7 @@ export default function DownloadClientsWidget({
               animateOpacity: true,
               transitionTimingFunction: "ease-out",
             },
-            content: ({ record, collapse }) => (
-              <ExpandedRow item={record} collapse={collapse} />
-            ),
+            content: ({ record, collapse }) => <ExpandedRow item={record} collapse={collapse} />,
           }}
           onScroll={() => {
             if (contextMenu) closeContextMenu();
@@ -871,13 +869,7 @@ function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): R
   );
 }
 
-function ExpandedRow({
-  item,
-  collapse,
-}: {
-  item: ExtendedDownloadClientItem;
-  collapse: () => void;
-}) {
+function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; collapse: () => void }) {
   const t = useI18n("widget.downloads");
   const locale = useCurrentIntlLocale();
   const progressPercent = Math.floor(item.progress * 100);

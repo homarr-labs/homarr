@@ -20,8 +20,8 @@ import { IconCheck, IconFolderShare, IconTrash, IconX } from "@tabler/icons-reac
 import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { getBoardLaneColumnCount, getRootSectionLane, getWidgetName } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 import { widgetCatalogIcons } from "@homarr/widgets/catalog";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";
@@ -36,7 +36,7 @@ export const BoardSelectionToolbar = () => {
   const currentLayoutId = useCurrentLayout();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
   const t = useI18n();
-  const tSelection = useScopedI18n("item.selection");
+  const tSelection = useI18n("item.selection");
 
   const selectedItems = board.items.filter((item) => selectedItemIds.has(item.id));
   const hasAppWidgets = selectedItems.some((item) => item.kind === "app");
@@ -64,7 +64,7 @@ export const BoardSelectionToolbar = () => {
       const appId = (item.options as { appId?: string })?.appId;
       const app = appId ? appMap.get(appId) : undefined;
       if (!displayName) {
-        displayName = app?.name || t("widget.app.name");
+        displayName = app?.name || getWidgetName("app", t);
       }
       if (app?.iconUrl) {
         iconUrl = app.iconUrl;
@@ -72,7 +72,7 @@ export const BoardSelectionToolbar = () => {
     }
 
     if (!displayName) {
-      displayName = t(`widget.${item.kind}.name`);
+      displayName = getWidgetName(item.kind, t);
     }
 
     return { displayName, iconUrl, IconComponent, kind: item.kind };

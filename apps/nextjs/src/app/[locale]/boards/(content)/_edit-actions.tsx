@@ -29,10 +29,8 @@ const AddMenu = () => {
   const { openModal: openIntegrationSelectModal } = useModalAction(IntegrationSelectModal);
   const { addContainer } = useContainerActions();
   const { createItem } = useItemActions();
-  const tApp = useI18n("app");
   const tBoard = useI18n("board");
   const tIntegration = useI18n("integration");
-  const tItem = useI18n("item");
   const tContainer = useI18n("section.container");
   const pathname = usePathname();
   const router = useRouter();
@@ -90,10 +88,10 @@ const AddMenu = () => {
       </Menu.Target>
       <Menu.Dropdown style={{ transform: "translate(-3px, 0)" }}>
         <Menu.Item leftSection={<IconResize size={20} />} onClick={handleSelectItem}>
-          {tItem("action.create")}
+          {tBoard("emptyState.addWidget")}
         </Menu.Item>
         <Menu.Item leftSection={<IconBox size={20} />} onClick={handleSelectApp}>
-          {tApp("action.add")}
+          {tBoard("emptyState.addApp")}
         </Menu.Item>
         {session?.user.permissions.includes("integration-create") && (
           <Menu.Item leftSection={<IconPlug size={20} />} onClick={handleAddIntegration}>

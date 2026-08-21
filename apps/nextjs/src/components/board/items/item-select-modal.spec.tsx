@@ -24,7 +24,6 @@ vi.mock("@homarr/translation/client", () => ({
     };
     return translations[key] ?? key;
   },
-  useScopedI18n: () => (key: string) => key,
 }));
 
 vi.mock("@homarr/definitions", async () => {
