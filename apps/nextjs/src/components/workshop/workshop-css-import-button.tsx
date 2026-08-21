@@ -7,7 +7,7 @@ import { IconDownload, IconExternalLink, IconSearch } from "@tabler/icons-react"
 
 import { modalSizeSelect, useConfirmModal } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useWorkshopQuery } from "@homarr/workshop/backend";
 import type { WorkshopSubmissionSummary } from "@homarr/workshop/schema";
 import { validateWorkshopContent } from "@homarr/workshop/schema";
@@ -24,7 +24,7 @@ import { WorkshopVoteControl } from "./workshop-vote-control";
  * board settings themselves are saved, so there is nothing to preview twice.
  */
 export function WorkshopCssImportButton({ onImport }: { onImport(css: string): void }) {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
   const [opened, controls] = useDisclosure(false);
 
   return (
@@ -45,7 +45,7 @@ export function WorkshopCssImportButton({ onImport }: { onImport(css: string): v
 }
 
 function WorkshopCssPicker({ onImport }: { onImport(css: string): void }) {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
   const session = useWorkshopSession();
   const { openConfirmModal } = useConfirmModal();
   const [search, setSearch] = useState("");

@@ -17,6 +17,7 @@ export interface BaseWidgetErrorProps {
 
 export const BaseWidgetError = (props: BaseWidgetErrorProps) => {
   const t = useI18n();
+  const tCommon = useI18n("common");
   const { data: session } = useSession();
   const [errorTimestamp] = useState(Date.now);
 
@@ -33,13 +34,13 @@ export const BaseWidgetError = (props: BaseWidgetErrorProps) => {
             ta="center"
             size="sm"
           >
-            {t("common.action.checkLogs")}
+            {tCommon("action.checkLogs")}
           </Anchor>
         )}
       </Stack>
 
       <Button onClick={props.onRetry} size="sm" variant="light">
-        {t("common.action.tryAgain")}
+        {tCommon("action.tryAgain")}
       </Button>
     </Stack>
   );

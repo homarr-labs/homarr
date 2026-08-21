@@ -8,7 +8,8 @@ import { useI18n } from "@homarr/translation/client";
 import { registerUnsavedChangesGuard } from "./_unsaved-changes-guard";
 
 export function useUnsavedChangesGuard(isDirty: boolean) {
-  const t = useI18n();
+  const tConfirmLeave = useI18n("board.action.edit.confirmLeave");
+  const tCommon = useI18n("common");
   const router = useRouter();
   const { openConfirmModal } = useConfirmModal();
   const dirtyRef = useRef(isDirty);
@@ -16,9 +17,9 @@ export function useUnsavedChangesGuard(isDirty: boolean) {
   dirtyRef.current = isDirty;
   confirmNavigationRef.current = (href) => {
     openConfirmModal({
-      title: t("board.action.edit.confirmLeave.title"),
-      children: t("board.action.edit.confirmLeave.message"),
-      confirmProps: { children: t("common.action.discard") },
+      title: tConfirmLeave("title"),
+      children: tConfirmLeave("message"),
+      confirmProps: { children: tCommon("action.discard") },
       onConfirm: () => router.push(href),
     });
   };

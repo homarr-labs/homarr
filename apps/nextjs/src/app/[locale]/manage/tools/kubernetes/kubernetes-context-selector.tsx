@@ -7,10 +7,11 @@ import { useLocalStorage } from "@mantine/hooks";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 export const KubernetesContextSelector = () => {
-  const t = useScopedI18n("kubernetes.context");
+  const t = useI18n("kubernetes.context");
+  const tCommon = useI18n("common");
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -46,7 +47,7 @@ export const KubernetesContextSelector = () => {
         <Stack gap="sm">
           <Text size="sm">{t("loadError.message")}</Text>
           <Button variant="light" color="red" size="xs" w="fit-content" onClick={() => void refetch()}>
-            {t("loadError.retry")}
+            {tCommon("action.tryAgain")}
           </Button>
         </Stack>
       </Alert>

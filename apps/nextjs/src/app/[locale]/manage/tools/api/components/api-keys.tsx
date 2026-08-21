@@ -9,8 +9,9 @@ import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
 
 import { CopyApiKeyModal } from "~/app/[locale]/manage/tools/api/components/copy-api-key-modal";
@@ -36,7 +37,7 @@ export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
     },
   });
 
-  const t = useScopedI18n("management.page.tool.api.tab.apiKey");
+  const t = useI18n("management.page.tool.api.tab.apiKey");
   const handleDelete = useCallback(
     (id: string) => {
       openConfirmModal({
@@ -55,7 +56,7 @@ export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
     () => [
       {
         accessorKey: "id",
-        header: t("table.header.id"),
+        header: invariantTechnicalLabels.id,
       },
       {
         accessorKey: "user",

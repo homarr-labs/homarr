@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Badge, Card, Center, Group, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconBrandDocker, IconCheck, IconPuzzle } from "@tabler/icons-react";
 
+import { getWidgetName } from "@homarr/definitions";
 import type { IntegrationKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
@@ -109,7 +110,7 @@ export const IntegrationMultiSelectGrid = ({
                         <Stack gap={4}>
                           {integration.widgets.map((widgetKind) => (
                             <Text key={widgetKind} size="xs">
-                              {t(`widget.${widgetKind}.name`)}
+                              {getWidgetName(widgetKind, t)}
                             </Text>
                           ))}
                         </Stack>

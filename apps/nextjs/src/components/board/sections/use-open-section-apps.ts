@@ -80,7 +80,7 @@ export const useOpenSectionApps = (sectionId: string, enabled: boolean) => {
   const currentLayoutId = useCurrentLayout();
   const settings = useSettings();
   const { openConfirmModal } = useConfirmModal();
-  const t = useI18n();
+  const t = useI18n("section");
   const appDefinition = use(loadWidgetDefinition("app"));
   const appIds = useMemo(() => {
     const items: Item[] = getSectionItemsForLayout(board, sectionId, currentLayoutId);
@@ -115,8 +115,8 @@ export const useOpenSectionApps = (sectionId: string, enabled: boolean) => {
       if (openedWindow) continue;
 
       openConfirmModal({
-        title: t("section.openAllInNewTabs.title"),
-        children: t("section.openAllInNewTabs.text"),
+        title: t("openAllInNewTabs.title"),
+        children: t("openAllInNewTabs.text"),
       });
       break;
     }

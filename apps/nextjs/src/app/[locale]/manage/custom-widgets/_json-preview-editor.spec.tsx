@@ -9,7 +9,9 @@ import { JsonPreviewEditor } from "./_json-preview-editor";
 
 const editorProps = vi.hoisted(() => vi.fn());
 
-vi.mock("@homarr/translation/client", () => ({ useScopedI18n: () => (key: string) => key }));
+vi.mock("@homarr/translation/client", () => ({
+  useI18n: (namespace: string) => (key: string) => `${namespace}.${key}`,
+}));
 vi.mock("./_code-editor", () => ({
   CodeEditor: (props: { error?: string; onChange(value: string): void }) => {
     editorProps(props);
@@ -41,6 +43,8 @@ describe("preview JSON editor", () => {
     await act(async () => (host.querySelector("button") as HTMLButtonElement).click());
 
     expect(onChange).toHaveBeenCalledWith({});
-    expect(editorProps).toHaveBeenLastCalledWith(expect.objectContaining({ error: "invalidJson" }));
+    expect(editorProps).toHaveBeenLastCalledWith(
+      expect.objectContaining({ error: "customWidget.workbench.builder.invalidJson" }),
+    );
   });
 });

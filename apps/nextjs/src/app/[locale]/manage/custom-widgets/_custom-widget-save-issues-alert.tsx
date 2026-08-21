@@ -3,12 +3,12 @@
 import { Alert, Button, CopyButton, Text, Textarea } from "@mantine/core";
 import { IconAlertCircle, IconCheck, IconCopy } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
 
 export function CustomWidgetSaveIssuesAlert({ issues }: { issues: CustomWidgetSaveIssue[] }) {
-  const t = useScopedI18n("customWidget.workbench.saveError");
+  const t = useI18n("customWidget.workbench.saveError");
   if (issues.length === 0) return null;
   const value = issues.map((issue) => `${issue.path ? `${issue.path}: ` : ""}${issue.message}`).join("\n");
 

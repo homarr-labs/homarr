@@ -5,7 +5,7 @@ import type { Icon } from "@tabler/icons-react";
 import { Button, Card, Group, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconAlertTriangle, IconCheck, IconPlayerPlay } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import classes from "./_custom-widget-form.module.css";
 
@@ -52,7 +52,8 @@ export function SaveActions({
   mode: "create" | "edit";
   onPreview(): void;
 }) {
-  const t = useScopedI18n("customWidget.workbench");
+  const t = useI18n("customWidget.workbench");
+  const tCommon = useI18n("common");
   return (
     <Group justify="space-between" wrap="wrap">
       <Group gap="xs">
@@ -77,7 +78,7 @@ export function SaveActions({
           {previewPending ? t("action.previewLoading") : t("action.preview")}
         </Button>
         <Button type="submit" loading={savePending} disabled={invalid || previewPending}>
-          {mode === "create" ? t("action.create") : t("action.save")}
+          {mode === "create" ? tCommon("action.create") : tCommon("action.save")}
         </Button>
       </Group>
     </Group>

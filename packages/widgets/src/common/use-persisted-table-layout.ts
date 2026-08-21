@@ -107,7 +107,7 @@ export const parseColumnWidths = (value: string, columnAccessors: readonly strin
   }
 };
 
-export const usePersistedTableLayout = <T>({
+export const usePersistedTableLayout = <T,>({
   columns,
   columnAccessors,
   columnOrder,

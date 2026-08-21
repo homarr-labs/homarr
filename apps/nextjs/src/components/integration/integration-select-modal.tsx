@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Group, ScrollArea, Title, UnstyledButton } from "@mantine/core";
+import { useEffect, useState } from "react";
+import { Alert, Button, Group, ScrollArea, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 import { IconArrowLeft, IconX } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName } from "@homarr/definitions";
 import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
@@ -26,10 +27,30 @@ interface IntegrationSelectModalProps {
 }
 
 export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>(({ actions, innerProps }) => {
-  const t = useI18n();
-  const [step, setStep] = useState<"select" | "form">(innerProps.initialKind ? "form" : "select");
-  const [selectedKind, setSelectedKind] = useState<IntegrationKind | null>(innerProps.initialKind ?? null);
+  const tCommon = useI18n("common");
+  const tIntegration = useI18n("integration");
+  const directKind =
+    innerProps.initialKind ?? (innerProps.allowedKinds?.length === 1 ? innerProps.allowedKinds[0] : null);
+  const isDirectForm = Boolean(directKind);
+  const [step, setStep] = useState<"select" | "form">(isDirectForm ? "form" : "select");
+  const [selectedKind, setSelectedKind] = useState<IntegrationKind | null>(directKind ?? null);
   const { openModal: openCompletionModal } = useModalAction(IntegrationCompletionModal);
+  const { data: integrationData, isError: isIntegrationDataError, refetch } = clientApi.integration.all.useQuery();
+
+  useEffect(() => {
+    if (step === "form" && !isDirectForm) {
+      actions.setCloseInterceptor?.(() => {
+        setStep("select");
+        setSelectedKind(null);
+        return false;
+      });
+    } else {
+      actions.setCloseInterceptor?.(null);
+    }
+    return () => {
+      actions.setCloseInterceptor?.(null);
+    };
+  }, [step, isDirectForm, actions]);
 
   const handleSelect = (kind: IntegrationKind) => {
     setSelectedKind(kind);
@@ -40,7 +61,7 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
     setStep("select");
     setSelectedKind(null);
   };
-  const handleFormBack = innerProps.initialKind ? actions.closeModal : handleBack;
+  const handleFormBack = isDirectForm ? actions.closeModal : handleBack;
 
   const handleSuccess = (result?: CreatedIntegrationResult) => {
     actions.closeModal();
@@ -53,10 +74,10 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
 
   if (step === "form" && selectedKind) {
     let HeaderIcon = IconArrowLeft;
-    let headerLabel = t("common.action.previous");
-    if (innerProps.initialKind) {
+    let headerLabel = tCommon("action.previous");
+    if (isDirectForm) {
       HeaderIcon = IconX;
-      headerLabel = t("common.action.close");
+      headerLabel = tCommon("action.close");
     }
 
     return (
@@ -79,11 +100,25 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
     );
   }
 
+  if (isIntegrationDataError) {
+    return (
+      <Alert color="red" title={tCommon("error")}>
+        <Stack gap="sm">
+          <Text size="sm">{tIntegration("grid.loadError")}</Text>
+          <Button variant="light" color="red" onClick={() => void refetch()}>
+            {tCommon("action.tryAgain")}
+          </Button>
+        </Stack>
+      </Alert>
+    );
+  }
+
   return (
     <IntegrationSelectGrid
       onSelect={handleSelect}
       enableMockIntegration={innerProps.enableMockIntegration}
       allowedKinds={innerProps.allowedKinds}
+      integrationData={integrationData}
     />
   );
 }).withOptions({

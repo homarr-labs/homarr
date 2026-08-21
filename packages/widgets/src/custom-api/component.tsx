@@ -6,7 +6,7 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
@@ -20,8 +20,8 @@ export default function CustomApiWidget({
   isEditMode,
   removeItem,
 }: WidgetComponentProps<"customApi">) {
-  const t = useScopedI18n("widget.customApi");
-  const tCustomJsx = useScopedI18n("widget.customApi.customJsx");
+  const t = useI18n("widget.customApi");
+  const tCustomJsx = useI18n("widget.customApi.customJsx");
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
   const definitionId = options.definitionId;

@@ -2,13 +2,13 @@ import type { ReactNode } from "react";
 import { Center, Group, Loader, Stack, Text } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { interaction } from "../../../../lib/interaction";
 
 export const PreferenceDetailHeader = ({ titleKey }: { titleKey: string }) => {
-  const tOption = useScopedI18n("search.mode.command.group.preferences.option");
-  const t = useScopedI18n("search.mode.command.group.preferences");
+  const tOption = useI18n("search.mode.command.group.preferences.option");
+  const t = useI18n("search.mode.command.group.preferences");
 
   return (
     <Stack mx="md" my="sm" gap="xs">

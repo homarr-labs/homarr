@@ -6,7 +6,7 @@ import type { AssistantRuntime, AttachmentAdapter, ThreadListRuntime, Toolkit } 
 import { AssistantRuntimeProvider, INTERNAL, Tools, useAui, useAuiEvent } from "@assistant-ui/react";
 
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface AssistantRuntimeProviderWithToolsProps extends PropsWithChildren {
   runtime: AssistantRuntime;
@@ -437,7 +437,7 @@ const getClipboardAttachmentName = (file: File, index: number) => {
 };
 
 const AssistantComposerSurfaceEvents = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   useAuiEvent("composer.attachmentAddError", ({ message }) => {
     showErrorNotification({ title: t("attachments.errorTitle"), message });
   });
@@ -445,7 +445,7 @@ const AssistantComposerSurfaceEvents = () => {
 };
 
 export const AssistantComposerSurfaceBoundary = ({ children, surfaceId }: PropsWithChildren<{ surfaceId: string }>) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const aui = useAui();
   const instanceId = useId();
   const resolvedSurfaceId = `${surfaceId}:${instanceId}`;

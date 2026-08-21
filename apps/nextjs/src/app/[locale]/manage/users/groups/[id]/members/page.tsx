@@ -11,7 +11,7 @@ import {
   isGroupMembershipManagedLocally,
 } from "@homarr/auth/server";
 import { everyoneGroup } from "@homarr/definitions";
-import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { Link, SearchInput, UserAvatar } from "@homarr/ui";
 
 import { ReservedGroupAlert } from "../_reserved-group-alert";
@@ -36,8 +36,8 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
     notFound();
   }
 
-  const t = await getI18n();
-  const tMembers = await getScopedI18n("management.page.group.setting.members");
+  const tGroup = await getI18n("group");
+  const tMembers = await getI18n("management.page.group.setting.members");
   const group = await api.group.getById({ id: params.id });
   const isReserved = group.name === everyoneGroup;
 
@@ -60,7 +60,7 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       ) : (
         managementType !== "local" && (
           <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
-            {t(`group.memberNotice.${managementType}`)}
+            {tGroup(`memberNotice.${managementType}`)}
           </Alert>
         )
       )}

@@ -35,7 +35,7 @@ import {
 
 import { capitalize, objectEntries } from "@homarr/common";
 import { hotkeys } from "@homarr/definitions";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -47,7 +47,7 @@ import crowdinContributors from "@static-data/translators.json";
 import classes from "./about.module.css";
 
 export async function generateMetadata() {
-  const t = await getScopedI18n("management");
+  const t = await getI18n("management");
 
   return {
     title: createMetaTitle(t("metaTitle")),
@@ -55,7 +55,7 @@ export async function generateMetadata() {
 }
 
 export default async function AboutPage() {
-  const t = await getScopedI18n("management.page.about");
+  const t = await getI18n("management.page.about");
   const version = getPackageVersion();
   const dependencies = await getDependenciesAsync();
 

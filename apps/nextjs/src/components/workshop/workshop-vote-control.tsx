@@ -4,7 +4,7 @@ import { ActionIcon, Group, Text, Tooltip } from "@mantine/core";
 import { IconArrowBigDown, IconArrowBigDownFilled, IconArrowBigUp, IconArrowBigUpFilled } from "@tabler/icons-react";
 
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { WorkshopBackend } from "@homarr/workshop/backend";
 import { useWorkshopUserVotesQuery, useWorkshopVoteMutation } from "@homarr/workshop/backend";
 
@@ -22,7 +22,7 @@ interface WorkshopVoteControlProps {
  * and clicking it again removes the vote.
  */
 export function WorkshopVoteControl({ client, submissionId, score, canVote, size = "md" }: WorkshopVoteControlProps) {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
   const vote = useWorkshopVoteMutation(client);
   const userVotes = useWorkshopUserVotesQuery(client);
   const ownVote = userVotes.data?.find((entry) => entry.submission === submissionId)?.value ?? null;

@@ -15,13 +15,13 @@ interface DeleteMediaProps {
 
 export const DeleteMedia = ({ media }: DeleteMediaProps) => {
   const { openConfirmModal } = useConfirmModal();
-  const t = useI18n();
+  const t = useI18n("media");
   const { mutateAsync, isPending } = clientApi.media.deleteMedia.useMutation();
 
   const onClick = () => {
     openConfirmModal({
-      title: t("media.action.delete.label"),
-      children: t.rich("media.action.delete.description", { bName: () => <b>{media.name}</b> }),
+      title: t("action.delete.label"),
+      children: t.rich("action.delete.description", { bName: () => <b>{media.name}</b> }),
       // eslint-disable-next-line no-restricted-syntax
       onConfirm: async () => {
         await mutateAsync({ id: media.id });
@@ -31,7 +31,7 @@ export const DeleteMedia = ({ media }: DeleteMediaProps) => {
   };
 
   return (
-    <Tooltip label={t("media.action.delete.label")} openDelay={500}>
+    <Tooltip label={t("action.delete.label")} openDelay={500}>
       <ActionIcon color="red" variant="subtle" onClick={onClick} loading={isPending}>
         <IconTrash color="red" size={16} stroke={1.5} />
       </ActionIcon>

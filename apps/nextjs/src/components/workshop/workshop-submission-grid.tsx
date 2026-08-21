@@ -6,7 +6,7 @@ import type { StyleProp } from "@mantine/core";
 import { IconAlertTriangle, IconRefresh } from "@tabler/icons-react";
 import type { UseQueryResult } from "@tanstack/react-query";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { WorkshopBackend, WorkshopPage } from "@homarr/workshop/backend";
 import type { WorkshopSubmissionSummary } from "@homarr/workshop/schema";
 
@@ -33,7 +33,8 @@ export function WorkshopSubmissionGrid({
   cols = { base: 1, sm: 2, lg: 3 },
   renderActions,
 }: WorkshopSubmissionGridProps) {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
+  const tCommon = useI18n("common");
 
   if (query.isLoading) {
     return (
@@ -57,7 +58,7 @@ export function WorkshopSubmissionGrid({
             loading={query.isFetching}
             onClick={() => void query.refetch()}
           >
-            {t("retry")}
+            {tCommon("action.tryAgain")}
           </Button>
         </Stack>
       </Alert>

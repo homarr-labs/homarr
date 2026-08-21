@@ -3,12 +3,12 @@
 import { Alert, Anchor, Text } from "@mantine/core";
 import { IconFlask } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 const FEEDBACK_URL = "https://github.com/homarr-labs/homarr/discussions/categories/custom-widgets";
 
 export function CustomWidgetBetaBanner() {
-  const t = useScopedI18n("customWidget.betaBanner");
+  const t = useI18n("customWidget.betaBanner");
 
   return (
     <Alert variant="light" color="yellow" title={t("title")} icon={<IconFlask />}>

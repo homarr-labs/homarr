@@ -26,11 +26,12 @@ export function QueuePanel(props: QueuePanelProps) {
   const { queue } = props;
 
   const t = useI18n("widget.mediaTranscoding.panel.queue");
+  const tCommon = useI18n("widget.mediaTranscoding.panel.common");
 
   if (queue.array.length === 0) {
     return (
       <Center style={{ flex: "1" }}>
-        <Title order={6}>{t("empty")}</Title>
+        <Title order={6}>{tCommon("empty")}</Title>
       </Center>
     );
   }
@@ -42,7 +43,7 @@ export function QueuePanel(props: QueuePanelProps) {
           <TableTr>
             <TableTh ta="start" py={4}>
               <Text size="xs" fw="bold">
-                {t("table.file")}
+                {tCommon("file")}
               </Text>
             </TableTh>
             <TableTh ta="start" py={4}>
@@ -58,11 +59,11 @@ export function QueuePanel(props: QueuePanelProps) {
               <TableTd py={2}>
                 <Group gap={4} wrap="nowrap">
                   {item.type === "transcode" ? (
-                    <Tooltip label={t("table.transcode")}>
+                    <Tooltip label={tCommon("transcode")}>
                       <IconTransform size="var(--mantine-font-size-xs)" style={{ flexShrink: 0 }} />
                     </Tooltip>
                   ) : (
-                    <Tooltip label={t("table.healthCheck")}>
+                    <Tooltip label={tCommon("healthCheck")}>
                       <IconHeartbeat size="var(--mantine-font-size-xs)" style={{ flexShrink: 0 }} />
                     </Tooltip>
                   )}

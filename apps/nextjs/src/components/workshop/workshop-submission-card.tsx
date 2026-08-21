@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { Badge, Box, Card, Group, Image, Stack, Text, Tooltip } from "@mantine/core";
 import { IconAlertTriangle, IconFlag, IconPhoto } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { WorkshopBackend } from "@homarr/workshop/backend";
 import type { WorkshopSubmissionSummary } from "@homarr/workshop/schema";
 
@@ -19,7 +19,7 @@ interface WorkshopSubmissionCardProps {
 }
 
 export function WorkshopSubmissionCard({ client, item, actions }: WorkshopSubmissionCardProps) {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
   const screenshot = item.screenshots[0];
 
   return (

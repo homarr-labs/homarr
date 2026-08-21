@@ -24,7 +24,7 @@ import dayjs from "dayjs";
 
 import { createId } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { formatWallDateTime, resolveWallDateTimeString } from "../countdown/recurrence";
 import type { DateTimeEventRecurrence, OptionDateTimeEvent } from "../options";
@@ -314,4 +314,4 @@ type EventListTranslationKey =
 type EventListTranslation = (key: EventListTranslationKey, values?: Record<string, string | number>) => string;
 
 const useEventListTranslation = (kind: WidgetKind) =>
-  useScopedI18n(`widget.${kind}.dateTimeEventList` as never) as unknown as EventListTranslation;
+  useI18n(`widget.${kind}.dateTimeEventList` as never) as unknown as EventListTranslation;

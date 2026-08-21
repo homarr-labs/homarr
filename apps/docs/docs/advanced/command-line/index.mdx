@@ -25,3 +25,27 @@ You should also create a backup of the database, in case you break something.
 4. Click "Execute" in the top right of the Window. ![](img/334116411-df1482f9-3aa9-4686-b77f-e0dca09e60b2.png)
 5. Select /bin/bash and click Execute ![](img/334116518-e1ddb515-99c7-4159-81bf-76e889d1e808.png)
 6. Run the Homarr command and press enter (eg. homarr reset-owner-password) ![](img/334116642-08c4f204-5cd0-4e4e-a785-0142e1b279ca.png)
+
+## Build a local branch harness
+
+The host-side operations CLI can build the current checkout and run it as a named, browser-ready Docker harness. This is separate from the recovery CLI described above and does not open the interactive developer TUI.
+
+```sh
+pnpm cli harness setup feature-board
+```
+
+The command builds `homarr:feature-board`, starts a container with a persistent data volume, enables demo mode, and keeps demo mutations writable (`DEMO_READ_ONLY=false`). Docker assigns a free host port by default; use the URL printed by the command or query it later:
+
+```sh
+pnpm cli harness port feature-board
+```
+
+Pass environment overrides by repeating `--env`:
+
+```sh
+pnpm cli harness setup feature-board \
+  --env WORKSHOP_WEB_URL=https://example.test \
+  --env FEATURE_FLAG=true
+```
+
+Other commands are `harness build <name>`, `harness run <name>`, and `harness stop <name>`. Use the returned URL with a browser automation harness for feature validation; do not assume the host port is `7575`.

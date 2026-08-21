@@ -77,7 +77,8 @@ const TourDoneButton = ({ label, onClick }: TourDoneButtonProps) => {
 };
 
 export const TourShell = ({ steps, started, onEnd, stepRoutes, position, children }: TourShellProps) => {
-  const t = useI18n();
+  const tCommon = useI18n("common.action");
+  const tTour = useI18n("onboardingTour");
   const router = useRouter();
   const forwardActionRef = useRef<(() => void) | null>(null);
 
@@ -154,11 +155,11 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
         const action = bindForwardAction(controller, () => {
           navigateAndAdvance(controller.currentStep?.id, nextStep?.id, () => controller.nextStep());
         });
-        return <TourForwardButton label={t("onboardingTour.next")} onClick={action} />;
+        return <TourForwardButton label={tCommon("next")} onClick={action} />;
       }}
       endStepNavigation={(controller) => {
         const action = bindForwardAction(controller, () => controller.endTour());
-        return <TourDoneButton label={t("onboardingTour.done")} onClick={action} />;
+        return <TourDoneButton label={tTour("done")} onClick={action} />;
       }}
       prevStepNavigation={(controller) => (
         <Button
@@ -169,12 +170,12 @@ export const TourShell = ({ steps, started, onEnd, stepRoutes, position, childre
             navigateAndAdvance(controller.currentStep?.id, prevStep?.id, () => controller.prevStep());
           }}
         >
-          {t("onboardingTour.prev")}
+          {tTour("prev")}
         </Button>
       )}
       skipNavigation={(controller) => (
         <Button size="sm" variant="subtle" color="gray" onClick={() => controller.skipTour()}>
-          {t("onboardingTour.skip")}
+          {tTour("skip")}
         </Button>
       )}
       withPrevButton

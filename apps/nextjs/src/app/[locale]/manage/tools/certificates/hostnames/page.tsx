@@ -30,7 +30,7 @@ export default async function TrustedHostnamesPage() {
     notFound();
   }
 
-  const t = await getI18n();
+  const t = await getI18n("certificate");
 
   const trustedHostnames = await getTrustedCertificateHostnamesAsync().then((hostnames) => {
     return hostnames.map((hostname) => {
@@ -54,26 +54,26 @@ export default async function TrustedHostnamesPage() {
       <Stack>
         <Group justify="space-between">
           <Stack gap={4}>
-            <Title>{t("certificate.page.hostnames.title")}</Title>
-            <Text>{t("certificate.page.hostnames.description")}</Text>
+            <Title>{t("page.hostnames.title")}</Title>
+            <Text>{t("page.hostnames.description")}</Text>
           </Stack>
 
           <Button variant="default" component={Link} href="/manage/tools/certificates">
-            {t("certificate.page.hostnames.toCertificates")}
+            {t("page.hostnames.toCertificates")}
           </Button>
         </Group>
 
         {trustedHostnames.length === 0 && (
-          <NoResults icon={IconCertificateOff} title={t("certificate.page.hostnames.noResults.title")} />
+          <NoResults icon={IconCertificateOff} title={t("page.hostnames.noResults.title")} />
         )}
 
         {trustedHostnames.length >= 1 && (
           <Table>
             <TableThead>
               <TableTr>
-                <TableTh>{t("certificate.field.hostname.label")}</TableTh>
-                <TableTh>{t("certificate.field.subject.label")}</TableTh>
-                <TableTh>{t("certificate.field.fingerprint.label")}</TableTh>
+                <TableTh>{t("field.hostname.label")}</TableTh>
+                <TableTh>{t("field.subject.label")}</TableTh>
+                <TableTh>{t("field.fingerprint.label")}</TableTh>
                 <TableTh></TableTh>
               </TableTr>
             </TableThead>

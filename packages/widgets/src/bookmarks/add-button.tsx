@@ -6,7 +6,7 @@ import { IconCheck } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { SortableItemListInput } from "../options";
 
@@ -17,9 +17,9 @@ export const BookmarkAddButton: SortableItemListInput<SelectableApp, string>["Ad
   removeItem,
   values,
 }) => {
-  const t = useScopedI18n("widget.bookmarks.option.items.apps");
-  const tCommon = useScopedI18n("common");
-  const tSelect = useScopedI18n("app.action.select");
+  const t = useI18n("widget.bookmarks.option.items.apps");
+  const tCommon = useI18n("common");
+  const tSelect = useI18n("app.action.select");
   const { data: apps = [], isPending, error } = clientApi.app.selectable.useQuery();
   const appsById = new Map(apps.map((app) => [app.id, app]));
 

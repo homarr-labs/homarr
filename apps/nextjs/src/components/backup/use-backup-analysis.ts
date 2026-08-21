@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useTiks } from "@rexa-developer/tiks/react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { BackupAnalysis, MigrationFile, MigrationStatus } from "./types";
 import { PREVIEW_TABLE_KEYS } from "./types";
@@ -60,7 +60,7 @@ export interface MigrationProgress {
 }
 
 export const useBackupAnalysis = () => {
-  const t = useScopedI18n("management.page.tool.backup.restore");
+  const t = useI18n("management.page.tool.backup.restore");
   const sounds = useTiks({ theme: "soft", volume: 0.12, respectReducedMotion: true });
   const [analysis, setAnalysis] = useState<BackupAnalysis | null>(null);
   const [loading, setLoading] = useState(false);

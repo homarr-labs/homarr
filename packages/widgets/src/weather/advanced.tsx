@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { IconDroplets, IconMapPin, IconSunHigh, IconSunrise, IconSunset, IconWind } from "@tabler/icons-react";
 
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetProps } from "../definition";
 import { AnimatedWeatherIcon } from "./animated-icon";
@@ -97,8 +97,8 @@ export const AdvancedWeather = ({ height, options, weather, width }: AdvancedWea
   const headingId = useId();
   const chartId = useId();
   const locale = useCurrentIntlLocale();
-  const t = useScopedI18n("widget.weather");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.weather");
+  const tCommon = useI18n("common");
   const layout = getAdvancedWeatherLayout(width, height);
   const today = weather.daily[0];
   const observedAt = Date.parse(weather.current.observedAt);
@@ -402,7 +402,7 @@ const HourlyWeatherTable = ({
   timeZone,
   useImperialSpeed,
 }: HourlyDetailProps & { hourly: HourlyChartRow[] }) => {
-  const t = useScopedI18n("widget.weather");
+  const t = useI18n("widget.weather");
   return (
     <table>
       <caption>{t("advanced.hourlyForecast")}</caption>

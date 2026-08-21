@@ -3,14 +3,14 @@
 import { Select, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
 export const WidgetUmamiWebsiteInput = ({ property, kind }: CommonWidgetInputProps<"umamiWebsite">) => {
-  const t = useScopedI18n("widget.umami.option.websiteId");
+  const t = useI18n("widget.umami.option.websiteId");
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 

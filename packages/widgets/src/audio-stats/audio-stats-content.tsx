@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 import { Text } from "@mantine/core";
 
 import type { AudiobookshelfDashboardData, NavidromeDashboardData } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
 import type { AudioStatsBackend, AudioStatsDisplayOptions } from "./shared";
@@ -49,7 +49,7 @@ export function AudioStatsContent({
   width,
   height,
 }: AudioStatsContentProps) {
-  const t = useScopedI18n(AUDIO_STATS_TRANSLATION_SCOPE);
+  const t = useI18n(AUDIO_STATS_TRANSLATION_SCOPE);
   const compact = options.compactMode ?? false;
   const enabledStats = prioritizeVisibleStats(getVisibleStats(backend, options, stats, showAllStats), compact);
   const visibleStats = enabledStats.slice(0, getVisibleStatLimit(width, height, enabledStats.length, compact));

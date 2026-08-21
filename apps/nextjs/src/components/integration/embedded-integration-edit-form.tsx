@@ -20,7 +20,8 @@ export const EmbeddedIntegrationEditForm = ({
   handleRef,
   onSuccess,
 }: EmbeddedIntegrationEditFormProps) => {
-  const t = useI18n();
+  const tItem = useI18n("item.edit.integration");
+  const tCommon = useI18n("common");
   const integrationFormRef = useRef<EditIntegrationFormHandle>(null);
   const {
     data: integration,
@@ -47,7 +48,7 @@ export const EmbeddedIntegrationEditForm = ({
 
   if (isPending) {
     return (
-      <Stack gap="sm" aria-busy="true" aria-label={t("item.edit.integration.loading")}>
+      <Stack gap="sm" aria-busy="true" aria-label={tItem("loading")}>
         <Skeleton height={36} width="60%" />
         <Skeleton height={60} />
         <Skeleton height={120} />
@@ -57,11 +58,11 @@ export const EmbeddedIntegrationEditForm = ({
 
   if (isError || !integration) {
     return (
-      <Alert color="red" title={t("common.error")}>
+      <Alert color="red" title={tCommon("error")}>
         <Stack gap="sm">
-          <Text size="sm">{t("item.edit.integration.loadError")}</Text>
+          <Text size="sm">{tItem("loadError")}</Text>
           <Button variant="light" color="red" onClick={() => void refetch()}>
-            {t("common.action.tryAgain")}
+            {tCommon("action.tryAgain")}
           </Button>
         </Stack>
       </Alert>
@@ -82,7 +83,7 @@ export const EmbeddedIntegrationEditForm = ({
         </Stack>
       </Group>
       <Alert icon={<IconInfoCircle size={16} />} color="blue" variant="light">
-        {t("item.edit.integration.propagationNotice")}
+        {tItem("propagationNotice")}
       </Alert>
       <EditIntegrationForm integration={integration} hideButtons formRef={integrationFormRef} onSuccess={onSuccess} />
     </Stack>

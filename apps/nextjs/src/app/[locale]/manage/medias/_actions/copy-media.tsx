@@ -11,7 +11,7 @@ interface CopyMediaProps {
 }
 
 export const CopyMedia = ({ media }: CopyMediaProps) => {
-  const t = useI18n();
+  const t = useI18n("media");
 
   const url = typeof window !== "undefined" ? `${window.location.origin}/api/user-medias/${media.id}` : "";
 
@@ -23,7 +23,7 @@ export const CopyMedia = ({ media }: CopyMediaProps) => {
   return (
     <CopyButton value={url}>
       {({ copy, copied }) => (
-        <Tooltip label={t("media.action.copy.label")} openDelay={500}>
+        <Tooltip label={t("action.copy.label")} openDelay={500}>
           <ActionIcon onClick={copy} color={copied ? "teal" : "gray"} variant="subtle">
             {copied ? <IconCheck size={16} stroke={1.5} /> : <IconCopy size={16} stroke={1.5} />}
           </ActionIcon>

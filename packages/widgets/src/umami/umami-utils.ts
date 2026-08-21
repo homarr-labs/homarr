@@ -1,4 +1,4 @@
-import type { useScopedI18n } from "@homarr/translation/client";
+import type { useI18n } from "@homarr/translation/client";
 
 import { timeFrameValues } from "./index";
 
@@ -24,10 +24,7 @@ export function formatXLabel(timestamp: string, timeFrame: string, locale: strin
 
 export type TimeFrame = (typeof timeFrameValues)[number];
 
-export function formatTimeFrameLabel(
-  timeFrame: TimeFrame,
-  t: ReturnType<typeof useScopedI18n<"widget.umami">>,
-): string {
+export function formatTimeFrameLabel(timeFrame: TimeFrame, t: ReturnType<typeof useI18n<"widget.umami">>): string {
   if (timeFrameValues.includes(timeFrame)) {
     return t(`option.timeFrame.option.${timeFrame}`);
   }

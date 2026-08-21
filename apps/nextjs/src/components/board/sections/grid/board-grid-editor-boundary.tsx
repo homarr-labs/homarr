@@ -2,13 +2,16 @@
 
 import type { ComponentType, PropsWithChildren } from "react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
 
-import { loadGridEditorAsync } from "./grid-editor-loader";
+import { getLoadedGridEditorModule, loadGridEditorAsync } from "./grid-editor-loader";
+import { GridEditorRegistryProvider, useRegisteredGridEditors } from "./grid-editor-registry";
 import { GridEditorRuntimeProvider } from "./grid-editor-runtime";
 
 type BoardGridEditorProviderComponent = ComponentType<PropsWithChildren>;
+type LoadedGridEditorModule = Awaited<ReturnType<typeof loadGridEditorAsync>>;
 
 /**
  * Keeps the dnd-kit runtime outside the read-only bundle while guaranteeing
@@ -16,17 +19,20 @@ type BoardGridEditorProviderComponent = ComponentType<PropsWithChildren>;
  */
 export const BoardGridEditorBoundary = ({ children }: PropsWithChildren) => {
   const [isEditMode] = useEditMode();
-  const [Provider, setProvider] = useState<BoardGridEditorProviderComponent | null>(null);
+  const [EditorModule, setEditorModule] = useState<LoadedGridEditorModule | null>(
+    getLoadedGridEditorModule() ?? null,
+  );
   const [hasLoadError, setHasLoadError] = useState(false);
+  const resolvedEditorModule = EditorModule ?? getLoadedGridEditorModule() ?? null;
 
   useEffect(() => {
-    if (!isEditMode || Provider) return;
+    if (!isEditMode || resolvedEditorModule) return;
 
     let cancelled = false;
     setHasLoadError(false);
     void loadGridEditorAsync()
       .then((module) => {
-        if (!cancelled) setProvider(() => module.BoardGridEditorProvider);
+        if (!cancelled) setEditorModule(module);
       })
       .catch(() => {
         if (!cancelled) setHasLoadError(true);
@@ -35,23 +41,34 @@ export const BoardGridEditorBoundary = ({ children }: PropsWithChildren) => {
     return () => {
       cancelled = true;
     };
-  }, [Provider, isEditMode]);
+  }, [isEditMode, resolvedEditorModule]);
 
-  if (!isEditMode) {
-    return <GridEditorRuntimeProvider status="idle">{children}</GridEditorRuntimeProvider>;
-  }
-
-  if (hasLoadError) {
-    return <GridEditorRuntimeProvider status="error">{children}</GridEditorRuntimeProvider>;
-  }
-
-  if (!Provider) {
-    return <GridEditorRuntimeProvider status="loading">{children}</GridEditorRuntimeProvider>;
-  }
+  const runtimeStatus = !isEditMode
+    ? "idle"
+    : hasLoadError
+      ? "error"
+      : resolvedEditorModule
+        ? "ready"
+        : "loading";
+  const Provider: BoardGridEditorProviderComponent | null = resolvedEditorModule?.BoardGridEditorProvider ?? null;
+  const GridEditor = resolvedEditorModule?.default ?? null;
 
   return (
-    <GridEditorRuntimeProvider status="ready">
-      <Provider>{children}</Provider>
-    </GridEditorRuntimeProvider>
+    <GridEditorRegistryProvider>
+      <GridEditorRuntimeProvider status={runtimeStatus}>{children}</GridEditorRuntimeProvider>
+      {isEditMode && Provider && GridEditor && (
+        <Provider>
+          <RegisteredGridEditors GridEditor={GridEditor} />
+        </Provider>
+      )}
+    </GridEditorRegistryProvider>
+  );
+};
+
+const RegisteredGridEditors = ({ GridEditor }: { GridEditor: LoadedGridEditorModule["default"] }) => {
+  const editors = useRegisteredGridEditors();
+
+  return Array.from(editors.values(), ({ host, disabled, ...props }) =>
+    disabled ? null : createPortal(<GridEditor {...props} />, host, props.sectionId),
   );
 };

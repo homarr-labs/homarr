@@ -5,7 +5,7 @@ import { IconExternalLink } from "@tabler/icons-react";
 
 import { createDocumentationLink } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { SectionCard } from "~/components/manage/section-card";
 import type { FormValues } from "./settings-form";
@@ -16,7 +16,7 @@ interface AnalyticsSettingsProps {
 }
 
 export const AnalyticsSettings = ({ form }: AnalyticsSettingsProps) => {
-  const t = useScopedI18n("management.page.settings.section");
+  const t = useI18n("management.page.settings.section");
 
   return (
     <SectionCard title={t("analytics.title")}>

@@ -10,9 +10,6 @@ declare module "next-intl" {
   }
 }
 
-export const { getI18n, getScopedI18n } = {
-  getI18n: getTranslations,
-  getScopedI18n: getTranslations,
-};
+export const getI18n = getTranslations;
 
 export { getMessages as getI18nMessages } from "next-intl/server";

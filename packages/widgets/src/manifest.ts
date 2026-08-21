@@ -24,7 +24,6 @@ export type WidgetResources = {
 const moduleLoaders: Record<WidgetKind, () => Promise<WidgetModule>> = {
   clock: () => import("./clock") as Promise<WidgetModule>,
   weather: () => import("./weather") as Promise<WidgetModule>,
-  today: () => import("./today") as Promise<WidgetModule>,
   airQuality: () => import("./air-quality") as Promise<WidgetModule>,
   countdown: () => import("./countdown") as Promise<WidgetModule>,
   timer: () => import("./timer") as Promise<WidgetModule>,
@@ -89,7 +88,6 @@ const moduleLoaders: Record<WidgetKind, () => Promise<WidgetModule>> = {
 const componentLoaders: Record<WidgetKind, () => Promise<WidgetComponentModule>> = {
   clock: () => import("./clock/component") as Promise<WidgetComponentModule>,
   weather: () => import("./weather/component") as Promise<WidgetComponentModule>,
-  today: () => import("./today/component") as Promise<WidgetComponentModule>,
   airQuality: () => import("./air-quality/component") as Promise<WidgetComponentModule>,
   countdown: () => import("./countdown/component") as Promise<WidgetComponentModule>,
   timer: () => import("./timer/component") as Promise<WidgetComponentModule>,

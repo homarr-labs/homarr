@@ -2,13 +2,13 @@ import { notFound } from "next/navigation";
 import { Text } from "@mantine/core";
 
 import { auth } from "@homarr/auth/next";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { AssistantConfiguration } from "./_components/assistant-configuration";
 
 export async function generateMetadata() {
-  const t = await getScopedI18n("management.page.settings.section.assistant");
+  const t = await getI18n("management.page.settings.section.assistant");
   return {
     title: `${t("title")} • Homarr`,
   };
@@ -21,7 +21,7 @@ export default async function AssistantPage() {
     notFound();
   }
 
-  const t = await getScopedI18n("management.page.settings.section.assistant");
+  const t = await getI18n("management.page.settings.section.assistant");
   return (
     <ManagePageLayout title={t("title")}>
       <Text c="dimmed" maw="70ch">

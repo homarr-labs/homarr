@@ -3,14 +3,21 @@ import { IconSettings } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
 import { colorSchemes } from "@homarr/definitions";
+import type { UserPreferenceKey } from "@homarr/settings";
 import { visiblePreferenceDefinitions } from "@homarr/settings";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { createGroup } from "../../lib/group";
-import { preferenceChildrenOptionsByKey, preferenceIcons } from "../../preferences/preference-registry";
+import {
+  preferenceChildrenOptionsByKey,
+  preferenceIcons,
+  userFieldPreferenceLabels,
+} from "../../preferences/preference-registry";
 import { settingsChildrenOptions } from "../command/children/preferences/settings-children";
 
-type PreferencesGroupOption = { key: "settings"; preferenceKey: null } | { key: string; preferenceKey: string };
+type PreferencesGroupOption =
+  | { key: "settings"; preferenceKey: null }
+  | { key: UserPreferenceKey; preferenceKey: UserPreferenceKey };
 
 const settingsOption: PreferencesGroupOption = { key: "settings", preferenceKey: null };
 
@@ -19,7 +26,8 @@ export const preferencesGroup = createGroup<PreferencesGroupOption>({
   title: (t) => t("search.mode.command.group.preferences.title"),
   useOptions(query) {
     const t = useI18n();
-    const tColorScheme = useScopedI18n("common.colorScheme.options");
+    const tColorScheme = useI18n("common.colorScheme.options");
+    const tUserField = useI18n("user.field");
     const { data: session } = useSession();
     const definitions = visiblePreferenceDefinitions(Boolean(session?.user));
     const q = query.trim().toLowerCase();
@@ -28,7 +36,10 @@ export const preferencesGroup = createGroup<PreferencesGroupOption>({
 
     const matching = definitions.flatMap((def): PreferencesGroupOption[] => {
       if (!preferenceChildrenOptionsByKey[def.key]) return [];
-      const label = t(`search.mode.command.group.preferences.option.${def.key}.label` as never);
+      const userFieldKey = userFieldPreferenceLabels[def.key];
+      const label = userFieldKey
+        ? tUserField(`${userFieldKey}.label` as never)
+        : t(`search.mode.command.group.preferences.option.${def.key}.label` as never);
       const searchValues = [
         label,
         ...def.aliases,
@@ -47,12 +58,19 @@ export const preferencesGroup = createGroup<PreferencesGroupOption>({
     return allSearchValues.some((v) => v.toLowerCase().includes(q)) ? [settingsOption] : [];
   },
   Component: (option) => {
-    const t = useScopedI18n("search.mode.command.group.preferences");
-    const tOption = useScopedI18n("search.mode.command.group.preferences.option");
+    const t = useI18n("search.mode.command.group.preferences");
+    const tOption = useI18n("search.mode.command.group.preferences.option");
+    const tUserField = useI18n("user.field");
     const Icon = option.preferenceKey
       ? preferenceIcons[option.preferenceKey as keyof typeof preferenceIcons]
       : IconSettings;
-    const label = option.preferenceKey ? tOption(`${option.preferenceKey}.label` as never) : t("title");
+    let label = t("title");
+    if (option.preferenceKey) {
+      const userFieldKey = userFieldPreferenceLabels[option.preferenceKey];
+      label = userFieldKey
+        ? tUserField(`${userFieldKey}.label` as never)
+        : tOption(`${option.preferenceKey}.label` as never);
+    }
 
     return (
       <Group px="md" py="sm" wrap="nowrap" gap="sm">

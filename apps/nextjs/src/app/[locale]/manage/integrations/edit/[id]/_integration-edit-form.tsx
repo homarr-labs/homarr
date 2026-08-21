@@ -10,7 +10,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { getAllSecretKindOptions, getDefaultSecretKinds } from "@homarr/definitions";
+import { getAllSecretKindOptions, getDefaultSecretKinds, invariantTechnicalLabels } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
@@ -56,7 +56,8 @@ export const EditIntegrationForm = ({
   onSuccess,
   formRef,
 }: EditIntegrationFormProps) => {
-  const t = useI18n();
+  const tCommon = useI18n("common");
+  const tIntegration = useI18n("integration");
   const { openConfirmModal } = useConfirmModal();
   const allSecretKinds = getAllSecretKindOptions(integration.kind);
 
@@ -83,8 +84,8 @@ export const EditIntegrationForm = ({
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation({
     onError() {
       showErrorNotification({
-        title: t("integration.page.edit.notification.error.title"),
-        message: t("integration.page.edit.notification.error.message"),
+        title: tCommon("notification.update.error"),
+        message: tIntegration("page.edit.notification.error.message"),
       });
     },
   });
@@ -103,8 +104,8 @@ export const EditIntegrationForm = ({
           : values.url;
       } catch {
         showErrorNotification({
-          title: t("integration.page.edit.notification.error.title"),
-          message: t("integration.page.edit.notification.error.message"),
+          title: tCommon("notification.update.error"),
+          message: tIntegration("page.edit.notification.error.message"),
         });
         return false;
       }
@@ -124,16 +125,16 @@ export const EditIntegrationForm = ({
       if (data?.error) {
         setError(data.error);
         showErrorNotification({
-          title: t("integration.page.edit.notification.error.title"),
-          message: t("integration.page.edit.notification.error.message"),
+          title: tCommon("notification.update.error"),
+          message: tIntegration("page.edit.notification.error.message"),
         });
         requestAnimationFrame(() => errorRef.current?.focus());
         return false;
       }
 
       showSuccessNotification({
-        title: t("integration.page.edit.notification.success.title"),
-        message: t("integration.page.edit.notification.success.message"),
+        title: tCommon("notification.update.success"),
+        message: tIntegration("page.edit.notification.success.message"),
       });
       void Promise.allSettled([utils.integration.invalidate(), utils.widget.invalidate()]);
       onSuccess?.();
@@ -142,7 +143,18 @@ export const EditIntegrationForm = ({
       }
       return true;
     },
-    [hasUrlSecret, hideButtons, integration.id, mutateAsync, onSuccess, router, t, utils.integration, utils.widget],
+    [
+      hasUrlSecret,
+      hideButtons,
+      integration.id,
+      mutateAsync,
+      onSuccess,
+      router,
+      tCommon,
+      tIntegration,
+      utils.integration,
+      utils.widget,
+    ],
   );
 
   useImperativeHandle(
@@ -172,13 +184,13 @@ export const EditIntegrationForm = ({
 
   const formFields = (
     <Stack>
-      <TextInput withAsterisk label={t("integration.field.name.label")} {...form.getInputProps("name")} />
+      <TextInput withAsterisk label={tCommon("field.name")} {...form.getInputProps("name")} />
 
       {hasUrlSecret ? null : (
-        <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
+        <TextInput withAsterisk label={invariantTechnicalLabels.url} {...form.getInputProps("url")} />
       )}
 
-      <Fieldset legend={t("integration.secrets.title")}>
+      <Fieldset legend={tIntegration("secrets.title")}>
         <Stack gap="sm">
           {allSecretKinds.length > 1 && (
             <SecretKindsSegmentedControl defaultKinds={initialSecretsKinds} secretKinds={allSecretKinds} form={form} />
@@ -196,8 +208,8 @@ export const EditIntegrationForm = ({
                         return resolve(true);
                       }
                       openConfirmModal({
-                        title: t("integration.secrets.reset.title"),
-                        children: t("integration.secrets.reset.message"),
+                        title: tIntegration("secrets.reset.title"),
+                        children: tIntegration("secrets.reset.message"),
                         onCancel: () => resolve(false),
                         onConfirm: () => {
                           form.setFieldValue(`secrets.${index}.value`, secretsMap.get(secret.kind)?.value ?? "");
@@ -208,7 +220,7 @@ export const EditIntegrationForm = ({
                   }
                 >
                   <IntegrationSecretInput
-                    label={t(`integration.secrets.kind.${secret.kind}.newLabel`)}
+                    label={tIntegration(`secrets.kind.${secret.kind}.newLabel` as never)}
                     key={secret.kind}
                     kind={secret.kind}
                     {...form.getInputProps(`secrets.${index}.value`)}
@@ -227,7 +239,7 @@ export const EditIntegrationForm = ({
               ))}
           {form.values.secrets.length === 0 && (
             <Alert icon={<IconInfoCircle size={"1rem"} />} color={"blue"}>
-              <Text c={"blue"}>{t("integration.secrets.noSecretsRequired.text")}</Text>
+              <Text c={"blue"}>{tIntegration("secrets.noSecretsRequired.text")}</Text>
             </Alert>
           )}
         </Stack>
@@ -244,10 +256,10 @@ export const EditIntegrationForm = ({
       {!hideButtons && (
         <Group justify="end" align="center">
           <Button variant="default" component={Link} href="/manage/integrations">
-            {t("common.action.backToOverview")}
+            {tCommon("action.backToOverview")}
           </Button>
           <Button type="submit" loading={isPending}>
-            {t("integration.testConnection.action.edit")}
+            {tIntegration("testConnection.action.edit")}
           </Button>
         </Group>
       )}
@@ -270,7 +282,8 @@ interface IntegrationAppSelectProps {
 
 const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
   const { openModal } = useModalAction(AppSelectModal);
-  const t = useI18n();
+  const tIntegration = useI18n("integration");
+  const tCommon = useI18n("common");
   const { data: session } = useSession();
   const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
 
@@ -281,7 +294,7 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
         withCreate: canCreateApps,
       },
       {
-        title: t("integration.page.edit.app.action.select"),
+        title: tIntegration("page.edit.app.action.select"),
       },
     );
 
@@ -294,13 +307,13 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
         fullWidth
         onClick={handleChange}
       >
-        {t("integration.page.edit.app.action.add")}
+        {tIntegration("page.edit.app.action.add")}
       </Button>
     );
   }
 
   return (
-    <Fieldset legend={t("integration.field.app.sectionTitle")}>
+    <Fieldset legend={tIntegration("field.app.sectionTitle")}>
       <Group justify="space-between">
         <Group gap="sm">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -323,7 +336,7 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
             leftSection={<IconUnlink size={16} stroke={1.5} />}
             onClick={() => onChange(null)}
           >
-            {t("integration.page.edit.app.action.remove")}
+            {tIntegration("page.edit.app.action.remove")}
           </Button>
           <Button
             variant="subtle"
@@ -331,7 +344,7 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
             leftSection={<IconPencil size={16} stroke={1.5} />}
             onClick={handleChange}
           >
-            {t("common.action.change")}
+            {tCommon("action.change")}
           </Button>
         </ButtonGroup>
       </Group>

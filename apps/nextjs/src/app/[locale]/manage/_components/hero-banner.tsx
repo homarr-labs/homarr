@@ -1,12 +1,12 @@
 import { Box, Group, Image, Stack, Title } from "@mantine/core";
 
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { IntegrationMarquee } from "@homarr/ui";
 
 import classes from "./hero-banner.module.css";
 
 export const HeroBanner = async () => {
-  const t = await getScopedI18n("management.page.home");
+  const t = await getI18n("management.page.home");
 
   return (
     <Box className={classes.bannerContainer} p={{ base: "lg", md: "3rem" }} bg="dark.6" pos="relative">

@@ -23,7 +23,8 @@ export default function AudioStatsWidget({
   displayMode = "compact",
   widgetRuntimeRef,
 }: WidgetComponentProps<"audioStats">) {
-  const t = useI18n();
+  const tAudio = useI18n("widget.audioStats");
+  const tMediaServer = useI18n("widget.mediaServer");
   const statsInput = { integrationId: integrationIds[0] ?? "" };
   const { data: response, error: statsError } = clientApi.widget.audioStats.getStats.useQuery(statsInput);
   const streamsInput = { integrationIds: [statsInput.integrationId], showOnlyPlaying: true };
@@ -56,7 +57,7 @@ export default function AudioStatsWidget({
     return (
       <Box h="100%" pos="relative">
         <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
-          <WidgetQueryErrorIndicator error={statsError} label={t("widget.audioStats.name")} />
+          <WidgetQueryErrorIndicator error={statsError} label={tAudio("name")} />
         </Box>
         {summary}
       </Box>
@@ -74,8 +75,8 @@ export default function AudioStatsWidget({
       <div style={{ minHeight: 150 }}>{summary}</div>
       {(statsError || streamsError || hasStreamErrors) && (
         <Group justify="flex-end">
-          <WidgetQueryErrorIndicator error={statsError} label={t("widget.audioStats.name")} />
-          <WidgetQueryErrorIndicator error={streamsError} label={t("widget.mediaServer.name")} />
+          <WidgetQueryErrorIndicator error={statsError} label={tAudio("name")} />
+          <WidgetQueryErrorIndicator error={streamsError} label={tMediaServer("name")} />
           <IntegrationErrorIndicator results={currentStreams} />
         </Group>
       )}

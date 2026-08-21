@@ -95,7 +95,7 @@ const CalendarEventRows = ({
   advanced,
 }: Pick<CalendarEventListProps, "events" | "advanced"> & { locale: string }) => {
   const { colorScheme } = useMantineColorScheme();
-  const t = useI18n();
+  const t = useI18n("widget.calendar");
   return (
     <>
       {events.map((event, eventIndex) => (
@@ -145,7 +145,7 @@ const CalendarEventRows = ({
               {event.metadata?.type === "radarr" && (
                 <Group wrap="nowrap">
                   <Text c="dimmed" size="sm">
-                    {t(`widget.calendar.option.releaseType.options.${event.metadata.releaseType}`)}
+                    {t(`option.releaseType.options.${event.metadata.releaseType}`)}
                   </Text>
                 </Group>
               )}
@@ -154,7 +154,7 @@ const CalendarEventRows = ({
                 <IconClock opacity={0.7} size={"1rem"} />
                 {isAllDay(event) ? (
                   <Text c={"dimmed"} size={"sm"}>
-                    {t("widget.calendar.duration.allDay")}
+                    {t("duration.allDay")}
                   </Text>
                 ) : (
                   <>

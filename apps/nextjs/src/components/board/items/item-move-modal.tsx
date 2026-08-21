@@ -6,7 +6,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { getRootSectionLane } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { createModal, ModalFormFooter, modalSizeForm, useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { Board, ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 import { getLayoutRowCount } from "../layout";
@@ -53,9 +53,9 @@ type MoveTargetCandidate = Omit<MoveTarget, "label"> & {
 };
 
 export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) => {
-  const tLandmark = useScopedI18n("board.landmark");
-  const tContainer = useScopedI18n("section.container");
-  const tMoveResize = useScopedI18n("item.moveResize");
+  const tLandmark = useI18n("board.landmark");
+  const tContainer = useI18n("section.container");
+  const tMoveResize = useI18n("item.moveResize");
   const { board, commitSectionGrids, currentLayoutId, entry, sourceSectionId } = innerProps;
   const minimumSize = useMemo(
     () => getEntryMinimumSize(board, currentLayoutId, entry),

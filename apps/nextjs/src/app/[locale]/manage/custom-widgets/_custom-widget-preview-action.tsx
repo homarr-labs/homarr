@@ -8,7 +8,7 @@ import { collectCustomWidgetRequestReferences, getCustomWidgetConfirmation } fro
 import type { CustomJsxRequest } from "@homarr/custom-widgets/core";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { isRuntimeParams, parseJson } from "./_custom-widget-form-utils";
 
@@ -19,7 +19,7 @@ export function PreviewActionControl({
   request: CustomJsxRequest & { id: string };
   sessionId?: string;
 }) {
-  const t = useScopedI18n("customWidget.workbench.preview");
+  const t = useI18n("customWidget.workbench.preview");
   const { openConfirmModal } = useConfirmModal();
   const actionMutation = clientApi.customWidget.previewAction.useMutation();
   const expectedParams = [...collectCustomWidgetRequestReferences(request).params].toSorted();

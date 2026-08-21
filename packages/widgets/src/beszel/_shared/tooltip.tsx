@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { formatLocalizedDate } from "../../common/locale";
 
@@ -54,7 +54,7 @@ interface BeszelTooltipProps {
 
 const BeszelTooltipContent = ({ active, label, payload, formatter, showTotal }: BeszelTooltipProps) => {
   const locale = useCurrentIntlLocale();
-  const t = useScopedI18n("common");
+  const t = useI18n("common");
   const isActive = active && (payload?.length ?? 0) > 0;
   if (!isActive) return null;
 

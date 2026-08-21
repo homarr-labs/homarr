@@ -5,7 +5,7 @@ import { Badge, Box, Flex, Group, Paper, SimpleGrid, Stack, Text, Title, useMant
 import { IconMinus, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
@@ -75,7 +75,8 @@ export default function StockPriceWidget({
   height,
   displayMode = "compact",
 }: WidgetComponentProps<"stockPrice">) {
-  const t = useScopedI18n("widget.stockPrice");
+  const t = useI18n("widget.stockPrice");
+  const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();
   const numberFormatter = new Intl.NumberFormat(locale);
   const theme = useMantineTheme();
@@ -117,7 +118,7 @@ export default function StockPriceWidget({
         <SimpleGrid cols={width >= 840 ? 6 : width >= 480 ? 3 : 2} spacing="xs">
           <StockMetric label={t("advanced.currentPrice")} value={formatValue(summary.currentPrice)} />
           <StockMetric label={t("advanced.previousClose")} value={formatValue(summary.previousClose)} />
-          <StockMetric label={t("advanced.change")} value={formatSignedValue(summary.change)} color={trendColor} />
+          <StockMetric label={tCommon("action.change")} value={formatSignedValue(summary.change)} color={trendColor} />
           <StockMetric
             label={t("advanced.changePercentage")}
             value={summary.changePercentage === null ? "—" : `${formatSignedValue(summary.changePercentage)}%`}

@@ -2,7 +2,7 @@
 
 import { Loader, MultiSelect } from "@mantine/core";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -13,7 +13,8 @@ export const WidgetDynamicMultiSelectInput = ({
   kind,
   options,
 }: CommonWidgetInputProps<"dynamicMultiSelect">) => {
-  const t = useScopedI18n("widget.dynamicSelect");
+  const t = useI18n("widget.common.select");
+  const tCommon = useI18n("common");
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
   const inputProps = form.getInputProps(`options.${property}`);
@@ -36,7 +37,7 @@ export const WidgetDynamicMultiSelectInput = ({
       searchable
       clearable
       maxValues={options.maxValues}
-      nothingFoundMessage={t("noResults")}
+      nothingFoundMessage={tCommon("noResults")}
       data={data}
       disabled={isError}
       error={isError ? t("loadError") : inputProps.error}

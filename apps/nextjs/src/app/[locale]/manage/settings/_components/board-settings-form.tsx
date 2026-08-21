@@ -4,7 +4,7 @@ import { Switch, Text } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import type { UseFormReturnType } from "@homarr/form";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { BoardSelect } from "~/components/board/board-select";
 import { SectionCard } from "~/components/manage/section-card";
@@ -16,10 +16,11 @@ interface BoardSettingsFormProps {
 }
 
 export const BoardSettingsForm = ({ form, selectableBoards }: BoardSettingsFormProps) => {
-  const tBoard = useScopedI18n("management.page.settings.section.board");
+  const tBoard = useI18n("management.page.settings.section.board");
+  const tEntities = useI18n("common.entity");
 
   return (
-    <SectionCard title={tBoard("title")}>
+    <SectionCard title={tEntities("boards")}>
       <BoardSelect
         label={tBoard("homeBoard.label")}
         description={tBoard("homeBoard.description")}

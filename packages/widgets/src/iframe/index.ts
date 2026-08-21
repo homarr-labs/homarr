@@ -28,7 +28,7 @@ export const { definition, componentLoader } = createWidgetDefinition("iframe", 
       ? [
           {
             key: "open-iframe",
-            label: "widget.app.option.openInNewTab.label",
+            label: "widget.common.openInNewTab.label",
             icon: IconExternalLink,
             onClick: () => window.open(embedUrl, "_blank", "noopener,noreferrer"),
           },

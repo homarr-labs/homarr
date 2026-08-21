@@ -16,7 +16,7 @@ import {
 } from "@mantine/core";
 import { IconCheck, IconKey, IconLock } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface RequestDetails {
   widgetName: string;
@@ -31,7 +31,8 @@ interface RequestDetails {
 }
 
 export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
-  const t = useScopedI18n("customWidget.secretEntry");
+  const t = useI18n("customWidget.secretEntry");
+  const tSecret = useI18n("customWidget.secret");
   const [details, setDetails] = useState<RequestDetails | null>(null);
   const [values, setValues] = useState<Record<string, string>>({});
   const [baseUrl, setBaseUrl] = useState("");
@@ -120,7 +121,7 @@ export function CustomWidgetConfigurationEntry({ token }: { token: string }) {
                 return (
                   <Input
                     key={kind}
-                    label={t(`field.${kind}`)}
+                    label={tSecret(kind)}
                     leftSection={<IconKey size={16} />}
                     value={values[kind] ?? ""}
                     onChange={(event) => setValues((current) => ({ ...current, [kind]: event.currentTarget.value }))}

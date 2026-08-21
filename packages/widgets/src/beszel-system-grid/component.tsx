@@ -1,7 +1,19 @@
 "use client";
 
 import type { MantineSize } from "@mantine/core";
-import { Badge, Box, Card, Center, Group, Loader, Progress, SimpleGrid, Stack, Text, UnstyledButton } from "@mantine/core";
+import {
+  Badge,
+  Box,
+  Card,
+  Center,
+  Group,
+  Loader,
+  Progress,
+  SimpleGrid,
+  Stack,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
 import {
   Activity,
   Battery,
@@ -20,8 +32,9 @@ import { IconServerOff } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { formatBytes } from "@homarr/common";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
 
@@ -123,19 +136,12 @@ const MIN_CELL_HEIGHT = 80;
 const ADVANCED_MIN_CELL_WIDTH = 320;
 const ADVANCED_MIN_CELL_HEIGHT = 420;
 
-const getColCount = (width: number, _height: number, itemCount: number, minCellWidth = MIN_CELL_WIDTH): number => {
+const getColCount = (width: number, height: number, itemCount: number, minCellWidth = MIN_CELL_WIDTH): number => {
   if (itemCount <= 1) return 1;
   const maxCols = Math.min(itemCount, Math.max(1, Math.floor(width / minCellWidth)));
-
-  let best = 1;
-  for (let c = 1; c <= maxCols; c++) {
-    const emptyCells = (c - (itemCount % c)) % c;
-    const bestEmpty = (best - (itemCount % best)) % best;
-    if (emptyCells < bestEmpty || (emptyCells === bestEmpty && c > best)) {
-      best = c;
-    }
-  }
-  return best;
+  const aspectRatio = width / Math.max(height, MIN_CELL_HEIGHT);
+  const idealCols = Math.round(Math.sqrt(itemCount * aspectRatio));
+  return Math.min(maxCols, Math.max(1, idealCols));
 };
 
 interface MetricRowProps {
@@ -175,7 +181,8 @@ const MetricRow = ({ icon, label, value, progress, size }: MetricRowProps) => (
 interface SystemCardProps {
   system: BeszelSystemRow & { rowKey: string };
   options: WidgetComponentProps<"beszelSystemGrid">["options"];
-  t: ReturnType<typeof useScopedI18n<"widget.beszelSystemGrid">>;
+  t: ReturnType<typeof useI18n<"widget.beszel">>;
+  tCommon: ReturnType<typeof useI18n<"common">>;
   size: SizeConfig;
   maxMetrics: number;
   itemRadius: MantineSize;
@@ -184,14 +191,25 @@ interface SystemCardProps {
   onClick?: () => void;
 }
 
-const metricRenderers = [
+type BeszelMetricRenderer = {
+  key: string;
+  render: (
+    system: BeszelSystemRow,
+    t: SystemCardProps["t"],
+    size: SizeConfig,
+    tCommon: SystemCardProps["tCommon"],
+  ) => React.ReactNode;
+  visible: (system: BeszelSystemRow, options: SystemCardProps["options"], advanced: boolean) => boolean;
+};
+
+const metricRenderers: BeszelMetricRenderer[] = [
   {
     key: "showCpu",
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
       <MetricRow
         key="cpu"
         icon={<Cpu size={sz.iconSize} />}
-        label={t("metric.cpu")}
+        label={invariantTechnicalLabels.cpu}
         value={formatPercent(s.cpu)}
         progress={{ value: s.cpu, color: thresholdColor(s.cpu) }}
         size={sz}
@@ -235,7 +253,7 @@ const metricRenderers = [
       <MetricRow
         key="gpu"
         icon={<Monitor size={sz.iconSize} />}
-        label={t("metric.gpu")}
+        label={invariantTechnicalLabels.gpu}
         value={formatPercent(s.gpu)}
         progress={{ value: s.gpu, color: thresholdColor(s.gpu) }}
         size={sz}
@@ -306,11 +324,11 @@ const metricRenderers = [
   },
   {
     key: "showServices",
-    render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
+    render: (s: BeszelSystemRow, _t: SystemCardProps["t"], sz: SizeConfig, tCommon: SystemCardProps["tCommon"]) => (
       <MetricRow
         key="svc"
         icon={<Server size={sz.iconSize} />}
-        label={t("metric.services")}
+        label={tCommon("services")}
         value={String(s.services)}
         size={sz}
       />
@@ -352,6 +370,7 @@ const SystemCard = ({
   system,
   options,
   t,
+  tCommon,
   size,
   maxMetrics,
   itemRadius,
@@ -382,12 +401,7 @@ const SystemCard = ({
       }}
     >
       {onClick && (
-        <UnstyledButton
-          type="button"
-          className={classes.cardAction}
-          aria-label={system.name}
-          onClick={onClick}
-        />
+        <UnstyledButton type="button" className={classes.cardAction} aria-label={system.name} onClick={onClick} />
       )}
       <Group gap="xs" mb={2}>
         <Badge
@@ -402,20 +416,20 @@ const SystemCard = ({
 
       {isAdvanced && (
         <SimpleGrid cols={2} spacing={4} verticalSpacing={2} mb={4}>
-          <SystemMetadata label={t("metadata.hostname")} value={system.hostname || "—"} />
-          <SystemMetadata label={t("metadata.os")} value={system.osName || "—"} />
-          <SystemMetadata label={t("metadata.cpuModel")} value={system.cpuModel || "—"} />
-          <SystemMetadata label={t("metadata.cores")} value={String(system.cores)} />
+          <SystemMetadata label={t("metric.hostname")} value={system.hostname || "—"} />
+          <SystemMetadata label={invariantTechnicalLabels.os} value={system.osName || "—"} />
+          <SystemMetadata label={t("metric.cpuModel")} value={system.cpuModel || "—"} />
+          <SystemMetadata label={t("metric.cores")} value={String(system.cores)} />
           <SystemMetadata
-            label={t("metadata.memoryTotal")}
+            label={t("metric.memoryTotal")}
             value={system.memoryTotal > 0 ? formatBytes(system.memoryTotal) : "—"}
           />
-          <SystemMetadata label={t("metadata.source")} value={integrationName} />
+          <SystemMetadata label={t("metric.source")} value={integrationName} />
         </SimpleGrid>
       )}
 
       <Stack gap={0} style={{ flex: 1 }} justify="space-evenly">
-        {visibleMetrics.map((m) => m.render(system, t, size))}
+        {visibleMetrics.map((m) => m.render(system, t, size, tCommon))}
       </Stack>
       {hiddenMetricCount > 0 && (
         <Text size="xs" c="dimmed" ta="right">
@@ -445,7 +459,9 @@ export default function BeszelSystemGridWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"beszelSystemGrid">) {
-  const t = useScopedI18n("widget.beszelSystemGrid");
+  const t = useI18n("widget.beszel");
+  const tFeature = useI18n("widget.beszelSystemGrid");
+  const tCommon = useI18n("common");
   const board = useRequiredBoard();
   const { openModal } = useModalAction(BeszelSystemStatsModal);
 
@@ -469,7 +485,7 @@ export default function BeszelSystemGridWidget({
     return (
       <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
         <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 1 }}>
-          <WidgetQueryErrorIndicator error={systemsQuery.error} label={t("name")} />
+          <WidgetQueryErrorIndicator error={systemsQuery.error} label={tFeature("name")} />
           <IntegrationErrorIndicator results={results} />
         </Group>
         <Center h="100%">
@@ -498,7 +514,7 @@ export default function BeszelSystemGridWidget({
   return (
     <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
       <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 1 }}>
-        <WidgetQueryErrorIndicator error={systemsQuery.error} label={t("name")} />
+        <WidgetQueryErrorIndicator error={systemsQuery.error} label={tFeature("name")} />
         <IntegrationErrorIndicator results={results} />
       </Group>
       <Box
@@ -523,6 +539,7 @@ export default function BeszelSystemGridWidget({
               system={system}
               options={options}
               t={t}
+              tCommon={tCommon}
               size={size}
               maxMetrics={maxMetrics}
               itemRadius={board.itemRadius}

@@ -90,7 +90,7 @@ import {
 } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import type { SupportedLanguage } from "@homarr/translation";
-import { useCurrentLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentLocale, useI18n } from "@homarr/translation/client";
 import { BoardColorInput, ColorSchemeCombobox, IntegrationAvatar, LanguageCombobox, Link } from "@homarr/ui";
 import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
 
@@ -154,8 +154,8 @@ const emptyDiscoveredIntegrations: DockerDiscoveryData["integrations"] = [];
 const emptyDiscoveredApps: DockerDiscoveryData["apps"] = [];
 
 export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingStudioProps) => {
-  const t = useScopedI18n("init.studio");
-  const tCommon = useScopedI18n("common.action");
+  const t = useI18n("init.studio");
+  const tCommon = useI18n("common.action");
   const currentLocale = useCurrentLocale();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const sounds = useOnboardingSounds();
@@ -781,7 +781,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                         rightSection={<IconArrowRight size={16} />}
                         onClick={continueOnboarding}
                       >
-                        {t("continue")}
+                        {tCommon("continue")}
                       </Button>
                     </Group>
                   )}
@@ -887,7 +887,7 @@ const SectionHeading = ({
 );
 
 const Essentials = (props: StudioSectionProps) => {
-  const t = useScopedI18n("init.studio.essentials");
+  const t = useI18n("init.studio.essentials");
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => setIsHydrated(true), []);
   return (
@@ -936,7 +936,7 @@ const Essentials = (props: StudioSectionProps) => {
 };
 
 const Discovery = (props: StudioSectionProps) => {
-  const t = useScopedI18n("init.studio.discover");
+  const t = useI18n("init.studio.discover");
   const dockerStatus = !props.environment.dockerConfigured
     ? "disabled"
     : props.docker.isPending
@@ -1064,7 +1064,7 @@ const CapabilityRow = ({
   detail: string;
   action?: ReactNode;
 }) => {
-  const t = useScopedI18n("init.studio.discover.status");
+  const t = useI18n("init.studio.discover.status");
   const color =
     status === "available"
       ? "green"
@@ -1107,7 +1107,7 @@ const CapabilityRow = ({
 };
 
 const Connections = (props: StudioSectionProps) => {
-  const t = useScopedI18n("init.studio.connect");
+  const t = useI18n("init.studio.connect");
   return (
     <Stack gap="xl">
       <SectionHeading headingRef={props.headingRef} title={t("title")} description={t("description")} />
@@ -1248,7 +1248,8 @@ const IntegrationEditor = ({
   update: (patch: Partial<IntegrationDraft>) => void;
   selectSecretOption: (option: number) => void;
 }) => {
-  const t = useScopedI18n("init.studio.connect");
+  const t = useI18n("init.studio.connect");
+  const tCommon = useI18n("common.field");
   const sounds = useOnboardingSounds();
   const options = getAllSecretKindOptions(draft.kind);
   const apiKeyUrl = getIntegrationApiKeyUrl(draft.url, draft.kind);
@@ -1313,7 +1314,7 @@ const IntegrationEditor = ({
         <Stack>
           <SimpleGrid cols={{ base: 1, sm: 2 }}>
             <TextInput
-              label={t("name")}
+              label={tCommon("name")}
               value={draft.name}
               onChange={(event) => updateAndResetTest({ name: event.currentTarget.value })}
             />
@@ -1415,7 +1416,7 @@ const formatSecretKind = (kind: IntegrationSecretKind) =>
   kind.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase());
 
 const BoardBuilder = (props: StudioSectionProps) => {
-  const t = useScopedI18n("init.studio.board");
+  const t = useI18n("init.studio.board");
   const sounds = useOnboardingSounds();
   const validationErrors = getBoardValidationErrors({
     attempted: props.boardValidationAttempted,
@@ -1634,7 +1635,7 @@ const BoardPreview = ({
 };
 
 const Extensions = (props: StudioSectionProps) => {
-  const t = useScopedI18n("init.studio.extend");
+  const t = useI18n("init.studio.extend");
   return (
     <Stack gap={0}>
       <Title id="studio-section-title" ref={props.headingRef} order={2} tabIndex={-1} mb="xs">
@@ -1649,7 +1650,7 @@ const Extensions = (props: StudioSectionProps) => {
             {t("assistant")}
           </Tabs.Tab>
           <Tabs.Tab value="mcp" leftSection={<IconCode size={16} />}>
-            {t("mcp")}
+            MCP
           </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="workshop" pt="xs">
@@ -1673,7 +1674,7 @@ const AssistantSetup = ({
   environment: StudioSectionProps["environment"];
   configuration: ReactNode;
 }) => {
-  const t = useScopedI18n("init.studio.extend.assistantSetup");
+  const t = useI18n("init.studio.extend.assistantSetup");
   if (!environment.canConfigurePrivileged) {
     return (
       <Alert icon={<IconKey size={18} />} title={t("loginTitle")}>
@@ -1697,7 +1698,7 @@ const WorkshopSetup = ({
   environment: StudioSectionProps["environment"];
   runtimeCapabilities: StudioSectionProps["runtimeCapabilities"];
 }) => {
-  const t = useScopedI18n("init.studio.extend.workshopSetup");
+  const t = useI18n("init.studio.extend.workshopSetup");
   const status = runtimeCapabilities.isPending
     ? "checking"
     : runtimeCapabilities.data?.workshop.status === "available"
@@ -1755,7 +1756,7 @@ const WorkshopFeature = ({ title, description }: { title: string; description: s
 );
 
 const McpSetup = ({ environment }: { environment: StudioSectionProps["environment"] }) => {
-  const t = useScopedI18n("init.studio.extend.mcpSetup");
+  const t = useI18n("init.studio.extend.mcpSetup");
   const [apiKey, setApiKey] = useState<string | null>(null);
   const sounds = useOnboardingSounds();
   const createKey = clientApi.apiKeys.create.useMutation({
@@ -1861,7 +1862,7 @@ const McpSetup = ({ environment }: { environment: StudioSectionProps["environmen
 };
 
 const Review = (props: StudioSectionProps) => {
-  const t = useScopedI18n("init.studio.review");
+  const t = useI18n("init.studio.review");
   const themeLabel = {
     auto: t("themeAuto"),
     light: t("themeLight"),

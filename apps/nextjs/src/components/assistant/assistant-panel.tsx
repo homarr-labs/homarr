@@ -131,7 +131,7 @@ import { assistantProviderIds, assistantProviderPresets, assistantReasoningModes
 import type { AssistantProvider } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useConfirmModal } from "@homarr/modals";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import classes from "./assistant-panel.module.css";
 import { getAssistantActivityState } from "./assistant-activity-state";
@@ -222,7 +222,7 @@ const ContextDirectiveChip = ({
   label,
   iconUrl,
 }: DirectiveChipProps & { iconUrl?: string }) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const Icon = contextIcons[directiveType as keyof typeof contextIcons] ?? IconAt;
   const safeIconUrl =
     getSafeAssistantMarkdownImageSource(iconUrl) ?? getSafeAssistantExternalMarkdownImageSource(iconUrl);
@@ -296,7 +296,7 @@ const MarkdownTable = ({ children, ...props }: ComponentPropsWithoutRef<"table">
 );
 
 const MarkdownImage = ({ src, alt = "", ...props }: ComponentPropsWithoutRef<"img">) => {
-  const t = useScopedI18n("common.assistant.image");
+  const t = useI18n("assistant.image");
   const [approvedExternalSource, setApprovedExternalSource] = useState<string | null>(null);
   const safeSource = getSafeAssistantMarkdownImageSource(src);
   const externalSource = getSafeAssistantExternalMarkdownImageSource(src);
@@ -365,7 +365,7 @@ const AssistantSyntaxHighlighter = ({ code, components, language }: SyntaxHighli
 };
 
 const MermaidDiagram = ({ code, components }: SyntaxHighlighterProps) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const colorScheme = useComputedColorScheme("light");
   const diagramId = `assistant-mermaid-${useId().replaceAll(/[^A-Za-z0-9_-]/gu, "")}`;
   const [rendered, setRendered] = useState<{ code: string; svg?: string; failed?: boolean }>({ code });
@@ -563,7 +563,7 @@ const AttachmentPreview = () => {
 };
 
 const Attachment = ({ removable = false }: { removable?: boolean }) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const attachment = useAuiState((state) => state.attachment);
   return (
     <AttachmentPrimitive.Root className={classes.attachment}>
@@ -605,7 +605,7 @@ const ReasoningPart = (_props: ReasoningMessagePartProps) => (
 );
 
 const AssistantMessagePending = ({ status }: EmptyMessagePartProps) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   if (status.type !== "running") return null;
 
   return (
@@ -644,7 +644,7 @@ const SourcePart = (source: SourceMessagePartProps) => {
 };
 
 const FilePart = ({ data, filename, mimeType }: FileMessagePartProps) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const downloadable = data.startsWith("data:");
   const displayName = filename ?? mimeType;
   return (
@@ -671,7 +671,7 @@ const FilePart = ({ data, filename, mimeType }: FileMessagePartProps) => {
 };
 
 const ImagePart = ({ image, filename }: ImageMessagePartProps) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const source = getSafeAssistantAttachmentImageSource(
     image,
     typeof window === "undefined" ? undefined : window.location.origin,
@@ -836,7 +836,7 @@ const getToolResultNavigation = (result: unknown) => {
 };
 
 const ToolResultNavigation = ({ result }: { result: unknown }) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const router = useRouter();
   const links = getToolResultNavigation(result);
 
@@ -892,7 +892,7 @@ const ToolPart = ({
   respondToApproval,
   timing,
 }: ToolCallMessagePartProps) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const compact = useContext(AgentTraceToolContext);
   const [opened, setOpened] = useState(false);
   const [approvalResponse, setApprovalResponse] = useState<"approve" | "deny" | null>(null);
@@ -1070,7 +1070,7 @@ const ChainOfThoughtLayout = ({ children }: { children?: ReactNode }) => (
 );
 
 const AssistantChainOfThought = ({ children }: { children?: ReactNode }) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const contentId = useId();
   const { collapsed: preferredCollapsed, setCollapsed: setPreferredCollapsed } = useContext(ReasoningVisibilityContext);
   const { chainStatus, collapsed } = useAssistantReasoningState(preferredCollapsed);
@@ -1105,7 +1105,7 @@ const AssistantChainOfThought = ({ children }: { children?: ReactNode }) => {
 };
 
 const BranchPicker = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   return (
     <BranchPickerPrimitive.Root hideWhenSingleBranch className={classes.branchPicker}>
       <BranchPickerPrimitive.Previous asChild>
@@ -1138,7 +1138,7 @@ const downloadAssistantMarkdown = (markdown: string, filename: string) => {
 };
 
 const AssistantMessageActions = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const aui = useAui();
   const exportMessage = () => {
     const message = aui.message().getState();
@@ -1151,7 +1151,6 @@ const AssistantMessageActions = () => {
     });
     downloadAssistantMarkdown(markdown, `assistant-message-${message.id.slice(0, 8)}.md`);
   };
-
   return (
     <Box className={classes.messageActions}>
       <ActionBarPrimitive.Root
@@ -1233,7 +1232,7 @@ const AssistantMessageActions = () => {
 };
 
 const UserMessageActions = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   return (
     <ActionBarPrimitive.Root hideWhenRunning autohide="not-last" className={classes.userActions}>
       <Group gap={2}>
@@ -1257,14 +1256,15 @@ const UserMessageActions = () => {
 };
 
 const EditComposer = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
+  const actionT = useI18n("common.action");
   return (
     <ComposerPrimitive.Root className={classes.editComposer}>
       <ComposerPrimitive.Input className={classes.editComposerInput} rows={2} aria-label={t("editMessage")} />
       <Group gap="xs" justify="flex-end">
         <ComposerPrimitive.Cancel asChild>
           <Button size="compact-sm" variant="default">
-            {t("cancelEdit")}
+            {actionT("cancel")}
           </Button>
         </ComposerPrimitive.Cancel>
         <ComposerPrimitive.Send asChild>
@@ -1383,7 +1383,7 @@ const ConversationTurn = ({
   threadId?: string;
   turn: AssistantConversationTurnUsage;
 }) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const detailsId = useId();
   const [opened, setOpened] = useState(false);
   const generationQuery = clientApi.assistant.getGenerationTelemetry.useQuery(
@@ -1679,7 +1679,7 @@ const ConversationTurn = ({
 };
 
 const ConversationContextBreakdown = ({ breakdown }: { breakdown: AssistantContextBreakdown }) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const hasContext = breakdown.percentage !== undefined;
   const categories = [
     { label: t("usage.input"), value: breakdown.inputTokens },
@@ -1737,7 +1737,7 @@ const ConversationContextBreakdown = ({ breakdown }: { breakdown: AssistantConte
 };
 
 const ConversationContext = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const [opened, setOpened] = useState(false);
   const messages = useAuiState((state) => state.thread.messages);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
@@ -1869,7 +1869,8 @@ const ConversationContext = () => {
   );
 };
 const RuntimeError = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
+  const actionT = useI18n("common.action");
   return (
     <MessagePrimitive.Error>
       <ErrorPrimitive.Root className={classes.messageError}>
@@ -1890,7 +1891,7 @@ const RuntimeError = () => {
                 w="fit-content"
                 leftSection={<IconRefresh size={14} />}
               >
-                {t("responseError.retry")}
+                {actionT("tryAgain")}
               </Button>
             </ActionBarPrimitive.Reload>
           </Stack>
@@ -1901,7 +1902,7 @@ const RuntimeError = () => {
 };
 
 const WebSearchActivity = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const metadata = useAuiState((state) => state.message.metadata);
   const telemetry = getAssistantTelemetry(metadata);
   if (!telemetry) return null;
@@ -2019,7 +2020,8 @@ const assistantThreadMessageComponents = { UserMessage, AssistantMessage };
 const HistorySelectContext = createContext<() => void>(() => undefined);
 
 const ThreadListItem = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
+  const actionT = useI18n("common.action");
   const aui = useAui();
   const { openConfirmModal } = useConfirmModal();
   const onSelect = useContext(HistorySelectContext);
@@ -2079,7 +2081,7 @@ const ThreadListItem = () => {
       title: t("deleteConversation.title"),
       children: t("deleteConversation.description", { title: title ?? t("newConversation") }),
       confirmProps: { color: "red" },
-      labels: { confirm: t("delete"), cancel: t("cancel") },
+      labels: { confirm: actionT("delete"), cancel: actionT("cancel") },
       onConfirm: async () => {
         try {
           await aui.threadListItem().delete();
@@ -2125,7 +2127,7 @@ const ThreadListItem = () => {
           variant="subtle"
           color="gray"
           size="sm"
-          aria-label={t("cancel")}
+          aria-label={actionT("cancel")}
           disabled={renaming}
           onClick={() => setRenameOpened(false)}
         >
@@ -2176,8 +2178,8 @@ const ThreadListItem = () => {
             variant="subtle"
             color="red"
             size="sm"
-            title={t("delete")}
-            aria-label={t("delete")}
+            title={actionT("delete")}
+            aria-label={actionT("delete")}
             onClick={deleteConversation}
           >
             <IconTrash size={14} />
@@ -2201,7 +2203,7 @@ const ThreadListItem = () => {
 };
 
 const ThreadHistory = ({ onSelect }: { onSelect: () => void }) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const [query, setQuery] = useState("");
   const normalizedQuery = query.trim().toLocaleLowerCase();
   const threadItems = useAuiState((state) => state.threads.threadItems);
@@ -2255,7 +2257,7 @@ const ThreadHistory = ({ onSelect }: { onSelect: () => void }) => {
 };
 
 const ConversationHistory = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const [opened, setOpened] = useState(false);
   return (
     <Popover
@@ -2294,7 +2296,7 @@ const ConversationHistory = () => {
 };
 
 const AutoApprovalControl = () => {
-  const t = useScopedI18n("common.assistant.autoApproval");
+  const t = useI18n("assistant.autoApproval");
   const [opened, setOpened] = useState(false);
   const { enabled, setEnabled } = useAssistantAutoApproval();
 
@@ -2367,7 +2369,7 @@ const ViewRefreshAction = ({
   isRefreshing,
   onRefresh,
 }: Pick<AssistantConversationControls, "isRefreshing" | "onRefresh">) => {
-  const t = useScopedI18n("common.assistant.refresh");
+  const t = useI18n("assistant.refresh");
 
   const refresh = async () => {
     try {
@@ -2396,7 +2398,7 @@ const ViewRefreshAction = ({
 };
 
 const EmptyThread = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   return (
     <ThreadPrimitive.Empty>
       <Box className={classes.empty}>
@@ -2497,7 +2499,7 @@ const TriggerItem = ({ item, index }: { item: Unstable_TriggerItem; index: numbe
 };
 
 const ComposerTriggers = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const aui = useAui();
   const mentionViewportRef = useRef<HTMLDivElement>(null);
   const slashViewportRef = useRef<HTMLDivElement>(null);
@@ -2640,7 +2642,7 @@ const RuntimeControls = ({
   onModelChange,
   onReasoningChange,
 }: ComposerProps) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const [modelSearch, setModelSearch] = useState("");
   const selectedModel = models.find((model) => model.id === modelId);
   const normalizedModelSearch = modelSearch.trim().toLocaleLowerCase();
@@ -2795,7 +2797,7 @@ const providerQuotaColors = {
 } as const;
 
 const HomarrProviderQuota = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const locale = useCurrentIntlLocale();
   const preferences = useAssistantPreferences();
   const quota = preferences.quota;
@@ -2918,7 +2920,7 @@ const HomarrProviderQuota = () => {
 };
 
 const Composer = (props: ComposerProps) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const preferences = useAssistantPreferences();
   const running = useAuiState((state) => state.thread.isRunning);
   const hasPendingAction = props.pendingAction !== undefined;
@@ -3023,7 +3025,7 @@ const Composer = (props: ComposerProps) => {
 };
 
 const usePendingActionCopy = (action: AssistantPendingAction | undefined) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   if (!action) return undefined;
   if (action.kind === "question") {
     return { title: t("pendingAction.answerTitle"), detail: action.detail ?? t("pendingAction.answerFallback") };
@@ -3040,7 +3042,7 @@ const usePendingActionCopy = (action: AssistantPendingAction | undefined) => {
 };
 
 const PendingActionBanner = ({ pendingAction }: { pendingAction: AssistantPendingAction | undefined }) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const copy = usePendingActionCopy(pendingAction);
   if (!copy || pendingAction?.kind === "question") return null;
 
@@ -3075,7 +3077,7 @@ const PendingQuestionDock = ({
   pendingAction: AssistantPendingAction | undefined;
   setTarget: (target: HTMLDivElement | null) => void;
 }) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   if (pendingAction?.kind !== "question") return null;
 
   return (
@@ -3109,7 +3111,7 @@ const AssistantActivityBar = ({
   | "onDismissActivity"
   | "activityDismissed"
 >) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const pendingCopy = usePendingActionCopy(pendingAction);
   const needsApproval = pendingAction !== undefined || latestStatus?.type === "requires-action";
   const failed = latestStatus?.type === "incomplete" && latestStatus.reason !== "cancelled";
@@ -3197,7 +3199,7 @@ interface AssistantConversationSurfaceProps extends AssistantConversationControl
 }
 
 const AssistantPanelIdentity = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const threadTitle = useAuiState((state) => state.threadListItem.title);
 
   return (
@@ -3233,7 +3235,7 @@ export const AssistantConversationSurface = ({
   onMinimize,
   onDismiss,
 }: AssistantConversationSurfaceProps) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const reducedMotion = useReducedMotion();
   const [questionPortalTarget, setQuestionPortalTarget] = useState<HTMLDivElement | null>(null);
   const [reasoningCollapsed, setReasoningCollapsed] = useState(false);
@@ -3379,7 +3381,7 @@ export const AssistantPanel = ({
   onModelChange,
   onReasoningChange,
 }: AssistantPanelProps) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const aui = useAui();
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const panelRef = useRef<HTMLDialogElement>(null);

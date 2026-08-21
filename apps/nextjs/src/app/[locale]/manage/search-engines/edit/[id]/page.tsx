@@ -22,13 +22,13 @@ export default async function SearchEngineEditPage(props: SearchEngineEditPagePr
   }
 
   const searchEngine = await api.searchEngine.byId({ id: params.id });
-  const t = await getI18n();
+  const t = await getI18n("search.engine.page.edit");
 
   return (
     <ManageContainer>
       <DynamicBreadcrumb dynamicMappings={new Map([[params.id, searchEngine.name]])} nonInteractable={["edit"]} />
       <Stack>
-        <Title>{t("search.engine.page.edit.title")}</Title>
+        <Title>{t("title")}</Title>
         <SearchEngineEditForm searchEngine={searchEngine} />
       </Stack>
     </ManageContainer>

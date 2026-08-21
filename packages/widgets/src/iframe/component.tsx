@@ -11,7 +11,7 @@ import { getSafeApplicationUrl } from "../common/application-url";
 import classes from "./component.module.css";
 
 export default function IFrameWidget({ options, isEditMode }: WidgetComponentProps<"iframe">) {
-  const t = useI18n();
+  const t = useI18n("widget.iframe");
   const { embedUrl, allowScrolling, ...permissions } = options;
   const safeEmbedUrl = getSafeApplicationUrl(embedUrl);
   const allowedPermissions = getAllowedPermissions(permissions);
@@ -35,7 +35,7 @@ export default function IFrameWidget({ options, isEditMode }: WidgetComponentPro
           scrolling={allowScrolling ? "yes" : "no"}
           sandbox={sandboxFlags.join(" ")}
         >
-          <Text>{t("widget.iframe.error.noBrowerSupport")}</Text>
+          <Text>{t("error.noBrowerSupport")}</Text>
         </iframe>
       </Box>
     </Stack>
@@ -49,24 +49,24 @@ export const isSupportedProtocol = (url: string) => {
 };
 
 const NoUrl = () => {
-  const t = useI18n();
+  const t = useI18n("widget.iframe");
 
   return (
     <Stack align="center" justify="center" h="100%">
       <IconBrowserOff />
-      <Title order={4}>{t("widget.iframe.error.noUrl")}</Title>
+      <Title order={4}>{t("error.noUrl")}</Title>
     </Stack>
   );
 };
 
 const UnsupportedProtocol = () => {
-  const t = useI18n();
+  const t = useI18n("widget.iframe");
 
   return (
     <Stack align="center" justify="center" h="100%">
       <IconProtocol />
       <Title order={4} ta="center">
-        {t("widget.iframe.error.unsupportedProtocol", {
+        {t("error.unsupportedProtocol", {
           supportedProtocols: supportedProtocols.map((protocol) => protocol).join(", "),
         })}
       </Title>

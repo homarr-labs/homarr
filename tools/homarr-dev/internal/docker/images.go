@@ -27,6 +27,8 @@ type Image struct {
 	Source   string
 	Revision string
 	PRNumber int
+	Size     string
+	Created  string
 }
 
 func (image Image) Reference() string {
@@ -34,9 +36,11 @@ func (image Image) Reference() string {
 }
 
 type imageListRow struct {
-	ID         string
-	Repository string
-	Tag        string
+	ID           string
+	Repository   string
+	Tag          string
+	Size         string
+	CreatedSince string
 }
 
 func parseImageList(output []byte) ([]Image, error) {
@@ -50,7 +54,7 @@ func parseImageList(output []byte) ([]Image, error) {
 			return nil, fmt.Errorf("parse local Docker image: %w", err)
 		}
 		if row.Repository == "homarr" && row.Tag != "<none>" {
-			images = append(images, Image{ID: row.ID, Tag: row.Tag})
+			images = append(images, Image{ID: row.ID, Tag: row.Tag, Size: row.Size, Created: row.CreatedSince})
 		}
 	}
 	return images, nil
@@ -86,22 +90,39 @@ func inspectImageLabels(ctx context.Context, images []Image) ([]map[string]strin
 		args = append(args, image.Reference())
 	}
 	out, err := exec.CommandContext(ctx, "docker", args...).Output()
-	if err != nil {
-		return nil, fmt.Errorf("inspect local Homarr images: %w", err)
+	if err == nil {
+		lines := strings.Split(strings.TrimSpace(string(out)), "\n")
+		if len(lines) == len(images) {
+			labelsByImage := make([]map[string]string, len(images))
+			valid := true
+			for index, line := range lines {
+				labelsByImage[index] = make(map[string]string)
+				if line == "null" || line == "" {
+					continue
+				}
+				if err := json.Unmarshal([]byte(line), &labelsByImage[index]); err != nil {
+					valid = false
+					break
+				}
+			}
+			if valid {
+				return labelsByImage, nil
+			}
+		}
 	}
-	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
-	if len(lines) != len(images) {
-		return nil, fmt.Errorf("inspect returned %d images, expected %d", len(lines), len(images))
-	}
+
 	labelsByImage := make([]map[string]string, len(images))
-	for index, line := range lines {
+	for index, image := range images {
 		labelsByImage[index] = make(map[string]string)
-		if line == "null" {
+		singleOut, singleErr := exec.CommandContext(ctx, "docker", "image", "inspect", "--format", "{{json .Config.Labels}}", image.Reference()).Output()
+		if singleErr != nil {
 			continue
 		}
-		if err := json.Unmarshal([]byte(line), &labelsByImage[index]); err != nil {
-			return nil, fmt.Errorf("parse labels for %s: %w", images[index].Reference(), err)
+		trimmed := strings.TrimSpace(string(singleOut))
+		if trimmed == "" || trimmed == "null" {
+			continue
 		}
+		_ = json.Unmarshal([]byte(trimmed), &labelsByImage[index])
 	}
 	return labelsByImage, nil
 }

@@ -4,7 +4,7 @@ import { BarChart, LineChart } from "@mantine/charts";
 import { Box, Group, Stack, Text } from "@mantine/core";
 
 import type { UmamiEventSeries } from "@homarr/integrations/types";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { EVENT_COLORS, formatXLabel } from "./umami-utils";
 
@@ -23,7 +23,7 @@ export function UmamiEventsContent({
   chartType,
   showXAxis,
 }: UmamiEventsContentProps) {
-  const t = useScopedI18n("widget.umami");
+  const t = useI18n("widget.umami");
   const locale = useCurrentIntlLocale();
   const tickColor = "var(--mantine-color-dimmed)";
 

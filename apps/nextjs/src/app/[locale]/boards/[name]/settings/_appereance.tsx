@@ -37,22 +37,23 @@ const progressPercentageLabel = (value: number) => `${value}%`;
 
 export const ColorSettingsContent = ({ form }: Props) => {
   const [showPreview, { toggle }] = useDisclosure(false);
-  const t = useI18n();
+  const tBoard = useI18n("board");
+  const tCommon = useI18n("common");
   const theme = useMantineTheme();
 
   return (
-    <SectionCard title={t("board.setting.section.appearance.title")}>
+    <SectionCard title={tBoard("setting.section.appearance.title")}>
       <Grid>
         <Grid.Col span={{ sm: 12, md: 6 }}>
           <Stack gap="xs">
-            <BoardColorInput label={t("board.field.primaryColor.label")} {...form.getInputProps("primaryColor")} />
+            <BoardColorInput label={tBoard("field.primaryColor.label")} {...form.getInputProps("primaryColor")} />
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
-          <BoardColorInput label={t("board.field.secondaryColor.label")} {...form.getInputProps("secondaryColor")} />
+          <BoardColorInput label={tBoard("field.secondaryColor.label")} {...form.getInputProps("secondaryColor")} />
         </Grid.Col>
         <Grid.Col span={12}>
-          <Anchor onClick={toggle}>{showPreview ? t("common.preview.hide") : t("common.preview.show")}</Anchor>
+          <Anchor onClick={toggle}>{showPreview ? tCommon("preview.hide") : tCommon("preview.show")}</Anchor>
         </Grid.Col>
         <Grid.Col span={12}>
           <Collapse expanded={showPreview}>
@@ -63,7 +64,7 @@ export const ColorSettingsContent = ({ form }: Props) => {
           </Collapse>
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
-          <InputWrapper label={t("board.field.opacity.label")}>
+          <InputWrapper label={tBoard("field.opacity.label")}>
             <Slider
               my={6}
               min={0}
@@ -77,7 +78,7 @@ export const ColorSettingsContent = ({ form }: Props) => {
         <Grid.Col span={{ sm: 12, md: 6 }}>
           <Group align="end">
             <ColorInput
-              label={t("board.field.iconColor.label")}
+              label={tBoard("field.iconColor.label")}
               format="hex"
               swatches={Object.values(theme.colors).map((color) => color[6])}
               flex={1}
@@ -90,20 +91,20 @@ export const ColorSettingsContent = ({ form }: Props) => {
               onClick={() => form.setFieldValue("iconColor", "")}
               disabled={!form.values.iconColor}
             >
-              {t("board.field.clearColor.label")}
+              {tBoard("field.clearColor.label")}
             </Button>
           </Group>
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
           <Select
-            label={t("board.field.itemRadius.label")}
-            description={t("board.field.itemRadius.description")}
+            label={tBoard("field.itemRadius.label")}
+            description={tBoard("field.itemRadius.description")}
             data={[
-              { label: t("board.field.itemRadius.option.xs"), value: "xs" },
-              { label: t("board.field.itemRadius.option.sm"), value: "sm" },
-              { label: t("board.field.itemRadius.option.md"), value: "md" },
-              { label: t("board.field.itemRadius.option.lg"), value: "lg" },
-              { label: t("board.field.itemRadius.option.xl"), value: "xl" },
+              { label: tBoard("field.itemRadius.option.xs"), value: "xs" },
+              { label: tBoard("field.itemRadius.option.sm"), value: "sm" },
+              { label: tBoard("field.itemRadius.option.md"), value: "md" },
+              { label: tBoard("field.itemRadius.option.lg"), value: "lg" },
+              { label: tBoard("field.itemRadius.option.xl"), value: "xl" },
             ]}
             {...form.getInputProps("itemRadius")}
           />

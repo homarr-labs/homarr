@@ -10,14 +10,18 @@ import { useSession } from "@homarr/auth/client";
 import type { ColorScheme } from "@homarr/definitions";
 import { visiblePreferenceDefinitions } from "@homarr/settings";
 import { localeConfigurations } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { createChildrenOptions } from "../../../../lib/children";
 import type { ChildrenAction } from "../../../../lib/children";
 import { interaction } from "../../../../lib/interaction";
 import { useUserPreferences } from "../../../../preferences/use-user-preference";
-import { preferenceChildrenOptionsByKey, preferenceIcons } from "../../../../preferences/preference-registry";
+import {
+  preferenceChildrenOptionsByKey,
+  preferenceIcons,
+  userFieldPreferenceLabels,
+} from "../../../../preferences/preference-registry";
 
 dayjs.extend(localeData);
 
@@ -65,8 +69,9 @@ const LinkRow = ({ label, Icon }: { label: string; Icon: TablerIcon }) => (
 const SELECT_KINDS = new Set(["select", "searchEngine", "board"]);
 
 const useSettingsActions = (_: Record<string, unknown>, query: string): SettingsAction[] => {
-  const t = useScopedI18n("search.mode.command.group.preferences.option");
-  const tColorScheme = useScopedI18n("common.colorScheme.options");
+  const t = useI18n("search.mode.command.group.preferences.option");
+  const tUserField = useI18n("user.field");
+  const tColorScheme = useI18n("common.colorScheme.options");
   const { data: session } = useSession();
   const isAuthenticated = Boolean(session?.user);
   const normalizedQuery = query.trim().toLowerCase();
@@ -95,7 +100,8 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
 
   return visiblePreferenceDefinitions(isAuthenticated)
     .map((definition): SettingsAction | null => {
-      const label = t(`${definition.key}.label` as never);
+      const userFieldKey = userFieldPreferenceLabels[definition.key];
+      const label = userFieldKey ? tUserField(`${userFieldKey}.label` as never) : t(`${definition.key}.label` as never);
       const Icon = preferenceIcons[definition.key];
 
       const matchesSearch = [label, ...definition.aliases].some((v) => v.toLowerCase().includes(normalizedQuery));
@@ -143,7 +149,7 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
 export const settingsChildrenOptions = createChildrenOptions<Record<string, unknown>>({
   useActions: useSettingsActions,
   DetailComponent: () => {
-    const t = useScopedI18n("search.mode.command.group.preferences");
+    const t = useI18n("search.mode.command.group.preferences");
     return (
       <Stack mx="md" my="sm" gap="xs">
         <Text>{t("title")}</Text>

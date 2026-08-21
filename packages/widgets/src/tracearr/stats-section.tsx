@@ -2,7 +2,7 @@ import { Group, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconDevices, IconNetwork, IconUsers, IconVideo } from "@tabler/icons-react";
 
 import type { TracearrDashboardData } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 export function StatsBar({
   stats,
@@ -13,19 +13,31 @@ export function StatsBar({
   summary: TracearrDashboardData["streams"]["summary"];
   width: number;
 }) {
-  const t = useScopedI18n("widget.tracearr");
+  const t = useI18n("widget.tracearr");
   const cols = width > 400 ? 4 : width > 250 ? 2 : 1;
 
   return (
     <SimpleGrid cols={cols} spacing="xs">
-      <StatCard icon={<IconVideo size="var(--mantine-font-size-md)" />} label={t("stats.activeStreams")} value={stats.activeStreams} />
-      <StatCard icon={<IconUsers size="var(--mantine-font-size-md)" />} label={t("stats.totalUsers")} value={stats.totalUsers} />
+      <StatCard
+        icon={<IconVideo size="var(--mantine-font-size-md)" />}
+        label={t("stats.activeStreams")}
+        value={stats.activeStreams}
+      />
+      <StatCard
+        icon={<IconUsers size="var(--mantine-font-size-md)" />}
+        label={t("stats.totalUsers")}
+        value={stats.totalUsers}
+      />
       <StatCard
         icon={<IconDevices size="var(--mantine-font-size-md)" />}
         label={t("stats.transcodes")}
         value={`${summary.transcodes}/${summary.total}`}
       />
-      <StatCard icon={<IconNetwork size="var(--mantine-font-size-md)" />} label={t("stats.bandwidth")} value={summary.totalBitrate} />
+      <StatCard
+        icon={<IconNetwork size="var(--mantine-font-size-md)" />}
+        label={t("stats.bandwidth")}
+        value={summary.totalBitrate}
+      />
     </SimpleGrid>
   );
 }

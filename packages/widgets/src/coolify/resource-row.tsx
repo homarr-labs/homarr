@@ -10,7 +10,7 @@ import {
   IconLoader2,
 } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import actionTargetClasses from "../common/action-target.module.css";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -35,7 +35,7 @@ interface ResourceRowProps {
 }
 
 export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRowProps) {
-  const t = useScopedI18n("widget.coolify");
+  const t = useI18n("widget.coolify");
   const status = parseStatus(item.status ?? "");
   const statusColor = getStatusColor(status);
   const isTransitioning = status === "starting" || status === "restarting";

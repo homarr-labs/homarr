@@ -2,7 +2,7 @@ import { Paper, Text } from "@mantine/core";
 import { IconBrain } from "@tabler/icons-react";
 
 import { formatBytesPair } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
@@ -19,7 +19,7 @@ export const SystemResourceMemoryChart = ({
   labelDisplayMode: LabelDisplayModeOption;
 }) => {
   const chartData = memoryUsageOverTime.map((usage, index) => ({ index, usage }));
-  const t = useScopedI18n("widget.systemResources.card");
+  const t = useI18n("widget.systemResources.card");
 
   const percentageUsed =
     memoryUsageOverTime.length > 0 && totalCapacityInBytes > 0

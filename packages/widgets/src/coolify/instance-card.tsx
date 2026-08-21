@@ -5,7 +5,7 @@ import { Accordion, Anchor, Badge, Card, Group, Image, Stack, Text, Tooltip } fr
 import { useLocalStorage } from "@mantine/hooks";
 
 import { useTimeAgo } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { ApplicationsSection } from "./applications-section";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -25,8 +25,8 @@ interface InstanceCardProps {
 }
 
 export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey, hideFooter }: InstanceCardProps) {
-  const t = useScopedI18n("widget.coolify");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.coolify");
+  const tCommon = useI18n("common");
   const cardKey = `${widgetKey}-${instance.integrationId}`;
   const [showIp, setShowIp] = useLocalStorage({
     key: `coolify-show-ip-${cardKey}`,
@@ -172,7 +172,7 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
 }
 
 const InstanceFooter = ({ version, updatedAt }: { version: string; updatedAt: Date }) => {
-  const t = useScopedI18n("widget.coolify");
+  const t = useI18n("widget.coolify");
   const relativeTime = useTimeAgo(updatedAt, 60_000);
   return (
     <Group

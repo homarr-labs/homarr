@@ -20,7 +20,10 @@ interface EmbeddedAppEditFormProps {
 }
 
 export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormProps) => {
-  const t = useI18n();
+  const tCommon = useI18n("common");
+  const tAppEdit = useI18n("app.page.edit");
+  const tAppSelect = useI18n("app.action.select");
+  const tItemApp = useI18n("item.edit.app");
   const utils = clientApi.useUtils();
   const appFormRef = useRef<AppFormHandle>(null);
   const { data: app, isPending: isLoadingApp, isError, refetch } = clientApi.app.byId.useQuery({ id: appId });
@@ -29,14 +32,14 @@ export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormPro
     onSuccess: async () => {
       await utils.app.invalidate();
       showSuccessNotification({
-        title: t("app.page.edit.notification.success.title"),
-        message: t("app.page.edit.notification.success.message"),
+        title: tCommon("notification.update.success"),
+        message: tAppEdit("notification.success.message"),
       });
     },
     onError: () => {
       showErrorNotification({
-        title: t("app.page.edit.notification.error.title"),
-        message: t("app.page.edit.notification.error.message"),
+        title: tCommon("notification.update.error"),
+        message: tAppEdit("notification.error.message"),
       });
     },
   });
@@ -66,9 +69,9 @@ export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormPro
   if (isError || !app) {
     return (
       <Stack align="center" gap="md" py="xl">
-        <Text c="dimmed">{t("app.action.select.notFound")}</Text>
+        <Text c="dimmed">{tAppSelect("notFound")}</Text>
         <Button variant="light" onClick={() => void refetch()}>
-          {t("common.action.tryAgain")}
+          {tCommon("action.tryAgain")}
         </Button>
       </Stack>
     );
@@ -77,7 +80,7 @@ export const EmbeddedAppEditForm = ({ appId, handleRef }: EmbeddedAppEditFormPro
   return (
     <Stack>
       <Alert icon={<IconInfoCircle size="var(--mantine-font-size-md)" />} color="blue" variant="light">
-        {t("item.edit.app.propagationNotice")}
+        {tItemApp("propagationNotice")}
       </Alert>
       <AppForm
         formRef={appFormRef}

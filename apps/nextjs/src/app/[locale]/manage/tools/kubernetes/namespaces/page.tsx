@@ -4,7 +4,7 @@ import { Stack, Title } from "@mantine/core";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/docker/env";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { NamespacesTable } from "~/app/[locale]/manage/tools/kubernetes/namespaces/namespaces-table";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -22,16 +22,16 @@ export default async function NamespacesPage({
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  const tResource = await getI18n("kubernetes.cluster.resources");
   const namespaces =
     context.status === "unavailable"
       ? []
       : await api.kubernetes.namespaces.getNamespaces({ contextId: context.contextId });
-  const tNamespaces = await getScopedI18n("kubernetes.namespaces");
   return (
     <>
       <DynamicBreadcrumb />
       <Stack>
-        <Title order={1}>{tNamespaces("label")}</Title>
+        <Title order={1}>{tResource("namespaces")}</Title>
         <NamespacesTable contextId={context.contextId} initialNamespaces={namespaces} />
       </Stack>
     </>

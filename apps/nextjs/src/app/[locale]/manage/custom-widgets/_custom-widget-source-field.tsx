@@ -5,7 +5,7 @@ import { IconKey, IconTrash } from "@tabler/icons-react";
 
 import { getCustomWidgetSourceUrlIssue } from "@homarr/custom-widgets/core";
 import type { CustomWidgetSource, CustomWidgetSourceUrlIssue } from "@homarr/custom-widgets/core";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 import { CustomWidgetIdentifierInput } from "./_custom-widget-identifier-input";
@@ -51,7 +51,8 @@ export function CustomWidgetSourceField({
   onClearSecret,
   onRemove,
 }: CustomWidgetSourceFieldProps) {
-  const t = useScopedI18n("customWidget.workbench.sources");
+  const t = useI18n("customWidget.workbench.sources");
+  const tSecret = useI18n("customWidget.secret");
   const baseUrlIssue = getCustomWidgetSourceUrlIssue(source.baseUrl);
   const authType = typeof source.auth === "string" ? source.auth : source.auth.type;
 
@@ -118,7 +119,7 @@ export function CustomWidgetSourceField({
             <Group key={kind} align="end" wrap="nowrap">
               <Input
                 style={{ flex: 1 }}
-                label={t(`secret.${kind}`)}
+                label={tSecret(kind)}
                 value={secret?.value ?? ""}
                 placeholder={secret?.hasValue ? t("configured") : undefined}
                 leftSection={<IconKey size={15} />}

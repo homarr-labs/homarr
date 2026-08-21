@@ -1,7 +1,7 @@
 import { Box, Group, Loader, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { isInitialWidgetQueryPending } from "../common/query-state";
 import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
@@ -26,7 +26,7 @@ export const ClockWeatherSummary = ({
   detailed,
 }: ClockWeatherSummaryProps) => {
   const t = useI18n();
-  const tCommon = useScopedI18n("common");
+  const tCommon = useI18n("common");
   const weatherQuery = clientApi.widget.weather.atLocation.useQuery({ latitude, longitude });
   const weather = weatherQuery.data;
 

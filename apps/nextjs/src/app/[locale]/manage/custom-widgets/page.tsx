@@ -4,7 +4,7 @@ import { IconExternalLink, IconPlus } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
@@ -21,11 +21,12 @@ export default async function CustomWidgetsPage() {
     redirect(session ? "/" : "/auth/login");
   }
   const definitions = await api.customWidget.list();
-  const t = await getScopedI18n("customWidget");
+  const t = await getI18n("customWidget");
+  const [tCommon, tEntities] = await Promise.all([getI18n("common"), getI18n("common.entity")]);
 
   return (
     <ManagePageLayout
-      title={t("page.list.title")}
+      title={tEntities("customWidgets")}
       primaryAction={
         <Group gap="xs">
           <MobileAffixButton
@@ -40,7 +41,7 @@ export default async function CustomWidgetsPage() {
           </MobileAffixButton>
           <ImportCustomWidgetButton />
           <MobileAffixButton component={Link} href="/manage/custom-widgets/new" leftSection={<IconPlus size={16} />}>
-            {t("action.create")}
+            {tCommon("action.create")}
           </MobileAffixButton>
         </Group>
       }

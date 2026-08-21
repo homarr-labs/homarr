@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box, Group, Popover, Progress, Stack, Text, UnstyledButton } from "@mantine/core";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { BeszelSystemRow } from "./types";
 import { thresholdColor } from "./colors";
@@ -21,7 +21,7 @@ const mountLabel = (path: string) =>
 const severityColor = (value: number) => `var(--mantine-color-${thresholdColor(value)}-6)`;
 
 export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap = 6 }: DiskUsageProps) => {
-  const t = useScopedI18n("common");
+  const t = useI18n("common");
   const [opened, setOpened] = useState(false);
   const filesystems = Object.entries(system.extraFilesystems).filter(([path]) => path !== "/");
   const filesystemUsageLabel = t("filesystemUsage", { count: filesystems.length + 1 });

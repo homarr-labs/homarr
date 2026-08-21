@@ -3,7 +3,7 @@ import { SegmentedControl } from "@mantine/core";
 
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface FormType {
   secrets: { kind: IntegrationSecretKind; value: string | null }[];
@@ -20,7 +20,7 @@ export const SecretKindsSegmentedControl = <TFormType extends FormType>({
   secretKinds,
   form,
 }: SecretKindsSegmentedControlProps<TFormType>) => {
-  const t = useScopedI18n("integration.secrets");
+  const t = useI18n("integration.secrets");
 
   const defaultValue = defaultKinds?.length === 0 ? "empty" : defaultKinds?.join("-");
   const secretKindGroups = secretKinds.map((kinds) => ({

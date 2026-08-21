@@ -3,7 +3,7 @@ import { IconPlayerPause, IconPlayerPlay } from "@tabler/icons-react";
 
 import { formatDuration } from "@homarr/common";
 import type { TracearrStream } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { SourcedTracearrItem } from "./source";
 
@@ -18,7 +18,7 @@ export function StreamsList({
   width: number;
   showSource: boolean;
 }) {
-  const t = useScopedI18n("widget.tracearr");
+  const t = useI18n("widget.tracearr");
 
   if (streams.length === 0) {
     return (
@@ -46,7 +46,7 @@ function StreamCard({
   compact: boolean;
   showSource: boolean;
 }) {
-  const t = useScopedI18n("widget.tracearr");
+  const t = useI18n("widget.tracearr");
   const progressPercent =
     stream.durationMs && stream.durationMs > 0 ? (stream.progressMs / stream.durationMs) * 100 : 0;
 

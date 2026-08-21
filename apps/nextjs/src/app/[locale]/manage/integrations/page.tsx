@@ -8,7 +8,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getSafeApplicationUrl } from "@homarr/common";
 import { getIntegrationName } from "@homarr/definitions";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { IntegrationAvatar, Link, SearchInput } from "@homarr/ui";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
@@ -37,7 +37,8 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
   } = getIntegrationsSectionAccess(session, integrations);
   if (!canAccess) notFound();
 
-  const t = await getScopedI18n("integration");
+  const t = await getI18n("integration");
+  const tCommon = await getI18n("common");
   // Without integration-full-all only the integrations that were explicitly delegated to the user
   // are manageable, so the list never shows an integration they cannot open.
   const manageableIntegrations = integrations.filter(
@@ -61,7 +62,7 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
 
   const page = (
     <ManageCollectionPage
-      title={t("page.list.title")}
+      title={tCommon("entity.integrations")}
       ariaLabel={t("page.list.ariaLabel")}
       itemCount={filteredIntegrations.length}
       emptyState={
@@ -77,7 +78,7 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
             icon={IconPlugX}
             title={t("page.list.noResults.filteredTitle")}
             description={t("page.list.noResults.filteredDescription", { search: searchParams.search ?? "" })}
-            action={{ label: t("page.list.noResults.clearSearch"), href: "/manage/integrations" }}
+            action={{ label: tCommon("action.clearSearch"), href: "/manage/integrations" }}
           />
         ) : (
           <NoResults
@@ -139,7 +140,7 @@ interface IntegrationItemProps {
 }
 
 const IntegrationItem = async ({ integration }: IntegrationItemProps) => {
-  const t = await getScopedI18n("integration");
+  const tCommon = await getI18n("common");
   const kindName = getIntegrationName(integration.kind);
   const safeUrl = getSafeApplicationUrl(integration.url);
 
@@ -178,7 +179,7 @@ const IntegrationItem = async ({ integration }: IntegrationItemProps) => {
             variant="subtle"
             color="gray"
             size={44}
-            aria-label={t("page.list.action.edit", { name: integration.name })}
+            aria-label={tCommon("action.editNamed", { name: integration.name })}
           >
             <IconPencil size={18} stroke={1.5} />
           </ActionIcon>

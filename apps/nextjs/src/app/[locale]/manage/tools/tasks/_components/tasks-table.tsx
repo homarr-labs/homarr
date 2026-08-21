@@ -11,73 +11,73 @@ import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
 import type { TaskStatus } from "@homarr/cron-job-status";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import type { ScopedTranslationFunction, TranslationFunction } from "@homarr/translation";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import type { ScopedTranslationFunction } from "@homarr/translation";
+import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 import { IconPowerOff } from "@homarr/ui/icons";
 
 const cronExpressions = [
   {
     value: "*/1 * * * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.seconds", { interval: 1 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.seconds", { interval: 1 }),
   },
   {
     value: "*/5 * * * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.seconds", { interval: 5 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.seconds", { interval: 5 }),
   },
   {
     value: "*/10 * * * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.seconds", { interval: 10 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.seconds", { interval: 10 }),
   },
   {
     value: "*/20 * * * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.seconds", { interval: 20 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.seconds", { interval: 20 }),
   },
   {
     value: "*/30 * * * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.seconds", { interval: 30 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.seconds", { interval: 30 }),
   },
   {
     value: "* * * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.minutes", { interval: 1 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.minutes", { interval: 1 }),
   },
   {
     value: "*/5 * * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.minutes", { interval: 5 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.minutes", { interval: 5 }),
   },
   {
     value: "*/10 * * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.minutes", { interval: 10 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.minutes", { interval: 10 }),
   },
   {
     value: "*/15 * * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.minutes", { interval: 15 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.minutes", { interval: 15 }),
   },
   // Every hour
   {
     value: "0 * * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.hours", { interval: 1 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.hours", { interval: 1 }),
   },
   // Every two hours
   {
     value: "0 */2 * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.hours", { interval: 2 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.hours", { interval: 2 }),
   },
   // Every four hours
   {
     value: "0 */4 * * *",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.hours", { interval: 4 }),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.hours", { interval: 4 }),
   },
   // Every midnight
   {
     value: "0 0 * * */1",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.midnight"),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.midnight"),
   },
   {
     value: "0 0 * * 1",
-    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.weeklyMonday"),
+    label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => t("interval.weeklyMonday"),
   },
-] satisfies { value: string; label: (t: TranslationFunction) => string }[];
+] satisfies { value: string; label: (t: ScopedTranslationFunction<"management.page.tool.tasks">) => string }[];
 
 type JobData = RouterOutputs["cronJobs"]["getJobs"][number] & {
   status?: TaskStatus | null;
@@ -85,7 +85,7 @@ type JobData = RouterOutputs["cronJobs"]["getJobs"][number] & {
 };
 
 const createColumns = (
-  t: TranslationFunction,
+  tCommon: ScopedTranslationFunction<"common">,
   tTasks: ScopedTranslationFunction<"management.page.tool.tasks">,
   jobStatusMap: Map<string, TaskStatus | null>,
   triggerMutation: ReturnType<typeof clientApi.cronJobs.triggerJob.useMutation>,
@@ -96,7 +96,7 @@ const createColumns = (
 ): MRT_ColumnDef<JobData>[] => [
   {
     accessorKey: "name",
-    header: tTasks("field.name.label"),
+    header: tCommon("field.name"),
     Cell({ row }) {
       const status = jobStatusMap.get(row.original.name);
       return (
@@ -156,7 +156,7 @@ const createColumns = (
           onChange={handleIntervalChange}
           data={cronExpressions.map(({ value, label }) => ({
             value,
-            label: label(t),
+            label: label(tTasks),
           }))}
           size="sm"
           disabled={loadingStates.get(row.original.name)?.interval ?? false}
@@ -279,8 +279,8 @@ interface TasksTableProps {
 }
 
 export const TasksTable = ({ initialJobs }: TasksTableProps) => {
-  const t = useI18n();
-  const tTasks = useScopedI18n("management.page.tool.tasks");
+  const tCommon = useI18n("common");
+  const tTasks = useI18n("management.page.tool.tasks");
 
   const { data: jobs } = clientApi.cronJobs.getJobs.useQuery(undefined, {
     initialData: initialJobs,
@@ -300,13 +300,13 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
   const triggerMutation = clientApi.cronJobs.triggerJob.useMutation({
     onError() {
       showErrorNotification({
-        title: t("common.error"),
+        title: tCommon("error"),
         message: tTasks("trigger.error.message"),
       });
     },
     onSuccess() {
       showSuccessNotification({
-        title: t("common.success"),
+        title: tCommon("success"),
         message: tTasks("trigger.success.message"),
       });
     },
@@ -314,14 +314,14 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
   const updateIntervalMutation = clientApi.cronJobs.updateJobInterval.useMutation({
     onError() {
       showErrorNotification({
-        title: t("common.error"),
+        title: tCommon("error"),
         message: tTasks("interval.update.error.message"),
       });
     },
     onSuccess: async () => {
       await utils.cronJobs.getJobs.invalidate();
       showSuccessNotification({
-        title: t("common.success"),
+        title: tCommon("success"),
         message: tTasks("interval.update.success.message"),
       });
     },
@@ -329,14 +329,14 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
   const enableMutation = clientApi.cronJobs.enableJob.useMutation({
     onError() {
       showErrorNotification({
-        title: t("common.error"),
+        title: tCommon("error"),
         message: tTasks("toggle.error.message"),
       });
     },
     onSuccess: async () => {
       await utils.cronJobs.getJobs.invalidate();
       showSuccessNotification({
-        title: t("common.success"),
+        title: tCommon("success"),
         message: tTasks("enable.success.message"),
       });
     },
@@ -344,14 +344,14 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
   const disableMutation = clientApi.cronJobs.disableJob.useMutation({
     onError() {
       showErrorNotification({
-        title: t("common.error"),
+        title: tCommon("error"),
         message: tTasks("toggle.error.message"),
       });
     },
     onSuccess: async () => {
       await utils.cronJobs.getJobs.invalidate();
       showSuccessNotification({
-        title: t("common.success"),
+        title: tCommon("success"),
         message: tTasks("disable.success.message"),
       });
     },
@@ -363,12 +363,12 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
     try {
       await utils.cronJobs.getJobs.invalidate();
       showSuccessNotification({
-        title: t("common.success"),
+        title: tCommon("success"),
         message: tTasks("refresh.success.message"),
       });
     } catch {
       showErrorNotification({
-        title: t("common.error"),
+        title: tCommon("error"),
         message: tTasks("refresh.error.message"),
       });
     }
@@ -395,11 +395,11 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
     initialState: { density: "xs", showGlobalFilter: true },
     renderTopToolbarCustomActions: () => (
       <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={handleRefreshAsync}>
-        {tTasks("action.refresh.label")}
+        {tCommon("action.refresh")}
       </Button>
     ),
     columns: createColumns(
-      t,
+      tCommon,
       tTasks,
       jobStatusMap,
       triggerMutation,
@@ -419,7 +419,7 @@ interface StatusBadgeProps {
 }
 
 const StatusBadge = ({ isEnabled, status }: StatusBadgeProps) => {
-  const tTasks = useScopedI18n("management.page.tool.tasks");
+  const tTasks = useI18n("management.page.tool.tasks");
 
   if (!isEnabled) {
     return (

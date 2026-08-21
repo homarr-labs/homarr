@@ -18,10 +18,11 @@ export interface CreateItemInput {
   integrationIds?: string[];
   targetSectionId?: string;
   advancedOptions?: BoardItemAdvancedOptions;
+  size?: { width: number; height: number };
 }
 
 export const createItemCallback =
-  ({ id, kind, options = {}, integrationIds = [], targetSectionId, advancedOptions }: CreateItemInput) =>
+  ({ id, kind, options = {}, integrationIds = [], targetSectionId, advancedOptions, size }: CreateItemInput) =>
   (previous: Board): Board => {
     const firstCanvasSection = previous.sections
       .filter(
@@ -40,10 +41,10 @@ export const createItemCallback =
 
     if (!targetSection) return previous;
 
-    let itemLayouts = createItemLayouts(previous, targetSection, kind);
+    let itemLayouts = createItemLayouts(previous, targetSection, kind, size);
     if (itemLayouts.length === 0 && firstCanvasSection && targetSection.id !== firstCanvasSection.id) {
       targetSection = firstCanvasSection;
-      itemLayouts = createItemLayouts(previous, targetSection, kind);
+      itemLayouts = createItemLayouts(previous, targetSection, kind, size);
     }
     if (itemLayouts.length === 0) return previous;
     const widget = {
@@ -74,9 +75,10 @@ const createItemLayouts = (
   board: Board,
   currentSection: EmptySection | ContainerSection,
   kind: WidgetKind,
+  requestedSize?: { width: number; height: number },
 ): ItemLayout[] => {
   const layouts = getBoardLayouts(board);
-  const itemSize = getWidgetItemSize(kind);
+  const itemSize = requestedSize ?? getWidgetItemSize(kind);
 
   return layouts.flatMap((layoutId) => {
     const boardLayout = board.layouts.find((layout) => layout.id === layoutId);

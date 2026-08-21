@@ -2,7 +2,7 @@ import { Alert, Badge, Center, Group, ScrollArea, SimpleGrid, Stack, Text } from
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { DynamicSelectOption } from "../_inputs/widget-dynamic-select-input";
 import { formatLocalizedTime } from "../common/locale";
@@ -15,7 +15,7 @@ export default function TimetableWidget({
   height,
   itemId,
 }: WidgetComponentProps<"timetable">) {
-  const t = useScopedI18n("widget.timetable");
+  const t = useI18n("widget.timetable");
 
   if (!options.station) {
     return <Center h="100%">{t("noStation")}</Center>;
@@ -53,8 +53,8 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, he
     stationId: station.value,
     limit: displayMode === "advanced" ? 50 : 10,
   });
-  const t = useScopedI18n("widget.timetable");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.timetable");
+  const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();
 
   if (error && timetable === undefined) throw error;
@@ -90,7 +90,12 @@ const TimetableWidgetInner = ({ station, baseUrl, itemId, displayMode, width, he
         </Group>
       )}
       {staleWarning && displayMode === "advanced" && (
-        <Alert role="presentation" color="orange" icon={<IconAlertTriangle aria-hidden size="var(--mantine-font-size-md)" />} p="xs">
+        <Alert
+          role="presentation"
+          color="orange"
+          icon={<IconAlertTriangle aria-hidden size="var(--mantine-font-size-md)" />}
+          p="xs"
+        >
           <output>{staleWarning}</output>
         </Alert>
       )}

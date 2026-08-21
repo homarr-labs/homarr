@@ -9,7 +9,7 @@ import { useI18n } from "@homarr/translation/client";
 
 export const AddCertificateButton = () => {
   const { openModal } = useModalAction(AddCertificateModal);
-  const t = useI18n();
+  const t = useI18n("certificate");
 
   const handleClick = () => {
     openModal({
@@ -19,5 +19,5 @@ export const AddCertificateButton = () => {
     });
   };
 
-  return <Button onClick={handleClick}>{t("certificate.action.create.label")}</Button>;
+  return <Button onClick={handleClick}>{t("action.create.label")}</Button>;
 };

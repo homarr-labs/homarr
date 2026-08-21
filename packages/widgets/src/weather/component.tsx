@@ -3,7 +3,7 @@
 import { Box } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
@@ -20,7 +20,7 @@ export default function WeatherWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"weather">) {
-  const t = useScopedI18n("widget.weather");
+  const t = useI18n("widget.weather");
   const input = {
     latitude: options.location.latitude,
     longitude: options.location.longitude,

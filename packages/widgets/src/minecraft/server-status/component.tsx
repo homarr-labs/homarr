@@ -16,13 +16,14 @@ export default function MinecraftServerStatusWidget({
   height,
 }: WidgetComponentProps<"minecraftServerStatus">) {
   const { data: result, isPending, error } = clientApi.widget.minecraft.getServerStatus.useQuery(options);
-  const t = useI18n();
+  const t = useI18n("widget.minecraftServerStatus");
+  const tCommon = useI18n("common");
 
   if (isPending) {
     return (
       <Flex align="center" justify="center" h="100%">
         <Text c="dimmed" size="sm">
-          {t("common.action.loading")}
+          {tCommon("action.loading")}
         </Text>
       </Flex>
     );
@@ -50,20 +51,10 @@ export default function MinecraftServerStatusWidget({
       align="center"
     >
       <Group gap="xs" wrap="nowrap" align="center" maw="100%">
-        <Tooltip
-          label={
-            data.online
-              ? t("widget.minecraftServerStatus.status.online")
-              : t("widget.minecraftServerStatus.status.offline")
-          }
-        >
+        <Tooltip label={data.online ? t("status.online") : t("status.offline")}>
           <Box aria-hidden miw="md" h="md" bg={data.online ? "teal" : "red"} style={{ borderRadius: "100%" }} />
         </Tooltip>
-        <VisuallyHidden>
-          {data.online
-            ? t("widget.minecraftServerStatus.status.online")
-            : t("widget.minecraftServerStatus.status.offline")}
-        </VisuallyHidden>
+        <VisuallyHidden>{data.online ? t("status.online") : t("status.offline")}</VisuallyHidden>
         <Text size={showMetadata ? "lg" : "md"} fw="bold" truncate="end">
           {title}
         </Text>
@@ -71,9 +62,7 @@ export default function MinecraftServerStatusWidget({
       {showMetadata && (
         <Group gap="xs" mt="xs" wrap="wrap" justify="center">
           <Badge variant="light">{options.domain}</Badge>
-          {options.isBedrockServer && (
-            <Badge variant="outline">{t("widget.minecraftServerStatus.option.isBedrockServer.label")}</Badge>
-          )}
+          {options.isBedrockServer && <Badge variant="outline">{t("option.isBedrockServer.label")}</Badge>}
         </Group>
       )}
       {data.online && (

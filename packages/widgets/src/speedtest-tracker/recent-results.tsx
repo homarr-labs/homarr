@@ -8,7 +8,7 @@ import { ReferenceLine, XAxis } from "recharts";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { SpeedtestTrackerResult } from "@homarr/integrations/types";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { SectionLabel } from "./section-label";
 
@@ -118,7 +118,7 @@ export function RecentResultsSection({
   results: SpeedtestTrackerResult[];
   showPingGraph: boolean;
 }) {
-  const t = useScopedI18n("widget.speedtestTracker");
+  const t = useI18n("widget.speedtestTracker");
 
   return (
     <Stack gap={4} h="100%" style={{ minHeight: 0 }}>
@@ -132,7 +132,7 @@ export function RecentResultsSection({
 }
 
 function SpeedSubChart({ results, showLabel }: { results: SpeedtestTrackerResult[]; showLabel: boolean }) {
-  const t = useScopedI18n("widget.speedtestTracker");
+  const t = useI18n("widget.speedtestTracker");
   const { ref, height } = useElementSize<HTMLDivElement>();
 
   return (
@@ -146,7 +146,7 @@ function SpeedSubChart({ results, showLabel }: { results: SpeedtestTrackerResult
 }
 
 function PingSubChart({ results }: { results: SpeedtestTrackerResult[] }) {
-  const t = useScopedI18n("widget.speedtestTracker");
+  const t = useI18n("widget.speedtestTracker");
   const { ref, height } = useElementSize<HTMLDivElement>();
 
   return (
@@ -162,7 +162,7 @@ function PingSubChart({ results }: { results: SpeedtestTrackerResult[] }) {
 function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResult[]; height: number }) {
   const board = useRequiredBoard();
   const theme = useMantineTheme();
-  const t = useScopedI18n("widget.speedtestTracker");
+  const t = useI18n("widget.speedtestTracker");
   const locale = useCurrentIntlLocale();
 
   const data = useMemo(
@@ -276,7 +276,7 @@ function SpeedHistoryChart({ results, height }: { results: SpeedtestTrackerResul
 function PingHistoryChart({ results, height }: { results: SpeedtestTrackerResult[]; height: number }) {
   const board = useRequiredBoard();
   const theme = useMantineTheme();
-  const t = useScopedI18n("widget.speedtestTracker");
+  const t = useI18n("widget.speedtestTracker");
   const locale = useCurrentIntlLocale();
 
   const data = useMemo(

@@ -8,7 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { formatCustomWidgetImportIssues } from "@homarr/custom-widgets/core";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import {
   applyCustomWidgetAiResponse,
@@ -36,14 +36,17 @@ interface FormActionsInput {
 }
 
 export function useCustomWidgetFormActions(input: FormActionsInput) {
-  const t = useScopedI18n("customWidget");
-  const w = useScopedI18n("customWidget.workbench");
+  const t = useI18n("customWidget");
+  const tCommon = useI18n("common");
+  const w = useI18n("customWidget.workbench");
   const utils = clientApi.useUtils();
   const createMutation = clientApi.customWidget.create.useMutation();
   const updateMutation = clientApi.customWidget.update.useMutation();
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
   const [saveIssues, setSaveIssues] = useState<CustomWidgetSaveIssue[]>([]);
   const [previewPending, setPreviewPending] = useState(false);
+  let actionLabel = tCommon("action.save");
+  if (input.mode === "create") actionLabel = tCommon("action.create");
 
   const save = input.form.onSubmit(async (values) => {
     clearSaveIssues(input.form, saveIssues);
@@ -54,7 +57,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         input.form,
         definition.error.issues.map((issue) => ({ path: issue.path.join("."), message: issue.message })),
         setSaveIssues,
-        t("action.save"),
+        actionLabel,
         (count) => w("saveError.more", { count }),
       );
       return;
@@ -65,7 +68,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         const result = await createMutation.mutateAsync({ ...definition.data, secrets: changedSecrets });
         await utils.customWidget.list.invalidate();
         showSuccessNotification({
-          title: t("action.create"),
+          title: tCommon("action.create"),
           message: t("notification.created", { name: values.name }),
         });
         input.form.setInitialValues(values);
@@ -86,18 +89,16 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         input.form.setInitialValues(values);
         input.form.resetDirty();
         showSuccessNotification({
-          title: t("action.save"),
+          title: tCommon("action.save"),
           message: t("notification.updated", { name: values.name }),
         });
       }
     } catch (error) {
       const issues = extractCustomWidgetSaveIssues(error);
       if (issues.length > 0) {
-        reportSaveIssues(input.form, issues, setSaveIssues, t("action.save"), (count) =>
-          w("saveError.more", { count }),
-        );
+        reportSaveIssues(input.form, issues, setSaveIssues, actionLabel, (count) => w("saveError.more", { count }));
       } else {
-        showErrorNotification({ title: t("action.save"), message: t("notification.updateError") });
+        showErrorNotification({ title: actionLabel, message: t("notification.updateError") });
       }
     }
   });

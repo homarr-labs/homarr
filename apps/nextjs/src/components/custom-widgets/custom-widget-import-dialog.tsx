@@ -4,7 +4,7 @@ import type { ModalProps } from "@mantine/core";
 
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { CustomWidgetSourceSetupPanel, ImportReviewDialog } from "@homarr/custom-widgets/workbench";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { useCustomWidgetImport } from "./use-custom-widget-import";
 
@@ -36,7 +36,7 @@ export function CustomWidgetImportDialog({
   onClose,
   onImported,
 }: CustomWidgetImportDialogProps) {
-  const t = useScopedI18n("customWidget");
+  const t = useI18n("customWidget");
   const importer = useCustomWidgetImport({
     widget,
     legacyId,

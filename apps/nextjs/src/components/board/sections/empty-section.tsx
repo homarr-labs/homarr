@@ -1,5 +1,5 @@
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";
 import { SectionGrid } from "./grid/section-grid";
@@ -16,7 +16,7 @@ export const BoardEmptySection = ({ section, columnCount, requestedRowCount, rai
   const { items, innerSections } = useSectionItems(section.id);
   const totalLength = items.length + innerSections.length;
   const [isEditMode] = useEditMode();
-  const t = useScopedI18n("board.landmark");
+  const t = useI18n("board.landmark");
 
   if (totalLength === 0 && !isEditMode && requestedRowCount === 0 && railPlacement !== "main") return null;
 

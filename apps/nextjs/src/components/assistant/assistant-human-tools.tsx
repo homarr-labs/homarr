@@ -26,7 +26,7 @@ import {
 import type { z } from "zod/v4";
 
 import { AppForm } from "@homarr/forms-collection";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
 
 import { getAssistantAskUserOptionKind } from "./assistant-ask-user";
@@ -54,7 +54,7 @@ export const getAssistantAppFormValues = (
 ) => (hasCompleteAssistantToolArguments(status) ? toAssistantAppValues(args) : null);
 
 export const AssistantHumanToolError = () => {
-  const t = useScopedI18n("common.assistant.toolPreparationError");
+  const t = useI18n("assistant.toolPreparationError");
   return (
     <Alert color="red" variant="light" title={t("title")} icon={<IconAlertTriangle size={18} />}>
       {t("description")}
@@ -68,7 +68,7 @@ export const AssistantAskUserTool = ({
   addResult,
   status,
 }: ToolCallMessagePartProps<AskUserArgs, AskUserResult>) => {
-  const t = useScopedI18n("common.assistant.askUser");
+  const t = useI18n("assistant.askUser");
   const [showOther, setShowOther] = useState(false);
   const [other, setOther] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -272,7 +272,7 @@ export const AssistantConfigureAppTool = ({
   status,
   toolCallId,
 }: ToolCallMessagePartProps<ConfigureAppArgs, AppValues>) => {
-  const t = useScopedI18n("common.assistant.configureApp");
+  const t = useI18n("assistant.configureApp");
   const [submitting, setSubmitting] = useState(false);
   const initialValues = getAssistantAppFormValues(args, status);
   const autoConfirming = useAssistantAutomaticAction({

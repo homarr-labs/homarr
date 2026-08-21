@@ -8,7 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { showErrorNotification } from "@homarr/notifications";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 import { isSmartHomeTiny } from "../layout";
@@ -22,8 +22,9 @@ export default function SmartHomeEntityStateWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"smartHome-entityState">) {
-  const t = useScopedI18n("widget.smartHome-entityState");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.smartHome-entityState");
+  const tWidgetCommon = useI18n("widget.common");
+  const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();
   // It will always have at least one integration as otherwise the NoIntegrationSelectedError would be thrown in item-content.tsx
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -163,7 +164,7 @@ export default function SmartHomeEntityStateWidget({
                 })}
               </Text>
               <Text size="xs" c="dimmed">
-                {t("advanced.lastUpdated", {
+                {tWidgetCommon("updatedAt", {
                   date: new Date(entity.last_updated).toLocaleString(locale),
                 })}
               </Text>

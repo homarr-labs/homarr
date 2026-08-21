@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { FloatingIndicator, Stack, TextInput, UnstyledButton } from "@mantine/core";
 
 import type { UrlTemplateMode } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { useOnboardingSounds } from "./use-onboarding-sounds";
 import classes from "./onboarding-studio.module.css";
@@ -78,7 +78,7 @@ export const ServiceUrlTemplate = ({
   readOnly,
   required,
 }: ServiceUrlTemplateProps) => {
-  const t = useScopedI18n("common.serviceUrlTemplate");
+  const t = useI18n("common.serviceUrlTemplate");
 
   return (
     <Stack gap="sm">

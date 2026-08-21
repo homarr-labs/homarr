@@ -10,7 +10,7 @@ import { IconInfoCircle } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
 import type { UseFormReturnType } from "@homarr/form";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { SectionCard } from "~/components/manage/section-card";
 import { WorkshopCssImportButton } from "~/components/workshop/workshop-css-import-button";
@@ -24,11 +24,11 @@ interface Props {
 export const CustomCssSettingsContent = ({ form }: Props) => {
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
-  const t = useI18n();
-  const customCssT = useScopedI18n("board.field.customCss");
+  const t = useI18n("board");
+  const customCssT = useI18n("board.field.customCss");
 
   return (
-    <SectionCard title={t("board.setting.section.customCss.title")}>
+    <SectionCard title={t("setting.section.customCss.title")}>
       <CustomCssInput {...form.getInputProps("customCss")} />
 
       <Alert variant="light" color="cyan" title={customCssT("customClassesAlert.title")} icon={<IconInfoCircle />}>
@@ -46,7 +46,7 @@ interface CustomCssInputProps {
 }
 
 const CustomCssInput = ({ value, onChange, error }: CustomCssInputProps) => {
-  const customCssT = useScopedI18n("board.field.customCss");
+  const customCssT = useI18n("board.field.customCss");
 
   return (
     <Input.Wrapper

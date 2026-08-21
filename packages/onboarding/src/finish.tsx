@@ -6,7 +6,7 @@ import { IconArrowRight, IconBook2, IconSparkles, IconTool } from "@tabler/icons
 import confetti from "canvas-confetti";
 
 import { createDocumentationLink } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { OnboardingBackdrop } from "./onboarding-backdrop";
@@ -16,7 +16,7 @@ import { useOnboardingSounds } from "./use-onboarding-sounds";
 import classes from "./onboarding-studio.module.css";
 
 export const Finish = ({ environment }: OnboardingStudioProps) => {
-  const t = useScopedI18n("init.studio.finish");
+  const t = useI18n("init.studio.finish");
   const sounds = useOnboardingSounds();
   const primaryColor = environment.initialBoard?.primaryColor ?? "#fa5252";
   const secondaryColor = environment.initialBoard?.secondaryColor ?? "#fd7e14";

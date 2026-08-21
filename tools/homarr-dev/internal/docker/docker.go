@@ -378,27 +378,29 @@ func IsPortConflict(err error) bool {
 		strings.Contains(message, "failed programming external connectivity")
 }
 
-func Stop(name string) error {
-	cmd := exec.Command("docker", "stop", name)
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("%w: %s", err, strings.TrimSpace(string(out)))
-	}
-	return nil
+func Stop(name string) error { return StopContext(context.Background(), name) }
+
+func Restart(name string) error { return RestartContext(context.Background(), name) }
+
+func Remove(name string) error { return RemoveContext(context.Background(), name) }
+
+// The context-aware variants let a background job be cancelled while the daemon
+// is still thinking, which matters when Docker is wedged and the user wants the
+// interface back.
+func StopContext(ctx context.Context, name string) error {
+	return runContainerCommand(ctx, "stop", name)
 }
 
-func Restart(name string) error {
-	cmd := exec.Command("docker", "restart", name)
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("%w: %s", err, strings.TrimSpace(string(out)))
-	}
-	return nil
+func RestartContext(ctx context.Context, name string) error {
+	return runContainerCommand(ctx, "restart", name)
 }
 
-func Remove(name string) error {
-	cmd := exec.Command("docker", "rm", "-f", name)
-	out, err := cmd.CombinedOutput()
+func RemoveContext(ctx context.Context, name string) error {
+	return runContainerCommand(ctx, "rm", "-f", name)
+}
+
+func runContainerCommand(ctx context.Context, args ...string) error {
+	out, err := exec.CommandContext(ctx, "docker", args...).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("%w: %s", err, strings.TrimSpace(string(out)))
 	}
@@ -420,6 +422,18 @@ func CheckImage(image string) (bool, error) {
 
 func FollowLogs(name string) error {
 	cmd := exec.Command("docker", "logs", "-f", "--tail", "100", name)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+func ExecInteractive(ctx context.Context, name string, command ...string) error {
+	if len(command) == 0 {
+		command = []string{"sh"}
+	}
+	args := append([]string{"exec", "-it", name}, command...)
+	cmd := exec.CommandContext(ctx, "docker", args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

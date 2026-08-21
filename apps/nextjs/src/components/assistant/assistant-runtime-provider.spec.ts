@@ -34,7 +34,7 @@ import {
 } from "./assistant-runtime-provider";
 
 vi.mock("@homarr/notifications", () => ({ showErrorNotification: vi.fn() }));
-vi.mock("@homarr/translation/client", () => ({ useScopedI18n: () => (key: string) => key }));
+vi.mock("@homarr/translation/client", () => ({ useI18n: () => (key: string) => key }));
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

@@ -18,7 +18,8 @@ interface InnerProps {
 }
 
 export const DuplicateBoardModal = createModal<InnerProps>(({ actions, innerProps }) => {
-  const t = useI18n();
+  const tBoard = useI18n("board");
+  const tCommon = useI18n("common");
   const form = useZodForm(boardDuplicateSchema.omit({ id: true }), {
     mode: "controlled",
     initialValues: {
@@ -46,14 +47,14 @@ export const DuplicateBoardModal = createModal<InnerProps>(({ actions, innerProp
             onSuccess() {
               actions.closeModal();
               showSuccessNotification({
-                title: t("board.action.duplicate.notification.success.title"),
-                message: t("board.action.duplicate.notification.success.message"),
+                title: tBoard("action.duplicate.notification.success.title"),
+                message: tBoard("action.duplicate.notification.success.message"),
               });
             },
             onError() {
               showErrorNotification({
-                title: t("board.action.duplicate.notification.error.title"),
-                message: t("board.action.duplicate.notification.error.message"),
+                title: tBoard("action.duplicate.notification.error.title"),
+                message: tBoard("action.duplicate.notification.error.message"),
               });
             },
           },
@@ -62,11 +63,11 @@ export const DuplicateBoardModal = createModal<InnerProps>(({ actions, innerProp
     >
       <Stack>
         <Text size="sm" c="gray.6">
-          {t("board.action.duplicate.message", { name: innerProps.board.name })}
+          {tBoard("action.duplicate.message", { name: innerProps.board.name })}
         </Text>
 
         <TextInput
-          label={t("board.field.name.label")}
+          label={tCommon("field.name")}
           data-autofocus
           {...form.getInputProps("name")}
           description={
@@ -82,10 +83,10 @@ export const DuplicateBoardModal = createModal<InnerProps>(({ actions, innerProp
 
         <Group justify="end">
           <Button variant="subtle" color="gray" onClick={actions.closeModal}>
-            {t("common.action.cancel")}
+            {tCommon("action.cancel")}
           </Button>
           <Button type="submit" loading={isPending}>
-            {t("common.action.create")}
+            {tCommon("action.create")}
           </Button>
         </Group>
       </Stack>

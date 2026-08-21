@@ -15,9 +15,9 @@ import {
 
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
-import { hotkeys } from "@homarr/definitions";
+import { hotkeys, invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
@@ -40,7 +40,7 @@ const formatHotkeyLabel = (hotkey: string, modifierLabel: string) =>
     .join(" + ");
 
 export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled }: UserAvatarMenuProps) => {
-  const t = useScopedI18n("common.userAvatar.menu");
+  const t = useI18n("common.userAvatar.menu");
   const session = useSession();
 
   const { logoutUrl } = useAuthContext();
@@ -110,7 +110,7 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled }: 
             </Menu.Item>
             {isDockerEnabled && (
               <Menu.Item leftSection={<IconBrandDocker size="1rem" />} onClick={() => openDockerModal()}>
-                {t("docker")}
+                {invariantTechnicalLabels.docker}
               </Menu.Item>
             )}
           </>

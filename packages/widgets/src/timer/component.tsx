@@ -20,7 +20,7 @@ import { useMediaQuery, useReducedMotion } from "@mantine/hooks";
 import { IconBell, IconPlayerPause, IconPlayerPlay, IconRefresh, IconSettings, IconVolume } from "@tabler/icons-react";
 import { useTiks } from "@rexa-developer/tiks/react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import {
   claimBrowserAlertOccurrence,
@@ -58,7 +58,7 @@ export default function TimerWidget({
   width,
 }: WidgetComponentProps<"timer">) {
   const now = useWidgetNow("second");
-  const t = useScopedI18n("widget.timer");
+  const t = useI18n("widget.timer");
   const reducedMotion = useReducedMotion();
   const forcedColors = useMediaQuery("(forced-colors: active)") ?? false;
   const { click: playResetSound, toggle: playRunningSound } = useTiks({
@@ -294,7 +294,7 @@ const CompactTimer = ({
   runtime,
   width,
 }: TimerDisplayProps) => {
-  const t = useScopedI18n("widget.timer");
+  const t = useI18n("widget.timer");
   const phaseLabel = getTimerPhaseLabel(runtime, t);
   const showCompletedFocus = runtime.mode === "pomodoro" && width >= 320;
   const showProgress = height >= 125;
@@ -384,7 +384,7 @@ const AdvancedTimer = ({
   remainingMs,
   runtime,
 }: AdvancedTimerProps) => {
-  const t = useScopedI18n("widget.timer");
+  const t = useI18n("widget.timer");
   const phaseLabel = getTimerPhaseLabel(runtime, t);
   return (
     <ScrollArea h="100%" w="100%" type="auto" offsetScrollbars scrollbarSize={6}>
@@ -480,7 +480,7 @@ const TimerControls = ({
   onReset: () => void;
   onToggleRunning: () => void;
 }) => {
-  const t = useScopedI18n("widget.timer");
+  const t = useI18n("widget.timer");
   const toggleLabel = isRunning ? t("action.pause") : t("action.start");
   return (
     <Group gap="xs" wrap="nowrap">
@@ -510,7 +510,7 @@ const TimerControls = ({
   );
 };
 
-type ScopedTimerTranslator = ReturnType<typeof useScopedI18n<"widget.timer">>;
+type ScopedTimerTranslator = ReturnType<typeof useI18n<"widget.timer">>;
 
 const getTimerPhaseLabel = (runtime: TimerRuntimeState, t: ScopedTimerTranslator) => {
   const phase = t(`phase.${runtime.phase}`);
@@ -567,7 +567,7 @@ const getTimerAttentionStyle = ({
 };
 
 const PomodoroSequence = ({ runtime, durations }: { runtime: TimerRuntimeState; durations: TimerDurations }) => {
-  const t = useScopedI18n("widget.timer");
+  const t = useI18n("widget.timer");
   return (
     <Paper withBorder p="md">
       <Text fw={600} mb="xs">
@@ -593,7 +593,7 @@ const PomodoroSequence = ({ runtime, durations }: { runtime: TimerRuntimeState; 
 };
 
 const SettingsSummary = ({ mode, durations }: { mode: TimerRuntimeState["mode"]; durations: TimerDurations }) => {
-  const t = useScopedI18n("widget.timer");
+  const t = useI18n("widget.timer");
   if (mode === "timer") return <SettingLine label={t("option.timerMinutes.label")} value={durations.timerMinutes} />;
   return (
     <Stack gap={5}>

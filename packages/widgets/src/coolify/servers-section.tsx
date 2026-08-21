@@ -11,7 +11,7 @@ import {
 } from "@tabler/icons-react";
 
 import type { CoolifyServer } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import actionTargetClasses from "../common/action-target.module.css";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -36,14 +36,17 @@ export function ServersSection({
   showIp,
   onToggleIp,
 }: ServersSectionProps) {
-  const t = useScopedI18n("widget.coolify");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.coolify");
+  const tCommon = useI18n("common");
   const onlineServers = servers.filter(isCoolifyServerOnline).length;
 
   return (
     <Accordion.Item value="servers">
       <Group gap={0} wrap="nowrap">
-        <Accordion.Control icon={isTiny ? null : <IconServer size="var(--mantine-font-size-md)" />} style={{ flex: 1, minWidth: 0 }}>
+        <Accordion.Control
+          icon={isTiny ? null : <IconServer size="var(--mantine-font-size-md)" />}
+          style={{ flex: 1, minWidth: 0 }}
+        >
           <Group gap="xs">
             <Text size="xs">{tCommon("servers")}</Text>
             <Badge variant="dot" color={getBadgeColor(onlineServers, servers.length)} size="xs">
@@ -101,7 +104,7 @@ interface ServerRowProps {
 }
 
 function ServerRow({ server, counts, baseUrl, isTiny, isAdvanced, showIp }: ServerRowProps) {
-  const t = useScopedI18n("widget.coolify");
+  const t = useI18n("widget.coolify");
   const isBuildServer = server.settings?.is_build_server === true;
   const reachability = getCoolifyServerState(server, "is_reachable");
   const usability = getCoolifyServerState(server, "is_usable");
@@ -158,7 +161,7 @@ function ServerRow({ server, counts, baseUrl, isTiny, isAdvanced, showIp }: Serv
 }
 
 const ServerStateBadge = ({ field, value }: { field: "reachability" | "usability"; value: boolean | undefined }) => {
-  const t = useScopedI18n("widget.coolify");
+  const t = useI18n("widget.coolify");
   const status =
     value === undefined
       ? t("status.unknown")

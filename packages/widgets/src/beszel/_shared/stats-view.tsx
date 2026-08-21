@@ -5,8 +5,9 @@ import { Button, Center, Group, SimpleGrid, Skeleton, Stack, Text } from "@manti
 import { IconPlugConnectedX, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { BeszelContainerStatsRecord, BeszelSystemStatsRecord } from "@homarr/integrations/types";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { getUsableWidgetQueryData } from "../../common/query-state";
 import { containerColors } from "./colors";
@@ -73,7 +74,8 @@ export function BeszelStatsView({
   columns,
   onSwitchToHistorical,
 }: BeszelStatsViewProps) {
-  const t = useScopedI18n("widget.beszelSystemStats");
+  const t = useI18n("widget.beszelSystemStats");
+  const tBeszel = useI18n("widget.beszel");
   const locale = useCurrentIntlLocale();
   const showDocker = visibility.dockerCpu || visibility.dockerMemory || visibility.dockerNetwork;
   const isLive = timePeriod === "1m";
@@ -91,7 +93,7 @@ export function BeszelStatsView({
 
   const mappers = useMemo(
     () => ({
-      cpu: (s: { cpu: number }) => ({ [t("chart.cpu.series")]: s.cpu }),
+      cpu: (s: { cpu: number }) => ({ [invariantTechnicalLabels.cpu]: s.cpu }),
       memory: (s: { mu: number; mb: number }) => ({
         [t("chart.memory.series")]: s.mu,
         [t("chart.memory.cache")]: s.mb ?? 0,
@@ -110,7 +112,7 @@ export function BeszelStatsView({
 
   const series = useMemo(
     () => ({
-      cpu: [{ name: t("chart.cpu.series"), color: "teal.6" }],
+      cpu: [{ name: invariantTechnicalLabels.cpu, color: "teal.6" }],
       memory: [
         { name: t("chart.memory.series"), color: "teal.5" },
         { name: t("chart.memory.cache"), color: "teal.8" },
@@ -238,7 +240,7 @@ export function BeszelStatsView({
         <Stack align="center" gap="xs">
           <IconServerOff size={24} opacity={0.5} />
           <Text size="sm" c="dimmed">
-            {t("error.internalServerError")}
+            {tBeszel("error.internalServerError")}
           </Text>
         </Stack>
       </Center>
