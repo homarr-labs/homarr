@@ -374,21 +374,31 @@ jobs:
           AMD64_DIGEST: ${{ needs.preview-amd64.outputs.digest }}
           ARM64_DIGEST: ${{ needs.preview-arm64.outputs.digest }}
         run: |
-          docker buildx imagetools create -t "${PREVIEW_IMAGE}:${PREVIEW_TAG}" \
+          tags=(-t "${PREVIEW_IMAGE}:${PREVIEW_TAG}")
+          if [[ "${GITHUB_EVENT_NAME}" == "push" && "${GITHUB_REF}" == "refs/heads/release/v2" ]]; then
+            tags+=(-t "${PREVIEW_IMAGE}:pr-6545")
+          fi
+          docker buildx imagetools create "${tags[@]}" \
             "${PREVIEW_IMAGE}@${AMD64_DIGEST}" \
             "${PREVIEW_IMAGE}@${ARM64_DIGEST}"
 
       - name: Verify preview manifest platforms
         if: "!env.ACT"
         run: |
-          image="${PREVIEW_IMAGE}:${PREVIEW_TAG}"
-          manifest="$(docker buildx imagetools inspect "$image" --raw)"
-          for architecture in amd64 arm64; do
-            jq --exit-status --arg architecture "$architecture" \
-              'any(.manifests[]; .platform.os == "linux" and .platform.architecture == $architecture)' \
-              <<<"$manifest" >/dev/null
+          tags=("${PREVIEW_TAG}")
+          if [[ "${GITHUB_EVENT_NAME}" == "push" && "${GITHUB_REF}" == "refs/heads/release/v2" ]]; then
+            tags+=("pr-6545")
+          fi
+          for tag in "${tags[@]}"; do
+            image="${PREVIEW_IMAGE}:${tag}"
+            manifest="$(docker buildx imagetools inspect "$image" --raw)"
+            for architecture in amd64 arm64; do
+              jq --exit-status --arg architecture "$architecture" \
+                'any(.manifests[]; .platform.os == "linux" and .platform.architecture == $architecture)' \
+                <<<"$manifest" >/dev/null
+            done
+            docker buildx imagetools inspect "$image"
           done
-          docker buildx imagetools inspect "$image"
 
   cleanup:
     name: Clean up preview image

@@ -27,37 +27,103 @@ jobs:
       - run: pnpm test:workshop
       - run: pnpm test:workshop-image
 
-  publish:
+  publish-amd64:
     if: github.event_name == 'push' && (github.ref_name == 'v2' || github.ref_name == 'release/v2' || github.ref_name == 'main')
     needs: validate
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 20
     permissions:
       contents: read
       packages: write
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
     steps:
       - uses: actions/checkout@v7
-      - uses: docker/setup-qemu-action@v4
       - uses: docker/setup-buildx-action@v4
       - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/metadata-action@v6
-        id: metadata
-        with:
-          images: ghcr.io/homarr-labs/workshop
-          tags: |
-            type=sha,prefix=sha-,format=long
-            type=raw,value=v2,enable=${{ github.ref_name == 'v2' || github.ref_name == 'release/v2' }}
-            type=raw,value=latest,enable=${{ github.ref_name == 'main' }}
       - uses: docker/build-push-action@v7
+        id: build
         with:
           context: .
           file: apps/workshop/Dockerfile
           target: production
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
+          platforms: linux/amd64
+          outputs: type=image,"name=ghcr.io/homarr-labs/workshop",push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=workshop-linux-amd64
+          cache-to: type=gha,scope=workshop-linux-amd64,mode=max
+
+  publish-arm64:
+    if: github.event_name == 'push' && (github.ref_name == 'v2' || github.ref_name == 'release/v2' || github.ref_name == 'main')
+    needs: validate
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v7
+        id: build
+        with:
+          context: .
+          file: apps/workshop/Dockerfile
+          target: production
+          platforms: linux/arm64
+          outputs: type=image,"name=ghcr.io/homarr-labs/workshop",push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=workshop-linux-arm64
+          cache-to: type=gha,scope=workshop-linux-arm64,mode=max
+
+  publish:
+    if: github.event_name == 'push' && (github.ref_name == 'v2' || github.ref_name == 'release/v2' || github.ref_name == 'main')
+    needs: [publish-amd64, publish-arm64]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      packages: write
+    env:
+      WORKSHOP_IMAGE: ghcr.io/homarr-labs/workshop
+    steps:
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish multi-platform image
+        env:
+          AMD64_DIGEST: ${{ needs.publish-amd64.outputs.digest }}
+          ARM64_DIGEST: ${{ needs.publish-arm64.outputs.digest }}
+        run: |
+          tags=(-t "${WORKSHOP_IMAGE}:sha-${GITHUB_SHA}")
+          if [[ "${GITHUB_REF_NAME}" == "v2" || "${GITHUB_REF_NAME}" == "release/v2" ]]; then
+            tags+=(-t "${WORKSHOP_IMAGE}:v2")
+          fi
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            tags+=(-t "${WORKSHOP_IMAGE}:latest")
+          fi
+          docker buildx imagetools create "${tags[@]}" \
+            "${WORKSHOP_IMAGE}@${AMD64_DIGEST}" \
+            "${WORKSHOP_IMAGE}@${ARM64_DIGEST}"
+      - name: Verify multi-platform image
+        run: |
+          image="${WORKSHOP_IMAGE}:sha-${GITHUB_SHA}"
+          manifest="$(docker buildx imagetools inspect "$image" --raw)"
+          for architecture in amd64 arm64; do
+            jq --exit-status --arg architecture "$architecture" \
+              'any(.manifests[]; .platform.os == "linux" and .platform.architecture == $architecture)' \
+              <<<"$manifest" >/dev/null
+          done
+          docker buildx imagetools inspect "$image"
