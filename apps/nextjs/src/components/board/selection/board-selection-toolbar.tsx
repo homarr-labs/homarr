@@ -15,7 +15,7 @@ import {
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { IconCheck, IconFolderShare, IconTrash, IconX } from "@tabler/icons-react";
+import { IconCheck, IconClipboard, IconCopy, IconFolderShare, IconTrash, IconX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
@@ -31,7 +31,14 @@ const MAX_AVATARS_DISPLAYED = 5;
 
 export const BoardSelectionToolbar = () => {
   const [isEditMode] = useEditMode();
-  const { selectedItemIds, clearSelection, removeSelectedItems, moveSelectedItemsToSection } = useBoardSelection();
+  const {
+    selectedItemIds,
+    clearSelection,
+    copySelectedItems,
+    pasteItems,
+    removeSelectedItems,
+    moveSelectedItemsToSection,
+  } = useBoardSelection();
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
@@ -201,14 +208,32 @@ export const BoardSelectionToolbar = () => {
           </HoverCard.Dropdown>
         </HoverCard>
 
-        <Text size="xs" c="dimmed" visibleFrom="sm" maw={220} lh={1.25}>
-          {t("app.action.select.multiSelectTip")}
-        </Text>
-
         <Divider orientation="vertical" />
 
         {/* Actions */}
         <Group gap="xs" wrap="nowrap" style={{ flexShrink: 0 }}>
+          <Button
+            size="xs"
+            variant="light"
+            color="blue"
+            leftSection={<IconCopy size={15} />}
+            onClick={() => void copySelectedItems()}
+          >
+            {tSelection("copy")}
+          </Button>
+
+          <Tooltip label={tSelection("pasteShortcut")} withArrow>
+            <Button
+              size="xs"
+              variant="light"
+              color="blue"
+              leftSection={<IconClipboard size={15} />}
+              onClick={() => void pasteItems()}
+            >
+              {tSelection("paste")}
+            </Button>
+          </Tooltip>
+
           {placementOptions.length > 1 && (
             <Menu position="top" withArrow shadow="md">
               <Menu.Target>

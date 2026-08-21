@@ -55,6 +55,7 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
   const activeRef = useRef<ActiveFocus | null>(null);
   const hoveredRef = useRef<{ itemId: string; source: HTMLElement } | null>(null);
   const shiftHeldRef = useRef(false);
+  const keepOpenHeldRef = useRef(false);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const previewLeaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -151,9 +152,30 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
     hoverTimerRef.current = setTimeout(() => {
       hoverTimerRef.current = null;
       setIsHoldPending(false);
-      open(hovered.itemId, hovered.source, { activation: "preview" });
+      const activation = keepOpenHeldRef.current ? "manual" : "preview";
+      open(hovered.itemId, hovered.source, {
+        activation,
+        autofocusClose: activation === "manual",
+        restoreFocusTarget: hovered.source,
+      });
     }, HOVER_DELAY_MS);
   }, [cancelHoverTimer, open]);
+
+  const promotePreviewToManual = useCallback(() => {
+    const current = activeRef.current;
+    if (!current || current.activation !== "preview") return false;
+    cancelHoverTimer();
+    cancelPreviewLeaveTimer();
+    cancelCloseTimer();
+    updateActive({
+      ...current,
+      activation: "manual",
+      autofocusClose: true,
+      restorePreviewFocus: false,
+      phase: "visible",
+    });
+    return true;
+  }, [cancelCloseTimer, cancelHoverTimer, cancelPreviewLeaveTimer, updateActive]);
 
   const hover = useCallback(
     (itemId: string, source: HTMLElement) => {
@@ -268,19 +290,37 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
         return;
       }
       if (isEditMode) return;
-      if (event.key !== "Shift" || event.repeat || isEditableTarget(event.target)) return;
+      if (event.repeat || isEditableTarget(event.target)) return;
+
+      const isKeepOpenModifier = event.key === "Control" || event.key === "Meta";
+      const hasKeepOpenShortcut = event.shiftKey && (event.ctrlKey || event.metaKey);
+      if (isKeepOpenModifier && hasKeepOpenShortcut) {
+        event.preventDefault();
+        keepOpenHeldRef.current = true;
+        if (!promotePreviewToManual()) startHoverTimer();
+        return;
+      }
+
+      if (event.key !== "Shift") return;
       if (activeRef.current?.activation === "manual") return;
       shiftHeldRef.current = true;
+      keepOpenHeldRef.current = hasKeepOpenShortcut;
       startHoverTimer();
     };
     const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === "Control" || event.key === "Meta") {
+        keepOpenHeldRef.current = false;
+        return;
+      }
       if (event.key !== "Shift") return;
       shiftHeldRef.current = false;
+      keepOpenHeldRef.current = false;
       cancelHoverTimer();
       if (activeRef.current?.activation === "preview") close(false);
     };
     const handleBlur = () => {
       shiftHeldRef.current = false;
+      keepOpenHeldRef.current = false;
       cancelHoverTimer();
       if (activeRef.current?.activation === "preview") close(false);
     };
@@ -296,7 +336,15 @@ export const BoardAdvancedFocusProvider = ({ children }: PropsWithChildren) => {
       cancelPreviewLeaveTimer();
       cancelCloseTimer();
     };
-  }, [cancelCloseTimer, cancelHoverTimer, cancelPreviewLeaveTimer, close, isEditMode, startHoverTimer]);
+  }, [
+    cancelCloseTimer,
+    cancelHoverTimer,
+    cancelPreviewLeaveTimer,
+    close,
+    isEditMode,
+    promotePreviewToManual,
+    startHoverTimer,
+  ]);
 
   useEffect(() => {
     if (isEditMode && activeRef.current) close(false);
