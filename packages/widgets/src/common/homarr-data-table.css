@@ -46,6 +46,13 @@
   text-overflow: ellipsis;
 }
 
+/* Lets a cell's content (e.g. an oversized action icon) visually overflow its own box without
+   growing it - used to make a per-row icon look bigger without inflating row height, since the
+   icon is pulled out of flow via absolute positioning rather than actually being a bigger cell. */
+.homarr-data-table td.docker-actions-cell {
+  overflow: visible;
+}
+
 .homarr-data-table td .mantine-Text-root,
 .homarr-data-table td .mantine-Group-root {
   white-space: nowrap;
@@ -56,6 +63,13 @@
 .homarr-data-table .mantine-datatable-header-cell-draggable-action-icon {
   opacity: 0;
   transition: opacity 150ms ease-out;
+}
+
+/* The sort icon only ever appears in the header row (not once per data row), so - unlike
+   row-level icons - making it bigger doesn't cost anything in row-height terms. */
+.homarr-data-table .mantine-datatable-header-cell-sortable-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 .homarr-data-table th:hover .mantine-datatable-header-cell-sortable-icon,
