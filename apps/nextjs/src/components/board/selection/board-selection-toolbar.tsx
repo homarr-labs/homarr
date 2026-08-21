@@ -15,7 +15,7 @@ import {
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { IconCheck, IconCopy, IconFolderShare, IconTrash, IconX } from "@tabler/icons-react";
+import { IconCheck, IconClipboard, IconCopy, IconFolderShare, IconTrash, IconX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
@@ -31,8 +31,14 @@ const MAX_AVATARS_DISPLAYED = 5;
 
 export const BoardSelectionToolbar = () => {
   const [isEditMode] = useEditMode();
-  const { selectedItemIds, clearSelection, copySelectedItems, removeSelectedItems, moveSelectedItemsToSection } =
-    useBoardSelection();
+  const {
+    selectedItemIds,
+    clearSelection,
+    copySelectedItems,
+    pasteItems,
+    removeSelectedItems,
+    moveSelectedItemsToSection,
+  } = useBoardSelection();
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
@@ -215,6 +221,18 @@ export const BoardSelectionToolbar = () => {
           >
             {tSelection("copy")}
           </Button>
+
+          <Tooltip label={tSelection("pasteShortcut")} withArrow>
+            <Button
+              size="xs"
+              variant="light"
+              color="blue"
+              leftSection={<IconClipboard size={15} />}
+              onClick={() => void pasteItems()}
+            >
+              {tSelection("paste")}
+            </Button>
+          </Tooltip>
 
           {placementOptions.length > 1 && (
             <Menu position="top" withArrow shadow="md">

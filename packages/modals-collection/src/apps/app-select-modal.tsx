@@ -114,13 +114,6 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
             }
           }}
         />
-        {multiSelect && selectedAppIds.size > 0 && (
-          <Group justify="flex-end" px={2}>
-            <Badge variant="light" color="primaryColor" size="xs">
-              {t("app.action.select.selectedCount", { count: selectedAppIds.size })}
-            </Badge>
-          </Group>
-        )}
       </Stack>
 
       {/* Scrollable Container with App Cards */}
@@ -213,13 +206,6 @@ const AppCard = ({
       selected={isSelected}
       icon={<Image src={app.iconUrl} alt={app.name} w={28} h={28} fit="contain" style={{ flexShrink: 0 }} />}
       title={app.name}
-      topRight={
-        isSelected ? (
-          <Badge variant="dot" color="primaryColor" size="xs">
-            {t("app.action.select.selected")}
-          </Badge>
-        ) : null
-      }
       description={app.description}
       footerLeft={
         <Text size="xs" c="dimmed">

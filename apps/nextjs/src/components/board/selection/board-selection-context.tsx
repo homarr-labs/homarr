@@ -29,6 +29,7 @@ interface BoardSelectionContextValue {
   clearSelection: () => void;
   isSelected: (id: string) => boolean;
   copySelectedItems: () => Promise<void>;
+  pasteItems: () => Promise<void>;
   removeSelectedItems: () => void;
   moveSelectedItemsToSection: (sectionId: string) => void;
 }
@@ -116,21 +117,8 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
     }
   }, [board.items, currentLayoutId, selectedItemIds, t, tSelection]);
 
-  useEffect(() => {
-    if (!isEditMode) return;
-
-    const handlePaste = (event: ClipboardEvent) => {
-      const target = event.target;
-      if (
-        target instanceof Element &&
-        target.closest("input, textarea, select, [contenteditable='true'], [role='textbox']")
-      )
-        return;
-
-      const value = event.clipboardData?.getData("text/plain") ?? "";
-      if (!isBoardItemClipboardText(value)) return;
-      event.preventDefault();
-
+  const pasteItemsFromText = useCallback(
+    (value: string) => {
       const payload = parseBoardItemClipboard(value);
       if (!payload) {
         showErrorNotification({ title: t("common.error"), message: tSelection("pasteInvalid") });
@@ -166,11 +154,38 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
         title: t("common.success"),
         message: tSelection("pasted", { count: pastedIds.length }),
       });
+    },
+    [persistBoard, t, tSelection],
+  );
+
+  const pasteItems = useCallback(async () => {
+    try {
+      pasteItemsFromText(await navigator.clipboard.readText());
+    } catch {
+      showErrorNotification({ title: t("common.error"), message: tSelection("pasteError") });
+    }
+  }, [pasteItemsFromText, t, tSelection]);
+
+  useEffect(() => {
+    if (!isEditMode) return;
+
+    const handlePaste = (event: ClipboardEvent) => {
+      const target = event.target;
+      if (
+        target instanceof Element &&
+        target.closest("input, textarea, select, [contenteditable='true'], [role='textbox']")
+      )
+        return;
+
+      const value = event.clipboardData?.getData("text/plain") ?? "";
+      if (!isBoardItemClipboardText(value)) return;
+      event.preventDefault();
+      pasteItemsFromText(value);
     };
 
     window.addEventListener("paste", handlePaste);
     return () => window.removeEventListener("paste", handlePaste);
-  }, [isEditMode, persistBoard, t, tSelection]);
+  }, [isEditMode, pasteItemsFromText]);
 
   const removeSelectedItems = useCallback(() => {
     if (selectedItemIds.size === 0) return;
@@ -335,6 +350,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
       clearSelection,
       isSelected,
       copySelectedItems,
+      pasteItems,
       removeSelectedItems,
       moveSelectedItemsToSection,
     }),
@@ -343,6 +359,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
       copySelectedItems,
       isSelected,
       moveSelectedItemsToSection,
+      pasteItems,
       removeSelectedItems,
       selectedItemIds,
       toggleSelectItem,
