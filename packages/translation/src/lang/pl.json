@@ -1344,6 +1344,10 @@
       "name": "Traefik",
       "description": "Chmurowy reverse proxy i load balancer"
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Monitoruj, który z twoich kontenerów Docker ma dostępne aktualizacje obrazów"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "System zarządzania dokumentami do archiwizacji i organizacji zeskanowaych dokumnteów"
@@ -1437,8 +1441,18 @@
     "here": "tutaj",
     "iconPicker": {
       "label": "adres URL ikony",
+      "description": "Przeszukaj bibliotekę, wklej adres URL obrazu lub wgraj plik.",
       "header": "Wpisz nazwę lub obiekty do filtrowania ikon... Homarr przeszuka dla Ciebie ikony {countIcons}.",
       "headerLoading": "Wpisz, aby wyszukać ikony…",
+      "clear": "Wyczyść obraz",
+      "uploadImage": "Prześlij obraz",
+      "results": "Wyniki wyszukiwania obrazów",
+      "localImages": "Twoje obrazy",
+      "svgIcons": "Ikony SVG",
+      "otherImages": "Inne obrazy",
+      "urlLoading": "Sprawdzanie obrazu…",
+      "urlReady": "Obraz jest gotowy do użycia",
+      "urlError": "Nie można załadować tego obrazu. Sprawdź adres URL i spróbuj ponownie.",
       "noResults": "Brak ikon pasujących do \"{search}\".",
       "error": "Nie udało się załadować ikon."
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": "Pokaż wiadomości nadawcze"
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "Pokaż, ile oglądanych kontenerów ma dostępne aktualizacje.",
+      "title": "What's Up Docker",
+      "monitored": "Monitorowane",
+      "updatesAvailable": "{count, plural, one {# dostępna aktualizacja} other {# dostępne aktualizacje}}",
+      "updateAvailable": "Dostępna aktualizacja",
+      "openReleaseNotes": "Otwórz notatki o wydaniu",
+      "option": {
+        "showTitle": {
+          "label": "Pokaż tytuł"
+        },
+        "showRing": {
+          "label": "Pokaż pierścień aktualizacji"
+        },
+        "layout": {
+          "label": "Układ",
+          "option": {
+            "horizontal": {
+              "label": "Poziomy"
+            },
+            "vertical": {
+              "label": "Pionowy"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Pokaż listę aktualizacji kontenera",
+          "description": "Wymienia każdy monitorowany kontener z dostępną aktualizacją obrazu"
         }
       }
     },

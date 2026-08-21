@@ -1018,11 +1018,11 @@
       "releasesProvider": "发布",
       "notifications": "通知",
       "firewall": "防火墙",
-      "timetable": "时刻表",
+      "timetable": "时间表",
       "photoService": "照片",
       "documents": "文档",
       "notes": "笔记",
-      "mediaMonitoring": "监控",
+      "mediaMonitoring": "媒体监控",
       "speedtest": "速度测试",
       "analytics": "分析",
       "vpn": "VPN",
@@ -1310,8 +1310,8 @@
           "newLabel": "新建私钥"
         },
         "slug": {
-          "label": "状态页面标识",
-          "newLabel": "新的状态页面标识"
+          "label": "状态页标识",
+          "newLabel": "新状态页标识"
         }
       }
     },
@@ -1322,7 +1322,7 @@
     },
     "audiobookshelf": {
       "name": "Audiobookshelf",
-      "description": "自托管有声书和播客服务器"
+      "description": "自托管有声读物和播客服务器"
     },
     "navidrome": {
       "name": "Navidrome",
@@ -1330,13 +1330,13 @@
     },
     "uptimeKuma": {
       "name": "Uptime Kuma",
-      "description": "自托管运行时间监控，带有公开状态页",
+      "description": "自托管运行时间监控，支持公开状态页",
       "secret": {
         "slug": {
-          "description": "公开状态页的标识。如果未设置，默认为 \"default\"。"
+          "description": "您公开状态页的标识。如未设置，默认值为“default”。"
         },
         "apiKey": {
-          "description": "用于经过身份验证的 /metrics 访问的可选 API 密钥"
+          "description": "用于访问 /metrics 认证接口的可选 API 密钥"
         }
       }
     },
@@ -1344,9 +1344,13 @@
       "name": "Traefik",
       "description": "云原生反向代理和负载均衡器"
     },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "监控您哪些 Docker 容器有可用的镜像更新"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
-      "description": "用于归档和组织扫描文档的文档管理系统"
+      "description": "用于归档和整理扫描文档的文档管理系统"
     },
     "patchmon": {
       "name": "PatchMon",
@@ -1398,7 +1402,7 @@
       }
     },
     "noResults": {
-      "title": "未上传媒体"
+      "title": "暂无上传的媒体"
     }
   },
   "common": {
@@ -1437,8 +1441,18 @@
     "here": "这里",
     "iconPicker": {
       "label": "图标 URL",
+      "description": "搜索库，粘贴图片URL，或上传文件。",
       "header": "输入名称或对象来筛选图标… Homarr 将为您搜索 {countIcons} 图标。",
       "headerLoading": "输入以搜索图标…",
+      "clear": "清除图像",
+      "uploadImage": "上传图片",
+      "results": "图像搜索结果",
+      "localImages": "你的映像",
+      "svgIcons": "SVG 图标",
+      "otherImages": "其他映像",
+      "urlLoading": "",
+      "urlReady": "图像已准备好使用",
+      "urlError": "无法加载此图像。请检查URL，然后重试。",
       "noResults": "没有与“{search}”匹配的图标。",
       "error": "无法加载图标。"
     },
@@ -1663,7 +1677,7 @@
         "app": "编辑应用"
       },
       "app": {
-        "propagationNotice": "对此应用的更改将应用于所有面板中使用它的所有位置。"
+        "propagationNotice": "对此应用的更改将应用于所有面板中使用该应用的位置。"
       },
       "advancedOptions": {
         "label": "高级选项",
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": "显示广播消息"
+        }
+      }
+    },
+    "wud": {
+      "name": "What's Up Docker",
+      "description": "显示有多少个已监控的容器有可用更新。",
+      "title": "What's Up Docker",
+      "monitored": "已监控",
+      "updatesAvailable": "{count, plural, one {# 个更新可用} other {# 个更新可用}}",
+      "updateAvailable": "有可用更新",
+      "openReleaseNotes": "打开发布说明",
+      "option": {
+        "showTitle": {
+          "label": "显示标题"
+        },
+        "showRing": {
+          "label": "显示更新进度环"
+        },
+        "layout": {
+          "label": "布局",
+          "option": {
+            "horizontal": {
+              "label": "水平"
+            },
+            "vertical": {
+              "label": "垂直"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "显示容器更新列表",
+          "description": "列出每个有镜像更新可用的已监控容器"
         }
       }
     },
@@ -2486,7 +2532,7 @@
     },
     "ups": {
       "name": "UPS",
-      "description": "通过 NUT 服务器监控 UPS 设备的状态",
+      "description": "通过 NUT 服务器监控您的 UPS 设备状态",
       "option": {
         "showBattery": {
           "label": "显示电量"
@@ -3784,35 +3830,35 @@
       "option": {
         "showArtists": {
           "label": "显示艺术家",
-          "description": "显示音乐库中艺术家的总数 (Navidrome)"
+          "description": "显示音乐库中的艺术家总数（Navidrome）"
         },
         "showAlbums": {
           "label": "显示专辑",
-          "description": "显示音乐库中专辑的总数 (Navidrome)"
+          "description": "显示音乐库中的专辑总数（Navidrome）"
         },
         "showSongs": {
           "label": "显示歌曲",
-          "description": "显示音乐库中歌曲的总数 (Navidrome)"
+          "description": "显示音乐库中的歌曲总数（Navidrome）"
         },
         "showLibraryCount": {
-          "label": "显示库数量",
-          "description": "显示实例中的库数量 (Audiobookshelf)"
+          "label": "显示媒体库数量",
+          "description": "显示实例中的媒体库数量（Audiobookshelf）"
         },
         "showAudiobooks": {
-          "label": "显示有声书",
-          "description": "显示所有库中的有声书总数 (Audiobookshelf)"
+          "label": "显示有声读物",
+          "description": "显示所有媒体库中的有声读物总数（Audiobookshelf）"
         },
         "showPodcasts": {
           "label": "显示播客",
-          "description": "显示所有库中的播客总数 (Audiobookshelf)"
+          "description": "显示所有媒体库中的播客总数（Audiobookshelf）"
         },
         "showListeningTime": {
-          "label": "显示收听时间",
-          "description": "显示您的总收听时间 (Audiobookshelf)"
+          "label": "显示收听时长",
+          "description": "显示总收听时长（Audiobookshelf）"
         },
         "showActiveSessions": {
           "label": "显示活跃会话",
-          "description": "显示当前活跃的播放会话数量 (Audiobookshelf)"
+          "description": "显示当前活跃播放会话的数量（Audiobookshelf）"
         },
         "compactMode": {
           "label": "紧凑模式",
@@ -3822,8 +3868,8 @@
       "artists": "艺术家",
       "albums": "专辑",
       "songs": "歌曲",
-      "libraryCount": "库",
-      "audiobooks": "有声书",
+      "libraryCount": "媒体库",
+      "audiobooks": "有声读物",
       "podcasts": "播客",
       "listeningTime": "收听时长",
       "activeSessions": "活跃会话",
@@ -3923,10 +3969,10 @@
     },
     "beszelSystemTable": {
       "name": "Beszel 系统（表格）",
-      "description": "所有 Beszel 监控系统的表格视图，具有可排序列和状态指示器",
+      "description": "所有 Beszel 监控系统的表格视图，包含可排序列和状态指示器",
       "option": {
         "statusFilter": {
-          "label": "状态过滤器"
+          "label": "状态筛选"
         },
         "sortBy": {
           "label": "排序方式"
@@ -4057,17 +4103,17 @@
       }
     },
     "beszelAlerts": {
-      "name": "Beszel 警报",
-      "description": "查看 Beszel 警报配置和历史记录",
+      "name": "Beszel 告警",
+      "description": "查看 Beszel 告警配置和历史记录",
       "option": {
         "showHistory": {
-          "label": "显示警报历史"
+          "label": "显示告警历史"
         },
         "maxHistoryItems": {
           "label": "最大历史记录条数"
         }
       },
-      "empty": "未配置警报",
+      "empty": "未配置告警",
       "error": {
         "internalServerError": "无法连接到 Beszel。请检查您的集成设置。"
       },
@@ -4079,15 +4125,15 @@
       }
     },
     "beszelSystemStats": {
-      "name": "Beszel 系统状态",
-      "description": "CPU、内存、磁盘、网络和 Docker 容器指标的时间序列图表",
+      "name": "Beszel 系统统计",
+      "description": "CPU、内存、磁盘、网络和 Docker 容器指标的时序图表",
       "option": {
         "systemId": {
           "label": "系统",
           "description": "选择要显示统计信息的 Beszel 系统"
         },
         "timePeriod": {
-          "label": "时间段"
+          "label": "时间范围"
         },
         "showCpu": {
           "label": "显示 CPU 图表"
@@ -4127,12 +4173,12 @@
       "chart": {
         "cpu": {
           "title": "CPU 使用率",
-          "subtitle": "平均系统 CPU 利用率",
+          "subtitle": "系统整体 CPU 平均使用率",
           "series": "CPU"
         },
         "memory": {
           "title": "内存使用率",
-          "subtitle": "记录时的精确利用率",
+          "subtitle": "记录时间点的精确使用率",
           "series": "已用",
           "cache": "缓存/缓冲区"
         },
@@ -4154,17 +4200,17 @@
         },
         "network": {
           "title": "带宽",
-          "subtitle": "公共接口的网络流量",
-          "sent": "已发送",
+          "subtitle": "公网接口的网络流量",
+          "sent": "发送",
           "recv": "已接收"
         },
         "dockerCpu": {
           "title": "Docker CPU 使用率",
-          "subtitle": "容器的平均 CPU 利用率"
+          "subtitle": "容器的平均 CPU 使用率"
         },
         "dockerMemory": {
           "title": "Docker 内存使用率",
-          "subtitle": "Docker 容器的内存使用"
+          "subtitle": "Docker 容器的内存使用率"
         },
         "dockerNetwork": {
           "title": "Docker 网络 I/O",
@@ -4572,7 +4618,7 @@
             "docker": "Docker",
             "kubernetes": "Kubernetes",
             "logs": "日志",
-            "api": "API",
+            "api": "API 与 MCP",
             "certificates": "证书",
             "tasks": "任务",
             "backup": "备份"
@@ -4690,19 +4736,19 @@
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "无障碍服务",
               "onboardingTours": {
-                "title": "入门指南",
-                "description": "重置入门指南，以便在下次访问管理中心或面板时再次看到它们。",
-                "reset": "重置入门指南",
+                "title": "新手指南",
+                "description": "重置新手指南，以便您下次访问管理区域或面板时再次看到它们。",
+                "reset": "重置新手指南",
                 "resetSuccess": {
-                  "title": "指南已重置",
-                  "message": "入门指南将在您下次访问时再次显示"
+                  "title": "新手指南已重置",
+                  "message": "新手指南将在您下次访问时再次显示"
                 },
                 "status": {
                   "completed": "已完成",
                   "notStarted": "未开始"
                 },
                 "name": {
-                  "management": "管理中心",
+                  "management": "管理",
                   "dashboard": "面板"
                 }
               }
@@ -4829,7 +4875,7 @@
           "analytics": {
             "title": "分析",
             "general": {
-              "title": "发送匿名分析",
+              "title": "协助我们改进 Homarr",
               "text": "这有助于我们了解用户实际使用哪些功能，从而决定将开发精力投入到哪里。我们会收集诸如您拥有多少小组件或集成、Homarr 版本以及使用的数据库类型等信息。仅此而已——不包含个人信息、URL、名称，也不含任何可能识别您本人或您个人配置的内容。"
             }
           },
@@ -5033,84 +5079,84 @@
             "mcp": {
               "label": "AI / MCP",
               "title": "AI 集成",
-              "subtitle": "模型上下文协议 (MCP) 服务器",
-              "description": "将 AI 助手连接到您的 Homarr 实例，通过自然语言控制整个家庭实验室。在 Overseerr 上搜索和请求媒体，管理 Docker 容器，切换 Pi-hole，检查服务器健康状况，控制 Home Assistant 设备等——一切通过您的 AI 助手完成。",
-              "noApiKey": "您需要一个 API 密钥来与 MCP 服务器进行身份验证。",
+              "subtitle": "模型上下文协议（MCP）服务器",
+              "description": "将 AI 助手连接到您的 Homarr 实例，通过自然语言控制您的整个家庭实验室。在 Overseerr 上搜索和请求媒体资源，管理 Docker 容器，切换 Pi-hole，检查服务器健康状态，控制 Home Assistant 设备等——全部通过您的 AI 助手完成。",
+              "noApiKey": "您需要 API 密钥才能通过 MCP 服务器进行认证。",
               "createApiKeyButton": "创建 API 密钥",
               "endpoint": {
                 "title": "MCP 端点"
               },
               "authentication": {
                 "title": "认证",
-                "intro": "您可以使用 API 密钥或 OAuth 与 MCP 服务器进行身份验证。两种方法授予相同的访问级别。",
+                "intro": "您可以使用 API 密钥或 OAuth 对 MCP 服务器进行认证。两种方法授予的访问权限级别相同。",
                 "apiKey": {
-                  "title": "API 密钥 (手动)",
-                  "description": "在 MCP 客户端配置中传递带有完整 API 密钥的 ApiKey 标头。"
+                  "title": "API 密钥（手动）",
+                  "description": "在 MCP 客户端配置中通过 ApiKey 标头传递您的完整 API 密钥。"
                 },
                 "oauth": {
-                  "title": "OAuth (浏览器登录)",
-                  "description": "支持 OAuth 的客户端（如 Claude Code、opencode 或 Cursor）可以通过打开浏览器窗口进行身份验证。在客户端中运行 auth 命令，在浏览器中登录 Homarr，即可连接——API 密钥会自动创建。",
-                  "hint": "OAuth 令牌在身份验证选项卡中显示为常规 API 密钥。您可以随时撤销它们。"
+                  "title": "OAuth（浏览器登录）",
+                  "description": "支持 OAuth 的客户端（如 Claude Code、opencode 或 Cursor）可通过打开浏览器窗口进行认证。在客户端中运行 auth 命令，在浏览器中登录 Homarr，即可完成连接——API 密钥将自动创建。",
+                  "hint": "OAuth 令牌在“认证”标签页中显示为常规 API 密钥。您可以随时撤销它们。"
                 },
-                "permissions": "API 密钥决定了 AI 可用的权限——它与密钥所有者具有相同的访问级别。"
+                "permissions": "PI 密钥决定了 AI 可用的权限——它的访问级别与密钥所有者相同。"
               },
               "clientConfig": {
                 "title": "客户端配置",
                 "streamableHttp": {
                   "recommended": "推荐",
-                  "title": "可流式 HTTP",
-                  "worksWith": "适用于: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
-                  "addToConfig": "添加到您的 MCP 客户端配置文件：",
-                  "cursor": "{name}: 项目或全局设置中的 {file}",
+                  "title": "可流式传输的 HTTP",
+                  "worksWith": "适用于：Cursor、Claude Desktop、VS Code Copilot、Windsurf、Claude Code",
+                  "addToConfig": "添加到您的 MCP 客户端配置文件中：",
+                  "cursor": "{name}：项目或全局设置中的 {file}",
                   "claudeDesktop": "{name}: {file}",
-                  "claudeCode": "{name}: {file} 或使用 {command}",
-                  "vsCodeCopilot": "{name}: 工作区设置中的 {file}",
+                  "claudeCode": "{name}：{file} 或使用 {command}",
+                  "vsCodeCopilot": "{name}：工作区设置中的 {file}",
                   "replaceHint": "将占位符替换为您在创建时收到的 API 密钥。"
                 },
                 "stdio": {
-                  "title": "stdio (通过 mcp-remote 桥接的旧客户端)",
-                  "description": "仅支持 stdio 传输的客户端。需要本地安装 {dependency} (Node.js)："
+                  "title": "stdio（通过 mcp-remote 桥接的旧版客户端）",
+                  "description": "适用于仅支持 stdio 传输的客户端。需要本地安装 {dependency}（Node.js）："
                 }
               },
               "testConnection": {
                 "title": "测试您的连接",
-                "description": "在终端中运行此命令以验证端点是否可达以及 API 密钥是否有效：",
-                "hint": "成功响应将返回 MCP 服务器功能。如果出现错误，请检查 JSON 响应以获取提示。"
+                "description": "在终端中运行以下命令，以验证端点可访问且您的 API 密钥有效：",
+                "hint": "成功响应将返回 MCP 服务器的能力信息。如果看到错误，请检查 JSON 响应中的提示。"
               },
               "availableTools": {
                 "title": "可用工具",
-                "description": "{count} 个工具可用。展开类别以查看各个工具及其描述。",
+                "description": "{count} 个工具可用。展开分类可查看各个工具及其描述。",
                 "columnType": "类型",
                 "columnName": "工具",
                 "columnDescription": "描述"
               },
               "troubleshooting": {
-                "title": "故障排除",
+                "title": "故障排查",
                 "missingHeader": {
-                  "title": "\"缺少 ApiKey 标头\"",
-                  "description": "您的客户端未发送 {header} 标头。验证 MCP 配置中的 {section} 部分是否正确。某些客户端在配置更改后需要重启。"
+                  "title": "“缺少 ApiKey 标头”",
+                  "description": "您的客户端未发送 {header} 标头。请检查 MCP 配置中的 {section} 部分是否正确。某些客户端在更改配置后需要重启。"
                 },
                 "invalidFormat": {
-                  "title": "\"无效的 ApiKey 格式\"",
-                  "description": "确保您复制了完整的 API 密钥，而不仅仅是部分。"
+                  "title": "“ApiKey 格式无效”",
+                  "description": "请确保您复制了完整的 API 密钥，而非仅复制了其中一部分。"
                 },
                 "invalidKey": {
-                  "title": "\"无效的 API 密钥\"",
-                  "description": "找不到密钥 ID 或令牌错误。API 密钥仅在创建时可见一次。如果您丢失了它，请删除旧密钥并创建新密钥。"
+                  "title": "“API 密钥无效”",
+                  "description": "未找到该密钥 ID，或令牌有误。API 密钥仅在创建时可见一次。如已丢失，请删除旧密钥并创建新密钥。"
                 },
                 "connectionRefused": {
                   "title": "连接被拒绝 / 超时",
-                  "description": "确保 URL 可从您的 AI 客户端访问。如果 Homarr 在反向代理或 Docker 后运行，请使用外部 URL (不是 {localhost})。验证端口是否正确 (默认: Docker 为 7575)。"
+                  "description": "请确保您的 AI 客户端能够访问该 URL。如果 Homarr 运行在反向代理后或 Docker 中，请使用外部 URL（而非 {localhost}）。请确认端口是否正确（Docker 默认端口为 7575）。"
                 },
                 "toolsNotAppearing": {
-                  "title": "工具未出现",
-                  "description": "某些工具需要配置特定的集成（例如 Docker、Overseerr）。工具列表取决于 Homarr 实例中的可用内容。"
+                  "title": "工具未显示",
+                  "description": "部分工具需要先配置特定的集成（例如 Docker、Overseerr）。工具列表取决于您的 Homarr 实例中可用的功能。"
                 }
               },
               "copy": "复制",
               "oneClick": {
                 "title": "一键安装",
-                "subtitle": "使用 OAuth — 首次使用时在浏览器中进行身份验证",
+                "subtitle": "使用 OAuth 认证——首次使用时在浏览器中进行身份验证",
                 "vsCode": "在 VS Code 中安装",
                 "cursor": "在 Cursor 中安装",
                 "copyUrl": "复制 MCP URL",
@@ -5123,16 +5169,16 @@
         },
         "backup": {
           "title": "完整数据库备份",
-          "metaTitle": "备份与恢复",
+          "metaTitle": "备份 & 恢复",
           "export": {
             "title": "导出数据库",
-            "description": "下载包含所有设置、用户、面板和加密集成密钥的 SQLite 数据库的完整备份。备份打包为 ZIP 文件，附带加密密钥和元数据。",
-            "button": "下载备份",
+            "description": "下载 SQLite 数据库的完整备份，包含所有设置、用户、面板和加密的集成密钥。备份文件以 ZIP 格式打包，内含加密密钥和元数据。",
+            "button": "备份下载",
             "error": "导出失败",
             "confirm": {
               "title": "敏感数据导出",
-              "warningTitle": "此导出包含您的整个数据库。",
-              "warningBody": "备份包括所有用户、集成密钥（加密）、API 密钥、面板配置和应用数据。将导出的文件安全存储，不要分享。",
+              "warningTitle": "此导出包含您的完整数据库。",
+              "warningBody": "备份包含所有用户、集成密钥（已加密）、API 密钥、面板配置和应用数据。请妥善保管导出的文件，切勿分享。",
               "typePrompt": "输入 \"{phrase}\" 以继续",
               "submit": "导出数据库",
               "cancel": "取消"
@@ -5140,23 +5186,23 @@
           },
           "import": {
             "title": "恢复数据库",
-            "description": "上传先前导出的备份 ZIP 以恢复您的数据库。这将替换您的整个数据库。如果备份是使用不同的加密密钥创建的，密钥将自动重新加密。",
-            "warning": "恢复备份将完全替换您当前的数据库并重启应用程序。此操作无法撤销。",
+            "description": "上传之前导出的备份 ZIP 文件以恢复数据库。此操作将替换整个数据库。如果备份使用的加密密钥不同，密钥将自动重新加密。",
+            "warning": "恢复备份将完全替换当前数据库并重启应用。此操作不可撤销。",
             "dropzone": {
-              "title": "将备份 ZIP 拖到此处或点击浏览",
-              "description": "仅接受 Homarr SQLite 备份的 .zip 文件"
+              "title": "将备份 ZIP 文件拖放到此处，或点击浏览",
+              "description": "仅接受来自 Homarr SQLite 备份的 .zip 文件"
             },
             "changeFile": "更改文件",
             "button": "恢复数据库",
             "success": {
               "title": "恢复完成",
-              "message": "数据库已成功恢复。应用程序正在重启……"
+              "message": "数据库已成功恢复。应用正在重启……"
             },
             "error": "导入失败"
           },
           "preview": {
             "title": "备份内容",
-            "exported": "导出时间：{date}",
+            "exported": "导出于 {date}",
             "loading": "正在分析备份文件……",
             "errorTitle": "预览错误",
             "entity": "实体",
@@ -5172,13 +5218,13 @@
               "search_engine": "搜索引擎"
             },
             "analyzeError": "分析备份文件失败",
-            "invalidMissingMetadata": "无效备份：缺少 metadata.json",
-            "invalidMissingDb": "无效备份：缺少 db.sqlite"
+            "invalidMissingMetadata": "备份无效：缺少 metadata.json 文件",
+            "invalidMissingDb": "备份无效：缺少 db.sqlite 文件"
           },
           "restore": {
             "dropzone": {
-              "title": "将备份 ZIP 拖到此处",
-              "description": "接受 Homarr SQLite 备份的 .zip 文件（最大 256 MB）"
+              "title": "将备份 ZIP 文件拖放到此处",
+              "description": "仅接受来自 Homarr SQLite 备份的 .zip 文件（最大 256 MB）"
             },
             "analyzing": "正在分析备份……",
             "changeFile": "更改文件",
@@ -5187,7 +5233,7 @@
             "analysisError": "分析错误",
             "preview": {
               "title": "备份内容",
-              "exported": "导出时间：{date}",
+              "exported": "导出于 {date}",
               "entity": "实体",
               "count": "数量",
               "boards": "面板",
@@ -5200,43 +5246,43 @@
                 "media": "媒体",
                 "search_engine": "搜索引擎"
               },
-              "migrationsApplied": "已应用 {count} 个迁移",
-              "migrationsAppliedPlural": "已应用 {count} 个迁移",
-              "migrationsOlderVersion": "此备份来自较旧的 Homarr 版本。已应用 {count} 个架构迁移以使其更新。",
-              "migrationsOlderVersionPlural": "此备份来自较旧的 Homarr 版本。已应用 {count} 个架构迁移以使其更新。",
-              "migrationsUpToDate": "数据库架构已是最新（已应用 {count} 个迁移）",
-              "upToDate": "已更新",
-              "migrationsPending": "{count} 个待处理"
+              "migrationsApplied": "已应用 {count} 项迁移",
+              "migrationsAppliedPlural": "已应用 {count} 项迁移",
+              "migrationsOlderVersion": "此备份来自较旧版本的 Homarr。已应用 {count} 项数据库迁移以将其更新至最新版本。",
+              "migrationsOlderVersionPlural": "此备份来自较旧版本的 Homarr。已应用 {count} 项数据库迁移以将其更新至最新版本。",
+              "migrationsUpToDate": "数据库架构已为最新（已应用 {count} 项迁移）",
+              "upToDate": "已是最新",
+              "migrationsPending": "{count} 项待处理"
             },
             "migration": {
-              "title": "正在应用迁移 ({current}/{total})",
+              "title": "正在应用迁移（{current}/{total}）",
               "migrationLabel": "迁移 {index}"
             },
             "confirm": {
               "title": "破坏性操作",
               "warningTitle": "这将永久替换您的整个数据库。",
-              "warningBody": "所有当前面板、用户、应用、集成、设置和会话都将丢失。此操作无法撤销。应用将在恢复后重启。",
+              "warningBody": "所有现有面板、用户、应用、集成、设置和会话都将丢失。此操作不可撤销。恢复完成后应用将重启。",
               "typePrompt": "输入 \"{phrase}\" 以继续",
               "cancel": "取消",
               "submit": "恢复数据库"
             },
             "progress": {
               "title": "正在恢复数据库……",
-              "extracting": "提取备份存档",
-              "migrating": "应用数据库迁移",
-              "encrypting": "重新加密集成密钥",
-              "swapping": "替换数据库文件",
-              "restarting": "重启服务器"
+              "extracting": "正在解压备份压缩包",
+              "migrating": "正在应用数据库迁移",
+              "encrypting": "正在重新加密集成密钥",
+              "swapping": "正在替换数据库文件",
+              "restarting": "正在重启服务器"
             },
             "complete": {
               "title": "恢复完成",
-              "message": "数据库已成功恢复。服务器正在重启——请几秒钟后刷新页面。"
+              "message": "数据库已成功恢复。服务器正在重启——请稍后刷新页面。"
             },
             "failed": {
               "title": "恢复失败"
             },
-            "invalidMissingMetadata": "无效备份：缺少 metadata.json",
-            "invalidMissingDb": "无效备份：缺少 db.sqlite",
+            "invalidMissingMetadata": "备份无效：缺少 metadata.json 文件",
+            "invalidMissingDb": "备份无效：缺少 db.sqlite 文件",
             "analyzeError": "分析备份失败"
           }
         }
@@ -5918,14 +5964,14 @@
             "title": "偏好设置",
             "children": {
               "detail": {
-                "title": "选择要更改的偏好",
-                "backHint": "按 Backspace 或使用返回按钮返回",
+                "title": "选择要更改的偏好设置",
+                "backHint": "按 Backspace 键或使用返回按钮返回",
                 "backAction": "返回"
               }
             },
             "notification": {
               "error": {
-                "message": "无法更新偏好"
+                "message": "无法更新偏好设置"
               }
             },
             "option": {
@@ -5938,11 +5984,11 @@
               },
               "board": {
                 "none": "无",
-                "unavailable": "当前选择（不可用）"
+                "unavailable": "当前已选（不可用）"
               },
               "searchEngine": {
                 "none": "无",
-                "unavailable": "当前选择（不可用）"
+                "unavailable": "当前已选（不可用）"
               },
               "colorScheme": {
                 "label": "配色方案",
@@ -5977,42 +6023,42 @@
                 }
               },
               "ddgBangs": {
-                "label": "启用 DuckDuckGo bangs",
+                "label": "启用 DuckDuckGo Bang 快捷搜索",
                 "children": {
                   "detail": {
-                    "title": "启用 DuckDuckGo bangs"
+                    "title": "启用 DuckDuckGo Bang 快捷搜索"
                   }
                 }
               },
               "firstDayOfWeek": {
-                "label": "一周的第一天",
+                "label": "每周的第一天",
                 "children": {
                   "detail": {
-                    "title": "选择一周的第一天"
+                    "title": "选择每周的第一天"
                   }
                 }
               },
               "homeBoardId": {
-                "label": "主面板",
+                "label": "默认面板",
                 "children": {
                   "detail": {
-                    "title": "选择您的主面板"
+                    "title": "选择您的默认面板"
                   }
                 }
               },
               "mobileHomeBoardId": {
-                "label": "移动端主面板",
+                "label": "移动端默认面板",
                 "children": {
                   "detail": {
-                    "title": "选择您的移动端主面板"
+                    "title": "选择您的移动端默认面板"
                   }
                 }
               },
               "pingIconsEnabled": {
-                "label": "为 ping 使用图标",
+                "label": "使用图标表示 ping 状态",
                 "children": {
                   "detail": {
-                    "title": "为 ping 使用图标"
+                    "title": "使用图标表示 ping 状态"
                   }
                 }
               },
@@ -6032,16 +6078,16 @@
         }
       },
       "media": {
-        "help": "搜索电影或节目以请求",
+        "help": "搜索要请求的电影或剧集",
         "requestMovie": "请求电影",
         "requestSeries": "请求电视节目",
         "openIn": "在 {kind} 中打开",
         "group": {
-          "title": "电影和节目"
+          "title": "电影和剧集"
         },
         "action": {
           "search": {
-            "label": "搜索电影或节目",
+            "label": "搜索电影或剧集",
             "description": "开始输入以搜索您的媒体请求集成",
             "disabled": {
               "noIntegration": "添加 Overseerr、Jellyseerr 或 Seerr 集成以启用媒体搜索。",
@@ -6456,39 +6502,39 @@
     "manage": {
       "welcome": {
         "title": "欢迎使用 Homarr！",
-        "description": "这是您的控制中心。您可以在此管理面板、应用、集成、用户和服务器设置。让我们浏览每个部分。"
+        "description": "这是您的控制中心。您可以在这里管理面板、应用、集成、用户和服务器设置。让我们逐一了解每个部分。"
       },
       "boardsList": {
         "title": "您的面板",
-        "description": "这里是您的所有面板。每个面板都有自己的布局、背景和访问设置。您可以查看每个面板的创建者以及它是公开的还是私有的。"
+        "description": "这里是您的所有面板。每个面板都有自己的布局、背景和访问设置。您可以查看每个面板的创建者以及它是公开还是私有的。"
       },
       "boardsCreate": {
         "title": "创建面板",
-        "description": "点击此处创建新面板或从以前的 Homarr 安装中导入。每个面板都有自己可共享的 URL。"
+        "description": "点击此处创建新面板，或从之前的 Homarr 安装中导入。每个面板都有独立的可分享链接。"
       },
       "appsList": {
         "title": "您的应用",
-        "description": "这些是您添加的所有应用——指向自托管服务的链接。每个应用都有图标、可选的健康检查和面板上的状态徽章。"
+        "description": "这些是您已添加的所有应用——指向您自托管服务的链接。每个应用都配有图标、可选的健康检查，并在面板上显示状态标记。"
       },
       "appsCreate": {
         "title": "添加应用",
-        "description": "在此注册新服务。为其命名、URL 和图标——它将作为磁贴显示在您的面板上，并带有实时状态监控。"
+        "description": "在此处注册新服务。设置名称、URL 和图标后，它将以磁贴形式出现在您的面板上，并带有实时状态监控。"
       },
       "integrationsList": {
         "title": "您的集成",
-        "description": "这些是连接到 Homarr 的服务——Sonarr、Radarr、Plex、Jellyfin 及 50 多种其他服务。所有凭据在静态时均加密。"
+        "description": "这些是已连接到 Homarr 的服务——Sonarr、Radarr、Plex、Jellyfin 以及 50 多种其他服务。所有凭证均以加密方式存储。"
       },
       "integrationsCreate": {
         "title": "添加集成",
-        "description": "在此连接新服务。选择类型，输入 URL 和 API 密钥——Homarr 在保存前会验证连接。"
+        "description": "在此处连接新服务。选择类型，输入 URL 和 API 密钥——Homarr 会在保存前验证连接。"
       },
       "usersList": {
         "title": "您的用户",
-        "description": "查看所有有访问权限的人员。将用户组织到组中，并控制谁可以查看或编辑每个面板。"
+        "description": "查看所有拥有访问权限的用户。将用户归入不同组别，并控制谁可以查看或编辑每个面板。"
       },
       "usersCreate": {
         "title": "创建用户",
-        "description": "在此添加新用户账户。您也可以使用邀请链接方便地引入。导览到此结束——您已准备就绪！"
+        "description": "在此处添加新用户账号。您也可以使用邀请链接简化入门流程。导览已结束——您已准备就绪！"
       }
     },
     "board": {
@@ -6502,15 +6548,15 @@
       },
       "settings": {
         "title": "面板设置",
-        "description": "更改此面板的名称、列数、背景、颜色以及访问权限。每个面板可以是公开或私有的。"
+        "description": "更改此面板的名称、列数、背景、颜色以及访问权限。每个面板均可设为公开或私有。"
       },
       "switcher": {
         "title": "切换面板",
-        "description": "在面板间跳转。为不同目的创建独立的面板——媒体、网络、按用户或任何您喜欢的。"
+        "description": "在不同面板之间跳转。您可以为不同用途创建独立的面板——媒体、网络、按用户划分，或任何您喜欢的分类。"
       },
       "userMenu": {
         "title": "您的个人资料",
-        "description": "更改您的配色方案、语言、主面板和偏好。您也可以从此处跳转到管理中心。"
+        "description": "更改您的配色方案、语言、默认面板和偏好设置。您也可以从这里跳转到管理区域。"
       }
     }
   }

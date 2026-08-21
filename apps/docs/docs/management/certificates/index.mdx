@@ -52,14 +52,21 @@ The certificates are stored in the `/appdata/trusted-certificates` directory whi
 This means you can automate the update of the certificates by simply replacing or adding a new file in the directory.
 
 ## Obtaining certificates
-
 Every integration has its own way of obtaining certificates.
 Generally it is recommended to search for the documentation of the integration you are using.
 Most of the time you can find the certificate in the file system of the integration.
+The certificate file needs to be uploaded to Homarr. To first get the file on your computer you can either:
+- use `scp user@host:/path/to/file ./certificate.pem`
+- use `cat /path/to/file` to print the certificate. Then recreate the file on your machine.
+
 Below you can find instructions for some of the integrations.
 
 ### Pi-hole (v6)
-
 Since version 6 of Pi-hole, the web interface can be accessed through HTTPS.
-The certificate can be found in the path `/etc/pihole/tls_ca.crt`. To add the certificate, this file needs to be copied and uploaded to Homarr.
+The certificate can be found in the path `/etc/pihole/tls_ca.crt`.
 You can find more details regarding SSL / TLS for Pi-hole [here](https://docs.pi-hole.net/api/tls/).
+
+### Proxmox
+By default, Proxmox VE uses a node certificate signed by the cluster. You only need to configure Homarr with the certificate of a single node.
+The certificate can be found in any node on the path `/etc/pve/pve-root-ca.pem`.
+You can learn more about certificate management in Proxmox [here](https://pve.proxmox.com/wiki/Certificate_Management).

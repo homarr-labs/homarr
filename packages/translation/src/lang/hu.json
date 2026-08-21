@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "",
+      "description": ""
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Dokumentumkezelő rendszer beolvasott dokumentumok archiválására és rendszerezésére"
@@ -1437,8 +1441,18 @@
     "here": "itt",
     "iconPicker": {
       "label": "Ikonhivatkozás",
+      "description": "",
       "header": "Írjon be nevet vagy objektumokat az ikonok szűréséhez... A Homarr a {countIcons} ikonok között keres.",
       "headerLoading": "",
+      "clear": "",
+      "uploadImage": "",
+      "results": "",
+      "localImages": "",
+      "svgIcons": "",
+      "otherImages": "",
+      "urlLoading": "",
+      "urlReady": "",
+      "urlError": "",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "",
+      "description": "",
+      "title": "",
+      "monitored": "",
+      "updatesAvailable": "",
+      "updateAvailable": "",
+      "openReleaseNotes": "",
+      "option": {
+        "showTitle": {
+          "label": "Cím megjelenítése"
+        },
+        "showRing": {
+          "label": ""
+        },
+        "layout": {
+          "label": "Elrendezés",
+          "option": {
+            "horizontal": {
+              "label": "Vízszintes"
+            },
+            "vertical": {
+              "label": "Függőleges"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "",
+          "description": ""
         }
       }
     },

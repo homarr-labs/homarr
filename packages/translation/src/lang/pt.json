@@ -1344,6 +1344,10 @@
       "name": "",
       "description": ""
     },
+    "wud": {
+      "name": "O Docker",
+      "description": "Monitora qual dos seus contêineres Docker tem atualizações de imagem disponíveis"
+    },
     "paperlessNgx": {
       "name": "Paperless-ngx",
       "description": "Sistema de gerenciamento de documentos para arquivamento e organização de documentos digitalizados"
@@ -1437,8 +1441,18 @@
     "here": "aqui",
     "iconPicker": {
       "label": "URL do ícone",
+      "description": "Procure na biblioteca, cole uma URL da imagem ou envie um arquivo.",
       "header": "Digite o nome ou os objetos para filtrar os ícones... O Homarr pesquisará {countIcons} ícones para você.",
-      "headerLoading": "",
+      "headerLoading": "Pesquisar imagens por nome",
+      "clear": "Limpar imagem",
+      "uploadImage": "Upload de imagem",
+      "results": "Resultados da busca por imagem",
+      "localImages": "Suas imagens",
+      "svgIcons": "Ícones SVG",
+      "otherImages": "Outras imagens",
+      "urlLoading": "Verificando imagem…",
+      "urlReady": "A imagem está pronta para uso",
+      "urlError": "Esta imagem não pôde ser carregada. Verifique a URL e tente novamente.",
       "noResults": "",
       "error": ""
     },
@@ -1790,6 +1804,38 @@
       "option": {
         "showBroadcastMessage": {
           "label": ""
+        }
+      }
+    },
+    "wud": {
+      "name": "O Docker",
+      "description": "Mostrar quantos contêineres assistidos possuem atualizações disponíveis.",
+      "title": "O Docker",
+      "monitored": "Monitorado",
+      "updatesAvailable": "{count, plural, one {# atualização disponível} other {# atualizações disponíveis}}",
+      "updateAvailable": "Atualização disponível",
+      "openReleaseNotes": "Abrir notas de lançamento",
+      "option": {
+        "showTitle": {
+          "label": "Mostrar título"
+        },
+        "showRing": {
+          "label": "Mostrar atualização de toque"
+        },
+        "layout": {
+          "label": "Disposição",
+          "option": {
+            "horizontal": {
+              "label": "Horizontal"
+            },
+            "vertical": {
+              "label": "Vertical"
+            }
+          }
+        },
+        "showUpdateList": {
+          "label": "Mostrar lista de atualização do recipiente",
+          "description": "Lista cada container monitorado que tem uma atualização de imagem disponível"
         }
       }
     },
