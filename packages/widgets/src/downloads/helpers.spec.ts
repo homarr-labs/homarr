@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import {
-  DOWNLOAD_COLUMN_ACCESSORS,
+  ADVANCED_DOWNLOAD_COLUMN_ACCESSORS,
   filterDownloadItemsByStatus,
   getAvailableDownloadStates,
   getDownloadColumnAccessors,
@@ -25,8 +25,8 @@ describe("downloads filters", () => {
 });
 
 describe("downloads advanced columns", () => {
-  test("uses every column in advanced mode without changing the compact selection", () => {
-    expect(getDownloadColumnAccessors(["name"], true)).toEqual(DOWNLOAD_COLUMN_ACCESSORS);
+  test("uses summary columns in advanced mode without changing the compact selection", () => {
+    expect(getDownloadColumnAccessors(["name"], true)).toEqual(ADVANCED_DOWNLOAD_COLUMN_ACCESSORS);
     expect(getDownloadColumnAccessors(["name"], false)).toEqual(["name"]);
   });
 });

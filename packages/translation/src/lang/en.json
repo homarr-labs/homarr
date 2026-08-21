@@ -4836,70 +4836,70 @@
       },
       "items": {
         "actions": {
-          "columnTitle": "Controls"
+          "columnTitle": "Actions"
         },
         "added": {
           "columnTitle": "Added",
-          "detailsTitle": "Date Added"
+          "detailsTitle": "Added"
         },
         "category": {
-          "columnTitle": "Extras",
-          "detailsTitle": "Categories (Or extra information)"
+          "columnTitle": "Category",
+          "detailsTitle": "Category"
         },
         "downSpeed": {
           "columnTitle": "Down",
-          "detailsTitle": "Download Speed"
+          "detailsTitle": "Down"
         },
         "index": {
           "columnTitle": "#",
-          "detailsTitle": "Current index within client"
+          "detailsTitle": "Index"
         },
         "id": {
-          "columnTitle": "Id",
-          "detailsTitle": "Item ID"
+          "columnTitle": "ID",
+          "detailsTitle": "ID"
         },
         "integration": {
-          "columnTitle": "Integration"
+          "columnTitle": "Source"
         },
         "name": {
-          "columnTitle": "Job name"
+          "columnTitle": "Name"
         },
         "progress": {
           "columnTitle": "Progress",
-          "detailsTitle": "Download Progress"
+          "detailsTitle": "Progress"
         },
         "ratio": {
           "columnTitle": "Ratio",
-          "detailsTitle": "Torrent ratio (received/sent)"
+          "detailsTitle": "Ratio"
         },
         "received": {
-          "columnTitle": "Total down",
-          "detailsTitle": "Total downloaded"
+          "columnTitle": "Down",
+          "detailsTitle": "Downloaded"
         },
         "sent": {
-          "columnTitle": "Total up",
-          "detailsTitle": "Total Uploaded"
+          "columnTitle": "Up",
+          "detailsTitle": "Uploaded"
         },
         "size": {
-          "columnTitle": "File Size",
-          "detailsTitle": "Total Size of selection/files"
+          "columnTitle": "Size",
+          "detailsTitle": "Size"
         },
         "state": {
           "columnTitle": "State",
-          "detailsTitle": "Job State"
+          "detailsTitle": "State"
         },
         "time": {
-          "columnTitle": "Finish time",
-          "detailsTitle": "Time since/to completion",
+          "columnTitle": "ETA",
+          "detailsTitle": "ETA",
           "eta": "ETA"
         },
         "type": {
           "columnTitle": "Type",
-          "detailsTitle": "Download Client type"
+          "detailsTitle": "Type"
         },
         "upSpeed": {
           "columnTitle": "Up",
-          "detailsTitle": "Upload Speed"
+          "detailsTitle": "Up"
         }
       },
       "states": {

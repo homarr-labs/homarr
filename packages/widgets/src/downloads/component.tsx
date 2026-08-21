@@ -793,7 +793,9 @@ export default function DownloadClientsWidget({
               animateOpacity: true,
               transitionTimingFunction: "ease-out",
             },
-            content: ({ record, collapse }) => <ExpandedRow item={record} collapse={collapse} />,
+            content: ({ record, collapse }) => (
+              <ExpandedRow item={record} collapse={collapse} />
+            ),
           }}
           onScroll={() => {
             if (contextMenu) closeContextMenu();
@@ -869,7 +871,13 @@ function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): R
   );
 }
 
-function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; collapse: () => void }) {
+function ExpandedRow({
+  item,
+  collapse,
+}: {
+  item: ExtendedDownloadClientItem;
+  collapse: () => void;
+}) {
   const t = useScopedI18n("widget.downloads");
   const locale = useCurrentIntlLocale();
   const progressPercent = Math.floor(item.progress * 100);
@@ -891,13 +899,13 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
           thickness={5}
           roundCaps
           sections={[{ value: progressPercent, color: progressColor(item.state, item.progress) }]}
-          label={<Text ta="center" fw={700} style={{ fontSize: 10 }}>{`${progressPercent}%`}</Text>}
+          label={<Text size="xs" ta="center" fw={700}>{`${progressPercent}%`}</Text>}
         />
 
-        <Stack gap={4} style={{ flex: 1 }}>
-          <Group gap="xs" wrap="nowrap">
-            <Avatar size={16} radius={0} src={getIconUrl(item.integration.kind)} />
-            <Text size="xs" fw={600} truncate>
+        <Stack gap="xs" style={{ flex: 1, minWidth: 0 }}>
+          <Group gap="xs" wrap="nowrap" style={{ minWidth: 0 }}>
+            <Avatar size="var(--mantine-font-size-md)" radius={0} src={getIconUrl(item.integration.kind)} />
+            <Text size="sm" fw={600} truncate style={{ minWidth: 0 }}>
               {item.name}
             </Text>
             <Badge size="xs" variant="light" color={stateColorMap[item.state]} ml="auto" style={{ flexShrink: 0 }}>
@@ -905,7 +913,7 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
             </Badge>
           </Group>
 
-          <SimpleGrid cols={3} spacing={4} verticalSpacing={2}>
+          <SimpleGrid cols={3} spacing="xs" verticalSpacing={4} style={{ minWidth: 0 }}>
             <DetailPair
               label={t("items.size.detailsTitle")}
               value={`${formatBytes(item.received)} / ${formatBytes(item.size)}`}
@@ -957,17 +965,17 @@ function DetailPair({
   color?: string;
 }) {
   return (
-    <Group gap={4} wrap="nowrap">
-      <Text size="xs" c="dimmed" style={{ whiteSpace: "nowrap", fontSize: 10 }}>
+    <Stack gap={0} style={{ minWidth: 0, overflow: "hidden" }}>
+      <Text size="xs" c="dimmed" truncate>
         {label}:
       </Text>
-      <Group gap={2} wrap="nowrap">
+      <Group gap={2} wrap="nowrap" style={{ minWidth: 0 }}>
         {icon}
-        <Text size="xs" fw={500} c={color} truncate style={{ fontSize: 10 }}>
+        <Text size="sm" fw={500} c={color} truncate style={{ minWidth: 0 }}>
           {value}
         </Text>
       </Group>
-    </Group>
+    </Stack>
   );
 }
 
