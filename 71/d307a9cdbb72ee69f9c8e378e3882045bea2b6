@@ -1,0 +1,16 @@
+apps/nextjs/src/components/board/selection/board-selection-toolbar.tsx
+  h_d6e478ca18e517 52,204-207
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 825
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "71d307a9cdbb72ee69f9c8e378e3882045bea2b6",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
