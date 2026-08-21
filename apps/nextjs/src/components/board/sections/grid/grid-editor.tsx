@@ -718,6 +718,7 @@ export default function GridEditor({
   rowCount,
   maxRowCount,
   placements,
+  transactionPlacements,
   className,
   section,
   items,
@@ -776,11 +777,11 @@ export default function GridEditor({
       maxRowCount,
       parentGridId,
       ownerPlacementId,
-      placements,
+      placements: transactionPlacements,
       depth,
       element,
     });
-  }, [columnCount, depth, maxRowCount, ownerPlacementId, parentGridId, placements, registerGrid, sectionId]);
+  }, [columnCount, depth, maxRowCount, ownerPlacementId, parentGridId, registerGrid, sectionId, transactionPlacements]);
 
   return (
     <div

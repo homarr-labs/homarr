@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import type { CSSProperties, KeyboardEvent, PointerEvent } from "react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Box } from "@mantine/core";
 import combineClasses from "clsx";
@@ -23,7 +23,7 @@ import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
 import { createGridEntryElementStore, useGridEditorRegistry } from "./grid-editor-registry";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
 import { SectionContent } from "../content";
-import { useCollapsedSectionIds } from "../section-collapse";
+import { useCollapsedSectionIds, useExpandSectionsForEditing } from "../section-collapse";
 import { SectionProvider } from "../section-context";
 import { useSectionItems } from "../use-section-items";
 import { useBoardGridPortalHost } from "./grid-portal-host";
@@ -57,13 +57,11 @@ export const SectionGrid = ({
   const { items, innerSections } = useSectionItems(section.id);
   const { announce, integrations } = useBoardGridPortalHost();
   const collapsedSectionIds = useCollapsedSectionIds();
-  const minimumBySectionId = useMemo(
-    () => {
-      const minimumSizes = getContainerMinimumSizes(board, currentLayoutId);
-      return new Map(innerSections.map((innerSection) => [innerSection.id, minimumSizes.get(innerSection.id)]));
-    },
-    [board, currentLayoutId, innerSections],
-  );
+  const expandSectionsForEditing = useExpandSectionsForEditing();
+  const minimumBySectionId = useMemo(() => {
+    const minimumSizes = getContainerMinimumSizes(board, currentLayoutId);
+    return new Map(innerSections.map((innerSection) => [innerSection.id, minimumSizes.get(innerSection.id)]));
+  }, [board, currentLayoutId, innerSections]);
 
   const placements = useMemo(
     () =>
@@ -86,7 +84,10 @@ export const SectionGrid = ({
     [columnCount, innerSections, items, minimumBySectionId],
   );
   const collapsibleSectionIds = useMemo(
-    () => new Set(innerSections.filter((section) => section.options.collapsible).map((section) => section.id)),
+    () =>
+      new Set(
+        innerSections.filter((innerSection) => innerSection.options.collapsible).map((innerSection) => innerSection.id),
+      ),
     [innerSections],
   );
 
@@ -131,15 +132,29 @@ export const SectionGrid = ({
   const maxRowCount = section.kind === "container" || railPlacement !== "main" ? rowCount : null;
   const logicalWidth = getLogicalTrackSize(columnCount);
   const logicalHeight = getLogicalTrackSize(rowCount);
-  // Collapsed display geometry is intentionally transient and must never be
-  // committed as the expanded layout. Expanding explicitly enables editing.
-  const isInteractionDisabled =
-    directCollapsedIds.size > 0 || (section.kind === "container" && collapsedSectionIds.has(section.id));
+  // A collapsed container's compact coordinates are display-only. Its own
+  // nested grid stays inactive until an explicit edit interaction expands it.
+  const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
   const canvasAttributes =
     isEditMode && !isInteractionDisabled
       ? getEditableCanvasAttributes({ label, columnCount, rowCount })
       : getReadonlyCanvasAttributes({ label });
   const editorClassName = combineClasses("board-grid-editor", classes.editorGrid);
+  const expandCollapsedSectionsForPointerEdit = (event: PointerEvent<HTMLDivElement>) => {
+    if (!isEditMode || directCollapsedIds.size === 0 || event.button !== 0) return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const entry = target.closest('[data-editor-grid-entry="true"]');
+    if (!entry || !event.currentTarget.contains(entry)) return;
+    if (!target.closest(".board-grid-resize-handle") && target.closest(INTERACTIVE_GRID_SELECTOR)) return;
+    expandSectionsForEditing(directCollapsedIds);
+  };
+  const expandCollapsedSectionsForKeyboardEdit = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!isEditMode || directCollapsedIds.size === 0 || !EDIT_ACTIVATION_KEYS.has(event.key)) return;
+    const target = event.target;
+    if (!(target instanceof Element) || !target.matches('[data-editor-grid-entry="true"]')) return;
+    expandSectionsForEditing(directCollapsedIds);
+  };
 
   useLayoutEffect(() => {
     const host = editorHostRef.current;
@@ -156,6 +171,7 @@ export const SectionGrid = ({
       rowCount,
       maxRowCount,
       placements: displayPlacements,
+      transactionPlacements: placements,
       className: editorClassName,
       entryElementStore,
     });
@@ -169,6 +185,7 @@ export const SectionGrid = ({
     entryElementStore,
     isInteractionDisabled,
     maxRowCount,
+    placements,
     rowCount,
     section,
   ]);
@@ -191,15 +208,19 @@ export const SectionGrid = ({
       <Box
         {...canvasAttributes}
         className={combineClasses(classes.viewport, className)}
-        style={{
-          width: logicalWidth,
-          height: `var(--board-grid-drag-height, ${logicalHeight}px)`,
-          "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
-        } as CSSProperties}
+        style={
+          {
+            width: logicalWidth,
+            height: `var(--board-grid-drag-height, ${logicalHeight}px)`,
+            "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
+          } as CSSProperties
+        }
         data-section-id={section.id}
         data-section-kind={section.kind}
         data-rail-placement={railPlacement}
         data-grid-interaction-disabled={isEditMode && isInteractionDisabled ? "true" : undefined}
+        onPointerDownCapture={expandCollapsedSectionsForPointerEdit}
+        onKeyDownCapture={expandCollapsedSectionsForKeyboardEdit}
       >
         <Box
           className={classes.staticGrid}
@@ -215,6 +236,10 @@ export const SectionGrid = ({
     </SectionProvider>
   );
 };
+
+const INTERACTIVE_GRID_SELECTOR =
+  'a,button,input,textarea,select,option,[contenteditable="true"],[role="button"],[data-grid-no-drag]';
+const EDIT_ACTIVATION_KEYS = new Set(["Enter", " ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"]);
 
 const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
   const [visualHeight, setVisualHeight] = useState(0);

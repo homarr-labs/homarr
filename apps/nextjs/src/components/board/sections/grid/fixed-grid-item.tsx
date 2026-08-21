@@ -121,8 +121,8 @@ export const FixedGridItem = ({
         current: placements,
       };
     }
-    const placements = keyboardGridRef.current.current;
-    const current = placements.find((candidate) => candidate.id === item.id);
+    const currentPlacements = keyboardGridRef.current.current;
+    const current = currentPlacements.find((candidate) => candidate.id === item.id);
     if (!current) return;
 
     let transaction: GridTransaction<SectionGridPlacement>;
@@ -134,7 +134,7 @@ export const FixedGridItem = ({
               id: section.id,
               columnCount,
               maxRowCount,
-              placements,
+              placements: currentPlacements,
             },
           ],
         },
@@ -142,8 +142,8 @@ export const FixedGridItem = ({
       );
     } catch {
       keyboardGridRef.current = {
-        source: placements,
-        current: placements,
+        source: currentPlacements,
+        current: currentPlacements,
       };
       setKeyboardEditing(false);
       return;

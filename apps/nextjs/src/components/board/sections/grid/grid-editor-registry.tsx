@@ -46,6 +46,7 @@ export interface GridEditorRenderProps {
   rowCount: number;
   maxRowCount: number | null;
   placements: readonly SectionGridPlacement[];
+  transactionPlacements: readonly SectionGridPlacement[];
   className: string;
   section: Exclude<Section, { kind: "container" }> | ContainerSectionItem;
   items: SectionItem[];
