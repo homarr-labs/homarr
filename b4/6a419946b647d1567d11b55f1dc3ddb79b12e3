@@ -1,0 +1,46 @@
+apps/docs/docs/integrations/docker/index.mdx
+  s_40f04ebdd68b8f::t_550577120b6757 201
+packages/widgets/src/media-requests/list/index.ts
+  s_40f04ebdd68b8f::t_031a27eee5f251 31
+packages/widgets/src/docker/index.ts
+  s_40f04ebdd68b8f::t_031a27eee5f251 28
+apps/nextjs/src/components/board/board-tip-events.ts
+  s_40f04ebdd68b8f::t_644b14d29746e5 22-29,45-64
+  s_40f04ebdd68b8f::t_92d4f18945b629 31-32
+apps/nextjs/src/app/[locale]/manage/tools/docker/docker-reconciliation.tsx
+  s_40f04ebdd68b8f::t_3b8f3fb21fd2f3 48,63,100-115
+packages/widgets/src/beszel-system-table/index.ts
+  s_40f04ebdd68b8f::t_031a27eee5f251 27
+packages/widgets/src/timer/index.ts
+  s_40f04ebdd68b8f::t_031a27eee5f251 10
+packages/widgets/src/definition.spec.ts
+  s_40f04ebdd68b8f::t_77352dbd365b74 9-16,20-21,23,65-73
+  s_40f04ebdd68b8f::t_4dfe4ddc42d8a7 74-75
+apps/nextjs/src/components/tips/registry.ts
+  s_40f04ebdd68b8f::t_176f5143b91c05 128-187
+packages/widgets/src/media-requests/stats/index.ts
+  s_40f04ebdd68b8f::t_031a27eee5f251 12
+packages/widgets/src/notebook/index.ts
+  s_40f04ebdd68b8f::t_031a27eee5f251 8
+packages/widgets/src/definition.ts
+  s_40f04ebdd68b8f::t_57a5e70db939e0 106-110,137-147
+  s_40f04ebdd68b8f::t_7ce9fdaab117f3 148
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_40f04ebdd68b8f::t_8e55d2d11aafb0 22-23,25-26,34,177-180,193-201,382,387
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "b46a419946b647d1567d11b55f1dc3ddb79b12e3",
+  "prompts": {},
+  "sessions": {
+    "s_40f04ebdd68b8f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02415-bf29-7e10-bca3-4dbf8f475de5",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
