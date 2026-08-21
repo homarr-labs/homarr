@@ -1,0 +1,22 @@
+packages/modals-collection/src/apps/app-select-modal.spec.tsx
+  s_40f04ebdd68b8f::t_c3a3ac6e5c9ac7 4,65-87,194,206-209
+  s_40f04ebdd68b8f::t_93a98cd7211f57 105,195-205,210-211
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_40f04ebdd68b8f::t_93a98cd7211f57 16,22,91-101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "0bef7f18e3c151cd824e50011e7ceacb772c023a",
+  "prompts": {},
+  "sessions": {
+    "s_40f04ebdd68b8f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02415-bf29-7e10-bca3-4dbf8f475de5",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
