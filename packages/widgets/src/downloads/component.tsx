@@ -750,8 +750,6 @@ export default function DownloadClientsWidget({
 
   let rowContextMenuHandler: typeof handleContextMenu | undefined = handleContextMenu;
   if (isEditMode) rowContextMenuHandler = undefined;
-  let expandedRowColumns = 2;
-  if (isAdvanced) expandedRowColumns = 3;
 
   return (
     <Stack gap={0} h="100%" style={{ overflow: "hidden" }}>
@@ -796,7 +794,7 @@ export default function DownloadClientsWidget({
               transitionTimingFunction: "ease-out",
             },
             content: ({ record, collapse }) => (
-              <ExpandedRow item={record} collapse={collapse} columns={expandedRowColumns} />
+              <ExpandedRow item={record} collapse={collapse} />
             ),
           }}
           onScroll={() => {
@@ -876,11 +874,9 @@ function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): R
 function ExpandedRow({
   item,
   collapse,
-  columns,
 }: {
   item: ExtendedDownloadClientItem;
   collapse: () => void;
-  columns: number;
 }) {
   const t = useScopedI18n("widget.downloads");
   const locale = useCurrentIntlLocale();
@@ -917,7 +913,7 @@ function ExpandedRow({
             </Badge>
           </Group>
 
-          <SimpleGrid cols={columns} spacing="xs" verticalSpacing={4} style={{ minWidth: 0 }}>
+          <SimpleGrid cols={3} spacing="xs" verticalSpacing={4} style={{ minWidth: 0 }}>
             <DetailPair
               label={t("items.size.detailsTitle")}
               value={`${formatBytes(item.received)} / ${formatBytes(item.size)}`}
