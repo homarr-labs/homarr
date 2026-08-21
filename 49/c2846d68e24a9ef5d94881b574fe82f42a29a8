@@ -1,0 +1,16 @@
+apps/nextjs/src/components/board/items/item-select-modal.spec.tsx
+  h_d6e478ca18e517 19
+apps/nextjs/src/components/board/selection/board-selection.spec.tsx
+  h_d6e478ca18e517 19,40-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "49c2846d68e24a9ef5d94881b574fe82f42a29a8",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
