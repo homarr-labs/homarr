@@ -3,15 +3,23 @@
 import type * as GridEditorModule from "./grid-editor";
 
 let editorModulePromise: Promise<typeof GridEditorModule> | undefined;
+let editorModule: typeof GridEditorModule | undefined;
 
 export const loadGridEditorAsync = () => {
-  editorModulePromise ??= import("./grid-editor").catch((error: unknown) => {
-    editorModulePromise = undefined;
-    throw error;
-  });
+  editorModulePromise ??= import("./grid-editor")
+    .then((loadedModule) => {
+      editorModule = loadedModule;
+      return loadedModule;
+    })
+    .catch((error: unknown) => {
+      editorModulePromise = undefined;
+      throw error;
+    });
 
   return editorModulePromise;
 };
+
+export const getLoadedGridEditorModule = () => editorModule;
 
 export const scheduleGridEditorWarmup = (loadAsync: () => Promise<unknown>) => {
   let animationFrameId: number | undefined;

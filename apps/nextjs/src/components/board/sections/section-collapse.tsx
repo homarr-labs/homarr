@@ -6,7 +6,6 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { useEditMode } from "@homarr/boards/edit-mode";
 
 import { readSectionCollapsedFromStorage, writeSectionCollapsedToStorage } from "./section-collapse-storage";
 
@@ -93,7 +92,6 @@ export const BoardSectionCollapseProvider = ({ children }: PropsWithChildren) =>
 
 export const useSectionCollapse = ({ sectionId, collapsible }: { sectionId: string; collapsible: boolean }) => {
   const context = useContext(SectionCollapseContext);
-  const [isEditMode] = useEditMode();
 
   if (!context) {
     throw new Error("BoardSectionCollapseProvider is required");
@@ -102,7 +100,7 @@ export const useSectionCollapse = ({ sectionId, collapsible }: { sectionId: stri
   const isCollapsed = collapsible && context.collapsedSectionIds.has(sectionId);
   return {
     isCollapsed,
-    isVisuallyCollapsed: isCollapsed && !isEditMode,
+    isVisuallyCollapsed: isCollapsed,
     setCollapsed: (collapsed: boolean) => context.setCollapsed(sectionId, collapsed),
     toggle: () => context.setCollapsed(sectionId, !isCollapsed),
   };
@@ -110,13 +108,10 @@ export const useSectionCollapse = ({ sectionId, collapsible }: { sectionId: stri
 
 export const useCollapsedSectionIds = () => {
   const context = useContext(SectionCollapseContext);
-  const [isEditMode] = useEditMode();
 
   if (!context) {
     throw new Error("BoardSectionCollapseProvider is required");
   }
 
-  return isEditMode ? EMPTY_SET : context.collapsedSectionIds;
+  return context.collapsedSectionIds;
 };
-
-const EMPTY_SET = new Set<string>();

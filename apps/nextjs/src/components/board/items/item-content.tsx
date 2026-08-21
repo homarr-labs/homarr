@@ -25,6 +25,7 @@ import type { WidgetComponentProps, WidgetDefinition, WidgetRuntimeRef } from "@
 import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
+import { getLogicalTrackSize } from "~/components/board/layout";
 import advancedFocusClasses from "../advanced-focus/advanced-focus.module.css";
 import { useAdvancedFocus } from "../advanced-focus/context";
 import { startAdvancedFocusEntrance } from "../advanced-focus/entrance";
@@ -103,9 +104,11 @@ const WidgetDefinitionLoadError = ({
 );
 
 export const BoardItemContent = ({ item }: BoardItemContentProps) => {
-  const { ref, width, height } = useElementSize<HTMLDivElement>();
+  const { ref, width: measuredWidth, height: measuredHeight } = useElementSize<HTMLDivElement>();
   const widgetStateRef = useRef<Record<string, unknown> | null>(null);
   const widgetRuntimeRef = useRef(createWidgetRuntimeState());
+  const width = measuredWidth || getLogicalTrackSize(item.width);
+  const height = measuredHeight || getLogicalTrackSize(item.height);
 
   return (
     <ErrorBoundary
