@@ -201,10 +201,6 @@ export const BoardSelectionToolbar = () => {
           </HoverCard.Dropdown>
         </HoverCard>
 
-        <Text size="xs" c="dimmed" visibleFrom="sm" maw={220} lh={1.25}>
-          {t("app.action.select.multiSelectTip")}
-        </Text>
-
         <Divider orientation="vertical" />
 
         {/* Actions */}

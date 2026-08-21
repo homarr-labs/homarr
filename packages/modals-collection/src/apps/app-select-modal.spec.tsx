@@ -70,7 +70,6 @@ vi.mock("@homarr/translation/client", () => ({
       "app.action.select.selected": "Selected",
       "app.action.select.toggle": "Click to select",
       "app.action.select.noResults": "No apps found",
-      "app.action.select.multiSelectTip": "Hold Ctrl or Command to select multiple apps",
       "app.action.select.selectedCount": `${count} selected`,
       "app.action.select.appsSelected": `${count} ${count === 1 ? "app" : "apps"} selected`,
       "app.action.select.customApplication": "Custom application",

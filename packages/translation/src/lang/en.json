@@ -822,7 +822,6 @@
         "toggle": "Click to select",
         "selected": "Selected",
         "multiple": "Add {count}",
-        "multiSelectTip": "Tip: Hold Ctrl / ⌘ to select multiple apps at once",
         "selectedCount": "{count, plural, one {# selected} other {# selected}}",
         "appsSelected": "{count, plural, one {# app selected} other {# apps selected}}",
         "customApplication": "Custom application",
@@ -835,6 +834,10 @@
       },
       "add": "Add an app"
     }
+  },
+  "tips": {
+    "dismiss": "Dismiss tip",
+    "multiSelectApps": "Tip: Hold Ctrl / ⌘ to select multiple apps at once"
   },
   "customWidget": {
     "betaBanner": {

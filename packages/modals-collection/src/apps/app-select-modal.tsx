@@ -88,7 +88,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
 
   return (
     <Stack gap="md">
-      {/* Top Search Input & Multi-Select Tip */}
+      {/* Top Search Input */}
       <Stack gap={6}>
         <Input
           value={search}
@@ -103,16 +103,11 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
             }
           }}
         />
-        {multiSelect && (
-          <Group justify="space-between" px={2}>
-            <Text size="xs" c="dimmed">
-              {t("app.action.select.multiSelectTip")}
-            </Text>
-            {selectedAppIds.size > 0 && (
-              <Badge variant="light" color="primaryColor" size="xs">
-                {t("app.action.select.selectedCount", { count: selectedAppIds.size })}
-              </Badge>
-            )}
+        {multiSelect && selectedAppIds.size > 0 && (
+          <Group justify="flex-end" px={2}>
+            <Badge variant="light" color="primaryColor" size="xs">
+              {t("app.action.select.selectedCount", { count: selectedAppIds.size })}
+            </Badge>
           </Group>
         )}
       </Stack>
