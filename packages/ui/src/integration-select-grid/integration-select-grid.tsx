@@ -127,6 +127,8 @@ const IntegrationCard = ({
   onSelect: (kind: IntegrationKind) => void;
   connectedCount?: number;
 }) => {
+  const t = useI18n();
+
   return (
     <SelectableCard
       onClick={() => onSelect(integration.kind)}
@@ -137,13 +139,13 @@ const IntegrationCard = ({
       footerLeft={
         connectedCount > 0 ? (
           <Badge variant="light" color="teal" size="xs" radius="xs">
-            {connectedCount} connected
+            {t("integration.grid.connected", { count: connectedCount })}
           </Badge>
         ) : null
       }
     >
       <Text size="10px" tt="uppercase" fw={700} c="dimmed">
-        Tied Widgets
+        {t("integration.grid.tiedWidgets")}
       </Text>
       <IntegrationTiedWidgets widgets={integration.widgets} />
     </SelectableCard>
@@ -224,7 +226,7 @@ const IntegrationTiedWidgets = ({ widgets, limit }: { widgets: WidgetKind[]; lim
       })}
       {moreCount > 0 && (
         <Badge variant="subtle" color="gray" size="xs" radius="xs">
-          +{moreCount} more
+          {t("integration.grid.more", { count: moreCount })}
         </Badge>
       )}
     </Group>

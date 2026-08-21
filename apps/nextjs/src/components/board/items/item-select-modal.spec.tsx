@@ -96,7 +96,7 @@ describe("Advanced Add App - Modal Subcomponents", () => {
         ),
       );
 
-      expect(host.textContent?.trim()).toBe("");
+      expect(host.querySelector("[class*='Badge-root']")).toBeNull();
     });
   });
 
@@ -180,7 +180,7 @@ describe("Advanced Add App - Modal Subcomponents", () => {
       expect(onSelect).toHaveBeenCalledOnce();
     });
 
-    it("marks card as selected when isSelected is true", async () => {
+    it("does not mark widget cards as selected", async () => {
       const item = {
         kind: "clock" as WidgetKind,
         name: "Clock",
@@ -204,7 +204,7 @@ describe("Advanced Add App - Modal Subcomponents", () => {
       );
 
       const button = host.querySelector("button");
-      expect(button?.getAttribute("data-selected")).toBe("true");
+      expect(button?.hasAttribute("data-selected")).toBe(false);
     });
   });
 });

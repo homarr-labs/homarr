@@ -821,7 +821,12 @@
         "title": "Select an app to add to this board",
         "toggle": "Click to select",
         "selected": "Selected",
-        "multiple": "Add {count}"
+        "multiple": "Add {count}",
+        "multiSelectTip": "Tip: Hold Shift or Ctrl / ⌘ to select multiple apps at once",
+        "selectedCount": "{count, plural, one {# selected} other {# selected}}",
+        "appsSelected": "{count, plural, one {# app selected} other {# apps selected}}",
+        "customApplication": "Custom application",
+        "application": "Application"
       },
       "create": {
         "title": "Create new app",
@@ -1666,7 +1671,10 @@
     "grid": {
       "widgetCount": "{count} widgets",
       "noWidgets": "No widgets",
-      "detected": "Detected via Docker"
+      "detected": "Detected via Docker",
+      "connected": "{count, plural, one {# connected} other {# connected}}",
+      "tiedWidgets": "Tied widgets",
+      "more": "+{count} more"
     },
     "category": {
       "dnsHole": "DNS",
@@ -2080,6 +2088,7 @@
     "success": "Success",
     "beta": "Beta",
     "error": "Error",
+    "analyticsError": "Setup analytics could not be recorded.",
     "action": {
       "add": "Add",
       "apply": "Apply",
@@ -2755,6 +2764,8 @@
         "needsSetup": "Needs setup",
         "noConnectionRequired": "No connection required"
       },
+      "customWidget": "Custom widget",
+      "standalone": "Standalone",
       "missingIntegration": {
         "title": "Connect a service first",
         "noPermission": "This widget needs a compatible service connection. Ask an administrator to connect one, then try again."
@@ -2770,6 +2781,18 @@
           "message": "The item could not be added to this board"
         }
       }
+    },
+    "selection": {
+      "summary": "{count, plural, one {# selected item} other {# selected items}}",
+      "selected": "{count, plural, one {# selected} other {# selected}}",
+      "removed": "{count, plural, one {# item removed} other {# items removed}}",
+      "move": "Move",
+      "moveTo": "Move selected items",
+      "delete": "Delete",
+      "clear": "Clear selection",
+      "clearShortcut": "Clear selection (Escape)",
+      "saveErrorTitle": "Unable to update items",
+      "saveErrorMessage": "The changes could not be saved. The board was refreshed."
     },
     "moveResize": {
       "title": "Move / resize item",

@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Group, Menu } from "@mantine/core";
 import { IconBox, IconChevronDown, IconLayoutGridAdd, IconPlug, IconPlus, IconResize } from "@tabler/icons-react";
 
@@ -28,6 +30,21 @@ const AddMenu = () => {
   const { addContainer } = useContainerActions();
   const { createItem } = useItemActions();
   const t = useI18n();
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const handledInitialAdd = useRef(false);
+
+  useEffect(() => {
+    if (handledInitialAdd.current || searchParams.get("add") !== "true") return;
+    handledInitialAdd.current = true;
+    openItemSelectModal({ boardId: board.id });
+
+    const nextSearchParams = new URLSearchParams(searchParams.toString());
+    nextSearchParams.delete("add");
+    const query = nextSearchParams.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  }, [board.id, openItemSelectModal, pathname, router, searchParams]);
 
   const handleSelectItem = () => {
     openItemSelectModal({ boardId: board.id });
@@ -54,7 +71,7 @@ const AddMenu = () => {
   };
 
   const handleAddIntegration = () => {
-    openIntegrationSelectModal({});
+    openIntegrationSelectModal({ completionBoardId: board.id });
   };
 
   return (

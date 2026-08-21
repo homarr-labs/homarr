@@ -3,7 +3,6 @@
 import {
   ActionIcon,
   Avatar,
-  Box,
   Button,
   Divider,
   Group,
@@ -14,6 +13,7 @@ import {
   Stack,
   Text,
   Tooltip,
+  UnstyledButton,
 } from "@mantine/core";
 import { IconCheck, IconFolderShare, IconTrash, IconX } from "@tabler/icons-react";
 
@@ -21,7 +21,7 @@ import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
-import { useI18n } from "@homarr/translation/client";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { widgetCatalogIcons } from "@homarr/widgets/catalog";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";
@@ -36,6 +36,7 @@ export const BoardSelectionToolbar = () => {
   const currentLayoutId = useCurrentLayout();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
   const t = useI18n();
+  const tSelection = useScopedI18n("item.selection");
 
   const selectedItems = board.items.filter((item) => selectedItemIds.has(item.id));
   const hasAppWidgets = selectedItems.some((item) => item.kind === "app");
@@ -121,7 +122,8 @@ export const BoardSelectionToolbar = () => {
         left: "50%",
         transform: "translateX(-50%)",
         zIndex: 1000,
-        maxWidth: "min(92vw, 760px)",
+        width: "max-content",
+        maxWidth: "calc(100vw - 1rem)",
         boxShadow: "0 12px 40px rgba(0, 0, 0, 0.28)",
         backdropFilter: "blur(14px)",
         border: "1px solid var(--mantine-color-default-border)",
@@ -132,7 +134,11 @@ export const BoardSelectionToolbar = () => {
         {/* Avatar Group with HoverCard Popover showing all items */}
         <HoverCard position="top" withArrow shadow="xl" radius="md" openDelay={100} closeDelay={200} withinPortal>
           <HoverCard.Target>
-            <Box style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}>
+            <UnstyledButton
+              display="inline-flex"
+              aria-label={tSelection("summary", { count: sortedSelectedItems.length })}
+              style={{ alignItems: "center", borderRadius: "var(--mantine-radius-xl)" }}
+            >
               <Avatar.Group>
                 {visibleItems.map((item) => {
                   const { displayName, iconUrl, IconComponent } = getItemDetails(item);
@@ -157,13 +163,13 @@ export const BoardSelectionToolbar = () => {
                   </Avatar>
                 )}
               </Avatar.Group>
-            </Box>
+            </UnstyledButton>
           </HoverCard.Target>
 
           <HoverCard.Dropdown p={6} style={{ width: 220 }}>
             <Stack gap={4}>
               <Text size="10px" fw={700} c="dimmed" tt="uppercase" px={4}>
-                {sortedSelectedItems.length} selected
+                {tSelection("selected", { count: sortedSelectedItems.length })}
               </Text>
 
               <ScrollArea.Autosize mah={176} type="auto">
@@ -203,11 +209,11 @@ export const BoardSelectionToolbar = () => {
             <Menu position="top" withArrow shadow="md">
               <Menu.Target>
                 <Button size="xs" variant="light" color="primaryColor" leftSection={<IconFolderShare size={15} />}>
-                  Move
+                  {tSelection("move")}
                 </Button>
               </Menu.Target>
               <Menu.Dropdown>
-                <Menu.Label>Move selected to section</Menu.Label>
+                <Menu.Label>{tSelection("moveTo")}</Menu.Label>
                 {placementOptions.map((opt) => (
                   <Menu.Item key={opt.value} onClick={() => moveSelectedItemsToSection(opt.value)}>
                     {opt.label}
@@ -224,11 +230,17 @@ export const BoardSelectionToolbar = () => {
             leftSection={<IconTrash size={15} />}
             onClick={removeSelectedItems}
           >
-            Delete
+            {tSelection("delete")}
           </Button>
 
-          <Tooltip label="Deselect (Escape)" withArrow>
-            <ActionIcon size="sm" variant="subtle" color="gray" onClick={clearSelection} aria-label="Clear selection">
+          <Tooltip label={tSelection("clearShortcut")} withArrow>
+            <ActionIcon
+              size="sm"
+              variant="subtle"
+              color="gray"
+              onClick={clearSelection}
+              aria-label={tSelection("clear")}
+            >
               <IconX size={14} />
             </ActionIcon>
           </Tooltip>

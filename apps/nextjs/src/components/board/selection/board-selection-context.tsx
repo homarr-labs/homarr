@@ -7,10 +7,10 @@ import { notifications } from "@mantine/notifications";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useUpdateBoard } from "@homarr/boards/updater";
+import { usePersistBoard } from "@homarr/boards/updater";
 import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
-import { showSuccessNotification } from "@homarr/notifications";
-import { useI18n } from "@homarr/translation/client";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import type { ContainerSection, ItemLayout } from "~/app/[locale]/boards/_types";
 import { getFirstEmptyPosition } from "~/components/board/items/actions/empty-position";
@@ -32,8 +32,23 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
   const [isEditMode] = useEditMode();
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
-  const { updateBoard } = useUpdateBoard();
+  const { updateAndPersistBoard } = usePersistBoard(board);
   const t = useI18n();
+  const tSelection = useScopedI18n("item.selection");
+
+  const persistBoard = useCallback(
+    (updater: (previous: typeof board) => typeof board) => {
+      updateAndPersistBoard(updater, {
+        onError: () => {
+          showErrorNotification({
+            title: tSelection("saveErrorTitle"),
+            message: tSelection("saveErrorMessage"),
+          });
+        },
+      });
+    },
+    [tSelection, updateAndPersistBoard],
+  );
 
   // Clear selection if leaving edit mode
   useEffect(() => {
@@ -85,7 +100,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
     playTrashSound();
     clearSelection();
 
-    updateBoard((previous) => ({
+    persistBoard((previous) => ({
       ...previous,
       items: previous.items.filter((item) => !idsToRemove.includes(item.id)),
     }));
@@ -96,12 +111,12 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
       title: t("common.success"),
       message: (
         <Group justify="space-between" wrap="nowrap">
-          <Text size="sm">{count === 1 ? "1 item removed" : `${count} items removed`}</Text>
+          <Text size="sm">{tSelection("removed", { count })}</Text>
           <Button
             variant="subtle"
             size="compact-xs"
             onClick={() => {
-              updateBoard((previous) => ({
+              persistBoard((previous) => ({
                 ...previous,
                 items: [...previous.items, ...removedItems],
               }));
@@ -114,73 +129,40 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
       ),
       autoClose: 10_000,
     });
-  }, [board.items, clearSelection, selectedItemIds, t, updateBoard]);
+  }, [board.items, clearSelection, persistBoard, selectedItemIds, t, tSelection]);
 
   const moveSelectedItemsToSection = useCallback(
     (targetSectionId: string) => {
       if (selectedItemIds.size === 0) return;
 
-      const idsToMove = Array.from(selectedItemIds);
+      const idsToMove = new Set(selectedItemIds);
 
-      updateBoard((previous) => {
+      persistBoard((previous) => {
         const targetSection = previous.sections.find((section) => section.id === targetSectionId);
-        if (!targetSection) return previous;
+        const boardLayout = previous.layouts.find((layout) => layout.id === currentLayoutId);
+        if (!targetSection || !boardLayout) return previous;
 
-        const itemsToMove = previous.items.filter((item) => idsToMove.includes(item.id));
-        const untouchedItems = previous.items.filter((item) => !idsToMove.includes(item.id));
+        const containerLayout =
+          targetSection.kind === "container"
+            ? targetSection.layouts.find((layout) => layout.layoutId === currentLayoutId)
+            : undefined;
+        const columnCount =
+          targetSection.kind === "container"
+            ? (containerLayout?.width ?? 0)
+            : getBoardLaneColumnCount(boardLayout, getRootSectionLane(targetSection.xOffset));
+        const rowCount = containerLayout?.height ?? 9999;
+        if (columnCount === 0 || rowCount === 0) return previous;
 
-        // Map of itemId -> layoutId -> new ItemLayout
-        const updatedItemLayoutsMap = new Map<string, Map<string, ItemLayout>>();
-        for (const item of itemsToMove) {
-          updatedItemLayoutsMap.set(item.id, new Map());
-        }
-
-        const acceptedItemIds = new Set<string>();
-        const layoutsToProcess = previous.layouts.toSorted(
-          (left, right) => Number(right.id === currentLayoutId) - Number(left.id === currentLayoutId),
-        );
-
-        for (const boardLayout of layoutsToProcess) {
-          const containerLayout =
-            targetSection.kind === "container"
-              ? targetSection.layouts.find((layout) => layout.layoutId === boardLayout.id)
-              : undefined;
-          const columnCount =
-            targetSection.kind === "container"
-              ? (containerLayout?.width ?? 0)
-              : getBoardLaneColumnCount(boardLayout, getRootSectionLane(targetSection.xOffset));
-          const rowCount = containerLayout?.height ?? 9999;
-
-          if (columnCount === 0 || rowCount === 0) continue;
-
-          // Collect existing elements in targetSection for this layout (excluding items to move)
-          const existingContainers = previous.sections
-            .filter((section): section is ContainerSection => section.kind === "container")
-            .flatMap((section) => {
-              const layout = section.layouts.find(
-                (l) => l.layoutId === boardLayout.id && l.parentSectionId === targetSection.id,
-              );
-              return layout
-                ? [
-                    {
-                      id: section.id,
-                      xOffset: layout.xOffset,
-                      yOffset: layout.yOffset,
-                      width: layout.width,
-                      height: layout.height,
-                    },
-                  ]
-                : [];
-            });
-
-          const existingItems = previous.items.flatMap((item) => {
-            const layout = item.layouts.find((layout) => {
-              return layout.layoutId === boardLayout.id && layout.sectionId === targetSection.id;
-            });
+        const existingContainers = previous.sections
+          .filter((section): section is ContainerSection => section.kind === "container")
+          .flatMap((section) => {
+            const layout = section.layouts.find(
+              (candidate) => candidate.layoutId === currentLayoutId && candidate.parentSectionId === targetSection.id,
+            );
             return layout
               ? [
                   {
-                    id: item.id,
+                    id: section.id,
                     xOffset: layout.xOffset,
                     yOffset: layout.yOffset,
                     width: layout.width,
@@ -189,74 +171,70 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
                 ]
               : [];
           });
+        const existingItems = previous.items.flatMap((item) => {
+          const layout = item.layouts.find(
+            (candidate) => candidate.layoutId === currentLayoutId && candidate.sectionId === targetSection.id,
+          );
+          return layout
+            ? [
+                {
+                  id: item.id,
+                  xOffset: layout.xOffset,
+                  yOffset: layout.yOffset,
+                  width: layout.width,
+                  height: layout.height,
+                },
+              ]
+            : [];
+        });
+        const occupiedPositions = [...existingContainers, ...existingItems];
+        const movedLayouts = new Map<string, ItemLayout>();
 
-          const occupiedPositions = [...existingContainers, ...existingItems];
+        for (const item of previous.items.filter((candidate) => idsToMove.has(candidate.id))) {
+          const currentItemLayout = item.layouts.find((layout) => layout.layoutId === currentLayoutId);
+          if (!currentItemLayout) continue;
 
-          // Place each item being moved into the first available space. The current
-          // layout decides which selected items can participate in the move; items
-          // that do not fit there remain untouched in every layout.
-          for (const item of itemsToMove) {
-            if (boardLayout.id !== currentLayoutId && !acceptedItemIds.has(item.id)) continue;
+          const previousPositionIndex = occupiedPositions.findIndex((position) => position.id === item.id);
+          const previousPosition =
+            previousPositionIndex >= 0 ? occupiedPositions.splice(previousPositionIndex, 1).at(0) : undefined;
+          const { width, height } = currentItemLayout;
+          const emptyPosition =
+            width <= columnCount && height <= rowCount
+              ? getFirstEmptyPosition(occupiedPositions, columnCount, rowCount, { width, height })
+              : undefined;
 
-            const currentItemLayout = item.layouts.find((layout) => layout.layoutId === boardLayout.id);
-            if (!currentItemLayout) continue;
-
-            const previousPositionIndex = occupiedPositions.findIndex((position) => position.id === item.id);
-            const previousPosition =
-              previousPositionIndex >= 0 ? occupiedPositions.splice(previousPositionIndex, 1).at(0) : undefined;
-            const { width, height } = currentItemLayout;
-            if (width > columnCount || height > rowCount) {
-              if (previousPosition) occupiedPositions.push(previousPosition);
-              continue;
-            }
-
-            const emptyPosition = getFirstEmptyPosition(occupiedPositions, columnCount, rowCount, { width, height });
-            if (!emptyPosition) {
-              if (previousPosition) occupiedPositions.push(previousPosition);
-              continue;
-            }
-
-            if (boardLayout.id === currentLayoutId) acceptedItemIds.add(item.id);
-
-            const newLayout: ItemLayout = {
-              layoutId: boardLayout.id,
-              sectionId: targetSectionId,
-              xOffset: emptyPosition.xOffset,
-              yOffset: emptyPosition.yOffset,
-              width,
-              height,
-            };
-
-            occupiedPositions.push({
-              id: item.id,
-              xOffset: emptyPosition.xOffset,
-              yOffset: emptyPosition.yOffset,
-              width,
-              height,
-            });
-
-            updatedItemLayoutsMap.get(item.id)?.set(boardLayout.id, newLayout);
+          if (!emptyPosition) {
+            if (previousPosition) occupiedPositions.push(previousPosition);
+            continue;
           }
+
+          const nextLayout: ItemLayout = {
+            ...currentItemLayout,
+            sectionId: targetSectionId,
+            xOffset: emptyPosition.xOffset,
+            yOffset: emptyPosition.yOffset,
+          };
+          movedLayouts.set(item.id, nextLayout);
+          occupiedPositions.push({ id: item.id, ...emptyPosition, width, height });
         }
 
-        const updatedMovedItems = itemsToMove.map((item) => {
-          const itemLayoutsMap = updatedItemLayoutsMap.get(item.id);
-          const newLayouts = item.layouts.map((layout) => itemLayoutsMap?.get(layout.layoutId) ?? layout);
-          return {
-            ...item,
-            layouts: newLayouts,
-          };
-        });
-
+        if (movedLayouts.size === 0) return previous;
         return {
           ...previous,
-          items: [...untouchedItems, ...updatedMovedItems],
+          items: previous.items.map((item) => {
+            const movedLayout = movedLayouts.get(item.id);
+            if (!movedLayout) return item;
+            return {
+              ...item,
+              layouts: item.layouts.map((layout) => (layout.layoutId === currentLayoutId ? movedLayout : layout)),
+            };
+          }),
         };
       });
 
       clearSelection();
     },
-    [clearSelection, currentLayoutId, selectedItemIds, updateBoard],
+    [clearSelection, currentLayoutId, persistBoard, selectedItemIds],
   );
 
   const value = useMemo(

@@ -108,11 +108,11 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
         {multiSelect && (
           <Group justify="space-between" px={2}>
             <Text size="xs" c="dimmed">
-              Tip: Hold Shift or Ctrl / ⌘ to select multiple apps at once
+              {t("app.action.select.multiSelectTip")}
             </Text>
             {selectedAppIds.size > 0 && (
               <Badge variant="light" color="primaryColor" size="xs">
-                {selectedAppIds.size} selected
+                {t("app.action.select.selectedCount", { count: selectedAppIds.size })}
               </Badge>
             )}
           </Group>
@@ -136,7 +136,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
                 description={t("app.action.create.description")}
                 footerLeft={
                   <Text size="xs" c="dimmed">
-                    Custom Application
+                    {t("app.action.select.customApplication")}
                   </Text>
                 }
               />
@@ -166,7 +166,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
         <Paper withBorder p="xs" radius="md" bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))">
           <Group justify="space-between" align="center">
             <Text size="sm" fw={600}>
-              {selectedApps.length} app{selectedApps.length > 1 ? "s" : ""} selected
+              {t("app.action.select.appsSelected", { count: selectedApps.length })}
             </Text>
             <Group gap="xs">
               <Button variant="default" size="xs" onClick={() => setSelectedAppIds(new Set())}>
@@ -219,7 +219,7 @@ const AppCard = ({
       description={app.description}
       footerLeft={
         <Text size="xs" c="dimmed">
-          {multiSelect && isSelected ? t("app.action.select.selected") : "Application"}
+          {multiSelect && isSelected ? t("app.action.select.selected") : t("app.action.select.application")}
         </Text>
       }
     />

@@ -154,7 +154,7 @@ export const SelectableCard = factory<SelectableCardFactory>((_props) => {
         <Box {...getStyles("body")}>
           <Tooltip label={description} multiline w={260} disabled={!description}>
             <Text size="sm" c="dimmed" lineClamp={2} lh={1.35}>
-              {description || "No description provided"}
+              {description}
             </Text>
           </Tooltip>
         </Box>

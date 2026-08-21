@@ -484,7 +484,7 @@ const ItemSelectModalContent = ({
                 description={def.description ?? ""}
                 footerLeft={
                   <Text size="xs" c="dimmed">
-                    Custom Widget
+                    {t("item.create.customWidget")}
                   </Text>
                 }
               />
@@ -569,10 +569,12 @@ export const ConnectionStatusBadge = ({ status }: { status: WidgetConnectionStat
 };
 
 export const SupportedIntegrations = ({ integrations }: { integrations: IntegrationKind[] }) => {
+  const t = useI18n();
+
   if (integrations.length === 0) {
     return (
       <Text size="xs" c="dimmed" fs="italic">
-        Standalone
+        {t("item.create.standalone")}
       </Text>
     );
   }
