@@ -1,0 +1,36 @@
+apps/docs/docs/management/boards/index.mdx
+  h_d6e478ca18e517 207-213,233
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  h_d6e478ca18e517 203
+apps/nextjs/src/components/board/selection/board-selection-context.tsx
+  h_d6e478ca18e517 139,222-223,237-244,246
+apps/nextjs/src/components/board/selection/board-selection.spec.tsx
+  h_d6e478ca18e517 191-250
+apps/nextjs/src/components/integration/integration-select-modal.tsx
+  h_d6e478ca18e517 4,37,98-110
+packages/modals-collection/src/apps/app-select-modal.spec.tsx
+  h_d6e478ca18e517 65-66,73-77
+packages/modals-collection/src/apps/app-select-modal.tsx
+  h_d6e478ca18e517 22
+packages/translation/src/lang/en.json
+  h_d6e478ca18e517 1677-1678,2796-2798
+packages/ui/src/components/selectable-card/selectable-card.spec.tsx
+  h_d6e478ca18e517 204,213-214
+packages/ui/src/integration-select-grid/integration-select-grid.spec.tsx
+  h_d6e478ca18e517 25,30-32
+packages/ui/src/integration-select-grid/integration-select-grid.tsx
+  h_d6e478ca18e517 50
+packages/widgets/src/modals/widget-edit-modal.tsx
+  h_d6e478ca18e517 221,240
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "50bd56edb9776aad8abdd5ec382ab23ee12f5930",
+  "prompts": {},
+  "humans": {
+    "h_d6e478ca18e517": {
+      "author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
