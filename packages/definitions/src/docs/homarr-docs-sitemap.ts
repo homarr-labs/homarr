@@ -336,7 +336,6 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/whats-up-docker"
   | "/docs/widgets/clock"
   | "/docs/widgets/weather"
-  | "/docs/widgets/today"
   | "/docs/widgets/air-quality"
   | "/docs/widgets/countdown"
   | "/docs/widgets/timer"

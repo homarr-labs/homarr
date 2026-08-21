@@ -236,61 +236,6 @@
       }
     }
   },
-  "universalCreate": {
-    "title": "Create",
-    "analyticsError": "Usage metrics could not be recorded. Your action was not affected.",
-    "trigger": {
-      "label": "Create something",
-      "description": "Add content, connect a service, or create a board from one place."
-    },
-    "search": {
-      "label": "Search create actions",
-      "placeholder": "What do you want to create?",
-      "noResults": "No matching actions"
-    },
-    "group": {
-      "currentBoard": "Current board",
-      "library": "Apps and services",
-      "boards": "Boards"
-    },
-    "action": {
-      "widget": {
-        "label": "Add widget",
-        "description": "Add live information or controls to this board.",
-        "keywords": "item dashboard content"
-      },
-      "app": {
-        "label": "Add or create app",
-        "description": "Place an app shortcut on this board or create one for your library.",
-        "keywords": "shortcut bookmark application"
-      },
-      "integration": {
-        "label": "Connect service",
-        "description": "Connect a service so widgets can use its data.",
-        "keywords": "integration provider connection"
-      },
-      "container": {
-        "label": "Add container",
-        "description": "Group related board content into a resizable section.",
-        "keywords": "section group layout"
-      },
-      "board": {
-        "label": "Create board",
-        "description": "Start a new dashboard and add its first widget.",
-        "keywords": "dashboard page"
-      },
-      "workshop": {
-        "label": "Browse Workshop",
-        "description": "Discover community-built widgets and install them.",
-        "keywords": "community discover install"
-      },
-      "customWidget": {
-        "label": "Create custom widget",
-        "description": "Build a widget tailored to your own workflow.",
-        "keywords": "code jsx developer"
-      }
-    }
-  },
   "user": {
     "title": "Users",
     "name": "User",
@@ -876,7 +821,12 @@
         "title": "Select an app to add to this board",
         "toggle": "Click to select",
         "selected": "Selected",
-        "multiple": "Add {count}"
+        "multiple": "Add {count}",
+        "multiSelectTip": "Tip: Hold Ctrl / ⌘ to select multiple apps at once",
+        "selectedCount": "{count, plural, one {# selected} other {# selected}}",
+        "appsSelected": "{count, plural, one {# app selected} other {# apps selected}}",
+        "customApplication": "Custom application",
+        "application": "Application"
       },
       "create": {
         "title": "Create new app",
@@ -1721,7 +1671,11 @@
     "grid": {
       "widgetCount": "{count} widgets",
       "noWidgets": "No widgets",
-      "detected": "Detected via Docker"
+      "detected": "Detected via Docker",
+      "connected": "{count, plural, one {# connected} other {# connected}}",
+      "tiedWidgets": "Tied widgets",
+      "more": "+{count} more",
+      "loadError": "Integrations could not be loaded. Try again before creating a new connection."
     },
     "category": {
       "dnsHole": "DNS",
@@ -2135,6 +2089,7 @@
     "success": "Success",
     "beta": "Beta",
     "error": "Error",
+    "analyticsError": "Setup analytics could not be recorded.",
     "action": {
       "add": "Add",
       "apply": "Apply",
@@ -2810,6 +2765,8 @@
         "needsSetup": "Needs setup",
         "noConnectionRequired": "No connection required"
       },
+      "customWidget": "Custom widget",
+      "standalone": "Standalone",
       "missingIntegration": {
         "title": "Connect a service first",
         "noPermission": "This widget needs a compatible service connection. Ask an administrator to connect one, then try again."
@@ -2825,6 +2782,20 @@
           "message": "The item could not be added to this board"
         }
       }
+    },
+    "selection": {
+      "summary": "{count, plural, one {# selected item} other {# selected items}}",
+      "selected": "{count, plural, one {# selected} other {# selected}}",
+      "removed": "{count, plural, one {# item removed} other {# items removed}}",
+      "move": "Move",
+      "moveTo": "Move selected items",
+      "delete": "Delete",
+      "clear": "Clear selection",
+      "clearShortcut": "Clear selection (Escape)",
+      "saveErrorTitle": "Unable to update items",
+      "saveErrorMessage": "The changes could not be saved. The board was refreshed.",
+      "moveUnavailableTitle": "Unable to move selected items",
+      "moveUnavailableMessage": "The destination does not have enough room for the entire selection."
     },
     "moveResize": {
       "title": "Move / resize item",
@@ -3463,50 +3434,6 @@
         "sound": "Timer sounds",
         "localAlertsHint": "Timer sounds are enabled by default. Sounds and notifications apply only to this widget in this browser.",
         "notificationsDenied": "Notifications are blocked in this browser."
-      }
-    },
-    "today": {
-      "name": "Today",
-      "description": "Displays the current date and progress through the calendar.",
-      "option": {
-        "weekConvention": {
-          "label": "Week numbering",
-          "options": {
-            "locale": "Use locale rules",
-            "iso": "ISO 8601"
-          }
-        },
-        "showWeekNumber": {
-          "label": "Show week number"
-        },
-        "showDayOfYear": {
-          "label": "Show day of year"
-        },
-        "showQuarter": {
-          "label": "Show quarter"
-        },
-        "showYearProgress": {
-          "label": "Show year progress"
-        }
-      },
-      "weekNumber": "Week {week}",
-      "dayOfYear": "Day {day} of {total}",
-      "quarter": "Quarter {quarter}",
-      "daysAfterToday": "{days, plural, =0 {Last day of the year} one {# day after today} other {# days after today}}",
-      "weekProgressLabel": "Week progress",
-      "monthProgressLabel": "Month progress",
-      "yearProgressLabel": "Year progress",
-      "yearProgress": "Year progress: {progress}%",
-      "weekConvention": {
-        "locale": "Week numbers follow your locale",
-        "iso": "ISO 8601 week numbers"
-      },
-      "advanced": {
-        "week": "Week number",
-        "dayOfYear": "Day of year",
-        "quarter": "Quarter",
-        "quarterValue": "Q{quarter}",
-        "daysRemaining": "Days after today"
       }
     },
     "minecraftServerStatus": {

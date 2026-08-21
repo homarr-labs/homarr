@@ -17,6 +17,7 @@ import {
 } from "~/components/board/layout";
 import type { GridPlacement } from "~/components/board/layout";
 import { useSectionContext } from "../section-context";
+import { useBoardSelection } from "~/components/board/selection/board-selection-context";
 import { beginGridTransaction, commitGridTransaction, previewGridMove, previewGridResize } from "./dnd";
 import type { GridTransaction } from "./dnd";
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
@@ -48,6 +49,16 @@ export const FixedGridItem = ({
   const { section, items, innerSections, columnCount, maxRowCount, announce } = useSectionContext();
   const { commitSectionGrid } = useGridLayoutActions();
   const [isKeyboardEditing, setIsKeyboardEditing] = useState(false);
+  const { isSelected, toggleSelectItem } = useBoardSelection();
+  const selected = item.type === "item" && isSelected(item.id);
+
+  const handleClickCapture = (event: React.MouseEvent) => {
+    if (!isEditorActive || item.type !== "item" || (!event.metaKey && !event.ctrlKey)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    toggleSelectItem(item.id);
+  };
   const instructionsId = useId();
   const isEditorActive = isEditMode && runtimeStatus === "ready";
   const placement = toPlacement(item);
@@ -178,6 +189,8 @@ export const FixedGridItem = ({
   return (
     <Box
       {...semantics}
+      onClickCapture={handleClickCapture}
+      data-board-item-selected={selected ? "true" : undefined}
       className={combineClasses(isEditorActive ? classes.editorEntry : classes.staticItem)}
       style={isEditorActive ? { position: "relative", width: "100%", height: "100%" } : getLogicalItemStyle(placement)}
       data-grid-item-id={isEditorActive ? undefined : item.id}
@@ -187,6 +200,7 @@ export const FixedGridItem = ({
       data-kind={item.kind}
       data-keyboard-editing={isEditorActive ? String(isKeyboardEditing) : undefined}
       aria-describedby={isEditorActive ? instructionsId : undefined}
+      aria-selected={isEditorActive && item.type === "item" ? selected : undefined}
       aria-keyshortcuts={
         isEditorActive
           ? "Enter Space Escape ArrowLeft ArrowRight ArrowUp ArrowDown Shift+ArrowLeft Shift+ArrowRight Shift+ArrowUp Shift+ArrowDown"

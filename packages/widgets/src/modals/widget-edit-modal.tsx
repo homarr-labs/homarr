@@ -58,6 +58,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   appId?: string;
   integrationEditForm?: ComponentType<EmbeddedIntegrationEditFormProps>;
   onIntegrationSaved?: () => void;
+  onOpenNewIntegration?: (onCreated?: (id: string) => void) => void;
 }
 
 export const getSelectedWidgetIntegrations = (
@@ -217,6 +218,17 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     handleSubmit(event);
   };
 
+  const canCreateIntegration = maxIntegrations === 1 || form.values.integrationIds.length < maxIntegrations;
+  const handleOpenNewIntegration = innerProps.onOpenNewIntegration
+    ? () => {
+        innerProps.onOpenNewIntegration?.((newId) => {
+          if (newId) {
+            form.setFieldValue("integrationIds", [...(maxIntegrations > 1 ? form.values.integrationIds : []), newId]);
+          }
+        });
+      }
+    : undefined;
+
   const widgetFormContent = (
     <Stack>
       {canConfigureWidget && innerProps.integrationSupport && (
@@ -225,6 +237,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           data={innerProps.integrationData}
           canSelectMultiple={maxIntegrations > 1}
           withAsterisk={integrationsRequired}
+          onOpenNewIntegration={canCreateIntegration ? handleOpenNewIntegration : undefined}
           {...form.getInputProps("integrationIds")}
         />
       )}
@@ -413,6 +426,5 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     return t("item.edit.title");
   },
   size: modalSizeForm,
-  presentation: "inspector",
   closeOnClickOutside: false,
 });

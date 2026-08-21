@@ -63,7 +63,6 @@ import * as beszelAlerts from "./beszel-alerts";
 import * as beszelSystemStats from "./beszel-system-stats";
 import * as video from "./video";
 import * as weather from "./weather";
-import * as today from "./today";
 import * as airQuality from "./air-quality";
 import * as countdown from "./countdown";
 import * as timer from "./timer";
@@ -98,7 +97,6 @@ export { AssistantWidgetRendererProvider } from "./assistant/context";
 export const widgetImports = {
   clock,
   weather,
-  today,
   airQuality,
   countdown,
   timer,

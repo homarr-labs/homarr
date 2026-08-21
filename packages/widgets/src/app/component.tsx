@@ -26,7 +26,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
   const t = useI18n();
   const settings = useSettings();
   const board = useRequiredBoard();
-  const appQuery = clientApi.app.byId.useQuery({ id: options.appId });
+  const appQuery = clientApi.app.byId.useQuery({ id: options.appId }, { enabled: Boolean(options.appId) });
   const app = getUsableWidgetQueryData(appQuery);
   const href = getSafeAppHref(app?.href);
   useRegisterSpotlightContextResults(
@@ -50,6 +50,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
     [app, href, options.openInNewTab],
   );
 
+  if (!options.appId) return <WidgetEmptyState />;
   if (isInitialWidgetQueryPending(appQuery)) return <WidgetQueryLoadingState />;
   if (!app) return <WidgetEmptyState />;
 

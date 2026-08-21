@@ -1,0 +1,79 @@
+.root {
+  cursor: pointer;
+  text-align: start;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  min-height: 175px;
+  height: 100%;
+  padding: var(--mantine-spacing-sm);
+  border-radius: var(--selectable-card-radius, var(--mantine-radius-md));
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border: 1px solid var(--mantine-color-default-border);
+  box-shadow: var(--mantine-shadow-xs);
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease;
+  overflow: hidden;
+  font-family: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+
+.root:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--mantine-shadow-sm);
+  border-color: var(--mantine-primary-color-filled);
+}
+
+.root:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
+.root[data-selected] {
+  border-color: var(--mantine-primary-color-filled);
+  box-shadow: 0 0 0 1px var(--mantine-primary-color-filled);
+}
+
+.root:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.header {
+  border-bottom: 1px solid var(--mantine-color-default-border);
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8));
+  padding-top: var(--mantine-spacing-xs);
+  padding-bottom: var(--mantine-spacing-xs);
+  margin: calc(var(--mantine-spacing-sm) * -1);
+  margin-bottom: 0;
+  padding-left: var(--mantine-spacing-sm);
+  padding-right: var(--mantine-spacing-sm);
+}
+
+.body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+  margin-top: var(--mantine-spacing-xs);
+  margin-bottom: var(--mantine-spacing-xs);
+  min-height: 0;
+}
+
+.footer {
+  border-top: 1px dashed var(--mantine-color-default-border);
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+  padding-top: var(--mantine-spacing-xs);
+  padding-bottom: var(--mantine-spacing-xs);
+  margin: calc(var(--mantine-spacing-sm) * -1);
+  margin-top: auto;
+  padding-left: var(--mantine-spacing-sm);
+  padding-right: var(--mantine-spacing-sm);
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}

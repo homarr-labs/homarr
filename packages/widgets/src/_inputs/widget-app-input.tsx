@@ -17,6 +17,12 @@ import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
 
+const renderHereLink = (children: React.ReactNode) => (
+  <Anchor size="xs" component={Link} target="_blank" href="/manage/apps/new">
+    {children}
+  </Anchor>
+);
+
 export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">) => {
   const t = useI18n();
   const tInput = useWidgetInputTranslation(kind, property);
@@ -49,13 +55,9 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
         }
         inputWrapperOrder={["label", "input", "description", "error"]}
         description={
-          <Text size="xs">
+          <Text component="span" size="xs">
             {t.rich("widget.common.app.description", {
-              here: () => (
-                <Anchor size="xs" component={Link} target="_blank" href="/manage/apps/new">
-                  {t("common.here")}
-                </Anchor>
-              ),
+              here: renderHereLink,
             })}
           </Text>
         }
