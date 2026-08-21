@@ -17,9 +17,27 @@
 }
 
 .homarr-data-table th {
+  position: relative;
   white-space: nowrap;
   background-color: color-mix(in srgb, var(--mantine-color-body) 60%, transparent) !important;
   backdrop-filter: blur(8px);
+}
+
+.homarr-column-resize-handle {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  bottom: 0;
+  width: 8px;
+  cursor: col-resize;
+  touch-action: none;
+  z-index: 1;
+}
+
+.homarr-column-resize-handle:hover,
+.homarr-column-resize-handle:active {
+  background-color: var(--mantine-primary-color-filled);
+  opacity: 0.4;
 }
 
 .homarr-data-table td {

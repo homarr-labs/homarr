@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import type { DataTableColumn } from "mantine-datatable";
 import { useDataTableColumns } from "mantine-datatable";
 
+import { ColumnResizeHandle } from "./column-resize-handle";
+
 interface TableLayoutOptions extends Record<string, unknown> {
   columnOrder?: string;
   columnWidths?: string;
@@ -31,6 +33,7 @@ interface UsePersistedTableLayoutProps<T> {
   itemId: string | undefined;
   storeKeyPrefix: string;
   onLayoutChange: (layout: TableLayoutOptions) => void;
+  isEditMode: boolean;
 }
 
 const layoutSaveDelay = 350;
@@ -107,7 +110,7 @@ export const parseColumnWidths = (value: string, columnAccessors: readonly strin
   }
 };
 
-export const usePersistedTableLayout = <T>({
+export const usePersistedTableLayout = <T,>({
   columns,
   columnAccessors,
   columnOrder,
@@ -115,6 +118,7 @@ export const usePersistedTableLayout = <T>({
   itemId,
   storeKeyPrefix,
   onLayoutChange,
+  isEditMode,
 }: UsePersistedTableLayoutProps<T>) => {
   const savedOrder = useMemo(() => parseColumnOrder(columnOrder, columnAccessors), [columnAccessors, columnOrder]);
   const savedWidths = useMemo(() => parseColumnWidths(columnWidths, columnAccessors), [columnAccessors, columnWidths]);
@@ -128,7 +132,7 @@ export const usePersistedTableLayout = <T>({
     [savedOrder, visibleAccessors, visibleAccessorSet],
   );
   const storeKey = `${storeKeyPrefix}-${itemId ?? "preview"}-${[...visibleAccessors].toSorted().join(",")}`;
-  const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths } =
+  const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths, setColumnWidth } =
     useDataTableColumns<T>({
       key: storeKey,
       columns,
@@ -229,5 +233,18 @@ export const usePersistedTableLayout = <T>({
     visibleAccessorSet,
   ]);
 
-  return { effectiveColumns, storeKey };
+  const columnsWithResizeHandles = useMemo(() => {
+    if (isEditMode) return effectiveColumns;
+    return effectiveColumns.map((column) => ({
+      ...column,
+      title: (
+        <span style={{ display: "flex", alignItems: "center", width: "100%" }}>
+          {column.title}
+          <ColumnResizeHandle onResize={(width) => setColumnWidth(String(column.accessor), width)} />
+        </span>
+      ),
+    }));
+  }, [effectiveColumns, isEditMode, setColumnWidth]);
+
+  return { effectiveColumns: columnsWithResizeHandles, storeKey };
 };

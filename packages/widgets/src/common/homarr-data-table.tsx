@@ -48,7 +48,10 @@ export function HomarrDataTable<T>({
         ...defaultColumnProps,
         noWrap: defaultColumnProps?.noWrap ?? true,
         draggable: !isEditMode,
-        resizable: !isEditMode,
+        // Resizing is handled by our own ColumnResizeHandle (see use-persisted-table-layout.ts) -
+        // mantine-datatable's built-in resize shrinks every other column to keep the table's
+        // total width fixed, which collapses columns in a narrow widget.
+        resizable: false,
         cellsStyle: defaultColumnProps?.cellsStyle ?? (() => ({ padding: cellPadding })),
       }}
       scrollAreaProps={{ type: "auto", scrollbarSize: 6, ...scrollAreaProps }}

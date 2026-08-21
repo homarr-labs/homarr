@@ -428,6 +428,7 @@ export default function BeszelSystemTableWidget({
     itemId,
     storeKeyPrefix: "beszel-system-table",
     onLayoutChange: persistLayout,
+    isEditMode,
   });
 
   const handleRowClick = useCallback(

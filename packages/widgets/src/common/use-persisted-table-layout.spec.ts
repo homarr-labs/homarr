@@ -34,6 +34,7 @@ const LayoutHarness = ({ itemId, onLayoutChange }: { itemId: string; onLayoutCha
     itemId,
     storeKeyPrefix: "test-table",
     onLayoutChange,
+    isEditMode: true,
   });
   return null;
 };

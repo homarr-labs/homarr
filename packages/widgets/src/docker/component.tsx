@@ -375,6 +375,7 @@ export default function DockerWidget({
     itemId,
     storeKeyPrefix: "docker-containers",
     onLayoutChange: persistLayout,
+    isEditMode,
   });
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
