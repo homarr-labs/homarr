@@ -1,0 +1,33 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_edit-actions.tsx
+  s_cf26c9caabb8d3::t_e349ae731fa919 3-4,33-47,74
+apps/nextjs/src/components/board/audio/board-sounds.ts
+  s_cf26c9caabb8d3::t_28e97bd544264c 10-15,17-20,46-90,92,103-106,108-110,112-113,115-116,118-122
+apps/nextjs/src/components/board/items/item-select-modal.tsx
+  s_cf26c9caabb8d3::t_a980f9d8bf1dae 487,572-573,577
+apps/nextjs/src/components/create/setup-analytics.ts
+  s_cf26c9caabb8d3::t_8147e0c3d3f164 40
+packages/modals-collection/src/apps/app-select-modal.spec.tsx
+  s_cf26c9caabb8d3::t_43b9d45faea740 96-103
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_cf26c9caabb8d3::t_f5b587fb9336d8 111,115,139,169,222
+packages/ui/src/components/selectable-card/selectable-card.tsx
+  s_cf26c9caabb8d3::t_7adead7aa2b8e8 157
+packages/ui/src/integration-select-grid/integration-select-grid.tsx
+  s_cf26c9caabb8d3::t_c0e75f5432563f 130-131,142,148,229
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "8b696886406e7f54b240aff9a00890a7ed500806",
+  "prompts": {},
+  "sessions": {
+    "s_cf26c9caabb8d3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff55fc8b9ffeav6SDTPcgtDQmg",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
