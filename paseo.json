@@ -1,0 +1,9 @@
+{
+  "worktree": {
+    "setup": [
+      "mise trust",
+      "mise install",
+      "pnpm install"
+    ]
+  }
+}

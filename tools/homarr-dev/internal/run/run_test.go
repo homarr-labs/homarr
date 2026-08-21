@@ -19,10 +19,10 @@ func TestPRPlanUsesAMD64(t *testing.T) {
 	}
 }
 
-func TestPRCloneIsShallow(t *testing.T) {
-	args := prCloneArgs("/tmp/checkout")
-	if !slices.Contains(args, "--depth=1") || !slices.Contains(args, "--filter=blob:none") {
-		t.Fatalf("clone args = %v", args)
+func TestPRFetchIsShallow(t *testing.T) {
+	args := prFetchArgs("https://github.com/homarr-labs/homarr.git", "refs/pull/1/head:pr-1")
+	if !slices.Contains(args, "--depth=1") {
+		t.Fatalf("fetch args = %v", args)
 	}
 }
 
