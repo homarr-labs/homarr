@@ -1,0 +1,35 @@
+apps/nextjs/src/components/board/items/item-content.module.css
+  s_cf26c9caabb8d3::t_331c0724690373 14-26,55-60
+apps/nextjs/src/components/board/items/item-menu.tsx
+  s_cf26c9caabb8d3::t_8980d00ee319f7 17,109-110,112-113
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  s_770aac9e47de12::t_a960512a80ad05 52,56-60
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_cf26c9caabb8d3::t_95be4ebf2d7853 35,65,851-853,929-934,943,1116-1136
+apps/nextjs/src/components/board/selection/board-selection.spec.tsx
+  s_770aac9e47de12::t_a963dd3f1683c8 1-190
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "3a7cad9e2f8d74eaa4fef91cb98cd647d750ab83",
+  "prompts": {},
+  "sessions": {
+    "s_770aac9e47de12": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d1a904f4-0746-4a3c-b258-2b4636dd54f8",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_cf26c9caabb8d3": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ff55fc8b9ffeav6SDTPcgtDQmg",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
