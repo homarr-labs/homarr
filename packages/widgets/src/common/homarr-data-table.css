@@ -17,6 +17,7 @@
 }
 
 .homarr-data-table th {
+  padding: 0;
   white-space: nowrap;
   background-color: color-mix(in srgb, var(--mantine-color-body) 60%, transparent) !important;
   backdrop-filter: blur(8px);
@@ -47,11 +48,23 @@
   transition: opacity 150ms ease-out;
 }
 
-/* The sort icon only ever appears in the header row (not once per data row), so - unlike
-   row-level icons - making it bigger doesn't cost anything in row-height terms. */
+.homarr-data-table .mantine-datatable-header-cell-sortable-group {
+  gap: 0;
+}
+
+.homarr-data-table .mantine-datatable-header-cell-draggable-action-icon {
+  margin: 0;
+}
+
+.homarr-data-table .mantine-datatable-header-cell-sortable-unsorted-icon {
+  display: none;
+}
+
+.homarr-data-table .mantine-datatable-header-cell-draggable-action-icon svg,
+.homarr-data-table .mantine-datatable-header-cell-sortable-text svg,
 .homarr-data-table .mantine-datatable-header-cell-sortable-icon svg {
-  width: 16px;
-  height: 16px;
+  width: var(--mantine-font-size-md);
+  height: var(--mantine-font-size-md);
 }
 
 .homarr-data-table th:hover .mantine-datatable-header-cell-sortable-icon,
