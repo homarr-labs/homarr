@@ -25,6 +25,8 @@ packages/db/migrations/*/migrate.cjs
 
 # production
 build
+tools/homarr-dev/homarr
+tools/homarr-dev/homarr-dev
 
 # misc
 .DS_Store

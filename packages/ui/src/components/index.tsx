@@ -20,6 +20,7 @@ export type {
   SelectableCardCssVariables,
   SelectableCardFactory,
 } from "./selectable-card";
+export * from "./floating-tip";
 export { MaskedImage } from "./masked-image";
 export { MaskedOrNormalImage } from "./masked-or-normal-image";
 export { LanguageIcon } from "./language-icon";

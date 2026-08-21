@@ -1,11 +1,13 @@
 "use client";
 
 import { Box, Paper, Stack, Text } from "@mantine/core";
+import { IconBulb } from "@tabler/icons-react";
 
 import { useCurrentLayout, useInitialViewportWidth, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
 import { useI18n } from "@homarr/translation/client";
+import { FloatingTip } from "@homarr/ui";
 
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
 import { BoardEmptyState } from "~/components/board/board-empty-state";
@@ -33,6 +35,7 @@ export const ClientBoard = () => {
   const board = useRequiredBoard();
   const t = useI18n("board.landmark");
   const tPreview = useI18n("board.setting.section.layout.preview");
+  const tTips = useI18n("tips");
   const [isEditMode] = useEditMode();
   const currentLayoutId = useCurrentLayout();
   const initialViewportWidth = useInitialViewportWidth();
@@ -129,6 +132,16 @@ export const ClientBoard = () => {
             </BoardGridPortalHost>
           </BoardSectionCollapseProvider>
           <BoardSelectionToolbar />
+          <FloatingTip
+            opened={isEditMode}
+            showDelay={2_000}
+            dismissAfter={3_000}
+            transitionDuration={200}
+            closable={false}
+            alertProps={{ color: "primaryColor", icon: <IconBulb size={18} />, variant: "light" }}
+          >
+            {tTips("multiSelectApps")}
+          </FloatingTip>
         </Box>
       </BoardAdvancedFocusProvider>
     </BoardSelectionProvider>

@@ -139,6 +139,49 @@ describe("BoardAdvancedFocusProvider preview interaction", () => {
     expect(focus.active).toBeNull();
   });
 
+  test("promotes a Shift preview to a persistent view with Shift+Control", async () => {
+    await startPreview();
+    await act(async () => vi.advanceTimersByTime(500));
+    expect(focus.active?.activation).toBe("preview");
+
+    await act(async () =>
+      window.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Control", ctrlKey: true, shiftKey: true, cancelable: true }),
+      ),
+    );
+    expect(focus.active?.activation).toBe("manual");
+
+    await act(async () => window.dispatchEvent(new KeyboardEvent("keyup", { key: "Shift" })));
+    expect(focus.active?.activation).toBe("manual");
+  });
+
+  test("promotes a Shift preview to a persistent view with Shift+Meta", async () => {
+    await startPreview();
+    await act(async () => vi.advanceTimersByTime(500));
+
+    await act(async () =>
+      window.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Meta", metaKey: true, shiftKey: true, cancelable: true }),
+      ),
+    );
+    expect(focus.active?.activation).toBe("manual");
+  });
+
+  test("opens a persistent view when the keep-open modifiers are held before the delay", async () => {
+    const source = host.querySelector<HTMLElement>("[data-testid='source']");
+    if (!source) throw new Error("Expected source fixture");
+    await act(async () => {
+      focus.hover("widget-1", source);
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "Control", ctrlKey: true }));
+      window.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Shift", ctrlKey: true, shiftKey: true, cancelable: true }),
+      );
+    });
+
+    await act(async () => vi.advanceTimersByTime(500));
+    expect(focus.active?.activation).toBe("manual");
+  });
+
   test("cancels the hold feedback and activation when the source is left early", async () => {
     await startPreview();
 

@@ -56,52 +56,69 @@ homarr dash                Start on the instance dashboard
 homarr build <name>        Build this checkout as homarr:<name>
 homarr build --pr <number> Build a PR locally from a temporary checkout
 homarr rebuild <name>      Rebuild from recorded provenance
+homarr images              List local images with build provenance
+homarr data                List instance data volumes
+homarr prune               Remove stopped instances
 homarr list                Script-friendly instance list
 homarr logs <container>    Follow logs
+homarr shell <container>   Open an interactive shell in a running instance
+homarr ci [pr] [--watch]   View or watch GitHub CI checks for a pull request
 homarr open <container>    Open in browser
 homarr stop <container>    Stop
 homarr restart <container> Restart
 homarr remove <container>  Force-remove
-homarr doctor              Check Docker and optional CLI integrations
+homarr doctor              Check Docker, Engine API, and optional integrations
 ```
 
 ## Development Browser
 
 ```text
 /              Filter by PR number, title, author, branch, CI, image, state, or port
-↑/↓ or j/k     Select
-Enter or Space Start the matching local build, otherwise pull remote; stop when running
-R              Build a remote PR locally in the background or rebuild a local image
-p              Pull a remote PR image and redeploy, preserving port and volume
-m              Toggle demo mode for the next launch
+↑/↓ or j/k     Select row
+Enter or Space Start the available image; choose local or remote when both exist; stop when running
+R              Build locally in background (or rebuild local image)
+p              Pull remote PR image in background and start container
+m              Manage mode (chords: b rebuild, i delete image, d delete data, c remove container, p prune)
+t              Background tasks overlay (status, progress, cancellation)
+Tab            Cycle sidebar tab (logs / build / ci)
+l              Toggle sidebar visibility
+L              Pin logs to currently selected container
+f              Follow or pause logs
+Page Up/Down   Scroll logs
+M              Toggle demo mode for next launch
+b              Toggle bot PRs
 o              Open PR on GitHub
-a              Open running app
-l              Toggle inline logs for the selected running PR
-f              Follow or pause inline logs
-Page Up/Down   Scroll inline logs
-b              Show or hide bot PRs
-r              Refresh
-d              Switch to the instance dashboard
-q              Quit; during a pull, cancel it
+a              Open running instance in browser
+c              Copy instance URL to clipboard
+r              Refresh data
+1 / 2 / d      Switch screen (development / instances)
+?              Help overlay
+q              Quit (cancels background tasks)
 ```
 
-Pull progress, layer completion, local build provenance, selected PR details, CI state, image availability, inline logs, and the final port remain inside the TUI.
-Local PR images are folded into their remote PR row only when the recorded revision exactly matches the current GitHub head SHA. They are marked `◆ local` and preferred by Enter; outdated builds remain separate local rows. Navigation and the `d` dashboard toggle remain available while a local build runs.
+Pull progress with live layer bytes, throughput, BuildKit step streaming, local build provenance, CI rollup badges, container health status, and live output streams are non-blocking. When a background pull completes, the sidebar automatically transitions to streaming the running instance's live logs.
 
 ## Instance Dashboard
 
 ```text
 /              Filter by name, image, state, health, port, or URL
-↑/↓ or j/k     Select
-l              Toggle inline logs
-f              Follow or pause logs
+↑/↓ or j/k     Select row
+Enter or Space Start / stop selected instance
+s              Stop instance
+S              Restart instance
+x              Remove container (keeps data)
+m              Manage mode for selected instance
+t              Background tasks overlay
+Tab            Cycle sidebar tab (logs / build / ci)
+l              Toggle sidebar visibility
+L              Pin logs
+f              Follow / pause logs
 Page Up/Down   Scroll logs
-s              Stop
-R              Restart
-x              Remove with confirmation
-o              Open in browser
-c              Copy URL
+o              Open running instance in browser
+c              Copy URL to clipboard
+R              Rebuild from recorded provenance
 r              Refresh
-d              Switch to the development browser
+1 / 2 / d      Switch screen
+?              Help overlay
 q              Quit
 ```
