@@ -201,7 +201,7 @@ describe("SelectableCard", () => {
       expect(host.textContent).not.toContain("This should not appear");
     });
 
-    it("renders description with fallback when description is empty string", async () => {
+    it("renders an empty description without fallback copy", async () => {
       await act(async () =>
         root.render(
           <MantineProvider>
@@ -210,7 +210,8 @@ describe("SelectableCard", () => {
         ),
       );
 
-      expect(host.textContent).toContain("No description provided");
+      expect(host.textContent).toContain("No Desc Item");
+      expect(host.textContent).not.toContain("No description provided");
     });
 
     it("omits header, body, or footer when corresponding props are omitted", async () => {

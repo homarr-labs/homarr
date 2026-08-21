@@ -47,6 +47,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { IntegrationAvatar } from "../components/integration-avatar";
 import { SelectableCard } from "../components/selectable-card";
+import { selectGridCols } from "../select-grid-layout";
 import { buildSortedIntegrations, categoryTranslationKeys, filterIntegrations } from "./integration-grid-shared";
 import type { IntegrationGridItem } from "./integration-grid-shared";
 
@@ -56,8 +57,6 @@ export interface IntegrationSelectGridProps {
   allowedKinds?: readonly IntegrationKind[];
   integrationData?: { kind: IntegrationKind; name?: string }[];
 }
-
-const selectGridCols = { base: 1, xs: 2, sm: 2, md: 3, lg: 4 };
 
 export const IntegrationSelectGrid = ({
   onSelect,

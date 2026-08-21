@@ -62,13 +62,19 @@ vi.mock("@homarr/modals", async () => {
 });
 
 vi.mock("@homarr/translation/client", () => ({
-  useI18n: () => (key: string) => {
+  useI18n: () => (key: string, values?: { count?: number }) => {
+    const count = values?.count ?? 0;
     const translations: Record<string, string> = {
       "app.action.select.search": "Search apps",
       "app.action.select.title": "Select application",
       "app.action.select.selected": "Selected",
       "app.action.select.toggle": "Click to select",
       "app.action.select.noResults": "No apps found",
+      "app.action.select.multiSelectTip": "Hold Ctrl or Command to select multiple apps",
+      "app.action.select.selectedCount": `${count} selected`,
+      "app.action.select.appsSelected": `${count} ${count === 1 ? "app" : "apps"} selected`,
+      "app.action.select.customApplication": "Custom application",
+      "app.action.select.application": "Application",
       "app.action.create.title": "Add custom app",
       "app.action.create.description": "Configure custom URL and icon",
       "common.action.discard": "Discard",

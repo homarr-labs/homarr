@@ -19,7 +19,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { SelectableCard } from "@homarr/ui";
+import { selectGridCols, SelectableCard } from "@homarr/ui";
 
 import { QuickAddAppModal } from "./quick-add-app/quick-add-app-modal";
 
@@ -30,8 +30,6 @@ interface AppSelectModalProps {
   onSelectMany?: (apps: SelectableApp[]) => void;
   withCreate: boolean;
 }
-
-const selectGridCols = { base: 1, xs: 2, sm: 2, md: 3, lg: 4 };
 
 export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, innerProps }) => {
   const [search, setSearch] = useState("");

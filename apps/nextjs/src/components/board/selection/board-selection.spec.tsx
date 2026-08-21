@@ -188,4 +188,64 @@ describe("BoardSelectionContext", () => {
     expect(movedB?.xOffset).toBe(2);
     expect(movedB?.yOffset).toBe(1);
   });
+
+  it("keeps the entire selection in place when the destination cannot fit every item", async () => {
+    const layout = new LayoutMockBuilder({ id: "layout-1" }).build();
+    const emptyRoot = new EmptySectionMockBuilder({ id: "empty-root", xOffset: 0 }).build();
+    const container = new ContainerSectionMockBuilder({ id: "container-1" })
+      .addLayout({ layoutId: "layout-1", parentSectionId: "empty-root", width: 2, height: 1 })
+      .build();
+    const existingContainerItem = new ItemMockBuilder({ id: "existing-1" })
+      .addLayout({ layoutId: "layout-1", sectionId: "container-1", xOffset: 0, yOffset: 0, width: 1, height: 1 })
+      .build();
+    const itemA = new ItemMockBuilder({ id: "item-a" })
+      .addLayout({ layoutId: "layout-1", sectionId: "empty-root", xOffset: 0, yOffset: 0, width: 1, height: 1 })
+      .build();
+    const itemB = new ItemMockBuilder({ id: "item-b" })
+      .addLayout({ layoutId: "layout-1", sectionId: "empty-root", xOffset: 1, yOffset: 0, width: 1, height: 1 })
+      .build();
+
+    currentBoardState = new BoardMockBuilder()
+      .addLayout(layout)
+      .addSection(emptyRoot)
+      .addSection(container)
+      .addItem(existingContainerItem)
+      .addItem(itemA)
+      .addItem(itemB)
+      .build();
+
+    let updatedBoard = currentBoardState;
+    mockUpdateBoard = vi.fn((updater) => {
+      updatedBoard = updater(currentBoardState);
+      currentBoardState = updatedBoard;
+    });
+
+    let selectionContext!: ReturnType<typeof useBoardSelection>;
+    await act(async () => {
+      root.render(
+        <MantineProvider>
+          <BoardSelectionProvider>
+            <SelectionConsumer
+              onReady={(ctx) => {
+                selectionContext = ctx;
+              }}
+            />
+          </BoardSelectionProvider>
+        </MantineProvider>,
+      );
+    });
+
+    await act(async () => {
+      selectionContext.toggleSelectItem("item-a");
+      selectionContext.toggleSelectItem("item-b");
+    });
+    await act(async () => {
+      selectionContext.moveSelectedItemsToSection("container-1");
+    });
+
+    expect(updatedBoard.items.find((item) => item.id === "item-a")?.layouts[0]?.sectionId).toBe("empty-root");
+    expect(updatedBoard.items.find((item) => item.id === "item-b")?.layouts[0]?.sectionId).toBe("empty-root");
+    expect(selectionContext.isSelected("item-a")).toBe(true);
+    expect(selectionContext.isSelected("item-b")).toBe(true);
+  });
 });

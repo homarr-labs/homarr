@@ -200,6 +200,7 @@ export const FixedGridItem = ({
       data-kind={item.kind}
       data-keyboard-editing={isEditorActive ? String(isKeyboardEditing) : undefined}
       aria-describedby={isEditorActive ? instructionsId : undefined}
+      aria-selected={isEditorActive && item.type === "item" ? selected : undefined}
       aria-keyshortcuts={
         isEditorActive
           ? "Enter Space Escape ArrowLeft ArrowRight ArrowUp ArrowDown Shift+ArrowLeft Shift+ArrowRight Shift+ArrowUp Shift+ArrowDown"

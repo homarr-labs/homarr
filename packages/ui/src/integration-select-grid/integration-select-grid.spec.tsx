@@ -22,11 +22,14 @@ vi.mock("@homarr/definitions", async (importOriginal) => {
 });
 
 vi.mock("@homarr/translation/client", () => ({
-  useI18n: () => (key: string) => {
+  useI18n: () => (key: string, values?: { count?: number }) => {
     const translations: Record<string, string> = {
       "integration.page.list.search": "Search integrations",
       "common.noResults": "No results found",
       "integration.grid.noWidgets": "No widgets tied to this service",
+      "integration.grid.tiedWidgets": "Tied Widgets",
+      "integration.grid.connected": `${values?.count ?? 0} connected`,
+      "integration.grid.more": `+${values?.count ?? 0} more`,
       "widget.mediaServer.name": "Media Server",
       "widget.calendar.name": "Calendar",
       "widget.downloads.name": "Downloads",

@@ -1674,7 +1674,8 @@
       "detected": "Detected via Docker",
       "connected": "{count, plural, one {# connected} other {# connected}}",
       "tiedWidgets": "Tied widgets",
-      "more": "+{count} more"
+      "more": "+{count} more",
+      "loadError": "Integrations could not be loaded. Try again before creating a new connection."
     },
     "category": {
       "dnsHole": "DNS",
@@ -2792,7 +2793,9 @@
       "clear": "Clear selection",
       "clearShortcut": "Clear selection (Escape)",
       "saveErrorTitle": "Unable to update items",
-      "saveErrorMessage": "The changes could not be saved. The board was refreshed."
+      "saveErrorMessage": "The changes could not be saved. The board was refreshed.",
+      "moveUnavailableTitle": "Unable to move selected items",
+      "moveUnavailableMessage": "The destination does not have enough room for the entire selection."
     },
     "moveResize": {
       "title": "Move / resize item",

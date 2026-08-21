@@ -218,6 +218,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     handleSubmit(event);
   };
 
+  const canCreateIntegration = maxIntegrations === 1 || form.values.integrationIds.length < maxIntegrations;
   const handleOpenNewIntegration = innerProps.onOpenNewIntegration
     ? () => {
         innerProps.onOpenNewIntegration?.((newId) => {
@@ -236,7 +237,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           data={innerProps.integrationData}
           canSelectMultiple={maxIntegrations > 1}
           withAsterisk={integrationsRequired}
-          onOpenNewIntegration={handleOpenNewIntegration}
+          onOpenNewIntegration={canCreateIntegration ? handleOpenNewIntegration : undefined}
           {...form.getInputProps("integrationIds")}
         />
       )}

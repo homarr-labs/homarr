@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Group, ScrollArea, Title, UnstyledButton } from "@mantine/core";
+import { Alert, Button, Group, ScrollArea, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 import { IconArrowLeft, IconX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -34,7 +34,7 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
   const [step, setStep] = useState<"select" | "form">(isDirectForm ? "form" : "select");
   const [selectedKind, setSelectedKind] = useState<IntegrationKind | null>(directKind ?? null);
   const { openModal: openCompletionModal } = useModalAction(IntegrationCompletionModal);
-  const { data: integrationData } = clientApi.integration.all.useQuery();
+  const { data: integrationData, isError: isIntegrationDataError, refetch } = clientApi.integration.all.useQuery();
 
   useEffect(() => {
     if (step === "form" && !isDirectForm) {
@@ -92,6 +92,19 @@ export const IntegrationSelectModal = createModal<IntegrationSelectModalProps>((
           onCancel={handleFormBack}
         />
       </ScrollArea.Autosize>
+    );
+  }
+
+  if (isIntegrationDataError) {
+    return (
+      <Alert color="red" title={t("common.error")}>
+        <Stack gap="sm">
+          <Text size="sm">{t("integration.grid.loadError")}</Text>
+          <Button variant="light" color="red" onClick={() => void refetch()}>
+            {t("common.action.tryAgain")}
+          </Button>
+        </Stack>
+      </Alert>
     );
   }
 

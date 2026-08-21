@@ -136,6 +136,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
       if (selectedItemIds.size === 0) return;
 
       const idsToMove = new Set(selectedItemIds);
+      let didMoveAll = false;
 
       persistBoard((previous) => {
         const targetSection = previous.sections.find((section) => section.id === targetSectionId);
@@ -218,7 +219,8 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
           occupiedPositions.push({ id: item.id, ...emptyPosition, width, height });
         }
 
-        if (movedLayouts.size === 0) return previous;
+        if (movedLayouts.size !== idsToMove.size) return previous;
+        didMoveAll = true;
         return {
           ...previous,
           items: previous.items.map((item) => {
@@ -232,9 +234,16 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
         };
       });
 
-      clearSelection();
+      if (didMoveAll) {
+        clearSelection();
+      } else {
+        showErrorNotification({
+          title: tSelection("moveUnavailableTitle"),
+          message: tSelection("moveUnavailableMessage"),
+        });
+      }
     },
-    [clearSelection, currentLayoutId, persistBoard, selectedItemIds],
+    [clearSelection, currentLayoutId, persistBoard, selectedItemIds, tSelection],
   );
 
   const value = useMemo(
