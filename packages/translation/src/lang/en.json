@@ -822,7 +822,7 @@
         "toggle": "Click to select",
         "selected": "Selected",
         "multiple": "Add {count}",
-        "multiSelectTip": "Tip: Hold Shift or Ctrl / ⌘ to select multiple apps at once",
+        "multiSelectTip": "Tip: Hold Ctrl / ⌘ to select multiple apps at once",
         "selectedCount": "{count, plural, one {# selected} other {# selected}}",
         "appsSelected": "{count, plural, one {# app selected} other {# apps selected}}",
         "customApplication": "Custom application",

@@ -49,7 +49,7 @@ export const BoardSelectionToolbar = () => {
   const appMap = new Map((selectableApps ?? []).map((app) => [app.id, app]));
 
   // Sort items so apps appear first
-  const sortedSelectedItems = [...selectedItems].sort((itemA, itemB) => {
+  const sortedSelectedItems = selectedItems.toSorted((itemA, itemB) => {
     if (itemA.kind === "app" && itemB.kind !== "app") return -1;
     if (itemA.kind !== "app" && itemB.kind === "app") return 1;
     return 0;
@@ -200,6 +200,10 @@ export const BoardSelectionToolbar = () => {
             </Stack>
           </HoverCard.Dropdown>
         </HoverCard>
+
+        <Text size="xs" c="dimmed" visibleFrom="sm" maw={220} lh={1.25}>
+          {t("app.action.select.multiSelectTip")}
+        </Text>
 
         <Divider orientation="vertical" />
 
