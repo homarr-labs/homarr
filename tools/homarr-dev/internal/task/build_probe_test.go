@@ -12,6 +12,9 @@ import (
 // Exercises the real BuildKit streaming and parsing path against a small
 // Dockerfile, so the step tracker is validated on genuine output.
 func TestBuildImageStreamsRealSteps(t *testing.T) {
+	if testing.Short() || os.Getenv("HOMARR_INTEGRATION_TEST") != "1" {
+		t.Skip("skipping docker build probe test; set HOMARR_INTEGRATION_TEST=1 to run")
+	}
 	dir := t.TempDir()
 	dockerfile := `FROM alpine:3.20 AS base
 RUN echo "hello from step two" && sleep 1

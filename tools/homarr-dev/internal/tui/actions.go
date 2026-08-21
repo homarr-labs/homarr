@@ -100,9 +100,9 @@ func (m Model) instanceTarget(row instanceRow) target {
 	return result
 }
 
-// primaryAction is Enter: stop what is running, start what is not. Starting
-// prefers a local image built from the exact head commit, falls back to the
-// registry image, and reports honestly when neither exists yet.
+// primaryAction is Enter: stop what is running, start what is not. A matching
+// local build and a published registry image open a small source selector;
+// otherwise the only available source is started directly.
 func (m Model) primaryAction() (Model, tea.Cmd) {
 	if m.screen == screenInstances {
 		row, found := m.selectedInstance()
@@ -126,6 +126,9 @@ func (m Model) primaryAction() (Model, tea.Cmd) {
 		return m.startLocal(row)
 	}
 	if row.hasCurrentLocalImage() {
+		if m.remoteImageAvailable(row) {
+			return m.selectImage(row)
+		}
 		return m.startLocalPR(row)
 	}
 	switch row.image {
@@ -137,6 +140,18 @@ func (m Model) primaryAction() (Model, tea.Cmd) {
 		return m, nil
 	}
 	return m.deployRemotePR(row)
+}
+
+func (m Model) remoteImageAvailable(row devRow) bool {
+	return row.kind == rowRemote && m.tagsKnown && registry.HasPRImage(m.tags, row.pr.Number)
+}
+
+func (m Model) selectImage(row devRow) (Model, tea.Cmd) {
+	m.imageSelection = imageSelection{rowKey: row.key(), choice: imageChoiceLocal}
+	m.mode = modeImageSelect
+	m.status, m.statusLevel = "choose an image source for "+row.label(), levelInfo
+	m.relayout()
+	return m, nil
 }
 
 func (m Model) startLocal(row devRow) (Model, tea.Cmd) {
@@ -264,9 +279,9 @@ func (m Model) focusOn(id int, title string) (Model, tea.Cmd) {
 	m.sidebar.follow = true
 	m.status, m.statusLevel = title+" started in the background", levelInfo
 	m.relayout()
-	m.refreshSidebar()
+	cmd := m.refreshSidebar()
 	clocks := m.animate()
-	return m, clocks
+	return m, tea.Batch(cmd, clocks)
 }
 
 func (m Model) stopContainer(name string) (Model, tea.Cmd) {

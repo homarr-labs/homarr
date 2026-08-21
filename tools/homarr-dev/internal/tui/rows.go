@@ -104,7 +104,7 @@ func (r devRow) searchTerms() string {
 
 // buildDevRows merges open pull requests with local images into a single list.
 // A local image folds into its pull request only when the revisions match, so
-// the row that Enter starts is always the freshest thing available.
+// the row exposes both sources when the registry image is available too.
 func buildDevRows(prs []gh.PR, images []docker.Image, tags map[string]bool, tagsKnown bool) []devRow {
 	rows := make([]devRow, 0, len(prs)+len(images))
 	indexByPR := make(map[int]int, len(prs))
@@ -117,8 +117,8 @@ func buildDevRows(prs []gh.PR, images []docker.Image, tags map[string]bool, tags
 		if matched && image.Revision != "" && image.Revision == rows[index].pr.HeadSHA {
 			if rows[index].local.Tag == "" {
 				rows[index].local = image
+				continue
 			}
-			continue
 		}
 		rows = append(rows, devRow{kind: rowLocal, local: image, image: ui.ImageLocal})
 	}

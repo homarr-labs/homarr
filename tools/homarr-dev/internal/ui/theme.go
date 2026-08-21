@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"charm.land/lipgloss/v2"
+	"github.com/charmbracelet/x/ansi"
 )
 
 // The palette is intentionally small. Colour carries meaning here — green is
@@ -69,17 +70,11 @@ func Rule(label string, width int) string {
 // occupy a row for no reason, which turns a log panel into double-spaced text.
 func Blank(line string) bool { return lipgloss.Width(strings.TrimSpace(line)) == 0 }
 
-// Truncate shortens a string to width runes, marking the cut with an ellipsis.
+// Truncate shortens a string to display width, marking the cut with an ellipsis.
+// It handles ANSI escape sequences and multi-byte runes correctly.
 func Truncate(value string, width int) string {
 	if width <= 0 {
 		return ""
 	}
-	runes := []rune(value)
-	if len(runes) <= width {
-		return value
-	}
-	if width == 1 {
-		return "…"
-	}
-	return string(runes[:width-1]) + "…"
+	return ansi.Truncate(value, width, "…")
 }

@@ -75,7 +75,7 @@ homarr doctor              Check Docker, Engine API, and optional integrations
 ```text
 /              Filter by PR number, title, author, branch, CI, image, state, or port
 ↑/↓ or j/k     Select row
-Enter or Space Start local build / pull remote; stop when running
+Enter or Space Start the available image; choose local or remote when both exist; stop when running
 R              Build locally in background (or rebuild local image)
 p              Pull remote PR image in background and start container
 m              Manage mode (chords: b rebuild, i delete image, d delete data, c remove container, p prune)

@@ -28,6 +28,8 @@ func (m Model) View() tea.View {
 		sections = append(sections, "", m.manageBar())
 	case modeConfirm:
 		sections = append(sections, "", m.confirmBar())
+	case modeImageSelect:
+		sections = append(sections, "", m.imageSelectBar())
 	}
 	if m.status != "" {
 		sections = append(sections, "", m.statusView())
@@ -208,8 +210,7 @@ func (m Model) taskOverlay(width int) string {
 }
 
 // detail describes the selected row in full, including the things that are too
-// wide for a table cell: branch, provenance, and the exact image that Enter
-// would run.
+// wide for a table cell: branch, provenance, and the image source Enter can run.
 func (m Model) detail() string {
 	if m.screen == screenInstances {
 		row, found := m.selectedInstance()
@@ -275,6 +276,8 @@ func (m Model) detail() string {
 	switch {
 	case row.running:
 		meta = append(meta, ui.Help.Render("enter stops it"))
+	case row.hasCurrentLocalImage() && m.remoteImageAvailable(row):
+		meta = append(meta, ui.Help.Render("enter chooses local or remote"))
 	case row.hasCurrentLocalImage():
 		meta = append(meta, ui.Local.Render("enter runs "+row.localReference()))
 	case row.image == ui.ImageRemote:
@@ -288,6 +291,29 @@ func (m Model) detail() string {
 	title := fmt.Sprintf("%s #%d  %s", ui.IconPR, row.pr.Number, row.pr.Title)
 	return clip(ui.Heading.Render(ui.Truncate(title, max(m.width-2, 20))), m.width) + "\n" +
 		clip(strings.Join(meta, ui.Dim.Render(" · ")), m.width)
+}
+
+func (m Model) imageSelectBar() string {
+	row, found := m.selectedDev()
+	if !found {
+		return ui.Help.Render("image selection is no longer available")
+	}
+
+	title := fmt.Sprintf("%s choose image for PR #%d", ui.IconDocker, row.pr.Number)
+	local := m.imageChoiceLine(imageChoiceLocal, ui.IconLocal+" local", row.localReference())
+	remote := m.imageChoiceLine(imageChoiceRemote, ui.IconCloud+" remote", remoteImageFor(row))
+	hint := ui.Help.Render("↑/↓ choose · enter start · esc cancel")
+	return strings.Join([]string{ui.Heading.Render(title), local, remote, hint}, "\n")
+}
+
+func (m Model) imageChoiceLine(choice imageChoice, label, reference string) string {
+	marker := "  "
+	style := ui.Help
+	if m.imageSelection.choice == choice {
+		marker = "▸ "
+		style = ui.Selected
+	}
+	return style.Render(ui.Truncate(marker+label+"  "+reference, max(m.width-2, 20)))
 }
 
 // taskTray is the always-visible one-liner for the job being followed. It uses

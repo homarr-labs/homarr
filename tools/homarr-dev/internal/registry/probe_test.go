@@ -2,13 +2,14 @@ package registry
 
 import (
 	"context"
+	"os"
 	"testing"
 	"time"
 )
 
 func TestPublishedTagsIntegration(t *testing.T) {
-	if testing.Short() {
-		t.Skip("network test")
+	if testing.Short() || os.Getenv("HOMARR_INTEGRATION_TEST") != "1" {
+		t.Skip("skipping GHCR integration test; set HOMARR_INTEGRATION_TEST=1 to run")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 25*time.Second)
 	defer cancel()

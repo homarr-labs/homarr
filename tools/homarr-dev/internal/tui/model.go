@@ -38,9 +38,22 @@ const (
 	modeFilter
 	modeManage
 	modeConfirm
+	modeImageSelect
 	modeHelp
 	modeTasks
 )
+
+type imageChoice int
+
+const (
+	imageChoiceLocal imageChoice = iota
+	imageChoiceRemote
+)
+
+type imageSelection struct {
+	rowKey string
+	choice imageChoice
+}
 
 type statusLevel int
 
@@ -96,7 +109,8 @@ type Model struct {
 	taskCursor int
 	focusTask  int
 
-	confirm confirmation
+	confirm        confirmation
+	imageSelection imageSelection
 
 	includeBots bool
 	demo        bool
@@ -243,8 +257,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.applyTasks()
 
 	case logsChangedMsg:
-		m.refreshSidebar()
-		return m, waitForLogs(m.logs)
+		cmd := m.refreshSidebar()
+		return m, tea.Batch(cmd, waitForLogs(m.logs))
 
 	case ciChecksMsg:
 		m.ciChecks[msg.pr] = ciCheckState{
@@ -253,16 +267,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			err:     msg.err,
 			updated: time.Now(),
 		}
-		m.refreshSidebar()
+		cmd := m.refreshSidebar()
 		for _, c := range msg.checks {
 			if c.IsPending() {
 				pollCmd := tea.Tick(6*time.Second, func(t time.Time) tea.Msg {
 					return pollCIChecksMsg{pr: msg.pr}
 				})
-				return m, pollCmd
+				return m, tea.Batch(cmd, pollCmd)
 			}
 		}
-		return m, nil
+		return m, cmd
 
 	case pollCIChecksMsg:
 		if m.sidebar.source == sourceCI && m.selectedPRNumber() == msg.pr {
@@ -274,12 +288,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Batch(tickRefresh(), loadContainers(m.generation))
 
 	case frameMsg:
-		m.refreshSidebar()
+		cmd := m.refreshSidebar()
 		if !m.busy() {
 			m.animating = false
-			return m, nil
+			return m, cmd
 		}
-		return m, tickFrame()
+		return m, tea.Batch(cmd, tickFrame())
 
 	case spinner.TickMsg:
 		if !m.busy() {
@@ -337,8 +351,8 @@ func (m Model) applyLoaded(msg loadedMsg) (Model, tea.Cmd) {
 		m.status, m.statusLevel = m.summary(), levelInfo
 	}
 	m.relayout()
-	m.refreshSidebar()
-	return m, m.syncLogStreams()
+	cmd := m.refreshSidebar()
+	return m, tea.Batch(cmd, m.syncLogStreams())
 }
 
 func (m Model) summary() string {
@@ -408,7 +422,9 @@ func (m Model) applyTasks() (Model, tea.Cmd) {
 		commands = append(commands, clocks)
 	}
 	m.relayout()
-	m.refreshSidebar()
+	if cmd := m.refreshSidebar(); cmd != nil {
+		commands = append(commands, cmd)
+	}
 	return m, tea.Batch(commands...)
 }
 
@@ -592,6 +608,8 @@ func (m *Model) relayout() {
 		reserved += 2
 	case modeConfirm:
 		reserved += 3
+	case modeImageSelect:
+		reserved += 5
 	}
 	if m.status != "" {
 		reserved += 2

@@ -21,7 +21,7 @@ homarr
 
 The main browser combines local `homarr:*` images with open pull requests and their GHCR preview status. Select an image to start or stop it, use `R` to build a remote pull request locally in the background or rebuild a local image, or use `p` to force a remote preview pull. Press `d` (or `1`/`2`) to toggle between the image browser and the instance dashboard.
 
-A locally built PR image is folded into its remote PR row only when its recorded revision matches the current GitHub head SHA (marked `◆ local`). Starting it prefers that local image without a registry pull. Outdated local builds remain separate rows.
+A locally built PR image is folded into its remote PR row only when its recorded revision matches the current GitHub head SHA (marked `◆ local`). When the matching GHCR image is also available, pressing `Enter` opens a local/remote selector with local preselected. Outdated local builds remain separate rows.
 
 ### Multi-Source Sidebar
 
@@ -45,7 +45,7 @@ Pulls and builds run asynchronously in the background. Press `t` to open the tas
 | ---------------------- | --------------------------------------------------------------------------------------------- |
 | `/`                    | Filter rows by PR number, title, author, branch, CI, image, state, or port                    |
 | `↑` / `↓` or `j` / `k` | Navigate rows                                                                                 |
-| `Enter` or `Space`     | Start local build / pull remote PR image; stop if running                                     |
+| `Enter` or `Space`     | Start the available image; choose local or remote when both exist; stop if running            |
 | `R`                    | Build locally in background (or rebuild local image)                                          |
 | `p`                    | Pull remote PR image in background and start container                                        |
 | `m`                    | Manage mode (`b` rebuild, `i` delete image, `d` delete data, `c` remove container, `p` prune) |

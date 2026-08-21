@@ -19,6 +19,8 @@ func (m Model) handleKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 		return m.handleFilterKey(msg)
 	case modeConfirm:
 		return m.handleConfirmKey(msg)
+	case modeImageSelect:
+		return m.handleImageSelectKey(msg)
 	case modeManage:
 		return m.handleManageKey(msg)
 	case modeHelp:
@@ -28,6 +30,42 @@ func (m Model) handleKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	default:
 		return m.handleNormalKey(msg)
 	}
+}
+
+func (m Model) handleImageSelectKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
+	switch {
+	case key.Matches(msg, m.keys.Cancel):
+		m.mode = modeNormal
+		m.imageSelection = imageSelection{}
+		m.status, m.statusLevel = "launch canceled", levelInfo
+		m.relayout()
+		return m, nil
+
+	case key.Matches(msg, m.keys.Up), key.Matches(msg, m.keys.Down):
+		if m.imageSelection.choice == imageChoiceLocal {
+			m.imageSelection.choice = imageChoiceRemote
+		} else {
+			m.imageSelection.choice = imageChoiceLocal
+		}
+		return m, nil
+
+	case key.Matches(msg, m.keys.Enter):
+		selection := m.imageSelection
+		row, found := m.selectedDev()
+		m.mode = modeNormal
+		m.imageSelection = imageSelection{}
+		if !found || row.key() != selection.rowKey {
+			m.status, m.statusLevel = "image selection expired; choose a row again", levelWarn
+			m.relayout()
+			return m, nil
+		}
+		m.relayout()
+		if selection.choice == imageChoiceRemote {
+			return m.deployRemotePR(row)
+		}
+		return m.startLocalPR(row)
+	}
+	return m, nil
 }
 
 func (m Model) handleNormalKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
@@ -245,8 +283,8 @@ func (m Model) handleFilterKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 		m.filter.Reset()
 		m.filter.Blur()
 		m.relayout()
-		m.refreshSidebar()
-		return m, nil
+		cmd := m.refreshSidebar()
+		return m, cmd
 	case tea.KeyEnter:
 		m.mode = modeNormal
 		m.filter.Blur()
@@ -256,8 +294,8 @@ func (m Model) handleFilterKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	var command tea.Cmd
 	m.filter, command = m.filter.Update(msg)
 	m.applyFilter()
-	m.refreshSidebar()
-	return m, command
+	cmd := m.refreshSidebar()
+	return m, tea.Batch(command, cmd)
 }
 
 func (m Model) handleOverlayKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {

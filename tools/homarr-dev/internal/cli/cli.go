@@ -5,6 +5,7 @@ package cli
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -36,7 +37,13 @@ func NewApp() *App {
 
 // Execute runs the CLI.
 func Execute() error {
-	return NewApp().Root().Execute()
+	args := os.Args[1:]
+	if len(args) > 0 && args[0] == "--" {
+		args = args[1:]
+	}
+	root := NewApp().Root()
+	root.SetArgs(args)
+	return root.Execute()
 }
 
 func (a *App) Root() *cobra.Command {

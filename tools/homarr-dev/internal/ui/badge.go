@@ -98,8 +98,9 @@ var imageBadges = map[ImageState]badgeSpec{
 	ImageUnknown:  {"?", "checking", Warning},
 }
 
-// ImageBadge renders image availability. Local builds win over registry builds
-// because running one is instant and needs no network.
+// ImageBadge renders the preferred image availability for a row. A matching
+// local build is shown first; the start action can still offer the registry
+// image when both sources are available.
 func ImageBadge(state ImageState, verbose bool) string {
 	spec, found := imageBadges[state]
 	if !found {
