@@ -1,0 +1,60 @@
+packages/cli/src/index.ts
+  s_b389e2d17efbfb::t_5e8e4155494a4b 6,8-42
+  s_b389e2d17efbfb::t_0940e9869f0cdc 4
+  s_b389e2d17efbfb::t_927283a96574f0 2
+apps/docs/docs/advanced/command-line/index.mdx
+  s_b389e2d17efbfb::t_25677327502c9b 28-51
+packages/cli/src/commands/harness.ts
+  s_b389e2d17efbfb::t_0940e9869f0cdc 1-183,185-237,250-265,270-346,348-357
+  s_b389e2d17efbfb::t_927283a96574f0 184
+  s_b389e2d17efbfb::t_0e6d45c1d7eaea 266-269
+  s_b389e2d17efbfb::t_16ee2779f825b0 238-249
+  s_b389e2d17efbfb::t_eaacb57936a24e 347
+apps/docs/docs/advanced/command-line/development/index.mdx
+  s_d756cf507a8904::t_8187a712c6ceb2 12
+  s_d756cf507a8904::t_a6dedf8a7fc03d 3,5,7-11,13-14,18-19,22-32,34,36-64,67-69,72-80,82-86,89-93,96-99,101,104-111,114-175
+tools/homarr-dev/internal/ui/theme.go
+  s_20fe5c8b1eab45::t_198b676548987f 56,59-61,63-64
+tools/homarr-dev/internal/ui/badge.go
+  s_40f04ebdd68b8f::t_88eb0f5b5697e4 6,194-195
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "84b000afdadad5574e53baedf2652b78102e54d2",
+  "prompts": {},
+  "sessions": {
+    "s_20fe5c8b1eab45": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02418-9e79-71b1-81dc-fae410529d07",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_40f04ebdd68b8f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02415-bf29-7e10-bca3-4dbf8f475de5",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_b389e2d17efbfb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a024a1-940c-7511-9076-9f86fc9d7eb6",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_d756cf507a8904": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fdb5f83e2ffe4WkIVtP95JaEUk",
+        "model": "google/gemini-3.7-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
