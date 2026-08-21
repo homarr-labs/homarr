@@ -131,4 +131,12 @@ describe("BeszelStatsView GPU charts", () => {
 
     expect(container.querySelectorAll("[data-chart]")).toHaveLength(0);
   });
+
+  test("does not render optional GPU charts when Beszel does not report their metrics", async () => {
+    setGpuStats({ "0": { n: "RTX 3090", u: 10 } });
+    const container = await renderStatsView({ ...hiddenCharts, gpuMemory: true, gpuPower: true });
+
+    expect(container.querySelector('[data-chart="chart.gpuMemory.title"]')).toBeNull();
+    expect(container.querySelector('[data-chart="chart.gpuPower.title"]')).toBeNull();
+  });
 });

@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import type { BeszelSystemStatsRecord } from "@homarr/integrations/types";
 
-import { buildDiskChartData, buildGpuChartData, buildGpuDevices, padLiveTimeGrid } from "./chart";
+import { buildDiskChartData, buildGpuChartData, buildGpuDevices, hasGpuMetric, padLiveTimeGrid } from "./chart";
 
 const record = (
   created: string,
@@ -141,5 +141,18 @@ describe("buildGpuChartData", () => {
     expect(buildGpuChartData([sample], devices, "memory", "1m").at(-1)?.["RTX 3090 (0)"]).toBe(0);
     expect(buildGpuChartData([sample], devices, "power", "1m").at(-1)?.["RTX 3090 (0)"]).toBe(0);
     expect(buildGpuChartData([sample], devices, "usage", "1m")).toHaveLength(60);
+  });
+
+  test("distinguishes missing optional GPU metrics from reported zero values", () => {
+    const sample = record("2026-07-11T13:51:30.000Z", 0, undefined);
+    sample.stats.g = { "0": { n: "RTX 3090", u: 0 } };
+
+    expect(hasGpuMetric([sample], "memory")).toBe(false);
+    expect(hasGpuMetric([sample], "power")).toBe(false);
+
+    sample.stats.g = { "0": { n: "RTX 3090", u: 0, mu: 0, p: 0 } };
+
+    expect(hasGpuMetric([sample], "memory")).toBe(true);
+    expect(hasGpuMetric([sample], "power")).toBe(true);
   });
 });

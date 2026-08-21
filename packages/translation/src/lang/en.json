@@ -4126,7 +4126,7 @@
     },
     "beszelSystemStats": {
       "name": "Beszel System Stats",
-      "description": "Time-series charts for CPU, memory, disk, network, and Docker container metrics",
+      "description": "Time-series charts for CPU, memory, disk, network, GPU, and Docker container metrics",
       "option": {
         "systemId": {
           "label": "System",

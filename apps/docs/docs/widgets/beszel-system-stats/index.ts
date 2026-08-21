@@ -62,13 +62,13 @@ export const beszelSystemStatsWidget: WidgetDefinition = {
       },
       {
         name: "Show GPU memory",
-        description: "Displays used VRAM for each GPU reported by Beszel in standard storage units",
+        description: "Displays used VRAM for each GPU when reported by Beszel, in standard storage units",
         values: { type: "boolean" },
         defaultValue: "yes",
       },
       {
         name: "Show GPU power",
-        description: "Displays power draw for each GPU reported by Beszel",
+        description: "Displays power draw for each GPU when reported by Beszel",
         values: { type: "boolean" },
         defaultValue: "yes",
       },

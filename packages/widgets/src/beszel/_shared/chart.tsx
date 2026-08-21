@@ -283,6 +283,14 @@ export const buildGpuDevices = (systemStats: BeszelSystemStatsRecord[] | undefin
 export const useGpuDevices = (systemStats: BeszelSystemStatsRecord[] | undefined) =>
   useMemo(() => buildGpuDevices(systemStats), [systemStats]);
 
+export const hasGpuMetric = (systemStats: BeszelSystemStatsRecord[] | undefined, metric: BeszelGpuMetric) => {
+  if (metric === "usage") return (systemStats ?? []).some((record) => Object.keys(record.stats.g ?? {}).length > 0);
+
+  return (systemStats ?? []).some((record) =>
+    Object.values(record.stats.g ?? {}).some((device) => (metric === "memory" ? device.mu : device.p) !== undefined),
+  );
+};
+
 const gpuExtractors: Record<BeszelGpuMetric, (device: BeszelGPUData | undefined) => number> = {
   usage: (device) => device?.u ?? 0,
   memory: (device) => (device?.mu ?? 0) * 1024 * 1024,

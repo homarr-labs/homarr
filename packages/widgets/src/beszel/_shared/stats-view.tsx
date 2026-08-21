@@ -13,6 +13,7 @@ import type { BeszelTimePeriod } from "./chart";
 import {
   BeszelChartPanel,
   CPU_Y_AXIS_DOMAIN,
+  hasGpuMetric,
   useContainerNames,
   useDiskChartData,
   useDockerChartData,
@@ -162,6 +163,8 @@ export function BeszelStatsView({
     timePeriod,
   );
   const gpuPowerData = useGpuChartData(whenVisible(visibility.gpuPower, systemStats), gpuDevices, "power", timePeriod);
+  const hasGpuMemory = hasGpuMetric(systemStats, "memory");
+  const hasGpuPower = hasGpuMetric(systemStats, "power");
 
   const efsPaths = useMemo(() => {
     const paths = new Set<string>();
@@ -338,7 +341,7 @@ export function BeszelStatsView({
               }}
             />
           )}
-          {visibility.gpuMemory && gpuMemoryData.length > 0 && (
+          {visibility.gpuMemory && hasGpuMemory && gpuMemoryData.length > 0 && (
             <BeszelChartPanel
               title={t("chart.gpuMemory.title")}
               subtitle={t("chart.gpuMemory.subtitle")}
@@ -351,7 +354,7 @@ export function BeszelStatsView({
               }}
             />
           )}
-          {visibility.gpuPower && gpuPowerData.length > 0 && (
+          {visibility.gpuPower && hasGpuPower && gpuPowerData.length > 0 && (
             <BeszelChartPanel
               title={t("chart.gpuPower.title")}
               subtitle={t("chart.gpuPower.subtitle")}
