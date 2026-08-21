@@ -2789,6 +2789,12 @@
     "selection": {
       "summary": "{count, plural, one {# selected item} other {# selected items}}",
       "selected": "{count, plural, one {# selected} other {# selected}}",
+      "copy": "Copy",
+      "copied": "{count, plural, one {# item copied to the clipboard} other {# items copied to the clipboard}}",
+      "copyError": "The selected items could not be copied. Your browser may not allow clipboard access.",
+      "pasted": "{count, plural, one {# item pasted} other {# items pasted}}",
+      "pasteInvalid": "The clipboard does not contain valid Homarr board items.",
+      "pasteUnavailable": "The copied items do not fit on this board.",
       "removed": "{count, plural, one {# item removed} other {# items removed}}",
       "move": "Move",
       "moveTo": "Move selected items",

@@ -8,19 +8,27 @@ import { notifications } from "@mantine/notifications";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { usePersistBoard } from "@homarr/boards/updater";
+import { createId } from "@homarr/common";
 import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 import type { ContainerSection, ItemLayout } from "~/app/[locale]/boards/_types";
+import { createItemCallback } from "~/components/board/items/actions/create-item";
 import { getFirstEmptyPosition } from "~/components/board/items/actions/empty-position";
 import { playPopSound, playTrashSound } from "../audio/board-sounds";
+import {
+  isBoardItemClipboardText,
+  parseBoardItemClipboard,
+  serializeBoardItemsForClipboard,
+} from "./board-item-clipboard";
 
 interface BoardSelectionContextValue {
   selectedItemIds: Set<string>;
   toggleSelectItem: (id: string) => void;
   clearSelection: () => void;
   isSelected: (id: string) => boolean;
+  copySelectedItems: () => Promise<void>;
   removeSelectedItems: () => void;
   moveSelectedItemsToSection: (sectionId: string) => void;
 }
@@ -37,7 +45,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
   const tSelection = useScopedI18n("item.selection");
 
   const persistBoard = useCallback(
-    (updater: (previous: typeof board) => typeof board) => {
+    (updater: (previous: typeof board) => typeof board) =>
       updateAndPersistBoard(updater, {
         onError: () => {
           showErrorNotification({
@@ -45,8 +53,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
             message: tSelection("saveErrorMessage"),
           });
         },
-      });
-    },
+      }),
     [tSelection, updateAndPersistBoard],
   );
 
@@ -89,6 +96,81 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   const isSelected = useCallback((id: string) => selectedItemIds.has(id), [selectedItemIds]);
+
+  const copySelectedItems = useCallback(async () => {
+    const selectedItems = board.items.filter((item) => selectedItemIds.has(item.id));
+    if (selectedItems.length === 0) return;
+
+    try {
+      const value = serializeBoardItemsForClipboard(selectedItems, currentLayoutId);
+      await navigator.clipboard.writeText(value);
+      showSuccessNotification({
+        title: t("common.success"),
+        message: tSelection("copied", { count: selectedItems.length }),
+      });
+    } catch {
+      showErrorNotification({
+        title: t("common.error"),
+        message: tSelection("copyError"),
+      });
+    }
+  }, [board.items, currentLayoutId, selectedItemIds, t, tSelection]);
+
+  useEffect(() => {
+    if (!isEditMode) return;
+
+    const handlePaste = (event: ClipboardEvent) => {
+      const target = event.target;
+      if (
+        target instanceof Element &&
+        target.closest("input, textarea, select, [contenteditable='true'], [role='textbox']")
+      )
+        return;
+
+      const value = event.clipboardData?.getData("text/plain") ?? "";
+      if (!isBoardItemClipboardText(value)) return;
+      event.preventDefault();
+
+      const payload = parseBoardItemClipboard(value);
+      if (!payload) {
+        showErrorNotification({ title: t("common.error"), message: tSelection("pasteInvalid") });
+        return;
+      }
+
+      const pastedIds = payload.items.map(() => createId());
+      let didPasteAll = false;
+      persistBoard((previous) => {
+        let next = previous;
+        try {
+          payload.items.forEach((item, index) => {
+            const id = pastedIds[index];
+            if (!id) throw new Error("Missing pasted item ID");
+            next = createItemCallback({ ...item, id })(next);
+          });
+        } catch {
+          return previous;
+        }
+
+        didPasteAll = next.items.length === previous.items.length + payload.items.length;
+        return didPasteAll ? next : previous;
+      });
+
+      if (!didPasteAll) {
+        showErrorNotification({ title: t("common.error"), message: tSelection("pasteUnavailable") });
+        return;
+      }
+
+      setSelectedItemIds(new Set(pastedIds));
+      playPopSound();
+      showSuccessNotification({
+        title: t("common.success"),
+        message: tSelection("pasted", { count: pastedIds.length }),
+      });
+    };
+
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [isEditMode, persistBoard, t, tSelection]);
 
   const removeSelectedItems = useCallback(() => {
     if (selectedItemIds.size === 0) return;
@@ -252,10 +334,19 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
       toggleSelectItem,
       clearSelection,
       isSelected,
+      copySelectedItems,
       removeSelectedItems,
       moveSelectedItemsToSection,
     }),
-    [clearSelection, isSelected, moveSelectedItemsToSection, removeSelectedItems, selectedItemIds, toggleSelectItem],
+    [
+      clearSelection,
+      copySelectedItems,
+      isSelected,
+      moveSelectedItemsToSection,
+      removeSelectedItems,
+      selectedItemIds,
+      toggleSelectItem,
+    ],
   );
 
   return <BoardSelectionContext.Provider value={value}>{children}</BoardSelectionContext.Provider>;

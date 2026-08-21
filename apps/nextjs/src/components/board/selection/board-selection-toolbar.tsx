@@ -15,7 +15,7 @@ import {
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { IconCheck, IconFolderShare, IconTrash, IconX } from "@tabler/icons-react";
+import { IconCheck, IconCopy, IconFolderShare, IconTrash, IconX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
@@ -31,7 +31,8 @@ const MAX_AVATARS_DISPLAYED = 5;
 
 export const BoardSelectionToolbar = () => {
   const [isEditMode] = useEditMode();
-  const { selectedItemIds, clearSelection, removeSelectedItems, moveSelectedItemsToSection } = useBoardSelection();
+  const { selectedItemIds, clearSelection, copySelectedItems, removeSelectedItems, moveSelectedItemsToSection } =
+    useBoardSelection();
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
@@ -205,6 +206,16 @@ export const BoardSelectionToolbar = () => {
 
         {/* Actions */}
         <Group gap="xs" wrap="nowrap" style={{ flexShrink: 0 }}>
+          <Button
+            size="xs"
+            variant="light"
+            color="blue"
+            leftSection={<IconCopy size={15} />}
+            onClick={() => void copySelectedItems()}
+          >
+            {tSelection("copy")}
+          </Button>
+
           {placementOptions.length > 1 && (
             <Menu position="top" withArrow shadow="md">
               <Menu.Target>
