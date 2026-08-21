@@ -1,0 +1,33 @@
+apps/docs/docs/management/boards/index.mdx
+  s_40f04ebdd68b8f::t_acf309bcb66a31 336-338
+apps/nextjs/src/components/board/advanced-focus/context.spec.tsx
+  s_40f04ebdd68b8f::t_d84289bc620634 158-169
+  s_40f04ebdd68b8f::t_dded8ae1e04a01 142-157,170-184
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_40f04ebdd68b8f::t_c1999c7438de51 402
+apps/docs/docs/getting-started/after-the-installation.mdx
+  s_40f04ebdd68b8f::t_acf309bcb66a31 154
+packages/translation/src/lang/en.json
+  s_40f04ebdd68b8f::t_c1999c7438de51 846
+apps/docs/docs/advanced/keyboard-shortcuts/index.mdx
+  s_40f04ebdd68b8f::t_c60eeff43abf20 9-16
+  s_40f04ebdd68b8f::t_acf309bcb66a31 20-21,24
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_40f04ebdd68b8f::t_5b3c4b8fa844da 60,162-167,171-186,300-311,314,318-321,324,330,346-354
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "c50cfc15f84b0ca426ec06853e34661a42677146",
+  "prompts": {},
+  "sessions": {
+    "s_40f04ebdd68b8f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02415-bf29-7e10-bca3-4dbf8f475de5",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
