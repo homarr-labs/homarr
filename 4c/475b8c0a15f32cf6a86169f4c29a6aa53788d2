@@ -1,0 +1,21 @@
+.github/workflows/ci.yml
+  s_ca2323b7f96e59::t_4aeaa23df0a306 377-381,388-400
+.github/workflows/workshop.yml
+  s_ca2323b7f96e59::t_4aeaa23df0a306 30,34,38-39,48-72,74-76,78,83-129
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "4c475b8c0a15f32cf6a86169f4c29a6aa53788d2",
+  "prompts": {},
+  "sessions": {
+    "s_ca2323b7f96e59": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ffa5b-9d67-7470-9988-648d9d7016d2",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
