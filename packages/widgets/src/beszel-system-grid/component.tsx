@@ -123,19 +123,12 @@ const MIN_CELL_HEIGHT = 80;
 const ADVANCED_MIN_CELL_WIDTH = 320;
 const ADVANCED_MIN_CELL_HEIGHT = 420;
 
-const getColCount = (width: number, _height: number, itemCount: number, minCellWidth = MIN_CELL_WIDTH): number => {
+const getColCount = (width: number, height: number, itemCount: number, minCellWidth = MIN_CELL_WIDTH): number => {
   if (itemCount <= 1) return 1;
   const maxCols = Math.min(itemCount, Math.max(1, Math.floor(width / minCellWidth)));
-
-  let best = 1;
-  for (let c = 1; c <= maxCols; c++) {
-    const emptyCells = (c - (itemCount % c)) % c;
-    const bestEmpty = (best - (itemCount % best)) % best;
-    if (emptyCells < bestEmpty || (emptyCells === bestEmpty && c > best)) {
-      best = c;
-    }
-  }
-  return best;
+  const aspectRatio = width / Math.max(height, MIN_CELL_HEIGHT);
+  const idealCols = Math.round(Math.sqrt(itemCount * aspectRatio));
+  return Math.min(maxCols, Math.max(1, idealCols));
 };
 
 interface MetricRowProps {
