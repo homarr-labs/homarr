@@ -1,0 +1,90 @@
+apps/nextjs/src/components/board/sections/section-collapse.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 15,17,24,33,36-39,68-73,93-114,117-119,132,135,137,148,151-159
+apps/nextjs/src/components/board/sections/grid/test/grid-entry-memo.spec.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 88,91,158,196
+apps/nextjs/src/components/board/sections/grid/grid-editor-registry.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 1-117
+apps/nextjs/src/components/board/sections/use-section-items.ts
+  s_40f04ebdd68b8f::t_75aa447a66a599 10,13-14,17-60
+  s_40f04ebdd68b8f::t_e628e2745e2de2 61
+apps/nextjs/src/components/board/sections/grid/grid-editor.css
+  s_40f04ebdd68b8f::t_75aa447a66a599 6,26-32,112-113
+apps/nextjs/src/components/board/sections/container-section.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 65,74,104
+apps/nextjs/src/components/board/sections/grid/section-grid.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 3-5,23,26-27,52-54,60-64,86-92,94-107,115,121-128,135-191,202-203,205,211-217,221-223,225-234,240-243,262-273,275-279,281-315,317-325
+apps/nextjs/src/components/board/sections/grid/board-grid-editor-boundary.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 5,9-10,14,22-24,26,29,35,44,46-54,56-66,68-69,71-72
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 4,38,51-52,57-60,70,76-77,120,122-123,126-127,139,147-148,201,205-216,232
+packages/widgets/src/calendar/calender-day.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 23-24,34,37-39,45,72-73,76-82,85-88,90,94,97-99
+apps/nextjs/src/components/board/sections/section-context.ts
+  s_40f04ebdd68b8f::t_75aa447a66a599 6-7,16-17,19
+packages/widgets/src/downloads/component.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 796-798,874-880,902,905-908,916,968-969,972,974,978
+packages/widgets/src/downloads/helpers.ts
+  s_40f04ebdd68b8f::t_75aa447a66a599 23-33,47
+apps/nextjs/src/components/board/sections/grid/grid-entry-memo.ts
+  s_40f04ebdd68b8f::t_75aa447a66a599 9,17
+apps/nextjs/src/components/board/sections/grid/test/fixed-grid-item.spec.ts
+  s_40f04ebdd68b8f::t_75aa447a66a599 15,84-92,94,113
+packages/widgets/src/common/homarr-data-table.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 5-6,9-19,21-22,33,35,40-104,112-131,146-147
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 25
+pnpm-workspace.yaml
+  s_40f04ebdd68b8f::t_75aa447a66a599 283
+packages/translation/src/lang/en.json
+  s_40f04ebdd68b8f::t_75aa447a66a599 4873,4877,4880-4881,4885,4889,4892-4893,4896,4899,4903,4907,4910-4911,4914-4915,4918-4919,4923,4926-4927,4932,4936
+packages/widgets/src/common/use-persisted-table-layout.ts
+  s_40f04ebdd68b8f::t_75aa447a66a599 110
+apps/docs/docs/widgets/calendar/index.mdx
+  s_40f04ebdd68b8f::t_75aa447a66a599 72
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 16,41,62,734,736-740,745-749,793,797,822,851,859,862,883,886,888,892-894,901-905,907-908,910,912-915,928-930
+apps/nextjs/src/components/board/sections/grid/test/grid-import-boundary.spec.ts
+  s_40f04ebdd68b8f::t_75aa447a66a599 8,37-39,41-46
+apps/nextjs/src/components/board/sections/grid/section-grid.module.css
+  s_40f04ebdd68b8f::t_75aa447a66a599 17-20,25-27,31-33
+  s_40f04ebdd68b8f::t_5fda3743b9c153 34
+packages/widgets/src/docker/component.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 72-83,98-104,147-148,155,211,213-216,431,455-456,460-461,468,473,480,486,488-491,521,524,526-532
+apps/nextjs/src/components/board/sections/grid/grid-editor-loader.ts
+  s_40f04ebdd68b8f::t_75aa447a66a599 6,9-17,22
+  s_40f04ebdd68b8f::t_fb38441a516475 23
+packages/widgets/src/docker/index.ts
+  s_40f04ebdd68b8f::t_75aa447a66a599 30
+packages/widgets/src/downloads/helpers.spec.ts
+  s_40f04ebdd68b8f::t_75aa447a66a599 4,28-29
+patches/mantine-datatable@9.3.1.patch
+  s_40f04ebdd68b8f::t_75aa447a66a599 1-17
+packages/widgets/src/definition.spec.ts
+  s_40f04ebdd68b8f::t_75aa447a66a599 61
+apps/nextjs/src/components/board/sections/grid/grid-portal-host.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 9,16,21,30,34-39,41,43-44,46,48-49
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_40f04ebdd68b8f::t_75aa447a66a599 32,40,113-117,146-149
+  s_40f04ebdd68b8f::t_086b60c7a4db3b 150
+packages/widgets/src/common/homarr-data-table.css
+  s_40f04ebdd68b8f::t_75aa447a66a599 15-20,26,38-44,57-74
+  s_40f04ebdd68b8f::t_fabb426c4c5a51 75
+pnpm-lock.yaml
+  s_40f04ebdd68b8f::t_3350fe2e1933f9 707,1213,2988,28637
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "89ae6b4705a70ce64e4fafda82b51f4d42956333",
+  "prompts": {},
+  "sessions": {
+    "s_40f04ebdd68b8f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02415-bf29-7e10-bca3-4dbf8f475de5",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
