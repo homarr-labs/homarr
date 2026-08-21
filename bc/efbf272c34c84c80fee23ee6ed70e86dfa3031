@@ -1,0 +1,40 @@
+packages/ui/src/components/floating-tip/floating-tip.module.css
+  s_40f04ebdd68b8f::t_d4db137b98f598 1-17
+packages/ui/src/components/floating-tip/floating-tip.tsx
+  s_40f04ebdd68b8f::t_2acda48d709d73 5,33-36
+  s_40f04ebdd68b8f::t_7af5b5f6015f78 98-100
+  s_40f04ebdd68b8f::t_d4db137b98f598 1-4,6-32,37-97,101-205
+packages/ui/src/components/floating-tip/floating-tip.spec.tsx
+  s_40f04ebdd68b8f::t_d4db137b98f598 1-96
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_40f04ebdd68b8f::t_d4db137b98f598 4,10,38,136-145
+packages/translation/src/lang/en.json
+  s_40f04ebdd68b8f::t_d4db137b98f598 838-840
+  s_40f04ebdd68b8f::t_143ca5ac79b47b 841
+packages/ui/src/components/floating-tip/floating-tip.module.d.css.ts
+  s_40f04ebdd68b8f::t_d4db137b98f598 1-5
+packages/ui/src/components/floating-tip/index.ts
+  s_40f04ebdd68b8f::t_d4db137b98f598 1-7
+apps/docs/docs/management/boards/index.mdx
+  s_40f04ebdd68b8f::t_d4db137b98f598 213-214
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_40f04ebdd68b8f::t_d4db137b98f598 91,106-110
+packages/ui/src/components/index.tsx
+  s_40f04ebdd68b8f::t_d4db137b98f598 23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "bcefbf272c34c84c80fee23ee6ed70e86dfa3031",
+  "prompts": {},
+  "sessions": {
+    "s_40f04ebdd68b8f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02415-bf29-7e10-bca3-4dbf8f475de5",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
