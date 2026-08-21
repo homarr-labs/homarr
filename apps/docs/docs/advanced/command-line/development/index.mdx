@@ -1,43 +1,175 @@
 # Developer Docker CLI
 
-The host-side developer CLI builds and runs local Homarr images and pull-request previews. Run it directly from a checkout with `pnpm dev:cli -- ...`; no shell-specific setup script is required. It is separate from the recovery CLI included in production images.
+The host-side developer CLI builds and runs local Homarr images and pull-request previews with non-blocking background operations. Run it directly from a checkout with `pnpm dev:cli -- ...`; no shell-specific setup script is required. It is separate from the recovery CLI included in production images.
 
-To install an optional `homarr` binary, run `pnpm dev:cli:install` and make your Go bin directory available on `PATH`. GitHub CLI authentication is only needed for pull-request features.
+To install an optional `homarr` binary, run `pnpm dev:cli:install` and make your Go bin directory available on `PATH`. GitHub CLI authentication (`gh auth login`) is only needed for pull-request features.
 
-## Browse development images
+## Requirements
+
+- Docker or OrbStack
+- Go 1.25+ (when building the CLI from source)
+- GitHub CLI authenticated with `gh auth login` (for pull-request and CI features)
+- A [Nerd Font](https://www.nerdfonts.com/) enabled in your terminal (recommended for icons, status indicators, and TUI glyphs)
+
+## Interactive Development Browser
 
 ```bash
 pnpm dev:cli --
+# or with global binary:
+homarr
 ```
 
-The main screen combines local `homarr:*` images with open pull requests and their GHCR preview status. Select an image to start or stop it, use `R` to build a remote pull request locally in the background or rebuild a local image, or use `p` to force a remote preview pull. Press `d` to switch to the instance dashboard and `d` again to return without losing the browser state. The explicit `dev` and `dash` subcommands start on either screen.
+The main browser combines local `homarr:*` images with open pull requests and their GHCR preview status. Select an image to start or stop it, use `R` to build a remote pull request locally in the background or rebuild a local image, or use `p` to force a remote preview pull. Press `d` (or `1`/`2`) to toggle between the image browser and the instance dashboard.
 
-A locally built PR image is folded into its remote PR row only when its recorded revision exactly matches the current GitHub head SHA. The row is marked `◆ local`, and starting it prefers that local image without a registry pull. Outdated local builds remain separate rows. Navigation and dashboard switching remain available during background builds.
+A locally built PR image is folded into its remote PR row only when its recorded revision matches the current GitHub head SHA (marked `◆ local`). When the matching GHCR image is also available, pressing `Enter` opens a local/remote selector with local preselected. Outdated local builds remain separate rows.
 
-## Build images
+### Multi-Source Sidebar
+
+Press `Tab` to cycle between sidebar tabs:
+
+- **`[logs]`**: Live container output streams (press `f` to follow/pause, `L` to pin to the selected container, `Page Up`/`Page Down` to scroll).
+- **`[build]`**: Real-time BuildKit step streaming for active local builds.
+- **`[ci]`**: GitHub Actions CI check statuses, run duration, and workflow links for pull requests.
+
+### Background Task Overlay
+
+Pulls and builds run asynchronously in the background. Press `t` to open the tasks overlay, showing:
+
+- Layer-by-layer download progress and transfer speeds (via Docker Engine API).
+- Active build stages and logs.
+- Task cancellation and status.
+
+### Browser Shortcuts
+
+| Key                    | Action                                                                                        |
+| ---------------------- | --------------------------------------------------------------------------------------------- |
+| `/`                    | Filter rows by PR number, title, author, branch, CI, image, state, or port                    |
+| `↑` / `↓` or `j` / `k` | Navigate rows                                                                                 |
+| `Enter` or `Space`     | Start the available image; choose local or remote when both exist; stop if running            |
+| `R`                    | Build locally in background (or rebuild local image)                                          |
+| `p`                    | Pull remote PR image in background and start container                                        |
+| `m`                    | Manage mode (`b` rebuild, `i` delete image, `d` delete data, `c` remove container, `p` prune) |
+| `t`                    | Toggle background tasks overlay                                                               |
+| `Tab`                  | Cycle sidebar tabs (`[logs]`, `[build]`, `[ci]`)                                              |
+| `l` / `L`              | Toggle sidebar visibility / Pin logs to selected instance                                     |
+| `f`                    | Follow or pause logs                                                                          |
+| `M`                    | Toggle demo mode for next launch                                                              |
+| `b`                    | Toggle bot pull requests                                                                      |
+| `o` / `a`              | Open PR on GitHub / Open running instance in browser                                          |
+| `c`                    | Copy instance URL to clipboard                                                                |
+| `r`                    | Refresh data                                                                                  |
+| `1` / `2` / `d`        | Switch screen (development browser / instance dashboard)                                      |
+| `?` / `q`              | Help overlay / Quit (cancels active background tasks)                                         |
+
+## Instance Dashboard
 
 ```bash
-pnpm dev:cli -- build <name>
-pnpm dev:cli -- build --pr <number> [name]
+homarr dash
+# or
+pnpm dev:cli -- dash
 ```
 
-The first command builds the current checkout as `homarr:<name>`. The pull-request form uses a depth-one clone in a temporary directory and defaults to `homarr:pr-<number>` when `name` is omitted.
+The instance dashboard displays all running and stopped Homarr containers, published ports, health states, and resource volumes.
 
-## Rebuild images
+| Key                | Action                                   |
+| ------------------ | ---------------------------------------- |
+| `Enter` or `Space` | Start or stop selected instance          |
+| `s` / `S`          | Stop / Restart instance                  |
+| `x`                | Remove container (preserves data volume) |
+| `m`                | Manage mode for selected instance        |
+| `R`                | Rebuild from recorded build provenance   |
+
+## CLI Commands
+
+The commands below use the installed `homarr` binary. Without global installation, prefix each command with `pnpm dev:cli --` (for example, `pnpm dev:cli -- list`).
+
+### Launch Instances
 
 ```bash
-pnpm dev:cli -- rebuild <name>
+homarr run dev
+homarr run --detach dev
+homarr run --pr 6441
+homarr run --pr 6441 --demo
+homarr --pr 6441 --env WORKSHOP_WEB_URL=https://app-v2.preview.homarr.dev/
 ```
 
-Images built by this CLI record their source checkout, revision, and optional pull-request number. Rebuild uses that provenance to select the original checkout or create a fresh temporary pull-request checkout.
+- `--pr <number>`: Pull and run a PR image from GHCR (shorthand: `homarr --pr <number>`).
+- `--demo` (`-m`): Start with mock integrations and sample data.
+- `--detach`: Start container in background.
+- `--env` (`-e`): Pass additional environment variables (repeatable: `--env KEY=VALUE`).
 
-## Run images
+### Build & Rebuild
 
 ```bash
-homarr --pr <number> --env HOMARR_WEBSITE_URL=https://app-v2.preview.homarr.dev/
-homarr run <name>
-homarr run --pr <number>
+# Build current checkout as homarr:<name>
+homarr build feature
+
+# Build a pull request locally in a temporary checkout
+homarr build --pr 6441
+
+# Rebuild an existing image from recorded provenance
+homarr rebuild feature
 ```
 
-The direct `homarr --pr <number>` form is shorthand for `homarr run --pr <number>`. Add `--detach` to run in the
-background, `--demo` to enable demo data, or repeat `--env KEY=VALUE` to provide additional environment variables.
+Images built with the CLI record their source checkout, revision SHA, and optional PR number. `homarr rebuild` reads this provenance to reconstruct the build without manual configuration.
+
+### GitHub CI Checks
+
+```bash
+# View CI checks for a specific PR
+homarr ci 6441
+
+# View CI checks for the current branch
+homarr ci
+
+# Watch CI checks until completion
+homarr ci 6441 --watch
+```
+
+### Interactive Shell
+
+```bash
+# Open interactive shell in running container
+homarr shell homarr-dev
+
+# Run specific command in container
+homarr shell homarr-dev pnpm db:migration:sqlite:run
+```
+
+### Image & Volume Management
+
+```bash
+# List local images with build provenance (source, revision, PR)
+homarr images
+
+# Delete local image
+homarr images rm feature
+
+# List data volumes with owner PR/tag and in-use status
+homarr data
+
+# Delete data volume (safely stops and removes owning container first)
+homarr data rm homarr_feature_data
+
+# Remove stopped containers (prompts without --force)
+homarr prune --force
+```
+
+### Instance Operations & Diagnostics
+
+```bash
+# List instances in a script-friendly table
+homarr list
+
+# Follow container logs
+homarr logs homarr-dev
+
+# Stop, restart, remove, or open container in browser
+homarr stop homarr-dev
+homarr restart homarr-dev
+homarr remove homarr-dev
+homarr open homarr-dev
+
+# Verify Docker daemon, Engine API, GHCR access, and gh CLI authentication
+homarr doctor
+```
