@@ -16,7 +16,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { getIntegrationName } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
@@ -73,7 +74,7 @@ export default function PatchMonWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"patchmon">) {
-  const t = useScopedI18n("widget.patchmon");
+  const t = useI18n("widget.patchmon");
   const integrationId = integrationIds[0] ?? "";
   const statsQuery = clientApi.widget.patchmon.getStats.useQuery({ integrationId }, { staleTime: 60 * 1000 });
   const stats = getUsableWidgetQueryData(statsQuery);
@@ -278,7 +279,7 @@ export default function PatchMonWidget({
   return (
     <div className={classes.root}>
       <div className={classes.queryIndicator}>
-        <WidgetQueryErrorIndicator error={statsQuery.error} label={t("name")} />
+        <WidgetQueryErrorIndicator error={statsQuery.error} label={getIntegrationName("patchmon")} />
       </div>
       {showHero && (
         <ComplianceHero
@@ -445,7 +446,12 @@ function CompactStatGrid({
               style={{ "--stat-bg": severityToMantineBgColor(severity) } as CSSProperties}
             >
               {showIcon && (
-                <Icon className={classes.statIcon} size="var(--mantine-font-size-lg)" stroke={1.5} color={severityToIconColor(severity)} />
+                <Icon
+                  className={classes.statIcon}
+                  size="var(--mantine-font-size-lg)"
+                  stroke={1.5}
+                  color={severityToIconColor(severity)}
+                />
               )}
               <span className={classes.compactStatValue}>
                 <Text component="span" fw={700} size="inherit" c={severityToMantineColor(severity)}>

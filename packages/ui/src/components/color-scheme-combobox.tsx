@@ -6,7 +6,7 @@ import { IconCheck, IconDeviceDesktop, IconMoon, IconSun } from "@tabler/icons-r
 
 import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemes } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 const schemeIcons: Record<ColorScheme, React.ElementType> = {
   auto: IconDeviceDesktop,
@@ -22,7 +22,7 @@ interface ColorSchemeComboboxProps {
 }
 
 export const ColorSchemeCombobox = ({ label, value, onChange, width }: ColorSchemeComboboxProps) => {
-  const tOptions = useScopedI18n("common.colorScheme.options");
+  const tOptions = useI18n("common.colorScheme.options");
   const combobox = useCombobox({ onDropdownClose: () => combobox.resetSelectedOption() });
 
   return (

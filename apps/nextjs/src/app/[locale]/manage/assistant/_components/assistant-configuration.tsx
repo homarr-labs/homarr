@@ -51,7 +51,7 @@ import {
 } from "@homarr/definitions";
 import type { AssistantProvider, AssistantProviderCategory } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { getWorkshopAssistantProviderUrl } from "~/components/workshop/workshop-client";
 
@@ -140,7 +140,8 @@ const ConfigurationSkeleton = ({ label }: { label: string }) => (
 );
 
 export const AssistantConfiguration = () => {
-  const t = useScopedI18n("management.page.settings.section.assistant");
+  const t = useI18n("management.page.settings.section.assistant");
+  const tCommon = useI18n("common");
   const router = useRouter();
   const utils = clientApi.useUtils();
   const { data: configuration, isLoading } = clientApi.assistant.getAdminConfiguration.useQuery();
@@ -208,7 +209,7 @@ export const AssistantConfiguration = () => {
           .filter((providerId) => assistantProviderPresets[providerId].category === category)
           .map((providerId) => ({
             value: providerId,
-            label: t(`provider.options.${providerId}.label`),
+            label: assistantProviderPresets[providerId].label ?? t("provider.options.custom.label"),
           }));
 
         return { group: t(`provider.groups.${category}`), items };
@@ -372,7 +373,7 @@ export const AssistantConfiguration = () => {
               </ThemeIcon>
               <Box className={classes.summaryProviderText}>
                 <Group gap="xs">
-                  <Text fw={650}>{t(`provider.options.${provider}.label`)}</Text>
+                  <Text fw={650}>{assistantProviderPresets[provider].label ?? t("provider.options.custom.label")}</Text>
                   <Badge
                     size="sm"
                     variant="light"
@@ -418,7 +419,7 @@ export const AssistantConfiguration = () => {
           description={t("connection.description")}
           status={
             <Badge variant="light" color={connectionChanged ? "yellow" : "gray"}>
-              {t(`provider.options.${provider}.label`)}
+              {assistantProviderPresets[provider].label ?? t("provider.options.custom.label")}
             </Badge>
           }
         >
@@ -758,7 +759,7 @@ export const AssistantConfiguration = () => {
                         {t("serverTools.webSearch.label")}
                       </Text>
                       <Badge size="xs" variant="light">
-                        {t("serverTools.beta")}
+                        {tCommon("beta")}
                       </Badge>
                     </Group>
                     <Text size="sm" c="dimmed" maw="66ch">

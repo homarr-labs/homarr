@@ -1,6 +1,7 @@
 import type { V1NodeList, VersionInfo } from "@kubernetes/client-node";
 import { TRPCError } from "@trpc/server";
 
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { ClusterResourceCount, KubernetesCluster } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
@@ -81,7 +82,7 @@ export const clusterRouter = createTRPCRouter({
           metricsAvailable: nodeMetricsClient !== null,
           capacity: [
             {
-              type: "CPU",
+              type: invariantTechnicalLabels.cpu,
               resourcesStats: [
                 {
                   percentageValue: reservedCPUPercentage,

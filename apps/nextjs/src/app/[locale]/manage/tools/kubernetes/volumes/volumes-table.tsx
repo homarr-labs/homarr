@@ -10,7 +10,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { KubernetesVolume } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 dayjs.extend(relativeTime);
@@ -20,19 +20,22 @@ interface VolumesTableComponentProps {
   initialVolumes: RouterOutputs["kubernetes"]["volumes"]["getVolumes"];
 }
 
-const createColumns = (t: ScopedTranslationFunction<"kubernetes.volumes">): MRT_ColumnDef<KubernetesVolume>[] => [
+const createColumns = (
+  t: ScopedTranslationFunction<"kubernetes.volumes">,
+  tField: ScopedTranslationFunction<"kubernetes.field">,
+): MRT_ColumnDef<KubernetesVolume>[] => [
   {
     accessorKey: "status",
-    header: t("field.status.label"),
+    header: tField("status.label"),
   },
   {
     accessorKey: "name",
-    header: t("field.name.label"),
+    header: tField("name.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "namespace",
-    header: t("field.namespace.label"),
+    header: tField("namespace.label"),
     enableClickToCopy: true,
   },
   {
@@ -62,13 +65,14 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.volumes">): MRT_
   },
   {
     accessorKey: "creationTimestamp",
-    header: t("field.creationTimestamp.label"),
+    header: tField("creationTimestamp.label"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function VolumesTable({ contextId, initialVolumes }: VolumesTableComponentProps) {
-  const tVolumes = useScopedI18n("kubernetes.volumes");
+  const tVolumes = useI18n("kubernetes.volumes");
+  const tField = useI18n("kubernetes.field");
 
   const { data } = clientApi.kubernetes.volumes.getVolumes.useQuery(
     { contextId },
@@ -99,7 +103,7 @@ export function VolumesTable({ contextId, initialVolumes }: VolumesTableComponen
       autoFocus: true,
     },
 
-    columns: createColumns(tVolumes),
+    columns: createColumns(tVolumes, tField),
   });
 
   return <MantineReactTable table={table} />;

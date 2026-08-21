@@ -11,7 +11,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { UserCreatePasswordFields } from "@homarr/forms-collection";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { groupCreateSchema } from "@homarr/validation/group";
 import { userInitSchema } from "@homarr/validation/user";
@@ -41,7 +41,7 @@ export const AccountSetup = ({ environment }: OnboardingStudioProps) => {
 };
 
 const CredentialsSetup = () => {
-  const t = useScopedI18n("init.studio.account");
+  const t = useI18n("init.studio.account");
   const [requiresSignIn, setRequiresSignIn] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const recoveryActionRef = useRef<HTMLAnchorElement>(null);
@@ -129,7 +129,7 @@ const CredentialsSetup = () => {
 };
 
 const ExternalGroupSetup = () => {
-  const t = useScopedI18n("init.studio.externalGroup");
+  const t = useI18n("init.studio.externalGroup");
   const [submitError, setSubmitError] = useState<string | null>(null);
   const sounds = useOnboardingSounds();
   const mutation = clientApi.group.createInitialExternalGroup.useMutation({

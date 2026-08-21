@@ -11,6 +11,7 @@ import {
   Text,
 } from "@mantine/core";
 
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
@@ -23,27 +24,27 @@ interface ResourceTableProps {
 }
 
 export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
-  const t = useI18n();
+  const t = useI18n("widget.healthMonitoring");
   return (
     <Table highlightOnHover>
       <TableThead>
         <TableTr fz="xs">
           <TableTh ta="start" p={0}>
-            {t("widget.healthMonitoring.cluster.table.header.name")}
+            {t("cluster.table.header.name")}
           </TableTh>
           {!isTiny && type !== "storage" ? (
             <TableTh ta="start" p={0}>
-              {t("widget.healthMonitoring.cluster.table.header.cpu")}
+              {invariantTechnicalLabels.cpu}
             </TableTh>
           ) : null}
           {!isTiny && type !== "storage" ? (
             <TableTh ta="start" p={0}>
-              {t("widget.healthMonitoring.cluster.table.header.memory")}
+              {invariantTechnicalLabels.ram}
             </TableTh>
           ) : null}
           {!isTiny && type === "storage" ? (
             <TableTh ta="start" p={0}>
-              {t("widget.healthMonitoring.cluster.table.header.node")}
+              {t("cluster.table.header.node")}
             </TableTh>
           ) : null}
         </TableTr>

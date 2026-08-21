@@ -4,7 +4,7 @@ import { Group, ScrollArea, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { UmamiMetricItem } from "@homarr/integrations/types";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { umamiQueryOptions } from "./umami-utils";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -17,7 +17,7 @@ interface UmamiTopListProps {
 }
 
 export function UmamiTopPagesContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
-  const t = useScopedI18n("widget.umami");
+  const t = useI18n("widget.umami");
   const data =
     getUsableWidgetQueryData(
       clientApi.widget.umami.getTopPages.useQuery(
@@ -25,11 +25,11 @@ export function UmamiTopPagesContent({ integrationIds, websiteId, timeFrame, lim
         umamiQueryOptions,
       ),
     ) ?? [];
-  return <UmamiTopList items={data} heading={t("option.viewMode.option.topPages")} emptyLabel={t("topPages.direct")} />;
+  return <UmamiTopList items={data} heading={t("option.viewMode.option.topPages")} emptyLabel={t("top.direct")} />;
 }
 
 export function UmamiTopReferrersContent({ integrationIds, websiteId, timeFrame, limit }: UmamiTopListProps) {
-  const t = useScopedI18n("widget.umami");
+  const t = useI18n("widget.umami");
   const data =
     getUsableWidgetQueryData(
       clientApi.widget.umami.getTopReferrers.useQuery(
@@ -37,13 +37,7 @@ export function UmamiTopReferrersContent({ integrationIds, websiteId, timeFrame,
         umamiQueryOptions,
       ),
     ) ?? [];
-  return (
-    <UmamiTopList
-      items={data}
-      heading={t("option.viewMode.option.topReferrers")}
-      emptyLabel={t("topReferrers.direct")}
-    />
-  );
+  return <UmamiTopList items={data} heading={t("option.viewMode.option.topReferrers")} emptyLabel={t("top.direct")} />;
 }
 
 function UmamiTopList({

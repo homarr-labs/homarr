@@ -10,12 +10,12 @@ interface PingIndicatorProps {
 }
 
 export const PingIndicator = ({ appId }: PingIndicatorProps) => {
-  const t = useI18n();
+  const t = useI18n("common");
   const { data: pingResult, error } = clientApi.widget.app.ping.useQuery({ id: appId }, { refetchOnMount: false });
 
-  if (error) return <PingDot icon={IconX} color="red" tooltip={t("common.error")} />;
+  if (error) return <PingDot icon={IconX} color="red" tooltip={t("error")} />;
 
-  if (!pingResult) return <PingDot icon={IconMinus} color="gray" tooltip={`${t("common.action.loading")}…`} />;
+  if (!pingResult) return <PingDot icon={IconMinus} color="gray" tooltip={`${t("action.loading")}…`} />;
 
   const isError = "error" in pingResult || pingResult.statusCode >= 500;
 

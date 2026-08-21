@@ -10,7 +10,7 @@ import {
 
 import { useSession } from "@homarr/auth/client";
 import { createDocumentationLink } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
@@ -33,7 +33,8 @@ type QuickLinkOption = {
 
 export const useHomeEmptyGroups = () => {
   const { data: session } = useSession();
-  const tPages = useScopedI18n("search.mode.page.group.page.option");
+  const tPages = useI18n("search.mode.page.group.page.option");
+  const tHelp = useI18n("management.navbar.items.help.items");
   const visibleSearchModes: SearchMode[] = [appIntegrationBoardMode, externalMode, mediaMode, commandMode, pageMode];
 
   if (session?.user.permissions.includes("admin")) {
@@ -88,7 +89,7 @@ export const useHomeEmptyGroups = () => {
       title: (t) => t("search.mode.help.group.mode.title"),
       options: visibleSearchModes.map(({ character, modeKey }) => ({ character, modeKey })),
       Component: ({ modeKey, character }) => {
-        const t = useScopedI18n(`search.mode.${modeKey}`);
+        const t = useI18n(`search.mode.${modeKey}`);
 
         return (
           <Group px="md" py="xs" w="100%" wrap="nowrap" align="center" justify="space-between">
@@ -102,25 +103,23 @@ export const useHomeEmptyGroups = () => {
     }),
     createGroup({
       keyPath: "href",
-      title: (t) => t("search.mode.help.group.help.title"),
+      title: (t) => t("management.navbar.items.help.label"),
       useOptions() {
-        const t = useScopedI18n("search.mode.help.group.help.option");
-
         return [
           {
             href: createDocumentationLink("/docs/getting-started"),
             icon: IconBook2,
-            label: t("documentation.label"),
+            label: tHelp("documentation"),
           },
           {
             href: "https://github.com/homarr-labs/homarr/issues/new/choose",
             icon: IconBrandGithub,
-            label: t("submitIssue.label"),
+            label: tHelp("submitIssue"),
           },
           {
             href: "https://discord.com/invite/aCsmEV5RgA",
             icon: IconBrandDiscord,
-            label: t("discord.label"),
+            label: tHelp("discord"),
           },
         ];
       },

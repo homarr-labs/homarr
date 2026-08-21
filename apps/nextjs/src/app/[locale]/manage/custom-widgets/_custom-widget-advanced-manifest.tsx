@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import { Accordion } from "@mantine/core";
 
 import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { CodeEditor } from "./_code-editor";
 import { applyDefinition, parseJson } from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 
 export function CustomWidgetAdvancedManifest({ form }: { form: CustomWidgetWorkbenchForm }) {
-  const t = useScopedI18n("customWidget.workbench.builder");
+  const t = useI18n("customWidget.workbench.builder");
   const serialized = JSON.stringify(
     {
       $schema: "homarr-custom-widget-v2",

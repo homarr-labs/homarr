@@ -55,7 +55,7 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
           options: [
             {
               label(t) {
-                return t("widget.app.option.layout.option.column");
+                return t("widget.common.layout.option.vertical");
               },
               value: "column",
               icon: IconLayoutNavbarExpand,
@@ -69,7 +69,7 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
             },
             {
               label(t) {
-                return t("widget.app.option.layout.option.row");
+                return t("widget.common.layout.option.horizontal");
               },
               value: "row",
               icon: IconLayoutSidebarLeftExpand,

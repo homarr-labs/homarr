@@ -16,7 +16,8 @@ interface ResourceTileProps {
 }
 
 export function ResourceTile(props: ResourceTileProps) {
-  const t = useI18n();
+  const tResource = useI18n("kubernetes.cluster.resources");
+
   return (
     <Card
       component={Link}
@@ -27,7 +28,7 @@ export function ResourceTile(props: ResourceTileProps) {
         <Image src={`/images/kubernetes/${props.label}.svg`} alt={props.label} width={64} height={64} />
         <Group gap="xs">
           <Text size="xl" fw={700} tt="capitalize">
-            {props.count} {t(`kubernetes.cluster.resources.${props.label}`)}
+            {props.count} {tResource(props.label)}
           </Text>
           <IconArrowRight />
         </Group>

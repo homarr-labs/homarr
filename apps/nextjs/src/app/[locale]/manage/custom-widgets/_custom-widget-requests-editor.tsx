@@ -3,7 +3,7 @@
 import { Accordion, ActionIcon, Button, Fieldset, Group, Select, Stack, Switch, Text, TextInput } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconPlus, IconTrash } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { isRecord, parseJson } from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
@@ -19,7 +19,7 @@ export function CustomWidgetRequestsEditor({
   form: CustomWidgetWorkbenchForm;
   onRename(currentId: string, nextId: string): void;
 }) {
-  const t = useScopedI18n("customWidget.workbench.builder");
+  const t = useI18n("customWidget.workbench.builder");
   const parsed = parseJson(form.values.requests);
   const entries = isRecord(parsed) ? Object.entries(parsed) : [];
   const sources = parseJson(form.values.sources);

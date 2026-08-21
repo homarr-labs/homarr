@@ -31,6 +31,7 @@ import {
   getIntegrationApiKeyUrl,
   getIntegrationDefaultUrl,
   getIntegrationName,
+  invariantTechnicalLabels,
   integrationDefs,
 } from "@homarr/definitions";
 import type { GetInputPropsReturnType, UseFormReturnType } from "@homarr/form";
@@ -65,7 +66,8 @@ const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
 );
 
 export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, onCancel }: NewIntegrationFormProps) => {
-  const t = useI18n();
+  const tCommon = useI18n("common");
+  const tIntegration = useI18n("integration");
   const secretKinds = getAllSecretKindOptions(kind);
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
   const { data: session } = useSession();
@@ -74,7 +76,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
     ? formSchema
     : formSchema.superRefine((values, context) => {
         if (!values.hasApp || values.appId !== null) return;
-        context.addIssue({ code: "custom", message: t("common.zod.errors.required"), path: ["appId"] });
+        context.addIssue({ code: "custom", message: tCommon("zod.errors.required"), path: ["appId"] });
       });
 
   let url = initialUrl ?? getIntegrationDefaultUrl(kind) ?? "";
@@ -116,15 +118,15 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
       if (data && "error" in data && data.error) {
         setError(data.error);
         showErrorNotification({
-          title: t("integration.page.create.notification.error.title"),
-          message: t("integration.page.create.notification.error.message"),
+          title: tCommon("notification.create.error"),
+          message: tIntegration("page.create.notification.error.message"),
         });
         return;
       }
 
       showSuccessNotification({
-        title: t("integration.page.create.notification.success.title"),
-        message: t("integration.page.create.notification.success.message"),
+        title: tCommon("notification.create.success"),
+        message: tIntegration("page.create.notification.success.message"),
       });
 
       onSuccess(data && "integration" in data ? data : undefined);
@@ -132,8 +134,8 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
 
     const onMutationError = () => {
       showErrorNotification({
-        title: t("integration.page.create.notification.error.title"),
-        message: t("integration.page.create.notification.error.message"),
+        title: tCommon("notification.create.error"),
+        message: tIntegration("page.create.notification.error.message"),
       });
     };
 
@@ -166,13 +168,13 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
   return (
     <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
       <Stack>
-        <TextInput withAsterisk label={t("integration.field.name.label")} autoFocus {...form.getInputProps("name")} />
+        <TextInput withAsterisk label={tCommon("field.name")} autoFocus {...form.getInputProps("name")} />
 
         {hasUrlSecret ? null : (
-          <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
+          <TextInput withAsterisk label={invariantTechnicalLabels.url} {...form.getInputProps("url")} />
         )}
 
-        <Fieldset legend={t("integration.secrets.title")}>
+        <Fieldset legend={tIntegration("secrets.title")}>
           <Stack gap="sm">
             {secretKinds.length > 1 && <SecretKindsSegmentedControl secretKinds={secretKinds} form={form} />}
             {form.values.secrets.map(({ kind }, index) => (
@@ -185,7 +187,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
             ))}
             {form.values.secrets.length === 0 && (
               <Alert icon={<IconInfoCircle size={"1rem"} />} color={"blue"}>
-                <Text c={"blue"}>{t("integration.secrets.noSecretsRequired.text")}</Text>
+                <Text c={"blue"}>{tIntegration("secrets.noSecretsRequired.text")}</Text>
               </Alert>
             )}
             <ApiKeySettingsLink kind={kind} url={form.values.url} />
@@ -196,8 +198,8 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
 
         {supportsSearchEngine && (
           <Checkbox
-            label={t("integration.field.attemptSearchEngineCreation.label")}
-            description={t("integration.field.attemptSearchEngineCreation.description", {
+            label={tIntegration("field.attemptSearchEngineCreation.label")}
+            description={tIntegration("field.attemptSearchEngineCreation.description", {
               kind: getIntegrationName(kind),
             })}
             {...form.getInputProps("attemptSearchEngineCreation", { type: "checkbox" })}
@@ -209,15 +211,15 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
         <Group justify="end" align="center">
           {onCancel ? (
             <Button variant="default" onClick={onCancel}>
-              {t("common.action.backToOverview")}
+              {tCommon("action.backToOverview")}
             </Button>
           ) : (
             <Button variant="default" component={Link} href="/manage/integrations">
-              {t("common.action.backToOverview")}
+              {tCommon("action.backToOverview")}
             </Button>
           )}
           <Button type="submit" loading={isCreatePending}>
-            {t("integration.testConnection.action.create")}
+            {tIntegration("testConnection.action.create")}
           </Button>
         </Group>
       </Stack>
@@ -228,7 +230,7 @@ export const NewIntegrationForm = ({ kind, initialUrl, initialName, onSuccess, o
 type FormType = z.infer<typeof formSchema>;
 
 const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; canCreateApps: boolean }) => {
-  const t = useI18n();
+  const tIntegration = useI18n("integration");
   const checkboxInputProps = form.getInputProps("hasApp", { type: "checkbox" });
 
   return (
@@ -242,20 +244,18 @@ const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; c
             checkboxInputProps.onChange(event);
           });
         }}
-        label={t(canCreateApps ? "integration.field.createApp.label" : "integration.field.linkApp.label")}
-        description={t(
-          canCreateApps ? "integration.field.createApp.description" : "integration.field.linkApp.description",
-        )}
+        label={tIntegration(canCreateApps ? "field.createApp.label" : "field.linkApp.label")}
+        description={tIntegration(canCreateApps ? "field.createApp.description" : "field.linkApp.description")}
       />
 
       <Collapse expanded={form.values.hasApp}>
-        <Fieldset legend={t("integration.field.app.sectionTitle")}>
+        <Fieldset legend={tIntegration("field.app.sectionTitle")}>
           <Stack gap="sm">
             {canCreateApps && (
               <SegmentedControl
                 data={(["new", "existing"] as const).map((value) => ({
                   value,
-                  label: t(`integration.page.create.app.option.${value}.title`),
+                  label: tIntegration(`page.create.app.option.${value}.title` as never),
                 }))}
                 value={form.values.appHref === null ? "existing" : "new"}
                 onChange={(value) => {
@@ -272,10 +272,10 @@ const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; c
 
             {typeof form.values.appHref === "string" && canCreateApps ? (
               <TextInput
-                placeholder={t("integration.field.appHref.placeholder")}
+                placeholder={tIntegration("field.appHref.placeholder")}
                 withAsterisk
-                label={t("integration.page.create.app.option.new.url.label")}
-                description={t("integration.page.create.app.option.new.url.description")}
+                label={tIntegration("page.create.app.option.new.url.label")}
+                description={tIntegration("page.create.app.option.new.url.description")}
                 {...form.getInputProps("appHref")}
               />
             ) : (
@@ -302,7 +302,7 @@ const normalizeUrl = (raw: string): string | null => {
 };
 
 const ApiKeySettingsLink = ({ kind, url }: { kind: IntegrationKind; url: string }) => {
-  const t = useI18n();
+  const tIntegration = useI18n("integration");
   const apiKeyUrl = getIntegrationApiKeyUrl(url, kind);
   if (!apiKeyUrl) return null;
 
@@ -315,7 +315,7 @@ const ApiKeySettingsLink = ({ kind, url }: { kind: IntegrationKind; url: string 
     <Anchor href={fullApiKeyUrl ?? apiKeyUrl} target="_blank" rel="noopener noreferrer" size="sm">
       <Group gap={4}>
         <IconKey size={14} stroke={1.5} />
-        <Text size="sm">{t("integration.field.apiKeySettings.label")}</Text>
+        <Text size="sm">{tIntegration("field.apiKeySettings.label")}</Text>
         <IconExternalLink size={14} stroke={1.5} />
       </Group>
     </Anchor>
@@ -332,14 +332,14 @@ type IntegrationAppSelectProps = Modify<
 
 const IntegrationAppSelect = ({ value, ...props }: IntegrationAppSelectProps) => {
   const { data, isPending } = clientApi.app.selectable.useQuery();
-  const t = useI18n();
+  const tIntegration = useI18n("integration");
 
   const appMap = new Map(data?.map((app) => [app.id, app] as const));
 
   return (
     <Select
       withAsterisk
-      label={t("integration.page.create.app.option.existing.label")}
+      label={tIntegration("page.create.app.option.existing.label")}
       searchable
       clearable
       leftSection={

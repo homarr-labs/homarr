@@ -17,7 +17,7 @@ import {
 } from "@mantine/core";
 import { IconBell, IconBellOff, IconHourglass } from "@tabler/icons-react";
 
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import {
   claimBrowserAlertOccurrence,
@@ -59,7 +59,7 @@ export default function CountdownWidget({
 }: WidgetComponentProps<"countdown">) {
   const now = useWidgetNow(options.showSeconds ? "second" : "minute");
   const locale = useCurrentIntlLocale();
-  const t = useScopedI18n("widget.countdown");
+  const t = useI18n("widget.countdown");
   const storagePrefix = boardId && itemId ? `homarr:countdown:${boardId}:${itemId}` : undefined;
   const [preferences, setPreferences] = useLocalWidgetState<AlertPreferences>({
     key: storagePrefix ? `${storagePrefix}:alert-preferences` : undefined,
@@ -228,7 +228,7 @@ const CountdownValue = ({
   showSeconds: boolean;
   compact?: boolean;
 }) => {
-  const t = useScopedI18n("widget.countdown");
+  const t = useI18n("widget.countdown");
   let value = t("invalid.value");
   if (state.completed) value = t("completed");
   else if (state.nextOccurrence)
@@ -287,7 +287,7 @@ const EventSection = ({
   showProgress: boolean;
   columns: number;
 }) => {
-  const t = useScopedI18n("widget.countdown");
+  const t = useI18n("widget.countdown");
   if (states.length === 0) return null;
   return (
     <Stack gap="xs">
@@ -330,7 +330,7 @@ const AlertControls = ({
   notificationPermission: ReturnType<typeof getBrowserNotificationPermission>;
   onNotificationsChange: (enabled: boolean) => Promise<void>;
 }) => {
-  const t = useScopedI18n("widget.countdown.alert");
+  const t = useI18n("widget.countdown.alert");
   if (!persistent) return null;
   return (
     <Paper withBorder p="sm" radius="md">

@@ -23,7 +23,8 @@ interface UserSelectFormType {
 }
 
 export const UserSelectModal = createModal<InnerProps>(({ actions, innerProps }) => {
-  const t = useI18n();
+  const tUser = useI18n("user.action.select");
+  const tCommon = useI18n("common");
   const { data: users, isPending } = clientApi.user.selectable.useQuery({
     providers: innerProps.allowedProviders,
   });
@@ -44,7 +45,7 @@ export const UserSelectModal = createModal<InnerProps>(({ actions, innerProps })
     actions.closeModal();
   };
 
-  const confirmLabel = innerProps.confirmLabel ?? t("common.action.add");
+  const confirmLabel = innerProps.confirmLabel ?? tCommon("action.add");
   const currentUser = users?.find((user) => user.id === form.values.userId);
 
   return (
@@ -52,13 +53,13 @@ export const UserSelectModal = createModal<InnerProps>(({ actions, innerProps })
       <Stack>
         <Select
           {...form.getInputProps("userId")}
-          label={t("user.action.select.label")}
+          label={tUser("label")}
           searchable
           clearable
           leftSection={
             isPending ? <Loader size="xs" /> : currentUser ? <UserAvatar user={currentUser} size="xs" /> : undefined
           }
-          nothingFoundMessage={t("user.action.select.notFound")}
+          nothingFoundMessage={tUser("notFound")}
           renderOption={createRenderOption(users ?? [])}
           limit={5}
           data={users
@@ -67,7 +68,7 @@ export const UserSelectModal = createModal<InnerProps>(({ actions, innerProps })
         />
         <Group justify="end">
           <Button variant="default" onClick={actions.closeModal}>
-            {t("common.action.cancel")}
+            {tCommon("action.cancel")}
           </Button>
           <Button type="submit" loading={loading}>
             {confirmLabel}

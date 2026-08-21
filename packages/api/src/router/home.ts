@@ -17,8 +17,6 @@ import {
   users,
 } from "@homarr/db/schema";
 import { getAppManagementAccess, getIntegrationManagementAccess } from "@homarr/definitions";
-import type { TranslationObject } from "@homarr/translation";
-
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 const getFullAccessIntegrationIdsAsync = async (db: Database, userId: string) => {
@@ -49,8 +47,8 @@ const getFullAccessIntegrationIdsAsync = async (db: Database, userId: string) =>
 };
 
 interface HomeStatistic {
-  titleKey: keyof TranslationObject["management"]["page"]["home"]["statistic"];
-  subtitleKey: keyof TranslationObject["management"]["page"]["home"]["statisticLabel"];
+  titleKey: "app" | "board" | "group" | "integration" | "invite" | "media" | "searchEngine" | "user";
+  subtitleKey: "authentication" | "authorization" | "boards" | "resources";
   count: number;
   path: string;
 }

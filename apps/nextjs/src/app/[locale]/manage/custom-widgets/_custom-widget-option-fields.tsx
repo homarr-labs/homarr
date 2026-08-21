@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ActionIcon, Button, Group, MultiSelect, NumberInput, Select, Stack, Switch, TextInput } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { CodeEditor } from "./_code-editor";
 
@@ -21,7 +21,7 @@ export function DefaultValueEditor({
   choices?: Array<{ label: string; value: string | number }>;
   onChange: (value: unknown) => void;
 }) {
-  const t = useScopedI18n("customWidget.workbench.builder");
+  const t = useI18n("customWidget.workbench.builder");
   if (control === "switch")
     return (
       <Switch
@@ -84,7 +84,7 @@ export function OptionChoicesEditor({
   value: Array<{ label: string; value: string | number }>;
   onChange(value: Array<{ label: string; value: string | number }>): void;
 }) {
-  const t = useScopedI18n("customWidget.workbench.builder");
+  const t = useI18n("customWidget.workbench.builder");
   return (
     <Stack gap="xs">
       {value.map((choice, index) => (
@@ -150,7 +150,7 @@ export function JsonValueEditor({
   value: unknown;
   onChange(value: unknown): void;
 }) {
-  const t = useScopedI18n("customWidget.workbench.builder");
+  const t = useI18n("customWidget.workbench.builder");
   const serialized = JSON.stringify(value, null, 2);
   const [draft, setDraft] = useState(serialized);
   const [error, setError] = useState<string>();

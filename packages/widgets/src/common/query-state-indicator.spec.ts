@@ -8,7 +8,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "./query-state-indicator";
 
 vi.mock("@homarr/translation/client", () => ({
-  useScopedI18n: () => (key: string, values?: { widget?: string }) => {
+  useI18n: () => (key: string, values?: { widget?: string }) => {
     if (key === "stale") return `Could not refresh ${values?.widget}; showing saved data`;
     if (key === "loading") return "Loading widget data";
     return key;

@@ -6,7 +6,7 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { UserSelectModal } from "~/components/access/user-select-modal";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
@@ -18,7 +18,7 @@ interface AddGroupMemberProps {
 }
 
 export const AddGroupMember = ({ groupId, presentUserIds, allowedProviders }: AddGroupMemberProps) => {
-  const tMembersAdd = useScopedI18n("group.action.addMember");
+  const tMembersAdd = useI18n("group.action.addMember");
   const { mutateAsync } = clientApi.group.addMember.useMutation();
   const { openModal } = useModalAction(UserSelectModal);
 

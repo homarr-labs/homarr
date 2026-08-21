@@ -11,13 +11,14 @@ import {
 } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 
 export const ImportCustomWidgetButton = () => {
-  const t = useScopedI18n("customWidget");
+  const t = useI18n("customWidget");
+  const tCommon = useI18n("common");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [pendingImport, setPendingImport] = useState<HomarrCustomWidgetV2 | null>(null);
   const [reviewOpened, { open: openReview, close: closeReview }] = useDisclosure(false);
@@ -38,7 +39,7 @@ export const ImportCustomWidgetButton = () => {
       const result = parseCustomWidgetClipboardDetailed(text);
       if (!result.success) {
         showErrorNotification({
-          title: t("action.import"),
+          title: tCommon("action.import"),
           message: formatCustomWidgetImportIssues(result.issues),
         });
         return;
@@ -47,7 +48,7 @@ export const ImportCustomWidgetButton = () => {
     };
     window.addEventListener("paste", handlePaste);
     return () => window.removeEventListener("paste", handlePaste);
-  }, [queueImport, t]);
+  }, [queueImport, t, tCommon]);
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -61,13 +62,13 @@ export const ImportCustomWidgetButton = () => {
         queueImport(result.widget);
       } catch (error) {
         showErrorNotification({
-          title: t("action.import"),
+          title: tCommon("action.import"),
           message: error instanceof Error ? error.message : t("notification.importError"),
         });
       }
     });
     reader.addEventListener("error", () => {
-      showErrorNotification({ title: t("action.import"), message: t("notification.importError") });
+      showErrorNotification({ title: tCommon("action.import"), message: t("notification.importError") });
     });
     reader.readAsText(file);
     event.target.value = "";
@@ -81,7 +82,7 @@ export const ImportCustomWidgetButton = () => {
         onClick={() => fileInputRef.current?.click()}
         title={t("action.pasteImportHint")}
       >
-        {t("action.import")}
+        {tCommon("action.import")}
       </MobileAffixButton>
       <input
         ref={fileInputRef}

@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
-import { useCurrentIntlLocale, useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import actionTargetClasses from "../common/action-target.module.css";
 import type { WidgetComponentProps } from "../definition";
@@ -138,7 +138,7 @@ const CalendarBase = ({
   options,
   displayMode,
 }: CalendarBaseProps) => {
-  const t = useI18n();
+  const t = useI18n("widget.calendar");
   const locale = useCurrentIntlLocale();
   const { firstDayOfWeek } = useSettings();
   const board = useRequiredBoard();
@@ -171,7 +171,7 @@ const CalendarBase = ({
         failedIntegrations={failedIntegrations}
         isPending={isPending}
         queryError={queryError}
-        queryErrorLabel={t("widget.calendar.name")}
+        queryErrorLabel={t("name")}
         isEditMode={isEditMode}
         locale={locale}
         month={month}
@@ -185,7 +185,7 @@ const CalendarBase = ({
       {(failedIntegrations.length > 0 || Boolean(queryError)) && (
         <Group px="xs" justify="flex-end">
           <IntegrationErrorIndicator results={failedIntegrations} />
-          <WidgetQueryErrorIndicator error={queryError} label={t("widget.calendar.name")} />
+          <WidgetQueryErrorIndicator error={queryError} label={t("name")} />
         </Group>
       )}
       <Calendar
@@ -287,7 +287,7 @@ const CalendarAgenda = ({
   month,
   setMonth,
 }: CalendarAgendaProps) => {
-  const t = useScopedI18n("widget.calendar.advanced");
+  const t = useI18n("widget.calendar.advanced");
   const monthLabel = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(month);
 
   return (

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { Alert, Button, Center, Paper, Stack, Text, Title } from "@mantine/core";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import type { OnboardingStudioProps } from "./types";
@@ -22,8 +22,8 @@ const getInitialClaimState = (accessState: ReturnType<typeof getOnboardingAccess
 };
 
 export const OnboardingStudio = (props: OnboardingStudioProps) => {
-  const t = useScopedI18n("init.studio.claim");
-  const tCommon = useScopedI18n("common.action");
+  const t = useI18n("init.studio.claim");
+  const tCommon = useI18n("common.action");
   const accessState = getOnboardingAccessState(props.environment);
   const [claimState, setClaimState] = useState<ClaimState>(() => getInitialClaimState(accessState));
   const [claimError, setClaimError] = useState<string | null>(null);

@@ -15,7 +15,7 @@ import {
 import { IconAlertTriangle, IconClock } from "@tabler/icons-react";
 import type { Dayjs } from "dayjs";
 
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { formatLocalizedDate, formatLocalizedTime } from "../common/locale";
 import type { WidgetComponentProps } from "../definition";
@@ -47,7 +47,7 @@ export const AdvancedClockView = ({
   primaryTimeZone,
   primaryTimeZoneInvalid,
 }: AdvancedClockViewProps) => {
-  const t = useScopedI18n("widget.clock");
+  const t = useI18n("widget.clock");
   const primaryLabel = getPrimaryLabel(options, t);
   const primary: WorldClockTime = {
     id: "primary",
@@ -95,7 +95,7 @@ interface ModeProps {
 
 const PrimaryClock = ({ now, options, primary }: Pick<ModeProps, "now" | "options" | "primary">) => {
   const locale = useCurrentIntlLocale();
-  const t = useScopedI18n("widget.clock");
+  const t = useI18n("widget.clock");
   const primaryTime = primary.zonedTime;
   if (!primaryTime || primary.phase === null || primary.minuteOfDay === null) return null;
 
@@ -152,7 +152,7 @@ const PrimaryClock = ({ now, options, primary }: Pick<ModeProps, "now" | "option
 };
 
 const OverviewMode = ({ now, options, primary, cities }: ModeProps) => {
-  const t = useScopedI18n("widget.clock");
+  const t = useI18n("widget.clock");
   if (cities.length === 0) return <EmptyCities />;
 
   return (
@@ -218,7 +218,7 @@ const ClockTime = ({
   compact = false,
 }: Omit<ClockEntryProps, "primaryOffset"> & { primary?: boolean; compact?: boolean }) => {
   const locale = useCurrentIntlLocale();
-  const t = useScopedI18n("widget.clock");
+  const t = useI18n("widget.clock");
   if (!entry.zonedTime) return null;
   let formattedTime = formatLocalizedTime(now, locale, {
     hour12: clockTimeFormatUses12Hours(options.customTimeFormat, options.is24HourFormat),
@@ -257,7 +257,7 @@ const ClockTime = ({
 
 const DayAndOffset = ({ entry, now, primaryOffset }: Pick<ClockEntryProps, "entry" | "now" | "primaryOffset">) => {
   const locale = useCurrentIntlLocale();
-  const t = useScopedI18n("widget.clock");
+  const t = useI18n("widget.clock");
   if (entry.dayDifference === null || entry.utcOffset === null) return null;
   const dayRelation = getDayRelation(entry.dayDifference, t);
   const date = formatLocalizedDate(now, locale, {
@@ -280,7 +280,7 @@ const DayAndOffset = ({ entry, now, primaryOffset }: Pick<ClockEntryProps, "entr
 };
 
 const InvalidTimeZone = ({ entry }: { entry: WorldClockTime }) => {
-  const t = useScopedI18n("widget.clock");
+  const t = useI18n("widget.clock");
   return (
     <Paper component="li" withBorder radius="md" p="md">
       <Group gap="xs" wrap="nowrap">
@@ -297,7 +297,7 @@ const InvalidTimeZone = ({ entry }: { entry: WorldClockTime }) => {
 };
 
 const EmptyCities = () => {
-  const t = useScopedI18n("widget.clock");
+  const t = useI18n("widget.clock");
   return (
     <Paper withBorder radius="md" p="xl">
       <Text c="dimmed" ta="center">
@@ -307,7 +307,7 @@ const EmptyCities = () => {
   );
 };
 
-type ScopedClockTranslator = ReturnType<typeof useScopedI18n<"widget.clock">>;
+type ScopedClockTranslator = ReturnType<typeof useI18n<"widget.clock">>;
 
 const getDayRelation = (difference: number, t: ScopedClockTranslator) => {
   if (difference < 0) return t("worldClock.yesterday");

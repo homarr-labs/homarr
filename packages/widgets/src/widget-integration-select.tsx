@@ -44,7 +44,9 @@ export const WidgetIntegrationSelect = ({
   onOpenNewIntegration,
   ...props
 }: WidgetIntegrationSelectProps) => {
-  const t = useI18n();
+  const tItem = useI18n("item.edit.field.integrations");
+  const tIntegration = useI18n("widget.common.integration");
+  const tCommon = useI18n("common");
   const multiSelectValues = valueProp ?? [];
 
   const combobox = useCombobox({
@@ -81,7 +83,7 @@ export const WidgetIntegrationSelect = ({
         option={option}
         onRemove={() => handleValueRemove(item)}
         showRemoveButton={canSelectMultiple}
-        removeLabel={t("item.edit.field.integrations.removeLabel", { name: option.name })}
+        removeLabel={tItem("removeLabel", { name: option.name })}
       />
     );
   });
@@ -114,13 +116,13 @@ export const WidgetIntegrationSelect = ({
             onOpenNewIntegration ? (
               <Text size="xs" span>
                 <Anchor size="xs" component="button" type="button" onClick={onOpenNewIntegration}>
-                  {t("integration.action.create")}
+                  {tCommon("action.create")}
                 </Anchor>
               </Text>
             ) : (
               <Text size="xs" span>
                 <Anchor size="xs" component={Link} target="_blank" href="/manage/integrations">
-                  {t("widget.common.integration.manage")}
+                  {tIntegration("manage")}
                 </Anchor>
               </Text>
             )
@@ -138,7 +140,7 @@ export const WidgetIntegrationSelect = ({
               <PillsInput.Field
                 readOnly
                 aria-label={label}
-                placeholder={values.length === 0 ? t("common.multiSelect.placeholder") : undefined}
+                placeholder={values.length === 0 ? tCommon("multiSelect.placeholder") : undefined}
                 onFocus={() => combobox.openDropdown()}
                 onBlur={() => combobox.closeDropdown()}
                 onKeyDown={(event) => {
@@ -169,7 +171,7 @@ export const WidgetIntegrationSelect = ({
             options
           ) : (
             <Text p={4} size="sm" ta="center" c="var(--mantine-color-dimmed)">
-              {t("widget.common.integration.noData")}
+              {tIntegration("noData")}
             </Text>
           )}
         </Combobox.Options>

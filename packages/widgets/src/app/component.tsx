@@ -23,7 +23,8 @@ import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
 
 export default function AppWidget({ options, isEditMode, height, width }: WidgetComponentProps<"app">) {
-  const t = useI18n();
+  const tCommon = useI18n("common");
+  const tApp = useI18n("widget.app");
   const settings = useSettings();
   const board = useRequiredBoard();
   const appQuery = clientApi.app.byId.useQuery({ id: options.appId }, { enabled: Boolean(options.appId) });
@@ -121,14 +122,14 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
         !settings.forceDisableStatus &&
         !board.disableStatus &&
         Boolean(app.pingUrl ?? app.href) ? (
-          <Suspense fallback={<PingDot icon={IconMinus} color="gray" tooltip={`${t("common.action.loading")}…`} />}>
+          <Suspense fallback={<PingDot icon={IconMinus} color="gray" tooltip={`${tCommon("action.loading")}…`} />}>
             <PingIndicator appId={app.id} />
           </Suspense>
         ) : null}
       </AppLink>
       {appQuery.error && (
         <Box pos="absolute" top={4} right={4}>
-          <WidgetQueryErrorIndicator error={appQuery.error} label={t("widget.app.name")} />
+          <WidgetQueryErrorIndicator error={appQuery.error} label={tApp("name")} />
         </Box>
       )}
     </Box>

@@ -60,14 +60,14 @@ export default function SmartHomeTriggerAutomationWidget({
     }
   }, [canInteract, integrationId, isEditMode, isPending, mutateAsync, options.automationId]);
 
-  const t = useI18n();
+  const t = useI18n("widget.smartHome-executeAutomation");
   const locale = useCurrentIntlLocale();
   useRegisterSpotlightContextActions(
     `smartHome-automation-${options.automationId}`,
     [
       {
         id: options.automationId,
-        name: t("widget.smartHome-executeAutomation.spotlightAction.run", { name: options.displayName }),
+        name: t("spotlightAction.run", { name: options.displayName }),
         icon: IconAutomation,
         interaction() {
           return {
@@ -89,24 +89,18 @@ export default function SmartHomeTriggerAutomationWidget({
   return (
     <Box pos="relative" w="100%" h="100%">
       <VisuallyHidden component="output">
-        {isPending
-          ? t("widget.smartHome-executeAutomation.status.running")
-          : isShowSuccess
-            ? t("widget.smartHome-executeAutomation.status.success")
-            : ""}
+        {isPending ? t("status.running") : isShowSuccess ? t("status.success") : ""}
       </VisuallyHidden>
-      {error && (
-        <VisuallyHidden role="alert">{t("widget.smartHome-executeAutomation.error.executeFailed")}</VisuallyHidden>
-      )}
+      {error && <VisuallyHidden role="alert">{t("error.executeFailed")}</VisuallyHidden>}
       <UnstyledButton
         onClick={handleClick}
         disabled={!integrationId || !canInteract || isPending}
-        aria-label={t("widget.smartHome-executeAutomation.spotlightAction.run", { name: options.displayName })}
+        aria-label={t("spotlightAction.run", { name: options.displayName })}
         style={{
           cursor: !isEditMode && integrationId && canInteract ? "pointer" : "initial",
           pointerEvents: isEditMode ? "none" : undefined,
         }}
-        aria-description={error ? t("widget.smartHome-executeAutomation.error.executeFailed") : undefined}
+        aria-description={error ? t("error.executeFailed") : undefined}
         w="100%"
         h="100%"
       >
@@ -124,7 +118,7 @@ export default function SmartHomeTriggerAutomationWidget({
           <Overlay>
             <Center w="100%" h="100%" p="xs">
               <Text size="xs" c="red" ta="center" lineClamp={3}>
-                {t("widget.smartHome-executeAutomation.error.executeFailed")}
+                {t("error.executeFailed")}
               </Text>
             </Center>
           </Overlay>
@@ -140,25 +134,21 @@ export default function SmartHomeTriggerAutomationWidget({
             {displayMode === "advanced" && (
               <Stack gap={2} align="center">
                 <Text ta="center" size="xs" c="dimmed">
-                  {t("widget.smartHome-executeAutomation.advanced.automationId", { id: options.automationId })}
+                  {t("advanced.automationId", { id: options.automationId })}
                 </Text>
                 <Text ta="center" size="xs" c={canInteract ? "dimmed" : "orange"}>
-                  {t(
-                    canInteract
-                      ? "widget.smartHome-executeAutomation.advanced.ready"
-                      : "widget.smartHome-executeAutomation.advanced.noPermission",
-                  )}
+                  {t(canInteract ? "advanced.ready" : "advanced.noPermission")}
                 </Text>
                 {lastExecutedAt && (
                   <Text ta="center" size="xs" c="dimmed">
-                    {t("widget.smartHome-executeAutomation.advanced.lastExecuted", {
+                    {t("advanced.lastExecuted", {
                       time: lastExecutedAt.toLocaleTimeString(locale),
                     })}
                   </Text>
                 )}
                 {error && (
                   <Text ta="center" size="xs" c="red">
-                    {t("widget.smartHome-executeAutomation.error.executeFailed")}
+                    {t("error.executeFailed")}
                   </Text>
                 )}
               </Stack>

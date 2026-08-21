@@ -21,9 +21,10 @@ import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { formatBytes } from "@homarr/common";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { HomarrDataTable } from "../common/homarr-data-table";
@@ -124,7 +125,9 @@ export default function BeszelSystemTableWidget({
   setOptions,
   displayMode,
 }: WidgetComponentProps<"beszelSystemTable">) {
-  const t = useScopedI18n("widget.beszelSystemTable");
+  const t = useI18n("widget.beszelSystemTable");
+  const tBeszel = useI18n("widget.beszel");
+  const tCommon = useI18n("common");
   const { openModal } = useModalAction(BeszelSystemStatsModal);
   const board = useOptionalBoard();
   const { data: session } = useSession();
@@ -201,7 +204,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <Server size={size.iconSize} />
-            <Text inherit>{t("column.system")}</Text>
+            <Text inherit>{tBeszel("metric.system")}</Text>
           </Group>
         ),
         sortable: true,
@@ -218,7 +221,7 @@ export default function BeszelSystemTableWidget({
         accessor: "integrationName",
         width: 140,
         ellipsis: true,
-        title: t("column.source"),
+        title: tBeszel("metric.source"),
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{record.integrationName}</Text>,
       },
@@ -226,7 +229,7 @@ export default function BeszelSystemTableWidget({
         accessor: "hostname",
         width: 150,
         ellipsis: true,
-        title: t("column.hostname"),
+        title: tBeszel("metric.hostname"),
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{record.hostname || "—"}</Text>,
       },
@@ -234,7 +237,7 @@ export default function BeszelSystemTableWidget({
         accessor: "osName",
         width: 160,
         ellipsis: true,
-        title: t("column.os"),
+        title: invariantTechnicalLabels.os,
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{record.osName || "—"}</Text>,
       },
@@ -242,21 +245,21 @@ export default function BeszelSystemTableWidget({
         accessor: "cpuModel",
         width: 220,
         ellipsis: true,
-        title: t("column.cpuModel"),
+        title: tBeszel("metric.cpuModel"),
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{record.cpuModel || "—"}</Text>,
       },
       isAdvanced && {
         accessor: "cores",
         width: 80,
-        title: t("column.cores"),
+        title: tBeszel("metric.cores"),
         sortable: true,
         render: (record) => <Text size={size.fontSize}>{record.cores}</Text>,
       },
       isAdvanced && {
         accessor: "memoryTotal",
         width: 120,
-        title: t("column.memoryTotal"),
+        title: tBeszel("metric.memoryTotal"),
         sortable: true,
         render: (record) => (
           <Text size={size.fontSize}>{record.memoryTotal > 0 ? formatBytes(record.memoryTotal) : "—"}</Text>
@@ -268,7 +271,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <Cpu size={size.iconSize} />
-            <Text inherit>{t("column.cpu")}</Text>
+            <Text inherit>{invariantTechnicalLabels.cpu}</Text>
           </Group>
         ),
         sortable: true,
@@ -280,7 +283,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <MemoryStick size={size.iconSize} />
-            <Text inherit>{t("column.memory")}</Text>
+            <Text inherit>{tBeszel("metric.memory")}</Text>
           </Group>
         ),
         sortable: true,
@@ -292,7 +295,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <HardDrive size={size.iconSize} />
-            <Text inherit>{t("column.disk")}</Text>
+            <Text inherit>{tBeszel("metric.disk")}</Text>
           </Group>
         ),
         sortable: true,
@@ -312,7 +315,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <Monitor size={size.iconSize} />
-            <Text inherit>{t("column.gpu")}</Text>
+            <Text inherit>{invariantTechnicalLabels.gpu}</Text>
           </Group>
         ),
         sortable: true,
@@ -324,7 +327,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <Activity size={size.iconSize} />
-            <Text inherit>{t("column.loadAvg")}</Text>
+            <Text inherit>{tBeszel("metric.loadAvg")}</Text>
           </Group>
         ),
         sortable: true,
@@ -346,7 +349,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <Network size={size.iconSize} />
-            <Text inherit>{t("column.net")}</Text>
+            <Text inherit>{tBeszel("metric.net")}</Text>
           </Group>
         ),
         sortable: true,
@@ -362,7 +365,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <Thermometer size={size.iconSize} />
-            <Text inherit>{t("column.temp")}</Text>
+            <Text inherit>{tBeszel("metric.temp")}</Text>
           </Group>
         ),
         sortable: true,
@@ -374,7 +377,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <Battery size={size.iconSize} />
-            <Text inherit>{t("column.battery")}</Text>
+            <Text inherit>{tBeszel("metric.battery")}</Text>
           </Group>
         ),
         render: (record) => <Text size={size.fontSize}>{record.battery ? `${record.battery[0]}%` : "—"}</Text>,
@@ -385,7 +388,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <Server size={size.iconSize} />
-            <Text inherit>{t("column.services")}</Text>
+            <Text inherit>{tCommon("services")}</Text>
           </Group>
         ),
         sortable: true,
@@ -397,7 +400,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <Activity size={size.iconSize} />
-            <Text inherit>{t("column.uptime")}</Text>
+            <Text inherit>{tBeszel("metric.uptime")}</Text>
           </Group>
         ),
         sortable: true,
@@ -409,7 +412,7 @@ export default function BeszelSystemTableWidget({
         title: (
           <Group gap={4} wrap="nowrap">
             <Wifi size={size.iconSize} />
-            <Text inherit>{t("column.agent")}</Text>
+            <Text inherit>{tBeszel("metric.agent")}</Text>
           </Group>
         ),
         sortable: true,
@@ -418,7 +421,7 @@ export default function BeszelSystemTableWidget({
     ];
 
     return cols.filter(Boolean) as DataTableColumn<SystemRowWithKey>[];
-  }, [t, size, visibleMetricKeys, isAdvanced]);
+  }, [tBeszel, tCommon, size, visibleMetricKeys, isAdvanced]);
 
   const { effectiveColumns, storeKey } = usePersistedTableLayout({
     columns,
@@ -462,7 +465,7 @@ export default function BeszelSystemTableWidget({
         columns={effectiveColumns}
         sortStatus={sortStatus}
         onSortStatusChange={setSortStatus}
-        noRecordsText={t("noRecords")}
+        noRecordsText={tBeszel("empty.noSystems")}
         idAccessor="rowKey"
         storeColumnsKey={storeKey}
         onRowClick={isEditMode ? undefined : handleRowClick}

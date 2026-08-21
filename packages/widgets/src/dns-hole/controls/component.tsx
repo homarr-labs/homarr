@@ -28,7 +28,6 @@ import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useIntegrationConnected } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
-import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
@@ -123,7 +122,8 @@ export default function DnsHoleControlsWidget({
     { enabled: [] as string[], disabled: [] as string[] },
   );
 
-  const t = useI18n();
+  const t = useI18n("widget.dnsHoleControls");
+  const tCommon = useI18n("common");
 
   // Timer modal setup
   const [selectedIntegrationIds, setSelectedIntegrationIds] = useState<string[]>([]);
@@ -146,7 +146,7 @@ export default function DnsHoleControlsWidget({
     return (
       <Stack h="100%" justify="center" align="center">
         <Text c="dimmed" size="sm">
-          {t("common.action.loading")}
+          {tCommon("action.loading")}
         </Text>
       </Stack>
     );
@@ -165,14 +165,14 @@ export default function DnsHoleControlsWidget({
       <Box pos="absolute" top={4} right={4} style={{ zIndex: 2 }}>
         <Group gap={0}>
           <IntegrationErrorIndicator results={summaryResults} />
-          <WidgetQueryErrorIndicator error={summaryQuery.error} label={t("widget.dnsHoleControls.name")} />
+          <WidgetQueryErrorIndicator error={summaryQuery.error} label={t("name")} />
         </Group>
       </Box>
       {controlAllButtonsVisible && (
         <Flex className="dns-hole-controls-buttons" gap="sm">
-          <Tooltip label={t("widget.dnsHoleControls.controls.enableAll")}>
+          <Tooltip label={t("controls.enableAll")}>
             <Button
-              aria-label={t("widget.dnsHoleControls.controls.enableAll")}
+              aria-label={t("controls.enableAll")}
               size="xs"
               p={0}
               className="dns-hole-controls-enable-all-button"
@@ -188,9 +188,9 @@ export default function DnsHoleControlsWidget({
             </Button>
           </Tooltip>
 
-          <Tooltip label={t("widget.dnsHoleControls.controls.setTimer")}>
+          <Tooltip label={t("controls.setTimer")}>
             <Button
-              aria-label={t("widget.dnsHoleControls.controls.setTimer")}
+              aria-label={t("controls.setTimer")}
               size="xs"
               p={0}
               className="dns-hole-controls-timer-all-button"
@@ -209,9 +209,9 @@ export default function DnsHoleControlsWidget({
             </Button>
           </Tooltip>
 
-          <Tooltip label={t("widget.dnsHoleControls.controls.disableAll")}>
+          <Tooltip label={t("controls.disableAll")}>
             <Button
-              aria-label={t("widget.dnsHoleControls.controls.disableAll")}
+              aria-label={t("controls.disableAll")}
               size="xs"
               p={0}
               className="dns-hole-controls-disable-all-button"
@@ -256,13 +256,13 @@ export default function DnsHoleControlsWidget({
 
       {bulkFailureCount > 0 && (
         <Text size="xs" c="red" ta="center">
-          {t("widget.dnsHoleControls.error.bulkActionsFailed", { count: bulkFailureCount })}
+          {t("error.bulkActionsFailed", { count: bulkFailureCount })}
         </Text>
       )}
       {actionError && (
-        <Tooltip label={t("widget.dnsHoleControls.error.internalServerError")}>
+        <Tooltip label={t("error.internalServerError")}>
           <Text size="xs" c="red" ta="center" lineClamp={2} tabIndex={0}>
-            {t("widget.dnsHoleControls.error.internalServerError")}
+            {t("error.internalServerError")}
           </Text>
         </Tooltip>
       )}
@@ -283,7 +283,7 @@ interface ControlsCardProps {
   data: AvailableDnsSummaryResult;
   setSelectedIntegrationIds: (integrationId: string[]) => void;
   open: () => void;
-  t: TranslationFunction;
+  t: ReturnType<typeof useI18n<"widget.dnsHoleControls">>;
   hasIconColor: boolean;
   rootWidth: number;
   rootHeight: number;
@@ -371,7 +371,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                   {!isEnabled ? (
                     <ActionIcon
                       className={actionTargetClasses.root}
-                      aria-label={`${t("widget.dnsHoleControls.controls.enableAll")}: ${data.integration.name}`}
+                      aria-label={`${t("controls.enableAll")}: ${data.integration.name}`}
                       onClick={() => void toggleDns(data.integration.id).catch(() => undefined)}
                       disabled={!controlEnabled}
                       size="sm"
@@ -383,7 +383,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                   ) : (
                     <ActionIcon
                       className={actionTargetClasses.root}
-                      aria-label={`${t("widget.dnsHoleControls.controls.disableAll")}: ${data.integration.name}`}
+                      aria-label={`${t("controls.disableAll")}: ${data.integration.name}`}
                       onClick={() => void toggleDns(data.integration.id).catch(() => undefined)}
                       disabled={!controlEnabled}
                       size="sm"
@@ -395,7 +395,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                   )}
                   <ActionIcon
                     className={actionTargetClasses.root}
-                    aria-label={`${t("widget.dnsHoleControls.controls.setTimer")}: ${data.integration.name}`}
+                    aria-label={`${t("controls.setTimer")}: ${data.integration.name}`}
                     onClick={() => {
                       setSelectedIntegrationIds([data.integration.id]);
                       open();
@@ -413,9 +413,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
               {layout === "md" && (
                 <UnstyledButton
                   aria-label={`${
-                    isEnabled
-                      ? t("widget.dnsHoleControls.controls.disableAll")
-                      : t("widget.dnsHoleControls.controls.enableAll")
+                    isEnabled ? t("controls.disableAll") : t("controls.enableAll")
                   }: ${data.integration.name}`}
                   className="dns-hole-controls-item-toggle-button"
                   disabled={!controlEnabled}
@@ -442,7 +440,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                     }
                   >
                     {t(
-                      `widget.dnsHoleControls.controls.${
+                      `controls.${
                         !isConnected
                           ? "disconnected"
                           : typeof isEnabled === "undefined"
@@ -450,7 +448,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                             : isEnabled
                               ? "enabled"
                               : "disabled"
-                      }`,
+                      }` as never,
                     )}
                   </Badge>
                 </UnstyledButton>
@@ -459,7 +457,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
           </Flex>
           {layout === "md" && (
             <ActionIcon
-              aria-label={`${t("widget.dnsHoleControls.controls.setTimer")}: ${data.integration.name}`}
+              aria-label={`${t("controls.setTimer")}: ${data.integration.name}`}
               className={combineClasses("dns-hole-controls-item-timer-button", actionTargetClasses.root)}
               display={isInteractPermitted ? undefined : "none"}
               disabled={!controlEnabled || !isEnabled}

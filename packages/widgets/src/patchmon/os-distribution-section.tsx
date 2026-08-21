@@ -5,7 +5,7 @@ import { DonutChart } from "@mantine/charts";
 import { Group, Progress, ScrollArea, Stack, Text } from "@mantine/core";
 
 import type { PatchMonOsDistributionEntry } from "@homarr/integrations";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
 
@@ -37,7 +37,7 @@ export function OsDistributionSection({
   showLegend,
   compact = false,
 }: OsDistributionSectionProps) {
-  const t = useScopedI18n("widget.patchmon");
+  const t = useI18n("widget.patchmon");
 
   if (entries.length === 0) {
     return null;

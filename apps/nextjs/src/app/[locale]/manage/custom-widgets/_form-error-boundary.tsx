@@ -5,7 +5,7 @@ import { Component } from "react";
 import { Alert, Button, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface FormErrorBoundaryState {
   error: Error | null;
@@ -35,7 +35,8 @@ export class FormErrorBoundary extends Component<FormErrorBoundaryProps, FormErr
 }
 
 function FormErrorFallback({ error, reset }: { error: Error; reset: () => void }) {
-  const t = useScopedI18n("customWidget");
+  const t = useI18n("customWidget");
+  const tCommon = useI18n("common");
   return (
     <Alert color="red" variant="light" icon={<IconAlertTriangle size={16} />} p="md">
       <Stack gap="xs">
@@ -46,7 +47,7 @@ function FormErrorFallback({ error, reset }: { error: Error; reset: () => void }
           {error.message}
         </Text>
         <Button size="xs" variant="light" color="red" onClick={reset}>
-          {t("editor.errorBoundary.retry")}
+          {tCommon("action.tryAgain")}
         </Button>
       </Stack>
     </Alert>

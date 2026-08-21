@@ -86,7 +86,7 @@ const SystemDiskCard = ({
 }: SystemDiskCardProps) => {
   const board = useRequiredBoard();
   const scheme = useMantineColorScheme();
-  const t = useI18n();
+  const t = useI18n("widget.systemDisks");
   const valueRef = useRef<HTMLParagraphElement>(null);
   const [valueFits, setValueFits] = useState(true);
 
@@ -108,7 +108,7 @@ const SystemDiskCard = ({
     return () => observer.disconnect();
   }, []);
 
-  const unhealthyLabel = t("widget.systemDisks.status.unhealthy");
+  const unhealthyLabel = t("status.unhealthy");
   const hasTemperature = temperature !== null && temperature !== undefined;
   const temperatureText = hasTemperature ? `${temperature}°C` : "—°C";
   const hasHiddenTemperature = hasTemperature && !showTemperature;
@@ -160,7 +160,7 @@ const SystemDiskCard = ({
             )}
             {isAdvanced && (
               <Text size="xs" c={healthy ? "dimmed" : "red"}>
-                {t("widget.systemDisks.status.smart")}: {smartStatus?.trim() || "—"}
+                {t("status.smart")}: {smartStatus?.trim() || "—"}
               </Text>
             )}
           </div>
@@ -192,7 +192,7 @@ export default function SystemResources({
   height,
   displayMode,
 }: WidgetComponentProps<"systemDisks">) {
-  const t = useI18n();
+  const t = useI18n("widget.systemDisks");
   const queryInput = { integrationIds };
   const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery(queryInput);
   const results = getUsableWidgetQueryData(healthQuery) ?? [];
@@ -202,7 +202,7 @@ export default function SystemResources({
   const queryIndicators = (
     <Group gap={0}>
       <IntegrationErrorIndicator results={results} />
-      <WidgetQueryErrorIndicator error={healthQuery.error} label={t("widget.systemDisks.name")} />
+      <WidgetQueryErrorIndicator error={healthQuery.error} label={t("name")} />
     </Group>
   );
   const emptyState = (
@@ -252,7 +252,7 @@ export default function SystemResources({
       <ScrollArea h="100%">
         <SimpleGrid cols={columns} spacing="xs" p="xs">
           {disks.map(({ integrationId, integrationName, item, smartItem }) => {
-            const freeText = t("widget.systemDisks.status.free", {
+            const freeText = t("status.free", {
               percentage: String(Math.round(100 - clampPercentage(item.percentage))),
             });
             const advancedDisplayTexts = getAdvancedDisplayTexts(item, freeText);

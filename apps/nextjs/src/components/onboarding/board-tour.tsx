@@ -7,7 +7,7 @@ import type { OnboardingTourStep } from "@gfazioli/mantine-onboarding-tour";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { createDocumentationLink } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { useBoardPermissions } from "~/components/board/permissions/client";
 import { TourTargetsProvider } from "~/components/layout/header/tour-target";
@@ -15,7 +15,7 @@ import { TourShell } from "./tour-shell";
 import { TourStepContent } from "./tour-step-content";
 
 export const BoardTourProvider = ({ children }: PropsWithChildren) => {
-  const t = useScopedI18n("onboardingTour.board");
+  const t = useI18n("onboardingTour.board");
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
   const [started, setStarted] = useState(true);

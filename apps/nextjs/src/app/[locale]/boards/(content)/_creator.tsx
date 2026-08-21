@@ -104,10 +104,10 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {
       try {
         const board = await getInitialBoard(await params);
-        const t = await getI18n();
+        const t = await getI18n("board");
 
         return {
-          title: board.metaTitle ?? createMetaTitle(t("board.content.metaTitle", { boardName: board.name })),
+          title: board.metaTitle ?? createMetaTitle(t("content.metaTitle", { boardName: board.name })),
           icons: {
             icon: !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : undefined,
             apple: !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : undefined,

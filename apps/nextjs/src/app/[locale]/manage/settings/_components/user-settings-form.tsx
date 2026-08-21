@@ -3,7 +3,7 @@
 import { Switch } from "@mantine/core";
 
 import type { UseFormReturnType } from "@homarr/form";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { SectionCard } from "~/components/manage/section-card";
 import type { FormValues } from "./settings-form";
@@ -13,10 +13,11 @@ interface UserSettingsFormProps {
 }
 
 export const UserSettingsForm = ({ form }: UserSettingsFormProps) => {
-  const tUser = useScopedI18n("management.page.settings.section.user");
+  const tUser = useI18n("management.page.settings.section.user");
+  const tEntities = useI18n("common.entity");
 
   return (
-    <SectionCard title={tUser("title")}>
+    <SectionCard title={tEntities("users")}>
       <Switch
         {...form.getInputProps("enableGravatar", { type: "checkbox" })}
         label={tUser("enableGravatar.label")}

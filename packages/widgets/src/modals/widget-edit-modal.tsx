@@ -68,6 +68,8 @@ export const getSelectedWidgetIntegrations = (
 
 export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ actions, innerProps }) => {
   const t = useI18n();
+  const tItem = useI18n("item.edit");
+  const tCommon = useI18n("common");
   const board = useOptionalBoard();
   const { data: session } = useSession();
   const [advancedOptions, setAdvancedOptions] = useState<BoardItemAdvancedOptions>(innerProps.value.advancedOptions);
@@ -233,7 +235,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     <Stack>
       {canConfigureWidget && innerProps.integrationSupport && (
         <WidgetIntegrationSelect
-          label={t("item.edit.field.integrations.label")}
+          label={tItem("field.integrations.label")}
           data={innerProps.integrationData}
           canSelectMultiple={maxIntegrations > 1}
           withAsterisk={integrationsRequired}
@@ -280,7 +282,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
             })
           }
         >
-          {t("item.edit.advancedOptions.label")}
+          {tItem("advancedOptions.label")}
         </Button>
       ) : (
         <ModalFormFooter
@@ -296,7 +298,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
                 })
               }
             >
-              {t("item.edit.advancedOptions.label")}
+              {tItem("advancedOptions.label")}
             </Button>
           }
         />
@@ -311,9 +313,9 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           <Stack>
             <Tabs value={activeTab} onChange={setActiveTab}>
               <Tabs.List grow>
-                <Tabs.Tab value="widget">{t("item.edit.tab.widget")}</Tabs.Tab>
-                {showAppTab && <Tabs.Tab value="app">{t("item.edit.tab.app")}</Tabs.Tab>}
-                {showIntegrationTab && <Tabs.Tab value="integration">{t("item.edit.tab.integration")}</Tabs.Tab>}
+                <Tabs.Tab value="widget">{tItem("tab.widget")}</Tabs.Tab>
+                {showAppTab && <Tabs.Tab value="app">{tItem("tab.app")}</Tabs.Tab>}
+                {showIntegrationTab && <Tabs.Tab value="integration">{tItem("tab.integration")}</Tabs.Tab>}
               </Tabs.List>
               <Tabs.Panel value="widget" pt="md">
                 {widgetFormContent}
@@ -329,7 +331,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
                     {displayedIntegrationId === null && (
                       <>
                         <Text size="sm" c="dimmed">
-                          {t("item.edit.integration.description")}
+                          {tItem("integration.description")}
                         </Text>
                         {selectedIntegrations.map((integration) => {
                           const canEdit = editableIntegrationIds.includes(integration.id);
@@ -352,13 +354,13 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
                                   variant="light"
                                   leftSection={<IconPencil size={16} />}
                                   onClick={() => beginEditingIntegration(integration.id)}
-                                  aria-label={t("item.edit.integration.editLabel", { name: integration.name })}
+                                  aria-label={tItem("integration.editLabel", { name: integration.name })}
                                 >
-                                  {t("item.edit.integration.action")}
+                                  {tItem("integration.action")}
                                 </Button>
                               ) : (
                                 <Text size="xs" c="dimmed" ta="end">
-                                  {t("item.edit.integration.fullAccessRequired")}
+                                  {tItem("integration.fullAccessRequired")}
                                 </Text>
                               )}
                             </Group>
@@ -374,7 +376,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
                         onClick={() => setActiveIntegrationId(null)}
                         style={{ alignSelf: "start" }}
                       >
-                        {t("common.action.previous")}
+                        {tCommon("action.previous")}
                       </Button>
                     )}
                     {integrationIdsToRender.map((integrationId) => (
@@ -406,10 +408,10 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
             >
               <Group justify="end">
                 <Button onClick={actions.closeModal} variant="subtle" color="gray">
-                  {t("common.action.cancel")}
+                  {tCommon("action.cancel")}
                 </Button>
                 <Button type="submit" loading={isSubmitting}>
-                  {t("common.action.saveChanges")}
+                  {tCommon("action.saveChanges")}
                 </Button>
               </Group>
             </Box>

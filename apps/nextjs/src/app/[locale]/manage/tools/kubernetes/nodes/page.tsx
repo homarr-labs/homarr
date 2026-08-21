@@ -4,7 +4,7 @@ import { Stack, Title } from "@mantine/core";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/docker/env";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { NodesTable } from "~/app/[locale]/manage/tools/kubernetes/nodes/nodes-table";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -18,14 +18,14 @@ export default async function NodesPage({ searchParams }: { searchParams: Promis
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  const tResource = await getI18n("kubernetes.cluster.resources");
   const nodes =
     context.status === "unavailable" ? [] : await api.kubernetes.nodes.getNodes({ contextId: context.contextId });
-  const tNodes = await getScopedI18n("kubernetes.nodes");
   return (
     <>
       <DynamicBreadcrumb />
       <Stack>
-        <Title order={1}>{tNodes("label")}</Title>
+        <Title order={1}>{tResource("nodes")}</Title>
         <NodesTable contextId={context.contextId} initialNodes={nodes} />
       </Stack>
     </>

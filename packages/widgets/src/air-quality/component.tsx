@@ -6,7 +6,7 @@ import { Box, Group, Paper, ScrollArea, SimpleGrid, Stack, Text, VisuallyHidden 
 import { IconMapPin } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { formatLocalizedDate, formatLocalizedTime } from "../common/locale";
@@ -28,7 +28,7 @@ import {
 } from "./display";
 
 export default function AirQualityWidget({ options, width, height, displayMode }: WidgetComponentProps<"airQuality">) {
-  const t = useScopedI18n("widget.airQuality");
+  const t = useI18n("widget.airQuality");
   const query = clientApi.widget.airQuality.atLocation.useQuery({
     latitude: options.location.latitude,
     longitude: options.location.longitude,
@@ -66,7 +66,7 @@ const CompactAirQuality = ({
   width,
 }: AirQualityViewProps & { height: number; width: number }) => {
   const locale = useCurrentIntlLocale();
-  const t = useScopedI18n("widget.airQuality");
+  const t = useI18n("widget.airQuality");
   const layout = getCompactAirQualityLayout(width, height);
   const standard = getAqiStandard(options.aqiStandard, locale);
   const value = getAqiValue(airQuality.current, standard);
@@ -158,7 +158,7 @@ const CompactAirQuality = ({
 const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps & { width: number }) => {
   const chartId = useId();
   const locale = useCurrentIntlLocale();
-  const t = useScopedI18n("widget.airQuality");
+  const t = useI18n("widget.airQuality");
   const standard = getAqiStandard(options.aqiStandard, locale);
   const value = getAqiValue(airQuality.current, standard);
   const category = getAqiCategory(value, standard);
@@ -358,7 +358,7 @@ const pollutantKeys: PollutantKey[] = ["pm2_5", "pm10", "ozone", "nitrogenDioxid
 const pollenKeys: PollenKey[] = ["alder", "birch", "grass", "mugwort", "olive", "ragweed"];
 
 const useAirQualityLabels = () => {
-  const t = useScopedI18n("widget.airQuality");
+  const t = useI18n("widget.airQuality");
   return {
     pollutants: {
       pm2_5: t("pollutant.pm2_5"),
@@ -389,7 +389,7 @@ const formatDecimal = (value: number | null, locale: string) => {
   return new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(value);
 };
 
-type ScopedAirQualityTranslator = ReturnType<typeof useScopedI18n<"widget.airQuality">>;
+type ScopedAirQualityTranslator = ReturnType<typeof useI18n<"widget.airQuality">>;
 
 const formatConcentration = (value: number | null, locale: string, t: ScopedAirQualityTranslator) =>
   t("unit.concentration", { value: formatDecimal(value, locale) });

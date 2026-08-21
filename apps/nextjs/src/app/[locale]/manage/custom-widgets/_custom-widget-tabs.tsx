@@ -3,7 +3,7 @@
 import { Tabs } from "@mantine/core";
 import { IconApi, IconBuildingStore } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 const tabs = {
@@ -13,7 +13,7 @@ const tabs = {
 
 /** Switches between the widgets you have installed and the community Workshop. */
 export const CustomWidgetTabs = ({ active }: { active: keyof typeof tabs }) => {
-  const t = useScopedI18n("customWidget.page.tabs");
+  const t = useI18n("customWidget.page.tabs");
 
   return (
     <Tabs value={tabs[active]}>

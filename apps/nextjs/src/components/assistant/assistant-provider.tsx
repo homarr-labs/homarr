@@ -30,7 +30,7 @@ import { createId } from "@homarr/common";
 import { assistantHomarrProviderTokenHeader, hotkeys } from "@homarr/definitions";
 import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
 import { closeSpotlight } from "@homarr/spotlight/store";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { openMediaRequestSearch, openSpotlight, useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { AssistantWidgetRendererProvider } from "@homarr/widgets";
 import { createWorkshopClient } from "~/components/workshop/workshop-client";
@@ -135,7 +135,7 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
 };
 
 const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const { data, isLoading } = clientApi.assistant.getRuntimeOptions.useQuery(undefined, {
     staleTime: 10 * 60_000,
   });
@@ -454,7 +454,7 @@ const createHistoryAdapter = (threadId: string | undefined): ThreadHistoryAdapte
 });
 
 const AssistantThreadRuntime = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const aui = useAui();
   const localThreadId = useAuiState((state) => state.threadListItem.id);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
@@ -652,7 +652,7 @@ const AssistantPreferenceSync = () => {
 };
 
 const AssistantRuntimeEvents = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   useAuiEvent("composer.attachmentAddError", ({ message }) => {
     showErrorNotification({
       title: t("attachments.errorTitle"),
@@ -679,7 +679,7 @@ const getNotificationKey = (message: ThreadMessage | undefined) => {
 };
 
 const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const [opened, setOpened] = useState(false);
   const [activityDismissed, setActivityDismissed] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);

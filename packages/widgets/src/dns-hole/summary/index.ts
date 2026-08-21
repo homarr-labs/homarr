@@ -20,7 +20,11 @@ export const { definition, componentLoader } = createWidgetDefinition(widgetKind
       layout: factory.select({
         options: (["grid", "row", "column"] as const).map((value) => ({
           value,
-          label: (t) => t(`widget.dnsHoleSummary.option.layout.option.${value}.label`),
+          label: (t) => {
+            if (value === "grid") return t("widget.common.layout.option.grid");
+            if (value === "row") return t("widget.common.layout.option.horizontal");
+            return t("widget.common.layout.option.vertical");
+          },
         })),
         defaultValue: "grid",
       }),

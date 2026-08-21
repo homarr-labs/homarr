@@ -13,7 +13,7 @@ import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
 import type { KubernetesIngress } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import KubernetesErrorPage from "../cluster-dashboard/error";
@@ -25,15 +25,18 @@ interface IngressesTableComponentProps {
   initialIngresses: RouterOutputs["kubernetes"]["ingresses"]["getIngresses"];
 }
 
-const createColumns = (t: ScopedTranslationFunction<"kubernetes.ingresses">): MRT_ColumnDef<KubernetesIngress>[] => [
+const createColumns = (
+  t: ScopedTranslationFunction<"kubernetes.ingresses">,
+  tField: ScopedTranslationFunction<"kubernetes.field">,
+): MRT_ColumnDef<KubernetesIngress>[] => [
   {
     accessorKey: "name",
-    header: t("field.name.label"),
+    header: tField("name.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "namespace",
-    header: t("field.namespace.label"),
+    header: tField("namespace.label"),
     enableClickToCopy: true,
   },
   {
@@ -70,13 +73,14 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.ingresses">): MR
   },
   {
     accessorKey: "creationTimestamp",
-    header: t("field.creationTimestamp.label"),
+    header: tField("creationTimestamp.label"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function IngressesTable({ contextId, initialIngresses }: IngressesTableComponentProps) {
-  const tIngresses = useScopedI18n("kubernetes.ingresses");
+  const tIngresses = useI18n("kubernetes.ingresses");
+  const tField = useI18n("kubernetes.field");
 
   const { data, isError } = clientApi.kubernetes.ingresses.getIngresses.useQuery(
     { contextId },
@@ -107,7 +111,7 @@ export function IngressesTable({ contextId, initialIngresses }: IngressesTableCo
       autoFocus: true,
     },
 
-    columns: createColumns(tIngresses),
+    columns: createColumns(tIngresses, tField),
   });
 
   if (isError) {

@@ -72,7 +72,7 @@ vi.mock("@homarr/boards/context", () => ({
 }));
 
 vi.mock("@homarr/translation/client", () => ({
-  useScopedI18n: () => (key: string) =>
+  useI18n: () => (key: string) =>
     ({
       migrationRequired: "Migration required",
       migrationDescription: "Copy its redacted prompt to an LLM, then paste the single JSON response into Homarr.",

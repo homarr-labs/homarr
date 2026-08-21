@@ -20,7 +20,7 @@ import localeData from "dayjs/plugin/localeData";
 import { clientApi } from "@homarr/api/client";
 import { colorSchemes } from "@homarr/definitions";
 import type { UserPreferenceKey } from "@homarr/settings";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { createChildrenOptions } from "../lib/children";
@@ -36,6 +36,21 @@ import { useUserPreference } from "./use-user-preference";
 dayjs.extend(localeData);
 
 type ChildrenFactory = ReturnType<typeof createChildrenOptions<Record<string, unknown>>>;
+
+export type UserFieldPreferenceKey =
+  | "defaultSearchEngine"
+  | "openSearchInNewTab"
+  | "ddgBangs"
+  | "pingIconsEnabled"
+  | "enableRightClickOnWidgets";
+
+export const userFieldPreferenceLabels: Partial<Record<UserPreferenceKey, UserFieldPreferenceKey>> = {
+  defaultSearchEngineId: "defaultSearchEngine",
+  openSearchInNewTab: "openSearchInNewTab",
+  ddgBangs: "ddgBangs",
+  pingIconsEnabled: "pingIconsEnabled",
+  enableRightClickOnWidgets: "enableRightClickOnWidgets",
+} satisfies Partial<Record<UserPreferenceKey, UserFieldPreferenceKey>>;
 
 export const preferenceIcons: Record<UserPreferenceKey, TablerIcon> = {
   colorScheme: IconDeviceDesktop,
@@ -82,7 +97,7 @@ const createAsyncSelectableChildren = <TItem,>(
     useActions: (_, query) => {
       const { value, setValue, isPending } = useUserPreference(preferenceKey);
       const result = useQuery();
-      const t = useScopedI18n("search.mode.command.group.preferences.option");
+      const t = useI18n("search.mode.command.group.preferences.option");
 
       if (result.isLoading) return [createLoadingPreferenceAction()];
 
@@ -103,7 +118,7 @@ const firstDayOfWeekOptions: DayOfWeek[] = [1, 6, 0];
 
 export const preferenceChildrenOptionsByKey: Partial<Record<UserPreferenceKey, ChildrenFactory>> = {
   colorScheme: createStaticChildren("colorScheme", () => {
-    const t = useScopedI18n("common.colorScheme.options");
+    const t = useI18n("common.colorScheme.options");
     return colorSchemes.map((s) => ({ key: s, label: t(s), value: s }));
   }),
   locale: languageChildrenOptions,

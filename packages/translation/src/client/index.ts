@@ -18,7 +18,4 @@ declare module "next-intl" {
 // Keep these as direct exports so Turbopack and webpack can statically inspect
 // the client package's public surface.
 export const useI18n = useTranslations;
-export const useScopedI18n = useTranslations;
 export const useI18nMessages = () => useMessages();
-
-export { useTranslations };

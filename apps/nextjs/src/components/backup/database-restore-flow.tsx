@@ -8,7 +8,7 @@ import { IconAlertTriangle, IconArrowRight, IconFileZip, IconUpload, IconX } fro
 
 import "@mantine/dropzone/styles.css"; // oxlint-disable-line import/no-unassigned-import
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { RestoreStep } from "./types";
 import { BackupPreviewPanel } from "./backup-preview-panel";
@@ -103,7 +103,8 @@ export const waitForServerReadinessAsync = async ({
 };
 
 export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: DatabaseRestoreFlowProps) => {
-  const t = useScopedI18n("management.page.tool.backup.restore");
+  const t = useI18n("management.page.tool.backup.restore");
+  const tCommon = useI18n("common");
   const [file, setFile] = useState<FileWithPath | null>(null);
   const [step, setStep] = useState<RestoreStep>("upload");
   const [importError, setImportError] = useState<string | null>(null);
@@ -330,7 +331,7 @@ export const DatabaseRestoreFlow = ({ variant = "card", onRestoreComplete }: Dat
         </Alert>
         <Group>
           <Button variant="subtle" onClick={handleClear}>
-            {t("tryAgain")}
+            {tCommon("action.tryAgain")}
           </Button>
         </Group>
       </Stack>

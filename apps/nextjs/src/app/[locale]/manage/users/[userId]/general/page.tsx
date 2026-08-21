@@ -4,7 +4,7 @@ import { IconExclamationCircle } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
@@ -34,7 +34,7 @@ export async function generateMetadata(props: Props) {
     return {};
   }
 
-  const t = await getScopedI18n("management.page.user.edit");
+  const t = await getI18n("management.page.user.edit");
 
   return {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -44,8 +44,9 @@ export async function generateMetadata(props: Props) {
 
 export default async function EditUserPage(props: Props) {
   const params = await props.params;
-  const t = await getI18n();
-  const tGeneral = await getScopedI18n("management.page.user.setting.general");
+  const tUserManagement = await getI18n("management.page.user");
+  const tUser = await getI18n("user");
+  const tGeneral = await getI18n("management.page.user.setting.general");
   const session = await auth();
   const user = await api.user
     .getById({
@@ -66,7 +67,7 @@ export default async function EditUserPage(props: Props) {
     <Stack>
       {!isCredentialsUser && (
         <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
-          {t("management.page.user.fieldsDisabledExternalProvider")}
+          {tUserManagement("fieldsDisabledExternalProvider")}
         </Alert>
       )}
       <Title>{tGeneral("title")}</Title>
@@ -97,8 +98,8 @@ export default async function EditUserPage(props: Props) {
 
       <DangerZoneRoot>
         <DangerZoneItem
-          label={t("user.action.delete.label")}
-          description={t("user.action.delete.description")}
+          label={tUser("action.delete.label")}
+          description={tUser("action.delete.description")}
           action={<DeleteUserButton user={user} />}
         />
       </DangerZoneRoot>

@@ -70,7 +70,7 @@ const groupChildrenOptions = createChildrenOptions<Group>({
 
 export const groupsSearchGroup = createGroup<Group>({
   keyPath: "id",
-  title: "Groups",
+  title: (t) => t("common.entity.groups"),
   Component: ({ name }) => (
     <Group px="md" py="sm">
       <Text>{name}</Text>

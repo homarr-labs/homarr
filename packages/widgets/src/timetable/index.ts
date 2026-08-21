@@ -2,7 +2,7 @@ import { IconBusStop, IconWorldOff } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -26,7 +26,7 @@ export const { componentLoader, definition } = createWidgetDefinition("timetable
       }),
       station: factory.dynamicSelect({
         useOptions(query, _integrationIds, options, itemId, boardId) {
-          const t = useScopedI18n("widget.timetable");
+          const t = useI18n("widget.timetable");
           const {
             data: stations,
             error,

@@ -2,6 +2,7 @@ import { IconBrandDocker, IconServerOff } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -16,13 +17,12 @@ const columnsList = [
 const allColumnsList = ["name", "state", "host", "cpuUsage", "memoryUsage", "actions"] as const;
 
 const columnTranslationKeyMap = {
-  name: "docker.field.name.label",
+  name: "common.field.name",
   state: "docker.field.state.label",
   host: "docker.field.host.label",
-  cpuUsage: "docker.field.stats.cpu.label",
   memoryUsage: "docker.field.stats.memory.label",
   actions: "docker.action.title",
-} as const satisfies Record<(typeof allColumnsList)[number], string>;
+} as const satisfies Record<Exclude<(typeof allColumnsList)[number], "cpuUsage">, string>;
 
 export const { definition, componentLoader } = createWidgetDefinition("dockerContainers", {
   icon: IconBrandDocker,
@@ -49,7 +49,10 @@ export const { definition, componentLoader } = createWidgetDefinition("dockerCon
           defaultValue: [...allColumnsList],
           options: allColumnsList.map((value) => ({
             value,
-            label: (t) => t(columnTranslationKeyMap[value]),
+            label: (t) => {
+              if (value === "cpuUsage") return invariantTechnicalLabels.cpu;
+              return t(columnTranslationKeyMap[value]);
+            },
           })),
           searchable: true,
         }),

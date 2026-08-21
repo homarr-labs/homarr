@@ -7,7 +7,7 @@ import { IconCheck, IconChevronDown, IconChecklist } from "@tabler/icons-react";
 import { useIntegrationsWithUseAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { useSetupAnalytics } from "~/components/create/setup-analytics";
 import { getBoardSetupProgress } from "./board-setup-progress";
@@ -23,7 +23,8 @@ export const BoardSetupChecklist = () => {
     key: `homarr-board-setup-checklist-${board.id}`,
     defaultValue: false,
   });
-  const t = useScopedI18n("board.setupChecklist");
+  const t = useI18n("board.setupChecklist");
+  const tCommon = useI18n("common.action");
   const trackSetup = useSetupAnalytics();
   const progress = getBoardSetupProgress({
     itemKinds: board.items.map((item) => item.kind),
@@ -74,14 +75,14 @@ export const BoardSetupChecklist = () => {
             complete={progress.steps.content}
             label={t("step.content.label")}
             description={t("step.content.description")}
-            actionLabel={t("step.content.action")}
+            actionLabel={tCommon("add")}
             onAction={addWidget}
           />
           <ChecklistStep
             complete={progress.steps.app}
             label={t("step.app.label")}
             description={t("step.app.description")}
-            actionLabel={t("step.app.action")}
+            actionLabel={tCommon("add")}
             onAction={addApp}
           />
           <ChecklistStep

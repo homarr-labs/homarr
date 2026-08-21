@@ -6,7 +6,7 @@ import { Center, RingProgress, Text } from "@mantine/core";
 import { IconFileDescription, IconFileText, IconInbox, IconTag, IconUsers } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
@@ -76,8 +76,8 @@ export default function PaperlessNgxWidget({
   width,
   height,
 }: WidgetComponentProps<"paperlessNgx">) {
-  const t = useScopedI18n("widget.paperlessNgx");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.paperlessNgx");
+  const tCommon = useI18n("common");
   const {
     data: stats,
     error,

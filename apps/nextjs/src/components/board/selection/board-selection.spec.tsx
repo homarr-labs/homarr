@@ -16,7 +16,6 @@ import { BoardSelectionProvider, useBoardSelection } from "./board-selection-con
 
 vi.mock("@homarr/translation/client", () => ({
   useI18n: () => (key: string) => key,
-  useScopedI18n: () => (key: string) => key,
 }));
 
 vi.mock("../audio/board-sounds", () => ({

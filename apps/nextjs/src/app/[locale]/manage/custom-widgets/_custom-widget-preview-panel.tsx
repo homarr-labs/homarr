@@ -7,7 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { analyzeCustomWidgetAccessibility, PreviewErrorBoundary } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import CustomJsxDisplay from "@homarr/widgets/custom-api/custom-jsx-display";
 
 import { CodeEditor } from "./_code-editor";
@@ -37,8 +37,9 @@ interface PreviewPanelProps {
 }
 
 export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
-  const t = useScopedI18n("customWidget.workbench.preview");
-  const errorBoundaryMessages = useScopedI18n("customWidget.editor.errorBoundary");
+  const t = useI18n("customWidget.workbench.preview");
+  const errorBoundaryMessages = useI18n("customWidget.editor.errorBoundary");
+  const actionT = useI18n("common.action");
   const [fixture, setFixture] = useState<"live" | "loading" | "empty" | "error">("live");
   const liveActionsMutation = clientApi.customWidget.setPreviewLiveActions.useMutation();
   const journalQuery = clientApi.customWidget.previewJournal.useQuery(
@@ -155,7 +156,7 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
                   <PreviewErrorBoundary
                     title={errorBoundaryMessages("title")}
                     description={t("containedFailures")}
-                    retryLabel={errorBoundaryMessages("retry")}
+                    retryLabel={actionT("tryAgain")}
                     resetKeys={[rendererResetKey]}
                   >
                     <CustomJsxDisplay data={displayData} />

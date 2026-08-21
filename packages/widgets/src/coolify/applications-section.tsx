@@ -4,7 +4,7 @@ import { Accordion, Badge, Group, Stack, Text } from "@mantine/core";
 import { IconCloud } from "@tabler/icons-react";
 
 import type { CoolifyApplicationWithContext } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { getBadgeColor, parseStatus } from "./coolify-utils";
 import { ResourceRow } from "./resource-row";
@@ -16,8 +16,8 @@ interface ApplicationsSectionProps {
 }
 
 export function ApplicationsSection({ applications, baseUrl, isTiny }: ApplicationsSectionProps) {
-  const t = useScopedI18n("widget.coolify");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.coolify");
+  const tCommon = useI18n("common");
   const runningApps = applications.filter((app) => parseStatus(app.status ?? "") === "running").length;
 
   return (

@@ -1,7 +1,7 @@
 import { Paper, Text } from "@mantine/core";
 import { IconCpu } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 
 import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
@@ -16,14 +16,13 @@ export const SystemResourceCPUChart = ({
   labelDisplayMode: LabelDisplayModeOption;
 }) => {
   const chartData = cpuUsageOverTime.map((usage, index) => ({ index, usage }));
-  const t = useScopedI18n("widget.systemResources.card");
 
   return (
     <CommonChart
       data={chartData}
       dataKey={"index"}
       series={[{ name: "usage", color: "blue.5" }]}
-      title={t("cpu")}
+      title={invariantTechnicalLabels.cpu}
       icon={IconCpu}
       lastValue={
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

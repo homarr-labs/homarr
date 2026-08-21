@@ -5,7 +5,7 @@ import { Avatar, Badge, Card, Group, ScrollArea, SimpleGrid, Stack, Text } from 
 import { clientApi } from "@homarr/api/client";
 import { formatByteRate } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
@@ -47,7 +47,8 @@ const ArchiveTeamWarriorWidgetContent = ({
   height: number;
   isAdvanced: boolean;
 }) => {
-  const t = useScopedI18n("widget.archiveTeamWarrior");
+  const t = useI18n("widget.archiveTeamWarrior");
+  const tWidgetCommon = useI18n("widget.common");
   const locale = useCurrentIntlLocale();
   const [data, statusQuery] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({ integrationId });
 
@@ -107,7 +108,7 @@ const ArchiveTeamWarriorWidgetContent = ({
               {t("runnerStatus", { status: t(`status.${getStatusKey(status.runnerStatus ?? status.status)}`) })}
             </Text>
             <Text size="xs" c="dimmed">
-              {t("updatedAt", { date: new Date(status.updatedAt).toLocaleString(locale) })}
+              {tWidgetCommon("updatedAt", { date: new Date(status.updatedAt).toLocaleString(locale) })}
             </Text>
           </Group>
           <Group gap="xs" wrap="wrap">

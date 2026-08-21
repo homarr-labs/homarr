@@ -13,7 +13,8 @@ interface TimerModalProps {
 }
 
 const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: TimerModalProps) => {
-  const t = useI18n();
+  const t = useI18n("widget.dnsHoleControls");
+  const tCommon = useI18n("common");
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const hoursHandlers = useRef<NumberInputHandlers>(null);
@@ -41,12 +42,12 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
         setHours(0);
         setMinutes(0);
       }}
-      title={t("widget.dnsHoleControls.controls.setTimer")}
+      title={t("controls.setTimer")}
     >
       <Flex direction="column" align="center" justify="center">
         <Stack align="flex-end">
           <Group>
-            <Text>{t("widget.dnsHoleControls.controls.hours")}</Text>
+            <Text>{tCommon("information.hours")}</Text>
             <ActionIcon size={35} variant="default" onClick={() => hoursHandlers.current?.decrement()}>
               –
             </ActionIcon>
@@ -65,7 +66,7 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
             </ActionIcon>
           </Group>
           <Group>
-            <Text>{t("widget.dnsHoleControls.controls.minutes")}</Text>
+            <Text>{tCommon("information.minutes")}</Text>
             <ActionIcon size={35} variant="default" onClick={() => minutesHandlers.current?.decrement()}>
               –
             </ActionIcon>
@@ -85,7 +86,7 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
           </Group>
         </Stack>
         <Text ta="center" c="dimmed" my={5}>
-          {t("widget.dnsHoleControls.controls.unlimited")}
+          {t("controls.unlimited")}
         </Text>
         <Button
           variant="light"
@@ -95,7 +96,7 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
           w="12rem"
           onClick={handleSetTimer}
         >
-          {t("widget.dnsHoleControls.controls.set")}
+          {t("controls.set")}
         </Button>
       </Flex>
     </Modal>

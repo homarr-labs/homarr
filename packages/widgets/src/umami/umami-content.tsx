@@ -6,7 +6,7 @@ import { Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { clientApi } from "@homarr/api/client";
 import { formatDuration } from "@homarr/common";
 import type { UmamiVisitorStats } from "@homarr/integrations/types";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { UmamiEventsContent } from "./umami-events-content";
 import { getUmamiLayout } from "./umami-layout";
@@ -45,7 +45,7 @@ export function UmamiContent({
   height,
   displayMode,
 }: UmamiContentProps) {
-  const t = useScopedI18n("widget.umami");
+  const t = useI18n("widget.umami");
   const locale = useCurrentIntlLocale();
   const tickColor = "var(--mantine-color-dimmed)";
 

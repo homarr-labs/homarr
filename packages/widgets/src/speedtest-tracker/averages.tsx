@@ -4,14 +4,14 @@ import { SimpleGrid, Stack } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconWaveSine } from "@tabler/icons-react";
 
 import type { SpeedtestTrackerStats } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { formatStatsSpeed } from "./helpers";
 import { SectionLabel } from "./section-label";
 import { SpeedStatCard } from "./speed-stat-card";
 
 export function AveragesSection({ stats, width = 500 }: { stats: SpeedtestTrackerStats; width?: number }) {
-  const t = useScopedI18n("widget.speedtestTracker");
+  const t = useI18n("widget.speedtestTracker");
 
   return (
     <Stack gap={6} h="100%">

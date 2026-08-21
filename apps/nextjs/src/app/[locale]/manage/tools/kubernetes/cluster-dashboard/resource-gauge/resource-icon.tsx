@@ -1,10 +1,11 @@
 import React from "react";
 import { IconCpu, IconCube, IconDeviceDesktopAnalytics } from "@tabler/icons-react";
 
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { KubernetesCapacityType } from "@homarr/definitions";
 
 const resourceIcons = {
-  CPU: IconCpu,
+  [invariantTechnicalLabels.cpu]: IconCpu,
   Memory: IconDeviceDesktopAnalytics,
   Pods: IconCube,
 } satisfies Record<KubernetesCapacityType, React.ComponentType<{ size: number; stroke: number }>>;

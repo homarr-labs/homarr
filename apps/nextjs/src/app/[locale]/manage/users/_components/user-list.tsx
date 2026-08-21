@@ -17,7 +17,7 @@ interface UserListComponentProps {
 }
 
 export const UserListComponent = ({ initialUserList }: UserListComponentProps) => {
-  const t = useI18n();
+  const t = useI18n("user");
   const { data, isLoading } = clientApi.user.getAll.useQuery(undefined, {
     initialData: initialUserList,
   });
@@ -26,7 +26,7 @@ export const UserListComponent = ({ initialUserList }: UserListComponentProps) =
     () => [
       {
         accessorKey: "name",
-        header: t("user.field.username.label"),
+        header: t("field.username.label"),
         grow: 1,
         Cell: ({ renderedCellValue, row }) => (
           <Group>
@@ -39,13 +39,13 @@ export const UserListComponent = ({ initialUserList }: UserListComponentProps) =
       },
       {
         accessorKey: "email",
-        header: t("user.field.email.label"),
+        header: t("field.email.label"),
         size: 300,
         Cell: ({ renderedCellValue, row }) => (
           <Group wrap="nowrap" gap="sm">
             {row.original.email ? renderedCellValue : <Text>-</Text>}
             {row.original.emailVerified && (
-              <Tooltip label={t("user.field.email.verified")} position="top">
+              <Tooltip label={t("field.email.verified")} position="top">
                 <IconCheck color="var(--mantine-color-green-4)" size="1rem" />
               </Tooltip>
             )}

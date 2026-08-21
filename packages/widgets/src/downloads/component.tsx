@@ -50,7 +50,7 @@ import { formatByteRate, formatBytes, useIntegrationConnected } from "@homarr/co
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
 import { showErrorNotification } from "@homarr/notifications";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -69,7 +69,7 @@ import {
 
 dayjs.extend(relativeTime);
 
-type DownloadsT = ReturnType<typeof useScopedI18n<"widget.downloads">>;
+type DownloadsT = ReturnType<typeof useI18n<"widget.downloads">>;
 type DownloadState = ExtendedDownloadClientItem["state"];
 
 interface SizeConfig {
@@ -315,7 +315,7 @@ export default function DownloadClientsWidget({
   const availableItems = useMemo(() => currentItems?.filter((item) => item.data !== null) ?? [], [currentItems]);
   const { isFetching } = downloadsQuery;
 
-  const t = useScopedI18n("widget.downloads");
+  const t = useI18n("widget.downloads");
   const queryIndicators = (
     <Group gap={0}>
       <IntegrationErrorIndicator results={currentItems ?? []} />
@@ -793,9 +793,7 @@ export default function DownloadClientsWidget({
               animateOpacity: true,
               transitionTimingFunction: "ease-out",
             },
-            content: ({ record, collapse }) => (
-              <ExpandedRow item={record} collapse={collapse} />
-            ),
+            content: ({ record, collapse }) => <ExpandedRow item={record} collapse={collapse} />,
           }}
           onScroll={() => {
             if (contextMenu) closeContextMenu();
@@ -871,14 +869,8 @@ function buildHoverTooltip(record: ExtendedDownloadClientItem, t: DownloadsT): R
   );
 }
 
-function ExpandedRow({
-  item,
-  collapse,
-}: {
-  item: ExtendedDownloadClientItem;
-  collapse: () => void;
-}) {
-  const t = useScopedI18n("widget.downloads");
+function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; collapse: () => void }) {
+  const t = useI18n("widget.downloads");
   const locale = useCurrentIntlLocale();
   const progressPercent = Math.floor(item.progress * 100);
   const categoryDisplay = formatCategoryDisplay(item.category);
@@ -994,7 +986,7 @@ function GlobalStatsBar({
   hasTorrents: boolean;
   clients: ExtendedClientStatus[];
 }) {
-  const t = useScopedI18n("widget.downloads");
+  const t = useI18n("widget.downloads");
 
   let overallProgress = 0;
   if (queueStats.totalSize > 0) overallProgress = queueStats.completedSize / queueStats.totalSize;
@@ -1214,7 +1206,7 @@ function WidgetFooter({
   showStats,
   toggleStats,
 }: WidgetFooterProps) {
-  const t = useScopedI18n("widget.downloads");
+  const t = useI18n("widget.downloads");
   const [filterOpen, { toggle: toggleFilter }] = useDisclosure(false);
   const someInteract = clients.some(({ interact }) => interact);
   const hasActiveFilter = clientFilter.length > 0 || statusFilter.length > 0;
@@ -1372,12 +1364,18 @@ function WidgetFooter({
             {!showStats && (
               <Group gap={2}>
                 <Text size="xs" fw={600} c="blue">
-                  <IconDownload size="var(--mantine-font-size-xs)" style={{ verticalAlign: "middle", marginRight: 2 }} />
+                  <IconDownload
+                    size="var(--mantine-font-size-xs)"
+                    style={{ verticalAlign: "middle", marginRight: 2 }}
+                  />
                   {formatByteRate(totalSpeed)}
                 </Text>
                 {totalUpSpeed > 0 && (
                   <Text size="xs" fw={600} c="green">
-                    <IconUpload size="var(--mantine-font-size-xs)" style={{ verticalAlign: "middle", marginRight: 2 }} />
+                    <IconUpload
+                      size="var(--mantine-font-size-xs)"
+                      style={{ verticalAlign: "middle", marginRight: 2 }}
+                    />
                     {formatByteRate(totalUpSpeed)}
                   </Text>
                 )}
@@ -1409,7 +1407,7 @@ function ClientIndicator({ integration }: { integration: ExtendedClientStatus["i
   const isConnected = useIntegrationConnected(integration.updatedAt, { timeout: 30000 });
 
   let tooltipLabel = integration.name;
-  const t = useScopedI18n("widget.downloads");
+  const t = useI18n("widget.downloads");
   if (!isConnected) tooltipLabel = `${integration.name} ${t("disconnected")}`;
 
   let avatarFilter: string | undefined;

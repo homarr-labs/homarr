@@ -9,15 +9,15 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface AppDeleteButtonProps {
   app: RouterOutputs["app"]["all"][number];
 }
 
 export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
-  const t = useScopedI18n("app.page.delete");
-  const tList = useScopedI18n("app.page.list.action");
+  const t = useI18n("app.page.delete");
+  const tCommon = useI18n("common");
   const { openConfirmModal } = useConfirmModal();
   const { mutate, isPending } = clientApi.app.delete.useMutation();
 
@@ -33,14 +33,14 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
           {
             onSuccess: () => {
               showSuccessNotification({
-                title: t("notification.success.title"),
+                title: tCommon("notification.delete.success"),
                 message: t("notification.success.message"),
               });
               void revalidatePathActionAsync("/manage/apps");
             },
             onError: () => {
               showErrorNotification({
-                title: t("notification.error.title"),
+                title: tCommon("notification.delete.error"),
                 message: t("notification.error.message"),
               });
             },
@@ -48,7 +48,7 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
         );
       },
     });
-  }, [app, mutate, t, openConfirmModal]);
+  }, [app, mutate, t, tCommon, openConfirmModal]);
 
   return (
     <ActionIcon
@@ -57,7 +57,7 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
       color="red"
       size={44}
       onClick={onClick}
-      aria-label={tList("delete", { name: app.name })}
+      aria-label={tCommon("action.deleteNamed", { name: app.name })}
     >
       <IconTrash color="red" size={16} stroke={1.5} />
     </ActionIcon>

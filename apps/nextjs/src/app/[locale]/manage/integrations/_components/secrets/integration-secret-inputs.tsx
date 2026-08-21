@@ -29,14 +29,14 @@ export const IntegrationSecretInput = (props: IntegrationSecretInputProps) => {
 };
 
 const PublicSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
-  const t = useI18n();
+  const tIntegration = useI18n("integration");
   const Icon = integrationSecretIcons[kind];
   const { multiline } = integrationSecretKindObject[kind];
   if (multiline) {
     return (
       <Textarea
         {...props}
-        label={props.label ?? t(`integration.secrets.kind.${kind}.label`)}
+        label={props.label ?? tIntegration(`secrets.kind.${kind}.label` as never)}
         w="100%"
         leftSection={<Icon size={20} stroke={1.5} />}
         autosize
@@ -48,7 +48,7 @@ const PublicSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
   return (
     <TextInput
       {...props}
-      label={props.label ?? t(`integration.secrets.kind.${kind}.label`)}
+      label={props.label ?? tIntegration(`secrets.kind.${kind}.label` as never)}
       w="100%"
       leftSection={<Icon size={20} stroke={1.5} />}
     />
@@ -56,7 +56,7 @@ const PublicSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
 };
 
 const PrivateSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
-  const t = useI18n();
+  const tIntegration = useI18n("integration");
   const Icon = integrationSecretIcons[kind];
   const { multiline } = integrationSecretKindObject[kind];
 
@@ -64,8 +64,8 @@ const PrivateSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => 
     return (
       <Textarea
         {...props}
-        label={props.label ?? t(`integration.secrets.kind.${kind}.label`)}
-        description={t("integration.secrets.secureNotice")}
+        label={props.label ?? tIntegration(`secrets.kind.${kind}.label` as never)}
+        description={tIntegration("secrets.secureNotice")}
         w="100%"
         leftSection={<Icon size={20} stroke={1.5} />}
         autosize
@@ -77,8 +77,8 @@ const PrivateSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => 
   return (
     <PasswordInput
       {...props}
-      label={props.label ?? t(`integration.secrets.kind.${kind}.label`)}
-      description={t("integration.secrets.secureNotice")}
+      label={props.label ?? tIntegration(`secrets.kind.${kind}.label` as never)}
+      description={tIntegration("secrets.secureNotice")}
       w="100%"
       leftSection={<Icon size={20} stroke={1.5} />}
     />

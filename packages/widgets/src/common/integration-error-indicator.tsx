@@ -3,7 +3,7 @@
 import { ActionIcon, Tooltip } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface IntegrationResult {
   integrationId: string;
@@ -16,7 +16,7 @@ interface IntegrationErrorIndicatorProps {
 }
 
 export function IntegrationErrorIndicator({ results }: IntegrationErrorIndicatorProps) {
-  const t = useScopedI18n("common");
+  const t = useI18n("common");
   const failed = results.filter((result) => Boolean(result.error));
   if (failed.length === 0) return null;
 

@@ -17,7 +17,7 @@ export const { definition, componentLoader } = createWidgetDefinition("wud", {
       layout: factory.select({
         options: (["horizontal", "vertical"] as const).map((value) => ({
           value,
-          label: (t) => t(`widget.wud.option.layout.option.${value}.label`),
+          label: (t) => t(`widget.common.layout.option.${value}`),
         })),
         defaultValue: "horizontal",
       }),

@@ -14,7 +14,7 @@ interface InnerProps {
 }
 
 export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, innerProps }) => {
-  const t = useI18n();
+  const t = useI18n("item.edit");
   const theme = useMantineTheme();
   const form = useForm({
     initialValues: innerProps.advancedOptions,
@@ -33,17 +33,14 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
         <TextInput
-          label={t("item.edit.field.title.label")}
+          label={t("field.title.label")}
           data-autofocus
           {...form.getInputProps("title")}
           rightSection={<Input.ClearButton onClick={() => form.setFieldValue("title", "")} />}
         />
-        <TextMultiSelect
-          label={t("item.edit.field.customCssClasses.label")}
-          {...form.getInputProps("customCssClasses")}
-        />
+        <TextMultiSelect label={t("field.customCssClasses.label")} {...form.getInputProps("customCssClasses")} />
         <ColorInput
-          label={t("item.edit.field.borderColor.label")}
+          label={t("field.borderColor.label")}
           format="hex"
           swatches={Object.values(theme.colors).map((color) => color[6])}
           rightSection={

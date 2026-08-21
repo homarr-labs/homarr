@@ -17,7 +17,7 @@ import {
 } from "./component";
 
 vi.mock("@homarr/translation/client", () => ({
-  useScopedI18n: () => (key: string) => key,
+  useI18n: () => (key: string) => key,
 }));
 
 const session = {

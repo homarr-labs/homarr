@@ -8,11 +8,12 @@ import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 export const ReservedGroupAlert = () => {
-  const t = useI18n();
+  const tGroup = useI18n("group");
+  const tCommon = useI18n("common");
 
   return (
     <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
-      {t.rich("group.reservedNotice.message", {
+      {tGroup.rich("reservedNotice.message", {
         checkoutDocs: () => (
           <Anchor
             size="sm"
@@ -20,7 +21,7 @@ export const ReservedGroupAlert = () => {
             href={createDocumentationLink("/docs/management/users", "#special-groups")}
             target="_blank"
           >
-            {t("common.action.checkoutDocs")}
+            {tCommon("action.checkoutDocs")}
           </Anchor>
         ),
       })}

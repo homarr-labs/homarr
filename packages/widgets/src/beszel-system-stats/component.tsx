@@ -10,7 +10,7 @@ import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import classes from "./component.module.css";
 
@@ -33,7 +33,8 @@ export default function BeszelSystemStatsWidget({
   setOptions,
   widgetRuntimeRef,
 }: WidgetComponentProps<"beszelSystemStats">) {
-  const t = useScopedI18n("widget.beszelSystemStats");
+  const t = useI18n("widget.beszelSystemStats");
+  const tBeszel = useI18n("widget.beszel");
   const board = useOptionalBoard();
   const { data: session } = useSession();
   const hasChangeAccess = board ? constructBoardPermissions(board, session).hasChangeAccess : false;
@@ -150,7 +151,7 @@ export default function BeszelSystemStatsWidget({
           <Stack align="center" gap="xs">
             <IconServerOff size={28} opacity={0.5} />
             <Text size="sm" c="dimmed">
-              {t("empty.noSystems")}
+              {tBeszel("empty.noSystems")}
             </Text>
           </Stack>
         </Center>

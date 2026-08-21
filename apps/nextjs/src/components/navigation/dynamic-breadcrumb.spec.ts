@@ -10,8 +10,9 @@ describe("DynamicBreadcrumb", () => {
 
     // Dynamic ids (e.g. /manage/custom-widgets/workshop/<id>) have no message and are
     // not mapped while their page loads; resolving them must not raise MISSING_MESSAGE.
+    expect(source).toContain("let label = pathnamePart");
+    expect(source).toContain("if (mappedValue !== undefined)");
     expect(source).toContain("t.has(labelKey)");
-    expect(source).toContain("mappedValue ?? (t.has(labelKey) ? t(labelKey) : pathnamePart)");
     expect(source).not.toMatch(/\{t\(`\$\{translationKey\}\.label`/u);
   });
 });

@@ -3,7 +3,7 @@
 import { PasswordInput, Stack } from "@mantine/core";
 import type { PasswordInputProps } from "@mantine/core";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { CustomPasswordInput } from "@homarr/ui";
 
 interface UserCreatePasswordFieldsProps {
@@ -17,7 +17,7 @@ export const UserCreatePasswordFields = ({
   confirmPasswordInputProps,
   variant,
 }: UserCreatePasswordFieldsProps) => {
-  const t = useScopedI18n("user.field");
+  const t = useI18n("user.field");
 
   return (
     <Stack gap="md">

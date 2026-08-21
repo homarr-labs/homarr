@@ -17,7 +17,7 @@ dayjs.extend(duration);
 
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
   const integrations = getUsableWidgetQueryData(clientApi.integration.byIds.useQuery(props.integrationIds)) ?? [];
-  const t = useI18n();
+  const t = useI18n("widget.healthMonitoring");
 
   const { clusterIntegrationIds, systemIntegrationIds } = partitionHealthMonitoringIntegrations(integrations);
 
@@ -68,10 +68,10 @@ export default function HealthMonitoringWidget(props: WidgetComponentProps<"heal
       <Tabs defaultValue={props.options.defaultTab} variant="outline">
         <Tabs.List grow>
           <Tabs.Tab value="system" fz="xs">
-            <b>{t("widget.healthMonitoring.tab.system")}</b>
+            <b>{t("tab.system")}</b>
           </Tabs.Tab>
           <Tabs.Tab value="cluster" fz="xs">
-            <b>{t("widget.healthMonitoring.tab.cluster")}</b>
+            <b>{t("tab.cluster")}</b>
           </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="system">

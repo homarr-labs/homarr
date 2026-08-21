@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Badge, Card, Center, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
@@ -32,8 +32,9 @@ export default function NetworkControllerNetworkStatusWidget({
       ),
     [results],
   );
-  const t = useScopedI18n("widget.networkControllerStatus");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.networkControllerStatus");
+  const tWidgetCommon = useI18n("widget.common");
+  const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();
 
   const countWifiGuests = summaries.reduce((sum, { summary }) => sum + summary.wifi.guests, 0);
@@ -55,7 +56,7 @@ export default function NetworkControllerNetworkStatusWidget({
         {queryIndicators}
         <Center p="sm" style={{ flex: 1 }}>
           <Text c="dimmed" size="sm" ta="center">
-            {summaryQuery.isPending ? tCommon("action.loading") : t("error.integrationsDisconnected")}
+            {summaryQuery.isPending ? tCommon("action.loading") : tWidgetCommon("integrationDisconnected")}
           </Text>
         </Center>
       </Stack>
@@ -77,7 +78,7 @@ export default function NetworkControllerNetworkStatusWidget({
                     </Text>
                     {updatedAt && (
                       <Text size="xs" c="dimmed">
-                        {t("advanced.updatedAt", { date: new Date(updatedAt).toLocaleString(locale) })}
+                        {tWidgetCommon("updatedAt", { date: new Date(updatedAt).toLocaleString(locale) })}
                       </Text>
                     )}
                   </Stack>

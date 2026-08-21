@@ -3,20 +3,22 @@
 import type { ComponentProps } from "react";
 
 import { CustomWidgetCodeEditor } from "@homarr/custom-widgets/workbench";
-import { useScopedI18n } from "@homarr/translation/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 
 type SharedEditorProps = ComponentProps<typeof CustomWidgetCodeEditor>;
 type CodeEditorProps = Omit<SharedEditorProps, "messages">;
 
 export function CodeEditor(props: CodeEditorProps) {
-  const t = useScopedI18n("customWidget.editor");
+  const t = useI18n("customWidget.editor");
+  const tCommon = useI18n("common");
   return (
     <CustomWidgetCodeEditor
       {...props}
       messages={{
-        languageJsx: t("language.jsx"),
-        languageJson: t("language.json"),
-        undo: t("action.undo"),
+        languageJsx: invariantTechnicalLabels.jsx,
+        languageJson: invariantTechnicalLabels.json,
+        undo: tCommon("action.undo"),
         redo: t("action.redo"),
         components: t("action.components"),
         componentSearch: t("componentReference.search"),
@@ -24,10 +26,10 @@ export function CodeEditor(props: CodeEditorProps) {
         componentCount: (count) => t("componentReference.count", { count }),
         insertStarter: t("action.insertStarter"),
         format: t("action.format"),
-        copy: t("action.copy"),
+        copy: tCommon("action.copy"),
         copied: t("action.copied"),
         schema: t("action.schema"),
-        schemaTab: t("reference.schema"),
+        schemaTab: invariantTechnicalLabels.jsonSchema,
         minimalTab: t("reference.minimal"),
         fullTab: t("reference.full"),
         errors: (count) => t("status.errors", { count }),

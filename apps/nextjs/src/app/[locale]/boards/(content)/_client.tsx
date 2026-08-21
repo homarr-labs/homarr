@@ -6,7 +6,7 @@ import { IconBulb } from "@tabler/icons-react";
 import { useCurrentLayout, useInitialViewportWidth, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { FloatingTip } from "@homarr/ui";
 
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
@@ -33,9 +33,9 @@ const APP_SHELL_INLINE_PADDING = 32;
 
 export const ClientBoard = () => {
   const board = useRequiredBoard();
-  const t = useScopedI18n("board.landmark");
-  const tPreview = useScopedI18n("board.setting.section.layout.preview");
-  const tTips = useScopedI18n("tips");
+  const t = useI18n("board.landmark");
+  const tPreview = useI18n("board.setting.section.layout.preview");
+  const tTips = useI18n("tips");
   const [isEditMode] = useEditMode();
   const currentLayoutId = useCurrentLayout();
   const initialViewportWidth = useInitialViewportWidth();

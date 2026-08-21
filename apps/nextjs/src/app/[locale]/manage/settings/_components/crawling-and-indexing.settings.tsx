@@ -3,7 +3,7 @@
 import { Text } from "@mantine/core";
 
 import type { UseFormReturnType } from "@homarr/form";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { SectionCard } from "~/components/manage/section-card";
 import type { FormValues } from "./settings-form";
@@ -14,7 +14,7 @@ interface CrawlingAndIndexingSettingsProps {
 }
 
 export const CrawlingAndIndexingSettings = ({ form }: CrawlingAndIndexingSettingsProps) => {
-  const t = useScopedI18n("management.page.settings.section.crawlingAndIndexing");
+  const t = useI18n("management.page.settings.section.crawlingAndIndexing");
 
   return (
     <SectionCard title={t("title")}>

@@ -3,7 +3,7 @@
 import { Group, Kbd, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconArrowUp, IconRobot } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface AssistantPromptInteractionOptions {
   sendPrompt: (prompt: string) => boolean;
@@ -13,7 +13,7 @@ interface AssistantPromptInteractionOptions {
 }
 
 const AssistantPromptDetail = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   return (
     <Group px="md" py="sm" wrap="nowrap">
       <ThemeIcon color="red" variant="light" radius="xl">
@@ -30,7 +30,7 @@ const AssistantPromptDetail = () => {
 };
 
 const AssistantPromptAction = ({ hasPrompt }: { hasPrompt: boolean }) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   return (
     <Group w="100%" px="md" py="xs" justify="space-between" wrap="nowrap" opacity={hasPrompt ? 1 : 0.6}>
       <Group gap="sm" wrap="nowrap">

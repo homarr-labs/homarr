@@ -11,7 +11,7 @@ import { usePersistBoard } from "@homarr/boards/updater";
 import { createId } from "@homarr/common";
 import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSection, ItemLayout } from "~/app/[locale]/boards/_types";
 import { createItemCallback } from "~/components/board/items/actions/create-item";
@@ -42,8 +42,8 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const { updateAndPersistBoard } = usePersistBoard(board);
-  const t = useI18n();
-  const tSelection = useScopedI18n("item.selection");
+  const tCommon = useI18n("common");
+  const tSelection = useI18n("item.selection");
 
   const persistBoard = useCallback(
     (updater: (previous: typeof board) => typeof board) =>
@@ -205,7 +205,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
     const notificationId = `batch-remove-${Date.now()}`;
     showSuccessNotification({
       id: notificationId,
-      title: t("common.success"),
+      title: tCommon("success"),
       message: (
         <Group justify="space-between" wrap="nowrap">
           <Text size="sm">{tSelection("removed", { count })}</Text>
@@ -220,13 +220,13 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
               notifications.hide(notificationId);
             }}
           >
-            {t("common.action.undo")}
+            {tCommon("action.undo")}
           </Button>
         </Group>
       ),
       autoClose: 10_000,
     });
-  }, [board.items, clearSelection, persistBoard, selectedItemIds, t, tSelection]);
+  }, [board.items, clearSelection, persistBoard, selectedItemIds, tCommon, tSelection]);
 
   const moveSelectedItemsToSection = useCallback(
     (targetSectionId: string) => {

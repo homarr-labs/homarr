@@ -1,6 +1,6 @@
 import { Box, Group } from "@mantine/core";
 
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import "@xterm/xterm/css/xterm.css";
 
@@ -22,7 +22,7 @@ export async function generateMetadata() {
   if (!session?.user.permissions.includes("admin")) {
     return {};
   }
-  const t = await getScopedI18n("management");
+  const t = await getI18n("management");
 
   return {
     title: createMetaTitle(t("metaTitle")),

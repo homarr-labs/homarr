@@ -6,7 +6,7 @@ import { IconInfoCircle } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
 import type { KubernetesLabelResourceType } from "@homarr/definitions";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import KubernetesErrorPage from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/error";
 import { HeaderCard } from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-card";
@@ -15,8 +15,7 @@ import { ResourceTile } from "~/app/[locale]/manage/tools/kubernetes/cluster-das
 import { useSelectedKubernetesContextId } from "../kubernetes-context-selector";
 
 export function ClusterDashboard() {
-  const t = useI18n();
-  const tCluster = useScopedI18n("kubernetes.cluster");
+  const tCluster = useI18n("kubernetes.cluster");
   const contextId = useSelectedKubernetesContextId();
 
   const {
@@ -36,7 +35,7 @@ export function ClusterDashboard() {
 
   return (
     <Stack bg="var(--mantine-color-body)">
-      <Title>{t("kubernetes.cluster.title")}</Title>
+      <Title>{tCluster("title")}</Title>
       <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>
         {isClusterError ? (
           Array.from({ length: 3 }).map(() => <KubernetesErrorPage key={createId()} />)
@@ -51,7 +50,7 @@ export function ClusterDashboard() {
         )}
       </SimpleGrid>
 
-      <Title>{t("kubernetes.cluster.capacity.title")}</Title>
+      <Title>{tCluster("capacity.title")}</Title>
 
       {clusterData?.metricsAvailable === false && (
         <Alert color="blue" variant="light" icon={<IconInfoCircle size={18} />}>
@@ -69,7 +68,7 @@ export function ClusterDashboard() {
               ))}
       </SimpleGrid>
 
-      <Title>{t("kubernetes.cluster.resources.title")}</Title>
+      <Title>{tCluster("resources.title")}</Title>
 
       <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>
         {isResourceCountsError

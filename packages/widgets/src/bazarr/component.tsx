@@ -5,7 +5,8 @@ import { Text } from "@mantine/core";
 import { IconAlertTriangle, IconBell, IconDeviceTv, IconMovie, IconPlugConnected } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { getIntegrationName } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
@@ -60,7 +61,7 @@ export default function BazarrWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"bazarr">) {
-  const t = useScopedI18n("widget.bazarr");
+  const t = useI18n("widget.bazarr");
   const { data: badges, error } = clientApi.widget.bazarr.getBadges.useQuery(
     { integrationId: integrationIds[0] ?? "" },
     { enabled: Boolean(integrationIds[0]) },
@@ -106,6 +107,14 @@ export default function BazarrWidget({
         {visibleStatKeys.map((statKey) => {
           const Icon = statIcons[statKey];
           const value = statValues[statKey];
+          let label: string;
+          if (statKey === "sonarrSignalr") {
+            label = `${getIntegrationName("sonarr")} SignalR`;
+          } else if (statKey === "radarrSignalr") {
+            label = `${getIntegrationName("radarr")} SignalR`;
+          } else {
+            label = t(statKey);
+          }
           const isWarning =
             typeof value === "number" &&
             (statKey === "providers" || statKey === "status" || statKey === "announcements") &&
@@ -117,8 +126,8 @@ export default function BazarrWidget({
               <span className={`${classes.statValue} ${isWarning ? classes.statValueWarning : ""}`}>
                 {typeof value === "string" && value.trim() === "" ? "—" : value}
               </span>
-              <span className={classes.statLabel} title={t(statKey)}>
-                {t(statKey)}
+              <span className={classes.statLabel} title={label}>
+                {label}
               </span>
             </div>
           );

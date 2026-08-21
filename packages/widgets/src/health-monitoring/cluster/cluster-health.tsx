@@ -3,6 +3,7 @@ import { Accordion, Box, Center, Flex, Group, RingProgress, Stack, Text } from "
 import { IconBrain, IconCpu, IconCube, IconDatabase, IconDeviceLaptop, IconServer } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
@@ -39,7 +40,7 @@ export const ClusterHealthMonitoring = ({
   width,
   displayMode,
 }: WidgetComponentProps<"healthMonitoring"> & { integrationId: string }) => {
-  const t = useI18n();
+  const t = useI18n("widget.healthMonitoring");
   const healthQuery = clientApi.widget.healthMonitoring.getClusterHealthStatus.useQuery({ integrationId });
   const healthData = getUsableWidgetQueryData(healthQuery);
   const visibleSections = getClusterVisibleSections(displayMode, options.visibleClusterSections);
@@ -71,7 +72,7 @@ export const ClusterHealthMonitoring = ({
   return (
     <Stack h={isAdvanced ? "auto" : "100%"} p="xs" gap={isTiny ? "xs" : "md"} pos="relative">
       <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
-        <WidgetQueryErrorIndicator error={healthQuery.error} label={t("widget.healthMonitoring.name")} />
+        <WidgetQueryErrorIndicator error={healthQuery.error} label={t("name")} />
       </Box>
       {(isAdvanced || options.showUptime) && !isTiny && (
         <Group justify="center" wrap="nowrap">
@@ -102,7 +103,7 @@ export const ClusterHealthMonitoring = ({
           {visibleSections.includes("node") && (
             <ResourceAccordionItem
               value="node"
-              title={t("widget.healthMonitoring.cluster.resource.node.name")}
+              title={t("cluster.resource.node.name")}
               icon={IconServer}
               badge={addBadgeColor({
                 activeCount: activeNodes,
@@ -118,7 +119,7 @@ export const ClusterHealthMonitoring = ({
           {visibleSections.includes("qemu") && (
             <ResourceAccordionItem
               value="qemu"
-              title={t("widget.healthMonitoring.cluster.resource.qemu.name")}
+              title={t("cluster.resource.qemu.name")}
               icon={IconDeviceLaptop}
               badge={addBadgeColor({
                 activeCount: activeVMs,
@@ -134,7 +135,7 @@ export const ClusterHealthMonitoring = ({
           {visibleSections.includes("lxc") && (
             <ResourceAccordionItem
               value="lxc"
-              title={t("widget.healthMonitoring.cluster.resource.lxc.name")}
+              title={t("cluster.resource.lxc.name")}
               icon={IconCube}
               badge={addBadgeColor({
                 activeCount: activeLXCs,
@@ -150,7 +151,7 @@ export const ClusterHealthMonitoring = ({
           {visibleSections.includes("storage") && (
             <ResourceAccordionItem
               value="storage"
-              title={t("widget.healthMonitoring.cluster.resource.storage.name")}
+              title={t("cluster.resource.storage.name")}
               icon={IconDatabase}
               badge={addBadgeColor({
                 activeCount: activeStorage,
@@ -175,8 +176,6 @@ interface SummaryHeaderProps {
 }
 
 const SummaryHeader = ({ cpu, memory, isTiny }: SummaryHeaderProps) => {
-  const t = useI18n();
-
   if (cpu.hidden && memory.hidden) return null;
 
   return (
@@ -198,7 +197,7 @@ const SummaryHeader = ({ cpu, memory, isTiny }: SummaryHeaderProps) => {
             <Stack align="center" justify="center" gap={0}>
               {!isTiny && (
                 <Text fw={500} size="sm">
-                  {t("widget.healthMonitoring.cluster.summary.cpu")}
+                  {invariantTechnicalLabels.cpu}
                 </Text>
               )}
               <Text size="xs">{cpu.value.toFixed(1)}%</Text>
@@ -221,7 +220,7 @@ const SummaryHeader = ({ cpu, memory, isTiny }: SummaryHeaderProps) => {
             <Stack align="center" justify="center" gap={0}>
               {!isTiny && (
                 <Text size="sm" fw={500}>
-                  {t("widget.healthMonitoring.cluster.summary.memory")}
+                  {invariantTechnicalLabels.ram}
                 </Text>
               )}
               <Text size="xs">{memory.value.toFixed(1)}%</Text>

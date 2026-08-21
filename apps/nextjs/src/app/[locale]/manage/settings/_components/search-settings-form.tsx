@@ -4,7 +4,7 @@ import { Select } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import type { UseFormReturnType } from "@homarr/form";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { SectionCard } from "~/components/manage/section-card";
 import type { FormValues } from "./settings-form";
@@ -15,7 +15,7 @@ interface SearchSettingsFormProps {
 }
 
 export const SearchSettingsForm = ({ form, selectableSearchEngines }: SearchSettingsFormProps) => {
-  const tSearch = useScopedI18n("management.page.settings.section.search");
+  const tSearch = useI18n("management.page.settings.section.search");
 
   return (
     <SectionCard title={tSearch("title")}>

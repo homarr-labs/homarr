@@ -9,7 +9,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getSafeAppHref } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
 import { TourTarget } from "~/components/layout/header/tour-target";
@@ -52,7 +52,8 @@ export default async function AppsPage(props: AppsPageProps) {
   const { items: apps, totalCount } = canManageAll
     ? await api.app.getPaginated(searchParams)
     : { items: [], totalCount: 0 };
-  const t = await getScopedI18n("app");
+  const t = await getI18n("app");
+  const tCommon = await getI18n("common");
   const hasSearch = canManageAll && Boolean(searchParams.search?.trim());
 
   const emptyState = !canManageAll ? (
@@ -67,7 +68,7 @@ export default async function AppsPage(props: AppsPageProps) {
       icon={IconBox}
       title={t("page.list.noResults.filteredTitle")}
       description={t("page.list.noResults.filteredDescription", { search: searchParams.search ?? "" })}
-      action={{ label: t("page.list.noResults.clearSearch"), href: "/manage/apps" }}
+      action={{ label: tCommon("action.clearSearch"), href: "/manage/apps" }}
     />
   ) : (
     <NoResults
@@ -80,7 +81,7 @@ export default async function AppsPage(props: AppsPageProps) {
 
   const page = (
     <ManageCollectionPage
-      title={t("page.list.title")}
+      title={tCommon("entity.apps")}
       ariaLabel={t("page.list.ariaLabel")}
       itemCount={apps.length}
       emptyState={emptyState}
@@ -115,7 +116,7 @@ export default async function AppsPage(props: AppsPageProps) {
           key={app.id}
           app={app}
           canDelete={canDelete}
-          editLabel={t("page.list.action.edit", { name: app.name })}
+          editLabel={tCommon("action.editNamed", { name: app.name })}
         />
       ))}
     </ManageCollectionPage>

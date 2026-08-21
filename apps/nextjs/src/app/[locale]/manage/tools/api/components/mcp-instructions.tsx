@@ -37,7 +37,7 @@ import {
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { CopyApiKeyModal } from "./copy-api-key-modal";
 import type { McpToolGroup } from "./api-page-tabs";
@@ -55,7 +55,8 @@ interface McpInstructionsProps {
 }
 
 export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstructionsProps) {
-  const t = useScopedI18n("management.page.tool.api.tab.mcp");
+  const t = useI18n("management.page.tool.api.tab.mcp");
+  const tCommon = useI18n("common");
   const { openModal } = useModalAction(CopyApiKeyModal);
   const { mutate: createApiKey, isPending } = clientApi.apiKeys.create.useMutation({
     async onSuccess(data) {
@@ -137,7 +138,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
             {t("endpoint.title")}
           </Group>
         </Title>
-        <CopyableCode value={mcpUrl} copyLabel={t("copy")} />
+        <CopyableCode value={mcpUrl} copyLabel={tCommon("action.copy")} />
       </div>
 
       <div>
@@ -237,7 +238,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
                     })}
                   </ListItem>
                 </List>
-                <CopyableCode value={streamableHttpConfig} copyLabel={t("copy")} />
+                <CopyableCode value={streamableHttpConfig} copyLabel={tCommon("action.copy")} />
                 <Alert variant="light" color="yellow" icon={<IconAlertTriangle size={16} />} p="xs">
                   <Text size="xs">{t("clientConfig.streamableHttp.replaceHint")}</Text>
                 </Alert>
@@ -252,7 +253,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
                 <Text size="sm" c="dimmed">
                   {t("clientConfig.stdio.description", { dependency: "npx" })}
                 </Text>
-                <CopyableCode value={stdioConfig} copyLabel={t("copy")} />
+                <CopyableCode value={stdioConfig} copyLabel={tCommon("action.copy")} />
               </Stack>
             </AccordionPanel>
           </AccordionItem>
@@ -269,7 +270,7 @@ export function McpInstructions({ baseUrl, hasApiKeys, toolGroups }: McpInstruct
         <Text size="sm" c="dimmed" mb="xs">
           {t("testConnection.description")}
         </Text>
-        <CopyableCode value={testCommand} copyLabel={t("copy")} />
+        <CopyableCode value={testCommand} copyLabel={tCommon("action.copy")} />
         <Text size="xs" c="dimmed" mt="xs">
           {t("testConnection.hint")}
         </Text>

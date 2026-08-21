@@ -7,14 +7,15 @@ import { Button } from "@mantine/core";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { BoardRenameModal } from "~/components/board/modals/board-rename-modal";
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 
 export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: boolean }) => {
   const board = useRequiredBoard();
-  const t = useScopedI18n("board.setting");
+  const t = useI18n("board.setting");
+  const tCommonAction = useI18n("common.action");
   const router = useRouter();
   const { openConfirmModal } = useConfirmModal();
   const { openModal } = useModalAction(BoardRenameModal);
@@ -104,11 +105,11 @@ export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: 
         />
       )}
       <DangerZoneItem
-        label={t("section.dangerZone.action.delete.label")}
+        label={tCommonAction("delete")}
         description={t("section.dangerZone.action.delete.description")}
         action={
           <Button variant="subtle" color="red" loading={isDeletePending} onClick={onDeleteClick}>
-            {t("section.dangerZone.action.delete.button")}
+            {tCommonAction("delete")}
           </Button>
         }
       />

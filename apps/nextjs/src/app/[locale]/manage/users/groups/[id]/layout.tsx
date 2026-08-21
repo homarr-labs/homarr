@@ -3,7 +3,7 @@ import { Button, Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core"
 import { IconId, IconLock, IconSettings, IconUsersGroup } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
-import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
@@ -19,8 +19,8 @@ export default async function Layout(props: PropsWithChildren<LayoutProps>) {
 
   const { children } = props;
 
-  const t = await getI18n();
-  const tGroup = await getScopedI18n("management.page.group");
+  const tGroupRoot = await getI18n("group");
+  const tGroup = await getI18n("management.page.group");
   const group = await api.group.getById({ id: params.id });
 
   return (
@@ -31,7 +31,7 @@ export default async function Layout(props: PropsWithChildren<LayoutProps>) {
           <Group justify="space-between" align="center">
             <Stack gap={0}>
               <Title order={3}>{group.name}</Title>
-              <Text c="gray.5">{t("group.name")}</Text>
+              <Text c="gray.5">{tGroupRoot("name")}</Text>
             </Stack>
             <Button component={Link} href="/manage/users/groups" color="gray" variant="light">
               {tGroup("back")}

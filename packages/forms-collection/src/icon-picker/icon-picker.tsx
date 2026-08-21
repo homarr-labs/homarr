@@ -35,7 +35,7 @@ import {
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { supportedLanguages } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { UploadMedia } from "../upload-media/upload-media";
 import { arrangeIconPickerSections, isDirectImageUrl, isImageSource, isSvgImage } from "./icon-picker.utils";
@@ -72,7 +72,7 @@ export const IconPicker = ({
   const [keyboardIndex, setKeyboardIndex] = useState(-1);
   const [previewState, setPreviewState] = useState<PreviewState>("idle");
   const { data: session } = useSession();
-  const tCommon = useScopedI18n("common");
+  const tCommon = useI18n("common");
   const [debouncedDraft] = useDebouncedValue(draft, 250);
 
   const directUrl = isDirectImageUrl(draft) ? draft.trim() : null;

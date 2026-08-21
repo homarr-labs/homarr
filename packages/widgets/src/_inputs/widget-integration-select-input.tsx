@@ -2,20 +2,20 @@
 
 import { Select, Text } from "@mantine/core";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
-
-const useIntegrationSelectTranslation = () => useScopedI18n("widget.integrationSelect");
 
 export const WidgetIntegrationSelectInput = ({
   property,
   kind,
   options,
 }: CommonWidgetInputProps<"integrationSelect">) => {
-  const t = useIntegrationSelectTranslation();
+  const t = useI18n("widget.integrationSelect");
+  const tSelect = useI18n("widget.common.select");
+  const tCommon = useI18n("common");
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
 
@@ -35,8 +35,8 @@ export const WidgetIntegrationSelectInput = ({
   }
 
   const description = options.withDescription ? tInput("description") : undefined;
-  const placeholder = isPending ? t("loading") : t("placeholder");
-  const error = isError ? t("loadError") : undefined;
+  const placeholder = isPending ? tSelect("loading") : t("placeholder");
+  const error = isError ? tSelect("loadError") : undefined;
 
   return (
     <Select
@@ -45,7 +45,7 @@ export const WidgetIntegrationSelectInput = ({
       placeholder={placeholder}
       clearable={options.clearable}
       searchable={options.searchable}
-      nothingFoundMessage={t("noResults")}
+      nothingFoundMessage={tCommon("noResults")}
       data={data}
       disabled={isError}
       error={error}

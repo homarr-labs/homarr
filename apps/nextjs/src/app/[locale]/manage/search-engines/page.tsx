@@ -8,7 +8,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getSafeApplicationUrl } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
 import { ManageCollectionItem, ManageCollectionPage } from "~/components/manage/manage-collection";
@@ -32,7 +32,8 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
 
   const searchParams = searchParamsSchema.parse(await props.searchParams);
   const { items: searchEngines, totalCount } = await api.searchEngine.getPaginated(searchParams);
-  const t = await getScopedI18n("search.engine");
+  const t = await getI18n("search.engine");
+  const tCommon = await getI18n("common");
   const canCreate = session.user.permissions.includes("search-engine-create");
   const canModify = session.user.permissions.includes("search-engine-modify-all");
   const canDelete = session.user.permissions.includes("search-engine-full-all");
@@ -40,7 +41,7 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
 
   return (
     <ManageCollectionPage
-      title={t("page.list.title")}
+      title={tCommon("entity.searchEngines")}
       ariaLabel={t("page.list.ariaLabel")}
       itemCount={searchEngines.length}
       emptyState={
@@ -49,7 +50,7 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
             icon={IconSearch}
             title={t("page.list.noResults.filteredTitle")}
             description={t("page.list.noResults.filteredDescription", { search: searchParams.search ?? "" })}
-            action={{ label: t("page.list.noResults.clearSearch"), href: "/manage/search-engines" }}
+            action={{ label: tCommon("action.clearSearch"), href: "/manage/search-engines" }}
           />
         ) : (
           <NoResults
@@ -105,7 +106,8 @@ interface SearchEngineItemProps {
 }
 
 const SearchEngineItem = async ({ searchEngine, canModify, canDelete }: SearchEngineItemProps) => {
-  const t = await getScopedI18n("search.engine");
+  const t = await getI18n("search.engine");
+  const actionT = await getI18n("common.action");
   const isIntegration = searchEngine.type === "fromIntegration";
   const previewUrl =
     searchEngine.type === "generic" && searchEngine.urlTemplate !== null
@@ -158,7 +160,7 @@ const SearchEngineItem = async ({ searchEngine, canModify, canDelete }: SearchEn
                 variant="subtle"
                 color="gray"
                 size={44}
-                aria-label={t("page.list.action.edit", { name: searchEngine.name })}
+                aria-label={actionT("editNamed", { name: searchEngine.name })}
               >
                 <IconPencil size={18} stroke={1.5} />
               </ActionIcon>

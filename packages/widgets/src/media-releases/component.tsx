@@ -23,7 +23,7 @@ import { getMantineColor, toValidDate } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
 import type { MediaRelease } from "@homarr/integrations/types";
 import { mediaTypeConfigurations } from "@homarr/integrations/types";
-import type { TranslationFunction } from "@homarr/translation";
+import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
@@ -43,7 +43,7 @@ export default function MediaReleasesWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"mediaReleases">) {
-  const t = useI18n();
+  const t = useI18n("widget.mediaReleases");
   const releasesQuery = clientApi.widget.mediaRelease.getMediaReleases.useQuery({ integrationIds });
   const response = getUsableWidgetQueryData(releasesQuery);
 
@@ -73,7 +73,7 @@ export default function MediaReleasesWidget({
       {(failedIntegrations.length > 0 || releasesQuery.error) && (
         <Group pos="absolute" top={4} right={4} gap={0}>
           <IntegrationErrorIndicator results={failedIntegrations} />
-          <WidgetQueryErrorIndicator error={releasesQuery.error} label={t("widget.mediaReleases.name")} />
+          <WidgetQueryErrorIndicator error={releasesQuery.error} label={t("name")} />
         </Group>
       )}
     </Box>
@@ -101,7 +101,7 @@ const formatReleaseDate = (value: unknown, locale: string, compact: boolean) => 
 
 const Item = ({ item, options, isAdvanced, width, height }: ItemProps) => {
   const locale = useCurrentIntlLocale();
-  const t = useI18n();
+  const t = useI18n("widget.mediaReleases");
   const length = formatLength(item.length, item.type, t);
   const isCompact = !isAdvanced && (width < 340 || height < 180);
   const isTiny = !isAdvanced && (width < 220 || height < 105);
@@ -281,12 +281,16 @@ const Info = ({ icon: Icon, label }: IconAndLabelProps) => {
   );
 };
 
-const formatLength = (length: number | undefined, type: MediaRelease["type"], t: TranslationFunction) => {
+const formatLength = (
+  length: number | undefined,
+  type: MediaRelease["type"],
+  t: ScopedTranslationFunction<"widget.mediaReleases">,
+) => {
   if (!length) return undefined;
   if (type === "movie" || type === "tv" || type === "video" || type === "music" || type === "article") {
     return {
       type: "duration" as const,
-      label: t("widget.mediaReleases.length.duration", {
+      label: t("length.duration", {
         length: Math.round(length / 60).toString(),
       }),
     };

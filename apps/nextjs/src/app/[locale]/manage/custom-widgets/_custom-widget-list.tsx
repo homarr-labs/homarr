@@ -5,7 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconAlertTriangle, IconApi, IconPencil, IconSparkles } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { CustomWidgetSourceSetupDialog } from "~/components/custom-widgets/custom-widget-source-setup-dialog";
@@ -18,20 +18,22 @@ interface CustomWidgetListProps {
 }
 
 export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
-  const t = useScopedI18n("customWidget");
+  const t = useI18n("customWidget");
+  const tCommon = useI18n("common");
+  const tEntities = useI18n("common.entity");
 
   if (definitions.length === 0) {
     return (
       <NoResults
         icon={IconApi}
         title={t("page.list.noResults")}
-        action={{ href: "/manage/custom-widgets/new", label: t("action.create") }}
+        action={{ href: "/manage/custom-widgets/new", label: tCommon("action.create") }}
       />
     );
   }
 
   return (
-    <ManageCollectionList ariaLabel={t("page.list.title")}>
+    <ManageCollectionList ariaLabel={tEntities("customWidgets")}>
       {definitions.map((definition) => (
         <CustomWidgetRow key={definition.id} widget={definition} />
       ))}
@@ -42,7 +44,8 @@ export const CustomWidgetList = ({ definitions }: CustomWidgetListProps) => {
 type WidgetDef = RouterOutputs["customWidget"]["list"][number];
 
 function CustomWidgetRow({ widget }: { widget: WidgetDef }) {
-  const t = useScopedI18n("customWidget");
+  const t = useI18n("customWidget");
+  const tCommon = useI18n("common");
   const [sourceSetupOpened, sourceSetupControls] = useDisclosure(false);
   const origins = [...new Set(widget.sources.map((source) => source.origin))];
 
@@ -94,7 +97,7 @@ function CustomWidgetRow({ widget }: { widget: WidgetDef }) {
                 size="sm"
                 leftSection={<IconPencil size={16} stroke={1.5} />}
               >
-                {t("action.edit")}
+                {tCommon("action.edit")}
               </Button>
             )}
             <CustomWidgetRowActions
@@ -122,14 +125,8 @@ function CustomWidgetRow({ widget }: { widget: WidgetDef }) {
 }
 
 /** Everything that decides whether this widget can actually run right now. */
-function CustomWidgetStatusBadges({
-  widget,
-  onConfigureSources,
-}: {
-  widget: WidgetDef;
-  onConfigureSources(): void;
-}) {
-  const t = useScopedI18n("customWidget");
+function CustomWidgetStatusBadges({ widget, onConfigureSources }: { widget: WidgetDef; onConfigureSources(): void }) {
+  const t = useI18n("customWidget");
 
   if (widget.migrationRequired) {
     return (

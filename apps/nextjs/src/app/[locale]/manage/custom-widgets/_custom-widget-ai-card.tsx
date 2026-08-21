@@ -4,7 +4,7 @@ import { Accordion, Button, Group, Stack, Text, TextInput, Textarea } from "@man
 import { IconClipboard, IconSparkles } from "@tabler/icons-react";
 
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { CopyAiPromptButton } from "./_copy-ai-prompt-button";
 
@@ -18,7 +18,7 @@ interface AiCardProps {
 }
 
 export function CustomWidgetAiCard(props: AiCardProps) {
-  const t = useScopedI18n("customWidget.workbench.ai");
+  const t = useI18n("customWidget.workbench.ai");
   return (
     <Accordion variant="contained">
       <Accordion.Item value="ai">

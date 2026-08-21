@@ -34,7 +34,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { createId, isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
 import type { ReleaseProviderKind } from "@homarr/definitions";
 import { getReleaseProviderIconUrl, getReleaseProviderName } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -54,7 +54,7 @@ const formatRelativeDate = (value: string): string => {
 };
 
 export default function ReleasesWidget({ options, itemId, width, displayMode }: WidgetComponentProps<"releases">) {
-  const t = useScopedI18n("widget.releases");
+  const t = useI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
   const board = useRequiredBoard();
@@ -359,7 +359,7 @@ interface DetailsDisplayProps {
 }
 
 const DetailsDisplay = ({ repository, isExpanded, toggleExpandedDisplay }: DetailsDisplayProps) => {
-  const t = useScopedI18n("widget.releases");
+  const t = useI18n("widget.releases");
   const formatter = useFormatter();
 
   return (
@@ -583,7 +583,7 @@ const ExpandedDisplay = ({
   markReleaseViewed,
   toggleExpandedDisplay,
 }: ExtendedDisplayProps) => {
-  const t = useScopedI18n("widget.releases");
+  const t = useI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
   const releaseUrl = getSafeApplicationUrl(repository.releaseUrl);

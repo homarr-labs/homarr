@@ -31,7 +31,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelAle
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,
-      message: (t) => t("widget.beszelAlerts.error.internalServerError"),
+      message: (t) => t("widget.beszel.error.internalServerError"),
     },
   },
 }).withDynamicImport(() => import("./component"));

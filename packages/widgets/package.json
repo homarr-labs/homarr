@@ -25,6 +25,7 @@
     "./errors": "./src/errors/component.tsx",
     "./manifest": "./src/manifest.ts",
     "./options": "./src/options.ts",
+    "./option-translation": "./src/option-translation.ts",
     "./errors/classes": "./src/errors/index.ts",
     "./widget-integration-select": "./src/widget-integration-select.tsx",
     "./modals": "./src/modals/index.ts",

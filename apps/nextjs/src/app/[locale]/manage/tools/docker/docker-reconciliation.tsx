@@ -38,12 +38,12 @@ import {
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { UrlTemplateMode } from "@homarr/definitions";
-import { getIntegrationName } from "@homarr/definitions";
+import { getIntegrationName, invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr } from "@homarr/modals-collection";
 import { showErrorNotification } from "@homarr/notifications";
 import { normalizeServiceUrl, ServiceUrlTemplate } from "@homarr/onboarding";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import type { DockerReconciliationInboxFilter } from "./docker-reconciliation-inbox";
@@ -57,8 +57,9 @@ type ReconciliationCandidate = RouterOutputs["docker"]["reconcileServices"]["can
 type ServiceHealth = RouterOutputs["docker"]["getServiceHealth"]["services"][number];
 
 export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOrigin: string }) => {
-  const t = useScopedI18n("docker.reconciliation");
-  const tGlobal = useI18n();
+  const t = useI18n("docker.reconciliation");
+  const tCommon = useI18n("common");
+  const tDockerAction = useI18n("docker.action");
   const utils = clientApi.useUtils();
   const panelId = useId();
   const [isOpen, setIsOpen] = useLocalStorage({
@@ -77,8 +78,8 @@ export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOri
     },
     onError() {
       showErrorNotification({
-        title: t("refreshError.title"),
-        message: t("refreshError.message"),
+        title: tDockerAction("refresh.notification.error.title"),
+        message: tDockerAction("refresh.notification.error.message"),
       });
     },
   });
@@ -102,7 +103,7 @@ export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOri
         <Stack gap="sm">
           <Text size="sm">{t("loadError.message")}</Text>
           <Button variant="light" color="red" size="xs" w="fit-content" onClick={() => void reconciliation.refetch()}>
-            {tGlobal("common.action.tryAgain")}
+            {tCommon("action.tryAgain")}
           </Button>
         </Stack>
       </Alert>
@@ -118,7 +119,7 @@ export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOri
       ["newRecognized", "newApp", "moved"].includes(state) && !dismissedCandidateKeys.includes(candidateKey),
   ).length;
   const isRefreshing = refreshInventory.isPending || reconciliation.isFetching || health.isFetching;
-  const toggleLabel = isOpen ? tGlobal("common.action.hide") : t("action.review");
+  const toggleLabel = isOpen ? tCommon("action.hide") : t("action.review");
 
   return (
     <Paper withBorder p="sm">
@@ -188,7 +189,7 @@ export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOri
                   leftSection={<IconRefresh size={14} />}
                   onClick={() => refreshInventory.mutate()}
                 >
-                  {tGlobal("docker.action.refresh.label")}
+                  {tCommon("action.refresh")}
                 </Button>
               </Group>
             </Group>
@@ -241,8 +242,8 @@ const DockerReconciliationCandidate = ({
   urlMode: UrlTemplateMode;
   onDismiss: () => void;
 }) => {
-  const t = useScopedI18n("docker.reconciliation");
-  const tGlobal = useI18n();
+  const t = useI18n("docker.reconciliation");
+  const tIntegration = useI18n("integration");
   const { openModal: openAppModal } = useModalAction(AddDockerAppToHomarr);
   const { openModal: openIntegrationModal } = useModalAction(IntegrationSelectModal);
   const templateUrl = getTemplateUrl(candidate, serverOrigin, urlMode);
@@ -300,7 +301,7 @@ const DockerReconciliationCandidate = ({
                 })
               }
             >
-              {tGlobal("integration.field.createApp.label")}
+              {tIntegration("field.createApp.label")}
             </Button>
           )}
           {target.kind === "setupIntegration" && (
@@ -364,7 +365,7 @@ const DockerReconciliationCandidate = ({
 
           {actionNeedsUrl && (
             <Autocomplete
-              label={tGlobal("integration.field.url.label")}
+              label={invariantTechnicalLabels.url}
               value={url}
               data={urlSuggestions}
               placeholder={t("url.manual")}

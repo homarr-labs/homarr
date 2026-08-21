@@ -4,9 +4,10 @@ import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil } from "@table
 
 import { useSession } from "@homarr/auth/client";
 import { useEditMode } from "@homarr/boards/edit-mode";
+import { getWidgetName } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { WidgetDefinition } from "@homarr/widgets/definition";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
@@ -34,7 +35,7 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
   const { data: session } = useSession();
   const canDuplicate = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const refResetErrorBoundaryOnNextRender = useRef(false);
-  const tItem = useScopedI18n("item");
+  const tItem = useI18n("item");
   const t = useI18n();
   const { openModal } = useModalAction(LazyWidgetEditModal);
   const openMoveModal = useOpenItemMoveModal();
@@ -43,7 +44,7 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
     useItemActions();
   const { integrations: integrationData, section } = useSectionContext();
   const settings = useSettings();
-  const label = item.advancedOptions.title?.trim() || t(`widget.${item.kind}.name`);
+  const label = item.advancedOptions.title?.trim() || getWidgetName(item.kind, t);
 
   // Reset error boundary on next render if item has been edited
   useEffect(() => {
@@ -92,7 +93,7 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
       },
       {
         title(translate) {
-          return `${translate("item.edit.title")} - ${translate(`widget.${item.kind}.name`)}`;
+          return `${translate("item.edit.title")} - ${getWidgetName(item.kind, translate)}`;
         },
       },
     );

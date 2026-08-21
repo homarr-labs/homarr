@@ -2,7 +2,7 @@ import { Box, Group, Paper, Stack, Text } from "@mantine/core";
 import { IconNetwork } from "@tabler/icons-react";
 
 import { formatByteRate } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
@@ -20,7 +20,7 @@ export const CombinedNetworkTrafficChart = ({
   labelDisplayMode: LabelDisplayModeOption;
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, up: usage.up, down: usage.down }));
-  const t = useScopedI18n("widget.systemResources.card");
+  const t = useI18n("widget.systemResources.card");
 
   return (
     <CommonChart

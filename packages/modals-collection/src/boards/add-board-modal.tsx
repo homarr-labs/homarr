@@ -12,7 +12,8 @@ import { useI18n } from "@homarr/translation/client";
 import { boardColumnCountSchema, boardCreateSchema, boardNameSchema } from "@homarr/validation/board";
 
 export const AddBoardModal = createModal(({ actions }) => {
-  const t = useI18n();
+  const tBoard = useI18n("board");
+  const tCommon = useI18n("common");
   const router = useRouter();
   const form = useZodForm(boardCreateSchema, {
     mode: "controlled",
@@ -39,8 +40,8 @@ export const AddBoardModal = createModal(({ actions }) => {
           onSuccess: (result) => {
             actions.closeModal();
             showSuccessNotification({
-              title: t("board.action.create.notification.success.title"),
-              message: t("board.action.create.notification.success.message", { name: values.name }),
+              title: tBoard("action.create.notification.success.title"),
+              message: tBoard("action.create.notification.success.message", { name: values.name }),
             });
             const name = encodeURIComponent(result.name);
             const layoutId = encodeURIComponent(result.layoutId);
@@ -48,8 +49,8 @@ export const AddBoardModal = createModal(({ actions }) => {
           },
           onError() {
             showErrorNotification({
-              title: t("board.action.create.notification.error.title"),
-              message: t("board.action.create.notification.error.message", { name: values.name }),
+              title: tBoard("action.create.notification.error.title"),
+              message: tBoard("action.create.notification.error.message", { name: values.name }),
             });
           },
         });
@@ -57,7 +58,7 @@ export const AddBoardModal = createModal(({ actions }) => {
     >
       <Stack>
         <TextInput
-          label={t("board.field.name.label")}
+          label={tCommon("field.name")}
           data-autofocus
           {...form.getInputProps("name")}
           description={
@@ -71,7 +72,7 @@ export const AddBoardModal = createModal(({ actions }) => {
             ) : null
           }
         />
-        <InputWrapper label={t("board.field.columnCount.label")} {...form.getInputProps("columnCount")}>
+        <InputWrapper label={tBoard("field.columnCount.label")} {...form.getInputProps("columnCount")}>
           <Slider
             min={boardColumnCountSchema.minValue ?? undefined}
             max={boardColumnCountSchema.maxValue ?? undefined}
@@ -81,17 +82,17 @@ export const AddBoardModal = createModal(({ actions }) => {
         </InputWrapper>
 
         <Switch
-          label={t("board.field.isPublic.label")}
-          description={t("board.field.isPublic.description")}
+          label={tBoard("field.isPublic.label")}
+          description={tBoard("field.isPublic.description")}
           {...form.getInputProps("isPublic")}
         />
 
         <Group justify="right">
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
-            {t("common.action.cancel")}
+            {tCommon("action.cancel")}
           </Button>
           <Button type="submit" loading={isPending}>
-            {t("common.action.create")}
+            {tCommon("action.create")}
           </Button>
         </Group>
       </Stack>
@@ -102,7 +103,8 @@ export const AddBoardModal = createModal(({ actions }) => {
 });
 
 export const useBoardNameStatus = (name: string) => {
-  const t = useI18n();
+  const tBoard = useI18n("board");
+  const tCommon = useI18n("common");
   const [debouncedName] = useDebouncedValue(name, 250);
   const { data: boardExists, isLoading } = clientApi.board.exists.useQuery(debouncedName, {
     enabled: boardNameSchema.safeParse(debouncedName).success,
@@ -115,19 +117,19 @@ export const useBoardNameStatus = (name: string) => {
         ? undefined
         : isLoading
           ? {
-              label: t("board.action.create.availability.checking"),
+              label: tBoard("action.create.availability.checking"),
             }
           : boardExists === undefined
             ? undefined
             : boardExists
               ? {
                   icon: IconAlertTriangle,
-                  label: t("common.zod.errors.custom.boardAlreadyExists"), // The board ${debouncedName} already exists
+                  label: tCommon("zod.errors.custom.boardAlreadyExists"), // The board ${debouncedName} already exists
                   color: "red",
                 }
               : {
                   icon: IconCircleCheck,
-                  label: t("board.action.create.availability.available", { name: debouncedName }),
+                  label: tBoard("action.create.availability.available", { name: debouncedName }),
                   color: "green",
                 },
   };

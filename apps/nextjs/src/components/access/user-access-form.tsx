@@ -3,7 +3,7 @@ import { Anchor, Box, Button, Group, Stack, Table, TableTbody, TableTh, TableThe
 import { IconPlus } from "@tabler/icons-react";
 
 import { useModalAction } from "@homarr/modals";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link, UserAvatar } from "@homarr/ui";
 
 import type { AccessQueryData } from "./access-settings";
@@ -42,8 +42,8 @@ export const UsersAccessForm = <TPermission extends string>({
     new Map(accessQueryData.users.map(({ user }) => [user.id, user])),
   );
   const { openModal } = useModalAction(UserSelectModal);
-  const t = useI18n();
-  const tPermissions = useScopedI18n("permission");
+  const tCommon = useI18n("common");
+  const tPermissions = useI18n("permission");
   const form = useForm({
     initialValues: {
       items: accessQueryData.users.map(({ user, permission }) => ({
@@ -102,10 +102,10 @@ export const UsersAccessForm = <TPermission extends string>({
 
           <Group justify="space-between">
             <Button rightSection={<IconPlus size="1rem" />} variant="light" onClick={handleAddUser}>
-              {t("common.action.add")}
+              {tCommon("action.add")}
             </Button>
             <Button type="submit" loading={isPending}>
-              {t("permission.action.saveUser")}
+              {tPermissions("action.saveUser")}
             </Button>
           </Group>
         </Stack>

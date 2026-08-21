@@ -19,7 +19,8 @@ interface GroupSelectFormType {
 }
 
 export const GroupSelectModal = createModal<InnerProps>(({ actions, innerProps }) => {
-  const t = useI18n();
+  const tGroup = useI18n("group.action.select");
+  const tCommon = useI18n("common");
   const { data: groups, isPending } = clientApi.group.selectable.useQuery({
     withPermissions: innerProps.withPermissions,
   });
@@ -39,18 +40,18 @@ export const GroupSelectModal = createModal<InnerProps>(({ actions, innerProps }
     actions.closeModal();
   };
 
-  const confirmLabel = innerProps.confirmLabel ?? t("common.action.add");
+  const confirmLabel = innerProps.confirmLabel ?? tCommon("action.add");
 
   return (
     <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
       <Stack>
         <Select
           {...form.getInputProps("groupId")}
-          label={t("group.action.select.label")}
+          label={tGroup("label")}
           clearable
           searchable
           leftSection={isPending ? <Loader size="xs" /> : undefined}
-          nothingFoundMessage={t("group.action.select.notFound")}
+          nothingFoundMessage={tGroup("notFound")}
           limit={5}
           data={groups
             ?.filter((group) => !innerProps.presentGroupIds.includes(group.id))
@@ -58,7 +59,7 @@ export const GroupSelectModal = createModal<InnerProps>(({ actions, innerProps }
         />
         <Group justify="end">
           <Button variant="default" onClick={actions.closeModal}>
-            {t("common.action.cancel")}
+            {tCommon("action.cancel")}
           </Button>
           <Button type="submit" loading={loading}>
             {confirmLabel}

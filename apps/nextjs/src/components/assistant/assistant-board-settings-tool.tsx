@@ -40,7 +40,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
 import {
@@ -97,7 +97,8 @@ export const AssistantConfigureBoardSettingsTool = ({
   status,
   toolCallId,
 }: ToolCallMessagePartProps<ConfigureBoardSettingsArgs, ConfigureBoardSettingsResult>) => {
-  const t = useScopedI18n("common.assistant.configureBoardSettings");
+  const t = useI18n("assistant.configureBoardSettings");
+  const actionT = useI18n("common.action");
   const hasCompleteArguments = hasCompleteAssistantToolArguments(status);
   const boardId = args?.boardId ?? "";
   const settings = clientApi.board.getBoardSettings.useQuery(
@@ -150,7 +151,7 @@ export const AssistantConfigureBoardSettingsTool = ({
         <Stack gap="sm">
           <Text size="sm">{t("loadErrorDescription")}</Text>
           <Button variant="light" color="red" size="compact-sm" w="fit-content" onClick={() => settings.refetch()}>
-            {t("retry")}
+            {actionT("tryAgain")}
           </Button>
         </Stack>
       </Alert>
@@ -199,7 +200,8 @@ const BoardSettingsForm = ({
   onSubmit: (changes: AssistantBoardSettingsChanges) => void;
   onCancel: () => void;
 }) => {
-  const t = useScopedI18n("common.assistant.configureBoardSettings");
+  const t = useI18n("assistant.configureBoardSettings");
+  const actionT = useI18n("common.action");
   const boardT = useI18n();
   const [submitting, setSubmitting] = useState(false);
   const currentValues = useMemo(() => toCurrentValues(current), [current]);
@@ -297,7 +299,7 @@ const BoardSettingsForm = ({
                           leftSection={copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
                           onClick={copy}
                         >
-                          {copied ? t("copied") : t("copy")}
+                          {copied ? t("copied") : actionT("copy")}
                         </Button>
                       </Tooltip>
                     )}

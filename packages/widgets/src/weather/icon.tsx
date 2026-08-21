@@ -16,7 +16,7 @@ import {
 } from "@tabler/icons-react";
 import { metricToImperial } from "@homarr/common";
 import type { TranslationObject } from "@homarr/translation";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetProps } from "../definition";
@@ -85,8 +85,8 @@ export const WeatherDescription = ({
   maxWindGusts,
   humidity,
 }: WeatherDescriptionProps) => {
-  const t = useScopedI18n("widget.weather");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.weather");
+  const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();
 
   const name = getWeatherKind(weatherCode);
