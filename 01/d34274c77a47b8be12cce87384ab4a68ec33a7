@@ -1,0 +1,24 @@
+packages/modals-collection/src/apps/app-select-modal.tsx
+  s_40f04ebdd68b8f::t_6bc87b3d34c6c7 3,17,107-118
+apps/docs/docs/management/boards/index.mdx
+  s_40f04ebdd68b8f::t_27aa5f4dc77f6f 211-213
+packages/modals-collection/src/apps/app-select-modal.spec.tsx
+  s_40f04ebdd68b8f::t_e75ff004c8b07f 77
+  s_40f04ebdd68b8f::t_6bc87b3d34c6c7 170-185
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "01d34274c77a47b8be12cce87384ab4a68ec33a7",
+  "prompts": {},
+  "sessions": {
+    "s_40f04ebdd68b8f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02415-bf29-7e10-bca3-4dbf8f475de5",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
