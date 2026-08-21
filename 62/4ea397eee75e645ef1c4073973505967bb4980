@@ -1,0 +1,164 @@
+apps/nextjs/src/components/tips/storage.ts
+  s_40f04ebdd68b8f::t_1ece03ea3647d0 1-23,26-37,40-50
+  s_40f04ebdd68b8f::t_6212441d6795fc 24-25,38-39
+apps/nextjs/src/components/tips/index.ts
+  s_40f04ebdd68b8f::t_8b1bede55e167b 13
+  s_40f04ebdd68b8f::t_2a236edf4ee293 3-12,14-15
+  s_40f04ebdd68b8f::t_98545bc9c152b6 2
+  s_40f04ebdd68b8f::t_120e0b97021ad1 1
+apps/nextjs/src/components/tips/types.ts
+  s_40f04ebdd68b8f::t_7bab07e3618c90 48-49,51
+  s_40f04ebdd68b8f::t_12ff5bca84278b 4-27,34,42
+  s_40f04ebdd68b8f::t_6238787a124295 1-3,28-33,35-41,43-47,50,52-79
+apps/nextjs/src/components/board/items/item-menu.tsx
+  s_40f04ebdd68b8f::t_71dfe37f8d3e66 110
+  s_40f04ebdd68b8f::t_be01d09047b176 6
+  s_40f04ebdd68b8f::t_3dae6d024690e0 14
+  s_40f04ebdd68b8f::t_3334b049717bb2 51-52,54-55
+  s_40f04ebdd68b8f::t_7bab07e3618c90 47,53
+apps/nextjs/src/app/[locale]/layout.tsx
+  s_40f04ebdd68b8f::t_fd6d60e0d9cb6b 36,163
+packages/ui/src/components/floating-tip/floating-tip.module.d.css.ts
+  s_40f04ebdd68b8f::t_b64bdfde723fd8 4
+packages/modals/src/index.tsx
+  s_40f04ebdd68b8f::t_26086be8a8153c 72-83
+apps/nextjs/src/components/board/sections/grid/fixed-grid-item.tsx
+  s_40f04ebdd68b8f::t_7bab07e3618c90 8,49,192
+  s_40f04ebdd68b8f::t_9d0340c6eae85e 20,191,193-194,215
+apps/nextjs/src/components/board/board-setup-checklist.tsx
+  s_40f04ebdd68b8f::t_27e94d8e2035c9 45,61
+  s_40f04ebdd68b8f::t_d68b2bbab28bd0 3,14,30,36-39
+  s_40f04ebdd68b8f::t_d5160b861c782e 40
+apps/nextjs/src/components/board/advanced-focus/context.tsx
+  s_40f04ebdd68b8f::t_a33e857609ff32 10,56,67-70
+  s_40f04ebdd68b8f::t_d6f52dbd2a68e2 71
+apps/docs/docs/management/boards/index.mdx
+  s_40f04ebdd68b8f::t_0b36741b62292c 213-217,340-341
+apps/docs/docs/management/assistant.mdx
+  s_40f04ebdd68b8f::t_4a2c39fef9188b 44-46
+apps/nextjs/src/components/board/board-tip-events.ts
+  s_40f04ebdd68b8f::t_07dd9f6223a8ea 1-27,29-36
+  s_40f04ebdd68b8f::t_aa462e84903b90 28
+apps/nextjs/src/components/board/sections/grid/test/fixed-grid-item.spec.ts
+  s_40f04ebdd68b8f::t_87a6ab386ca7a7 58
+apps/nextjs/src/components/onboarding/board-tour.tsx
+  s_40f04ebdd68b8f::t_88a634b2caa7fc 4,14,23,26-29
+  s_40f04ebdd68b8f::t_62fc0faf501f0d 30
+apps/nextjs/src/app/[locale]/boards/(content)/_edit-actions.tsx
+  s_40f04ebdd68b8f::t_bc3c837883a9e8 16,78-82,106
+apps/nextjs/src/components/assistant/assistant-gate.tsx
+  s_40f04ebdd68b8f::t_05915374126bee 8,79,87
+  s_40f04ebdd68b8f::t_46dce1242bb958 83
+  s_40f04ebdd68b8f::t_5dd849ed1bbefe 4,81-82,84-86,88-91
+  s_40f04ebdd68b8f::t_c33da212e1341c 6,80,92
+apps/docs/docs/management/search-engines/index.mdx
+  s_40f04ebdd68b8f::t_fa53941759f84b 15-17
+packages/ui/src/components/floating-tip/floating-tip.tsx
+  s_40f04ebdd68b8f::t_452b098dd1e2cf 137,151-160,163-164,180,186,194,198
+  s_40f04ebdd68b8f::t_6f012e14700f9f 242
+  s_40f04ebdd68b8f::t_c862b6c4894cdd 21
+  s_40f04ebdd68b8f::t_abe5493e70db9d 248
+  s_40f04ebdd68b8f::t_d1d29ddaecc752 123-125,132,140,166,168-169,227-232,235-241,243-244,251-253,262,264-267
+  s_40f04ebdd68b8f::t_19a7d2bc8af190 249
+  s_40f04ebdd68b8f::t_1768e78808f9e1 263
+  s_40f04ebdd68b8f::t_53fcdbf90a72f3 87
+  s_40f04ebdd68b8f::t_b7f1ad4f3e4840 102
+  s_40f04ebdd68b8f::t_be05ffb629040f 4-15,17,26-27,45-51,57-60
+  s_40f04ebdd68b8f::t_8334460432a1da 138-139
+  s_40f04ebdd68b8f::t_a35d952677bbcd 167
+  s_40f04ebdd68b8f::t_1c2a261d877ad4 182,188,208
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_40f04ebdd68b8f::t_7bab07e3618c90 363,369
+  s_40f04ebdd68b8f::t_09000a51bb608a 30,362,364-368
+apps/nextjs/src/components/tips/tips-context.tsx
+  s_40f04ebdd68b8f::t_98545bc9c152b6 24
+  s_40f04ebdd68b8f::t_e84984142b080e 100-104
+  s_40f04ebdd68b8f::t_1936111fc668d3 14-21,226,231-232,234,248
+  s_40f04ebdd68b8f::t_19e8050893e54c 1-3,5-7,9-13,22-23,25-32,35-39,42-55,58,61,63-65,67-68,70-79,89-99,105-111,124-125,132-142,144-156,168-171,175-186,189-221,223-225,227-229,233,235-247,249-255,285,292-301
+  s_40f04ebdd68b8f::t_4a96151cfe6aaa 82-85,187-188
+  s_40f04ebdd68b8f::t_95c12c9b2c80da 40-41,62
+  s_40f04ebdd68b8f::t_6076abe45b4c9d 143
+  s_40f04ebdd68b8f::t_ec7ac74b75b902 157-167
+  s_40f04ebdd68b8f::t_6537a4a1df86f6 4,33,112-122
+  s_40f04ebdd68b8f::t_4bdd4e285f06e1 56-57,80-81,86-88,172-174
+  s_40f04ebdd68b8f::t_e6a5082cf9f3c2 131
+  s_40f04ebdd68b8f::t_7d3259a39f9d1d 264-268
+  s_40f04ebdd68b8f::t_74a036e8a64954 8,222,256-263,269-274,280-284
+  s_40f04ebdd68b8f::t_ee91f826d7f414 302-303
+  s_40f04ebdd68b8f::t_e2a2fa383099af 275-279,286-291
+  s_40f04ebdd68b8f::t_cce33c6b7d763a 34,123
+  s_40f04ebdd68b8f::t_46c921f240a54b 59-60,230
+  s_40f04ebdd68b8f::t_3bbe9371a63a33 66,69,126-130
+apps/nextjs/src/components/board/selection/board-selection-toolbar.tsx
+  s_40f04ebdd68b8f::t_d68b2bbab28bd0 3,29,42,45-49
+  s_40f04ebdd68b8f::t_1f370f0b0d2f70 50,141
+packages/ui/src/components/floating-tip/index.ts
+  s_40f04ebdd68b8f::t_62a344e24fd4e0 4
+apps/nextjs/src/components/tips/registry.ts
+  s_40f04ebdd68b8f::t_eac3650edf090c 1-8,10-15,17-20,22-27,29-32,34-39,41-44,46-51,53-56,58-63,65-68,70-75,77-87,89-99,101-111,113-123,125-130
+  s_40f04ebdd68b8f::t_9405faa75f57af 9,21,33,45,57,69
+  s_40f04ebdd68b8f::t_7bab07e3618c90 16,28,40,52,64,76,88,100,112,124
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  s_40f04ebdd68b8f::t_fdcce9f08a447d 37,691,722-725
+  s_40f04ebdd68b8f::t_7bd42076910dcf 726
+packages/ui/src/components/floating-tip/floating-tip.module.css
+  s_40f04ebdd68b8f::t_df6fe4f2fa4554 18-36,39-46
+  s_40f04ebdd68b8f::t_51785f99cbf084 37-38
+  s_40f04ebdd68b8f::t_7c548a04abdba7 4
+apps/nextjs/src/components/onboarding/manage-tour.tsx
+  s_40f04ebdd68b8f::t_4644d5aa6eb4cd 21,61-66
+apps/nextjs/src/components/board/items/widget-context-menu.tsx
+  s_40f04ebdd68b8f::t_3ca772c1ea4fc3 4,72,81-86,234,236-241
+  s_40f04ebdd68b8f::t_bd5accfd890067 76-79
+  s_40f04ebdd68b8f::t_9c33be4b078637 29,233,235,242-243,252
+  s_40f04ebdd68b8f::t_7bab07e3618c90 27
+  s_40f04ebdd68b8f::t_b2de15ea6a67a3 73-75
+  s_40f04ebdd68b8f::t_315c2e7442eea5 80
+apps/nextjs/src/components/tips/types.spec.ts
+  s_40f04ebdd68b8f::t_29a18260d0fe03 1-19
+packages/spotlight/src/components/spotlight.tsx
+  s_40f04ebdd68b8f::t_d484fe405a9a59 134-136,140-142
+apps/nextjs/src/components/board/sections/grid/grid-editor.tsx
+  s_40f04ebdd68b8f::t_924b733b379f2c 176,198,200
+  s_40f04ebdd68b8f::t_f6dd250a25cdb4 41,177-181,197,199
+  s_40f04ebdd68b8f::t_d6db1d81294f93 201
+packages/ui/src/styles.css
+  s_40f04ebdd68b8f::t_53fcdbf90a72f3 13
+apps/nextjs/src/components/tips/tips-context.spec.tsx
+  s_40f04ebdd68b8f::t_fad775b1266aaf 1-2,5-22,25-27,29-30,34,57-60,62-65,68-76,78-87,93-96,98-106,108-120,122-130,132-134,168-169
+  s_40f04ebdd68b8f::t_334474a669a069 4,28
+  s_40f04ebdd68b8f::t_325f42641518c9 3,23-24,31-33,35-56,61,66-67,97,107,135-153,155-167
+  s_40f04ebdd68b8f::t_9fedab15e37db4 77
+  s_40f04ebdd68b8f::t_46c921f240a54b 121,131
+  s_40f04ebdd68b8f::t_ce2287f19cff7f 88-92,154
+packages/translation/src/lang/en.json
+  s_40f04ebdd68b8f::t_cb6f4878d35702 841-842
+  s_40f04ebdd68b8f::t_0cf98174d7b795 843
+  s_40f04ebdd68b8f::t_64ecf42ad142bc 840,844-871
+packages/ui/src/components/floating-tip/floating-tip.spec.tsx
+  s_40f04ebdd68b8f::t_9ea8e9336880d7 42,46,60-84,114
+  s_40f04ebdd68b8f::t_058c8603bd8112 115
+apps/docs/docs/advanced/keyboard-shortcuts/index.mdx
+  s_40f04ebdd68b8f::t_96c0fc5776db72 24-25,42-44
+  s_40f04ebdd68b8f::t_4a2c39fef9188b 23
+  s_40f04ebdd68b8f::t_db13345b82a4dd 45
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_40f04ebdd68b8f::t_b5008b1a56db4d 76-87
+  s_40f04ebdd68b8f::t_f9e0606cc08044 3,14,60-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "624ea397eee75e645ef1c4073973505967bb4980",
+  "prompts": {},
+  "sessions": {
+    "s_40f04ebdd68b8f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02415-bf29-7e10-bca3-4dbf8f475de5",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
