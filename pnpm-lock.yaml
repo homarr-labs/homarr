@@ -704,6 +704,7 @@ overrides:
 
 patchedDependencies:
   '@types/node-unifi': 5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5
+  mantine-datatable@9.3.1: 8b83a773610215e619e3f5acbec2d26fb6f27b089852e2bc754d10d8515c1254
   trpc-to-openapi: 2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c
 
 importers:
@@ -1209,7 +1210,7 @@ importers:
         version: 3.10.1
       mantine-datatable:
         specifier: 'catalog:'
-        version: 9.3.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(patch_hash=8b83a773610215e619e3f5acbec2d26fb6f27b089852e2bc754d10d8515c1254)(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       mantine-react-table:
         specifier: 'catalog:'
         version: mantine-react-table-open@9.0.3(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -2984,7 +2985,7 @@ importers:
         version: 1.24.0(react@19.2.7)
       mantine-datatable:
         specifier: 'catalog:'
-        version: 9.3.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 9.3.1(patch_hash=8b83a773610215e619e3f5acbec2d26fb6f27b089852e2bc754d10d8515c1254)(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       mantine-react-table:
         specifier: 'catalog:'
         version: mantine-react-table-open@9.0.3(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/dates@9.4.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(@tabler/icons-react@3.44.0(react@19.2.7))(clsx@2.1.1)(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -28633,7 +28634,7 @@ snapshots:
     dependencies:
       semver: 7.8.5
 
-  mantine-datatable@9.3.1(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  mantine-datatable@9.3.1(patch_hash=8b83a773610215e619e3f5acbec2d26fb6f27b089852e2bc754d10d8515c1254)(@mantine/core@9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(@mantine/hooks@9.4.1(react@19.2.7))(clsx@2.1.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
       '@mantine/core': 9.4.1(@mantine/hooks@9.4.1(react@19.2.7))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@mantine/hooks': 9.4.1(react@19.2.7)

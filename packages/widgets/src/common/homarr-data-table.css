@@ -17,59 +17,9 @@
 }
 
 .homarr-data-table th {
-  position: relative;
   white-space: nowrap;
   background-color: color-mix(in srgb, var(--mantine-color-body) 60%, transparent) !important;
   backdrop-filter: blur(8px);
-}
-
-.homarr-column-resize-handle {
-  appearance: none;
-  position: absolute;
-  top: 0;
-  right: -4px;
-  bottom: 0;
-  width: 8px;
-  height: auto;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  cursor: col-resize;
-  touch-action: none;
-  z-index: 1;
-}
-
-.homarr-column-resize-handle::-webkit-slider-thumb {
-  appearance: none;
-  width: 8px;
-  height: 100%;
-  background: transparent;
-}
-
-.homarr-column-resize-handle::-moz-range-thumb {
-  width: 8px;
-  height: 100%;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-}
-
-.homarr-column-resize-handle::-moz-range-track {
-  background: transparent;
-}
-
-.homarr-column-resize-handle:hover,
-.homarr-column-resize-handle:active,
-.homarr-column-resize-handle:focus-visible {
-  background-color: var(--mantine-primary-color-filled);
-  opacity: 0.4;
-}
-
-.homarr-column-resize-handle:focus-visible {
-  outline: 2px solid var(--mantine-primary-color-filled);
-  outline-offset: -2px;
 }
 
 .homarr-data-table td {

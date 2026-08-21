@@ -2,9 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import type { DataTableColumn } from "mantine-datatable";
-import { humanize, useDataTableColumns } from "mantine-datatable";
-
-import { ColumnResizeHandle } from "./column-resize-handle";
+import { useDataTableColumns } from "mantine-datatable";
 
 interface TableLayoutOptions extends Record<string, unknown> {
   columnOrder?: string;
@@ -33,7 +31,6 @@ interface UsePersistedTableLayoutProps<T> {
   itemId: string | undefined;
   storeKeyPrefix: string;
   onLayoutChange: (layout: TableLayoutOptions) => void;
-  isEditMode: boolean;
 }
 
 const layoutSaveDelay = 350;
@@ -59,11 +56,6 @@ const toPixelWidth = (width: string | number): number | undefined => {
 
   const parsedWidth = Number.parseInt(width, 10);
   return Number.isFinite(parsedWidth) && parsedWidth > 0 ? parsedWidth : undefined;
-};
-
-const getColumnLabel = <T,>(column: DataTableColumn<T>): string => {
-  if (typeof column.title === "string") return column.title;
-  return humanize(String(column.accessor));
 };
 
 const getColumnWidthMap = (
@@ -123,7 +115,6 @@ export const usePersistedTableLayout = <T,>({
   itemId,
   storeKeyPrefix,
   onLayoutChange,
-  isEditMode,
 }: UsePersistedTableLayoutProps<T>) => {
   const savedOrder = useMemo(() => parseColumnOrder(columnOrder, columnAccessors), [columnAccessors, columnOrder]);
   const savedWidths = useMemo(() => parseColumnWidths(columnWidths, columnAccessors), [columnAccessors, columnWidths]);
@@ -137,7 +128,7 @@ export const usePersistedTableLayout = <T,>({
     [savedOrder, visibleAccessors, visibleAccessorSet],
   );
   const storeKey = `${storeKeyPrefix}-${itemId ?? "preview"}-${[...visibleAccessors].toSorted().join(",")}`;
-  const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths, setColumnWidth } =
+  const { effectiveColumns, columnsOrder, columnsWidth, setColumnsOrder, setMultipleColumnWidths } =
     useDataTableColumns<T>({
       key: storeKey,
       columns,
@@ -238,23 +229,5 @@ export const usePersistedTableLayout = <T,>({
     visibleAccessorSet,
   ]);
 
-  const columnsWithResizeHandles = useMemo(() => {
-    if (isEditMode) return effectiveColumns;
-    return effectiveColumns.map((column) => ({
-      ...column,
-      title: (
-        <span style={{ display: "flex", alignItems: "center", width: "100%" }}>
-          {column.title}
-          <ColumnResizeHandle
-            columnLabel={getColumnLabel(column)}
-            currentWidth={toPixelWidth(column.width ?? "auto")}
-            onResizeStart={setMultipleColumnWidths}
-            onResize={(width) => setColumnWidth(String(column.accessor), `${width}px`)}
-          />
-        </span>
-      ),
-    }));
-  }, [effectiveColumns, isEditMode, setColumnWidth, setMultipleColumnWidths]);
-
-  return { effectiveColumns: columnsWithResizeHandles, storeKey };
+  return { effectiveColumns, storeKey };
 };
