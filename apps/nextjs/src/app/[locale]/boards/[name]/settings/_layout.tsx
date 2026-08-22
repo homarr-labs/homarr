@@ -135,7 +135,7 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
                   leftGutterColumnCount: baseLayout.leftGutterColumnCount,
                   rightGutterColumnCount: baseLayout.rightGutterColumnCount,
                   breakpoint: nextBreakpoint,
-                  role: "custom",
+                  role: "custom" as const,
                 },
               ].toSorted((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint);
               form.setFieldValue("layouts", layouts);
