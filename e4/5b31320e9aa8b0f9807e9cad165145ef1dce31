@@ -1,0 +1,19 @@
+apps/nextjs/src/components/board/board-switcher.tsx
+  s_f92bb477c1a12c::t_5418ba4c8d19ae 179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "e45b31320e9aa8b0f9807e9cad165145ef1dce31",
+  "prompts": {},
+  "sessions": {
+    "s_f92bb477c1a12c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02988-6a32-78c2-b99c-c006a25f76dd",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
