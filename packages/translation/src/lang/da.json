@@ -1442,7 +1442,7 @@
     "iconPicker": {
       "label": "Ikon-URL",
       "description": "Søg i biblioteket, indsæt en billed-URL, eller upload en fil.",
-      "header": "Indtast navn eller objekter for at filtrere for ikoner... Homarr vil søge gennem {countIcons} ikoner for dig.",
+      "header": "Søg efter {countIcons} billeder efter navn",
       "headerLoading": "Søg billeder efter navn",
       "clear": "Ryd billede",
       "uploadImage": "Upload billede",
@@ -3093,7 +3093,7 @@
       "option": {
         "albumId": {
           "label": "Album ID",
-          "description": "Dette er et unikt ID som refererer til dit Immich album. Du kan finde dette id ved at åbne et album og kopiere den unikke streng fra URL, for eksempel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "Dette er et unikt ID som refererer til dit Immich album. Du kan finde dette id ved at åbne et album og kopiere den unikke streng fra URL, for eksempel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Interval i sekunder",

@@ -1346,7 +1346,7 @@
     },
     "wud": {
       "name": "What's Up Docker",
-      "description": "Docker konteynerlerinizden hangilerinde imaj güncellemeleri olduğunu izleyin."
+      "description": "Docker konteynerlerinizden hangilerinde imaj güncellemeleri olduğunu izleyin"
     },
     "paperlessNgx": {
       "name": "Paperless-ngx",
@@ -1442,8 +1442,8 @@
     "iconPicker": {
       "label": "Simge URL'si",
       "description": "Kütüphanede arayın, bir görsel URL'si yapıştırın veya bir dosya yükleyin.",
-      "header": "Simgeleri filtrelemek için isim veya nesne yazın... Homarr sizin için {countIcons} simge arasında arama yapacaktır.",
-      "headerLoading": "Simge aramak için yazın…",
+      "header": "Simgeleri filtrelemek için isim veya nesne yazın... Homarr sizin için {countIcons} simge arasında arama yapacaktır",
+      "headerLoading": "Simge aramak için yazın",
       "clear": "Görseli temizle",
       "uploadImage": "Görsel yükle",
       "results": "Görsel arama sonuçları",
