@@ -1042,20 +1042,20 @@
         },
         "unknown": {
           "title": "알 수 없는 오류",
-          "description": ""
+          "description": "알 수 없는 오류가 발생했습니다. 자세한 내용을 보려면 아래 원인을 펼치세요"
         },
         "parse": {
           "title": "파싱 오류",
-          "description": ""
+          "description": "응답을 파싱할 수 없습니다. URL이 서비스의 기본 URL을 가리키는지 확인하세요."
         },
         "authorization": {
           "title": "인증 오류",
-          "description": ""
+          "description": "요청이 승인되지 않았습니다. 자격 증명이 올바르고 충분한 권한으로 구성되어 있는지 확인하세요."
         },
         "statusCode": {
           "title": "응답 오류",
-          "description": "",
-          "otherDescription": "",
+          "description": "예상치 못한 {statusCode} ({reason}) 응답을 <url></url>에서 받았습니다. URL이 통합의 기본 URL을 가리키는지 확인하세요.",
+          "otherDescription": "예상치 못한 {statusCode} 응답을 <url></url>에서 받았습니다. URL이 통합의 기본 URL을 가리키는지 확인하세요.",
           "reason": {
             "badRequest": "잘못된 요청",
             "notFound": "찾을 수 없음",
@@ -1345,8 +1345,8 @@
       "description": "클라우드 네이티브 리버스 프록시 및 로드 밸런서"
     },
     "wud": {
-      "name": "",
-      "description": ""
+      "name": "왓츠업 도커",
+      "description": "Docker 컨테이너 중 이미지 업데이트가 가능한 것을 모니터링합니다."
     },
     "paperlessNgx": {
       "name": "Paperless-ngx",
@@ -1441,18 +1441,18 @@
     "here": "여기",
     "iconPicker": {
       "label": "아이콘 URL",
-      "description": "",
-      "header": "이름 또는 주제를 입력해 아이콘을 필터링하세요... Homarr가 {countIcons}에서 아이콘을 검색합니다.",
-      "headerLoading": "아이콘을 검색하려면 입력…",
-      "clear": "",
-      "uploadImage": "",
-      "results": "",
+      "description": "라이브러리에서 검색하거나, 이미지 URL을 붙여넣거나, 파일을 업로드하세요.",
+      "header": "이름 또는 주제를 입력해 아이콘을 필터링하세요... Homarr가 {countIcons}에서 아이콘을 검색합니다",
+      "headerLoading": "아이콘을 검색하려면 입력",
+      "clear": "이미지 지우기",
+      "uploadImage": "이미지 업로드",
+      "results": "이미지 검색 결과",
       "localImages": "내 이미지",
-      "svgIcons": "",
+      "svgIcons": "SVG 아이콘",
       "otherImages": "기타 이미지",
-      "urlLoading": "",
-      "urlReady": "",
-      "urlError": "",
+      "urlLoading": "이미지 확인 중…",
+      "urlReady": "이미지 사용 준비 완료",
+      "urlError": "이 이미지는 불러올 수 없습니다. URL을 확인하고 다시 시도하십시오.",
       "noResults": "\"{search}\"에 일치하는 아이콘이 없습니다.",
       "error": "아이콘을 불러올 수 없습니다."
     },
@@ -1808,19 +1808,19 @@
       }
     },
     "wud": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "monitored": "",
-      "updatesAvailable": "",
-      "updateAvailable": "",
-      "openReleaseNotes": "",
+      "name": "왓츠업 도커",
+      "description": "모니터링 중인 컨테이너에서 사용 가능한 업데이트 수를 표시합니다.",
+      "title": "What's Up Docker",
+      "monitored": "모니터링 중",
+      "updatesAvailable": "{count, plural, other {업데이트 #개 사용 가능}}",
+      "updateAvailable": "업데이트 사용 가능",
+      "openReleaseNotes": "릴리스 노트 열기",
       "option": {
         "showTitle": {
-          "label": ""
+          "label": "제목 표시"
         },
         "showRing": {
-          "label": ""
+          "label": "업데이트 링 표시"
         },
         "layout": {
           "label": "레이아웃",
@@ -1834,8 +1834,8 @@
           }
         },
         "showUpdateList": {
-          "label": "",
-          "description": ""
+          "label": "컨테이너 업데이트 목록 표시",
+          "description": "이미지 업데이트가 있는 각 모니터링 컨테이너를 나열합니다."
         }
       }
     },
@@ -1984,16 +1984,16 @@
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "시간표",
+      "description": "역의 출발 시간을 표시합니다",
+      "title": "{station} 출발",
+      "noStation": "선택한 역이 없습니다",
       "option": {
         "baseUrl": {
           "label": "Search.ch URL"
         },
         "station": {
-          "label": ""
+          "label": "역"
         }
       }
     },
@@ -2061,7 +2061,7 @@
       },
       "placeholder": "노트 작성 시작",
       "dismiss": {
-        "title": "변경사항 삭제",
+        "title": "변경사항을 버리시겠습니까??",
         "message": "노트북에 저장되지 않은 변경 사항이 있습니다. 삭제하시겠습니까?",
         "action": {
           "discard": "저장하지 않음",
@@ -2070,32 +2070,32 @@
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Anchor 노트",
+      "description": "Anchor에서 선택한 노트를 표시합니다",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "노트"
         },
         "showTitle": {
-          "label": ""
+          "label": "제목 표시"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "마지막 업데이트 표시"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "표시할 노트를 선택하세요",
+      "emptyContent": "이 노트에는 내용이 없습니다",
+      "notFound": "노트를 찾을 수 없습니다",
+      "noNotes": "노트를 찾을 수 없습니다",
+      "integrationRequired": "먼저 Anchor 통합을 선택하세요",
+      "updatedAt": "{date}에 업데이트됨",
+      "untitled": "제목 없음",
+      "edit": "편집",
+      "save": "저장",
+      "cancel": "취소",
+      "readOnlyViewer": "이 노트에 대한 뷰어 권한이 있습니다. 편집이 비활성화되었습니다.",
+      "saveForbidden": "이 노트를 편집할 권한이 없습니다.",
+      "saveFailed": "이 노트를 저장하지 못했습니다. 다시 시도하세요."
     },
     "iframe": {
       "name": "iFrame",
@@ -2455,7 +2455,7 @@
     },
     "dockerContainers": {
       "name": "Docker 상태",
-      "description": "",
+      "description": "컨테이너 통계 (이 위젯은 관리자 권한으로만 추가할 수 있습니다)",
       "option": {
         "columns": {
           "label": "표시할 열"
@@ -2464,7 +2464,7 @@
           "label": "항목 정렬 활성화"
         },
         "defaultSort": {
-          "label": "",
+          "label": "기본 정렬에 사용되는 열",
           "option": {
             "name": "이름",
             "state": "상태",
@@ -2476,52 +2476,52 @@
           "label": "역순 정렬"
         },
         "columnOrder": {
-          "label": ""
+          "label": "열 순서"
         },
         "columnWidths": {
-          "label": ""
+          "label": "열 너비"
         }
       },
       "error": {
         "internalServerError": "컨테이너 상태 불러오기 실패",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "테이블 레이아웃이 저장되지 않았습니다",
+        "layoutSaveMessage": "Docker 테이블 레이아웃을 저장할 수 없습니다. 열을 다시 이동하거나 크기를 조정해 보세요."
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "컨테이너 없음"
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "서버와 애플리케이션을 포함한 Coolify 인스턴스 개요",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "서버 표시"
         },
         "showApplications": {
-          "label": ""
+          "label": "애플리케이션 표시"
         },
         "showServices": {
-          "label": ""
+          "label": "서비스 표시"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "서버를 찾을 수 없습니다",
+        "applications": "애플리케이션을 찾을 수 없습니다",
+        "services": "서비스를 찾을 수 없습니다"
       },
       "footer": {
-        "updated": ""
+        "updated": "{when}에 업데이트됨"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "구성된 Coolify 통합이 없습니다",
+        "internalServerError": "Coolify 데이터를 가져오지 못했습니다"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "빌드"
       },
       "instances": {
-        "title": ""
+        "title": "인스턴스"
       }
     },
     "vpn": {
@@ -2562,85 +2562,85 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "상세 스트림 및 트랜스코딩 데이터로 강화된 미디어 서버 모니터링",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "활성 스트림 표시"
         },
         "showStats": {
-          "label": ""
+          "label": "통계 요약 표시"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "최근 활동 표시"
         },
         "showViolations": {
-          "label": ""
+          "label": "위반 사항 표시"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "활성 스트림",
+        "totalUsers": "총 사용자",
+        "transcodes": "트랜스코드",
+        "bandwidth": "대역폭"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "활성 스트림이 없습니다",
+        "user": "사용자",
+        "media": "미디어",
+        "state": "상태",
+        "quality": "품질",
+        "device": "장치",
+        "progress": "진행률",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "직접 재생",
+          "transcode": "트랜스코딩",
+          "directStream": "직접 스트림"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "최근 활동",
+        "empty": "최근 활동이 없습니다",
+        "watched": "시청함",
+        "partial": "부분"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "위반 사항",
+        "empty": "최근 위반 사항이 없습니다",
+        "rule": "규칙",
+        "user": "사용자"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "활성화된 섹션이 없습니다",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "구성된 Tracearr 통합이 없습니다",
+        "internalServerError": "Tracearr 데이터를 가져오지 못했습니다"
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami Analytics",
+      "description": "Umami 분석 인스턴스의 방문자 통계를 표시합니다",
+      "visitors": "방문자",
+      "active": "활성",
+      "pageviews": "페이지뷰",
+      "visits": "방문",
+      "bounceRate": "이탈률",
+      "avgDuration": "평균",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "웹사이트",
+          "description": "Umami 인스턴스에서 추적하는 웹사이트 선택",
+          "placeholder": "웹사이트 선택",
+          "loading": "웹사이트 불러오는 중...",
+          "noWebsites": "웹사이트를 찾을 수 없습니다",
+          "configureIntegrationFirst": "먼저 Umami 통합을 연결하세요"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "시간 범위",
+          "description": "방문자 데이터를 표시할 기간",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
+            "today": "오늘",
+            "24h": "지난 24시간",
+            "7d": "지난 7일",
             "30d": "지난 30일",
             "month": "이번 달",
             "lastMonth": "지난 달"
@@ -2784,17 +2784,17 @@
           "description": "비활성화 옵션은 plex에서는 지원되지 않음"
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "비트레이트 표시",
+          "description": "위치 옆에 현재 재생 비트레이트를 표시합니다"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "위치 표시",
+          "description": "스트림이 LAN 또는 WAN에 있는지 표시합니다"
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, other {# 활성 스트림}}",
+        "totalBitrate": "총: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "현재 재생 중",
@@ -2803,9 +2803,9 @@
         "id": "아이디",
         "status": "상태",
         "directPlay": "직접 재생",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
+        "directStream": "직접 스트림",
+        "transcodeVideo": "비디오 트랜스코딩",
+        "transcodeAudio": "오디오 트랜스코딩",
         "transcoding": "트랜스코딩",
         "paused": "일시 중지됨",
         "remaining": "남은 시간 {minutes}분",
@@ -3153,18 +3153,18 @@
           "description": "통합당 표시되는 항목 수를 제한하여 전체 항목이 표시되지 않습니다"
         },
         "columnOrder": {
-          "label": ""
+          "label": "열 순서"
         },
         "columnWidths": {
-          "label": ""
+          "label": "열 너비"
         }
       },
       "errors": {
         "noColumns": "항목에서 열 선택",
         "noCommunications": "통합에서 데이터를 불러올 수 없습니다",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "다운로드 없음",
+        "actionFailed": "작업 실패",
+        "actionFailedMessage": "작업을 완료할 수 없습니다. 다시 시도해 주세요."
       },
       "items": {
         "actions": {
@@ -3188,7 +3188,7 @@
         },
         "id": {
           "columnTitle": "아이디",
-          "detailsTitle": ""
+          "detailsTitle": "항목 ID"
         },
         "integration": {
           "columnTitle": "통합"
@@ -3223,7 +3223,7 @@
         "time": {
           "columnTitle": "완료 시간",
           "detailsTitle": "완료/완료 후 경과 시간",
-          "eta": ""
+          "eta": "남은 시간"
         },
         "type": {
           "columnTitle": "유형",
@@ -3269,49 +3269,49 @@
       },
       "globalRatio": "전체 비율",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "이름 복사",
+        "copyId": "ID 복사",
+        "clearFilters": "필터 지우기"
       },
       "footer": {
-        "filter": ""
+        "filter": "다운로드 필터"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "전체 통계 표시",
+        "hide": "전체 통계 숨기기",
+        "overallProgress": "전체 대기열 진행률",
+        "totalSize": "전체 대기열 크기",
+        "clients": "{count, plural, other {# 클라이언트}}"
       },
-      "disconnected": ""
+      "disconnected": "(연결 끊김)"
     },
     "mediaReleases": {
-      "name": "",
-      "description": "",
+      "name": "미디어 릴리스",
+      "description": "다른 통합에서 새로 추가된 미디어나 예정된 릴리스를 표시합니다",
       "option": {
         "layout": {
-          "label": "",
+          "label": "레이아웃",
           "option": {
             "backdrop": {
-              "label": ""
+              "label": "배경"
             },
             "poster": {
-              "label": ""
+              "label": "포스터"
             }
           }
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "설명 도구 설명 표시"
         },
         "showType": {
-          "label": ""
+          "label": "미디어 유형 배지 표시"
         },
         "showSource": {
-          "label": ""
+          "label": "소스 통합 표시"
         }
       },
       "length": {
-        "duration": ""
+        "duration": "{length}분"
       }
     },
     "mediaRequests-requestList": {
@@ -3337,11 +3337,11 @@
         "unknown": "알 수 없음",
         "pending": "대기 중",
         "processing": "처리 중",
-        "requested": "",
+        "requested": "요청됨",
         "partiallyAvailable": "부분",
         "available": "사용 가능",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "블랙리스트",
+        "deleted": "삭제됨"
       },
       "status": {
         "pending": "대기 중",
@@ -3479,10 +3479,10 @@
           "label": "게시물 수 제한"
         },
         "hideDescription": {
-          "label": ""
+          "label": "설명 숨기기"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "포스터 이미지 표시"
         }
       }
     },
@@ -3506,7 +3506,7 @@
           "label": "세부 정보 표시"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "아이콘만 표시"
         },
         "topReleases": {
           "label": "최상위 릴리스",
@@ -3515,18 +3515,18 @@
         "repositories": {
           "label": "저장소",
           "addRepository": {
-            "label": ""
+            "label": "저장소 추가"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": "",
-            "selectAll": "",
-            "deselectAll": ""
+            "label": "Docker에서 가져오기",
+            "loading": "Docker 이미지 불러오는 중",
+            "noImagesFound": "Docker 이미지를 찾을 수 없습니다",
+            "listFoundImages": "발견된 이미지 목록",
+            "listAlreadyImportedImages": "이미 가져온 이미지 목록",
+            "allImagesAlreadyImported": "모든 이미지를 이미 가져왔습니다",
+            "onlyAdminCanImport": "관리자만 Docker에서 가져올 수 있습니다",
+            "selectAll": "모두 선택",
+            "deselectAll": "모두 선택 해제"
           },
           "provider": {
             "label": "제공자"
@@ -3572,15 +3572,15 @@
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Docker에서 가져오기"
           },
           "example": {
             "label": "예시"
           },
           "invalid": "잘못된 저장소 정의, 값을 확인하십시오",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "제공자 없음",
+            "tooltip": "제공자를 파싱할 수 없습니다. 이미지를 가져온 후 수동으로 설정하세요"
           },
           "tokens": {
             "label": "공급자 토큰",
@@ -3598,20 +3598,20 @@
       "starsCount": "별",
       "forksCount": "포크",
       "issuesCount": "열린 이슈",
-      "markViewed": "",
+      "markViewed": "본 것으로 표시",
       "openProjectPage": "프로젝트 페이지 열기",
       "openReleasePage": "릴리스 페이지 열기",
       "releaseDescription": "릴리스 설명",
-      "projectDescription": "",
+      "projectDescription": "프로젝트 설명",
       "created": "생성됨",
       "error": {
         "label": "오류",
         "messages": {
-          "invalidIdentifier": "",
-          "noMatchingVersion": "",
-          "noReleasesFound": "",
+          "invalidIdentifier": "잘못된 식별자",
+          "noMatchingVersion": "일치하는 버전을 찾을 수 없습니다",
+          "noReleasesFound": "릴리스를 찾을 수 없습니다",
           "noProviderSelected": "선택한 공급자가 없습니다",
-          "noProviderResponse": "",
+          "noProviderResponse": "제공자로부터 응답이 없습니다",
           "unexpected": "예기치 않은 공급자 오류"
         }
       }
@@ -3673,31 +3673,31 @@
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "방화벽 모니터링",
+      "description": "방화벽 요약을 표시합니다",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "시스템",
+        "interfaces": "인터페이스"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "방화벽에서 데이터를 가져올 수 없습니다"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "표시할 네트워크 인터페이스"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "fwname": "이름",
+        "version": "버전",
+        "versiontitle": "버전",
+        "cputitle": "CPU 사용량",
+        "memorytitle": "메모리 사용량",
+        "cpu": "CPU",
+        "memory": "메모리",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "이름",
+          "trans": "전송됨",
+          "recv": "수신됨",
+          "title": "네트워크 인터페이스"
         }
       }
     },
@@ -3712,42 +3712,42 @@
       }
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "Speedtest Tracker",
+      "description": "Speedtest Tracker 인스턴스의 속도 테스트 결과를 표시합니다.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "최신 결과 표시"
         },
         "showStats": {
-          "label": ""
+          "label": "평균 표시"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "최근 결과 표시"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "핑 그래프 표시"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "최신 결과",
+      "averages": "평균",
+      "tests": "테스트 {count}개",
+      "recentResults": "최근 결과",
+      "recentResultsSpeed": "속도",
+      "recentResultsPing": "핑",
+      "download": "다운로드",
+      "upload": "업로드",
+      "ping": "핑",
+      "status": "상태",
+      "avgDownload": "평균 다운로드",
+      "avgUpload": "평균 업로드",
+      "avgPing": "평균 핑",
+      "healthy": "정상",
+      "unhealthy": "비정상",
+      "ok": "정상",
+      "fail": "실패",
+      "noSectionsEnabled": "위젯 옵션에서 하나 이상의 섹션을 활성화하세요.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "속도 테스트 데이터를 가져오지 못했습니다"
       }
     },
     "uptimeKuma": {
@@ -4014,17 +4014,17 @@
           "label": "에이전트 버전 표시"
         },
         "columnOrder": {
-          "label": ""
+          "label": "열 순서"
         },
         "columnWidths": {
-          "label": ""
+          "label": "열 너비"
         }
       },
       "noRecords": "시스템을 찾을 수 없음",
       "error": {
         "internalServerError": "Beszel에 연결할 수 없습니다. 통합 설정을 확인하십시오.",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "테이블 레이아웃을 저장할 수 없습니다",
+        "layoutSaveMessage": "열 순서나 너비를 저장할 수 없습니다. 다시 시도해 주세요."
       },
       "column": {
         "system": "시스템",
@@ -4656,7 +4656,7 @@
           "authorization": "권한"
         },
         "heroBanner": {
-          "title": "",
+          "title": "다시 오신 것을 환영합니다",
           "subtitle": "{app} 보드"
         }
       },
@@ -4922,7 +4922,7 @@
             "title": "사용자",
             "enableGravatar": {
               "label": "Gravatar 활성화",
-              "description": ""
+              "description": "사용자 지정 아바타가 설정되지 않고 이메일이 구성된 경우 Libravatar/Gravatar의 사용자 아바타로 대체됩니다"
             }
           },
           "search": {
@@ -4958,7 +4958,7 @@
             "idle": "대기",
             "running": "실행 중",
             "error": "오류",
-            "disabled": ""
+            "disabled": "비활성화됨"
           },
           "job": {
             "iconsUpdater": {
@@ -5300,8 +5300,8 @@
             "subtitle": "{count}명이 여러 언어로 번역 기여"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "스폰서",
+            "subtitle": "재정적으로 지원 중인 {count}명"
           },
           "libraries": {
             "title": "라이브러리",
@@ -5315,12 +5315,12 @@
               "action": "행동"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "보드 편집 모드 전환",
+              "toggleColorScheme": "라이트/다크 모드 전환",
+              "saveNotebook": "노트북 저장 (노트북 위젯 내에서만)",
+              "openSpotlight": "검색 열기"
             },
-            "note": ""
+            "note": "팁: Mod는 Ctrl 키와 macOS의 ⌘ 키를 모두 의미합니다"
           }
         }
       }
@@ -5422,7 +5422,7 @@
       },
       "remove": {
         "label": "제거",
-        "confirm": "",
+        "confirm": "영구적으로 제거하려면 다시 클릭하세요",
         "notification": {
           "success": {
             "title": "컨테이너 제거됨",

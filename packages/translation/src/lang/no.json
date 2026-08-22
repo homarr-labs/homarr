@@ -1809,7 +1809,7 @@
     },
     "wud": {
       "name": "Hva passer opp",
-      "description": "Vis hvor mange sette containere som er tilgjengelige",
+      "description": "Vis hvor mange sette containere som er tilgjengelige.",
       "title": "Hva passer opp",
       "monitored": "Overvåket",
       "updatesAvailable": "{count, plural, one {# oppdatering tilgjengelig} other {# oppdateringer tilgjengelig}}",
@@ -2801,7 +2801,7 @@
         "user": "Bruker",
         "name": "Navn",
         "id": "Id",
-        "status": "Status:",
+        "status": "Status",
         "directPlay": "Direkte avspilling",
         "directStream": "Direkte strøm",
         "transcodeVideo": "Konverterer video",
@@ -2883,7 +2883,7 @@
       "securityUpdates": "Sikkerhetsoppdateringer",
       "upToDateHosts": "Oppdaterte verter",
       "hostsWithSecurityUpdates": "Verter med sikkerhetsoppdateringer",
-      "recentUpdates24h": "Oppdateringer (2,4 timer)",
+      "recentUpdates24h": "Oppdateringer (24 timer)",
       "totalOutdatedPackages": "Utdaterte pakker",
       "totalRepos": "Depoter",
       "osDistribution": "OS distribusjon",
@@ -3093,7 +3093,7 @@
       "option": {
         "albumId": {
           "label": "Album ID",
-          "description": "Dette er en unik ID som refererer til ditt Immich-album. Du kan finne denne ID-en ved å åpne et album og kopiere den unike strengen fra URL-en, for eksempel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "Dette er en unik ID som refererer til ditt Immich-album. Du kan finne denne ID-en ved å åpne et album og kopiere den unike strengen fra URL-en, for eksempel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Intervall i sekunder",
@@ -4034,7 +4034,7 @@
         "gpu": "GPU",
         "loadAvg": "Last snitt",
         "net": "Netto",
-        "temp": "Temp.",
+        "temp": "Temp",
         "battery": "Flaggermus",
         "services": "Tjenester",
         "uptime": "Oppetid",
@@ -4095,7 +4095,7 @@
         "gpu": "GPU",
         "loadAvg": "Last snitt",
         "net": "Netto",
-        "temp": "Temp.",
+        "temp": "Temp",
         "battery": "Flaggermus",
         "services": "Tjenester",
         "uptime": "Oppetid",
@@ -5126,7 +5126,7 @@
               "availableTools": {
                 "title": "Tilgjengelige verktøy",
                 "description": "{count} verktøy tilgjengelig. Utvid en kategori for å se enkelte verktøy og tilhørende beskrivelser.",
-                "columnType": "Type:",
+                "columnType": "Type",
                 "columnName": "Verktøy",
                 "columnDescription": "Beskrivelse"
               },
@@ -5134,7 +5134,7 @@
                 "title": "Feilsøking",
                 "missingHeader": {
                   "title": "\"Mangler ApiKey header\"",
-                  "description": "Klienten din sender ikke headeren {header} . Verifiser {section} -delen i MCP-konfigurasjonen din er riktig. Noen klienter krever omstart etter konfigurasjonsendringer."
+                  "description": "Klienten din sender ikke headeren {header}. Verifiser {section}-delen i MCP-konfigurasjonen din er riktig. Noen klienter krever omstart etter konfigurasjonsendringer."
                 },
                 "invalidFormat": {
                   "title": "\"Ugyldig ApiKey format\"",
@@ -6378,7 +6378,7 @@
               "header": {
                 "season": "Sesong",
                 "episodes": "Episoder",
-                "status": "Status:"
+                "status": "Status"
               },
               "status": {
                 "requested": "Forespurt"

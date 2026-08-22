@@ -38,8 +38,8 @@
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Tóm tắt nhập",
+          "description": "Trong phần tóm tắt bên dưới, bạn có thể xem những gì sẽ được nhập",
           "action": {
             "import": "Xác nhận nhập và tiếp tục"
           },
@@ -47,7 +47,7 @@
             "apps": "Ứng dụng",
             "boards": "Bảng",
             "integrations": "Tích hợp",
-            "credentialUsers": ""
+            "credentialUsers": "User xác thực"
           }
         },
         "tokenModal": {
@@ -68,7 +68,7 @@
       },
       "user": {
         "title": "Người dùng quản trị",
-        "subtitle": "",
+        "subtitle": "Chỉ định thông tin xác thực cho tài khoản quản trị viên.",
         "notification": {
           "success": {
             "title": "Đã tạo người dùng",
@@ -80,12 +80,12 @@
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Nhóm bên ngoài",
+        "subtitle": "Chỉ định nhóm sẽ được sử dụng cho người dùng bên ngoài.",
         "form": {
           "name": {
             "label": "Tên nhóm",
-            "description": ""
+            "description": "Tên phải khớp với nhóm quản trị viên của nhà cung cấp bên ngoài"
           }
         }
       },
@@ -138,10 +138,10 @@
       "finish": {
         "title": "Hoàn tất cài đặt",
         "subtitle": "Bạn đã sẵn sàng để tiếp tục!",
-        "description": "",
+        "description": "Bạn đã hoàn tất quá trình thiết lập thành công. Bây giờ bạn có thể bắt đầu sử dụng Homarr. Hãy chọn thao tác tiếp theo:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
+          "goToBoard": "Đi đến bảng {name}",
+          "createBoard": "Tạo bảng đầu tiên của bạn",
           "inviteUser": "Mời người dùng khác",
           "docs": "Đọc tài liệu hướng dẫn"
         }
@@ -199,8 +199,8 @@
         "label": "Sử dụng biểu tượng cho ping"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "Bật nhấp chuột phải trên tiện ích",
+        "description": "Hiển thị menu ngữ cảnh của Homarr khi nhấp chuột phải vào tiện ích. Tắt để sử dụng menu mặc định của trình duyệt (ví dụ: \"Mở liên kết trong tab mới\")."
       },
       "defaultSearchEngine": {
         "label": "Công cụ tìm kiếm mặc định"
@@ -370,12 +370,12 @@
       "name": "Tên",
       "members": "Thành viên",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Bảng chính",
+        "description": "Chỉ có thể chọn các bảng mà nhóm có quyền truy cập"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Bảng di động",
+        "description": "Chỉ có thể chọn các bảng mà nhóm có quyền truy cập"
       }
     },
     "permission": {
@@ -516,11 +516,11 @@
       },
       "transfer": {
         "label": "Chuyển quyền sở hữu",
-        "description": "Chuyển quyền sở hữu nhóm này cho một người dùng khác",
+        "description": "Chuyển quyền sở hữu nhóm này cho một người dùng khác.",
         "confirm": "Bạn chắc chắn muốn chuyển quyền sở hữu nhóm {name} cho {username}?",
         "notification": {
           "success": {
-            "message": "Đã chuyển thành công quyền sở hữu nhóm {group} cho {username}"
+            "message": "Đã chuyển thành công quyền sở hữu nhóm {group} cho {user}"
           },
           "error": {
             "message": "Không thể chuyển quyền sở hữu"
@@ -577,12 +577,12 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Đã lưu cài đặt",
+              "message": "Cài đặt bảng đã được lưu thành công"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Không thể lưu cài đặt",
+              "message": "Không thể lưu cài đặt bảng"
             }
           }
         }
@@ -666,7 +666,7 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
+          "label": "Sử dụng URL khác để ping",
           "description": "Hữu ích nếu Homarr có thể truy cập trực tiếp bằng tên máy chủ nội bộ hoặc mạng để tránh sử dụng băng thông của ISP"
         }
       }
@@ -678,219 +678,219 @@
         "search": "Tìm một ứng dụng",
         "noResults": "Không có kết quả",
         "action": "Chọn {app}",
-        "title": ""
+        "title": "Chọn ứng dụng để thêm vào bảng này"
       },
       "create": {
         "title": "Tạo ứng dụng mới",
-        "description": "Tạo ứng dụng mới",
-        "action": ""
+        "description": "Tạo ứng dụng mới ",
+        "action": "Mở trình tạo ứng dụng"
       },
-      "add": ""
+      "add": "Thêm ứng dụng"
     }
   },
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
+        "title": "Tiện ích tùy chỉnh",
+        "noResults": "Chưa có tiện ích tùy chỉnh. Hãy tạo tiện ích đầu tiên của bạn!",
+        "loading": "Đang tải..."
       },
       "create": {
-        "title": "",
-        "subtitle": ""
+        "title": "Tạo tiện ích tùy chỉnh",
+        "subtitle": "Xác định URL API, thông tin xác thực và cách hiển thị dữ liệu phản hồi."
       },
       "edit": {
-        "title": ""
+        "title": "Chỉnh sửa tiện ích tùy chỉnh"
       }
     },
     "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
+      "create": "Tạo",
+      "import": "Nhập",
+      "save": "Lưu",
+      "delete": "Xóa tiện ích tùy chỉnh",
+      "deleteConfirm": "Bạn có chắc muốn xóa \"{name}\" không? Không thể hoàn tác thao tác này.",
+      "export": "Xuất",
+      "addMapping": "Thêm ánh xạ",
+      "addColumn": "Thêm cột",
+      "edit": "Sửa",
+      "removeMapping": "Xóa ánh xạ",
+      "removeColumn": "Xóa cột",
+      "addItem": "Thêm mục",
+      "removeItem": "Xóa mục",
+      "addBar": "Thêm thanh",
+      "duplicate": "Nhân bản",
+      "copyAiPrompt": "Sao chép lời nhắc AI",
+      "enable": "Bật",
+      "disable": "Tắt",
+      "menu": "Thao tác"
     },
     "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
+      "name": "Tên",
+      "description": "Mô tả",
+      "iconUrl": "URL biểu tượng",
+      "url": "URL",
+      "authType": "Loại xác thực",
+      "headerName": "Tên tham số Header/Truy vấn",
+      "method": "Phương thức",
+      "requestBody": "Nội dung yêu cầu",
+      "displayType": "Loại hiển thị",
+      "jsonPath": "Đường dẫn JSON",
+      "jsonPathHint": "Sử dụng cú pháp JSONPath để trích xuất giá trị, ví dụ: $.data.temperature hoặc $.items[0].name",
+      "label": "Nhãn",
+      "unit": "Đơn vị",
+      "mappings": "Ánh xạ",
+      "tablePath": "Đường dẫn JSON của mảng",
+      "tablePathHint": "Đường dẫn đến mảng trong phản hồi, ví dụ: $.data.items",
+      "columns": "Cột",
+      "header": "Tiêu đề",
+      "items": "Mục",
+      "gridColumns": "Cột lưới",
+      "cardStyle": "Kiểu thẻ",
+      "bars": "Thanh",
+      "valuePath": "Đường dẫn JSON của giá trị",
+      "maxPath": "Đường dẫn JSON của giá trị tối đa",
+      "showPercentage": "Hiển thị phần trăm",
+      "barSize": "Kích thước thanh",
+      "goodValues": "Giá trị tốt (phân tách bằng dấu phẩy)",
+      "dotSize": "Kích thước chấm",
+      "valueSize": "Kích thước giá trị",
+      "labelPosition": "Vị trí nhãn",
+      "kvLayout": "Bố cục",
+      "striped": "Hàng sọc",
+      "compact": "Chế độ thu gọn",
+      "maxHeight": "Chiều cao tối đa (px)",
+      "color": "Màu",
+      "buttonLabel": "Nhãn nút",
+      "buttonColor": "Màu nút",
+      "confirmText": "Nội dung xác nhận",
+      "confirmTextHint": "Nếu được đặt, hộp thoại xác nhận sẽ xuất hiện trước khi thực hiện yêu cầu",
+      "successMessage": "Thông báo thành công",
+      "successMessageHint": "Thông báo hiển thị sau khi thực hiện thành công",
+      "enabled": "Đã bật",
       "template": {
-        "label": "",
-        "description": ""
+        "label": "Mẫu JSX",
+        "description": "Mẫu JSX Mantine. Truy cập các trường phản hồi API thông qua liên kết dữ liệu (ví dụ: data.name). Chỉ sử dụng các component được cho phép. Bị cấm: constructor, __proto__, eval, Function, window, document."
       }
     },
     "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
+      "exampleLabel": "Nhiệt độ CPU",
+      "exampleLabelShort": "Nhiệt độ CPU",
+      "exampleHeader": "Tên",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API-Key",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "online, true, up",
+      "color": "xanh dương"
     },
     "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
+      "filled": "Đặc",
+      "outline": "Viền",
+      "subtle": "Tinh tế"
     },
     "layoutOption": {
-      "list": "",
-      "grid": ""
+      "list": "Danh sách",
+      "grid": "Lưới"
     },
     "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
+      "sm": "Nhỏ",
+      "md": "Trung bình",
+      "lg": "Lớn",
+      "xl": "Rất lớn"
     },
     "labelPositionOption": {
-      "above": "",
-      "below": ""
+      "above": "Bên trên",
+      "below": "Bên dưới"
     },
     "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
+      "general": "Chung",
+      "connection": "Kết nối API",
+      "display": "Cấu hình hiển thị"
     },
     "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "Hiển thị một giá trị được trích xuất cùng nhãn và đơn vị",
+      "keyValue": "Hiển thị nhiều giá trị có nhãn cạnh nhau",
+      "table": "Hiển thị các hàng dữ liệu ở dạng bảng",
+      "statGrid": "Các thẻ thống kê có màu trong lưới — như các tiện ích Pi-Hole hoặc Speedtest",
+      "progressBars": "Thanh tiến độ hiển thị mức sử dụng hoặc mức hoàn thành — dành cho ổ đĩa, bộ nhớ và hạn mức",
+      "statusIndicator": "Các chấm trạng thái có màu hiển thị trạng thái trực tuyến/ngoại tuyến hoặc tình trạng hệ thống",
+      "countGrid": "Bộ đếm số + nhãn nhỏ gọn trong lưới dày",
+      "raw": "Đầu ra JSON được định dạng đẹp để gỡ lỗi",
+      "actionButton": "Nút kích hoạt yêu cầu khi được nhấp",
+      "customJsx": "Bố cục JSX tùy chỉnh sử dụng các component Mantine được cho phép cùng liên kết đầy đủ với dữ liệu API"
     },
     "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "DELETE",
+      "PATCH": "PATCH"
     },
     "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
+      "none": "Không có",
+      "bearer": "Mã thông báo Bearer",
+      "basic": "Xác thực cơ bản",
+      "apiKeyHeader": "Khóa API (Header)",
+      "apiKeyQuery": "Khóa API (Truy vấn)"
     },
     "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "Giá trị đơn",
+      "keyValue": "Khóa-Giá trị",
+      "table": "Bảng",
+      "statGrid": "Lưới thống kê",
+      "progressBars": "Thanh tiến độ",
+      "statusIndicator": "Chỉ báo trạng thái",
+      "countGrid": "Lưới số lượng",
+      "raw": "JSON thô",
+      "actionButton": "Nút thao tác",
+      "customJsx": "JSX tùy chỉnh"
     },
     "secret": {
-      "apiKey": "",
-      "username": "",
-      "password": "",
-      "savedPlaceholder": ""
+      "apiKey": "Khóa API / Token",
+      "username": "Tên người dùng",
+      "password": "Mật khẩu",
+      "savedPlaceholder": "••••••• (đã lưu, để trống để giữ nguyên)"
     },
     "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
+      "title": "Xem trước",
+      "test": "Kiểm tra",
+      "hint": "Nhấp vào Kiểm tra để xem trước phản hồi API với cấu hình hiện tại.",
+      "rawResponse": "Phản hồi JSON thô"
     },
     "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
+      "created": "Đã tạo tiện ích \"{name}\" thành công.",
+      "updated": "Đã cập nhật tiện ích \"{name}\" thành công.",
+      "deleted": "Đã xóa tiện ích \"{name}\".",
+      "imported": "Đã nhập tiện ích thành công.",
+      "aiPromptCopied": "Đã sao chép lời nhắc AI vào bảng nhớ tạm",
+      "aiPromptDescription": "Sao chép lời nhắc dựng sẵn để dán vào bất kỳ chatbot AI nào (ChatGPT, Claude, Gemini...). Lời nhắc bao gồm toàn bộ lược đồ tiện ích và phản hồi API của bạn để AI có thể tạo cấu hình JSON sẵn sàng nhập.",
+      "aiPromptCopy": "Sao chép vào bảng nhớ tạm",
+      "aiPromptNoResponse": "Mẹo: Hãy chạy kiểm tra trước để đưa phản hồi API vào lời nhắc nhằm có kết quả tốt hơn.",
+      "aiPromptCopyError": "Không thể sao chép lời nhắc vào bảng nhớ tạm. Trình duyệt của bạn có thể không hỗ trợ tính năng này.",
+      "createError": "Không thể tạo tiện ích. Hãy kiểm tra endpoint API có thể truy cập.",
+      "updateError": "Không thể cập nhật tiện ích. Các thay đổi của bạn chưa được lưu.",
+      "importError": "Không thể nhập tiện ích. Đảm bảo tệp là bản xuất JSON tiện ích tùy chỉnh hợp lệ.",
+      "exportError": "Không thể xuất tiện ích.",
+      "duplicated": "Đã nhân bản tiện ích \"{name}\".",
+      "duplicateError": "Không thể nhân bản tiện ích.",
+      "toggleError": "Không thể chuyển đổi trạng thái tiện ích.",
+      "deleteError": "Không thể xóa tiện ích.",
+      "previewError": "Không thể tải bản xem trước. Hãy kiểm tra URL và thử lại.",
+      "executed": "Đã thực hiện thao tác thành công.",
+      "executeError": "Thao tác thất bại: {error}"
     },
     "table": {
-      "name": "",
-      "url": "",
-      "display": ""
+      "name": "Tên",
+      "url": "URL",
+      "display": "Hiển thị"
     },
     "widget": {
-      "disabled": ""
+      "disabled": "Tiện ích này đã bị tắt"
     }
   },
   "integration": {
@@ -917,14 +917,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Đã có",
+              "label": "Chọn ứng dụng hiện có"
             },
             "new": {
-              "title": "",
+              "title": "Mới",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "URL ứng dụng",
+                "description": "URL ứng dụng sẽ mở khi truy cập từ bảng điều khiển"
               }
             }
           }
@@ -944,9 +944,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Liên kết ứng dụng",
+            "remove": "Bỏ liên kết",
+            "select": "Chọn ứng dụng để liên kết"
           }
         }
       },
@@ -974,17 +974,17 @@
       },
       "attemptSearchEngineCreation": {
         "label": "Tạo công cụ tìm kiếm",
-        "description": ""
+        "description": "Tích hợp “{kind}” có thể được sử dụng với các công cụ tìm kiếm. Chọn tùy chọn này để tự động cấu hình công cụ tìm kiếm."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Ứng dụng liên kết"
       },
       "createApp": {
         "label": "Tạo ứng dụng",
-        "description": ""
+        "description": "Tạo ứng dụng có cùng tên và biểu tượng với tích hợp. Để trống trường nhập bên dưới để tạo ứng dụng bằng URL của tích hợp."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "URL ứng dụng tùy chỉnh"
       },
       "apiKeySettings": {
         "label": "Lấy khóa API"
@@ -1020,14 +1020,14 @@
       "firewall": "Tường lửa",
       "timetable": "Thời khóa biểu",
       "photoService": "Ảnh",
-      "documents": "",
+      "documents": "Tài liệu",
       "notes": "Ghi chú",
       "mediaMonitoring": "Giám sát",
       "speedtest": "Kiểm tra tốc độ",
       "analytics": "Phân tích",
-      "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "vpn": "VPN",
+      "mediaLibrary": "Thư viện phương tiện",
+      "uptimeMonitoring": "Giám sát thời gian hoạt động"
     },
     "testConnection": {
       "action": {
@@ -1037,125 +1037,125 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Nguyên nhân và thêm chi tiết"
           }
         },
         "unknown": {
           "title": "Lỗi không xác định",
-          "description": ""
+          "description": "Đã xảy ra lỗi không xác định, hãy mở nguyên nhân bên dưới để xem thêm chi tiết"
         },
         "parse": {
           "title": "Lỗi cú pháp",
-          "description": ""
+          "description": "Không thể phân tích phản hồi. Vui lòng xác minh URL đang trỏ đến URL cơ sở của dịch vụ."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Lỗi ủy quyền",
+          "description": "Yêu cầu không được ủy quyền. Vui lòng xác minh thông tin đăng nhập chính xác và đã được cấu hình với đủ quyền."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Lỗi phản hồi",
+          "description": "Đã nhận phản hồi không mong đợi {statusCode} ({reason}) từ <url></url>. Vui lòng xác minh URL đang trỏ đến URL cơ sở của tích hợp.",
+          "otherDescription": "Đã nhận phản hồi không mong đợi {statusCode} từ <url></url>. Vui lòng xác minh URL đang trỏ đến URL cơ sở của tích hợp.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "Yêu cầu lỗi",
+            "notFound": "Không tìm thấy",
+            "tooManyRequests": "Quá nhiều yêu cầu",
+            "internalServerError": "Lỗi máy chủ nội bộ",
+            "serviceUnavailable": "Dịch vụ không khả dụng",
+            "gatewayTimeout": "Hết thời gian cổng"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Lỗi chứng chỉ",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "Chứng chỉ đã hết hạn.",
+            "notYetValid": "Chứng chỉ chưa có hiệu lực.",
+            "untrusted": "Chứng chỉ không được tin cậy.",
+            "hostnameMismatch": "Tên máy chủ của chứng chỉ không khớp với URL."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "Không đủ quyền",
+              "message": "Bạn không được phép tin cậy hoặc tải chứng chỉ lên. Vui lòng liên hệ quản trị viên để tải lên chứng chỉ gốc cần thiết."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Tên máy chủ không khớp",
+              "message": "Tên máy chủ trong chứng chỉ không khớp với tên máy chủ bạn đang kết nối. Điều này có thể cho thấy rủi ro bảo mật, nhưng bạn vẫn có thể chọn tin cậy chứng chỉ này."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "Không thể trích xuất chứng chỉ CA",
+              "message": "Chỉ có thể tự động lấy chứng chỉ tự ký không kèm chuỗi chứng chỉ. Nếu bạn đang sử dụng chứng chỉ tự ký, vui lòng tải chứng chỉ CA lên theo cách thủ công. Bạn có thể xem hướng dẫn <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Thử tạo lại"
             },
             "trust": {
-              "label": ""
+              "label": "Tin cậy chứng chỉ"
             },
             "upload": {
-              "label": ""
+              "label": "Tải chứng chỉ lên"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Tin cậy tên máy chủ không khớp",
+              "message": "Bạn có chắc muốn tin cậy chứng chỉ có tên máy chủ không khớp không?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Đã tin cậy chứng chỉ",
+                "message": "Đã thêm tên máy chủ vào danh sách chứng chỉ đáng tin cậy"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Không thể tin cậy chứng chỉ",
+                "message": "Không thể tin cậy chứng chỉ có tên máy chủ không khớp"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Tin cậy chứng chỉ tự ký",
+              "message": "Bạn có chắc muốn tin cậy chứng chỉ tự ký này không?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Đã tin cậy chứng chỉ",
+                "message": "Đã thêm chứng chỉ vào danh sách chứng chỉ đáng tin cậy"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Không thể tin cậy chứng chỉ",
+                "message": "Không thể thêm chứng chỉ vào danh sách chứng chỉ đáng tin cậy"
               }
             }
           },
           "details": {
-            "title": "",
-            "description": "",
+            "title": "Chi tiết",
+            "description": "Xem lại thông tin chứng chỉ trước khi quyết định tin cậy chứng chỉ.",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "Hiển thị nội dung",
+              "title": "Chứng chỉ PEM"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "Lỗi yêu cầu",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "Không thể kết nối đến máy chủ. Điều này thường có nghĩa là máy chủ đang ngoại tuyến hoặc không thể truy cập từ mạng của bạn.",
+              "networkUnreachable": "Không thể truy cập mạng. Vui lòng kiểm tra kết nối Internet hoặc cấu hình mạng.",
+              "refused": "Máy chủ từ chối kết nối. Máy chủ có thể chưa chạy hoặc đang từ chối yêu cầu trên cổng được chỉ định.",
+              "reset": "Kết nối đã bị máy chủ đóng đột ngột. Điều này có thể xảy ra nếu máy chủ không ổn định hoặc được khởi động lại."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "Không tìm thấy địa chỉ máy chủ. Vui lòng kiểm tra URL xem có lỗi chính tả hoặc tên miền không hợp lệ không.",
+              "timeout": "Tra cứu DNS đã hết thời gian chờ. Đây có thể là sự cố tạm thời — vui lòng thử lại sau một lát.",
+              "noAnswer": "Máy chủ DNS không trả về phản hồi hợp lệ. Tên miền có thể tồn tại nhưng không có bản ghi hợp lệ."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "Yêu cầu đã bị hủy trước khi hoàn tất. Điều này có thể do thao tác của người dùng hoặc hết thời gian chờ hệ thống.",
+              "timeout": "Yêu cầu mất quá nhiều thời gian để hoàn tất và đã hết thời gian chờ. Hãy kiểm tra mạng hoặc thử lại sau."
             }
           }
         }
@@ -1227,8 +1227,8 @@
           "message": "Đường dẫn có thể không chính xác"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "Quá nhiều yêu cầu trong một khoảng thời gian",
+          "message": "Có quá nhiều yêu cầu. Có thể bạn đang bị giới hạn tần suất hoặc hệ thống đích đã từ chối yêu cầu"
         }
       }
     },
@@ -1236,8 +1236,8 @@
       "title": "Bí mật",
       "lastUpdated": "Cập nhật lần cuối {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Chưa đặt giá trị",
+        "tooltip": "Bí mật bắt buộc này chưa được thiết lập"
       },
       "secureNotice": "Bí mật này không thể truy xuất sau khi tạo",
       "reset": {
@@ -1262,56 +1262,56 @@
           "newLabel": "Mật khẩu mới"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID token",
+          "newLabel": "ID mã thông báo mới"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Realm",
+          "newLabel": "Realm mới"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Mã thông báo truy cập cá nhân",
+          "newLabel": "Mã thông báo truy cập cá nhân mới"
         },
         "topic": {
-          "label": "",
+          "label": "Chủ đề",
           "newLabel": "Chủ đề mới"
         },
         "url": {
-          "label": "",
-          "newLabel": ""
+          "label": "URL",
+          "newLabel": "URL mới"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Khóa API (Khóa)",
+          "newLabel": "Khóa API mới (Khóa)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "Khóa API (Bí mật)",
+          "newLabel": "Khóa API mới (Bí mật)"
         },
         "patchmonApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Khóa API",
+          "newLabel": "Khóa API mới"
         },
         "patchmonApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "Bí mật API",
+          "newLabel": "Bí mật API mới"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID ứng dụng",
+          "newLabel": "ID ứng dụng mới"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID cài đặt",
+          "newLabel": "ID cài đặt mới"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Khóa riêng tư",
+          "newLabel": "Khóa riêng tư mới"
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Slug trang trạng thái",
+          "newLabel": "Slug trang trạng thái mới"
         }
       }
     },
@@ -1321,44 +1321,44 @@
       "full": "Toàn quyền truy cập tích hợp"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Audiobookshelf",
+      "description": "Máy chủ sách nói và podcast tự lưu trữ"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Máy chủ phát nhạc tự lưu trữ, tương thích với API Subsonic"
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Giám sát thời gian hoạt động tự lưu trữ với các trang trạng thái công khai",
       "secret": {
         "slug": {
-          "description": ""
+          "description": "Slug của trang trạng thái công khai. Mặc định là \"default\" nếu chưa thiết lập."
         },
         "apiKey": {
-          "description": ""
+          "description": "Khóa API tùy chọn để truy cập /metrics có xác thực"
         }
       }
     },
     "traefik": {
-      "name": "",
-      "description": ""
+      "name": "Traefik",
+      "description": "Reverse proxy và bộ cân bằng tải nền tảng đám mây"
     },
     "wud": {
       "name": "What's Up Docker",
-      "description": "Theo dõi các container Docker của bạn có bản cập nhật hình ảnh."
+      "description": "Theo dõi các container Docker của bạn có bản cập nhật hình ảnh"
     },
     "paperlessNgx": {
-      "name": "",
-      "description": ""
+      "name": "Paperless-ngx",
+      "description": "Hệ thống quản lý tài liệu để lưu trữ và sắp xếp các tài liệu đã quét"
     },
     "patchmon": {
-      "name": "",
-      "description": ""
+      "name": "PatchMon",
+      "description": "Quản lý bản vá và giám sát máy chủ Linux"
     },
     "bazarr": {
-      "name": "",
-      "description": ""
+      "name": "Bazarr",
+      "description": "Ứng dụng bổ trợ cho Sonarr và Radarr, dùng để quản lý và tải phụ đề"
     }
   },
   "media": {
@@ -1398,7 +1398,7 @@
         "label": "Sao chép URL"
       },
       "open": {
-        "label": ""
+        "label": "Mở media"
       }
     },
     "noResults": {
@@ -1406,7 +1406,7 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "Thành công",
     "beta": "Bản beta",
     "error": "Lỗi",
     "action": {
@@ -1414,9 +1414,9 @@
       "apply": "Áp dụng",
       "backToOverview": "Trở về mục tổng quan",
       "skip": "Bỏ qua",
-      "change": "",
+      "change": "Thay đổi",
       "create": "Tạo nên",
-      "createAnother": "",
+      "createAnother": "Tạo và bắt đầu lại",
       "edit": "Sửa",
       "import": "Nhập",
       "insert": "Thêm",
@@ -1426,13 +1426,13 @@
       "cancel": "Hủy",
       "delete": "Xóa",
       "discard": "Hủy bỏ",
-      "close": "",
+      "close": "Đóng",
       "confirm": "Xác nhận",
       "continue": "Tiếp tục",
       "previous": "Trước",
       "next": "Kế tiếp",
       "checkoutDocs": "Xem tài liệu",
-      "checkLogs": "",
+      "checkLogs": "Kiểm tra nhật ký để biết thêm chi tiết",
       "tryAgain": "Thử lại",
       "loading": "Đang tải",
       "show": "Hiện",
@@ -1442,7 +1442,7 @@
     "iconPicker": {
       "label": "URL biểu tượng",
       "description": "Tìm kiếm trong thư viện, dán URL hình ảnh hoặc tải lên tệp.",
-      "header": "Nhập tên hoặc đối tượng để lọc biểu tượng... Homarr sẽ tìm qua {countIcons} biểu tượng cho bạn.",
+      "header": "Nhập tên hoặc đối tượng để lọc biểu tượng... Homarr sẽ tìm qua {countIcons} biểu tượng cho bạn",
       "headerLoading": "Tìm kiếm hình ảnh theo tên",
       "clear": "Xóa hình ảnh",
       "uploadImage": "Tải lên hình ảnh",
@@ -1453,14 +1453,14 @@
       "urlLoading": "Đang kiểm tra hình ảnh…",
       "urlReady": "Hình ảnh đã sẵn sàng để sử dụng",
       "urlError": "Không thể tải hình ảnh này. Kiểm tra URL và thử lại.",
-      "noResults": "",
-      "error": ""
+      "noResults": "Không có biểu tượng nào khớp với \"{search}\".",
+      "error": "Không thể tải biểu tượng."
     },
     "colorScheme": {
       "options": {
         "auto": "Tự động",
-        "light": "",
-        "dark": ""
+        "light": "Sáng",
+        "dark": "Tối"
       }
     },
     "information": {
@@ -1506,21 +1506,21 @@
         "switchToDarkMode": "Chuyển sang chế độ tối",
         "switchToLightMode": "Đổi qua chế độ nền sáng",
         "management": "Quản lý",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Cá nhân hoá",
         "logout": "Đăng xuất",
         "login": "Đăng nhập",
         "homeBoard": "Bảng chính của bạn",
         "loggedOut": "Đã đăng xuất",
-        "updateAvailable": ""
+        "updateAvailable": "Có {countUpdates} bản cập nhật: {tag}"
       }
     },
     "dangerZone": "Khu vực nguy hiểm",
     "noResults": "Không có kết quả",
-    "unsavedChanges": "",
-    "servers": "",
+    "unsavedChanges": "Bạn có thay đổi chưa lưu!",
+    "servers": "Máy chủ",
     "applications": "",
-    "services": "",
+    "services": "Dịch vụ",
     "preview": {
       "show": "Hiển thị xem trước",
       "hide": "Ẩn xem trước"
@@ -1548,17 +1548,17 @@
           "passwordRequirements": "Mật khẩu không đáp ứng yêu cầu",
           "boardAlreadyExists": "Bảng có tên này đã tồn tại",
           "invalidFileType": "Loại tệp không hợp lệ, dự kiến {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "Tên tệp không hợp lệ",
           "fileTooLarge": "Tệp quá lớn, kích thước tối đa là {maxSize}",
           "invalidConfiguration": "Cấu hình không hợp lệ",
-          "groupNameTaken": ""
+          "groupNameTaken": "Tên nhóm đã được sử dụng"
         }
       }
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1570,13 +1570,13 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Tiêu đề"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Lớp CSS tùy chỉnh"
         },
         "borderColor": {
-          "label": ""
+          "label": "Màu viền"
         }
       },
       "remove": {
@@ -1598,7 +1598,7 @@
         "moveDown": "Đi xuống",
         "createAbove": "Danh mục mới phía trên",
         "createBelow": "Danh mục mới phía dưới",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "Mở tất cả trong các tab"
       },
       "create": {
         "title": "Danh mục mới",
@@ -1620,8 +1620,8 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Mở tất cả trong các tab",
+        "text": "Một số trình duyệt có thể chặn việc mở hàng loạt tab vì lý do bảo mật. Homarr không thể mở tất cả cửa sổ vì trình duyệt đã chặn thao tác này. Vui lòng cho phép “Mở cửa sổ bật lên” rồi thử lại."
       }
     }
   },
@@ -1637,20 +1637,20 @@
     "menu": {
       "label": {
         "settings": "Cài đặt",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "refresh": "Làm mới",
+        "options": "Tùy chọn",
+        "actions": "Thao tác"
       },
       "status": {
-        "success": "",
-        "error": "",
-        "loading": "",
-        "idle": ""
+        "success": "OK",
+        "error": "Lỗi",
+        "loading": "Đang tải",
+        "idle": "Nhàn rỗi"
       }
     },
     "create": {
       "title": "Chọn mục để thêm",
-      "search": "",
+      "search": "Lọc mục",
       "addToBoard": "Thêm vào bảng"
     },
     "moveResize": {
@@ -1688,13 +1688,13 @@
           "label": "Tích hợp"
         },
         "title": {
-          "label": ""
+          "label": "Tiêu đề"
         },
         "customCssClasses": {
           "label": "Lớp css tùy chỉnh"
         },
         "borderColor": {
-          "label": ""
+          "label": "Màu viền"
         }
       }
     },
@@ -1705,11 +1705,11 @@
   },
   "widget": {
     "integrationSelect": {
-      "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "configureIntegrationFirst": "Trước tiên hãy kết nối một tích hợp",
+      "loading": "Đang tải...",
+      "placeholder": "Chọn một tùy chọn",
+      "noResults": "Không tìm thấy kết quả",
+      "loadError": "Không thể tải các tùy chọn"
     },
     "app": {
       "name": "Ứng dụng",
@@ -1725,24 +1725,24 @@
           "label": "Hiện tên ứng dụng"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Bật kiểm tra trạng thái"
         },
         "layout": {
-          "label": "",
+          "label": "Bố cục",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Ngang",
+            "row-reverse": "Ngang (đảo ngược)",
+            "column": "Dọc",
+            "column-reverse": "Dọc (đảo ngược)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Chế độ hiển thị mô tả",
+          "description": "Chọn cách hiển thị mô tả ứng dụng",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Trong tiện ích",
+            "tooltip": "Dạng chú giải",
+            "hidden": "Ẩn"
           }
         }
       },
@@ -1773,21 +1773,21 @@
               "label": "Lưới"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Lưới ngang"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Ẩn tiêu đề"
         },
         "hideIcon": {
-          "label": ""
+          "label": "Ẩn biểu tượng"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Ẩn tên máy chủ"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Mở trong tab mới"
         },
         "withBorder": {
           "label": "Hiển thị viền"
@@ -1799,11 +1799,11 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "ArchiveTeam Warrior",
+      "description": "Theo dõi trạng thái ArchiveTeam Warrior, các dự án và tác vụ lưu trữ đang hoạt động.",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "Hiển thị tin nhắn phát sóng"
         }
       }
     },
@@ -1871,7 +1871,7 @@
         "dnsQueriesToday": "Truy vấn hôm nay",
         "domainsBeingBlocked": "Tên miền trong danh sách chặn"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "Do có nhiều tích hợp, Homarr không thể tính chính xác số lượng miền đang bị chặn"
     },
     "dnsHoleControls": {
       "name": "Điều khiển DNS Hole",
@@ -1945,55 +1945,55 @@
           "description": "Ngày tháng sẽ hiển thị như thế nào"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Định dạng thời gian tùy chỉnh",
+          "description": "Sử dụng ISO 8601 để định dạng thời gian (sẽ ghi đè các tùy chọn khác)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Định dạng ngày tùy chỉnh",
+          "description": "Sử dụng ISO 8601 để định dạng ngày (sẽ ghi đè các tùy chọn khác)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị thời tiết",
+          "description": "Hiển thị biểu tượng thời tiết động nhỏ và nhiệt độ ở góc thẻ"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Vị trí thời tiết"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Sử dụng Fahrenheit"
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Trạng thái máy chủ Minecraft",
+      "description": "Hiển thị trạng thái của máy chủ Minecraft",
       "option": {
         "title": {
-          "label": ""
+          "label": "Tiêu đề"
         },
         "domain": {
-          "label": ""
+          "label": "Địa chỉ máy chủ"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Máy chủ Bedrock"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "Trực tuyến",
+        "offline": "Ngoại tuyến"
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Lịch trình",
+      "description": "Hiển thị giờ khởi hành của một ga",
+      "title": "Các chuyến khởi hành {station}",
+      "noStation": "Chưa chọn ga",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "URL Search.ch"
         },
         "station": {
-          "label": ""
+          "label": "Ga"
         }
       }
     },
@@ -2022,8 +2022,8 @@
         "clear": "Xóa định dạng",
         "heading": "Tiêu đề {level}",
         "align": "Căn chỉnh: {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "Đặt hướng văn bản từ trái sang phải",
+        "directionRtl": "Đặt hướng văn bản từ phải sang trái",
         "blockquote": "Trích dẫn",
         "horizontalLine": "Kẻ ngang",
         "bulletList": "Danh sách kiểu ký hiệu",
@@ -2059,43 +2059,43 @@
         "width": "Chiều rộng",
         "height": "Chiều cao"
       },
-      "placeholder": "",
+      "placeholder": "Bắt đầu viết ghi chú của bạn",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Bỏ thay đổi?",
+        "message": "Bạn có thay đổi chưa lưu trong sổ ghi chép. Bạn có chắc muốn hủy chúng không?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Hủy thay đổi",
+          "keepEditing": "Tiếp tục chỉnh sửa"
         }
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Ghi chú Anchor",
+      "description": "Hiển thị ghi chú đã chọn từ Anchor",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Ghi chú"
         },
         "showTitle": {
-          "label": ""
+          "label": "Hiển thị tiêu đề"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Hiển thị thời điểm cập nhật gần nhất"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Chọn một ghi chú để hiển thị",
+      "emptyContent": "Ghi chú này không có nội dung",
+      "notFound": "Không tìm thấy ghi chú",
+      "noNotes": "Không tìm thấy ghi chú nào",
+      "integrationRequired": "Trước tiên hãy chọn một tích hợp Anchor",
+      "updatedAt": "Đã cập nhật {date}",
+      "untitled": "Chưa có tiêu đề",
+      "edit": "Sửa",
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "readOnlyViewer": "Bạn chỉ có quyền xem ghi chú này. Tính năng chỉnh sửa đã bị tắt.",
+      "saveForbidden": "Bạn không có quyền chỉnh sửa ghi chú này.",
+      "saveFailed": "Không thể lưu ghi chú này. Vui lòng thử lại."
     },
     "iframe": {
       "name": "iFrame",
@@ -2129,12 +2129,12 @@
           "label": "Cho phép định vị"
         },
         "allowModals": {
-          "label": ""
+          "label": "Cho phép hộp thoại"
         }
       },
       "error": {
         "noUrl": "Chưa cung cấp URL iFrame",
-        "unsupportedProtocol": "",
+        "unsupportedProtocol": "URL được cung cấp sử dụng giao thức không được hỗ trợ. Vui lòng sử dụng một trong các giao thức ({supportedProtocols})",
         "noBrowerSupport": "Trình duyệt của bạn không hỗ trợ iframe. Vui lòng cập nhật trình duyệt của bạn."
       }
     },
@@ -2168,80 +2168,80 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Chạy {name}"
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Giá cổ phiếu",
+      "description": "Hiển thị giá cổ phiếu hiện tại của một công ty",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Mã cổ phiếu"
         },
         "timeRange": {
-          "label": "",
+          "label": "Khoảng thời gian",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 ngày"
             },
             "5d": {
-              "label": ""
+              "label": "5 ngày"
             },
             "1mo": {
-              "label": ""
+              "label": "1 tháng"
             },
             "3mo": {
-              "label": ""
+              "label": "3 tháng"
             },
             "6mo": {
-              "label": ""
+              "label": "6 tháng"
             },
             "ytd": {
-              "label": ""
+              "label": "Từ đầu năm đến nay"
             },
             "1y": {
-              "label": ""
+              "label": "1 năm"
             },
             "2y": {
-              "label": ""
+              "label": "2 năm"
             },
             "5y": {
-              "label": ""
+              "label": "5 năm"
             },
             "10y": {
-              "label": ""
+              "label": "10 năm"
             },
             "max": {
-              "label": ""
+              "label": "Tối đa"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Khoảng thời gian",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 phút"
             },
             "15m": {
-              "label": ""
+              "label": "15 phút"
             },
             "30m": {
-              "label": ""
+              "label": "30 phút"
             },
             "1h": {
-              "label": ""
+              "label": "1 giờ"
             },
             "1d": {
-              "label": ""
+              "label": "1 ngày"
             },
             "5d": {
-              "label": ""
+              "label": "5 ngày"
             },
             "1wk": {
-              "label": ""
+              "label": "1 tuần"
             },
             "1mo": {
-              "label": ""
+              "label": "1 tháng"
             }
           }
         }
@@ -2251,7 +2251,7 @@
       "name": "Lịch",
       "description": "Hiển thị sự kiện từ các tích hợp của bạn trong chế độ xem lịch trong một khoảng thời gian tương đối nhất định",
       "duration": {
-        "allDay": ""
+        "allDay": "Cả ngày"
       },
       "option": {
         "releaseType": {
@@ -2269,7 +2269,7 @@
           "label": "Kết thúc tại"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "Hiển thị mục chưa giám sát"
         }
       }
     },
@@ -2281,14 +2281,14 @@
           "label": "Nhiệt độ theo Fahrenheit"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Tắt số thập phân của nhiệt độ"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị tốc độ gió hiện tại",
+          "description": "Chỉ trong thời tiết hiện tại"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Dùng mph cho tốc độ gió"
         },
         "location": {
           "label": "Vị trí thời tiết"
@@ -2308,13 +2308,13 @@
           "description": "Ngày tháng sẽ hiển thị như thế nào"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": "",
-        "humidity": ""
+        "sunrise": "Bình minh",
+        "sunset": "Hoàng hôn",
+        "maxWindSpeed": "Tốc độ gió tối đa: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Gió giật tối đa: {maxWindGusts} {unit}",
+        "humidity": "Độ ẩm: {humidity}%"
       },
       "kind": {
         "clear": "Quang đãng",
@@ -2351,8 +2351,8 @@
       "name": "Giám sát tình trạng hệ thống",
       "description": "Hiển thị thông tin về tình trạng và trạng thái hệ thống của bạn.",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "Hệ thống",
+        "cluster": "Cụm"
       },
       "option": {
         "fahrenheit": {
@@ -2365,27 +2365,27 @@
           "label": "Hiển thị thông tin Bộ nhớ"
         },
         "gpu": {
-          "label": ""
+          "label": "Hiển thị thông tin GPU"
         },
         "showUptime": {
-          "label": ""
+          "label": "Hiện thời gian chạy"
         },
         "fileSystem": {
           "label": "Hiển thị thông tin Hệ thống tệp"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Ổ lưu trữ hiển thị",
+          "description": "Chỉ khả dụng khi tất cả tích hợp đã chọn là Synology. Để trống để hiển thị tất cả ổ lưu trữ được phát hiện.",
+          "placeholder": "Chọn ổ lưu trữ"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Tab mặc định"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Các phần cụm hiển thị"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Yêu cầu chỉ báo phần"
         }
       },
       "popover": {
@@ -2394,7 +2394,7 @@
         "memory": "Bộ nhớ: {memory}GiB",
         "memoryAvailable": "Khả dụng: {memoryAvailable}GiB ({percent}%)",
         "version": "Phiên bản: {version}",
-        "uptime": "",
+        "uptime": "Thời gian hoạt động: {months} tháng, {days} ngày, {hours} giờ, {minutes} phút",
         "loadAverage": "Tải trung bình:",
         "minute": "1 phút",
         "minutes": "{count} phút",
@@ -2408,126 +2408,126 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Node"
           },
           "qemu": {
-            "name": ""
+            "name": "Máy ảo"
           },
           "lxc": {
-            "name": ""
+            "name": "LXC"
           },
           "storage": {
-            "name": ""
+            "name": "Lưu trữ"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Node",
+            "vmId": "ID máy ảo",
+            "plugin": "Plugin"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
+            "cpu": "Lõi",
+            "memory": "Bộ nhớ",
+            "storage": "Lưu trữ",
             "uptime": "",
-            "haState": "",
+            "haState": "Trạng thái HA",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Lưu trữ cục bộ",
+              "shared": "Lưu trữ dùng chung"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Tên",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Node"
           }
         }
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Thống kê Docker",
+      "description": "Thống kê các container của bạn (chỉ quản trị viên mới có thể thêm tiện ích này)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Các cột cần hiển thị"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Bật sắp xếp mục"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Cột dùng để sắp xếp mặc định",
           "option": {
-            "name": "",
+            "name": "Tên",
             "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "cpuUsage": "Mức sử dụng CPU",
+            "memoryUsage": "Mức sử dụng bộ nhớ"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Đảo ngược thứ tự sắp xếp"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Thứ tự cột"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Độ rộng cột"
         }
       },
       "error": {
-        "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "internalServerError": "Không thể lấy thống kê container",
+        "layoutSaveTitle": "Chưa lưu bố cục bảng",
+        "layoutSaveMessage": "Không thể lưu bố cục bảng Docker. Hãy thử di chuyển hoặc thay đổi kích thước cột lần nữa."
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "Không tìm thấy container"
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Tổng quan về phiên bản Coolify của bạn với các máy chủ và ứng dụng",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Hiển thị máy chủ"
         },
         "showApplications": {
-          "label": ""
+          "label": "Hiển thị ứng dụng"
         },
         "showServices": {
-          "label": ""
+          "label": "Hiển thị dịch vụ"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "Không tìm thấy máy chủ nào",
+        "applications": "Không tìm thấy ứng dụng nào",
+        "services": "Không tìm thấy dịch vụ nào"
       },
       "footer": {
-        "updated": ""
+        "updated": "Đã cập nhật {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Chưa cấu hình tích hợp Coolify",
+        "internalServerError": "Không thể lấy dữ liệu Coolify"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Xây dựng"
       },
       "instances": {
-        "title": ""
+        "title": "Các phiên bản"
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "Tổng quan về các kết nối VPN của bạn",
+      "serviceUnavailable": "VPN không khả dụng",
       "option": {}
     },
     "ups": {
@@ -2562,85 +2562,85 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Giám sát máy chủ phương tiện nâng cao với dữ liệu chi tiết về luồng và chuyển mã",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Hiển thị luồng đang hoạt động"
         },
         "showStats": {
-          "label": ""
+          "label": "Hiển thị tóm tắt thống kê"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Hiển thị hoạt động gần đây"
         },
         "showViolations": {
-          "label": ""
+          "label": "Hiển thị vi phạm"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Luồng đang hoạt động",
+        "totalUsers": "Tổng số người dùng",
+        "transcodes": "Lượt chuyển mã",
+        "bandwidth": "Băng thông"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Không có luồng đang hoạt động",
+        "user": "Người dùng",
+        "media": "Phương tiện",
+        "state": "Trạng thái",
+        "quality": "Chất lượng",
+        "device": "Thiết bị",
+        "progress": "Tiến độ",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Phát trực tiếp",
+          "transcode": "Chuyển mã",
+          "directStream": "Truyền trực tiếp"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Hoạt động gần đây",
+        "empty": "Không có hoạt động gần đây",
+        "watched": "Đã xem",
+        "partial": "Một phần"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Vi phạm",
+        "empty": "Không có vi phạm gần đây",
+        "rule": "Quy tắc",
+        "user": "Người dùng"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Chưa bật phần nào",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Chưa cấu hình tích hợp Tracearr",
+        "internalServerError": "Không thể lấy dữ liệu Tracearr"
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Phân tích Umami",
+      "description": "Hiển thị thống kê khách truy cập từ phiên bản phân tích Umami của bạn",
+      "visitors": "khách truy cập",
+      "active": "đang hoạt động",
+      "pageviews": "lượt xem trang",
+      "visits": "lượt truy cập",
+      "bounceRate": "tỷ lệ thoát",
+      "avgDuration": "trung bình",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Trang web",
+          "description": "Chọn một trang web được theo dõi bởi phiên bản Umami của bạn",
+          "placeholder": "Chọn một trang web",
+          "loading": "Đang tải các trang web...",
+          "noWebsites": "Không tìm thấy trang web nào",
+          "configureIntegrationFirst": "Trước tiên hãy kết nối một tích hợp Umami"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Khung thời gian",
+          "description": "Khoảng thời gian hiển thị dữ liệu khách truy cập",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
+            "today": "Hôm nay",
+            "24h": "24 giờ qua",
+            "7d": "7 ngày qua",
             "30d": "30 ngày qua",
             "month": "Tháng này",
             "lastMonth": "Tháng trước"
@@ -2744,7 +2744,7 @@
       "app": {
         "noData": "Không tìm thấy ứng dụng",
         "description": "Nhấp <here></here> để tạo ứng dụng mới",
-        "quickCreate": ""
+        "quickCreate": "Tạo ứng dụng nhanh"
       },
       "error": {
         "noIntegration": "Chưa chọn tích hợp",
@@ -2780,336 +2780,336 @@
       "description": "Hiển thị các luồng hiện tại trên máy chủ media của bạn",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Chỉ hiển thị nội dung đang phát",
+          "description": "Tắt tùy chọn này sẽ không hoạt động với Plex"
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị tốc độ bit",
+          "description": "Hiển thị tốc độ bit phát lại hiện tại bên cạnh vị trí"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị vị trí",
+          "description": "Hiển thị luồng phát trên mạng LAN hay WAN"
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, other {# luồng đang hoạt động}}",
+        "totalBitrate": "Tổng: {bitrate}"
       },
       "items": {
-        "currentlyPlaying": "",
-        "user": "",
-        "name": "",
-        "id": "",
-        "status": "",
-        "directPlay": "",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "currentlyPlaying": "Đang phát",
+        "user": "User",
+        "name": "Tên",
+        "id": "ID",
+        "status": "Trạng thái",
+        "directPlay": "Phát trực tiếp",
+        "directStream": "Luồng trực tiếp",
+        "transcodeVideo": "Chuyển mã video",
+        "transcodeAudio": "Chuyển mã âm thanh",
+        "transcoding": "Chuyển mã",
+        "paused": "Tạm dừng",
+        "remaining": "Còn {minutes} phút",
         "metadata": {
-          "title": "",
+          "title": "Thống kê chuyên sâu",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Video",
+            "resolution": "Độ phân giải"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Âm thanh",
+            "channelCount": "Kênh âm thanh",
+            "codec": "Bộ giải mã âm thanh"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "Chuyển mã",
+            "container": "Vùng chứa",
+            "resolution": "Độ phân giải",
+            "target": "Bộ giải mã đích"
           }
         }
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "name": "Paperless-ngx",
+      "description": "Tổng quan về kho lưu trữ tài liệu Paperless-ngx của bạn",
+      "documentsTotal": "Tổng số tài liệu",
+      "documentsInbox": "Hộp thư đến",
+      "correspondents": "Đối tác liên hệ",
+      "tags": "Thẻ",
+      "documentTypes": "Loại tài liệu",
+      "inboxRatio": "Tỷ lệ hộp thư đến",
+      "inbox": "hộp thư đến",
+      "total": "tổng cộng",
       "option": {
         "showInboxRatio": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị tỷ lệ hộp thư đến",
+          "description": "Hiển thị tỷ lệ tài liệu trong hộp thư đến so với tổng số trong phần chính"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị vòng tròn hộp thư đến",
+          "description": "Hiển thị vòng tiến độ bên cạnh tỷ lệ hộp thư đến"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị tổng số tài liệu",
+          "description": "Hiển thị tổng số tài liệu trong kho lưu trữ của bạn"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị số lượng trong hộp thư đến",
+          "description": "Hiển thị số tài liệu chưa xử lý trong hộp thư đến"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị đối tác liên hệ",
+          "description": "Hiển thị tổng số đối tác liên hệ"
         },
         "showTags": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị thẻ",
+          "description": "Hiển thị tổng số thẻ"
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị loại tài liệu",
+          "description": "Hiển thị tổng số loại tài liệu"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể tải dữ liệu Paperless-ngx"
       }
     },
     "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
+      "name": "PatchMon",
+      "description": "Tổng quan về trạng thái bản vá máy chủ từ PatchMon",
+      "title": "Thống kê PatchMon",
+      "totalHosts": "Tổng số máy chủ",
+      "hostsNeedingUpdates": "Cần cập nhật",
+      "securityUpdates": "Cập nhật bảo mật",
+      "upToDateHosts": "Máy chủ đã cập nhật",
+      "hostsWithSecurityUpdates": "Máy chủ có bản cập nhật bảo mật",
+      "recentUpdates24h": "Cập nhật (24 giờ)",
+      "totalOutdatedPackages": "Gói lỗi thời",
+      "totalRepos": "Kho lưu trữ",
+      "osDistribution": "Phân phối hệ điều hành",
+      "compliance": "Tuân thủ bản vá",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Đã cập nhật {time}",
       "option": {
         "showTotalHosts": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị tổng số máy chủ",
+          "description": "Hiển thị tổng số máy chủ được giám sát"
         },
         "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị máy chủ cần cập nhật",
+          "description": "Hiển thị máy chủ có ít nhất một gói lỗi thời"
         },
         "showSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị bản cập nhật bảo mật",
+          "description": "Hiển thị tổng số bản cập nhật bảo mật khả dụng"
         },
         "showUpToDateHosts": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị máy chủ đã cập nhật",
+          "description": "Hiển thị máy chủ không có gói lỗi thời"
         },
         "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị máy chủ có bản cập nhật bảo mật",
+          "description": "Hiển thị máy chủ yêu cầu bản vá bảo mật"
         },
         "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị cập nhật gần đây (24 giờ)",
+          "description": "Hiển thị số bản cập nhật đã áp dụng trong 24 giờ qua"
         },
         "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị gói lỗi thời",
+          "description": "Hiển thị tổng số gói lỗi thời trên tất cả máy chủ"
         },
         "showTotalRepos": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị kho lưu trữ",
+          "description": "Hiển thị số kho lưu trữ đang hoạt động được giám sát"
         },
         "enableThresholdColors": {
-          "label": "",
-          "description": ""
+          "label": "Bật màu theo ngưỡng",
+          "description": "Tô màu giá trị thống kê xanh lục, vàng hoặc đỏ dựa trên các mức độ nghiêm trọng đặt sẵn"
         },
         "useCustomThresholds": {
-          "label": "",
-          "description": ""
+          "label": "Ngưỡng nâng cao",
+          "description": "Tùy chỉnh ngưỡng cảnh báo và nghiêm trọng cho từng thống kê bằng số tuyệt đối hoặc phần trăm tổng số máy chủ"
         },
         "thresholdMode": {
           "option": {
-            "absolute": "",
-            "percent": ""
+            "absolute": "Số lượng tuyệt đối",
+            "percent": "Phần trăm tổng số máy chủ"
           }
         },
         "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Chế độ ngưỡng cần cập nhật",
+          "description": "So sánh số lượng cần cập nhật dưới dạng giá trị tuyệt đối hoặc phần trăm tổng số máy chủ"
         },
         "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Ngưỡng cảnh báo cần cập nhật",
+          "description": "Chuyển sang màu vàng khi giá trị đạt ngưỡng này"
         },
         "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Ngưỡng nghiêm trọng cần cập nhật",
+          "description": "Chuyển sang màu đỏ khi giá trị đạt ngưỡng này"
         },
         "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Chế độ ngưỡng cập nhật bảo mật",
+          "description": "So sánh số lượng cập nhật bảo mật dưới dạng giá trị tuyệt đối hoặc phần trăm tổng số máy chủ"
         },
         "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Ngưỡng cảnh báo cập nhật bảo mật",
+          "description": "Chuyển sang màu vàng khi giá trị đạt ngưỡng này"
         },
         "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Ngưỡng nghiêm trọng cập nhật bảo mật",
+          "description": "Chuyển sang màu đỏ khi giá trị đạt ngưỡng này"
         },
         "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Chế độ ngưỡng máy chủ có cập nhật bảo mật",
+          "description": "So sánh số lượng máy chủ dưới dạng giá trị tuyệt đối hoặc phần trăm tổng số máy chủ"
         },
         "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Ngưỡng cảnh báo máy chủ có cập nhật bảo mật",
+          "description": "Chuyển sang màu vàng khi giá trị đạt ngưỡng này"
         },
         "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Ngưỡng nghiêm trọng máy chủ có cập nhật bảo mật",
+          "description": "Chuyển sang màu đỏ khi giá trị đạt ngưỡng này"
         },
         "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Chế độ ngưỡng máy chủ đã cập nhật",
+          "description": "So sánh số lượng máy chủ đã cập nhật dưới dạng giá trị tuyệt đối hoặc phần trăm tổng số máy chủ"
         },
         "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Ngưỡng cảnh báo máy chủ đã cập nhật",
+          "description": "Chuyển sang màu vàng khi giá trị đạt hoặc vượt ngưỡng này nhưng chưa bao phủ hoàn toàn"
         },
         "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Ngưỡng nghiêm trọng máy chủ đã cập nhật",
+          "description": "Chuyển sang màu đỏ khi giá trị thấp hơn ngưỡng này"
         },
         "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Chế độ ngưỡng gói lỗi thời",
+          "description": "So sánh số lượng gói lỗi thời dưới dạng giá trị tuyệt đối hoặc phần trăm tổng số máy chủ"
         },
         "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Ngưỡng cảnh báo gói lỗi thời",
+          "description": "Chuyển sang màu vàng khi giá trị đạt ngưỡng này"
         },
         "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Ngưỡng nghiêm trọng gói lỗi thời",
+          "description": "Chuyển sang màu đỏ khi giá trị đạt ngưỡng này"
         },
         "showOsDistribution": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị phân phối hệ điều hành",
+          "description": "Hiển thị phân tích máy chủ được giám sát theo hệ điều hành"
         },
         "osDistributionLimit": {
-          "label": "",
-          "description": "",
+          "label": "Giới hạn phân phối hệ điều hành",
+          "description": "Số hệ điều hành tối đa cần hiển thị",
           "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
+            "3": "3 hàng đầu",
+            "5": "5 hàng đầu",
+            "10": "10 hàng đầu",
+            "all": "Tất cả"
           }
         },
         "showOsVersion": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị phiên bản hệ điều hành",
+          "description": "Thêm phiên bản hệ điều hành vào từng nhãn phân phối khi có sẵn"
         },
         "showComplianceHero": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị phần chính tuân thủ",
+          "description": "Hiển thị vòng tuân thủ cho biết phần trăm máy chủ đã cập nhật"
         },
         "osDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Chế độ hiển thị hệ điều hành",
+          "description": "Chọn cách hiển thị phân phối hệ điều hành",
           "option": {
-            "bars": "",
-            "donut": ""
+            "bars": "Thanh ngang",
+            "donut": "Biểu đồ vòng khuyên"
           }
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể tải dữ liệu PatchMon"
       }
     },
     "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
+      "name": "Bazarr",
+      "description": "Tổng quan về phụ đề còn thiếu và tình trạng hệ thống từ phiên bản Bazarr của bạn",
+      "episodes": "Tập còn thiếu",
+      "movies": "Phim còn thiếu",
+      "providers": "Sự cố nhà cung cấp",
+      "status": "Sự cố tình trạng hệ thống",
       "option": {
         "showMissingEpisodes": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị tập còn thiếu",
+          "description": "Hiển thị số tập còn thiếu phụ đề"
         },
         "showMissingMovies": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị phim còn thiếu",
+          "description": "Hiển thị số phim còn thiếu phụ đề"
         },
         "showProviderIssues": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị sự cố nhà cung cấp",
+          "description": "Hiển thị số nhà cung cấp phụ đề gặp sự cố"
         },
         "showHealthIssues": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị sự cố tình trạng hệ thống",
+          "description": "Hiển thị số sự cố tình trạng hệ thống của Bazarr"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể tải dữ liệu Bazarr"
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Thống kê máy chủ Immich",
+      "description": "Thông tin về phiên bản Immich của bạn",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "Hiện người dùng",
+          "description": "Hiển thị số người dùng trong phiên bản của bạn"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị ảnh",
+          "description": "Hiển thị số ảnh trong phiên bản của bạn"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị video",
+          "description": "Hiển thị số video trong phiên bản của bạn"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Hiện lưu trữ",
+          "description": "Hiển thị tổng dung lượng lưu trữ đã sử dụng"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Người dùng",
+      "photos": "Ảnh",
+      "videos": "Video",
+      "storage": "Dung lượng đã sử dụng"
     },
     "immich-albumCarousel": {
-      "name": "",
-      "allPhotos": "",
+      "name": "Album Immich",
+      "allPhotos": "Tất cả ảnh",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "Album",
+          "description": "Chọn album Immich hoặc Tất cả ảnh. Lựa chọn trống cũng hiển thị ảnh ngẫu nhiên từ toàn bộ thư viện của bạn."
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Khoảng thời gian tính bằng giây",
+          "description": "Xoay vòng giữa các ảnh trong album sau mỗi X giây. Tối thiểu là 1 và phải nhỏ hơn 3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị thông tin ảnh",
+          "description": "Hiển thị ngày của ảnh và chỉ mục hiện tại ở cuối trình chiếu"
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "Xáo trộn ảnh",
+          "description": "Hiển thị ảnh theo thứ tự ngẫu nhiên thay vì luôn bắt đầu theo cùng thứ tự album."
         }
       },
-      "description": "",
-      "noPhotos": ""
+      "description": "Trình chiếu ảnh từ album Immich hoặc toàn bộ thư viện của bạn",
+      "noPhotos": "Không tìm thấy ảnh"
     },
     "downloads": {
       "name": "Trình tải xuống",
@@ -3134,7 +3134,7 @@
           "label": "Hiển thị các mục torrent đã hoàn thành"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Hiển thị các mục linh tinh được đánh dấu là đã hoàn tất"
         },
         "activeTorrentThreshold": {
           "label": "Ẩn torrent đã hoàn thành dưới ngưỡng này (kiB/s)"
@@ -3149,22 +3149,22 @@
           "label": "Sử dụng bộ lọc để tính Tỷ lệ"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Giới hạn mục trên mỗi tích hợp",
+          "description": "Tùy chọn này sẽ giới hạn số mục hiển thị trên mỗi tích hợp, không phải trên toàn hệ thống"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Thứ tự cột"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Độ rộng cột"
         }
       },
       "errors": {
         "noColumns": "Chọn Cột trong Mục",
         "noCommunications": "Không thể tải dữ liệu từ tích hợp",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "Không tìm thấy nội dung tải xuống",
+        "actionFailed": "Thao tác thất bại",
+        "actionFailedMessage": "Không thể hoàn tất thao tác. Vui lòng thử lại."
       },
       "items": {
         "actions": {
@@ -3188,7 +3188,7 @@
         },
         "id": {
           "columnTitle": "ID",
-          "detailsTitle": ""
+          "detailsTitle": "ID mục"
         },
         "integration": {
           "columnTitle": "Tích hợp"
@@ -3223,7 +3223,7 @@
         "time": {
           "columnTitle": "Thời gian hoàn thành",
           "detailsTitle": "Thời gian từ/đến khi hoàn thành",
-          "eta": ""
+          "eta": "Thời gian dự kiến"
         },
         "type": {
           "columnTitle": "Loại",
@@ -3269,49 +3269,49 @@
       },
       "globalRatio": "Tỷ lệ toàn cục",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "Sao chép tên",
+        "copyId": "Sao chép ID",
+        "clearFilters": "Xóa bộ lọc"
       },
       "footer": {
-        "filter": ""
+        "filter": "Lọc nội dung tải xuống"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "Hiển thị thống kê tổng thể",
+        "hide": "Ẩn thống kê tổng thể",
+        "overallProgress": "Tiến độ hàng đợi tổng thể",
+        "totalSize": "Kích thước hàng đợi tổng cộng",
+        "clients": "{count, plural, other {# máy khách}}"
       },
-      "disconnected": ""
+      "disconnected": "(đã ngắt kết nối)"
     },
     "mediaReleases": {
-      "name": "",
-      "description": "",
+      "name": "Phát hành media",
+      "description": "Hiển thị phương tiện mới được thêm hoặc bản phát hành sắp tới từ các tích hợp khác nhau",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Bố cục",
           "option": {
             "backdrop": {
-              "label": ""
+              "label": "Ảnh nền"
             },
             "poster": {
-              "label": ""
+              "label": "Áp phích"
             }
           }
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Hiển thị chú giải mô tả"
         },
         "showType": {
-          "label": ""
+          "label": "Hiển thị huy hiệu loại phương tiện"
         },
         "showSource": {
-          "label": ""
+          "label": "Hiển thị tích hợp nguồn"
         }
       },
       "length": {
-        "duration": ""
+        "duration": "{length} phút"
       }
     },
     "mediaRequests-requestList": {
@@ -3322,10 +3322,10 @@
           "label": "Mở liên kết trong tab mới"
         },
         "statusFilter": {
-          "label": ""
+          "label": "Trạng thái cần hiển thị"
         },
         "recentDays": {
-          "label": ""
+          "label": "Chỉ hiển thị yêu cầu gần đây"
         }
       },
       "pending": {
@@ -3337,18 +3337,18 @@
         "unknown": "Không rõ",
         "pending": "Đang chờ",
         "processing": "Đang xử lý",
-        "requested": "",
+        "requested": "Đã yêu cầu",
         "partiallyAvailable": "Một phần",
         "available": "Khả dụng",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "Danh sách đen",
+        "deleted": "Đã xóa"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": "",
-        "completed": ""
+        "pending": "Đang chờ",
+        "approved": "Đã phê duyệt",
+        "declined": "Đã từ chối",
+        "failed": "Thất bại",
+        "completed": "Đã hoàn thành"
       },
       "toBeDetermined": "Chưa xác định"
     },
@@ -3375,92 +3375,92 @@
       }
     },
     "mediaTranscoding": {
-      "name": "",
-      "description": "",
+      "name": "Chuyển mã media",
+      "description": "Thống kê, hàng đợi hiện tại và trạng thái worker của quá trình chuyển mã media",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Chế độ xem mặc định"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "Kích thước trang hàng đợi"
         }
       },
       "tab": {
-        "workers": "",
+        "workers": "Worker",
         "queue": "Chờ",
-        "statistics": ""
+        "statistics": "Thống kê"
       },
-      "currentIndex": "",
+      "currentIndex": "{start}–{end} trên tổng số {total}",
       "healthCheck": {
-        "title": "",
-        "queued": "",
+        "title": "Kiểm tra tình trạng",
+        "queued": "Đang chờ",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Khỏe mạnh",
+          "unhealthy": "Không khỏe mạnh"
         }
       },
       "panel": {
         "statistics": {
           "empty": "Trống",
-          "transcodes": "",
-          "transcodesCount": "",
-          "healthChecksCount": "",
-          "filesCount": "",
+          "transcodes": "Lượt chuyển mã",
+          "transcodesCount": "Lượt chuyển mã",
+          "healthChecksCount": "Lần kiểm tra tình trạng",
+          "filesCount": "Tệp",
           "savedSpace": "",
-          "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "healthChecks": "Lần kiểm tra tình trạng",
+          "videoCodecs": "Bộ mã hóa",
+          "videoContainers": "Container video",
+          "videoResolutions": "Độ phân giải"
         },
         "workers": {
           "empty": "Trống",
           "table": {
-            "file": "",
+            "file": "Tệp",
             "eta": "Thời gian dự kiến",
             "progress": "Tiến độ",
-            "transcode": "",
-            "healthCheck": ""
+            "transcode": "Chuyển mã",
+            "healthCheck": "Kiểm tra tình trạng"
           }
         },
         "queue": {
           "empty": "Trống",
           "table": {
-            "file": "",
+            "file": "Tệp",
             "size": "Kích cỡ",
-            "transcode": "",
-            "healthCheck": ""
+            "transcode": "Chuyển mã",
+            "healthCheck": "Kiểm tra tình trạng"
           }
         }
       }
     },
     "mediaMissing": {
-      "name": "",
-      "description": "",
+      "name": "Phương tiện còn thiếu & đang xếp hàng",
+      "description": "Hiển thị phim và tập còn thiếu hoặc đang xếp hàng từ Radarr và Sonarr",
       "option": {
         "showMissing": {
-          "label": ""
+          "label": "Hiển thị mục còn thiếu"
         },
         "showQueued": {
-          "label": ""
+          "label": "Hiển thị mục đang xếp hàng"
         },
         "pageSize": {
-          "label": ""
+          "label": "Số mục mỗi trang"
         }
       },
       "tab": {
-        "missing": "",
-        "queued": ""
+        "missing": "Còn thiếu",
+        "queued": "Đang xếp hàng"
       },
       "type": {
-        "movie": "",
-        "episode": ""
+        "movie": "Phim",
+        "episode": "Tập"
       },
       "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
+        "missing": "Không có mục còn thiếu",
+        "queued": "Không có mục đang xếp hàng",
+        "noTabsEnabled": "Bật ít nhất một tab trong cài đặt tiện ích"
       },
-      "timeLeft": ""
+      "timeLeft": "Thời gian còn lại"
     },
     "rssFeed": {
       "name": "Nguồn cấp RSS",
@@ -3479,140 +3479,140 @@
           "label": "Giới hạn số lượng bài đăng"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Ẩn mô tả"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Hiển thị ảnh áp phích"
         }
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Bản phát hành",
+      "description": "Hiển thị danh sách phiên bản hiện tại của các kho lưu trữ được chỉ định bằng biểu thức chính quy phiên bản tương ứng.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Bản phát hành mới trong khoảng",
+          "description": "Ví dụ: 1w (1 tuần), 10M (10 tháng). Các đơn vị được chấp nhận: h (giờ), d (ngày), w (tuần), M (tháng), y (năm). Để trống nếu không muốn đánh dấu bản phát hành mới."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Bản phát hành cũ trong khoảng",
+          "description": "Ví dụ: 1w (1 tuần), 10M (10 tháng). Các đơn vị được chấp nhận: h (giờ), d (ngày), w (tuần), M (tháng), y (năm). Để trống nếu không muốn đánh dấu bản phát hành cũ."
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Chỉ hiển thị bản nổi bật",
+          "description": "Chỉ hiển thị các bản phát hành mới hoặc cũ. Như mô tả ở trên."
         },
         "showDetails": {
-          "label": ""
+          "label": "Hiển thị chi tiết"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Chỉ hiển thị biểu tượng"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "Phát hành nổi bật",
+          "description": "Số bản phát hành mới nhất tối đa được hiển thị. Số 0 nghĩa là không giới hạn."
         },
         "repositories": {
-          "label": "",
+          "label": "Kho lưu trữ",
           "addRepository": {
-            "label": ""
+            "label": "Thêm kho lưu trữ"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": "",
-            "selectAll": "",
-            "deselectAll": ""
+            "label": "Nhập từ Docker",
+            "loading": "Đang tải ảnh Docker",
+            "noImagesFound": "Không tìm thấy ảnh Docker",
+            "listFoundImages": "Danh sách ảnh tìm thấy",
+            "listAlreadyImportedImages": "Danh sách ảnh đã nhập",
+            "allImagesAlreadyImported": "Tất cả ảnh đã được nhập",
+            "onlyAdminCanImport": "Chỉ quản trị viên mới có thể nhập từ Docker",
+            "selectAll": "Chọn tất cả",
+            "deselectAll": "Bỏ chọn tất cả"
           },
           "provider": {
-            "label": ""
+            "label": "Nhà cung cấp"
           },
           "providerUrl": {
-            "label": ""
+            "label": "URL nhà cung cấp"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Mã định danh",
+            "placeholder": "Tên hoặc Chủ sở hữu/Tên"
           },
           "name": {
-            "label": ""
+            "label": "Tên"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Bộ lọc phiên bản",
             "prefix": {
-              "label": ""
+              "label": "Tiền tố"
             },
             "precision": {
-              "label": "",
+              "label": "Độ chính xác",
               "options": {
-                "none": ""
+                "none": "Không"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Hậu tố"
             },
             "regex": {
-              "label": ""
+              "label": "Biểu thức chính quy"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Sửa"
           },
           "editForm": {
-            "title": "",
+            "title": "Sửa kho lưu trữ",
             "cancel": {
-              "label": ""
+              "label": "Hủy"
             },
             "confirm": {
-              "label": ""
+              "label": "Xác nhận"
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Nhập từ Docker"
           },
           "example": {
-            "label": ""
+            "label": "Ví dụ"
           },
-          "invalid": "",
+          "invalid": "Định nghĩa kho lưu trữ không hợp lệ, vui lòng kiểm tra các giá trị",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Không có NCC",
+            "tooltip": "Không thể phân tích nhà cung cấp, vui lòng đặt thủ công sau khi nhập ảnh"
           },
           "tokens": {
-            "label": "",
-            "token": "",
-            "configured": "",
-            "notConfigured": "",
-            "save": ""
+            "label": "Token nhà cung cấp",
+            "token": "Mã thông báo",
+            "configured": "Đã cấu hình token",
+            "notConfigured": "Chưa đặt token",
+            "save": "Lưu"
           }
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "markViewed": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "projectDescription": "",
-      "created": "",
+      "not-found": "Không tìm thấy",
+      "pre-release": "Bản phát hành thử",
+      "archived": "Đã lưu trữ",
+      "forked": "Fork",
+      "starsCount": "Sao",
+      "forksCount": "Fork",
+      "issuesCount": "Vấn đề đang mở",
+      "markViewed": "Đánh dấu đã xem",
+      "openProjectPage": "Mở trang dự án",
+      "openReleasePage": "Mở trang bản phát hành",
+      "releaseDescription": "Mô tả bản phát hành",
+      "projectDescription": "Mô tả dự án",
+      "created": "Đã tạo",
       "error": {
-        "label": "",
+        "label": "Lỗi",
         "messages": {
-          "invalidIdentifier": "",
-          "noMatchingVersion": "",
-          "noReleasesFound": "",
-          "noProviderSelected": "",
-          "noProviderResponse": "",
-          "unexpected": ""
+          "invalidIdentifier": "Mã định danh không hợp lệ",
+          "noMatchingVersion": "Không tìm thấy phiên bản phù hợp",
+          "noReleasesFound": "Không có bản phát hành",
+          "noProviderSelected": "Chưa chọn nhà cung cấp",
+          "noProviderResponse": "Không có phản hồi từ nhà cung cấp",
+          "unexpected": "Lỗi nhà cung cấp không mong muốn"
         }
       }
     },
@@ -3620,352 +3620,352 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "Đã kết nối: {count}"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Không có dữ liệu, tất cả tích hợp đều đã ngắt kết nối",
+        "unknownContentOption": "Tùy chọn nội dung không xác định cho widget tóm tắt bộ điều khiển mạng: "
       },
-      "name": "",
-      "description": ""
+      "name": "Tóm tắt bộ điều khiển mạng",
+      "description": "Hiển thị tóm tắt của Bộ điều khiển mạng (chẳng hạn UniFi Controller)"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "Có dây"
           },
           "wifi": {
-            "name": ""
+            "name": "Wi-Fi"
           }
         },
         "users": {
-          "label": ""
+          "label": "User"
         },
         "guests": {
-          "label": ""
+          "label": "Khách"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "Wi-Fi"
             },
             "wired": {
-              "label": ""
+              "label": "Có dây"
             }
           },
-          "label": ""
+          "label": "Nội dung widget"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Không có dữ liệu, tất cả tích hợp đều đã ngắt kết nối",
+        "unknownContentOption": "Tùy chọn nội dung không xác định cho widget trạng thái mạng: "
       },
-      "name": "",
-      "description": ""
+      "name": "Trạng thái mạng",
+      "description": "Hiển thị các thiết bị được kết nối trong mạng"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể tải tóm tắt bộ điều khiển mạng"
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "Giám sát tường lửa",
+      "description": "Hiển thị tổng quan về tường lửa",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "Hệ thống",
+        "interfaces": "Giao diện"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể lấy dữ liệu từ tường lửa"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "Giao diện mạng cần hiển thị"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "fwname": "Tên",
+        "version": "Phiên bản",
+        "versiontitle": "Các phiên bản",
+        "cputitle": "Mức sử dụng CPU",
+        "memorytitle": "Mức sử dụng bộ nhớ",
+        "cpu": "CPU",
+        "memory": "Bộ nhớ",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "Tên",
+          "trans": "Đã truyền",
+          "recv": "Đã nhận",
+          "title": "Giao diện mạng"
         }
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "Thông báo",
+      "description": "Hiển thị lịch sử thông báo từ một tích hợp",
+      "noItems": "Không có thông báo để hiển thị.",
       "option": {
         "hideLogos": {
-          "label": ""
+          "label": "Ẩn logo"
         }
       }
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "Speedtest Tracker",
+      "description": "Hiển thị kết quả kiểm tra tốc độ từ phiên bản Speedtest Tracker của bạn.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Hiển thị kết quả mới nhất"
         },
         "showStats": {
-          "label": ""
+          "label": "Hiển thị giá trị trung bình"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Hiển thị kết quả gần đây"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Hiển thị biểu đồ ping"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Kết quả mới nhất",
+      "averages": "Giá trị trung bình",
+      "tests": "{count} bài kiểm tra",
+      "recentResults": "Kết quả gần đây",
+      "recentResultsSpeed": "Tốc độ",
+      "recentResultsPing": "Ping",
+      "download": "Tải xuống",
+      "upload": "Tải lên",
+      "ping": "Ping",
+      "status": "Trạng thái",
+      "avgDownload": "Tải xuống trung bình",
+      "avgUpload": "Tải lên trung bình",
+      "avgPing": "Ping trung bình",
+      "healthy": "Bình thường",
+      "unhealthy": "Không ổn định",
+      "ok": "OK",
+      "fail": "Không đạt",
+      "noSectionsEnabled": "Bật ít nhất một phần trong các tùy chọn tiện ích.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể lấy dữ liệu Speedtest"
       }
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Theo dõi thống kê thời gian hoạt động từ trang trạng thái Uptime Kuma của bạn",
       "option": {
         "showAverageUptime": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị thời gian hoạt động trung bình",
+          "description": "Hiển thị phần trăm thời gian hoạt động trung bình trong 24 giờ tổng hợp"
         },
         "showUptimeRing": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị vòng thời gian hoạt động",
+          "description": "Hiển thị vòng tiến độ bên cạnh giá trị thời gian hoạt động trung bình"
         },
         "showTotalMonitors": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị tổng số trình giám sát",
+          "description": "Hiển thị tổng số trình giám sát đã cấu hình"
         },
         "showUpCount": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị số lượng đang hoạt động",
+          "description": "Hiển thị số trình giám sát hiện đang hoạt động"
         },
         "showDownCount": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị số lượng ngừng hoạt động",
+          "description": "Hiển thị số trình giám sát hiện đang ngừng hoạt động"
         },
         "showPausedCount": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị số lượng tạm dừng",
+          "description": "Hiển thị số trình giám sát hiện đang tạm dừng"
         }
       },
-      "averageUptime": "",
+      "averageUptime": "Thời gian hoạt động trung bình (24 giờ)",
       "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
+        "totalMonitors": "Tổng số trình giám sát",
+        "upCount": "Đang hoạt động",
+        "downCount": "Ngừng hoạt động",
+        "pausedCount": "Tạm dừng"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể tải dữ liệu thời gian hoạt động"
       }
     },
     "traefik": {
-      "name": "",
-      "description": "",
+      "name": "Traefik",
+      "description": "Tổng quan về router, dịch vụ, middleware và entry point của Traefik",
       "option": {
         "showTcp": {
-          "label": ""
+          "label": "Hiển thị TCP"
         },
         "showUdp": {
-          "label": ""
+          "label": "Hiển thị UDP"
         },
         "showEntryPoints": {
-          "label": ""
+          "label": "Hiển thị entry point"
         }
       },
-      "instances": "",
-      "versionUnknown": "",
+      "instances": "Các phiên bản Traefik",
+      "versionUnknown": "Không rõ phiên bản",
       "summary": {
-        "routers": "",
-        "entryPoints": ""
+        "routers": "Router",
+        "entryPoints": "Entry point"
       },
       "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
+        "routers": "Router",
+        "services": "Dịch vụ",
+        "middlewares": "Middleware"
       },
       "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
+        "healthy": "Khỏe mạnh",
+        "errors": "{count} lỗi",
+        "warnings": "{count} cảnh báo"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể tải dữ liệu Traefik"
       }
     },
     "audioStats": {
-      "name": "",
-      "description": "",
+      "name": "Thống kê âm thanh",
+      "description": "Thống kê thư viện và phát lại từ Navidrome hoặc Audiobookshelf",
       "option": {
         "showArtists": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị nghệ sĩ",
+          "description": "Hiển thị tổng số nghệ sĩ trong thư viện nhạc của bạn (Navidrome)"
         },
         "showAlbums": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị album",
+          "description": "Hiển thị tổng số album trong thư viện nhạc của bạn (Navidrome)"
         },
         "showSongs": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị bài hát",
+          "description": "Hiển thị tổng số bài hát trong thư viện nhạc của bạn (Navidrome)"
         },
         "showLibraryCount": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị số lượng thư viện",
+          "description": "Hiển thị số thư viện trong phiên bản của bạn (Audiobookshelf)"
         },
         "showAudiobooks": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị sách nói",
+          "description": "Hiển thị tổng số sách nói trong tất cả thư viện (Audiobookshelf)"
         },
         "showPodcasts": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị podcast",
+          "description": "Hiển thị tổng số podcast trong tất cả thư viện (Audiobookshelf)"
         },
         "showListeningTime": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị thời gian nghe",
+          "description": "Hiển thị tổng thời gian nghe của bạn (Audiobookshelf)"
         },
         "showActiveSessions": {
-          "label": "",
-          "description": ""
+          "label": "Hiển thị phiên đang hoạt động",
+          "description": "Hiển thị số phiên phát lại hiện đang hoạt động (Audiobookshelf)"
         },
         "compactMode": {
-          "label": "",
-          "description": ""
+          "label": "Chế độ thu gọn",
+          "description": "Sử dụng bố cục dày hơn với các ô nhỏ hơn, phù hợp với kích thước tiện ích nhỏ"
         }
       },
-      "artists": "",
-      "albums": "",
-      "songs": "",
-      "libraryCount": "",
-      "audiobooks": "",
-      "podcasts": "",
-      "listeningTime": "",
-      "activeSessions": "",
+      "artists": "Nghệ sĩ",
+      "albums": "Album",
+      "songs": "Bài hát",
+      "libraryCount": "Thư viện",
+      "audiobooks": "Sách nói",
+      "podcasts": "Podcast",
+      "listeningTime": "Thời gian nghe",
+      "activeSessions": "Phiên đang hoạt động",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể tải dữ liệu thống kê âm thanh"
       }
     },
     "systemResources": {
-      "name": "",
-      "description": "",
+      "name": "Tài nguyên hệ thống",
+      "description": "Mức sử dụng CPU, bộ nhớ, ổ đĩa và phần cứng khác của hệ thống",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "Bật đổ bóng biểu đồ"
         },
         "visibleCharts": {
-          "label": "",
-          "description": "",
+          "label": "Biểu đồ hiển thị",
+          "description": "Chọn các biểu đồ bạn muốn hiển thị.",
           "option": {
-            "cpu": "",
-            "memory": "",
-            "gpu": "",
-            "network": ""
+            "cpu": "CPU",
+            "memory": "Bộ nhớ",
+            "gpu": "GPU",
+            "network": "Mạng"
           }
         },
         "labelDisplayMode": {
-          "label": "",
+          "label": "Chế độ hiển thị nhãn",
           "option": {
-            "textWithIcon": "",
-            "text": "",
-            "icon": "",
-            "hidden": ""
+            "textWithIcon": "Hiển thị văn bản cùng biểu tượng",
+            "text": "Chỉ hiển thị văn bản",
+            "icon": "Chỉ hiển thị biểu tượng",
+            "hidden": "Ẩn nhãn"
           }
         }
       },
       "card": {
-        "cpu": "",
-        "memory": "",
-        "gpu": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "cpu": "CPU",
+        "memory": "BỘ NHỚ",
+        "gpu": "GPU",
+        "network": "MẠNG",
+        "up": "LÊN",
+        "down": "XUỐNG"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Ổ đĩa hệ thống",
+      "description": "Mức sử dụng ổ đĩa của hệ thống",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Hiển thị nhiệt độ nếu có"
         },
         "displayMode": {
-          "label": "",
+          "label": "Chế độ hiển thị",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Phần trăm (ví dụ: 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Giá trị tuyệt đối (ví dụ: 800GB / 1TB)"
             },
             "free": {
-              "label": ""
+              "label": "Phần trăm dung lượng trống (ví dụ: còn trống 24%)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Hiển thị thanh mức sử dụng nền"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Ổ lưu trữ hiển thị",
+          "description": "Chỉ khả dụng khi tất cả tích hợp đã chọn là Synology. Để trống để hiển thị tất cả ổ lưu trữ được phát hiện.",
+          "placeholder": "Chọn ổ lưu trữ"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Không ổn định"
       }
     },
     "customApi": {
-      "name": "",
-      "description": "",
+      "name": "API tùy chỉnh",
+      "description": "Hiển thị dữ liệu từ bất kỳ API bên ngoài nào với cấu hình tùy chỉnh.",
       "option": {
         "definitionId": {
-          "label": ""
+          "label": "ID định nghĩa"
         },
         "refreshInterval": {
-          "label": "",
-          "description": ""
+          "label": "Khoảng thời gian làm mới",
+          "description": "Tần suất tải lại dữ liệu từ API (tính bằng giây)"
         }
       },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
+      "noDefinition": "Chưa chọn định nghĩa",
+      "definitionNotFound": "Không tìm thấy định nghĩa tiện ích. Có thể định nghĩa đã bị xóa.",
+      "noDisplayOutput": "Không có đầu ra hiển thị",
+      "executeConfirm": "Bạn có chắc muốn thực hiện thao tác này không?",
+      "executing": "Đang thực hiện...",
+      "executeSuccess": "Đã thực hiện thao tác thành công",
+      "executeFailed": "Thao tác thất bại. Kiểm tra cấu hình tiện ích."
     },
     "beszelSystemTable": {
       "name": "Beszel Systems (Bảng)",
@@ -4014,17 +4014,17 @@
           "label": "Hiển thị phiên bản tác tử"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Thứ tự cột"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Độ rộng cột"
         }
       },
       "noRecords": "Không tìm thấy hệ thống",
       "error": {
-        "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "internalServerError": "Không thể kết nối với Beszel. Hãy kiểm tra cài đặt tích hợp.",
+        "layoutSaveTitle": "Không thể lưu bố cục bảng",
+        "layoutSaveMessage": "Không thể lưu thứ tự hoặc độ rộng cột. Vui lòng thử lại."
       },
       "column": {
         "system": "Hệ thống",
@@ -4083,10 +4083,10 @@
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể kết nối với Beszel. Hãy kiểm tra cài đặt tích hợp."
       },
       "empty": {
-        "noSystems": ""
+        "noSystems": "Không tìm thấy hệ thống"
       },
       "metric": {
         "cpu": "CPU",
@@ -4115,7 +4115,7 @@
       },
       "empty": "Không có cảnh báo nào được cấu hình",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Không thể kết nối với Beszel. Hãy kiểm tra cài đặt tích hợp."
       },
       "history": "Lịch sử",
       "resolved": "Đã giải quyết",
@@ -4125,96 +4125,96 @@
       }
     },
     "beszelSystemStats": {
-      "name": "",
-      "description": "",
+      "name": "Thống kê hệ thống Beszel",
+      "description": "Biểu đồ chuỗi thời gian cho CPU, bộ nhớ, ổ đĩa, mạng và chỉ số container Docker",
       "option": {
         "systemId": {
-          "label": "",
-          "description": ""
+          "label": "Hệ thống",
+          "description": "Chọn một hệ thống Beszel để hiển thị thống kê"
         },
         "timePeriod": {
-          "label": ""
+          "label": "Khoảng thời gian"
         },
         "showCpu": {
-          "label": ""
+          "label": "Hiển thị biểu đồ CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Hiển thị biểu đồ bộ nhớ"
         },
         "showDisk": {
-          "label": ""
+          "label": "Hiển thị biểu đồ ổ đĩa"
         },
         "showDiskIO": {
-          "label": ""
+          "label": "Hiển thị biểu đồ I/O ổ đĩa"
         },
         "showNetwork": {
-          "label": ""
+          "label": "Hiển thị biểu đồ mạng"
         },
         "showDockerCpu": {
-          "label": ""
+          "label": "Hiển thị biểu đồ CPU Docker"
         },
         "showDockerMemory": {
-          "label": ""
+          "label": "Hiển thị biểu đồ bộ nhớ Docker"
         },
         "showDockerNetwork": {
-          "label": ""
+          "label": "Hiển thị biểu đồ mạng Docker"
         }
       },
-      "selectSystem": "",
+      "selectSystem": "Chọn hệ thống",
       "empty": {
-        "noSystems": ""
+        "noSystems": "Không tìm thấy hệ thống"
       },
       "error": {
-        "internalServerError": "",
-        "liveConnectionFailed": "",
-        "switchToHistorical": "",
-        "systemNotFound": ""
+        "internalServerError": "Không thể kết nối với Beszel. Hãy kiểm tra cài đặt tích hợp.",
+        "liveConnectionFailed": "Kết nối trực tiếp thất bại. Phiên bản Beszel của bạn có thể không hỗ trợ truyền dữ liệu theo thời gian thực.",
+        "switchToHistorical": "Chuyển sang chế độ xem lịch sử",
+        "systemNotFound": "Không tìm thấy hệ thống đã chọn. Hãy chọn hệ thống khác."
       },
       "chart": {
         "cpu": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Mức sử dụng CPU",
+          "subtitle": "Mức sử dụng CPU trung bình trên toàn hệ thống",
+          "series": "CPU"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
-          "series": "",
-          "cache": ""
+          "title": "Mức sử dụng bộ nhớ",
+          "subtitle": "Mức sử dụng chính xác tại thời điểm ghi nhận",
+          "series": "Đã sử dụng",
+          "cache": "Bộ nhớ đệm/Bộ đệm"
         },
         "disk": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Mức sử dụng ổ đĩa",
+          "subtitle": "Mức sử dụng theo hệ thống tệp",
+          "series": "Gốc"
         },
         "diskIO": {
-          "title": "",
-          "subtitle": "",
-          "read": "",
-          "write": ""
+          "title": "I/O ổ đĩa",
+          "subtitle": "Thông lượng của hệ thống tệp gốc",
+          "read": "Đọc",
+          "write": "Ghi"
         },
         "storage": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Lưu trữ",
+          "subtitle": "Mức sử dụng ổ đĩa theo từng hệ thống tệp",
+          "series": "Đã sử dụng"
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Băng thông",
+          "subtitle": "Lưu lượng mạng của các giao diện công khai",
+          "sent": "Đã gửi",
+          "recv": "Đã nhận"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Mức sử dụng CPU Docker",
+          "subtitle": "Mức sử dụng CPU trung bình của các container"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Mức sử dụng bộ nhớ Docker",
+          "subtitle": "Mức sử dụng bộ nhớ của các container Docker"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "I/O mạng Docker",
+          "subtitle": "Lưu lượng mạng của các container Docker"
         }
       }
     }
@@ -4231,16 +4231,16 @@
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "Nhân bản bảng",
+        "message": "Thao tác này sẽ nhân bản bảng {name} cùng toàn bộ nội dung. Nếu widget tham chiếu đến các tích hợp mà bạn không được phép sử dụng, chúng sẽ bị xóa.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã nhân bản bảng",
+            "message": "Bảng đã được nhân bản thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không thể nhân bản bảng",
+            "message": "Không thể nhân bản bảng"
           }
         }
       },
@@ -4293,7 +4293,7 @@
           },
           "screenSize": {
             "label": "Kích thước màn hình",
-            "description": "",
+            "description": "Trong các phiên bản trước 1.0, có ba chế độ khác nhau, vì vậy bạn có thể chọn số cột cho từng kích thước màn hình.",
             "option": {
               "sm": "Bé nhỏ",
               "md": "Trung bình",
@@ -4318,8 +4318,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "Tạo ứng dụng nhanh",
+          "createAndUse": "Tạo và sử dụng"
         }
       }
     },
@@ -4338,10 +4338,10 @@
       },
       "backgroundImageUrl": {
         "label": "URL hình ảnh nền",
-        "placeholder": "",
+        "placeholder": "Bắt đầu nhập để tìm kiếm hình ảnh cục bộ",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "Hình ảnh của bạn",
+          "other": "Hình ảnh khác"
         }
       },
       "backgroundImageAttachment": {
@@ -4366,15 +4366,15 @@
           },
           "no-repeat": {
             "label": "Không lặp",
-            "description": ""
+            "description": "Hình ảnh không được lặp lại và có thể không phủ kín toàn bộ không gian."
           },
           "repeat-x": {
-            "label": "",
-            "description": ""
+            "label": "Lặp theo X",
+            "description": "Giống như “Lặp” nhưng chỉ trên trục ngang."
           },
           "repeat-y": {
-            "label": "",
-            "description": ""
+            "label": "Lặp theo Y",
+            "description": "Giống như “Lặp” nhưng chỉ trên trục dọc."
           }
         }
       },
@@ -4382,12 +4382,12 @@
         "label": "Kích cỡ ảnh nền",
         "option": {
           "cover": {
-            "label": "",
-            "description": ""
+            "label": "Phủ kín",
+            "description": "Thu phóng hình ảnh nhỏ nhất có thể để phủ kín toàn bộ cửa sổ bằng cách cắt phần thừa."
           },
           "contain": {
-            "label": "",
-            "description": ""
+            "label": "Vừa khung",
+            "description": "Thu phóng hình ảnh lớn nhất có thể trong vùng chứa mà không cắt hoặc kéo giãn hình ảnh."
           }
         }
       },
@@ -4398,38 +4398,38 @@
         "label": "Màu thứ cấp"
       },
       "opacity": {
-        "label": ""
+        "label": "Độ mờ"
       },
       "iconColor": {
-        "label": ""
+        "label": "Màu biểu tượng"
       },
       "clearColor": {
-        "label": ""
+        "label": "Xóa màu"
       },
       "customCss": {
-        "label": "",
+        "label": "CSS tùy chỉnh cho bảng này",
         "description": "Ngoài ra có thể tùy chỉnh bảng điều khiển của bạn bằng CSS, chỉ được đề xuất cho người dùng có kinh nghiệm",
         "customClassesAlert": {
-          "title": "",
-          "description": ""
+          "title": "Lớp tùy chỉnh",
+          "description": "Bạn có thể thêm lớp tùy chỉnh cho các mục trên bảng trong tùy chọn nâng cao của từng mục và sử dụng chúng trong CSS tùy chỉnh ở trên."
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "Tắt trạng thái ứng dụng",
+        "description": "Tắt kiểm tra trạng thái cho tất cả ứng dụng trên bảng này"
       },
       "columnCount": {
-        "label": ""
+        "label": "Số cột"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "Bán kính mục",
+        "description": "Thay đổi độ bo tròn của các ô trên bảng",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "Rất nhỏ",
+          "sm": "Bé nhỏ",
+          "md": "Trung bình",
+          "lg": "Lớn",
+          "xl": "Rất lớn"
         }
       },
       "name": {
@@ -4437,25 +4437,25 @@
       },
       "isPublic": {
         "label": "Công khai",
-        "description": ""
+        "description": "Bảng công khai có thể được mọi người truy cập, ngay cả khi không có tài khoản."
       }
     },
     "content": {
-      "metaTitle": ""
+      "metaTitle": "Bảng {boardName}"
     },
     "setting": {
-      "title": "",
+      "title": "Cài đặt cho bảng {boardName}",
       "section": {
         "general": {
           "title": "Chung",
-          "unrecognizedLink": ""
+          "unrecognizedLink": "Liên kết được cung cấp không được nhận diện và sẽ không hiển thị bản xem trước, nhưng vẫn có thể hoạt động."
         },
         "layout": {
           "title": "Bố cục",
           "responsive": {
-            "title": "",
+            "title": "Bố cục đáp ứng",
             "action": {
-              "add": ""
+              "add": "Thêm bố cục"
             }
           }
         },
@@ -4463,26 +4463,26 @@
           "title": "Hình nền"
         },
         "appearance": {
-          "title": ""
+          "title": "Hiển thị"
         },
         "customCss": {
-          "title": ""
+          "title": "CSS tùy chỉnh"
         },
         "behavior": {
-          "title": ""
+          "title": "Hành vi"
         },
         "access": {
-          "title": "",
+          "title": "Kiểm soát quyền truy cập",
           "permission": {
             "item": {
               "view": {
                 "label": "Xem bảng"
               },
               "modify": {
-                "label": ""
+                "label": "Chỉnh sửa bảng"
               },
               "full": {
-                "label": ""
+                "label": "Toàn quyền truy cập"
               }
             }
           }
@@ -4491,41 +4491,41 @@
           "title": "Khu vực nguy hiểm",
           "action": {
             "rename": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Đổi tên bảng",
+              "description": "Việc đổi tên sẽ làm hỏng mọi liên kết đến bảng này.",
+              "button": "Đổi tên",
               "modal": {
-                "title": ""
+                "title": "Đổi tên bảng"
               }
             },
             "visibility": {
-              "label": "",
+              "label": "Thay đổi chế độ hiển thị bảng",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "Bảng này hiện đang công khai.",
+                "private": "Bảng này hiện đang riêng tư."
               },
               "button": {
-                "public": "",
-                "private": ""
+                "public": "Chuyển sang riêng tư",
+                "private": "Công khai"
               },
               "confirm": {
                 "public": {
-                  "title": "",
-                  "description": ""
+                  "title": "Đặt bảng ở chế độ riêng tư",
+                  "description": "Bạn có chắc muốn đặt bảng này ở chế độ riêng tư không? Bảng sẽ bị ẩn khỏi công chúng. Các liên kết dành cho khách sẽ không còn hoạt động."
                 },
                 "private": {
-                  "title": "",
-                  "description": ""
+                  "title": "Đặt bảng ở chế độ công khai",
+                  "description": "Bạn có chắc muốn đặt bảng này ở chế độ công khai không? Khi đó mọi người đều có thể truy cập bảng."
                 }
               }
             },
             "delete": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Xóa bảng này",
+              "description": "Sau khi xóa bảng, bạn sẽ không thể hoàn tác. Hãy chắc chắn trước khi tiếp tục.",
+              "button": "Xóa bảng này",
               "confirm": {
                 "title": "Xóa bảng",
-                "description": ""
+                "description": "Bạn có chắc muốn xóa bảng này không? Bảng và toàn bộ nội dung sẽ bị xóa vĩnh viễn."
               }
             }
           }
@@ -4534,33 +4534,33 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Chào mừng đến với Homarr",
+        "description": "Một bảng điều khiển hiện đại, tinh gọn, đưa tất cả ứng dụng và dịch vụ của bạn đến ngay trong tầm tay.",
+        "link": "Tạo bảng đầu tiên của bạn",
+        "notice": "Để ẩn trang này, hãy tạo một bảng và đặt làm bảng chính"
       },
       "notFound": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Không tìm thấy bảng",
+        "description": "Bảng được chỉ định không tồn tại hoặc bạn không có quyền truy cập.",
+        "link": "Xem tất cả các bảng",
+        "notice": "Kiểm tra liên kết hoặc liên hệ quản trị viên nếu bạn cho rằng mình phải có quyền truy cập"
       },
       "homeBoard": {
-        "title": "",
+        "title": "Chưa có bảng chính",
         "admin": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Bạn chưa đặt bảng chính cho máy chủ.",
+          "link": "Cấu hình bảng chính cho toàn máy chủ",
+          "notice": "Để ẩn trang này với mọi người dùng, hãy đặt bảng chính cho máy chủ"
         },
         "user": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Bạn chưa đặt bảng chính.",
+          "link": "Cấu hình bảng chính của bạn",
+          "notice": "Để ẩn trang này, hãy chỉ định bảng chính trong tùy chọn của bạn"
         },
         "anonymous": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Quản trị viên máy chủ chưa đặt bảng chính.",
+          "link": "Xem các bảng công khai",
+          "notice": "Để ẩn trang này, hãy yêu cầu quản trị viên máy chủ đặt bảng chính cho máy chủ"
         }
       }
     }
@@ -4568,59 +4568,59 @@
   "layout": {
     "field": {
       "name": {
-        "label": ""
+        "label": "Tên"
       },
       "columnCount": {
-        "label": ""
+        "label": "Số cột"
       },
       "breakpoint": {
-        "label": "",
-        "description": ""
+        "label": "Điểm ngắt",
+        "description": "Bố cục sẽ được sử dụng trên mọi màn hình lớn hơn điểm ngắt này cho đến điểm ngắt lớn hơn tiếp theo."
       }
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "Quản lý",
     "title": {
-      "morning": "",
-      "afternoon": "",
-      "evening": ""
+      "morning": "Chào buổi sáng, {username}",
+      "afternoon": "Chào buổi chiều, {username}",
+      "evening": "Chào buổi tối, {username}"
     },
     "notFound": {
-      "title": "",
-      "text": ""
+      "title": "Không tìm thấy",
+      "text": "Không tìm thấy tài nguyên được yêu cầu"
     },
     "error": {
-      "title": "",
-      "text": "",
-      "digest": ""
+      "title": "Không thể tải trang này",
+      "text": "Đã xảy ra lỗi không mong muốn khi tải trang này. Bạn vẫn có thể điều hướng — hãy thử tải lại hoặc chọn một phần khác từ thanh bên.",
+      "digest": "Mã tham chiếu lỗi: {digest}"
     },
     "navbar": {
       "items": {
         "home": "Trang chủ",
         "boards": "Bảng",
         "apps": "Ứng dụng",
-        "integrations": "",
-        "customWidgets": "",
+        "integrations": "Tích hợp",
+        "customWidgets": "Tiện ích tùy chỉnh",
         "searchEngies": "Công cụ tìm kiếm",
-        "medias": "",
+        "medias": "Media",
         "users": {
           "label": "Người dùng",
           "items": {
             "manage": "Quản lý",
             "invites": "Mời",
-            "groups": ""
+            "groups": "Các nhóm"
           }
         },
         "tools": {
           "label": "Công cụ",
           "items": {
-            "docker": "",
-            "kubernetes": "",
-            "logs": "",
-            "api": "",
-            "certificates": "",
-            "tasks": "",
+            "docker": "Docker",
+            "kubernetes": "Kubernetes",
+            "logs": "Nhật ký",
+            "api": "API & MCP",
+            "certificates": "Chứng chỉ",
+            "tasks": "Tác vụ",
             "backup": "Sao lưu"
           }
         },
@@ -4629,9 +4629,9 @@
           "label": "Giúp đỡ",
           "items": {
             "documentation": "Tài liệu",
-            "submitIssue": "",
+            "submitIssue": "Gửi báo cáo sự cố",
             "discord": "Discord",
-            "sourceCode": ""
+            "sourceCode": "Mã nguồn"
           }
         },
         "about": "Về chúng tôi"
@@ -4643,63 +4643,63 @@
           "board": "Bảng",
           "user": "Người dùng",
           "invite": "Mời",
-          "integration": "",
+          "integration": "Tích hợp",
           "app": "Ứng dụng",
-          "group": "",
-          "searchEngine": "",
-          "media": ""
+          "group": "Các nhóm",
+          "searchEngine": "Công cụ tìm kiếm",
+          "media": "Phương tiện"
         },
         "statisticLabel": {
           "boards": "Bảng",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "Tài nguyên",
+          "authentication": "Xác thực",
+          "authorization": "Phân quyền"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Chào mừng bạn trở lại với",
+          "subtitle": "Bảng {app}"
         }
       },
       "board": {
         "title": "Bảng của bạn",
         "action": {
           "new": {
-            "label": ""
+            "label": "Bảng mới"
           },
           "open": {
-            "label": ""
+            "label": "Mở bảng"
           },
           "settings": {
             "label": "Cài đặt"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "Đặt làm bảng chính của bạn",
             "badge": {
               "label": "Trang chủ",
-              "tooltip": ""
+              "tooltip": "Bảng này sẽ được hiển thị làm bảng chính của bạn"
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Đặt làm bảng di động của bạn",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Di động",
+              "tooltip": "Bảng này sẽ được hiển thị làm bảng di động của bạn"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Nhân bản bảng"
           },
           "delete": {
             "label": "Xóa vĩnh viễn",
             "confirm": {
               "title": "Xóa bảng",
-              "description": ""
+              "description": "Bạn có chắc muốn xóa bảng {name} không?"
             }
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "Bảng này công khai",
+          "private": "Bảng này riêng tư"
         },
         "noResults": {
           "title": "Chưa có bảng"
@@ -4715,21 +4715,21 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "Bao gồm media từ tất cả người dùng"
       },
       "user": {
-        "back": "",
-        "fieldsDisabledExternalProvider": "",
+        "back": "Về danh sách user",
+        "fieldsDisabledExternalProvider": "Một số trường bị vô hiệu hóa vì được quản lý bởi nhà cung cấp xác thực bên ngoài.",
         "setting": {
           "general": {
             "title": "Chung",
             "item": {
-              "language": "",
+              "language": "Ngôn ngữ & Khu vực",
               "board": {
-                "title": "",
+                "title": "Bảng chính",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Chung",
+                  "mobile": "Di động"
                 }
               },
               "search": "Tìm",
@@ -4766,50 +4766,50 @@
           "title": "Người dùng"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "Chỉnh sửa người dùng {username}"
         },
         "create": {
           "metaTitle": "Tạo người dùng",
-          "title": "",
+          "title": "Tạo người dùng mới",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "Thông tin cá nhân"
             },
             "security": {
               "label": "Bảo mật"
             },
             "groups": {
-              "label": "",
-              "title": "",
-              "description": ""
+              "label": "Các nhóm",
+              "title": "Chọn tất cả các nhóm mà người dùng sẽ tham gia",
+              "description": "Nhóm {everyoneGroup} được gán cho tất cả người dùng và không thể bị xóa."
             },
             "review": {
-              "label": ""
+              "label": "Xem lại"
             },
             "completed": {
-              "title": ""
+              "title": "Đã tạo người dùng"
             },
             "error": {
-              "title": ""
+              "title": "Tạo người dùng không thành công"
             }
           },
           "action": {
-            "createAnother": "",
-            "back": ""
+            "createAnother": "Tạo người dùng khác",
+            "back": "Quay lại danh sách người dùng"
           }
         },
         "invite": {
           "title": "Quản lý lời mời của người dùng",
           "action": {
             "new": {
-              "title": "",
+              "title": "Lời mời mới",
               "description": "Sau khi hết hạn, lời mời sẽ không còn hiệu lực và người nhận lời mời sẽ không thể tạo tài khoản."
             },
             "copy": {
-              "title": "",
-              "description": "",
+              "title": "Sao chép lời mời",
+              "description": "Lời mời của bạn đã được tạo. Sau khi đóng hộp thoại này, <b>bạn sẽ không thể sao chép liên kết này nữa.</b> Nếu không muốn mời người đó, bạn có thể xóa lời mời này bất cứ lúc nào.",
               "link": "Liên kết lời mời",
-              "button": ""
+              "button": "Sao chép & đóng"
             },
             "delete": {
               "title": "Xóa lời mời",
@@ -4833,30 +4833,30 @@
         }
       },
       "group": {
-        "back": "",
+        "back": "Quay lại các nhóm",
         "setting": {
           "general": {
             "title": "Chung",
             "owner": "Chủ",
-            "ownerOfGroup": "",
-            "ownerOfGroupDeleted": ""
+            "ownerOfGroup": "Chủ sở hữu nhóm này",
+            "ownerOfGroupDeleted": "Chủ sở hữu của nhóm này đã bị xóa. Hiện nhóm không có chủ sở hữu."
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "Cài đặt",
+            "alert": "Cài đặt nhóm được ưu tiên theo thứ tự nhóm trong danh sách. Cài đặt ở trên sẽ ghi đè cài đặt ở dưới.",
             "board": {
-              "title": ""
+              "title": "Các bảng"
             }
           },
           "members": {
-            "title": "",
+            "title": "Thành viên",
             "search": "Tìm một thành viên",
-            "notFound": ""
+            "notFound": "Không tìm thấy thành viên"
           },
           "permissions": {
-            "title": "",
+            "title": "Quyền",
             "form": {
-              "unsavedChanges": ""
+              "unsavedChanges": "Bạn có thay đổi chưa lưu!"
             }
           }
         }
@@ -4865,191 +4865,191 @@
         "title": "Cài đặt",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Đã lưu cài đặt thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể lưu cài đặt"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "Phân tích",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "Giúp chúng tôi cải thiện Homarr",
+              "text": "Điều này giúp chúng tôi biết mọi người thực sự sử dụng gì để xác định nên dành thời gian cho đâu. Chúng tôi thấy những thông tin như số lượng tiện ích hoặc tích hợp bạn có, phiên bản Homarr và cơ sở dữ liệu bạn đang dùng. Chỉ vậy thôi — không có thông tin cá nhân, URL, tên hay bất kỳ dữ liệu nào có thể nhận dạng bạn hoặc cấu hình của bạn."
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
-            "warning": "",
+            "title": "Thu thập dữ liệu và lập chỉ mục",
+            "warning": "Việc bật hoặc tắt bất kỳ cài đặt nào ở đây sẽ ảnh hưởng nghiêm trọng đến cách công cụ tìm kiếm lập chỉ mục và thu thập dữ liệu trang của bạn. Mỗi cài đặt chỉ là một yêu cầu và trình thu thập dữ liệu sẽ quyết định có áp dụng hay không. Mọi thay đổi có thể mất vài ngày hoặc vài tuần để có hiệu lực. Một số cài đặt có thể chỉ áp dụng cho từng công cụ tìm kiếm.",
             "noIndex": {
               "title": "",
-              "text": ""
+              "text": "Không lập chỉ mục trang web trên các công cụ tìm kiếm và không hiển thị trang trong bất kỳ kết quả tìm kiếm nào"
             },
             "noFollow": {
               "title": "",
-              "text": ""
+              "text": "Không theo dõi bất kỳ liên kết nào khi lập chỉ mục. Tắt tùy chọn này sẽ khiến trình thu thập dữ liệu cố gắng theo dõi tất cả liên kết trên Homarr."
             },
             "noTranslate": {
-              "title": "",
-              "text": ""
+              "title": "Không dịch",
+              "text": "Khi ngôn ngữ trang web có vẻ không phải ngôn ngữ mà người dùng muốn đọc, Google sẽ hiển thị liên kết dịch trong kết quả tìm kiếm"
             },
             "noSiteLinksSearchBox": {
-              "title": "",
-              "text": ""
+              "title": "Ẩn ô tìm kiếm liên kết",
+              "text": "Google sẽ tạo hộp tìm kiếm với các liên kết đã thu thập cùng những liên kết trực tiếp khác. Bật tùy chọn này sẽ yêu cầu Google tắt hộp đó."
             }
           },
           "board": {
             "title": "Bảng",
             "homeBoard": {
-              "label": "",
-              "mobileLabel": "",
-              "description": ""
+              "label": "Bảng chính toàn cục",
+              "mobileLabel": "Bảng di động toàn cục",
+              "description": "Chỉ có thể chọn các bảng công khai"
             },
             "status": {
               "title": "",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Bật trạng thái theo mặc định",
+                "description": "Khi thêm mục ứng dụng, trạng thái sẽ được bật theo mặc định"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Buộc tắt trạng thái",
+                "description": "Trạng thái ứng dụng sẽ bị tắt đối với tất cả người dùng và không thể bật lại"
               }
             }
           },
           "user": {
             "title": "",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Bật Gravatar",
+              "description": "Sử dụng ảnh đại diện người dùng từ Libravatar/Gravatar khi chưa đặt ảnh đại diện tùy chỉnh và đã cấu hình email"
             }
           },
           "search": {
             "title": "Tìm",
             "defaultSearchEngine": {
               "label": "Công cụ tìm kiếm mặc định cho toàn hệ thống",
-              "description": ""
+              "description": "Không thể chọn công cụ tìm kiếm tích hợp ở đây"
             }
           },
           "appearance": {
             "title": "Hiển thị",
             "defaultColorScheme": {
-              "label": "",
+              "label": "Bảng màu mặc định",
               "options": {
                 "auto": "Tự động",
-                "light": "",
-                "dark": ""
+                "light": "Sáng",
+                "dark": "Tối"
               }
             }
           },
           "culture": {
-            "title": "",
+            "title": "Khu vực",
             "defaultLocale": {
-              "label": ""
+              "label": "Ngôn ngữ mặc định"
             }
           }
         }
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "Tác vụ",
           "status": {
-            "idle": "",
+            "idle": "Rảnh",
             "running": "Đang chạy",
             "error": "Lỗi",
-            "disabled": ""
+            "disabled": "Đã tắt"
           },
           "job": {
             "iconsUpdater": {
-              "label": ""
+              "label": "Cập nhật biểu tượng"
             },
             "analytics": {
-              "label": ""
+              "label": "Phân tích"
             },
             "ping": {
-              "label": ""
+              "label": "Ping"
             }
           },
           "interval": {
             "seconds": "",
             "minutes": "",
             "hours": "",
-            "midnight": "",
-            "weeklyMonday": "",
+            "midnight": "Mỗi ngày vào nửa đêm",
+            "weeklyMonday": "Mỗi tuần vào thứ Hai",
             "update": {
               "success": {
-                "message": ""
+                "message": "Đã cập nhật khoảng thời gian thành công"
               },
               "error": {
-                "message": ""
+                "message": "Không thể cập nhật khoảng thời gian"
               }
             }
           },
           "settings": {
-            "title": ""
+            "title": "Cài đặt tác vụ cho {jobName}"
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "Tên"
             },
             "interval": {
-              "label": ""
+              "label": "Khoảng thời gian lập lịch"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Lần thực thi gần nhất"
             },
             "actions": {
-              "label": ""
+              "label": "Thao tác"
             }
           },
           "table": {
-            "search": ""
+            "search": "Tìm kiếm {count} tác vụ..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "Làm mới"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "Đã làm mới tác vụ thành công"
             },
             "error": {
-              "message": ""
+              "message": "Không thể làm mới tác vụ"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "Đã kích hoạt tác vụ thành công"
             },
             "error": {
-              "message": ""
+              "message": "Không thể kích hoạt tác vụ"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "Đã bật tác vụ thành công"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "Đã tắt tác vụ thành công"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "Không thể chuyển đổi trạng thái tác vụ"
             }
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
-              "description": "",
-              "button": ""
+              "title": "Đã tạo mã thông báo API",
+              "description": "Mã thông báo API đã được tạo. Hãy cẩn thận: mã thông báo này được mã hóa trong cơ sở dữ liệu và sẽ không bao giờ được gửi lại cho bạn. Nếu làm mất mã thông báo này, bạn sẽ không thể lấy lại mã thông báo cụ thể đó.",
+              "button": "Sao chép và đóng"
             }
           },
           "tab": {
@@ -5057,112 +5057,112 @@
               "label": "Tài liệu"
             },
             "apiKey": {
-              "label": "",
-              "title": "",
+              "label": "Xác thực",
+              "title": "Khóa API",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "Tạo mã thông báo API"
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "Xóa mã thông báo API",
+                  "text": "Mã thông báo API sẽ bị xóa vĩnh viễn. Các ứng dụng API sử dụng mã thông báo này sẽ không thể xác thực và thực hiện yêu cầu API nữa. Không thể hoàn tác thao tác này."
                 }
               },
               "table": {
                 "header": {
                   "id": "NHẬN DẠNG",
-                  "createdBy": "",
-                  "actions": ""
+                  "createdBy": "Người tạo",
+                  "actions": "Thao tác"
                 }
               }
             },
             "mcp": {
-              "label": "",
-              "title": "",
-              "subtitle": "",
-              "description": "",
-              "noApiKey": "",
-              "createApiKeyButton": "",
+              "label": "AI / MCP",
+              "title": "Tích hợp AI",
+              "subtitle": "Máy chủ Model Context Protocol (MCP)",
+              "description": "Kết nối trợ lý AI với phiên bản Homarr của bạn và điều khiển toàn bộ homelab bằng ngôn ngữ tự nhiên. Tìm kiếm và yêu cầu phương tiện trên Overseerr, quản lý container Docker, bật/tắt Pi-hole, kiểm tra tình trạng máy chủ, điều khiển thiết bị Home Assistant và hơn thế nữa — tất cả từ trợ lý AI của bạn.",
+              "noApiKey": "Bạn cần khóa API để xác thực với máy chủ MCP.",
+              "createApiKeyButton": "Tạo khóa API",
               "endpoint": {
-                "title": ""
+                "title": "Endpoint MCP"
               },
               "authentication": {
-                "title": "",
-                "intro": "",
+                "title": "Xác thực",
+                "intro": "Bạn có thể xác thực với máy chủ MCP bằng khóa API hoặc OAuth. Cả hai phương thức đều cấp cùng một mức quyền truy cập.",
                 "apiKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "Khóa API (thủ công)",
+                  "description": "Truyền header ApiKey cùng khóa API đầy đủ trong cấu hình máy khách MCP."
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (đăng nhập trình duyệt)",
+                  "description": "Các máy khách hỗ trợ OAuth (như Claude Code, opencode hoặc Cursor) có thể xác thực bằng cách mở cửa sổ trình duyệt. Chạy lệnh xác thực trong máy khách, đăng nhập Homarr trên trình duyệt và bạn đã kết nối — khóa API sẽ được tự động tạo.",
+                  "hint": "Token OAuth xuất hiện dưới dạng khóa API thông thường trong tab Xác thực. Bạn có thể thu hồi chúng bất cứ lúc nào."
                 },
-                "permissions": ""
+                "permissions": "Khóa API xác định các quyền có sẵn cho AI — AI hoạt động với cùng mức truy cập như chủ sở hữu khóa."
               },
               "clientConfig": {
-                "title": "",
+                "title": "Cấu hình máy khách",
                 "streamableHttp": {
-                  "recommended": "",
-                  "title": "",
-                  "worksWith": "",
-                  "addToConfig": "",
-                  "cursor": "",
-                  "claudeDesktop": "",
-                  "claudeCode": "",
-                  "vsCodeCopilot": "",
-                  "replaceHint": ""
+                  "recommended": "Được khuyến nghị",
+                  "title": "HTTP có thể truyền theo luồng",
+                  "worksWith": "Hoạt động với: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
+                  "addToConfig": "Thêm vào tệp cấu hình máy khách MCP của bạn:",
+                  "cursor": "{name}: {file} trong cài đặt dự án hoặc cài đặt chung",
+                  "claudeDesktop": "{name}: {file}",
+                  "claudeCode": "{name}: {file} hoặc sử dụng {command}",
+                  "vsCodeCopilot": "{name}: {file} trong cài đặt không gian làm việc",
+                  "replaceHint": "Thay thế phần giữ chỗ bằng khóa API bạn nhận được khi tạo khóa."
                 },
                 "stdio": {
-                  "title": "",
-                  "description": ""
+                  "title": "stdio (máy khách cũ qua cầu nối mcp-remote)",
+                  "description": "Dành cho các máy khách chỉ hỗ trợ truyền tải stdio. Yêu cầu cài đặt {dependency} (Node.js) cục bộ:"
                 }
               },
               "testConnection": {
-                "title": "",
-                "description": "",
-                "hint": ""
+                "title": "Kiểm tra kết nối",
+                "description": "Chạy lệnh này trong terminal để xác minh endpoint có thể truy cập và khóa API hoạt động:",
+                "hint": "Phản hồi thành công trả về các khả năng của máy chủ MCP. Nếu thấy lỗi, hãy kiểm tra phản hồi JSON để tìm gợi ý."
               },
               "availableTools": {
-                "title": "",
-                "description": "",
-                "columnType": "",
-                "columnName": "",
-                "columnDescription": ""
+                "title": "Công cụ khả dụng",
+                "description": "Có {count} công cụ khả dụng. Mở rộng một danh mục để xem từng công cụ và mô tả của chúng.",
+                "columnType": "Loại",
+                "columnName": "Công cụ",
+                "columnDescription": "Mô tả"
               },
               "troubleshooting": {
-                "title": "",
+                "title": "Khắc phục sự cố",
                 "missingHeader": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Thiếu header ApiKey\"",
+                  "description": "Máy khách của bạn không gửi header {header}. Hãy xác minh phần {section} trong cấu hình MCP là chính xác. Một số máy khách yêu cầu khởi động lại sau khi thay đổi cấu hình."
                 },
                 "invalidFormat": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Định dạng ApiKey không hợp lệ\"",
+                  "description": "Hãy đảm bảo bạn đã sao chép toàn bộ khóa API, không chỉ một phần."
                 },
                 "invalidKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Khóa API không hợp lệ\"",
+                  "description": "Không tìm thấy ID khóa hoặc token không đúng. Chỉ có thể xem khóa API một lần khi tạo. Nếu làm mất khóa, hãy xóa khóa cũ và tạo khóa mới."
                 },
                 "connectionRefused": {
-                  "title": "",
-                  "description": ""
+                  "title": "Từ chối kết nối / hết thời gian chờ",
+                  "description": "Đảm bảo URL có thể truy cập từ máy khách AI của bạn. Nếu Homarr chạy sau reverse proxy hoặc trong Docker, hãy sử dụng URL bên ngoài (không phải {localhost}). Xác minh cổng chính xác (mặc định: 7575 cho Docker)."
                 },
                 "toolsNotAppearing": {
-                  "title": "",
-                  "description": ""
+                  "title": "Công cụ không xuất hiện",
+                  "description": "Một số công cụ yêu cầu cấu hình các tích hợp cụ thể (ví dụ: Docker, Overseerr). Danh sách công cụ phụ thuộc vào những gì có sẵn trong phiên bản Homarr của bạn."
                 }
               },
-              "copy": "",
+              "copy": "Sao chép",
               "oneClick": {
-                "title": "",
-                "subtitle": "",
-                "vsCode": "",
-                "cursor": "",
-                "copyUrl": "",
-                "copied": "",
-                "copyHint": "",
-                "manualConfig": ""
+                "title": "Cài đặt bằng một cú nhấp",
+                "subtitle": "Sử dụng OAuth — xác thực trong trình duyệt ở lần sử dụng đầu tiên",
+                "vsCode": "Cài đặt trong VS Code",
+                "cursor": "Cài đặt trong Cursor",
+                "copyUrl": "Sao chép URL MCP",
+                "copied": "Đã sao chép!",
+                "copyHint": "Dành cho ChatGPT, Claude Code hoặc bất kỳ máy khách MCP nào",
+                "manualConfig": "Cấu hình thủ công"
               }
             }
           }
@@ -5288,56 +5288,56 @@
         }
       },
       "about": {
-        "version": "",
-        "text": "",
+        "version": "Phiên bản {version}",
+        "text": "Homarr là một dự án mã nguồn mở do cộng đồng phát triển và được các tình nguyện viên duy trì. Nhờ những người này, Homarr đã không ngừng phát triển từ năm 2021. Đội ngũ của chúng tôi làm việc hoàn toàn từ xa, đến từ nhiều quốc gia khác nhau, dành thời gian rảnh để phát triển Homarr mà không nhận thù lao.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Người đóng góp",
+            "subtitle": "{count} người duy trì mã nguồn và Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Người dịch",
+            "subtitle": "{count} người đóng góp bản dịch cho nhiều ngôn ngữ"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Nhà tài trợ",
+            "subtitle": "{count} người hỗ trợ tài chính cho dự án"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Thư viện",
+            "subtitle": "{count} thư viện được sử dụng trong mã nguồn Homarr"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Phím tắt",
+            "subtitle": "Phím tắt giúp nâng cao quy trình làm việc",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "Phím tắt",
+              "action": "Thao tác"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "Bật/tắt chế độ chỉnh sửa bảng",
+              "toggleColorScheme": "Bật/tắt chế độ sáng/tối",
+              "saveNotebook": "Lưu sổ ghi chép (chỉ trong tiện ích sổ ghi chép)",
+              "openSpotlight": "Mở tìm kiếm"
             },
-            "note": ""
+            "note": "Mẹo: Mod dùng cho cả phím Ctrl và phím ⌘ trên macOS"
           }
         }
       }
     }
   },
   "docker": {
-    "title": "",
+    "title": "Container",
     "table": {
-      "updated": "",
+      "updated": "Đã cập nhật {when}",
       "refresh": {
-        "lastUpdated": ""
+        "lastUpdated": "Lần làm mới gần nhất {when}"
       },
-      "search": "",
-      "selected": "",
-      "footer": "",
-      "totalCpu": "",
-      "totalMemory": ""
+      "search": "Tìm kiếm {count} container",
+      "selected": "Đã chọn {selectCount}/{totalCount} container",
+      "footer": "Tổng cộng {count} container",
+      "totalCpu": "Tổng CPU: {cpu}%",
+      "totalMemory": "Tổng bộ nhớ: {memory}"
     },
     "field": {
       "name": {
@@ -5350,17 +5350,17 @@
           "running": "Đang chạy",
           "paused": "Tạm dừng",
           "restarting": "Đang khởi động lại",
-          "exited": "",
+          "exited": "Đã thoát",
           "removing": "Đang xoá",
-          "dead": ""
+          "dead": "Đã chết"
         }
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Bộ nhớ"
         }
       },
       "containerImage": {
@@ -5374,7 +5374,7 @@
       }
     },
     "action": {
-      "title": "",
+      "title": "Thao tác",
       "logs": {
         "label": "Xem nhật ký",
         "page": {
@@ -5385,12 +5385,12 @@
         "label": "Bắt đầu",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã khởi động container",
+            "message": "Các container đã được khởi động thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không khởi động được container",
+            "message": "Không thể khởi động các container"
           }
         }
       },
@@ -5398,12 +5398,12 @@
         "label": "Dừng",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã dừng container",
+            "message": "Các container đã được dừng thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không dừng được container",
+            "message": "Không thể dừng các container"
           }
         }
       },
@@ -5411,331 +5411,331 @@
         "label": "Khởi động lại",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã khởi động lại container",
+            "message": "Các container đã được khởi động lại thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không khởi động lại được container",
+            "message": "Không thể khởi động lại các container"
           }
         }
       },
       "remove": {
         "label": "Xóa",
-        "confirm": "",
+        "confirm": "Nhấp lần nữa để xóa vĩnh viễn",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã xóa container",
+            "message": "Các container đã được xóa thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không xóa được container",
+            "message": "Không thể xóa các container"
           }
         }
       },
       "refresh": {
-        "label": "",
+        "label": "Làm mới",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã làm mới container",
+            "message": "Bạn đang xem dữ liệu mới nhất"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không làm mới được container",
+            "message": "Đã xảy ra lỗi khi làm mới các container"
           }
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Thêm vào Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã thêm vào Homarr",
+            "message": "Các ứng dụng đã chọn đã được thêm vào Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không thể thêm vào Homarr",
+            "message": "Không thể thêm các ứng dụng đã chọn vào Homarr"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Thêm container Docker vào Homarr"
         }
       }
     },
     "error": {
-      "internalServerError": "",
-      "noColumns": ""
+      "internalServerError": "Không thể tải các container Docker",
+      "noColumns": "Chọn ít nhất một cột trong cài đặt tiện ích"
     }
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
-      "label": "",
-      "providers": "",
-      "version": "",
-      "architecture": "",
+      "title": "Bảng điều khiển cụm",
+      "label": "Cụm",
+      "providers": "Nhà cung cấp",
+      "version": "Phiên bản",
+      "architecture": "Kiến trúc",
       "capacity": {
-        "title": "",
+        "title": "Dung lượng",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "Đã dành riêng",
+          "used": "Đã dùng"
         }
       },
       "resources": {
-        "title": "",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "title": "Tài nguyên",
+        "nodes": "Node",
+        "namespaces": "Namespace",
+        "ingresses": "Ingress",
+        "services": "Dịch vụ",
+        "pods": "Pod",
+        "configmaps": "ConfigMap",
+        "secrets": "Bí mật",
+        "volumes": "Ổ đĩa"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "Node",
       "field": {
         "name": {
-          "label": ""
+          "label": "Tên"
         },
         "state": {
           "label": "",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "Sẵn sàng",
+            "NotReady": "Chưa sẵn sàng"
           }
         },
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "RAM"
         },
         "pods": {
-          "label": ""
+          "label": "Pod"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "HĐH"
         },
         "architecture": {
-          "label": ""
+          "label": "Kiến trúc"
         },
         "kubernetesVersion": {
-          "label": ""
+          "label": "Phiên bản Kubernetes"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Đã tạo"
         }
       },
       "table": {
-        "search": ""
+        "search": "Tìm kiếm {count} node"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "Namespace",
       "field": {
         "name": {
-          "label": ""
+          "label": "Tên"
         },
         "state": {
           "label": "",
           "option": {
-            "active": "",
-            "terminating": ""
+            "active": "Hoạt động",
+            "terminating": "Đang kết thúc"
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Đã tạo"
         }
       },
       "table": {
-        "search": ""
+        "search": "Tìm kiếm {count} namespace"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "Ingress",
       "field": {
         "name": {
-          "label": ""
+          "label": "Tên"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "className": {
-          "label": ""
+          "label": "Tên lớp"
         },
         "rulesAndPaths": {
-          "label": ""
+          "label": "Quy tắc & đường dẫn"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Đã tạo"
         }
       },
       "table": {
-        "search": ""
+        "search": "Tìm kiếm {count} ingress"
       }
     },
     "services": {
-      "label": "",
+      "label": "Dịch vụ",
       "field": {
         "name": {
-          "label": ""
+          "label": "Tên"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "type": {
-          "label": ""
+          "label": "Loại"
         },
         "ports": {
-          "label": ""
+          "label": "Cổng"
         },
         "targetPorts": {
-          "label": ""
+          "label": "Cổng đích"
         },
         "clusterIP": {
-          "label": ""
+          "label": "IP cụm"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Đã tạo"
         }
       },
       "table": {
-        "search": ""
+        "search": "Tìm kiếm {count} dịch vụ"
       }
     },
     "pods": {
-      "label": "",
+      "label": "Pod",
       "field": {
         "name": {
-          "label": ""
+          "label": "Tên"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "image": {
-          "label": ""
+          "label": "Hình ảnh"
         },
         "applicationType": {
-          "label": ""
+          "label": "Loại ứng dụng"
         },
         "status": {
-          "label": ""
+          "label": "Trạng thái"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Đã tạo"
         }
       },
       "table": {
-        "search": ""
+        "search": "Tìm kiếm {count} pod"
       }
     },
     "secrets": {
-      "label": "",
+      "label": "Bí mật",
       "field": {
         "name": {
-          "label": ""
+          "label": "Tên"
         },
         "namespace": {
-          "label": ""
+          "label": "namespace"
         },
         "type": {
-          "label": ""
+          "label": "loại"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Đã tạo"
         }
       },
       "table": {
-        "search": ""
+        "search": "Tìm kiếm {count} bí mật"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "ConfigMap",
       "field": {
         "name": {
-          "label": ""
+          "label": "Tên"
         },
         "namespace": {
-          "label": ""
+          "label": "namespace"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Đã tạo"
         }
       },
       "table": {
-        "search": ""
+        "search": "Tìm kiếm {count} ConfigMap"
       }
     },
     "volumes": {
-      "label": "",
+      "label": "Ổ đĩa",
       "field": {
         "name": {
-          "label": ""
+          "label": "Tên"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "accessModes": {
-          "label": ""
+          "label": "Chế độ truy cập"
         },
         "storage": {
-          "label": ""
+          "label": "Lưu trữ"
         },
         "storageClassName": {
-          "label": ""
+          "label": "Tên lớp lưu trữ"
         },
         "volumeMode": {
-          "label": ""
+          "label": "Chế độ ổ đĩa"
         },
         "volumeName": {
-          "label": ""
+          "label": "Tên ổ đĩa"
         },
         "status": {
-          "label": ""
+          "label": "Trạng thái"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Đã tạo"
         }
       },
       "table": {
-        "search": ""
+        "search": "Tìm kiếm {count} ổ đĩa"
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Không thể tải dữ liệu Kubernetes"
     }
   },
   "permission": {
-    "title": "",
+    "title": "Quyền",
     "userSelect": {
-      "title": ""
+      "title": "Thêm quyền cho người dùng"
     },
     "groupSelect": {
-      "title": ""
+      "title": "Thêm quyền cho nhóm"
     },
     "tab": {
       "user": "Người dùng",
-      "group": "",
-      "inherited": ""
+      "group": "Các nhóm",
+      "inherited": "Nhóm kế thừa"
     },
     "field": {
       "user": {
         "label": "Người dùng"
       },
       "group": {
-        "label": ""
+        "label": "Nhóm"
       },
       "permission": {
-        "label": ""
+        "label": "Quyền"
       }
     },
     "action": {
-      "saveUser": "",
-      "saveGroup": ""
+      "saveUser": "Lưu quyền người dùng",
+      "saveGroup": "Lưu quyền nhóm"
     }
   },
   "navigationStructure": {
@@ -5745,44 +5745,44 @@
         "label": "Bảng"
       },
       "integrations": {
-        "label": "",
+        "label": "Tích hợp",
         "edit": {
           "label": "Sửa"
         },
         "new": {
-          "label": ""
+          "label": "Mới"
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Công cụ tìm kiếm",
         "new": {
-          "label": ""
+          "label": "Mới"
         },
         "edit": {
           "label": "Sửa"
         }
       },
       "medias": {
-        "label": ""
+        "label": "Media"
       },
       "apps": {
         "label": "Ứng dụng",
         "new": {
-          "label": ""
+          "label": "Mới"
         },
         "edit": {
           "label": "Sửa"
         }
       },
       "custom-widgets": {
-        "label": "",
+        "label": "Tiện ích tùy chỉnh",
         "new": {
-          "label": ""
+          "label": "Mới"
         },
         "edit": {
-          "label": "",
+          "label": "Sửa",
           "flow": {
-            "label": ""
+            "label": "Luồng"
           }
         }
       },
@@ -5795,7 +5795,7 @@
         "security": "Bảo mật",
         "board": "Bảng",
         "groups": {
-          "label": ""
+          "label": "Các nhóm"
         },
         "invites": {
           "label": "Mời"
@@ -5804,48 +5804,48 @@
       "tools": {
         "label": "Công cụ",
         "tasks": {
-          "label": ""
+          "label": "Tác vụ"
         },
         "docker": {
-          "label": "",
+          "label": "Docker",
           "logs": {
             "label": "Nhật ký"
           }
         },
         "kubernetes": {
-          "label": "",
+          "label": "Kubernetes",
           "nodes": {
-            "label": ""
+            "label": "Node"
           },
           "namespaces": {
-            "label": ""
+            "label": "Namespace"
           },
           "ingresses": {
-            "label": ""
+            "label": "Ingress"
           },
           "services": {
-            "label": ""
+            "label": "Dịch vụ"
           },
           "pods": {
-            "label": ""
+            "label": "pods"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMap"
           },
           "secrets": {
-            "label": ""
+            "label": "Bí mật"
           },
           "volumes": {
-            "label": ""
+            "label": "Ổ đĩa"
           }
         },
         "logs": {
-          "label": ""
+          "label": "Nhật ký"
         },
         "certificates": {
-          "label": "",
+          "label": "Chứng chỉ",
           "hostnames": {
-            "label": ""
+            "label": "Tên máy chủ"
           }
         }
       },
@@ -5858,28 +5858,28 @@
     }
   },
   "search": {
-    "placeholder": "",
+    "placeholder": "Tìm kiếm mọi thứ",
     "nothingFound": "Không tìm được gì cả",
     "error": {
-      "fetch": ""
+      "fetch": "Đã xảy ra lỗi khi tải dữ liệu"
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Tìm kiếm ứng dụng, tích hợp hoặc bảng",
         "group": {
           "app": {
             "title": "Ứng dụng",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Mở URL ứng dụng"
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Sửa ứng dụng"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Chọn thao tác cho ứng dụng"
               }
             }
           },
@@ -5888,75 +5888,75 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Mở bảng"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "Đặt làm bảng chính"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Đặt làm bảng di động"
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Mở cài đặt"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Chọn thao tác cho bảng"
               }
             }
           },
           "integration": {
-            "title": ""
+            "title": "Tích hợp"
           }
         }
       },
       "command": {
-        "help": "",
+        "help": "Kích hoạt chế độ lệnh",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "Lệnh cục bộ"
           },
           "globalCommand": {
-            "title": "",
+            "title": "Lệnh toàn cục",
             "option": {
               "colorScheme": {
                 "auto": "Chuyển đổi chế độ giao diện",
-                "light": "",
-                "dark": ""
+                "light": "Chuyển sang chế độ sáng",
+                "dark": "Chuyển sang chế độ tối"
               },
               "language": {
-                "label": "",
+                "label": "Đổi ngôn ngữ",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Chọn ngôn ngữ bạn muốn"
                   }
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "Tạo bảng mới"
               },
               "importBoard": {
-                "label": ""
+                "label": "Nhập bảng"
               },
               "newApp": {
-                "label": ""
+                "label": "Tạo ứng dụng mới"
               },
               "newIntegration": {
-                "label": "",
+                "label": "Tạo tích hợp mới",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Chọn loại tích hợp bạn muốn tạo"
                   }
                 }
               },
               "newUser": {
-                "label": ""
+                "label": "Tạo người dùng mới"
               },
               "newInvite": {
-                "label": ""
+                "label": "Tạo lời mời mới"
               },
               "newGroup": {
-                "label": ""
+                "label": "Tạo nhóm mới"
               }
             }
           },
@@ -6063,10 +6063,10 @@
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "",
+                "label": "Bật nhấp chuột phải trên tiện ích",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Bật nhấp chuột phải trên tiện ích"
                   }
                 }
               },
@@ -6079,9 +6079,9 @@
       },
       "media": {
         "help": "Tìm kiếm phim hoặc chương trình để yêu cầu",
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": "",
+        "requestMovie": "Yêu cầu phim",
+        "requestSeries": "Yêu cầu series",
+        "openIn": "Mở bằng {kind}",
         "group": {
           "title": "Phim và chương trình"
         },
@@ -6104,10 +6104,10 @@
         }
       },
       "external": {
-        "help": "",
+        "help": "Sử dụng công cụ tìm kiếm bên ngoài",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Công cụ tìm kiếm",
             "tipDdgBangs": "Mẹo: Bạn có thể dùng bất kỳ DuckDuckGo bang nào ở đây, ví dụ: !something",
             "bang": {
               "searchWithQuery": "Tìm kiếm \"{query}\" với {label}",
@@ -6119,36 +6119,36 @@
             "children": {
               "action": {
                 "search": {
-                  "label": ""
+                  "label": "Tìm kiếm bằng {name}"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Chọn thao tác cho công cụ tìm kiếm"
               },
               "searchResults": {
-                "title": ""
+                "title": "Chọn một kết quả tìm kiếm để thao tác"
               }
             },
             "option": {
               "google": {
-                "name": "",
-                "description": ""
+                "name": "Google",
+                "description": "Tìm kiếm web bằng Google"
               },
               "bing": {
-                "name": "",
-                "description": ""
+                "name": "Bing",
+                "description": "Tìm kiếm web bằng Bing"
               },
               "duckduckgo": {
-                "name": "",
-                "description": ""
+                "name": "DuckDuckGo",
+                "description": "Tìm kiếm web bằng DuckDuckGo"
               },
               "torrent": {
                 "name": "Torrent",
-                "description": ""
+                "description": "Tìm kiếm torrent trên torrentdownloads.pro"
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "Tìm kiếm video trên YouTube"
               }
             }
           }
@@ -6157,7 +6157,7 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "Chế độ"
           },
           "help": {
             "title": "Giúp đỡ",
@@ -6166,7 +6166,7 @@
                 "label": "Tài liệu"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Gửi báo cáo sự cố"
               },
               "discord": {
                 "label": "Discord"
@@ -6178,81 +6178,81 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Tìm kiếm",
             "option": {
               "other": {
-                "label": ""
+                "label": "Tìm kiếm bằng công cụ tìm kiếm khác"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "Không có công cụ tìm kiếm mặc định",
+                "description": "Đặt công cụ tìm kiếm mặc định trong tùy chọn"
               },
               "search": {
-                "label": ""
+                "label": "Tìm “{query}” bằng {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Bắt đầu nhập để tìm kiếm"
               }
             }
           },
           "local": {
-            "title": ""
+            "title": "Kết quả cục bộ"
           }
         }
       },
       "page": {
-        "help": "",
+        "help": "Tìm kiếm trang",
         "group": {
           "page": {
-            "title": "",
+            "title": "Trang",
             "option": {
               "manageHome": {
-                "label": ""
+                "label": "Quản lý trang chủ"
               },
               "manageBoard": {
-                "label": ""
+                "label": "Quản lý bảng"
               },
               "manageApp": {
-                "label": ""
+                "label": "Quản lý ứng dụng"
               },
               "manageIntegration": {
-                "label": ""
+                "label": "Quản lý tích hợp"
               },
               "manageSearchEngine": {
-                "label": ""
+                "label": "Quản lý công cụ tìm kiếm"
               },
               "manageMedia": {
-                "label": ""
+                "label": "Quản lý media"
               },
               "manageUser": {
                 "label": "Quản lý người dùng"
               },
               "manageInvite": {
-                "label": ""
+                "label": "Quản lý lời mời"
               },
               "manageGroup": {
-                "label": ""
+                "label": "Quản lý nhóm"
               },
               "manageDocker": {
-                "label": ""
+                "label": "Quản lý Docker"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
-                "label": ""
+                "label": "Xem nhật ký"
               },
               "manageTask": {
-                "label": ""
+                "label": "Quản lý tác vụ"
               },
               "manageSettings": {
-                "label": ""
+                "label": "Cài đặt toàn cục"
               },
               "about": {
                 "label": "Về chúng tôi"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Bảng chính"
               },
               "preferences": {
                 "label": "Cá nhân hoá"
@@ -6262,37 +6262,37 @@
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Tìm kiếm người dùng hoặc nhóm",
         "group": {
           "user": {
             "title": "Người dùng",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Hiển thị thông tin người dùng"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Chọn thao tác cho người dùng"
               }
             }
           },
           "group": {
-            "title": "",
+            "title": "Các nhóm",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Hiển thị thông tin nhóm"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "Quản lý thành viên"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "Quản lý quyền"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Chọn thao tác cho nhóm"
               }
             }
           }
@@ -6300,72 +6300,72 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "Tìm công cụ tìm kiếm",
       "field": {
         "name": {
           "label": "Tên"
         },
         "short": {
-          "label": ""
+          "label": "Ngắn"
         },
         "urlTemplate": {
-          "label": ""
+          "label": "Mẫu URL tìm kiếm"
         },
         "description": {
-          "label": ""
+          "label": "Mô tả"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Công cụ tìm kiếm",
           "noResults": {
-            "title": "",
-            "action": ""
+            "title": "Chưa có công cụ tìm kiếm nào",
+            "action": "Tạo công cụ tìm kiếm đầu tiên"
           },
-          "interactive": ""
+          "interactive": "Tương tác, sử dụng một tích hợp"
         },
         "create": {
-          "title": "",
+          "title": "Công cụ tìm kiếm mới",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Đã tạo công cụ tìm kiếm",
+              "message": "Công cụ tìm kiếm đã được tạo thành công"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Không tạo được công cụ tìm kiếm",
+              "message": "Không thể tạo công cụ tìm kiếm"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "Chỉnh sửa công cụ tìm kiếm",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Đã áp dụng thay đổi thành công",
+              "message": "Công cụ tìm kiếm đã được lưu thành công"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Không thể áp dụng thay đổi",
+              "message": "Không thể lưu công cụ tìm kiếm"
             }
           },
-          "configControl": "",
+          "configControl": "Cấu hình",
           "searchEngineType": {
-            "generic": "",
-            "fromIntegration": ""
+            "generic": "Chung",
+            "fromIntegration": "Từ tích hợp"
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "Xóa công cụ tìm kiếm",
+          "message": "Bạn có chắc muốn xóa công cụ tìm kiếm {name} không?",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Đã xóa công cụ tìm kiếm",
+              "message": "Công cụ tìm kiếm đã được xóa thành công"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Không xóa được công cụ tìm kiếm",
+              "message": "Không thể xóa công cụ tìm kiếm"
             }
           }
         }
@@ -6373,11 +6373,11 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "Yêu cầu “{name}”",
             "table": {
               "header": {
-                "season": "",
-                "episodes": "",
+                "season": "Mùa",
+                "episodes": "Tập",
                 "status": "Trạng thái"
               },
               "status": {
@@ -6385,7 +6385,7 @@
               }
             },
             "button": {
-              "send": ""
+              "send": "Gửi yêu cầu"
             }
           }
         }
@@ -6395,89 +6395,89 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Tên máy chủ"
       },
       "subject": {
-        "label": ""
+        "label": "Chủ thể"
       },
       "issuer": {
         "label": ""
       },
       "validFrom": {
-        "label": ""
+        "label": "Có hiệu lực từ"
       },
       "validTo": {
         "label": ""
       },
       "serialNumber": {
-        "label": ""
+        "label": "Số sê-ri"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Dấu vân tay"
       }
     },
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Chứng chỉ đáng tin cậy",
+        "description": "Được Homarr sử dụng để yêu cầu dữ liệu từ các tích hợp.",
         "noResults": {
-          "title": ""
+          "title": "Chưa có chứng chỉ nào"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Chứng chỉ không hợp lệ",
+          "description": "Không thể phân tích chứng chỉ"
         },
-        "expires": "",
-        "toHostnames": ""
+        "expires": "Hết hạn {when}",
+        "toHostnames": "Tên máy chủ đáng tin cậy"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "Tên máy chủ của chứng chỉ đáng tin cậy",
+        "description": "Một số chứng chỉ không cho phép tên miền cụ thể mà Homarr sử dụng để yêu cầu chúng. Vì vậy, tất cả tên máy chủ đáng tin cậy cùng dấu vân tay chứng chỉ được sử dụng để bỏ qua các hạn chế này.",
         "noResults": {
-          "title": ""
+          "title": "Chưa có tên máy chủ nào"
         },
-        "toCertificates": ""
+        "toCertificates": "Chứng chỉ"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Thêm chứng chỉ",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã thêm chứng chỉ",
+            "message": "Chứng chỉ đã được thêm thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không thể thêm chứng chỉ",
+            "message": "Không thể thêm chứng chỉ"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "Xóa chứng chỉ",
+        "confirm": "Bạn có chắc muốn xóa chứng chỉ này không?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã xóa chứng chỉ",
+            "message": "Chứng chỉ đã được xóa thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Không xóa được chứng chỉ",
+            "message": "Không thể xóa chứng chỉ"
           }
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "Xóa tên máy chủ đáng tin cậy",
+        "confirm": "Bạn có chắc muốn xóa tên máy chủ đáng tin cậy này không? Điều này có thể khiến một số tích hợp ngừng hoạt động.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã xóa tên máy chủ",
+            "message": "Đã xóa tên máy chủ thành công"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Chưa xóa tên máy chủ",
+            "message": "Không thể xóa tên máy chủ"
           }
         }
       }
@@ -6486,10 +6486,10 @@
   "log": {
     "level": {
       "option": {
-        "debug": "",
+        "debug": "Gỡ lỗi",
         "info": "",
         "warn": "",
-        "error": ""
+        "error": "Lỗi"
       }
     }
   },

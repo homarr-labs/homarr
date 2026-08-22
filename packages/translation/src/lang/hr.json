@@ -2,96 +2,96 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Dobro došli u Homarr",
+        "subtitle": "Započnimo s postavljanjem vaše instance Homarra.",
+        "description": "Za početak odaberite kako želite postaviti svoju instancu Homarra.",
         "action": {
-          "scratch": "",
-          "importOldmarr": "",
+          "scratch": "Započni ispočetka",
+          "importOldmarr": "Uvezi iz Homarra prije verzije 1.0",
           "restoreSqlite": "Vrati iz SQLite sigurnosne kopije",
           "restoreSqliteDescription": "Prenesite cjelovitu SQLite sigurnosnu kopiju baze podataka iz prethodne Homarr instance. To će vratiti sve ploče, korisnike, aplikacije, integracije i postavke.",
           "backToOptions": "← Natrag na opcije postavljanja"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Uvoz podataka",
+        "subtitle": "Možete uvesti podatke iz postojeće instance Homarra.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Povucite ZIP datoteku ovdje ili kliknite za pregled",
+          "description": "Preneseni ZIP obradit će se i moći ćete odabrati što želite uvesti"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Promijeni datoteku"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Postavke uvoza",
+          "description": "Konfiguriraj ponašanje uvoza"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "Pronađene ploče: {count}",
+          "description": "Odaberite sve ploče s veličinom koju želite uvesti",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Odaberi sve",
+            "unselectAll": "Poništi odabir svega"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Sažetak uvoza",
+          "description": "U sažetku u nastavku možete vidjeti što će se uvesti",
           "action": {
-            "import": ""
+            "import": "Potvrdi uvoz i nastavi"
           },
           "entities": {
             "apps": "aplikacije",
             "boards": "Daske",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "Integracije",
+            "credentialUsers": "Korisnici vjerodajnica"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Unesite uvozni token",
           "field": {
             "token": {
               "label": "Znak",
-              "description": ""
+              "description": "Unesite prikazani uvozni token iz svoje prethodne instance Homarra"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Neispravan token",
+              "message": "Token koji ste unijeli nije valjan"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Admin korisnik",
+        "subtitle": "Navedite vjerodajnice za svoj administratorski korisnički račun.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Korisnik je stvoren",
+            "message": "Korisnik je uspješno stvoren"
           },
           "error": {
-            "title": ""
+            "title": "Stvaranje korisnika nije uspjelo"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Vanjska grupa",
+        "subtitle": "Navedite grupu koja će se koristiti za vanjske korisnike.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Naziv grupe",
+            "description": "Naziv mora odgovarati administratorskoj grupi vanjskog pružatelja usluge"
           }
         }
       },
       "settings": {
         "title": "Postavke",
-        "subtitle": ""
+        "subtitle": "Konfigurirajte postavke poslužitelja."
       },
       "integrations": {
         "title": "Integracije",
@@ -136,18 +136,18 @@
         }
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Dovrši postavljanje",
+        "subtitle": "Spremni ste za početak!",
+        "description": "Uspješno ste dovršili postupak postavljanja. Sada možete početi koristiti Homarr. Odaberite sljedeću radnju:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Idi na ploču {name}",
+          "createBoard": "Stvori svoju prvu ploču",
+          "inviteUser": "Pozovi druge korisnike",
+          "docs": "Pročitaj dokumentaciju"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Natrag na početak"
   },
   "user": {
     "title": "Korisnici",
@@ -199,14 +199,14 @@
         "label": "Koristi ikone za pingove"
       },
       "enableRightClickOnWidgets": {
-        "label": "",
-        "description": ""
+        "label": "Omogući desni klik na widgetima",
+        "description": "Prikaži Homarrov kontekstni izbornik pri desnom kliku na widget. Onemogućite ovu opciju za upotrebu zadanog izbornika preglednika (npr. \"Otvori poveznicu u novoj kartici\")."
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Zadana tražilica"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Otvori rezultate pretraživanja u novoj kartici"
       },
       "ddgBangs": {
         "label": "Omogući DuckDuckGo prečace"
@@ -272,10 +272,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Postavke pretraživanja uspješno su promijenjene"
           },
           "error": {
-            "message": ""
+            "message": "Nije moguće promijeniti postavke pretraživanja"
           }
         }
       },
@@ -370,12 +370,12 @@
       "name": "Naziv",
       "members": "Članovi",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Početna ploča",
+        "description": "Moguće je odabrati samo ploče kojima grupa ima pristup"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Mobilna ploča",
+        "description": "Moguće je odabrati samo ploče kojima grupa ima pristup"
       }
     },
     "permission": {
@@ -577,12 +577,12 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Postavke su spremljene",
+              "message": "Postavke ploče uspješno su spremljene"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Spremanje postavki nije uspjelo",
+              "message": "Postavke ploče nije moguće spremiti"
             }
           }
         }
@@ -590,21 +590,21 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Položaj je uspješno promijenjen"
           },
           "error": {
-            "message": ""
+            "message": "Položaj nije moguće promijeniti"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "Zadana grupa",
+      "description": "{name} – svi prijavljeni korisnici"
     }
   },
   "app": {
-    "search": "",
+    "search": "Pronađi aplikaciju",
     "page": {
       "list": {
         "title": "aplikacije",
@@ -666,8 +666,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Koristi drugi URL za ping",
+          "description": "Korisno ako Homarr može izravno pristupiti putem internog naziva hosta ili mreže kako bi se izbjegla potrošnja propusnosti davatelja internetskih usluga"
         }
       }
     },
@@ -675,222 +675,222 @@
       "select": {
         "label": "Odaberi aplikaciju",
         "notFound": "Aplikacija nije pronađena",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Pretraži aplikaciju",
+        "noResults": "Nema rezultata",
+        "action": "Odaberi {app}",
+        "title": "Odaberite aplikaciju za dodavanje na ovu ploču"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Stvori novu aplikaciju",
+        "description": "Stvori novu aplikaciju ",
+        "action": "Otvori stvaranje aplikacije"
       },
-      "add": ""
+      "add": "Dodaj aplikaciju"
     }
   },
   "customWidget": {
     "page": {
       "list": {
-        "title": "",
-        "noResults": "",
-        "loading": ""
+        "title": "Prilagođeni widgeti",
+        "noResults": "Još nema prilagođenih widgeta. Izradite svoj prvi!",
+        "loading": "Učitavanje..."
       },
       "create": {
-        "title": "",
-        "subtitle": ""
+        "title": "Izradi prilagođeni widget",
+        "subtitle": "Definirajte API URL, autentifikaciju i način prikaza podataka odgovora."
       },
       "edit": {
-        "title": ""
+        "title": "Uredi prilagođeni widget"
       }
     },
     "action": {
-      "create": "",
-      "import": "",
-      "save": "",
-      "delete": "",
-      "deleteConfirm": "",
-      "export": "",
-      "addMapping": "",
-      "addColumn": "",
-      "edit": "",
-      "removeMapping": "",
-      "removeColumn": "",
-      "addItem": "",
-      "removeItem": "",
-      "addBar": "",
-      "duplicate": "",
-      "copyAiPrompt": "",
-      "enable": "",
-      "disable": "",
-      "menu": ""
+      "create": "Izradi",
+      "import": "Uvezi",
+      "save": "Spremi",
+      "delete": "Izbriši prilagođeni widget",
+      "deleteConfirm": "Jeste li sigurni da želite izbrisati \"{name}\"? Ova se radnja ne može poništiti.",
+      "export": "Izvezi",
+      "addMapping": "Dodaj mapiranje",
+      "addColumn": "Dodaj stupac",
+      "edit": "Uredi",
+      "removeMapping": "Ukloni mapiranje",
+      "removeColumn": "Ukloni stupac",
+      "addItem": "Dodaj stavku",
+      "removeItem": "Ukloni stavku",
+      "addBar": "Dodaj traku",
+      "duplicate": "Dupliciraj",
+      "copyAiPrompt": "Kopiraj AI upit",
+      "enable": "Omogući",
+      "disable": "Onemogući",
+      "menu": "Radnje"
     },
     "field": {
-      "name": "",
-      "description": "",
-      "iconUrl": "",
-      "url": "",
-      "authType": "",
-      "headerName": "",
-      "method": "",
-      "requestBody": "",
-      "displayType": "",
-      "jsonPath": "",
-      "jsonPathHint": "",
-      "label": "",
-      "unit": "",
-      "mappings": "",
-      "tablePath": "",
-      "tablePathHint": "",
-      "columns": "",
-      "header": "",
-      "items": "",
-      "gridColumns": "",
-      "cardStyle": "",
-      "bars": "",
-      "valuePath": "",
-      "maxPath": "",
-      "showPercentage": "",
-      "barSize": "",
-      "goodValues": "",
-      "dotSize": "",
-      "valueSize": "",
-      "labelPosition": "",
-      "kvLayout": "",
-      "striped": "",
-      "compact": "",
-      "maxHeight": "",
-      "color": "",
-      "buttonLabel": "",
-      "buttonColor": "",
-      "confirmText": "",
-      "confirmTextHint": "",
-      "successMessage": "",
-      "successMessageHint": "",
-      "enabled": "",
+      "name": "Naziv",
+      "description": "Opis",
+      "iconUrl": "URL ikone",
+      "url": "URL",
+      "authType": "Vrsta autentifikacije",
+      "headerName": "Naziv zaglavlja/parametra upita",
+      "method": "Metoda",
+      "requestBody": "Tijelo zahtjeva",
+      "displayType": "Vrsta prikaza",
+      "jsonPath": "JSON putanja",
+      "jsonPathHint": "Upotrijebite sintaksu JSONPath za izdvajanje vrijednosti, npr. $.data.temperature ili $.items[0].name",
+      "label": "Oznaka",
+      "unit": "Jedinica",
+      "mappings": "Mapiranja",
+      "tablePath": "JSON putanja niza",
+      "tablePathHint": "Putanja do niza u odgovoru, npr. $.data.items",
+      "columns": "Stupci",
+      "header": "Zaglavlje",
+      "items": "Stavke",
+      "gridColumns": "Stupci rešetke",
+      "cardStyle": "Stil kartice",
+      "bars": "Trake",
+      "valuePath": "JSON putanja vrijednosti",
+      "maxPath": "JSON putanja maksimalne vrijednosti",
+      "showPercentage": "Prikaži postotak",
+      "barSize": "Veličina trake",
+      "goodValues": "Dobre vrijednosti (odvojene zarezom)",
+      "dotSize": "Veličina točke",
+      "valueSize": "Veličina vrijednosti",
+      "labelPosition": "Položaj oznake",
+      "kvLayout": "Raspored",
+      "striped": "Prugasti reci",
+      "compact": "Kompaktni način rada",
+      "maxHeight": "Maksimalna visina (px)",
+      "color": "Boja",
+      "buttonLabel": "Oznaka gumba",
+      "buttonColor": "Boja gumba",
+      "confirmText": "Tekst potvrde",
+      "confirmTextHint": "Ako je postavljeno, prije izvršavanja zahtjeva prikazat će se dijaloški okvir za potvrdu",
+      "successMessage": "Poruka o uspjehu",
+      "successMessageHint": "Poruka prikazana nakon uspješnog izvršavanja",
+      "enabled": "Omogućeno",
       "template": {
-        "label": "",
-        "description": ""
+        "label": "JSX predložak",
+        "description": "Mantine JSX predložak. Pristupite poljima API odgovora putem povezivanja podataka (npr. data.name). Upotrebljavajte samo dopuštene komponente. Zabranjeno: constructor, __proto__, eval, Function, window, document."
       }
     },
     "placeholder": {
-      "exampleLabel": "",
-      "exampleLabelShort": "",
-      "exampleHeader": "",
-      "exampleUnit": "",
-      "iconUrl": "",
-      "url": "",
-      "headerName": "",
-      "jsonPath": "",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
-      "color": ""
+      "exampleLabel": "Temperatura CPU-a",
+      "exampleLabelShort": "Temp. CPU-a",
+      "exampleHeader": "Naziv",
+      "exampleUnit": "°C",
+      "iconUrl": "https://...",
+      "url": "https://api.example.com/api/v1/status",
+      "headerName": "X-API-Key",
+      "jsonPath": "$.data.value",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.naziv",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "online, true, up",
+      "color": "plava"
     },
     "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
+      "filled": "Ispunjeno",
+      "outline": "Obris",
+      "subtle": "Suptilno"
     },
     "layoutOption": {
-      "list": "",
-      "grid": ""
+      "list": "Popis",
+      "grid": "Mreža"
     },
     "sizeOption": {
-      "sm": "",
-      "md": "",
-      "lg": "",
-      "xl": ""
+      "sm": "Malo",
+      "md": "Srednje",
+      "lg": "Veliko",
+      "xl": "Vrlo veliko"
     },
     "labelPositionOption": {
-      "above": "",
-      "below": ""
+      "above": "Iznad",
+      "below": "Ispod"
     },
     "fieldset": {
-      "general": "",
-      "connection": "",
-      "display": ""
+      "general": "Općenito",
+      "connection": "API veza",
+      "display": "Konfiguracija prikaza"
     },
     "displayTypeDescription": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "Prikaži jednu izdvojenu vrijednost s oznakom i jedinicom",
+      "keyValue": "Prikaži više označenih vrijednosti jednu uz drugu",
+      "table": "Prikaži retke podataka u obliku tablice",
+      "statGrid": "Obojene statističke kartice u mreži — poput widgeta Pi-Hole ili Speedtest",
+      "progressBars": "Trake napretka koje prikazuju upotrebu ili dovršenost — za disk, memoriju i kvote",
+      "statusIndicator": "Obojene statusne točke koje prikazuju stanje na mreži izvan mreže ili stanje ispravnosti",
+      "countGrid": "Kompaktni brojači brojeva i oznaka u uskoj mreži",
+      "raw": "Lijepo formatiran JSON izlaz za otklanjanje pogrešaka",
+      "actionButton": "Gumb koji pokreće zahtjev kada se klikne",
+      "customJsx": "Prilagođeni JSX raspored s dopuštenim Mantine komponentama i potpunim povezivanjem API podataka"
     },
     "method": {
-      "GET": "",
-      "POST": "",
-      "PUT": "",
-      "DELETE": "",
-      "PATCH": ""
+      "GET": "GET",
+      "POST": "POST",
+      "PUT": "PUT",
+      "DELETE": "DELETE",
+      "PATCH": "PATCH"
     },
     "authType": {
-      "none": "",
-      "bearer": "",
-      "basic": "",
-      "apiKeyHeader": "",
-      "apiKeyQuery": ""
+      "none": "Ništa",
+      "bearer": "Bearer token",
+      "basic": "Osnovna autentifikacija",
+      "apiKeyHeader": "API ključ (zaglavlje)",
+      "apiKeyQuery": "API ključ (upit)"
     },
     "displayType": {
-      "singleValue": "",
-      "keyValue": "",
-      "table": "",
-      "statGrid": "",
-      "progressBars": "",
-      "statusIndicator": "",
-      "countGrid": "",
-      "raw": "",
-      "actionButton": "",
-      "customJsx": ""
+      "singleValue": "Jedna vrijednost",
+      "keyValue": "Ključ-vrijednost",
+      "table": "Tablica",
+      "statGrid": "Mreža statistika",
+      "progressBars": "Trake napretka",
+      "statusIndicator": "Pokazatelj statusa",
+      "countGrid": "Mreža brojača",
+      "raw": "Sirovi JSON",
+      "actionButton": "Gumb radnje",
+      "customJsx": "Prilagođeni JSX"
     },
     "secret": {
-      "apiKey": "",
-      "username": "",
-      "password": "",
-      "savedPlaceholder": ""
+      "apiKey": "API ključ / token",
+      "username": "Korisničko ime",
+      "password": "Lozinka",
+      "savedPlaceholder": "••••••• (spremljeno, ostavite prazno za zadržavanje)"
     },
     "preview": {
-      "title": "",
-      "test": "",
-      "hint": "",
-      "rawResponse": ""
+      "title": "Pretpregled",
+      "test": "Testiraj",
+      "hint": "Kliknite Testiraj za pretpregled API odgovora s trenutačnom konfiguracijom.",
+      "rawResponse": "Sirovi JSON odgovor"
     },
     "notification": {
-      "created": "",
-      "updated": "",
-      "deleted": "",
-      "imported": "",
-      "aiPromptCopied": "",
-      "aiPromptDescription": "",
-      "aiPromptCopy": "",
-      "aiPromptNoResponse": "",
-      "aiPromptCopyError": "",
-      "createError": "",
-      "updateError": "",
-      "importError": "",
-      "exportError": "",
-      "duplicated": "",
-      "duplicateError": "",
-      "toggleError": "",
-      "deleteError": "",
-      "previewError": "",
-      "executed": "",
-      "executeError": ""
+      "created": "Widget \"{name}\" uspješno je izrađen.",
+      "updated": "Widget \"{name}\" uspješno je ažuriran.",
+      "deleted": "Widget \"{name}\" je izbrisan.",
+      "imported": "Widget je uspješno uvezen.",
+      "aiPromptCopied": "AI upit kopiran je u međuspremnik",
+      "aiPromptDescription": "Kopirajte unaprijed izrađen upit koji ćete zalijepiti u bilo koji AI chatbot (ChatGPT, Claude, Gemini...). Sadrži cijelu shemu widgeta i vaš API odgovor kako bi AI mogao izraditi JSON konfiguraciju spremnu za uvoz.",
+      "aiPromptCopy": "Kopiraj u međuspremnik",
+      "aiPromptNoResponse": "Savjet: prvo pokrenite test kako biste u upit uključili API odgovor za bolje rezultate.",
+      "aiPromptCopyError": "Kopiranje upita u međuspremnik nije uspjelo. Vaš preglednik možda ne podržava ovu značajku.",
+      "createError": "Izrada widgeta nije uspjela. Provjerite je li vaša API krajnja točka dostupna.",
+      "updateError": "Ažuriranje widgeta nije uspjelo. Promjene nisu spremljene.",
+      "importError": "Uvoz widgeta nije uspio. Provjerite je li datoteka valjani JSON izvoz prilagođenog widgeta.",
+      "exportError": "Izvoz widgeta nije uspio.",
+      "duplicated": "Widget \"{name}\" je dupliciran.",
+      "duplicateError": "Dupliciranje widgeta nije uspjelo.",
+      "toggleError": "Promjena statusa widgeta nije uspjela.",
+      "deleteError": "Brisanje widgeta nije uspjelo.",
+      "previewError": "Dohvaćanje pretpregleda nije uspjelo. Provjerite URL i pokušajte ponovno.",
+      "executed": "Radnja je uspješno izvršena.",
+      "executeError": "Radnja nije uspjela: {error}"
     },
     "table": {
-      "name": "",
-      "url": "",
-      "display": ""
+      "name": "Naziv",
+      "url": "URL",
+      "display": "Prikaz"
     },
     "widget": {
-      "disabled": ""
+      "disabled": "Ovaj je widget onemogućen"
     }
   },
   "integration": {
@@ -917,14 +917,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Postojeće",
+              "label": "Odaberite postojeću aplikaciju"
             },
             "new": {
-              "title": "",
+              "title": "Novo",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "URL aplik.",
+                "description": "URL koji će se otvoriti pri pristupu aplikaciji s nadzorne ploče"
               }
             }
           }
@@ -944,9 +944,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Poveži aplikaciju",
+            "remove": "Odveži",
+            "select": "Odaberite aplikaciju za povezivanje"
           }
         }
       },
@@ -973,18 +973,18 @@
         "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Stvori tražilicu",
+        "description": "Integracija \"{kind}\" može se koristiti s tražilicama. Označite ovo za automatsku konfiguraciju tražilice."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Povezana apl."
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "Stvori aplikaciju",
+        "description": "Stvorite aplikaciju s istim nazivom i ikonom kao integracija. Ostavite polje u nastavku praznim da biste aplikaciju stvorili s URL-om integracije."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "Prilagođeni URL"
       },
       "apiKeySettings": {
         "label": "Dohvati API ključ"
@@ -999,15 +999,15 @@
       "detected": "Otkriveno putem Dockera"
     },
     "category": {
-      "dnsHole": "",
+      "dnsHole": "DNS",
       "mediaService": "Mediji",
       "calendar": "Kalendar",
       "mediaSearch": "Pretraživanje",
       "mediaRelease": "Izdanja",
       "mediaRequest": "Zahtjevi",
       "downloadClient": "Preuzimanja",
-      "usenet": "",
-      "torrent": "",
+      "usenet": "Usenet",
+      "torrent": "Torrenti",
       "miscellaneous": "Razno",
       "smartHomeServer": "Pametni dom",
       "indexerManager": "Indekser",
@@ -1020,14 +1020,14 @@
       "firewall": "Vatrozid",
       "timetable": "Raspored",
       "photoService": "Fotografije",
-      "documents": "",
+      "documents": "Dokumenti",
       "notes": "Bilješke",
       "mediaMonitoring": "Nadzor",
       "speedtest": "Test brzine",
       "analytics": "Analitika",
-      "vpn": "",
-      "mediaLibrary": "",
-      "uptimeMonitoring": ""
+      "vpn": "VPN",
+      "mediaLibrary": "Medijska biblioteka",
+      "uptimeMonitoring": "Nadzor dostupnosti"
     },
     "testConnection": {
       "action": {
@@ -1037,125 +1037,125 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Uzrok s više pojedinosti"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Nepoznata pogreška",
+          "description": "Došlo je do nepoznate pogreške; otvorite uzrok u nastavku za više pojedinosti"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Greška pars.",
+          "description": "Odgovor nije moguće raščlaniti. Provjerite pokazuje li URL na osnovni URL usluge."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Pogreška autorizacije",
+          "description": "Zahtjev nije autoriziran. Provjerite jesu li vjerodajnice točne i konfigurirane s dovoljnim dozvolama."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Pogreška odgovora",
+          "description": "Primljen je neočekivani odgovor {statusCode} ({reason}) s adrese <url></url>. Provjerite pokazuje li URL na osnovni URL integracije.",
+          "otherDescription": "Primljen je neočekivani odgovor {statusCode} s adrese <url></url>. Provjerite pokazuje li URL na osnovni URL integracije.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "Neispravan zahtjev",
+            "notFound": "Nije pronađeno",
+            "tooManyRequests": "Previše zahtjeva",
+            "internalServerError": "Interna pogreška poslužitelja",
+            "serviceUnavailable": "Usluga nije dostupna",
+            "gatewayTimeout": "Istek vremena pristupnika"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Pogreška certifikata",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "Certifikat je istekao.",
+            "notYetValid": "Certifikat još nije valjan.",
+            "untrusted": "Certifikat nije pouzdan.",
+            "hostnameMismatch": "Naziv hosta certifikata ne podudara se s URL-om."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "Nema dovoljno dozvola",
+              "message": "Nemate dopuštenje za vjerovanje certifikatima ili njihov prijenos. Obratite se administratoru za prijenos potrebnog korijenskog certifikata."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Nepodudaranje naziva hosta",
+              "message": "Naziv hosta u certifikatu ne podudara se s nazivom hosta na koji se povezujete. To može ukazivati na sigurnosni rizik, ali i dalje možete odabrati vjerovanje ovom certifikatu."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "Izdvajanje CA certifikata nije uspjelo",
+              "message": "Automatski se mogu dohvatiti samo samopotpisani certifikati bez lanca. Ako koristite samopotpisani certifikat, ručno prenesite CA certifikat. Upute možete pronaći <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Ponovi stvaranje"
             },
             "trust": {
-              "label": ""
+              "label": "Vjeruj certifikatu"
             },
             "upload": {
-              "label": ""
+              "label": "Prenesi certifikat"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Vjeruj nepodudaranju naziva hosta",
+              "message": "Jeste li sigurni da želite vjerovati certifikatu s nepodudaranjem naziva hosta?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Certifikat je pouzdan",
+                "message": "Naziv hosta dodan je na popis pouzdanih certifikata"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Vjerovanje certifikatu nije uspjelo",
+                "message": "Certifikatu s nepodudaranjem naziva hosta nije moguće vjerovati"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Vjeruj samopotpisanom certifikatu",
+              "message": "Jeste li sigurni da želite vjerovati ovom samopotpisanom certifikatu?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Certifikat je pouzdan",
+                "message": "Certifikat je dodan na popis pouzdanih certifikata"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Vjerovanje certifikatu nije uspjelo",
+                "message": "Dodavanje certifikata na popis pouzdanih certifikata nije uspjelo"
               }
             }
           },
           "details": {
-            "title": "",
-            "description": "",
+            "title": "Pojedinosti",
+            "description": "Pregledajte podatke certifikata prije nego što odlučite vjerovati mu.",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "Prikaži sadržaj",
+              "title": "PEM certifikat"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "Pogreška zahtjeva",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "Poslužitelj nije moguće dosegnuti. To obično znači da je host izvan mreže ili nedostupan s vaše mreže.",
+              "networkUnreachable": "Mreža nije dostupna. Provjerite internetsku vezu ili konfiguraciju mreže.",
+              "refused": "Poslužitelj je odbio vezu. Možda nije pokrenut ili odbija zahtjeve na navedenom portu.",
+              "reset": "Poslužitelj je neočekivano zatvorio vezu. To se može dogoditi ako je poslužitelj nestabilan ili ponovno pokrenut."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "Adresu poslužitelja nije moguće pronaći. Provjerite URL zbog tipfelera ili nevaljanih naziva domena.",
+              "timeout": "Isteklo je vrijeme DNS pretraživanja. To može biti privremeni problem — pokušajte ponovno za nekoliko trenutaka.",
+              "noAnswer": "DNS poslužitelj nije vratio valjan odgovor. Domena možda postoji, ali nema valjane zapise."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "Zahtjev je prekinut prije dovršetka. Uzrok može biti radnja korisnika ili istek vremena sustava.",
+              "timeout": "Zahtaj je trajao predugo i isteklo mu je vrijeme. Provjerite mrežu ili pokušajte ponovno kasnije."
             }
           }
         }
@@ -1227,8 +1227,8 @@
           "message": "Putanja vjerojatno nije ispravna"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "Previše zahtjeva u zadanom vremenu",
+          "message": "Bilo je previše zahtjeva. Vjerojatno su vam ograničeni zahtjevi ili ih ciljni sustav odbija"
         }
       }
     },
@@ -1236,8 +1236,8 @@
       "title": "Tajne",
       "lastUpdated": "Zadnje ažurirano {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Nije postavljeno",
+        "tooltip": "Ova obavezna tajna još nije postavljena"
       },
       "secureNotice": "Ova tajna se ne može dohvatiti nakon kreiranja",
       "reset": {
@@ -1262,56 +1262,56 @@
           "newLabel": "Nova lozinka"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID tokena",
+          "newLabel": "Novi ID tokena"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Realm",
+          "newLabel": "Novi realm"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Osobni pristupni token",
+          "newLabel": "Novi osobni pristupni token"
         },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "Tema",
+          "newLabel": "Nova tema"
         },
         "url": {
-          "label": "",
-          "newLabel": ""
+          "label": "URL",
+          "newLabel": "Novi URL"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API ključ (ključ)",
+          "newLabel": "Novi API ključ (ključ)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API ključ (tajna vrijednost)",
+          "newLabel": "Novi API ključ (tajna vrijednost)"
         },
         "patchmonApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API ključ",
+          "newLabel": "Novi API ključ"
         },
         "patchmonApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API tajna",
+          "newLabel": "Nova API tajna"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID aplik.",
+          "newLabel": "Novi ID apl."
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID instalacije",
+          "newLabel": "Novi ID instalacije"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Privatni ključ",
+          "newLabel": "Novi privatni ključ"
         },
         "slug": {
-          "label": "",
-          "newLabel": ""
+          "label": "Slug stranice statusa",
+          "newLabel": "Novi slug stranice statusa"
         }
       }
     },
@@ -1321,44 +1321,44 @@
       "full": "Potpuni pristup integracijama"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Audiobookshelf",
+      "description": "Samostalno hostirani poslužitelj audioknjiga i podcasta"
     },
     "navidrome": {
-      "name": "",
-      "description": ""
+      "name": "Navidrome",
+      "description": "Samostalno hostirani poslužitelj za streaming glazbe s kompatibilnošću sa Subsonic API-jem"
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Samostalno hostirani nadzor dostupnosti s javnim stranicama statusa",
       "secret": {
         "slug": {
-          "description": ""
+          "description": "Slug vaše javne stranice statusa. Ako nije postavljen, zadana je vrijednost \"default\"."
         },
         "apiKey": {
-          "description": ""
+          "description": "Neobavezni API ključ za autentificirani pristup /metrics ruti"
         }
       }
     },
     "traefik": {
-      "name": "",
-      "description": ""
+      "name": "Traefik",
+      "description": "Obrnuti proxy i raspodjelnik opterećenja izvorno za oblak"
     },
     "wud": {
       "name": "What's Up Docker",
-      "description": "Pratite koji od vaših Docker kontejnera imaju dostupna ažuriranja slika."
+      "description": "Pratite koji od vaših Docker kontejnera imaju dostupna ažuriranja slika"
     },
     "paperlessNgx": {
-      "name": "",
-      "description": ""
+      "name": "Paperless-ngx",
+      "description": "Sustav za upravljanje dokumentima za arhiviranje i organiziranje skeniranih dokumenata"
     },
     "patchmon": {
-      "name": "",
-      "description": ""
+      "name": "PatchMon",
+      "description": "Upravljanje zakrpama i nadzor Linux računala"
     },
     "bazarr": {
-      "name": "",
-      "description": ""
+      "name": "Bazarr",
+      "description": "Prateća aplikacija za Sonarr i Radarr koja upravlja titlovima i preuzima ih"
     }
   },
   "media": {
@@ -1398,7 +1398,7 @@
         "label": "Kopiraj URL"
       },
       "open": {
-        "label": ""
+        "label": "Otvori medije"
       }
     },
     "noResults": {
@@ -1406,7 +1406,7 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "Uspjeh",
     "beta": "Beta",
     "error": "Pogreška",
     "action": {
@@ -1414,9 +1414,9 @@
       "apply": "Primijeni",
       "backToOverview": "Natrag na pregled",
       "skip": "Preskoči",
-      "change": "",
+      "change": "Promijeni",
       "create": "Stvoriti",
-      "createAnother": "",
+      "createAnother": "Stvori i počni ispočetka",
       "edit": "Uredi",
       "import": "Uvezi",
       "insert": "Umetni",
@@ -1426,13 +1426,13 @@
       "cancel": "Otkaži",
       "delete": "Obriši",
       "discard": "Odbaci",
-      "close": "",
+      "close": "Zatvori",
       "confirm": "Potvrdi",
       "continue": "Nastavi",
       "previous": "Prethodno",
       "next": "Sljedeći",
       "checkoutDocs": "Pogledaj dokumentaciju",
-      "checkLogs": "",
+      "checkLogs": "Provjeri zapisnike za više pojedinosti",
       "tryAgain": "Pokušaj ponovno",
       "loading": "Učitavanje",
       "show": "Prikaži",
@@ -1442,7 +1442,7 @@
     "iconPicker": {
       "label": "URL ikone",
       "description": "Pretražite biblioteku, zalijepite URL slike ili prenesite datoteku.",
-      "header": "Upišite naziv ili objekte za filtriranje ikona... Homarr će pretražiti {countIcons} ikona za vas.",
+      "header": "Upišite naziv ili objekte za filtriranje ikona... Homarr će pretražiti {countIcons} ikona za vas",
       "headerLoading": "Pretražite slike po nazivu",
       "clear": "Očisti sliku",
       "uploadImage": "Prenesi sliku",
@@ -1453,14 +1453,14 @@
       "urlLoading": "Provjera slike…",
       "urlReady": "Slika je spremna za upotrebu",
       "urlError": "Ova se slika nije mogla učitati. Provjerite URL i pokušajte ponovno.",
-      "noResults": "",
-      "error": ""
+      "noResults": "Nijedna ikona ne odgovara izrazu \"{search}\".",
+      "error": "Učitavanje ikona nije uspjelo."
     },
     "colorScheme": {
       "options": {
         "auto": "Automatski",
-        "light": "",
-        "dark": ""
+        "light": "Svijetla",
+        "dark": "Tamna"
       }
     },
     "information": {
@@ -1506,21 +1506,21 @@
         "switchToDarkMode": "Prebaci na tamni način",
         "switchToLightMode": "Prebaci na svijetli način",
         "management": "Upravljanje",
-        "docker": "",
+        "docker": "Docker",
         "preferences": "Vaše preferencije",
         "logout": "Odjava",
         "login": "Prijaviti se",
         "homeBoard": "Vaša početna ploča",
         "loggedOut": "Odjavljeni",
-        "updateAvailable": ""
+        "updateAvailable": "Dostupna ažuriranja: {tag} ({countUpdates})"
       }
     },
     "dangerZone": "Opasna zona",
     "noResults": "Nije pronađen nijedan rezultat",
-    "unsavedChanges": "",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "unsavedChanges": "Imate nespremljene promjene!",
+    "servers": "Poslužitelji",
+    "applications": "Aplik.",
+    "services": "Usluge",
     "preview": {
       "show": "Prikaži pregled",
       "hide": "Sakrij pregled"
@@ -1548,17 +1548,17 @@
           "passwordRequirements": "Lozinka ne zadovoljava uvjete",
           "boardAlreadyExists": "Ploča s ovim nazivom već postoji",
           "invalidFileType": "Nevažeća vrsta datoteke, očekivano {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "Neispravan naziv datoteke",
           "fileTooLarge": "Datoteka je prevelika, maksimalna veličina je {maxSize}",
           "invalidConfiguration": "Nevažeća konfiguracija",
-          "groupNameTaken": ""
+          "groupNameTaken": "Naziv grupe već je zauzet"
         }
       }
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1570,13 +1570,13 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Naslov"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Prilagođene CSS klase"
         },
         "borderColor": {
-          "label": ""
+          "label": "Boja obruba"
         }
       },
       "remove": {
@@ -1598,7 +1598,7 @@
         "moveDown": "Pomicati prema dolje",
         "createAbove": "Nova kategorija iznad",
         "createBelow": "Nova kategorija ispod",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "Otvori sve u karticama"
       },
       "create": {
         "title": "Nova kategorija",
@@ -1620,8 +1620,8 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Otvori sve u karticama",
+        "text": "Neki preglednici mogu blokirati skupno otvaranje kartica iz sigurnosnih razloga. Homarr nije uspio otvoriti sve prozore jer je preglednik blokirao tu radnju. Dopustite \"Otvaranje skočnih prozora\" i pokušajte ponovno."
       }
     }
   },
@@ -1637,20 +1637,20 @@
     "menu": {
       "label": {
         "settings": "Postavke",
-        "refresh": "",
-        "options": "",
-        "actions": ""
+        "refresh": "Osvježi",
+        "options": "Opcije",
+        "actions": "Radnje"
       },
       "status": {
-        "success": "",
-        "error": "",
-        "loading": "",
-        "idle": ""
+        "success": "U redu",
+        "error": "Pogreška",
+        "loading": "Učitavanje",
+        "idle": "Neaktivno"
       }
     },
     "create": {
       "title": "Odaberite stavku za dodavanje",
-      "search": "",
+      "search": "Filtriraj stavke",
       "addToBoard": "Dodaj na ploču"
     },
     "moveResize": {
@@ -1688,13 +1688,13 @@
           "label": "Integracije"
         },
         "title": {
-          "label": ""
+          "label": "Naslov"
         },
         "customCssClasses": {
           "label": "Prilagođene CSS klase"
         },
         "borderColor": {
-          "label": ""
+          "label": "Boja obruba"
         }
       }
     },
@@ -1705,11 +1705,11 @@
   },
   "widget": {
     "integrationSelect": {
-      "configureIntegrationFirst": "",
-      "loading": "",
-      "placeholder": "",
-      "noResults": "",
-      "loadError": ""
+      "configureIntegrationFirst": "Najprije povežite integraciju",
+      "loading": "Učitavanje...",
+      "placeholder": "Odaberite opciju",
+      "noResults": "Nije pronađen nijedan rezultat",
+      "loadError": "Učitavanje opcija nije uspjelo"
     },
     "app": {
       "name": "Aplikacija",
@@ -1725,24 +1725,24 @@
           "label": "Prikaži naziv aplikacije"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Omogući provjeru stanja"
         },
         "layout": {
-          "label": "",
+          "label": "Raspored",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Vodoravno",
+            "row-reverse": "Vodoravno (obrnuto)",
+            "column": "Okomito",
+            "column-reverse": "Okomito (obrnuto)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Način prikaza opisa",
+          "description": "Odaberite način prikaza opisa aplikacije",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Unutar widgeta",
+            "tooltip": "Kao opis alata",
+            "hidden": "Skriveno"
           }
         }
       },
@@ -1773,21 +1773,21 @@
               "label": "Mreža"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Vodoravna mreža"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Sakrij naslov"
         },
         "hideIcon": {
-          "label": ""
+          "label": "Sakrij ikone"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Sakrij nazive hostova"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Otvori u novoj kartici"
         },
         "withBorder": {
           "label": "Prikaži obrub"
@@ -1799,11 +1799,11 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
-      "description": "",
+      "name": "ArchiveTeam Warrior",
+      "description": "Pratite stanje ArchiveTeam Warriora, projekte i aktivne poslove arhiviranja.",
       "option": {
         "showBroadcastMessage": {
-          "label": ""
+          "label": "Prikaži emitirane poruke"
         }
       }
     },
@@ -1835,7 +1835,7 @@
         },
         "showUpdateList": {
           "label": "Prikaži popis ažuriranja kontejnera",
-          "description": "Nabraja svaki nadzirani kontejner za koji je dostupno ažuriranje slike."
+          "description": "Nabraja svaki nadzirani kontejner za koji je dostupno ažuriranje slike"
         }
       }
     },
@@ -1871,7 +1871,7 @@
         "dnsQueriesToday": "Upiti danas",
         "domainsBeingBlocked": "Domene na popisu za blokiranje"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "Zbog više integracija Homarr ne može izračunati točan broj blokiranih domena"
     },
     "dnsHoleControls": {
       "name": "Kontrole DNS rupe",
@@ -1945,55 +1945,55 @@
           "description": "Kako bi datum trebao izgledati"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Prilagođeni format vremena",
+          "description": "Koristi ISO 8601 za oblikovanje vremena (time će se nadjačati ostale mogućnosti)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Prilagođeni format datuma",
+          "description": "Koristi ISO 8601 za oblikovanje datuma (time će se nadjačati ostale mogućnosti)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži vremensku prognozu",
+          "description": "Prikaži malu animiranu ikonu vremena i temperaturu u kutu kartice"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Lokacija vremenske prognoze"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Upotrijebi Fahrenheit"
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Stanje Minecraft poslužitelja",
+      "description": "Prikazuje stanje Minecraft poslužitelja",
       "option": {
         "title": {
-          "label": ""
+          "label": "Naslov"
         },
         "domain": {
-          "label": ""
+          "label": "Adresa poslužitelja"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Bedrock poslužitelj"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "Na mreži",
+        "offline": "Izvan mreže"
       }
     },
     "timetable": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "noStation": "",
+      "name": "Vozni red",
+      "description": "Prikazuje vremena polazaka za stanicu",
+      "title": "Polasci {station}",
+      "noStation": "Nijedna stanica nije odabrana",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "URL usluge Search.ch"
         },
         "station": {
-          "label": ""
+          "label": "Stanica"
         }
       }
     },
@@ -2022,8 +2022,8 @@
         "clear": "Očisti formatiranje",
         "heading": "Naslov {level}",
         "align": "Poravnaj tekst: {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "Postavi smjer teksta slijeva nadesno",
+        "directionRtl": "Postavi smjer teksta zdesna nalijevo",
         "blockquote": "Blok citat",
         "horizontalLine": "Vodoravna crta",
         "bulletList": "Popis s grafičkim oznakama",
@@ -2059,43 +2059,43 @@
         "width": "Širina",
         "height": "Visina"
       },
-      "placeholder": "",
+      "placeholder": "Počnite pisati bilješke",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Odbaciti promjene?",
+        "message": "U bilježnici imate nespremljene promjene. Jeste li sigurni da ih želite odbaciti?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Odbaci promjene",
+          "keepEditing": "Nastavi uređivati"
         }
       }
     },
     "anchorNote": {
-      "name": "",
-      "description": "",
+      "name": "Bilješka Anchor",
+      "description": "Prikazuje odabranu bilješku iz usluge Anchor",
       "option": {
         "noteId": {
-          "label": ""
+          "label": "Bilješka"
         },
         "showTitle": {
-          "label": ""
+          "label": "Prikaži naslov"
         },
         "showUpdatedAt": {
-          "label": ""
+          "label": "Prikaži vrijeme posljednjeg ažuriranja"
         }
       },
-      "empty": "",
-      "emptyContent": "",
-      "notFound": "",
-      "noNotes": "",
-      "integrationRequired": "",
-      "updatedAt": "",
-      "untitled": "",
-      "edit": "",
-      "save": "",
-      "cancel": "",
-      "readOnlyViewer": "",
-      "saveForbidden": "",
-      "saveFailed": ""
+      "empty": "Odaberite bilješku za prikaz",
+      "emptyContent": "Ova bilješka nema sadržaja",
+      "notFound": "Bilješka nije pronađena",
+      "noNotes": "Nisu pronađene bilješke",
+      "integrationRequired": "Najprije odaberite integraciju Anchor",
+      "updatedAt": "Ažurirano {date}",
+      "untitled": "Bez naslova",
+      "edit": "Uredi",
+      "save": "Spremi",
+      "cancel": "Otkaži",
+      "readOnlyViewer": "Imate pristup ovoj bilješci kao preglednik. Uređivanje je onemogućeno.",
+      "saveForbidden": "Nemate dopuštenje za uređivanje ove bilješke.",
+      "saveFailed": "Spremanje ove bilješke nije uspjelo. Pokušajte ponovno."
     },
     "iframe": {
       "name": "iFrame",
@@ -2129,12 +2129,12 @@
           "label": "Dopusti geolociranje"
         },
         "allowModals": {
-          "label": ""
+          "label": "Dopusti modalne prozore"
         }
       },
       "error": {
         "noUrl": "Nije naveden iFrame URL",
-        "unsupportedProtocol": "",
+        "unsupportedProtocol": "Navedeni URL koristi nepodržani protokol. Koristite jedan od protokola ({supportedProtocols})",
         "noBrowerSupport": "Vaš preglednik ne podržava iframeove. Ažurirajte svoj preglednik."
       }
     },
@@ -2168,80 +2168,80 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Pokreni {name}"
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Cijena dionice",
+      "description": "Prikazuje trenutačnu cijenu dionice tvrtke",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Simbol dionice"
         },
         "timeRange": {
-          "label": "",
+          "label": "Vremenski raspon",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 dan"
             },
             "5d": {
-              "label": ""
+              "label": "5 dana"
             },
             "1mo": {
-              "label": ""
+              "label": "1 mjesec"
             },
             "3mo": {
-              "label": ""
+              "label": "3 mjeseca"
             },
             "6mo": {
-              "label": ""
+              "label": "6 mjeseci"
             },
             "ytd": {
-              "label": ""
+              "label": "Od početka godine"
             },
             "1y": {
-              "label": ""
+              "label": "1 godina"
             },
             "2y": {
-              "label": ""
+              "label": "2 godine"
             },
             "5y": {
-              "label": ""
+              "label": "5 godina"
             },
             "10y": {
-              "label": ""
+              "label": "10 godina"
             },
             "max": {
-              "label": ""
+              "label": "Maks."
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Vremenski interval",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 minuta"
             },
             "15m": {
-              "label": ""
+              "label": "15 minuta"
             },
             "30m": {
-              "label": ""
+              "label": "30 minuta"
             },
             "1h": {
-              "label": ""
+              "label": "1 sat"
             },
             "1d": {
-              "label": ""
+              "label": "1 dan"
             },
             "5d": {
-              "label": ""
+              "label": "5 dana"
             },
             "1wk": {
-              "label": ""
+              "label": "1 tjedan"
             },
             "1mo": {
-              "label": ""
+              "label": "1 mjesec"
             }
           }
         }
@@ -2251,7 +2251,7 @@
       "name": "Kalendar",
       "description": "Prikaži događaje iz svojih integracija u kalendarskom prikazu unutar određenog relativnog vremenskog razdoblja",
       "duration": {
-        "allDay": ""
+        "allDay": "Cijeli dan"
       },
       "option": {
         "releaseType": {
@@ -2269,7 +2269,7 @@
           "label": "Završi u"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "Prikaži stavke bez nadzora"
         }
       }
     },
@@ -2281,14 +2281,14 @@
           "label": "Temperatura u Fahrenheitima"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Onemogući decimale temperature"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži trenutačnu brzinu vjetra",
+          "description": "Samo za trenutačno vrijeme"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Koristi mph za brzinu vjetra"
         },
         "location": {
           "label": "Lokacija vremenske prognoze"
@@ -2308,13 +2308,13 @@
           "description": "Kako bi datum trebao izgledati"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": "",
-        "humidity": ""
+        "sunrise": "Izlazak",
+        "sunset": "Zalazak",
+        "maxWindSpeed": "Maks. brzina vjetra: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Maks. udari vjetra: {maxWindGusts} {unit}",
+        "humidity": "Vlažnost: {humidity}%"
       },
       "kind": {
         "clear": "Vedro",
@@ -2351,8 +2351,8 @@
       "name": "Nadzor zdravlja sustava",
       "description": "Prikazuje informacije o zdravlju i statusu vašeg(ih) sustava.",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "Sustav",
+        "cluster": "Klaster"
       },
       "option": {
         "fahrenheit": {
@@ -2365,27 +2365,27 @@
           "label": "Prikaži informacije o memoriji"
         },
         "gpu": {
-          "label": ""
+          "label": "Prikaži informacije o GPU-u"
         },
         "showUptime": {
-          "label": ""
+          "label": "Prikaži trajanje"
         },
         "fileSystem": {
           "label": "Prikaži informacije o datotečnom sustavu"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Vidljivi volumeni pohrane",
+          "description": "Dostupno samo kada su sve odabrane integracije Synology. Ostavite prazno za prikaz svih otkrivenih volumena pohrane.",
+          "placeholder": "Odaberite volumene pohrane"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Zadana kartica"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Vidljivi odjeljci klastera"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Zahtjev za pokazatelj odjeljka"
         }
       },
       "popover": {
@@ -2394,7 +2394,7 @@
         "memory": "Memorija: {memory}GiB",
         "memoryAvailable": "Dostupno: {memoryAvailable}GiB ({percent}%)",
         "version": "Verzija: {version}",
-        "uptime": "",
+        "uptime": "Vrijeme rada: {months} mjeseci, {days} dana, {hours} sati, {minutes} minuta",
         "loadAverage": "Prosječno opterećenje:",
         "minute": "1 minuta",
         "minutes": "{count} minute",
@@ -2408,126 +2408,126 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Čvorovi"
           },
           "qemu": {
-            "name": ""
+            "name": "VM-ovi"
           },
           "lxc": {
-            "name": ""
+            "name": "LXC-ovi"
           },
           "storage": {
-            "name": ""
+            "name": "Pohrana"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Čvor",
+            "vmId": "ID VM-a",
+            "plugin": "Dodatak"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "Jezgre",
+            "memory": "Memorija",
+            "storage": "Pohrana",
+            "uptime": "Trajanje",
+            "haState": "HA stanje",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Lokalna pohrana",
+              "shared": "Dijeljena pohrana"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Naziv",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Čvor"
           }
         }
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Dockerova statistika",
+      "description": "Statistika vaših spremnika (ovaj widget može se dodati samo s administratorskim ovlastima)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Stupci za prikaz"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Omogući sortiranje stavki"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Stupac prema kojem se zadano sortira",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Naziv",
+            "state": "Stanje",
+            "cpuUsage": "Upotreba CPU-a",
+            "memoryUsage": "Upotreba memorije"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Obrni sortiranje"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Redoslijed stupaca"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Širine stupaca"
         }
       },
       "error": {
-        "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "internalServerError": "Dohvaćanje statistike spremnika nije uspjelo",
+        "layoutSaveTitle": "Raspored tablice nije spremljen",
+        "layoutSaveMessage": "Raspored Docker tablice nije moguće spremiti. Pokušajte ponovno pomaknuti ili promijeniti veličinu stupca."
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "Nisu pronađeni spremnici"
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Pregled vaše instance Coolifyja s poslužiteljima i aplikacijama",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Prikaži poslužitelje"
         },
         "showApplications": {
-          "label": ""
+          "label": "Prikaži aplikacije"
         },
         "showServices": {
-          "label": ""
+          "label": "Prikaži usluge"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "Nema posluž.",
+        "applications": "Nije pronađena nijedna aplikacija",
+        "services": "Nije pronađena nijedna usluga"
       },
       "footer": {
-        "updated": ""
+        "updated": "Ažurirano {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Nije konfigurirana integracija s Coolifyjem",
+        "internalServerError": "Neuspješno dohvaćanje podataka iz Coolifyja"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Izgradi"
       },
       "instances": {
-        "title": ""
+        "title": "Instance"
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "Pregled vaših VPN veza",
+      "serviceUnavailable": "VPN nije dostupan",
       "option": {}
     },
     "ups": {
@@ -2562,85 +2562,85 @@
       }
     },
     "tracearr": {
-      "name": "",
-      "description": "",
+      "name": "Tracearr",
+      "description": "Napredni nadzor medijskog poslužitelja s detaljnim podacima o streamovima i transkodiranju",
       "option": {
         "showStreams": {
-          "label": ""
+          "label": "Prikaži aktivne streamove"
         },
         "showStats": {
-          "label": ""
+          "label": "Prikaži sažetak statistike"
         },
         "showRecentActivity": {
-          "label": ""
+          "label": "Prikaži nedavnu aktivnost"
         },
         "showViolations": {
-          "label": ""
+          "label": "Prikaži kršenja"
         }
       },
       "stats": {
-        "activeStreams": "",
-        "totalUsers": "",
-        "transcodes": "",
-        "bandwidth": ""
+        "activeStreams": "Aktivni streamovi",
+        "totalUsers": "Ukupno korisnika",
+        "transcodes": "Transkodiranja",
+        "bandwidth": "Propusnost"
       },
       "streams": {
-        "empty": "",
-        "user": "",
-        "media": "",
-        "state": "",
-        "quality": "",
-        "device": "",
-        "progress": "",
+        "empty": "Nema aktivnih streamova",
+        "user": "Korisnik",
+        "media": "Medij",
+        "state": "Stanje",
+        "quality": "Kvaliteta",
+        "device": "Uređaj",
+        "progress": "Napredak",
         "videoDecision": {
-          "directPlay": "",
-          "transcode": "",
-          "directStream": ""
+          "directPlay": "Izravna reprodukcija",
+          "transcode": "Transkodiranje",
+          "directStream": "Izravni stream"
         }
       },
       "recentActivity": {
-        "title": "",
-        "empty": "",
-        "watched": "",
-        "partial": ""
+        "title": "Nedavna aktivnost",
+        "empty": "Nema nedavne aktivnosti",
+        "watched": "Gledano",
+        "partial": "Djelomično"
       },
       "violations": {
-        "title": "",
-        "empty": "",
-        "rule": "",
-        "user": ""
+        "title": "Kršenja",
+        "empty": "Nema nedavnih kršenja",
+        "rule": "Pravilo",
+        "user": "Korisnik"
       },
-      "noSectionsEnabled": "",
+      "noSectionsEnabled": "Nijedan odjeljak nije omogućen",
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Nije konfigurirana integracija s Tracearrjem",
+        "internalServerError": "Neuspješno dohvaćanje podataka iz Tracearrja"
       }
     },
     "umami": {
-      "name": "",
-      "description": "",
-      "visitors": "",
-      "active": "",
-      "pageviews": "",
-      "visits": "",
-      "bounceRate": "",
-      "avgDuration": "",
+      "name": "Umami Analytics",
+      "description": "Prikaži statistiku posjetitelja iz svoje instance Umami Analyticsa",
+      "visitors": "posjetitelji",
+      "active": "aktivni",
+      "pageviews": "pregledi stranica",
+      "visits": "posjeti",
+      "bounceRate": "stopa napuštanja",
+      "avgDuration": "prosjek",
       "option": {
         "websiteId": {
-          "label": "",
-          "description": "",
-          "placeholder": "",
-          "loading": "",
-          "noWebsites": "",
-          "configureIntegrationFirst": ""
+          "label": "Web-mjesto",
+          "description": "Odaberite web-mjesto koje prati vaša instanca Umamija",
+          "placeholder": "Odaberite web-mjesto",
+          "loading": "Učitavanje web-mjesta...",
+          "noWebsites": "Nisu pronađena web-mjesta",
+          "configureIntegrationFirst": "Najprije povežite integraciju Umami"
         },
         "timeFrame": {
-          "label": "",
-          "description": "",
+          "label": "Vremenski raspon",
+          "description": "Vremensko razdoblje za koje se prikazuju podaci o posjetiteljima",
           "option": {
-            "today": "",
-            "24h": "",
-            "7d": "",
+            "today": "Danas",
+            "24h": "Posljednja 24 sata",
+            "7d": "Posljednjih 7 dana",
             "30d": "Posljednjih 30 dana",
             "month": "Ovaj mjesec",
             "lastMonth": "Prošli mjesec"
@@ -2744,7 +2744,7 @@
       "app": {
         "noData": "Nijedna aplikacija nije pronađena",
         "description": "Kliknite <here></here> za stvaranje nove aplikacije",
-        "quickCreate": ""
+        "quickCreate": "Stvori aplikaciju u hodu"
       },
       "error": {
         "noIntegration": "Nijedna integracija nije odabrana",
@@ -2780,336 +2780,336 @@
       "description": "Prikaži trenutačne prijenose na svojim poslužiteljima medija",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži samo ono što se trenutačno reproducira",
+          "description": "Onemogućavanje ovoga neće raditi za Plex"
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži brzinu prijenosa",
+          "description": "Prikaži trenutačnu brzinu prijenosa reprodukcije uz lokaciju"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži lokaciju",
+          "description": "Prikaži je li stream na vašoj LAN ili WAN mreži"
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, one {# aktivni stream} few {# aktivna streama} other {# aktivnih streamova}}",
+        "totalBitrate": "Ukupno: {bitrate}"
       },
       "items": {
-        "currentlyPlaying": "",
-        "user": "",
-        "name": "",
-        "id": "",
-        "status": "",
-        "directPlay": "",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "currentlyPlaying": "Trenutačno se reproducira",
+        "user": "Koris.",
+        "name": "Naziv",
+        "id": "ID",
+        "status": "Status",
+        "directPlay": "Izravna reprodukcija",
+        "directStream": "Izravni stream",
+        "transcodeVideo": "Transkodiranje videozapisa",
+        "transcodeAudio": "Transkodiranje zvuka",
+        "transcoding": "Transkodiranje",
+        "paused": "Pauzirano",
+        "remaining": "Preostalo je {minutes} min",
         "metadata": {
-          "title": "",
+          "title": "Statistike za znalce",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Video",
+            "resolution": "Razlučivost"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Zvuk",
+            "channelCount": "Zvučni kanali",
+            "codec": "Zvučni kodek"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "Transkodiranje",
+            "container": "Spremnik",
+            "resolution": "Razlučivost",
+            "target": "Ciljni kodek"
           }
         }
       }
     },
     "paperlessNgx": {
-      "name": "",
-      "description": "",
-      "documentsTotal": "",
-      "documentsInbox": "",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "name": "Paperless-ngx",
+      "description": "Pregled vaše arhive dokumenata Paperless-ngx",
+      "documentsTotal": "Ukupno dokumenata",
+      "documentsInbox": "Ulazna pošta",
+      "correspondents": "Korespondenti",
+      "tags": "Oznake",
+      "documentTypes": "Vrste dokumenata",
+      "inboxRatio": "Omjer ulazne pošte",
+      "inbox": "ulazna pošta",
+      "total": "ukupno",
       "option": {
         "showInboxRatio": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži omjer ulazne pošte",
+          "description": "Prikaži omjer dokumenata u ulaznoj pošti i ukupnog broja u glavnom odjeljku"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži krug ulazne pošte",
+          "description": "Prikaži prsten napretka uz omjer ulazne pošte"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži ukupan broj dokumenata",
+          "description": "Prikaži ukupan broj dokumenata u arhivi"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži broj dokumenata u ulaznoj pošti",
+          "description": "Prikaži broj neobrađenih dokumenata u ulaznoj pošti"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži korespondente",
+          "description": "Prikaži ukupan broj korespondenata"
         },
         "showTags": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži oznake",
+          "description": "Prikaži ukupan broj oznaka"
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži vrste dokumenata",
+          "description": "Prikaži ukupan broj vrsta dokumenata"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neuspješno dohvaćanje podataka iz Paperless-ngx"
       }
     },
     "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
+      "name": "PatchMon",
+      "description": "Pregled stanja zakrpa računala iz PatchMona",
+      "title": "PatchMon statistika",
+      "totalHosts": "Ukupno računala",
+      "hostsNeedingUpdates": "Potrebna ažuriranja",
+      "securityUpdates": "Sigurnosna ažuriranja",
+      "upToDateHosts": "Ažurirana računala",
+      "hostsWithSecurityUpdates": "Računala sa sigurnosnim ažuriranjima",
+      "recentUpdates24h": "Ažuriranja (24 h)",
+      "totalOutdatedPackages": "Zastarjeli paketi",
+      "totalRepos": "Repozitoriji",
+      "osDistribution": "Distribucija OS-a",
+      "compliance": "Usklađenost zakrpa",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Ažurirano {time}",
       "option": {
         "showTotalHosts": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži ukupan broj računala",
+          "description": "Prikaži ukupan broj nadziranih računala"
         },
         "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži računala kojima su potrebna ažuriranja",
+          "description": "Prikaži računala s barem jednim zastarjelim paketom"
         },
         "showSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži sigurnosna ažuriranja",
+          "description": "Prikaži ukupan broj dostupnih sigurnosnih ažuriranja"
         },
         "showUpToDateHosts": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži ažurirana računala",
+          "description": "Prikaži računala bez zastarjelih paketa"
         },
         "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži računala sa sigurnosnim ažuriranjima",
+          "description": "Prikaži računala kojima su potrebne sigurnosne zakrpe"
         },
         "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži nedavna ažuriranja (24 h)",
+          "description": "Prikaži broj ažuriranja primijenjenih u posljednja 24 sata"
         },
         "showTotalOutdatedPackages": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži zastarjele pakete",
+          "description": "Prikaži ukupan broj zastarjelih paketa na svim računalima"
         },
         "showTotalRepos": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži repozitorije",
+          "description": "Prikaži broj aktivnih nadziranih repozitorija"
         },
         "enableThresholdColors": {
-          "label": "",
-          "description": ""
+          "label": "Omogući boje pragova",
+          "description": "Oboji statističke vrijednosti zelenom, žutom ili crvenom bojom na temelju unaprijed postavljenih razina ozbiljnosti"
         },
         "useCustomThresholds": {
-          "label": "",
-          "description": ""
+          "label": "Napredni pragovi",
+          "description": "Prilagodite pragove upozorenja i kritične pragove po statistici koristeći apsolutne brojeve ili postotke ukupnog broja računala"
         },
         "thresholdMode": {
           "option": {
-            "absolute": "",
-            "percent": ""
+            "absolute": "Apsolutni broj",
+            "percent": "Postotak ukupnog broja računala"
           }
         },
         "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Način praga za potrebna ažuriranja",
+          "description": "Usporedite broj potrebnih ažuriranja kao apsolutnu vrijednost ili postotak ukupnog broja računala"
         },
         "hostsNeedingUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Prag upozorenja za potrebna ažuriranja",
+          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
         },
         "hostsNeedingUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Kritični prag za potrebna ažuriranja",
+          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
         },
         "securityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Način praga za sigurnosna ažuriranja",
+          "description": "Usporedite broj sigurnosnih ažuriranja kao apsolutnu vrijednost ili postotak ukupnog broja računala"
         },
         "securityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Prag upozorenja za sigurnosna ažuriranja",
+          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
         },
         "securityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Kritični prag za sigurnosna ažuriranja",
+          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
         },
         "hostsWithSecurityUpdatesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Način praga za računala sa sigurnosnim ažuriranjima",
+          "description": "Usporedite broj računala kao apsolutnu vrijednost ili postotak ukupnog broja računala"
         },
         "hostsWithSecurityUpdatesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Prag upozorenja za računala sa sigurnosnim ažuriranjima",
+          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
         },
         "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Kritični prag za računala sa sigurnosnim ažuriranjima",
+          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
         },
         "upToDateHostsThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Način praga za ažurirana računala",
+          "description": "Usporedite broj ažuriranih računala kao apsolutnu vrijednost ili postotak ukupnog broja računala"
         },
         "upToDateHostsWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Prag upozorenja za ažurirana računala",
+          "description": "Prikaži žutu boju kada je vrijednost na ili iznad ovog praga, ali ispod potpune pokrivenosti"
         },
         "upToDateHostsCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Kritični prag za ažurirana računala",
+          "description": "Prikaži crvenu boju kada vrijednost padne ispod ovog praga"
         },
         "totalOutdatedPackagesThresholdMode": {
-          "label": "",
-          "description": ""
+          "label": "Način praga za zastarjele pakete",
+          "description": "Usporedite broj zastarjelih paketa kao apsolutnu vrijednost ili postotak ukupnog broja računala"
         },
         "totalOutdatedPackagesWarningAt": {
-          "label": "",
-          "description": ""
+          "label": "Prag upozorenja za zastarjele pakete",
+          "description": "Prikaži žutu boju kada vrijednost dosegne ovaj prag"
         },
         "totalOutdatedPackagesCriticalAt": {
-          "label": "",
-          "description": ""
+          "label": "Kritični prag za zastarjele pakete",
+          "description": "Prikaži crvenu boju kada vrijednost dosegne ovaj prag"
         },
         "showOsDistribution": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži distribuciju OS-a",
+          "description": "Prikaži raščlambu nadziranih računala prema operacijskom sustavu"
         },
         "osDistributionLimit": {
-          "label": "",
-          "description": "",
+          "label": "Ograničenje distribucije OS-a",
+          "description": "Maksimalan broj operacijskih sustava za prikaz",
           "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
+            "3": "Najviše 3",
+            "5": "Najviše 5",
+            "10": "Najviše 10",
+            "all": "Sve"
           }
         },
         "showOsVersion": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži verziju OS-a",
+          "description": "Dodaj verziju OS-a svakoj oznaci distribucije kada je dostupna"
         },
         "showComplianceHero": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži sažetak usklađenosti",
+          "description": "Prikaži prsten usklađenosti koji pokazuje postotak ažuriranih računala"
         },
         "osDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Način prikaza OS-a",
+          "description": "Odaberite način prikaza distribucije operacijskog sustava",
           "option": {
-            "bars": "",
-            "donut": ""
+            "bars": "Vodoravne trake",
+            "donut": "Kružni grafikon"
           }
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neuspješno dohvaćanje podataka iz PatchMona"
       }
     },
     "bazarr": {
-      "name": "",
-      "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
-      "status": "",
+      "name": "Bazarr",
+      "description": "Pregled nedostajućih titlova i stanja ispravnosti vaše instance Bazarra",
+      "episodes": "Nedostajuće epizode",
+      "movies": "Nedostajući filmovi",
+      "providers": "Problemi s pružateljima",
+      "status": "Problemi sa stanjem ispravnosti",
       "option": {
         "showMissingEpisodes": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži nedostajuće epizode",
+          "description": "Prikaži broj epizoda kojima nedostaju titlovi"
         },
         "showMissingMovies": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži nedostajuće filmove",
+          "description": "Prikaži broj filmova kojima nedostaju titlovi"
         },
         "showProviderIssues": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži probleme s pružateljima",
+          "description": "Prikaži broj pružatelja titlova s problemima"
         },
         "showHealthIssues": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži probleme sa stanjem ispravnosti",
+          "description": "Prikaži broj problema sa stanjem ispravnosti Bazarra"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neuspješno dohvaćanje podataka iz Bazarra"
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Statistika poslužitelja Immicha",
+      "description": "Informacije o vašoj instanci Immicha",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži korisnike",
+          "description": "Prikaži broj korisnika na svojoj instanci"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži fotografije",
+          "description": "Prikaži broj fotografija na svojoj instanci"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži videozapise",
+          "description": "Prikaži broj videozapisa na svojoj instanci"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži pohranu",
+          "description": "Prikaži ukupnu količinu iskorištene pohrane"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Korisnici",
+      "photos": "Fotografije",
+      "videos": "Videozapisi",
+      "storage": "Iskorištena pohrana"
     },
     "immich-albumCarousel": {
-      "name": "",
-      "allPhotos": "",
+      "name": "Immich album",
+      "allPhotos": "Sve fotografije",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "Album",
+          "description": "Odaberite Immich album ili Sve fotografije. Prazan odabir također prikazuje nasumične fotografije iz cijele biblioteke."
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Interval u sekundama",
+          "description": "Rotiraj fotografije u albumu svakih X sekundi. Mora biti najmanje 1 i manje od 3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži informacije o fotografiji",
+          "description": "Prikaži datum fotografije i trenutačni indeks pri dnu prezentacije"
         },
         "randomizePhotos": {
-          "label": "",
-          "description": ""
+          "label": "Nasumično promiješaj fotografije",
+          "description": "Prikaži fotografije nasumičnim redoslijedom umjesto da uvijek započinješ istim redoslijedom albuma."
         }
       },
-      "description": "",
-      "noPhotos": ""
+      "description": "Prezentacija fotografija iz Immich albuma ili cijele biblioteke",
+      "noPhotos": "Nisu pronađene fotografije"
     },
     "downloads": {
       "name": "Klijent za preuzimanje",
@@ -3134,7 +3134,7 @@
           "label": "Prikaži torrent stavke označene kao dovršene"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Prikaži razne dovršene stavke"
         },
         "activeTorrentThreshold": {
           "label": "Sakrij dovršene torrente ispod ovog praga (u kiB/s)"
@@ -3149,22 +3149,22 @@
           "label": "Koristi filtar za izračun omjera"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Ograniči stavke po integraciji",
+          "description": "Time se ograničava broj prikazanih stavki po integraciji, a ne globalno"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Redoslijed stupaca"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Širine stupaca"
         }
       },
       "errors": {
         "noColumns": "Odaberite stupce u stavkama",
         "noCommunications": "Nije moguće učitati podatke iz integracije",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "Nisu pronađena preuzimanja",
+        "actionFailed": "Radnja nije uspjela",
+        "actionFailedMessage": "Radnja se nije mogla dovršiti. Pokušajte ponovno."
       },
       "items": {
         "actions": {
@@ -3188,7 +3188,7 @@
         },
         "id": {
           "columnTitle": "ID",
-          "detailsTitle": ""
+          "detailsTitle": "ID stavke"
         },
         "integration": {
           "columnTitle": "Integracija"
@@ -3223,7 +3223,7 @@
         "time": {
           "columnTitle": "Vrijeme završetka",
           "detailsTitle": "Vrijeme od/do dovršenja",
-          "eta": ""
+          "eta": "Procijenjeno vrijeme završetka"
         },
         "type": {
           "columnTitle": "Vrsta",
@@ -3269,49 +3269,49 @@
       },
       "globalRatio": "Globalni omjer",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "Kopiraj naziv",
+        "copyId": "Kopiraj ID",
+        "clearFilters": "Očisti filtre"
       },
       "footer": {
-        "filter": ""
+        "filter": "Filtriraj preuzimanja"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "Prikaži globalnu statistiku",
+        "hide": "Sakrij globalnu statistiku",
+        "overallProgress": "Ukupan napredak reda čekanja",
+        "totalSize": "Ukupna veličina reda čekanja",
+        "clients": "{count, plural, one {# klijent} few {# klijenta} other {# klijenata}}"
       },
-      "disconnected": ""
+      "disconnected": "(odspojeno)"
     },
     "mediaReleases": {
-      "name": "",
-      "description": "",
+      "name": "Medijska izdanja",
+      "description": "Prikazuje novododane medije ili nadolazeća izdanja iz različitih integracija",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Raspored",
           "option": {
             "backdrop": {
-              "label": ""
+              "label": "Pozadina"
             },
             "poster": {
-              "label": ""
+              "label": "Poster"
             }
           }
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Prikaži opis u oblačiću"
         },
         "showType": {
-          "label": ""
+          "label": "Prikaži oznaku vrste medija"
         },
         "showSource": {
-          "label": ""
+          "label": "Prikaži izvornu integraciju"
         }
       },
       "length": {
-        "duration": ""
+        "duration": "{length} min"
       }
     },
     "mediaRequests-requestList": {
@@ -3322,10 +3322,10 @@
           "label": "Otvori veze u novoj kartici"
         },
         "statusFilter": {
-          "label": ""
+          "label": "Statusi za prikaz"
         },
         "recentDays": {
-          "label": ""
+          "label": "Prikaži samo nedavne zahtjeve"
         }
       },
       "pending": {
@@ -3337,18 +3337,18 @@
         "unknown": "Nepoznato",
         "pending": "Na čekanju",
         "processing": "Obrada",
-        "requested": "",
+        "requested": "Zatraženo",
         "partiallyAvailable": "Djelomično dostupno",
         "available": "Dostupno",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "Na crnoj listi",
+        "deleted": "Izbrisano"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": "",
-        "completed": ""
+        "pending": "Na čekanju",
+        "approved": "Odobreno",
+        "declined": "Odbijeno",
+        "failed": "Neuspjelo",
+        "completed": "Dovršeno"
       },
       "toBeDetermined": "TBD"
     },
@@ -3375,92 +3375,92 @@
       }
     },
     "mediaTranscoding": {
-      "name": "",
-      "description": "",
+      "name": "Transkodiranje medija",
+      "description": "Statistika, trenutačni red čekanja i stanje radnika vašeg transkodiranja medija",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Zadani prikaz"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "Veličina reda"
         }
       },
       "tab": {
-        "workers": "",
+        "workers": "Radnici",
         "queue": "Red čekanja",
-        "statistics": ""
+        "statistics": "Statistika"
       },
-      "currentIndex": "",
+      "currentIndex": "{start}–{end} od {total}",
       "healthCheck": {
-        "title": "",
-        "queued": "",
+        "title": "Provjera stanja",
+        "queued": "U redu",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Ispravno",
+          "unhealthy": "Neispravno"
         }
       },
       "panel": {
         "statistics": {
           "empty": "Isprazni",
-          "transcodes": "",
-          "transcodesCount": "",
-          "healthChecksCount": "",
-          "filesCount": "",
-          "savedSpace": "",
-          "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "transcodes": "Transkodiranja",
+          "transcodesCount": "Transkodiranja",
+          "healthChecksCount": "Provjere stanja",
+          "filesCount": "Datoteke",
+          "savedSpace": "Ušteđeni prostor",
+          "healthChecks": "Provjere stanja",
+          "videoCodecs": "Kodeci",
+          "videoContainers": "Spremnici",
+          "videoResolutions": "Razlučivosti"
         },
         "workers": {
           "empty": "Isprazni",
           "table": {
-            "file": "",
+            "file": "Dat.",
             "eta": "",
             "progress": "Napredak",
-            "transcode": "",
-            "healthCheck": ""
+            "transcode": "Transkodiranje",
+            "healthCheck": "Provjera stanja"
           }
         },
         "queue": {
           "empty": "Isprazni",
           "table": {
-            "file": "",
+            "file": "Dat.",
             "size": "Veličina",
-            "transcode": "",
-            "healthCheck": ""
+            "transcode": "Transkodiranje",
+            "healthCheck": "Provjera stanja"
           }
         }
       }
     },
     "mediaMissing": {
-      "name": "",
-      "description": "",
+      "name": "Nedostajući i stavljeni mediji u red čekanja",
+      "description": "Prikazuje nedostajuće filmove i epizode te filmove i epizode u redu čekanja iz Radarra i Sonarra",
       "option": {
         "showMissing": {
-          "label": ""
+          "label": "Prikaži nedostajuće stavke"
         },
         "showQueued": {
-          "label": ""
+          "label": "Prikaži stavke u redu čekanja"
         },
         "pageSize": {
-          "label": ""
+          "label": "Stavke po stranici"
         }
       },
       "tab": {
-        "missing": "",
-        "queued": ""
+        "missing": "Nedostaje",
+        "queued": "U redu čekanja"
       },
       "type": {
-        "movie": "",
-        "episode": ""
+        "movie": "Film",
+        "episode": "Epizoda"
       },
       "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
+        "missing": "Nema nedostajućih stavki",
+        "queued": "Nema stavki u redu čekanja",
+        "noTabsEnabled": "Omogućite barem jednu karticu u postavkama widgeta"
       },
-      "timeLeft": ""
+      "timeLeft": "Preostalo vrijeme"
     },
     "rssFeed": {
       "name": "RSS kanali",
@@ -3479,140 +3479,140 @@
           "label": "Ograničenje broja objava"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Sakrij opis"
         },
         "showPosterImage": {
-          "label": ""
+          "label": "Prikaži sliku plakata"
         }
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Izdanja",
+      "description": "Prikazuje popis trenutačne verzije zadanih repozitorija prema zadanom regularnom izrazu verzije.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Novo izdanje unutar",
+          "description": "Primjer upotrebe: 1w (1 tjedan), 10M (10 mjeseci). Prihvaćene jedinice su h (sati), d (dani), w (tjedni), M (mjeseci), y (godine). Ostavite prazno da se nova izdanja ne ističu."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Zastarjelo izdanje unutar",
+          "description": "Primjer upotrebe: 1w (1 tjedan), 10M (10 mjeseci). Prihvaćene jedinice su h (sati), d (dani), w (tjedni), M (mjeseci), y (godine). Ostavite prazno da se zastarjela izdanja ne ističu."
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži samo istaknuta",
+          "description": "Prikaži samo nova ili zastarjela izdanja, prema gornjim postavkama."
         },
         "showDetails": {
-          "label": ""
+          "label": "Prikaži pojedinosti"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Prikaži samo ikonu"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "Najnovija izdanja",
+          "description": "Maksimalan broj najnovijih izdanja za prikaz. Nula znači bez ograničenja."
         },
         "repositories": {
-          "label": "",
+          "label": "Repozitoriji",
           "addRepository": {
-            "label": ""
+            "label": "Dodaj repozitorij"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": "",
-            "selectAll": "",
-            "deselectAll": ""
+            "label": "Uvezi iz Dockera",
+            "loading": "Učitavanje Dockerovih slika",
+            "noImagesFound": "Nema pronađenih Dockerovih slika",
+            "listFoundImages": "Popis pronađenih slika",
+            "listAlreadyImportedImages": "Popis već uvezenih slika",
+            "allImagesAlreadyImported": "Sve su slike već uvezene",
+            "onlyAdminCanImport": "Samo administratori mogu uvoziti iz Dockera",
+            "selectAll": "Odaberi sve",
+            "deselectAll": "Poništi odabir svega"
           },
           "provider": {
-            "label": ""
+            "label": "Pružatelj"
           },
           "providerUrl": {
-            "label": ""
+            "label": "URL pružatelja"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Identifikator",
+            "placeholder": "Naziv ili vlasnik/naziv"
           },
           "name": {
-            "label": ""
+            "label": "Naziv"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Filtar verzije",
             "prefix": {
-              "label": ""
+              "label": "Prefiks"
             },
             "precision": {
-              "label": "",
+              "label": "Preciznost",
               "options": {
-                "none": ""
+                "none": "Ništa"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Sufiks"
             },
             "regex": {
-              "label": ""
+              "label": "Regularni izraz"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Uredi"
           },
           "editForm": {
-            "title": "",
+            "title": "Uredi repozitorij",
             "cancel": {
-              "label": ""
+              "label": "Otkaži"
             },
             "confirm": {
-              "label": ""
+              "label": "Potvrdi"
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Uvezi iz Dockera"
           },
           "example": {
-            "label": ""
+            "label": "Primjer"
           },
-          "invalid": "",
+          "invalid": "Neispravna definicija repozitorija, provjerite vrijednosti",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Bez pružatelja",
+            "tooltip": "Pružatelja nije moguće raščlaniti; ručno ga postavite nakon uvoza slika"
           },
           "tokens": {
-            "label": "",
-            "token": "",
-            "configured": "",
-            "notConfigured": "",
-            "save": ""
+            "label": "Tokeni pružatelja",
+            "token": "Znak",
+            "configured": "Token je konfiguriran",
+            "notConfigured": "Token nije postavljen",
+            "save": "Spremi"
           }
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "markViewed": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "projectDescription": "",
-      "created": "",
+      "not-found": "Nije pronađeno",
+      "pre-release": "Predizdanje",
+      "archived": "Arhivirano",
+      "forked": "Razgranato",
+      "starsCount": "Zvjezdice",
+      "forksCount": "Račvanja",
+      "issuesCount": "Otvoreni problemi",
+      "markViewed": "Označi kao pregledano",
+      "openProjectPage": "Otvori stranicu projekta",
+      "openReleasePage": "Otvori stranicu izdanja",
+      "releaseDescription": "Opis izdanja",
+      "projectDescription": "Opis projekta",
+      "created": "Stvoreno",
       "error": {
-        "label": "",
+        "label": "Pogreška",
         "messages": {
-          "invalidIdentifier": "",
-          "noMatchingVersion": "",
-          "noReleasesFound": "",
-          "noProviderSelected": "",
-          "noProviderResponse": "",
-          "unexpected": ""
+          "invalidIdentifier": "Neispravan identifikator",
+          "noMatchingVersion": "Nije pronađena odgovarajuća verzija",
+          "noReleasesFound": "Nema pronađenih izdanja",
+          "noProviderSelected": "Nije odabran nijedan pružatelj",
+          "noProviderResponse": "Nema odgovora pružatelja",
+          "unexpected": "Neočekivana pogreška pružatelja"
         }
       }
     },
@@ -3620,352 +3620,352 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "Povezano: {count}"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Podaci nisu dostupni, sve su integracije odspojene",
+        "unknownContentOption": "Nepoznata mogućnost sadržaja za widget sažetka mrežnog kontrolera: "
       },
-      "name": "",
-      "description": ""
+      "name": "Sažetak mrežnog kontrolera",
+      "description": "Prikazuje sažetak mrežnog kontrolera (kao što je UniFi Controller)"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "Žičano"
           },
           "wifi": {
-            "name": ""
+            "name": "Wi-Fi"
           }
         },
         "users": {
-          "label": ""
+          "label": "Korisnici"
         },
         "guests": {
-          "label": ""
+          "label": "Gosti"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "Wi-Fi"
             },
             "wired": {
-              "label": ""
+              "label": "Žičano"
             }
           },
-          "label": ""
+          "label": "Sadržaj widgeta"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Podaci nisu dostupni, sve su integracije odspojene",
+        "unknownContentOption": "Nepoznata mogućnost sadržaja za widget stanja mreže: "
       },
-      "name": "",
-      "description": ""
+      "name": "Stanje mreže",
+      "description": "Prikazuje povezane uređaje na mreži"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Dohvaćanje sažetka mrežnog kontrolera nije uspjelo"
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "Nadzor vatrozida",
+      "description": "Prikazuje sažetak vatrozida",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "Sustav",
+        "interfaces": "Sučelja"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nije moguće dohvatiti podatke iz vatrozida"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "Mrežna sučelja za prikaz"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "fwname": "Naziv",
+        "version": "Verzija",
+        "versiontitle": "Verzije",
+        "cputitle": "Upotreba CPU-a",
+        "memorytitle": "Upotreba memorije",
+        "cpu": "CPU",
+        "memory": "Memorija",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "naziv",
+          "trans": "Poslano",
+          "recv": "Primljeno",
+          "title": "Mrežna sučelja"
         }
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "Obavijesti",
+      "description": "Prikazuje povijest obavijesti iz integracije",
+      "noItems": "Nema obavijesti za prikaz.",
       "option": {
         "hideLogos": {
-          "label": ""
+          "label": "Sakrij logotipe"
         }
       }
     },
     "speedtestTracker": {
-      "name": "",
-      "description": "",
+      "name": "Speedtest Tracker",
+      "description": "Prikazuje rezultate testiranja brzine iz vaše instance Speedtest Trackera.",
       "option": {
         "showLatestResult": {
-          "label": ""
+          "label": "Prikaži najnoviji rezultat"
         },
         "showStats": {
-          "label": ""
+          "label": "Prikaži prosjeke"
         },
         "showRecentResults": {
-          "label": ""
+          "label": "Prikaži nedavne rezultate"
         },
         "showPingGraph": {
-          "label": ""
+          "label": "Prikaži graf pinga"
         }
       },
-      "latestResult": "",
-      "averages": "",
-      "tests": "",
-      "recentResults": "",
-      "recentResultsSpeed": "",
-      "recentResultsPing": "",
-      "download": "",
-      "upload": "",
-      "ping": "",
-      "status": "",
-      "avgDownload": "",
-      "avgUpload": "",
-      "avgPing": "",
-      "healthy": "",
-      "unhealthy": "",
-      "ok": "",
-      "fail": "",
-      "noSectionsEnabled": "",
+      "latestResult": "Najnoviji rezultat",
+      "averages": "Prosjeci",
+      "tests": "{count} testova",
+      "recentResults": "Nedavni rezultati",
+      "recentResultsSpeed": "Brzina",
+      "recentResultsPing": "Ping",
+      "download": "Preuzimanje",
+      "upload": "Slanje",
+      "ping": "Ping",
+      "status": "Status",
+      "avgDownload": "Prosj. preuzimanje",
+      "avgUpload": "Prosj. slanje",
+      "avgPing": "Prosj. ping",
+      "healthy": "Zdravo",
+      "unhealthy": "Nezdravo",
+      "ok": "U redu",
+      "fail": "Neuspjeh",
+      "noSectionsEnabled": "Omogućite barem jedan odjeljak u opcijama widgeta.",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neuspješno dohvaćanje podataka Speedtesta"
       }
     },
     "uptimeKuma": {
-      "name": "",
-      "description": "",
+      "name": "Uptime Kuma",
+      "description": "Pratite statistiku dostupnosti sa svoje stranice statusa Uptime Kuma",
       "option": {
         "showAverageUptime": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži prosječnu dostupnost",
+          "description": "Prikaži kombinirani postotak prosječne dostupnosti u 24 sata"
         },
         "showUptimeRing": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži prsten dostupnosti",
+          "description": "Prikaži prsten napretka uz vrijednost prosječne dostupnosti"
         },
         "showTotalMonitors": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži ukupno nadziranih usluga",
+          "description": "Prikaži ukupan broj konfiguriranih nadziranih usluga"
         },
         "showUpCount": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži broj dostupnih",
+          "description": "Prikaži koliko je nadziranih usluga trenutačno dostupno"
         },
         "showDownCount": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži broj nedostupnih",
+          "description": "Prikaži koliko je nadziranih usluga trenutačno nedostupno"
         },
         "showPausedCount": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži broj pauziranih",
+          "description": "Prikaži koliko je nadziranih usluga trenutačno pauzirano"
         }
       },
-      "averageUptime": "",
+      "averageUptime": "Prosječna dostupnost (24 h)",
       "stats": {
-        "totalMonitors": "",
-        "upCount": "",
-        "downCount": "",
-        "pausedCount": ""
+        "totalMonitors": "Ukupno nadziranih usluga",
+        "upCount": "Dostupno",
+        "downCount": "Nedostupno",
+        "pausedCount": "Pauzirano"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neuspješno dohvaćanje podataka o dostupnosti"
       }
     },
     "traefik": {
-      "name": "",
-      "description": "",
+      "name": "Traefik",
+      "description": "Pregled Traefikovih usmjerivača, usluga, međuprograme i ulaznih točaka",
       "option": {
         "showTcp": {
-          "label": ""
+          "label": "Prikaži TCP"
         },
         "showUdp": {
-          "label": ""
+          "label": "Prikaži UDP"
         },
         "showEntryPoints": {
-          "label": ""
+          "label": "Prikaži ulazne točke"
         }
       },
-      "instances": "",
-      "versionUnknown": "",
+      "instances": "Traefikove instance",
+      "versionUnknown": "Verzija nije poznata",
       "summary": {
-        "routers": "",
-        "entryPoints": ""
+        "routers": "Usmjerivači",
+        "entryPoints": "Ulazne točke"
       },
       "resource": {
-        "routers": "",
-        "services": "",
-        "middlewares": ""
+        "routers": "Usmjerivači",
+        "services": "Usluge",
+        "middlewares": "Međuprogrami"
       },
       "status": {
-        "healthy": "",
-        "errors": "",
-        "warnings": ""
+        "healthy": "Ispravno",
+        "errors": "{count} pogrešaka",
+        "warnings": "{count} upozorenja"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neuspješno dohvaćanje podataka iz Traefika"
       }
     },
     "audioStats": {
-      "name": "",
-      "description": "",
+      "name": "Audio statistika",
+      "description": "Statistika biblioteke i reprodukcije iz Navidromea ili Audiobookshelfa",
       "option": {
         "showArtists": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži izvođače",
+          "description": "Prikaži ukupan broj izvođača u glazbenoj biblioteci (Navidrome)"
         },
         "showAlbums": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži albume",
+          "description": "Prikaži ukupan broj albuma u glazbenoj biblioteci (Navidrome)"
         },
         "showSongs": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži pjesme",
+          "description": "Prikaži ukupan broj pjesama u glazbenoj biblioteci (Navidrome)"
         },
         "showLibraryCount": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži broj biblioteka",
+          "description": "Prikaži broj biblioteka na vašoj instanci (Audiobookshelf)"
         },
         "showAudiobooks": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži audioknjige",
+          "description": "Prikaži ukupan broj audioknjiga u svim bibliotekama (Audiobookshelf)"
         },
         "showPodcasts": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži podcaste",
+          "description": "Prikaži ukupan broj podcasta u svim bibliotekama (Audiobookshelf)"
         },
         "showListeningTime": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži vrijeme slušanja",
+          "description": "Prikaži ukupno vrijeme slušanja (Audiobookshelf)"
         },
         "showActiveSessions": {
-          "label": "",
-          "description": ""
+          "label": "Prikaži aktivne sesije",
+          "description": "Prikaži broj trenutačno aktivnih sesija reprodukcije (Audiobookshelf)"
         },
         "compactMode": {
-          "label": "",
-          "description": ""
+          "label": "Kompaktni način rada",
+          "description": "Koristi gušći raspored s manjim pločicama, idealan za male veličine widgeta"
         }
       },
-      "artists": "",
-      "albums": "",
-      "songs": "",
-      "libraryCount": "",
-      "audiobooks": "",
-      "podcasts": "",
-      "listeningTime": "",
-      "activeSessions": "",
+      "artists": "Izvođači",
+      "albums": "Albumi",
+      "songs": "Pjesme",
+      "libraryCount": "Biblioteke",
+      "audiobooks": "Audioknjige",
+      "podcasts": "Podcasti",
+      "listeningTime": "Vrijeme slušanja",
+      "activeSessions": "Aktivne sesije",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Neuspješno dohvaćanje audio statistike"
       }
     },
     "systemResources": {
-      "name": "",
-      "description": "",
+      "name": "Resursi sustava",
+      "description": "Upotreba CPU-a, memorije, diska i drugog hardvera vašeg sustava",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "Omogući sjenčanje grafikona"
         },
         "visibleCharts": {
-          "label": "",
-          "description": "",
+          "label": "Vidljivi grafikoni",
+          "description": "Odaberite grafikone koje želite prikazati.",
           "option": {
-            "cpu": "",
-            "memory": "",
-            "gpu": "",
-            "network": ""
+            "cpu": "CPU",
+            "memory": "Memorija",
+            "gpu": "GPU",
+            "network": "Mreža"
           }
         },
         "labelDisplayMode": {
-          "label": "",
+          "label": "Način prikaza oznake",
           "option": {
-            "textWithIcon": "",
-            "text": "",
-            "icon": "",
-            "hidden": ""
+            "textWithIcon": "Prikaži tekst s ikonom",
+            "text": "Prikaži samo tekst",
+            "icon": "Prikaži samo ikonu",
+            "hidden": "Sakrij oznaku"
           }
         }
       },
       "card": {
-        "cpu": "",
-        "memory": "",
-        "gpu": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "cpu": "CPU",
+        "memory": "MEM",
+        "gpu": "GPU",
+        "network": "MREŽA",
+        "up": "GORE",
+        "down": "DOLJE"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Diskovi sustava",
+      "description": "Upotreba diskova vašeg sustava",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Prikaži temperaturu ako je dostupna"
         },
         "displayMode": {
-          "label": "",
+          "label": "Način prikaza",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Postotak (npr. 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Apsolutne vrijednosti (npr. 800 GB / 1 TB)"
             },
             "free": {
-              "label": ""
+              "label": "Postotak slobodnog prostora (npr. 24% slobodno)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Prikaži traku upotrebe u pozadini"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Vidljivi volumeni pohrane",
+          "description": "Dostupno samo kada su sve odabrane integracije Synology. Ostavite prazno za prikaz svih otkrivenih volumena pohrane.",
+          "placeholder": "Odaberite volumene pohrane"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Nezdravo"
       }
     },
     "customApi": {
-      "name": "",
-      "description": "",
+      "name": "Prilagođeni API",
+      "description": "Prikažite podatke iz bilo kojeg vanjskog API-ja s prilagođenom konfiguracijom.",
       "option": {
         "definitionId": {
-          "label": ""
+          "label": "ID definicije"
         },
         "refreshInterval": {
-          "label": "",
-          "description": ""
+          "label": "Interval osvježavanja",
+          "description": "Koliko često ponovno dohvaćati podatke iz API-ja (u sekundama)"
         }
       },
-      "noDefinition": "",
-      "definitionNotFound": "",
-      "noDisplayOutput": "",
-      "executeConfirm": "",
-      "executing": "",
-      "executeSuccess": "",
-      "executeFailed": ""
+      "noDefinition": "Nije odabrana nijedna definicija",
+      "definitionNotFound": "Definicija widgeta nije pronađena. Možda je izbrisana.",
+      "noDisplayOutput": "Nema izlaznih podataka za prikaz",
+      "executeConfirm": "Jeste li sigurni da želite izvršiti ovu radnju?",
+      "executing": "Izvršavanje...",
+      "executeSuccess": "Radnja je uspješno izvršena",
+      "executeFailed": "Radnja nije uspjela. Provjerite konfiguraciju widgeta."
     },
     "beszelSystemTable": {
       "name": "Beszel sustavi (tablica)",
@@ -4014,17 +4014,17 @@
           "label": "Prikaži verziju agenta"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Redoslijed stupaca"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Širine stupaca"
         }
       },
       "noRecords": "Nisu pronađeni sustavi",
       "error": {
-        "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "internalServerError": "Povezivanje s Beszelom nije moguće. Provjerite postavke integracije.",
+        "layoutSaveTitle": "Nije moguće spremiti raspored tablice",
+        "layoutSaveMessage": "Redoslijed ili širine stupaca nisu se mogli spremiti. Pokušajte ponovno."
       },
       "column": {
         "system": "Sustav",
@@ -4038,7 +4038,7 @@
         "battery": "Baterija",
         "services": "Usluge",
         "uptime": "Vrijeme rada",
-        "agent": ""
+        "agent": "Agent"
       }
     },
     "beszelSystemGrid": {
@@ -4052,169 +4052,169 @@
           "label": "Prikaži CPU"
         },
         "showMemory": {
-          "label": ""
+          "label": "Prikaži memoriju"
         },
         "showDisk": {
-          "label": ""
+          "label": "Prikaži disk"
         },
         "showGpu": {
-          "label": ""
+          "label": "Prikaži GPU"
         },
         "showLoadAvg": {
-          "label": ""
+          "label": "Prikaži prosječno opterećenje"
         },
         "showNet": {
-          "label": ""
+          "label": "Prikaži mrežu"
         },
         "showTemp": {
-          "label": ""
+          "label": "Prikaži temperaturu"
         },
         "showBattery": {
-          "label": ""
+          "label": "Prikaži bateriju"
         },
         "showServices": {
-          "label": ""
+          "label": "Prikaži usluge"
         },
         "showUptime": {
-          "label": ""
+          "label": "Prikaži vrijeme rada"
         },
         "showAgent": {
-          "label": ""
+          "label": "Prikaži verziju agenta"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Povezivanje s Beszelom nije moguće. Provjerite postavke integracije."
       },
       "empty": {
-        "noSystems": ""
+        "noSystems": "Nisu pronađeni sustavi"
       },
       "metric": {
-        "cpu": "",
-        "memory": "",
-        "disk": "",
-        "gpu": "",
-        "loadAvg": "",
-        "net": "",
-        "temp": "",
-        "battery": "",
-        "services": "",
-        "uptime": "",
-        "agent": ""
+        "cpu": "CPU",
+        "memory": "Memorija",
+        "disk": "Disk",
+        "gpu": "GPU",
+        "loadAvg": "Prosj. opterećenje",
+        "net": "Mreža",
+        "temp": "Temp",
+        "battery": "Baterija",
+        "services": "Usluge",
+        "uptime": "Vrijeme rada",
+        "agent": "Agent"
       }
     },
     "beszelAlerts": {
-      "name": "",
-      "description": "",
+      "name": "Beszel upozorenja",
+      "description": "Pregled konfiguracija i povijesti upozorenja za Beszel",
       "option": {
         "showHistory": {
-          "label": ""
+          "label": "Prikaži povijest upozorenja"
         },
         "maxHistoryItems": {
-          "label": ""
+          "label": "Maksimalan broj stavki povijesti"
         }
       },
-      "empty": "",
+      "empty": "Nema konfiguriranih upozorenja",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Povezivanje s Beszelom nije moguće. Provjerite postavke integracije."
       },
-      "history": "",
-      "resolved": "",
+      "history": "Povijest",
+      "resolved": "Riješeno",
       "status": {
-        "triggered": "",
-        "ok": ""
+        "triggered": "Aktivirano",
+        "ok": "U redu"
       }
     },
     "beszelSystemStats": {
-      "name": "",
-      "description": "",
+      "name": "Beszel statistika sustava",
+      "description": "Vremenski grafikoni za CPU, memoriju, disk, mrežu i metrike Docker spremnika",
       "option": {
         "systemId": {
-          "label": "",
-          "description": ""
+          "label": "Sustav",
+          "description": "Odaberite Beszelov sustav za prikaz statistike"
         },
         "timePeriod": {
-          "label": ""
+          "label": "Vremensko razdoblje"
         },
         "showCpu": {
-          "label": ""
+          "label": "Prikaži grafikon CPU-a"
         },
         "showMemory": {
-          "label": ""
+          "label": "Prikaži grafikon memorije"
         },
         "showDisk": {
-          "label": ""
+          "label": "Prikaži grafikon diska"
         },
         "showDiskIO": {
-          "label": ""
+          "label": "Prikaži grafikon I/O-a diska"
         },
         "showNetwork": {
-          "label": ""
+          "label": "Prikaži grafikon mreže"
         },
         "showDockerCpu": {
-          "label": ""
+          "label": "Prikaži grafikon Docker CPU-a"
         },
         "showDockerMemory": {
-          "label": ""
+          "label": "Prikaži grafikon Docker memorije"
         },
         "showDockerNetwork": {
-          "label": ""
+          "label": "Prikaži grafikon Docker mreže"
         }
       },
-      "selectSystem": "",
+      "selectSystem": "Odaberi sustav",
       "empty": {
-        "noSystems": ""
+        "noSystems": "Nisu pronađeni sustavi"
       },
       "error": {
-        "internalServerError": "",
-        "liveConnectionFailed": "",
-        "switchToHistorical": "",
-        "systemNotFound": ""
+        "internalServerError": "Povezivanje s Beszelom nije moguće. Provjerite postavke integracije.",
+        "liveConnectionFailed": "Veza uživo nije uspjela. Vaša instanca Beszela možda ne podržava streaming u stvarnom vremenu.",
+        "switchToHistorical": "Prijeđi na povijesni prikaz",
+        "systemNotFound": "Odabrani sustav nije pronađen. Odaberite drugi sustav."
       },
       "chart": {
         "cpu": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Upotreba CPU-a",
+          "subtitle": "Prosječna iskorištenost CPU-a na razini cijelog sustava",
+          "series": "CPU"
         },
         "memory": {
-          "title": "",
-          "subtitle": "",
-          "series": "",
-          "cache": ""
+          "title": "Upotreba memorije",
+          "subtitle": "Precizna iskorištenost u zabilježeno vrijeme",
+          "series": "Upotrijebljeno",
+          "cache": "Predmemorija/Spremnici"
         },
         "disk": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Upotreba diska",
+          "subtitle": "Upotreba prema datotečnom sustavu",
+          "series": "Korijen"
         },
         "diskIO": {
-          "title": "",
-          "subtitle": "",
-          "read": "",
-          "write": ""
+          "title": "I/O diska",
+          "subtitle": "Protok korijenskog datotečnog sustava",
+          "read": "Čitanje",
+          "write": "Pisanje"
         },
         "storage": {
-          "title": "",
-          "subtitle": "",
-          "series": ""
+          "title": "Pohrana",
+          "subtitle": "Upotreba diska po datotečnom sustavu",
+          "series": "Upotrijebljeno"
         },
         "network": {
-          "title": "",
-          "subtitle": "",
-          "sent": "",
-          "recv": ""
+          "title": "Propusnost",
+          "subtitle": "Mrežni promet javnih sučelja",
+          "sent": "Poslano",
+          "recv": "Primljeno"
         },
         "dockerCpu": {
-          "title": "",
-          "subtitle": ""
+          "title": "Upotreba Docker CPU-a",
+          "subtitle": "Prosječna iskorištenost CPU-a spremnika"
         },
         "dockerMemory": {
-          "title": "",
-          "subtitle": ""
+          "title": "Upotreba Docker memorije",
+          "subtitle": "Upotreba memorije Docker spremnika"
         },
         "dockerNetwork": {
-          "title": "",
-          "subtitle": ""
+          "title": "Docker mrežni I/O",
+          "subtitle": "Mrežni promet Docker spremnika"
         }
       }
     }
@@ -4231,16 +4231,16 @@
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "Dupliciraj ploču",
+        "message": "Time će se duplicirati ploča {name} sa svim njezinim sadržajem. Ako se widgeti pozivaju na integracije koje ne smijete koristiti, one će biti uklonjene.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Ploča je duplicirana",
+            "message": "Ploča je uspješno duplicirana"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nije moguće duplicirati ploču",
+            "message": "Ploču nije moguće duplicirati"
           }
         }
       },
@@ -4293,7 +4293,7 @@
           },
           "screenSize": {
             "label": "Veličina zaslona",
-            "description": "",
+            "description": "U verzijama prije 1.0 postojala su tri različita načina rada, pa ste mogli odabrati broj stupaca za svaku veličinu zaslona.",
             "option": {
               "sm": "Mali",
               "md": "Srednji",
@@ -4318,8 +4318,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "Stvori aplikaciju u hodu",
+          "createAndUse": "Stvori i koristi"
         }
       }
     },
@@ -4338,10 +4338,10 @@
       },
       "backgroundImageUrl": {
         "label": "URL pozadinske slike",
-        "placeholder": "",
+        "placeholder": "Počnite upisivati za pretraživanje lokalnih slika",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "Vaše slike",
+          "other": "Ostale slike"
         }
       },
       "backgroundImageAttachment": {
@@ -4401,10 +4401,10 @@
         "label": "Neprozirnost"
       },
       "iconColor": {
-        "label": ""
+        "label": "Boja ikone"
       },
       "clearColor": {
-        "label": ""
+        "label": "Obriši boju"
       },
       "customCss": {
         "label": "Prilagođeni CSS za ovu ploču",
@@ -4415,21 +4415,21 @@
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "Onemogući stanje aplikacije",
+        "description": "Onemogućuje provjeru stanja za sve aplikacije na ovoj ploči"
       },
       "columnCount": {
         "label": "Broj stupaca"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "Polumjer stavke",
+        "description": "Mijenja zaobljenost pločica na vašoj ploči",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "Vrlo mala",
+          "sm": "Mala",
+          "md": "Srednja",
+          "lg": "Velika",
+          "xl": "Vrlo velika"
         }
       },
       "name": {
@@ -4453,9 +4453,9 @@
         "layout": {
           "title": "Raspored",
           "responsive": {
-            "title": "",
+            "title": "Responzivni rasporedi",
             "action": {
-              "add": ""
+              "add": "Dodaj raspored"
             }
           }
         },
@@ -4463,13 +4463,13 @@
           "title": "Pozadina"
         },
         "appearance": {
-          "title": ""
+          "title": "Izgled"
         },
         "customCss": {
           "title": "Prilagođeni CSS"
         },
         "behavior": {
-          "title": ""
+          "title": "Ponašanje"
         },
         "access": {
           "title": "Kontrola pristupa",
@@ -4534,33 +4534,33 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Dobro došli u Homarr",
+        "description": "Moderan i elegantan nadzorni panel koji vam sve aplikacije i usluge stavlja na dohvat ruke.",
+        "link": "Stvori svoju prvu ploču",
+        "notice": "Da biste uklonili ovu stranicu, stvorite ploču i postavite je kao početnu ploču"
       },
       "notFound": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Ploča nije pronađena",
+        "description": "Navedena ploča nije pronađena ili joj nemate pristup.",
+        "link": "Prikaži sve ploče",
+        "notice": "Provjerite poveznicu ili kontaktirajte administratora ako mislite da bi trebala biti dostupna"
       },
       "homeBoard": {
-        "title": "",
+        "title": "Nema početne ploče",
         "admin": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Još niste postavili početnu ploču za poslužitelj.",
+          "link": "Konfiguriraj početnu ploču za cijeli poslužitelj",
+          "notice": "Da biste ovu stranicu uklonili za sve korisnike, postavite početnu ploču za poslužitelj"
         },
         "user": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Još niste postavili početnu ploču.",
+          "link": "Konfiguriraj svoju početnu ploču",
+          "notice": "Da biste uklonili ovu stranicu, navedite početnu ploču u svojim postavkama"
         },
         "anonymous": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Administrator poslužitelja još nije postavio početnu ploču.",
+          "link": "Prikaži javne ploče",
+          "notice": "Da biste uklonili ovu stranicu, zamolite administratora poslužitelja da postavi početnu ploču za poslužitelj"
         }
       }
     }
@@ -4568,14 +4568,14 @@
   "layout": {
     "field": {
       "name": {
-        "label": ""
+        "label": "Naziv"
       },
       "columnCount": {
-        "label": ""
+        "label": "Broj stupaca"
       },
       "breakpoint": {
-        "label": "",
-        "description": ""
+        "label": "Prijelomna točka",
+        "description": "Raspored će se koristiti na svim zaslonima većima od ove prijelomne točke do sljedeće veće prijelomne točke."
       }
     }
   },
@@ -4591,9 +4591,9 @@
       "text": "Nije moguće pronaći traženi resurs"
     },
     "error": {
-      "title": "",
-      "text": "",
-      "digest": ""
+      "title": "Učitavanje ove stranice nije uspjelo",
+      "text": "Pri učitavanju ove stranice pojavila se neočekivana pogreška. Navigacija je i dalje dostupna — pokušajte ponovno učitati stranicu ili upotrijebite drugi odjeljak bočne trake.",
+      "digest": "Referenca pogreške: {digest}"
     },
     "navbar": {
       "items": {
@@ -4601,7 +4601,7 @@
         "boards": "Daske",
         "apps": "aplikacije",
         "integrations": "Integracije",
-        "customWidgets": "",
+        "customWidgets": "Prilagođeni widgeti",
         "searchEngies": "Tražilice",
         "medias": "Mediji",
         "users": {
@@ -4616,10 +4616,10 @@
           "label": "Alati",
           "items": {
             "docker": "Docker",
-            "kubernetes": "",
+            "kubernetes": "Kubernetes",
             "logs": "Zapisi",
-            "api": "",
-            "certificates": "",
+            "api": "API i MCP",
+            "certificates": "Certifikati",
             "tasks": "Zadaci",
             "backup": "Sigurnosna kopija"
           }
@@ -4646,8 +4646,8 @@
           "integration": "Integracije",
           "app": "aplikacije",
           "group": "Grupe",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "Tražilice",
+          "media": "Mediji"
         },
         "statisticLabel": {
           "boards": "Daske",
@@ -4656,8 +4656,8 @@
           "authorization": "Autorizacija"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Dobro došli natrag na svoju",
+          "subtitle": "Ploča {app}"
         }
       },
       "board": {
@@ -4680,14 +4680,14 @@
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Postavi kao mobilnu ploču",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Mobilno",
+              "tooltip": "Ova će se ploča prikazivati kao vaša mobilna ploča"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Dupliciraj ploču"
           },
           "delete": {
             "label": "Izbriši trajno",
@@ -4726,13 +4726,13 @@
             "item": {
               "language": "Jezik i regija",
               "board": {
-                "title": "",
+                "title": "Početna ploča",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Općenito",
+                  "mobile": "Mobilno"
                 }
               },
-              "search": "",
+              "search": "Traži",
               "firstDayOfWeek": "Prvi dan u tjednu",
               "accessibility": "Pristupačnost",
               "onboardingTours": {
@@ -4842,10 +4842,10 @@
             "ownerOfGroupDeleted": "Vlasnik ove grupe je izbrisan. Trenutno nema vlasnika."
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "Postavke",
+            "alert": "Postavke grupa određene su redoslijedom grupa na popisu. Gornje postavke nadjačavaju donje.",
             "board": {
-              "title": ""
+              "title": "Ploče"
             }
           },
           "members": {
@@ -4875,8 +4875,8 @@
           "analytics": {
             "title": "Analitika",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "Pomozite nam poboljšati Homarr",
+              "text": "To nam pomaže shvatiti što ljudi zaista upotrebljavaju kako bismo znali na što usmjeriti vrijeme. Vidimo podatke poput broja widgeta ili integracija koje imate, verzije Homarra i baze podataka koju upotrebljavate. To je sve — nema osobnih podataka, URL-ova, imena ni ičega što bi moglo identificirati vas ili vaše postavke."
             }
           },
           "crawlingAndIndexing": {
@@ -4903,33 +4903,33 @@
             "title": "Daske",
             "homeBoard": {
               "label": "Globalna početna ploča",
-              "mobileLabel": "",
+              "mobileLabel": "Globalna mobilna ploča",
               "description": "Samo javne ploče su dostupne za odabir"
             },
             "status": {
-              "title": "",
+              "title": "Stanje aplikacije",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Omogući stanje prema zadanim postavkama",
+                "description": "Pri dodavanju stavke aplikacije stanje će prema zadanim postavkama biti omogućeno"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Prisilno onemogući stanje",
+                "description": "Stanje aplikacija bit će onemogućeno za sve korisnike i neće se moći omogućiti"
               }
             }
           },
           "user": {
-            "title": "",
+            "title": "Korisnici",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Omogući Gravatar",
+              "description": "Vraća se na korisničke avatare iz usluga Libravatar/Gravatar kada nije postavljen prilagođeni avatar i konfigurirana je e-pošta"
             }
           },
           "search": {
-            "title": "",
+            "title": "Traži",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "Globalna zadana tražilica",
+              "description": "Ovdje nije moguće odabrati tražilice integracija"
             }
           },
           "appearance": {
@@ -4958,7 +4958,7 @@
             "idle": "Neaktivan",
             "running": "U radu",
             "error": "Pogreška",
-            "disabled": ""
+            "disabled": "Onemogućeno"
           },
           "job": {
             "iconsUpdater": {
@@ -4972,74 +4972,74 @@
             }
           },
           "interval": {
-            "seconds": "",
-            "minutes": "",
-            "hours": "",
-            "midnight": "",
-            "weeklyMonday": "",
+            "seconds": "Svakih {interval, plural, =1 {sekundu} one {sekundu} few {# sekunde} other {# sekundi}}",
+            "minutes": "Svake {interval, plural, =1 {minute} one {minute} few {# minute} other {# minuta}}",
+            "hours": "Svaki {interval, plural, =1 {sat} one {sat} few {# sata} other {# sati}}",
+            "midnight": "Svaki dan u ponoć",
+            "weeklyMonday": "Svaki tjedan ponedjeljkom",
             "update": {
               "success": {
-                "message": ""
+                "message": "Interval je uspješno ažuriran"
               },
               "error": {
-                "message": ""
+                "message": "Neuspješno ažuriranje intervala"
               }
             }
           },
           "settings": {
-            "title": ""
+            "title": "Postavke zadatka za {jobName}"
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "Naziv"
             },
             "interval": {
-              "label": ""
+              "label": "Interval rasporeda"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Posljednje izvršavanje"
             },
             "actions": {
-              "label": ""
+              "label": "Radnje"
             }
           },
           "table": {
-            "search": ""
+            "search": "Pretraži {count} zadataka..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "Osvježi"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "Zadaci su uspješno osvježeni"
             },
             "error": {
-              "message": ""
+              "message": "Neuspješno osvježavanje zadataka"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "Zadatak je uspješno pokrenut"
             },
             "error": {
-              "message": ""
+              "message": "Neuspješno pokretanje zadatka"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "Zadatak je uspješno omogućen"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "Zadatak je uspješno onemogućen"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "Neuspješna promjena statusa zadatka"
             }
           }
         },
@@ -5064,105 +5064,105 @@
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "Izbriši API token",
+                  "text": "Time će se API token trajno izbrisati. API klijenti koji koriste ovaj token više se neće moći autentificirati i izvršavati API zahtjeve. Ova se radnja ne može poništiti."
                 }
               },
               "table": {
                 "header": {
                   "id": "iskaznica",
                   "createdBy": "Stvorio",
-                  "actions": ""
+                  "actions": "Radnje"
                 }
               }
             },
             "mcp": {
-              "label": "",
-              "title": "",
-              "subtitle": "",
-              "description": "",
-              "noApiKey": "",
-              "createApiKeyButton": "",
+              "label": "AI / MCP",
+              "title": "AI integracija",
+              "subtitle": "Poslužitelj protokola konteksta modela (MCP)",
+              "description": "Povežite AI pomoćnike sa svojom instancom Homarr i upravljajte cijelim kućnim laboratorijem prirodnim jezikom. Pretražujte i zahtijevajte medije u Overseerru, upravljajte Docker spremnicima, uključujte i isključujte Pi-hole, provjeravajte stanje poslužitelja, upravljajte uređajima Home Assistanta i još mnogo toga — sve iz svojeg AI pomoćnika.",
+              "noApiKey": "Za autentifikaciju s MCP poslužiteljem potreban vam je API ključ.",
+              "createApiKeyButton": "Izradi API ključ",
               "endpoint": {
-                "title": ""
+                "title": "MCP krajnja točka"
               },
               "authentication": {
-                "title": "",
-                "intro": "",
+                "title": "Autentifikacija",
+                "intro": "S MCP poslužiteljem možete se autentificirati API ključem ili OAuthom. Obje metode daju istu razinu pristupa.",
                 "apiKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "API ključ (ručno)",
+                  "description": "U konfiguraciji MCP klijenta pošaljite zaglavlje ApiKey s cijelim API ključem."
                 },
                 "oauth": {
-                  "title": "",
-                  "description": "",
-                  "hint": ""
+                  "title": "OAuth (prijava u pregledniku)",
+                  "description": "Klijenti koji podržavaju OAuth (kao što su Claude Code, opencode ili Cursor) mogu se autentificirati otvaranjem prozora preglednika. Pokrenite naredbu za autentifikaciju u klijentu, prijavite se u Homarr u pregledniku i povezani ste — API ključ automatski se izrađuje.",
+                  "hint": "OAuth tokeni prikazuju se kao obični API ključevi na kartici Autentifikacija. Možete ih opozvati u bilo kojem trenutku."
                 },
-                "permissions": ""
+                "permissions": "API ključ određuje dopuštenja dostupna AI-ju — on radi s istom razinom pristupa kao vlasnik ključa."
               },
               "clientConfig": {
-                "title": "",
+                "title": "Konfiguracija klijenta",
                 "streamableHttp": {
-                  "recommended": "",
-                  "title": "",
-                  "worksWith": "",
-                  "addToConfig": "",
-                  "cursor": "",
-                  "claudeDesktop": "",
-                  "claudeCode": "",
-                  "vsCodeCopilot": "",
-                  "replaceHint": ""
+                  "recommended": "Preporučeno",
+                  "title": "HTTP za streaming",
+                  "worksWith": "Radi s: Cursor, Claude Desktop, VS Code Copilot, Windsurf, Claude Code",
+                  "addToConfig": "Dodajte u konfiguracijsku datoteku MCP klijenta:",
+                  "cursor": "{name}: {file} u projektu ili globalnim postavkama",
+                  "claudeDesktop": "{name}: {file}",
+                  "claudeCode": "{name}: {file} ili upotrijebite {command}",
+                  "vsCodeCopilot": "{name}: {file} u postavkama radnog prostora",
+                  "replaceHint": "Zamijenite rezervirano mjesto API ključem koji ste dobili prilikom izrade."
                 },
                 "stdio": {
-                  "title": "",
-                  "description": ""
+                  "title": "stdio (naslijeđeni klijenti putem mosta mcp-remote)",
+                  "description": "Za klijente koji podržavaju samo stdio transport. Lokalno mora biti instaliran {dependency} (Node.js):"
                 }
               },
               "testConnection": {
-                "title": "",
-                "description": "",
-                "hint": ""
+                "title": "Testirajte vezu",
+                "description": "Pokrenite ovo u terminalu kako biste provjerili je li krajnja točka dostupna i radi li vaš API ključ:",
+                "hint": "Uspješan odgovor vraća mogućnosti MCP poslužitelja. Ako vidite pogrešku, provjerite JSON odgovor radi dodatnih informacija."
               },
               "availableTools": {
-                "title": "",
-                "description": "",
-                "columnType": "",
-                "columnName": "",
-                "columnDescription": ""
+                "title": "Dostupni alati",
+                "description": "Dostupno je {count} alata. Proširite kategoriju da biste vidjeli pojedinačne alate i njihove opise.",
+                "columnType": "Vrsta",
+                "columnName": "Alat",
+                "columnDescription": "Opis"
               },
               "troubleshooting": {
-                "title": "",
+                "title": "Rješavanje problema",
                 "missingHeader": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Nedostaje zaglavlje ApiKey\"",
+                  "description": "Vaš klijent ne šalje zaglavlje {header}. Provjerite je li odjeljak {section} u MCP konfiguraciji ispravan. Neki klijenti zahtijevaju ponovno pokretanje nakon promjena konfiguracije."
                 },
                 "invalidFormat": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Nevažeći format ApiKeya\"",
+                  "description": "Provjerite jeste li kopirali cijeli API ključ, a ne samo njegov dio."
                 },
                 "invalidKey": {
-                  "title": "",
-                  "description": ""
+                  "title": "\"Nevažeći API ključ\"",
+                  "description": "ID ključa nije pronađen ili je token pogrešan. API ključevi mogu se vidjeti samo jednom, prilikom izrade. Ako ste ga izgubili, izbrišite stari ključ i izradite novi."
                 },
                 "connectionRefused": {
-                  "title": "",
-                  "description": ""
+                  "title": "Veza odbijena / istek vremena",
+                  "description": "Provjerite je li URL dostupan iz vašeg AI klijenta. Ako Homarr radi iza obrnutog proxyja ili u Dockeru, upotrijebite vanjski URL (ne {localhost}). Provjerite je li priključak ispravan (zadano: 7575 za Docker)."
                 },
                 "toolsNotAppearing": {
-                  "title": "",
-                  "description": ""
+                  "title": "Alati se ne prikazuju",
+                  "description": "Neki alati zahtijevaju konfiguriranje određenih integracija (npr. Docker, Overseerr). Popis alata ovisi o tome što je dostupno u vašoj instanci Homarr."
                 }
               },
-              "copy": "",
+              "copy": "Kopiraj",
               "oneClick": {
-                "title": "",
-                "subtitle": "",
-                "vsCode": "",
-                "cursor": "",
-                "copyUrl": "",
-                "copied": "",
-                "copyHint": "",
-                "manualConfig": ""
+                "title": "Instaliraj jednim klikom",
+                "subtitle": "Upotrebljava OAuth — autentificirajte se u pregledniku pri prvoj upotrebi",
+                "vsCode": "Instaliraj u VS Code",
+                "cursor": "Instaliraj u Cursor",
+                "copyUrl": "Kopiraj MCP URL",
+                "copied": "Kopirano!",
+                "copyHint": "Za ChatGPT, Claude Code ili bilo koji MCP klijent",
+                "manualConfig": "Ručna konfiguracija"
               }
             }
           }
@@ -5300,27 +5300,27 @@
             "subtitle": "{count} doprinosi prijevodima na mnoge jezike"
           },
           "sponsors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Sponzori",
+            "subtitle": "{count} podržava projekt financijski"
           },
           "libraries": {
             "title": "Biblioteke",
             "subtitle": "{count} korišteno u kodu Homarra"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Prečaci",
+            "subtitle": "Tipkovni prečaci za poboljšanje vašeg tijeka rada",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "Prečac",
+              "action": "Radnja"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "Uredi ploču",
+              "toggleColorScheme": "Uključi/isključi svijetli/tamni način",
+              "saveNotebook": "Spremi bilježnicu (samo unutar widgeta bilježnice)",
+              "openSpotlight": "Otvori tražilicu"
             },
-            "note": ""
+            "note": "Savjet: Mod označava i tipku Ctrl i tipku ⌘ na sustavu macOS"
           }
         }
       }
@@ -5331,13 +5331,13 @@
     "table": {
       "updated": "Ažurirano {when}",
       "refresh": {
-        "lastUpdated": ""
+        "lastUpdated": "Posljednje osvježavanje {when}"
       },
-      "search": "",
+      "search": "Pretraži {count} spremnika",
       "selected": "Odabrano {selectCount} od {totalCount} kontejnera",
-      "footer": "",
-      "totalCpu": "",
-      "totalMemory": ""
+      "footer": "Ukupno spremnika: {count}",
+      "totalCpu": "Ukupni CPU: {cpu}%",
+      "totalMemory": "Ukupna memorija: {memory}"
     },
     "field": {
       "name": {
@@ -5357,10 +5357,10 @@
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Memorija"
         }
       },
       "containerImage": {
@@ -5374,7 +5374,7 @@
       }
     },
     "action": {
-      "title": "",
+      "title": "Radnje",
       "logs": {
         "label": "Prikaži zapise",
         "page": {
@@ -5422,7 +5422,7 @@
       },
       "remove": {
         "label": "Ukloni",
-        "confirm": "",
+        "confirm": "Kliknite ponovno za trajno uklanjanje",
         "notification": {
           "success": {
             "title": "Kontejneri su uklonjeni",
@@ -5448,265 +5448,265 @@
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Dodaj u Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Dodano u Homarr",
+            "message": "Odabrane aplikacije dodane su u Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Nije moguće dodati u Homarr",
+            "message": "Odabrane aplikacije nije moguće dodati u Homarr"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Dodaj Dockerov spremnik(-e) u Homarr"
         }
       }
     },
     "error": {
-      "internalServerError": "",
-      "noColumns": ""
+      "internalServerError": "Dohvaćanje Dockerovih spremnika nije uspjelo",
+      "noColumns": "Odaberite barem jedan stupac u postavkama widgeta"
     }
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
-      "label": "",
-      "providers": "",
-      "version": "",
-      "architecture": "",
+      "title": "Nadzorna ploča klastera",
+      "label": "Klaster",
+      "providers": "Pružatelji",
+      "version": "Verzija",
+      "architecture": "Arhitektura",
       "capacity": {
-        "title": "",
+        "title": "Kapacitet",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "Rezervirano",
+          "used": "Utroš."
         }
       },
       "resources": {
-        "title": "",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "title": "Resursi",
+        "nodes": "Čvorovi",
+        "namespaces": "Imenski prostori",
+        "ingresses": "Ingressi",
+        "services": "Usluge",
+        "pods": "Podovi",
+        "configmaps": "ConfigMapovi",
+        "secrets": "Tajne",
+        "volumes": "Svesci"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "Čvorovi",
       "field": {
         "name": {
-          "label": ""
+          "label": "Naziv"
         },
         "state": {
-          "label": "",
+          "label": "Stanje",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "Spreman",
+            "NotReady": "Nije spreman"
           }
         },
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "RAM"
         },
         "pods": {
-          "label": ""
+          "label": "Podovi"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "OS"
         },
         "architecture": {
-          "label": ""
+          "label": "Arhitektura"
         },
         "kubernetesVersion": {
-          "label": ""
+          "label": "Verzija Kubernetesa"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Stvoreno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Pretraži {count} čvorova"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "Imenski prostori",
       "field": {
         "name": {
-          "label": ""
+          "label": "Naziv"
         },
         "state": {
-          "label": "",
+          "label": "Stanje",
           "option": {
-            "active": "",
-            "terminating": ""
+            "active": "Aktivno",
+            "terminating": "Prekidanje"
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Stvoreno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Pretraži {count} imenskih prostora"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "Ingressi",
       "field": {
         "name": {
-          "label": ""
+          "label": "Naziv"
         },
         "namespace": {
-          "label": ""
+          "label": "Imenski prostor"
         },
         "className": {
-          "label": ""
+          "label": "Naziv klase"
         },
         "rulesAndPaths": {
-          "label": ""
+          "label": "Pravila i putanje"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Stvoreno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Pretraži {count} ingressa"
       }
     },
     "services": {
-      "label": "",
+      "label": "Usluge",
       "field": {
         "name": {
-          "label": ""
+          "label": "Naziv"
         },
         "namespace": {
-          "label": ""
+          "label": "Imenski prostor"
         },
         "type": {
-          "label": ""
+          "label": "Vrsta"
         },
         "ports": {
-          "label": ""
+          "label": "Portovi"
         },
         "targetPorts": {
-          "label": ""
+          "label": "Ciljni portovi"
         },
         "clusterIP": {
-          "label": ""
+          "label": "IP klastera"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Stvoreno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Pretraži {count} usluga"
       }
     },
     "pods": {
-      "label": "",
+      "label": "Podovi",
       "field": {
         "name": {
-          "label": ""
+          "label": "Naziv"
         },
         "namespace": {
-          "label": ""
+          "label": "Imenski prostor"
         },
         "image": {
-          "label": ""
+          "label": "Slika"
         },
         "applicationType": {
-          "label": ""
+          "label": "Vrsta aplikacije"
         },
         "status": {
-          "label": ""
+          "label": "Stanje"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Stvoreno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Pretraži {count} podova"
       }
     },
     "secrets": {
-      "label": "",
+      "label": "Tajne",
       "field": {
         "name": {
-          "label": ""
+          "label": "Naziv"
         },
         "namespace": {
-          "label": ""
+          "label": "imenski prostor"
         },
         "type": {
-          "label": ""
+          "label": "vrsta"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Stvoreno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Pretraži {count} tajni"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "ConfigMapovi",
       "field": {
         "name": {
-          "label": ""
+          "label": "Naziv"
         },
         "namespace": {
-          "label": ""
+          "label": "imenski prostor"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Stvoreno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Pretraži {count} ConfigMapova"
       }
     },
     "volumes": {
-      "label": "",
+      "label": "Svesci",
       "field": {
         "name": {
-          "label": ""
+          "label": "Naziv"
         },
         "namespace": {
-          "label": ""
+          "label": "Imenski prostor"
         },
         "accessModes": {
-          "label": ""
+          "label": "Načini pristupa"
         },
         "storage": {
-          "label": ""
+          "label": "Pohrana"
         },
         "storageClassName": {
-          "label": ""
+          "label": "Naziv klase pohrane"
         },
         "volumeMode": {
-          "label": ""
+          "label": "Način sveska"
         },
         "volumeName": {
-          "label": ""
+          "label": "Naziv sveska"
         },
         "status": {
-          "label": ""
+          "label": "Stanje"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Stvoreno"
         }
       },
       "table": {
-        "search": ""
+        "search": "Pretraži {count} svezaka"
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Dohvaćanje Kubernetesovih podataka nije uspjelo"
     }
   },
   "permission": {
@@ -5775,14 +5775,14 @@
         }
       },
       "custom-widgets": {
-        "label": "",
+        "label": "Prilagođeni widgeti",
         "new": {
-          "label": ""
+          "label": "Novo"
         },
         "edit": {
-          "label": "",
+          "label": "Uredi",
           "flow": {
-            "label": ""
+            "label": "Tijek"
           }
         }
       },
@@ -5804,7 +5804,7 @@
       "tools": {
         "label": "Alati",
         "tasks": {
-          "label": ""
+          "label": "Zadaci"
         },
         "docker": {
           "label": "Docker",
@@ -5813,39 +5813,39 @@
           }
         },
         "kubernetes": {
-          "label": "",
+          "label": "Kubernetes",
           "nodes": {
-            "label": ""
+            "label": "Čvorovi"
           },
           "namespaces": {
-            "label": ""
+            "label": "Imenski prostori"
           },
           "ingresses": {
-            "label": ""
+            "label": "Ingressi"
           },
           "services": {
-            "label": ""
+            "label": "Usluge"
           },
           "pods": {
-            "label": ""
+            "label": "podovi"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMapovi"
           },
           "secrets": {
-            "label": ""
+            "label": "Tajne"
           },
           "volumes": {
-            "label": ""
+            "label": "Svesci"
           }
         },
         "logs": {
           "label": "Zapisi"
         },
         "certificates": {
-          "label": "",
+          "label": "Certifikati",
           "hostnames": {
-            "label": ""
+            "label": "Nazivi hostova"
           }
         }
       },
@@ -5894,7 +5894,7 @@
                   "label": "Postavi kao početnu ploču"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Postavi kao mobilnu ploču"
                 },
                 "settings": {
                   "label": "Otvori postavke"
@@ -5914,7 +5914,7 @@
         "help": "Aktiviraj način naredbi",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "Lokalne naredbe"
           },
           "globalCommand": {
             "title": "Globalne naredbe",
@@ -6063,10 +6063,10 @@
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "",
+                "label": "Omogući desni klik na widgetima",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Omogući desni klik na widgetima"
                   }
                 }
               },
@@ -6079,9 +6079,9 @@
       },
       "media": {
         "help": "Pretražite filmove ili serije za zahtjev",
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": "",
+        "requestMovie": "Zatraži film",
+        "requestSeries": "Zatraži seriju",
+        "openIn": "Otvori u {kind}",
         "group": {
           "title": "Filmovi i serije"
         },
@@ -6178,25 +6178,25 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Traži",
             "option": {
               "other": {
-                "label": ""
+                "label": "Pretraži drugom tražilicom"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "Nema zadane tražilice",
+                "description": "Postavite zadanu tražilicu u postavkama"
               },
               "search": {
-                "label": ""
+                "label": "Pretraži \"{query}\" pomoću tražilice {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Počnite upisivati za pretraživanje"
               }
             }
           },
           "local": {
-            "title": ""
+            "title": "Lokalni rezultati"
           }
         }
       },
@@ -6322,50 +6322,50 @@
             "title": "Još nema tražilica",
             "action": "Stvorite svoju prvu tražilicu"
           },
-          "interactive": ""
+          "interactive": "Interaktivno, koristi integraciju"
         },
         "create": {
-          "title": "",
+          "title": "Nova tražilica",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Tražilica je stvorena",
+              "message": "Tražilica je uspješno stvorena"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Tražilica nije stvorena",
+              "message": "Tražilicu nije moguće stvoriti"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "Uredi tražilicu",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Promjene su uspješno primijenjene",
+              "message": "Tražilica je uspješno spremljena"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Nije moguće primijeniti promjene",
+              "message": "Tražilicu nije moguće spremiti"
             }
           },
-          "configControl": "",
+          "configControl": "Konfiguracija",
           "searchEngineType": {
-            "generic": "",
-            "fromIntegration": ""
+            "generic": "Generička",
+            "fromIntegration": "Iz integracije"
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "Izbriši tražilicu",
+          "message": "Jeste li sigurni da želite izbrisati tražilicu {name}?",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Tražilica je izbrisana",
+              "message": "Tražilica je uspješno izbrisana"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Tražilica nije izbrisana",
+              "message": "Tražilicu nije moguće izbrisati"
             }
           }
         }
@@ -6373,11 +6373,11 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "Zatraži \"{name}\"",
             "table": {
               "header": {
-                "season": "",
-                "episodes": "",
+                "season": "Sezona",
+                "episodes": "Epizode",
                 "status": "Stanje"
               },
               "status": {
@@ -6385,7 +6385,7 @@
               }
             },
             "button": {
-              "send": ""
+              "send": "Pošalji zahtjev"
             }
           }
         }
@@ -6395,89 +6395,89 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Naziv hosta"
       },
       "subject": {
-        "label": ""
+        "label": "Predmet"
       },
       "issuer": {
-        "label": ""
+        "label": "Izdavatelj"
       },
       "validFrom": {
-        "label": ""
+        "label": "Vrijedi od"
       },
       "validTo": {
-        "label": ""
+        "label": "Vrijedi do"
       },
       "serialNumber": {
-        "label": ""
+        "label": "Serijski broj"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Otisak"
       }
     },
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Pouzdani certifikati",
+        "description": "Homarr ih koristi za dohvaćanje podataka iz integracija.",
         "noResults": {
-          "title": ""
+          "title": "Još nema certifikata"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Neispravan certifikat",
+          "description": "Raščlanjivanje certifikata nije uspjelo"
         },
-        "expires": "",
-        "toHostnames": ""
+        "expires": "Istječe {when}",
+        "toHostnames": "Pouzdani nazivi hostova"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "Pouzdani nazivi hostova certifikata",
+        "description": "Neki certifikati ne dopuštaju određenu domenu koju Homarr koristi za njihovo dohvaćanje, pa se svi pouzdani nazivi hostova s otiscima certifikata koriste za zaobilaženje tih ograničenja.",
         "noResults": {
-          "title": ""
+          "title": "Još nema naziva hostova"
         },
-        "toCertificates": ""
+        "toCertificates": "Certifikati"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Dodaj certifikat",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Certifikat je dodan",
+            "message": "Certifikat je uspješno dodan"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Dodavanje certifikata nije uspjelo",
+            "message": "Certifikat nije moguće dodati"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "Ukloni certifikat",
+        "confirm": "Jeste li sigurni da želite ukloniti certifikat?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Certifikat je uklonjen",
+            "message": "Certifikat je uspješno uklonjen"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Certifikat nije uklonjen",
+            "message": "Certifikat nije moguće ukloniti"
           }
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "Ukloni pouzdani naziv hosta",
+        "confirm": "Jeste li sigurni da želite ukloniti ovaj pouzdani naziv hosta? To može uzrokovati prestanak rada nekih integracija.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Naziv hosta je uklonjen",
+            "message": "Naziv hosta uspješno je uklonjen"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Naziv hosta nije uklonjen",
+            "message": "Naziv hosta nije moguće ukloniti"
           }
         }
       }
@@ -6486,10 +6486,10 @@
   "log": {
     "level": {
       "option": {
-        "debug": "",
-        "info": "",
-        "warn": "",
-        "error": ""
+        "debug": "Otklanj.",
+        "info": "Info",
+        "warn": "Upoz.",
+        "error": "Pogreška"
       }
     }
   },
