@@ -41,6 +41,22 @@ describe("mergeHeadersWithUserAgent", () => {
     expect(merged.get("user-agent")).toContain("Homarr/");
   });
 
+  test("should keep existing headers when given a tuple array", () => {
+    // Arrange
+    const headers: [string, string][] = [
+      ["x-api-key", "some-api-key"],
+      ["Accept", "application/json"],
+    ];
+
+    // Act
+    const merged = mergeHeadersWithUserAgent(headers);
+
+    // Assert
+    expect(merged.get("x-api-key")).toBe("some-api-key");
+    expect(merged.get("accept")).toBe("application/json");
+    expect(merged.get("user-agent")).toContain("Homarr/");
+  });
+
   test("should not override an existing user-agent in any casing", () => {
     // Arrange
     const headers = new Headers({ "USER-AGENT": "custom-agent" });
@@ -88,14 +104,17 @@ describe("fetchWithTrustedCertificatesAsync", () => {
     const headers = new Headers({ "x-api-key": "immich-api-key", Accept: "application/json" });
 
     // Act
-    const response = await fetchWithTrustedCertificatesAsync(`http://127.0.0.1:${port}/api/server/statistics`, {
-      headers: headers as unknown as RequestInit["headers"],
-    });
-    server.close();
+    try {
+      const response = await fetchWithTrustedCertificatesAsync(`http://127.0.0.1:${port}/api/server/statistics`, {
+        headers: headers as unknown as RequestInit["headers"],
+      });
 
-    // Assert
-    expect(response.status).toBe(200);
-    expect(getReceivedHeaders()["x-api-key"]).toBe("immich-api-key");
-    expect(getReceivedHeaders()["user-agent"]).toContain("Homarr/");
+      // Assert
+      expect(response.status).toBe(200);
+      expect(getReceivedHeaders()["x-api-key"]).toBe("immich-api-key");
+      expect(getReceivedHeaders()["user-agent"]).toContain("Homarr/");
+    } finally {
+      server.close();
+    }
   });
 });

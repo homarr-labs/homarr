@@ -25,13 +25,15 @@ describe("real @immich/sdk end-to-end through fetchWithTrustedCertificatesAsync"
     const port = (server.address() as AddressInfo).port;
 
     init({ baseUrl: `http://127.0.0.1:${port}/api`, apiKey: "sdk-configured-key" });
-    const stats = await getServerStatistics({
-      fetch: fetchWithTrustedCertificatesAsync as unknown as typeof fetch,
-    });
+    try {
+      const stats = await getServerStatistics({
+        fetch: fetchWithTrustedCertificatesAsync as unknown as typeof fetch,
+      });
 
-    server.close();
-
-    expect(receivedXApiKey).toBe("sdk-configured-key");
-    expect(stats).toMatchObject({ usage: 1000, photos: 5, videos: 2 });
+      expect(receivedXApiKey).toBe("sdk-configured-key");
+      expect(stats).toMatchObject({ usage: 1000, photos: 5, videos: 2 });
+    } finally {
+      server.close();
+    }
   });
 });
