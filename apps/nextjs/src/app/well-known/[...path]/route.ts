@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 
-import { extractBaseUrlFromHeaders } from "@homarr/common";
+import { getMcpBaseUrl } from "~/app/api/mcp/_base-url";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -8,14 +8,16 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "*",
 };
 
-export async function GET(_req: NextRequest, props: { params: Promise<{ path: string[] }> }) {
+export async function GET(req: NextRequest, props: { params: Promise<{ path: string[] }> }) {
   const [kind, ...rest] = (await props.params).path;
-  const baseUrl = extractBaseUrlFromHeaders(_req.headers);
+  const baseUrl = getMcpBaseUrl(req.headers);
+  const identifierPath = rest.join("/");
+  const identifier = identifierPath ? `${baseUrl}/${identifierPath}` : baseUrl;
 
   if (kind === "oauth-authorization-server") {
     return Response.json(
       {
-        issuer: baseUrl,
+        issuer: identifier,
         authorization_endpoint: `${baseUrl}/api/mcp/oauth/authorize`,
         token_endpoint: `${baseUrl}/api/mcp/oauth/token`,
         registration_endpoint: `${baseUrl}/api/mcp/oauth/register`,
@@ -30,10 +32,9 @@ export async function GET(_req: NextRequest, props: { params: Promise<{ path: st
   }
 
   if (kind === "oauth-protected-resource") {
-    const resourcePath = rest.join("/");
     return Response.json(
       {
-        resource: resourcePath ? `${baseUrl}/${resourcePath}` : baseUrl,
+        resource: identifier,
         authorization_servers: [baseUrl],
       },
       { headers: corsHeaders },

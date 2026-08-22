@@ -67,7 +67,10 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       { source: "/.well-known/:path*", destination: "/well-known/:path*" },
-      { source: "/api/mcp/:transport/.well-known/:path*", destination: "/well-known/:path*" },
+      {
+        source: "/api/mcp/:transport/.well-known/:path*",
+        destination: "/well-known/:path*/api/mcp/:transport",
+      },
     ];
   },
 
