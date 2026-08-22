@@ -25,7 +25,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { constructBoardPermissions } from "@homarr/auth/shared";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { Link, UserAvatar } from "@homarr/ui";
 
 import { BoardLayoutThumbnail } from "~/components/board/board-layout-thumbnail";
@@ -36,7 +36,7 @@ import { BoardCardMenuDropdown } from "./_components/board-card-menu-dropdown";
 import { CreateBoardButton } from "./_components/create-board-button";
 
 export default async function ManageBoardsPage() {
-  const t = await getScopedI18n("management.page.board");
+  const t = await getI18n("management.page.board");
   const session = await auth();
   const boards = await api.board.getManageOverview();
   const canCreateBoards = session?.user.permissions.includes("board-create");

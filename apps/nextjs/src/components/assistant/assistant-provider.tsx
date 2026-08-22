@@ -7,11 +7,19 @@ import type {
   AttachmentAdapter,
   MessageFormatAdapter,
   RemoteThreadListAdapter,
+  SpeechSynthesisAdapter,
   ThreadHistoryAdapter,
   ThreadMessage,
   Toolkit,
 } from "@assistant-ui/react";
-import { defineToolkit, useAui, useAuiEvent, useAuiState, useRemoteThreadListRuntime } from "@assistant-ui/react";
+import {
+  defineToolkit,
+  useAui,
+  useAuiEvent,
+  useAuiState,
+  useRemoteThreadListRuntime,
+  WebSpeechSynthesisAdapter,
+} from "@assistant-ui/react";
 import { useChat } from "@ai-sdk/react";
 import { AssistantChatTransport, useAISDKRuntime } from "@assistant-ui/react-ai-sdk";
 import { useHotkeys } from "@mantine/hooks";
@@ -22,7 +30,7 @@ import { createId } from "@homarr/common";
 import { assistantHomarrProviderTokenHeader, hotkeys } from "@homarr/definitions";
 import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
 import { closeSpotlight } from "@homarr/spotlight/store";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { openMediaRequestSearch, openSpotlight, useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { AssistantWidgetRendererProvider } from "@homarr/widgets";
 import { createWorkshopClient } from "~/components/workshop/workshop-client";
@@ -41,7 +49,8 @@ import type { AssistantReasoningMode, AssistantRuntimeModelOption } from "./assi
 import { resolveAssistantPreferenceModelId, resolveAssistantThreadPreferenceModelId } from "./assistant-preferences";
 import { assistantAiSdkRuntimeOptions } from "./assistant-runtime-options";
 import {
-  AssistantComposerSurfaceProvider,
+  AssistantComposerRuntimeProvider,
+  AssistantComposerSurfaceBoundary,
   AssistantRunFocusPreserver,
   AssistantRuntimeProviderWithTools,
 } from "./assistant-runtime-provider";
@@ -126,7 +135,7 @@ const createAssistantAttachmentAdapter = (allowImages: boolean): AttachmentAdapt
 };
 
 const AssistantPreferencesProvider = ({ children }: PropsWithChildren) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const { data, isLoading } = clientApi.assistant.getRuntimeOptions.useQuery(undefined, {
     staleTime: 10 * 60_000,
   });
@@ -445,7 +454,7 @@ const createHistoryAdapter = (threadId: string | undefined): ThreadHistoryAdapte
 });
 
 const AssistantThreadRuntime = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const aui = useAui();
   const localThreadId = useAuiState((state) => state.threadListItem.id);
   const threadId = useAuiState((state) => state.threadListItem.remoteId);
@@ -475,6 +484,12 @@ const AssistantThreadRuntime = () => {
       ),
     [selectedModel],
   );
+  const [speech, setSpeech] = useState<SpeechSynthesisAdapter>();
+  useEffect(() => {
+    if ("speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined") {
+      setSpeech(new WebSpeechSynthesisAdapter());
+    }
+  }, []);
   const feedback = useMemo(
     () => ({
       submit: ({ message, type }: { message: ThreadMessage; type: "positive" | "negative" }) => {
@@ -512,6 +527,7 @@ const AssistantThreadRuntime = () => {
       history,
       attachments,
       feedback,
+      speech,
     },
   });
   transport.setRuntime(runtime);
@@ -636,7 +652,7 @@ const AssistantPreferenceSync = () => {
 };
 
 const AssistantRuntimeEvents = () => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   useAuiEvent("composer.attachmentAddError", ({ message }) => {
     showErrorNotification({
       title: t("attachments.errorTitle"),
@@ -663,10 +679,11 @@ const getNotificationKey = (message: ThreadMessage | undefined) => {
 };
 
 const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
   const [opened, setOpened] = useState(false);
   const [activityDismissed, setActivityDismissed] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [visibleWidgetIds, setVisibleWidgetIds] = useState<Set<string>>(() => new Set());
   const [queuedPrompt, setQueuedPrompt] = useState<string | null>(null);
   const aui = useAui();
   const preferences = useAssistantPreferences();
@@ -714,6 +731,21 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
     setOpened(true);
   }, [markRead]);
   const close = useCallback(() => setOpened(false), []);
+  const setWidgetVisible = useCallback((widgetId: string, visible: boolean) => {
+    setVisibleWidgetIds((current) => {
+      if (current.has(widgetId) === visible) return current;
+      const next = new Set(current);
+      if (visible) next.add(widgetId);
+      else next.delete(widgetId);
+      return next;
+    });
+  }, []);
+  const activateWidget = useCallback((widgetId: string) => {
+    setVisibleWidgetIds((current) => {
+      if (!current.has(widgetId) || current.values().next().value === widgetId) return current;
+      return new Set([widgetId, ...Array.from(current).filter((id) => id !== widgetId)]);
+    });
+  }, []);
   const toggle = useCallback(() => {
     if (opened) close();
     else open();
@@ -835,6 +867,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
   }, [assistantIsRunning, latestStatus?.type, providerUnavailable, sendPrompt, t]);
   useRegisterSpotlightContextResults("homarr-assistant", [spotlightItem], [spotlightItem]);
 
+  const activeWidgetId = visibleWidgetIds.values().next().value ?? null;
   const value = useMemo(
     () => ({
       enabled: true,
@@ -843,46 +876,67 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
       isRunning: assistantIsRunning,
       isRefreshing,
       unreadCount,
+      hasVisibleWidget: visibleWidgetIds.size > 0,
+      activeWidgetId,
       open,
       close,
       toggle,
       sendPrompt,
       refreshCurrentView,
+      setWidgetVisible,
+      activateWidget,
     }),
-    [assistantIsRunning, close, isRefreshing, open, opened, refreshCurrentView, sendPrompt, toggle, unreadCount],
+    [
+      assistantIsRunning,
+      activateWidget,
+      activeWidgetId,
+      close,
+      isRefreshing,
+      open,
+      opened,
+      refreshCurrentView,
+      sendPrompt,
+      setWidgetVisible,
+      toggle,
+      unreadCount,
+      visibleWidgetIds.size,
+    ],
   );
 
   return (
     <AssistantAutoApprovalProvider conversationId={conversationId}>
       <AssistantContext.Provider value={value}>
-        <AssistantWidgetRendererProvider renderer={AssistantBoardWidget}>{children}</AssistantWidgetRendererProvider>
-        <AssistantComposerSurfaceProvider surfaceId="floating-panel">
-          <AssistantPanel
-            opened={opened}
-            onOpen={open}
-            onClose={close}
-            onDismissActivity={() => {
-              markRead();
-              setActivityDismissed(true);
-            }}
-            activityDismissed={activityDismissed}
-            isRunning={assistantIsRunning}
-            unreadCount={unreadCount}
-            latestAssistantText={latestAssistantText}
-            latestAssistantPartType={latestAssistantPartType}
-            latestUserText={queuedPrompt ?? latestUserText}
-            latestStatus={latestStatus}
-            pendingAction={pendingAction}
-            modelId={preferences.modelId}
-            models={preferences.models}
-            modelOptionsLoading={preferences.isLoading}
-            reasoning={preferences.reasoning}
-            isRefreshing={isRefreshing}
-            onRefresh={refreshCurrentView}
-            onModelChange={selectModel}
-            onReasoningChange={preferences.setReasoning}
-          />
-        </AssistantComposerSurfaceProvider>
+        <AssistantComposerRuntimeProvider>
+          <AssistantWidgetRendererProvider renderer={AssistantBoardWidget}>{children}</AssistantWidgetRendererProvider>
+          <AssistantComposerSurfaceBoundary surfaceId="assistant-panel">
+            <AssistantPanel
+              opened={opened}
+              onOpen={open}
+              onClose={close}
+              onDismissActivity={() => {
+                markRead();
+                setActivityDismissed(true);
+              }}
+              activityDismissed={activityDismissed}
+              hasVisibleWidget={visibleWidgetIds.size > 0}
+              isRunning={assistantIsRunning}
+              unreadCount={unreadCount}
+              latestAssistantText={latestAssistantText}
+              latestAssistantPartType={latestAssistantPartType}
+              latestUserText={queuedPrompt ?? latestUserText}
+              latestStatus={latestStatus}
+              pendingAction={pendingAction}
+              modelId={preferences.modelId}
+              models={preferences.models}
+              modelOptionsLoading={preferences.isLoading}
+              reasoning={preferences.reasoning}
+              isRefreshing={isRefreshing}
+              onRefresh={refreshCurrentView}
+              onModelChange={selectModel}
+              onReasoningChange={preferences.setReasoning}
+            />
+          </AssistantComposerSurfaceBoundary>
+        </AssistantComposerRuntimeProvider>
       </AssistantContext.Provider>
     </AssistantAutoApprovalProvider>
   );

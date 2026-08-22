@@ -14,7 +14,7 @@ import { useSession } from "@homarr/auth/client";
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { AddBoardModal, AddGroupModal, InviteCreateModal } from "@homarr/modals-collection";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
@@ -48,7 +48,7 @@ export const globalCommandGroup = createGroup<Command>({
     return option.name.toLowerCase().includes(query.toLowerCase());
   },
   useOptions() {
-    const tOption = useScopedI18n("search.mode.command.group.globalCommand.option");
+    const tOption = useI18n("search.mode.command.group.globalCommand.option");
     const { data: session } = useSession();
     const pathname = usePathname();
     const router = useRouter();

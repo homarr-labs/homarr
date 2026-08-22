@@ -2,7 +2,7 @@ import { Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine
 
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { getPermissionsWithChildren } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { AccessQueryData } from "./access-settings";
 import { AccessDisplayRow } from "./access-table-rows";
@@ -19,7 +19,7 @@ export const InheritAccessTable = <TPermission extends string>({
   mapPermissions,
   fullAccessGroupPermission,
 }: InheritTableProps<TPermission>) => {
-  const tPermissions = useScopedI18n("permission");
+  const tPermissions = useI18n("permission");
   return (
     <Stack pt="sm">
       <Table>

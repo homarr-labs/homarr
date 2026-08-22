@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useImperativeHandle, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, Anchor, Button, ButtonGroup, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
 import { IconInfoCircle, IconPencil, IconPlus, IconUnlink } from "@tabler/icons-react";
@@ -10,7 +10,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { getAllSecretKindOptions, getDefaultSecretKinds } from "@homarr/definitions";
+import { getAllSecretKindOptions, getDefaultSecretKinds, invariantTechnicalLabels } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
@@ -27,8 +27,14 @@ import type { AnyMappedTestConnectionError } from "../../_components/test-connec
 
 interface EditIntegrationFormProps {
   integration: RouterOutputs["integration"]["byId"];
-  embedded?: boolean;
+  hideButtons?: boolean;
   onSuccess?: () => void;
+  formRef?: React.Ref<EditIntegrationFormHandle>;
+}
+
+export interface EditIntegrationFormHandle {
+  submit: () => Promise<boolean>;
+  isDirty: () => boolean;
 }
 
 const formSchema = integrationUpdateSchema.omit({ id: true, appId: true }).and(
@@ -44,8 +50,14 @@ const formSchema = integrationUpdateSchema.omit({ id: true, appId: true }).and(
   }),
 );
 
-export const EditIntegrationForm = ({ integration, embedded = false, onSuccess }: EditIntegrationFormProps) => {
-  const t = useI18n();
+export const EditIntegrationForm = ({
+  integration,
+  hideButtons = false,
+  onSuccess,
+  formRef,
+}: EditIntegrationFormProps) => {
+  const tCommon = useI18n("common");
+  const tIntegration = useI18n("integration");
   const { openConfirmModal } = useConfirmModal();
   const allSecretKinds = getAllSecretKindOptions(integration.kind);
 
@@ -72,8 +84,8 @@ export const EditIntegrationForm = ({ integration, embedded = false, onSuccess }
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation({
     onError() {
       showErrorNotification({
-        title: t("integration.page.edit.notification.error.title"),
-        message: t("integration.page.edit.notification.error.message"),
+        title: tCommon("notification.update.error"),
+        message: tIntegration("page.edit.notification.error.message"),
       });
     },
   });
@@ -82,147 +94,183 @@ export const EditIntegrationForm = ({ integration, embedded = false, onSuccess }
 
   const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
 
-  const handleSubmitAsync = async ({ app, ...values }: FormType) => {
-    setError(null);
-    let url: string;
-    try {
-      url = hasUrlSecret
-        ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
-        : values.url;
-    } catch {
-      showErrorNotification({
-        title: t("integration.page.edit.notification.error.title"),
-        message: t("integration.page.edit.notification.error.message"),
+  const handleSubmitAsync = useCallback(
+    async ({ app, ...values }: FormType) => {
+      setError(null);
+      let url: string;
+      try {
+        url = hasUrlSecret
+          ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
+          : values.url;
+      } catch {
+        showErrorNotification({
+          title: tCommon("notification.update.error"),
+          message: tIntegration("page.edit.notification.error.message"),
+        });
+        return false;
+      }
+
+      const data = await mutateAsync({
+        id: integration.id,
+        ...values,
+        url,
+        secrets: values.secrets.map((secret) => ({
+          kind: secret.kind,
+          value: secret.value === "" ? null : secret.value,
+        })),
+        appId: app?.id ?? null,
       });
-      return;
-    }
 
-    const data = await mutateAsync({
-      id: integration.id,
-      ...values,
-      url,
-      secrets: values.secrets.map((secret) => ({
-        kind: secret.kind,
-        value: secret.value === "" ? null : secret.value,
-      })),
-      appId: app?.id ?? null,
-    });
+      // We do it this way as we are unable to send a typesafe error through onError
+      if (data?.error) {
+        setError(data.error);
+        showErrorNotification({
+          title: tCommon("notification.update.error"),
+          message: tIntegration("page.edit.notification.error.message"),
+        });
+        requestAnimationFrame(() => errorRef.current?.focus());
+        return false;
+      }
 
-    // We do it this way as we are unable to send a typesafe error through onError
-    if (data?.error) {
-      setError(data.error);
-      showErrorNotification({
-        title: t("integration.page.edit.notification.error.title"),
-        message: t("integration.page.edit.notification.error.message"),
+      showSuccessNotification({
+        title: tCommon("notification.update.success"),
+        message: tIntegration("page.edit.notification.success.message"),
       });
-      requestAnimationFrame(() => errorRef.current?.focus());
-      return;
-    }
+      void Promise.allSettled([utils.integration.invalidate(), utils.widget.invalidate()]);
+      onSuccess?.();
+      if (!hideButtons) {
+        void revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
+      }
+      return true;
+    },
+    [
+      hasUrlSecret,
+      hideButtons,
+      integration.id,
+      mutateAsync,
+      onSuccess,
+      router,
+      tCommon,
+      tIntegration,
+      utils.integration,
+      utils.widget,
+    ],
+  );
 
-    showSuccessNotification({
-      title: t("integration.page.edit.notification.success.title"),
-      message: t("integration.page.edit.notification.success.message"),
-    });
-    void Promise.allSettled([utils.integration.invalidate(), utils.widget.invalidate()]);
-    onSuccess?.();
-    if (!embedded) {
-      void revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
-    }
-  };
+  useImperativeHandle(
+    formRef,
+    () => ({
+      submit: () =>
+        new Promise<boolean>((resolve) => {
+          form.onSubmit(
+            async (values) => {
+              try {
+                resolve(await handleSubmitAsync(values));
+              } catch {
+                resolve(false);
+              }
+            },
+            () => resolve(false),
+          )();
+        }),
+      isDirty: () => form.isDirty(),
+    }),
+    [form, handleSubmitAsync],
+  );
 
   const isInitialSecretKinds =
     initialSecretsKinds.every((kind) => form.values.secrets.some((secret) => secret.kind === kind)) &&
     form.values.secrets.length === initialSecretsKinds.length;
 
-  return (
-    <form onSubmit={form.onSubmit(async (values) => await handleSubmitAsync(values))}>
-      <Stack>
-        <TextInput withAsterisk label={t("integration.field.name.label")} {...form.getInputProps("name")} />
+  const formFields = (
+    <Stack>
+      <TextInput withAsterisk label={tCommon("field.name")} {...form.getInputProps("name")} />
 
-        {hasUrlSecret ? null : (
-          <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
-        )}
+      {hasUrlSecret ? null : (
+        <TextInput withAsterisk label={invariantTechnicalLabels.url} {...form.getInputProps("url")} />
+      )}
 
-        <Fieldset legend={t("integration.secrets.title")}>
-          <Stack gap="sm">
-            {allSecretKinds.length > 1 && (
-              <SecretKindsSegmentedControl
-                defaultKinds={initialSecretsKinds}
-                secretKinds={allSecretKinds}
-                form={form}
-              />
-            )}
-            {!isInitialSecretKinds
-              ? null
-              : form.values.secrets.map((secret, index) => (
-                  <SecretCard
-                    key={secret.kind}
-                    secret={secretsMap.get(secret.kind) ?? { kind: secret.kind, value: null, updatedAt: null }}
-                    onCancel={() =>
-                      new Promise((resolve) => {
-                        // When nothing changed, just close the secret card
-                        if ((secret.value ?? "") === (secretsMap.get(secret.kind)?.value ?? "")) {
-                          return resolve(true);
-                        }
-                        openConfirmModal({
-                          title: t("integration.secrets.reset.title"),
-                          children: t("integration.secrets.reset.message"),
-                          onCancel: () => resolve(false),
-                          onConfirm: () => {
-                            form.setFieldValue(`secrets.${index}.value`, secretsMap.get(secret.kind)?.value ?? "");
-                            resolve(true);
-                          },
-                        });
-                      })
-                    }
-                  >
-                    <IntegrationSecretInput
-                      label={t(`integration.secrets.kind.${secret.kind}.newLabel`)}
-                      key={secret.kind}
-                      kind={secret.kind}
-                      {...form.getInputProps(`secrets.${index}.value`)}
-                    />
-                  </SecretCard>
-                ))}
-            {isInitialSecretKinds
-              ? null
-              : form.values.secrets.map(({ kind }, index) => (
+      <Fieldset legend={tIntegration("secrets.title")}>
+        <Stack gap="sm">
+          {allSecretKinds.length > 1 && (
+            <SecretKindsSegmentedControl defaultKinds={initialSecretsKinds} secretKinds={allSecretKinds} form={form} />
+          )}
+          {!isInitialSecretKinds
+            ? null
+            : form.values.secrets.map((secret, index) => (
+                <SecretCard
+                  key={secret.kind}
+                  secret={secretsMap.get(secret.kind) ?? { kind: secret.kind, value: null, updatedAt: null }}
+                  onCancel={() =>
+                    new Promise((resolve) => {
+                      // When nothing changed, just close the secret card
+                      if ((secret.value ?? "") === (secretsMap.get(secret.kind)?.value ?? "")) {
+                        return resolve(true);
+                      }
+                      openConfirmModal({
+                        title: tIntegration("secrets.reset.title"),
+                        children: tIntegration("secrets.reset.message"),
+                        onCancel: () => resolve(false),
+                        onConfirm: () => {
+                          form.setFieldValue(`secrets.${index}.value`, secretsMap.get(secret.kind)?.value ?? "");
+                          resolve(true);
+                        },
+                      });
+                    })
+                  }
+                >
                   <IntegrationSecretInput
-                    withAsterisk
-                    key={kind}
-                    kind={kind}
+                    label={tIntegration(`secrets.kind.${secret.kind}.newLabel` as never)}
+                    key={secret.kind}
+                    kind={secret.kind}
                     {...form.getInputProps(`secrets.${index}.value`)}
                   />
-                ))}
-            {form.values.secrets.length === 0 && (
-              <Alert icon={<IconInfoCircle size={"1rem"} />} color={"blue"}>
-                <Text c={"blue"}>{t("integration.secrets.noSecretsRequired.text")}</Text>
-              </Alert>
-            )}
-          </Stack>
-        </Fieldset>
-
-        <IntegrationLinkApp value={form.values.app} onChange={(app) => form.setFieldValue("app", app)} />
-
-        {error !== null && (
-          <div ref={errorRef} role="alert" tabIndex={-1}>
-            <IntegrationTestConnectionError error={error} url={form.values.url} />
-          </div>
-        )}
-
-        <Group justify="end" align="center">
-          {!embedded && (
-            <Button variant="default" component={Link} href="/manage/integrations">
-              {t("common.action.backToOverview")}
-            </Button>
+                </SecretCard>
+              ))}
+          {isInitialSecretKinds
+            ? null
+            : form.values.secrets.map(({ kind }, index) => (
+                <IntegrationSecretInput
+                  withAsterisk
+                  key={kind}
+                  kind={kind}
+                  {...form.getInputProps(`secrets.${index}.value`)}
+                />
+              ))}
+          {form.values.secrets.length === 0 && (
+            <Alert icon={<IconInfoCircle size={"1rem"} />} color={"blue"}>
+              <Text c={"blue"}>{tIntegration("secrets.noSecretsRequired.text")}</Text>
+            </Alert>
           )}
+        </Stack>
+      </Fieldset>
+
+      <IntegrationLinkApp value={form.values.app} onChange={(app) => form.setFieldValue("app", app)} />
+
+      {error !== null && (
+        <div ref={errorRef} role="alert" tabIndex={-1}>
+          <IntegrationTestConnectionError error={error} url={form.values.url} />
+        </div>
+      )}
+
+      {!hideButtons && (
+        <Group justify="end" align="center">
+          <Button variant="default" component={Link} href="/manage/integrations">
+            {tCommon("action.backToOverview")}
+          </Button>
           <Button type="submit" loading={isPending}>
-            {t("integration.testConnection.action.edit")}
+            {tIntegration("testConnection.action.edit")}
           </Button>
         </Group>
-      </Stack>
-    </form>
+      )}
+    </Stack>
   );
+
+  if (hideButtons) {
+    return formFields;
+  }
+
+  return <form onSubmit={form.onSubmit(async (values) => await handleSubmitAsync(values))}>{formFields}</form>;
 };
 
 type FormType = z.infer<typeof formSchema>;
@@ -234,7 +282,8 @@ interface IntegrationAppSelectProps {
 
 const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
   const { openModal } = useModalAction(AppSelectModal);
-  const t = useI18n();
+  const tIntegration = useI18n("integration");
+  const tCommon = useI18n("common");
   const { data: session } = useSession();
   const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
 
@@ -245,7 +294,7 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
         withCreate: canCreateApps,
       },
       {
-        title: t("integration.page.edit.app.action.select"),
+        title: tIntegration("page.edit.app.action.select"),
       },
     );
 
@@ -258,13 +307,13 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
         fullWidth
         onClick={handleChange}
       >
-        {t("integration.page.edit.app.action.add")}
+        {tIntegration("page.edit.app.action.add")}
       </Button>
     );
   }
 
   return (
-    <Fieldset legend={t("integration.field.app.sectionTitle")}>
+    <Fieldset legend={tIntegration("field.app.sectionTitle")}>
       <Group justify="space-between">
         <Group gap="sm">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -287,7 +336,7 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
             leftSection={<IconUnlink size={16} stroke={1.5} />}
             onClick={() => onChange(null)}
           >
-            {t("integration.page.edit.app.action.remove")}
+            {tIntegration("page.edit.app.action.remove")}
           </Button>
           <Button
             variant="subtle"
@@ -295,7 +344,7 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
             leftSection={<IconPencil size={16} stroke={1.5} />}
             onClick={handleChange}
           >
-            {t("common.action.change")}
+            {tCommon("action.change")}
           </Button>
         </ButtonGroup>
       </Group>

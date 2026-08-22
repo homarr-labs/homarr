@@ -19,7 +19,7 @@ export const BoardAccessSettings = ({ board, initialPermissions }: Props) => {
   const groupMutation = clientApi.board.saveGroupBoardPermissions.useMutation();
   const userMutation = clientApi.board.saveUserBoardPermissions.useMutation();
   const utils = clientApi.useUtils();
-  const t = useI18n();
+  const tBoard = useI18n("board");
 
   const { data: permissions } = clientApi.board.getBoardPermissions.useQuery(
     {
@@ -52,7 +52,7 @@ export const BoardAccessSettings = ({ board, initialPermissions }: Props) => {
         mutate: userMutation.mutate,
         isPending: userMutation.isPending,
       }}
-      translate={(key) => t(`board.setting.section.access.permission.item.${key}.label`)}
+      translate={(key) => tBoard(`setting.section.access.permission.item.${key}.label` as never)}
       permission={{
         items: boardPermissions,
         default: "view",

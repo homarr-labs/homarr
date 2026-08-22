@@ -5,7 +5,7 @@ import { ActionIcon, Box, Group, Image, Modal, Paper, Tooltip, UnstyledButton } 
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronLeft, IconChevronRight, IconZoomIn } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { WorkshopBackend } from "@homarr/workshop/backend";
 
 interface WorkshopScreenshotsProps {
@@ -20,7 +20,7 @@ interface WorkshopScreenshotsProps {
  * click-to-zoom lightbox, so people can actually see what they are installing.
  */
 export function WorkshopScreenshots({ client, submissionId, title, screenshots }: WorkshopScreenshotsProps) {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
   const [index, setIndex] = useState(0);
   const [zoomOpened, zoomControls] = useDisclosure(false);
 

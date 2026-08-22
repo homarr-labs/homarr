@@ -10,7 +10,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { boardSaveLayoutsSchema, boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
@@ -86,8 +86,8 @@ interface BoardSettingsFormProps {
 }
 
 export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisibility }: BoardSettingsFormProps) => {
-  const t = useI18n();
-  const tSection = useScopedI18n("board.setting.section");
+  const t = useI18n("common");
+  const tSection = useI18n("board.setting.section");
   const { updateBoard } = useUpdateBoard();
   const savePartialSettings = useSavePartialSettingsMutation(board);
   const saveLayouts = useSaveLayoutsMutation(board);
@@ -156,14 +156,14 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
       form.resetDirty(canonicalValues);
       await revalidatePathActionAsync(`/boards/${board.name}/settings`);
       showSuccessNotification({
-        title: t("common.notification.update.success"),
-        message: t("common.notification.update.success"),
+        title: t("notification.update.success"),
+        message: t("notification.update.success"),
       });
       return canonicalValues;
     } catch {
       showErrorNotification({
-        title: t("common.notification.update.error"),
-        message: t("common.notification.update.error"),
+        title: t("notification.update.error"),
+        message: t("notification.update.error"),
       });
       return null;
     }
@@ -200,10 +200,10 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
           {form.isDirty() && (
             <UnsavedChangesBar>
               <Button type="button" disabled={isPending} variant="default" onClick={handleDiscard}>
-                {t("common.action.discard")}
+                {t("action.discard")}
               </Button>
               <Button loading={isPending} type="submit" disabled={!form.isValid()}>
-                {t("common.action.saveChanges")}
+                {t("action.saveChanges")}
               </Button>
             </UnsavedChangesBar>
           )}

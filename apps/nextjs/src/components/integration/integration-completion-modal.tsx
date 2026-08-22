@@ -9,7 +9,7 @@ import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
 import type { IntegrationKind } from "@homarr/definitions";
-import { getIntegrationName, getWidgetKindsForIntegration } from "@homarr/definitions";
+import { getIntegrationName, getWidgetKindsForIntegration, getWidgetName } from "@homarr/definitions";
 import { createModal, modalSizeForm, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 
@@ -27,6 +27,8 @@ interface IntegrationCompletionModalProps {
 }
 
 export const IntegrationCompletionModal = createModal<IntegrationCompletionModalProps>(({ actions, innerProps }) => {
+  const tIntegration = useI18n("integration");
+  const tCommon = useI18n("common");
   const t = useI18n();
   const board = useOptionalBoard();
   const { data: session } = useSession();
@@ -88,10 +90,10 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
         </ThemeIcon>
         <Stack gap={2}>
           <Title order={3} size="h4">
-            {t("integration.completion.title", { name: innerProps.result.integration.name })}
+            {tIntegration("completion.title", { name: innerProps.result.integration.name })}
           </Title>
           <Text c="dimmed" size="sm">
-            {t("integration.completion.description")}
+            {tIntegration("completion.description")}
           </Text>
         </Stack>
       </Group>
@@ -107,14 +109,14 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
         <List.Item>
           <Group gap="xs">
             <IconPlugConnected size={17} />
-            <Text size="sm">{t("integration.completion.connectionReady")}</Text>
+            <Text size="sm">{tIntegration("completion.connectionReady")}</Text>
           </Group>
         </List.Item>
         {innerProps.result.appId && (
           <List.Item>
             <Group gap="xs">
               <IconAppWindow size={17} />
-              <Text size="sm">{t("integration.completion.appReady")}</Text>
+              <Text size="sm">{tIntegration("completion.appReady")}</Text>
             </Group>
           </List.Item>
         )}
@@ -122,7 +124,7 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
           <Group gap="xs">
             <IconLayoutDashboard size={17} />
             <Text size="sm">
-              {t("integration.completion.compatibleWidgets", { count: String(compatibleWidgets.length) })}
+              {tIntegration("completion.compatibleWidgets", { count: String(compatibleWidgets.length) })}
             </Text>
           </Group>
         </List.Item>
@@ -134,17 +136,17 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
           <Group justify="space-between" wrap="nowrap">
             <div>
               <Text fw={600} size="sm">
-                {t("integration.completion.recipes.title")}
+                {tIntegration("completion.recipes.title")}
               </Text>
               <Text c="dimmed" size="xs">
-                {t("integration.completion.recipes.description")}
+                {tIntegration("completion.recipes.description")}
               </Text>
             </div>
-            <Tooltip label={t("integration.completion.recipes.dismiss")}>
+            <Tooltip label={tIntegration("completion.recipes.dismiss")}>
               <ActionIcon
                 variant="subtle"
                 color="gray"
-                aria-label={t("integration.completion.recipes.dismiss")}
+                aria-label={tIntegration("completion.recipes.dismiss")}
                 onClick={() => setRecommendationsDismissed(true)}
               >
                 <IconX size={16} />
@@ -155,13 +157,13 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
             <Group key={recommendation.widgetKind} justify="space-between" wrap="nowrap" gap="sm">
               <Stack gap={0} style={{ minWidth: 0 }}>
                 <Text size="sm" fw={500} truncate>
-                  {t(`widget.${recommendation.widgetKind}.name`)}
+                  {getWidgetName(recommendation.widgetKind, t)}
                 </Text>
                 <Text c="dimmed" size="xs" truncate>
-                  {t(
+                  {tIntegration(
                     recommendation.isNewlyAvailable
-                      ? "integration.completion.recipes.newConnectionReason"
-                      : "integration.completion.recipes.existingConnectionReason",
+                      ? "completion.recipes.newConnectionReason"
+                      : "completion.recipes.existingConnectionReason",
                     {
                       integration: recommendation.isNewlyAvailable
                         ? innerProps.result.integration.name
@@ -171,7 +173,7 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
                 </Text>
               </Stack>
               <Button variant="light" size="compact-xs" onClick={() => addRecommendedWidget(recommendation.widgetKind)}>
-                {t("integration.completion.recipes.add")}
+                {tCommon("action.add")}
               </Button>
             </Group>
           ))}
@@ -180,10 +182,10 @@ export const IntegrationCompletionModal = createModal<IntegrationCompletionModal
 
       <Group justify="end">
         <Button variant="default" onClick={actions.closeModal}>
-          {t("common.action.close")}
+          {tCommon("action.close")}
         </Button>
         {innerProps.boardId && compatibleWidgets.length > 0 && (
-          <Button onClick={addWidget}>{t("integration.completion.chooseWidget")}</Button>
+          <Button onClick={addWidget}>{tIntegration("completion.chooseWidget")}</Button>
         )}
       </Group>
     </Stack>

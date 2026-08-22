@@ -23,7 +23,7 @@ import { getQueryKey } from "@trpc/react-query";
 
 import { clientApi } from "@homarr/api/client";
 import type { MissingMediaItem, QueuedMediaItem } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -44,7 +44,7 @@ export default function MediaMissingWidget({
   displayMode,
   widgetRuntimeRef,
 }: WidgetComponentProps<"mediaMissing">) {
-  const t = useScopedI18n("widget.mediaMissing");
+  const t = useI18n("widget.mediaMissing");
   const isAdvanced = displayMode === "advanced";
   const showMissing = isAdvanced || options.showMissing;
   const showQueued = isAdvanced || options.showQueued;
@@ -181,12 +181,20 @@ export default function MediaMissingWidget({
       </Group>
       <Tabs.List grow>
         {showMissing && (
-          <Tabs.Tab value="missing" px={isThin ? 6 : undefined} leftSection={<IconQuestionMark size="var(--mantine-font-size-sm)" />}>
+          <Tabs.Tab
+            value="missing"
+            px={isThin ? 6 : undefined}
+            leftSection={<IconQuestionMark size="var(--mantine-font-size-sm)" />}
+          >
             {tabLabel(t("tab.missing"), missing.length, missingCount)}
           </Tabs.Tab>
         )}
         {showQueued && (
-          <Tabs.Tab value="queued" px={isThin ? 6 : undefined} leftSection={<IconDownload size="var(--mantine-font-size-sm)" />}>
+          <Tabs.Tab
+            value="queued"
+            px={isThin ? 6 : undefined}
+            leftSection={<IconDownload size="var(--mantine-font-size-sm)" />}
+          >
             {tabLabel(t("tab.queued"), queued.length, queuedCount)}
           </Tabs.Tab>
         )}
@@ -240,7 +248,7 @@ const episodeCode = (item: MissingMediaItem | QueuedMediaItem) =>
     : null;
 
 const TypeBadge = ({ item, density }: { item: MissingMediaItem | QueuedMediaItem; density: Density }) => {
-  const t = useScopedI18n("widget.mediaMissing");
+  const t = useI18n("widget.mediaMissing");
   const color = item.type === "movie" ? "yellow" : "blue";
   const code = episodeCode(item);
 

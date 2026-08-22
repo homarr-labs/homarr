@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Stack } from "@mantine/core";
 import { z } from "zod/v4";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
@@ -11,7 +12,7 @@ import { colorSchemes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { ServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 import { AnalyticsSettings } from "./analytics.settings";
@@ -58,11 +59,13 @@ const buildInitialValues = (initialData: ServerSettings): FormValues => ({
 
 interface SettingsFormProps {
   initialData: ServerSettings;
+  selectableBoards: RouterOutputs["board"]["getPublicBoards"];
+  selectableSearchEngines: RouterOutputs["searchEngine"]["getSelectable"];
 }
 
-export const SettingsForm = ({ initialData }: SettingsFormProps) => {
-  const t = useI18n();
-  const tSettings = useScopedI18n("management.page.settings");
+export const SettingsForm = ({ initialData, selectableBoards, selectableSearchEngines }: SettingsFormProps) => {
+  const tCommon = useI18n("common");
+  const tSettings = useI18n("management.page.settings");
 
   const initialValues = buildInitialValues(initialData);
   const initialValuesRef = useRef(initialValues);
@@ -78,7 +81,7 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
 
   const saveSettingsMutation = clientApi.serverSettings.saveSettings.useMutation({
     onError(error) {
-      showErrorNotification({ title: t("common.notification.update.error"), message: error.message });
+      showErrorNotification({ title: tCommon("notification.update.error"), message: error.message });
     },
   });
 
@@ -153,7 +156,7 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
       form.resetDirty();
       await revalidatePathActionAsync("/manage/settings");
       showSuccessNotification({
-        title: t("common.notification.update.success"),
+        title: tCommon("notification.update.success"),
         message: tSettings("notification.success.message"),
       });
     } finally {
@@ -169,21 +172,21 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
   return (
     <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
       <Stack gap="xl">
-        <AnalyticsSettings form={form} />
-        <CrawlingAndIndexingSettings form={form} />
-        <BoardSettingsForm form={form} />
+        <BoardSettingsForm form={form} selectableBoards={selectableBoards} />
         <UserSettingsForm form={form} />
-        <SearchSettingsForm form={form} />
+        <SearchSettingsForm form={form} selectableSearchEngines={selectableSearchEngines} />
         <AppearanceSettingsForm form={form} />
         <CultureSettingsForm form={form} />
+        <AnalyticsSettings form={form} />
+        <CrawlingAndIndexingSettings form={form} />
 
         {form.isDirty() && (
           <UnsavedChangesBar>
             <Button type="button" disabled={isSubmitting} variant="default" onClick={handleDiscard}>
-              {t("common.action.discard")}
+              {tCommon("action.discard")}
             </Button>
             <Button loading={isSubmitting} type="submit" disabled={!form.isValid()}>
-              {t("common.action.saveChanges")}
+              {tCommon("action.saveChanges")}
             </Button>
           </UnsavedChangesBar>
         )}

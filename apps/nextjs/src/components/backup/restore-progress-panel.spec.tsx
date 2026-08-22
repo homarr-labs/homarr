@@ -7,16 +7,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@homarr/translation/client", () => {
   const translations: Record<string, string> = {
-    "progress.title": "Restoring database...",
-    "progress.restarting": "Restarting server",
-    "timeout.title": "Server did not come back online",
-    "timeout.message": "Retry the connection check or refresh this page manually.",
-    tryAgain: "Try again",
-    "docker.action.refresh.label": "Refresh",
+    "management.page.tool.backup.restore.progress.title": "Restoring database...",
+    "management.page.tool.backup.restore.progress.restarting": "Restarting server",
+    "management.page.tool.backup.restore.timeout.title": "Server did not come back online",
+    "management.page.tool.backup.restore.timeout.message": "Retry the connection check or refresh this page manually.",
+    "common.action.tryAgain": "Try again",
+    "common.action.refresh": "Refresh",
   };
   return {
-    useScopedI18n: () => (key: string) => translations[key] ?? key,
-    useI18n: () => (key: string) => translations[key] ?? key,
+    useI18n: (namespace?: string) => (key: string) => {
+      const fullKey = namespace ? `${namespace}.${key}` : key;
+      return translations[fullKey] ?? key;
+    },
   };
 });
 

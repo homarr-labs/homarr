@@ -15,7 +15,7 @@ interface ModalProps {
 }
 
 export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps }) => {
-  const t = useI18n();
+  const tSection = useI18n("section");
   const theme = useMantineTheme();
   const form = useZodForm(containerSectionOptionsSchema.unwrap(), {
     mode: "controlled",
@@ -30,20 +30,20 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
       })}
     >
       <Stack>
-        <TextInput label={t("section.container.option.title.label")} data-autofocus {...form.getInputProps("title")} />
+        <TextInput label={tSection("container.option.title.label")} data-autofocus {...form.getInputProps("title")} />
         <Switch
-          label={t("section.option.showLabel.label")}
-          description={t("section.option.showLabel.description")}
+          label={tSection("option.showLabel.label")}
+          description={tSection("option.showLabel.description")}
           {...form.getInputProps("showLabel", { type: "checkbox" })}
         />
         <Switch
-          label={t("section.option.collapsible.label")}
-          description={t("section.option.collapsible.description")}
+          label={tSection("option.collapsible.label")}
+          description={tSection("option.collapsible.description")}
           {...form.getInputProps("collapsible", { type: "checkbox" })}
         />
         <Switch
-          label={t("section.option.showOpenAll.label")}
-          description={t("section.option.showOpenAll.description")}
+          label={tSection("option.showOpenAll.label")}
+          description={tSection("option.showOpenAll.description")}
           {...form.getInputProps("showOpenAll", { type: "checkbox" })}
         />
         <Switch
@@ -52,11 +52,11 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
           {...form.getInputProps("scrollable", { type: "checkbox" })}
         />
         <TextMultiSelect
-          label={t("section.container.option.customCssClasses.label")}
+          label={tSection("container.option.customCssClasses.label")}
           {...form.getInputProps("customCssClasses")}
         />
         <ColorInput
-          label={t("section.container.option.borderColor.label")}
+          label={tSection("container.option.borderColor.label")}
           format="hex"
           swatches={Object.values(theme.colors).map((color) => color[6])}
           rightSection={

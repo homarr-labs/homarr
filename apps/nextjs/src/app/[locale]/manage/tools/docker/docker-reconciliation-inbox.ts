@@ -1,3 +1,6 @@
+import type { DockerServiceMatch, DockerServicePort, UrlTemplateMode } from "@homarr/definitions";
+import { buildAppUrl, buildIntegrationUrl, getIntegrationDefaultPort } from "@homarr/definitions";
+
 export type DockerReconciliationInboxFilter = "attention" | "represented" | "all";
 
 interface DockerReconciliationInboxCandidate {
@@ -24,11 +27,28 @@ export const filterDockerReconciliationInbox = <Candidate extends DockerReconcil
 export const dismissDockerReconciliationCandidate = (dismissedCandidateKeys: string[], candidateKey: string) =>
   dismissedCandidateKeys.includes(candidateKey) ? dismissedCandidateKeys : [...dismissedCandidateKeys, candidateKey];
 
-export const getValidDockerServiceUrl = (value: string) => {
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null;
-  } catch {
-    return null;
+interface DockerTemplateCandidate {
+  container: {
+    name: string;
+    ports?: DockerServicePort[];
+  };
+  match: Pick<DockerServiceMatch, "kind"> | null;
+}
+
+export const getTemplateUrl = (candidate: DockerTemplateCandidate, serverOrigin: string, urlMode: UrlTemplateMode) => {
+  if (!serverOrigin.trim()) return "";
+
+  const tcpPorts = candidate.container.ports?.filter(({ Type }) => Type.toLowerCase() === "tcp") ?? [];
+  let publishedPort = tcpPorts.find(({ PublicPort }) => PublicPort)?.PublicPort;
+
+  if (candidate.match) {
+    const defaultPort = getIntegrationDefaultPort(candidate.match.kind);
+    const preferredPort = tcpPorts.find(
+      ({ PrivatePort, PublicPort }) => PrivatePort === defaultPort && PublicPort !== undefined,
+    );
+    publishedPort = preferredPort?.PublicPort ?? publishedPort;
+    return buildIntegrationUrl(candidate.match.kind, serverOrigin, urlMode, publishedPort);
   }
+
+  return buildAppUrl(candidate.container.name, serverOrigin, urlMode, publishedPort);
 };

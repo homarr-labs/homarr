@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { Container, Stack, Text, Title } from "@mantine/core";
 
 import { auth } from "@homarr/auth/next";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { CustomWidgetBetaBanner } from "../_beta-banner";
@@ -14,7 +14,7 @@ export default async function NewCustomWidgetPage() {
   if (!session || !session.user.permissions.includes("admin")) {
     redirect("/manage/custom-widgets");
   }
-  const t = await getScopedI18n("customWidget");
+  const t = await getI18n("customWidget");
 
   return (
     <>

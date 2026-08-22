@@ -7,7 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { UserSelectModal } from "~/components/access/user-select-modal";
 
@@ -20,8 +20,8 @@ interface TransferGroupOwnershipProps {
 }
 
 export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) => {
-  const tTransfer = useScopedI18n("group.action.transfer");
-  const tRoot = useI18n();
+  const tTransfer = useI18n("group.action.transfer");
+  const tCommon = useI18n("common");
   const [innerOwnerId, setInnerOwnerId] = useState(group.ownerId);
   const { openModal } = useModalAction(UserSelectModal);
   const { openConfirmModal } = useConfirmModal();
@@ -34,7 +34,7 @@ export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) =
   const handleTransfer = useCallback(() => {
     openModal(
       {
-        confirmLabel: tRoot("common.action.continue"),
+        confirmLabel: tCommon("action.continue"),
         presentUserIds: innerOwnerId ? [innerOwnerId] : [],
         onSelect: ({ id, name }) => {
           openConfirmModal({
@@ -54,7 +54,7 @@ export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) =
                   onSuccess() {
                     setInnerOwnerId(id);
                     showSuccessNotification({
-                      title: tRoot("common.notification.transfer.success"),
+                      title: tCommon("notification.transfer.success"),
                       message: tTransfer("notification.success.message", {
                         group: group.name,
                         user: name,
@@ -63,7 +63,7 @@ export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) =
                   },
                   onError() {
                     showErrorNotification({
-                      title: tRoot("common.notification.transfer.error"),
+                      title: tCommon("notification.transfer.error"),
                       message: tTransfer("notification.error.message"),
                     });
                   },
@@ -77,7 +77,7 @@ export const TransferGroupOwnership = ({ group }: TransferGroupOwnershipProps) =
         title: tTransfer("label"),
       },
     );
-  }, [group.id, group.name, innerOwnerId, mutateAsync, openConfirmModal, openModal, tRoot, tTransfer]);
+  }, [group.id, group.name, innerOwnerId, mutateAsync, openConfirmModal, openModal, tCommon, tTransfer]);
 
   const fullWidth = useMatches({
     xs: true,

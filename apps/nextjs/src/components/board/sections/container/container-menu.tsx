@@ -3,7 +3,7 @@ import { IconArrowsMove, IconLayoutKanban, IconPencil } from "@tabler/icons-reac
 
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { BoardRemoveConfirmationMenuItem } from "../../remove-confirmation-menu-item";
@@ -13,8 +13,8 @@ import { useContainerActions } from "./container-actions";
 import { ContainerEditModal } from "./container-edit-modal";
 
 export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem }) => {
-  const tContainer = useScopedI18n("section.container");
-  const tItem = useScopedI18n("item");
+  const tContainer = useI18n("section.container");
+  const tItem = useI18n("item");
   const { openModal } = useModalAction(ContainerEditModal);
   const openMoveModal = useOpenItemMoveModal();
   const { updateContainer, removeContainer } = useContainerActions();

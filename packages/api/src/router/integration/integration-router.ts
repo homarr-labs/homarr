@@ -1,12 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import type { Session } from "@homarr/auth";
 import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { Database } from "@homarr/db";
+import type { Database, SQL } from "@homarr/db";
 import { and, asc, eq, handleTransactionsAsync, inArray, like, or } from "@homarr/db";
 import {
   apps,
@@ -17,7 +18,7 @@ import {
   integrationSecrets,
   integrationUserPermissions,
 } from "@homarr/db/schema";
-import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { GroupPermissionKey, IntegrationPermission, IntegrationSecretKind } from "@homarr/definitions";
 import {
   getIntegrationKindsByCategory,
   getPermissionsWithParents,
@@ -71,80 +72,18 @@ export const integrationRouter = createTRPCRouter({
       },
     })
     .query(async ({ ctx }) => {
-      const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, ctx.session.user.id),
-      });
-
-      const integrations = await ctx.db.query.integrations.findMany({
-        with: {
-          userPermissions: {
-            where: eq(integrationUserPermissions.userId, ctx.session.user.id),
-          },
-          groupPermissions: {
-            where: inArray(
-              integrationGroupPermissions.groupId,
-              groupsOfCurrentUser.map((group) => group.groupId),
-            ),
-          },
-        },
-      });
-      return integrations
-        .map((integration) => {
-          const permissions = constructIntegrationPermissions(integration, ctx.session);
-
-          return {
-            id: integration.id,
-            name: integration.name,
-            kind: integration.kind,
-            url: integration.url,
-            permissions,
-          };
-        })
-        .toSorted(
-          (integrationA, integrationB) =>
-            integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
-        );
+      return await getAccessibleIntegrationsAsync(ctx);
     }),
   allThatSupportSearch: protectedProcedure.query(async ({ ctx }) => {
-    const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-      where: eq(groupMembers.userId, ctx.session.user.id),
-    });
-
-    const integrationsFromDb = await ctx.db.query.integrations.findMany({
-      with: {
-        userPermissions: {
-          where: eq(integrationUserPermissions.userId, ctx.session.user.id),
-        },
-        groupPermissions: {
-          where: inArray(
-            integrationGroupPermissions.groupId,
-            groupsOfCurrentUser.map((group) => group.groupId),
-          ),
-        },
-      },
-      where: inArray(
+    return await getAccessibleIntegrationsAsync(
+      ctx,
+      inArray(
         integrations.kind,
         objectEntries(integrationDefs)
           .filter(([_, integration]) => [...integration.category].includes("search"))
           .map(([kind, _]) => kind),
       ),
-    });
-    return integrationsFromDb
-      .map((integration) => {
-        const permissions = constructIntegrationPermissions(integration, ctx.session);
-
-        return {
-          id: integration.id,
-          name: integration.name,
-          kind: integration.kind,
-          url: integration.url,
-          permissions,
-        };
-      })
-      .toSorted(
-        (integrationA, integrationB) =>
-          integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
-      );
+    );
   }),
   allOfGivenCategory: protectedProcedure
     .input(
@@ -153,42 +92,10 @@ export const integrationRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, ctx.session.user.id),
-      });
-
-      const intergrationKinds = getIntegrationKindsByCategory(input.category);
-
-      const integrationsFromDb = await ctx.db.query.integrations.findMany({
-        with: {
-          userPermissions: {
-            where: eq(integrationUserPermissions.userId, ctx.session.user.id),
-          },
-          groupPermissions: {
-            where: inArray(
-              integrationGroupPermissions.groupId,
-              groupsOfCurrentUser.map((group) => group.groupId),
-            ),
-          },
-        },
-        where: inArray(integrations.kind, intergrationKinds),
-      });
-      return integrationsFromDb
-        .map((integration) => {
-          const permissions = constructIntegrationPermissions(integration, ctx.session);
-
-          return {
-            id: integration.id,
-            name: integration.name,
-            kind: integration.kind,
-            url: integration.url,
-            permissions,
-          };
-        })
-        .toSorted(
-          (integrationA, integrationB) =>
-            integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
-        );
+      return await getAccessibleIntegrationsAsync(
+        ctx,
+        inArray(integrations.kind, getIntegrationKindsByCategory(input.category)),
+      );
     }),
   search: protectedProcedure
     .meta({
@@ -205,11 +112,29 @@ export const integrationRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      return await ctx.db.query.integrations.findMany({
+      const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, ctx.session.user.id),
+      });
+
+      const integrationsFromDb = await ctx.db.query.integrations.findMany({
         where: like(integrations.name, `%${input.query}%`),
         orderBy: asc(integrations.name),
-        limit: input.limit,
+        with: getIntegrationAccessRelationsAsync(
+          ctx.session.user.id,
+          groupsOfCurrentUser.map((group) => group.groupId),
+        ),
       });
+
+      return integrationsFromDb
+        .filter((integration) => hasIntegrationQueryAccess(ctx.session, integration))
+        .toSorted(
+          (integrationA, integrationB) =>
+            integrationA.name.localeCompare(integrationB.name) || integrationA.id.localeCompare(integrationB.id),
+        )
+        .slice(0, input.limit)
+        .map(
+          ({ userPermissions: _userPermissions, groupPermissions: _groupPermissions, ...integration }) => integration,
+        );
     }),
   // This is used to get the integrations by their ids it's public because it's needed to get integrations data in the boards
   byIds: publicProcedure.input(z.array(z.string())).query(async ({ ctx, input }) => {
@@ -773,6 +698,66 @@ export const integrationRouter = createTRPCRouter({
       return await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
     }),
 });
+
+const globalIntegrationPermissions = [
+  "integration-use-all",
+  "integration-interact-all",
+  "integration-full-all",
+] satisfies GroupPermissionKey[];
+
+const hasGlobalIntegrationAccess = (session: Session | null) =>
+  globalIntegrationPermissions.some((permission) => session?.user.permissions.includes(permission) ?? false);
+
+const hasIntegrationQueryAccess = (
+  session: Session | null,
+  integration: {
+    userPermissions: { permission: IntegrationPermission }[];
+    groupPermissions: { permission: IntegrationPermission }[];
+  },
+) => hasGlobalIntegrationAccess(session) || constructIntegrationPermissions(integration, session).hasUseAccess;
+
+const getIntegrationAccessRelationsAsync = (userId: string, groupIds: string[]) => ({
+  userPermissions: {
+    where: eq(integrationUserPermissions.userId, userId),
+  },
+  groupPermissions: {
+    where: inArray(integrationGroupPermissions.groupId, groupIds),
+  },
+});
+
+const getAccessibleIntegrationsAsync = async (ctx: { db: Database; session: Session }, where?: SQL) => {
+  const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, ctx.session.user.id),
+  });
+
+  const integrationsFromDb = await ctx.db.query.integrations.findMany({
+    where,
+    with: getIntegrationAccessRelationsAsync(
+      ctx.session.user.id,
+      groupsOfCurrentUser.map((group) => group.groupId),
+    ),
+  });
+
+  return integrationsFromDb
+    .filter((integration) => hasIntegrationQueryAccess(ctx.session, integration))
+    .map((integration) => {
+      const permissions = constructIntegrationPermissions(integration, ctx.session);
+
+      return {
+        id: integration.id,
+        name: integration.name,
+        kind: integration.kind,
+        url: integration.url,
+        permissions,
+      };
+    })
+    .toSorted(
+      (integrationA, integrationB) =>
+        integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind) ||
+        integrationA.name.localeCompare(integrationB.name) ||
+        integrationA.id.localeCompare(integrationB.id),
+    );
+};
 
 interface IntegrationRouterContext {
   db: Database;

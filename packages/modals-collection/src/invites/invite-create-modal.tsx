@@ -6,7 +6,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { InviteCopyModal } from "./invite-copy-modal";
 
@@ -17,7 +17,7 @@ interface FormType {
 }
 
 export const InviteCreateModal = createModal<void>(({ actions }) => {
-  const tInvite = useScopedI18n("management.page.user.invite");
+  const tInvite = useI18n("management.page.user.invite");
   const t = useI18n();
   const { openModal } = useModalAction(InviteCopyModal);
 

@@ -20,27 +20,29 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
 
   const minAxisSize = Math.min(rootWidth, rootHeight);
   const shouldScaleDown = minAxisSize < 350;
-  const isSmall = rootHeight < 256;
+  const shouldShowIndicators = rootHeight >= 256;
+  const indicatorSize = shouldScaleDown ? 3 : 4;
 
   const cell = (
     <Container
       h="100%"
       w="100%"
       p={0}
-      pt={isSmall ? 0 : 10}
-      pb={isSmall ? 0 : 10}
       m={0}
       pos="relative"
       style={{
-        alignContent: "center",
+        alignItems: "center",
         borderRadius: actualItemRadius,
         cursor: disabled ? "default" : "pointer",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
       }}
     >
       <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
         {date.getDate()}
       </Text>
-      <NotificationIndicator events={events} isSmall={isSmall} />
+      <NotificationIndicator events={events} size={indicatorSize} visible={shouldShowIndicators} />
     </Container>
   );
 
@@ -67,25 +69,34 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
 
 interface NotificationIndicatorProps {
   events: CalendarEvent[];
-  isSmall: boolean;
+  size: number;
+  visible: boolean;
 }
 
-const NotificationIndicator = ({ events, isSmall }: NotificationIndicatorProps) => {
-  const notificationEvents = [...new Set(events.map((event) => event.indicatorColor))].filter(String);
+const NotificationIndicator = ({ events, size, visible }: NotificationIndicatorProps) => {
+  const notificationEvents = [...new Set(events.map((event) => event.indicatorColor))].filter(
+    (color): color is string => Boolean(color),
+  );
+
+  if (!visible) return null;
+
   return (
     <Flex
-      w="75%"
+      mt={3}
+      w="fit-content"
+      maw="75%"
+      h={size}
       align={"center"}
-      pos={"absolute"}
-      gap={3}
-      bottom={isSmall ? 4 : 10}
-      left={"12.5%"}
+      gap={2}
       p={0}
       direction={"row"}
       justify={"center"}
+      aria-hidden
     >
       {notificationEvents.map((notificationEvent) => {
-        return <Box key={notificationEvent} bg={notificationEvent} h={4} w={4} p={0} style={{ borderRadius: 999 }} />;
+        return (
+          <Box key={notificationEvent} bg={notificationEvent} h={size} w={size} p={0} style={{ borderRadius: 999 }} />
+        );
       })}
     </Flex>
   );

@@ -5,7 +5,7 @@ import { IconSettings, IconShieldLock } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
@@ -24,8 +24,9 @@ export default async function Layout(props: PropsWithChildren<LayoutProps>) {
   const { children } = props;
 
   const session = await auth();
-  const t = await getI18n();
-  const tUser = await getScopedI18n("management.page.user");
+  const tNavigation = await getI18n("navigationStructure.manage.users");
+  const tUserRoot = await getI18n("user");
+  const tUser = await getI18n("management.page.user");
   const user = await api.user.getById({ userId: params.userId }).catch(catchTrpcNotFound).catch(catchTrpcUnauthorized);
 
   if (!canAccessUserEditPage(session, user.id)) {
@@ -40,8 +41,8 @@ export default async function Layout(props: PropsWithChildren<LayoutProps>) {
         dynamicMappings={
           new Map([
             [params.userId, user.name ?? ""],
-            ["general", t("navigationStructure.manage.users.general")],
-            ["security", t("navigationStructure.manage.users.security")],
+            ["general", tNavigation("general")],
+            ["security", tNavigation("security")],
           ])
         }
       />
@@ -51,7 +52,7 @@ export default async function Layout(props: PropsWithChildren<LayoutProps>) {
             <UserAvatar user={user} size="lg" />
             <Stack gap={0}>
               <Title order={3}>{user.name}</Title>
-              <Text c="gray.5">{t("user.name")}</Text>
+              <Text c="gray.5">{tUserRoot("name")}</Text>
             </Stack>
           </Group>
         </GridCol>

@@ -18,12 +18,14 @@ import {
   IconChartAreaLine,
   IconChartBar,
   IconClock,
+  IconClockPlay,
   IconCloud,
   IconDeviceCctv,
   IconDeviceGamepad,
   IconDownload,
   IconFileText,
   IconGraphFilled,
+  IconHourglass,
   IconHeadphones,
   IconHeartRateMonitor,
   IconHeartbeat,
@@ -47,6 +49,7 @@ import {
   IconTransform,
   IconVideo,
   IconWall,
+  IconWind,
   IconZoomQuestion,
 } from "@tabler/icons-react";
 
@@ -56,6 +59,9 @@ import type { TablerIcon } from "@homarr/ui";
 export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
   clock: IconClock,
   weather: IconCloud,
+  airQuality: IconWind,
+  countdown: IconHourglass,
+  timer: IconClockPlay,
   app: IconApps,
   assistant: IconRobot,
   iframe: IconBrowser,

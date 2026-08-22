@@ -78,11 +78,15 @@ describe("lazy widget application graph", () => {
       await page.goto(`${baseUrl}/auth/login`);
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
-      const signedIn = page.waitForURL(baseUrl, { waitUntil: "commit", timeout: 60_000 });
+      const signedIn = page.waitForURL((url) => url.origin === baseUrl && url.pathname === "/", {
+        waitUntil: "commit",
+        timeout: 60_000,
+      });
       await page.locator("css=button[type='submit']").click();
       await signedIn;
 
-      await expect(page.locator("[data-homarr-dev-benchmark-board]")).toBeVisible({ timeout: 30_000 });
+      const visibleBoard = page.locator("[data-homarr-dev-benchmark-board]").filter({ visible: true }).first();
+      await expect(visibleBoard).toBeVisible({ timeout: 30_000 });
       const clockWidget = page.locator(
         `[data-id="${itemId}"] .clock-widget-container, [data-grid-item-id="${itemId}"] .clock-widget-container`,
       );

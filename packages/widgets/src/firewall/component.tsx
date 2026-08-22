@@ -19,8 +19,8 @@ import { useLocalStorage } from "@mantine/hooks";
 import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { FirewallInterfacesSummary } from "@homarr/integrations";
-import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -67,7 +67,8 @@ export default function FirewallWidget({
   const isTiny = !isAdvanced && (width < 256 || height < 180);
   const ringSize = isAdvanced ? 100 : height < 120 ? 44 : isTiny ? 64 : 100;
   const showInterfaces = isAdvanced || (!isTiny && height >= 120);
-  const t = useI18n();
+  const t = useI18n("widget.firewall");
+  const tCommon = useI18n("common");
 
   const handleSelect = useCallback((value: string | null) => {
     setSelectedFirewall(value ?? "");
@@ -96,7 +97,7 @@ export default function FirewallWidget({
   });
 
   if (hasTotalFailure) {
-    throw new Error(t("widget.firewall.error.internalServerError"));
+    throw new Error(t("error.internalServerError"));
   }
 
   const firewallMetadata = new Map(
@@ -119,7 +120,7 @@ export default function FirewallWidget({
     return (
       <Center h="100%" p="sm">
         <Text size="sm" c="dimmed" ta="center">
-          {isLoading ? t("common.action.loading") : t("widget.firewall.empty.noInterfaces")}
+          {isLoading ? tCommon("action.loading") : t("empty.noInterfaces")}
         </Text>
       </Center>
     );
@@ -138,9 +139,9 @@ export default function FirewallWidget({
             />
             <Group gap={4} wrap="nowrap">
               {activeFirewall && firewallHasError(activeFirewall) && (
-                <Tooltip label={t("widget.firewall.error.internalServerError")}>
+                <Tooltip label={t("error.internalServerError")}>
                   <Badge color="red" variant="light" size="xs">
-                    {t("common.error")}
+                    {tCommon("error")}
                   </Badge>
                 </Tooltip>
               )}
@@ -179,12 +180,13 @@ export default function FirewallWidget({
                 showInterfaces={showInterfaces}
                 accordionValue={accordionValue}
                 setAccordionValue={setAccordionValue}
-                errorLabel={t("widget.firewall.error.internalServerError")}
-                noDataLabel={t("widget.firewall.empty.noInterfaces")}
-                loadingLabel={t("common.action.loading")}
-                errorBadgeLabel={t("common.error")}
-                interfacesLabel={t("widget.firewall.widget.interfaces.title")}
+                errorLabel={t("error.internalServerError")}
+                noDataLabel={t("empty.noInterfaces")}
+                loadingLabel={tCommon("action.loading")}
+                errorBadgeLabel={tCommon("error")}
+                interfacesLabel={t("widget.interfaces.title")}
                 t={t}
+                tCommon={tCommon}
               />
             );
           })}
@@ -214,7 +216,8 @@ interface FirewallPanelProps {
   loadingLabel: string;
   errorBadgeLabel: string;
   interfacesLabel: string;
-  t: TranslationFunction;
+  t: ReturnType<typeof useI18n<"widget.firewall">>;
+  tCommon: ReturnType<typeof useI18n<"common">>;
 }
 
 const FirewallPanel = ({
@@ -238,6 +241,7 @@ const FirewallPanel = ({
   errorBadgeLabel,
   interfacesLabel,
   t,
+  tCommon,
 }: FirewallPanelProps) => (
   <Paper withBorder={isAdvanced} radius="sm" p={isAdvanced ? "xs" : 0}>
     <Stack gap="xs">
@@ -257,12 +261,12 @@ const FirewallPanel = ({
             {hasError && (
               <Tooltip label={errorLabel}>
                 <Badge color="red" variant="light" size="xs">
-                  {t("common.error")}
+                  {tCommon("error")}
                 </Badge>
               </Tooltip>
             )}
             <Badge variant="outline" color="gray" size="xs">
-              {formatVersion(version ?? "", t("widget.firewall.versionUnknown"))}
+              {formatVersion(version ?? "", t("versionUnknown"))}
             </Badge>
           </Group>
         </Group>
@@ -270,16 +274,10 @@ const FirewallPanel = ({
 
       <Flex justify="center" align="center" wrap="wrap">
         {cpu !== undefined && (
-          <MetricRing value={cpu} icon={IconCpu} size={ringSize} label={t("widget.firewall.widget.cpu")} t={t} />
+          <MetricRing value={cpu} icon={IconCpu} size={ringSize} label={invariantTechnicalLabels.cpu} t={t} />
         )}
         {memory !== undefined && (
-          <MetricRing
-            value={memory}
-            icon={IconBrain}
-            size={ringSize}
-            label={t("widget.firewall.widget.memory")}
-            t={t}
-          />
+          <MetricRing value={memory} icon={IconBrain} size={ringSize} label={t("widget.memory")} t={t} />
         )}
       </Flex>
 
@@ -307,19 +305,19 @@ interface MetricRingProps {
   icon: typeof IconCpu;
   size: number;
   label: string;
-  t: TranslationFunction;
+  t: ReturnType<typeof useI18n<"widget.firewall">>;
 }
 
 const MetricRing = ({ value, icon: Icon, size, label, t }: MetricRingProps) => {
   const safeValue = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
   const status = getMetricStatus(safeValue);
-  const statusLabel = t(`widget.firewall.status.${status}`);
+  const statusLabel = t(`status.${status}` as never);
   const showIcon = size >= 64;
   const showStatus = size >= 96;
 
   return (
     <RingProgress
-      aria-label={t("widget.firewall.metricAccessible", {
+      aria-label={t("metricAccessible", {
         metric: label,
         value: safeValue.toFixed(1),
         status: statusLabel,

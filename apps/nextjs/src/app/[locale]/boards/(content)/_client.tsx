@@ -1,11 +1,13 @@
 "use client";
 
 import { Box, Paper, Stack, Text } from "@mantine/core";
+import { IconBulb } from "@tabler/icons-react";
 
 import { useCurrentLayout, useInitialViewportWidth, useLayoutOverride, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
+import { FloatingTip } from "@homarr/ui";
 
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
 import { BoardEmptyState } from "~/components/board/board-empty-state";
@@ -20,17 +22,20 @@ import {
 import { ScaledBoardCanvas } from "~/components/board/layout/scaled-board-canvas";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
 import { BoardGridEditorBoundary } from "~/components/board/sections/grid/board-grid-editor-boundary";
-import { BoardGridPortalHost, BoardGridPortalRenderer } from "~/components/board/sections/grid/grid-portal-host";
+import { BoardGridPortalHost } from "~/components/board/sections/grid/grid-portal-host";
 import { BoardSectionCollapseProvider } from "~/components/board/sections/section-collapse";
 import { BoardBackgroundVideo } from "~/components/layout/background";
+import { BoardSelectionProvider } from "~/components/board/selection/board-selection-context";
+import { BoardSelectionToolbar } from "~/components/board/selection/board-selection-toolbar";
 import classes from "./_client.module.css";
 
 const APP_SHELL_INLINE_PADDING = 32;
 
 export const ClientBoard = () => {
   const board = useRequiredBoard();
-  const t = useScopedI18n("board.landmark");
-  const tPreview = useScopedI18n("board.setting.section.layout.preview");
+  const t = useI18n("board.landmark");
+  const tPreview = useI18n("board.setting.section.layout.preview");
+  const tTips = useI18n("tips");
   const [isEditMode] = useEditMode();
   const currentLayoutId = useCurrentLayout();
   const initialViewportWidth = useInitialViewportWidth();
@@ -63,71 +68,83 @@ export const ClientBoard = () => {
     .join(" ");
 
   const content = (
-    <BoardAdvancedFocusProvider>
-      <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
-        <BoardBackgroundVideo />
-        <BoardEmptyState />
-        <BoardSetupChecklist />
-        <BoardSectionCollapseProvider>
-          <BoardGridPortalHost>
-            <ScaledBoardCanvas
-              logicalWidth={logicalWidth}
-              initialLogicalHeight={initialLogicalHeight}
-              initialAvailableWidth={initialAvailableWidth}
-              label={board.name}
-            >
-              <BoardGridEditorBoundary key={currentLayoutId}>
-                <BoardGridPortalRenderer />
-                <div className={classes.columns} style={{ gridTemplateColumns }}>
-                  {leftColumnCount > 0 && leftSection && (
-                    <aside
-                      className={`${classes.lane} ${classes.gutter}`}
-                      aria-label={t("leftRail")}
-                      data-board-gutter="left"
-                      data-board-editing={isEditMode ? "true" : undefined}
-                    >
-                      <BoardEmptySection
-                        key={`${currentLayoutId}-${leftSection.id}`}
-                        section={leftSection}
-                        columnCount={leftColumnCount}
-                        requestedRowCount={0}
-                        railPlacement="left"
-                      />
-                    </aside>
-                  )}
+    <BoardSelectionProvider>
+      <BoardAdvancedFocusProvider>
+        <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
+          <BoardBackgroundVideo />
+          <BoardEmptyState />
+          <BoardSetupChecklist />
+          <BoardSectionCollapseProvider>
+            <BoardGridPortalHost>
+              <ScaledBoardCanvas
+                logicalWidth={logicalWidth}
+                initialLogicalHeight={initialLogicalHeight}
+                initialAvailableWidth={initialAvailableWidth}
+                label={board.name}
+              >
+                <BoardGridEditorBoundary key={currentLayoutId}>
+                  <div className={classes.columns} style={{ gridTemplateColumns }}>
+                    {leftColumnCount > 0 && leftSection && (
+                      <aside
+                        className={`${classes.lane} ${classes.gutter}`}
+                        aria-label={t("leftRail")}
+                        data-board-gutter="left"
+                        data-board-editing={isEditMode ? "true" : undefined}
+                      >
+                        <BoardEmptySection
+                          key={`${currentLayoutId}-${leftSection.id}`}
+                          section={leftSection}
+                          columnCount={leftColumnCount}
+                          requestedRowCount={0}
+                          railPlacement="left"
+                        />
+                      </aside>
+                    )}
 
-                  <section className={classes.lane} aria-label={t("canvas")}>
-                    <BoardEmptySection
-                      key={`${currentLayoutId}-${mainSection.id}`}
-                      section={mainSection}
-                      columnCount={mainColumnCount}
-                      requestedRowCount={0}
-                    />
-                  </section>
-
-                  {rightColumnCount > 0 && rightSection && (
-                    <aside
-                      className={`${classes.lane} ${classes.gutter}`}
-                      aria-label={t("rightRail")}
-                      data-board-gutter="right"
-                      data-board-editing={isEditMode ? "true" : undefined}
-                    >
+                    <section className={classes.lane} aria-label={t("canvas")}>
                       <BoardEmptySection
-                        key={`${currentLayoutId}-${rightSection.id}`}
-                        section={rightSection}
-                        columnCount={rightColumnCount}
+                        key={`${currentLayoutId}-${mainSection.id}`}
+                        section={mainSection}
+                        columnCount={mainColumnCount}
                         requestedRowCount={0}
-                        railPlacement="right"
                       />
-                    </aside>
-                  )}
-                </div>
-              </BoardGridEditorBoundary>
-            </ScaledBoardCanvas>
-          </BoardGridPortalHost>
-        </BoardSectionCollapseProvider>
-      </Box>
-    </BoardAdvancedFocusProvider>
+                    </section>
+
+                    {rightColumnCount > 0 && rightSection && (
+                      <aside
+                        className={`${classes.lane} ${classes.gutter}`}
+                        aria-label={t("rightRail")}
+                        data-board-gutter="right"
+                        data-board-editing={isEditMode ? "true" : undefined}
+                      >
+                        <BoardEmptySection
+                          key={`${currentLayoutId}-${rightSection.id}`}
+                          section={rightSection}
+                          columnCount={rightColumnCount}
+                          requestedRowCount={0}
+                          railPlacement="right"
+                        />
+                      </aside>
+                    )}
+                  </div>
+                </BoardGridEditorBoundary>
+              </ScaledBoardCanvas>
+            </BoardGridPortalHost>
+          </BoardSectionCollapseProvider>
+          <BoardSelectionToolbar />
+          <FloatingTip
+            opened={isEditMode}
+            showDelay={2_000}
+            dismissAfter={3_000}
+            transitionDuration={200}
+            closable={false}
+            alertProps={{ color: "primaryColor", icon: <IconBulb size={18} />, variant: "light" }}
+          >
+            {tTips("multiSelectApps")}
+          </FloatingTip>
+        </Box>
+      </BoardAdvancedFocusProvider>
+    </BoardSelectionProvider>
   );
 
   if (representativeWidth === null) return content;

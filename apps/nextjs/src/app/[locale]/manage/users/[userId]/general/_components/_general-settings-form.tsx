@@ -26,7 +26,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import {
   userChangeHomeBoardsSchema,
   userChangeSearchPreferencesSchema,
@@ -89,8 +89,10 @@ export const UserGeneralSettingsForm = ({
   searchEnginesData,
   showLanguageSelector = false,
 }: UserGeneralSettingsFormProps) => {
-  const t = useI18n();
-  const tGeneral = useScopedI18n("management.page.user.setting.general");
+  const tUser = useI18n("user");
+  const tCommon = useI18n("common");
+  const tUserManagement = useI18n("management.page.user");
+  const tGeneral = useI18n("management.page.user.setting.general");
   const isCredentialsUser = user.provider === "credentials";
 
   const editProfileMutation = clientApi.user.editProfile.useMutation();
@@ -195,13 +197,13 @@ export const UserGeneralSettingsForm = ({
       form.resetDirty();
       await revalidatePathActionAsync(`/manage/users/${user.id}`);
       showSuccessNotification({
-        title: t("common.notification.update.success"),
-        message: t("common.notification.update.success"),
+        title: tCommon("notification.update.success"),
+        message: tCommon("notification.update.success"),
       });
     } catch {
       showErrorNotification({
-        title: t("common.notification.update.error"),
-        message: t("common.notification.update.error"),
+        title: tCommon("notification.update.error"),
+        message: tCommon("notification.update.error"),
       });
     }
   };
@@ -222,23 +224,23 @@ export const UserGeneralSettingsForm = ({
           <Card withBorder bg="transparent">
             <Stack gap="md">
               <Stack gap={2}>
-                <Title order={3}>{t("user.name")}</Title>
+                <Title order={3}>{tUser("name")}</Title>
                 {!isCredentialsUser && (
                   <Text c="dimmed" size="sm">
-                    {t("management.page.user.fieldsDisabledExternalProvider")}
+                    {tUserManagement("fieldsDisabledExternalProvider")}
                   </Text>
                 )}
               </Stack>
               <Divider />
               <TextInput
                 disabled={!isCredentialsUser}
-                label={t("user.field.username.label")}
+                label={tUser("field.username.label")}
                 withAsterisk
                 {...form.getInputProps("name")}
               />
               <TextInput
                 disabled={!isCredentialsUser}
-                label={t("user.field.email.label")}
+                label={tUser("field.email.label")}
                 {...form.getInputProps("email")}
               />
             </Stack>
@@ -276,18 +278,18 @@ export const UserGeneralSettingsForm = ({
               </Stack>
               <Divider />
               <Select
-                label={t("user.field.defaultSearchEngine.label")}
+                label={tUser("field.defaultSearchEngine.label")}
                 w="100%"
                 data={searchEnginesData}
                 comboboxProps={{ withinPortal: true }}
                 {...form.getInputProps("defaultSearchEngineId")}
               />
               <Switch
-                label={t("user.field.openSearchInNewTab.label")}
+                label={tUser("field.openSearchInNewTab.label")}
                 {...form.getInputProps("openInNewTab", { type: "checkbox" })}
               />
               <Switch
-                label={t("user.field.ddgBangs.label")}
+                label={tUser("field.ddgBangs.label")}
                 {...form.getInputProps("ddgBangsEnabled", { type: "checkbox" })}
               />
             </Stack>
@@ -315,12 +317,12 @@ export const UserGeneralSettingsForm = ({
               <Divider my="xs" />
               <Title order={4}>{tGeneral("item.accessibility")}</Title>
               <Switch
-                label={t("user.field.pingIconsEnabled.label")}
+                label={tUser("field.pingIconsEnabled.label")}
                 {...form.getInputProps("pingIconsEnabled", { type: "checkbox" })}
               />
               <Switch
-                label={t("user.field.enableRightClickOnWidgets.label")}
-                description={t("user.field.enableRightClickOnWidgets.description")}
+                label={tUser("field.enableRightClickOnWidgets.label")}
+                description={tUser("field.enableRightClickOnWidgets.description")}
                 {...form.getInputProps("enableRightClickOnWidgets", { type: "checkbox" })}
               />
             </Stack>
@@ -331,13 +333,13 @@ export const UserGeneralSettingsForm = ({
           {form.isDirty() && (
             <Card withBorder>
               <Group justify="space-between" wrap="wrap">
-                <Text fw={500}>{t("common.unsavedChanges")}</Text>
+                <Text fw={500}>{tCommon("unsavedChanges")}</Text>
                 <Group>
                   <Button disabled={isPending} variant="default" onClick={handleDiscard}>
-                    {t("common.action.discard")}
+                    {tCommon("action.discard")}
                   </Button>
                   <Button loading={isPending} type="submit" disabled={!form.isValid()}>
-                    {t("common.action.saveChanges")}
+                    {tCommon("action.saveChanges")}
                   </Button>
                 </Group>
               </Group>

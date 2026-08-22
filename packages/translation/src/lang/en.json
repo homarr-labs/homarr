@@ -3,7 +3,6 @@
     "studio": {
       "navigationLabel": "Onboarding sections",
       "back": "Back",
-      "continue": "Continue",
       "buildBoard": "Build my board",
       "common": {
         "unknownError": "Something went wrong. Your choices are still here; try again."
@@ -66,15 +65,10 @@
         "themeAuto": "System",
         "themeLight": "Light",
         "themeDark": "Dark",
-        "serverTitle": "Usual server address",
         "serverOriginHelp": "Homarr uses this address to prefill detected service URLs. You can still edit every service individually.",
         "serverDescription": "This is a shortcut, not a restriction. Every detected service remains editable.",
         "serverOrigin": "Domain, IP, or reverse-proxy path",
         "serverOriginDescription": "Examples: home.lan, 192.168.1.10, or https://home.example.com/services. Choose how each service is appended below.",
-        "urlModeLabel": "Service address pattern",
-        "hostPort": "Same host, different ports",
-        "subdomain": "One subdomain per service",
-        "path": "One path per service",
         "analytics": "Share anonymous product analytics",
         "analyticsDescription": "Helps Homarr improve feature reliability. No service credentials or dashboard content are sent."
       },
@@ -118,7 +112,6 @@
         "empty": "No integrations selected. Homarr will still create a useful starter board with general widgets.",
         "dockerSource": "Docker",
         "manualSource": "Manual",
-        "name": "Name",
         "url": "Service URL",
         "noCredentials": "No credentials",
         "noCredentialsDescription": "This integration does not need credentials.",
@@ -161,7 +154,6 @@
         "tabsLabel": "Assistant, Workshop, and MCP setup",
         "assistant": "Assistant",
         "workshop": "Workshop",
-        "mcp": "MCP",
         "assistantSetup": {
           "loginTitle": "Administrator sign-in required",
           "loginDescription": "Provider keys and model access are privileged. Finish setup, sign in, and Homarr will open the Assistant configuration directly.",
@@ -241,63 +233,7 @@
       }
     }
   },
-  "universalCreate": {
-    "title": "Create",
-    "analyticsError": "Usage metrics could not be recorded. Your action was not affected.",
-    "trigger": {
-      "label": "Create something",
-      "description": "Add content, connect a service, or create a board from one place."
-    },
-    "search": {
-      "label": "Search create actions",
-      "placeholder": "What do you want to create?",
-      "noResults": "No matching actions"
-    },
-    "group": {
-      "currentBoard": "Current board",
-      "library": "Apps and services",
-      "boards": "Boards"
-    },
-    "action": {
-      "widget": {
-        "label": "Add widget",
-        "description": "Add live information or controls to this board.",
-        "keywords": "item dashboard content"
-      },
-      "app": {
-        "label": "Add or create app",
-        "description": "Place an app shortcut on this board or create one for your library.",
-        "keywords": "shortcut bookmark application"
-      },
-      "integration": {
-        "label": "Connect service",
-        "description": "Connect a service so widgets can use its data.",
-        "keywords": "integration provider connection"
-      },
-      "container": {
-        "label": "Add container",
-        "description": "Group related board content into a resizable section.",
-        "keywords": "section group layout"
-      },
-      "board": {
-        "label": "Create board",
-        "description": "Start a new dashboard and add its first widget.",
-        "keywords": "dashboard page"
-      },
-      "workshop": {
-        "label": "Browse Workshop",
-        "description": "Discover community-built widgets and install them.",
-        "keywords": "community discover install"
-      },
-      "customWidget": {
-        "label": "Create custom widget",
-        "description": "Build a widget tailored to your own workflow.",
-        "keywords": "code jsx developer"
-      }
-    }
-  },
   "user": {
-    "title": "Users",
     "name": "User",
     "page": {
       "login": {
@@ -308,10 +244,6 @@
         "title": "Join Homarr",
         "subtitle": "Welcome to Homarr! Please create your account",
         "description": "You were invited by {username}"
-      },
-      "init": {
-        "title": "New Homarr installation",
-        "subtitle": "Please create the initial administrator user"
       }
     },
     "field": {
@@ -338,9 +270,6 @@
       },
       "previousPassword": {
         "label": "Previous password"
-      },
-      "homeBoard": {
-        "label": "Home board"
       },
       "pingIconsEnabled": {
         "label": "Use icons for pings"
@@ -394,7 +323,6 @@
           }
         }
       },
-      "create": "Create user",
       "changePassword": {
         "label": "Change password",
         "notification": {
@@ -403,56 +331,6 @@
           },
           "error": {
             "message": "Unable to change password"
-          }
-        }
-      },
-      "changeHomeBoard": {
-        "notification": {
-          "success": {
-            "message": "Home board changed successfully"
-          },
-          "error": {
-            "message": "Unable to change home board"
-          }
-        }
-      },
-      "changeSearchPreferences": {
-        "notification": {
-          "success": {
-            "message": "Search preferences changed successfully"
-          },
-          "error": {
-            "message": "Unable to change search preferences"
-          }
-        }
-      },
-      "changeFirstDayOfWeek": {
-        "notification": {
-          "success": {
-            "message": "First day of week changed successfully"
-          },
-          "error": {
-            "message": "Unable to change first day of week"
-          }
-        }
-      },
-      "changePingIconsEnabled": {
-        "notification": {
-          "success": {
-            "message": "Ping icons toggled successfully"
-          },
-          "error": {
-            "message": "Unable to toggle ping icons"
-          }
-        }
-      },
-      "changeDdgBangs": {
-        "notification": {
-          "success": {
-            "message": "DuckDuckGo bangs toggled successfully"
-          },
-          "error": {
-            "message": "Unable to toggle DuckDuckGo bangs"
           }
         }
       },
@@ -485,16 +363,6 @@
           }
         }
       },
-      "editProfile": {
-        "notification": {
-          "success": {
-            "message": "Profile updated successfully"
-          },
-          "error": {
-            "message": "Unable to update profile"
-          }
-        }
-      },
       "delete": {
         "label": "Delete user permanently",
         "description": "Deletes this user including their preferences. Will not delete any boards. User will not be notified.",
@@ -503,18 +371,13 @@
       "select": {
         "label": "Select user",
         "notFound": "No user found"
-      },
-      "transfer": {
-        "label": "Select new owner"
       }
     }
   },
   "group": {
-    "title": "Groups",
     "name": "Group",
     "search": "Find a group",
     "field": {
-      "name": "Name",
       "members": "Members",
       "homeBoard": {
         "label": "Home board",
@@ -653,6 +516,35 @@
             "description": "Allow members to manage and delete any search engine"
           }
         }
+      },
+      "matrix": {
+        "none": "No access",
+        "impliedHint": "Also grants: {permissions}",
+        "grantedViaAdmin": "Administrators already have this. Set Admin to “No access” to configure it separately.",
+        "preset": {
+          "label": "Presets",
+          "viewer": "Viewer",
+          "viewerDescription": "Read-only: view boards and medias, use apps and integrations that already exist.",
+          "editor": "Editor",
+          "editorDescription": "Day-to-day management: create and edit boards, apps, integrations and search engines.",
+          "admin": "Admin",
+          "adminDescription": "Unrestricted access to every feature and setting, including user management.",
+          "custom": "Custom"
+        },
+        "effective": {
+          "title": "Effective permissions",
+          "description": "The full, de-duplicated set of actions members of this group can perform, including permissions granted indirectly.",
+          "empty": "No permissions selected"
+        },
+        "noneDescription": "Members get no access to this area.",
+        "level": {
+          "view": "View",
+          "use": "Use",
+          "interact": "Interact",
+          "modify": "Modify",
+          "full": "Full"
+        },
+        "capabilityIncluded": "Already included in “{level}”"
       }
     },
     "memberNotice": {
@@ -767,30 +659,24 @@
     "search": "Find an app",
     "page": {
       "list": {
-        "title": "Apps",
         "ariaLabel": "Configured apps",
-        "action": {
-          "edit": "Edit {name}",
-          "delete": "Delete {name}"
-        },
         "noResults": {
           "title": "There are no apps yet",
           "description": "Apps are links to the services and tools you want on your boards.",
           "action": "Create your first app",
           "filteredTitle": "No apps match your search",
           "filteredDescription": "No apps match \"{search}\". Try another name or URL.",
-          "clearSearch": "Clear search"
+          "createOnlyTitle": "You can only add apps",
+          "createOnlyDescription": "Your permissions let you create apps but not browse existing ones. Ask an administrator for app management access to see the full list."
         }
       },
       "create": {
         "title": "New app",
         "notification": {
           "success": {
-            "title": "Creation successful",
             "message": "The app was successfully created"
           },
           "error": {
-            "title": "Creation failed",
             "message": "The app could not be created"
           }
         }
@@ -799,11 +685,9 @@
         "title": "Edit app",
         "notification": {
           "success": {
-            "title": "Changes applied successfully",
             "message": "The app was successfully saved"
           },
           "error": {
-            "title": "Unable to apply changes",
             "message": "The app could not be saved"
           }
         }
@@ -813,25 +697,17 @@
         "message": "Are you sure you want to delete the app {name}?",
         "notification": {
           "success": {
-            "title": "Deletion successful",
             "message": "The app was successfully deleted"
           },
           "error": {
-            "title": "Deletion failed",
             "message": "Unable to delete the app"
           }
         }
       }
     },
     "field": {
-      "name": {
-        "label": "Name"
-      },
       "description": {
         "label": "Description"
-      },
-      "url": {
-        "label": "Url"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
@@ -850,15 +726,22 @@
         "title": "Select an app to add to this board",
         "toggle": "Click to select",
         "selected": "Selected",
-        "multiple": "Add {count}"
+        "multiple": "Add {count}",
+        "selectedCount": "{count, plural, one {# selected} other {# selected}}",
+        "appsSelected": "{count, plural, one {# app selected} other {# apps selected}}",
+        "customApplication": "Custom application",
+        "application": "Application"
       },
       "create": {
         "title": "Create new app",
         "description": "Create a new app ",
         "action": "Open app creation"
-      },
-      "add": "Add an app"
+      }
     }
+  },
+  "tips": {
+    "dismiss": "Dismiss tip",
+    "multiSelectApps": "Tip: Hold Ctrl / ⌘ to select multiple apps at once"
   },
   "customWidget": {
     "betaBanner": {
@@ -878,27 +761,18 @@
       "baseUrl": "Server URL",
       "networkScope": "Network access",
       "save": "Save API configuration",
-      "expires": "This one-time request expires at {time}.",
-      "field": {
-        "apiKey": "API key or token",
-        "username": "Username",
-        "password": "Password"
-      }
+      "expires": "This one-time request expires at {time}."
     },
     "page": {
       "list": {
-        "title": "Custom Widgets",
         "noResults": "No custom widgets yet. Create your first one!",
         "noDescription": "No description",
-        "loading": "Loading...",
         "enabled": "Enabled",
         "disabled": "Disabled",
         "disabledDescription": "This widget stays configured but will not load on any board.",
         "requestCount": "{count, plural, one {# request} other {# requests}}",
         "invalidDefinition": "Invalid definition",
-        "invalidDefinitionDescription": "This stored widget no longer matches the current Custom Widget schema. Delete it and recreate or import a valid definition.",
         "migrationRequired": "Migration required",
-        "migrationDescription": "This v1 custom widget is preserved but cannot run until it is migrated to Custom JSX v2.",
         "migrationInstructions": "Open Actions to copy or export the original v1 definition for manual recreation. You can also use the migration prompt with an LLM. Existing board placements keep working after migration.",
         "missingCredentials": "{count, plural, one {Credential missing} other {# credentials missing}}",
         "missingCredentialsDescription": "{count, plural, one {This widget still needs one credential.} other {This widget still needs # credentials.}} Select this badge to configure the URL and encrypted values."
@@ -907,9 +781,6 @@
         "title": "Create Custom Widget",
         "subtitle": "Define an API URL, authentication, and how to display the response data."
       },
-      "edit": {
-        "title": "Edit Custom Widget"
-      },
       "tabs": {
         "ariaLabel": "Custom widget sections",
         "installed": "Installed",
@@ -917,14 +788,10 @@
       }
     },
     "action": {
-      "create": "Create",
-      "import": "Import",
       "pasteImportHint": "Paste a full custom widget JSON with Ctrl+V or Command+V",
-      "save": "Save",
       "delete": "Delete Custom Widget",
       "deleteConfirm": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
       "export": "Export",
-      "edit": "Edit",
       "duplicate": "Duplicate",
       "aiPrompt": "Design with AI",
       "copyAiPrompt": "Copy AI prompt",
@@ -939,91 +806,30 @@
       "exportLegacyDefinition": "Export original widget content",
       "copyMigrationPrompt": "Copy LLM migration prompt",
       "pasteMigration": "Paste migrated widget",
-      "importMigration": "Import migrated JSON file",
-      "addMapping": "Add Mapping",
-      "addColumn": "Add Column",
-      "removeMapping": "Remove mapping",
-      "removeColumn": "Remove column",
-      "addItem": "Add Item",
-      "removeItem": "Remove item",
-      "addBar": "Add Bar"
+      "importMigration": "Import migrated JSON file"
     },
     "sourceSetupDialog": {
       "title": "Configure widget sources",
       "description": "Review where this widget connects and add or replace its encrypted credentials.",
       "credentialsRequired": "Requests will fail until the required credentials are added.",
-      "cancel": "Cancel",
       "save": "Save configuration"
     },
     "field": {
-      "name": "Name",
-      "description": "Description",
-      "iconUrl": "Icon URL",
-      "url": "URL",
-      "authType": "Auth Type",
-      "headerName": "Header/Query Parameter Name",
-      "method": "Method",
-      "requestBody": "Request Body",
-      "displayType": "Display Type",
-      "jsonPath": "JSON Path",
-      "jsonPathHint": "Use JSONPath syntax to extract values, e.g. $.data.temperature or $.items[0].name",
-      "label": "Label",
-      "unit": "Unit",
-      "mappings": "Mappings",
-      "tablePath": "Array JSON Path",
-      "tablePathHint": "Path to the array in the response, e.g. $.data.items",
-      "columns": "Columns",
-      "header": "Header",
-      "items": "Items",
-      "gridColumns": "Grid Columns",
-      "cardStyle": "Card Style",
-      "bars": "Bars",
-      "valuePath": "Value JSON Path",
-      "maxPath": "Max Value JSON Path",
-      "showPercentage": "Show Percentage",
-      "barSize": "Bar Size",
-      "goodValues": "Good Values (comma-separated)",
-      "dotSize": "Dot Size",
-      "valueSize": "Value Size",
-      "labelPosition": "Label Position",
-      "kvLayout": "Layout",
-      "striped": "Striped Rows",
-      "compact": "Compact Mode",
-      "maxHeight": "Max Height (px)",
-      "color": "Color",
-      "buttonLabel": "Button Label",
-      "buttonColor": "Button Color",
-      "confirmText": "Confirmation Text",
-      "confirmTextHint": "If set, a confirmation dialog will appear before executing the request",
-      "successMessage": "Success Message",
-      "successMessageHint": "Message shown after successful execution",
-      "enabled": "Enabled",
-      "template": {
-        "label": "JSX Template",
-        "description": "Mantine JSX template. Access API response fields via data bindings (e.g. data.name). Use whitelisted components only. Forbidden: constructor, __proto__, eval, Function, window, document."
-      }
+      "description": "Description"
     },
     "editor": {
       "errorBoundary": {
-        "title": "Something went wrong",
-        "retry": "Try again"
-      },
-      "language": {
-        "jsx": "JSX",
-        "json": "JSON"
+        "title": "Something went wrong"
       },
       "action": {
         "components": "Components",
         "format": "Format",
         "insertStarter": "Insert starter",
-        "undo": "Undo",
         "redo": "Redo",
-        "copy": "Copy",
         "copied": "Copied",
         "schema": "Schema"
       },
       "reference": {
-        "schema": "JSON Schema",
         "minimal": "Minimal example",
         "full": "Full example"
       },
@@ -1084,9 +890,7 @@
       },
       "action": {
         "preview": "Test and preview",
-        "previewLoading": "Testing requests",
-        "create": "Create",
-        "save": "Save"
+        "previewLoading": "Testing requests"
       },
       "requests": {
         "title": "Named queries and actions",
@@ -1094,14 +898,12 @@
         "description": "Queries load data; actions only run after user interaction. Any HTTP method is valid for either kind."
       },
       "options": {
-        "title": "Widget options",
-        "schema": "Options schema",
-        "defaults": "Default option values"
+        "title": "Widget options"
       },
       "builder": {
         "advancedManifest": "Advanced raw manifest",
-        "manifestFilename": "widget.json",
         "advancedJson": "Advanced manifest JSON",
+        "manifestFilename": "widget.json",
         "request": "Request {count, number}",
         "requestId": "Request ID",
         "type": "Type",
@@ -1194,12 +996,7 @@
         "clear": "Clear",
         "remove": "Remove source and its requests",
         "advanced": "Advanced",
-        "add": "Add another API source",
-        "secret": {
-          "apiKey": "API key or token",
-          "username": "Username",
-          "password": "Password"
-        }
+        "add": "Add another API source"
       },
       "ai": {
         "title": "Create or fix with any AI",
@@ -1258,7 +1055,7 @@
         "invalidParameters": "Use the declared string, number, and boolean parameter types.",
         "runDestructive": "Run destructive action",
         "runAction": "Run action",
-        "deleteConfirmation": "This preview action sends a DELETE request to the configured API.",
+        "deleteConfirmation": "This preview action changes remote data through the configured API.",
         "simulated": "Action simulated",
         "httpStatus": "HTTP {status, number}",
         "tab": {
@@ -1289,11 +1086,7 @@
           "modify": "Modify",
           "full": "Full"
         }
-      },
-      "title": "Preview",
-      "test": "Test",
-      "hint": "Click Test to preview the API response with your current configuration.",
-      "rawResponse": "Raw JSON response"
+      }
     },
     "notification": {
       "created": "Widget \"{name}\" created successfully.",
@@ -1308,7 +1101,6 @@
       "migrationPromptCopyError": "Failed to copy the migration prompt.",
       "sourcesConfigured": "Widget sources and credentials saved.",
       "sourceConfigurationError": "Failed to configure widget sources.",
-      "aiPromptCopied": "AI prompt copied to clipboard",
       "aiPromptCopiedWithCount": "AI prompt copied to clipboard ({count, number} characters).",
       "aiPromptCopyError": "Failed to copy prompt to clipboard. Your browser may not support this feature.",
       "aiPromptSent": "Prompt sent. You can keep editing while the assistant works in the background.",
@@ -1319,18 +1111,7 @@
       "duplicateError": "Failed to duplicate widget.",
       "toggleError": "Failed to toggle widget status.",
       "deleteError": "Failed to delete widget.",
-      "previewError": "Failed to fetch preview. Check the URL and try again.",
-      "aiPromptDescription": "Copy a pre-built prompt to paste into any AI chatbot (ChatGPT, Claude, Gemini...). It includes the full widget schema and your API response so the AI can generate a ready-to-import JSON config for you.",
-      "aiPromptCopy": "Copy to clipboard",
-      "aiPromptNoResponse": "Tip: Run a test first to include your API response in the prompt for better results.",
-      "createError": "Failed to create widget. Check your API endpoint is reachable.",
-      "executed": "Action executed successfully.",
-      "executeError": "Action failed: {error}",
-      "aiPromptRequestLabel": "What should the widget do?",
-      "aiPromptRequestPlaceholder": "For example, show service health as a compact status grid and highlight offline services.",
-      "aiPromptAssistant": "Ask Homarr Assistant",
-      "aiPromptAssistantBusy": "Assistant is working",
-      "aiPromptAssistantUnavailable": "Homarr Assistant is unavailable. You can still copy the prepared prompt."
+      "previewError": "Failed to fetch preview. Check the URL and try again."
     },
     "importReview": {
       "title": "Review custom widget import",
@@ -1344,17 +1125,6 @@
       "networkScope": "Network scope",
       "methods": "HTTP methods",
       "permissions": "Required board permissions",
-      "credentials": {
-        "title": "Configure credentials now",
-        "description": "Secrets are encrypted locally and never added to the imported widget. You can leave a field blank and configure it later.",
-        "header": "Sent through the {name} header",
-        "query": "Sent through the {name} query parameter",
-        "field": {
-          "apiKey": "API key or token",
-          "username": "Username",
-          "password": "Password"
-        }
-      },
       "sourceSetup": {
         "title": "Configure API sources",
         "description": "Confirm where this widget connects and add credentials. Private and loopback URLs are specific to your Homarr installation.",
@@ -1373,90 +1143,11 @@
       "confirm": "Import widget",
       "confirmMigration": "Confirm v2 replacement"
     },
-    "placeholder": {
-      "exampleLabel": "CPU Temperature",
-      "exampleLabelShort": "CPU Temp",
-      "exampleHeader": "Name",
-      "exampleUnit": "°C",
-      "iconUrl": "https://...",
-      "url": "https://api.example.com/api/v1/status",
-      "headerName": "X-API-Key",
-      "jsonPath": "$.data.value",
-      "tablePath": "$.data.items",
-      "columnJsonPath": "$.name",
-      "valuePath": "$.data.used",
-      "maxPath": "$.data.total",
-      "goodValues": "online, true, up",
-      "color": "blue"
-    },
-    "cardStyleOption": {
-      "filled": "Filled",
-      "outline": "Outline",
-      "subtle": "Subtle"
-    },
-    "layoutOption": {
-      "list": "List",
-      "grid": "Grid"
-    },
-    "sizeOption": {
-      "sm": "Small",
-      "md": "Medium",
-      "lg": "Large",
-      "xl": "Extra Large"
-    },
-    "labelPositionOption": {
-      "above": "Above",
-      "below": "Below"
-    },
-    "fieldset": {
-      "general": "General",
-      "connection": "API Connection",
-      "display": "Display Configuration"
-    },
-    "displayTypeDescription": {
-      "singleValue": "Show one extracted value with a label and unit",
-      "keyValue": "Show multiple labeled values side by side",
-      "table": "Show rows of data in a table format",
-      "statGrid": "Colored stat cards in a grid — like Pi-Hole or Speedtest widgets",
-      "progressBars": "Progress bars showing usage or completion — for disk, memory, quotas",
-      "statusIndicator": "Colored status dots showing online/offline or health states",
-      "countGrid": "Compact number + label counters in a tight grid",
-      "raw": "Pretty-printed JSON output for debugging",
-      "actionButton": "A button that triggers a request when clicked",
-      "customJsx": "Custom JSX layout using whitelisted Mantine components with full API data binding"
-    },
-    "authType": {
-      "none": "None",
-      "bearer": "Bearer Token",
-      "basic": "Basic Auth",
-      "apiKeyHeader": "API Key (Header)",
-      "apiKeyQuery": "API Key (Query)"
-    },
-    "displayType": {
-      "singleValue": "Single Value",
-      "keyValue": "Key-Value",
-      "table": "Table",
-      "statGrid": "Stat Grid",
-      "progressBars": "Progress Bars",
-      "statusIndicator": "Status Indicator",
-      "countGrid": "Count Grid",
-      "raw": "Raw JSON",
-      "actionButton": "Action Button",
-      "customJsx": "Custom JSX"
-    },
     "secret": {
-      "apiKey": "API Key / Token",
+      "apiKey": "API key or token",
       "username": "Username",
       "password": "Password",
       "savedPlaceholder": "••••••• (saved, leave empty to keep)"
-    },
-    "table": {
-      "name": "Name",
-      "url": "URL",
-      "display": "Display"
-    },
-    "widget": {
-      "disabled": "This widget is disabled"
     }
   },
   "workshop": {
@@ -1465,7 +1156,6 @@
     "openCommunity": "Open Workshop",
     "openOnWorkshop": "Open {title} on the Workshop website",
     "back": "Back to Workshop",
-    "cancel": "Cancel",
     "search": "Search widgets",
     "searchCss": "Search CSS themes",
     "sort": "Sort",
@@ -1477,11 +1167,9 @@
     "emptyDescription": "Community widgets published to the Workshop show up here.",
     "emptyFilteredTitle": "No widgets match this search",
     "emptyFilteredDescription": "No Workshop widget matches \"{search}\".",
-    "clearSearch": "Clear search",
     "emptyCss": "No CSS themes match this search.",
     "unavailableTitle": "Homarr Workshop seems to be unavailable",
     "unavailable": "The community service may be temporarily down. Try again in a moment. Your installed widgets are unaffected.",
-    "retry": "Try again",
     "loadError": "This submission could not be loaded.",
     "noDescription": "No description",
     "author": "by {name}",
@@ -1552,7 +1240,6 @@
       "reviewSourcesTitle": "Review private source URLs",
       "privateSourceConfirmation": "I reviewed these source URLs and they do not expose private infrastructure details",
       "action": "Publish now",
-      "cancel": "Cancel",
       "publicationNote": "Publishing is immediate. You can manage the submission afterward on Workshop.",
       "definitionChanged": "The widget changed while publication was being prepared. Review its private source URLs again, then retry.",
       "error": "Publication failed"
@@ -1572,37 +1259,31 @@
         "description": "Based on connected services and widgets already on this board.",
         "newConnectionReason": "Now available through {integration}",
         "existingConnectionReason": "Works with a service you already connected",
-        "add": "Add",
         "dismiss": "Dismiss recommendations for this service on this board"
       }
     },
     "page": {
       "list": {
-        "title": "Integrations",
         "ariaLabel": "Configured integrations",
         "search": "Search integrations",
-        "action": {
-          "edit": "Edit {name}",
-          "delete": "Delete {name}"
-        },
+        "scopedNote": "Showing only the integrations you are allowed to manage.",
         "noResults": {
           "title": "There are no integrations yet",
           "description": "Connect a service to use its data and actions in Homarr widgets.",
           "action": "Create your first integration",
           "filteredTitle": "No integrations match your search",
           "filteredDescription": "No integrations match \"{search}\". Try another name, type, or URL.",
-          "clearSearch": "Clear search"
+          "createOnlyTitle": "You can only add integrations",
+          "createOnlyDescription": "Your permissions let you create integrations but not manage existing ones. Ask an administrator for access to the ones you need."
         }
       },
       "create": {
         "title": "New {name} integration",
         "notification": {
           "success": {
-            "title": "Creation successful",
             "message": "The integration was successfully created"
           },
           "error": {
-            "title": "Creation failed",
             "message": "The integration could not be created"
           }
         },
@@ -1626,11 +1307,9 @@
         "title": "Edit {name} integration",
         "notification": {
           "success": {
-            "title": "Changes applied successfully",
             "message": "The integration was successfully saved"
           },
           "error": {
-            "title": "Unable to apply changes",
             "message": "The integration could not be saved"
           }
         },
@@ -1647,23 +1326,15 @@
         "message": "Are you sure you want to delete the integration {name}?",
         "notification": {
           "success": {
-            "title": "Deletion successful",
             "message": "The integration was successfully deleted"
           },
           "error": {
-            "title": "Deletion failed",
             "message": "Unable to delete the integration"
           }
         }
       }
     },
     "field": {
-      "name": {
-        "label": "Name"
-      },
-      "url": {
-        "label": "Url"
-      },
       "attemptSearchEngineCreation": {
         "label": "Create Search Engine",
         "description": "Integration \"{kind}\" can be used with the search engines. Check this to automatically configure the search engine."
@@ -1692,7 +1363,11 @@
     "grid": {
       "widgetCount": "{count} widgets",
       "noWidgets": "No widgets",
-      "detected": "Detected via Docker"
+      "detected": "Detected via Docker",
+      "connected": "{count, plural, one {# connected} other {# connected}}",
+      "tiedWidgets": "Tied widgets",
+      "more": "+{count} more",
+      "loadError": "Integrations could not be loaded. Try again before creating a new connection."
     },
     "category": {
       "dnsHole": "DNS",
@@ -2016,53 +1691,12 @@
       "use": "Select integrations in items",
       "interact": "Interact with integrations",
       "full": "Full integration access"
-    },
-    "audiobookshelf": {
-      "name": "Audiobookshelf",
-      "description": "Self-hosted audiobook and podcast server"
-    },
-    "navidrome": {
-      "name": "Navidrome",
-      "description": "Self-hosted music streaming server with Subsonic API compatibility"
-    },
-    "uptimeKuma": {
-      "name": "Uptime Kuma",
-      "description": "Self-hosted uptime monitoring with public status pages",
-      "secret": {
-        "slug": {
-          "description": "The slug of your public status page. Defaults to \"default\" if not set."
-        },
-        "apiKey": {
-          "description": "Optional API key for authenticated /metrics access"
-        }
-      }
-    },
-    "traefik": {
-      "name": "Traefik",
-      "description": "Cloud-native reverse proxy and load balancer"
-    },
-    "wud": {
-      "name": "What's Up Docker",
-      "description": "Monitor which of your Docker containers have image updates available"
-    },
-    "paperlessNgx": {
-      "name": "Paperless-ngx",
-      "description": "Document management system for archiving and organizing scanned documents"
-    },
-    "patchmon": {
-      "name": "PatchMon",
-      "description": "Patch management and monitoring for Linux hosts"
-    },
-    "bazarr": {
-      "name": "Bazarr",
-      "description": "Companion application to Sonarr and Radarr that manages and downloads subtitles"
     }
   },
   "media": {
     "plural": "Medias",
     "search": "Find a media",
     "field": {
-      "name": "Name",
       "size": "Size",
       "creator": "Creator"
     },
@@ -2106,11 +1740,11 @@
     "success": "Success",
     "beta": "Beta",
     "error": "Error",
+    "analyticsError": "Setup analytics could not be recorded.",
     "action": {
       "add": "Add",
       "apply": "Apply",
       "backToOverview": "Back to overview",
-      "skip": "Skip",
       "change": "Change",
       "create": "Create",
       "createAnother": "Create and start over",
@@ -2134,9 +1768,21 @@
       "loading": "Loading",
       "show": "Show",
       "hide": "Hide",
-      "undo": "Undo"
+      "undo": "Undo",
+      "editNamed": "Edit {name}",
+      "deleteNamed": "Delete {name}",
+      "clearSearch": "Clear search",
+      "copy": "Copy",
+      "refresh": "Refresh"
     },
     "here": "here",
+    "serviceUrlTemplate": {
+      "serverTitle": "Usual server address",
+      "urlModeLabel": "Service address pattern",
+      "hostPort": "Same host, different ports",
+      "subdomain": "One subdomain per service",
+      "path": "One path per service"
+    },
     "iconPicker": {
       "label": "Icon URL",
       "description": "Search the library, paste an image URL, or upload a file.",
@@ -2164,7 +1810,6 @@
     "information": {
       "min": "Min",
       "max": "Max",
-      "days": "Days",
       "hours": "Hours",
       "minutes": "Minutes"
     },
@@ -2201,15 +1846,11 @@
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "Switch to dark mode",
-        "switchToLightMode": "Switch to light mode",
         "management": "Management",
-        "docker": "Docker",
         "preferences": "Your preferences",
         "logout": "Logout",
         "login": "Login",
         "homeBoard": "Your home board",
-        "loggedOut": "Logged out",
         "updateAvailable": "{countUpdates} updates available: {tag}",
         "assistant": "Homarr Assistant",
         "assistantThinking": "Thinking",
@@ -2268,338 +1909,25 @@
     },
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}",
-    "assistant": {
-      "title": "Homarr Assistant",
-      "open": "Open Homarr Assistant",
-      "close": "Close assistant",
-      "minimize": "Minimize assistant",
-      "windowControls": "Conversation window controls",
-      "spotlight": "Ask Homarr Assistant",
-      "spotlightDescription": "Type and send a prompt without leaving the command menu.",
-      "spotlightPrompt": {
-        "title": "Ask Assistant",
-        "description": "Type a prompt above. Enter sends it in the background.",
-        "send": "Send prompt",
-        "empty": "Type a prompt above"
-      },
-      "unavailable": {
-        "checking": "Checking whether the assistant is available…",
-        "error": "The assistant's availability could not be checked. Try again.",
-        "notConfigured": "An administrator must configure and enable the assistant first.",
-        "signIn": "Sign in to use Homarr Assistant."
-      },
-      "newConversation": "New conversation",
-      "conversations": "Conversations",
-      "delete": "Delete",
-      "closeHistory": "Close conversation history",
-      "openHistory": "Open conversation history",
-      "emptyTitle": "What can I help with?",
-      "emptyDescription": "Ask about your Homarr setup, inspect live instance data, or approve actions when you want me to make a change.",
-      "suggestions": {
-        "health": {
-          "label": "Check service health",
-          "prompt": "Check my integrations and summarize anything that needs attention."
-        },
-        "explore": {
-          "label": "Explore my Homarr",
-          "prompt": "Show me what I can view and manage in this Homarr instance."
-        },
-        "media": {
-          "label": "Find media to request",
-          "prompt": "Help me find a movie or series to request."
-        },
-        "style": {
-          "label": "Improve a dashboard",
-          "prompt": "Help me improve a board's appearance or custom CSS. Show me my boards first, then preserve my current settings while we make the change."
-        }
-      },
-      "composerPlaceholder": "Ask Homarr Assistant…",
-      "runtime": {
-        "model": "Model",
-        "searchModels": "Search models",
-        "noModels": "No models available",
-        "otherModels": "Other models",
-        "imageInput": "Accepts image input",
-        "thinking": "Thinking mode",
-        "reasoning": {
-          "auto": "Auto",
-          "none": "Off",
-          "minimal": "Minimal",
-          "low": "Low",
-          "medium": "Medium",
-          "high": "High"
-        }
-      },
-      "providerQuota": {
-        "title": "Homarr provider",
-        "communityWorkshop": "Community Workshop",
-        "dailyAllowance": "Daily request allowance",
-        "remainingLabel": "{remaining} of {limit} Homarr provider requests remaining",
-        "loading": "Loading Homarr provider allowance",
-        "signInRequired": "Workshop sign-in required for the Homarr provider",
-        "signInDescription": "Sign in with GitHub through the Community Workshop to receive your separate daily allowance.",
-        "exhaustedDescription": "Your Homarr provider allowance is used for today. It resets at midnight UTC.",
-        "unavailableDescription": "Sign in to the Workshop or wait for your Homarr provider allowance to reset.",
-        "signIn": "Sign in with GitHub",
-        "signInError": "GitHub sign-in failed. Try again in a moment.",
-        "loadError": "The Homarr provider allowance could not be loaded.",
-        "reset": "Resets {relative} at <time></time>",
-        "toolCalls": "Each model request and completed tool call uses one request.",
-        "retry": "Reload allowance",
-        "level": {
-          "ok": "OK",
-          "warning": "Warning",
-          "bad": "Low",
-          "dead": "Used"
-        }
-      },
-      "stop": "Stop response",
-      "send": "Send message",
-      "copy": "Copy response",
-      "copyMessage": "Copy message",
-      "editMessage": "Edit message",
-      "cancelEdit": "Cancel",
-      "updateMessage": "Update message",
-      "regenerate": "Regenerate response",
-      "helpful": "Helpful",
-      "notHelpful": "Not helpful",
-      "feedbackError": "Your feedback could not be saved. Try again.",
-      "exportMarkdown": "Export as Markdown",
-      "exportConversation": {
-        "action": "Export conversation as Markdown",
-        "failedTitle": "Conversation could not be exported",
-        "failedDescription": "Homarr could not load this conversation. Try again."
-      },
-      "reasoning": "Thinking",
-      "previousResponse": "Previous response",
-      "nextResponse": "Next response",
-      "removeAttachment": "Remove attachment",
-      "downloadFile": "Download {name}",
-      "attachedImage": "Attached image",
-      "externalImageBlocked": "External image blocked for privacy",
-      "image": {
-        "loading": "Loading image",
-        "failed": "This image could not be loaded.",
-        "retry": "Try image again"
-      },
-      "quoteSelection": "Quote",
-      "dismissQuote": "Remove quote",
-      "attachments": {
-        "add": "Attach an image or document",
-        "errorTitle": "Attachment could not be added",
-        "imageUnsupported": "The selected model does not support image input."
-      },
-      "mentions": {
-        "menu": "Add Homarr context",
-        "hint": "Type @ to add context",
-        "context": "Context",
-        "app": "Apps",
-        "integration": "Integrations",
-        "board": "Boards",
-        "widget": "Widgets",
-        "tools": "Available tools"
-      },
-      "markdown": {
-        "diagram": "Diagram",
-        "renderingDiagram": "Rendering diagram…",
-        "diagramUnavailable": "This diagram could not be rendered."
-      },
-      "commands": {
-        "menu": "Assistant commands",
-        "hint": "Type / for shortcuts",
-        "health": "Prepare a service-health check",
-        "explore": "Prepare an overview of this Homarr instance",
-        "media": "Prepare a media search",
-        "style": "Prepare a board appearance or custom CSS change"
-      },
-      "usage": {
-        "tokens": "tokens",
-        "contextWindow": "Context window",
-        "requestDetails": "Request details",
-        "used": "Used",
-        "remaining": "Remaining",
-        "capacity": "Capacity",
-        "input": "Input",
-        "output": "Output",
-        "cached": "Cached input",
-        "cacheWrite": "Cache write",
-        "reasoning": "Reasoning",
-        "inputShort": "in",
-        "outputShort": "out",
-        "cachedShort": "cached",
-        "reasoningShort": "reasoning",
-        "firstOutput": "First output",
-        "homarrTiming": "Homarr observed",
-        "endToEnd": "End to end",
-        "observedThroughput": "Observed throughput",
-        "providerTiming": "Provider reported",
-        "loadingProviderDetails": "Loading generation details…",
-        "providerDetailsPending": "OpenRouter is still processing some generation details. Reopen to retry.",
-        "providerLatency": "Provider latency",
-        "generationTime": "Generation time",
-        "moderationLatency": "Moderation",
-        "providerThroughput": "Provider throughput",
-        "fallbacks": "Fallbacks",
-        "fallbackLatency": "Fallback latency",
-        "cacheDiscount": "Cache discount",
-        "normalizedTokens": "OpenRouter normalized input / output",
-        "byok": "BYOK",
-        "cost": "Cost",
-        "reported": "Reported by provider",
-        "estimated": "Estimated from model pricing",
-        "upstreamCost": "Upstream inference",
-        "webSearches": "Web searches",
-        "finishReason": "Finish reason",
-        "notReported": "Not reported",
-        "agentSteps": "Agent steps",
-        "step": "Step {number}",
-        "generation": "Generation"
-      },
-      "toolInput": "Input",
-      "toolOutput": "Output",
-      "toolActivity": {
-        "iconSearch": "Looking for “{query}” icons",
-        "iconBrowse": "Browsing available icons"
-      },
-      "toolNavigation": {
-        "openPreview": "Open preview",
-        "openWidget": "Open widget"
-      },
-      "webSearch": {
-        "title": "Web search",
-        "completed": "OpenRouter searched the live web for this response.",
-        "searches": "{count, plural, one {# search} other {# searches}}",
-        "sources": "{count, plural, one {# source} other {# sources}}"
-      },
-      "responseError": {
-        "title": "The assistant could not finish",
-        "description": "Try again. If the problem continues, ask an administrator to verify the configured model endpoint.",
-        "retry": "Try again"
-      },
-      "toolPreparationError": {
-        "title": "This request could not be prepared",
-        "description": "The model stopped before it supplied complete details. Retry the response or describe the request again. No change was made."
-      },
-      "busy": {
-        "title": "The assistant is already working",
-        "description": "Wait for the current response or open it to stop the run."
-      },
-      "pendingAction": {
-        "answerTitle": "Answer needed",
-        "answerFallback": "Choose an answer to continue",
-        "formTitle": "Review app details",
-        "boardFormTitle": "Review board changes",
-        "review": "Review",
-        "sendBlocked": "Resolve the pending request before sending"
-      },
-      "activity": {
-        "thinking": "Assistant is thinking",
-        "working": "Working on your prompt",
-        "ready": "Response ready",
-        "completed": "Open the response",
-        "approval": "Approval needed",
-        "failed": "Assistant needs attention",
-        "expand": "Open the assistant response",
-        "dismiss": "Dismiss assistant activity"
-      },
-      "scrollToLatest": "Scroll to latest",
-      "refresh": {
-        "action": "Refresh current view",
-        "working": "Refreshing current view",
-        "completeTitle": "View refreshed",
-        "completeDescription": "Visible Homarr data has been reloaded.",
-        "failedTitle": "View could not be refreshed",
-        "failedDescription": "The change may still be saved. Try the refresh action again."
-      },
-      "askUser": {
-        "preparing": "Preparing question",
-        "answered": "Your answer",
-        "other": "Other",
-        "otherLabel": "Your answer",
-        "otherPlaceholder": "Type another answer…",
-        "submit": "Send answer",
-        "cancelOther": "Cancel other answer",
-        "automaticAffirmative": "Choosing the affirmative answer automatically",
-        "optionKind": {
-          "affirmative": "Confirm",
-          "negative": "Decline",
-          "alternative": "Option",
-          "custom": "Custom"
-        }
-      },
-      "configureApp": {
-        "title": "Review app details",
-        "description": "Choose a local icon and adjust anything before the assistant requests creation approval.",
-        "preparing": "Preparing app details",
-        "continue": "Use these details",
-        "ready": "App details ready",
-        "automaticContinue": "Using these app details automatically"
-      },
-      "configureBoardSettings": {
-        "title": "Review board changes",
-        "loading": "Loading current board settings",
-        "loadErrorTitle": "Board settings could not be loaded",
-        "loadErrorDescription": "The board may no longer exist, or you may not have permission to modify it.",
-        "retry": "Try again",
-        "proposedCount": "Assistant proposed {count} fields",
-        "changeCount": "{count} changes ready",
-        "ready": "Board changes ready",
-        "cancelled": "Current board settings kept",
-        "noChanges": "No settings will change",
-        "keepCurrent": "Keep current settings",
-        "continue": "Continue to approval",
-        "automaticContinue": "Accepting the proposed board changes automatically",
-        "resetAll": "Reset all changes",
-        "tabs": {
-          "css": "Custom CSS",
-          "appearance": "Appearance",
-          "background": "Background",
-          "general": "General"
-        },
-        "cssDescription": "Edit the complete stylesheet. Existing rules are kept unless they are removed here.",
-        "cssCharacters": "{count} of 16384 characters",
-        "copy": "Copy",
-        "copyCss": "Copy CSS",
-        "copied": "Copied",
-        "restoreCss": "Restore current CSS",
-        "remoteCssTitle": "This CSS loads a remote resource",
-        "remoteCssDescription": "Imported stylesheets and remote URLs contact another server when the board loads. Review them before continuing."
-      },
-      "configureWidget": {
-        "title": "Review widget",
-        "preparing": "Preparing widget settings",
-        "review": "Review widget and integrations",
-        "ready": "Widget configuration ready",
-        "cancelled": "Widget was not added",
-        "automaticContinue": "Accepting the proposed widget configuration automatically",
-        "loadErrorTitle": "Integrations could not be loaded",
-        "loadErrorDescription": "Homarr could not load the integrations available for this widget.",
-        "retry": "Try again",
-        "noIntegrationTitle": "A compatible integration is required",
-        "noIntegrationDescription": "Configure an integration supported by this widget before adding it to the dashboard.",
-        "connectIntegration": "Connect service",
-        "manageIntegrations": "Manage integrations",
-        "skip": "Do not add",
-        "errorTitle": "Widget settings could not be prepared",
-        "errorDescription": "The model did not provide a complete widget configuration. No widget was added."
-      },
-      "approvalRequired": "Approval required",
-      "complete": "Complete",
-      "denied": "Denied",
-      "failed": "Failed",
-      "working": "Working",
-      "approvalDescription": "Review this change before it runs.",
-      "approveAndRun": "Approve and run",
-      "deny": "Deny",
-      "autoApproval": {
-        "label": "Automatic approvals",
-        "title": "Automatic approvals",
-        "description": "Automatically approve protected changes, use presented form details, and choose answers categorized as affirmative. Neutral selections still wait for you. Your Homarr permissions still apply. This turns off when you switch conversations.",
-        "enable": "Enable for this conversation",
-        "disable": "Turn off automatic approvals",
-        "enabled": "Automatic approvals are on",
-        "approving": "Approving automatically"
-      }
+    "field": {
+      "name": "Name"
+    },
+    "label": {
+      "new": "New"
+    },
+    "entity": {
+      "apps": "Apps",
+      "boards": "Boards",
+      "certificates": "Certificates",
+      "customWidgets": "Custom widgets",
+      "groups": "Groups",
+      "integrations": "Integrations",
+      "invites": "Invites",
+      "logs": "Logs",
+      "media": "Media",
+      "searchEngines": "Search engines",
+      "tasks": "Tasks",
+      "users": "Users"
     }
   },
   "section": {
@@ -2622,7 +1950,6 @@
       }
     },
     "action": {
-      "openAllInNewTabs": "Open all in tabs",
       "openAllInNewTabsFor": "Open all apps in {name} in tabs"
     },
     "openAllInNewTabs": {
@@ -2649,76 +1976,12 @@
         }
       },
       "remove": {
-        "title": "Remove container",
         "message": "Remove this container? Its contents will move into the surrounding area."
-      }
-    },
-    "dynamic": {
-      "action": {
-        "create": "New dynamic section",
-        "remove": "Remove dynamic section"
-      },
-      "option": {
-        "title": {
-          "label": "Title"
-        },
-        "customCssClasses": {
-          "label": "Custom css classes"
-        },
-        "borderColor": {
-          "label": "Border color"
-        }
-      },
-      "remove": {
-        "title": "Remove dynamic section",
-        "message": "Are you sure you want to remove this dynamic section? Items will be moved at the same location in the parent section."
-      }
-    },
-    "category": {
-      "field": {
-        "name": {
-          "label": "Name"
-        }
-      },
-      "action": {
-        "create": "New category",
-        "edit": "Rename category",
-        "remove": "Remove category",
-        "moveUp": "Move up",
-        "moveDown": "Move down",
-        "createAbove": "New category above",
-        "createBelow": "New category below",
-        "openAllInNewTabs": "Open all in tabs"
-      },
-      "create": {
-        "title": "New category",
-        "submit": "Add category"
-      },
-      "remove": {
-        "title": "Remove category",
-        "message": "Are you sure you want to remove the category {name}?"
-      },
-      "edit": {
-        "title": "Rename category",
-        "submit": "Rename category"
-      },
-      "menu": {
-        "label": {
-          "create": "New category",
-          "changePosition": "Change position",
-          "settings": "Settings"
-        }
-      },
-      "openAllInNewTabs": {
-        "title": "Open all in tabs",
-        "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
       }
     }
   },
   "item": {
     "action": {
-      "create": "New item",
-      "import": "Import item",
       "edit": "Edit item",
       "moveResize": "Move / resize item",
       "duplicate": "Duplicate item",
@@ -2728,7 +1991,6 @@
       "label": {
         "settings": "Settings",
         "settingsFor": "Settings for {name}",
-        "refresh": "Refresh",
         "options": "Options",
         "actions": "Actions"
       },
@@ -2762,6 +2024,8 @@
         "needsSetup": "Needs setup",
         "noConnectionRequired": "No connection required"
       },
+      "customWidget": "Custom widget",
+      "standalone": "Standalone",
       "missingIntegration": {
         "title": "Connect a service first",
         "noPermission": "This widget needs a compatible service connection. Ask an administrator to connect one, then try again."
@@ -2777,6 +2041,29 @@
           "message": "The item could not be added to this board"
         }
       }
+    },
+    "selection": {
+      "summary": "{count, plural, one {# selected item} other {# selected items}}",
+      "selected": "{count, plural, one {# selected} other {# selected}}",
+      "copy": "Copy",
+      "copied": "{count, plural, one {# item copied to the clipboard} other {# items copied to the clipboard}}",
+      "copyError": "The selected items could not be copied. Your browser may not allow clipboard access.",
+      "paste": "Paste",
+      "pasteShortcut": "Paste copied items here (Ctrl / ⌘ + V)",
+      "pasted": "{count, plural, one {# item pasted} other {# items pasted}}",
+      "pasteError": "The clipboard could not be read. Your browser may not allow clipboard access.",
+      "pasteInvalid": "The clipboard does not contain valid Homarr board items.",
+      "pasteUnavailable": "The copied items do not fit on this board.",
+      "removed": "{count, plural, one {# item removed} other {# items removed}}",
+      "move": "Move",
+      "moveTo": "Move selected items",
+      "delete": "Delete",
+      "clear": "Clear selection",
+      "clearShortcut": "Clear selection (Escape)",
+      "saveErrorTitle": "Unable to update items",
+      "saveErrorMessage": "The changes could not be saved. The board was refreshed.",
+      "moveUnavailableTitle": "Unable to move selected items",
+      "moveUnavailableMessage": "The destination does not have enough room for the entire selection."
     },
     "moveResize": {
       "title": "Move / resize item",
@@ -2849,7 +2136,6 @@
       }
     },
     "remove": {
-      "title": "Remove item",
       "message": "Are you sure?"
     },
     "advancedFocus": {
@@ -2861,10 +2147,7 @@
   "widget": {
     "integrationSelect": {
       "configureIntegrationFirst": "Connect an integration first",
-      "loading": "Loading...",
-      "placeholder": "Select an option",
-      "noResults": "No results found",
-      "loadError": "Failed to load options"
+      "placeholder": "Select an option"
     },
     "app": {
       "name": "App",
@@ -2873,9 +2156,6 @@
         "appId": {
           "label": "Choose app"
         },
-        "openInNewTab": {
-          "label": "Open in new tab"
-        },
         "showTitle": {
           "label": "Show app name"
         },
@@ -2883,11 +2163,8 @@
           "label": "Enable status check"
         },
         "layout": {
-          "label": "Layout",
           "option": {
-            "row": "Horizontal",
             "row-reverse": "Horizontal (reversed)",
-            "column": "Vertical",
             "column-reverse": "Vertical (reversed)"
           }
         },
@@ -2912,21 +2189,9 @@
       "name": "Bookmarks",
       "description": "Displays multiple app links",
       "option": {
-        "title": {
-          "label": "Title"
-        },
         "layout": {
           "label": "Layout",
           "option": {
-            "row": {
-              "label": "Horizontal"
-            },
-            "column": {
-              "label": "Vertical"
-            },
-            "grid": {
-              "label": "Grid"
-            },
             "gridHorizontal": {
               "label": "Grid horizontal"
             }
@@ -2940,9 +2205,6 @@
         },
         "hideHostname": {
           "label": "Hide hostnames"
-        },
-        "openNewTab": {
-          "label": "Open in new tab"
         },
         "withBorder": {
           "label": "Show border"
@@ -2970,7 +2232,6 @@
       },
       "noProjectSelected": "No project selected",
       "runnerStatus": "Runner: {status}",
-      "updatedAt": "Updated {date}",
       "projectId": "Project: {id}",
       "sessionReceived": "Session received: {value}",
       "sessionSent": "Session sent: {value}",
@@ -3004,22 +2265,8 @@
       "updateAvailable": "Update available",
       "openReleaseNotes": "Open release notes",
       "option": {
-        "showTitle": {
-          "label": "Show title"
-        },
         "showRing": {
           "label": "Show update ring"
-        },
-        "layout": {
-          "label": "Layout",
-          "option": {
-            "horizontal": {
-              "label": "Horizontal"
-            },
-            "vertical": {
-              "label": "Vertical"
-            }
-          }
         },
         "showUpdateList": {
           "label": "Show container update list",
@@ -3031,27 +2278,12 @@
       "name": "DNS Hole Summary",
       "description": "Displays the summary of your DNS Hole",
       "option": {
-        "layout": {
-          "label": "Layout",
-          "option": {
-            "row": {
-              "label": "Horizontal"
-            },
-            "column": {
-              "label": "Vertical"
-            },
-            "grid": {
-              "label": "Grid"
-            }
-          }
-        },
         "usePiHoleColors": {
           "label": "Use Pi-Hole colors"
         }
       },
       "error": {
-        "internalServerError": "Failed to fetch DNS Hole Summary",
-        "integrationsDisconnected": "No data available, all integrations disconnected"
+        "internalServerError": "Failed to fetch DNS Hole Summary"
       },
       "data": {
         "adsBlockedToday": "Blocked today",
@@ -3070,20 +2302,6 @@
       "name": "DNS Hole Controls",
       "description": "Control PiHole or AdGuard from your dashboard",
       "option": {
-        "layout": {
-          "label": "Layout",
-          "option": {
-            "row": {
-              "label": "Horizontal"
-            },
-            "column": {
-              "label": "Vertical"
-            },
-            "grid": {
-              "label": "Grid"
-            }
-          }
-        },
         "showToggleAllButtons": {
           "label": "Show Toggle All Buttons"
         }
@@ -3101,8 +2319,6 @@
         "disabled": "Disabled",
         "processing": "Processing",
         "disconnected": "Disconnected",
-        "hours": "Hours",
-        "minutes": "Minutes",
         "unlimited": "Leave blank to unlimited"
       }
     },
@@ -3114,15 +2330,9 @@
           "label": "Custom Title/City display",
           "description": "Show off a custom title or the name of the city/country on top of the clock."
         },
-        "customTitle": {
-          "label": "Title"
-        },
         "is24HourFormat": {
           "label": "24-hour format",
           "description": "Use 24-hour format instead of 12-hour format"
-        },
-        "showSeconds": {
-          "label": "Display seconds"
         },
         "useCustomTimezone": {
           "label": "Use a fixed timezone"
@@ -3135,36 +2345,292 @@
           "label": "Show the date"
         },
         "dateFormat": {
-          "label": "Date Format",
-          "description": "How the date should look like"
+          "label": "Date format",
+          "description": "Choose a Day.js preset. Each option shows a live example and its format tokens."
         },
         "customTimeFormat": {
-          "label": "Custom time format",
-          "description": "Use ISO 8601 to format time (this will override other options)"
-        },
-        "customDateFormat": {
-          "label": "Custom date format",
-          "description": "Use ISO 8601 to format date (this will override other options)"
+          "label": "Time format",
+          "description": "Choose a Day.js preset. The selected format controls 12/24-hour display and whether the clock updates every second."
         },
         "showWeather": {
           "label": "Show weather",
           "description": "Display a small animated weather icon and temperature in the corner of the card"
         },
-        "weatherLocation": {
-          "label": "Weather location"
-        },
         "isWeatherFormatFahrenheit": {
           "label": "Use Fahrenheit"
+        },
+        "animateWeatherIcon": {
+          "label": "Animate weather icon",
+          "description": "Animate the weather icon. Disabled by default and always disabled when reduced motion is requested."
+        },
+        "worldClockCities": {
+          "label": "World clock cities",
+          "description": "Add and order up to six cities for advanced view."
         }
+      },
+      "timezoneList": {
+        "timezone": "Timezone",
+        "cityLabel": "City label",
+        "searchPlaceholder": "Search timezones",
+        "noResults": "No timezones found",
+        "unsupportedOption": "Unsupported: {timeZone}",
+        "add": "Add city",
+        "remove": "Remove {city}",
+        "reorder": "Reorder {city}",
+        "limit": "{count} of {maximum} cities configured"
+      },
+      "worldClock": {
+        "primary": "Primary clock",
+        "local": "Local time",
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "yesterday": "Yesterday",
+        "noSecondaryCities": "Add cities in widget options to compare them here.",
+        "unsupportedPrimaryTitle": "Primary timezone is unavailable",
+        "unsupportedPrimary": "{timeZone} is not supported in this browser. Showing UTC as a clearly marked fallback.",
+        "unsupportedTimeZone": "Unsupported timezone: {timeZone}",
+        "accessibleTime": "{city}: {time}, {date}, {timeZone}",
+        "advancedLabel": "Advanced world clock",
+        "cities": "World clocks",
+        "cityCount": "{count} timezones",
+        "timeBarLabel": "24-hour time-of-day position for {city}",
+        "dayProgress": "{percent}% elapsed · {hours}h {minutes}m remaining",
+        "phaseLegend": "Time-of-day legend",
+        "tick": {
+          "midnight": "00",
+          "morning": "06",
+          "noon": "12",
+          "evening": "18",
+          "end": "24"
+        },
+        "phaseRange": {
+          "night": "00–05 · 21–24",
+          "dawn": "05–08",
+          "day": "08–18",
+          "dusk": "18–21"
+        },
+        "phase": {
+          "night": "Night",
+          "dawn": "Dawn",
+          "day": "Day",
+          "dusk": "Dusk"
+        }
+      }
+    },
+    "airQuality": {
+      "name": "Air Quality & UV",
+      "description": "Displays air quality, ultraviolet index, pollutants and pollen for a location.",
+      "option": {
+        "location": {
+          "label": "Air quality location"
+        },
+        "aqiStandard": {
+          "label": "AQI standard",
+          "options": {
+            "auto": "Automatic for locale",
+            "european": "European AQI",
+            "us": "US AQI"
+          }
+        },
+        "showUv": {
+          "label": "Show UV index"
+        },
+        "showPollutants": {
+          "label": "Show pollutant concentrations"
+        },
+        "showPollen": {
+          "label": "Show pollen concentrations"
+        }
+      },
+      "category": {
+        "good": "Good",
+        "fair": "Fair",
+        "moderate": "Moderate",
+        "unhealthySensitive": "Unhealthy for sensitive groups",
+        "unhealthy": "Unhealthy",
+        "poor": "Poor",
+        "veryPoor": "Very poor",
+        "veryUnhealthy": "Very unhealthy",
+        "extremelyPoor": "Extremely poor",
+        "hazardous": "Hazardous",
+        "unknown": "No AQI reading"
+      },
+      "uv": {
+        "label": "UV index",
+        "category": {
+          "low": "Low",
+          "moderate": "Moderate",
+          "high": "High",
+          "veryHigh": "Very high",
+          "extreme": "Extreme",
+          "unknown": "No reading"
+        }
+      },
+      "dominantPollutant": "Dominant pollutant",
+      "aqiLabel": "AQI",
+      "strongestPollen": "Highest pollen",
+      "unit": {
+        "concentration": "{value} µg/m³",
+        "pollen": "{value} grains/m³"
+      },
+      "pollutant": {
+        "pm2_5": "PM2.5",
+        "pm10": "PM10",
+        "ozone": "Ozone",
+        "nitrogenDioxide": "Nitrogen dioxide",
+        "sulphurDioxide": "Sulphur dioxide",
+        "carbonMonoxide": "Carbon monoxide"
+      },
+      "pollen": {
+        "alder": "Alder",
+        "birch": "Birch",
+        "grass": "Grass",
+        "mugwort": "Mugwort",
+        "olive": "Olive",
+        "ragweed": "Ragweed"
+      },
+      "compact": {
+        "sixHourTrend": "AQI trend for the next six hours"
+      },
+      "advanced": {
+        "observedAt": "Updated at {time}",
+        "next24Hours": "Next 24 hours",
+        "pollutants": "Pollutant concentrations",
+        "pollen": "Pollen concentrations",
+        "sevenDayForecast": "7-day maximum forecast",
+        "aqiValue": "AQI {value}",
+        "uvValue": "UV {value}",
+        "uvShort": "UV {value}",
+        "noForecast": "No forecast data available"
+      }
+    },
+    "countdown": {
+      "name": "Countdowns",
+      "description": "Tracks upcoming events and recurring anniversaries.",
+      "option": {
+        "events": {
+          "label": "Events",
+          "description": "Add and order up to 20 one-time or yearly countdowns. Dates are entered in the selected timezone."
+        },
+        "showProgress": {
+          "label": "Show progress"
+        },
+        "showSeconds": {
+          "label": "Show seconds",
+          "description": "Keep seconds visible for every upcoming event."
+        }
+      },
+      "dateTimeEventList": {
+        "newEvent": "New event",
+        "add": "Add event",
+        "remove": "Remove {event}",
+        "reorder": "Reorder {event}",
+        "eventLabel": "Event label",
+        "timezone": "Timezone",
+        "unsupportedOption": "Unsupported: {timeZone}",
+        "recurrence": "Repeats",
+        "recurrenceOption": {
+          "none": "Does not repeat",
+          "yearly": "Every year"
+        },
+        "target": "Event date and time",
+        "trackProgress": "Track progress from a start date",
+        "start": "Progress start date and time",
+        "confirmDateTime": "Confirm date and time",
+        "limit": "{count} of {maximum} events configured"
+      },
+      "empty": {
+        "title": "No countdowns yet",
+        "description": "Add an event in widget options to start counting down."
+      },
+      "completed": "Completed",
+      "yearly": "Yearly",
+      "progress": "Event progress",
+      "upcoming": "Upcoming",
+      "completedEvents": "Completed events",
+      "invalid": {
+        "title": "Some events cannot be displayed",
+        "description": "{count, plural, one {One event has an invalid date or unsupported timezone.} other {# events have an invalid date or unsupported timezone.}}",
+        "value": "Unavailable"
+      },
+      "alert": {
+        "notifications": "Browser notifications",
+        "permissionDenied": "Notifications are blocked in this browser.",
+        "reached": "The countdown has reached its target."
+      }
+    },
+    "timer": {
+      "name": "Timer / Pomodoro",
+      "description": "Runs a simple timer or a configurable Pomodoro sequence.",
+      "option": {
+        "mode": {
+          "label": "Mode",
+          "options": {
+            "timer": "Timer",
+            "pomodoro": "Pomodoro"
+          }
+        },
+        "timerMinutes": {
+          "label": "Timer minutes"
+        },
+        "focusMinutes": {
+          "label": "Focus minutes"
+        },
+        "shortBreakMinutes": {
+          "label": "Short break minutes"
+        },
+        "longBreakMinutes": {
+          "label": "Long break minutes"
+        },
+        "sessionsBeforeLongBreak": {
+          "label": "Focus sessions before a long break"
+        },
+        "autoStartBreaks": {
+          "label": "Automatically start breaks"
+        },
+        "autoStartFocus": {
+          "label": "Automatically start focus sessions"
+        }
+      },
+      "phase": {
+        "timer": "Timer",
+        "focus": "Focus",
+        "shortBreak": "Short break",
+        "longBreak": "Long break"
+      },
+      "action": {
+        "start": "Start",
+        "pause": "Pause",
+        "reset": "Reset"
+      },
+      "attention": {
+        "timerComplete": "Timer complete",
+        "phaseReady": "{phase} ready"
+      },
+      "progress": "Timer progress: {progress}%",
+      "compact": {
+        "completedFocus": "{count, plural, =0 {No focus sessions completed} one {# focus session completed} other {# focus sessions completed}}"
+      },
+      "alert": {
+        "title": "Timer complete",
+        "completed": "{phase} completed."
+      },
+      "advanced": {
+        "sequence": "Pomodoro sequence",
+        "focusSession": "Focus {session}",
+        "settings": "Permanent settings",
+        "settingsHint": "Use the widget context menu to edit these board settings.",
+        "localAlerts": "Local alerts",
+        "notifications": "Browser notifications",
+        "sound": "Timer sounds",
+        "localAlertsHint": "Timer sounds are enabled by default. Sounds and notifications apply only to this widget in this browser.",
+        "notificationsDenied": "Notifications are blocked in this browser."
       }
     },
     "minecraftServerStatus": {
       "name": "Minecraft Server Status",
       "description": "Displays the status of a Minecraft server",
       "option": {
-        "title": {
-          "label": "Title"
-        },
         "domain": {
           "label": "Server address"
         },
@@ -3282,9 +2748,6 @@
         "noteId": {
           "label": "Note"
         },
-        "showTitle": {
-          "label": "Show title"
-        },
         "showUpdatedAt": {
           "label": "Show last updated"
         }
@@ -3294,11 +2757,7 @@
       "notFound": "Note not found",
       "noNotes": "No notes found",
       "integrationRequired": "Select an Anchor integration first",
-      "updatedAt": "Updated {date}",
       "untitled": "Untitled",
-      "edit": "Edit",
-      "save": "Save",
-      "cancel": "Cancel",
       "readOnlyViewer": "You have viewer access to this note. Editing is disabled.",
       "saveForbidden": "You do not have permission to edit this note.",
       "saveFailed": "Failed to save this note. Please try again.",
@@ -3380,7 +2839,6 @@
       "advanced": {
         "entityId": "Entity ID: {id}",
         "lastChanged": "Changed {date}",
-        "lastUpdated": "Updated {date}",
         "attribute": {
           "unit": "Unit",
           "deviceClass": "Device class",
@@ -3426,7 +2884,6 @@
       "advanced": {
         "currentPrice": "Current price",
         "previousClose": "Previous close",
-        "change": "Change",
         "changePercentage": "Change (%)",
         "minimum": "Minimum",
         "maximum": "Maximum"
@@ -3501,6 +2958,10 @@
               "label": "1 Month"
             }
           }
+        },
+        "showDetails": {
+          "label": "Show details",
+          "description": "Show the name, change, and time range in the compact view. Turn off for just the symbol and price."
         }
       }
     },
@@ -3512,7 +2973,7 @@
       },
       "option": {
         "releaseType": {
-          "label": "Radarr release type",
+          "label": "Release type",
           "options": {
             "inCinemas": "In cinemas",
             "digitalRelease": "Digital release",
@@ -3547,15 +3008,19 @@
         "disableTemperatureDecimals": {
           "label": "Disable temperature decimals"
         },
+        "animateIcons": {
+          "label": "Animate weather icons"
+        },
+        "showHumidity": {
+          "label": "Show humidity",
+          "description": "Display humidity in current conditions, hourly details and daily forecasts"
+        },
         "showCurrentWindSpeed": {
           "label": "Show current wind speed",
           "description": "Only on current weather"
         },
         "useImperialSpeed": {
           "label": "Use mph for windspeed"
-        },
-        "location": {
-          "label": "Weather location"
         },
         "showCity": {
           "label": "Show city"
@@ -3566,10 +3031,6 @@
         "forecastDayCount": {
           "label": "Amount of forecast days",
           "description": "When the widget is not wide enough, less days are shown"
-        },
-        "dateFormat": {
-          "label": "Date Format",
-          "description": "How the date should look like"
         }
       },
       "currentWindSpeed": "{currentWindSpeed} {unit}",
@@ -3600,11 +3061,40 @@
       "detailsFor": "Show weather details for {date}",
       "advanced": {
         "forecast": "7-day forecast",
+        "hourlyForecast": "Next 24 hours",
         "day": "Day",
+        "time": "Time",
         "conditions": "Conditions",
-        "temperature": "High / low",
+        "temperature": "Temperature",
+        "feelsLike": "Feels like {temperature}",
+        "feelsLikeLabel": "Feels like",
+        "feelsLikeRange": "Feels like: {maximum} / {minimum}",
+        "highLow": "High {maximum} · low {minimum}",
+        "observedAt": "Updated at {time}",
         "humidity": "Humidity",
+        "averageHumidity": "Average humidity: {humidity}%",
+        "currentHumidity": "Current humidity",
         "wind": "Wind / gusts ({unit})",
+        "currentWind": "Current wind / gusts",
+        "windValue": "{speed} / {gusts} {unit}",
+        "windDetail": "Max wind / gusts: {speed} / {gusts} {unit}",
+        "nextHourPrecipitation": "Precipitation next hour",
+        "precipitationChance": "Precipitation chance",
+        "precipitationValue": "{probability}% · {amount} mm",
+        "precipitationDetail": "Precipitation: {probability}% · {amount} mm",
+        "todayUv": "Today's max UV index",
+        "uvIndex": "Max UV index: {value}",
+        "daylight": "Daylight: {duration}",
+        "hourlyTooltip": "Feels like {feelsLike}{temperatureUnit} · {amount} mm · {humidity}% humidity · {speed} {speedUnit} wind",
+        "hourlyTooltipWithoutHumidity": "Feels like {feelsLike}{temperatureUnit} · {amount} mm · {speed} {speedUnit} wind",
+        "detailLabel": {
+          "feelsLike": "Feels like",
+          "precipitation": "Precipitation",
+          "humidity": "Average humidity",
+          "wind": "Max wind / gusts",
+          "uv": "Max UV index",
+          "daylight": "Daylight"
+        },
         "sun": "Sunrise / sunset",
         "noForecast": "No forecast data available"
       }
@@ -3654,11 +3144,6 @@
         "fileSystem": {
           "label": "Show Filesystem Info"
         },
-        "visibleStorageVolumes": {
-          "label": "Visible storage volumes",
-          "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
-          "placeholder": "Select storage volumes"
-        },
         "defaultTab": {
           "label": "Default tab"
         },
@@ -3686,15 +3171,10 @@
         "rebootRequired": "Reboot required",
         "rebootNotRequired": "No reboot required"
       },
-      "memory": {},
       "error": {
         "internalServerError": "Failed to fetch health status"
       },
       "cluster": {
-        "summary": {
-          "cpu": "CPU",
-          "memory": "RAM"
-        },
         "resource": {
           "node": {
             "name": "Nodes"
@@ -3730,8 +3210,6 @@
         "table": {
           "header": {
             "name": "Name",
-            "cpu": "CPU",
-            "memory": "RAM",
             "node": "Node"
           }
         }
@@ -3741,29 +3219,18 @@
       "name": "Docker stats",
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {
-        "columns": {
-          "label": "Columns to show"
-        },
-        "enableRowSorting": {
-          "label": "Enable items sorting"
+        "endpointIds": {
+          "label": "Docker environments",
+          "description": "Leave empty to show containers from every Docker environment",
+          "placeholder": "All Docker environments"
         },
         "defaultSort": {
-          "label": "Column used for sorting by default",
           "option": {
             "name": "Name",
             "state": "State",
             "cpuUsage": "CPU usage",
             "memoryUsage": "Memory usage"
           }
-        },
-        "descendingDefaultSort": {
-          "label": "Invert sorting"
-        },
-        "columnOrder": {
-          "label": "Column order"
-        },
-        "columnWidths": {
-          "label": "Column widths"
         }
       },
       "error": {
@@ -3777,7 +3244,6 @@
       }
     },
     "coolify": {
-      "name": "Coolify",
       "description": "Overview of your Coolify instance with servers and applications",
       "option": {
         "showServers": {
@@ -3840,7 +3306,6 @@
       "name": "VPN",
       "description": "Overview of your VPN connections",
       "serviceUnavailable": "VPN unavailable",
-      "option": {},
       "status": {
         "running": "Running",
         "notRunning": "Not running",
@@ -3886,7 +3351,6 @@
       }
     },
     "tracearr": {
-      "name": "Tracearr",
       "description": "Enhanced media server monitoring with detailed stream and transcoding data",
       "option": {
         "showStreams": {
@@ -3974,10 +3438,7 @@
           "label": "Event",
           "description": "Show total occurrences of a specific event",
           "placeholder": "Select an event",
-          "loading": "Loading events...",
-          "noEvents": "No events found",
-          "none": "No event",
-          "configureWebsiteFirst": "Select a website first to load events"
+          "none": "No event"
         },
         "chartType": {
           "label": "Chart type",
@@ -4008,25 +3469,20 @@
         "eventNames": {
           "label": "Events",
           "description": "Select one or more events to chart",
-          "placeholder": "Select events...",
-          "loading": "Loading events...",
-          "noEvents": "No events found",
-          "configureWebsiteFirst": "Select a website first to load events"
+          "placeholder": "Select events..."
         },
         "topCount": {
           "label": "Items to show",
           "description": "Number of top items to display (max 500)"
+        },
+        "events": {
+          "loading": "Loading events...",
+          "noEvents": "No events found",
+          "configureWebsiteFirst": "Select a website first to load events"
         }
       },
       "event": {
-        "occurrences": "events",
         "label": "events"
-      },
-      "topPages": {
-        "direct": "Direct"
-      },
-      "topReferrers": {
-        "direct": "Direct"
       },
       "events": {
         "selectPrompt": "Select events to chart"
@@ -4036,6 +3492,9 @@
         "noWebsite": "No website configured",
         "noData": "No data available",
         "internalServerError": "Failed to fetch Umami data"
+      },
+      "top": {
+        "direct": "Direct"
       }
     },
     "common": {
@@ -4075,7 +3534,61 @@
         "noIntegration": "No integration selected",
         "noData": "No integration data available"
       },
-      "option": {}
+      "integrationDisconnected": "No data available, all integrations disconnected",
+      "updatedAt": "Updated {date}",
+      "title": {
+        "label": "Title"
+      },
+      "openInNewTab": {
+        "label": "Open in new tab"
+      },
+      "showTitle": {
+        "label": "Show title"
+      },
+      "weatherLocation": {
+        "label": "Weather location"
+      },
+      "layout": {
+        "label": "Layout",
+        "option": {
+          "horizontal": "Horizontal",
+          "vertical": "Vertical",
+          "grid": "Grid"
+        }
+      },
+      "select": {
+        "loading": "Loading...",
+        "loadError": "Failed to load options"
+      },
+      "dateFormat": {
+        "label": "Date Format",
+        "description": "How the date should look like"
+      },
+      "visibleStorageVolumes": {
+        "label": "Visible storage volumes",
+        "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
+        "placeholder": "Select storage volumes"
+      },
+      "tableOptions": {
+        "columns": {
+          "label": "Columns to show"
+        },
+        "columnOrder": {
+          "label": "Column order"
+        },
+        "columnWidths": {
+          "label": "Column widths"
+        },
+        "enableRowSorting": {
+          "label": "Enable items sorting"
+        },
+        "defaultSort": {
+          "label": "Column used for sorting by default"
+        },
+        "invertSorting": {
+          "label": "Invert sorting"
+        }
+      }
     },
     "video": {
       "name": "Video Stream",
@@ -4106,7 +3619,7 @@
       "option": {
         "showOnlyPlaying": {
           "label": "Show only currently playing",
-          "description": "Disabling this will not work for plex"
+          "description": "This option is not supported by every media server"
         },
         "showBitrate": {
           "label": "Show bitrate",
@@ -4162,7 +3675,6 @@
       }
     },
     "paperlessNgx": {
-      "name": "Paperless-ngx",
       "description": "Overview of your Paperless-ngx document archive",
       "documentsTotal": "Total Documents",
       "documentsInbox": "Inbox",
@@ -4207,7 +3719,6 @@
       }
     },
     "patchmon": {
-      "name": "PatchMon",
       "description": "Overview of host patch status from PatchMon",
       "title": "PatchMon Statistics",
       "totalHosts": "Total Hosts",
@@ -4274,36 +3785,30 @@
           "description": "Compare the needs-updates count as an absolute value or percentage of total hosts"
         },
         "hostsNeedingUpdatesWarningAt": {
-          "label": "Needs updates warning threshold",
-          "description": "Enter yellow when the value reaches this threshold"
+          "label": "Needs updates warning threshold"
         },
         "hostsNeedingUpdatesCriticalAt": {
-          "label": "Needs updates critical threshold",
-          "description": "Enter red when the value reaches this threshold"
+          "label": "Needs updates critical threshold"
         },
         "securityUpdatesThresholdMode": {
           "label": "Security updates threshold mode",
           "description": "Compare the security-updates count as an absolute value or percentage of total hosts"
         },
         "securityUpdatesWarningAt": {
-          "label": "Security updates warning threshold",
-          "description": "Enter yellow when the value reaches this threshold"
+          "label": "Security updates warning threshold"
         },
         "securityUpdatesCriticalAt": {
-          "label": "Security updates critical threshold",
-          "description": "Enter red when the value reaches this threshold"
+          "label": "Security updates critical threshold"
         },
         "hostsWithSecurityUpdatesThresholdMode": {
           "label": "Hosts with security updates threshold mode",
           "description": "Compare the host count as an absolute value or percentage of total hosts"
         },
         "hostsWithSecurityUpdatesWarningAt": {
-          "label": "Hosts with security updates warning threshold",
-          "description": "Enter yellow when the value reaches this threshold"
+          "label": "Hosts with security updates warning threshold"
         },
         "hostsWithSecurityUpdatesCriticalAt": {
-          "label": "Hosts with security updates critical threshold",
-          "description": "Enter red when the value reaches this threshold"
+          "label": "Hosts with security updates critical threshold"
         },
         "upToDateHostsThresholdMode": {
           "label": "Up-to-date hosts threshold mode",
@@ -4322,12 +3827,10 @@
           "description": "Compare the outdated-packages count as an absolute value or percentage of total hosts"
         },
         "totalOutdatedPackagesWarningAt": {
-          "label": "Outdated packages warning threshold",
-          "description": "Enter yellow when the value reaches this threshold"
+          "label": "Outdated packages warning threshold"
         },
         "totalOutdatedPackagesCriticalAt": {
-          "label": "Outdated packages critical threshold",
-          "description": "Enter red when the value reaches this threshold"
+          "label": "Outdated packages critical threshold"
         },
         "showOsDistribution": {
           "label": "Show OS distribution",
@@ -4358,6 +3861,14 @@
             "bars": "Horizontal bars",
             "donut": "Donut chart"
           }
+        },
+        "threshold": {
+          "warningAt": {
+            "description": "Enter yellow when the value reaches this threshold"
+          },
+          "criticalAt": {
+            "description": "Enter red when the value reaches this threshold"
+          }
         }
       },
       "error": {
@@ -4365,14 +3876,11 @@
       }
     },
     "bazarr": {
-      "name": "Bazarr",
       "description": "Overview of missing subtitles and health status from your Bazarr instance",
       "episodes": "Missing Episodes",
       "movies": "Missing Movies",
       "providers": "Provider Issues",
       "status": "Health Issues",
-      "sonarrSignalr": "Sonarr SignalR",
-      "radarrSignalr": "Radarr SignalR",
       "announcements": "Announcements",
       "option": {
         "showMissingEpisodes": {
@@ -4460,18 +3968,6 @@
       "name": "Download Client",
       "description": "Allows you to view and manage your Downloads from both Torrent and Usenet clients.",
       "option": {
-        "columns": {
-          "label": "Columns to show"
-        },
-        "enableRowSorting": {
-          "label": "Enable items sorting"
-        },
-        "defaultSort": {
-          "label": "Column used for sorting by default"
-        },
-        "descendingDefaultSort": {
-          "label": "Invert sorting"
-        },
         "showCompletedUsenet": {
           "label": "Show usenet entries marked as completed"
         },
@@ -4496,12 +3992,6 @@
         "limitPerIntegration": {
           "label": "Limit items per integration",
           "description": "This will limit the number of items shown per integration, not globally"
-        },
-        "columnOrder": {
-          "label": "Column order"
-        },
-        "columnWidths": {
-          "label": "Column widths"
         }
       },
       "errors": {
@@ -4513,70 +4003,70 @@
       },
       "items": {
         "actions": {
-          "columnTitle": "Controls"
+          "columnTitle": "Actions"
         },
         "added": {
           "columnTitle": "Added",
-          "detailsTitle": "Date Added"
+          "detailsTitle": "Added"
         },
         "category": {
-          "columnTitle": "Extras",
-          "detailsTitle": "Categories (Or extra information)"
+          "columnTitle": "Category",
+          "detailsTitle": "Category"
         },
         "downSpeed": {
           "columnTitle": "Down",
-          "detailsTitle": "Download Speed"
+          "detailsTitle": "Down"
         },
         "index": {
           "columnTitle": "#",
-          "detailsTitle": "Current index within client"
+          "detailsTitle": "Index"
         },
         "id": {
-          "columnTitle": "Id",
-          "detailsTitle": "Item ID"
+          "columnTitle": "ID",
+          "detailsTitle": "ID"
         },
         "integration": {
-          "columnTitle": "Integration"
+          "columnTitle": "Source"
         },
         "name": {
-          "columnTitle": "Job name"
+          "columnTitle": "Name"
         },
         "progress": {
           "columnTitle": "Progress",
-          "detailsTitle": "Download Progress"
+          "detailsTitle": "Progress"
         },
         "ratio": {
           "columnTitle": "Ratio",
-          "detailsTitle": "Torrent ratio (received/sent)"
+          "detailsTitle": "Ratio"
         },
         "received": {
-          "columnTitle": "Total down",
-          "detailsTitle": "Total downloaded"
+          "columnTitle": "Down",
+          "detailsTitle": "Downloaded"
         },
         "sent": {
-          "columnTitle": "Total up",
-          "detailsTitle": "Total Uploaded"
+          "columnTitle": "Up",
+          "detailsTitle": "Uploaded"
         },
         "size": {
-          "columnTitle": "File Size",
-          "detailsTitle": "Total Size of selection/files"
+          "columnTitle": "Size",
+          "detailsTitle": "Size"
         },
         "state": {
           "columnTitle": "State",
-          "detailsTitle": "Job State"
+          "detailsTitle": "State"
         },
         "time": {
-          "columnTitle": "Finish time",
-          "detailsTitle": "Time since/to completion",
+          "columnTitle": "ETA",
+          "detailsTitle": "ETA",
           "eta": "ETA"
         },
         "type": {
           "columnTitle": "Type",
-          "detailsTitle": "Download Client type"
+          "detailsTitle": "Type"
         },
         "upSpeed": {
           "columnTitle": "Up",
-          "detailsTitle": "Upload Speed"
+          "detailsTitle": "Up"
         }
       },
       "states": {
@@ -4700,7 +4190,6 @@
     "mediaRequests-requestStats": {
       "name": "Media Requests Stats",
       "description": "Statistics about your media requests",
-      "option": {},
       "titles": {
         "stats": {
           "main": "Media Stats",
@@ -4710,8 +4199,7 @@
           "declined": "Already declined",
           "available": "Already Available",
           "tv": "TV requests",
-          "movie": "Movie requests",
-          "total": "Total"
+          "movie": "Movie requests"
         },
         "users": {
           "main": "Top Users",
@@ -4737,7 +4225,6 @@
       },
       "currentIndex": "{start}-{end} of {total}",
       "healthCheck": {
-        "title": "Health check",
         "queued": "Queued",
         "status": {
           "healthy": "Healthy",
@@ -4746,41 +4233,36 @@
       },
       "panel": {
         "statistics": {
-          "empty": "Empty",
-          "transcodes": "Transcodes",
-          "transcodesCount": "Transcodes",
-          "healthChecksCount": "Health checks",
           "filesCount": "Files",
           "savedSpace": "Saved space",
-          "healthChecks": "Health checks",
           "videoCodecs": "Codecs",
           "videoContainers": "Containers",
           "videoResolutions": "Resolutions"
         },
         "workers": {
-          "empty": "Empty",
           "table": {
-            "file": "File",
             "eta": "ETA",
-            "progress": "Progress",
-            "transcode": "Transcode",
-            "healthCheck": "Health check"
+            "progress": "Progress"
           }
         },
         "queue": {
-          "empty": "Empty",
           "table": {
-            "file": "File",
-            "size": "Size",
-            "transcode": "Transcode",
-            "healthCheck": "Health check"
+            "size": "Size"
           }
+        },
+        "common": {
+          "empty": "Empty",
+          "file": "File",
+          "healthCheck": "Health check",
+          "transcode": "Transcode",
+          "transcodes": "Transcodes",
+          "healthChecks": "Health checks"
         }
       }
     },
     "mediaMissing": {
       "name": "Missing & Queued Media",
-      "description": "Shows missing and queued movies and episodes from Radarr and Sonarr",
+      "description": "Shows missing and queued movies and episodes from {radarr} and {sonarr}",
       "option": {
         "showMissing": {
           "label": "Show missing items"
@@ -4911,17 +4393,8 @@
               "label": "Regular Expression"
             }
           },
-          "edit": {
-            "label": "Edit"
-          },
           "editForm": {
-            "title": "Edit Repository",
-            "cancel": {
-              "label": "Cancel"
-            },
-            "confirm": {
-              "label": "Confirm"
-            }
+            "title": "Edit Repository"
           },
           "importForm": {
             "title": "Import from Docker"
@@ -4938,8 +4411,7 @@
             "label": "Provider Tokens",
             "token": "Token",
             "configured": "Token configured",
-            "notConfigured": "No token set",
-            "save": "Save"
+            "notConfigured": "No token set"
           }
         }
       },
@@ -4971,7 +4443,6 @@
       "collapseDetails": "Hide details for {name}"
     },
     "networkControllerSummary": {
-      "option": {},
       "advanced": {
         "updated": "Updated",
         "metric": {
@@ -4993,16 +4464,12 @@
         "lan": "LAN"
       },
       "error": {
-        "integrationsDisconnected": "No data available, all integrations disconnected",
         "unknownContentOption": "Unknown content option for network controller summary widget: "
       },
       "name": "Network Controller Summary",
       "description": "Displays the summary of a Network Controller (like UniFi Controller)"
     },
     "networkControllerStatus": {
-      "advanced": {
-        "updatedAt": "Updated {date}"
-      },
       "card": {
         "variants": {
           "wired": {
@@ -5033,7 +4500,6 @@
         }
       },
       "error": {
-        "integrationsDisconnected": "No data available, all integrations disconnected",
         "unknownContentOption": "Unknown content option for network status widget: "
       },
       "name": "Network Status",
@@ -5063,7 +4529,6 @@
         "versiontitle": "Versions",
         "cputitle": "CPU usage",
         "memorytitle": "Memory usage",
-        "cpu": "CPU",
         "memory": "Memory",
         "interfaces": {
           "name": "name",
@@ -5139,7 +4604,6 @@
       }
     },
     "uptimeKuma": {
-      "name": "Uptime Kuma",
       "description": "Monitor uptime statistics from your Uptime Kuma status page",
       "option": {
         "showAverageUptime": {
@@ -5184,7 +4648,6 @@
       }
     },
     "traefik": {
-      "name": "Traefik",
       "description": "Overview of Traefik routers, services, middlewares, and entry points",
       "option": {
         "showTcp": {
@@ -5205,7 +4668,6 @@
       },
       "resource": {
         "routers": "Routers",
-        "services": "Services",
         "middlewares": "Middlewares"
       },
       "status": {
@@ -5294,9 +4756,7 @@
           "label": "Visible charts",
           "description": "Select the charts you want to be visible.",
           "option": {
-            "cpu": "CPU",
             "memory": "Memory",
-            "gpu": "GPU",
             "network": "Network"
           }
         },
@@ -5311,9 +4771,7 @@
         }
       },
       "card": {
-        "cpu": "CPU",
         "memory": "MEM",
-        "gpu": "GPU",
         "network": "NET",
         "up": "UP",
         "down": "DOWN"
@@ -5342,11 +4800,6 @@
         },
         "showBackgroundBar": {
           "label": "Show background usage bar"
-        },
-        "visibleStorageVolumes": {
-          "label": "Visible storage volumes",
-          "description": "Only available when all selected integrations are Synology. Leave empty to show all detected storage volumes.",
-          "placeholder": "Select storage volumes"
         }
       },
       "status": {
@@ -5362,7 +4815,7 @@
         "noTemplate": "No JSX template is configured.",
         "templateWarnings": "{count} template warnings:",
         "requestIdRequired": "This network control requires a named requestId.",
-        "unsavedPreview": "Run a GET test in the editor before testing named requests.",
+        "unsavedPreview": "Run the initial request test in the editor before testing named requests.",
         "invalidParams": "The request parameters are invalid.",
         "loading": "Loading request...",
         "loadRequest": "Load request",
@@ -5373,8 +4826,6 @@
         "actionsDisabledEditMode": "Actions are disabled while the board is in edit mode.",
         "widgetItemUnavailable": "This widget item is not available.",
         "toggle": "Toggle",
-        "refresh": "Refresh",
-        "copy": "Copy",
         "copied": "Copied",
         "confirmDelete": "Confirm this destructive action."
       },
@@ -5416,150 +4867,21 @@
       "name": "Beszel Systems (Table)",
       "description": "Table view of all Beszel-monitored systems with sortable columns and status indicators",
       "option": {
-        "statusFilter": {
-          "label": "Status filter"
-        },
         "sortBy": {
           "label": "Sort by"
         },
         "sortDirection": {
           "label": "Sort direction"
-        },
-        "showCpu": {
-          "label": "Show CPU"
-        },
-        "showMemory": {
-          "label": "Show memory"
-        },
-        "showDisk": {
-          "label": "Show disk"
-        },
-        "showGpu": {
-          "label": "Show GPU"
-        },
-        "showLoadAvg": {
-          "label": "Show load average"
-        },
-        "showNet": {
-          "label": "Show network"
-        },
-        "showTemp": {
-          "label": "Show temperature"
-        },
-        "showBattery": {
-          "label": "Show battery"
-        },
-        "showServices": {
-          "label": "Show services"
-        },
-        "showUptime": {
-          "label": "Show uptime"
-        },
-        "showAgent": {
-          "label": "Show agent version"
-        },
-        "columnOrder": {
-          "label": "Column order"
-        },
-        "columnWidths": {
-          "label": "Column widths"
         }
       },
-      "noRecords": "No systems found",
       "error": {
-        "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
         "layoutSaveTitle": "Unable to save table layout",
         "layoutSaveMessage": "Your column order or widths could not be saved. Please try again."
-      },
-      "column": {
-        "system": "System",
-        "source": "Source",
-        "hostname": "Hostname",
-        "os": "OS",
-        "cpuModel": "CPU model",
-        "cores": "Cores",
-        "memoryTotal": "Memory total",
-        "cpu": "CPU",
-        "memory": "Memory",
-        "disk": "Disk",
-        "gpu": "GPU",
-        "loadAvg": "Load Avg",
-        "net": "Net",
-        "temp": "Temp",
-        "battery": "Bat",
-        "services": "Services",
-        "uptime": "Uptime",
-        "agent": "Agent"
       }
     },
     "beszelSystemGrid": {
       "name": "Beszel Systems (Grid)",
-      "description": "Card grid view of all Beszel-monitored systems with real-time metrics",
-      "option": {
-        "statusFilter": {
-          "label": "Status filter"
-        },
-        "showCpu": {
-          "label": "Show CPU"
-        },
-        "showMemory": {
-          "label": "Show memory"
-        },
-        "showDisk": {
-          "label": "Show disk"
-        },
-        "showGpu": {
-          "label": "Show GPU"
-        },
-        "showLoadAvg": {
-          "label": "Show load average"
-        },
-        "showNet": {
-          "label": "Show network"
-        },
-        "showTemp": {
-          "label": "Show temperature"
-        },
-        "showBattery": {
-          "label": "Show battery"
-        },
-        "showServices": {
-          "label": "Show services"
-        },
-        "showUptime": {
-          "label": "Show uptime"
-        },
-        "showAgent": {
-          "label": "Show agent version"
-        }
-      },
-      "error": {
-        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
-      },
-      "empty": {
-        "noSystems": "No systems found"
-      },
-      "metadata": {
-        "hostname": "Hostname",
-        "os": "OS",
-        "cpuModel": "CPU model",
-        "cores": "Cores",
-        "memoryTotal": "Memory total",
-        "source": "Source"
-      },
-      "metric": {
-        "cpu": "CPU",
-        "memory": "Memory",
-        "disk": "Disk",
-        "gpu": "GPU",
-        "loadAvg": "Load Avg",
-        "net": "Net",
-        "temp": "Temp",
-        "battery": "Bat",
-        "services": "Services",
-        "uptime": "Uptime",
-        "agent": "Agent"
-      }
+      "description": "Card grid view of all Beszel-monitored systems with real-time metrics"
     },
     "beszelAlerts": {
       "name": "Beszel Alerts",
@@ -5573,9 +4895,6 @@
         }
       },
       "empty": "No alerts configured",
-      "error": {
-        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
-      },
       "history": "History",
       "resolved": "Resolved",
       "status": {
@@ -5624,7 +4943,6 @@
         "noSystems": "No systems found"
       },
       "error": {
-        "internalServerError": "Unable to connect to Beszel. Check your integration settings.",
         "liveConnectionFailed": "Live connection failed. Your Beszel instance may not support real-time streaming.",
         "switchToHistorical": "Switch to historical view",
         "systemNotFound": "Selected system was not found. Choose a different system.",
@@ -5634,8 +4952,7 @@
       "chart": {
         "cpu": {
           "title": "CPU Usage",
-          "subtitle": "Average system-wide CPU utilization",
-          "series": "CPU"
+          "subtitle": "Average system-wide CPU utilization"
         },
         "memory": {
           "title": "Memory Usage",
@@ -5687,14 +5004,9 @@
         "thirtyDays": "30d"
       }
     },
-    "dynamicSelect": {
-      "noResults": "No results found",
-      "loadError": "Failed to load options"
-    },
     "assistant": {
       "name": "Assistant",
       "description": "Have a complete assistant conversation directly on your board.",
-      "option": {},
       "unavailable": {
         "title": "Assistant unavailable",
         "description": "Sign in and ask an administrator to configure the Assistant from the management panel."
@@ -5702,7 +5014,75 @@
       "compact": {
         "title": "Assistant",
         "description": "Resize this widget to chat here, or open the full conversation.",
-        "open": "Open assistant"
+        "open": "Open assistant",
+        "openTitle": "Assistant open in side panel",
+        "openDescription": "The conversation stays in one active surface.",
+        "returnToWidget": "Return the conversation to this widget",
+        "otherWidgetTitle": "Assistant active in another widget",
+        "otherWidgetDescription": "Only one conversation surface stays active at a time.",
+        "useHere": "Use the assistant in this widget"
+      }
+    },
+    "beszel": {
+      "error": {
+        "internalServerError": "Unable to connect to Beszel. Check your integration settings."
+      },
+      "empty": {
+        "noSystems": "No systems found"
+      },
+      "options": {
+        "statusFilter": {
+          "label": "Status filter"
+        },
+        "showCpu": {
+          "label": "Show CPU"
+        },
+        "showMemory": {
+          "label": "Show memory"
+        },
+        "showDisk": {
+          "label": "Show disk"
+        },
+        "showGpu": {
+          "label": "Show GPU"
+        },
+        "showLoadAvg": {
+          "label": "Show load average"
+        },
+        "showNet": {
+          "label": "Show network"
+        },
+        "showTemp": {
+          "label": "Show temperature"
+        },
+        "showBattery": {
+          "label": "Show battery"
+        },
+        "showServices": {
+          "label": "Show services"
+        },
+        "showUptime": {
+          "label": "Show uptime"
+        },
+        "showAgent": {
+          "label": "Show agent version"
+        }
+      },
+      "metric": {
+        "system": "System",
+        "source": "Source",
+        "hostname": "Hostname",
+        "cpuModel": "CPU model",
+        "cores": "Cores",
+        "memoryTotal": "Memory total",
+        "memory": "Memory",
+        "disk": "Disk",
+        "loadAvg": "Load Avg",
+        "net": "Net",
+        "temp": "Temp",
+        "battery": "Bat",
+        "uptime": "Uptime",
+        "agent": "Agent"
       }
     }
   },
@@ -5732,13 +5112,11 @@
       "step": {
         "content": {
           "label": "Add useful content",
-          "description": "Choose a widget and configure it before it is placed.",
-          "action": "Add"
+          "description": "Choose a widget and configure it before it is placed."
         },
         "app": {
           "label": "Pin an app",
-          "description": "Keep a service or tool one click away from this board.",
-          "action": "Add"
+          "description": "Keep a service or tool one click away from this board."
         },
         "service": {
           "label": "Connect a service",
@@ -5788,11 +5166,9 @@
         "exit": "Exit edit mode",
         "notification": {
           "success": {
-            "title": "Changes applied successfully",
             "message": "The board was successfully saved"
           },
           "error": {
-            "title": "Unable to apply changes",
             "message": "The board could not be saved"
           },
           "loadError": {
@@ -5927,9 +5303,6 @@
           "xl": "Very large"
         }
       },
-      "name": {
-        "label": "Name"
-      },
       "isPublic": {
         "label": "Public",
         "description": "Public boards are accessible by everyone, even without an account."
@@ -6023,10 +5396,7 @@
             "rename": {
               "label": "Rename board",
               "description": "Changing the name will break any links to this board.",
-              "button": "Change name",
-              "modal": {
-                "title": "Rename board"
-              }
+              "button": "Change name"
             },
             "visibility": {
               "label": "Change board visibility",
@@ -6050,9 +5420,7 @@
               }
             },
             "delete": {
-              "label": "Delete this board",
               "description": "Once you delete a board, there is no going back. Please be certain.",
-              "button": "Delete this board",
               "confirm": {
                 "title": "Delete board",
                 "description": "Are you sure you want to delete this board? This will permanently delete the board and all its content."
@@ -6097,9 +5465,6 @@
   },
   "layout": {
     "field": {
-      "name": {
-        "label": "Name"
-      },
       "columnCount": {
         "label": "Column count"
       },
@@ -6131,14 +5496,10 @@
   },
   "management": {
     "metaTitle": "Management",
-    "title": {
-      "morning": "Good morning, {username}",
-      "afternoon": "Good afternoon, {username}",
-      "evening": "Good evening, {username}"
-    },
     "notFound": {
       "title": "Not Found",
-      "text": "Could not find requested resource"
+      "text": "Could not find requested resource",
+      "backToHome": "Back to management home"
     },
     "error": {
       "title": "This page couldn't load",
@@ -6148,18 +5509,9 @@
     "navbar": {
       "items": {
         "home": "Home",
-        "boards": "Boards",
-        "apps": "Apps",
-        "integrations": "Integrations",
-        "customWidgets": "Custom Widgets",
-        "searchEngies": "Search engines",
-        "medias": "Medias",
         "users": {
-          "label": "Users",
           "items": {
-            "manage": "Manage",
-            "invites": "Invites",
-            "groups": "Groups"
+            "manage": "Manage"
           }
         },
         "tools": {
@@ -6167,10 +5519,7 @@
           "items": {
             "docker": "Docker",
             "kubernetes": "Kubernetes",
-            "logs": "Logs",
             "api": "API & MCP",
-            "certificates": "Certificates",
-            "tasks": "Tasks",
             "backup": "Backup"
           }
         },
@@ -6190,16 +5539,6 @@
     },
     "page": {
       "home": {
-        "statistic": {
-          "board": "Boards",
-          "user": "Users",
-          "invite": "Invites",
-          "integration": "Integrations",
-          "app": "Apps",
-          "group": "Groups",
-          "searchEngine": "Search engines",
-          "media": "Medias"
-        },
         "statisticLabel": {
           "boards": "Boards",
           "resources": "Resources",
@@ -6237,13 +5576,8 @@
               "tooltip": "This board will show as your mobile board"
             }
           },
-          "duplicate": {
-            "label": "Duplicate board"
-          },
           "delete": {
-            "label": "Delete permanently",
             "confirm": {
-              "title": "Delete board",
               "description": "Are you sure you want to delete the {name} board?"
             }
           }
@@ -6259,22 +5593,12 @@
         "noResults": {
           "title": "No boards yet",
           "description": "Create a board to arrange your apps and widgets in one place."
-        },
-        "modal": {
-          "createBoard": {
-            "field": {
-              "name": {
-                "label": "Name"
-              }
-            }
-          }
         }
       },
       "media": {
         "includeFromAllUsers": "Include media from all users"
       },
       "user": {
-        "back": "Back to users",
         "fieldsDisabledExternalProvider": "Certain fields are disabled because they are managed by an external authentication provider.",
         "setting": {
           "general": {
@@ -6312,14 +5636,10 @@
           },
           "security": {
             "title": "Security"
-          },
-          "board": {
-            "title": "Boards"
           }
         },
         "list": {
-          "metaTitle": "Manage users",
-          "title": "Users"
+          "metaTitle": "Manage users"
         },
         "edit": {
           "metaTitle": "Edit user {username}"
@@ -6373,9 +5693,6 @@
             }
           },
           "field": {
-            "id": {
-              "label": "ID"
-            },
             "creator": {
               "label": "Creator"
             },
@@ -6399,10 +5716,7 @@
           },
           "setting": {
             "title": "Settings",
-            "alert": "Group settings are prioritized by the order of groups in the list. The top settings overwrite the bottom settings.",
-            "board": {
-              "title": "Boards"
-            }
+            "alert": "Group settings are prioritized by the order of groups in the list. The top settings overwrite the bottom settings."
           },
           "members": {
             "title": "Members",
@@ -6410,10 +5724,7 @@
             "notFound": "No members found"
           },
           "permissions": {
-            "title": "Permissions",
-            "form": {
-              "unsavedChanges": "You have unsaved changes!"
-            }
+            "title": "Permissions"
           }
         }
       },
@@ -6422,9 +5733,6 @@
         "notification": {
           "success": {
             "message": "Settings saved successfully"
-          },
-          "error": {
-            "message": "Failed to save settings"
           }
         },
         "section": {
@@ -6457,7 +5765,6 @@
             }
           },
           "board": {
-            "title": "Boards",
             "homeBoard": {
               "label": "Global home board",
               "mobileLabel": "Global mobile board",
@@ -6476,7 +5783,6 @@
             }
           },
           "user": {
-            "title": "Users",
             "enableGravatar": {
               "label": "Enable Gravatar",
               "description": "Falls back to user avatars from Libravatar/Gravatar when no custom avatar is set and an email is configured"
@@ -6492,12 +5798,7 @@
           "appearance": {
             "title": "Appearance",
             "defaultColorScheme": {
-              "label": "Default color scheme",
-              "options": {
-                "auto": "Auto",
-                "light": "Light",
-                "dark": "Dark"
-              }
+              "label": "Default color scheme"
             }
           },
           "culture": {
@@ -6511,23 +5812,18 @@
             "title": "Assistant",
             "description": "Connect an OpenAI-compatible model endpoint for the instance-wide assistant.",
             "security": {
-              "title": "Server-side secrets",
               "description": "API keys and additional header values are encrypted in the Homarr database. They are never returned to browsers. Model requests are sent from the Homarr server directly to the configured endpoint."
             },
             "overview": {
               "connectionReady": "Connection ready",
               "unsavedChanges": "Unsaved changes",
               "setupRequired": "Setup required",
-              "available": "Available",
               "disabled": "Disabled",
               "noModel": "No model selected"
             },
             "connection": {
-              "title": "Provider connection",
               "endpointTitle": "Provider and endpoint",
               "description": "Choose a preset or connect any service that implements the OpenAI Chat Completions API.",
-              "saved": "Connection saved",
-              "notSaved": "Not configured",
               "save": "Save provider connection"
             },
             "credentials": {
@@ -6547,51 +5843,39 @@
               },
               "options": {
                 "homarr": {
-                  "label": "Homarr",
                   "description": "A limited number of Assistant uses are free each day, paid for by the Homarr team. Sign in with the Community Workshop to use your allowance."
                 },
                 "openrouter": {
-                  "label": "OpenRouter",
                   "description": "Hosted model routing with a large tool-capable model catalog."
                 },
                 "openai": {
-                  "label": "OpenAI",
                   "description": "OpenAI Chat Completions through the official API endpoint."
                 },
                 "anthropic": {
-                  "label": "Anthropic Claude",
                   "description": "Claude through Anthropic's OpenAI SDK compatibility endpoint."
                 },
                 "google-gemini": {
-                  "label": "Google Gemini",
                   "description": "Gemini through Google's OpenAI-compatible API endpoint."
                 },
                 "xai": {
-                  "label": "xAI",
                   "description": "Grok models through xAI's OpenAI-compatible API."
                 },
                 "groq": {
-                  "label": "Groq",
                   "description": "Fast hosted inference through Groq's OpenAI-compatible API."
                 },
                 "mistral": {
-                  "label": "Mistral AI",
                   "description": "Mistral models through the official API."
                 },
                 "deepseek": {
-                  "label": "DeepSeek",
                   "description": "DeepSeek models through its OpenAI-compatible API."
                 },
                 "together": {
-                  "label": "Together AI",
                   "description": "Hosted open models through Together's OpenAI-compatible API."
                 },
                 "ollama": {
-                  "label": "Ollama",
                   "description": "A local or network Ollama server using its OpenAI-compatible API."
                 },
                 "lm-studio": {
-                  "label": "LM Studio",
                   "description": "An LM Studio local server with OpenAI compatibility enabled."
                 },
                 "custom": {
@@ -6613,13 +5897,9 @@
               "required": "Required by this provider. The value is encrypted and write-only.",
               "optional": "Optional for local endpoints. Leave it blank when the service does not require bearer authentication.",
               "placeholder": "Enter an API key",
-              "configuredBadge": "Saved key active",
-              "pendingRemoval": "Removal pending",
               "savedTitle": "Encrypted API key saved",
               "savedDescription": "Homarr can use this key, but it cannot display or recover its value.",
               "remove": "Remove saved API key",
-              "removeDescription": "Deletes the saved key after you click Save provider connection.",
-              "removalPendingDescription": "The saved key will be deleted when you save the provider connection.",
               "removeFlow": {
                 "title": "Remove the saved API key?",
                 "description": "This provider requires an API key. Removing it can stop model discovery and assistant responses until another key is saved.",
@@ -6663,7 +5943,6 @@
             },
             "serverTools": {
               "title": "Server tools",
-              "beta": "Beta",
               "webSearch": {
                 "label": "Web search",
                 "description": "Allow the model to search the live web through OpenRouter when a request needs current information. Search usage is charged separately by OpenRouter.",
@@ -6695,7 +5974,6 @@
       },
       "tool": {
         "tasks": {
-          "title": "Tasks",
           "status": {
             "idle": "Idle",
             "running": "Running",
@@ -6728,13 +6006,7 @@
               }
             }
           },
-          "settings": {
-            "title": "Task settings for {jobName}"
-          },
           "field": {
-            "name": {
-              "label": "Name"
-            },
             "interval": {
               "label": "Schedule interval"
             },
@@ -6747,11 +6019,6 @@
           },
           "table": {
             "search": "Search {count} tasks..."
-          },
-          "action": {
-            "refresh": {
-              "label": "Refresh"
-            }
           },
           "refresh": {
             "success": {
@@ -6786,7 +6053,6 @@
           }
         },
         "api": {
-          "title": "API",
           "modal": {
             "createApiToken": {
               "title": "API token created",
@@ -6812,7 +6078,6 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
                   "createdBy": "Created by",
                   "actions": "Actions"
                 }
@@ -6867,44 +6132,7 @@
               },
               "availableTools": {
                 "title": "Available Tools",
-                "description": "{count} tools available. Expand a category to see individual tools and their descriptions.",
-                "columnType": "Type",
-                "columnName": "Tool",
-                "columnDescription": "Description"
-              },
-              "troubleshooting": {
-                "title": "Troubleshooting",
-                "missingHeader": {
-                  "title": "\"Missing ApiKey header\"",
-                  "description": "Your client is not sending the {header} header. Verify the {section} section in your MCP config is correct. Some clients require restarting after config changes."
-                },
-                "invalidFormat": {
-                  "title": "\"Invalid ApiKey format\"",
-                  "description": "Make sure you copied the full API key, not just part of it."
-                },
-                "invalidKey": {
-                  "title": "\"Invalid API key\"",
-                  "description": "The key ID was not found or the token is wrong. API keys can only be viewed once when created. If you lost it, delete the old key and create a new one."
-                },
-                "connectionRefused": {
-                  "title": "Connection refused / timeout",
-                  "description": "Make sure the URL is reachable from your AI client. If Homarr runs behind a reverse proxy or in Docker, use the external URL (not {localhost}). Verify the port is correct (default: 7575 for Docker)."
-                },
-                "toolsNotAppearing": {
-                  "title": "Tools not appearing",
-                  "description": "Some tools require specific integrations to be configured (e.g. Docker, Overseerr). The tool list depends on what's available in your Homarr instance."
-                }
-              },
-              "copy": "Copy",
-              "oneClick": {
-                "title": "Install in One Click",
-                "subtitle": "Uses OAuth — authenticate in your browser on first use",
-                "vsCode": "Install in VS Code",
-                "cursor": "Install in Cursor",
-                "copyUrl": "Copy MCP URL",
-                "copied": "Copied!",
-                "copyHint": "For ChatGPT, Claude Code, or any MCP client",
-                "manualConfig": "Manual Configuration"
+                "description": "{count} tools available. Expand a category to see individual tools and their descriptions."
               }
             }
           }
@@ -6921,47 +6149,12 @@
               "title": "Sensitive data export",
               "warningTitle": "This export contains your entire database.",
               "warningBody": "The backup includes all users, integration secrets (encrypted), API keys, board configurations, and app data. Store the exported file securely and do not share it.",
-              "typePrompt": "Type \"{phrase}\" to continue",
-              "submit": "Export Database",
-              "cancel": "Cancel"
+              "submit": "Export Database"
             }
           },
           "import": {
             "title": "Restore Database",
-            "description": "Upload a previously exported backup ZIP to restore your database. This will replace your entire database. If the backup was created with a different encryption key, secrets will be automatically re-encrypted.",
-            "warning": "Restoring a backup will completely replace your current database and restart the application. This action cannot be undone.",
-            "dropzone": {
-              "title": "Drop your backup ZIP here or click to browse",
-              "description": "Only .zip files from a Homarr SQLite backup are accepted"
-            },
-            "changeFile": "Change file",
-            "button": "Restore Database",
-            "success": {
-              "title": "Restore Complete",
-              "message": "Database has been restored successfully. The application is restarting..."
-            },
-            "error": "Import failed"
-          },
-          "preview": {
-            "title": "Backup Contents",
-            "exported": "Exported {date}",
-            "loading": "Analyzing backup file...",
-            "errorTitle": "Preview Error",
-            "entity": "Entity",
-            "count": "Count",
-            "boards": "Boards",
-            "entities": {
-              "board": "Boards",
-              "user": "Users",
-              "app": "Apps",
-              "integration": "Integrations",
-              "item": "Widgets",
-              "media": "Media",
-              "search_engine": "Search Engines"
-            },
-            "analyzeError": "Failed to analyze backup file",
-            "invalidMissingMetadata": "Invalid backup: missing metadata.json",
-            "invalidMissingDb": "Invalid backup: missing db.sqlite"
+            "description": "Upload a previously exported backup ZIP to restore your database. This will replace your entire database. If the backup was created with a different encryption key, secrets will be automatically re-encrypted."
           },
           "restore": {
             "dropzone": {
@@ -6971,29 +6164,20 @@
             "analyzing": "Analyzing backup...",
             "changeFile": "Change file",
             "continueToRestore": "Continue to restore",
-            "tryAgain": "Try again",
             "analysisError": "Analysis Error",
             "preview": {
               "title": "Backup Contents",
               "exported": "Exported {date}",
               "entity": "Entity",
               "count": "Count",
-              "boards": "Boards",
               "entities": {
-                "board": "Boards",
-                "user": "Users",
-                "app": "Apps",
-                "integration": "Integrations",
-                "item": "Widgets",
-                "media": "Media",
-                "search_engine": "Search Engines"
+                "item": "Widgets"
               },
               "migrationsApplied": "{count} migration applied",
               "migrationsAppliedPlural": "{count} migrations applied",
               "migrationsOlderVersion": "This backup was from an older Homarr version. {count} schema migration was applied to bring it up to date.",
               "migrationsOlderVersionPlural": "This backup was from an older Homarr version. {count} schema migrations were applied to bring it up to date.",
               "migrationsUpToDate": "Database schema is up to date ({count} migrations applied)",
-              "upToDate": "Up to date",
               "migrationsPending": "{count} pending"
             },
             "migration": {
@@ -7004,21 +6188,11 @@
               "title": "Destructive action",
               "warningTitle": "This will permanently replace your entire database.",
               "warningBody": "All current boards, users, apps, integrations, settings, and sessions will be lost. This action cannot be undone. The application will restart after the restore.",
-              "typePrompt": "Type \"{phrase}\" to continue",
-              "cancel": "Cancel",
               "submit": "Restore Database"
             },
             "progress": {
               "title": "Restoring database...",
-              "extracting": "Extracting backup archive",
-              "migrating": "Applying database migrations",
-              "encrypting": "Re-encrypting integration secrets",
-              "swapping": "Replacing database file",
               "restarting": "Restarting server"
-            },
-            "complete": {
-              "title": "Restore Complete",
-              "message": "Database has been restored successfully. The server is restarting — please refresh the page in a few seconds."
             },
             "timeout": {
               "title": "Server did not come back online",
@@ -7030,6 +6204,9 @@
             "invalidMissingMetadata": "Invalid backup: missing metadata.json",
             "invalidMissingDb": "Invalid backup: missing db.sqlite",
             "analyzeError": "Failed to analyze backup"
+          },
+          "confirm": {
+            "typePrompt": "Type \"{phrase}\" to continue"
           }
         }
       },
@@ -7076,22 +6253,17 @@
   "docker": {
     "title": "Containers",
     "reconciliation": {
-      "title": "Service setup",
-      "description": "Docker services are compared with your apps and integrations. Review every suggestion before Homarr changes anything.",
+      "title": "Assisted Docker setup",
+      "suggestions": "{count, plural, =0 {No suggestions} one {# suggestion} other {# suggestions}}",
       "attention": "{count} need attention",
       "endpointUnavailable": "Some services could not be checked because these endpoints are unavailable: {names}",
       "empty": "No visible Docker services were found.",
       "emptyFilter": "No services match this view.",
       "ambiguous": "More than one existing item could match this service. Homarr will not choose one automatically.",
-      "match": "{confidence} confidence match",
       "filter": {
         "attention": "Needs attention",
         "represented": "Already set up",
         "all": "All"
-      },
-      "confidence": {
-        "high": "High",
-        "medium": "Medium"
       },
       "state": {
         "newRecognized": "Ready to connect",
@@ -7101,19 +6273,9 @@
         "moved": "Address changed"
       },
       "url": {
-        "label": "Service address",
-        "inputLabel": "Service URL",
-        "manual": "Enter an address manually",
-        "invalid": "Enter a valid HTTP or HTTPS URL"
-      },
-      "reason": {
-        "publishedAddress": "Published address reported by Docker",
-        "dockerEndpointHost": "Docker endpoint host combined with the published port",
-        "sharedContainerNetwork": "Server-only address for services sharing the container network",
-        "manualHostRequired": "Enter the address that your browser or Homarr server can reach"
+        "manual": "Enter an address manually"
       },
       "health": {
-        "title": "Observed service layers",
         "layer": {
           "docker": "Docker",
           "integrationConfiguration": "Integration",
@@ -7135,22 +6297,16 @@
         }
       },
       "action": {
-        "refresh": "Refresh",
-        "retry": "Try again",
+        "review": "Review",
         "dismiss": "Dismiss",
         "restoreDismissed": "Restore dismissed ({count})",
         "setupIntegration": "Set up integration",
-        "createApp": "Create app",
         "reviewIntegration": "Review integration",
         "viewRepresentation": "View setup"
       },
       "loadError": {
-        "title": "Service setup could not be loaded",
+        "title": "Docker setup assistant could not be loaded",
         "message": "Docker service information is unavailable. Try again without leaving this page."
-      },
-      "refreshError": {
-        "title": "Containers not refreshed",
-        "message": "Something went wrong while refreshing the containers"
       }
     },
     "table": {
@@ -7165,9 +6321,6 @@
       "totalMemory": "Total Mem: {memory}"
     },
     "field": {
-      "name": {
-        "label": "Name"
-      },
       "state": {
         "label": "State",
         "option": {
@@ -7181,9 +6334,6 @@
         }
       },
       "stats": {
-        "cpu": {
-          "label": "CPU"
-        },
         "memory": {
           "label": "Memory"
         }
@@ -7246,7 +6396,6 @@
         }
       },
       "remove": {
-        "label": "Remove",
         "confirm": "Click again to remove permanently",
         "confirmation": {
           "title": "{count, plural, one {Remove # container?} other {Remove # containers?}}",
@@ -7270,7 +6419,6 @@
         }
       },
       "refresh": {
-        "label": "Refresh",
         "notification": {
           "success": {
             "title": "Containers refreshed",
@@ -7310,8 +6458,7 @@
       "label": "Kubernetes context",
       "loadError": {
         "title": "Kubernetes contexts could not be loaded",
-        "message": "Context information is unavailable. Try again without leaving this page.",
-        "retry": "Try again"
+        "message": "Context information is unavailable. Try again without leaving this page."
       },
       "status": {
         "available": "Available",
@@ -7326,7 +6473,6 @@
       "label": "Cluster",
       "providers": "Providers",
       "version": "Version",
-      "architecture": "Architecture",
       "capacity": {
         "title": "Capacity",
         "metricsUnavailable": "Metrics Server is unavailable. Inventory and reserved capacity remain visible, but live CPU and memory usage cannot be shown.",
@@ -7348,39 +6494,10 @@
       }
     },
     "nodes": {
-      "label": "Nodes",
       "field": {
         "metricsUnavailable": "Unavailable",
-        "name": {
-          "label": "Name"
-        },
-        "state": {
-          "label": "State",
-          "option": {
-            "ready": "Ready",
-            "NotReady": "Not Ready"
-          }
-        },
-        "cpu": {
-          "label": "CPU"
-        },
-        "memory": {
-          "label": "RAM"
-        },
-        "pods": {
-          "label": "Pods"
-        },
-        "operatingSystem": {
-          "label": "OS"
-        },
-        "architecture": {
-          "label": "Architecture"
-        },
         "kubernetesVersion": {
           "label": "Kubernetes version"
-        },
-        "creationTimestamp": {
-          "label": "Created"
         }
       },
       "table": {
@@ -7388,43 +6505,17 @@
       }
     },
     "namespaces": {
-      "label": "Namespaces",
-      "field": {
-        "name": {
-          "label": "Name"
-        },
-        "state": {
-          "label": "State",
-          "option": {
-            "active": "Active",
-            "terminating": "Terminating"
-          }
-        },
-        "creationTimestamp": {
-          "label": "Created"
-        }
-      },
       "table": {
         "search": "Search {count} namespaces"
       }
     },
     "ingresses": {
-      "label": "Ingresses",
       "field": {
-        "name": {
-          "label": "Name"
-        },
-        "namespace": {
-          "label": "Namespace"
-        },
         "className": {
           "label": "Class name"
         },
         "rulesAndPaths": {
           "label": "Rules & paths"
-        },
-        "creationTimestamp": {
-          "label": "Created"
         }
       },
       "table": {
@@ -7432,17 +6523,7 @@
       }
     },
     "services": {
-      "label": "Services",
       "field": {
-        "name": {
-          "label": "Name"
-        },
-        "namespace": {
-          "label": "Namespace"
-        },
-        "type": {
-          "label": "Type"
-        },
         "ports": {
           "label": "Ports"
         },
@@ -7451,9 +6532,6 @@
         },
         "clusterIP": {
           "label": "Cluster IP"
-        },
-        "creationTimestamp": {
-          "label": "Created"
         }
       },
       "table": {
@@ -7461,25 +6539,12 @@
       }
     },
     "pods": {
-      "label": "Pods",
       "field": {
-        "name": {
-          "label": "Name"
-        },
-        "namespace": {
-          "label": "Namespace"
-        },
         "image": {
           "label": "Image"
         },
         "applicationType": {
           "label": "Application type"
-        },
-        "status": {
-          "label": "Status"
-        },
-        "creationTimestamp": {
-          "label": "Created"
         }
       },
       "table": {
@@ -7487,51 +6552,17 @@
       }
     },
     "secrets": {
-      "label": "Secrets",
-      "field": {
-        "name": {
-          "label": "Name"
-        },
-        "namespace": {
-          "label": "namespace"
-        },
-        "type": {
-          "label": "type"
-        },
-        "creationTimestamp": {
-          "label": "Created"
-        }
-      },
       "table": {
         "search": "Search {count} secrets"
       }
     },
     "configmaps": {
-      "label": "ConfigMaps",
-      "field": {
-        "name": {
-          "label": "Name"
-        },
-        "namespace": {
-          "label": "namespace"
-        },
-        "creationTimestamp": {
-          "label": "Created"
-        }
-      },
       "table": {
         "search": "Search {count} configMaps"
       }
     },
     "volumes": {
-      "label": "Volumes",
       "field": {
-        "name": {
-          "label": "Name"
-        },
-        "namespace": {
-          "label": "Namespace"
-        },
         "accessModes": {
           "label": "Access Modes"
         },
@@ -7546,12 +6577,6 @@
         },
         "volumeName": {
           "label": "Volume Name"
-        },
-        "status": {
-          "label": "Status"
-        },
-        "creationTimestamp": {
-          "label": "Created"
         }
       },
       "table": {
@@ -7560,6 +6585,29 @@
     },
     "error": {
       "internalServerError": "Failed to fetch Kubernetes data"
+    },
+    "field": {
+      "name": {
+        "label": "Name"
+      },
+      "namespace": {
+        "label": "Namespace"
+      },
+      "creationTimestamp": {
+        "label": "Created"
+      },
+      "state": {
+        "label": "State"
+      },
+      "status": {
+        "label": "Status"
+      },
+      "type": {
+        "label": "Type"
+      },
+      "architecture": {
+        "label": "Architecture"
+      }
     }
   },
   "permission": {
@@ -7594,46 +6642,8 @@
   "navigationStructure": {
     "manage": {
       "label": "Manage",
-      "boards": {
-        "label": "Boards"
-      },
-      "integrations": {
-        "label": "Integrations",
-        "edit": {
-          "label": "Edit"
-        },
-        "new": {
-          "label": "New"
-        }
-      },
-      "search-engines": {
-        "label": "Search engines",
-        "new": {
-          "label": "New"
-        },
-        "edit": {
-          "label": "Edit"
-        }
-      },
-      "medias": {
-        "label": "Medias"
-      },
-      "apps": {
-        "label": "Apps",
-        "new": {
-          "label": "New"
-        },
-        "edit": {
-          "label": "Edit"
-        }
-      },
       "custom-widgets": {
-        "label": "Custom widgets",
-        "new": {
-          "label": "New"
-        },
         "edit": {
-          "label": "Edit",
           "flow": {
             "label": "Flow"
           }
@@ -7646,33 +6656,12 @@
         }
       },
       "users": {
-        "label": "Users",
-        "create": {
-          "label": "Create"
-        },
         "general": "General",
-        "security": "Security",
-        "board": "Boards",
-        "groups": {
-          "label": "Groups"
-        },
-        "invites": {
-          "label": "Invites"
-        }
+        "security": "Security"
       },
       "tools": {
         "label": "Tools",
-        "tasks": {
-          "label": "Tasks"
-        },
-        "docker": {
-          "label": "Docker",
-          "logs": {
-            "label": "Logs"
-          }
-        },
         "kubernetes": {
-          "label": "Kubernetes",
           "nodes": {
             "label": "Nodes"
           },
@@ -7698,11 +6687,7 @@
             "label": "Volumes"
           }
         },
-        "logs": {
-          "label": "Logs"
-        },
         "certificates": {
-          "label": "Certificates",
           "hostnames": {
             "label": "Hostnames"
           }
@@ -7730,7 +6715,6 @@
         "help": "Search for apps, integrations or boards",
         "group": {
           "app": {
-            "title": "Apps",
             "children": {
               "action": {
                 "open": {
@@ -7746,7 +6730,6 @@
             }
           },
           "board": {
-            "title": "Boards",
             "children": {
               "action": {
                 "open": {
@@ -7766,9 +6749,6 @@
                 "title": "Select an action for the board"
               }
             }
-          },
-          "integration": {
-            "title": "Integrations"
           }
         }
       },
@@ -7869,7 +6849,6 @@
                 }
               },
               "defaultSearchEngineId": {
-                "label": "Default search engine",
                 "children": {
                   "detail": {
                     "title": "Select your default search engine"
@@ -7877,7 +6856,6 @@
                 }
               },
               "openSearchInNewTab": {
-                "label": "Open search results in new tab",
                 "children": {
                   "detail": {
                     "title": "Open search results in new tab"
@@ -7885,7 +6863,6 @@
                 }
               },
               "ddgBangs": {
-                "label": "Enable DuckDuckGo bangs",
                 "children": {
                   "detail": {
                     "title": "Enable DuckDuckGo bangs"
@@ -7917,7 +6894,6 @@
                 }
               },
               "pingIconsEnabled": {
-                "label": "Use icons for pings",
                 "children": {
                   "detail": {
                     "title": "Use icons for pings"
@@ -7925,7 +6901,6 @@
                 }
               },
               "enableRightClickOnWidgets": {
-                "label": "Enable right-click on widgets",
                 "children": {
                   "detail": {
                     "title": "Enable right-click on widgets"
@@ -7969,7 +6944,6 @@
         "help": "Use an external search engine",
         "group": {
           "searchEngine": {
-            "title": "Search engines",
             "tipDdgBangs": "Tip: You can use any DuckDuckGo bangs here as well, e.g. !something",
             "bang": {
               "searchWithQuery": "Search \"{query}\" with {label}",
@@ -8020,20 +6994,6 @@
         "group": {
           "mode": {
             "title": "Modes"
-          },
-          "help": {
-            "title": "Help",
-            "option": {
-              "documentation": {
-                "label": "Documentation"
-              },
-              "submitIssue": {
-                "label": "Submit an issue"
-              },
-              "discord": {
-                "label": "Community Discord"
-              }
-            }
           }
         }
       },
@@ -8127,7 +7087,6 @@
         "help": "Search for users or groups",
         "group": {
           "user": {
-            "title": "Users",
             "children": {
               "action": {
                 "detail": {
@@ -8140,7 +7099,6 @@
             }
           },
           "group": {
-            "title": "Groups",
             "children": {
               "action": {
                 "detail": {
@@ -8164,9 +7122,6 @@
     "engine": {
       "search": "Find a search engine",
       "field": {
-        "name": {
-          "label": "Name"
-        },
         "short": {
           "label": "Short"
         },
@@ -8179,19 +7134,13 @@
       },
       "page": {
         "list": {
-          "title": "Search engines",
           "ariaLabel": "Configured search engines",
-          "action": {
-            "edit": "Edit {name}",
-            "delete": "Delete {name}"
-          },
           "noResults": {
             "title": "There are no search engines yet",
             "description": "Search engines let Spotlight send a query to a site or connected service.",
             "action": "Create your first search engine",
             "filteredTitle": "No search engines match your search",
-            "filteredDescription": "No search engines match \"{search}\". Try another name or URL.",
-            "clearSearch": "Clear search"
+            "filteredDescription": "No search engines match \"{search}\". Try another name or URL."
           },
           "interactive": "Interactive, uses an integration",
           "type": {
@@ -8216,11 +7165,9 @@
           "title": "Edit search engine",
           "notification": {
             "success": {
-              "title": "Changes applied successfully",
               "message": "The search engine was saved successfully"
             },
             "error": {
-              "title": "Unable to apply changes",
               "message": "The search engine could not be saved"
             }
           },
@@ -8359,6 +7306,10 @@
     }
   },
   "log": {
+    "context": {
+      "widgetError": "Widget reported an error around this time",
+      "expiredWidgetError": "Logs around this widget error are no longer retained"
+    },
     "level": {
       "option": {
         "debug": "Debug",
@@ -8370,7 +7321,6 @@
   },
   "onboardingTour": {
     "learnMore": "Read the docs",
-    "next": "Next",
     "prev": "Back",
     "done": "Done",
     "skip": "Skip tour",
@@ -8397,7 +7347,7 @@
       },
       "integrationsList": {
         "title": "Your Integrations",
-        "description": "These are the services connected to Homarr — Sonarr, Radarr, Plex, Jellyfin, and 50+ more. All credentials are encrypted at rest."
+        "description": "These are the services connected to Homarr. All credentials are encrypted at rest."
       },
       "integrationsCreate": {
         "title": "Add an Integration",
@@ -8433,6 +7383,348 @@
         "title": "Your Profile",
         "description": "Change your color scheme, language, home board, and preferences. You can also jump to the management area from here."
       }
+    }
+  },
+  "assistant": {
+    "title": "Homarr Assistant",
+    "open": "Open Homarr Assistant",
+    "close": "Close assistant",
+    "minimize": "Minimize assistant",
+    "spotlight": "Ask Homarr Assistant",
+    "spotlightDescription": "Type and send a prompt without leaving the command menu.",
+    "spotlightPrompt": {
+      "title": "Ask Assistant",
+      "description": "Type a prompt above. Enter sends it in the background.",
+      "send": "Send prompt",
+      "empty": "Type a prompt above"
+    },
+    "unavailable": {
+      "checking": "Checking whether the assistant is available…",
+      "error": "The assistant's availability could not be checked. Try again.",
+      "notConfigured": "An administrator must configure and enable the assistant first.",
+      "signIn": "Sign in to use Homarr Assistant."
+    },
+    "newConversation": "New conversation",
+    "conversations": "Conversations",
+    "conversationActions": "Conversation actions",
+    "searchConversations": "Search conversations",
+    "noMatchingConversations": "No matching conversations",
+    "moreActions": "More response actions",
+    "renameConversation": {
+      "action": "Rename",
+      "label": "Conversation name",
+      "save": "Save name",
+      "failedTitle": "Conversation could not be renamed",
+      "failedDescription": "Homarr could not rename this conversation. Try again."
+    },
+    "deleteConversation": {
+      "title": "Delete conversation?",
+      "description": "“{title}” and its messages will be permanently deleted.",
+      "failedTitle": "Conversation could not be deleted",
+      "failedDescription": "Homarr could not delete this conversation. Try again."
+    },
+    "closeHistory": "Close conversation history",
+    "openHistory": "Open conversation history",
+    "emptyTitle": "What can I help with?",
+    "emptyDescription": "Ask about your Homarr setup, inspect live instance data, or approve actions when you want me to make a change.",
+    "suggestions": {
+      "health": {
+        "label": "Check service health",
+        "prompt": "Check my integrations and summarize anything that needs attention."
+      },
+      "explore": {
+        "label": "Explore my Homarr",
+        "prompt": "Show me what I can view and manage in this Homarr instance."
+      },
+      "media": {
+        "label": "Find media to request",
+        "prompt": "Help me find a movie or series to request."
+      },
+      "style": {
+        "label": "Improve a dashboard",
+        "prompt": "Help me improve a board's appearance or custom CSS. Show me my boards first, then preserve my current settings while we make the change."
+      }
+    },
+    "composerPlaceholder": "Ask Homarr Assistant…",
+    "runtime": {
+      "model": "Model",
+      "searchModels": "Search models",
+      "noModels": "No models available",
+      "otherModels": "Other models",
+      "imageInput": "Accepts image input",
+      "thinking": "Thinking mode",
+      "reasoning": {
+        "auto": "Auto",
+        "none": "Off",
+        "minimal": "Minimal",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      }
+    },
+    "providerQuota": {
+      "title": "Homarr provider",
+      "communityWorkshop": "Community Workshop",
+      "dailyAllowance": "Daily request allowance",
+      "remainingLabel": "{remaining} of {limit} Homarr provider requests remaining",
+      "loading": "Loading Homarr provider allowance",
+      "signInRequired": "Workshop sign-in required for the Homarr provider",
+      "signInDescription": "Sign in with GitHub through the Community Workshop to receive your separate daily allowance.",
+      "exhaustedDescription": "Your Homarr provider allowance is used for today. It resets at midnight UTC.",
+      "unavailableDescription": "Sign in to the Workshop or wait for your Homarr provider allowance to reset.",
+      "signIn": "Sign in with GitHub",
+      "signInError": "GitHub sign-in failed. Try again in a moment.",
+      "loadError": "The Homarr provider allowance could not be loaded.",
+      "reset": "Resets {relative} at <time></time>",
+      "toolCalls": "Each model request and completed tool call uses one request.",
+      "retry": "Reload allowance",
+      "level": {
+        "ok": "OK",
+        "warning": "Warning",
+        "bad": "Low",
+        "dead": "Used"
+      }
+    },
+    "stop": "Stop response",
+    "send": "Send message",
+    "copy": "Copy response",
+    "copyMessage": "Copy message",
+    "editMessage": "Edit message",
+    "updateMessage": "Update message",
+    "regenerate": "Regenerate response",
+    "helpful": "Helpful",
+    "notHelpful": "Not helpful",
+    "readAloud": "Read response aloud",
+    "stopReading": "Stop reading response",
+    "feedbackError": "Your feedback could not be saved. Try again.",
+    "exportMarkdown": "Export as Markdown",
+    "exportConversation": {
+      "action": "Export conversation as Markdown",
+      "failedTitle": "Conversation could not be exported",
+      "failedDescription": "Homarr could not load this conversation. Try again."
+    },
+    "reasoning": "Thinking",
+    "previousResponse": "Previous response",
+    "nextResponse": "Next response",
+    "removeAttachment": "Remove attachment",
+    "downloadFile": "Download {name}",
+    "attachedImage": "Attached image",
+    "externalImageBlocked": "External image blocked for privacy",
+    "image": {
+      "loading": "Loading image",
+      "failed": "This image could not be loaded.",
+      "retry": "Try image again"
+    },
+    "quoteSelection": "Quote",
+    "dismissQuote": "Remove quote",
+    "attachments": {
+      "add": "Attach an image or document",
+      "errorTitle": "Attachment could not be added",
+      "imageUnsupported": "The selected model does not support image input."
+    },
+    "mentions": {
+      "menu": "Add Homarr context",
+      "context": "Context",
+      "app": "Apps",
+      "integration": "Integrations",
+      "board": "Boards",
+      "widget": "Widgets",
+      "tools": "Available tools"
+    },
+    "markdown": {
+      "diagram": "Diagram",
+      "renderingDiagram": "Rendering diagram…",
+      "diagramUnavailable": "This diagram could not be rendered."
+    },
+    "commands": {
+      "menu": "Assistant commands",
+      "health": "Prepare a service-health check",
+      "explore": "Prepare an overview of this Homarr instance",
+      "media": "Prepare a media search",
+      "style": "Prepare a board appearance or custom CSS change"
+    },
+    "usage": {
+      "tokens": "tokens",
+      "contextWindow": "Context window",
+      "requestDetails": "Request details",
+      "used": "Used",
+      "remaining": "Remaining",
+      "capacity": "Capacity",
+      "input": "Input",
+      "output": "Output",
+      "cached": "Cached input",
+      "cacheWrite": "Cache write",
+      "reasoning": "Reasoning",
+      "inputShort": "in",
+      "outputShort": "out",
+      "cachedShort": "cached",
+      "reasoningShort": "reasoning",
+      "firstOutput": "First output",
+      "homarrTiming": "Homarr observed",
+      "endToEnd": "End to end",
+      "observedThroughput": "Observed throughput",
+      "providerTiming": "Provider reported",
+      "loadingProviderDetails": "Loading generation details…",
+      "providerDetailsPending": "OpenRouter is still processing some generation details. Reopen to retry.",
+      "providerLatency": "Provider latency",
+      "generationTime": "Generation time",
+      "moderationLatency": "Moderation",
+      "providerThroughput": "Provider throughput",
+      "fallbacks": "Fallbacks",
+      "fallbackLatency": "Fallback latency",
+      "cacheDiscount": "Cache discount",
+      "normalizedTokens": "OpenRouter normalized input / output",
+      "byok": "BYOK",
+      "cost": "Cost",
+      "reported": "Reported by provider",
+      "estimated": "Estimated from model pricing",
+      "upstreamCost": "Upstream inference",
+      "webSearches": "Web searches",
+      "finishReason": "Finish reason",
+      "notReported": "Not reported",
+      "agentSteps": "Agent steps",
+      "step": "Step {number}",
+      "generation": "Generation"
+    },
+    "toolInput": "Input",
+    "toolOutput": "Output",
+    "toolActivity": {
+      "iconSearch": "Looking for “{query}” icons",
+      "iconBrowse": "Browsing available icons"
+    },
+    "toolNavigation": {
+      "openPreview": "Open preview",
+      "openWidget": "Open widget"
+    },
+    "webSearch": {
+      "title": "Web search",
+      "completed": "OpenRouter searched the live web for this response.",
+      "searches": "{count, plural, one {# search} other {# searches}}",
+      "sources": "{count, plural, one {# source} other {# sources}}"
+    },
+    "responseError": {
+      "title": "The assistant could not finish",
+      "description": "Try again. If the problem continues, ask an administrator to verify the configured model endpoint."
+    },
+    "toolPreparationError": {
+      "title": "This request could not be prepared",
+      "description": "The model stopped before it supplied complete details. Retry the response or describe the request again. No change was made."
+    },
+    "busy": {
+      "title": "The assistant is already working",
+      "description": "Wait for the current response or open it to stop the run."
+    },
+    "pendingAction": {
+      "answerTitle": "Answer needed",
+      "answerFallback": "Choose an answer to continue",
+      "formTitle": "Review app details",
+      "boardFormTitle": "Review board changes",
+      "review": "Review",
+      "sendBlocked": "Resolve the pending request before sending"
+    },
+    "activity": {
+      "thinking": "Assistant is thinking",
+      "working": "Working on your prompt",
+      "ready": "Response ready",
+      "completed": "Open the response",
+      "approval": "Approval needed",
+      "failed": "Assistant needs attention",
+      "expand": "Open the assistant response",
+      "dismiss": "Dismiss assistant activity"
+    },
+    "scrollToLatest": "Scroll to latest",
+    "refresh": {
+      "action": "Refresh current view",
+      "working": "Refreshing current view",
+      "completeTitle": "View refreshed",
+      "completeDescription": "Visible Homarr data has been reloaded.",
+      "failedTitle": "View could not be refreshed",
+      "failedDescription": "The change may still be saved. Try the refresh action again."
+    },
+    "askUser": {
+      "preparing": "Preparing question",
+      "answered": "Your answer",
+      "other": "Other",
+      "otherLabel": "Your answer",
+      "otherPlaceholder": "Type another answer…",
+      "submit": "Send answer",
+      "cancelOther": "Cancel other answer",
+      "optionKind": {
+        "affirmative": "Confirm",
+        "negative": "Decline",
+        "alternative": "Option",
+        "custom": "Custom"
+      }
+    },
+    "configureApp": {
+      "title": "Review app details",
+      "description": "Choose a local icon and adjust anything before the assistant requests creation approval.",
+      "preparing": "Preparing app details",
+      "continue": "Use these details",
+      "ready": "App details ready",
+      "automaticContinue": "Using these app details automatically"
+    },
+    "configureBoardSettings": {
+      "title": "Review board changes",
+      "loading": "Loading current board settings",
+      "loadErrorTitle": "Board settings could not be loaded",
+      "loadErrorDescription": "The board may no longer exist, or you may not have permission to modify it.",
+      "proposedCount": "Assistant proposed {count} fields",
+      "changeCount": "{count} changes ready",
+      "ready": "Board changes ready",
+      "cancelled": "Current board settings kept",
+      "noChanges": "No settings will change",
+      "keepCurrent": "Keep current settings",
+      "continue": "Continue to approval",
+      "automaticContinue": "Accepting the proposed board changes automatically",
+      "resetAll": "Reset all changes",
+      "tabs": {
+        "css": "Custom CSS",
+        "appearance": "Appearance",
+        "background": "Background",
+        "general": "General"
+      },
+      "cssDescription": "Edit the complete stylesheet. Existing rules are kept unless they are removed here.",
+      "cssCharacters": "{count} of 16384 characters",
+      "copyCss": "Copy CSS",
+      "copied": "Copied",
+      "restoreCss": "Restore current CSS",
+      "remoteCssTitle": "This CSS loads a remote resource",
+      "remoteCssDescription": "Imported stylesheets and remote URLs contact another server when the board loads. Review them before continuing."
+    },
+    "configureWidget": {
+      "title": "Review widget",
+      "preparing": "Preparing widget settings",
+      "review": "Review widget and integrations",
+      "ready": "Widget configuration ready",
+      "cancelled": "Widget was not added",
+      "automaticContinue": "Accepting the proposed widget configuration automatically",
+      "loadErrorTitle": "Integrations could not be loaded",
+      "loadErrorDescription": "Homarr could not load the integrations available for this widget.",
+      "noIntegrationTitle": "A compatible integration is required",
+      "noIntegrationDescription": "Configure an integration supported by this widget before adding it to the dashboard.",
+      "connectIntegration": "Connect service",
+      "manageIntegrations": "Manage integrations",
+      "skip": "Do not add",
+      "errorTitle": "Widget settings could not be prepared",
+      "errorDescription": "The model did not provide a complete widget configuration. No widget was added."
+    },
+    "approvalRequired": "Approval required",
+    "complete": "Complete",
+    "denied": "Denied",
+    "failed": "Failed",
+    "working": "Working",
+    "approvalDescription": "Review this change before it runs.",
+    "approveAndRun": "Approve and run",
+    "deny": "Deny",
+    "autoApproval": {
+      "label": "Automatic approvals",
+      "title": "Automatic approvals",
+      "description": "Automatically prepare forms and approve protected changes for this conversation. Questions still wait for your answer, and your Homarr permissions still apply. This turns off when you switch conversations.",
+      "enable": "Enable for this conversation",
+      "disable": "Turn off automatic approvals",
+      "enabled": "Automatic approvals are on",
+      "approving": "Approving automatically"
     }
   }
 }

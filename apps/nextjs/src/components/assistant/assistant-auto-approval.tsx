@@ -52,6 +52,8 @@ export const AssistantAutoApprovalProvider = ({
   const trackerRef = useRef(createAssistantAutoApprovalTracker(AUTO_APPROVAL_MAX_ATTEMPTS));
   const retryTimersRef = useRef(new Map<string, number>());
   const previousConversationIdRef = useRef(conversationId);
+  const conversationMatches = previousConversationIdRef.current === conversationId;
+  const effectiveEnabled = conversationMatches && enabled;
 
   const clearRetryTimer = useCallback((toolCallId: string) => {
     const timer = retryTimersRef.current.get(toolCallId);
@@ -86,7 +88,7 @@ export const AssistantAutoApprovalProvider = ({
 
   const requestAction = useCallback(
     (toolCallId: string, confirm: () => void) => {
-      if (!enabled || !trackerRef.current.claim(toolCallId)) return false;
+      if (!effectiveEnabled || !trackerRef.current.claim(toolCallId)) return false;
 
       try {
         confirm();
@@ -105,7 +107,7 @@ export const AssistantAutoApprovalProvider = ({
         return false;
       }
     },
-    [clearRetryTimer, enabled],
+    [clearRetryTimer, effectiveEnabled],
   );
 
   const completeAction = useCallback(
@@ -116,10 +118,15 @@ export const AssistantAutoApprovalProvider = ({
     [clearRetryTimer],
   );
 
-  const value = useMemo(
-    () => ({ enabled, setEnabled, requestAction, completeAction, retryRevision }),
-    [completeAction, enabled, requestAction, retryRevision, setEnabled],
-  );
+  const value = useMemo(() => {
+    return {
+      enabled: effectiveEnabled,
+      setEnabled,
+      requestAction,
+      completeAction,
+      retryRevision,
+    };
+  }, [completeAction, effectiveEnabled, requestAction, retryRevision, setEnabled]);
 
   return <AssistantAutoApprovalContext.Provider value={value}>{children}</AssistantAutoApprovalContext.Provider>;
 };

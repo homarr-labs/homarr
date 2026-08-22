@@ -6,7 +6,7 @@ import { IconLayoutGrid } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import type { BoardPreviewLayout } from "@homarr/boards/layout-preview";
 import { getRepresentativeLayoutWidth, projectBoardLayout } from "@homarr/boards/layout-preview";
-import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
+import { getBoardLaneColumnCount, getRootSectionLane, getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 import { widgetCatalogIcons } from "@homarr/widgets/catalog";
@@ -23,6 +23,8 @@ interface Props {
 }
 
 export const LayoutPreview = ({ board, layout, layouts, sourceLayout, apps }: Props) => {
+  const tBoard = useI18n("board");
+  const tSection = useI18n("section");
   const t = useI18n();
   const elements = projectBoardLayout(board, sourceLayout, layout);
   const representativeWidth = getRepresentativeLayoutWidth(layout, layouts);
@@ -42,13 +44,13 @@ export const LayoutPreview = ({ board, layout, layouts, sourceLayout, apps }: Pr
           {representativeWidth}px
         </Badge>
         <Text size="xs">
-          {layout.columnCount} {t("board.setting.section.layout.preview.columns")}
+          {layout.columnCount} {tBoard("setting.section.layout.preview.columns")}
         </Text>
       </Group>
       <Box w={{ base: "100%", md: `max(${previewWidth}, 14rem)` }} maw="100%" className={classes.canvas}>
         {elements.length === 0 ? (
           <Text size="xs" c="dimmed" ta="center" py="xl">
-            {t("board.setting.section.layout.preview.empty")}
+            {tBoard("setting.section.layout.preview.empty")}
           </Text>
         ) : (
           <Stack gap="xs">
@@ -76,8 +78,8 @@ export const LayoutPreview = ({ board, layout, layouts, sourceLayout, apps }: Pr
                       const containerLabel =
                         container?.kind === "container" && container.options.title
                           ? container.options.title
-                          : t("section.container.untitled");
-                      const label = app?.name ?? (item ? t(`widget.${item.kind}.name`) : containerLabel);
+                          : tSection("container.untitled");
+                      const label = app?.name ?? (item ? getWidgetName(item.kind, t) : containerLabel);
                       const WidgetIcon = item ? widgetCatalogIcons[item.kind] : IconLayoutGrid;
 
                       return (

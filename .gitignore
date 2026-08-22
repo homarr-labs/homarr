@@ -25,6 +25,8 @@ packages/db/migrations/*/migrate.cjs
 
 # production
 build
+tools/homarr-dev/homarr
+tools/homarr-dev/homarr-dev
 
 # misc
 .DS_Store
@@ -92,3 +94,6 @@ homarr-backup*.zip
 *.sqlite-wal
 *.sqlite-shm
 /scripts/benchmarks/
+
+# PR description screenshots belong on the pull request, not in the repository
+.screenshots/

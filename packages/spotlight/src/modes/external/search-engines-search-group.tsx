@@ -10,7 +10,7 @@ import { getIntegrationKindsByCategory, getIntegrationName } from "@homarr/defin
 import { useModalAction } from "@homarr/modals";
 import { RequestMediaModal } from "@homarr/modals-collection";
 import { useSettings } from "@homarr/settings";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { createChildrenOptions } from "../../lib/children";
 import { createGroup } from "../../lib/group";
@@ -135,7 +135,7 @@ export const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestCh
           (option.result.type === "movie" && option.result.inLibrary) ||
           option.integration.permissions?.hasInteractAccess === false,
         Component(option) {
-          const t = useScopedI18n("search.mode.media");
+          const t = useI18n("search.mode.media");
           return (
             <Group mx="md" my="sm" wrap="nowrap">
               <IconDownload stroke={1.5} />
@@ -164,7 +164,7 @@ export const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestCh
       {
         key: "open",
         Component({ integration }) {
-          const tChildren = useScopedI18n("search.mode.media");
+          const tChildren = useI18n("search.mode.media");
           return (
             <Group mx="md" my="sm" wrap="nowrap">
               <IconSearch stroke={1.5} />
@@ -220,7 +220,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
         {
           key: "search",
           Component: ({ name }) => {
-            const tChildren = useScopedI18n("search.mode.external.group.searchEngine.children");
+            const tChildren = useI18n("search.mode.external.group.searchEngine.children");
 
             return (
               <Group mx="md" my="sm">
@@ -265,7 +265,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
     }));
   },
   DetailComponent({ options }) {
-    const tChildren = useScopedI18n("search.mode.external.group.searchEngine.children");
+    const tChildren = useI18n("search.mode.external.group.searchEngine.children");
     return (
       <Stack mx="md" my="sm">
         <Text>{options.type === "generic" ? tChildren("detail.title") : tChildren("searchResults.title")}</Text>
@@ -298,7 +298,7 @@ const buildSearchUrl = (template: string, query: string) => {
 
 export const searchEnginesSearchGroups = createGroup<ExternalOption>({
   keyPath: "key",
-  title: (t) => t("search.mode.external.group.searchEngine.title"),
+  title: (t) => t("common.entity.searchEngines"),
   Component: (option) => {
     if (option.kind === "hint") {
       return (
@@ -403,7 +403,7 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
     return { type: "none" };
   },
   useQueryOptions(query) {
-    const tExternal = useScopedI18n("search.mode.external.group.searchEngine");
+    const tExternal = useI18n("search.mode.external.group.searchEngine");
     const { ddgBangs } = useSettings();
     const { bangToken, searchText, locked } = parseBangQuery(query);
     const [debouncedBangToken] = useDebouncedValue(bangToken, 150);

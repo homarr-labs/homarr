@@ -20,12 +20,12 @@ export const RemoveCertificate = ({ fileName }: RemoveCertificateProps) => {
       await revalidatePathActionAsync("/manage/tools/certificates");
     },
   });
-  const t = useI18n();
+  const t = useI18n("certificate");
 
   const handleClick = () => {
     openConfirmModal({
-      title: t("certificate.action.remove.label"),
-      children: t("certificate.action.remove.confirm"),
+      title: t("action.remove.label"),
+      children: t("action.remove.confirm"),
       // eslint-disable-next-line no-restricted-syntax
       async onConfirm() {
         await mutateAsync(
@@ -33,14 +33,14 @@ export const RemoveCertificate = ({ fileName }: RemoveCertificateProps) => {
           {
             onSuccess() {
               showSuccessNotification({
-                title: t("certificate.action.remove.notification.success.title"),
-                message: t("certificate.action.remove.notification.success.message"),
+                title: t("action.remove.notification.success.title"),
+                message: t("action.remove.notification.success.message"),
               });
             },
             onError() {
               showErrorNotification({
-                title: t("certificate.action.remove.notification.error.title"),
-                message: t("certificate.action.remove.notification.error.message"),
+                title: t("action.remove.notification.error.title"),
+                message: t("action.remove.notification.error.message"),
               });
             },
           },

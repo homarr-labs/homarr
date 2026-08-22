@@ -11,6 +11,19 @@
   border-color: var(--border-color) !important;
 }
 
+.settingsButton {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+:global([data-type="item"]:hover) .settingsButton,
+:global([data-type="item"]:focus-within) .settingsButton,
+.settingsButton[data-menu-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .editModeInertContent {
   display: contents;
 }
@@ -38,4 +51,10 @@
 .advancedFocusTrigger:focus-visible {
   opacity: 1;
   pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settingsButton {
+    transition: none;
+  }
 }

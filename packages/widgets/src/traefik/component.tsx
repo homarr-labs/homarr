@@ -12,8 +12,9 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { getIntegrationName } from "@homarr/definitions";
 import type { TraefikDashboardData, TraefikProtocolSummary, TraefikResourceSummary } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -108,7 +109,8 @@ function TraefikWidgetContent({
   height,
   displayMode = "compact",
 }: WidgetComponentProps<"traefik">) {
-  const t = useScopedI18n("widget.traefik");
+  const t = useI18n("widget.traefik");
+  const tCommon = useI18n("common");
   const dashboardQuery = clientApi.widget.traefik.getDashboard.useQuery({ integrationIds });
   const data = getUsableWidgetQueryData(dashboardQuery);
 
@@ -189,7 +191,7 @@ function TraefikWidgetContent({
 
       <div className={classes.protocolGrid}>
         {protocolKeys.map((protocol) => (
-          <ProtocolCard key={protocol} protocol={protocol} data={combined[protocol]} />
+          <ProtocolCard key={protocol} protocol={protocol} data={combined[protocol]} tCommon={tCommon} />
         ))}
       </div>
 
@@ -210,7 +212,7 @@ function TraefikWidgetContent({
       <Box h="100%" pos="relative">
         <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
           <IntegrationErrorIndicator results={data} />
-          <WidgetQueryErrorIndicator error={dashboardQuery.error} label={t("name")} />
+          <WidgetQueryErrorIndicator error={dashboardQuery.error} label={getIntegrationName("traefik")} />
         </Group>
         <ScrollArea h="100%">{summary}</ScrollArea>
       </Box>
@@ -263,7 +265,7 @@ function TraefikWidgetContent({
       <Box h="100%" pos="relative">
         <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
           <IntegrationErrorIndicator results={data} />
-          <WidgetQueryErrorIndicator error={dashboardQuery.error} label={t("name")} />
+          <WidgetQueryErrorIndicator error={dashboardQuery.error} label={getIntegrationName("traefik")} />
         </Group>
         <ScrollArea h="100%">
           <Stack gap="md" p="md">
@@ -279,7 +281,7 @@ function TraefikWidgetContent({
     <Box h="100%" pos="relative">
       <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
         <IntegrationErrorIndicator results={data} />
-        <WidgetQueryErrorIndicator error={dashboardQuery.error} label={t("name")} />
+        <WidgetQueryErrorIndicator error={dashboardQuery.error} label={getIntegrationName("traefik")} />
       </Group>
       <SimpleGrid cols={2} spacing="md" h="100%" p="md" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
         <ScrollArea h="100%">{summary}</ScrollArea>
@@ -291,8 +293,16 @@ function TraefikWidgetContent({
 
 const resourceStatusOrder = { error: 0, warning: 1, disabled: 2, unknown: 3, enabled: 4 } as const;
 
-function ProtocolCard({ protocol, data }: { protocol: ProtocolKey; data: TraefikDashboardData[ProtocolKey] }) {
-  const t = useScopedI18n("widget.traefik");
+function ProtocolCard({
+  protocol,
+  data,
+  tCommon,
+}: {
+  protocol: ProtocolKey;
+  data: TraefikDashboardData[ProtocolKey];
+  tCommon: ReturnType<typeof useI18n<"common">>;
+}) {
+  const t = useI18n("widget.traefik");
   const rows: { key: ResourceKey; icon: typeof IconRoute; summary: TraefikResourceSummary }[] = [
     { key: "routers", icon: IconRoute, summary: data.routers },
     { key: "services", icon: IconServer, summary: data.services },
@@ -300,6 +310,11 @@ function ProtocolCard({ protocol, data }: { protocol: ProtocolKey; data: Traefik
   if ("middlewares" in data) {
     rows.push({ key: "middlewares", icon: IconStack2, summary: data.middlewares });
   }
+  const resourceLabels = {
+    routers: t("resource.routers"),
+    services: tCommon("services"),
+    middlewares: t("resource.middlewares"),
+  };
 
   return (
     <div className={classes.protocolCard}>
@@ -309,7 +324,7 @@ function ProtocolCard({ protocol, data }: { protocol: ProtocolKey; data: Traefik
           <div key={key} className={classes.protocolRow}>
             <Group gap={4} wrap="nowrap" className={classes.protocolLabel}>
               <Icon size="var(--mantine-font-size-sm)" />
-              <Text>{t(`resource.${key}`)}</Text>
+              <Text>{resourceLabels[key]}</Text>
             </Group>
             <StatusCount summary={summary} />
           </div>
@@ -350,11 +365,16 @@ function SummaryMetric({ icon, label, value }: { icon: ReactNode; label: string;
 }
 
 function HealthBadge({ errors, warnings }: { errors: number; warnings: number }) {
-  const t = useScopedI18n("widget.traefik");
+  const t = useI18n("widget.traefik");
 
   if (errors > 0) {
     return (
-      <Badge color="red" variant="light" leftSection={<IconAlertTriangle size="var(--mantine-font-size-xs)" />} radius="sm">
+      <Badge
+        color="red"
+        variant="light"
+        leftSection={<IconAlertTriangle size="var(--mantine-font-size-xs)" />}
+        radius="sm"
+      >
         {t("status.errors", { count: errors })}
       </Badge>
     );
@@ -362,14 +382,24 @@ function HealthBadge({ errors, warnings }: { errors: number; warnings: number })
 
   if (warnings > 0) {
     return (
-      <Badge color="yellow" variant="light" leftSection={<IconAlertTriangle size="var(--mantine-font-size-xs)" />} radius="sm">
+      <Badge
+        color="yellow"
+        variant="light"
+        leftSection={<IconAlertTriangle size="var(--mantine-font-size-xs)" />}
+        radius="sm"
+      >
         {t("status.warnings", { count: warnings })}
       </Badge>
     );
   }
 
   return (
-    <Badge color="green" variant="light" leftSection={<IconCircleCheck size="var(--mantine-font-size-xs)" />} radius="sm">
+    <Badge
+      color="green"
+      variant="light"
+      leftSection={<IconCircleCheck size="var(--mantine-font-size-xs)" />}
+      radius="sm"
+    >
       {t("status.healthy")}
     </Badge>
   );

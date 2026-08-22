@@ -13,12 +13,9 @@ import {
   CustomWidgetSourceSetupPanel,
   isCustomWidgetSourceSetupReady,
 } from "@homarr/custom-widgets/workbench";
-import type {
-  CustomWidgetSourceSetupMessages,
-  CustomWidgetSourceSetupValue,
-} from "@homarr/custom-widgets/workbench";
+import type { CustomWidgetSourceSetupMessages, CustomWidgetSourceSetupValue } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface CustomWidgetSourceSetupDialogProps {
   definitionId: string;
@@ -26,12 +23,9 @@ interface CustomWidgetSourceSetupDialogProps {
   onClose(): void;
 }
 
-export function CustomWidgetSourceSetupDialog({
-  definitionId,
-  opened,
-  onClose,
-}: CustomWidgetSourceSetupDialogProps) {
-  const t = useScopedI18n("customWidget");
+export function CustomWidgetSourceSetupDialog({ definitionId, opened, onClose }: CustomWidgetSourceSetupDialogProps) {
+  const t = useI18n("customWidget");
+  const tCommon = useI18n("common");
   const router = useRouter();
   const utils = clientApi.useUtils();
   const definitionQuery = clientApi.customWidget.get.useQuery({ id: definitionId }, { enabled: opened });
@@ -60,7 +54,7 @@ export function CustomWidgetSourceSetupDialog({
     credentialsMissing: t("importReview.sourceSetup.credentialsMissing"),
     credentialsOptional: t("sourceSetupDialog.credentialsRequired"),
     configured: t("workbench.sources.configured"),
-    secret: (kind) => t(`importReview.credentials.field.${kind}`),
+    secret: (kind) => t(`secret.${kind}`),
     urlError: (issue) => t(`workbench.sources.baseUrlError.${issue}`),
   };
 
@@ -123,7 +117,7 @@ export function CustomWidgetSourceSetupDialog({
           />
           <Group justify="flex-end">
             <Button variant="default" onClick={onClose} disabled={saving}>
-              {t("sourceSetupDialog.cancel")}
+              {tCommon("action.cancel")}
             </Button>
             <Button
               onClick={() => void save()}

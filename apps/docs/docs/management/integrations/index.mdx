@@ -17,6 +17,24 @@ To create an integration, choose **New integration** and select the supported ap
 
 The integrations management page uses a searchable list. Each row shows the integration type and URL, with the actions you have permission to use.
 
+### Accessing the page
+
+The `/manage/integrations` page is reachable when at least one of the following applies:
+
+- you can manage all integrations (global `integration-full-all`),
+- you can create integrations (`integration-create`), or
+- you have been granted full access to at least one specific integration.
+
+What the page shows depends on the case:
+
+- **Manage all (`integration-full-all`)**: the full list of integrations is shown.
+- **Create only (`integration-create`)**: the page shows an empty "create an integration" state instead of the list, with the create action still available.
+- **Delegated (full access on one or more)**: only the integrations you have full access to are listed, above a note making clear that the view is scoped to what you can manage.
+- **None**: the page is not reachable and returns a not-found page.
+
+Where you have a mix of access, the list combines the integrations you can manage. Integration lists are filtered
+server side, so a user never receives data about integrations they lack access to.
+
 Next, you'll need to fill out the required fields to configure the integration:
 
 ![](./img/form-create-integration.png)
@@ -63,9 +81,9 @@ When you connect a service from a board, Homarr keeps you in the same setup flow
 confirms whether an application shortcut was linked and offers the widgets that support the new integration. Selecting a
 widget returns to its settings with the new integration already selected.
 
-Users with full access can also test and update a selected integration from **Edit widget → Edit integration** on a
-board. Failed tests keep the editor open and show the same connection diagnostics as the management page. Successful
-changes apply to every app and widget that uses the integration.
+Users with full access can also test and update a selected integration directly in the **Edit widget → Edit integration**
+tab on a board. Failed tests keep the editor open and show the same connection diagnostics as the management page.
+Successful changes apply to every app and widget that uses the integration.
 
 When app creation is not permitted, the setup form offers linking an existing accessible app instead of attempting to
 create one.

@@ -18,7 +18,7 @@ import duration from "dayjs/plugin/duration";
 
 import { capitalize, formatBytes, formatBytesPair } from "@homarr/common";
 import type { ComputeResource, Resource, StorageResource } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 dayjs.extend(duration);
 
@@ -46,7 +46,7 @@ export const ResourcePopover = ({ item, children }: PropsWithChildren<ResourcePo
 };
 
 export const ResourceTypeEntryDetails = ({ item }: { item: Resource }) => {
-  const t = useScopedI18n("widget.healthMonitoring.cluster.popover");
+  const t = useI18n("widget.healthMonitoring.cluster.popover");
   return (
     <Stack gap={0}>
       <Group wrap="nowrap" align="start" justify="apart">
@@ -92,7 +92,7 @@ const RightSection = ({ label, value }: RightSectionProps) => {
 };
 
 const ComputeResourceDetails = ({ item }: { item: ComputeResource }) => {
-  const t = useScopedI18n("widget.healthMonitoring.cluster.popover.detail");
+  const t = useI18n("widget.healthMonitoring.cluster.popover.detail");
   const memory = formatBytesPair(item.memory.used, item.memory.total);
   const storage = formatBytesPair(item.storage.used, item.storage.total);
   return (
@@ -121,7 +121,7 @@ const ComputeResourceDetails = ({ item }: { item: ComputeResource }) => {
 };
 
 const StorageResourceDetails = ({ item }: { item: StorageResource }) => {
-  const t = useScopedI18n("widget.healthMonitoring.cluster.popover.detail");
+  const t = useI18n("widget.healthMonitoring.cluster.popover.detail");
   const storagePercent = item.total ? (item.used / item.total) * 100 : 0;
   const storage = formatBytesPair(item.used, item.total);
   return (
@@ -188,7 +188,7 @@ const NetStats = ({ item }: { item: ComputeResource }) => {
 };
 
 const StorageType = ({ item }: { item: StorageResource }) => {
-  const t = useScopedI18n("widget.healthMonitoring.cluster.popover.detail.storageType");
+  const t = useI18n("widget.healthMonitoring.cluster.popover.detail.storageType");
   if (item.isShared) {
     return <Badge color="blue">{t("shared")}</Badge>;
   } else {

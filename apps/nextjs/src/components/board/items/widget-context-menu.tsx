@@ -16,12 +16,14 @@ import { useTimeAgo } from "@homarr/common";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
+import { getWidgetName } from "@homarr/definitions";
 import { translateIfNecessary } from "@homarr/translation";
 import type { TranslationFunction } from "@homarr/translation";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
 import { getWidgetQueryKeys, getWidgetRuntimeQueries, supportsAdvancedFocus } from "@homarr/widgets/definition";
 import { reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
+import { getWidgetOptionTranslationNamespace } from "@homarr/widgets/option-translation";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useAdvancedFocus } from "../advanced-focus/context";
@@ -51,8 +53,9 @@ export const WidgetContextMenu = ({
   const board = useRequiredBoard();
   const { hasChangeAccess } = useBoardPermissions(board);
   const { updateAndPersistBoard } = usePersistBoard(board);
-  const tMenu = useScopedI18n("item.menu.label");
   const t = useI18n();
+  const tMenu = useI18n("item.menu.label");
+  const tCommon = useI18n("common.action");
   const settings = useSettings();
   const { openModal } = useModalAction(LazyWidgetEditModal);
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
@@ -189,7 +192,9 @@ export const WidgetContextMenu = ({
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      { title: (fn: any) => `${fn("item.edit.title")} - ${fn(`widget.${item.kind}.name`)}` },
+      {
+        title: (fn: any) => `${fn("item.edit.title")} - ${getWidgetName(item.kind, fn)}`,
+      },
     );
   }, [
     definition,
@@ -250,8 +255,7 @@ export const WidgetContextMenu = ({
             <Menu.Label>{tMenu("options")}</Menu.Label>
             {toggleOptions.map(([key]) => (
               <Menu.CheckboxItem key={key} checked={Boolean(options[key])} onChange={handleToggle(key)}>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {String(translateIfNecessary(t, ((fn: any) => fn(`widget.${item.kind}.option.${key}.label`)) as any))}
+                {t(`${getWidgetOptionTranslationNamespace(item.kind, key)}.label` as never)}
               </Menu.CheckboxItem>
             ))}
           </>
@@ -286,7 +290,7 @@ export const WidgetContextMenu = ({
           disabled={isWidgetFetching}
         >
           <Group justify="space-between" wrap="nowrap" gap="sm">
-            {tMenu("refresh")}
+            {tCommon("refresh")}
             <WidgetQueryStatus
               queryClient={queryClient}
               matchesQuery={matchesWidgetQuery}

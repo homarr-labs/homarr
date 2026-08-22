@@ -4,7 +4,7 @@ import { Button, Group, Loader, Paper, Stack, Text, ThemeIcon } from "@mantine/c
 import { useReducedMotion } from "@mantine/hooks";
 import { IconAlertTriangle, IconCheck, IconDatabaseImport, IconRefresh } from "@tabler/icons-react";
 
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 export type RestoreProgressStatus = "restoring" | "restarting" | "timedOut";
 
@@ -16,8 +16,8 @@ interface RestoreProgressPanelProps {
 }
 
 export const RestoreProgressPanel = ({ active, status, onRetry, onReload }: RestoreProgressPanelProps) => {
-  const t = useScopedI18n("management.page.tool.backup.restore");
-  const tRoot = useI18n();
+  const t = useI18n("management.page.tool.backup.restore");
+  const tCommon = useI18n("common");
   const reduceMotion = useReducedMotion();
 
   if (!active) return null;
@@ -66,10 +66,10 @@ export const RestoreProgressPanel = ({ active, status, onRetry, onReload }: Rest
         {isTimedOut ? (
           <Group>
             <Button variant="light" onClick={onRetry} leftSection={<IconRefresh size={16} />}>
-              {t("tryAgain")}
+              {tCommon("action.tryAgain")}
             </Button>
             <Button variant="default" onClick={onReload}>
-              {tRoot("docker.action.refresh.label")}
+              {tCommon("action.refresh")}
             </Button>
           </Group>
         ) : null}

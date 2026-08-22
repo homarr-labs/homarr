@@ -5,7 +5,7 @@ import { Indicator, Menu, Text } from "@mantine/core";
 import { IconBellRinging } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface UpdateIndicatorProps extends PropsWithChildren {
   availableUpdates: RouterOutputs["updateChecker"]["getAvailableUpdates"] | undefined;
@@ -29,7 +29,7 @@ interface AvailableUpdatesMenuItemProps {
 }
 
 export const AvailableUpdatesMenuItem = ({ availableUpdates }: AvailableUpdatesMenuItemProps) => {
-  const t = useScopedI18n("common.userAvatar.menu");
+  const t = useI18n("common.userAvatar.menu");
   if (availableUpdates === undefined || availableUpdates.length === 0) {
     return null;
   }

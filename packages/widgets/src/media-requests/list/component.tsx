@@ -11,7 +11,7 @@ import { toValidDate } from "@homarr/common";
 import type { MediaRequestStatus } from "@homarr/integrations/types";
 import { mediaAvailabilityConfiguration, mediaRequestStatusConfiguration } from "@homarr/integrations/types";
 import { openMediaRequestSearch } from "@homarr/spotlight";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../../common/application-url";
@@ -83,7 +83,7 @@ export default function MediaServerWidget({
 }
 
 const MediaRequestSearchButton = ({ integrationIds }: { integrationIds: string[] }) => {
-  const t = useScopedI18n("search.mode.media");
+  const t = useI18n("search.mode.media");
 
   return (
     <Tooltip label={t("action.search.label")}>
@@ -118,7 +118,7 @@ const MediaRequestCard = ({
   options,
 }: MediaRequestCardProps) => {
   const board = useRequiredBoard();
-  const t = useScopedI18n("widget.mediaRequests-requestList");
+  const t = useI18n("widget.mediaRequests-requestList");
   const requestHref = getSafeApplicationUrl(request.href);
   const requestedByHref = getSafeApplicationUrl(request.requestedBy?.link);
 
@@ -252,7 +252,7 @@ const DecisionButtons = ({ requestId, integrationId, canInteract, alwaysVisible 
   } = clientApi.widget.mediaRequests.answerRequest.useMutation({
     onSettled: () => void utils.widget.mediaRequests.invalidate(),
   });
-  const t = useScopedI18n("widget.mediaRequests-requestList");
+  const t = useI18n("widget.mediaRequests-requestList");
   const handleDecision = (answer: RouterInputs["widget"]["mediaRequests"]["answerRequest"]["answer"]) => {
     if (!canInteract || isPending) return;
     mutateRequestAnswer({
@@ -308,7 +308,7 @@ interface StatusBadgeProps {
 }
 
 const StatusBadge = ({ status }: StatusBadgeProps) => {
-  const tStatus = useScopedI18n("widget.mediaRequests-requestList.status");
+  const tStatus = useI18n("widget.mediaRequests-requestList.status");
 
   return (
     <Badge size="xs" color={mediaRequestStatusConfiguration[status].color} variant="light">

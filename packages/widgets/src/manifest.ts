@@ -24,6 +24,9 @@ export type WidgetResources = {
 const moduleLoaders: Record<WidgetKind, () => Promise<WidgetModule>> = {
   clock: () => import("./clock") as Promise<WidgetModule>,
   weather: () => import("./weather") as Promise<WidgetModule>,
+  airQuality: () => import("./air-quality") as Promise<WidgetModule>,
+  countdown: () => import("./countdown") as Promise<WidgetModule>,
+  timer: () => import("./timer") as Promise<WidgetModule>,
   app: () => import("./app") as Promise<WidgetModule>,
   assistant: () => import("./assistant") as Promise<WidgetModule>,
   archiveTeamWarrior: () => import("./archive-team-warrior") as Promise<WidgetModule>,
@@ -85,6 +88,9 @@ const moduleLoaders: Record<WidgetKind, () => Promise<WidgetModule>> = {
 const componentLoaders: Record<WidgetKind, () => Promise<WidgetComponentModule>> = {
   clock: () => import("./clock/component") as Promise<WidgetComponentModule>,
   weather: () => import("./weather/component") as Promise<WidgetComponentModule>,
+  airQuality: () => import("./air-quality/component") as Promise<WidgetComponentModule>,
+  countdown: () => import("./countdown/component") as Promise<WidgetComponentModule>,
+  timer: () => import("./timer/component") as Promise<WidgetComponentModule>,
   app: () => import("./app/component") as Promise<WidgetComponentModule>,
   assistant: () => import("./assistant/component") as Promise<WidgetComponentModule>,
   archiveTeamWarrior: () => import("./archive-team-warrior/component") as Promise<WidgetComponentModule>,

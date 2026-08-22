@@ -7,11 +7,9 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/homarr-labs/homarr/tools/homarr-dev/internal/docker"
-	"github.com/homarr-labs/homarr/tools/homarr-dev/internal/gh"
 )
 
 func BuildCurrentImage(tag, directory string) error {
@@ -19,11 +17,11 @@ func BuildCurrentImage(tag, directory string) error {
 }
 
 func buildCurrentImage(ctx context.Context, tag, directory string, stdout, stderr io.Writer) error {
-	root, revision, err := checkoutDetails(ctx, directory)
+	options, err := CurrentBuildOptions(ctx, tag, directory)
 	if err != nil {
 		return err
 	}
-	return docker.BuildContext(ctx, docker.BuildOptions{Context: root, Tag: tag, Source: root, Revision: revision}, stdout, stderr)
+	return docker.BuildContext(ctx, options, stdout, stderr)
 }
 
 func BuildPRImage(number int, tag string) error {
@@ -31,44 +29,18 @@ func BuildPRImage(number int, tag string) error {
 }
 
 func buildPRImage(ctx context.Context, number int, tag string, stdout, stderr io.Writer) error {
-	if number <= 0 {
-		return fmt.Errorf("PR number must be positive")
-	}
-	temporaryRoot, err := os.MkdirTemp("", "homarr-pr-*")
-	if err != nil {
-		return fmt.Errorf("create temporary checkout: %w", err)
-	}
-	defer os.RemoveAll(temporaryRoot)
-
-	checkout := filepath.Join(temporaryRoot, "homarr")
-	clone := exec.CommandContext(ctx, "gh", prCloneArgs(checkout)...)
-	clone.Stdout = stdout
-	clone.Stderr = stderr
-	if err := clone.Run(); err != nil {
-		return fmt.Errorf("clone %s: %w", gh.Repo, err)
-	}
-	command := exec.CommandContext(ctx, "gh", "pr", "checkout", strconv.Itoa(number), "--detach")
-	command.Dir = checkout
-	command.Stdout = stdout
-	command.Stderr = stderr
-	if err := command.Run(); err != nil {
-		return fmt.Errorf("checkout PR #%d: %w", number, err)
-	}
-	_, revision, err := checkoutDetails(ctx, checkout)
+	options, cleanup, err := PRBuildOptions(ctx, number, tag, func(line string) {
+		_, _ = fmt.Fprintln(stdout, line)
+	})
 	if err != nil {
 		return err
 	}
-	return docker.BuildContext(ctx, docker.BuildOptions{
-		Context:  checkout,
-		Tag:      tag,
-		Source:   fmt.Sprintf("https://github.com/%s/pull/%d", gh.Repo, number),
-		Revision: revision,
-		PRNumber: number,
-	}, stdout, stderr)
+	defer cleanup()
+	return docker.BuildContext(ctx, options, stdout, stderr)
 }
 
-func prCloneArgs(checkout string) []string {
-	return []string{"repo", "clone", gh.Repo, checkout, "--", "--depth=1", "--filter=blob:none"}
+func prFetchArgs(repoURL, refSpec string) []string {
+	return []string{"fetch", "--depth=1", repoURL, refSpec}
 }
 
 func RebuildImage(image docker.Image) error {
@@ -89,7 +61,16 @@ func RebuildImageContext(ctx context.Context, image docker.Image, stdout, stderr
 }
 
 func checkoutDetails(ctx context.Context, directory string) (root string, revision string, err error) {
-	rootOutput, err := exec.CommandContext(ctx, "git", "-C", directory, "rev-parse", "--show-toplevel").CombinedOutput()
+	cmdRoot := exec.CommandContext(ctx, "git", "-C", directory, "rev-parse", "--show-toplevel")
+	cmdRoot.Env = append(
+		os.Environ(),
+		"MISE_TRUSTED_CONFIG_PATHS=*",
+		"MISE_QUIET=1",
+		"MISE_SILENT=1",
+		"MISE_YES=1",
+		"MISE_OVERRIDE_CONFIG_FILENAMES=",
+	)
+	rootOutput, err := cmdRoot.CombinedOutput()
 	if err != nil {
 		return "", "", fmt.Errorf("find Homarr checkout: %w: %s", err, strings.TrimSpace(string(rootOutput)))
 	}
@@ -97,7 +78,16 @@ func checkoutDetails(ctx context.Context, directory string) (root string, revisi
 	if _, err := os.Stat(filepath.Join(root, "Dockerfile")); err != nil {
 		return "", "", fmt.Errorf("%s is not a Homarr checkout", root)
 	}
-	revisionOutput, err := exec.CommandContext(ctx, "git", "-C", root, "rev-parse", "HEAD").CombinedOutput()
+	cmdRev := exec.CommandContext(ctx, "git", "-C", root, "rev-parse", "HEAD")
+	cmdRev.Env = append(
+		os.Environ(),
+		"MISE_TRUSTED_CONFIG_PATHS=*",
+		"MISE_QUIET=1",
+		"MISE_SILENT=1",
+		"MISE_YES=1",
+		"MISE_OVERRIDE_CONFIG_FILENAMES=",
+	)
+	revisionOutput, err := cmdRev.CombinedOutput()
 	if err != nil {
 		return "", "", fmt.Errorf("read checkout revision: %w: %s", err, strings.TrimSpace(string(revisionOutput)))
 	}

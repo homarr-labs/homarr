@@ -5,7 +5,7 @@ import combineClasses from "clsx";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem } from "~/app/[locale]/boards/_types";
 import { SectionGrid } from "./grid/section-grid";
@@ -25,8 +25,8 @@ interface Props {
 export const BoardContainerSection = ({ section }: Props) => {
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
-  const t = useScopedI18n("section.container");
-  const tAll = useI18n();
+  const t = useI18n("section.container");
+  const tSection = useI18n("section");
   const options = section.options;
   const { open: openAllInNewTabs, isLoading: areAppsLoading } = useOpenSectionApps(
     section.id,
@@ -62,7 +62,7 @@ export const BoardContainerSection = ({ section }: Props) => {
         radius={board.itemRadius}
         p={0}
       >
-        {options.collapsible && !isEditMode && (
+        {options.collapsible && (
           <Button
             className={classes.containerToggle}
             pos="absolute"
@@ -71,7 +71,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             w="100%"
             h={isVisuallyCollapsed ? "100%" : 24}
             px={12}
-            pe={options.showOpenAll ? 40 : 12}
+            pe={isEditMode ? 48 : options.showOpenAll ? 40 : 12}
             radius="sm"
             variant="default"
             justify={options.showLabel ? "flex-start" : "center"}
@@ -101,7 +101,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             )}
           </Button>
         )}
-        {!isVisuallyCollapsed && (!options.collapsible || isEditMode) && options.showLabel && options.title && (
+        {!isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
           <Badge
             pos="absolute"
             top={-24}
@@ -137,7 +137,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             radius="sm"
             loading={areAppsLoading}
             onClick={openAllInNewTabs}
-            aria-label={tAll("section.action.openAllInNewTabsFor", { name: label })}
+            aria-label={tSection("action.openAllInNewTabsFor", { name: label })}
           >
             <IconExternalLink size={16} />
           </ActionIcon>

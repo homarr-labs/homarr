@@ -4,7 +4,7 @@ import { Accordion, Anchor, Badge, Group, Stack, Text } from "@mantine/core";
 import { IconStack2 } from "@tabler/icons-react";
 
 import type { CoolifyServiceWithContext } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import actionTargetClasses from "../common/action-target.module.css";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -19,8 +19,8 @@ interface ServicesSectionProps {
 }
 
 export function ServicesSection({ services, baseUrl, isTiny, isAdvanced }: ServicesSectionProps) {
-  const t = useScopedI18n("widget.coolify");
-  const tCommon = useScopedI18n("common");
+  const t = useI18n("widget.coolify");
+  const tCommon = useI18n("common");
   const runningServices = services.filter((svc) => parseStatus(svc.status ?? "") === "running").length;
 
   return (
@@ -65,7 +65,7 @@ export function ServicesSection({ services, baseUrl, isTiny, isAdvanced }: Servi
 type ServiceApplication = NonNullable<CoolifyServiceWithContext["applications"]>[number];
 
 const ServiceApplicationRow = ({ application }: { application: ServiceApplication }) => {
-  const t = useScopedI18n("widget.coolify");
+  const t = useI18n("widget.coolify");
   const status = parseStatus(application.status ?? "");
   const publicUrl = getSafeApplicationUrl(cleanFqdn(application.fqdn));
   const statusLabel =

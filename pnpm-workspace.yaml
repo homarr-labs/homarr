@@ -280,6 +280,7 @@ overrides:
   "vite@>=5.0.0 <=5.4.18": ">=8.1.4"
 patchedDependencies:
   "@types/node-unifi": "patches/@types__node-unifi.patch"
+  mantine-datatable@9.3.1: patches/mantine-datatable@9.3.1.patch
   "trpc-to-openapi": "patches/trpc-to-openapi.patch"
 
 allowUnusedPatches: true

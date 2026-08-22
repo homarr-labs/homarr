@@ -18,7 +18,7 @@ import { clientApi } from "@homarr/api/client";
 import { formatDuration } from "@homarr/common";
 import type { UpsStatus, UpsSummary } from "@homarr/integrations/types";
 import type { ScopedTranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
@@ -68,7 +68,7 @@ interface UpsContentProps {
 }
 
 function UpsContent({ integrationIds, options, width, height, displayMode }: UpsContentProps) {
-  const t = useScopedI18n("widget.ups");
+  const t = useI18n("widget.ups");
   const summariesQuery = clientApi.widget.ups.getSummaries.useQuery({ integrationIds });
   const data = getUsableWidgetQueryData(summariesQuery);
 

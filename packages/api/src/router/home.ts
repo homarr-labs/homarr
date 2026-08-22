@@ -1,4 +1,6 @@
 import { isProviderEnabled } from "@homarr/auth/server";
+import { constructIntegrationPermissions } from "@homarr/auth/shared";
+import type { Database } from "@homarr/db";
 import { db, eq, inArray, or } from "@homarr/db";
 import {
   apps,
@@ -6,19 +8,47 @@ import {
   boardUserPermissions,
   groupMembers,
   groups,
+  integrationGroupPermissions,
+  integrationUserPermissions,
   integrations,
   invites,
   medias,
   searchEngines,
   users,
 } from "@homarr/db/schema";
-import type { TranslationObject } from "@homarr/translation";
-
+import { getAppManagementAccess, getIntegrationManagementAccess } from "@homarr/definitions";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
+const getFullAccessIntegrationIdsAsync = async (db: Database, userId: string) => {
+  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, userId),
+  });
+
+  const accessibleIntegrations = await db.query.integrations.findMany({
+    columns: {
+      id: true,
+    },
+    with: {
+      userPermissions: {
+        where: eq(integrationUserPermissions.userId, userId),
+      },
+      groupPermissions: {
+        where: inArray(
+          integrationGroupPermissions.groupId,
+          groupsOfCurrentUser.map((group) => group.groupId),
+        ),
+      },
+    },
+  });
+
+  return accessibleIntegrations
+    .filter((integration) => constructIntegrationPermissions(integration, null).hasFullAccess)
+    .map((integration) => integration.id);
+};
+
 interface HomeStatistic {
-  titleKey: keyof TranslationObject["management"]["page"]["home"]["statistic"];
-  subtitleKey: keyof TranslationObject["management"]["page"]["home"]["statisticLabel"];
+  titleKey: "app" | "board" | "group" | "integration" | "invite" | "media" | "searchEngine" | "user";
+  subtitleKey: "authentication" | "authorization" | "boards" | "resources";
   count: number;
   path: string;
 }
@@ -92,20 +122,30 @@ export const homeRouter = createTRPCRouter({
       });
     }
 
-    if (ctx.session?.user.permissions.includes("integration-create")) {
+    // A card is only shown when the page behind it is reachable, and it counts only what the user is
+    // allowed to see. The rules come from @homarr/definitions so this cannot drift from the pages.
+    const permissions = ctx.session?.user.permissions ?? [];
+    const hasGlobalFullIntegrationAccess = permissions.includes("integration-full-all");
+    const fullAccessIntegrationIds =
+      hasGlobalFullIntegrationAccess || !ctx.session?.user
+        ? []
+        : await getFullAccessIntegrationIdsAsync(ctx.db, ctx.session.user.id);
+    const integrationAccess = getIntegrationManagementAccess(permissions, fullAccessIntegrationIds.length > 0);
+    if (integrationAccess.canAccess) {
       statistics.push({
         titleKey: "integration",
         subtitleKey: "resources",
-        count: await db.$count(integrations),
+        count: integrationAccess.canManageAll ? await db.$count(integrations) : fullAccessIntegrationIds.length,
         path: "/manage/integrations",
       });
     }
 
-    if (ctx.session?.user.permissions.includes("app-create")) {
+    const appAccess = getAppManagementAccess(permissions);
+    if (appAccess.canAccess) {
       statistics.push({
         titleKey: "app",
         subtitleKey: "resources",
-        count: await db.$count(apps),
+        count: appAccess.canManageAll ? await db.$count(apps) : 0,
         path: "/manage/apps",
       });
     }

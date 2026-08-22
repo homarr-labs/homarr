@@ -7,7 +7,7 @@ import type { z } from "zod/v4";
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { CustomPasswordInput } from "@homarr/ui";
 import { userRegistrationSchema } from "@homarr/validation/user";
 
@@ -19,7 +19,7 @@ interface RegistrationFormProps {
 }
 
 export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
-  const t = useScopedI18n("user");
+  const t = useI18n("user");
   const router = useRouter();
   const { mutate, isPending } = clientApi.user.register.useMutation();
   const form = useZodForm(userRegistrationSchema, {

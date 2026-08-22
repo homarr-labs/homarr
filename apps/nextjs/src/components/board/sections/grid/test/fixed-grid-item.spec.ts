@@ -10,6 +10,9 @@ import { FixedGridItem } from "../fixed-grid-item";
 const mocks = vi.hoisted(() => ({
   announce: vi.fn(),
   commitSectionGrid: vi.fn(),
+  isSelected: vi.fn(() => false),
+  toggleSelectItem: vi.fn(),
+  registerElement: vi.fn(),
   editMode: true,
   maxRowCount: null as number | null,
   items: [
@@ -44,6 +47,13 @@ vi.mock("@homarr/boards/edit-mode", () => ({
   useEditMode: () => [mocks.editMode],
 }));
 
+vi.mock("~/components/board/selection/board-selection-context", () => ({
+  useBoardSelection: () => ({
+    isSelected: mocks.isSelected,
+    toggleSelectItem: mocks.toggleSelectItem,
+  }),
+}));
+
 vi.mock("@homarr/boards/context", () => ({
   useCurrentLayout: () => "layout",
 }));
@@ -70,7 +80,17 @@ vi.mock("../../section-context", () => ({
     innerSections: [],
     columnCount: 3,
     maxRowCount: mocks.maxRowCount,
+    placements: mocks.items.map((item) => ({
+      id: item.id,
+      type: item.type,
+      x: item.xOffset,
+      y: item.yOffset,
+      w: item.width,
+      h: item.height,
+    })),
+    interactionDisabled: false,
     announce: mocks.announce,
+    entryElementStore: { register: mocks.registerElement },
   }),
 }));
 
@@ -89,6 +109,7 @@ describe("fixed grid item behavior", () => {
   beforeEach(() => {
     mocks.announce.mockReset();
     mocks.commitSectionGrid.mockReset();
+    mocks.registerElement.mockReset();
     mocks.editMode = true;
     mocks.maxRowCount = null;
     getWeatherMock().advancedOptions.title = null;

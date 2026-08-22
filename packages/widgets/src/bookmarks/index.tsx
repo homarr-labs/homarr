@@ -20,7 +20,12 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
       layout: factory.select({
         options: (["grid", "gridHorizontal", "row", "column"] as const).map((value) => ({
           value,
-          label: (t) => t(`widget.bookmarks.option.layout.option.${value}.label`),
+          label: (t) => {
+            if (value === "grid") return t("widget.common.layout.option.grid");
+            if (value === "row") return t("widget.common.layout.option.horizontal");
+            if (value === "column") return t("widget.common.layout.option.vertical");
+            return t("widget.bookmarks.option.layout.option.gridHorizontal.label");
+          },
         })),
         defaultValue: "column",
       }),

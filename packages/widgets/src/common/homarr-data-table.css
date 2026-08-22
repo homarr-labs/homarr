@@ -12,11 +12,18 @@
   background-color: transparent;
 }
 
+.homarr-data-table .mantine-datatable-table {
+  width: 100% !important;
+  max-width: 100%;
+  table-layout: fixed !important;
+}
+
 .homarr-data-table .mantine-datatable-table tbody tr:hover {
   background-color: color-mix(in srgb, var(--mantine-color-default-hover) 40%, transparent) !important;
 }
 
 .homarr-data-table th {
+  padding: 0;
   white-space: nowrap;
   background-color: color-mix(in srgb, var(--mantine-color-body) 60%, transparent) !important;
   backdrop-filter: blur(8px);
@@ -26,6 +33,13 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Lets a cell's content (e.g. an oversized action icon) visually overflow its own box without
+   growing it - used to make a per-row icon look bigger without inflating row height, since the
+   icon is pulled out of flow via absolute positioning rather than actually being a bigger cell. */
+.homarr-data-table td.docker-actions-cell {
+  overflow: visible;
 }
 
 .homarr-data-table td .mantine-Text-root,
@@ -38,6 +52,25 @@
 .homarr-data-table .mantine-datatable-header-cell-draggable-action-icon {
   opacity: 0;
   transition: opacity 150ms ease-out;
+}
+
+.homarr-data-table .mantine-datatable-header-cell-sortable-group {
+  gap: 0;
+}
+
+.homarr-data-table .mantine-datatable-header-cell-draggable-action-icon {
+  margin: 0;
+}
+
+.homarr-data-table .mantine-datatable-header-cell-sortable-unsorted-icon {
+  display: none;
+}
+
+.homarr-data-table .mantine-datatable-header-cell-draggable-action-icon svg,
+.homarr-data-table .mantine-datatable-header-cell-sortable-text svg,
+.homarr-data-table .mantine-datatable-header-cell-sortable-icon svg {
+  width: var(--mantine-font-size-md);
+  height: var(--mantine-font-size-md);
 }
 
 .homarr-data-table th:hover .mantine-datatable-header-cell-sortable-icon,

@@ -35,7 +35,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createDocumentationLink } from "@homarr/definitions";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
 import { env } from "@homarr/docker/env";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
@@ -44,6 +44,7 @@ import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";
 import { ManageTourGate } from "~/components/onboarding/manage-tour-gate";
 import { env as nextEnv } from "~/env";
+import { getAppsSectionAccess, getIntegrationsSectionAccessAsync } from "./_access";
 
 const logger = createLogger({ module: "manageLayout" });
 
@@ -60,11 +61,14 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       return false;
     }
   });
-  const [t, session, shouldRunManageTour] = await Promise.all([
-    getScopedI18n("management.navbar"),
+  const [t, tEntities, session, shouldRunManageTour] = await Promise.all([
+    getI18n("management.navbar"),
+    getI18n("common.entity"),
     sessionPromise,
     shouldRunManageTourPromise,
   ]);
+  const appsAccess = getAppsSectionAccess(session);
+  const integrationsAccess = await getIntegrationsSectionAccessAsync(session);
   const navigationLinks: NavigationLink[] = [
     {
       label: t("items.home"),
@@ -75,14 +79,14 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     {
       icon: IconLayoutDashboardFilled,
       href: "/manage/boards",
-      label: t("items.boards"),
+      label: tEntities("boards"),
       "data-onboarding-tour-id": "manage-boards",
     },
     {
       icon: IconBox,
       href: "/manage/apps",
-      label: t("items.apps"),
-      hidden: !session?.user.permissions.includes("app-create"),
+      label: tEntities("apps"),
+      hidden: !appsAccess.canAccess,
       iconProps: {
         strokeWidth: 2.5,
       },
@@ -91,20 +95,20 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     {
       icon: IconAffiliateFilled,
       href: "/manage/integrations",
-      label: t("items.integrations"),
-      hidden: !session?.user.permissions.includes("integration-create"),
+      label: tEntities("integrations"),
+      hidden: !integrationsAccess.canAccess,
       "data-onboarding-tour-id": "manage-integrations",
     },
     {
       icon: IconApi,
       href: "/manage/custom-widgets",
-      label: t("items.customWidgets"),
+      label: tEntities("customWidgets"),
       hidden: !session?.user.permissions.includes("admin"),
     },
     {
       icon: IconSearch,
       href: "/manage/search-engines",
-      label: t("items.searchEngies"),
+      label: tEntities("searchEngines"),
       hidden: !session?.user.permissions.includes("search-engine-create"),
       iconProps: {
         strokeWidth: 2.5,
@@ -114,13 +118,13 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     {
       icon: IconPhotoFilled,
       href: "/manage/medias",
-      label: t("items.medias"),
+      label: tEntities("media"),
       hidden: !session?.user.permissions.includes("media-upload"),
       "data-onboarding-tour-id": "manage-medias",
     },
     {
       icon: IconUserFilled,
-      label: t("items.users.label"),
+      label: tEntities("users"),
       hidden: !session?.user.permissions.includes("admin"),
       "data-onboarding-tour-id": "manage-users",
       items: [
@@ -130,13 +134,13 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           href: "/manage/users",
         },
         {
-          label: t("items.users.items.invites"),
+          label: tEntities("invites"),
           icon: IconMailForward,
           href: "/manage/users/invites",
           hidden: !isProviderEnabled("credentials"),
         },
         {
-          label: t("items.users.items.groups"),
+          label: tEntities("groups"),
           icon: IconUsersGroup,
           href: "/manage/users/groups",
         },
@@ -167,19 +171,19 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           hidden: !session?.user.permissions.includes("admin"),
         },
         {
-          label: t("items.tools.items.logs"),
+          label: tEntities("logs"),
           icon: IconBrandTablerFilled,
           href: "/manage/tools/logs",
           hidden: !session?.user.permissions.includes("other-view-logs"),
         },
         {
-          label: t("items.tools.items.certificates"),
+          label: tEntities("certificates"),
           icon: IconCertificate,
           href: "/manage/tools/certificates",
           hidden: !session?.user.permissions.includes("admin"),
         },
         {
-          label: t("items.tools.items.tasks"),
+          label: tEntities("tasks"),
           icon: IconClipboardListFilled,
           href: "/manage/tools/tasks",
           hidden: !session?.user.permissions.includes("admin"),

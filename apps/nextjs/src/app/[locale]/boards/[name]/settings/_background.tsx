@@ -23,7 +23,7 @@ interface Props {
 }
 
 export const BackgroundSettingsContent = ({ form }: Props) => {
-  const t = useI18n();
+  const tBoard = useI18n("board");
   const { data: session } = useSession();
 
   const [debouncedSearch] = useDebouncedValue(form.values.backgroundImageUrl ?? "", 200);
@@ -44,7 +44,7 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
   const backgroundImageRepeatData = useBackgroundOptionData("backgroundImageRepeat", backgroundImageRepeats);
 
   return (
-    <SectionCard title={t("board.setting.section.background.title")}>
+    <SectionCard title={tBoard("setting.section.background.title")}>
       <Grid>
         <Grid.Col span={12}>
           <Group wrap="nowrap" gap="xs" w="100%" align="start">
@@ -67,8 +67,8 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
               }
               // We filter it on the server
               filter={({ options }) => options}
-              label={t("board.field.backgroundImageUrl.label")}
-              placeholder={`${t("board.field.backgroundImageUrl.placeholder")}...`}
+              label={tBoard("field.backgroundImageUrl.label")}
+              placeholder={`${tBoard("field.backgroundImageUrl.placeholder")}...`}
               renderOption={({ option }) => {
                 const current = imageMap.get(option.value);
                 if (!current) return null;
@@ -87,13 +87,13 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
               }}
               data={[
                 {
-                  group: t("board.field.backgroundImageUrl.group.your"),
+                  group: tBoard("field.backgroundImageUrl.group.your"),
                   items: images
                     .filter((media) => media.creatorId === session?.user.id)
                     .map((media) => `/api/user-medias/${media.id}`),
                 },
                 {
-                  group: t("board.field.backgroundImageUrl.group.other"),
+                  group: tBoard("field.backgroundImageUrl.group.other"),
                   items: images
                     .filter((media) => media.creatorId !== session?.user.id)
                     .map((media) => `/api/user-medias/${media.id}`),
@@ -123,21 +123,21 @@ export const BackgroundSettingsContent = ({ form }: Props) => {
         </Grid.Col>
         <Grid.Col span={12}>
           <SelectWithDescriptionBadge
-            label={t("board.field.backgroundImageAttachment.label")}
+            label={tBoard("field.backgroundImageAttachment.label")}
             data={backgroundImageAttachmentData}
             {...form.getInputProps("backgroundImageAttachment")}
           />
         </Grid.Col>
         <Grid.Col span={12}>
           <SelectWithDescriptionBadge
-            label={t("board.field.backgroundImageSize.label")}
+            label={tBoard("field.backgroundImageSize.label")}
             data={backgroundImageSizeData}
             {...form.getInputProps("backgroundImageSize")}
           />
         </Grid.Col>
         <Grid.Col span={12}>
           <SelectWithDescriptionBadge
-            label={t("board.field.backgroundImageRepeat.label")}
+            label={tBoard("field.backgroundImageRepeat.label")}
             data={backgroundImageRepeatData}
             {...form.getInputProps("backgroundImageRepeat")}
           />
@@ -176,19 +176,20 @@ const useBackgroundOptionData = <
     defaultValue: keyof TOptions;
   },
 ) => {
-  const t = useI18n();
+  const tBoard = useI18n("board");
+  const tCommon = useI18n("common");
 
   return data.values.map(
     (value) =>
       ({
-        label: t(`board.field.${key}.option.${value as string}.label` as never),
-        description: t(`board.field.${key}.option.${value as string}.description` as never),
+        label: tBoard(`field.${key}.option.${value as string}.label` as never),
+        description: tBoard(`field.${key}.option.${value as string}.description` as never),
         value: value as string,
         badge:
           data.defaultValue === value
             ? {
                 color: "blue",
-                label: t("common.select.badge.recommended"),
+                label: tCommon("select.badge.recommended"),
               }
             : undefined,
       }) satisfies SelectItemWithDescriptionBadge,

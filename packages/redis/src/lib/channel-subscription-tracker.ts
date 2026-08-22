@@ -18,6 +18,7 @@ type SubscriptionCallback = (message: string) => MaybePromise<void>;
  */
 export class ChannelSubscriptionTracker {
   private static subscriptions = new Map<string, Map<string, SubscriptionCallback>>();
+  private static subscriptionReadiness = new Map<string, Promise<void>>();
   private static redis = createRedisConnection();
   private static listenerActive = false;
 
@@ -28,6 +29,25 @@ export class ChannelSubscriptionTracker {
    * @returns a function to unsubscribe from the channel
    */
   public static subscribe(channelName: string, callback: SubscriptionCallback) {
+    return this.registerSubscription(channelName, callback).unsubscribe;
+  }
+
+  /**
+   * Subscribes to a channel and resolves once Redis confirms the subscription.
+   */
+  public static async subscribeAsync(channelName: string, callback: SubscriptionCallback) {
+    const subscription = this.registerSubscription(channelName, callback);
+
+    try {
+      await subscription.ready;
+      return subscription.unsubscribe;
+    } catch (error) {
+      subscription.unsubscribe();
+      throw error;
+    }
+  }
+
+  private static registerSubscription(channelName: string, callback: SubscriptionCallback) {
     logger.debug("Adding redis channel callback", { channel: channelName });
 
     // We only want to activate the listener once
@@ -38,11 +58,18 @@ export class ChannelSubscriptionTracker {
 
     const channelSubscriptions = this.subscriptions.get(channelName) ?? new Map<string, SubscriptionCallback>();
     const id = randomUUID();
+    let ready = this.subscriptionReadiness.get(channelName);
 
-    // If there are no subscriptions to the channel, subscribe to it
-    if (channelSubscriptions.size === 0) {
+    // Subscribe when this channel has no active or pending Redis subscription.
+    if (!ready) {
       logger.debug("Subscribing to redis channel", { channel: channelName });
-      void this.redis.subscribe(channelName);
+      ready = this.redis.subscribe(channelName).then(() => undefined);
+      this.subscriptionReadiness.set(channelName, ready);
+      void ready.catch(() => {
+        if (this.subscriptionReadiness.get(channelName) === ready) {
+          this.subscriptionReadiness.delete(channelName);
+        }
+      });
     }
 
     logger.debug("Adding redis channel callback", { channel: channelName, id });
@@ -50,24 +77,26 @@ export class ChannelSubscriptionTracker {
 
     this.subscriptions.set(channelName, channelSubscriptions);
 
-    // Return a function to unsubscribe
-    return () => {
+    const unsubscribe = () => {
       logger.debug("Removing redis channel callback", { channel: channelName, id });
 
-      const channelSubscriptions = this.subscriptions.get(channelName);
-      if (!channelSubscriptions) return;
+      const currentSubscriptions = this.subscriptions.get(channelName);
+      if (!currentSubscriptions) return;
 
-      channelSubscriptions.delete(id);
+      currentSubscriptions.delete(id);
 
       // If there are no subscriptions to the channel, unsubscribe from it
-      if (channelSubscriptions.size >= 1) {
+      if (currentSubscriptions.size >= 1) {
         return;
       }
 
       logger.debug("Unsubscribing from redis channel", { channel: channelName });
       void this.redis.unsubscribe(channelName);
       this.subscriptions.delete(channelName);
+      this.subscriptionReadiness.delete(channelName);
     };
+
+    return { ready, unsubscribe };
   }
 
   /**

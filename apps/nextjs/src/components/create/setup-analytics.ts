@@ -32,12 +32,12 @@ export interface SetupMetricProperties {
  * Never pass record IDs, names, URLs, search text, credentials, or provider responses here.
  */
 export const useSetupAnalytics = () => {
-  const t = useI18n();
+  const tCommon = useI18n("common");
   const { mutate } = clientApi.analytics.trackFeature.useMutation({
     onError() {
       showErrorNotification({
-        title: t("common.error"),
-        message: t("universalCreate.analyticsError"),
+        title: tCommon("error"),
+        message: tCommon("analyticsError"),
       });
     },
   });

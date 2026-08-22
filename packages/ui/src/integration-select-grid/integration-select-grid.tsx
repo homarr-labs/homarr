@@ -1,27 +1,69 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Badge, Card, Center, Group, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
-import { IconPuzzle } from "@tabler/icons-react";
+import { Badge, Center, Group, Input, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import {
+  IconAd,
+  IconApps,
+  IconBinaryTree,
+  IconBookmark,
+  IconBrandDocker,
+  IconBrandMinecraft,
+  IconBrowser,
+  IconBuildingBank,
+  IconBusStop,
+  IconCalendar,
+  IconChartBar,
+  IconClock,
+  IconClockPlay,
+  IconCloud,
+  IconDeviceCctv,
+  IconDeviceGamepad,
+  IconDownload,
+  IconGraphFilled,
+  IconHeartRateMonitor,
+  IconHourglass,
+  IconMessage,
+  IconMovie,
+  IconNotes,
+  IconPuzzle,
+  IconReportSearch,
+  IconRobot,
+  IconRocket,
+  IconRss,
+  IconSearch,
+  IconServer2,
+  IconTicket,
+  IconTopologyFull,
+  IconTransform,
+  IconVideo,
+  IconWall,
+  IconWind,
+  IconZoomQuestion,
+} from "@tabler/icons-react";
 
-import type { IntegrationKind } from "@homarr/definitions";
+import { getWidgetName } from "@homarr/definitions";
+import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import { IntegrationAvatar } from "../components/integration-avatar";
-import { SelectGridLayout, selectGridCardHeight } from "../select-grid-layout";
+import { SelectableCard } from "../components/selectable-card";
+import { selectGridCols } from "../select-grid-layout";
 import { buildSortedIntegrations, categoryTranslationKeys, filterIntegrations } from "./integration-grid-shared";
-import classes from "./integration-select-grid.module.css";
+import type { IntegrationGridItem } from "./integration-grid-shared";
 
 export interface IntegrationSelectGridProps {
   onSelect: (kind: IntegrationKind) => void;
   enableMockIntegration?: boolean;
   allowedKinds?: readonly IntegrationKind[];
+  integrationData?: { kind: IntegrationKind; name?: string }[];
 }
 
 export const IntegrationSelectGrid = ({
   onSelect,
   enableMockIntegration = false,
   allowedKinds,
+  integrationData,
 }: IntegrationSelectGridProps) => {
   const [search, setSearch] = useState("");
   const t = useI18n();
@@ -32,75 +74,182 @@ export const IntegrationSelectGrid = ({
   const filtered = useMemo(() => filterIntegrations(integrations, search), [integrations, search]);
 
   return (
-    <SelectGridLayout
-      search={search}
-      onSearchChange={setSearch}
-      placeholder={`${t("integration.page.list.search")}...`}
-      ariaLabel={t("integration.page.list.search")}
-    >
-      {filtered.map((integration) => (
-        <UnstyledButton
-          className={classes.choice}
-          key={integration.kind}
-          onClick={() => onSelect(integration.kind)}
-          aria-label={integration.name}
-        >
-          <Card h={selectGridCardHeight} className={classes.card} withBorder>
-            <Stack justify="space-between" h="100%" gap="xs">
-              <Group gap="sm" wrap="nowrap" align="flex-start">
-                <IntegrationAvatar kind={integration.kind} size="sm" />
-                <Text fw={500} lh={1.2} size="sm" lineClamp={2}>
-                  {integration.name}
-                </Text>
-              </Group>
-              <IntegrationGridMeta integration={integration} />
-            </Stack>
-          </Card>
-        </UnstyledButton>
-      ))}
-      {filtered.length === 0 && (
-        <Center p="xl" style={{ gridColumn: "1 / -1" }}>
-          <Text c="dimmed">{t("common.noResults")}</Text>
-        </Center>
-      )}
-    </SelectGridLayout>
+    <Stack gap="md">
+      {/* Top Search Input */}
+      <Input
+        value={search}
+        onChange={(event) => setSearch(event.currentTarget.value)}
+        leftSection={<IconSearch size={16} />}
+        placeholder={`${t("integration.page.list.search")}...`}
+        aria-label={t("integration.page.list.search")}
+        data-autofocus
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && filtered.length === 1 && filtered[0]) {
+            onSelect(filtered[0].kind);
+          }
+        }}
+      />
+
+      {/* Scrollable Container with Integration Cards */}
+      <ScrollArea.Autosize mah="70vh" offsetScrollbars>
+        <Stack gap="md" pt="xs" pr="xs" px={4}>
+          <SimpleGrid cols={selectGridCols} spacing="sm">
+            {filtered.map((integration) => (
+              <IntegrationCard
+                key={integration.kind}
+                integration={integration}
+                onSelect={onSelect}
+                connectedCount={(integrationData ?? []).filter((i) => i.kind === integration.kind).length}
+              />
+            ))}
+          </SimpleGrid>
+
+          {filtered.length === 0 && (
+            <Center p="xl">
+              <Text c="dimmed">{t("common.noResults")}</Text>
+            </Center>
+          )}
+        </Stack>
+      </ScrollArea.Autosize>
+    </Stack>
   );
 };
 
-const IntegrationGridMeta = ({ integration }: { integration: ReturnType<typeof buildSortedIntegrations>[number] }) => {
+// =========================================================================
+// IntegrationCard: Shared Modular SelectableCard with Tied Widgets
+// =========================================================================
+const IntegrationCard = ({
+  integration,
+  onSelect,
+  connectedCount = 0,
+}: {
+  integration: IntegrationGridItem;
+  onSelect: (kind: IntegrationKind) => void;
+  connectedCount?: number;
+}) => {
   const t = useI18n();
+
   return (
-    <Stack gap={4} mt="auto">
-      <Group gap={4} wrap="wrap">
-        {integration.categories.slice(0, 2).map((category) => (
-          <Badge key={category} variant="light" size="xs">
-            {categoryTranslationKeys[category] ? t(categoryTranslationKeys[category] as never) : category}
+    <SelectableCard
+      onClick={() => onSelect(integration.kind)}
+      aria-label={integration.name}
+      icon={<IntegrationAvatar kind={integration.kind} size="sm" />}
+      title={integration.name}
+      topRight={<IntegrationCategoryBadges categories={integration.categories} limit={1} />}
+      footerLeft={
+        connectedCount > 0 ? (
+          <Badge variant="light" color="teal" size="xs" radius="xs">
+            {t("integration.grid.connected", { count: connectedCount })}
           </Badge>
-        ))}
-      </Group>
-      {integration.widgets.length > 0 ? (
-        <Tooltip
-          multiline
-          w={200}
-          label={
-            <Stack gap={4}>
-              {integration.widgets.map((widgetKind) => (
-                <Text key={widgetKind} size="xs">
-                  {t(`widget.${widgetKind}.name`)}
-                </Text>
-              ))}
-            </Stack>
-          }
-        >
-          <Badge variant="light" color="blue" size="sm" leftSection={<IconPuzzle size={12} />}>
-            {t("integration.grid.widgetCount", { count: String(integration.widgets.length) })}
+        ) : null
+      }
+    >
+      <Text size="10px" tt="uppercase" fw={700} c="dimmed">
+        {t("integration.grid.tiedWidgets")}
+      </Text>
+      <IntegrationTiedWidgets widgets={integration.widgets} />
+    </SelectableCard>
+  );
+};
+
+const widgetIconsMap: Partial<Record<WidgetKind, typeof IconPuzzle>> = {
+  clock: IconClock,
+  weather: IconCloud,
+  airQuality: IconWind,
+  countdown: IconHourglass,
+  timer: IconClockPlay,
+  app: IconApps,
+  assistant: IconRobot,
+  iframe: IconBrowser,
+  video: IconDeviceCctv,
+  notebook: IconNotes,
+  anchorNote: IconNotes,
+  dnsHoleSummary: IconAd,
+  dnsHoleControls: IconDeviceGamepad,
+  "smartHome-entityState": IconBinaryTree,
+  "smartHome-executeAutomation": IconBinaryTree,
+  stockPrice: IconBuildingBank,
+  mediaServer: IconVideo,
+  calendar: IconCalendar,
+  downloads: IconDownload,
+  "mediaRequests-requestList": IconZoomQuestion,
+  "mediaRequests-requestStats": IconChartBar,
+  mediaTranscoding: IconTransform,
+  mediaMissing: IconMovie,
+  minecraftServerStatus: IconBrandMinecraft,
+  networkControllerSummary: IconTopologyFull,
+  networkControllerStatus: IconTopologyFull,
+  rssFeed: IconRss,
+  bookmarks: IconBookmark,
+  indexerManager: IconReportSearch,
+  healthMonitoring: IconHeartRateMonitor,
+  releases: IconRocket,
+  mediaReleases: IconTicket,
+  dockerContainers: IconBrandDocker,
+  firewall: IconWall,
+  notifications: IconMessage,
+  systemResources: IconGraphFilled,
+  coolify: IconCloud,
+  systemDisks: IconServer2,
+  timetable: IconBusStop,
+};
+
+const IntegrationTiedWidgets = ({ widgets, limit }: { widgets: WidgetKind[]; limit?: number }) => {
+  const t = useI18n();
+  if (widgets.length === 0) {
+    return (
+      <Text size="xs" c="dimmed" fs="italic">
+        {t("integration.grid.noWidgets")}
+      </Text>
+    );
+  }
+
+  const items = limit ? widgets.slice(0, limit) : widgets;
+  const moreCount = limit ? widgets.length - limit : 0;
+
+  return (
+    <Group gap={4} wrap="wrap">
+      {items.map((widgetKind) => {
+        const WidgetIcon = widgetIconsMap[widgetKind] ?? IconPuzzle;
+        return (
+          <Badge
+            key={widgetKind}
+            variant="default"
+            radius="xs"
+            size="xs"
+            leftSection={<WidgetIcon size={12} />}
+            style={{ fontWeight: 500 }}
+          >
+            {getWidgetName(widgetKind, t)}
           </Badge>
-        </Tooltip>
-      ) : (
-        <Badge variant="light" color="gray" size="sm">
-          {t("integration.grid.noWidgets")}
+        );
+      })}
+      {moreCount > 0 && (
+        <Badge variant="subtle" color="gray" size="xs" radius="xs">
+          {t("integration.grid.more", { count: moreCount })}
         </Badge>
       )}
-    </Stack>
+    </Group>
+  );
+};
+
+const IntegrationCategoryBadges = ({
+  categories,
+  limit,
+}: {
+  categories: IntegrationGridItem["categories"];
+  limit?: number;
+}) => {
+  const t = useI18n();
+  const items = limit ? categories.slice(0, limit) : categories;
+
+  return (
+    <Group gap={4} wrap="wrap">
+      {items.map((category) => (
+        <Badge key={category} variant="light" size="xs" color="gray" radius="xs">
+          {categoryTranslationKeys[category] ? t(categoryTranslationKeys[category] as never) : category}
+        </Badge>
+      ))}
+    </Group>
   );
 };

@@ -4,7 +4,8 @@ import { useId } from "react";
 
 import { ReadOnlyCustomWidgetCode } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetEditorMessages } from "@homarr/custom-widgets/workbench";
-import { useScopedI18n } from "@homarr/translation/client";
+import { invariantTechnicalLabels } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 
 /** Read-only source view of a Workshop submission, used for both widget JSON and Custom CSS. */
 export function WorkshopCodeViewer({
@@ -17,12 +18,13 @@ export function WorkshopCodeViewer({
   height?: string;
 }) {
   const id = useId();
-  const t = useScopedI18n("customWidget.editor");
-  const workshopT = useScopedI18n("workshop");
+  const t = useI18n("customWidget.editor");
+  const tCommon = useI18n("common");
+  const workshopT = useI18n("workshop");
   const messages: CustomWidgetEditorMessages = {
-    languageJsx: t("language.jsx"),
-    languageJson: t("language.json"),
-    undo: t("action.undo"),
+    languageJsx: invariantTechnicalLabels.jsx,
+    languageJson: invariantTechnicalLabels.json,
+    undo: tCommon("action.undo"),
     redo: t("action.redo"),
     components: t("action.components"),
     componentSearch: t("componentReference.search"),
@@ -30,10 +32,10 @@ export function WorkshopCodeViewer({
     componentCount: (count) => t("componentReference.count", { count }),
     insertStarter: t("action.insertStarter"),
     format: t("action.format"),
-    copy: t("action.copy"),
+    copy: tCommon("action.copy"),
     copied: t("action.copied"),
     schema: t("action.schema"),
-    schemaTab: t("reference.schema"),
+    schemaTab: invariantTechnicalLabels.jsonSchema,
     minimalTab: t("reference.minimal"),
     fullTab: t("reference.full"),
     errors: (count) => t("status.errors", { count }),

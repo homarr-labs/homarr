@@ -72,6 +72,34 @@ API key authentication enables programmatic access for:
 - Custom dashboards and monitoring tools
 - Container orchestration systems that need to sync app definitions
 
+## Permissions
+
+API keys act as the user that created them, so every request is subject to that user's group
+permissions. A call that the user is not allowed to make returns `FORBIDDEN`, and list endpoints
+return only the records the user may see rather than failing.
+
+### App endpoints require app management access
+
+`GET /api/apps`, `GET /api/apps/paginated` and `GET /api/apps/search` (tRPC `app.all`,
+`app.getPaginated`, `app.search`) require the **modify all apps** permission. They previously
+returned the full app catalogue — including internal URLs — to any authenticated user.
+
+If a script that used to work now returns `FORBIDDEN`, grant **modify all apps** to a group the key
+owner belongs to, or switch to `GET /api/apps/selectable`, which returns the reduced fields used by
+board pickers.
+
+### Integration endpoints are filtered per key
+
+`integration.all`, `integration.allThatSupportSearch`, `integration.allOfGivenCategory` and
+`integration.search` filter server side. Without a global integration permission, a key only
+receives the integrations its owner has been granted access to, so responses may contain fewer
+records than before rather than returning an error. `integration.search` applies its `limit` after
+filtering, so a scoped key still receives a full page of results.
+
+Each returned integration carries a `permissions` object — check `hasUseAccess` before reading data
+and `hasInteractAccess` before performing actions; `false` means the key owner lacks that level for
+that integration, not that the call failed.
+
 ## Board Automation
 
 The OpenAPI and MCP APIs include board management endpoints for common automation workflows:
@@ -109,6 +137,10 @@ Read `endpointId` and `id` from `docker.getContainers` (MCP tool `docker_getCont
 Pass those pairs unchanged to `docker.startAll`, `docker.stopAll`, `docker.restartAll`, or `docker.removeAll`; their MCP tool
 names use underscores, such as `docker_restartAll`. Endpoint qualification prevents identical container IDs on different
 Docker or Podman endpoints from targeting the wrong service.
+
+`docker.getContainers` also accepts an optional `endpointIds` array. Omit it or pass an empty array to query every configured
+Docker environment, or pass one or more IDs returned by `docker.getEndpoints` to query only those Dockerode clients. The
+Docker widget uses the same behavior for its environment selector.
 
 ## Partial integration failures
 

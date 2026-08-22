@@ -46,7 +46,7 @@ vi.mock("@homarr/modals", () => ({
 
 vi.mock("@homarr/translation/client", () => ({
   useCurrentIntlLocale: () => "en",
-  useScopedI18n: () => (key: string) => key,
+  useI18n: () => (key: string) => key,
 }));
 
 vi.mock("./common", async (importOriginal) => ({

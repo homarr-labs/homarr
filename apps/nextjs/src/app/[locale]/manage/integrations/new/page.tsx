@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 
 import { auth } from "@homarr/auth/next";
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 import { IntegrationAvatar } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -30,7 +30,7 @@ export default async function IntegrationsNewPage(props: NewIntegrationPageProps
   const result = z.enum(integrationKinds).safeParse(searchParams.kind);
 
   if (!result.success) {
-    const t = await getScopedI18n("integration");
+    const t = await getI18n("integration");
     return (
       <>
         <DynamicBreadcrumb />
@@ -44,7 +44,7 @@ export default async function IntegrationsNewPage(props: NewIntegrationPageProps
     );
   }
 
-  const tCreate = await getScopedI18n("integration.page.create");
+  const tCreate = await getI18n("integration.page.create");
 
   const currentKind = result.data;
 

@@ -41,6 +41,10 @@ export const { definition, componentLoader } = createWidgetDefinition("stockPric
           label: (t) => t(`widget.stockPrice.option.timeInterval.option.${value}.label`),
         })),
       }),
+      showDetails: factory.switch({
+        defaultValue: true,
+        withDescription: true,
+      }),
     }));
   },
 }).withDynamicImport(() => import("./component"));

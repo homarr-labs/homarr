@@ -14,7 +14,7 @@ interface IntegrationTestConnectionErrorProps {
 }
 
 export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestConnectionErrorProps) => {
-  const t = useI18n();
+  const tIntegration = useI18n("integration");
   const causeArray = useMemo(() => toCauseArray(error.cause), [error.cause]);
 
   return (
@@ -22,17 +22,17 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
       <Stack>
         <Stack gap="sm">
           <Text size="lg" fw={500} c="red.8">
-            {t(`integration.testConnection.error.${error.type}.title`)}
+            {tIntegration(`testConnection.error.${error.type}.title` as never)}
           </Text>
 
           {error.type !== "request" && error.type !== "certificate" && error.type !== "statusCode" ? (
-            <Text size="md">{t(`integration.testConnection.error.${error.type}.description`)}</Text>
+            <Text size="md">{tIntegration(`testConnection.error.${error.type}.description` as never)}</Text>
           ) : null}
 
           {error.type === "request" ? (
             <Text size="md">
-              {t(
-                `integration.testConnection.error.request.description.${error.data.type}.${error.data.reason}` as never,
+              {tIntegration(
+                `testConnection.error.request.description.${error.data.type}.${error.data.reason}` as never,
               )}
             </Text>
           ) : null}
@@ -40,7 +40,7 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
           {error.type === "statusCode" ? (
             error.data.reason === "other" ? (
               <Text size="md">
-                {t.rich("integration.testConnection.error.statusCode.otherDescription", {
+                {tIntegration.rich("testConnection.error.statusCode.otherDescription", {
                   statusCode: error.data.statusCode.toString(),
                   url: () => (
                     <Anchor href={error.data.url} target="_blank" rel="noopener noreferrer">
@@ -51,8 +51,8 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
               </Text>
             ) : (
               <Text size="md">
-                {t.rich("integration.testConnection.error.statusCode.description", {
-                  reason: t(`integration.testConnection.error.statusCode.reason.${error.data.reason}`),
+                {tIntegration.rich("testConnection.error.statusCode.description", {
+                  reason: tIntegration(`testConnection.error.statusCode.reason.${error.data.reason}` as never),
                   statusCode: error.data.statusCode.toString(),
                   url: () => (
                     <Anchor href={error.data.url} target="_blank" rel="noopener noreferrer">
@@ -71,7 +71,7 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
           <Accordion variant="contained">
             <Accordion.Item value="cause">
               <Accordion.Control icon={<IconSubtask size={16} stroke={1.5} />}>
-                {t("integration.testConnection.error.common.cause.title")}
+                {tIntegration("testConnection.error.common.cause.title")}
               </Accordion.Control>
               <Accordion.Panel>
                 <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>

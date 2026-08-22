@@ -10,7 +10,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { KubernetesBaseResource } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 dayjs.extend(relativeTime);
@@ -22,26 +22,28 @@ interface ConfigMapsTableComponentProps {
 
 const createColumns = (
   t: ScopedTranslationFunction<"kubernetes.configmaps">,
+  tField: ScopedTranslationFunction<"kubernetes.field">,
 ): MRT_ColumnDef<KubernetesBaseResource>[] => [
   {
     accessorKey: "name",
-    header: t("field.name.label"),
+    header: tField("name.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "namespace",
-    header: t("field.namespace.label"),
+    header: tField("namespace.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "creationTimestamp",
-    header: t("field.creationTimestamp.label"),
+    header: tField("creationTimestamp.label"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function ConfigmapsTable({ contextId, initialConfigMaps }: ConfigMapsTableComponentProps) {
-  const tConfigMaps = useScopedI18n("kubernetes.configmaps");
+  const tConfigMaps = useI18n("kubernetes.configmaps");
+  const tField = useI18n("kubernetes.field");
 
   const { data } = clientApi.kubernetes.configMaps.getConfigMaps.useQuery(
     { contextId },
@@ -72,7 +74,7 @@ export function ConfigmapsTable({ contextId, initialConfigMaps }: ConfigMapsTabl
       autoFocus: true,
     },
 
-    columns: createColumns(tConfigMaps),
+    columns: createColumns(tConfigMaps, tField),
   });
 
   return <MantineReactTable table={table} />;

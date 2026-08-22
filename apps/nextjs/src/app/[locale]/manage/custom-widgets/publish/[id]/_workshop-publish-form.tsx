@@ -26,7 +26,7 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { useWorkshopCreateMutation } from "@homarr/workshop/backend";
 import { workshopScreenshotsSchema } from "@homarr/workshop/schema";
@@ -45,7 +45,8 @@ import { WorkshopAccountButton, useWorkshopSession } from "~/components/workshop
 const listHref = "/manage/custom-widgets";
 
 export function WorkshopPublishForm({ widget }: { widget: { id: string; name: string } }) {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
+  const tCommon = useI18n("common");
   const session = useWorkshopSession();
   const [title, setTitle] = useState(widget.name);
   const [description, setDescription] = useState("");
@@ -231,7 +232,7 @@ export function WorkshopPublishForm({ widget }: { widget: { id: string; name: st
           }
         >
           <Button component={Link} href={listHref} variant="default">
-            {t("publish.cancel")}
+            {tCommon("action.cancel")}
           </Button>
           <Button
             size="md"

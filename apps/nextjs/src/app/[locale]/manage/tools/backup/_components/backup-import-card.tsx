@@ -3,12 +3,12 @@
 import { Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconDatabaseImport } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { DatabaseRestoreFlow } from "~/components/backup";
 
 export const BackupImportCard = () => {
-  const t = useScopedI18n("management.page.tool.backup.import");
+  const t = useI18n("management.page.tool.backup.import");
 
   return (
     <Card withBorder>

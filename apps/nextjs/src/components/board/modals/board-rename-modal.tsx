@@ -17,7 +17,7 @@ interface InnerProps {
 
 export const BoardRenameModal = createModal<InnerProps>(({ actions, innerProps }) => {
   const utils = clientApi.useUtils();
-  const t = useI18n();
+  const tCommon = useI18n("common");
   const { mutate, isPending } = clientApi.board.renameBoard.useMutation({
     onSettled() {
       void utils.board.getBoardByName.invalidate({
@@ -50,20 +50,20 @@ export const BoardRenameModal = createModal<InnerProps>(({ actions, innerProps }
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <TextInput label={t("board.field.name.label")} {...form.getInputProps("name")} data-autofocus />
+        <TextInput label={tCommon("field.name")} {...form.getInputProps("name")} data-autofocus />
         <Group justify="end">
           <Button variant="subtle" color="gray" onClick={actions.closeModal}>
-            {t("common.action.cancel")}
+            {tCommon("action.cancel")}
           </Button>
           <Button type="submit" loading={isPending}>
-            {t("common.action.confirm")}
+            {tCommon("action.confirm")}
           </Button>
         </Group>
       </Stack>
     </form>
   );
 }).withOptions({
-  defaultTitle: (t) => t("board.setting.section.dangerZone.action.rename.modal.title"),
+  defaultTitle: (t) => t("board.setting.section.dangerZone.action.rename.label"),
 });
 
 type FormType = Omit<z.infer<typeof boardRenameSchema>, "id">;

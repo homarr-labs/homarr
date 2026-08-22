@@ -74,7 +74,7 @@ const appChildrenOptions = createChildrenOptions<App>({
 
 export const appsSearchGroup = createGroup<App>({
   keyPath: "id",
-  title: (t) => t("search.mode.appIntegrationBoard.group.app.title"),
+  title: (t) => t("common.entity.apps"),
   Component: (app) => (
     <Group px="md" py="sm">
       <Avatar

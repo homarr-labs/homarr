@@ -7,7 +7,6 @@ import combineClasses from "clsx";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useI18n } from "@homarr/translation/client";
 
 import type { ContainerSectionItem, Section } from "~/app/[locale]/boards/_types";
 import {
@@ -15,55 +14,20 @@ import {
   getEditableCanvasAttributes,
   getGridRowCountForVisualHeight,
   getLayoutRowCount,
-  getLogicalItemStyle,
   getLogicalTrackSize,
   getReadonlyCanvasAttributes,
   normalizeGridPlacement,
 } from "~/components/board/layout";
 import { useBoardCanvasScale } from "~/components/board/layout/scaled-board-canvas";
-import { loadGridEditorAsync } from "./grid-editor-loader";
 import { useGridEditorRuntimeStatus } from "./grid-editor-runtime";
+import { createGridEntryElementStore, useGridEditorRegistry } from "./grid-editor-registry";
 import type { SectionGridPlacement } from "./use-grid-layout-actions";
 import { SectionContent } from "../content";
-import { useCollapsedSectionIds } from "../section-collapse";
-import { SectionProvider, useSectionContext } from "../section-context";
+import { useCollapsedSectionIds, useExpandSectionsForEditing } from "../section-collapse";
+import { SectionProvider } from "../section-context";
 import { useSectionItems } from "../use-section-items";
 import { useBoardGridPortalHost } from "./grid-portal-host";
 import classes from "./section-grid.module.css";
-
-const GridEditor = dynamic(loadGridEditorAsync, {
-  loading: GridEditorLoading,
-  ssr: false,
-});
-
-function GridEditorLoading() {
-  const t = useI18n();
-  const { items, innerSections } = useSectionContext();
-
-  return (
-    <Box
-      component="output"
-      className={classes.editorLoading}
-      data-testid="board-grid-editor-loading"
-      aria-label={t("common.action.loading")}
-    >
-      {[...items, ...innerSections].map((item) => (
-        <Box
-          key={item.id}
-          className={classes.editorLoadingItem}
-          style={getLogicalItemStyle({
-            x: item.xOffset,
-            y: item.yOffset,
-            w: item.width,
-            h: item.height,
-          })}
-          aria-hidden="true"
-        />
-      ))}
-      <LoadingOverlay visible />
-    </Box>
-  );
-}
 
 interface SectionGridProps {
   section: Exclude<Section, { kind: "container" }> | ContainerSectionItem;
@@ -85,21 +49,19 @@ export const SectionGrid = ({
   const [isEditMode] = useEditMode();
   const canvasScale = useBoardCanvasScale();
   const editorRuntimeStatus = useGridEditorRuntimeStatus();
+  const editorRegistry = useGridEditorRegistry();
+  const editorHostRef = useRef<HTMLDivElement>(null);
+  const [entryElementStore] = useState(createGridEntryElementStore);
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const { items, innerSections } = useSectionItems(section.id);
   const { announce, integrations } = useBoardGridPortalHost();
   const collapsedSectionIds = useCollapsedSectionIds();
-  const minimumBySectionId = useMemo(
-    () =>
-      new Map(
-        innerSections.map((innerSection) => [
-          innerSection.id,
-          getContainerMinimumSize(board, currentLayoutId, innerSection.id),
-        ]),
-      ),
-    [board, currentLayoutId, innerSections],
-  );
+  const expandSectionsForEditing = useExpandSectionsForEditing();
+  const minimumBySectionId = useMemo(() => {
+    const minimumSizes = getContainerMinimumSizes(board, currentLayoutId);
+    return new Map(innerSections.map((innerSection) => [innerSection.id, minimumSizes.get(innerSection.id)]));
+  }, [board, currentLayoutId, innerSections]);
 
   const placements = useMemo(
     () =>
@@ -121,32 +83,49 @@ export const SectionGrid = ({
       }),
     [columnCount, innerSections, items, minimumBySectionId],
   );
+  const collapsibleSectionIds = useMemo(
+    () =>
+      new Set(
+        innerSections.filter((innerSection) => innerSection.options.collapsible).map((innerSection) => innerSection.id),
+      ),
+    [innerSections],
+  );
 
+  const directCollapsedIds = useMemo(
+    () =>
+      new Set(
+        placements
+          .filter(
+            (placement) =>
+              placement.type === "section" &&
+              collapsedSectionIds.has(placement.id) &&
+              collapsibleSectionIds.has(placement.id),
+          )
+          .map((placement) => placement.id),
+      ),
+    [collapsedSectionIds, collapsibleSectionIds, placements],
+  );
   const displayPlacements = useMemo(() => {
-    const directCollapsedIds = new Set(
-      placements
-        .filter(
-          (placement) =>
-            placement.type === "section" &&
-            collapsedSectionIds.has(placement.id) &&
-            innerSections.find((innerSection) => innerSection.id === placement.id)?.options.collapsible,
-        )
-        .map((placement) => placement.id),
-    );
     if (directCollapsedIds.size === 0) return placements;
 
     return getCollapsedDisplayLayout(placements, {
       columnCount,
       collapsedItemIds: directCollapsedIds,
     });
-  }, [collapsedSectionIds, columnCount, innerSections, placements]);
+  }, [columnCount, directCollapsedIds, placements]);
 
   const placementById = useMemo(
     () => new Map(displayPlacements.map((placement) => [placement.id, placement])),
     [displayPlacements],
   );
-  const displayedItems = items.map((item) => withPlacement(item, placementById.get(item.id)));
-  const displayedInnerSections = innerSections.map((item) => withPlacement(item, placementById.get(item.id)));
+  const displayedItems = useMemo(
+    () => items.map((item) => withPlacement(item, placementById.get(item.id))),
+    [items, placementById],
+  );
+  const displayedInnerSections = useMemo(
+    () => innerSections.map((item) => withPlacement(item, placementById.get(item.id))),
+    [innerSections, placementById],
+  );
   const minimumViewportRowCount = useMinimumViewportRowCount(section.kind === "empty", canvasScale);
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
@@ -181,7 +160,10 @@ export const SectionGrid = ({
         integrations,
         columnCount,
         maxRowCount,
+        placements: displayPlacements,
+        interactionDisabled: isInteractionDisabled,
         announce,
+        entryElementStore,
       }}
     >
       <Box
@@ -197,32 +179,24 @@ export const SectionGrid = ({
         data-rail-placement={railPlacement}
         data-scrollable={isScrollableContainer ? "true" : undefined}
       >
-        {isEditMode && editorRuntimeStatus === "ready" ? (
-          <GridEditor
-            sectionId={section.id}
-            columnCount={columnCount}
-            rowCount={rowCount}
-            maxRowCount={maxRowCount}
-            placements={displayPlacements}
-            className={combineClasses("board-grid-editor", classes.editorGrid)}
-          />
-        ) : isEditMode && editorRuntimeStatus === "loading" ? (
-          <GridEditorLoading />
-        ) : (
-          <Box
-            className={classes.staticGrid}
-            style={{ width: logicalWidth, height: logicalHeight }}
-            data-grid-section-id={section.id}
-            data-kind={section.kind}
-            data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}
-          >
-            <SectionContent />
-          </Box>
-        )}
+        <Box
+          className={classes.staticGrid}
+          style={{ width: logicalWidth, height: logicalHeight }}
+          data-grid-section-id={section.id}
+          data-kind={section.kind}
+          data-grid-editor-error={isEditMode && editorRuntimeStatus === "error" ? "true" : undefined}
+        >
+          <SectionContent />
+        </Box>
+        <div ref={editorHostRef} className={classes.editorPortalHost} />
       </Box>
     </SectionProvider>
   );
 };
+
+const INTERACTIVE_GRID_SELECTOR =
+  'a,button,input,textarea,select,option,[contenteditable="true"],[role="button"],[data-grid-no-drag]';
+const EDIT_ACTIVATION_KEYS = new Set(["Enter", " ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"]);
 
 const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
   const [visualHeight, setVisualHeight] = useState(0);
@@ -256,27 +230,25 @@ const getContainerMinimumSize = (
   const isScrollable = section?.kind === "container" && section.options.scrollable;
   const directItems: PlacementBounds[] = board.items.flatMap((item) => {
     const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
-    return layout?.sectionId === sectionId ? [layout] : [];
-  });
-  const directSections: PlacementBounds[] = board.sections.flatMap((candidate) => {
-    if (candidate.kind !== "container") return [];
-    const layout = candidate.layouts.find((candidateLayout) => candidateLayout.layoutId === layoutId);
-    if (!layout || layout.parentSectionId !== sectionId) return [];
-    const minimum = getContainerMinimumSize(board, layoutId, candidate.id, nextVisited);
-    return [
-      {
-        ...layout,
-        width: Math.max(layout.width, minimum.width),
-        height: Math.max(layout.height, minimum.height),
-      },
-    ];
-  });
-  const children = [...directItems, ...directSections];
+    if (!layout) continue;
+    const entries = directItemsBySectionId.get(layout.sectionId) ?? [];
+    entries.push(layout);
+    directItemsBySectionId.set(layout.sectionId, entries);
+  }
 
   return {
     width: Math.max(1, ...children.map((child) => child.xOffset + child.width)),
     height: isScrollable ? 1 : Math.max(1, ...children.map((child) => child.yOffset + child.height)),
   };
+
+  for (const section of board.sections) {
+    if (section.kind === "container") resolve(section.id);
+  }
+
+  const nextByLayout = cachedByLayout ?? new Map();
+  nextByLayout.set(layoutId, minimumBySectionId);
+  containerMinimumSizeCache.set(board, nextByLayout);
+  return minimumBySectionId;
 };
 
 interface PlacementBounds {

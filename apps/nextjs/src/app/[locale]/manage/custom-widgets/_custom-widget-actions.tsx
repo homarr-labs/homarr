@@ -22,7 +22,7 @@ import { formatCustomWidgetImportIssues, parseCustomWidgetClipboardDetailed } fr
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
 import { CustomWidgetImportDialog } from "~/components/custom-widgets/custom-widget-import-dialog";
@@ -39,7 +39,7 @@ interface WidgetRef {
 }
 
 export const CustomWidgetRowActions = ({ widget }: { widget: WidgetRef }) => {
-  const t = useScopedI18n("customWidget");
+  const t = useI18n("customWidget");
   const { openConfirmModal } = useConfirmModal();
   const deleteMutation = clientApi.customWidget.delete.useMutation();
   const duplicateMutation = clientApi.customWidget.duplicate.useMutation();

@@ -6,7 +6,7 @@ import { IconDeviceDesktop, IconMoon, IconSun } from "@tabler/icons-react";
 import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemes } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { SelectWithCustomItems } from "@homarr/ui";
 
 import { SectionCard } from "~/components/manage/section-card";
@@ -17,7 +17,8 @@ interface AppearanceSettingsFormProps {
 }
 
 export const AppearanceSettingsForm = ({ form }: AppearanceSettingsFormProps) => {
-  const tAppearance = useScopedI18n("management.page.settings.section.appearance");
+  const tAppearance = useI18n("management.page.settings.section.appearance");
+  const tColorScheme = useI18n("common.colorScheme.options");
 
   return (
     <SectionCard title={tAppearance("title")}>
@@ -25,10 +26,11 @@ export const AppearanceSettingsForm = ({ form }: AppearanceSettingsFormProps) =>
         label={tAppearance("defaultColorScheme.label")}
         data={colorSchemes.map((scheme) => ({
           value: scheme,
-          label: tAppearance(`defaultColorScheme.options.${scheme}`),
+          label: tColorScheme(scheme),
         }))}
         {...form.getInputProps("defaultColorScheme")}
         SelectOption={AppearanceCustomOption}
+        withinPortal
       />
     </SectionCard>
   );

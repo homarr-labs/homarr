@@ -26,14 +26,15 @@ import { z } from "zod/v4";
 import { showErrorNotification } from "@homarr/notifications";
 
 import {
-  AssistantComposerSurfaceProvider,
+  AssistantComposerRuntimeProvider,
+  AssistantComposerSurfaceBoundary,
   AssistantRunFocusPreserver,
   AssistantRuntimeProviderWithTools,
   assistantSurfaceComposerCacheLimit,
 } from "./assistant-runtime-provider";
 
 vi.mock("@homarr/notifications", () => ({ showErrorNotification: vi.fn() }));
-vi.mock("@homarr/translation/client", () => ({ useScopedI18n: () => (key: string) => key }));
+vi.mock("@homarr/translation/client", () => ({ useI18n: () => (key: string) => key }));
 
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -148,14 +149,22 @@ const SurfaceTestAssistant = ({
     { runtime, toolkit },
     createElement(AssistantRunFocusPreserver),
     createElement(
-      AssistantComposerSurfaceProvider,
-      { surfaceId: "surface-a" },
-      createElement(SurfaceProbe, { id: "a", onReady }),
+      AssistantComposerRuntimeProvider,
+      null,
+      createElement(
+        AssistantComposerSurfaceBoundary,
+        { surfaceId: "surface-a" },
+        createElement(SurfaceProbe, { id: "a", onReady }),
+      ),
     ),
     createElement(
-      AssistantComposerSurfaceProvider,
-      { surfaceId: "surface-b" },
-      createElement(SurfaceProbe, { id: "b", onReady }),
+      AssistantComposerRuntimeProvider,
+      null,
+      createElement(
+        AssistantComposerSurfaceBoundary,
+        { surfaceId: "surface-b" },
+        createElement(SurfaceProbe, { id: "b", onReady }),
+      ),
     ),
     simulateRunFocus ? createElement(LexicalRunFocusProbe) : null,
   );

@@ -1,46 +1,73 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
+  Accordion,
+  ActionIcon,
   Alert,
+  Autocomplete,
   Avatar,
   Badge,
   Button,
-  Card,
+  Collapse,
+  Divider,
   Group,
+  Paper,
   SegmentedControl,
-  Select,
   SimpleGrid,
   Stack,
   Text,
-  TextInput,
+  ThemeIcon,
+  Tooltip,
 } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import { IconAlertTriangle, IconArrowRight, IconEyeOff, IconPlugConnected, IconRefresh } from "@tabler/icons-react";
+import {
+  IconAlertTriangle,
+  IconApps,
+  IconCheck,
+  IconChevronDown,
+  IconEye,
+  IconEyeOff,
+  IconBrandDocker,
+  IconMinus,
+  IconPlugConnected,
+  IconRefresh,
+  IconSettings,
+} from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { getIntegrationName } from "@homarr/definitions";
+import type { UrlTemplateMode } from "@homarr/definitions";
+import { getIntegrationName, invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr } from "@homarr/modals-collection";
 import { showErrorNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { normalizeServiceUrl, ServiceUrlTemplate } from "@homarr/onboarding";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
+import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import type { DockerReconciliationInboxFilter } from "./docker-reconciliation-inbox";
 import {
   dismissDockerReconciliationCandidate,
   filterDockerReconciliationInbox,
-  getValidDockerServiceUrl,
+  getTemplateUrl,
 } from "./docker-reconciliation-inbox";
 
 type ReconciliationCandidate = RouterOutputs["docker"]["reconcileServices"]["candidates"][number];
 type ServiceHealth = RouterOutputs["docker"]["getServiceHealth"]["services"][number];
 
-export const DockerReconciliation = () => {
-  const t = useScopedI18n("docker.reconciliation");
+export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOrigin: string }) => {
+  const t = useI18n("docker.reconciliation");
+  const tCommon = useI18n("common");
+  const tDockerAction = useI18n("docker.action");
   const utils = clientApi.useUtils();
+  const panelId = useId();
+  const [isOpen, setIsOpen] = useLocalStorage({
+    key: "homarr-docker-reconciliation-open",
+    defaultValue: false,
+  });
   const reconciliation = clientApi.docker.reconcileServices.useQuery();
-  const health = clientApi.docker.getServiceHealth.useQuery();
+  const health = clientApi.docker.getServiceHealth.useQuery(undefined, { enabled: isOpen });
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({
     async onSuccess() {
       await Promise.all([
@@ -51,8 +78,8 @@ export const DockerReconciliation = () => {
     },
     onError() {
       showErrorNotification({
-        title: t("refreshError.title"),
-        message: t("refreshError.message"),
+        title: tDockerAction("refresh.notification.error.title"),
+        message: tDockerAction("refresh.notification.error.message"),
       });
     },
   });
@@ -61,6 +88,14 @@ export const DockerReconciliation = () => {
     key: "homarr-docker-reconciliation-dismissed",
     defaultValue: [],
   });
+  const [serverOrigin, setServerOrigin] = useLocalStorage({
+    key: "homarr-docker-service-origin",
+    defaultValue: defaultServerOrigin,
+  });
+  const [urlMode, setUrlMode] = useLocalStorage<UrlTemplateMode>({
+    key: "homarr-docker-service-url-mode",
+    defaultValue: "hostPort",
+  });
 
   if (reconciliation.isError) {
     return (
@@ -68,7 +103,7 @@ export const DockerReconciliation = () => {
         <Stack gap="sm">
           <Text size="sm">{t("loadError.message")}</Text>
           <Button variant="light" color="red" size="xs" w="fit-content" onClick={() => void reconciliation.refetch()}>
-            {t("action.retry")}
+            {tCommon("action.tryAgain")}
           </Button>
         </Stack>
       </Alert>
@@ -79,231 +114,274 @@ export const DockerReconciliation = () => {
 
   const unavailableEndpoints = reconciliation.data.endpoints.filter(({ status }) => status === "unavailable");
   const candidates = filterDockerReconciliationInbox(reconciliation.data.candidates, filter, dismissedCandidateKeys);
-  const attentionCount = health.data
-    ? health.data.services.filter(
-        ({ key, status }) =>
-          ["newRecognized", "newApp", "moved"].includes(status) && !dismissedCandidateKeys.includes(key),
-      ).length
-    : 0;
+  const attentionCount = reconciliation.data.candidates.filter(
+    ({ candidateKey, state }) =>
+      ["newRecognized", "newApp", "moved"].includes(state) && !dismissedCandidateKeys.includes(candidateKey),
+  ).length;
   const isRefreshing = refreshInventory.isPending || reconciliation.isFetching || health.isFetching;
+  const toggleLabel = isOpen ? tCommon("action.hide") : t("action.review");
 
   return (
-    <Card withBorder>
-      <Stack>
+    <Paper withBorder p="sm">
+      <Stack gap={isOpen ? "sm" : 0}>
         <Group justify="space-between" align="start">
-          <div>
-            <Group gap="xs">
-              <IconPlugConnected size={20} />
-              <Text fw={600}>{t("title")}</Text>
-            </Group>
-            <Text c="dimmed" size="sm">
-              {t("description")}
-            </Text>
-          </div>
-          {health.data && <Badge variant="light">{t("attention", { count: String(attentionCount) })}</Badge>}
-        </Group>
-
-        <Group justify="space-between">
-          <SegmentedControl
-            value={filter}
-            onChange={(value) => setFilter(value as DockerReconciliationInboxFilter)}
-            data={[
-              { value: "attention", label: t("filter.attention") },
-              { value: "represented", label: t("filter.represented") },
-              { value: "all", label: t("filter.all") },
-            ]}
-          />
-          <Group gap="xs">
-            {dismissedCandidateKeys.length > 0 && (
-              <Button variant="subtle" size="xs" onClick={() => setDismissedCandidateKeys([])}>
-                {t("action.restoreDismissed", { count: String(dismissedCandidateKeys.length) })}
-              </Button>
-            )}
-            <Button
-              variant="light"
-              size="xs"
-              loading={isRefreshing}
-              leftSection={<IconRefresh size={14} />}
-              onClick={() => refreshInventory.mutate()}
-            >
-              {t("action.refresh")}
-            </Button>
+          <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
+            <ThemeIcon variant="light" size="lg" radius="md">
+              <IconBrandDocker size={18} />
+            </ThemeIcon>
+            <div>
+              <Group gap="xs">
+                <Text fw={600}>{t("title")}</Text>
+                <Badge variant="light" color={attentionCount > 0 ? "blue" : "gray"} aria-live="polite">
+                  {t("suggestions", { count: String(attentionCount) })}
+                </Badge>
+              </Group>
+            </div>
           </Group>
+          <Button
+            variant="subtle"
+            size="compact-sm"
+            rightSection={
+              <IconChevronDown
+                size={15}
+                style={{ transform: isOpen ? "rotate(180deg)" : undefined, transition: "transform 150ms ease" }}
+              />
+            }
+            aria-expanded={isOpen}
+            aria-controls={panelId}
+            onClick={() => setIsOpen((current) => !current)}
+          >
+            {toggleLabel}
+          </Button>
         </Group>
 
-        {unavailableEndpoints.length > 0 && (
-          <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
-            {t("endpointUnavailable", { names: unavailableEndpoints.map(({ name }) => name).join(", ") })}
-          </Alert>
-        )}
+        <Collapse id={panelId} expanded={isOpen}>
+          <Divider mb="sm" />
+          <Stack gap="sm">
+            <ServiceUrlTemplate
+              serverOrigin={serverOrigin}
+              onServerOriginChange={setServerOrigin}
+              mode={urlMode}
+              onModeChange={setUrlMode}
+            />
 
-        {candidates.length === 0 ? (
-          <Text c="dimmed" size="sm">
-            {reconciliation.data.candidates.length === 0 ? t("empty") : t("emptyFilter")}
-          </Text>
-        ) : (
-          <SimpleGrid cols={{ base: 1, lg: 2 }}>
-            {candidates.map((candidate) => (
-              <DockerReconciliationCandidate
-                key={candidate.candidateKey}
-                candidate={candidate}
-                health={health.data?.services.find(({ key }) => key === candidate.candidateKey)}
-                onDismiss={() =>
-                  setDismissedCandidateKeys((current) =>
-                    dismissDockerReconciliationCandidate(current, candidate.candidateKey),
-                  )
-                }
+            <Group justify="space-between">
+              <SegmentedControl
+                size="xs"
+                value={filter}
+                onChange={(value) => setFilter(value as DockerReconciliationInboxFilter)}
+                data={[
+                  { value: "attention", label: t("filter.attention") },
+                  { value: "represented", label: t("filter.represented") },
+                  { value: "all", label: t("filter.all") },
+                ]}
               />
-            ))}
-          </SimpleGrid>
-        )}
+              <Group gap="xs">
+                {dismissedCandidateKeys.length > 0 && (
+                  <Button variant="subtle" size="compact-xs" onClick={() => setDismissedCandidateKeys([])}>
+                    {t("action.restoreDismissed", { count: String(dismissedCandidateKeys.length) })}
+                  </Button>
+                )}
+                <Button
+                  variant="light"
+                  size="compact-xs"
+                  loading={isRefreshing}
+                  leftSection={<IconRefresh size={14} />}
+                  onClick={() => refreshInventory.mutate()}
+                >
+                  {tCommon("action.refresh")}
+                </Button>
+              </Group>
+            </Group>
+
+            {unavailableEndpoints.length > 0 && (
+              <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
+                {t("endpointUnavailable", { names: unavailableEndpoints.map(({ name }) => name).join(", ") })}
+              </Alert>
+            )}
+
+            {candidates.length === 0 ? (
+              <Text c="dimmed" size="sm">
+                {reconciliation.data.candidates.length === 0 ? t("empty") : t("emptyFilter")}
+              </Text>
+            ) : (
+              <Accordion multiple variant="separated" radius="sm" chevron={null}>
+                {candidates.map((candidate) => (
+                  <DockerReconciliationCandidate
+                    key={candidate.candidateKey}
+                    candidate={candidate}
+                    health={health.data?.services.find(({ key }) => key === candidate.candidateKey)}
+                    serverOrigin={serverOrigin}
+                    urlMode={urlMode}
+                    onDismiss={() =>
+                      setDismissedCandidateKeys((current) =>
+                        dismissDockerReconciliationCandidate(current, candidate.candidateKey),
+                      )
+                    }
+                  />
+                ))}
+              </Accordion>
+            )}
+          </Stack>
+        </Collapse>
       </Stack>
-    </Card>
+    </Paper>
   );
 };
 
 const DockerReconciliationCandidate = ({
   candidate,
   health,
+  serverOrigin,
+  urlMode,
   onDismiss,
 }: {
   candidate: ReconciliationCandidate;
   health: ServiceHealth | undefined;
+  serverOrigin: string;
+  urlMode: UrlTemplateMode;
   onDismiss: () => void;
 }) => {
-  const t = useScopedI18n("docker.reconciliation");
-  const { openModal } = useModalAction(AddDockerAppToHomarr);
-  const initialUrlCandidate =
-    candidate.urlCandidates.find(
-      ({ url, scopes }) => url.length > 0 && (candidate.match ? true : scopes.includes("browser")),
-    ) ?? candidate.urlCandidates.find(({ source }) => source === "manual");
-  const [selectedCandidateId, setSelectedCandidateId] = useState(initialUrlCandidate?.id ?? null);
-  const [url, setUrl] = useState(initialUrlCandidate?.url ?? "");
-  const selectedCandidate = candidate.urlCandidates.find(({ id }) => id === selectedCandidateId);
-  const validatedUrl = getValidDockerServiceUrl(url);
-  const isInvalidUrl = url.length > 0 && validatedUrl === null;
-  const target = getCandidateTarget(candidate, validatedUrl ?? "");
+  const t = useI18n("docker.reconciliation");
+  const tIntegration = useI18n("integration");
+  const { openModal: openAppModal } = useModalAction(AddDockerAppToHomarr);
+  const { openModal: openIntegrationModal } = useModalAction(IntegrationSelectModal);
+  const templateUrl = getTemplateUrl(candidate, serverOrigin, urlMode);
+  const urlSuggestions = Array.from(
+    new Set([templateUrl, ...candidate.urlCandidates.map(({ url }) => url)].filter((url) => url.length > 0)),
+  );
+  const initialUrl = urlSuggestions[0] ?? "";
+  const [url, setUrl] = useState(initialUrl);
+  const isUrlEdited = useRef(false);
+  const target = getCandidateTarget(candidate);
   const actionNeedsUrl = target.kind === "createApp" || target.kind === "setupIntegration";
-  const isActionDisabled = actionNeedsUrl && validatedUrl === null;
+  const visibleHealthLayers =
+    health?.layers.filter(({ status }) => status !== "notApplicable" && status !== "notObserved") ?? [];
 
   useEffect(() => {
-    setSelectedCandidateId(initialUrlCandidate?.id ?? null);
-    setUrl(initialUrlCandidate?.url ?? "");
-  }, [initialUrlCandidate?.id, initialUrlCandidate?.url]);
+    if (isUrlEdited.current) return;
+    setUrl(initialUrl);
+  }, [initialUrl]);
 
   return (
-    <Card withBorder padding="md">
-      <Stack gap="sm">
-        <Group justify="space-between" align="start" wrap="nowrap">
-          <Group wrap="nowrap">
-            <Avatar src={candidate.container.iconUrl} radius="sm">
+    <Accordion.Item value={candidate.candidateKey}>
+      <Group wrap="nowrap" gap={4} pr="sm">
+        <Accordion.Control
+          style={{ flex: 1 }}
+          icon={
+            <Avatar src={candidate.container.iconUrl} radius="sm" size="sm">
               {candidate.container.name.at(0)?.toUpperCase()}
             </Avatar>
-            <div>
-              <Text fw={600} lineClamp={1}>
+          }
+        >
+          <div style={{ minWidth: 0 }}>
+            <Group gap="xs" wrap="nowrap">
+              <Text fw={600} size="sm" truncate>
                 {candidate.container.name}
               </Text>
-              <Text c="dimmed" size="xs">
-                {candidate.endpointName}
-              </Text>
-            </div>
-          </Group>
-          <Badge color={stateColor(candidate.state)} variant="light">
-            {t(`state.${candidate.state}`)}
-          </Badge>
-        </Group>
-
-        {candidate.match && (
-          <Group gap="xs">
-            <Badge variant="outline">{candidate.match.kind}</Badge>
-            <Text c="dimmed" size="xs">
-              {t("match", { confidence: t(`confidence.${candidate.match.confidence}`) })}
-            </Text>
-          </Group>
-        )}
-
-        {candidate.representation.signals.ambiguous && (
-          <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
-            {t("ambiguous")}
-          </Alert>
-        )}
-
-        {health && (
-          <div>
-            <Text c="dimmed" size="xs" mb={4}>
-              {t("health.title")}
-            </Text>
-            <Group gap={4}>
-              {health.layers.map((layer) => (
-                <Badge key={layer.layer} color={healthStatusColor(layer.status)} variant="dot" size="sm">
-                  {t(`health.layer.${layer.layer}`)}: {t(`health.status.${layer.status}`)}
-                </Badge>
-              ))}
+              <Badge color={stateColor(candidate.state)} variant="light" size="xs">
+                {t(`state.${candidate.state}`)}
+              </Badge>
             </Group>
+            <Text c="dimmed" size="xs">
+              {candidate.endpointName}
+            </Text>
           </div>
-        )}
-
-        <Select
-          label={t("url.label")}
-          description={selectedCandidate ? t(`reason.${selectedCandidate.reason}`) : t("reason.manualHostRequired")}
-          value={selectedCandidateId}
-          data={candidate.urlCandidates.map((item) => ({
-            value: item.id,
-            label: item.url || t("url.manual"),
-          }))}
-          onChange={(value) => {
-            setSelectedCandidateId(value);
-            setUrl(candidate.urlCandidates.find(({ id }) => id === value)?.url ?? "");
-          }}
-        />
-        <TextInput
-          label={t("url.inputLabel")}
-          aria-label={t("url.inputLabel")}
-          value={url}
-          placeholder="https://service.example.com"
-          error={isInvalidUrl ? t("url.invalid") : undefined}
-          onChange={(event) => setUrl(event.currentTarget.value)}
-        />
-
-        <Group justify="space-between">
-          <Button variant="subtle" color="gray" leftSection={<IconEyeOff size={16} />} onClick={onDismiss}>
-            {t("action.dismiss")}
-          </Button>
-          {target.kind === "createApp" ? (
+        </Accordion.Control>
+        <Group gap={4} wrap="nowrap">
+          {target.kind === "createApp" && (
             <Button
               variant="light"
-              rightSection={<IconArrowRight size={16} />}
-              disabled={isActionDisabled}
+              size="compact-xs"
+              leftSection={<IconApps size={14} />}
               onClick={() =>
-                openModal({
+                openAppModal({
                   selectedContainers: [candidate.container],
-                  initialUrls: validatedUrl ? [validatedUrl] : undefined,
+                  initialUrls: [(normalizeServiceUrl(url) ?? url) || null],
                 })
               }
             >
-              {t("action.createApp")}
+              {tIntegration("field.createApp.label")}
             </Button>
-          ) : (
+          )}
+          {target.kind === "setupIntegration" && (
+            <Button
+              variant="light"
+              size="compact-xs"
+              leftSection={<IconPlugConnected size={14} />}
+              onClick={() =>
+                openIntegrationModal({
+                  initialKind: target.integrationKind,
+                  initialName: candidate.container.name,
+                  initialUrl: normalizeServiceUrl(url) ?? url,
+                })
+              }
+            >
+              {t("action.setupIntegration")}
+            </Button>
+          )}
+          {(target.kind === "reviewIntegration" || target.kind === "viewRepresentation") && (
             <Button
               component={Link}
               href={target.href}
               variant="light"
-              rightSection={<IconArrowRight size={16} />}
-              disabled={isActionDisabled}
-              onClick={(event) => {
-                if (isActionDisabled) event.preventDefault();
-              }}
+              size="compact-xs"
+              leftSection={target.kind === "reviewIntegration" ? <IconSettings size={14} /> : <IconEye size={14} />}
             >
               {t(`action.${target.kind}`)}
             </Button>
           )}
+          <Tooltip label={t("action.dismiss")} events={{ hover: true, focus: true, touch: false }}>
+            <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t("action.dismiss")} onClick={onDismiss}>
+              <IconEyeOff size={15} />
+            </ActionIcon>
+          </Tooltip>
         </Group>
-      </Stack>
-    </Card>
+      </Group>
+
+      <Accordion.Panel>
+        <Stack gap="sm">
+          {candidate.representation.signals.ambiguous && (
+            <Alert color="yellow" icon={<IconAlertTriangle size={16} />}>
+              {t("ambiguous")}
+            </Alert>
+          )}
+
+          {visibleHealthLayers.length > 0 && (
+            <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="xs">
+              {visibleHealthLayers.map((layer) => (
+                <Group key={layer.layer} gap="xs" wrap="nowrap">
+                  <HealthStatusIcon status={layer.status} />
+                  <Text size="xs">
+                    {t(`health.layer.${layer.layer}`)} ·{" "}
+                    <Text component="span" c="dimmed" inherit>
+                      {t(`health.status.${layer.status}`)}
+                    </Text>
+                  </Text>
+                </Group>
+              ))}
+            </SimpleGrid>
+          )}
+
+          {actionNeedsUrl && (
+            <Autocomplete
+              label={invariantTechnicalLabels.url}
+              value={url}
+              data={urlSuggestions}
+              placeholder={t("url.manual")}
+              onChange={(value) => {
+                isUrlEdited.current = true;
+                setUrl(value);
+              }}
+            />
+          )}
+        </Stack>
+      </Accordion.Panel>
+    </Accordion.Item>
   );
 };
 
-const getCandidateTarget = (candidate: ReconciliationCandidate, url: string) => {
+const getCandidateTarget = (candidate: ReconciliationCandidate) => {
   if (candidate.representation.signals.ambiguous) {
     if (candidate.nextAction === "reviewIntegration" && candidate.match) {
       const params = new URLSearchParams({ search: getIntegrationName(candidate.match.kind) });
@@ -312,9 +390,7 @@ const getCandidateTarget = (candidate: ReconciliationCandidate, url: string) => 
     return { kind: "viewRepresentation" as const, href: "/manage/apps" };
   }
   if (candidate.state === "newRecognized" && candidate.match) {
-    const params = new URLSearchParams({ kind: candidate.match.kind, name: candidate.container.name });
-    if (url) params.set("url", url);
-    return { kind: "setupIntegration" as const, href: `/manage/integrations/new?${params.toString()}` };
+    return { kind: "setupIntegration" as const, integrationKind: candidate.match.kind };
   }
 
   if (candidate.state === "newApp") return { kind: "createApp" as const };
@@ -337,8 +413,21 @@ const stateColor = (state: ReconciliationCandidate["state"]) => {
   return "blue";
 };
 
-const healthStatusColor = (status: ServiceHealth["layers"][number]["status"]) => {
-  if (["available", "configured", "linked"].includes(status)) return "green";
-  if (["missing", "changed", "unused"].includes(status)) return "yellow";
-  return "gray";
+const HealthStatusIcon = ({ status }: { status: ServiceHealth["layers"][number]["status"] }) => {
+  let color = "gray";
+  let icon = <IconMinus size={12} />;
+
+  if (["available", "configured", "linked"].includes(status)) {
+    color = "green";
+    icon = <IconCheck size={12} />;
+  } else if (["missing", "changed", "unused"].includes(status)) {
+    color = "yellow";
+    icon = <IconAlertTriangle size={12} />;
+  }
+
+  return (
+    <ThemeIcon color={color} variant="light" radius="xl" size="sm">
+      {icon}
+    </ThemeIcon>
+  );
 };

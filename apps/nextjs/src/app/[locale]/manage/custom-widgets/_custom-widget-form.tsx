@@ -22,7 +22,7 @@ import { customWidgetOptionsSchema, getCustomWidgetDefaultOptions } from "@homar
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import { useZodForm } from "@homarr/form";
 import { IconPicker } from "@homarr/forms-collection";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { CodeEditor } from "./_code-editor";
 import { CustomWidgetAiCard } from "./_custom-widget-ai-card";
@@ -57,8 +57,9 @@ const sectionLinks = [
 ] as const;
 
 export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWidgetFormProps) {
-  const t = useScopedI18n("customWidget");
-  const w = useScopedI18n("customWidget.workbench");
+  const t = useI18n("customWidget");
+  const tCommon = useI18n("common");
+  const w = useI18n("customWidget.workbench");
   const formInitialValues: CustomWidgetFormValues = { ...DEFAULT_CUSTOM_WIDGET_FORM_VALUES, ...initialValues };
   const form = useZodForm(customWidgetFormSchema, { initialValues: formInitialValues });
   const [mobilePane, setMobilePane] = useState<"configure" | "preview">("configure");
@@ -169,7 +170,7 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           />
           <CustomWidgetAdvancedManifest form={form} />
           <EditorSection id="general" title={w("generalInformation")} icon={IconSettings}>
-            <TextInput label={t("field.name")} required {...form.getInputProps("name")} />
+            <TextInput label={tCommon("field.name")} required {...form.getInputProps("name")} />
             <Textarea label={t("field.description")} autosize minRows={2} {...form.getInputProps("description")} />
             <IconPicker
               withAsterisk={false}

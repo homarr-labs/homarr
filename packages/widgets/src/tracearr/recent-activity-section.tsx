@@ -1,7 +1,7 @@
 import { Avatar, Badge, Group, Paper, Stack, Text } from "@mantine/core";
 
 import type { TracearrHistorySession } from "@homarr/integrations/types";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { SourcedTracearrItem } from "./source";
 
@@ -14,7 +14,7 @@ export function RecentActivityList({
   sessions: SourcedTracearrHistorySession[];
   showSource: boolean;
 }) {
-  const t = useScopedI18n("widget.tracearr");
+  const t = useI18n("widget.tracearr");
   const locale = useCurrentIntlLocale();
 
   return (

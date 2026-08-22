@@ -12,7 +12,7 @@ import type {
 import { CustomWidgetRuntimeProvider } from "@homarr/custom-widgets/runtime";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface WidgetDefinitionProviderProps {
@@ -36,7 +36,8 @@ const INACTIVE_PORT: CustomWidgetRuntimePort = {
 };
 
 const useRuntimeMessages = (): CustomWidgetRuntimeMessages => {
-  const t = useScopedI18n("widget.customApi.customJsx");
+  const t = useI18n("widget.customApi.customJsx");
+  const actionT = useI18n("common.action");
   return {
     requestIdRequired: t("requestIdRequired"),
     unsavedPreview: t("unsavedPreview"),
@@ -51,7 +52,7 @@ const useRuntimeMessages = (): CustomWidgetRuntimeMessages => {
     actionCompleted: t("actionCompleted"),
     confirmDelete: t("confirmDelete"),
     toggle: t("toggle"),
-    refresh: t("refresh"),
+    refresh: actionT("refresh"),
   };
 };
 

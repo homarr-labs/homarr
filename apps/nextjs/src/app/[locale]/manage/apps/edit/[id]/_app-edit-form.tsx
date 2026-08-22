@@ -9,7 +9,7 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { AppForm } from "@homarr/forms-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
 
 interface AppEditFormProps {
@@ -17,14 +17,14 @@ interface AppEditFormProps {
 }
 
 export const AppEditForm = ({ app }: AppEditFormProps) => {
-  const tScoped = useScopedI18n("app.page.edit.notification");
-  const t = useI18n();
+  const tScoped = useI18n("app.page.edit.notification");
+  const tCommon = useI18n("common");
   const router = useRouter();
 
   const { mutate, isPending } = clientApi.app.update.useMutation({
     onSuccess: () => {
       showSuccessNotification({
-        title: tScoped("success.title"),
+        title: tCommon("notification.update.success"),
         message: tScoped("success.message"),
       });
       void revalidatePathActionAsync("/manage/apps").then(() => {
@@ -33,7 +33,7 @@ export const AppEditForm = ({ app }: AppEditFormProps) => {
     },
     onError: () => {
       showErrorNotification({
-        title: tScoped("error.title"),
+        title: tCommon("notification.update.error"),
         message: tScoped("error.message"),
       });
     },
@@ -52,7 +52,7 @@ export const AppEditForm = ({ app }: AppEditFormProps) => {
   return (
     <AppForm
       buttonLabels={{
-        submit: t("common.action.save"),
+        submit: tCommon("action.save"),
       }}
       initialValues={app}
       handleSubmit={handleSubmit}

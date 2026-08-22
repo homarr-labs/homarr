@@ -1,0 +1,54 @@
+---
+title: "Timer / Pomodoro"
+description: "Runs a simple timer or a configurable Pomodoro sequence."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { timerWidget } from ".";
+
+<WidgetHeader widget={timerWidget} categories={["Productivity", "Time"]} />
+
+The Timer / Pomodoro widget runs entirely in your browser and does not require an integration. The compact widget
+always keeps its start or pause button and reset button visible. A running timer uses a saved deadline, so reopening
+the board or returning to a background tab restores the correct remaining time instead of restarting the countdown.
+
+Timer mode uses one configured duration. Pomodoro mode starts with a focus session, follows most completed focus
+sessions with a short break, and uses a long break after the configured number of focus sessions. Automatic break and
+focus starts are separate options and are disabled by default. When automatic starts are enabled, elapsed phases are
+reconciled from their original deadlines after the board returns to the foreground.
+
+Advanced view shows the current sequence, configured durations, and local alert preferences. Browser notifications are
+requested only when enabled. Notification and sound preferences, live progress, deadlines, and cycle position are
+stored locally using the board and widget identifiers. They are separate for each browser or device, are available to
+guest viewers, and are removed by clearing site data. Widget previews are ephemeral and do not write local timer state.
+
+Timer sounds are enabled by default and use the same low-volume Tiks sound system as onboarding: start and pause use
+rising and falling soft-theme cues, reset uses a short click, and phase completion uses the glass theme's resonant
+notification ding. You can disable them in advanced view. The cues respect the device's reduced-motion preference and
+supplement the visible timer state rather than replacing it.
+
+When automatic start is disabled, a completed phase labels the next step as ready and flashes the widget edges with the
+board's secondary color. The border glow and completion chime run together as a five-beat alarm burst at
+300-millisecond intervals, then stop. Reduced-motion and forced-colors modes replace the flash with a static border.
+The current phase stays pinned to the compact widget's top-left corner and wraps when needed. Timer text and controls
+use the dashboard theme's responsive size scale, with secondary details hidden when the widget preview is narrow or
+short.
+
+Alerts can fire while Homarr is open. Browser and operating-system notification settings may still suppress them.
+The timer's mode, durations, session count, and automatic-start behavior are permanent board settings and are edited
+from the widget context menu.
+
+<WidgetInteractionGuide />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={timerWidget.configuration} />

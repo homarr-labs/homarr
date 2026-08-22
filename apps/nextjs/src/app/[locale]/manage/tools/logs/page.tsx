@@ -1,6 +1,6 @@
 import { Box, Group } from "@mantine/core";
 
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import "@xterm/xterm/css/xterm.css";
 
@@ -22,17 +22,30 @@ export async function generateMetadata() {
   if (!session?.user.permissions.includes("admin")) {
     return {};
   }
-  const t = await getScopedI18n("management");
+  const t = await getI18n("management");
 
   return {
     title: createMetaTitle(t("metaTitle")),
   };
 }
 
-export default async function LogsManagementPage() {
+interface LogsManagementPageProps {
+  searchParams: Promise<{ focus?: string | string[] }>;
+}
+
+export default async function LogsManagementPage({ searchParams }: LogsManagementPageProps) {
   const session = await auth();
   if (!session?.user.permissions.includes("other-view-logs")) {
     notFound();
+  }
+
+  const focus = (await searchParams).focus;
+  let focusTimestamp: number | undefined;
+  if (typeof focus === "string") {
+    const parsedFocusTimestamp = Number(focus);
+    if (Number.isSafeInteger(parsedFocusTimestamp) && parsedFocusTimestamp > 0) {
+      focusTimestamp = parsedFocusTimestamp;
+    }
   }
 
   return (
@@ -45,7 +58,7 @@ export default async function LogsManagementPage() {
         </Group>
       </Group>
       <Box style={{ borderRadius: 6 }} h={fullHeightWithoutHeaderAndFooter} p="md" bg="black">
-        <ClientSideTerminalComponent />
+        <ClientSideTerminalComponent focusTimestamp={focusTimestamp} />
       </Box>
     </LogContextProvider>
   );

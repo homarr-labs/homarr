@@ -8,7 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { getIconUrl } from "@homarr/definitions";
 import type { WudContainerUpdate } from "@homarr/integrations";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -40,7 +40,7 @@ const WudWidgetContent = ({
   width: number;
   isAdvanced: boolean;
 }) => {
-  const t = useScopedI18n("widget.wud");
+  const t = useI18n("widget.wud");
   const [data, statsQuery] = clientApi.widget.wud.getStats.useSuspenseQuery({ integrationId });
   const board = useRequiredBoard();
 
@@ -198,7 +198,7 @@ const UpdateCard = ({
   radius: string | undefined;
   className: string | undefined;
 }) => {
-  const t = useScopedI18n("widget.wud");
+  const t = useI18n("widget.wud");
   const href = getSafeApplicationUrl(update.link);
   const isDigestUpdate = isDigestVersion(update.newVersion);
   const fullVersionText = buildVersionText(update.currentVersion, update.newVersion);

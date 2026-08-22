@@ -16,6 +16,7 @@ interface StatisticsPanelProps {
 
 export function StatisticsPanel(props: StatisticsPanelProps) {
   const t = useI18n("widget.mediaTranscoding.panel.statistics");
+  const tCommon = useI18n("widget.mediaTranscoding.panel.common");
 
   const allLibs = props.statistics;
 
@@ -23,7 +24,7 @@ export function StatisticsPanel(props: StatisticsPanelProps) {
   if (!(allLibs.totalFileCount > 0)) {
     return (
       <Center style={{ flex: "1" }}>
-        <Title order={6}>{t("empty")}</Title>
+        <Title order={6}>{tCommon("empty")}</Title>
       </Center>
     );
   }
@@ -31,10 +32,14 @@ export function StatisticsPanel(props: StatisticsPanelProps) {
   return (
     <ScrollArea h="100%">
       <Group wrap="wrap" justify="center" p={4} w="100%" gap="xs">
-        <StatisticItem icon={IconTransform} label={t("transcodesCount")} value={props.statistics.totalTranscodeCount} />
+        <StatisticItem
+          icon={IconTransform}
+          label={tCommon("transcodes")}
+          value={props.statistics.totalTranscodeCount}
+        />
         <StatisticItem
           icon={IconHeartbeat}
-          label={t("healthChecksCount")}
+          label={tCommon("healthChecks")}
           value={props.statistics.totalHealthCheckCount}
         />
         <StatisticItem icon={IconFileDescription} label={t("filesCount")} value={props.statistics.totalFileCount} />
@@ -45,8 +50,8 @@ export function StatisticsPanel(props: StatisticsPanelProps) {
         />
       </Group>
       <Group justify="center" wrap="wrap" grow>
-        <StatisticRingProgress items={allLibs.transcodeStatus} label={t("transcodes")} />
-        <StatisticRingProgress items={allLibs.healthCheckStatus} label={t("healthChecks")} />
+        <StatisticRingProgress items={allLibs.transcodeStatus} label={tCommon("transcodes")} />
+        <StatisticRingProgress items={allLibs.healthCheckStatus} label={tCommon("healthChecks")} />
         <StatisticRingProgress items={allLibs.videoCodecs} label={t("videoCodecs")} />
         <StatisticRingProgress items={allLibs.videoContainers} label={t("videoContainers")} />
         <StatisticRingProgress items={allLibs.videoResolutions} label={t("videoResolutions")} />

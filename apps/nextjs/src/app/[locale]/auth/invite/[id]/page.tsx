@@ -6,7 +6,7 @@ import { isProviderEnabled } from "@homarr/auth/server";
 import { and, db, eq } from "@homarr/db";
 import { invites } from "@homarr/db/schema";
 import { OnboardingAuthShell } from "@homarr/onboarding";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { RegistrationForm } from "./_registration-form";
 
@@ -45,7 +45,7 @@ export default async function InviteUsagePage(props: InviteUsagePageProps) {
 
   if (!invite || invite.expirationDate < new Date()) notFound();
 
-  const t = await getScopedI18n("user.page.invite");
+  const t = await getI18n("user.page.invite");
 
   return (
     <OnboardingAuthShell

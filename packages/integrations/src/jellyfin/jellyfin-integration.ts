@@ -1,3 +1,4 @@
+import { BlockList, isIP } from "node:net";
 import { Jellyfin } from "@jellyfin/sdk";
 import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
 import { getSessionApi } from "@jellyfin/sdk/lib/utils/api/session-api";
@@ -19,6 +20,42 @@ import type { IMediaReleasesIntegration, MediaRelease, MediaType } from "../type
 
 function ticksToMs(ticks: number | null | undefined): number | null {
   return ticks ? Math.round(ticks / 10_000) : null;
+}
+
+// Unlike Plex, Jellyfin doesn't report a session's network location directly - only the
+// client's RemoteEndPoint (an IP, optionally with a port). Classify it ourselves.
+const privateAddresses = new BlockList();
+privateAddresses.addSubnet("10.0.0.0", 8, "ipv4");
+privateAddresses.addSubnet("172.16.0.0", 12, "ipv4");
+privateAddresses.addSubnet("192.168.0.0", 16, "ipv4");
+privateAddresses.addSubnet("127.0.0.0", 8, "ipv4");
+privateAddresses.addSubnet("169.254.0.0", 16, "ipv4");
+privateAddresses.addSubnet("fc00::", 7, "ipv6");
+privateAddresses.addSubnet("fe80::", 10, "ipv6");
+privateAddresses.addAddress("::1", "ipv6");
+
+export function extractHost(remoteEndPoint: string): string {
+  if (remoteEndPoint.startsWith("[")) {
+    const end = remoteEndPoint.indexOf("]");
+    return end === -1 ? remoteEndPoint : remoteEndPoint.slice(1, end);
+  }
+  // A bare IPv6 address (no brackets, no port) has more than one colon.
+  const isIPv4WithPort = remoteEndPoint.split(":").length === 2;
+  return isIPv4WithPort ? remoteEndPoint.slice(0, remoteEndPoint.lastIndexOf(":")) : remoteEndPoint;
+}
+
+export function parseLocation(remoteEndPoint: string | null | undefined): "lan" | "wan" | null {
+  if (!remoteEndPoint) return null;
+  let host = extractHost(remoteEndPoint);
+  let family = isIP(host);
+  // A dual-stack server can report an IPv4 client as an IPv4-mapped IPv6 address
+  // (e.g. "::ffff:192.168.1.5") - unwrap it so the IPv4 private ranges still apply.
+  if (family === 6 && host.toLowerCase().startsWith("::ffff:") && isIP(host.slice(7)) === 4) {
+    host = host.slice(7);
+    family = 4;
+  }
+  if (!family) return null;
+  return privateAddresses.check(host, family === 4 ? "ipv4" : "ipv6") ? "lan" : "wan";
 }
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
@@ -56,17 +93,27 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
         if (sessionInfo.NowPlayingItem) {
           const positionMs = ticksToMs(sessionInfo.PlayState?.PositionTicks);
           const durationMs = ticksToMs(sessionInfo.NowPlayingItem.RunTimeTicks);
+          // Jellyfin only reliably fills in MediaSources[].Bitrate for a transcoding session -
+          // /Sessions has no `fields` selector to force it, so fall back to summing the individual
+          // media streams' own bitrates (populated from the source file's metadata) for direct play.
+          const mediaStreamsBitrateBps = sessionInfo.NowPlayingItem.MediaStreams?.reduce(
+            (sum, stream) => sum + (stream.BitRate ?? 0),
+            0,
+          );
           const bitrateBps =
-            sessionInfo.TranscodingInfo?.Bitrate ?? sessionInfo.NowPlayingItem.MediaSources?.[0]?.Bitrate ?? null;
+            sessionInfo.TranscodingInfo?.Bitrate ??
+            sessionInfo.NowPlayingItem.MediaSources?.[0]?.Bitrate ??
+            (mediaStreamsBitrateBps || null);
           const bitrateKbps = bitrateBps !== null ? Math.round(bitrateBps / 1000) : null;
+          const isEpisode = sessionInfo.NowPlayingItem.Type === BaseItemKind.Episode;
 
           currentlyPlaying = {
             type: convertJellyfinType(sessionInfo.NowPlayingItem.Type),
             name: sessionInfo.NowPlayingItem.SeriesName ?? sessionInfo.NowPlayingItem.Name ?? "",
             seasonName: sessionInfo.NowPlayingItem.SeasonName ?? "",
-            seasonNumber: sessionInfo.NowPlayingItem.ParentIndexNumber ?? null,
-            episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
-            episodeNumber: sessionInfo.NowPlayingItem.IndexNumber ?? null,
+            seasonNumber: isEpisode ? (sessionInfo.NowPlayingItem.ParentIndexNumber ?? null) : null,
+            episodeName: isEpisode ? sessionInfo.NowPlayingItem.EpisodeTitle : null,
+            episodeNumber: isEpisode ? (sessionInfo.NowPlayingItem.IndexNumber ?? null) : null,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
             playback: {
@@ -74,7 +121,7 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
               positionMs,
               durationMs,
             },
-            location: null,
+            location: parseLocation(sessionInfo.RemoteEndPoint),
             metadata: {
               video: {
                 resolution:

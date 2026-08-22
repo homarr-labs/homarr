@@ -2,7 +2,7 @@ import { IconChevronLeft, IconChevronRight, IconPhoto, IconPlayerPause } from "@
 import z from "zod";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../../definition";
 import { optionsBuilder } from "../../options";
@@ -15,7 +15,7 @@ const createOptions = () =>
       withDescription: true,
       clearable: true,
       useOptions: (integrationIds: string[]) => {
-        const t = useScopedI18n("widget.immich-albumCarousel");
+        const t = useI18n("widget.immich-albumCarousel");
         const {
           data = [],
           isPending,

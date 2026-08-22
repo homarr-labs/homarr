@@ -4,7 +4,7 @@ import { Stack, Title } from "@mantine/core";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/docker/env";
-import { getScopedI18n } from "@homarr/translation/server";
+import { getI18n } from "@homarr/translation/server";
 
 import { ConfigmapsTable } from "~/app/[locale]/manage/tools/kubernetes/configmaps/configmaps-table";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -22,17 +22,16 @@ export default async function ConfigMapsPage({
   }
 
   const context = await getSelectedKubernetesContextAsync(searchParams);
+  const tResource = await getI18n("kubernetes.cluster.resources");
   const configMaps =
     context.status === "unavailable"
       ? []
       : await api.kubernetes.configMaps.getConfigMaps({ contextId: context.contextId });
-  const tConfigMaps = await getScopedI18n("kubernetes.configmaps");
-
   return (
     <>
       <DynamicBreadcrumb />
       <Stack>
-        <Title order={1}>{tConfigMaps("label")}</Title>
+        <Title order={1}>{tResource("configmaps")}</Title>
         <ConfigmapsTable contextId={context.contextId} initialConfigMaps={configMaps} />
       </Stack>
     </>

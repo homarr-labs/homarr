@@ -18,7 +18,7 @@ interface AccessSelectRowProps {
 }
 
 export const AccessSelectRow = ({ itemContent, permission, index, handleCountChange }: AccessSelectRowProps) => {
-  const tRoot = useI18n();
+  const tCommon = useI18n("common");
   const { icons, getSelectData } = useAccessContext();
   const form = useFormContext();
 
@@ -48,7 +48,7 @@ export const AccessSelectRow = ({ itemContent, permission, index, handleCountCha
           />
 
           <Button size="xs" variant="subtle" onClick={handleRemove}>
-            {tRoot("common.action.remove")}
+            {tCommon("action.remove")}
           </Button>
         </Flex>
       </TableTd>

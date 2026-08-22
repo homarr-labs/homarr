@@ -1,7 +1,7 @@
 import { Group, SimpleGrid, Text } from "@mantine/core";
 import { IconNetwork } from "@tabler/icons-react";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { StatRow } from "./stat-row";
 
@@ -16,7 +16,7 @@ export const WiredVariant = ({
   compact?: boolean;
   horizontal?: boolean;
 }) => {
-  const t = useScopedI18n("widget.networkControllerStatus.card");
+  const t = useI18n("widget.networkControllerStatus.card");
   return (
     <>
       <Group gap="xs" wrap="nowrap" mb={compact ? "xs" : "md"}>

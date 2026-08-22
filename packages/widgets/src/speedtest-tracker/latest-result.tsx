@@ -4,14 +4,14 @@ import { Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconCircleCheck, IconCircleX, IconWaveSine } from "@tabler/icons-react";
 
 import type { SpeedtestTrackerResult } from "@homarr/integrations/types";
-import { useCurrentIntlLocale, useScopedI18n } from "@homarr/translation/client";
+import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { formatResultSpeed } from "./helpers";
 import { SectionLabel } from "./section-label";
 import { SpeedStatCard } from "./speed-stat-card";
 
 export function LatestResultSection({ result, width = 500 }: { result: SpeedtestTrackerResult; width?: number }) {
-  const t = useScopedI18n("widget.speedtestTracker");
+  const t = useI18n("widget.speedtestTracker");
   const locale = useCurrentIntlLocale();
   const timestamp = Intl.DateTimeFormat(locale, {
     month: "short",

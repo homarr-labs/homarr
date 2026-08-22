@@ -15,7 +15,7 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import { createDocumentationLink } from "@homarr/definitions";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { TourTargetsProvider } from "~/components/layout/header/tour-target";
 import { TourShell } from "./tour-shell";
@@ -46,7 +46,7 @@ const usersStepFocusRevealProps: OnboardingTourFocusRevealProps = {
 };
 
 export const ManageTourProvider = ({ children, isAdmin }: ManageTourProviderProps) => {
-  const t = useScopedI18n("onboardingTour.manage");
+  const t = useI18n("onboardingTour.manage");
   const { mutate: completeTour } = clientApi.user.completeTour.useMutation();
   const isMobile = useMediaQuery("(max-width: 48em)");
   const pathname = usePathname();

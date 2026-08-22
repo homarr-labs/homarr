@@ -7,15 +7,15 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface DeleteIntegrationActionButtonProps {
   integration: { id: string; name: string };
 }
 
 export const DeleteIntegrationActionButton = ({ integration }: DeleteIntegrationActionButtonProps) => {
-  const t = useScopedI18n("integration.page.delete");
-  const tList = useScopedI18n("integration.page.list.action");
+  const t = useI18n("integration.page.delete");
+  const tCommon = useI18n("common");
   const { openConfirmModal } = useConfirmModal();
   const utils = clientApi.useUtils();
   const { mutateAsync, isPending } = clientApi.integration.delete.useMutation();
@@ -36,7 +36,7 @@ export const DeleteIntegrationActionButton = ({ integration }: DeleteIntegration
               {
                 onSuccess: () => {
                   showSuccessNotification({
-                    title: t("notification.success.title"),
+                    title: tCommon("notification.delete.success"),
                     message: t("notification.success.message"),
                   });
                   void revalidatePathActionAsync("/manage/integrations");
@@ -44,7 +44,7 @@ export const DeleteIntegrationActionButton = ({ integration }: DeleteIntegration
                 },
                 onError: () => {
                   showErrorNotification({
-                    title: t("notification.error.title"),
+                    title: tCommon("notification.delete.error"),
                     message: t("notification.error.message"),
                   });
                 },
@@ -53,7 +53,7 @@ export const DeleteIntegrationActionButton = ({ integration }: DeleteIntegration
           },
         });
       }}
-      aria-label={tList("delete", { name: integration.name })}
+      aria-label={tCommon("action.deleteNamed", { name: integration.name })}
     >
       <IconTrash color="red" size={16} stroke={1.5} />
     </ActionIcon>

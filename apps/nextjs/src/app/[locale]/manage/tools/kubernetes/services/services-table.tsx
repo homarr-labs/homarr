@@ -11,7 +11,7 @@ import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
 import type { KubernetesService } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 dayjs.extend(relativeTime);
@@ -21,20 +21,23 @@ interface ServicesTableComponentProps {
   initialServices: RouterOutputs["kubernetes"]["services"]["getServices"];
 }
 
-const createColumns = (t: ScopedTranslationFunction<"kubernetes.services">): MRT_ColumnDef<KubernetesService>[] => [
+const createColumns = (
+  t: ScopedTranslationFunction<"kubernetes.services">,
+  tField: ScopedTranslationFunction<"kubernetes.field">,
+): MRT_ColumnDef<KubernetesService>[] => [
   {
     accessorKey: "name",
-    header: t("field.name.label"),
+    header: tField("name.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "namespace",
-    header: t("field.namespace.label"),
+    header: tField("namespace.label"),
     enableClickToCopy: true,
   },
   {
     accessorKey: "type",
-    header: t("field.type.label"),
+    header: tField("type.label"),
   },
   {
     accessorKey: "ports",
@@ -57,13 +60,14 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.services">): MRT
   },
   {
     accessorKey: "creationTimestamp",
-    header: t("field.creationTimestamp.label"),
+    header: tField("creationTimestamp.label"),
     Cell: ({ row }) => dayjs(row.original.creationTimestamp).fromNow(false),
   },
 ];
 
 export function ServicesTable({ contextId, initialServices }: ServicesTableComponentProps) {
-  const tServices = useScopedI18n("kubernetes.services");
+  const tServices = useI18n("kubernetes.services");
+  const tField = useI18n("kubernetes.field");
 
   const { data } = clientApi.kubernetes.services.getServices.useQuery(
     { contextId },
@@ -93,7 +97,7 @@ export function ServicesTable({ contextId, initialServices }: ServicesTableCompo
       style: { minWidth: 300 },
       autoFocus: true,
     },
-    columns: createColumns(tServices),
+    columns: createColumns(tServices, tField),
   });
 
   return <MantineReactTable table={table} />;

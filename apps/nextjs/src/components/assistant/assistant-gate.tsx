@@ -4,7 +4,7 @@ import type { PropsWithChildren } from "react";
 import { useMemo } from "react";
 import dynamic from "next/dynamic";
 
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { AssistantWidgetRendererProvider } from "@homarr/widgets/assistant/context";
 
 import { AssistantContext } from "./assistant-context";
@@ -34,11 +34,15 @@ const DisabledAssistant = ({ children, description }: PropsWithChildren<{ descri
       isRunning: false,
       isRefreshing: false,
       unreadCount: 0,
+      hasVisibleWidget: false,
+      activeWidgetId: null,
       open: () => undefined,
       close: () => undefined,
       toggle: () => undefined,
       sendPrompt: () => false,
       refreshCurrentView: () => Promise.resolve(),
+      setWidgetVisible: () => undefined,
+      activateWidget: () => undefined,
     }),
     [description],
   );
@@ -69,7 +73,7 @@ const unavailableMessageKeys = {
 } as const;
 
 export const AssistantGate = ({ availability, children }: AssistantGateProps) => {
-  const t = useScopedI18n("common.assistant");
+  const t = useI18n("assistant");
 
   if (availability === "enabled") {
     return <EnabledAssistantRoot>{children}</EnabledAssistantRoot>;

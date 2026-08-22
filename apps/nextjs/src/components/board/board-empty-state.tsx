@@ -5,7 +5,7 @@ import { IconBox, IconLayoutDashboard, IconPlug, IconResize } from "@tabler/icon
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { useBoardAddActions } from "./use-board-add-actions";
 import classes from "./board-empty-state.module.css";
@@ -14,7 +14,7 @@ export const BoardEmptyState = () => {
   const board = useRequiredBoard();
   const [isEditMode] = useEditMode();
   const { addWidget, addApp, connectService, canConnectService } = useBoardAddActions();
-  const t = useScopedI18n("board.emptyState");
+  const t = useI18n("board.emptyState");
   const hasBoardContent = board.items.length > 0 || board.sections.some((section) => section.kind !== "empty");
 
   if (!isEditMode || hasBoardContent) return null;

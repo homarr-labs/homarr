@@ -3,6 +3,9 @@ import type { WidgetKind } from "../widget";
 export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   clock: "clock",
   weather: "weather",
+  airQuality: "air-quality",
+  countdown: "countdown",
+  timer: "timer",
   app: "app",
   iframe: "iframe",
   video: "video",

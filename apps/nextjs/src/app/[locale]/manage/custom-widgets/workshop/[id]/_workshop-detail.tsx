@@ -23,7 +23,7 @@ import { IconAlertTriangle, IconArrowLeft, IconDownload, IconExternalLink, IconF
 import { CUSTOM_WIDGET_SCHEMA } from "@homarr/custom-widgets/core";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
 import { CustomWidgetSourceSetupPanel, ImportReviewContent } from "@homarr/custom-widgets/workbench";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { useWorkshopReportSummariesQuery, useWorkshopSubmissionQuery } from "@homarr/workshop/backend";
 import type { WorkshopSubmissionDetail } from "@homarr/workshop/schema";
@@ -44,7 +44,7 @@ const browseHref = "/manage/custom-widgets/workshop";
 const installedHref = "/manage/custom-widgets";
 
 export function WorkshopDetail({ id }: { id: string }) {
-  const t = useScopedI18n("workshop");
+  const t = useI18n("workshop");
   const router = useRouter();
   const session = useWorkshopSession();
   const [reportOpened, reportControls] = useDisclosure(false);

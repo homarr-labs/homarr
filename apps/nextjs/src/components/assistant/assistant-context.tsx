@@ -20,11 +20,15 @@ export interface AssistantContextValue {
   isRunning: boolean;
   isRefreshing: boolean;
   unreadCount: number;
+  hasVisibleWidget: boolean;
+  activeWidgetId: string | null;
   open: () => void;
   close: () => void;
   toggle: () => void;
   sendPrompt: (prompt: string) => boolean;
   refreshCurrentView: () => Promise<void>;
+  setWidgetVisible: (widgetId: string, visible: boolean) => void;
+  activateWidget: (widgetId: string) => void;
 }
 
 export const AssistantContext = createContext<AssistantContextValue | null>(null);

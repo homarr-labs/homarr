@@ -1,5 +1,85 @@
+.weatherSurface {
+  overflow: hidden;
+}
+
+.weatherContent {
+  min-width: 0;
+  min-height: 0;
+}
+
+.compactRoot {
+  overflow: hidden;
+}
+
+.compactRoot[data-tier="micro"] {
+  flex-direction: row;
+}
+
+.compactMetrics {
+  min-width: 0;
+}
+
+.advancedRoot {
+  min-width: 0;
+}
+
+.locationSummary {
+  max-width: min(100%, 20rem);
+}
+
+.metricCard,
+.dailyCard,
+.detailMetric,
+.solarDetails {
+  background: color-mix(in srgb, var(--mantine-color-body) 72%, transparent);
+  border: 0.0625rem solid color-mix(in srgb, var(--mantine-color-default-border) 72%, transparent);
+}
+
+.dailyCard {
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.dailyCardButton:hover .dailyCard,
+.dailyCardButton:focus-visible .dailyCard {
+  background: color-mix(in srgb, var(--mantine-primary-color-light) 30%, var(--mantine-color-body));
+  border-color: color-mix(in srgb, var(--mantine-primary-color-filled) 45%, var(--mantine-color-default-border));
+}
+
+.dailyDetailsDropdown {
+  width: min(24.375rem, calc(100vw - 2rem));
+  padding: var(--mantine-spacing-sm);
+}
+
+.dailyDetails {
+  min-width: 0;
+}
+
+.dailyDetailsTemperature {
+  flex-shrink: 0;
+  max-width: 8.25rem;
+}
+
+.dailyCardFacts {
+  min-width: 0;
+}
+
+.dailyCardFact {
+  white-space: nowrap;
+}
+
+.detailMetric {
+  min-width: 0;
+}
+
+.solarDetails {
+  background: color-mix(in srgb, var(--mantine-color-yellow-light) 24%, var(--mantine-color-body));
+}
+
 .detailsButton,
-.forecastButton {
+.forecastButton,
+.dailyCardButton {
   color: inherit;
   border-radius: var(--mantine-radius-sm);
 }
@@ -8,24 +88,52 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 24px;
-  min-height: 24px;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
 }
 
-.forecastButton {
+.forecastButton,
+.dailyCardButton {
   display: block;
 }
 
+.dailyCardButton,
+.dailyCard {
+  width: 100%;
+  height: 100%;
+}
+
 .detailsButton:focus-visible,
-.forecastButton:focus-visible {
-  outline: 2px solid var(--mantine-primary-color-filled);
-  outline-offset: 2px;
+.forecastButton:focus-visible,
+.dailyCardButton:focus-visible {
+  outline: 0.125rem solid var(--mantine-primary-color-filled);
+  outline-offset: 0.125rem;
+}
+
+.errorIndicator {
+  z-index: 2;
 }
 
 @media (any-pointer: coarse) {
   .detailsButton,
-  .forecastButton {
-    min-width: 44px;
-    min-height: 44px;
+  .forecastButton,
+  .dailyCardButton {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dailyCard {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .metricCard,
+  .dailyCard,
+  .detailMetric,
+  .solarDetails {
+    border: 0.0625rem solid CanvasText;
   }
 }

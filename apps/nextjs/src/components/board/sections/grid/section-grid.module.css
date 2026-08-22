@@ -36,19 +36,23 @@
   inset: 0 auto auto 0;
 }
 
+.editorPortalHost {
+  display: contents;
+}
+
 .staticItem {
   overflow: visible;
-  transition:
-    left 220ms ease,
-    top 220ms ease,
-    width 220ms ease,
-    height 220ms ease;
+}
+
+.contentMount {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
 
 .editorEntry {
-  position: relative;
-  width: 100%;
-  height: 100%;
   overflow: visible;
   cursor: grab;
   user-select: none;
@@ -65,19 +69,6 @@
   border-radius: var(--mantine-radius-md);
 }
 
-.editorLoading {
-  position: absolute;
-  inset: 0;
-  z-index: 20;
-  overflow: hidden;
-}
-
-.editorLoadingItem {
-  background-color: var(--mantine-color-default);
-  border: 1px solid var(--mantine-color-default-border);
-  border-radius: var(--mantine-radius-md);
-}
-
 .liveRegion {
   position: absolute;
   width: 1px;
@@ -88,10 +79,4 @@
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .staticItem {
-    transition: none;
-  }
 }

@@ -9,6 +9,7 @@ vi.mock("@homarr/auth", () => ({}));
 
 const MCP_TOOL_ALLOWLIST = {
   query: [
+    "airQuality_atLocation",
     "apiKeys_getAll",
     "app_all",
     "app_byId",

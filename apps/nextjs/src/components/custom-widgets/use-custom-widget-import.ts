@@ -18,7 +18,7 @@ import type {
   ImportReviewContentMessages,
 } from "@homarr/custom-widgets/workbench";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 interface UseCustomWidgetImportOptions {
   widget: HomarrCustomWidgetV2 | null;
@@ -33,7 +33,8 @@ interface UseCustomWidgetImportOptions {
  * means the Workshop page and the file/clipboard dialog can never drift apart.
  */
 export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCustomWidgetImportOptions) {
-  const t = useScopedI18n("customWidget");
+  const t = useI18n("customWidget");
+  const tCommon = useI18n("common");
   const router = useRouter();
   const utils = clientApi.useUtils();
 
@@ -75,7 +76,7 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
   const onSuccess = (result: { id: string }) => {
     setSucceeded(true);
     showSuccessNotification({
-      title: legacyId ? t("action.migrate") : t("action.import"),
+      title: legacyId ? t("action.migrate") : tCommon("action.import"),
       message: legacyId ? t("notification.migrated") : t("notification.imported"),
     });
     void utils.customWidget.list.invalidate();
@@ -88,7 +89,7 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
   };
   const onError = (error: { message?: string }) => {
     showErrorNotification({
-      title: legacyId ? t("action.migrate") : t("action.import"),
+      title: legacyId ? t("action.migrate") : tCommon("action.import"),
       message: error.message || (legacyId ? t("notification.migrationError") : t("notification.importError")),
     });
   };
@@ -146,7 +147,7 @@ export function useCustomWidgetImport({ widget, legacyId, onImported }: UseCusto
     credentialsMissing: t("importReview.sourceSetup.credentialsMissing"),
     credentialsOptional: t("importReview.sourceSetup.credentialsOptional"),
     configured: t("workbench.sources.configured"),
-    secret: (kind) => t(`importReview.credentials.field.${kind}`),
+    secret: (kind) => t(`secret.${kind}`),
     urlError: (issue) => t(`workbench.sources.baseUrlError.${issue}`),
   };
 
