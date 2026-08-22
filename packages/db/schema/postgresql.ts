@@ -293,7 +293,7 @@ export const boards = pgTable("board", {
   opacity: integer().default(100).notNull(),
   customCss: text(),
   iconColor: text(),
-  itemRadius: text().$type<MantineSize>().default("lg").notNull(),
+  itemRadius: text().$type<MantineSize>().default("sm").notNull(),
   disableStatus: boolean().default(false).notNull(),
 });
 

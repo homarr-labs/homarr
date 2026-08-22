@@ -1,0 +1,1 @@
+ALTER TABLE `board` MODIFY COLUMN `item_radius` text NOT NULL DEFAULT ('sm');
