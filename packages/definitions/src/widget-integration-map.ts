@@ -161,7 +161,7 @@ export interface DefaultWidgetConfig {
 
 export const defaultWidgetConfigs: DefaultWidgetConfig[] = [
   { kind: "clock", width: 2, height: 1 },
-  { kind: "weather", width: 2, height: 1, options: { showCity: true, hasForecast: true, forecastDayCount: 3 } },
+  { kind: "weather", width: 2, height: 1, options: { showHumidity: false, showCity: false, hasForecast: false } },
   { kind: "bookmarks", width: 2, height: 2, options: { title: "Useful Links", layout: "grid", openNewTab: true } },
 ];
 
