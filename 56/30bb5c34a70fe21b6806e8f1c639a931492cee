@@ -1,0 +1,50 @@
+apps/docs/docs/widgets/bookmarks/index.mdx
+  s_148a12b92c3c12::t_af9f27bdfc1e14 3,16-21
+packages/translation/src/lang/en.json
+  s_148a12b92c3c12::t_af9f27bdfc1e14 2195-2197,2199-2239,2256,2260,2262-2266,2269-2270
+packages/widgets/src/_inputs/widget-sortable-item-list-input.tsx
+  s_148a12b92c3c12::t_af9f27bdfc1e14 99-120,137-143,184,209,218,254
+packages/widgets/src/bookmarks/add-button.tsx
+  s_148a12b92c3c12::t_af9f27bdfc1e14 3-16,23-24,27,29-31,33,35,41-59,61-76,78-80,82-85,87-90,93-111,113-163,165-197
+packages/widgets/src/bookmarks/index.tsx
+  s_148a12b92c3c12::t_af9f27bdfc1e14 2,9-10,20,23,27,31-45,52-55,58,61-71,76,85-92
+packages/widgets/src/bookmarks/layout.spec.ts
+  s_148a12b92c3c12::t_af9f27bdfc1e14 3-4,7-19,22-25,27-30,32-38,42-51,55-56,61-67
+apps/docs/docs/widgets/bookmarks/index.ts
+  s_148a12b92c3c12::t_af9f27bdfc1e14 7,19-33,61-62
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  s_148a12b92c3c12::t_ed6dcb6087460d 26-27,47-52,128-129
+  s_148a12b92c3c12::t_af9f27bdfc1e14 1-25,28-46,53-127,130-369
+packages/widgets/src/bookmarks/bookmark-item.ts
+  s_148a12b92c3c12::t_af9f27bdfc1e14 1-66
+packages/widgets/src/bookmarks/component.tsx
+  s_148a12b92c3c12::t_ed6dcb6087460d 3
+packages/widgets/src/bookmarks/layout.ts
+  s_148a12b92c3c12::t_af9f27bdfc1e14 1-265
+packages/widgets/src/bookmarks/prefetch.ts
+  s_148a12b92c3c12::t_af9f27bdfc1e14 7,12,20-21,26-27
+packages/ui/src/theme.ts
+  s_148a12b92c3c12::t_af9f27bdfc1e14 28
+packages/widgets/src/weather/index.ts
+  s_148a12b92c3c12::t_af9f27bdfc1e14 29-30
+packages/widgets/src/_inputs/common.tsx
+  s_148a12b92c3c12::t_af9f27bdfc1e14 19
+packages/widgets/src/options.ts
+  s_148a12b92c3c12::t_af9f27bdfc1e14 37,40,45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "5630bb5c34a70fe21b6806e8f1c639a931492cee",
+  "prompts": {},
+  "sessions": {
+    "s_148a12b92c3c12": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0297c-9284-73f1-b444-a10db89df09a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
