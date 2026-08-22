@@ -14,6 +14,8 @@ describe("BASE_URL", () => {
     "ftp://homarr.example.com",
     "https://user:password@homarr.example.com",
     "https://homarr.example.com/prefix",
+    "https://homarr.example.com/.",
+    "https://homarr.example.com/a/..",
     "https://homarr.example.com?preview=1",
     "https://homarr.example.com#preview",
   ])("rejects the non-origin URL %s", (value) => {

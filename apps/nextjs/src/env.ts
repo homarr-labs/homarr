@@ -1,9 +1,11 @@
 import { createBooleanSchema, createEnv } from "@homarr/core/infrastructure/env";
 import { z } from "zod/v4";
 
+const httpOriginRegex = /^https?:\/\/[^/?#\\]+\/?$/i;
+
 export const baseUrlSchema = z.url({ protocol: /^https?$/ }).refine((value) => {
   const url = new URL(value);
-  return !url.username && !url.password && url.pathname === "/" && !url.search && !url.hash;
+  return httpOriginRegex.test(value) && !url.username && !url.password;
 }, "BASE_URL must be an HTTP(S) origin without credentials, a path, query parameters, or a fragment");
 
 export const env = createEnv({
