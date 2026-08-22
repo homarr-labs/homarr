@@ -106,22 +106,22 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
       const value = serializeBoardItemsForClipboard(selectedItems, currentLayoutId);
       await navigator.clipboard.writeText(value);
       showSuccessNotification({
-        title: t("common.success"),
+        title: tCommon("success"),
         message: tSelection("copied", { count: selectedItems.length }),
       });
     } catch {
       showErrorNotification({
-        title: t("common.error"),
+        title: tCommon("error"),
         message: tSelection("copyError"),
       });
     }
-  }, [board.items, currentLayoutId, selectedItemIds, t, tSelection]);
+  }, [board.items, currentLayoutId, selectedItemIds, tCommon, tSelection]);
 
   const pasteItemsFromText = useCallback(
     (value: string) => {
       const payload = parseBoardItemClipboard(value);
       if (!payload) {
-        showErrorNotification({ title: t("common.error"), message: tSelection("pasteInvalid") });
+        showErrorNotification({ title: tCommon("error"), message: tSelection("pasteInvalid") });
         return;
       }
 
@@ -144,27 +144,27 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
       });
 
       if (!didPasteAll) {
-        showErrorNotification({ title: t("common.error"), message: tSelection("pasteUnavailable") });
+        showErrorNotification({ title: tCommon("error"), message: tSelection("pasteUnavailable") });
         return;
       }
 
       setSelectedItemIds(new Set(pastedIds));
       playPopSound();
       showSuccessNotification({
-        title: t("common.success"),
+        title: tCommon("success"),
         message: tSelection("pasted", { count: pastedIds.length }),
       });
     },
-    [persistBoard, t, tSelection],
+    [persistBoard, tCommon, tSelection],
   );
 
   const pasteItems = useCallback(async () => {
     try {
       pasteItemsFromText(await navigator.clipboard.readText());
     } catch {
-      showErrorNotification({ title: t("common.error"), message: tSelection("pasteError") });
+      showErrorNotification({ title: tCommon("error"), message: tSelection("pasteError") });
     }
-  }, [pasteItemsFromText, t, tSelection]);
+  }, [pasteItemsFromText, tCommon, tSelection]);
 
   useEffect(() => {
     if (!isEditMode) return;

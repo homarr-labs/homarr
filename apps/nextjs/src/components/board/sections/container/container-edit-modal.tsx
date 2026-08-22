@@ -47,8 +47,8 @@ export const ContainerEditModal = createModal<ModalProps>(({ actions, innerProps
           {...form.getInputProps("showOpenAll", { type: "checkbox" })}
         />
         <Switch
-          label={t("section.option.scrollable.label")}
-          description={t("section.option.scrollable.description")}
+          label={tSection("option.scrollable.label")}
+          description={tSection("option.scrollable.description")}
           {...form.getInputProps("scrollable", { type: "checkbox" })}
         />
         <TextMultiSelect

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import dynamic from "next/dynamic";
-import { Box, LoadingOverlay } from "@mantine/core";
+import type { CSSProperties, KeyboardEvent, PointerEvent } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Box } from "@mantine/core";
 import combineClasses from "clsx";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
@@ -130,14 +130,70 @@ export const SectionGrid = ({
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   const maxRowCount = section.kind === "container" || railPlacement !== "main" ? rowCount : null;
+  // A scrollable container isn't forced to grow with its content - it scrolls internally instead
+  // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
   const isScrollableContainer = section.kind === "container" && section.options.scrollable;
   const viewportRowCount = isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount;
   const logicalWidth = getLogicalTrackSize(columnCount);
   const logicalHeight = getLogicalTrackSize(rowCount);
   const viewportHeight = getLogicalTrackSize(viewportRowCount);
-  const canvasAttributes = isEditMode
-    ? getEditableCanvasAttributes({ label, columnCount, rowCount })
-    : getReadonlyCanvasAttributes({ label });
+  // A collapsed container's compact coordinates are display-only. Its own
+  // nested grid stays inactive until an explicit edit interaction expands it.
+  const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
+  const canvasAttributes =
+    isEditMode && !isInteractionDisabled
+      ? getEditableCanvasAttributes({ label, columnCount, rowCount })
+      : getReadonlyCanvasAttributes({ label });
+  const editorClassName = combineClasses("board-grid-editor", classes.editorGrid);
+  const expandCollapsedSectionsForPointerEdit = (event: PointerEvent<HTMLDivElement>) => {
+    if (!isEditMode || directCollapsedIds.size === 0 || event.button !== 0) return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const entry = target.closest('[data-editor-grid-entry="true"]');
+    if (!entry || !event.currentTarget.contains(entry)) return;
+    if (!target.closest(".board-grid-resize-handle") && target.closest(INTERACTIVE_GRID_SELECTOR)) return;
+    expandSectionsForEditing(directCollapsedIds);
+  };
+  const expandCollapsedSectionsForKeyboardEdit = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!isEditMode || directCollapsedIds.size === 0 || !EDIT_ACTIVATION_KEYS.has(event.key)) return;
+    const target = event.target;
+    if (!(target instanceof Element) || !target.matches('[data-editor-grid-entry="true"]')) return;
+    expandSectionsForEditing(directCollapsedIds);
+  };
+
+  useLayoutEffect(() => {
+    const host = editorHostRef.current;
+    if (!host) return;
+
+    return editorRegistry.register({
+      host,
+      disabled: isInteractionDisabled,
+      sectionId: section.id,
+      section,
+      items: displayedItems,
+      innerSections: displayedInnerSections,
+      columnCount,
+      rowCount,
+      maxRowCount,
+      placements: displayPlacements,
+      transactionPlacements: placements,
+      className: editorClassName,
+      entryElementStore,
+    });
+  }, [
+    columnCount,
+    displayPlacements,
+    displayedInnerSections,
+    displayedItems,
+    editorClassName,
+    editorRegistry,
+    entryElementStore,
+    isInteractionDisabled,
+    maxRowCount,
+    placements,
+    rowCount,
+    section,
+  ]);
 
   const viewportRef = useRef<HTMLDivElement>(null);
   const previousItemIdsRef = useRef<Set<string> | null>(null);
@@ -170,14 +226,20 @@ export const SectionGrid = ({
         ref={viewportRef}
         {...canvasAttributes}
         className={combineClasses(classes.viewport, isScrollableContainer && classes.scrollableViewport, className)}
-        style={{
-          width: logicalWidth,
-          height: `var(--board-grid-drag-height, ${viewportHeight}px)`,
-        }}
+        style={
+          {
+            width: logicalWidth,
+            height: `var(--board-grid-drag-height, ${viewportHeight}px)`,
+            "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
+          } as CSSProperties
+        }
         data-section-id={section.id}
         data-section-kind={section.kind}
         data-rail-placement={railPlacement}
         data-scrollable={isScrollableContainer ? "true" : undefined}
+        data-grid-interaction-disabled={isEditMode && isInteractionDisabled ? "true" : undefined}
+        onPointerDownCapture={expandCollapsedSectionsForPointerEdit}
+        onKeyDownCapture={expandCollapsedSectionsForKeyboardEdit}
       >
         <Box
           className={classes.staticGrid}
@@ -216,19 +278,18 @@ const useMinimumViewportRowCount = (enabled: boolean, canvasScale: number) => {
   return enabled ? getGridRowCountForVisualHeight(visualHeight, canvasScale) : 0;
 };
 
-const getContainerMinimumSize = (
-  board: ReturnType<typeof useRequiredBoard>,
-  layoutId: string,
-  sectionId: string,
-  visited = new Set<string>(),
-): { width: number; height: number } => {
-  if (visited.has(sectionId)) return { width: 1, height: 1 };
-  const nextVisited = new Set(visited).add(sectionId);
-  const section = board.sections.find((candidate) => candidate.id === sectionId);
-  // A scrollable container isn't forced to grow with its content - it scrolls internally instead,
-  // so it shouldn't have a content-derived height floor imposed by its parent's grid.
-  const isScrollable = section?.kind === "container" && section.options.scrollable;
-  const directItems: PlacementBounds[] = board.items.flatMap((item) => {
+const containerMinimumSizeCache = new WeakMap<
+  ReturnType<typeof useRequiredBoard>,
+  Map<string, ReadonlyMap<string, { width: number; height: number }>>
+>();
+
+const getContainerMinimumSizes = (board: ReturnType<typeof useRequiredBoard>, layoutId: string) => {
+  const cachedByLayout = containerMinimumSizeCache.get(board);
+  const cached = cachedByLayout?.get(layoutId);
+  if (cached) return cached;
+
+  const directItemsBySectionId = new Map<string, PlacementBounds[]>();
+  for (const item of board.items) {
     const layout = item.layouts.find((candidate) => candidate.layoutId === layoutId);
     if (!layout) continue;
     const entries = directItemsBySectionId.get(layout.sectionId) ?? [];
@@ -236,9 +297,46 @@ const getContainerMinimumSize = (
     directItemsBySectionId.set(layout.sectionId, entries);
   }
 
-  return {
-    width: Math.max(1, ...children.map((child) => child.xOffset + child.width)),
-    height: isScrollable ? 1 : Math.max(1, ...children.map((child) => child.yOffset + child.height)),
+  const directSectionsBySectionId = new Map<string, { id: string; placement: PlacementBounds }[]>();
+  for (const section of board.sections) {
+    if (section.kind !== "container") continue;
+    const layout = section.layouts.find((candidate) => candidate.layoutId === layoutId);
+    if (!layout) continue;
+    const entries = directSectionsBySectionId.get(layout.parentSectionId) ?? [];
+    entries.push({ id: section.id, placement: layout });
+    directSectionsBySectionId.set(layout.parentSectionId, entries);
+  }
+
+  const minimumBySectionId = new Map<string, { width: number; height: number }>();
+  const visiting = new Set<string>();
+  const resolve = (sectionId: string): { width: number; height: number } => {
+    const existing = minimumBySectionId.get(sectionId);
+    if (existing) return existing;
+    if (visiting.has(sectionId)) return { width: 1, height: 1 };
+    visiting.add(sectionId);
+
+    const section = board.sections.find((candidate) => candidate.id === sectionId);
+    // A scrollable container isn't forced to grow with its content - it scrolls internally instead,
+    // so it shouldn't have a content-derived height floor imposed by its parent's grid.
+    const isScrollable = section?.kind === "container" && section.options.scrollable;
+
+    const itemBounds = directItemsBySectionId.get(sectionId) ?? [];
+    const sectionBounds = (directSectionsBySectionId.get(sectionId) ?? []).map(({ id, placement }) => {
+      const minimum = resolve(id);
+      return {
+        ...placement,
+        width: Math.max(placement.width, minimum.width),
+        height: Math.max(placement.height, minimum.height),
+      };
+    });
+    const children = [...itemBounds, ...sectionBounds];
+    const minimum = {
+      width: Math.max(1, ...children.map((child) => child.xOffset + child.width)),
+      height: isScrollable ? 1 : Math.max(1, ...children.map((child) => child.yOffset + child.height)),
+    };
+    visiting.delete(sectionId);
+    minimumBySectionId.set(sectionId, minimum);
+    return minimum;
   };
 
   for (const section of board.sections) {
