@@ -1,5 +1,3 @@
-// @vitest-environment jsdom
-
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import type { PersistedClient } from "@tanstack/react-query-persist-client";
 import { persistQueryClientRestore } from "@tanstack/react-query-persist-client";
