@@ -86,23 +86,8 @@ test("SQLite migrations seed the redesigned demo dashboard", async () => {
 
     const mainSection = board.sections.find((section) => section.kind === "empty" && section.xOffset === 0);
     const rightSection = board.sections.find((section) => section.kind === "empty" && section.xOffset === 1);
-    const networkSection = board.sections.find((section) => section.kind === "container");
-    if (!mainSection || !rightSection || !networkSection) throw new Error("Demo board sections were not seeded");
-
-    const networkLayout = networkSection.layouts.find((layout) => layout.layoutId === baseLayout.id);
-    expect(networkLayout).toMatchObject({
-      parentSectionId: mainSection.id,
-      xOffset: 3,
-      yOffset: 5,
-      width: 6,
-      height: 6,
-    });
-    if (!networkSection.options) throw new Error("Demo network section options were not seeded");
-    expect(SuperJSON.parse<{ title: string; collapsible: boolean }>(networkSection.options)).toMatchObject({
-      title: "Network stuff",
-      collapsible: false,
-    });
-    expect(networkSection.collapseStates).toEqual([]);
+    if (!mainSection || !rightSection) throw new Error("Demo board sections were not seeded");
+    expect(board.sections.some((section) => section.kind === "container")).toBe(false);
 
     const itemByKind = (kind: string) => board.items.find((item) => item.kind === kind);
     const expectItemLayout = (
@@ -135,11 +120,11 @@ test("SQLite migrations seed the redesigned demo dashboard", async () => {
     expectItemLayout("mediaReleases", 4, 11, 4, 3);
     expectItemLayout("customApi", 8, 11, 4, 3);
 
-    expectItemLayout("healthMonitoring", 0, 0, 6, 2, networkSection.id);
-    expectItemLayout("dnsHoleSummary", 0, 2, 3, 2, networkSection.id);
-    expectItemLayout("beszelSystemStats", 3, 2, 3, 2, networkSection.id);
-    expectItemLayout("notifications", 0, 4, 2, 2, networkSection.id);
-    expectItemLayout("beszelAlerts", 2, 4, 4, 2, networkSection.id);
+    expectItemLayout("healthMonitoring", 3, 5, 6, 2);
+    expectItemLayout("dnsHoleSummary", 3, 7, 3, 2);
+    expectItemLayout("beszelSystemStats", 6, 7, 3, 2);
+    expectItemLayout("notifications", 3, 9, 2, 2);
+    expectItemLayout("beszelAlerts", 5, 9, 4, 2);
 
     for (const kind of ["weather", "airQuality"]) {
       const item = itemByKind(kind);
@@ -168,8 +153,7 @@ test("SQLite migrations seed the redesigned demo dashboard", async () => {
     const mainItemLayouts = board.items.flatMap((item) =>
       item.layouts.filter((layout) => layout.layoutId === baseLayout.id && layout.sectionId === mainSection.id),
     );
-    if (!networkLayout) throw new Error("Demo network section layout was not seeded");
-    expectFilledGrid([...mainItemLayouts, networkLayout], 12);
+    expectFilledGrid(mainItemLayouts, 12);
 
     const rightRailItems = board.items.filter((item) =>
       item.layouts.some((layout) => layout.layoutId === baseLayout.id && layout.sectionId === rightSection.id),
@@ -204,17 +188,6 @@ test("SQLite migrations seed the redesigned demo dashboard", async () => {
       })),
     );
     expectFilledGrid(rightRailLayouts, 1);
-
-    const networkItems = board.items.filter((item) =>
-      item.layouts.some((layout) => layout.layoutId === baseLayout.id && layout.sectionId === networkSection.id),
-    );
-    expect(networkItems.map((item) => item.kind).toSorted()).toEqual(
-      ["beszelAlerts", "beszelSystemStats", "dnsHoleSummary", "healthMonitoring", "notifications"].toSorted(),
-    );
-    const networkItemLayouts = networkItems.flatMap((item) =>
-      item.layouts.filter((layout) => layout.layoutId === baseLayout.id && layout.sectionId === networkSection.id),
-    );
-    expectFilledGrid(networkItemLayouts, 6);
 
     const workshopDefinition = await database.query.customWidgetDefinitions.findFirst({
       where: (table, { eq }) => eq(table.creatorId, demoUser.id),

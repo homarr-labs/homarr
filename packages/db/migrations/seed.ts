@@ -514,7 +514,7 @@ const seedDefaultBoardAsync = async (db: Database) => {
 
 interface DemoWidget {
   kind: WidgetKind;
-  section?: "network" | "right";
+  section?: "right";
   xOffset: number;
   yOffset: number;
   width: number;
@@ -665,7 +665,7 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
   { kind: "beszelSystemGrid", xOffset: 5, yOffset: 2, width: 4, height: 3, needsIntegration: true },
   { kind: "assistant", xOffset: 9, yOffset: 2, width: 3, height: 3, needsIntegration: false },
 
-  // Around the centered network container
+  // Operations center
   { kind: "mediaRequests-requestList", xOffset: 0, yOffset: 5, width: 3, height: 2, needsIntegration: true },
   { kind: "mediaMissing", xOffset: 9, yOffset: 5, width: 3, height: 2, needsIntegration: true },
   { kind: "mediaServer", xOffset: 0, yOffset: 7, width: 3, height: 2, needsIntegration: true },
@@ -701,21 +701,19 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
     options: { definitionId: customWidgetDefinitionId, refreshInterval: 300 },
   },
 
-  // Network stuff container
+  // Network and health
   {
     kind: "healthMonitoring",
-    section: "network",
-    xOffset: 0,
-    yOffset: 0,
+    xOffset: 3,
+    yOffset: 5,
     width: 6,
     height: 2,
     needsIntegration: true,
   },
   {
     kind: "dnsHoleSummary",
-    section: "network",
-    xOffset: 0,
-    yOffset: 2,
+    xOffset: 3,
+    yOffset: 7,
     width: 3,
     height: 2,
     needsIntegration: true,
@@ -723,15 +721,14 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
   },
   {
     kind: "beszelSystemStats",
-    section: "network",
-    xOffset: 3,
-    yOffset: 2,
+    xOffset: 6,
+    yOffset: 7,
     width: 3,
     height: 2,
     needsIntegration: true,
   },
-  { kind: "notifications", section: "network", xOffset: 0, yOffset: 4, width: 2, height: 2, needsIntegration: true },
-  { kind: "beszelAlerts", section: "network", xOffset: 2, yOffset: 4, width: 4, height: 2, needsIntegration: true },
+  { kind: "notifications", xOffset: 3, yOffset: 9, width: 2, height: 2, needsIntegration: true },
+  { kind: "beszelAlerts", xOffset: 5, yOffset: 9, width: 4, height: 2, needsIntegration: true },
 
   // Right app rail
   ...appIds.map(
@@ -886,22 +883,6 @@ const seedDemoUserAsync = async (db: Database) => {
     boardId,
   });
 
-  const networkSectionId = createId();
-  await db.insert(sections).values({
-    id: networkSectionId,
-    kind: "container",
-    boardId,
-    options: SuperJSON.stringify({
-      title: "Network stuff",
-      customCssClasses: [],
-      borderColor: "",
-      showLabel: true,
-      collapsible: false,
-      showOpenAll: false,
-      scrollable: false,
-    }),
-  });
-
   const layoutId = createId();
   await db.insert(layouts).values({
     id: layoutId,
@@ -913,23 +894,11 @@ const seedDemoUserAsync = async (db: Database) => {
     boardId,
   });
 
-  await db.insert(sectionLayouts).values({
-    sectionId: networkSectionId,
-    layoutId,
-    parentSectionId: mainSectionId,
-    xOffset: 3,
-    yOffset: 5,
-    width: 6,
-    height: 6,
-  });
-
   const demoWidgets = buildDemoWidgets(appIds, customWidgetDefinitionId);
   for (const widget of demoWidgets) {
     let sectionId = mainSectionId;
     if (widget.section === "right") {
       sectionId = rightSectionId;
-    } else if (widget.section === "network") {
-      sectionId = networkSectionId;
     }
 
     const itemId = createId();
