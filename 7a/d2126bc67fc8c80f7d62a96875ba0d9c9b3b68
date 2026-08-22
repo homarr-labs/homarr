@@ -1,0 +1,21 @@
+apps/nextjs/src/app/[locale]/_client-providers/query-persistence.ts
+  s_148a12b92c3c12::t_aa199561aa8063 79
+apps/nextjs/src/app/[locale]/_client-providers/query-persistence.spec.ts
+  s_148a12b92c3c12::t_8899fef1279916 142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "7ad2126bc67fc8c80f7d62a96875ba0d9c9b3b68",
+  "prompts": {},
+  "sessions": {
+    "s_148a12b92c3c12": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0297c-9284-73f1-b444-a10db89df09a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
