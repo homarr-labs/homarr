@@ -5,8 +5,8 @@
 }
 
 .errorIndicator {
-  top: calc(var(--mantine-spacing-md) + var(--mantine-spacing-xl));
-  inset-inline-end: 4px;
+  top: 4px;
+  inset-inline-start: 4px;
   z-index: 1;
   padding: 2px;
   border: 1px solid rgb(from var(--mantine-primary-color-filled) r g b / calc(var(--opacity, 1) * 0.45));
