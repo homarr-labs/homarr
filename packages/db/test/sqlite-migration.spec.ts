@@ -45,6 +45,196 @@ test("SQLite migrations seed the five disabled bundled custom widgets", async ()
   connection.close();
 });
 
+test("SQLite migrations seed the redesigned demo dashboard", async () => {
+  const previousDemoMode = process.env.DEMO_MODE;
+  process.env.DEMO_MODE = "true";
+  const connection = new BetterSqlite3(":memory:");
+  const database = drizzle(connection, { schema: sqliteSchema, casing: DB_CASING });
+
+  try {
+    migrate(database, { migrationsFolder: path.join(__dirname, "..", "migrations", "sqlite") });
+    await seedDataAsync(database as unknown as Database);
+
+    const demoUser = await database.query.users.findFirst({
+      where: (table, { eq }) => eq(table.name, "demo"),
+    });
+    if (!demoUser?.homeBoardId) throw new Error("Demo user or home board was not seeded");
+
+    const board = await database.query.boards.findFirst({
+      where: (table, { eq }) => eq(table.id, demoUser.homeBoardId ?? ""),
+      with: {
+        layouts: true,
+        sections: { with: { collapseStates: true, layouts: true } },
+        items: { with: { layouts: true } },
+      },
+    });
+    if (!board) throw new Error("Demo board was not seeded");
+
+    expect(board).toMatchObject({
+      pageTitle: "Homarr demo",
+      backgroundImageUrl: "/images/demo-dashboard-background.svg",
+    });
+    expect(board.layouts).toHaveLength(2);
+    expect(board.layouts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ columnCount: 13, rightGutterColumnCount: 1, role: "base" }),
+        expect.objectContaining({ columnCount: 3, rightGutterColumnCount: 0, role: "mobile" }),
+      ]),
+    );
+    const baseLayout = board.layouts.find((layout) => layout.role === "base");
+    if (!baseLayout) throw new Error("Demo base layout was not seeded");
+
+    const mainSection = board.sections.find((section) => section.kind === "empty" && section.xOffset === 0);
+    const rightSection = board.sections.find((section) => section.kind === "empty" && section.xOffset === 1);
+    const networkSection = board.sections.find((section) => section.kind === "container");
+    if (!mainSection || !rightSection || !networkSection) throw new Error("Demo board sections were not seeded");
+
+    const networkLayout = networkSection.layouts.find((layout) => layout.layoutId === baseLayout.id);
+    expect(networkLayout).toMatchObject({
+      parentSectionId: mainSection.id,
+      xOffset: 3,
+      yOffset: 5,
+      width: 6,
+      height: 6,
+    });
+    if (!networkSection.options) throw new Error("Demo network section options were not seeded");
+    expect(SuperJSON.parse<{ title: string; collapsible: boolean }>(networkSection.options)).toMatchObject({
+      title: "Network stuff",
+      collapsible: false,
+    });
+    expect(networkSection.collapseStates).toEqual([]);
+
+    const itemByKind = (kind: string) => board.items.find((item) => item.kind === kind);
+    const expectItemLayout = (
+      kind: string,
+      xOffset: number,
+      yOffset: number,
+      width: number,
+      height: number,
+      sectionId = mainSection.id,
+    ) => {
+      const layout = itemByKind(kind)?.layouts.find((candidate) => candidate.layoutId === baseLayout.id);
+      expect(layout).toMatchObject({ sectionId, xOffset, yOffset, width, height });
+    };
+    expectItemLayout("calendar", 0, 0, 2, 2);
+    expectItemLayout("weather", 2, 0, 2, 2);
+    expectItemLayout("clock", 4, 0, 1, 2);
+    expectItemLayout("timer", 5, 0, 2, 1);
+    expectItemLayout("airQuality", 5, 1, 2, 1);
+    expectItemLayout("downloads", 7, 0, 5, 2);
+    expectItemLayout("notebook", 0, 2, 5, 3);
+    expectItemLayout("beszelSystemGrid", 5, 2, 4, 3);
+    expectItemLayout("assistant", 9, 2, 3, 3);
+    expectItemLayout("mediaRequests-requestList", 0, 5, 3, 2);
+    expectItemLayout("mediaMissing", 9, 5, 3, 2);
+    expectItemLayout("mediaServer", 0, 7, 3, 2);
+    expectItemLayout("mediaRequests-requestStats", 9, 7, 3, 2);
+    expectItemLayout("rssFeed", 0, 9, 3, 2);
+    expectItemLayout("indexerManager", 9, 9, 3, 2);
+    expectItemLayout("dockerContainers", 0, 11, 4, 3);
+    expectItemLayout("mediaReleases", 4, 11, 4, 3);
+    expectItemLayout("customApi", 8, 11, 4, 3);
+
+    expectItemLayout("healthMonitoring", 0, 0, 6, 2, networkSection.id);
+    expectItemLayout("dnsHoleSummary", 0, 2, 3, 2, networkSection.id);
+    expectItemLayout("beszelSystemStats", 3, 2, 3, 2, networkSection.id);
+    expectItemLayout("notifications", 0, 4, 2, 2, networkSection.id);
+    expectItemLayout("beszelAlerts", 2, 4, 4, 2, networkSection.id);
+
+    for (const kind of ["weather", "airQuality"]) {
+      const item = itemByKind(kind);
+      if (!item?.options) throw new Error(`Demo ${kind} options were not seeded`);
+      expect(SuperJSON.parse<{ location: { name: string } }>(item.options).location.name).toBe("Paris");
+    }
+
+    const expectFilledGrid = (
+      placements: { xOffset: number; yOffset: number; width: number; height: number }[],
+      columnCount: number,
+    ) => {
+      const rowCount = Math.max(...placements.map((placement) => placement.yOffset + placement.height));
+      const cells = Array.from({ length: rowCount }, () => Array<number>(columnCount).fill(0));
+      for (const placement of placements) {
+        for (let y = placement.yOffset; y < placement.yOffset + placement.height; y += 1) {
+          for (let x = placement.xOffset; x < placement.xOffset + placement.width; x += 1) {
+            const row = cells[y];
+            if (!row) throw new Error("Demo placement exceeds the grid height");
+            row[x] = (row[x] ?? 0) + 1;
+          }
+        }
+      }
+      expect(cells.every((row) => row.length === columnCount && row.every((cell) => cell === 1))).toBe(true);
+    };
+
+    const mainItemLayouts = board.items.flatMap((item) =>
+      item.layouts.filter((layout) => layout.layoutId === baseLayout.id && layout.sectionId === mainSection.id),
+    );
+    if (!networkLayout) throw new Error("Demo network section layout was not seeded");
+    expectFilledGrid([...mainItemLayouts, networkLayout], 12);
+
+    const rightRailItems = board.items.filter((item) =>
+      item.layouts.some((layout) => layout.layoutId === baseLayout.id && layout.sectionId === rightSection.id),
+    );
+    expect(rightRailItems).toHaveLength(12);
+    const rightRailLayouts = rightRailItems.flatMap((item) =>
+      item.layouts.filter((layout) => layout.layoutId === baseLayout.id && layout.sectionId === rightSection.id),
+    );
+    expect(
+      rightRailItems.every((item) => {
+        const layout = item.layouts.find((candidate) => candidate.layoutId === baseLayout.id);
+        return item.kind === "app" && layout?.width === 1 && layout.height === 1;
+      }),
+    ).toBe(true);
+    expect(
+      rightRailLayouts
+        .toSorted((first, second) => first.yOffset - second.yOffset)
+        .map(({ sectionId, xOffset, yOffset, width, height }) => ({
+          sectionId,
+          xOffset,
+          yOffset,
+          width,
+          height,
+        })),
+    ).toEqual(
+      Array.from({ length: 12 }, (_, yOffset) => ({
+        sectionId: rightSection.id,
+        xOffset: 0,
+        yOffset,
+        width: 1,
+        height: 1,
+      })),
+    );
+    expectFilledGrid(rightRailLayouts, 1);
+
+    const networkItems = board.items.filter((item) =>
+      item.layouts.some((layout) => layout.layoutId === baseLayout.id && layout.sectionId === networkSection.id),
+    );
+    expect(networkItems.map((item) => item.kind).toSorted()).toEqual(
+      ["beszelAlerts", "beszelSystemStats", "dnsHoleSummary", "healthMonitoring", "notifications"].toSorted(),
+    );
+    const networkItemLayouts = networkItems.flatMap((item) =>
+      item.layouts.filter((layout) => layout.layoutId === baseLayout.id && layout.sectionId === networkSection.id),
+    );
+    expectFilledGrid(networkItemLayouts, 6);
+
+    const workshopDefinition = await database.query.customWidgetDefinitions.findFirst({
+      where: (table, { eq }) => eq(table.creatorId, demoUser.id),
+    });
+    if (!workshopDefinition) throw new Error("Demo Workshop definition was not seeded");
+    expect(workshopDefinition.name).toBe("Community Workshop");
+    expect(SuperJSON.parse<Record<string, { baseUrl: string }>>(workshopDefinition.sources).default?.baseUrl).toBe(
+      "https://v2.preview.homarr.dev",
+    );
+
+    const workshopItem = itemByKind("customApi");
+    if (!workshopItem) throw new Error("Demo Workshop item was not seeded");
+    expect(SuperJSON.parse<{ definitionId: string }>(workshopItem.options).definitionId).toBe(workshopDefinition.id);
+  } finally {
+    connection.close();
+    if (previousDemoMode === undefined) delete process.env.DEMO_MODE;
+    else process.env.DEMO_MODE = previousDemoMode;
+  }
+});
+
 test("Custom Widget v2 migration preserves v1 data and board references", () => {
   const connection = new BetterSqlite3(":memory:");
   const legacyPlacementOptions = SuperJSON.stringify({ definitionId: "legacy-weather", refreshInterval: 30 });
