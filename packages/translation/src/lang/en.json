@@ -3012,12 +3012,10 @@
           "label": "Animate weather icons"
         },
         "showHumidity": {
-          "label": "Show humidity",
-          "description": "Display humidity in current conditions, hourly details and daily forecasts"
+          "label": "Show humidity"
         },
         "showCurrentWindSpeed": {
-          "label": "Show current wind speed",
-          "description": "Only on current weather"
+          "label": "Show current wind speed"
         },
         "useImperialSpeed": {
           "label": "Use mph for windspeed"
