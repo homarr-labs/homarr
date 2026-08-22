@@ -45,6 +45,111 @@ test("SQLite migrations seed the five disabled bundled custom widgets", async ()
   connection.close();
 });
 
+test("SQLite migrations seed the redesigned demo dashboard", async () => {
+  const previousDemoMode = process.env.DEMO_MODE;
+  process.env.DEMO_MODE = "true";
+  const connection = new BetterSqlite3(":memory:");
+  const database = drizzle(connection, { schema: sqliteSchema, casing: DB_CASING });
+
+  try {
+    migrate(database, { migrationsFolder: path.join(__dirname, "..", "migrations", "sqlite") });
+    await seedDataAsync(database as unknown as Database);
+
+    const demoUser = await database.query.users.findFirst({
+      where: (table, { eq }) => eq(table.name, "demo"),
+    });
+    if (!demoUser?.homeBoardId) throw new Error("Demo user or home board was not seeded");
+
+    const board = await database.query.boards.findFirst({
+      where: (table, { eq }) => eq(table.id, demoUser.homeBoardId ?? ""),
+      with: {
+        layouts: true,
+        sections: { with: { collapseStates: true, layouts: true } },
+        items: { with: { layouts: true } },
+      },
+    });
+    if (!board) throw new Error("Demo board was not seeded");
+
+    expect(board).toMatchObject({
+      pageTitle: "Homarr demo",
+      backgroundImageUrl: "/images/demo-dashboard-background.svg",
+    });
+    expect(board.layouts).toHaveLength(2);
+    expect(board.layouts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ columnCount: 13, rightGutterColumnCount: 1, role: "base" }),
+        expect.objectContaining({ columnCount: 3, rightGutterColumnCount: 0, role: "mobile" }),
+      ]),
+    );
+    const baseLayout = board.layouts.find((layout) => layout.role === "base");
+    if (!baseLayout) throw new Error("Demo base layout was not seeded");
+
+    const mainSection = board.sections.find((section) => section.kind === "empty" && section.xOffset === 0);
+    const rightSection = board.sections.find((section) => section.kind === "empty" && section.xOffset === 1);
+    const networkSection = board.sections.find((section) => section.kind === "container");
+    if (!mainSection || !rightSection || !networkSection) throw new Error("Demo board sections were not seeded");
+
+    expect(networkSection.layouts.find((layout) => layout.layoutId === baseLayout.id)).toMatchObject({
+      parentSectionId: mainSection.id,
+      xOffset: 3,
+      yOffset: 5,
+      width: 6,
+      height: 6,
+    });
+    expect(networkSection.collapseStates).toEqual([expect.objectContaining({ userId: demoUser.id, collapsed: true })]);
+
+    const itemByKind = (kind: string) => board.items.find((item) => item.kind === kind);
+    const expectItemLayout = (kind: string, width: number, height: number) => {
+      const layout = itemByKind(kind)?.layouts.find((candidate) => candidate.layoutId === baseLayout.id);
+      expect(layout).toMatchObject({ width, height });
+    };
+    expectItemLayout("calendar", 2, 2);
+    expectItemLayout("downloads", 5, 2);
+    expectItemLayout("dockerContainers", 4, 3);
+    expectItemLayout("mediaServer", 3, 2);
+    expectItemLayout("beszelSystemGrid", 4, 3);
+
+    const rightRailItems = board.items.filter((item) =>
+      item.layouts.some((layout) => layout.layoutId === baseLayout.id && layout.sectionId === rightSection.id),
+    );
+    expect(rightRailItems).toHaveLength(12);
+    expect(
+      rightRailItems.every((item) => {
+        const layout = item.layouts.find((candidate) => candidate.layoutId === baseLayout.id);
+        return item.kind === "app" && layout?.width === 1 && layout.height === 1;
+      }),
+    ).toBe(true);
+
+    const networkItems = board.items.filter((item) =>
+      item.layouts.some((layout) => layout.layoutId === baseLayout.id && layout.sectionId === networkSection.id),
+    );
+    expect(networkItems.map((item) => item.kind).toSorted()).toEqual(
+      ["beszelAlerts", "beszelSystemStats", "dnsHoleSummary", "healthMonitoring", "notifications"].toSorted(),
+    );
+    const notificationsLayout = networkItems
+      .find((item) => item.kind === "notifications")
+      ?.layouts.find((layout) => layout.layoutId === baseLayout.id);
+    expect(notificationsLayout).toMatchObject({ width: 2, height: 2 });
+
+    const workshopDefinition = await database.query.customWidgetDefinitions.findFirst({
+      where: (table, { eq }) => eq(table.creatorId, demoUser.id),
+    });
+    if (!workshopDefinition) throw new Error("Demo Workshop definition was not seeded");
+    expect(workshopDefinition.name).toBe("Community Workshop");
+    expect(SuperJSON.parse<Record<string, { baseUrl: string }>>(workshopDefinition.sources).default?.baseUrl).toBe(
+      "https://homarr.dev",
+    );
+
+    const workshopItem = itemByKind("customApi");
+    if (!workshopItem) throw new Error("Demo Workshop item was not seeded");
+    expect(SuperJSON.parse<{ definitionId: string }>(workshopItem.options).definitionId).toBe(workshopDefinition.id);
+  } finally {
+    connection.close();
+    if (previousDemoMode === undefined) delete process.env.DEMO_MODE;
+    else process.env.DEMO_MODE = previousDemoMode;
+  }
+});
+
 test("Custom Widget v2 migration preserves v1 data and board references", () => {
   const connection = new BetterSqlite3(":memory:");
   const legacyPlacementOptions = SuperJSON.stringify({ definitionId: "legacy-weather", refreshInterval: 30 });

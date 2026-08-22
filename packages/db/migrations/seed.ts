@@ -819,7 +819,7 @@ const seedDemoUserAsync = async (db: Database) => {
     sources: {
       default: {
         name: "Homarr Workshop",
-        baseUrl: "https://v2.preview.homarr.dev",
+        baseUrl: "https://homarr.dev",
         networkScope: "public",
         auth: "none",
       },
