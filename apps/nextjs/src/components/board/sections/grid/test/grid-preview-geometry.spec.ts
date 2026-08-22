@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "vitest";
 
-import { getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
+import { getLogicalGridSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 
 import { createGridPreviewDomState, syncGridPreviewGeometry } from "../grid-preview-geometry";
 
@@ -65,8 +65,8 @@ describe("grid preview geometry", () => {
     expect(active?.getAttribute("data-grid-preview")).toBe("true");
     expect(active?.style.getPropertyValue("--board-grid-preview-x")).toBe(`${LOGICAL_GRID_PITCH}px`);
     expect(active?.style.getPropertyValue("--board-grid-preview-y")).toBe(`${LOGICAL_GRID_PITCH}px`);
-    expect(active?.style.getPropertyValue("--board-grid-preview-width")).toBe(`${getLogicalTrackSize(3)}px`);
-    expect(active?.style.getPropertyValue("--board-grid-preview-height")).toBe(`${getLogicalTrackSize(4)}px`);
+    expect(active?.style.getPropertyValue("--board-grid-preview-width")).toBe(`${getLogicalGridSize(3)}px`);
+    expect(active?.style.getPropertyValue("--board-grid-preview-height")).toBe(`${getLogicalGridSize(4)}px`);
     expect(active?.dataset.gridW).toBe("3");
     expect(active?.dataset.gridH).toBe("4");
   });
