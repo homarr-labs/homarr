@@ -5,8 +5,8 @@
   align-items: start;
 }
 
-.workspace[data-with-preview] {
-  grid-template-columns: minmax(0, 3fr) minmax(34rem, 2fr);
+.workspace[data-with-preview][data-with-settings] {
+  grid-template-columns: minmax(0, 3fr) auto minmax(34rem, 2fr);
 }
 
 .previewPanel {
@@ -28,7 +28,8 @@
 
 .previewCanvas {
   position: relative;
-  align-self: center;
+  width: 100%;
+  height: clamp(24rem, calc(100dvh - 17rem), 44rem);
   padding: var(--mantine-spacing-lg);
   overflow: hidden;
   border: 1px solid var(--mantine-color-default-border);
@@ -38,6 +39,11 @@
     linear-gradient(to right, color-mix(in srgb, var(--mantine-color-dimmed) 14%, transparent) 1px, transparent 1px),
     linear-gradient(to bottom, color-mix(in srgb, var(--mantine-color-dimmed) 14%, transparent) 1px, transparent 1px);
   background-size: 2rem 2rem;
+}
+
+.previewDivider {
+  height: auto;
+  align-self: stretch;
 }
 
 .previewViewport {
@@ -76,6 +82,10 @@
   padding-right: 0.25rem;
   overflow-y: auto;
   scrollbar-gutter: stable;
+}
+
+.settingsForm {
+  min-width: 0;
 }
 
 .fullWidthField {
@@ -142,13 +152,21 @@
 }
 
 @media (max-width: 68em) {
-  .workspace[data-with-preview] {
+  .workspace[data-with-preview][data-with-settings] {
     grid-template-columns: 1fr;
   }
 
   .previewPanel {
     position: static;
     max-width: 44rem;
+  }
+
+  .previewDivider {
+    display: none;
+  }
+
+  .previewCanvas {
+    height: 24rem;
   }
 
   .settingsPanel {
