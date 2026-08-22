@@ -121,8 +121,6 @@ export function Notebook({
   }, [options.allowReadOnlyCheck]);
 
   const { primaryColor } = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
-
   const { mutateAsync, isPending: isSaving } = clientApi.widget.notebook.updateContent.useMutation({
     scope: { id: `notebook-content:${boardId ?? "preview"}:${itemId ?? "preview"}` },
   });
@@ -360,9 +358,9 @@ export function Notebook({
           isEditing && !isSaving ? getHotkeyHandler([[hotkeys.saveNotebook, () => void handleEditToggle()]]) : undefined
         }
         editor={editor}
-        styles={(theme) => ({
+        styles={() => ({
           root: {
-            backgroundColor: colorScheme === "dark" ? theme.colors.dark[6] : "white",
+            backgroundColor: "transparent",
             border: "none",
             borderRadius: "0.5rem",
             display: "flex",
@@ -371,6 +369,8 @@ export function Notebook({
           },
           toolbar: {
             backgroundColor: "transparent",
+            borderColor:
+              "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))",
             padding: "0.5rem",
           },
           content: {
@@ -390,7 +390,7 @@ export function Notebook({
             overflowY: display.toolbarMaxHeight === undefined ? undefined : "auto",
           }}
         >
-          <RichTextEditor.ControlsGroup>
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
             <RichTextEditor.Bold title={tControls("bold")} />
             <RichTextEditor.Italic title={tControls("italic")} />
             <RichTextEditor.Strikethrough title={tControls("strikethrough")} />
@@ -401,14 +401,14 @@ export function Notebook({
             <RichTextEditor.ClearFormatting title={tControls("clear")} />
           </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ControlsGroup>
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
             <RichTextEditor.H1 title={tControls("heading", { level: "1" })} />
             <RichTextEditor.H2 title={tControls("heading", { level: "2" })} />
             <RichTextEditor.H3 title={tControls("heading", { level: "3" })} />
             <RichTextEditor.H4 title={tControls("heading", { level: "4" })} />
           </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ControlsGroup>
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
             <RichTextEditor.AlignLeft
               title={tControls("align", {
                 position: t("align.left"),
@@ -442,12 +442,12 @@ export function Notebook({
             </RichTextEditor.Control>
           </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ControlsGroup>
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
             <RichTextEditor.Blockquote title={tControls("blockquote")} />
             <RichTextEditor.Hr title={tControls("horizontalLine")} />
           </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ControlsGroup>
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
             <RichTextEditor.BulletList title={tControls("bulletList")} />
             <RichTextEditor.OrderedList title={tControls("orderedList")} />
             <TaskListToggle />
@@ -461,13 +461,13 @@ export function Notebook({
             )}
           </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ControlsGroup>
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
             <RichTextEditor.Link title={tControls("link")} />
             <RichTextEditor.Unlink title={tControls("unlink")} />
             <EmbedImage />
           </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ControlsGroup>
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
             <TableToggle />
             {editor?.isActive("table") && (
               <>
@@ -483,7 +483,7 @@ export function Notebook({
             )}
           </RichTextEditor.ControlsGroup>
 
-          <RichTextEditor.ControlsGroup>
+          <RichTextEditor.ControlsGroup className="homarr-notebook-toolbar-group">
             <RichTextEditor.Undo />
             <RichTextEditor.Redo />
           </RichTextEditor.ControlsGroup>

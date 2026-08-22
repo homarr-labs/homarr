@@ -11,6 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 import type { Board, ContainerSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 import { getLayoutRowCount } from "../layout";
 import { resolvePinnedGridCollisions } from "../sections/grid/dnd";
+import { useRegisteredGridEditors } from "../sections/grid/grid-editor-registry";
 import { getSectionGridColumnCount, getSectionGridPlacements } from "../sections/grid/section-grid-placements";
 import type { CommitSectionGridInput, SectionGridPlacement } from "../sections/grid/use-grid-layout-actions";
 import { useGridLayoutActions } from "../sections/grid/use-grid-layout-actions";
@@ -57,26 +58,29 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
   const tContainer = useI18n("section.container");
   const tMoveResize = useI18n("item.moveResize");
   const { board, commitSectionGrids, currentLayoutId, entry, sourceSectionId } = innerProps;
+  const registeredGridEditors = useRegisteredGridEditors();
   const minimumSize = useMemo(
     () => getEntryMinimumSize(board, currentLayoutId, entry),
     [board, currentLayoutId, entry],
   );
-  const targets = useMemo(
-    () =>
-      getMoveTargets(board, currentLayoutId, entry, {
-        canvas: tLandmark("canvas"),
-        container: tContainer("action.create"),
-        leftRail: tLandmark("leftRail"),
-        rightRail: tLandmark("rightRail"),
-        numbered: (name, index) => tMoveResize("target.numbered", { name, index: String(index) }),
-        located: (name, location, index) =>
-          tMoveResize("target.located", {
-            name,
-            location,
-            index: String(index),
-          }),
-      }),
-    [board, currentLayoutId, entry, tContainer, tLandmark, tMoveResize],
+  const targets = getMoveTargets(
+    board,
+    currentLayoutId,
+    entry,
+    {
+      canvas: tLandmark("canvas"),
+      container: tContainer("action.create"),
+      leftRail: tLandmark("leftRail"),
+      rightRail: tLandmark("rightRail"),
+      numbered: (name, index) => tMoveResize("target.numbered", { name, index: String(index) }),
+      located: (name, location, index) =>
+        tMoveResize("target.located", {
+          name,
+          location,
+          index: String(index),
+        }),
+    },
+    registeredGridEditors,
   );
   const targetById = useMemo(() => new Map(targets.map((target) => [target.id, target])), [targets]);
   const initialTarget = targetById.get(sourceSectionId) ?? targets[0];
@@ -252,6 +256,7 @@ export const getMoveTargets = (
   layoutId: string,
   entry: MovableEntry,
   labels: MoveTargetLabels,
+  registeredGridEditors?: ReadonlyMap<string, { placementMaxRowCount: number | null }>,
 ): MoveTarget[] => {
   const minimum = getEntryMinimumSize(board, layoutId, entry);
 
@@ -260,13 +265,15 @@ export const getMoveTargets = (
       const columnCount = getSectionColumnCount(board, layoutId, section.id);
       const lane = getRootSectionLane(section.xOffset);
       if (columnCount === 0) return [];
+      const registeredEditor = registeredGridEditors?.get(section.id);
+      if (lane !== "main" && registeredGridEditors && !registeredEditor) return [];
       return minimum.width <= columnCount
         ? [
             {
               id: section.id,
               name: lane === "left" ? labels.leftRail : lane === "right" ? labels.rightRail : labels.canvas,
               columnCount,
-              maxRowCount: getSectionMaxRowCount(board, layoutId, section.id),
+              maxRowCount: registeredEditor?.placementMaxRowCount ?? getSectionMaxRowCount(board, layoutId, section.id),
             },
           ]
         : [];

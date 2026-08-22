@@ -1,5 +1,7 @@
 "use client";
 
+import "./styles.css";
+
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActionIcon,
@@ -146,8 +148,9 @@ const createColumns = (
       <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
         {inlineState && <ContainerStateDot state={container.state} />}
         <Avatar
-          radius="xl"
-          size={24}
+          variant="outline"
+          radius="sm"
+          size={20}
           styles={{ image: { objectFit: "contain" } }}
           src={container.iconUrl}
           style={{ flexShrink: 0 }}
@@ -432,6 +435,7 @@ export default function DockerWidget({
         <HomarrDataTable
           isEditMode={isEditMode}
           cellPadding="2px 8px"
+          className="docker-table"
           rowCursor="default"
           fetching={isFetching && containers.length === 0}
           fz={width < 400 ? "xs" : "sm"}

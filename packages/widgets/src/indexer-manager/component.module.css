@@ -1,9 +1,6 @@
-[data-mantine-color-scheme="light"] .card {
-  background-color: var(--mantine-color-gray-1);
-}
-
-[data-mantine-color-scheme="dark"] .card {
-  background-color: var(--mantine-color-dark-7);
+.card {
+  background-color: transparent;
+  border: 1px solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.38));
 }
 
 .root {
@@ -31,7 +28,7 @@
 
   &:hover,
   &:focus-within {
-    background-color: var(--mantine-color-default-hover);
+    background-color: transparent;
   }
 }
 

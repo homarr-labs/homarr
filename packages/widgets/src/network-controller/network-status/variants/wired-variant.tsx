@@ -1,4 +1,4 @@
-import { Group, SimpleGrid, Text } from "@mantine/core";
+import { Center, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconNetwork } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
@@ -18,17 +18,19 @@ export const WiredVariant = ({
 }) => {
   const t = useI18n("widget.networkControllerStatus.card");
   return (
-    <>
-      <Group gap="xs" wrap="nowrap" mb={compact ? "xs" : "md"}>
-        <IconNetwork size={24} />
+    <Stack h="100%" align="center" justify="center" gap={compact ? "sm" : "md"}>
+      <Group gap="xs" wrap="nowrap" justify="center">
+        <Center w={24} h={24}>
+          <IconNetwork size={20} />
+        </Center>
         <Text size={"md"} fw={"bold"}>
           {t("variants.wired.name")}
         </Text>
       </Group>
-      <SimpleGrid cols={horizontal ? 2 : 1} spacing={compact ? "sm" : "lg"}>
+      <SimpleGrid cols={horizontal ? 2 : 1} spacing={compact ? "sm" : "lg"} w="100%" maw={horizontal ? 360 : 220}>
         <StatRow label={t("users.label")} value={countUsers} compact={compact} />
         <StatRow label={t("guests.label")} value={countGuests} compact={compact} />
       </SimpleGrid>
-    </>
+    </Stack>
   );
 };

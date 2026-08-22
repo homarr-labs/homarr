@@ -180,14 +180,10 @@ const CalendarBase = ({
     );
   }
 
+  const hasErrors = failedIntegrations.length > 0 || Boolean(queryError);
+
   return (
-    <Stack ref={ref} h="100%" w="100%" gap="xs" style={{ overflow: "hidden" }}>
-      {(failedIntegrations.length > 0 || Boolean(queryError)) && (
-        <Group px="xs" justify="flex-end">
-          <IntegrationErrorIndicator results={failedIntegrations} />
-          <WidgetQueryErrorIndicator error={queryError} label={t("name")} />
-        </Group>
-      )}
+    <Box ref={ref} h="100%" w="100%" pos="relative" style={{ overflow: "hidden" }}>
       <Calendar
         defaultDate={new Date()}
         onPreviousMonth={(previousMonth) => setMonth(new Date(previousMonth))}
@@ -260,7 +256,13 @@ const CalendarBase = ({
           );
         }}
       />
-    </Stack>
+      {hasErrors && (
+        <Group className={classes.errorIndicator} gap={0} pos="absolute">
+          <IntegrationErrorIndicator results={failedIntegrations} />
+          <WidgetQueryErrorIndicator error={queryError} label={t("name")} />
+        </Group>
+      )}
+    </Box>
   );
 };
 

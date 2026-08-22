@@ -1,5 +1,6 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
 import { Box, Paper, Stack, Text } from "@mantine/core";
 import { IconBulb } from "@tabler/icons-react";
 
@@ -22,6 +23,7 @@ import {
 import { ScaledBoardCanvas } from "~/components/board/layout/scaled-board-canvas";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
 import { BoardGridEditorBoundary } from "~/components/board/sections/grid/board-grid-editor-boundary";
+import { GridEditorRegistryProvider } from "~/components/board/sections/grid/grid-editor-registry";
 import { BoardGridPortalHost } from "~/components/board/sections/grid/grid-portal-host";
 import { BoardSectionCollapseProvider } from "~/components/board/sections/section-collapse";
 import { BoardBackgroundVideo } from "~/components/layout/background";
@@ -30,6 +32,12 @@ import { BoardSelectionToolbar } from "~/components/board/selection/board-select
 import classes from "./_client.module.css";
 
 const APP_SHELL_INLINE_PADDING = 32;
+
+const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
+  <GridEditorRegistryProvider>
+    <BoardSelectionProvider>{children}</BoardSelectionProvider>
+  </GridEditorRegistryProvider>
+);
 
 export const ClientBoard = () => {
   const board = useRequiredBoard();
@@ -68,7 +76,7 @@ export const ClientBoard = () => {
     .join(" ");
 
   const content = (
-    <BoardSelectionProvider>
+    <BoardSelectionGridProvider>
       <BoardAdvancedFocusProvider>
         <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
           <BoardBackgroundVideo />
@@ -144,7 +152,7 @@ export const ClientBoard = () => {
           </FloatingTip>
         </Box>
       </BoardAdvancedFocusProvider>
-    </BoardSelectionProvider>
+    </BoardSelectionGridProvider>
   );
 
   if (representativeWidth === null) return content;

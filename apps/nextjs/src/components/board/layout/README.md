@@ -3,8 +3,8 @@
 The board uses fixed logical units:
 
 - one `1 × 1` item is exactly `200 × 200` logical pixels;
-- the gap is always `24` logical pixels, giving a `224` pixel track pitch;
-- multi-cell items include the gaps between their cells (`2 × 1` is `424 × 200`);
+- the gap matches Mantine's `sm` spacing at `12` logical pixels, giving a `212` pixel track pitch;
+- multi-cell items include the gaps between their cells (`2 × 1` is `412 × 200`);
 - the canvas is zoomed once with one uniform scale derived from its available width.
 
 Items keep the same logical dimensions at every viewport. The viewport reserves

@@ -30,7 +30,7 @@ export function ViolationsList({
       ) : (
         <Stack gap="xs">
           {violations.map((violation) => (
-            <Paper key={violation.key} p="xs" radius="lg">
+            <Paper key={violation.key} p="xs" radius="lg" bg="transparent">
               <Group justify="space-between" wrap="nowrap">
                 <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
                   <IconAlertTriangle

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Box, Card, Group, ScrollArea, SimpleGrid, Text, Tooltip, useMantineColorScheme } from "@mantine/core";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Box, Card, Group, ScrollArea, SimpleGrid, Text, Tooltip } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -17,6 +17,34 @@ import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-stor
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
 type DiskDisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
+
+const advancedColumnBreakpoints = [
+  { minimumWidth: 1820, columns: 7 },
+  { minimumWidth: 1560, columns: 6 },
+  { minimumWidth: 1300, columns: 5 },
+  { minimumWidth: 1040, columns: 4 },
+  { minimumWidth: 780, columns: 3 },
+  { minimumWidth: 520, columns: 2 },
+  { minimumWidth: 0, columns: 1 },
+] as const;
+
+const getSystemDisksLayout = (width: number, height: number, diskCount: number, isAdvanced: boolean) => {
+  if (!isAdvanced) {
+    return {
+      columns: 1,
+      showSecondaryText: height >= 160 && width >= 260,
+      showTemperature: height >= 100 && width >= 220,
+    };
+  }
+
+  const breakpoint = advancedColumnBreakpoints.find((candidate) => width >= candidate.minimumWidth);
+  const columns = Math.min(diskCount, breakpoint?.columns ?? 1);
+  return {
+    columns: Math.max(1, columns),
+    showSecondaryText: true,
+    showTemperature: true,
+  };
+};
 
 export const clampPercentage = (percentage: number): number => Math.min(100, Math.max(0, percentage));
 
@@ -85,7 +113,6 @@ const SystemDiskCard = ({
   showTemperature,
 }: SystemDiskCardProps) => {
   const board = useRequiredBoard();
-  const scheme = useMantineColorScheme();
   const t = useI18n("widget.systemDisks");
   const valueRef = useRef<HTMLParagraphElement>(null);
   const [valueFits, setValueFits] = useState(true);
@@ -120,6 +147,8 @@ const SystemDiskCard = ({
   ]
     .filter(Boolean)
     .join(" · ");
+  const backgroundColor = "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
+  const borderColor = "rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45))";
 
   return (
     <Tooltip
@@ -131,8 +160,9 @@ const SystemDiskCard = ({
       <Card
         radius={board.itemRadius}
         py="xs"
-        bg={scheme.colorScheme === "dark" ? "dark.7" : "gray.1"}
-        style={{ overflow: "hidden", position: "relative" }}
+        withBorder
+        bg={backgroundColor}
+        style={{ overflow: "hidden", position: "relative", borderColor }}
       >
         <Group justify="space-between" wrap="nowrap" style={{ zIndex: 1, minWidth: 0 }}>
           <div style={{ minWidth: 0, flex: 1 }}>
@@ -199,6 +229,27 @@ export default function SystemResources({
   const data = results.filter(
     (entry): entry is typeof entry & { healthInfo: NonNullable<typeof entry.healthInfo> } => entry.healthInfo !== null,
   );
+  const disks = data.flatMap((entry) => {
+    const fileSystem = filterStorageVolumes(
+      entry.healthInfo.fileSystem,
+      options.visibleStorageVolumes,
+      entry.integrationId,
+    );
+    const smart = filterStorageVolumes(entry.healthInfo.smart, options.visibleStorageVolumes, entry.integrationId);
+    return fileSystem.map((item) => ({
+      integrationId: entry.integrationId,
+      integrationName: entry.integrationName,
+      item,
+      smartItem: smart.find(
+        (candidate) => normalizeStorageDeviceName(candidate.deviceName) === normalizeStorageDeviceName(item.deviceName),
+      ),
+    }));
+  });
+  const isAdvanced = displayMode === "advanced";
+  const layout = useMemo(
+    () => getSystemDisksLayout(width, height, disks.length, isAdvanced),
+    [disks.length, height, isAdvanced, width],
+  );
   const queryIndicators = (
     <Group gap={0}>
       <IntegrationErrorIndicator results={results} />
@@ -217,32 +268,10 @@ export default function SystemResources({
   if (isInitialWidgetQueryPending(healthQuery)) return <WidgetQueryLoadingState />;
   if (data.length === 0) return emptyState;
 
-  const disks = data.flatMap((entry) => {
-    const fileSystem = filterStorageVolumes(
-      entry.healthInfo.fileSystem,
-      options.visibleStorageVolumes,
-      entry.integrationId,
-    );
-    const smart = filterStorageVolumes(entry.healthInfo.smart, options.visibleStorageVolumes, entry.integrationId);
-    return fileSystem.map((item) => ({
-      integrationId: entry.integrationId,
-      integrationName: entry.integrationName,
-      item,
-      smartItem: smart.find(
-        (candidate) => normalizeStorageDeviceName(candidate.deviceName) === normalizeStorageDeviceName(item.deviceName),
-      ),
-    }));
-  });
-
   const hasNoFileSystems = data.every((entry) => entry.healthInfo.fileSystem.length === 0);
   const hasFailedSource = results.some((entry) => Boolean(entry.error));
   if (hasNoFileSystems && !hasFailedSource && !healthQuery.error) throw new NoIntegrationDataError();
   if (hasNoFileSystems || disks.length === 0) return emptyState;
-
-  const isAdvanced = displayMode === "advanced";
-  const minimumCardWidth = 260;
-  const columns = Math.max(1, Math.min(disks.length, Math.floor(width / minimumCardWidth)));
-  const cellWidth = width / columns;
 
   return (
     <Box h="100%" pos="relative">
@@ -250,7 +279,7 @@ export default function SystemResources({
         {queryIndicators}
       </Box>
       <ScrollArea h="100%">
-        <SimpleGrid cols={columns} spacing="xs" p="xs">
+        <SimpleGrid cols={layout.columns} spacing="xs" p="xs">
           {disks.map(({ integrationId, integrationName, item, smartItem }) => {
             const freeText = t("status.free", {
               percentage: String(Math.round(100 - clampPercentage(item.percentage))),
@@ -273,8 +302,8 @@ export default function SystemResources({
                 freeText={advancedDisplayTexts.free}
                 smartStatus={smartItem?.overallStatus}
                 isAdvanced={isAdvanced}
-                showSecondaryText={isAdvanced || (height >= 160 && cellWidth >= 260)}
-                showTemperature={isAdvanced || (height >= 100 && cellWidth >= 220)}
+                showSecondaryText={layout.showSecondaryText}
+                showTemperature={layout.showTemperature}
               />
             );
           })}

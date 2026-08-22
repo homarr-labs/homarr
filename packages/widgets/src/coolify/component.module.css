@@ -1,0 +1,29 @@
+.accordion {
+  --coolify-neutral-fill: rgb(
+    from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.12)
+  );
+  --coolify-neutral-border: rgb(
+    from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45)
+  );
+}
+
+.accordion :global(.mantine-Accordion-item) {
+  --item-border-color: var(--coolify-neutral-border);
+  --item-filled-color: var(--coolify-neutral-fill);
+}
+
+.accordion :global(.mantine-Accordion-control) {
+  background-color: transparent;
+}
+
+.accordion :global(.mantine-Accordion-control:not(:disabled, [data-disabled]):hover) {
+  background-color: var(--coolify-neutral-fill);
+}
+
+.neutralDividerBottom {
+  border-bottom: 1px solid var(--coolify-neutral-border);
+}
+
+.neutralDividerTop {
+  border-top: 1px solid var(--coolify-neutral-border);
+}

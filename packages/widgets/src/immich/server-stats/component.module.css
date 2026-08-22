@@ -1,13 +1,22 @@
 .statItem {
-  padding: 12px;
-  border-radius: var(--mantine-radius-md);
-  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  padding: 8px 10px;
+  border: 0.0625rem solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.38));
+  border-radius: var(--mantine-radius-sm);
+  background-color: transparent;
 }
 
 .statItemDense {
   min-width: 0;
-  min-height: 44px;
-  padding: 4px 6px;
+  min-height: 40px;
+  padding: 3px 6px;
+  border: 0.0625rem solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.32));
   border-radius: var(--mantine-radius-sm);
-  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  background-color: transparent;
+}
+
+@media (forced-colors: active) {
+  .statItem,
+  .statItemDense {
+    border-color: CanvasText;
+  }
 }

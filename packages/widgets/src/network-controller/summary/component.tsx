@@ -83,7 +83,13 @@ export default function NetworkControllerSummaryWidget({
         {queryIndicators}
         <SimpleGrid cols={controllerColumns} spacing="sm">
           {summaries.map(({ integration, summary, updatedAt }) => (
-            <Card key={integration.id} p="sm" withBorder>
+            <Card
+              key={integration.id}
+              p="sm"
+              withBorder
+              bg="transparent"
+              style={{ borderColor: neutralSurfaceBorder }}
+            >
               <Stack gap="sm">
                 <Group justify="space-between" align="flex-start" wrap="nowrap">
                   <Stack gap={0} style={{ minWidth: 0 }}>
@@ -105,7 +111,13 @@ export default function NetworkControllerSummaryWidget({
                 </Group>
                 <SimpleGrid cols={matrixColumns} spacing="xs">
                   {getNetworkControllerMatrix(summary).map((section) => (
-                    <Card key={section.key} p="xs" withBorder>
+                    <Card
+                      key={section.key}
+                      p="xs"
+                      withBorder
+                      bg="transparent"
+                      style={{ borderColor: neutralSurfaceBorder }}
+                    >
                       <Stack gap="xs">
                         <Group justify="space-between" wrap="nowrap">
                           <Group gap={6} wrap="nowrap">
@@ -149,12 +161,18 @@ export default function NetworkControllerSummaryWidget({
   }
 
   return (
-    <ScrollArea h="100%" p={isDense ? "xs" : "sm"}>
+    <Stack h="100%" p={isDense ? "xs" : "sm"} gap={0} style={{ overflow: "hidden" }}>
       {queryIndicators}
-      <SimpleGrid cols={columns} spacing="sm">
+      <SimpleGrid cols={columns} spacing="sm" style={{ flex: 1, minHeight: 0, alignContent: "center" }}>
         {summaries.map(({ integration, summary }) => (
-          <Card key={integration.id} p={isDense ? "xs" : "sm"} withBorder={summaries.length > 1}>
-            <Stack gap="xs">
+          <Card
+            key={integration.id}
+            p={isDense ? "xs" : "sm"}
+            withBorder={summaries.length > 1}
+            bg="transparent"
+            style={{ borderColor: neutralSurfaceBorder }}
+          >
+            <Stack h="100%" gap={isDense ? 4 : 8} justify="center" align="center">
               {summaries.length > 1 && (
                 <Group justify="space-between" wrap="nowrap">
                   <Text fw={600} size="sm" truncate="end">
@@ -165,7 +183,7 @@ export default function NetworkControllerSummaryWidget({
                   </Badge>
                 </Group>
               )}
-              <List spacing={isDense ? 2 : "xs"} center size={isDense ? "sm" : undefined}>
+              <List spacing={isDense ? 2 : 4} center size={isDense ? "xs" : "sm"} w="fit-content" mx="auto">
                 <List.Item
                   icon={
                     <StatusIcon
@@ -211,7 +229,7 @@ export default function NetworkControllerSummaryWidget({
                       <StatusIcon
                         status={summary.lan.status}
                         label={statusLabels[getBinaryStatusKey(summary.lan.status)]}
-                        size="var(--mantine-font-size-xl)"
+                        size={isDense ? 16 : 20}
                       />
                     }
                   >
@@ -239,7 +257,7 @@ export default function NetworkControllerSummaryWidget({
           </Card>
         ))}
       </SimpleGrid>
-    </ScrollArea>
+    </Stack>
   );
 }
 
@@ -261,6 +279,9 @@ const getMatrixSectionLabel = (
   if (key === "vpn") return t("card.vpn.label");
   return t(`card.${key}` as never);
 };
+
+const neutralSurfaceBorder =
+  "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
 
 const StatusIcon = ({
   status,

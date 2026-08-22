@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import type { AreaChartSeries } from "@mantine/charts";
 import { AreaChart, LineChart } from "@mantine/charts";
-import { Card, Center, Group, Stack, Text, useComputedColorScheme, useMantineTheme } from "@mantine/core";
+import { Card, Center, Group, Stack, Text, useMantineTheme } from "@mantine/core";
 import { useElementSize, useHover, useMergedRef } from "@mantine/hooks";
 import type { TooltipProps, YAxisProps } from "recharts";
 
@@ -36,13 +36,12 @@ export const CommonChart = ({
 }) => {
   const { ref: elementSizeRef, height } = useElementSize();
   const theme = useMantineTheme();
-  const colorScheme = useComputedColorScheme("light");
   const board = useRequiredBoard();
   const { hovered, ref: hoverRef } = useHover();
   const ref = useMergedRef(elementSizeRef, hoverRef);
 
-  const opacity = board.opacity / 100;
-  const backgroundColor = colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
+  const backgroundColor = "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
+  const borderColor = "rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45))";
 
   const ChartComponent = chartType === "line" ? LineChart : AreaChart;
   const showIcon = labelDisplayMode === "icon" || labelDisplayMode === "textWithIcon";
@@ -53,7 +52,7 @@ export const CommonChart = ({
       ref={ref}
       h={"100%"}
       pos={"relative"}
-      style={{ overflow: "visible" }}
+      style={{ overflow: "visible", border: `1px solid ${borderColor}` }}
       p={0}
       bg={backgroundColor}
       radius={board.itemRadius}
@@ -119,7 +118,13 @@ export const CommonChart = ({
           withYAxis={false}
           withDots={false}
           bg={backgroundColor}
-          styles={{ root: { padding: 5, borderRadius: theme.radius[board.itemRadius] } }}
+          styles={{
+            root: {
+              padding: 5,
+              borderRadius: theme.radius[board.itemRadius],
+              backgroundColor,
+            },
+          }}
           tooltipAnimationDuration={200}
           tooltipProps={tooltipProps}
           withTooltip={height >= 64}

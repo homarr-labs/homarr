@@ -8,6 +8,7 @@ import { useTimeAgo } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import { ApplicationsSection } from "./applications-section";
+import classes from "./component.module.css";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { buildServerResourceCounts, getBadgeColor, isCoolifyServerOnline, parseStatus } from "./coolify-utils";
 import { ServersSection } from "./servers-section";
@@ -71,12 +72,12 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
     .join(" · ");
 
   return (
-    <Card p={0} radius="sm">
+    <Card p={0} radius="sm" bg="transparent">
       <Group
         p="xs"
         justify="space-between"
         wrap="nowrap"
-        style={{ borderBottom: "1px solid var(--mantine-color-dark-4)" }}
+        className={classes.neutralDividerBottom}
       >
         <Group gap={4} wrap="nowrap" miw={0}>
           <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
@@ -135,6 +136,7 @@ export function InstanceCard({ instance, options, isTiny, isAdvanced, widgetKey,
       </Group>
 
       <Accordion
+        className={classes.accordion}
         variant="filled"
         chevronPosition="right"
         multiple
@@ -175,11 +177,7 @@ const InstanceFooter = ({ version, updatedAt }: { version: string; updatedAt: Da
   const t = useI18n("widget.coolify");
   const relativeTime = useTimeAgo(updatedAt, 60_000);
   return (
-    <Group
-      justify="space-between"
-      p={4}
-      style={{ borderTop: "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))" }}
-    >
+    <Group justify="space-between" p={4} className={classes.neutralDividerTop}>
       <Text size="10px" c="dimmed">
         v{version}
       </Text>

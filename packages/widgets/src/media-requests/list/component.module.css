@@ -1,14 +1,15 @@
 .card {
   min-width: 0;
-  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  background-color: transparent;
+  border-color: rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.38));
   transition:
     background-color 120ms ease,
     border-color 120ms ease;
 
   &:hover,
   &:focus-within {
-    border-color: var(--mantine-primary-color-filled);
-    background-color: var(--mantine-color-default-hover);
+    border-color: rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.62));
+    background-color: transparent;
   }
 }
 

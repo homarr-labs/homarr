@@ -5,7 +5,12 @@ import { BoardMockBuilder } from "~/components/board/items/actions/test/mocks/bo
 import { ContainerSectionMockBuilder } from "~/components/board/items/actions/test/mocks/container-section-mock";
 import { EmptySectionMockBuilder } from "~/components/board/items/actions/test/mocks/empty-section-mock";
 import { ItemMockBuilder } from "~/components/board/items/actions/test/mocks/item-mock";
-import { getBoardLaneColumnCount, getInitialBoardLogicalHeight, getRootSectionForLane } from "../index";
+import {
+  getBoardLaneColumnCount,
+  getInitialBoardLogicalHeight,
+  getLogicalTrackSize,
+  getRootSectionForLane,
+} from "../index";
 
 describe("board lanes", () => {
   test("gutters consume columns from the main canvas", () => {
@@ -126,6 +131,6 @@ describe("board lanes", () => {
       },
     ];
 
-    expect(getInitialBoardLogicalHeight(board, layoutId)).toBe(872);
+    expect(getInitialBoardLogicalHeight(board, layoutId)).toBe(getLogicalTrackSize(4));
   });
 });

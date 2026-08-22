@@ -130,6 +130,45 @@
   color: var(--mantine-color-text);
 }
 
+.widgetPanel[data-board-widget] {
+  background: transparent;
+}
+
+.widgetPanel[data-board-widget] .panelHeader,
+.widgetPanel[data-board-widget] .composerWrap {
+  border-color: rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .composerWrap,
+.widgetPanel[data-board-widget] .composer,
+.widgetPanel[data-board-widget] .composerQuote,
+.widgetPanel[data-board-widget] .pendingQuestionDock {
+  background: transparent;
+}
+
+.widgetPanel[data-board-widget] .suggestion,
+.widgetPanel[data-board-widget] .runtimeSelectorTrigger,
+.widgetPanel[data-board-widget] .composerContext,
+.widgetPanel[data-board-widget] .providerQuotaTrigger {
+  border-color: rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1));
+  background: transparent;
+}
+
+.widgetPanel[data-board-widget] .suggestion:hover:not(:disabled),
+.widgetPanel[data-board-widget] .runtimeSelectorTrigger:hover:not(:disabled),
+.widgetPanel[data-board-widget] .composerContext:hover:not(:disabled),
+.widgetPanel[data-board-widget] .providerQuotaTrigger:hover:not(:disabled) {
+  background: rgb(from var(--mantine-color-default-hover) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .suggestion:focus-visible,
+.widgetPanel[data-board-widget] .runtimeSelectorTrigger:focus-visible,
+.widgetPanel[data-board-widget] .composerContext:focus-visible,
+.widgetPanel[data-board-widget] .providerQuotaTrigger:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
 .widgetState {
   container-type: inline-size;
   overflow: auto;
@@ -157,28 +196,10 @@
   border-bottom: 1px solid var(--mantine-color-default-border);
 }
 
-.panelIdentity {
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.panelIdentityIcon {
-  flex: 0 0 auto;
-}
-
-.panelIdentityTitle,
-.panelThreadTitle {
-  max-width: 14rem;
-}
-
 .panelActions {
   min-width: 0;
   flex: 0 0 auto;
   margin-inline-start: auto;
-}
-
-.newConversationButton {
-  flex: 0 0 auto;
 }
 
 .panelAction {
@@ -204,21 +225,6 @@
   }
 
   .historyButtonLabel {
-    display: none;
-  }
-
-  .newConversationButton {
-    width: 2.625rem;
-    max-width: 2.625rem;
-    height: 2.625rem;
-    padding-inline: 0.75rem;
-  }
-
-  .newConversationButton :global(.mantine-Button-section) {
-    margin-inline: 0;
-  }
-
-  .newConversationButton :global(.mantine-Button-label) {
     display: none;
   }
 
@@ -277,8 +283,7 @@
 
 @container assistant-widget (max-width: 22rem) {
   .panelAction,
-  .historyButton,
-  .newConversationButton {
+  .historyButton {
     width: 2.25rem;
     max-width: 2.25rem;
     height: 2.25rem;
@@ -299,10 +304,6 @@
   }
 
   .composerContextLabel {
-    display: none;
-  }
-
-  .panelThreadTitle {
     display: none;
   }
 }

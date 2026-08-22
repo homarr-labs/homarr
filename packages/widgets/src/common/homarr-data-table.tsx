@@ -135,14 +135,13 @@ export function HomarrDataTable<T>({
       withTableBorder={false}
       borderRadius={0}
       highlightOnHover
-      striped="odd"
-      stripedColor={{ dark: "dark.7", light: "gray.0" }}
       highlightOnHoverColor={{ dark: "dark.5", light: "gray.1" }}
       verticalAlign="center"
       loaderBackgroundBlur={2}
       textSelectionDisabled
       height="100%"
       {...props}
+      striped={false}
       columns={fittedColumns}
       onMouseDownCapture={handleMouseDownCapture}
       className={mergedClassName}

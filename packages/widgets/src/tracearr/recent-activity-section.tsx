@@ -35,7 +35,7 @@ export function RecentActivityList({
                 : session.mediaTitle;
 
             return (
-              <Paper key={session.key} p="sm" radius="lg">
+              <Paper key={session.key} p="sm" radius="lg" bg="transparent">
                 <Group justify="space-between" wrap="nowrap">
                   <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
                     <Avatar src={session.user.avatarUrl} alt={session.user.username} radius="xl" size="sm" />

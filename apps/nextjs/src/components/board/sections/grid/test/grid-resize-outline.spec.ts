@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 
+import { getLogicalTrackSize } from "~/components/board/layout";
+
 import { createGridResizeOutlineController } from "../grid-resize-outline";
 
 describe("grid resize outline", () => {
@@ -28,8 +30,8 @@ describe("grid resize outline", () => {
     const outline = shell.querySelector<HTMLElement>("[data-grid-resize-outline]");
     expect(outline?.style.left).toBe("0px");
     expect(outline?.style.top).toBe("0px");
-    expect(outline?.style.width).toBe("200px");
-    expect(outline?.style.height).toBe("424px");
+    expect(outline?.style.width).toBe(`${getLogicalTrackSize(1)}px`);
+    expect(outline?.style.height).toBe(`${getLogicalTrackSize(2)}px`);
     expect(outline?.dataset.gridResizeValid).toBe("false");
 
     controller.schedule(null);

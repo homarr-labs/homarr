@@ -35,6 +35,11 @@ const statusColors: Record<UpsStatus, string> = {
   unknown: "gray",
 };
 
+const neutralSurfaceBackground =
+  "rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.12))";
+const neutralSurfaceBorder =
+  "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
+
 type UpsLayout = "mini" | "compact" | "full";
 
 export default function UpsWidget({
@@ -183,7 +188,7 @@ function UpsDeviceCard({ summary, sourceName, options, layout, advanced, t }: Up
 
   if (layout === "mini") {
     return (
-      <Card p={6} radius="md">
+      <Card p={6} radius="md" bg="transparent">
         <Group gap={4} wrap="nowrap" justify="center" mb={showRing ? 4 : 0}>
           <Box
             w={8}
@@ -211,6 +216,7 @@ function UpsDeviceCard({ summary, sourceName, options, layout, advanced, t }: Up
               size={44}
               thickness={4}
               roundCaps
+              rootColor={neutralSurfaceBorder}
               sections={[{ value: clampPercent(summary.batteryCharge), color: getChargeColor(summary.batteryCharge) }]}
               label={
                 <Text ta="center" size="10px" fw={700}>
@@ -226,13 +232,14 @@ function UpsDeviceCard({ summary, sourceName, options, layout, advanced, t }: Up
 
   if (layout === "compact") {
     return (
-      <Card p={6} radius="md">
+      <Card p={6} radius="md" bg="transparent">
         <Group gap={8} wrap="nowrap" align="center">
           {showRing && summary.batteryCharge !== null && (
             <RingProgress
               size={40}
               thickness={4}
               roundCaps
+              rootColor={neutralSurfaceBorder}
               sections={[{ value: clampPercent(summary.batteryCharge), color: getChargeColor(summary.batteryCharge) }]}
               label={
                 <Text ta="center" size="9px" fw={700}>
@@ -258,7 +265,7 @@ function UpsDeviceCard({ summary, sourceName, options, layout, advanced, t }: Up
   }
 
   return (
-    <Card p="xs" radius="md">
+    <Card p="xs" radius="md" bg="transparent">
       <Group justify="space-between" wrap="nowrap" mb={4}>
         <Stack gap={0} style={{ minWidth: 0 }}>
           <Text fw={600} size="sm" truncate>
@@ -279,6 +286,7 @@ function UpsDeviceCard({ summary, sourceName, options, layout, advanced, t }: Up
             size={68}
             thickness={6}
             roundCaps
+            rootColor={neutralSurfaceBorder}
             sections={[{ value: clampPercent(summary.batteryCharge), color: getChargeColor(summary.batteryCharge) }]}
             label={
               <Text ta="center" size="xs" fw={700}>
@@ -301,7 +309,12 @@ function UpsDeviceCard({ summary, sourceName, options, layout, advanced, t }: Up
                 </Text>
                 <Text size="xs">{Math.round(summary.load)}%</Text>
               </Group>
-              <Progress value={clampPercent(summary.load)} size="sm" color={getLoadColor(summary.load)} />
+              <Progress
+                value={clampPercent(summary.load)}
+                size="sm"
+                color={getLoadColor(summary.load)}
+                styles={{ root: { backgroundColor: neutralSurfaceBackground } }}
+              />
             </Box>
           )}
 

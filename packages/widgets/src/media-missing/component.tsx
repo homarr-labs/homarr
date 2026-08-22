@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Badge,
   Box,
@@ -36,11 +36,37 @@ import classes from "./component.module.css";
 import type { MediaMissingTab } from "./tabs";
 import { resolveMediaMissingTab } from "./tabs";
 
+type Density = "thin" | "compact" | "comfortable";
+
+const MIN_CARD_WIDTH = 280;
+const MAX_COLUMNS = 4;
+const GRID_HORIZONTAL_PADDING = 20;
+const GRID_COLUMN_GAP = 10;
+
+const columnBreakpoints = Array.from({ length: MAX_COLUMNS }, (_, index) => {
+  const columns = MAX_COLUMNS - index;
+  return {
+    columns,
+    minimumWidth: columns * MIN_CARD_WIDTH + (columns - 1) * GRID_COLUMN_GAP,
+  };
+});
+
+const getMediaMissingGridLayout = (panelWidth: number) => {
+  const contentWidth = Math.max(0, panelWidth - GRID_HORIZONTAL_PADDING);
+  const breakpoint = columnBreakpoints.find((candidate) => contentWidth >= candidate.minimumWidth);
+  return { columns: breakpoint?.columns ?? 1, contentWidth };
+};
+
+const getMediaMissingDensity = (contentWidth: number, columns: number, isThin: boolean): Density => {
+  if (isThin) return "thin";
+  if (contentWidth > 0 && contentWidth / columns < 180) return "compact";
+  return "comfortable";
+};
+
 export default function MediaMissingWidget({
   integrationIds,
   options,
   width,
-  height,
   displayMode,
   widgetRuntimeRef,
 }: WidgetComponentProps<"mediaMissing">) {
@@ -68,6 +94,12 @@ export default function MediaMissingWidget({
     if (activeTab !== null && activeTab !== selectedTab) setSelectedTab(activeTab);
   }, [activeTab, selectedTab]);
 
+  const enabledPanelCount = Number(showMissing) + Number(showQueued);
+  const panelWidth = isAdvanced && enabledPanelCount > 1 ? width / enabledPanelCount : width;
+  const isThin = !isAdvanced && panelWidth > 0 && panelWidth < 160;
+  const gridLayout = useMemo(() => getMediaMissingGridLayout(panelWidth), [panelWidth]);
+  const density = getMediaMissingDensity(gridLayout.contentWidth, gridLayout.columns, isThin);
+
   if (!data) return <WidgetEmptyState />;
   if (data.length === 0) throw new NoIntegrationDataError();
   if (!showMissing && !showQueued)
@@ -84,14 +116,6 @@ export default function MediaMissingWidget({
   const missingCount = data.reduce((sum, entry) => sum + entry.missingCount, 0);
   const queuedCount = data.reduce((sum, entry) => sum + entry.queuedCount, 0);
   const failedIntegrations = data.filter((entry): entry is typeof entry & { error: string } => Boolean(entry.error));
-
-  const enabledPanelCount = Number(showMissing) + Number(showQueued);
-  const panelWidth = isAdvanced && enabledPanelCount > 1 ? width / enabledPanelCount : width;
-  const isThin = !isAdvanced && panelWidth > 0 && panelWidth < 160;
-  const isShort = !isAdvanced && height > 0 && height < 180;
-  const targetCardWidth = isShort ? 130 : 200;
-  const columns = panelWidth > 0 ? Math.max(1, Math.min(Math.floor(panelWidth / targetCardWidth), 4)) : 1;
-  const density: Density = isThin ? "thin" : panelWidth > 0 && panelWidth / columns < 180 ? "compact" : "comfortable";
 
   const tabLabel = (label: string, shown: number, total: number) => (isThin ? total : `${label} (${shown}/${total})`);
 
@@ -114,7 +138,7 @@ export default function MediaMissingWidget({
             {emptyLabel}
           </Text>
         ) : (
-          <SimpleGrid cols={columns} spacing="xs" verticalSpacing="xs">
+          <SimpleGrid cols={Math.min(gridLayout.columns, entries.length)} spacing="xs" verticalSpacing="xs">
             {entries.map(({ item, integrationId }) => (
               <MediaCard
                 key={`${integrationId}-${item.type}-${item.id}`}
@@ -225,8 +249,6 @@ export default function MediaMissingWidget({
     </Tabs>
   );
 }
-
-type Density = "thin" | "compact" | "comfortable";
 
 const CARD_HEIGHT: Record<Density, number> = { thin: 52, compact: 56, comfortable: 68 };
 

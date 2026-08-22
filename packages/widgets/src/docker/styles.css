@@ -1,0 +1,5 @@
+/* Keep Docker rows translucent so board wallpaper and the inherited item opacity remain visible. */
+.homarr-data-table.docker-table {
+  --mantine-datatable-background-color: transparent !important;
+  --mantine-datatable-striped-color: transparent !important;
+}

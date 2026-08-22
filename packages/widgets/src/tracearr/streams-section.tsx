@@ -65,7 +65,7 @@ function StreamCard({
           : null;
 
   return (
-    <Paper p="xs" radius="lg" style={{ position: "relative", overflow: "hidden" }}>
+    <Paper p="xs" radius="lg" bg="transparent" style={{ position: "relative", overflow: "hidden" }}>
       {stream.posterUrl && (
         <Box
           style={{

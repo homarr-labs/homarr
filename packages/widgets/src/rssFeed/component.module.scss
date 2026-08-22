@@ -2,11 +2,16 @@
   min-width: 0;
   color: inherit;
   text-decoration: none;
-  transition: background-color 120ms ease;
+  background-color: transparent;
+  border: 1px solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.38));
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
 
   &:hover,
   &:focus-visible {
-    background-color: var(--mantine-color-default-hover);
+    background-color: transparent;
+    border-color: rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.62));
   }
 
   &:focus-visible {
@@ -22,5 +27,11 @@
 @media (prefers-reduced-motion: reduce) {
   .entry {
     transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .entry {
+    border-color: CanvasText;
   }
 }

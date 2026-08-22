@@ -1,21 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { getQueryKey } from "@trpc/react-query";
 import {
   Box,
-  Center,
+  Button,
   Divider,
   Group,
   Pagination,
   Paper,
   ScrollArea,
-  SegmentedControl,
+  Select,
   SimpleGrid,
   Stack,
   Text,
-  VisuallyHidden,
 } from "@mantine/core";
 import { IconClipboardList, IconCpu2, IconReportAnalytics } from "@tabler/icons-react";
 
@@ -43,6 +42,24 @@ const viewIcons = {
   queue: IconClipboardList,
   statistics: IconReportAnalytics,
 } satisfies Record<View, TablerIcon>;
+
+type TranscodingControlMode = "buttons" | "select";
+
+const narrowWidthLayout = { minimumWidth: 0, advancedColumns: 1, controlMode: "select" } as const;
+
+const widthBreakpoints = [
+  { minimumWidth: 1100, advancedColumns: 3, controlMode: "buttons" },
+  { minimumWidth: 700, advancedColumns: 2, controlMode: "buttons" },
+  { minimumWidth: 560, advancedColumns: 1, controlMode: "buttons" },
+  narrowWidthLayout,
+] as const satisfies readonly {
+  minimumWidth: number;
+  advancedColumns: number;
+  controlMode: TranscodingControlMode;
+}[];
+
+const getTranscodingWidthLayout = (width: number) =>
+  widthBreakpoints.find((candidate) => width >= candidate.minimumWidth) ?? narrowWidthLayout;
 
 export default function MediaTranscodingWidget({
   integrationIds,
@@ -91,6 +108,7 @@ export default function MediaTranscodingWidget({
   const handleQueuePageChange = (page: number) => {
     setQueuePagination({ page, pageSize: queuePageSize, isAdvanced });
   };
+  const widthLayout = useMemo(() => getTranscodingWidthLayout(width), [width]);
 
   if (!transcodingData) return <WidgetEmptyState />;
 
@@ -108,7 +126,7 @@ export default function MediaTranscodingWidget({
       <Stack gap="xs" h="100%" p="xs" pos="relative">
         {queryIndicator}
         <ScrollArea h="100%" style={{ flex: 1 }}>
-          <SimpleGrid cols={width >= 1100 ? 3 : width >= 700 ? 2 : 1} spacing="sm">
+          <SimpleGrid cols={widthLayout.advancedColumns} spacing="sm">
             <AdvancedPanel title={t("tab.workers")} icon={IconCpu2}>
               <WorkersPanel workers={transcodingData.data.workers} isTiny={false} />
             </AdvancedPanel>
@@ -147,35 +165,45 @@ export default function MediaTranscodingWidget({
       )}
       <Divider />
       <Group gap="xs" mb={4} ms={4} me={8} wrap="nowrap">
-        <SegmentedControl
-          data={views.map((value) => {
-            const Icon = viewIcons[value];
-            return {
-              label: (
-                <Center style={{ gap: 4 }}>
-                  <Icon size="var(--mantine-font-size-xs)" style={{ flexShrink: 0 }} />
-                  {footerLayout.showTabLabels ? (
-                    <Text span size="xs">
-                      {t(`tab.${value}`)}
-                    </Text>
-                  ) : (
-                    <VisuallyHidden>{t(`tab.${value}`)}</VisuallyHidden>
-                  )}
-                </Center>
-              ),
+        {widthLayout.controlMode === "buttons" ? (
+          <Button.Group style={{ flex: 1, minWidth: 0 }}>
+            {views.map((value) => {
+              const Icon = viewIcons[value];
+              return (
+                <Button
+                  key={value}
+                  size="compact-xs"
+                  variant={value === view ? "filled" : "default"}
+                  leftSection={<Icon size="var(--mantine-font-size-xs)" />}
+                  aria-pressed={value === view}
+                  style={{ flex: 1 }}
+                  onClick={() => setView(value)}
+                >
+                  {t(`tab.${value}`)}
+                </Button>
+              );
+            })}
+          </Button.Group>
+        ) : (
+          <Select
+            size="xs"
+            value={view}
+            data={views.map((value) => ({
               value,
-            };
-          })}
-          value={view}
-          onChange={(value) => {
-            const nextView = viewBySegmentValue[value];
-            if (nextView) {
-              setView(nextView);
-            }
-          }}
-          size="xs"
-          style={{ minWidth: 0, flexShrink: footerLayout.showTabLabels ? 1 : 0 }}
-        />
+              label: t(`tab.${value}`),
+            }))}
+            aria-label={t("option.defaultView.label")}
+            style={{ flex: 1, minWidth: 0 }}
+            onChange={(value) => {
+              if (!value) return;
+
+              const nextView = viewBySegmentValue[value];
+              if (nextView) {
+                setView(nextView);
+              }
+            }}
+          />
+        )}
 
         <Group gap="xs" ml="auto" wrap="nowrap">
           {view === "queue" && queuePageCount > 1 && (

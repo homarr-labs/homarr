@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Flex, Text, Tooltip, VisuallyHidden } from "@mantine/core";
+import { Card, Flex, Text, Tooltip, VisuallyHidden } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -8,7 +8,7 @@ import type { TablerIcon } from "@homarr/ui";
 
 export interface SpeedStatCardProps {
   icon: TablerIcon;
-  color: string;
+  color: "blue" | "teal" | "orange" | "green" | "red";
   value: string;
   label: string;
   compact?: boolean;
@@ -19,15 +19,22 @@ export function SpeedStatCard({ icon: Icon, color, value, label, compact = false
   const board = useRequiredBoard();
   const isWide = width > height + 20;
   const hideLabel = height > 0 && height <= 38;
+  const surfaceColor = `var(--mantine-color-${color}-filled)`;
+  const accentColor = `var(--mantine-color-${color}-5)`;
+  const surfaceAlpha = compact ? 0.1 : 0.14;
+  const surfaceBackground = `rgb(from ${surfaceColor} r g b / calc(var(--opacity, 1) * ${surfaceAlpha}))`;
+  const surfaceBorder = "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
 
   return (
     <Tooltip label={`${label}: ${value}`} withArrow>
-      <Box
+      <Card
         ref={ref}
         p={compact ? "xs" : "sm"}
-        bg={`var(--mantine-color-${color}-light)`}
+        radius={board.itemRadius}
+        withBorder
+        bg={surfaceBackground}
         h="100%"
-        style={{ flex: 1, borderRadius: `var(--mantine-radius-${board.itemRadius})`, minWidth: 0 }}
+        style={{ flex: 1, minWidth: 0, borderColor: surfaceBorder }}
       >
         <Flex
           h="100%"
@@ -38,7 +45,7 @@ export function SpeedStatCard({ icon: Icon, color, value, label, compact = false
           gap={isWide ? 8 : 4}
           style={{ minWidth: 0 }}
         >
-          <Icon size={compact ? 16 : 20} color={`var(--mantine-color-${color}-5)`} style={{ flexShrink: 0 }} />
+          <Icon size={compact ? 16 : 20} color={accentColor} style={{ flexShrink: 0 }} />
           <Flex direction="column" align={isWide ? "flex-start" : "center"} gap={0} style={{ minWidth: 0 }}>
             <Text size={compact ? "sm" : "md"} fw={700} ta="center" lh={1.1} truncate w="100%">
               {value}
@@ -51,7 +58,7 @@ export function SpeedStatCard({ icon: Icon, color, value, label, compact = false
             {hideLabel && <VisuallyHidden>{label}</VisuallyHidden>}
           </Flex>
         </Flex>
-      </Box>
+      </Card>
     </Tooltip>
   );
 }

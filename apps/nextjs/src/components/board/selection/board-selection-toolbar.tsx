@@ -25,6 +25,7 @@ import { useI18n } from "@homarr/translation/client";
 import { widgetCatalogIcons } from "@homarr/widgets/catalog";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";
+import { useRegisteredGridEditors } from "~/components/board/sections/grid/grid-editor-registry";
 import { useBoardSelection } from "./board-selection-context";
 
 const MAX_AVATARS_DISPLAYED = 5;
@@ -40,6 +41,7 @@ export const BoardSelectionToolbar = () => {
     moveSelectedItemsToSection,
   } = useBoardSelection();
   const board = useRequiredBoard();
+  const registeredGridEditors = useRegisteredGridEditors();
   const currentLayoutId = useCurrentLayout();
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId);
   const t = useI18n();
@@ -96,7 +98,15 @@ export const BoardSelectionToolbar = () => {
     .at(0);
 
   const placementOptions = [
-    ...(mainCanvasSection ? [{ value: mainCanvasSection.id, label: t("item.create.destination.mainCanvas") }] : []),
+    ...(mainCanvasSection
+      ? [
+          {
+            value: mainCanvasSection.id,
+            label: t("item.create.destination.mainCanvas"),
+            maxRowCount: null,
+          },
+        ]
+      : []),
     ...board.sections.flatMap((section) => {
       if (section.kind !== "empty") return [];
       const lane = getRootSectionLane(section.xOffset);
@@ -105,6 +115,7 @@ export const BoardSelectionToolbar = () => {
         {
           value: section.id,
           label: t(`item.create.destination.${lane === "left" ? "leftRail" : "rightRail"}`),
+          maxRowCount: registeredGridEditors.get(section.id)?.placementMaxRowCount,
         },
       ];
     }),
@@ -113,6 +124,7 @@ export const BoardSelectionToolbar = () => {
       .map((section) => ({
         value: section.id,
         label: section.options.title.trim() || t("section.container.untitled"),
+        maxRowCount: section.layouts.find((layout) => layout.layoutId === currentLayoutId)?.height,
       })),
   ];
 
@@ -244,7 +256,11 @@ export const BoardSelectionToolbar = () => {
               <Menu.Dropdown>
                 <Menu.Label>{tSelection("moveTo")}</Menu.Label>
                 {placementOptions.map((opt) => (
-                  <Menu.Item key={opt.value} onClick={() => moveSelectedItemsToSection(opt.value)}>
+                  <Menu.Item
+                    key={opt.value}
+                    disabled={opt.maxRowCount === undefined}
+                    onClick={() => moveSelectedItemsToSection(opt.value, opt.maxRowCount)}
+                  >
                     {opt.label}
                   </Menu.Item>
                 ))}

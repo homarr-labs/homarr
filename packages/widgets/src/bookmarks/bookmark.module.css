@@ -1,5 +1,15 @@
-.card:hover {
-  background-color: var(--mantine-color-primaryColor-light-hover);
+.card {
+  background-color: transparent;
+  border-color: rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.38));
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.card:hover,
+.card:focus-within {
+  background-color: transparent;
+  border-color: rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.62));
 }
 
 .bookmarkButton:focus-visible {
@@ -8,20 +18,18 @@
   border-radius: var(--mantine-radius-sm);
 }
 
-[data-mantine-color-scheme="light"] .card-grid {
-  background-color: var(--mantine-color-gray-1);
-}
-
-[data-mantine-color-scheme="dark"] .card-grid {
-  background-color: var(--mantine-color-dark-7);
-}
-
 .card:hover > div > div.bookmarkIcon {
   background-color: var(--mantine-color-iconColor-filled-hover);
 }
 
 .bookmarkButton:focus-visible .bookmarkIcon {
   background-color: var(--mantine-color-iconColor-filled-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
 }
 
 .compactScrollViewport > div {

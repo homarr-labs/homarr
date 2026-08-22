@@ -23,7 +23,12 @@ describe("dnd grid coordinates", () => {
   test("uses the dragged shape origin so a non-center grab retains its pointer offset", () => {
     const scale = 0.75;
     const target = { left: -280, top: 390, width: getLogicalTrackSize(5) * scale };
-    const initialShape = { left: target.left, top: target.top, width: 424 * scale, height: 200 * scale };
+    const initialShape = {
+      left: target.left,
+      top: target.top,
+      width: getLogicalTrackSize(2) * scale,
+      height: 200 * scale,
+    };
     const pointerDelta = { x: LOGICAL_GRID_PITCH * scale * 2, y: LOGICAL_GRID_PITCH * scale * 3 };
 
     expect(

@@ -195,6 +195,9 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
   const board = useRequiredBoard();
   const label = translateIfNecessary(t, item.label);
   const value = item.value(data, width <= 64 ? "sm" : "md");
+  const backgroundColor = usePiHoleColors
+    ? `rgb(from ${item.color} r g b / calc(var(--opacity, 1) * 0.4))`
+    : "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
 
   return (
     <Tooltip label={tooltip} disabled={!tooltip} w={250} multiline events={{ hover: true, focus: true, touch: true }}>
@@ -206,9 +209,11 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
         className="summary-card"
         p="sm"
         radius={board.itemRadius}
-        bg={usePiHoleColors ? item.color : "var(--mantine-color-default-hover)"}
+        bg={backgroundColor}
         style={{
           flex: 1,
+          border:
+            "1px solid rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45))",
         }}
       >
         <Flex

@@ -27,6 +27,7 @@ import type { WidgetComponentProps } from "../definition";
 import { calculateBandwidth, formatBitsPerSec } from "./bandwidth";
 import { FirewallMenu } from "./firewall-menu";
 import { FirewallVersion, formatVersion } from "./firewall-version";
+import classes from "./firewall.module.css";
 
 export interface Firewall {
   label: string;
@@ -243,7 +244,7 @@ const FirewallPanel = ({
   t,
   tCommon,
 }: FirewallPanelProps) => (
-  <Paper withBorder={isAdvanced} radius="sm" p={isAdvanced ? "xs" : 0}>
+  <Paper className={classes.card} withBorder={isAdvanced} radius="sm" p={isAdvanced ? "xs" : 0} bg="transparent">
     <Stack gap="xs">
       {isAdvanced && (
         <Group justify="space-between" wrap="nowrap">
@@ -382,6 +383,7 @@ const InterfacesPanel = ({
       value={isAdvanced ? "interfaces" : accordionValue}
       onChange={isAdvanced ? undefined : setAccordionValue}
       variant={isAdvanced ? "contained" : "default"}
+      classNames={{ item: classes.accordionItem, control: classes.accordionControl }}
     >
       <Accordion.Item value="interfaces">
         <Accordion.Control icon={<IconTopologyBus size="var(--mantine-font-size-md)" />}>

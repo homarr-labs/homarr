@@ -3,8 +3,8 @@
 import type { CSSProperties } from "react";
 import { useMemo } from "react";
 import { Anchor, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text, Title, UnstyledButton } from "@mantine/core";
+import { useElementSize } from "@mantine/hooks";
 import { IconLink } from "@tabler/icons-react";
-import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -18,6 +18,8 @@ import classes from "./bookmark.module.css";
 
 type BookmarkLayout = WidgetComponentProps<"bookmarks">["options"]["layout"];
 
+const COMPACT_GRID_GAP = 4;
+
 export interface BookmarkDisplayItem {
   id: string;
   name: string;
@@ -30,7 +32,6 @@ export interface CompactBookmarkLayout {
   columns: number;
   hideHostname: boolean;
   hideTitle: boolean;
-  minimumItemWidth: number;
   minimumItemSize: number;
 }
 
@@ -43,9 +44,14 @@ export function getCompactBookmarkLayout(
   const count = Math.max(1, itemCount);
   const isGrid = layout === "grid" || layout === "gridHorizontal";
   const targetWidth = layout === "gridHorizontal" ? 180 : 104;
-  const columns = isGrid ? Math.max(1, Math.min(count, Math.floor(width / targetWidth))) : layout === "row" ? count : 1;
+  let columns = 1;
+  if (isGrid) {
+    columns = Math.max(1, Math.min(count, Math.floor((width + COMPACT_GRID_GAP) / (targetWidth + COMPACT_GRID_GAP))));
+  } else if (layout === "row") {
+    columns = count;
+  }
   const rows = Math.max(1, Math.ceil(count / columns));
-  const cellWidth = width / columns;
+  const cellWidth = (width - (columns - 1) * COMPACT_GRID_GAP) / columns;
   const cellHeight = height / rows;
   const usesHorizontalItems = layout === "column" || layout === "gridHorizontal";
 
@@ -53,7 +59,6 @@ export function getCompactBookmarkLayout(
     columns,
     hideHostname: cellWidth < 120 || cellHeight < (usesHorizontalItems ? 52 : 96),
     hideTitle: cellWidth < 64 || cellHeight < 40,
-    minimumItemWidth: targetWidth,
     minimumItemSize: usesHorizontalItems ? 48 : 96,
   };
 }
@@ -66,6 +71,7 @@ export default function BookmarksWidget({
   displayMode,
 }: WidgetComponentProps<"bookmarks">) {
   const board = useRequiredBoard();
+  const { ref: compactContentRef, width: compactContentWidth } = useElementSize<HTMLDivElement>();
   const apps =
     getUsableWidgetQueryData(
       clientApi.app.byIds.useQuery(options.items, {
@@ -105,8 +111,8 @@ export default function BookmarksWidget({
   );
 
   const compactLayout = useMemo(
-    () => getCompactBookmarkLayout(width, height, data.length, options.layout),
-    [width, height, data.length, options.layout],
+    () => getCompactBookmarkLayout(compactContentWidth || width, height, data.length, options.layout),
+    [compactContentWidth, data.length, height, options.layout, width],
   );
   const compactHideTitle = options.hideTitle || (compactLayout.hideTitle && !options.hideIcon);
   const compactHideHostname =
@@ -135,11 +141,11 @@ export default function BookmarksWidget({
           scrollbarSize={6}
           style={{ flex: 1, minHeight: 0 }}
         >
-          <div className={classes.compactScrollContent}>
+          <div ref={compactContentRef} className={classes.compactScrollContent}>
             {options.layout === "grid" || options.layout === "gridHorizontal" ? (
               <GridLayout
                 data={data}
-                minimumItemWidth={compactLayout.minimumItemWidth}
+                columns={compactLayout.columns}
                 minimumItemHeight={compactLayout.minimumItemSize}
                 itemDirection={options.layout === "gridHorizontal" ? "horizontal" : "vertical"}
                 hideTitle={compactHideTitle}
@@ -211,6 +217,7 @@ const FlexLayout = ({
               <Card
                 radius={board.itemRadius}
                 className={classes.card}
+                bg="transparent"
                 w="100%"
                 display="flex"
                 p={4}
@@ -295,7 +302,14 @@ const AdvancedBookmarksLayout = ({
               target={href ? (openNewTab ? "_blank" : "_self") : undefined}
               rel={href && openNewTab ? SAFE_NEW_TAB_REL : undefined}
             >
-              <Card radius={board.itemRadius} className={classes.card} withBorder={withBorder} p="md" h="100%">
+              <Card
+                radius={board.itemRadius}
+                className={classes.card}
+                bg="transparent"
+                withBorder={withBorder}
+                p="md"
+                h="100%"
+              >
                 <Group align="flex-start" wrap="nowrap">
                   <BookmarkIcon
                     app={app}
@@ -335,7 +349,7 @@ interface GridLayoutProps {
   withBorder: boolean;
   itemDirection: "horizontal" | "vertical";
   hasIconColor: boolean;
-  minimumItemWidth: number;
+  columns: number;
   minimumItemHeight: number;
 }
 
@@ -348,13 +362,13 @@ const GridLayout = ({
   withBorder,
   itemDirection,
   hasIconColor,
-  minimumItemWidth,
+  columns,
   minimumItemHeight,
 }: GridLayoutProps) => {
   const board = useRequiredBoard();
 
   return (
-    <Flex gap={4} wrap="wrap" miw="100%" mih="100%" style={{ alignContent: "stretch" }}>
+    <Flex gap={COMPACT_GRID_GAP} wrap="wrap" miw="100%" mih="100%" style={{ alignContent: "stretch" }}>
       {data.map((app) => {
         const href = getSafeAppHref(app.href);
         return (
@@ -366,14 +380,15 @@ const GridLayout = ({
             rel={href && openNewTab ? SAFE_NEW_TAB_REL : undefined}
             key={app.id}
             style={{
-              flex: `1 0 calc(${minimumItemWidth}px * var(--mantine-scale, 1))`,
+              flex: `1 0 calc((100% - calc(${COMPACT_GRID_GAP * (columns - 1)}px * var(--mantine-scale, 1))) / ${columns})`,
               minWidth: 0,
               minHeight: `calc(${minimumItemHeight}px * var(--mantine-scale, 1))`,
             }}
           >
             <Card
               h="100%"
-              className={combineClasses(classes.card, classes["card-grid"])}
+              className={classes.card}
+              bg="transparent"
               radius={board.itemRadius}
               withBorder={withBorder}
               p="xs"

@@ -51,7 +51,7 @@
 
 .board-grid-entry[data-board-item-selected="true"]::after {
   position: absolute;
-  inset: 0;
+  inset: var(--board-grid-item-inset, 0px);
   z-index: 100;
   content: "";
   background: color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent);
@@ -121,6 +121,7 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
 
 .board-grid-placeholder {
   z-index: 0;
+  clip-path: inset(var(--board-grid-item-inset, 0px));
   background: color-mix(in srgb, var(--mantine-primary-color-filled) 16%, transparent);
   border: 2px dashed var(--mantine-primary-color-filled);
   border-radius: var(--mantine-radius-md);
@@ -139,6 +140,7 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
 
 .board-grid-resize-outline {
   z-index: 1002;
+  clip-path: inset(var(--board-grid-item-inset, 0px));
   background: color-mix(in srgb, var(--mantine-primary-color-filled) 6%, transparent);
   border: 2px solid var(--mantine-primary-color-filled);
   border-radius: var(--mantine-radius-md);
@@ -151,17 +153,6 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
 
 .board-grid-editor[data-dnd-drop-target="true"][data-dnd-drop-valid="false"] {
   box-shadow: inset 0 0 0 2px var(--mantine-color-red-filled);
-}
-
-[data-section-kind="empty"][data-rail-placement="main"] > .board-grid-editor[data-dnd-drop-target="true"] {
-  outline: 2px solid color-mix(in srgb, var(--mantine-primary-color-filled) 60%, transparent);
-  outline-offset: 4px;
-  box-shadow: none;
-}
-
-[data-section-kind="empty"][data-rail-placement="main"]
-  > .board-grid-editor[data-dnd-drop-target="true"][data-dnd-drop-valid="false"] {
-  outline-color: var(--mantine-color-red-filled);
 }
 
 [data-board-container-collapsed]
@@ -240,11 +231,11 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="n"] {
-  top: -0.25rem;
+  top: calc(var(--board-grid-item-inset, 0px) - 0.25rem);
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="s"] {
-  bottom: -0.25rem;
+  bottom: calc(var(--board-grid-item-inset, 0px) - 0.25rem);
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="e"],
@@ -258,11 +249,11 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="e"] {
-  right: -0.25rem;
+  right: calc(var(--board-grid-item-inset, 0px) - 0.25rem);
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="w"] {
-  left: -0.25rem;
+  left: calc(var(--board-grid-item-inset, 0px) - 0.25rem);
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="ne"],
@@ -275,42 +266,30 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="ne"] {
-  top: -0.625rem;
-  right: -0.625rem;
+  top: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  right: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
   cursor: nesw-resize;
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="se"] {
-  right: -0.625rem;
-  bottom: -0.625rem;
+  right: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  bottom: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
   cursor: nwse-resize;
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="sw"] {
-  bottom: -0.625rem;
-  left: -0.625rem;
+  bottom: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  left: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
   cursor: nesw-resize;
 }
 
 .board-grid-resize-handle[data-grid-resize-handle="nw"] {
-  top: -0.625rem;
-  left: -0.625rem;
+  top: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
+  left: calc(var(--board-grid-item-inset, 0px) - 0.625rem);
   cursor: nwse-resize;
   /* Leaves a thin draggable border around the corner instead of a solid 44x44 hit area,
      so it doesn't sit on top of the container menu button anchored in this same corner. */
-  clip-path: polygon(
-    evenodd,
-    0 0,
-    100% 0,
-    100% 100%,
-    0 100%,
-    0 0,
-    4px 4px,
-    4px 40px,
-    40px 40px,
-    40px 4px,
-    4px 4px
-  );
+  clip-path: polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, 4px 4px, 4px 40px, 40px 40px, 40px 4px, 4px 4px);
 }
 
 @media (prefers-reduced-motion: reduce) {

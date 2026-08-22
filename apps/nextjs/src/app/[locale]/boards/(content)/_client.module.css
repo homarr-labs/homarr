@@ -19,35 +19,11 @@
   align-self: start;
   box-sizing: border-box;
   height: var(--board-gutter-viewport-height);
-  padding-top: 24px;
-  margin-top: -24px;
   overflow: clip;
 }
 
 .gutter[data-board-editing="true"] {
-  outline: 1px dashed var(--mantine-color-default-border);
-  outline-offset: -1px;
+  outline: 0.0625rem solid var(--mantine-color-default-border);
+  outline-offset: -0.0625rem;
   border-radius: var(--mantine-radius-md);
-}
-
-.gutter[data-board-editing="true"]::before {
-  position: sticky;
-  top: 0;
-  inset-inline-start: 0;
-  z-index: 2;
-  display: block;
-  width: fit-content;
-  height: 24px;
-  padding-inline: var(--mantine-spacing-xs);
-  margin-top: -24px;
-  overflow: hidden;
-  font-size: var(--mantine-font-size-xs);
-  line-height: 24px;
-  color: var(--mantine-color-dimmed);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  pointer-events: none;
-  content: attr(aria-label);
-  background: color-mix(in srgb, var(--mantine-color-body) 88%, transparent);
-  border-radius: var(--mantine-radius-sm);
 }

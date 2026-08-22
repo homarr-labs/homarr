@@ -29,7 +29,7 @@
   gap: clamp(2px, 1.5cqi, 5px);
   padding: clamp(4px, 2.5cqi, 10px);
   border-radius: var(--mantine-radius-md);
-  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+  background-color: transparent;
   overflow: hidden;
 }
 

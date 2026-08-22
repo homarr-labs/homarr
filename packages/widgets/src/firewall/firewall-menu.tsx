@@ -1,6 +1,7 @@
 import { Box, Select } from "@mantine/core";
 
 import type { Firewall } from "./component";
+import classes from "./firewall.module.css";
 
 interface FirewallMenuProps {
   onChange: (value: string | null) => void;
@@ -18,6 +19,7 @@ export const FirewallMenu = ({ onChange, isTiny, dropdownItems, selectedFirewall
       w="100%"
       color="lightgray"
       data={dropdownItems}
+      classNames={{ input: classes.selectInput }}
       styles={{
         input: {
           minHeight: "24px",
