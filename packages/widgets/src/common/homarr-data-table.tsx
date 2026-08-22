@@ -153,7 +153,7 @@ export function HomarrDataTable<T>({
         resizable: !isEditMode,
         cellsStyle: defaultColumnProps?.cellsStyle ?? (() => ({ padding: cellPadding })),
       }}
-      scrollAreaProps={{ type: "auto", scrollbarSize: 6, ...scrollAreaProps }}
+      scrollAreaProps={scrollAreaProps}
     />
   );
 }
