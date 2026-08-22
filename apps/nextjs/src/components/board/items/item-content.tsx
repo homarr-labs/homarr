@@ -1,9 +1,8 @@
-import type { ComponentType, CSSProperties, MutableRefObject } from "react";
+import type { ComponentType, CSSProperties, MutableRefObject, PropsWithChildren } from "react";
 import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
-import type { CardProps } from "@mantine/core";
-import { Badge, Box, Button, Card, Center, Loader, Portal } from "@mantine/core";
+import { Box, Button, Center, Loader, Portal } from "@mantine/core";
 import { useElementSize, useIsomorphicEffect } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
@@ -24,6 +23,7 @@ import {
 } from "@homarr/widgets/definition";
 import type { WidgetComponentProps, WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
 import { loadWidgetResources, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
+import { WidgetCardShell, WidgetTitleBadge } from "@homarr/widgets/widget-card-shell";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { getLogicalTrackSize } from "~/components/board/layout";
@@ -35,7 +35,6 @@ import { getAdvancedFocusClosePosition, getAdvancedFocusRect } from "../advanced
 import { AdvancedFocusManualSurface } from "../advanced-focus/manual-surface";
 import { redirectShiftWheel } from "../advanced-focus/wheel";
 import { useBoardGridPortalHost } from "../sections/grid/grid-portal-host";
-import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { WidgetContextMenu } from "./widget-context-menu";
@@ -49,47 +48,28 @@ interface BoardItemContentProps {
   item: SectionItem;
 }
 
-const getOverflowFromKind = (kind: SectionItem["kind"], hasCustomCssClasses: boolean) => {
-  if (kind === "systemResources") return { overflowX: "visible", overflowY: "visible" } as const;
-  if (kind === "iframe" || kind === "assistant") return { overflowX: "hidden", overflowY: "hidden" } as const;
-  if (hasCustomCssClasses) return {};
-  return { overflowX: "hidden", overflowY: "auto" } as const;
-};
-
-type BoardItemCardProps = CardProps & {
+type BoardItemCardProps = PropsWithChildren<{
   item: SectionItem;
   innerRef: (element: HTMLDivElement | null) => void;
-};
+}>;
 
-const BoardItemCard = ({ item, innerRef, children, ...cardProps }: BoardItemCardProps) => {
+const BoardItemCard = ({ item, innerRef, children }: BoardItemCardProps) => {
   const board = useRequiredBoard();
 
   return (
-    <Card
-      {...cardProps}
-      ref={innerRef}
+    <WidgetCardShell
+      innerRef={innerRef}
+      kind={item.kind}
+      advancedOptions={item.advancedOptions}
+      opacity={board.opacity / 100}
       w="100%"
       h="100%"
       data-grid-item-content
-      className={combineClasses(
-        classes.itemCard,
-        `${item.kind}-wrapper`,
-        "board-grid-item-content",
-        item.advancedOptions.customCssClasses.join(" "),
-      )}
       radius={board.itemRadius}
-      styles={{
-        root: {
-          "--opacity": board.opacity / 100,
-          containerType: "size",
-          ...getOverflowFromKind(item.kind, item.advancedOptions.customCssClasses.length > 0),
-          "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-        },
-      }}
       p={0}
     >
       {children}
-    </Card>
+    </WidgetCardShell>
   );
 };
 
@@ -297,8 +277,11 @@ const LoadedBoardItemContent = ({
       : undefined;
 
   const widgetCard = (
-    <Card
-      ref={cardRef}
+    <WidgetCardShell
+      innerRef={cardRef}
+      kind={item.kind}
+      advancedOptions={item.advancedOptions}
+      opacity={isAdvanced ? 0.98 : board.opacity / 100}
       id={isPreview ? advancedViewId : undefined}
       role={isPreview ? "region" : undefined}
       aria-label={isPreview ? advancedViewLabel : undefined}
@@ -309,21 +292,9 @@ const LoadedBoardItemContent = ({
       h={isManual ? "100%" : isAdvanced ? undefined : "100%"}
       w={isManual ? "100%" : isAdvanced ? undefined : "100%"}
       className={combineClasses(
-        classes.itemCard,
-        `${item.kind}-wrapper`,
-        "board-grid-item-content",
         isPreview && advancedFocusClasses.surface,
         activeFocus?.phase === "closing" && isPreview && advancedFocusClasses.surfaceClosing,
-        item.advancedOptions.customCssClasses.join(" "),
       )}
-      styles={{
-        root: {
-          "--opacity": isAdvanced ? 0.98 : board.opacity / 100,
-          containerType: "size",
-          ...getOverflowFromKind(item.kind, item.advancedOptions.customCssClasses.length > 0),
-          "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-        },
-      }}
       style={previewStyle}
     >
       <Box ref={contentRef} w="100%" h="100%" mih={0}>
@@ -351,7 +322,7 @@ const LoadedBoardItemContent = ({
           />
         </ErrorBoundary>
       </Box>
-    </Card>
+    </WidgetCardShell>
   );
 
   return (
@@ -425,25 +396,12 @@ const LoadedBoardItemContent = ({
           )}
         </Box>
       </WidgetContextMenu>
-      {!isAdvanced && item.advancedOptions.title?.trim() && (
-        <Badge
-          pos="absolute"
-          style={{ zIndex: "var(--mantine-z-index-app)" }}
-          top={2}
-          left={16}
-          size="xs"
+      {!isAdvanced && (
+        <WidgetTitleBadge
+          advancedOptions={item.advancedOptions}
+          opacity={board.opacity / 100}
           radius={board.itemRadius}
-          styles={{
-            root: {
-              "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-              "--opacity": board.opacity / 100,
-            },
-          }}
-          className={itemContentClasses.badge}
-          c="var(--mantine-color-text)"
-        >
-          {item.advancedOptions.title}
-        </Badge>
+        />
       )}
     </>
   );

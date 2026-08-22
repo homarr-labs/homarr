@@ -56,17 +56,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  overflow: hidden;
-  box-shadow: var(--mantine-shadow-lg);
   transform-origin: top left;
-}
-
-.previewTitle {
-  position: absolute;
-  z-index: 2;
-  top: var(--mantine-spacing-xs);
-  left: var(--mantine-spacing-xs);
-  max-width: calc(100% - var(--mantine-spacing-md));
 }
 
 .previewContent {

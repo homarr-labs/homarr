@@ -10,12 +10,16 @@ import { clientApi } from "@homarr/api/client";
 import { boardViewportWidthCookieName, getLayoutIdForViewportWidth } from "./layout-selection";
 import { updateBoardName } from "./updater";
 
-const BoardContext = createContext<{
-  board: RouterOutputs["board"]["getBoardByName"];
+type Board = RouterOutputs["board"]["getBoardByName"];
+
+interface BoardContextValue {
+  board: Board;
   layoutOverrideId: string | null;
   currentLayout: string;
   initialViewportWidth: number;
-} | null>(null);
+}
+
+const BoardContext = createContext<BoardContextValue | null>(null);
 
 const subscribeToViewport = (onStoreChange: () => void) => {
   if (typeof window === "undefined") return () => undefined;
@@ -35,6 +39,23 @@ const subscribeToViewport = (onStoreChange: () => void) => {
     window.removeEventListener("resize", handleResize);
     window.cancelAnimationFrame(animationFrame);
   };
+};
+
+export const BoardPreviewProvider = ({ children, board }: PropsWithChildren<{ board: Board }>) => {
+  const currentLayout = board.layouts[0]?.id ?? "";
+
+  return (
+    <BoardContext.Provider
+      value={{
+        board,
+        layoutOverrideId: null,
+        currentLayout,
+        initialViewportWidth: 0,
+      }}
+    >
+      {children}
+    </BoardContext.Provider>
+  );
 };
 
 export const BoardProvider = ({

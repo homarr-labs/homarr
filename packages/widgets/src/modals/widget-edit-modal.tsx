@@ -3,13 +3,12 @@
 /* eslint-disable react/no-unstable-nested-components -- Widget modules and definition-bound fallbacks are loaded dynamically. */
 
 import { useEffect, useId, useRef, useState } from "react";
-import type { ComponentType, FormEvent } from "react";
-import { Alert, Badge, Box, Button, Card, Center, Divider, Group, SimpleGrid, Stack, Tabs, Text } from "@mantine/core";
+import type { ComponentType, FormEvent, PropsWithChildren } from "react";
+import { Alert, Badge, Box, Button, Center, Divider, Group, SimpleGrid, Stack, Tabs, Text } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
 import { useElementSize } from "@mantine/hooks";
 import { IconArrowLeft, IconEye, IconPencil, IconSettings } from "@tabler/icons-react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import combineClasses from "clsx";
 import { ErrorBoundary } from "react-error-boundary";
 import { z } from "zod/v4";
 
@@ -17,8 +16,9 @@ import { objectEntries } from "@homarr/common";
 import { IntegrationProvider, useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import type { WidgetKind } from "@homarr/definitions";
-import { createModal, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeForm, useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
+import { SpotlightProvider } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "@homarr/ui";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
@@ -32,6 +32,7 @@ import { WidgetError } from "../errors/component";
 import { OPTIONS_SUPER_REFINE } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetIntegrationSelect } from "../widget-integration-select";
+import { WidgetCardShell, WidgetTitleBadge } from "../widget-card-shell";
 import { WidgetAdvancedOptionsModal } from "./widget-advanced-options-modal";
 import type { EmbeddedAppEditFormHandle } from "./embedded-app-edit-form";
 import { EmbeddedAppEditForm } from "./embedded-app-edit-form";
@@ -69,6 +70,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   onOpenNewIntegration?: (onCreated?: (id: string) => void) => void;
   previewComponent?: ComponentType<WidgetComponentProps<TSort>>;
   previewDimensions?: { width: number; height: number; scale?: number };
+  previewWrapper?: ComponentType<PropsWithChildren>;
 }
 
 interface WidgetEditPreviewProps {
@@ -81,7 +83,16 @@ interface WidgetEditPreviewProps {
   dimensions?: { width: number; height: number; scale?: number };
   integrationData: IntegrationSelectOption[];
   onChangeOptions: (newOptions: Record<string, unknown>) => void;
+  PreviewWrapper?: ComponentType<PropsWithChildren>;
 }
+
+const PreviewRuntimeBoundary = ({
+  Wrapper,
+  children,
+}: PropsWithChildren<{ Wrapper?: ComponentType<PropsWithChildren> }>) => {
+  if (!Wrapper) return children;
+  return <Wrapper>{children}</Wrapper>;
+};
 
 const WidgetEditPreview = ({
   kind,
@@ -93,8 +104,11 @@ const WidgetEditPreview = ({
   dimensions = { width: 400, height: 240 },
   integrationData,
   onChangeOptions,
+  PreviewWrapper,
 }: WidgetEditPreviewProps) => {
   const tItem = useI18n("item.edit");
+  const board = useOptionalBoard();
+  const generatedPreviewId = useId().replaceAll(":", "");
   const { ref, width: availableWidth, height: availableHeight } = useElementSize<HTMLDivElement>();
   const sourceWidth = Math.max(dimensions.width, 1);
   const sourceHeight = Math.max(dimensions.height, 1);
@@ -111,14 +125,20 @@ const WidgetEditPreview = ({
   const hasIntegrationSupport = "supportedIntegrations" in definition;
   const integrationRequired = hasIntegrationSupport && definition.integrationsRequired !== false;
   const isMissingIntegration = integrationRequired && state.integrationIds.length === 0;
-  const previewIntegrations = integrationData.map((integration) => ({
-    id: integration.id,
-    permissions: integration.permissions ?? {
-      hasFullAccess: false,
-      hasInteractAccess: false,
-      hasUseAccess: false,
-    },
-  }));
+  const previewIntegrations = integrationData
+    .filter((integration) => state.integrationIds.includes(integration.id))
+    .map((integration) => ({
+      id: integration.id,
+      permissions: integration.permissions ?? {
+        hasFullAccess: false,
+        hasInteractAccess: false,
+        hasUseAccess: false,
+      },
+    }));
+  let componentItemId = itemId;
+  if (kind === "assistant") componentItemId = `widget-preview-${generatedPreviewId}`;
+  const isPendingCustomWidget = kind === "customApi" && !itemId;
+  const previewOpacity = (board?.opacity ?? 100) / 100;
 
   return (
     <Stack className={classes.previewPanel} gap={0}>
@@ -132,27 +152,23 @@ const WidgetEditPreview = ({
           </Alert>
         ) : (
           <Box className={classes.previewViewport} w={previewWidth} h={previewHeight}>
-            <Card
-              className={combineClasses(
-                classes.previewWidget,
-                `${kind}-wrapper`,
-                "board-grid-item-content",
-                state.advancedOptions.customCssClasses,
-              )}
+            <WidgetCardShell
+              className={classes.previewWidget}
+              kind={kind}
+              advancedOptions={state.advancedOptions}
+              opacity={previewOpacity}
+              radius={board?.itemRadius}
               w={sourceWidth}
               h={sourceHeight}
               p={0}
-              style={{
-                borderColor: state.advancedOptions.borderColor || undefined,
-                containerType: "size",
-                transform: `scale(${previewScale})`,
-              }}
+              data-grid-item-content
+              style={{ transform: `scale(${previewScale})` }}
             >
-              {state.advancedOptions.title && (
-                <Badge className={classes.previewTitle} size="sm" variant="default">
-                  {state.advancedOptions.title}
-                </Badge>
-              )}
+              <WidgetTitleBadge
+                advancedOptions={state.advancedOptions}
+                opacity={previewOpacity}
+                radius={board?.itemRadius}
+              />
               <QueryErrorResetBoundary>
                 {({ reset }) => (
                   <ErrorBoundary
@@ -162,25 +178,29 @@ const WidgetEditPreview = ({
                       <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
                     )}
                   >
-                    <IntegrationProvider integrations={previewIntegrations}>
-                      <div className={classes.previewContent} inert>
-                        <Component
-                          options={state.options as never}
-                          integrationIds={state.integrationIds}
-                          width={sourceWidth}
-                          height={sourceHeight}
-                          isEditMode={false}
-                          displayMode="compact"
-                          boardId={boardId}
-                          itemId={itemId}
-                          setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
-                        />
-                      </div>
-                    </IntegrationProvider>
+                    <PreviewRuntimeBoundary Wrapper={PreviewWrapper}>
+                      <SpotlightProvider>
+                        <IntegrationProvider integrations={previewIntegrations}>
+                          <div className={classes.previewContent} inert>
+                            <Component
+                              options={state.options as never}
+                              integrationIds={state.integrationIds}
+                              width={sourceWidth}
+                              height={sourceHeight}
+                              isEditMode={isPendingCustomWidget}
+                              displayMode="compact"
+                              boardId={boardId}
+                              itemId={componentItemId}
+                              setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
+                            />
+                          </div>
+                        </IntegrationProvider>
+                      </SpotlightProvider>
+                    </PreviewRuntimeBoundary>
                   </ErrorBoundary>
                 )}
               </QueryErrorResetBoundary>
-            </Card>
+            </WidgetCardShell>
           </Box>
         )}
       </Center>
@@ -398,6 +418,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           dimensions={innerProps.previewDimensions}
           integrationData={innerProps.integrationData}
           onChangeOptions={handlePreviewOptionsChange}
+          PreviewWrapper={innerProps.previewWrapper}
         />
       )}
       {innerProps.previewComponent && hasWidgetSettings && (
@@ -602,10 +623,6 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   defaultTitle(t) {
     return t("item.edit.title");
   },
-  size: "100rem",
-  transitionProps: {
-    transition: "pop",
-    duration: 180,
-  },
+  size: modalSizeForm,
   closeOnClickOutside: false,
 });
