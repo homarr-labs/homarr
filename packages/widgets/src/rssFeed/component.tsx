@@ -219,7 +219,7 @@ export const getRssEntryDisplay = ({
   descriptionLines,
 }: RssEntryDisplayInput) => ({
   showDescription: isAdvanced || (!hideDescription && !isTiny),
-  showImage: isAdvanced || (showPosterImage && !isDense),
+  showImage: isAdvanced || (showPosterImage && !isTiny),
   showSource: isAdvanced || !isDense,
   descriptionLineClamp: isAdvanced ? undefined : descriptionLines,
 });

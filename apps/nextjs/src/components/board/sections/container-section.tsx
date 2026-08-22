@@ -42,18 +42,7 @@ export const BoardContainerSection = ({ section }: Props) => {
   const labelRight = isEditMode ? 48 : options.showOpenAll ? 40 : 8;
 
   return (
-    <Box
-      className={combineClasses("board-grid-item-content", classes.containerRoot)}
-      pos="relative"
-      data-grid-item-content
-      w="100%"
-      h="100%"
-      style={{
-        overflow: "visible",
-        "--opacity": board.opacity / 100,
-        "--border-color": options.borderColor || undefined,
-      }}
-    >
+    <Box className="board-grid-item-content" data-grid-item-content w="100%" h="100%" style={{ overflow: "visible" }}>
       <Card
         className={combineClasses(
           classes.itemCard,
@@ -66,6 +55,8 @@ export const BoardContainerSection = ({ section }: Props) => {
         styles={{
           root: {
             overflow: "visible",
+            "--opacity": board.opacity / 100,
+            "--border-color": options.borderColor || undefined,
           },
         }}
         radius={board.itemRadius}
@@ -110,6 +101,31 @@ export const BoardContainerSection = ({ section }: Props) => {
             )}
           </Button>
         )}
+        {!isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
+          <Badge
+            pos="absolute"
+            top="calc(var(--mantine-spacing-xs) * -1)"
+            left={labelLeft}
+            maw={`calc(100% - ${labelLeft + labelRight}px)`}
+            size="md"
+            radius="sm"
+            variant="default"
+            c="var(--mantine-color-text)"
+            style={{
+              zIndex: 9,
+              overflow: "hidden",
+              pointerEvents: "none",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              backgroundColor: "var(--background-color)",
+              borderColor: "var(--border-color)",
+            }}
+            title={options.title}
+            data-board-container-label
+          >
+            {options.title}
+          </Badge>
+        )}
         {options.showOpenAll && !isEditMode && (
           <ActionIcon
             pos="absolute"
@@ -138,24 +154,6 @@ export const BoardContainerSection = ({ section }: Props) => {
           <SectionGrid section={section} columnCount={section.width} requestedRowCount={section.height} label={label} />
         </Box>
       </Card>
-      {!isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
-        <Badge
-          className={classes.containerLabel}
-          pos="absolute"
-          top="calc(var(--mantine-spacing-lg) * -1 - 2px)"
-          left={labelLeft}
-          maw={`calc(100% - ${labelLeft + labelRight}px)`}
-          size="md"
-          radius="sm"
-          fz="md"
-          variant="default"
-          c="var(--mantine-color-text)"
-          title={options.title}
-          data-board-container-label
-        >
-          {options.title}
-        </Badge>
-      )}
       {isEditMode && <BoardContainerMenu section={section} />}
     </Box>
   );

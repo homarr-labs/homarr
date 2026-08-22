@@ -257,7 +257,7 @@ const CalendarBase = ({
         }}
       />
       {hasErrors && (
-        <Group className={classes.errorIndicator} gap={0} pos="absolute" top={4} right={4}>
+        <Group className={classes.errorIndicator} gap={0} pos="absolute">
           <IntegrationErrorIndicator results={failedIntegrations} />
           <WidgetQueryErrorIndicator error={queryError} label={t("name")} />
         </Group>
