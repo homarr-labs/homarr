@@ -9,18 +9,18 @@ import {
 } from "../index";
 
 describe("fixed dashboard geometry", () => {
-  test("keeps a 1x1 item exactly 200px with a fixed 24px gap", () => {
+  test("keeps a 1x1 item exactly 200px with a fixed 12px gap", () => {
     expect(getLogicalTrackSize(1)).toBe(200);
-    expect(getLogicalTrackSize(0.5)).toBe(88);
-    expect(getLogicalTrackSize(2)).toBe(424);
-    expect(getLogicalTrackSize(3)).toBe(648);
+    expect(getLogicalTrackSize(0.5)).toBe(94);
+    expect(getLogicalTrackSize(2)).toBe(412);
+    expect(getLogicalTrackSize(3)).toBe(624);
 
     expect(getLogicalItemStyle({ x: 1, y: 2, w: 2, h: 3 })).toEqual({
       position: "absolute",
-      left: 224,
-      top: 448,
-      width: 424,
-      height: 648,
+      left: 212,
+      top: 424,
+      width: 412,
+      height: 624,
     });
   });
 
@@ -35,7 +35,7 @@ describe("fixed dashboard geometry", () => {
     expect(getGridRowCountForVisualHeight(1200, 1)).toBe(6);
     expect(getLogicalTrackSize(getGridRowCountForVisualHeight(1200, 1))).toBeGreaterThanOrEqual(1200);
 
-    expect(getGridRowCountForVisualHeight(1200, 0.5)).toBe(11);
+    expect(getGridRowCountForVisualHeight(1200, 0.5)).toBe(12);
     expect(getLogicalTrackSize(getGridRowCountForVisualHeight(1200, 0.5)) * 0.5).toBeGreaterThanOrEqual(1200);
   });
 });

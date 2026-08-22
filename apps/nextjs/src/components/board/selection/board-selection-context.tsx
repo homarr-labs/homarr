@@ -31,7 +31,7 @@ interface BoardSelectionContextValue {
   copySelectedItems: () => Promise<void>;
   pasteItems: () => Promise<void>;
   removeSelectedItems: () => void;
-  moveSelectedItemsToSection: (sectionId: string) => void;
+  moveSelectedItemsToSection: (sectionId: string, maxRowCount?: number | null) => void;
 }
 
 const BoardSelectionContext = createContext<BoardSelectionContextValue | null>(null);
@@ -229,7 +229,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
   }, [board.items, clearSelection, persistBoard, selectedItemIds, tCommon, tSelection]);
 
   const moveSelectedItemsToSection = useCallback(
-    (targetSectionId: string) => {
+    (targetSectionId: string, maxRowCount?: number | null) => {
       if (selectedItemIds.size === 0) return;
 
       const idsToMove = new Set(selectedItemIds);
@@ -248,7 +248,7 @@ export const BoardSelectionProvider = ({ children }: PropsWithChildren) => {
           targetSection.kind === "container"
             ? (containerLayout?.width ?? 0)
             : getBoardLaneColumnCount(boardLayout, getRootSectionLane(targetSection.xOffset));
-        const rowCount = containerLayout?.height ?? 9999;
+        const rowCount = containerLayout?.height ?? maxRowCount ?? 9999;
         if (columnCount === 0 || rowCount === 0) return previous;
 
         const existingContainers = previous.sections

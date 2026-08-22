@@ -16,7 +16,7 @@ const AssistantPromptDetail = () => {
   const t = useI18n("assistant");
   return (
     <Group px="md" py="sm" wrap="nowrap">
-      <ThemeIcon color="red" variant="light" radius="xl">
+      <ThemeIcon variant="light" radius="xl">
         <IconRobot size={17} />
       </ThemeIcon>
       <Stack gap={1}>

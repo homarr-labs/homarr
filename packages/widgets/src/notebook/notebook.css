@@ -1,5 +1,6 @@
 .tiptap hr {
   border-top-style: double;
+  border-top-color: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
 }
 
 .tiptap ul[data-type="taskList"] {
@@ -20,6 +21,10 @@
   outline: 3px solid rgba(0, 65, 198, 0.8);
 }
 
+.tiptap table :where(tr) {
+  background-color: transparent;
+}
+
 .tiptap table {
   border-collapse: collapse;
   margin: 0;
@@ -28,8 +33,8 @@
   width: 100%;
 }
 
-.tiptap table td {
-  border-color: var(--mantine-color-gray-5) !important;
+.tiptap table :where(th, td) {
+  border-color: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45)) !important;
   border-width: 1px !important;
   border-style: solid !important;
   box-sizing: border-box;
@@ -39,7 +44,7 @@
   vertical-align: top;
 }
 
-.tiptap table td > * {
+.tiptap table :where(th, td) > * {
   margin-bottom: 0;
 }
 
@@ -66,6 +71,23 @@
 .tiptap[contenteditable="false"].resize-cursor {
   pointer-events: none;
 }
+.homarr-notebook-toolbar-group {
+  background-color: rgb(from var(--mantine-color-body) r g b / calc(var(--opacity, 1) * 0.12));
+}
+
+.homarr-notebook .tiptap :where(pre, blockquote) {
+  background-color: rgb(from var(--mantine-color-body) r g b / calc(var(--opacity, 1) * 0.12));
+}
+
+.homarr-notebook .tiptap :where(code, kbd) {
+  background-color: rgb(from var(--mantine-color-body) r g b / calc(var(--opacity, 1) * 0.12));
+  border-color: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
+}
+
+.homarr-notebook .tiptap :where(pre) :where(code) {
+  background-color: transparent;
+}
+
 
 .ProseMirror {
   height: 100%;

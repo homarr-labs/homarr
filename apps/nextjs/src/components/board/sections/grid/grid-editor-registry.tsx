@@ -55,6 +55,7 @@ export interface GridEditorRenderProps {
 }
 
 export interface RegisteredGridEditor extends GridEditorRenderProps {
+  placementMaxRowCount: number | null;
   host: HTMLElement;
   disabled: boolean;
 }

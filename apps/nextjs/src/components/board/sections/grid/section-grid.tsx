@@ -130,6 +130,10 @@ export const SectionGrid = ({
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   const maxRowCount = section.kind === "container" || railPlacement !== "main" ? rowCount : null;
+  let placementMaxRowCount = maxRowCount;
+  if (railPlacement !== "main") {
+    placementMaxRowCount = minimumViewportRowCount;
+  }
   // A scrollable container isn't forced to grow with its content - it scrolls internally instead
   // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
   const isScrollableContainer = section.kind === "container" && section.options.scrollable;
@@ -175,6 +179,7 @@ export const SectionGrid = ({
       columnCount,
       rowCount,
       maxRowCount,
+      placementMaxRowCount,
       placements: displayPlacements,
       transactionPlacements: placements,
       className: editorClassName,
@@ -190,6 +195,7 @@ export const SectionGrid = ({
     entryElementStore,
     isInteractionDisabled,
     maxRowCount,
+    placementMaxRowCount,
     placements,
     rowCount,
     section,

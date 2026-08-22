@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 import { useEditMode } from "@homarr/boards/edit-mode";
 
 import { getLoadedGridEditorModule, loadGridEditorAsync } from "./grid-editor-loader";
-import { GridEditorRegistryProvider, useRegisteredGridEditors } from "./grid-editor-registry";
+import { useRegisteredGridEditors } from "./grid-editor-registry";
 import { GridEditorRuntimeProvider } from "./grid-editor-runtime";
 
 type BoardGridEditorProviderComponent = ComponentType<PropsWithChildren>;
@@ -54,14 +54,14 @@ export const BoardGridEditorBoundary = ({ children }: PropsWithChildren) => {
   const GridEditor = resolvedEditorModule?.default ?? null;
 
   return (
-    <GridEditorRegistryProvider>
+    <>
       <GridEditorRuntimeProvider status={runtimeStatus}>{children}</GridEditorRuntimeProvider>
       {isEditMode && Provider && GridEditor && (
         <Provider>
           <RegisteredGridEditors GridEditor={GridEditor} />
         </Provider>
       )}
-    </GridEditorRegistryProvider>
+    </>
   );
 };
 

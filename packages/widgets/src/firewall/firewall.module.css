@@ -1,7 +1,33 @@
-[data-mantine-color-scheme="light"] .card {
-  background-color: var(--mantine-color-gray-1);
+.card {
+  background-color: transparent;
+  border-color: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
 }
 
-[data-mantine-color-scheme="dark"] .card {
-  background-color: var(--mantine-color-dark-7);
+.accordionItem {
+  border-color: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
+  background-color: transparent;
+}
+
+.accordionItem[data-active] {
+  background-color: transparent;
+}
+
+.accordionControl {
+  background-color: transparent;
+}
+
+.accordionControl:hover,
+.accordionControl:focus-visible,
+.accordionControl:active {
+  background-color: rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.4));
+}
+
+.selectInput {
+  background-color: transparent;
+  border-color: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
+}
+
+.selectInput:focus,
+.selectInput:focus-within {
+  border-color: var(--mantine-primary-color-filled);
 }

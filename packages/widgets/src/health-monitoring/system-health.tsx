@@ -191,7 +191,7 @@ export const SystemHealthMonitoring = ({
                   ))}
               </Flex>
               {isAdvanced && (
-                <Card radius={board.itemRadius} p="sm">
+                <Card className={classes.card} radius={board.itemRadius} p="sm">
                   <SystemInformationList healthInfo={healthInfo} memoryUsage={memoryUsage} t={t} compact />
                 </Card>
               )}

@@ -44,7 +44,7 @@ export function StatsBar({
 
 function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | number }) {
   return (
-    <Paper p="xs" radius="lg">
+    <Paper p="xs" radius="lg" bg="transparent">
       <Group gap={4} wrap="nowrap">
         {icon}
         <Stack gap={0} style={{ overflow: "hidden" }}>

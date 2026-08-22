@@ -50,6 +50,10 @@
   overflow: visible;
 }
 
+.staticItem:has([data-board-container-label]) {
+  z-index: 2;
+}
+
 .editorEntry {
   overflow: visible;
   cursor: grab;

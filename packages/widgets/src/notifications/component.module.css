@@ -1,0 +1,5 @@
+.card,
+.row {
+  background-color: transparent;
+  border-color: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.38));
+}

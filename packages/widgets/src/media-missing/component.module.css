@@ -4,29 +4,35 @@
   display: flex;
   text-decoration: none;
   color: inherit;
-  border: 1px solid var(--border-color);
-  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  border: 1px solid
+    rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
+  background-color: transparent;
   transition:
     border-color 120ms ease,
     background-color 120ms ease;
 
-  @mixin dark {
-    --border-color: var(--mantine-color-dark-4);
-  }
-  @mixin light {
-    --border-color: var(--mantine-color-gray-3);
-  }
-
   &:hover,
   &:focus-visible {
     border-color: var(--mantine-primary-color-filled);
-    background-color: var(--mantine-color-default-hover);
+    background-color: rgb(
+      from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.14)
+    );
   }
 
   &:focus-visible {
     outline: 2px solid var(--mantine-primary-color-filled);
     outline-offset: -2px;
   }
+}
+
+:global(.mediaMissing-wrapper) :global(.mantine-SimpleGrid-root) > :global(.mantine-Paper-root) {
+  border-color: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
+  background-color: transparent;
+}
+
+:global(.mediaMissing-wrapper) :global(.mantine-Tabs-list) {
+  --tab-border-color: rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45));
+  --tab-hover-color: rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * 0.14));
 }
 
 .content {

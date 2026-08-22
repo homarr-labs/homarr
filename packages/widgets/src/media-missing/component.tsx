@@ -36,11 +36,13 @@ import classes from "./component.module.css";
 import type { MediaMissingTab } from "./tabs";
 import { resolveMediaMissingTab } from "./tabs";
 
+const MIN_CARD_WIDTH = 280;
+const MAX_COLUMNS = 4;
+
 export default function MediaMissingWidget({
   integrationIds,
   options,
   width,
-  height,
   displayMode,
   widgetRuntimeRef,
 }: WidgetComponentProps<"mediaMissing">) {
@@ -88,9 +90,7 @@ export default function MediaMissingWidget({
   const enabledPanelCount = Number(showMissing) + Number(showQueued);
   const panelWidth = isAdvanced && enabledPanelCount > 1 ? width / enabledPanelCount : width;
   const isThin = !isAdvanced && panelWidth > 0 && panelWidth < 160;
-  const isShort = !isAdvanced && height > 0 && height < 180;
-  const targetCardWidth = isShort ? 130 : 200;
-  const columns = panelWidth > 0 ? Math.max(1, Math.min(Math.floor(panelWidth / targetCardWidth), 4)) : 1;
+  const columns = panelWidth > 0 ? Math.max(1, Math.min(Math.floor(panelWidth / MIN_CARD_WIDTH), MAX_COLUMNS)) : 1;
   const density: Density = isThin ? "thin" : panelWidth > 0 && panelWidth / columns < 180 ? "compact" : "comfortable";
 
   const tabLabel = (label: string, shown: number, total: number) => (isThin ? total : `${label} (${shown}/${total})`);
@@ -114,7 +114,7 @@ export default function MediaMissingWidget({
             {emptyLabel}
           </Text>
         ) : (
-          <SimpleGrid cols={columns} spacing="xs" verticalSpacing="xs">
+          <SimpleGrid cols={Math.min(columns, entries.length)} spacing="xs" verticalSpacing="xs">
             {entries.map(({ item, integrationId }) => (
               <MediaCard
                 key={`${integrationId}-${item.type}-${item.id}`}

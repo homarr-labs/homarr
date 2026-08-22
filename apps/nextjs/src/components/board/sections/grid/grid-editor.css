@@ -155,17 +155,6 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
   box-shadow: inset 0 0 0 2px var(--mantine-color-red-filled);
 }
 
-[data-section-kind="empty"][data-rail-placement="main"] > .board-grid-editor[data-dnd-drop-target="true"] {
-  outline: 2px solid color-mix(in srgb, var(--mantine-primary-color-filled) 60%, transparent);
-  outline-offset: 4px;
-  box-shadow: none;
-}
-
-[data-section-kind="empty"][data-rail-placement="main"]
-  > .board-grid-editor[data-dnd-drop-target="true"][data-dnd-drop-valid="false"] {
-  outline-color: var(--mantine-color-red-filled);
-}
-
 [data-board-container-collapsed]
   > [data-board-container-body]
   > [data-section-id]

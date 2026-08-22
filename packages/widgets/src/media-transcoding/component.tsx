@@ -5,17 +5,16 @@ import type { ReactNode } from "react";
 import { getQueryKey } from "@trpc/react-query";
 import {
   Box,
-  Center,
+  Button,
   Divider,
   Group,
   Pagination,
   Paper,
   ScrollArea,
-  SegmentedControl,
+  Select,
   SimpleGrid,
   Stack,
   Text,
-  VisuallyHidden,
 } from "@mantine/core";
 import { IconClipboardList, IconCpu2, IconReportAnalytics } from "@tabler/icons-react";
 
@@ -147,35 +146,45 @@ export default function MediaTranscodingWidget({
       )}
       <Divider />
       <Group gap="xs" mb={4} ms={4} me={8} wrap="nowrap">
-        <SegmentedControl
-          data={views.map((value) => {
-            const Icon = viewIcons[value];
-            return {
-              label: (
-                <Center style={{ gap: 4 }}>
-                  <Icon size="var(--mantine-font-size-xs)" style={{ flexShrink: 0 }} />
-                  {footerLayout.showTabLabels ? (
-                    <Text span size="xs">
-                      {t(`tab.${value}`)}
-                    </Text>
-                  ) : (
-                    <VisuallyHidden>{t(`tab.${value}`)}</VisuallyHidden>
-                  )}
-                </Center>
-              ),
+        {width >= 560 ? (
+          <Button.Group style={{ flex: 1, minWidth: 0 }}>
+            {views.map((value) => {
+              const Icon = viewIcons[value];
+              return (
+                <Button
+                  key={value}
+                  size="compact-xs"
+                  variant={value === view ? "filled" : "default"}
+                  leftSection={<Icon size="var(--mantine-font-size-xs)" />}
+                  aria-pressed={value === view}
+                  style={{ flex: 1 }}
+                  onClick={() => setView(value)}
+                >
+                  {t(`tab.${value}`)}
+                </Button>
+              );
+            })}
+          </Button.Group>
+        ) : (
+          <Select
+            size="xs"
+            value={view}
+            data={views.map((value) => ({
               value,
-            };
-          })}
-          value={view}
-          onChange={(value) => {
-            const nextView = viewBySegmentValue[value];
-            if (nextView) {
-              setView(nextView);
-            }
-          }}
-          size="xs"
-          style={{ minWidth: 0, flexShrink: footerLayout.showTabLabels ? 1 : 0 }}
-        />
+              label: t(`tab.${value}`),
+            }))}
+            aria-label={t("option.defaultView.label")}
+            style={{ flex: 1, minWidth: 0 }}
+            onChange={(value) => {
+              if (!value) return;
+
+              const nextView = viewBySegmentValue[value];
+              if (nextView) {
+                setView(nextView);
+              }
+            }}
+          />
+        )}
 
         <Group gap="xs" ml="auto" wrap="nowrap">
           {view === "queue" && queuePageCount > 1 && (

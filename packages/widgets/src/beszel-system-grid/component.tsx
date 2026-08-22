@@ -159,7 +159,6 @@ const MetricValue = ({ value, progress, size }: Pick<MetricRowProps, "value" | "
     </Text>
     {progress && (
       <Progress
-        className={classes.progress}
         value={progress.value}
         color={progress.color}
         size={getProgressTrackSize(size.progressSize)}

@@ -14,6 +14,7 @@ import { getUsableWidgetQueryData } from "../common/query-state";
 import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { getNotificationDisplay } from "./display";
+import classes from "./component.module.css";
 
 export default function NotificationsWidget({
   options,
@@ -97,17 +98,13 @@ export default function NotificationsWidget({
                   href={href}
                   target={href ? "_blank" : undefined}
                   rel={href ? SAFE_NEW_TAB_REL : undefined}
+                  className={columns > 1 ? classes.card : classes.row}
                   radius={board.itemRadius}
                   w="100%"
                   p={isRoomy ? "sm" : isDense ? 6 : "xs"}
-                  bg={columns > 1 ? undefined : "transparent"}
                   style={{
                     color: "inherit",
                     textDecoration: "none",
-                    borderBottom:
-                      columns > 1
-                        ? undefined
-                        : "1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4))",
                   }}
                 >
                   <Flex gap={isDense ? "xs" : "sm"} align="flex-start" w="100%">

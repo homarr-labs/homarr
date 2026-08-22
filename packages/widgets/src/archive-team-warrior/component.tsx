@@ -82,7 +82,7 @@ const ArchiveTeamWarriorWidgetContent = ({
       </Group>
 
       {(isAdvanced || options.showBroadcastMessage) && status.broadcastMessage && layout.showBroadcast && (
-        <Card withBorder p="xs">
+        <Card withBorder p="xs" bg="transparent" style={{ borderColor: neutralSurfaceBorder }}>
           <Text size="xs" lineClamp={isAdvanced ? undefined : 3}>
             {status.broadcastMessage}
           </Text>
@@ -143,7 +143,13 @@ const ArchiveTeamWarriorWidgetContent = ({
               {status.items.map((item) => {
                 const itemStatusKey = getStatusKey(item.status);
                 return (
-                  <Card key={item.id} withBorder p="xs">
+                  <Card
+                    key={item.id}
+                    withBorder
+                    p="xs"
+                    bg="transparent"
+                    style={{ borderColor: neutralSurfaceBorder }}
+                  >
                     <Group justify="space-between" wrap="nowrap">
                       <Stack gap={0} miw={0}>
                         <Text size="sm" fw={600} lineClamp={1}>
@@ -200,6 +206,9 @@ export const getArchiveCompactLayout = (width: number, height: number, isAdvance
 };
 
 const formatBandwidth = (value?: number) => formatByteRate(Math.round(value ?? 0));
+
+const neutralSurfaceBorder =
+  "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))";
 
 type WarriorStatusKey = "running" | "completed" | "failed" | "canceled" | "stopped" | "idle" | "unknown";
 

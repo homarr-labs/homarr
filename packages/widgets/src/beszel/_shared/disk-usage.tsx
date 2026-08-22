@@ -64,7 +64,6 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
             >
               <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
                 <Progress
-                  className={classes.progress}
                   value={system.disk}
                   color={thresholdColor(system.disk)}
                   size={trackSize}
@@ -107,7 +106,6 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
                       {formatPercent(value)}
                     </Text>
                     <Progress
-                      className={classes.progress}
                       value={value}
                       color={thresholdColor(value)}
                       size="xs"
@@ -123,7 +121,6 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
         <Box style={{ display: "flex", alignItems: "center", flex: 1, minWidth: 24 }}>
           <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
             <Progress
-              className={classes.progress}
               value={system.disk}
               color={thresholdColor(system.disk)}
               size={trackSize}

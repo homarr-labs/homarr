@@ -157,28 +157,10 @@
   border-bottom: 1px solid var(--mantine-color-default-border);
 }
 
-.panelIdentity {
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.panelIdentityIcon {
-  flex: 0 0 auto;
-}
-
-.panelIdentityTitle,
-.panelThreadTitle {
-  max-width: 14rem;
-}
-
 .panelActions {
   min-width: 0;
   flex: 0 0 auto;
   margin-inline-start: auto;
-}
-
-.newConversationButton {
-  flex: 0 0 auto;
 }
 
 .panelAction {
@@ -204,21 +186,6 @@
   }
 
   .historyButtonLabel {
-    display: none;
-  }
-
-  .newConversationButton {
-    width: 2.625rem;
-    max-width: 2.625rem;
-    height: 2.625rem;
-    padding-inline: 0.75rem;
-  }
-
-  .newConversationButton :global(.mantine-Button-section) {
-    margin-inline: 0;
-  }
-
-  .newConversationButton :global(.mantine-Button-label) {
     display: none;
   }
 
@@ -277,8 +244,7 @@
 
 @container assistant-widget (max-width: 22rem) {
   .panelAction,
-  .historyButton,
-  .newConversationButton {
+  .historyButton {
     width: 2.25rem;
     max-width: 2.25rem;
     height: 2.25rem;
@@ -299,10 +265,6 @@
   }
 
   .composerContextLabel {
-    display: none;
-  }
-
-  .panelThreadTitle {
     display: none;
   }
 }

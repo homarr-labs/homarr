@@ -10,11 +10,11 @@ export const StatRow = ({
   compact?: boolean;
 }) => {
   return (
-    <Stack gap={0}>
-      <Text size={compact ? "xl" : "2xl"} fw={800} lh={1}>
+    <Stack gap={2} align="center" justify="center">
+      <Text size={compact ? "xl" : "2xl"} fw={800} lh={1} ta="center">
         {value}
       </Text>
-      <Text size={compact ? "sm" : "md"} c="dimmed">
+      <Text size={compact ? "sm" : "md"} c="dimmed" ta="center">
         {label}
       </Text>
     </Stack>

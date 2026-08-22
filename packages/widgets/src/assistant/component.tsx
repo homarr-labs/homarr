@@ -17,7 +17,7 @@ export default function AssistantWidget(props: WidgetComponentProps<"assistant">
   return (
     <Center h="100%" p="md">
       <Stack align="center" gap="xs" ta="center">
-        <ThemeIcon variant="light" color="red" radius="xl" size="lg">
+        <ThemeIcon variant="light" radius="xl" size="lg">
           <IconRobot size="var(--mantine-font-size-xl)" />
         </ThemeIcon>
         <Text size="sm" fw={600}>

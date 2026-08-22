@@ -206,14 +206,20 @@ const UpdateCard = ({
     ? t("updateAvailable")
     : buildVersionText(truncateVersion(update.currentVersion), truncateVersion(update.newVersion));
   const versionBadge = versionText ? (
-    <Badge size="xs" variant="light" color="gray" style={{ whiteSpace: "nowrap" }}>
+    <Badge size="xs" variant="subtle" color="gray" style={{ whiteSpace: "nowrap" }}>
       {versionText}
     </Badge>
   ) : null;
   const showVersionTooltip = versionText !== null && !isDigestUpdate && versionText !== fullVersionText;
 
   return (
-    <Card className={combineClasses(className)} radius={radius} p="xs" style={{ overflow: "visible" }}>
+    <Card
+      className={combineClasses(className)}
+      radius={radius}
+      p="xs"
+      bg="transparent"
+      style={{ overflow: "visible" }}
+    >
       <Group justify="space-between" wrap="nowrap" gap="xs" miw={0}>
         <Text size="xs" fw={500} lineClamp={1} miw={0}>
           {update.name}

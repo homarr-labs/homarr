@@ -16,7 +16,6 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { IconLink } from "@tabler/icons-react";
-import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -216,6 +215,7 @@ const FlexLayout = ({
               <Card
                 radius={board.itemRadius}
                 className={classes.card}
+                bg="transparent"
                 w="100%"
                 display="flex"
                 p={4}
@@ -300,7 +300,14 @@ const AdvancedBookmarksLayout = ({
               target={href ? (openNewTab ? "_blank" : "_self") : undefined}
               rel={href && openNewTab ? SAFE_NEW_TAB_REL : undefined}
             >
-              <Card radius={board.itemRadius} className={classes.card} withBorder={withBorder} p="md" h="100%">
+              <Card
+                radius={board.itemRadius}
+                className={classes.card}
+                bg="transparent"
+                withBorder={withBorder}
+                p="md"
+                h="100%"
+              >
                 <Group align="flex-start" wrap="nowrap">
                   <BookmarkIcon
                     app={app}
@@ -381,7 +388,8 @@ const GridLayout = ({
           >
             <Card
               h="100%"
-              className={combineClasses(classes.card, classes["card-grid"])}
+              className={classes.card}
+              bg="transparent"
               radius={board.itemRadius}
               withBorder={withBorder}
               p="xs"

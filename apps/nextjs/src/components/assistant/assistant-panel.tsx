@@ -2368,7 +2368,7 @@ const EmptyThread = () => {
       <Box className={classes.empty}>
         <Stack align="center" gap="lg" maw={560} w="100%">
           <Stack align="center" gap="xs" maw={430}>
-            <ThemeIcon size={52} radius="xl" variant="light" color="red">
+            <ThemeIcon size={52} radius="xl" variant="light">
               <IconRobot size={27} />
             </ThemeIcon>
             <Text size="xl" fw={700}>
@@ -2957,7 +2957,6 @@ const Composer = (props: ComposerProps) => {
               ) : (
                 <ComposerPrimitive.Send asChild>
                   <ActionIcon
-                    color="red"
                     variant="filled"
                     size="lg"
                     aria-label={
@@ -3162,27 +3161,6 @@ interface AssistantConversationSurfaceProps extends AssistantConversationControl
   onDismiss?: () => void;
 }
 
-const AssistantPanelIdentity = () => {
-  const t = useI18n("assistant");
-  const threadTitle = useAuiState((state) => state.threadListItem.title);
-
-  return (
-    <Group className={classes.panelIdentity} gap="xs" wrap="nowrap">
-      <ThemeIcon className={classes.panelIdentityIcon} variant="light" color="red" radius="xl" size="md">
-        <IconRobot size={16} />
-      </ThemeIcon>
-      <Box miw={0}>
-        <Text className={classes.panelIdentityTitle} size="sm" fw={700} truncate>
-          {t("title")}
-        </Text>
-        <Text className={classes.panelThreadTitle} size="xs" c="dimmed" truncate>
-          {threadTitle ?? t("newConversation")}
-        </Text>
-      </Box>
-    </Group>
-  );
-};
-
 export const AssistantConversationSurface = ({
   isRunning,
   pendingAction,
@@ -3212,23 +3190,20 @@ export const AssistantConversationSurface = ({
   return (
     <AssistantDirectiveEntitiesProvider>
       <Group className={classes.panelHeader} justify="space-between" wrap="nowrap" gap="xs">
-        <AssistantPanelIdentity />
         <Group className={classes.panelActions} gap={2} wrap="nowrap">
           <ConversationHistory />
           <ViewRefreshAction isRefreshing={isRefreshing} onRefresh={onRefresh} />
           <AutoApprovalControl />
           <Tooltip label={t("newConversation")}>
             <ThreadListPrimitive.New asChild>
-              <Button
-                className={classes.newConversationButton}
+              <ActionIcon
+                className={classes.panelAction}
                 variant="subtle"
                 color="gray"
-                size="compact-sm"
-                leftSection={<IconPlus size={17} />}
                 aria-label={t("newConversation")}
               >
-                {t("newConversation")}
-              </Button>
+                <IconPlus size={17} />
+              </ActionIcon>
             </ThreadListPrimitive.New>
           </Tooltip>
           {onExpand && (

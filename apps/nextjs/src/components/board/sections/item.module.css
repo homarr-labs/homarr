@@ -1,4 +1,4 @@
-.itemCard {
+.containerRoot {
   @mixin dark {
     --background-color: rgb(from var(--mantine-color-dark-6) r g b / var(--opacity));
     --border-color: rgb(from var(--mantine-color-dark-4) r g b / var(--opacity));
@@ -7,6 +7,9 @@
     --background-color: rgb(from var(--mantine-color-white) r g b / var(--opacity));
     --border-color: rgb(from var(--mantine-color-gray-3) r g b / var(--opacity));
   }
+}
+
+.itemCard {
   background-color: var(--background-color) !important;
   border-color: var(--border-color) !important;
 }
@@ -38,6 +41,21 @@
 .containerToggle :global(.mantine-Button-label) {
   min-width: 0;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.containerLabel {
+  overflow: visible;
+  pointer-events: none;
+  background-color: var(--background-color);
+  border-color: var(--border-color);
+}
+
+.containerLabel :global(.mantine-Badge-label) {
+  min-width: 0;
+  overflow: hidden;
+  line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

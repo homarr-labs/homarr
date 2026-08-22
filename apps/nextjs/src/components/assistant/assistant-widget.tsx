@@ -137,7 +137,7 @@ const CompactAssistantWidget = ({
     <Box className={classes.widgetPanel}>
       <Group className={classes.compactState} justify="space-between" wrap="nowrap" gap="sm">
         <Group wrap="nowrap" gap="xs" miw={0}>
-          <ThemeIcon variant="light" color="red" radius="xl" size="lg" flex="0 0 auto">
+          <ThemeIcon variant="light" radius="xl" size="lg" flex="0 0 auto">
             <IconRobot size={19} />
           </ThemeIcon>
           <Stack className={classes.compactCopy} gap={1}>
@@ -167,13 +167,7 @@ interface AssistantWidgetStateProps {
   children?: ReactNode;
 }
 
-const AssistantWidgetState = ({
-  icon: Icon,
-  title,
-  description,
-  color = "red",
-  children,
-}: AssistantWidgetStateProps) => (
+const AssistantWidgetState = ({ icon: Icon, title, description, color, children }: AssistantWidgetStateProps) => (
   <Center className={classes.widgetState} h="100%" p="md">
     <Stack align="center" gap="sm" ta="center" maw={360}>
       <ThemeIcon variant="light" color={color} radius="xl" size="xl">
