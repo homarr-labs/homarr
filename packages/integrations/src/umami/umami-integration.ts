@@ -32,7 +32,6 @@ const UMAMI_CUSTOM_EVENT_TYPE = 2;
 const UMAMI_EVENT_NAME_LIMIT = 5_000;
 const UMAMI_EVENT_PAGE_SIZE = 5_000;
 const UMAMI_EVENT_PAGE_MAX = 20;
-const UMAMI_EVENT_REQUEST_CONCURRENCY = 4;
 
 const logger = createLogger({ module: "umami-integration" });
 
@@ -247,22 +246,16 @@ export class UmamiIntegration extends Integration {
     const authHeaders = await this.getAuthHeadersAsync();
     const { startAt, endAt, unit } = this.computeTimeRange(timeFrame);
     const results: UmamiEventSeries[] = [];
-    for (let index = 0; index < eventNames.length; index += UMAMI_EVENT_REQUEST_CONCURRENCY) {
-      const batch = eventNames.slice(index, index + UMAMI_EVENT_REQUEST_CONCURRENCY);
-      const batchResults = await Promise.all(
-        batch.map(async (eventName) => {
-          const dataPoints = await this.getWebsiteEventTimeSeriesAsync(
-            websiteId,
-            startAt,
-            endAt,
-            unit,
-            eventName,
-            authHeaders,
-          );
-          return { eventName, dataPoints: dataPoints ?? [] };
-        }),
+    for (const eventName of eventNames) {
+      const dataPoints = await this.getWebsiteEventTimeSeriesAsync(
+        websiteId,
+        startAt,
+        endAt,
+        unit,
+        eventName,
+        authHeaders,
       );
-      results.push(...batchResults);
+      results.push({ eventName, dataPoints: dataPoints ?? [] });
     }
     return results;
   }
