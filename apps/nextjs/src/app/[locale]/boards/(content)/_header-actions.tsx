@@ -3,18 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Box, Center, Loader, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import {
-  IconDeviceFloppy,
-  IconLayoutBoard,
-  IconPencil,
-  IconPencilOff,
-  IconReplace,
-  IconSettings,
-  IconX,
-} from "@tabler/icons-react";
+import { IconDeviceFloppy, IconPencil, IconPencilOff, IconSettings, IconX } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -25,8 +16,6 @@ import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
-
 import { useBoardPermissions } from "~/components/board/permissions/client";
 import { loadGridEditorAsync, scheduleGridEditorWarmup } from "~/components/board/sections/grid/grid-editor-loader";
 import { HeaderButton } from "~/components/layout/header/button";
@@ -56,9 +45,7 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
   const t = useI18n("board");
   const { hasChangeAccess } = useBoardPermissions(board);
 
-  if (!hasChangeAccess) {
-    return <SelectBoardsMenu />;
-  }
+  if (!hasChangeAccess) return null;
 
   return (
     <>
@@ -73,8 +60,6 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
           </HeaderButton>
         </TourTarget>
       )}
-
-      <SelectBoardsMenu />
     </>
   );
 };
@@ -231,47 +216,6 @@ const EditModeMenu = ({ demoReadOnly }: { demoReadOnly: boolean }) => {
       >
         {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
       </HeaderButton>
-    </TourTarget>
-  );
-};
-
-const SelectBoardsMenu = () => {
-  const t = useI18n("board");
-  const [isOpen, setIsOpen] = useState(false);
-  const utils = clientApi.useUtils();
-  const { data: boards = [], isPending } = clientApi.board.getAllBoards.useQuery(undefined, { enabled: isOpen });
-  const preloadBoards = () => void utils.board.getAllBoards.prefetch();
-
-  return (
-    <TourTarget id="board-switcher">
-      <Box onFocus={preloadBoards} onPointerEnter={preloadBoards}>
-        <Menu position="bottom-end" opened={isOpen} onChange={setIsOpen}>
-          <Menu.Target>
-            <HeaderButton w="auto" px={4} aria-label={t("action.switch")}>
-              <IconReplace stroke={1.5} />
-            </HeaderButton>
-          </Menu.Target>
-          <Menu.Dropdown style={{ transform: "translate(-7px, 0)" }}>
-            <ScrollArea.Autosize mah={300}>
-              {isPending && (
-                <Center p="xs">
-                  <Loader size="xs" />
-                </Center>
-              )}
-              {boards.map((board) => (
-                <Menu.Item
-                  key={board.id}
-                  component={Link}
-                  href={`/boards/${board.name}`}
-                  leftSection={<IconLayoutBoard size={20} />}
-                >
-                  {board.name}
-                </Menu.Item>
-              ))}
-            </ScrollArea.Autosize>
-          </Menu.Dropdown>
-        </Menu>
-      </Box>
     </TourTarget>
   );
 };

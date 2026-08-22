@@ -67,16 +67,6 @@ export const BoardTourProvider = ({ children }: PropsWithChildren) => {
         ),
       },
       {
-        id: "board-switcher",
-        title: t("switcher.title"),
-        content: (
-          <TourStepContent
-            description={t("switcher.description")}
-            documentationHref={createDocumentationLink("/docs/management/boards")}
-          />
-        ),
-      },
-      {
         id: "board-user-menu",
         title: t("userMenu.title"),
         content: (
