@@ -324,7 +324,7 @@ export function JsonPathTreePicker({
           </Combobox.Header>
         )}
         <Combobox.Options>
-          <ScrollArea.Autosize mah={420} type="scroll">
+          <ScrollArea.Autosize mah={420}>
             {!hasData && <Combobox.Empty>{noDataHint}</Combobox.Empty>}
             {hasData && visibleNodes.length === 0 && <Combobox.Empty>No matching paths</Combobox.Empty>}
             {visibleNodes.map((node) => (

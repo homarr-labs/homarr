@@ -22,6 +22,16 @@
   background-color: color-mix(in srgb, var(--mantine-color-default-hover) 40%, transparent) !important;
 }
 
+.homarr-data-table .mantine-datatable-scroll-area-scrollbar[data-state="visible"]:hover {
+  @mixin light {
+    background-color: var(--mantine-color-gray-0);
+  }
+
+  @mixin dark {
+    background-color: var(--mantine-color-dark-8);
+  }
+}
+
 .homarr-data-table th {
   padding: 0;
   white-space: nowrap;

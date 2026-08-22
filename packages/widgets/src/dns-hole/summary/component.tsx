@@ -104,7 +104,7 @@ export default function DnsHoleSummaryWidget({
         )}
       </SimpleGrid>
       {showSourceStatuses && (
-        <ScrollArea type="auto" scrollbarSize={4} px="xs" pb="xs">
+        <ScrollArea px="xs" pb="xs">
           <Group gap="xs" wrap="nowrap">
             {successfulSummaries.map(({ integration, summary }) => (
               <Badge

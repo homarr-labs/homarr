@@ -126,7 +126,6 @@ export default function MediaMissingWidget({
   ) => (
     <ScrollArea
       h="100%"
-      scrollbarSize={4}
       startScrollPosition={tabScrollPositionsRef.current[tab]}
       onScrollPositionChange={(position) => {
         tabScrollPositionsRef.current[tab] = position;

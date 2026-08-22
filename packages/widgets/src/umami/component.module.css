@@ -5,7 +5,6 @@
 }
 
 .chartSurface :global(.mantine-ScrollArea-viewport),
-.chartSurface :global(.mantine-ScrollArea-scrollbar),
 .chartSurface :global(.recharts-wrapper),
 .chartSurface :global(.recharts-surface) {
   background-color: transparent !important;

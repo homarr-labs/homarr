@@ -500,7 +500,6 @@ export function Notebook({
 
         <ScrollArea
           mih="4rem"
-          offsetScrollbars
           pl={12}
           pt={12}
           styles={{

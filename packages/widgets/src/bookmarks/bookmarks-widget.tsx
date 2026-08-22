@@ -148,11 +148,7 @@ export default function BookmarksWidget({
         </Center>
       ) : (
         <ScrollArea
-          type="hover"
           scrollbars={plan.horizontalScroll ? "x" : "y"}
-          scrollbarSize={2}
-          scrollHideDelay={500}
-          offsetScrollbars
           style={{ flex: 1, minHeight: 0 }}
         >
           <Box miw="100%" mih="100%" pb={2}>

@@ -184,7 +184,7 @@ export default function CountdownWidget({
         onNotificationsChange={setNotifications}
       />
 
-      <ScrollArea type="auto" style={{ flex: 1, minHeight: 0 }}>
+      <ScrollArea style={{ flex: 1, minHeight: 0 }}>
         <Stack gap="md" pb="xs">
           <EventSection
             title={t("upcoming")}

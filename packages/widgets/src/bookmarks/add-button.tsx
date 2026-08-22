@@ -163,7 +163,7 @@ export const BookmarkAddButton: SortableItemListInput<BookmarkSelectionItem, str
       </Combobox.DropdownTarget>
 
       <Combobox.Dropdown>
-        <ScrollArea.Autosize mah={280} type="auto">
+        <ScrollArea.Autosize mah={280}>
           <Combobox.Options>
             {pendingUrl && !selectedValues.has(pendingUrl.id) ? (
               <Combobox.Option value={createOptionValue}>
