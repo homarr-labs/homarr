@@ -2115,6 +2115,12 @@
         "loading": "Loading integration",
         "loadError": "This integration could not be loaded. Try again before changing its connection settings."
       },
+      "preview": {
+        "integrationRequired": "Choose a connection to preview this widget."
+      },
+      "settings": {
+        "label": "Widget settings"
+      },
       "advancedOptions": {
         "label": "Advanced options",
         "title": "Advanced item options"

@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable react/no-unstable-nested-components -- Widget modules and definition-bound fallbacks are loaded dynamically. */
+
 import { use, useCallback, useState } from "react";
 import { ActionIcon, Affix, Card } from "@mantine/core";
 import { IconDimensions, IconPencil, IconToggleLeft, IconToggleRight } from "@tabler/icons-react";
@@ -71,6 +73,7 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
           ),
           integrationSupport: hasIntegrationSupport,
           settings,
+          previewDimensions: dimensions,
         },
         {
           title(translate) {
@@ -86,10 +89,10 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
     } finally {
       setIsEditorLoading(false);
     }
-  }, [currentDefinition, kind, openWidgetEditModal, settings, state, t, utils]);
+  }, [currentDefinition, dimensions, kind, openWidgetEditModal, settings, state, t, utils]);
 
   const toggleEditMode = useCallback(() => {
-    setEditMode((editMode) => !editMode);
+    setEditMode((currentEditMode) => !currentEditMode);
     showSuccessNotification({
       message: editMode ? t("widgetPreview.toggle.disabled") : t("widgetPreview.toggle.enabled"),
     });

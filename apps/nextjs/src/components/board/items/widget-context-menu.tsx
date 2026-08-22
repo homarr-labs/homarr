@@ -189,6 +189,9 @@ export const WidgetContextMenu = ({
         ),
         integrationSupport: definition.supportedIntegrations !== undefined,
         settings,
+        itemId: item.id,
+        boardId: board.id,
+        previewDimensions: { width: item.width * 200, height: item.height * 200 },
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -197,6 +200,7 @@ export const WidgetContextMenu = ({
       },
     );
   }, [
+    board.id,
     definition,
     integrationData,
     item,

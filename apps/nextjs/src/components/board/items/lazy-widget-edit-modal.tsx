@@ -7,10 +7,11 @@ import type { FallbackProps } from "react-error-boundary";
 
 import { clientApi } from "@homarr/api/client";
 import type { WidgetKind } from "@homarr/definitions";
-import { createModal, modalSizeForm, useModalAction } from "@homarr/modals";
+import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
 import { WidgetError } from "@homarr/widgets/errors";
 import type * as WidgetModalsModule from "@homarr/widgets/modals";
 import type { WidgetEditModalProps } from "@homarr/widgets/modals";
+import { loadWidgetComponent } from "@homarr/widgets/manifest";
 import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
 
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
@@ -83,6 +84,7 @@ interface LazyWidgetEditModalContentProps {
 
 const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
   const { WidgetEditModal } = use(loadWidgetEditModal());
+  const { default: PreviewComponent } = use(loadWidgetComponent(props.innerProps.kind));
   const { openModal: openIntegrationModal } = useModalAction(IntegrationSelectModal);
   const Component = WidgetEditModal.component;
   const utils = clientApi.useUtils();
@@ -122,6 +124,7 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
         ...props.innerProps,
         integrationData: combinedIntegrationData,
         integrationEditForm: LazyIntegrationEditForm,
+        previewComponent: PreviewComponent,
         onOpenNewIntegration: supportedKinds.length > 0 ? handleOpenNewIntegration : undefined,
       }}
     />
@@ -157,6 +160,10 @@ export const LazyWidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>
   defaultTitle(t) {
     return t("item.edit.title");
   },
-  size: modalSizeForm,
+  size: modalSizeSelect,
+  transitionProps: {
+    transition: "pop",
+    duration: 180,
+  },
   closeOnClickOutside: false,
 });

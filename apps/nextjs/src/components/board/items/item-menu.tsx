@@ -89,6 +89,7 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
         integrationSupport: "supportedIntegrations" in definition,
         settings,
         itemId: item.id,
+        previewDimensions: { width: item.width * 200, height: item.height * 200 },
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       {
