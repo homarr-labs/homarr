@@ -117,14 +117,29 @@ test("SQLite migrations seed the redesigned demo dashboard", async () => {
       expect(layout).toMatchObject({ sectionId, xOffset, yOffset, width, height });
     };
     expectItemLayout("calendar", 0, 0, 2, 2);
+    expectItemLayout("weather", 2, 0, 2, 2);
+    expectItemLayout("clock", 4, 0, 1, 2);
+    expectItemLayout("timer", 5, 0, 2, 1);
+    expectItemLayout("airQuality", 5, 1, 2, 1);
     expectItemLayout("downloads", 7, 0, 5, 2);
+    expectItemLayout("notebook", 0, 2, 5, 3);
+    expectItemLayout("beszelSystemGrid", 5, 2, 4, 3);
+    expectItemLayout("assistant", 9, 2, 3, 3);
     expectItemLayout("mediaRequests-requestList", 0, 5, 3, 2);
     expectItemLayout("mediaMissing", 9, 5, 3, 2);
-    expectItemLayout("dockerContainers", 0, 11, 4, 3);
     expectItemLayout("mediaServer", 0, 7, 3, 2);
-    expectItemLayout("beszelSystemGrid", 5, 2, 4, 3);
+    expectItemLayout("mediaRequests-requestStats", 9, 7, 3, 2);
+    expectItemLayout("rssFeed", 0, 9, 3, 2);
+    expectItemLayout("indexerManager", 9, 9, 3, 2);
+    expectItemLayout("dockerContainers", 0, 11, 4, 3);
+    expectItemLayout("mediaReleases", 4, 11, 4, 3);
     expectItemLayout("customApi", 8, 11, 4, 3);
+
+    expectItemLayout("healthMonitoring", 0, 0, 6, 2, networkSection.id);
+    expectItemLayout("dnsHoleSummary", 0, 2, 3, 2, networkSection.id);
+    expectItemLayout("beszelSystemStats", 3, 2, 3, 2, networkSection.id);
     expectItemLayout("notifications", 0, 4, 2, 2, networkSection.id);
+    expectItemLayout("beszelAlerts", 2, 4, 4, 2, networkSection.id);
 
     for (const kind of ["weather", "airQuality"]) {
       const item = itemByKind(kind);
