@@ -9,6 +9,7 @@ import { schemaResolver } from "@mantine/form";
 import { useElementSize } from "@mantine/hooks";
 import { IconArrowLeft, IconEye, IconPencil, IconSettings } from "@tabler/icons-react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import combineClasses from "clsx";
 import { ErrorBoundary } from "react-error-boundary";
 import { z } from "zod/v4";
 
@@ -16,7 +17,7 @@ import { objectEntries } from "@homarr/common";
 import { useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import type { WidgetKind } from "@homarr/definitions";
-import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
+import { createModal, useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "@homarr/ui";
@@ -71,6 +72,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
 }
 
 interface WidgetEditPreviewProps {
+  kind: WidgetKind;
   Component: ComponentType<WidgetComponentProps<WidgetKind>>;
   definition: WidgetDefinition;
   state: WidgetEditModalState;
@@ -81,6 +83,7 @@ interface WidgetEditPreviewProps {
 }
 
 const WidgetEditPreview = ({
+  kind,
   Component,
   definition,
   state,
@@ -90,18 +93,15 @@ const WidgetEditPreview = ({
   onChangeOptions,
 }: WidgetEditPreviewProps) => {
   const tItem = useI18n("item.edit");
-  const { ref, width: availableWidth } = useElementSize<HTMLDivElement>();
+  const { ref, width: availableWidth, height: availableHeight } = useElementSize<HTMLDivElement>();
   const sourceWidth = Math.max(dimensions.width, 1);
   const sourceHeight = Math.max(dimensions.height, 1);
-  const aspectRatio = sourceWidth / sourceHeight;
-  const maximumWidth = Math.max(availableWidth, 280);
-  let previewWidth = maximumWidth;
-  let previewHeight = previewWidth / aspectRatio;
-
-  if (previewHeight > 320) {
-    previewHeight = 320;
-    previewWidth = previewHeight * aspectRatio;
+  let previewScale = 1;
+  if (availableWidth > 0 && availableHeight > 0) {
+    previewScale = Math.min(availableWidth / sourceWidth, availableHeight / sourceHeight, 1);
   }
+  const previewWidth = sourceWidth * previewScale;
+  const previewHeight = sourceHeight * previewScale;
 
   const hasIntegrationSupport = "supportedIntegrations" in definition;
   const integrationRequired = hasIntegrationSupport && definition.integrationsRequired !== false;
@@ -118,43 +118,55 @@ const WidgetEditPreview = ({
             {tItem("preview.integrationRequired")}
           </Alert>
         ) : (
-          <Card
-            className={classes.previewWidget}
-            w={previewWidth}
-            h={previewHeight}
-            p={previewHeight >= 96 ? undefined : 4}
-            style={{ borderColor: state.advancedOptions.borderColor || undefined }}
-          >
-            {state.advancedOptions.title && (
-              <Badge className={classes.previewTitle} size="sm" variant="default">
-                {state.advancedOptions.title}
-              </Badge>
-            )}
-            <QueryErrorResetBoundary>
-              {({ reset }) => (
-                <ErrorBoundary
-                  onReset={reset}
-                  resetKeys={[state.options, state.integrationIds]}
-                  fallbackRender={({ resetErrorBoundary, error }) => (
-                    <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
-                  )}
-                >
-                  <div className={classes.previewContent} inert>
-                    <Component
-                      options={state.options as never}
-                      integrationIds={state.integrationIds}
-                      width={previewWidth}
-                      height={previewHeight}
-                      isEditMode={false}
-                      boardId={boardId}
-                      itemId={itemId}
-                      setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
-                    />
-                  </div>
-                </ErrorBoundary>
+          <Box className={classes.previewViewport} w={previewWidth} h={previewHeight}>
+            <Card
+              className={combineClasses(
+                classes.previewWidget,
+                `${kind}-wrapper`,
+                "board-grid-item-content",
+                state.advancedOptions.customCssClasses,
               )}
-            </QueryErrorResetBoundary>
-          </Card>
+              w={sourceWidth}
+              h={sourceHeight}
+              p={0}
+              style={{
+                borderColor: state.advancedOptions.borderColor || undefined,
+                containerType: "size",
+                transform: `scale(${previewScale})`,
+              }}
+            >
+              {state.advancedOptions.title && (
+                <Badge className={classes.previewTitle} size="sm" variant="default">
+                  {state.advancedOptions.title}
+                </Badge>
+              )}
+              <QueryErrorResetBoundary>
+                {({ reset }) => (
+                  <ErrorBoundary
+                    onReset={reset}
+                    resetKeys={[state.options, state.integrationIds]}
+                    fallbackRender={({ resetErrorBoundary, error }) => (
+                      <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
+                    )}
+                  >
+                    <div className={classes.previewContent} inert>
+                      <Component
+                        options={state.options as never}
+                        integrationIds={state.integrationIds}
+                        width={sourceWidth}
+                        height={sourceHeight}
+                        isEditMode={false}
+                        displayMode="compact"
+                        boardId={boardId}
+                        itemId={itemId}
+                        setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
+                      />
+                    </div>
+                  </ErrorBoundary>
+                )}
+              </QueryErrorResetBoundary>
+            </Card>
+          </Box>
         )}
       </Center>
     </Stack>
@@ -356,6 +368,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
     <Box className={classes.workspace} data-with-preview={innerProps.previewComponent ? true : undefined}>
       {innerProps.previewComponent && (
         <WidgetEditPreview
+          kind={innerProps.kind}
           Component={innerProps.previewComponent}
           definition={definition}
           state={{ ...form.values, advancedOptions }}
@@ -562,7 +575,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   defaultTitle(t) {
     return t("item.edit.title");
   },
-  size: modalSizeSelect,
+  size: "100rem",
   transitionProps: {
     transition: "pop",
     duration: 180,

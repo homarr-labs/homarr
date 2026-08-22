@@ -180,6 +180,7 @@ const LoadedBoardItemContent = ({
   const { width: viewportWidth, height: viewportHeight } = viewportSize;
   const supportsAdvancedFocus = definitionSupportsAdvancedFocus(definition);
   const widgetName = getWidgetName(item.kind, t);
+  const previewDimensions = useMemo(() => ({ width, height }), [height, width]);
   const advancedViewLabel = t("item.advancedFocus.label", { widget: widgetName });
   const advancedViewId = `advanced-focus-${item.id}`;
   const activeFocus = supportsAdvancedFocus && active?.itemId === item.id ? active : null;
@@ -350,10 +351,11 @@ const LoadedBoardItemContent = ({
 
   return (
     <>
-      {isEditMode && <BoardItemMenu item={menuItem} definition={definition} />}
+      {isEditMode && <BoardItemMenu item={menuItem} definition={definition} previewDimensions={previewDimensions} />}
       <WidgetContextMenu
         item={item}
         definition={definition}
+        previewDimensions={previewDimensions}
         widgetStateRef={widgetStateRef}
         widgetRuntimeRef={widgetRuntimeRef}
         sourceRef={sourceRef}

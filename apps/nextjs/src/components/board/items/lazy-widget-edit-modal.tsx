@@ -7,7 +7,7 @@ import type { FallbackProps } from "react-error-boundary";
 
 import { clientApi } from "@homarr/api/client";
 import type { WidgetKind } from "@homarr/definitions";
-import { createModal, modalSizeSelect, useModalAction } from "@homarr/modals";
+import { createModal, useModalAction } from "@homarr/modals";
 import { WidgetError } from "@homarr/widgets/errors";
 import type * as WidgetModalsModule from "@homarr/widgets/modals";
 import type { WidgetEditModalProps } from "@homarr/widgets/modals";
@@ -160,7 +160,7 @@ export const LazyWidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>
   defaultTitle(t) {
     return t("item.edit.title");
   },
-  size: modalSizeSelect,
+  size: "100rem",
   transitionProps: {
     transition: "pop",
     duration: 180,

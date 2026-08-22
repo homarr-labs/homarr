@@ -6,7 +6,7 @@
 }
 
 .workspace[data-with-preview] {
-  grid-template-columns: minmax(0, 0.95fr) minmax(24rem, 1.05fr);
+  grid-template-columns: minmax(0, 3fr) minmax(34rem, 2fr);
 }
 
 .previewPanel {
@@ -28,7 +28,7 @@
 }
 
 .previewCanvas {
-  min-height: 23rem;
+  height: clamp(24rem, calc(100dvh - 17rem), 44rem);
   padding: var(--mantine-spacing-lg);
   overflow: hidden;
   border: 1px solid var(--mantine-color-default-border);
@@ -40,12 +40,19 @@
   background-size: 2rem 2rem;
 }
 
-.previewWidget {
+.previewViewport {
   position: relative;
   flex: 0 0 auto;
+  animation: dock-widget 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.previewWidget {
+  position: absolute;
+  top: 0;
+  left: 0;
   overflow: hidden;
   box-shadow: var(--mantine-shadow-lg);
-  animation: dock-widget 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: top left;
 }
 
 .previewTitle {
@@ -134,7 +141,7 @@
   }
 }
 
-@media (max-width: 62em) {
+@media (max-width: 75em) {
   .workspace[data-with-preview] {
     grid-template-columns: 1fr;
   }
@@ -144,7 +151,7 @@
   }
 
   .previewCanvas {
-    min-height: 18rem;
+    height: 24rem;
   }
 
   .settingsPanel {
@@ -154,7 +161,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .previewWidget {
+  .previewViewport {
     animation: none;
   }
 }

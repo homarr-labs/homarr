@@ -21,6 +21,7 @@ import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-
 interface BoardItemMenuProps {
   item: SectionItem;
   definition: WidgetDefinition;
+  previewDimensions: { width: number; height: number };
   resetErrorBoundary?: () => void;
 }
 
@@ -31,7 +32,7 @@ export const BoardItemMenu = (props: BoardItemMenuProps) => {
 
   return <BoardItemMenuInner {...props} />;
 };
-const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemMenuProps) => {
+const BoardItemMenuInner = ({ item, definition, previewDimensions, resetErrorBoundary }: BoardItemMenuProps) => {
   const { data: session } = useSession();
   const canDuplicate = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const refResetErrorBoundaryOnNextRender = useRef(false);
@@ -89,7 +90,7 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
         integrationSupport: "supportedIntegrations" in definition,
         settings,
         itemId: item.id,
-        previewDimensions: { width: item.width * 200, height: item.height * 200 },
+        previewDimensions,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       {

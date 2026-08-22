@@ -35,6 +35,7 @@ import { matchesWidgetItemQuery } from "./widget-query-scope";
 interface WidgetContextMenuProps {
   item: SectionItem;
   definition: WidgetDefinition;
+  previewDimensions: { width: number; height: number };
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   widgetRuntimeRef: WidgetRuntimeRef;
   sourceRef: RefObject<HTMLElement | null>;
@@ -44,6 +45,7 @@ interface WidgetContextMenuProps {
 export const WidgetContextMenu = ({
   item,
   definition,
+  previewDimensions,
   widgetRuntimeRef,
   sourceRef,
   children,
@@ -191,7 +193,7 @@ export const WidgetContextMenu = ({
         settings,
         itemId: item.id,
         boardId: board.id,
-        previewDimensions: { width: item.width * 200, height: item.height * 200 },
+        previewDimensions,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -207,6 +209,7 @@ export const WidgetContextMenu = ({
     handleRefetch,
     openModal,
     persistBoard,
+    previewDimensions,
     settings,
     updateItemAdvancedOptions,
     updateItemIntegrations,
