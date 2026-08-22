@@ -39,6 +39,7 @@ import {
   layouts,
   onboarding,
   searchEngines,
+  sectionCollapseStates,
   sections,
   sectionLayouts,
   users,
@@ -514,6 +515,9 @@ const seedDefaultBoardAsync = async (db: Database) => {
 
 interface DemoWidget {
   kind: WidgetKind;
+  section?: "network" | "right";
+  xOffset: number;
+  yOffset: number;
   width: number;
   height: number;
   needsIntegration: boolean;
@@ -562,9 +566,9 @@ const demoApps = [
     href: "https://portainer.io",
   },
   {
-    name: "Home Assistant",
-    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/home-assistant.svg",
-    href: "https://home-assistant.io",
+    name: "Uptime Kuma",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/uptime-kuma.svg",
+    href: "https://uptime.kuma.pet",
   },
   {
     name: "Nextcloud",
@@ -583,69 +587,166 @@ const demoApps = [
   },
 ] as const;
 
-const buildDemoWidgets = (appIds: string[]): DemoWidget[] => [
-  // Row 1: calendar + downloads + clock = 12
-  { kind: "calendar", width: 5, height: 3, needsIntegration: true },
-  { kind: "downloads", width: 5, height: 3, needsIntegration: true },
-  { kind: "clock", width: 2, height: 1, needsIntegration: false },
-  // Row 2: healthMonitoring + bookmarks = 12
-  { kind: "healthMonitoring", width: 6, height: 3, needsIntegration: true },
+const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): DemoWidget[] => [
+  // Daily focus
+  { kind: "calendar", xOffset: 0, yOffset: 0, width: 2, height: 2, needsIntegration: true },
   {
-    kind: "bookmarks",
-    width: 6,
+    kind: "weather",
+    xOffset: 2,
+    yOffset: 0,
+    width: 2,
+    height: 2,
+    needsIntegration: false,
+    options: {
+      location: { name: "Berlin", latitude: 52.52, longitude: 13.405 },
+      hasForecast: false,
+      showHumidity: false,
+      showCurrentWindSpeed: false,
+      showCity: true,
+      animateIcons: false,
+    },
+  },
+  {
+    kind: "clock",
+    xOffset: 4,
+    yOffset: 0,
+    width: 1,
+    height: 2,
+    needsIntegration: false,
+    options: { customTitleToggle: false, showDate: false, customTimeFormat: "HH:mm" },
+  },
+  {
+    kind: "timer",
+    xOffset: 5,
+    yOffset: 0,
+    width: 2,
+    height: 1,
+    needsIntegration: false,
+    options: {
+      mode: "pomodoro",
+      focusMinutes: 25,
+      shortBreakMinutes: 5,
+      longBreakMinutes: 15,
+      sessionsBeforeLongBreak: 4,
+      autoStartBreaks: false,
+      autoStartFocus: false,
+    },
+  },
+  {
+    kind: "airQuality",
+    xOffset: 5,
+    yOffset: 1,
+    width: 2,
+    height: 1,
+    needsIntegration: false,
+    options: {
+      location: { name: "Berlin", latitude: 52.52, longitude: 13.405 },
+      aqiStandard: "european",
+      showUv: false,
+      showPollutants: false,
+      showPollen: false,
+    },
+  },
+  { kind: "downloads", xOffset: 7, yOffset: 0, width: 5, height: 2, needsIntegration: true },
+
+  // Homarr workspace
+  {
+    kind: "notebook",
+    xOffset: 0,
+    yOffset: 2,
+    width: 5,
     height: 3,
     needsIntegration: false,
-    options: { title: "Homelab", items: appIds, layout: "grid", openNewTab: true },
+    options: {
+      showToolbar: false,
+      allowReadOnlyCheck: true,
+      content: `<p style="text-align: center"><img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg" width="28%"></p><h2 style="text-align: center">Quick runbook</h2><p style="text-align: center">Keep today close: signals first, controls beside them, distractions out.</p><ul data-type="taskList"><li data-checked="true" data-type="taskItem"><label><input type="checkbox" checked="checked"><span></span></label><div><p>Backups verified</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Review active alerts</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Connect your everyday services</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Tune this board to your routine</p></div></li></ul><p style="text-align: center"><em>Make it yours. Keep it useful.</em></p>`,
+    },
   },
-  // Row 3: mediaServer + mediaTranscoding + dnsHoleSummary = 12
-  { kind: "mediaServer", width: 3, height: 2, needsIntegration: true },
-  { kind: "mediaTranscoding", width: 3, height: 2, needsIntegration: true },
-  { kind: "dnsHoleSummary", width: 6, height: 2, needsIntegration: true },
-  // Row 4: dnsHoleControls + mediaReleases + notifications = 12
-  { kind: "dnsHoleControls", width: 2, height: 1, needsIntegration: true },
-  { kind: "mediaReleases", width: 4, height: 2, needsIntegration: true },
-  { kind: "notifications", width: 6, height: 2, needsIntegration: true },
-  // Row 5: requestList + requestStats + indexerManager = 12
-  { kind: "mediaRequests-requestList", width: 4, height: 3, needsIntegration: true },
-  { kind: "mediaRequests-requestStats", width: 4, height: 2, needsIntegration: true },
-  { kind: "indexerManager", width: 4, height: 2, needsIntegration: true },
-  // Row 6: networkControllerSummary + networkControllerStatus + rssFeed = 12
-  { kind: "networkControllerSummary", width: 3, height: 2, needsIntegration: true },
-  { kind: "networkControllerStatus", width: 3, height: 2, needsIntegration: true },
+  { kind: "beszelSystemGrid", xOffset: 5, yOffset: 2, width: 4, height: 3, needsIntegration: true },
+  { kind: "assistant", xOffset: 9, yOffset: 2, width: 3, height: 3, needsIntegration: false },
+
+  // Around the centered network container
+  { kind: "mediaRequests-requestList", xOffset: 0, yOffset: 5, width: 2, height: 2, needsIntegration: true },
+  { kind: "mediaMissing", xOffset: 10, yOffset: 5, width: 2, height: 2, needsIntegration: true },
+  { kind: "mediaServer", xOffset: 0, yOffset: 7, width: 3, height: 2, needsIntegration: true },
+
+  // Infrastructure and activity
+  { kind: "dockerContainers", xOffset: 4, yOffset: 11, width: 4, height: 3, needsIntegration: false },
+  { kind: "mediaReleases", xOffset: 8, yOffset: 11, width: 4, height: 3, needsIntegration: true },
+  { kind: "mediaRequests-requestStats", xOffset: 0, yOffset: 14, width: 4, height: 2, needsIntegration: true },
   {
     kind: "rssFeed",
-    width: 6,
+    xOffset: 4,
+    yOffset: 14,
+    width: 4,
     height: 2,
     needsIntegration: false,
     options: {
       feedUrls: ["https://selfh.st/rss/", "https://hnrss.org/newest?q=self-hosted"],
-      maximumAmountPosts: 20,
+      maximumAmountPosts: 12,
       textLinesClamp: 2,
-      hideDescription: false,
+      hideDescription: true,
     },
   },
-  // Row 7-8: app widgets (2x1 each, 6 per row = 12)
+  { kind: "indexerManager", xOffset: 8, yOffset: 14, width: 4, height: 2, needsIntegration: true },
+
+  // Community Workshop
+  {
+    kind: "customApi",
+    xOffset: 0,
+    yOffset: 16,
+    width: 4,
+    height: 2,
+    needsIntegration: false,
+    options: { definitionId: customWidgetDefinitionId, refreshInterval: 300 },
+  },
+
+  // Network stuff container
+  {
+    kind: "healthMonitoring",
+    section: "network",
+    xOffset: 0,
+    yOffset: 0,
+    width: 3,
+    height: 2,
+    needsIntegration: true,
+  },
+  {
+    kind: "beszelSystemStats",
+    section: "network",
+    xOffset: 3,
+    yOffset: 0,
+    width: 3,
+    height: 2,
+    needsIntegration: true,
+  },
+  {
+    kind: "dnsHoleSummary",
+    section: "network",
+    xOffset: 0,
+    yOffset: 2,
+    width: 3,
+    height: 2,
+    needsIntegration: true,
+    options: { layout: "grid", usePiHoleColors: false },
+  },
+  { kind: "beszelAlerts", section: "network", xOffset: 3, yOffset: 2, width: 3, height: 2, needsIntegration: true },
+  { kind: "notifications", section: "network", xOffset: 2, yOffset: 4, width: 2, height: 2, needsIntegration: true },
+
+  // Right app rail
   ...appIds.map(
-    (appId): DemoWidget => ({
+    (appId, index): DemoWidget => ({
       kind: "app",
-      width: 2,
+      section: "right",
+      xOffset: 0,
+      yOffset: index,
+      width: 1,
       height: 1,
       needsIntegration: false,
       options: { appId, openInNewTab: true, showTitle: true, pingEnabled: false },
     }),
   ),
-  // Row 9: beszelSystemGrid + beszelAlerts = 12
-  { kind: "beszelSystemGrid", width: 8, height: 3, needsIntegration: true },
-  { kind: "beszelAlerts", width: 4, height: 3, needsIntegration: true },
-  // Row 10: beszelSystemTable + beszelSystemStats = 12
-  { kind: "beszelSystemTable", width: 6, height: 3, needsIntegration: true },
-  { kind: "beszelSystemStats", width: 6, height: 4, needsIntegration: true },
-  // Row 11: notebook + dockerContainers + weather = 12
-  { kind: "notebook", width: 4, height: 4, needsIntegration: false },
-  { kind: "dockerContainers", width: 6, height: 2, needsIntegration: false },
-  { kind: "weather", width: 2, height: 1, needsIntegration: false },
-  // Row 12: assistant
-  { kind: "assistant", width: 3, height: 3, needsIntegration: false },
 ];
 
 const seedDemoUserAsync = async (db: Database) => {
@@ -710,44 +811,134 @@ const seedDemoUserAsync = async (db: Database) => {
     });
   }
 
+  const customWidgetDefinitionId = createId();
+  const customWidgetDefinition = customWidgetDefinitionSchema.parse({
+    $schema: "homarr-custom-widget-v2",
+    name: "Community Workshop",
+    description: "Live Custom Widget and Custom CSS submissions shared by the Homarr community.",
+    sources: {
+      default: {
+        name: "Homarr Workshop",
+        baseUrl: "https://v2.preview.homarr.dev",
+        networkScope: "public",
+        auth: "none",
+      },
+    },
+    requests: {
+      workshop: {
+        path: "/api/collections/workshop_listings/records",
+        query: { perPage: 50 },
+        cacheSeconds: 300,
+      },
+    },
+    options: {},
+    template: `<Stack p="md" gap="xs" h="100%">
+  <Group justify="space-between" wrap="nowrap">
+    <Stack gap={0}><Text size="xs" c="indigo" fw={700}>COMMUNITY WORKSHOP</Text><Title order={3}>Made by Homarr users</Title></Stack>
+    <Badge color="indigo" variant="light">{data.workshop?.totalItems ?? "—"} shared</Badge>
+  </Group>
+  <Text size="xs" c="dimmed">Build Custom Widgets or dashboard CSS, then share it with the community.</Text>
+  {status.workshop?.loading ? <Stack gap="xs"><Skeleton height={26} radius="sm" /><Skeleton height={26} radius="sm" /><Skeleton height={26} radius="sm" /></Stack> : status.workshop?.error ? <Stack gap="xs"><Alert color="red" title="The Workshop could not be loaded">{status.workshop.error}</Alert><RefreshButton /></Stack> : (data.workshop?.items ?? []).length === 0 ? <Stack gap="xs"><Alert color="gray" title="Nothing shared yet">The first community submission could be yours.</Alert><RefreshButton /></Stack> : <Stack gap={4} style={{ flex: 1 }}>{(data.workshop?.items ?? []).slice(0, 4).map(submission => <Group key={submission.id} justify="space-between" wrap="nowrap"><Text size="sm" fw={600} lineClamp={1}>{submission.title}</Text><Group gap="xs" wrap="nowrap"><Text size="xs" c="dimmed">@{submission.authorName ?? "community"}</Text><Badge size="xs" color="gray" variant="light">{submission.upvotes ?? 0} ↑</Badge></Group></Group>)}{data.workshop?.totalItems > 4 ? <Text size="xs" c="dimmed">and {data.workshop.totalItems - 4} more in the Workshop</Text> : null}</Stack>}
+  <Anchor href="https://homarr.dev/docs/getting-started" target="_blank" rel="noreferrer" bg="indigo" c="white" fw={700} px="md" py="xs" radius="md" underline="never">Install Homarr now →</Anchor>
+</Stack>`,
+  });
+  await db.insert(customWidgetDefinitions).values({
+    id: customWidgetDefinitionId,
+    name: customWidgetDefinition.name,
+    description: customWidgetDefinition.description ?? null,
+    iconUrl: null,
+    sources: SuperJSON.stringify(customWidgetDefinition.sources),
+    requests: SuperJSON.stringify(customWidgetDefinition.requests),
+    options: SuperJSON.stringify(customWidgetDefinition.options),
+    template: customWidgetDefinition.template,
+    enabled: true,
+    creatorId: userId,
+  });
+
   const boardId = createId();
   await db.insert(boards).values({
     id: boardId,
     name: "default",
     isPublic: false,
     creatorId: userId,
+    pageTitle: "Homarr demo",
+    backgroundImageUrl: "/images/demo-dashboard-background.svg",
+    primaryColor: "#748FFC",
+    secondaryColor: "#3BC9DB",
+    opacity: 90,
+    itemRadius: "xl",
   });
 
-  const sectionId = createId();
+  const mainSectionId = createId();
   await db.insert(sections).values({
-    id: sectionId,
+    id: mainSectionId,
     kind: "empty",
     xOffset: 0,
     yOffset: 0,
     boardId,
   });
 
+  const rightSectionId = createId();
+  await db.insert(sections).values({
+    id: rightSectionId,
+    kind: "empty",
+    xOffset: 1,
+    yOffset: 0,
+    boardId,
+  });
+
+  const networkSectionId = createId();
+  await db.insert(sections).values({
+    id: networkSectionId,
+    kind: "container",
+    boardId,
+    options: SuperJSON.stringify({
+      title: "Network stuff",
+      customCssClasses: [],
+      borderColor: "",
+      showLabel: true,
+      collapsible: true,
+      showOpenAll: false,
+      scrollable: false,
+    }),
+  });
+
   const layoutId = createId();
   await db.insert(layouts).values({
     id: layoutId,
     name: "Base",
-    columnCount: 12,
+    columnCount: 13,
+    rightGutterColumnCount: 1,
     breakpoint: 768,
     role: "base",
     boardId,
   });
 
-  const demoWidgets = buildDemoWidgets(appIds);
-  let xOffset = 0;
-  let yOffset = 0;
-  let rowMaxHeight = 0;
+  await db.insert(sectionLayouts).values({
+    sectionId: networkSectionId,
+    layoutId,
+    parentSectionId: mainSectionId,
+    xOffset: 3,
+    yOffset: 5,
+    width: 6,
+    height: 6,
+  });
+
+  await db.insert(sectionCollapseStates).values({
+    userId,
+    sectionId: networkSectionId,
+    collapsed: true,
+  });
+
+  const demoWidgets = buildDemoWidgets(appIds, customWidgetDefinitionId);
   for (const widget of demoWidgets) {
-    if (xOffset + widget.width > 12) {
-      xOffset = 0;
-      yOffset += rowMaxHeight;
-      rowMaxHeight = 0;
+    let sectionId = mainSectionId;
+    if (widget.section === "right") {
+      sectionId = rightSectionId;
+    } else if (widget.section === "network") {
+      sectionId = networkSectionId;
     }
-    rowMaxHeight = Math.max(rowMaxHeight, widget.height);
+
     const itemId = createId();
     await db.insert(items).values({
       id: itemId,
@@ -759,8 +950,8 @@ const seedDemoUserAsync = async (db: Database) => {
       itemId,
       sectionId,
       layoutId,
-      xOffset,
-      yOffset,
+      xOffset: widget.xOffset,
+      yOffset: widget.yOffset,
       width: widget.width,
       height: widget.height,
     });
@@ -770,7 +961,6 @@ const seedDemoUserAsync = async (db: Database) => {
         integrationId,
       });
     }
-    xOffset += widget.width;
   }
 
   await db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, userId));
