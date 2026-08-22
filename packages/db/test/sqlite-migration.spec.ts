@@ -105,18 +105,26 @@ test("SQLite migrations seed the redesigned demo dashboard", async () => {
     expect(networkSection.collapseStates).toEqual([]);
 
     const itemByKind = (kind: string) => board.items.find((item) => item.kind === kind);
-    const expectItemLayout = (kind: string, width: number, height: number) => {
+    const expectItemLayout = (
+      kind: string,
+      xOffset: number,
+      yOffset: number,
+      width: number,
+      height: number,
+      sectionId = mainSection.id,
+    ) => {
       const layout = itemByKind(kind)?.layouts.find((candidate) => candidate.layoutId === baseLayout.id);
-      expect(layout).toMatchObject({ width, height });
+      expect(layout).toMatchObject({ sectionId, xOffset, yOffset, width, height });
     };
-    expectItemLayout("calendar", 2, 2);
-    expectItemLayout("downloads", 5, 2);
-    expectItemLayout("mediaRequests-requestList", 3, 2);
-    expectItemLayout("mediaMissing", 3, 2);
-    expectItemLayout("dockerContainers", 4, 3);
-    expectItemLayout("mediaServer", 3, 2);
-    expectItemLayout("beszelSystemGrid", 4, 3);
-    expectItemLayout("customApi", 4, 3);
+    expectItemLayout("calendar", 0, 0, 2, 2);
+    expectItemLayout("downloads", 7, 0, 5, 2);
+    expectItemLayout("mediaRequests-requestList", 0, 5, 3, 2);
+    expectItemLayout("mediaMissing", 9, 5, 3, 2);
+    expectItemLayout("dockerContainers", 0, 11, 4, 3);
+    expectItemLayout("mediaServer", 0, 7, 3, 2);
+    expectItemLayout("beszelSystemGrid", 5, 2, 4, 3);
+    expectItemLayout("customApi", 8, 11, 4, 3);
+    expectItemLayout("notifications", 0, 4, 2, 2, networkSection.id);
 
     for (const kind of ["weather", "airQuality"]) {
       const item = itemByKind(kind);
@@ -161,6 +169,25 @@ test("SQLite migrations seed the redesigned demo dashboard", async () => {
         return item.kind === "app" && layout?.width === 1 && layout.height === 1;
       }),
     ).toBe(true);
+    expect(
+      rightRailLayouts
+        .toSorted((first, second) => first.yOffset - second.yOffset)
+        .map(({ sectionId, xOffset, yOffset, width, height }) => ({
+          sectionId,
+          xOffset,
+          yOffset,
+          width,
+          height,
+        })),
+    ).toEqual(
+      Array.from({ length: 12 }, (_, yOffset) => ({
+        sectionId: rightSection.id,
+        xOffset: 0,
+        yOffset,
+        width: 1,
+        height: 1,
+      })),
+    );
     expectFilledGrid(rightRailLayouts, 1);
 
     const networkItems = board.items.filter((item) =>
@@ -172,10 +199,6 @@ test("SQLite migrations seed the redesigned demo dashboard", async () => {
     const networkItemLayouts = networkItems.flatMap((item) =>
       item.layouts.filter((layout) => layout.layoutId === baseLayout.id && layout.sectionId === networkSection.id),
     );
-    const notificationsLayout = networkItemLayouts.find(
-      (layout) => layout.itemId === networkItems.find((item) => item.kind === "notifications")?.id,
-    );
-    expect(notificationsLayout).toMatchObject({ width: 2, height: 2 });
     expectFilledGrid(networkItemLayouts, 6);
 
     const workshopDefinition = await database.query.customWidgetDefinitions.findFirst({
@@ -184,7 +207,7 @@ test("SQLite migrations seed the redesigned demo dashboard", async () => {
     if (!workshopDefinition) throw new Error("Demo Workshop definition was not seeded");
     expect(workshopDefinition.name).toBe("Community Workshop");
     expect(SuperJSON.parse<Record<string, { baseUrl: string }>>(workshopDefinition.sources).default?.baseUrl).toBe(
-      "https://homarr.dev",
+      "https://v2.preview.homarr.dev",
     );
 
     const workshopItem = itemByKind("customApi");
