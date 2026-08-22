@@ -30,6 +30,7 @@ import {
   getIntegrationName,
   getWidgetName,
   getRootSectionLane,
+  widgetDefaultSizes,
   widgetIntegrationSupport,
   widgetKinds,
   widgetKindsWithOptionalIntegrations,
@@ -47,6 +48,7 @@ import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr
 import type { EmptySection } from "~/app/[locale]/boards/_types";
 import { useSetupAnalytics } from "~/components/create/setup-analytics";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
+import { getSectionGridColumnCount } from "../sections/grid/section-grid-placements";
 import { useItemActions } from "./item-actions";
 import type { WidgetConnectionStatus } from "./item-select-data";
 import {
@@ -76,6 +78,8 @@ export interface WidgetItemData {
 }
 
 const selectGridCols = { base: 1, xs: 2, sm: 2, md: 3, lg: 4 };
+const defaultWidgetSize = { width: 1, height: 1 };
+const maximumWidgetHeight = 64;
 
 const ItemSelectModalContent = ({
   actions,
@@ -124,6 +128,13 @@ const ItemSelectModalContent = ({
   const effectiveSectionId = placementOptions.some(({ value }) => value === targetSectionId)
     ? targetSectionId
     : (placementOptions[0]?.value ?? null);
+  const maximumWidgetSize = useMemo(() => {
+    if (!effectiveSectionId) return defaultWidgetSize;
+    return {
+      width: Math.max(1, getSectionGridColumnCount(board, currentLayoutId, effectiveSectionId) ?? 1),
+      height: maximumWidgetHeight,
+    };
+  }, [board, currentLayoutId, effectiveSectionId]);
 
   const [loadingSelection, setLoadingSelection] = useState<string | null>(null);
   const selectionLock = useRef(false);
@@ -246,6 +257,7 @@ const ItemSelectModalContent = ({
     try {
       const definition = await loadWidgetDefinition("customApi");
       const itemId = createId();
+      const initialSize = widgetDefaultSizes.customApi ?? defaultWidgetSize;
       const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
       const options = {
         ...defaultOptions,
@@ -263,7 +275,7 @@ const ItemSelectModalContent = ({
             options,
             integrationIds: [],
           },
-          onSuccessfulEdit: ({ options: configuredOptions, advancedOptions }) => {
+          onSuccessfulEdit: ({ options: configuredOptions, advancedOptions }, selectedSize) => {
             const updatedBoard = createItem({
               id: itemId,
               kind: "customApi",
@@ -271,12 +283,14 @@ const ItemSelectModalContent = ({
               options: configuredOptions,
               targetSectionId: effectiveSectionId ?? undefined,
               advancedOptions,
+              size: selectedSize ?? initialSize,
             });
             notifyCreated(updatedBoard, itemId, customWidgetDefinition.name);
           },
           integrationData: [],
           integrationSupport: false,
           settings,
+          previewResize: { initialSize, maximumSize: maximumWidgetSize },
         },
         {
           title: (titleT) => `${titleT("item.edit.title")} - ${customWidgetDefinition.name}`,
@@ -311,6 +325,7 @@ const ItemSelectModalContent = ({
       const matchingIntegrationCount = Math.min(matchingIntegrations.length, maxIntegrations);
       const itemId = createId();
       const defaultOptions = reduceWidgetOptionsWithDefinition(definition, settings);
+      const initialSize = widgetDefaultSizes[kind] ?? defaultWidgetSize;
       const openEditor = (
         availableIntegrations: { id: string; name: string; url: string; kind: IntegrationKind }[],
       ) => {
@@ -326,7 +341,7 @@ const ItemSelectModalContent = ({
               options: defaultOptions,
               integrationIds: selectedIntegrationIds,
             },
-            onSuccessfulEdit: ({ options, integrationIds: newIntegrationIds, advancedOptions }) => {
+            onSuccessfulEdit: ({ options, integrationIds: newIntegrationIds, advancedOptions }, selectedSize) => {
               const updatedBoard = createItem({
                 id: itemId,
                 kind,
@@ -334,6 +349,7 @@ const ItemSelectModalContent = ({
                 integrationIds: newIntegrationIds,
                 targetSectionId: effectiveSectionId ?? undefined,
                 advancedOptions,
+                size: selectedSize ?? initialSize,
               });
               if (!notifyCreated(updatedBoard, itemId, getWidgetName(kind, t))) return;
               trackSetup("widget-completed", {
@@ -346,6 +362,7 @@ const ItemSelectModalContent = ({
             integrationData: availableIntegrations,
             integrationSupport: hasIntegrationSupport,
             settings,
+            previewResize: { initialSize, maximumSize: maximumWidgetSize },
           },
           {
             title: (titleT) => `${titleT("item.edit.title")} - ${getWidgetName(kind, titleT)}`,

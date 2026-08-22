@@ -12,7 +12,7 @@ import { widgetDefaultSizes } from "@homarr/definitions";
 import { createModal, useModalAction } from "@homarr/modals";
 import { WidgetError } from "@homarr/widgets/errors";
 import type * as WidgetModalsModule from "@homarr/widgets/modals";
-import type { WidgetEditModalProps } from "@homarr/widgets/modals";
+import type { WidgetEditModalProps, WidgetEditModalSize } from "@homarr/widgets/modals";
 import { loadWidgetComponent } from "@homarr/widgets/manifest";
 import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
 
@@ -26,6 +26,10 @@ const defaultWidgetSize = { width: 1, height: 1 };
 const ignoreAssistantAction = () => undefined;
 const ignoreAssistantPrompt = () => false;
 const ignoreAssistantRefresh = () => Promise.resolve();
+const getPreviewDimensions = (size: WidgetEditModalSize) => ({
+  width: getLogicalTrackSize(size.width),
+  height: getLogicalTrackSize(size.height),
+});
 
 const PreviewRuntimeWrapper = ({ children }: PropsWithChildren) => {
   const assistant = useOptionalHomarrAssistant();
@@ -153,6 +157,10 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
       height: getLogicalTrackSize(size.height),
     };
   }, [props.innerProps.kind, props.innerProps.previewDimensions]);
+  let previewResize = props.innerProps.previewResize;
+  if (previewResize) {
+    previewResize = { ...previewResize, getDimensions: getPreviewDimensions };
+  }
 
   return (
     <Component
@@ -163,6 +171,7 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
         integrationEditForm: LazyIntegrationEditForm,
         previewComponent: PreviewComponent,
         previewDimensions,
+        previewResize,
         previewWrapper: PreviewRuntimeWrapper,
         onOpenNewIntegration: supportedKinds.length > 0 ? handleOpenNewIntegration : undefined,
       }}

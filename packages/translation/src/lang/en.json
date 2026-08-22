@@ -2116,7 +2116,8 @@
         "loadError": "This integration could not be loaded. Try again before changing its connection settings."
       },
       "preview": {
-        "integrationRequired": "Choose a connection to preview this widget."
+        "integrationRequired": "Choose a connection to preview this widget.",
+        "size": "Size"
       },
       "settings": {
         "label": "Widget settings"

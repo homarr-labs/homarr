@@ -4,7 +4,21 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import type { ComponentType, FormEvent, PropsWithChildren } from "react";
-import { Alert, Badge, Box, Button, Center, Divider, Group, SimpleGrid, Stack, Tabs, Text } from "@mantine/core";
+import {
+  Alert,
+  Badge,
+  Box,
+  Button,
+  Center,
+  Divider,
+  Group,
+  NumberInput,
+  SimpleGrid,
+  Stack,
+  Tabs,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
 import { useElementSize } from "@mantine/hooks";
 import { IconArrowLeft, IconEye, IconPencil, IconSettings } from "@tabler/icons-react";
@@ -44,6 +58,17 @@ export interface WidgetEditModalState {
   advancedOptions: BoardItemAdvancedOptions;
 }
 
+export interface WidgetEditModalSize {
+  width: number;
+  height: number;
+}
+
+interface WidgetEditPreviewResizeOptions {
+  initialSize: WidgetEditModalSize;
+  maximumSize: WidgetEditModalSize;
+  getDimensions?: (size: WidgetEditModalSize) => { width: number; height: number; scale?: number };
+}
+
 export interface EmbeddedIntegrationEditFormHandle {
   submitIfDirty: () => Promise<boolean>;
 }
@@ -58,7 +83,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   kind: TSort;
   definition: WidgetDefinition;
   value: WidgetEditModalState;
-  onSuccessfulEdit: (value: WidgetEditModalState) => void;
+  onSuccessfulEdit: (value: WidgetEditModalState, size?: WidgetEditModalSize) => void;
   integrationData: IntegrationSelectOption[];
   integrationSupport: boolean;
   settings: SettingsContextProps;
@@ -70,6 +95,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   onOpenNewIntegration?: (onCreated?: (id: string) => void) => void;
   previewComponent?: ComponentType<WidgetComponentProps<TSort>>;
   previewDimensions?: { width: number; height: number; scale?: number };
+  previewResize?: WidgetEditPreviewResizeOptions;
   previewWrapper?: ComponentType<PropsWithChildren>;
 }
 
@@ -83,6 +109,11 @@ interface WidgetEditPreviewProps {
   dimensions?: { width: number; height: number; scale?: number };
   integrationData: IntegrationSelectOption[];
   onChangeOptions: (newOptions: Record<string, unknown>) => void;
+  resize?: {
+    size: WidgetEditModalSize;
+    maximumSize: WidgetEditModalSize;
+    onChange: (size: WidgetEditModalSize) => void;
+  };
   PreviewWrapper?: ComponentType<PropsWithChildren>;
 }
 
@@ -94,6 +125,11 @@ const PreviewRuntimeBoundary = ({
   return <Wrapper>{children}</Wrapper>;
 };
 
+const normalizePreviewSize = (size: WidgetEditModalSize, maximumSize: WidgetEditModalSize): WidgetEditModalSize => ({
+  width: Math.max(1, Math.min(Math.round(size.width), maximumSize.width)),
+  height: Math.max(1, Math.min(Math.round(size.height), maximumSize.height)),
+});
+
 const WidgetEditPreview = ({
   kind,
   Component,
@@ -104,8 +140,10 @@ const WidgetEditPreview = ({
   dimensions = { width: 400, height: 240 },
   integrationData,
   onChangeOptions,
+  resize,
   PreviewWrapper,
 }: WidgetEditPreviewProps) => {
+  const t = useI18n();
   const tItem = useI18n("item.edit");
   const board = useOptionalBoard();
   const generatedPreviewId = useId().replaceAll(":", "");
@@ -139,10 +177,66 @@ const WidgetEditPreview = ({
   if (kind === "assistant") componentItemId = `widget-preview-${generatedPreviewId}`;
   const isPendingCustomWidget = kind === "customApi" && !itemId;
   const previewOpacity = (board?.opacity ?? 100) / 100;
+  const handleResizeValue = (dimension: keyof WidgetEditModalSize, value: string | number) => {
+    if (typeof value !== "number" || !Number.isFinite(value) || !resize) return;
+    resize.onChange(
+      normalizePreviewSize(
+        {
+          ...resize.size,
+          [dimension]: value,
+        },
+        resize.maximumSize,
+      ),
+    );
+  };
 
   return (
     <Stack className={classes.previewPanel} gap={0}>
       <Center ref={ref} className={classes.previewCanvas}>
+        {resize && (
+          <Group className={classes.previewSizeControls} gap={6} wrap="nowrap">
+            <Text size="xs" fw={600} c="dimmed">
+              {tItem("preview.size")}
+            </Text>
+            <Tooltip label={t("item.moveResize.field.width.label")}>
+              <NumberInput
+                className={classes.previewSizeInput}
+                aria-label={t("item.moveResize.field.width.label")}
+                value={resize.size.width}
+                onChange={(value) => handleResizeValue("width", value)}
+                min={1}
+                max={resize.maximumSize.width}
+                step={1}
+                allowDecimal={false}
+                allowNegative={false}
+                clampBehavior="strict"
+                size="xs"
+                leftSection="W"
+                leftSectionPointerEvents="none"
+              />
+            </Tooltip>
+            <Text size="xs" c="dimmed" aria-hidden>
+              ×
+            </Text>
+            <Tooltip label={t("item.moveResize.field.height.label")}>
+              <NumberInput
+                className={classes.previewSizeInput}
+                aria-label={t("item.moveResize.field.height.label")}
+                value={resize.size.height}
+                onChange={(value) => handleResizeValue("height", value)}
+                min={1}
+                max={resize.maximumSize.height}
+                step={1}
+                allowDecimal={false}
+                allowNegative={false}
+                clampBehavior="strict"
+                size="xs"
+                leftSection="H"
+                leftSectionPointerEvents="none"
+              />
+            </Tooltip>
+          </Group>
+        )}
         <Badge className={classes.previewDimensions} size="xs" variant="light" color="gray">
           {Math.round(sourceWidth)} × {Math.round(sourceHeight)}
         </Badge>
@@ -228,6 +322,11 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const [mountedIntegrationIds, setMountedIntegrationIds] = useState<string[]>([]);
   const [activeIntegrationId, setActiveIntegrationId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [previewSize, setPreviewSize] = useState<WidgetEditModalSize | null>(() => {
+    const resize = innerProps.previewResize;
+    if (!resize) return null;
+    return normalizePreviewSize(resize.initialSize, resize.maximumSize);
+  });
   const widgetFormId = useId();
 
   z.config({
@@ -354,10 +453,13 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
         }
       }
 
-      innerProps.onSuccessfulEdit({
-        ...values,
-        advancedOptions,
-      });
+      innerProps.onSuccessfulEdit(
+        {
+          ...values,
+          advancedOptions,
+        },
+        previewSize ?? undefined,
+      );
       actions.closeModal();
     } finally {
       setIsSubmitting(false);
@@ -400,6 +502,17 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const switchOptions = visibleOptions.filter(([, value]) => value.type === "switch");
   const otherOptions = visibleOptions.filter(([, value]) => value.type !== "switch");
   const hasWidgetSettings = canConfigureWidget && (innerProps.integrationSupport || visibleOptions.length > 0);
+  const previewResize = innerProps.previewResize;
+  let previewDimensions = innerProps.previewDimensions;
+  let resizeControls: WidgetEditPreviewProps["resize"];
+  if (previewSize && previewResize?.getDimensions) {
+    previewDimensions = previewResize.getDimensions(previewSize);
+    resizeControls = {
+      size: previewSize,
+      maximumSize: previewResize.maximumSize,
+      onChange: setPreviewSize,
+    };
+  }
 
   const widgetFormContent = (
     <Box
@@ -415,9 +528,10 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           state={{ ...form.values, advancedOptions }}
           itemId={innerProps.itemId}
           boardId={innerProps.boardId ?? board?.id}
-          dimensions={innerProps.previewDimensions}
+          dimensions={previewDimensions}
           integrationData={innerProps.integrationData}
           onChangeOptions={handlePreviewOptionsChange}
+          resize={resizeControls}
           PreviewWrapper={innerProps.previewWrapper}
         />
       )}
