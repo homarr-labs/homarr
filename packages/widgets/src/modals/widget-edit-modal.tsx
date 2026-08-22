@@ -211,7 +211,7 @@ const WidgetEditPreview = ({
                 allowNegative={false}
                 clampBehavior="strict"
                 size="xs"
-                leftSection="W"
+                leftSection={t("item.moveResize.field.width.shortLabel")}
                 leftSectionPointerEvents="none"
               />
             </Tooltip>
@@ -231,7 +231,7 @@ const WidgetEditPreview = ({
                 allowNegative={false}
                 clampBehavior="strict"
                 size="xs"
-                leftSection="H"
+                leftSection={t("item.moveResize.field.height.shortLabel")}
                 leftSectionPointerEvents="none"
               />
             </Tooltip>

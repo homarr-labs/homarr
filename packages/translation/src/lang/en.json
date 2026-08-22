@@ -2083,10 +2083,12 @@
           "label": "Section or rail"
         },
         "width": {
-          "label": "Width"
+          "label": "Width",
+          "shortLabel": "W"
         },
         "height": {
-          "label": "Height"
+          "label": "Height",
+          "shortLabel": "H"
         },
         "xOffset": {
           "label": "X offset"

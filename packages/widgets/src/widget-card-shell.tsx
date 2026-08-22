@@ -44,6 +44,7 @@ export const WidgetCardShell = ({
     ref={innerRef}
     className={combineClasses(
       classes.card,
+      kind === "iframe" && classes.iframe,
       `${kind}-wrapper`,
       "board-grid-item-content",
       advancedOptions.customCssClasses.join(" "),
