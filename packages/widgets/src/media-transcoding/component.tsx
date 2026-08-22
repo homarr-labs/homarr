@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { getQueryKey } from "@trpc/react-query";
 import {
@@ -42,6 +42,24 @@ const viewIcons = {
   queue: IconClipboardList,
   statistics: IconReportAnalytics,
 } satisfies Record<View, TablerIcon>;
+
+type TranscodingControlMode = "buttons" | "select";
+
+const narrowWidthLayout = { minimumWidth: 0, advancedColumns: 1, controlMode: "select" } as const;
+
+const widthBreakpoints = [
+  { minimumWidth: 1100, advancedColumns: 3, controlMode: "buttons" },
+  { minimumWidth: 700, advancedColumns: 2, controlMode: "buttons" },
+  { minimumWidth: 560, advancedColumns: 1, controlMode: "buttons" },
+  narrowWidthLayout,
+] as const satisfies readonly {
+  minimumWidth: number;
+  advancedColumns: number;
+  controlMode: TranscodingControlMode;
+}[];
+
+const getTranscodingWidthLayout = (width: number) =>
+  widthBreakpoints.find((candidate) => width >= candidate.minimumWidth) ?? narrowWidthLayout;
 
 export default function MediaTranscodingWidget({
   integrationIds,
@@ -90,6 +108,7 @@ export default function MediaTranscodingWidget({
   const handleQueuePageChange = (page: number) => {
     setQueuePagination({ page, pageSize: queuePageSize, isAdvanced });
   };
+  const widthLayout = useMemo(() => getTranscodingWidthLayout(width), [width]);
 
   if (!transcodingData) return <WidgetEmptyState />;
 
@@ -107,7 +126,7 @@ export default function MediaTranscodingWidget({
       <Stack gap="xs" h="100%" p="xs" pos="relative">
         {queryIndicator}
         <ScrollArea h="100%" style={{ flex: 1 }}>
-          <SimpleGrid cols={width >= 1100 ? 3 : width >= 700 ? 2 : 1} spacing="sm">
+          <SimpleGrid cols={widthLayout.advancedColumns} spacing="sm">
             <AdvancedPanel title={t("tab.workers")} icon={IconCpu2}>
               <WorkersPanel workers={transcodingData.data.workers} isTiny={false} />
             </AdvancedPanel>
@@ -146,7 +165,7 @@ export default function MediaTranscodingWidget({
       )}
       <Divider />
       <Group gap="xs" mb={4} ms={4} me={8} wrap="nowrap">
-        {width >= 560 ? (
+        {widthLayout.controlMode === "buttons" ? (
           <Button.Group style={{ flex: 1, minWidth: 0 }}>
             {views.map((value) => {
               const Icon = viewIcons[value];
