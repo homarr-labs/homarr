@@ -17,7 +17,10 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
   const t = useI18n("item.edit");
   const theme = useMantineTheme();
   const form = useForm({
-    initialValues: innerProps.advancedOptions,
+    initialValues: {
+      ...innerProps.advancedOptions,
+      title: innerProps.advancedOptions.title ?? "",
+    },
   });
   const handleSubmit = (values: BoardItemAdvancedOptions) => {
     innerProps.onSuccess({

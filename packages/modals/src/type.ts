@@ -19,6 +19,7 @@ export type CreateModalOptions = Pick<
   | "centered"
   | "keepMounted"
   | "withCloseButton"
+  | "withOverlay"
   | "zIndex"
   | "scrollAreaComponent"
   | "yOffset"

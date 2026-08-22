@@ -157,6 +157,8 @@ export const LazyWidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>
   defaultTitle(t) {
     return t("item.edit.title");
   },
+  presentation: "inspector",
+  withOverlay: false,
   size: modalSizeForm,
   closeOnClickOutside: false,
 });

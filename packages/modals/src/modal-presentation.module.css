@@ -7,9 +7,11 @@
 .inspectorContent {
   --modal-content-flex: 0 0 100%;
   --modal-content-max-height: min(88dvh, 52rem);
+  --modal-size: 100%;
 
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   border-radius: var(--mantine-radius-lg) var(--mantine-radius-lg) 0 0;
 }
 
@@ -23,8 +25,13 @@
     --modal-content-flex: 0 0 min(34rem, 46vw);
     --modal-content-height: 100dvh;
     --modal-content-max-height: 100dvh;
+    --modal-size: min(34rem, 46vw);
 
     width: min(34rem, 46vw);
     border-radius: 0;
+  }
+
+  .inspectorInner:has([data-widget-inspector-side="left"]) {
+    justify-content: flex-start;
   }
 }

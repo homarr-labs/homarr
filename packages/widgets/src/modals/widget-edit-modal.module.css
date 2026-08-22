@@ -1,0 +1,74 @@
+.panel {
+  min-width: 0;
+}
+
+.settings {
+  min-width: 0;
+}
+
+.switchGrid {
+  align-items: stretch;
+}
+
+.switchOption {
+  display: flex;
+  min-height: 4.25rem;
+  align-items: center;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+}
+
+.switchOption > *,
+.switchOption :global(.mantine-Switch-root),
+.switchOption :global(.mantine-Switch-body) {
+  width: 100%;
+}
+
+.switchOption :global(.mantine-Switch-body) {
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-sm);
+}
+
+.switchOption :global(.mantine-Switch-labelWrapper) {
+  min-width: 0;
+  flex: 1;
+}
+
+.footer {
+  position: sticky;
+  z-index: 2;
+  bottom: calc(var(--mantine-spacing-md) * -1);
+  margin-inline: calc(var(--mantine-spacing-md) * -1);
+  margin-bottom: calc(var(--mantine-spacing-md) * -1);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-top: 1px solid var(--mantine-color-default-border);
+  background: color-mix(in srgb, var(--mantine-color-body) 96%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.focusFrame {
+  position: fixed;
+  pointer-events: none;
+  border: 2px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--mantine-primary-color-filled) 32%, transparent),
+    0 0 2.5rem color-mix(in srgb, var(--mantine-primary-color-filled) 28%, transparent),
+    0 0 0 100vmax rgb(0 0 0 / 0.58);
+  clip-path: inset(-100vmax);
+  transition:
+    top 160ms ease,
+    left 160ms ease,
+    width 160ms ease,
+    height 160ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focusFrame {
+    transition: none;
+  }
+}

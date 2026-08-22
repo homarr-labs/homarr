@@ -160,7 +160,7 @@ export const WidgetContextMenu = ({
         definition,
         value: {
           advancedOptions: item.advancedOptions,
-          options: item.options,
+          options,
           integrationIds: item.integrationIds,
         },
         onSuccessfulEdit: (editResult) => {
@@ -189,6 +189,8 @@ export const WidgetContextMenu = ({
         ),
         integrationSupport: definition.supportedIntegrations !== undefined,
         settings,
+        itemId: item.id,
+        boardId: board.id,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -197,11 +199,13 @@ export const WidgetContextMenu = ({
       },
     );
   }, [
+    board.id,
     definition,
     integrationData,
     item,
     handleRefetch,
     openModal,
+    options,
     persistBoard,
     settings,
     updateItemAdvancedOptions,

@@ -277,6 +277,7 @@ const ItemSelectModalContent = ({
           integrationData: [],
           integrationSupport: false,
           settings,
+          boardId: board.id,
         },
         {
           title: (titleT) => `${titleT("item.edit.title")} - ${customWidgetDefinition.name}`,
@@ -346,6 +347,7 @@ const ItemSelectModalContent = ({
             integrationData: availableIntegrations,
             integrationSupport: hasIntegrationSupport,
             settings,
+            boardId: board.id,
           },
           {
             title: (titleT) => `${titleT("item.edit.title")} - ${getWidgetName(kind, titleT)}`,

@@ -3,6 +3,7 @@ import { ActionIcon, Menu } from "@mantine/core";
 import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil } from "@tabler/icons-react";
 
 import { useSession } from "@homarr/auth/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { getWidgetName } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
@@ -33,6 +34,7 @@ export const BoardItemMenu = (props: BoardItemMenuProps) => {
 };
 const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemMenuProps) => {
   const { data: session } = useSession();
+  const board = useRequiredBoard();
   const canDuplicate = item.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
   const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useI18n("item");
@@ -89,6 +91,7 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
         integrationSupport: "supportedIntegrations" in definition,
         settings,
         itemId: item.id,
+        boardId: board.id,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       {
