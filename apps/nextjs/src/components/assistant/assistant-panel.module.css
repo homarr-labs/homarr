@@ -130,6 +130,45 @@
   color: var(--mantine-color-text);
 }
 
+.widgetPanel[data-board-widget] {
+  background: transparent;
+}
+
+.widgetPanel[data-board-widget] .panelHeader,
+.widgetPanel[data-board-widget] .composerWrap {
+  border-color: rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .composerWrap,
+.widgetPanel[data-board-widget] .composer,
+.widgetPanel[data-board-widget] .composerQuote,
+.widgetPanel[data-board-widget] .pendingQuestionDock {
+  background: transparent;
+}
+
+.widgetPanel[data-board-widget] .suggestion,
+.widgetPanel[data-board-widget] .runtimeSelectorTrigger,
+.widgetPanel[data-board-widget] .composerContext,
+.widgetPanel[data-board-widget] .providerQuotaTrigger {
+  border-color: rgb(from var(--mantine-color-default-border) r g b / var(--opacity, 1));
+  background: transparent;
+}
+
+.widgetPanel[data-board-widget] .suggestion:hover:not(:disabled),
+.widgetPanel[data-board-widget] .runtimeSelectorTrigger:hover:not(:disabled),
+.widgetPanel[data-board-widget] .composerContext:hover:not(:disabled),
+.widgetPanel[data-board-widget] .providerQuotaTrigger:hover:not(:disabled) {
+  background: rgb(from var(--mantine-color-default-hover) r g b / var(--opacity, 1));
+}
+
+.widgetPanel[data-board-widget] .suggestion:focus-visible,
+.widgetPanel[data-board-widget] .runtimeSelectorTrigger:focus-visible,
+.widgetPanel[data-board-widget] .composerContext:focus-visible,
+.widgetPanel[data-board-widget] .providerQuotaTrigger:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: 2px;
+}
+
 .widgetState {
   container-type: inline-size;
   overflow: auto;
