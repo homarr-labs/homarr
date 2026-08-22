@@ -11,11 +11,12 @@ import classes from "./board-layout-thumbnail.module.css";
 interface BoardLayoutThumbnailProps {
   preview: BoardPreviewData | null;
   label: string;
+  fitFullLayout?: boolean;
 }
 
 const maxThumbnailRows = 12;
 
-export const BoardLayoutThumbnail = ({ preview, label }: BoardLayoutThumbnailProps) => {
+export const BoardLayoutThumbnail = ({ preview, label, fitFullLayout = false }: BoardLayoutThumbnailProps) => {
   const layout = preview?.layouts.find((candidate) => candidate.role === "base") ?? preview?.layouts.at(0);
   if (!preview || !layout) {
     return (
@@ -26,6 +27,7 @@ export const BoardLayoutThumbnail = ({ preview, label }: BoardLayoutThumbnailPro
   }
 
   const elements = projectBoardLayout(preview, layout, layout);
+  const thumbnailRowLimit = fitFullLayout ? Number.POSITIVE_INFINITY : maxThumbnailRows;
   const roots = preview.sections
     .filter((section) => section.kind === "empty")
     .toSorted((first, second) => (first.xOffset ?? 0) - (second.xOffset ?? 0) || first.id.localeCompare(second.id));
@@ -65,12 +67,12 @@ export const BoardLayoutThumbnail = ({ preview, label }: BoardLayoutThumbnailPro
               element.xOffset >= 0 &&
               element.xOffset < columnCount &&
               element.yOffset >= 0 &&
-              element.yOffset < maxThumbnailRows &&
+              element.yOffset < thumbnailRowLimit &&
               element.width > 0 &&
               element.height > 0,
           );
           const rowCount = Math.min(
-            maxThumbnailRows,
+            thumbnailRowLimit,
             Math.max(4, ...laneElements.map((element) => element.yOffset + element.height)),
           );
 

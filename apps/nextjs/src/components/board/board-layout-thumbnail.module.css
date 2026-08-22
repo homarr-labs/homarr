@@ -1,5 +1,6 @@
 .canvas {
-  min-height: 8rem;
+  width: 100%;
+  min-width: 0;
   aspect-ratio: 16 / 7;
   overflow: hidden;
   color: var(--mantine-color-dimmed);
@@ -82,10 +83,4 @@
   display: grid;
   gap: rem(1px);
   overflow: hidden;
-}
-
-@media (max-width: $mantine-breakpoint-xs) {
-  .canvas {
-    min-height: 7rem;
-  }
 }

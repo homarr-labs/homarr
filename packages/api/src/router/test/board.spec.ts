@@ -337,7 +337,7 @@ describe("getManageOverview", () => {
     expect(overview.map((board) => board.id)).not.toContain(hiddenBoardId);
   });
 
-  test("returns one compact base-layout preview for each accessible board", async () => {
+  test("returns compact previews by default and full previews on request", async () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
     const boardId = createId();
@@ -487,6 +487,10 @@ describe("getManageOverview", () => {
     expect(result[0]?.preview?.layouts).toHaveLength(1);
     expect(result[0]?.preview?.items.map((item) => item.id)).toEqual([itemId, nestedItemId]);
     expect(result[0]?.preview?.sections).toHaveLength(2);
+
+    const fullResult = await caller.getManageOverview({ fullPreview: true });
+
+    expect(fullResult[0]?.preview?.items.map((item) => item.id)).toEqual([itemId, offscreenItemId, nestedItemId]);
   });
 
   test("includes app and widget icons in compact previews", async () => {

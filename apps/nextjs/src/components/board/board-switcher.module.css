@@ -1,5 +1,24 @@
+.modalContent {
+  overflow: hidden;
+  border: rem(1px) solid color-mix(in srgb, var(--mantine-color-default-border) 70%, transparent);
+  border-radius: rem(24px);
+  background: color-mix(in srgb, var(--mantine-color-body) 58%, transparent);
+  box-shadow: 0 rem(18px) rem(56px) rgb(0 0 0 / 22%);
+  backdrop-filter: blur(rem(20px)) saturate(140%);
+}
+
+.modalBody {
+  padding: var(--mantine-spacing-sm);
+}
+
 .content {
   outline: none;
+}
+
+.searchInput {
+  border-color: color-mix(in srgb, var(--mantine-color-default-border) 72%, transparent);
+  background: color-mix(in srgb, var(--mantine-color-body) 54%, transparent);
+  backdrop-filter: blur(rem(8px));
 }
 
 .option {
@@ -11,6 +30,12 @@
 .card {
   height: 100%;
   overflow: hidden;
+  box-shadow: var(--mantine-shadow-sm);
+}
+
+.metadataBadge {
+  width: rem(22px);
+  padding-inline: 0;
 }
 
 .option:hover .card,
