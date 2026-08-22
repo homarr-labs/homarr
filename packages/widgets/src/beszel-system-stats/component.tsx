@@ -19,7 +19,6 @@ import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import type { BeszelTimePeriod } from "../beszel/_shared/chart";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { BeszelStatsView } from "../beszel/_shared/stats-view";
 import { createBeszelSystemChoices, resolveBeszelSystemChoice } from "./selection";
 
@@ -144,7 +143,6 @@ export default function BeszelSystemStatsWidget({
     return (
       <Box h="100%" pos="relative">
         <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 1 }}>
-          <WidgetQueryErrorIndicator error={systemsQuery.error} label={t("name")} />
           <IntegrationErrorIndicator results={systemsResult} />
         </Group>
         <Center h="100%">
@@ -184,7 +182,6 @@ export default function BeszelSystemStatsWidget({
     <Box h="100%" pos="relative">
       <Box pos="absolute" top={4} right={8} style={{ zIndex: 1 }}>
         <Group gap={0}>
-          <WidgetQueryErrorIndicator error={systemsQuery.error} label={t("name")} />
           <IntegrationErrorIndicator results={systemsResult} />
         </Group>
       </Box>

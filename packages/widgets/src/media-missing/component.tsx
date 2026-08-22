@@ -28,7 +28,6 @@ import { useI18n } from "@homarr/translation/client";
 import { WidgetEmptyState } from "../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
@@ -164,15 +163,10 @@ export default function MediaMissingWidget({
       ))}
     </Group>
   );
-  const queryFailure = <WidgetQueryErrorIndicator error={mediaQuery.error} label={t("name")} />;
-
   if (isAdvanced) {
     return (
       <Stack h="100%" gap={0}>
-        <Group justify="flex-end" px="xs">
-          {queryFailure}
-          {partialFailures}
-        </Group>
+        {partialFailures}
         <SimpleGrid cols={enabledPanelCount} spacing="sm" p="sm" style={{ flex: 1, minHeight: 0 }}>
           {showMissing && (
             <Paper withBorder radius="sm" style={{ minHeight: 0, overflow: "hidden" }}>
@@ -211,10 +205,7 @@ export default function MediaMissingWidget({
       h="100%"
       style={{ display: "flex", flexDirection: "column" }}
     >
-      <Group justify="flex-end" px="xs">
-        {queryFailure}
-        {partialFailures}
-      </Group>
+      {partialFailures}
       <Tabs.List grow>
         {showMissing && (
           <Tabs.Tab

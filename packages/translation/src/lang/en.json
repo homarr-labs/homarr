@@ -1904,8 +1904,7 @@
       }
     },
     "widgetQuery": {
-      "loading": "Loading widget data",
-      "stale": "Could not refresh {widget}; showing saved data"
+      "loading": "Loading widget data"
     },
     "total": "Total",
     "filesystemUsage": "{count, plural, one {Show usage for # filesystem} other {Show usage for # filesystems}}",

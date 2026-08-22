@@ -55,7 +55,6 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { HomarrDataTable } from "../common/homarr-data-table";
 import { formatLocalizedDateTime } from "../common/locale";
 import { usePersistedTableLayout, useTableLayoutPersistence } from "../common/use-persisted-table-layout";
@@ -314,7 +313,6 @@ export default function DownloadClientsWidget({
   const queryIndicators = (
     <Group gap={0}>
       <IntegrationErrorIndicator results={currentItems ?? []} />
-      <WidgetQueryErrorIndicator error={downloadsQuery.error} label={t("name")} />
     </Group>
   );
 

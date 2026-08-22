@@ -1,4 +1,0 @@
-interface:
-  display_name: "Homarr Local Harness"
-  short_description: "Build and browse a writable local Homarr branch harness"
-  default_prompt: "Use $homarr-local-harness to set up a writable Homarr harness for the current branch and validate it in the browser."

@@ -11,7 +11,6 @@ import { useI18n } from "@homarr/translation/client";
 
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { getNotificationDisplay } from "./display";
 import classes from "./component.module.css";
@@ -67,11 +66,6 @@ export default function NotificationsWidget({
   return (
     <ScrollArea className="scroll-area-w100" w="100%" h="100%" p="xs">
       <Stack w="100%" gap="xs">
-        {notificationsQuery.error && (
-          <Group justify="flex-end">
-            <WidgetQueryErrorIndicator error={notificationsQuery.error} label={t("name")} />
-          </Group>
-        )}
         {failedIntegrations.length > 0 && (
           <Group gap={4} wrap="wrap">
             {failedIntegrations.map((integration) => (

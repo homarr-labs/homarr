@@ -32,7 +32,6 @@ import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../../common/query-state";
-import { WidgetQueryErrorIndicator } from "../../common/query-state-indicator";
 
 export default function DnsHoleSummaryWidget({
   options,
@@ -71,7 +70,6 @@ export default function DnsHoleSummaryWidget({
       <Box pos="absolute" top={4} right={4} style={{ zIndex: 2 }}>
         <Group gap={0}>
           <IntegrationErrorIndicator results={summaries} />
-          <WidgetQueryErrorIndicator error={summaryQuery.error} label={tDns("name")} />
         </Group>
       </Box>
       <SimpleGrid cols={2} spacing="xs" p="xs" {...layoutProps} style={{ ...layoutProps.style, flex: 1, minHeight: 0 }}>

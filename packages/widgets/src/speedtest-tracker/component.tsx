@@ -9,7 +9,6 @@ import { useI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { WidgetEmptyState } from "../common/empty-state";
 import { AveragesSection } from "./averages";
 import { combineSpeedtestDashboards, getAvailableSpeedtestDashboards, getCompactSections } from "./helpers";
@@ -72,7 +71,6 @@ export default function SpeedtestTrackerWidget({
       <Box h="100%" pos="relative">
         <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
           <IntegrationErrorIndicator results={dashboardData} />
-          <WidgetQueryErrorIndicator error={dashboardQuery.error} label={t("name")} />
         </Group>
         <ScrollArea h="100%">
           <Stack gap="md" p="md">
@@ -131,7 +129,6 @@ export default function SpeedtestTrackerWidget({
     <Box h="100%" pos="relative">
       <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
         <IntegrationErrorIndicator results={dashboardData} />
-        <WidgetQueryErrorIndicator error={dashboardQuery.error} label={t("name")} />
       </Group>
       <Stack h="100%" gap="sm" p="xs" style={{ overflow: "hidden" }}>
         {dashboardData.length > 1 && (

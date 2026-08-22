@@ -12,7 +12,6 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
@@ -41,7 +40,7 @@ const WudWidgetContent = ({
   isAdvanced: boolean;
 }) => {
   const t = useI18n("widget.wud");
-  const [data, statsQuery] = clientApi.widget.wud.getStats.useSuspenseQuery({ integrationId });
+  const [data] = clientApi.widget.wud.getStats.useSuspenseQuery({ integrationId });
   const board = useRequiredBoard();
 
   const isTiny = !isAdvanced && width < 256;
@@ -115,11 +114,6 @@ const WudWidgetContent = ({
 
   return (
     <Stack p="xs" gap="xs" h="100%">
-      {Boolean(statsQuery.error) && (
-        <Group justify="flex-end">
-          <WidgetQueryErrorIndicator error={statsQuery.error} label={t("name")} />
-        </Group>
-      )}
       {showTitle && !isTiny && (
         <Group gap="xs" wrap="nowrap" justify="space-between" miw={0}>
           <Group gap="xs" wrap="nowrap" miw={0}>

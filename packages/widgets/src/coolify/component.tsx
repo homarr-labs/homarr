@@ -3,11 +3,9 @@
 import { Badge, Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { getIntegrationName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { createWidgetKey, getCoolifySectionVisibility } from "./coolify-utils";
@@ -148,9 +146,6 @@ const FailedSourceBadges = ({
           {t("source.unavailable", { source: source.integrationName })}
         </Badge>
       ))}
-      <Box ml="auto">
-        <WidgetQueryErrorIndicator error={queryError} label={getIntegrationName("coolify")} />
-      </Box>
     </Group>
   );
 };

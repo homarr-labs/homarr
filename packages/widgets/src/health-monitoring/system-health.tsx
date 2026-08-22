@@ -45,7 +45,7 @@ import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-stor
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import actionTargetClasses from "../common/action-target.module.css";
 import { CpuRing } from "./rings/cpu-ring";
@@ -81,7 +81,6 @@ export const SystemHealthMonitoring = ({
   const queryIndicators = (
     <Group gap={0}>
       <IntegrationErrorIndicator results={healthResults} />
-      <WidgetQueryErrorIndicator error={healthQuery.error} label={t("name")} />
     </Group>
   );
 

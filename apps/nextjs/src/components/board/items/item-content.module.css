@@ -12,6 +12,10 @@
 }
 
 .settingsButton {
+  position: absolute;
+  top: -34px;
+  right: 14px;
+  z-index: 201;
   opacity: 0;
   pointer-events: none;
   transition: opacity 120ms ease;
@@ -56,5 +60,13 @@
 @media (prefers-reduced-motion: reduce) {
   .settingsButton {
     transition: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .settingsButton {
+    right: 4px;
+    opacity: 1;
+    pointer-events: auto;
   }
 }

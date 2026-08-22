@@ -11,7 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { filterStorageVolumes, normalizeStorageDeviceName } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
@@ -253,7 +253,6 @@ export default function SystemResources({
   const queryIndicators = (
     <Group gap={0}>
       <IntegrationErrorIndicator results={results} />
-      <WidgetQueryErrorIndicator error={healthQuery.error} label={t("name")} />
     </Group>
   );
   const emptyState = (

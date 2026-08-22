@@ -16,7 +16,6 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import actionTargetClasses from "../common/action-target.module.css";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { CalendarDay } from "./calender-day";
@@ -54,7 +53,6 @@ export default function CalendarWidget(props: WidgetComponentProps<"calendar">) 
         events={[]}
         failedIntegrations={[]}
         isPending={false}
-        queryError={undefined}
         month={month}
         setMonth={setMonth}
       />
@@ -106,7 +104,6 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
       events={events}
       failedIntegrations={failedIntegrations}
       isPending={isPending}
-      queryError={calendarQuery.error}
       month={month}
       setMonth={setMonth}
       options={options}
@@ -120,7 +117,6 @@ interface CalendarBaseProps {
   events: CalendarEventWithSource[];
   failedIntegrations: { integrationId: string; integrationName: string; error: string }[];
   isPending: boolean;
-  queryError: unknown;
   month: Date;
   setMonth: (date: Date) => void;
   options: WidgetComponentProps<"calendar">["options"];
@@ -132,13 +128,11 @@ const CalendarBase = ({
   events,
   failedIntegrations,
   isPending,
-  queryError,
   month,
   setMonth,
   options,
   displayMode,
 }: CalendarBaseProps) => {
-  const t = useI18n("widget.calendar");
   const locale = useCurrentIntlLocale();
   const { firstDayOfWeek } = useSettings();
   const board = useRequiredBoard();
@@ -170,8 +164,6 @@ const CalendarBase = ({
         events={agendaEvents}
         failedIntegrations={failedIntegrations}
         isPending={isPending}
-        queryError={queryError}
-        queryErrorLabel={t("name")}
         isEditMode={isEditMode}
         locale={locale}
         month={month}
@@ -179,8 +171,6 @@ const CalendarBase = ({
       />
     );
   }
-
-  const hasErrors = failedIntegrations.length > 0 || Boolean(queryError);
 
   return (
     <Box ref={ref} h="100%" w="100%" pos="relative" style={{ overflow: "hidden" }}>
@@ -194,13 +184,11 @@ const CalendarBase = ({
         date={month}
         maxLevel="month"
         firstDayOfWeek={firstDayOfWeek}
-        static={isEditMode}
         className={classes.calendar}
         w="100%"
         h="100%"
         styles={{
           calendarHeaderControl: {
-            pointerEvents: isEditMode ? "none" : undefined,
             borderRadius: "md",
             height: isSmall ? "1.5rem" : undefined,
             width: isSmall ? "1.5rem" : undefined,
@@ -249,17 +237,16 @@ const CalendarBase = ({
             <CalendarDay
               date={dayjs(tileDate).toDate()}
               events={eventsForDate}
-              disabled={isEditMode || eventsForDate.length === 0}
+              disabled={eventsForDate.length === 0}
               rootWidth={width}
               rootHeight={height}
             />
           );
         }}
       />
-      {hasErrors && (
+      {failedIntegrations.length > 0 && (
         <Group className={classes.errorIndicator} gap={0} pos="absolute">
           <IntegrationErrorIndicator results={failedIntegrations} />
-          <WidgetQueryErrorIndicator error={queryError} label={t("name")} />
         </Group>
       )}
     </Box>
@@ -270,8 +257,6 @@ interface CalendarAgendaProps {
   events: CalendarEventWithSource[];
   failedIntegrations: CalendarBaseProps["failedIntegrations"];
   isPending: boolean;
-  queryError: unknown;
-  queryErrorLabel: string;
   isEditMode: boolean;
   locale: string;
   month: Date;
@@ -282,8 +267,6 @@ const CalendarAgenda = ({
   events,
   failedIntegrations,
   isPending,
-  queryError,
-  queryErrorLabel,
   isEditMode,
   locale,
   month,
@@ -331,7 +314,6 @@ const CalendarAgenda = ({
         </Group>
         <Group gap={0}>
           <IntegrationErrorIndicator results={failedIntegrations} />
-          <WidgetQueryErrorIndicator error={queryError} label={queryErrorLabel} />
         </Group>
       </Group>
 
