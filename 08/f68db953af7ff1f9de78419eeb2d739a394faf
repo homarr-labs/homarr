@@ -1,0 +1,45 @@
+apps/nextjs/src/app/[locale]/_client-providers/query-persistence.spec.ts
+  s_148a12b92c3c12::t_7ac9d78b6a4583 5-6,27-40,85-98,137-138,154-198,212-213,227,230-236,245-274,276-283,292,297,341,344-351
+  s_148a12b92c3c12::t_1fcc7c596ec48d 308
+  s_148a12b92c3c12::t_85041defe36821 100-120
+  s_148a12b92c3c12::t_252730a95ef473 203
+  s_f92bb477c1a12c::t_187949dc301cea 99,199
+e2e/lazy-widgets.spec.ts
+  s_148a12b92c3c12::t_b465718e520642 157
+  s_148a12b92c3c12::t_6df6f2ec707159 161
+  s_148a12b92c3c12::t_fe9525930a6692 3
+  s_148a12b92c3c12::t_fa5cc885a05e1c 25-27,47-51,53-89,96,112,118-120,127,132,136-141,152-155,158-160,164,168-177,199,203
+  s_148a12b92c3c12::t_3c95d2d641e068 105-108,180-197
+  s_148a12b92c3c12::t_807f0fb9fd447e 156,162,167,178
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_148a12b92c3c12::t_50062f379d5741 4,46,79-83,89,91-93,103-104,160-167
+apps/nextjs/src/app/[locale]/_client-providers/query-persistence.ts
+  s_148a12b92c3c12::t_85041defe36821 77-82
+  s_148a12b92c3c12::t_50062f379d5741 41,57-72,86-109,135-138,140-142,144-148,154-169,172-177,181-188,190-198,206-207,211
+  s_148a12b92c3c12::t_32a3f0144cad08 139,143,149-153
+  s_148a12b92c3c12::t_f4ae9420624178 229-232
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "08f68db953af7ff1f9de78419eeb2d739a394faf",
+  "prompts": {},
+  "sessions": {
+    "s_148a12b92c3c12": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0297c-9284-73f1-b444-a10db89df09a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_f92bb477c1a12c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a02988-6a32-78c2-b99c-c006a25f76dd",
+        "model": "gpt-5.6-luna"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
