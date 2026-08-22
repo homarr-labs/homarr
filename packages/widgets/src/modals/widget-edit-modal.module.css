@@ -16,22 +16,19 @@
   max-width: 52rem;
   min-width: 0;
   justify-self: center;
-  padding: var(--mantine-spacing-md);
-  border: 1px solid var(--mantine-color-default-border);
-  border-radius: var(--mantine-radius-md);
-  background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
 }
 
 .previewDimensions {
   position: absolute;
   z-index: 2;
-  top: calc(var(--mantine-spacing-md) + var(--mantine-spacing-xs));
-  right: calc(var(--mantine-spacing-md) + var(--mantine-spacing-xs));
+  top: var(--mantine-spacing-xs);
+  right: var(--mantine-spacing-xs);
   pointer-events: none;
 }
 
 .previewCanvas {
-  height: clamp(24rem, calc(100dvh - 17rem), 44rem);
+  position: relative;
+  align-self: center;
   padding: var(--mantine-spacing-lg);
   overflow: hidden;
   border: 1px solid var(--mantine-color-default-border);
@@ -152,10 +149,6 @@
   .previewPanel {
     position: static;
     max-width: 44rem;
-  }
-
-  .previewCanvas {
-    height: 24rem;
   }
 
   .settingsPanel {

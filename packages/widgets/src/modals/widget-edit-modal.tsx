@@ -83,6 +83,9 @@ interface WidgetEditPreviewProps {
   onChangeOptions: (newOptions: Record<string, unknown>) => void;
 }
 
+const PREVIEW_STAGE_INSET = 40;
+const MAXIMUM_PREVIEW_HEIGHT = 544;
+
 const WidgetEditPreview = ({
   kind,
   Component,
@@ -95,15 +98,15 @@ const WidgetEditPreview = ({
   onChangeOptions,
 }: WidgetEditPreviewProps) => {
   const tItem = useI18n("item.edit");
-  const { ref, width: availableWidth, height: availableHeight } = useElementSize<HTMLDivElement>();
+  const { ref, width: availableWidth } = useElementSize<HTMLDivElement>();
   const sourceWidth = Math.max(dimensions.width, 1);
   const sourceHeight = Math.max(dimensions.height, 1);
   let maximumScale = dimensions.scale ?? 0.9;
   if (!Number.isFinite(maximumScale) || maximumScale <= 0) maximumScale = 0.9;
   maximumScale = Math.min(maximumScale, 0.9);
-  let previewScale = maximumScale;
-  if (availableWidth > 0 && availableHeight > 0) {
-    previewScale = Math.min(availableWidth / sourceWidth, availableHeight / sourceHeight, maximumScale);
+  let previewScale = Math.min(MAXIMUM_PREVIEW_HEIGHT / sourceHeight, maximumScale);
+  if (availableWidth > PREVIEW_STAGE_INSET) {
+    previewScale = Math.min((availableWidth - PREVIEW_STAGE_INSET) / sourceWidth, previewScale);
   }
   const previewWidth = sourceWidth * previewScale;
   const previewHeight = sourceHeight * previewScale;
@@ -111,6 +114,12 @@ const WidgetEditPreview = ({
   const hasIntegrationSupport = "supportedIntegrations" in definition;
   const integrationRequired = hasIntegrationSupport && definition.integrationsRequired !== false;
   const isMissingIntegration = integrationRequired && state.integrationIds.length === 0;
+  let previewStageWidth = previewWidth + PREVIEW_STAGE_INSET;
+  let previewStageHeight = previewHeight + PREVIEW_STAGE_INSET;
+  if (isMissingIntegration) {
+    previewStageWidth = Math.max(previewStageWidth, 360);
+    previewStageHeight = Math.max(previewStageHeight, 160);
+  }
   const previewIntegrations = integrationData.map((integration) => ({
     id: integration.id,
     permissions: integration.permissions ?? {
@@ -121,11 +130,14 @@ const WidgetEditPreview = ({
   }));
 
   return (
-    <Stack className={classes.previewPanel} gap="sm">
-      <Badge className={classes.previewDimensions} size="xs" variant="light" color="gray">
-        {Math.round(sourceWidth)} × {Math.round(sourceHeight)}
-      </Badge>
-      <Center ref={ref} className={classes.previewCanvas}>
+    <Stack ref={ref} className={classes.previewPanel} gap={0}>
+      <Center
+        className={classes.previewCanvas}
+        style={{ width: previewStageWidth, height: previewStageHeight, maxWidth: "100%" }}
+      >
+        <Badge className={classes.previewDimensions} size="xs" variant="light" color="gray">
+          {Math.round(sourceWidth)} × {Math.round(sourceHeight)}
+        </Badge>
         {isMissingIntegration ? (
           <Alert color="gray" variant="light" icon={<IconEye size={18} />} maw={320}>
             {tItem("preview.integrationRequired")}
