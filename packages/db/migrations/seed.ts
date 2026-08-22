@@ -39,7 +39,6 @@ import {
   layouts,
   onboarding,
   searchEngines,
-  sectionCollapseStates,
   sections,
   sectionLayouts,
   users,
@@ -598,7 +597,7 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
     height: 2,
     needsIntegration: false,
     options: {
-      location: { name: "Berlin", latitude: 52.52, longitude: 13.405 },
+      location: { name: "Paris", latitude: 48.85341, longitude: 2.3488 },
       hasForecast: false,
       showHumidity: false,
       showCurrentWindSpeed: false,
@@ -640,7 +639,7 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
     height: 1,
     needsIntegration: false,
     options: {
-      location: { name: "Berlin", latitude: 52.52, longitude: 13.405 },
+      location: { name: "Paris", latitude: 48.85341, longitude: 2.3488 },
       aqiStandard: "european",
       showUv: false,
       showPollutants: false,
@@ -667,19 +666,15 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
   { kind: "assistant", xOffset: 9, yOffset: 2, width: 3, height: 3, needsIntegration: false },
 
   // Around the centered network container
-  { kind: "mediaRequests-requestList", xOffset: 0, yOffset: 5, width: 2, height: 2, needsIntegration: true },
-  { kind: "mediaMissing", xOffset: 10, yOffset: 5, width: 2, height: 2, needsIntegration: true },
+  { kind: "mediaRequests-requestList", xOffset: 0, yOffset: 5, width: 3, height: 2, needsIntegration: true },
+  { kind: "mediaMissing", xOffset: 9, yOffset: 5, width: 3, height: 2, needsIntegration: true },
   { kind: "mediaServer", xOffset: 0, yOffset: 7, width: 3, height: 2, needsIntegration: true },
-
-  // Infrastructure and activity
-  { kind: "dockerContainers", xOffset: 4, yOffset: 11, width: 4, height: 3, needsIntegration: false },
-  { kind: "mediaReleases", xOffset: 8, yOffset: 11, width: 4, height: 3, needsIntegration: true },
-  { kind: "mediaRequests-requestStats", xOffset: 0, yOffset: 14, width: 4, height: 2, needsIntegration: true },
+  { kind: "mediaRequests-requestStats", xOffset: 9, yOffset: 7, width: 3, height: 2, needsIntegration: true },
   {
     kind: "rssFeed",
-    xOffset: 4,
-    yOffset: 14,
-    width: 4,
+    xOffset: 0,
+    yOffset: 9,
+    width: 3,
     height: 2,
     needsIntegration: false,
     options: {
@@ -689,15 +684,19 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
       hideDescription: true,
     },
   },
-  { kind: "indexerManager", xOffset: 8, yOffset: 14, width: 4, height: 2, needsIntegration: true },
+  { kind: "indexerManager", xOffset: 9, yOffset: 9, width: 3, height: 2, needsIntegration: true },
+
+  // Infrastructure and activity
+  { kind: "dockerContainers", xOffset: 0, yOffset: 11, width: 4, height: 3, needsIntegration: false },
+  { kind: "mediaReleases", xOffset: 4, yOffset: 11, width: 4, height: 3, needsIntegration: true },
 
   // Community Workshop
   {
     kind: "customApi",
-    xOffset: 0,
-    yOffset: 16,
+    xOffset: 8,
+    yOffset: 11,
     width: 4,
-    height: 2,
+    height: 3,
     needsIntegration: false,
     options: { definitionId: customWidgetDefinitionId, refreshInterval: 300 },
   },
@@ -708,16 +707,7 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
     section: "network",
     xOffset: 0,
     yOffset: 0,
-    width: 3,
-    height: 2,
-    needsIntegration: true,
-  },
-  {
-    kind: "beszelSystemStats",
-    section: "network",
-    xOffset: 3,
-    yOffset: 0,
-    width: 3,
+    width: 6,
     height: 2,
     needsIntegration: true,
   },
@@ -731,8 +721,17 @@ const buildDemoWidgets = (appIds: string[], customWidgetDefinitionId: string): D
     needsIntegration: true,
     options: { layout: "grid", usePiHoleColors: false },
   },
-  { kind: "beszelAlerts", section: "network", xOffset: 3, yOffset: 2, width: 3, height: 2, needsIntegration: true },
-  { kind: "notifications", section: "network", xOffset: 2, yOffset: 4, width: 2, height: 2, needsIntegration: true },
+  {
+    kind: "beszelSystemStats",
+    section: "network",
+    xOffset: 3,
+    yOffset: 2,
+    width: 3,
+    height: 2,
+    needsIntegration: true,
+  },
+  { kind: "notifications", section: "network", xOffset: 0, yOffset: 4, width: 2, height: 2, needsIntegration: true },
+  { kind: "beszelAlerts", section: "network", xOffset: 2, yOffset: 4, width: 4, height: 2, needsIntegration: true },
 
   // Right app rail
   ...appIds.map(
@@ -897,7 +896,7 @@ const seedDemoUserAsync = async (db: Database) => {
       customCssClasses: [],
       borderColor: "",
       showLabel: true,
-      collapsible: true,
+      collapsible: false,
       showOpenAll: false,
       scrollable: false,
     }),
@@ -922,12 +921,6 @@ const seedDemoUserAsync = async (db: Database) => {
     yOffset: 5,
     width: 6,
     height: 6,
-  });
-
-  await db.insert(sectionCollapseStates).values({
-    userId,
-    sectionId: networkSectionId,
-    collapsed: true,
   });
 
   const demoWidgets = buildDemoWidgets(appIds, customWidgetDefinitionId);
