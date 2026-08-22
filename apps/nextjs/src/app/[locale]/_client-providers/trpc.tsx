@@ -152,15 +152,19 @@ const ScopedTRPCReactProvider = ({
     return client;
   });
 
-  useEffect(() => () => queryClient.clear(), [queryClient]);
+  // Declared before the cache teardown below so its cleanup runs first: the
+  // persister has to save the real cache and shut down before `clear()` empties
+  // it, otherwise the resulting "empty cache" event would be persisted instead.
   useEffect(() => {
     const flush = () => queryPersister.flush();
     window.addEventListener("pagehide", flush);
     return () => {
       window.removeEventListener("pagehide", flush);
       flush();
+      queryPersister.stop();
     };
   }, [queryPersister]);
+  useEffect(() => () => queryClient.clear(), [queryClient]);
 
   const trpcClient = useMemo(() => {
     return clientApi.createClient({

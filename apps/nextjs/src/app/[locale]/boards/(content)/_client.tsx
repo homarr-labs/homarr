@@ -162,31 +162,27 @@ export const ClientBoard = ({
     </BoardSelectionGridProvider>
   );
 
-  if (representativeWidth === null) {
-    return (
-      <WidgetTimeProvider initialTimestamp={initialTimestamp} initialTimeZone={initialTimeZone}>
-        {content}
-      </WidgetTimeProvider>
-    );
-  }
-
   return (
     <WidgetTimeProvider initialTimestamp={initialTimestamp} initialTimeZone={initialTimeZone}>
-      <Stack align="center" gap="xs" p="md" mih="100%">
-        <Text size="xs" c="dimmed" fw={500}>
-          {tPreview("editorWidthLabel", { layoutName: currentLayout.name, width: representativeWidth })}
-        </Text>
-        <Paper
-          withBorder
-          shadow="sm"
-          radius="md"
-          w={`min(${representativeWidth}px, calc(100vw - 2rem))`}
-          mih="calc(100dvh - 8rem)"
-          style={{ overflow: "hidden" }}
-        >
-          {content}
-        </Paper>
-      </Stack>
+      {representativeWidth === null ? (
+        content
+      ) : (
+        <Stack align="center" gap="xs" p="md" mih="100%">
+          <Text size="xs" c="dimmed" fw={500}>
+            {tPreview("editorWidthLabel", { layoutName: currentLayout.name, width: representativeWidth })}
+          </Text>
+          <Paper
+            withBorder
+            shadow="sm"
+            radius="md"
+            w={`min(${representativeWidth}px, calc(100vw - 2rem))`}
+            mih="calc(100dvh - 8rem)"
+            style={{ overflow: "hidden" }}
+          >
+            {content}
+          </Paper>
+        </Stack>
+      )}
     </WidgetTimeProvider>
   );
 };

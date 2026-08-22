@@ -2,7 +2,7 @@ import type { ComponentType, CSSProperties, MutableRefObject, PropsWithChildren 
 import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
-import { Box, Button, Center, Loader, Portal, VisuallyHidden } from "@mantine/core";
+import { Box, Button, Center, Loader, Portal } from "@mantine/core";
 import { useElementSize, useIsomorphicEffect } from "@mantine/hooks";
 import { QueryErrorResetBoundary, useIsFetching, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
@@ -343,10 +343,14 @@ const LoadedBoardItemContent = ({
           />
         </ErrorBoundary>
       </Box>
+      {/*
+        Purely decorative: widgets keep showing their previous data while they
+        refresh, and every widget refreshes on a timer, so announcing this would
+        make assistive technology repeat "loading" for the whole board forever.
+      */}
       {isWidgetRefreshing && (
-        <Box className={itemContentClasses.refreshIndicator} component="output" aria-live="polite">
+        <Box className={itemContentClasses.refreshIndicator} data-widget-refreshing aria-hidden>
           <Loader size="xs" />
-          <VisuallyHidden>{t("common.action.loading")}</VisuallyHidden>
         </Box>
       )}
     </WidgetCardShell>

@@ -96,9 +96,14 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       return (
         <HydrationBoundary state={dehydrate(queryClient)}>
           <IntegrationProvider integrations={integrations}>
+            {/*
+              Rendered on the server, so this is the server's clock and time
+              zone. Widgets paint with it immediately and switch to the browser
+              values right after hydration.
+            */}
             <ClientBoard
               initialTimestamp={Date.now()}
-              initialTimeZone={Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"}
+              initialTimeZone={Intl.DateTimeFormat().resolvedOptions().timeZone}
             />
           </IntegrationProvider>
         </HydrationBoundary>

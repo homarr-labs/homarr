@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useSyncExternalStore } from "react";
+import { createContext, useContext, useMemo, useSyncExternalStore } from "react";
 
 const WidgetTimestampContext = createContext<number | null>(null);
 const WidgetTimeZoneContext = createContext("UTC");
@@ -15,15 +15,22 @@ export const WidgetTimeProvider = ({
   children,
   initialTimestamp,
   initialTimeZone,
-}: PropsWithChildren<WidgetTimeProviderProps>) => (
-  <WidgetTimestampContext.Provider value={initialTimestamp}>
-    <WidgetTimeZoneContext.Provider value={getSupportedTimeZone(initialTimeZone)}>
-      {children}
-    </WidgetTimeZoneContext.Provider>
-  </WidgetTimestampContext.Provider>
-);
+}: PropsWithChildren<WidgetTimeProviderProps>) => {
+  const timeZone = useMemo(() => getSupportedTimeZone(initialTimeZone), [initialTimeZone]);
+
+  return (
+    <WidgetTimestampContext.Provider value={initialTimestamp}>
+      <WidgetTimeZoneContext.Provider value={timeZone}>{children}</WidgetTimeZoneContext.Provider>
+    </WidgetTimestampContext.Provider>
+  );
+};
 
 export const useWidgetInitialTimestamp = () => useContext(WidgetTimestampContext);
+
+/**
+ * Resolves to the browser time zone, but renders (and hydrates) with the time
+ * zone the server used so widgets can paint a time before hydration finishes.
+ */
 export const useWidgetLocalTimeZone = () => {
   const initialTimeZone = useContext(WidgetTimeZoneContext);
   return useSyncExternalStore(subscribeToTimeZone, getResolvedLocalTimeZone, () => initialTimeZone);
@@ -31,7 +38,15 @@ export const useWidgetLocalTimeZone = () => {
 
 const subscribeToTimeZone = () => () => undefined;
 
-const getResolvedLocalTimeZone = () => getSupportedTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+// React calls the snapshot getter on every render of every consumer, and
+// resolving a time zone builds `Intl.DateTimeFormat` instances, so keep the
+// answer around: it cannot change without a new document.
+let resolvedLocalTimeZone: string | undefined;
+
+const getResolvedLocalTimeZone = () => {
+  resolvedLocalTimeZone ??= getSupportedTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  return resolvedLocalTimeZone;
+};
 
 const getSupportedTimeZone = (timeZone: string | undefined) => {
   if (!timeZone) return "UTC";

@@ -71,12 +71,23 @@ describe("widget query persistence", () => {
     expect(getQueryPersistenceStorageKey(null)).not.toBe(getQueryPersistenceStorageKey("user-a"));
 
     const userAKey = getQueryPersistenceStorageKey("user-a");
-    const userBKey = getQueryPersistenceStorageKey("user-b");
     window.sessionStorage.setItem(userAKey, "a");
-    window.sessionStorage.setItem(userBKey, "b");
     createSessionQueryPersister("user-a").removeClient();
     expect(window.sessionStorage.getItem(userAKey)).toBeNull();
-    expect(window.sessionStorage.getItem(userBKey)).toBe("b");
+  });
+
+  test("evicts every other scope so signing out cannot leave data behind", () => {
+    const userAKey = getQueryPersistenceStorageKey("user-a");
+    const anonymousKey = getQueryPersistenceStorageKey(null);
+    window.sessionStorage.setItem(userAKey, "a");
+    window.sessionStorage.setItem(anonymousKey, "anonymous");
+    window.sessionStorage.setItem("unrelated", "kept");
+
+    createSessionQueryPersister("user-b");
+
+    expect(window.sessionStorage.getItem(userAKey)).toBeNull();
+    expect(window.sessionStorage.getItem(anonymousKey)).toBeNull();
+    expect(window.sessionStorage.getItem("unrelated")).toBe("kept");
   });
 
   test("never restores another session scope", async () => {
@@ -89,9 +100,53 @@ describe("widget query persistence", () => {
       clientState: dehydrate(queryClient),
     });
     userAPersister.flush();
+    expect((await userAPersister.restoreClient())?.clientState.queries).toHaveLength(1);
 
     expect(createSessionQueryPersister("user-b").restoreClient()).toBeUndefined();
-    expect((await userAPersister.restoreClient())?.clientState.queries).toHaveLength(1);
+  });
+
+  test("stops persisting once the provider tears the cache down", async () => {
+    const storage = createMemoryStorage();
+    const persister = createSessionQueryPersister("user-a", storage);
+    const { queryClient } = createSuccessfulQuery([["widget", "weather", "getWeather"], { type: "query" }], {
+      temp: 21,
+    });
+
+    persister.persistClient({
+      timestamp: Date.now(),
+      buster: queryPersistenceBuster,
+      clientState: dehydrate(queryClient),
+    });
+    persister.flush();
+    persister.stop();
+
+    // A torn down provider clears its query client, which would otherwise be
+    // persisted as an empty cache on top of the snapshot we just saved.
+    persister.persistClient({
+      timestamp: Date.now(),
+      buster: queryPersistenceBuster,
+      clientState: { mutations: [], queries: [] },
+    });
+    persister.flush();
+
+    expect((await persister.restoreClient())?.clientState.queries).toHaveLength(1);
+  });
+
+  test("removes the cache instead of storing an empty one", () => {
+    const scope = "user-a";
+    const key = getQueryPersistenceStorageKey(scope);
+    const { queryClient } = createSuccessfulQuery([["board", "getBoardByName"], { type: "query" }], { name: "Home" });
+    const persister = createSessionQueryPersister(scope);
+    window.sessionStorage.setItem(key, "stale");
+
+    persister.persistClient({
+      timestamp: Date.now(),
+      buster: queryPersistenceBuster,
+      clientState: dehydrate(queryClient),
+    });
+    persister.flush();
+
+    expect(window.sessionStorage.getItem(key)).toBeNull();
   });
 
   test("persister itself rejects unrelated query payloads", async () => {
@@ -179,6 +234,11 @@ describe("widget query persistence", () => {
               queryKey: [["board", "getBoardByName"], { type: "query" }],
             },
             { queryHash: "malformed", queryKey: [["widget", "weather"]], state: null },
+            {
+              ...validQuery,
+              queryHash: "missing-timestamp",
+              state: { ...validQuery.state, dataUpdatedAt: undefined },
+            },
           ],
         },
       }),

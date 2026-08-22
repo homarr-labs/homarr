@@ -107,8 +107,11 @@ describe("lazy widget application graph", () => {
     const pageErrors: Error[] = [];
     const hydrationErrors: string[] = [];
     page.on("pageerror", (error) => pageErrors.push(error));
+    // Production React reports hydration mismatches as minified error codes with
+    // a react.dev link, so matching the development wording alone never fires.
+    const hydrationErrorPattern = /hydrat|did not match|react\.dev\/errors\/4(18|2[1235])|react error #4(18|2[1235])/i;
     page.on("console", (message) => {
-      if (message.type() === "error" && /hydration|did not match/i.test(message.text())) {
+      if (message.type() === "error" && hydrationErrorPattern.test(message.text())) {
         hydrationErrors.push(message.text());
       }
     });
@@ -118,16 +121,12 @@ describe("lazy widget application graph", () => {
       await page.goto(`${baseUrl}/auth/login`);
       await page.getByLabel("Username").fill(adminCredentials.username);
       await page.locator("#password").fill(adminCredentials.password);
-      const initialDownloadsResponse = page.waitForResponse(
-        (response) => response.url().includes("widget.downloads.getJobsAndStatuses") && response.ok(),
-      );
       const signedIn = page.waitForURL((url) => url.origin === baseUrl && url.pathname === "/", {
         waitUntil: "commit",
         timeout: 60_000,
       });
       await page.locator("css=button[type='submit']").click();
       await signedIn;
-      await initialDownloadsResponse;
 
       const visibleBoard = page.locator("[data-homarr-dev-benchmark-board]").filter({ visible: true }).first();
       await expect(visibleBoard).toBeVisible({ timeout: 30_000 });
@@ -169,7 +168,7 @@ describe("lazy widget application graph", () => {
       await expect(clockWidget.locator("time").filter({ visible: true }).first()).not.toHaveText("--:--");
       await expect.poll(() => refreshRequestStarted, { timeout: 10_000 }).toBe(true);
       await expect(cachedDownload).toBeVisible({ timeout: 5_000 });
-      await expect(downloadsWidget.locator('output[aria-live="polite"]')).toBeVisible();
+      await expect(downloadsWidget.locator("[data-widget-refreshing]")).toBeVisible();
 
       const refreshedDownloadsResponse = page.waitForResponse(
         (response) => response.url().includes("widget.downloads.getJobsAndStatuses") && response.ok(),
@@ -177,7 +176,7 @@ describe("lazy widget application graph", () => {
       releaseRefresh();
       releaseRefresh = undefined;
       await refreshedDownloadsResponse;
-      await expect(downloadsWidget.locator('output[aria-live="polite"]')).toHaveCount(0);
+      await expect(downloadsWidget.locator("[data-widget-refreshing]")).toHaveCount(0);
       await page.unroute(downloadsRequestPattern, delayDownloadsRefresh);
       expect(pageErrors).toEqual([]);
       expect(hydrationErrors).toEqual([]);

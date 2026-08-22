@@ -61,11 +61,6 @@ export interface WorldClockTime {
   dayDifference: number | null;
 }
 
-export const getResolvedLocalTimeZone = () => {
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  return timeZone && isTimeZoneSupported(timeZone) ? timeZone : "UTC";
-};
-
 export const createWorldClockTime = ({
   city,
   now,

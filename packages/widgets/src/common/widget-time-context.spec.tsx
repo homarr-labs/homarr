@@ -10,7 +10,7 @@ import { useWidgetLocalTimeZone, WidgetTimeProvider } from "./widget-time-contex
 
 const TimeProbe = () => (
   <time>
-    {useWidgetNow("minute")?.toISOString() ?? "missing"}|{useWidgetLocalTimeZone() ?? "missing"}
+    {useWidgetNow("minute")?.toISOString() ?? "missing"}|{useWidgetLocalTimeZone()}
   </time>
 );
 
