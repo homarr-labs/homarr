@@ -111,9 +111,6 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
 
   const nextBreakpoint = getNextCustomBreakpoint(form.values.layouts);
   const baseLayout = form.values.layouts.find((layout) => layout.role === "base");
-  const sortedLayouts = form.values.layouts
-    .map((layout, index) => ({ layout, index }))
-    .toSorted((entryA, entryB) => entryA.layout.breakpoint - entryB.layout.breakpoint);
 
   return (
     <SectionCard title={tBoard("setting.section.layout.title")}>
@@ -129,7 +126,7 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
             disabled={nextBreakpoint === null || !baseLayout}
             onClick={() => {
               if (nextBreakpoint === null || !baseLayout) return;
-              form.setFieldValue("layouts", [
+              const layouts = [
                 ...form.values.layouts,
                 {
                   id: createId(),
@@ -140,14 +137,15 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
                   breakpoint: nextBreakpoint,
                   role: "custom",
                 },
-              ]);
+              ].toSorted((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint);
+              form.setFieldValue("layouts", layouts);
             }}
           >
             {tBoard("setting.section.layout.responsive.action.add")}
           </Button>
         </Group>
 
-        {sortedLayouts.map(({ layout, index }) => {
+        {form.values.layouts.map((layout, index) => {
           const persistedLayout = board.layouts.find((candidate) => candidate.id === layout.id);
           const sourceLayout = persistedLayout ?? board.layouts.find((candidate) => candidate.role === "base");
           const customBreakpoints = form.values.layouts
