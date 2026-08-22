@@ -4,14 +4,19 @@
 
 .settings {
   min-width: 0;
+  container-type: inline-size;
 }
 
 .switchGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
+  gap: var(--mantine-spacing-sm);
 }
 
 .switchOption {
   display: flex;
+  height: 100%;
   min-height: 4.25rem;
   align-items: center;
   padding: 0.625rem 0.75rem;
@@ -41,13 +46,24 @@
 .footer {
   position: sticky;
   z-index: 2;
-  bottom: calc(var(--mantine-spacing-md) * -1);
+  bottom: 0;
   margin-inline: calc(var(--mantine-spacing-md) * -1);
   margin-bottom: calc(var(--mantine-spacing-md) * -1);
   padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
   border-top: 1px solid var(--mantine-color-default-border);
   background: color-mix(in srgb, var(--mantine-color-body) 96%, transparent);
   backdrop-filter: blur(10px);
+}
+
+.footerActions {
+  margin-inline-start: auto;
+}
+
+@container (min-width: 30rem) {
+  .switchGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+  }
 }
 
 .focusFrame {

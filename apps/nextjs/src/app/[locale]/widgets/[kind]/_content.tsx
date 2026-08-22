@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useCallback, useState } from "react";
+import { use, useCallback, useId, useState } from "react";
 import { ActionIcon, Affix, Card } from "@mantine/core";
 import { IconDimensions, IconPencil, IconToggleLeft, IconToggleRight } from "@tabler/icons-react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
@@ -32,6 +32,7 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
   const { openModal: openWidgetEditModal } = useModalAction(LazyWidgetEditModal);
   const { openModal: openPreviewDimensionsModal } = useModalAction(PreviewDimensionsModal);
   const { definition: currentDefinition, Component } = use(loadWidgetResources(kind));
+  const previewId = useId();
   const [editMode, setEditMode] = useState(false);
   const [isEditorLoading, setIsEditorLoading] = useState(false);
   const [dimensions, setDimensions] = useState<Dimensions>({
@@ -71,6 +72,7 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
           ),
           integrationSupport: hasIntegrationSupport,
           settings,
+          focusTargetId: previewId,
         },
         {
           title(translate) {
@@ -86,7 +88,7 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
     } finally {
       setIsEditorLoading(false);
     }
-  }, [currentDefinition, kind, openWidgetEditModal, settings, state, t, utils]);
+  }, [currentDefinition, kind, openWidgetEditModal, previewId, settings, state, t, utils]);
 
   const toggleEditMode = useCallback(() => {
     setEditMode((editMode) => !editMode);
@@ -110,7 +112,7 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
 
   return (
     <>
-      <Card w={dimensions.width} h={dimensions.height} p={dimensions.height >= 96 ? undefined : 4}>
+      <Card id={previewId} w={dimensions.width} h={dimensions.height} p={dimensions.height >= 96 ? undefined : 4}>
         <QueryErrorResetBoundary>
           {({ reset }) => (
             <ErrorBoundary

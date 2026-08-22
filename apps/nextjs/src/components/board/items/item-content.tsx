@@ -297,6 +297,7 @@ const LoadedBoardItemContent = ({
       role={isPreview ? "region" : undefined}
       aria-label={isPreview ? advancedViewLabel : undefined}
       data-advanced-focus-surface={isPreview || undefined}
+      data-advanced-focus-item-id={isAdvanced ? item.id : undefined}
       data-grid-item-content
       radius={board.itemRadius}
       p={isAdvanced ? undefined : 0}

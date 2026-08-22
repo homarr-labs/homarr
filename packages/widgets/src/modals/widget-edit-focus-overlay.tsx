@@ -46,16 +46,18 @@ const focusRectsMatch = (current: FocusRect | null, next: FocusRect | null) => {
   );
 };
 
-export const useWidgetEditFocus = (itemId: string | undefined) => {
+export const useWidgetEditFocus = (itemId: string | undefined, focusTargetId: string | undefined) => {
   const [focusRect, setFocusRect] = useState<FocusRect | null>(null);
 
   useIsomorphicEffect(() => {
-    if (!itemId) {
-      setFocusRect(null);
-      return;
+    let element: HTMLElement | null = null;
+    if (focusTargetId) {
+      element = document.getElementById(focusTargetId);
+    } else if (itemId) {
+      element = document.querySelector<HTMLElement>(`[data-advanced-focus-item-id="${CSS.escape(itemId)}"]`);
+      element ??= document.querySelector<HTMLElement>(`[data-item-id="${CSS.escape(itemId)}"]`);
     }
 
-    const element = document.querySelector<HTMLElement>(`[data-item-id="${CSS.escape(itemId)}"]`);
     if (!element) {
       setFocusRect(null);
       return;
@@ -84,7 +86,7 @@ export const useWidgetEditFocus = (itemId: string | undefined) => {
       window.removeEventListener("scroll", scheduleUpdate, true);
       window.cancelAnimationFrame(animationFrame);
     };
-  }, [itemId]);
+  }, [focusTargetId, itemId]);
 
   const inspectorSide: WidgetInspectorSide =
     focusRect && focusRect.left + focusRect.width / 2 > window.innerWidth / 2 ? "left" : "right";
@@ -95,17 +97,20 @@ export const useWidgetEditFocus = (itemId: string | undefined) => {
 export const WidgetEditFocusOverlay = ({ focusRect }: { focusRect: FocusRect | null }) => (
   <Portal>
     {focusRect ? (
-      <Box
-        aria-hidden
-        className={classes.focusFrame}
-        style={{
-          top: focusRect.top,
-          left: focusRect.left,
-          width: focusRect.width,
-          height: focusRect.height,
-          zIndex: getDefaultZIndex("modal"),
-        }}
-      />
+      <>
+        <Overlay fixed backgroundOpacity={0} zIndex={getDefaultZIndex("modal")} />
+        <Box
+          aria-hidden
+          className={classes.focusFrame}
+          style={{
+            top: focusRect.top,
+            left: focusRect.left,
+            width: focusRect.width,
+            height: focusRect.height,
+            zIndex: getDefaultZIndex("modal"),
+          }}
+        />
+      </>
     ) : (
       <Overlay fixed color="#000" backgroundOpacity={0.58} blur={1} zIndex={getDefaultZIndex("modal")} />
     )}

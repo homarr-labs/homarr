@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import type { ComponentType, FormEvent } from "react";
-import { Box, Button, Group, SimpleGrid, Stack, Tabs, Text } from "@mantine/core";
+import { Box, Button, Group, Stack, Tabs, Text } from "@mantine/core";
 import { schemaResolver } from "@mantine/form";
 import { IconArrowLeft, IconPencil } from "@tabler/icons-react";
 import { z } from "zod/v4";
@@ -57,6 +57,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   settings: SettingsContextProps;
   itemId?: string;
   boardId?: string;
+  focusTargetId?: string;
   appId?: string;
   integrationEditForm?: ComponentType<EmbeddedIntegrationEditFormProps>;
   onIntegrationSaved?: () => void;
@@ -84,7 +85,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const [activeIntegrationId, setActiveIntegrationId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const widgetFormId = useId();
-  const { focusRect, inspectorSide } = useWidgetEditFocus(innerProps.itemId);
+  const { focusRect, inspectorSide } = useWidgetEditFocus(innerProps.itemId, innerProps.focusTargetId);
 
   z.config({
     customError: zodErrorMap(t),
@@ -260,7 +261,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           />
         )}
         {canConfigureWidget && switchOptions.length > 0 && (
-          <SimpleGrid className={classes.switchGrid} cols={{ base: 1, xs: 2 }} spacing="sm" verticalSpacing="sm">
+          <Box className={classes.switchGrid}>
             {switchOptions.map(([key, value]) => {
               const Input = getInputForType(value.type);
               if (!Input) return null;
@@ -278,7 +279,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
                 </Box>
               );
             })}
-          </SimpleGrid>
+          </Box>
         )}
         {canConfigureWidget &&
           otherOptions.map(([key, value]) => {
@@ -395,7 +396,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
               widgetFormContent
             )}
           </Box>
-          <Group className={classes.footer} justify="space-between" wrap="nowrap">
+          <Group className={classes.footer} justify="space-between" wrap="wrap">
             <Button
               variant="subtle"
               type="button"
@@ -408,7 +409,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
             >
               {tItem("advancedOptions.label")}
             </Button>
-            <Group gap="xs" wrap="nowrap">
+            <Group className={classes.footerActions} gap="xs" justify="flex-end" wrap="wrap">
               <Button type="button" onClick={actions.closeModal} variant="subtle" color="gray">
                 {tCommon("action.cancel")}
               </Button>
