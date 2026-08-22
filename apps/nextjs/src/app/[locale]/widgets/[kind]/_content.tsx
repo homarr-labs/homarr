@@ -59,6 +59,7 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
     preloadWidgetEditModal();
     try {
       const integrationData = hasIntegrationSupport ? await utils.integration.all.ensureData() : [];
+      const originalState = state;
       openWidgetEditModal(
         {
           kind,
@@ -67,6 +68,8 @@ export const WidgetPreviewPageContent = ({ kind }: WidgetPreviewPageContentProps
           onSuccessfulEdit: (value) => {
             setState(value);
           },
+          onPreviewChange: setState,
+          onPreviewRestore: () => setState(originalState),
           integrationData: integrationData.filter((integration) =>
             (currentDefinition.supportedIntegrations ?? []).includes(integration.kind),
           ),

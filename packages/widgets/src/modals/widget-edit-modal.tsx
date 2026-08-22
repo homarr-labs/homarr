@@ -52,6 +52,8 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   definition: WidgetDefinition;
   value: WidgetEditModalState;
   onSuccessfulEdit: (value: WidgetEditModalState) => void;
+  onPreviewChange?: (value: WidgetEditModalState) => void;
+  onPreviewRestore?: () => void;
   integrationData: IntegrationSelectOption[];
   integrationSupport: boolean;
   settings: SettingsContextProps;
@@ -84,6 +86,16 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   const [mountedIntegrationIds, setMountedIntegrationIds] = useState<string[]>([]);
   const [activeIntegrationId, setActiveIntegrationId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const hasPreviewedRef = useRef(false);
+  const hasSavedRef = useRef(false);
+  const previewCallbacksRef = useRef({
+    onPreviewChange: innerProps.onPreviewChange,
+    onPreviewRestore: innerProps.onPreviewRestore,
+  });
+  previewCallbacksRef.current = {
+    onPreviewChange: innerProps.onPreviewChange,
+    onPreviewRestore: innerProps.onPreviewRestore,
+  };
   const widgetFormId = useId();
   const { focusRect, inspectorSide } = useWidgetEditFocus(innerProps.itemId, innerProps.focusTargetId);
 
@@ -117,24 +129,46 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
   if (integrationsRequired) integrationIdsSchema = integrationIdsSchema.min(1);
   if (Number.isFinite(maxIntegrations)) integrationIdsSchema = integrationIdsSchema.max(maxIntegrations);
 
+  const widgetFormSchema = z.object({
+    options: optionsSchema,
+    integrationIds: integrationIdsSchema,
+  });
+  const applyPreview = (value: WidgetEditModalState) => {
+    if (!innerProps.onPreviewChange) return;
+
+    hasPreviewedRef.current = true;
+    innerProps.onPreviewChange(value);
+  };
   const form = useForm({
     mode: "controlled",
-    initialValues: innerProps.value,
-    validate: schemaResolver(
-      z.object({
-        options: optionsSchema,
-        integrationIds: integrationIdsSchema,
-        advancedOptions: z.object({
-          customCssClasses: z.array(z.string()),
-          borderColor: z.string(),
-        }),
-      }),
-      { sync: true },
-    ),
+    initialValues: {
+      options: innerProps.value.options,
+      integrationIds: innerProps.value.integrationIds,
+    },
+    validate: schemaResolver(widgetFormSchema, { sync: true }),
     validateInputOnBlur: true,
     validateInputOnChange: true,
+    onValuesChange: (values) => {
+      if (!widgetFormSchema.safeParse(values).success) return;
+
+      applyPreview({ ...values, advancedOptions });
+    },
   });
   const { openModal } = useModalAction(WidgetAdvancedOptionsModal);
+
+  useEffect(
+    () => () => {
+      if (!hasPreviewedRef.current || hasSavedRef.current) return;
+
+      const { onPreviewChange, onPreviewRestore } = previewCallbacksRef.current;
+      if (onPreviewRestore) {
+        onPreviewRestore();
+        return;
+      }
+      onPreviewChange?.(innerProps.value);
+    },
+    [innerProps.value],
+  );
 
   const canModifyApps = session?.user.permissions.includes("app-modify-all") ?? false;
   const canConfigureWidget = innerProps.kind !== "customApi" || (session?.user.permissions.includes("admin") ?? false);
@@ -215,6 +249,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
         ...values,
         advancedOptions,
       });
+      hasSavedRef.current = true;
       actions.closeModal();
     } finally {
       setIsSubmitting(false);
@@ -403,7 +438,10 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
               onClick={() =>
                 openModal({
                   advancedOptions,
-                  onSuccess: setAdvancedOptions,
+                  onSuccess: (value) => {
+                    setAdvancedOptions(value);
+                    applyPreview({ ...form.getValues(), advancedOptions: value });
+                  },
                 })
               }
             >

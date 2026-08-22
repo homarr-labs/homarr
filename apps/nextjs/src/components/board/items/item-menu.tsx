@@ -42,8 +42,7 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
   const { openModal } = useModalAction(LazyWidgetEditModal);
   const openMoveModal = useOpenItemMoveModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
-    useItemActions();
+  const { updateItemSettings, duplicateItem, removeItem } = useItemActions();
   const { integrations: integrationData, section } = useSectionContext();
   const settings = useSettings();
   const label = item.advancedOptions.title?.trim() || getWidgetName(item.kind, t);
@@ -57,6 +56,11 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
   }, [item, resetErrorBoundary]);
 
   const openEditModal = () => {
+    const originalSettings = {
+      options: item.options,
+      advancedOptions: item.advancedOptions,
+      integrationIds: item.integrationIds,
+    };
     openModal(
       {
         kind: item.kind,
@@ -66,19 +70,14 @@ const BoardItemMenuInner = ({ item, definition, resetErrorBoundary }: BoardItemM
           options: item.options,
           integrationIds: item.integrationIds,
         },
-        onSuccessfulEdit: ({ options, integrationIds, advancedOptions }) => {
-          updateItemOptions({
-            itemId: item.id,
-            newOptions: options,
-          });
-          updateItemAdvancedOptions({
-            itemId: item.id,
-            newAdvancedOptions: advancedOptions,
-          });
-          updateItemIntegrations({
-            itemId: item.id,
-            newIntegrations: integrationIds,
-          });
+        onPreviewChange: (value) => {
+          updateItemSettings({ itemId: item.id, ...value });
+        },
+        onPreviewRestore: () => {
+          updateItemSettings({ itemId: item.id, ...originalSettings });
+        },
+        onSuccessfulEdit: (value) => {
+          updateItemSettings({ itemId: item.id, ...value });
           refResetErrorBoundaryOnNextRender.current = true;
         },
         onIntegrationSaved: resetErrorBoundary,

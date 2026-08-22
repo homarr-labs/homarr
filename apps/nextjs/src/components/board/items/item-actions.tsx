@@ -30,6 +30,13 @@ interface UpdateItemIntegrations {
   newIntegrations: string[];
 }
 
+interface UpdateItemSettings {
+  itemId: string;
+  options: Record<string, unknown>;
+  advancedOptions: BoardItemAdvancedOptions;
+  integrationIds: string[];
+}
+
 export const useItemActions = () => {
   const { updateBoard } = useUpdateBoard();
   const currentLayoutId = useCurrentLayout();
@@ -77,6 +84,20 @@ export const useItemActions = () => {
     [updateBoard],
   );
 
+  const updateItemSettings = useCallback(
+    ({ itemId, options, advancedOptions, integrationIds }: UpdateItemSettings) => {
+      updateBoard((previous) => ({
+        ...previous,
+        items: previous.items.map((item) => {
+          if (item.id !== itemId || !("integrationIds" in item)) return item;
+
+          return { ...item, options, advancedOptions, integrationIds };
+        }),
+      }));
+    },
+    [updateBoard],
+  );
+
   const moveAndResizeItem = useCallback(
     (input: Omit<MoveAndResizeItemInput, "layoutId">) => {
       updateBoard(moveAndResizeItemCallback({ ...input, layoutId: currentLayoutId }));
@@ -105,6 +126,7 @@ export const useItemActions = () => {
     updateItemOptions,
     updateItemAdvancedOptions,
     updateItemIntegrations,
+    updateItemSettings,
     duplicateItem,
     createItem,
   };

@@ -58,7 +58,7 @@ export const WidgetContextMenu = ({
   const tCommon = useI18n("common.action");
   const settings = useSettings();
   const { openModal } = useModalAction(LazyWidgetEditModal);
-  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations } = useItemActions();
+  const { updateItemSettings } = useItemActions();
   const hasSupportedIntegrations = (definition.supportedIntegrations?.length ?? 0) > 0;
   const { data: integrationData = [], isPending } = clientApi.integration.all.useQuery(undefined, {
     enabled: hasSupportedIntegrations,
@@ -154,6 +154,11 @@ export const WidgetContextMenu = ({
     }) ?? [];
 
   const openEditModal = useCallback(() => {
+    const originalSettings = {
+      options: item.options,
+      advancedOptions: item.advancedOptions,
+      integrationIds: item.integrationIds,
+    };
     openModal(
       {
         kind: item.kind,
@@ -163,10 +168,13 @@ export const WidgetContextMenu = ({
           options,
           integrationIds: item.integrationIds,
         },
+        onPreviewChange: (value) => {
+          updateItemSettings({ itemId: item.id, ...value });
+        },
+        onPreviewRestore: () => {
+          updateItemSettings({ itemId: item.id, ...originalSettings });
+        },
         onSuccessfulEdit: (editResult) => {
-          updateItemOptions({ itemId: item.id, newOptions: editResult.options });
-          updateItemAdvancedOptions({ itemId: item.id, newAdvancedOptions: editResult.advancedOptions });
-          updateItemIntegrations({ itemId: item.id, newIntegrations: editResult.integrationIds });
           persistBoard((previous) => ({
             ...previous,
             items: previous.items.map((boardItem) =>
@@ -208,9 +216,7 @@ export const WidgetContextMenu = ({
     options,
     persistBoard,
     settings,
-    updateItemAdvancedOptions,
-    updateItemIntegrations,
-    updateItemOptions,
+    updateItemSettings,
   ]);
 
   const handleToggle = useCallback(
