@@ -21,7 +21,7 @@ import { LazyWidgetEditModal, preloadWidgetEditModal } from "./lazy-widget-edit-
 interface BoardItemMenuProps {
   item: SectionItem;
   definition: WidgetDefinition;
-  previewDimensions: { width: number; height: number };
+  previewDimensions: { width: number; height: number; scale?: number };
   resetErrorBoundary?: () => void;
 }
 

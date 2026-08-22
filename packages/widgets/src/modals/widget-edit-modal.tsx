@@ -14,7 +14,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { z } from "zod/v4";
 
 import { objectEntries } from "@homarr/common";
-import { useSession } from "@homarr/auth/client";
+import { IntegrationProvider, useSession } from "@homarr/auth/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal, useModalAction } from "@homarr/modals";
@@ -68,7 +68,7 @@ export interface WidgetEditModalProps<TSort extends WidgetKind> {
   onIntegrationSaved?: () => void;
   onOpenNewIntegration?: (onCreated?: (id: string) => void) => void;
   previewComponent?: ComponentType<WidgetComponentProps<TSort>>;
-  previewDimensions?: { width: number; height: number };
+  previewDimensions?: { width: number; height: number; scale?: number };
 }
 
 interface WidgetEditPreviewProps {
@@ -78,7 +78,8 @@ interface WidgetEditPreviewProps {
   state: WidgetEditModalState;
   itemId?: string;
   boardId?: string;
-  dimensions?: { width: number; height: number };
+  dimensions?: { width: number; height: number; scale?: number };
+  integrationData: IntegrationSelectOption[];
   onChangeOptions: (newOptions: Record<string, unknown>) => void;
 }
 
@@ -90,15 +91,19 @@ const WidgetEditPreview = ({
   itemId,
   boardId,
   dimensions = { width: 400, height: 240 },
+  integrationData,
   onChangeOptions,
 }: WidgetEditPreviewProps) => {
   const tItem = useI18n("item.edit");
   const { ref, width: availableWidth, height: availableHeight } = useElementSize<HTMLDivElement>();
   const sourceWidth = Math.max(dimensions.width, 1);
   const sourceHeight = Math.max(dimensions.height, 1);
-  let previewScale = 1;
+  let maximumScale = dimensions.scale ?? 0.9;
+  if (!Number.isFinite(maximumScale) || maximumScale <= 0) maximumScale = 0.9;
+  maximumScale = Math.min(maximumScale, 0.9);
+  let previewScale = maximumScale;
   if (availableWidth > 0 && availableHeight > 0) {
-    previewScale = Math.min(availableWidth / sourceWidth, availableHeight / sourceHeight, 1);
+    previewScale = Math.min(availableWidth / sourceWidth, availableHeight / sourceHeight, maximumScale);
   }
   const previewWidth = sourceWidth * previewScale;
   const previewHeight = sourceHeight * previewScale;
@@ -106,6 +111,14 @@ const WidgetEditPreview = ({
   const hasIntegrationSupport = "supportedIntegrations" in definition;
   const integrationRequired = hasIntegrationSupport && definition.integrationsRequired !== false;
   const isMissingIntegration = integrationRequired && state.integrationIds.length === 0;
+  const previewIntegrations = integrationData.map((integration) => ({
+    id: integration.id,
+    permissions: integration.permissions ?? {
+      hasFullAccess: false,
+      hasInteractAccess: false,
+      hasUseAccess: false,
+    },
+  }));
 
   return (
     <Stack className={classes.previewPanel} gap="sm">
@@ -149,19 +162,21 @@ const WidgetEditPreview = ({
                       <WidgetError definition={definition} error={error} resetErrorBoundary={resetErrorBoundary} />
                     )}
                   >
-                    <div className={classes.previewContent} inert>
-                      <Component
-                        options={state.options as never}
-                        integrationIds={state.integrationIds}
-                        width={sourceWidth}
-                        height={sourceHeight}
-                        isEditMode={false}
-                        displayMode="compact"
-                        boardId={boardId}
-                        itemId={itemId}
-                        setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
-                      />
-                    </div>
+                    <IntegrationProvider integrations={previewIntegrations}>
+                      <div className={classes.previewContent} inert>
+                        <Component
+                          options={state.options as never}
+                          integrationIds={state.integrationIds}
+                          width={sourceWidth}
+                          height={sourceHeight}
+                          isEditMode={false}
+                          displayMode="compact"
+                          boardId={boardId}
+                          itemId={itemId}
+                          setOptions={({ newOptions }) => onChangeOptions(newOptions as Record<string, unknown>)}
+                        />
+                      </div>
+                    </IntegrationProvider>
                   </ErrorBoundary>
                 )}
               </QueryErrorResetBoundary>
@@ -375,6 +390,7 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
           itemId={innerProps.itemId}
           boardId={innerProps.boardId ?? board?.id}
           dimensions={innerProps.previewDimensions}
+          integrationData={innerProps.integrationData}
           onChangeOptions={handlePreviewOptionsChange}
         />
       )}

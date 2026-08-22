@@ -2,6 +2,9 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Center, Loader } from "@mantine/core";
 
+import { IntegrationProvider } from "@homarr/auth/client";
+import { auth } from "@homarr/auth/next";
+import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetKinds } from "@homarr/widgets/manifest";
 
@@ -16,12 +19,15 @@ export default async function WidgetPreview(props: Props) {
   if (!widgetKinds.includes(kind as WidgetKind)) {
     notFound();
   }
+  const integrations = await getIntegrationsWithPermissionsAsync(await auth());
 
   return (
-    <Center h="100vh">
-      <Suspense fallback={<Loader size="sm" />}>
-        <WidgetPreviewPageContent key={kind} kind={kind as WidgetKind} />
-      </Suspense>
-    </Center>
+    <IntegrationProvider integrations={integrations}>
+      <Center h="100vh">
+        <Suspense fallback={<Loader size="sm" />}>
+          <WidgetPreviewPageContent key={kind} kind={kind as WidgetKind} />
+        </Suspense>
+      </Center>
+    </IntegrationProvider>
   );
 }

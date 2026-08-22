@@ -35,7 +35,7 @@ import { matchesWidgetItemQuery } from "./widget-query-scope";
 interface WidgetContextMenuProps {
   item: SectionItem;
   definition: WidgetDefinition;
-  previewDimensions: { width: number; height: number };
+  previewDimensions: { width: number; height: number; scale?: number };
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   widgetRuntimeRef: WidgetRuntimeRef;
   sourceRef: RefObject<HTMLElement | null>;

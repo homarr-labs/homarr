@@ -12,7 +12,10 @@
 .previewPanel {
   position: sticky;
   top: 0;
+  width: 100%;
+  max-width: 52rem;
   min-width: 0;
+  justify-self: center;
   padding: var(--mantine-spacing-md);
   border: 1px solid var(--mantine-color-default-border);
   border-radius: var(--mantine-radius-md);
@@ -141,13 +144,14 @@
   }
 }
 
-@media (max-width: 75em) {
+@media (max-width: 68em) {
   .workspace[data-with-preview] {
     grid-template-columns: 1fr;
   }
 
   .previewPanel {
     position: static;
+    max-width: 44rem;
   }
 
   .previewCanvas {
