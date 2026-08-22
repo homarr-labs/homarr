@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
-import { getCollapsedDisplayLayout, LOGICAL_GRID_CELL_SIZE } from "../../../layout";
+import { getCollapsedDisplayLayout, getLogicalGridSize } from "../../../layout";
 import { FixedGridItem } from "../fixed-grid-item";
 
 const mocks = vi.hoisted(() => ({
@@ -250,14 +250,14 @@ describe("fixed grid item behavior", () => {
     expect(container.querySelector('[data-testid="board-grid-drag-affordance"]')).toBeNull();
   });
 
-  test("renders a view-only 1x1 card at the fixed 200px logical size", () => {
+  test("renders a view-only 1x1 card at the complete grid footprint", () => {
     mocks.editMode = false;
     renderWeather(root);
 
     const item = container.querySelector<HTMLElement>('[data-grid-id="weather"]');
     expect(item).not.toBeNull();
-    expect(item?.style.width).toBe(`${LOGICAL_GRID_CELL_SIZE}px`);
-    expect(item?.style.height).toBe(`${LOGICAL_GRID_CELL_SIZE}px`);
+    expect(item?.style.width).toBe(`${getLogicalGridSize(1)}px`);
+    expect(item?.style.height).toBe(`${getLogicalGridSize(1)}px`);
     expect(item?.getAttribute("role")).toBeNull();
 
     act(() => item?.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true })));

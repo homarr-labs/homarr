@@ -2,17 +2,16 @@
 
 The board uses fixed logical units:
 
-- one `1 × 1` item is exactly `200 × 200` logical pixels;
-- the gap matches Mantine's `sm` spacing at `12` logical pixels, giving a `212` pixel track pitch;
-- multi-cell items include the gaps between their cells (`2 × 1` is `412 × 200`);
+- one grid track has a `212 × 212` logical-pixel footprint;
+- cards are inset by `10` visual pixels on every side, matching the legacy GridStack gutter;
+- multi-cell items occupy complete track footprints (`2 × 1` is `424 × 212` before the card inset);
 - the canvas is zoomed once with one uniform scale derived from its available width.
 
-Items keep the same logical dimensions at every viewport. The viewport reserves
-the painted size while the inner canvas remains at its logical dimensions, so a
-widget's `clientWidth`, `clientHeight`, and `ResizeObserver` measurements stay
-stable. The visual canvas always fits the available width, every root lane
-keeps at least one viewport of height, and edit-mode previews extend it downward
-as needed.
+Grid footprints keep the same logical dimensions at every viewport. Widget cards
+use a scale-compensated inset so their painted size and content measurements
+match the legacy responsive grid. The visual canvas always fits the available
+width, every root lane keeps at least one viewport of height, and edit-mode
+previews extend it downward as needed.
 
 The read-only renderer should:
 

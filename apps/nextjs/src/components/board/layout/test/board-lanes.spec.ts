@@ -8,7 +8,7 @@ import { ItemMockBuilder } from "~/components/board/items/actions/test/mocks/ite
 import {
   getBoardLaneColumnCount,
   getInitialBoardLogicalHeight,
-  getLogicalTrackSize,
+  getLogicalGridSize,
   getRootSectionForLane,
 } from "../index";
 
@@ -131,6 +131,6 @@ describe("board lanes", () => {
       },
     ];
 
-    expect(getInitialBoardLogicalHeight(board, layoutId)).toBe(getLogicalTrackSize(4));
+    expect(getInitialBoardLogicalHeight(board, layoutId)).toBe(getLogicalGridSize(4));
   });
 });

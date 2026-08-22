@@ -14,7 +14,7 @@ import {
   getEditableCanvasAttributes,
   getGridRowCountForVisualHeight,
   getLayoutRowCount,
-  getLogicalTrackSize,
+  getLogicalGridSize,
   getReadonlyCanvasAttributes,
   normalizeGridPlacement,
 } from "~/components/board/layout";
@@ -138,9 +138,9 @@ export const SectionGrid = ({
   // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
   const isScrollableContainer = section.kind === "container" && section.options.scrollable;
   const viewportRowCount = isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount;
-  const logicalWidth = getLogicalTrackSize(columnCount);
-  const logicalHeight = getLogicalTrackSize(rowCount);
-  const viewportHeight = getLogicalTrackSize(viewportRowCount);
+  const logicalWidth = getLogicalGridSize(columnCount);
+  const logicalHeight = getLogicalGridSize(rowCount);
+  const viewportHeight = getLogicalGridSize(viewportRowCount);
   // A collapsed container's compact coordinates are display-only. Its own
   // nested grid stays inactive until an explicit edit interaction expands it.
   const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);

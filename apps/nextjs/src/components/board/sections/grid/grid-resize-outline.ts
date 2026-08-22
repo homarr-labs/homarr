@@ -1,4 +1,4 @@
-import { getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
+import { getLogicalGridSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import type { GridPlacement } from "~/components/board/layout";
 
 interface ResizeOutlinePreview {
@@ -31,8 +31,8 @@ export const createGridResizeOutlineController = (
     outline.style.position = "absolute";
     outline.style.left = `${(preview.placement.x - visualX) * LOGICAL_GRID_PITCH}px`;
     outline.style.top = `${(preview.placement.y - visualY) * LOGICAL_GRID_PITCH}px`;
-    outline.style.width = `${getLogicalTrackSize(preview.placement.w)}px`;
-    outline.style.height = `${getLogicalTrackSize(preview.placement.h)}px`;
+    outline.style.width = `${getLogicalGridSize(preview.placement.w)}px`;
+    outline.style.height = `${getLogicalGridSize(preview.placement.h)}px`;
     outline.dataset.gridResizeValid = String(preview.valid);
   };
 

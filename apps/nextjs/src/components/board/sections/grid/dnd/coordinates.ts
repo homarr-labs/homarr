@@ -1,4 +1,4 @@
-import { getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
+import { getLogicalGridSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import type { GridPlacement } from "~/components/board/layout";
 import type { GridResizeDirection } from "./types";
 
@@ -38,7 +38,7 @@ export const getSnappedGridCoordinates = ({
   target: RectangleLike;
   columnCount: number;
 }) => {
-  const logicalWidth = getLogicalTrackSize(columnCount);
+  const logicalWidth = getLogicalGridSize(columnCount);
   const visualScale = logicalWidth > 0 ? target.width / logicalWidth : 0;
   if (!Number.isFinite(visualScale) || visualScale <= 0) return null;
 

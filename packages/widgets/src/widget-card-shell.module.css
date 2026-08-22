@@ -1,0 +1,34 @@
+.card {
+  @mixin dark {
+    --background-color: rgb(from var(--mantine-color-dark-6) r g b / var(--opacity));
+    --default-border-color: rgb(from var(--mantine-color-dark-4) r g b / var(--opacity));
+  }
+
+  @mixin light {
+    --background-color: rgb(from var(--mantine-color-white) r g b / var(--opacity));
+    --default-border-color: rgb(from var(--mantine-color-gray-3) r g b / var(--opacity));
+  }
+
+  background-color: var(--background-color) !important;
+  border-color: var(--border-color, var(--default-border-color)) !important;
+}
+
+.card.iframe {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.title {
+  @mixin dark {
+    --background-color: rgb(from var(--mantine-color-dark-6) r g b / var(--opacity));
+    --default-border-color: rgb(from var(--mantine-color-dark-4) r g b / var(--opacity));
+  }
+
+  @mixin light {
+    --background-color: rgb(from var(--mantine-color-white) r g b / var(--opacity));
+    --default-border-color: rgb(from var(--mantine-color-gray-3) r g b / var(--opacity));
+  }
+
+  background-color: var(--background-color) !important;
+  border-color: var(--border-color, var(--default-border-color)) !important;
+}

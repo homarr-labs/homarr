@@ -10,12 +10,23 @@ export const getLogicalTrackSize = (trackCount: number) => {
   return normalizedTrackCount * LOGICAL_GRID_CELL_SIZE + (normalizedTrackCount - 1) * LOGICAL_GRID_GAP;
 };
 
+/**
+ * Returns the complete footprint occupied by grid tracks. Cards are inset
+ * inside this footprint so their visual gutters stay fixed while the canvas
+ * is scaled.
+ */
+export const getLogicalGridSize = (trackCount: number) => {
+  const normalizedTrackCount = Math.max(0, toFiniteNumber(trackCount, "trackCount"));
+
+  return normalizedTrackCount * LOGICAL_GRID_PITCH;
+};
+
 export const getLogicalItemStyle = ({ x, y, w, h }: GridCoordinates): CSSProperties => ({
   position: "absolute",
   left: x * LOGICAL_GRID_PITCH,
   top: y * LOGICAL_GRID_PITCH,
-  width: getLogicalTrackSize(w),
-  height: getLogicalTrackSize(h),
+  width: getLogicalGridSize(w),
+  height: getLogicalGridSize(h),
 });
 
 export const getLayoutRowCount = (placements: readonly GridCoordinates[]) =>
@@ -25,7 +36,7 @@ export const getGridRowCountForVisualHeight = (visualHeight: number, visualScale
   if (!Number.isFinite(visualHeight) || visualHeight <= 0) return 1;
   if (!Number.isFinite(visualScale) || visualScale <= 0) return 1;
 
-  return Math.max(1, Math.ceil((visualHeight / visualScale + LOGICAL_GRID_GAP) / LOGICAL_GRID_PITCH));
+  return Math.max(1, Math.ceil(visualHeight / visualScale / LOGICAL_GRID_PITCH));
 };
 
 export const normalizeGridPlacement = <TPlacement extends GridPlacement>(

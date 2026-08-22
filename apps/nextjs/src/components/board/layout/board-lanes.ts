@@ -2,7 +2,7 @@ import type { BoardLane } from "@homarr/definitions";
 import { getBoardLaneColumnCount, getRootSectionLane } from "@homarr/definitions";
 
 import type { Board, EmptySection } from "~/app/[locale]/boards/_types";
-import { getLogicalTrackSize, getLayoutRowCount, normalizeGridPlacement } from "./geometry";
+import { getLogicalGridSize, getLayoutRowCount, normalizeGridPlacement } from "./geometry";
 import { getCollapsedDisplayLayout } from "./reflow";
 import type { GridPlacement } from "./types";
 
@@ -90,5 +90,5 @@ export const getInitialBoardLogicalHeight = (board: Board, layoutId: string) => 
     return [getLayoutRowCount(displayPlacements)];
   });
 
-  return getLogicalTrackSize(Math.max(0, ...rowCounts));
+  return getLogicalGridSize(Math.max(0, ...rowCounts));
 };

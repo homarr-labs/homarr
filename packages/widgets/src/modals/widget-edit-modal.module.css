@@ -1,0 +1,191 @@
+.workspace {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--mantine-spacing-lg);
+  align-items: start;
+}
+
+.workspace[data-with-preview][data-with-settings] {
+  grid-template-columns: minmax(0, 3fr) auto minmax(34rem, 2fr);
+}
+
+.previewPanel {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  max-width: 52rem;
+  min-width: 0;
+  justify-self: center;
+}
+
+.previewDimensions {
+  position: absolute;
+  z-index: 2;
+  top: var(--mantine-spacing-xs);
+  right: var(--mantine-spacing-xs);
+  pointer-events: none;
+}
+
+.previewSizeControls {
+  position: absolute;
+  z-index: 3;
+  top: var(--mantine-spacing-xs);
+  left: var(--mantine-spacing-xs);
+  padding: 0.25rem 0.375rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: color-mix(in srgb, var(--mantine-color-body) 92%, transparent);
+  box-shadow: var(--mantine-shadow-xs);
+  backdrop-filter: blur(8px);
+}
+
+.previewSizeInput {
+  width: 5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.previewCanvas {
+  position: relative;
+  width: 100%;
+  height: clamp(24rem, calc(100dvh - 17rem), 44rem);
+  padding: var(--mantine-spacing-lg);
+  overflow: hidden;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-8));
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--mantine-color-dimmed) 14%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--mantine-color-dimmed) 14%, transparent) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+
+.previewDivider {
+  height: auto;
+  align-self: stretch;
+}
+
+.previewViewport {
+  position: relative;
+  flex: 0 0 auto;
+  animation: dock-widget 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.previewWidget {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+}
+
+.previewContent {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.settingsPanel {
+  min-width: 0;
+  max-height: calc(100dvh - 13rem);
+  padding-right: 0.25rem;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.settingsForm {
+  min-width: 0;
+}
+
+.fullWidthField {
+  grid-column: 1 / -1;
+}
+
+.switchOption {
+  display: flex;
+  cursor: pointer;
+  height: 4.5rem;
+  align-items: center;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+}
+
+.switchOption > *,
+.switchOption :global(.mantine-Switch-root),
+.switchOption :global(.mantine-Switch-body) {
+  width: 100%;
+}
+
+.switchOption :global(.mantine-Switch-body) {
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-md);
+}
+
+.switchOption :global(.mantine-Switch-labelWrapper) {
+  min-width: 0;
+  flex: 1;
+}
+
+.switchOption :global(.mantine-Switch-description) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.footer {
+  position: sticky;
+  z-index: 3;
+  bottom: calc(var(--mantine-spacing-md) * -1);
+  margin-inline: calc(var(--mantine-spacing-md) * -1);
+  margin-bottom: calc(var(--mantine-spacing-md) * -1);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-top: 1px solid var(--mantine-color-default-border);
+  background: color-mix(in srgb, var(--mantine-color-body) 94%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+@keyframes dock-widget {
+  from {
+    opacity: 0;
+    transform: translate(-1.25rem, 1rem) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 68em) {
+  .workspace[data-with-preview][data-with-settings] {
+    grid-template-columns: 1fr;
+  }
+
+  .previewPanel {
+    position: static;
+    max-width: 44rem;
+  }
+
+  .previewDivider {
+    display: none;
+  }
+
+  .previewCanvas {
+    height: 24rem;
+  }
+
+  .settingsPanel {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .previewViewport {
+    animation: none;
+  }
+}

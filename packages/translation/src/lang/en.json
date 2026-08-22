@@ -2083,10 +2083,12 @@
           "label": "Section or rail"
         },
         "width": {
-          "label": "Width"
+          "label": "Width",
+          "shortLabel": "W"
         },
         "height": {
-          "label": "Height"
+          "label": "Height",
+          "shortLabel": "H"
         },
         "xOffset": {
           "label": "X offset"
@@ -2114,6 +2116,13 @@
         "propagationNotice": "Changes to this integration apply everywhere it is used. The connection is tested before it is saved.",
         "loading": "Loading integration",
         "loadError": "This integration could not be loaded. Try again before changing its connection settings."
+      },
+      "preview": {
+        "integrationRequired": "Choose a connection to preview this widget.",
+        "size": "Size"
+      },
+      "settings": {
+        "label": "Widget settings"
       },
       "advancedOptions": {
         "label": "Advanced options",

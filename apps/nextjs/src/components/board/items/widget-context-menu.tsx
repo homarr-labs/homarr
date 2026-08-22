@@ -35,6 +35,7 @@ import { matchesWidgetItemQuery } from "./widget-query-scope";
 interface WidgetContextMenuProps {
   item: SectionItem;
   definition: WidgetDefinition;
+  previewDimensions: { width: number; height: number; scale?: number };
   widgetStateRef: MutableRefObject<Record<string, unknown> | null>;
   widgetRuntimeRef: WidgetRuntimeRef;
   sourceRef: RefObject<HTMLElement | null>;
@@ -44,6 +45,7 @@ interface WidgetContextMenuProps {
 export const WidgetContextMenu = ({
   item,
   definition,
+  previewDimensions,
   widgetRuntimeRef,
   sourceRef,
   children,
@@ -160,7 +162,7 @@ export const WidgetContextMenu = ({
         definition,
         value: {
           advancedOptions: item.advancedOptions,
-          options: item.options,
+          options,
           integrationIds: item.integrationIds,
         },
         onSuccessfulEdit: (editResult) => {
@@ -189,6 +191,9 @@ export const WidgetContextMenu = ({
         ),
         integrationSupport: definition.supportedIntegrations !== undefined,
         settings,
+        itemId: item.id,
+        boardId: board.id,
+        previewDimensions,
         appId: item.kind === "app" ? (item.options.appId as string | undefined) : undefined,
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -197,12 +202,15 @@ export const WidgetContextMenu = ({
       },
     );
   }, [
+    board.id,
     definition,
     integrationData,
     item,
     handleRefetch,
     openModal,
+    options,
     persistBoard,
+    previewDimensions,
     settings,
     updateItemAdvancedOptions,
     updateItemIntegrations,

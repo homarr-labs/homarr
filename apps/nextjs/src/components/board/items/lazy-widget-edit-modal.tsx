@@ -1,5 +1,6 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
 import { Suspense, use, useCallback, useMemo, useState } from "react";
 import { Center, Loader } from "@mantine/core";
 import { ErrorBoundary } from "react-error-boundary";
@@ -7,15 +8,48 @@ import type { FallbackProps } from "react-error-boundary";
 
 import { clientApi } from "@homarr/api/client";
 import type { WidgetKind } from "@homarr/definitions";
-import { createModal, modalSizeForm, useModalAction } from "@homarr/modals";
+import { widgetDefaultSizes } from "@homarr/definitions";
+import { createModal, useModalAction } from "@homarr/modals";
 import { WidgetError } from "@homarr/widgets/errors";
 import type * as WidgetModalsModule from "@homarr/widgets/modals";
-import type { WidgetEditModalProps } from "@homarr/widgets/modals";
+import type { WidgetEditModalProps, WidgetEditModalSize } from "@homarr/widgets/modals";
+import { loadWidgetComponent } from "@homarr/widgets/manifest";
 import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
 
+import { AssistantContext, useOptionalHomarrAssistant } from "~/components/assistant/assistant-context";
+import { getLogicalTrackSize } from "~/components/board/layout";
 import { IntegrationSelectModal } from "~/components/integration/integration-select-modal";
 import type * as IntegrationEditFormModule from "~/components/integration/embedded-integration-edit-form";
 import type { EmbeddedIntegrationEditFormProps } from "~/components/integration/embedded-integration-edit-form";
+
+const defaultWidgetSize = { width: 1, height: 1 };
+const ignoreAssistantAction = () => undefined;
+const ignoreAssistantPrompt = () => false;
+const ignoreAssistantRefresh = () => Promise.resolve();
+const getPreviewDimensions = (size: WidgetEditModalSize) => ({
+  width: getLogicalTrackSize(size.width),
+  height: getLogicalTrackSize(size.height),
+});
+
+const PreviewRuntimeWrapper = ({ children }: PropsWithChildren) => {
+  const assistant = useOptionalHomarrAssistant();
+  const previewAssistant = useMemo(() => {
+    if (!assistant) return null;
+    return {
+      ...assistant,
+      open: ignoreAssistantAction,
+      close: ignoreAssistantAction,
+      toggle: ignoreAssistantAction,
+      sendPrompt: ignoreAssistantPrompt,
+      refreshCurrentView: ignoreAssistantRefresh,
+      setWidgetVisible: ignoreAssistantAction,
+      activateWidget: ignoreAssistantAction,
+    };
+  }, [assistant]);
+
+  if (!previewAssistant) return children;
+  return <AssistantContext.Provider value={previewAssistant}>{children}</AssistantContext.Provider>;
+};
 
 let widgetEditModalPromise: Promise<typeof WidgetModalsModule> | undefined;
 
@@ -83,6 +117,7 @@ interface LazyWidgetEditModalContentProps {
 
 const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
   const { WidgetEditModal } = use(loadWidgetEditModal());
+  const { default: PreviewComponent } = use(loadWidgetComponent(props.innerProps.kind));
   const { openModal: openIntegrationModal } = useModalAction(IntegrationSelectModal);
   const Component = WidgetEditModal.component;
   const utils = clientApi.useUtils();
@@ -114,6 +149,18 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
     const additional = createdIntegrations.filter((c) => !existing.some((e) => e.id === c.id));
     return [...existing, ...additional];
   }, [props.innerProps.integrationData, createdIntegrations]);
+  const previewDimensions = useMemo(() => {
+    if (props.innerProps.previewDimensions) return props.innerProps.previewDimensions;
+    const size = widgetDefaultSizes[props.innerProps.kind] ?? defaultWidgetSize;
+    return {
+      width: getLogicalTrackSize(size.width),
+      height: getLogicalTrackSize(size.height),
+    };
+  }, [props.innerProps.kind, props.innerProps.previewDimensions]);
+  let previewResize = props.innerProps.previewResize;
+  if (previewResize) {
+    previewResize = { ...previewResize, getDimensions: getPreviewDimensions };
+  }
 
   return (
     <Component
@@ -122,6 +169,10 @@ const LazyWidgetEditModalContent = (props: LazyWidgetEditModalContentProps) => {
         ...props.innerProps,
         integrationData: combinedIntegrationData,
         integrationEditForm: LazyIntegrationEditForm,
+        previewComponent: PreviewComponent,
+        previewDimensions,
+        previewResize,
+        previewWrapper: PreviewRuntimeWrapper,
         onOpenNewIntegration: supportedKinds.length > 0 ? handleOpenNewIntegration : undefined,
       }}
     />
@@ -157,6 +208,10 @@ export const LazyWidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>
   defaultTitle(t) {
     return t("item.edit.title");
   },
-  size: modalSizeForm,
+  size: "100rem",
+  transitionProps: {
+    transition: "pop",
+    duration: 180,
+  },
   closeOnClickOutside: false,
 });
