@@ -23,3 +23,15 @@
 .bookmarkButton:focus-visible .bookmarkIcon {
   background-color: var(--mantine-color-iconColor-filled-hover);
 }
+
+.compactScrollArea :global(.mantine-ScrollArea-viewport) > div {
+  display: flex !important;
+  width: 100%;
+  min-height: 100%;
+}
+
+.compactScrollContent {
+  flex: 1;
+  min-width: 100%;
+  min-height: 100%;
+}

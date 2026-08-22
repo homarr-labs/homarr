@@ -2,19 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { useMemo } from "react";
-import {
-  Anchor,
-  Box,
-  Card,
-  Flex,
-  Group,
-  ScrollArea,
-  SimpleGrid,
-  Stack,
-  Text,
-  Title,
-  UnstyledButton,
-} from "@mantine/core";
+import { Anchor, Card, Flex, Group, ScrollArea, SimpleGrid, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 import { IconLink } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -42,6 +30,7 @@ export interface CompactBookmarkLayout {
   columns: number;
   hideHostname: boolean;
   hideTitle: boolean;
+  minimumItemWidth: number;
   minimumItemSize: number;
 }
 
@@ -64,6 +53,7 @@ export function getCompactBookmarkLayout(
     columns,
     hideHostname: cellWidth < 120 || cellHeight < (usesHorizontalItems ? 52 : 96),
     hideTitle: cellWidth < 64 || cellHeight < 40,
+    minimumItemWidth: targetWidth,
     minimumItemSize: usesHorizontalItems ? 48 : 96,
   };
 }
@@ -139,12 +129,17 @@ export default function BookmarksWidget({
         />
       )}
       {displayMode !== "advanced" && (
-        <ScrollArea type="auto" scrollbarSize={6} offsetScrollbars style={{ flex: 1, minHeight: 0 }}>
-          <Box mih="100%">
+        <ScrollArea
+          className={classes.compactScrollArea}
+          type="auto"
+          scrollbarSize={6}
+          style={{ flex: 1, minHeight: 0 }}
+        >
+          <div className={classes.compactScrollContent}>
             {options.layout === "grid" || options.layout === "gridHorizontal" ? (
               <GridLayout
                 data={data}
-                columns={compactLayout.columns}
+                minimumItemWidth={compactLayout.minimumItemWidth}
                 minimumItemHeight={compactLayout.minimumItemSize}
                 itemDirection={options.layout === "gridHorizontal" ? "horizontal" : "vertical"}
                 hideTitle={compactHideTitle}
@@ -167,7 +162,7 @@ export default function BookmarksWidget({
                 hasIconColor={board.iconColor !== null}
               />
             )}
-          </Box>
+          </div>
         </ScrollArea>
       )}
     </Stack>
@@ -340,7 +335,7 @@ interface GridLayoutProps {
   withBorder: boolean;
   itemDirection: "horizontal" | "vertical";
   hasIconColor: boolean;
-  columns: number;
+  minimumItemWidth: number;
   minimumItemHeight: number;
 }
 
@@ -353,20 +348,13 @@ const GridLayout = ({
   withBorder,
   itemDirection,
   hasIconColor,
-  columns,
+  minimumItemWidth,
   minimumItemHeight,
 }: GridLayoutProps) => {
   const board = useRequiredBoard();
 
   return (
-    <SimpleGrid
-      cols={columns}
-      spacing={4}
-      verticalSpacing={4}
-      miw="100%"
-      mih="100%"
-      style={{ gridAutoRows: `minmax(${minimumItemHeight}px, 1fr)` }}
-    >
+    <Flex gap={4} wrap="wrap" miw="100%" mih="100%" style={{ alignContent: "stretch" }}>
       {data.map((app) => {
         const href = getSafeAppHref(app.href);
         return (
@@ -377,7 +365,11 @@ const GridLayout = ({
             target={href ? (openNewTab ? "_blank" : "_self") : undefined}
             rel={href && openNewTab ? SAFE_NEW_TAB_REL : undefined}
             key={app.id}
-            h="100%"
+            style={{
+              flex: `1 0 calc(${minimumItemWidth}px * var(--mantine-scale, 1))`,
+              minWidth: 0,
+              minHeight: `calc(${minimumItemHeight}px * var(--mantine-scale, 1))`,
+            }}
           >
             <Card
               h="100%"
@@ -407,7 +399,7 @@ const GridLayout = ({
           </UnstyledButton>
         );
       })}
-    </SimpleGrid>
+    </Flex>
   );
 };
 
