@@ -1,0 +1,21 @@
+.content {
+  outline: none;
+}
+
+.option {
+  min-width: 0;
+  border-radius: var(--mantine-radius-md);
+  outline: none;
+}
+
+.card {
+  height: 100%;
+  overflow: hidden;
+}
+
+.option:hover .card,
+.option:focus-visible .card,
+.option[data-active="true"] .card {
+  border-color: var(--mantine-primary-color-filled);
+  box-shadow: var(--mantine-shadow-md);
+}

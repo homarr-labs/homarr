@@ -5130,6 +5130,25 @@
       "addContent": "Add board content",
       "settings": "Board settings",
       "switch": "Switch board",
+      "switcher": {
+        "title": "Switch board",
+        "search": {
+          "empty": "No boards match \"{search}\"."
+        },
+        "results": "Available boards",
+        "preview": "Preview of {name} with {count} items",
+        "currentHidden": "Current board: {name}",
+        "keyboard": {
+          "navigate": "Navigate",
+          "open": "Open",
+          "instructions": "Type to filter boards. Use the arrow keys to move through results and Enter to open a board."
+        },
+        "empty": {
+          "title": "No other boards",
+          "description": "There are no other boards you can access."
+        },
+        "error": "Boards could not be loaded."
+      },
       "create": {
         "availability": {
           "checking": "Checking availability…",
