@@ -1,0 +1,465 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import {
+  Avatar,
+  Box,
+  Card,
+  Center,
+  Group,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Text,
+  ThemeIcon,
+  Tooltip,
+} from "@mantine/core";
+import { useReducedMotion } from "@mantine/hooks";
+import { IconArrowUpRight, IconBookmark, IconLink } from "@tabler/icons-react";
+
+import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
+import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
+import { useI18n } from "@homarr/translation/client";
+
+import { getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
+import { getUsableWidgetQueryData } from "../common/query-state";
+import type { WidgetComponentProps } from "../definition";
+import { createDirectBookmark, getBookmarkFaviconUrl, getDirectBookmarkUrl } from "./bookmark-item";
+import type { BookmarkItem } from "./bookmark-item";
+
+type BookmarkLayout = WidgetComponentProps<"bookmarks">["options"]["layout"];
+type BookmarkVariant = WidgetComponentProps<"bookmarks">["options"]["variant"];
+type BookmarkOrientation = "horizontal" | "vertical" | "icon";
+
+interface BookmarkDisplayPlan {
+  columns: number;
+  horizontalScroll: boolean;
+  itemHeight: number;
+  itemWidth: number;
+  orientation: BookmarkOrientation;
+  showHostname: boolean;
+  showTitle: boolean;
+}
+
+const getBookmarkDisplayPlan = ({
+  advanced,
+  height,
+  itemCount,
+  layout,
+  width,
+}: {
+  advanced: boolean;
+  height: number;
+  itemCount: number;
+  layout: BookmarkLayout;
+  width: number;
+}): BookmarkDisplayPlan => {
+  const count = Math.max(1, itemCount);
+  const availableWidth = Math.max(1, width - 16);
+  const availableHeight = Math.max(1, height - 16);
+
+  if (advanced) {
+    const columns = Math.max(1, Math.min(count, Math.floor(availableWidth / 260)));
+    return {
+      columns,
+      horizontalScroll: false,
+      itemHeight: 104,
+      itemWidth: 260,
+      orientation: "horizontal",
+      showHostname: true,
+      showTitle: true,
+    };
+  }
+
+  if (layout === "row") {
+    const itemWidth = Math.max(96, Math.min(180, availableWidth / Math.min(count, 4)));
+    return {
+      columns: count,
+      horizontalScroll: true,
+      itemHeight: Math.max(48, availableHeight),
+      itemWidth,
+      orientation: availableHeight < 64 ? "icon" : "vertical",
+      showHostname: availableHeight >= 112,
+      showTitle: availableHeight >= 72,
+    };
+  }
+
+  if (layout === "column") {
+    const itemHeight = Math.max(46, Math.min(72, availableHeight / count));
+    return {
+      columns: 1,
+      horizontalScroll: false,
+      itemHeight,
+      itemWidth: availableWidth,
+      orientation: "horizontal",
+      showHostname: itemHeight >= 56 && availableWidth >= 150,
+      showTitle: availableWidth >= 92,
+    };
+  }
+
+  if (layout === "icons") {
+    const columns = Math.max(1, Math.min(count, Math.floor(availableWidth / 64)));
+    return {
+      columns,
+      horizontalScroll: false,
+      itemHeight: 56,
+      itemWidth: 56,
+      orientation: "icon",
+      showHostname: false,
+      showTitle: false,
+    };
+  }
+
+  const minimumWidth = layout === "gridHorizontal" ? 168 : layout === "grid" ? 104 : 64;
+  let columns = Math.max(1, Math.min(count, Math.floor(availableWidth / minimumWidth)));
+  if (layout === "adaptive") {
+    const targetAspectRatio = 1.7;
+    const idealColumns = Math.max(
+      1,
+      Math.round(Math.sqrt((availableWidth * count) / (availableHeight * targetAspectRatio))),
+    );
+    columns = Math.min(columns, idealColumns);
+  }
+  const rows = Math.max(1, Math.ceil(count / columns));
+  const cellWidth = availableWidth / columns;
+  const cellHeight = availableHeight / rows;
+  let orientation: BookmarkOrientation = layout === "grid" ? "vertical" : "horizontal";
+
+  if (layout === "adaptive") {
+    if (cellHeight < 54 || cellWidth < 72) orientation = "icon";
+    else if (cellWidth / cellHeight > 1.35 || cellHeight < 92) orientation = "horizontal";
+    else orientation = "vertical";
+  }
+
+  return {
+    columns,
+    horizontalScroll: false,
+    itemHeight: Math.max(52, Math.min(128, cellHeight)),
+    itemWidth: layout === "adaptive" ? 144 : minimumWidth,
+    orientation,
+    showHostname: orientation !== "icon" && cellWidth >= 138 && cellHeight >= 64,
+    showTitle: orientation !== "icon" && cellWidth >= 88 && cellHeight >= 48,
+  };
+};
+
+export default function BookmarksWidget({
+  options,
+  itemId,
+  width,
+  height,
+  displayMode,
+}: WidgetComponentProps<"bookmarks">) {
+  const t = useI18n("widget.bookmarks");
+  const board = useRequiredBoard();
+  const advanced = displayMode === "advanced";
+  const appIds = useMemo(() => options.items.filter((value) => !getDirectBookmarkUrl(value)), [options.items]);
+  const apps =
+    getUsableWidgetQueryData(
+      clientApi.app.byIds.useQuery(appIds, {
+        select(selectedApps) {
+          return selectedApps;
+        },
+      }),
+    ) ?? [];
+  const appsById = new Map(apps.map((app) => [app.id, app]));
+  const configuredItems = options.items.flatMap((value) => {
+    const directUrl = getDirectBookmarkUrl(value);
+    if (directUrl) return createDirectBookmark(directUrl) ?? [];
+    return appsById.get(value) ?? [];
+  });
+  const configuredHrefs = new Set(configuredItems.map((item) => item.href));
+  const legacyItems = options.customUrls.flatMap((url) => {
+    const item = createDirectBookmark(url);
+    if (!item || configuredHrefs.has(item.href)) return [];
+    return [item];
+  });
+  const data = [...configuredItems, ...legacyItems];
+
+  useRegisterSpotlightContextResults(
+    `bookmark-${itemId}`,
+    data.flatMap((bookmark) => {
+      const href = getSafeAppHref(bookmark.href);
+      if (!href) return [];
+
+      return [
+        {
+          id: bookmark.id,
+          name: bookmark.name,
+          icon: bookmark.iconUrl ?? IconLink,
+          interaction() {
+            return {
+              type: "link" as const,
+              href,
+              newTab: false,
+            };
+          },
+        },
+      ];
+    }),
+    [data],
+  );
+
+  const plan = useMemo(
+    () =>
+      getBookmarkDisplayPlan({
+        advanced,
+        height: options.title.length > 0 ? height - 36 : height,
+        itemCount: data.length,
+        layout: options.layout,
+        width,
+      }),
+    [advanced, data.length, height, options.layout, options.title.length, width],
+  );
+
+  const cards = data.map((bookmark) => (
+    <BookmarkCard
+      key={bookmark.id}
+      bookmark={bookmark}
+      advanced={advanced}
+      orientation={plan.orientation}
+      showHostname={advanced || (!options.hideHostname && plan.showHostname)}
+      showIcon={advanced || !options.hideIcon || (options.hideTitle && options.hideHostname)}
+      showTitle={advanced || (!options.hideTitle && plan.showTitle)}
+      openNewTab={options.openNewTab}
+      variant={options.variant}
+      withBorder={options.withBorder}
+      radius={board.itemRadius}
+      height={plan.itemHeight}
+      width={plan.horizontalScroll ? plan.itemWidth : undefined}
+    />
+  ));
+
+  return (
+    <Stack h="100%" mih={0} gap={height < 120 ? 6 : "sm"} p={height < 120 ? 6 : "sm"}>
+      {options.title.length > 0 ? (
+        <Text fz="xs" fw={600} px={2} lh={1.2} lineClamp={1}>
+          {options.title}
+        </Text>
+      ) : null}
+
+      {data.length === 0 ? (
+        <Center flex={1}>
+          <Stack align="center" gap={6}>
+            <ThemeIcon variant="light" size="lg" radius="xl">
+              <IconBookmark size={20} />
+            </ThemeIcon>
+            <Text size="sm" c="dimmed" ta="center">
+              {t("empty")}
+            </Text>
+          </Stack>
+        </Center>
+      ) : (
+        <ScrollArea
+          type="hover"
+          scrollbars={plan.horizontalScroll ? "x" : "y"}
+          scrollbarSize={2}
+          scrollHideDelay={500}
+          offsetScrollbars
+          style={{ flex: 1, minHeight: 0 }}
+        >
+          <Box miw="100%" mih="100%" pb={2}>
+            {plan.horizontalScroll ? (
+              <Group gap={6} wrap="nowrap" mih="100%" align="stretch">
+                {cards}
+              </Group>
+            ) : (
+              <SimpleGrid cols={plan.columns} spacing={6} verticalSpacing={6}>
+                {cards}
+              </SimpleGrid>
+            )}
+          </Box>
+        </ScrollArea>
+      )}
+    </Stack>
+  );
+}
+
+interface BookmarkCardProps {
+  advanced: boolean;
+  bookmark: BookmarkItem;
+  height: number;
+  openNewTab: boolean;
+  orientation: BookmarkOrientation;
+  radius: string;
+  showHostname: boolean;
+  showIcon: boolean;
+  showTitle: boolean;
+  variant: BookmarkVariant;
+  width?: number;
+  withBorder: boolean;
+}
+
+const BookmarkCard = ({
+  advanced,
+  bookmark,
+  height,
+  openNewTab,
+  orientation,
+  radius,
+  showHostname,
+  showIcon,
+  showTitle,
+  variant,
+  width,
+  withBorder,
+}: BookmarkCardProps) => {
+  const [active, setActive] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const href = getSafeAppHref(bookmark.href);
+  const hostname = bookmark.href ? getBookmarkHostname(bookmark.href) : undefined;
+  const iconUrl = bookmark.iconUrl ?? getBookmarkFaviconUrl(bookmark.href);
+  const iconOnly = orientation === "icon" || (!showTitle && !showHostname);
+  const background = getBookmarkBackground(variant, active);
+
+  const content =
+    orientation === "vertical" && !advanced ? (
+      <Stack h="100%" align="center" justify="center" gap={6} flex={1}>
+        {showIcon ? <BookmarkAvatar bookmark={bookmark} iconUrl={iconUrl} size={iconOnly ? 34 : 38} /> : null}
+        {showTitle ? (
+          <Text fz={11} fw={600} lh={1.2} ta="center" lineClamp={2}>
+            {bookmark.name}
+          </Text>
+        ) : null}
+        {showHostname ? (
+          <Text fz={10} c="dimmed" ta="center" truncate w="100%">
+            {hostname}
+          </Text>
+        ) : null}
+      </Stack>
+    ) : (
+      <Group
+        h="100%"
+        gap={advanced ? "sm" : "xs"}
+        wrap="nowrap"
+        justify={iconOnly ? "center" : "flex-start"}
+        align="center"
+        flex={1}
+      >
+        {showIcon ? (
+          <BookmarkAvatar bookmark={bookmark} iconUrl={iconUrl} size={advanced ? 42 : iconOnly ? 32 : 30} />
+        ) : null}
+        {!iconOnly ? (
+          <Stack gap={advanced ? 3 : 0} miw={0} flex={1}>
+            {showTitle ? (
+              <Text fz={advanced ? "xs" : 11} fw={600} lh={1.2} truncate>
+                {bookmark.name}
+              </Text>
+            ) : null}
+            {showHostname ? (
+              <Text fz={advanced ? 11 : 10} c="dimmed" truncate>
+                {hostname}
+              </Text>
+            ) : null}
+            {advanced && bookmark.description ? (
+              <Text fz={11} c="dimmed" lineClamp={2}>
+                {bookmark.description}
+              </Text>
+            ) : null}
+          </Stack>
+        ) : null}
+        {advanced ? (
+          <ThemeIcon
+            variant={active ? "light" : "transparent"}
+            color={active ? "primaryColor" : "gray"}
+            size="sm"
+            radius="xl"
+            style={{
+              opacity: active ? 1 : 0.45,
+              transform: active && !reduceMotion ? "translate(1px, -1px)" : undefined,
+              transition: reduceMotion ? undefined : "opacity 120ms ease, transform 120ms ease",
+            }}
+          >
+            <IconArrowUpRight size={14} />
+          </ThemeIcon>
+        ) : null}
+      </Group>
+    );
+
+  return (
+    <Tooltip
+      label={
+        <Stack gap={0}>
+          <Text size="xs" fw={600}>
+            {bookmark.name}
+          </Text>
+          {hostname ? (
+            <Text size="xs" opacity={0.8}>
+              {hostname}
+            </Text>
+          ) : null}
+        </Stack>
+      }
+      openDelay={450}
+      disabled={advanced}
+      withArrow
+    >
+      <Card
+        component={href ? "a" : "div"}
+        href={href}
+        target={href ? (openNewTab ? "_blank" : "_self") : undefined}
+        rel={href && openNewTab ? SAFE_NEW_TAB_REL : undefined}
+        aria-label={bookmark.name}
+        radius={radius}
+        withBorder={withBorder || variant === "outline"}
+        p={iconOnly ? 6 : advanced ? "md" : "xs"}
+        h={height}
+        w={width}
+        miw={width}
+        onMouseEnter={() => setActive(true)}
+        onMouseLeave={() => setActive(false)}
+        onFocus={() => setActive(true)}
+        onBlur={() => setActive(false)}
+        styles={{
+          root: {
+            background,
+            borderColor: active ? "var(--mantine-primary-color-filled)" : undefined,
+            boxShadow: active ? "var(--mantine-shadow-sm)" : undefined,
+            color: "var(--mantine-color-text)",
+            cursor: href ? "pointer" : "default",
+            display: "flex",
+            outline: active ? "2px solid var(--mantine-primary-color-light)" : undefined,
+            outlineOffset: -2,
+            overflow: "hidden",
+            textDecoration: "none",
+            transform: active && !reduceMotion ? "translateY(-1px)" : undefined,
+            transition: reduceMotion
+              ? undefined
+              : "background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease",
+          },
+        }}
+      >
+        {content}
+      </Card>
+    </Tooltip>
+  );
+};
+
+const BookmarkAvatar = ({ bookmark, iconUrl, size }: { bookmark: BookmarkItem; iconUrl?: string; size: number }) => (
+  <Avatar
+    src={iconUrl}
+    name={bookmark.name}
+    color="gray"
+    radius="sm"
+    size={size}
+    imageProps={{ referrerPolicy: "no-referrer" }}
+    styles={{ image: { objectFit: "contain" } }}
+  >
+    <IconLink size={Math.max(14, size / 2)} />
+  </Avatar>
+);
+
+const getBookmarkBackground = (variant: BookmarkVariant, active: boolean): string => {
+  if (active) return "var(--mantine-primary-color-light-hover)";
+  if (variant === "plain" || variant === "outline") return "transparent";
+  if (variant === "filled") return "var(--mantine-color-default-hover)";
+  return "var(--mantine-primary-color-light)";
+};
+
+const getBookmarkHostname = (href: string): string | undefined => {
+  try {
+    return new URL(href).hostname || undefined;
+  } catch {
+    return undefined;
+  }
+};

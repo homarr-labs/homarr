@@ -2192,8 +2192,31 @@
         "layout": {
           "label": "Layout",
           "option": {
+            "adaptive": {
+              "label": "Adaptive"
+            },
             "gridHorizontal": {
-              "label": "Grid horizontal"
+              "label": "Compact grid"
+            },
+            "icons": {
+              "label": "Icons"
+            }
+          }
+        },
+        "variant": {
+          "label": "Appearance",
+          "option": {
+            "soft": {
+              "label": "Soft"
+            },
+            "filled": {
+              "label": "Filled"
+            },
+            "outline": {
+              "label": "Outline"
+            },
+            "plain": {
+              "label": "Plain"
             }
           }
         },
@@ -2209,18 +2232,18 @@
         "withBorder": {
           "label": "Show border"
         },
-        "customUrls": {
-          "label": "Custom links",
-          "description": "Add URLs directly without creating an App first"
-        },
         "items": {
           "label": "Bookmarks",
           "apps": {
-            "label": "Apps",
-            "placeholder": "Select one or more apps"
+            "label": "Add bookmarks",
+            "description": "Paste URLs or find existing Apps. Drag the bookmarks below to reorder them.",
+            "placeholder": "Paste URLs or search Apps",
+            "addUrl": "Add this URL",
+            "hint": "Press Enter to add a URL. Paste comma-separated or one-per-line URLs to add several."
           }
         }
-      }
+      },
+      "empty": "Add a URL or App in the widget settings"
     },
     "archiveTeamWarrior": {
       "name": "ArchiveTeam Warrior",

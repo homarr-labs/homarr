@@ -36,6 +36,7 @@ export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentif
     addItem: (item: TItem) => void;
     removeItem: (value: TOptionValue) => void;
     values: TOptionValue[];
+    initialOptions: Record<string, unknown>;
   }) => React.ReactNode;
   ItemComponent: (props: {
     item: TItem;

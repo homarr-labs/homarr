@@ -112,7 +112,7 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
   return (
     <Fieldset legend={t("label")}>
       <Stack>
-        <options.addButton addItem={addItem} removeItem={removeItem} values={values} />
+        <options.addButton addItem={addItem} removeItem={removeItem} values={values} initialOptions={initialOptions} />
 
         <DndContext
           sensors={sensors}

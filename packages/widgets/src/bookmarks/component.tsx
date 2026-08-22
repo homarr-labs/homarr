@@ -16,6 +16,8 @@ import { getSafeApplicationUrl, getSafeAppHref, SAFE_NEW_TAB_REL } from "../comm
 import { getUsableWidgetQueryData } from "../common/query-state";
 import classes from "./bookmark.module.css";
 
+export { default } from "./bookmarks-widget";
+
 type BookmarkLayout = WidgetComponentProps<"bookmarks">["options"]["layout"];
 
 const COMPACT_GRID_GAP = 4;
@@ -63,7 +65,7 @@ export function getCompactBookmarkLayout(
   };
 }
 
-export default function BookmarksWidget({
+export function LegacyBookmarksWidget({
   options,
   itemId,
   width,
@@ -158,7 +160,7 @@ export default function BookmarksWidget({
             ) : (
               <FlexLayout
                 data={data}
-                direction={options.layout}
+                direction={options.layout === "row" ? "row" : "column"}
                 minimumItemSize={compactLayout.minimumItemSize}
                 hideTitle={compactHideTitle}
                 hideIcon={options.hideIcon}
