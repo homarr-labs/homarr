@@ -2033,7 +2033,8 @@
           "label": "關閉溫度小數點"
         },
         "showCurrentWindSpeed": {
-          "label": "顯示當前風速"
+          "label": "顯示當前風速",
+          "description": "僅限當前天氣"
         },
         "useImperialSpeed": {
           "label": ""

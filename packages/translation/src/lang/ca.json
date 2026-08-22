@@ -2033,7 +2033,8 @@
           "label": "Desactivar decimals de temperatura"
         },
         "showCurrentWindSpeed": {
-          "label": "Mostrar velocitat actual del vent"
+          "label": "Mostrar velocitat actual del vent",
+          "description": "Només al temps actual"
         },
         "useImperialSpeed": {
           "label": ""

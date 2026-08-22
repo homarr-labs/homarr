@@ -2043,7 +2043,8 @@
           "label": ""
         },
         "showCurrentWindSpeed": {
-          "label": ""
+          "label": "",
+          "description": ""
         },
         "useImperialSpeed": {
           "label": ""

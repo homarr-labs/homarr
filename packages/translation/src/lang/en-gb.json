@@ -2058,7 +2058,8 @@
           "label": "Disable temperature decimals"
         },
         "showCurrentWindSpeed": {
-          "label": "Show current wind speed"
+          "label": "Show current wind speed",
+          "description": "Only on current weather"
         },
         "useImperialSpeed": {
           "label": "Use mph for windspeed"

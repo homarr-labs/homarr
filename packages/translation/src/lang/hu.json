@@ -2033,7 +2033,8 @@
           "label": "Hőmérséklet tizedesjegyének kikapcsolása"
         },
         "showCurrentWindSpeed": {
-          "label": "Aktuális szélsebesség megjelenítése"
+          "label": "Aktuális szélsebesség megjelenítése",
+          "description": "Csak az aktuális időjárásról"
         },
         "useImperialSpeed": {
           "label": "A szélsebességet mérföld/órában (mph) adja meg"

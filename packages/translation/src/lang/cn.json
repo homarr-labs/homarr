@@ -2238,7 +2238,8 @@
           "label": "禁用温度小数"
         },
         "showCurrentWindSpeed": {
-          "label": "显示当前风速"
+          "label": "显示当前风速",
+          "description": "仅在当前天气时"
         },
         "useImperialSpeed": {
           "label": "风速使用英里/时"

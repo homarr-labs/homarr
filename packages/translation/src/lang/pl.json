@@ -2087,7 +2087,8 @@
           "label": "Wyłącz dziesiętne wartości temperatury"
         },
         "showCurrentWindSpeed": {
-          "label": "Pokaż aktualną prędkość wiatru"
+          "label": "Pokaż aktualną prędkość wiatru",
+          "description": "Tylko dla bieżącej pogody"
         },
         "useImperialSpeed": {
           "label": "Użyj mph dla prędkości wiatru"

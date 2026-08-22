@@ -2033,7 +2033,8 @@
           "label": "Deaktivieren der Temperatur Dezimalstellen"
         },
         "showCurrentWindSpeed": {
-          "label": "Aktuelle Windgeschwindigkeit anzeigen"
+          "label": "Aktuelle Windgeschwindigkeit anzeigen",
+          "description": "Nur bei aktuellem Wetter"
         },
         "useImperialSpeed": {
           "label": ""
