@@ -86,6 +86,7 @@ interface BoardItemPlacementRectangle {
 
 const boardItemPlacementTails = new Map<string, Promise<void>>();
 const maxManageOverviewPreviewRows = 12;
+const manageOverviewInputSchema = z.object({ fullPreview: z.boolean().default(false) }).optional();
 
 const serializeBoardItemPlacementAsync = async <T>(boardId: string, operation: () => Promise<T>) => {
   const previous = boardItemPlacementTails.get(boardId) ?? Promise.resolve();
@@ -225,7 +226,7 @@ export const boardRouter = createTRPCRouter({
         isMobileHome: currentUser?.mobileHomeBoardId === board.id,
       }));
     }),
-  getManageOverview: publicProcedure.query(async ({ ctx }) => {
+  getManageOverview: publicProcedure.input(manageOverviewInputSchema).query(async ({ ctx, input }) => {
     const userId = ctx.session?.user.id;
     const { boardIds, currentUser, groupMemberships } = await getBoardAccessContextAsync(ctx.db, userId);
     const groupPermissionWhere = getBoardGroupPermissionWhere(groupMemberships);
@@ -306,7 +307,7 @@ export const boardRouter = createTRPCRouter({
                 inArray(itemLayouts.sectionId, rootSectionIds),
                 gte(itemLayouts.xOffset, 0),
                 gte(itemLayouts.yOffset, 0),
-                lt(itemLayouts.yOffset, maxManageOverviewPreviewRows),
+                input?.fullPreview ? undefined : lt(itemLayouts.yOffset, maxManageOverviewPreviewRows),
                 gt(itemLayouts.width, 0),
                 gt(itemLayouts.height, 0),
               ),
@@ -331,7 +332,7 @@ export const boardRouter = createTRPCRouter({
                 inArray(sectionLayouts.parentSectionId, rootSectionIds),
                 gte(sectionLayouts.xOffset, 0),
                 gte(sectionLayouts.yOffset, 0),
-                lt(sectionLayouts.yOffset, maxManageOverviewPreviewRows),
+                input?.fullPreview ? undefined : lt(sectionLayouts.yOffset, maxManageOverviewPreviewRows),
                 gt(sectionLayouts.width, 0),
                 gt(sectionLayouts.height, 0),
               ),
@@ -366,7 +367,7 @@ export const boardRouter = createTRPCRouter({
               inArray(itemLayouts.sectionId, previewContainerSectionIds),
               gte(itemLayouts.xOffset, 0),
               gte(itemLayouts.yOffset, 0),
-              lt(itemLayouts.yOffset, maxManageOverviewPreviewRows),
+              input?.fullPreview ? undefined : lt(itemLayouts.yOffset, maxManageOverviewPreviewRows),
               gt(itemLayouts.width, 0),
               gt(itemLayouts.height, 0),
             ),

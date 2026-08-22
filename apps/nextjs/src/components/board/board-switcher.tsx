@@ -53,9 +53,12 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
     data: boards = [],
     isPending,
     isError,
-  } = clientApi.board.getManageOverview.useQuery(undefined, {
-    enabled: isOpen,
-  });
+  } = clientApi.board.getManageOverview.useQuery(
+    { fullPreview: true },
+    {
+      enabled: isOpen,
+    },
+  );
 
   const switcherBoards = useMemo(
     () => [
@@ -79,7 +82,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
     setSearch("");
     setActiveIndex(0);
   }, []);
-  const preloadBoards = () => void utils.board.getManageOverview.prefetch();
+  const preloadBoards = () => void utils.board.getManageOverview.prefetch({ fullPreview: true });
 
   useHotkeys([[boardSwitcherHotkey, openSwitcher, { preventDefault: true }]]);
 
