@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Avatar,
   Combobox,
@@ -20,12 +20,7 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { SortableItemListInput } from "../options";
-import {
-  createDirectBookmark,
-  getBookmarkFaviconUrl,
-  getDirectBookmarkValue,
-  splitBookmarkUrls,
-} from "./bookmark-item";
+import { createDirectBookmark, getBookmarkFaviconUrl, splitBookmarkUrls } from "./bookmark-item";
 import type { BookmarkItem } from "./bookmark-item";
 
 type SelectableApp = RouterOutputs["app"]["selectable"][number];
@@ -35,6 +30,7 @@ const createOptionValue = "$create-url";
 
 export const BookmarkAddButton: SortableItemListInput<BookmarkSelectionItem, string>["AddButton"] = ({
   addItem,
+  migrateItems,
   values,
   initialOptions,
 }) => {
@@ -48,27 +44,26 @@ export const BookmarkAddButton: SortableItemListInput<BookmarkSelectionItem, str
     onDropdownOpen: () => combobox.updateSelectedOptionIndex("active"),
   });
   const selectedValues = useMemo(() => new Set(values), [values]);
+  const migrationStartedRef = useRef(false);
   const legacyUrls = useMemo(() => {
     if (!Array.isArray(initialOptions.customUrls)) return [];
     return initialOptions.customUrls.filter((value): value is string => typeof value === "string");
   }, [initialOptions.customUrls]);
 
   useEffect(() => {
-    for (const url of legacyUrls) {
-      const item = createDirectBookmark(url);
-      if (item && !selectedValues.has(item.id)) addItem(item);
-    }
-  }, [addItem, legacyUrls, selectedValues]);
+    if (migrationStartedRef.current || legacyUrls.length === 0) return;
 
-  const normalizedSearch = search.trim().toLocaleLowerCase();
+    migrationStartedRef.current = true;
+    const legacyItems = legacyUrls.flatMap((url) => createDirectBookmark(url) ?? []);
+    migrateItems(legacyItems, { customUrls: [] });
+  }, [legacyUrls, migrateItems]);
+
+  const normalizedSearch = search.trim().toLowerCase();
   const filteredApps = apps.filter((app) => {
     if (selectedValues.has(app.id)) return false;
     if (normalizedSearch.length === 0) return true;
 
-    return (
-      app.name.toLocaleLowerCase().includes(normalizedSearch) ||
-      app.href?.toLocaleLowerCase().includes(normalizedSearch)
-    );
+    return app.name.toLowerCase().includes(normalizedSearch) || app.href?.toLowerCase().includes(normalizedSearch);
   });
   const pendingUrl = createDirectBookmark(search);
 
@@ -143,7 +138,6 @@ export const BookmarkAddButton: SortableItemListInput<BookmarkSelectionItem, str
             <PillsInput.Field
               value={search}
               placeholder={t("placeholder")}
-              disabled={Boolean(error)}
               onFocus={() => combobox.openDropdown()}
               onBlur={() => combobox.closeDropdown()}
               onChange={(event) => {
@@ -158,7 +152,7 @@ export const BookmarkAddButton: SortableItemListInput<BookmarkSelectionItem, str
                 addUrls(pastedValue);
               }}
               onKeyDown={(event) => {
-                if (event.key !== "Enter" && event.key !== ",") return;
+                if (event.key !== "Enter") return;
                 if (!pendingUrl) return;
                 event.preventDefault();
                 addUrls(search);
@@ -171,7 +165,7 @@ export const BookmarkAddButton: SortableItemListInput<BookmarkSelectionItem, str
       <Combobox.Dropdown>
         <ScrollArea.Autosize mah={280} type="auto">
           <Combobox.Options>
-            {pendingUrl && !selectedValues.has(getDirectBookmarkValue(pendingUrl.href ?? "")) ? (
+            {pendingUrl && !selectedValues.has(pendingUrl.id) ? (
               <Combobox.Option value={createOptionValue}>
                 <Group gap="sm" wrap="nowrap">
                   <Avatar src={getBookmarkFaviconUrl(pendingUrl.href)} size={28} radius="sm" color="gray">

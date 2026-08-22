@@ -34,6 +34,7 @@ export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentif
 > {
   AddButton: (props: {
     addItem: (item: TItem) => void;
+    migrateItems: (items: TItem[], optionsPatch: Record<string, unknown>) => void;
     removeItem: (value: TOptionValue) => void;
     values: TOptionValue[];
     initialOptions: Record<string, unknown>;
@@ -41,6 +42,7 @@ export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentif
   ItemComponent: (props: {
     item: TItem;
     removeItem: () => void;
+    removeLabel: string;
     rootAttributes: DraggableAttributes;
     handle: React.ReactNode;
   }) => React.ReactNode;

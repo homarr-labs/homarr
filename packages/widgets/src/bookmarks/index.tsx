@@ -44,7 +44,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
       withBorder: factory.switch({ defaultValue: false }),
       customUrls: factory.internal({ defaultValue: [] as string[] }),
       items: factory.sortableItemList<BookmarkSelectionItem, string>({
-        ItemComponent: ({ item, handle, removeItem, rootAttributes }) => {
+        ItemComponent: ({ item, handle, removeItem, removeLabel, rootAttributes }) => {
           const iconUrl = item.iconUrl ?? getBookmarkFaviconUrl(item.href);
           return (
             <Group {...rootAttributes} tabIndex={0} justify="space-between" wrap="nowrap">
@@ -66,7 +66,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
                 </Group>
               </Group>
 
-              <ActionIcon variant="subtle" color="red" onClick={removeItem} aria-label="Remove bookmark">
+              <ActionIcon variant="subtle" color="red" onClick={removeItem} aria-label={removeLabel}>
                 <IconX size="var(--mantine-font-size-xl)" />
               </ActionIcon>
             </Group>

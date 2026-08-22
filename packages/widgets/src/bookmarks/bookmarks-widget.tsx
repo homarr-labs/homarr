@@ -27,121 +27,10 @@ import { getUsableWidgetQueryData } from "../common/query-state";
 import type { WidgetComponentProps } from "../definition";
 import { createDirectBookmark, getBookmarkFaviconUrl, getDirectBookmarkUrl } from "./bookmark-item";
 import type { BookmarkItem } from "./bookmark-item";
+import { getBookmarkCardDisplay, getBookmarkDisplayPlan } from "./layout";
+import type { BookmarkOrientation } from "./layout";
 
-type BookmarkLayout = WidgetComponentProps<"bookmarks">["options"]["layout"];
 type BookmarkVariant = WidgetComponentProps<"bookmarks">["options"]["variant"];
-type BookmarkOrientation = "horizontal" | "vertical" | "icon";
-
-interface BookmarkDisplayPlan {
-  columns: number;
-  horizontalScroll: boolean;
-  itemHeight: number;
-  itemWidth: number;
-  orientation: BookmarkOrientation;
-  showHostname: boolean;
-  showTitle: boolean;
-}
-
-const getBookmarkDisplayPlan = ({
-  advanced,
-  height,
-  itemCount,
-  layout,
-  width,
-}: {
-  advanced: boolean;
-  height: number;
-  itemCount: number;
-  layout: BookmarkLayout;
-  width: number;
-}): BookmarkDisplayPlan => {
-  const count = Math.max(1, itemCount);
-  const availableWidth = Math.max(1, width - 16);
-  const availableHeight = Math.max(1, height - 16);
-
-  if (advanced) {
-    const columns = Math.max(1, Math.min(count, Math.floor(availableWidth / 260)));
-    return {
-      columns,
-      horizontalScroll: false,
-      itemHeight: 104,
-      itemWidth: 260,
-      orientation: "horizontal",
-      showHostname: true,
-      showTitle: true,
-    };
-  }
-
-  if (layout === "row") {
-    const itemWidth = Math.max(96, Math.min(180, availableWidth / Math.min(count, 4)));
-    return {
-      columns: count,
-      horizontalScroll: true,
-      itemHeight: Math.max(48, availableHeight),
-      itemWidth,
-      orientation: availableHeight < 64 ? "icon" : "vertical",
-      showHostname: availableHeight >= 112,
-      showTitle: availableHeight >= 72,
-    };
-  }
-
-  if (layout === "column") {
-    const itemHeight = Math.max(46, Math.min(72, availableHeight / count));
-    return {
-      columns: 1,
-      horizontalScroll: false,
-      itemHeight,
-      itemWidth: availableWidth,
-      orientation: "horizontal",
-      showHostname: itemHeight >= 56 && availableWidth >= 150,
-      showTitle: availableWidth >= 92,
-    };
-  }
-
-  if (layout === "icons") {
-    const columns = Math.max(1, Math.min(count, Math.floor(availableWidth / 64)));
-    return {
-      columns,
-      horizontalScroll: false,
-      itemHeight: 56,
-      itemWidth: 56,
-      orientation: "icon",
-      showHostname: false,
-      showTitle: false,
-    };
-  }
-
-  const minimumWidth = layout === "gridHorizontal" ? 168 : layout === "grid" ? 104 : 64;
-  let columns = Math.max(1, Math.min(count, Math.floor(availableWidth / minimumWidth)));
-  if (layout === "adaptive") {
-    const targetAspectRatio = 1.7;
-    const idealColumns = Math.max(
-      1,
-      Math.round(Math.sqrt((availableWidth * count) / (availableHeight * targetAspectRatio))),
-    );
-    columns = Math.min(columns, idealColumns);
-  }
-  const rows = Math.max(1, Math.ceil(count / columns));
-  const cellWidth = availableWidth / columns;
-  const cellHeight = availableHeight / rows;
-  let orientation: BookmarkOrientation = layout === "grid" ? "vertical" : "horizontal";
-
-  if (layout === "adaptive") {
-    if (cellHeight < 54 || cellWidth < 72) orientation = "icon";
-    else if (cellWidth / cellHeight > 1.35 || cellHeight < 92) orientation = "horizontal";
-    else orientation = "vertical";
-  }
-
-  return {
-    columns,
-    horizontalScroll: false,
-    itemHeight: Math.max(52, Math.min(128, cellHeight)),
-    itemWidth: layout === "adaptive" ? 144 : minimumWidth,
-    orientation,
-    showHostname: orientation !== "icon" && cellWidth >= 138 && cellHeight >= 64,
-    showTitle: orientation !== "icon" && cellWidth >= 88 && cellHeight >= 48,
-  };
-};
 
 export default function BookmarksWidget({
   options,
@@ -212,15 +101,23 @@ export default function BookmarksWidget({
     [advanced, data.length, height, options.layout, options.title.length, width],
   );
 
+  const cardDisplay = getBookmarkCardDisplay({
+    advanced,
+    hideHostname: options.hideHostname,
+    hideIcon: options.hideIcon,
+    hideTitle: options.hideTitle,
+    plan,
+  });
+
   const cards = data.map((bookmark) => (
     <BookmarkCard
       key={bookmark.id}
       bookmark={bookmark}
       advanced={advanced}
-      orientation={plan.orientation}
-      showHostname={advanced || (!options.hideHostname && plan.showHostname)}
-      showIcon={advanced || !options.hideIcon || (options.hideTitle && options.hideHostname)}
-      showTitle={advanced || (!options.hideTitle && plan.showTitle)}
+      orientation={cardDisplay.orientation}
+      showHostname={cardDisplay.showHostname}
+      showIcon={cardDisplay.showIcon}
+      showTitle={cardDisplay.showTitle}
       openNewTab={options.openNewTab}
       variant={options.variant}
       withBorder={options.withBorder}
@@ -233,7 +130,7 @@ export default function BookmarksWidget({
   return (
     <Stack h="100%" mih={0} gap={height < 120 ? 6 : "sm"} p={height < 120 ? 6 : "sm"}>
       {options.title.length > 0 ? (
-        <Text fz="xs" fw={600} px={2} lh={1.2} lineClamp={1}>
+        <Text fz={11} fw={600} px={2} lh={1.2} lineClamp={1}>
           {options.title}
         </Text>
       ) : null}
@@ -317,12 +214,12 @@ const BookmarkCard = ({
       <Stack h="100%" align="center" justify="center" gap={6} flex={1}>
         {showIcon ? <BookmarkAvatar bookmark={bookmark} iconUrl={iconUrl} size={iconOnly ? 34 : 38} /> : null}
         {showTitle ? (
-          <Text fz={11} fw={600} lh={1.2} ta="center" lineClamp={2}>
+          <Text fz={10} fw={600} lh={1.2} ta="center" lineClamp={2}>
             {bookmark.name}
           </Text>
         ) : null}
         {showHostname ? (
-          <Text fz={10} c="dimmed" ta="center" truncate w="100%">
+          <Text fz={9} c="dimmed" ta="center" truncate w="100%">
             {hostname}
           </Text>
         ) : null}
@@ -342,17 +239,17 @@ const BookmarkCard = ({
         {!iconOnly ? (
           <Stack gap={advanced ? 3 : 0} miw={0} flex={1}>
             {showTitle ? (
-              <Text fz={advanced ? "xs" : 11} fw={600} lh={1.2} truncate>
+              <Text fz={advanced ? 11 : 10} fw={600} lh={1.2} truncate>
                 {bookmark.name}
               </Text>
             ) : null}
             {showHostname ? (
-              <Text fz={advanced ? 11 : 10} c="dimmed" truncate>
+              <Text fz={advanced ? 10 : 9} c="dimmed" truncate>
                 {hostname}
               </Text>
             ) : null}
             {advanced && bookmark.description ? (
-              <Text fz={11} c="dimmed" lineClamp={2}>
+              <Text fz={10} c="dimmed" lineClamp={2}>
                 {bookmark.description}
               </Text>
             ) : null}
@@ -413,7 +310,9 @@ const BookmarkCard = ({
         styles={{
           root: {
             background,
-            borderColor: active ? "var(--mantine-primary-color-filled)" : undefined,
+            borderColor: active
+              ? "rgb(from var(--mantine-primary-color-filled) r g b / calc(var(--opacity, 1) * 0.62))"
+              : "rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.38))",
             boxShadow: active ? "var(--mantine-shadow-sm)" : undefined,
             color: "var(--mantine-color-text)",
             cursor: href ? "pointer" : "default",
@@ -450,10 +349,14 @@ const BookmarkAvatar = ({ bookmark, iconUrl, size }: { bookmark: BookmarkItem; i
 );
 
 const getBookmarkBackground = (variant: BookmarkVariant, active: boolean): string => {
-  if (active) return "var(--mantine-primary-color-light-hover)";
   if (variant === "plain" || variant === "outline") return "transparent";
-  if (variant === "filled") return "var(--mantine-color-default-hover)";
-  return "var(--mantine-primary-color-light)";
+  if (variant === "filled") {
+    const opacity = active ? 0.64 : 0.48;
+    return `rgb(from var(--mantine-color-default-hover) r g b / calc(var(--opacity, 1) * ${opacity}))`;
+  }
+
+  const opacity = active ? 0.14 : 0.08;
+  return `rgb(from var(--mantine-primary-color-filled) r g b / calc(var(--opacity, 1) * ${opacity}))`;
 };
 
 const getBookmarkHostname = (href: string): string | undefined => {

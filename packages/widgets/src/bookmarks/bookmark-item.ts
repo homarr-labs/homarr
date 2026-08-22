@@ -53,7 +53,14 @@ export const createDirectBookmark = (url: string): BookmarkItem | undefined => {
 };
 
 export const splitBookmarkUrls = (value: string) =>
-  value
-    .split(/[,\n]+/)
-    .map((part) => part.trim())
-    .filter(Boolean);
+  value.split(/\r?\n+/).flatMap((line) => {
+    const trimmedLine = line.trim();
+    if (trimmedLine.length === 0) return [];
+
+    const commaSeparatedValues = trimmedLine.split(",").map((part) => part.trim());
+    if (commaSeparatedValues.length > 1 && commaSeparatedValues.every((part) => normalizeBookmarkUrl(part))) {
+      return commaSeparatedValues;
+    }
+
+    return [trimmedLine];
+  });
