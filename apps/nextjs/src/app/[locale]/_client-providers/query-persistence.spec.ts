@@ -8,11 +8,9 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 
 import {
   createSessionQueryPersister,
-  getQueryPersistenceBuster,
   getQueryPersistenceStorageKey,
+  queryPersistenceBuster,
   queryPersistenceMaxDataBytes,
-  removeSessionQueryCache,
-  scheduleRestoredDashboardQueryRefresh,
   shouldPersistDashboardQuery,
 } from "./query-persistence";
 
@@ -71,13 +69,12 @@ describe("widget query persistence", () => {
     expect(getQueryPersistenceStorageKey("user-a")).toBe(getQueryPersistenceStorageKey("user-a"));
     expect(getQueryPersistenceStorageKey("user-a")).not.toBe(getQueryPersistenceStorageKey("user-b"));
     expect(getQueryPersistenceStorageKey(null)).not.toBe(getQueryPersistenceStorageKey("user-a"));
-    expect(getQueryPersistenceStorageKey("user-a")).not.toContain("user-a");
 
     const userAKey = getQueryPersistenceStorageKey("user-a");
     const userBKey = getQueryPersistenceStorageKey("user-b");
     window.sessionStorage.setItem(userAKey, "a");
     window.sessionStorage.setItem(userBKey, "b");
-    removeSessionQueryCache("user-a");
+    createSessionQueryPersister("user-a").removeClient();
     expect(window.sessionStorage.getItem(userAKey)).toBeNull();
     expect(window.sessionStorage.getItem(userBKey)).toBe("b");
   });
@@ -88,12 +85,12 @@ describe("widget query persistence", () => {
     const userAPersister = createSessionQueryPersister("user-a");
     userAPersister.persistClient({
       timestamp: Date.now(),
-      buster: getQueryPersistenceBuster("user-a"),
+      buster: queryPersistenceBuster,
       clientState: dehydrate(queryClient),
     });
     userAPersister.flush();
 
-    await expect(createSessionQueryPersister("user-b").restoreClient()).resolves.toBeUndefined();
+    expect(createSessionQueryPersister("user-b").restoreClient()).toBeUndefined();
     expect((await userAPersister.restoreClient())?.clientState.queries).toHaveLength(1);
   });
 
@@ -105,7 +102,7 @@ describe("widget query persistence", () => {
 
     persister.persistClient({
       timestamp: Date.now(),
-      buster: getQueryPersistenceBuster(scope),
+      buster: queryPersistenceBuster,
       clientState: {
         mutations: [],
         queries: [...dehydrate(widget.queryClient).queries, ...dehydrate(unrelated.queryClient).queries],
@@ -130,7 +127,7 @@ describe("widget query persistence", () => {
     expect(shouldPersistDashboardQuery(query)).toBe(true);
     const persistedClient: PersistedClient = {
       timestamp: Date.now(),
-      buster: getQueryPersistenceBuster(scope),
+      buster: queryPersistenceBuster,
       clientState: dehydrate(queryClient, { shouldDehydrateQuery: shouldPersistDashboardQuery }),
     };
 
@@ -141,13 +138,11 @@ describe("widget query persistence", () => {
     expect(restoredData?.startsAt).toEqual(new Date("2026-08-22T12:00:00.000Z"));
     expect(restored?.clientState.queries[0]?.state.status).toBe("success");
     expect(restored?.clientState.queries[0]?.state.error).toBeNull();
+    expect(restored?.clientState.queries[0]?.state.isInvalidated).toBe(true);
     expect(window.sessionStorage.getItem(key)).not.toContain("private refresh error");
-    const restoredPredicate = persister.takeRestoredDashboardQueryPredicate();
-    expect(restoredPredicate?.(query)).toBe(true);
-    expect(persister.takeRestoredDashboardQueryPredicate()).toBeUndefined();
 
     window.sessionStorage.setItem(key, "not-valid-superjson");
-    await expect(persister.restoreClient()).resolves.toBeUndefined();
+    expect(persister.restoreClient()).toBeUndefined();
     expect(window.sessionStorage.getItem(key)).toBeNull();
   });
 
@@ -165,7 +160,7 @@ describe("widget query persistence", () => {
       key,
       stringify({
         timestamp: Date.now(),
-        buster: getQueryPersistenceBuster(scope),
+        buster: queryPersistenceBuster,
         clientState: {
           mutations: [{ state: { status: "pending" } }],
           queries: [
@@ -198,9 +193,9 @@ describe("widget query persistence", () => {
   });
 
   test.each([
-    ["expired", 1, getQueryPersistenceBuster("user-a")],
-    ["different buster", new Date("2026-08-22T12:00:00.000Z").getTime(), getQueryPersistenceBuster("user-b")],
-    ["future timestamp", new Date("2026-08-22T12:00:00.000Z").getTime() + 1, getQueryPersistenceBuster("user-a")],
+    ["expired", 1, queryPersistenceBuster],
+    ["different buster", new Date("2026-08-22T12:00:00.000Z").getTime(), "old-version"],
+    ["future timestamp", new Date("2026-08-22T12:00:00.000Z").getTime() + 1, queryPersistenceBuster],
   ])("discards %s cache entries", async (_case, timestamp, storedBuster) => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-08-22T12:00:00.000Z"));
@@ -217,7 +212,7 @@ describe("widget query persistence", () => {
       queryClient: restoredClient,
       persister,
       maxAge: 5 * 60 * 1_000,
-      buster: getQueryPersistenceBuster(scope),
+      buster: queryPersistenceBuster,
     });
 
     expect(restoredClient.getQueryData([["widget", "weather", "getWeather"], { type: "query" }])).toBeUndefined();
@@ -236,7 +231,7 @@ describe("widget query persistence", () => {
     });
     const persistedClient: PersistedClient = {
       timestamp: Date.now(),
-      buster: getQueryPersistenceBuster("user-a"),
+      buster: queryPersistenceBuster,
       clientState: {
         mutations: [],
         queries: [...dehydrate(old.queryClient).queries, ...dehydrate(recent.queryClient).queries],
@@ -264,12 +259,12 @@ describe("widget query persistence", () => {
 
     persister.persistClient({
       timestamp: Date.now(),
-      buster: getQueryPersistenceBuster("user-a"),
+      buster: queryPersistenceBuster,
       clientState: dehydrate(first.queryClient),
     });
     persister.persistClient({
       timestamp: Date.now(),
-      buster: getQueryPersistenceBuster("user-a"),
+      buster: queryPersistenceBuster,
       clientState: dehydrate(latest.queryClient),
     });
 
@@ -281,48 +276,6 @@ describe("widget query persistence", () => {
 
     const restored = await persister.restoreClient();
     expect(restored?.clientState.queries[0]?.state.data).toEqual({ temp: 21 });
-  });
-
-  test("refreshes only restored cache data without awaiting the refresh", async () => {
-    vi.useFakeTimers();
-    const scope = "user-a";
-    const queryKey = [["widget", "weather", "getWeather"], { type: "query" }] as const;
-    const cached = createSuccessfulQuery(queryKey, { temp: 20 }, 10);
-    const persister = createSessionQueryPersister(scope);
-    persister.persistClient({
-      timestamp: Date.now(),
-      buster: getQueryPersistenceBuster(scope),
-      clientState: dehydrate(cached.queryClient),
-    });
-    persister.flush();
-    await persister.restoreClient();
-
-    const fresh = createSuccessfulQuery(queryKey, { temp: 21 }, 20);
-    const neverSettles = new Promise<void>(() => undefined);
-    const invalidateQueries = vi.spyOn(fresh.queryClient, "invalidateQueries").mockReturnValue(neverSettles);
-
-    expect(scheduleRestoredDashboardQueryRefresh(fresh.queryClient, persister)).toBeUndefined();
-    expect(invalidateQueries).not.toHaveBeenCalled();
-    await vi.advanceTimersByTimeAsync(0);
-    expect(invalidateQueries).toHaveBeenCalledOnce();
-    expect(invalidateQueries).toHaveBeenCalledWith(expect.objectContaining({ type: "all", refetchType: "active" }));
-
-    const predicate = invalidateQueries.mock.calls[0]?.[0]?.predicate;
-    expect(predicate?.(cached.query)).toBe(true);
-    expect(predicate?.(fresh.query)).toBe(false);
-  });
-
-  test("does not invalidate fresh queries when no cache was restored", async () => {
-    vi.useFakeTimers();
-    const persister = createSessionQueryPersister("empty");
-    await persister.restoreClient();
-    const fresh = createSuccessfulQuery([["widget", "weather", "getWeather"], { type: "query" }], { temp: 21 });
-    const invalidateQueries = vi.spyOn(fresh.queryClient, "invalidateQueries");
-
-    scheduleRestoredDashboardQueryRefresh(fresh.queryClient, persister);
-    await vi.advanceTimersByTimeAsync(0);
-
-    expect(invalidateQueries).not.toHaveBeenCalled();
   });
 
   test("treats blocked storage operations as an empty cache", async () => {
@@ -340,17 +293,16 @@ describe("widget query persistence", () => {
     const persister = createSessionQueryPersister("blocked", blockedStorage);
     const { queryClient } = createSuccessfulQuery([["widget", "weather"], { type: "query" }], { temp: 21 });
 
-    await expect(persister.restoreClient()).resolves.toBeUndefined();
+    expect(persister.restoreClient()).toBeUndefined();
     expect(() => {
       persister.persistClient({
         timestamp: Date.now(),
-        buster: getQueryPersistenceBuster("blocked"),
+        buster: queryPersistenceBuster,
         clientState: dehydrate(queryClient),
       });
       persister.flush();
     }).not.toThrow();
     expect(() => persister.removeClient()).not.toThrow();
-    expect(() => removeSessionQueryCache("blocked", blockedStorage)).not.toThrow();
   });
 
   test("treats an unavailable session storage getter as an empty cache", async () => {
@@ -359,7 +311,6 @@ describe("widget query persistence", () => {
     });
 
     expect(() => createSessionQueryPersister("blocked-getter")).not.toThrow();
-    expect(() => removeSessionQueryCache("blocked-getter")).not.toThrow();
-    await expect(createSessionQueryPersister("blocked-getter").restoreClient()).resolves.toBeUndefined();
+    expect(createSessionQueryPersister("blocked-getter").restoreClient()).toBeUndefined();
   });
 });

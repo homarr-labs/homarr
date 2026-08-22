@@ -1,14 +1,10 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useSyncExternalStore } from "react";
 
-interface WidgetTimeContextValue {
-  initialTimestamp: number | null;
-  localTimeZone: string | null;
-}
-
-const WidgetTimeContext = createContext<WidgetTimeContextValue>({ initialTimestamp: null, localTimeZone: null });
+const WidgetTimestampContext = createContext<number | null>(null);
+const WidgetTimeZoneContext = createContext("UTC");
 
 interface WidgetTimeProviderProps {
   initialTimestamp: number;
@@ -19,19 +15,21 @@ export const WidgetTimeProvider = ({
   children,
   initialTimestamp,
   initialTimeZone,
-}: PropsWithChildren<WidgetTimeProviderProps>) => {
-  const [localTimeZone, setLocalTimeZone] = useState(() => getSupportedTimeZone(initialTimeZone));
+}: PropsWithChildren<WidgetTimeProviderProps>) => (
+  <WidgetTimestampContext.Provider value={initialTimestamp}>
+    <WidgetTimeZoneContext.Provider value={getSupportedTimeZone(initialTimeZone)}>
+      {children}
+    </WidgetTimeZoneContext.Provider>
+  </WidgetTimestampContext.Provider>
+);
 
-  useEffect(() => {
-    setLocalTimeZone(getResolvedLocalTimeZone());
-  }, []);
-
-  const value = useMemo(() => ({ initialTimestamp, localTimeZone }), [initialTimestamp, localTimeZone]);
-  return <WidgetTimeContext.Provider value={value}>{children}</WidgetTimeContext.Provider>;
+export const useWidgetInitialTimestamp = () => useContext(WidgetTimestampContext);
+export const useWidgetLocalTimeZone = () => {
+  const initialTimeZone = useContext(WidgetTimeZoneContext);
+  return useSyncExternalStore(subscribeToTimeZone, getResolvedLocalTimeZone, () => initialTimeZone);
 };
 
-export const useWidgetInitialTimestamp = () => useContext(WidgetTimeContext).initialTimestamp;
-export const useWidgetLocalTimeZone = () => useContext(WidgetTimeContext).localTimeZone;
+const subscribeToTimeZone = () => () => undefined;
 
 const getResolvedLocalTimeZone = () => getSupportedTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
 

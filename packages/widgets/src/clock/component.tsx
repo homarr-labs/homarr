@@ -10,7 +10,7 @@ import { AdvancedClockView } from "./advanced-view";
 import { clockTimeFormatShowsSeconds, resolveClockTimeFormat } from "./format";
 import { useCurrentTime } from "./use-current-time";
 import { ClockWeatherSummary } from "./weather-summary";
-import { getResolvedLocalTimeZone, isTimeZoneSupported } from "./world-clock";
+import { isTimeZoneSupported } from "./world-clock";
 
 dayjs.extend(advancedFormat);
 
@@ -18,10 +18,8 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
   const isAdvanced = displayMode === "advanced";
   const showSeconds = clockTimeFormatShowsSeconds(options.customTimeFormat);
   const time = useCurrentTime({ showSeconds });
-  const initialLocalTimeZone = useWidgetLocalTimeZone();
-  const requestedTimeZone = options.useCustomTimezone
-    ? options.timezone
-    : (initialLocalTimeZone ?? getResolvedLocalTimeZone());
+  const localTimeZone = useWidgetLocalTimeZone();
+  const requestedTimeZone = options.useCustomTimezone ? options.timezone : localTimeZone;
   const primaryTimeZoneInvalid = !isTimeZoneSupported(requestedTimeZone);
   const primaryTimeZone = primaryTimeZoneInvalid ? "UTC" : requestedTimeZone;
   const zonedTime = time === null ? null : dayjs(time).tz(primaryTimeZone);

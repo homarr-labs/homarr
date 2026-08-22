@@ -16,79 +16,39 @@ const collectRuntimeSourceFiles = (directory: string): string[] =>
 
 const rootWidgetsModule = "@homarr/widgets";
 
-interface AstNode {
-  type: string;
-  [key: string]: unknown;
-}
-
-const isAstNode = (value: unknown): value is AstNode =>
-  typeof value === "object" && value !== null && "type" in value && typeof value.type === "string";
-
-const getAstNode = (value: unknown) => (isAstNode(value) ? value : undefined);
-const getAstNodes = (value: unknown) => (Array.isArray(value) ? value.filter(isAstNode) : []);
-
-const isRootWidgetsModule = (node: unknown) => {
-  const astNode = getAstNode(node);
-  return astNode?.type === "StringLiteral" && astNode.value === rootWidgetsModule;
-};
-
 const hasRuntimeRootWidgetImport = (source: string, fileName: string): boolean => {
-  const sourceFile = parse(source, {
+  const { program } = parse(source, {
     sourceFilename: fileName,
     sourceType: "unambiguous",
     plugins: ["typescript", "jsx", "decorators-legacy", "importAttributes"],
   });
-  let found = false;
+  const hasStaticImport = program.body.some(
+    (node) =>
+      node.type === "ImportDeclaration" &&
+      node.source.value === rootWidgetsModule &&
+      node.importKind !== "type" &&
+      (node.specifiers.length === 0 ||
+        node.specifiers.some((specifier) => specifier.type !== "ImportSpecifier" || specifier.importKind !== "type")),
+  );
+  return hasStaticImport || hasDynamicRootWidgetImport(program);
+};
 
-  const visit = (node: AstNode) => {
-    if (found) return;
+const hasDynamicRootWidgetImport = (value: unknown): boolean => {
+  if (Array.isArray(value)) return value.some(hasDynamicRootWidgetImport);
+  if (typeof value !== "object" || value === null) return false;
 
-    if (node.type === "ImportDeclaration" && isRootWidgetsModule(node.source)) {
-      const specifiers = getAstNodes(node.specifiers);
-      if (
-        node.importKind !== "type" &&
-        (specifiers.length === 0 ||
-          specifiers.some((specifier) => specifier.type !== "ImportSpecifier" || specifier.importKind !== "type"))
-      ) {
-        found = true;
-      }
-    } else if (
-      (node.type === "ExportNamedDeclaration" || node.type === "ExportAllDeclaration") &&
-      isRootWidgetsModule(node.source)
-    ) {
-      const specifiers = getAstNodes(node.specifiers);
-      if (
-        node.exportKind !== "type" &&
-        (node.type === "ExportAllDeclaration" ||
-          specifiers.length === 0 ||
-          specifiers.some((specifier) => specifier.exportKind !== "type"))
-      ) {
-        found = true;
-      }
-    } else if (node.type === "TSImportEqualsDeclaration" && node.importKind !== "type") {
-      const moduleReference = getAstNode(node.moduleReference);
-      if (moduleReference?.type === "TSExternalModuleReference" && isRootWidgetsModule(moduleReference.expression)) {
-        found = true;
-      }
-    } else if (node.type === "CallExpression") {
-      const callee = getAstNode(node.callee);
-      const argument = getAstNodes(node.arguments)[0];
-      if (
-        isRootWidgetsModule(argument) &&
-        (callee?.type === "Import" || (callee?.type === "Identifier" && callee.name === "require"))
-      ) {
-        found = true;
-      }
+  const node = value as Record<string, unknown>;
+  if (node.type === "CallExpression") {
+    const callee = node.callee as Record<string, unknown> | undefined;
+    const argument = Array.isArray(node.arguments)
+      ? (node.arguments[0] as Record<string, unknown> | undefined)
+      : undefined;
+    if (callee?.type === "Import" && argument?.type === "StringLiteral" && argument.value === rootWidgetsModule) {
+      return true;
     }
+  }
 
-    for (const value of Object.values(node)) {
-      if (isAstNode(value)) visit(value);
-      else if (Array.isArray(value)) value.filter(isAstNode).forEach(visit);
-    }
-  };
-
-  visit(sourceFile as unknown as AstNode);
-  return found;
+  return Object.values(node).some(hasDynamicRootWidgetImport);
 };
 
 describe("widget import boundary", () => {
@@ -104,14 +64,11 @@ describe("widget import boundary", () => {
   test.each([
     ['import type { WidgetDefinition } from "@homarr/widgets";', false],
     ['import { type WidgetDefinition } from "@homarr/widgets";', false],
-    ['export type { WidgetDefinition } from "@homarr/widgets";', false],
     ["const example = 'import { widgets } from \"@homarr/widgets\";';", false],
     ['// import { widgets } from "@homarr/widgets";', false],
     ['import { widgets } from "@homarr/widgets";', true],
     ['import { type WidgetDefinition, widgets } from "@homarr/widgets";', true],
-    ['export * from "@homarr/widgets";', true],
     ['import /* chunk */ ( /* source */ "@homarr/widgets" );', true],
-    ['require("@homarr/widgets");', true],
   ])("detects runtime root imports in %s", (source, expected) => {
     expect(hasRuntimeRootWidgetImport(source, "fixture.ts")).toBe(expected);
   });

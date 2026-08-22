@@ -102,9 +102,6 @@ describe("lazy widget application graph", () => {
 
     const baseUrl = `http://${homarrContainer.getHost()}:${homarrContainer.getMappedPort(7575)}`;
     const browser = await chromium.launch();
-    // Playwright cannot route requests handled by a service worker. Keep it
-    // blocked in this context so the delayed refresh below is observable, then
-    // verify registration separately in an unblocked context.
     const context = await browser.newContext({ serviceWorkers: "block" });
     const page = await context.newPage();
     const pageErrors: Error[] = [];

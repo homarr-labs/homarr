@@ -24,9 +24,11 @@ describe("WidgetTimeProvider", () => {
     vi.useFakeTimers();
     const serverTimestamp = new Date("2026-08-22T12:34:00.000Z").getTime();
     const clientTimestamp = serverTimestamp + 60_000;
+    const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    const serverTimeZone = browserTimeZone === "UTC" ? "Europe/Paris" : "UTC";
     vi.setSystemTime(serverTimestamp);
     const content = (
-      <WidgetTimeProvider initialTimestamp={serverTimestamp} initialTimeZone="UTC">
+      <WidgetTimeProvider initialTimestamp={serverTimestamp} initialTimeZone={serverTimeZone}>
         <TimeProbe />
       </WidgetTimeProvider>
     );
@@ -34,15 +36,12 @@ describe("WidgetTimeProvider", () => {
     const host = document.createElement("div");
     host.innerHTML = html;
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
-    vi.spyOn(Intl.DateTimeFormat.prototype, "resolvedOptions").mockReturnValue({
-      timeZone: "Europe/Paris",
-    } as Intl.ResolvedDateTimeFormatOptions);
     vi.setSystemTime(clientTimestamp);
 
-    expect(host.textContent).toBe("2026-08-22T12:34:00.000Z|UTC");
+    expect(host.textContent).toBe(`2026-08-22T12:34:00.000Z|${serverTimeZone}`);
     const root = hydrateRoot(host, content);
     await act(async () => undefined);
-    expect(host.textContent).toBe("2026-08-22T12:35:00.000Z|Europe/Paris");
+    expect(host.textContent).toBe(`2026-08-22T12:35:00.000Z|${browserTimeZone}`);
     expect(consoleError).not.toHaveBeenCalled();
 
     await act(async () => root.unmount());

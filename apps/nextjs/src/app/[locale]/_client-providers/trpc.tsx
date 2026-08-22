@@ -38,9 +38,8 @@ import { widgetQueryRefetchIntervals } from "@homarr/widgets/refetch-intervals";
 import { getSessionQueryScope, SessionQueryScopeGuard } from "./session-query-scope";
 import {
   createSessionQueryPersister,
-  getQueryPersistenceBuster,
+  queryPersistenceBuster,
   queryPersistenceMaxAgeMs,
-  scheduleRestoredDashboardQueryRefresh,
   shouldPersistDashboardQuery,
 } from "./query-persistence";
 import type { SessionQueryPersister } from "./query-persistence";
@@ -88,9 +87,7 @@ export function TRPCReactProvider({ children }: PropsWithChildren) {
       currentScope={sessionQueryScope}
       onScopeChange={handleScopeChange}
     >
-      <ScopedTRPCReactProvider sessionQueryScope={initialSessionQueryScope} queryPersister={queryPersister}>
-        {children}
-      </ScopedTRPCReactProvider>
+      <ScopedTRPCReactProvider queryPersister={queryPersister}>{children}</ScopedTRPCReactProvider>
     </SessionQueryScopeGuard>
   );
 }
@@ -99,9 +96,8 @@ const reloadPage = () => window.location.reload();
 
 const ScopedTRPCReactProvider = ({
   children,
-  sessionQueryScope,
   queryPersister,
-}: PropsWithChildren<{ sessionQueryScope: string | null; queryPersister: SessionQueryPersister }>) => {
+}: PropsWithChildren<{ queryPersister: SessionQueryPersister }>) => {
   const wsClient = useMemo(
     () =>
       createWSClient({
@@ -219,11 +215,8 @@ const ScopedTRPCReactProvider = ({
         persistOptions={{
           persister: queryPersister,
           maxAge: queryPersistenceMaxAgeMs,
-          buster: getQueryPersistenceBuster(sessionQueryScope),
+          buster: queryPersistenceBuster,
           dehydrateOptions: { shouldDehydrateQuery: shouldPersistDashboardQuery },
-        }}
-        onSuccess={() => {
-          scheduleRestoredDashboardQueryRefresh(queryClient, queryPersister);
         }}
       >
         <ReactQueryStreamedHydration transformer={superjson}>{children}</ReactQueryStreamedHydration>
