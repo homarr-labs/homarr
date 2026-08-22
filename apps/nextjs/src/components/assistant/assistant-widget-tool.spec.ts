@@ -20,6 +20,7 @@ describe("getAssistantWidgetConfiguration", () => {
 
   test("preserves generated notebook content and fills its hidden defaults", () => {
     const result = getAssistantWidgetConfiguration(
+      widgetImports.notebook.definition,
       {
         boardId: "board-1",
         boardName: "Home",
@@ -41,6 +42,7 @@ describe("getAssistantWidgetConfiguration", () => {
 
   test("keeps only accessible, compatible integrations and respects the widget maximum", () => {
     const result = getAssistantWidgetConfiguration(
+      widgetImports.audioStats.definition,
       {
         boardId: "board-1",
         boardName: "Home",
@@ -88,11 +90,13 @@ describe("getAssistantWidgetConfiguration", () => {
 
   test("treats integration-backed widgets as required unless explicitly optional", () => {
     const mediaServer = getAssistantWidgetConfiguration(
+      widgetImports.mediaServer.definition,
       { boardId: "board-1", boardName: "Home", kind: "mediaServer", summary: "Show Plex streams" },
       settings,
       [],
     );
     const calendar = getAssistantWidgetConfiguration(
+      widgetImports.calendar.definition,
       { boardId: "board-1", boardName: "Home", kind: "calendar", summary: "Show releases" },
       settings,
       [],

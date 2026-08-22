@@ -23,7 +23,8 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../../common/application-url";
-import { getUsableWidgetQueryData } from "../../common/query-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import actionTargetClasses from "../../common/action-target.module.css";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
@@ -42,10 +43,12 @@ export default function MediaServerWidget({
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useI18n("widget.mediaRequests-requestStats");
   const tCommon = useI18n("common");
-  const requestStats = getUsableWidgetQueryData(clientApi.widget.mediaRequests.getStats.useQuery({ integrationIds }));
+  const requestStatsQuery = clientApi.widget.mediaRequests.getStats.useQuery({ integrationIds });
+  const requestStats = getUsableWidgetQueryData(requestStatsQuery);
 
   const board = useRequiredBoard();
 
+  if (isInitialWidgetQueryPending(requestStatsQuery)) return <WidgetQueryLoadingState />;
   if (!requestStats) return <WidgetEmptyState />;
   if (
     requestStats.users.length === 0 &&

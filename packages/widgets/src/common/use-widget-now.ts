@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useWidgetInitialTimestamp } from "./widget-time-context";
+
 export type WidgetClockPrecision = "second" | "minute" | "day";
 
 const minimumDelayMs = 10;
@@ -20,7 +22,8 @@ export const getNextWidgetTickDelay = (now: Date, precision: WidgetClockPrecisio
 };
 
 export const useWidgetNow = (precision: WidgetClockPrecision = "minute"): Date | null => {
-  const [now, setNow] = useState<Date | null>(null);
+  const initialTimestamp = useWidgetInitialTimestamp();
+  const [now, setNow] = useState<Date | null>(() => (initialTimestamp === null ? null : new Date(initialTimestamp)));
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const cancelTick = useCallback(() => {

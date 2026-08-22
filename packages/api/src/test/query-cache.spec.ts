@@ -22,7 +22,7 @@ describe("isWidgetDataQueryKey", () => {
     [[["docker", "getContainers"], { type: "query" }], true],
     [[["integration", "byIds"], { type: "query" }], true],
     [[["widget", "app", "ping"], { type: "query", input: { id: "abc" } }], false],
-    [[["widget", "beszel", "getSystemStats"], { type: "query" }], false],
+    [[["widget", "beszel", "getSystemStats"], { type: "query" }], true],
     [[["widget", "beszel", "getSystems"], { type: "query" }], true],
     [[["app", "selectable"], { type: "query" }], false],
     [[["board", "getBoardByName"], { type: "query" }], false],
@@ -39,7 +39,7 @@ describe("isWidgetDataTrpcPath", () => {
     ["integration.byIds", true],
     ["docker.getContainers", true],
     ["widget.app.ping", false],
-    ["widget.beszel.getSystemStats", false],
+    ["widget.beszel.getSystemStats", true],
     ["board.getBoardByName", false],
   ])("classifies dashboard data path %s", (path, expected) => {
     expect(isWidgetDataTrpcPath(path)).toBe(expected);

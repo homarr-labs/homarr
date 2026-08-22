@@ -34,7 +34,8 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
-import { getUsableWidgetQueryData } from "../../common/query-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import actionTargetClasses from "../../common/action-target.module.css";
 import classes from "./component.module.css";
 import TimerModal from "./TimerModal";
@@ -67,7 +68,6 @@ export default function DnsHoleControlsWidget({
   const summaryQuery = clientApi.widget.dnsHole.summary.useQuery({ integrationIds });
   const summaryResults = getUsableWidgetQueryData(summaryQuery) ?? [];
   const summaries = summaryResults.filter(isAvailableDnsSummaryResult);
-  const { isPending: isSummaryPending } = summaryQuery;
   const utils = clientApi.useUtils();
 
   const {
@@ -122,7 +122,6 @@ export default function DnsHoleControlsWidget({
   );
 
   const t = useI18n("widget.dnsHoleControls");
-  const tCommon = useI18n("common");
 
   // Timer modal setup
   const [selectedIntegrationIds, setSelectedIntegrationIds] = useState<string[]>([]);
@@ -141,15 +140,7 @@ export default function DnsHoleControlsWidget({
     setBulkPending(false);
   };
 
-  if (isSummaryPending) {
-    return (
-      <Stack h="100%" justify="center" align="center">
-        <Text c="dimmed" size="sm">
-          {tCommon("action.loading")}
-        </Text>
-      </Stack>
-    );
-  }
+  if (isInitialWidgetQueryPending(summaryQuery)) return <WidgetQueryLoadingState />;
 
   return (
     <Stack

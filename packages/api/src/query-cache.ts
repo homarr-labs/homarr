@@ -8,7 +8,7 @@ export const queryCacheDefaultGcTimeMs = 1000 * 60 * 5;
 export const queryCacheMetadataStaleTimeMs = 1000 * 60 * 5;
 
 const widgetDataQueryPaths = new Set(["app.byId", "app.byIds", "docker.getContainers", "integration.byIds"]);
-const excludedWidgetPaths = new Set(["widget.app.ping", "widget.beszel.getSystemStats"]);
+const excludedWidgetPaths = new Set(["widget.app.ping"]);
 
 export const isWidgetDataTrpcPath = (path: string) => {
   if (path.startsWith("widget.")) return !excludedWidgetPaths.has(path);

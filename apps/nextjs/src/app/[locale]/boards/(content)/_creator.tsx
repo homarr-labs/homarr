@@ -96,7 +96,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       return (
         <HydrationBoundary state={dehydrate(queryClient)}>
           <IntegrationProvider integrations={integrations}>
-            <ClientBoard />
+            <ClientBoard initialTimestamp={Date.now()} />
           </IntegrationProvider>
         </HydrationBoundary>
       );

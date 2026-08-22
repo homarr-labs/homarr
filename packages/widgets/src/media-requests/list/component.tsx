@@ -15,7 +15,8 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../../common/application-url";
-import { getUsableWidgetQueryData } from "../../common/query-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import actionTargetClasses from "../../common/action-target.module.css";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../../definition";
@@ -35,17 +36,17 @@ export default function MediaServerWidget({
       .filter(({ id }) => integrationIds.includes(id))
       .map(({ id }) => id),
   );
-  const mediaRequestData = getUsableWidgetQueryData(
-    clientApi.widget.mediaRequests.getLatestRequests.useQuery({
-      integrationIds,
-      statuses:
-        options.statusFilter.length > 0
-          ? options.statusFilter
-          : ["pending", "approved", "declined", "failed", "completed"],
-      recentDays: options.recentDays,
-    }),
-  );
+  const mediaRequestQuery = clientApi.widget.mediaRequests.getLatestRequests.useQuery({
+    integrationIds,
+    statuses:
+      options.statusFilter.length > 0
+        ? options.statusFilter
+        : ["pending", "approved", "declined", "failed", "completed"],
+    recentDays: options.recentDays,
+  });
+  const mediaRequestData = getUsableWidgetQueryData(mediaRequestQuery);
 
+  if (isInitialWidgetQueryPending(mediaRequestQuery)) return <WidgetQueryLoadingState />;
   if (!mediaRequestData) return <WidgetEmptyState />;
   const { requests: mediaRequests, failedIntegrations } = mediaRequestData;
   if (mediaRequests.length === 0 && failedIntegrations.length === 0) throw new NoIntegrationDataError();

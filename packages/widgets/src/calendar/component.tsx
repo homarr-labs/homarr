@@ -15,7 +15,8 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import actionTargetClasses from "../common/action-target.module.css";
 import type { WidgetComponentProps } from "../definition";
-import { getUsableWidgetQueryData } from "../common/query-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { CalendarDay } from "./calender-day";
@@ -97,6 +98,8 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options, d
     data?.flatMap(({ integration, error }) =>
       error ? [{ integrationId: integration.id, integrationName: integration.name, error }] : [],
     ) ?? [];
+
+  if (isInitialWidgetQueryPending(calendarQuery)) return <WidgetQueryLoadingState />;
 
   return (
     <CalendarBase

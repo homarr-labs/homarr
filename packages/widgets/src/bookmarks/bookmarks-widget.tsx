@@ -23,7 +23,8 @@ import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 
 import { getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
-import { getUsableWidgetQueryData } from "../common/query-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { createDirectBookmark, getBookmarkFaviconUrl, getDirectBookmarkUrl } from "./bookmark-item";
 import type { BookmarkItem } from "./bookmark-item";
@@ -43,14 +44,12 @@ export default function BookmarksWidget({
   const board = useRequiredBoard();
   const advanced = displayMode === "advanced";
   const appIds = useMemo(() => options.items.filter((value) => !getDirectBookmarkUrl(value)), [options.items]);
-  const apps =
-    getUsableWidgetQueryData(
-      clientApi.app.byIds.useQuery(appIds, {
-        select(selectedApps) {
-          return selectedApps;
-        },
-      }),
-    ) ?? [];
+  const appsQuery = clientApi.app.byIds.useQuery(appIds, {
+    select(selectedApps) {
+      return selectedApps;
+    },
+  });
+  const apps = getUsableWidgetQueryData(appsQuery) ?? [];
   const appsById = new Map(apps.map((app) => [app.id, app]));
   const configuredItems = options.items.flatMap((value) => {
     const directUrl = getDirectBookmarkUrl(value);
@@ -126,6 +125,8 @@ export default function BookmarksWidget({
       width={plan.horizontalScroll ? plan.itemWidth : undefined}
     />
   ));
+
+  if (appIds.length > 0 && isInitialWidgetQueryPending(appsQuery)) return <WidgetQueryLoadingState />;
 
   return (
     <Stack h="100%" mih={0} gap={height < 120 ? 6 : "sm"} p={height < 120 ? 6 : "sm"}>

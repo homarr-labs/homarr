@@ -32,7 +32,7 @@ import { showErrorNotification, showWarningNotification } from "@homarr/notifica
 import { closeSpotlight } from "@homarr/spotlight/store";
 import { useI18n } from "@homarr/translation/client";
 import { openMediaRequestSearch, openSpotlight, useRegisterSpotlightContextResults } from "@homarr/spotlight";
-import { AssistantWidgetRendererProvider } from "@homarr/widgets";
+import { AssistantWidgetRendererProvider } from "@homarr/widgets/assistant/context";
 import { createWorkshopClient } from "~/components/workshop/workshop-client";
 
 import { AssistantContext, AssistantPreferencesContext, useAssistantPreferences } from "./assistant-context";

@@ -91,6 +91,7 @@ describe("lazy widget application graph", () => {
         `[data-id="${itemId}"] .clock-widget-container, [data-grid-item-id="${itemId}"] .clock-widget-container`,
       );
       await expect(clockWidget.filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
+      await expect(clockWidget.locator("time").filter({ visible: true }).first()).not.toHaveText("--:--");
 
       await expect(page.locator("[data-homarr-dev-benchmark-spotlight-preloaded]")).toHaveCount(1, {
         timeout: 15_000,
@@ -114,6 +115,7 @@ describe("lazy widget application graph", () => {
 
       await page.reload();
       await expect(clockWidget.filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
+      await expect(clockWidget.locator("time").filter({ visible: true }).first()).not.toHaveText("--:--");
       expect(pageErrors).toEqual([]);
     } finally {
       await browser.close();

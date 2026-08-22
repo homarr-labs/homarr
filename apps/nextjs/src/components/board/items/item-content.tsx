@@ -2,9 +2,9 @@ import type { ComponentType, CSSProperties, MutableRefObject, PropsWithChildren 
 import { memo, Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
-import { Box, Button, Center, Loader, Portal } from "@mantine/core";
+import { Box, Button, Center, Loader, Portal, VisuallyHidden } from "@mantine/core";
 import { useElementSize, useIsomorphicEffect } from "@mantine/hooks";
-import { QueryErrorResetBoundary, useQueryClient } from "@tanstack/react-query";
+import { QueryErrorResetBoundary, useIsFetching, useQueryClient } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "@homarr/widgets/errors/classes";
 import type { FallbackProps } from "react-error-boundary";
@@ -19,6 +19,7 @@ import { WidgetError } from "@homarr/widgets/errors";
 import {
   createWidgetRuntimeState,
   getWidgetQueryKeys,
+  getWidgetRuntimeQueries,
   supportsAdvancedFocus as definitionSupportsAdvancedFocus,
 } from "@homarr/widgets/definition";
 import type { WidgetComponentProps, WidgetDefinition, WidgetRuntimeRef } from "@homarr/widgets/definition";
@@ -39,6 +40,7 @@ import { useItemActions } from "./item-actions";
 import itemContentClasses from "./item-content.module.css";
 import { WidgetContextMenu } from "./widget-context-menu";
 import { removeWidgetDataQueries } from "./widget-query-recovery";
+import { matchesWidgetItemQuery } from "./widget-query-scope";
 
 const BoardItemMenu = dynamic(() => import("./item-menu").then((module) => module.BoardItemMenu), {
   ssr: false,
@@ -156,6 +158,25 @@ const LoadedBoardItemContent = ({
     () => ({ ...item, options: reduceWidgetOptionsWithDefinition(definition, settings, item.options) }),
     [definition, item, settings],
   );
+  const widgetQueryKeys = useMemo(() => getWidgetQueryKeys(definition, item.kind), [definition, item.kind]);
+  const isWidgetRefreshing =
+    useIsFetching({
+      type: "active",
+      predicate: (query) =>
+        query.state.data !== undefined &&
+        matchesWidgetItemQuery(
+          query.queryKey,
+          widgetQueryKeys,
+          {
+            itemId: item.id,
+            boardId: board.id,
+            integrationIds: item.integrationIds,
+            options: menuItem.options,
+            runtimeQueries: getWidgetRuntimeQueries(widgetRuntimeRef),
+          },
+          definition.queryMatcher,
+        ),
+    }) > 0;
   const [manualSurface, setManualSurface] = useState<HTMLDivElement | null>(null);
   const [surfacePortalTarget, setSurfacePortalTarget] = useState<HTMLDivElement | null>(null);
   const { active, viewportSize, open, close, dismiss, hover, leave } = useAdvancedFocus();
@@ -322,6 +343,12 @@ const LoadedBoardItemContent = ({
           />
         </ErrorBoundary>
       </Box>
+      {isWidgetRefreshing && (
+        <Box className={itemContentClasses.refreshIndicator} component="output" aria-live="polite">
+          <Loader size="xs" />
+          <VisuallyHidden>{t("common.action.loading")}</VisuallyHidden>
+        </Box>
+      )}
     </WidgetCardShell>
   );
 
