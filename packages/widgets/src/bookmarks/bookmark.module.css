@@ -31,3 +31,15 @@
     transition: none;
   }
 }
+
+.compactScrollViewport > div {
+  display: flex !important;
+  width: 100%;
+  min-height: 100%;
+}
+
+.compactScrollContent {
+  flex: 1;
+  min-width: 100%;
+  min-height: 100%;
+}
