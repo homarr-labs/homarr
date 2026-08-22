@@ -69,13 +69,13 @@ describe("weather layout", () => {
 });
 
 describe("weather defaults", () => {
-  it("starts rich and static while preserving saved false values", () => {
+  it("starts minimal and static while preserving saved false values", () => {
     const options = definition.createOptions();
-    expect(options.showCity.defaultValue).toBe(true);
-    expect(options.hasForecast.defaultValue).toBe(true);
+    expect(options.showCity.defaultValue).toBe(false);
+    expect(options.hasForecast.defaultValue).toBe(false);
     expect(options.forecastDayCount.defaultValue).toBe(3);
     expect(options.animateIcons.defaultValue).toBe(false);
-    expect(options.showHumidity.defaultValue).toBe(true);
+    expect(options.showHumidity.defaultValue).toBe(false);
 
     const reduced = reduceWidgetOptionsWithDefinition(definition, {} as never, {
       showCity: false,
