@@ -147,7 +147,7 @@ function StreamTableHeader({
   const SortIcon = !active ? IconArrowsSort : sort.descending ? IconChevronDown : IconChevronUp;
 
   return (
-    <Table.Th w={width} aria-sort={active ? (sort.descending ? "descending" : "ascending") : "none"}>
+    <Table.Th style={{ width }} aria-sort={active ? (sort.descending ? "descending" : "ascending") : "none"}>
       {sortable ? (
         <UnstyledButton className={classes.sortButton} onClick={() => onSort(column)}>
           <Text component="span" size="xs" fw={600} c="dimmed" style={{ letterSpacing: "0.02em" }} truncate>
