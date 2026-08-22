@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 
-import { mapWithConcurrency } from "@homarr/common";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -247,17 +246,25 @@ export class UmamiIntegration extends Integration {
   ): Promise<UmamiEventSeries[]> {
     const authHeaders = await this.getAuthHeadersAsync();
     const { startAt, endAt, unit } = this.computeTimeRange(timeFrame);
-    return mapWithConcurrency(eventNames, UMAMI_EVENT_REQUEST_CONCURRENCY, async (eventName) => {
-      const dataPoints = await this.getWebsiteEventTimeSeriesAsync(
-        websiteId,
-        startAt,
-        endAt,
-        unit,
-        eventName,
-        authHeaders,
+    const results: UmamiEventSeries[] = [];
+    for (let index = 0; index < eventNames.length; index += UMAMI_EVENT_REQUEST_CONCURRENCY) {
+      const batch = eventNames.slice(index, index + UMAMI_EVENT_REQUEST_CONCURRENCY);
+      const batchResults = await Promise.all(
+        batch.map(async (eventName) => {
+          const dataPoints = await this.getWebsiteEventTimeSeriesAsync(
+            websiteId,
+            startAt,
+            endAt,
+            unit,
+            eventName,
+            authHeaders,
+          );
+          return { eventName, dataPoints: dataPoints ?? [] };
+        }),
       );
-      return { eventName, dataPoints: dataPoints ?? [] };
-    });
+      results.push(...batchResults);
+    }
+    return results;
   }
 
   private async getWebsiteEventMetricsAsync(
