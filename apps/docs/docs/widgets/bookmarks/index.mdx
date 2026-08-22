@@ -1,6 +1,6 @@
 ---
 title: "Bookmarks"
-description: "Displays multiple app links"
+description: "Keeps useful links together"
 hide_title: true
 ---
 
@@ -13,11 +13,12 @@ import { bookmarksWidget } from ".";
 
 <WidgetHeader widget={bookmarksWidget} categories={["Links", "Apps"]} />
 
-The bookmarks widget allows you to display multiple links in a single widget.
-Select one or more existing Apps directly in the widget settings; these bookmarks keep a reference to the App, so changes to its name, icon, or URL are reflected automatically.
-For links that do not need an App, add their URLs under **Custom links** instead.
-Its normal view adapts each configured layout to the available width and height: lower-priority hostnames are hidden before names or icons, and larger collections scroll instead of crushing cards.
-Advanced view shows every bookmark as a roomy card with its full title, hostname, icon, and complete description regardless of the compact layout and visibility choices.
+The bookmarks widget keeps direct URLs and Homarr Apps in one ordered list.
+Paste a URL and press Enter, paste several comma-separated or one-per-line URLs, or search for an existing App.
+URLs do not need an App record; Homarr uses the site's favicon and falls back to a link icon when it cannot load one.
+Bookmarks selected from Apps continue to use the App name, URL, icon, and description.
+
+**Adaptive** layout is the practical default: it changes between icons, compact rows, and tiles as the widget changes shape. Every compact item exposes its destination on hover, while advanced view expands items into descriptive cards.
 
 ### Screenshots
 

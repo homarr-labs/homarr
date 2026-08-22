@@ -96,6 +96,28 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
     updateItems((currentValues) => [...currentValues, options.uniqueIdentifier(item) as TOptionValue]);
   };
 
+  const migrateItems = useCallback(
+    (items: TItem[], optionsPatch: Record<string, unknown>) => {
+      const migratedEntries = items.map((item) => [options.uniqueIdentifier(item) as TOptionValue, item] as const);
+      setTempMap((previous) => {
+        const next = new Map(previous);
+        for (const [value, item] of migratedEntries) next.set(value, item);
+        return next;
+      });
+      form.setFieldValue("options", (currentOptions) => {
+        const currentItems = Array.isArray(currentOptions[property])
+          ? (currentOptions[property] as TOptionValue[])
+          : options.defaultValue;
+        const nextItems = [...currentItems];
+        for (const [value] of migratedEntries) {
+          if (!nextItems.includes(value)) nextItems.push(value);
+        }
+        return { ...currentOptions, ...optionsPatch, [property]: nextItems };
+      });
+    },
+    [form, options, property],
+  );
+
   const removeItem = useCallback(
     (value: TOptionValue) => {
       updateItems((currentValues) => currentValues.filter((candidate) => candidate !== value));
@@ -112,7 +134,13 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
   return (
     <Fieldset legend={t("label")}>
       <Stack>
-        <options.addButton addItem={addItem} removeItem={removeItem} values={values} />
+        <options.addButton
+          addItem={addItem}
+          migrateItems={migrateItems}
+          removeItem={removeItem}
+          values={values}
+          initialOptions={initialOptions}
+        />
 
         <DndContext
           sensors={sensors}
@@ -153,6 +181,7 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
                       index={index}
                       item={item}
                       removeItem={() => removeItem(value)}
+                      removeLabel={t("remove")}
                       options={options}
                     />
                   );
@@ -177,6 +206,7 @@ interface ItemProps<TItem, TOptionValue extends UniqueIdentifier> {
   item: TItem;
   index: number;
   removeItem: () => void;
+  removeLabel: string;
   options: CommonWidgetInputProps<"sortableItemList">["options"];
 }
 
@@ -185,6 +215,7 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({
   index,
   item,
   removeItem,
+  removeLabel,
   options,
 }: ItemProps<TItem, TOptionValue>) => {
   const { attributes, isDragging, listeners, setNodeRef, setActivatorNodeRef, transform, transition } = useSortable({
@@ -220,6 +251,7 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({
         key={index}
         item={item}
         removeItem={removeItem}
+        removeLabel={removeLabel}
         rootAttributes={attributes}
         handle={
           <ActionIcon

@@ -1,54 +1,69 @@
 import { describe, expect, test } from "vitest";
 
-import {
-  createCustomBookmark,
-  getAdvancedBookmarkColumns,
-  getBookmarkHostname,
-  getCompactBookmarkLayout,
-} from "./component";
+import { createDirectBookmark, normalizeBookmarkUrl, splitBookmarkUrls } from "./bookmark-item";
+import { getBookmarkCardDisplay, getBookmarkDisplayPlan } from "./layout";
 
 describe("bookmark display helpers", () => {
-  test("uses bounded advanced columns", () => {
-    expect(getAdvancedBookmarkColumns(900, 8)).toBe(3);
-    expect(getAdvancedBookmarkColumns(120, 8)).toBe(1);
-    expect(getAdvancedBookmarkColumns(900, 0)).toBe(1);
+  test("uses explicit width breakpoints for advanced columns", () => {
+    expect(
+      getBookmarkDisplayPlan({ advanced: true, width: 900, height: 500, itemCount: 8, layout: "adaptive" }),
+    ).toMatchObject({
+      columns: 3,
+      orientation: "horizontal",
+    });
+    expect(
+      getBookmarkDisplayPlan({ advanced: true, width: 120, height: 500, itemCount: 8, layout: "adaptive" }),
+    ).toMatchObject({
+      columns: 1,
+      orientation: "horizontal",
+    });
   });
 
-  test("uses container geometry to keep compact cards legible", () => {
-    expect(getCompactBookmarkLayout(420, 220, 4, "gridHorizontal")).toMatchObject({
+  test("selects an adaptive plan from width and height breakpoints", () => {
+    expect(
+      getBookmarkDisplayPlan({ advanced: false, width: 560, height: 260, itemCount: 4, layout: "adaptive" }),
+    ).toMatchObject({
       columns: 2,
-      hideHostname: false,
-      hideTitle: false,
-      minimumItemSize: 48,
+      itemHeight: 128,
+      orientation: "horizontal",
+      showHostname: true,
+      showTitle: true,
     });
-
-    expect(getCompactBookmarkLayout(180, 80, 4, "row")).toMatchObject({
-      columns: 4,
-      hideHostname: true,
-      hideTitle: true,
-      minimumItemSize: 96,
+    expect(
+      getBookmarkDisplayPlan({ advanced: false, width: 180, height: 80, itemCount: 4, layout: "adaptive" }),
+    ).toMatchObject({
+      columns: 1,
+      orientation: "icon",
+      showHostname: false,
+      showTitle: false,
     });
   });
 
-  test("does not crash on malformed bookmark URLs", () => {
-    expect(getBookmarkHostname("https://homarr.dev/docs")).toBe("homarr.dev");
-    expect(getBookmarkHostname("not a URL")).toBeUndefined();
-    expect(getBookmarkHostname(null)).toBeUndefined();
+  test("keeps compact cards visible when icons are hidden", () => {
+    const plan = getBookmarkDisplayPlan({ advanced: false, width: 180, height: 80, itemCount: 4, layout: "icons" });
+    expect(
+      getBookmarkCardDisplay({ advanced: false, hideHostname: false, hideIcon: true, hideTitle: false, plan }),
+    ).toEqual({
+      orientation: "horizontal",
+      showHostname: false,
+      showIcon: false,
+      showTitle: true,
+    });
   });
 
   test("creates standalone bookmarks without app records", () => {
-    expect(createCustomBookmark("https://homarr.dev/docs")).toEqual({
-      id: "custom-link:https://homarr.dev/docs",
+    expect(createDirectBookmark("https://homarr.dev/docs")).toEqual({
+      id: "url:https://homarr.dev/docs",
       name: "homarr.dev",
       description: null,
       href: "https://homarr.dev/docs",
     });
-    expect(createCustomBookmark("  https://homarr.dev/docs  ")).toEqual({
-      id: "custom-link:https://homarr.dev/docs",
-      name: "homarr.dev",
-      description: null,
-      href: "https://homarr.dev/docs",
-    });
-    expect(createCustomBookmark("javascript:alert(1)")).toBeNull();
+    expect(normalizeBookmarkUrl("homarr.dev/docs")).toBe("https://homarr.dev/docs");
+    expect(normalizeBookmarkUrl("javascript:alert(1)")).toBeUndefined();
+  });
+
+  test("splits URL lists without corrupting commas inside a URL", () => {
+    expect(splitBookmarkUrls("https://one.example, two.example")).toEqual(["https://one.example", "two.example"]);
+    expect(splitBookmarkUrls("https://maps.example/@52.5,13.4,15z")).toEqual(["https://maps.example/@52.5,13.4,15z"]);
   });
 });

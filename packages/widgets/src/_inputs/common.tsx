@@ -16,7 +16,7 @@ export interface CommonWidgetInputProps<TKey extends WidgetOptionType> {
   boardId?: string;
 }
 
-type UseWidgetInputTranslationReturnType = (key: "label" | "description" | "placeholder") => string;
+type UseWidgetInputTranslationReturnType = (key: "label" | "description" | "placeholder" | "remove") => string;
 
 /**
  * Short description why as and unknown convertions are used below:

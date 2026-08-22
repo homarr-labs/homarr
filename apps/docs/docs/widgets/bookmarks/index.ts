@@ -4,7 +4,7 @@ import { IconBookmark } from "@tabler/icons-react";
 export const bookmarksWidget: WidgetDefinition = {
   icon: IconBookmark,
   name: "Bookmarks",
-  description: "Displays multiple app links",
+  description: "Keeps useful links together",
   path: "../../widgets/bookmarks",
   configuration: {
     items: [
@@ -16,9 +16,21 @@ export const bookmarksWidget: WidgetDefinition = {
       },
       {
         name: "Layout",
-        description: "Layout in which the bookmarks are displayed.",
-        values: { type: "select", options: ["Vertical", "Horizontal", "Grid", "Grid horizontal"] },
-        defaultValue: "Vertical",
+        description: "How bookmarks use the available widget space.",
+        values: { type: "select", options: ["Adaptive", "Vertical", "Horizontal", "Grid", "Compact grid", "Icons"] },
+        defaultValue: "Adaptive",
+      },
+      {
+        name: "Appearance",
+        description: "Card surface style.",
+        values: { type: "select", options: ["Soft", "Filled", "Outline", "Plain"] },
+        defaultValue: "Soft",
+      },
+      {
+        name: "Card spacing",
+        description: "Space between bookmark cards.",
+        values: { type: "select", options: ["Extra small", "Small", "Medium", "Large", "Extra large"] },
+        defaultValue: "Extra small",
       },
       {
         name: "Hide title",
@@ -46,15 +58,9 @@ export const bookmarksWidget: WidgetDefinition = {
       },
       {
         name: "Bookmarks",
-        description: "List of bookmarks to display in the widget.",
-        values: "Select one or more Apps directly, then order them as you like.",
+        description: "URLs and existing Apps shown by the widget.",
+        values: "Paste one or many URLs, or find an existing App. Drag to reorder.",
         defaultValue: "No bookmarks selected",
-      },
-      {
-        name: "Custom links",
-        description: "URLs to display without first creating an App.",
-        values: "List of URLs.",
-        defaultValue: "No custom links",
       },
     ],
   },

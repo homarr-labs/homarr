@@ -26,8 +26,8 @@ export const { definition, componentLoader } = createWidgetDefinition("weather",
         isFormatFahrenheit: factory.switch(),
         disableTemperatureDecimals: factory.switch(),
         animateIcons: factory.switch(),
-        showHumidity: factory.switch({ defaultValue: false, withDescription: true }),
-        showCurrentWindSpeed: factory.switch({ withDescription: true }),
+        showHumidity: factory.switch({ defaultValue: false }),
+        showCurrentWindSpeed: factory.switch(),
         useImperialSpeed: factory.switch(),
         location: factory.location({
           defaultValue: {
