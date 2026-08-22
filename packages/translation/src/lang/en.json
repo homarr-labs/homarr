@@ -2220,6 +2220,26 @@
             }
           }
         },
+        "spacing": {
+          "label": "Card spacing",
+          "option": {
+            "xs": {
+              "label": "Extra small"
+            },
+            "sm": {
+              "label": "Small"
+            },
+            "md": {
+              "label": "Medium"
+            },
+            "lg": {
+              "label": "Large"
+            },
+            "xl": {
+              "label": "Extra large"
+            }
+          }
+        },
         "hideTitle": {
           "label": "Hide title"
         },

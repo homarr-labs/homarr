@@ -27,6 +27,12 @@ export const bookmarksWidget: WidgetDefinition = {
         defaultValue: "Soft",
       },
       {
+        name: "Card spacing",
+        description: "Space between bookmark cards.",
+        values: { type: "select", options: ["Extra small", "Small", "Medium", "Large", "Extra large"] },
+        defaultValue: "Extra small",
+      },
+      {
         name: "Hide title",
         description: "Whether to hide the title of the bookmark items.",
         values: { type: "boolean" },

@@ -37,6 +37,13 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
         })),
         defaultValue: "soft",
       }),
+      spacing: factory.select({
+        options: (["xs", "sm", "md", "lg", "xl"] as const).map((value) => ({
+          value,
+          label: (t) => t(`widget.bookmarks.option.spacing.option.${value}.label`),
+        })),
+        defaultValue: "xs",
+      }),
       hideTitle: factory.switch({ defaultValue: false }),
       hideIcon: factory.switch({ defaultValue: false }),
       hideHostname: factory.switch({ defaultValue: false }),
