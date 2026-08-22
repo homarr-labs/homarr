@@ -40,7 +40,13 @@ const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   </GridEditorRegistryProvider>
 );
 
-export const ClientBoard = ({ initialTimestamp }: { initialTimestamp: number }) => {
+export const ClientBoard = ({
+  initialTimestamp,
+  initialTimeZone,
+}: {
+  initialTimestamp: number;
+  initialTimeZone: string;
+}) => {
   const board = useRequiredBoard();
   const t = useI18n("board.landmark");
   const tPreview = useI18n("board.setting.section.layout.preview");
@@ -157,11 +163,15 @@ export const ClientBoard = ({ initialTimestamp }: { initialTimestamp: number }) 
   );
 
   if (representativeWidth === null) {
-    return <WidgetTimeProvider initialTimestamp={initialTimestamp}>{content}</WidgetTimeProvider>;
+    return (
+      <WidgetTimeProvider initialTimestamp={initialTimestamp} initialTimeZone={initialTimeZone}>
+        {content}
+      </WidgetTimeProvider>
+    );
   }
 
   return (
-    <WidgetTimeProvider initialTimestamp={initialTimestamp}>
+    <WidgetTimeProvider initialTimestamp={initialTimestamp} initialTimeZone={initialTimeZone}>
       <Stack align="center" gap="xs" p="md" mih="100%">
         <Text size="xs" c="dimmed" fw={500}>
           {tPreview("editorWidthLabel", { layoutName: currentLayout.name, width: representativeWidth })}

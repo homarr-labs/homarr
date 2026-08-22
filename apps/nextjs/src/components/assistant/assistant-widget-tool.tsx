@@ -4,6 +4,8 @@ import { Suspense, use, useMemo } from "react";
 import type { ToolCallMessagePartProps } from "@assistant-ui/react";
 import { Alert, Box, Button, Group, Skeleton, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconAlertTriangle, IconCheck, IconSettings } from "@tabler/icons-react";
+import { ErrorBoundary } from "react-error-boundary";
+import type { FallbackProps } from "react-error-boundary";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -73,9 +75,27 @@ export const AssistantConfigureWidgetTool = (props: AssistantConfigureWidgetTool
   if (!completeArgs) return <AssistantConfigureWidgetToolContent {...props} definition={undefined} />;
 
   return (
-    <Suspense fallback={<AssistantConfigureWidgetSkeleton />}>
-      <LoadedAssistantConfigureWidgetTool {...props} args={completeArgs} />
-    </Suspense>
+    <ErrorBoundary FallbackComponent={AssistantWidgetDefinitionErrorFallback} resetKeys={[completeArgs.kind]}>
+      <Suspense fallback={<AssistantConfigureWidgetSkeleton />}>
+        <LoadedAssistantConfigureWidgetTool {...props} args={completeArgs} />
+      </Suspense>
+    </ErrorBoundary>
+  );
+};
+
+const AssistantWidgetDefinitionErrorFallback = ({ resetErrorBoundary }: FallbackProps) => {
+  const t = useI18n("assistant.configureWidget");
+  const actionT = useI18n("common.action");
+
+  return (
+    <Alert color="red" variant="light" title={t("definitionLoadErrorTitle")} icon={<IconAlertTriangle size={18} />}>
+      <Stack gap="sm">
+        <Text size="sm">{t("definitionLoadErrorDescription")}</Text>
+        <Button variant="light" color="red" size="compact-sm" w="fit-content" onClick={resetErrorBoundary}>
+          {actionT("tryAgain")}
+        </Button>
+      </Stack>
+    </Alert>
   );
 };
 

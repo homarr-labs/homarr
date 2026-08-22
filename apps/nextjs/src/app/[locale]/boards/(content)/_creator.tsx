@@ -96,7 +96,10 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       return (
         <HydrationBoundary state={dehydrate(queryClient)}>
           <IntegrationProvider integrations={integrations}>
-            <ClientBoard initialTimestamp={Date.now()} />
+            <ClientBoard
+              initialTimestamp={Date.now()}
+              initialTimeZone={Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"}
+            />
           </IntegrationProvider>
         </HydrationBoundary>
       );

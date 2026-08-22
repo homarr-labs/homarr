@@ -108,7 +108,13 @@ describe("lazy widget application graph", () => {
     const context = await browser.newContext({ serviceWorkers: "block" });
     const page = await context.newPage();
     const pageErrors: Error[] = [];
+    const hydrationErrors: string[] = [];
     page.on("pageerror", (error) => pageErrors.push(error));
+    page.on("console", (message) => {
+      if (message.type() === "error" && /hydration|did not match/i.test(message.text())) {
+        hydrationErrors.push(message.text());
+      }
+    });
     let releaseRefresh: (() => void) | undefined;
 
     try {
@@ -177,6 +183,7 @@ describe("lazy widget application graph", () => {
       await expect(downloadsWidget.locator('output[aria-live="polite"]')).toHaveCount(0);
       await page.unroute(downloadsRequestPattern, delayDownloadsRefresh);
       expect(pageErrors).toEqual([]);
+      expect(hydrationErrors).toEqual([]);
 
       const serviceWorkerContext = await browser.newContext();
       const serviceWorkerPage = await serviceWorkerContext.newPage();

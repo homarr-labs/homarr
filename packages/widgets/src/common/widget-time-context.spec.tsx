@@ -6,9 +6,13 @@ import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, test, vi } from "vitest";
 
 import { useWidgetNow } from "./use-widget-now";
-import { WidgetTimeProvider } from "./widget-time-context";
+import { useWidgetLocalTimeZone, WidgetTimeProvider } from "./widget-time-context";
 
-const TimeProbe = () => <time>{useWidgetNow("minute")?.toISOString() ?? "missing"}</time>;
+const TimeProbe = () => (
+  <time>
+    {useWidgetNow("minute")?.toISOString() ?? "missing"}|{useWidgetLocalTimeZone() ?? "missing"}
+  </time>
+);
 
 afterEach(() => {
   vi.useRealTimers();
@@ -16,12 +20,13 @@ afterEach(() => {
 });
 
 describe("WidgetTimeProvider", () => {
-  test("uses the same non-placeholder timestamp for server rendering and hydration", async () => {
+  test("hydrates with server time and timezone before switching to browser values", async () => {
     vi.useFakeTimers();
-    const timestamp = new Date("2026-08-22T12:34:00.000Z").getTime();
-    vi.setSystemTime(timestamp);
+    const serverTimestamp = new Date("2026-08-22T12:34:00.000Z").getTime();
+    const clientTimestamp = serverTimestamp + 60_000;
+    vi.setSystemTime(serverTimestamp);
     const content = (
-      <WidgetTimeProvider initialTimestamp={timestamp}>
+      <WidgetTimeProvider initialTimestamp={serverTimestamp} initialTimeZone="UTC">
         <TimeProbe />
       </WidgetTimeProvider>
     );
@@ -29,11 +34,15 @@ describe("WidgetTimeProvider", () => {
     const host = document.createElement("div");
     host.innerHTML = html;
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    vi.spyOn(Intl.DateTimeFormat.prototype, "resolvedOptions").mockReturnValue({
+      timeZone: "Europe/Paris",
+    } as Intl.ResolvedDateTimeFormatOptions);
+    vi.setSystemTime(clientTimestamp);
 
-    expect(host.textContent).toBe("2026-08-22T12:34:00.000Z");
+    expect(host.textContent).toBe("2026-08-22T12:34:00.000Z|UTC");
     const root = hydrateRoot(host, content);
     await act(async () => undefined);
-    expect(host.textContent).toBe("2026-08-22T12:34:00.000Z");
+    expect(host.textContent).toBe("2026-08-22T12:35:00.000Z|Europe/Paris");
     expect(consoleError).not.toHaveBeenCalled();
 
     await act(async () => root.unmount());
