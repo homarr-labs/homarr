@@ -293,7 +293,7 @@ const CalendarAgenda = ({
   const monthLabel = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(month);
 
   return (
-    <Stack h="100%" w="100%" gap="sm" p="md" style={{ overflow: "hidden" }}>
+    <Stack h="100%" w="100%" gap="sm" p="md" pos="relative" style={{ overflow: "hidden" }}>
       <Group justify="space-between" align="center" wrap="nowrap">
         <Group gap="xs" wrap="nowrap">
           <Tooltip label={t("previousMonth")} events={{ hover: true, focus: true, touch: false }}>
@@ -329,7 +329,7 @@ const CalendarAgenda = ({
             </ActionIcon>
           </Tooltip>
         </Group>
-        <Group gap={0}>
+        <Group className={classes.errorIndicator} gap={0} pos="absolute">
           <IntegrationErrorIndicator results={failedIntegrations} />
           <WidgetQueryErrorIndicator error={queryError} label={queryErrorLabel} />
         </Group>
