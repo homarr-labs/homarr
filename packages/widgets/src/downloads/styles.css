@@ -1,4 +1,20 @@
-/* Row expansion styling */
-.downloads-table .mantine-datatable-row-expansion-cell {
-  background-color: color-mix(in srgb, var(--mantine-color-body) 40%, transparent) !important;
+/* Keep the downloads table translucent so the board wallpaper and opacity remain visible. */
+.homarr-data-table.downloads-table,
+.homarr-data-table.downloads-table .mantine-datatable-table,
+.homarr-data-table.downloads-table .mantine-datatable-table thead,
+.homarr-data-table.downloads-table .mantine-datatable-table tbody,
+.homarr-data-table.downloads-table .mantine-datatable-table tfoot,
+.homarr-data-table.downloads-table .mantine-datatable-table tr,
+.homarr-data-table.downloads-table th,
+.homarr-data-table.downloads-table td,
+.homarr-data-table.downloads-table .mantine-datatable-row-expansion-cell {
+  background-color: transparent !important;
+}
+
+.homarr-data-table.downloads-table .mantine-datatable-table tbody tr:hover {
+  background-color: transparent !important;
+}
+
+.homarr-data-table.downloads-table th {
+  backdrop-filter: none;
 }

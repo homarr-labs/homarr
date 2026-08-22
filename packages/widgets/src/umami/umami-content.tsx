@@ -7,6 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import { formatDuration } from "@homarr/common";
 import type { UmamiVisitorStats } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import classes from "./component.module.css";
 
 import { UmamiEventsContent } from "./umami-events-content";
 import { getUmamiLayout } from "./umami-layout";
@@ -161,7 +162,7 @@ export function UmamiContent({
     );
 
   const advancedLists = (
-    <SimpleGrid cols={viewMode === "topPages" || viewMode === "topReferrers" ? 1 : 2} spacing="md" mih={260}>
+    <SimpleGrid cols={viewMode === "topPages" || viewMode === "topReferrers" ? 1 : 2} spacing="xs" mih={180}>
       {viewMode !== "topPages" && (
         <UmamiTopPagesContent
           integrationIds={integrationIds}
@@ -182,7 +183,7 @@ export function UmamiContent({
   );
 
   const advancedContent = stackAdvancedContent ? (
-    <ScrollArea h="100%">
+    <ScrollArea className={classes.chartSurface} h="100%">
       <Stack gap="md">
         <Box h={Math.max(280, Math.min(420, height - 160))}>{selectedView}</Box>
         {advancedLists}
@@ -190,15 +191,17 @@ export function UmamiContent({
     </ScrollArea>
   ) : (
     <SimpleGrid cols={2} spacing="md" h="100%" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
-      <Box h="100%" mih={260}>
+      <Box className={classes.chartSurface} h="100%" mih={260}>
         {selectedView}
       </Box>
-      <ScrollArea h="100%">{advancedLists}</ScrollArea>
+      <ScrollArea className={classes.chartSurface} h="100%">
+        {advancedLists}
+      </ScrollArea>
     </SimpleGrid>
   );
 
   return (
-    <Stack gap={isDense ? 2 : 4} p={isDense ? 4 : "xs"} h="100%" pos="relative">
+    <Stack gap={isDense ? 1 : 4} p={isDense ? 2 : "xs"} h="100%" pos="relative">
       <Group justify="space-between" align="baseline" wrap="nowrap">
         <Text size="xs" c="dimmed" truncate="end" style={{ maxWidth: "55%" }}>
           {visitorStats.domain} ({formatTimeFrameLabel(timeFrame, t)})
@@ -264,7 +267,7 @@ export function UmamiContent({
           )}
         </Group>
       )}
-      <Box mt={4} style={{ flex: 1, minHeight: 0 }}>
+      <Box className={classes.chartSurface} mt={4} style={{ flex: 1, minHeight: 0 }}>
         {displayMode === "advanced" ? advancedContent : selectedView}
       </Box>
       {(statsQuery.error || activeVisitorsQuery.error || multiEventQuery.error) && (

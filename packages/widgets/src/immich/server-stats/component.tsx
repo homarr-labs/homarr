@@ -55,42 +55,49 @@ export default function ImmichServerStatsWidget({
     Number(statVisibility.showStorage);
   const statsLayout = getImmichStatsLayout(width, height, statCount, isAdvanced);
 
-  const statsContent = (
-    <SimpleGrid cols={statsLayout.columns} spacing={statsLayout.dense ? 4 : "sm"}>
-      {statVisibility.showUsers && (
-        <StatItem
-          icon={<IconUsers size="var(--mantine-font-size-xl)" />}
-          label={t("users")}
-          value={stats.userCount.toLocaleString(locale)}
-          dense={statsLayout.dense}
-        />
-      )}
-      {statVisibility.showPhotos && (
-        <StatItem
-          icon={<IconPhoto size="var(--mantine-font-size-xl)" />}
-          label={t("photos")}
-          value={stats.photoCount.toLocaleString(locale)}
-          dense={statsLayout.dense}
-        />
-      )}
-      {statVisibility.showVideos && (
-        <StatItem
-          icon={<IconVideo size="var(--mantine-font-size-xl)" />}
-          label={t("videos")}
-          value={stats.videoCount.toLocaleString(locale)}
-          dense={statsLayout.dense}
-        />
-      )}
-      {statVisibility.showStorage && (
-        <StatItem
-          icon={<IconDatabase size="var(--mantine-font-size-xl)" />}
-          label={t("storage")}
-          value={formatBytes(stats.totalLibraryUsageInBytes)}
-          dense={statsLayout.dense}
-        />
-      )}
-    </SimpleGrid>
-  );
+  const statItems = [
+    {
+      key: "users",
+      enabled: statVisibility.showUsers,
+      icon: <IconUsers size={statsLayout.dense ? 16 : 18} />,
+      label: t("users"),
+      value: stats.userCount.toLocaleString(locale),
+    },
+    {
+      key: "photos",
+      enabled: statVisibility.showPhotos,
+      icon: <IconPhoto size={statsLayout.dense ? 16 : 18} />,
+      label: t("photos"),
+      value: stats.photoCount.toLocaleString(locale),
+    },
+    {
+      key: "videos",
+      enabled: statVisibility.showVideos,
+      icon: <IconVideo size={statsLayout.dense ? 16 : 18} />,
+      label: t("videos"),
+      value: stats.videoCount.toLocaleString(locale),
+    },
+    {
+      key: "storage",
+      enabled: statVisibility.showStorage,
+      icon: <IconDatabase size={statsLayout.dense ? 16 : 18} />,
+      label: t("storage"),
+      value: formatBytes(stats.totalLibraryUsageInBytes),
+    },
+  ]
+    .filter((item) => item.enabled)
+    .map(({ key, icon, label, value }) => (
+      <StatItem key={key} icon={icon} label={label} value={value} dense={statsLayout.dense} />
+    ));
+
+  const statsContent =
+    isAdvanced || statsLayout.dense ? (
+      <SimpleGrid cols={statsLayout.columns} spacing={statsLayout.dense ? 4 : "sm"}>
+        {statItems}
+      </SimpleGrid>
+    ) : (
+      <Stack gap="xs">{statItems}</Stack>
+    );
 
   if (!isAdvanced) {
     return (

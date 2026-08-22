@@ -63,7 +63,12 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
               }}
             >
               <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
-                <Progress value={system.disk} color={thresholdColor(system.disk)} size={trackSize} />
+                <Progress
+                  className={classes.progress}
+                  value={system.disk}
+                  color={thresholdColor(system.disk)}
+                  size={trackSize}
+                />
                 <Group
                   gap={dotGap}
                   wrap="nowrap"
@@ -101,7 +106,13 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
                     <Text size="sm" fw={600} miw={48} lh={1.25}>
                       {formatPercent(value)}
                     </Text>
-                    <Progress value={value} color={thresholdColor(value)} size="xs" style={{ flex: 1 }} />
+                    <Progress
+                      className={classes.progress}
+                      value={value}
+                      color={thresholdColor(value)}
+                      size="xs"
+                      style={{ flex: 1 }}
+                    />
                   </Group>
                 </Stack>
               ))}
@@ -111,7 +122,12 @@ export const DiskUsage = ({ system, fontSize, progressSize, valueMiw, valueGap =
       ) : (
         <Box style={{ display: "flex", alignItems: "center", flex: 1, minWidth: 24 }}>
           <Box pos="relative" style={{ flex: 1, minWidth: 24 }}>
-            <Progress value={system.disk} color={thresholdColor(system.disk)} size={trackSize} />
+            <Progress
+              className={classes.progress}
+              value={system.disk}
+              color={thresholdColor(system.disk)}
+              size={trackSize}
+            />
           </Box>
         </Box>
       )}

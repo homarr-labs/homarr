@@ -1,3 +1,7 @@
+.progress {
+  opacity: max(0.6, var(--opacity, 1));
+}
+
 .target {
   position: relative;
   z-index: 2;

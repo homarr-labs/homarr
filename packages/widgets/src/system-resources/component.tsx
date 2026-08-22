@@ -232,10 +232,10 @@ const SystemCharts = ({
   const chartColumns = isAdvanced && width >= 560 ? 2 : 1;
   const chartHeight = isAdvanced
     ? 180
-    : `calc((100% - ${Math.max(0, chartCount - 1) * 10}px) / ${Math.max(1, chartCount)})`;
+    : `calc((100% - ${Math.max(0, chartCount - 1) * 8}px) / ${Math.max(1, chartCount)})`;
 
   return (
-    <Stack gap="xs" h={isAdvanced ? "auto" : height} miw={0}>
+    <Stack gap={isAdvanced ? "xs" : 8} h={isAdvanced ? "auto" : height} miw={0}>
       {showTitle && (
         <Text size="sm" fw={600} truncate="end">
           {integrationName}

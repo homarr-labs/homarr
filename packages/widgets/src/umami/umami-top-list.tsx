@@ -5,6 +5,7 @@ import { Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { clientApi } from "@homarr/api/client";
 import type { UmamiMetricItem } from "@homarr/integrations/types";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import classes from "./component.module.css";
 
 import { umamiQueryOptions } from "./umami-utils";
 import { getUsableWidgetQueryData } from "../common/query-state";
@@ -52,7 +53,7 @@ function UmamiTopList({
   const locale = useCurrentIntlLocale();
 
   return (
-    <Stack gap={2} h="100%">
+    <Stack className={classes.listSurface} gap={2} h="100%">
       <Text size="xs" c="dimmed" fw={500}>
         {heading}
       </Text>

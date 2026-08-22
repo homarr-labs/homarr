@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Box, Card, Group, ScrollArea, SimpleGrid, Text, Tooltip, useMantineColorScheme } from "@mantine/core";
+import { Box, Card, Group, ScrollArea, SimpleGrid, Text, Tooltip } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
@@ -85,7 +85,6 @@ const SystemDiskCard = ({
   showTemperature,
 }: SystemDiskCardProps) => {
   const board = useRequiredBoard();
-  const scheme = useMantineColorScheme();
   const t = useI18n("widget.systemDisks");
   const valueRef = useRef<HTMLParagraphElement>(null);
   const [valueFits, setValueFits] = useState(true);
@@ -120,6 +119,8 @@ const SystemDiskCard = ({
   ]
     .filter(Boolean)
     .join(" · ");
+  const backgroundColor = "rgb(from var(--mantine-color-primaryColor-filled) r g b / calc(var(--opacity, 1) * 0.12))";
+  const borderColor = "rgb(from var(--mantine-color-secondaryColor-filled) r g b / calc(var(--opacity, 1) * 0.45))";
 
   return (
     <Tooltip
@@ -131,8 +132,9 @@ const SystemDiskCard = ({
       <Card
         radius={board.itemRadius}
         py="xs"
-        bg={scheme.colorScheme === "dark" ? "dark.7" : "gray.1"}
-        style={{ overflow: "hidden", position: "relative" }}
+        withBorder
+        bg={backgroundColor}
+        style={{ overflow: "hidden", position: "relative", borderColor }}
       >
         <Group justify="space-between" wrap="nowrap" style={{ zIndex: 1, minWidth: 0 }}>
           <div style={{ minWidth: 0, flex: 1 }}>
@@ -241,7 +243,7 @@ export default function SystemResources({
 
   const isAdvanced = displayMode === "advanced";
   const minimumCardWidth = 260;
-  const columns = Math.max(1, Math.min(disks.length, Math.floor(width / minimumCardWidth)));
+  const columns = isAdvanced ? Math.max(1, Math.min(disks.length, Math.floor(width / minimumCardWidth))) : 1;
   const cellWidth = width / columns;
 
   return (

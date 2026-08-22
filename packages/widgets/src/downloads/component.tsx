@@ -143,11 +143,6 @@ const stateColorMap: Record<DownloadState, string> = {
   unknown: "gray",
 };
 
-const rowBgAlpha: Partial<Record<DownloadState, string>> = {
-  failed: "var(--mantine-color-red-light)",
-  paused: "var(--mantine-color-yellow-light)",
-};
-
 const columnVisibilityChecks: Partial<Record<string, (ctx: ColumnContext) => boolean>> = {
   upSpeed: (ctx) => ctx.hasTorrents && ctx.size.showSpeedColumns,
   ratio: (ctx) => ctx.hasTorrents,
@@ -606,7 +601,7 @@ export default function DownloadClientsWidget({
         title: t("items.state.columnTitle"),
         width: 90,
         render: (record) => (
-          <Badge size="xs" variant="light" color={stateColorMap[record.state]}>
+          <Badge size="xs" variant="dot" color={stateColorMap[record.state]}>
             {t(`states.${record.state}`)}
           </Badge>
         ),
@@ -784,7 +779,6 @@ export default function DownloadClientsWidget({
           className="downloads-table"
           customRowAttributes={(_, index) => ({ "data-row-index": index })}
           onRowContextMenu={rowContextMenuHandler}
-          rowBackgroundColor={(record) => rowBgAlpha[record.state]}
           rowExpansion={{
             trigger: "click",
             allowMultiple: true,
@@ -900,7 +894,7 @@ function ExpandedRow({ item, collapse }: { item: ExtendedDownloadClientItem; col
             <Text size="sm" fw={600} truncate style={{ minWidth: 0 }}>
               {item.name}
             </Text>
-            <Badge size="xs" variant="light" color={stateColorMap[item.state]} ml="auto" style={{ flexShrink: 0 }}>
+            <Badge size="xs" variant="dot" color={stateColorMap[item.state]} ml="auto" style={{ flexShrink: 0 }}>
               {t(`states.${item.state}`)}
             </Badge>
           </Group>

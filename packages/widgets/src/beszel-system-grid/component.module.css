@@ -1,3 +1,7 @@
+.progress {
+  opacity: max(0.6, var(--opacity, 1));
+}
+
 .clickableCard {
   position: relative;
   transition: background-color 150ms;

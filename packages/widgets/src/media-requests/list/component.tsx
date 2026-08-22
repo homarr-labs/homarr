@@ -149,7 +149,7 @@ const MediaRequestCard = ({
             <Image
               className="mediaRequests-list-item-poster"
               src={request.posterImagePath}
-              h={isDense ? 36 : 44}
+              h={isDense ? 32 : 40}
               w="auto"
               radius="sm"
               alt=""
@@ -157,7 +157,7 @@ const MediaRequestCard = ({
             />
           )}
 
-          <Stack gap={2} w="100%" miw={0}>
+          <Stack gap={0} w="100%" miw={0}>
             <Group gap="xs" justify="space-between" wrap="nowrap" className="mediaRequests-list-item-top-group">
               <Anchor
                 className="mediaRequests-list-item-info-second-line mediaRequests-list-item-media-title"
@@ -274,7 +274,7 @@ const DecisionButtons = ({ requestId, integrationId, canInteract, alwaysVisible 
           className={`mediaRequests-list-item-pending-button-approve ${actionTargetClasses.root}`}
           variant="light"
           color="green"
-          size="sm"
+          size="xs"
           disabled={!canInteract || isPending}
           aria-label={t("pending.approve")}
           onClick={() => {
@@ -289,7 +289,7 @@ const DecisionButtons = ({ requestId, integrationId, canInteract, alwaysVisible 
           className={`mediaRequests-list-item-pending-button-decline ${actionTargetClasses.root}`}
           variant="light"
           color="red"
-          size="sm"
+          size="xs"
           disabled={!canInteract || isPending}
           aria-label={t("pending.decline")}
           onClick={() => {

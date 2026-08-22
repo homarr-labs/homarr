@@ -23,6 +23,8 @@
    * zoom and enlarges everything together.
    */
   --mantine-scale: var(--board-canvas-ui-scale, 1);
+  /* Keep the legacy card inset visually stable while the fixed canvas is zoomed. */
+  --board-grid-item-inset: calc(10px * var(--board-canvas-inverse-scale, 1) - 12px);
   --mantine-spacing-xs: calc(0.625rem * var(--board-canvas-ui-scale, 1));
   --mantine-spacing-sm: calc(0.75rem * var(--board-canvas-ui-scale, 1));
   --mantine-spacing-md: calc(1rem * var(--board-canvas-ui-scale, 1));
