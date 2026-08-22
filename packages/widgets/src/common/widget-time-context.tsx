@@ -27,10 +27,6 @@ export const WidgetTimeProvider = ({
 
 export const useWidgetInitialTimestamp = () => useContext(WidgetTimestampContext);
 
-/**
- * Resolves to the browser time zone, but renders (and hydrates) with the time
- * zone the server used so widgets can paint a time before hydration finishes.
- */
 export const useWidgetLocalTimeZone = () => {
   const initialTimeZone = useContext(WidgetTimeZoneContext);
   return useSyncExternalStore(subscribeToTimeZone, getResolvedLocalTimeZone, () => initialTimeZone);
@@ -38,9 +34,6 @@ export const useWidgetLocalTimeZone = () => {
 
 const subscribeToTimeZone = () => () => undefined;
 
-// React calls the snapshot getter on every render of every consumer, and
-// resolving a time zone builds `Intl.DateTimeFormat` instances, so keep the
-// answer around: it cannot change without a new document.
 let resolvedLocalTimeZone: string | undefined;
 
 const getResolvedLocalTimeZone = () => {

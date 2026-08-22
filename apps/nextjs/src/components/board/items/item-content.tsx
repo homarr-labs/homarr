@@ -161,7 +161,6 @@ const LoadedBoardItemContent = ({
   const widgetQueryKeys = useMemo(() => getWidgetQueryKeys(definition, item.kind), [definition, item.kind]);
   const isWidgetRefreshing =
     useIsFetching({
-      type: "active",
       predicate: (query) =>
         query.state.data !== undefined &&
         matchesWidgetItemQuery(
@@ -343,11 +342,6 @@ const LoadedBoardItemContent = ({
           />
         </ErrorBoundary>
       </Box>
-      {/*
-        Purely decorative: widgets keep showing their previous data while they
-        refresh, and every widget refreshes on a timer, so announcing this would
-        make assistive technology repeat "loading" for the whole board forever.
-      */}
       {isWidgetRefreshing && (
         <Box className={itemContentClasses.refreshIndicator} data-widget-refreshing aria-hidden>
           <Loader size="xs" />

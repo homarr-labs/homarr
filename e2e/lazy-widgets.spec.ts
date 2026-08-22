@@ -107,8 +107,6 @@ describe("lazy widget application graph", () => {
     const pageErrors: Error[] = [];
     const hydrationErrors: string[] = [];
     page.on("pageerror", (error) => pageErrors.push(error));
-    // Production React reports hydration mismatches as minified error codes with
-    // a react.dev link, so matching the development wording alone never fires.
     const hydrationErrorPattern = /hydrat|did not match|react\.dev\/errors\/4(18|2[1235])|react error #4(18|2[1235])/i;
     page.on("console", (message) => {
       if (message.type() === "error" && hydrationErrorPattern.test(message.text())) {

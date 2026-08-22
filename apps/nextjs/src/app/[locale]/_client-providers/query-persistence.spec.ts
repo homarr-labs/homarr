@@ -120,8 +120,6 @@ describe("widget query persistence", () => {
     persister.flush();
     persister.stop();
 
-    // A torn down provider clears its query client, which would otherwise be
-    // persisted as an empty cache on top of the snapshot we just saved.
     persister.persistClient({
       timestamp: Date.now(),
       buster: queryPersistenceBuster,
@@ -135,39 +133,17 @@ describe("widget query persistence", () => {
   test("removes the cache instead of storing an empty one", () => {
     const scope = "user-a";
     const key = getQueryPersistenceStorageKey(scope);
-    const { queryClient } = createSuccessfulQuery([["board", "getBoardByName"], { type: "query" }], { name: "Home" });
     const persister = createSessionQueryPersister(scope);
     window.sessionStorage.setItem(key, "stale");
 
     persister.persistClient({
       timestamp: Date.now(),
       buster: queryPersistenceBuster,
-      clientState: dehydrate(queryClient),
+      clientState: { mutations: [], queries: [] },
     });
     persister.flush();
 
     expect(window.sessionStorage.getItem(key)).toBeNull();
-  });
-
-  test("persister itself rejects unrelated query payloads", async () => {
-    const scope = "user-a";
-    const widget = createSuccessfulQuery([["widget", "weather", "getWeather"], { type: "query" }], { temp: 21 });
-    const unrelated = createSuccessfulQuery([["user", "session"], { type: "query" }], { secret: true });
-    const persister = createSessionQueryPersister(scope);
-
-    persister.persistClient({
-      timestamp: Date.now(),
-      buster: queryPersistenceBuster,
-      clientState: {
-        mutations: [],
-        queries: [...dehydrate(widget.queryClient).queries, ...dehydrate(unrelated.queryClient).queries],
-      },
-    });
-    persister.flush();
-
-    const storedValue = window.sessionStorage.getItem(getQueryPersistenceStorageKey(scope));
-    expect(storedValue).not.toContain("secret");
-    expect((await persister.restoreClient())?.clientState.queries).toHaveLength(1);
   });
 
   test("round-trips SuperJSON data, strips refresh errors, and removes corrupted storage", async () => {

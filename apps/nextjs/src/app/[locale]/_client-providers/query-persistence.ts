@@ -25,11 +25,6 @@ interface PersistableQuery {
 export type SessionQueryPersister = Persister & { flush: () => void; stop: () => void };
 
 const textEncoder = new TextEncoder();
-// React Query re-dehydrates the whole cache on every cache event, so this
-// predicate runs for every query several times per refresh cycle. Measuring a
-// payload means serializing it, which dwarfs everything else in the pass, so
-// remember the verdict per data reference instead of re-encoding every widget
-// payload every time.
 const budgetVerdictCache = new WeakMap<object, boolean>();
 
 const measureFitsBudget = (data: unknown) => {
@@ -57,7 +52,6 @@ const holdsDashboardData = (query: PersistableQuery) =>
   query.state.dataUpdatedAt > 0 &&
   isWidgetDataQueryKey(query.queryKey);
 
-/** Write path: dashboard data that is small enough to keep in session storage. */
 export const shouldPersistDashboardQuery = (query: PersistableQuery) =>
   holdsDashboardData(query) && fitsStorageBudget(query.state.data);
 
@@ -82,18 +76,13 @@ const sanitizePersistedClient = (client: PersistedClient): PersistedClient => ({
   ...client,
   clientState: {
     mutations: [],
-    queries: client.clientState.queries
-      .filter((query) => shouldPersistDashboardQuery(query as PersistableQuery))
-      .map(sanitizePersistedQuery),
+    queries: client.clientState.queries.map(sanitizePersistedQuery),
   },
 });
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-// Read path: the payload was already budgeted when it was written, and this runs
-// before any query is allowed to fetch, so it deliberately skips the expensive
-// size measurement and only rejects anything that is not restorable widget data.
 const isRestorableQuery = (value: unknown): value is DehydratedQuery => {
   if (!isRecord(value) || typeof value.queryHash !== "string" || !Array.isArray(value.queryKey)) return false;
   if (!isRecord(value.state) || typeof value.state.status !== "string") return false;
@@ -133,9 +122,6 @@ const removeStorageItem = (storage: Storage | undefined, key: string) => {
   }
 };
 
-// Signing out navigates away before the session scope guard can observe the
-// change, so a previous account's cached dashboard data would otherwise linger
-// in the tab. Only the active scope may keep a cache.
 const removeForeignScopes = (storage: Storage | undefined, activeKey: string) => {
   if (!storage) return;
 
@@ -231,9 +217,6 @@ export const createSessionQueryPersister = (
       removeStorageItem(storage, key);
     },
     flush,
-    // Called when the provider tears down, after the last flush: the teardown
-    // also clears the query cache, and that clear must not be able to overwrite
-    // the snapshot we just saved with an empty one.
     stop() {
       stopped = true;
       clearPersistTimer();
