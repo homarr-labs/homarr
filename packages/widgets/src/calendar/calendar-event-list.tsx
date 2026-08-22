@@ -56,7 +56,6 @@ export const CalendarEventList = ({
 
   return (
     <ScrollArea
-      offsetScrollbars
       pt={5}
       w="100%"
       h={fillHeight ? "100%" : undefined}

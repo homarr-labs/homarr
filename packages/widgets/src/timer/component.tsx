@@ -387,7 +387,7 @@ const AdvancedTimer = ({
   const t = useI18n("widget.timer");
   const phaseLabel = getTimerPhaseLabel(runtime, t);
   return (
-    <ScrollArea h="100%" w="100%" type="auto" offsetScrollbars scrollbarSize={6}>
+    <ScrollArea h="100%" w="100%">
       <Stack gap="md" p="md">
         <Paper
           withBorder

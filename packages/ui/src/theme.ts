@@ -96,6 +96,14 @@ export const theme = createTheme({
         style: { borderRadius: 5 },
       },
     },
+    ScrollArea: {
+      defaultProps: {
+        type: "hover",
+        scrollbarSize: 2,
+        scrollHideDelay: 500,
+        offsetScrollbars: true,
+      },
+    },
     LoadingOverlay: {
       defaultProps: {
         zIndex: 1000,

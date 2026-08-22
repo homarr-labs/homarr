@@ -46,7 +46,7 @@ export default function VpnWidget({ options, integrationIds, width, height }: Wi
   }
 
   return (
-    <ScrollArea className="scroll-area-w100" w="100%" h="100%" offsetScrollbars p="xs">
+    <ScrollArea className="scroll-area-w100" w="100%" h="100%" p="xs">
       <SimpleGrid cols={width >= 640 ? 2 : 1} spacing="sm">
         {integrations.map((result) => (
           <Stack key={result.integration.id} gap={4}>

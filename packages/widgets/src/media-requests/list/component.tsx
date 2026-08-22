@@ -61,7 +61,6 @@ export default function MediaServerWidget({
       )}
       <ScrollArea
         className="mediaRequests-list-scrollArea"
-        scrollbarSize="md"
         style={{ flex: 1, minHeight: 0, pointerEvents: isEditMode ? "none" : undefined }}
       >
         <Stack className="mediaRequests-list-list" gap="xs" p="sm">

@@ -143,7 +143,7 @@ export const AdvancedWeather = ({ height, options, weather, width }: AdvancedWea
   const ticks = hourly.filter((_, index) => index % layout.hourlyTickStep === 0).map((hour) => hour.observedAt);
 
   return (
-    <ScrollArea h="100%" w="100%" type="auto" offsetScrollbars scrollbarSize={6}>
+    <ScrollArea h="100%" w="100%">
       <Stack className={classes.advancedRoot} gap="md" p="md">
         <Group justify="space-between" align="flex-start" gap="md" wrap="wrap">
           <Group gap="md" wrap="nowrap">

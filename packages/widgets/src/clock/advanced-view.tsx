@@ -68,9 +68,6 @@ export const AdvancedClockView = ({
     <ScrollArea
       h="100%"
       w="100%"
-      type="auto"
-      offsetScrollbars
-      scrollbarSize={6}
       aria-label={t("worldClock.advancedLabel")}
     >
       <Stack gap="md" p={{ base: "sm", sm: "md" }}>

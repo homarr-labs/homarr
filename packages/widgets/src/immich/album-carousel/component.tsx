@@ -228,7 +228,7 @@ function Carousel({
         )}
       </Box>
       {advanced && (
-        <ScrollArea type="never" scrollbarSize={0} px="xs" py={6}>
+        <ScrollArea px="xs" py={6}>
           <Group gap={6} wrap="nowrap">
             {assets.map((asset, index) => (
               <UnstyledButton

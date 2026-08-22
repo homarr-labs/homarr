@@ -177,7 +177,7 @@ const AdvancedAirQuality = ({ airQuality, options, width }: AirQualityViewProps 
   ];
 
   return (
-    <ScrollArea h="100%" w="100%" type="auto" offsetScrollbars scrollbarSize={6}>
+    <ScrollArea h="100%" w="100%">
       <Stack gap="md" p="md">
         <Group justify="space-between" align="flex-start" wrap="wrap">
           <Stack gap={2}>
