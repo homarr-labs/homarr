@@ -3,29 +3,31 @@
 import type { KeyboardEvent, ReactNode, RefObject } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  Badge,
   Card,
   Center,
   Group,
-  Kbd,
   Loader,
   Modal,
   ScrollArea,
   SimpleGrid,
   Stack,
   Text,
+  TextInput,
   ThemeIcon,
+  Tooltip,
   UnstyledButton,
   useMatches,
   VisuallyHidden,
 } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
-import { IconArrowDown, IconArrowRight, IconLayoutBoard, IconReplace } from "@tabler/icons-react";
+import { IconDeviceMobile, IconHomeFilled, IconLayoutBoard, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
+import { Link, UserAvatar } from "@homarr/ui";
 
 import { BoardLayoutThumbnail } from "~/components/board/board-layout-thumbnail";
 
@@ -39,6 +41,7 @@ interface BoardSwitcherProps {
 
 export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   const t = useI18n("board.action.switcher");
+  const manageBoardsT = useI18n("management.page.board");
   const currentBoard = useOptionalBoard();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -54,15 +57,18 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
     enabled: isOpen,
   });
 
-  const availableBoards = useMemo(
-    () => boards.filter((board) => board.id !== currentBoard?.id),
+  const switcherBoards = useMemo(
+    () => [
+      ...boards.filter((board) => board.id !== currentBoard?.id),
+      ...boards.filter((board) => board.id === currentBoard?.id),
+    ],
     [boards, currentBoard?.id],
   );
   const filteredBoards = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase();
-    if (normalizedSearch.length === 0) return availableBoards;
-    return availableBoards.filter((board) => board.name.toLocaleLowerCase().includes(normalizedSearch));
-  }, [availableBoards, search]);
+    if (normalizedSearch.length === 0) return switcherBoards;
+    return switcherBoards.filter((board) => board.name.toLocaleLowerCase().includes(normalizedSearch));
+  }, [search, switcherBoards]);
   const columnCount = Math.max(1, Math.min(filteredBoards.length, responsiveColumnCount));
 
   const openSwitcher = useCallback(() => {
@@ -88,14 +94,17 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   }, [activeIndex, filteredBoards.length, isOpen]);
 
   const handleModalKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Backspace") {
+    const isSearchInput =
+      event.target instanceof HTMLInputElement && event.target.dataset.boardSwitcherSearch !== undefined;
+
+    if (!isSearchInput && event.key === "Backspace") {
       event.preventDefault();
       setSearch((current) => current.slice(0, -1));
       setActiveIndex(0);
       return;
     }
 
-    if (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey) {
+    if (!isSearchInput && event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey) {
       event.preventDefault();
       setSearch((current) => `${current}${event.key}`);
       setActiveIndex(0);
@@ -141,7 +150,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   };
 
   const results = getBoardSwitcherResults({
-    availableBoardCount: availableBoards.length,
+    availableBoardCount: switcherBoards.length,
     filteredBoards,
     isError,
     isPending,
@@ -152,6 +161,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
     setActiveIndex,
     optionRefs,
     columnCount,
+    manageBoardsT,
   });
 
   return (
@@ -161,54 +171,40 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
       <Modal
         opened={isOpen}
         onClose={closeSwitcher}
-        title={
-          <Group gap="sm" wrap="nowrap">
-            <ThemeIcon variant="light" radius="md">
-              <IconReplace size={18} stroke={1.5} />
-            </ThemeIcon>
-            <Text fw={700}>{t("title")}</Text>
-          </Group>
-        }
-        size={1280}
-        yOffset={32}
-        overlayProps={{ backgroundOpacity: 0.18, blur: 2 }}
+        withCloseButton={false}
+        centered
+        aria-label={t("title")}
+        size={`${columnCount * 15 + Math.max(0, columnCount - 1) * 0.75}rem`}
+        overlayProps={{ backgroundOpacity: 0, blur: 2 }}
         transitionProps={{ transition: "fade", duration: 100, timingFunction: "ease" }}
+        classNames={{ content: classes.modalContent, body: classes.modalBody }}
       >
         <Stack
-          data-autofocus
           tabIndex={-1}
-          gap="md"
+          gap="xs"
           onKeyDown={handleModalKeyDown}
           className={classes.content}
           aria-describedby="board-switcher-instructions"
         >
           <VisuallyHidden id="board-switcher-instructions">{t("keyboard.instructions")}</VisuallyHidden>
-          <ScrollArea.Autosize mah={640} type="auto" offsetScrollbars>
+          <TextInput
+            data-autofocus
+            data-board-switcher-search
+            value={search}
+            onChange={(event) => {
+              setSearch(event.currentTarget.value);
+              setActiveIndex(0);
+            }}
+            leftSection={<IconSearch size="1rem" stroke={1.6} />}
+            placeholder={t("title")}
+            aria-label={t("title")}
+            aria-controls="board-switcher-results"
+            radius="xl"
+            classNames={{ input: classes.searchInput }}
+          />
+          <ScrollArea.Autosize mah="min(80vh, 42rem)" type="never">
             {results}
           </ScrollArea.Autosize>
-
-          <Group justify={currentBoard ? "space-between" : "flex-end"} gap="xs" visibleFrom="sm">
-            {currentBoard && (
-              <Text size="xs" c="dimmed">
-                {t("currentHidden", { name: currentBoard.name })}
-              </Text>
-            )}
-            <Group gap="xs">
-              <Kbd size="xs">
-                <IconArrowRight size={12} />
-              </Kbd>
-              <Kbd size="xs">
-                <IconArrowDown size={12} />
-              </Kbd>
-              <Text size="xs" c="dimmed">
-                {t("keyboard.navigate")}
-              </Text>
-              <Kbd size="xs">Enter</Kbd>
-              <Text size="xs" c="dimmed">
-                {t("keyboard.open")}
-              </Text>
-            </Group>
-          </Group>
         </Stack>
       </Modal>
     </>
@@ -227,6 +223,7 @@ interface BoardSwitcherResultsProps {
   setActiveIndex: (index: number) => void;
   optionRefs: RefObject<Array<HTMLAnchorElement | null>>;
   columnCount: number;
+  manageBoardsT: ReturnType<typeof useI18n<"management.page.board">>;
 }
 
 const getBoardSwitcherResults = ({
@@ -241,6 +238,7 @@ const getBoardSwitcherResults = ({
   setActiveIndex,
   optionRefs,
   columnCount,
+  manageBoardsT,
 }: BoardSwitcherResultsProps) => {
   if (isPending) {
     return (
@@ -287,7 +285,7 @@ const getBoardSwitcherResults = ({
   }
 
   return (
-    <SimpleGrid id="board-switcher-results" aria-label={t("results")} cols={columnCount} spacing="md" p={4}>
+    <SimpleGrid id="board-switcher-results" aria-label={t("results")} cols={columnCount} spacing="xs" p={2}>
       {filteredBoards.map((board, index) => (
         <UnstyledButton
           key={board.id}
@@ -296,7 +294,7 @@ const getBoardSwitcherResults = ({
           }}
           className={classes.option}
           w="100%"
-          maw={320}
+          maw={240}
           mx="auto"
           component={Link}
           href={`/boards/${encodeURIComponent(board.name)}`}
@@ -306,21 +304,50 @@ const getBoardSwitcherResults = ({
           onFocus={() => setActiveIndex(index)}
           onPointerEnter={() => setActiveIndex(index)}
         >
-          <Card padding={0} withBorder radius="md" className={classes.card}>
+          <Card padding={0} withBorder radius="lg" className={classes.card}>
             <Card.Section>
               <BoardLayoutThumbnail
                 preview={board.preview}
                 label={t("preview", { name: board.name, count: String(board.preview?.items.length ?? 0) })}
+                fitFullLayout
               />
             </Card.Section>
-            <Card.Section withBorder p="sm">
-              <Group gap="sm" wrap="nowrap">
-                <ThemeIcon variant="light" radius="md" size="md">
-                  <IconLayoutBoard size={16} stroke={1.5} />
-                </ThemeIcon>
-                <Text fw={650} truncate>
+            <Card.Section withBorder px="sm" py={6}>
+              <Group justify="space-between" gap="xs" wrap="nowrap">
+                <Text fw={600} size="sm" truncate>
                   {board.name}
                 </Text>
+                <Group gap={4} wrap="nowrap">
+                  {board.isHome && (
+                    <Tooltip label={manageBoardsT("action.setHomeBoard.badge.tooltip")}>
+                      <Badge
+                        className={classes.metadataBadge}
+                        color="yellow"
+                        variant="light"
+                        aria-label={manageBoardsT("action.setHomeBoard.badge.label")}
+                      >
+                        <IconHomeFilled size="0.7rem" />
+                      </Badge>
+                    </Tooltip>
+                  )}
+                  {board.isMobileHome && (
+                    <Tooltip label={manageBoardsT("action.setMobileHomeBoard.badge.tooltip")}>
+                      <Badge
+                        className={classes.metadataBadge}
+                        color="yellow"
+                        variant="light"
+                        aria-label={manageBoardsT("action.setMobileHomeBoard.badge.label")}
+                      >
+                        <IconDeviceMobile size="0.7rem" />
+                      </Badge>
+                    </Tooltip>
+                  )}
+                  {board.creator && (
+                    <Tooltip label={board.creator.name ?? manageBoardsT("preview.unknownCreator")}>
+                      <UserAvatar user={board.creator} size="xs" />
+                    </Tooltip>
+                  )}
+                </Group>
               </Group>
             </Card.Section>
           </Card>
