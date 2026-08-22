@@ -162,7 +162,7 @@ export const WidgetContextMenu = ({
         definition,
         value: {
           advancedOptions: item.advancedOptions,
-          options: item.options,
+          options,
           integrationIds: item.integrationIds,
         },
         onSuccessfulEdit: (editResult) => {
@@ -208,6 +208,7 @@ export const WidgetContextMenu = ({
     item,
     handleRefetch,
     openModal,
+    options,
     persistBoard,
     previewDimensions,
     settings,
