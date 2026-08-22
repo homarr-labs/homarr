@@ -2,7 +2,7 @@ import { createTheme, rem } from "@mantine/core";
 
 import { modalComponent } from "./theme/modal";
 
-const scrollAreaDefaultProps = {
+export const scrollAreaDefaultProps = {
   type: "hover",
   scrollbarSize: 2,
   scrollHideDelay: 500,
