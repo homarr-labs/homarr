@@ -64,7 +64,7 @@ export const previewActionProcedures = {
           kind: "action",
         });
         if (response.ok && request.invalidates?.length) {
-          await invalidateCustomWidgetResponseCache(
+          invalidateCustomWidgetResponseCache(
             request.invalidates.map((requestId) => `custom-jsx:preview:${session.id}:${requestId}:`),
           );
         }

@@ -13,8 +13,7 @@ import {
   validateCustomWidgetUrl,
 } from "./network-policy";
 import { closeDispatcher } from "./request-dispatcher-lifecycle";
-import { isCustomWidgetRequestTimeoutError } from "./request-timeout";
-import { normalizeResponseHeaders, parseResponseBody } from "./response";
+import { parseResponseBody } from "./response";
 
 export {
   assertSafeStaticHeaders,
@@ -29,14 +28,13 @@ export {
   MAX_RESPONSE_JSON_DEPTH,
   MAX_RESPONSE_JSON_NODES,
 } from "./response";
-export { isCustomWidgetRequestTimeoutError } from "./request-timeout";
 
 export const MAX_REQUEST_BODY_BYTES = 10 * 1024;
 const REQUEST_TIMEOUT_MS = 10_000;
 const MAX_QUERY_REDIRECTS = 3;
 const MAX_RESPONSE_CACHE_ENTRIES = 1_000;
-const MAX_RESPONSE_CACHE_BYTES = 64 * 1024 * 1024;
 export const MAX_REQUEST_DURATION_MS = 45_000;
+const TIMEOUT_ERROR_CODES = new Set(["UND_ERR_CONNECT_TIMEOUT", "UND_ERR_HEADERS_TIMEOUT", "UND_ERR_BODY_TIMEOUT"]);
 const RESPONSE_TOO_LARGE_ERROR_CODE = "UND_ERR_RES_EXCEEDED_MAX_SIZE";
 
 export interface CustomWidgetAuthConfig {
@@ -65,10 +63,9 @@ export interface CustomWidgetHttpResponse {
   statusText: string;
   data: unknown;
 }
-const cache = new Map<string, { expiresAt: number; response: CustomWidgetHttpResponse; size: number }>();
+const cache = new Map<string, { expiresAt: number; response: CustomWidgetHttpResponse }>();
 const inFlight = new Map<string, Promise<CustomWidgetHttpResponse>>();
 let cacheEpoch = 0;
-let cacheBytes = 0;
 
 type RequestHopResult =
   | { kind: "response"; response: CustomWidgetHttpResponse }
@@ -220,6 +217,23 @@ async function performRequestWithinDeadline(
   }
 }
 
+export function isCustomWidgetRequestTimeoutError(error: unknown, ...signals: readonly AbortSignal[]): boolean {
+  if (signals.some((signal) => signal.aborted)) return true;
+  if (!(error instanceof Error)) return false;
+  if (error.name.includes("Timeout")) return true;
+  const code = "code" in error && typeof error.code === "string" ? error.code : undefined;
+  return code !== undefined && TIMEOUT_ERROR_CODES.has(code);
+}
+
+function normalizeResponseHeaders(values: Record<string, string | string[] | undefined>) {
+  const headers = new Headers();
+  for (const [name, value] of Object.entries(values)) {
+    if (Array.isArray(value)) value.forEach((entry) => headers.append(name, entry));
+    else if (value !== undefined) headers.set(name, value);
+  }
+  return headers;
+}
+
 function assertRequest(input: CustomWidgetHttpRequest): void {
   if (input.body !== undefined && Buffer.byteLength(input.body, "utf8") > MAX_REQUEST_BODY_BYTES)
     throw new CustomWidgetDomainError({ code: "PAYLOAD_TOO_LARGE", message: "Request body exceeds the 10 KiB limit" });
@@ -242,12 +256,8 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
   const key = input.kind === "query" ? input.cacheKey : undefined;
   if (!key) return performRequest(input);
   const cached = cache.get(key);
-  if (cached && cached.expiresAt > Date.now()) {
-    cache.delete(key);
-    cache.set(key, cached);
-    return cached.response;
-  }
-  if (cached) deleteCachedResponse(key);
+  if (cached && cached.expiresAt > Date.now()) return cached.response;
+  if (cached) cache.delete(key);
   const pending = inFlight.get(key);
   if (pending) return pending;
   const requestEpoch = cacheEpoch;
@@ -255,12 +265,8 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
   request = performRequest(input)
     .then((response) => {
       if (response.ok && (input.cacheTtlSeconds ?? 0) > 0 && requestEpoch === cacheEpoch) {
-        const size = Buffer.byteLength(JSON.stringify(response), "utf8");
-        if (size <= MAX_RESPONSE_CACHE_BYTES) {
-          pruneCache(size);
-          cache.set(key, { expiresAt: Date.now() + (input.cacheTtlSeconds ?? 0) * 1000, response, size });
-          cacheBytes += size;
-        }
+        pruneCache();
+        cache.set(key, { expiresAt: Date.now() + (input.cacheTtlSeconds ?? 0) * 1000, response });
       }
       return response;
     })
@@ -274,22 +280,15 @@ export async function executeCustomWidgetRequest(input: CustomWidgetHttpRequest)
 export function invalidateCustomWidgetResponseCache(prefixes: readonly string[]): void {
   if (prefixes.length === 0) return;
   cacheEpoch += 1;
-  for (const key of cache.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) deleteCachedResponse(key);
+  for (const key of cache.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) cache.delete(key);
   for (const key of inFlight.keys()) if (prefixes.some((prefix) => key.startsWith(prefix))) inFlight.delete(key);
 }
 
-function pruneCache(incomingSize: number): void {
-  for (const [key, entry] of cache) if (entry.expiresAt <= Date.now()) deleteCachedResponse(key);
-  while (cache.size >= MAX_RESPONSE_CACHE_ENTRIES || cacheBytes + incomingSize > MAX_RESPONSE_CACHE_BYTES) {
+function pruneCache(): void {
+  for (const [key, entry] of cache) if (entry.expiresAt <= Date.now()) cache.delete(key);
+  while (cache.size >= MAX_RESPONSE_CACHE_ENTRIES) {
     const key = cache.keys().next().value as string | undefined;
     if (!key) return;
-    deleteCachedResponse(key);
+    cache.delete(key);
   }
-}
-
-function deleteCachedResponse(key: string): void {
-  const cached = cache.get(key);
-  if (!cached) return;
-  cache.delete(key);
-  cacheBytes = Math.max(0, cacheBytes - cached.size);
 }

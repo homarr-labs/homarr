@@ -16,9 +16,9 @@ import {
   CopyButton,
   Fieldset,
   Group,
-  Modal,
   Paper,
   PasswordInput,
+  Popover,
   Progress,
   Select,
   SimpleGrid,
@@ -110,7 +110,6 @@ import classes from "./onboarding-studio.module.css";
 
 type StudioSection = "essentials" | "discover" | "connect" | "board" | "extend" | "review";
 type LayoutPreset = "balanced" | "wide" | "focused";
-type IncompleteIntegrationConfirmationIntent = "navigate" | "apply";
 
 const getLayoutPresetForColumnCount = (columnCount: number): LayoutPreset =>
   columnCount <= 8 ? "focused" : columnCount <= 10 ? "balanced" : "wide";
@@ -161,9 +160,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const sounds = useOnboardingSounds();
   const [activeSection, setActiveSection] = useState<StudioSection>("essentials");
   const [incompleteIntegrationConfirmationOpened, setIncompleteIntegrationConfirmationOpened] = useState(false);
-  const [confirmedIncompleteIntegrationSignature, setConfirmedIncompleteIntegrationSignature] = useState<string | null>(
-    null,
-  );
   const [selectedLocale, setSelectedLocale] = useState(currentLocale);
   const [serverOrigin, setServerOrigin] = useState(environment.serverOrigin);
   const [urlMode, setUrlMode] = useState<UrlTemplateMode>("hostPort");
@@ -188,7 +184,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [isApplying, setIsApplying] = useState(false);
   const [applyProgress, setApplyProgress] = useState(0);
   const [applyMessage, setApplyMessage] = useState("");
-  const [applyError, setApplyError] = useState<string | null>(null);
   const [appError, setAppError] = useState<string | null>(null);
   const sectionHeadingRef = useRef<HTMLHeadingElement>(null);
   const sectionButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -196,7 +191,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const focusSectionHeading = useRef(true);
   const seenIntegrationSourceIds = useRef(new Set<string>());
   const seenAppSourceIds = useRef(new Set<string>());
-  const incompleteIntegrationConfirmationIntent = useRef<IncompleteIntegrationConfirmationIntent | null>(null);
 
   const docker = clientApi.onboard.discoverDockerServices.useQuery(undefined, {
     enabled: environment.dockerConfigured,
@@ -209,11 +203,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   });
   const complete = clientApi.onboard.completeSetup.useMutation({
     onError(error) {
-      let message = t("common.unknownError");
-      if (error.message.trim().length > 0) {
-        message = error.message;
-      }
-      showErrorNotification({ title: t("review.errorTitle"), message });
+      showErrorNotification({ title: t("review.errorTitle"), message: error.message });
     },
   });
   const dockerData = docker.data;
@@ -244,21 +234,6 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     () => new Set(discoveredIntegrations.map((integration) => integration.kind)),
     [discoveredIntegrations],
   );
-  const incompleteDrafts = useMemo(() => drafts.filter((draft) => !isIntegrationDraftComplete(draft)), [drafts]);
-  const incompleteIntegrationSignature = useMemo(
-    () =>
-      JSON.stringify(
-        incompleteDrafts.map((draft) => ({
-          id: draft.id,
-          hasUrl: draft.url.trim().length > 0,
-          secrets: draft.secrets.map((secret) => ({ kind: secret.kind, hasValue: secret.value.trim().length > 0 })),
-        })),
-      ),
-    [incompleteDrafts],
-  );
-  const hasIncompleteIntegrations = incompleteDrafts.length > 0;
-  const incompleteIntegrationsConfirmed =
-    hasIncompleteIntegrations && confirmedIncompleteIntegrationSignature === incompleteIntegrationSignature;
 
   useEffect(() => {
     if (!docker.data) return;
@@ -351,28 +326,9 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     if (next) selectSection(next.id);
   };
 
-  const changeSection = (section: StudioSection) => {
+  const selectSection = (section: StudioSection) => {
     if (section !== activeSection) sounds.swoosh();
     setActiveSection(section);
-  };
-
-  const selectSection = (section: StudioSection) => {
-    if (
-      section === "review" &&
-      activeSection !== "review" &&
-      hasIncompleteIntegrations &&
-      !incompleteIntegrationsConfirmed
-    ) {
-      incompleteIntegrationConfirmationIntent.current = "navigate";
-      setIncompleteIntegrationConfirmationOpened(true);
-      return;
-    }
-    changeSection(section);
-  };
-
-  const closeIncompleteIntegrationConfirmation = () => {
-    incompleteIntegrationConfirmationIntent.current = null;
-    setIncompleteIntegrationConfirmationOpened(false);
   };
 
   const handleSectionKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -410,15 +366,9 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     });
   };
 
-  const applySetupAsync = async (skipIncompleteIntegrationConfirmation = false) => {
+  const applySetupAsync = async () => {
     if (isApplying) return;
-    if (!skipIncompleteIntegrationConfirmation && hasIncompleteIntegrations && !incompleteIntegrationsConfirmed) {
-      incompleteIntegrationConfirmationIntent.current = "apply";
-      setIncompleteIntegrationConfirmationOpened(true);
-      return;
-    }
     setIsApplying(true);
-    setApplyError(null);
     setAppError(null);
     setAppErrorSourceId(null);
     setApplyProgress(5);
@@ -533,30 +483,11 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       setApplyMessage(t("review.progress.done"));
       setApplyProgress(100);
       await revalidatePathActionAsync("/init");
-    } catch (error) {
-      let message = t("common.unknownError");
-      if (error instanceof Error && error.message.trim().length > 0) {
-        message = error.message;
-      }
+    } catch {
       sounds.error();
-      setApplyError(message);
       setApplyProgress(0);
       setIsApplying(false);
     }
-  };
-
-  const confirmIncompleteIntegrations = () => {
-    const intent = incompleteIntegrationConfirmationIntent.current;
-    if (!intent) return;
-
-    incompleteIntegrationConfirmationIntent.current = null;
-    setConfirmedIncompleteIntegrationSignature(incompleteIntegrationSignature);
-    setIncompleteIntegrationConfirmationOpened(false);
-    if (intent === "apply") {
-      void applySetupAsync(true);
-      return;
-    }
-    changeSection("review");
   };
 
   const sectionProps: StudioSectionProps = {
@@ -639,10 +570,10 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
     },
     applyProgress,
     applyMessage,
-    applyError,
     appError,
     appErrorSourceId,
   };
+  const hasIncompleteIntegrations = drafts.some((draft) => !isIntegrationDraftComplete(draft));
   const selectedAppWithoutAddress = discoveredApps.find(
     (app) => selectedAppIds.includes(app.sourceId) && (discoveredAppUrls[app.sourceId] ?? "").trim().length === 0,
   );
@@ -659,122 +590,153 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
       }
       setAppError(null);
       setAppErrorSourceId(null);
-      move(1);
+      if (hasIncompleteIntegrations) {
+        setIncompleteIntegrationConfirmationOpened(true);
+      } else {
+        move(1);
+      }
     } else {
       move(1);
     }
   };
   return (
-    <>
-      <Modal
-        opened={incompleteIntegrationConfirmationOpened}
-        onClose={closeIncompleteIntegrationConfirmation}
-        title={t("connect.incompleteConfirmationTitle")}
-        centered
-      >
-        <Stack gap="md">
-          <Text size="sm">{t("connect.incompleteConfirmation")}</Text>
-          <Group justify="flex-end" gap="xs">
-            <Button variant="default" onClick={closeIncompleteIntegrationConfirmation}>
-              {tCommon("cancel")}
-            </Button>
-            <Button onClick={confirmIncompleteIntegrations}>{tCommon("confirm")}</Button>
-          </Group>
-        </Stack>
-      </Modal>
-      <main
-        className={classes.page}
-        style={
-          {
-            "--studio-glow-color": primaryColor,
-            "--studio-secondary-glow-color": secondaryColor,
-          } as CSSProperties
-        }
-      >
-        <OnboardingBackdrop />
-        <div className={classes.shell}>
-          <Group className={classes.topbar} justify="center" mb="lg">
-            <OnboardingWordmark
-              primaryColor={primaryColor}
-              secondaryColor={secondaryColor.toLowerCase() === initialSecondaryColor ? undefined : secondaryColor}
-            />
-          </Group>
+    <main
+      className={classes.page}
+      style={
+        {
+          "--studio-glow-color": primaryColor,
+          "--studio-secondary-glow-color": secondaryColor,
+        } as CSSProperties
+      }
+    >
+      <OnboardingBackdrop />
+      <div className={classes.shell}>
+        <Group className={classes.topbar} justify="center" mb="lg">
+          <OnboardingWordmark
+            primaryColor={primaryColor}
+            secondaryColor={secondaryColor.toLowerCase() === initialSecondaryColor ? undefined : secondaryColor}
+          />
+        </Group>
 
-          <Paper className={classes.studio} radius="lg">
-            <div className={classes.studioGrid}>
-              <nav className={classes.rail} aria-label={t("navigationLabel")}>
-                <Timeline
-                  active={activeIndex}
-                  bulletSize={32}
-                  lineWidth={2}
-                  color={primaryColor}
-                  className={classes.timeline}
-                  classNames={{ itemBullet: classes.timelineBullet }}
-                >
-                  {sectionDefinitions.map((section, index) => {
-                    const Icon = section.icon;
-                    const active = section.id === activeSection;
-                    return (
-                      <Timeline.Item
-                        key={section.id}
-                        bullet={<Icon size={16} aria-hidden />}
-                        title={
-                          <UnstyledButton
-                            ref={(node) => {
-                              sectionButtonRefs.current[index] = node;
-                            }}
-                            className={classes.timelineButton}
-                            data-active={active}
-                            onClick={() => selectSection(section.id)}
-                            onKeyDown={(event) => handleSectionKeyDown(event, index)}
-                            aria-label={`${t(`navigation.${section.id}`)} (${index + 1}/${sectionDefinitions.length})`}
-                            aria-current={active ? "step" : undefined}
-                            aria-controls="onboarding-studio-section"
-                            tabIndex={active ? 0 : -1}
-                          >
-                            <Stack gap={0} align="flex-start">
-                              <Text className={classes.timelineLabel} size="sm" fw={active ? 650 : 500}>
-                                {t(`navigation.${section.id}`)}
-                              </Text>
-                              <Text className={classes.timelineLabel} size="xs" c="dimmed">
-                                {index + 1} / {sectionDefinitions.length}
-                              </Text>
-                            </Stack>
-                          </UnstyledButton>
-                        }
-                      />
-                    );
-                  })}
-                </Timeline>
-              </nav>
-
-              <section
-                id="onboarding-studio-section"
-                className={classes.content}
-                aria-labelledby="studio-section-title"
+        <Paper className={classes.studio} radius="lg">
+          <div className={classes.studioGrid}>
+            <nav className={classes.rail} aria-label={t("navigationLabel")}>
+              <Timeline
+                active={activeIndex}
+                bulletSize={32}
+                lineWidth={2}
+                color={primaryColor}
+                className={classes.timeline}
+                classNames={{ itemBullet: classes.timelineBullet }}
               >
-                <div key={activeSection}>
-                  <StudioSectionContent section={activeSection} {...sectionProps} />
-                </div>
+                {sectionDefinitions.map((section, index) => {
+                  const Icon = section.icon;
+                  const active = section.id === activeSection;
+                  return (
+                    <Timeline.Item
+                      key={section.id}
+                      bullet={<Icon size={16} aria-hidden />}
+                      title={
+                        <UnstyledButton
+                          ref={(node) => {
+                            sectionButtonRefs.current[index] = node;
+                          }}
+                          className={classes.timelineButton}
+                          data-active={active}
+                          onClick={() => selectSection(section.id)}
+                          onKeyDown={(event) => handleSectionKeyDown(event, index)}
+                          aria-label={`${t(`navigation.${section.id}`)} (${index + 1}/${sectionDefinitions.length})`}
+                          aria-current={active ? "step" : undefined}
+                          aria-controls="onboarding-studio-section"
+                          tabIndex={active ? 0 : -1}
+                        >
+                          <Stack gap={0} align="flex-start">
+                            <Text className={classes.timelineLabel} size="sm" fw={active ? 650 : 500}>
+                              {t(`navigation.${section.id}`)}
+                            </Text>
+                            <Text className={classes.timelineLabel} size="xs" c="dimmed">
+                              {index + 1} / {sectionDefinitions.length}
+                            </Text>
+                          </Stack>
+                        </UnstyledButton>
+                      }
+                    />
+                  );
+                })}
+              </Timeline>
+            </nav>
 
-                <Group className={classes.stickyActions} justify="space-between" wrap="nowrap">
-                  <Button
-                    className={classes.backAction}
-                    size="sm"
-                    variant="default"
-                    leftSection={<IconArrowLeft size={16} />}
-                    aria-label={t("back")}
-                    disabled={activeIndex === 0 || isApplying}
-                    onClick={() => move(-1)}
-                  >
-                    {t("back")}
+            <section id="onboarding-studio-section" className={classes.content} aria-labelledby="studio-section-title">
+              <div key={activeSection}>
+                <StudioSectionContent section={activeSection} {...sectionProps} />
+              </div>
+
+              <Group className={classes.stickyActions} justify="space-between" wrap="nowrap">
+                <Button
+                  className={classes.backAction}
+                  size="sm"
+                  variant="default"
+                  leftSection={<IconArrowLeft size={16} />}
+                  aria-label={t("back")}
+                  disabled={activeIndex === 0 || isApplying}
+                  onClick={() => move(-1)}
+                >
+                  {t("back")}
+                </Button>
+                {activeSection === "review" ? (
+                  <Button size="sm" loading={isApplying} onClick={continueOnboarding}>
+                    {t("buildBoard")}
                   </Button>
-                  {activeSection === "review" ? (
-                    <Button size="sm" loading={isApplying} onClick={continueOnboarding}>
-                      {t("buildBoard")}
-                    </Button>
-                  ) : (
-                    <Group className={classes.primaryActions} gap="xs" wrap="nowrap">
+                ) : (
+                  <Group className={classes.primaryActions} gap="xs" wrap="nowrap">
+                    {activeSection === "connect" && hasIncompleteIntegrations ? (
+                      <Popover
+                        opened={incompleteIntegrationConfirmationOpened}
+                        onDismiss={() => setIncompleteIntegrationConfirmationOpened(false)}
+                        transitionProps={{ duration: 0 }}
+                        position="top-end"
+                        width={320}
+                        shadow="md"
+                        withArrow
+                        trapFocus
+                      >
+                        <Popover.Target>
+                          <Button
+                            size="sm"
+                            disabled={continueDisabled}
+                            rightSection={<IconArrowRight size={16} />}
+                            aria-haspopup="dialog"
+                            aria-expanded={incompleteIntegrationConfirmationOpened}
+                            onClick={() => setIncompleteIntegrationConfirmationOpened((opened) => !opened)}
+                          >
+                            {tCommon("continue")}
+                          </Button>
+                        </Popover.Target>
+                        <Popover.Dropdown role="dialog" aria-label={t("connect.incompleteConfirmation")}>
+                          <Stack gap="sm">
+                            <Text size="sm">{t("connect.incompleteConfirmation")}</Text>
+                            <Group justify="flex-end" gap="xs">
+                              <Button
+                                size="xs"
+                                variant="default"
+                                onClick={() => setIncompleteIntegrationConfirmationOpened(false)}
+                              >
+                                {tCommon("cancel")}
+                              </Button>
+                              <Button
+                                size="xs"
+                                onClick={() => {
+                                  setIncompleteIntegrationConfirmationOpened(false);
+                                  move(1);
+                                }}
+                              >
+                                {tCommon("confirm")}
+                              </Button>
+                            </Group>
+                          </Stack>
+                        </Popover.Dropdown>
+                      </Popover>
+                    ) : (
                       <Button
                         size="sm"
                         disabled={continueDisabled}
@@ -783,15 +745,15 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
                       >
                         {tCommon("continue")}
                       </Button>
-                    </Group>
-                  )}
-                </Group>
-              </section>
-            </div>
-          </Paper>
-        </div>
-      </main>
-    </>
+                    )}
+                  </Group>
+                )}
+              </Group>
+            </section>
+          </div>
+        </Paper>
+      </div>
+    </main>
   );
 };
 
@@ -845,7 +807,6 @@ interface StudioSectionProps {
   setRightSidebar: (value: boolean) => void;
   applyProgress: number;
   applyMessage: string;
-  applyError: string | null;
   appError: string | null;
   appErrorSourceId: string | null;
 }
@@ -1959,11 +1920,6 @@ const Review = (props: StudioSectionProps) => {
             <Progress value={props.applyProgress} aria-label={props.applyMessage} aria-live="polite" />
           </Stack>
         </Paper>
-      ) : null}
-      {props.applyError ? (
-        <Alert color="red" icon={<IconAlertCircle size={18} />} title={t("errorTitle")} role="alert">
-          {props.applyError}
-        </Alert>
       ) : null}
     </Stack>
   );

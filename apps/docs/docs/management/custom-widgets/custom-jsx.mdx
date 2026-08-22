@@ -61,8 +61,8 @@ than one variable quantifier are rejected.
 - `ActionButton` and `ToggleSwitch` run actions only when the widget is mounted outside edit mode. A toggle needs both
   enabled and disabled request parameters and rolls back its visual state if the action fails.
 - `RefreshButton` renders a compact, accessible icon control that invalidates the client&apos;s load-query cache so active load
-  queries can refetch; it does not execute a request itself. It is disabled for anonymous viewers, when the widget has no
-  active item or preview session, or while the board is in edit mode.
+  queries can refetch; it does not execute a request itself. It is disabled when the widget has no active item or preview
+  session, or while the board is in edit mode.
 - `Icon`/`TablerIcon` resolves installed safe icons.
 
 Always include responsive loading, empty, error, and success states. Runtime failures remain inside the widget tile.

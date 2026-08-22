@@ -37,7 +37,7 @@ export function RefreshButton({ label, color = "gray", variant = "subtle", size 
       size={size as never}
       onClick={() => void refresh()}
       loading={loading}
-      disabled={!runtime.canRefresh || (!runtime.itemId && !runtime.previewSessionId) || runtime.isEditMode}
+      disabled={(!runtime.itemId && !runtime.previewSessionId) || runtime.isEditMode}
     >
       <IconRefresh size={16} />
     </ActionIcon>

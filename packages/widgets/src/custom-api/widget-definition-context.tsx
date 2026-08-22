@@ -21,7 +21,6 @@ interface WidgetDefinitionProviderProps {
   previewSessionId?: string;
   previewLiveActions?: boolean;
   queriesDisabled?: boolean;
-  canRefresh?: boolean;
   isEditMode?: boolean;
   requestCapabilities?: readonly CustomJsxRequestCapability[];
   setQueryState?(requestId: string, value: CustomWidgetPublishedQueryState | null): void;
@@ -172,7 +171,6 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
       previewSessionId={props.previewSessionId}
       previewLiveActions={props.previewLiveActions}
       queriesDisabled={props.queriesDisabled}
-      canRefresh={Boolean(props.previewSessionId) || props.canRefresh === true}
       isEditMode={props.isEditMode ?? false}
       requestCapabilities={props.requestCapabilities ?? []}
       port={port}

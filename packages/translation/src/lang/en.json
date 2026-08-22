@@ -126,7 +126,6 @@
         "needsConfiguration": "Needs configuration",
         "tested": "Connection tested",
         "testFailed": "Connection test failed",
-        "incompleteConfirmationTitle": "Skip unfinished integrations?",
         "incompleteConfirmation": "Unfinished integrations will be skipped. Continue without them?"
       },
       "board": {

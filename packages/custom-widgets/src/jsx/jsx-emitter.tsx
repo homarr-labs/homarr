@@ -68,7 +68,7 @@ export function emitJsxElement(
       child.type === "JSXExpressionContainer" ? asNode(child.expression, "JSX child expression") : null;
     if (resolvedTag === "SubFetch" && expression?.type === "ArrowFunctionExpression") {
       const callback = context.createCallback(expression, environment);
-      return (value: unknown, metadata: unknown) => context.renderCallback(callback, [value, metadata], depth + 1);
+      return (value: unknown) => context.renderCallback(callback, [value], depth + 1);
     }
     return context.evaluate(child, environment, depth + 1);
   });

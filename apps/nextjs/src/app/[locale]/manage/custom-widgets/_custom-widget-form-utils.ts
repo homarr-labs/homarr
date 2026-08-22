@@ -1,8 +1,6 @@
 import { fetchApi } from "@homarr/api/client";
-import { mapWithConcurrency } from "@homarr/common";
 import {
   customWidgetDefinitionSchema,
-  CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT,
   getCustomWidgetDefaultOptions,
   getCustomWidgetRequiredSecretKinds,
   parseCustomWidgetAiResponse,
@@ -104,26 +102,25 @@ export function isRuntimeParams(
 }
 
 export async function loadPreviewQueries(definition: HomarrCustomWidgetV2, sessionId: string) {
-  const requests = Object.entries(definition.requests).filter(
+  const data: Record<string, unknown> = {};
+  const status: Record<string, unknown> = {};
+  for (const [requestId] of Object.entries(definition.requests).filter(
     ([, entry]) => entry.kind === "query" && entry.trigger === "load",
-  );
-  const entries = await mapWithConcurrency(requests, CUSTOM_WIDGET_USER_ITEM_CONCURRENCY_LIMIT, async ([requestId]) => {
+  )) {
     try {
       const result = await fetchApi.customWidget.previewQuery.query({ sessionId, requestId, params: {} });
-      return [requestId, result.data, { loading: false, ...result }] as const;
+      data[requestId] = result.data;
+      status[requestId] = { loading: false, ...result };
     } catch (error) {
-      const failedStatus = {
+      data[requestId] = null;
+      status[requestId] = {
         loading: false,
         ok: false,
         error: error instanceof Error ? error.message : "Request failed",
       };
-      return [requestId, null, failedStatus] as const;
     }
-  });
-  return {
-    data: Object.fromEntries(entries.map(([requestId, data]) => [requestId, data])),
-    status: Object.fromEntries(entries.map(([requestId, , status]) => [requestId, status])),
-  };
+  }
+  return { data, status };
 }
 
 export function getDefinitionDefaults(definition: HomarrCustomWidgetV2) {

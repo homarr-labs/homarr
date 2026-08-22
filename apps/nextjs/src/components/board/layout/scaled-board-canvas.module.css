@@ -2,12 +2,10 @@
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  overflow: clip;
+}
 
-  /*
-   * The canvas always scales to fit, so board content must never widen the
-   * document or scroll sideways. `clip` guarantees that without creating a
-   * scroll container.
-   */
+.viewport[data-board-hydrated="false"] {
   overflow: clip;
 }
 
@@ -21,10 +19,8 @@
 
   /*
    * Keep dashboard UI at its normal readable density while the fixed canvas
-   * is fitted below 100%, until the compensation is capped (see
-   * MAX_BOARD_UI_COMPENSATION) and the board zooms out as a whole instead.
-   * Above 100%, the canvas behaves like browser zoom and enlarges everything
-   * together.
+   * is fitted below 100%. Above 100%, the canvas still behaves like browser
+   * zoom and enlarges everything together.
    */
   --mantine-scale: var(--board-canvas-ui-scale, 1);
   --mantine-spacing-xs: calc(0.625rem * var(--board-canvas-ui-scale, 1));
