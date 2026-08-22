@@ -126,19 +126,18 @@ export const LayoutSettingsContent = ({ board, form, isSaving, saveSettingsAsync
             disabled={nextBreakpoint === null || !baseLayout}
             onClick={() => {
               if (nextBreakpoint === null || !baseLayout) return;
-              const layouts = [
-                ...form.values.layouts,
-                {
-                  id: createId(),
-                  name: tBoard("setting.section.layout.custom.defaultName"),
-                  columnCount: baseLayout.columnCount,
-                  leftGutterColumnCount: baseLayout.leftGutterColumnCount,
-                  rightGutterColumnCount: baseLayout.rightGutterColumnCount,
-                  breakpoint: nextBreakpoint,
-                  role: "custom" as const,
-                },
-              ].toSorted((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint);
-              form.setFieldValue("layouts", layouts);
+              const newLayout: FormValues["layouts"][number] = {
+                id: createId(),
+                name: tBoard("setting.section.layout.custom.defaultName"),
+                columnCount: baseLayout.columnCount,
+                leftGutterColumnCount: baseLayout.leftGutterColumnCount,
+                rightGutterColumnCount: baseLayout.rightGutterColumnCount,
+                breakpoint: nextBreakpoint,
+                role: "custom",
+              };
+              let insertionIndex = form.values.layouts.findIndex((layout) => layout.breakpoint > nextBreakpoint);
+              if (insertionIndex === -1) insertionIndex = form.values.layouts.length;
+              form.insertListItem("layouts", newLayout, insertionIndex);
             }}
           >
             {tBoard("setting.section.layout.responsive.action.add")}
