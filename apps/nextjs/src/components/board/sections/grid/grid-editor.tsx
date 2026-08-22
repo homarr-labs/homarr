@@ -39,7 +39,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
-import { getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
+import { getLogicalGridSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import {
   beginGridTransaction,
   cancelGridTransaction,
@@ -792,8 +792,8 @@ export default function GridEditor({
       data-grid-depth={depth}
       style={
         {
-          width: getLogicalTrackSize(columnCount),
-          height: getLogicalTrackSize(rowCount),
+          width: getLogicalGridSize(columnCount),
+          height: getLogicalGridSize(rowCount),
           "--board-grid-pitch": `${LOGICAL_GRID_PITCH}px`,
         } as CSSProperties
       }
@@ -1234,8 +1234,8 @@ const getEntryVisualScale = (element: HTMLElement | null, placement: SectionGrid
   if (!element) return null;
   const rectangle = element.getBoundingClientRect();
   const scale = {
-    x: rectangle.width / getLogicalTrackSize(placement.w),
-    y: rectangle.height / getLogicalTrackSize(placement.h),
+    x: rectangle.width / getLogicalGridSize(placement.w),
+    y: rectangle.height / getLogicalGridSize(placement.h),
   };
   return Number.isFinite(scale.x) && scale.x > 0 && Number.isFinite(scale.y) && scale.y > 0 ? scale : null;
 };

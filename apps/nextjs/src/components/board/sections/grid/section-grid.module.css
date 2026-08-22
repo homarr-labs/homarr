@@ -50,6 +50,10 @@
   overflow: visible;
 }
 
+.staticItem[data-type="item"] > .contentMount {
+  inset: calc(10px * var(--board-canvas-inverse-scale, 1));
+}
+
 .staticItem:has([data-board-container-label]) {
   z-index: 2;
 }

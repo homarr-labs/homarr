@@ -3,7 +3,7 @@
 import type { RefObject } from "react";
 import { useCallback, useLayoutEffect, useRef, useSyncExternalStore } from "react";
 
-import { getLayoutRowCount, getLogicalItemStyle, getLogicalTrackSize } from "~/components/board/layout";
+import { getLayoutRowCount, getLogicalItemStyle, getLogicalGridSize } from "~/components/board/layout";
 import type { TransactionalGridState } from "./dnd";
 import type { GridInteractionStore } from "./grid-interaction-store";
 import { clearGridPreviewGeometry, createGridPreviewDomState, syncGridPreviewGeometry } from "./grid-preview-geometry";
@@ -87,7 +87,7 @@ export const GridPreviewLayer = ({
     } else {
       delete grid.dataset.dndPreviewRevision;
     }
-    grid.style.height = `${getLogicalTrackSize(renderedRowCount)}px`;
+    grid.style.height = `${getLogicalGridSize(renderedRowCount)}px`;
 
     const viewport = grid.parentElement;
     if (viewport?.hasAttribute("data-section-id")) {
@@ -98,7 +98,7 @@ export const GridPreviewLayer = ({
       // stray value would silently blow the cap open for the rest of the session, well after any
       // drag ended, since nothing else would ever clear it back out.
       if (maxRowCount === null) {
-        viewport.style.setProperty("--board-grid-drag-height", `${getLogicalTrackSize(renderedRowCount)}px`);
+        viewport.style.setProperty("--board-grid-drag-height", `${getLogicalGridSize(renderedRowCount)}px`);
       } else {
         viewport.style.removeProperty("--board-grid-drag-height");
       }

@@ -1,4 +1,4 @@
-import { getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
+import { getLogicalGridSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
 import type { GridPlacement } from "~/components/board/layout";
 
 export interface GridPreviewDomState {
@@ -75,8 +75,8 @@ export const clearGridPreviewGeometry = (
 const applyPreviewGeometry = (element: HTMLElement, controlled: GridPlacement, preview: GridPlacement) => {
   element.style.setProperty("--board-grid-preview-x", `${(preview.x - controlled.x) * LOGICAL_GRID_PITCH}px`);
   element.style.setProperty("--board-grid-preview-y", `${(preview.y - controlled.y) * LOGICAL_GRID_PITCH}px`);
-  element.style.setProperty("--board-grid-preview-width", `${getLogicalTrackSize(preview.w)}px`);
-  element.style.setProperty("--board-grid-preview-height", `${getLogicalTrackSize(preview.h)}px`);
+  element.style.setProperty("--board-grid-preview-width", `${getLogicalGridSize(preview.w)}px`);
+  element.style.setProperty("--board-grid-preview-height", `${getLogicalGridSize(preview.h)}px`);
   element.setAttribute("data-grid-preview", "true");
   setPlacementAttributes(element, preview);
 };

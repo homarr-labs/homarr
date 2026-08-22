@@ -16,7 +16,7 @@ import { BoardSetupChecklist } from "~/components/board/board-setup-checklist";
 import {
   getBoardLaneColumnCount,
   getInitialBoardLogicalHeight,
-  getLogicalTrackSize,
+  getLogicalGridSize,
   LOGICAL_GRID_GAP,
   getRootSectionForLane,
 } from "~/components/board/layout";
@@ -61,16 +61,16 @@ export const ClientBoard = () => {
   const rightColumnCount = getBoardLaneColumnCount(currentLayout, "right");
   const laneWidths = [leftColumnCount, mainColumnCount, rightColumnCount]
     .filter((columnCount) => columnCount > 0)
-    .map(getLogicalTrackSize);
+    .map(getLogicalGridSize);
   const logicalWidth =
     laneWidths.reduce((total, width) => total + width, 0) + (laneWidths.length - 1) * LOGICAL_GRID_GAP;
   const initialLogicalHeight = getInitialBoardLogicalHeight(board, currentLayoutId);
   const representativeWidth = layoutOverrideId ? getRepresentativeLayoutWidth(currentLayout, board.layouts) : null;
   const initialAvailableWidth = Math.max(1, (representativeWidth ?? initialViewportWidth) - APP_SHELL_INLINE_PADDING);
   const gridTemplateColumns = [
-    leftColumnCount > 0 ? `${getLogicalTrackSize(leftColumnCount)}px` : null,
-    `${getLogicalTrackSize(mainColumnCount)}px`,
-    rightColumnCount > 0 ? `${getLogicalTrackSize(rightColumnCount)}px` : null,
+    leftColumnCount > 0 ? `${getLogicalGridSize(leftColumnCount)}px` : null,
+    `${getLogicalGridSize(mainColumnCount)}px`,
+    rightColumnCount > 0 ? `${getLogicalGridSize(rightColumnCount)}px` : null,
   ]
     .filter((value) => value !== null)
     .join(" ");
