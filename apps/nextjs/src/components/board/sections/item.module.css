@@ -11,6 +11,18 @@
   border-color: var(--border-color) !important;
 }
 
+.containerCard {
+  @mixin dark {
+    --container-default-border-color: var(--mantine-color-dark-4);
+  }
+  @mixin light {
+    --container-default-border-color: var(--mantine-color-gray-3);
+  }
+  --border-color: rgb(
+    from var(--container-border-color, var(--container-default-border-color)) r g b / var(--opacity, 1)
+  );
+}
+
 .itemCard:global(.iframe-wrapper) {
   background-color: transparent !important;
   border-color: transparent !important;
@@ -26,8 +38,8 @@
   z-index: 9;
   overflow: hidden;
   color: var(--mantine-color-text);
-  background-color: var(--background-color);
-  border-color: var(--border-color);
+  background-color: var(--background-color) !important;
+  border-color: var(--border-color) !important;
 }
 
 .containerToggle :global(.mantine-Button-inner) {
@@ -40,6 +52,24 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.containerLabel,
+.containerAction {
+  background-color: var(--background-color) !important;
+  border-color: var(--border-color) !important;
+}
+
+.containerLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.containerLabel :global(.mantine-Badge-label) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .containerBody {

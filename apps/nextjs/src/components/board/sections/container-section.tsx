@@ -46,6 +46,7 @@ export const BoardContainerSection = ({ section }: Props) => {
       <Card
         className={combineClasses(
           classes.itemCard,
+          classes.containerCard,
           options.customCssClasses.join(" "),
           isVisuallyCollapsed && classes.collapsedContainerCard,
         )}
@@ -56,7 +57,7 @@ export const BoardContainerSection = ({ section }: Props) => {
           root: {
             overflow: "visible",
             "--opacity": board.opacity / 100,
-            "--border-color": options.borderColor || undefined,
+            "--container-border-color": options.borderColor || undefined,
           },
         }}
         radius={board.itemRadius}
@@ -103,6 +104,7 @@ export const BoardContainerSection = ({ section }: Props) => {
         )}
         {!isVisuallyCollapsed && !options.collapsible && options.showLabel && options.title && (
           <Badge
+            className={classes.containerLabel}
             pos="absolute"
             top="calc(var(--mantine-spacing-xs) * -1)"
             left={labelLeft}
@@ -113,12 +115,7 @@ export const BoardContainerSection = ({ section }: Props) => {
             c="var(--mantine-color-text)"
             style={{
               zIndex: 9,
-              overflow: "hidden",
               pointerEvents: "none",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              backgroundColor: "var(--background-color)",
-              borderColor: "var(--border-color)",
             }}
             title={options.title}
             data-board-container-label
@@ -128,6 +125,7 @@ export const BoardContainerSection = ({ section }: Props) => {
         )}
         {options.showOpenAll && !isEditMode && (
           <ActionIcon
+            className={classes.containerAction}
             pos="absolute"
             top={isVisuallyCollapsed ? "50%" : "calc(var(--mantine-spacing-xs) * -1)"}
             right={8}
