@@ -5140,7 +5140,8 @@
         "currentHidden": "Current board: {name}",
         "keyboard": {
           "navigate": "Navigate",
-          "open": "Open"
+          "open": "Open",
+          "instructions": "Type to filter boards. Use the arrow keys to move through results and Enter to open a board."
         },
         "empty": {
           "title": "No other boards",

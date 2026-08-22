@@ -16,6 +16,7 @@ import {
   ThemeIcon,
   UnstyledButton,
   useMatches,
+  VisuallyHidden,
 } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import { IconArrowDown, IconArrowRight, IconLayoutBoard, IconReplace } from "@tabler/icons-react";
@@ -54,10 +55,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   });
 
   const availableBoards = useMemo(
-    () =>
-      boards
-        .filter((board) => board.id !== currentBoard?.id)
-        .toSorted((first, second) => first.name.localeCompare(second.name)),
+    () => boards.filter((board) => board.id !== currentBoard?.id),
     [boards, currentBoard?.id],
   );
   const filteredBoards = useMemo(() => {
@@ -176,7 +174,15 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
         overlayProps={{ backgroundOpacity: 0.18, blur: 2 }}
         transitionProps={{ transition: "fade", duration: 100, timingFunction: "ease" }}
       >
-        <Stack data-autofocus tabIndex={-1} gap="md" onKeyDown={handleModalKeyDown} className={classes.content}>
+        <Stack
+          data-autofocus
+          tabIndex={-1}
+          gap="md"
+          onKeyDown={handleModalKeyDown}
+          className={classes.content}
+          aria-describedby="board-switcher-instructions"
+        >
+          <VisuallyHidden id="board-switcher-instructions">{t("keyboard.instructions")}</VisuallyHidden>
           <ScrollArea.Autosize mah={640} type="auto" offsetScrollbars>
             {results}
           </ScrollArea.Autosize>
