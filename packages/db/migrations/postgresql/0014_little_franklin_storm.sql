@@ -1,1 +1,0 @@
-ALTER TABLE "board" ALTER COLUMN "item_radius" SET DEFAULT 'sm';

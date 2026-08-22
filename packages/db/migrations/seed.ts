@@ -862,7 +862,7 @@ const seedDemoUserAsync = async (db: Database) => {
     primaryColor: "#748FFC",
     secondaryColor: "#3BC9DB",
     opacity: 90,
-    itemRadius: "sm",
+    itemRadius: "xl",
   });
 
   const mainSectionId = createId();
