@@ -55,4 +55,5 @@ export const widgetDocSlugs: Record<WidgetKind, string | null> = {
   beszelSystemStats: "beszel-system-stats",
   traefik: "traefik",
   customApi: "custom-api",
+  wud: "whats-up-docker",
 };

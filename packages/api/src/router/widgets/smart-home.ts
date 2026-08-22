@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -41,6 +42,13 @@ export const smartHomeRouter = createTRPCRouter({
       const client = await createIntegrationAsync(integration);
       const success = await client.triggerToggleAsync(input.entityId);
 
+      if (!success) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Home Assistant failed to toggle the entity",
+        });
+      }
+
       return success;
     }),
   executeAutomation: protectedProcedure
@@ -55,6 +63,13 @@ export const smartHomeRouter = createTRPCRouter({
     .input(z.object({ automationId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
-      await client.triggerAutomationAsync(input.automationId);
+      const success = await client.triggerAutomationAsync(input.automationId);
+
+      if (!success) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Home Assistant failed to trigger the automation",
+        });
+      }
     }),
 });
