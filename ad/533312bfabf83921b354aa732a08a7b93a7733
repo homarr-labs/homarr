@@ -1,0 +1,39 @@
+e2e/lazy-widgets.spec.ts
+  s_148a12b92c3c12::t_d1c10391d0ab13 111,113-117,186
+packages/widgets/src/clock/component.tsx
+  s_148a12b92c3c12::t_d1c10391d0ab13 7,21-24
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_148a12b92c3c12::t_d1c10391d0ab13 43-49,166-170,174
+packages/translation/src/lang/en.json
+  s_148a12b92c3c12::t_d1c10391d0ab13 7766-7767
+packages/widgets/src/time.ts
+  s_148a12b92c3c12::t_d1c10391d0ab13 1
+apps/nextjs/src/components/assistant/assistant-widget-tool.tsx
+  s_148a12b92c3c12::t_d1c10391d0ab13 7-8,78-98
+packages/widgets/src/common/widget-time-context.spec.tsx
+  s_148a12b92c3c12::t_d1c10391d0ab13 9,11-15,23,25-27,29,37-40,42,45
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_148a12b92c3c12::t_d1c10391d0ab13 99-102
+packages/widgets/src/common/widget-time-context.tsx
+  s_148a12b92c3c12::t_d1c10391d0ab13 4,6-9,11,13-46
+apps/nextjs/src/components/assistant/widget-import-boundary.spec.ts
+  s_148a12b92c3c12::t_c9223b17866c9d 4,17-89,91-93,98,103-107,109-117
+  s_148a12b92c3c12::t_aa907067835594 90
+  s_148a12b92c3c12::t_bd2ed746a273fc 108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "ad533312bfabf83921b354aa732a08a7b93a7733",
+  "prompts": {},
+  "sessions": {
+    "s_148a12b92c3c12": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0297c-9284-73f1-b444-a10db89df09a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
