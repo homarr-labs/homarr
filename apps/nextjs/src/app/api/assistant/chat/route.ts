@@ -15,7 +15,6 @@ import {
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
 import { decryptSecret } from "@homarr/common/server";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq } from "@homarr/db";
 import { db } from "@homarr/db";
@@ -616,11 +615,6 @@ export async function POST(request: Request) {
       baseURL: configuration.baseUrl,
       apiKey: providerApiKey,
       headers: providerHeaders,
-      fetch: async (input, init) =>
-        (await fetchWithTrustedCertificatesAsync(
-          input as Parameters<typeof fetchWithTrustedCertificatesAsync>[0],
-          init as Parameters<typeof fetchWithTrustedCertificatesAsync>[1],
-        )) as unknown as Response,
       includeUsage: true,
       transformRequestBody:
         configuration.provider === "openrouter"

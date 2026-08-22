@@ -51,15 +51,11 @@ summary of accessible Homarr resources. Live status is fetched only when needed.
 
 ## Permissions and privacy
 
-- Read-only actions can run automatically. Changes require approval by default.
-- **Automatic approvals** can be enabled for one conversation. While enabled, protected changes and prepared forms run
-  without another approval click, but questions still wait for your answer. It turns off when you switch conversations;
-  Homarr permissions still apply to every action.
+- Read-only actions can run automatically. Changes require approval by default. Automatic approvals apply only to the
+  current conversation, turn off when you switch conversations, and never answer questions for you.
 - Homarr permissions apply to every tool call and mentioned item.
 - API keys and custom headers are encrypted and never returned to the browser.
 - Conversations are stored per user and can be exported or deleted.
-- Model-generated images from external websites are not loaded automatically. Homarr shows the destination host and
-  waits for you to approve each image URL, preventing a response from silently contacting another server from your browser.
 
 Prompts, attachments, tool definitions, and tool results are sent to the selected model provider. Review that
 provider's privacy policy before enabling the assistant.

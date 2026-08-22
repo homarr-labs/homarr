@@ -91,7 +91,6 @@ catalog:
   "@types/adm-zip": 0.5.8
   "@types/bcrypt": 6.0.0
   "@types/better-sqlite3": 7.6.13
-  "@types/busboy": 1.5.4
   "@types/chroma-js": 3.1.2
   "@types/cookies": 0.9.2
   "@types/crypto-js": ^4.2.2
@@ -109,7 +108,6 @@ catalog:
   "@types/ws": ^8.18.1
   "@uiw/react-codemirror": ^4.25.11
   "@types/xml2js": ^0.4.14
-  "@types/yauzl": 3.4.0
   posthog-js: ^1.399.1
   posthog-node: ^5.40.0
   "@vitejs/plugin-react": ^6.0.3
@@ -126,7 +124,6 @@ catalog:
   babel-plugin-react-compiler: ^1.0.0
   bcrypt: ^6.0.0
   better-sqlite3: ^12.11.1
-  busboy: 1.6.0
   chroma-js: ^3.2.0
   clsx: ^2.1.1
   codemirror: ^6.0.2
@@ -216,7 +213,6 @@ catalog:
   ws: ^8.21.0
   xml2js: ^0.6.2
   yaml: 2.9.0
-  yauzl: 3.4.0
   zod: ^4.4.3
   zod-form-data: ^3.0.2
   zod-validation-error: ^5.0.0

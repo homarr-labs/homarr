@@ -285,9 +285,6 @@ catalogs:
     '@types/better-sqlite3':
       specifier: 7.6.13
       version: 7.6.13
-    '@types/busboy':
-      specifier: 1.5.4
-      version: 1.5.4
     '@types/canvas-confetti':
       specifier: ^1.9.0
       version: 1.9.0
@@ -333,9 +330,6 @@ catalogs:
     '@types/xml2js':
       specifier: ^0.4.14
       version: 0.4.14
-    '@types/yauzl':
-      specifier: 3.4.0
-      version: 3.4.0
     '@vitejs/plugin-react':
       specifier: ^6.0.3
       version: 6.0.3
@@ -378,9 +372,6 @@ catalogs:
     better-sqlite3:
       specifier: ^12.11.1
       version: 12.11.1
-    busboy:
-      specifier: 1.6.0
-      version: 1.6.0
     canvas-confetti:
       specifier: ^1.9.4
       version: 1.9.4
@@ -672,9 +663,6 @@ catalogs:
     yaml:
       specifier: 2.9.0
       version: 2.9.0
-    yauzl:
-      specifier: 3.4.0
-      version: 3.4.0
     zod:
       specifier: ^4.4.3
       version: 4.4.3
@@ -1190,9 +1178,6 @@ importers:
       better-sqlite3:
         specifier: 'catalog:'
         version: 12.11.1
-      busboy:
-        specifier: 'catalog:'
-        version: 1.6.0
       chroma-js:
         specifier: 'catalog:'
         version: 3.2.0
@@ -1283,9 +1268,6 @@ importers:
       yaml:
         specifier: 'catalog:'
         version: 2.9.0
-      yauzl:
-        specifier: 'catalog:'
-        version: 3.4.0
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -1299,9 +1281,6 @@ importers:
       '@types/better-sqlite3':
         specifier: 'catalog:'
         version: 7.6.13
-      '@types/busboy':
-        specifier: 'catalog:'
-        version: 1.5.4
       '@types/chroma-js':
         specifier: 'catalog:'
         version: 3.1.2
@@ -1317,9 +1296,6 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.17)
-      '@types/yauzl':
-        specifier: 'catalog:'
-        version: 3.4.0
       concurrently:
         specifier: 'catalog:'
         version: 10.0.3
@@ -9236,9 +9212,6 @@ packages:
   '@types/bonjour@3.5.13':
     resolution: {integrity: sha512-z9fJ5Im06zvUL548KvYNecEVlA7cVDkGUi6kZusb04mpyEFKCIZJvloCcmpmLaIahDpOQGHaHmG6imtPMmPXGQ==}
 
-  '@types/busboy@1.5.4':
-    resolution: {integrity: sha512-kG7WrUuAKK0NoyxfQHsVE6j1m01s6kMma64E+OZenQABMQyTJop1DumUWcLwAQ2JzpefU7PDYoRDKl8uZosFjw==}
-
   '@types/canvas-confetti@1.9.0':
     resolution: {integrity: sha512-aBGj/dULrimR1XDZLtG9JwxX1b4HPRF6CX9Yfwh3NvstZEm1ZL7RBnel4keCPSqs1ANRu1u2Aoz9R+VmtjYuTg==}
 
@@ -9576,9 +9549,6 @@ packages:
 
   '@types/yargs@17.0.35':
     resolution: {integrity: sha512-qUHkeCyQFxMXg79wQfTtfndEC+N9ZZg76HJftDJp+qH2tV7Gj4OJi7l+PiWwJ+pWtW8GwSmqsDj/oymhrTWXjg==}
-
-  '@types/yauzl@3.4.0':
-    resolution: {integrity: sha512-NRPn5w6h8dhcnmx3YIRQcqMywY/+nND/uOkJessedcrowO3C0AssHp3tMJpxKAwOhFOo0OV1y9VtsC5hbKKBAw==}
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     resolution: {integrity: sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==}
@@ -10392,10 +10362,6 @@ packages:
   bundle-name@4.1.0:
     resolution: {integrity: sha512-tjwM5exMg6BGRI+kNmTntNsvdZS1X8BFYS6tnJ2hdH0kVxM6/eVZ2xy+FqStSWvYmtfFMDLIxurorHwDKfDz5Q==}
     engines: {node: '>=18'}
-
-  busboy@1.6.0:
-    resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
-    engines: {node: '>=10.16.0'}
 
   byline@5.0.0:
     resolution: {integrity: sha512-s6webAy+R4SR8XVuJWt2V2rGvhnrhxN+9S15GNuTK3wKPOXFF6RNc+8ug2XhH+2s4f+uudG4kUVYmYOQWL2g0Q==}
@@ -14178,9 +14144,6 @@ packages:
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
 
-  pend@1.2.0:
-    resolution: {integrity: sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==}
-
   pg-cloudflare@1.4.0:
     resolution: {integrity: sha512-Vo7z/6rrQYxpNRylp4Tlob2elzbh+N/MOQbxFVWCxS7oEx6jF53GTJFxK2WWpKuBRkmiin4Mt+xofFDjx09R0A==}
 
@@ -15787,10 +15750,6 @@ packages:
   stream-combiner2@1.1.1:
     resolution: {integrity: sha512-3PnJbYgS56AeWgtKF5jtJRT6uFJe56Z0Hc5Ngg/6sI6rIt8iiMBTa9cvdyFfpMQjaVHr8dusbNeFGIIonxOvKw==}
 
-  streamsearch@1.1.0:
-    resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
-    engines: {node: '>=10.0.0'}
-
   streamx@2.22.0:
     resolution: {integrity: sha512-sLh1evHOzBy/iWRiR6d1zRcLao4gGZr3C1kzNz4fopCOKJb6xD9ub8Mpi9Mr1R6id5o43S+d93fI48UC5uM9aw==}
 
@@ -16976,10 +16935,6 @@ packages:
   yargs@18.0.0:
     resolution: {integrity: sha512-4UEqdc2RYGHZc7Doyqkrqiln3p9X2DZVxaGbwhn2pi7MrRagKaOcIKe8L3OxYcbhXLgLFUS3zAYuQjKBQgmuNg==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=23}
-
-  yauzl@3.4.0:
-    resolution: {integrity: sha512-jIH9yLR9wqr0wOS0TpBvo/g/2UgZH5qePVbjgRliiF0BYvOZyaBknKsF+x9Iht0O6sqgnB93rCICdOZFecJuDw==}
-    engines: {node: '>=12'}
 
   yjs@13.6.32:
     resolution: {integrity: sha512-lfiJIIC4Xayt5ItynE407ehlE03pCjeOc4hkR4yxxvvNJ4kuiN25B0g+Qp8XagYz361LLL7DCzR5bvFJ81QKtQ==}
@@ -24355,10 +24310,6 @@ snapshots:
     dependencies:
       '@types/node': 24.13.3
 
-  '@types/busboy@1.5.4':
-    dependencies:
-      '@types/node': 24.13.3
-
   '@types/canvas-confetti@1.9.0': {}
 
   '@types/chai@5.2.2':
@@ -24744,10 +24695,6 @@ snapshots:
   '@types/yargs@17.0.35':
     dependencies:
       '@types/yargs-parser': 21.0.3
-
-  '@types/yauzl@3.4.0':
-    dependencies:
-      '@types/node': 24.13.3
 
   '@typescript/typescript-aix-ppc64@7.0.2':
     optional: true
@@ -25616,10 +25563,6 @@ snapshots:
   bundle-name@4.1.0:
     dependencies:
       run-applescript: 7.1.0
-
-  busboy@1.6.0:
-    dependencies:
-      streamsearch: 1.1.0
 
   byline@5.0.0: {}
 
@@ -29943,8 +29886,6 @@ snapshots:
 
   pathe@2.0.3: {}
 
-  pend@1.2.0: {}
-
   pg-cloudflare@1.4.0:
     optional: true
 
@@ -32148,8 +32089,6 @@ snapshots:
       duplexer2: 0.1.4
       readable-stream: 2.3.8
 
-  streamsearch@1.1.0: {}
-
   streamx@2.22.0:
     dependencies:
       fast-fifo: 1.3.2
@@ -33494,10 +33433,6 @@ snapshots:
       string-width: 7.2.0
       y18n: 5.0.8
       yargs-parser: 22.0.0
-
-  yauzl@3.4.0:
-    dependencies:
-      pend: 1.2.0
 
   yjs@13.6.32:
     dependencies:

@@ -101,7 +101,7 @@ describe("POST /api/backup/import", () => {
   let activeDatabasePath: string;
 
   beforeEach(() => {
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    vi.useFakeTimers();
     temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "homarr-import-route-test-"));
     activeDatabasePath = path.join(temporaryDirectory, "db.sqlite");
     routeMocks.dbEnv.DRIVER = "better-sqlite3";
@@ -234,6 +234,7 @@ describe("POST /api/backup/import", () => {
   it("rejects a concurrent restore while the first request owns the restore lock", async () => {
     createMigratedDatabase(activeDatabasePath, "board-current", "Current board");
     const backup = createBackup(temporaryDirectory, "concurrent", "Concurrent restore");
+    const originalArrayBuffer = File.prototype.arrayBuffer;
     let signalStarted!: () => void;
     let releaseFirstRequest!: () => void;
     const started = new Promise<void>((resolve) => {
@@ -242,25 +243,13 @@ describe("POST /api/backup/import", () => {
     const release = new Promise<void>((resolve) => {
       releaseFirstRequest = resolve;
     });
-    const originalRequest = createImportRequest(backup);
-    const requestBody = await originalRequest.arrayBuffer();
-    const delayedBody = new ReadableStream<Uint8Array>({
-      async pull(controller) {
-        signalStarted();
-        await release;
-        controller.enqueue(new Uint8Array(requestBody));
-        controller.close();
-      },
+    vi.spyOn(File.prototype, "arrayBuffer").mockImplementationOnce(async function (this: File) {
+      signalStarted();
+      await release;
+      return originalArrayBuffer.call(this);
     });
-    const delayedRequestInit: RequestInit & { duplex: "half" } = {
-      method: "POST",
-      headers: originalRequest.headers,
-      body: delayedBody,
-      duplex: "half",
-    };
-    const delayedRequest = new Request(originalRequest.url, delayedRequestInit);
 
-    const firstRestore = POST(delayedRequest);
+    const firstRestore = POST(createImportRequest(backup));
     await started;
     const concurrentResponse = await POST(createImportRequest(backup));
     releaseFirstRequest();

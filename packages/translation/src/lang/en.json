@@ -7510,8 +7510,7 @@
     "image": {
       "loading": "Loading image",
       "failed": "This image could not be loaded.",
-      "retry": "Try image again",
-      "loadExternal": "Load external image from {host}"
+      "retry": "Try image again"
     },
     "quoteSelection": "Quote",
     "dismissQuote": "Remove quote",

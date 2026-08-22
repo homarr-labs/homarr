@@ -148,11 +148,7 @@ import { getAssistantDirectiveTranslationKey, parseAssistantDirectives } from ".
 import { remarkAssistantDirectives, resolveAssistantDirectiveEntity } from "./assistant-markdown-directives";
 import type { AssistantDirectiveEntity } from "./assistant-markdown-directives";
 import { normalizeAssistantMarkdown } from "./assistant-markdown";
-import {
-  getSafeAssistantAttachmentImageSource,
-  getSafeAssistantExternalMarkdownImageSource,
-  getSafeAssistantMarkdownImageSource,
-} from "./assistant-markdown-image";
+import { getSafeAssistantAttachmentImageSource, getSafeAssistantMarkdownImageSource } from "./assistant-markdown-image";
 import {
   getAssistantContextBreakdown,
   getAssistantConversationUsage,
@@ -224,8 +220,7 @@ const ContextDirectiveChip = ({
 }: DirectiveChipProps & { iconUrl?: string }) => {
   const t = useI18n("assistant");
   const Icon = contextIcons[directiveType as keyof typeof contextIcons] ?? IconAt;
-  const safeIconUrl =
-    getSafeAssistantMarkdownImageSource(iconUrl) ?? getSafeAssistantExternalMarkdownImageSource(iconUrl);
+  const safeIconUrl = getSafeAssistantMarkdownImageSource(iconUrl);
   const translationKey = getAssistantDirectiveTranslationKey(directiveType);
   const typeLabel = t(`mentions.${translationKey}`);
 
@@ -297,30 +292,13 @@ const MarkdownTable = ({ children, ...props }: ComponentPropsWithoutRef<"table">
 
 const MarkdownImage = ({ src, alt = "", ...props }: ComponentPropsWithoutRef<"img">) => {
   const t = useI18n("assistant.image");
-  const [approvedExternalSource, setApprovedExternalSource] = useState<string | null>(null);
   const safeSource = getSafeAssistantMarkdownImageSource(src);
-  const externalSource = getSafeAssistantExternalMarkdownImageSource(src);
-  const approvedSource = externalSource === approvedExternalSource ? externalSource : null;
-  const displaySource = safeSource ?? approvedSource;
-
-  if (!displaySource && externalSource) {
-    return (
-      <Button
-        variant="default"
-        size="compact-sm"
-        leftSection={<IconPhoto size={14} aria-hidden />}
-        onClick={() => setApprovedExternalSource(externalSource)}
-      >
-        {t("loadExternal", { host: new URL(externalSource).host })}
-      </Button>
-    );
-  }
-  if (!displaySource) return null;
+  if (!safeSource) return null;
 
   return (
     <AssistantImage
       {...props}
-      source={displaySource}
+      source={safeSource}
       alt={alt}
       className={classes.markdownImage}
       loadingLabel={t("loading")}
@@ -2309,8 +2287,6 @@ const AutoApprovalControl = () => {
       width="min(19rem, calc(100vw - 1rem))"
       shadow="md"
       withinPortal
-      trapFocus
-      returnFocus
     >
       <Popover.Target>
         <ActionIcon
@@ -2318,11 +2294,6 @@ const AutoApprovalControl = () => {
           variant={enabled ? "light" : "subtle"}
           color={enabled ? "green" : "gray"}
           onClick={() => setOpened((current) => !current)}
-          onKeyDown={(event) => {
-            if (event.key !== "Escape" || !opened) return;
-            event.stopPropagation();
-            setOpened(false);
-          }}
           aria-label={t("label")}
           aria-pressed={enabled}
           title={enabled ? t("enabled") : t("label")}
@@ -2330,13 +2301,7 @@ const AutoApprovalControl = () => {
           <IconShieldCheck size={17} />
         </ActionIcon>
       </Popover.Target>
-      <Popover.Dropdown
-        onKeyDown={(event) => {
-          if (event.key !== "Escape") return;
-          event.stopPropagation();
-          setOpened(false);
-        }}
-      >
+      <Popover.Dropdown>
         <Stack gap="sm">
           <Box>
             <Text size="sm" fw={700}>
@@ -2347,7 +2312,6 @@ const AutoApprovalControl = () => {
             </Text>
           </Box>
           <Button
-            data-autofocus
             fullWidth
             variant={enabled ? "default" : "light"}
             color={enabled ? "gray" : "green"}
