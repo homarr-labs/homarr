@@ -102,6 +102,7 @@
 
 .switchOption {
   display: flex;
+  cursor: pointer;
   height: 4.5rem;
   align-items: center;
   padding: 0.625rem 0.75rem;

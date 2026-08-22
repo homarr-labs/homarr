@@ -570,7 +570,17 @@ export const WidgetEditModal = createModal<WidgetEditModalProps<WidgetKind>>(({ 
                       }
 
                       return (
-                        <Box key={key} className={classes.switchOption} data-option-type={value.type}>
+                        <Box
+                          key={key}
+                          className={classes.switchOption}
+                          data-option-type={value.type}
+                          onClick={(event) => {
+                            const target = event.target;
+                            if (target instanceof Element && target.closest("label, input")) return;
+                            const input = event.currentTarget.querySelector<HTMLInputElement>("input[type=checkbox]");
+                            if (!input?.disabled) input?.click();
+                          }}
+                        >
                           <Input
                             kind={innerProps.kind}
                             property={key}
