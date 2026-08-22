@@ -24,7 +24,7 @@
   background-color: var(--mantine-color-iconColor-filled-hover);
 }
 
-.compactScrollArea :global(.mantine-ScrollArea-viewport) > div {
+.compactScrollViewport > div {
   display: flex !important;
   width: 100%;
   min-height: 100%;

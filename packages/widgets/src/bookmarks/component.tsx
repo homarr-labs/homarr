@@ -130,7 +130,7 @@ export default function BookmarksWidget({
       )}
       {displayMode !== "advanced" && (
         <ScrollArea
-          className={classes.compactScrollArea}
+          classNames={{ viewport: classes.compactScrollViewport }}
           type="auto"
           scrollbarSize={6}
           style={{ flex: 1, minHeight: 0 }}
