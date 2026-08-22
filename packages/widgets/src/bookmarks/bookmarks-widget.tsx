@@ -214,7 +214,7 @@ const BookmarkCard = ({
       <Stack h="100%" align="center" justify="center" gap={6} flex={1}>
         {showIcon ? <BookmarkAvatar bookmark={bookmark} iconUrl={iconUrl} size={iconOnly ? 34 : 38} /> : null}
         {showTitle ? (
-          <Text fz={11} fw={600} lh={1.2} ta="center" lineClamp={2}>
+          <Text size="xxs" fw={600} lh={1.2} ta="center" lineClamp={2}>
             {bookmark.name}
           </Text>
         ) : null}
@@ -239,7 +239,7 @@ const BookmarkCard = ({
         {!iconOnly ? (
           <Stack gap={advanced ? 3 : 0} miw={0} flex={1}>
             {showTitle ? (
-              <Text fz={advanced ? 12 : 11} fw={600} lh={1.2} truncate>
+              <Text size={advanced ? "xs" : "xxs"} fw={600} lh={1.2} truncate>
                 {bookmark.name}
               </Text>
             ) : null}
