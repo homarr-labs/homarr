@@ -91,7 +91,17 @@ export const GridPreviewLayer = ({
 
     const viewport = grid.parentElement;
     if (viewport?.hasAttribute("data-section-id")) {
-      viewport.style.setProperty("--board-grid-drag-height", `${getLogicalTrackSize(renderedRowCount)}px`);
+      // This grows the viewport to match the inner grid while a drag needs extra room to show a
+      // drop target (maxRowCount === null - a "main"/rail section without a fixed cap). A capped
+      // section (e.g. a scrollable container, maxRowCount !== null) must never have this set: it
+      // isn't just a temporary default here, this effect reruns on every board mutation - so a
+      // stray value would silently blow the cap open for the rest of the session, well after any
+      // drag ended, since nothing else would ever clear it back out.
+      if (maxRowCount === null) {
+        viewport.style.setProperty("--board-grid-drag-height", `${getLogicalTrackSize(renderedRowCount)}px`);
+      } else {
+        viewport.style.removeProperty("--board-grid-drag-height");
+      }
     }
   }, [
     entryElements,

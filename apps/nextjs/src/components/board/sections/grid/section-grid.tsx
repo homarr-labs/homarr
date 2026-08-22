@@ -130,8 +130,13 @@ export const SectionGrid = ({
   const contentRowCount = Math.max(1, getLayoutRowCount(displayPlacements));
   const rowCount = Math.max(contentRowCount, requestedRowCount, minimumViewportRowCount);
   const maxRowCount = section.kind === "container" || railPlacement !== "main" ? rowCount : null;
+  // A scrollable container isn't forced to grow with its content - it scrolls internally instead
+  // of expanding to fit every widget, so its viewport height is capped independently of rowCount.
+  const isScrollableContainer = section.kind === "container" && section.options.scrollable;
+  const viewportRowCount = isScrollableContainer ? Math.max(requestedRowCount, 1) : rowCount;
   const logicalWidth = getLogicalTrackSize(columnCount);
   const logicalHeight = getLogicalTrackSize(rowCount);
+  const viewportHeight = getLogicalTrackSize(viewportRowCount);
   // A collapsed container's compact coordinates are display-only. Its own
   // nested grid stays inactive until an explicit edit interaction expands it.
   const isInteractionDisabled = section.kind === "container" && collapsedSectionIds.has(section.id);
@@ -190,6 +195,18 @@ export const SectionGrid = ({
     section,
   ]);
 
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const previousItemIdsRef = useRef<Set<string> | null>(null);
+  useEffect(() => {
+    const currentIds = new Set([...items, ...innerSections].map((item) => item.id));
+    const previousIds = previousItemIdsRef.current;
+    const hasNewItem = previousIds !== null && [...currentIds].some((id) => !previousIds.has(id));
+    previousItemIdsRef.current = currentIds;
+    if (hasNewItem && isScrollableContainer) {
+      viewportRef.current?.scrollTo({ top: viewportRef.current.scrollHeight, behavior: "smooth" });
+    }
+  }, [innerSections, isScrollableContainer, items]);
+
   return (
     <SectionProvider
       value={{
@@ -206,18 +223,20 @@ export const SectionGrid = ({
       }}
     >
       <Box
+        ref={viewportRef}
         {...canvasAttributes}
-        className={combineClasses(classes.viewport, className)}
+        className={combineClasses(classes.viewport, isScrollableContainer && classes.scrollableViewport, className)}
         style={
           {
             width: logicalWidth,
-            height: `var(--board-grid-drag-height, ${logicalHeight}px)`,
+            height: `var(--board-grid-drag-height, ${viewportHeight}px)`,
             "--board-item-radius": `var(--mantine-radius-${board.itemRadius})`,
           } as CSSProperties
         }
         data-section-id={section.id}
         data-section-kind={section.kind}
         data-rail-placement={railPlacement}
+        data-scrollable={isScrollableContainer ? "true" : undefined}
         data-grid-interaction-disabled={isEditMode && isInteractionDisabled ? "true" : undefined}
         onPointerDownCapture={expandCollapsedSectionsForPointerEdit}
         onKeyDownCapture={expandCollapsedSectionsForKeyboardEdit}
@@ -296,6 +315,11 @@ const getContainerMinimumSizes = (board: ReturnType<typeof useRequiredBoard>, la
     if (visiting.has(sectionId)) return { width: 1, height: 1 };
     visiting.add(sectionId);
 
+    const section = board.sections.find((candidate) => candidate.id === sectionId);
+    // A scrollable container isn't forced to grow with its content - it scrolls internally instead,
+    // so it shouldn't have a content-derived height floor imposed by its parent's grid.
+    const isScrollable = section?.kind === "container" && section.options.scrollable;
+
     const itemBounds = directItemsBySectionId.get(sectionId) ?? [];
     const sectionBounds = (directSectionsBySectionId.get(sectionId) ?? []).map(({ id, placement }) => {
       const minimum = resolve(id);
@@ -308,7 +332,7 @@ const getContainerMinimumSizes = (board: ReturnType<typeof useRequiredBoard>, la
     const children = [...itemBounds, ...sectionBounds];
     const minimum = {
       width: Math.max(1, ...children.map((child) => child.xOffset + child.width)),
-      height: Math.max(1, ...children.map((child) => child.yOffset + child.height)),
+      height: isScrollable ? 1 : Math.max(1, ...children.map((child) => child.yOffset + child.height)),
     };
     visiting.delete(sectionId);
     minimumBySectionId.set(sectionId, minimum);

@@ -1396,6 +1396,7 @@ describe("saveBoard should save full board", () => {
       showLabel: false,
       collapsible: false,
       showOpenAll: false,
+      scrollable: false,
     });
     expect(
       await db.query.sectionLayouts.findFirst({

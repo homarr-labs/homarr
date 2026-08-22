@@ -296,6 +296,21 @@ body[data-board-grid-interacting="resize"] .board-grid-entry[data-dnd-active="tr
   top: -0.625rem;
   left: -0.625rem;
   cursor: nwse-resize;
+  /* Leaves a thin draggable border around the corner instead of a solid 44x44 hit area,
+     so it doesn't sit on top of the container menu button anchored in this same corner. */
+  clip-path: polygon(
+    evenodd,
+    0 0,
+    100% 0,
+    100% 100%,
+    0 100%,
+    0 0,
+    4px 4px,
+    4px 40px,
+    40px 40px,
+    40px 4px,
+    4px 4px
+  );
 }
 
 @media (prefers-reduced-motion: reduce) {

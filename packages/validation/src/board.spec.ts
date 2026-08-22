@@ -75,6 +75,7 @@ describe("section behavior validation", () => {
         showLabel: false,
         collapsible: true,
         showOpenAll: true,
+        scrollable: true,
       },
       layouts: [],
     });
@@ -88,6 +89,7 @@ describe("section behavior validation", () => {
         showLabel: false,
         collapsible: true,
         showOpenAll: true,
+        scrollable: true,
       },
     });
   });

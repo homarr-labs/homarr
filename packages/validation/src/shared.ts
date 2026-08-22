@@ -61,6 +61,7 @@ export const containerSectionOptionsDefaults = {
   showLabel: true,
   collapsible: false,
   showOpenAll: false,
+  scrollable: false,
 } as const;
 
 export const containerSectionOptionsSchema = z
@@ -71,6 +72,7 @@ export const containerSectionOptionsSchema = z
     showLabel: z.boolean().default(containerSectionOptionsDefaults.showLabel),
     collapsible: z.boolean().default(containerSectionOptionsDefaults.collapsible),
     showOpenAll: z.boolean().default(containerSectionOptionsDefaults.showOpenAll),
+    scrollable: z.boolean().default(containerSectionOptionsDefaults.scrollable),
   })
   .default(containerSectionOptionsDefaults);
 
