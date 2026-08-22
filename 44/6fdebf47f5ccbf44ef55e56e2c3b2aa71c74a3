@@ -1,0 +1,21 @@
+packages/widgets/src/calendar/component.module.css
+  s_ae3aca013ea901::t_270872d96f0784 8-9
+packages/widgets/src/calendar/component.tsx
+  s_ae3aca013ea901::t_d536d02a285482 294,297-304
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "446fdebf47f5ccbf44ef55e56e2c3b2aa71c74a3",
+  "prompts": {},
+  "sessions": {
+    "s_ae3aca013ea901": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a029e5-cfb0-7b20-8bf8-88f9e08de20b",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    }
+  }
+}
