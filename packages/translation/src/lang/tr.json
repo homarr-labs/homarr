@@ -2033,8 +2033,7 @@
           "label": "Sıcaklıklarda ondalıkları gösterme"
         },
         "showCurrentWindSpeed": {
-          "label": "Mevcut rüzgar hızını göster",
-          "description": "Yalnızca mevcut hava durumunda"
+          "label": "Mevcut rüzgar hızını göster"
         },
         "useImperialSpeed": {
           "label": "Rüzgâr hızı için mil/sa kullan"

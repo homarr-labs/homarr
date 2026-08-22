@@ -2087,8 +2087,7 @@
           "label": "crwdns2704:0crwdne2704:0"
         },
         "showCurrentWindSpeed": {
-          "label": "crwdns2706:0crwdne2706:0",
-          "description": "crwdns2708:0crwdne2708:0"
+          "label": "crwdns2706:0crwdne2706:0"
         },
         "useImperialSpeed": {
           "label": "crwdns3768:0crwdne3768:0"

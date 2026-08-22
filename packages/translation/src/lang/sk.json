@@ -2033,8 +2033,7 @@
           "label": "Zakázať desatinné miesta teploty"
         },
         "showCurrentWindSpeed": {
-          "label": "Zobraziť aktuálnu rýchlosť vetra",
-          "description": "Len za aktuálneho počasia"
+          "label": "Zobraziť aktuálnu rýchlosť vetra"
         },
         "useImperialSpeed": {
           "label": ""

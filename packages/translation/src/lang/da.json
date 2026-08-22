@@ -2033,8 +2033,7 @@
           "label": "Deaktiver temperaturdecimaler"
         },
         "showCurrentWindSpeed": {
-          "label": "Vis aktuel vindhastighed",
-          "description": "Kun på nuværende vejr"
+          "label": "Vis aktuel vindhastighed"
         },
         "useImperialSpeed": {
           "label": "Brug mi/t til vindhastighed"

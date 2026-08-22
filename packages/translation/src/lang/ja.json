@@ -2033,8 +2033,7 @@
           "label": "温度の小数点以下を無効にする"
         },
         "showCurrentWindSpeed": {
-          "label": "現在の風速を表示",
-          "description": "現在の天気のみ表示"
+          "label": "現在の風速を表示"
         },
         "useImperialSpeed": {
           "label": "風速にmphを使用する"

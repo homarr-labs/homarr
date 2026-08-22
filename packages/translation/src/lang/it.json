@@ -2087,8 +2087,7 @@
           "label": "Disabilita decimali della temperatura"
         },
         "showCurrentWindSpeed": {
-          "label": "Mostra la velocità attuale del vento",
-          "description": "Solo sul meteo corrente"
+          "label": "Mostra la velocità attuale del vento"
         },
         "useImperialSpeed": {
           "label": "Usa mph per la velocità del vento"

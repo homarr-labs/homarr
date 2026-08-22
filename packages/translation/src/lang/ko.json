@@ -2087,8 +2087,7 @@
           "label": "온도 소수점 비활성화"
         },
         "showCurrentWindSpeed": {
-          "label": "현재 풍속 표시",
-          "description": "현재 날씨 기준으로만 표시됩니다"
+          "label": "현재 풍속 표시"
         },
         "useImperialSpeed": {
           "label": "mph 풍속 사용"

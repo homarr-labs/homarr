@@ -2033,8 +2033,7 @@
           "label": "Älä näytä lämpötilojen desimaaleja"
         },
         "showCurrentWindSpeed": {
-          "label": "Näytä nykyinen tuulen nopeus",
-          "description": "Vain nykyiselle säälle."
+          "label": "Näytä nykyinen tuulen nopeus"
         },
         "useImperialSpeed": {
           "label": "Käytä tuulen nopeudelle mph-yksikköä"

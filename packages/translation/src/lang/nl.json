@@ -2033,8 +2033,7 @@
           "label": "Temperatuur-decimalen uitschakelen"
         },
         "showCurrentWindSpeed": {
-          "label": "Toon huidige windsnelheid",
-          "description": "Alleen op het huidige weer"
+          "label": "Toon huidige windsnelheid"
         },
         "useImperialSpeed": {
           "label": "Gebruik mph voor windsnelheid"
