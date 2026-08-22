@@ -73,6 +73,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
     return switcherBoards.filter((board) => board.name.toLocaleLowerCase().includes(normalizedSearch));
   }, [search, switcherBoards]);
   const columnCount = Math.max(1, Math.min(filteredBoards.length, responsiveColumnCount));
+  const modalColumnCount = Math.max(1, Math.min(switcherBoards.length, responsiveColumnCount));
 
   const openSwitcher = useCallback(() => {
     setIsOpen(true);
@@ -177,7 +178,7 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
         withCloseButton={false}
         centered
         aria-label={t("title")}
-        size={`${columnCount * 15 + Math.max(0, columnCount - 1) * 0.75}rem`}
+        size={`${modalColumnCount * 15 + Math.max(0, modalColumnCount - 1) * 0.75}rem`}
         overlayProps={{ backgroundOpacity: 0, blur: 2 }}
         transitionProps={{ transition: "fade", duration: 100, timingFunction: "ease" }}
         classNames={{ content: classes.modalContent, body: classes.modalBody }}
