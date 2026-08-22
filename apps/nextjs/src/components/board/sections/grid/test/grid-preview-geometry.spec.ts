@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, test } from "vitest";
 
+import { getLogicalTrackSize, LOGICAL_GRID_PITCH } from "~/components/board/layout";
+
 import { createGridPreviewDomState, syncGridPreviewGeometry } from "../grid-preview-geometry";
 
 describe("grid preview geometry", () => {
@@ -25,8 +27,12 @@ describe("grid preview geometry", () => {
 
     expect(elements.get("active")?.hasAttribute("data-grid-preview")).toBe(false);
     expect(elements.get("active")?.getAttribute("data-dnd-active")).toBe("true");
-    expect(elements.get("displaced")?.style.getPropertyValue("--board-grid-preview-x")).toBe("-448px");
-    expect(elements.get("displaced")?.style.getPropertyValue("--board-grid-preview-y")).toBe("448px");
+    expect(elements.get("displaced")?.style.getPropertyValue("--board-grid-preview-x")).toBe(
+      `${-2 * LOGICAL_GRID_PITCH}px`,
+    );
+    expect(elements.get("displaced")?.style.getPropertyValue("--board-grid-preview-y")).toBe(
+      `${2 * LOGICAL_GRID_PITCH}px`,
+    );
     expect(elements.get("displaced")?.dataset.gridX).toBe("0");
     expect(elements.get("displaced")?.dataset.gridY).toBe("2");
 
@@ -57,10 +63,10 @@ describe("grid preview geometry", () => {
 
     const active = elements.get("active");
     expect(active?.getAttribute("data-grid-preview")).toBe("true");
-    expect(active?.style.getPropertyValue("--board-grid-preview-x")).toBe("224px");
-    expect(active?.style.getPropertyValue("--board-grid-preview-y")).toBe("224px");
-    expect(active?.style.getPropertyValue("--board-grid-preview-width")).toBe("648px");
-    expect(active?.style.getPropertyValue("--board-grid-preview-height")).toBe("872px");
+    expect(active?.style.getPropertyValue("--board-grid-preview-x")).toBe(`${LOGICAL_GRID_PITCH}px`);
+    expect(active?.style.getPropertyValue("--board-grid-preview-y")).toBe(`${LOGICAL_GRID_PITCH}px`);
+    expect(active?.style.getPropertyValue("--board-grid-preview-width")).toBe(`${getLogicalTrackSize(3)}px`);
+    expect(active?.style.getPropertyValue("--board-grid-preview-height")).toBe(`${getLogicalTrackSize(4)}px`);
     expect(active?.dataset.gridW).toBe("3");
     expect(active?.dataset.gridH).toBe("4");
   });
