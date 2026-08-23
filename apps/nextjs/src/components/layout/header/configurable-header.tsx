@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AppShellHeader,
   Avatar,
@@ -57,6 +57,10 @@ interface ConfigurableHeaderProps {
 }
 
 type HeaderBoard = RouterOutputs["board"]["getAllBoards"][number];
+
+const floatingControlsIntroDurationMs = 5_000;
+const floatingControlsDismissDelayMs = 900;
+
 export const ConfigurableHeader = ({
   logo,
   actions,
@@ -132,7 +136,7 @@ export const ConfigurableHeader = ({
                 </div>
               </AppShellHeader>
             ) : (
-              <Group className={classes.floatingControls} gap={4} wrap="nowrap">
+              <FloatingHeaderControls>
                 {hasNavigation ? <ClientBurger /> : null}
                 <UserButtonClient
                   avatar={avatar}
@@ -140,13 +144,92 @@ export const ConfigurableHeader = ({
                   isDockerEnabled={isDockerEnabled}
                   boardSwitcher={boardSwitcher}
                 />
-              </Group>
+              </FloatingHeaderControls>
             )}
             <LazySpotlight />
           </>
         );
       }}
     </BoardSwitcher>
+  );
+};
+
+const FloatingHeaderControls = ({ children }: { children: ReactNode }) => {
+  const [isIntroComplete, setIsIntroComplete] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const isInteractingRef = useRef(false);
+  const dismissTimeoutRef = useRef<number | null>(null);
+
+  const clearDismissTimeout = () => {
+    if (dismissTimeoutRef.current === null) return;
+    window.clearTimeout(dismissTimeoutRef.current);
+    dismissTimeoutRef.current = null;
+  };
+
+  const dismissSoon = () => {
+    if (!isIntroComplete) return;
+    clearDismissTimeout();
+    dismissTimeoutRef.current = window.setTimeout(() => {
+      if (!isInteractingRef.current) setIsVisible(false);
+    }, floatingControlsDismissDelayMs);
+  };
+
+  const revealFromCorner = () => {
+    if (!isIntroComplete) return;
+    clearDismissTimeout();
+    setIsVisible(true);
+  };
+
+  const startInteraction = () => {
+    isInteractingRef.current = true;
+    clearDismissTimeout();
+    setIsVisible(true);
+  };
+
+  const endInteraction = () => {
+    isInteractingRef.current = false;
+    dismissSoon();
+  };
+
+  useEffect(() => {
+    const introTimeout = window.setTimeout(() => {
+      setIsIntroComplete(true);
+      if (!isInteractingRef.current) setIsVisible(false);
+    }, floatingControlsIntroDurationMs);
+
+    return () => {
+      window.clearTimeout(introTimeout);
+      if (dismissTimeoutRef.current !== null) window.clearTimeout(dismissTimeoutRef.current);
+    };
+  }, []);
+
+  return (
+    <>
+      <div
+        className={classes.floatingControlsCorner}
+        data-active={isIntroComplete || undefined}
+        aria-hidden
+        onPointerEnter={revealFromCorner}
+        onPointerMove={revealFromCorner}
+        onPointerDown={revealFromCorner}
+        onPointerLeave={dismissSoon}
+      />
+      <Group
+        className={classes.floatingControls}
+        data-visible={isVisible || undefined}
+        gap={4}
+        wrap="nowrap"
+        onPointerEnter={startInteraction}
+        onPointerLeave={endInteraction}
+        onFocusCapture={startInteraction}
+        onBlurCapture={(event) => {
+          if (event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget)) return;
+          endInteraction();
+        }}
+      >
+        {children}
+      </Group>
+    </>
   );
 };
 

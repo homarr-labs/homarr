@@ -96,14 +96,27 @@
 .floatingControls {
   position: fixed;
   z-index: var(--homarr-z-index-board-header);
-  inset-block-start: max(rem(10px), env(safe-area-inset-top));
-  inset-inline-end: max(rem(10px), env(safe-area-inset-right));
+  top: max(rem(10px), env(safe-area-inset-top));
+  right: max(rem(10px), env(safe-area-inset-right));
   padding: rem(8px);
   border: rem(1px) solid color-mix(in srgb, var(--mantine-color-default-border) 70%, transparent);
   border-radius: 999px;
   background: color-mix(in srgb, var(--mantine-color-body) 58%, transparent);
   box-shadow: 0 rem(12px) rem(36px) rgb(0 0 0 / 20%);
   backdrop-filter: blur(rem(20px)) saturate(140%);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(rem(-8px)) scale(0.98);
+  transition:
+    opacity 160ms ease,
+    transform 180ms ease;
+}
+
+.floatingControls[data-visible="true"],
+.floatingControls:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
 }
 
 .floatingControls :global(.mantine-UnstyledButton-root) {
@@ -112,8 +125,18 @@
   justify-content: center;
 }
 
-:global([dir="rtl"]) .floatingControls {
-  inset-inline-end: max(rem(10px), env(safe-area-inset-left));
+.floatingControlsCorner {
+  position: fixed;
+  z-index: calc(var(--homarr-z-index-board-header) - 1);
+  top: 0;
+  right: 0;
+  width: rem(112px);
+  height: rem(112px);
+  pointer-events: none;
+}
+
+.floatingControlsCorner[data-active="true"] {
+  pointer-events: auto;
 }
 
 @media (max-width: $mantine-breakpoint-sm) {
@@ -129,5 +152,11 @@
   .search {
     width: auto;
     flex: 0 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floatingControls {
+    transition: none;
   }
 }
