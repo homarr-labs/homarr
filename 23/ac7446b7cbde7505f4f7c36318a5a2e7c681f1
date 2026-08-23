@@ -11,6 +11,7 @@ apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
   s_3e036d74c3a222::t_42fc62bf290fa7 155-157,164,167
 apps/nextjs/src/components/board/items/item-content.tsx
   s_3e036d74c3a222::t_557938b69d3dd1 346-350,352
+  s_3e036d74c3a222::t_ca1c71a64b2ce7 5
 apps/nextjs/src/app/[locale]/_client-providers/query-persistence.ts
   s_3e036d74c3a222::t_199a42373e4c80 25,27-33,35,37,43-63,94-96,101,131-153,161,164,171-175,206,217,234-241
 e2e/lazy-widgets.spec.ts
