@@ -17,7 +17,6 @@
     "./downloads": "./src/interfaces/downloads/download-client-items.ts",
     "./factory": "./src/factory.ts",
     "./response-contract": "./src/base/response-contract.ts",
-    "./synology": "./src/synology/synology-integration.ts",
     "./test-connection": "./src/base/test-connection/index.ts",
     "./types": "./src/types.ts"
   },

@@ -6,7 +6,7 @@ import { beforeAll, describe, expect, test, vi } from "vitest";
 
 import { createDb } from "@homarr/db/test";
 
-import { NzbGetIntegration } from "../src/download-client/nzbget/nzbget-integration";
+import { NzbGetIntegration } from "../src";
 import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
 
 vi.mock("@homarr/db", async (importActual) => {

@@ -91,7 +91,6 @@ const ItemSelectModalContent = ({
   initialSearch = "",
 }: ItemSelectModalContentProps) => {
   const [search, setSearch] = useState(initialSearch);
-  const canBrowseCustomWidgets = isAdmin;
   const t = useI18n();
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
@@ -480,7 +479,7 @@ const ItemSelectModalContent = ({
           />
         ))}
 
-        {canBrowseCustomWidgets && (
+        {isAdmin && (
           <>
             <Divider
               label={
@@ -535,7 +534,7 @@ const ItemSelectModalContent = ({
         )}
       </SimpleGrid>
 
-      {filteredItems.length === 0 && (!canBrowseCustomWidgets || filteredCustomWidgets.length === 0) && (
+      {filteredItems.length === 0 && (!isAdmin || filteredCustomWidgets.length === 0) && (
         <Center p="xl">
           <Text c="dimmed">{t("common.noResults")}</Text>
         </Center>
@@ -654,13 +653,12 @@ const ItemSelectModalFrame = ({
   const utils = clientApi.useUtils();
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
-  const canBrowseCustomWidgets = isAdmin;
   const canCreateIntegration = session?.user.permissions.includes("integration-create") ?? false;
   const t = useI18n();
   const { data: integrationData } = clientApi.integration.all.useQuery();
   const { data: customWidgetDefs } = clientApi.customWidget.available.useQuery(
     { boardId: innerProps.boardId },
-    { enabled: canBrowseCustomWidgets },
+    { enabled: isAdmin },
   );
 
   return (

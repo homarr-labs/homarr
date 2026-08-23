@@ -1,12 +1,12 @@
-import { objectEntries, objectKeys } from "@homarr/common";
 import type { AtLeastOneOf } from "@homarr/common/types";
 
 import { createDocumentationLink } from "./docs";
 import type { HomarrDocumentationPath } from "./docs/homarr-docs-sitemap";
-import { generatedIntegrationDefinitions } from "./generated/integration-modules";
 
 type IntegrationDocumentationPath = Extract<HomarrDocumentationPath, `/docs/integrations/${string}`>;
-type IntegrationDocumentationSlug = string;
+type IntegrationDocumentationSlug = IntegrationDocumentationPath extends `/docs/integrations/${infer TSlug}`
+  ? TSlug
+  : never;
 
 export const integrationSecretKindObject = {
   apiKey: { isPublic: false, multiline: false },
@@ -27,7 +27,7 @@ export const integrationSecretKindObject = {
   slug: { isPublic: true, multiline: false },
 } satisfies Record<string, { isPublic: boolean; multiline: boolean }>;
 
-export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
+export const integrationSecretKinds = Object.keys(integrationSecretKindObject) as IntegrationSecretKind[];
 
 interface IntegrationFeatureMetadata {
   docker?: {
@@ -37,17 +37,6 @@ interface IntegrationFeatureMetadata {
   onboarding?: {
     featuredOrder?: number;
     hidden?: boolean;
-  };
-}
-
-interface ResolvedIntegrationFeatureMetadata {
-  docker: {
-    aliases: readonly string[];
-    discoverable: boolean;
-  };
-  onboarding: {
-    featuredOrder: number | null;
-    hidden: boolean;
   };
 }
 
@@ -63,45 +52,7 @@ interface integrationDefinition {
   apiKeySettingsPath?: string;
 }
 
-type ResolvedIntegrationDefinitions<TDefinitions extends Record<string, integrationDefinition>> = {
-  [TKind in keyof TDefinitions]: TDefinitions[TKind] & {
-    documentationUrl: string | null;
-    features: ResolvedIntegrationFeatureMetadata;
-  };
-};
-
-const createIntegrationDefinitions = <const TDefinitions extends Record<string, integrationDefinition>>(
-  definitions: TDefinitions,
-): ResolvedIntegrationDefinitions<TDefinitions> => {
-  return Object.fromEntries(
-    objectEntries(definitions).map(([kind, definition]) => {
-      let documentationUrl: string | null = null;
-      if (definition.documentationSlug !== null) {
-        const documentationPath = `/docs/integrations/${definition.documentationSlug}` as IntegrationDocumentationPath;
-        documentationUrl = createDocumentationLink(documentationPath);
-      }
-      return [
-        kind,
-        {
-          ...definition,
-          documentationUrl,
-          features: {
-            docker: {
-              aliases: definition.features?.docker?.aliases ?? [],
-              discoverable: definition.features?.docker?.discoverable ?? true,
-            },
-            onboarding: {
-              featuredOrder: definition.features?.onboarding?.featuredOrder ?? null,
-              hidden: definition.features?.onboarding?.hidden ?? false,
-            },
-          },
-        },
-      ];
-    }),
-  ) as unknown as ResolvedIntegrationDefinitions<TDefinitions>;
-};
-
-export const integrationDefs = createIntegrationDefinitions({
+export const integrationDefs = {
   sabNzbd: {
     name: "SABnzbd",
     secretKinds: [["apiKey"]],
@@ -551,7 +502,14 @@ export const integrationDefs = createIntegrationDefinitions({
     documentationSlug: "peanut",
     defaultPort: 8080,
   },
-  ...generatedIntegrationDefinitions,
+  beszel: {
+    name: "Beszel",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/beszel.svg",
+    category: ["beszel"],
+    documentationSlug: "beszel",
+    defaultPort: 8090,
+  },
   gluetun: {
     name: "Gluetun",
     secretKinds: [["username", "password"], ["apiKey"], []],
@@ -612,9 +570,9 @@ export const integrationDefs = createIntegrationDefinitions({
       onboarding: { hidden: true },
     },
   },
-} as const satisfies Record<string, integrationDefinition>);
+} as const satisfies Record<string, integrationDefinition>;
 
-export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
+export const integrationKinds = Object.keys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
 
 export const getIconUrl = (integration: IntegrationKind) => integrationDefs[integration].iconUrl;
 
@@ -624,10 +582,10 @@ export const getDefaultSecretKinds = (integration: IntegrationKind): Integration
   ...integrationDefs[integration].secretKinds[0],
 ];
 
-export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> =>
-  integrationDefs[integration].secretKinds.map((secretKinds) => [...secretKinds]) as AtLeastOneOf<
-    IntegrationSecretKind[]
-  >;
+export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> => {
+  const [first, ...rest] = integrationDefs[integration].secretKinds;
+  return [[...first], ...rest.map((secretKinds) => [...secretKinds])];
+};
 
 export const getIntegrationDefaultUrl = (integration: IntegrationKind) => {
   const definition = integrationDefs[integration];
@@ -639,8 +597,30 @@ export const getIntegrationDefaultPort = (kind: IntegrationKind): number | undef
   return "defaultPort" in definition ? definition.defaultPort : undefined;
 };
 
-export const getIntegrationDocumentationUrl = (kind: IntegrationKind): string | null =>
-  integrationDefs[kind].documentationUrl;
+export const getIntegrationDocumentationSlug = (kind: IntegrationKind): IntegrationDocumentationSlug | null =>
+  integrationDefs[kind].documentationSlug;
+
+export const getIntegrationDocumentationUrl = (kind: IntegrationKind): string | null => {
+  const slug = getIntegrationDocumentationSlug(kind);
+  if (slug === null) return null;
+  return createDocumentationLink(`/docs/integrations/${slug}`);
+};
+
+export const getIntegrationDockerMetadata = (kind: IntegrationKind) => {
+  const definition: integrationDefinition = integrationDefs[kind];
+  return {
+    aliases: definition.features?.docker?.aliases ?? [],
+    discoverable: definition.features?.docker?.discoverable ?? true,
+  };
+};
+
+export const getIntegrationOnboardingMetadata = (kind: IntegrationKind) => {
+  const definition: integrationDefinition = integrationDefs[kind];
+  return {
+    featuredOrder: definition.features?.onboarding?.featuredOrder ?? null,
+    hidden: definition.features?.onboarding?.hidden ?? false,
+  };
+};
 
 export const getIntegrationApiKeyUrl = (integrationUrl: string, kind: IntegrationKind): string | null => {
   const definition = integrationDefs[kind];
@@ -666,7 +646,7 @@ export const getIntegrationApiKeyUrl = (integrationUrl: string, kind: Integratio
  * @returns Partial list of integration kinds
  */
 export const getIntegrationKindsByCategory = <TCategory extends IntegrationCategory>(category: TCategory) => {
-  return objectKeys(integrationDefs).filter((integration) =>
+  return (Object.keys(integrationDefs) as IntegrationKind[]).filter((integration) =>
     integrationDefs[integration].category.some((defCategory) => defCategory === category),
   ) as AtLeastOneOf<IntegrationKindByCategory<TCategory>>;
 };

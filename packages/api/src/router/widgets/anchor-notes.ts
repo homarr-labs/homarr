@@ -75,6 +75,8 @@ export const anchorNotesRouter = createTRPCRouter({
           ...(input.title !== undefined ? { title: input.title } : {}),
           ...(normalizedContent !== undefined ? { content: normalizedContent } : {}),
         });
+        anchorNotesListRequestHandler.invalidateCache();
+        await anchorNoteRequestHandler.invalidateCacheAsync([ctx.integration.id]);
 
         return updatedNote;
       } catch (error) {

@@ -13,11 +13,13 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("rssFeed", {
   supportsAdvancedFocus: true,
   icon: IconRss,
+  queryKey: [["widget", "rssFeed", "getFeeds"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {
       urls: scope.options.feedUrls,
       maximumAmountPosts: scope.options.maximumAmountPosts,
     }),
+  refetchInterval: null,
   errors: {
     BAD_GATEWAY: {
       icon: IconServerOff,

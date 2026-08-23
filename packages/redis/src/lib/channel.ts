@@ -168,7 +168,13 @@ export const createLockChannel = (name: string) => {
 };
 
 const integrationCacheGenerationKey = (integrationId: string) => `integration-cache:generation:${integrationId}`;
-const pendingIntegrationCacheInvalidations = new Map<string, string>();
+export const getIntegrationSessionStoreKey = (integrationId: string) => `session-store:${integrationId}`;
+interface PendingIntegrationCacheInvalidation {
+  generation: string;
+  clearSession: boolean;
+}
+
+const pendingIntegrationCacheInvalidations = new Map<string, PendingIntegrationCacheInvalidation>();
 const MAX_PENDING_INTEGRATION_CACHE_INVALIDATIONS = 1000;
 const CACHE_GENERATION_REDIS_TIMEOUT_MS = 500;
 const CACHE_GENERATION_SUCCESS_TTL_MS = 1000;
@@ -284,7 +290,11 @@ const advanceIntegrationCacheGenerationAsync = async (integrationId: string) => 
   if (!client) return null;
 
   const results = await withCacheGenerationRedisTimeoutAsync(
-    client.multi().incr(integrationCacheGenerationKey(integrationId)).del(`session-store:${integrationId}`).exec(),
+    client
+      .multi()
+      .incr(integrationCacheGenerationKey(integrationId))
+      .del(getIntegrationSessionStoreKey(integrationId))
+      .exec(),
   );
   const generationResult = results?.[0];
   const sessionResult = results?.[1];
@@ -293,25 +303,54 @@ const advanceIntegrationCacheGenerationAsync = async (integrationId: string) => 
   return String(generationResult[1]);
 };
 
+const advanceIntegrationResponseCacheGenerationAsync = async (integrationId: string) => {
+  const client = getSetClient as typeof getSetClient | null;
+  if (!client) return null;
+
+  return String(await withCacheGenerationRedisTimeoutAsync(client.incr(integrationCacheGenerationKey(integrationId))));
+};
+
+const getIntegrationCacheInvalidationOperation = (clearSession: boolean) => {
+  if (clearSession) {
+    return {
+      advanceAsync: advanceIntegrationCacheGenerationAsync,
+      operation: "generation-advance-and-session-delete",
+      failureMessage: "Failed to invalidate integration and session caches in Redis",
+    };
+  }
+  return {
+    advanceAsync: advanceIntegrationResponseCacheGenerationAsync,
+    operation: "generation-advance",
+    failureMessage: "Failed to invalidate integration response caches in Redis",
+  };
+};
+
 export const getIntegrationCacheGenerationAsync = async (
   integrationId: string,
 ): Promise<IntegrationCacheGeneration> => {
   const cacheKey = integrationCacheGenerationKey(integrationId);
-  const pendingGeneration = pendingIntegrationCacheInvalidations.get(integrationId);
-  if (pendingGeneration) {
+  const pendingInvalidation = pendingIntegrationCacheInvalidations.get(integrationId);
+  if (pendingInvalidation) {
+    const invalidationOperation = getIntegrationCacheInvalidationOperation(pendingInvalidation.clearSession);
     const generation = await getCachedGenerationAsync({
       cacheKey,
-      readAsync: async () => await advanceIntegrationCacheGenerationAsync(integrationId),
-      fallback: { value: pendingGeneration, isShared: false },
+      readAsync: async () => await invalidationOperation.advanceAsync(integrationId),
+      fallback: { value: pendingInvalidation.generation, isShared: false },
       errorMessage: "Failed to retry integration cache invalidation",
-      errorMetadata: { integrationId, operation: "generation-advance" },
+      errorMetadata: {
+        integrationId,
+        operation: invalidationOperation.operation,
+      },
     });
-    if (generation.isShared && pendingIntegrationCacheInvalidations.get(integrationId) === pendingGeneration) {
+    if (
+      generation.isShared &&
+      pendingIntegrationCacheInvalidations.get(integrationId)?.generation === pendingInvalidation.generation
+    ) {
       pendingIntegrationCacheInvalidations.delete(integrationId);
       return generation;
     }
-    const latestPendingGeneration = pendingIntegrationCacheInvalidations.get(integrationId);
-    if (latestPendingGeneration) return { value: latestPendingGeneration, isShared: false };
+    const latestPendingInvalidation = pendingIntegrationCacheInvalidations.get(integrationId);
+    if (latestPendingInvalidation) return { value: latestPendingInvalidation.generation, isShared: false };
     return generation;
   }
 
@@ -328,27 +367,50 @@ export const getIntegrationCacheGenerationAsync = async (
   });
 };
 
-export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {
-  const pendingGeneration = `local-${createId()}`;
+const invalidateIntegrationCacheGenerationAsync = async (
+  integrationId: string,
+  clearSession: boolean,
+): Promise<void> => {
+  const previousInvalidation = pendingIntegrationCacheInvalidations.get(integrationId);
+  const pendingInvalidation: PendingIntegrationCacheInvalidation = {
+    generation: `local-${createId()}`,
+    clearSession: clearSession || previousInvalidation?.clearSession === true,
+  };
   if (pendingIntegrationCacheInvalidations.size >= MAX_PENDING_INTEGRATION_CACHE_INVALIDATIONS) {
     const oldestIntegrationId = pendingIntegrationCacheInvalidations.keys().next().value;
     if (oldestIntegrationId) pendingIntegrationCacheInvalidations.delete(oldestIntegrationId);
   }
-  pendingIntegrationCacheInvalidations.set(integrationId, pendingGeneration);
+  pendingIntegrationCacheInvalidations.set(integrationId, pendingInvalidation);
   const cacheKey = integrationCacheGenerationKey(integrationId);
-  beginCacheGenerationInvalidation(cacheKey, pendingGeneration);
+  beginCacheGenerationInvalidation(cacheKey, pendingInvalidation.generation);
+  const invalidationOperation = getIntegrationCacheInvalidationOperation(pendingInvalidation.clearSession);
 
   const generation = await getCachedGenerationAsync({
     cacheKey,
-    readAsync: async () => await advanceIntegrationCacheGenerationAsync(integrationId),
-    fallback: { value: pendingGeneration, isShared: false },
-    errorMessage: "Failed to invalidate integration caches in Redis",
-    errorMetadata: { integrationId, operation: "generation-advance-and-session-delete" },
+    readAsync: async () => await invalidationOperation.advanceAsync(integrationId),
+    fallback: { value: pendingInvalidation.generation, isShared: false },
+    errorMessage: invalidationOperation.failureMessage,
+    errorMetadata: {
+      integrationId,
+      operation: invalidationOperation.operation,
+    },
     force: true,
   });
-  if (generation.isShared && pendingIntegrationCacheInvalidations.get(integrationId) === pendingGeneration) {
+  if (
+    generation.isShared &&
+    pendingIntegrationCacheInvalidations.get(integrationId)?.generation === pendingInvalidation.generation
+  ) {
     pendingIntegrationCacheInvalidations.delete(integrationId);
   }
+};
+
+export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {
+  await invalidateIntegrationCacheGenerationAsync(integrationId, true);
+};
+
+/** Advances response-cache generation without evicting cached integration credentials. */
+export const invalidateIntegrationResponseCacheAsync = async (integrationId: string): Promise<void> => {
+  await invalidateIntegrationCacheGenerationAsync(integrationId, false);
 };
 
 const widgetCacheGenerationKey = (namespace: string) => `widget-cache:generation:${namespace}`;

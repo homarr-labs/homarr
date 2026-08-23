@@ -2,10 +2,10 @@ import { TRPCError } from "@trpc/server";
 
 import { env } from "@homarr/docker/env";
 
-import { middlewareProcedure } from "../trpc";
+import { publicProcedure } from "../trpc";
 
 export const kubernetesMiddleware = () => {
-  return middlewareProcedure.use(async ({ next }) => {
+  return publicProcedure.use(async ({ next }) => {
     if (env.ENABLE_KUBERNETES) {
       return await next();
     }

@@ -3,12 +3,12 @@ import superjson from "superjson";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import { createGetSetChannel } from "@homarr/redis";
+import { createGetSetChannel, getIntegrationSessionStoreKey } from "@homarr/redis";
 
 const logger = createLogger({ module: "sessionStore" });
 
 export const createSessionStore = <TValue>(integration: { id: string }) => {
-  const channelName = `session-store:${integration.id}`;
+  const channelName = getIntegrationSessionStoreKey(integration.id);
   const channel = createGetSetChannel<`${string}.${string}`>(channelName);
 
   return {

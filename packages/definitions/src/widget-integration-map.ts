@@ -1,31 +1,91 @@
+import { objectEntries } from "@homarr/common";
+
 import { createDocumentationLink } from "./docs";
 import type { IntegrationKind } from "./integration";
-import { integrationKinds } from "./integration";
+import { getIntegrationKindsByCategory, integrationKinds } from "./integration";
 import type { WidgetKind } from "./widget";
-import { widgetDefaultSizes, widgetFeatureCatalog, widgetKinds } from "./widget";
-import type { NativeFeatureCapabilityDescriptor } from "./widget-feature-catalog";
+import { widgetDefaultSizes } from "./widget";
 
-export type { NativeFeatureCapabilityDescriptor } from "./widget-feature-catalog";
+/** Integration selection shared by the widget UI and API trust boundary. */
+export interface WidgetIntegrationConfig {
+  supportedIntegrations: IntegrationKind[];
+  integrationsRequired?: false;
+  maxIntegrations?: number;
+}
 
-const createNativeFeatureCapabilities = () => {
-  const result: Partial<Record<WidgetKind, NativeFeatureCapabilityDescriptor>> = {};
-  for (const kind of widgetKinds) {
-    const descriptor = widgetFeatureCatalog[kind];
-    if ("capability" in descriptor) result[kind] = descriptor.capability;
-  }
-  return result;
-};
+export const widgetIntegrationConfigs = {
+  dnsHoleSummary: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },
+  dnsHoleControls: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },
+  "smartHome-entityState": {
+    supportedIntegrations: getIntegrationKindsByCategory("smartHomeServer"),
+    maxIntegrations: 1,
+  },
+  "smartHome-executeAutomation": {
+    supportedIntegrations: getIntegrationKindsByCategory("smartHomeServer"),
+    maxIntegrations: 1,
+  },
+  mediaServer: { supportedIntegrations: getIntegrationKindsByCategory("mediaService") },
+  calendar: { supportedIntegrations: getIntegrationKindsByCategory("calendar"), integrationsRequired: false },
+  downloads: { supportedIntegrations: getIntegrationKindsByCategory("downloadClient") },
+  "mediaRequests-requestList": { supportedIntegrations: getIntegrationKindsByCategory("mediaRequest") },
+  "mediaRequests-requestStats": { supportedIntegrations: getIntegrationKindsByCategory("mediaRequest") },
+  mediaTranscoding: {
+    supportedIntegrations: getIntegrationKindsByCategory("mediaTranscoding"),
+    maxIntegrations: 1,
+  },
+  mediaMissing: { supportedIntegrations: getIntegrationKindsByCategory("mediaOrganizer") },
+  networkControllerSummary: { supportedIntegrations: getIntegrationKindsByCategory("networkController") },
+  networkControllerStatus: { supportedIntegrations: getIntegrationKindsByCategory("networkController") },
+  indexerManager: { supportedIntegrations: getIntegrationKindsByCategory("indexerManager") },
+  healthMonitoring: {
+    supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring").filter(
+      (kind) => kind !== "patchmon" && kind !== "wud",
+    ),
+  },
+  firewall: { supportedIntegrations: getIntegrationKindsByCategory("firewall") },
+  notifications: { supportedIntegrations: getIntegrationKindsByCategory("notifications") },
+  mediaReleases: { supportedIntegrations: ["mock", "emby", "jellyfin", "plex"] },
+  systemResources: {
+    supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
+  },
+  systemDisks: { supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology"] },
+  beszelAlerts: { supportedIntegrations: ["beszel", "mock"] },
+  beszelSystemGrid: { supportedIntegrations: ["beszel", "mock"] },
+  beszelSystemStats: { supportedIntegrations: ["beszel", "mock"] },
+  beszelSystemTable: { supportedIntegrations: ["beszel", "mock"] },
+  coolify: { supportedIntegrations: ["coolify"] },
+  "immich-serverStats": { supportedIntegrations: ["immich"], maxIntegrations: 1 },
+  "immich-albumCarousel": { supportedIntegrations: ["immich"], maxIntegrations: 1 },
+  paperlessNgx: { supportedIntegrations: ["paperlessNgx"], maxIntegrations: 1 },
+  patchmon: { supportedIntegrations: ["patchmon"], maxIntegrations: 1 },
+  bazarr: { supportedIntegrations: ["bazarr"], maxIntegrations: 1 },
+  tracearr: { supportedIntegrations: ["tracearr"] },
+  speedtestTracker: { supportedIntegrations: ["speedtestTracker"] },
+  uptimeKuma: { supportedIntegrations: ["uptimeKuma"] },
+  audioStats: { supportedIntegrations: ["navidrome", "audiobookshelf"], maxIntegrations: 1 },
+  umami: { supportedIntegrations: ["umami"], maxIntegrations: 1 },
+  vpn: { supportedIntegrations: getIntegrationKindsByCategory("vpn") },
+  ups: { supportedIntegrations: getIntegrationKindsByCategory("ups") },
+  archiveTeamWarrior: { supportedIntegrations: ["archiveTeamWarrior"], maxIntegrations: 1 },
+  anchorNote: { supportedIntegrations: ["anchor"], maxIntegrations: 1 },
+  traefik: { supportedIntegrations: ["traefik"] },
+  wud: { supportedIntegrations: ["wud"], maxIntegrations: 1 },
+} satisfies Partial<Record<WidgetKind, WidgetIntegrationConfig>>;
 
-export const nativeFeatureCapabilities = createNativeFeatureCapabilities();
+export type WidgetKindWithIntegration = keyof typeof widgetIntegrationConfigs;
 
-const nativeFeatureCapabilityEntries = Object.entries(nativeFeatureCapabilities) as [
-  WidgetKind,
-  NativeFeatureCapabilityDescriptor,
-][];
+export type WidgetIntegrationKind<TKind extends WidgetKindWithIntegration> =
+  (typeof widgetIntegrationConfigs)[TKind]["supportedIntegrations"][number];
+
+export const getWidgetIntegrationConfig = <TKind extends WidgetKindWithIntegration>(
+  kind: TKind,
+): (typeof widgetIntegrationConfigs)[TKind] => widgetIntegrationConfigs[kind];
+
+const widgetIntegrationConfigEntries = objectEntries(widgetIntegrationConfigs);
 
 const createWidgetIntegrationSupport = () => {
   const result: Partial<Record<WidgetKind, readonly IntegrationKind[]>> = {};
-  for (const [kind, capability] of nativeFeatureCapabilityEntries) result[kind] = capability.integrations;
+  for (const [kind, config] of widgetIntegrationConfigEntries) result[kind] = config.supportedIntegrations;
   return result;
 };
 
@@ -33,16 +93,15 @@ export const widgetIntegrationSupport = createWidgetIntegrationSupport();
 
 /** Widgets that remain useful without a configured integration. */
 export const widgetKindsWithOptionalIntegrations = new Set<WidgetKind>(
-  nativeFeatureCapabilityEntries
-    .filter(([, capability]) => capability.connectionOptional === true)
+  widgetIntegrationConfigEntries
+    .filter(([, config]) => "integrationsRequired" in config && config.integrationsRequired === false)
     .map(([kind]) => kind),
 );
 
-/** Widgets that support fewer integrations than the default unlimited selection. */
 const createWidgetIntegrationLimits = () => {
   const result: Partial<Record<WidgetKind, number>> = {};
-  for (const [kind, capability] of nativeFeatureCapabilityEntries) {
-    if (capability.serverMaxIntegrations !== undefined) result[kind] = capability.serverMaxIntegrations;
+  for (const [kind, config] of widgetIntegrationConfigEntries) {
+    if ("maxIntegrations" in config) result[kind] = config.maxIntegrations;
   }
   return result;
 };
@@ -75,7 +134,8 @@ export const getWidgetIntegrationIssue = (
     return { code: "integration-required" };
   }
   const incompatibleKinds = selectedIntegrationKinds.filter((kind) => !supportedIntegrations?.includes(kind));
-  return incompatibleKinds.length > 0 ? { code: "incompatible-integration", incompatibleKinds } : null;
+  if (incompatibleKinds.length === 0) return null;
+  return { code: "incompatible-integration", incompatibleKinds };
 };
 
 export const getWidgetIntegrationIssueMessage = (widgetKind: WidgetKind, issue: WidgetIntegrationIssue) => {
@@ -87,16 +147,18 @@ export const getWidgetIntegrationIssueMessage = (widgetKind: WidgetKind, issue: 
   return `${widgetKind} does not support integration kind${issue.incompatibleKinds.length === 1 ? "" : "s"}: ${issue.incompatibleKinds.join(", ")}`;
 };
 
-/** Reverse capability index generated from nativeFeatureCapabilities. */
 const createIntegrationWidgetSupport = () => {
   const result = {} as Record<IntegrationKind, readonly WidgetKind[]>;
   for (const integrationKind of integrationKinds) {
-    result[integrationKind] = nativeFeatureCapabilityEntries
-      .filter(([, capability]) => capability.integrations.includes(integrationKind))
+    result[integrationKind] = widgetIntegrationConfigEntries
+      .filter(([, config]) => supportsIntegration(config, integrationKind))
       .map(([widgetKind]) => widgetKind);
   }
   return result;
 };
+
+const supportsIntegration = (config: WidgetIntegrationConfig, integrationKind: IntegrationKind) =>
+  config.supportedIntegrations.includes(integrationKind);
 
 export const integrationWidgetSupport = createIntegrationWidgetSupport();
 
@@ -112,27 +174,11 @@ export interface DefaultWidgetConfig {
   skip?: boolean;
 }
 
-type WidgetKindWithDefaultSize = {
-  [TKind in WidgetKind]: (typeof widgetFeatureCatalog)[TKind] extends { defaultSize: Readonly<{ width: number }> }
-    ? TKind
-    : never;
-}[WidgetKind];
-
-type DefaultWidgetConfigRecipe = Omit<DefaultWidgetConfig, "kind" | "width" | "height"> & {
-  kind: WidgetKindWithDefaultSize;
-};
-
-const defaultWidgetConfigDefinitions: DefaultWidgetConfigRecipe[] = [
-  { kind: "clock" },
-  { kind: "weather", options: { showHumidity: false, showCity: false, hasForecast: false } },
-  { kind: "bookmarks", options: { title: "Useful Links", layout: "grid", openNewTab: true } },
+export const defaultWidgetConfigs: DefaultWidgetConfig[] = [
+  { kind: "clock", width: 2, height: 1 },
+  { kind: "weather", width: 2, height: 1, options: { showHumidity: false, showCity: false, hasForecast: false } },
+  { kind: "bookmarks", width: 2, height: 2, options: { title: "Useful Links", layout: "grid", openNewTab: true } },
 ];
-
-export const defaultWidgetConfigs: DefaultWidgetConfig[] = defaultWidgetConfigDefinitions.map((recipe) => {
-  const defaultSize = widgetDefaultSizes[recipe.kind];
-  if (!defaultSize) throw new Error(`Default widget ${recipe.kind} must declare a default size`);
-  return { ...recipe, ...defaultSize };
-});
 
 const defaultWidgetConfigByKind = new Map(defaultWidgetConfigs.map((config) => [config.kind, config]));
 

@@ -38,6 +38,14 @@ type DownloadClientQueryResult = DownloadClientQueryResultBase &
       }
   );
 
+const runDownloadMutationsAsync = async (mutations: Promise<void>[], integrationIds: string[]) => {
+  const results = await Promise.allSettled(mutations);
+  await downloadClientRequestHandler.invalidateCacheAsync(integrationIds);
+
+  const failure = results.find((result) => result.status === "rejected");
+  if (failure) throw failure.reason;
+};
+
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure
     .meta({
@@ -84,25 +92,25 @@ export const downloadsRouter = createTRPCRouter({
     })
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .mutation(async ({ ctx }) => {
-      await Promise.all(
+      await runDownloadMutationsAsync(
         ctx.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.pauseQueueAsync();
         }),
+        ctx.integrations.map(({ id }) => id),
       );
-      downloadClientRequestHandler.invalidateCache();
     }),
   pauseItem: protectedProcedure
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
-      await Promise.all(
+      await runDownloadMutationsAsync(
         ctx.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.pauseItemAsync(input.item);
         }),
+        ctx.integrations.map(({ id }) => id),
       );
-      downloadClientRequestHandler.invalidateCache();
     }),
   resume: protectedProcedure
     .meta({
@@ -114,36 +122,36 @@ export const downloadsRouter = createTRPCRouter({
     })
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .mutation(async ({ ctx }) => {
-      await Promise.all(
+      await runDownloadMutationsAsync(
         ctx.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.resumeQueueAsync();
         }),
+        ctx.integrations.map(({ id }) => id),
       );
-      downloadClientRequestHandler.invalidateCache();
     }),
   resumeItem: protectedProcedure
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
-      await Promise.all(
+      await runDownloadMutationsAsync(
         ctx.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.resumeItemAsync(input.item);
         }),
+        ctx.integrations.map(({ id }) => id),
       );
-      downloadClientRequestHandler.invalidateCache();
     }),
   deleteItem: protectedProcedure
     .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema, fromDisk: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      await Promise.all(
+      await runDownloadMutationsAsync(
         ctx.integrations.map(async (integration) => {
           const integrationInstance = await createIntegrationAsync(integration);
           await integrationInstance.deleteItemAsync(input.item, input.fromDisk);
         }),
+        ctx.integrations.map(({ id }) => id),
       );
-      downloadClientRequestHandler.invalidateCache();
     }),
 });

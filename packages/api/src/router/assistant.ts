@@ -25,9 +25,7 @@ import {
   assistantProviderPresets,
   assistantProviderRequiresApiKey,
   getIconUrl,
-  integrationKinds,
   resolveAssistantModelId,
-  widgetKinds,
 } from "@homarr/definitions";
 
 import type { createTRPCContext } from "../trpc";
@@ -338,7 +336,6 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
     boardRouter.createCaller(ctx).getAllBoards(),
     ctx.db.query.integrations.findMany({
       columns: { id: true, name: true, kind: true },
-      where: inArray(integrations.kind, integrationKinds),
       with: {
         userPermissions: {
           where: eq(integrationUserPermissions.userId, ctx.session.user.id),
@@ -367,12 +364,9 @@ export const getAssistantContextEntitiesAsync = async (ctx: AssistantContext): P
       ? []
       : await ctx.db.query.items.findMany({
           columns: { id: true, boardId: true, kind: true },
-          where: and(
-            inArray(
-              items.boardId,
-              availableBoards.map((board) => board.id),
-            ),
-            inArray(items.kind, widgetKinds),
+          where: inArray(
+            items.boardId,
+            availableBoards.map((board) => board.id),
           ),
           orderBy: asc(items.kind),
           limit: 500,

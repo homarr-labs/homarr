@@ -7,20 +7,44 @@ import type { SettingsContextProps } from "@homarr/settings/creator";
 
 import type { WidgetComponentProps, WidgetDefinition } from "./definition";
 import type { WidgetOptionDefinition } from "./options";
+import type { WidgetImports } from "./registry";
 import { widgetModuleLoaders } from "./registry";
 
-type WidgetComponentModule = {
-  default: ComponentType<WidgetComponentProps<WidgetKind>>;
+type RegisteredWidgetModule = WidgetImports[WidgetKind];
+type RegisteredWidgetComponentModule = Awaited<ReturnType<RegisteredWidgetModule["componentLoader"]>>;
+type WidgetDefinitionFor<TKind extends WidgetKind> = WidgetImports[TKind]["definition"] & WidgetDefinition;
+
+type WidgetComponentModule<TKind extends WidgetKind> = {
+  default: ComponentType<WidgetComponentProps<TKind>>;
 };
 
-type WidgetModule = {
-  definition: WidgetDefinition;
-  componentLoader: () => Promise<WidgetComponentModule>;
+export type WidgetModule<TKind extends WidgetKind> = {
+  definition: WidgetDefinitionFor<TKind>;
+  componentLoader: () => Promise<WidgetComponentModule<TKind>>;
 };
 
-export type WidgetResources = {
+export type WidgetResources<TKind extends WidgetKind = WidgetKind> = {
+  definition: WidgetDefinitionFor<TKind>;
+  Component: ComponentType<WidgetComponentProps<TKind>>;
+};
+
+type RegisteredWidgetResources = {
+  definition: RegisteredWidgetModule["definition"];
+  Component: RegisteredWidgetComponentModule["default"];
+};
+
+type WidgetManifestValue<TKind extends WidgetKind> = {
+  module: WidgetModule<TKind>;
+  component: WidgetComponentModule<TKind>;
+  resources: WidgetResources<TKind>;
+  definition: WidgetDefinitionFor<TKind>;
+};
+
+type RegisteredWidgetManifestValue = {
+  module: RegisteredWidgetModule;
+  component: RegisteredWidgetComponentModule;
+  resources: RegisteredWidgetResources;
   definition: WidgetDefinition;
-  Component: ComponentType<WidgetComponentProps<WidgetKind>>;
 };
 
 const definitionPromises = new Map<WidgetKind, Promise<WidgetDefinition>>();
@@ -47,52 +71,67 @@ export const createRetryableLoader = <TKey, TValue>(loaders: ReadonlyMap<TKey, (
 };
 
 const loadRegisteredWidgetModule = createRetryableLoader(
-  new Map(Object.entries(widgetModuleLoaders) as [WidgetKind, () => Promise<WidgetModule>][]),
+  new Map<WidgetKind, () => Promise<RegisteredWidgetModule>>(objectEntries(widgetModuleLoaders)),
 );
 
-export const loadWidgetModule = (kind: WidgetKind) => loadRegisteredWidgetModule(kind);
+// ponytail: TypeScript cannot express a Map whose value depends on its key. This
+// private assertion restores only the fixed shapes above; the manifest alignment
+// test checks module.definition.kind. Its ceiling is runtime-only mismatch
+// detection, so remove it if TypeScript gains dependent Map value types.
+const correlateWidgetPromise = <TKind extends WidgetKind, TType extends keyof WidgetManifestValue<TKind>>(
+  _kind: TKind,
+  _type: TType,
+  promise: Promise<RegisteredWidgetManifestValue[TType]>,
+) => promise as Promise<WidgetManifestValue<TKind>[TType]>;
+
+export const loadWidgetModule = <TKind extends WidgetKind>(kind: TKind) =>
+  correlateWidgetPromise(kind, "module", loadRegisteredWidgetModule(kind));
 
 const loadRegisteredWidgetComponent = createRetryableLoader(
-  new Map(
+  new Map<WidgetKind, () => Promise<RegisteredWidgetComponentModule>>(
     widgetKinds.map((kind) => [
       kind,
       async () => {
-        const widgetModule = await loadWidgetModule(kind);
+        const widgetModule = await loadRegisteredWidgetModule(kind);
         return widgetModule.componentLoader();
       },
     ]),
   ),
 );
 
-export const loadWidgetComponent = (kind: WidgetKind) => loadRegisteredWidgetComponent(kind);
+export const loadWidgetComponent = <TKind extends WidgetKind>(kind: TKind) =>
+  correlateWidgetPromise(kind, "component", loadRegisteredWidgetComponent(kind));
 
 const loadRegisteredWidgetResources = createRetryableLoader(
-  new Map(
+  new Map<WidgetKind, () => Promise<RegisteredWidgetResources>>(
     widgetKinds.map((kind) => [
       kind,
       async () => {
         const [{ definition }, { default: Component }] = await Promise.all([
-          loadWidgetModule(kind),
-          loadWidgetComponent(kind),
+          loadRegisteredWidgetModule(kind),
+          loadRegisteredWidgetComponent(kind),
         ]);
-        return { definition, Component } satisfies WidgetResources;
+        return { definition, Component };
       },
     ]),
   ),
 );
 
-export const loadWidgetResources = (kind: WidgetKind) => loadRegisteredWidgetResources(kind);
+export const loadWidgetResources = <TKind extends WidgetKind>(kind: TKind) =>
+  correlateWidgetPromise(kind, "resources", loadRegisteredWidgetResources(kind));
 
-export const loadWidgetDefinition = (kind: WidgetKind) => {
+export const loadWidgetDefinition = <TKind extends WidgetKind>(kind: TKind) => {
   const existing = definitionPromises.get(kind);
-  if (existing) return existing;
+  if (existing) {
+    return correlateWidgetPromise(kind, "definition", existing);
+  }
 
-  const promise = loadWidgetModule(kind).then(({ definition }) => definition);
+  const promise = loadRegisteredWidgetModule(kind).then(({ definition }) => definition);
   definitionPromises.set(kind, promise);
   void promise.catch(() => {
     if (definitionPromises.get(kind) === promise) definitionPromises.delete(kind);
   });
-  return promise;
+  return correlateWidgetPromise(kind, "definition", promise);
 };
 
 let allWidgetDefinitionsPromise: Promise<Map<WidgetKind, WidgetDefinition>> | undefined;

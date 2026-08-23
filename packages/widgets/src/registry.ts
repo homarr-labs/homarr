@@ -20,6 +20,7 @@ import type * as customApi from "./custom-api";
 import type * as dnsHoleControls from "./dns-hole/controls";
 import type * as dnsHoleSummary from "./dns-hole/summary";
 import type * as dockerContainers from "./docker";
+import type * as downloads from "./downloads";
 import type * as firewall from "./firewall";
 import type * as healthMonitoring from "./health-monitoring";
 import type * as iframe from "./iframe";
@@ -56,9 +57,8 @@ import type * as ups from "./ups";
 import type * as uptimeKuma from "./uptime-kuma";
 import type * as video from "./video";
 import type * as vpn from "./vpn";
+import type * as weather from "./weather";
 import type * as wud from "./wud";
-import { generatedWidgetModuleLoaders } from "./generated/widget-modules";
-import type { GeneratedWidgetImports } from "./generated/widget-modules";
 
 type WidgetModule = {
   definition: unknown;
@@ -86,6 +86,7 @@ export const widgetModuleLoaders = {
   stockPrice: () => import("./stocks"),
   mediaServer: () => import("./media-server"),
   calendar: () => import("./calendar"),
+  downloads: () => import("./downloads"),
   "mediaRequests-requestList": () => import("./media-requests/list"),
   "mediaRequests-requestStats": () => import("./media-requests/stats"),
   mediaMissing: () => import("./media-missing"),
@@ -124,8 +125,8 @@ export const widgetModuleLoaders = {
   beszelSystemStats: () => import("./beszel-system-stats"),
   traefik: () => import("./traefik"),
   customApi: () => import("./custom-api"),
+  weather: () => import("./weather"),
   wud: () => import("./wud"),
-  ...generatedWidgetModuleLoaders,
 } satisfies Record<WidgetKind, () => Promise<WidgetModule>>;
 
 export type WidgetImports = {
@@ -147,6 +148,7 @@ export type WidgetImports = {
   stockPrice: typeof stockPrice;
   mediaServer: typeof mediaServer;
   calendar: typeof calendar;
+  downloads: typeof downloads;
   "mediaRequests-requestList": typeof mediaRequestsList;
   "mediaRequests-requestStats": typeof mediaRequestsStats;
   mediaMissing: typeof mediaMissing;
@@ -185,8 +187,9 @@ export type WidgetImports = {
   beszelSystemStats: typeof beszelSystemStats;
   traefik: typeof traefik;
   customApi: typeof customApi;
+  weather: typeof weather;
   wud: typeof wud;
-} & GeneratedWidgetImports;
+};
 
 export type WidgetImportKey = keyof WidgetImports;
 

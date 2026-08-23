@@ -120,27 +120,22 @@ const findFirstAvailableBoardItemPosition = (
   return null;
 };
 
-interface WidgetPlacementRecord {
+interface WidgetConfiguration {
   id: string;
   kind: WidgetKind;
-}
-
-interface WidgetConfigurationRecord extends WidgetPlacementRecord {
   integrationIds: readonly string[];
 }
 
-interface IntegrationKindRecord {
-  id: string;
-  kind: IntegrationKind;
-}
-
-const haveSameIntegrationIds = (left: readonly string[], right: readonly string[]) =>
-  left.length === right.length && left.every((integrationId) => right.includes(integrationId));
+const haveSameIntegrationIds = (left: readonly string[], right: readonly string[]) => {
+  if (left.length !== right.length) return false;
+  const sortedRight = right.toSorted();
+  return left.toSorted().every((integrationId, index) => integrationId === sortedRight[index]);
+};
 
 const validateWidgetConfigurationsAsync = async (
   ctx: Parameters<typeof throwIfIntegrationActionsForbiddenAsync>[0],
-  submittedItems: readonly WidgetConfigurationRecord[],
-  storedItems: readonly WidgetConfigurationRecord[],
+  submittedItems: readonly WidgetConfiguration[],
+  storedItems: readonly WidgetConfiguration[] = [],
 ) => {
   const storedItemsById = new Map(storedItems.map((item) => [item.id, item]));
   const changedItems = submittedItems.filter((item) => {
@@ -151,7 +146,7 @@ const validateWidgetConfigurationsAsync = async (
   if (changedItems.length === 0) return;
 
   const selectedIntegrationIds = [...new Set(changedItems.flatMap(({ integrationIds }) => integrationIds))];
-  let integrationRecords: IntegrationKindRecord[] = [];
+  let integrationRecords: { id: string; kind: IntegrationKind }[] = [];
   if (selectedIntegrationIds.length > 0) {
     integrationRecords = await ctx.db.query.integrations.findMany({
       columns: { id: true, kind: true },
@@ -181,10 +176,9 @@ const validateWidgetConfigurationsAsync = async (
   await throwIfIntegrationActionsForbiddenAsync(ctx, addedOrReconfiguredIntegrationIds, "use");
 
   for (const item of changedItems) {
-    const selectedIntegrationKinds = item.integrationIds.flatMap((integrationId) => {
-      const integration = integrationRecordsById.get(integrationId);
-      return integration ? [integration.kind] : [];
-    });
+    const selectedIntegrationKinds = item.integrationIds.flatMap(
+      (integrationId) => integrationRecordsById.get(integrationId)?.kind ?? [],
+    );
     const integrationIssue = getWidgetIntegrationIssue(item.kind, selectedIntegrationKinds);
     if (!integrationIssue) continue;
 
@@ -705,7 +699,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Duplicate an existing board into a new board. Requires board-create permission, view permission on the source board, and use permission for every linked integration. Disabled or invalid widget configurations must be removed before duplication. REQUIRED: id (source board ID), name (unique name for the new board). Returns { boardId }",
+          "Duplicate an existing board into a new board. Requires board-create permission, view permission on the source board, and use permission for every linked integration. Every widget-integration configuration must be valid. REQUIRED: id (source board ID), name (unique name for the new board). Returns { boardId }",
       },
     })
     .input(boardDuplicateSchema)
@@ -749,7 +743,6 @@ export const boardRouter = createTRPCRouter({
           kind: item.kind,
           integrationIds: item.integrations.map(({ integrationId }) => integrationId),
         })),
-        [],
       );
 
       const newBoardId = createId();
@@ -1563,11 +1556,10 @@ export const boardRouter = createTRPCRouter({
     for (const item of input.items) {
       if (item.kind !== "timetable") continue;
       const previousItem = dbBoard.items.find((dbItem) => dbItem.id === item.id);
+      let previousOptions: Record<string, unknown> | undefined;
+      if (previousItem?.kind === "timetable") previousOptions = previousItem.options;
       const { validateTimetableOptionsChangeAsync } = await import("./timetable-options-validation");
-      await validateTimetableOptionsChangeAsync(
-        item.options,
-        previousItem?.kind === "timetable" ? previousItem.options : undefined,
-      );
+      await validateTimetableOptionsChangeAsync(item.options, previousOptions);
     }
 
     await handleTransactionsAsync(ctx.db, {
@@ -2142,11 +2134,9 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
 
-      await validateWidgetConfigurationsAsync(
-        ctx,
-        [{ id: "", kind: input.kind, integrationIds: input.integrationIds }],
-        [],
-      );
+      await validateWidgetConfigurationsAsync(ctx, [
+        { id: "", kind: input.kind, integrationIds: input.integrationIds },
+      ]);
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: ctx.session.user.permissions.includes("admin"),
         submittedItems: [{ id: "", kind: input.kind, options: input.options }],

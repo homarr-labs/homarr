@@ -29,6 +29,8 @@ import {
 } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { invalidateIntegrationCacheAsync } from "@homarr/redis";
+import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
+import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 import { byIdSchema } from "@homarr/validation/common";
 import {
   integrationCreateSchema,
@@ -712,7 +714,10 @@ export const integrationRouter = createTRPCRouter({
     .input(mediaRequestRequestSchema)
     .mutation(async ({ ctx, input }) => {
       const integration = await createIntegrationAsync(ctx.integration);
-      return await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
+      const result = await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
+      mediaRequestListRequestHandler.invalidateCache();
+      await mediaRequestStatsRequestHandler.invalidateCacheAsync([ctx.integration.id]);
+      return result;
     }),
 });
 

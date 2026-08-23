@@ -1,11 +1,14 @@
 import { IconBadgeCc, IconServerOff } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("bazarr", {
   supportsAdvancedFocus: true,
   icon: IconBadgeCc,
+  ...getWidgetIntegrationConfig("bazarr"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showMissingEpisodes: factory.switch({

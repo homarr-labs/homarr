@@ -1,5 +1,7 @@
 import { IconRoute, IconRouteOff } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -19,6 +21,7 @@ export const { definition, componentLoader } = createWidgetDefinition("traefik",
       }),
     }));
   },
+  ...getWidgetIntegrationConfig("traefik"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconRouteOff,

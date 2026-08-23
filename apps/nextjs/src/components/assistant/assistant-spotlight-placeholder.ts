@@ -7,7 +7,7 @@ import { useI18n } from "@homarr/translation/client";
 
 /**
  * Keeps the assistant discoverable in the spotlight when it is unavailable, without loading the
- * assistant runtime. Lives apart from `assistant-provider` so the unavailable path stays cheap.
+ * assistant runtime. Lives apart from `assistant-provider` so the disabled path stays cheap.
  */
 export const useRegisterAssistantSpotlightPlaceholder = (description: string) => {
   const t = useI18n("assistant");

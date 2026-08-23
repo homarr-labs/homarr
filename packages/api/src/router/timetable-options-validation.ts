@@ -9,8 +9,7 @@ import { DEFAULT_TIMETABLE_BASE_URL, normalizeTimetableBaseUrl } from "@homarr/r
 
 const timetableOptionsSchema = z.object({ baseUrl: z.string().optional() }).passthrough();
 
-const blockedTimetableIpv4Addresses = new BlockList();
-const blockedTimetableIpv6Addresses = new BlockList();
+const blockedTimetableAddresses = new BlockList();
 const blockedTimetableSubnets = [
   ["0.0.0.0", 8, "ipv4"],
   ["10.0.0.0", 8, "ipv4"],
@@ -45,8 +44,7 @@ const blockedTimetableSubnets = [
 ] as const;
 
 for (const [network, prefix, family] of blockedTimetableSubnets) {
-  const blockList = family === "ipv4" ? blockedTimetableIpv4Addresses : blockedTimetableIpv6Addresses;
-  blockList.addSubnet(network, prefix, family);
+  blockedTimetableAddresses.addSubnet(network, prefix, family);
 }
 
 export const normalizeTimetableBaseUrlOrThrowBadRequest = (baseUrl: string) => {
@@ -61,39 +59,28 @@ export const normalizeTimetableBaseUrlOrThrowBadRequest = (baseUrl: string) => {
   }
 };
 
-const throwInvalidSavedTimetableConfiguration = (cause: unknown): never => {
-  throw new TRPCError({
-    code: "INTERNAL_SERVER_ERROR",
-    message: "Timetable widget configuration is invalid",
-    cause,
-  });
-};
-
-export const parseSavedTimetableOptions = (serializedOptions: string) => {
+export const getSavedTimetableBaseUrl = (serializedOptions: string) => {
   try {
-    return timetableOptionsSchema.parse(parse<unknown>(serializedOptions));
+    const options = timetableOptionsSchema.parse(parse<unknown>(serializedOptions));
+    return normalizeTimetableBaseUrl(options.baseUrl ?? DEFAULT_TIMETABLE_BASE_URL);
   } catch (cause) {
-    return throwInvalidSavedTimetableConfiguration(cause);
-  }
-};
-
-export const normalizeSavedTimetableBaseUrl = (baseUrl: string) => {
-  try {
-    return normalizeTimetableBaseUrl(baseUrl);
-  } catch (cause) {
-    return throwInvalidSavedTimetableConfiguration(cause);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Timetable widget configuration is invalid",
+      cause,
+    });
   }
 };
 
 const normalizeHostname = (hostname: string) => {
-  const withoutBrackets = hostname.startsWith("[") && hostname.endsWith("]") ? hostname.slice(1, -1) : hostname;
+  let withoutBrackets = hostname;
+  if (hostname.startsWith("[") && hostname.endsWith("]")) withoutBrackets = hostname.slice(1, -1);
   return withoutBrackets.toLowerCase().replace(/\.$/, "");
 };
 
 const isBlockedTimetableAddress = (address: string, family: number) => {
-  return family === 6
-    ? blockedTimetableIpv6Addresses.check(address, "ipv6")
-    : blockedTimetableIpv4Addresses.check(address, "ipv4");
+  if (family === 6) return blockedTimetableAddresses.check(address, "ipv6");
+  return blockedTimetableAddresses.check(address, "ipv4");
 };
 
 export const resolvePublicTimetableAddressesAsync = async (baseUrl: string): Promise<TimetableResolvedAddress[]> => {
@@ -115,10 +102,8 @@ export const resolvePublicTimetableAddressesAsync = async (baseUrl: string): Pro
 
   let addresses: TimetableResolvedAddress[];
   try {
-    const resolvedAddresses =
-      hostnameFamily === 0
-        ? await lookup(hostname, { all: true, verbatim: true })
-        : [{ address: hostname, family: hostnameFamily }];
+    let resolvedAddresses = [{ address: hostname, family: hostnameFamily }];
+    if (hostnameFamily === 0) resolvedAddresses = await lookup(hostname, { all: true, verbatim: true });
     addresses = resolvedAddresses.filter(
       (entry): entry is TimetableResolvedAddress => entry.family === 4 || entry.family === 6,
     );

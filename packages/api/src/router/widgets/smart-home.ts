@@ -57,6 +57,7 @@ export const smartHomeRouter = createTRPCRouter({
       if (!success) {
         throw new TRPCError({ code: "BAD_GATEWAY", message: "Home Assistant did not toggle the entity" });
       }
+      await smartHomeEntityStateRequestHandler.invalidateCacheAsync([integration.id]);
       return true;
     }),
   executeAutomation: protectedProcedure
@@ -75,6 +76,7 @@ export const smartHomeRouter = createTRPCRouter({
       if (!success) {
         throw new TRPCError({ code: "BAD_GATEWAY", message: "Home Assistant did not execute the automation" });
       }
+      await smartHomeEntityStateRequestHandler.invalidateCacheAsync([integration.id]);
       return true;
     }),
 });

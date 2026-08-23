@@ -15,9 +15,8 @@ import { DEFAULT_TIMETABLE_BASE_URL } from "@homarr/request-handler/timetable-ur
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
 import {
-  normalizeSavedTimetableBaseUrl,
+  getSavedTimetableBaseUrl,
   normalizeTimetableBaseUrlOrThrowBadRequest,
-  parseSavedTimetableOptions,
   resolvePublicTimetableAddressesAsync,
 } from "../timetable-options-validation";
 
@@ -27,11 +26,6 @@ const timetableSourceSchema = z.object({
   itemId: z.string().max(100).optional(),
   boardId: z.string().max(100).optional(),
 });
-const getSavedTimetableBaseUrl = (serializedOptions: string) => {
-  const options = parseSavedTimetableOptions(serializedOptions);
-  return normalizeSavedTimetableBaseUrl(options.baseUrl ?? DEFAULT_TIMETABLE_BASE_URL);
-};
-
 interface ResolvedTimetableSource {
   baseUrl: string;
   pinnedAddresses?: TimetableResolvedAddress[];

@@ -1940,12 +1940,9 @@ const getPreviewWidgetKinds = (props: StudioSectionProps) => [
   ]),
 ];
 
-const getPreviewAppCount = (props: StudioSectionProps) => {
-  return (
-    props.drafts.filter(isIntegrationDraftComplete).length +
-    props.discoveredApps.filter((app) => props.selectedAppIds.includes(app.sourceId)).length
-  );
-};
+const getPreviewAppCount = (props: StudioSectionProps) =>
+  props.drafts.filter(isIntegrationDraftComplete).length +
+  props.discoveredApps.filter((app) => props.selectedAppIds.includes(app.sourceId)).length;
 
 const createDraft = ({
   id,

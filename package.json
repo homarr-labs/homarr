@@ -40,11 +40,6 @@
     "docker:dev:up": "docker compose -f ./development/development.docker-compose.yml up -d redis",
     "format": "turbo format --continue -- --check",
     "format:fix": "turbo format --continue",
-    "features:sync": "pnpm widgets:sync && pnpm integrations:sync",
-    "features:sync:check": "pnpm widgets:sync:check && pnpm integrations:sync:check",
-    "integrations:new": "tsx ./scripts/integrations/create-integration-module.mts",
-    "integrations:sync": "tsx ./scripts/integrations/sync-integration-modules.mts",
-    "integrations:sync:check": "tsx ./scripts/integrations/sync-integration-modules.mts --check",
     "lint": "turbo lint --continue",
     "lint:fix": "turbo lint --continue -- --fix",
     "lint:ws": "pnpm dlx sherif@latest",
@@ -59,9 +54,6 @@
     "test:workshop-image": "sh apps/workshop/test-image.sh",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --project \"!e2e\" --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
-    "widgets:sync": "tsx ./scripts/widgets/sync-widget-modules.mts",
-    "widgets:sync:check": "tsx ./scripts/widgets/sync-widget-modules.mts --check",
-    "widgets:new": "tsx ./scripts/widgets/create-widget-module.mts",
     "with-env": "dotenv -e .env --"
   },
   "dependencies": {

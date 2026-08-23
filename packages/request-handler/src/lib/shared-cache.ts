@@ -75,7 +75,7 @@ interface RedisSharedCacheOptions {
 const logRedisFailure = (operation: string, metadata: Record<string, unknown>, error: unknown) => {
   logger.warn(
     new ErrorWithMetadata(
-      "Redis widget cache operation failed",
+      "Redis response cache operation failed",
       {
         ...metadata,
         operation,
@@ -121,7 +121,7 @@ const createRedisSharedCache = <TData>({
       if (value === undefined || value === null) return value;
       if (isCacheEntry(value)) return value as CacheEntry<TData>;
 
-      logger.warn("Ignored invalid Redis widget cache entry", {
+      logger.warn("Ignored invalid Redis response cache entry", {
         ...logMetadata,
         operation: "payload-validate",
       });
@@ -164,7 +164,7 @@ export const createWidgetSharedCacheAsync = async <TData>({
   const metadata = { cacheNamespace: namespace };
   let generation: WidgetCacheGeneration;
   try {
-    generation = await withTimeoutAsync(getWidgetCacheGenerationAsync(namespace), REDIS_OPERATION_TIMEOUT_MS);
+    generation = await getWidgetCacheGenerationAsync(namespace);
   } catch (error) {
     logRedisFailure("generation-read", metadata, error);
     generation = { value: "redis-unavailable", isShared: false };
@@ -190,7 +190,7 @@ export const createIntegrationSharedCacheAsync = async <TData>({
   const metadata = { cacheNamespace: namespace, integrationId };
   let generation: IntegrationCacheGeneration;
   try {
-    generation = await withTimeoutAsync(getIntegrationCacheGenerationAsync(integrationId), REDIS_OPERATION_TIMEOUT_MS);
+    generation = await getIntegrationCacheGenerationAsync(integrationId);
   } catch (error) {
     logRedisFailure("generation-read", metadata, error);
     generation = { value: "redis-unavailable", isShared: false };

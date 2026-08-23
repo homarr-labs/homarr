@@ -10,26 +10,25 @@ import { getI18n } from "@homarr/translation/server";
 
 import { createMetaTitle } from "~/metadata";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { getMcpRuntimeAsync } from "~/app/api/mcp/_extract-tools";
+import { extractMcpTools } from "~/app/api/mcp/_extract-tools";
 import { ApiKeysManagement } from "./components/api-keys";
 import { ApiPageTabs } from "./components/api-page-tabs";
 import { ScalarApiReference } from "./components/scalar-api-reference";
 
 import type { McpToolGroup } from "./components/api-page-tabs";
 
-async function getMcpToolGroupsAsync(): Promise<McpToolGroup[]> {
-  const { tools, procedureTypes } = await getMcpRuntimeAsync();
+function getMcpToolGroups(): McpToolGroup[] {
+  const tools = extractMcpTools();
   const groups = new Map<string, McpToolGroup["tools"]>();
   for (const tool of tools) {
     const namespace = tool.pathInRouter[0] ?? "other";
     if (!groups.has(namespace)) {
       groups.set(namespace, []);
     }
-    const procedureKey = tool.pathInRouter.join(".");
     groups.get(namespace)?.push({
       name: tool.name,
       description: tool.description,
-      type: procedureTypes.get(procedureKey) ?? "query",
+      type: tool.type,
     });
   }
   return Array.from(groups.entries()).map(([namespace, items]) => ({
@@ -60,7 +59,7 @@ export default async function ApiPage() {
     headers(),
     api.apiKeys.getAll(),
     getI18n("management.page.tool.api.tab"),
-    getMcpToolGroupsAsync(),
+    getMcpToolGroups(),
   ]);
   const baseUrl = extractBaseUrlFromHeaders(requestHeaders);
   const document = openApiDocument(baseUrl);

@@ -6,10 +6,7 @@ import {
   immichStatsRequestHandler,
 } from "@homarr/request-handler/immich";
 
-import {
-  createOneSharedWidgetIntegrationMiddleware,
-  createOneWidgetIntegrationMiddleware,
-} from "../../middlewares/integration";
+import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const immichRouter = createTRPCRouter({
@@ -40,7 +37,7 @@ export const immichRouter = createTRPCRouter({
         limit: z.number().int().min(1).max(500).optional(),
       }),
     )
-    .concat(createOneSharedWidgetIntegrationMiddleware("query", "immich-albumCarousel", ["immich-serverStats"]))
+    .concat(createOneWidgetIntegrationMiddleware("query", "immich-albumCarousel"))
     .query(async ({ ctx, input }) => {
       const innerHandler = immichAlbumsRequestHandler.handler(ctx.integration, { limit: input.limit });
       const data = await innerHandler.getDataAsync();

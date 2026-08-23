@@ -124,7 +124,6 @@ export const placeAllWidgetsAsync = async (
     }
   }
 
-  let placedAppCount = 0;
   for (const app of allApps) {
     await placeWidgetAsync(
       db,
@@ -134,7 +133,6 @@ export const placeAllWidgetsAsync = async (
       superjson.stringify({ appId: app.id, openInNewTab: true, showTitle: true }),
       { width: 1, height: 1 },
     );
-    placedAppCount += 1;
   }
 
   const bookmarkAppNames = new Set(defaultBookmarkApps.map((bookmark) => bookmark.name));
@@ -155,5 +153,5 @@ export const placeAllWidgetsAsync = async (
     });
   }
 
-  return placedWidgets.size + placedAppCount;
+  return placedWidgets.size + allApps.length;
 };

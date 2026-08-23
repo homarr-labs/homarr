@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Integration, IntegrationSecret } from "@homarr/db/schema";
 
 import { createIntegrationRequestHandler } from "./integration-request-handler";
+import type { SharedCacheAdapter } from "./request-handler";
 import { createRequestHandler } from "./request-handler";
 import { createWidgetRequestHandler } from "./widget-request-handler";
 
@@ -50,6 +51,62 @@ describe("createRequestHandler", () => {
     await expect(Promise.all([first, second])).resolves.toMatchObject([{ data: "value" }, { data: "value" }]);
     await expect(handler.handler({ id: "same" }).getDataAsync()).resolves.toMatchObject({ data: "value" });
     expect(calls).toBe(1);
+  });
+
+  it("uses a fresh shared cache entry before calling the upstream service", async () => {
+    const timestamp = new Date();
+    const requestAsync = vi.fn(async () => "upstream");
+    const sharedCache = {
+      generation: "shared-1",
+      isShared: true,
+      getAsync: vi.fn(async () => ({
+        data: "shared",
+        timestamp,
+        expiresAt: Date.now() + 1_000,
+        staleUntil: Date.now() + 1_000,
+      })),
+      setAsync: vi.fn(async () => undefined),
+      acquireRefreshLockAsync: vi.fn(async () => "lock"),
+      releaseRefreshLockAsync: vi.fn(async () => undefined),
+    };
+    const handler = createRequestHandler({
+      cacheTtlMs: 1_000,
+      requestAsync,
+      getSharedCacheAsync: async () => sharedCache,
+    });
+
+    await expect(handler.handler({ id: "same" }).getDataAsync()).resolves.toMatchObject({ data: "shared", timestamp });
+    expect(requestAsync).not.toHaveBeenCalled();
+    expect(sharedCache.acquireRefreshLockAsync).not.toHaveBeenCalled();
+  });
+
+  it("deduplicates while the shared cache is being resolved", async () => {
+    const sharedCacheRequest = deferred<SharedCacheAdapter<string>>();
+    const upstreamRequest = deferred<string>();
+    const getSharedCacheAsync = vi.fn(async () => await sharedCacheRequest.promise);
+    const requestAsync = vi.fn(async () => await upstreamRequest.promise);
+    const handler = createRequestHandler({
+      cacheTtlMs: 1_000,
+      requestAsync,
+      getSharedCacheAsync,
+    });
+
+    const first = handler.handler({ id: "same" }).getDataAsync();
+    const second = handler.handler({ id: "same" }).getDataAsync();
+    expect(getSharedCacheAsync).toHaveBeenCalledTimes(1);
+
+    sharedCacheRequest.resolve({
+      generation: "shared-1",
+      isShared: false,
+      getAsync: async () => undefined,
+      setAsync: async () => undefined,
+      acquireRefreshLockAsync: async () => undefined,
+      releaseRefreshLockAsync: async () => undefined,
+    });
+    await vi.waitFor(() => expect(requestAsync).toHaveBeenCalledTimes(1));
+    upstreamRequest.resolve("value");
+
+    await expect(Promise.all([first, second])).resolves.toMatchObject([{ data: "value" }, { data: "value" }]);
   });
 
   it("keeps in-flight deduplication but retains no payload when ttl is zero", async () => {

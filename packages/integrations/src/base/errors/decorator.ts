@@ -42,6 +42,12 @@ const createSafeErrorCause = (error: unknown, depth = 0): Error => {
   if (error instanceof Error && safeErrorNameRegex.test(error.name)) {
     safeError.name = error.name;
   }
+  if (error instanceof Error && error.stack) {
+    const originalHeader = Error.prototype.toString.call(error);
+    if (error.stack.startsWith(originalHeader)) {
+      safeError.stack = `${safeError.name}: ${safeError.message}${error.stack.slice(originalHeader.length)}`;
+    }
+  }
   return safeError;
 };
 

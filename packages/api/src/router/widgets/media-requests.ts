@@ -152,6 +152,8 @@ export const mediaRequestsRouter = createTRPCRouter({
       } as const;
 
       await answerActions[input.answer](input.requestId);
+      mediaRequestListRequestHandler.invalidateCache();
+      await mediaRequestStatsRequestHandler.invalidateCacheAsync([integration.id]);
       return { success: true };
     }),
 });

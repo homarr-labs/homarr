@@ -2,187 +2,128 @@ import type { IntegrationKind } from "@homarr/definitions";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
-import { generatedIntegrationCreatorLoaders } from "../generated/integration-creators";
 import type { Integration, IntegrationInput } from "./integration";
 
 const logger = createLogger({ module: "integrationFactory" });
 
-type IntegrationCreator<TIntegration extends Integration = Integration> = (
-  input: IntegrationInput,
-) => Promise<TIntegration>;
-
-type IntegrationConstructor<TIntegration extends Integration = Integration> = new (
-  input: IntegrationInput,
-) => TIntegration;
-
-const createConstructorCreator =
-  <TIntegration extends Integration>(
-    IntegrationClass: IntegrationConstructor<TIntegration>,
-  ): IntegrationCreator<TIntegration> =>
-  async (input) =>
-    new IntegrationClass(input);
-
 // Keep each import path explicit so Node and Turbopack can discover every lazy integration chunk.
-const integrationCreatorLoaders = {
-  anchor: async () => createConstructorCreator((await import("../anchor/anchor-integration")).AnchorIntegration),
-  piHole: async () => (await import("../pi-hole/pi-hole-integration-factory")).createPiHoleIntegrationAsync,
-  adGuardHome: async () =>
-    createConstructorCreator((await import("../adguard-home/adguard-home-integration")).AdGuardHomeIntegration),
-  technitiumDns: async () =>
-    (await import("../technitium/technitium-integration-factory")).createTechnitiumDnsIntegrationAsync,
-  homeAssistant: async () =>
-    createConstructorCreator((await import("../homeassistant/homeassistant-integration")).HomeAssistantIntegration),
-  jellyfin: async () =>
-    createConstructorCreator((await import("../jellyfin/jellyfin-integration")).JellyfinIntegration),
-  plex: async () => createConstructorCreator((await import("../plex/plex-integration")).PlexIntegration),
-  sonarr: async () =>
-    createConstructorCreator((await import("../media-organizer/sonarr/sonarr-integration")).SonarrIntegration),
-  radarr: async () =>
-    createConstructorCreator((await import("../media-organizer/radarr/radarr-integration")).RadarrIntegration),
-  sabNzbd: async () =>
-    createConstructorCreator((await import("../download-client/sabnzbd/sabnzbd-integration")).SabnzbdIntegration),
-  nzbGet: async () =>
-    createConstructorCreator((await import("../download-client/nzbget/nzbget-integration")).NzbGetIntegration),
-  qBittorrent: async () =>
-    createConstructorCreator(
-      (await import("../download-client/qbittorrent/qbittorrent-integration")).QBitTorrentIntegration,
-    ),
-  deluge: async () =>
-    createConstructorCreator((await import("../download-client/deluge/deluge-integration")).DelugeIntegration),
-  transmission: async () =>
-    createConstructorCreator(
-      (await import("../download-client/transmission/transmission-integration")).TransmissionIntegration,
-    ),
-  slskd: async () =>
-    createConstructorCreator((await import("../download-client/slskd/slskd-integration")).SlskdIntegration),
-  aria2: async () =>
-    createConstructorCreator((await import("../download-client/aria2/aria2-integration")).Aria2Integration),
-  jellyseerr: async () =>
-    createConstructorCreator((await import("../jellyseerr/jellyseerr-integration")).JellyseerrIntegration),
-  seerr: async () => createConstructorCreator((await import("../seerr/seerr-integration")).SeerrIntegration),
-  overseerr: async () =>
-    createConstructorCreator((await import("../overseerr/overseerr-integration")).OverseerrIntegration),
-  prowlarr: async () =>
-    createConstructorCreator((await import("../prowlarr/prowlarr-integration")).ProwlarrIntegration),
-  openmediavault: async () =>
-    createConstructorCreator((await import("../openmediavault/openmediavault-integration")).OpenMediaVaultIntegration),
-  lidarr: async () =>
-    createConstructorCreator((await import("../media-organizer/lidarr/lidarr-integration")).LidarrIntegration),
-  readarr: async () =>
-    createConstructorCreator((await import("../media-organizer/readarr/readarr-integration")).ReadarrIntegration),
-  dashDot: async () => createConstructorCreator((await import("../dashdot/dashdot-integration")).DashDotIntegration),
-  tdarr: async () =>
-    createConstructorCreator((await import("../media-transcoding/tdarr-integration")).TdarrIntegration),
-  proxmox: async () => createConstructorCreator((await import("../proxmox/proxmox-integration")).ProxmoxIntegration),
-  emby: async () => createConstructorCreator((await import("../emby/emby-integration")).EmbyIntegration),
-  nextcloud: async () =>
-    createConstructorCreator((await import("../nextcloud/nextcloud.integration")).NextcloudIntegration),
-  unifiController: async () =>
-    createConstructorCreator(
-      (await import("../unifi-controller/unifi-controller-integration")).UnifiControllerIntegration,
-    ),
-  opnsense: async () =>
-    createConstructorCreator((await import("../opnsense/opnsense-integration")).OPNsenseIntegration),
-  ical: async () => createConstructorCreator((await import("../ical/ical-integration")).ICalIntegration),
-  ntfy: async () => createConstructorCreator((await import("../ntfy/ntfy-integration")).NTFYIntegration),
-  gotify: async () => createConstructorCreator((await import("../gotify/gotify-integration")).GotifyIntegration),
-  mock: async () => createConstructorCreator((await import("../mock/mock-integration")).MockIntegration),
-  truenas: async () => createConstructorCreator((await import("../truenas/truenas-integration")).TrueNasIntegration),
-  synology: async () =>
-    createConstructorCreator((await import("../synology/synology-integration")).SynologyIntegration),
-  unraid: async () => createConstructorCreator((await import("../unraid/unraid-integration")).UnraidIntegration),
-  coolify: async () => createConstructorCreator((await import("../coolify/coolify-integration")).CoolifyIntegration),
-  tracearr: async () =>
-    createConstructorCreator((await import("../tracearr/tracearr-integration")).TracearrIntegration),
-  glances: async () => createConstructorCreator((await import("../glances/glances-integration")).GlancesIntegration),
-  immich: async () => createConstructorCreator((await import("../immich/immich-integration")).ImmichIntegration),
-  paperlessNgx: async () =>
-    createConstructorCreator((await import("../paperless-ngx/paperless-ngx-integration")).PaperlessNgxIntegration),
-  patchmon: async () =>
-    createConstructorCreator((await import("../patchmon/patchmon-integration")).PatchMonIntegration),
-  speedtestTracker: async () =>
-    createConstructorCreator(
-      (await import("../speedtest-tracker/speedtest-tracker-integration")).SpeedtestTrackerIntegration,
-    ),
-  audiobookshelf: async () =>
-    createConstructorCreator((await import("../audiobookshelf/audiobookshelf-integration")).AudiobookshelfIntegration),
-  navidrome: async () =>
-    createConstructorCreator((await import("../navidrome/navidrome-integration")).NavidromeIntegration),
-  umami: async () => createConstructorCreator((await import("../umami/umami-integration")).UmamiIntegration),
-  gluetun: async () => createConstructorCreator((await import("../gluetun/gluetun-integration")).GluetunIntegration),
-  archiveTeamWarrior: async () =>
-    createConstructorCreator(
-      (await import("../archive-team-warrior/archive-team-warrior-integration")).ArchiveTeamWarriorIntegration,
-    ),
-  uptimeKuma: async () =>
-    createConstructorCreator((await import("../uptime-kuma/uptime-kuma-integration")).UptimeKumaIntegration),
-  peaNut: async () => createConstructorCreator((await import("../peanut/peanut-integration")).PeaNutIntegration),
-  ...generatedIntegrationCreatorLoaders,
-  bazarr: async () => createConstructorCreator((await import("../bazarr/bazarr-integration")).BazarrIntegration),
-  traefik: async () => createConstructorCreator((await import("../traefik/traefik-integration")).TraefikIntegration),
-  wud: async () => createConstructorCreator((await import("../wud/wud-integration")).WudIntegration),
-};
+const integrationCreators = {
+  anchor: async (input: IntegrationInput) =>
+    new (await import("../anchor/anchor-integration")).AnchorIntegration(input),
+  piHole: async (input: IntegrationInput) =>
+    (await import("../pi-hole/pi-hole-integration-factory")).createPiHoleIntegrationAsync(input),
+  adGuardHome: async (input: IntegrationInput) =>
+    new (await import("../adguard-home/adguard-home-integration")).AdGuardHomeIntegration(input),
+  technitiumDns: async (input: IntegrationInput) =>
+    (await import("../technitium/technitium-integration-factory")).createTechnitiumDnsIntegrationAsync(input),
+  homeAssistant: async (input: IntegrationInput) =>
+    new (await import("../homeassistant/homeassistant-integration")).HomeAssistantIntegration(input),
+  jellyfin: async (input: IntegrationInput) =>
+    new (await import("../jellyfin/jellyfin-integration")).JellyfinIntegration(input),
+  plex: async (input: IntegrationInput) => new (await import("../plex/plex-integration")).PlexIntegration(input),
+  sonarr: async (input: IntegrationInput) =>
+    new (await import("../media-organizer/sonarr/sonarr-integration")).SonarrIntegration(input),
+  radarr: async (input: IntegrationInput) =>
+    new (await import("../media-organizer/radarr/radarr-integration")).RadarrIntegration(input),
+  sabNzbd: async (input: IntegrationInput) =>
+    new (await import("../download-client/sabnzbd/sabnzbd-integration")).SabnzbdIntegration(input),
+  nzbGet: async (input: IntegrationInput) =>
+    new (await import("../download-client/nzbget/nzbget-integration")).NzbGetIntegration(input),
+  qBittorrent: async (input: IntegrationInput) =>
+    new (await import("../download-client/qbittorrent/qbittorrent-integration")).QBitTorrentIntegration(input),
+  deluge: async (input: IntegrationInput) =>
+    new (await import("../download-client/deluge/deluge-integration")).DelugeIntegration(input),
+  transmission: async (input: IntegrationInput) =>
+    new (await import("../download-client/transmission/transmission-integration")).TransmissionIntegration(input),
+  slskd: async (input: IntegrationInput) =>
+    new (await import("../download-client/slskd/slskd-integration")).SlskdIntegration(input),
+  aria2: async (input: IntegrationInput) =>
+    new (await import("../download-client/aria2/aria2-integration")).Aria2Integration(input),
+  jellyseerr: async (input: IntegrationInput) =>
+    new (await import("../jellyseerr/jellyseerr-integration")).JellyseerrIntegration(input),
+  seerr: async (input: IntegrationInput) => new (await import("../seerr/seerr-integration")).SeerrIntegration(input),
+  overseerr: async (input: IntegrationInput) =>
+    new (await import("../overseerr/overseerr-integration")).OverseerrIntegration(input),
+  prowlarr: async (input: IntegrationInput) =>
+    new (await import("../prowlarr/prowlarr-integration")).ProwlarrIntegration(input),
+  openmediavault: async (input: IntegrationInput) =>
+    new (await import("../openmediavault/openmediavault-integration")).OpenMediaVaultIntegration(input),
+  lidarr: async (input: IntegrationInput) =>
+    new (await import("../media-organizer/lidarr/lidarr-integration")).LidarrIntegration(input),
+  readarr: async (input: IntegrationInput) =>
+    new (await import("../media-organizer/readarr/readarr-integration")).ReadarrIntegration(input),
+  dashDot: async (input: IntegrationInput) =>
+    new (await import("../dashdot/dashdot-integration")).DashDotIntegration(input),
+  tdarr: async (input: IntegrationInput) =>
+    new (await import("../media-transcoding/tdarr-integration")).TdarrIntegration(input),
+  proxmox: async (input: IntegrationInput) =>
+    new (await import("../proxmox/proxmox-integration")).ProxmoxIntegration(input),
+  emby: async (input: IntegrationInput) => new (await import("../emby/emby-integration")).EmbyIntegration(input),
+  nextcloud: async (input: IntegrationInput) =>
+    new (await import("../nextcloud/nextcloud.integration")).NextcloudIntegration(input),
+  unifiController: async (input: IntegrationInput) =>
+    new (await import("../unifi-controller/unifi-controller-integration")).UnifiControllerIntegration(input),
+  opnsense: async (input: IntegrationInput) =>
+    new (await import("../opnsense/opnsense-integration")).OPNsenseIntegration(input),
+  ical: async (input: IntegrationInput) => new (await import("../ical/ical-integration")).ICalIntegration(input),
+  ntfy: async (input: IntegrationInput) => new (await import("../ntfy/ntfy-integration")).NTFYIntegration(input),
+  gotify: async (input: IntegrationInput) =>
+    new (await import("../gotify/gotify-integration")).GotifyIntegration(input),
+  mock: async (input: IntegrationInput) => new (await import("../mock/mock-integration")).MockIntegration(input),
+  truenas: async (input: IntegrationInput) =>
+    new (await import("../truenas/truenas-integration")).TrueNasIntegration(input),
+  synology: async (input: IntegrationInput) =>
+    new (await import("../synology/synology-integration")).SynologyIntegration(input),
+  unraid: async (input: IntegrationInput) =>
+    new (await import("../unraid/unraid-integration")).UnraidIntegration(input),
+  coolify: async (input: IntegrationInput) =>
+    new (await import("../coolify/coolify-integration")).CoolifyIntegration(input),
+  tracearr: async (input: IntegrationInput) =>
+    new (await import("../tracearr/tracearr-integration")).TracearrIntegration(input),
+  glances: async (input: IntegrationInput) =>
+    new (await import("../glances/glances-integration")).GlancesIntegration(input),
+  immich: async (input: IntegrationInput) =>
+    new (await import("../immich/immich-integration")).ImmichIntegration(input),
+  paperlessNgx: async (input: IntegrationInput) =>
+    new (await import("../paperless-ngx/paperless-ngx-integration")).PaperlessNgxIntegration(input),
+  patchmon: async (input: IntegrationInput) =>
+    new (await import("../patchmon/patchmon-integration")).PatchMonIntegration(input),
+  speedtestTracker: async (input: IntegrationInput) =>
+    new (await import("../speedtest-tracker/speedtest-tracker-integration")).SpeedtestTrackerIntegration(input),
+  audiobookshelf: async (input: IntegrationInput) =>
+    new (await import("../audiobookshelf/audiobookshelf-integration")).AudiobookshelfIntegration(input),
+  navidrome: async (input: IntegrationInput) =>
+    new (await import("../navidrome/navidrome-integration")).NavidromeIntegration(input),
+  umami: async (input: IntegrationInput) => new (await import("../umami/umami-integration")).UmamiIntegration(input),
+  gluetun: async (input: IntegrationInput) =>
+    new (await import("../gluetun/gluetun-integration")).GluetunIntegration(input),
+  archiveTeamWarrior: async (input: IntegrationInput) =>
+    new (await import("../archive-team-warrior/archive-team-warrior-integration")).ArchiveTeamWarriorIntegration(input),
+  uptimeKuma: async (input: IntegrationInput) =>
+    new (await import("../uptime-kuma/uptime-kuma-integration")).UptimeKumaIntegration(input),
+  peaNut: async (input: IntegrationInput) =>
+    new (await import("../peanut/peanut-integration")).PeaNutIntegration(input),
+  beszel: async (input: IntegrationInput) =>
+    new (await import("../beszel/beszel-integration")).BeszelIntegration(input),
+  bazarr: async (input: IntegrationInput) =>
+    new (await import("../bazarr/bazarr-integration")).BazarrIntegration(input),
+  traefik: async (input: IntegrationInput) =>
+    new (await import("../traefik/traefik-integration")).TraefikIntegration(input),
+  wud: async (input: IntegrationInput) => new (await import("../wud/wud-integration")).WudIntegration(input),
+} satisfies Record<IntegrationKind, (input: IntegrationInput) => Promise<Integration>>;
 
-type AssertIntegrationCreatorLoaders<TLoaders extends Record<IntegrationKind, () => Promise<IntegrationCreator>>> =
-  TLoaders;
-type AssertNoUnexpectedIntegrationKinds<TKind extends never> = TKind;
-type IntegrationCreatorLoadersCheck = AssertIntegrationCreatorLoaders<typeof integrationCreatorLoaders>;
-type UnexpectedIntegrationKindsCheck = AssertNoUnexpectedIntegrationKinds<
-  Exclude<keyof typeof integrationCreatorLoaders, IntegrationKind>
+type IntegrationCreators = typeof integrationCreators;
+type IntegrationInstanceOfKind<TKind extends keyof IntegrationCreators> = Awaited<
+  ReturnType<IntegrationCreators[TKind]>
 >;
 
-type IntegrationCreatorLoaders = IntegrationCreatorLoadersCheck & Record<UnexpectedIntegrationKindsCheck, never>;
-type IntegrationCreatorOfKind<TKind extends keyof IntegrationCreatorLoaders> = Awaited<
-  ReturnType<IntegrationCreatorLoaders[TKind]>
->;
-type IntegrationInstanceOfKind<TKind extends keyof IntegrationCreatorLoaders> = Awaited<
-  ReturnType<IntegrationCreatorOfKind<TKind>>
->;
-
-const integrationCreatorCache = new Map<IntegrationKind, Promise<IntegrationCreator>>();
-
-const loadIntegrationCreatorAsync = async <TKind extends keyof IntegrationCreatorLoaders>(
-  kind: TKind,
-): Promise<IntegrationCreatorOfKind<TKind>> => {
-  const cachedCreator = integrationCreatorCache.get(kind);
-  if (cachedCreator) {
-    return (await cachedCreator) as IntegrationCreatorOfKind<TKind>;
-  }
-
-  const startedAt = Date.now();
-  logger.debug("Loading integration implementation", { integrationKind: kind });
-  const creatorPromise = integrationCreatorLoaders[kind]();
-  integrationCreatorCache.set(kind, creatorPromise);
-
-  try {
-    const creator = (await creatorPromise) as IntegrationCreatorOfKind<TKind>;
-    logger.debug("Integration implementation loaded", {
-      integrationKind: kind,
-      durationMs: Date.now() - startedAt,
-    });
-    return creator;
-  } catch (error) {
-    if (integrationCreatorCache.get(kind) === creatorPromise) {
-      integrationCreatorCache.delete(kind);
-    }
-    logger.warn(
-      new ErrorWithMetadata(
-        "Integration implementation failed to load",
-        {
-          integrationKind: kind,
-          durationMs: Date.now() - startedAt,
-        },
-        { cause: error },
-      ),
-    );
-    throw error;
-  }
-};
-
-export const createIntegrationAsync = async <TKind extends keyof IntegrationCreatorLoaders>(
+export function createIntegrationAsync<TKind extends keyof IntegrationCreators>(
   integration: IntegrationInput & { kind: TKind },
-): Promise<IntegrationInstanceOfKind<TKind>> => {
-  if (!Object.hasOwn(integrationCreatorLoaders, integration.kind)) {
+): Promise<IntegrationInstanceOfKind<TKind>>;
+export async function createIntegrationAsync(
+  integration: IntegrationInput & { kind: IntegrationKind },
+): Promise<Integration> {
+  if (!Object.hasOwn(integrationCreators, integration.kind)) {
     logger.warn("Integration client creation refused", {
       integrationId: integration.id,
       integrationKind: integration.kind,
@@ -193,6 +134,29 @@ export const createIntegrationAsync = async <TKind extends keyof IntegrationCrea
     );
   }
 
-  const creator = await loadIntegrationCreatorAsync(integration.kind);
-  return (await creator(integration)) as IntegrationInstanceOfKind<TKind>;
-};
+  const startedAt = Date.now();
+  logger.debug("Creating integration client", { integrationId: integration.id, integrationKind: integration.kind });
+
+  try {
+    const instance = await integrationCreators[integration.kind](integration);
+    logger.debug("Integration client created", {
+      integrationId: integration.id,
+      integrationKind: integration.kind,
+      durationMs: Date.now() - startedAt,
+    });
+    return instance;
+  } catch (error) {
+    logger.warn(
+      new ErrorWithMetadata(
+        "Integration client creation failed",
+        {
+          integrationId: integration.id,
+          integrationKind: integration.kind,
+          durationMs: Date.now() - startedAt,
+        },
+        { cause: error },
+      ),
+    );
+    throw error;
+  }
+}

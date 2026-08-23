@@ -1,5 +1,6 @@
 import { IconBinaryTree, IconServerOff } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
@@ -7,6 +8,8 @@ import { optionsBuilder } from "../../options";
 export const { definition, componentLoader } = createWidgetDefinition("smartHome-entityState", {
   icon: IconBinaryTree,
   supportsAdvancedFocus: true,
+  queryKey: [["widget", "smartHome"]],
+  ...getWidgetIntegrationConfig("smartHome-entityState"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       entityId: factory.text({

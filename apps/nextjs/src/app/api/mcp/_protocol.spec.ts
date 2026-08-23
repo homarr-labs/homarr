@@ -50,6 +50,7 @@ const echoValidator = z.object({ message: z.string() });
 const echoTool: McpTool = {
   name: "echo",
   description: "Echo a message",
+  type: "query",
   pathInRouter: ["echo"],
   inputValidator: echoValidator,
   inputSchema: z.toJSONSchema(echoValidator),

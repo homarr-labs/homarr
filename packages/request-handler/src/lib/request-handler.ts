@@ -95,26 +95,27 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
       async getDataAsync(): Promise<{ data: TData; timestamp: Date }> {
         const ttl = options.cacheTtlMs ?? DEFAULT_TTL_MS;
         const baseKey = options.getCacheKey?.(input) ?? JSON.stringify(input);
-        const sharedCache = ttl > 0 ? await options.getSharedCacheAsync?.(input) : undefined;
-        const key = `${sharedCache?.generation ?? "local"}:${baseKey}`;
-
-        let cached = cache.get(key);
-        const now = Date.now();
-        if (cached && now < cached.expiresAt) {
-          return { data: cached.data, timestamp: cached.timestamp };
-        }
-        if (cached && now >= cached.staleUntil) {
-          cache.delete(key);
-          scheduleExpiry();
-          cached = undefined;
-        }
-
-        const existing = inflight.get(key);
+        const existing = inflight.get(baseKey);
         if (existing) return existing;
 
         const requestGeneration = generation;
         let promise: Promise<CacheEntry<TData>>;
         promise = (async () => {
+          let sharedCache: SharedCacheAdapter<TData> | undefined;
+          if (ttl > 0 && options.getSharedCacheAsync) {
+            sharedCache = await options.getSharedCacheAsync(input);
+          }
+          const key = `${sharedCache?.generation ?? "local"}:${baseKey}`;
+
+          let cached = cache.get(key);
+          const now = Date.now();
+          if (cached && now < cached.expiresAt) return cached;
+          if (cached && now >= cached.staleUntil) {
+            cache.delete(key);
+            scheduleExpiry();
+            cached = undefined;
+          }
+
           let stale = cached;
           let lockToken: string | null | undefined;
 
@@ -179,10 +180,10 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
             if (lockToken) await sharedCache?.releaseRefreshLockAsync(lockToken);
           }
         })().finally(() => {
-          if (inflight.get(key) === promise) inflight.delete(key);
+          if (inflight.get(baseKey) === promise) inflight.delete(baseKey);
         });
 
-        inflight.set(key, promise);
+        inflight.set(baseKey, promise);
         return promise;
       },
     }),

@@ -12,7 +12,7 @@ export interface BaseWidgetErrorProps {
   icon: TablerIcon;
   message: stringOrTranslation;
   showLogsLink?: boolean;
-  onRetry?: () => void;
+  onRetry: () => void;
 }
 
 export const BaseWidgetError = (props: BaseWidgetErrorProps) => {
@@ -39,11 +39,9 @@ export const BaseWidgetError = (props: BaseWidgetErrorProps) => {
         )}
       </Stack>
 
-      {props.onRetry && (
-        <Button onClick={props.onRetry} size="sm" variant="light">
-          {tCommon("action.tryAgain")}
-        </Button>
-      )}
+      <Button onClick={props.onRetry} size="sm" variant="light">
+        {tCommon("action.tryAgain")}
+      </Button>
     </Stack>
   );
 };

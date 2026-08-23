@@ -1,5 +1,7 @@
 import { IconServer2 } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options";
@@ -7,6 +9,9 @@ import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options
 export const { definition, componentLoader } = createWidgetDefinition("systemDisks", {
   supportsAdvancedFocus: true,
   icon: IconServer2,
+  queryKey: [["widget", "healthMonitoring"]],
+  refetchInterval: 10,
+  ...getWidgetIntegrationConfig("systemDisks"),
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

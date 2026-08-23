@@ -1,6 +1,7 @@
 import { IconSearch, IconZoomQuestion } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { openMediaRequestSearch } from "@homarr/spotlight";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../../definition";
@@ -28,6 +29,7 @@ const createOptions = () =>
 export const { componentLoader, definition } = createWidgetDefinition("mediaRequests-requestList", {
   supportsAdvancedFocus: false,
   icon: IconZoomQuestion,
+  queryKey: [["widget", "mediaRequests", "getLatestRequests"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {
       integrationIds: scope.integrationIds,
@@ -48,4 +50,5 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaRequ
       },
     },
   ],
+  ...getWidgetIntegrationConfig("mediaRequests-requestList"),
 }).withDynamicImport(() => import("./component"));

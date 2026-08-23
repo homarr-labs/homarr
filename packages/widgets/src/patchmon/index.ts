@@ -1,6 +1,8 @@
 import { IconServerOff, IconShieldCheck } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 import { PATCHMON_STAT_COLOR_PRESETS } from "./stat-colors";
@@ -9,6 +11,7 @@ import { patchmonOptionsSuperRefine } from "./threshold-validation";
 export const { definition, componentLoader } = createWidgetDefinition("patchmon", {
   supportsAdvancedFocus: true,
   icon: IconShieldCheck,
+  ...getWidgetIntegrationConfig("patchmon"),
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

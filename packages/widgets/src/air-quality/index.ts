@@ -6,6 +6,8 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("airQuality", {
   icon: IconWind,
   supportsAdvancedFocus: true,
+  queryKey: [["widget", "airQuality", "atLocation"]],
+  refetchInterval: 900,
   queryMatcher: ({ input }, scope) => {
     const location = scope.options.location;
     if (location === null || typeof location !== "object" || !("latitude" in location) || !("longitude" in location)) {

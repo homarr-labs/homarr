@@ -1,6 +1,7 @@
 import { IconChartAreaLine, IconServerOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
@@ -17,6 +18,7 @@ const timePeriodOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemStats", {
   icon: IconChartAreaLine,
+  queryKeys: [[["widget", "beszel", "getSystems"]], [["widget", "beszel", "getSystemStats"]]],
   queryMatcher(query, scope) {
     if (query.path.at(-1) === "getSystems") {
       return widgetQueryInputMatches(query.input, { integrationIds: scope.integrationIds });
@@ -39,6 +41,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
       (dockerEnabled && widgetQueryInputMatches(query.input, { ...expected, includeDocker: true }))
     );
   },
+  ...getWidgetIntegrationConfig("beszelSystemStats"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       systemId: factory.integrationSelect({

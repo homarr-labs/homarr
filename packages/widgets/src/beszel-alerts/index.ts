@@ -1,11 +1,14 @@
 import { IconBell, IconServerOff } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelAlerts", {
   icon: IconBell,
+  queryKey: [["widget", "beszel", "getAlerts"]],
   queryMatcher(query, scope) {
     const hasRuntimeAlertsQuery = scope.runtimeQueries.some(({ path }) => path.at(-1) === "getAlerts");
     if (hasRuntimeAlertsQuery) return matchesWidgetRuntimeQuery(query, scope);
@@ -16,6 +19,7 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelAle
       maxHistoryItems: scope.options.maxHistoryItems,
     });
   },
+  ...getWidgetIntegrationConfig("beszelAlerts"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showHistory: factory.switch({ defaultValue: true }),

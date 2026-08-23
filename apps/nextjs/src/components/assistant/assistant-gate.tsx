@@ -74,6 +74,7 @@ const unavailableMessageKeys = {
 
 export const AssistantGate = ({ availability, children }: AssistantGateProps) => {
   const t = useI18n("assistant");
+
   if (availability === "enabled") {
     return <EnabledAssistantRoot>{children}</EnabledAssistantRoot>;
   }

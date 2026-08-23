@@ -6,7 +6,7 @@ import type { DnsHoleSummary } from "@homarr/integrations/types";
 import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
 
 import {
-  createManySharedWidgetIntegrationMiddleware,
+  createManyWidgetIntegrationMiddleware,
   createOneWidgetIntegrationMiddleware,
 } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
@@ -34,7 +34,7 @@ export const dnsHoleRouter = createTRPCRouter({
           "Get DNS blocking statistics from Pi-hole/AdGuard (queries, blocked, percentage). REQUIRED: integrationIds (array of Pi-hole/AdGuard integration IDs from integration_all)",
       },
     })
-    .concat(createManySharedWidgetIntegrationMiddleware("query", "dnsHoleSummary", ["dnsHoleControls"]))
+    .concat(createManyWidgetIntegrationMiddleware("query", "dnsHoleSummary"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries<(typeof ctx.integrations)[number], DnsHoleSummaryResult>(
         ctx.integrations,
@@ -72,6 +72,7 @@ export const dnsHoleRouter = createTRPCRouter({
     .mutation(async ({ ctx: { integration } }) => {
       const client = await createIntegrationAsync(integration);
       await client.enableAsync();
+      await dnsHoleRequestHandler.invalidateCacheAsync([integration.id]);
     }),
 
   disable: protectedProcedure
@@ -91,5 +92,6 @@ export const dnsHoleRouter = createTRPCRouter({
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
       await client.disableAsync(input.duration);
+      await dnsHoleRequestHandler.invalidateCacheAsync([integration.id]);
     }),
 });

@@ -6,7 +6,7 @@ import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { createId } from "@homarr/common";
 import { createDb } from "@homarr/db/test";
 
-import { NextcloudIntegration } from "../src/nextcloud/nextcloud.integration";
+import { NextcloudIntegration } from "../src";
 
 // Mock the database
 vi.mock("@homarr/db", async (importActual) => {

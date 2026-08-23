@@ -1,5 +1,7 @@
 import { IconHeadphones, IconServerOff } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
 
@@ -14,7 +16,9 @@ const hideUnlessAudiobookshelf = {
 export const { definition, componentLoader } = createWidgetDefinition("audioStats", {
   icon: IconHeadphones,
   supportsAdvancedFocus: true,
+  queryKeys: [[["widget", "audioStats", "getStats"]], [["widget", "mediaServer", "getCurrentStreams"]]],
   queryMatcher: matchesWidgetRuntimeQuery,
+  ...getWidgetIntegrationConfig("audioStats"),
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

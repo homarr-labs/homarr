@@ -12,6 +12,7 @@ import { createDirectBookmark, getBookmarkFaviconUrl, getDirectBookmarkUrl } fro
 export const { definition, componentLoader } = createWidgetDefinition("bookmarks", {
   icon: IconBookmark,
   supportsAdvancedFocus: true,
+  queryKey: [["app", "byIds"]],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       title: factory.text(),

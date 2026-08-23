@@ -15,7 +15,9 @@ const relativeDateSchema = z
 export const { definition, componentLoader } = createWidgetDefinition("releases", {
   supportsAdvancedFocus: true,
   icon: IconRocket,
+  queryKey: [["widget", "releases", "getLatest"]],
   queryMatcher: ({ input }, scope) => widgetQueryInputMatches(input, { itemId: scope.itemId }),
+  refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       newReleaseWithin: factory.text({

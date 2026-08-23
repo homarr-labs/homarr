@@ -1,6 +1,6 @@
 import { objectKeys } from "@homarr/common";
 
-import { integrationDefs } from "./integration";
+import { getIntegrationDockerMetadata, integrationDefs } from "./integration";
 import type { IntegrationKind } from "./integration";
 
 export const extractContainerImageName = (image: string): string => image.split("/").at(-1)?.split(":").at(0) ?? "";
@@ -28,7 +28,7 @@ export const matchIntegrationKind = (search: string): IntegrationKind | null => 
   }
 
   for (const kind of objectKeys(integrationDefs)) {
-    if (integrationDefs[kind].features.docker.aliases.some((alias) => alias === normalized)) return kind;
+    if (getIntegrationDockerMetadata(kind).aliases.some((alias) => alias === normalized)) return kind;
   }
 
   for (const kind of objectKeys(integrationDefs)) {
@@ -47,10 +47,10 @@ interface ContainerMatchInput {
 export const matchIntegrationKindFromContainer = (container: ContainerMatchInput): IntegrationKind | null => {
   const imageName = extractContainerImageName(container.image);
   const fromImage = matchIntegrationKind(imageName);
-  if (fromImage && integrationDefs[fromImage].features.docker.discoverable) return fromImage;
+  if (fromImage && getIntegrationDockerMetadata(fromImage).discoverable) return fromImage;
 
   const fromName = matchIntegrationKind(container.name);
-  if (fromName && integrationDefs[fromName].features.docker.discoverable) return fromName;
+  if (fromName && getIntegrationDockerMetadata(fromName).discoverable) return fromName;
 
   return null;
 };

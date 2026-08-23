@@ -2,36 +2,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
 import { themes as prismThemes } from "prism-react-renderer";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
-import { generatedIntegrationDocumentationSources, generatedWidgetDocumentationSources } from "@homarr/definitions";
 const a11yEmoji = require("@fec/remark-a11y-emoji");
-
-const githubDocsEditRoot = "https://github.com/homarr-labs/homarr/edit/dev";
-
-const getDocumentationEditUrl = (docPath: string) => {
-  const integrationPath = /^integrations\/([^/]+)\/(.+)$/u.exec(docPath);
-  const integrationSlug = integrationPath?.[1];
-  const integrationRelativePath = integrationPath?.[2];
-  if (
-    integrationSlug &&
-    integrationRelativePath &&
-    Object.hasOwn(generatedIntegrationDocumentationSources, integrationSlug)
-  ) {
-    const source =
-      generatedIntegrationDocumentationSources[
-        integrationSlug as keyof typeof generatedIntegrationDocumentationSources
-      ];
-    return `${githubDocsEditRoot}/${source}/${integrationRelativePath}`;
-  }
-
-  const widgetPath = /^widgets\/([^/]+)\/(.+)$/u.exec(docPath);
-  const slug = widgetPath?.[1];
-  const relativePath = widgetPath?.[2];
-  if (slug && relativePath && Object.hasOwn(generatedWidgetDocumentationSources, slug)) {
-    const source = generatedWidgetDocumentationSources[slug as keyof typeof generatedWidgetDocumentationSources];
-    return `${githubDocsEditRoot}/${source}/${relativePath}`;
-  }
-  return `${githubDocsEditRoot}/apps/docs/docs/${docPath}`;
-};
 
 const deprecatedWorkshopUrl = process.env.WORKSHOP_URL;
 if (deprecatedWorkshopUrl && !process.env.WORKSHOP_API_URL) {
@@ -94,7 +65,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: ({ docPath }) => getDocumentationEditUrl(docPath),
+          editUrl: ({ docPath }) => `https://github.com/homarr-labs/homarr/edit/dev/apps/docs/docs/${docPath}`,
           remarkPlugins: [a11yEmoji],
           exclude: [],
           showLastUpdateAuthor: false,

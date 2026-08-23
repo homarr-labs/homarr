@@ -2,6 +2,7 @@ import { IconTransform } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { capitalize } from "@homarr/common";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
 import { optionsBuilder } from "../options";
@@ -11,7 +12,10 @@ export const views = ["workers", "queue", "statistics"] as const;
 export const { componentLoader, definition } = createWidgetDefinition("mediaTranscoding", {
   icon: IconTransform,
   supportsAdvancedFocus: true,
+  queryKey: [["widget", "mediaTranscoding", "getDataAsync"]],
   queryMatcher: matchesWidgetRuntimeQuery,
+  ...getWidgetIntegrationConfig("mediaTranscoding"),
+  refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       defaultView: factory.select({

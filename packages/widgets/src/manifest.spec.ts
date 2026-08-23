@@ -17,7 +17,13 @@ import { widgetQueryRefetchIntervals } from "./refetch-intervals";
 import { widgetCatalogIcons } from "./catalog";
 import { getWidgetQueryKeys } from "./definition";
 
-const serializePollingPolicy = (entry: { queryKey: QueryKey; intervalSeconds: number | null }) => JSON.stringify(entry);
+const serializePollingPolicy = ({
+  queryKey,
+  intervalSeconds,
+}: {
+  queryKey: QueryKey;
+  intervalSeconds: number | null;
+}) => JSON.stringify({ queryKey, intervalSeconds });
 
 describe("widget manifest promise stability", () => {
   it("returns the same module promise for every render", () => {
@@ -70,6 +76,7 @@ describe("widget manifest promise stability", () => {
         const canonicalComponent = await module.componentLoader();
         const component = await loadWidgetComponent(kind);
         const resources = await loadWidgetResources(kind);
+        expect(module.definition.kind).toBe(kind);
         expect(definitions.get(kind)).toBe(module.definition);
         expect(component.default).toBe(canonicalComponent.default);
         expect(component.default).toBeDefined();

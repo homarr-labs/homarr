@@ -11,10 +11,7 @@ import {
 } from "@homarr/request-handler/beszel";
 
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
-import {
-  createManySharedWidgetIntegrationMiddleware,
-  createManyWidgetIntegrationMiddleware,
-} from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { BoundedAsyncQueue } from "./bounded-async-queue";
 
@@ -30,12 +27,7 @@ export const beszelRouter = createTRPCRouter({
           "Get all Beszel-monitored systems with CPU, memory, disk, GPU, network, temperature, and status. REQUIRED: integrationIds (array of Beszel integration IDs from integration_all)",
       },
     })
-    .concat(
-      createManySharedWidgetIntegrationMiddleware("query", "beszelSystemGrid", [
-        "beszelSystemTable",
-        "beszelSystemStats",
-      ]),
-    )
+    .concat(createManyWidgetIntegrationMiddleware("query", "beszelSystemGrid"))
     .query(async ({ ctx }) => {
       const integrationIds = ctx.integrations.map((i) => i.id);
       logger.debug("getSystems called", { userId: ctx.session?.user?.id, integrationIds });
@@ -153,12 +145,7 @@ export const beszelRouter = createTRPCRouter({
           "Get historical Beszel system metrics (CPU, memory, disk, network, temperature) and optional Docker container stats. REQUIRED: integrationIds (pass the single integrationId from the beszel_getSystems entry containing the target system — only the first ID is used), systemId (from beszel_getSystems). OPTIONAL: timePeriod (1m/1h/12h/24h/1w/30d, default 1h), includeDocker (default true)",
       },
     })
-    .concat(
-      createManySharedWidgetIntegrationMiddleware("query", "beszelSystemStats", [
-        "beszelSystemTable",
-        "beszelSystemGrid",
-      ]),
-    )
+    .concat(createManyWidgetIntegrationMiddleware("query", "beszelSystemStats"))
     .input(
       z.object({
         systemId: z.string(),
@@ -209,12 +196,7 @@ export const beszelRouter = createTRPCRouter({
     }),
 
   subscribeSystemStats: publicProcedure
-    .concat(
-      createManySharedWidgetIntegrationMiddleware("query", "beszelSystemStats", [
-        "beszelSystemTable",
-        "beszelSystemGrid",
-      ]),
-    )
+    .concat(createManyWidgetIntegrationMiddleware("query", "beszelSystemStats"))
     .input(
       z.object({
         systemId: z.string(),

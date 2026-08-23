@@ -1,5 +1,5 @@
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
-import { nativeFeatureCapabilities, widgetKinds } from "@homarr/definitions";
+import { widgetIntegrationConfigs, widgetKinds } from "@homarr/definitions";
 
 export interface BoardRecipeRecommendation {
   widgetKind: WidgetKind;
@@ -36,10 +36,10 @@ export const getBoardRecipeRecommendations = ({
   return widgetKinds
     .filter((widgetKind) => !existingKinds.has(widgetKind))
     .flatMap((widgetKind) => {
-      const capability = nativeFeatureCapabilities[widgetKind as keyof typeof nativeFeatureCapabilities];
+      const capability = widgetIntegrationConfigs[widgetKind as keyof typeof widgetIntegrationConfigs];
       if (!capability) return [];
 
-      const matches = capability.integrations.filter((integrationKind) => availableKinds.has(integrationKind));
+      const matches = capability.supportedIntegrations.filter((integrationKind) => availableKinds.has(integrationKind));
       if (matches.length === 0) return [];
 
       const preferredMatch = preferredIntegrationKind && matches.includes(preferredIntegrationKind);
@@ -51,10 +51,10 @@ export const getBoardRecipeRecommendations = ({
           widgetKind,
           integrationKind,
           isNewlyAvailable: Boolean(preferredMatch),
-          score: (preferredMatch ? 1_000 : 0) + matches.length * 10 - capability.integrations.length,
+          score: (preferredMatch ? 1_000 : 0) + matches.length * 10 - capability.supportedIntegrations.length,
         },
       ];
     })
-    .toSorted((left, right) => right.score - left.score || left.widgetKind.localeCompare(right.widgetKind))
+    .sort((left, right) => right.score - left.score || left.widgetKind.localeCompare(right.widgetKind))
     .slice(0, Math.max(0, limit));
 };

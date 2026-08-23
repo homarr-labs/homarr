@@ -2,6 +2,7 @@ import { IconChevronLeft, IconChevronRight, IconPhoto, IconPlayerPause } from "@
 import z from "zod";
 
 import { clientApi } from "@homarr/api/client";
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../../definition";
@@ -52,6 +53,7 @@ const createOptions = () =>
 export const { definition, componentLoader } = createWidgetDefinition("immich-albumCarousel", {
   icon: IconPhoto,
   supportsAdvancedFocus: true,
+  queryKey: [["widget", "immich", "getAlbum"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {
       integrationId: scope.integrationIds[0] ?? "",
@@ -60,6 +62,8 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-al
           ? scope.options.albumId
           : undefined,
     }),
+  refetchInterval: null,
+  ...getWidgetIntegrationConfig("immich-albumCarousel"),
   contextActions: ({ widgetRuntimeRef }) => {
     const actions = widgetRuntimeRef.current.actions;
     return [

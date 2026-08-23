@@ -245,8 +245,8 @@ type DockerContainerAction = "start" | "stop" | "restart" | "remove";
 export const performDockerContainerActionsAsync = async (
   targets: DockerContainerTarget[],
   action: DockerContainerAction,
-) =>
-  await Promise.all(
+) => {
+  const results = await Promise.all(
     targets.map(async (target) => {
       try {
         const capability = action === "remove" ? "remove" : "lifecycle";
@@ -270,6 +270,13 @@ export const performDockerContainerActionsAsync = async (
       }
     }),
   );
+
+  if (results.some(({ success }) => success)) {
+    dockerContainersRequestHandler.invalidateCache();
+  }
+
+  return results;
+};
 
 const assertDockerEndpointCapability = (
   endpointId: string,

@@ -1,11 +1,15 @@
 import { IconFileText, IconServerOff } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("paperlessNgx", {
   supportsAdvancedFocus: false,
   icon: IconFileText,
+  refetchInterval: null,
+  ...getWidgetIntegrationConfig("paperlessNgx"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showInboxRatio: factory.switch({

@@ -2,9 +2,6 @@ export { createTRPCContext } from "./trpc";
 export { extractMcpToolsFromProcedures } from "./mcp-tools";
 export type { McpTool } from "./mcp-tools";
 
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-
 import { createTRPCRouter } from "./trpc";
 import { appRouter as appRouterForApps } from "./router/app";
 import { apiKeysRouter } from "./router/apiKeys";
@@ -15,51 +12,41 @@ import { iconsRouter } from "./router/icons";
 import { infoRouter } from "./router/info";
 import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
+import { airQualityRouter } from "./router/widgets/air-quality";
+import { bazarrRouter } from "./router/widgets/bazarr";
 import { serverSettingsRouter } from "./router/serverSettings";
-import { loadMcpWidgetRoutersAsync } from "./router/widgets/registry";
+import { beszelRouter } from "./router/widgets/beszel";
+import { calendarRouter } from "./router/widgets/calendar";
+import { dnsHoleRouter } from "./router/widgets/dns-hole";
+import { downloadsRouter } from "./router/widgets/downloads";
+import { healthMonitoringRouter } from "./router/widgets/health-monitoring";
+import { mediaRequestsRouter } from "./router/widgets/media-requests";
+import { mediaServerRouter } from "./router/widgets/media-server";
+import { patchmonRouter } from "./router/widgets/patchmon";
+import { smartHomeRouter } from "./router/widgets/smart-home";
+import { widgetSecretsRouter } from "./router/widgets/widget-secrets";
 
-const logger = createLogger({ module: "mcpRouter" });
-
-const createMcpRouterAsync = async () => {
-  const startedAt = Date.now();
-  const widgetRouters = await loadMcpWidgetRoutersAsync();
-
-  const router = createTRPCRouter({
-    app: appRouterForApps,
-    apiKeys: apiKeysRouter,
-    board: boardRouter,
-    customWidget: customWidgetRouter,
-    docker: dockerRouter,
-    icon: iconsRouter,
-    info: infoRouter,
-    integration: integrationRouter,
-    invite: inviteRouter,
-    serverSettings: serverSettingsRouter,
-    ...widgetRouters,
-  });
-
-  logger.info("Materialized MCP router", {
-    durationMs: Date.now() - startedAt,
-    widgetRouters: Object.keys(widgetRouters),
-  });
-  return router;
-};
-
-export type McpRouter = Awaited<ReturnType<typeof createMcpRouterAsync>>;
-
-let mcpRouterPromise: Promise<McpRouter> | null = null;
-
-export async function getMcpRouterAsync(): Promise<McpRouter> {
-  if (mcpRouterPromise) return await mcpRouterPromise;
-
-  const loadPromise = createMcpRouterAsync();
-  mcpRouterPromise = loadPromise;
-
-  try {
-    return await loadPromise;
-  } catch (error) {
-    if (mcpRouterPromise === loadPromise) mcpRouterPromise = null;
-    logger.error(new ErrorWithMetadata("Failed to materialize MCP router", {}, { cause: error }));
-    throw error;
-  }
-}
+export const mcpRouter = createTRPCRouter({
+  app: appRouterForApps,
+  apiKeys: apiKeysRouter,
+  board: boardRouter,
+  customWidget: customWidgetRouter,
+  docker: dockerRouter,
+  icon: iconsRouter,
+  info: infoRouter,
+  integration: integrationRouter,
+  invite: inviteRouter,
+  airQuality: airQualityRouter,
+  bazarr: bazarrRouter,
+  serverSettings: serverSettingsRouter,
+  beszel: beszelRouter,
+  calendar: calendarRouter,
+  dnsHole: dnsHoleRouter,
+  downloads: downloadsRouter,
+  healthMonitoring: healthMonitoringRouter,
+  mediaRequests: mediaRequestsRouter,
+  mediaServer: mediaServerRouter,
+  patchmon: patchmonRouter,
+  smartHome: smartHomeRouter,
+  widgetSecrets: widgetSecretsRouter,
+});

@@ -1,6 +1,7 @@
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import {
   getIntegrationName,
+  getIntegrationOnboardingMetadata,
   getWidgetKindsForIntegration,
   integrationDefs,
   integrationKinds,
@@ -54,7 +55,7 @@ export const buildSortedIntegrations = (
   integrationKinds
     .filter((kind) => {
       if (options.allowedKinds && !options.allowedKinds.includes(kind)) return false;
-      if (options.onboarding && integrationDefs[kind].features.onboarding.hidden) return false;
+      if (options.onboarding && getIntegrationOnboardingMetadata(kind).hidden) return false;
       if (!options.enableMockIntegration && kind === "mock") return false;
       return true;
     })
@@ -65,8 +66,8 @@ export const buildSortedIntegrations = (
       widgets: getWidgetKindsForIntegration(kind),
     }))
     .toSorted((left, right) => {
-      const leftFeaturedOrder = integrationDefs[left.kind].features.onboarding.featuredOrder;
-      const rightFeaturedOrder = integrationDefs[right.kind].features.onboarding.featuredOrder;
+      const leftFeaturedOrder = getIntegrationOnboardingMetadata(left.kind).featuredOrder;
+      const rightFeaturedOrder = getIntegrationOnboardingMetadata(right.kind).featuredOrder;
       if (leftFeaturedOrder !== null && rightFeaturedOrder !== null) return leftFeaturedOrder - rightFeaturedOrder;
       if (leftFeaturedOrder !== null) return -1;
       if (rightFeaturedOrder !== null) return 1;

@@ -2,13 +2,17 @@ import type { LoadContext, Plugin } from "@docusaurus/types";
 import fs from "node:fs";
 import path from "node:path";
 
-import { integrationDocSlugs } from "@homarr/definitions/docs/integration-doc-slugs";
 import { widgetDocSlugs } from "@homarr/definitions/docs/widget-doc-slugs";
+import { getIntegrationDocumentationSlug, integrationKinds } from "@homarr/definitions/integration";
 
-const slugMaps = {
-  Integration: { slugs: integrationDocSlugs, folder: "integrations" },
-  Widget: { slugs: widgetDocSlugs, folder: "widgets" },
-} as const;
+const documentationEntries = [
+  {
+    label: "Integration",
+    folder: "integrations",
+    entries: integrationKinds.map((kind) => [kind, getIntegrationDocumentationSlug(kind)] as const),
+  },
+  { label: "Widget", folder: "widgets", entries: Object.entries(widgetDocSlugs) },
+] as const;
 
 export default function validateDocsCoveragePlugin(context: LoadContext): Plugin {
   return {
@@ -17,8 +21,8 @@ export default function validateDocsCoveragePlugin(context: LoadContext): Plugin
       const docsDir = path.resolve(context.siteDir, "docs");
       const missing: string[] = [];
 
-      for (const [label, { slugs, folder }] of Object.entries(slugMaps)) {
-        for (const [kind, slug] of Object.entries(slugs)) {
+      for (const { label, folder, entries } of documentationEntries) {
+        for (const [kind, slug] of entries) {
           if (!slug) continue;
           if (!fs.existsSync(path.join(docsDir, folder, slug))) {
             missing.push(`${label} "${kind}" -> docs/${folder}/${slug}/`);

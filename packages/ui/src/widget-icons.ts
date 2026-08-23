@@ -22,6 +22,7 @@ import {
   IconCloud,
   IconDeviceCctv,
   IconDeviceGamepad,
+  IconDownload,
   IconFileText,
   IconGraphFilled,
   IconHeadphones,
@@ -55,17 +56,9 @@ import type { TablerIcon } from "@tabler/icons-react";
 
 import type { WidgetKind } from "@homarr/definitions";
 
-import { generatedWidgetCatalogIcons } from "./generated/widget-icons";
-
-const {
-  weather: generatedWeatherIcon,
-  downloads: generatedDownloadsIcon,
-  ...additionalGeneratedWidgetIcons
-} = generatedWidgetCatalogIcons;
-
 export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
   clock: IconClock,
-  weather: generatedWeatherIcon,
+  weather: IconCloud,
   airQuality: IconWind,
   countdown: IconHourglass,
   timer: IconClockPlay,
@@ -82,7 +75,7 @@ export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
   stockPrice: IconBuildingBank,
   mediaServer: IconVideo,
   calendar: IconCalendar,
-  downloads: generatedDownloadsIcon,
+  downloads: IconDownload,
   "mediaRequests-requestList": IconZoomQuestion,
   "mediaRequests-requestStats": IconChartBar,
   mediaTranscoding: IconTransform,
@@ -123,5 +116,4 @@ export const widgetCatalogIcons: Record<WidgetKind, TablerIcon> = {
   traefik: IconRoute,
   customApi: IconApi,
   wud: IconBrandDocker,
-  ...additionalGeneratedWidgetIcons,
 };

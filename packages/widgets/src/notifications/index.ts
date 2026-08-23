@@ -1,5 +1,6 @@
 import { IconMessage } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
@@ -7,6 +8,7 @@ import { optionsBuilder } from "../options";
 export const { componentLoader, definition } = createWidgetDefinition("notifications", {
   supportsAdvancedFocus: true,
   icon: IconMessage,
+  queryKey: [["widget", "notifications", "getNotifications"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {
       hideLogos: scope.options.hideLogos,
@@ -17,4 +19,5 @@ export const { componentLoader, definition } = createWidgetDefinition("notificat
       hideLogos: factory.switch({ defaultValue: false }),
     }));
   },
+  ...getWidgetIntegrationConfig("notifications"),
 }).withDynamicImport(() => import("./component"));

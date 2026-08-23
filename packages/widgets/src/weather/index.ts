@@ -1,13 +1,15 @@
+import { IconCloud } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { z } from "zod/v4";
 
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
-import { widgetIcon } from "./module.generated";
 
 export const { definition, componentLoader } = createWidgetDefinition("weather", {
-  icon: widgetIcon,
+  icon: IconCloud,
   supportsAdvancedFocus: true,
+  queryKey: [["widget", "weather", "atLocation"]],
+  refetchInterval: 600,
   queryMatcher: ({ input }, scope) => {
     const location = scope.options.location;
     if (location === null || typeof location !== "object" || !("latitude" in location) || !("longitude" in location)) {

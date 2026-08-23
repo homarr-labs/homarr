@@ -1,11 +1,9 @@
 import type React from "react";
-import type { LoaderComponent } from "next/dynamic";
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { hashKey } from "@tanstack/react-query";
 import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 
-import type { IntegrationKind, NativeFeatureCapabilityDescriptor, WidgetKind } from "@homarr/definitions";
-import { widgetFeatureCatalog } from "@homarr/definitions";
+import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { ServerSettings } from "@homarr/server-settings";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import type { stringOrTranslation } from "@homarr/translation";
@@ -74,86 +72,13 @@ export interface WidgetContextActionProps {
   widgetRuntimeRef: WidgetRuntimeRef;
 }
 
-type WidgetFeatureCapability<TKind extends WidgetKind> = (typeof widgetFeatureCatalog)[TKind] extends {
-  capability: infer TCapability extends NativeFeatureCapabilityDescriptor;
-}
-  ? TCapability
-  : never;
-
-type WidgetFeatureIntegrationDefinition<TKind extends WidgetKind> = [WidgetFeatureCapability<TKind>] extends [never]
-  ? object
-  : {
-      supportedIntegrations: WidgetFeatureCapability<TKind>["integrations"][number][];
-      integrationsRequired: WidgetFeatureCapability<TKind> extends { connectionOptional: true } ? false : true;
-    } & (WidgetFeatureCapability<TKind> extends { serverMaxIntegrations: infer TMax extends number }
-      ? { maxIntegrations: TMax }
-      : object);
-
-type CatalogOwnedWidgetDefinitionKey =
-  | "kind"
-  | "supportedIntegrations"
-  | "integrationsRequired"
-  | "maxIntegrations"
-  | "queryKey"
-  | "queryKeys"
-  | "refetchInterval";
-
-type WidgetDefinitionInput = Omit<WidgetDefinition, CatalogOwnedWidgetDefinitionKey>;
-
-type WidgetDefinitionInputWithoutCatalogMetadata<TDefinition extends WidgetDefinitionInput> = TDefinition & {
-  [TKey in CatalogOwnedWidgetDefinitionKey]?: never;
-};
-
-type ResolvedWidgetDefinition<TKind extends WidgetKind, TDefinition extends WidgetDefinitionInput> = TDefinition &
-  WidgetFeatureIntegrationDefinition<TKind> & {
-    kind: TKind;
-    queryKey?: QueryKey;
-    queryKeys?: readonly QueryKey[];
-    refetchInterval?: number | null;
-  };
-
-const resolveWidgetDefinition = <TKind extends WidgetKind, TDefinition extends WidgetDefinitionInput>(
-  kind: TKind,
-  definition: WidgetDefinitionInputWithoutCatalogMetadata<TDefinition>,
-): ResolvedWidgetDefinition<TKind, TDefinition> => {
-  const descriptor = widgetFeatureCatalog[kind];
-  const resolvedDefinition: WidgetDefinition = {
-    ...definition,
-    kind,
-  };
-
-  if ("capability" in descriptor) {
-    const capability = descriptor.capability;
-    const connectionOptional = "connectionOptional" in capability && capability.connectionOptional === true;
-    resolvedDefinition.supportedIntegrations = [...capability.integrations];
-    resolvedDefinition.integrationsRequired = !connectionOptional;
-    if ("serverMaxIntegrations" in capability && capability.serverMaxIntegrations !== undefined) {
-      resolvedDefinition.maxIntegrations = capability.serverMaxIntegrations;
-    }
-  }
-
-  if ("query" in descriptor) {
-    const queryKeys: QueryKey[] = descriptor.query.paths.map((path) => [path]);
-    if (queryKeys.length === 1) {
-      resolvedDefinition.queryKey = queryKeys[0];
-    } else {
-      resolvedDefinition.queryKeys = queryKeys;
-    }
-    if ("refetchIntervalSeconds" in descriptor.query) {
-      resolvedDefinition.refetchInterval = descriptor.query.refetchIntervalSeconds;
-    }
-  }
-
-  return resolvedDefinition as ResolvedWidgetDefinition<TKind, TDefinition>;
-};
-
 const createWithDynamicImport =
-  <TKind extends WidgetKind, TDefinition extends WidgetDefinitionInput>(
-    kind: TKind,
-    definition: ResolvedWidgetDefinition<TKind, TDefinition>,
-  ) =>
-  (componentLoader: () => LoaderComponent<WidgetComponentProps<TKind>>) => ({
-    definition,
+  <TKind extends WidgetKind, TDefinition extends WidgetDefinition>(kind: TKind, definition: TDefinition) =>
+  (componentLoader: () => Promise<{ default: React.ComponentType<WidgetComponentProps<TKind>> }>) => ({
+    definition: {
+      ...definition,
+      kind,
+    },
     kind,
     componentLoader,
   });
@@ -167,18 +92,14 @@ export type Prefetch<TKind extends WidgetKind> = (
   }[],
 ) => Promise<void>;
 
-export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition extends WidgetDefinitionInput>(
+export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition extends WidgetDefinition>(
   kind: TKind,
-  definition: WidgetDefinitionInputWithoutCatalogMetadata<TDefinition>,
-) => {
-  const resolvedDefinition = resolveWidgetDefinition(kind, definition);
-  return {
-    withDynamicImport: createWithDynamicImport(kind, resolvedDefinition),
-  };
-};
+  definition: TDefinition,
+) => ({
+  withDynamicImport: createWithDynamicImport(kind, definition),
+});
 
 export interface WidgetDefinition {
-  kind?: WidgetKind;
   icon: TablerIcon;
   supportsAdvancedFocus?: boolean;
   queryKey?: QueryKey;

@@ -1,11 +1,15 @@
 import { IconLayoutGrid, IconServerOff } from "@tabler/icons-react";
 
+import { getWidgetIntegrationConfig } from "@homarr/definitions";
+
 import { createWidgetDefinition } from "../definition";
 import { statusOptions } from "../beszel/_shared/options";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemGrid", {
   icon: IconLayoutGrid,
+  queryKey: [["widget", "beszel", "getSystems"]],
+  ...getWidgetIntegrationConfig("beszelSystemGrid"),
   createOptions() {
     return optionsBuilder.from((factory) => ({
       statusFilter: factory.select({

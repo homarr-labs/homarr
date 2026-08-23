@@ -6,7 +6,7 @@ import type { ToolSet, UIMessage } from "ai";
 import { createUIMessageStream, createUIMessageStreamResponse, jsonSchema, stepCountIs, streamText, tool } from "ai";
 import { z } from "zod/v4";
 
-import { createTRPCContext } from "@homarr/api/mcp";
+import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
 import {
   createAssistantGenerationAccessToken,
   getAssistantContextEntitiesAsync,
@@ -16,7 +16,6 @@ import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
 import { decryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { and, eq } from "@homarr/db";
 import { db } from "@homarr/db";
 import { assistantConfigurations, assistantThreads } from "@homarr/db/schema";
@@ -36,7 +35,7 @@ import type {
   AssistantWebSearchSource,
 } from "~/components/assistant/assistant-message-metadata";
 
-import { getMcpRuntimeAsync } from "../../mcp/_extract-tools";
+import { extractMcpTools } from "../../mcp/_extract-tools";
 import { buildAssistantRequestContext, sanitizeAttachmentFilename } from "./assistant-chat-input";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
 import { convertAssistantMessagesToModelMessages } from "./assistant-message-conversion";
@@ -493,24 +492,14 @@ export async function POST(request: Request) {
   }
   const canAuthorCustomWidgets = session.user.permissions.includes("admin");
   const customWidgetAuthoringContext = getCustomWidgetAuthoringContext(incomingMessages, canAuthorCustomWidgets);
-  let mcpRuntime;
-  try {
-    mcpRuntime = await getMcpRuntimeAsync();
-  } catch (error) {
-    logger.error(new ErrorWithMetadata("Assistant tools are unavailable", { requestId }, { cause: error }));
-    return Response.json(
-      { error: "Homarr tools could not be loaded. Check the Homarr logs and try again." },
-      { status: 503 },
-    );
-  }
-  const caller = mcpRuntime.router.createCaller(context);
+  const caller = mcpRouter.createCaller(context);
   const omittedCustomWidgetTools = new Set<string>(customWidgetAuthoringContext.omittedToolNames);
-  const mcpTools = mcpRuntime.tools.filter((mcpTool) => !omittedCustomWidgetTools.has(mcpTool.name));
+  const mcpTools = extractMcpTools().filter((mcpTool) => !omittedCustomWidgetTools.has(mcpTool.name));
   const customWidgetComponentDocumentBudget = createCustomWidgetComponentDocumentBudget();
 
   const homarrTools = Object.fromEntries(
     mcpTools.map((mcpTool) => {
-      const requiresApproval = mcpRuntime.procedureTypes.get(mcpTool.pathInRouter.join(".")) === "mutation";
+      const requiresApproval = mcpTool.type === "mutation";
       return [
         mcpTool.name,
         tool({
@@ -558,11 +547,9 @@ export async function POST(request: Request) {
     }),
   ) satisfies ToolSet;
   const toolApproval = Object.fromEntries(
-    mcpTools.flatMap((mcpTool) =>
-      mcpRuntime.procedureTypes.get(mcpTool.pathInRouter.join(".")) === "mutation"
-        ? [[mcpTool.name, "user-approval" as const]]
-        : [],
-    ),
+    mcpTools
+      .filter((mcpTool) => mcpTool.type === "mutation")
+      .map((mcpTool) => [mcpTool.name, "user-approval" as const]),
   );
 
   const frontendTools = Object.fromEntries(

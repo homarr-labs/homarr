@@ -1,6 +1,6 @@
 import { IconServerOff, IconTable } from "@tabler/icons-react";
 
-import { invariantTechnicalLabels } from "@homarr/definitions";
+import { getWidgetIntegrationConfig, invariantTechnicalLabels } from "@homarr/definitions";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery, widgetQueryInputMatches } from "../definition";
 import type { SelectOption } from "../_inputs/widget-select-input";
@@ -28,10 +28,12 @@ const sortDirectionOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemTable", {
   icon: IconTable,
+  queryKeys: [[["widget", "beszel", "getSystems"]], [["widget", "beszel", "getSystemStats"]]],
   queryMatcher: (query, scope) =>
     query.path.at(-1) === "getSystems"
       ? widgetQueryInputMatches(query.input, { integrationIds: scope.integrationIds })
       : matchesWidgetRuntimeQuery(query, scope),
+  ...getWidgetIntegrationConfig("beszelSystemTable"),
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({

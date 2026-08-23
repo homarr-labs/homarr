@@ -2,12 +2,10 @@ import type { TRPCError } from "@trpc/server";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod/v4";
 
-import { getMcpRouterAsync } from "../mcp";
+import { mcpRouter } from "../mcp";
 import { extractMcpToolsFromProcedures } from "../mcp-tools";
 
 vi.mock("@homarr/auth", () => ({}));
-
-const mcpRouter = await getMcpRouterAsync();
 
 const MCP_TOOL_ALLOWLIST = {
   query: [

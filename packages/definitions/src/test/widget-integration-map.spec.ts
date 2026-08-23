@@ -4,19 +4,19 @@ import { integrationKinds } from "../integration";
 import {
   getWidgetKindsForIntegration,
   integrationWidgetSupport,
-  nativeFeatureCapabilities,
+  widgetIntegrationConfigs,
   widgetIntegrationLimits,
   widgetIntegrationSupport,
   widgetKindsWithOptionalIntegrations,
 } from "../widget-integration-map";
 
-describe("native feature capability descriptor", () => {
+describe("widget integration config", () => {
   test("derives forward and reverse support without losing relationships", () => {
-    for (const [widgetKind, capability] of Object.entries(nativeFeatureCapabilities)) {
+    for (const [widgetKind, capability] of Object.entries(widgetIntegrationConfigs)) {
       expect(widgetIntegrationSupport[widgetKind as keyof typeof widgetIntegrationSupport]).toEqual(
-        capability.integrations,
+        capability.supportedIntegrations,
       );
-      for (const integrationKind of capability.integrations) {
+      for (const integrationKind of capability.supportedIntegrations) {
         expect(integrationWidgetSupport[integrationKind]).toContain(widgetKind);
       }
     }
