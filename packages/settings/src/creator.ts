@@ -1,19 +1,31 @@
 import type { User } from "@homarr/db/schema";
 import type { ServerSettings } from "@homarr/server-settings";
+import { parseBrandingSettings } from "@homarr/server-settings";
+import type { HeaderPreferences } from "@homarr/validation/user";
+import { parseHeaderPreferences } from "@homarr/validation/user";
 
-export type SettingsContextProps = Pick<
-  User,
-  | "firstDayOfWeek"
-  | "defaultSearchEngineId"
-  | "homeBoardId"
-  | "mobileHomeBoardId"
-  | "openSearchInNewTab"
-  | "ddgBangs"
-  | "pingIconsEnabled"
-  | "enableRightClickOnWidgets"
-> &
-  Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus"> &
-  Pick<ServerSettings["user"], "enableGravatar">;
+export type SettingsContextProps = Omit<
+  Pick<
+    User,
+    | "firstDayOfWeek"
+    | "defaultSearchEngineId"
+    | "homeBoardId"
+    | "mobileHomeBoardId"
+    | "openSearchInNewTab"
+    | "ddgBangs"
+    | "pingIconsEnabled"
+    | "enableRightClickOnWidgets"
+    | "headerPreferences"
+  >,
+  "headerPreferences"
+> & { headerPreferences: HeaderPreferences } & Pick<
+    ServerSettings["board"],
+    "enableStatusByDefault" | "forceDisableStatus"
+  > &
+  Pick<ServerSettings["user"], "enableGravatar"> & {
+    branding: ServerSettings["branding"];
+    featureControls: ServerSettings["featureControls"];
+  };
 
 export interface PublicServerSettings {
   search: Pick<ServerSettings["search"], "defaultSearchEngineId">;
@@ -22,6 +34,8 @@ export interface PublicServerSettings {
     "homeBoardId" | "mobileHomeBoardId" | "enableStatusByDefault" | "forceDisableStatus"
   >;
   user: Pick<ServerSettings["user"], "enableGravatar">;
+  branding: ServerSettings["branding"];
+  featureControls: ServerSettings["featureControls"];
 }
 
 export type UserSettings = Pick<
@@ -34,6 +48,7 @@ export type UserSettings = Pick<
   | "ddgBangs"
   | "pingIconsEnabled"
   | "enableRightClickOnWidgets"
+  | "headerPreferences"
 >;
 
 export const createSettings = ({
@@ -51,7 +66,10 @@ export const createSettings = ({
   mobileHomeBoardId: user?.mobileHomeBoardId ?? serverSettings.board.mobileHomeBoardId,
   pingIconsEnabled: user?.pingIconsEnabled ?? false,
   enableRightClickOnWidgets: user?.enableRightClickOnWidgets ?? true,
+  headerPreferences: parseHeaderPreferences(user?.headerPreferences),
   enableStatusByDefault: serverSettings.board.enableStatusByDefault,
   forceDisableStatus: serverSettings.board.forceDisableStatus,
   enableGravatar: serverSettings.user.enableGravatar,
+  branding: parseBrandingSettings(serverSettings.branding),
+  featureControls: serverSettings.featureControls,
 });

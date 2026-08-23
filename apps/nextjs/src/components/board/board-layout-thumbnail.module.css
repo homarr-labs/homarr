@@ -5,10 +5,10 @@
   overflow: hidden;
   color: var(--mantine-color-dimmed);
   background:
-    radial-gradient(
-      circle at 15% 10%,
+    linear-gradient(
+      to top,
       color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent),
-      transparent 35%
+      transparent 55%
     ),
     var(--mantine-color-body);
 }

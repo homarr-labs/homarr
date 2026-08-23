@@ -37,7 +37,7 @@ import { capitalize, objectEntries } from "@homarr/common";
 import { hotkeys } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 
-import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
+import { homarrLogoPath } from "~/components/layout/logo/constants";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";
 import { getDependenciesAsync, getPackageVersion } from "~/versions/package-reader";

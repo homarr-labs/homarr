@@ -10,10 +10,11 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { boardSaveLayoutsSchema, boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
-import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
+import { homarrLogoPath } from "~/components/layout/logo/constants";
 import { SectionCard } from "~/components/manage/section-card";
 import { UnsavedChangesBar } from "~/components/manage/unsaved-changes-bar";
 
@@ -88,6 +89,7 @@ interface BoardSettingsFormProps {
 export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisibility }: BoardSettingsFormProps) => {
   const t = useI18n("common");
   const tSection = useI18n("board.setting.section");
+  const { branding } = useSettings();
   const { updateBoard } = useUpdateBoard();
   const savePartialSettings = useSavePartialSettingsMutation(board);
   const saveLayouts = useSaveLayoutsMutation(board);
@@ -142,7 +144,9 @@ export const BoardSettingsForm = ({ board, permissions, hasFullAccess, hideVisib
       const [, canonicalLayouts] = await Promise.all([
         partialSettingsChanged
           ? savePartialSettings.mutateAsync({ id: board.id, ...partialSettings }).then(() => {
-              updateFavicon(values.faviconImageUrl ?? homarrLogoPath);
+              updateFavicon(
+                values.faviconImageUrl ?? branding.faviconImageUrl ?? branding.logoImageUrl ?? homarrLogoPath,
+              );
             })
           : Promise.resolve(),
         layoutsChanged ? saveLayouts.mutateAsync({ id: board.id, layouts }) : Promise.resolve(null),

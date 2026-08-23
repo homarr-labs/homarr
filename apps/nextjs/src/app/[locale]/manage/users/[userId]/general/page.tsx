@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Alert, Box, Group, Stack, Title } from "@mantine/core";
+import { Alert, Stack, Title } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
@@ -58,7 +58,7 @@ export default async function EditUserPage(props: Props) {
     notFound();
   }
 
-  const boards = await api.board.getAllBoards();
+  const boards = await api.board.getManageOverview({ fullPreview: false, userId: user.id });
   const searchEngines = await api.searchEngine.getSelectable();
   const isSelf = session?.user.id === user.id;
   const isCredentialsUser = user.provider === "credentials";
@@ -71,23 +71,18 @@ export default async function EditUserPage(props: Props) {
         </Alert>
       )}
       <Title>{tGeneral("title")}</Title>
-      <Group gap="xl" align="flex-start" wrap="wrap">
-        <Box flex={1} miw={{ base: "100%", md: 540 }}>
-          <UserGeneralSettingsForm
-            user={user}
-            boardsData={boards.map((board) => ({
-              id: board.id,
-              name: board.name,
-              logoImageUrl: board.logoImageUrl,
-            }))}
-            searchEnginesData={searchEngines}
-            showLanguageSelector={isSelf}
-          />
-        </Box>
-        <Box w={{ base: "100%", lg: 260 }}>
-          <UserProfileAvatarForm user={user} />
-        </Box>
-      </Group>
+      <UserGeneralSettingsForm
+        user={user}
+        boardsData={boards.map((board) => ({
+          id: board.id,
+          name: board.name,
+          logoImageUrl: board.logoImageUrl,
+          preview: board.preview,
+        }))}
+        searchEnginesData={searchEngines}
+        showLanguageSelector={isSelf}
+        profileAvatar={<UserProfileAvatarForm user={user} />}
+      />
 
       {session?.user.id === user.id && (
         <Stack mb="lg">

@@ -1,5 +1,6 @@
 import { IconHomeOff } from "@tabler/icons-react";
 
+import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 import { auth } from "@homarr/auth/next";
 import { db } from "@homarr/db";
 import { boards } from "@homarr/db/schema";
@@ -7,6 +8,7 @@ import { getI18n } from "@homarr/translation/server";
 
 import type { BoardNotFoundProps } from "~/components/board/not-found";
 import { BoardNotFound } from "~/components/board/not-found";
+import { homarrLogoPath } from "~/components/layout/logo/constants";
 
 export default async function NotFoundBoardHomePage() {
   const boardNotFoundProps = await getPropsAsync();
@@ -19,8 +21,9 @@ const getPropsAsync = async (): Promise<BoardNotFoundProps> => {
   const t = await getI18n("board");
 
   if (boardCount === 0) {
+    const { branding } = await getRscServerSettingsAsync();
     return {
-      icon: { src: "/favicon.ico", alt: "Homarr logo" },
+      icon: { src: branding.logoImageUrl ?? homarrLogoPath, alt: `${branding.appName} logo` },
       title: t("error.noBoard.title"),
       description: t("error.noBoard.description"),
       link: { label: t("error.noBoard.link"), href: "/manage/boards" },

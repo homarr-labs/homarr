@@ -1,0 +1,129 @@
+.header {
+  overflow: hidden;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  width: 100%;
+  height: 100%;
+  padding-inline: var(--mantine-spacing-md);
+  direction: ltr;
+}
+
+.zone {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.zone::-webkit-scrollbar {
+  display: none;
+}
+
+.zone[data-zone="left"] {
+  justify-content: flex-start;
+}
+
+.zone[data-zone="center"] {
+  justify-content: center;
+}
+
+.zone[data-zone="right"] {
+  justify-content: flex-end;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: auto;
+  height: calc(100% - 0.5rem);
+  max-width: min(12rem, 28vw);
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: var(--mantine-radius-md);
+}
+
+.logo :global(img.logo) {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.logo > * {
+  flex-wrap: nowrap;
+}
+
+.logo :global(.mantine-Title-root) {
+  display: none;
+}
+
+.search {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.search[data-display="icon"] {
+  width: 2.25rem;
+  flex: 0 0 2.25rem;
+}
+
+.search > * {
+  max-width: 100%;
+}
+
+.zone :global([data-tour-target="board-search"]) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.contextActions {
+  flex: 0 0 auto;
+}
+
+.floatingControls {
+  position: fixed;
+  z-index: var(--homarr-z-index-board-header);
+  inset-block-start: max(rem(10px), env(safe-area-inset-top));
+  inset-inline-end: max(rem(10px), env(safe-area-inset-right));
+  padding: rem(8px);
+  border: rem(1px) solid color-mix(in srgb, var(--mantine-color-default-border) 70%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mantine-color-body) 58%, transparent);
+  box-shadow: 0 rem(12px) rem(36px) rgb(0 0 0 / 20%);
+  backdrop-filter: blur(rem(20px)) saturate(140%);
+}
+
+.floatingControls :global(.mantine-UnstyledButton-root) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:global([dir="rtl"]) .floatingControls {
+  inset-inline-end: max(rem(10px), env(safe-area-inset-left));
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .content {
+    gap: var(--mantine-spacing-xs);
+    padding-inline: var(--mantine-spacing-xs);
+  }
+
+  .zone {
+    gap: var(--mantine-spacing-xs);
+  }
+
+  .search {
+    width: auto;
+    flex: 0 0 auto;
+  }
+}

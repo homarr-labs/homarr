@@ -10,12 +10,24 @@ import classes from "./onboarding-studio.module.css";
 import { useOnboardingSounds } from "./use-onboarding-sounds";
 
 interface OnboardingWordmarkProps {
+  appName?: string;
+  logoImageUrl?: string;
+  showAppName?: boolean;
+  showAppLogo?: boolean;
   primaryColor?: string;
   secondaryColor?: string;
   large?: boolean;
 }
 
-export const OnboardingWordmark = ({ primaryColor, secondaryColor, large = false }: OnboardingWordmarkProps) => {
+export const OnboardingWordmark = ({
+  appName,
+  logoImageUrl,
+  showAppName,
+  showAppLogo,
+  primaryColor,
+  secondaryColor,
+  large = false,
+}: OnboardingWordmarkProps) => {
   const [celebrating, setCelebrating] = useState(false);
   const colorScheme = useComputedColorScheme("light");
   const sounds = useOnboardingSounds();
@@ -29,7 +41,7 @@ export const OnboardingWordmark = ({ primaryColor, secondaryColor, large = false
     sounds.hover();
     const logo = event.currentTarget.getBoundingClientRect();
     const originY = (logo.top + logo.height / 2) / window.innerHeight;
-    const colors = primaryColor && secondaryColor ? [primaryColor, secondaryColor] : undefined;
+    const confettiColors = primaryColor && secondaryColor ? [primaryColor, secondaryColor] : undefined;
 
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) setCelebrating(true);
     for (const { angle, originX } of [
@@ -45,18 +57,41 @@ export const OnboardingWordmark = ({ primaryColor, secondaryColor, large = false
         ticks: 90,
         scalar: 0.8,
         origin: { x: originX / window.innerWidth, y: originY },
-        colors,
+        colors: confettiColors,
         disableForReducedMotion: true,
       });
     }
   };
 
+  const className = `${classes.wordmark} ${classes.onboardingWordmark} ${large ? classes.welcomeWordmark : ""} ${celebrating ? classes.celebratingWordmark : ""}`;
+  const hasVisibilityControls = showAppName !== undefined || showAppLogo !== undefined;
+  const resolvedAppName = appName?.trim() || "Homarr";
+  const shouldRenderDefaultWordmark = showAppLogo && showAppName && !logoImageUrl && resolvedAppName === "Homarr";
+
+  if (hasVisibilityControls && !shouldRenderDefaultWordmark) {
+    const visibleLogoImageUrl = showAppLogo ? (logoImageUrl ?? "/logo/logo.png") : undefined;
+    if (!visibleLogoImageUrl && !showAppName) return null;
+
+    return (
+      <div className={classes.customBrand} data-large={large || undefined} aria-label={resolvedAppName}>
+        {visibleLogoImageUrl ? (
+          <img
+            className={classes.customBrandImage}
+            src={visibleLogoImageUrl}
+            alt={showAppName ? "" : resolvedAppName}
+          />
+        ) : null}
+        {showAppName ? <span>{resolvedAppName}</span> : null}
+      </div>
+    );
+  }
+
   return (
     <HomarrWordmarkLight
       role="img"
-      aria-label="Homarr"
+      aria-label={resolvedAppName}
       style={colors}
-      className={`${classes.wordmark} ${classes.onboardingWordmark} ${large ? classes.welcomeWordmark : ""} ${celebrating ? classes.celebratingWordmark : ""}`}
+      className={className}
       onMouseEnter={celebrate}
       onAnimationEnd={() => setCelebrating(false)}
     />

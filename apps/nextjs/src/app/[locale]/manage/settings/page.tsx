@@ -5,14 +5,14 @@ import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
+import { createMetaTitle } from "~/metadata";
 import { SettingsForm } from "./_components/settings-form";
 
 export async function generateMetadata() {
   const t = await getI18n("management");
-  const metaTitle = `${t("metaTitle")} • Homarr`;
 
   return {
-    title: metaTitle,
+    title: createMetaTitle(t("metaTitle")),
   };
 }
 

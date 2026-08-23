@@ -19,6 +19,7 @@ import {
   items,
   users,
 } from "@homarr/db/schema";
+import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
   assistantProviderCanUseOpenRouterServerTools,
   assistantProviderIds,
@@ -37,6 +38,13 @@ import { createTRPCRouter, isDemoMode, permissionRequiredProcedure, protectedPro
 import { boardRouter, getHomeIdBoardAsync } from "./board";
 
 const adminProcedure = permissionRequiredProcedure.requiresPermission("admin");
+const assistantEnabledProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+  const featureControls = await getServerSettingByKeyAsync(ctx.db, "featureControls");
+  if (!featureControls.assistantEnabled) {
+    throw new TRPCError({ code: "NOT_FOUND", message: "Homarr Assistant is disabled." });
+  }
+  return next({ ctx });
+});
 const configurationId = "default";
 const providerSchema = z.enum(assistantProviderIds);
 
@@ -453,6 +461,8 @@ const addFeedbackToMessageContent = (serializedContent: string, type: "positive"
 
 export const assistantRouter = createTRPCRouter({
   getAvailability: protectedProcedure.query(async ({ ctx }) => {
+    const featureControls = await getServerSettingByKeyAsync(ctx.db, "featureControls");
+    if (!featureControls.assistantEnabled) return { enabled: false };
     if (isDemoMode) {
       return { enabled: true };
     }
@@ -465,11 +475,11 @@ export const assistantRouter = createTRPCRouter({
     };
   }),
 
-  getContextEntities: protectedProcedure.query(async ({ ctx }) => {
+  getContextEntities: assistantEnabledProcedure.query(async ({ ctx }) => {
     return await getAssistantContextEntitiesAsync(ctx);
   }),
 
-  getModelCapabilities: protectedProcedure
+  getModelCapabilities: assistantEnabledProcedure
     .input(z.object({ modelId: z.string().trim().min(1).max(256).optional() }).optional())
     .query(async ({ ctx, input }) => {
       const configuration = await getConfigurationAsync(ctx.db);
@@ -486,7 +496,7 @@ export const assistantRouter = createTRPCRouter({
       };
     }),
 
-  getRuntimeOptions: protectedProcedure.query(async ({ ctx }) => {
+  getRuntimeOptions: assistantEnabledProcedure.query(async ({ ctx }) => {
     const configuration = await getConfigurationAsync(ctx.db);
     if (isDemoMode) {
       return {
@@ -684,7 +694,7 @@ export const assistantRouter = createTRPCRouter({
     });
   }),
 
-  createThread: protectedProcedure
+  createThread: assistantEnabledProcedure
     .input(z.object({ localId: z.string().max(128).optional() }).optional())
     .mutation(async ({ ctx }) => {
       const configuration = await getConfigurationAsync(ctx.db);
@@ -700,7 +710,7 @@ export const assistantRouter = createTRPCRouter({
       return { id };
     }),
 
-  updateThreadModel: protectedProcedure
+  updateThreadModel: assistantEnabledProcedure
     .input(z.object({ threadId: z.string().max(64), modelId: z.string().trim().min(1).max(256) }))
     .mutation(async ({ ctx, input }) => {
       const [thread, configuration] = await Promise.all([
@@ -745,7 +755,7 @@ export const assistantRouter = createTRPCRouter({
     };
   }),
 
-  getGenerationTelemetry: protectedProcedure
+  getGenerationTelemetry: assistantEnabledProcedure
     .input(
       z.object({
         threadId: z.string().max(64),
@@ -791,7 +801,7 @@ export const assistantRouter = createTRPCRouter({
       };
     }),
 
-  renameThread: protectedProcedure
+  renameThread: assistantEnabledProcedure
     .input(z.object({ threadId: z.string().max(64), title: z.string().trim().min(1).max(120) }))
     .mutation(async ({ ctx, input }) => {
       await ownedThreadAsync(ctx.db, input.threadId, ctx.session.user.id);
@@ -808,7 +818,7 @@ export const assistantRouter = createTRPCRouter({
       await ctx.db.delete(assistantThreads).where(eq(assistantThreads.id, input.threadId));
     }),
 
-  appendMessage: protectedProcedure
+  appendMessage: assistantEnabledProcedure
     .input(
       z.object({
         threadId: z.string().max(64),
@@ -869,7 +879,7 @@ export const assistantRouter = createTRPCRouter({
         .where(eq(assistantThreads.id, thread.id));
     }),
 
-  submitFeedback: protectedProcedure
+  submitFeedback: assistantEnabledProcedure
     .input(
       z.object({
         threadId: z.string().max(64),

@@ -8,6 +8,38 @@ import { zodEnumFromArray } from "./enums";
 import { createCustomErrorParams } from "./form/i18n";
 import { nullableEmailSchema, optionalEmailSchema } from "./email";
 
+export {
+  createBoardHeaderItem,
+  createBuiltinHeaderItem,
+  defaultHeaderPreferences,
+  getDefaultHeaderZone,
+  getHeaderItemKey,
+  getHeaderItems,
+  getHeaderItemZone,
+  headerBuiltinItemIds,
+  headerItemIds,
+  headerItemSchema,
+  headerPreferenceItemIds,
+  headerPreferencesMutationSchema,
+  headerPreferencesSchema,
+  headerPreferencesVersion,
+  headerSearchDisplayValues,
+  headerZoneIds,
+  parseHeaderPreferences,
+} from "./header-preferences";
+export type {
+  HeaderBoardItem,
+  HeaderBuiltinItem,
+  HeaderBuiltinItemId,
+  HeaderItem,
+  HeaderItemId,
+  HeaderPreferenceItemId,
+  HeaderPreferences,
+  HeaderSearchDisplay,
+  HeaderZoneId,
+  HeaderZones,
+} from "./header-preferences";
+
 // We always want the lowercase version of the username to compare it in a case-insensitive way
 export const usernameSchema = z.string().trim().toLowerCase().min(3).max(255);
 

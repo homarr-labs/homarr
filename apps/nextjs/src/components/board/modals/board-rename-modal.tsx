@@ -24,6 +24,7 @@ export const BoardRenameModal = createModal<InnerProps>(({ actions, innerProps }
         name: innerProps.previousName,
       });
       void utils.board.getHomeBoard.invalidate();
+      void utils.board.getAllBoards.invalidate();
     },
   });
   const form = useZodForm(boardRenameSchema.omit({ id: true }), {

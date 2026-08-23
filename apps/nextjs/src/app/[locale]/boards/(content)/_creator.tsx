@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { TRPCError } from "@trpc/server";
 
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 import { makeQueryClient } from "@homarr/api/shared";
 import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
@@ -103,18 +104,26 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
     },
     generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {
       try {
-        const board = await getInitialBoard(await params);
-        const t = await getI18n("board");
+        const [board, t, serverSettings] = await Promise.all([
+          getInitialBoard(await params),
+          getI18n("board"),
+          getRscServerSettingsAsync(),
+        ]);
+        const brandLogo = serverSettings.branding.logoImageUrl ?? "/logo/logo.png";
+        const brandFavicon = serverSettings.branding.faviconImageUrl ?? brandLogo;
+        const favicon = !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : brandFavicon;
 
         return {
-          title: board.metaTitle ?? createMetaTitle(t("content.metaTitle", { boardName: board.name })),
+          title: board.metaTitle
+            ? { absolute: board.metaTitle }
+            : createMetaTitle(t("content.metaTitle", { boardName: board.name })),
           icons: {
-            icon: !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : undefined,
-            apple: !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : undefined,
+            icon: favicon,
+            apple: favicon,
           },
           appleWebApp: {
             startupImage: {
-              url: !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : "/logo/logo.png",
+              url: favicon,
             },
           },
         };

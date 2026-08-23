@@ -12,15 +12,22 @@ interface BoardLayoutThumbnailProps {
   preview: BoardPreviewData | null;
   label: string;
   fitFullLayout?: boolean;
+  className?: string;
 }
 
 const maxThumbnailRows = 12;
 
-export const BoardLayoutThumbnail = ({ preview, label, fitFullLayout = false }: BoardLayoutThumbnailProps) => {
+export const BoardLayoutThumbnail = ({
+  preview,
+  label,
+  fitFullLayout = false,
+  className,
+}: BoardLayoutThumbnailProps) => {
+  const canvasClassName = [classes.canvas, className].filter(Boolean).join(" ");
   const layout = preview?.layouts.find((candidate) => candidate.role === "base") ?? preview?.layouts.at(0);
   if (!preview || !layout) {
     return (
-      <Center className={classes.canvas} role="img" aria-label={label}>
+      <Center className={canvasClassName} role="img" aria-label={label}>
         <IconLayoutGrid size={28} stroke={1.4} aria-hidden />
       </Center>
     );
@@ -38,7 +45,7 @@ export const BoardLayoutThumbnail = ({ preview, label, fitFullLayout = false }: 
   });
   if (lanes.length === 0) {
     return (
-      <Center className={classes.canvas} role="img" aria-label={label}>
+      <Center className={canvasClassName} role="img" aria-label={label}>
         <IconLayoutGrid size={28} stroke={1.4} aria-hidden />
       </Center>
     );
@@ -55,7 +62,7 @@ export const BoardLayoutThumbnail = ({ preview, label, fitFullLayout = false }: 
   };
 
   return (
-    <Box className={classes.canvas} role="img" aria-label={label}>
+    <Box className={canvasClassName} role="img" aria-label={label}>
       <div
         className={classes.lanes}
         style={{ gridTemplateColumns: lanes.map(({ columnCount }) => `${columnCount}fr`).join(" ") }}

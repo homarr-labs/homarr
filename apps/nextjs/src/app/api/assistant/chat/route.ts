@@ -18,6 +18,7 @@ import { decryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq } from "@homarr/db";
 import { db } from "@homarr/db";
+import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { assistantConfigurations, assistantThreads } from "@homarr/db/schema";
 import {
   assistantProviderCanUseOpenRouterServerTools,
@@ -371,6 +372,11 @@ export async function POST(request: Request) {
   const session = await auth();
   if (!session) {
     return Response.json({ error: "Sign in to use Homarr Assistant." }, { status: 401 });
+  }
+
+  const featureControls = await getServerSettingByKeyAsync(db, "featureControls");
+  if (!featureControls.assistantEnabled) {
+    return Response.json({ error: "Homarr Assistant is disabled." }, { status: 404 });
   }
 
   const requestBody = await request.text();

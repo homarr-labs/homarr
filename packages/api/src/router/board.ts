@@ -86,7 +86,9 @@ interface BoardItemPlacementRectangle {
 
 const boardItemPlacementTails = new Map<string, Promise<void>>();
 const maxManageOverviewPreviewRows = 12;
-const manageOverviewInputSchema = z.object({ fullPreview: z.boolean().default(false) }).optional();
+const manageOverviewInputSchema = z
+  .object({ fullPreview: z.boolean().default(false), userId: z.string().optional() })
+  .optional();
 
 const serializeBoardItemPlacementAsync = async <T>(boardId: string, operation: () => Promise<T>) => {
   const previous = boardItemPlacementTails.get(boardId) ?? Promise.resolve();
@@ -227,9 +229,14 @@ export const boardRouter = createTRPCRouter({
       }));
     }),
   getManageOverview: publicProcedure.input(manageOverviewInputSchema).query(async ({ ctx, input }) => {
-    const userId = ctx.session?.user.id;
+    const sessionUserId = ctx.session?.user.id;
+    const userId = input?.userId ?? sessionUserId;
+    if (userId !== sessionUserId && !ctx.session?.user.permissions.includes("admin")) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to view boards for this user" });
+    }
     const { boardIds, currentUser, groupMemberships } = await getBoardAccessContextAsync(ctx.db, userId);
     const groupPermissionWhere = getBoardGroupPermissionWhere(groupMemberships);
+    const canViewAllBoards = getCanViewAllBoards(groupMemberships);
 
     const dbBoards = await ctx.db.query.boards.findMany({
       columns: {
@@ -279,7 +286,7 @@ export const boardRouter = createTRPCRouter({
           orderBy: (section, { asc }) => [asc(section.xOffset), asc(section.id)],
         },
       },
-      where: getAccessibleBoardsWhere(ctx.session?.user.permissions.includes("board-view-all"), userId, boardIds),
+      where: getAccessibleBoardsWhere(canViewAllBoards, userId, boardIds),
     });
 
     const previewLayoutIds = dbBoards.flatMap((board) => board.layouts.map((layout) => layout.id));
@@ -2566,6 +2573,7 @@ const getBoardAccessContextAsync = async (db: Database, userId: string | undefin
         group: {
           with: {
             boardPermissions: {},
+            permissions: {},
           },
         },
       },
@@ -2587,6 +2595,24 @@ const getBoardAccessContextAsync = async (db: Database, userId: string | undefin
     );
 
   return { boardIds, currentUser, groupMemberships };
+};
+
+const getCanViewAllBoards = (
+  groupMemberships: Awaited<ReturnType<typeof getBoardAccessContextAsync>>["groupMemberships"],
+) => {
+  const permissions = new Set(
+    groupMemberships.flatMap((membership) => membership.group.permissions.map(({ permission }) => permission)),
+  );
+  return getPermissionsWithChildren([...permissions]).includes("board-view-all");
+};
+
+export const getAccessibleBoardIdsForUserAsync = async (db: Database, userId: string) => {
+  const { boardIds, groupMemberships } = await getBoardAccessContextAsync(db, userId);
+  const accessibleBoards = await db.query.boards.findMany({
+    columns: { id: true },
+    where: getAccessibleBoardsWhere(getCanViewAllBoards(groupMemberships), userId, boardIds),
+  });
+  return new Set(accessibleBoards.map(({ id }) => id));
 };
 
 const getBoardGroupPermissionWhere = (

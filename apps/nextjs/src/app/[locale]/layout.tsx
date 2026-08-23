@@ -53,35 +53,45 @@ const fontSans = Inter({
 
 const logger = createLogger({ module: "rootLayout" });
 
-// eslint-disable-next-line no-restricted-syntax
-export const generateMetadata = async (): Promise<Metadata> => ({
-  title: "Homarr",
-  description:
-    "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",
-  openGraph: {
-    title: "Homarr Dashboard",
-    description:
-      "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",
-    url: env.HOMARR_WEBSITE_URL,
-    siteName: "Homarr",
-  },
-  icons: {
-    icon: "/logo/logo.png",
-    apple: "/logo/logo.png",
-  },
-  appleWebApp: {
-    title: "Homarr",
-    capable: true,
-    startupImage: { url: "/logo/logo.png" },
-    statusBarStyle: (await getCurrentColorSchemeAsync()) === "dark" ? "black-translucent" : "default",
-  },
-});
+const defaultDescription =
+  "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.";
 
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
+// eslint-disable-next-line no-restricted-syntax
+export const generateMetadata = async (): Promise<Metadata> => {
+  const [serverSettings, colorScheme] = await Promise.all([getRscServerSettingsAsync(), getCurrentColorSchemeAsync()]);
+  const { appName, faviconImageUrl, logoImageUrl } = serverSettings.branding;
+  const logo = logoImageUrl ?? "/logo/logo.png";
+  const favicon = faviconImageUrl ?? logo;
+
+  return {
+    title: {
+      default: appName,
+      template: `%s • ${appName}`,
+    },
+    description: defaultDescription,
+    openGraph: {
+      title: `${appName} Dashboard`,
+      description: defaultDescription,
+      url: env.HOMARR_WEBSITE_URL,
+      siteName: appName,
+    },
+    icons: {
+      icon: favicon,
+      apple: logo,
+    },
+    appleWebApp: {
+      title: appName,
+      capable: true,
+      startupImage: { url: logo },
+      statusBarStyle: colorScheme === "dark" ? "black-translucent" : "default",
+    },
+  };
+};
+
+// eslint-disable-next-line no-restricted-syntax
+export const generateViewport = async (): Promise<Viewport> => {
+  const serverSettings = await getRscServerSettingsAsync();
+  return { themeColor: serverSettings.branding.primaryColor };
 };
 
 export default async function Layout(props: {
@@ -94,6 +104,7 @@ export default async function Layout(props: {
   }
 
   const sessionPromise = auth();
+  const serverSettingsPromise = getRscServerSettingsAsync();
   const userPromise = sessionPromise.then((session) =>
     session
       ? getRscUserSettingsAsync(session.user.id).catch((error: unknown) => {
@@ -102,18 +113,21 @@ export default async function Layout(props: {
         })
       : null,
   );
-  const assistantAvailabilityPromise: Promise<AssistantAvailability> = sessionPromise.then((session) =>
-    !session
-      ? "unauthenticated"
-      : api.assistant
-          .getAvailability()
-          .then((availability) => (availability.enabled ? "enabled" : "unconfigured"))
-          .catch(() => "error"),
-  );
+  const assistantAvailabilityPromise: Promise<AssistantAvailability> = Promise.all([
+    sessionPromise,
+    serverSettingsPromise,
+  ]).then(([session, serverSettings]) => {
+    if (!serverSettings.featureControls.assistantEnabled) return "disabled";
+    if (!session) return "unauthenticated";
+    return api.assistant
+      .getAvailability()
+      .then((availability) => (availability.enabled ? "enabled" : "unconfigured"))
+      .catch(() => "error");
+  });
   const [session, user, serverSettings, colorScheme, assistantAvailability] = await Promise.all([
     sessionPromise,
     userPromise,
-    getRscServerSettingsAsync(),
+    serverSettingsPromise,
     getCurrentColorSchemeAsync(),
     assistantAvailabilityPromise,
   ]);
@@ -148,6 +162,8 @@ export default async function Layout(props: {
           },
           search: { defaultSearchEngineId: serverSettings.search.defaultSearchEngineId },
           user: { enableGravatar: serverSettings.user.enableGravatar },
+          branding: serverSettings.branding,
+          featureControls: serverSettings.featureControls,
         }}
         {...innerProps}
       />
@@ -156,7 +172,9 @@ export default async function Layout(props: {
     (innerProps) => <TRPCReactProvider {...innerProps} />,
     (innerProps) => <DayJsLoader {...innerProps} />,
     (innerProps) => <NextIntlClientProvider {...innerProps} />,
-    (innerProps) => <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} />,
+    (innerProps) => (
+      <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} branding={serverSettings.branding} />
+    ),
     (innerProps) => <ModalProvider {...innerProps} />,
     (innerProps) => <SpotlightProvider {...innerProps} />,
     (innerProps) => <AssistantGate availability={assistantAvailability} {...innerProps} />,

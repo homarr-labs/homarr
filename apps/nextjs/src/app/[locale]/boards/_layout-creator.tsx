@@ -12,7 +12,8 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ModalProvider } from "@homarr/modals";
 
 import { MainHeader } from "~/components/layout/header";
-import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
+import { appShellLogoHeight } from "~/components/layout/constants";
+import { BoardLogo } from "~/components/layout/logo/board-logo";
 import { ClientShell } from "~/components/layout/shell";
 import { BoardTourGate } from "~/components/onboarding/board-tour-gate";
 import { env } from "~/env";
@@ -105,7 +106,7 @@ export const createBoardLayout = <TParams extends Params>({
               <BoardTourGate enabled={shouldRunBoardTour}>
                 <ClientShell hasNavigation={false}>
                   <MainHeader
-                    logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+                    logo={<BoardLogo size={appShellLogoHeight} />}
                     actions={headerActions}
                     hasNavigation={false}
                   />
