@@ -36,18 +36,16 @@ import classes from "./board-switcher.module.css";
 export const boardSwitcherHotkey = "shift+c";
 
 export interface BoardSwitcherControls {
-  enabled: boolean;
   open: () => void;
   preload: () => void;
   hotkey: string;
 }
 
 interface BoardSwitcherProps {
-  enabled?: boolean;
   children: (controls: BoardSwitcherControls) => ReactNode;
 }
 
-export const BoardSwitcher = ({ enabled = true, children }: BoardSwitcherProps) => {
+export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   const t = useI18n("board.action.switcher");
   const manageBoardsT = useI18n("management.page.board");
   const currentBoard = useOptionalBoard();
@@ -64,7 +62,7 @@ export const BoardSwitcher = ({ enabled = true, children }: BoardSwitcherProps) 
   } = clientApi.board.getManageOverview.useQuery(
     { fullPreview: true },
     {
-      enabled: enabled && isOpen,
+      enabled: isOpen,
     },
   );
 
@@ -84,24 +82,16 @@ export const BoardSwitcher = ({ enabled = true, children }: BoardSwitcherProps) 
   const modalColumnCount = Math.max(1, Math.min(switcherBoards.length, responsiveColumnCount));
 
   const openSwitcher = useCallback(() => {
-    if (!enabled) return;
     setIsOpen(true);
-  }, [enabled]);
+  }, []);
   const closeSwitcher = useCallback(() => {
     setIsOpen(false);
     setSearch("");
     setActiveIndex(0);
   }, []);
-  const preloadBoards = () => {
-    if (!enabled) return;
-    void utils.board.getManageOverview.prefetch({ fullPreview: true });
-  };
+  const preloadBoards = () => void utils.board.getManageOverview.prefetch({ fullPreview: true });
 
-  useHotkeys(enabled ? [[boardSwitcherHotkey, openSwitcher, { preventDefault: true }]] : []);
-
-  useEffect(() => {
-    if (!enabled && isOpen) closeSwitcher();
-  }, [closeSwitcher, enabled, isOpen]);
+  useHotkeys([[boardSwitcherHotkey, openSwitcher, { preventDefault: true }]]);
 
   useEffect(() => {
     if (!isOpen || filteredBoards.length === 0) return;
@@ -186,10 +176,10 @@ export const BoardSwitcher = ({ enabled = true, children }: BoardSwitcherProps) 
 
   return (
     <>
-      {children({ enabled, open: openSwitcher, preload: preloadBoards, hotkey: boardSwitcherHotkey })}
+      {children({ open: openSwitcher, preload: preloadBoards, hotkey: boardSwitcherHotkey })}
 
       <Modal
-        opened={enabled && isOpen}
+        opened={isOpen}
         onClose={closeSwitcher}
         withCloseButton={false}
         yOffset="15vh"

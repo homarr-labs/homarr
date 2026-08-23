@@ -10,10 +10,18 @@ import { HomarrLogo } from "./logo/homarr-logo";
 interface Props {
   logo?: ReactNode;
   actions?: ReactNode;
+  boardEditAction?: ReactNode;
+  boardSettingsAction?: ReactNode;
   hasNavigation?: boolean;
 }
 
-export const MainHeader = async ({ logo, actions, hasNavigation = true }: Props) => {
+export const MainHeader = async ({
+  logo,
+  actions,
+  boardEditAction,
+  boardSettingsAction,
+  hasNavigation = true,
+}: Props) => {
   const session = await auth();
   const isAdmin = Boolean(session?.user.permissions.includes("admin"));
   const isDockerEnabled = isAdmin && env.ENABLE_DOCKER;
@@ -22,6 +30,8 @@ export const MainHeader = async ({ logo, actions, hasNavigation = true }: Props)
     <ConfigurableHeader
       logo={logo ?? <HomarrLogo size={appShellLogoHeight} />}
       actions={actions}
+      boardEditAction={boardEditAction}
+      boardSettingsAction={boardSettingsAction}
       hasNavigation={hasNavigation}
       avatar={<CurrentUserAvatar size="md" />}
       userId={session?.user.id ?? null}

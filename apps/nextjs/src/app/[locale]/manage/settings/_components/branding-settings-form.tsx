@@ -46,6 +46,7 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
               <TextInput label={t("appName.label")} {...form.getInputProps("branding.appName")} />
               <IconPicker
                 label={t("logo.label")}
+                description={null}
                 placeholder={t("logo.placeholder")}
                 withAsterisk={false}
                 value={logoInput.value ?? ""}
@@ -54,6 +55,7 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
               />
               <IconPicker
                 label={t("favicon.label")}
+                description={null}
                 placeholder={t("favicon.placeholder")}
                 withAsterisk={false}
                 value={faviconInput.value ?? ""}
@@ -108,6 +110,7 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
               <TextInput label={t("greeting.label")} {...form.getInputProps("branding.greeting")} />
               <IconPicker
                 label={t("signInBackground.label")}
+                description={null}
                 placeholder={t("signInBackground.placeholder")}
                 withAsterisk={false}
                 value={backgroundInput.value ?? ""}
@@ -142,7 +145,7 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
                 <Text size="sm" c="dimmed">
                   {t("authVisibility.description")}
                 </Text>
-                <SimpleGrid cols={{ base: 1, xs: 3 }} spacing="xs" verticalSpacing="xs">
+                <SimpleGrid cols={3} spacing="xs">
                   <Switch
                     size="sm"
                     label={t("authVisibility.appName")}

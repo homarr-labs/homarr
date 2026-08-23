@@ -14,9 +14,7 @@ import {
   authBrandingSchema,
   brandingServerSettingsSchema,
   defaultServerSettingsKeys,
-  featureControlsServerSettingsSchema,
   parseBrandingSettings,
-  parseFeatureControls,
 } from "@homarr/server-settings";
 
 import { createTRPCRouter, permissionRequiredProcedure, publicProcedure } from "../trpc";
@@ -37,8 +35,6 @@ const legacyAuthBrandingUpdateSchema = z.object({
   showCustomLogoOnLogin: z.boolean().optional(),
   showCustomGreetingOnLogin: z.boolean().optional(),
 });
-const featureControlsServerSettingsUpdateSchema = featureControlsServerSettingsSchema.partial();
-
 export const serverSettingsRouter = createTRPCRouter({
   getCulture: publicProcedure.query(async ({ ctx }) => {
     return await getServerSettingByKeyAsync(ctx.db, "culture");
@@ -137,14 +133,6 @@ export const serverSettingsRouter = createTRPCRouter({
         await updateServerSettingByKeyAsync(ctx.db, "branding", value);
         return;
       }
-      if (input.settingsKey === "featureControls") {
-        const current = await getServerSettingByKeyAsync(ctx.db, "featureControls");
-        const parsedInput = featureControlsServerSettingsUpdateSchema.parse(input.value);
-        const value = parseFeatureControls({ ...current, ...parsedInput });
-        await updateServerSettingByKeyAsync(ctx.db, "featureControls", value);
-        return;
-      }
-
       const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
       await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {
         ...current,

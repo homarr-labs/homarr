@@ -67,17 +67,15 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
         <Menu.Item component={Link} href="/boards" leftSection={<IconHome size="1rem" />}>
           {t("homeBoard")}
         </Menu.Item>
-        {boardSwitcher.enabled ? (
-          <Menu.Item
-            leftSection={<IconReplace size="1rem" />}
-            rightSection={<Kbd size="xs">{formatHotkeyLabel(boardSwitcher.hotkey, t("modifier"))}</Kbd>}
-            onClick={boardSwitcher.open}
-            onFocus={boardSwitcher.preload}
-            onPointerEnter={boardSwitcher.preload}
-          >
-            {tBoard("action.switch")}
-          </Menu.Item>
-        ) : null}
+        <Menu.Item
+          leftSection={<IconReplace size="1rem" />}
+          rightSection={<Kbd size="xs">{formatHotkeyLabel(boardSwitcher.hotkey, t("modifier"))}</Kbd>}
+          onClick={boardSwitcher.open}
+          onFocus={boardSwitcher.preload}
+          onPointerEnter={boardSwitcher.preload}
+        >
+          {tBoard("action.switch")}
+        </Menu.Item>
         <Menu.Divider />
 
         <Menu.Item p={0} closeMenuOnClick={false} component="div">

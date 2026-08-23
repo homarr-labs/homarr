@@ -21,7 +21,7 @@ import { env } from "~/env";
 import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { ClientBoard } from "./_client";
-import { BoardContentHeaderActions } from "./_header-actions";
+import { BoardContentEditAction, BoardContentSettingsAction } from "./_header-actions";
 
 const logger = createLogger({ module: "createBoardContentPage" });
 const getQueryClient = cache(makeQueryClient);
@@ -37,7 +37,8 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
 }: Props<TParams>) => {
   return {
     layout: createBoardLayout({
-      headerActions: <BoardContentHeaderActions demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
+      headerBoardEditAction: <BoardContentEditAction demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
+      headerBoardSettingsAction: <BoardContentSettingsAction demoReadOnly={env.DEMO_MODE && env.DEMO_READ_ONLY} />,
       getInitialBoardAsync: getInitialBoard,
       withTour: true,
     }),

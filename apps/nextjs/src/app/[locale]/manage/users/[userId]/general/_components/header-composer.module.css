@@ -65,8 +65,7 @@
 }
 
 .sortableStrip {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
   gap: var(--mantine-spacing-sm);
   width: 100%;
   min-width: 100%;
@@ -79,7 +78,8 @@
   display: grid;
   grid-template-rows: 1.25rem 2.5rem;
   gap: 0.3rem;
-  min-width: 0;
+  min-width: max-content;
+  flex: 1 0 0;
   align-content: center;
 }
 
@@ -90,8 +90,8 @@
   min-width: 0;
   min-height: 1.25rem;
   padding-inline: 0.15rem;
-  border-radius: var(--mantine-radius-sm);
-  transition: background-color 120ms ease;
+  pointer-events: none;
+  user-select: none;
 }
 
 .zoneDelimiter :global(.mantine-Divider-label) {
@@ -103,14 +103,6 @@
   text-transform: uppercase;
 }
 
-.zoneDelimiter[data-over="true"] {
-  background: var(--mantine-primary-color-light);
-}
-
-.zoneDelimiter[data-over="true"] :global(.mantine-Divider-label) {
-  color: var(--mantine-primary-color-filled);
-}
-
 .zoneControls {
   display: flex;
   align-items: center;
@@ -118,13 +110,7 @@
   min-width: 0;
   height: 2.5rem;
   padding: 0.125rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-}
-
-.zoneControls::-webkit-scrollbar {
-  display: none;
+  overflow: visible;
 }
 
 .zoneSegment[data-zone="center"] .zoneControls {
@@ -135,31 +121,31 @@
   justify-content: safe flex-end;
 }
 
-.zoneTail {
+.emptyZoneTarget {
   display: grid;
   place-items: center;
-  width: 1.5rem;
+  min-width: 2.25rem;
   height: 2.25rem;
-  flex: 0 0 1.5rem;
+  flex: 1 0 2.25rem;
   border-radius: var(--mantine-radius-sm);
   transition: background-color 120ms ease;
 }
 
-.zoneTailMarker {
+.emptyZoneTarget span {
   width: 2px;
   height: 1rem;
   border-radius: var(--mantine-radius-xl);
-  background: var(--mantine-color-default-border);
+  background: transparent;
   transition:
     height 120ms ease,
     background-color 120ms ease;
 }
 
-.zoneTail[data-over="true"] {
+.emptyZoneTarget[data-over="true"] {
   background: var(--mantine-primary-color-light);
 }
 
-.zoneTail[data-over="true"] .zoneTailMarker {
+.emptyZoneTarget[data-over="true"] span {
   height: 1.5rem;
   background: var(--mantine-primary-color-filled);
 }
@@ -257,23 +243,6 @@
   display: grid;
 }
 
-.contextActions {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  height: 2.25rem;
-  flex: 0 0 auto;
-  padding-inline: 0.35rem;
-}
-
-.contextActions span {
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 50%;
-  background: var(--mantine-color-dimmed);
-  opacity: 0.45;
-}
-
 .hiddenPreview {
   position: absolute;
   inset: 0 0 auto;
@@ -333,9 +302,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .device,
-  .zoneDelimiter,
-  .zoneTail,
-  .zoneTailMarker,
+  .emptyZoneTarget,
+  .emptyZoneTarget span,
   .itemButton {
     transition: none;
   }

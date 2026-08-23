@@ -15,7 +15,6 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   horizontalListSortingStrategy,
   SortableContext,
   sortableKeyboardCoordinates,
@@ -44,6 +43,7 @@ import {
   IconEyeOff,
   IconHome,
   IconLayoutDashboard,
+  IconPencil,
   IconPlus,
   IconReplace,
   IconRobot,
@@ -55,7 +55,6 @@ import {
 } from "@tabler/icons-react";
 
 import type { BoardPreviewData } from "@homarr/boards/layout-preview";
-import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type {
   HeaderBuiltinItemId,
@@ -73,6 +72,7 @@ import {
   getHeaderItemZone,
   headerBuiltinItemIds,
   headerZoneIds,
+  isRequiredHeaderItem,
 } from "@homarr/validation/user";
 
 import { BoardLayoutThumbnail } from "~/components/board/board-layout-thumbnail";
@@ -94,7 +94,6 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
   const [previewSize, setPreviewSize] = useState<PreviewSize>("desktop");
   const [draggedItemKey, setDraggedItemKey] = useState<string | null>(null);
   const [selectedItemKey, setSelectedItemKey] = useState<string | null>(null);
-  const { featureControls } = useSettings();
   const t = useI18n("management.page.user.setting.general.header");
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
@@ -106,12 +105,11 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
   );
   const boardsById = useMemo(() => new Map(boards.map((board) => [board.id, board])), [boards]);
   const activeItems = getHeaderItems(value.zones);
-  const visibleItems = activeItems.filter((item) => isHeaderItemAvailable(item, featureControls));
-  const visibleItemKeys = visibleItems.map(getHeaderItemKey);
+  const visibleItemKeys = activeItems.map(getHeaderItemKey);
   const activeItemKeySet = new Set(activeItems.map(getHeaderItemKey));
   const inactiveBuiltinIds = headerBuiltinItemIds.filter((itemId) => {
     const item = createBuiltinHeaderItem(itemId);
-    return isHeaderItemAvailable(item, featureControls) && !activeItemKeySet.has(getHeaderItemKey(item));
+    return !isRequiredHeaderItem(item) && !activeItemKeySet.has(getHeaderItemKey(item));
   });
   const availableBoards = boards.filter(
     (board) => !activeItemKeySet.has(getHeaderItemKey(createBoardHeaderItem(board.id))),
@@ -130,7 +128,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
   const updateZones = (zones: HeaderZones) => onChange({ ...value, zones });
 
   const removeItem = (item: HeaderItem) => {
-    if (item.type === "builtin" && item.id === "user") return;
+    if (isRequiredHeaderItem(item)) return;
     const zone = getHeaderItemZone(value.zones, item);
     if (!zone) return;
     const itemKey = getHeaderItemKey(item);
@@ -159,10 +157,14 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
     if (!sourceZone || !targetZone) return;
 
     const targetItem = findHeaderItem(activeItems, over.id);
-    let targetIndex = 0;
-    if (getDropZoneTailId(targetZone) === over.id) targetIndex = value.zones[targetZone].length;
-    else if (targetItem)
+    let targetIndex = value.zones[targetZone].length;
+    if (targetItem) {
       targetIndex = value.zones[targetZone].findIndex((candidate) => isSameItem(candidate, targetItem));
+      const translatedRect = active.rect.current.translated;
+      const activeCenter = translatedRect ? translatedRect.left + translatedRect.width / 2 : null;
+      const targetCenter = over.rect.left + over.rect.width / 2;
+      if (activeCenter !== null && activeCenter > targetCenter) targetIndex += 1;
+    }
     if (targetIndex < 0) return;
     updateZones(moveHeaderItem(value.zones, item, targetZone, targetIndex));
   };
@@ -227,10 +229,9 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
                             key={zone}
                             zone={zone}
                             label={t(`zones.${zone}` as never)}
-                            endLabel={t("action.dropAtEnd", { zone: t(`zones.${zone}` as never) })}
+                            emptyLabel={t("action.dropIntoZone", { zone: t(`zones.${zone}` as never) })}
                             leading={zone === "left" ? <MobileBurger /> : null}
-                            trailing={zone === "right" ? <ContextActions /> : null}
-                            items={value.zones[zone].filter((item) => isHeaderItemAvailable(item, featureControls))}
+                            items={value.zones[zone]}
                             previewSize={previewSize}
                             searchDisplay={value.searchDisplay}
                             selectedItemKey={selectedItemKey}
@@ -302,7 +303,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
                       ]}
                     />
                   ) : null}
-                  {selectedItem.type !== "builtin" || selectedItem.id !== "user" ? (
+                  {!isRequiredHeaderItem(selectedItem) ? (
                     <Button
                       size="xs"
                       variant="subtle"
@@ -314,7 +315,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
                     </Button>
                   ) : (
                     <Text c="dimmed" size="xs">
-                      {t("available.accountAlways")}
+                      {t("available.requiredAlways")}
                     </Text>
                   )}
                 </Group>
@@ -393,9 +394,8 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
 interface ZoneSegmentProps {
   zone: HeaderZoneId;
   label: string;
-  endLabel: string;
+  emptyLabel: string;
   leading: ReactNode;
-  trailing: ReactNode;
   items: HeaderItem[];
   previewSize: PreviewSize;
   searchDisplay: HeaderPreferences["searchDisplay"];
@@ -409,9 +409,8 @@ interface ZoneSegmentProps {
 const ZoneSegment = ({
   zone,
   label,
-  endLabel,
+  emptyLabel,
   leading,
-  trailing,
   items,
   previewSize,
   searchDisplay,
@@ -441,29 +440,25 @@ const ZoneSegment = ({
           />
         );
       })}
-      <ZoneTail zone={zone} label={endLabel} />
-      {trailing}
+      {items.length === 0 ? <EmptyZoneDropTarget zone={zone} label={emptyLabel} /> : null}
     </div>
   </section>
 );
 
-const ZoneDelimiter = ({ zone, label }: { zone: HeaderZoneId; label: string }) => {
+// Fixed reference point inside the shared sortable row; it never enters SortableContext.
+const ZoneDelimiter = ({ zone, label }: { zone: HeaderZoneId; label: string }) => (
+  <div className={classes.zoneDelimiter} data-zone={zone}>
+    <Divider label={label} labelPosition="center" />
+  </div>
+);
+
+const EmptyZoneDropTarget = ({ zone, label }: { zone: HeaderZoneId; label: string }) => {
   const { isOver, setNodeRef } = useDroppable({ id: getDropZoneId(zone) });
 
   return (
-    <div ref={setNodeRef} className={classes.zoneDelimiter} data-zone={zone} data-over={isOver || undefined}>
-      <Divider label={label} labelPosition="center" />
-    </div>
-  );
-};
-
-const ZoneTail = ({ zone, label }: { zone: HeaderZoneId; label: string }) => {
-  const { isOver, setNodeRef } = useDroppable({ id: getDropZoneTailId(zone) });
-
-  return (
-    <div ref={setNodeRef} className={classes.zoneTail} data-over={isOver || undefined}>
+    <div ref={setNodeRef} className={classes.emptyZoneTarget} data-over={isOver || undefined}>
       <VisuallyHidden>{label}</VisuallyHidden>
-      <span className={classes.zoneTailMarker} aria-hidden />
+      <span aria-hidden />
     </div>
   );
 };
@@ -471,13 +466,6 @@ const ZoneTail = ({ zone, label }: { zone: HeaderZoneId; label: string }) => {
 const MobileBurger = () => (
   <div className={classes.mobileBurger} aria-hidden>
     <span />
-    <span />
-    <span />
-  </div>
-);
-
-const ContextActions = () => (
-  <div className={classes.contextActions} aria-hidden>
     <span />
     <span />
   </div>
@@ -516,32 +504,30 @@ const SortableHeaderItem = ({
 
   return (
     <div ref={setNodeRef} style={style} className={classes.sortableItem} data-selected={selected || undefined}>
-      <Tooltip label={configureLabel} openDelay={500}>
-        <button
-          ref={setActivatorNodeRef}
-          type="button"
-          className={classes.itemButton}
-          data-kind={item.type === "builtin" ? item.id : "board"}
-          data-compact={previewSize === "mobile" || undefined}
-          data-wide={
-            item.type === "builtin" && item.id === "search" && searchDisplay === "input" && previewSize === "desktop"
-              ? true
-              : undefined
-          }
-          aria-label={configureLabel}
-          onClick={() => onSelect(itemKey)}
-          {...attributes}
-          {...listeners}
-        >
-          <HeaderItemPreview
-            item={item}
-            label={label}
-            compact={previewSize === "mobile"}
-            searchDisplay={searchDisplay}
-            boardLogo={boardLogo}
-          />
-        </button>
-      </Tooltip>
+      <button
+        ref={setActivatorNodeRef}
+        type="button"
+        className={classes.itemButton}
+        data-kind={item.type === "builtin" ? item.id : "board"}
+        data-compact={previewSize === "mobile" || undefined}
+        data-wide={
+          item.type === "builtin" && item.id === "search" && searchDisplay === "input" && previewSize === "desktop"
+            ? true
+            : undefined
+        }
+        aria-label={configureLabel}
+        onClick={() => onSelect(itemKey)}
+        {...attributes}
+        {...listeners}
+      >
+        <HeaderItemPreview
+          item={item}
+          label={label}
+          compact={previewSize === "mobile"}
+          searchDisplay={searchDisplay}
+          boardLogo={boardLogo}
+        />
+      </button>
     </div>
   );
 };
@@ -628,27 +614,25 @@ const moveHeaderItem = (
   const sourceIndex = sourceItems.findIndex((candidate) => isSameItem(candidate, item));
   if (sourceIndex < 0) return zones;
 
-  if (sourceZone === targetZone) {
-    const normalizedTargetIndex = Math.min(targetIndex, sourceItems.length - 1);
-    if (sourceIndex === normalizedTargetIndex) return zones;
-    return { ...zones, [sourceZone]: arrayMove(sourceItems, sourceIndex, normalizedTargetIndex) };
-  }
+  const sourceItemsWithoutMovedItem = sourceItems.filter((candidate) => !isSameItem(candidate, item));
+  const targetItems = sourceZone === targetZone ? sourceItemsWithoutMovedItem : zones[targetZone];
+  let normalizedTargetIndex = Math.min(Math.max(targetIndex, 0), targetItems.length);
+  if (sourceZone === targetZone && sourceIndex < targetIndex) normalizedTargetIndex -= 1;
+  if (sourceZone === targetZone && sourceIndex === normalizedTargetIndex) return zones;
 
-  const targetItems = zones[targetZone];
   return {
     ...zones,
-    [sourceZone]: sourceItems.filter((candidate) => !isSameItem(candidate, item)),
-    [targetZone]: [...targetItems.slice(0, targetIndex), item, ...targetItems.slice(targetIndex)],
+    [sourceZone]: sourceItemsWithoutMovedItem,
+    [targetZone]: [...targetItems.slice(0, normalizedTargetIndex), item, ...targetItems.slice(normalizedTargetIndex)],
   };
 };
 
 const getDropZoneId = (zone: HeaderZoneId) => `header-zone-${zone}`;
-const getDropZoneTailId = (zone: HeaderZoneId) => `header-zone-${zone}-end`;
 
 const getDropZone = (zones: HeaderZones, id: UniqueIdentifier): HeaderZoneId | undefined => {
   const item = findHeaderItem(getHeaderItems(zones), id);
   if (item) return getHeaderItemZone(zones, item);
-  return headerZoneIds.find((zone) => getDropZoneId(zone) === id || getDropZoneTailId(zone) === id);
+  return headerZoneIds.find((zone) => getDropZoneId(zone) === id);
 };
 
 const findHeaderItem = (items: HeaderItem[], id: UniqueIdentifier | null): HeaderItem | undefined => {
@@ -659,22 +643,14 @@ const findHeaderItem = (items: HeaderItem[], id: UniqueIdentifier | null): Heade
 
 const isSameItem = (first: HeaderItem, second: HeaderItem) => getHeaderItemKey(first) === getHeaderItemKey(second);
 
-const isHeaderItemAvailable = (
-  item: HeaderItem,
-  featureControls: { assistantEnabled: boolean; boardSwitcherEnabled: boolean },
-) => {
-  if (item.type === "board") return true;
-  if (item.id === "assistant") return featureControls.assistantEnabled;
-  if (item.id === "boardSwitcher") return featureControls.boardSwitcherEnabled;
-  return true;
-};
-
 const getBuiltinItemIcon = (itemId: HeaderBuiltinItemId) => {
   if (itemId === "search") return IconSearch;
   if (itemId === "home") return IconHome;
   if (itemId === "boardSwitcher") return IconReplace;
   if (itemId === "assistant") return IconRobot;
   if (itemId === "docker") return IconBrandDocker;
+  if (itemId === "boardEdit") return IconPencil;
+  if (itemId === "boardSettings") return IconSettings;
   if (itemId === "settings") return IconSettings;
   if (itemId === "themeToggle") return IconSunMoon;
   if (itemId === "user") return IconUserCircle;

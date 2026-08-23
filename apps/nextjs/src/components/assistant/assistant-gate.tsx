@@ -23,16 +23,8 @@ const EnabledAssistantRoot = dynamic(() =>
   import("./assistant-provider").then((module) => ({ default: module.EnabledAssistantRoot })),
 );
 
-const AssistantSpotlightPlaceholder = ({ description }: { description: string }) => {
+const DisabledAssistant = ({ children, description }: PropsWithChildren<{ description: string }>) => {
   useRegisterAssistantSpotlightPlaceholder(description);
-  return null;
-};
-
-const DisabledAssistant = ({
-  children,
-  description,
-  discoverable = true,
-}: PropsWithChildren<{ description: string; discoverable?: boolean }>) => {
   const value = useMemo(
     () => ({
       enabled: false,
@@ -56,7 +48,6 @@ const DisabledAssistant = ({
 
   return (
     <AssistantContext.Provider value={value}>
-      {discoverable ? <AssistantSpotlightPlaceholder description={description} /> : null}
       <AssistantWidgetRendererProvider renderer={AssistantBoardWidgetLazy}>{children}</AssistantWidgetRendererProvider>
     </AssistantContext.Provider>
   );
@@ -68,7 +59,7 @@ const DisabledAssistant = ({
  * `unauthenticated` is kept apart from `unconfigured` because the server cannot check availability
  * for a signed-out visitor, and telling them the instance is unconfigured would be a guess.
  */
-export type AssistantAvailability = "enabled" | "unconfigured" | "unauthenticated" | "disabled" | "error";
+export type AssistantAvailability = "enabled" | "unconfigured" | "unauthenticated" | "error";
 
 interface AssistantGateProps extends PropsWithChildren {
   availability: AssistantAvailability;
@@ -85,14 +76,6 @@ export const AssistantGate = ({ availability, children }: AssistantGateProps) =>
 
   if (availability === "enabled") {
     return <EnabledAssistantRoot>{children}</EnabledAssistantRoot>;
-  }
-
-  if (availability === "disabled") {
-    return (
-      <DisabledAssistant description={t("unavailable.disabledByServer")} discoverable={false}>
-        {children}
-      </DisabledAssistant>
-    );
   }
 
   return <DisabledAssistant description={t(unavailableMessageKeys[availability])}>{children}</DisabledAssistant>;

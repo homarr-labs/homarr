@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { Text } from "@mantine/core";
 
-import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
@@ -17,9 +16,9 @@ export async function generateMetadata() {
 }
 
 export default async function AssistantPage() {
-  const [session, serverSettings] = await Promise.all([auth(), getRscServerSettingsAsync()]);
+  const session = await auth();
 
-  if (!serverSettings.featureControls.assistantEnabled || !session?.user.permissions.includes("admin")) {
+  if (!session?.user.permissions.includes("admin")) {
     notFound();
   }
 

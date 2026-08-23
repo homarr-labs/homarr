@@ -222,13 +222,7 @@ export const WidgetContextMenu = ({
     [setItemOptions],
   );
 
-  if (
-    !session ||
-    !settings.featureControls.widgetContextMenuEnabled ||
-    !settings.enableRightClickOnWidgets ||
-    isEditMode ||
-    item.kind === "app"
-  ) {
+  if (!session || !settings.enableRightClickOnWidgets || isEditMode || item.kind === "app") {
     return <>{children}</>;
   }
 

@@ -47,6 +47,8 @@ import classes from "./configurable-header.module.css";
 interface ConfigurableHeaderProps {
   logo: ReactNode;
   actions?: ReactNode;
+  boardEditAction?: ReactNode;
+  boardSettingsAction?: ReactNode;
   hasNavigation: boolean;
   avatar: ReactNode;
   userId: string | null;
@@ -58,15 +60,15 @@ type HeaderBoard = RouterOutputs["board"]["getAllBoards"][number];
 export const ConfigurableHeader = ({
   logo,
   actions,
+  boardEditAction,
+  boardSettingsAction,
   hasNavigation,
   avatar,
   userId,
   isAdmin,
   isDockerEnabled,
 }: ConfigurableHeaderProps) => {
-  const { featureControls, headerPreferences } = useSettings();
-  const assistantEnabled = featureControls.assistantEnabled;
-  const boardSwitcherEnabled = featureControls.boardSwitcherEnabled;
+  const { headerPreferences } = useSettings();
   const assistant = useOptionalHomarrAssistant();
   const { toggleColorScheme } = useMantineColorScheme();
   const { openModal: openDockerModal } = useModalAction(DockerQuickAccessModal);
@@ -80,7 +82,7 @@ export const ConfigurableHeader = ({
   const boardsById = useMemo(() => new Map(boards.map((board) => [board.id, board])), [boards]);
 
   return (
-    <BoardSwitcher enabled={boardSwitcherEnabled}>
+    <BoardSwitcher>
       {(boardSwitcher) => {
         const renderItems = (items: HeaderItem[]) =>
           items.map((item) => (
@@ -88,12 +90,12 @@ export const ConfigurableHeader = ({
               key={getHeaderItemKey(item)}
               item={item}
               logo={logo}
+              boardEditAction={boardEditAction}
+              boardSettingsAction={boardSettingsAction}
               avatar={avatar}
               userId={userId}
               isAdmin={isAdmin}
               isDockerEnabled={isDockerEnabled}
-              assistantEnabled={assistantEnabled}
-              boardSwitcherEnabled={boardSwitcherEnabled}
               board={item.type === "board" ? boardsById.get(item.boardId) : undefined}
               searchDisplay={headerPreferences.searchDisplay}
               boardSwitcher={boardSwitcher}
@@ -151,12 +153,12 @@ export const ConfigurableHeader = ({
 interface HeaderItemProps {
   item: HeaderItem;
   logo: ReactNode;
+  boardEditAction: ReactNode;
+  boardSettingsAction: ReactNode;
   avatar: ReactNode;
   userId: string | null;
   isAdmin: boolean;
   isDockerEnabled: boolean;
-  assistantEnabled: boolean;
-  boardSwitcherEnabled: boolean;
   board: HeaderBoard | undefined;
   searchDisplay: "input" | "icon";
   boardSwitcher: BoardSwitcherControls;
@@ -170,12 +172,12 @@ interface HeaderItemProps {
 const HeaderItem = ({
   item,
   logo,
+  boardEditAction,
+  boardSettingsAction,
   avatar,
   userId,
   isAdmin,
   isDockerEnabled,
-  assistantEnabled,
-  boardSwitcherEnabled,
   board,
   searchDisplay,
   boardSwitcher,
@@ -214,6 +216,9 @@ const HeaderItem = ({
     );
   }
 
+  if (item.id === "boardEdit") return boardEditAction;
+  if (item.id === "boardSettings") return boardSettingsAction;
+
   if (item.id === "search") {
     return (
       <TourTarget id="board-search">
@@ -242,7 +247,6 @@ const HeaderItem = ({
   }
 
   if (item.id === "boardSwitcher") {
-    if (!boardSwitcherEnabled) return null;
     return (
       <Tooltip label={label("boardSwitcher")}>
         <HeaderButton
@@ -258,7 +262,7 @@ const HeaderItem = ({
   }
 
   if (item.id === "assistant") {
-    if (!assistantEnabled || !assistant?.enabled) return null;
+    if (!assistant?.enabled) return null;
     return (
       <Tooltip label={label("assistant")}>
         <Indicator

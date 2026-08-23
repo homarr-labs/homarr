@@ -25,7 +25,9 @@ export {
   headerPreferencesVersion,
   headerSearchDisplayValues,
   headerZoneIds,
+  isRequiredHeaderItem,
   parseHeaderPreferences,
+  requiredHeaderBuiltinItemIds,
 } from "./header-preferences";
 export type {
   HeaderBoardItem,

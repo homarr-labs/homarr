@@ -1,12 +1,7 @@
 import SuperJSON from "superjson";
 
 import type { ServerSettings } from "@homarr/server-settings";
-import {
-  defaultServerSettings,
-  defaultServerSettingsKeys,
-  parseBrandingSettings,
-  parseFeatureControls,
-} from "@homarr/server-settings";
+import { defaultServerSettings, defaultServerSettingsKeys, parseBrandingSettings } from "@homarr/server-settings";
 
 import type { Database } from "..";
 import { eq } from "..";
@@ -28,11 +23,6 @@ export const getServerSettingsAsync = async (db: Database) => {
       acc[settingKey] = parseBrandingSettings(parsedSetting) as never;
       return acc;
     }
-    if (settingKey === "featureControls") {
-      acc[settingKey] = parseFeatureControls(parsedSetting) as never;
-      return acc;
-    }
-
     acc[settingKey] = {
       ...defaultServerSettings[settingKey],
       ...parsedSetting,
@@ -54,10 +44,6 @@ export const getServerSettingByKeyAsync = async <TKey extends keyof ServerSettin
   if (key === "branding") {
     return parseBrandingSettings(parsedSetting) as ServerSettings[TKey];
   }
-  if (key === "featureControls") {
-    return parseFeatureControls(parsedSetting) as ServerSettings[TKey];
-  }
-
   return {
     ...defaultServerSettings[key],
     ...parsedSetting,

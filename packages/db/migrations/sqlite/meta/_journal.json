@@ -337,13 +337,6 @@
       "when": 1787496053654,
       "tag": "0047_add_server_branding_settings",
       "breakpoints": true
-    },
-    {
-      "idx": 48,
-      "version": "6",
-      "when": 1787496060000,
-      "tag": "0048_add_feature_controls_server_setting",
-      "breakpoints": true
     }
   ]
 }

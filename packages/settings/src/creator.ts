@@ -24,7 +24,6 @@ export type SettingsContextProps = Omit<
   > &
   Pick<ServerSettings["user"], "enableGravatar"> & {
     branding: ServerSettings["branding"];
-    featureControls: ServerSettings["featureControls"];
   };
 
 export interface PublicServerSettings {
@@ -35,7 +34,6 @@ export interface PublicServerSettings {
   >;
   user: Pick<ServerSettings["user"], "enableGravatar">;
   branding: ServerSettings["branding"];
-  featureControls: ServerSettings["featureControls"];
 }
 
 export type UserSettings = Pick<
@@ -71,5 +69,4 @@ export const createSettings = ({
   forceDisableStatus: serverSettings.board.forceDisableStatus,
   enableGravatar: serverSettings.user.enableGravatar,
   branding: parseBrandingSettings(serverSettings.branding),
-  featureControls: serverSettings.featureControls,
 });

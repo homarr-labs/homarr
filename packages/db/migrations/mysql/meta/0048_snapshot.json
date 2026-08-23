@@ -2656,7 +2656,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "('{\"version\":3,\"visible\":true,\"searchDisplay\":\"input\",\"zones\":{\"left\":[{\"type\":\"builtin\",\"id\":\"logo\"}],\"center\":[{\"type\":\"builtin\",\"id\":\"search\"}],\"right\":[{\"type\":\"builtin\",\"id\":\"user\"}]}}')"
+          "default": "('{\"version\":3,\"visible\":true,\"searchDisplay\":\"input\",\"zones\":{\"left\":[{\"type\":\"builtin\",\"id\":\"logo\"}],\"center\":[{\"type\":\"builtin\",\"id\":\"search\"}],\"right\":[{\"type\":\"builtin\",\"id\":\"user\"},{\"type\":\"builtin\",\"id\":\"boardEdit\"},{\"type\":\"builtin\",\"id\":\"boardSettings\"}]}}')"
         },
         "completed_manage_tour": {
           "name": "completed_manage_tour",

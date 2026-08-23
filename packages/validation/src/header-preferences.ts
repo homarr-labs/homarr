@@ -9,10 +9,14 @@ export const headerBuiltinItemIds = [
   "boardSwitcher",
   "assistant",
   "docker",
+  "boardEdit",
+  "boardSettings",
   "settings",
   "themeToggle",
   "user",
 ] as const;
+
+export const requiredHeaderBuiltinItemIds = ["boardEdit", "boardSettings", "user"] as const;
 
 export const headerPreferenceItemIds = headerBuiltinItemIds;
 export const headerItemIds = headerBuiltinItemIds;
@@ -51,6 +55,9 @@ export type HeaderZones = Record<HeaderZoneId, HeaderItem[]>;
 export const createBuiltinHeaderItem = (id: HeaderBuiltinItemId): HeaderBuiltinItem => ({ type: "builtin", id });
 
 export const createBoardHeaderItem = (boardId: string): HeaderBoardItem => ({ type: "board", boardId });
+
+export const isRequiredHeaderItem = (item: HeaderItem) =>
+  item.type === "builtin" && requiredHeaderBuiltinItemIds.some((itemId) => itemId === item.id);
 
 export const getHeaderItemKey = (item: HeaderItem): string => {
   if (item.type === "board") return `board:${item.boardId}`;
@@ -165,6 +172,22 @@ const migrateLegacyHeaderPreferencesV1 = (
 const migrateLegacyHeaderPreferencesV2 = (legacy: z.infer<typeof legacyHeaderPreferencesV2Schema>): HeaderPreferences =>
   migrateLegacyItems(legacy.visible, legacy.zones);
 
+const includeRequiredHeaderItems = (preferences: HeaderPreferences): HeaderPreferences => {
+  const itemKeys = new Set(getHeaderItems(preferences.zones).map(getHeaderItemKey));
+  const missingItems = requiredHeaderBuiltinItemIds
+    .map(createBuiltinHeaderItem)
+    .filter((item) => !itemKeys.has(getHeaderItemKey(item)));
+  if (missingItems.length === 0) return preferences;
+
+  return {
+    ...preferences,
+    zones: {
+      ...preferences.zones,
+      right: [...preferences.zones.right, ...missingItems],
+    },
+  };
+};
+
 export const headerPreferencesMutationSchema = z
   .discriminatedUnion("version", [
     headerPreferencesSchema,
@@ -172,9 +195,9 @@ export const headerPreferencesMutationSchema = z
     legacyHeaderPreferencesV2Schema,
   ])
   .transform((preferences): HeaderPreferences => {
-    if (preferences.version === 1) return migrateLegacyHeaderPreferencesV1(preferences);
-    if (preferences.version === 2) return migrateLegacyHeaderPreferencesV2(preferences);
-    return preferences;
+    if (preferences.version === 1) return includeRequiredHeaderItems(migrateLegacyHeaderPreferencesV1(preferences));
+    if (preferences.version === 2) return includeRequiredHeaderItems(migrateLegacyHeaderPreferencesV2(preferences));
+    return includeRequiredHeaderItems(preferences);
   });
 
 export const defaultHeaderPreferences = {
@@ -184,7 +207,11 @@ export const defaultHeaderPreferences = {
   zones: {
     left: [createBuiltinHeaderItem("logo")],
     center: [createBuiltinHeaderItem("search")],
-    right: [createBuiltinHeaderItem("user")],
+    right: [
+      createBuiltinHeaderItem("user"),
+      createBuiltinHeaderItem("boardEdit"),
+      createBuiltinHeaderItem("boardSettings"),
+    ],
   },
 } satisfies HeaderPreferences;
 
@@ -201,4 +228,5 @@ export const parseHeaderPreferences = (value: unknown): HeaderPreferences => {
   }
 };
 
-export const serializeHeaderPreferences = (value: HeaderPreferences) => JSON.stringify(value);
+export const serializeHeaderPreferences = (value: HeaderPreferences) =>
+  JSON.stringify(includeRequiredHeaderItems(value));

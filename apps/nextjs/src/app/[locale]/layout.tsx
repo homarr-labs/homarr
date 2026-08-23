@@ -113,11 +113,7 @@ export default async function Layout(props: {
         })
       : null,
   );
-  const assistantAvailabilityPromise: Promise<AssistantAvailability> = Promise.all([
-    sessionPromise,
-    serverSettingsPromise,
-  ]).then(([session, serverSettings]) => {
-    if (!serverSettings.featureControls.assistantEnabled) return "disabled";
+  const assistantAvailabilityPromise: Promise<AssistantAvailability> = sessionPromise.then((session) => {
     if (!session) return "unauthenticated";
     return api.assistant
       .getAvailability()
@@ -163,7 +159,6 @@ export default async function Layout(props: {
           search: { defaultSearchEngineId: serverSettings.search.defaultSearchEngineId },
           user: { enableGravatar: serverSettings.user.enableGravatar },
           branding: serverSettings.branding,
-          featureControls: serverSettings.featureControls,
         }}
         {...innerProps}
       />

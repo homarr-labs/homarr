@@ -9,7 +9,6 @@ export const defaultServerSettingsKeys = [
   "user",
   "appearance",
   "branding",
-  "featureControls",
   "culture",
   "search",
 ] as const;
@@ -24,13 +23,6 @@ export const authBrandingSchema = z.object({
   showLogo: z.boolean(),
   showGreeting: z.boolean(),
 });
-
-export const featureControlsServerSettingsSchema = z.object({
-  assistantEnabled: z.boolean(),
-  boardSwitcherEnabled: z.boolean(),
-  widgetContextMenuEnabled: z.boolean(),
-});
-export type FeatureControlsSettings = z.infer<typeof featureControlsServerSettingsSchema>;
 
 const brandingImageUrlSchema = z
   .string()
@@ -81,12 +73,6 @@ export const defaultBrandingSettings: BrandingSettings = {
   defaultRadius: "md",
 };
 
-export const defaultFeatureControls: FeatureControlsSettings = {
-  assistantEnabled: true,
-  boardSwitcherEnabled: true,
-  widgetContextMenuEnabled: true,
-};
-
 const legacyLoginBrandingSchema = z.object({
   showCustomAppNameOnLogin: z.boolean().optional(),
   showCustomLogoOnLogin: z.boolean().optional(),
@@ -122,16 +108,6 @@ export const parseBrandingSettings = (value: unknown): BrandingSettings => {
   return result.data;
 };
 
-export const parseFeatureControls = (value: unknown) => {
-  const partialValue = z.record(z.string(), z.unknown()).safeParse(value);
-  if (!partialValue.success) return defaultFeatureControls;
-
-  const result = featureControlsServerSettingsSchema.safeParse({ ...defaultFeatureControls, ...partialValue.data });
-  if (!result.success) return defaultFeatureControls;
-
-  return result.data;
-};
-
 export const defaultServerSettings = {
   analytics: {
     enableGeneral: true,
@@ -156,7 +132,6 @@ export const defaultServerSettings = {
     defaultColorScheme: "auto" as ColorScheme,
   },
   branding: defaultBrandingSettings,
-  featureControls: defaultFeatureControls,
   culture: {
     defaultLocale: "en" as SupportedLanguage,
   },

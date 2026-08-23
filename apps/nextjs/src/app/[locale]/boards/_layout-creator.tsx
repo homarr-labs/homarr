@@ -28,13 +28,17 @@ import { BoardMantineProvider } from "./(content)/_theme";
 const logger = createLogger({ module: "createBoardLayout" });
 
 interface CreateBoardLayoutProps<TParams extends Params> {
-  headerActions: JSX.Element;
+  headerActions?: JSX.Element;
+  headerBoardEditAction?: JSX.Element;
+  headerBoardSettingsAction?: JSX.Element;
   getInitialBoardAsync: (params: TParams) => Promise<Board>;
   withTour?: boolean;
 }
 
 export const createBoardLayout = <TParams extends Params>({
   headerActions,
+  headerBoardEditAction,
+  headerBoardSettingsAction,
   getInitialBoardAsync: getInitialBoard,
   withTour = false,
 }: CreateBoardLayoutProps<TParams>) => {
@@ -108,6 +112,8 @@ export const createBoardLayout = <TParams extends Params>({
                   <MainHeader
                     logo={<BoardLogo size={appShellLogoHeight} />}
                     actions={headerActions}
+                    boardEditAction={headerBoardEditAction}
+                    boardSettingsAction={headerBoardSettingsAction}
                     hasNavigation={false}
                   />
                   <AppShellMain data-advanced-focus-background>{children}</AppShellMain>

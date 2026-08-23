@@ -5689,7 +5689,7 @@
             "header": {
               "title": "Header studio",
               "badge": "Personal",
-              "description": "Drag each control across the fixed Left, Center, and Right dividers. Click a control to configure it.",
+              "description": "This is one continuous row. Drag controls anywhere; Left, Center, and Right are fixed dividers and never move.",
               "device": {
                 "desktop": "Desktop",
                 "mobile": "Mobile"
@@ -5704,7 +5704,7 @@
                 "show": "Show the header",
                 "configure": "Move or configure {item}",
                 "remove": "Remove {item}",
-                "dropAtEnd": "Drop at the end of the {zone} zone"
+                "dropIntoZone": "Move into the {zone} section"
               },
               "preview": {
                 "board": "Dashboard preview for {name}",
@@ -5713,7 +5713,7 @@
               "available": {
                 "title": "Available controls",
                 "description": "Add a control, then drag its full button into position above.",
-                "accountAlways": "Account access always remains available",
+                "requiredAlways": "This control is required, but you can move it anywhere in the header.",
                 "allAdded": "Every built-in control is already in your header.",
                 "add": "Add {item}",
                 "boardShortcut": "Board shortcut",
@@ -5733,6 +5733,8 @@
                 "boardSwitcher": "Boards",
                 "assistant": "Assistant",
                 "docker": "Docker",
+                "boardEdit": "Edit board",
+                "boardSettings": "Board settings",
                 "settings": "Your settings",
                 "themeToggle": "Toggle theme",
                 "user": "Account",
@@ -6009,21 +6011,6 @@
               "greeting": "Greeting",
               "on": "On",
               "off": "Off"
-            }
-          },
-          "featureControls": {
-            "title": "Feature controls",
-            "assistant": {
-              "label": "Assistant",
-              "description": "Show and allow the instance Assistant."
-            },
-            "boardSwitcher": {
-              "label": "Board switcher",
-              "description": "Allow board switching from the header, account menu, and keyboard shortcut."
-            },
-            "widgetContextMenu": {
-              "label": "Widget context menu",
-              "description": "Allow widget actions from the context menu."
             }
           },
           "culture": {
@@ -7625,7 +7612,6 @@
     },
     "unavailable": {
       "checking": "Checking whether the assistant is available…",
-      "disabledByServer": "An administrator has disabled Assistant for this server.",
       "error": "The assistant's availability could not be checked. Try again.",
       "notConfigured": "An administrator must configure and enable the assistant first.",
       "signIn": "Sign in to use Assistant."

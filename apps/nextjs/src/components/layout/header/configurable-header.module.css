@@ -41,10 +41,13 @@
 .logo {
   display: grid;
   place-items: center;
+  min-width: 0;
+  min-height: 0;
   width: auto;
-  height: calc(100% - 0.5rem);
+  height: calc(var(--app-shell-header-height) - 0.5rem);
+  max-height: calc(var(--app-shell-header-height) - 0.5rem);
   max-width: min(12rem, 28vw);
-  flex: 0 0 auto;
+  flex: 0 1 auto;
   overflow: hidden;
   border-radius: var(--mantine-radius-md);
 }
@@ -52,8 +55,9 @@
 .logo :global(img.logo) {
   display: block;
   width: auto;
-  height: 100%;
+  height: auto;
   max-width: 100%;
+  max-height: calc(var(--app-shell-header-height) - 0.5rem);
   object-fit: contain;
 }
 

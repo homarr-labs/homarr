@@ -29,7 +29,6 @@ import {
 } from "@tabler/icons-react";
 
 import { getRscUserSettingsAsync } from "@homarr/api/user-server";
-import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -62,12 +61,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       return false;
     }
   });
-  const [t, tEntities, session, shouldRunManageTour, serverSettings] = await Promise.all([
+  const [t, tEntities, session, shouldRunManageTour] = await Promise.all([
     getI18n("management.navbar"),
     getI18n("common.entity"),
     sessionPromise,
     shouldRunManageTourPromise,
-    getRscServerSettingsAsync(),
   ]);
   const appsAccess = getAppsSectionAccess(session);
   const integrationsAccess = await getIntegrationsSectionAccessAsync(session);
@@ -203,7 +201,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       label: t("items.assistant"),
       href: "/manage/assistant",
       icon: IconRobot,
-      hidden: !serverSettings.featureControls.assistantEnabled || !session?.user.permissions.includes("admin"),
+      hidden: !session?.user.permissions.includes("admin"),
     },
     {
       label: t("items.settings"),

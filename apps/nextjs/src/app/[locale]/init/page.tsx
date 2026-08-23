@@ -2,7 +2,6 @@ import { headers } from "next/headers";
 
 import { getOnboardingClaimTokenFromCookieHeader, isOnboardingClaimValidAsync } from "@homarr/api/onboarding-claim";
 import { normalizeOnboardingStep } from "@homarr/api/onboarding-step";
-import { getRscServerSettingsAsync } from "@homarr/api/server-settings-server";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
@@ -20,12 +19,11 @@ import { getPackageVersion } from "~/versions/package-reader";
 import { AssistantConfiguration } from "../manage/assistant/_components/assistant-configuration";
 
 export default async function InitPage() {
-  const [state, session, requestHeaders, firstUser, serverSettings] = await Promise.all([
+  const [state, session, requestHeaders, firstUser] = await Promise.all([
     db.query.onboarding.findFirst(),
     auth(),
     headers(),
     db.query.users.findFirst({ columns: { id: true } }),
-    getRscServerSettingsAsync(),
   ]);
   const canConfigurePrivileged = session?.user.permissions.includes("admin") ?? false;
   const onboardingClaim = getOnboardingClaimTokenFromCookieHeader(requestHeaders.get("cookie"));
@@ -74,11 +72,7 @@ export default async function InitPage() {
         availableBoards: availableBoards.map(({ id, name }) => ({ id, name })),
       }}
       sqliteRestore={databaseDriver === "sqlite" ? <DatabaseRestoreFlow variant="standalone" /> : undefined}
-      assistantConfiguration={
-        canConfigurePrivileged && serverSettings.featureControls.assistantEnabled ? (
-          <AssistantConfiguration />
-        ) : undefined
-      }
+      assistantConfiguration={canConfigurePrivileged ? <AssistantConfiguration /> : undefined}
     />
   );
 }
