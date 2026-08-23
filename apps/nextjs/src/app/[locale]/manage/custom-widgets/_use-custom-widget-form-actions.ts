@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturnType } from "@mantine/form";
 
@@ -23,11 +23,13 @@ import type { PreviewState } from "./_custom-widget-preview-panel";
 import { extractCustomWidgetSaveIssues } from "./_custom-widget-save-errors";
 import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
 import { clearSaveIssues, reportSaveIssues } from "./_custom-widget-save-issue-utils";
+import type { CustomWidgetFormDocumentStore } from "./_custom-widget-form-state";
 
 interface FormActionsInput {
   mode: "create" | "edit";
   definitionId?: string;
   form: UseFormReturnType<CustomWidgetFormValues>;
+  documentStore: CustomWidgetFormDocumentStore;
   setPreview: Dispatch<SetStateAction<PreviewState>>;
   setMobilePane: Dispatch<SetStateAction<"configure" | "preview">>;
   optionsSnapshot: Record<string, unknown>;
@@ -44,52 +46,9 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
   const [saveIssues, setSaveIssues] = useState<CustomWidgetSaveIssue[]>([]);
   const [previewPending, setPreviewPending] = useState(false);
-  const previewOptions = input.optionsSnapshot;
-  const previewOptionsFingerprint = useMemo(() => JSON.stringify(previewOptions), [previewOptions]);
-  const previewSecretValues = input.form.values.secrets;
-  const previewSecrets = useMemo(() => getChangedSecrets({ secrets: previewSecretValues }), [previewSecretValues]);
-  const previewSecretsFingerprint = useMemo(() => JSON.stringify(previewSecrets), [previewSecrets]);
-  const previewDefinitionValues = useMemo(
-    () => ({
-      name: input.form.values.name,
-      description: input.form.values.description,
-      iconUrl: input.form.values.iconUrl,
-      sources: input.form.values.sources,
-      requests: input.form.values.requests,
-      options: input.form.values.options,
-      template: input.form.values.template,
-    }),
-    [
-      input.form.values.description,
-      input.form.values.iconUrl,
-      input.form.values.name,
-      input.form.values.options,
-      input.form.values.requests,
-      input.form.values.sources,
-      input.form.values.template,
-    ],
-  );
   const setPreview = input.setPreview;
   const previewGeneration = useRef(0);
-  const latestPreviewInput = useRef({
-    definitionValues: previewDefinitionValues,
-    optionsFingerprint: previewOptionsFingerprint,
-    secretsFingerprint: previewSecretsFingerprint,
-  });
-  useLayoutEffect(() => {
-    const previous = latestPreviewInput.current;
-    const current = {
-      definitionValues: previewDefinitionValues,
-      optionsFingerprint: previewOptionsFingerprint,
-      secretsFingerprint: previewSecretsFingerprint,
-    };
-    latestPreviewInput.current = current;
-    if (
-      previous.definitionValues === current.definitionValues &&
-      previous.optionsFingerprint === current.optionsFingerprint &&
-      previous.secretsFingerprint === current.secretsFingerprint
-    )
-      return;
+  const invalidatePreview = useCallback(() => {
     previewGeneration.current += 1;
     setPreview((preview) => {
       if (
@@ -102,7 +61,11 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       return { data: {}, status: {}, session: null, outcome: "idle" };
     });
     setPreviewPending(false);
-  }, [previewDefinitionValues, previewOptionsFingerprint, previewSecretsFingerprint, setPreview]);
+  }, [setPreview]);
+  useLayoutEffect(() => {
+    invalidatePreview();
+  }, [input.optionsSnapshot, invalidatePreview]);
+  useEffect(() => input.documentStore.subscribe(invalidatePreview), [input.documentStore, invalidatePreview]);
   useEffect(
     () => () => {
       previewGeneration.current += 1;
@@ -137,6 +100,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         });
         input.form.setInitialValues(values);
         input.form.resetDirty();
+        input.documentStore.markSaved(values);
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         window.location.assign(result.managementPath);
       } else if (input.definitionId) {
@@ -152,6 +116,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         ]);
         input.form.setInitialValues(values);
         input.form.resetDirty();
+        input.documentStore.markSaved(values);
         showSuccessNotification({
           title: tCommon("action.save"),
           message: t("notification.updated", { name: values.name }),
@@ -169,7 +134,8 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
 
   const runPreview = async () => {
     if (previewPending) return;
-    const candidateAtStart = buildDefinition(input.form.values);
+    const valuesAtStart = input.documentStore.getValues();
+    const candidateAtStart = buildDefinition(valuesAtStart);
     if (!candidateAtStart.success) {
       showErrorNotification({
         title: w("section.preview"),
@@ -177,7 +143,8 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       });
       return;
     }
-    const optionIssues = getCustomWidgetPreviewOptionIssues(candidateAtStart.data, input.optionsSnapshot);
+    const optionsAtStart = input.optionsSnapshot;
+    const optionIssues = getCustomWidgetPreviewOptionIssues(candidateAtStart.data, optionsAtStart);
     if (optionIssues.length > 0) {
       const issue = optionIssues[0];
       showErrorNotification({
@@ -186,22 +153,10 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       });
       return;
     }
-    const definitionValuesAtStart = previewDefinitionValues;
-    const optionsAtStart = input.optionsSnapshot;
-    const optionsFingerprintAtStart = previewOptionsFingerprint;
-    const secretsAtStart = previewSecrets;
-    const secretsFingerprintAtStart = previewSecretsFingerprint;
+    const secretsAtStart = getChangedSecrets(valuesAtStart);
     const generation = previewGeneration.current + 1;
     previewGeneration.current = generation;
-    const isCurrent = () => {
-      const latest = latestPreviewInput.current;
-      return (
-        previewGeneration.current === generation &&
-        latest.definitionValues === definitionValuesAtStart &&
-        latest.optionsFingerprint === optionsFingerprintAtStart &&
-        latest.secretsFingerprint === secretsFingerprintAtStart
-      );
-    };
+    const isCurrent = () => previewGeneration.current === generation;
     input.setMobilePane("preview");
     input.setPreview({ data: {}, status: {}, session: null, outcome: "loading" });
     setPreviewPending(true);

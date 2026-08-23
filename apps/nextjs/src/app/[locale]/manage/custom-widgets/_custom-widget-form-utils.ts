@@ -48,7 +48,7 @@ export function filterSecretsForSourceAuthentication(
 
 export function applyDefinition(form: CustomWidgetWorkbenchForm, widget: HomarrCustomWidgetV2) {
   form.setValues({
-    ...form.values,
+    ...form.getValues(),
     name: widget.name,
     description: widget.description ?? "",
     iconUrl: widget.iconUrl ?? "",

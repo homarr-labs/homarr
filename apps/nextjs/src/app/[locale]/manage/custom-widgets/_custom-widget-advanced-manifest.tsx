@@ -6,6 +6,7 @@ import { customWidgetDefinitionSchema } from "@homarr/custom-widgets/core";
 import { useI18n } from "@homarr/translation/client";
 
 import { CodeEditor } from "./_code-editor";
+import { useDeferredCustomWidgetFormDocumentValues } from "./_custom-widget-form-state";
 import { applyDefinition, parseJson } from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 import { LazyOnceAccordion } from "./_lazy-once-accordion";
@@ -21,16 +22,17 @@ export function CustomWidgetAdvancedManifest({ form }: { form: CustomWidgetWorkb
 
 function CustomWidgetManifestEditor({ form }: { form: CustomWidgetWorkbenchForm }) {
   const t = useI18n("customWidget.workbench.builder");
+  const values = useDeferredCustomWidgetFormDocumentValues();
   const serialized = JSON.stringify(
     {
       $schema: "homarr-custom-widget-v2",
-      name: form.values.name,
-      ...(form.values.description ? { description: form.values.description } : {}),
-      ...(form.values.iconUrl ? { iconUrl: form.values.iconUrl } : {}),
-      sources: parseJson(form.values.sources),
-      requests: parseJson(form.values.requests),
-      options: parseJson(form.values.options),
-      template: form.values.template,
+      name: values.name,
+      ...(values.description ? { description: values.description } : {}),
+      ...(values.iconUrl ? { iconUrl: values.iconUrl } : {}),
+      sources: parseJson(values.sources),
+      requests: parseJson(values.requests),
+      options: parseJson(values.options),
+      template: values.template,
     },
     null,
     2,

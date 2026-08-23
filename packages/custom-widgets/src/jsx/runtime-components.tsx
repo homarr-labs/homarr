@@ -144,11 +144,15 @@ function getInitialInputValue(type: WidgetInputType | null, props: Record<string
   if (!type) return "";
   const candidate = type === "boolean" ? props.defaultChecked : props.defaultValue;
   if (type === "boolean" && typeof candidate === "boolean") return candidate;
-  if (type === "number" && typeof candidate === "number") return candidate;
+  if (type === "number" && typeof candidate === "number" && Number.isFinite(candidate)) return candidate;
   if (type === "string" && typeof candidate === "string") return candidate;
   if (type === "string[]" && Array.isArray(candidate) && candidate.every((item) => typeof item === "string"))
     return candidate;
-  if (type === "number[]" && Array.isArray(candidate) && candidate.every((item) => typeof item === "number"))
+  if (
+    type === "number[]" &&
+    Array.isArray(candidate) &&
+    candidate.every((item) => typeof item === "number" && Number.isFinite(item))
+  )
     return candidate;
   return emptyInputValue(type);
 }

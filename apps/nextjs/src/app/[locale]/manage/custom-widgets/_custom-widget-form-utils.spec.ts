@@ -28,7 +28,7 @@ describe("Custom Widget workbench preview options", () => {
     const setValues = vi.fn();
     const result = applyCustomWidgetAiResponse(
       {
-        values: {
+        getValues: () => ({
           name: "",
           description: "",
           iconUrl: "",
@@ -37,7 +37,7 @@ describe("Custom Widget workbench preview options", () => {
           options: "{}",
           template: "",
           secrets: [],
-        },
+        }),
         setValues,
       } as never,
       `\`\`\`json\n${JSON.stringify(definition)}\n\`\`\``,

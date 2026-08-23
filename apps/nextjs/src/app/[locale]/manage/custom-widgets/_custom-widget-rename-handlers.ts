@@ -10,7 +10,7 @@ interface RenameHandlersInput {
 
 export function createCustomWidgetRenameHandlers(input: RenameHandlersInput) {
   const renameRequest = (currentId: string, nextId: string) => {
-    const candidate = buildDefinition(input.form.values);
+    const candidate = buildDefinition(input.form.getValues());
     if (!candidate.success) {
       input.form.setFieldError("requests", input.invalidWidgetMessage);
       return;
@@ -23,7 +23,7 @@ export function createCustomWidgetRenameHandlers(input: RenameHandlersInput) {
     }
   };
   const renameOption = (currentName: string, nextName: string) => {
-    const candidate = buildDefinition(input.form.values);
+    const candidate = buildDefinition(input.form.getValues());
     if (!candidate.success) {
       input.form.setFieldError("options", input.invalidWidgetMessage);
       return;

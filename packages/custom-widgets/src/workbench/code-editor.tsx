@@ -105,6 +105,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
   const errorCount = diagnostics.filter(({ severity }) => severity === "error").length;
   const warningCount = diagnostics.length - errorCount;
   const isCharacterLimitExceeded = props.maxLength !== undefined && props.value.length > props.maxLength;
+  const isEditorInvalid = Boolean(props.error) || errorCount > 0 || isCharacterLimitExceeded;
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(props.value);
@@ -176,7 +177,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
                 label={props.label}
                 placeholder={props.placeholder}
                 theme={colorScheme}
-                invalid={isCharacterLimitExceeded}
+                invalid={isEditorInvalid}
                 height={props.height ?? (props.language === "jsx" ? "320px" : "220px")}
                 readOnly={props.readOnly ?? false}
                 diagnosticMessage={props.messages.diagnostic}

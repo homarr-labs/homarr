@@ -9,8 +9,8 @@ import { useI18n } from "@homarr/translation/client";
 import { CopyAiPromptButton } from "./_copy-ai-prompt-button";
 
 interface AiCardProps {
-  draft: CustomWidgetAiDraft;
-  diagnostics: readonly CustomWidgetAiDiagnostic[];
+  getDraft(): CustomWidgetAiDraft;
+  getDiagnostics(): readonly CustomWidgetAiDiagnostic[];
   request: string;
   onRequestChange(value: string): void;
   documentationUrl: string;
@@ -28,8 +28,8 @@ export function CustomWidgetAiCard(props: AiCardProps) {
             {t("title")}
           </Accordion.Control>
           <CopyAiPromptButton
-            draft={props.draft}
-            diagnostics={props.diagnostics}
+            getDraft={props.getDraft}
+            getDiagnostics={props.getDiagnostics}
             request={props.request}
             documentationUrl={props.documentationUrl}
           />
