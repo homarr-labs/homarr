@@ -41,7 +41,7 @@ export const healthMonitoringRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "List storage volumes from a Synology DiskStation or OpenMediaVault integration for widget configuration. REQUIRED: integrationId from integration_all (Synology or OpenMediaVault integration only)",
+          "List storage volumes from a Synology DiskStation or OpenMediaVault integration for widget configuration. REQUIRED: integrationId from integration_all (Synology or OpenMediaVault integration only). The caller needs query permission for that integration.",
       },
     })
     .concat(createOneIntegrationMiddleware("query", "synology", "openmediavault"))
