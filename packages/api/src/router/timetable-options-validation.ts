@@ -9,42 +9,50 @@ import { DEFAULT_TIMETABLE_BASE_URL, normalizeTimetableBaseUrl } from "@homarr/r
 
 const timetableOptionsSchema = z.object({ baseUrl: z.string().optional() }).passthrough();
 
-const blockedTimetableAddresses = new BlockList();
-const blockedTimetableSubnets = [
-  ["0.0.0.0", 8, "ipv4"],
-  ["10.0.0.0", 8, "ipv4"],
-  ["100.64.0.0", 10, "ipv4"],
-  ["127.0.0.0", 8, "ipv4"],
-  ["169.254.0.0", 16, "ipv4"],
-  ["172.16.0.0", 12, "ipv4"],
-  ["192.0.0.0", 24, "ipv4"],
-  ["192.0.2.0", 24, "ipv4"],
-  ["192.88.99.0", 24, "ipv4"],
-  ["192.168.0.0", 16, "ipv4"],
-  ["198.18.0.0", 15, "ipv4"],
-  ["198.51.100.0", 24, "ipv4"],
-  ["203.0.113.0", 24, "ipv4"],
-  ["224.0.0.0", 4, "ipv4"],
-  ["240.0.0.0", 4, "ipv4"],
-  ["::", 96, "ipv6"],
-  ["::ffff:0:0", 96, "ipv6"],
-  ["::ffff:0:0:0", 96, "ipv6"],
-  ["64:ff9b::", 96, "ipv6"],
-  ["64:ff9b:1::", 48, "ipv6"],
-  ["100::", 64, "ipv6"],
-  ["2001::", 32, "ipv6"],
-  ["2001:2::", 48, "ipv6"],
-  ["2001:10::", 28, "ipv6"],
-  ["2001:db8::", 32, "ipv6"],
-  ["2002::", 16, "ipv6"],
-  ["fc00::", 7, "ipv6"],
-  ["fe80::", 10, "ipv6"],
-  ["fec0::", 10, "ipv6"],
-  ["ff00::", 8, "ipv6"],
+const blockedTimetableIpv4Addresses = new BlockList();
+const blockedTimetableIpv4Subnets = [
+  ["0.0.0.0", 8],
+  ["10.0.0.0", 8],
+  ["100.64.0.0", 10],
+  ["127.0.0.0", 8],
+  ["169.254.0.0", 16],
+  ["172.16.0.0", 12],
+  ["192.0.0.0", 24],
+  ["192.0.2.0", 24],
+  ["192.88.99.0", 24],
+  ["192.168.0.0", 16],
+  ["198.18.0.0", 15],
+  ["198.51.100.0", 24],
+  ["203.0.113.0", 24],
+  ["224.0.0.0", 4],
+  ["240.0.0.0", 4],
 ] as const;
 
-for (const [network, prefix, family] of blockedTimetableSubnets) {
-  blockedTimetableAddresses.addSubnet(network, prefix, family);
+const blockedTimetableIpv6Addresses = new BlockList();
+const blockedTimetableIpv6Subnets = [
+  ["::", 96],
+  ["::ffff:0:0", 96],
+  ["::ffff:0:0:0", 96],
+  ["64:ff9b::", 96],
+  ["64:ff9b:1::", 48],
+  ["100::", 64],
+  ["2001::", 32],
+  ["2001:2::", 48],
+  ["2001:10::", 28],
+  ["2001:db8::", 32],
+  ["2002::", 16],
+  ["fc00::", 7],
+  ["fe80::", 10],
+  ["fec0::", 10],
+  ["ff00::", 8],
+] as const;
+
+for (const [network, prefix] of blockedTimetableIpv4Subnets) {
+  blockedTimetableIpv4Addresses.addSubnet(network, prefix, "ipv4");
+}
+
+for (const [network, prefix] of blockedTimetableIpv6Subnets) {
+  blockedTimetableIpv6Addresses.addSubnet(network, prefix, "ipv6");
 }
 
 export const normalizeTimetableBaseUrlOrThrowBadRequest = (baseUrl: string) => {
@@ -79,8 +87,8 @@ const normalizeHostname = (hostname: string) => {
 };
 
 const isBlockedTimetableAddress = (address: string, family: number) => {
-  if (family === 6) return blockedTimetableAddresses.check(address, "ipv6");
-  return blockedTimetableAddresses.check(address, "ipv4");
+  if (family === 6) return blockedTimetableIpv6Addresses.check(address, "ipv6");
+  return blockedTimetableIpv4Addresses.check(address, "ipv4");
 };
 
 export const resolvePublicTimetableAddressesAsync = async (baseUrl: string): Promise<TimetableResolvedAddress[]> => {
