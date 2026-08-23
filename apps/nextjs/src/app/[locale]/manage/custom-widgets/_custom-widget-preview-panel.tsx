@@ -1,19 +1,7 @@
 "use client";
 
 import { memo, useMemo, useState } from "react";
-import {
-  Alert,
-  Box,
-  Card,
-  Group,
-  Paper,
-  SegmentedControl,
-  Stack,
-  Switch,
-  Tabs,
-  Text,
-  VisuallyHidden,
-} from "@mantine/core";
+import { Alert, Box, Card, Group, Paper, SegmentedControl, Stack, Switch, Tabs, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
@@ -27,6 +15,7 @@ import { getPreviewSummary, PreviewResult, PreviewStatusDot } from "./_custom-wi
 import type { PreviewOutcome } from "./_custom-widget-preview-status";
 import { PreviewActionControl } from "./_custom-widget-preview-action";
 import { createPreviewDisplayData } from "./_custom-widget-preview-data";
+import { CustomWidgetPreviewSizeControl } from "./_custom-widget-preview-size-control";
 import { JsonPreviewEditor } from "./_json-preview-editor";
 import classes from "./_custom-widget-form.module.css";
 
@@ -128,40 +117,7 @@ function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
     <Card withBorder p="md">
       <Stack gap="md">
         <Group gap="xs" justify="space-between">
-          <SegmentedControl
-            size="xs"
-            value={props.size}
-            onChange={props.onSizeChange}
-            data={[
-              {
-                value: "compact",
-                label: (
-                  <span title={t("size.compact")}>
-                    <span aria-hidden>S</span>
-                    <VisuallyHidden>{t("size.compact")}</VisuallyHidden>
-                  </span>
-                ),
-              },
-              {
-                value: "standard",
-                label: (
-                  <span title={t("size.standard")}>
-                    <span aria-hidden>M</span>
-                    <VisuallyHidden>{t("size.standard")}</VisuallyHidden>
-                  </span>
-                ),
-              },
-              {
-                value: "wide",
-                label: (
-                  <span title={t("size.wide")}>
-                    <span aria-hidden>L</span>
-                    <VisuallyHidden>{t("size.wide")}</VisuallyHidden>
-                  </span>
-                ),
-              },
-            ]}
-          />
+          <CustomWidgetPreviewSizeControl value={props.size} onChange={props.onSizeChange} />
           <SegmentedControl
             size="xs"
             value={fixture}

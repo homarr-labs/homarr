@@ -1069,8 +1069,11 @@
         },
         "size": {
           "compact": "Compact",
+          "compactShort": "S",
           "standard": "Standard",
-          "wide": "Wide"
+          "standardShort": "M",
+          "wide": "Wide",
+          "wideShort": "L"
         },
         "fixture": {
           "live": "Live",

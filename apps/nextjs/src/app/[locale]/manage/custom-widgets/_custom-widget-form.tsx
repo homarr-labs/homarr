@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Box, Button, Paper, SegmentedControl, Stack, TextInput, Textarea } from "@mantine/core";
 import {
   IconAlertCircle,
@@ -12,15 +12,9 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 
-import {
-  analyzeJsxTemplate,
-  analyzeRequestManifest,
-  customWidgetFormSchema,
-  DEFAULT_CUSTOM_WIDGET_FORM_VALUES,
-} from "@homarr/custom-widgets/workbench";
-import type { CustomWidgetAiDiagnostic, CustomWidgetAiDraft } from "@homarr/custom-widgets/authoring-prompt";
-import { customWidgetOptionsSchema, getCustomWidgetDefaultOptions } from "@homarr/custom-widgets/core";
-import type { CustomWidgetFormValues, EditorDiagnostic } from "@homarr/custom-widgets/workbench";
+import { getCustomWidgetDefaultOptions } from "@homarr/custom-widgets/core";
+import { customWidgetFormSchema, DEFAULT_CUSTOM_WIDGET_FORM_VALUES } from "@homarr/custom-widgets/workbench";
+import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
 import { useZodForm } from "@homarr/form";
 import { IconPicker } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
@@ -28,10 +22,9 @@ import { useI18n } from "@homarr/translation/client";
 import { CodeEditor } from "./_code-editor";
 import { CustomWidgetAiCard } from "./_custom-widget-ai-card";
 import { CustomWidgetAdvancedManifest } from "./_custom-widget-advanced-manifest";
-import { createCustomWidgetCompletions, getInvalidCustomWidgetSections } from "./_custom-widget-form-analysis";
 import { EditorSection, SaveActions } from "./_custom-widget-form-layout";
 import { customWidgetOptionsSchemaReference, customWidgetRequestReference } from "./_custom-widget-form-references";
-import { buildDefinition, getDefinitionDefaults, isRecord, parseJson } from "./_custom-widget-form-utils";
+import { buildDefinition, getDefinitionDefaults } from "./_custom-widget-form-utils";
 import { CustomWidgetOptionsEditor } from "./_custom-widget-options-editor";
 import { CustomWidgetPreviewPanel } from "./_custom-widget-preview-panel";
 import type { PreviewState } from "./_custom-widget-preview-panel";
@@ -41,6 +34,7 @@ import { CustomWidgetSaveIssuesAlert } from "./_custom-widget-save-issues-alert"
 import { CustomWidgetSourcesEditor } from "./_custom-widget-sources-editor";
 import { LazyOnceAccordion } from "./_lazy-once-accordion";
 import { useCustomWidgetFormActions } from "./_use-custom-widget-form-actions";
+import { useCustomWidgetFormAnalysis } from "./_use-custom-widget-form-analysis";
 import { useUnsavedChangesGuard } from "./_use-unsaved-changes-guard";
 import classes from "./_custom-widget-form.module.css";
 
@@ -57,20 +51,6 @@ const sectionLinks = [
   ["jsx", "section.jsx", IconCode],
   ["preview", "section.preview", IconEye],
 ] as const;
-
-function normalizeEditorDiagnostics(
-  section: "requests" | "template",
-  diagnostics: readonly EditorDiagnostic[],
-): CustomWidgetAiDiagnostic[] {
-  return diagnostics.map((diagnostic) => ({
-    section,
-    severity: diagnostic.severity,
-    code: diagnostic.code,
-    line: diagnostic.line,
-    column: diagnostic.column,
-    message: diagnostic.value,
-  }));
-}
 
 export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWidgetFormProps) {
   const t = useI18n("customWidget");
@@ -89,76 +69,18 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   });
   useUnsavedChangesGuard(form.isDirty());
 
-  const analysisValues = useDeferredValue(form.values);
-  const candidate = useMemo(() => buildDefinition(analysisValues), [analysisValues]);
-  const parsedOptions = useMemo(
-    () => customWidgetOptionsSchema.safeParse(parseJson(analysisValues.options)),
-    [analysisValues.options],
-  );
-  const requestIds = useMemo(() => {
-    const parsedRequests = parseJson(analysisValues.requests);
-    return isRecord(parsedRequests) ? Object.keys(parsedRequests) : [];
-  }, [analysisValues.requests]);
-  const requestIdsSignature = requestIds.join("\0");
-  const jsxCompletions = useMemo(
-    () =>
-      createCustomWidgetCompletions(
-        { options: analysisValues.options, sources: analysisValues.sources },
-        requestIdsSignature ? requestIdsSignature.split("\0") : [],
-      ),
-    [analysisValues.options, analysisValues.sources, requestIdsSignature],
-  );
-  const templateDiagnostics = useMemo(
-    () => analyzeJsxTemplate(analysisValues.template, { requestIds }),
-    [analysisValues.template, requestIds],
-  );
-  const requestDiagnostics = useMemo(() => analyzeRequestManifest(analysisValues.requests), [analysisValues.requests]);
-  const hasDiagnostics = [...templateDiagnostics, ...requestDiagnostics].some((entry) => entry.severity === "error");
-  const invalidSections = useMemo(
-    () =>
-      getInvalidCustomWidgetSections(
-        candidate.success ? [] : candidate.error.issues,
-        requestDiagnostics,
-        templateDiagnostics,
-      ),
-    [candidate, requestDiagnostics, templateDiagnostics],
-  );
-  const aiDraft = useMemo<CustomWidgetAiDraft>(
-    () => ({
-      name: form.values.name,
-      description: form.values.description,
-      iconUrl: form.values.iconUrl,
-      sources: form.values.sources,
-      requests: form.values.requests,
-      options: form.values.options,
-      template: form.values.template,
-    }),
-    [
-      form.values.description,
-      form.values.iconUrl,
-      form.values.name,
-      form.values.options,
-      form.values.requests,
-      form.values.sources,
-      form.values.template,
-    ],
-  );
-  const aiDiagnostics = useMemo<CustomWidgetAiDiagnostic[]>(() => {
-    const diagnostics = [
-      ...normalizeEditorDiagnostics("requests", requestDiagnostics),
-      ...normalizeEditorDiagnostics("template", templateDiagnostics),
-    ];
-    if (candidate.success) return diagnostics;
-    return [
-      ...candidate.error.issues.map((issue) => ({
-        section: String(issue.path[0] ?? "definition"),
-        severity: "error" as const,
-        path: issue.path.map(String).join(".") || undefined,
-        message: issue.message,
-      })),
-      ...diagnostics,
-    ];
-  }, [candidate, requestDiagnostics, templateDiagnostics]);
+  const {
+    candidate,
+    parsedOptions,
+    jsxCompletions,
+    templateDiagnostics,
+    requestDiagnostics,
+    hasDiagnostics,
+    invalidSections,
+    aiDraft,
+    aiDiagnostics,
+    previewValidationIssues,
+  } = useCustomWidgetFormAnalysis(form.values);
 
   const { save, runPreview, pasteAiResponse, saveIssues, savePending, previewPending } = useCustomWidgetFormActions({
     mode,
@@ -178,16 +100,6 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     form,
     invalidWidgetMessage: w("invalidWidget"),
   });
-  const previewValidationIssues = useMemo(
-    () =>
-      candidate.success
-        ? []
-        : candidate.error.issues.map((issue) => ({
-            path: issue.path.map(String).join(".") || undefined,
-            message: issue.message,
-          })),
-    [candidate],
-  );
   const handleLiveActionsChange = useCallback(
     (enabled: boolean) =>
       setPreview((current) => ({

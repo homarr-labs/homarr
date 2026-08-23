@@ -6,6 +6,7 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 import { renderSafeJsx } from "../jsx/interpreter";
 import { CustomJsxInputsProvider } from "../jsx/runtime-components";
 import type { WidgetInputType, WidgetInputValue } from "../jsx/runtime-components";
+import { sameInputRecord, sameStringArray, sameTypeRecord } from "./input-state-utils";
 import type { CustomJsxRequestCapability } from "./types";
 
 const EMPTY_RECORD: Record<string, never> = {};
@@ -286,22 +287,4 @@ function createBoundaryKey(template: string, bindings: Readonly<Record<string, u
   const value = `${template}\0${JSON.stringify(bindings)}`;
   for (let index = 0; index < value.length; index += 1) hash = (hash * 31 + value.charCodeAt(index)) | 0;
   return `${template.length}:${hash}`;
-}
-
-function sameStringArray(left: string[], right: string[]) {
-  return left.length === right.length && left.every((value, index) => value === right[index]);
-}
-
-function sameTypeRecord(left: Record<string, WidgetInputType>, right: Record<string, WidgetInputType>) {
-  const leftEntries = Object.entries(left);
-  const rightEntries = Object.entries(right);
-  return leftEntries.length === rightEntries.length && leftEntries.every(([name, type]) => right[name] === type);
-}
-
-function sameInputRecord(left: Record<string, WidgetInputValue>, right: Record<string, WidgetInputValue>) {
-  const leftEntries = Object.entries(left);
-  const rightEntries = Object.entries(right);
-  return (
-    leftEntries.length === rightEntries.length && leftEntries.every(([name, value]) => Object.is(right[name], value))
-  );
 }
