@@ -1,0 +1,79 @@
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 5,7,22,43,161-179,346-351
+packages/widgets/src/common/widget-time-context.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 1-12
+apps/nextjs/src/components/board/items/item-content.module.css
+  s_3e036d74c3a222::t_c1a97a6513fcd9 1-14
+apps/nextjs/src/app/[locale]/_client-providers/query-persistence.spec.ts
+  s_3e036d74c3a222::t_c1a97a6513fcd9 1-215
+packages/widgets/src/common/widget-time-context.spec.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 1-41
+packages/widgets/src/dns-hole/summary/component.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 34,57
+  s_3e036d74c3a222::t_9ad81781a3a823 35
+packages/widgets/src/media-requests/stats/component.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 26-27,46-47,51
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 99
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 26-27,47-52,129
+apps/nextjs/src/components/assistant/assistant-widget-tool.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 3,16-17,33,58,64-102,108-109,122-124,176,192,201,274
+packages/widgets/src/common/use-widget-now.ts
+  s_3e036d74c3a222::t_c1a97a6513fcd9 5-6,25-26
+apps/nextjs/src/components/assistant/assistant-widget-tool.spec.ts
+  s_3e036d74c3a222::t_c1a97a6513fcd9 23,45,93,99
+packages/widgets/src/time.ts
+  s_3e036d74c3a222::t_c1a97a6513fcd9 1-3
+packages/widgets/package.json
+  s_3e036d74c3a222::t_c1a97a6513fcd9 34
+apps/nextjs/package.json
+  s_3e036d74c3a222::t_c1a97a6513fcd9 75,80
+packages/widgets/src/dns-hole/controls/component.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 37,143
+  s_3e036d74c3a222::t_9ad81781a3a823 38
+packages/widgets/src/calendar/component.tsx
+  s_3e036d74c3a222::t_9ad81781a3a823 19
+  s_3e036d74c3a222::t_c1a97a6513fcd9 18,102
+apps/nextjs/src/components/assistant/assistant-provider.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 35
+packages/api/src/test/query-cache.spec.ts
+  s_3e036d74c3a222::t_c1a97a6513fcd9 25,42
+apps/nextjs/src/components/assistant/widget-import-boundary.spec.ts
+  s_3e036d74c3a222::t_c1a97a6513fcd9 1-30
+packages/widgets/src/clock/use-current-time.ts
+  s_3e036d74c3a222::t_c1a97a6513fcd9 1,3-4
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 6,8,39-46,84-87,89,96-99,155,205-216,219
+e2e/lazy-widgets.spec.ts
+  s_3e036d74c3a222::t_c1a97a6513fcd9 94,118
+packages/api/src/query-cache.ts
+  s_3e036d74c3a222::t_c1a97a6513fcd9 11
+pnpm-workspace.yaml
+  s_3e036d74c3a222::t_c1a97a6513fcd9 66-67
+apps/nextjs/src/app/[locale]/_client-providers/query-persistence.ts
+  s_3e036d74c3a222::t_c1a97a6513fcd9 1-158
+packages/widgets/src/downloads/component.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 57,745
+  s_3e036d74c3a222::t_9ad81781a3a823 58
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 12,43,159-161,164-180
+packages/widgets/src/media-requests/list/component.tsx
+  s_3e036d74c3a222::t_c1a97a6513fcd9 18-19,39-47,49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "a2a408410a3e9cf22e0c0f250cb21ec7eb355e20",
+  "prompts": {},
+  "sessions": {
+    "s_3e036d74c3a222": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b04ee47-04c5-4ad9-9dbf-0a13c0b96fdd",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
