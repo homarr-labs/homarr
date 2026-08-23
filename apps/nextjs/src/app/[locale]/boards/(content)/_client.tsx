@@ -9,7 +9,6 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import { getRepresentativeLayoutWidth } from "@homarr/boards/layout-preview";
 import { useI18n } from "@homarr/translation/client";
 import { FloatingTip } from "@homarr/ui";
-import { WidgetTimeProvider } from "@homarr/widgets/time";
 
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
 import { BoardEmptyState } from "~/components/board/board-empty-state";
@@ -40,13 +39,7 @@ const BoardSelectionGridProvider = ({ children }: PropsWithChildren) => (
   </GridEditorRegistryProvider>
 );
 
-export const ClientBoard = ({
-  initialTimestamp,
-  initialTimeZone,
-}: {
-  initialTimestamp: number;
-  initialTimeZone: string;
-}) => {
+export const ClientBoard = () => {
   const board = useRequiredBoard();
   const t = useI18n("board.landmark");
   const tPreview = useI18n("board.setting.section.layout.preview");
@@ -162,27 +155,23 @@ export const ClientBoard = ({
     </BoardSelectionGridProvider>
   );
 
+  if (representativeWidth === null) return content;
+
   return (
-    <WidgetTimeProvider initialTimestamp={initialTimestamp} initialTimeZone={initialTimeZone}>
-      {representativeWidth === null ? (
-        content
-      ) : (
-        <Stack align="center" gap="xs" p="md" mih="100%">
-          <Text size="xs" c="dimmed" fw={500}>
-            {tPreview("editorWidthLabel", { layoutName: currentLayout.name, width: representativeWidth })}
-          </Text>
-          <Paper
-            withBorder
-            shadow="sm"
-            radius="md"
-            w={`min(${representativeWidth}px, calc(100vw - 2rem))`}
-            mih="calc(100dvh - 8rem)"
-            style={{ overflow: "hidden" }}
-          >
-            {content}
-          </Paper>
-        </Stack>
-      )}
-    </WidgetTimeProvider>
+    <Stack align="center" gap="xs" p="md" mih="100%">
+      <Text size="xs" c="dimmed" fw={500}>
+        {tPreview("editorWidthLabel", { layoutName: currentLayout.name, width: representativeWidth })}
+      </Text>
+      <Paper
+        withBorder
+        shadow="sm"
+        radius="md"
+        w={`min(${representativeWidth}px, calc(100vw - 2rem))`}
+        mih="calc(100dvh - 8rem)"
+        style={{ overflow: "hidden" }}
+      >
+        {content}
+      </Paper>
+    </Stack>
   );
 };

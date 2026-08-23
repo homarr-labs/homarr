@@ -132,7 +132,9 @@ describe("lazy widget application graph", () => {
         `[data-id="${clockItemId}"] .clock-widget-container, [data-grid-item-id="${clockItemId}"] .clock-widget-container`,
       );
       await expect(clockWidget.filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
-      await expect(clockWidget.locator("time").filter({ visible: true }).first()).not.toHaveText("--:--");
+      await expect(clockWidget.locator("time").filter({ visible: true }).first()).not.toHaveText("--:--", {
+        timeout: 30_000,
+      });
       const downloadsWidget = page
         .locator(`[data-id="${downloadsItemId}"], [data-grid-item-id="${downloadsItemId}"]`)
         .filter({ visible: true })
@@ -163,7 +165,9 @@ describe("lazy widget application graph", () => {
 
       await page.reload({ waitUntil: "domcontentloaded" });
       await expect(clockWidget.filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
-      await expect(clockWidget.locator("time").filter({ visible: true }).first()).not.toHaveText("--:--");
+      await expect(clockWidget.locator("time").filter({ visible: true }).first()).not.toHaveText("--:--", {
+        timeout: 30_000,
+      });
       await expect.poll(() => refreshRequestStarted, { timeout: 10_000 }).toBe(true);
       await expect(cachedDownload).toBeVisible({ timeout: 5_000 });
       await expect(downloadsWidget.locator("[data-widget-refreshing]")).toBeVisible();

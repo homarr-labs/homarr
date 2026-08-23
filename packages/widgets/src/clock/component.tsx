@@ -4,13 +4,12 @@ import { Box, Center, Stack, Text, Title } from "@mantine/core";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 
-import { useWidgetLocalTimeZone } from "../common/widget-time-context";
 import type { WidgetComponentProps } from "../definition";
 import { AdvancedClockView } from "./advanced-view";
 import { clockTimeFormatShowsSeconds, resolveClockTimeFormat } from "./format";
 import { useCurrentTime } from "./use-current-time";
 import { ClockWeatherSummary } from "./weather-summary";
-import { isTimeZoneSupported } from "./world-clock";
+import { getResolvedLocalTimeZone, isTimeZoneSupported } from "./world-clock";
 
 dayjs.extend(advancedFormat);
 
@@ -18,8 +17,7 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
   const isAdvanced = displayMode === "advanced";
   const showSeconds = clockTimeFormatShowsSeconds(options.customTimeFormat);
   const time = useCurrentTime({ showSeconds });
-  const localTimeZone = useWidgetLocalTimeZone();
-  const requestedTimeZone = options.useCustomTimezone ? options.timezone : localTimeZone;
+  const requestedTimeZone = options.useCustomTimezone ? options.timezone : getResolvedLocalTimeZone();
   const primaryTimeZoneInvalid = !isTimeZoneSupported(requestedTimeZone);
   const primaryTimeZone = primaryTimeZoneInvalid ? "UTC" : requestedTimeZone;
   const zonedTime = time === null ? null : dayjs(time).tz(primaryTimeZone);

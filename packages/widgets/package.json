@@ -31,7 +31,6 @@
     "./modals": "./src/modals/index.ts",
     "./prefetch": "./src/prefetch.ts",
     "./refetch-intervals": "./src/refetch-intervals.ts",
-    "./time": "./src/time.ts",
     "./widget-card-shell": "./src/widget-card-shell.tsx"
   },
   "scripts": {
