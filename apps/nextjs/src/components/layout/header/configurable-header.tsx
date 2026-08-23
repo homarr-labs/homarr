@@ -208,11 +208,9 @@ const HeaderItem = ({
 
   if (item.id === "logo") {
     return (
-      <Tooltip label={label("logo")}>
-        <UnstyledButton component={Link} href="/" className={classes.logo} aria-label={label("logo")}>
-          {logo}
-        </UnstyledButton>
-      </Tooltip>
+      <UnstyledButton component={Link} href="/" className={classes.logo} aria-label={label("logo")}>
+        {logo}
+      </UnstyledButton>
     );
   }
 
