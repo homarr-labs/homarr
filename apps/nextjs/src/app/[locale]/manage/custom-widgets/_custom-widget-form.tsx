@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Accordion, Box, Button, Paper, SegmentedControl, Stack, TextInput, Textarea } from "@mantine/core";
+import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { Box, Button, Paper, SegmentedControl, Stack, TextInput, Textarea } from "@mantine/core";
 import {
   IconAlertCircle,
   IconApi,
@@ -18,8 +18,9 @@ import {
   customWidgetFormSchema,
   DEFAULT_CUSTOM_WIDGET_FORM_VALUES,
 } from "@homarr/custom-widgets/workbench";
+import type { CustomWidgetAiDiagnostic, CustomWidgetAiDraft } from "@homarr/custom-widgets/authoring-prompt";
 import { customWidgetOptionsSchema, getCustomWidgetDefaultOptions } from "@homarr/custom-widgets/core";
-import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
+import type { CustomWidgetFormValues, EditorDiagnostic } from "@homarr/custom-widgets/workbench";
 import { useZodForm } from "@homarr/form";
 import { IconPicker } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
@@ -38,6 +39,7 @@ import { CustomWidgetRequestsEditor } from "./_custom-widget-requests-editor";
 import { createCustomWidgetRenameHandlers } from "./_custom-widget-rename-handlers";
 import { CustomWidgetSaveIssuesAlert } from "./_custom-widget-save-issues-alert";
 import { CustomWidgetSourcesEditor } from "./_custom-widget-sources-editor";
+import { LazyOnceAccordion } from "./_lazy-once-accordion";
 import { useCustomWidgetFormActions } from "./_use-custom-widget-form-actions";
 import { useUnsavedChangesGuard } from "./_use-unsaved-changes-guard";
 import classes from "./_custom-widget-form.module.css";
@@ -56,6 +58,20 @@ const sectionLinks = [
   ["preview", "section.preview", IconEye],
 ] as const;
 
+function normalizeEditorDiagnostics(
+  section: "requests" | "template",
+  diagnostics: readonly EditorDiagnostic[],
+): CustomWidgetAiDiagnostic[] {
+  return diagnostics.map((diagnostic) => ({
+    section,
+    severity: diagnostic.severity,
+    code: diagnostic.code,
+    line: diagnostic.line,
+    column: diagnostic.column,
+    message: diagnostic.value,
+  }));
+}
+
 export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWidgetFormProps) {
   const t = useI18n("customWidget");
   const tCommon = useI18n("common");
@@ -73,27 +89,30 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   });
   useUnsavedChangesGuard(form.isDirty());
 
-  const candidate = useMemo(() => buildDefinition(form.values), [form.values]);
+  const analysisValues = useDeferredValue(form.values);
+  const candidate = useMemo(() => buildDefinition(analysisValues), [analysisValues]);
   const parsedOptions = useMemo(
-    () => customWidgetOptionsSchema.safeParse(parseJson(form.values.options)),
-    [form.values.options],
+    () => customWidgetOptionsSchema.safeParse(parseJson(analysisValues.options)),
+    [analysisValues.options],
   );
-  const requestIds = useMemo(
-    () =>
-      Object.keys(
-        isRecord(parseJson(form.values.requests)) ? (parseJson(form.values.requests) as Record<string, unknown>) : {},
-      ),
-    [form.values.requests],
-  );
+  const requestIds = useMemo(() => {
+    const parsedRequests = parseJson(analysisValues.requests);
+    return isRecord(parsedRequests) ? Object.keys(parsedRequests) : [];
+  }, [analysisValues.requests]);
+  const requestIdsSignature = requestIds.join("\0");
   const jsxCompletions = useMemo(
-    () => createCustomWidgetCompletions(form.values, requestIds),
-    [form.values, requestIds],
+    () =>
+      createCustomWidgetCompletions(
+        { options: analysisValues.options, sources: analysisValues.sources },
+        requestIdsSignature ? requestIdsSignature.split("\0") : [],
+      ),
+    [analysisValues.options, analysisValues.sources, requestIdsSignature],
   );
   const templateDiagnostics = useMemo(
-    () => analyzeJsxTemplate(form.values.template, { requestIds }),
-    [form.values.template, requestIds],
+    () => analyzeJsxTemplate(analysisValues.template, { requestIds }),
+    [analysisValues.template, requestIds],
   );
-  const requestDiagnostics = useMemo(() => analyzeRequestManifest(form.values.requests), [form.values.requests]);
+  const requestDiagnostics = useMemo(() => analyzeRequestManifest(analysisValues.requests), [analysisValues.requests]);
   const hasDiagnostics = [...templateDiagnostics, ...requestDiagnostics].some((entry) => entry.severity === "error");
   const invalidSections = useMemo(
     () =>
@@ -104,13 +123,47 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       ),
     [candidate, requestDiagnostics, templateDiagnostics],
   );
+  const aiDraft = useMemo<CustomWidgetAiDraft>(
+    () => ({
+      name: form.values.name,
+      description: form.values.description,
+      iconUrl: form.values.iconUrl,
+      sources: form.values.sources,
+      requests: form.values.requests,
+      options: form.values.options,
+      template: form.values.template,
+    }),
+    [
+      form.values.description,
+      form.values.iconUrl,
+      form.values.name,
+      form.values.options,
+      form.values.requests,
+      form.values.sources,
+      form.values.template,
+    ],
+  );
+  const aiDiagnostics = useMemo<CustomWidgetAiDiagnostic[]>(() => {
+    const diagnostics = [
+      ...normalizeEditorDiagnostics("requests", requestDiagnostics),
+      ...normalizeEditorDiagnostics("template", templateDiagnostics),
+    ];
+    if (candidate.success) return diagnostics;
+    return [
+      ...candidate.error.issues.map((issue) => ({
+        section: String(issue.path[0] ?? "definition"),
+        severity: "error" as const,
+        path: issue.path.map(String).join(".") || undefined,
+        message: issue.message,
+      })),
+      ...diagnostics,
+    ];
+  }, [candidate, requestDiagnostics, templateDiagnostics]);
 
   const { save, runPreview, pasteAiResponse, saveIssues, savePending, previewPending } = useCustomWidgetFormActions({
     mode,
     definitionId,
     form,
-    candidate,
-    preview,
     setPreview,
     setMobilePane,
     optionsSnapshot,
@@ -123,9 +176,26 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
   const invalid = hasDiagnostics || !candidate.success;
   const { renameRequest, renameOption } = createCustomWidgetRenameHandlers({
     form,
-    candidate,
     invalidWidgetMessage: w("invalidWidget"),
   });
+  const previewValidationIssues = useMemo(
+    () =>
+      candidate.success
+        ? []
+        : candidate.error.issues.map((issue) => ({
+            path: issue.path.map(String).join(".") || undefined,
+            message: issue.message,
+          })),
+    [candidate],
+  );
+  const handleLiveActionsChange = useCallback(
+    (enabled: boolean) =>
+      setPreview((current) => ({
+        ...current,
+        session: current.session ? { ...current.session, liveActions: enabled } : null,
+      })),
+    [],
+  );
   return (
     <form onSubmit={save} className={classes.form}>
       <SegmentedControl
@@ -161,7 +231,8 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
       <div className={classes.workbench} data-mobile-pane={mobilePane}>
         <Stack gap="lg" className={classes.configuration}>
           <CustomWidgetAiCard
-            candidate={candidate.success ? candidate.data : null}
+            draft={aiDraft}
+            diagnostics={aiDiagnostics}
             request={request}
             onRequestChange={setRequest}
             documentationUrl={documentationUrl}
@@ -183,44 +254,34 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           </EditorSection>
           <EditorSection id="requests" title={w("requests.title")} icon={IconDatabase}>
             <CustomWidgetRequestsEditor form={form} onRename={renameRequest} />
-            <Accordion variant="contained">
-              <Accordion.Item value="raw">
-                <Accordion.Control>{w("builder.advancedJson")}</Accordion.Control>
-                <Accordion.Panel>
-                  <CodeEditor
-                    id="requests-editor"
-                    label={w("requests.label")}
-                    description={w("requests.description")}
-                    language="json"
-                    value={form.values.requests}
-                    onChange={(value) => form.setFieldValue("requests", value)}
-                    diagnostics={requestDiagnostics}
-                    error={form.errors.requests}
-                    reference={customWidgetRequestReference}
-                    required
-                  />
-                </Accordion.Panel>
-              </Accordion.Item>
-            </Accordion>
+            <LazyOnceAccordion label={w("builder.advancedJson")}>
+              <CodeEditor
+                id="requests-editor"
+                label={w("requests.label")}
+                description={w("requests.description")}
+                language="json"
+                value={form.values.requests}
+                onChange={(value) => form.setFieldValue("requests", value)}
+                diagnostics={requestDiagnostics}
+                error={form.errors.requests}
+                reference={customWidgetRequestReference}
+                required
+              />
+            </LazyOnceAccordion>
           </EditorSection>
           <EditorSection id="options" title={w("options.title")} icon={IconBraces}>
             <CustomWidgetOptionsEditor form={form} onRename={renameOption} />
-            <Accordion variant="contained">
-              <Accordion.Item value="raw">
-                <Accordion.Control>{w("builder.advancedJson")}</Accordion.Control>
-                <Accordion.Panel>
-                  <CodeEditor
-                    id="options"
-                    label={w("options.title")}
-                    language="json"
-                    value={form.values.options}
-                    onChange={(value) => form.setFieldValue("options", value)}
-                    error={form.errors.options}
-                    reference={customWidgetOptionsSchemaReference}
-                  />
-                </Accordion.Panel>
-              </Accordion.Item>
-            </Accordion>
+            <LazyOnceAccordion label={w("builder.advancedJson")}>
+              <CodeEditor
+                id="options-editor"
+                label={w("options.title")}
+                language="json"
+                value={form.values.options}
+                onChange={(value) => form.setFieldValue("options", value)}
+                error={form.errors.options}
+                reference={customWidgetOptionsSchemaReference}
+              />
+            </LazyOnceAccordion>
           </EditorSection>
           <EditorSection id="jsx" title={w("jsx.title")} icon={IconCode}>
             <CodeEditor
@@ -260,25 +321,13 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
           </Paper>
           <CustomWidgetPreviewPanel
             candidate={candidate.success ? candidate.data : null}
-            validationIssues={
-              candidate.success
-                ? []
-                : candidate.error.issues.map((issue) => ({
-                    path: issue.path.map(String).join(".") || undefined,
-                    message: issue.message,
-                  }))
-            }
+            validationIssues={previewValidationIssues}
             preview={preview}
             size={previewSize}
             onSizeChange={setPreviewSize}
             optionsSnapshot={optionsSnapshot}
             onOptionsChange={setOptionsSnapshot}
-            onLiveActionsChange={(enabled) =>
-              setPreview((current) => ({
-                ...current,
-                session: current.session ? { ...current.session, liveActions: enabled } : null,
-              }))
-            }
+            onLiveActionsChange={handleLiveActionsChange}
           />
         </Box>
       </div>

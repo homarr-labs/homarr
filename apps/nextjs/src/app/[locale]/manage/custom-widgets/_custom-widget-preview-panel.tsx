@@ -1,7 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { Alert, Box, Card, Group, Paper, SegmentedControl, Stack, Switch, Tabs, Text } from "@mantine/core";
+import { memo, useMemo, useState } from "react";
+import {
+  Alert,
+  Box,
+  Card,
+  Group,
+  Paper,
+  SegmentedControl,
+  Stack,
+  Switch,
+  Tabs,
+  Text,
+  VisuallyHidden,
+} from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { HomarrCustomWidgetV2 } from "@homarr/custom-widgets/core";
@@ -17,6 +29,8 @@ import { PreviewActionControl } from "./_custom-widget-preview-action";
 import { createPreviewDisplayData } from "./_custom-widget-preview-data";
 import { JsonPreviewEditor } from "./_json-preview-editor";
 import classes from "./_custom-widget-form.module.css";
+
+const previewWidths: Record<string, number> = { compact: 320, standard: 480, wide: 720 };
 
 export interface PreviewState {
   data: Record<string, unknown>;
@@ -36,7 +50,7 @@ interface PreviewPanelProps {
   onLiveActionsChange(enabled: boolean): void;
 }
 
-export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
+function CustomWidgetPreviewPanelContent(props: PreviewPanelProps) {
   const t = useI18n("customWidget.workbench.preview");
   const errorBoundaryMessages = useI18n("customWidget.editor.errorBoundary");
   const actionT = useI18n("common.action");
@@ -46,26 +60,55 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
     { sessionId: props.preview.session?.id ?? "" },
     { enabled: Boolean(props.preview.session), refetchInterval: props.preview.session ? 2_000 : false },
   );
-  const widths: Record<string, number> = { compact: 320, standard: 480, wide: 720 };
   const candidate = props.candidate;
-  const accessibilityIssues = candidate ? analyzeCustomWidgetAccessibility(candidate.template) : [];
-  const displayData = createPreviewDisplayData({
-    candidate,
-    fixture,
-    preview: props.preview,
-    options: props.optionsSnapshot,
-    fixtureError: t("fixtureError"),
-  });
-  const previewSummary = getPreviewSummary(props.preview.status);
-  const rendererResetKey = JSON.stringify({
-    template: candidate?.template,
-    requests: candidate?.requests,
-    fixture,
-    data: props.preview.data,
-    status: props.preview.status,
-    sessionId: props.preview.session?.id,
-    options: props.optionsSnapshot,
-  });
+  const candidateTemplate = candidate?.template;
+  const candidateRequests = candidate?.requests;
+  const previewCandidate = useMemo(() => {
+    if (candidateTemplate === undefined || candidateRequests === undefined) return null;
+    return { template: candidateTemplate, requests: candidateRequests };
+  }, [candidateRequests, candidateTemplate]);
+  const previewSnapshot = useMemo(
+    () => ({ data: props.preview.data, status: props.preview.status, session: props.preview.session }),
+    [props.preview.data, props.preview.session, props.preview.status],
+  );
+  const fixtureError = t("fixtureError");
+  const accessibilityIssues = useMemo(() => {
+    if (candidateTemplate === undefined) return [];
+    return analyzeCustomWidgetAccessibility(candidateTemplate);
+  }, [candidateTemplate]);
+  const displayData = useMemo(
+    () =>
+      createPreviewDisplayData({
+        candidate: previewCandidate,
+        fixture,
+        preview: previewSnapshot,
+        options: props.optionsSnapshot,
+        fixtureError,
+      }),
+    [fixture, fixtureError, previewCandidate, previewSnapshot, props.optionsSnapshot],
+  );
+  const previewSummary = useMemo(() => getPreviewSummary(props.preview.status), [props.preview.status]);
+  const rendererResetKey = useMemo(
+    () =>
+      JSON.stringify({
+        template: candidateTemplate,
+        requests: candidateRequests,
+        fixture,
+        data: props.preview.data,
+        status: props.preview.status,
+        sessionId: props.preview.session?.id,
+        options: props.optionsSnapshot,
+      }),
+    [
+      candidateRequests,
+      candidateTemplate,
+      fixture,
+      props.optionsSnapshot,
+      props.preview.data,
+      props.preview.session?.id,
+      props.preview.status,
+    ],
+  );
   const previewResult =
     props.preview.outcome === "success"
       ? {
@@ -93,24 +136,27 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
               {
                 value: "compact",
                 label: (
-                  <span aria-label={t("size.compact")} title={t("size.compact")}>
-                    S
+                  <span title={t("size.compact")}>
+                    <span aria-hidden>S</span>
+                    <VisuallyHidden>{t("size.compact")}</VisuallyHidden>
                   </span>
                 ),
               },
               {
                 value: "standard",
                 label: (
-                  <span aria-label={t("size.standard")} title={t("size.standard")}>
-                    M
+                  <span title={t("size.standard")}>
+                    <span aria-hidden>M</span>
+                    <VisuallyHidden>{t("size.standard")}</VisuallyHidden>
                   </span>
                 ),
               },
               {
                 value: "wide",
                 label: (
-                  <span aria-label={t("size.wide")} title={t("size.wide")}>
-                    L
+                  <span title={t("size.wide")}>
+                    <span aria-hidden>L</span>
+                    <VisuallyHidden>{t("size.wide")}</VisuallyHidden>
                   </span>
                 ),
               },
@@ -151,7 +197,14 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
           </Tabs.List>
           <Tabs.Panel value="widget" pt="sm">
             <Box className={classes.previewCanvas}>
-              <Paper withBorder p="sm" h={360} w={widths[props.size] ?? 480} maw="100%" style={{ overflow: "auto" }}>
+              <Paper
+                withBorder
+                p="sm"
+                h={360}
+                w={previewWidths[props.size] ?? 480}
+                maw="100%"
+                style={{ overflow: "auto" }}
+              >
                 {displayData ? (
                   <PreviewErrorBoundary
                     title={errorBoundaryMessages("title")}
@@ -264,3 +317,5 @@ export function CustomWidgetPreviewPanel(props: PreviewPanelProps) {
     </Card>
   );
 }
+
+export const CustomWidgetPreviewPanel = memo(CustomWidgetPreviewPanelContent);

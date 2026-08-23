@@ -39,7 +39,7 @@ interface CustomJsxInputsContextValue {
   scopeId: string;
   inputs: Record<string, WidgetInputValue>;
   inputTypes: Record<string, WidgetInputType>;
-  registerInput(name: string, type: WidgetInputType, initialValue: WidgetInputValue): void;
+  registerInput(name: string, type: WidgetInputType, initialValue: WidgetInputValue): () => void;
   setInputValue(name: string, type: WidgetInputType, value: WidgetInputValue): void;
 }
 
@@ -104,10 +104,13 @@ function useBoundProps(componentName: string, props: Record<string, unknown>): R
   delete sanitized.bind;
   const inputType = getCustomJsxBindingType(componentName, sanitized);
   const initialValue = getInitialInputValue(inputType, sanitized);
+  const serializedInitialValue = JSON.stringify(initialValue);
   const isBound = Boolean(binding && context && inputType && customJsxBindableComponentNames.has(componentName));
+  const registerInput = context?.registerInput;
   useEffect(() => {
-    if (isBound && binding && context && inputType) context.registerInput(binding, inputType, initialValue);
-  }, [binding, context, initialValue, inputType, isBound]);
+    if (!isBound || !binding || !registerInput || !inputType) return;
+    return registerInput(binding, inputType, JSON.parse(serializedInitialValue) as WidgetInputValue);
+  }, [binding, inputType, isBound, registerInput, serializedInitialValue]);
   if (!isBound || !binding || !context || !inputType) return sanitized;
   delete sanitized.defaultValue;
   delete sanitized.defaultChecked;

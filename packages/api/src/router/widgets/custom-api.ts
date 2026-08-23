@@ -243,6 +243,7 @@ export const customApiRouter = createTRPCRouter({
     return {
       type: "customJsx" as const,
       template: resolved.definition.template,
+      queryCacheKey: `${getCustomWidgetCacheVersion(resolved.stored)}:${hashRuntimeParams(resolved.configuration)}`,
       data: Object.fromEntries(entries.map(([id, result]) => [id, result.data])),
       status: Object.fromEntries(entries.map(([id, result]) => [id, result.status])),
       options: resolved.configuration,

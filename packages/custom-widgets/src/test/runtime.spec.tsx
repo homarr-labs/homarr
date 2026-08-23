@@ -78,14 +78,16 @@ async function render(
   port: CustomWidgetRuntimePort,
   capabilities: readonly CustomJsxRequestCapability[] = [],
   setQueryState?: (requestId: string, value: CustomWidgetPublishedQueryState | null) => void,
+  options?: { queryCacheKey?: string; queryClient?: QueryClient },
 ) {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const queryClient = options?.queryClient ?? new QueryClient({ defaultOptions: { queries: { retry: false } } });
   await act(async () => {
     root.render(
       <MantineProvider>
         <QueryClientProvider client={queryClient}>
           <CustomWidgetRuntimeProvider
             itemId="item-1"
+            queryCacheKey={options?.queryCacheKey}
             isEditMode={false}
             requestCapabilities={capabilities}
             port={port}
@@ -362,6 +364,17 @@ describe("Custom Widget runtime ports", () => {
       status: expect.objectContaining({ loading: false, ok: true, status: 200 }),
     });
     expect(host.querySelector("button, p, code, [role='alert']")).toBeNull();
+  });
+
+  it("does not reuse a query result after the effective definition changes", async () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const port = createPort();
+    await render(<SubFetch requestId="details" />, port, [], undefined, { queryCacheKey: "definition-a", queryClient });
+    await settle();
+    await render(<SubFetch requestId="details" />, port, [], undefined, { queryCacheKey: "definition-b", queryClient });
+    await settle();
+
+    expect(port.query).toHaveBeenCalledTimes(2);
   });
 
   it("uses a built-in manual trigger and passes successful request metadata to children", async () => {

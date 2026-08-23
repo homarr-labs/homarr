@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturnType } from "@mantine/form";
 
@@ -27,8 +27,6 @@ interface FormActionsInput {
   mode: "create" | "edit";
   definitionId?: string;
   form: UseFormReturnType<CustomWidgetFormValues>;
-  candidate: ReturnType<typeof buildDefinition>;
-  preview: PreviewState;
   setPreview: Dispatch<SetStateAction<PreviewState>>;
   setMobilePane: Dispatch<SetStateAction<"configure" | "preview">>;
   optionsSnapshot: Record<string, unknown>;
@@ -45,6 +43,71 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
   const [saveIssues, setSaveIssues] = useState<CustomWidgetSaveIssue[]>([]);
   const [previewPending, setPreviewPending] = useState(false);
+  const previewOptions = input.optionsSnapshot;
+  const previewOptionsFingerprint = useMemo(() => JSON.stringify(previewOptions), [previewOptions]);
+  const previewSecretValues = input.form.values.secrets;
+  const previewSecrets = useMemo(() => getChangedSecrets({ secrets: previewSecretValues }), [previewSecretValues]);
+  const previewSecretsFingerprint = useMemo(() => JSON.stringify(previewSecrets), [previewSecrets]);
+  const previewDefinitionValues = useMemo(
+    () => ({
+      name: input.form.values.name,
+      description: input.form.values.description,
+      iconUrl: input.form.values.iconUrl,
+      sources: input.form.values.sources,
+      requests: input.form.values.requests,
+      options: input.form.values.options,
+      template: input.form.values.template,
+    }),
+    [
+      input.form.values.description,
+      input.form.values.iconUrl,
+      input.form.values.name,
+      input.form.values.options,
+      input.form.values.requests,
+      input.form.values.sources,
+      input.form.values.template,
+    ],
+  );
+  const setPreview = input.setPreview;
+  const previewGeneration = useRef(0);
+  const latestPreviewInput = useRef({
+    definitionValues: previewDefinitionValues,
+    optionsFingerprint: previewOptionsFingerprint,
+    secretsFingerprint: previewSecretsFingerprint,
+  });
+  useLayoutEffect(() => {
+    const previous = latestPreviewInput.current;
+    const current = {
+      definitionValues: previewDefinitionValues,
+      optionsFingerprint: previewOptionsFingerprint,
+      secretsFingerprint: previewSecretsFingerprint,
+    };
+    latestPreviewInput.current = current;
+    if (
+      previous.definitionValues === current.definitionValues &&
+      previous.optionsFingerprint === current.optionsFingerprint &&
+      previous.secretsFingerprint === current.secretsFingerprint
+    )
+      return;
+    previewGeneration.current += 1;
+    setPreview((preview) => {
+      if (
+        preview.outcome === "idle" &&
+        preview.session === null &&
+        Object.keys(preview.data).length === 0 &&
+        Object.keys(preview.status).length === 0
+      )
+        return preview;
+      return { data: {}, status: {}, session: null, outcome: "idle" };
+    });
+    setPreviewPending(false);
+  }, [previewDefinitionValues, previewOptionsFingerprint, previewSecretsFingerprint, setPreview]);
+  useEffect(
+    () => () => {
+      previewGeneration.current += 1;
+    },
+    [],
+  );
   let actionLabel = tCommon("action.save");
   if (input.mode === "create") actionLabel = tCommon("action.create");
 
@@ -105,14 +168,15 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
 
   const runPreview = async () => {
     if (previewPending) return;
-    if (!input.candidate.success) {
+    const candidateAtStart = buildDefinition(input.form.values);
+    if (!candidateAtStart.success) {
       showErrorNotification({
         title: w("section.preview"),
-        message: input.candidate.error.issues[0]?.message ?? w("invalidWidget"),
+        message: candidateAtStart.error.issues[0]?.message ?? w("invalidWidget"),
       });
       return;
     }
-    const optionIssues = getCustomWidgetPreviewOptionIssues(input.candidate.data, input.optionsSnapshot);
+    const optionIssues = getCustomWidgetPreviewOptionIssues(candidateAtStart.data, input.optionsSnapshot);
     if (optionIssues.length > 0) {
       const issue = optionIssues[0];
       showErrorNotification({
@@ -121,17 +185,35 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       });
       return;
     }
+    const definitionValuesAtStart = previewDefinitionValues;
+    const optionsAtStart = input.optionsSnapshot;
+    const optionsFingerprintAtStart = previewOptionsFingerprint;
+    const secretsAtStart = previewSecrets;
+    const secretsFingerprintAtStart = previewSecretsFingerprint;
+    const generation = previewGeneration.current + 1;
+    previewGeneration.current = generation;
+    const isCurrent = () => {
+      const latest = latestPreviewInput.current;
+      return (
+        previewGeneration.current === generation &&
+        latest.definitionValues === definitionValuesAtStart &&
+        latest.optionsFingerprint === optionsFingerprintAtStart &&
+        latest.secretsFingerprint === secretsFingerprintAtStart
+      );
+    };
     input.setMobilePane("preview");
     input.setPreview({ data: {}, status: {}, session: null, outcome: "loading" });
     setPreviewPending(true);
     try {
       const created = await previewMutation.mutateAsync({
-        definition: input.candidate.data,
+        definition: candidateAtStart.data,
         definitionId: input.definitionId,
-        options: input.optionsSnapshot,
-        secrets: getChangedSecrets(input.form.values),
+        options: optionsAtStart,
+        secrets: secretsAtStart,
       });
-      const snapshot = await loadPreviewQueries(input.candidate.data, created.previewSession.id);
+      if (!isCurrent()) return;
+      const snapshot = await loadPreviewQueries(candidateAtStart.data, created.previewSession.id);
+      if (!isCurrent()) return;
       const failed = Object.values(snapshot.status).filter((status) => isRecord(status) && status.ok === false).length;
       input.setPreview({
         ...snapshot,
@@ -156,10 +238,13 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         });
       }
     } catch {
+      if (!isCurrent()) return;
       input.setPreview((current) => ({ ...current, outcome: "error" }));
       showErrorNotification({ title: w("section.preview"), message: t("notification.previewError") });
     } finally {
-      setPreviewPending(false);
+      if (isCurrent()) {
+        setPreviewPending(false);
+      }
     }
   };
 
