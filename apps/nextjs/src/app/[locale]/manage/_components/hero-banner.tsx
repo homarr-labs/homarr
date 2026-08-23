@@ -16,12 +16,13 @@ export const HeroBanner = async () => {
         <Title fz={{ base: "h4", md: "h2" }} c="dimmed">
           {t("heroBanner.title")}
         </Title>
-        <Group gap="xs" wrap="nowrap">
+        <Group gap="sm" wrap="nowrap">
           <Image
             src={logoImageUrl ?? "/logo/logo.png"}
             alt={`${appName} logo`}
-            w={{ base: 32, md: 40 }}
-            h={{ base: 32, md: 40 }}
+            w="auto"
+            h={{ base: 48, md: 64 }}
+            maw={{ base: 128, md: 192 }}
             fit="contain"
             style={{ flexShrink: 0 }}
           />
