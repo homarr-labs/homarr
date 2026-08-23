@@ -1,10 +1,11 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import {
   createWSClient,
   httpBatchStreamLink,
@@ -35,6 +36,13 @@ import { showWarningNotification } from "@homarr/notifications";
 import { widgetQueryRefetchIntervals } from "@homarr/widgets/refetch-intervals";
 
 import { getSessionQueryScope, SessionQueryScopeGuard } from "./session-query-scope";
+import {
+  createSessionQueryPersister,
+  queryPersistenceBuster,
+  queryPersistenceMaxAgeMs,
+  shouldPersistDashboardQuery,
+} from "./query-persistence";
+import type { SessionQueryPersister } from "./query-persistence";
 import { createQueryRetry } from "./query-retry";
 
 const DevelopmentTools =
@@ -67,21 +75,29 @@ export function TRPCReactProvider({ children }: PropsWithChildren) {
   const { data: session } = useSession();
   const sessionQueryScope = getSessionQueryScope(session);
   const [initialSessionQueryScope] = useState(() => sessionQueryScope);
+  const [queryPersister] = useState(() => createSessionQueryPersister(initialSessionQueryScope));
+  const handleScopeChange = useCallback(() => {
+    void queryPersister.removeClient();
+    reloadPage();
+  }, [queryPersister]);
 
   return (
     <SessionQueryScopeGuard
       initialScope={initialSessionQueryScope}
       currentScope={sessionQueryScope}
-      onScopeChange={reloadPage}
+      onScopeChange={handleScopeChange}
     >
-      <ScopedTRPCReactProvider>{children}</ScopedTRPCReactProvider>
+      <ScopedTRPCReactProvider queryPersister={queryPersister}>{children}</ScopedTRPCReactProvider>
     </SessionQueryScopeGuard>
   );
 }
 
 const reloadPage = () => window.location.reload();
 
-const ScopedTRPCReactProvider = ({ children }: PropsWithChildren) => {
+const ScopedTRPCReactProvider = ({
+  children,
+  queryPersister,
+}: PropsWithChildren<{ queryPersister: SessionQueryPersister }>) => {
   const wsClient = useMemo(
     () =>
       createWSClient({
@@ -136,6 +152,15 @@ const ScopedTRPCReactProvider = ({ children }: PropsWithChildren) => {
     return client;
   });
 
+  useEffect(() => {
+    const flush = () => queryPersister.flush();
+    window.addEventListener("pagehide", flush);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      flush();
+      queryPersister.stop();
+    };
+  }, [queryPersister]);
   useEffect(() => () => queryClient.clear(), [queryClient]);
 
   const trpcClient = useMemo(() => {
@@ -186,10 +211,18 @@ const ScopedTRPCReactProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <clientApi.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{
+          persister: queryPersister,
+          maxAge: queryPersistenceMaxAgeMs,
+          buster: queryPersistenceBuster,
+          dehydrateOptions: { shouldDehydrateQuery: shouldPersistDashboardQuery },
+        }}
+      >
         <ReactQueryStreamedHydration transformer={superjson}>{children}</ReactQueryStreamedHydration>
         {process.env.NODE_ENV === "development" && <DevelopmentTools />}
-      </QueryClientProvider>
+      </PersistQueryClientProvider>
     </clientApi.Provider>
   );
 };

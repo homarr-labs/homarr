@@ -30,6 +30,26 @@
   "options": {
     "reportUnusedDisableDirectives": "off"
   },
+  "overrides": [
+    {
+      "files": ["apps/nextjs/src/**/*.ts", "apps/nextjs/src/**/*.tsx"],
+      "excludeFiles": ["**/*.spec.ts", "**/*.spec.tsx"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "@homarr/widgets",
+                "allowTypeImports": true,
+                "message": "Import a narrow @homarr/widgets export to preserve widget lazy loading."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
   "ignorePatterns": [
     "**/*.config.js",
     "**/*.config.mjs",

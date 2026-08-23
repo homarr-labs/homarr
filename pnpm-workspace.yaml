@@ -63,6 +63,7 @@ catalog:
   "@tanstack/react-query": ^5.101.2
   "@tanstack/react-query-devtools": ^5.101.2
   "@tanstack/react-query-next-experimental": ^5.101.2
+  "@tanstack/react-query-persist-client": ^5.101.2
   "@testcontainers/mysql": ^12.0.4
   "@testcontainers/postgresql": ^12.0.4
   "@testcontainers/redis": ^12.0.4

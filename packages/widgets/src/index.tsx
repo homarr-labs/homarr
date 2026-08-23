@@ -3,9 +3,7 @@ import type { Loader } from "next/dynamic";
 import dynamic from "next/dynamic";
 import { Center, Loader as UiLoader } from "@mantine/core";
 
-import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
-import type { SettingsContextProps } from "@homarr/settings/creator";
 
 import * as anchorNote from "./anchor-note";
 import * as audioStats from "./audio-stats";
@@ -41,7 +39,6 @@ import * as notebook from "./notebook";
 import * as paperlessNgx from "./paperless-ngx";
 import * as patchmon from "./patchmon";
 import * as notifications from "./notifications";
-import type { WidgetOptionDefinition } from "./options";
 import * as releases from "./releases";
 import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
@@ -191,19 +188,3 @@ export type inferSupportedIntegrationsStrict<TKind extends WidgetKind> = (Widget
 }
   ? WidgetImports[TKind]["definition"]["supportedIntegrations"]
   : never[])[number];
-
-export const reduceWidgetOptionsWithDefaultValues = (
-  kind: WidgetKind,
-  settings: Pick<SettingsContextProps, "enableStatusByDefault" | "forceDisableStatus">,
-  currentValue: Record<string, unknown> = {},
-) => {
-  const definition = widgetImports[kind].definition;
-  const options = definition.createOptions(settings) as Record<string, WidgetOptionDefinition>;
-  return objectEntries(options).reduce(
-    (prev, [key, value]) => ({
-      ...prev,
-      [key]: currentValue[key] ?? value.defaultValue,
-    }),
-    {} as Record<string, unknown>,
-  );
-};

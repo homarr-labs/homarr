@@ -7771,6 +7771,8 @@
       "ready": "Widget configuration ready",
       "cancelled": "Widget was not added",
       "automaticContinue": "Accepting the proposed widget configuration automatically",
+      "definitionLoadErrorTitle": "Widget settings could not be loaded",
+      "definitionLoadErrorDescription": "Homarr could not load this widget's settings. Try again.",
       "loadErrorTitle": "Integrations could not be loaded",
       "loadErrorDescription": "Homarr could not load the integrations available for this widget.",
       "noIntegrationTitle": "A compatible integration is required",

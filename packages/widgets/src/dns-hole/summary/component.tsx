@@ -31,7 +31,8 @@ import type { TablerIcon } from "@homarr/ui";
 import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
-import { getUsableWidgetQueryData } from "../../common/query-state";
+import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
+import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 
 export default function DnsHoleSummaryWidget({
   options,
@@ -43,10 +44,8 @@ export default function DnsHoleSummaryWidget({
     integrationIds,
   });
   const summaries = getUsableWidgetQueryData(summaryQuery) ?? [];
-  const { isPending } = summaryQuery;
 
   const t = useI18n();
-  const tCommon = useI18n("common");
   const tDns = useI18n("widget.dnsHoleSummary");
   const tWidgetCommon = useI18n("widget.common");
 
@@ -55,15 +54,7 @@ export default function DnsHoleSummaryWidget({
   const layoutProps = boxPropsByLayout(options.layout);
   const showSourceStatuses = successfulSummaries.length > 1 && width >= 240 && height >= 220;
 
-  if (isPending) {
-    return (
-      <Stack h="100%" justify="center" align="center">
-        <Text c="dimmed" size="sm">
-          {tCommon("action.loading")}
-        </Text>
-      </Stack>
-    );
-  }
+  if (isInitialWidgetQueryPending(summaryQuery)) return <WidgetQueryLoadingState />;
 
   return (
     <Stack h="100%" gap={0} pos="relative">

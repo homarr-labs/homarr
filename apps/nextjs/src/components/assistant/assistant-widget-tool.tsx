@@ -1,9 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import { Suspense, use, useMemo } from "react";
 import type { ToolCallMessagePartProps } from "@assistant-ui/react";
 import { Alert, Box, Button, Group, Skeleton, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconAlertTriangle, IconCheck, IconSettings } from "@tabler/icons-react";
+import { ErrorBoundary } from "react-error-boundary";
+import type { FallbackProps } from "react-error-boundary";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -13,7 +15,8 @@ import { useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import { reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
+import type { WidgetDefinition } from "@homarr/widgets/definition";
+import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "@homarr/widgets/manifest";
 import type { IntegrationSelectOption } from "@homarr/widgets/widget-integration-select";
 import { WidgetEditModal } from "@homarr/widgets/modals";
 
@@ -29,11 +32,11 @@ interface AssistantIntegration extends IntegrationSelectOption {
 }
 
 export const getAssistantWidgetConfiguration = (
+  definition: WidgetDefinition,
   args: ConfigureWidgetArgs,
   settings: Pick<SettingsContextProps, "enableStatusByDefault" | "forceDisableStatus">,
   integrations: AssistantIntegration[],
 ) => {
-  const definition = widgetImports[args.kind].definition;
   const integrationSupport = "supportedIntegrations" in definition;
   const supportedIntegrations = integrationSupport
     ? (definition.supportedIntegrations as readonly IntegrationKind[])
@@ -54,35 +57,91 @@ export const getAssistantWidgetConfiguration = (
       integrationSupport && (!("integrationsRequired" in definition) || definition.integrationsRequired !== false),
     value: {
       advancedOptions: { title: null, customCssClasses: [], borderColor: "" },
-      options: reduceWidgetOptionsWithDefaultValues(args.kind, settings, args.options),
+      options: reduceWidgetOptionsWithDefinition(definition, settings, args.options),
       integrationIds,
     },
   };
 };
 
-export const AssistantConfigureWidgetTool = ({
+type AssistantConfigureWidgetToolProps = ToolCallMessagePartProps<ConfigureWidgetArgs, ConfigureWidgetResult>;
+
+export const AssistantConfigureWidgetTool = (props: AssistantConfigureWidgetToolProps) => {
+  const hasCompleteArguments = hasCompleteAssistantToolArguments(props.status);
+  const completeArgs =
+    props.result === undefined && !hasFailedAssistantToolArguments(props.status) && hasCompleteArguments
+      ? props.args
+      : undefined;
+
+  if (!completeArgs) return <AssistantConfigureWidgetToolContent {...props} definition={undefined} />;
+
+  return (
+    <ErrorBoundary FallbackComponent={AssistantWidgetDefinitionErrorFallback} resetKeys={[completeArgs.kind]}>
+      <Suspense fallback={<AssistantConfigureWidgetSkeleton />}>
+        <LoadedAssistantConfigureWidgetTool {...props} args={completeArgs} />
+      </Suspense>
+    </ErrorBoundary>
+  );
+};
+
+const AssistantWidgetDefinitionErrorFallback = ({ resetErrorBoundary }: FallbackProps) => {
+  const t = useI18n("assistant.configureWidget");
+  const actionT = useI18n("common.action");
+
+  return (
+    <Alert color="red" variant="light" title={t("definitionLoadErrorTitle")} icon={<IconAlertTriangle size={18} />}>
+      <Stack gap="sm">
+        <Text size="sm">{t("definitionLoadErrorDescription")}</Text>
+        <Button variant="light" color="red" size="compact-sm" w="fit-content" onClick={resetErrorBoundary}>
+          {actionT("tryAgain")}
+        </Button>
+      </Stack>
+    </Alert>
+  );
+};
+
+const LoadedAssistantConfigureWidgetTool = (
+  props: AssistantConfigureWidgetToolProps & { args: ConfigureWidgetArgs },
+) => {
+  const definition = use(loadWidgetDefinition(props.args.kind));
+  return <AssistantConfigureWidgetToolContent {...props} definition={definition} />;
+};
+
+const AssistantConfigureWidgetSkeleton = () => {
+  const t = useI18n("assistant.configureWidget");
+  return (
+    <Box className={classes.appTool} aria-label={t("preparing")}>
+      <Stack gap="sm">
+        <Skeleton height={18} width="45%" />
+        <Skeleton height={14} width="76%" />
+        <Skeleton height={38} />
+      </Stack>
+    </Box>
+  );
+};
+
+const AssistantConfigureWidgetToolContent = ({
   args,
   result,
   addResult,
   status,
   toolCallId,
-}: ToolCallMessagePartProps<ConfigureWidgetArgs, ConfigureWidgetResult>) => {
+  definition,
+}: AssistantConfigureWidgetToolProps & { definition: WidgetDefinition | undefined }) => {
   const t = useI18n("assistant.configureWidget");
   const actionT = useI18n("common.action");
   const fullT = useI18n();
   const { data: session } = useSession();
   const settings = useSettings();
   const hasCompleteArguments = hasCompleteAssistantToolArguments(status);
-  const definition = args?.kind ? widgetImports[args.kind].definition : undefined;
   const needsIntegrations = definition !== undefined && "supportedIntegrations" in definition;
   const integrations = clientApi.integration.all.useQuery(undefined, {
     enabled: result === undefined && hasCompleteArguments && needsIntegrations,
     retry: false,
   });
   const configuration = useMemo(() => {
-    if (!args || !hasCompleteArguments || (needsIntegrations && !integrations.data)) return null;
-    return getAssistantWidgetConfiguration(args, settings, integrations.data ?? []);
-  }, [args, hasCompleteArguments, integrations.data, needsIntegrations, settings]);
+    if (!args || !definition || !hasCompleteArguments || (needsIntegrations && !integrations.data)) return null;
+    return getAssistantWidgetConfiguration(definition, args, settings, integrations.data ?? []);
+  }, [args, definition, hasCompleteArguments, integrations.data, needsIntegrations, settings]);
   const missingRequiredIntegration =
     configuration?.integrationsRequired === true && configuration.value.integrationIds.length === 0;
   const { openModal: openWidgetModal } = useModalAction(WidgetEditModal);
@@ -134,15 +193,7 @@ export const AssistantConfigureWidgetTool = ({
   }
 
   if (!hasCompleteArguments || !args || (needsIntegrations && integrations.isPending)) {
-    return (
-      <Box className={classes.appTool} aria-label={t("preparing")}>
-        <Stack gap="sm">
-          <Skeleton height={18} width="45%" />
-          <Skeleton height={14} width="76%" />
-          <Skeleton height={38} />
-        </Stack>
-      </Box>
-    );
+    return <AssistantConfigureWidgetSkeleton />;
   }
 
   if (integrations.isError) {
@@ -158,7 +209,7 @@ export const AssistantConfigureWidgetTool = ({
     );
   }
 
-  if (!configuration) return null;
+  if (!configuration || !definition) return null;
 
   const openConfigurationModal = (
     value = configuration.value,
@@ -167,7 +218,7 @@ export const AssistantConfigureWidgetTool = ({
     openWidgetModal(
       {
         kind: args.kind,
-        definition: widgetImports[args.kind].definition,
+        definition,
         value,
         integrationData,
         integrationSupport: configuration.integrationSupport,
@@ -240,7 +291,7 @@ export const AssistantConfigureWidgetTool = ({
     );
   }
 
-  const WidgetIcon = widgetImports[args.kind].definition.icon;
+  const WidgetIcon = definition.icon;
   return (
     <Box className={classes.appTool}>
       <Group gap="sm" align="flex-start" wrap="nowrap">
