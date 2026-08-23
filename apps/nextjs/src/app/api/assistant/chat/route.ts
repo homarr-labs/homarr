@@ -6,7 +6,7 @@ import type { ToolSet, UIMessage } from "ai";
 import { createUIMessageStream, createUIMessageStreamResponse, jsonSchema, stepCountIs, streamText, tool } from "ai";
 import { z } from "zod/v4";
 
-import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
+import { createTRPCContext } from "@homarr/api/mcp";
 import {
   createAssistantGenerationAccessToken,
   getAssistantContextEntitiesAsync,
@@ -16,6 +16,7 @@ import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/common/env";
 import { decryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { and, eq } from "@homarr/db";
 import { db } from "@homarr/db";
 import { assistantConfigurations, assistantThreads } from "@homarr/db/schema";
@@ -35,7 +36,7 @@ import type {
   AssistantWebSearchSource,
 } from "~/components/assistant/assistant-message-metadata";
 
-import { extractMcpTools } from "../../mcp/_extract-tools";
+import { getMcpRuntimeAsync } from "../../mcp/_extract-tools";
 import { buildAssistantRequestContext, sanitizeAttachmentFilename } from "./assistant-chat-input";
 import { getAssistantModelLookupStatus } from "./assistant-model-lookup";
 import { convertAssistantMessagesToModelMessages } from "./assistant-message-conversion";
@@ -322,20 +323,6 @@ const sumCompleteStepMetric = (
   return (values as number[]).reduce((sum, value) => sum + value, 0);
 };
 
-const getProcedureTypeMap = () => {
-  const procedures = (
-    mcpRouter as unknown as {
-      ["_def"]: { procedures: Record<string, { ["_def"]?: { type?: string } }> };
-    }
-  )["_def"].procedures;
-  return new Map(
-    Object.entries(procedures).flatMap(([path, procedure]) => {
-      const type = procedure["_def"]?.type;
-      return type === "query" || type === "mutation" ? [[path, type] as const] : [];
-    }),
-  );
-};
-
 const waitForDemoChunkAsync = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 const createDemoAssistantResponse = (request: z.infer<typeof requestSchema>) => {
@@ -506,15 +493,24 @@ export async function POST(request: Request) {
   }
   const canAuthorCustomWidgets = session.user.permissions.includes("admin");
   const customWidgetAuthoringContext = getCustomWidgetAuthoringContext(incomingMessages, canAuthorCustomWidgets);
-  const caller = mcpRouter.createCaller(context);
-  const procedureTypes = getProcedureTypeMap();
+  let mcpRuntime;
+  try {
+    mcpRuntime = await getMcpRuntimeAsync();
+  } catch (error) {
+    logger.error(new ErrorWithMetadata("Assistant tools are unavailable", { requestId }, { cause: error }));
+    return Response.json(
+      { error: "Homarr tools could not be loaded. Check the Homarr logs and try again." },
+      { status: 503 },
+    );
+  }
+  const caller = mcpRuntime.router.createCaller(context);
   const omittedCustomWidgetTools = new Set<string>(customWidgetAuthoringContext.omittedToolNames);
-  const mcpTools = extractMcpTools().filter((mcpTool) => !omittedCustomWidgetTools.has(mcpTool.name));
+  const mcpTools = mcpRuntime.tools.filter((mcpTool) => !omittedCustomWidgetTools.has(mcpTool.name));
   const customWidgetComponentDocumentBudget = createCustomWidgetComponentDocumentBudget();
 
   const homarrTools = Object.fromEntries(
     mcpTools.map((mcpTool) => {
-      const requiresApproval = procedureTypes.get(mcpTool.pathInRouter.join(".")) === "mutation";
+      const requiresApproval = mcpRuntime.procedureTypes.get(mcpTool.pathInRouter.join(".")) === "mutation";
       return [
         mcpTool.name,
         tool({
@@ -563,7 +559,7 @@ export async function POST(request: Request) {
   ) satisfies ToolSet;
   const toolApproval = Object.fromEntries(
     mcpTools.flatMap((mcpTool) =>
-      procedureTypes.get(mcpTool.pathInRouter.join(".")) === "mutation"
+      mcpRuntime.procedureTypes.get(mcpTool.pathInRouter.join(".")) === "mutation"
         ? [[mcpTool.name, "user-approval" as const]]
         : [],
     ),

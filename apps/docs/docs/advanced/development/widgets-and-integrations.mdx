@@ -1,0 +1,188 @@
+---
+title: Widgets and integrations
+tags:
+  - Developer
+  - Technical documentation
+  - Widgets
+  - Integrations
+sidebar_position: 2
+---
+
+Homarr is moving native widgets and integrations to vertical feature modules: the stable identity, lightweight metadata,
+client entry, server registration, cache policy, and documentation source live beside the implementation. Generated
+files preserve static imports and package boundaries for Next.js, tRPC, and Docusaurus.
+
+Registration means availability. There is no separate feature-enable list or runtime kill switch.
+
+## Current status
+
+Weather and Downloads are the reference widget modules. Their folders now own registration and canonical docs:
+
+```text
+packages/widgets/src/weather/
+├── module.ts            # authored manifest and client/server data policy
+├── index.ts             # options and presentation-specific definition
+├── component.tsx        # client UI
+├── module.generated.ts  # generated icon projection; do not edit
+└── docs/                # canonical MDX, metadata, and assets
+```
+
+The remaining widgets still use the compatibility registries and can be migrated one folder at a time without changing
+their persisted `WidgetKind` or tRPC paths. The generated and legacy entries are merged behind the same runtime loaders.
+
+The server router implementation is not physically inside these first two widget folders yet. `@homarr/widgets`
+currently imports `@homarr/api/client`; making `@homarr/api` import widget server files would create a package cycle and
+risk shipping server code to the browser. The module already owns the lazy router registration, and the neutral server
+operation types are the cycle-breaking seam for the next migration stage.
+
+## The module manifest
+
+`module.ts` is pure and server-safe. It must not import React, tRPC, an integration implementation, secrets, or a request
+handler. It describes import locations as strings so the generator can emit literal imports into the correct package.
+
+```ts
+import { defineWidgetModule } from "@homarr/definitions";
+
+export default defineWidgetModule({
+  kind: "example",
+  icon: "IconSparkles",
+  clientEntry: ".",
+  documentation: {
+    slug: "example",
+    sourceDirectory: "docs",
+  },
+  integration: {
+    categories: ["downloadClient"],
+    serverMaxIntegrations: 1,
+  },
+  operations: [
+    {
+      name: "getData",
+      path: ["widget", "example", "getData"],
+      client: {
+        refetchIntervalSeconds: 30,
+        persist: true,
+      },
+      serverCache: {
+        namespace: "example:data",
+        ttlMs: 30_000,
+        scope: "integration",
+      },
+    },
+  ],
+  routers: [
+    {
+      namespace: "example",
+      module: "./example",
+      exportName: "exampleRouter",
+    },
+  ],
+});
+```
+
+Run the synchronizer after adding or changing a module:
+
+```sh
+pnpm widgets:new example --icon IconSparkles
+pnpm widgets:sync
+pnpm widgets:sync:check
+```
+
+`widgets:new` creates a minimal client-only folder and immediately runs the synchronizer. Replace the empty component,
+add options, and extend the manifest with operations or router registrations as needed; it never edits a hand-written
+central feature list.
+
+The check command is read-only and reports drift. The synchronizer rejects duplicate widget kinds, docs slugs, router
+namespaces with conflicting targets, operation names, and cache namespaces. It also verifies client entries, router
+modules, and local docs before producing anything.
+
+It generates these compatibility projections:
+
+| Consumer               | Generated projection                                                 |
+| ---------------------- | -------------------------------------------------------------------- |
+| Definitions and policy | `packages/definitions/src/generated/widget-modules.ts`               |
+| Client lazy loading    | `packages/widgets/src/generated/widget-modules.ts`                   |
+| Lightweight icons      | `packages/ui/src/generated/widget-icons.ts`                          |
+| Lazy tRPC routers      | `packages/api/src/router/widgets/generated-registry.ts`              |
+| Docusaurus             | `apps/docs/docs/widgets/<slug>/` from the module's canonical `docs/` |
+
+Generated client and server registries contain explicit import literals. Do not replace them with a variable dynamic
+import: explicit paths let Next.js and Turbopack discover chunks without eagerly loading every widget.
+
+## Client and server data caching
+
+The operation is the shared identity for both cache layers:
+
+- The tRPC path drives the TanStack Query key.
+- `refetchIntervalSeconds` configures the root Query Client without importing widget UI code.
+- `persist` controls session-scoped browser persistence. Persisted payloads are size-bounded, sanitized, and separated
+  by the authenticated user and permission scope.
+- `serverCache` is imported by the request handler through `getWidgetServerCachePolicy`, so its namespace and TTL are
+  not copied into another file.
+
+Server reads use bounded in-process L1 caching and a shared Redis L2. Inputs are canonically serialized and SHA-256
+hashed; raw URLs, options, and secrets never appear in Redis keys or cache logs. Redis operations and lock waits are
+bounded, refreshes use token-safe distributed locks, and stale data can be retained for the declared error window.
+Redis failure degrades to local caching and produces structured logs with safe metadata and the original cause.
+
+Integration-backed cache keys include the integration ID and its Redis generation. Mutations advance that generation,
+which invalidates all replicas without scanning keys. Integration-free widget handlers use a namespace generation;
+manual refreshes such as Docker inventory invalidation therefore clear both local and shared values. A zero TTL keeps
+only overlapping in-flight request deduplication and never stores a Redis payload, which is appropriate for realtime
+or subscription data.
+
+TanStack Query remains the browser cache and Redis remains the server cache. A browser persistence hit never bypasses
+server authorization, and Redis never caches permission decisions or decrypted credentials.
+
+## Server operations and tRPC
+
+The neutral contract includes helpers for queries, mutations, subscriptions, and routes:
+
+- `defineWidgetServerOperation`
+- `defineWidgetServerSubscription`
+- `defineWidgetServerRoute`
+- `defineWidgetServerModule`
+
+They describe validated input, authorization intent, cache policy, an `AbortSignal`, and a framework-neutral resolver.
+The future API adapter will inject tRPC procedure builders, integration middleware, logging, and error normalization.
+This dependency direction lets a local `server.ts` be consumed by API code without the widget client importing API
+runtime code.
+
+Until that adapter replaces the current client dependency, keep actual upstream calls in `@homarr/request-handler` and
+the tRPC compatibility router in `packages/api/src/router/widgets/`. Put the router registration in the local manifest;
+do not add it to the hand-written registry.
+
+An integration-backed procedure must use the widget-aware middleware. It derives compatible kinds and maximum
+selection limits from the module/catalog, resolves only the requested records, decrypts secrets on the server, and
+checks direct user and group permissions before the procedure runs. Use `query` permission for reads and `interact`
+permission for mutations.
+
+## Errors and logs
+
+- Root tRPC instrumentation records the procedure path, operation type, user, duration, and outcome.
+- Integration middleware records safe requested/resolved IDs and kinds plus denial reasons; it never logs credentials.
+- Integration calls are timed and normalized into public errors while preserving a structured server-side cause.
+- Multi-integration reads use `settleIntegrationQueries` so one failed service does not erase successful providers.
+- Widget components read through the shared usable-data helper: stale data remains visible after a refresh error, while
+  first-load failures reach the common widget error boundary and logs link.
+- Lazy client, router, and integration imports cache successful and in-flight loads, evict failed promises, and log
+  load duration so a transient chunk failure can retry.
+
+## Complex modules
+
+The manifest is the common path, not a limit on implementation size.
+
+- Beszel can group multiple stable widget kinds behind one router and keep live statistics on an SSE subscription with
+  Redis payload caching disabled.
+- Assistant can use a route/stream adapter for chat while keeping client runtime state and tools in subfolders.
+- A proxy-only widget can expose a server route without inventing a polling query.
+- A widget can add custom query matchers, context actions, prefetching, or nested client components while retaining the
+  same registration, permissions, logging, error, and cache contracts.
+
+## Legacy integration path
+
+Integration metadata is currently derived from `integrationDefs`, while implementation constructors are loaded lazily
+through `@homarr/integrations/factory`. Keep integrations server-only, implement only their capability interfaces, and
+use narrow schema/interface exports instead of the broad runtime barrel. The same local-manifest and generated-registry
+shape is being introduced for integrations so metadata, constructor registration, and canonical docs can move beside
+each implementation without changing `IntegrationKind` or widget capability checks.

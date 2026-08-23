@@ -218,6 +218,7 @@ export const onboardRouter = createTRPCRouter({
       const discoveredApps: DiscoveredApp[] = [];
 
       for (const service of discovery.services) {
+        const widgetKind = service.widgetKind;
         if (service.integrationKind) {
           discoveredIntegrations.push({
             sourceId: service.sourceId,
@@ -231,7 +232,7 @@ export const onboardRouter = createTRPCRouter({
             group: service.group,
             boardName: service.boardName,
             host: service.host,
-            widgetKind: service.widgetKind,
+            widgetKind,
             description: service.description,
             pingUrl: service.pingUrl,
           });
@@ -249,7 +250,7 @@ export const onboardRouter = createTRPCRouter({
             description: service.description,
             pingUrl: service.pingUrl,
             host: service.host,
-            widgetKind: service.widgetKind,
+            widgetKind,
           });
         }
       }

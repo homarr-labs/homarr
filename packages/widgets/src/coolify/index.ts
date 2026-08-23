@@ -19,7 +19,6 @@ export const { definition, componentLoader } = createWidgetDefinition("coolify",
       }),
     }));
   },
-  supportedIntegrations: ["coolify"],
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

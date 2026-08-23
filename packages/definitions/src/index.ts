@@ -1,5 +1,7 @@
 export * from "./board";
 export * from "./integration";
+export * from "./integration-module";
+export * from "./generated/integration-modules";
 export * from "./section";
 export * from "./widget";
 export * from "./widget-name";
@@ -14,6 +16,8 @@ export * from "./cookie";
 export * from "./search-engine";
 export * from "./onboarding";
 export * from "./widget-integration-map";
+export * from "./widget-module";
+export * from "./generated/widget-modules";
 export * from "./emptysuperjson";
 export * from "./hotkeys";
 export * from "./docker-integration-match";

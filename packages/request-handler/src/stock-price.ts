@@ -6,6 +6,7 @@ import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 export const fetchStockPriceHandler = createWidgetRequestHandler({
+  cacheNamespace: "stock-price",
   async requestAsync(input: { stock: string; timeRange: string; timeInterval: string }) {
     const response = await withTimeoutAsync(async (signal) => {
       return await fetchWithTrustedCertificatesAsync(

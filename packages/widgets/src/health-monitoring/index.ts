@@ -1,6 +1,5 @@
 import { IconHeartRateMonitor, IconServerOff } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -9,8 +8,6 @@ import { createStorageVolumeMultiSelectOptions } from "../storage-volume-options
 export const { definition, componentLoader } = createWidgetDefinition("healthMonitoring", {
   icon: IconHeartRateMonitor,
   supportsAdvancedFocus: true,
-  queryKeys: [[["integration", "byIds"]], [["widget", "healthMonitoring"]]],
-  refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
@@ -114,9 +111,6 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
       },
     );
   },
-  supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring").filter(
-    (kind) => kind !== "patchmon" && kind !== "wud",
-  ),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

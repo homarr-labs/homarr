@@ -19,12 +19,12 @@ import {
 import { getAppManagementAccess, getIntegrationManagementAccess } from "@homarr/definitions";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
-const getFullAccessIntegrationIdsAsync = async (db: Database, userId: string) => {
-  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
+const getFullAccessIntegrationIdsAsync = async (database: Database, userId: string) => {
+  const groupsOfCurrentUser = await database.query.groupMembers.findMany({
     where: eq(groupMembers.userId, userId),
   });
 
-  const accessibleIntegrations = await db.query.integrations.findMany({
+  const accessibleIntegrations = await database.query.integrations.findMany({
     columns: {
       id: true,
     },

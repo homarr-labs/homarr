@@ -1,12 +1,12 @@
 import { uptimeKumaRequestHandler } from "@homarr/request-handler/uptime-kuma";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const uptimeKumaRouter = createTRPCRouter({
   getDashboard: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "uptimeKuma"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "uptimeKuma"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(
         ctx.integrations,

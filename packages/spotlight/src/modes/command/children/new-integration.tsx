@@ -13,7 +13,7 @@ export const newIntegrationChildrenOptions = createChildrenOptions<Record<string
     const normalizedQuery = query.trim().toLowerCase();
     return objectEntries(integrationDefs)
       .filter(([, integrationDef]) => integrationDef.name.toLowerCase().includes(normalizedQuery))
-      .sort(
+      .toSorted(
         ([, definitionA], [, definitionB]) =>
           definitionA.name.toLowerCase().indexOf(normalizedQuery) -
           definitionB.name.toLowerCase().indexOf(normalizedQuery),

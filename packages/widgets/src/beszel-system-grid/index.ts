@@ -6,9 +6,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemGrid", {
   icon: IconLayoutGrid,
-  queryKey: [["widget", "beszel", "getSystems"]],
-  supportedIntegrations: ["beszel", "mock"],
-  integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       statusFilter: factory.select({

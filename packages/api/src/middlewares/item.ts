@@ -5,10 +5,10 @@ import { and, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema";
 import type { WidgetKind } from "@homarr/definitions";
 
-import { publicProcedure } from "../trpc";
+import { middlewareProcedure } from "../trpc";
 
 export const createOneItemMiddleware = (kind: WidgetKind) => {
-  return publicProcedure.input(z.object({ itemId: z.string() })).use(async ({ input, ctx, next }) => {
+  return middlewareProcedure.input(z.object({ itemId: z.string() })).use(async ({ input, ctx, next }) => {
     const item = await ctx.db.query.items.findFirst({
       where: and(eq(items.id, input.itemId), eq(items.kind, kind)),
     });

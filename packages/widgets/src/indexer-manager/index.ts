@@ -1,6 +1,5 @@
 import { IconReportSearch, IconServerOff, IconTestPipe } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -28,9 +27,7 @@ export const { definition, componentLoader } = createWidgetDefinition("indexerMa
       },
     },
   ],
-  refetchInterval: null,
   createOptions,
-  supportedIntegrations: getIntegrationKindsByCategory("indexerManager"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

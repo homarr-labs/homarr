@@ -1,12 +1,12 @@
 import { audiobookshelfRequestHandler } from "@homarr/request-handler/audiobookshelf";
 import { navidromeRequestHandler } from "@homarr/request-handler/navidrome";
 
-import { createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const audioStatsRouter = createTRPCRouter({
   getStats: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "navidrome", "audiobookshelf"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "audioStats"))
     .query(async ({ ctx }) => {
       const { kind } = ctx.integration;
 

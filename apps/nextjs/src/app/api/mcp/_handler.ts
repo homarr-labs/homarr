@@ -5,11 +5,12 @@ import { ResourceTemplate } from "@modelcontextprotocol/server";
 import { z } from "zod/v4";
 
 import type { McpTool } from "@homarr/api/mcp";
-import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
+import { createTRPCContext } from "@homarr/api/mcp";
 import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
 import { ipAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { buildCustomWidgetMcpPrompt } from "@homarr/custom-widgets/authoring-prompt";
 import {
   getCustomWidgetComponent,
@@ -22,7 +23,7 @@ import { db } from "@homarr/db";
 
 import { getPackageVersion } from "~/versions/package-reader";
 import { getSafeAssistantToolError } from "../assistant/chat/assistant-tool-error";
-import { extractMcpTools } from "./_extract-tools";
+import { getMcpRuntimeAsync } from "./_extract-tools";
 import { createMcpProtocolHandler } from "./_protocol";
 
 const logger = createLogger({ module: "mcpRoute" });
@@ -80,18 +81,8 @@ function clearAuthFailures(ip: string | null) {
   authFailures.delete(ip ?? "unknown");
 }
 
-let toolsCache: McpTool[] | null = null;
-
-function getTools() {
-  if (!toolsCache) {
-    toolsCache = extractMcpTools();
-    logger.info(`Extracted ${toolsCache.length} MCP tools`);
-  }
-  return toolsCache;
-}
-
-const getVisibleTools = (isAdmin: boolean) =>
-  isAdmin ? getTools() : getTools().filter((tool) => !tool.name.startsWith("customWidget_"));
+const getVisibleTools = (tools: McpTool[], isAdmin: boolean) =>
+  isAdmin ? tools : tools.filter((tool) => !tool.name.startsWith("customWidget_"));
 
 function registerCustomWidgetAuthoring(server: McpServer) {
   server.registerPrompt(
@@ -331,12 +322,23 @@ export const handleMcpRequest = async (req: NextRequest) => {
   clearAuthFailures(ipAddress);
   logger.info("MCP request authenticated", { userId: session.user.id });
 
+  let mcpRuntime;
+  try {
+    mcpRuntime = await getMcpRuntimeAsync();
+  } catch (error) {
+    logger.error(new ErrorWithMetadata("MCP runtime is unavailable", {}, { cause: error }));
+    return jsonErrorResponse(503, {
+      error: "service_unavailable",
+      hint: "The MCP tool registry could not be loaded. Check the Homarr logs and try again.",
+    });
+  }
+
   const ctx = createTRPCContext({ session, headers: req.headers });
-  const caller = mcpRouter.createCaller(ctx);
+  const caller = mcpRuntime.router.createCaller(ctx);
   const isAdmin = session.user.permissions.includes("admin");
   const protocolHandler = createMcpProtocolHandler({
     caller,
-    tools: getVisibleTools(isAdmin),
+    tools: getVisibleTools(mcpRuntime.tools, isAdmin),
     version: getPackageVersion(),
     instructions: SERVER_INSTRUCTIONS,
     configureServer: isAdmin ? registerCustomWidgetAuthoring : undefined,

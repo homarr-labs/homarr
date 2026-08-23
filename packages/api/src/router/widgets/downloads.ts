@@ -1,18 +1,14 @@
 import { z } from "zod/v4";
 
 import type { IntegrationKindByCategory } from "@homarr/definitions";
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
-import { createIntegrationAsync, downloadClientItemSchema } from "@homarr/integrations";
+import { downloadClientItemSchema } from "@homarr/integrations/downloads";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
 
-import type { IntegrationAction } from "../../middlewares/integration";
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
-
-const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
-  createManyIntegrationMiddleware(action, ...getIntegrationKindsByCategory("downloadClient"));
 
 interface DownloadClientQueryResultBase {
   integrationId: string;
@@ -51,7 +47,7 @@ export const downloadsRouter = createTRPCRouter({
           "Get active download jobs and queue status from connected download clients (qBittorrent, SABnzbd, Transmission, Deluge, NZBGet). REQUIRED: integrationIds (array of download client integration IDs from integration_all). OPTIONAL: limitPerIntegration (number, default 50)",
       },
     })
-    .concat(createDownloadClientIntegrationMiddleware("query"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "downloads"))
     .input(z.object({ limitPerIntegration: z.number().default(50) }))
     .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries<(typeof ctx.integrations)[number], DownloadClientQueryResult>(
@@ -86,7 +82,7 @@ export const downloadsRouter = createTRPCRouter({
           "Pause all download queues across connected download clients. REQUIRED: integrationIds (array of download client integration IDs from integration_all)",
       },
     })
-    .concat(createDownloadClientIntegrationMiddleware("interact"))
+    .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -97,7 +93,7 @@ export const downloadsRouter = createTRPCRouter({
       downloadClientRequestHandler.invalidateCache();
     }),
   pauseItem: protectedProcedure
-    .concat(createDownloadClientIntegrationMiddleware("interact"))
+    .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
@@ -116,7 +112,7 @@ export const downloadsRouter = createTRPCRouter({
           "Resume all download queues across connected download clients. REQUIRED: integrationIds (array of download client integration IDs from integration_all)",
       },
     })
-    .concat(createDownloadClientIntegrationMiddleware("interact"))
+    .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -127,7 +123,7 @@ export const downloadsRouter = createTRPCRouter({
       downloadClientRequestHandler.invalidateCache();
     }),
   resumeItem: protectedProcedure
-    .concat(createDownloadClientIntegrationMiddleware("interact"))
+    .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
@@ -139,7 +135,7 @@ export const downloadsRouter = createTRPCRouter({
       downloadClientRequestHandler.invalidateCache();
     }),
   deleteItem: protectedProcedure
-    .concat(createDownloadClientIntegrationMiddleware("interact"))
+    .concat(createManyWidgetIntegrationMiddleware("interact", "downloads"))
     .input(z.object({ item: downloadClientItemSchema, fromDisk: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(

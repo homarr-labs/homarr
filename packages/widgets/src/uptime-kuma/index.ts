@@ -34,7 +34,6 @@ export const { definition, componentLoader } = createWidgetDefinition("uptimeKum
       }),
     }));
   },
-  supportedIntegrations: ["uptimeKuma"],
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

@@ -1,7 +1,7 @@
 import type { CoolifyInstanceInfo } from "@homarr/integrations/types";
 import { coolifyRequestHandler } from "@homarr/request-handler/coolify";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
@@ -16,7 +16,7 @@ interface CoolifyInstanceResult {
 
 export const coolifyRouter = createTRPCRouter({
   getInstancesInfo: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "coolify"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "coolify"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(
         ctx.integrations,

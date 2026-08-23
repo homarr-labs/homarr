@@ -2,10 +2,10 @@ import { TRPCError } from "@trpc/server";
 
 import { env } from "@homarr/docker/env";
 
-import { isDemoMode, publicProcedure } from "../trpc";
+import { isDemoMode, middlewareProcedure } from "../trpc";
 
 export const dockerMiddleware = () => {
-  return publicProcedure.use(async ({ next }) => {
+  return middlewareProcedure.use(async ({ next }) => {
     if (env.ENABLE_DOCKER || isDemoMode) {
       return await next();
     }

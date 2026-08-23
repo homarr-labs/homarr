@@ -1,49 +1,30 @@
+import type { AnyTRPCRouter } from "@trpc/server";
 import { lazy } from "@trpc/server";
 
 import { createTRPCRouter } from "../../trpc";
+import { widgetRouterRegistry } from "./registry";
+import type { WidgetRouterName } from "./registry";
+
+const createLazyWidgetRouter = <TRouter extends AnyTRPCRouter>(loadRouter: () => Promise<TRouter>) => lazy(loadRouter);
+
+const lazyWidgetRouters = Object.fromEntries(
+  Object.entries(widgetRouterRegistry).map(([name, registration]) => [
+    name,
+    createLazyWidgetRouter(registration.loadRouter as () => Promise<AnyTRPCRouter>),
+  ]),
+) as unknown as {
+  [TName in WidgetRouterName]: ReturnType<
+    typeof createLazyWidgetRouter<
+      (typeof widgetRouterRegistry)[TName] extends { loadRouter: () => Promise<infer TRouter> }
+        ? TRouter extends AnyTRPCRouter
+          ? TRouter
+          : never
+        : never
+    >
+  >;
+};
 
 export const widgetRouter = createTRPCRouter({
-  archiveTeamWarrior: lazy(() => import("./archive-team-warrior").then((mod) => mod.archiveTeamWarriorRouter)),
-  beszel: lazy(() => import("./beszel").then((mod) => mod.beszelRouter)),
-  anchorNotes: lazy(() => import("./anchor-notes").then((mod) => mod.anchorNotesRouter)),
-  coolify: lazy(() => import("./coolify").then((mod) => mod.coolifyRouter)),
-  immich: lazy(() => import("./immich").then((mod) => mod.immichRouter)),
-  paperlessNgx: lazy(() => import("./paperless-ngx").then((mod) => mod.paperlessNgxRouter)),
-  patchmon: lazy(() => import("./patchmon").then((mod) => mod.patchmonRouter)),
-  bazarr: lazy(() => import("./bazarr").then((mod) => mod.bazarrRouter)),
-  notebook: lazy(() => import("./notebook").then((mod) => mod.notebookRouter)),
-  weather: lazy(() => import("./weather").then((mod) => mod.weatherRouter)),
-  airQuality: lazy(() => import("./air-quality").then((mod) => mod.airQualityRouter)),
-  app: lazy(() => import("./app").then((mod) => mod.appRouter)),
-  dnsHole: lazy(() => import("./dns-hole").then((mod) => mod.dnsHoleRouter)),
-  smartHome: lazy(() => import("./smart-home").then((mod) => mod.smartHomeRouter)),
-  stockPrice: lazy(() => import("./stocks").then((mod) => mod.stockPriceRouter)),
-  mediaServer: lazy(() => import("./media-server").then((mod) => mod.mediaServerRouter)),
-  mediaRelease: lazy(() => import("./media-release").then((mod) => mod.mediaReleaseRouter)),
-  calendar: lazy(() => import("./calendar").then((mod) => mod.calendarRouter)),
-  downloads: lazy(() => import("./downloads").then((mod) => mod.downloadsRouter)),
-  mediaRequests: lazy(() => import("./media-requests").then((mod) => mod.mediaRequestsRouter)),
-  mediaOrganizer: lazy(() => import("./media-organizer").then((mod) => mod.mediaOrganizerRouter)),
-  rssFeed: lazy(() => import("./rssFeed").then((mod) => mod.rssFeedRouter)),
-  indexerManager: lazy(() => import("./indexer-manager").then((mod) => mod.indexerManagerRouter)),
-  healthMonitoring: lazy(() => import("./health-monitoring").then((mod) => mod.healthMonitoringRouter)),
-  mediaTranscoding: lazy(() => import("./media-transcoding").then((mod) => mod.mediaTranscodingRouter)),
-  minecraft: lazy(() => import("./minecraft").then((mod) => mod.minecraftRouter)),
+  ...lazyWidgetRouters,
   options: lazy(() => import("./options").then((mod) => mod.optionsRouter)),
-  releases: lazy(() => import("./releases").then((mod) => mod.releasesRouter)),
-  networkController: lazy(() => import("./network-controller").then((mod) => mod.networkControllerRouter)),
-  firewall: lazy(() => import("./firewall").then((mod) => mod.firewallRouter)),
-  notifications: lazy(() => import("./notifications").then((mod) => mod.notificationsRouter)),
-  timetable: lazy(() => import("./timetable").then((mod) => mod.timetableRouter)),
-  tracearr: lazy(() => import("./tracearr").then((mod) => mod.tracearrRouter)),
-  speedtestTracker: lazy(() => import("./speedtest-tracker").then((mod) => mod.speedtestTrackerRouter)),
-  uptimeKuma: lazy(() => import("./uptime-kuma").then((mod) => mod.uptimeKumaRouter)),
-  audioStats: lazy(() => import("./audio-stats").then((mod) => mod.audioStatsRouter)),
-  umami: lazy(() => import("./umami").then((mod) => mod.umamiRouter)),
-  vpn: lazy(() => import("./vpn").then((mod) => mod.vpnRouter)),
-  ups: lazy(() => import("./ups").then((mod) => mod.upsRouter)),
-  traefik: lazy(() => import("./traefik").then((mod) => mod.traefikRouter)),
-  customApi: lazy(() => import("./custom-api").then((mod) => mod.customApiRouter)),
-  secrets: lazy(() => import("./widget-secrets").then((mod) => mod.widgetSecretsRouter)),
-  wud: lazy(() => import("./wud").then((mod) => mod.wudRouter)),
 });

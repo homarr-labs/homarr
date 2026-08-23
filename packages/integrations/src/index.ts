@@ -1,53 +1,6 @@
-// General integrations
-export { ArchiveTeamWarriorIntegration } from "./archive-team-warrior/archive-team-warrior-integration";
-export { WudIntegration } from "./wud/wud-integration";
-export { AdGuardHomeIntegration } from "./adguard-home/adguard-home-integration";
-export { TechnitiumDnsIntegration } from "./technitium/technitium-integration";
-export { AnchorIntegration } from "./anchor/anchor-integration";
-export { Aria2Integration } from "./download-client/aria2/aria2-integration";
-export { DelugeIntegration } from "./download-client/deluge/deluge-integration";
-export { NzbGetIntegration } from "./download-client/nzbget/nzbget-integration";
-export { QBitTorrentIntegration } from "./download-client/qbittorrent/qbittorrent-integration";
-export { SabnzbdIntegration } from "./download-client/sabnzbd/sabnzbd-integration";
-export { SlskdIntegration } from "./download-client/slskd/slskd-integration";
-export { TransmissionIntegration } from "./download-client/transmission/transmission-integration";
-export { HomeAssistantIntegration } from "./homeassistant/homeassistant-integration";
-export { JellyfinIntegration } from "./jellyfin/jellyfin-integration";
-export { JellyseerrIntegration } from "./jellyseerr/jellyseerr-integration";
-export { LidarrIntegration } from "./media-organizer/lidarr/lidarr-integration";
-export { RadarrIntegration } from "./media-organizer/radarr/radarr-integration";
-export { ReadarrIntegration } from "./media-organizer/readarr/readarr-integration";
-export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
-export { NextcloudIntegration } from "./nextcloud/nextcloud.integration";
-export { GotifyIntegration } from "./gotify/gotify-integration";
-export { NTFYIntegration } from "./ntfy/ntfy-integration";
-export { OpenMediaVaultIntegration } from "./openmediavault/openmediavault-integration";
-export { GlancesIntegration } from "./glances/glances-integration";
-export { OverseerrIntegration } from "./overseerr/overseerr-integration";
-export { SeerrIntegration } from "./seerr/seerr-integration";
-export { PiHoleIntegrationV5 } from "./pi-hole/v5/pi-hole-integration-v5";
-export { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";
-export { PlexIntegration } from "./plex/plex-integration";
-export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
-export { TrueNasIntegration } from "./truenas/truenas-integration";
-export { SynologyIntegration } from "./synology/synology-integration";
-export { UnraidIntegration } from "./unraid/unraid-integration";
-export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
-export { ICalIntegration } from "./ical/ical-integration";
-export { CoolifyIntegration } from "./coolify/coolify-integration";
-export { ImmichIntegration } from "./immich/immich-integration";
-export { TracearrIntegration } from "./tracearr/tracearr-integration";
-export { SpeedtestTrackerIntegration } from "./speedtest-tracker/speedtest-tracker-integration";
-export { AudiobookshelfIntegration } from "./audiobookshelf/audiobookshelf-integration";
-export { NavidromeIntegration } from "./navidrome/navidrome-integration";
-export { UptimeKumaIntegration } from "./uptime-kuma/uptime-kuma-integration";
-export { UmamiIntegration } from "./umami/umami-integration";
-export { PeaNutIntegration } from "./peanut/peanut-integration";
-export { BazarrIntegration } from "./bazarr/bazarr-integration";
-export { TraefikIntegration } from "./traefik/traefik-integration";
-
-// Types
+// Type-only compatibility surface. Runtime capabilities have explicit subpaths.
 export type { IntegrationInput } from "./base/integration";
+export type { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";
 export type { DownloadClientJobsAndStatus } from "./interfaces/downloads/download-client-data";
 export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download-client-items";
 export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
@@ -59,8 +12,11 @@ export type {
   FirewallMemorySummary,
 } from "./interfaces/firewall-summary/firewall-summary-types";
 export type { SystemHealthMonitoring } from "./interfaces/health-monitoring/health-monitoring-types";
-export { UpstreamMediaRequestStatus } from "./interfaces/media-requests/media-request-types";
-export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request-types";
+export type {
+  MediaRequestList,
+  MediaRequestStats,
+  UpstreamMediaRequestStatus,
+} from "./interfaces/media-requests/media-request-types";
 export type { StreamSession } from "./interfaces/media-server/media-server-types";
 export type { EntityState } from "./interfaces/smart-home/smart-home-types";
 export type {
@@ -95,12 +51,4 @@ export type {
 } from "./archive-team-warrior/archive-team-warrior-types";
 export type { WudStats, WudContainerUpdate } from "./wud/wud-types";
 
-// Schemas
-export { anchorNotesListInputSchema } from "./anchor/anchor-types";
-export { anchorNoteUpdateInputSchema } from "./anchor/anchor-types";
-export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";
-
-// Helpers
-export { createIntegrationAsync } from "./base/creator";
-export { simulateResponseContractAsync } from "./base/response-contract";
 export type { ResponseContractFixture, ResponseContractParser } from "./base/response-contract";

@@ -1,7 +1,7 @@
 import type { QueryKey } from "@tanstack/react-query";
 import { describe, expect, it } from "vitest";
 
-import { widgetIntegrationSupport, widgetKinds as definedWidgetKinds } from "@homarr/definitions";
+import { widgetIntegrationSupport, widgetKinds as declaredWidgetKinds } from "@homarr/definitions";
 
 import {
   createRetryableLoader,
@@ -58,7 +58,7 @@ describe("widget manifest promise stability", () => {
   });
 
   it("covers every declared widget kind", () => {
-    expect(new Set(widgetKinds)).toEqual(new Set(definedWidgetKinds));
+    expect(new Set(widgetKinds)).toEqual(new Set(declaredWidgetKinds));
   });
 
   it("loads matching definitions and component loaders for every widget", async () => {
@@ -98,7 +98,8 @@ describe("widget manifest promise stability", () => {
       const definition = definitions.get(kind);
       const supportedIntegrations =
         definition && "supportedIntegrations" in definition ? (definition.supportedIntegrations ?? []) : [];
-      expect([...(widgetIntegrationSupport[kind] ?? [])].toSorted()).toEqual([...supportedIntegrations].toSorted());
+      const expectedIntegrations = widgetIntegrationSupport[kind] ?? [];
+      expect(expectedIntegrations.toSorted()).toEqual([...supportedIntegrations].toSorted());
     }
   });
 

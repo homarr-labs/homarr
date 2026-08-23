@@ -4,8 +4,25 @@ import type { Session } from "@homarr/auth";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import type { Database, SQL } from "@homarr/db";
 import { eq, inArray } from "@homarr/db";
-import { groupMembers, integrationGroupPermissions, integrationUserPermissions } from "@homarr/db/schema";
+import { groupMembers, integrationGroupPermissions, integrations, integrationUserPermissions } from "@homarr/db/schema";
 import type { IntegrationPermission } from "@homarr/definitions";
+
+interface IntegrationPermissionRecord {
+  userPermissions: { permission: IntegrationPermission }[];
+  groupPermissions: { permission: IntegrationPermission }[];
+}
+
+const hasIntegrationPermission = (
+  integration: IntegrationPermissionRecord,
+  session: Session | null,
+  permission: IntegrationPermission,
+) => {
+  const { hasUseAccess, hasInteractAccess, hasFullAccess } = constructIntegrationPermissions(integration, session);
+  if (hasFullAccess) return true;
+  if (permission === "interact") return hasInteractAccess;
+  if (permission === "use") return hasUseAccess;
+  return false;
+};
 
 /**
  * Throws NOT_FOUND if user is not allowed to perform action on integration
@@ -44,21 +61,49 @@ export const throwIfActionForbiddenAsync = async (
     notAllowed();
   }
 
-  const { hasUseAccess, hasInteractAccess, hasFullAccess } = constructIntegrationPermissions(integration, session);
-
-  if (hasFullAccess) {
-    return; // As full access is required and user has full access, allow
-  }
-
-  if (["interact", "use"].includes(permission) && hasInteractAccess) {
-    return; // As interact access is required and user has interact access, allow
-  }
-
-  if (permission === "use" && hasUseAccess) {
-    return; // As use access is required and user has use access, allow
-  }
+  if (hasIntegrationPermission(integration, session, permission)) return;
 
   notAllowed();
+};
+
+/**
+ * Batched variant for feature configuration flows. It applies the same direct
+ * user, group, and global permission rules without issuing one query per ID.
+ */
+export const throwIfIntegrationActionsForbiddenAsync = async (
+  ctx: { db: Database; session: Session | null },
+  integrationIds: readonly string[],
+  permission: IntegrationPermission,
+) => {
+  const uniqueIntegrationIds = [...new Set(integrationIds)];
+  if (uniqueIntegrationIds.length === 0) return;
+
+  const { db, session } = ctx;
+  const groupsOfCurrentUser = await db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, session?.user.id ?? ""),
+  });
+  const integrationRecords = await db.query.integrations.findMany({
+    where: inArray(integrations.id, uniqueIntegrationIds),
+    columns: { id: true },
+    with: {
+      userPermissions: {
+        where: eq(integrationUserPermissions.userId, session?.user.id ?? ""),
+      },
+      groupPermissions: {
+        where: inArray(
+          integrationGroupPermissions.groupId,
+          groupsOfCurrentUser.map(({ groupId }) => groupId).concat(""),
+        ),
+      },
+    },
+  });
+
+  if (
+    integrationRecords.length !== uniqueIntegrationIds.length ||
+    !integrationRecords.every((integration) => hasIntegrationPermission(integration, session, permission))
+  ) {
+    notAllowed();
+  }
 };
 
 /**

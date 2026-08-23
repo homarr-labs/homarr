@@ -22,9 +22,6 @@ const getChartOptionLabel = (key: "cpu" | "memory" | "gpu" | "network", t: (key:
 export const { definition, componentLoader } = createWidgetDefinition("systemResources", {
   icon: IconGraphFilled,
   supportsAdvancedFocus: true,
-  queryKey: [["widget", "healthMonitoring"]],
-  refetchInterval: 10,
-  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       hasShadow: factory.switch({ defaultValue: true }),

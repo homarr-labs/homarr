@@ -5,17 +5,24 @@ import type { WidgetKind } from "@homarr/definitions";
 import { createSettings } from "@homarr/settings/creator";
 
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "./manifest";
-import prefetchForApps from "./app/prefetch";
-import prefetchForBookmarks from "./bookmarks/prefetch";
-import type { Prefetch, WidgetOptionsRecordOf } from "./definition";
+import type { PrefetchLoader, WidgetOptionsRecordOf } from "./definition";
 import type { inferOptionsFromCreator } from "./options";
 
-const prefetchCallbacks: Partial<{
-  [TKind in WidgetKind]: Prefetch<TKind>;
-}> = {
-  bookmarks: prefetchForBookmarks,
-  app: prefetchForApps,
-};
+const definePrefetchLoaders = <TLoaders extends Partial<{ [TKind in WidgetKind]: PrefetchLoader<TKind> }>>(
+  loaders: TLoaders,
+) => loaders;
+
+// Keep these imports explicit so Next.js can trace each optional prefetch
+// module without loading its database-specific implementation eagerly.
+const prefetchLoaders = definePrefetchLoaders({
+  app: () => import("./app/prefetch"),
+  bookmarks: () => import("./bookmarks/prefetch"),
+});
+
+type PrefetchWidgetKind = keyof typeof prefetchLoaders;
+
+const hasPrefetchLoader = (kind: WidgetKind): kind is PrefetchWidgetKind =>
+  Object.prototype.hasOwnProperty.call(prefetchLoaders, kind);
 
 export const prefetchForKindAsync = async <TKind extends WidgetKind>(
   kind: TKind,
@@ -25,12 +32,15 @@ export const prefetchForKindAsync = async <TKind extends WidgetKind>(
     integrationIds: string[];
   }[],
 ) => {
-  const callback = prefetchCallbacks[kind];
-  if (!callback) {
+  if (!hasPrefetchLoader(kind)) {
     return;
   }
 
-  const [serverSettings, definition] = await Promise.all([getRscServerSettingsAsync(), loadWidgetDefinition(kind)]);
+  const [{ default: callback }, serverSettings, definition] = await Promise.all([
+    prefetchLoaders[kind](),
+    getRscServerSettingsAsync(),
+    loadWidgetDefinition(kind),
+  ]);
 
   const itemsWithDefaultOptions = items.map((item) => ({
     ...item,

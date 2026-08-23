@@ -1,0 +1,50 @@
+---
+title: "Weather"
+description: "Displays the current weather information of a set location."
+hide_title: true
+---
+
+import { WidgetInteractionGuide } from "@site/src/components/widgets/interactions";
+
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { weatherWidget } from ".";
+
+<WidgetHeader widget={weatherWidget} categories={["Weather"]} />
+
+The Weather Widget displays current conditions and a responsive forecast for a selected location. New widgets start
+with the city and a three-day forecast visible. As the widget gets smaller, it keeps the current condition and
+temperature readable before removing secondary details or forecast days.
+
+Select a forecast day to inspect precipitation, apparent temperature, humidity, wind, UV index, sunrise, sunset and
+daylight duration with a mouse, keyboard or touch. Open the advanced view for a current-condition summary, a 24-hour
+temperature and precipitation chart, and the complete seven-day forecast. The chart has an equivalent data table for
+assistive technologies.
+
+The **Show humidity** option controls humidity across the compact current-conditions view, advanced summary, hourly
+details, and daily forecast details. Forecast cards use a roomier adaptive grid in advanced view, with four columns on
+the standard desktop surface and fewer columns as the surface narrows.
+
+Weather icons are static by default. Animation can be enabled in the widget configuration, but the operating system's
+reduced-motion preference always disables it.
+
+<WidgetInteractionGuide />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+
+<WidgetConfig configuration={weatherWidget.configuration} />
+
+### Data source
+
+We use the Open Meteo API to fetch the weather and locations. Active weather data refreshes every ten minutes, while
+identical location requests can reuse a server response for five minutes. A manual refresh may therefore return the
+same still-current server response. If a refresh fails, Homarr keeps the last successful data visible and shows an
+error indicator.
+
+Set `NO_EXTERNAL_CONNECTION=true` to disable this and other internet-backed requests.
+If you need to whitelist the api, please use the following URL: `https://open-meteo.com`

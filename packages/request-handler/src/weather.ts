@@ -6,11 +6,14 @@ import { z } from "zod";
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
+import { getWidgetServerCachePolicy } from "@homarr/definitions";
 
 import { createWidgetRequestHandler } from "./lib/widget-request-handler";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+const weatherCachePolicy = getWidgetServerCachePolicy("weather", "atLocation");
 
 const HOURLY_FORECAST_LENGTH = 24;
 const DAILY_FORECAST_LENGTH = 7;
@@ -140,7 +143,7 @@ const requestWeatherAsync = async (input: { latitude: number; longitude: number 
 };
 
 export const weatherRequestHandler = createWidgetRequestHandler({
-  cacheTtlMs: 5 * 60 * 1000,
+  cachePolicy: weatherCachePolicy,
   requestAsync: requestWeatherAsync,
 });
 

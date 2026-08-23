@@ -1,7 +1,12 @@
-import { objectKeys } from "@homarr/common";
+import { objectEntries, objectKeys } from "@homarr/common";
 import type { AtLeastOneOf } from "@homarr/common/types";
 
 import { createDocumentationLink } from "./docs";
+import type { HomarrDocumentationPath } from "./docs/homarr-docs-sitemap";
+import { generatedIntegrationDefinitions } from "./generated/integration-modules";
+
+type IntegrationDocumentationPath = Extract<HomarrDocumentationPath, `/docs/integrations/${string}`>;
+type IntegrationDocumentationSlug = string;
 
 export const integrationSecretKindObject = {
   apiKey: { isPublic: false, multiline: false },
@@ -24,41 +29,107 @@ export const integrationSecretKindObject = {
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
 
+interface IntegrationFeatureMetadata {
+  docker?: {
+    aliases?: readonly string[];
+    discoverable?: boolean;
+  };
+  onboarding?: {
+    featuredOrder?: number;
+    hidden?: boolean;
+  };
+}
+
+interface ResolvedIntegrationFeatureMetadata {
+  docker: {
+    aliases: readonly string[];
+    discoverable: boolean;
+  };
+  onboarding: {
+    featuredOrder: number | null;
+    hidden: boolean;
+  };
+}
+
 interface integrationDefinition {
   name: string;
   iconUrl: string;
-  secretKinds: AtLeastOneOf<IntegrationSecretKind[]>; // at least one secret kind set is required
-  category: AtLeastOneOf<IntegrationCategory>;
-  documentationUrl: string | null;
+  secretKinds: readonly [readonly IntegrationSecretKind[], ...(readonly IntegrationSecretKind[])[]];
+  category: readonly [IntegrationCategory, ...IntegrationCategory[]];
+  documentationSlug: IntegrationDocumentationSlug | null;
+  features?: IntegrationFeatureMetadata;
   defaultUrl?: string;
   defaultPort?: number;
   apiKeySettingsPath?: string;
 }
 
-export const integrationDefs = {
+type ResolvedIntegrationDefinitions<TDefinitions extends Record<string, integrationDefinition>> = {
+  [TKind in keyof TDefinitions]: TDefinitions[TKind] & {
+    documentationUrl: string | null;
+    features: ResolvedIntegrationFeatureMetadata;
+  };
+};
+
+const createIntegrationDefinitions = <const TDefinitions extends Record<string, integrationDefinition>>(
+  definitions: TDefinitions,
+): ResolvedIntegrationDefinitions<TDefinitions> => {
+  return Object.fromEntries(
+    objectEntries(definitions).map(([kind, definition]) => {
+      let documentationUrl: string | null = null;
+      if (definition.documentationSlug !== null) {
+        const documentationPath = `/docs/integrations/${definition.documentationSlug}` as IntegrationDocumentationPath;
+        documentationUrl = createDocumentationLink(documentationPath);
+      }
+      return [
+        kind,
+        {
+          ...definition,
+          documentationUrl,
+          features: {
+            docker: {
+              aliases: definition.features?.docker?.aliases ?? [],
+              discoverable: definition.features?.docker?.discoverable ?? true,
+            },
+            onboarding: {
+              featuredOrder: definition.features?.onboarding?.featuredOrder ?? null,
+              hidden: definition.features?.onboarding?.hidden ?? false,
+            },
+          },
+        },
+      ];
+    }),
+  ) as unknown as ResolvedIntegrationDefinitions<TDefinitions>;
+};
+
+export const integrationDefs = createIntegrationDefinitions({
   sabNzbd: {
     name: "SABnzbd",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sabnzbd.svg",
     category: ["downloadClient", "usenet"],
-    documentationUrl: createDocumentationLink("/docs/integrations/sabnzbd"),
+    documentationSlug: "sabnzbd",
     defaultPort: 8080,
     apiKeySettingsPath: "/config/general/",
+    features: {
+      docker: { aliases: ["sabnzbd"] },
+      onboarding: { featuredOrder: 3 },
+    },
   },
   nzbGet: {
     name: "NZBGet",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nzbget.svg",
     category: ["downloadClient", "usenet"],
-    documentationUrl: createDocumentationLink("/docs/integrations/nzbget"),
+    documentationSlug: "nzbget",
     defaultPort: 6789,
+    features: { docker: { aliases: ["nzbget"] } },
   },
   deluge: {
     name: "Deluge",
     secretKinds: [["password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/deluge.svg",
     category: ["downloadClient", "torrent"],
-    documentationUrl: createDocumentationLink("/docs/integrations/deluge"),
+    documentationSlug: "deluge",
     defaultPort: 8112,
   },
   transmission: {
@@ -66,7 +137,7 @@ export const integrationDefs = {
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/transmission.svg",
     category: ["downloadClient", "torrent"],
-    documentationUrl: createDocumentationLink("/docs/integrations/transmission"),
+    documentationSlug: "transmission",
     defaultPort: 9091,
   },
   qBittorrent: {
@@ -74,16 +145,20 @@ export const integrationDefs = {
     secretKinds: [["apiKey"], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/qbittorrent.svg",
     category: ["downloadClient", "torrent"],
-    documentationUrl: createDocumentationLink("/docs/integrations/q-bittorent"),
+    documentationSlug: "q-bittorent",
     defaultPort: 8080,
     apiKeySettingsPath: "/#/settings/webui",
+    features: {
+      docker: { aliases: ["qbittorrent"] },
+      onboarding: { featuredOrder: 4 },
+    },
   },
   aria2: {
     name: "Aria2",
     secretKinds: [[], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus_icons@latest/src/system_downloads_3.svg",
     category: ["downloadClient", "torrent", "miscellaneous"],
-    documentationUrl: createDocumentationLink("/docs/integrations/aria2"),
+    documentationSlug: "aria2",
     defaultPort: 6800,
   },
   slskd: {
@@ -91,7 +166,7 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/slskd.svg",
     category: ["downloadClient", "miscellaneous"],
-    documentationUrl: createDocumentationLink("/docs/integrations/slskd"),
+    documentationSlug: "slskd",
     defaultPort: 5030,
   },
   sonarr: {
@@ -99,25 +174,27 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sonarr.svg",
     category: ["calendar", "mediaOrganizer"],
-    documentationUrl: createDocumentationLink("/docs/integrations/sonarr"),
+    documentationSlug: "sonarr",
     defaultPort: 8989,
     apiKeySettingsPath: "/settings/general",
+    features: { onboarding: { featuredOrder: 0 } },
   },
   radarr: {
     name: "Radarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/radarr.svg",
     category: ["calendar", "mediaOrganizer"],
-    documentationUrl: createDocumentationLink("/docs/integrations/radarr"),
+    documentationSlug: "radarr",
     defaultPort: 7878,
     apiKeySettingsPath: "/settings/general",
+    features: { onboarding: { featuredOrder: 1 } },
   },
   lidarr: {
     name: "Lidarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/lidarr.svg",
     category: ["calendar"],
-    documentationUrl: createDocumentationLink("/docs/integrations/lidarr"),
+    documentationSlug: "lidarr",
     defaultPort: 8686,
     apiKeySettingsPath: "/settings/general",
   },
@@ -126,7 +203,7 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@main/png/readarr.png",
     category: ["calendar"],
-    documentationUrl: createDocumentationLink("/docs/integrations/readarr"),
+    documentationSlug: "readarr",
     defaultPort: 8787,
     apiKeySettingsPath: "/settings/general",
   },
@@ -135,34 +212,37 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/prowlarr.svg",
     category: ["indexerManager"],
-    documentationUrl: createDocumentationLink("/docs/integrations/prowlarr"),
+    documentationSlug: "prowlarr",
     defaultPort: 9696,
     apiKeySettingsPath: "/settings/general",
+    features: { onboarding: { featuredOrder: 2 } },
   },
   bazarr: {
     name: "Bazarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/bazarr.svg",
     category: ["subtitleManager"],
-    documentationUrl: createDocumentationLink("/docs/integrations/bazarr"),
+    documentationSlug: "bazarr",
     defaultPort: 6767,
     apiKeySettingsPath: "/settings/general",
+    features: { docker: { aliases: ["bazarr"] } },
   },
   jellyfin: {
     name: "Jellyfin",
     secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
     category: ["mediaService", "mediaRelease"],
-    documentationUrl: createDocumentationLink("/docs/integrations/jellyfin"),
+    documentationSlug: "jellyfin",
     defaultPort: 8096,
     apiKeySettingsPath: "/web/index.html#!/dashboard/keys",
+    features: { onboarding: { featuredOrder: 6 } },
   },
   emby: {
     name: "Emby",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/emby.svg",
     category: ["mediaService", "mediaRelease"],
-    documentationUrl: createDocumentationLink("/docs/integrations/emby"),
+    documentationSlug: "emby",
     defaultPort: 8096,
   },
   plex: {
@@ -170,7 +250,7 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/plex.svg",
     category: ["mediaService", "mediaRelease"],
-    documentationUrl: createDocumentationLink("/docs/integrations/plex"),
+    documentationSlug: "plex",
     defaultPort: 32400,
   },
   jellyseerr: {
@@ -178,50 +258,55 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyseerr.svg",
     category: ["mediaSearch", "mediaRequest", "search"],
-    documentationUrl: createDocumentationLink("/docs/integrations/jellyseerr"),
+    documentationSlug: "jellyseerr",
     defaultPort: 5055,
     apiKeySettingsPath: "/settings",
+    features: { docker: { aliases: ["jellyseerr"] } },
   },
   seerr: {
     name: "Seerr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/seerr.svg",
     category: ["mediaSearch", "mediaRequest", "search"],
-    documentationUrl: createDocumentationLink("/docs/integrations/seerr"),
+    documentationSlug: "seerr",
     defaultPort: 5055,
     apiKeySettingsPath: "/settings",
+    features: { onboarding: { featuredOrder: 5 } },
   },
   overseerr: {
     name: "Overseerr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/overseerr.svg",
     category: ["mediaSearch", "mediaRequest", "search"],
-    documentationUrl: createDocumentationLink("/docs/integrations/overseerr"),
+    documentationSlug: "overseerr",
     defaultPort: 5055,
     apiKeySettingsPath: "/settings",
+    features: { docker: { aliases: ["overseerr"] } },
   },
   piHole: {
     name: "Pi-hole",
     secretKinds: [["apiKey"], []],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/pi-hole.svg",
     category: ["dnsHole"],
-    documentationUrl: createDocumentationLink("/docs/integrations/pi-hole"),
+    documentationSlug: "pi-hole",
     defaultPort: 80,
+    features: { docker: { aliases: ["pihole", "pi-hole"] } },
   },
   adGuardHome: {
     name: "AdGuard Home",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/adguard-home.svg",
     category: ["dnsHole"],
-    documentationUrl: createDocumentationLink("/docs/integrations/adguard-home"),
+    documentationSlug: "adguard-home",
     defaultPort: 3000,
+    features: { docker: { aliases: ["adguardhome", "adguard-home", "adguard"] } },
   },
   technitiumDns: {
     name: "Technitium DNS",
     secretKinds: [["apiKey"], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/technitium.svg",
     category: ["dnsHole"],
-    documentationUrl: createDocumentationLink("/docs/integrations/technitium-dns"),
+    documentationSlug: "technitium-dns",
     defaultPort: 5380,
   },
   homeAssistant: {
@@ -229,32 +314,35 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/home-assistant.svg",
     category: ["smartHomeServer", "calendar"],
-    documentationUrl: createDocumentationLink("/docs/integrations/home-assistant"),
+    documentationSlug: "home-assistant",
     defaultPort: 8123,
     apiKeySettingsPath: "/profile/security",
+    features: { docker: { aliases: ["homeassistant", "home-assistant", "hass"] } },
   },
   openmediavault: {
     name: "OpenMediaVault",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/openmediavault.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/open-media-vault"),
+    documentationSlug: "open-media-vault",
     defaultPort: 80,
+    features: { docker: { aliases: ["omv"] } },
   },
   dashDot: {
     name: "Dash.",
     secretKinds: [[]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/dashdot.png",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/dash-dot"),
+    documentationSlug: "dash-dot",
     defaultPort: 3001,
+    features: { docker: { aliases: ["dashdot", "dash-dot", "dash."] } },
   },
   glances: {
     name: "Glances",
     secretKinds: [[]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/glances.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/glances"),
+    documentationSlug: "glances",
     defaultPort: 61208,
   },
   tdarr: {
@@ -262,7 +350,7 @@ export const integrationDefs = {
     secretKinds: [[], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/tdarr.png",
     category: ["mediaTranscoding"],
-    documentationUrl: createDocumentationLink("/docs/integrations/tdarr"),
+    documentationSlug: "tdarr",
     defaultPort: 8265,
   },
   proxmox: {
@@ -270,7 +358,7 @@ export const integrationDefs = {
     secretKinds: [["username", "tokenId", "apiKey", "realm"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/proxmox.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/proxmox"),
+    documentationSlug: "proxmox",
     defaultPort: 8006,
   },
   nextcloud: {
@@ -278,7 +366,7 @@ export const integrationDefs = {
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nextcloud.svg",
     category: ["calendar", "notifications"],
-    documentationUrl: createDocumentationLink("/docs/integrations/nextcloud"),
+    documentationSlug: "nextcloud",
     defaultPort: 443,
   },
   unifiController: {
@@ -286,15 +374,16 @@ export const integrationDefs = {
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
-    documentationUrl: createDocumentationLink("/docs/integrations/unifi-controller"),
+    documentationSlug: "unifi-controller",
     defaultPort: 8443,
+    features: { docker: { aliases: ["unifi", "unifi-controller"] } },
   },
   opnsense: {
     name: "OPNsense",
     secretKinds: [["opnsenseApiKey", "opnsenseApiSecret"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg",
     category: ["firewall"],
-    documentationUrl: createDocumentationLink("/docs/integrations/opnsense"),
+    documentationSlug: "opnsense",
     defaultPort: 443,
     apiKeySettingsPath: "/system_usermanager.php",
   },
@@ -303,7 +392,7 @@ export const integrationDefs = {
     secretKinds: [["topic"], ["topic", "apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
     category: ["notifications"],
-    documentationUrl: createDocumentationLink("/docs/integrations/ntfy"),
+    documentationSlug: "ntfy",
     defaultPort: 80,
     apiKeySettingsPath: "/account",
   },
@@ -312,7 +401,7 @@ export const integrationDefs = {
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gotify.svg",
     category: ["notifications"],
-    documentationUrl: createDocumentationLink("/docs/integrations/gotify"),
+    documentationSlug: "gotify",
     defaultPort: 80,
   },
   ical: {
@@ -320,14 +409,15 @@ export const integrationDefs = {
     secretKinds: [["url"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ical.svg",
     category: ["calendar"],
-    documentationUrl: createDocumentationLink("/docs/integrations/ical"),
+    documentationSlug: "ical",
+    features: { docker: { discoverable: false } },
   },
   anchor: {
     name: "Anchor",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/anchor.svg",
     category: ["notes"],
-    documentationUrl: createDocumentationLink("/docs/integrations/anchor"),
+    documentationSlug: "anchor",
     defaultPort: 8080,
     apiKeySettingsPath: "/settings",
   },
@@ -336,23 +426,25 @@ export const integrationDefs = {
     secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/truenas.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/truenas"),
+    documentationSlug: "truenas",
     defaultPort: 80,
+    features: { docker: { aliases: ["truenas"] } },
   },
   synology: {
     name: "Synology DiskStation",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/synology.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/synology"),
+    documentationSlug: "synology",
     defaultPort: 5000,
+    features: { docker: { aliases: ["synology", "diskstation"] } },
   },
   unraid: {
     name: "Unraid",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/unraid.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/unraid"),
+    documentationSlug: "unraid",
     defaultPort: 80,
     apiKeySettingsPath: "/Settings/ManagementAccess",
   },
@@ -361,16 +453,17 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/coolify.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
+    documentationSlug: "coolify",
     defaultPort: 8000,
     apiKeySettingsPath: "/security/api-tokens",
+    features: { docker: { aliases: ["coolify"] } },
   },
   immich: {
     name: "Immich",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/immich.svg",
     category: ["photoService"],
-    documentationUrl: createDocumentationLink("/docs/integrations/immich"),
+    documentationSlug: "immich",
     defaultPort: 2283,
     apiKeySettingsPath: "/user-settings",
   },
@@ -379,24 +472,26 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/paperless-ngx.svg",
     category: ["documents"],
-    documentationUrl: createDocumentationLink("/docs/integrations/paperless-ngx"),
+    documentationSlug: "paperless-ngx",
     defaultPort: 8000,
+    features: { docker: { aliases: ["paperless-ngx", "paperless"] } },
   },
   patchmon: {
     name: "PatchMon",
     secretKinds: [["patchmonApiKey", "patchmonApiSecret"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/patchmon.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/patchmon"),
+    documentationSlug: "patchmon",
     defaultPort: 3413,
     apiKeySettingsPath: "/settings/integrations",
+    features: { docker: { aliases: ["patchmon", "patch-mon"] } },
   },
   tracearr: {
     name: "Tracearr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg",
     category: ["mediaMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
+    documentationSlug: "tracearr",
     defaultPort: 7040,
     apiKeySettingsPath: "/settings",
   },
@@ -405,35 +500,39 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/speedtest-tracker.png",
     category: ["speedtest"],
-    documentationUrl: createDocumentationLink("/docs/integrations/speedtest-tracker"),
+    documentationSlug: "speedtest-tracker",
     defaultPort: 80,
     apiKeySettingsPath: "/admin/api-tokens",
+    features: { docker: { aliases: ["speedtest-tracker"] } },
   },
   uptimeKuma: {
     name: "Uptime Kuma",
     secretKinds: [[], ["slug"], ["slug", "apiKey"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/uptime-kuma.svg",
     category: ["uptimeMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/uptime-kuma"),
+    documentationSlug: "uptime-kuma",
     defaultPort: 3001,
     apiKeySettingsPath: "/settings/api-keys",
+    features: { docker: { aliases: ["uptime-kuma"] } },
   },
   audiobookshelf: {
     name: "Audiobookshelf",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/audiobookshelf.svg",
     category: ["mediaLibrary"],
-    documentationUrl: createDocumentationLink("/docs/integrations/audiobookshelf"),
+    documentationSlug: "audiobookshelf",
     defaultPort: 13378,
     apiKeySettingsPath: "/account",
+    features: { docker: { aliases: ["audiobookshelf"] } },
   },
   navidrome: {
     name: "Navidrome",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/navidrome.svg",
     category: ["mediaLibrary", "mediaService"],
-    documentationUrl: createDocumentationLink("/docs/integrations/navidrome"),
+    documentationSlug: "navidrome",
     defaultPort: 4533,
+    features: { docker: { aliases: ["navidrome"] } },
   },
   umami: {
     name: "Umami",
@@ -441,7 +540,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/umami.svg",
     category: ["analytics"],
     defaultUrl: "https://api.umami.is/v1",
-    documentationUrl: createDocumentationLink("/docs/integrations/umami"),
+    documentationSlug: "umami",
     defaultPort: 3000,
   },
   peaNut: {
@@ -449,23 +548,16 @@ export const integrationDefs = {
     secretKinds: [["username", "password"], []],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/peanut.svg",
     category: ["ups"],
-    documentationUrl: createDocumentationLink("/docs/integrations/peanut"),
+    documentationSlug: "peanut",
     defaultPort: 8080,
   },
-  beszel: {
-    name: "Beszel",
-    secretKinds: [["username", "password"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/beszel.svg",
-    category: ["beszel"],
-    documentationUrl: createDocumentationLink("/docs/integrations/beszel"),
-    defaultPort: 8090,
-  },
+  ...generatedIntegrationDefinitions,
   gluetun: {
     name: "Gluetun",
     secretKinds: [["username", "password"], ["apiKey"], []],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gluetun.svg",
     category: ["vpn"],
-    documentationUrl: createDocumentationLink("/docs/integrations/gluetun"),
+    documentationSlug: "gluetun",
     defaultPort: 8000,
   },
   traefik: {
@@ -473,7 +565,7 @@ export const integrationDefs = {
     secretKinds: [[], ["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/traefik.svg",
     category: ["reverseProxy"],
-    documentationUrl: createDocumentationLink("/docs/integrations/traefik"),
+    documentationSlug: "traefik",
     defaultPort: 8080,
   },
   archiveTeamWarrior: {
@@ -481,7 +573,7 @@ export const integrationDefs = {
     secretKinds: [[], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/archiveteam-warrior.png",
     category: ["archiving"],
-    documentationUrl: createDocumentationLink("/docs/integrations/archiveteam-warrior"),
+    documentationSlug: "archiveteam-warrior",
     defaultPort: 8001,
   },
   wud: {
@@ -489,7 +581,7 @@ export const integrationDefs = {
     secretKinds: [[], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/whats-up-docker.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/whats-up-docker"),
+    documentationSlug: "whats-up-docker",
     defaultPort: 3000,
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
@@ -514,9 +606,13 @@ export const integrationDefs = {
       "uptimeMonitoring",
       "mediaOrganizer",
     ],
-    documentationUrl: null,
+    documentationSlug: null,
+    features: {
+      docker: { discoverable: false },
+      onboarding: { hidden: true },
+    },
   },
-} as const satisfies Record<string, integrationDefinition>;
+} as const satisfies Record<string, integrationDefinition>);
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
 
@@ -524,11 +620,14 @@ export const getIconUrl = (integration: IntegrationKind) => integrationDefs[inte
 
 export const getIntegrationName = (integration: IntegrationKind) => integrationDefs[integration].name;
 
-export const getDefaultSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] =>
-  integrationDefs[integration].secretKinds[0];
+export const getDefaultSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] => [
+  ...integrationDefs[integration].secretKinds[0],
+];
 
 export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> =>
-  integrationDefs[integration].secretKinds;
+  integrationDefs[integration].secretKinds.map((secretKinds) => [...secretKinds]) as AtLeastOneOf<
+    IntegrationSecretKind[]
+  >;
 
 export const getIntegrationDefaultUrl = (integration: IntegrationKind) => {
   const definition = integrationDefs[integration];

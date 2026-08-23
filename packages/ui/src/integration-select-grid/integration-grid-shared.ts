@@ -1,9 +1,7 @@
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import {
-  featuredIntegrations,
   getIntegrationName,
   getWidgetKindsForIntegration,
-  hiddenFromOnboarding,
   integrationDefs,
   integrationKinds,
 } from "@homarr/definitions";
@@ -56,7 +54,7 @@ export const buildSortedIntegrations = (
   integrationKinds
     .filter((kind) => {
       if (options.allowedKinds && !options.allowedKinds.includes(kind)) return false;
-      if (options.onboarding && hiddenFromOnboarding.has(kind)) return false;
+      if (options.onboarding && integrationDefs[kind].features.onboarding.hidden) return false;
       if (!options.enableMockIntegration && kind === "mock") return false;
       return true;
     })
@@ -67,11 +65,11 @@ export const buildSortedIntegrations = (
       widgets: getWidgetKindsForIntegration(kind),
     }))
     .toSorted((left, right) => {
-      const leftIndex = featuredIntegrations.indexOf(left.kind);
-      const rightIndex = featuredIntegrations.indexOf(right.kind);
-      if (leftIndex !== -1 && rightIndex !== -1) return leftIndex - rightIndex;
-      if (leftIndex !== -1) return -1;
-      if (rightIndex !== -1) return 1;
+      const leftFeaturedOrder = integrationDefs[left.kind].features.onboarding.featuredOrder;
+      const rightFeaturedOrder = integrationDefs[right.kind].features.onboarding.featuredOrder;
+      if (leftFeaturedOrder !== null && rightFeaturedOrder !== null) return leftFeaturedOrder - rightFeaturedOrder;
+      if (leftFeaturedOrder !== null) return -1;
+      if (rightFeaturedOrder !== null) return 1;
       return right.widgets.length - left.widgets.length || left.name.localeCompare(right.name);
     });
 

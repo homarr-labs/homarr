@@ -19,9 +19,7 @@ import {
   groupMembers,
   groupPermissions,
   groups,
-  integrationGroupPermissions,
   integrationItems,
-  integrationUserPermissions,
   integrations,
   apps,
   itemLayouts,
@@ -70,12 +68,11 @@ import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
-import { throwIfActionForbiddenAsync as throwIfIntegrationActionForbiddenAsync } from "./integration/integration-access";
+import { throwIfIntegrationActionsForbiddenAsync } from "./integration/integration-access";
 import {
   throwIfCustomWidgetBoardDuplicationForbidden,
   throwIfCustomWidgetPlacementChangeForbidden,
 } from "./board/custom-widget-placement-access";
-import { validateTimetableOptionsChangeAsync } from "./widgets/timetable";
 
 interface BoardItemPlacementRectangle {
   xOffset: number;
@@ -121,6 +118,81 @@ const findFirstAvailableBoardItemPosition = (
     }
   }
   return null;
+};
+
+interface WidgetPlacementRecord {
+  id: string;
+  kind: WidgetKind;
+}
+
+interface WidgetConfigurationRecord extends WidgetPlacementRecord {
+  integrationIds: readonly string[];
+}
+
+interface IntegrationKindRecord {
+  id: string;
+  kind: IntegrationKind;
+}
+
+const haveSameIntegrationIds = (left: readonly string[], right: readonly string[]) =>
+  left.length === right.length && left.every((integrationId) => right.includes(integrationId));
+
+const validateWidgetConfigurationsAsync = async (
+  ctx: Parameters<typeof throwIfIntegrationActionsForbiddenAsync>[0],
+  submittedItems: readonly WidgetConfigurationRecord[],
+  storedItems: readonly WidgetConfigurationRecord[],
+) => {
+  const storedItemsById = new Map(storedItems.map((item) => [item.id, item]));
+  const changedItems = submittedItems.filter((item) => {
+    const storedItem = storedItemsById.get(item.id);
+    if (!storedItem || storedItem.kind !== item.kind) return true;
+    return !haveSameIntegrationIds(item.integrationIds, storedItem.integrationIds);
+  });
+  if (changedItems.length === 0) return;
+
+  const selectedIntegrationIds = [...new Set(changedItems.flatMap(({ integrationIds }) => integrationIds))];
+  let integrationRecords: IntegrationKindRecord[] = [];
+  if (selectedIntegrationIds.length > 0) {
+    integrationRecords = await ctx.db.query.integrations.findMany({
+      columns: { id: true, kind: true },
+      where: inArray(integrations.id, selectedIntegrationIds),
+    });
+  }
+  const integrationRecordsById = new Map(integrationRecords.map((integration) => [integration.id, integration]));
+  const invalidIntegrationIds = selectedIntegrationIds.filter(
+    (integrationId) => !integrationRecordsById.has(integrationId),
+  );
+  if (invalidIntegrationIds.length > 0) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: `Invalid integration IDs: ${invalidIntegrationIds.join(", ")}`,
+    });
+  }
+
+  const addedOrReconfiguredIntegrationIds = [
+    ...new Set(
+      changedItems.flatMap((item) => {
+        const storedItem = storedItemsById.get(item.id);
+        if (!storedItem || storedItem.kind !== item.kind) return item.integrationIds;
+        return item.integrationIds.filter((integrationId) => !storedItem.integrationIds.includes(integrationId));
+      }),
+    ),
+  ];
+  await throwIfIntegrationActionsForbiddenAsync(ctx, addedOrReconfiguredIntegrationIds, "use");
+
+  for (const item of changedItems) {
+    const selectedIntegrationKinds = item.integrationIds.flatMap((integrationId) => {
+      const integration = integrationRecordsById.get(integrationId);
+      return integration ? [integration.kind] : [];
+    });
+    const integrationIssue = getWidgetIntegrationIssue(item.kind, selectedIntegrationKinds);
+    if (!integrationIssue) continue;
+
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: getWidgetIntegrationIssueMessage(item.kind, integrationIssue),
+    });
+  }
 };
 
 export const boardRouter = createTRPCRouter({
@@ -633,7 +705,7 @@ export const boardRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Duplicate an existing board into a new board. Requires board-create permission and view permission on the source board. REQUIRED: id (source board ID), name (unique name for the new board). Returns { boardId }",
+          "Duplicate an existing board into a new board. Requires board-create permission, view permission on the source board, and use permission for every linked integration. Disabled or invalid widget configurations must be removed before duplication. REQUIRED: id (source board ID), name (unique name for the new board). Returns { boardId }",
       },
     })
     .input(boardDuplicateSchema)
@@ -670,6 +742,15 @@ export const boardRouter = createTRPCRouter({
 
       const { sections: boardSections, items: boardItems, layouts: boardLayouts, ...boardProps } = board;
       throwIfCustomWidgetBoardDuplicationForbidden(ctx.session.user.permissions.includes("admin"), boardItems);
+      await validateWidgetConfigurationsAsync(
+        ctx,
+        boardItems.map((item) => ({
+          id: item.id,
+          kind: item.kind,
+          integrationIds: item.integrations.map(({ integrationId }) => integrationId),
+        })),
+        [],
+      );
 
       const newBoardId = createId();
 
@@ -750,17 +831,19 @@ export const boardRouter = createTRPCRouter({
 
       const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = boardSections
         .flatMap((section) =>
-          section.layouts.map((layoutSection): InferInsertModel<typeof sectionLayouts> => ({
-            ...layoutSection,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            layoutId: layoutsMap.get(layoutSection.layoutId)!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            sectionId: sectionMap.get(layoutSection.sectionId)!,
-            parentSectionId: layoutSection.parentSectionId
-              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                sectionMap.get(layoutSection.parentSectionId)!
-              : layoutSection.parentSectionId,
-          })),
+          section.layouts.map(
+            (layoutSection): InferInsertModel<typeof sectionLayouts> => ({
+              ...layoutSection,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              layoutId: layoutsMap.get(layoutSection.layoutId)!,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              sectionId: sectionMap.get(layoutSection.sectionId)!,
+              parentSectionId: layoutSection.parentSectionId
+                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  sectionMap.get(layoutSection.parentSectionId)!
+                : layoutSection.parentSectionId,
+            }),
+          ),
         )
         .concat(
           (generatedMobilePositions?.sectionLayouts ?? []).map((layoutSection) => ({
@@ -777,11 +860,13 @@ export const boardRouter = createTRPCRouter({
         );
       const sectionCollapseStatesToInsert: InferInsertModel<typeof sectionCollapseStates>[] = boardSections.flatMap(
         (section) =>
-          section.collapseStates.map((collapseState): InferInsertModel<typeof sectionCollapseStates> => ({
-            ...collapseState,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            sectionId: sectionMap.get(collapseState.sectionId)!,
-          })),
+          section.collapseStates.map(
+            (collapseState): InferInsertModel<typeof sectionCollapseStates> => ({
+              ...collapseState,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              sectionId: sectionMap.get(collapseState.sectionId)!,
+            }),
+          ),
       );
 
       const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
@@ -796,15 +881,17 @@ export const boardRouter = createTRPCRouter({
 
       const itemLayoutsToInsert: InferInsertModel<typeof itemLayouts>[] = boardItems
         .flatMap((item) =>
-          item.layouts.map((layoutSection): InferInsertModel<typeof itemLayouts> => ({
-            ...layoutSection,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            sectionId: sectionMap.get(layoutSection.sectionId)!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            itemId: itemMap.get(layoutSection.itemId)!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            layoutId: layoutsMap.get(layoutSection.layoutId)!,
-          })),
+          item.layouts.map(
+            (layoutSection): InferInsertModel<typeof itemLayouts> => ({
+              ...layoutSection,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              sectionId: sectionMap.get(layoutSection.sectionId)!,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              itemId: itemMap.get(layoutSection.itemId)!,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              layoutId: layoutsMap.get(layoutSection.layoutId)!,
+            }),
+          ),
         )
         .concat(
           (generatedMobilePositions?.itemSectionLayouts ?? []).map((layoutSection) => ({
@@ -818,34 +905,12 @@ export const boardRouter = createTRPCRouter({
           })),
         );
 
-      // Creates a list with all integration ids the user has access to
-      const hasAccessForAll = ctx.session.user.permissions.includes("integration-use-all");
-      const integrationIdsWithAccess = hasAccessForAll
-        ? []
-        : await ctx.db
-            .selectDistinct({
-              id: integrationGroupPermissions.integrationId,
-            })
-            .from(integrationGroupPermissions)
-            .leftJoin(groupMembers, eq(integrationGroupPermissions.groupId, groupMembers.groupId))
-            .where(eq(groupMembers.userId, ctx.session.user.id))
-            .union(
-              ctx.db
-                .selectDistinct({ id: integrationUserPermissions.integrationId })
-                .from(integrationUserPermissions)
-                .where(eq(integrationUserPermissions.userId, ctx.session.user.id)),
-            )
-            .then((result) => result.map((row) => row.id));
-
       const itemIntegrationsToInsert = boardItems.flatMap((item) =>
-        item.integrations
-          // Restrict integrations to only those the user has access to
-          .filter(({ integrationId }) => integrationIdsWithAccess.includes(integrationId) || hasAccessForAll)
-          .map((integration) => ({
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            itemId: itemMap.get(item.id)!,
-            integrationId: integration.integrationId,
-          })),
+        item.integrations.map((integration) => ({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          itemId: itemMap.get(item.id)!,
+          integrationId: integration.integrationId,
+        })),
       );
 
       await handleTransactionsAsync(ctx.db, {
@@ -1488,6 +1553,7 @@ export const boardRouter = createTRPCRouter({
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
     const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
+    await validateWidgetConfigurationsAsync(ctx, input.items, dbBoard.items);
     throwIfCustomWidgetPlacementChangeForbidden({
       isAdmin: ctx.session.user.permissions.includes("admin"),
       submittedItems: input.items,
@@ -1497,6 +1563,7 @@ export const boardRouter = createTRPCRouter({
     for (const item of input.items) {
       if (item.kind !== "timetable") continue;
       const previousItem = dbBoard.items.find((dbItem) => dbItem.id === item.id);
+      const { validateTimetableOptionsChangeAsync } = await import("./timetable-options-validation");
       await validateTimetableOptionsChangeAsync(
         item.options,
         previousItem?.kind === "timetable" ? previousItem.options : undefined,
@@ -1524,15 +1591,17 @@ export const boardRouter = createTRPCRouter({
             const sectionLayoutsToInsert = addedSections
               .filter((section) => section.kind === "container")
               .flatMap((section) =>
-                section.layouts.map((sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
-                  layoutId: sectionLayout.layoutId,
-                  sectionId: section.id,
-                  parentSectionId: sectionLayout.parentSectionId,
-                  height: sectionLayout.height,
-                  width: sectionLayout.width,
-                  xOffset: sectionLayout.xOffset,
-                  yOffset: sectionLayout.yOffset,
-                })),
+                section.layouts.map(
+                  (sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
+                    layoutId: sectionLayout.layoutId,
+                    sectionId: section.id,
+                    parentSectionId: sectionLayout.parentSectionId,
+                    height: sectionLayout.height,
+                    width: sectionLayout.width,
+                    xOffset: sectionLayout.xOffset,
+                    yOffset: sectionLayout.yOffset,
+                  }),
+                ),
               );
 
             if (sectionLayoutsToInsert.length > 0) {
@@ -1554,15 +1623,17 @@ export const boardRouter = createTRPCRouter({
             );
             await transaction.insert(schema.itemLayouts).values(
               addedItems.flatMap((item) =>
-                item.layouts.map((layoutSection): InferInsertModel<typeof schema.itemLayouts> => ({
-                  layoutId: layoutSection.layoutId,
-                  sectionId: layoutSection.sectionId,
-                  itemId: item.id,
-                  height: layoutSection.height,
-                  width: layoutSection.width,
-                  xOffset: layoutSection.xOffset,
-                  yOffset: layoutSection.yOffset,
-                })),
+                item.layouts.map(
+                  (layoutSection): InferInsertModel<typeof schema.itemLayouts> => ({
+                    layoutId: layoutSection.layoutId,
+                    sectionId: layoutSection.sectionId,
+                    itemId: item.id,
+                    height: layoutSection.height,
+                    width: layoutSection.width,
+                    xOffset: layoutSection.xOffset,
+                    yOffset: layoutSection.yOffset,
+                  }),
+                ),
               ),
             );
           }
@@ -1720,15 +1791,17 @@ export const boardRouter = createTRPCRouter({
             const sectionLayoutsToInsert = addedSections
               .filter((section) => section.kind === "container")
               .flatMap((section) =>
-                section.layouts.map((sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
-                  layoutId: sectionLayout.layoutId,
-                  sectionId: section.id,
-                  parentSectionId: sectionLayout.parentSectionId,
-                  height: sectionLayout.height,
-                  width: sectionLayout.width,
-                  xOffset: sectionLayout.xOffset,
-                  yOffset: sectionLayout.yOffset,
-                })),
+                section.layouts.map(
+                  (sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
+                    layoutId: sectionLayout.layoutId,
+                    sectionId: section.id,
+                    parentSectionId: sectionLayout.parentSectionId,
+                    height: sectionLayout.height,
+                    width: sectionLayout.width,
+                    xOffset: sectionLayout.xOffset,
+                    yOffset: sectionLayout.yOffset,
+                  }),
+                ),
               );
 
             if (sectionLayoutsToInsert.length > 0) {
@@ -1755,15 +1828,17 @@ export const boardRouter = createTRPCRouter({
               .insert(itemLayouts)
               .values(
                 addedItems.flatMap((item) =>
-                  item.layouts.map((layoutSection): InferInsertModel<typeof itemLayouts> => ({
-                    layoutId: layoutSection.layoutId,
-                    sectionId: layoutSection.sectionId,
-                    itemId: item.id,
-                    height: layoutSection.height,
-                    width: layoutSection.width,
-                    xOffset: layoutSection.xOffset,
-                    yOffset: layoutSection.yOffset,
-                  })),
+                  item.layouts.map(
+                    (layoutSection): InferInsertModel<typeof itemLayouts> => ({
+                      layoutId: layoutSection.layoutId,
+                      sectionId: layoutSection.sectionId,
+                      itemId: item.id,
+                      height: layoutSection.height,
+                      width: layoutSection.width,
+                      xOffset: layoutSection.xOffset,
+                      yOffset: layoutSection.yOffset,
+                    }),
+                  ),
                 ),
               )
               .run();
@@ -2066,6 +2141,12 @@ export const boardRouter = createTRPCRouter({
     .output(z.object({ itemId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+
+      await validateWidgetConfigurationsAsync(
+        ctx,
+        [{ id: "", kind: input.kind, integrationIds: input.integrationIds }],
+        [],
+      );
       throwIfCustomWidgetPlacementChangeForbidden({
         isAdmin: ctx.session.user.permissions.includes("admin"),
         submittedItems: [{ id: "", kind: input.kind, options: input.options }],
@@ -2073,36 +2154,8 @@ export const boardRouter = createTRPCRouter({
       });
 
       if (input.kind === "timetable") {
+        const { validateTimetableOptionsChangeAsync } = await import("./timetable-options-validation");
         await validateTimetableOptionsChangeAsync(input.options);
-      }
-
-      let selectedIntegrationKinds: IntegrationKind[] = [];
-      if (input.integrationIds.length > 0) {
-        const existing = await ctx.db.query.integrations.findMany({
-          columns: { id: true, kind: true },
-          where: inArray(integrations.id, input.integrationIds),
-        });
-        const validIds = new Set(existing.map((row) => row.id));
-        const invalid = input.integrationIds.filter((id) => !validIds.has(id));
-        if (invalid.length > 0) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: `Invalid integration IDs: ${invalid.join(", ")}` });
-        }
-
-        selectedIntegrationKinds = existing.map((integration) => integration.kind);
-
-        await Promise.all(
-          input.integrationIds.map((integrationId) =>
-            throwIfIntegrationActionForbiddenAsync(ctx, eq(integrations.id, integrationId), "use"),
-          ),
-        );
-      }
-
-      const integrationIssue = getWidgetIntegrationIssue(input.kind, selectedIntegrationKinds);
-      if (integrationIssue) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: getWidgetIntegrationIssueMessage(input.kind, integrationIssue),
-        });
       }
 
       return await serializeBoardItemPlacementAsync(input.boardId, async () => {

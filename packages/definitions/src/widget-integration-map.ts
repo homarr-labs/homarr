@@ -1,73 +1,22 @@
 import { createDocumentationLink } from "./docs";
 import type { IntegrationKind } from "./integration";
-import { getIntegrationKindsByCategory, integrationKinds } from "./integration";
+import { integrationKinds } from "./integration";
 import type { WidgetKind } from "./widget";
-import { widgetDefaultSizes } from "./widget";
+import { widgetDefaultSizes, widgetFeatureCatalog, widgetKinds } from "./widget";
+import type { NativeFeatureCapabilityDescriptor } from "./widget-feature-catalog";
 
-/**
- * Server-safe capability metadata shared by the API and widget catalog.
- * Keep this intentionally small: presentation, options, and request contracts
- * remain owned by their feature packages.
- */
-export interface NativeFeatureCapabilityDescriptor {
-  integrations: readonly IntegrationKind[];
-  connectionOptional?: true;
-  serverMaxIntegrations?: number;
-}
+export type { NativeFeatureCapabilityDescriptor } from "./widget-feature-catalog";
 
-export const nativeFeatureCapabilities = {
-  dnsHoleSummary: { integrations: getIntegrationKindsByCategory("dnsHole") },
-  dnsHoleControls: { integrations: getIntegrationKindsByCategory("dnsHole") },
-  "smartHome-entityState": {
-    integrations: getIntegrationKindsByCategory("smartHomeServer"),
-    serverMaxIntegrations: 1,
-  },
-  "smartHome-executeAutomation": {
-    integrations: getIntegrationKindsByCategory("smartHomeServer"),
-    serverMaxIntegrations: 1,
-  },
-  mediaServer: { integrations: getIntegrationKindsByCategory("mediaService") },
-  calendar: { integrations: getIntegrationKindsByCategory("calendar"), connectionOptional: true },
-  downloads: { integrations: getIntegrationKindsByCategory("downloadClient") },
-  "mediaRequests-requestList": { integrations: getIntegrationKindsByCategory("mediaRequest") },
-  "mediaRequests-requestStats": { integrations: getIntegrationKindsByCategory("mediaRequest") },
-  mediaTranscoding: { integrations: getIntegrationKindsByCategory("mediaTranscoding"), serverMaxIntegrations: 1 },
-  mediaMissing: { integrations: getIntegrationKindsByCategory("mediaOrganizer") },
-  networkControllerSummary: { integrations: getIntegrationKindsByCategory("networkController") },
-  networkControllerStatus: { integrations: getIntegrationKindsByCategory("networkController") },
-  indexerManager: { integrations: getIntegrationKindsByCategory("indexerManager") },
-  healthMonitoring: {
-    integrations: getIntegrationKindsByCategory("healthMonitoring").filter(
-      (kind) => kind !== "patchmon" && kind !== "wud",
-    ),
-  },
-  firewall: { integrations: getIntegrationKindsByCategory("firewall") },
-  notifications: { integrations: getIntegrationKindsByCategory("notifications") },
-  mediaReleases: { integrations: ["mock", "emby", "jellyfin", "plex"] },
-  systemResources: { integrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"] },
-  systemDisks: { integrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology"] },
-  beszelAlerts: { integrations: ["beszel", "mock"] },
-  beszelSystemGrid: { integrations: ["beszel", "mock"] },
-  beszelSystemStats: { integrations: ["beszel", "mock"] },
-  beszelSystemTable: { integrations: ["beszel", "mock"] },
-  coolify: { integrations: ["coolify"] },
-  "immich-serverStats": { integrations: ["immich"], serverMaxIntegrations: 1 },
-  "immich-albumCarousel": { integrations: ["immich"], serverMaxIntegrations: 1 },
-  paperlessNgx: { integrations: ["paperlessNgx"], serverMaxIntegrations: 1 },
-  patchmon: { integrations: ["patchmon"], serverMaxIntegrations: 1 },
-  bazarr: { integrations: ["bazarr"], serverMaxIntegrations: 1 },
-  tracearr: { integrations: ["tracearr"] },
-  speedtestTracker: { integrations: ["speedtestTracker"] },
-  uptimeKuma: { integrations: ["uptimeKuma"] },
-  audioStats: { integrations: ["navidrome", "audiobookshelf"], serverMaxIntegrations: 1 },
-  umami: { integrations: ["umami"], serverMaxIntegrations: 1 },
-  vpn: { integrations: getIntegrationKindsByCategory("vpn") },
-  ups: { integrations: getIntegrationKindsByCategory("ups") },
-  archiveTeamWarrior: { integrations: ["archiveTeamWarrior"], serverMaxIntegrations: 1 },
-  anchorNote: { integrations: ["anchor"], serverMaxIntegrations: 1 },
-  traefik: { integrations: ["traefik"] },
-  wud: { integrations: ["wud"], serverMaxIntegrations: 1 },
-} as const satisfies Partial<Record<WidgetKind, NativeFeatureCapabilityDescriptor>>;
+const createNativeFeatureCapabilities = () => {
+  const result: Partial<Record<WidgetKind, NativeFeatureCapabilityDescriptor>> = {};
+  for (const kind of widgetKinds) {
+    const descriptor = widgetFeatureCatalog[kind];
+    if ("capability" in descriptor) result[kind] = descriptor.capability;
+  }
+  return result;
+};
+
+export const nativeFeatureCapabilities = createNativeFeatureCapabilities();
 
 const nativeFeatureCapabilityEntries = Object.entries(nativeFeatureCapabilities) as [
   WidgetKind,
@@ -108,20 +57,24 @@ export type WidgetIntegrationIssue =
 
 export const getWidgetIntegrationIssue = (
   widgetKind: WidgetKind,
-  integrationKinds: readonly IntegrationKind[],
+  selectedIntegrationKinds: readonly IntegrationKind[],
 ): WidgetIntegrationIssue | null => {
   const supportedIntegrations = widgetIntegrationSupport[widgetKind];
   const integrationLimit = widgetIntegrationLimits[widgetKind] ?? Number.POSITIVE_INFINITY;
-  if (integrationKinds.length > integrationLimit) return { code: "integration-limit", limit: integrationLimit };
-  if (supportedIntegrations === undefined && integrationKinds.length > 0) return { code: "integration-not-supported" };
+  if (selectedIntegrationKinds.length > integrationLimit) {
+    return { code: "integration-limit", limit: integrationLimit };
+  }
+  if (supportedIntegrations === undefined && selectedIntegrationKinds.length > 0) {
+    return { code: "integration-not-supported" };
+  }
   if (
     supportedIntegrations !== undefined &&
-    integrationKinds.length === 0 &&
+    selectedIntegrationKinds.length === 0 &&
     !widgetKindsWithOptionalIntegrations.has(widgetKind)
   ) {
     return { code: "integration-required" };
   }
-  const incompatibleKinds = integrationKinds.filter((kind) => !supportedIntegrations?.includes(kind));
+  const incompatibleKinds = selectedIntegrationKinds.filter((kind) => !supportedIntegrations?.includes(kind));
   return incompatibleKinds.length > 0 ? { code: "incompatible-integration", incompatibleKinds } : null;
 };
 
@@ -147,9 +100,9 @@ const createIntegrationWidgetSupport = () => {
 
 export const integrationWidgetSupport = createIntegrationWidgetSupport();
 
-export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => [
-  ...integrationWidgetSupport[integrationKind],
-];
+export const getWidgetKindsForIntegration = (integrationKind: IntegrationKind): WidgetKind[] => {
+  return [...integrationWidgetSupport[integrationKind]];
+};
 
 export interface DefaultWidgetConfig {
   kind: WidgetKind;
@@ -159,11 +112,27 @@ export interface DefaultWidgetConfig {
   skip?: boolean;
 }
 
-export const defaultWidgetConfigs: DefaultWidgetConfig[] = [
-  { kind: "clock", width: 2, height: 1 },
-  { kind: "weather", width: 2, height: 1, options: { showHumidity: false, showCity: false, hasForecast: false } },
-  { kind: "bookmarks", width: 2, height: 2, options: { title: "Useful Links", layout: "grid", openNewTab: true } },
+type WidgetKindWithDefaultSize = {
+  [TKind in WidgetKind]: (typeof widgetFeatureCatalog)[TKind] extends { defaultSize: Readonly<{ width: number }> }
+    ? TKind
+    : never;
+}[WidgetKind];
+
+type DefaultWidgetConfigRecipe = Omit<DefaultWidgetConfig, "kind" | "width" | "height"> & {
+  kind: WidgetKindWithDefaultSize;
+};
+
+const defaultWidgetConfigDefinitions: DefaultWidgetConfigRecipe[] = [
+  { kind: "clock" },
+  { kind: "weather", options: { showHumidity: false, showCity: false, hasForecast: false } },
+  { kind: "bookmarks", options: { title: "Useful Links", layout: "grid", openNewTab: true } },
 ];
+
+export const defaultWidgetConfigs: DefaultWidgetConfig[] = defaultWidgetConfigDefinitions.map((recipe) => {
+  const defaultSize = widgetDefaultSizes[recipe.kind];
+  if (!defaultSize) throw new Error(`Default widget ${recipe.kind} must declare a default size`);
+  return { ...recipe, ...defaultSize };
+});
 
 const defaultWidgetConfigByKind = new Map(defaultWidgetConfigs.map((config) => [config.kind, config]));
 
@@ -173,18 +142,6 @@ export const getDefaultWidgetConfig = (kind: WidgetKind): DefaultWidgetConfig =>
 export const generalWidgets: WidgetKind[] = defaultWidgetConfigs
   .filter((config) => !config.skip)
   .map((config) => config.kind);
-
-export const featuredIntegrations: readonly IntegrationKind[] = [
-  "sonarr",
-  "radarr",
-  "prowlarr",
-  "sabNzbd",
-  "qBittorrent",
-  "seerr",
-  "jellyfin",
-];
-
-export const hiddenFromOnboarding = new Set<IntegrationKind>(["mock"]);
 
 export const defaultBookmarkApps = [
   {

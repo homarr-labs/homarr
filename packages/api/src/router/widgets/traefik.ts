@@ -1,6 +1,6 @@
 import { traefikRequestHandler } from "@homarr/request-handler/traefik";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
@@ -13,7 +13,7 @@ export const traefikRouter = createTRPCRouter({
           "Retrieve Traefik dashboard data, including routers, services, middlewares, and entry points, for the given integration IDs.",
       },
     })
-    .concat(createManyIntegrationMiddleware("query", "traefik"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "traefik"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(
         ctx.integrations,

@@ -102,14 +102,16 @@ export default async function Layout(props: {
         })
       : null,
   );
-  const assistantAvailabilityPromise: Promise<AssistantAvailability> = sessionPromise.then((session) =>
-    !session
-      ? "unauthenticated"
-      : api.assistant
-          .getAvailability()
-          .then((availability) => (availability.enabled ? "enabled" : "unconfigured"))
-          .catch(() => "error"),
-  );
+  const assistantAvailabilityPromise = sessionPromise.then(async (session): Promise<AssistantAvailability> => {
+    if (!session) return "unauthenticated";
+
+    try {
+      const availability = await api.assistant.getAvailability();
+      return availability.enabled ? "enabled" : "unconfigured";
+    } catch {
+      return "error";
+    }
+  });
   const [session, user, serverSettings, colorScheme, assistantAvailability] = await Promise.all([
     sessionPromise,
     userPromise,

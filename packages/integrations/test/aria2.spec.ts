@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, test, vi } from "vitest";
 
 import { createDb } from "@homarr/db/test";
 
-import { Aria2Integration } from "../src";
+import { Aria2Integration } from "../src/download-client/aria2/aria2-integration";
 
 vi.mock("@homarr/db", async (importActual) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports

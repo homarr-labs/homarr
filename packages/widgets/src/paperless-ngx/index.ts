@@ -6,10 +6,6 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("paperlessNgx", {
   supportsAdvancedFocus: false,
   icon: IconFileText,
-  refetchInterval: null,
-  supportedIntegrations: ["paperlessNgx"],
-  integrationsRequired: true,
-  maxIntegrations: 1,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showInboxRatio: factory.switch({

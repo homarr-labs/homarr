@@ -44,6 +44,7 @@ const requestedVariables = [
 ] as const;
 
 export const airQualityRequestHandler = createWidgetRequestHandler({
+  cacheNamespace: "air-quality",
   cacheTtlMs: 15 * 60 * 1000,
   fallbackToStaleOnError: true,
   staleIfErrorTtlMs: 24 * 60 * 60 * 1000,

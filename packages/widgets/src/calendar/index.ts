@@ -1,7 +1,6 @@
 import { IconCalendar } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
 
 import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition";
@@ -10,7 +9,6 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("calendar", {
   icon: IconCalendar,
   supportsAdvancedFocus: true,
-  queryKey: [["widget", "calendar", "findAllEvents"]],
   queryMatcher: matchesWidgetRuntimeQuery,
   createOptions() {
     return optionsBuilder.from((factory) => ({
@@ -34,6 +32,4 @@ export const { definition, componentLoader } = createWidgetDefinition("calendar"
       }),
     }));
   },
-  supportedIntegrations: getIntegrationKindsByCategory("calendar"),
-  integrationsRequired: false,
 }).withDynamicImport(() => import("./component"));

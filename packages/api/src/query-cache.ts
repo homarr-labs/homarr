@@ -1,5 +1,7 @@
 import type { QueryKey } from "@tanstack/react-query";
 
+import { generatedWidgetOperationPolicies } from "@homarr/definitions";
+
 // RSC-prefetched data must survive the hydration pass without an immediate
 // duplicate fetch. Widget-specific intervals still control live refreshes.
 export const queryCacheDefaultStaleTimeMs = 30_000;
@@ -11,8 +13,15 @@ const widgetDataQueryPaths = new Set(["app.byId", "app.byIds", "docker.getContai
 // Beszel system stats are large time-series payloads and were deliberately kept out of
 // the persisted cache in #6289; live stats come from an SSE subscription instead.
 const excludedWidgetPaths = new Set(["widget.app.ping", "widget.beszel.getSystemStats"]);
+const generatedWidgetPersistencePolicies = new Map(
+  generatedWidgetOperationPolicies
+    .filter((policy) => policy.kind === "query")
+    .map((policy) => [policy.path.join("."), policy.persist] as const),
+);
 
 export const isWidgetDataTrpcPath = (path: string) => {
+  const generatedPolicy = generatedWidgetPersistencePolicies.get(path);
+  if (generatedPolicy !== undefined) return generatedPolicy;
   if (path.startsWith("widget.")) return !excludedWidgetPaths.has(path);
   return widgetDataQueryPaths.has(path);
 };

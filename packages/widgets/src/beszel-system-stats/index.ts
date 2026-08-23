@@ -17,7 +17,6 @@ const timePeriodOptions = [
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelSystemStats", {
   icon: IconChartAreaLine,
-  queryKeys: [[["widget", "beszel", "getSystems"]], [["widget", "beszel", "getSystemStats"]]],
   queryMatcher(query, scope) {
     if (query.path.at(-1) === "getSystems") {
       return widgetQueryInputMatches(query.input, { integrationIds: scope.integrationIds });
@@ -40,8 +39,6 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelSys
       (dockerEnabled && widgetQueryInputMatches(query.input, { ...expected, includeDocker: true }))
     );
   },
-  supportedIntegrations: ["beszel", "mock"],
-  integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       systemId: factory.integrationSelect({

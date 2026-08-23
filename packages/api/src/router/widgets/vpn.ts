@@ -1,13 +1,12 @@
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { vpnSummaryHandler } from "@homarr/request-handler/vpn";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const vpnRouter = createTRPCRouter({
   getSummaries: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("vpn")))
+    .unstable_concat(createManyWidgetIntegrationMiddleware("query", "vpn"))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries(
         ctx.integrations,

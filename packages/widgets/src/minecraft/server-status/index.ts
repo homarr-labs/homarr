@@ -7,14 +7,12 @@ import { optionsBuilder } from "../../options";
 export const { componentLoader, definition } = createWidgetDefinition("minecraftServerStatus", {
   supportsAdvancedFocus: false,
   icon: IconBrandMinecraft,
-  queryKey: [["widget", "minecraft", "getServerStatus"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {
       title: scope.options.title,
       domain: scope.options.domain,
       isBedrockServer: scope.options.isBedrockServer,
     }),
-  refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       title: factory.text({ defaultValue: "" }),

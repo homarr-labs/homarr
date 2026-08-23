@@ -1,19 +1,14 @@
 import { z } from "zod/v4";
 import { TRPCError } from "@trpc/server";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import {
   smartHomeEntityStateRequestHandler,
   toSafeEntityDetails,
 } from "@homarr/request-handler/smart-home-entity-state";
 
-import type { IntegrationAction } from "../../middlewares/integration";
-import { createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
-
-const createSmartHomeIntegrationMiddleware = (action: IntegrationAction) =>
-  createOneIntegrationMiddleware(action, ...getIntegrationKindsByCategory("smartHomeServer"));
 
 export const smartHomeRouter = createTRPCRouter({
   entityState: publicProcedure
@@ -25,7 +20,7 @@ export const smartHomeRouter = createTRPCRouter({
       },
     })
     .input(z.object({ entityId: z.string() }))
-    .concat(createSmartHomeIntegrationMiddleware("query"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-entityState"))
     .query(async ({ ctx: { integration }, input }) => {
       const innerHandler = smartHomeEntityStateRequestHandler.handler(integration, { entityId: input.entityId });
       const { data } = await innerHandler.getDataAsync();
@@ -40,7 +35,7 @@ export const smartHomeRouter = createTRPCRouter({
       },
     })
     .input(z.object({ entityId: z.string() }))
-    .concat(createSmartHomeIntegrationMiddleware("query"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "smartHome-entityState"))
     .query(async ({ ctx: { integration }, input }) => {
       const innerHandler = smartHomeEntityStateRequestHandler.handler(integration, { entityId: input.entityId });
       const { data } = await innerHandler.getDataAsync();
@@ -54,7 +49,7 @@ export const smartHomeRouter = createTRPCRouter({
           "Toggle a Home Assistant entity (turn on/off a light, switch, etc.). REQUIRED: integrationId (Home Assistant integration ID from integration_all), entityId (e.g. 'light.living_room')",
       },
     })
-    .concat(createSmartHomeIntegrationMiddleware("interact"))
+    .concat(createOneWidgetIntegrationMiddleware("interact", "smartHome-entityState"))
     .input(z.object({ entityId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
@@ -72,7 +67,7 @@ export const smartHomeRouter = createTRPCRouter({
           "Trigger a Home Assistant automation by its ID. REQUIRED: integrationId (Home Assistant integration ID from integration_all), automationId (the automation entity ID)",
       },
     })
-    .concat(createSmartHomeIntegrationMiddleware("interact"))
+    .concat(createOneWidgetIntegrationMiddleware("interact", "smartHome-executeAutomation"))
     .input(z.object({ automationId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);

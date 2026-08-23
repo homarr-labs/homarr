@@ -6,7 +6,6 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("tracearr", {
   icon: IconActivityHeartbeat,
   supportsAdvancedFocus: true,
-  refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showStreams: factory.switch({
@@ -24,7 +23,6 @@ export const { definition, componentLoader } = createWidgetDefinition("tracearr"
       }),
     }));
   },
-  supportedIntegrations: ["tracearr"],
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

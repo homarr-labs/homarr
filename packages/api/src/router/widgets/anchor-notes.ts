@@ -3,10 +3,11 @@ import { z } from "zod/v4";
 
 import { ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { anchorNotesListInputSchema, anchorNoteUpdateInputSchema, createIntegrationAsync } from "@homarr/integrations";
+import { anchorNotesListInputSchema, anchorNoteUpdateInputSchema } from "@homarr/integrations/anchor";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import { anchorNoteRequestHandler, anchorNotesListRequestHandler } from "@homarr/request-handler/anchor-notes";
 
-import { createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { createOneWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
 const noteIdInput = z.object({
@@ -40,7 +41,7 @@ const normalizeAnchorContent = (content: string | undefined) => {
 
 export const anchorNotesRouter = createTRPCRouter({
   listNotes: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "anchor"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "anchorNote"))
     .input(anchorNotesListInputSchema)
     .query(async ({ ctx, input }) => {
       const handler = anchorNotesListRequestHandler.handler(ctx.integration, { ...input, limit: input.limit ?? 50 });
@@ -50,7 +51,7 @@ export const anchorNotesRouter = createTRPCRouter({
       return data;
     }),
   getNote: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "anchor"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "anchorNote"))
     .input(noteIdInput)
     .query(async ({ ctx, input }) => {
       const handler = anchorNoteRequestHandler.handler(ctx.integration, { noteId: input.noteId });
@@ -60,7 +61,7 @@ export const anchorNotesRouter = createTRPCRouter({
       return data;
     }),
   updateNote: protectedProcedure
-    .concat(createOneIntegrationMiddleware("interact", "anchor"))
+    .concat(createOneWidgetIntegrationMiddleware("interact", "anchorNote"))
     .input(anchorNoteUpdateInputSchema)
     .mutation(async ({ ctx, input }) => {
       const integrationInstance = await createIntegrationAsync(ctx.integration);

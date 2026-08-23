@@ -1,6 +1,5 @@
 import { IconBinaryTree, IconServerOff } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
@@ -8,8 +7,6 @@ import { optionsBuilder } from "../../options";
 export const { definition, componentLoader } = createWidgetDefinition("smartHome-entityState", {
   icon: IconBinaryTree,
   supportsAdvancedFocus: true,
-  queryKey: [["widget", "smartHome"]],
-  maxIntegrations: 1,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       entityId: factory.text({
@@ -22,7 +19,6 @@ export const { definition, componentLoader } = createWidgetDefinition("smartHome
       clickable: factory.switch(),
     }));
   },
-  supportedIntegrations: getIntegrationKindsByCategory("smartHomeServer"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

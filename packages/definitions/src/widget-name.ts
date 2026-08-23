@@ -1,21 +1,11 @@
-import type { IntegrationKind } from "./integration";
 import { getIntegrationName } from "./integration";
 import type { WidgetKind } from "./widget";
-
-const widgetIntegrationKinds: Partial<Record<WidgetKind, IntegrationKind>> = {
-  coolify: "coolify",
-  tracearr: "tracearr",
-  paperlessNgx: "paperlessNgx",
-  patchmon: "patchmon",
-  bazarr: "bazarr",
-  uptimeKuma: "uptimeKuma",
-  traefik: "traefik",
-};
+import { widgetFeatureCatalog } from "./widget-feature-catalog";
 
 export const getWidgetIntegrationName = (kind: WidgetKind): string | undefined => {
-  const integrationKind = widgetIntegrationKinds[kind];
-  if (!integrationKind) return undefined;
-  return getIntegrationName(integrationKind);
+  const descriptor = widgetFeatureCatalog[kind];
+  if (!("displayNameFromIntegration" in descriptor) || !descriptor.displayNameFromIntegration) return undefined;
+  return getIntegrationName(descriptor.capability.integrations[0]);
 };
 
 type WidgetNameTranslator = (key: never) => string;

@@ -1,12 +1,14 @@
 import type { QueryKey } from "@tanstack/react-query";
 import { describe, expect, test } from "vitest";
 
-import type { NormalizedWidgetQuery, WidgetDefinition, WidgetQueryMatcherScope } from "@homarr/widgets";
-import { getWidgetQueryKeys, widgetImports } from "@homarr/widgets";
+import type { WidgetKind } from "@homarr/definitions";
+import type { NormalizedWidgetQuery, WidgetQueryMatcherScope } from "@homarr/widgets";
+import { getWidgetQueryKeys } from "@homarr/widgets";
+import { loadAllWidgetDefinitions } from "@homarr/widgets/manifest";
 
 import { matchesWidgetItemQuery } from "./widget-query-scope";
 
-type WidgetKind = keyof typeof widgetImports;
+const widgetDefinitions = await loadAllWidgetDefinitions();
 const allPhotosAlbumId = "all";
 
 const createScope = (overrides: Partial<WidgetQueryMatcherScope> = {}): WidgetQueryMatcherScope => ({
@@ -19,7 +21,9 @@ const createScope = (overrides: Partial<WidgetQueryMatcherScope> = {}): WidgetQu
 });
 
 const matches = (kind: WidgetKind, path: readonly string[], input: unknown, scope: WidgetQueryMatcherScope) => {
-  const definition = widgetImports[kind].definition as WidgetDefinition & { kind: string };
+  const definition = widgetDefinitions.get(kind);
+  if (!definition) throw new Error(`No definition is registered for ${kind}`);
+
   const queryKey: QueryKey = [path, { input, type: "query" }];
   return matchesWidgetItemQuery(queryKey, getWidgetQueryKeys(definition), scope, definition.queryMatcher);
 };

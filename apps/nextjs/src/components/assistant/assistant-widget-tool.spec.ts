@@ -2,25 +2,32 @@ import { describe, expect, test } from "vitest";
 
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetIntegrationSupport } from "@homarr/definitions";
-import { widgetImports } from "@homarr/widgets";
+import { loadAllWidgetDefinitions } from "@homarr/widgets/manifest";
 
 import { getAssistantWidgetConfiguration } from "./assistant-widget-tool";
 
 const settings = { enableStatusByDefault: true, forceDisableStatus: false };
+const widgetDefinitions = await loadAllWidgetDefinitions();
+
+const getWidgetDefinition = (kind: WidgetKind) => {
+  const definition = widgetDefinitions.get(kind);
+  if (!definition) throw new Error(`No definition is registered for ${kind}`);
+  return definition;
+};
 
 describe("getAssistantWidgetConfiguration", () => {
   test("keeps server-side integration support synchronized with widget definitions", () => {
-    for (const [kind, widgetImport] of Object.entries(widgetImports)) {
-      const definition = widgetImport.definition;
+    for (const [kind, definition] of widgetDefinitions) {
       const expected = "supportedIntegrations" in definition ? definition.supportedIntegrations : undefined;
+      const supportedIntegrations = widgetIntegrationSupport[kind];
 
-      expect(widgetIntegrationSupport[kind as WidgetKind], kind).toEqual(expected);
+      expect(supportedIntegrations, kind).toEqual(expected);
     }
   });
 
   test("preserves generated notebook content and fills its hidden defaults", () => {
     const result = getAssistantWidgetConfiguration(
-      widgetImports.notebook.definition,
+      getWidgetDefinition("notebook"),
       {
         boardId: "board-1",
         boardName: "Home",
@@ -42,7 +49,7 @@ describe("getAssistantWidgetConfiguration", () => {
 
   test("keeps only accessible, compatible integrations and respects the widget maximum", () => {
     const result = getAssistantWidgetConfiguration(
-      widgetImports.audioStats.definition,
+      getWidgetDefinition("audioStats"),
       {
         boardId: "board-1",
         boardName: "Home",
@@ -90,13 +97,13 @@ describe("getAssistantWidgetConfiguration", () => {
 
   test("treats integration-backed widgets as required unless explicitly optional", () => {
     const mediaServer = getAssistantWidgetConfiguration(
-      widgetImports.mediaServer.definition,
+      getWidgetDefinition("mediaServer"),
       { boardId: "board-1", boardName: "Home", kind: "mediaServer", summary: "Show Plex streams" },
       settings,
       [],
     );
     const calendar = getAssistantWidgetConfiguration(
-      widgetImports.calendar.definition,
+      getWidgetDefinition("calendar"),
       { boardId: "board-1", boardName: "Home", kind: "calendar", summary: "Show releases" },
       settings,
       [],

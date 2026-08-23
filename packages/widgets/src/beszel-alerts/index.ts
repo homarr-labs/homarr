@@ -6,7 +6,6 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("beszelAlerts", {
   icon: IconBell,
-  queryKey: [["widget", "beszel", "getAlerts"]],
   queryMatcher(query, scope) {
     const hasRuntimeAlertsQuery = scope.runtimeQueries.some(({ path }) => path.at(-1) === "getAlerts");
     if (hasRuntimeAlertsQuery) return matchesWidgetRuntimeQuery(query, scope);
@@ -17,8 +16,6 @@ export const { definition, componentLoader } = createWidgetDefinition("beszelAle
       maxHistoryItems: scope.options.maxHistoryItems,
     });
   },
-  supportedIntegrations: ["beszel", "mock"],
-  integrationsRequired: true,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showHistory: factory.switch({ defaultValue: true }),

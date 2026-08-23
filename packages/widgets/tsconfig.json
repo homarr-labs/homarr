@@ -4,5 +4,5 @@
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
   "include": ["*.ts", "src", "*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/**/docs/**"]
 }

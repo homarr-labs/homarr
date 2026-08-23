@@ -6,10 +6,6 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("wud", {
   icon: IconBrandDocker,
   supportsAdvancedFocus: true,
-  refetchInterval: null,
-  supportedIntegrations: ["wud"],
-  integrationsRequired: true,
-  maxIntegrations: 1,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showTitle: factory.switch({ defaultValue: true }),

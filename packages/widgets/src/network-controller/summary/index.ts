@@ -1,6 +1,5 @@
 import { IconServerOff, IconTopologyFull } from "@tabler/icons-react";
 
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
@@ -8,12 +7,9 @@ import { optionsBuilder } from "../../options";
 export const { definition, componentLoader } = createWidgetDefinition("networkControllerSummary", {
   supportsAdvancedFocus: true,
   icon: IconTopologyFull,
-  queryKey: [["widget", "networkController"]],
-  refetchInterval: null,
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },
-  supportedIntegrations: getIntegrationKindsByCategory("networkController"),
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

@@ -55,6 +55,6 @@ export const getBoardRecipeRecommendations = ({
         },
       ];
     })
-    .sort((left, right) => right.score - left.score || left.widgetKind.localeCompare(right.widgetKind))
+    .toSorted((left, right) => right.score - left.score || left.widgetKind.localeCompare(right.widgetKind))
     .slice(0, Math.max(0, limit));
 };

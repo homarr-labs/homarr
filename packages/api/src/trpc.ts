@@ -16,6 +16,7 @@ import { extractBaseUrlFromHeaders, FlattenError } from "@homarr/common";
 import { userAgent } from "@homarr/common/server";
 import type { DeviceType } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
@@ -105,6 +106,13 @@ export const createCallerFactory = t.createCallerFactory;
  */
 export const createTRPCRouter = t.router;
 
+/**
+ * Unadorned procedure builder for middleware fragments that are concatenated
+ * onto a public, protected, or internal procedure. Global middleware belongs
+ * on the outer procedure so observability and policy checks run exactly once.
+ */
+export const middlewareProcedure = t.procedure;
+
 export const isDemoMode = env.DEMO_MODE;
 
 // The public "real demo" (demo + mock integrations) stays read-only, while preview
@@ -121,7 +129,47 @@ const enforceDemoModeReadOnly = t.middleware(({ ctx, next, type }) => {
   return next({ ctx });
 });
 
-const baseProcedure = isDemoReadOnly ? t.procedure.use(enforceDemoModeReadOnly) : t.procedure;
+const observeProcedure = t.middleware(async ({ ctx, next, path, type }) => {
+  const startedAt = Date.now();
+  const metadata = {
+    path,
+    type,
+    userId: ctx.session?.user.id,
+  };
+
+  logger.debug("tRPC procedure started", metadata);
+
+  const result = await next();
+  const durationMs = Date.now() - startedAt;
+
+  if (result.ok) {
+    logger.debug("tRPC procedure completed", { ...metadata, durationMs });
+    return result;
+  }
+
+  const safeError = new Error(result.error.message);
+  safeError.name = result.error.name;
+  safeError.stack = result.error.stack;
+
+  logger.warn(
+    new ErrorWithMetadata(
+      "tRPC procedure failed",
+      {
+        ...metadata,
+        durationMs,
+        errorCode: result.error.code,
+        causeType: result.error.cause instanceof Error ? result.error.cause.name : undefined,
+      },
+      { cause: safeError },
+    ),
+  );
+  return result;
+});
+
+let baseProcedure = t.procedure.use(observeProcedure);
+if (isDemoReadOnly) {
+  baseProcedure = baseProcedure.use(enforceDemoModeReadOnly);
+}
 
 /**
  * Public (unauthed) procedure
@@ -145,7 +193,7 @@ const enforceOnboardingAccess = t.middleware(async ({ ctx, next }) => {
 
 export const onboardingClaimedProcedure = baseProcedure.use(enforceOnboardingAccess);
 
-export const internalProcedure = t.procedure;
+export const internalProcedure = t.procedure.use(observeProcedure);
 
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session?.user) {

@@ -5,7 +5,7 @@ import { fetch as undiciFetch } from "undici";
 
 import { removeTrailingSlash } from "@homarr/common";
 import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
-import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 
 import { HandleIntegrationErrors } from "./errors/decorator";
 import { TestConnectionError } from "./test-connection/test-connection-error";
@@ -15,6 +15,7 @@ import type { IntegrationSecret } from "./types";
 
 export interface IntegrationInput {
   id: string;
+  kind?: IntegrationKind;
   name: string;
   url: string;
   externalUrl: string | null;

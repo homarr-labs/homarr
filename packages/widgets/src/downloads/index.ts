@@ -1,4 +1,3 @@
-import { IconDownload } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -6,6 +5,7 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createWidgetDefinition, widgetQueryInputMatches } from "../definition";
 import { optionsBuilder } from "../options";
 import { DOWNLOAD_COLUMN_ACCESSORS } from "./helpers";
+import { widgetIcon } from "./module.generated";
 
 const sortColumns = [
   "name",
@@ -23,15 +23,13 @@ const sortColumns = [
 ] as const satisfies readonly (typeof DOWNLOAD_COLUMN_ACCESSORS)[number][];
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {
-  icon: IconDownload,
+  icon: widgetIcon,
   supportsAdvancedFocus: true,
-  queryKey: [["widget", "downloads", "getJobsAndStatuses"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {
       integrationIds: scope.integrationIds,
       limitPerIntegration: scope.options.limitPerIntegration,
     }),
-  refetchInterval: 10,
   createOptions() {
     return optionsBuilder.from(
       (factory) => ({
@@ -111,5 +109,4 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
       },
     );
   },
-  supportedIntegrations: getIntegrationKindsByCategory("downloadClient"),
 }).withDynamicImport(() => import("./component"));

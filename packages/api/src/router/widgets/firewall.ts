@@ -1,4 +1,3 @@
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import {
   firewallCpuRequestHandler,
   firewallInterfacesRequestHandler,
@@ -6,11 +5,11 @@ import {
   firewallVersionRequestHandler,
 } from "@homarr/request-handler/firewall";
 
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyWidgetIntegrationMiddleware } from "../../middlewares/integration";
 import { settleIntegrationQueries, toPublicIntegrationError } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
-const firewallMiddleware = createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall"));
+const firewallMiddleware = createManyWidgetIntegrationMiddleware("query", "firewall");
 
 const queryFirewall = <
   THandler extends {

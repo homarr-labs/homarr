@@ -6,8 +6,6 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("mediaReleases", {
   icon: IconTicket,
   supportsAdvancedFocus: true,
-  queryKey: [["widget", "mediaRelease"]],
-  refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       layout: factory.select({
@@ -34,5 +32,4 @@ export const { definition, componentLoader } = createWidgetDefinition("mediaRele
       }),
     }));
   },
-  supportedIntegrations: ["mock", "emby", "jellyfin", "plex"],
 }).withDynamicImport(() => import("./component"));

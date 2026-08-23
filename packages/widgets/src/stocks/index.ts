@@ -14,14 +14,12 @@ const timeIntervalOptions = stockPriceTimeFrames.interval;
 export const { definition, componentLoader } = createWidgetDefinition("stockPrice", {
   supportsAdvancedFocus: true,
   icon: IconBuildingBank,
-  queryKey: [["widget", "stockPrice", "getPriceHistory"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {
       stock: scope.options.stock,
       timeRange: scope.options.timeRange,
       timeInterval: scope.options.timeInterval,
     }),
-  refetchInterval: null,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       stock: factory.text({

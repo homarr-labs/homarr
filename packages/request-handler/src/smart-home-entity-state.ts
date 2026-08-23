@@ -1,5 +1,5 @@
 import type { IntegrationKindByCategory } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type { EntityState } from "@homarr/integrations";
 
 import { createIntegrationRequestHandler } from "./lib/integration-request-handler";
@@ -27,6 +27,7 @@ export const smartHomeEntityStateRequestHandler = createIntegrationRequestHandle
   IntegrationKindByCategory<"smartHomeServer">,
   { entityId: string }
 >({
+  cacheNamespace: "smart-home:entity-state",
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
     const result = await integrationInstance.getEntityStateAsync(input.entityId);

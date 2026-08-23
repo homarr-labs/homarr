@@ -2,7 +2,7 @@ import { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import {
   umamiActiveVisitorsRequestHandler,
   umamiEventNamesRequestHandler,
@@ -12,14 +12,17 @@ import {
   umamiTopReferrersRequestHandler,
 } from "@homarr/request-handler/umami";
 
-import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import {
+  createManyWidgetIntegrationMiddleware,
+  createOneWidgetIntegrationMiddleware,
+} from "../../middlewares/integration";
 import { settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const logger = createLogger({ module: "umami-router" });
 
 export const umamiRouter = createTRPCRouter({
-  getWebsites: publicProcedure.concat(createOneIntegrationMiddleware("query", "umami")).query(async ({ ctx }) => {
+  getWebsites: publicProcedure.concat(createOneWidgetIntegrationMiddleware("query", "umami")).query(async ({ ctx }) => {
     try {
       const instance = await createIntegrationAsync(ctx.integration);
       return await instance.getWebsitesAsync();
@@ -37,7 +40,7 @@ export const umamiRouter = createTRPCRouter({
         eventName: z.string().optional(),
       }),
     )
-    .concat(createManyIntegrationMiddleware("query", "umami"))
+    .concat(createManyWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       return await settleIntegrationQueries(ctx.integrations, async (integration) => {
         const innerHandler = umamiRequestHandler.handler(integration, {
@@ -59,7 +62,7 @@ export const umamiRouter = createTRPCRouter({
 
   getEventNames: publicProcedure
     .input(z.object({ websiteId: z.string() }))
-    .concat(createOneIntegrationMiddleware("query", "umami"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       try {
         const innerHandler = umamiEventNamesRequestHandler.handler(ctx.integration, { websiteId: input.websiteId });
@@ -81,7 +84,7 @@ export const umamiRouter = createTRPCRouter({
         limit: z.number().int().min(1).max(500),
       }),
     )
-    .concat(createOneIntegrationMiddleware("query", "umami"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       try {
         const innerHandler = umamiTopPagesRequestHandler.handler(ctx.integration, {
@@ -111,7 +114,7 @@ export const umamiRouter = createTRPCRouter({
         limit: z.number().int().min(1).max(500),
       }),
     )
-    .concat(createOneIntegrationMiddleware("query", "umami"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       try {
         const innerHandler = umamiTopReferrersRequestHandler.handler(ctx.integration, {
@@ -141,7 +144,7 @@ export const umamiRouter = createTRPCRouter({
         eventNames: z.array(z.string()),
       }),
     )
-    .concat(createOneIntegrationMiddleware("query", "umami"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       try {
         const sortedNames = [...input.eventNames].toSorted();
@@ -166,7 +169,7 @@ export const umamiRouter = createTRPCRouter({
 
   getActiveVisitors: publicProcedure
     .input(z.object({ websiteId: z.string() }))
-    .concat(createOneIntegrationMiddleware("query", "umami"))
+    .concat(createOneWidgetIntegrationMiddleware("query", "umami"))
     .query(async ({ ctx, input }) => {
       try {
         const innerHandler = umamiActiveVisitorsRequestHandler.handler(ctx.integration, {

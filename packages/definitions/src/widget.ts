@@ -1,75 +1,19 @@
-export const widgetKinds = [
-  "clock",
-  "weather",
-  "airQuality",
-  "countdown",
-  "timer",
-  "app",
-  "iframe",
-  "video",
-  "notebook",
-  "anchorNote",
-  "dnsHoleSummary",
-  "dnsHoleControls",
-  "smartHome-entityState",
-  "smartHome-executeAutomation",
-  "stockPrice",
-  "mediaServer",
-  "calendar",
-  "downloads",
-  "mediaRequests-requestList",
-  "mediaRequests-requestStats",
-  "mediaTranscoding",
-  "mediaMissing",
-  "minecraftServerStatus",
-  "networkControllerSummary",
-  "networkControllerStatus",
-  "rssFeed",
-  "bookmarks",
-  "indexerManager",
-  "healthMonitoring",
-  "releases",
-  "mediaReleases",
-  "dockerContainers",
-  "firewall",
-  "notifications",
-  "systemResources",
-  "coolify",
-  "systemDisks",
-  "timetable",
-  "immich-serverStats",
-  "immich-albumCarousel",
-  "paperlessNgx",
-  "patchmon",
-  "bazarr",
-  "tracearr",
-  "speedtestTracker",
-  "uptimeKuma",
-  "audioStats",
-  "umami",
-  "vpn",
-  "archiveTeamWarrior",
-  "ups",
-  "beszelSystemTable",
-  "beszelSystemGrid",
-  "beszelAlerts",
-  "beszelSystemStats",
-  "traefik",
-  "customApi",
-  "assistant",
-  "wud",
-] as const;
-export type WidgetKind = (typeof widgetKinds)[number];
+import { widgetFeatureCatalog } from "./widget-feature-catalog";
 
-export const widgetDefaultSizes: Partial<Record<WidgetKind, { width: number; height: number }>> = {
-  airQuality: { width: 2, height: 1 },
-  countdown: { width: 2, height: 1 },
-  timer: { width: 2, height: 1 },
-  uptimeKuma: { width: 2, height: 3 },
-  audioStats: { width: 2, height: 2 },
-  paperlessNgx: { width: 2, height: 2 },
-  patchmon: { width: 2, height: 2 },
-  mediaMissing: { width: 4, height: 3 },
-  bazarr: { width: 2, height: 2 },
-  assistant: { width: 10, height: 4 },
+export * from "./widget-feature-catalog";
+export type { WidgetFeatureDescriptor } from "./widget-feature-catalog";
+
+export type WidgetKind = keyof typeof widgetFeatureCatalog;
+
+export const widgetKinds = Object.keys(widgetFeatureCatalog) as unknown as readonly [WidgetKind, ...WidgetKind[]];
+
+const createWidgetDefaultSizes = () => {
+  const result: Partial<Record<WidgetKind, { width: number; height: number }>> = {};
+  for (const kind of widgetKinds) {
+    const descriptor = widgetFeatureCatalog[kind];
+    if ("defaultSize" in descriptor) result[kind] = descriptor.defaultSize;
+  }
+  return result;
 };
+
+export const widgetDefaultSizes = createWidgetDefaultSizes();

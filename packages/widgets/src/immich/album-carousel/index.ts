@@ -52,7 +52,6 @@ const createOptions = () =>
 export const { definition, componentLoader } = createWidgetDefinition("immich-albumCarousel", {
   icon: IconPhoto,
   supportsAdvancedFocus: true,
-  queryKey: [["widget", "immich", "getAlbum"]],
   queryMatcher: ({ input }, scope) =>
     widgetQueryInputMatches(input, {
       integrationId: scope.integrationIds[0] ?? "",
@@ -61,10 +60,6 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-al
           ? scope.options.albumId
           : undefined,
     }),
-  refetchInterval: null,
-  supportedIntegrations: ["immich"],
-  integrationsRequired: true,
-  maxIntegrations: 1,
   contextActions: ({ widgetRuntimeRef }) => {
     const actions = widgetRuntimeRef.current.actions;
     return [

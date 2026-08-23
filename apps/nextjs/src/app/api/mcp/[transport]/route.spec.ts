@@ -16,7 +16,6 @@ const mocks = vi.hoisted(() => ({
 vi.mock("next/server", () => ({ userAgent: () => ({ ua: "MCP route test" }) }));
 vi.mock("@homarr/api/mcp", () => ({
   createTRPCContext: vi.fn(() => ({})),
-  mcpRouter: { createCaller: vi.fn(() => ({ board: { getAllBoards: mocks.toolProcedure } })) },
 }));
 vi.mock("@homarr/auth/api-key", () => ({
   API_KEY_HEADER_NAME: "ApiKey",
@@ -42,26 +41,30 @@ vi.mock("@homarr/custom-widgets/core", () => ({
 vi.mock("@homarr/db", () => ({ db: {} }));
 vi.mock("~/versions/package-reader", () => ({ getPackageVersion: () => "test-version" }));
 vi.mock("../_extract-tools", () => ({
-  extractMcpTools: () => [
-    {
-      name: "board_getAllBoards",
-      description: "List boards",
-      pathInRouter: ["board", "getAllBoards"],
-      inputSchema: { type: "object", properties: {} },
-    },
-    {
-      name: "customWidget_list",
-      description: "List Custom Widgets",
-      pathInRouter: ["customWidget", "list"],
-      inputSchema: { type: "object", properties: {} },
-    },
-    {
-      name: "customWidget_workshopSearch",
-      description: "Search Workshop",
-      pathInRouter: ["customWidget", "workshopSearch"],
-      inputSchema: { type: "object", properties: {} },
-    },
-  ],
+  getMcpRuntimeAsync: async () => ({
+    router: { createCaller: vi.fn(() => ({ board: { getAllBoards: mocks.toolProcedure } })) },
+    procedureTypes: new Map([["board.getAllBoards", "query"]]),
+    tools: [
+      {
+        name: "board_getAllBoards",
+        description: "List boards",
+        pathInRouter: ["board", "getAllBoards"],
+        inputSchema: { type: "object", properties: {} },
+      },
+      {
+        name: "customWidget_list",
+        description: "List Custom Widgets",
+        pathInRouter: ["customWidget", "list"],
+        inputSchema: { type: "object", properties: {} },
+      },
+      {
+        name: "customWidget_workshopSearch",
+        description: "Search Workshop",
+        pathInRouter: ["customWidget", "workshopSearch"],
+        inputSchema: { type: "object", properties: {} },
+      },
+    ],
+  }),
 }));
 
 import { POST } from "./route";

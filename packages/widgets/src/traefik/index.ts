@@ -19,7 +19,6 @@ export const { definition, componentLoader } = createWidgetDefinition("traefik",
       }),
     }));
   },
-  supportedIntegrations: ["traefik"],
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconRouteOff,

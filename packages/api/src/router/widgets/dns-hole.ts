@@ -1,12 +1,14 @@
 import { z } from "zod/v4";
 
 import type { IntegrationKindByCategory } from "@homarr/definitions";
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations/factory";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
 import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
 
-import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import {
+  createManySharedWidgetIntegrationMiddleware,
+  createOneWidgetIntegrationMiddleware,
+} from "../../middlewares/integration";
 import { PUBLIC_INTEGRATION_ERROR, settleIntegrationQueries } from "../../settle-integrations";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
@@ -32,7 +34,7 @@ export const dnsHoleRouter = createTRPCRouter({
           "Get DNS blocking statistics from Pi-hole/AdGuard (queries, blocked, percentage). REQUIRED: integrationIds (array of Pi-hole/AdGuard integration IDs from integration_all)",
       },
     })
-    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
+    .concat(createManySharedWidgetIntegrationMiddleware("query", "dnsHoleSummary", ["dnsHoleControls"]))
     .query(async ({ ctx }) => {
       return await settleIntegrationQueries<(typeof ctx.integrations)[number], DnsHoleSummaryResult>(
         ctx.integrations,
@@ -66,7 +68,7 @@ export const dnsHoleRouter = createTRPCRouter({
           "Enable DNS blocking on Pi-hole/AdGuard. REQUIRED: integrationId (single Pi-hole/AdGuard integration ID from integration_all)",
       },
     })
-    .concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
+    .concat(createOneWidgetIntegrationMiddleware("interact", "dnsHoleControls"))
     .mutation(async ({ ctx: { integration } }) => {
       const client = await createIntegrationAsync(integration);
       await client.enableAsync();
@@ -85,7 +87,7 @@ export const dnsHoleRouter = createTRPCRouter({
         duration: z.number().optional(),
       }),
     )
-    .concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
+    .concat(createOneWidgetIntegrationMiddleware("interact", "dnsHoleControls"))
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
       await client.disableAsync(input.duration);
