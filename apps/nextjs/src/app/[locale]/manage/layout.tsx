@@ -244,7 +244,7 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
     },
     {
       label: t("items.about"),
-      icon: serverSettings.branding.logoImageUrl ?? homarrLogoPath,
+      icon: homarrLogoPath,
       href: "/manage/about",
     },
   ];
