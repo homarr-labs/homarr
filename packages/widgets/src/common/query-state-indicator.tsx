@@ -1,38 +1,8 @@
 "use client";
 
-import { ActionIcon, Center, Loader, Tooltip, VisuallyHidden } from "@mantine/core";
-import { IconAlertTriangle } from "@tabler/icons-react";
+import { Center, Loader, VisuallyHidden } from "@mantine/core";
 
 import { useI18n } from "@homarr/translation/client";
-
-interface WidgetQueryErrorIndicatorProps {
-  error: unknown;
-  label: string;
-}
-
-/** Localized warning for stale or optional-query failures. Never renders the raw error. */
-export function WidgetQueryErrorIndicator({ error, label }: WidgetQueryErrorIndicatorProps) {
-  const t = useI18n("common.widgetQuery");
-  if (!error) return null;
-
-  const accessibleLabel = t("stale", { widget: label });
-  return (
-    <Tooltip label={accessibleLabel} position="left" withArrow>
-      <ActionIcon
-        component="span"
-        color="orange"
-        variant="subtle"
-        size="sm"
-        role="note"
-        aria-label={accessibleLabel}
-        tabIndex={0}
-        style={{ cursor: "help" }}
-      >
-        <IconAlertTriangle aria-hidden size="var(--mantine-font-size-sm)" />
-      </ActionIcon>
-    </Tooltip>
-  );
-}
 
 export function WidgetQueryLoadingState() {
   const t = useI18n("common.widgetQuery");

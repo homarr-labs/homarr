@@ -6,14 +6,12 @@ import { IconArrowDown, IconArrowUp, IconClockPause, IconServer } from "@tabler/
 
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
-import { getIntegrationName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import classes from "./component.module.css";
 import { aggregateUptimeKumaDashboards } from "./aggregate";
@@ -254,7 +252,6 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
       <Box h="100%" pos="relative">
         <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
           <IntegrationErrorIndicator results={dashboardData} />
-          <WidgetQueryErrorIndicator error={dashboardQuery.error} label={getIntegrationName("uptimeKuma")} />
         </Group>
         {summaryContent}
       </Box>
@@ -291,7 +288,6 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
       <Box h="100%" pos="relative">
         <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
           <IntegrationErrorIndicator results={dashboardData} />
-          <WidgetQueryErrorIndicator error={dashboardQuery.error} label={getIntegrationName("uptimeKuma")} />
         </Group>
         <ScrollArea h="100%">
           <Stack gap="lg" p="md">
@@ -307,7 +303,6 @@ function UptimeKumaContent({ integrationIds, options, width, height, displayMode
     <Box h="100%" pos="relative">
       <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
         <IntegrationErrorIndicator results={dashboardData} />
-        <WidgetQueryErrorIndicator error={dashboardQuery.error} label={getIntegrationName("uptimeKuma")} />
       </Group>
       <SimpleGrid cols={2} spacing="lg" h="100%" p="md" style={{ gridTemplateRows: "minmax(0, 1fr)" }}>
         {summaryContent}

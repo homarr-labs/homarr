@@ -16,7 +16,7 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 import { WidgetEmptyState } from "../common/empty-state";
 import { getSafeAppHref, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
 import { PingDot } from "./ping/ping-dot";
@@ -24,7 +24,6 @@ import { PingIndicator } from "./ping/ping-indicator";
 
 export default function AppWidget({ options, isEditMode, height, width }: WidgetComponentProps<"app">) {
   const tCommon = useI18n("common");
-  const tApp = useI18n("widget.app");
   const settings = useSettings();
   const board = useRequiredBoard();
   const appQuery = clientApi.app.byId.useQuery({ id: options.appId }, { enabled: Boolean(options.appId) });
@@ -127,11 +126,6 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
           </Suspense>
         ) : null}
       </AppLink>
-      {appQuery.error && (
-        <Box pos="absolute" top={4} right={4}>
-          <WidgetQueryErrorIndicator error={appQuery.error} label={tApp("name")} />
-        </Box>
-      )}
     </Box>
   );
 }

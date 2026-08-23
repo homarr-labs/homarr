@@ -3,14 +3,12 @@
 import { Box, Group, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { getIntegrationName } from "@homarr/definitions";
 import type { TracearrDashboardData } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 import { formatTotalTracearrBitrate } from "./bitrate";
 import { RecentActivityList } from "./recent-activity-section";
@@ -186,7 +184,6 @@ function TracearrContent({ integrationIds, options, width, height, displayMode }
       <Box h="100%" pos="relative">
         <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
           <IntegrationErrorIndicator results={dashboardData} />
-          <WidgetQueryErrorIndicator error={dashboardQuery.error} label={getIntegrationName("tracearr")} />
         </Group>
         <ScrollArea h="100%">
           <SimpleGrid
@@ -223,7 +220,6 @@ function TracearrContent({ integrationIds, options, width, height, displayMode }
     <Box h="100%" pos="relative">
       <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
         <IntegrationErrorIndicator results={dashboardData} />
-        <WidgetQueryErrorIndicator error={dashboardQuery.error} label={getIntegrationName("tracearr")} />
       </Group>
       <ScrollArea h="100%">
         <Stack gap="xs" p="xs">

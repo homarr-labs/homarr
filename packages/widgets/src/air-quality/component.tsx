@@ -11,7 +11,7 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { WidgetEmptyState } from "../common/empty-state";
 import { formatLocalizedDate, formatLocalizedTime } from "../common/locale";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import type { AirQualityData, PollutantKey, PollenKey } from "./display";
 import {
@@ -28,7 +28,6 @@ import {
 } from "./display";
 
 export default function AirQualityWidget({ options, width, height, displayMode }: WidgetComponentProps<"airQuality">) {
-  const t = useI18n("widget.airQuality");
   const query = clientApi.widget.airQuality.atLocation.useQuery({
     latitude: options.location.latitude,
     longitude: options.location.longitude,
@@ -44,11 +43,6 @@ export default function AirQualityWidget({ options, width, height, displayMode }
         <AdvancedAirQuality airQuality={airQuality} options={options} width={width} />
       ) : (
         <CompactAirQuality airQuality={airQuality} height={height} options={options} width={width} />
-      )}
-      {query.error && (
-        <Box pos="absolute" top={4} right={4}>
-          <WidgetQueryErrorIndicator error={query.error} label={t("name")} />
-        </Box>
       )}
     </Box>
   );

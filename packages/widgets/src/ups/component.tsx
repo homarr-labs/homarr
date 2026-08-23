@@ -24,7 +24,6 @@ import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { NoIntegrationSelectedError } from "../errors/no-integration-selected";
 
 const statusColors: Record<UpsStatus, string> = {
@@ -87,7 +86,6 @@ function UpsContent({ integrationIds, options, width, height, displayMode }: Ups
       <Box h="100%" pos="relative">
         <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
           <IntegrationErrorIndicator results={data} />
-          <WidgetQueryErrorIndicator error={summariesQuery.error} label={t("name")} />
         </Group>
         <WidgetEmptyState />
       </Box>
@@ -118,7 +116,6 @@ function UpsContent({ integrationIds, options, width, height, displayMode }: Ups
     <Box h="100%" pos="relative">
       <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 2 }}>
         <IntegrationErrorIndicator results={data} />
-        <WidgetQueryErrorIndicator error={summariesQuery.error} label={t("name")} />
       </Group>
       <ScrollArea h="100%">
         {displayMode === "advanced" ? (

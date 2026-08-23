@@ -184,10 +184,6 @@
   min-width: 0;
 }
 
-.widgetPanel[data-editing] .panelActions {
-  padding-inline-end: 2.75rem;
-}
-
 .panelHeader {
   min-width: 0;
   min-height: 3.75rem;

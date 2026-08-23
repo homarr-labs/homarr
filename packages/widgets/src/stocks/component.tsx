@@ -9,7 +9,7 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 
 function round(value: number) {
@@ -196,11 +196,6 @@ export default function StockPriceWidget({
   return (
     <Box h="100%" w="100%" pos="relative">
       {content}
-      {stockQuery.error && (
-        <Box pos="absolute" top={4} right={4}>
-          <WidgetQueryErrorIndicator error={stockQuery.error} label={t("name")} />
-        </Box>
-      )}
     </Box>
   );
 }

@@ -15,7 +15,6 @@ import type { WidgetComponentProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import { getBinaryStatusKey } from "../../common/locale";
 import { getUsableWidgetQueryData } from "../../common/query-state";
-import { WidgetQueryErrorIndicator } from "../../common/query-state-indicator";
 import type { NetworkControllerMatrixMetricKey, NetworkControllerMatrixSectionKey } from "./display";
 import { getNetworkControllerMatrix } from "./display";
 
@@ -57,7 +56,6 @@ export default function NetworkControllerSummaryWidget({
   const queryIndicators = (
     <Group gap={0} justify="flex-end">
       <IntegrationErrorIndicator results={results} />
-      <WidgetQueryErrorIndicator error={summaryQuery.error} label={t("name")} />
     </Group>
   );
 

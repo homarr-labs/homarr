@@ -4,7 +4,6 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import { isInitialWidgetQueryPending } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { AnimatedWeatherIcon } from "../weather/animated-icon";
 import { WeatherDescription } from "../weather/icon";
 
@@ -25,17 +24,16 @@ export const ClockWeatherSummary = ({
   animateIcon,
   detailed,
 }: ClockWeatherSummaryProps) => {
-  const t = useI18n();
   const tCommon = useI18n("common");
   const weatherQuery = clientApi.widget.weather.atLocation.useQuery({ latitude, longitude });
   const weather = weatherQuery.data;
 
   if (!weather) {
-    return isInitialWidgetQueryPending(weatherQuery) ? (
-      <Loader size="xs" aria-label={tCommon("action.loading")} />
-    ) : (
-      <WidgetQueryErrorIndicator error={weatherQuery.error} label={t("widget.weather.name")} />
-    );
+    if (isInitialWidgetQueryPending(weatherQuery)) {
+      return <Loader size="xs" aria-label={tCommon("action.loading")} />;
+    }
+
+    return null;
   }
 
   const temperature = isFahrenheit ? weather.current.temperature * (9 / 5) + 32 : weather.current.temperature;
@@ -72,7 +70,6 @@ export const ClockWeatherSummary = ({
           </Text>
         </Box>
       )}
-      <WidgetQueryErrorIndicator error={weatherQuery.error} label={t("widget.weather.name")} />
     </Stack>
   );
 };

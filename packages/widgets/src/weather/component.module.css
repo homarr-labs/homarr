@@ -110,10 +110,6 @@
   outline-offset: 0.125rem;
 }
 
-.errorIndicator {
-  z-index: 2;
-}
-
 @media (any-pointer: coarse) {
   .detailsButton,
   .forecastButton,

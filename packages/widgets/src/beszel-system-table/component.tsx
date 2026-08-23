@@ -42,7 +42,6 @@ import {
 } from "../beszel/_shared/format";
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
 import { getBeszelTableVisibleMetricKeys } from "./display";
@@ -453,7 +452,6 @@ export default function BeszelSystemTableWidget({
     <div style={{ position: "relative", height: "100%" }}>
       <div style={{ position: "absolute", top: 4, right: 8, zIndex: 1 }}>
         <Group gap={0}>
-          <WidgetQueryErrorIndicator error={systemsQuery.error} label={t("name")} />
           <IntegrationErrorIndicator results={results} />
         </Group>
       </div>

@@ -4,13 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Box, Center, Group, Loader, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
 import { SystemResourceGPUChart } from "./chart/gpu-chart";
@@ -84,7 +82,6 @@ export default function SystemResources({
   height,
   displayMode,
 }: WidgetComponentProps<"systemResources">) {
-  const t = useI18n("widget.systemResources");
   const healthQuery = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({ integrationIds });
   const results = getUsableWidgetQueryData(healthQuery) ?? [];
   const data = results.filter(
@@ -98,7 +95,6 @@ export default function SystemResources({
   const queryIndicators = (
     <Group gap={0}>
       <IntegrationErrorIndicator results={results} />
-      <WidgetQueryErrorIndicator error={healthQuery.error} label={t("name")} />
     </Group>
   );
 

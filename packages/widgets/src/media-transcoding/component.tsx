@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { getQueryKey } from "@trpc/react-query";
 import {
-  Box,
   Button,
   Divider,
   Group,
@@ -26,7 +25,6 @@ import { views } from ".";
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { useWidgetRuntimeQueries } from "../runtime-hooks";
 import { HealthCheckStatus } from "./health-check-status";
 import { QueuePanel } from "./panels/queue.panel";
@@ -115,16 +113,9 @@ export default function MediaTranscodingWidget({
   const queuePageCount = totalQueuePages ?? 1;
   const isTiny = !isAdvanced && (width < 280 || height < 140);
   const footerLayout = getTranscodingFooterLayout(width, height);
-  const queryIndicator = (
-    <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
-      <WidgetQueryErrorIndicator error={transcodingQuery.error} label={t("name")} />
-    </Box>
-  );
-
   if (isAdvanced) {
     return (
       <Stack gap="xs" h="100%" p="xs" pos="relative">
-        {queryIndicator}
         <ScrollArea h="100%" style={{ flex: 1 }}>
           <SimpleGrid cols={widthLayout.advancedColumns} spacing="sm">
             <AdvancedPanel title={t("tab.workers")} icon={IconCpu2}>
@@ -155,7 +146,6 @@ export default function MediaTranscodingWidget({
 
   return (
     <Stack gap={4} h="100%" pos="relative">
-      {queryIndicator}
       {view === "workers" ? (
         <WorkersPanel workers={transcodingData.data.workers} isTiny={isTiny} />
       ) : view === "queue" ? (

@@ -33,7 +33,7 @@ import type { WidgetComponentProps } from "../definition";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import classes from "./component.module.css";
 
 export default function MediaReleasesWidget({
@@ -43,7 +43,6 @@ export default function MediaReleasesWidget({
   height,
   displayMode,
 }: WidgetComponentProps<"mediaReleases">) {
-  const t = useI18n("widget.mediaReleases");
   const releasesQuery = clientApi.widget.mediaRelease.getMediaReleases.useQuery({ integrationIds });
   const response = getUsableWidgetQueryData(releasesQuery);
 
@@ -70,10 +69,9 @@ export default function MediaReleasesWidget({
           </SimpleGrid>
         </ScrollArea>
       )}
-      {(failedIntegrations.length > 0 || releasesQuery.error) && (
+      {failedIntegrations.length > 0 && (
         <Group pos="absolute" top={4} right={4} gap={0}>
           <IntegrationErrorIndicator results={failedIntegrations} />
-          <WidgetQueryErrorIndicator error={releasesQuery.error} label={t("name")} />
         </Group>
       )}
     </Box>

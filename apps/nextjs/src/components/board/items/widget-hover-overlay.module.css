@@ -31,7 +31,7 @@
   align-items: center;
   gap: 8px;
   min-height: 28px;
-  padding: 4px 8px;
+  padding: 4px 40px 4px 8px;
   border: 1px solid var(--border-color);
   border-radius: var(--mantine-radius-md);
   background-color: var(--background-color);

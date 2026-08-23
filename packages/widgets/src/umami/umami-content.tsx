@@ -15,7 +15,7 @@ import { UmamiTopPagesContent, UmamiTopReferrersContent } from "./umami-top-list
 import { formatTimeFrameLabel, formatXLabel, umamiQueryOptions } from "./umami-utils";
 import type { TimeFrame } from "./umami-utils";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 
 interface UmamiContentProps {
   integrationIds: string[];
@@ -270,14 +270,6 @@ export function UmamiContent({
       <Box className={classes.chartSurface} mt={4} style={{ flex: 1, minHeight: 0 }}>
         {displayMode === "advanced" ? advancedContent : selectedView}
       </Box>
-      {(statsQuery.error || activeVisitorsQuery.error || multiEventQuery.error) && (
-        <Box pos="absolute" top={4} right={4}>
-          <WidgetQueryErrorIndicator
-            error={statsQuery.error ?? activeVisitorsQuery.error ?? multiEventQuery.error}
-            label={t("name")}
-          />
-        </Box>
-      )}
     </Stack>
   );
 }

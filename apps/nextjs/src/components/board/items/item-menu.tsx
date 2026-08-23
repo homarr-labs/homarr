@@ -108,10 +108,6 @@ const BoardItemMenuInner = ({ item, definition, previewDimensions, resetErrorBou
           variant="default"
           size={24}
           radius="sm"
-          pos="absolute"
-          top={4}
-          right={4}
-          style={{ zIndex: 30 }}
           className={itemContentClasses.settingsButton}
           data-menu-open={isMenuOpen || undefined}
           data-board-widget-settings

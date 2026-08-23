@@ -9,7 +9,6 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../../common/query-state";
-import { WidgetQueryErrorIndicator } from "../../common/query-state-indicator";
 import { getNetworkControllerStatusLayout } from "./layout";
 import { WifiVariant } from "./variants/wifi-variant";
 import { WiredVariant } from "./variants/wired-variant";
@@ -35,7 +34,6 @@ export default function NetworkControllerNetworkStatusWidget({
       ),
     [results],
   );
-  const t = useI18n("widget.networkControllerStatus");
   const tWidgetCommon = useI18n("widget.common");
   const tCommon = useI18n("common");
   const locale = useCurrentIntlLocale();
@@ -49,7 +47,6 @@ export default function NetworkControllerNetworkStatusWidget({
   const queryIndicators = (
     <Group gap={0} justify="flex-end">
       <IntegrationErrorIndicator results={results} />
-      <WidgetQueryErrorIndicator error={summaryQuery.error} label={t("name")} />
     </Group>
   );
 

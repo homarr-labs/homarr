@@ -16,13 +16,12 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import { clientApi } from "@homarr/api/client";
-import { getIntegrationName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../common/query-state";
-import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../common/query-state-indicator";
+import { WidgetQueryLoadingState } from "../common/query-state-indicator";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 import { getGridCols, getVisiblePatchMonStatKeys, shouldShowComplianceHeroText } from "./layout-utils";
@@ -278,9 +277,6 @@ export default function PatchMonWidget({
 
   return (
     <div className={classes.root}>
-      <div className={classes.queryIndicator}>
-        <WidgetQueryErrorIndicator error={statsQuery.error} label={getIntegrationName("patchmon")} />
-      </div>
       {showHero && (
         <ComplianceHero
           compliancePercent={compliancePercent}

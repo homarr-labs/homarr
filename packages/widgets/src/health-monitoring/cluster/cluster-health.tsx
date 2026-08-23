@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Accordion, Box, Center, Flex, Group, RingProgress, Stack, Text } from "@mantine/core";
+import { Accordion, Center, Flex, Group, RingProgress, Stack, Text } from "@mantine/core";
 import { IconBrain, IconCpu, IconCube, IconDatabase, IconDeviceLaptop, IconServer } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -9,7 +9,6 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import { getUsableWidgetQueryData } from "../../common/query-state";
-import { WidgetQueryErrorIndicator } from "../../common/query-state-indicator";
 import type { WidgetComponentProps } from "../../definition";
 import { formatUptime } from "../system-health";
 import { getClusterAccordionDefault, getClusterVisibleSections } from "./accordion-state";
@@ -71,9 +70,6 @@ export const ClusterHealthMonitoring = ({
   const isTiny = displayMode !== "advanced" && width < 256;
   return (
     <Stack h={isAdvanced ? "auto" : "100%"} p="xs" gap={isTiny ? "xs" : "md"} pos="relative">
-      <Box pos="absolute" top={4} right={8} style={{ zIndex: 2 }}>
-        <WidgetQueryErrorIndicator error={healthQuery.error} label={t("name")} />
-      </Box>
       {(isAdvanced || options.showUptime) && !isTiny && (
         <Group justify="center" wrap="nowrap">
           <Text fz="xs" fw={700} c="dimmed" ta="center">

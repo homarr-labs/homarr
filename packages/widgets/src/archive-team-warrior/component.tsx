@@ -8,7 +8,6 @@ import { getIconUrl } from "@homarr/definitions";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 
 export default function ArchiveTeamWarriorWidget({
   integrationIds,
@@ -50,7 +49,7 @@ const ArchiveTeamWarriorWidgetContent = ({
   const t = useI18n("widget.archiveTeamWarrior");
   const tWidgetCommon = useI18n("widget.common");
   const locale = useCurrentIntlLocale();
-  const [data, statusQuery] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({ integrationId });
+  const [data] = clientApi.widget.archiveTeamWarrior.getStatus.useSuspenseQuery({ integrationId });
 
   const status = data.status;
   const projectName = status.project?.title ?? status.selectedProject ?? t("noProjectSelected");
@@ -74,7 +73,6 @@ const ArchiveTeamWarriorWidgetContent = ({
         </Group>
 
         <Group gap={4} wrap="nowrap">
-          <WidgetQueryErrorIndicator error={statusQuery.error} label={t("name")} />
           <Badge size="sm" color={getStatusColor(statusKey)}>
             {t(`status.${statusKey}`)}
           </Badge>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Box, Center, Group, Progress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
+import { Group, Progress, ScrollArea, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconDatabase, IconPhoto, IconUsers, IconVideo } from "@tabler/icons-react";
 import { getQueryKey } from "@trpc/react-query";
 
@@ -12,7 +12,7 @@ import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
 import { getUsableWidgetQueryData, isInitialWidgetQueryPending } from "../../common/query-state";
-import { WidgetQueryErrorIndicator, WidgetQueryLoadingState } from "../../common/query-state-indicator";
+import { WidgetQueryLoadingState } from "../../common/query-state-indicator";
 import { useWidgetRuntimeQueries } from "../../runtime-hooks";
 import classes from "./component.module.css";
 
@@ -103,11 +103,6 @@ export default function ImmichServerStatsWidget({
     return (
       <Stack gap="md" h="100%" p={statsLayout.dense ? "xs" : "md"} justify="center" pos="relative">
         {statsContent}
-        {statsQuery.error && (
-          <Box pos="absolute" top={4} right={4}>
-            <WidgetQueryErrorIndicator error={statsQuery.error} label={t("name")} />
-          </Box>
-        )}
       </Stack>
     );
   }
@@ -121,15 +116,10 @@ export default function ImmichServerStatsWidget({
         <Text size="xs" c="dimmed">
           {t("albumLimit", { count: MAX_ADVANCED_ALBUMS })}
         </Text>
-        <WidgetQueryErrorIndicator error={statsQuery.error ?? albumsQuery.error} label={t("name")} />
       </Group>
       <ScrollArea style={{ flex: 1, minHeight: 0 }}>
         {isInitialWidgetQueryPending(albumsQuery) ? (
           <WidgetQueryLoadingState />
-        ) : albumsQuery.error && albumsQuery.data === undefined ? (
-          <Center h="100%" p="md">
-            <WidgetQueryErrorIndicator error={albumsQuery.error} label={t("name")} />
-          </Center>
         ) : albums.length === 0 ? (
           <WidgetEmptyState />
         ) : (

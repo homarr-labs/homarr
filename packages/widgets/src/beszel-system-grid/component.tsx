@@ -52,7 +52,6 @@ import {
 import { useBeszelFilteredSystems } from "../beszel/_shared/hooks";
 import { IntegrationErrorIndicator } from "../common/integration-error-indicator";
 import { getUsableWidgetQueryData } from "../common/query-state";
-import { WidgetQueryErrorIndicator } from "../common/query-state-indicator";
 import { BeszelSystemStatsModal } from "../beszel/_shared/system-stats-modal";
 import { DiskUsage } from "../beszel/_shared/disk-usage";
 import { isBeszelGridMetricVisible } from "./display";
@@ -460,7 +459,6 @@ export default function BeszelSystemGridWidget({
   displayMode,
 }: WidgetComponentProps<"beszelSystemGrid">) {
   const t = useI18n("widget.beszel");
-  const tFeature = useI18n("widget.beszelSystemGrid");
   const tCommon = useI18n("common");
   const board = useRequiredBoard();
   const { openModal } = useModalAction(BeszelSystemStatsModal);
@@ -485,7 +483,6 @@ export default function BeszelSystemGridWidget({
     return (
       <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
         <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 1 }}>
-          <WidgetQueryErrorIndicator error={systemsQuery.error} label={tFeature("name")} />
           <IntegrationErrorIndicator results={results} />
         </Group>
         <Center h="100%">
@@ -514,7 +511,6 @@ export default function BeszelSystemGridWidget({
   return (
     <Box h="100%" pos="relative" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
       <Group pos="absolute" top={4} right={8} gap={0} style={{ zIndex: 1 }}>
-        <WidgetQueryErrorIndicator error={systemsQuery.error} label={tFeature("name")} />
         <IntegrationErrorIndicator results={results} />
       </Group>
       <Box
