@@ -49,7 +49,7 @@ import { useI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "../components/integration-avatar";
 import { SelectableCard } from "../components/selectable-card";
 import { selectGridCols } from "../select-grid-layout";
-import { buildSortedIntegrations, categoryTranslationKeys, filterIntegrations } from "./integration-grid-shared";
+import { buildSortedIntegrations, filterIntegrations } from "./integration-grid-shared";
 import type { IntegrationGridItem } from "./integration-grid-shared";
 
 export interface IntegrationSelectGridProps {
@@ -134,8 +134,11 @@ const IntegrationCard = ({
       onClick={() => onSelect(integration.kind)}
       aria-label={integration.name}
       icon={<IntegrationAvatar kind={integration.kind} size="sm" />}
-      title={integration.name}
-      topRight={<IntegrationCategoryBadges categories={integration.categories} limit={1} />}
+      title={
+        <Text fw={700} size="md" style={{ whiteSpace: "nowrap" }}>
+          {integration.name}
+        </Text>
+      }
       footerLeft={
         connectedCount > 0 ? (
           <Badge variant="light" color="teal" size="xs" radius="xs">
@@ -229,27 +232,6 @@ const IntegrationTiedWidgets = ({ widgets, limit }: { widgets: WidgetKind[]; lim
           {t("integration.grid.more", { count: moreCount })}
         </Badge>
       )}
-    </Group>
-  );
-};
-
-const IntegrationCategoryBadges = ({
-  categories,
-  limit,
-}: {
-  categories: IntegrationGridItem["categories"];
-  limit?: number;
-}) => {
-  const t = useI18n();
-  const items = limit ? categories.slice(0, limit) : categories;
-
-  return (
-    <Group gap={4} wrap="wrap">
-      {items.map((category) => (
-        <Badge key={category} variant="light" size="xs" color="gray" radius="xs">
-          {categoryTranslationKeys[category] ? t(categoryTranslationKeys[category] as never) : category}
-        </Badge>
-      ))}
     </Group>
   );
 };
