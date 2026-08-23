@@ -84,13 +84,6 @@ describe("Custom Widget workbench preview options", () => {
   it("normalizes only changed secrets", () => {
     expect(
       getChangedSecrets({
-        name: "Widget",
-        description: "",
-        iconUrl: "",
-        sources: "{}",
-        requests: "{}",
-        options: "{}",
-        template: "<Text />",
         secrets: [
           { sourceId: "default", kind: "apiKey", value: "", hasValue: true },
           { sourceId: "other", kind: "password", value: "replacement" },

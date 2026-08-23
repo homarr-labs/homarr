@@ -104,6 +104,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
   const formattedValue = useMemo(() => formatCode(props.value, props.language), [props.language, props.value]);
   const errorCount = diagnostics.filter(({ severity }) => severity === "error").length;
   const warningCount = diagnostics.length - errorCount;
+  const isCharacterLimitExceeded = props.maxLength !== undefined && props.value.length > props.maxLength;
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(props.value);
@@ -175,6 +176,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
                 label={props.label}
                 placeholder={props.placeholder}
                 theme={colorScheme}
+                invalid={isCharacterLimitExceeded}
                 height={props.height ?? (props.language === "jsx" ? "320px" : "220px")}
                 readOnly={props.readOnly ?? false}
                 diagnosticMessage={props.messages.diagnostic}
@@ -211,9 +213,11 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
             </Text>
           </Group>
           <Text
+            component="output"
             size="xs"
             className={classes.accessibleMuted}
-            data-invalid={Boolean(props.maxLength && props.value.length > props.maxLength)}
+            data-invalid={isCharacterLimitExceeded}
+            aria-live="polite"
           >
             {props.messages.characters(props.value.length, props.maxLength)}
           </Text>

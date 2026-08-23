@@ -29,6 +29,7 @@ interface DirectCodeMirrorProps {
   placeholder?: string;
   height: string;
   theme: "light" | "dark";
+  invalid: boolean;
   readOnly: boolean;
   diagnosticMessage(diagnostic: EditorDiagnostic): string;
   onChange(value: string): void;
@@ -124,9 +125,10 @@ export default function DirectCodeMirror(props: DirectCodeMirrorProps) {
         tabindex: "0",
         "aria-label": props.label,
         "aria-labelledby": props.labelledBy,
+        "aria-invalid": props.invalid.toString(),
       }),
     );
-  }, [compartments.accessibility, instanceId, props.id, props.label, props.labelledBy]);
+  }, [compartments.accessibility, instanceId, props.id, props.invalid, props.label, props.labelledBy]);
   useEffect(() => {
     reconfigure(instanceId, compartments.editability, createEditabilityExtension(props.readOnly));
   }, [compartments.editability, instanceId, props.readOnly]);
@@ -166,6 +168,7 @@ function createExtensions(instanceId: string, props: DirectCodeMirrorProps, comp
         tabindex: "0",
         "aria-label": props.label,
         "aria-labelledby": props.labelledBy,
+        "aria-invalid": props.invalid.toString(),
       }),
     ),
     compartments.editability.of(createEditabilityExtension(props.readOnly)),

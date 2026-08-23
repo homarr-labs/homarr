@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { useI18n } from "@homarr/translation/client";
-import type { CustomWidgetPublishedQueryState } from "@homarr/custom-widgets/runtime";
+import type { CustomJsxRendererMessages, CustomWidgetPublishedQueryState } from "@homarr/custom-widgets/runtime";
 import { CustomJsxRenderer, parseRequestCapabilities } from "@homarr/custom-widgets/runtime";
 
 import { createCustomWidgetComponents, SAFE_BINDINGS } from "./jsx-components";
@@ -21,12 +21,17 @@ interface ScopedQueryState {
 export default function CustomJsxDisplay({ data }: { data: Record<string, unknown> }) {
   const t = useI18n("widget.customApi.customJsx");
   const actionT = useI18n("common.action");
+  const diagnosticsT = useI18n("customWidget.editor.diagnostics");
   const capabilities = useMemo(() => parseRequestCapabilities(data.requestCapabilities), [data.requestCapabilities]);
   const copyLabel = actionT("copy");
   const copiedLabel = t("copied");
   const components = useMemo(
     () => createCustomWidgetComponents({ copy: copyLabel, copied: copiedLabel }),
     [copiedLabel, copyLabel],
+  );
+  const bindingTypeConflict = useCallback<CustomJsxRendererMessages["bindingTypeConflict"]>(
+    (name, firstType, secondType) => diagnosticsT("runtimeBindingTypeConflict", { value: name, firstType, secondType }),
+    [diagnosticsT],
   );
   const definitionId = typeof data.widgetDefinitionId === "string" ? data.widgetDefinitionId : undefined;
   const itemId = typeof data.widgetItemId === "string" ? data.widgetItemId : undefined;
@@ -77,6 +82,7 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
       messages={{
         noTemplate: t("noTemplate"),
         templateWarnings: (count) => t("templateWarnings", { count: String(count) }),
+        bindingTypeConflict,
       }}
     />
   );

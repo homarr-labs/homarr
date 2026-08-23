@@ -108,13 +108,17 @@ function useBoundProps(componentName: string, props: Record<string, unknown>): R
   const isBound = Boolean(binding && context && inputType && customJsxBindableComponentNames.has(componentName));
   const registerInput = context?.registerInput;
   useEffect(() => {
-    if (!isBound || !binding || !registerInput || !inputType) return;
+    if (!isBound || !binding || !registerInput || !inputType || serializedInitialValue === undefined) return;
     return registerInput(binding, inputType, JSON.parse(serializedInitialValue) as WidgetInputValue);
   }, [binding, inputType, isBound, registerInput, serializedInitialValue]);
   if (!isBound || !binding || !context || !inputType) return sanitized;
   delete sanitized.defaultValue;
   delete sanitized.defaultChecked;
-  const currentValue = context.inputs[binding] ?? initialValue;
+  let currentValue = initialValue;
+  if (context.inputTypes[binding] === inputType && Object.hasOwn(context.inputs, binding)) {
+    const storedValue = context.inputs[binding];
+    if (storedValue !== undefined) currentValue = storedValue;
+  }
 
   const update = (value: unknown, checked = false) => {
     const extracted = extractEventValue(value, checked);

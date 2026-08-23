@@ -28,7 +28,7 @@
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4));
 }
 .accessibleMuted[data-invalid="true"] {
-  color: var(--mantine-color-red-6);
+  color: light-dark(var(--mantine-color-red-9), var(--mantine-color-red-4));
 }
 .viewport {
   max-height: min(62vh, 680px);

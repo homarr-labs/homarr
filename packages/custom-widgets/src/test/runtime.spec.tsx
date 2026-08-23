@@ -12,6 +12,7 @@ import { ActionButton, CustomJsxRenderer, CustomWidgetRuntimeProvider, SubFetch,
 import { createCustomJsxComponents } from "../jsx";
 import { MAX_REFRESH_INTERVAL_MS, MAX_REFRESH_INTERVAL_SECONDS, normalizeRefreshInterval } from "../runtime/sub-fetch";
 import type {
+  CustomJsxRendererMessages,
   CustomJsxRequestCapability,
   CustomWidgetPublishedQueryState,
   CustomWidgetRequestResult,
@@ -35,6 +36,13 @@ const messages: CustomWidgetRuntimeMessages = {
   toggle: "Toggle",
   refresh: "Refresh",
 };
+
+const rendererMessages = {
+  noTemplate: "No template",
+  templateWarnings: (count: number) => `${count} warnings`,
+  bindingTypeConflict: (name: string, firstType: string, secondType: string) =>
+    `Input ${name} conflicts between ${firstType} and ${secondType}`,
+} satisfies CustomJsxRendererMessages;
 
 let root: Root;
 let host: HTMLDivElement;
@@ -125,7 +133,7 @@ describe("Custom Widget runtime ports", () => {
         createBindings={() => {
           throw new RangeError("Response data exceeded the depth limit");
         }}
-        messages={{ noTemplate: "No template", templateWarnings: (count) => `${count} warnings` }}
+        messages={rendererMessages}
       />,
       createPort(),
     );
@@ -147,7 +155,7 @@ describe("Custom Widget runtime ports", () => {
         data={{}}
         components={components}
         createBindings={() => ({})}
-        messages={{ noTemplate: "No template", templateWarnings: (count) => `${count} warnings` }}
+        messages={rendererMessages}
       />,
       createPort(),
     );
@@ -159,11 +167,6 @@ describe("Custom Widget runtime ports", () => {
       TablerIcon: (() => null) as never,
       copyLabels: { copy: "Copy", copied: "Copied" },
     });
-    const rendererMessages = {
-      noTemplate: "No template",
-      templateWarnings: (count: number) => `${count} warnings`,
-    };
-
     await render(
       <CustomJsxRenderer
         template={"<Anchor href={data.url}>Unsafe</Anchor>"}
@@ -183,11 +186,6 @@ describe("Custom Widget runtime ports", () => {
       TablerIcon: (() => null) as never,
       copyLabels: { copy: "Copy", copied: "Copied" },
     });
-    const rendererMessages = {
-      noTemplate: "No template",
-      templateWarnings: (count: number) => `${count} warnings`,
-    };
-
     await render(
       <>
         <input aria-label="Outside" name="shared" type="radio" />
@@ -217,10 +215,6 @@ describe("Custom Widget runtime ports", () => {
 
   it("exposes temporary bindings through inputs without browser storage", async () => {
     const setItem = vi.spyOn(Storage.prototype, "setItem");
-    const rendererMessages = {
-      noTemplate: "No template",
-      templateWarnings: (count: number) => `${count} warnings`,
-    };
     const components = createCustomJsxComponents({
       TablerIcon: (() => null) as never,
       copyLabels: { copy: "Copy", copied: "Copied" },
@@ -252,7 +246,7 @@ describe("Custom Widget runtime ports", () => {
         data={{}}
         components={components}
         createBindings={() => ({})}
-        messages={{ noTemplate: "No template", templateWarnings: (count) => `${count} warnings` }}
+        messages={rendererMessages}
       />,
       createPort(),
     );
@@ -273,10 +267,6 @@ describe("Custom Widget runtime ports", () => {
   });
 
   it("resets temporary bindings when the template changes", async () => {
-    const rendererMessages = {
-      noTemplate: "No template",
-      templateWarnings: (count: number) => `${count} warnings`,
-    };
     const components = createCustomJsxComponents({
       TablerIcon: (() => null) as never,
       copyLabels: { copy: "Copy", copied: "Copied" },
@@ -313,10 +303,6 @@ describe("Custom Widget runtime ports", () => {
   });
 
   it("preserves temporary bindings when data changes without changing the template", async () => {
-    const rendererMessages = {
-      noTemplate: "No template",
-      templateWarnings: (count: number) => `${count} warnings`,
-    };
     const components = createCustomJsxComponents({
       TablerIcon: (() => null) as never,
       copyLabels: { copy: "Copy", copied: "Copied" },

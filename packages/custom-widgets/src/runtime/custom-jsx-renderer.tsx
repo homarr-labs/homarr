@@ -24,6 +24,7 @@ const permissions = new Set(["view", "modify", "full"]);
 export interface CustomJsxRendererMessages {
   noTemplate: string;
   templateWarnings(count: number): string;
+  bindingTypeConflict(name: string, firstType: WidgetInputType, secondType: WidgetInputType): string;
 }
 
 export interface CustomJsxRendererProps {
@@ -146,6 +147,7 @@ function CustomJsxRendererSession({
   const registrations = useRef(new Map<symbol, InputRegistration>());
   const registrationVersion = useRef(0);
   const mounted = useRef(true);
+  const bindingTypeConflict = messages.bindingTypeConflict;
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -163,7 +165,7 @@ function CustomJsxRendererSession({
         continue;
       }
       if (existing.type === registration.type) continue;
-      const message = `BINDING_TYPE_CONFLICT: '${registration.name}' is bound as both ${existing.type} and ${registration.type}`;
+      const message = bindingTypeConflict(registration.name, existing.type, registration.type);
       if (!conflicts.includes(message) && conflicts.length < 5) conflicts.push(message);
     }
     setBindingErrors((current) => (sameStringArray(current, conflicts) ? current : conflicts));
@@ -172,15 +174,19 @@ function CustomJsxRendererSession({
       for (const [name, registration] of active) nextTypes[name] = registration.type;
       const nextValues: Record<string, WidgetInputValue> = {};
       for (const [name, registration] of active) {
-        nextValues[name] =
-          current.types[name] === registration.type && Object.hasOwn(current.values, name)
-            ? current.values[name]
-            : registration.initialValue;
+        if (current.types[name] === registration.type && Object.hasOwn(current.values, name)) {
+          const previousValue = current.values[name];
+          if (previousValue !== undefined) {
+            nextValues[name] = previousValue;
+            continue;
+          }
+        }
+        nextValues[name] = registration.initialValue;
       }
       if (sameTypeRecord(current.types, nextTypes) && sameInputRecord(current.values, nextValues)) return current;
       return { values: nextValues, types: nextTypes };
     });
-  }, []);
+  }, [bindingTypeConflict]);
   const registerInput = useCallback(
     (name: string, type: WidgetInputType, initialValue: WidgetInputValue) => {
       const id = Symbol(name);
