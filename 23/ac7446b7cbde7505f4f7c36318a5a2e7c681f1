@@ -1,0 +1,41 @@
+apps/nextjs/src/app/[locale]/boards/(content)/_client.tsx
+  s_3e036d74c3a222::t_69bd28870ffd01 167-185
+apps/nextjs/src/app/[locale]/_client-providers/query-persistence.spec.ts
+  s_3e036d74c3a222::t_b8560f27ca6c09 103,108,132
+  s_3e036d74c3a222::t_3ed864191b5f3d 237-241
+  s_3e036d74c3a222::t_9ea341b377e735 77,79-90,106-107,109-131,133-149
+  s_3e036d74c3a222::t_0a1822dd713f34 78
+packages/widgets/src/common/widget-time-context.tsx
+  s_3e036d74c3a222::t_dfc5d287bb6bf8 4,18-26,29-33,41-49
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_3e036d74c3a222::t_42fc62bf290fa7 155-157,164,167
+apps/nextjs/src/components/board/items/item-content.tsx
+  s_3e036d74c3a222::t_557938b69d3dd1 346-350,352
+apps/nextjs/src/app/[locale]/_client-providers/query-persistence.ts
+  s_3e036d74c3a222::t_199a42373e4c80 25,27-33,35,37,43-63,94-96,101,131-153,161,164,171-175,206,217,234-241
+e2e/lazy-widgets.spec.ts
+  s_3e036d74c3a222::t_39ecfff9f68cea 110-112,114
+  s_3e036d74c3a222::t_88674e54270d84 171,179
+apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
+  s_3e036d74c3a222::t_adca70b865ec59 99-103,106
+packages/widgets/src/common/widget-time-context.spec.tsx
+  s_3e036d74c3a222::t_acf943de9fd188 13
+packages/widgets/src/time.ts
+  s_3e036d74c3a222::t_daeb0c961c3faa 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "23ac7446b7cbde7505f4f7c36318a5a2e7c681f1",
+  "prompts": {},
+  "sessions": {
+    "s_3e036d74c3a222": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b04ee47-04c5-4ad9-9dbf-0a13c0b96fdd",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+apps/nextjs/src/components/assistant/widget-import-boundary.spec.ts
+  s_148a12b92c3c12::t_64a2a255c98d1b 20,25-34,36-38,40-42,46-47,49,51
+  s_148a12b92c3c12::t_6e2cfef27c7840 43-45
+apps/nextjs/src/app/[locale]/_client-providers/query-persistence.ts
+  s_148a12b92c3c12::t_e0a912637b9cb8 12,25,103,154
+  s_148a12b92c3c12::t_a204b469ad6dfe 10,160
+  s_148a12b92c3c12::t_0a51f772a1b298 1,15,51
+apps/nextjs/src/app/[locale]/_client-providers/query-persistence.spec.ts
+  s_148a12b92c3c12::t_810f5f914dc88b 105
+  s_148a12b92c3c12::t_fa6f964aa3c3e0 215
+  s_148a12b92c3c12::t_aae955aabd20e5 196,198
+  s_148a12b92c3c12::t_66e1f4ca7e17c8 234
+  s_148a12b92c3c12::t_e0a912637b9cb8 93,145,296,314
+  s_148a12b92c3c12::t_ce314fcf0cb10b 130
+  s_148a12b92c3c12::t_cd9b41850d7e1f 77,141,197
+  s_148a12b92c3c12::t_8539ebae4b3293 12
+  s_148a12b92c3c12::t_9c5f7c3584d8f9 262
+  s_148a12b92c3c12::t_3d8a9091bb8ee3 88
+  s_148a12b92c3c12::t_13837569867bdf 267
+  s_148a12b92c3c12::t_560cc6899bcd2f 163,300
+packages/widgets/src/common/widget-time-context.tsx
+  s_148a12b92c3c12::t_0a51f772a1b298 4,6-7,26-29,32
+  s_148a12b92c3c12::t_e0a912637b9cb8 18-24
+  s_3e036d74c3a222::t_6effe59221dde1 25
+packages/widgets/src/clock/component.tsx
+  s_148a12b92c3c12::t_0a51f772a1b298 13,21-22
+apps/nextjs/src/app/[locale]/_client-providers/trpc.tsx
+  s_3e036d74c3a222::t_e2c9ba1e10735c 90
+  s_148a12b92c3c12::t_94b4632c7ce597 100
+  s_148a12b92c3c12::t_a204b469ad6dfe 41,218
+packages/widgets/src/common/widget-time-context.spec.tsx
+  s_148a12b92c3c12::t_64a2a255c98d1b 27-28,31,41,44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "0632ee27d88d7f3733a3b374156a90b8c8611037",
+  "prompts": {},
+  "sessions": {
+    "s_148a12b92c3c12": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0297c-9284-73f1-b444-a10db89df09a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_3e036d74c3a222": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b04ee47-04c5-4ad9-9dbf-0a13c0b96fdd",
+        "model": "unknown"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
