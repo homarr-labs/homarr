@@ -31,11 +31,14 @@
 }
 
 .marqueeRail {
+  --marquee-horizontal-mask: linear-gradient(black, black);
   position: absolute;
   top: -14rem;
   bottom: -14rem;
   width: clamp(22rem, 26vw, 32rem);
-  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+  mask-image:
+    linear-gradient(to bottom, transparent, black 10%, black 90%, transparent), var(--marquee-horizontal-mask);
+  mask-composite: intersect;
 }
 
 .marqueeRail > * {
@@ -46,12 +49,14 @@
 .marqueeRailLeft {
   left: -7rem;
   --integration-marquee-accent: var(--studio-glow-color);
+  --marquee-horizontal-mask: linear-gradient(to right, black 55%, transparent);
 }
 
 .marqueeRailRight {
   right: -7rem;
   top: -22rem;
   --integration-marquee-accent: var(--studio-secondary-glow-color);
+  --marquee-horizontal-mask: linear-gradient(to left, black 55%, transparent);
 }
 
 .shell {
