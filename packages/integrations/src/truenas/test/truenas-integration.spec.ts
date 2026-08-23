@@ -59,10 +59,12 @@ const ws = vi.hoisted(() => {
       }
 
       const result = responder(payload.method as string, (payload.params as unknown[] | undefined) ?? []);
+      // A responder returning an Error mimics a method the server rejects, e.g. an unsupported filter.
+      const body = result instanceof Error ? { error: { message: result.message } } : { result };
       const envelope =
         payload.jsonrpc === "2.0"
-          ? { jsonrpc: "2.0", id: payload.id, result }
-          : { msg: "result", id: payload.id, result };
+          ? { jsonrpc: "2.0", id: payload.id, ...body }
+          : { msg: "result", id: payload.id, ...body };
       this.respond(JSON.stringify(envelope));
     }
 
@@ -91,7 +93,10 @@ const ws = vi.hoisted(() => {
   };
 });
 
+const logs = vi.hoisted(() => ({ debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() }));
+
 vi.mock("ws", () => ({ WebSocket: ws.FakeWebSocket }));
+vi.mock("@homarr/core/infrastructure/logs", () => ({ createLogger: () => logs }));
 vi.mock("@homarr/core/infrastructure/certificates", () => ({
   getAllTrustedCertificatesAsync: vi.fn().mockResolvedValue([]),
   getTrustedCertificateHostnamesAsync: vi.fn().mockResolvedValue([]),
@@ -167,6 +172,11 @@ const happyResponder = (method: string) => {
 
 const emptyAggregations = () => ({ min: {}, mean: {}, max: {} });
 
+// `pool.query` reports 500 allocated of a 1000 byte pool, leaving 500 free.
+const physicalFallbackFileSystem = [{ deviceName: "tank", available: "500", used: "500", percentage: 50 }];
+
+const ERROR_MESSAGE_LIMIT = 200;
+
 let integrationCounter = 0;
 const createIntegration = (decryptedSecrets: IntegrationSecret[]) =>
   new TrueNasIntegration({
@@ -188,6 +198,7 @@ describe("TrueNasIntegration", () => {
     ws.constructedUrls.length = 0;
     ws.failures.length = 0;
     ws.setResponder(happyResponder);
+    logs.warn.mockClear();
   });
 
   test("fetches and maps system info over the JSON-RPC API", async () => {
@@ -228,6 +239,112 @@ describe("TrueNasIntegration", () => {
       fileSystem: [{ deviceName: "tank", available: "300", used: "200", percentage: 40 }],
       smart: [{ deviceName: "tank", healthy: true, overallStatus: "ONLINE", temperature: null }],
     });
+  });
+
+  test("falls back to physical pool space when the root dataset is not returned", async () => {
+    ws.setResponder((method) => (method === "pool.dataset.query" ? [] : happyResponder(method)));
+    const integration = createIntegration(credentials);
+
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.fileSystem).toMatchObject(physicalFallbackFileSystem);
+    // Dropping the pool would also hide its health status.
+    expect(result.smart).toMatchObject([{ deviceName: "tank", healthy: true, overallStatus: "ONLINE" }]);
+  });
+
+  test("falls back to physical pool space when the root dataset reports no usable values", async () => {
+    ws.setResponder((method) =>
+      method === "pool.dataset.query"
+        ? [{ id: "tank", used: { parsed: null }, available: null }]
+        : happyResponder(method),
+    );
+    const integration = createIntegration(credentials);
+
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.fileSystem).toMatchObject(physicalFallbackFileSystem);
+  });
+
+  test("falls back to physical pool space when the root dataset omits the requested properties", async () => {
+    // Datasets that cannot report space, e.g. while locked, come back without `used` and `available`.
+    ws.setResponder((method) =>
+      method === "pool.dataset.query" ? [{ id: "tank", locked: true }] : happyResponder(method),
+    );
+    const integration = createIntegration(credentials);
+
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.fileSystem).toMatchObject(physicalFallbackFileSystem);
+  });
+
+  test("falls back to physical pool space when the dataset response fails schema validation", async () => {
+    ws.setResponder((method) =>
+      method === "pool.dataset.query" ? { unexpected: "not an array" } : happyResponder(method),
+    );
+    const integration = createIntegration(credentials);
+
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.fileSystem).toMatchObject(physicalFallbackFileSystem);
+    // A malformed payload must not take the rest of the system info down with it.
+    expect(result).toMatchObject({ cpuTemp: 45, memAvailableInBytes: 6_000_000_000, uptime: 3600 });
+  });
+
+  test("falls back to physical pool space when the dataset query is rejected", async () => {
+    ws.setResponder((method) =>
+      method === "pool.dataset.query"
+        ? new Error("[EINVAL] filters: Value error, Invalid operation: in")
+        : happyResponder(method),
+    );
+    const integration = createIntegration(credentials);
+
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.fileSystem).toMatchObject(physicalFallbackFileSystem);
+    // A rejected dataset query must not take the rest of the system info down with it.
+    expect(result).toMatchObject({ cpuTemp: 45, memAvailableInBytes: 6_000_000_000, uptime: 3600 });
+  });
+
+  test("logs the truncated rejection reason rather than the generic wrapper message", async () => {
+    // TrueNAS answers a rejected method with its Python traceback, which runs to several kilobytes.
+    ws.setResponder((method) =>
+      method === "pool.dataset.query"
+        ? new Error(`[EINVAL] query-filters ${"x".repeat(5000)}`)
+        : happyResponder(method),
+    );
+    const integration = createIntegration(credentials);
+
+    await integration.getSystemInfoAsync();
+
+    const logged = logs.warn.mock.calls.find(([message]) => String(message).includes("Could not retrieve"));
+    const reason = String((logged?.[1] as { error?: string } | undefined)?.error);
+    // The decorator would otherwise surface only "An unknown error occured while executing Integration method".
+    expect(reason).toContain("[EINVAL] query-filters");
+    expect(reason).toHaveLength(ERROR_MESSAGE_LIMIT + 1); // truncated, plus the ellipsis
+  });
+
+  test("keeps reporting a pool that is unhealthy but has no usable dataset space", async () => {
+    ws.setResponder((method) => {
+      if (method === "pool.query")
+        return [
+          { name: "tank", status: "ONLINE", healthy: true, free: 500, size: 1000, allocated: 500 },
+          { name: "backup", status: "DEGRADED", healthy: false, free: 10, size: 100, allocated: 90 },
+        ];
+      if (method === "pool.dataset.query") return [{ id: "tank", used: { parsed: 200 }, available: { parsed: 300 } }];
+      return happyResponder(method);
+    });
+    const integration = createIntegration(credentials);
+
+    const result = await integration.getSystemInfoAsync();
+
+    expect(result.smart).toMatchObject([
+      { deviceName: "tank", healthy: true, overallStatus: "ONLINE" },
+      { deviceName: "backup", healthy: false, overallStatus: "DEGRADED" },
+    ]);
+    expect(result.fileSystem).toMatchObject([
+      { deviceName: "tank", available: "300", used: "200", percentage: 40 },
+      { deviceName: "backup", available: "10", used: "90", percentage: 90 },
+    ]);
   });
 
   test("reports zero usage for an empty root dataset", async () => {

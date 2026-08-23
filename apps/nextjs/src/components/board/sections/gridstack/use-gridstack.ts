@@ -301,6 +301,8 @@ interface UseCssVariableConfiguration {
   isDynamic: boolean;
 }
 
+const minimumResizeWidthDelta = 20;
+
 /**
  * This hook is used to configure the css variables for the gridstack
  * Those css variables are used to define the size of the gridstack items
@@ -319,9 +321,30 @@ const useCssVariableConfiguration = ({
   columnCount,
   isDynamic,
 }: UseCssVariableConfiguration) => {
+  const prevSizeRef = useRef<{ width: number; height: number } | null>(null);
+
   const onResize = useCallback(() => {
     if (!wrapperRef.current) return;
     if (!gridRef.current) return;
+
+    const currentWidth = wrapperRef.current.clientWidth;
+    const currentHeight = wrapperRef.current.clientHeight;
+    const prevSize = prevSizeRef.current;
+
+    // Only skip recalculation when the width change is insignificant
+    // and, for dynamic sections, the height is unchanged. This prevents infinite
+    // feedback loops when the vertical scrollbar appears/disappears, causing
+    // clientWidth to oscillate by ~15px, while still reacting to height changes.
+    if (
+      prevSize !== null &&
+      Math.abs(currentWidth - prevSize.width) < minimumResizeWidthDelta &&
+      (!isDynamic || currentHeight === prevSize.height)
+    ) {
+      return;
+    }
+
+    prevSizeRef.current = { width: currentWidth, height: currentHeight };
+
     handleResizeChange(
       wrapperRef.current,
       gridRef.current,

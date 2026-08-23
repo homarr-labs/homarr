@@ -1442,8 +1442,8 @@
     "iconPicker": {
       "label": "Icona URL",
       "description": "Cerca nella libreria, incolla un URL di immagine, o carica un file.",
-      "header": "Digita il nome o gli oggetti da filtrare per le icone... Homarr cercherà tra le icone {countIcons} per te.",
-      "headerLoading": "Digita per cercare icone…",
+      "header": "Digita il nome o gli oggetti da filtrare per le icone... Homarr cercherà tra le icone {countIcons} per te",
+      "headerLoading": "Digita per cercare icone",
       "clear": "Cancella immagine",
       "uploadImage": "Carica immagine",
       "results": "Risultati della ricerca immagini",
@@ -2070,7 +2070,7 @@
       }
     },
     "anchorNote": {
-      "name": "Nota Anchor",
+      "name": "Ancora Nota",
       "description": "Visualizza una nota selezionata da Ancoraggio",
       "option": {
         "noteId": {
@@ -2308,12 +2308,12 @@
           "description": "Come dovrebbe apparire la data"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Alba",
         "sunset": "Tramonto",
-        "maxWindSpeed": "Max velocità vento: {maxWindSpeed} km/h",
-        "maxWindGusts": "Max raffiche di vento: {maxWindGusts} km/h",
+        "maxWindSpeed": "Velocità massima del vento: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Raffiche di vento massime: {maxWindGusts} {unit}",
         "humidity": "Umidità: {humidity}%"
       },
       "kind": {
@@ -3093,7 +3093,7 @@
       "option": {
         "albumId": {
           "label": "ID Album",
-          "description": "Si tratta di un ID univoco che si riferisce al tuo album Immich. Puoi trovare questo id aprendo un album e copiando la stringa univoca dall'URL, ad esempio 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "Si tratta di un ID univoco che si riferisce al tuo album Immich. Puoi trovare questo id aprendo un album e copiando la stringa univoca dall'URL, ad esempio 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Intervallo in secondi",
@@ -3254,7 +3254,7 @@
         },
         "client": {
           "pause": "Metti in pausa il client",
-          "resume": "Ripristina il client"
+          "resume": "Riprendi il client"
         },
         "item": {
           "pause": "Metti in pausa l'elemento",
@@ -5398,7 +5398,7 @@
         "label": "Arresta",
         "notification": {
           "success": {
-            "title": "Containers arrestati",
+            "title": "Containers fermati",
             "message": "I containers sono stati arrestati con successo"
           },
           "error": {
