@@ -1,0 +1,23 @@
+pnpm-lock.yaml
+  s_148a12b92c3c12::t_a7376693ccb77f 205
+pnpm-workspace.yaml
+  s_148a12b92c3c12::t_b8071bf8e206a8 66
+.oxlintrc.json
+  s_148a12b92c3c12::t_ca7c9376a7b19e 33-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "657e518f4dcee3027894c8a1b0d3abb91bc6f135",
+  "prompts": {},
+  "sessions": {
+    "s_148a12b92c3c12": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0297c-9284-73f1-b444-a10db89df09a",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
