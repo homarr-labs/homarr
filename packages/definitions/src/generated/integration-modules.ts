@@ -10,3 +10,7 @@ export const generatedIntegrationDefinitions = {
     defaultPort: 8090,
   },
 } as const;
+
+export const generatedIntegrationDocumentationSources = {
+  beszel: "packages/integrations/src/beszel/docs",
+} as const;

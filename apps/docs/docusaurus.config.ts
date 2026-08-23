@@ -2,12 +2,27 @@ import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
 import { themes as prismThemes } from "prism-react-renderer";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
-import { generatedWidgetDocumentationSources } from "@homarr/definitions";
+import { generatedIntegrationDocumentationSources, generatedWidgetDocumentationSources } from "@homarr/definitions";
 const a11yEmoji = require("@fec/remark-a11y-emoji");
 
 const githubDocsEditRoot = "https://github.com/homarr-labs/homarr/edit/dev";
 
 const getDocumentationEditUrl = (docPath: string) => {
+  const integrationPath = /^integrations\/([^/]+)\/(.+)$/u.exec(docPath);
+  const integrationSlug = integrationPath?.[1];
+  const integrationRelativePath = integrationPath?.[2];
+  if (
+    integrationSlug &&
+    integrationRelativePath &&
+    Object.hasOwn(generatedIntegrationDocumentationSources, integrationSlug)
+  ) {
+    const source =
+      generatedIntegrationDocumentationSources[
+        integrationSlug as keyof typeof generatedIntegrationDocumentationSources
+      ];
+    return `${githubDocsEditRoot}/${source}/${integrationRelativePath}`;
+  }
+
   const widgetPath = /^widgets\/([^/]+)\/(.+)$/u.exec(docPath);
   const slug = widgetPath?.[1];
   const relativePath = widgetPath?.[2];

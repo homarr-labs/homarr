@@ -170,28 +170,120 @@ export const createLockChannel = (name: string) => {
 const integrationCacheGenerationKey = (integrationId: string) => `integration-cache:generation:${integrationId}`;
 const pendingIntegrationCacheInvalidations = new Map<string, string>();
 const MAX_PENDING_INTEGRATION_CACHE_INVALIDATIONS = 1000;
-const INTEGRATION_CACHE_REDIS_TIMEOUT_MS = 500;
+const CACHE_GENERATION_REDIS_TIMEOUT_MS = 500;
+const CACHE_GENERATION_SUCCESS_TTL_MS = 1000;
+const CACHE_GENERATION_UNAVAILABLE_TTL_MS = 5000;
+const MAX_CACHE_GENERATION_READS = 1000;
+
+export interface IntegrationCacheGeneration {
+  value: string;
+  isShared: boolean;
+}
+
+interface CacheGenerationReadEntry {
+  generation: IntegrationCacheGeneration;
+  expiresAt: number;
+}
+
+interface CacheGenerationReadInFlight {
+  promise: Promise<IntegrationCacheGeneration>;
+  token: object;
+}
+
+const cacheGenerationReads = new Map<string, CacheGenerationReadEntry>();
+const cacheGenerationReadsInFlight = new Map<string, CacheGenerationReadInFlight>();
 
 const logCacheGenerationFailure = (message: string, metadata: Record<string, unknown>, error: unknown) => {
   logger.warn(new ErrorWithMetadata(message, metadata, { cause: error }));
 };
 
-const withIntegrationCacheRedisTimeoutAsync = async <T>(promise: Promise<T>): Promise<T> => {
+const withCacheGenerationRedisTimeoutAsync = async <T>(promise: Promise<T>): Promise<T> => {
   return await new Promise<T>((resolve, reject) => {
     const timer = setTimeout(
-      () => reject(new Error("Redis integration cache operation timed out")),
-      INTEGRATION_CACHE_REDIS_TIMEOUT_MS,
+      () => reject(new Error("Redis cache generation operation timed out")),
+      CACHE_GENERATION_REDIS_TIMEOUT_MS,
     );
     timer.unref?.();
     void promise.then(resolve, reject).finally(() => clearTimeout(timer));
   });
 };
 
+const setCacheGenerationRead = (
+  cacheKey: string,
+  generation: IntegrationCacheGeneration,
+  ttlMs = generation.isShared ? CACHE_GENERATION_SUCCESS_TTL_MS : CACHE_GENERATION_UNAVAILABLE_TTL_MS,
+) => {
+  if (cacheGenerationReads.has(cacheKey)) cacheGenerationReads.delete(cacheKey);
+  while (cacheGenerationReads.size >= MAX_CACHE_GENERATION_READS) {
+    const oldestCacheKey = cacheGenerationReads.keys().next().value;
+    if (!oldestCacheKey) break;
+    cacheGenerationReads.delete(oldestCacheKey);
+  }
+  cacheGenerationReads.set(cacheKey, {
+    generation,
+    expiresAt: Date.now() + ttlMs,
+  });
+};
+
+const beginCacheGenerationInvalidation = (cacheKey: string, pendingGeneration: string) => {
+  cacheGenerationReadsInFlight.delete(cacheKey);
+  setCacheGenerationRead(cacheKey, { value: pendingGeneration, isShared: false });
+};
+
+interface GetCachedGenerationOptions {
+  cacheKey: string;
+  readAsync: () => Promise<string | null>;
+  fallback: IntegrationCacheGeneration;
+  errorMessage: string;
+  errorMetadata: Record<string, unknown>;
+  force?: boolean;
+}
+
+const getCachedGenerationAsync = async ({
+  cacheKey,
+  readAsync,
+  fallback,
+  errorMessage,
+  errorMetadata,
+  force = false,
+}: GetCachedGenerationOptions): Promise<IntegrationCacheGeneration> => {
+  if (!force) {
+    const cached = cacheGenerationReads.get(cacheKey);
+    if (cached && Date.now() < cached.expiresAt) return cached.generation;
+    if (cached) cacheGenerationReads.delete(cacheKey);
+  }
+
+  const existing = cacheGenerationReadsInFlight.get(cacheKey);
+  if (existing) return await existing.promise;
+
+  const token = {};
+  const promise = (async () => {
+    let generation = fallback;
+    try {
+      const value = await readAsync();
+      if (value !== null) generation = { value, isShared: true };
+    } catch (error) {
+      logCacheGenerationFailure(errorMessage, errorMetadata, error);
+    }
+
+    if (cacheGenerationReadsInFlight.get(cacheKey)?.token === token) {
+      setCacheGenerationRead(cacheKey, generation);
+    }
+    return generation;
+  })().finally(() => {
+    if (cacheGenerationReadsInFlight.get(cacheKey)?.token === token) {
+      cacheGenerationReadsInFlight.delete(cacheKey);
+    }
+  });
+  cacheGenerationReadsInFlight.set(cacheKey, { promise, token });
+  return await promise;
+};
+
 const advanceIntegrationCacheGenerationAsync = async (integrationId: string) => {
   const client = getSetClient as typeof getSetClient | null;
   if (!client) return null;
 
-  const results = await withIntegrationCacheRedisTimeoutAsync(
+  const results = await withCacheGenerationRedisTimeoutAsync(
     client.multi().incr(integrationCacheGenerationKey(integrationId)).del(`session-store:${integrationId}`).exec(),
   );
   const generationResult = results?.[0];
@@ -201,54 +293,39 @@ const advanceIntegrationCacheGenerationAsync = async (integrationId: string) => 
   return String(generationResult[1]);
 };
 
-export interface IntegrationCacheGeneration {
-  value: string;
-  isShared: boolean;
-}
-
 export const getIntegrationCacheGenerationAsync = async (
   integrationId: string,
 ): Promise<IntegrationCacheGeneration> => {
+  const cacheKey = integrationCacheGenerationKey(integrationId);
   const pendingGeneration = pendingIntegrationCacheInvalidations.get(integrationId);
   if (pendingGeneration) {
-    try {
-      const generation = await advanceIntegrationCacheGenerationAsync(integrationId);
-      if (generation) {
-        if (pendingIntegrationCacheInvalidations.get(integrationId) === pendingGeneration) {
-          pendingIntegrationCacheInvalidations.delete(integrationId);
-          return { value: generation, isShared: true };
-        }
-        return {
-          value: pendingIntegrationCacheInvalidations.get(integrationId) ?? generation,
-          isShared: false,
-        };
-      }
-    } catch (error) {
-      logCacheGenerationFailure(
-        "Failed to retry integration cache invalidation",
-        { integrationId, operation: "generation-advance" },
-        error,
-      );
+    const generation = await getCachedGenerationAsync({
+      cacheKey,
+      readAsync: async () => await advanceIntegrationCacheGenerationAsync(integrationId),
+      fallback: { value: pendingGeneration, isShared: false },
+      errorMessage: "Failed to retry integration cache invalidation",
+      errorMetadata: { integrationId, operation: "generation-advance" },
+    });
+    if (generation.isShared && pendingIntegrationCacheInvalidations.get(integrationId) === pendingGeneration) {
+      pendingIntegrationCacheInvalidations.delete(integrationId);
+      return generation;
     }
-    return { value: pendingGeneration, isShared: false };
+    const latestPendingGeneration = pendingIntegrationCacheInvalidations.get(integrationId);
+    if (latestPendingGeneration) return { value: latestPendingGeneration, isShared: false };
+    return generation;
   }
 
   const client = getSetClient as typeof getSetClient | null;
-  if (!client) return { value: "redis-unavailable", isShared: false };
-
-  try {
-    const generation = await withIntegrationCacheRedisTimeoutAsync(
-      client.get(integrationCacheGenerationKey(integrationId)),
-    );
-    return { value: generation ?? "0", isShared: true };
-  } catch (error) {
-    logCacheGenerationFailure(
-      "Failed to read integration cache generation",
-      { integrationId, operation: "generation-read" },
-      error,
-    );
-    return { value: "redis-unavailable", isShared: false };
-  }
+  return await getCachedGenerationAsync({
+    cacheKey,
+    readAsync: async () => {
+      if (!client) return null;
+      return (await withCacheGenerationRedisTimeoutAsync(client.get(cacheKey))) ?? "0";
+    },
+    fallback: { value: "redis-unavailable", isShared: false },
+    errorMessage: "Failed to read integration cache generation",
+    errorMetadata: { integrationId, operation: "generation-read" },
+  });
 };
 
 export const invalidateIntegrationCacheAsync = async (integrationId: string): Promise<void> => {
@@ -258,18 +335,19 @@ export const invalidateIntegrationCacheAsync = async (integrationId: string): Pr
     if (oldestIntegrationId) pendingIntegrationCacheInvalidations.delete(oldestIntegrationId);
   }
   pendingIntegrationCacheInvalidations.set(integrationId, pendingGeneration);
+  const cacheKey = integrationCacheGenerationKey(integrationId);
+  beginCacheGenerationInvalidation(cacheKey, pendingGeneration);
 
-  try {
-    const generation = await advanceIntegrationCacheGenerationAsync(integrationId);
-    if (generation && pendingIntegrationCacheInvalidations.get(integrationId) === pendingGeneration) {
-      pendingIntegrationCacheInvalidations.delete(integrationId);
-    }
-  } catch (error) {
-    logCacheGenerationFailure(
-      "Failed to invalidate integration caches in Redis",
-      { integrationId, operation: "generation-advance-and-session-delete" },
-      error,
-    );
+  const generation = await getCachedGenerationAsync({
+    cacheKey,
+    readAsync: async () => await advanceIntegrationCacheGenerationAsync(integrationId),
+    fallback: { value: pendingGeneration, isShared: false },
+    errorMessage: "Failed to invalidate integration caches in Redis",
+    errorMetadata: { integrationId, operation: "generation-advance-and-session-delete" },
+    force: true,
+  });
+  if (generation.isShared && pendingIntegrationCacheInvalidations.get(integrationId) === pendingGeneration) {
+    pendingIntegrationCacheInvalidations.delete(integrationId);
   }
 };
 
@@ -281,50 +359,42 @@ const advanceWidgetCacheGenerationAsync = async (namespace: string) => {
   const client = getSetClient as typeof getSetClient | null;
   if (!client) return null;
 
-  return String(await withIntegrationCacheRedisTimeoutAsync(client.incr(widgetCacheGenerationKey(namespace))));
+  return String(await withCacheGenerationRedisTimeoutAsync(client.incr(widgetCacheGenerationKey(namespace))));
 };
 
 export type WidgetCacheGeneration = IntegrationCacheGeneration;
 
 export const getWidgetCacheGenerationAsync = async (namespace: string): Promise<WidgetCacheGeneration> => {
+  const cacheKey = widgetCacheGenerationKey(namespace);
   const pendingGeneration = pendingWidgetCacheInvalidations.get(namespace);
   if (pendingGeneration) {
-    try {
-      const generation = await advanceWidgetCacheGenerationAsync(namespace);
-      if (generation) {
-        if (pendingWidgetCacheInvalidations.get(namespace) === pendingGeneration) {
-          pendingWidgetCacheInvalidations.delete(namespace);
-          return { value: generation, isShared: true };
-        }
-        return {
-          value: pendingWidgetCacheInvalidations.get(namespace) ?? generation,
-          isShared: false,
-        };
-      }
-    } catch (error) {
-      logCacheGenerationFailure(
-        "Failed to retry widget cache invalidation",
-        { cacheNamespace: namespace, operation: "generation-advance" },
-        error,
-      );
+    const generation = await getCachedGenerationAsync({
+      cacheKey,
+      readAsync: async () => await advanceWidgetCacheGenerationAsync(namespace),
+      fallback: { value: pendingGeneration, isShared: false },
+      errorMessage: "Failed to retry widget cache invalidation",
+      errorMetadata: { cacheNamespace: namespace, operation: "generation-advance" },
+    });
+    if (generation.isShared && pendingWidgetCacheInvalidations.get(namespace) === pendingGeneration) {
+      pendingWidgetCacheInvalidations.delete(namespace);
+      return generation;
     }
-    return { value: pendingGeneration, isShared: false };
+    const latestPendingGeneration = pendingWidgetCacheInvalidations.get(namespace);
+    if (latestPendingGeneration) return { value: latestPendingGeneration, isShared: false };
+    return generation;
   }
 
   const client = getSetClient as typeof getSetClient | null;
-  if (!client) return { value: "redis-unavailable", isShared: false };
-
-  try {
-    const generation = await withIntegrationCacheRedisTimeoutAsync(client.get(widgetCacheGenerationKey(namespace)));
-    return { value: generation ?? "0", isShared: true };
-  } catch (error) {
-    logCacheGenerationFailure(
-      "Failed to read widget cache generation",
-      { cacheNamespace: namespace, operation: "generation-read" },
-      error,
-    );
-    return { value: "redis-unavailable", isShared: false };
-  }
+  return await getCachedGenerationAsync({
+    cacheKey,
+    readAsync: async () => {
+      if (!client) return null;
+      return (await withCacheGenerationRedisTimeoutAsync(client.get(cacheKey))) ?? "0";
+    },
+    fallback: { value: "redis-unavailable", isShared: false },
+    errorMessage: "Failed to read widget cache generation",
+    errorMetadata: { cacheNamespace: namespace, operation: "generation-read" },
+  });
 };
 
 export const invalidateWidgetCache = (namespace: string): void => {
@@ -334,20 +404,21 @@ export const invalidateWidgetCache = (namespace: string): void => {
     if (oldestNamespace) pendingWidgetCacheInvalidations.delete(oldestNamespace);
   }
   pendingWidgetCacheInvalidations.set(namespace, pendingGeneration);
+  const cacheKey = widgetCacheGenerationKey(namespace);
+  beginCacheGenerationInvalidation(cacheKey, pendingGeneration);
 
-  void advanceWidgetCacheGenerationAsync(namespace)
-    .then((generation) => {
-      if (generation && pendingWidgetCacheInvalidations.get(namespace) === pendingGeneration) {
-        pendingWidgetCacheInvalidations.delete(namespace);
-      }
-    })
-    .catch((error: unknown) => {
-      logCacheGenerationFailure(
-        "Failed to invalidate widget caches in Redis",
-        { cacheNamespace: namespace, operation: "generation-advance" },
-        error,
-      );
-    });
+  void getCachedGenerationAsync({
+    cacheKey,
+    readAsync: async () => await advanceWidgetCacheGenerationAsync(namespace),
+    fallback: { value: pendingGeneration, isShared: false },
+    errorMessage: "Failed to invalidate widget caches in Redis",
+    errorMetadata: { cacheNamespace: namespace, operation: "generation-advance" },
+    force: true,
+  }).then((generation) => {
+    if (generation.isShared && pendingWidgetCacheInvalidations.get(namespace) === pendingGeneration) {
+      pendingWidgetCacheInvalidations.delete(namespace);
+    }
+  });
 };
 
 /**

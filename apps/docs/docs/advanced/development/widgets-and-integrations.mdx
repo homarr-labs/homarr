@@ -30,6 +30,10 @@ packages/widgets/src/weather/
 The remaining widgets still use the compatibility registries and can be migrated one folder at a time without changing
 their persisted `WidgetKind` or tRPC paths. The generated and legacy entries are merged behind the same runtime loaders.
 
+Beszel is the reference integration module. Its folder owns the manifest, implementation, capability helpers, tests,
+and canonical docs. The generator projects its metadata into definitions and its constructor into the lazy integration
+factory without eagerly importing the implementation.
+
 The server router implementation is not physically inside these first two widget folders yet. `@homarr/widgets`
 currently imports `@homarr/api/client`; making `@homarr/api` import widget server files would create a package cycle and
 risk shipping server code to the browser. The module already owns the lazy router registration, and the neutral server
@@ -109,6 +113,8 @@ It generates these compatibility projections:
 Generated client and server registries contain explicit import literals. Do not replace them with a variable dynamic
 import: explicit paths let Next.js and Turbopack discover chunks without eagerly loading every widget.
 
+Use `pnpm features:sync` or `pnpm features:sync:check` when a change spans widgets and integrations.
+
 ## Client and server data caching
 
 The operation is the shared identity for both cache layers:
@@ -130,6 +136,10 @@ which invalidates all replicas without scanning keys. Integration-free widget ha
 manual refreshes such as Docker inventory invalidation therefore clear both local and shared values. A zero TTL keeps
 only overlapping in-flight request deduplication and never stores a Redis payload, which is appropriate for realtime
 or subscription data.
+
+Generation reads are process-cached for one second and concurrent misses are deduplicated, so a hot L1 hit does not add
+a Redis round trip. Redis failure backs off for five seconds instead of producing a request storm; local invalidations
+take effect immediately and other replicas converge within the one-second generation window.
 
 TanStack Query remains the browser cache and Redis remains the server cache. A browser persistence hit never bypasses
 server authorization, and Redis never caches permission decisions or decrypted credentials.
@@ -179,10 +189,25 @@ The manifest is the common path, not a limit on implementation size.
 - A widget can add custom query matchers, context actions, prefetching, or nested client components while retaining the
   same registration, permissions, logging, error, and cache contracts.
 
-## Legacy integration path
+## Integration modules
 
-Integration metadata is currently derived from `integrationDefs`, while implementation constructors are loaded lazily
-through `@homarr/integrations/factory`. Keep integrations server-only, implement only their capability interfaces, and
-use narrow schema/interface exports instead of the broad runtime barrel. The same local-manifest and generated-registry
-shape is being introduced for integrations so metadata, constructor registration, and canonical docs can move beside
-each implementation without changing `IntegrationKind` or widget capability checks.
+Create an integration module with an explicit icon URL:
+
+```sh
+pnpm integrations:new example --icon-url https://example.com/example.svg
+pnpm integrations:sync:check
+```
+
+The scaffold creates a compileable connection test, pure `module.ts`, and canonical docs in
+`packages/integrations/src/example/`. Add capability interfaces and service methods beside that implementation, then
+connect them to widget request handlers. Declare real credential alternatives, categories, Docker discovery aliases,
+ports, and onboarding metadata in the local module instead of editing the central definitions and creator registries.
+
+The integration synchronizer validates kinds, credential kinds, categories, ports, URLs, documentation, creator
+exports, and collisions. It generates the definitions projection, a typed lazy creator registry with literal imports,
+and Docusaurus copies whose edit links point back to the canonical module docs.
+
+Beszel is migrated to this path. Other integrations still use the compatibility registry and can move independently
+without changing persisted `IntegrationKind` values or widget capability checks. Keep integrations server-only,
+implement only their capability interfaces, and use narrow schema/interface exports instead of the broad runtime
+barrel while migrating them.
