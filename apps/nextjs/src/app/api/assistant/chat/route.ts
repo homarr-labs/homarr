@@ -371,12 +371,12 @@ export async function POST(request: Request) {
 
   const session = await auth();
   if (!session) {
-    return Response.json({ error: "Sign in to use Homarr Assistant." }, { status: 401 });
+    return Response.json({ error: "Sign in to use Assistant." }, { status: 401 });
   }
 
   const featureControls = await getServerSettingByKeyAsync(db, "featureControls");
   if (!featureControls.assistantEnabled) {
-    return Response.json({ error: "Homarr Assistant is disabled." }, { status: 404 });
+    return Response.json({ error: "Assistant is disabled." }, { status: 404 });
   }
 
   const requestBody = await request.text();
@@ -420,7 +420,7 @@ export async function POST(request: Request) {
 
   const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;
   if (!configuration?.enabled || !configuration.modelId || (requiresApiKey && !configuration.encryptedApiKey)) {
-    return Response.json({ error: "Homarr Assistant is not configured." }, { status: 503 });
+    return Response.json({ error: "Assistant is not configured." }, { status: 503 });
   }
 
   let homarrProviderToken: string | null | undefined;

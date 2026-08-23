@@ -1862,7 +1862,7 @@
         "login": "Login",
         "homeBoard": "Your home board",
         "updateAvailable": "{countUpdates} updates available: {tag}",
-        "assistant": "{app} Assistant",
+        "assistant": "Assistant",
         "assistantThinking": "Thinking",
         "modifier": "Mod"
       }
@@ -6467,7 +6467,7 @@
               "toggleColorScheme": "Toggle light/dark mode",
               "saveNotebook": "Save notebook (only inside notebook widget)",
               "openSpotlight": "Open search",
-              "openAssistant": "Open Homarr Assistant"
+              "openAssistant": "Open Assistant"
             },
             "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }
@@ -7611,11 +7611,11 @@
     }
   },
   "assistant": {
-    "title": "Homarr Assistant",
-    "open": "Open Homarr Assistant",
+    "title": "Assistant",
+    "open": "Open Assistant",
     "close": "Close assistant",
     "minimize": "Minimize assistant",
-    "spotlight": "Ask Homarr Assistant",
+    "spotlight": "Ask Assistant",
     "spotlightDescription": "Type and send a prompt without leaving the command menu.",
     "spotlightPrompt": {
       "title": "Ask Assistant",
@@ -7625,10 +7625,10 @@
     },
     "unavailable": {
       "checking": "Checking whether the assistant is available…",
-      "disabledByServer": "An administrator has disabled Homarr Assistant for this server.",
+      "disabledByServer": "An administrator has disabled Assistant for this server.",
       "error": "The assistant's availability could not be checked. Try again.",
       "notConfigured": "An administrator must configure and enable the assistant first.",
-      "signIn": "Sign in to use Homarr Assistant."
+      "signIn": "Sign in to use Assistant."
     },
     "newConversation": "New conversation",
     "conversations": "Conversations",
@@ -7671,7 +7671,7 @@
         "prompt": "Help me improve a board's appearance or custom CSS. Show me my boards first, then preserve my current settings while we make the change."
       }
     },
-    "composerPlaceholder": "Ask Homarr Assistant…",
+    "composerPlaceholder": "Ask Assistant…",
     "runtime": {
       "model": "Model",
       "searchModels": "Search models",

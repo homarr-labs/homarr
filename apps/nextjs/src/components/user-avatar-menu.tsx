@@ -18,7 +18,6 @@ import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
 import { hotkeys, invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
-import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
@@ -46,7 +45,6 @@ const formatHotkeyLabel = (hotkey: string, modifierLabel: string) =>
 export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, boardSwitcher }: UserAvatarMenuProps) => {
   const t = useI18n("common.userAvatar.menu");
   const tBoard = useI18n("board");
-  const { branding } = useSettings();
   const session = useSession();
 
   const { logoutUrl } = useAuthContext();
@@ -111,7 +109,7 @@ export const UserAvatarMenu = ({ children, availableUpdates, isDockerEnabled, bo
                 }
                 onClick={assistant.open}
               >
-                {t("assistant", { app: branding.appName })}
+                {t("assistant")}
               </Menu.Item>
             )}
             <Menu.Item
