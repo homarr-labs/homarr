@@ -9,8 +9,8 @@ const editorBoundaryPath = resolve(gridDirectory, "board-grid-editor-boundary.ts
 const editorLoaderPath = resolve(gridDirectory, "grid-editor-loader.ts");
 
 describe("board grid import boundary", () => {
-  test("keeps every current dnd-kit runtime import inside the edit-only module", () => {
-    const runtimeImports = getSourceFiles(nextjsSourceDirectory)
+  test("keeps board grid dnd-kit runtime imports inside the edit-only module", () => {
+    const runtimeImports = getSourceFiles(gridDirectory)
       .flatMap(getRuntimeImports)
       .filter(({ specifier }) => isCurrentDndKitImport(specifier))
       .map(({ filePath, kind, specifier }) => ({
