@@ -47,6 +47,7 @@ apps/nextjs/src/components/board/items/item-content.module.css
   s_148a12b92c3c12::t_b2feb904a71508 1-14
 apps/nextjs/src/components/board/items/item-content.tsx
   s_148a12b92c3c12::t_b2feb904a71508 7,22,43,161-179,346-351
+  s_3e036d74c3a222::t_0e213cb070cda4 5
 packages/widgets/src/media-requests/list/component.tsx
   s_148a12b92c3c12::t_424ca6e1bb32b1 18-19,39-47,49
 apps/nextjs/src/app/[locale]/boards/(content)/_creator.tsx
@@ -64,6 +65,7 @@ packages/widgets/src/media-requests/stats/component.tsx
   s_148a12b92c3c12::t_424ca6e1bb32b1 26-27,46-47,51
 packages/widgets/package.json
   s_148a12b92c3c12::t_8ce20f17e67927 33
+  s_3e036d74c3a222::t_7023d4a38aaa9a 34
 pnpm-workspace.yaml
   s_148a12b92c3c12::t_1e9d933ac564e3 66-67
 packages/widgets/src/common/use-widget-now.ts
@@ -81,6 +83,8 @@ e2e/lazy-widgets.spec.ts
   s_148a12b92c3c12::t_3880385d20a70b 94,118
 pnpm-lock.yaml
   s_148a12b92c3c12::t_dcf7f28da7cab0 192-194,207-209,1139-1141,1154-1156,8846-8851,8874-8879,23950-23958,23984-23989
+packages/widgets/src/bookmarks/bookmarks-widget.tsx
+  s_3e036d74c3a222::t_0eba7566b29bf6 26-27,47-52,129
 ---
 {
   "schema_version": "authorship/3.0.0",
@@ -93,6 +97,14 @@ pnpm-lock.yaml
         "tool": "codex",
         "id": "01a0297c-9284-73f1-b444-a10db89df09a",
         "model": "gpt-5.6-sol"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    },
+    "s_3e036d74c3a222": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b04ee47-04c5-4ad9-9dbf-0a13c0b96fdd",
+        "model": "claude-opus-5"
       },
       "human_author": "Thomas Camlong <thomas@ajnart.fr>"
     }
