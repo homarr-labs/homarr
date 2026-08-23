@@ -118,6 +118,19 @@ describe("fetchFaviconUrlAsync", () => {
     expect(result).toBe("https://auth.example.net/favicon.ico");
   });
 
+  test("falls back to the well known favicon of the origin that answered, even when that response carried no usable html", async () => {
+    mockResponses({
+      // The redirect target answers with something other than html, for example an api
+      // error page, so fetchPageAsync has no html to read but still knows who answered.
+      [websiteUrl]: createResponse({ url: "https://auth.example.net/error", contentType: "application/json" }),
+      "https://auth.example.net/favicon.ico": createResponse({ contentType: "image/x-icon", body: "binary" }),
+    });
+
+    const result = await fetchFaviconUrlAsync(websiteUrl);
+
+    expect(result).toBe("https://auth.example.net/favicon.ico");
+  });
+
   test("ignores a well known favicon that answers with a page instead of an image", async () => {
     mockResponses({
       [websiteUrl]: createPage(""),

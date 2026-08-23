@@ -41,11 +41,15 @@ export const fetchFaviconUrlAsync = async (href: string): Promise<string | null>
   if (websiteUrl === null) return null;
 
   const page = await fetchPageAsync(websiteUrl);
-  const declaredIconUrl = page === null ? null : findDeclaredIconUrl(page.html, page.url);
+  const declaredIconUrl = page?.html == null ? null : findDeclaredIconUrl(page.html, page.url);
   if (declaredIconUrl !== null) return declaredIconUrl;
 
   // The well known icon belongs to the origin that actually served the page, which is a
   // different one than the requested address whenever the app redirects across origins.
+  // page.url already reflects that even when the response carried no usable html, for
+  // example when a redirect lands on a non-html or bodyless response. page itself is only
+  // null when no response was obtained at all, which is the one case with no better url
+  // than the one originally requested.
   const wellKnownUrl = new URL("/favicon.ico", page?.url.origin ?? websiteUrl.origin);
   return (await isImageAsync(wellKnownUrl)) ? wellKnownUrl.href : null;
 };
@@ -59,7 +63,11 @@ const parseHttpUrl = (value: string): URL | null => {
   }
 };
 
-const fetchPageAsync = async (websiteUrl: URL): Promise<{ html: string; url: URL } | null> => {
+// Returns null only when no response was obtained at all. Once a response exists, its
+// url is always returned, even when the response carries no usable html, so a caller
+// falling back to the well known favicon still targets the origin that actually
+// answered, which can differ from the requested address when the app redirects.
+const fetchPageAsync = async (websiteUrl: URL): Promise<{ html: string | null; url: URL } | null> => {
   let response: FetchResponse;
   try {
     response = await fetchWithTrustedCertificatesAsync(websiteUrl, {
@@ -74,20 +82,22 @@ const fetchPageAsync = async (websiteUrl: URL): Promise<{ html: string; url: URL
     return null;
   }
 
+  // Relative icons are resolved against the page that answered, which can differ from
+  // the requested address when the app redirects, for example to a login page.
+  const finalUrl = parseHttpUrl(response.url) ?? websiteUrl;
+
   const body = response.body;
   const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
   if (!response.ok || !contentType.includes("text/html") || body === null) {
     await cancelBodyAsync(response);
-    return null;
+    return { html: null, url: finalUrl };
   }
 
   try {
-    // Relative icons are resolved against the page that answered, which can differ from
-    // the requested address when the app redirects, for example to a login page.
-    return { html: await readDocumentHeadAsync(body), url: parseHttpUrl(response.url) ?? websiteUrl };
+    return { html: await readDocumentHeadAsync(body), url: finalUrl };
   } catch (error) {
     logger.debug("Unable to read website for favicon detection", { url: websiteUrl.href, error });
-    return null;
+    return { html: null, url: finalUrl };
   }
 };
 
