@@ -53,13 +53,11 @@ export const BoardContentHeaderActions = ({ demoReadOnly }: { demoReadOnly: bool
 
       <EditModeMenu demoReadOnly={demoReadOnly} />
 
-      {!demoReadOnly && (
-        <TourTarget id="board-settings">
-          <HeaderButton href={`/boards/${board.name}/settings`} aria-label={t("action.settings")}>
-            <IconSettings stroke={1.5} />
-          </HeaderButton>
-        </TourTarget>
-      )}
+      <TourTarget id="board-settings">
+        <HeaderButton href={`/boards/${board.name}/settings`} aria-label={t("action.settings")}>
+          <IconSettings stroke={1.5} />
+        </HeaderButton>
+      </TourTarget>
     </>
   );
 };
