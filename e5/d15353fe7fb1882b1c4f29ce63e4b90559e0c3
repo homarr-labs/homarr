@@ -1,0 +1,26 @@
+packages/api/src/router/widgets/timetable.ts
+  s_be377879e9dbc6::t_9b86eb316d57c4 13,17-21,39
+packages/api/src/router/widgets/options.ts
+  s_be377879e9dbc6::t_1e0fa11ae0cdc6 52
+packages/api/src/router/timetable-options-validation.ts
+  s_be377879e9dbc6::t_9b86eb316d57c4 1-162
+packages/api/src/router/board.ts
+  s_be377879e9dbc6::t_93f6d79861687c 1499
+  s_be377879e9dbc6::t_c5cf04ae984526 2076
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "e5d15353fe7fb1882b1c4f29ce63e4b90559e0c3",
+  "prompts": {},
+  "sessions": {
+    "s_be377879e9dbc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "785054cb-c471-4a58-8c2e-2d7f28cb4102",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
