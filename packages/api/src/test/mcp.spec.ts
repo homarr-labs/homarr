@@ -63,6 +63,7 @@ const MCP_TOOL_ALLOWLIST = {
     "mediaServer_getCurrentStreams",
     "patchmon_getStats",
     "serverSettings_getBoardSettings",
+    "serverSettings_getBranding",
     "smartHome_entityDetails",
     "smartHome_entityState",
     "widgetSecrets_getConfiguredKinds",
