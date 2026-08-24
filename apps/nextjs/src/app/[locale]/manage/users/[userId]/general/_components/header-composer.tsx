@@ -56,7 +56,6 @@ import {
   getHeaderItems,
   getHeaderItemZone,
   headerBuiltinItemIds,
-  headerZoneIds,
   isRequiredHeaderItem,
 } from "@homarr/validation/user";
 
@@ -196,6 +195,9 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
                 <div className={classes.previewHeader}>
                   <div className={classes.stripScroller}>
                     <div className={classes.sortableStrip}>
+                      <Text className={classes.zoneOriginLabel} component="span">
+                        {t("zones.left")}
+                      </Text>
                       <MobileBurger />
                       {stripEntries.map((entry, index) => {
                         if (entry.kind === "divider") {
@@ -552,11 +554,13 @@ const PreviewItem = ({
   return <Icon size={20} stroke={1.7} />;
 };
 
-const createHeaderStripEntries = (zones: HeaderZones): HeaderStripEntry[] =>
-  headerZoneIds.flatMap((zone) => [
-    { id: `header-divider:${zone}`, kind: "divider" as const, zone },
-    ...zones[zone].map((item) => ({ id: getHeaderItemKey(item), item, kind: "item" as const })),
-  ]);
+const createHeaderStripEntries = (zones: HeaderZones): HeaderStripEntry[] => [
+  ...zones.left.map((item) => ({ id: getHeaderItemKey(item), item, kind: "item" as const })),
+  { id: "header-divider:center", kind: "divider", zone: "center" },
+  ...zones.center.map((item) => ({ id: getHeaderItemKey(item), item, kind: "item" as const })),
+  { id: "header-divider:right", kind: "divider", zone: "right" },
+  ...zones.right.map((item) => ({ id: getHeaderItemKey(item), item, kind: "item" as const })),
+];
 
 const createHeaderZonesFromStripEntries = (entries: HeaderStripEntry[]): HeaderZones => {
   const zones: HeaderZones = { left: [], center: [], right: [] };

@@ -65,14 +65,28 @@
 }
 
 .sortableStrip {
+  position: relative;
   display: flex;
   align-items: stretch;
-  gap: 0;
+  gap: 0.25rem;
   width: max-content;
   min-width: 100%;
   height: 100%;
   padding: 0.35rem var(--mantine-spacing-sm) 0.45rem;
   white-space: nowrap;
+}
+
+.zoneOriginLabel {
+  position: absolute;
+  inset-block-start: 0.85rem;
+  inset-inline-start: var(--mantine-spacing-sm);
+  color: var(--mantine-color-dimmed);
+  font-size: 0.55rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  user-select: none;
 }
 
 .zoneDelimiter {

@@ -5690,7 +5690,7 @@
             "header": {
               "title": "Header studio",
               "badge": "Personal",
-              "description": "This is one continuous row. Drag controls anywhere; Left, Center, and Right are fixed dividers and never move.",
+              "description": "Drag controls anywhere in the row. Center and Right are fixed boundaries; everything before Center belongs to Left.",
               "device": {
                 "desktop": "Desktop",
                 "mobile": "Mobile"
