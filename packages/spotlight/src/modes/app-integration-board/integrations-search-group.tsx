@@ -6,10 +6,12 @@ import { IntegrationAvatar } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
+import { useRemoteQuery } from "../../lib/remote-query";
 
 export const integrationsSearchGroup = createGroup<{ id: string; kind: IntegrationKind; name: string }>({
   keyPath: "id",
   title: (t) => t("common.entity.integrations"),
+  source: { kind: "remote", source: "integrations" },
   Component: (integration) => (
     <Group px="md" py="sm">
       <IntegrationAvatar size="sm" kind={integration.kind} />
@@ -19,6 +21,10 @@ export const integrationsSearchGroup = createGroup<{ id: string; kind: Integrati
   ),
   useInteraction: interaction.link(({ id }) => ({ href: `/manage/integrations/edit/${id}` })),
   useQueryOptions(query) {
-    return clientApi.integration.search.useQuery({ query, limit: 5 });
+    const remoteQuery = useRemoteQuery(query, "integrations");
+    return clientApi.integration.search.useQuery(
+      { query: remoteQuery.query, limit: 8 },
+      { enabled: remoteQuery.enabled },
+    );
   },
 });

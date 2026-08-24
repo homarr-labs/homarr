@@ -2,10 +2,10 @@
 
 import { Group, Stack, Switch, Text } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
+import { IconChevronRight } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import localeData from "dayjs/plugin/localeData";
 
-import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import type { ColorScheme } from "@homarr/definitions";
 import { visiblePreferenceDefinitions } from "@homarr/settings";
@@ -47,15 +47,19 @@ const BooleanRow = ({
   </Group>
 );
 
-const SelectRow = ({ label, Icon, valueLabel }: { label: string; Icon: TablerIcon; valueLabel: string }) => (
+const SelectRow = ({ label, Icon, valueLabel }: { label: string; Icon: TablerIcon; valueLabel?: string }) => (
   <Group mx="md" my="sm" wrap="nowrap" justify="space-between" w="100%">
     <Group wrap="nowrap" gap="sm">
       <Icon stroke={1.5} size={20} />
       <Text>{label}</Text>
     </Group>
-    <Text size="sm" c="dimmed">
-      {valueLabel}
-    </Text>
+    {valueLabel ? (
+      <Text size="sm" c="dimmed">
+        {valueLabel}
+      </Text>
+    ) : (
+      <IconChevronRight aria-hidden size={16} />
+    )}
   </Group>
 );
 
@@ -68,7 +72,7 @@ const LinkRow = ({ label, Icon }: { label: string; Icon: TablerIcon }) => (
 
 const SELECT_KINDS = new Set(["select", "searchEngine", "board"]);
 
-const useSettingsActions = (_: Record<string, unknown>, query: string): SettingsAction[] => {
+export const useSettingsActions = (_: Record<string, unknown>, query: string): SettingsAction[] => {
   const t = useI18n("search.mode.command.group.preferences.option");
   const tUserField = useI18n("user.field");
   const tColorScheme = useI18n("common.colorScheme.options");
@@ -77,25 +81,13 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
   const normalizedQuery = query.trim().toLowerCase();
   const preferences = useUserPreferences();
 
-  const boardsQuery = clientApi.board.getAllBoards.useQuery(undefined, { enabled: isAuthenticated });
-  const searchEnginesQuery = clientApi.searchEngine.getSelectable.useQuery(undefined, { enabled: isAuthenticated });
-
   const valueLabelResolvers: Record<string, () => string> = {
     colorScheme: () => tColorScheme(preferences.getPreference("colorScheme").value as ColorScheme),
     locale: () => {
       const val = preferences.getPreference("locale").value;
       return localeConfigurations[val as keyof typeof localeConfigurations]?.name ?? String(val);
     },
-    defaultSearchEngineId: () =>
-      searchEnginesQuery.data?.find((e) => e.value === preferences.getPreference("defaultSearchEngineId").value)
-        ?.label ?? t("searchEngine.none" as never),
     firstDayOfWeek: () => dayjs.weekdays(false)[preferences.getPreference("firstDayOfWeek").value as DayOfWeek] ?? "",
-    homeBoardId: () =>
-      boardsQuery.data?.find((b) => b.id === preferences.getPreference("homeBoardId").value)?.name ??
-      t("board.none" as never),
-    mobileHomeBoardId: () =>
-      boardsQuery.data?.find((b) => b.id === preferences.getPreference("mobileHomeBoardId").value)?.name ??
-      t("board.none" as never),
   };
 
   return visiblePreferenceDefinitions(isAuthenticated)
@@ -134,9 +126,7 @@ const useSettingsActions = (_: Record<string, unknown>, query: string): Settings
         if (!children) return null;
         return {
           key: definition.key,
-          Component: () => (
-            <SelectRow label={label} Icon={Icon} valueLabel={valueLabelResolvers[definition.key]?.() ?? ""} />
-          ),
+          Component: () => <SelectRow label={label} Icon={Icon} valueLabel={valueLabelResolvers[definition.key]?.()} />,
           useInteraction: interaction.children(children),
         };
       }

@@ -6314,6 +6314,9 @@
               "toggleColorScheme": "Toggle light/dark mode",
               "saveNotebook": "Save notebook (only inside notebook widget)",
               "openSpotlight": "Open search",
+              "openSpotlightApps": "Open app search",
+              "openSpotlightAssistant": "Open Assistant mode",
+              "openSpotlightPreferences": "Open preferences mode",
               "openAssistant": "Open Homarr Assistant"
             },
             "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
@@ -6779,6 +6782,51 @@
   "search": {
     "placeholder": "Search for anything",
     "nothingFound": "Nothing found",
+    "modePicker": {
+      "search": {
+        "label": "Search",
+        "placeholder": "Search apps, boards, pages, commands, and preferences"
+      },
+      "apps": {
+        "label": "Apps",
+        "placeholder": "Search apps, boards, and integrations"
+      },
+      "command": {
+        "label": "Commands",
+        "placeholder": "Search actions and commands"
+      },
+      "preferences": {
+        "label": "Preferences",
+        "placeholder": "Search and change preferences"
+      },
+      "assistant": {
+        "label": "Assistant",
+        "placeholder": "Ask Homarr Assistant"
+      },
+      "external": {
+        "label": "Web",
+        "placeholder": "Search with an external search engine"
+      },
+      "media": {
+        "label": "Media",
+        "placeholder": "Search for a movie or show",
+        "fallback": "Search media for \"{query}\""
+      },
+      "userGroup": {
+        "label": "People",
+        "placeholder": "Search users and groups"
+      },
+      "continueWith": "Continue with",
+      "dialogAriaLabel": "{mode} command menu",
+      "navigationLabel": "Search modes",
+      "modeAriaLabel": "{mode} mode",
+      "resultsAriaLabel": "{mode} results",
+      "footer": {
+        "navigate": "Navigate",
+        "open": "Open",
+        "close": "Close"
+      }
+    },
     "error": {
       "fetch": "An error occurred while fetching data"
     },

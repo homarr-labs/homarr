@@ -11,6 +11,8 @@ export type ContextSpecificItem = {
   name: string;
   icon: TablerIcon | string;
   interaction: (query: string) => inferSearchInteractionDefinition<SearchInteraction>;
+  aliases?: string[];
+  placement?: "primary" | "fallback";
   disabled?: boolean;
   description?: string;
   unavailable?: boolean;

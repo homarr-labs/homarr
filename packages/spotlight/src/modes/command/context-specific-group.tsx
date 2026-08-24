@@ -7,6 +7,7 @@ import { useSpotlightContextActions } from "../home/context";
 export const contextSpecificActionsSearchGroups = createGroup<ContextSpecificItem>({
   title: (t) => t("search.mode.command.group.localCommand.title"),
   keyPath: "id",
+  source: { kind: "local" },
   Component(option) {
     const icon =
       typeof option.icon !== "string" ? (

@@ -12,6 +12,7 @@ import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
+import { useRemoteQuery } from "../../lib/remote-query";
 import { useFromIntegrationSearchInteraction } from "../external/search-engines-search-group";
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -27,13 +28,14 @@ type GroupItem = {
 export const homeSearchEngineGroup = createGroup<GroupItem>({
   title: (t) => t("search.mode.home.group.search.title"),
   keyPath: "id",
+  source: { kind: "fallback" },
   Component(item) {
     const icon =
       typeof item.icon !== "string" ? (
         <item.icon size={24} />
       ) : (
         <Box w={24} h={24}>
-          <img src={item.icon} alt={item.name} style={{ maxWidth: 24 }} />
+          <img src={item.icon} alt="" style={{ maxWidth: 24 }} />
         </Box>
       );
 
@@ -60,14 +62,15 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
   useQueryOptions(query) {
     const t = useI18n();
     const { data: session, status } = useSession();
+    const remoteQuery = useRemoteQuery(query, "integration-search");
     const { data: defaultSearchEngine, ...defaultSearchEngineQuery } =
       clientApi.searchEngine.getDefaultSearchEngine.useQuery(undefined, {
-        enabled: status !== "loading",
+        enabled: status !== "loading" && remoteQuery.enabled,
       });
-    const fromIntegrationEnabled = defaultSearchEngine?.type === "fromIntegration" && query.length > 0;
+    const fromIntegrationEnabled = defaultSearchEngine?.type === "fromIntegration" && remoteQuery.enabled;
     const { data: results, ...resultQuery } = clientApi.integration.searchInIntegration.useQuery(
       {
-        query,
+        query: remoteQuery.query,
         integrationId: defaultSearchEngine?.integrationId ?? "",
       },
       {
@@ -80,7 +83,7 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
       isLoading:
         defaultSearchEngineQuery.isLoading || (resultQuery.isLoading && fromIntegrationEnabled) || status === "loading",
       isError: defaultSearchEngineQuery.isError || (resultQuery.isError && fromIntegrationEnabled),
-      data: createDefaultSearchEntries(defaultSearchEngine, results, session, query, t),
+      data: remoteQuery.enabled ? createDefaultSearchEntries(defaultSearchEngine, results, session, query, t) : [],
     };
   },
 });

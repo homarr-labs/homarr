@@ -19,6 +19,7 @@ export const useRegisterAssistantSpotlightPlaceholder = (description: string) =>
       description,
       unavailable: true,
       alwaysVisible: true,
+      placement: "fallback" as const,
       interaction: (_query: string) => ({ type: "none" as const }),
     }),
     [description, t],

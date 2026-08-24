@@ -20,19 +20,22 @@ describe("lazy Spotlight open bridge", () => {
     const listener = vi.fn();
     window.addEventListener(spotlightOpenEvent, listener);
 
-    openSpotlight();
+    openSpotlight({ mode: "apps", query: "rada" });
 
     expect(listener).toHaveBeenCalledOnce();
-    expect(consumePendingSpotlightOpen()).toBe(true);
-    expect(consumePendingSpotlightOpen()).toBe(false);
+    expect(listener.mock.calls[0]?.[0]).toMatchObject({
+      detail: { mode: "apps", query: "rada" },
+    });
+    expect(consumePendingSpotlightOpen()).toEqual({ mode: "apps", query: "rada" });
+    expect(consumePendingSpotlightOpen()).toBeNull();
     window.removeEventListener(spotlightOpenEvent, listener);
   });
 
-  it("lets a listener installed after the request discover the pending open", () => {
+  it("defaults to search and lets a listener installed after the request discover the pending intent", () => {
     openSpotlight();
 
     expect(hasPendingSpotlightOpen()).toBe(true);
-    expect(consumePendingSpotlightOpen()).toBe(true);
+    expect(consumePendingSpotlightOpen()).toEqual({ mode: "search" });
     expect(hasPendingSpotlightOpen()).toBe(false);
   });
 
@@ -45,8 +48,11 @@ describe("lazy Spotlight open bridge", () => {
     openMediaRequestSearch({ integrationIds: ["integration-a"], query: "movie" });
 
     expect(openListener).toHaveBeenCalledOnce();
+    expect(openListener.mock.calls[0]?.[0]).toMatchObject({
+      detail: { mode: "media", query: "movie" },
+    });
     expect(mediaListener).toHaveBeenCalledOnce();
-    expect(consumePendingSpotlightOpen()).toBe(true);
+    expect(consumePendingSpotlightOpen()).toEqual({ mode: "media", query: "movie" });
     expect(consumePendingMediaRequestSearch()).toEqual({ integrationIds: ["integration-a"], query: "movie" });
     window.removeEventListener(spotlightOpenEvent, openListener);
     window.removeEventListener(mediaRequestSearchEvent, mediaListener);

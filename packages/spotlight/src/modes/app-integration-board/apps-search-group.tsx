@@ -7,6 +7,7 @@ import { useI18n } from "@homarr/translation/client";
 import { createChildrenOptions } from "../../lib/children";
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
+import { useRemoteQuery } from "../../lib/remote-query";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -58,6 +59,7 @@ const appChildrenOptions = createChildrenOptions<App>({
           <Avatar
             size="sm"
             src={options.iconUrl}
+            alt=""
             radius={0}
             styles={{
               image: {
@@ -75,11 +77,13 @@ const appChildrenOptions = createChildrenOptions<App>({
 export const appsSearchGroup = createGroup<App>({
   keyPath: "id",
   title: (t) => t("common.entity.apps"),
+  source: { kind: "remote", source: "apps" },
   Component: (app) => (
     <Group px="md" py="sm">
       <Avatar
         size="sm"
         src={app.iconUrl}
+        alt=""
         radius={0}
         styles={{
           image: {
@@ -92,6 +96,7 @@ export const appsSearchGroup = createGroup<App>({
   ),
   useInteraction: interaction.children(appChildrenOptions),
   useQueryOptions(query) {
-    return clientApi.app.search.useQuery({ query, limit: 5 });
+    const remoteQuery = useRemoteQuery(query, "apps");
+    return clientApi.app.search.useQuery({ query: remoteQuery.query, limit: 8 }, { enabled: remoteQuery.enabled });
   },
 });
