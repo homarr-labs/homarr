@@ -5725,6 +5725,10 @@
                 "searchDisplay": {
                   "input": "Search bar",
                   "icon": "Icon only"
+                },
+                "logoDisplay": {
+                  "logo": "Logo only",
+                  "logoAndText": "Logo + text"
                 }
               },
               "items": {

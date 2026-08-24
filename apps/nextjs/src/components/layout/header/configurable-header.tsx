@@ -9,7 +9,6 @@ import {
   Indicator,
   Loader,
   Tooltip,
-  UnstyledButton,
   useMantineColorScheme,
 } from "@mantine/core";
 import {
@@ -28,7 +27,6 @@ import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
 import type { HeaderItem } from "@homarr/validation/user";
 import { getHeaderItemKey, getHeaderItems } from "@homarr/validation/user";
 
@@ -38,6 +36,7 @@ import type { BoardSwitcherControls } from "~/components/board/board-switcher";
 import { ClientBurger } from "./burger";
 import { HeaderButton } from "./button";
 import { DockerQuickAccessModal } from "./docker-quick-access-modal";
+import { HeaderLogo } from "./header-logo";
 import { LazySpotlight } from "./lazy-spotlight";
 import { DesktopSearchInput, MobileSearchButton } from "./search";
 import { TourTarget } from "./tour-target";
@@ -46,6 +45,7 @@ import classes from "./configurable-header.module.css";
 
 interface ConfigurableHeaderProps {
   logo: ReactNode;
+  logoWithTitle: ReactNode;
   actions?: ReactNode;
   boardEditAction?: ReactNode;
   boardSettingsAction?: ReactNode;
@@ -63,6 +63,7 @@ const floatingControlsDismissDelayMs = 900;
 
 export const ConfigurableHeader = ({
   logo,
+  logoWithTitle,
   actions,
   boardEditAction,
   boardSettingsAction,
@@ -94,6 +95,7 @@ export const ConfigurableHeader = ({
               key={getHeaderItemKey(item)}
               item={item}
               logo={logo}
+              logoWithTitle={logoWithTitle}
               boardEditAction={boardEditAction}
               boardSettingsAction={boardSettingsAction}
               avatar={avatar}
@@ -102,6 +104,7 @@ export const ConfigurableHeader = ({
               isDockerEnabled={isDockerEnabled}
               board={item.type === "board" ? boardsById.get(item.boardId) : undefined}
               searchDisplay={headerPreferences.searchDisplay}
+              logoDisplay={headerPreferences.logoDisplay}
               boardSwitcher={boardSwitcher}
               assistant={assistant}
               openDockerModal={openDockerModal}
@@ -236,6 +239,7 @@ const FloatingHeaderControls = ({ children }: { children: ReactNode }) => {
 interface HeaderItemProps {
   item: HeaderItem;
   logo: ReactNode;
+  logoWithTitle: ReactNode;
   boardEditAction: ReactNode;
   boardSettingsAction: ReactNode;
   avatar: ReactNode;
@@ -244,6 +248,7 @@ interface HeaderItemProps {
   isDockerEnabled: boolean;
   board: HeaderBoard | undefined;
   searchDisplay: "input" | "icon";
+  logoDisplay: "logo" | "logoAndText";
   boardSwitcher: BoardSwitcherControls;
   assistant: ReturnType<typeof useOptionalHomarrAssistant>;
   openDockerModal: () => void;
@@ -255,6 +260,7 @@ interface HeaderItemProps {
 const HeaderItem = ({
   item,
   logo,
+  logoWithTitle,
   boardEditAction,
   boardSettingsAction,
   avatar,
@@ -263,6 +269,7 @@ const HeaderItem = ({
   isDockerEnabled,
   board,
   searchDisplay,
+  logoDisplay,
   boardSwitcher,
   assistant,
   openDockerModal,
@@ -293,9 +300,12 @@ const HeaderItem = ({
 
   if (item.id === "logo") {
     return (
-      <UnstyledButton component={Link} href="/" className={classes.logo} aria-label={label("logo")}>
-        {logo}
-      </UnstyledButton>
+      <HeaderLogo
+        display={logoDisplay}
+        logo={logo}
+        logoWithTitle={logoWithTitle}
+        label={label("logo")}
+      />
     );
   }
 

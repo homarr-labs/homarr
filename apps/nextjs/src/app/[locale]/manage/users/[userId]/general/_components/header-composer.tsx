@@ -39,6 +39,7 @@ import {
 } from "@tabler/icons-react";
 
 import type { BoardPreviewData } from "@homarr/boards/layout-preview";
+import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 import type {
   HeaderBuiltinItemId,
@@ -97,6 +98,7 @@ const headerGuideZones = ["left", "center", "right"] as const;
 export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderComposerProps) => {
   const [draggedItemKey, setDraggedItemKey] = useState<string | null>(null);
   const [selectedItemKey, setSelectedItemKey] = useState<string | null>(null);
+  const { branding } = useSettings();
   const t = useI18n("management.page.user.setting.general.header");
   const boardsById = useMemo(() => new Map(boards.map((board) => [board.id, board])), [boards]);
   const activeItems = getHeaderItems(value.zones);
@@ -217,12 +219,14 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                             index={index}
                             label={itemLabel(item)}
                             searchDisplay={value.searchDisplay}
+                            logoDisplay={value.logoDisplay}
+                            logoTitle={branding.appName}
                             boardLogo={
                               item.type === "board" ? (boardsById.get(item.boardId)?.logoImageUrl ?? null) : null
                             }
                             configureLabel={t("action.configure", { item: itemLabel(item) })}
                             selected={selectedItemKey === getHeaderItemKey(item)}
-                              onSelect={toggleSelectedItem}
+                            onSelect={toggleSelectedItem}
                           />
                         ))}
                       </HeaderZoneColumn>
@@ -236,6 +240,8 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                       label={itemLabel(draggedItem)}
                       compact={false}
                       searchDisplay={value.searchDisplay}
+                      logoDisplay={value.logoDisplay}
+                      logoTitle={branding.appName}
                       boardLogo={
                         draggedItem.type === "board" ? boardsById.get(draggedItem.boardId)?.logoImageUrl : null
                       }
@@ -284,6 +290,19 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                       data={[
                         { value: "input", label: t("configuration.searchDisplay.input") },
                         { value: "icon", label: t("configuration.searchDisplay.icon") },
+                      ]}
+                    />
+                  ) : null}
+                  {selectedItem.type === "builtin" && selectedItem.id === "logo" ? (
+                    <SegmentedControl
+                      size="xs"
+                      value={value.logoDisplay}
+                      onChange={(logoDisplay) =>
+                        onChange({ ...value, logoDisplay: logoDisplay as HeaderPreferences["logoDisplay"] })
+                      }
+                      data={[
+                        { value: "logo", label: t("configuration.logoDisplay.logo") },
+                        { value: "logoAndText", label: t("configuration.logoDisplay.logoAndText") },
                       ]}
                     />
                   ) : null}
@@ -403,6 +422,8 @@ interface SortableHeaderItemProps {
   index: number;
   label: string;
   searchDisplay: HeaderPreferences["searchDisplay"];
+  logoDisplay: HeaderPreferences["logoDisplay"];
+  logoTitle: string;
   boardLogo: string | null;
   configureLabel: string;
   selected: boolean;
@@ -415,6 +436,8 @@ const SortableHeaderItem = ({
   index,
   label,
   searchDisplay,
+  logoDisplay,
+  logoTitle,
   boardLogo,
   configureLabel,
   selected,
@@ -445,7 +468,10 @@ const SortableHeaderItem = ({
         className={classes.itemButton}
         data-kind={item.type === "builtin" ? item.id : "board"}
         data-wide={
-          (item.type === "builtin" && item.id === "search" && searchDisplay === "input") || undefined
+          (item.type === "builtin" &&
+            ((item.id === "search" && searchDisplay === "input") ||
+              (item.id === "logo" && logoDisplay === "logoAndText"))) ||
+          undefined
         }
         aria-label={configureLabel}
         onClick={(event) => {
@@ -458,6 +484,8 @@ const SortableHeaderItem = ({
           label={label}
           compact={false}
           searchDisplay={searchDisplay}
+          logoDisplay={logoDisplay}
+          logoTitle={logoTitle}
           boardLogo={boardLogo}
         />
       </button>
@@ -470,6 +498,8 @@ const HeaderItemPreview = ({
   label,
   compact,
   searchDisplay,
+  logoDisplay,
+  logoTitle,
   boardLogo,
   overlay = false,
 }: {
@@ -477,11 +507,21 @@ const HeaderItemPreview = ({
   label: string;
   compact: boolean;
   searchDisplay: HeaderPreferences["searchDisplay"];
+  logoDisplay: HeaderPreferences["logoDisplay"];
+  logoTitle: string;
   boardLogo: string | null | undefined;
   overlay?: boolean;
 }) => {
   const content = (
-    <PreviewItem item={item} label={label} compact={compact} searchDisplay={searchDisplay} boardLogo={boardLogo} />
+    <PreviewItem
+      item={item}
+      label={label}
+      compact={compact}
+      searchDisplay={searchDisplay}
+      logoDisplay={logoDisplay}
+      logoTitle={logoTitle}
+      boardLogo={boardLogo}
+    />
   );
   if (!overlay) return content;
 
@@ -490,7 +530,11 @@ const HeaderItemPreview = ({
       className={classes.dragOverlay}
       data-kind={item.type === "builtin" ? item.id : "board"}
       data-wide={
-        item.type === "builtin" && item.id === "search" && searchDisplay === "input" && !compact ? true : undefined
+        (item.type === "builtin" &&
+          !compact &&
+          ((item.id === "search" && searchDisplay === "input") ||
+            (item.id === "logo" && logoDisplay === "logoAndText"))) ||
+        undefined
       }
     >
       {content}
@@ -503,12 +547,16 @@ const PreviewItem = ({
   label,
   compact,
   searchDisplay,
+  logoDisplay,
+  logoTitle,
   boardLogo,
 }: {
   item: HeaderItem;
   label: string;
   compact: boolean;
   searchDisplay: HeaderPreferences["searchDisplay"];
+  logoDisplay: HeaderPreferences["logoDisplay"];
+  logoTitle: string;
   boardLogo: string | null | undefined;
 }) => {
   if (item.type === "board") {
@@ -519,7 +567,14 @@ const PreviewItem = ({
     );
   }
 
-  if (item.id === "logo") return <HomarrLogo size={26} />;
+  if (item.id === "logo") {
+    return (
+      <div className={classes.logoPreview} data-with-title={logoDisplay === "logoAndText" || undefined}>
+        <HomarrLogo size={26} />
+        {logoDisplay === "logoAndText" ? <span>{logoTitle}</span> : null}
+      </div>
+    );
+  }
 
   if (item.id === "search") {
     const showInput = searchDisplay === "input" && !compact;

@@ -12,12 +12,13 @@ interface LogoProps {
 
 const useBrandLogo = () => {
   const { branding } = useSettings();
+  const configuredLogoUrl = branding.logoImageUrl?.trim();
   return {
     title: branding.appName,
     image: {
-      src: branding.logoImageUrl ?? homarrLogoPath,
+      src: configuredLogoUrl || homarrLogoPath,
       alt: `${branding.appName} logo`,
-      shouldUseNextImage: branding.logoImageUrl === null,
+      shouldUseNextImage: !configuredLogoUrl,
     },
   };
 };

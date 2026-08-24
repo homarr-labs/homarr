@@ -737,7 +737,7 @@ export const userRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Update the header layout preferences of a user. REQUIRED: id (user ID), headerPreferences (zones for left, center and right, visible flag and searchDisplay). Admins can change any user; other users can only change their own. Board shortcut items must reference boards the target user can view",
+          "Update the header layout preferences of a user. REQUIRED: id (user ID), headerPreferences (zones for left, center and right, visible flag, searchDisplay and logoDisplay). Admins can change any user; other users can only change their own. Board shortcut items must reference boards the target user can view",
       },
     })
     .input(z.object({ id: z.string(), headerPreferences: headerPreferencesMutationSchema }))

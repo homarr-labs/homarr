@@ -13,7 +13,7 @@ import { ModalProvider } from "@homarr/modals";
 
 import { MainHeader } from "~/components/layout/header";
 import { appShellLogoHeight } from "~/components/layout/constants";
-import { BoardLogo } from "~/components/layout/logo/board-logo";
+import { BoardLogo, BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
 import { ClientShell } from "~/components/layout/shell";
 import { BoardTourGate } from "~/components/onboarding/board-tour-gate";
 import { env } from "~/env";
@@ -111,6 +111,7 @@ export const createBoardLayout = <TParams extends Params>({
                 <ClientShell hasNavigation={false}>
                   <MainHeader
                     logo={<BoardLogo size={appShellLogoHeight} />}
+                    logoWithTitle={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
                     actions={headerActions}
                     boardEditAction={headerBoardEditAction}
                     boardSettingsAction={headerBoardSettingsAction}

@@ -5,10 +5,11 @@ import { env } from "@homarr/docker/env";
 import { CurrentUserAvatar } from "~/components/user-avatar";
 import { appShellLogoHeight } from "./constants";
 import { ConfigurableHeader } from "./header/configurable-header";
-import { HomarrLogo } from "./logo/homarr-logo";
+import { HomarrLogo, HomarrLogoWithTitle } from "./logo/homarr-logo";
 
 interface Props {
   logo?: ReactNode;
+  logoWithTitle?: ReactNode;
   actions?: ReactNode;
   boardEditAction?: ReactNode;
   boardSettingsAction?: ReactNode;
@@ -17,6 +18,7 @@ interface Props {
 
 export const MainHeader = async ({
   logo,
+  logoWithTitle,
   actions,
   boardEditAction,
   boardSettingsAction,
@@ -29,6 +31,7 @@ export const MainHeader = async ({
   return (
     <ConfigurableHeader
       logo={logo ?? <HomarrLogo size={appShellLogoHeight} />}
+      logoWithTitle={logoWithTitle ?? <HomarrLogoWithTitle size="md" />}
       actions={actions}
       boardEditAction={boardEditAction}
       boardSettingsAction={boardSettingsAction}

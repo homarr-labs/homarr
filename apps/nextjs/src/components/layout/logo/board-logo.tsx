@@ -15,7 +15,7 @@ const useImageOptions = () => {
   const board = useRequiredBoard();
   const { branding } = useSettings();
   return {
-    src: board.logoImageUrl ?? branding.logoImageUrl ?? homarrLogoPath,
+    src: board.logoImageUrl?.trim() || branding.logoImageUrl?.trim() || homarrLogoPath,
     alt: "Board logo",
     shouldUseNextImage: false,
   };
