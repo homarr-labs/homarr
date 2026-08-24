@@ -1,8 +1,8 @@
 import { IconBrowser, IconExternalLink } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
-import { getSafeApplicationUrl } from "../common/application-url";
 import { optionsBuilder } from "../options";
+import { getSafeIframeUrl } from "./safe-url";
 
 const createOptions = () =>
   optionsBuilder.from((factory) => ({
@@ -23,7 +23,7 @@ export const { definition, componentLoader } = createWidgetDefinition("iframe", 
   supportsAdvancedFocus: false,
   icon: IconBrowser,
   contextActions: ({ options }) => {
-    const embedUrl = getSafeApplicationUrl(options.embedUrl);
+    const embedUrl = getSafeIframeUrl(options.embedUrl);
     return embedUrl
       ? [
           {

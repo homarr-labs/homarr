@@ -4,7 +4,8 @@ import { createWidgetDefinition, matchesWidgetRuntimeQuery } from "../definition
 import { optionsBuilder } from "../options";
 
 const hideUnlessNavidrome = {
-  shouldHide: (_: unknown, integrationKinds: string[]) => !integrationKinds.includes("navidrome"),
+  shouldHide: (_: unknown, integrationKinds: string[]) =>
+    !integrationKinds.includes("navidrome") && !integrationKinds.includes("mock"),
 };
 
 const hideUnlessAudiobookshelf = {
@@ -16,7 +17,7 @@ export const { definition, componentLoader } = createWidgetDefinition("audioStat
   supportsAdvancedFocus: true,
   queryKeys: [[["widget", "audioStats", "getStats"]], [["widget", "mediaServer", "getCurrentStreams"]]],
   queryMatcher: matchesWidgetRuntimeQuery,
-  supportedIntegrations: ["navidrome", "audiobookshelf"],
+  supportedIntegrations: ["navidrome", "audiobookshelf", "mock"],
   integrationsRequired: true,
   maxIntegrations: 1,
   createOptions() {

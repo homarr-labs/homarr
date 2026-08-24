@@ -12,7 +12,7 @@ export const { definition, componentLoader } = createWidgetDefinition("firewall"
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },
-  supportedIntegrations: getIntegrationKindsByCategory("firewall"),
+  supportedIntegrations: [...getIntegrationKindsByCategory("firewall"), "mock"],
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconWallOff,

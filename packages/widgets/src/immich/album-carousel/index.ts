@@ -62,7 +62,7 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-al
           : undefined,
     }),
   refetchInterval: null,
-  supportedIntegrations: ["immich"],
+  supportedIntegrations: ["immich", "mock"],
   integrationsRequired: true,
   maxIntegrations: 1,
   contextActions: ({ widgetRuntimeRef }) => {

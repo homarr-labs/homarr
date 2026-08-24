@@ -26,6 +26,12 @@ describe("native feature capability descriptor", () => {
     }
   });
 
+  test("supports the mock integration for every integration-backed widget", () => {
+    for (const capability of Object.values(nativeFeatureCapabilities)) {
+      expect(capability.integrations).toContain("mock");
+    }
+  });
+
   test("derives optional connections and server selection limits", () => {
     expect(widgetKindsWithOptionalIntegrations).toEqual(new Set(["calendar"]));
     expect(widgetIntegrationLimits).toEqual({

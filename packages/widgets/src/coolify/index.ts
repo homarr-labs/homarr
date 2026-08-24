@@ -19,7 +19,7 @@ export const { definition, componentLoader } = createWidgetDefinition("coolify",
       }),
     }));
   },
-  supportedIntegrations: ["coolify"],
+  supportedIntegrations: ["coolify", "mock"],
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,

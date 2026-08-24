@@ -24,7 +24,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
   supportsAdvancedFocus: true,
   queryKey: [["widget", "healthMonitoring"]],
   refetchInterval: 10,
-  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
+  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology", "mock"],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       hasShadow: factory.switch({ defaultValue: true }),

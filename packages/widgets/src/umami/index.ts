@@ -18,7 +18,7 @@ export const { definition, componentLoader } = createWidgetDefinition("umami", {
   ],
   queryMatcher: matchesWidgetRuntimeQuery,
   refetchInterval: null,
-  supportedIntegrations: ["umami"],
+  supportedIntegrations: ["umami", "mock"],
   integrationsRequired: true,
   maxIntegrations: 1,
   createOptions() {

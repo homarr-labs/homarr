@@ -9,7 +9,7 @@ import { patchmonOptionsSuperRefine } from "./threshold-validation";
 export const { definition, componentLoader } = createWidgetDefinition("patchmon", {
   supportsAdvancedFocus: true,
   icon: IconShieldCheck,
-  supportedIntegrations: ["patchmon"],
+  supportedIntegrations: ["patchmon", "mock"],
   integrationsRequired: true,
   maxIntegrations: 1,
   createOptions() {

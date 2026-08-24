@@ -14,5 +14,5 @@ export const { definition, componentLoader } = createWidgetDefinition("archiveTe
       }),
     }));
   },
-  supportedIntegrations: ["archiveTeamWarrior"],
+  supportedIntegrations: ["archiveTeamWarrior", "mock"],
 }).withDynamicImport(() => import("./component"));

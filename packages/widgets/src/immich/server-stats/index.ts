@@ -9,7 +9,7 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-se
   queryKeys: [[["widget", "immich", "getServerStats"]], [["widget", "immich", "getAlbums"]]],
   queryMatcher: matchesWidgetRuntimeQuery,
   refetchInterval: null,
-  supportedIntegrations: ["immich"],
+  supportedIntegrations: ["immich", "mock"],
   integrationsRequired: true,
   maxIntegrations: 1,
   createOptions() {

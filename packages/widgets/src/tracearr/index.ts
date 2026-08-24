@@ -24,7 +24,7 @@ export const { definition, componentLoader } = createWidgetDefinition("tracearr"
       }),
     }));
   },
-  supportedIntegrations: ["tracearr"],
+  supportedIntegrations: ["tracearr", "mock"],
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,
