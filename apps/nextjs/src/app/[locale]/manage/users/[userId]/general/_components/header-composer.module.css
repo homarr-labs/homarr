@@ -75,13 +75,6 @@
   white-space: nowrap;
 }
 
-.zoneSection {
-  display: flex;
-  align-items: flex-end;
-  height: 100%;
-  flex: 0 0 auto;
-}
-
 .zoneDelimiter {
   display: grid;
   grid-template-rows: 1.2rem 1.75rem;
@@ -93,6 +86,7 @@
   padding-block: 0.25rem 0.4rem;
   flex: 0 0 auto;
   user-select: none;
+  transition: background-color 120ms ease;
 }
 
 .zoneLabel {
@@ -102,72 +96,28 @@
   line-height: 1;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  transition: color 120ms ease;
 }
 
 .zoneLine {
   height: 1.5rem;
   border-color: var(--mantine-color-default-border);
-}
-
-.dropSlot {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 1.25rem;
-  min-width: 1.25rem;
-  height: 3rem;
-  margin-bottom: 0.125rem;
-  flex: 0 0 auto;
-  outline: none;
-}
-
-.dropMarker {
-  display: block;
-  width: 2px;
-  height: 1.4rem;
-  border-radius: var(--mantine-radius-xl);
-  background: transparent;
   transition:
-    width 120ms ease,
     height 120ms ease,
-    background-color 120ms ease,
-    box-shadow 120ms ease;
+    border-color 120ms ease;
 }
 
-.sortableStrip[data-drag-active="true"] .dropMarker {
-  background: color-mix(in srgb, var(--mantine-color-default-border) 72%, transparent);
+.zoneDelimiter[data-drop-target="true"] {
+  background: color-mix(in srgb, var(--mantine-primary-color-light) 48%, transparent);
 }
 
-.dropZoneLabel {
-  position: absolute;
-  inset-block-start: -0.9rem;
-  inset-inline-start: 50%;
-  z-index: 2;
-  display: none;
-  padding: 0.15rem 0.3rem;
+.zoneDelimiter[data-drop-target="true"] .zoneLabel {
   color: var(--mantine-primary-color-filled);
-  border: 1px solid var(--mantine-primary-color-filled);
-  border-radius: var(--mantine-radius-sm);
-  background: var(--mantine-color-body);
-  box-shadow: var(--mantine-shadow-xs);
-  font-size: 0.5rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  transform: translateX(-50%);
-  pointer-events: none;
 }
 
-.dropSlot[data-drop-target="true"] .dropMarker {
-  width: 3px;
-  height: 2.35rem;
-  background: var(--mantine-primary-color-filled);
-  box-shadow: 0 0 0 3px var(--mantine-primary-color-light);
-}
-
-.dropSlot[data-drop-target="true"] .dropZoneLabel {
-  display: block;
+.zoneDelimiter[data-drop-target="true"] .zoneLine {
+  height: 1.75rem;
+  border-color: var(--mantine-primary-color-filled);
 }
 
 .sortableItem {
@@ -213,6 +163,7 @@
 
 .itemButton:hover,
 .itemButton:focus-visible,
+.sortableItem[data-drop-target="true"] .itemButton,
 .sortableItem[data-selected="true"] .itemButton {
   border-color: var(--mantine-primary-color-filled);
   background: var(--mantine-primary-color-light-hover);
@@ -331,7 +282,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .device,
-  .dropMarker,
+  .zoneDelimiter,
+  .zoneLabel,
+  .zoneLine,
   .itemButton {
     transition: none;
   }

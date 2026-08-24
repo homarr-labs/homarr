@@ -1,12 +1,11 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { RestrictToHorizontalAxis } from "@dnd-kit/abstract/modifiers";
-import { pointerIntersection } from "@dnd-kit/collision";
 import { PointerActivationConstraints } from "@dnd-kit/dom";
 import type { DragEndEvent } from "@dnd-kit/react";
-import { DragDropProvider, DragOverlay, KeyboardSensor, PointerSensor, useDroppable } from "@dnd-kit/react";
-import { useSortable } from "@dnd-kit/react/sortable";
+import { DragDropProvider, DragOverlay, KeyboardSensor, PointerSensor } from "@dnd-kit/react";
+import { isSortable, useSortable } from "@dnd-kit/react/sortable";
 import {
   ActionIcon,
   Avatar,
@@ -75,16 +74,9 @@ interface HeaderComposerProps {
 
 type PreviewSize = "desktop" | "mobile";
 
-interface HeaderItemDragData {
-  kind: "item";
-  itemKey: string;
-}
-
-interface HeaderDropSlotData {
-  kind: "slot";
-  zone: HeaderZoneId;
-  index: number;
-}
+type HeaderStripEntry =
+  | { id: string; kind: "divider"; zone: HeaderZoneId }
+  | { id: string; item: HeaderItem; kind: "item" };
 
 const headerSortableSensors = [
   PointerSensor.configure({
@@ -94,8 +86,6 @@ const headerSortableSensors = [
 ];
 const headerSortableModifiers = [RestrictToHorizontalAxis];
 const headerSortableGroup = "header-composer";
-const headerSortableType = "header-composer-item";
-const headerDropSlotType = "header-composer-slot";
 
 export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHomeBoardId }: HeaderComposerProps) => {
   const [previewSize, setPreviewSize] = useState<PreviewSize>("desktop");
@@ -104,7 +94,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
   const t = useI18n("management.page.user.setting.general.header");
   const boardsById = useMemo(() => new Map(boards.map((board) => [board.id, board])), [boards]);
   const activeItems = getHeaderItems(value.zones);
-  const sortableIndices = new Map(activeItems.map((item, index) => [getHeaderItemKey(item), index]));
+  const stripEntries = createHeaderStripEntries(value.zones);
   const activeItemKeySet = new Set(activeItems.map(getHeaderItemKey));
   const inactiveBuiltinIds = headerBuiltinItemIds.filter((itemId) => {
     const item = createBuiltinHeaderItem(itemId);
@@ -149,14 +139,11 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
   const handleDragEnd = ({ canceled, operation }: DragEndEvent) => {
     setDraggedItemKey(null);
     const source = operation.source;
-    const target = operation.target;
-    if (canceled || !source || !target) return;
+    if (canceled || !isSortable(source)) return;
+    if (source.initialIndex === source.index) return;
 
-    const sourceData = source.data as HeaderItemDragData;
-    const targetData = target.data as HeaderDropSlotData;
-    if (sourceData.kind !== "item" || targetData.kind !== "slot") return;
-
-    updateZones(moveHeaderItemToSlot(value.zones, sourceData.itemKey, targetData));
+    const nextEntries = moveHeaderStripEntry(stripEntries, source.initialIndex, source.index);
+    updateZones(createHeaderZonesFromStripEntries(nextEntries));
   };
 
   return (
@@ -208,42 +195,36 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
               >
                 <div className={classes.previewHeader}>
                   <div className={classes.stripScroller}>
-                    <div className={classes.sortableStrip} data-drag-active={draggedItemKey !== null || undefined}>
+                    <div className={classes.sortableStrip}>
                       <MobileBurger />
-                      {headerZoneIds.map((zone) => {
-                        const zoneLabel = t(`zones.${zone}` as never);
+                      {stripEntries.map((entry, index) => {
+                        if (entry.kind === "divider") {
+                          return (
+                            <SortableZoneDivider
+                              key={entry.id}
+                              entry={entry}
+                              index={index}
+                              label={t(`zones.${entry.zone}` as never)}
+                            />
+                          );
+                        }
+
+                        const item = entry.item;
                         return (
-                          <div key={zone} className={classes.zoneSection} data-zone={zone}>
-                            <HeaderZoneDivider label={zoneLabel} />
-                            <HeaderInsertionSlot zone={zone} index={0} zoneLabel={zoneLabel} />
-                            {value.zones[zone].map((item, zoneIndex) => {
-                              const itemKey = getHeaderItemKey(item);
-                              const sortableIndex = sortableIndices.get(itemKey);
-                              if (sortableIndex === undefined) return null;
-
-                              let boardLogo: string | null = null;
-                              if (item.type === "board") {
-                                boardLogo = boardsById.get(item.boardId)?.logoImageUrl ?? null;
-                              }
-
-                              return (
-                                <Fragment key={itemKey}>
-                                  <SortableHeaderItem
-                                    item={item}
-                                    index={sortableIndex}
-                                    label={itemLabel(item)}
-                                    previewSize={previewSize}
-                                    searchDisplay={value.searchDisplay}
-                                    boardLogo={boardLogo}
-                                    configureLabel={t("action.configure", { item: itemLabel(item) })}
-                                    selected={selectedItemKey === itemKey}
-                                    onSelect={setSelectedItemKey}
-                                  />
-                                  <HeaderInsertionSlot zone={zone} index={zoneIndex + 1} zoneLabel={zoneLabel} />
-                                </Fragment>
-                              );
-                            })}
-                          </div>
+                          <SortableHeaderItem
+                            key={entry.id}
+                            item={item}
+                            index={index}
+                            label={itemLabel(item)}
+                            previewSize={previewSize}
+                            searchDisplay={value.searchDisplay}
+                            boardLogo={
+                              item.type === "board" ? (boardsById.get(item.boardId)?.logoImageUrl ?? null) : null
+                            }
+                            configureLabel={t("action.configure", { item: itemLabel(item) })}
+                            selected={selectedItemKey === entry.id}
+                            onSelect={setSelectedItemKey}
+                          />
                         );
                       })}
                     </div>
@@ -395,49 +376,32 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
   );
 };
 
-interface HeaderZoneDividerProps {
+interface SortableZoneDividerProps {
+  entry: Extract<HeaderStripEntry, { kind: "divider" }>;
+  index: number;
   label: string;
 }
 
-const HeaderZoneDivider = ({ label }: HeaderZoneDividerProps) => {
-  return (
-    <div className={classes.zoneDelimiter}>
-      <Text className={classes.zoneLabel} component="span">
-        {label}
-      </Text>
-      <Divider className={classes.zoneLine} orientation="vertical" />
-    </div>
-  );
-};
-
-interface HeaderInsertionSlotProps {
-  zone: HeaderZoneId;
-  index: number;
-  zoneLabel: string;
-}
-
-const HeaderInsertionSlot = ({ zone, index, zoneLabel }: HeaderInsertionSlotProps) => {
-  const slotData: HeaderDropSlotData = { kind: "slot", zone, index };
-  const { isDropTarget, ref } = useDroppable({
-    id: `header-slot:${zone}:${index}`,
-    type: headerDropSlotType,
-    accept: headerSortableType,
-    collisionPriority: 100,
-    collisionDetector: pointerIntersection,
-    data: slotData,
+const SortableZoneDivider = ({ entry, index, label }: SortableZoneDividerProps) => {
+  const { isDropTarget, ref } = useSortable({
+    id: entry.id,
+    index,
+    group: headerSortableGroup,
+    data: { kind: entry.kind, zone: entry.zone },
+    disabled: { draggable: true },
   });
 
   return (
     <div
       ref={ref}
-      className={classes.dropSlot}
+      className={classes.zoneDelimiter}
+      data-divider-zone={entry.zone}
       data-drop-target={isDropTarget || undefined}
-      data-slot-zone={zone}
-      data-slot-index={index}
-      aria-label={zoneLabel}
     >
-      <span className={classes.dropZoneLabel}>{zoneLabel}</span>
-      <span className={classes.dropMarker} aria-hidden />
+      <Text className={classes.zoneLabel} component="span">
+        {label}
+      </Text>
+      <Divider className={classes.zoneLine} orientation="vertical" />
     </div>
   );
 };
@@ -474,13 +438,11 @@ const SortableHeaderItem = ({
   onSelect,
 }: SortableHeaderItemProps) => {
   const itemKey = getHeaderItemKey(item);
-  const { handleRef, isDragging, ref } = useSortable({
+  const { handleRef, isDragging, isDropTarget, ref } = useSortable({
     id: itemKey,
     index,
     group: headerSortableGroup,
-    type: headerSortableType,
-    data: { kind: "item", itemKey } satisfies HeaderItemDragData,
-    disabled: { draggable: false, droppable: true },
+    data: { kind: "item", item },
     sensors: headerSortableSensors,
     modifiers: headerSortableModifiers,
   });
@@ -490,6 +452,7 @@ const SortableHeaderItem = ({
       ref={ref}
       className={classes.sortableItem}
       data-dragging={isDragging || undefined}
+      data-drop-target={isDropTarget || undefined}
       data-entry-id={itemKey}
       data-selected={selected || undefined}
     >
@@ -589,38 +552,35 @@ const PreviewItem = ({
   return <Icon size={20} stroke={1.7} />;
 };
 
-const moveHeaderItemToSlot = (zones: HeaderZones, sourceItemKey: string, target: HeaderDropSlotData): HeaderZones => {
-  let sourceItem: HeaderItem | undefined;
-  let sourceZone: HeaderZoneId | undefined;
-  let sourceIndex = -1;
+const createHeaderStripEntries = (zones: HeaderZones): HeaderStripEntry[] =>
+  headerZoneIds.flatMap((zone) => [
+    { id: `header-divider:${zone}`, kind: "divider" as const, zone },
+    ...zones[zone].map((item) => ({ id: getHeaderItemKey(item), item, kind: "item" as const })),
+  ]);
 
-  for (const zone of headerZoneIds) {
-    const itemIndex = zones[zone].findIndex((item) => getHeaderItemKey(item) === sourceItemKey);
-    if (itemIndex === -1) continue;
-    sourceItem = zones[zone][itemIndex];
-    sourceZone = zone;
-    sourceIndex = itemIndex;
-    break;
+const createHeaderZonesFromStripEntries = (entries: HeaderStripEntry[]): HeaderZones => {
+  const zones: HeaderZones = { left: [], center: [], right: [] };
+  let activeZone: HeaderZoneId = "left";
+
+  for (const entry of entries) {
+    if (entry.kind === "divider") {
+      activeZone = entry.zone;
+      continue;
+    }
+    zones[activeZone].push(entry.item);
   }
 
-  if (!sourceItem || !sourceZone) return zones;
+  return zones;
+};
 
-  const nextZones: HeaderZones = {
-    left: zones.left.filter((item) => getHeaderItemKey(item) !== sourceItemKey),
-    center: zones.center.filter((item) => getHeaderItemKey(item) !== sourceItemKey),
-    right: zones.right.filter((item) => getHeaderItemKey(item) !== sourceItemKey),
-  };
+const moveHeaderStripEntry = (entries: HeaderStripEntry[], from: number, to: number): HeaderStripEntry[] => {
+  if (from === to || from < 0 || from >= entries.length || to < 0 || to >= entries.length) return entries;
 
-  let targetIndex = target.index;
-  if (target.zone === sourceZone && sourceIndex < targetIndex) targetIndex -= 1;
-
-  const targetItems = nextZones[target.zone];
-  targetIndex = Math.max(0, Math.min(targetIndex, targetItems.length));
-  if (target.zone === sourceZone && targetIndex === sourceIndex) return zones;
-
-  nextZones[target.zone] = [...targetItems.slice(0, targetIndex), sourceItem, ...targetItems.slice(targetIndex)];
-
-  return nextZones;
+  const reorderedEntries = entries.slice();
+  const [movedEntry] = reorderedEntries.splice(from, 1);
+  if (!movedEntry || movedEntry.kind !== "item") return entries;
+  reorderedEntries.splice(to, 0, movedEntry);
+  return reorderedEntries;
 };
 
 const findHeaderItem = (items: HeaderItem[], id: string | null): HeaderItem | undefined => {
