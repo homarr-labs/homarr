@@ -9,6 +9,7 @@ const read = (path: string) => readFileSync(`${process.cwd()}/${path}`, "utf8");
 
 const detailPage = "apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/[id]/_workshop-detail.tsx";
 const browsePage = "apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/_workshop-browse.tsx";
+const browseRoutePage = "apps/nextjs/src/app/[locale]/manage/custom-widgets/workshop/page.tsx";
 const publishPage = "apps/nextjs/src/app/[locale]/manage/custom-widgets/publish/[id]/_workshop-publish-form.tsx";
 const cssButton = "apps/nextjs/src/components/workshop/workshop-css-import-button.tsx";
 
@@ -52,12 +53,18 @@ describe("Workshop widget install flow", () => {
 
   it("browses the Workshop as a card grid with per-item Workshop links", () => {
     const browse = read(browsePage);
+    const route = read(browseRoutePage);
 
     expect(browse).toContain("WorkshopSubmissionGrid");
     expect(browse).toContain("SearchInput");
     expect(browse).toContain("TablePagination");
     expect(browse).toContain("CustomWidgetTabs");
-    expect(browse).toContain("getWorkshopWebUrl(item.id)");
+    expect(route).toContain("resolveHomarrUrlConfig");
+    expect(route).toContain("workshopWebUrl={workshopWebUrl}");
+    expect(browse).toContain("workshopWebUrl: string");
+    expect(browse).toContain("href={workshopWebUrl}");
+    expect(browse).toContain('workshopWebUrl.replace(/\\/+$/u, "")');
+    expect(browse).toContain("encodeURIComponent(item.id)");
     expect(browse).toContain("WorkshopVoteControl");
     expect(browse).not.toContain("Modal");
   });

@@ -2,7 +2,10 @@ import type { CustomWidgetFormValues, EditorDiagnostic } from "@homarr/custom-wi
 
 import { isRecord, parseJson, parseSources } from "./_custom-widget-form-utils";
 
-export function createCustomWidgetCompletions(values: CustomWidgetFormValues, requestIds: string[]) {
+export function createCustomWidgetCompletions(
+  values: Pick<CustomWidgetFormValues, "options" | "sources">,
+  requestIds: string[],
+) {
   const options = parseJson(values.options);
   const optionKeys = Object.keys(isRecord(options) ? options : {});
   return [

@@ -24,6 +24,12 @@
 .footer {
   border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
 }
+.accessibleMuted {
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4));
+}
+.accessibleMuted[data-invalid="true"] {
+  color: light-dark(var(--mantine-color-red-9), var(--mantine-color-red-4));
+}
 .viewport {
   max-height: min(62vh, 680px);
   overflow: auto;
@@ -44,6 +50,9 @@
 .viewport :global(.cm-gutters) {
   background: var(--mantine-color-default-hover);
   border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-5));
+}
+.viewport :global(.cm-editor .cm-lineNumbers .cm-gutterElement) {
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4));
 }
 .diagnosticButton {
   min-height: 44px;

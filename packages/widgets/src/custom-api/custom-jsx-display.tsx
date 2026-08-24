@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { useI18n } from "@homarr/translation/client";
-import type { CustomWidgetPublishedQueryState } from "@homarr/custom-widgets/runtime";
+import type { CustomJsxRendererMessages, CustomWidgetPublishedQueryState } from "@homarr/custom-widgets/runtime";
 import { CustomJsxRenderer, parseRequestCapabilities } from "@homarr/custom-widgets/runtime";
 
 import { createCustomWidgetComponents, SAFE_BINDINGS } from "./jsx-components";
@@ -11,32 +11,61 @@ import { InactiveWidgetDefinitionProvider, WidgetDefinitionProvider } from "./wi
 
 export { CUSTOM_JSX_METHOD_COLORS } from "@homarr/custom-widgets/runtime";
 
+const EMPTY_QUERY_STATE: Record<string, CustomWidgetPublishedQueryState> = {};
+
+interface ScopedQueryState {
+  key: string;
+  values: Record<string, CustomWidgetPublishedQueryState>;
+}
+
 export default function CustomJsxDisplay({ data }: { data: Record<string, unknown> }) {
   const t = useI18n("widget.customApi.customJsx");
   const actionT = useI18n("common.action");
+  const diagnosticsT = useI18n("customWidget.editor.diagnostics");
   const capabilities = useMemo(() => parseRequestCapabilities(data.requestCapabilities), [data.requestCapabilities]);
+  const copyLabel = actionT("copy");
+  const copiedLabel = t("copied");
   const components = useMemo(
-    () => createCustomWidgetComponents({ copy: actionT("copy"), copied: t("copied") }),
-    [actionT, t],
+    () => createCustomWidgetComponents({ copy: copyLabel, copied: copiedLabel }),
+    [copiedLabel, copyLabel],
   );
-  const [queryState, setQueryState] = useState<Record<string, CustomWidgetPublishedQueryState>>({});
-  useEffect(
-    () => setQueryState({}),
-    [data.widgetDefinitionId, data.widgetItemId, data.previewSessionId, data.template],
+  const bindingTypeConflict = useCallback<CustomJsxRendererMessages["bindingTypeConflict"]>(
+    (name, firstType, secondType) => diagnosticsT("runtimeBindingTypeConflict", { value: name, firstType, secondType }),
+    [diagnosticsT],
   );
-  const publishQueryState = useCallback((requestId: string, value: CustomWidgetPublishedQueryState | null) => {
-    setQueryState((current) => {
-      if (!value) {
-        if (!Object.hasOwn(current, requestId)) return current;
-        const next = { ...current };
-        delete next[requestId];
-        return next;
-      }
-      const previous = current[requestId];
-      if (previous && previous.data === value.data && sameStatus(previous.status, value.status)) return current;
-      return { ...current, [requestId]: value };
-    });
-  }, []);
+  const definitionId = typeof data.widgetDefinitionId === "string" ? data.widgetDefinitionId : undefined;
+  const itemId = typeof data.widgetItemId === "string" ? data.widgetItemId : undefined;
+  const previewSessionId = typeof data.previewSessionId === "string" ? data.previewSessionId : undefined;
+  const queryCacheKey = typeof data.queryCacheKey === "string" ? data.queryCacheKey : undefined;
+  const queryScopeKey = [definitionId, itemId, previewSessionId, queryCacheKey].join("\u001f");
+  const [publishedQueryState, setPublishedQueryState] = useState<ScopedQueryState>(() => ({
+    key: queryScopeKey,
+    values: {},
+  }));
+  const queryState = publishedQueryState.key === queryScopeKey ? publishedQueryState.values : EMPTY_QUERY_STATE;
+  const publishQueryState = useCallback(
+    (requestId: string, value: CustomWidgetPublishedQueryState | null) => {
+      setPublishedQueryState((current) => {
+        const currentValues = current.key === queryScopeKey ? current.values : EMPTY_QUERY_STATE;
+        if (!value) {
+          if (!Object.hasOwn(currentValues, requestId)) {
+            if (current.key === queryScopeKey) return current;
+            return { key: queryScopeKey, values: currentValues };
+          }
+          const next = { ...currentValues };
+          delete next[requestId];
+          return { key: queryScopeKey, values: next };
+        }
+        const previous = currentValues[requestId];
+        if (previous && previous.data === value.data && sameStatus(previous.status, value.status)) {
+          if (current.key === queryScopeKey) return current;
+          return { key: queryScopeKey, values: currentValues };
+        }
+        return { key: queryScopeKey, values: { ...currentValues, [requestId]: value } };
+      });
+    },
+    [queryScopeKey],
+  );
   const baseData = isRecord(data.data) ? data.data : {};
   const baseStatus = isRecord(data.status) ? data.status : {};
   const renderer = (
@@ -53,12 +82,10 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
       messages={{
         noTemplate: t("noTemplate"),
         templateWarnings: (count) => t("templateWarnings", { count: String(count) }),
+        bindingTypeConflict,
       }}
     />
   );
-  const definitionId = typeof data.widgetDefinitionId === "string" ? data.widgetDefinitionId : undefined;
-  const itemId = typeof data.widgetItemId === "string" ? data.widgetItemId : undefined;
-  const previewSessionId = typeof data.previewSessionId === "string" ? data.previewSessionId : undefined;
   if (!itemId && !previewSessionId) {
     return (
       <InactiveWidgetDefinitionProvider definitionId={definitionId} isEditMode={data.isEditMode === true}>
@@ -70,6 +97,7 @@ export default function CustomJsxDisplay({ data }: { data: Record<string, unknow
     <WidgetDefinitionProvider
       definitionId={definitionId}
       itemId={itemId}
+      queryCacheKey={queryCacheKey}
       previewSessionId={previewSessionId}
       previewLiveActions={data.previewLiveActions === true}
       queriesDisabled={data.queriesDisabled === true}

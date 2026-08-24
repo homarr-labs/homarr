@@ -18,8 +18,8 @@ import type { IMediaServerIntegration } from "../interfaces/media-server/media-s
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
 import type { IMediaReleasesIntegration, MediaRelease, MediaType } from "../types";
 
-function ticksToMs(ticks: number | null | undefined): number | null {
-  return ticks ? Math.round(ticks / 10_000) : null;
+export function ticksToMs(ticks: number | null | undefined): number | null {
+  return ticks == null ? null : Math.round(ticks / 10_000);
 }
 
 // Unlike Plex, Jellyfin doesn't report a session's network location directly - only the

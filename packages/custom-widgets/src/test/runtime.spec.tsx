@@ -12,6 +12,7 @@ import { ActionButton, CustomJsxRenderer, CustomWidgetRuntimeProvider, SubFetch,
 import { createCustomJsxComponents } from "../jsx";
 import { MAX_REFRESH_INTERVAL_MS, MAX_REFRESH_INTERVAL_SECONDS, normalizeRefreshInterval } from "../runtime/sub-fetch";
 import type {
+  CustomJsxRendererMessages,
   CustomJsxRequestCapability,
   CustomWidgetPublishedQueryState,
   CustomWidgetRequestResult,
@@ -35,6 +36,13 @@ const messages: CustomWidgetRuntimeMessages = {
   toggle: "Toggle",
   refresh: "Refresh",
 };
+
+const rendererMessages = {
+  noTemplate: "No template",
+  templateWarnings: (count: number) => `${count} warnings`,
+  bindingTypeConflict: (name: string, firstType: string, secondType: string) =>
+    `Input ${name} conflicts between ${firstType} and ${secondType}`,
+} satisfies CustomJsxRendererMessages;
 
 let root: Root;
 let host: HTMLDivElement;
@@ -78,14 +86,16 @@ async function render(
   port: CustomWidgetRuntimePort,
   capabilities: readonly CustomJsxRequestCapability[] = [],
   setQueryState?: (requestId: string, value: CustomWidgetPublishedQueryState | null) => void,
+  options?: { queryCacheKey?: string; queryClient?: QueryClient },
 ) {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const queryClient = options?.queryClient ?? new QueryClient({ defaultOptions: { queries: { retry: false } } });
   await act(async () => {
     root.render(
       <MantineProvider>
         <QueryClientProvider client={queryClient}>
           <CustomWidgetRuntimeProvider
             itemId="item-1"
+            queryCacheKey={options?.queryCacheKey}
             isEditMode={false}
             requestCapabilities={capabilities}
             port={port}
@@ -123,7 +133,7 @@ describe("Custom Widget runtime ports", () => {
         createBindings={() => {
           throw new RangeError("Response data exceeded the depth limit");
         }}
-        messages={{ noTemplate: "No template", templateWarnings: (count) => `${count} warnings` }}
+        messages={rendererMessages}
       />,
       createPort(),
     );
@@ -145,7 +155,7 @@ describe("Custom Widget runtime ports", () => {
         data={{}}
         components={components}
         createBindings={() => ({})}
-        messages={{ noTemplate: "No template", templateWarnings: (count) => `${count} warnings` }}
+        messages={rendererMessages}
       />,
       createPort(),
     );
@@ -157,11 +167,6 @@ describe("Custom Widget runtime ports", () => {
       TablerIcon: (() => null) as never,
       copyLabels: { copy: "Copy", copied: "Copied" },
     });
-    const rendererMessages = {
-      noTemplate: "No template",
-      templateWarnings: (count: number) => `${count} warnings`,
-    };
-
     await render(
       <CustomJsxRenderer
         template={"<Anchor href={data.url}>Unsafe</Anchor>"}
@@ -181,11 +186,6 @@ describe("Custom Widget runtime ports", () => {
       TablerIcon: (() => null) as never,
       copyLabels: { copy: "Copy", copied: "Copied" },
     });
-    const rendererMessages = {
-      noTemplate: "No template",
-      templateWarnings: (count: number) => `${count} warnings`,
-    };
-
     await render(
       <>
         <input aria-label="Outside" name="shared" type="radio" />
@@ -215,10 +215,6 @@ describe("Custom Widget runtime ports", () => {
 
   it("exposes temporary bindings through inputs without browser storage", async () => {
     const setItem = vi.spyOn(Storage.prototype, "setItem");
-    const rendererMessages = {
-      noTemplate: "No template",
-      templateWarnings: (count: number) => `${count} warnings`,
-    };
     const components = createCustomJsxComponents({
       TablerIcon: (() => null) as never,
       copyLabels: { copy: "Copy", copied: "Copied" },
@@ -250,7 +246,7 @@ describe("Custom Widget runtime ports", () => {
         data={{}}
         components={components}
         createBindings={() => ({})}
-        messages={{ noTemplate: "No template", templateWarnings: (count) => `${count} warnings` }}
+        messages={rendererMessages}
       />,
       createPort(),
     );
@@ -271,10 +267,6 @@ describe("Custom Widget runtime ports", () => {
   });
 
   it("resets temporary bindings when the template changes", async () => {
-    const rendererMessages = {
-      noTemplate: "No template",
-      templateWarnings: (count: number) => `${count} warnings`,
-    };
     const components = createCustomJsxComponents({
       TablerIcon: (() => null) as never,
       copyLabels: { copy: "Copy", copied: "Copied" },
@@ -311,10 +303,6 @@ describe("Custom Widget runtime ports", () => {
   });
 
   it("preserves temporary bindings when data changes without changing the template", async () => {
-    const rendererMessages = {
-      noTemplate: "No template",
-      templateWarnings: (count: number) => `${count} warnings`,
-    };
     const components = createCustomJsxComponents({
       TablerIcon: (() => null) as never,
       copyLabels: { copy: "Copy", copied: "Copied" },
@@ -362,6 +350,17 @@ describe("Custom Widget runtime ports", () => {
       status: expect.objectContaining({ loading: false, ok: true, status: 200 }),
     });
     expect(host.querySelector("button, p, code, [role='alert']")).toBeNull();
+  });
+
+  it("does not reuse a query result after the effective definition changes", async () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const port = createPort();
+    await render(<SubFetch requestId="details" />, port, [], undefined, { queryCacheKey: "definition-a", queryClient });
+    await settle();
+    await render(<SubFetch requestId="details" />, port, [], undefined, { queryCacheKey: "definition-b", queryClient });
+    await settle();
+
+    expect(port.query).toHaveBeenCalledTimes(2);
   });
 
   it("uses a built-in manual trigger and passes successful request metadata to children", async () => {

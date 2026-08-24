@@ -1,6 +1,6 @@
 "use client";
 
-import { Accordion, ActionIcon, Button, Fieldset, Group, Select, Stack, Switch, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Button, Fieldset, Group, Select, Stack, Switch, Text, TextInput } from "@mantine/core";
 import { IconArrowDown, IconArrowUp, IconPlus, IconTrash } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
@@ -9,6 +9,7 @@ import { isRecord, parseJson } from "./_custom-widget-form-utils";
 import type { CustomWidgetWorkbenchForm } from "./_custom-widget-form-utils";
 import { QueryValuesEditor, RequestBodyEditor } from "./_custom-widget-request-value-editors";
 import { CustomWidgetIdentifierInput } from "./_custom-widget-identifier-input";
+import { LazyOnceAccordion } from "./_lazy-once-accordion";
 
 const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"];
 
@@ -24,6 +25,8 @@ export function CustomWidgetRequestsEditor({
   const entries = isRecord(parsed) ? Object.entries(parsed) : [];
   const sources = parseJson(form.values.sources);
   const sourceIds = isRecord(sources) ? Object.keys(sources) : ["default"];
+  const options = parseJson(form.values.options);
+  const optionNames = isRecord(options) ? Object.keys(options) : [];
 
   const commit = (next: Array<[string, unknown]>) =>
     form.setFieldValue("requests", JSON.stringify(Object.fromEntries(next), null, 2));
@@ -50,7 +53,7 @@ export function CustomWidgetRequestsEditor({
         const kind = request.kind === "action" ? "action" : "query";
         const trigger = request.trigger === "manual" ? "manual" : "load";
         return (
-          <Fieldset key={index} legend={id || t("request", { count: index + 1 })}>
+          <Fieldset key={id} legend={id || t("request", { count: index + 1 })}>
             <Stack gap="sm">
               <Group grow align="start">
                 <CustomWidgetIdentifierInput
@@ -119,71 +122,61 @@ export function CustomWidgetRequestsEditor({
               <TextInput
                 label={t("path")}
                 description={t("pathDescription")}
+                descriptionProps={{
+                  style: { color: "light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4))" },
+                }}
                 value={typeof request.path === "string" ? request.path : ""}
                 onChange={(event) => update(index, id, { ...request, path: event.currentTarget.value })}
               />
-              <Accordion variant="contained">
-                <Accordion.Item value="values">
-                  <Accordion.Control>{t("requestDetails")}</Accordion.Control>
-                  <Accordion.Panel>
-                    <Stack gap="sm">
-                      <QueryValuesEditor
-                        value={isRecord(request.query) ? request.query : {}}
-                        optionNames={Object.keys(
-                          isRecord(parseJson(form.values.options))
-                            ? (parseJson(form.values.options) as Record<string, unknown>)
-                            : {},
-                        )}
-                        allowParams={trigger === "manual" || kind === "action"}
-                        onChange={(query) => update(index, id, { ...request, query })}
-                      />
-                      <RequestBodyEditor
-                        id={id}
-                        value={request.body}
-                        optionNames={Object.keys(
-                          isRecord(parseJson(form.values.options))
-                            ? (parseJson(form.values.options) as Record<string, unknown>)
-                            : {},
-                        )}
-                        allowParams={trigger === "manual" || kind === "action"}
-                        onChange={(body) => update(index, id, { ...request, body })}
-                      />
-                      {kind === "action" && (
-                        <TextInput
-                          label={t("confirmation")}
-                          value={typeof request.confirmation === "string" ? request.confirmation : ""}
-                          onChange={(event) =>
-                            update(index, id, { ...request, confirmation: event.currentTarget.value || undefined })
-                          }
-                        />
-                      )}
-                      {kind === "action" && (
-                        <TextInput
-                          label={t("invalidation")}
-                          description={t("invalidationDescription")}
-                          value={Array.isArray(request.invalidates) ? request.invalidates.join(", ") : ""}
-                          onChange={(event) =>
-                            update(index, id, {
-                              ...request,
-                              invalidates: event.currentTarget.value
-                                .split(",")
-                                .map((value) => value.trim())
-                                .filter(Boolean),
-                            })
-                          }
-                        />
-                      )}
-                      <Switch
-                        label={t("noAuth")}
-                        checked={request.auth === "none"}
-                        onChange={(event) =>
-                          update(index, id, { ...request, auth: event.currentTarget.checked ? "none" : "inherit" })
-                        }
-                      />
-                    </Stack>
-                  </Accordion.Panel>
-                </Accordion.Item>
-              </Accordion>
+              <LazyOnceAccordion label={t("requestDetails")}>
+                <Stack gap="sm">
+                  <QueryValuesEditor
+                    value={isRecord(request.query) ? request.query : {}}
+                    optionNames={optionNames}
+                    allowParams={trigger === "manual" || kind === "action"}
+                    onChange={(query) => update(index, id, { ...request, query })}
+                  />
+                  <RequestBodyEditor
+                    id={id}
+                    value={request.body}
+                    optionNames={optionNames}
+                    allowParams={trigger === "manual" || kind === "action"}
+                    onChange={(body) => update(index, id, { ...request, body })}
+                  />
+                  {kind === "action" && (
+                    <TextInput
+                      label={t("confirmation")}
+                      value={typeof request.confirmation === "string" ? request.confirmation : ""}
+                      onChange={(event) =>
+                        update(index, id, { ...request, confirmation: event.currentTarget.value || undefined })
+                      }
+                    />
+                  )}
+                  {kind === "action" && (
+                    <TextInput
+                      label={t("invalidation")}
+                      description={t("invalidationDescription")}
+                      value={Array.isArray(request.invalidates) ? request.invalidates.join(", ") : ""}
+                      onChange={(event) =>
+                        update(index, id, {
+                          ...request,
+                          invalidates: event.currentTarget.value
+                            .split(",")
+                            .map((value) => value.trim())
+                            .filter(Boolean),
+                        })
+                      }
+                    />
+                  )}
+                  <Switch
+                    label={t("noAuth")}
+                    checked={request.auth === "none"}
+                    onChange={(event) =>
+                      update(index, id, { ...request, auth: event.currentTarget.checked ? "none" : "inherit" })
+                    }
+                  />
+                </Stack>
+              </LazyOnceAccordion>
               <Group justify="space-between">
                 <Group gap="xs">
                   <ActionIcon

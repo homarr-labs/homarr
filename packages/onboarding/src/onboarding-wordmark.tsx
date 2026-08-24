@@ -1,8 +1,7 @@
 "use client";
 
-import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react";
+import type { CSSProperties } from "react";
 import { useState } from "react";
-import { useComputedColorScheme } from "@mantine/core";
 import confetti from "canvas-confetti";
 
 import HomarrWordmarkLight from "./homarr-wordmark-light";
@@ -19,6 +18,8 @@ interface OnboardingWordmarkProps {
   large?: boolean;
 }
 
+const defaultWordmarkUrl = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg";
+
 export const OnboardingWordmark = ({
   appName,
   logoImageUrl,
@@ -29,17 +30,17 @@ export const OnboardingWordmark = ({
   large = false,
 }: OnboardingWordmarkProps) => {
   const [celebrating, setCelebrating] = useState(false);
-  const colorScheme = useComputedColorScheme("light");
   const sounds = useOnboardingSounds();
+  const className = `${classes.wordmark} ${classes.onboardingWordmark} ${large ? classes.welcomeWordmark : ""} ${celebrating ? classes.celebratingWordmark : ""}`;
   const colors = {
     "--homarr-wordmark-primary": primaryColor ?? "#F92424",
     "--homarr-wordmark-secondary": secondaryColor ?? "#FA5252",
-    "--homarr-wordmark-foreground": colorScheme === "light" ? "#1A1B1E" : "#FEFDFD",
+    "--homarr-wordmark-foreground": "#FEFDFD",
   } as CSSProperties;
 
-  const celebrate = (event: ReactMouseEvent<SVGSVGElement>) => {
+  const celebrate = (logoElement: Element) => {
     sounds.hover();
-    const logo = event.currentTarget.getBoundingClientRect();
+    const logo = logoElement.getBoundingClientRect();
     const originY = (logo.top + logo.height / 2) / window.innerHeight;
     const confettiColors = primaryColor && secondaryColor ? [primaryColor, secondaryColor] : undefined;
 
@@ -63,7 +64,6 @@ export const OnboardingWordmark = ({
     }
   };
 
-  const className = `${classes.wordmark} ${classes.onboardingWordmark} ${large ? classes.welcomeWordmark : ""} ${celebrating ? classes.celebratingWordmark : ""}`;
   const hasVisibilityControls = showAppName !== undefined || showAppLogo !== undefined;
   const resolvedAppName = appName?.trim() || "Homarr";
   const shouldRenderDefaultWordmark = showAppLogo && showAppName && !logoImageUrl && resolvedAppName === "Homarr";
@@ -86,13 +86,17 @@ export const OnboardingWordmark = ({
     );
   }
 
+  if (primaryColor === undefined && secondaryColor === undefined) {
+    return <img src={defaultWordmarkUrl} alt={resolvedAppName} width={1477} height={1054} className={className} />;
+  }
+
   return (
     <HomarrWordmarkLight
       role="img"
       aria-label={resolvedAppName}
       style={colors}
       className={className}
-      onMouseEnter={celebrate}
+      onMouseEnter={(event) => celebrate(event.currentTarget)}
       onAnimationEnd={() => setCelebrating(false)}
     />
   );

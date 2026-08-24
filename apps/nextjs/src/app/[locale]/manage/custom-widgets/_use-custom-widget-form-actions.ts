@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturnType } from "@mantine/form";
 
@@ -22,13 +22,14 @@ import {
 import type { PreviewState } from "./_custom-widget-preview-panel";
 import { extractCustomWidgetSaveIssues } from "./_custom-widget-save-errors";
 import type { CustomWidgetSaveIssue } from "./_custom-widget-save-errors";
+import { clearSaveIssues, reportSaveIssues } from "./_custom-widget-save-issue-utils";
+import type { CustomWidgetFormDocumentStore } from "./_custom-widget-form-state";
 
 interface FormActionsInput {
   mode: "create" | "edit";
   definitionId?: string;
   form: UseFormReturnType<CustomWidgetFormValues>;
-  candidate: ReturnType<typeof buildDefinition>;
-  preview: PreviewState;
+  documentStore: CustomWidgetFormDocumentStore;
   setPreview: Dispatch<SetStateAction<PreviewState>>;
   setMobilePane: Dispatch<SetStateAction<"configure" | "preview">>;
   optionsSnapshot: Record<string, unknown>;
@@ -45,6 +46,34 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const previewMutation = clientApi.customWidget.previewCreate.useMutation();
   const [saveIssues, setSaveIssues] = useState<CustomWidgetSaveIssue[]>([]);
   const [previewPending, setPreviewPending] = useState(false);
+  const setPreview = input.setPreview;
+  const previewGeneration = useRef(0);
+  const activePreviewGeneration = useRef<number | null>(null);
+  const invalidatePreview = useCallback(() => {
+    previewGeneration.current += 1;
+    if (activePreviewGeneration.current !== null) return;
+    setPreview((preview) => {
+      if (
+        preview.outcome === "idle" &&
+        preview.session === null &&
+        Object.keys(preview.data).length === 0 &&
+        Object.keys(preview.status).length === 0
+      )
+        return preview;
+      return { data: {}, status: {}, session: null, outcome: "idle" };
+    });
+  }, [setPreview]);
+  useLayoutEffect(() => {
+    invalidatePreview();
+  }, [input.optionsSnapshot, invalidatePreview]);
+  useEffect(() => input.documentStore.subscribe(invalidatePreview), [input.documentStore, invalidatePreview]);
+  useEffect(
+    () => () => {
+      previewGeneration.current += 1;
+      activePreviewGeneration.current = null;
+    },
+    [],
+  );
   let actionLabel = tCommon("action.save");
   if (input.mode === "create") actionLabel = tCommon("action.create");
 
@@ -73,6 +102,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         });
         input.form.setInitialValues(values);
         input.form.resetDirty();
+        input.documentStore.markSaved(values);
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         window.location.assign(result.managementPath);
       } else if (input.definitionId) {
@@ -88,6 +118,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         ]);
         input.form.setInitialValues(values);
         input.form.resetDirty();
+        input.documentStore.markSaved(values);
         showSuccessNotification({
           title: tCommon("action.save"),
           message: t("notification.updated", { name: values.name }),
@@ -104,15 +135,18 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   });
 
   const runPreview = async () => {
-    if (previewPending) return;
-    if (!input.candidate.success) {
+    if (activePreviewGeneration.current !== null) return;
+    const valuesAtStart = input.documentStore.getValues();
+    const candidateAtStart = buildDefinition(valuesAtStart);
+    if (!candidateAtStart.success) {
       showErrorNotification({
         title: w("section.preview"),
-        message: input.candidate.error.issues[0]?.message ?? w("invalidWidget"),
+        message: candidateAtStart.error.issues[0]?.message ?? w("invalidWidget"),
       });
       return;
     }
-    const optionIssues = getCustomWidgetPreviewOptionIssues(input.candidate.data, input.optionsSnapshot);
+    const optionsAtStart = input.optionsSnapshot;
+    const optionIssues = getCustomWidgetPreviewOptionIssues(candidateAtStart.data, optionsAtStart);
     if (optionIssues.length > 0) {
       const issue = optionIssues[0];
       showErrorNotification({
@@ -121,17 +155,24 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       });
       return;
     }
+    const secretsAtStart = getChangedSecrets(valuesAtStart);
+    const generation = previewGeneration.current + 1;
+    previewGeneration.current = generation;
+    activePreviewGeneration.current = generation;
+    const isCurrent = () => previewGeneration.current === generation;
     input.setMobilePane("preview");
     input.setPreview({ data: {}, status: {}, session: null, outcome: "loading" });
     setPreviewPending(true);
     try {
       const created = await previewMutation.mutateAsync({
-        definition: input.candidate.data,
+        definition: candidateAtStart.data,
         definitionId: input.definitionId,
-        options: input.optionsSnapshot,
-        secrets: getChangedSecrets(input.form.values),
+        options: optionsAtStart,
+        secrets: secretsAtStart,
       });
-      const snapshot = await loadPreviewQueries(input.candidate.data, created.previewSession.id);
+      if (!isCurrent()) return;
+      const snapshot = await loadPreviewQueries(candidateAtStart.data, created.previewSession.id);
+      if (!isCurrent()) return;
       const failed = Object.values(snapshot.status).filter((status) => isRecord(status) && status.ok === false).length;
       input.setPreview({
         ...snapshot,
@@ -156,10 +197,15 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         });
       }
     } catch {
+      if (!isCurrent()) return;
       input.setPreview((current) => ({ ...current, outcome: "error" }));
       showErrorNotification({ title: w("section.preview"), message: t("notification.previewError") });
     } finally {
-      setPreviewPending(false);
+      if (activePreviewGeneration.current === generation) {
+        activePreviewGeneration.current = null;
+        setPreviewPending(false);
+        if (!isCurrent()) setPreview({ data: {}, status: {}, session: null, outcome: "idle" });
+      }
     }
   };
 
@@ -170,7 +216,6 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         throw new Error(formatCustomWidgetImportIssues(result.issues));
       }
       input.setOptionsSnapshot(getDefinitionDefaults(result.widget));
-      input.setPreview({ data: {}, status: {}, session: null, outcome: "idle" });
       showSuccessNotification({
         title: w("ai.response"),
         message:
@@ -195,34 +240,4 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     savePending: createMutation.isPending || updateMutation.isPending,
     previewPending,
   };
-}
-
-function reportSaveIssues(
-  form: UseFormReturnType<CustomWidgetFormValues>,
-  issues: CustomWidgetSaveIssue[],
-  setIssues: Dispatch<SetStateAction<CustomWidgetSaveIssue[]>>,
-  title: string,
-  getRemainingLabel: (count: number) => string,
-) {
-  setIssues(issues);
-  const messagesByPath = new Map<string, string[]>();
-  for (const issue of issues) {
-    if (!issue.path) continue;
-    const field = issue.path.split(".")[0] ?? issue.path;
-    messagesByPath.set(field, [...(messagesByPath.get(field) ?? []), issue.message]);
-  }
-  for (const [path, messages] of messagesByPath) {
-    form.setFieldError(path, messages.join(" "));
-  }
-  const remaining = issues.length - 1;
-  showErrorNotification({
-    title,
-    message: `${issues[0]?.message ?? ""}${remaining > 0 ? ` ${getRemainingLabel(remaining)}` : ""}`,
-  });
-}
-
-function clearSaveIssues(form: UseFormReturnType<CustomWidgetFormValues>, issues: CustomWidgetSaveIssue[]) {
-  for (const path of new Set(issues.flatMap((issue) => (issue.path ? [issue.path.split(".")[0] ?? issue.path] : [])))) {
-    form.clearFieldError(path);
-  }
 }
