@@ -30,9 +30,9 @@ export const homeMode = {
       preferencesGroup,
       ...appGroups,
       ...directoryGroups,
-      mediaFallbackGroup,
       homeSearchEngineGroup,
       contextSpecificFallbackSearchGroup,
+      mediaFallbackGroup,
     ];
   },
 } satisfies SearchMode;

@@ -76,6 +76,10 @@
   display: none;
 }
 
+.actionsList [data-search-source]:has([data-search-pending]) {
+  display: none;
+}
+
 .footer {
   min-height: 42px;
   border-top: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
