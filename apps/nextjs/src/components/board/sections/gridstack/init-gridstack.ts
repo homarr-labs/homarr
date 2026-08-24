@@ -3,7 +3,7 @@ import type { RefObject } from "react";
 import type { GridItemHTMLElement } from "@homarr/gridstack";
 import { GridStack } from "@homarr/gridstack";
 
-import type { Section } from "~/app/[locale]/boards/_types";
+import type { DynamicSection, Section } from "~/app/[locale]/boards/_types";
 
 interface InitializeGridstackProps {
   section: Omit<Section, "items">;
@@ -21,7 +21,7 @@ export const initializeGridstack = ({ section, itemIds, refs, sectionColumnCount
   // initialize gridstack
   const newGrid = refs.gridstack;
   const isDynamic = section.kind === "dynamic";
-  const isScrollable = isDynamic && "options" in section && section.options.scrollable;
+  const isScrollable = isDynamic && (section as DynamicSection).options.scrollable;
   // Scrollable dynamic sections aren't limited to the visible section height,
   // so items can be placed below the fold and reached by scrolling.
   const maxRow = isDynamic && "height" in section && !isScrollable ? (section.height as number) : 0;

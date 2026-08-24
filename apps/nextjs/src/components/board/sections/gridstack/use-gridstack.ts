@@ -6,7 +6,7 @@ import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import type { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode } from "@homarr/gridstack";
 
-import type { Section } from "~/app/[locale]/boards/_types";
+import type { DynamicSection, Section } from "~/app/[locale]/boards/_types";
 import { useMarkSectionAsReady } from "~/app/[locale]/boards/(content)/_ready-context";
 import { useItemActions } from "../../items/item-actions";
 import { useSectionActions } from "../section-actions";
@@ -87,7 +87,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     section.kind === "dynamic" && "width" in section && typeof section.width === "number"
       ? section.width
       : currentLayout.columnCount;
-  const isScrollable = section.kind === "dynamic" && "options" in section && section.options.scrollable;
+  const isScrollable = section.kind === "dynamic" && (section as DynamicSection).options.scrollable;
 
   const itemRefKeys = Object.keys(itemRefs.current);
   // define items in itemRefs for easy access and reference to items
