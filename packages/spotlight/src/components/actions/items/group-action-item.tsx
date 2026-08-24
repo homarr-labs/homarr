@@ -1,11 +1,11 @@
 import { Spotlight } from "@mantine/spotlight";
 
 import { getSafeAppHref, SAFE_NEW_TAB_REL } from "@homarr/common";
-import type { TranslationObject } from "@homarr/translation";
 import { Link } from "@homarr/ui";
 
 import type { SearchGroup } from "../../../lib/group";
 import type { inferSearchInteractionOptions } from "../../../lib/interaction";
+import type { SpotlightMode } from "../../../open";
 import { selectAction, spotlightStore } from "../../../spotlight-store";
 import classes from "./action-item.module.css";
 
@@ -13,7 +13,7 @@ interface SpotlightGroupActionItemProps<TOption extends Record<string, unknown>>
   option: TOption;
   query: string;
   setQuery: (query: string) => void;
-  setMode: (mode: keyof TranslationObject["search"]["mode"]) => void;
+  setMode: (mode: SpotlightMode) => void;
   setChildrenOptions: (options: inferSearchInteractionOptions<"children">) => void;
   group: SearchGroup<TOption>;
 }
@@ -34,7 +34,7 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
 
   const safeHref = interaction.type === "link" ? getSafeAppHref(interaction.href) : undefined;
   const renderRoot =
-    interaction.type === "link" && safeHref
+    interaction.type === "link" && safeHref && !unavailable
       ? (props: Record<string, unknown>) => {
           return (
             <Link
@@ -48,6 +48,8 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
       : undefined;
 
   const handleClickAsync = async () => {
+    if (unavailable) return;
+
     if (interaction.type === "javaScript") {
       await interaction.onSelect();
     } else if (interaction.type === "setQuery") {
@@ -76,6 +78,7 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
       }
       className={classes.spotlightAction}
       aria-disabled={unavailable || undefined}
+      disabled={unavailable}
     >
       <group.Component {...(optionProps as TOption)} />
     </Spotlight.Action>

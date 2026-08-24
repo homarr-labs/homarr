@@ -1,7 +1,7 @@
 import type { MaybePromise } from "@homarr/common/types";
-import type { TranslationObject } from "@homarr/translation";
 
 import type { CreateChildrenOptionsProps } from "./children";
+import type { SpotlightMode } from "../open";
 
 const createSearchInteraction = <TType extends string>(type: TType) => ({
   optionsType: <TOption extends Record<string, unknown> | undefined>() => ({ type, _inferOptions: {} as TOption }),
@@ -15,7 +15,7 @@ const searchInteractions = [
     closeSpotlightOnTrigger?: boolean;
   }>(),
   createSearchInteraction("setQuery").optionsType<{ query: string }>(),
-  createSearchInteraction("mode").optionsType<{ mode: keyof TranslationObject["search"]["mode"]; query?: string }>(),
+  createSearchInteraction("mode").optionsType<{ mode: SpotlightMode; query?: string }>(),
   createSearchInteraction("children").optionsType<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useActions: CreateChildrenOptionsProps<any>["useActions"];

@@ -856,6 +856,7 @@ const EnabledAssistantProvider = ({ children }: PropsWithChildren) => {
           : t("busy.description"),
       unavailable: !canSend,
       alwaysVisible: true,
+      placement: "fallback" as const,
       interaction: (query: string) =>
         createAssistantPromptInteraction({
           sendPrompt,

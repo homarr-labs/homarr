@@ -1,18 +1,18 @@
 import { Spotlight } from "@mantine/spotlight";
 
-import type { TranslationObject } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
 import type { SearchGroup } from "../../../lib/group";
 import type { inferSearchInteractionOptions } from "../../../lib/interaction";
+import type { SpotlightMode } from "../../../open";
 import { SpotlightGroupActions } from "../group-actions";
 
 interface SpotlightActionGroupsProps {
   groups: SearchGroup[];
   query: string;
   setQuery: (query: string) => void;
-  setMode: (mode: keyof TranslationObject["search"]["mode"]) => void;
+  setMode: (mode: SpotlightMode) => void;
   setChildrenOptions: (options: inferSearchInteractionOptions<"children">) => void;
 }
 
@@ -23,6 +23,8 @@ export const SpotlightActionGroups = ({ groups, ...others }: SpotlightActionGrou
     <Spotlight.ActionsGroup
       key={`${translateIfNecessary(t, group.title)}::${String(group.keyPath)}`}
       label={translateIfNecessary(t, group.title)}
+      data-search-source={group.source?.kind ?? "local"}
+      data-remote-source={group.source?.kind === "remote" ? group.source.source : undefined}
     >
       {/*eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       <SpotlightGroupActions<any> group={group} {...others} />

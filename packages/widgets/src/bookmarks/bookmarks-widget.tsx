@@ -73,6 +73,7 @@ export default function BookmarksWidget({
       return [
         {
           id: bookmark.id,
+          dedupeKey: appsById.has(bookmark.id) ? `app:${bookmark.id}` : undefined,
           name: bookmark.name,
           icon: bookmark.iconUrl ?? IconLink,
           interaction() {
@@ -148,10 +149,7 @@ export default function BookmarksWidget({
           </Stack>
         </Center>
       ) : (
-        <ScrollArea
-          scrollbars={plan.horizontalScroll ? "x" : "y"}
-          style={{ flex: 1, minHeight: 0 }}
-        >
+        <ScrollArea scrollbars={plan.horizontalScroll ? "x" : "y"} style={{ flex: 1, minHeight: 0 }}>
           <Box miw="100%" mih="100%" pb={2}>
             {plan.horizontalScroll ? (
               <Group gap={options.spacing} wrap="nowrap" mih="100%" align="stretch">

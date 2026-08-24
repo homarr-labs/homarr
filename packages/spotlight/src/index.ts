@@ -6,3 +6,4 @@ export {
   useRegisterSpotlightContextResults,
   useRegisterSpotlightContextActions,
 } from "./modes/home/context";
+export type { ContextSpecificItem } from "./modes/home/context";
