@@ -226,14 +226,38 @@ describe("AI authoring evaluation", () => {
     });
   });
 
-  it("requires exceptional goal, design, practicality, and complexity scores", () => {
-    expect(judgePasses(makeJudgeResult(90))).toBe(true);
+  it("requires an excellent result without weak categories", () => {
+    expect(
+      judgePasses({
+        ...makeJudgeResult(85),
+        categories: {
+          ...makeCategories(85),
+          visualQuality: 76,
+          dailyUsefulness: 76,
+          complexityDiscipline: 80,
+        },
+      }),
+    ).toBe(true);
+    expect(judgePasses(makeJudgeResult(84))).toBe(false);
+    expect(
+      judgePasses({
+        ...makeJudgeResult(90),
+        categories: { ...makeCategories(90), accessibility: 74 },
+      }),
+    ).toBe(false);
     expect(
       judgePasses({
         ...makeJudgeResult(92),
-        categories: { ...makeCategories(92), dailyUsefulness: 84 },
+        categories: { ...makeCategories(92), goalFulfillment: 84 },
       }),
     ).toBe(false);
+    expect(
+      judgePasses({
+        ...makeJudgeResult(92),
+        categories: { ...makeCategories(92), complexityDiscipline: 79 },
+      }),
+    ).toBe(false);
+    expect(judgePasses({ ...makeJudgeResult(92), dailyUseDecision: "promising-but-not-daily" })).toBe(false);
     expect(judgePasses({ ...makeJudgeResult(95), fatalProblems: ["A requested core action is missing."] })).toBe(false);
   });
 
@@ -257,6 +281,20 @@ describe("AI authoring evaluation", () => {
     expect(prompt).toContain(JSON.stringify(testCase.sampleResponse, null, 2));
     expect(prompt).toContain("# Bundled file: references/runtime.md");
     expect(prompt).toContain("does not prove API correctness, visual quality, usefulness, or accessibility");
+    expect(prompt).toContain(
+      "verified API notes and representative response fixtures are authoritative for endpoint paths, authentication requirements, and response shapes",
+    );
+    expect(prompt).toContain("Do not invent external endpoint or authentication objections from outside assumptions");
+    expect(prompt).toContain(
+      "Decorative icons paired with equivalent adjacent visible status text need no separate aria-label",
+    );
+    expect(prompt).toContain("A Badge containing explicit visible status text is not color-only");
+    expect(prompt).toContain(
+      "A readable absolute UTC date and time is valid; do not require relative or localized time without a documented safe helper",
+    );
+    expect(prompt).toContain(
+      'A pass requires a weighted total of at least 85, every category at least 75, goalFulfillment at least 85, complexityDiscipline at least 80, no fatal problem, and dailyUseDecision="would-use-daily"',
+    );
   });
 
   it("computes the weighted score and refuses inflated advisory verdicts", () => {

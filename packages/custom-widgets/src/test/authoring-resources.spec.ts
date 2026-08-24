@@ -10,6 +10,7 @@ import {
   getCustomWidgetSkill,
   getCustomWidgetSkillContent,
 } from "../core/authoring-resources";
+import { validateCustomJsxTemplate } from "../jsx/analyzer";
 
 const skillSourceDirectory = path.resolve(import.meta.dirname, "../../../../.agents/skills/homarr-custom-widget");
 
@@ -55,6 +56,11 @@ describe("authoring resources", () => {
         sources: { default: { baseUrl: "https://pokeapi.co" } },
       },
     });
+    const serviceDashboard = getCustomWidgetExample("service-dashboard");
+    if (!serviceDashboard) throw new Error("Service dashboard example is missing");
+    expect(validateCustomJsxTemplate(serviceDashboard.widget.template)).toEqual([]);
+    expect(serviceDashboard.widget.template.match(/<Paper/gu)).toHaveLength(1);
+    expect(serviceDashboard.widget.template).toContain('RefreshButton label="Refresh service health"');
     expect(Buffer.byteLength(JSON.stringify(pokedex), "utf8")).toBeLessThan(16_000);
     expect(catalog.sharedProps).toMatchObject({
       count: expect.any(Number),

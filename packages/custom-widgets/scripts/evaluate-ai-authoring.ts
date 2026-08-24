@@ -15,58 +15,55 @@ if (!apiKey) {
 const requestedCase = process.argv.find((value) => value.startsWith("--case="))?.slice("--case=".length);
 const assistantMode = process.argv.includes("--assistant");
 const configuredLoops = Number(process.env.CUSTOM_WIDGET_AI_MAX_LOOPS ?? 10);
-const totalLoopBudget = Number.isInteger(configuredLoops) && configuredLoops > 0 ? Math.min(configuredLoops, 10) : 10;
-const selectableCases = assistantMode
-  ? CUSTOM_WIDGET_AI_EVALUATION_CASES.filter(
-      (testCase) =>
-        (testCase.sampleResponse !== undefined || testCase.previewResponses?.length) &&
-        testCase.expectations !== undefined,
-    )
-  : CUSTOM_WIDGET_AI_EVALUATION_CASES;
-const selectedCases = requestedCase
-  ? CUSTOM_WIDGET_AI_EVALUATION_CASES.filter((testCase) => testCase.id === requestedCase)
-  : selectableCases;
-if (selectedCases.length === 0) throw new Error(`Unknown AI evaluation case '${requestedCase}'`);
-if (totalLoopBudget < selectedCases.length) {
-  throw new Error(`CUSTOM_WIDGET_AI_MAX_LOOPS must be at least ${selectedCases.length} for this run`);
+const maxLoops = Number.isInteger(configuredLoops) && configuredLoops > 0 ? Math.min(configuredLoops, 10) : 10;
+let selectableCases = CUSTOM_WIDGET_AI_EVALUATION_CASES;
+if (assistantMode) {
+  selectableCases = CUSTOM_WIDGET_AI_EVALUATION_CASES.filter(
+    (testCase) =>
+      (testCase.sampleResponse !== undefined || testCase.previewResponses?.length) &&
+      testCase.expectations !== undefined,
+  );
 }
+let selectedCases = selectableCases;
+if (requestedCase)
+  selectedCases = CUSTOM_WIDGET_AI_EVALUATION_CASES.filter((testCase) => testCase.id === requestedCase);
+if (selectedCases.length === 0) throw new Error(`Unknown AI evaluation case '${requestedCase}'`);
 
 const runId = new Date().toISOString().replaceAll(/[:.]/gu, "-");
 const outputRoot = path.resolve(process.cwd(), ".ai-evaluations", runId);
 await mkdir(outputRoot, { recursive: true });
 
 const results: Array<AiEvaluationResult | CustomWidgetAssistantEvaluationResult> = [];
-let remainingLoopBudget = totalLoopBudget;
 for (const testCase of selectedCases) {
-  const remainingCases = selectedCases.length - results.length;
-  const maxLoops = Math.max(1, Math.floor(remainingLoopBudget / remainingCases));
   process.stdout.write(`Evaluating ${testCase.id}...\n`);
-  const result = assistantMode
-    ? await evaluateCustomWidgetAssistantCase({
-        testCase,
-        apiKey,
-        baseUrl: providerBaseUrl,
-        outputRoot,
-        maxLoops,
-        generatorModel,
-        judgeModel,
-      })
-    : await evaluateCustomWidgetCase({
-        testCase,
-        apiKey,
-        baseUrl: providerBaseUrl,
-        outputRoot,
-        maxLoops,
-        generatorModel,
-        judgeModel,
-      });
+  let result: AiEvaluationResult | CustomWidgetAssistantEvaluationResult;
+  if (assistantMode) {
+    result = await evaluateCustomWidgetAssistantCase({
+      testCase,
+      apiKey,
+      baseUrl: providerBaseUrl,
+      outputRoot,
+      maxLoops,
+      generatorModel,
+      judgeModel,
+    });
+  } else {
+    result = await evaluateCustomWidgetCase({
+      testCase,
+      apiKey,
+      baseUrl: providerBaseUrl,
+      outputRoot,
+      maxLoops,
+      generatorModel,
+      judgeModel,
+    });
+  }
   results.push(result);
-  remainingLoopBudget -= result.attempts;
-  process.stdout.write(
-    result.judge
-      ? `  ${result.judge.total}/100 after ${result.attempts} attempt(s)\n`
-      : `  failed after ${result.attempts} attempt(s)\n`,
-  );
+  if (result.judge) {
+    process.stdout.write(`  ${result.judge.total}/100 after ${result.attempts} attempt(s)\n`);
+  } else {
+    process.stdout.write(`  failed after ${result.attempts} attempt(s)\n`);
+  }
 }
 
 const summary = {
