@@ -18,6 +18,7 @@ import { useQueryClient } from "@tanstack/react-query";
 interface WidgetDefinitionProviderProps {
   itemId?: string;
   definitionId?: string;
+  queryCacheKey?: string;
   previewSessionId?: string;
   previewLiveActions?: boolean;
   queriesDisabled?: boolean;
@@ -168,6 +169,7 @@ export function WidgetDefinitionProvider(props: WidgetDefinitionProviderProps) {
     <CustomWidgetRuntimeProvider
       itemId={props.itemId}
       definitionId={props.definitionId}
+      queryCacheKey={props.queryCacheKey}
       previewSessionId={props.previewSessionId}
       previewLiveActions={props.previewLiveActions}
       queriesDisabled={props.queriesDisabled}

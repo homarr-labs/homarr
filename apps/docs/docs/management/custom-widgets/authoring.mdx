@@ -41,6 +41,10 @@ needs attention.
 4. Write responsive JSX using `data`, `status`, `options`, and temporary `inputs`.
 5. Test and preview, inspect Data and the redacted request journal, then save.
 
+While focus is inside a code editor, use `Ctrl+Z`/`Cmd+Z` to undo and `Ctrl+Shift+Z`/`Cmd+Shift+Z` to redo. The toolbar exposes the same actions. This history is local to that editor; builder-wide undo is not yet available.
+
+Changing the definition, instance options, or credentials invalidates the previous preview and its live-action session. Run **Test and preview** again before treating the data or result as current. Automatic load queries are queued with up to four running at once so larger previews stay within the request limit.
+
 <CanonicalCustomWidgetExample
   id="named-widget-requests"
   label="Named queries and actions"

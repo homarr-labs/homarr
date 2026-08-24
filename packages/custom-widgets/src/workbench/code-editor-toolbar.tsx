@@ -63,6 +63,7 @@ export function CodeEditorToolbar({
               leftSection={<IconArrowBackUp size={14} />}
               onClick={onUndo}
               disabled={!editorCreated || historyDepth.undo === 0}
+              aria-keyshortcuts="Control+Z Meta+Z"
             >
               {props.messages.undo}
             </Button>
@@ -73,6 +74,7 @@ export function CodeEditorToolbar({
               leftSection={<IconArrowForwardUp size={14} />}
               onClick={onRedo}
               disabled={!editorCreated || historyDepth.redo === 0}
+              aria-keyshortcuts="Control+Shift+Z Meta+Shift+Z"
             >
               {props.messages.redo}
             </Button>

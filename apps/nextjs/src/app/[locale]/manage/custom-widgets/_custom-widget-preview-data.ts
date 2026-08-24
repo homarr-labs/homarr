@@ -6,6 +6,8 @@ interface PreviewSnapshot {
   session: { id: string; liveActions: boolean } | null;
 }
 
+type PreviewCandidate = Pick<HomarrCustomWidgetV2, "requests" | "template">;
+
 export function createPreviewDisplayData({
   candidate,
   fixture,
@@ -13,7 +15,7 @@ export function createPreviewDisplayData({
   options,
   fixtureError,
 }: {
-  candidate: HomarrCustomWidgetV2 | null;
+  candidate: PreviewCandidate | null;
   fixture: "live" | "loading" | "empty" | "error";
   preview: PreviewSnapshot;
   options: Record<string, unknown>;

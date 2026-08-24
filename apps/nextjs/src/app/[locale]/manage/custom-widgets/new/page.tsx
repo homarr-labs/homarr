@@ -23,7 +23,7 @@ export default async function NewCustomWidgetPage() {
         <Stack>
           <div>
             <Title>{t("page.create.title")}</Title>
-            <Text c="dimmed" size="sm" mt={4}>
+            <Text c="light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4))" size="sm" mt={4}>
               {t("page.create.subtitle")}
             </Text>
           </div>

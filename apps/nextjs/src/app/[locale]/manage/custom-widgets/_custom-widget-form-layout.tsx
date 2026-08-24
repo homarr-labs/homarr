@@ -1,13 +1,39 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useRef } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import type { Icon } from "@tabler/icons-react";
 import { Button, Card, Group, Stack, Text, ThemeIcon } from "@mantine/core";
-import { IconAlertTriangle, IconCheck, IconPlayerPlay } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconAlertTriangle,
+  IconApi,
+  IconBraces,
+  IconCheck,
+  IconCode,
+  IconDatabase,
+  IconEye,
+  IconPlayerPlay,
+  IconSettings,
+} from "@tabler/icons-react";
 
+import { getCustomWidgetDefaultOptions } from "@homarr/custom-widgets/core";
 import { useI18n } from "@homarr/translation/client";
 
+import { useCustomWidgetFormDocumentDirty } from "./_custom-widget-form-state";
+import { areCustomWidgetValuesEqual } from "./_custom-widget-value-equality";
+import { useCustomWidgetFormAnalysisField } from "./_use-custom-widget-form-analysis";
+import { useUnsavedChangesGuard } from "./_use-unsaved-changes-guard";
 import classes from "./_custom-widget-form.module.css";
+
+const sectionLinks = [
+  ["general", "section.general", IconSettings],
+  ["sources", "section.sources", IconApi],
+  ["requests", "section.requests", IconDatabase],
+  ["options", "section.options", IconBraces],
+  ["jsx", "section.jsx", IconCode],
+  ["preview", "section.preview", IconEye],
+] as const;
 
 export function EditorSection({
   id,
@@ -83,4 +109,84 @@ export function SaveActions({
       </Group>
     </Group>
   );
+}
+
+export function CustomWidgetSectionNavigation({
+  onSelect,
+}: {
+  onSelect(section: (typeof sectionLinks)[number][0]): void;
+}) {
+  const t = useI18n("customWidget.workbench");
+  const invalidSections = useCustomWidgetFormAnalysisField("invalidSections");
+  return (
+    <nav className={classes.sectionNav} aria-label={t("sectionNavigation")}>
+      {sectionLinks.map(([id, key, SectionIcon]) => {
+        const invalid = invalidSections.has(id);
+        return (
+          <Button
+            key={id}
+            component="a"
+            href={`#${id}`}
+            onClick={() => onSelect(id)}
+            size="compact-sm"
+            variant="subtle"
+            color={invalid ? "red" : undefined}
+            leftSection={<SectionIcon size={14} />}
+            rightSection={invalid ? <IconAlertCircle size={13} aria-label={t("status.invalid")} /> : undefined}
+          >
+            {t(key)}
+          </Button>
+        );
+      })}
+    </nav>
+  );
+}
+
+export function CustomWidgetSaveActions({
+  mode,
+  savePending,
+  previewPending,
+  onPreview,
+}: {
+  mode: "create" | "edit";
+  savePending: boolean;
+  previewPending: boolean;
+  onPreview(): void;
+}) {
+  const dirty = useCustomWidgetFormDocumentDirty();
+  const candidateValid = useCustomWidgetFormAnalysisField("candidateValid");
+  const hasDiagnostics = useCustomWidgetFormAnalysisField("hasDiagnostics");
+  return (
+    <SaveActions
+      dirty={dirty}
+      savePending={savePending}
+      previewPending={previewPending}
+      invalid={hasDiagnostics || !candidateValid}
+      mode={mode}
+      onPreview={onPreview}
+    />
+  );
+}
+
+export function CustomWidgetUnsavedChangesGuard() {
+  const dirty = useCustomWidgetFormDocumentDirty();
+  useUnsavedChangesGuard(dirty);
+  return null;
+}
+
+export function CustomWidgetOptionsSnapshotSync({
+  setOptionsSnapshot,
+}: {
+  setOptionsSnapshot: Dispatch<SetStateAction<Record<string, unknown>>>;
+}) {
+  const parsedOptions = useCustomWidgetFormAnalysisField("parsedOptions");
+  const lastDefaults = useRef<Record<string, unknown> | null>(null);
+  useEffect(() => {
+    if (!parsedOptions.success) return;
+    const defaults = getCustomWidgetDefaultOptions(parsedOptions.data);
+    if (lastDefaults.current && areCustomWidgetValuesEqual(lastDefaults.current, defaults)) return;
+    lastDefaults.current = defaults;
+    setOptionsSnapshot(defaults);
+  }, [parsedOptions, setOptionsSnapshot]);
+  return null;
 }

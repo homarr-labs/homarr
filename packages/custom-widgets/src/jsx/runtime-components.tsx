@@ -39,7 +39,7 @@ interface CustomJsxInputsContextValue {
   scopeId: string;
   inputs: Record<string, WidgetInputValue>;
   inputTypes: Record<string, WidgetInputType>;
-  registerInput(name: string, type: WidgetInputType, initialValue: WidgetInputValue): void;
+  registerInput(name: string, type: WidgetInputType, initialValue: WidgetInputValue): () => void;
   setInputValue(name: string, type: WidgetInputType, value: WidgetInputValue): void;
 }
 
@@ -104,14 +104,21 @@ function useBoundProps(componentName: string, props: Record<string, unknown>): R
   delete sanitized.bind;
   const inputType = getCustomJsxBindingType(componentName, sanitized);
   const initialValue = getInitialInputValue(inputType, sanitized);
+  const serializedInitialValue = JSON.stringify(initialValue);
   const isBound = Boolean(binding && context && inputType && customJsxBindableComponentNames.has(componentName));
+  const registerInput = context?.registerInput;
   useEffect(() => {
-    if (isBound && binding && context && inputType) context.registerInput(binding, inputType, initialValue);
-  }, [binding, context, initialValue, inputType, isBound]);
+    if (!isBound || !binding || !registerInput || !inputType || serializedInitialValue === undefined) return;
+    return registerInput(binding, inputType, JSON.parse(serializedInitialValue) as WidgetInputValue);
+  }, [binding, inputType, isBound, registerInput, serializedInitialValue]);
   if (!isBound || !binding || !context || !inputType) return sanitized;
   delete sanitized.defaultValue;
   delete sanitized.defaultChecked;
-  const currentValue = context.inputs[binding] ?? initialValue;
+  let currentValue = initialValue;
+  if (context.inputTypes[binding] === inputType && Object.hasOwn(context.inputs, binding)) {
+    const storedValue = context.inputs[binding];
+    if (storedValue !== undefined) currentValue = storedValue;
+  }
 
   const update = (value: unknown, checked = false) => {
     const extracted = extractEventValue(value, checked);
@@ -137,11 +144,15 @@ function getInitialInputValue(type: WidgetInputType | null, props: Record<string
   if (!type) return "";
   const candidate = type === "boolean" ? props.defaultChecked : props.defaultValue;
   if (type === "boolean" && typeof candidate === "boolean") return candidate;
-  if (type === "number" && typeof candidate === "number") return candidate;
+  if (type === "number" && typeof candidate === "number" && Number.isFinite(candidate)) return candidate;
   if (type === "string" && typeof candidate === "string") return candidate;
   if (type === "string[]" && Array.isArray(candidate) && candidate.every((item) => typeof item === "string"))
     return candidate;
-  if (type === "number[]" && Array.isArray(candidate) && candidate.every((item) => typeof item === "number"))
+  if (
+    type === "number[]" &&
+    Array.isArray(candidate) &&
+    candidate.every((item) => typeof item === "number" && Number.isFinite(item))
+  )
     return candidate;
   return emptyInputValue(type);
 }

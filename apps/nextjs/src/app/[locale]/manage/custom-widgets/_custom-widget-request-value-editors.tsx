@@ -23,7 +23,7 @@ export function QueryValuesEditor({
 }) {
   const t = useI18n("customWidget.workbench.builder");
   const entries = Object.entries(value);
-  const [nameErrors, setNameErrors] = useState<Record<number, string>>({});
+  const [nameErrors, setNameErrors] = useState<Record<string, string>>({});
   return (
     <Stack gap="xs">
       <Text size="sm" fw={500}>
@@ -65,23 +65,23 @@ export function QueryValuesEditor({
           ...(allowParams ? [{ value: "param", label: t("invocationParameter") }] : []),
         ];
         return (
-          <Group key={index} align="end" wrap="wrap">
+          <Group key={name} align="end" wrap="wrap">
             <CustomWidgetIdentifierInput
               style={{ flex: "1 1 10rem" }}
               label={t("queryKey")}
               value={name}
-              error={nameErrors[index]}
+              error={nameErrors[name]}
               onCommit={(nextName) => {
                 if (
                   !/^[A-Za-z][A-Za-z0-9_-]*$/u.test(nextName) ||
                   entries.some(([entryName], entryIndex) => entryIndex !== index && entryName === nextName)
                 ) {
-                  setNameErrors((currentErrors) => ({ ...currentErrors, [index]: t("queryKeyInvalid") }));
+                  setNameErrors((currentErrors) => ({ ...currentErrors, [name]: t("queryKeyInvalid") }));
                   return;
                 }
                 setNameErrors((currentErrors) => {
                   const nextErrors = { ...currentErrors };
-                  delete nextErrors[index];
+                  delete nextErrors[name];
                   return nextErrors;
                 });
                 commit(nextName, kind, current);

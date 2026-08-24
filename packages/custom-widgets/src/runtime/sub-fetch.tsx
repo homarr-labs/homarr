@@ -40,7 +40,8 @@ export const MAX_REFRESH_INTERVAL_SECONDS = 2_147_483;
 export const MAX_REFRESH_INTERVAL_MS = MAX_REFRESH_INTERVAL_SECONDS * 1_000;
 
 export function SubFetch(props: SubFetchProps) {
-  const { itemId, previewSessionId, queriesDisabled, port, messages, setQueryState } = useCustomWidgetRuntime();
+  const { itemId, previewSessionId, queryCacheKey, queriesDisabled, port, messages, setQueryState } =
+    useCustomWidgetRuntime();
   const [manualRun, setManualRun] = useState(false);
   const params = useMemo(() => normalizeParams(props.params), [props.params]);
   const paramsKey = useMemo(() => JSON.stringify(params), [params]);
@@ -56,7 +57,7 @@ export function SubFetch(props: SubFetchProps) {
   const scope = itemId ? "item" : "preview";
   const scopeId = itemId ?? previewSessionId;
   const query = useQuery({
-    queryKey: ["custom-widget", scope, scopeId, props.requestId, paramsKey],
+    queryKey: ["custom-widget", scope, scopeId, props.requestId, paramsKey, queryCacheKey],
     queryFn: ({ signal }) =>
       port.query({ itemId, previewSessionId, requestId: props.requestId ?? "", params: params ?? {} }, signal),
     enabled,

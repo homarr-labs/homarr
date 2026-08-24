@@ -69,7 +69,7 @@ export function CustomWidgetOptionsEditor({
             )
           : [];
         return (
-          <Fieldset key={index} legend={typeof option.label === "string" ? option.label : id}>
+          <Fieldset key={id} legend={typeof option.label === "string" ? option.label : id}>
             <Stack gap="sm">
               <Group grow align="start">
                 <CustomWidgetIdentifierInput
@@ -99,7 +99,7 @@ export function CustomWidgetOptionsEditor({
                 }
               />
               <DefaultValueEditor
-                id={`${index}-default`}
+                id={`${id}-default`}
                 control={control}
                 value={option.default}
                 choices={choices}
