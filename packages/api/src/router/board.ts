@@ -75,7 +75,6 @@ import {
   throwIfCustomWidgetBoardDuplicationForbidden,
   throwIfCustomWidgetPlacementChangeForbidden,
 } from "./board/custom-widget-placement-access";
-import { validateTimetableOptionsChangeAsync } from "./widgets/timetable";
 
 interface BoardItemPlacementRectangle {
   xOffset: number;
@@ -1497,6 +1496,7 @@ export const boardRouter = createTRPCRouter({
     for (const item of input.items) {
       if (item.kind !== "timetable") continue;
       const previousItem = dbBoard.items.find((dbItem) => dbItem.id === item.id);
+      const { validateTimetableOptionsChangeAsync } = await import("./timetable-options-validation");
       await validateTimetableOptionsChangeAsync(
         item.options,
         previousItem?.kind === "timetable" ? previousItem.options : undefined,
@@ -2073,6 +2073,7 @@ export const boardRouter = createTRPCRouter({
       });
 
       if (input.kind === "timetable") {
+        const { validateTimetableOptionsChangeAsync } = await import("./timetable-options-validation");
         await validateTimetableOptionsChangeAsync(input.options);
       }
 
