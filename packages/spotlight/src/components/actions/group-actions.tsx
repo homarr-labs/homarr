@@ -15,6 +15,18 @@ interface GroupActionsProps<TOption extends Record<string, unknown>> {
   setChildrenOptions: (options: inferSearchInteractionOptions<"children">) => void;
 }
 
+const getUniqueOptions = <TOption extends Record<string, unknown>>(options: TOption[], keyPath: keyof TOption) => {
+  const optionKeys = new Set<unknown>();
+
+  return options.filter((option) => {
+    const optionKey = option[keyPath];
+    if (optionKeys.has(optionKey)) return false;
+
+    optionKeys.add(optionKey);
+    return true;
+  });
+};
+
 export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
   group,
   query,
@@ -33,7 +45,7 @@ export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
       return null;
     }
 
-    const filteredOptions = options
+    const filteredOptions = getUniqueOptions(options, group.keyPath)
       .filter((option) => ("filter" in group ? group.filter(query, option) : false))
       .sort((optionA, optionB) => {
         if ("sort" in group) {
@@ -80,7 +92,7 @@ export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
     return null;
   }
 
-  return options.data.map((option) => (
+  return getUniqueOptions(options.data, group.keyPath).map((option) => (
     <SpotlightGroupActionItem
       key={option[group.keyPath] as never}
       option={option}
