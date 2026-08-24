@@ -47,6 +47,7 @@ const anchorNote: AnchorNote = {
 };
 
 export const mockWidgetData = {
+  timestamp: demoTimestamp,
   anchorNote,
   anchorNotes: [
     {

@@ -9,7 +9,7 @@ export const archiveTeamWarriorRouter = createTRPCRouter({
     .concat(createOneIntegrationMiddleware("query", "archiveTeamWarrior", "mock"))
     .query(async ({ ctx }) => {
       if (ctx.integration.kind === "mock") {
-        return { status: mockWidgetData.archiveTeamWarrior, updatedAt: new Date() };
+        return { status: mockWidgetData.archiveTeamWarrior, updatedAt: new Date(mockWidgetData.timestamp) };
       }
 
       const handler = archiveTeamWarriorRequestHandler.handler({ ...ctx.integration, kind: "archiveTeamWarrior" }, {});

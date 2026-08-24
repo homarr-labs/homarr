@@ -40,7 +40,12 @@ const queryFirewall = <TSummary>(
       async (integration): Promise<FirewallResult<TSummary>> => {
         if (integration.kind === "mock") {
           return {
-            integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: new Date() },
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+              updatedAt: new Date(mockWidgetData.timestamp),
+            },
             summary: getMockData(),
             error: undefined,
           };

@@ -18,7 +18,7 @@ export const uptimeKumaRouter = createTRPCRouter({
               integrationName: integration.name,
               integrationUrl: integration.url,
               dashboard: mockWidgetData.uptimeKuma,
-              updatedAt: new Date(),
+              updatedAt: new Date(mockWidgetData.timestamp),
               error: undefined,
             };
           }

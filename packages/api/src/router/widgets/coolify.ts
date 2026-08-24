@@ -28,7 +28,7 @@ export const coolifyRouter = createTRPCRouter({
               integrationName: integration.name,
               integrationUrl: integration.url,
               instanceInfo: mockWidgetData.coolify,
-              updatedAt: new Date(),
+              updatedAt: new Date(mockWidgetData.timestamp),
             };
           }
 

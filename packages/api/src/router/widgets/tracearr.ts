@@ -18,7 +18,7 @@ export const tracearrRouter = createTRPCRouter({
               integrationName: integration.name,
               integrationUrl: integration.url,
               dashboard: mockWidgetData.tracearr,
-              updatedAt: new Date(),
+              updatedAt: new Date(mockWidgetData.timestamp),
               error: undefined,
             };
           }

@@ -49,7 +49,7 @@ export const umamiRouter = createTRPCRouter({
             integrationName: integration.name,
             integrationUrl: integration.url,
             visitorStats: { ...mockWidgetData.umamiVisitorStats, timeFrame: input.timeFrame },
-            updatedAt: new Date(),
+            updatedAt: new Date(mockWidgetData.timestamp),
           };
         }
         const innerHandler = umamiRequestHandler.handler(

@@ -25,7 +25,7 @@ export const traefikRouter = createTRPCRouter({
               integrationName: integration.name,
               integrationUrl: integration.url,
               dashboard: mockWidgetData.traefik,
-              updatedAt: new Date(),
+              updatedAt: new Date(mockWidgetData.timestamp),
               error: undefined,
             };
           }

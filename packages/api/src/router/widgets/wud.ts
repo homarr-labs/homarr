@@ -10,12 +10,14 @@ export const wudRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Returns monitored-container counts and available updates from a What's Up Docker integration. REQUIRED: integrationId from integration_all. The caller needs query permission for that integration.",
+          "Returns monitored-container counts and available updates from a What's Up Docker integration, or mock statistics from a mock integration. REQUIRED: integrationId from integration_all. The caller needs query permission for that integration.",
       },
     })
     .concat(createOneIntegrationMiddleware("query", "wud", "mock"))
     .query(async ({ ctx }) => {
-      if (ctx.integration.kind === "mock") return { stats: mockWidgetData.wud, updatedAt: new Date() };
+      if (ctx.integration.kind === "mock") {
+        return { stats: mockWidgetData.wud, updatedAt: new Date(mockWidgetData.timestamp) };
+      }
       const handler = wudStatsRequestHandler.handler({ ...ctx.integration, kind: "wud" }, {});
       const { data, timestamp } = await handler.getDataAsync();
 

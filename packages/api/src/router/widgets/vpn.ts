@@ -27,7 +27,7 @@ export const vpnRouter = createTRPCRouter({
                 id: integration.id,
                 name: integration.name,
                 kind: integration.kind,
-                updatedAt: new Date(),
+                updatedAt: new Date(mockWidgetData.timestamp),
               },
               summary: mockWidgetData.vpn,
               error: undefined,

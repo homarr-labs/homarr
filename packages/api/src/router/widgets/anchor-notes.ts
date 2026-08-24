@@ -20,6 +20,12 @@ const noteIdInput = z.object({
 
 const logger = createLogger({ module: "anchorNotesRouter" });
 
+const assertMockNoteExists = (noteId: string) => {
+  if (noteId === mockWidgetData.anchorNote.id) return;
+
+  throw new TRPCError({ code: "NOT_FOUND", message: "Note not found" });
+};
+
 const isJsonDeltaString = (value: string) => {
   try {
     const parsed: unknown = JSON.parse(value);
@@ -70,7 +76,10 @@ export const anchorNotesRouter = createTRPCRouter({
     .concat(createOneIntegrationMiddleware("query", "anchor", "mock"))
     .input(noteIdInput)
     .query(async ({ ctx, input }) => {
-      if (ctx.integration.kind === "mock") return mockWidgetData.anchorNote;
+      if (ctx.integration.kind === "mock") {
+        assertMockNoteExists(input.noteId);
+        return mockWidgetData.anchorNote;
+      }
 
       const handler = anchorNoteRequestHandler.handler(
         { ...ctx.integration, kind: "anchor" },
@@ -90,6 +99,7 @@ export const anchorNotesRouter = createTRPCRouter({
         input.content !== undefined && normalizedContent !== undefined && input.content !== normalizedContent;
 
       if (ctx.integration.kind === "mock") {
+        assertMockNoteExists(input.noteId);
         return {
           ...mockWidgetData.anchorNote,
           ...(input.title !== undefined ? { title: input.title } : {}),

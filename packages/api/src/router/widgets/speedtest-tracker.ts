@@ -18,7 +18,7 @@ export const speedtestTrackerRouter = createTRPCRouter({
               integrationName: integration.name,
               integrationUrl: integration.url,
               dashboard: mockWidgetData.speedtestTracker,
-              updatedAt: new Date(),
+              updatedAt: new Date(mockWidgetData.timestamp),
               error: undefined,
             };
           }
