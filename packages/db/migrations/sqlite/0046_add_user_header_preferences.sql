@@ -1,1 +1,0 @@
-ALTER TABLE `user` ADD `header_preferences` text DEFAULT '{"version":3,"visible":true,"searchDisplay":"input","zones":{"left":[{"type":"builtin","id":"logo"}],"center":[{"type":"builtin","id":"search"}],"right":[{"type":"builtin","id":"boardEdit"},{"type":"builtin","id":"boardSettings"},{"type":"builtin","id":"user"}]}}' NOT NULL;

@@ -327,15 +327,8 @@
     {
       "idx": 46,
       "version": "6",
-      "when": 1787496042447,
-      "tag": "0046_add_user_header_preferences",
-      "breakpoints": true
-    },
-    {
-      "idx": 47,
-      "version": "6",
-      "when": 1787496053654,
-      "tag": "0047_add_server_branding_settings",
+      "when": 1787556956665,
+      "tag": "0046_add_header_preferences_and_branding",
       "breakpoints": true
     }
   ]

@@ -1,5 +1,5 @@
 {
-  "id": "dec7f43d-ca63-4b3d-af66-0d94e4f06a80",
+  "id": "a1398ea3-5939-47f7-840c-2b9b693a2b0c",
   "prevId": "ab2696e9-42d1-4aa0-bc60-b6d9fc50a7dc",
   "version": "7",
   "dialect": "postgresql",
@@ -2373,42 +2373,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.trusted_certificate_hostname": {
-      "name": "trusted_certificate_hostname",
-      "schema": "",
-      "columns": {
-        "hostname": {
-          "name": "hostname",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "thumbprint": {
-          "name": "thumbprint",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "certificate": {
-          "name": "certificate",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "trusted_certificate_hostname_hostname_thumbprint_pk": {
-          "name": "trusted_certificate_hostname_hostname_thumbprint_pk",
-          "columns": ["hostname", "thumbprint"]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.user": {
       "name": "user",
       "schema": "",
@@ -2655,6 +2619,42 @@
         "widget_secret_item_id_kind_pk": {
           "name": "widget_secret_item_id_kind_pk",
           "columns": ["item_id", "kind"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.trusted_certificate_hostname": {
+      "name": "trusted_certificate_hostname",
+      "schema": "",
+      "columns": {
+        "hostname": {
+          "name": "hostname",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "thumbprint": {
+          "name": "thumbprint",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "certificate": {
+          "name": "certificate",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "trusted_certificate_hostname_hostname_thumbprint_pk": {
+          "name": "trusted_certificate_hostname_hostname_thumbprint_pk",
+          "columns": ["hostname", "thumbprint"]
         }
       },
       "uniqueConstraints": {},
