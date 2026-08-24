@@ -415,6 +415,7 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
       const { ddgBangs } = useSettings();
       const { bangToken, searchText, locked } = parseBangQuery(query);
       const remoteQuery = useRemoteQuery(bangToken, "search-engines", { minimumLength });
+      const ddgQueryEnabled = remoteQuery.enabled && ddgBangs && remoteQuery.query.length >= 1;
 
       const enginesQuery = clientApi.searchEngine.search.useQuery(
         { query: remoteQuery.query, limit: 10 },
@@ -424,16 +425,16 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
       const ddgQuery = clientApi.bangs.search.useQuery(
         { query: remoteQuery.query, limit: 10 },
         {
-          enabled: remoteQuery.enabled && ddgBangs && remoteQuery.query.length >= 1,
+          enabled: ddgQueryEnabled,
         },
       );
 
-      const isLoading = enginesQuery.isLoading || ddgQuery.isLoading;
-      const isError =
-        (enginesQuery.isError && remoteQuery.enabled) ||
-        (ddgQuery.isError && remoteQuery.enabled && ddgBangs && remoteQuery.query.length >= 1);
+      const isLoading = (enginesQuery.isLoading && remoteQuery.enabled) || (ddgQuery.isLoading && ddgQueryEnabled);
+      const isError = (enginesQuery.isError && remoteQuery.enabled) || (ddgQuery.isError && ddgQueryEnabled);
+      const engineData = remoteQuery.enabled ? (enginesQuery.data ?? []) : [];
+      const ddgData = ddgQueryEnabled ? (ddgQuery.data ?? []) : [];
 
-      const engineOptions = (enginesQuery.data ?? []).map(
+      const engineOptions = engineData.map(
         (engine): ExternalOption => ({
           key: `engine-${engine.short}`,
           kind: "engine",
@@ -441,7 +442,7 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
         }),
       );
 
-      const ddgOptions = (ddgQuery.data ?? [])
+      const ddgOptions = ddgData
         .filter((bang) => !engineOptions.some((option) => option.kind === "engine" && option.engine.short === bang.t))
         .map(
           (bang): ExternalOption => ({
@@ -453,8 +454,8 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
 
       const searchActions: ExternalOption[] = [];
       if (locked && bangToken.length > 0) {
-        const matchedEngine = (enginesQuery.data ?? []).find((engine) => engine.short === bangToken);
-        const matchedDdg = (ddgQuery.data ?? []).find((bang) => bang.t === bangToken);
+        const matchedEngine = engineData.find((engine) => engine.short === bangToken);
+        const matchedDdg = ddgData.find((bang) => bang.t === bangToken);
 
         const genericEngine = matchedEngine?.type === "generic" ? matchedEngine : undefined;
         const label = genericEngine?.name ?? matchedDdg?.s;
@@ -486,7 +487,7 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
           }
         }
       }
-      if (showEmptyHint && query.length === 0) {
+      if (showEmptyHint && remoteQuery.query.length === 0) {
         searchActions.push({
           key: "hint",
           kind: "hint",

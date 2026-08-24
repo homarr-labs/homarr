@@ -67,7 +67,10 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
       clientApi.searchEngine.getDefaultSearchEngine.useQuery(undefined, {
         enabled: status !== "loading" && remoteQuery.enabled,
       });
-    const fromIntegrationEnabled = defaultSearchEngine?.type === "fromIntegration" && remoteQuery.enabled;
+    const fromIntegrationEnabled =
+      defaultSearchEngine?.type === "fromIntegration" &&
+      defaultSearchEngine.integrationId !== null &&
+      remoteQuery.enabled;
     const { data: results, ...resultQuery } = clientApi.integration.searchInIntegration.useQuery(
       {
         query: remoteQuery.query,
