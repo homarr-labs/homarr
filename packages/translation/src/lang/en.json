@@ -5690,7 +5690,7 @@
             "header": {
               "title": "Header studio",
               "badge": "Personal",
-              "description": "Drag controls anywhere in the row. Center and Right are fixed boundaries; everything before Center belongs to Left.",
+              "description": "Drag controls anywhere in the row. Left, Center, and Right stay fixed while controls shift around them.",
               "device": {
                 "desktop": "Desktop",
                 "mobile": "Mobile"

@@ -1,18 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { RestrictToHorizontalAxis } from "@dnd-kit/abstract/modifiers";
+import { type ReactNode, useMemo, useState } from "react";
 import { PointerActivationConstraints } from "@dnd-kit/dom";
+import { SortableKeyboardPlugin } from "@dnd-kit/dom/sortable";
 import type { DragEndEvent } from "@dnd-kit/react";
-import { DragDropProvider, DragOverlay, KeyboardSensor, PointerSensor } from "@dnd-kit/react";
-import { isSortable, useSortable } from "@dnd-kit/react/sortable";
+import { DragDropProvider, DragOverlay, KeyboardSensor, PointerSensor, useDroppable } from "@dnd-kit/react";
+import { useSortable } from "@dnd-kit/react/sortable";
 import {
   ActionIcon,
   Avatar,
   Box,
   Button,
   Card,
-  Divider,
   Group,
   Menu,
   Paper,
@@ -71,11 +70,19 @@ interface HeaderComposerProps {
   mobileHomeBoardId: string | null;
 }
 
-type PreviewSize = "desktop" | "mobile";
+interface HeaderItemDragData {
+  kind: "item";
+  itemKey: string;
+  zone: HeaderZoneId;
+  index: number;
+}
 
-type HeaderStripEntry =
-  | { id: string; kind: "divider"; zone: HeaderZoneId }
-  | { id: string; item: HeaderItem; kind: "item" };
+interface HeaderZoneDropData {
+  kind: "zone";
+  zone: HeaderZoneId;
+}
+
+type HeaderDropData = HeaderItemDragData | HeaderZoneDropData;
 
 const headerSortableSensors = [
   PointerSensor.configure({
@@ -83,17 +90,16 @@ const headerSortableSensors = [
   }),
   KeyboardSensor,
 ];
-const headerSortableModifiers = [RestrictToHorizontalAxis];
 const headerSortableGroup = "header-composer";
+const headerSortablePlugins = [SortableKeyboardPlugin];
+const headerGuideZones = ["left", "center", "right"] as const;
 
-export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHomeBoardId }: HeaderComposerProps) => {
-  const [previewSize, setPreviewSize] = useState<PreviewSize>("desktop");
+export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderComposerProps) => {
   const [draggedItemKey, setDraggedItemKey] = useState<string | null>(null);
   const [selectedItemKey, setSelectedItemKey] = useState<string | null>(null);
   const t = useI18n("management.page.user.setting.general.header");
   const boardsById = useMemo(() => new Map(boards.map((board) => [board.id, board])), [boards]);
   const activeItems = getHeaderItems(value.zones);
-  const stripEntries = createHeaderStripEntries(value.zones);
   const activeItemKeySet = new Set(activeItems.map(getHeaderItemKey));
   const inactiveBuiltinIds = headerBuiltinItemIds.filter((itemId) => {
     const item = createBuiltinHeaderItem(itemId);
@@ -104,9 +110,14 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
   );
   const draggedItem = findHeaderItem(activeItems, draggedItemKey);
   const selectedItem = findHeaderItem(activeItems, selectedItemKey);
-  let previewBoardId = homeBoardId;
-  if (previewSize === "mobile") previewBoardId = mobileHomeBoardId ?? homeBoardId;
-  const previewBoard = boardsById.get(previewBoardId ?? "") ?? boards.at(0);
+  const previewBoard = boardsById.get(homeBoardId ?? "") ?? boards.at(0);
+
+  const toggleSelectedItem = (itemKey: string) => {
+    setSelectedItemKey((currentItemKey) => {
+      if (currentItemKey === itemKey) return null;
+      return itemKey;
+    });
+  };
 
   const itemLabel = (item: HeaderItem) => {
     if (item.type === "board") return boardsById.get(item.boardId)?.name ?? t("items.boardUnavailable");
@@ -138,11 +149,22 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
   const handleDragEnd = ({ canceled, operation }: DragEndEvent) => {
     setDraggedItemKey(null);
     const source = operation.source;
-    if (canceled || !isSortable(source)) return;
-    if (source.initialIndex === source.index) return;
+    const target = operation.target;
+    if (canceled || !source || !target) return;
 
-    const nextEntries = moveHeaderStripEntry(stripEntries, source.initialIndex, source.index);
-    updateZones(createHeaderZonesFromStripEntries(nextEntries));
+    const sourceData = source.data as HeaderItemDragData;
+    const targetData = target.data as HeaderDropData;
+    if (sourceData.kind !== "item") return;
+
+    let targetIndex = value.zones[targetData.zone].length;
+    if (targetData.kind === "item") {
+      if (targetData.itemKey === sourceData.itemKey) return;
+      targetIndex = targetData.index;
+    }
+
+    const nextZones = moveHeaderItem(value.zones, sourceData.itemKey, targetData.zone, targetIndex);
+    if (nextZones === value.zones) return;
+    updateZones(nextZones);
   };
 
   return (
@@ -163,15 +185,6 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
             </Text>
           </Stack>
           <Group gap="xs">
-            <SegmentedControl
-              size="xs"
-              value={previewSize}
-              onChange={(next) => setPreviewSize(next as PreviewSize)}
-              data={[
-                { value: "desktop", label: t("device.desktop") },
-                { value: "mobile", label: t("device.mobile") },
-              ]}
-            />
             <Tooltip label={value.visible ? t("action.hide") : t("action.show")}>
               <ActionIcon
                 size="lg"
@@ -185,7 +198,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
           </Group>
         </Group>
 
-        <Box className={classes.stage} data-size={previewSize} data-visible={value.visible}>
+        <Box className={classes.stage} data-visible={value.visible}>
           <Paper className={classes.device} radius="lg" withBorder>
             {value.visible ? (
               <DragDropProvider
@@ -193,43 +206,27 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
                 onDragEnd={handleDragEnd}
               >
                 <div className={classes.previewHeader}>
-                  <div className={classes.stripScroller}>
-                    <div className={classes.sortableStrip}>
-                      <Text className={classes.zoneOriginLabel} component="span">
-                        {t("zones.left")}
-                      </Text>
-                      <MobileBurger />
-                      {stripEntries.map((entry, index) => {
-                        if (entry.kind === "divider") {
-                          return (
-                            <SortableZoneDivider
-                              key={entry.id}
-                              entry={entry}
-                              index={index}
-                              label={t(`zones.${entry.zone}` as never)}
-                            />
-                          );
-                        }
-
-                        const item = entry.item;
-                        return (
+                  <div className={classes.zoneTable} onClick={() => setSelectedItemKey(null)}>
+                    {headerGuideZones.map((zone) => (
+                      <HeaderZoneColumn key={zone} zone={zone} label={t(`zones.${zone}` as never)}>
+                        {value.zones[zone].map((item, index) => (
                           <SortableHeaderItem
-                            key={entry.id}
+                            key={getHeaderItemKey(item)}
                             item={item}
+                            zone={zone}
                             index={index}
                             label={itemLabel(item)}
-                            previewSize={previewSize}
                             searchDisplay={value.searchDisplay}
                             boardLogo={
                               item.type === "board" ? (boardsById.get(item.boardId)?.logoImageUrl ?? null) : null
                             }
                             configureLabel={t("action.configure", { item: itemLabel(item) })}
-                            selected={selectedItemKey === entry.id}
-                            onSelect={setSelectedItemKey}
+                            selected={selectedItemKey === getHeaderItemKey(item)}
+                              onSelect={toggleSelectedItem}
                           />
-                        );
-                      })}
-                    </div>
+                        ))}
+                      </HeaderZoneColumn>
+                    ))}
                   </div>
                 </div>
                 <DragOverlay dropAnimation={null}>
@@ -237,7 +234,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
                     <HeaderItemPreview
                       item={draggedItem}
                       label={itemLabel(draggedItem)}
-                      compact={previewSize === "mobile"}
+                      compact={false}
                       searchDisplay={value.searchDisplay}
                       boardLogo={
                         draggedItem.type === "board" ? boardsById.get(draggedItem.boardId)?.logoImageUrl : null
@@ -378,49 +375,33 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId, mobileHom
   );
 };
 
-interface SortableZoneDividerProps {
-  entry: Extract<HeaderStripEntry, { kind: "divider" }>;
-  index: number;
+interface HeaderZoneColumnProps {
+  zone: HeaderZoneId;
   label: string;
+  children: ReactNode;
 }
 
-const SortableZoneDivider = ({ entry, index, label }: SortableZoneDividerProps) => {
-  const { isDropTarget, ref } = useSortable({
-    id: entry.id,
-    index,
-    group: headerSortableGroup,
-    data: { kind: entry.kind, zone: entry.zone },
-    disabled: { draggable: true },
+const HeaderZoneColumn = ({ zone, label, children }: HeaderZoneColumnProps) => {
+  const { isDropTarget, ref } = useDroppable({
+    id: `header-zone:${zone}`,
+    data: { kind: "zone", zone } satisfies HeaderZoneDropData,
   });
 
   return (
-    <div
-      ref={ref}
-      className={classes.zoneDelimiter}
-      data-divider-zone={entry.zone}
-      data-drop-target={isDropTarget || undefined}
-    >
-      <Text className={classes.zoneLabel} component="span">
+    <section ref={ref} className={classes.zoneColumn} data-drop-target={isDropTarget || undefined}>
+      <Text className={classes.zoneColumnHeader} component="h4">
         {label}
       </Text>
-      <Divider className={classes.zoneLine} orientation="vertical" />
-    </div>
+      <div className={classes.zoneItems}>{children}</div>
+    </section>
   );
 };
 
-const MobileBurger = () => (
-  <div className={classes.mobileBurger} aria-hidden>
-    <span />
-    <span />
-    <span />
-  </div>
-);
-
 interface SortableHeaderItemProps {
   item: HeaderItem;
+  zone: HeaderZoneId;
   index: number;
   label: string;
-  previewSize: PreviewSize;
   searchDisplay: HeaderPreferences["searchDisplay"];
   boardLogo: string | null;
   configureLabel: string;
@@ -430,9 +411,9 @@ interface SortableHeaderItemProps {
 
 const SortableHeaderItem = ({
   item,
+  zone,
   index,
   label,
-  previewSize,
   searchDisplay,
   boardLogo,
   configureLabel,
@@ -443,10 +424,10 @@ const SortableHeaderItem = ({
   const { handleRef, isDragging, isDropTarget, ref } = useSortable({
     id: itemKey,
     index,
-    group: headerSortableGroup,
-    data: { kind: "item", item },
+    group: `${headerSortableGroup}:${zone}`,
+    data: { kind: "item", itemKey, zone, index } satisfies HeaderItemDragData,
     sensors: headerSortableSensors,
-    modifiers: headerSortableModifiers,
+    plugins: headerSortablePlugins,
   });
 
   return (
@@ -463,19 +444,19 @@ const SortableHeaderItem = ({
         type="button"
         className={classes.itemButton}
         data-kind={item.type === "builtin" ? item.id : "board"}
-        data-compact={previewSize === "mobile" || undefined}
         data-wide={
-          item.type === "builtin" && item.id === "search" && searchDisplay === "input" && previewSize === "desktop"
-            ? true
-            : undefined
+          (item.type === "builtin" && item.id === "search" && searchDisplay === "input") || undefined
         }
         aria-label={configureLabel}
-        onClick={() => onSelect(itemKey)}
+        onClick={(event) => {
+          event.stopPropagation();
+          onSelect(itemKey);
+        }}
       >
         <HeaderItemPreview
           item={item}
           label={label}
-          compact={previewSize === "mobile"}
+          compact={false}
           searchDisplay={searchDisplay}
           boardLogo={boardLogo}
         />
@@ -554,37 +535,30 @@ const PreviewItem = ({
   return <Icon size={20} stroke={1.7} />;
 };
 
-const createHeaderStripEntries = (zones: HeaderZones): HeaderStripEntry[] => [
-  ...zones.left.map((item) => ({ id: getHeaderItemKey(item), item, kind: "item" as const })),
-  { id: "header-divider:center", kind: "divider", zone: "center" },
-  ...zones.center.map((item) => ({ id: getHeaderItemKey(item), item, kind: "item" as const })),
-  { id: "header-divider:right", kind: "divider", zone: "right" },
-  ...zones.right.map((item) => ({ id: getHeaderItemKey(item), item, kind: "item" as const })),
-];
+const moveHeaderItem = (
+  zones: HeaderZones,
+  itemKey: string,
+  targetZone: HeaderZoneId,
+  requestedTargetIndex: number,
+): HeaderZones => {
+  let sourceItem: HeaderItem | undefined;
 
-const createHeaderZonesFromStripEntries = (entries: HeaderStripEntry[]): HeaderZones => {
-  const zones: HeaderZones = { left: [], center: [], right: [] };
-  let activeZone: HeaderZoneId = "left";
-
-  for (const entry of entries) {
-    if (entry.kind === "divider") {
-      activeZone = entry.zone;
-      continue;
-    }
-    zones[activeZone].push(entry.item);
+  for (const zone of headerGuideZones) {
+    sourceItem = zones[zone].find((item) => getHeaderItemKey(item) === itemKey);
+    if (sourceItem) break;
   }
 
-  return zones;
-};
+  if (!sourceItem) return zones;
 
-const moveHeaderStripEntry = (entries: HeaderStripEntry[], from: number, to: number): HeaderStripEntry[] => {
-  if (from === to || from < 0 || from >= entries.length || to < 0 || to >= entries.length) return entries;
-
-  const reorderedEntries = entries.slice();
-  const [movedEntry] = reorderedEntries.splice(from, 1);
-  if (!movedEntry || movedEntry.kind !== "item") return entries;
-  reorderedEntries.splice(to, 0, movedEntry);
-  return reorderedEntries;
+  const nextZones: HeaderZones = {
+    left: zones.left.filter((item) => getHeaderItemKey(item) !== itemKey),
+    center: zones.center.filter((item) => getHeaderItemKey(item) !== itemKey),
+    right: zones.right.filter((item) => getHeaderItemKey(item) !== itemKey),
+  };
+  const targetItems = nextZones[targetZone];
+  const targetIndex = Math.max(0, Math.min(requestedTargetIndex, targetItems.length));
+  nextZones[targetZone] = [...targetItems.slice(0, targetIndex), sourceItem, ...targetItems.slice(targetIndex)];
+  return nextZones;
 };
 
 const findHeaderItem = (items: HeaderItem[], id: string | null): HeaderItem | undefined => {

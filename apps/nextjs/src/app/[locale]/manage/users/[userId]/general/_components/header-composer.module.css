@@ -1,13 +1,7 @@
 .composer {
   width: 100%;
   overflow: hidden;
-  background:
-    radial-gradient(
-      ellipse 70% 42% at 50% 0%,
-      color-mix(in srgb, var(--mantine-primary-color-light) 32%, transparent),
-      transparent 72%
-    ),
-    var(--mantine-color-body);
+  background: var(--mantine-color-body);
 }
 
 .heading,
@@ -22,7 +16,7 @@
 .stage {
   display: grid;
   place-items: center;
-  min-height: 20rem;
+  min-height: 21rem;
   padding: var(--mantine-spacing-md);
   background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
   background-image: radial-gradient(var(--mantine-color-default-border) 0.75px, transparent 0.75px);
@@ -31,8 +25,8 @@
 
 .device {
   position: relative;
-  width: 100%;
-  min-height: 15rem;
+  width: min(100%, 31.2rem);
+  min-height: 18rem;
   overflow: hidden;
   background: var(--mantine-color-body);
   box-shadow: var(--mantine-shadow-lg);
@@ -41,105 +35,87 @@
     min-height 180ms ease;
 }
 
-.stage[data-size="mobile"] .device {
-  width: min(100%, 24rem);
-  min-height: 18rem;
-}
-
 .previewHeader {
   position: relative;
   z-index: 1;
-  height: 5rem;
+  min-height: 5rem;
   border-bottom: 1px solid var(--mantine-color-default-border);
   background: color-mix(in srgb, var(--mantine-color-body) 94%, transparent);
   direction: ltr;
 }
 
-.stripScroller {
-  width: 100%;
-  height: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-color: var(--mantine-color-default-border) transparent;
-  scrollbar-width: thin;
-}
-
-.sortableStrip {
-  position: relative;
-  display: flex;
-  align-items: stretch;
-  gap: 0.25rem;
-  width: max-content;
-  min-width: 100%;
-  height: 100%;
-  padding: 0.35rem var(--mantine-spacing-sm) 0.45rem;
-  white-space: nowrap;
-}
-
-.zoneOriginLabel {
-  position: absolute;
-  inset-block-start: 0.85rem;
-  inset-inline-start: var(--mantine-spacing-sm);
-  color: var(--mantine-color-dimmed);
-  font-size: 0.55rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  user-select: none;
-}
-
-.zoneDelimiter {
+.zoneTable {
   display: grid;
-  grid-template-rows: 1.2rem 1.75rem;
-  place-items: center;
-  gap: 0.2rem;
-  width: 3.5rem;
-  height: 100%;
-  align-content: center;
-  padding-block: 0.25rem 0.4rem;
-  flex: 0 0 auto;
-  user-select: none;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+  min-height: 5rem;
+}
+
+.zoneColumn {
+  min-width: 0;
+  border-inline-end: 1px solid var(--mantine-color-default-border);
   transition: background-color 120ms ease;
 }
 
-.zoneLabel {
+.zoneColumn:last-child {
+  border-inline-end: 0;
+}
+
+.zoneColumn[data-drop-target="true"] {
+  background: var(--mantine-primary-color-light);
+}
+
+.zoneColumn[data-drop-target="true"] .zoneItems::after {
+  content: "";
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px dashed var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-md);
+  background: color-mix(in srgb, var(--mantine-primary-color-light) 65%, transparent);
+}
+
+.zoneColumnHeader {
+  display: grid;
+  place-items: center;
+  height: 1.75rem;
+  margin: 0;
   color: var(--mantine-color-dimmed);
+  border-bottom: 1px solid var(--mantine-color-default-border);
   font-size: 0.55rem;
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  transition: color 120ms ease;
+  user-select: none;
 }
 
-.zoneLine {
-  height: 1.5rem;
-  border-color: var(--mantine-color-default-border);
-  transition:
-    height 120ms ease,
-    border-color 120ms ease;
-}
-
-.zoneDelimiter[data-drop-target="true"] {
-  background: color-mix(in srgb, var(--mantine-primary-color-light) 48%, transparent);
-}
-
-.zoneDelimiter[data-drop-target="true"] .zoneLabel {
-  color: var(--mantine-primary-color-filled);
-}
-
-.zoneDelimiter[data-drop-target="true"] .zoneLine {
-  height: 1.75rem;
-  border-color: var(--mantine-primary-color-filled);
+.zoneItems {
+  display: flex;
+  align-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  min-height: 3.25rem;
+  padding: 0.5rem;
 }
 
 .sortableItem {
+  position: relative;
   display: flex;
-  align-items: flex-end;
-  height: 100%;
-  padding-block: 1.55rem 0.125rem;
+  align-items: center;
   flex: 0 0 auto;
+}
+
+.sortableItem[data-drop-target="true"]::before {
+  content: "";
+  position: absolute;
+  inset-block: 0.2rem;
+  inset-inline-start: -0.2rem;
+  z-index: 1;
+  width: 2px;
+  border-radius: var(--mantine-radius-xl);
+  background: var(--mantine-primary-color-filled);
+  box-shadow: 0 0 0 2px var(--mantine-primary-color-light);
 }
 
 .sortableItem[data-dragging="true"] {
@@ -216,28 +192,6 @@
   text-overflow: ellipsis;
 }
 
-.mobileBurger {
-  display: none;
-  width: 2.25rem;
-  height: 2.25rem;
-  gap: 3px;
-  place-content: center;
-  align-self: flex-end;
-  margin: 0 0.125rem 0.125rem 0;
-  flex: 0 0 auto;
-}
-
-.mobileBurger span {
-  display: block;
-  width: 1rem;
-  height: 1px;
-  background: var(--mantine-color-text);
-}
-
-.stage[data-size="mobile"] .mobileBurger {
-  display: grid;
-}
-
 .hiddenPreview {
   position: absolute;
   inset: 0 0 auto;
@@ -252,7 +206,7 @@
 }
 
 .dashboardPreview {
-  height: 11.25rem;
+  height: 13rem;
   overflow: hidden;
   opacity: 0.86;
 }
@@ -260,18 +214,6 @@
 .dashboardLayout {
   height: 100%;
   aspect-ratio: auto;
-}
-
-.stage[data-size="mobile"] .sortableStrip {
-  padding-inline: var(--mantine-spacing-xs);
-}
-
-.stage[data-size="mobile"] .zoneLabel {
-  font-size: 0.5rem;
-}
-
-.stage[data-size="mobile"] .dashboardPreview {
-  height: 14.25rem;
 }
 
 .tray {
@@ -296,9 +238,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .device,
-  .zoneDelimiter,
-  .zoneLabel,
-  .zoneLine,
+  .zoneColumn,
   .itemButton {
     transition: none;
   }
