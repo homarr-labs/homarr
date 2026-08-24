@@ -4,7 +4,7 @@
       "start": {
         "title": "Bienvenue sur Homarr",
         "subtitle": "Commençons par configurer votre instance Homarr.",
-        "description": "Pour commencer, veuillez selectionner comment vous souhaitez configurer votre instance Homarr.",
+        "description": "Pour commencer, veuillez sélectionner comment vous souhaitez configurer votre instance Homarr.",
         "action": {
           "scratch": "Partir de zéro",
           "importOldmarr": "Importer depuis Homarr avant la 1.0",
@@ -129,7 +129,7 @@
           "detected": "Docker a détecté {count} services",
           "detectedBreakdown": "Intégrations {integrations} · Applications {apps}",
           "summary": "Les applications {apps} ont été détectées par Homarr, dont {integrations} ont des intégrations intégrées",
-          "appBadge": "App",
+          "appBadge": "Application",
           "appSectionLabel": "Applications à ajouter au tableau de bord ({count} sélectionné)",
           "scanning": "Analyse de Docker...",
           "scanningDescription": "Recherche de conteneurs en cours d'exécution sur votre système"
@@ -740,36 +740,36 @@
       "unit": "Unité",
       "mappings": "Correspondances",
       "tablePath": "Chemin du tableau JSON",
-      "tablePathHint": "",
+      "tablePathHint": "Chemin vers le tableau dans la réponse, par exemple $.data.items",
       "columns": "Colonnes",
       "header": "En-tête",
       "items": "Objets",
       "gridColumns": "Nombre de colonnes",
       "cardStyle": "Style des cartes",
       "bars": "Barres",
-      "valuePath": "",
-      "maxPath": "",
+      "valuePath": "Chemin de la valeur JSON",
+      "maxPath": "Chemin de la valeur max JSON",
       "showPercentage": "Afficher le pourcentage",
       "barSize": "Taille de la barre",
       "goodValues": "Bonnes valeurs (séparées par des virgules)",
       "dotSize": "Taille des points",
       "valueSize": "Taille",
       "labelPosition": "Position du libellé",
-      "kvLayout": "",
-      "striped": "",
+      "kvLayout": "Mise en page",
+      "striped": "Lignes en couleur alternées",
       "compact": "Mode Compact",
-      "maxHeight": "",
+      "maxHeight": "Hauteur maximale (px)",
       "color": "Couleur",
-      "buttonLabel": "",
-      "buttonColor": "",
+      "buttonLabel": "Libellé du bouton",
+      "buttonColor": "Couleur du bouton",
       "confirmText": "Texte de confirmation",
-      "confirmTextHint": "",
+      "confirmTextHint": "Si défini, une popup de confirmation apparaîtra avant d'exécuter la requête",
       "successMessage": "Message de réussite",
-      "successMessageHint": "",
+      "successMessageHint": "Message affiché après une exécution réussie",
       "enabled": "Activé",
       "template": {
         "label": "Template JSX",
-        "description": ""
+        "description": "Modèle JSX Mantine. Accédez aux champs de réponse de l'API via les liaisons de données (par ex. data.name). Utilisez uniquement les composants autorisés. Interdit : constructor, __proto__, eval, Function, window, document."
       }
     },
     "placeholder": {
@@ -779,23 +779,23 @@
       "exampleUnit": "°C",
       "iconUrl": "https://...",
       "url": "https://api.example.com/api/v1/status",
-      "headerName": "",
+      "headerName": "X-API-Key",
       "jsonPath": "$.data.value",
-      "tablePath": "",
-      "columnJsonPath": "",
-      "valuePath": "",
-      "maxPath": "",
-      "goodValues": "",
+      "tablePath": "$.data.items",
+      "columnJsonPath": "$.name",
+      "valuePath": "$.data.used",
+      "maxPath": "$.data.total",
+      "goodValues": "en ligne, vrai,",
       "color": "bleu"
     },
     "cardStyleOption": {
-      "filled": "",
-      "outline": "",
-      "subtle": ""
+      "filled": "Rempli",
+      "outline": "Contour",
+      "subtle": "Discret"
     },
     "layoutOption": {
-      "list": "",
-      "grid": ""
+      "list": "Liste",
+      "grid": "Grille"
     },
     "sizeOption": {
       "sm": "Petit",
@@ -815,7 +815,7 @@
     "displayTypeDescription": {
       "singleValue": "Afficher une valeur extraite avec une étiquette et une unité",
       "keyValue": "Afficher plusieurs valeurs étiquetées côte à côte",
-      "table": "",
+      "table": "Afficher les lignes de données dans un format de tableau",
       "statGrid": "",
       "progressBars": "",
       "statusIndicator": "Points d'état colorés montrant en ligne/hors ligne ou l'état de santé",
@@ -860,14 +860,14 @@
       "title": "Aperçu",
       "test": "Tester",
       "hint": "Cliquez sur Test pour prévisualiser la réponse API avec votre configuration actuelle.",
-      "rawResponse": ""
+      "rawResponse": "Réponse de JSON brute"
     },
     "notification": {
       "created": "Widget \"{name}\" créé avec succès.",
       "updated": "Widget \"{name}\" mis à jour avec succès.",
       "deleted": "Widget \"{name}\" supprimé.",
       "imported": "Widget importé avec succès.",
-      "aiPromptCopied": "",
+      "aiPromptCopied": "Prompt IA a été copiée dans le presse-papiers",
       "aiPromptDescription": "",
       "aiPromptCopy": "Copier dans le presse-papiers",
       "aiPromptNoResponse": "",
@@ -1168,15 +1168,15 @@
         },
         "invalidUrl": {
           "title": "URL invalide",
-          "message": "L'URL est invalide."
+          "message": "L'URL est invalide"
         },
         "secretNotDefined": {
           "title": "Identifiants manquants",
-          "message": "Les informations d'identification n'ont pas toutes été fournies"
+          "message": "Tous les identifiants n'ont pas été fournis"
         },
         "invalidCredentials": {
-          "title": "Informations d'identification incorrectes.",
-          "message": "Les informations d'identification ne sont pas valides"
+          "title": "Les identifiants sont invalides",
+          "message": "Les identifiants sont invalides"
         },
         "commonError": {
           "title": "Échec de la connexion",
@@ -1290,12 +1290,12 @@
           "newLabel": "Nouvelle clé API (secrète)"
         },
         "patchmonApiKey": {
-          "label": "",
+          "label": "Clé API",
           "newLabel": "Nouvelle clé API"
         },
         "patchmonApiSecret": {
           "label": "Clé secrète d'API",
-          "newLabel": ""
+          "newLabel": "Nouveau secret API"
         },
         "githubAppId": {
           "label": "Identifiant de l'application",
@@ -1321,12 +1321,12 @@
       "full": "Accès intégral à l'intégration"
     },
     "audiobookshelf": {
-      "name": "",
-      "description": ""
+      "name": "Étagère de livres audio",
+      "description": "Serveur de livres audio et de podcasts auto-hébergés"
     },
     "navidrome": {
       "name": "Navidrome",
-      "description": ""
+      "description": "Serveur de streaming de musique auto-hébergé avec compatibilité avec l'API Subsonic"
     },
     "uptimeKuma": {
       "name": "Uptime Kuma",
@@ -1349,15 +1349,15 @@
       "description": "Surveiller lequel de vos conteneurs Docker a des mises à jour d'images disponibles"
     },
     "paperlessNgx": {
-      "name": "",
+      "name": "Paperless-ngx",
       "description": ""
     },
     "patchmon": {
-      "name": "",
-      "description": ""
+      "name": "PatchMon",
+      "description": "Gestion et surveillance des correctifs pour les hôtes Linux"
     },
     "bazarr": {
-      "name": "",
+      "name": "Bazarr",
       "description": ""
     }
   },
@@ -1440,10 +1440,10 @@
     },
     "here": "ici",
     "iconPicker": {
-      "label": "URL de l'icône :",
+      "label": "URL de l'icône ",
       "description": "Recherchez dans la bibliothèque, collez une URL d'image, ou téléchargez un fichier.",
-      "header": "Tapez le nom ou les objets pour filtrer les icônes... Homarr recherchera les icônes {countIcons} pour vous.",
-      "headerLoading": "Tapez pour rechercher les icônes…",
+      "header": "Rechercher les images {countIcons} par nom",
+      "headerLoading": "Rechercher des images par nom",
       "clear": "Effacer l'image",
       "uploadImage": "Charger une image",
       "results": "Résultats de la recherche d'images",
@@ -1642,10 +1642,10 @@
         "actions": "Actions"
       },
       "status": {
-        "success": "",
-        "error": "",
-        "loading": "",
-        "idle": ""
+        "success": "OK",
+        "error": "Erreur",
+        "loading": "Chargement",
+        "idle": "Inactif"
       }
     },
     "create": {
@@ -1799,7 +1799,7 @@
       }
     },
     "archiveTeamWarrior": {
-      "name": "",
+      "name": "ArchiveTeam Warrior",
       "description": "",
       "option": {
         "showBroadcastMessage": {
@@ -1953,14 +1953,14 @@
           "description": "Utiliser ISO 8601 pour formater la date (cela remplacera les autres options)"
         },
         "showWeather": {
-          "label": "",
-          "description": ""
+          "label": "Afficher la météo",
+          "description": "Afficher une petite icône météo animée et la température dans le coin de la carte"
         },
         "weatherLocation": {
-          "label": ""
+          "label": "Lieu de la météo"
         },
         "isWeatherFormatFahrenheit": {
-          "label": ""
+          "label": "Utiliser les degrés Fahrenheit"
         }
       }
     },
@@ -1990,7 +1990,7 @@
       "noStation": "Aucune station sélectionnée",
       "option": {
         "baseUrl": {
-          "label": ""
+          "label": "URL Search.ch"
         },
         "station": {
           "label": "Station"
@@ -2022,8 +2022,8 @@
         "clear": "Effacer la mise en forme",
         "heading": "Titre {level}",
         "align": "Aligner le texte : {position}",
-        "directionLtr": "",
-        "directionRtl": "",
+        "directionLtr": "Définir la direction du texte de gauche à droite",
+        "directionRtl": "Définir la direction du texte de droite à gauche",
         "blockquote": "Citation",
         "horizontalLine": "Ligne horizontale",
         "bulletList": "Liste à puces",
@@ -2093,7 +2093,7 @@
       "edit": "Modifier",
       "save": "Sauvegarder",
       "cancel": "Annuler",
-      "readOnlyViewer": "",
+      "readOnlyViewer": "Vous avez un accès en lecture seule à cette note. La modification est désactivée.",
       "saveForbidden": "Vous n'êtes pas autorisé à modifier cette note.",
       "saveFailed": "Impossible d'enregistrer cette note. Veuillez réessayer."
     },
@@ -2308,13 +2308,13 @@
           "description": "À quoi devrait ressembler la date"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Lever du Soleil",
         "sunset": "Coucher du soleil",
-        "maxWindSpeed": "Vitesse maximale du vent : {maxWindSpeed} km/h",
-        "maxWindGusts": "Rafales de vent maximales : {maxWindGusts} km/h",
-        "humidity": ""
+        "maxWindSpeed": "Vitesse maximale du vent : {maxWindSpeed} {unit}",
+        "maxWindGusts": "Rafales de vent maximales : {maxWindGusts} {unit}",
+        "humidity": "Humidité : {humidity}%"
       },
       "kind": {
         "clear": "Clair",
@@ -2374,9 +2374,9 @@
           "label": "Afficher les infos sur le système de fichiers"
         },
         "visibleStorageVolumes": {
-          "label": "",
-          "description": "",
-          "placeholder": ""
+          "label": "Volumes de stockage visibles",
+          "description": "Uniquement disponible lorsque toutes les intégrations sélectionnées sont Synology. Laissez vide pour afficher tous les volumes de stockage détectés.",
+          "placeholder": "Sélectionnez les volumes de stockage"
         },
         "defaultTab": {
           "label": "Onglet par défaut"
@@ -2398,7 +2398,7 @@
         "loadAverage": "Charge moyenne :",
         "minute": "1 minute",
         "minutes": "{count} minutes",
-        "used": "Utilisé ",
+        "used": "Utilisé",
         "available": "Disponible",
         "lastSeen": "Dernière mise à jour de statut : {lastSeen}"
       },
@@ -2435,7 +2435,7 @@
             "cpu": "Coeurs",
             "memory": "Mémoire",
             "storage": "Stockage",
-            "uptime": "Disponibilité",
+            "uptime": "Disponible",
             "haState": "État HA",
             "storageType": {
               "local": "Stockage local",
@@ -2458,7 +2458,7 @@
       "description": "Statistiques de vos conteneurs (Ce widget ne peut être ajouté qu'avec les privilèges d'administrateur)",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Colonnes à afficher"
         },
         "enableRowSorting": {
           "label": "Activer le tri des éléments"
@@ -2476,19 +2476,19 @@
           "label": "Inverser le tri"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Ordre des colonnes"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Largeurs des colonnes"
         }
       },
       "error": {
         "internalServerError": "Impossible de récupérer les statistiques des conteneurs",
-        "layoutSaveTitle": "",
+        "layoutSaveTitle": "Disposition du tableau non sauvegardée",
         "layoutSaveMessage": ""
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "Aucun conteneur trouvé"
       }
     },
     "coolify": {
@@ -2525,9 +2525,9 @@
       }
     },
     "vpn": {
-      "name": "",
-      "description": "",
-      "serviceUnavailable": "",
+      "name": "VPN",
+      "description": "Aperçu de vos connexions VPN",
+      "serviceUnavailable": "VPN indisponible",
       "option": {}
     },
     "ups": {
@@ -2784,31 +2784,31 @@
           "description": "Désactiver cette option ne fonctionnera pas pour Plex"
         },
         "showBitrate": {
-          "label": "",
+          "label": "Afficher le débit",
           "description": ""
         },
         "showLocation": {
-          "label": "",
+          "label": "Afficher la localisation",
           "description": ""
         }
       },
       "footer": {
         "streams": "",
-        "totalBitrate": ""
+        "totalBitrate": "Total : {bitrate}"
       },
       "items": {
         "currentlyPlaying": "En cours de lecture",
         "user": "Utilisateur",
         "name": "Nom",
         "id": "Id",
-        "status": "",
-        "directPlay": "",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
-        "transcoding": "",
-        "paused": "",
-        "remaining": "",
+        "status": "Statut",
+        "directPlay": "Lecture directe",
+        "directStream": "Flux direct",
+        "transcodeVideo": "Transcodage vidéo",
+        "transcodeAudio": "Transcodage audio",
+        "transcoding": "Transcodage",
+        "paused": "En pause",
+        "remaining": "{minutes} min restantes",
         "metadata": {
           "title": "Statistiques détaillées",
           "video": {
@@ -2834,111 +2834,111 @@
       "description": "Aperçu de votre archive de documents Paperless-ngx",
       "documentsTotal": "Nombre total de documents",
       "documentsInbox": "Boîte de réception",
-      "correspondents": "",
-      "tags": "",
-      "documentTypes": "",
-      "inboxRatio": "",
-      "inbox": "",
-      "total": "",
+      "correspondents": "Correspondants",
+      "tags": "Tags",
+      "documentTypes": "Types de documents",
+      "inboxRatio": "Ratio de la boîte de réception",
+      "inbox": "boîte de réception",
+      "total": "total",
       "option": {
         "showInboxRatio": {
           "label": "Afficher le ratio de la boîte de réception",
-          "description": ""
+          "description": "Afficher le rapport inbox/total des documents dans la section Héros"
         },
         "showInboxRing": {
-          "label": "",
-          "description": ""
+          "label": "Afficher l'anneau de la boîte de réception",
+          "description": "Afficher un anneau de progression à côté du ratio de la boîte de réception"
         },
         "showDocumentsTotal": {
-          "label": "",
-          "description": ""
+          "label": "Afficher le total des documents",
+          "description": "Afficher le nombre total de documents dans votre archive"
         },
         "showDocumentsInbox": {
-          "label": "",
-          "description": ""
+          "label": "Afficher le compteur de la boîte de réception",
+          "description": "Afficher le nombre de documents non traités dans la boîte de réception"
         },
         "showCorrespondents": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les correspondants",
+          "description": "Afficher le nombre total de correspondants"
         },
         "showTags": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les tags",
+          "description": "Afficher le nombre total de tags"
         },
         "showDocumentTypes": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les types de documents",
+          "description": "Afficher le nombre total de types de documents"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Échec de la récupération des données Paperless-ngx"
       }
     },
     "patchmon": {
-      "name": "",
-      "description": "",
-      "title": "",
-      "totalHosts": "",
-      "hostsNeedingUpdates": "",
-      "securityUpdates": "",
-      "upToDateHosts": "",
-      "hostsWithSecurityUpdates": "",
-      "recentUpdates24h": "",
-      "totalOutdatedPackages": "",
-      "totalRepos": "",
-      "osDistribution": "",
-      "compliance": "",
-      "complianceRatio": "",
-      "lastUpdated": "",
+      "name": "PatchMon",
+      "description": "Aperçu de l'état des correctifs des hôtes depuis PatchMon",
+      "title": "Statistiques PatchMon",
+      "totalHosts": "Total des hôtes",
+      "hostsNeedingUpdates": "Mises à jour requises",
+      "securityUpdates": "Mises à jour de sécurité",
+      "upToDateHosts": "Hôtes à jour",
+      "hostsWithSecurityUpdates": "Hôtes avec mises à jour de sécurité",
+      "recentUpdates24h": "Mises à jour (24h)",
+      "totalOutdatedPackages": "Paquets obsolètes",
+      "totalRepos": "Dépôts",
+      "osDistribution": "Répartition des OS",
+      "compliance": "Conformité des correctifs",
+      "complianceRatio": "{upToDate} / {total}",
+      "lastUpdated": "Mis à jour {time}",
       "option": {
         "showTotalHosts": {
-          "label": "",
-          "description": ""
+          "label": "Afficher le nombre total d'hôtes",
+          "description": "Afficher le nombre total d'hôtes surveillés"
         },
         "showHostsNeedingUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les hôtes ayant besoin de mises à jour",
+          "description": "Afficher les hôtes avec au moins un paquet obsolète"
         },
         "showSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les mises à jour de sécurité",
+          "description": "Afficher le nombre total de mises à jour de sécurité disponibles"
         },
         "showUpToDateHosts": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les hôtes à jour",
+          "description": "Afficher les hôtes avec aucun paquet obsolète"
         },
         "showHostsWithSecurityUpdates": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les hôtes avec les mises à jour de sécurité",
+          "description": "Afficher les hôtes nécessitant des correctifs de sécurité"
         },
         "showRecentUpdates24h": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les mises à jour récentes (24h)",
+          "description": "Afficher le nombre de mises à jour appliquées au cours des dernières 24 heures"
         },
         "showTotalOutdatedPackages": {
-          "label": "",
+          "label": "Afficher les paquets obsolètes",
           "description": ""
         },
         "showTotalRepos": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les dépôts",
+          "description": "Afficher le nombre de dépôts actifs en cours de surveillance"
         },
         "enableThresholdColors": {
-          "label": "",
+          "label": "Activer les couleurs de seuil",
           "description": ""
         },
         "useCustomThresholds": {
-          "label": "",
+          "label": "Seuils avancés",
           "description": ""
         },
         "thresholdMode": {
           "option": {
             "absolute": "",
-            "percent": ""
+            "percent": "Pourcentage du total des hôtes"
           }
         },
         "hostsNeedingUpdatesThresholdMode": {
-          "label": "",
+          "label": "Nécessite le mode de mise à jour de seuil",
           "description": ""
         },
         "hostsNeedingUpdatesWarningAt": {
@@ -2958,7 +2958,7 @@
           "description": ""
         },
         "securityUpdatesCriticalAt": {
-          "label": "",
+          "label": "Seuil critique de mise à jour de sécurité",
           "description": ""
         },
         "hostsWithSecurityUpdatesThresholdMode": {
@@ -2998,33 +2998,33 @@
           "description": ""
         },
         "showOsDistribution": {
-          "label": "",
+          "label": "Afficher la répartition des OS",
           "description": ""
         },
         "osDistributionLimit": {
           "label": "",
           "description": "",
           "option": {
-            "3": "",
-            "5": "",
-            "10": "",
-            "all": ""
+            "3": "Top 3",
+            "5": "Top 5",
+            "10": "Top 10",
+            "all": "Tout"
           }
         },
         "showOsVersion": {
-          "label": "",
-          "description": ""
+          "label": "Afficher la version de l'OS",
+          "description": "Ajouter la version de l'OS à chaque étiquette de distribution lorsque disponible"
         },
         "showComplianceHero": {
-          "label": "",
+          "label": "Afficher la jauge de conformité",
           "description": ""
         },
         "osDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Mode d'affichage de l'OS",
+          "description": "Choisir comment afficher la répartition des systèmes d'exploitation",
           "option": {
-            "bars": "",
-            "donut": ""
+            "bars": "Barres horizontales",
+            "donut": "Graphique en anneau"
           }
         }
       },
@@ -3033,19 +3033,19 @@
       }
     },
     "bazarr": {
-      "name": "",
+      "name": "Bazarr",
       "description": "",
-      "episodes": "",
-      "movies": "",
-      "providers": "",
+      "episodes": "Épisodes manquants",
+      "movies": "Films manquants",
+      "providers": "Problèmes de fournisseurs",
       "status": "",
       "option": {
         "showMissingEpisodes": {
-          "label": "",
-          "description": ""
+          "label": "Afficher les épisodes manquants",
+          "description": "Afficher le nombre d'épisodes avec les sous-titres manquants"
         },
         "showMissingMovies": {
-          "label": "",
+          "label": "Afficher les films manquants",
           "description": ""
         },
         "showProviderIssues": {
@@ -3093,7 +3093,7 @@
       "option": {
         "albumId": {
           "label": "Identifiant de l'album",
-          "description": "C'est l'identifiant unique qui correspond à l'album Immich. Vous pouvez le trouver en ouvrant un album et copiant l'identifiant unique depuis l'URL, par exemple 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "C'est l'identifiant unique qui correspond à l'album Immich. Vous pouvez le trouver en ouvrant un album et copiant l'identifiant unique depuis l'URL, par exemple 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Intervalle en secondes",
@@ -3153,18 +3153,18 @@
           "description": "Cela limitera le nombre d'éléments affichés par intégration, pas globalement"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Ordre des colonnes"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Largeur des colonnes"
         }
       },
       "errors": {
         "noColumns": "Sélectionner les colonnes dans les éléments",
         "noCommunications": "Impossible de charger les données à partir de l'intégration",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "Aucun téléchargement trouvé",
+        "actionFailed": "Action échouée",
+        "actionFailedMessage": "Cette action n'a pas pu être complétée. Veuillez ressayer."
       },
       "items": {
         "actions": {
@@ -3428,7 +3428,7 @@
             "file": "Fichier",
             "size": "Taille",
             "transcode": "Transcodeur",
-            "healthCheck": "Bilan de santé"
+            "healthCheck": "Contrôle de santé"
           }
         }
       }
@@ -3441,26 +3441,26 @@
           "label": ""
         },
         "showQueued": {
-          "label": ""
+          "label": "Afficher les éléments en attente"
         },
         "pageSize": {
-          "label": ""
+          "label": "Éléments par page"
         }
       },
       "tab": {
         "missing": "",
-        "queued": ""
+        "queued": "En file d’attente"
       },
       "type": {
-        "movie": "",
-        "episode": ""
+        "movie": "Film",
+        "episode": "Épisode"
       },
       "empty": {
-        "missing": "",
-        "queued": "",
-        "noTabsEnabled": ""
+        "missing": "Aucun élément manquant",
+        "queued": "Aucun élément en file d'attente",
+        "noTabsEnabled": "Activer au moins un onglet dans les paramètres du widget"
       },
-      "timeLeft": ""
+      "timeLeft": "Temps restant"
     },
     "rssFeed": {
       "name": "Flux RSS",
@@ -3594,9 +3594,9 @@
       "not-found": "Non trouvé",
       "pre-release": "Pré-publication",
       "archived": "Archivé",
-      "forked": "",
+      "forked": "Forké",
       "starsCount": "Étoiles",
-      "forksCount": "",
+      "forksCount": "Forks",
       "issuesCount": "Problèmes ouverts",
       "markViewed": "Marquer comme vu(s)",
       "openProjectPage": "Ouvrir la page du projet",
@@ -3707,7 +3707,7 @@
       "noItems": "Aucune notification à afficher.",
       "option": {
         "hideLogos": {
-          "label": ""
+          "label": "Masquer les logos"
         }
       }
     },
@@ -3751,7 +3751,7 @@
       }
     },
     "uptimeKuma": {
-      "name": "",
+      "name": "Uptime Kuma",
       "description": "",
       "option": {
         "showAverageUptime": {
@@ -3812,7 +3812,7 @@
       },
       "resource": {
         "routers": "",
-        "services": "",
+        "services": "Services",
         "middlewares": ""
       },
       "status": {
@@ -4030,15 +4030,15 @@
         "system": "",
         "cpu": "",
         "memory": "",
-        "disk": "",
+        "disk": "Disque",
         "gpu": "",
         "loadAvg": "",
         "net": "",
-        "temp": "",
+        "temp": "Temp",
         "battery": "",
         "services": "",
         "uptime": "",
-        "agent": ""
+        "agent": "Agent"
       }
     },
     "beszelSystemGrid": {
@@ -4090,7 +4090,7 @@
       },
       "metric": {
         "cpu": "",
-        "memory": "",
+        "memory": "Mémoire",
         "disk": "",
         "gpu": "",
         "loadAvg": "",
@@ -4117,8 +4117,8 @@
       "error": {
         "internalServerError": ""
       },
-      "history": "",
-      "resolved": "",
+      "history": "Historique",
+      "resolved": "Résolut",
       "status": {
         "triggered": "",
         "ok": ""
@@ -4174,10 +4174,10 @@
         "cpu": {
           "title": "",
           "subtitle": "",
-          "series": ""
+          "series": "CPU"
         },
         "memory": {
-          "title": "",
+          "title": "Utilisation Mémoire",
           "subtitle": "",
           "series": "",
           "cache": ""
@@ -5480,7 +5480,7 @@
         "title": "Capacité",
         "resource": {
           "reserved": "Réservé",
-          "used": "Utilisé "
+          "used": "Utilisé"
         }
       },
       "resources": {
@@ -5861,7 +5861,7 @@
     "placeholder": "Rechercher quelque chose",
     "nothingFound": "Aucun résultat",
     "error": {
-      "fetch": "Une erreur s'est produite lors de la récupération des données."
+      "fetch": "Une erreur s'est produite lors de la récupération des données"
     },
     "mode": {
       "appIntegrationBoard": {
@@ -6544,7 +6544,7 @@
       },
       "editMode": {
         "title": "Mode édition",
-        "description": "Cliquez ici pour entrer en mode édition. Vous pouvez ensuite ajouter des widgets, des applications et des sections — faites glisser pour repositionner, redimensionnez avec la poignée d'angle. Cliquez à nouveau pour enregistrer vos modifications."
+        "description": "Cliquez ici pour entrer en mode édition. Vous pourrez ensuite ajouter des widgets, des applications et des sections — faites glisser pour repositionner, redimensionnez avec la poignée d'angle. Cliquez à nouveau pour enregistrer vos modifications."
       },
       "settings": {
         "title": "Paramètres du tableau de bord",

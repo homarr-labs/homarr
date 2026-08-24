@@ -1442,8 +1442,8 @@
     "iconPicker": {
       "label": "adres URL ikony",
       "description": "Przeszukaj bibliotekę, wklej adres URL obrazu lub wgraj plik.",
-      "header": "Wpisz nazwę lub obiekty do filtrowania ikon... Homarr przeszuka dla Ciebie ikony {countIcons}.",
-      "headerLoading": "Wpisz, aby wyszukać ikony…",
+      "header": "Szukaj zdjęć {countIcons} według nazwy",
+      "headerLoading": "Szukaj obrazów według nazwy",
       "clear": "Wyczyść obraz",
       "uploadImage": "Prześlij obraz",
       "results": "Wyniki wyszukiwania obrazów",
@@ -1892,7 +1892,7 @@
           }
         },
         "showToggleAllButtons": {
-          "label": "Pokaż  \"pokaż wszystkie przyciski\" przycisk"
+          "label": "Pokaż przyciski „przełącz wszystkie\""
         }
       },
       "error": {
@@ -2312,8 +2312,8 @@
       "dailyForecast": {
         "sunrise": "Wschód słońca",
         "sunset": "Zachód słońca",
-        "maxWindSpeed": "Maksymalna prędkość wiatru: {maxWindSpeed} km/h",
-        "maxWindGusts": "Maksymalne porywy wiatru: {maxWindGusts} km/h",
+        "maxWindSpeed": "Maksymalna prędkość wiatru: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Maksymalne porywy wiatru: {maxWindGusts} {unit}",
         "humidity": "Wilgotność: {humidity}%"
       },
       "kind": {
@@ -2348,7 +2348,7 @@
       }
     },
     "healthMonitoring": {
-      "name": "Monitorowanie zdrowia  systemu",
+      "name": "Monitorowanie zdrowia systemu",
       "description": "Wyświetla informacje o stanie Twojego systemu(ów).",
       "tab": {
         "system": "System",
@@ -2395,7 +2395,7 @@
         "memoryAvailable": "Dostępna pamięć {memoryAvailable} GB ({percent}%)",
         "version": "Wersja: {version}",
         "uptime": "Czas pracy: {months} mies., {days} dni, {hours} godzin, {minutes} minut",
-        "loadAverage": "Średnie obciążenie",
+        "loadAverage": "Średnie obciążenie:",
         "minute": "1 minuta",
         "minutes": "{count} minut",
         "used": "Używane",
@@ -2719,7 +2719,7 @@
         "query": "Miasto / kod pocztowy",
         "latitude": "Szerokość geograficzna (Latitude)",
         "longitude": "Długość geograficzna (Longitude)",
-        "disabledTooltip": "Podaj miasto lub kod pocztowy.",
+        "disabledTooltip": "Podaj miasto lub kod pocztowy",
         "unknownLocation": "Nieznana lokalizacja",
         "search": "Szukaj",
         "table": {
@@ -3150,7 +3150,7 @@
         },
         "limitPerIntegration": {
           "label": "Limit elementów na integrację",
-          "description": "To ograniczy liczbę wyświetlanych elementów dla każdej integracji, a nie globalnie."
+          "description": "To ograniczy liczbę wyświetlanych elementów dla każdej integracji, a nie globalnie"
         },
         "columnOrder": {
           "label": "Kolejność kolumn"
@@ -3496,11 +3496,11 @@
         },
         "staleReleaseWithin": {
           "label": "Nieaktualne wydanie w ciągu",
-          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nieaktualnych wydań"
+          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nieaktualnych wydań."
         },
         "showOnlyHighlighted": {
           "label": "Pokaż tylko wyróżnione",
-          "description": "„Pokaż tylko nowe lub nieaktualne wydania. Zgodnie z powyższymi ustawieniami.”"
+          "description": "„Pokaż tylko nowe lub nieaktualne wydania. Zgodnie z powyższymi ustawieniami.”."
         },
         "showDetails": {
           "label": "Pokaż szczegóły"
@@ -3580,7 +3580,7 @@
           "invalid": "Nieprawidłowa definicja repozytorium, sprawdź wartości",
           "noProvider": {
             "label": "Brak dostawcy",
-            "tooltip": "Nie udało się rozpoznać dostawcy. Ustaw go ręcznie po zaimportowaniu obrazów."
+            "tooltip": "Nie udało się rozpoznać dostawcy. Ustaw go ręcznie po zaimportowaniu obrazów"
           },
           "tokens": {
             "label": "Tokeny dostawcy",
@@ -3609,7 +3609,7 @@
         "messages": {
           "invalidIdentifier": "Nieprawidłowy identyfikator",
           "noMatchingVersion": "Nie znaleziono pasującej wersji",
-          "noReleasesFound": "Nie znaleziono wydań!",
+          "noReleasesFound": "Nie znaleziono wydań",
           "noProviderSelected": "Nie wybrano dostawcy",
           "noProviderResponse": "Brak odpowiedzi od dostawcy",
           "unexpected": "Nieoczekiwany błąd dostawcy"
@@ -3625,10 +3625,10 @@
       },
       "error": {
         "integrationsDisconnected": "Brak dostępnych danych, wszystkie integracje rozłączone",
-        "unknownContentOption": "Nieznana opcja zawartości dla widżetu podsumowania kontrolera sieci:"
+        "unknownContentOption": "Nieznana opcja zawartości dla widżetu podsumowania kontrolera sieci: "
       },
       "name": "Podsumowanie kontrolera sieci",
-      "description": "Wyświetla podsumowanie kontrolera sieci (np. UniFi Controller)."
+      "description": "Wyświetla podsumowanie kontrolera sieci (np. UniFi Controller)"
     },
     "networkControllerStatus": {
       "card": {
@@ -3662,7 +3662,7 @@
       },
       "error": {
         "integrationsDisconnected": "Brak dostępnych danych, wszystkie integracje są rozłączone",
-        "unknownContentOption": "Nieznana opcja zawartości dla widżetu statusu sieci:"
+        "unknownContentOption": "Nieznana opcja zawartości dla widżetu statusu sieci: "
       },
       "name": "Stan sieci",
       "description": "Wyświetl podłączone urządzenia w sieci"
@@ -3713,7 +3713,7 @@
     },
     "speedtestTracker": {
       "name": "Speedtest Tracker",
-      "description": "Wyświetla wyniki testów prędkości z Twojej instancji Speedtest Tracker",
+      "description": "Wyświetla wyniki testów prędkości z Twojej instancji Speedtest Tracker.",
       "option": {
         "showLatestResult": {
           "label": "Pokaż ostatni wynik"
@@ -3745,7 +3745,7 @@
       "unhealthy": "Zły",
       "ok": "Ok",
       "fail": "Błąd",
-      "noSectionsEnabled": "Włącz co najmniej jedną sekcję w opcjach widgetu",
+      "noSectionsEnabled": "Włącz co najmniej jedną sekcję w opcjach widgetu.",
       "error": {
         "internalServerError": "Nie udało się pobrać danych testu prędkości"
       }
@@ -4232,7 +4232,7 @@
     "action": {
       "duplicate": {
         "title": "Duplikuj tablicę",
-        "message": "Spowoduje to zduplikowanie tablicy {name} wraz ze wszystkimi jej treściami. Jeśli widżety odwołują się do integracji, których nie możesz używać, zostaną usunięte",
+        "message": "Spowoduje to zduplikowanie tablicy {name} wraz ze wszystkimi jej treściami. Jeśli widżety odwołują się do integracji, których nie możesz używać, zostaną usunięte.",
         "notification": {
           "success": {
             "title": "Tablica została zduplikowana",
@@ -4269,7 +4269,7 @@
           },
           "error": {
             "title": "Import nie powiódł się",
-            "message": "Nie udało się zaimportować tablicy. Sprawdź logi, aby uzyskać więcej informacji."
+            "message": "Nie udało się zaimportować tablicy. Sprawdź logi, aby uzyskać więcej informacji"
           }
         },
         "form": {
@@ -4281,11 +4281,11 @@
             "label": "Aplikacje",
             "avoidDuplicates": {
               "label": "Unikaj duplikatów",
-              "description": "Ignoruje aplikacje, dla których już istnieje aplikacja z tym samym adresem href."
+              "description": "Ignoruje aplikacje, dla których już istnieje aplikacja z tym samym adresem href"
             },
             "onlyImportApps": {
               "label": "Import tylko aplikacje",
-              "description": "Dodaje tylko aplikacje, tablica musi zostać odtworzona ręcznie."
+              "description": "Dodaje tylko aplikacje, tablica musi zostać odtworzona ręcznie"
             }
           },
           "name": {
@@ -4416,14 +4416,14 @@
       },
       "disableStatus": {
         "label": "Wyłącz status aplikacji",
-        "description": "Wyłącza sprawdzanie statusu wszystkich aplikacji na tej tablicy."
+        "description": "Wyłącza sprawdzanie statusu wszystkich aplikacji na tej tablicy"
       },
       "columnCount": {
         "label": "Liczba kolumn"
       },
       "itemRadius": {
         "label": "Promień elementu",
-        "description": "Zmienia zaokrąglenie kafelków na Twojej tablicy.",
+        "description": "Zmienia zaokrąglenie kafelków na Twojej tablicy",
         "option": {
           "xs": "Bardzo mały",
           "sm": "Mały",
@@ -4537,11 +4537,11 @@
         "title": "Witamy w Homarr",
         "description": "Elegancki, nowoczesny pulpit nawigacyjny, który daje Ci dostęp do wszystkich Twoich aplikacji i usług w zasięgu ręki.",
         "link": "Utwórz swoją pierwszą tablicę",
-        "notice": "Aby ta strona zniknęła, utwórz tablicę i ustaw ją jako tablicę główną."
+        "notice": "Aby ta strona zniknęła, utwórz tablicę i ustaw ją jako tablicę główną"
       },
       "notFound": {
         "title": "Tablica nie znaleziona",
-        "description": "Wskazana tablica nie została znaleziona lub nie masz do niej dostępu.”",
+        "description": "Wskazana tablica nie została znaleziona lub nie masz do niej dostępu.”.",
         "link": "Wyświetl wszystkie tablice",
         "notice": "Sprawdź link lub skontaktuj się z administratorem, jeśli uważasz, że powinien być dostępny"
       },
@@ -4550,7 +4550,7 @@
         "admin": {
           "description": "Nie ustawiłeś jeszcze tablicy głównej dla serwera.",
           "link": "Skonfiguruj tablicę główną dla całego serwera",
-          "notice": "Aby ta strona zniknęła dla wszystkich użytkowników, ustaw tablicę główną dla serwera\n\n"
+          "notice": "Aby ta strona zniknęła dla wszystkich użytkowników, ustaw tablicę główną dla serwera"
         },
         "user": {
           "description": "Nie ustawiłeś jeszcze tablicy głównej.",
@@ -4560,7 +4560,7 @@
         "anonymous": {
           "description": "Administrator serwera nie ustawił jeszcze tablicy głównej.",
           "link": "Pokaż tablice publiczne",
-          "notice": "Aby ta strona zniknęła, poproś administratora serwera o ustawienie tablicy głównej dla serwera."
+          "notice": "Aby ta strona zniknęła, poproś administratora serwera o ustawienie tablicy głównej dla serwera"
         }
       }
     }
@@ -4588,7 +4588,7 @@
     },
     "notFound": {
       "title": "Nie znaleziono",
-      "text": "Nie znaleziono żądanego zasobu."
+      "text": "Nie znaleziono żądanego zasobu"
     },
     "error": {
       "title": "Nie można załadować tej strony",
@@ -4719,7 +4719,7 @@
       },
       "user": {
         "back": "Powrót do użytkowników",
-        "fieldsDisabledExternalProvider": "Niektóre pola są zablokowane, ponieważ są zarządzane przez zewnętrznego dostawcę uwierzytelniania",
+        "fieldsDisabledExternalProvider": "Niektóre pola są zablokowane, ponieważ są zarządzane przez zewnętrznego dostawcę uwierzytelniania.",
         "setting": {
           "general": {
             "title": "Ogólne",

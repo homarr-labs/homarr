@@ -1442,8 +1442,8 @@
     "iconPicker": {
       "label": "Icon URL",
       "description": "Suchen Sie die Bibliothek, fügen Sie eine Bild-URL ein oder laden Sie eine Datei hoch.",
-      "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie.",
-      "headerLoading": "Tippe um die Symbole zu durchsuchen…",
+      "header": "Suche {countIcons} Bilder nach Namen",
+      "headerLoading": "Bilder nach Namen suchen",
       "clear": "Bild löschen",
       "uploadImage": "Bild hochladen",
       "results": "Bildsuchergebnisse",
@@ -2375,7 +2375,7 @@
         },
         "visibleStorageVolumes": {
           "label": "Sichtbare Speichervolumes",
-          "description": "Nur verfügbar, wenn alle Integrationen Synology betreffen. Nicht ausfüllen, um alle erkannten Speichervolumes zu zeigen. ",
+          "description": "Nur verfügbar, wenn alle ausgewählten Integrationen Synology betreffen. Nicht ausfüllen, um alle erkannten Speichervolumes anzuzeigen.",
           "placeholder": "Speichervolumen auswählen"
         },
         "defaultTab": {
@@ -2485,7 +2485,7 @@
       "error": {
         "internalServerError": "Fehler beim Abrufen der Container Statistiken",
         "layoutSaveTitle": "Tabellenlayout nicht gespeichert",
-        "layoutSaveMessage": "Die Docker-Tabelle konnte nicht gespeichert werden. Versuche die Spalte zu verschieben oder eine andere Spaltengröße zu verwenden. "
+        "layoutSaveMessage": "Das Docker-Tabellenlayout konnte nicht gespeichert werden. Versuche die Spalte zu verschieben oder eine andere Spaltengröße zu verwenden."
       },
       "empty": {
         "noContainers": "Keine Docker-Container gefunden"
@@ -3093,7 +3093,7 @@
       "option": {
         "albumId": {
           "label": "Album ID",
-          "description": "Dies ist eine eindeutige ID, die sich auf Ihr Immich Album bezieht. Sie können diese ID finden, indem Sie ein Album öffnen und die einzigartige Zeichenkette von der URL kopieren, zum Beispiel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "Dies ist eine eindeutige ID, die sich auf Ihr Immich Album bezieht. Sie können diese ID finden, indem Sie ein Album öffnen und die einzigartige Zeichenkette von der URL kopieren, zum Beispiel 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Intervall in Sekunden",
@@ -4103,8 +4103,8 @@
       }
     },
     "beszelAlerts": {
-      "name": "Beszel-Alarme",
-      "description": "Zeige Beszels Alarmeinstellungen und -verlauf",
+      "name": "Beszel-Meldungen",
+      "description": "Zeige Beszels Benachrichtigungseinstellungen und -verlauf",
       "option": {
         "showHistory": {
           "label": "Alarmverlauf anzeigen"

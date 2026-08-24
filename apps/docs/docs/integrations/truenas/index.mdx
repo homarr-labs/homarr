@@ -27,7 +27,7 @@ import Alert from '@theme/Admonition';
       ]}
 />
 
-The storage values shown by these widgets use the root ZFS dataset's usable `used` and `available` space, including RAIDZ parity overhead and dataset limits.
+The storage values shown by these widgets come from each pool's root ZFS dataset, so they already account for RAIDZ parity overhead and dataset limits and match what `zfs list` and the TrueNAS web interface report. When a pool cannot report its dataset space, Homarr falls back to the pool's physical values, which read higher on RAIDZ.
 
 ### Adding the integration
 <AddingIntegration />

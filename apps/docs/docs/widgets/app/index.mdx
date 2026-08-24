@@ -1,30 +1,27 @@
 ---
-title: 'App'
-description: 'Embeds an app into the board.'
+title: "App"
+description: "Embeds an app into the board."
 hide_title: true
 ---
 
-import { AddingWidget } from '@site/src/components/widgets/adding';
-import { WidgetConfig } from '@site/src/components/widgets/configuration';
-import { WidgetHeader } from '@site/src/components/widgets/header';
-import { appWidget } from '.';
+import { AddingWidget } from "@site/src/components/widgets/adding";
+import { WidgetConfig } from "@site/src/components/widgets/configuration";
+import { WidgetHeader } from "@site/src/components/widgets/header";
+import { appWidget } from ".";
 
-
-<WidgetHeader
-  widget={appWidget}
-  categories={['Links', 'Apps']}
-/>
+<WidgetHeader widget={appWidget} categories={["Links", "Apps"]} />
 
 The app widget allows you to add a link to an application or a website that you want to access quickly from your Homarr board.
 It also supports a status check to indicate whether Homarr can reach the application or website.
+In view mode, right-clicking uses the browser's link menu. Homarr's widget menu remains available in edit mode.
 
 ### Screenshots
 
-import githubApp from './img/github.png';
-import jellyseerrApp from './img/jellyseerr-description-tooltip.png';
-import piHoleApp from './img/pi-hole-ping-icon.png';
+import githubApp from "./img/github.png";
+import jellyseerrApp from "./img/jellyseerr-description-tooltip.png";
+import piHoleApp from "./img/pi-hole-ping-icon.png";
 
-<div className='flex gap-1'>
+<div className="flex gap-1">
   <img src={githubApp} alt="app github with-status-check" width={128 * 1.5} height={128 * 1.5} />
   <img src={piHoleApp} alt="app pi-hole with-status-check status-check-icon" width={128 * 1.5} height={128 * 1.5} />
   <img src={jellyseerrApp} alt="app jellyseerr with-description-tooltip" height={128 * 1.5} />
@@ -34,4 +31,5 @@ import piHoleApp from './img/pi-hole-ping-icon.png';
 <AddingWidget />
 
 ### Configuration
+
 <WidgetConfig configuration={appWidget.configuration} />

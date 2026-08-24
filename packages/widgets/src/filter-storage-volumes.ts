@@ -5,10 +5,16 @@ interface StorageVolumeEntry {
 const partitionSuffixPatterns: ReadonlyArray<{ pattern: RegExp; baseGroupIndex: number }> = [
   // SCSI/SATA/VirtIO: /dev/sda1 -> /dev/sda
   { pattern: /^(\/dev\/(?:sd|vd|hd|xvd)[a-z]+)[0-9]+$/, baseGroupIndex: 1 },
+  // SCSI/SATA/VirtIO without device node prefix: sda1 -> sda (OMV reports unprefixed names)
+  { pattern: /^((?:sd|vd)[a-z]+)[0-9]+$/, baseGroupIndex: 1 },
   // NVMe: /dev/nvme0n1p2 -> /dev/nvme0n1
   { pattern: /^(\/dev\/nvme[0-9]+n[0-9]+)p[0-9]+$/, baseGroupIndex: 1 },
+  // NVMe without device node prefix: nvme0n1p2 -> nvme0n1
+  { pattern: /^(nvme[0-9]+n[0-9]+)p[0-9]+$/, baseGroupIndex: 1 },
   // eMMC: /dev/mmcblk0p1 -> /dev/mmcblk0
   { pattern: /^(\/dev\/mmcblk[0-9]+)p[0-9]+$/, baseGroupIndex: 1 },
+  // eMMC without device node prefix: mmcblk0p1 -> mmcblk0
+  { pattern: /^(mmcblk[0-9]+)p[0-9]+$/, baseGroupIndex: 1 },
 ];
 
 export const normalizeStorageDeviceName = (deviceName: string): string => {
@@ -28,18 +34,14 @@ export const toScopedStorageVolumeValue = (integrationId: string, value: string)
   return `${integrationId}:${volumeName}`;
 };
 
-const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
+export const storageDeviceNamesMatch = (leftDeviceName: string, rightDeviceName: string): boolean => {
   return (
     leftDeviceName === rightDeviceName ||
     normalizeStorageDeviceName(leftDeviceName) === normalizeStorageDeviceName(rightDeviceName)
   );
 };
 
-const matchesVisibleStorageVolume = (
-  visibleVolume: string,
-  integrationId: string,
-  deviceName: string,
-): boolean => {
+const matchesVisibleStorageVolume = (visibleVolume: string, integrationId: string, deviceName: string): boolean => {
   const separatorIndex = visibleVolume.indexOf(":");
   if (separatorIndex === -1) {
     return storageDeviceNamesMatch(visibleVolume, deviceName);

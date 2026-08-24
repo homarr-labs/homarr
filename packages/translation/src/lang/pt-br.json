@@ -682,7 +682,7 @@
       },
       "create": {
         "title": "Criar aplicativo",
-        "description": "Criar um aplicativo",
+        "description": "Criar um novo aplicativo ",
         "action": "Abrir criação de aplicativo"
       },
       "add": "Adicione um aplicativo"
@@ -769,7 +769,7 @@
       "enabled": "Habilitado",
       "template": {
         "label": "Template JSX",
-        "description": ""
+        "description": "Modelo JSX do Mantine. Acesse os campos da resposta da API por meio de ligações de dados (por exemplo, data.name). Use apenas componentes da lista de permissões. Proibido: constructor, __proto__, eval, Function, window, document."
       }
     },
     "placeholder": {
@@ -864,8 +864,8 @@
     },
     "notification": {
       "created": "Widget \"{name}\" criado com sucesso.",
-      "updated": "Widget \"{name}atualizado com sucesso.",
-      "deleted": "Widget \"{name}excluído.",
+      "updated": "Widget \"{name}\" atualizado com sucesso.",
+      "deleted": "Widget \"{name}\" excluído.",
       "imported": "Widget importado com sucesso.",
       "aiPromptCopied": "Prompt de IA copiado para a área de transferência",
       "aiPromptDescription": "Copie um prompt pré-construído para colar qualquer chatbot de AI (ChatGPT, Claude, Gemini...). Ele inclui o esquema completo de widget e a sua resposta de API para que a AI possa gerar uma configuração JSON pronta para importar para você.",
@@ -876,7 +876,7 @@
       "updateError": "Falha ao atualizar o widget. Suas alterações não foram salvas.",
       "importError": "Falha ao importar o widget. Certifique-se de que o arquivo seja um widget personalizado válido exportado em JSON.",
       "exportError": "Falha ao exportar o widget.",
-      "duplicated": "Widget \"{name}duplicado.",
+      "duplicated": "Widget \"{name}\" duplicado.",
       "duplicateError": "Falha ao duplicar o widget.",
       "toggleError": "Falha ao alternar o status do widget.",
       "deleteError": "Falha ao excluir o widget.",
@@ -1442,8 +1442,8 @@
     "iconPicker": {
       "label": "URL do ícone",
       "description": "Procure na biblioteca, cole uma URL da imagem ou envie um arquivo.",
-      "header": "Digite o nome ou os objetos para filtrar os ícones... O Homarr pesquisará {countIcons} ícones para você.",
-      "headerLoading": "Digite para pesquisar ícones…",
+      "header": "Digite o nome ou os objetos para filtrar os ícones... O Homarr pesquisará {countIcons} ícones para você",
+      "headerLoading": "Digite para pesquisar ícones",
       "clear": "Limpar imagem",
       "uploadImage": "Upload de imagem",
       "results": "Resultados da busca por imagem",
@@ -2563,7 +2563,7 @@
     },
     "tracearr": {
       "name": "Tracearr",
-      "description": "Monitoramento avançado de servidor de mídia com dados detalhados de transmissão e transcodificação\n",
+      "description": "Monitoramento avançado de servidor de mídia com dados detalhados de transmissão e transcodificação",
       "option": {
         "showStreams": {
           "label": "Exibir transmissões ativas"
@@ -2739,7 +2739,7 @@
       },
       "integration": {
         "noData": "Nenhuma integração encontrada",
-        "description": "Clique <here></here< para criar uma nova integração"
+        "description": "Clique <here></here> para criar uma nova integração"
       },
       "app": {
         "noData": "Nenhum aplicativo encontrado",
@@ -2772,7 +2772,7 @@
       },
       "error": {
         "noUrl": "Nenhum URL de vídeo fornecido",
-        "forYoutubeUseIframe": "Para vídeos do Youtube, use a opção de iFrame"
+        "forYoutubeUseIframe": "Para vídeos do Youtube, use a opção de iframe"
       }
     },
     "mediaServer": {
@@ -3093,7 +3093,7 @@
       "option": {
         "albumId": {
           "label": "ID do Álbum",
-          "description": "Esta é uma identificação única que se refere ao seu álbum Immich. Você pode encontrar essa identificação abrindo um álbum e copiando a string única da URL, por exemplo 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+          "description": "Esta é uma identificação única que se refere ao seu álbum Immich. Você pode encontrar essa identificação abrindo um álbum e copiando a string única da URL, por exemplo 'a21aca09-9f05-47dc-b1a1-7b53c547226e'."
         },
         "rotationIntervalSeconds": {
           "label": "Intervalo em segundos",

@@ -10,7 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 
 import { WidgetEmptyState } from "../common/empty-state";
 import type { WidgetComponentProps } from "../definition";
-import { filterStorageVolumes } from "../filter-storage-volumes";
+import { filterStorageVolumes, storageDeviceNamesMatch } from "../filter-storage-volumes";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
 type DisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
@@ -140,7 +140,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
   return (
     <Stack gap="xs" p="xs" h="100%">
       {fileSystem.map((item) => {
-        const smartItem = smart.find((smart) => smart.deviceName === item.deviceName);
+        const smartItem = smart.find((smart) => storageDeviceNamesMatch(smart.deviceName, item.deviceName));
 
         return (
           <SystemDiskCard
