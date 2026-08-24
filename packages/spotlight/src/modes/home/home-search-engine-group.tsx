@@ -82,7 +82,9 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
     return {
       isLoading:
         defaultSearchEngineQuery.isLoading || (resultQuery.isLoading && fromIntegrationEnabled) || status === "loading",
-      isError: defaultSearchEngineQuery.isError || (resultQuery.isError && fromIntegrationEnabled),
+      isError:
+        (defaultSearchEngineQuery.isError && status !== "loading" && remoteQuery.enabled) ||
+        (resultQuery.isError && fromIntegrationEnabled),
       data: remoteQuery.enabled ? createDefaultSearchEntries(defaultSearchEngine, results, session, query, t) : [],
     };
   },

@@ -429,7 +429,9 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
       );
 
       const isLoading = enginesQuery.isLoading || ddgQuery.isLoading;
-      const isError = enginesQuery.isError || ddgQuery.isError;
+      const isError =
+        (enginesQuery.isError && remoteQuery.enabled) ||
+        (ddgQuery.isError && remoteQuery.enabled && ddgBangs && remoteQuery.query.length >= 1);
 
       const engineOptions = (enginesQuery.data ?? []).map(
         (engine): ExternalOption => ({
@@ -454,9 +456,10 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
         const matchedEngine = (enginesQuery.data ?? []).find((engine) => engine.short === bangToken);
         const matchedDdg = (ddgQuery.data ?? []).find((bang) => bang.t === bangToken);
 
-        const label = matchedEngine?.name ?? matchedDdg?.s;
-        const iconUrl = matchedEngine?.iconUrl;
-        const urlTemplate = matchedEngine?.type === "generic" ? matchedEngine.urlTemplate : matchedDdg?.u;
+        const genericEngine = matchedEngine?.type === "generic" ? matchedEngine : undefined;
+        const label = genericEngine?.name ?? matchedDdg?.s;
+        const iconUrl = genericEngine?.iconUrl;
+        const urlTemplate = genericEngine?.urlTemplate ?? matchedDdg?.u;
 
         if (label && urlTemplate) {
           if (searchText.trim().length > 0) {

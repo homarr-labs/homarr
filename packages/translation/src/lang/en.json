@@ -7048,6 +7048,7 @@
             "description": "Start typing to search your media request integrations",
             "disabled": {
               "noIntegration": "Add an Overseerr, Jellyseerr, or Seerr integration to enable media search.",
+              "signInRequired": "Sign in to search media request integrations.",
               "scoped": "This widget does not have an accessible media request integration."
             }
           }

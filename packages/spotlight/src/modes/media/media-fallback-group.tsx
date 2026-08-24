@@ -56,7 +56,7 @@ export const mediaFallbackGroup = createGroup<MediaFallbackOption>({
           {
             key: "media-fallback",
             label: t("search.modePicker.media.fallback", { query: remoteQuery.query }),
-            description: t("search.mode.media.action.search.disabled.noIntegration"),
+            description: t("search.mode.media.action.search.disabled.signInRequired"),
             query: remoteQuery.query,
             unavailable: true,
           },

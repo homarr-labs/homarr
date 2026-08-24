@@ -142,7 +142,7 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
             key: "disabled",
             kind: "disabled",
             label: tMedia("action.search.label"),
-            description: tMedia("action.search.disabled.noIntegration"),
+            description: tMedia("action.search.disabled.signInRequired"),
             unavailable: true,
           },
         ],
