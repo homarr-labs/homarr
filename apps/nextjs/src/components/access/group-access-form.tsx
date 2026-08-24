@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Anchor, Button, Group, Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
-import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
@@ -11,7 +10,7 @@ import { AccessSelectRow } from "./access-table-rows";
 import { useAccessContext } from "./context";
 import type { AccessFormType } from "./form";
 import { FormProvider, useForm } from "./form";
-import { GroupSelectModal } from "./group-select-modal";
+import { GroupSelect } from "./group-select";
 import type { FormProps } from "./user-access-form";
 
 export const GroupAccessForm = <TPermission extends string>({
@@ -24,8 +23,6 @@ export const GroupAccessForm = <TPermission extends string>({
   const [groups, setGroups] = useState<Map<string, AccessQueryData<string>["groups"][number]["group"]>>(
     new Map(accessQueryData.groups.map(({ group }) => [group.id, group])),
   );
-  const { openModal } = useModalAction(GroupSelectModal);
-  const tCommon = useI18n("common");
   const tPermissions = useI18n("permission");
   const form = useForm({
     initialValues: {
@@ -35,23 +32,6 @@ export const GroupAccessForm = <TPermission extends string>({
       })),
     },
   });
-
-  const handleAddUser = () => {
-    openModal({
-      presentGroupIds: form.values.items.map(({ principalId: id }) => id),
-      onSelect: (group) => {
-        setGroups((prev) => new Map(prev).set(group.id, group));
-        form.setFieldValue("items", [
-          {
-            principalId: group.id,
-            permission: defaultPermission,
-          },
-          ...form.values.items,
-        ]);
-        handleCountChange((prev) => prev + 1);
-      },
-    });
-  };
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values as AccessFormType<TPermission>))}>
@@ -79,9 +59,21 @@ export const GroupAccessForm = <TPermission extends string>({
           </Table>
 
           <Group justify="space-between">
-            <Button rightSection={<IconPlus size="1rem" />} variant="light" onClick={handleAddUser}>
-              {tCommon("action.add")}
-            </Button>
+            <GroupSelect
+              presentGroupIds={form.values.items.map(({ principalId: id }) => id)}
+              onSelect={(group) => {
+                setGroups((prev) => new Map(prev).set(group.id, group));
+                form.setFieldValue("items", [
+                  {
+                    principalId: group.id,
+                    permission: defaultPermission,
+                  },
+                  ...form.values.items,
+                ]);
+                handleCountChange((prev) => prev + 1);
+              }}
+              triggerProps={{ rightSection: <IconPlus size="1rem" />, variant: "light" }}
+            />
             <Button type="submit" loading={isPending}>
               {tPermissions("action.saveGroup")}
             </Button>

@@ -11,7 +11,6 @@ import { getI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { extractMcpTools } from "~/app/api/mcp/_extract-tools";
-import { ApiKeysManagement } from "./components/api-keys";
 import { ApiPageTabs } from "./components/api-page-tabs";
 import { ScalarApiReference } from "./components/scalar-api-reference";
 
@@ -87,9 +86,8 @@ export default async function ApiPage() {
           apiKeyLabel={t("apiKey.label")}
           mcpLabel={t("mcp.label")}
           documentationPanel={<ScalarApiReference document={document} />}
-          authenticationPanel={<ApiKeysManagement apiKeys={apiKeys} />}
+          apiKeys={apiKeys}
           baseUrl={baseUrl}
-          hasApiKeys={apiKeys.length > 0}
           toolGroups={toolGroups}
         />
       </Stack>

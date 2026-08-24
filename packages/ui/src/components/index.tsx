@@ -1,5 +1,6 @@
 export * from "./count-badge";
 export { OverflowBadge } from "./overflow-badge";
+export { InlineConfirmActionIcon, InlineConfirmButton, InlineConfirmMenuItem } from "./inline-confirm-action";
 export { SearchInput } from "./search-input";
 export * from "./select-with-description";
 export * from "./select-with-description-and-badge";

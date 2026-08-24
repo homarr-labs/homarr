@@ -5,6 +5,8 @@ import type { ReactNode } from "react";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@mantine/core";
 import { IconBrain, IconCode, IconKey } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
+import { ApiKeysManagement } from "./api-keys";
 import { McpInstructions } from "./mcp-instructions";
 
 export interface McpToolGroup {
@@ -17,9 +19,8 @@ interface ApiPageTabsProps {
   apiKeyLabel: string;
   mcpLabel: string;
   documentationPanel: ReactNode;
-  authenticationPanel: ReactNode;
+  apiKeys: RouterOutputs["apiKeys"]["getAll"];
   baseUrl: string;
-  hasApiKeys: boolean;
   toolGroups: McpToolGroup[];
 }
 
@@ -28,12 +29,12 @@ export function ApiPageTabs({
   apiKeyLabel,
   mcpLabel,
   documentationPanel,
-  authenticationPanel,
+  apiKeys,
   baseUrl,
-  hasApiKeys,
   toolGroups,
 }: ApiPageTabsProps) {
   const [activeTab, setActiveTab] = useState<string | null>("documentation");
+  const [hasApiKeys, setHasApiKeys] = useState(apiKeys.length > 0);
 
   return (
     <Tabs value={activeTab} onChange={setActiveTab}>
@@ -48,10 +49,17 @@ export function ApiPageTabs({
           {mcpLabel}
         </TabsTab>
       </TabsList>
-      <TabsPanel value="authentication">{authenticationPanel}</TabsPanel>
+      <TabsPanel value="authentication">
+        <ApiKeysManagement apiKeys={apiKeys} onCreated={() => setHasApiKeys(true)} />
+      </TabsPanel>
       <TabsPanel value="documentation">{documentationPanel}</TabsPanel>
       <TabsPanel value="mcp">
-        <McpInstructions baseUrl={baseUrl} hasApiKeys={hasApiKeys} toolGroups={toolGroups} />
+        <McpInstructions
+          baseUrl={baseUrl}
+          hasApiKeys={hasApiKeys}
+          toolGroups={toolGroups}
+          onApiKeyCreated={() => setHasApiKeys(true)}
+        />
       </TabsPanel>
     </Tabs>
   );

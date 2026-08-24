@@ -1783,6 +1783,7 @@
       "deleteNamed": "Delete {name}",
       "clearSearch": "Clear search",
       "copy": "Copy",
+      "copied": "Copied",
       "refresh": "Refresh"
     },
     "here": "here",

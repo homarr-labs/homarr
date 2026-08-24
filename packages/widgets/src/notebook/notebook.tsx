@@ -66,6 +66,7 @@ import { useForm } from "@homarr/form";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
+import { InlineConfirmActionIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import actionTargetClasses from "../common/action-target.module.css";
@@ -80,7 +81,6 @@ import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { hotkeys } from "@homarr/definitions";
-import { useConfirmModal } from "@homarr/modals";
 
 const iconProps = {
   size: 30,
@@ -285,21 +285,10 @@ export function Notebook({
     return false;
   }, [editor]);
 
-  const { openConfirmModal } = useConfirmModal();
   const handleEditCancel = useCallback(() => {
     if (savingRef.current) return;
-    openConfirmModal({
-      title: t("dismiss.title"),
-      children: t("dismiss.message"),
-      labels: {
-        confirm: t("dismiss.action.discard"),
-        cancel: t("dismiss.action.keepEditing"),
-      },
-      onConfirm: () => {
-        setIsEditing(handleEditCancelCallback);
-      },
-    });
-  }, [setIsEditing, handleEditCancelCallback, openConfirmModal, t]);
+    setIsEditing(handleEditCancelCallback);
+  }, [setIsEditing, handleEditCancelCallback]);
 
   const handleEditToggle = useCallback(async () => {
     if (!editor || savingRef.current) return;
@@ -369,8 +358,7 @@ export function Notebook({
           },
           toolbar: {
             backgroundColor: "transparent",
-            borderColor:
-              "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))",
+            borderColor: "rgb(from var(--mantine-color-default-border) r g b / calc(var(--opacity, 1) * 0.45))",
             padding: "0.5rem",
           },
           content: {
@@ -554,19 +542,22 @@ export function Notebook({
             {isEditing ? <IconDeviceFloppy {...iconProps} /> : <IconEdit {...iconProps} />}
           </ActionIcon>
           {isEditing && (
-            <ActionIcon
+            <InlineConfirmActionIcon
               className={`homarr-notebook-action ${actionTargetClasses.root}`}
               data-visible
               title={tCommon("action.cancel")}
               aria-label={tCommon("action.cancel")}
+              confirmLabel={t("dismiss.message")}
+              confirmationAriaLabel={t("dismiss.action.discard")}
+              confirmationChildren={<IconCheck {...iconProps} />}
+              onConfirm={handleEditCancel}
               color={primaryColor}
               variant="light"
               size={30}
               disabled={isSaving}
-              onClick={handleEditCancel}
             >
               <IconX {...iconProps} />
-            </ActionIcon>
+            </InlineConfirmActionIcon>
           )}
         </Stack>
       )}
