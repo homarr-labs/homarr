@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import type { Icon } from "@tabler/icons-react";
 import { Button, Card, Group, Stack, Text, ThemeIcon } from "@mantine/core";
@@ -21,6 +21,7 @@ import { getCustomWidgetDefaultOptions } from "@homarr/custom-widgets/core";
 import { useI18n } from "@homarr/translation/client";
 
 import { useCustomWidgetFormDocumentDirty } from "./_custom-widget-form-state";
+import { areCustomWidgetValuesEqual } from "./_custom-widget-value-equality";
 import { useCustomWidgetFormAnalysisField } from "./_use-custom-widget-form-analysis";
 import { useUnsavedChangesGuard } from "./_use-unsaved-changes-guard";
 import classes from "./_custom-widget-form.module.css";
@@ -179,8 +180,13 @@ export function CustomWidgetOptionsSnapshotSync({
   setOptionsSnapshot: Dispatch<SetStateAction<Record<string, unknown>>>;
 }) {
   const parsedOptions = useCustomWidgetFormAnalysisField("parsedOptions");
+  const lastDefaults = useRef<Record<string, unknown> | null>(null);
   useEffect(() => {
-    if (parsedOptions.success) setOptionsSnapshot(getCustomWidgetDefaultOptions(parsedOptions.data));
+    if (!parsedOptions.success) return;
+    const defaults = getCustomWidgetDefaultOptions(parsedOptions.data);
+    if (lastDefaults.current && areCustomWidgetValuesEqual(lastDefaults.current, defaults)) return;
+    lastDefaults.current = defaults;
+    setOptionsSnapshot(defaults);
   }, [parsedOptions, setOptionsSnapshot]);
   return null;
 }

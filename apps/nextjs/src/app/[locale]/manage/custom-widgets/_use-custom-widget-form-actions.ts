@@ -48,8 +48,10 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   const [previewPending, setPreviewPending] = useState(false);
   const setPreview = input.setPreview;
   const previewGeneration = useRef(0);
+  const activePreviewGeneration = useRef<number | null>(null);
   const invalidatePreview = useCallback(() => {
     previewGeneration.current += 1;
+    if (activePreviewGeneration.current !== null) return;
     setPreview((preview) => {
       if (
         preview.outcome === "idle" &&
@@ -60,7 +62,6 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         return preview;
       return { data: {}, status: {}, session: null, outcome: "idle" };
     });
-    setPreviewPending(false);
   }, [setPreview]);
   useLayoutEffect(() => {
     invalidatePreview();
@@ -69,6 +70,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   useEffect(
     () => () => {
       previewGeneration.current += 1;
+      activePreviewGeneration.current = null;
     },
     [],
   );
@@ -133,7 +135,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
   });
 
   const runPreview = async () => {
-    if (previewPending) return;
+    if (activePreviewGeneration.current !== null) return;
     const valuesAtStart = input.documentStore.getValues();
     const candidateAtStart = buildDefinition(valuesAtStart);
     if (!candidateAtStart.success) {
@@ -156,6 +158,7 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
     const secretsAtStart = getChangedSecrets(valuesAtStart);
     const generation = previewGeneration.current + 1;
     previewGeneration.current = generation;
+    activePreviewGeneration.current = generation;
     const isCurrent = () => previewGeneration.current === generation;
     input.setMobilePane("preview");
     input.setPreview({ data: {}, status: {}, session: null, outcome: "loading" });
@@ -198,8 +201,10 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
       input.setPreview((current) => ({ ...current, outcome: "error" }));
       showErrorNotification({ title: w("section.preview"), message: t("notification.previewError") });
     } finally {
-      if (isCurrent()) {
+      if (activePreviewGeneration.current === generation) {
+        activePreviewGeneration.current = null;
         setPreviewPending(false);
+        if (!isCurrent()) setPreview({ data: {}, status: {}, session: null, outcome: "idle" });
       }
     }
   };
@@ -211,7 +216,6 @@ export function useCustomWidgetFormActions(input: FormActionsInput) {
         throw new Error(formatCustomWidgetImportIssues(result.issues));
       }
       input.setOptionsSnapshot(getDefinitionDefaults(result.widget));
-      input.setPreview({ data: {}, status: {}, session: null, outcome: "idle" });
       showSuccessNotification({
         title: w("ai.response"),
         message:

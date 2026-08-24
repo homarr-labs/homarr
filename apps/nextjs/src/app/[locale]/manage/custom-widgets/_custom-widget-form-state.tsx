@@ -13,7 +13,10 @@ import {
 import type { ReactNode } from "react";
 import type { UseFormReturnType } from "@mantine/form";
 
+import { customWidgetFormSchema } from "@homarr/custom-widgets/workbench";
 import type { CustomWidgetFormValues } from "@homarr/custom-widgets/workbench";
+
+import { areCustomWidgetValuesEqual } from "./_custom-widget-value-equality";
 
 export interface CustomWidgetFormDocumentStore {
   getValues(): CustomWidgetFormValues;
@@ -23,28 +26,13 @@ export interface CustomWidgetFormDocumentStore {
   markSaved(values: CustomWidgetFormValues): void;
 }
 
+const documentValueKeys = customWidgetFormSchema.keyof().options;
+
 function areDocumentValuesEqual(left: CustomWidgetFormValues, right: CustomWidgetFormValues) {
-  const secretsEqual =
-    left.secrets.length === right.secrets.length &&
-    left.secrets.every((secret, index) => {
-      const other = right.secrets[index];
-      return (
-        other !== undefined &&
-        secret.sourceId === other.sourceId &&
-        secret.kind === other.kind &&
-        secret.value === other.value &&
-        secret.hasValue === other.hasValue
-      );
-    });
-  return (
-    left.name === right.name &&
-    left.description === right.description &&
-    left.iconUrl === right.iconUrl &&
-    left.sources === right.sources &&
-    left.requests === right.requests &&
-    left.options === right.options &&
-    left.template === right.template &&
-    secretsEqual
+  if (Object.keys(left).length !== documentValueKeys.length) return false;
+  if (Object.keys(right).length !== documentValueKeys.length) return false;
+  return documentValueKeys.every(
+    (key) => Object.hasOwn(left, key) && Object.hasOwn(right, key) && areCustomWidgetValuesEqual(left[key], right[key]),
   );
 }
 
