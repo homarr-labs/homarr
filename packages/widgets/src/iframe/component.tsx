@@ -7,15 +7,13 @@ import { objectEntries } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { getSafeApplicationUrl } from "../common/application-url";
 import classes from "./component.module.css";
-import { getSafeIframeUrl } from "./safe-url";
-
-export { getSafeIframeUrl } from "./safe-url";
 
 export default function IFrameWidget({ options, isEditMode }: WidgetComponentProps<"iframe">) {
   const t = useI18n("widget.iframe");
   const { embedUrl, allowScrolling, ...permissions } = options;
-  const safeEmbedUrl = getSafeIframeUrl(embedUrl);
+  const safeEmbedUrl = getSafeApplicationUrl(embedUrl);
   const allowedPermissions = getAllowedPermissions(permissions);
   const sandboxFlags = getSandboxFlags(permissions);
 
@@ -47,7 +45,7 @@ export default function IFrameWidget({ options, isEditMode }: WidgetComponentPro
 const supportedProtocols = ["http", "https"];
 
 export const isSupportedProtocol = (url: string) => {
-  return getSafeIframeUrl(url) !== undefined;
+  return getSafeApplicationUrl(url) !== undefined;
 };
 
 const NoUrl = () => {

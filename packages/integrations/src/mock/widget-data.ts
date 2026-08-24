@@ -22,11 +22,6 @@ import type { VpnSummary } from "../interfaces/vpn-summary/vpn-summary-types";
 
 const demoTimestamp = "2026-08-24T12:00:00.000Z";
 
-const demoPhoto = (label: string, color: string) => {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="${color}"/><stop offset="1" stop-color="#15121f"/></linearGradient></defs><rect width="1200" height="800" fill="url(#g)"/><circle cx="930" cy="180" r="120" fill="#fff" opacity=".14"/><path d="M0 650L310 350l180 170 190-230 520 510H0z" fill="#fff" opacity=".18"/><text x="70" y="720" fill="#fff" font-size="68" font-family="system-ui" font-weight="700">${label}</text></svg>`;
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-};
-
 const anchorNote: AnchorNote = {
   id: "homarr-demo-note",
   title: "Homarr demo runbook",
@@ -168,7 +163,7 @@ export const mockWidgetData = {
         fileCreatedAt: demoTimestamp,
         updatedAt: demoTimestamp,
         type: "IMAGE",
-        publicLink: demoPhoto("Paris weekend", "#6f4cff"),
+        publicLink: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80",
       },
       {
         id: "demo-photo-2",
@@ -177,7 +172,7 @@ export const mockWidgetData = {
         fileCreatedAt: demoTimestamp,
         updatedAt: demoTimestamp,
         type: "IMAGE",
-        publicLink: demoPhoto("Alpine trails", "#198f83"),
+        publicLink: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
       },
     ],
   } satisfies ImmichAlbum,

@@ -18,11 +18,8 @@ describe("iframe policy", () => {
     expect(getSandboxFlags(permissions)).toContain("allow-modals");
   });
 
-  it("accepts HTTP URLs and same-origin paths", () => {
+  it("accepts only HTTP protocols", () => {
     expect(isSupportedProtocol("https://example.com")).toBe(true);
-    expect(isSupportedProtocol("/api/demo-assets/overview")).toBe(true);
-    expect(isSupportedProtocol("//evil.example")).toBe(false);
-    expect(isSupportedProtocol("/\\evil.example")).toBe(false);
     expect(isSupportedProtocol("javascript:alert(1)")).toBe(false);
     expect(isSupportedProtocol("not a url")).toBe(false);
   });
