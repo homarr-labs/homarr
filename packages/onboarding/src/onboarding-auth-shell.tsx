@@ -16,6 +16,8 @@ interface OnboardingAuthShellProps {
   showAppLogo?: boolean;
   primaryColor?: string;
   secondaryColor?: string;
+  wordmarkPrimaryColor?: string;
+  wordmarkSecondaryColor?: string;
   logoImageUrl?: string;
   backgroundImageUrl?: string;
   backgroundOverlay?: number;
@@ -33,6 +35,8 @@ export const OnboardingAuthShell = ({
   showAppLogo = false,
   primaryColor,
   secondaryColor,
+  wordmarkPrimaryColor,
+  wordmarkSecondaryColor,
   logoImageUrl,
   backgroundImageUrl,
   backgroundOverlay = 0.55,
@@ -66,8 +70,8 @@ export const OnboardingAuthShell = ({
               appName={appName}
               showAppName={showAppName}
               showAppLogo={showAppLogo}
-              primaryColor={primaryColor}
-              secondaryColor={secondaryColor}
+              primaryColor={wordmarkPrimaryColor}
+              secondaryColor={wordmarkSecondaryColor}
               logoImageUrl={logoImageUrl}
             />
           </div>

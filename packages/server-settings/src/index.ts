@@ -73,6 +73,20 @@ export const defaultBrandingSettings: BrandingSettings = {
   defaultRadius: "md",
 };
 
+const hasDefaultBrandingColors = (branding: Pick<BrandingSettings, "primaryColor" | "secondaryColor">) =>
+  branding.primaryColor.toLowerCase() === defaultBrandingSettings.primaryColor &&
+  branding.secondaryColor.toLowerCase() === defaultBrandingSettings.secondaryColor;
+
+export const getBrandingColorOverrides = (
+  branding: Pick<BrandingSettings, "primaryColor" | "secondaryColor">,
+): Partial<Pick<BrandingSettings, "primaryColor" | "secondaryColor">> => {
+  if (hasDefaultBrandingColors(branding)) return {};
+  return {
+    primaryColor: branding.primaryColor,
+    secondaryColor: branding.secondaryColor,
+  };
+};
+
 const legacyLoginBrandingSchema = z.object({
   showCustomAppNameOnLogin: z.boolean().optional(),
   showCustomLogoOnLogin: z.boolean().optional(),

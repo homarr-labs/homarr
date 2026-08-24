@@ -208,9 +208,9 @@ export const defaultHeaderPreferences = {
     left: [createBuiltinHeaderItem("logo")],
     center: [createBuiltinHeaderItem("search")],
     right: [
-      createBuiltinHeaderItem("user"),
       createBuiltinHeaderItem("boardEdit"),
       createBuiltinHeaderItem("boardSettings"),
+      createBuiltinHeaderItem("user"),
     ],
   },
 } satisfies HeaderPreferences;
