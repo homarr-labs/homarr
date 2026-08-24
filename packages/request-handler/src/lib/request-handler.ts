@@ -26,7 +26,12 @@ export interface SharedCacheAdapter<TData> {
 const MAX_CACHE_SIZE = 1000;
 const DEFAULT_TTL_MS = 10_000;
 const DEFAULT_STALE_IF_ERROR_TTL_MS = 5 * 60_000;
-const SHARED_REFRESH_WAIT_MS = 750;
+// A waiter that loses the refresh lock polls the shared cache until the lock holder
+// publishes the entry (the holder writes it before releasing the lock). This window
+// must be >= the shared-cache refresh lock TTL (REFRESH_LOCK_TTL_SECONDS in
+// shared-cache.ts, currently 15s); otherwise every waiting pod gives up early and
+// stampedes the upstream on a cold cache while the holder is still refreshing.
+const SHARED_REFRESH_WAIT_MS = 15_000;
 const SHARED_REFRESH_POLL_MS = 75;
 
 const delayAsync = async (durationMs: number) =>

@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Integration, IntegrationSecret } from "@homarr/db/schema";
 
 import { createIntegrationRequestHandler } from "./integration-request-handler";
-import type { SharedCacheAdapter } from "./request-handler";
+import type { CacheEntry, SharedCacheAdapter } from "./request-handler";
 import { createRequestHandler } from "./request-handler";
 import { createWidgetRequestHandler } from "./widget-request-handler";
 
@@ -78,6 +78,46 @@ describe("createRequestHandler", () => {
     await expect(handler.handler({ id: "same" }).getDataAsync()).resolves.toMatchObject({ data: "shared", timestamp });
     expect(requestAsync).not.toHaveBeenCalled();
     expect(sharedCache.acquireRefreshLockAsync).not.toHaveBeenCalled();
+  });
+
+  it("waits out a refresh lock held by another process instead of stampeding the upstream", async () => {
+    vi.useFakeTimers();
+    const timestamp = new Date();
+    let sharedEntry: CacheEntry<string> | null = null;
+    const requestAsync = vi.fn(async () => "upstream");
+    const sharedCache = {
+      generation: "shared-1",
+      isShared: true,
+      getAsync: vi.fn(async () => sharedEntry),
+      setAsync: vi.fn(async () => undefined),
+      // A different process/pod already holds the refresh lock.
+      acquireRefreshLockAsync: vi.fn(async () => null),
+      releaseRefreshLockAsync: vi.fn(async () => undefined),
+    };
+    const handler = createRequestHandler<string, { id: string }>({
+      cacheTtlMs: 1_000,
+      requestAsync,
+      getSharedCacheAsync: async () => sharedCache,
+    });
+
+    const pending = handler.handler({ id: "same" }).getDataAsync();
+
+    // Poll well past the old fixed wait window while the lock is still held and the
+    // shared cache is empty: the waiter must keep waiting, not fetch upstream itself.
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(requestAsync).not.toHaveBeenCalled();
+
+    // The lock holder finishes and publishes the entry to the shared cache.
+    sharedEntry = {
+      data: "shared",
+      timestamp,
+      expiresAt: Date.now() + 1_000,
+      staleUntil: Date.now() + 1_000,
+    };
+    await vi.advanceTimersByTimeAsync(100);
+
+    await expect(pending).resolves.toMatchObject({ data: "shared", timestamp });
+    expect(requestAsync).not.toHaveBeenCalled();
   });
 
   it("deduplicates while the shared cache is being resolved", async () => {
