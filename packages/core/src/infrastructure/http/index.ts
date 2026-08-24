@@ -5,4 +5,5 @@ export {
   createCustomCheckServerIdentity,
   createHttpsAgentAsync,
   fetchWithTrustedCertificatesAsync,
+  mergeHeadersWithUserAgent,
 } from "./request";

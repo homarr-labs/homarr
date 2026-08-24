@@ -91,7 +91,7 @@
       },
       "settings": {
         "title": "Asetukset",
-        "subtitle": "Määritä palvelinasetukset."
+        "subtitle": "Määritä palvelimen asetukset."
       },
       "integrations": {
         "title": "Integraatiot",
@@ -110,7 +110,7 @@
             "message": "Jotain meni pieleen kojelautaasi määritettäessä. Yritä uudelleen."
           },
           "helpers": {
-            "tooltip": "URL-apurit",
+            "tooltip": "URL-avustajat",
             "description": "Nämä apurit pyrkivät arvaamaan palveluidesi URL-osoitteet. Jos tämä ei toimi, kirjoita osoite manuaalisesti."
           }
         },
@@ -131,7 +131,7 @@
           "summary": "Homarr havaitse {apps} sovellusta, joista {integrations} löytyy sisäänrakennettu integraatio",
           "appBadge": "Sovellus",
           "appSectionLabel": "Ohjauspaneeliin lisättävät sovellukset ({count} valittu)",
-          "scanning": "Dockeria tutkitaan...",
+          "scanning": "Tutkitaan Dockeria...",
           "scanningDescription": "Tunnistetaan järjestelmässäsi suoritettavia kontteja"
         }
       },
@@ -159,7 +159,7 @@
       },
       "invite": {
         "title": "Liity Homarriin",
-        "subtitle": "Tervetuloa Homarriin! Luo itsellesi käyttäjätunnus",
+        "subtitle": "Tervetuloa Homarriin! Luo käyttäjätunnuksesi",
         "description": "Sinut kutsui {username}"
       },
       "init": {
@@ -218,7 +218,7 @@
     "action": {
       "login": {
         "label": "Kirjaudu",
-        "labelWith": "Kirjaudu {{provider}}-tunnuksella",
+        "labelWith": "Kirjaudu palvelulla: {provider}",
         "notification": {
           "success": {
             "title": "Kirjautuminen onnistui",
@@ -302,7 +302,7 @@
       "changeDdgBangs": {
         "notification": {
           "success": {
-            "message": "DuckDuckGo Bangs -komentojen tila vaihdettiin"
+            "message": "DuckDuckGon Bangs-komentojen tila vaihdettiin"
           },
           "error": {
             "message": "DuckDuckGo Bangs -komentojen tilaa ei voitu vaihtaa"
@@ -397,7 +397,7 @@
           },
           "use-all": {
             "label": "Sovellusten käyttö",
-            "description": "Sallii jäsenten lisätä kaikkia sovelluksia paneeleihinsa."
+            "description": "Sallii jäsenten lisätä kaikkia sovelluksia paneeleihinsa"
           },
           "modify-all": {
             "label": "Sovellusten muokkaus",
@@ -414,19 +414,19 @@
         "item": {
           "create": {
             "label": "Paneelien luonti",
-            "description": "Sallii jäsenten luoda paneeleita."
+            "description": "Sallii jäsenten luoda paneeleita"
           },
           "view-all": {
             "label": "Paneelien tarkastelu",
-            "description": "Sallii jäsenten tarkastella kaikkia paneeleita."
+            "description": "Sallii jäsenten tarkastella kaikkia paneeleita"
           },
           "modify-all": {
             "label": "Paneelien muokkaus",
-            "description": "Sallii jäsenten muokata kaikkia paneeleita (pois lukien käyttöoikeudet ja vaaravyöhyke)."
+            "description": "Sallii jäsenten muokata kaikkia paneeleita (pois lukien käyttöoikeudet ja vaaravyöhyke)"
           },
           "full-all": {
             "label": "Paneelien hallinta",
-            "description": "Sallii jäsenten tarkastella, muokata ja poistaa kaikkia paneeleita (mukaan lukien käyttöoikeudet ja vaaravyöhyke)."
+            "description": "Sallii jäsenten tarkastella, muokata ja poistaa kaikkia paneeleita (mukaan lukien käyttöoikeudet ja vaaravyöhyke)"
           }
         }
       },
@@ -996,7 +996,7 @@
     "grid": {
       "widgetCount": "{count} widgettiä",
       "noWidgets": "Widgettejä ei ole",
-      "detected": "Havaittu Dockerin kautta"
+      "detected": "Havaittu Dockerilla"
     },
     "category": {
       "dnsHole": "DNS",
@@ -1228,7 +1228,7 @@
         },
         "tooManyRequests": {
           "title": "",
-          "message": "Pyyntöjä oli liikaa. Pyyntöjäsi todennäköisesti rajoitetaan tai sinut estetään kohdejärjestelmässä."
+          "message": "Pyyntöjä oli liikaa. Pyyntöjäsi todennäköisesti rajoitetaan tai sinut estetään kohdejärjestelmässä"
         }
       }
     },
@@ -1254,8 +1254,8 @@
           "newLabel": "Uusi käyttäjätunnus"
         },
         "apiKey": {
-          "label": "Rajapinnan avain",
-          "newLabel": "Uusi rajapinnan avain"
+          "label": "API-avain",
+          "newLabel": "Uusi API-avain"
         },
         "password": {
           "label": "Salasana",
@@ -1442,15 +1442,15 @@
     "iconPicker": {
       "label": "Kuvakkeen URL-osoite",
       "description": "Etsi kirjastosta, liitä kuvan URL-osoite tai lataa tiedosto.",
-      "header": "Suodata kuvakkeita syöttämällä nimi tai objekti... Homarr etsii {countIcons} kuvakkeesta.",
-      "headerLoading": "Kirjoita hakeaksesi kuvakkeita…",
+      "header": "Etsi {countIcons} kuvaa nimen mukaan",
+      "headerLoading": "Hae kuvia nimen mukaan",
       "clear": "Tyhjennä kuva",
       "uploadImage": "Lataa kuva",
       "results": "Haun tulokset",
       "localImages": "Omat kuvat",
       "svgIcons": "SVG kuvakkeet",
       "otherImages": "Muut kuvat",
-      "urlLoading": "",
+      "urlLoading": "Tarkistetaan kuvaa…",
       "urlReady": "Kuva on valmis käytettäväksi",
       "urlError": "Kuvaa ei voitu ladata. Tarkista URL-osoite ja yritä uudelleen.",
       "noResults": "Ei kuvakkeita haulla \"{search}\".",
@@ -2285,7 +2285,7 @@
         },
         "showCurrentWindSpeed": {
           "label": "Näytä nykyinen tuulen nopeus",
-          "description": "Vain nykyiselle säälle."
+          "description": "Vain nykyiselle säälle"
         },
         "useImperialSpeed": {
           "label": "Käytä tuulen nopeudelle mph-yksikköä"
@@ -2476,19 +2476,19 @@
           "label": "Käänteinen järjestys"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Sarakkeiden järjestys"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Sarakkeiden leveydet"
         }
       },
       "error": {
         "internalServerError": "",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "Taulukon asettelua ei tallennettu",
+        "layoutSaveMessage": "Docker-taulukon asettelua ei voitu tallentaa. Yritä siirtää tai muuttaa sarakkeen kokoa uudelleen."
       },
       "empty": {
-        "noContainers": ""
+        "noContainers": "Kontteja ei löytynyt"
       }
     },
     "coolify": {
@@ -2784,17 +2784,17 @@
           "description": ""
         },
         "showBitrate": {
-          "label": "",
-          "description": ""
+          "label": "Näytä bittinopeus",
+          "description": "Näytä nykyinen toiston bittinopeus sijainnin vieressä"
         },
         "showLocation": {
-          "label": "",
-          "description": ""
+          "label": "Näytä sijainti",
+          "description": "Näytä, onko suoratoisto LAN- vai WAN-verkossa."
         }
       },
       "footer": {
-        "streams": "",
-        "totalBitrate": ""
+        "streams": "{count, plural, one {# aktiivinen suoratoisto} other {# aktiivista suoratoistoa}}",
+        "totalBitrate": "Yhteensä: {bitrate}"
       },
       "items": {
         "currentlyPlaying": "",
@@ -2803,9 +2803,9 @@
         "id": "",
         "status": "Tila",
         "directPlay": "Muuntamaton toisto",
-        "directStream": "",
-        "transcodeVideo": "",
-        "transcodeAudio": "",
+        "directStream": "Suora suoratoisto",
+        "transcodeVideo": "Videon transkoodaus",
+        "transcodeAudio": "Äänen transkoodaus",
         "transcoding": "Transkoodaus",
         "paused": "Keskeytetty",
         "remaining": "{minutes} min jäljellä",
@@ -3150,21 +3150,21 @@
         },
         "limitPerIntegration": {
           "label": "Integraation elementtien määrärajoitus",
-          "description": "Tämä rajoittaa näytettävien elementtien määrää integraatiokohtaisesti, ei kokonaisvaltaisesti."
+          "description": "Tämä rajoittaa näytettävien elementtien määrää integraatiokohtaisesti, ei kokonaisvaltaisesti"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Sarakkeiden järjestys"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Sarakkeiden leveydet"
         }
       },
       "errors": {
         "noColumns": "Valitse kohteiden sarakkeet",
         "noCommunications": "Integraatiolta ei voida noutaa tietoja",
-        "noItems": "",
-        "actionFailed": "",
-        "actionFailedMessage": ""
+        "noItems": "Latauksia ei löytynyt",
+        "actionFailed": "Toiminto epäonnistui",
+        "actionFailedMessage": "Toimintoa ei voitu suorittaa. Yritä uudelleen."
       },
       "items": {
         "actions": {
@@ -3188,7 +3188,7 @@
         },
         "id": {
           "columnTitle": "Tunniste",
-          "detailsTitle": ""
+          "detailsTitle": "Kohteen ID"
         },
         "integration": {
           "columnTitle": "Integraatio"
@@ -3223,7 +3223,7 @@
         "time": {
           "columnTitle": "Valmistumisaika",
           "detailsTitle": "",
-          "eta": ""
+          "eta": "Arvioitu aika"
         },
         "type": {
           "columnTitle": "Tyyppi",
@@ -3269,21 +3269,21 @@
       },
       "globalRatio": "Kokonaissuhde",
       "contextMenu": {
-        "copyName": "",
-        "copyId": "",
-        "clearFilters": ""
+        "copyName": "Kopioi nimi",
+        "copyId": "Kopioi ID",
+        "clearFilters": "Tyhjennä suodattimet"
       },
       "footer": {
-        "filter": ""
+        "filter": "Suodata latauksia"
       },
       "stats": {
-        "show": "",
-        "hide": "",
-        "overallProgress": "",
-        "totalSize": "",
-        "clients": ""
+        "show": "Näytä globaalit tilastot",
+        "hide": "Piilota globaalit tilastot",
+        "overallProgress": "Jonon kokonaisedistyminen",
+        "totalSize": "Jonon kokonaiskoko",
+        "clients": "{count, plural, one {# asiakas} other {# asiakasta}}"
       },
-      "disconnected": ""
+      "disconnected": "(ei yhteydessä)"
     },
     "mediaReleases": {
       "name": "",
@@ -3745,7 +3745,7 @@
       "unhealthy": "",
       "ok": "",
       "fail": "",
-      "noSectionsEnabled": "Aktivoi ainakin yksi osio widgetin asetuksista.",
+      "noSectionsEnabled": "Ota ainakin yksi osio käyttöön widgetin asetuksista.",
       "error": {
         "internalServerError": ""
       }
@@ -4014,17 +4014,17 @@
           "label": "Näytä agentin versio"
         },
         "columnOrder": {
-          "label": ""
+          "label": "Sarakkeiden järjestys"
         },
         "columnWidths": {
-          "label": ""
+          "label": "Sarakkeiden leveydet"
         }
       },
       "noRecords": "Järjestelmiä ei löytynyt",
       "error": {
         "internalServerError": "Beszel-yhteyden muodostaminen epäonnistui. Tarkista integraatioasetuksesi.",
-        "layoutSaveTitle": "",
-        "layoutSaveMessage": ""
+        "layoutSaveTitle": "Taulukon asettelua ei voitu tallentaa",
+        "layoutSaveMessage": "Sarakkeiden järjestystä tai leveyksiä ei voitu tallentaa. Yritä uudelleen."
       },
       "column": {
         "system": "Järjestelmä",
@@ -4423,7 +4423,7 @@
       },
       "itemRadius": {
         "label": "Kohteen säde",
-        "description": "Muuttaa paneelin korttien kulmien pyöristystä.",
+        "description": "Muuttaa paneelin korttien pyöreyttä",
         "option": {
           "xs": "Erittäin pieni",
           "sm": "Pieni",
@@ -4968,7 +4968,7 @@
               "label": "Analytiikka"
             },
             "ping": {
-              "label": "Ping-koestukset"
+              "label": "Pingit"
             }
           },
           "interval": {
@@ -5333,7 +5333,7 @@
       "refresh": {
         "lastUpdated": "Viimeisin päivitys {when}"
       },
-      "search": "Suodata {count} konttia...",
+      "search": "Suodata {count} konttia",
       "selected": "{selectCount}/{totalCount} kontista valittu",
       "footer": "Yhteensä {count} konttia",
       "totalCpu": "CPU yhteensä: {cpu}%",
@@ -5422,7 +5422,7 @@
       },
       "remove": {
         "label": "Poista",
-        "confirm": "",
+        "confirm": "Napsauta uudelleen poistaaksesi pysyvästi",
         "notification": {
           "success": {
             "title": "",
@@ -5964,14 +5964,14 @@
             "title": "Asetukset",
             "children": {
               "detail": {
-                "title": "Valitse muutettava asetus.",
+                "title": "Valitse muutettava asetus",
                 "backHint": "Palaa takaisin askelpalauttimella tai painamalla Takaisin-painiketta",
                 "backAction": "Palaa takaisin"
               }
             },
             "notification": {
               "error": {
-                "message": "Asetusta ei voitu päivittää."
+                "message": "Asetusta ei voitu päivittää"
               }
             },
             "option": {
@@ -6055,10 +6055,10 @@
                 }
               },
               "pingIconsEnabled": {
-                "label": "Käytä ping-kuvakkeita",
+                "label": "Käytä ping-ikoneita",
                 "children": {
                   "detail": {
-                    "title": "Käytä ping-kuvakkeita"
+                    "title": "Käytä ping-ikoneita"
                   }
                 }
               },
@@ -6237,7 +6237,7 @@
                 "label": "Hallinnoi Dockeria"
               },
               "manageApi": {
-                "label": "Swagger-rajapinta"
+                "label": "Swagger API"
               },
               "manageLog": {
                 "label": "Tarkastele lokeja"

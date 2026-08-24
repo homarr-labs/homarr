@@ -1346,7 +1346,7 @@
     },
     "wud": {
       "name": "What's Up Docker",
-      "description": "Sledujte, ktoré z vašich Docker kontajnerov majú k dispozícii aktualizácie obrazov."
+      "description": "Sledujte, ktoré z vašich Docker kontajnerov majú k dispozícii aktualizácie obrazov"
     },
     "paperlessNgx": {
       "name": "Paperless-ngx",
@@ -1442,7 +1442,7 @@
     "iconPicker": {
       "label": "URL ikony",
       "description": "Vyhľadajte v knižnici, prilepte URL obrázka alebo nahrajte súbor.",
-      "header": "Zadajte názov alebo objekty na filtrovanie ikon... Homarr pre vás vyhľadá ikony na stránke {countIcons} .",
+      "header": "Zadajte názov alebo objekty na filtrovanie ikon... Homarr pre vás vyhľadá ikony na stránke {countIcons} ",
       "headerLoading": "Vyhľadať obrázky podľa názvu",
       "clear": "Odstrániť obrázok",
       "uploadImage": "Nahrať obrázok",
@@ -1835,7 +1835,7 @@
         },
         "showUpdateList": {
           "label": "Zobraziť zoznam aktualizácií kontajnerov",
-          "description": "Uvádza každý sledovaný kontajner, ktorý má dostupnú aktualizáciu obrazu."
+          "description": "Uvádza každý sledovaný kontajner, ktorý má dostupnú aktualizáciu obrazu"
         }
       }
     },
@@ -2308,12 +2308,12 @@
           "description": "Ako by mal dátum vyzerať"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Východ slnka",
         "sunset": "Západ slnka",
-        "maxWindSpeed": "Maximálna rýchlosť vetra: {maxWindSpeed} km/h",
-        "maxWindGusts": "Maximálne nárazy vetra: {maxWindGusts} km/h",
+        "maxWindSpeed": "Maximálna rýchlosť vetra: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Maximálne nárazy vetra: {maxWindGusts} {unit}",
         "humidity": ""
       },
       "kind": {

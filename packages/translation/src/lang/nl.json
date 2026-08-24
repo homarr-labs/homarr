@@ -1442,7 +1442,7 @@
     "iconPicker": {
       "label": "Icoon-URL",
       "description": "Zoek in de bibliotheek, plak een afbeelding-URL of upload een bestand.",
-      "header": "Typ naam of objecten om te filteren op iconen… Homarr doorzoekt {countIcons} iconen voor je.",
+      "header": "Zoek {countIcons} afbeeldingen op naam",
       "headerLoading": "Afbeeldingen zoeken op naam",
       "clear": "Verwijder afbeelding",
       "uploadImage": "Afbeelding uploaden",
