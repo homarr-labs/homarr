@@ -42,10 +42,14 @@ export const serverSettingsRouter = createTRPCRouter({
   getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
     return await getServerSettingsAsync(ctx.db);
   }),
-  getBranding: publicProcedure.query(async ({ ctx }) => {
-    const branding = await getServerSettingByKeyAsync(ctx.db, "branding");
-    return parseBrandingSettings(branding);
-  }),
+  getBranding: publicProcedure
+    .meta({
+      mcp: { enabled: true, description: "Returns the public instance branding configuration." },
+    })
+    .query(async ({ ctx }) => {
+      const branding = await getServerSettingByKeyAsync(ctx.db, "branding");
+      return parseBrandingSettings(branding);
+    }),
   getBoardSettings: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({

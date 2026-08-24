@@ -8,7 +8,6 @@ import { getI18n } from "@homarr/translation/server";
 
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
-import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
 import { DeleteUserButton } from "./_components/_delete-user-button";
 import { UserGeneralSettingsForm } from "./_components/_general-settings-form";
@@ -38,7 +37,7 @@ export async function generateMetadata(props: Props) {
 
   return {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    title: createMetaTitle(t("metaTitle", { username: user.name! })),
+    title: t("metaTitle", { username: user.name! }),
   };
 }
 

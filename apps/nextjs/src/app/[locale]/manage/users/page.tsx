@@ -9,7 +9,6 @@ import { Link } from "@homarr/ui";
 import { TourTarget } from "~/components/layout/header/tour-target";
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
-import { createMetaTitle } from "~/metadata";
 import { UserListComponent } from "./_components/user-list";
 
 export async function generateMetadata() {
@@ -20,7 +19,7 @@ export async function generateMetadata() {
   const t = await getI18n("management.page.user.list");
 
   return {
-    title: createMetaTitle(t("metaTitle")),
+    title: t("metaTitle"),
   };
 }
 

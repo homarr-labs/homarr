@@ -7597,6 +7597,10 @@
       }
     }
   },
+  "metadata": {
+    "description": "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.",
+    "dashboardTitle": "{appName} Dashboard"
+  },
   "assistant": {
     "title": "Assistant",
     "open": "Open Assistant",

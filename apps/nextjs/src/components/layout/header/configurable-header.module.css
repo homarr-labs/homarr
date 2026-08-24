@@ -10,7 +10,6 @@
   width: 100%;
   height: 100%;
   padding-inline: var(--mantine-spacing-md);
-  direction: ltr;
 }
 
 .zone {
@@ -52,7 +51,7 @@
   border-radius: var(--mantine-radius-md);
 }
 
-.logo :global(img.logo) {
+.logo img {
   display: block;
   width: auto;
   height: auto;
@@ -65,7 +64,9 @@
   flex-wrap: nowrap;
 }
 
-.logo :global(.mantine-Title-root) {
+.logo h1,
+.logo h2,
+.logo h3 {
   display: none;
 }
 
@@ -84,7 +85,7 @@
   max-width: 100%;
 }
 
-.zone :global([data-tour-target="board-search"]) {
+.zone [data-tour-target="board-search"] {
   min-width: 0;
   max-width: 100%;
 }
@@ -119,7 +120,7 @@
   transform: translateY(0) scale(1);
 }
 
-.floatingControls :global(.mantine-UnstyledButton-root) {
+.floatingControls button {
   display: flex;
   align-items: center;
   justify-content: center;

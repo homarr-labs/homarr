@@ -16,7 +16,6 @@ import type { WidgetKind } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
 
-import { createMetaTitle } from "~/metadata";
 import { env } from "~/env";
 import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
@@ -115,9 +114,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         const favicon = !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : brandFavicon;
 
         return {
-          title: board.metaTitle
-            ? { absolute: board.metaTitle }
-            : createMetaTitle(t("content.metaTitle", { boardName: board.name })),
+          title: board.metaTitle ? { absolute: board.metaTitle } : t("content.metaTitle", { boardName: board.name }),
           icons: {
             icon: favicon,
             apple: favicon,

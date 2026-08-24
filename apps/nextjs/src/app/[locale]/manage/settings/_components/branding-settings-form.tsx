@@ -93,10 +93,7 @@ export const BrandingSettingsForm = ({ form }: BrandingSettingsFormProps) => {
               value={branding.defaultRadius}
               labels={
                 Object.fromEntries(
-                  cornerStyleValues.map((cornerStyle) => [
-                    cornerStyle,
-                    t(`defaultRadius.options.${cornerStyle}` as never),
-                  ]),
+                  cornerStyleValues.map((cornerStyle) => [cornerStyle, t(`defaultRadius.options.${cornerStyle}`)]),
                 ) as Record<(typeof cornerStyleValues)[number], string>
               }
               onChange={(cornerStyle) => form.setFieldValue("branding.defaultRadius", cornerStyle)}
@@ -190,7 +187,7 @@ const BrandingSummary = ({ form }: BrandingSettingsFormProps) => {
         <Group justify="space-between" gap="xs" wrap="wrap">
           <Text fw={650}>{t("summary.title")}</Text>
           <Badge variant="light">
-            {t("summary.cornerStyle")}: {t(`defaultRadius.options.${branding.defaultRadius}` as never)}
+            {t("summary.cornerStyle")}: {t(`defaultRadius.options.${branding.defaultRadius}`)}
           </Badge>
         </Group>
         <SimpleGrid cols={{ base: 1, sm: 2, xl: 3 }} spacing="md" verticalSpacing="sm">

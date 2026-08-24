@@ -27,6 +27,7 @@ import { SettingsProvider } from "@homarr/settings";
 import { SpotlightProvider } from "@homarr/spotlight";
 import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
+import { getI18n } from "@homarr/translation/server";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
 import { Analytics } from "~/components/layout/analytics";
@@ -53,25 +54,26 @@ const fontSans = Inter({
 
 const logger = createLogger({ module: "rootLayout" });
 
-const defaultDescription =
-  "A self-hosted dashboard for the *arr stack and your entire homelab. Integrates with 50+ services, real-time widgets, no config files.";
-
-// eslint-disable-next-line no-restricted-syntax
 export const generateMetadata = async (): Promise<Metadata> => {
-  const [serverSettings, colorScheme] = await Promise.all([getRscServerSettingsAsync(), getCurrentColorSchemeAsync()]);
+  const [serverSettings, colorScheme, t] = await Promise.all([
+    getRscServerSettingsAsync(),
+    getCurrentColorSchemeAsync(),
+    getI18n("metadata"),
+  ]);
   const { appName, faviconImageUrl, logoImageUrl } = serverSettings.branding;
   const logo = logoImageUrl ?? "/logo/logo.png";
   const favicon = faviconImageUrl ?? logo;
+  const description = t("description");
 
   return {
     title: {
       default: appName,
       template: `%s • ${appName}`,
     },
-    description: defaultDescription,
+    description,
     openGraph: {
-      title: `${appName} Dashboard`,
-      description: defaultDescription,
+      title: t("dashboardTitle", { appName }),
+      description,
       url: env.HOMARR_WEBSITE_URL,
       siteName: appName,
     },
@@ -88,7 +90,6 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
-// eslint-disable-next-line no-restricted-syntax
 export const generateViewport = async (): Promise<Viewport> => {
   const serverSettings = await getRscServerSettingsAsync();
   return { themeColor: serverSettings.branding.primaryColor };

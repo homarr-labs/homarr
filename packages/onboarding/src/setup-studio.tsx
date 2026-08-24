@@ -1464,7 +1464,7 @@ const BoardBuilder = (props: StudioSectionProps) => {
             value={props.itemRadius}
             labels={
               Object.fromEntries(
-                cornerStyleValues.map((cornerStyle) => [cornerStyle, t(`radiusOptions.${cornerStyle}` as never)]),
+                cornerStyleValues.map((cornerStyle) => [cornerStyle, t(`radiusOptions.${cornerStyle}`)]),
               ) as Record<CornerStyle, string>
             }
             onChange={props.setItemRadius}

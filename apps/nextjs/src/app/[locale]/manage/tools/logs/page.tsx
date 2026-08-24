@@ -11,7 +11,6 @@ import { logsEnv } from "@homarr/core/infrastructure/logs/env";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";
-import { createMetaTitle } from "~/metadata";
 import { ClientSideTerminalComponent } from "./client";
 import { LogFontSizeSlider } from "./font-size-slider";
 import { LogLevelSelection } from "./level-selection";
@@ -25,7 +24,7 @@ export async function generateMetadata() {
   const t = await getI18n("management");
 
   return {
-    title: createMetaTitle(t("metaTitle")),
+    title: t("metaTitle"),
   };
 }
 

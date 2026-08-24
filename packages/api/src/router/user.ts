@@ -727,8 +727,6 @@ export const userRouter = createTRPCRouter({
         .where(eq(users.id, input.id));
     }),
   changeHeaderPreferences: protectedProcedure
-    .input(z.object({ id: z.string(), headerPreferences: headerPreferencesMutationSchema }))
-    .output(z.void())
     .meta({
       openapi: {
         method: "PATCH",
@@ -736,7 +734,14 @@ export const userRouter = createTRPCRouter({
         tags: ["users"],
         protect: true,
       },
+      mcp: {
+        enabled: true,
+        description:
+          "Update the header layout preferences of a user. REQUIRED: id (user ID), headerPreferences (zones for left, center and right, visible flag and searchDisplay). Admins can change any user; other users can only change their own. Board shortcut items must reference boards the target user can view",
+      },
     })
+    .input(z.object({ id: z.string(), headerPreferences: headerPreferencesMutationSchema }))
+    .output(z.void())
     .mutation(async ({ input, ctx }) => {
       if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
         throw new TRPCError({

@@ -5,13 +5,12 @@ import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
-import { createMetaTitle } from "~/metadata";
 import { AssistantConfiguration } from "./_components/assistant-configuration";
 
 export async function generateMetadata() {
   const t = await getI18n("management.page.settings.section.assistant");
   return {
-    title: createMetaTitle(t("title")),
+    title: t("title"),
   };
 }
 

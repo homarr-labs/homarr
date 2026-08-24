@@ -39,7 +39,6 @@ import { getI18n } from "@homarr/translation/server";
 
 import { homarrLogoPath } from "~/components/layout/logo/constants";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { createMetaTitle } from "~/metadata";
 import { getDependenciesAsync, getPackageVersion } from "~/versions/package-reader";
 import githubContributors from "@static-data/contributors.json";
 import openCollectiveContributors from "@static-data/opencollective-contributors.json";
@@ -50,7 +49,7 @@ export async function generateMetadata() {
   const t = await getI18n("management");
 
   return {
-    title: createMetaTitle(t("metaTitle")),
+    title: t("metaTitle"),
   };
 }
 

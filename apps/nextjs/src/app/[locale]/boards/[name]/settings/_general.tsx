@@ -11,7 +11,6 @@ import { useI18n } from "@homarr/translation/client";
 import { useSettings } from "@homarr/settings";
 
 import { SectionCard } from "~/components/manage/section-card";
-import { createMetaTitle } from "~/metadata";
 import type { Board } from "../../_types";
 import type { FormValues } from "./_settings-form";
 
@@ -23,7 +22,7 @@ interface Props {
 export const GeneralSettingsContent = ({ board, form }: Props) => {
   const t = useI18n("board");
   const { branding } = useSettings();
-  const defaultMetaTitle = createMetaTitle(t("content.metaTitle", { boardName: board.name }), branding.appName);
+  const defaultMetaTitle = t("content.metaTitle", { boardName: board.name });
 
   useLogoPreview(form.values.logoImageUrl);
   const metaTitleStatus = useMetaTitlePreview(form.values.metaTitle, defaultMetaTitle);
