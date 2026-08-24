@@ -181,13 +181,7 @@ const searchAccessibleBoardsAsync = async (
         where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
       },
       groupPermissions: {
-        where:
-          permissionsOfCurrentUserGroupsWhenPresent.length >= 1
-            ? inArray(
-                boardGroupPermissions.groupId,
-                permissionsOfCurrentUserGroupsWhenPresent.map((groupMember) => groupMember.groupId),
-              )
-            : undefined,
+        where: getBoardGroupPermissionWhere(permissionsOfCurrentUserGroupsWhenPresent),
       },
     },
   });
@@ -561,9 +555,17 @@ export const boardRouter = createTRPCRouter({
       };
     });
   }),
-  catalog: publicProcedure.query(async ({ ctx }) => searchAccessibleBoardsAsync(ctx, "")),
+  catalog: publicProcedure
+    .meta({ mcp: { enabled: true, description: "List every board the current user can access." } })
+    .query(async ({ ctx }) => searchAccessibleBoardsAsync(ctx, "")),
   search: publicProcedure
     .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "Search accessible boards by name. REQUIRED: query (string). OPTIONAL: limit (number).",
+      },
+    })
     .query(async ({ ctx, input }) => searchAccessibleBoardsAsync(ctx, input.query, input.limit)),
   createBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
