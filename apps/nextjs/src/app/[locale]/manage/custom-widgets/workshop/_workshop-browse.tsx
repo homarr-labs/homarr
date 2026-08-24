@@ -11,7 +11,6 @@ import { useWorkshopQuery } from "@homarr/workshop/backend";
 
 import { ManagePageLayout } from "~/components/manage/manage-page-layout";
 import { NoResults } from "~/components/no-results";
-import { getWorkshopWebUrl } from "~/components/workshop/workshop-client";
 import { WorkshopAccountButton, useWorkshopSession } from "~/components/workshop/workshop-session";
 import { WorkshopSubmissionGrid } from "~/components/workshop/workshop-submission-grid";
 import { WorkshopVoteControl } from "~/components/workshop/workshop-vote-control";
@@ -23,9 +22,10 @@ interface WorkshopBrowseProps {
   search: string | undefined;
   sort: "top" | "newest";
   page: number;
+  workshopWebUrl: string;
 }
 
-export function WorkshopBrowse({ search, sort, page }: WorkshopBrowseProps) {
+export function WorkshopBrowse({ search, sort, page, workshopWebUrl }: WorkshopBrowseProps) {
   const t = useI18n("workshop");
   const tCommon = useI18n("common.action");
   const session = useWorkshopSession();
@@ -46,7 +46,7 @@ export function WorkshopBrowse({ search, sort, page }: WorkshopBrowseProps) {
           <WorkshopAccountButton session={session} />
           <Button
             component="a"
-            href={getWorkshopWebUrl()}
+            href={workshopWebUrl}
             target="_blank"
             rel="noopener noreferrer"
             variant="default"
@@ -100,7 +100,7 @@ export function WorkshopBrowse({ search, sort, page }: WorkshopBrowseProps) {
               <Tooltip label={t("openCommunity")}>
                 <ActionIcon
                   component="a"
-                  href={getWorkshopWebUrl(item.id)}
+                  href={`${workshopWebUrl.replace(/\/+$/u, "")}/${encodeURIComponent(item.id)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   variant="subtle"

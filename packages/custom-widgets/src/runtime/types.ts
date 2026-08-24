@@ -79,6 +79,7 @@ export interface CustomWidgetRuntimeMessages {
 export interface CustomWidgetRuntimeValue {
   itemId?: string;
   definitionId?: string;
+  queryCacheKey?: string;
   previewSessionId?: string;
   previewLiveActions?: boolean;
   queriesDisabled?: boolean;

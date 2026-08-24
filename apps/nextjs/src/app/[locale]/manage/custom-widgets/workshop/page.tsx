@@ -3,6 +3,9 @@ import { z } from "zod/v4";
 
 import { auth } from "@homarr/auth/next";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
+import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
+
+import { env } from "~/env";
 
 import { WorkshopBrowse } from "./_workshop-browse";
 
@@ -26,6 +29,13 @@ export default async function WorkshopBrowsePage(props: WorkshopBrowsePageProps)
   if (!session?.user.permissions.includes("admin")) redirect(session ? "/" : "/auth/login");
 
   const { search, sort, page } = searchParamsSchema.parse(await props.searchParams);
+  const { workshopWebUrl } = resolveHomarrUrlConfig({
+    homarrWebsiteUrl: env.HOMARR_WEBSITE_URL,
+    workshopApiUrl: env.WORKSHOP_API_URL,
+    workshopWebUrl: env.WORKSHOP_WEB_URL,
+  });
 
-  return <WorkshopBrowse search={search?.trim() || undefined} sort={sort} page={page} />;
+  return (
+    <WorkshopBrowse search={search?.trim() || undefined} sort={sort} page={page} workshopWebUrl={workshopWebUrl} />
+  );
 }

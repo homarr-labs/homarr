@@ -851,6 +851,7 @@
         "line": "Line {line, number}",
         "ast": "{value}",
         "bindingTypeConflict": "The input \"{value}\" is shared by controls with incompatible value types.",
+        "runtimeBindingTypeConflict": "The input \"{value}\" is bound as both {firstType} and {secondType}.",
         "dynamicRequestId": "A literal requestId is required. Dynamic request IDs are not accepted.",
         "dynamicInputBinding": "A literal input name is required for bind.",
         "inlineRequestProps": "Network components accept requestId and params; inline URL, method, header, and body props are blocked.",
@@ -1068,8 +1069,11 @@
         },
         "size": {
           "compact": "Compact",
+          "compactShort": "S",
           "standard": "Standard",
-          "wide": "Wide"
+          "standardShort": "M",
+          "wide": "Wide",
+          "wideShort": "L"
         },
         "fixture": {
           "live": "Live",

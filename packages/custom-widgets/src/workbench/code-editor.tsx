@@ -1,9 +1,9 @@
 "use client";
 
 import { indentSelection, redo, redoDepth, undo, undoDepth } from "@codemirror/commands";
-import type { EditorView as EditorViewType } from "@codemirror/view";
+import type { EditorView as EditorViewType, ViewUpdate } from "@codemirror/view";
 import { EditorView } from "@codemirror/view";
-import { lazy, Suspense, useCallback, useEffect, useId, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Badge, Collapse, Group, Input, Loader, Tabs, Text, useComputedColorScheme } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 
@@ -24,11 +24,11 @@ export type {
 } from "./code-editor-types";
 
 const EMPTY_DIAGNOSTICS: NonNullable<CustomWidgetCodeEditorProps["diagnostics"]> = [];
+const EMPTY_COMPLETIONS: NonNullable<CustomWidgetCodeEditorProps["completions"]> = [];
 const LazyCodeMirror = lazy(() => import("./direct-code-mirror"));
-const editorViews = new Map<string, EditorViewType>();
 
 export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
-  const editorInstanceId = useId();
+  const editorViewRef = useRef<EditorViewType>(null);
   const diagnostics = props.diagnostics ?? EMPTY_DIAGNOSTICS;
   const [editorReady, setEditorReady] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -41,7 +41,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
     setEditorReady(true);
   }, []);
   useEffect(() => {
-    const editorView = editorViews.get(editorInstanceId);
+    const editorView = editorViewRef.current;
     if (!editorView || !props.revealText) return;
     const from = editorView.state.doc.toString().indexOf(props.revealText);
     if (from < 0) return;
@@ -50,9 +50,9 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
       effects: EditorView.scrollIntoView(from, { y: "center" }),
     });
     editorView.focus();
-  }, [editorCreated, editorInstanceId, props.revealKey, props.revealText]);
+  }, [editorCreated, props.revealKey, props.revealText]);
   useEffect(() => {
-    const editorView = editorViews.get(editorInstanceId);
+    const editorView = editorViewRef.current;
     if (!editorView || !props.insertText) return;
     const selection = editorView.state.selection.main;
     editorView.dispatch({
@@ -61,30 +61,51 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
       scrollIntoView: true,
     });
     editorView.focus();
-  }, [editorCreated, editorInstanceId, props.insertKey, props.insertText]);
-  const handleCreateEditor = useCallback(
-    (view: EditorViewType) => {
-      editorViews.set(editorInstanceId, view);
-      window.setTimeout(() => setEditorCreated(true), 0);
-    },
-    [editorInstanceId],
-  );
-  const handleDestroyEditor = useCallback(() => {
-    editorViews.delete(editorInstanceId);
-  }, [editorInstanceId]);
-  const selectDiagnostic = useCallback(
-    (diagnostic: EditorDiagnostic) => {
-      const editorView = editorViews.get(editorInstanceId);
-      if (!editorView || diagnostic.index === undefined) return;
-      const anchor = Math.min(diagnostic.index, editorView.state.doc.length);
-      editorView.dispatch({ selection: { anchor }, scrollIntoView: true });
-      editorView.focus();
-    },
-    [editorInstanceId],
-  );
+  }, [editorCreated, props.insertKey, props.insertText]);
+  const handleCreateEditor = useCallback((view: EditorViewType) => {
+    editorViewRef.current = view;
+    window.setTimeout(() => {
+      if (editorViewRef.current === view) setEditorCreated(true);
+    }, 0);
+  }, []);
+  const handleDestroyEditor = useCallback((view: EditorViewType) => {
+    if (editorViewRef.current !== view) return;
+    editorViewRef.current = null;
+    setEditorCreated(false);
+    setCursor({ line: 1, column: 1 });
+    setHistoryDepth({ undo: 0, redo: 0 });
+  }, []);
+  const handleUndo = useCallback(() => {
+    const editorView = editorViewRef.current;
+    if (!editorView) return;
+    undo(editorView);
+    editorView.focus();
+  }, []);
+  const handleRedo = useCallback(() => {
+    const editorView = editorViewRef.current;
+    if (!editorView) return;
+    redo(editorView);
+    editorView.focus();
+  }, []);
+  const handleUpdate = useCallback((update: ViewUpdate) => {
+    if (!update.selectionSet && !update.docChanged) return;
+    const head = update.state.selection.main.head;
+    const line = update.state.doc.lineAt(head);
+    setCursor({ line: line.number, column: head - line.from + 1 });
+    setHistoryDepth({ undo: undoDepth(update.state), redo: redoDepth(update.state) });
+  }, []);
+  const selectDiagnostic = useCallback((diagnostic: EditorDiagnostic) => {
+    const editorView = editorViewRef.current;
+    if (!editorView || diagnostic.index === undefined) return;
+    const anchor = Math.min(diagnostic.index, editorView.state.doc.length);
+    editorView.dispatch({ selection: { anchor }, scrollIntoView: true });
+    editorView.focus();
+  }, []);
   const formattedValue = useMemo(() => formatCode(props.value, props.language), [props.language, props.value]);
   const errorCount = diagnostics.filter(({ severity }) => severity === "error").length;
   const warningCount = diagnostics.length - errorCount;
+  const isCharacterLimitExceeded = props.maxLength !== undefined && props.value.length > props.maxLength;
+  const isEditorInvalid = Boolean(props.error) || errorCount > 0 || isCharacterLimitExceeded;
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(props.value);
@@ -101,6 +122,7 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
       error={props.error}
       required={props.required}
       labelProps={{ id: `${props.id}-label`, htmlFor: props.id }}
+      descriptionProps={{ className: classes.accessibleMuted }}
       inputWrapperOrder={["label", "description", "input", "error"]}
     >
       <div className={classes.root}>
@@ -113,16 +135,10 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
           referenceOpened={referenceOpened}
           onReferenceToggle={() => setReferenceOpened((value) => !value)}
           onCopy={() => void copy()}
-          onUndo={() => {
-            const editorView = editorViews.get(editorInstanceId);
-            if (editorView) undo(editorView);
-          }}
-          onRedo={() => {
-            const editorView = editorViews.get(editorInstanceId);
-            if (editorView) redo(editorView);
-          }}
+          onUndo={handleUndo}
+          onRedo={handleRedo}
           onFormat={() => {
-            const editorView = editorViews.get(editorInstanceId);
+            const editorView = editorViewRef.current;
             if (props.language === "jsx" && editorView) {
               const selection = editorView.state.selection.main;
               editorView.dispatch({ selection: { anchor: 0, head: editorView.state.doc.length } });
@@ -157,23 +173,18 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
                 value={props.value}
                 language={props.language}
                 diagnostics={diagnostics}
-                completions={props.completions ?? []}
+                completions={props.completions ?? EMPTY_COMPLETIONS}
                 label={props.label}
                 placeholder={props.placeholder}
                 theme={colorScheme}
+                invalid={isEditorInvalid}
                 height={props.height ?? (props.language === "jsx" ? "320px" : "220px")}
                 readOnly={props.readOnly ?? false}
                 diagnosticMessage={props.messages.diagnostic}
                 onChange={props.readOnly ? () => undefined : props.onChange}
                 onCreateEditor={handleCreateEditor}
                 onDestroyEditor={handleDestroyEditor}
-                onUpdate={(update) => {
-                  if (!update.selectionSet && !update.docChanged) return;
-                  const head = update.state.selection.main.head;
-                  const line = update.state.doc.lineAt(head);
-                  setCursor({ line: line.number, column: head - line.from + 1 });
-                  setHistoryDepth({ undo: undoDepth(update.state), redo: redoDepth(update.state) });
-                }}
+                onUpdate={handleUpdate}
               />
             </Suspense>
           ) : (
@@ -193,16 +204,22 @@ export function CustomWidgetCodeEditor(props: CustomWidgetCodeEditorProps) {
             ) : (
               <Group gap={4}>
                 <IconCheck size={13} color="var(--mantine-color-green-6)" aria-hidden />
-                <Text size="xs" c="dimmed">
+                <Text size="xs" className={classes.accessibleMuted}>
                   {props.messages.ready}
                 </Text>
               </Group>
             )}
-            <Text size="xs" c="dimmed">
+            <Text size="xs" className={classes.accessibleMuted}>
               {props.messages.position(cursor)}
             </Text>
           </Group>
-          <Text size="xs" c={props.maxLength && props.value.length > props.maxLength ? "red" : "dimmed"}>
+          <Text
+            component="output"
+            size="xs"
+            className={classes.accessibleMuted}
+            data-invalid={isCharacterLimitExceeded}
+            aria-live="polite"
+          >
             {props.messages.characters(props.value.length, props.maxLength)}
           </Text>
         </Group>
