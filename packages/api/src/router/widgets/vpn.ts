@@ -1,4 +1,5 @@
-import { getIntegrationKindsByCategory, type IntegrationKind } from "@homarr/definitions";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 import { mockWidgetData } from "@homarr/integrations";
 import type { VpnSummary } from "@homarr/integrations/types";
 import { vpnSummaryHandler } from "@homarr/request-handler/vpn";
