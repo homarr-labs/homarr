@@ -1,0 +1,46 @@
+packages/custom-widgets/src/core/definition-security.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 194-257
+packages/custom-widgets/src/core/examples.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 39-40
+packages/custom-widgets/src/jsx/runtime-components.tsx
+  s_be377879e9dbc6::t_ea71fb1fb17801 21,29,236-238,256
+packages/custom-widgets/src/test/ai-assistant-evaluation.spec.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 149-166
+packages/custom-widgets/src/test/ai-prompt.spec.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 59-95,112,140-159
+  s_be377879e9dbc6::t_4246c983fb96da 160
+packages/custom-widgets/src/test/jsx-policy.spec.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 46-60
+packages/custom-widgets/scripts/ai-assistant-evaluation.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 147-148,166-167,256-271,273,588-592
+packages/custom-widgets/scripts/evaluate-ai-authoring.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 18-25,27-30,39-60,62-66
+packages/custom-widgets/src/test/ai-evaluation.spec.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 229-247,251,254-260,284-297
+packages/custom-widgets/scripts/ai-evaluation.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 222,257,262
+packages/custom-widgets/src/core/ai-prompt.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 3-8,115-124,128,132,136,147,156,219,227,236,245,252-257
+packages/custom-widgets/src/workbench/code-editor.tsx
+  s_be377879e9dbc6::t_ea71fb1fb17801 280-281
+packages/custom-widgets/src/jsx/analyzer-jsx.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 1,35-48,64,89-93
+packages/custom-widgets/src/test/authoring-resources.spec.ts
+  s_be377879e9dbc6::t_ea71fb1fb17801 13,59-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "60fcac9f42c5440ec1bd22dfba68f10afa514006",
+  "prompts": {},
+  "sessions": {
+    "s_be377879e9dbc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "785054cb-c471-4a58-8c2e-2d7f28cb4102",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
