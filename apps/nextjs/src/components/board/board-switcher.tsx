@@ -26,6 +26,7 @@ import { IconDeviceMobile, IconHomeFilled, IconLayoutBoard, IconSearch } from "@
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useOptionalBoard } from "@homarr/boards/context";
+import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 import { Link, UserAvatar } from "@homarr/ui";
 
@@ -47,6 +48,7 @@ interface BoardSwitcherProps {
 
 export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
   const t = useI18n("board.action.switcher");
+  const tBoard = useI18n("board");
   const manageBoardsT = useI18n("management.page.board");
   const currentBoard = useOptionalBoard();
   const [isOpen, setIsOpen] = useState(false);
@@ -90,6 +92,20 @@ export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {
     setActiveIndex(0);
   }, []);
   const preloadBoards = () => void utils.board.getManageOverview.prefetch({ fullPreview: true });
+
+  const spotlightAction = useMemo(
+    () => ({
+      id: "open-board-switcher",
+      name: tBoard("action.switch"),
+      icon: IconLayoutBoard,
+      interaction: () => ({
+        type: "javaScript" as const,
+        onSelect: openSwitcher,
+      }),
+    }),
+    [openSwitcher, tBoard],
+  );
+  useRegisterSpotlightContextActions("board-switcher", [spotlightAction], [spotlightAction]);
 
   useHotkeys([[boardSwitcherHotkey, openSwitcher, { preventDefault: true }]]);
 

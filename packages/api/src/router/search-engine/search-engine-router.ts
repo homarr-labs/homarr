@@ -130,6 +130,28 @@ export const searchEngineRouter = createTRPCRouter({
 
     return null;
   }),
+  catalog: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "List search engines available to the current user.",
+      },
+    })
+    .query(async ({ ctx }) => {
+      return await ctx.db.query.searchEngines.findMany({
+        where: ctx.session?.user ? undefined : eq(searchEngines.type, "generic"),
+        orderBy: asc(searchEngines.name),
+        with: {
+          integration: {
+            columns: {
+              kind: true,
+              url: true,
+              id: true,
+            },
+          },
+        },
+      });
+    }),
   search: publicProcedure.input(searchSchema).query(async ({ ctx, input }) => {
     return await ctx.db.query.searchEngines.findMany({
       // Public dashboards have no session: restrict anonymous users to generic

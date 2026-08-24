@@ -30,6 +30,7 @@ export const pagesSearchGroup = createGroup<{
 }>({
   keyPath: "path",
   title: (t) => t("search.mode.page.group.page.title"),
+  source: { kind: "local" },
   Component: ({ name, icon: Icon }) => (
     <Group px="md" py="sm">
       <Icon stroke={1.5} />

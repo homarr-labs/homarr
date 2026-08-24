@@ -36,7 +36,8 @@ type Command<TSearchInteraction extends SearchInteraction = SearchInteraction> =
 
 export const globalCommandGroup = createGroup<Command>({
   keyPath: "commandKey",
-  title: "Global commands",
+  title: (t) => t("search.mode.command.group.globalCommand.title"),
+  source: { kind: "local" },
   useInteraction: (option, query) => option.useInteraction(option, query),
   Component: ({ icon: Icon, name }) => (
     <Group px="md" py="sm">

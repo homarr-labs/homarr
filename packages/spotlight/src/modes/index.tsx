@@ -1,17 +1,19 @@
 import { appIntegrationBoardMode } from "./app-integration-board";
+import { assistantMode } from "./assistant";
 import { commandMode } from "./command";
 import { externalMode } from "./external";
 import { homeMode } from "./home";
 import { mediaMode } from "./media";
-import { pageMode } from "./page";
+import { preferencesMode } from "./preferences";
 import { userGroupMode } from "./user-group";
 
 export const searchModes = [
-  userGroupMode,
-  appIntegrationBoardMode,
-  externalMode,
-  commandMode,
-  pageMode,
-  mediaMode,
   homeMode,
+  appIntegrationBoardMode,
+  commandMode,
+  preferencesMode,
+  assistantMode,
+  externalMode,
+  mediaMode,
+  userGroupMode,
 ] as const;

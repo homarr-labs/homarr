@@ -6455,6 +6455,9 @@
               "toggleColorScheme": "Toggle light/dark mode",
               "saveNotebook": "Save notebook (only inside notebook widget)",
               "openSpotlight": "Open search",
+              "openSpotlightApps": "Open app search",
+              "openSpotlightAssistant": "Open Assistant mode",
+              "openSpotlightPreferences": "Open preferences mode",
               "openAssistant": "Open Assistant"
             },
             "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
@@ -6920,6 +6923,51 @@
   "search": {
     "placeholder": "Search for anything",
     "nothingFound": "Nothing found",
+    "modePicker": {
+      "search": {
+        "label": "Search",
+        "placeholder": "Search apps, boards, pages, commands, and preferences"
+      },
+      "apps": {
+        "label": "Apps",
+        "placeholder": "Search apps, boards, and integrations"
+      },
+      "command": {
+        "label": "Commands",
+        "placeholder": "Search actions and commands"
+      },
+      "preferences": {
+        "label": "Preferences",
+        "placeholder": "Search and change preferences"
+      },
+      "assistant": {
+        "label": "Assistant",
+        "placeholder": "Ask Assistant"
+      },
+      "external": {
+        "label": "Web",
+        "placeholder": "Search with an external search engine"
+      },
+      "media": {
+        "label": "Media",
+        "placeholder": "Search for a movie or show",
+        "fallback": "Search media for \"{query}\""
+      },
+      "userGroup": {
+        "label": "People",
+        "placeholder": "Search users and groups"
+      },
+      "continueWith": "Continue with",
+      "dialogAriaLabel": "{mode} command menu",
+      "navigationLabel": "Search modes",
+      "modeAriaLabel": "{mode} mode",
+      "resultsAriaLabel": "{mode} results",
+      "footer": {
+        "navigate": "Navigate",
+        "open": "Open",
+        "close": "Close"
+      }
+    },
     "error": {
       "fetch": "An error occurred while fetching data"
     },
@@ -7141,6 +7189,7 @@
             "description": "Start typing to search your media request integrations",
             "disabled": {
               "noIntegration": "Add an Overseerr, Jellyseerr, or Seerr integration to enable media search.",
+              "signInRequired": "Sign in to search media request integrations.",
               "scoped": "This widget does not have an accessible media request integration."
             }
           }
@@ -7218,9 +7267,10 @@
               "other": {
                 "label": "Search with another search engine"
               },
-              "no-default": {
-                "label": "No default search engine",
-                "description": "Set a default search engine in preferences"
+              "no-engines": {
+                "label": "No search engines configured",
+                "descriptionCreate": "Add a search engine to search from the command menu",
+                "descriptionUnavailable": "Ask an administrator to configure a search engine"
               },
               "search": {
                 "label": "Search for \"{query}\" with {name}"

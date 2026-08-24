@@ -2,8 +2,8 @@ import { Spotlight } from "@mantine/spotlight";
 
 import { useI18n } from "@homarr/translation/client";
 
-export const SpotlightNoResults = () => {
+export const SpotlightNoResults = ({ className }: { className?: string }) => {
   const t = useI18n();
 
-  return <Spotlight.Empty>{t("search.nothingFound")}</Spotlight.Empty>;
+  return <Spotlight.Empty className={className}>{t("search.nothingFound")}</Spotlight.Empty>;
 };
