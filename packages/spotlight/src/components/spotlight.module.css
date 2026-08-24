@@ -70,12 +70,8 @@
   border-top: 0;
 }
 
-.actionsList [data-search-loading] ~ [data-search-loading] {
-  display: none;
-}
-
 .actionsList:has([data-action]) .emptyState,
-.actionsList:has([data-search-loading]) .emptyState,
+.actionsList:has([data-search-pending]) .emptyState,
 .actionsList:has([data-search-status]) .emptyState {
   display: none;
 }

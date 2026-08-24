@@ -17,6 +17,7 @@ export type ContextSpecificItem = {
   description?: string;
   unavailable?: boolean;
   alwaysVisible?: boolean;
+  dedupeKey?: string;
 };
 
 interface SpotlightContextProps {

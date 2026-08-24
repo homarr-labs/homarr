@@ -11,12 +11,13 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import { createChildrenOptions } from "../../lib/children";
+import { filterCatalog, useSearchEnginesCatalogQuery } from "../../lib/catalog";
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition } from "../../lib/interaction";
 import { interaction } from "../../lib/interaction";
 import { useRemoteQuery } from "../../lib/remote-query";
 
-type SearchEngine = RouterOutputs["searchEngine"]["search"][number];
+type SearchEngine = RouterOutputs["searchEngine"]["catalog"][number];
 type FromIntegrationSearchResult = RouterOutputs["integration"]["searchInIntegration"][number];
 type DuckDuckGoBang = RouterOutputs["bangs"]["search"][number];
 
@@ -287,7 +288,7 @@ const parseBangQuery = (query: string) => {
   return { bangToken, searchText, locked };
 };
 
-const buildSearchUrl = (template: string, query: string) => {
+export const buildSearchUrl = (template: string, query: string) => {
   const encoded = encodeURIComponent(query);
   if (template.includes("{{{s}}}")) {
     return template.replaceAll("{{{s}}}", encoded);
@@ -416,23 +417,28 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
       const { bangToken, searchText, locked } = parseBangQuery(query);
       const remoteQuery = useRemoteQuery(bangToken, "search-engines", { minimumLength });
       const ddgQueryEnabled = remoteQuery.enabled && ddgBangs && remoteQuery.query.length >= 1;
-
-      const enginesQuery = clientApi.searchEngine.search.useQuery(
-        { query: remoteQuery.query, limit: 10 },
-        { enabled: remoteQuery.enabled },
-      );
+      const enginesQuery = useSearchEnginesCatalogQuery();
 
       const ddgQuery = clientApi.bangs.search.useQuery(
         { query: remoteQuery.query, limit: 10 },
         {
           enabled: ddgQueryEnabled,
+          placeholderData: (previousData) => previousData,
         },
       );
 
-      const isLoading = (enginesQuery.isLoading && remoteQuery.enabled) || (ddgQuery.isLoading && ddgQueryEnabled);
-      const isError = (enginesQuery.isError && remoteQuery.enabled) || (ddgQuery.isError && ddgQueryEnabled);
-      const engineData = remoteQuery.enabled ? (enginesQuery.data ?? []) : [];
-      const ddgData = ddgQueryEnabled ? (ddgQuery.data ?? []) : [];
+      const engineCatalog = enginesQuery.data ?? [];
+      const engineData = filterCatalog(engineCatalog, bangToken, (engine) => [engine.short, engine.name], 10);
+      const ddgData = ddgQueryEnabled && bangToken.length > 0
+        ? (ddgQuery.data ?? []).filter((bang) => bang.t.toLowerCase().startsWith(bangToken.toLowerCase()))
+        : [];
+      const isWaitingForDdgResults =
+        ddgBangs &&
+        bangToken.length > 0 &&
+        engineData.length === 0 &&
+        (remoteQuery.query !== bangToken || (ddgQueryEnabled && ddgQuery.isFetching && ddgData.length === 0));
+      const isLoading = enginesQuery.isLoading || isWaitingForDdgResults;
+      const isError = enginesQuery.isError || (ddgQuery.isError && ddgQueryEnabled && bangToken.length > 0);
 
       const engineOptions = engineData.map(
         (engine): ExternalOption => ({
@@ -454,7 +460,7 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
 
       const searchActions: ExternalOption[] = [];
       if (locked && bangToken.length > 0) {
-        const matchedEngine = engineData.find((engine) => engine.short === bangToken);
+        const matchedEngine = engineCatalog.find((engine) => engine.short === bangToken);
         const matchedDdg = ddgData.find((bang) => bang.t === bangToken);
 
         const genericEngine = matchedEngine?.type === "generic" ? matchedEngine : undefined;
@@ -487,7 +493,7 @@ const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }
           }
         }
       }
-      if (showEmptyHint && remoteQuery.query.length === 0) {
+      if (showEmptyHint && bangToken.length === 0) {
         searchActions.push({
           key: "hint",
           kind: "hint",
@@ -508,10 +514,4 @@ export const searchEnginesSearchGroups = createSearchEnginesSearchGroup({
   minimumLength: 0,
   showEmptyHint: true,
   source: "focused",
-});
-
-export const globalSearchEnginesSearchGroup = createSearchEnginesSearchGroup({
-  minimumLength: 1,
-  showEmptyHint: false,
-  source: "fallback",
 });

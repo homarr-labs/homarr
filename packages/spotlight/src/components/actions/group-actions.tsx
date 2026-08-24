@@ -1,4 +1,4 @@
-import { Center, Loader } from "@mantine/core";
+import { Center } from "@mantine/core";
 
 import { useI18n } from "@homarr/translation/client";
 
@@ -61,11 +61,7 @@ export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
   }
 
   if (options.isLoading) {
-    return (
-      <Center w="100%" py="sm" data-search-loading>
-        <Loader size="sm" />
-      </Center>
-    );
+    return <span hidden data-search-pending />;
   }
 
   if (options.isError) {

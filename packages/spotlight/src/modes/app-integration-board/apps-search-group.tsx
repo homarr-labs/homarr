@@ -1,13 +1,13 @@
 import { Avatar, Group, Stack, Text } from "@mantine/core";
 import { IconExternalLink, IconEye } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import { createChildrenOptions } from "../../lib/children";
+import { filterCatalog, useAppsCatalogQuery } from "../../lib/catalog";
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
-import { useRemoteQuery } from "../../lib/remote-query";
+import { useSpotlightContextResults } from "../home/context";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -96,7 +96,16 @@ export const appsSearchGroup = createGroup<App>({
   ),
   useInteraction: interaction.children(appChildrenOptions),
   useQueryOptions(query) {
-    const remoteQuery = useRemoteQuery(query, "apps");
-    return clientApi.app.search.useQuery({ query: remoteQuery.query, limit: 8 }, { enabled: remoteQuery.enabled });
+    const catalogQuery = useAppsCatalogQuery();
+    const localAppKeys = new Set(
+      useSpotlightContextResults().flatMap((item) => (item.dedupeKey ? [item.dedupeKey] : [])),
+    );
+    const apps = (catalogQuery.data ?? []).filter((app) => !localAppKeys.has(`app:${app.id}`));
+
+    return {
+      data: filterCatalog(apps, query, (app) => [app.name]),
+      isLoading: catalogQuery.isLoading,
+      isError: catalogQuery.isError,
+    };
   },
 });

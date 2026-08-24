@@ -1,14 +1,14 @@
 import { Group, Stack, Text } from "@mantine/core";
 import { IconDeviceMobile, IconHome, IconLayoutDashboard, IconLink, IconSettings } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { ChildrenAction } from "../../lib/children";
+import { filterCatalog, useBoardsCatalogQuery } from "../../lib/catalog";
 import { createChildrenOptions } from "../../lib/children";
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
-import { useRemoteQuery } from "../../lib/remote-query";
+import { clientApi } from "@homarr/api/client";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -141,7 +141,11 @@ export const boardsSearchGroup = createGroup<Board>({
   ),
   useInteraction: interaction.children(boardChildrenOptions),
   useQueryOptions(query) {
-    const remoteQuery = useRemoteQuery(query, "boards");
-    return clientApi.board.search.useQuery({ query: remoteQuery.query, limit: 8 }, { enabled: remoteQuery.enabled });
+    const catalogQuery = useBoardsCatalogQuery();
+    return {
+      data: filterCatalog(catalogQuery.data ?? [], query, (board) => [board.name]),
+      isLoading: catalogQuery.isLoading,
+      isError: catalogQuery.isError,
+    };
   },
 });

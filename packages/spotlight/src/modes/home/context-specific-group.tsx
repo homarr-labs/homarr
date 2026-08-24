@@ -62,6 +62,23 @@ export const contextSpecificSearchGroups = createGroup<ContextSpecificItem>({
   },
 });
 
+export const contextSpecificAppsSearchGroup = createGroup<ContextSpecificItem>({
+  title: (t) => t("search.mode.home.group.local.title"),
+  keyPath: "id",
+  source: { kind: "local" },
+  Component: renderContextSpecificItem,
+  useInteraction(option, query) {
+    return option.interaction(query);
+  },
+  filter(query, option) {
+    return query.trim().length === 0 || shouldShowContextSpecificResult(query, option);
+  },
+  sort: localResultSort,
+  useOptions() {
+    return useSpotlightContextResults().filter((item) => item.placement !== "fallback");
+  },
+});
+
 export const contextSpecificFallbackSearchGroup = createGroup<ContextSpecificItem>({
   title: (t) => t("search.modePicker.continueWith"),
   keyPath: "id",

@@ -7126,9 +7126,10 @@
               "other": {
                 "label": "Search with another search engine"
               },
-              "no-default": {
-                "label": "No default search engine",
-                "description": "Set a default search engine in preferences"
+              "no-engines": {
+                "label": "No search engines configured",
+                "descriptionCreate": "Add a search engine to search from the command menu",
+                "descriptionUnavailable": "Ask an administrator to configure a search engine"
               },
               "search": {
                 "label": "Search for \"{query}\" with {name}"

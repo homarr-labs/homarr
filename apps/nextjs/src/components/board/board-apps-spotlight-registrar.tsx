@@ -48,6 +48,7 @@ export const BoardAppsSpotlightRegistrar = () => {
       return [
         {
           id: app.id,
+          dedupeKey: `app:${app.id}`,
           name: app.name,
           icon: app.iconUrl,
           interaction() {

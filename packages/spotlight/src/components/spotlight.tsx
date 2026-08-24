@@ -19,6 +19,7 @@ import {
 import type { OpenMediaRequestSearchOptions, SpotlightMode, SpotlightOpenIntent } from "../open";
 import type { inferSearchInteractionOptions } from "../lib/interaction";
 import type { SearchMode } from "../lib/mode";
+import { useSpotlightCatalogs } from "../lib/catalog";
 import { searchModes } from "../modes";
 import { mediaRequestSearchScopeAtom, selectAction, spotlightActions, spotlightStore } from "../spotlight-store";
 import { SpotlightChildrenActions } from "./actions/children-actions";
@@ -36,6 +37,8 @@ const resetSelection = () => {
 };
 
 export const Spotlight = () => {
+  useSpotlightCatalogs();
+
   const [mode, setMode] = useState<SpotlightMode>(defaultMode);
   const [query, setQuery] = useState("");
   const setMediaRequestSearchScope = useSetAtom(mediaRequestSearchScopeAtom);

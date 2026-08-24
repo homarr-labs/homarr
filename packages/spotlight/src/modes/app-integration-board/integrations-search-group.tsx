@@ -1,12 +1,11 @@
 import { Group, Text } from "@mantine/core";
 
-import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind } from "@homarr/definitions";
 import { IntegrationAvatar } from "@homarr/ui";
 
+import { filterCatalog, useIntegrationsCatalogQuery } from "../../lib/catalog";
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
-import { useRemoteQuery } from "../../lib/remote-query";
 
 export const integrationsSearchGroup = createGroup<{ id: string; kind: IntegrationKind; name: string }>({
   keyPath: "id",
@@ -21,10 +20,11 @@ export const integrationsSearchGroup = createGroup<{ id: string; kind: Integrati
   ),
   useInteraction: interaction.link(({ id }) => ({ href: `/manage/integrations/edit/${id}` })),
   useQueryOptions(query) {
-    const remoteQuery = useRemoteQuery(query, "integrations");
-    return clientApi.integration.search.useQuery(
-      { query: remoteQuery.query, limit: 8 },
-      { enabled: remoteQuery.enabled },
-    );
+    const catalogQuery = useIntegrationsCatalogQuery();
+    return {
+      data: filterCatalog(catalogQuery.data ?? [], query, (integration) => [integration.name, integration.kind]),
+      isLoading: catalogQuery.isLoading,
+      isError: catalogQuery.isError,
+    };
   },
 });
