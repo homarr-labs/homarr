@@ -45,15 +45,18 @@ export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
       return null;
     }
 
-    const filteredOptions = getUniqueOptions(options, group.keyPath)
-      .filter((option) => ("filter" in group ? group.filter(query, option) : false))
-      .sort((optionA, optionB) => {
-        if ("sort" in group) {
-          return group.sort?.(query, [optionA, optionB]) ?? 0;
-        }
+    const filteredOptions = getUniqueOptions(
+      options
+        .filter((option) => ("filter" in group ? group.filter(query, option) : false))
+        .sort((optionA, optionB) => {
+          if ("sort" in group) {
+            return group.sort?.(query, [optionA, optionB]) ?? 0;
+          }
 
-        return 0;
-      });
+          return 0;
+        }),
+      group.keyPath,
+    );
 
     if (filteredOptions.length === 0) {
       return null;
