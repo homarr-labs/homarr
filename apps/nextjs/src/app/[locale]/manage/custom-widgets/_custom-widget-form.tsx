@@ -78,13 +78,10 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
     () => customWidgetOptionsSchema.safeParse(parseJson(form.values.options)),
     [form.values.options],
   );
-  const requestIds = useMemo(
-    () =>
-      Object.keys(
-        isRecord(parseJson(form.values.requests)) ? (parseJson(form.values.requests) as Record<string, unknown>) : {},
-      ),
-    [form.values.requests],
-  );
+  const requestIds = useMemo(() => {
+    const requests = parseJson(form.values.requests);
+    return Object.keys(isRecord(requests) ? requests : {});
+  }, [form.values.requests]);
   const jsxCompletions = useMemo(
     () => createCustomWidgetCompletions(form.values, requestIds),
     [form.values, requestIds],
@@ -132,7 +129,9 @@ export function CustomWidgetForm({ mode, initialValues, definitionId }: CustomWi
         className={classes.paneSwitcher}
         fullWidth
         value={mobilePane}
-        onChange={(value) => setMobilePane(value as typeof mobilePane)}
+        onChange={(value) => {
+          if (value === "configure" || value === "preview") setMobilePane(value);
+        }}
         data={[
           { value: "configure", label: w("configure") },
           { value: "preview", label: w("section.preview") },

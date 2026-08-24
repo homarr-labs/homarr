@@ -14,6 +14,8 @@ import { integrationJsonParseErrorHandler, integrationZodParseErrorHandler } fro
 const logger = createLogger({ module: "handleIntegrationErrors" });
 const loggedIntegrationErrors = new WeakSet<IntegrationError>();
 
+// ponytail: TypeScript requires `any[]` for mixin constructors (TS2545). The
+// decorator returns the same constructor type T, so callers retain exact args.
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-explicit-any
 type AbstractConstructor<T = {}> = abstract new (...args: any[]) => T;
 

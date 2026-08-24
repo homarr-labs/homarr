@@ -27,7 +27,7 @@ export const mediaOrganizerRouter = createTRPCRouter({
             integrationId: integration.id,
             integrationName: integration.name,
             ...data,
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {

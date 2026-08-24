@@ -74,10 +74,9 @@ const loadRegisteredWidgetModule = createRetryableLoader(
   new Map<WidgetKind, () => Promise<RegisteredWidgetModule>>(objectEntries(widgetModuleLoaders)),
 );
 
-// ponytail: TypeScript cannot express a Map whose value depends on its key. This
-// private assertion restores only the fixed shapes above; the manifest alignment
-// test checks module.definition.kind. Its ceiling is runtime-only mismatch
-// detection, so remove it if TypeScript gains dependent Map value types.
+// ponytail: TypeScript cannot correlate a generic key with the matching value
+// in a Map. The registry itself is checked against WidgetImports, so this
+// assertion only restores that already-verified relationship after caching.
 const correlateWidgetPromise = <TKind extends WidgetKind, TType extends keyof WidgetManifestValue<TKind>>(
   _kind: TKind,
   _type: TType,

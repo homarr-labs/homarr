@@ -74,7 +74,8 @@ export function parseSources(value: string): Array<CustomWidgetSource & { id: st
 
 export function parseJson(value: string): unknown {
   try {
-    return JSON.parse(value) as unknown;
+    const parsed: unknown = JSON.parse(value);
+    return parsed;
   } catch {
     return null;
   }

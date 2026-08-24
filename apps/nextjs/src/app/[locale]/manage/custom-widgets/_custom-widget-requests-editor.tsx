@@ -24,6 +24,8 @@ export function CustomWidgetRequestsEditor({
   const entries = isRecord(parsed) ? Object.entries(parsed) : [];
   const sources = parseJson(form.values.sources);
   const sourceIds = isRecord(sources) ? Object.keys(sources) : ["default"];
+  const options = parseJson(form.values.options);
+  const optionNames = isRecord(options) ? Object.keys(options) : [];
 
   const commit = (next: Array<[string, unknown]>) =>
     form.setFieldValue("requests", JSON.stringify(Object.fromEntries(next), null, 2));
@@ -129,22 +131,14 @@ export function CustomWidgetRequestsEditor({
                     <Stack gap="sm">
                       <QueryValuesEditor
                         value={isRecord(request.query) ? request.query : {}}
-                        optionNames={Object.keys(
-                          isRecord(parseJson(form.values.options))
-                            ? (parseJson(form.values.options) as Record<string, unknown>)
-                            : {},
-                        )}
+                        optionNames={optionNames}
                         allowParams={trigger === "manual" || kind === "action"}
                         onChange={(query) => update(index, id, { ...request, query })}
                       />
                       <RequestBodyEditor
                         id={id}
                         value={request.body}
-                        optionNames={Object.keys(
-                          isRecord(parseJson(form.values.options))
-                            ? (parseJson(form.values.options) as Record<string, unknown>)
-                            : {},
-                        )}
+                        optionNames={optionNames}
                         allowParams={trigger === "manual" || kind === "action"}
                         onChange={(body) => update(index, id, { ...request, body })}
                       />

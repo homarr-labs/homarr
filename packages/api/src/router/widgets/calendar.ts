@@ -43,7 +43,7 @@ export const calendarRouter = createTRPCRouter({
               name: integration.name,
               kind: integration.kind,
             },
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {

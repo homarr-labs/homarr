@@ -47,10 +47,11 @@ const getProcedureInput = (inputs: z.ZodType[]) => {
 };
 
 const normalizeJsonSchema = (schema: z.core.JSONSchema.JSONSchema): z.core.JSONSchema.JSONSchema => {
-  const properties = (schema.properties ?? {}) as Record<string, Record<string, unknown>>;
-  const required = ((schema.required as string[] | undefined) ?? []).filter(
-    (key) => !("default" in (properties[key] ?? {})),
-  );
+  const properties = schema.properties ?? {};
+  const required = (schema.required ?? []).filter((key) => {
+    const property = properties[key];
+    return !property || typeof property !== "object" || !("default" in property);
+  });
 
   return {
     ...schema,

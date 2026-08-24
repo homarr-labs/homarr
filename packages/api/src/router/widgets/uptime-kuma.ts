@@ -18,9 +18,9 @@ export const uptimeKumaRouter = createTRPCRouter({
             integrationId: integration.id,
             integrationName: integration.name,
             integrationUrl: integration.url,
-            dashboard: data as typeof data | null,
+            dashboard: data,
             updatedAt: timestamp,
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {

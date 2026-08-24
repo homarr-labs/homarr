@@ -19,8 +19,8 @@ export const vpnRouter = createTRPCRouter({
               kind: integration.kind,
               updatedAt: timestamp,
             },
-            summary: data as typeof data | null,
-            error: undefined as string | undefined,
+            summary: data,
+            error: undefined,
           };
         },
         {

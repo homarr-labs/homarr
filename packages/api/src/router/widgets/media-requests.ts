@@ -42,7 +42,7 @@ export const mediaRequestsRouter = createTRPCRouter({
           return {
             integration: { id: integration.id, name: integration.name, kind: integration.kind },
             data,
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {
@@ -98,8 +98,8 @@ export const mediaRequestsRouter = createTRPCRouter({
           const { data } = await mediaRequestStatsRequestHandler.handler(integration, {}).getDataAsync();
           return {
             integration: { id: integration.id, name: integration.name, kind: integration.kind },
-            data: { ...data, stats: data.stats as typeof data.stats | null },
-            error: undefined as string | undefined,
+            data,
+            error: undefined,
           };
         },
         {

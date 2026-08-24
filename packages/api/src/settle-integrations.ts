@@ -15,18 +15,18 @@ interface IntegrationLike {
   kind: string;
 }
 
-interface Options<TIntegration extends IntegrationLike, TResult> {
-  fallback?: (integration: TIntegration, error: unknown) => TResult;
+interface Options<TIntegration extends IntegrationLike, TFallback> {
+  fallback?: (integration: TIntegration, error: unknown) => TFallback;
   throwOnAllFailures?: boolean;
 }
 
-export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult>(
+export async function settleIntegrationQueries<TIntegration extends IntegrationLike, TResult, TFallback = TResult>(
   integrations: TIntegration[],
   fn: (integration: TIntegration) => Promise<TResult>,
-  options?: Options<TIntegration, TResult>,
-): Promise<TResult[]> {
+  options?: Options<TIntegration, TFallback>,
+): Promise<(TResult | TFallback)[]> {
   const settled = await Promise.allSettled(integrations.map(async (integration) => fn(integration)));
-  const results: TResult[] = [];
+  const results: (TResult | TFallback)[] = [];
   const errors: unknown[] = [];
 
   settled.forEach((result, index) => {

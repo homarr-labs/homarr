@@ -22,7 +22,7 @@ export const notificationsRouter = createTRPCRouter({
               updatedAt: timestamp,
             },
             data,
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {

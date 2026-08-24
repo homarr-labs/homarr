@@ -425,9 +425,7 @@ export default function MediaServerWidget({
           <Group gap={6} wrap="nowrap">
             <IconVideo size="var(--mantine-font-size-xs)" style={{ flexShrink: 0 }} />
             <Text size="sm" fw={500} style={{ whiteSpace: "nowrap" }}>
-              {(t as unknown as (key: string, params?: { count: number }) => string)("footer.streams", {
-                count: flatSessions.length,
-              })}
+              {t("footer.streams", { count: flatSessions.length })}
             </Text>
             {totalBitrateLabel && (isAdvanced || width >= 300) && (
               <>

@@ -29,7 +29,7 @@ export const mediaServerRouter = createTRPCRouter({
             integrationName: integration.name,
             integrationKind: integration.kind,
             sessions: data,
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {

@@ -43,7 +43,8 @@ export function CustomWidgetAdvancedManifest({ form }: { form: CustomWidgetWorkb
             onChange={(next) => {
               setDraft(next);
               try {
-                const parsed = customWidgetDefinitionSchema.safeParse(JSON.parse(next) as unknown);
+                const value: unknown = JSON.parse(next);
+                const parsed = customWidgetDefinitionSchema.safeParse(value);
                 if (!parsed.success) {
                   setError(parsed.error.issues[0]?.message ?? t("invalidWidget"));
                   return;

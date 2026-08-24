@@ -585,11 +585,11 @@ async function runAssistantAttempt(args: {
       process.stdout.write(`    tool: ${toolCall.function.name}\n`);
       let output: unknown;
       try {
-        const parsed = JSON.parse(toolCall.function.arguments) as unknown;
-        const input =
-          parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)
-            ? (parsed as Record<string, unknown>)
-            : {};
+        const parsed: unknown = JSON.parse(toolCall.function.arguments);
+        let input: Record<string, unknown> = {};
+        if (parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)) {
+          input = Object.fromEntries(Object.entries(parsed));
+        }
         output = executeAssistantEvaluationTool(args.testCase, state, toolCall.function.name, input);
       } catch (error) {
         output = { error: error instanceof Error ? error.message : "Tool input was not valid JSON" };

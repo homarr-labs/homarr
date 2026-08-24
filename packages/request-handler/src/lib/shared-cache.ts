@@ -18,14 +18,16 @@ const logger = createLogger({ module: "sharedRequestCache" });
 const REDIS_OPERATION_TIMEOUT_MS = 250;
 const REFRESH_LOCK_TTL_SECONDS = 15;
 const namespacePattern = /^[a-z0-9][a-z0-9:-]*$/;
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  value !== null && typeof value === "object" && !Array.isArray(value);
 
 const canonicalize = (value: unknown): unknown => {
   if (Array.isArray(value)) return value.map(canonicalize);
-  if (!value || typeof value !== "object") return value;
+  if (!isRecord(value)) return value;
 
   const result: Record<string, unknown> = {};
   for (const key of Object.keys(value).toSorted()) {
-    result[key] = canonicalize((value as Record<string, unknown>)[key]);
+    result[key] = canonicalize(value[key]);
   }
   return result;
 };
@@ -46,14 +48,13 @@ const withTimeoutAsync = async <T>(promise: Promise<T>, durationMs: number): Pro
 };
 
 const isCacheEntry = (value: unknown): value is CacheEntry<unknown> => {
-  if (!value || typeof value !== "object") return false;
-  const entry = value as Partial<CacheEntry<unknown>>;
+  if (!isRecord(value)) return false;
   return (
-    entry.timestamp instanceof Date &&
-    typeof entry.expiresAt === "number" &&
-    Number.isFinite(entry.expiresAt) &&
-    typeof entry.staleUntil === "number" &&
-    Number.isFinite(entry.staleUntil)
+    value.timestamp instanceof Date &&
+    typeof value.expiresAt === "number" &&
+    Number.isFinite(value.expiresAt) &&
+    typeof value.staleUntil === "number" &&
+    Number.isFinite(value.staleUntil)
   );
 };
 
@@ -94,7 +95,7 @@ const createRedisSharedCache = <TData>({
   isShared: initialIsShared = true,
 }: RedisSharedCacheOptions): SharedCacheAdapter<TData> => {
   const logMetadata = { cacheNamespace: namespace, cacheKind, ...metadata };
-  const payloadChannel = createGetSetChannel<unknown>(
+  const payloadChannel = createGetSetChannel<CacheEntry<TData>>(
     `${cacheKind}-cache:payload:v1:${namespace}:${generation}:${cacheIdentity}`,
   );
   const lock = createLockChannel(`${cacheKind}-cache:lock:v1:${namespace}:${generation}:${cacheIdentity}`);
@@ -119,7 +120,7 @@ const createRedisSharedCache = <TData>({
     getAsync: async () => {
       const value = await runRedisOperationAsync("payload-read", () => payloadChannel.getAsync(), undefined);
       if (value === undefined || value === null) return value;
-      if (isCacheEntry(value)) return value as CacheEntry<TData>;
+      if (isCacheEntry(value)) return value;
 
       logger.warn("Ignored invalid Redis response cache entry", {
         ...logMetadata,

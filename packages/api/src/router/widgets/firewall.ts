@@ -11,23 +11,36 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const firewallMiddleware = createManyWidgetIntegrationMiddleware("query", "firewall");
 
-const queryFirewall = <
-  THandler extends {
-    handler: (integration: any, input: any) => { getDataAsync: () => Promise<{ data: any; timestamp: Date }> };
-  },
->(
-  handler: THandler,
-  createFallback: () => Awaited<ReturnType<ReturnType<THandler["handler"]>["getDataAsync"]>>["data"],
-) =>
+type FirewallIntegration = Parameters<typeof firewallCpuRequestHandler.handler>[0];
+
+interface FirewallHandler<TData> {
+  handler: (
+    integration: FirewallIntegration,
+    input: Record<string, never>,
+  ) => { getDataAsync: () => Promise<{ data: TData; timestamp: Date }> };
+}
+
+interface FirewallQueryResult<TData> {
+  integration: {
+    id: string;
+    name: string;
+    kind: FirewallIntegration["kind"];
+    updatedAt: Date;
+  };
+  summary: TData;
+  error: string | undefined;
+}
+
+const queryFirewall = <TData>(handler: FirewallHandler<TData>, createFallback: () => TData) =>
   publicProcedure.concat(firewallMiddleware).query(async ({ ctx }) =>
     settleIntegrationQueries(
       ctx.integrations,
-      async (integration) => {
+      async (integration): Promise<FirewallQueryResult<TData>> => {
         const { data, timestamp } = await handler.handler(integration, {}).getDataAsync();
         return {
           integration: { id: integration.id, name: integration.name, kind: integration.kind, updatedAt: timestamp },
-          summary: data as Awaited<ReturnType<ReturnType<THandler["handler"]>["getDataAsync"]>>["data"],
-          error: undefined as string | undefined,
+          summary: data,
+          error: undefined,
         };
       },
       {

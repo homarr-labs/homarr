@@ -60,11 +60,6 @@ import type * as vpn from "./vpn";
 import type * as weather from "./weather";
 import type * as wud from "./wud";
 
-type WidgetModule = {
-  definition: unknown;
-  componentLoader: () => Promise<unknown>;
-};
-
 // Keep these imports explicit so Next.js and Turbopack can discover every widget
 // module without loading any widget definition or component eagerly.
 export const widgetModuleLoaders = {
@@ -127,7 +122,7 @@ export const widgetModuleLoaders = {
   customApi: () => import("./custom-api"),
   weather: () => import("./weather"),
   wud: () => import("./wud"),
-} satisfies Record<WidgetKind, () => Promise<WidgetModule>>;
+} satisfies { [TKind in WidgetKind]: () => Promise<WidgetImports[TKind]> };
 
 export type WidgetImports = {
   clock: typeof clock;

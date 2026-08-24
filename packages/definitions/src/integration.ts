@@ -27,7 +27,10 @@ export const integrationSecretKindObject = {
   slug: { isPublic: true, multiline: false },
 } satisfies Record<string, { isPublic: boolean; multiline: boolean }>;
 
-export const integrationSecretKinds = Object.keys(integrationSecretKindObject) as IntegrationSecretKind[];
+const isIntegrationSecretKind = (value: string): value is IntegrationSecretKind =>
+  Object.hasOwn(integrationSecretKindObject, value);
+
+export const integrationSecretKinds = Object.keys(integrationSecretKindObject).filter(isIntegrationSecretKind);
 
 interface IntegrationFeatureMetadata {
   docker?: {
@@ -40,7 +43,7 @@ interface IntegrationFeatureMetadata {
   };
 }
 
-interface integrationDefinition {
+interface IntegrationDefinition {
   name: string;
   iconUrl: string;
   secretKinds: readonly [readonly IntegrationSecretKind[], ...(readonly IntegrationSecretKind[])[]];
@@ -570,9 +573,17 @@ export const integrationDefs = {
       onboarding: { hidden: true },
     },
   },
-} as const satisfies Record<string, integrationDefinition>;
+} as const satisfies Record<string, IntegrationDefinition>;
 
-export const integrationKinds = Object.keys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
+const isIntegrationKind = (value: string): value is IntegrationKind => Object.hasOwn(integrationDefs, value);
+const integrationKindValues = Object.keys(integrationDefs).filter(isIntegrationKind);
+const firstIntegrationKind = integrationKindValues[0];
+if (!firstIntegrationKind) throw new Error("At least one integration definition is required");
+
+export const integrationKinds: AtLeastOneOf<IntegrationKind> = [
+  firstIntegrationKind,
+  ...integrationKindValues.slice(1),
+];
 
 export const getIconUrl = (integration: IntegrationKind) => integrationDefs[integration].iconUrl;
 
@@ -607,7 +618,7 @@ export const getIntegrationDocumentationUrl = (kind: IntegrationKind): string | 
 };
 
 export const getIntegrationDockerMetadata = (kind: IntegrationKind) => {
-  const definition: integrationDefinition = integrationDefs[kind];
+  const definition: IntegrationDefinition = integrationDefs[kind];
   return {
     aliases: definition.features?.docker?.aliases ?? [],
     discoverable: definition.features?.docker?.discoverable ?? true,
@@ -615,7 +626,7 @@ export const getIntegrationDockerMetadata = (kind: IntegrationKind) => {
 };
 
 export const getIntegrationOnboardingMetadata = (kind: IntegrationKind) => {
-  const definition: integrationDefinition = integrationDefs[kind];
+  const definition: IntegrationDefinition = integrationDefs[kind];
   return {
     featuredOrder: definition.features?.onboarding?.featuredOrder ?? null,
     hidden: definition.features?.onboarding?.hidden ?? false,
@@ -646,9 +657,12 @@ export const getIntegrationApiKeyUrl = (integrationUrl: string, kind: Integratio
  * @returns Partial list of integration kinds
  */
 export const getIntegrationKindsByCategory = <TCategory extends IntegrationCategory>(category: TCategory) => {
-  return (Object.keys(integrationDefs) as IntegrationKind[]).filter((integration) =>
-    integrationDefs[integration].category.some((defCategory) => defCategory === category),
-  ) as AtLeastOneOf<IntegrationKindByCategory<TCategory>>;
+  const matchesCategory = (integration: IntegrationKind): integration is IntegrationKindByCategory<TCategory> =>
+    integrationDefs[integration].category.some((definitionCategory) => definitionCategory === category);
+  const matches = integrationKinds.filter(matchesCategory);
+  const firstMatch = matches[0];
+  if (!firstMatch) throw new Error(`No integration definition uses the ${category} category`);
+  return [firstMatch, ...matches.slice(1)] satisfies AtLeastOneOf<IntegrationKindByCategory<TCategory>>;
 };
 
 /**
@@ -658,10 +672,8 @@ export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
   [Key in keyof typeof integrationDefs]: TCategory extends (typeof integrationDefs)[Key]["category"][number]
     ? Key
     : never;
-}[keyof typeof integrationDefs] extends infer U
-  ? //Needed to simplify the type when using it
-    U
-  : never;
+}[keyof typeof integrationDefs] &
+  IntegrationKind;
 
 export type IntegrationSecretKind = keyof typeof integrationSecretKindObject;
 export type IntegrationKind = keyof typeof integrationDefs;

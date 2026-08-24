@@ -5,7 +5,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
-import { createRedisConnection } from "./connection";
+import { createRedisConnection, requireRedisConnection } from "./connection";
 
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();
@@ -26,11 +26,13 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
      */
     subscribe: (callback: (data: TData) => void) => {
       if (persist) {
-        void lastDataClient.get(lastChannelName).then((data) => {
-          if (data) {
-            callback(superjson.parse(data));
-          }
-        });
+        void requireRedisConnection(lastDataClient)
+          .get(lastChannelName)
+          .then((data) => {
+            if (data) {
+              callback(superjson.parse(data));
+            }
+          });
       }
       return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
         callback(superjson.parse(message));
@@ -42,12 +44,12 @@ export const createSubPubChannel = <TData>(name: string, { persist }: { persist:
      */
     publishAsync: async (data: TData) => {
       if (persist) {
-        await lastDataClient.set(lastChannelName, superjson.stringify(data));
+        await requireRedisConnection(lastDataClient).set(lastChannelName, superjson.stringify(data));
       }
-      await publisher.publish(channelName, superjson.stringify(data));
+      await requireRedisConnection(publisher).publish(channelName, superjson.stringify(data));
     },
     getLastDataAsync: async () => {
-      const data = await lastDataClient.get(lastChannelName);
+      const data = await requireRedisConnection(lastDataClient).get(lastChannelName);
       return data ? superjson.parse<TData>(data) : null;
     },
   };
@@ -68,7 +70,7 @@ export const createListChannel = <TItem>(name: string) => {
      * @returns an array of all items
      */
     getAllAsync: async () => {
-      const items = await getSetClient.lrange(listChannelName, 0, -1);
+      const items = await requireRedisConnection(getSetClient).lrange(listChannelName, 0, -1);
       return items.map((item) => superjson.parse<TItem>(item));
     },
     /**
@@ -76,20 +78,20 @@ export const createListChannel = <TItem>(name: string) => {
      * @param item item to remove
      */
     removeAsync: async (item: TItem) => {
-      await getSetClient.lrem(listChannelName, 0, superjson.stringify(item));
+      await requireRedisConnection(getSetClient).lrem(listChannelName, 0, superjson.stringify(item));
     },
     /**
      * Clear all items from the channels list
      */
     clearAsync: async () => {
-      await getSetClient.del(listChannelName);
+      await requireRedisConnection(getSetClient).del(listChannelName);
     },
     /**
      * Add an item to the channels list
      * @param item item to add
      */
     addAsync: async (item: TItem) => {
-      await getSetClient.lpush(listChannelName, superjson.stringify(item));
+      await requireRedisConnection(getSetClient).lpush(listChannelName, superjson.stringify(item));
     },
   };
 };
@@ -105,7 +107,7 @@ export const createGetSetChannel = <TData>(name: string) => {
      * @returns data or null if not found
      */
     getAsync: async () => {
-      const data = await getSetClient.get(name);
+      const data = await requireRedisConnection(getSetClient).get(name);
       return data ? superjson.parse<TData>(data) : null;
     },
     /**
@@ -116,23 +118,23 @@ export const createGetSetChannel = <TData>(name: string) => {
     setAsync: async (data: TData, options?: { ttlSeconds?: number; ttlMs?: number }) => {
       if (options?.ttlMs !== undefined) {
         if (options.ttlMs <= 0) {
-          await getSetClient.del(name);
+          await requireRedisConnection(getSetClient).del(name);
           return;
         }
-        await getSetClient.set(name, superjson.stringify(data), "PX", options.ttlMs);
+        await requireRedisConnection(getSetClient).set(name, superjson.stringify(data), "PX", options.ttlMs);
         return;
       }
       if (options?.ttlSeconds) {
-        await getSetClient.set(name, superjson.stringify(data), "EX", options.ttlSeconds);
+        await requireRedisConnection(getSetClient).set(name, superjson.stringify(data), "EX", options.ttlSeconds);
         return;
       }
-      await getSetClient.set(name, superjson.stringify(data));
+      await requireRedisConnection(getSetClient).set(name, superjson.stringify(data));
     },
     /**
      * Remove data from the channel
      */
     removeAsync: async () => {
-      await getSetClient.del(name);
+      await requireRedisConnection(getSetClient).del(name);
     },
   };
 };
@@ -147,14 +149,14 @@ export const createLockChannel = (name: string) => {
   return {
     acquireAsync: async (ttlSeconds: number) => {
       const token = createId();
-      const client = getSetClient as typeof getSetClient | null;
+      const client = getSetClient;
       if (!client) return token;
 
       const result = await client.set(name, token, "EX", ttlSeconds, "NX");
       return result === "OK" ? token : null;
     },
     releaseAsync: async (token: string) => {
-      const client = getSetClient as typeof getSetClient | null;
+      const client = getSetClient;
       if (!client) return;
 
       await client.eval(
@@ -286,7 +288,7 @@ const getCachedGenerationAsync = async ({
 };
 
 const advanceIntegrationCacheGenerationAsync = async (integrationId: string) => {
-  const client = getSetClient as typeof getSetClient | null;
+  const client = getSetClient;
   if (!client) return null;
 
   const results = await withCacheGenerationRedisTimeoutAsync(
@@ -304,7 +306,7 @@ const advanceIntegrationCacheGenerationAsync = async (integrationId: string) => 
 };
 
 const advanceIntegrationResponseCacheGenerationAsync = async (integrationId: string) => {
-  const client = getSetClient as typeof getSetClient | null;
+  const client = getSetClient;
   if (!client) return null;
 
   return String(await withCacheGenerationRedisTimeoutAsync(client.incr(integrationCacheGenerationKey(integrationId))));
@@ -354,7 +356,7 @@ export const getIntegrationCacheGenerationAsync = async (
     return generation;
   }
 
-  const client = getSetClient as typeof getSetClient | null;
+  const client = getSetClient;
   return await getCachedGenerationAsync({
     cacheKey,
     readAsync: async () => {
@@ -418,7 +420,7 @@ const pendingWidgetCacheInvalidations = new Map<string, string>();
 const MAX_PENDING_WIDGET_CACHE_INVALIDATIONS = 1000;
 
 const advanceWidgetCacheGenerationAsync = async (namespace: string) => {
-  const client = getSetClient as typeof getSetClient | null;
+  const client = getSetClient;
   if (!client) return null;
 
   return String(await withCacheGenerationRedisTimeoutAsync(client.incr(widgetCacheGenerationKey(namespace))));
@@ -446,7 +448,7 @@ export const getWidgetCacheGenerationAsync = async (namespace: string): Promise<
     return generation;
   }
 
-  const client = getSetClient as typeof getSetClient | null;
+  const client = getSetClient;
   return await getCachedGenerationAsync({
     cacheKey,
     readAsync: async () => {
@@ -488,11 +490,11 @@ export const invalidateWidgetCache = (namespace: string): void => {
  */
 export const createChannelEventHistoryOld = <TData>(channelName: string, maxElements = 15) => {
   const popElementsOverMaxAsync = async () => {
-    const length = await getSetClient.llen(channelName);
+    const length = await requireRedisConnection(getSetClient).llen(channelName);
     if (length <= maxElements) {
       return;
     }
-    await getSetClient.ltrim(channelName, 0, maxElements - 1);
+    await requireRedisConnection(getSetClient).ltrim(channelName, 0, maxElements - 1);
   };
 
   return {
@@ -502,33 +504,41 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       });
     },
     publishAndPushAsync: async (data: TData) => {
-      await publisher.publish(channelName, superjson.stringify(data));
-      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await requireRedisConnection(publisher).publish(channelName, superjson.stringify(data));
+      await requireRedisConnection(getSetClient).lpush(
+        channelName,
+        superjson.stringify({ data, timestamp: new Date() }),
+      );
       await popElementsOverMaxAsync();
     },
     pushAsync: async (data: TData) => {
-      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await requireRedisConnection(getSetClient).lpush(
+        channelName,
+        superjson.stringify({ data, timestamp: new Date() }),
+      );
       await popElementsOverMaxAsync();
     },
     clearAsync: async () => {
-      await getSetClient.del(channelName);
+      await requireRedisConnection(getSetClient).del(channelName);
     },
     getLastAsync: async () => {
-      const length = await getSetClient.llen(channelName);
-      const data = await getSetClient.lrange(channelName, length - 1, length);
+      const client = requireRedisConnection(getSetClient);
+      const length = await client.llen(channelName);
+      const data = await client.lrange(channelName, length - 1, length);
       if (data.length !== 1) return null;
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return superjson.parse<{ data: TData; timestamp: Date }>(data[0]!);
     },
     getSliceAsync: async (startIndex: number, endIndex: number) => {
-      const range = await getSetClient.lrange(channelName, startIndex, endIndex);
+      const range = await requireRedisConnection(getSetClient).lrange(channelName, startIndex, endIndex);
       return range.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item));
     },
     getSliceUntilTimeAsync: async (time: Date) => {
-      const length = await getSetClient.llen(channelName);
+      const client = requireRedisConnection(getSetClient);
+      const length = await client.llen(channelName);
       const items: TData[] = [];
-      const itemsInCollection = await getSetClient.lrange(channelName, 0, length - 1);
+      const itemsInCollection = await client.lrange(channelName, 0, length - 1);
 
       for (let i = 0; i < length - 1; i++) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -541,7 +551,7 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       return items;
     },
     getLengthAsync: async () => {
-      return await getSetClient.llen(channelName);
+      return await requireRedisConnection(getSetClient).llen(channelName);
     },
     name: channelName,
   };
@@ -559,11 +569,11 @@ type WithId<TItem> = TItem & { _id: string };
 export const createQueueChannel = <TItem>(name: string) => {
   const queueChannelName = `queue:${name}`;
   const getDataAsync = async () => {
-    const data = await queueClient.get(queueChannelName);
+    const data = await requireRedisConnection(queueClient).get(queueChannelName);
     return data ? superjson.parse<WithId<TItem>[]>(data) : [];
   };
   const setDataAsync = async (data: WithId<TItem>[]) => {
-    await queueClient.set(queueChannelName, superjson.stringify(data));
+    await requireRedisConnection(queueClient).set(queueChannelName, superjson.stringify(data));
   };
 
   return {
@@ -610,5 +620,5 @@ export const createQueueChannel = <TItem>(name: string) => {
 };
 
 export const handshakeAsync = async () => {
-  await getSetClient.hello();
+  await requireRedisConnection(getSetClient).hello();
 };

@@ -21,7 +21,7 @@ export const indexerManagerRouter = createTRPCRouter({
             integrationId: integration.id,
             integrationName: integration.name,
             indexers,
-            error: undefined as string | undefined,
+            error: undefined,
           };
         },
         {

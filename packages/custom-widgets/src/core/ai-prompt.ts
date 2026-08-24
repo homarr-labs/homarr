@@ -219,10 +219,13 @@ function redactValue(value: unknown, path: Array<string | number> = []): unknown
       }),
     );
   if (typeof value === "string") {
-    const key = typeof path.at(-1) === "string" ? (path.at(-1) as string) : "";
+    const lastPathPart = path.at(-1);
+    let key = "";
+    if (typeof lastPathPart === "string") key = lastPathPart;
     if (["sources", "requests", "options"].includes(key)) {
       try {
-        return redactValue(JSON.parse(value) as unknown, path);
+        const parsed: unknown = JSON.parse(value);
+        return redactValue(parsed, path);
       } catch {
         /* Keep invalid editor JSON useful. */
       }
@@ -236,7 +239,8 @@ function redactValue(value: unknown, path: Array<string | number> = []): unknown
 
 function redactResponse(value: string) {
   try {
-    return JSON.stringify(redactValue(JSON.parse(value) as unknown), null, 2);
+    const parsed: unknown = JSON.parse(value);
+    return JSON.stringify(redactValue(parsed), null, 2);
   } catch {
     return truncatePromptText(redactText(value), 1_500);
   }

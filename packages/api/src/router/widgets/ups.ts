@@ -18,7 +18,7 @@ export const upsRouter = createTRPCRouter({
           integrationUrl: integration.url,
           summaries: data,
           updatedAt: timestamp,
-          error: undefined as string | undefined,
+          error: undefined,
         };
       },
       {

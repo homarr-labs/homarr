@@ -32,6 +32,14 @@ interface IntegrationAccessMetadata {
   allowedIntegrationKinds: readonly IntegrationKind[];
 }
 
+const throwUnexpectedIntegrationKind = (kind: IntegrationKind, allowedKinds: readonly IntegrationKind[]): never => {
+  logger.error("Database returned an integration outside the requested kinds", {
+    integrationKind: kind,
+    allowedIntegrationKinds: allowedKinds,
+  });
+  throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Integration kind validation failed" });
+};
+
 const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
   action: IntegrationAction,
   kinds: readonly TKind[],
@@ -75,21 +83,19 @@ const createOneIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
       resolvedIntegrationKinds: [integration.kind],
     });
 
-    const {
-      secrets,
-      kind,
-      items: _ignore1,
-      groupPermissions: _ignore2,
-      userPermissions: _ignore3,
-      ...rest
-    } = integration;
+    const narrowedKind = kinds.find((kind) => kind === integration.kind);
+    if (!narrowedKind) {
+      return throwUnexpectedIntegrationKind(integration.kind, kinds);
+    }
+
+    const { secrets, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest } = integration;
 
     return next({
       ctx: {
         integration: {
           ...rest,
           externalUrl: rest.app?.href ?? null,
-          kind: kind as TKind,
+          kind: narrowedKind,
           decryptedSecrets: secrets.map((secret) => ({
             ...secret,
             value: decryptSecret(secret.value),
@@ -176,15 +182,19 @@ const createManyIntegrationMiddlewareForKinds = <TKind extends IntegrationKind>(
     return next({
       ctx: {
         integrations: dbIntegrations.map(
-          ({ secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => ({
-            ...rest,
-            externalUrl: rest.app?.href ?? null,
-            kind: kind as TKind,
-            decryptedSecrets: secrets.map((secret) => ({
-              ...secret,
-              value: decryptSecret(secret.value),
-            })),
-          }),
+          ({ secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => {
+            const narrowedKind = kinds.find((allowedKind) => allowedKind === kind);
+            if (!narrowedKind) return throwUnexpectedIntegrationKind(kind, kinds);
+            return {
+              ...rest,
+              externalUrl: rest.app?.href ?? null,
+              kind: narrowedKind,
+              decryptedSecrets: secrets.map((secret) => ({
+                ...secret,
+                value: decryptSecret(secret.value),
+              })),
+            };
+          },
         ),
       },
     });
@@ -212,13 +222,19 @@ export const createOneWidgetIntegrationMiddleware = <TWidgetKind extends WidgetK
   action: IntegrationAction,
   widgetKind: TWidgetKind,
 ): ReturnType<typeof createOneIntegrationMiddlewareForKinds<WidgetIntegrationKind<TWidgetKind>>> =>
-  createOneIntegrationMiddlewareForKinds(action, getWidgetIntegrationConfig(widgetKind).supportedIntegrations);
+  createOneIntegrationMiddlewareForKinds<WidgetIntegrationKind<TWidgetKind>>(
+    action,
+    getWidgetIntegrationConfig(widgetKind).supportedIntegrations,
+  );
 
 export const createManyWidgetIntegrationMiddleware = <TWidgetKind extends WidgetKindWithIntegration>(
   action: IntegrationAction,
   widgetKind: TWidgetKind,
 ): ReturnType<typeof createManyIntegrationMiddlewareForKinds<WidgetIntegrationKind<TWidgetKind>>> =>
-  createManyIntegrationMiddlewareForKinds(action, getWidgetIntegrationConfig(widgetKind).supportedIntegrations);
+  createManyIntegrationMiddlewareForKinds<WidgetIntegrationKind<TWidgetKind>>(
+    action,
+    getWidgetIntegrationConfig(widgetKind).supportedIntegrations,
+  );
 
 /**
  * Throws a TRPCError FORBIDDEN if the user does not have permission to perform the specified action on at least one of the specified integrations

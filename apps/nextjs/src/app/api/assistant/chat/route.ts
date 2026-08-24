@@ -366,7 +366,8 @@ export async function POST(request: Request) {
   const parsed = requestSchema.safeParse(
     (() => {
       try {
-        return JSON.parse(requestBody) as unknown;
+        const value: unknown = JSON.parse(requestBody);
+        return value;
       } catch {
         return null;
       }
