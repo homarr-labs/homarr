@@ -67,57 +67,107 @@
 .sortableStrip {
   display: flex;
   align-items: stretch;
-  gap: var(--mantine-spacing-sm);
-  width: 100%;
+  gap: 0;
+  width: max-content;
   min-width: 100%;
   height: 100%;
   padding: 0.35rem var(--mantine-spacing-sm) 0.45rem;
   white-space: nowrap;
 }
 
+.zoneSection {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  flex: 0 0 auto;
+}
+
 .zoneDelimiter {
   display: grid;
-  grid-template-rows: 1.25rem 2.5rem;
-  gap: 0.3rem;
-  min-width: 5rem;
+  grid-template-rows: 1.2rem 1.75rem;
+  place-items: center;
+  gap: 0.2rem;
+  width: 3.5rem;
   height: 100%;
-  flex: 1 1 7rem;
   align-content: center;
-  padding-inline: 0.25rem;
+  padding-block: 0.25rem 0.4rem;
+  flex: 0 0 auto;
   user-select: none;
 }
 
-.zoneDelimiter :global(.mantine-Divider-label) {
-  padding-inline: 0.25rem;
+.zoneLabel {
   color: var(--mantine-color-dimmed);
   font-size: 0.55rem;
   font-weight: 700;
+  line-height: 1;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.zoneBoundary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--mantine-spacing-xs);
-  height: 2.5rem;
+.zoneLine {
+  height: 1.5rem;
+  border-color: var(--mantine-color-default-border);
+}
+
+.dropSlot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  min-width: 1.25rem;
+  height: 3rem;
+  margin-bottom: 0.125rem;
+  flex: 0 0 auto;
+  outline: none;
+}
+
+.dropMarker {
+  display: block;
+  width: 2px;
+  height: 1.4rem;
+  border-radius: var(--mantine-radius-xl);
+  background: transparent;
+  transition:
+    width 120ms ease,
+    height 120ms ease,
+    background-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.sortableStrip[data-drag-active="true"] .dropMarker {
+  background: color-mix(in srgb, var(--mantine-color-default-border) 72%, transparent);
+}
+
+.dropZoneLabel {
+  position: absolute;
+  inset-block-start: -0.9rem;
+  inset-inline-start: 50%;
+  z-index: 2;
+  display: none;
+  padding: 0.15rem 0.3rem;
+  color: var(--mantine-primary-color-filled);
+  border: 1px solid var(--mantine-primary-color-filled);
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+  box-shadow: var(--mantine-shadow-xs);
+  font-size: 0.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transform: translateX(-50%);
   pointer-events: none;
 }
 
-.zoneBoundary > span {
-  width: 2px;
-  height: 1.25rem;
-  border-radius: var(--mantine-radius-xl);
-  background: var(--mantine-color-default-border);
-  transition:
-    height 120ms ease,
-    background-color 120ms ease;
+.dropSlot[data-drop-target="true"] .dropMarker {
+  width: 3px;
+  height: 2.35rem;
+  background: var(--mantine-primary-color-filled);
+  box-shadow: 0 0 0 3px var(--mantine-primary-color-light);
 }
 
-.zoneDelimiter[data-drop-target="true"] .zoneBoundary > span {
-  height: 1.5rem;
-  background: var(--mantine-primary-color-filled);
+.dropSlot[data-drop-target="true"] .dropZoneLabel {
+  display: block;
 }
 
 .sortableItem {
@@ -163,7 +213,6 @@
 
 .itemButton:hover,
 .itemButton:focus-visible,
-.sortableItem[data-drop-target="true"] .itemButton,
 .sortableItem[data-selected="true"] .itemButton {
   border-color: var(--mantine-primary-color-filled);
   background: var(--mantine-primary-color-light-hover);
@@ -208,6 +257,8 @@
   height: 2.25rem;
   gap: 3px;
   place-content: center;
+  align-self: flex-end;
+  margin: 0 0.125rem 0.125rem 0;
   flex: 0 0 auto;
 }
 
@@ -247,11 +298,10 @@
 }
 
 .stage[data-size="mobile"] .sortableStrip {
-  gap: var(--mantine-spacing-xs);
   padding-inline: var(--mantine-spacing-xs);
 }
 
-.stage[data-size="mobile"] .zoneDelimiter :global(.mantine-Divider-label) {
+.stage[data-size="mobile"] .zoneLabel {
   font-size: 0.5rem;
 }
 
@@ -281,7 +331,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .device,
-  .zoneBoundary > span,
+  .dropMarker,
   .itemButton {
     transition: none;
   }
