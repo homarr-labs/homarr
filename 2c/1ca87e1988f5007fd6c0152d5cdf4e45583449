@@ -1,0 +1,22 @@
+packages/request-handler/src/lib/request-handler.spec.ts
+  s_be377879e9dbc6::t_83e4982a40bcf9 6
+  s_be377879e9dbc6::t_7d86dc7f2c8490 83-122
+packages/request-handler/src/lib/request-handler.ts
+  s_be377879e9dbc6::t_dc1c3bfe528615 29-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.23",
+  "base_commit_sha": "2c1ca87e1988f5007fd6c0152d5cdf4e45583449",
+  "prompts": {},
+  "sessions": {
+    "s_be377879e9dbc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "785054cb-c471-4a58-8c2e-2d7f28cb4102",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
