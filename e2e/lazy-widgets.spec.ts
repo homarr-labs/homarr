@@ -8,6 +8,7 @@ import { describe, test } from "vitest";
 import * as sqliteSchema from "../packages/db/schema/sqlite";
 import { createHomarrContainer } from "./shared/create-homarr-container";
 import { createSqliteDbFileAsync } from "./shared/e2e-db";
+import { loginAsync } from "./shared/login";
 import { seedAdminUserAsync } from "./shared/seed-admin-user";
 
 const adminCredentials = {
@@ -116,15 +117,7 @@ describe("lazy widget application graph", () => {
     let releaseRefresh: (() => void) | undefined;
 
     try {
-      await page.goto(`${baseUrl}/auth/login`);
-      await page.getByLabel("Username").fill(adminCredentials.username);
-      await page.locator("#password").fill(adminCredentials.password);
-      const signedIn = page.waitForURL((url) => url.origin === baseUrl && url.pathname === "/", {
-        waitUntil: "commit",
-        timeout: 60_000,
-      });
-      await page.locator("css=button[type='submit']").click();
-      await signedIn;
+      await loginAsync({ page, baseUrl, credentials: adminCredentials });
 
       const visibleBoard = page.locator("[data-homarr-dev-benchmark-board]").filter({ visible: true }).first();
       await expect(visibleBoard).toBeVisible({ timeout: 30_000 });
