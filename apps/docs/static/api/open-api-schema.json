@@ -4386,6 +4386,11 @@
                             "type": "string",
                             "enum": ["input", "icon"]
                           },
+                          "logoDisplay": {
+                            "default": "logo",
+                            "type": "string",
+                            "enum": ["logo", "logoAndText"]
+                          },
                           "zones": {
                             "type": "object",
                             "properties": {
