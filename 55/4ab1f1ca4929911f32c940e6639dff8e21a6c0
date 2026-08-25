@@ -1,0 +1,43 @@
+packages/redis/src/lib/channel.ts
+  s_be377879e9dbc6::t_1d97cfd20c7ceb 6,26-30,42,44,47,68,76,82,89,105,111,113,115,118,124,139,146,160-162,170,174,184-185,189,193,196-197,204,208,210,223,241,245,292
+packages/api/src/router/widgets/downloads.ts
+  s_be377879e9dbc6::t_9287bd74c4b3db 41,43
+packages/request-handler/src/lib/integration-request-handler.ts
+  s_be377879e9dbc6::t_1d97cfd20c7ceb 30
+packages/request-handler/src/lib/widget-request-handler.ts
+  s_be377879e9dbc6::t_1d97cfd20c7ceb 13-14
+packages/api/src/router/widgets/anchor-notes.ts
+  s_be377879e9dbc6::t_0e997d71faa7a4 79
+packages/redis/src/lib/connection.ts
+  s_be377879e9dbc6::t_1d97cfd20c7ceb 10-11
+packages/api/src/router/widgets/dns-hole.ts
+  s_be377879e9dbc6::t_b17204794ffe42 75,95
+packages/api/src/router/widgets/smart-home.ts
+  s_be377879e9dbc6::t_e1a91a718294f0 60,79
+packages/integrations/src/base/session-store.ts
+  s_be377879e9dbc6::t_da2acffecd0714 6,11
+packages/api/src/router/integration/integration-router.ts
+  s_be377879e9dbc6::t_fa11afd7263a2c 719
+packages/api/src/router/widgets/media-requests.ts
+  s_be377879e9dbc6::t_1a8b13527b552f 156
+packages/request-handler/src/lib/request-handler.ts
+  s_be377879e9dbc6::t_1d97cfd20c7ceb 9,64-77,82-85,91-93,95-102,105-106,109-110,113,115-119,121
+packages/redis/src/lib/channel-subscription-tracker.ts
+  s_be377879e9dbc6::t_1d97cfd20c7ceb 6,66,94,107
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "554ab1f1ca4929911f32c940e6639dff8e21a6c0",
+  "prompts": {},
+  "sessions": {
+    "s_be377879e9dbc6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "785054cb-c471-4a58-8c2e-2d7f28cb4102",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
