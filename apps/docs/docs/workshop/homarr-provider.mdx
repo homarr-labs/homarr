@@ -38,8 +38,10 @@ its server; changing the browser clock cannot bypass them.
 Workshop keeps the OpenRouter API key on its server. Homarr and the browser never receive it.
 
 Prompts, attachments, tools, and tool results pass through Workshop and OpenRouter. Workshop does not retain this
-content or the responses. It stores only the user, UTC day, and counters needed to enforce allowances. OpenRouter is
-configured for zero data retention with data collection disabled. Homarr does not use this content to train models.
+content or the responses. It stores only the user, UTC day, and counters needed to enforce allowances. Each active day
+has a separate quota record so Workshop operators can inspect per-user daily usage without seeing request content.
+OpenRouter is configured for zero data retention with data collection disabled. Homarr does not use this content to
+train models.
 
 We would rather become millionaires in a more ethical manner.
 

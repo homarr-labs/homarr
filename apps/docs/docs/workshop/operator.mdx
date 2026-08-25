@@ -72,6 +72,9 @@ per-request telemetry. It accepts only uploaded image data, conservatively bound
 allows at most two concurrent requests per user and 100 across the service. Keep an OpenRouter account-level credit
 limit as the final monetary backstop because request quotas are not dollar accounting.
 
+PocketBase stores one `assistant_quotas` record per user and active UTC day. Workshop superusers can use this private
+collection for a daily usage breakdown; regular users cannot list or view its records.
+
 Run `pnpm test:workshop` to test authentication, streaming, UTC reset, atomic per-user and global quota enforcement,
 failed-request accounting, identity attribution, server-selected model routing, function tools, input and output
 controls, privacy routing, spoofing resistance, absence of request logs, and migration rollback.

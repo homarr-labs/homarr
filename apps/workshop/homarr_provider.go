@@ -605,7 +605,12 @@ func (provider *homarrProvider) loadQuota(
 	user *core.Record,
 	now time.Time,
 ) (*core.Record, quotaSnapshot, bool, error) {
-	quota, err := app.FindFirstRecordByFilter("assistant_quotas", "user = {:user}", dbx.Params{"user": user.Id})
+	day := now.Format(time.DateOnly)
+	quota, err := app.FindFirstRecordByFilter(
+		"assistant_quotas",
+		"user = {:user} && day = {:day}",
+		dbx.Params{"user": user.Id, "day": day},
+	)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return nil, quotaSnapshot{}, false, err
 	}
@@ -617,10 +622,7 @@ func (provider *homarrProvider) loadQuota(
 		}
 		quota = core.NewRecord(collection)
 		quota.Set("user", user.Id)
-		changed = true
-	}
-	if quota.GetString("day") != now.Format(time.DateOnly) {
-		quota.Set("day", now.Format(time.DateOnly))
+		quota.Set("day", day)
 		quota.Set("used", 0)
 		changed = true
 	}
