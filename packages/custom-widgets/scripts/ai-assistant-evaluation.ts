@@ -144,7 +144,8 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
     type: "function",
     function: {
       name: "customWidget_getComponent",
-      description: "Get installed documentation and safety rules for one named Custom JSX component.",
+      description:
+        "Get installed documentation and safety rules for one named Custom JSX component. Fetch only a selected component, one tool call at a time, after any optional example.",
       parameters: objectSchema({ name: { type: "string" } }, ["name"]),
     },
   },
@@ -162,7 +163,8 @@ export const customWidgetAssistantEvaluationToolDefinitions: ToolDefinition[] = 
     type: "function",
     function: {
       name: "customWidget_getExample",
-      description: "Get one installed Custom JSX example by catalog ID.",
+      description:
+        "Optionally get one installed Custom JSX example by catalog ID before requesting any component documentation.",
       parameters: objectSchema({ name: { type: "string" } }, ["name"]),
     },
   },
@@ -251,11 +253,24 @@ export function executeAssistantEvaluationTool(
   name: string,
   input: Record<string, unknown>,
 ): unknown {
+  const componentDocumentCount = state.calledTools.filter(
+    (toolName) => toolName === "customWidget_getComponent",
+  ).length;
+  if (name === "customWidget_getExample") {
+    if (componentDocumentCount > 0) {
+      return {
+        error:
+          "An example must be loaded before component documentation. Keep the existing component-document budget and continue to customWidget_validate.",
+      };
+    }
+    const example = typeof input.name === "string" ? getCustomWidgetExample(input.name) : null;
+    if (!example) return { error: "Custom JSX example not found" };
+    state.calledTools.push(name);
+    const { template, ...widget } = example.widget;
+    return { ...example, widget: { ...widget, templateLines: template.split("\n") } };
+  }
   const componentDocumentLimit = state.calledTools.includes("customWidget_getExample") ? 4 : 8;
-  if (
-    name === "customWidget_getComponent" &&
-    state.calledTools.filter((toolName) => toolName === "customWidget_getComponent").length >= componentDocumentLimit
-  ) {
+  if (name === "customWidget_getComponent" && componentDocumentCount >= componentDocumentLimit) {
     return {
       error:
         "The targeted component-document budget is exhausted. Continue with validation using the documentation already loaded.",
@@ -276,12 +291,6 @@ export function executeAssistantEvaluationTool(
     return names.length > 0
       ? getCustomWidgetSharedProps(names)
       : { error: "At least one shared prop name is required" };
-  }
-  if (name === "customWidget_getExample") {
-    const example = typeof input.name === "string" ? getCustomWidgetExample(input.name) : null;
-    if (!example) return { error: "Custom JSX example not found" };
-    const { template, ...widget } = example.widget;
-    return { ...example, widget: { ...widget, templateLines: template.split("\n") } };
   }
   if (name === "customWidget_validate") {
     const parsed = parseDefinition(input.widget);
@@ -576,11 +585,11 @@ async function runAssistantAttempt(args: {
       process.stdout.write(`    tool: ${toolCall.function.name}\n`);
       let output: unknown;
       try {
-        const parsed = JSON.parse(toolCall.function.arguments) as unknown;
-        const input =
-          parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)
-            ? (parsed as Record<string, unknown>)
-            : {};
+        const parsed: unknown = JSON.parse(toolCall.function.arguments);
+        let input: Record<string, unknown> = {};
+        if (parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)) {
+          input = Object.fromEntries(Object.entries(parsed));
+        }
         output = executeAssistantEvaluationTool(args.testCase, state, toolCall.function.name, input);
       } catch (error) {
         output = { error: error instanceof Error ? error.message : "Tool input was not valid JSON" };

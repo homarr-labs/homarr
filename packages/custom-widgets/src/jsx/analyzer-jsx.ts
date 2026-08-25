@@ -1,3 +1,4 @@
+import { customJsxCatalogComponentByName } from "../core/component-catalog";
 import {
   customJsxBindableComponentNames,
   customJsxComponentByName,
@@ -31,6 +32,20 @@ export function analyzeCustomJsxElement(
   const name = nameNode ? customJsxTagName(nameNode) : null;
   const resolvedName = name ? resolveCustomJsxComponentName(name) : null;
   const descriptor = resolvedName ? customJsxComponentByName.get(resolvedName) : undefined;
+  const attributes = nodesOf(opening.attributes);
+  if (resolvedName === "TablerIcon") {
+    const attributeNames = new Set<string>();
+    for (const attribute of attributes) {
+      if (attribute.type !== "JSXAttribute") continue;
+      const attributeName = nodeOf(attribute.name);
+      if (attributeName?.type === "JSXIdentifier") attributeNames.add(String(attributeName.name));
+    }
+    for (const prop of customJsxCatalogComponentByName.get(resolvedName)?.props ?? []) {
+      if (prop.required && !attributeNames.has(prop.name)) {
+        context.add(opening, `MISSING_REQUIRED_PROP: '${prop.name}' on ${name} is required`);
+      }
+    }
+  }
   if (descriptor?.safety === "denied") {
     context.add(
       opening,
@@ -46,7 +61,7 @@ export function analyzeCustomJsxElement(
     );
   }
 
-  for (const attribute of nodesOf(opening.attributes)) {
+  for (const attribute of attributes) {
     if (attribute.type === "JSXSpreadAttribute") {
       const argument = nodeOf(attribute.argument);
       if (argument) context.visit(argument, depth + 1, bindings);
@@ -71,7 +86,11 @@ export function analyzeCustomJsxElement(
       attributeName !== "bind" &&
       !customJsxSupportedPropsByName.get(resolvedName)?.has(attributeName)
     ) {
-      context.add(attribute, `UNKNOWN_MANTINE_PROP: '${attributeName}' on ${name} will be passed through`, "warning");
+      if (resolvedName === "TablerIcon") {
+        context.add(attribute, `UNKNOWN_COMPONENT_PROP: '${attributeName}' on ${name} is not supported`);
+      } else {
+        context.add(attribute, `UNKNOWN_MANTINE_PROP: '${attributeName}' on ${name} will be passed through`, "warning");
+      }
     } else if (resolvedName && attributeName === "bind" && !customJsxBindableComponentNames.has(resolvedName)) {
       context.add(attribute, `BINDING_UNAVAILABLE: '${name}' does not have a declarative binding adapter`, "warning");
     }

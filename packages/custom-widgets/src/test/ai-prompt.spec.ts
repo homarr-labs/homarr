@@ -53,11 +53,46 @@ describe("AI prompt", () => {
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("at most eight named component documents");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("at most four after loading a complete example");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Treat preview data as the binding contract");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("freshness context");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Make initial states actionable");
-    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("compact narrow-tile rows");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Label standalone icons");
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Prefer templateLines");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Make one documentation tool call at a time");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Never issue batched customWidget_getComponent calls");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(
+      "choose at most four component names total and never request a fifth",
+    );
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(
+      "reject IIFEs, new, block callbacks or => {, and raw HTML tags such as span",
+    );
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("concise human-readable absolute dates and times");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(
+      "do not compute relative time with Date, Date.now, or Date.parse unless the live docs provide a safe helper",
+    );
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("one restrained accent for decorative chrome");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(
+      "operational, degraded, and down states retain distinct semantic colors",
+    );
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("Do not wrap every metric or service row in Paper or Card");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain("one dominant surface with clearly separated service rows");
+    expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(
+      "a one-column compact narrow layout, and an intentionally more spacious wide layout",
+    );
+    const orderedSteps = [
+      "1. First call customWidget_getSkill",
+      "2. Call customWidget_schema",
+      "3. If a complete example is useful, call customWidget_getExample before any customWidget_getComponent call",
+      "4. Before validation",
+      "5. Call customWidget_previewCreate",
+      "6. Call customWidget_previewQuery once for every query",
+      "7. Call customWidget_createFromPreview",
+    ];
+    for (const [index, step] of orderedSteps.entries()) {
+      expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT).toContain(step);
+      if (index === 0) continue;
+      expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf(orderedSteps[index - 1] ?? "")).toBeLessThan(
+        CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf(step),
+      );
+    }
     expect(CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf("customWidget_previewQuery")).toBeLessThan(
       CUSTOM_WIDGET_MCP_AUTHORING_PROMPT.indexOf("customWidget_create"),
     );
@@ -74,7 +109,7 @@ describe("AI prompt", () => {
 
   it("preserves raw context and the final instruction when optional context is large", () => {
     const prompt = buildCustomWidgetAiPrompt(undefined, JSON.stringify({ data: "x".repeat(20_000) }), null, "Build it");
-    expect(prompt).toContain('"data":"');
+    expect(prompt).toContain('"data": "');
     expect(prompt.endsWith(CUSTOM_WIDGET_FINAL_OUTPUT_INSTRUCTION)).toBe(true);
     expect(prompt.length).toBeLessThanOrEqual(12_000);
   });
@@ -101,5 +136,26 @@ describe("AI prompt", () => {
     const prompt = buildCustomWidgetAiPrompt(undefined, null, null, "Use compact cards and show the current latency");
 
     expect(prompt).toContain("Use compact cards and show the current latency");
+  });
+
+  it("redacts credentials from widget context", () => {
+    const prompt = buildCustomWidgetAiPrompt(
+      undefined,
+      JSON.stringify({ token: "sensitive" }),
+      {
+        requests: {
+          status: {
+            path: "/status?credential=Bearer-sk-secret-123456",
+            headers: { "X-Auth": "Bearer sk-secret-123456", "X-Feature-Key": "dashboard-layout" },
+          },
+        },
+      },
+      "Use Authorization: Bearer sk-secret-123456",
+    );
+
+    expect(prompt).not.toContain("sensitive");
+    expect(prompt).not.toContain("sk-secret-123456");
+    expect(prompt).toContain('"X-Auth": "[REDACTED]"');
+    expect(prompt).toContain('"X-Feature-Key": "dashboard-layout"');
   });
 });
