@@ -143,6 +143,7 @@ const BoardItemMenuInner = ({ item, definition, previewDimensions, resetErrorBou
         )}
         <Menu.Divider />
         <InlineConfirmMenuItem
+          color="red"
           confirmLabel={tItem("remove.message")}
           leftSection={<IconTrash size={16} />}
           onConfirm={() => removeItem({ itemId: item.id })}

@@ -60,6 +60,7 @@ export const BoardContainerMenu = ({ section }: { section: ContainerSectionItem 
         </Menu.Item>
         <Menu.Divider />
         <InlineConfirmMenuItem
+          color="red"
           confirmLabel={tContainer("remove.message")}
           leftSection={<IconTrash size={16} />}
           onConfirm={() => removeContainer({ id: section.id })}
