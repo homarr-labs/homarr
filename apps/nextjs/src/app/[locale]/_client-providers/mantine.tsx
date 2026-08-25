@@ -1,6 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
+import { useMemo } from "react";
 import type { MantineColorScheme, MantineColorSchemeManager } from "@mantine/core";
 import { DirectionProvider, MantineProvider, v8CssVariablesResolver } from "@mantine/core";
 import dayjs from "dayjs";
@@ -10,18 +11,23 @@ import { useSession } from "@homarr/auth/client";
 import { parseCookies, setClientCookie } from "@homarr/common";
 import { colorSchemeCookieKey } from "@homarr/definitions";
 import { theme } from "@homarr/ui";
+import type { ServerSettings } from "@homarr/server-settings";
+
+import { createBrandTheme } from "~/theme/branding";
 
 export const CustomMantineProvider = ({
   children,
   defaultColorScheme,
-}: PropsWithChildren<{ defaultColorScheme: MantineColorScheme }>) => {
+  branding,
+}: PropsWithChildren<{ defaultColorScheme: MantineColorScheme; branding?: ServerSettings["branding"] }>) => {
   const manager = useColorSchemeManager();
+  const configuredTheme = useMemo(() => (branding ? createBrandTheme(branding) : theme), [branding]);
   return (
     <DirectionProvider>
       <MantineProvider
         defaultColorScheme={defaultColorScheme}
         colorSchemeManager={manager}
-        theme={theme}
+        theme={configuredTheme}
         cssVariablesResolver={v8CssVariablesResolver}
       >
         {children}

@@ -25,7 +25,6 @@ const EnabledAssistantRoot = dynamic(() =>
 
 const DisabledAssistant = ({ children, description }: PropsWithChildren<{ description: string }>) => {
   useRegisterAssistantSpotlightPlaceholder(description);
-
   const value = useMemo(
     () => ({
       enabled: false,

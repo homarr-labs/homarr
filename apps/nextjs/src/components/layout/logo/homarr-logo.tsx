@@ -1,25 +1,39 @@
+"use client";
+
+import { useSettings } from "@homarr/settings";
+
 import type { LogoWithTitleProps } from "./logo";
 import { Logo, LogoWithTitle } from "./logo";
+import { homarrLogoPath } from "./constants";
 
 interface LogoProps {
   size: number;
 }
 
-export const homarrLogoPath = "/logo/logo.png";
-export const homarrPageTitle = "Homarr";
-
-const imageOptions = {
-  src: homarrLogoPath,
-  alt: "Homarr logo",
-  shouldUseNextImage: true,
+const useBrandLogo = () => {
+  const { branding } = useSettings();
+  const configuredLogoUrl = branding.logoImageUrl?.trim();
+  return {
+    title: branding.appName,
+    image: {
+      src: configuredLogoUrl || homarrLogoPath,
+      alt: `${branding.appName} logo`,
+      shouldUseNextImage: !configuredLogoUrl,
+    },
+  };
 };
 
-export const HomarrLogo = ({ size }: LogoProps) => <Logo size={size} {...imageOptions} />;
+export const HomarrLogo = ({ size }: LogoProps) => {
+  const brand = useBrandLogo();
+  return <Logo size={size} {...brand.image} />;
+};
 
 interface CommonLogoWithTitleProps {
   size: LogoWithTitleProps["size"];
+  hideTitleOnMobile?: boolean;
 }
 
-export const HomarrLogoWithTitle = ({ size }: CommonLogoWithTitleProps) => {
-  return <LogoWithTitle size={size} title={homarrPageTitle} image={imageOptions} />;
+export const HomarrLogoWithTitle = ({ size, hideTitleOnMobile }: CommonLogoWithTitleProps) => {
+  const brand = useBrandLogo();
+  return <LogoWithTitle size={size} title={brand.title} image={brand.image} hideTitleOnMobile={hideTitleOnMobile} />;
 };

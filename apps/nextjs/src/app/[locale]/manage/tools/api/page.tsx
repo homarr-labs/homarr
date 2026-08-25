@@ -9,7 +9,6 @@ import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
 import { getI18n } from "@homarr/translation/server";
 
-import { createMetaTitle } from "~/metadata";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { extractMcpTools } from "~/app/api/mcp/_extract-tools";
 import { ApiKeysManagement } from "./components/api-keys";
@@ -63,7 +62,7 @@ export async function generateMetadata() {
   const t = await getI18n("management");
 
   return {
-    title: createMetaTitle(t("metaTitle")),
+    title: t("metaTitle"),
   };
 }
 

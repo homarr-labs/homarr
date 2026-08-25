@@ -10,7 +10,12 @@ import {
 } from "@homarr/db/queries";
 import { boards, serverSettings } from "@homarr/db/schema";
 import type { ServerSettings } from "@homarr/server-settings";
-import { defaultServerSettingsKeys } from "@homarr/server-settings";
+import {
+  authBrandingSchema,
+  brandingServerSettingsSchema,
+  defaultServerSettingsKeys,
+  parseBrandingSettings,
+} from "@homarr/server-settings";
 
 import { createTRPCRouter, permissionRequiredProcedure, publicProcedure } from "../trpc";
 
@@ -22,7 +27,14 @@ const boardServerSettingsSchema = z.object({
 }) satisfies z.ZodType<ServerSettings["board"]>;
 
 const boardServerSettingsUpdateSchema = boardServerSettingsSchema.partial();
-
+const brandingServerSettingsUpdateSchema = brandingServerSettingsSchema.partial().extend({
+  authBranding: authBrandingSchema.partial().optional(),
+});
+const legacyAuthBrandingUpdateSchema = z.object({
+  showCustomAppNameOnLogin: z.boolean().optional(),
+  showCustomLogoOnLogin: z.boolean().optional(),
+  showCustomGreetingOnLogin: z.boolean().optional(),
+});
 export const serverSettingsRouter = createTRPCRouter({
   getCulture: publicProcedure.query(async ({ ctx }) => {
     return await getServerSettingByKeyAsync(ctx.db, "culture");
@@ -30,6 +42,14 @@ export const serverSettingsRouter = createTRPCRouter({
   getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
     return await getServerSettingsAsync(ctx.db);
   }),
+  getBranding: publicProcedure
+    .meta({
+      mcp: { enabled: true, description: "Returns the public instance branding configuration." },
+    })
+    .query(async ({ ctx }) => {
+      const branding = await getServerSettingByKeyAsync(ctx.db, "branding");
+      return parseBrandingSettings(branding);
+    }),
   getBoardSettings: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({
@@ -100,10 +120,27 @@ export const serverSettingsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      if (input.settingsKey === "branding") {
+        const current = await getServerSettingByKeyAsync(ctx.db, "branding");
+        const parsedInput = brandingServerSettingsUpdateSchema.parse(input.value);
+        const legacyInput = legacyAuthBrandingUpdateSchema.parse(input.value);
+        const authBranding = { ...current.authBranding };
+        authBranding.showAppName = legacyInput.showCustomAppNameOnLogin ?? authBranding.showAppName;
+        authBranding.showLogo = legacyInput.showCustomLogoOnLogin ?? authBranding.showLogo;
+        authBranding.showGreeting = legacyInput.showCustomGreetingOnLogin ?? authBranding.showGreeting;
+        Object.assign(authBranding, parsedInput.authBranding);
+        const value = brandingServerSettingsSchema.parse({
+          ...parseBrandingSettings(current),
+          ...parsedInput,
+          authBranding,
+        });
+        await updateServerSettingByKeyAsync(ctx.db, "branding", value);
+        return;
+      }
       const current = await getServerSettingByKeyAsync(ctx.db, input.settingsKey);
       await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, {
         ...current,
         ...input.value,
-      } as ServerSettings[keyof ServerSettings]);
+      } as ServerSettings[typeof input.settingsKey]);
     }),
 });

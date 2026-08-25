@@ -28,12 +28,14 @@ export const DesktopSearchInput = () => {
   );
 };
 
-export const MobileSearchButton = () => {
+export const MobileSearchButton = ({ alwaysVisible = false }: { alwaysVisible?: boolean }) => {
+  const t = useI18n();
   return (
     <HeaderButton
       data-homarr-dev-benchmark-interaction="search"
       onClick={() => openSpotlight()}
-      className={classes.mobileSearch}
+      className={alwaysVisible ? undefined : classes.mobileSearch}
+      aria-label={t("search.placeholder")}
     >
       <IconSearch size={20} stroke={1.5} />
     </HeaderButton>

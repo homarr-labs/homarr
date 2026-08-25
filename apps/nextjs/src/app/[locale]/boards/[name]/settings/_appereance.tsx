@@ -22,9 +22,10 @@ import { IconX } from "@tabler/icons-react";
 import type { UseFormReturnType } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { BoardColorInput } from "@homarr/ui";
+import { useSettings } from "@homarr/settings";
 
 import { SectionCard } from "~/components/manage/section-card";
-import { generateColors } from "../../(content)/_theme";
+import { generateColorScale } from "~/theme/branding";
 import type { FormValues } from "./_settings-form";
 
 interface Props {
@@ -40,13 +41,19 @@ export const ColorSettingsContent = ({ form }: Props) => {
   const tBoard = useI18n("board");
   const tCommon = useI18n("common");
   const theme = useMantineTheme();
+  const { branding } = useSettings();
 
   return (
     <SectionCard title={tBoard("setting.section.appearance.title")}>
       <Grid>
         <Grid.Col span={{ sm: 12, md: 6 }}>
           <Stack gap="xs">
-            <BoardColorInput label={tBoard("field.primaryColor.label")} {...form.getInputProps("primaryColor")} />
+            <BoardColorInput
+              label={tBoard("field.primaryColor.label")}
+              description={branding.lockPrimaryColor ? tBoard("field.primaryColor.locked") : undefined}
+              disabled={branding.lockPrimaryColor}
+              {...form.getInputProps("primaryColor")}
+            />
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ sm: 12, md: 6 }}>
@@ -121,7 +128,8 @@ interface ColorsPreviewProps {
 const ColorsPreview = ({ previewColor }: ColorsPreviewProps) => {
   const theme = useMantineTheme();
 
-  const colors = previewColor && hexRegex.test(previewColor) ? generateColors(previewColor) : generateColors("#000000");
+  const colors =
+    previewColor && hexRegex.test(previewColor) ? generateColorScale(previewColor) : generateColorScale("#000000");
 
   return (
     <Group gap={0} wrap="nowrap">

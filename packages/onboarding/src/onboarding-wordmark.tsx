@@ -9,6 +9,10 @@ import classes from "./onboarding-studio.module.css";
 import { useOnboardingSounds } from "./use-onboarding-sounds";
 
 interface OnboardingWordmarkProps {
+  appName?: string;
+  logoImageUrl?: string;
+  showAppName?: boolean;
+  showAppLogo?: boolean;
   primaryColor?: string;
   secondaryColor?: string;
   large?: boolean;
@@ -16,7 +20,15 @@ interface OnboardingWordmarkProps {
 
 const defaultWordmarkUrl = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg";
 
-export const OnboardingWordmark = ({ primaryColor, secondaryColor, large = false }: OnboardingWordmarkProps) => {
+export const OnboardingWordmark = ({
+  appName,
+  logoImageUrl,
+  showAppName,
+  showAppLogo,
+  primaryColor,
+  secondaryColor,
+  large = false,
+}: OnboardingWordmarkProps) => {
   const [celebrating, setCelebrating] = useState(false);
   const sounds = useOnboardingSounds();
   const className = `${classes.wordmark} ${classes.onboardingWordmark} ${large ? classes.welcomeWordmark : ""} ${celebrating ? classes.celebratingWordmark : ""}`;
@@ -52,14 +64,36 @@ export const OnboardingWordmark = ({ primaryColor, secondaryColor, large = false
     }
   };
 
+  const hasVisibilityControls = showAppName !== undefined || showAppLogo !== undefined;
+  const resolvedAppName = appName?.trim() || "Homarr";
+  const shouldRenderDefaultWordmark = showAppLogo && showAppName && !logoImageUrl && resolvedAppName === "Homarr";
+
+  if (hasVisibilityControls && !shouldRenderDefaultWordmark) {
+    const visibleLogoImageUrl = showAppLogo ? (logoImageUrl ?? "/logo/logo.png") : undefined;
+    if (!visibleLogoImageUrl && !showAppName) return null;
+
+    return (
+      <div className={classes.customBrand} data-large={large || undefined} aria-label={resolvedAppName}>
+        {visibleLogoImageUrl ? (
+          <img
+            className={classes.customBrandImage}
+            src={visibleLogoImageUrl}
+            alt={showAppName ? "" : resolvedAppName}
+          />
+        ) : null}
+        {showAppName ? <span>{resolvedAppName}</span> : null}
+      </div>
+    );
+  }
+
   if (primaryColor === undefined && secondaryColor === undefined) {
-    return <img src={defaultWordmarkUrl} alt="Homarr" width={1477} height={1054} className={className} />;
+    return <img src={defaultWordmarkUrl} alt={resolvedAppName} width={1477} height={1054} className={className} />;
   }
 
   return (
     <HomarrWordmarkLight
       role="img"
-      aria-label="Homarr"
+      aria-label={resolvedAppName}
       style={colors}
       className={className}
       onMouseEnter={(event) => celebrate(event.currentTarget)}

@@ -27,6 +27,8 @@ export { LanguageIcon } from "./language-icon";
 export { LanguageCombobox } from "./language-combobox";
 export { ColorSchemeCombobox } from "./color-scheme-combobox";
 export { BoardColorInput } from "./board-color-input";
+export { CornerStylePicker, cornerStyleValues } from "./corner-style-picker";
+export type { CornerStyle } from "./corner-style-picker";
 export { IntegrationMarquee } from "./integration-marquee";
 export { Link } from "./link";
 export {

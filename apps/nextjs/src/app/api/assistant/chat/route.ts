@@ -4,6 +4,7 @@ import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import type { MetadataExtractor } from "@ai-sdk/openai-compatible";
 import type { ToolSet, UIMessage } from "ai";
 import { createUIMessageStream, createUIMessageStreamResponse, jsonSchema, stepCountIs, streamText, tool } from "ai";
+import { cookies } from "next/headers";
 import { z } from "zod/v4";
 
 import { createTRPCContext, mcpRouter } from "@homarr/api/mcp";
@@ -24,6 +25,10 @@ import {
   assistantProviderRequiresApiKey,
   assistantReasoningModes,
 } from "@homarr/definitions";
+import { localeCookieKey } from "@homarr/definitions/cookie";
+import type { SupportedLanguage } from "@homarr/translation";
+import { fallbackLocale, isLocaleSupported } from "@homarr/translation";
+import { getI18n } from "@homarr/translation/server";
 import { resolveHomarrUrlConfig } from "@homarr/workshop/schema";
 
 import { browserToolContracts } from "~/components/assistant/assistant-tool-contracts";
@@ -370,7 +375,7 @@ export async function POST(request: Request) {
 
   const session = await auth();
   if (!session) {
-    return Response.json({ error: "Sign in to use Homarr Assistant." }, { status: 401 });
+    return Response.json({ error: "Sign in to use Assistant." }, { status: 401 });
   }
 
   const requestBody = await request.text();
@@ -414,7 +419,11 @@ export async function POST(request: Request) {
 
   const requiresApiKey = configuration ? assistantProviderRequiresApiKey(configuration.provider) : false;
   if (!configuration?.enabled || !configuration.modelId || (requiresApiKey && !configuration.encryptedApiKey)) {
-    return Response.json({ error: "Homarr Assistant is not configured." }, { status: 503 });
+    const requestedLocale = (await cookies()).get(localeCookieKey)?.value;
+    let locale: SupportedLanguage = fallbackLocale;
+    if (requestedLocale && isLocaleSupported(requestedLocale)) locale = requestedLocale;
+    const t = await getI18n({ locale, namespace: "assistant.unavailable" });
+    return Response.json({ error: t("notConfigured") }, { status: 503 });
   }
 
   let homarrProviderToken: string | null | undefined;

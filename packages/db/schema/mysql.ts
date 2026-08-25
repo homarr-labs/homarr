@@ -43,6 +43,7 @@ import type {
   WidgetKind,
 } from "@homarr/definitions";
 import type { CustomWidgetSecretKind } from "@homarr/custom-widgets/core";
+import { defaultHeaderPreferencesSerialized } from "@homarr/validation/header-preferences";
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
@@ -85,6 +86,7 @@ export const users = mysqlTable("user", {
   firstDayOfWeek: tinyint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: boolean().default(false).notNull(),
   enableRightClickOnWidgets: boolean().default(true).notNull(),
+  headerPreferences: text().default(defaultHeaderPreferencesSerialized).notNull(),
   completedManageTour: boolean().default(false).notNull(),
   completedBoardTour: boolean().default(false).notNull(),
 });

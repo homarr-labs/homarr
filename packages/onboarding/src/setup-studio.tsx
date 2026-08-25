@@ -34,7 +34,6 @@ import {
   UnstyledButton,
   useMantineColorScheme,
 } from "@mantine/core";
-import type { MantineSize } from "@mantine/core";
 import {
   IconAdjustments,
   IconAlertCircle,
@@ -91,7 +90,16 @@ import {
 import { showErrorNotification, showSuccessNotification, showWarningNotification } from "@homarr/notifications";
 import type { SupportedLanguage } from "@homarr/translation";
 import { useCurrentLocale, useI18n } from "@homarr/translation/client";
-import { BoardColorInput, ColorSchemeCombobox, IntegrationAvatar, LanguageCombobox, Link } from "@homarr/ui";
+import type { CornerStyle } from "@homarr/ui";
+import {
+  BoardColorInput,
+  ColorSchemeCombobox,
+  CornerStylePicker,
+  cornerStyleValues,
+  IntegrationAvatar,
+  LanguageCombobox,
+  Link,
+} from "@homarr/ui";
 import { IntegrationMultiSelectGrid } from "@homarr/ui/integration-select-grid";
 
 import type { OnboardingStudioProps } from "./types";
@@ -146,7 +154,6 @@ const sectionDefinitions = [
   { id: "review", icon: IconCheck },
 ] as const;
 
-const radiusValues = ["xs", "sm", "md", "lg", "xl"] as const;
 const initialPrimaryColor = "#fa5252";
 const initialSecondaryColor = "#fd7e14";
 const emptyDiscoveredIntegrations: DockerDiscoveryData["integrations"] = [];
@@ -176,7 +183,7 @@ export const SetupStudio = ({ environment, assistantConfiguration }: OnboardingS
   const [boardName, setBoardName] = useState(initialBoard?.name ?? "dashboard");
   const [primaryColor, setPrimaryColor] = useState(initialPrimaryColor);
   const [secondaryColor, setSecondaryColor] = useState(initialSecondaryColor);
-  const [itemRadius, setItemRadius] = useState<MantineSize>("lg");
+  const [itemRadius, setItemRadius] = useState<CornerStyle>("lg");
   const [columnCount, setColumnCount] = useState(10);
   const [leftSidebar, setLeftSidebar] = useState(false);
   const [rightSidebar, setRightSidebar] = useState(false);
@@ -797,8 +804,8 @@ interface StudioSectionProps {
   setPrimaryColor: (value: string) => void;
   secondaryColor: string;
   setSecondaryColor: (value: string) => void;
-  itemRadius: MantineSize;
-  setItemRadius: (value: MantineSize) => void;
+  itemRadius: CornerStyle;
+  setItemRadius: (value: CornerStyle) => void;
   columnCount: number;
   setColumnCount: (value: number) => void;
   leftSidebar: boolean;
@@ -1452,32 +1459,16 @@ const BoardBuilder = (props: StudioSectionProps) => {
               </Button>
             ) : null}
           </Stack>
-          <Stack gap="xs">
-            <Text size="sm" fw={500}>
-              {t("radius")}
-            </Text>
-            <OnboardingFloatingControl
-              ariaLabel={t("radius")}
-              value={props.itemRadius}
-              onChange={props.setItemRadius}
-              options={radiusValues.map((value) => ({ value, label: value.toUpperCase() }))}
-            />
-            <Group gap="xs" aria-hidden>
-              {radiusValues.map((radius) => (
-                <div
-                  key={radius}
-                  style={{
-                    flex: 1,
-                    height: 34,
-                    borderRadius: `var(--mantine-radius-${radius})`,
-                    background: "var(--mantine-color-default)",
-                    border: "1px solid var(--mantine-color-default-border)",
-                    opacity: props.itemRadius === radius ? 1 : 0.55,
-                  }}
-                />
-              ))}
-            </Group>
-          </Stack>
+          <CornerStylePicker
+            label={t("radius")}
+            value={props.itemRadius}
+            labels={
+              Object.fromEntries(
+                cornerStyleValues.map((cornerStyle) => [cornerStyle, t(`radiusOptions.${cornerStyle}`)]),
+              ) as Record<CornerStyle, string>
+            }
+            onChange={props.setItemRadius}
+          />
         </Stack>
 
         <Stack gap="lg">
@@ -1543,7 +1534,7 @@ const BoardPreview = ({
   appCount,
 }: {
   ariaLabel: string;
-  itemRadius: MantineSize;
+  itemRadius: CornerStyle;
   baseColumnCount: number;
   leftSidebar: boolean;
   rightSidebar: boolean;

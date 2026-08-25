@@ -36,8 +36,14 @@ import classes from "./board-switcher.module.css";
 
 export const boardSwitcherHotkey = "shift+c";
 
+export interface BoardSwitcherControls {
+  open: () => void;
+  preload: () => void;
+  hotkey: string;
+}
+
 interface BoardSwitcherProps {
-  children: (controls: { open: () => void; preload: () => void; hotkey: string }) => ReactNode;
+  children: (controls: BoardSwitcherControls) => ReactNode;
 }
 
 export const BoardSwitcher = ({ children }: BoardSwitcherProps) => {

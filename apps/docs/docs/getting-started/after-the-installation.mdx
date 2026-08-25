@@ -55,7 +55,7 @@ The studio keeps related choices together:
 2. **Discover** checks the actual database, Docker-compatible sockets, Kubernetes configuration, Workshop, and Assistant capabilities. Unavailable sources never block manual setup.
 3. **Connect** shows detected integrations and apps first, identifying whether each app came from an explicit [`homarr.*` or Homepage Docker label](/docs/integrations/docker-labels) or image matching. Select several integrations and apps at once, review every URL, and use the service-specific link to open its API-key settings when one is available. If a container has no published port or URL label, add its HTTP or HTTPS address before importing it.
 4. **Board** previews the Base layout, colors, widget radius, sidebars, selected apps, and widgets inferred from integrations or Docker labels. Choose 8 columns for a focused board, 10 for a balanced board, 12 for a wide board, or use the slider for a custom width up to 24 columns. Homarr still creates and reflows the protected Mobile layout automatically. A fast setup adds the integration-free Clock, Weather, and Bookmarks starter widgets.
-5. **Extend** explains and optionally configures Homarr Assistant, the community Workshop, and the separate Homarr MCP endpoint.
+5. **Extend** explains and optionally configures Assistant, the community Workshop, and the separate Homarr MCP endpoint.
 6. **Review** tests the selected connections, then saves integrations, apps, widgets, settings, and the exact first board together. If any part fails, the database changes are rolled back and your form stays available to correct.
 
 Docker discovery reports each configured host separately. Results from reachable hosts remain selectable if another socket

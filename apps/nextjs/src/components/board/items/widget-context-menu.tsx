@@ -222,7 +222,9 @@ export const WidgetContextMenu = ({
     [setItemOptions],
   );
 
-  if (!session || !settings.enableRightClickOnWidgets || isEditMode || item.kind === "app") return <>{children}</>;
+  if (!session || !settings.enableRightClickOnWidgets || isEditMode || item.kind === "app") {
+    return <>{children}</>;
+  }
 
   const visibleWidgetActions = widgetContextActions.filter((action) => !action.hidden);
 

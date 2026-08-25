@@ -15,8 +15,11 @@ import { selectUserSchema } from "@homarr/db/validationSchemas";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { credentialsAdminGroup, supportedAuthProviders } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
-import type { userBaseCreateSchema } from "@homarr/validation/user";
+import type { HeaderPreferences, userBaseCreateSchema } from "@homarr/validation/user";
 import {
+  getHeaderItems,
+  headerPreferencesMutationSchema,
+  parseHeaderPreferences,
   userChangeColorSchemeSchema,
   userChangeHomeBoardsSchema,
   userChangePasswordApiSchema,
@@ -30,6 +33,7 @@ import {
   userPingIconsEnabledSchema,
   userRegistrationApiSchema,
 } from "@homarr/validation/user";
+import { serializeHeaderPreferences } from "@homarr/validation/header-preferences";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import {
@@ -40,6 +44,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../trpc";
+import { getAccessibleBoardIdsForUserAsync } from "./board";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 import { changeSearchPreferencesAsync, changeSearchPreferencesInputSchema } from "./user/change-search-preferences";
@@ -368,6 +373,7 @@ export const userRouter = createTRPCRouter({
         firstDayOfWeek: true,
         pingIconsEnabled: true,
         enableRightClickOnWidgets: true,
+        headerPreferences: true,
         defaultSearchEngineId: true,
         openSearchInNewTab: true,
         ddgBangs: true,
@@ -405,6 +411,7 @@ export const userRouter = createTRPCRouter({
           firstDayOfWeek: true,
           pingIconsEnabled: true,
           enableRightClickOnWidgets: true,
+          headerPreferences: true,
           defaultSearchEngineId: true,
           openSearchInNewTab: true,
           ddgBangs: true,
@@ -719,6 +726,63 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, input.id));
     }),
+  changeHeaderPreferences: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/users/header-preferences",
+        tags: ["users"],
+        protect: true,
+      },
+      mcp: {
+        enabled: true,
+        description:
+          "Update the header layout preferences of a user. REQUIRED: id (user ID), headerPreferences (zones for left, center and right, visible flag, searchDisplay and logoDisplay). Admins can change any user; other users can only change their own. Board shortcut items must reference boards the target user can view",
+      },
+    })
+    .input(z.object({ id: z.string(), headerPreferences: headerPreferencesMutationSchema }))
+    .output(z.void())
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const targetUser = await ctx.db.query.users.findFirst({
+        columns: { headerPreferences: true },
+        where: eq(users.id, input.id),
+      });
+      if (!targetUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const submittedBoardIds = getBoardShortcutIds(input.headerPreferences);
+      if (submittedBoardIds.length > 0) {
+        const existingBoardIds = new Set(getBoardShortcutIds(parseHeaderPreferences(targetUser.headerPreferences)));
+        const accessibleBoardIds = await getAccessibleBoardIdsForUserAsync(ctx.db, input.id);
+        const hasUnavailableShortcut = submittedBoardIds.some(
+          (boardId) => !accessibleBoardIds.has(boardId) && !existingBoardIds.has(boardId),
+        );
+        if (hasUnavailableShortcut) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "One or more board shortcuts are unavailable to this user",
+          });
+        }
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          headerPreferences: serializeHeaderPreferences(input.headerPreferences),
+        })
+        .where(eq(users.id, input.id));
+    }),
   changeDdgBangs: protectedProcedure
     .input(convertIntersectionToZodObject(userDdgBangsSchema.and(byIdSchema)))
     .output(z.void())
@@ -828,6 +892,9 @@ export const userRouter = createTRPCRouter({
     };
   }),
 });
+
+const getBoardShortcutIds = (preferences: HeaderPreferences) =>
+  getHeaderItems(preferences.zones).flatMap((item) => (item.type === "board" ? [item.boardId] : []));
 
 const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBaseCreateSchema>, "groupIds">) => {
   const hashedPassword = await hashPasswordAsync(input.password);
