@@ -1,6 +1,7 @@
 "use client";
 
-import { type ReactNode, useMemo, useState } from "react";
+import type { ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PointerActivationConstraints } from "@dnd-kit/dom";
 import { SortableKeyboardPlugin } from "@dnd-kit/dom/sortable";
 import type { DragEndEvent } from "@dnd-kit/react";
@@ -98,10 +99,25 @@ const headerGuideZones = ["left", "center", "right"] as const;
 export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderComposerProps) => {
   const [draggedItemKey, setDraggedItemKey] = useState<string | null>(null);
   const [selectedItemKey, setSelectedItemKey] = useState<string | null>(null);
+  const zoneTableRef = useRef<HTMLDivElement>(null);
   const { branding } = useSettings();
   const t = useI18n("management.page.user.setting.general.header");
   const boardsById = useMemo(() => new Map(boards.map((board) => [board.id, board])), [boards]);
   const activeItems = getHeaderItems(value.zones);
+
+  useEffect(() => {
+    const zoneTable = zoneTableRef.current;
+    if (!zoneTable) return;
+
+    const clearSelectionFromEmptyArea = (event: PointerEvent) => {
+      if (!(event.target instanceof Element)) return;
+      if (event.target.closest("[data-header-composer-item]")) return;
+      setSelectedItemKey(null);
+    };
+
+    zoneTable.addEventListener("pointerdown", clearSelectionFromEmptyArea);
+    return () => zoneTable.removeEventListener("pointerdown", clearSelectionFromEmptyArea);
+  }, []);
   const activeItemKeySet = new Set(activeItems.map(getHeaderItemKey));
   const inactiveBuiltinIds = headerBuiltinItemIds.filter((itemId) => {
     const item = createBuiltinHeaderItem(itemId);
@@ -208,7 +224,7 @@ export const HeaderComposer = ({ value, onChange, boards, homeBoardId }: HeaderC
                 onDragEnd={handleDragEnd}
               >
                 <div className={classes.previewHeader}>
-                  <div className={classes.zoneTable} onClick={() => setSelectedItemKey(null)}>
+                  <div ref={zoneTableRef} className={classes.zoneTable}>
                     {headerGuideZones.map((zone) => (
                       <HeaderZoneColumn key={zone} zone={zone} label={t(`zones.${zone}` as never)}>
                         {value.zones[zone].map((item, index) => (
@@ -466,6 +482,7 @@ const SortableHeaderItem = ({
         ref={handleRef}
         type="button"
         className={classes.itemButton}
+        data-header-composer-item
         data-kind={item.type === "builtin" ? item.id : "board"}
         data-wide={
           (item.type === "builtin" &&
