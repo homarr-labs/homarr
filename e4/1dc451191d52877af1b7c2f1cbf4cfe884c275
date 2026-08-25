@@ -1,0 +1,19 @@
+tools/homarr-dev/internal/run/run.go
+  s_10289a40c1813c::t_cb7b1a70ad4673 73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "e41dc451191d52877af1b7c2f1cbf4cfe884c275",
+  "prompts": {},
+  "sessions": {
+    "s_10289a40c1813c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fd2888505ffeKRRZm66EWQPFiO",
+        "model": "deepseek-v4-flash"
+      },
+      "human_author": "Thomas Camlong <thomas@ajnart.fr>"
+    }
+  }
+}
