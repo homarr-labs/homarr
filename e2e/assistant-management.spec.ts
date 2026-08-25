@@ -3,6 +3,7 @@ import { describe, test } from "vitest";
 
 import { createHomarrContainer } from "./shared/create-homarr-container";
 import { createSqliteDbFileAsync } from "./shared/e2e-db";
+import { loginAsync } from "./shared/login";
 import { seedAdminUserAsync } from "./shared/seed-admin-user";
 import * as sqliteSchema from "../packages/db/schema/sqlite";
 
@@ -40,13 +41,7 @@ describe("Assistant management", () => {
     const page = await context.newPage();
 
     try {
-      await page.goto(`${baseUrl}/auth/login`);
-      await page.getByLabel("Username").fill(adminCredentials.username);
-      await page.locator("#password").fill(adminCredentials.password);
-      await page.getByRole("button", { name: "Login" }).click();
-      await expect(page).not.toHaveURL(/\/auth\/login/, { timeout: 30_000 });
-
-      await page.goto(`${baseUrl}/manage/assistant`);
+      await loginAsync({ page, baseUrl, credentials: adminCredentials, destination: "/manage/assistant" });
       await expect(page.getByRole("heading", { name: "Assistant" })).toBeVisible();
       await expect(page.getByText("Connection ready")).toBeVisible();
       await expect(page.getByText("Encrypted API key saved")).toBeVisible();
