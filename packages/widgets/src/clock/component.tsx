@@ -47,7 +47,7 @@ export default function ClockWidget({ options, width, height, displayMode }: Wid
   return (
     <Box className="clock-widget-container" h="100%" pos="relative">
       {showWeatherCorner && (
-        <Box pos="absolute" top={4} left={4}>
+        <Box pos="absolute" top={2} left={4}>
           <ClockWeatherSummary
             latitude={options.weatherLocation.latitude}
             longitude={options.weatherLocation.longitude}

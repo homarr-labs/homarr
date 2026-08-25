@@ -63,14 +63,14 @@ export const ClockWeatherSummary = ({
           <WeatherDescription weatherOnly weatherCode={weather.current.weatherCode} />
         </Group>
       ) : (
-        <Stack gap={2} align="center">
+        <Stack gap={1} align="center">
           <AnimatedWeatherIcon
             animated={animateIcon}
             code={weather.current.weatherCode}
             isDay={weather.current.isDay}
-            style={zoomCompensatedSize(33)}
+            style={zoomCompensatedSize(26)}
           />
-          <Text size="sm" c="dimmed">
+          <Text size="xs" c="dimmed">
             {Math.round(temperature)}
             {unit}
           </Text>
