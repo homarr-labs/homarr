@@ -26,6 +26,7 @@ import type { DnsHoleSummary } from "@homarr/integrations/types";
 import type { stringOrTranslation, TranslationFunction } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import type { widgetKind } from ".";
@@ -214,7 +215,14 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
           direction={isLong ? "row" : "column"}
           gap={0}
         >
-          <item.icon className="summary-card-icon" size={24} style={{ minWidth: 24, minHeight: 24 }} />
+          <item.icon
+            className="summary-card-icon"
+            style={{
+              ...zoomCompensatedSize(24),
+              minWidth: "calc(24px * var(--board-canvas-ui-scale, 1))",
+              minHeight: "calc(24px * var(--board-canvas-ui-scale, 1))",
+            }}
+          />
           <Flex
             className="summary-card-texts"
             justify="center"

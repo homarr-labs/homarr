@@ -15,6 +15,7 @@ import {
 
 import { clientApi } from "@homarr/api/client";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
@@ -257,7 +258,7 @@ function NoPhotosInAlbum() {
   return (
     <Center h="100%">
       <Stack align="center" gap="xs">
-        <IconAlertCircle size={32} />
+        <IconAlertCircle style={iconSizes.xl} />
         <Text size="sm" fw={500}>
           {t("noPhotos")}
         </Text>

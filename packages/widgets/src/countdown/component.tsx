@@ -18,6 +18,7 @@ import {
 import { IconBell, IconBellOff, IconHourglass } from "@tabler/icons-react";
 
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import {
   claimBrowserAlertOccurrence,
@@ -339,7 +340,13 @@ const AlertControls = ({
         disabled={disabled || notificationPermission === "unsupported" || notificationPermission === "denied"}
         onChange={(event) => void onNotificationsChange(event.currentTarget.checked)}
         label={t("notifications")}
-        thumbIcon={preferences.notifications ? <IconBell size={12} /> : <IconBellOff size={12} />}
+        thumbIcon={
+          preferences.notifications ? (
+            <IconBell style={iconSizes.sm} />
+          ) : (
+            <IconBellOff style={iconSizes.sm} />
+          )
+        }
       />
       {notificationPermission === "denied" && (
         <Text size="xs" c="dimmed" mt="xs">

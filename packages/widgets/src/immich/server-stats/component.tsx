@@ -8,6 +8,7 @@ import { getQueryKey } from "@trpc/react-query";
 import { clientApi } from "@homarr/api/client";
 import { formatBytes } from "@homarr/common";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../../common/empty-state";
 import type { WidgetComponentProps } from "../../definition";
@@ -59,28 +60,28 @@ export default function ImmichServerStatsWidget({
     {
       key: "users",
       enabled: statVisibility.showUsers,
-      icon: <IconUsers size={statsLayout.dense ? 16 : 18} />,
+      icon: <IconUsers style={zoomCompensatedSize(statsLayout.dense ? 16 : 18)} />,
       label: t("users"),
       value: stats.userCount.toLocaleString(locale),
     },
     {
       key: "photos",
       enabled: statVisibility.showPhotos,
-      icon: <IconPhoto size={statsLayout.dense ? 16 : 18} />,
+      icon: <IconPhoto style={zoomCompensatedSize(statsLayout.dense ? 16 : 18)} />,
       label: t("photos"),
       value: stats.photoCount.toLocaleString(locale),
     },
     {
       key: "videos",
       enabled: statVisibility.showVideos,
-      icon: <IconVideo size={statsLayout.dense ? 16 : 18} />,
+      icon: <IconVideo style={zoomCompensatedSize(statsLayout.dense ? 16 : 18)} />,
       label: t("videos"),
       value: stats.videoCount.toLocaleString(locale),
     },
     {
       key: "storage",
       enabled: statVisibility.showStorage,
-      icon: <IconDatabase size={statsLayout.dense ? 16 : 18} />,
+      icon: <IconDatabase style={zoomCompensatedSize(statsLayout.dense ? 16 : 18)} />,
       label: t("storage"),
       value: formatBytes(stats.totalLibraryUsageInBytes),
     },

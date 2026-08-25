@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { Badge, Card, Center, Group, List, ScrollArea, SimpleGrid, Stack, Text, useMantineTheme } from "@mantine/core";
 import { IconCircleCheckFilled, IconCircleXFilled } from "@tabler/icons-react";
 import dayjs from "dayjs";
@@ -10,6 +11,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { clientApi } from "@homarr/api/client";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../../definition";
 import { IntegrationErrorIndicator } from "../../common/integration-error-indicator";
@@ -187,7 +189,7 @@ export default function NetworkControllerSummaryWidget({
                     <StatusIcon
                       status={summary.wanStatus}
                       label={statusLabels[getBinaryStatusKey(summary.wanStatus)]}
-                      size={isDense ? 16 : 20}
+                      style={isDense ? iconSizes.md : iconSizes.xl}
                     />
                   }
                 >
@@ -198,7 +200,7 @@ export default function NetworkControllerSummaryWidget({
                     <StatusIcon
                       status={summary.www.status}
                       label={statusLabels[getBinaryStatusKey(summary.www.status)]}
-                      size={isDense ? 16 : 20}
+                      style={isDense ? iconSizes.md : iconSizes.xl}
                     />
                   }
                 >
@@ -214,7 +216,7 @@ export default function NetworkControllerSummaryWidget({
                     <StatusIcon
                       status={summary.wifi.status}
                       label={statusLabels[getBinaryStatusKey(summary.wifi.status)]}
-                      size={isDense ? 16 : 20}
+                      style={isDense ? iconSizes.md : iconSizes.xl}
                     />
                   }
                 >
@@ -227,7 +229,7 @@ export default function NetworkControllerSummaryWidget({
                       <StatusIcon
                         status={summary.lan.status}
                         label={statusLabels[getBinaryStatusKey(summary.lan.status)]}
-                        size={isDense ? 16 : 20}
+                        style={isDense ? iconSizes.md : iconSizes.xl}
                       />
                     }
                   >
@@ -239,7 +241,7 @@ export default function NetworkControllerSummaryWidget({
                     <StatusIcon
                       status={summary.vpn.status}
                       label={statusLabels[getBinaryStatusKey(summary.vpn.status)]}
-                      size={isDense ? 16 : 20}
+                      style={isDense ? iconSizes.md : iconSizes.xl}
                     />
                   }
                 >
@@ -285,17 +287,19 @@ const StatusIcon = ({
   status,
   label,
   size,
+  style,
 }: {
   status?: "enabled" | "disabled";
   label: string;
-  size: number | string;
+  size?: number | string;
+  style?: CSSProperties;
 }) => {
   const mantineTheme = useMantineTheme();
   if (status === "enabled") {
-    return <IconCircleCheckFilled aria-label={label} size={size} color={mantineTheme.colors.green[6]} />;
+    return <IconCircleCheckFilled aria-label={label} size={size} style={style} color={mantineTheme.colors.green[6]} />;
   }
   if (status === "disabled") {
-    return <IconCircleXFilled aria-label={label} size={size} color={mantineTheme.colors.red[6]} />;
+    return <IconCircleXFilled aria-label={label} size={size} style={style} color={mantineTheme.colors.red[6]} />;
   }
-  return <IconCircleXFilled aria-label={label} size={size} color={mantineTheme.colors.gray[6]} />;
+  return <IconCircleXFilled aria-label={label} size={size} style={style} color={mantineTheme.colors.gray[6]} />;
 };

@@ -7,7 +7,7 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
+import { Link, zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import { isLegacyCustomWidgetMigrationError, isTerminalCustomWidgetDefinitionError } from "./migration-state";
@@ -107,7 +107,10 @@ function Unavailable({
   return (
     <Center h="100%" p="sm">
       <Stack align="center" gap="xs">
-        <IconAlertTriangle size={32} color={`var(--mantine-color-${danger ? "red" : "yellow"}-6)`} />
+        <IconAlertTriangle
+          style={zoomCompensatedSize(32)}
+          color={`var(--mantine-color-${danger ? "red" : "yellow"}-6)`}
+        />
         <Text c="dimmed" size="sm" ta="center">
           {message}
         </Text>

@@ -16,6 +16,7 @@ import { IconAlertTriangle, IconClock } from "@tabler/icons-react";
 import type { Dayjs } from "dayjs";
 
 import { useCurrentIntlLocale, useI18n } from "@homarr/translation/client";
+import { iconSizes } from "@homarr/ui";
 
 import { formatLocalizedDate, formatLocalizedTime } from "../common/locale";
 import type { WidgetComponentProps } from "../definition";
@@ -102,7 +103,7 @@ const PrimaryClock = ({ now, options, primary }: Pick<ModeProps, "now" | "option
         <Stack gap={5} miw={0}>
           <Group gap="xs" wrap="nowrap">
             <ThemeIcon color={getPhaseColor(primary.phase)} variant="light" radius="xl" size="md">
-              <IconClock size={16} />
+              <IconClock style={iconSizes.md} />
             </ThemeIcon>
             <Title order={2} size="h4" fw={600}>
               {primary.label}

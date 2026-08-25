@@ -22,6 +22,7 @@ import { clientApi } from "@homarr/api/client";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import type { FirewallInterfacesSummary } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import { calculateBandwidth, formatBitsPerSec } from "./bandwidth";
@@ -329,7 +330,7 @@ const MetricRing = ({ value, icon: Icon, size, label, t }: MetricRingProps) => {
       label={
         <Center style={{ flexDirection: "column" }}>
           <Text size="xs">{safeValue.toFixed(1)}%</Text>
-          {showIcon && <Icon size={size < 96 ? 12 : 16} />}
+          {showIcon && <Icon style={zoomCompensatedSize(size < 96 ? 12 : 16)} />}
           {showStatus && <Text size="xs">{statusLabel}</Text>}
         </Center>
       }

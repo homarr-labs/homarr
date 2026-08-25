@@ -2,6 +2,7 @@ import { Box, Group, Loader, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import { isInitialWidgetQueryPending } from "../common/query-state";
 import { AnimatedWeatherIcon } from "../weather/animated-icon";
@@ -52,7 +53,7 @@ export const ClockWeatherSummary = ({
           animated={animateIcon}
           code={weather.current.weatherCode}
           isDay={weather.current.isDay}
-          size={detailed ? 28 : 22}
+          style={zoomCompensatedSize(detailed ? 28 : 22)}
         />
         <Text size={detailed ? "sm" : "xs"} fw={detailed ? 600 : undefined} c={detailed ? undefined : "dimmed"}>
           {Math.round(temperature)}

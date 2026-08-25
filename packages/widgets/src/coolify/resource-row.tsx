@@ -11,6 +11,7 @@ import {
 } from "@tabler/icons-react";
 
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import actionTargetClasses from "../common/action-target.module.css";
 import { getSafeApplicationUrl, SAFE_NEW_TAB_REL } from "../common/application-url";
@@ -73,7 +74,11 @@ export function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRow
   return (
     <Stack gap={0}>
       <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
-        <StatusIcon aria-label={statusLabel} size={isTiny ? 12 : 16} color={`var(--mantine-color-${statusColor}-6)`} />
+        <StatusIcon
+          aria-label={statusLabel}
+          style={zoomCompensatedSize(isTiny ? 12 : 16)}
+          color={`var(--mantine-color-${statusColor}-6)`}
+        />
         {resourceUrl ? (
           <Anchor
             className={actionTargetClasses.root}

@@ -35,6 +35,7 @@ import { formatBytes } from "@homarr/common";
 import { invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import classes from "./component.module.css";
 
@@ -207,7 +208,7 @@ const metricRenderers: BeszelMetricRenderer[] = [
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
       <MetricRow
         key="cpu"
-        icon={<Cpu size={sz.iconSize} />}
+        icon={<Cpu style={zoomCompensatedSize(sz.iconSize)} />}
         label={invariantTechnicalLabels.cpu}
         value={formatPercent(s.cpu)}
         progress={{ value: s.cpu, color: thresholdColor(s.cpu) }}
@@ -222,7 +223,7 @@ const metricRenderers: BeszelMetricRenderer[] = [
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
       <MetricRow
         key="mem"
-        icon={<MemoryStick size={sz.iconSize} />}
+        icon={<MemoryStick style={zoomCompensatedSize(sz.iconSize)} />}
         label={t("metric.memory")}
         value={formatPercent(s.memory)}
         progress={{ value: s.memory, color: thresholdColor(s.memory) }}
@@ -236,7 +237,7 @@ const metricRenderers: BeszelMetricRenderer[] = [
     key: "showDisk",
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
       <Group key="disk" gap="xs" wrap="nowrap" justify="space-between" style={{ minHeight: sz.rowHeight }}>
-        <HardDrive size={sz.iconSize} />
+        <HardDrive style={zoomCompensatedSize(sz.iconSize)} />
         <Text size={sz.fontSize} c="dimmed" w={sz.labelMiw} style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
           {t("metric.disk")}
         </Text>
@@ -251,7 +252,7 @@ const metricRenderers: BeszelMetricRenderer[] = [
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
       <MetricRow
         key="gpu"
-        icon={<Monitor size={sz.iconSize} />}
+        icon={<Monitor style={zoomCompensatedSize(sz.iconSize)} />}
         label={invariantTechnicalLabels.gpu}
         value={formatPercent(s.gpu)}
         progress={{ value: s.gpu, color: thresholdColor(s.gpu) }}
@@ -266,7 +267,7 @@ const metricRenderers: BeszelMetricRenderer[] = [
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
       <MetricRow
         key="la"
-        icon={<Activity size={sz.iconSize} />}
+        icon={<Activity style={zoomCompensatedSize(sz.iconSize)} />}
         label={t("metric.loadAvg")}
         value={formatLoadAvg(s.loadAvg)}
         size={sz}
@@ -280,7 +281,7 @@ const metricRenderers: BeszelMetricRenderer[] = [
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
       <MetricRow
         key="net"
-        icon={<Network size={sz.iconSize} />}
+        icon={<Network style={zoomCompensatedSize(sz.iconSize)} />}
         label={t("metric.net")}
         value={formatByteRate(s.netBytes)}
         size={sz}
@@ -294,7 +295,7 @@ const metricRenderers: BeszelMetricRenderer[] = [
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
       <MetricRow
         key="temp"
-        icon={<Thermometer size={sz.iconSize} />}
+        icon={<Thermometer style={zoomCompensatedSize(sz.iconSize)} />}
         label={t("metric.temp")}
         value={formatTemp(s.temp, false)}
         size={sz}
@@ -311,7 +312,7 @@ const metricRenderers: BeszelMetricRenderer[] = [
       return (
         <MetricRow
           key="bat"
-          icon={<Icon size={sz.iconSize} />}
+          icon={<Icon style={zoomCompensatedSize(sz.iconSize)} />}
           label={t("metric.battery")}
           value={`${s.battery?.[0] ?? 0}%`}
           size={sz}
@@ -326,7 +327,7 @@ const metricRenderers: BeszelMetricRenderer[] = [
     render: (s: BeszelSystemRow, _t: SystemCardProps["t"], sz: SizeConfig, tCommon: SystemCardProps["tCommon"]) => (
       <MetricRow
         key="svc"
-        icon={<Server size={sz.iconSize} />}
+        icon={<Server style={zoomCompensatedSize(sz.iconSize)} />}
         label={tCommon("services")}
         value={String(s.services)}
         size={sz}
@@ -340,7 +341,7 @@ const metricRenderers: BeszelMetricRenderer[] = [
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
       <MetricRow
         key="up"
-        icon={<Activity size={sz.iconSize} />}
+        icon={<Activity style={zoomCompensatedSize(sz.iconSize)} />}
         label={t("metric.uptime")}
         value={formatUptime(s.uptime)}
         size={sz}
@@ -354,7 +355,7 @@ const metricRenderers: BeszelMetricRenderer[] = [
     render: (s: BeszelSystemRow, t: SystemCardProps["t"], sz: SizeConfig) => (
       <MetricRow
         key="agent"
-        icon={<Wifi size={sz.iconSize} />}
+        icon={<Wifi style={zoomCompensatedSize(sz.iconSize)} />}
         label={t("metric.agent")}
         value={s.agentVersion}
         size={sz}
@@ -487,7 +488,7 @@ export default function BeszelSystemGridWidget({
         </Group>
         <Center h="100%">
           <Stack align="center" gap="xs">
-            <IconServerOff size={28} opacity={0.5} />
+            <IconServerOff style={zoomCompensatedSize(28)} opacity={0.5} />
             <Text size="sm" c="dimmed">
               {t("empty.noSystems")}
             </Text>

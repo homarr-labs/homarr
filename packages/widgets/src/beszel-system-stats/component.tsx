@@ -11,6 +11,7 @@ import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { zoomCompensatedSize } from "@homarr/ui";
 
 import classes from "./component.module.css";
 
@@ -147,7 +148,7 @@ export default function BeszelSystemStatsWidget({
         </Group>
         <Center h="100%">
           <Stack align="center" gap="xs">
-            <IconServerOff size={28} opacity={0.5} />
+            <IconServerOff style={zoomCompensatedSize(28)} opacity={0.5} />
             <Text size="sm" c="dimmed">
               {tBeszel("empty.noSystems")}
             </Text>
@@ -161,7 +162,7 @@ export default function BeszelSystemStatsWidget({
     return (
       <Center h="100%">
         <Stack align="center" gap="sm" p="md">
-          <IconQuestionMark size={40} />
+          <IconQuestionMark style={zoomCompensatedSize(40)} />
           <Text size="sm" c="dimmed" ta="center">
             {t("error.systemNotFound")}
           </Text>

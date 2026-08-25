@@ -1,6 +1,8 @@
 import { Center, RingProgress, Text } from "@mantine/core";
 import { IconCpu } from "@tabler/icons-react";
 
+import { zoomCompensatedSize } from "@homarr/ui";
+
 import { progressColor } from "../system-health";
 
 export const CpuTempRing = ({
@@ -27,7 +29,7 @@ export const CpuTempRing = ({
           <Text className="health-monitoring-cpu-temp-value" size={isTiny ? "8px" : "xs"}>
             {fahrenheit ? `${(cpuTemp * 1.8 + 32).toFixed(1)}°F` : `${cpuTemp.toFixed(1)}°C`}
           </Text>
-          <IconCpu className="health-monitoring-cpu-temp-icon" size={isTiny ? 8 : 16} />
+          <IconCpu className="health-monitoring-cpu-temp-icon" style={zoomCompensatedSize(isTiny ? 8 : 16)} />
         </Center>
       }
       sections={[

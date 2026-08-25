@@ -4,6 +4,7 @@ import { Card, Flex, Text, Tooltip, VisuallyHidden } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
 import { useRequiredBoard } from "@homarr/boards/context";
+import { zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 export interface SpeedStatCardProps {
@@ -45,7 +46,7 @@ export function SpeedStatCard({ icon: Icon, color, value, label, compact = false
           gap={isWide ? 8 : 4}
           style={{ minWidth: 0 }}
         >
-          <Icon size={compact ? 16 : 20} color={accentColor} style={{ flexShrink: 0 }} />
+          <Icon color={accentColor} style={zoomCompensatedSize(compact ? 16 : 20)} />
           <Flex direction="column" align={isWide ? "flex-start" : "center"} gap={0} style={{ minWidth: 0 }}>
             <Text size={compact ? "sm" : "md"} fw={700} ta="center" lh={1.1} truncate w="100%">
               {value}
