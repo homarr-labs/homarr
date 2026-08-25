@@ -11,7 +11,7 @@ import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useOptionalBoard } from "@homarr/boards/context";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { zoomCompensatedSize } from "@homarr/ui";
+import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 
 import classes from "./component.module.css";
 
@@ -200,7 +200,7 @@ export default function BeszelSystemStatsWidget({
                     <Button
                       variant="default"
                       size="compact-xs"
-                      leftSection={<IconServer size="var(--mantine-font-size-sm)" />}
+                      leftSection={<IconServer style={iconSizes.sm} />}
                       className={classes.beszelStatsSystemToggle}
                       disabled={isSelectionSavePending}
                     >

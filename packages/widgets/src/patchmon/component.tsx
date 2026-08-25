@@ -17,7 +17,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
-import { zoomCompensatedSize } from "@homarr/ui";
+import { iconSizes, zoomCompensatedSize } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 import { WidgetEmptyState } from "../common/empty-state";
@@ -450,7 +450,7 @@ function CompactStatGrid({
               {showIcon && (
                 <Icon
                   className={classes.statIcon}
-                  size="var(--mantine-font-size-lg)"
+                  style={iconSizes.lg}
                   stroke={1.5}
                   color={severityToIconColor(severity)}
                 />
