@@ -9,6 +9,7 @@ import { boards, items } from "@homarr/db/schema";
 import type { WidgetOptionsSettings } from "../../../../widgets/src";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";
+import { validateTimetableOptionsChangeAsync } from "./timetable";
 import { throwIfCustomWidgetPlacementChangeForbidden } from "../board/custom-widget-placement-access";
 
 export const optionsRouter = createTRPCRouter({
@@ -49,7 +50,6 @@ export const optionsRouter = createTRPCRouter({
       const previousOptions = SuperJSON.parse<Record<string, unknown>>(item.options);
       const updatedOptions = { ...previousOptions, ...input.newOptions };
       if (item.kind === "timetable") {
-        const { validateTimetableOptionsChangeAsync } = await import("../timetable-options-validation");
         await validateTimetableOptionsChangeAsync(updatedOptions, previousOptions);
       }
       throwIfCustomWidgetPlacementChangeForbidden({

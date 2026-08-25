@@ -154,12 +154,10 @@ export const reduceWidgetOptionsWithDefinition = (
   settings: Pick<SettingsContextProps, "enableStatusByDefault" | "forceDisableStatus">,
   currentValue: Record<string, unknown> = {},
 ) => {
-  const options = definition.createOptions(settings) as Record<string, WidgetOptionDefinition>;
-  return objectEntries(options).reduce(
-    (prev, [key, value]) => ({
-      ...prev,
-      [key]: currentValue[key] ?? value.defaultValue,
-    }),
-    {} as Record<string, unknown>,
-  );
+  const options: Record<string, WidgetOptionDefinition> = definition.createOptions(settings);
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of objectEntries(options)) {
+    result[key] = currentValue[key] ?? value.defaultValue;
+  }
+  return result;
 };

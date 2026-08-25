@@ -20,24 +20,56 @@ export interface SharedCacheAdapter<TData> {
   getAsync: () => Promise<CacheEntry<TData> | null | undefined>;
   setAsync: (entry: CacheEntry<TData>) => Promise<void>;
   acquireRefreshLockAsync: () => Promise<string | null | undefined>;
+  renewRefreshLockAsync: (token: string) => Promise<boolean | undefined>;
   releaseRefreshLockAsync: (token: string) => Promise<void>;
 }
 
 const MAX_CACHE_SIZE = 1000;
 const DEFAULT_TTL_MS = 10_000;
 const DEFAULT_STALE_IF_ERROR_TTL_MS = 5 * 60_000;
-// A waiter that loses the refresh lock polls the shared cache until the lock holder
-// publishes the entry (the holder writes it before releasing the lock). This window
-// must be >= the shared-cache refresh lock TTL (REFRESH_LOCK_TTL_SECONDS in
-// shared-cache.ts, currently 15s); otherwise every waiting pod gives up early and
-// stampedes the upstream on a cold cache while the holder is still refreshing.
-const SHARED_REFRESH_WAIT_MS = 15_000;
-const SHARED_REFRESH_POLL_MS = 75;
+const SHARED_REFRESH_POLL_MS = 100;
+const SHARED_REFRESH_LOCK_RETRY_MS = 1_000;
+const SHARED_REFRESH_STALE_WAIT_MS = 15_000;
+// Must remain comfortably below REFRESH_LOCK_TTL_SECONDS in shared-cache.ts.
+const SHARED_REFRESH_LOCK_RENEW_MS = 5_000;
 
 const delayAsync = async (durationMs: number) =>
   await new Promise<void>((resolve) => {
     setTimeout(resolve, durationMs);
   });
+
+const startRefreshLockRenewal = <TData>(sharedCache: SharedCacheAdapter<TData>, token: string) => {
+  let isOwned = true;
+  let isStopped = false;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+
+  const schedule = () => {
+    timer = setTimeout(() => {
+      void sharedCache.renewRefreshLockAsync(token).then(
+        (renewed) => {
+          if (renewed !== true) {
+            isOwned = false;
+            return;
+          }
+          if (!isStopped) schedule();
+        },
+        () => {
+          isOwned = false;
+        },
+      );
+    }, SHARED_REFRESH_LOCK_RENEW_MS);
+    timer.unref?.();
+  };
+
+  schedule();
+  return {
+    isOwned: () => isOwned,
+    stop: () => {
+      isStopped = true;
+      if (timer) clearTimeout(timer);
+    },
+  };
+};
 
 const evictExpired = <TData>(cache: Map<string, CacheEntry<TData>>) => {
   const now = Date.now();
@@ -134,8 +166,9 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
 
             lockToken = await sharedCache.acquireRefreshLockAsync();
             if (lockToken === null) {
-              const waitUntil = Date.now() + SHARED_REFRESH_WAIT_MS;
-              while (Date.now() < waitUntil) {
+              const returnStaleAt = Date.now() + SHARED_REFRESH_STALE_WAIT_MS;
+              let retryLockAt = Date.now() + SHARED_REFRESH_LOCK_RETRY_MS;
+              while (lockToken === null && sharedCache.isShared) {
                 await delayAsync(SHARED_REFRESH_POLL_MS);
                 const refreshedEntry = await sharedCache.getAsync();
                 if (refreshedEntry && Date.now() < refreshedEntry.expiresAt) {
@@ -143,16 +176,20 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
                   return refreshedEntry;
                 }
                 if (refreshedEntry && Date.now() < refreshedEntry.staleUntil) stale = refreshedEntry;
-              }
-
-              lockToken = await sharedCache.acquireRefreshLockAsync();
-              if (lockToken === null && options.fallbackToStaleOnError && stale) {
-                storeInMemory(key, stale, requestGeneration);
-                return stale;
+                if (Date.now() >= returnStaleAt && options.fallbackToStaleOnError && stale) {
+                  storeInMemory(key, stale, requestGeneration);
+                  return stale;
+                }
+                if (Date.now() >= retryLockAt) {
+                  lockToken = await sharedCache.acquireRefreshLockAsync();
+                  retryLockAt = Date.now() + SHARED_REFRESH_LOCK_RETRY_MS;
+                }
               }
             }
           }
 
+          const refreshLockRenewal =
+            lockToken && sharedCache ? startRefreshLockRenewal(sharedCache, lockToken) : undefined;
           try {
             const data = await options.requestAsync(input);
             const completedAt = Date.now();
@@ -167,7 +204,9 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
             };
             if (ttl > 0) {
               storeInMemory(key, entry, requestGeneration);
-              if (sharedCache?.isShared) await sharedCache.setAsync(entry);
+              if (sharedCache?.isShared && refreshLockRenewal?.isOwned() !== false) {
+                await sharedCache.setAsync(entry);
+              }
             }
             return entry;
           } catch (error) {
@@ -182,6 +221,7 @@ export const createRequestHandler = <TData, TInput extends Record<string, unknow
             }
             throw error;
           } finally {
+            refreshLockRenewal?.stop();
             if (lockToken) await sharedCache?.releaseRefreshLockAsync(lockToken);
           }
         })().finally(() => {

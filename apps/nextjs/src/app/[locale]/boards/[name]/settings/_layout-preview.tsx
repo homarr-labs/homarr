@@ -9,7 +9,7 @@ import { getRepresentativeLayoutWidth, projectBoardLayout } from "@homarr/boards
 import { getBoardLaneColumnCount, getRootSectionLane, getWidgetName } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
-import { widgetCatalogIcons } from "@homarr/widgets/catalog";
+import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 
 import type { Board } from "../../_types";
 import classes from "./_layout-preview.module.css";

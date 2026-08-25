@@ -50,5 +50,6 @@ export const indexerManagerRouter = createTRPCRouter({
           });
         }),
       );
+      await indexerManagerRequestHandler.invalidateCacheAsync(ctx.integrations.map(({ id }) => id));
     }),
 });

@@ -14,7 +14,7 @@ import {
   widgetKinds,
 } from "./manifest";
 import { widgetQueryRefetchIntervals } from "./refetch-intervals";
-import { widgetCatalogIcons } from "./catalog";
+import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 import { getWidgetQueryKeys } from "./definition";
 
 const serializePollingPolicy = ({

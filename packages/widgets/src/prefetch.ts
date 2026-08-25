@@ -5,12 +5,10 @@ import type { WidgetKind } from "@homarr/definitions";
 import { createSettings } from "@homarr/settings/creator";
 
 import { loadWidgetDefinition, reduceWidgetOptionsWithDefinition } from "./manifest";
-import type { PrefetchLoader, WidgetOptionsRecordOf } from "./definition";
-import type { inferOptionsFromCreator } from "./options";
+import type { PrefetchLoader } from "./definition";
 
-const definePrefetchLoaders = <TLoaders extends Partial<{ [TKind in WidgetKind]: PrefetchLoader<TKind> }>>(
-  loaders: TLoaders,
-) => loaders;
+const definePrefetchLoaders = <TLoaders extends Partial<Record<WidgetKind, PrefetchLoader>>>(loaders: TLoaders) =>
+  loaders;
 
 // Keep these imports explicit so Next.js can trace each optional prefetch
 // module without loading its database-specific implementation eagerly.
@@ -24,11 +22,11 @@ type PrefetchWidgetKind = keyof typeof prefetchLoaders;
 const hasPrefetchLoader = (kind: WidgetKind): kind is PrefetchWidgetKind =>
   Object.prototype.hasOwnProperty.call(prefetchLoaders, kind);
 
-export const prefetchForKindAsync = async <TKind extends WidgetKind>(
-  kind: TKind,
+export const prefetchForKindAsync = async (
+  kind: WidgetKind,
   queryClient: QueryClient,
   items: {
-    options: inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>;
+    options: Record<string, unknown>;
     integrationIds: string[];
   }[],
 ) => {
@@ -51,5 +49,5 @@ export const prefetchForKindAsync = async <TKind extends WidgetKind>(
     ),
   }));
 
-  await callback(queryClient, itemsWithDefaultOptions as never[]);
+  await callback(queryClient, itemsWithDefaultOptions);
 };

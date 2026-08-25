@@ -155,6 +155,19 @@ export const createLockChannel = (name: string) => {
       const result = await client.set(name, token, "EX", ttlSeconds, "NX");
       return result === "OK" ? token : null;
     },
+    renewAsync: async (token: string, ttlSeconds: number) => {
+      const client = getSetClient;
+      if (!client) return true;
+
+      const result = await client.eval(
+        "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('expire', KEYS[1], ARGV[2]) else return 0 end",
+        1,
+        name,
+        token,
+        ttlSeconds,
+      );
+      return result === 1;
+    },
     releaseAsync: async (token: string) => {
       const client = getSetClient;
       if (!client) return;

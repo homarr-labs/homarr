@@ -13,6 +13,25 @@ export interface WidgetIntegrationConfig {
   maxIntegrations?: number;
 }
 
+const healthMonitoringGeneralIntegrationKinds = [
+  "openmediavault",
+  "dashDot",
+  "truenas",
+  "unraid",
+  "glances",
+  "synology",
+] as const satisfies readonly IntegrationKind[];
+
+export const healthMonitoringSystemIntegrationKinds = [
+  ...healthMonitoringGeneralIntegrationKinds,
+  "mock",
+] as const satisfies readonly IntegrationKind[];
+
+export const healthMonitoringClusterIntegrationKinds = [
+  "proxmox",
+  "mock",
+] as const satisfies readonly IntegrationKind[];
+
 export const widgetIntegrationConfigs = {
   dnsHoleSummary: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },
   dnsHoleControls: { supportedIntegrations: getIntegrationKindsByCategory("dnsHole") },
@@ -38,15 +57,13 @@ export const widgetIntegrationConfigs = {
   networkControllerStatus: { supportedIntegrations: getIntegrationKindsByCategory("networkController") },
   indexerManager: { supportedIntegrations: getIntegrationKindsByCategory("indexerManager") },
   healthMonitoring: {
-    supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring").filter(
-      (kind) => kind !== "patchmon" && kind !== "wud",
-    ),
+    supportedIntegrations: [...healthMonitoringGeneralIntegrationKinds, ...healthMonitoringClusterIntegrationKinds],
   },
   firewall: { supportedIntegrations: getIntegrationKindsByCategory("firewall") },
   notifications: { supportedIntegrations: getIntegrationKindsByCategory("notifications") },
   mediaReleases: { supportedIntegrations: ["mock", "emby", "jellyfin", "plex"] },
   systemResources: {
-    supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances", "synology"],
+    supportedIntegrations: [...healthMonitoringGeneralIntegrationKinds],
   },
   systemDisks: { supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "synology"] },
   beszelAlerts: { supportedIntegrations: ["beszel", "mock"] },

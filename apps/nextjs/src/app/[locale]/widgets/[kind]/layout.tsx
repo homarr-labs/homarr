@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 
 import { widgetKinds } from "@homarr/definitions";
-import { widgetCatalogIcons } from "@homarr/widgets/catalog";
+import { widgetCatalogIcons } from "@homarr/ui/widget-icons";
 
 import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";

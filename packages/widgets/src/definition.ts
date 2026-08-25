@@ -83,11 +83,11 @@ const createWithDynamicImport =
     componentLoader,
   });
 
-export type PrefetchLoader<TKind extends WidgetKind> = () => Promise<{ default: Prefetch<TKind> }>;
-export type Prefetch<TKind extends WidgetKind> = (
+export type PrefetchLoader = () => Promise<{ default: Prefetch }>;
+export type Prefetch = (
   queryClient: QueryClient,
   items: {
-    options: inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>;
+    options: Record<string, unknown>;
     integrationIds: string[];
   }[],
 ) => Promise<void>;

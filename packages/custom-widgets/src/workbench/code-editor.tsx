@@ -277,8 +277,7 @@ function EditorLoader() {
 function formatCode(value: string, language: "jsx" | "json" | "css") {
   if (language === "json") {
     try {
-      const parsed: unknown = JSON.parse(value);
-      return `${JSON.stringify(parsed, null, 2)}\n`;
+      return `${JSON.stringify(JSON.parse(value) as unknown, null, 2)}\n`;
     } catch {
       return value;
     }

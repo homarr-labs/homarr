@@ -18,7 +18,7 @@ import { Collapsible, PaginatedList, StatBar, TabPanel, TabsContainer, TypeBadge
 import { getScopedCustomJsxControlName, isSafeCustomJsxUrl } from "./runtime-component-policy";
 import { sanitizeCustomJsxProps } from "./safe-properties";
 
-type Namespace = object;
+type Namespace = Readonly<Record<string, unknown>>;
 
 function resolveExport(namespace: Namespace, name: string): ComponentType<never> | undefined {
   let value: unknown = namespace;
@@ -26,7 +26,7 @@ function resolveExport(namespace: Namespace, name: string): ComponentType<never>
     if (!value || (typeof value !== "object" && typeof value !== "function") || !Object.hasOwn(value, segment)) {
       return undefined;
     }
-    value = Reflect.get(value, segment);
+    value = (value as Record<string, unknown>)[segment];
   }
   return typeof value === "function" || (typeof value === "object" && value !== null)
     ? (value as ComponentType<never>)
@@ -233,9 +233,9 @@ export interface CustomJsxComponentAdapters {
 
 export function createCustomJsxComponents(adapters: CustomJsxComponentAdapters): Record<string, ComponentType<never>> {
   const namespaces: Record<string, Namespace> = {
-    "@mantine/core": Core,
-    "@mantine/charts": Charts,
-    "@mantine/dates": Dates,
+    "@mantine/core": Core as unknown as Namespace,
+    "@mantine/charts": Charts as unknown as Namespace,
+    "@mantine/dates": Dates as unknown as Namespace,
   };
   const components: Record<string, ComponentType<never>> = {};
   for (const descriptor of enabledCustomJsxComponents) {
@@ -253,7 +253,7 @@ export function createCustomJsxComponents(adapters: CustomJsxComponentAdapters):
       components[descriptor.name] = wrap(descriptor.name, component, additions);
     }
   }
-  const core: Namespace = Core;
+  const core = Core as unknown as Namespace;
   for (const name of [
     "Notification",
     "LoadingOverlay",

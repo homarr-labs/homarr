@@ -7,8 +7,11 @@ import { createTrpcQueryKey } from "../trpc-query-key";
 
 const logger = createLogger({ module: "appWidgetPrefetch" });
 
-const prefetchAllAsync: Prefetch<"app"> = async (queryClient, items) => {
-  const appIds = items.map((item) => item.options.appId);
+const prefetchAllAsync: Prefetch = async (queryClient, items) => {
+  const appIds: string[] = [];
+  for (const item of items) {
+    if (typeof item.options.appId === "string") appIds.push(item.options.appId);
+  }
   const distinctAppIds = [...new Set(appIds)];
 
   const dbApps = await db.query.apps.findMany({

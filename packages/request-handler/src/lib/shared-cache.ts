@@ -144,6 +144,12 @@ const createRedisSharedCache = <TData>({
         () => lock.acquireAsync(REFRESH_LOCK_TTL_SECONDS),
         undefined,
       ),
+    renewRefreshLockAsync: async (token) =>
+      await runRedisOperationAsync(
+        "refresh-lock-renew",
+        () => lock.renewAsync(token, REFRESH_LOCK_TTL_SECONDS),
+        undefined,
+      ),
     releaseRefreshLockAsync: async (token) => {
       await runRedisOperationAsync("refresh-lock-release", () => lock.releaseAsync(token), undefined);
     },

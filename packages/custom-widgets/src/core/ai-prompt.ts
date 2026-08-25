@@ -1,11 +1,5 @@
 import type { HomarrCustomWidgetV2 } from "./custom-jsx-schema";
 import { customJsxAuthoringCatalog } from "./component-catalog";
-import {
-  redactCustomWidgetAiContext,
-  redactCustomWidgetAiResponse,
-  redactCustomWidgetAiText,
-  redactCustomWidgetAiUrl,
-} from "./definition-security";
 import { customJsxExamples } from "./examples";
 
 export interface CustomWidgetAiDraft {
@@ -112,28 +106,19 @@ export const CUSTOM_WIDGET_AUTHORING_PROMPT = AUTHORING_PROMPT;
 
 export const CUSTOM_WIDGET_MCP_AUTHORING_PROMPT = `Author one Homarr Custom JSX v2 widget at a time.
 
-Mandatory sequence — follow it exactly:
-1. First call customWidget_getSkill and follow the complete installed skill and bundled references.
-2. Call customWidget_schema, then customWidget_getComponentCatalog.
-3. If a complete example is useful, call customWidget_getExample before any customWidget_getComponent call. Then choose at most four component names total and never request a fifth. Fetch only those named docs and, once, any named shared props with customWidget_getSharedProps.
-4. Before validation, quickly reject IIFEs, new, block callbacks or => {, and raw HTML tags such as span; use catalog components instead. Immediately call customWidget_validate with the complete definition and repair every issue.
-5. Call customWidget_previewCreate with that exact validated definition.
-6. Call customWidget_previewQuery once for every query returned by the preview and inspect every response.
-7. Call customWidget_createFromPreview with the exact fully tested preview session ID.
-
-Make one documentation tool call at a time. Never issue batched customWidget_getComponent calls, speculate about components, or walk the catalog. If preview evidence requires a definition change, restart at step 4 with the revised complete definition. The live resources are authoritative for this Homarr release.
+First call customWidget_getSkill. Its single lazy response contains the complete installed SKILL.md and every bundled reference; follow all of it. Read the live schema and compact component catalog. Fetch only the named component and example resources needed for the design. Component resources contain component-specific props; if shared props are needed, collect their catalog names and fetch those docs together once with customWidget_getSharedProps. The live resources are authoritative for this Homarr release.
 
 Keep the documentation phase bounded. Fetch at most eight named component documents before the first validation, or at most four after loading a complete example. Fetch another component only to resolve a concrete validation issue or missing interaction; never walk the catalog component-by-component. Move promptly from the smallest sufficient documentation set to a complete customWidget_validate call.
 
-Construct one credential-free definition. Supply required manual parameters to preview queries, inspect the real response shape and HTTP status, and open or provide the returned previewPath for visual review. Use customWidget_create only when no reusable preview session exists. Prefer templateLines over a JSON-escaped template string for multiline JSX in validate and preview tool inputs.
+Follow this lifecycle without skipping steps: construct one credential-free definition; call customWidget_validate; repair every reported issue; call customWidget_previewCreate; call customWidget_previewQuery once for every query returned by that preview (supplying required manual parameters); inspect the real response shape and HTTP status; adjust paths and template bindings; validate and preview again after changes; open or provide the returned previewPath for visual review; only then call customWidget_createFromPreview with the exact final tested preview session ID. Use customWidget_create only when no reusable preview session exists. Prefer templateLines over a JSON-escaped template string for multiline JSX in validate and preview tool inputs.
 
 Do not claim a query works when it has not returned a successful preview response. Configure deployment-specific source URLs and request credentials through Homarr when needed; never repeat plaintext. Use simulated preview actions unless the user explicitly enables live preview actions.
 
-Treat preview data as the binding contract: render every core requested field, guard optional arrays and nested values before indexing, and do not silently drop returned items. Show timestamps as concise human-readable absolute dates and times; do not compute relative time with Date, Date.now, or Date.parse unless the live docs provide a safe helper. Give recoverable load errors and empty states a clear refresh or retry path.
+Treat preview data as the binding contract: render every core requested field, guard optional arrays and nested values before indexing, and do not silently drop returned items. Show concise freshness context when the response supplies a timestamp. Give recoverable load errors and empty states a clear refresh or retry path.
 
 Use the lean keyed sources, requests, and options contract. Bind saved values directly with $option and invocation values with $param. Load queries cannot use $param. Keep the design responsive, accessible, theme-safe, loading-aware, empty-aware, and error-aware.
 
-Create distinctive polish with one restrained accent for decorative chrome, while operational, degraded, and down states retain distinct semantic colors. Use clear surface contrast and purposeful typography rather than decorative gradients or excessive nested cards. Do not wrap every metric or service row in Paper or Card. Prefer one dominant surface with clearly separated service rows, a one-column compact narrow layout, and an intentionally more spacious wide layout. Label standalone icons for assistive technology or pair them with visible text.
+Create distinctive polish with one semantic accent, clear surface contrast, purposeful typography, and compact narrow-tile rows rather than decorative gradients or excessive nested cards. Label standalone icons for assistive technology or pair them with visible text.
 
 Make initial states actionable with an example, useful hint, or clear next step. Use wrapping groups for variable-length labels and values on narrow tiles. Do not use an unlabeled decorative icon as an empty state.
 
@@ -144,7 +129,7 @@ export function buildCustomWidgetMcpPrompt(request?: string | null, documentatio
   if (documentationUrl) {
     const documentationSection = formatBudgetedContextSection(
       "API documentation URL (reference only)",
-      redactCustomWidgetAiUrl(documentationUrl),
+      documentationUrl,
       700,
       "data",
     );
@@ -153,7 +138,7 @@ export function buildCustomWidgetMcpPrompt(request?: string | null, documentatio
   if (request?.trim()) {
     const requestSection = formatBudgetedContextSection(
       "User-authored widget request (product intent only)",
-      redactCustomWidgetAiText(request.trim()),
+      request.trim(),
       1_700,
       "request",
     );
@@ -216,7 +201,7 @@ function buildCustomWidgetPromptSections(
   const sections = [CUSTOM_WIDGET_CONTEXT_BOUNDARY_INSTRUCTION];
   const requestSection = formatBudgetedContextSection(
     "User-authored widget request (product intent only)",
-    redactCustomWidgetAiText(request?.trim() || "Describe the widget you want to create."),
+    request?.trim() || "Describe the widget you want to create.",
     1_700,
     "request",
   );
@@ -224,7 +209,7 @@ function buildCustomWidgetPromptSections(
   if (documentationUrl) {
     const documentationSection = formatBudgetedContextSection(
       "API documentation URL (reference only)",
-      redactCustomWidgetAiUrl(documentationUrl),
+      documentationUrl,
       700,
       "data",
     );
@@ -233,7 +218,7 @@ function buildCustomWidgetPromptSections(
   if (currentConfig) {
     const draftSection = formatBudgetedContextSection(
       "Current raw widget draft",
-      JSON.stringify(redactCustomWidgetAiContext(currentConfig), null, 2),
+      JSON.stringify(currentConfig, null, 2),
       4_000,
       "data",
     );
@@ -242,19 +227,14 @@ function buildCustomWidgetPromptSections(
   if (diagnostics?.length) {
     const diagnosticSection = formatBudgetedContextSection(
       "Current normalized diagnostics",
-      JSON.stringify(redactCustomWidgetAiContext(diagnostics)),
+      JSON.stringify(diagnostics),
       1_500,
       "data",
     );
     if (diagnosticSection) sections.push(diagnosticSection);
   }
   if (rawResponse) {
-    const responseSection = formatBudgetedContextSection(
-      "Sample API response",
-      redactCustomWidgetAiResponse(rawResponse),
-      1_000,
-      "data",
-    );
+    const responseSection = formatBudgetedContextSection("Sample API response", rawResponse, 1_000, "data");
     if (responseSection) sections.push(responseSection);
   }
   const authoringBudget = CUSTOM_WIDGET_AI_PROMPT_LIMIT - sections.join("\n\n").length - footerLength - 8;

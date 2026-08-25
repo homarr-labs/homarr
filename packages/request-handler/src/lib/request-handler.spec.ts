@@ -67,6 +67,7 @@ describe("createRequestHandler", () => {
       })),
       setAsync: vi.fn(async () => undefined),
       acquireRefreshLockAsync: vi.fn(async () => "lock"),
+      renewRefreshLockAsync: vi.fn(async () => true),
       releaseRefreshLockAsync: vi.fn(async () => undefined),
     };
     const handler = createRequestHandler({
@@ -78,6 +79,35 @@ describe("createRequestHandler", () => {
     await expect(handler.handler({ id: "same" }).getDataAsync()).resolves.toMatchObject({ data: "shared", timestamp });
     expect(requestAsync).not.toHaveBeenCalled();
     expect(sharedCache.acquireRefreshLockAsync).not.toHaveBeenCalled();
+  });
+
+  it("renews the refresh lock while the upstream request is still running", async () => {
+    vi.useFakeTimers();
+    const upstreamRequest = deferred<string>();
+    const renewRefreshLockAsync = vi.fn(async () => true);
+    const releaseRefreshLockAsync = vi.fn(async () => undefined);
+    const sharedCache: SharedCacheAdapter<string> = {
+      generation: "shared-1",
+      isShared: true,
+      getAsync: async () => null,
+      setAsync: async () => undefined,
+      acquireRefreshLockAsync: async () => "lock",
+      renewRefreshLockAsync,
+      releaseRefreshLockAsync,
+    };
+    const handler = createRequestHandler({
+      cacheTtlMs: 1_000,
+      requestAsync: async () => await upstreamRequest.promise,
+      getSharedCacheAsync: async () => sharedCache,
+    });
+
+    const pending = handler.handler({ id: "same" }).getDataAsync();
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(renewRefreshLockAsync).toHaveBeenCalledTimes(1);
+
+    upstreamRequest.resolve("upstream");
+    await expect(pending).resolves.toMatchObject({ data: "upstream" });
+    expect(releaseRefreshLockAsync).toHaveBeenCalledWith("lock");
   });
 
   it("waits out a refresh lock held by another process instead of stampeding the upstream", async () => {
@@ -92,6 +122,7 @@ describe("createRequestHandler", () => {
       setAsync: vi.fn(async () => undefined),
       // A different process/pod already holds the refresh lock.
       acquireRefreshLockAsync: vi.fn(async () => null),
+      renewRefreshLockAsync: vi.fn(async () => true),
       releaseRefreshLockAsync: vi.fn(async () => undefined),
     };
     const handler = createRequestHandler<string, { id: string }>({
@@ -104,7 +135,7 @@ describe("createRequestHandler", () => {
 
     // Poll well past the old fixed wait window while the lock is still held and the
     // shared cache is empty: the waiter must keep waiting, not fetch upstream itself.
-    await vi.advanceTimersByTimeAsync(5_000);
+    await vi.advanceTimersByTimeAsync(20_000);
     expect(requestAsync).not.toHaveBeenCalled();
 
     // The lock holder finishes and publishes the entry to the shared cache.
@@ -141,6 +172,7 @@ describe("createRequestHandler", () => {
       getAsync: async () => undefined,
       setAsync: async () => undefined,
       acquireRefreshLockAsync: async () => undefined,
+      renewRefreshLockAsync: async () => undefined,
       releaseRefreshLockAsync: async () => undefined,
     });
     await vi.waitFor(() => expect(requestAsync).toHaveBeenCalledTimes(1));

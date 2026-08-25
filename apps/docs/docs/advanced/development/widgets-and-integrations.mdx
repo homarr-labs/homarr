@@ -8,8 +8,8 @@ tags:
 sidebar_position: 2
 ---
 
-Homarr keeps feature registration explicit and typed. There is no generator or generated registry to run after a
-change. A new feature is available when its typed metadata and lazy loader are registered.
+Homarr keeps feature registration explicit and typed. Feature registration has no generator or generated registry.
+A new feature is available when its typed metadata and lazy loader are registered.
 
 ## Add a widget
 
@@ -46,9 +46,23 @@ Keep the HTTP client and its capability-specific types in `packages/integrations
    implementation out of the initial server bundle and makes the registration easy to find.
 3. Implement only the interfaces required by the widgets that use the service.
 4. Add canonical documentation in `apps/docs/docs/integrations/<slug>/`. Its `index.ts` must satisfy
-   `IntegrationDefinition` so invalid metadata fails type checking.
+   `IntegrationDefinition` so invalid metadata fails type checking without widening the object. Use a type-only import
+   and `satisfies IntegrationDefinition`; do not cast the object.
 
 Beszel is a compact example with several widgets sharing one integration client.
+
+## Write user documentation
+
+Write for technically capable self-hosters. Keep each page short and operational.
+
+- Start with one sentence describing what the integration or widget adds to Homarr.
+- Include prerequisites, credentials, permissions, destructive actions, and non-obvious limits only when they matter.
+- Use numbered steps only when order matters. Prefer the exact UI labels a user must select.
+- Do not add marketing, implementation history, architecture internals, or explanations of basic self-hosting concepts.
+- End when the user can configure and verify the feature; do not repeat the same information in a summary.
+
+The usual page needs only an introduction and a `Configuration` section. Add `Notes` or `Troubleshooting` only for
+real caveats.
 
 ## Data and errors
 
