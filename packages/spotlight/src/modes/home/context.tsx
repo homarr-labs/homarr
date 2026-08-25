@@ -11,10 +11,13 @@ export type ContextSpecificItem = {
   name: string;
   icon: TablerIcon | string;
   interaction: (query: string) => inferSearchInteractionDefinition<SearchInteraction>;
+  aliases?: string[];
+  placement?: "primary" | "fallback";
   disabled?: boolean;
   description?: string;
   unavailable?: boolean;
   alwaysVisible?: boolean;
+  dedupeKey?: string;
 };
 
 interface SpotlightContextProps {
@@ -60,7 +63,22 @@ const createSpotlightContext = (displayName: string) => {
       });
     }, []);
 
-    const items = useMemo(() => Array.from(itemsMap.values()).flatMap(({ items }) => items), [itemsMap]);
+    const items = useMemo(() => {
+      const uniqueItems: ContextSpecificItem[] = [];
+      const itemKeys = new Set<string>();
+
+      for (const registration of itemsMap.values()) {
+        for (const item of registration.items) {
+          const itemKey = item.dedupeKey ?? item.id;
+          if (itemKeys.has(itemKey)) continue;
+
+          itemKeys.add(itemKey);
+          uniqueItems.push(item);
+        }
+      }
+
+      return uniqueItems;
+    }, [itemsMap]);
     const itemsContext = useMemo(() => ({ items }), [items]);
     const registration = useMemo(() => ({ registerItems, unregisterItems }), [registerItems, unregisterItems]);
 

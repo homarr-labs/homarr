@@ -7,6 +7,7 @@ import { useI18n } from "@homarr/translation/client";
 import { createChildrenOptions } from "../../lib/children";
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
+import { useRemoteQuery } from "../../lib/remote-query";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -71,6 +72,7 @@ const groupChildrenOptions = createChildrenOptions<Group>({
 export const groupsSearchGroup = createGroup<Group>({
   keyPath: "id",
   title: (t) => t("common.entity.groups"),
+  source: { kind: "remote", source: "groups" },
   Component: ({ name }) => (
     <Group px="md" py="sm">
       <Text>{name}</Text>
@@ -78,6 +80,7 @@ export const groupsSearchGroup = createGroup<Group>({
   ),
   useInteraction: interaction.children(groupChildrenOptions),
   useQueryOptions(query) {
-    return clientApi.group.search.useQuery({ query, limit: 5 });
+    const remoteQuery = useRemoteQuery(query, "groups");
+    return clientApi.group.search.useQuery({ query: remoteQuery.query, limit: 8 }, { enabled: remoteQuery.enabled });
   },
 });

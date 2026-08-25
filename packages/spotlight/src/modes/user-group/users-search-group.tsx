@@ -8,6 +8,7 @@ import { UserAvatar } from "@homarr/ui";
 import { createChildrenOptions } from "../../lib/children";
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
+import { useRemoteQuery } from "../../lib/remote-query";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -49,6 +50,7 @@ const userChildrenOptions = createChildrenOptions<User>({
 export const usersSearchGroup = createGroup<User>({
   keyPath: "id",
   title: (t) => t("common.entity.users"),
+  source: { kind: "remote", source: "users" },
   Component: (user) => (
     <Group px="md" py="sm">
       <UserAvatar user={user} size="sm" />
@@ -57,6 +59,7 @@ export const usersSearchGroup = createGroup<User>({
   ),
   useInteraction: interaction.children(userChildrenOptions),
   useQueryOptions(query) {
-    return clientApi.user.search.useQuery({ query, limit: 5 });
+    const remoteQuery = useRemoteQuery(query, "users");
+    return clientApi.user.search.useQuery({ query: remoteQuery.query, limit: 8 }, { enabled: remoteQuery.enabled });
   },
 });

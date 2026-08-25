@@ -11,6 +11,7 @@ import { useI18n } from "@homarr/translation/client";
 import { FloatingTip } from "@homarr/ui";
 
 import { BoardAdvancedFocusProvider } from "~/components/board/advanced-focus/context";
+import { BoardAppsSpotlightRegistrar } from "~/components/board/board-apps-spotlight-registrar";
 import { BoardEmptyState } from "~/components/board/board-empty-state";
 import { BoardSetupChecklist } from "~/components/board/board-setup-checklist";
 import {
@@ -79,6 +80,7 @@ export const ClientBoard = () => {
     <BoardSelectionGridProvider>
       <BoardAdvancedFocusProvider>
         <Box h="100%" pos="relative" data-homarr-dev-benchmark-board>
+          <BoardAppsSpotlightRegistrar />
           <BoardBackgroundVideo />
           <BoardEmptyState />
           <BoardSetupChecklist />

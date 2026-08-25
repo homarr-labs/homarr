@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { z } from "zod/v4";
 
+import type { Session } from "@homarr/auth";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { createId, generateResponsiveGridFor } from "@homarr/common";
 import type { GridAlgorithmItem } from "@homarr/common";
@@ -188,6 +189,74 @@ const validateWidgetConfigurationsAsync = async (
       message: getWidgetIntegrationIssueMessage(item.kind, integrationIssue),
     });
   }
+};
+
+const searchAccessibleBoardsAsync = async (
+  ctx: { db: Database; session: Session | null },
+  query: string,
+  limit?: number,
+) => {
+  const userId = ctx.session?.user.id;
+  const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
+    where: eq(boardUserPermissions.userId, userId ?? ""),
+  });
+
+  const permissionsOfCurrentUserGroupsWhenPresent = await ctx.db.query.groupMembers.findMany({
+    where: eq(groupMembers.userId, userId ?? ""),
+    with: {
+      group: {
+        with: {
+          boardPermissions: {},
+        },
+      },
+    },
+  });
+  const boardIds = permissionsOfCurrentUserWhenPresent
+    .map((permission) => permission.boardId)
+    .concat(
+      permissionsOfCurrentUserGroupsWhenPresent
+        .map((groupMember) => groupMember.group.boardPermissions.map((permission) => permission.boardId))
+        .flat(),
+    );
+
+  const currentUserWhenPresent = await ctx.db.query.users.findFirst({
+    where: eq(users.id, userId ?? ""),
+  });
+
+  const foundBoards = await ctx.db.query.boards.findMany({
+    where: and(
+      like(boards.name, `%${query}%`),
+      ctx.session?.user.permissions.includes("board-view-all")
+        ? undefined
+        : or(eq(boards.isPublic, true), eq(boards.creatorId, ctx.session?.user.id ?? ""), inArray(boards.id, boardIds)),
+    ),
+    limit,
+    orderBy: asc(boards.name),
+    columns: {
+      id: true,
+      name: true,
+      creatorId: true,
+      isPublic: true,
+      logoImageUrl: true,
+    },
+    with: {
+      userPermissions: {
+        where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
+      },
+      groupPermissions: {
+        where: getBoardGroupPermissionWhere(permissionsOfCurrentUserGroupsWhenPresent),
+      },
+    },
+  });
+
+  return foundBoards.map((board) => ({
+    id: board.id,
+    name: board.name,
+    logoImageUrl: board.logoImageUrl,
+    permissions: constructBoardPermissions(board, ctx.session),
+    isHome: currentUserWhenPresent?.homeBoardId === board.id,
+    isMobileHome: currentUserWhenPresent?.mobileHomeBoardId === board.id,
+  }));
 };
 
 export const boardRouter = createTRPCRouter({
@@ -549,80 +618,18 @@ export const boardRouter = createTRPCRouter({
       };
     });
   }),
+  catalog: publicProcedure
+    .meta({ mcp: { enabled: true, description: "List every board the current user can access." } })
+    .query(async ({ ctx }) => searchAccessibleBoardsAsync(ctx, "")),
   search: publicProcedure
+    .meta({
+      mcp: {
+        enabled: true,
+        description: "Search accessible boards by name. REQUIRED: query (string). OPTIONAL: limit (number).",
+      },
+    })
     .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
-    .query(async ({ ctx, input }) => {
-      const userId = ctx.session?.user.id;
-      const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
-        where: eq(boardUserPermissions.userId, userId ?? ""),
-      });
-
-      const permissionsOfCurrentUserGroupsWhenPresent = await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, userId ?? ""),
-        with: {
-          group: {
-            with: {
-              boardPermissions: {},
-            },
-          },
-        },
-      });
-      const boardIds = permissionsOfCurrentUserWhenPresent
-        .map((permission) => permission.boardId)
-        .concat(
-          permissionsOfCurrentUserGroupsWhenPresent
-            .map((groupMember) => groupMember.group.boardPermissions.map((permission) => permission.boardId))
-            .flat(),
-        );
-
-      const currentUserWhenPresent = await ctx.db.query.users.findFirst({
-        where: eq(users.id, userId ?? ""),
-      });
-
-      const foundBoards = await ctx.db.query.boards.findMany({
-        where: and(
-          like(boards.name, `%${input.query}%`),
-          ctx.session?.user.permissions.includes("board-view-all")
-            ? undefined
-            : or(
-                eq(boards.isPublic, true),
-                eq(boards.creatorId, ctx.session?.user.id ?? ""),
-                inArray(boards.id, boardIds),
-              ),
-        ),
-        limit: input.limit,
-        columns: {
-          id: true,
-          name: true,
-          creatorId: true,
-          isPublic: true,
-          logoImageUrl: true,
-        },
-        with: {
-          userPermissions: {
-            where: eq(boardUserPermissions.userId, ctx.session?.user.id ?? ""),
-          },
-          groupPermissions: {
-            where:
-              permissionsOfCurrentUserGroupsWhenPresent.length >= 1
-                ? inArray(
-                    boardGroupPermissions.groupId,
-                    permissionsOfCurrentUserGroupsWhenPresent.map((groupMember) => groupMember.groupId),
-                  )
-                : undefined,
-          },
-        },
-      });
-
-      return foundBoards.map((board) => ({
-        id: board.id,
-        name: board.name,
-        logoImageUrl: board.logoImageUrl,
-        permissions: constructBoardPermissions(board, ctx.session),
-        isHome: currentUserWhenPresent?.homeBoardId === board.id,
-        isMobileHome: currentUserWhenPresent?.mobileHomeBoardId === board.id,
-      }));
-    }),
+    .query(async ({ ctx, input }) => searchAccessibleBoardsAsync(ctx, input.query, input.limit)),
   createBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
     .meta({

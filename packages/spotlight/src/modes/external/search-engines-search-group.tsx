@@ -1,7 +1,5 @@
 import { Group, Image, Kbd, Stack, Text } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
 import { IconDownload, IconSearch } from "@tabler/icons-react";
-import { keepPreviousData } from "@tanstack/react-query";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -13,11 +11,13 @@ import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import { createChildrenOptions } from "../../lib/children";
+import { filterCatalog, useSearchEnginesCatalogQuery } from "../../lib/catalog";
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition } from "../../lib/interaction";
 import { interaction } from "../../lib/interaction";
+import { useRemoteQuery } from "../../lib/remote-query";
 
-type SearchEngine = RouterOutputs["searchEngine"]["search"][number];
+type SearchEngine = RouterOutputs["searchEngine"]["catalog"][number];
 type FromIntegrationSearchResult = RouterOutputs["integration"]["searchInIntegration"][number];
 type DuckDuckGoBang = RouterOutputs["bangs"]["search"][number];
 
@@ -187,7 +187,7 @@ export const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestCh
     return (
       <Group mx="md" my="sm" wrap="nowrap">
         {options.result.image ? (
-          <Image src={options.result.image} w={35} h={50} fit="cover" radius={"md"} />
+          <Image src={options.result.image} alt="" w={35} h={50} fit="cover" radius={"md"} />
         ) : (
           <IconSearch stroke={1.5} size={35} />
         )}
@@ -206,11 +206,12 @@ export const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestCh
 
 export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
   useActions: (searchEngine, query) => {
+    const remoteQuery = useRemoteQuery(query, "integration-search");
     const { data } = clientApi.integration.searchInIntegration.useQuery(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      { integrationId: searchEngine.integrationId!, query },
+      { integrationId: searchEngine.integrationId!, query: remoteQuery.query },
       {
-        enabled: searchEngine.type === "fromIntegration" && searchEngine.integrationId !== null && query.length > 0,
+        enabled: remoteQuery.enabled && searchEngine.type === "fromIntegration" && searchEngine.integrationId !== null,
       },
     );
     const { openSearchInNewTab } = useSettings();
@@ -244,7 +245,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
         return (
           <Group mx="md" my="sm" wrap="nowrap">
             {searchResult.image ? (
-              <Image src={searchResult.image} w={35} h={50} fit="cover" radius={"md"} />
+              <Image src={searchResult.image} alt="" w={35} h={50} fit="cover" radius={"md"} />
             ) : (
               <IconSearch stroke={1.5} size={35} />
             )}
@@ -270,7 +271,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
       <Stack mx="md" my="sm">
         <Text>{options.type === "generic" ? tChildren("detail.title") : tChildren("searchResults.title")}</Text>
         <Group>
-          <img height={24} width={24} src={options.iconUrl} alt={options.name} />
+          <img height={24} width={24} src={options.iconUrl} alt="" />
           <Text>{options.name}</Text>
         </Group>
       </Stack>
@@ -287,7 +288,7 @@ const parseBangQuery = (query: string) => {
   return { bangToken, searchText, locked };
 };
 
-const buildSearchUrl = (template: string, query: string) => {
+export const buildSearchUrl = (template: string, query: string) => {
   const encoded = encodeURIComponent(query);
   if (template.includes("{{{s}}}")) {
     return template.replaceAll("{{{s}}}", encoded);
@@ -296,36 +297,23 @@ const buildSearchUrl = (template: string, query: string) => {
   return template.replaceAll("%s", encoded);
 };
 
-export const searchEnginesSearchGroups = createGroup<ExternalOption>({
-  keyPath: "key",
-  title: (t) => t("common.entity.searchEngines"),
-  Component: (option) => {
-    if (option.kind === "hint") {
-      return (
-        <Group w="100%" wrap="nowrap" align="center" px="md" py="xs">
-          <IconSearch stroke={1.5} />
-          <Stack gap={0}>
-            <Text size="sm">{option.label}</Text>
-            {option.description ? (
-              <Text size="xs" c="gray.6">
-                {option.description}
-              </Text>
-            ) : null}
-          </Stack>
-        </Group>
-      );
-    }
+interface SearchEngineGroupOptions {
+  minimumLength: number;
+  showEmptyHint: boolean;
+  source: "focused" | "fallback";
+}
 
-    if (option.kind === "search") {
-      return (
-        <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
-          <Group wrap="nowrap">
-            {option.iconUrl ? (
-              <img height={24} width={24} src={option.iconUrl} alt={option.label} />
-            ) : (
-              <IconSearch stroke={1.5} />
-            )}
-            <Stack gap={0} justify="center">
+const createSearchEnginesSearchGroup = ({ minimumLength, showEmptyHint, source }: SearchEngineGroupOptions) =>
+  createGroup<ExternalOption>({
+    keyPath: "key",
+    title: (t) => t("common.entity.searchEngines"),
+    source: source === "focused" ? { kind: "remote", source: "search-engines" } : { kind: "fallback" },
+    Component: (option) => {
+      if (option.kind === "hint") {
+        return (
+          <Group w="100%" wrap="nowrap" align="center" px="md" py="xs">
+            <IconSearch stroke={1.5} />
+            <Stack gap={0}>
               <Text size="sm">{option.label}</Text>
               {option.description ? (
                 <Text size="xs" c="gray.6">
@@ -334,22 +322,61 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
               ) : null}
             </Stack>
           </Group>
+        );
+      }
 
-          <Kbd size="sm">!{option.bang}</Kbd>
-        </Group>
-      );
-    }
+      if (option.kind === "search") {
+        return (
+          <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
+            <Group wrap="nowrap">
+              {option.iconUrl ? (
+                <img height={24} width={24} src={option.iconUrl} alt="" />
+              ) : (
+                <IconSearch stroke={1.5} />
+              )}
+              <Stack gap={0} justify="center">
+                <Text size="sm">{option.label}</Text>
+                {option.description ? (
+                  <Text size="xs" c="gray.6">
+                    {option.description}
+                  </Text>
+                ) : null}
+              </Stack>
+            </Group>
 
-    if (option.kind === "engine") {
-      const { iconUrl, name, short, description } = option.engine;
+            <Kbd size="sm">!{option.bang}</Kbd>
+          </Group>
+        );
+      }
+
+      if (option.kind === "engine") {
+        const { iconUrl, name, short, description } = option.engine;
+        return (
+          <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
+            <Group wrap="nowrap">
+              <img height={24} width={24} src={iconUrl} alt="" />
+              <Stack gap={0} justify="center">
+                <Text size="sm">{name}</Text>
+                <Text size="xs" c="gray.6">
+                  {description}
+                </Text>
+              </Stack>
+            </Group>
+
+            <Kbd size="sm">!{short}</Kbd>
+          </Group>
+        );
+      }
+
+      const { s: name, t: short, d: domain } = option.bang;
       return (
         <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
           <Group wrap="nowrap">
-            <img height={24} width={24} src={iconUrl} alt={name} />
+            <IconSearch stroke={1.5} />
             <Stack gap={0} justify="center">
               <Text size="sm">{name}</Text>
               <Text size="xs" c="gray.6">
-                {description}
+                {domain ?? "DuckDuckGo bang"}
               </Text>
             </Stack>
           </Group>
@@ -357,138 +384,134 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
           <Kbd size="sm">!{short}</Kbd>
         </Group>
       );
-    }
+    },
+    useInteraction(option, query) {
+      const { openSearchInNewTab } = useSettings();
+      const { bangToken, searchText } = parseBangQuery(query);
 
-    const { s: name, t: short, d: domain } = option.bang;
-    return (
-      <Group w="100%" wrap="nowrap" justify="space-between" align="center" px="md" py="xs">
-        <Group wrap="nowrap">
-          <IconSearch stroke={1.5} />
-          <Stack gap={0} justify="center">
-            <Text size="sm">{name}</Text>
-            <Text size="xs" c="gray.6">
-              {domain ?? "DuckDuckGo bang"}
-            </Text>
-          </Stack>
-        </Group>
+      if (option.kind === "search") {
+        return {
+          type: "link",
+          href: buildSearchUrl(option.urlTemplate, option.searchText),
+          newTab: openSearchInNewTab,
+        };
+      }
 
-        <Kbd size="sm">!{short}</Kbd>
-      </Group>
-    );
-  },
-  useInteraction(option, query) {
-    const { openSearchInNewTab } = useSettings();
-    const { bangToken, searchText } = parseBangQuery(query);
+      if (option.kind === "engine") {
+        const nextBang = option.engine.short;
+        const nextQuery = `${`${nextBang} ${searchText}`.trimEnd()} `;
+        return { type: "setQuery", query: bangToken === nextBang && query.endsWith(" ") ? query : nextQuery };
+      }
 
-    if (option.kind === "search") {
-      return {
-        type: "link",
-        href: buildSearchUrl(option.urlTemplate, option.searchText),
-        newTab: openSearchInNewTab,
-      };
-    }
+      if (option.kind === "ddg") {
+        const nextBang = option.bang.t;
+        const nextQuery = `${`${nextBang} ${searchText}`.trimEnd()} `;
+        return { type: "setQuery", query: bangToken === nextBang && query.endsWith(" ") ? query : nextQuery };
+      }
 
-    if (option.kind === "engine") {
-      const nextBang = option.engine.short;
-      const nextQuery = `${`${nextBang} ${searchText}`.trimEnd()} `;
-      return { type: "setQuery", query: bangToken === nextBang && query.endsWith(" ") ? query : nextQuery };
-    }
+      return { type: "none" };
+    },
+    useQueryOptions(query) {
+      const tExternal = useI18n("search.mode.external.group.searchEngine");
+      const { ddgBangs } = useSettings();
+      const { bangToken, searchText, locked } = parseBangQuery(query);
+      const remoteQuery = useRemoteQuery(bangToken, "search-engines", { minimumLength });
+      const ddgQueryEnabled = remoteQuery.enabled && ddgBangs && remoteQuery.query.length >= 1;
+      const enginesQuery = useSearchEnginesCatalogQuery();
 
-    if (option.kind === "ddg") {
-      const nextBang = option.bang.t;
-      const nextQuery = `${`${nextBang} ${searchText}`.trimEnd()} `;
-      return { type: "setQuery", query: bangToken === nextBang && query.endsWith(" ") ? query : nextQuery };
-    }
+      const ddgQuery = clientApi.bangs.search.useQuery(
+        { query: remoteQuery.query, limit: 10 },
+        {
+          enabled: ddgQueryEnabled,
+          placeholderData: (previousData) => previousData,
+        },
+      );
 
-    return { type: "none" };
-  },
-  useQueryOptions(query) {
-    const tExternal = useI18n("search.mode.external.group.searchEngine");
-    const { ddgBangs } = useSettings();
-    const { bangToken, searchText, locked } = parseBangQuery(query);
-    const [debouncedBangToken] = useDebouncedValue(bangToken, 150);
+      const engineCatalog = enginesQuery.data ?? [];
+      const engineData = filterCatalog(engineCatalog, bangToken, (engine) => [engine.short, engine.name], 10);
+      const ddgData = ddgQueryEnabled && bangToken.length > 0
+        ? (ddgQuery.data ?? []).filter((bang) => bang.t.toLowerCase().startsWith(bangToken.toLowerCase()))
+        : [];
+      const isWaitingForDdgResults =
+        ddgBangs &&
+        bangToken.length > 0 &&
+        engineData.length === 0 &&
+        (remoteQuery.query !== bangToken || (ddgQueryEnabled && ddgQuery.isFetching && ddgData.length === 0));
+      const isLoading = enginesQuery.isLoading || isWaitingForDdgResults;
+      const isError = enginesQuery.isError || (ddgQuery.isError && ddgQueryEnabled && bangToken.length > 0);
 
-    const enginesQuery = clientApi.searchEngine.search.useQuery(
-      { query: debouncedBangToken, limit: 10 },
-      { placeholderData: keepPreviousData },
-    );
-
-    const ddgQuery = clientApi.bangs.search.useQuery(
-      { query: debouncedBangToken, limit: 10 },
-      {
-        enabled: ddgBangs && debouncedBangToken.length >= 1,
-        placeholderData: keepPreviousData,
-      },
-    );
-
-    const isLoading = enginesQuery.isLoading || ddgQuery.isLoading;
-    const isError = enginesQuery.isError || ddgQuery.isError;
-
-    const engineOptions = (enginesQuery.data ?? []).map(
-      (engine): ExternalOption => ({
-        key: `engine-${engine.short}`,
-        kind: "engine",
-        engine,
-      }),
-    );
-
-    const ddgOptions = (ddgQuery.data ?? [])
-      .filter((bang) => !engineOptions.some((option) => option.kind === "engine" && option.engine.short === bang.t))
-      .map(
-        (bang): ExternalOption => ({
-          key: `ddg-${bang.t}`,
-          kind: "ddg",
-          bang,
+      const engineOptions = engineData.map(
+        (engine): ExternalOption => ({
+          key: `engine-${engine.short}`,
+          kind: "engine",
+          engine,
         }),
       );
 
-    const searchActions: ExternalOption[] = [];
-    if (locked && bangToken.length > 0) {
-      const matchedEngine = (enginesQuery.data ?? []).find((engine) => engine.short === bangToken);
-      const matchedDdg = (ddgQuery.data ?? []).find((bang) => bang.t === bangToken);
+      const ddgOptions = ddgData
+        .filter((bang) => !engineOptions.some((option) => option.kind === "engine" && option.engine.short === bang.t))
+        .map(
+          (bang): ExternalOption => ({
+            key: `ddg-${bang.t}`,
+            kind: "ddg",
+            bang,
+          }),
+        );
 
-      const label = matchedEngine?.name ?? matchedDdg?.s;
-      const iconUrl = matchedEngine?.iconUrl;
-      const urlTemplate = matchedEngine?.type === "generic" ? matchedEngine.urlTemplate : matchedDdg?.u;
+      const searchActions: ExternalOption[] = [];
+      if (locked && bangToken.length > 0) {
+        const matchedEngine = engineCatalog.find((engine) => engine.short === bangToken);
+        const matchedDdg = ddgData.find((bang) => bang.t === bangToken);
 
-      if (label && urlTemplate) {
-        if (searchText.trim().length > 0) {
-          searchActions.push({
-            key: "search-action",
-            kind: "search",
-            label: tExternal("bang.searchWithQuery", {
-              query: searchText.trim(),
-              label,
-            }),
-            description: tExternal("bang.pressEnterToOpen"),
-            bang: bangToken,
-            iconUrl,
-            urlTemplate,
-            searchText: searchText.trim(),
-          });
-        } else {
-          searchActions.push({
-            key: "search-hint",
-            kind: "hint",
-            label: tExternal("bang.engineSelected", { label, bang: bangToken }),
-            description: tExternal("bang.typeQueryToContinue"),
-          });
+        const genericEngine = matchedEngine?.type === "generic" ? matchedEngine : undefined;
+        const label = genericEngine?.name ?? matchedDdg?.s;
+        const iconUrl = genericEngine?.iconUrl;
+        const urlTemplate = genericEngine?.urlTemplate ?? matchedDdg?.u;
+
+        if (label && urlTemplate) {
+          if (searchText.trim().length > 0) {
+            searchActions.push({
+              key: "search-action",
+              kind: "search",
+              label: tExternal("bang.searchWithQuery", {
+                query: searchText.trim(),
+                label,
+              }),
+              description: tExternal("bang.pressEnterToOpen"),
+              bang: bangToken,
+              iconUrl,
+              urlTemplate,
+              searchText: searchText.trim(),
+            });
+          } else {
+            searchActions.push({
+              key: "search-hint",
+              kind: "hint",
+              label: tExternal("bang.engineSelected", { label, bang: bangToken }),
+              description: tExternal("bang.typeQueryToContinue"),
+            });
+          }
         }
       }
-    }
-    if (query.length === 0) {
-      searchActions.push({
-        key: "hint",
-        kind: "hint",
-        label: tExternal("bang.emptyBangHint"),
-        description: ddgBangs ? tExternal("tipDdgBangs") : undefined,
-      });
-    }
+      if (showEmptyHint && bangToken.length === 0) {
+        searchActions.push({
+          key: "hint",
+          kind: "hint",
+          label: tExternal("bang.emptyBangHint"),
+          description: ddgBangs ? tExternal("tipDdgBangs") : undefined,
+        });
+      }
 
-    return {
-      isLoading,
-      isError,
-      data: [...searchActions, ...engineOptions, ...ddgOptions].slice(0, 10),
-    };
-  },
+      return {
+        isLoading,
+        isError,
+        data: [...searchActions, ...engineOptions, ...ddgOptions].slice(0, 10),
+      };
+    },
+  });
+
+export const searchEnginesSearchGroups = createSearchEnginesSearchGroup({
+  minimumLength: 0,
+  showEmptyHint: true,
+  source: "focused",
 });

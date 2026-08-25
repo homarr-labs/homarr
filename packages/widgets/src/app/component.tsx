@@ -9,7 +9,6 @@ import combineClasses from "clsx";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
-import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
@@ -29,26 +28,6 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
   const appQuery = clientApi.app.byId.useQuery({ id: options.appId }, { enabled: Boolean(options.appId) });
   const app = getUsableWidgetQueryData(appQuery);
   const href = getSafeAppHref(app?.href);
-  useRegisterSpotlightContextResults(
-    `app-${app?.id ?? options.appId}`,
-    app && href
-      ? [
-          {
-            id: app.id,
-            name: app.name,
-            icon: app.iconUrl,
-            interaction() {
-              return {
-                type: "link",
-                href,
-                newTab: options.openInNewTab,
-              };
-            },
-          },
-        ]
-      : [],
-    [app, href, options.openInNewTab],
-  );
 
   if (!options.appId) return <WidgetEmptyState />;
   if (isInitialWidgetQueryPending(appQuery)) return <WidgetQueryLoadingState />;

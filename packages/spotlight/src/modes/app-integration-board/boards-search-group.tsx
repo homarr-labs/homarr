@@ -1,13 +1,14 @@
 import { Group, Stack, Text } from "@mantine/core";
 import { IconDeviceMobile, IconHome, IconLayoutDashboard, IconLink, IconSettings } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { ChildrenAction } from "../../lib/children";
+import { filterCatalog, useBoardsCatalogQuery } from "../../lib/catalog";
 import { createChildrenOptions } from "../../lib/children";
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
+import { clientApi } from "@homarr/api/client";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -126,6 +127,7 @@ const boardChildrenOptions = createChildrenOptions<Board>({
 export const boardsSearchGroup = createGroup<Board>({
   keyPath: "id",
   title: (t) => t("common.entity.boards"),
+  source: { kind: "remote", source: "boards" },
   Component: (board) => (
     <Group px="md" py="sm">
       {board.logoImageUrl ? (
@@ -139,6 +141,11 @@ export const boardsSearchGroup = createGroup<Board>({
   ),
   useInteraction: interaction.children(boardChildrenOptions),
   useQueryOptions(query) {
-    return clientApi.board.search.useQuery({ query, limit: 5 });
+    const catalogQuery = useBoardsCatalogQuery();
+    return {
+      data: filterCatalog(catalogQuery.data ?? [], query, (board) => [board.name]),
+      isLoading: catalogQuery.isLoading,
+      isError: catalogQuery.isError,
+    };
   },
 });

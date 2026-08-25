@@ -1,8 +1,7 @@
 "use client";
 
-import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react";
+import type { CSSProperties } from "react";
 import { useState } from "react";
-import { useComputedColorScheme } from "@mantine/core";
 import confetti from "canvas-confetti";
 
 import HomarrWordmarkLight from "./homarr-wordmark-light";
@@ -15,21 +14,23 @@ interface OnboardingWordmarkProps {
   large?: boolean;
 }
 
+const defaultWordmarkUrl = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr-wordmark-light.svg";
+
 export const OnboardingWordmark = ({ primaryColor, secondaryColor, large = false }: OnboardingWordmarkProps) => {
   const [celebrating, setCelebrating] = useState(false);
-  const colorScheme = useComputedColorScheme("light");
   const sounds = useOnboardingSounds();
+  const className = `${classes.wordmark} ${classes.onboardingWordmark} ${large ? classes.welcomeWordmark : ""} ${celebrating ? classes.celebratingWordmark : ""}`;
   const colors = {
     "--homarr-wordmark-primary": primaryColor ?? "#F92424",
     "--homarr-wordmark-secondary": secondaryColor ?? "#FA5252",
-    "--homarr-wordmark-foreground": colorScheme === "light" ? "#1A1B1E" : "#FEFDFD",
+    "--homarr-wordmark-foreground": "#FEFDFD",
   } as CSSProperties;
 
-  const celebrate = (event: ReactMouseEvent<SVGSVGElement>) => {
+  const celebrate = (logoElement: Element) => {
     sounds.hover();
-    const logo = event.currentTarget.getBoundingClientRect();
+    const logo = logoElement.getBoundingClientRect();
     const originY = (logo.top + logo.height / 2) / window.innerHeight;
-    const colors = primaryColor && secondaryColor ? [primaryColor, secondaryColor] : undefined;
+    const confettiColors = primaryColor && secondaryColor ? [primaryColor, secondaryColor] : undefined;
 
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) setCelebrating(true);
     for (const { angle, originX } of [
@@ -45,19 +46,23 @@ export const OnboardingWordmark = ({ primaryColor, secondaryColor, large = false
         ticks: 90,
         scalar: 0.8,
         origin: { x: originX / window.innerWidth, y: originY },
-        colors,
+        colors: confettiColors,
         disableForReducedMotion: true,
       });
     }
   };
+
+  if (primaryColor === undefined && secondaryColor === undefined) {
+    return <img src={defaultWordmarkUrl} alt="Homarr" width={1477} height={1054} className={className} />;
+  }
 
   return (
     <HomarrWordmarkLight
       role="img"
       aria-label="Homarr"
       style={colors}
-      className={`${classes.wordmark} ${classes.onboardingWordmark} ${large ? classes.welcomeWordmark : ""} ${celebrating ? classes.celebratingWordmark : ""}`}
-      onMouseEnter={celebrate}
+      className={className}
+      onMouseEnter={(event) => celebrate(event.currentTarget)}
       onAnimationEnd={() => setCelebrating(false)}
     />
   );

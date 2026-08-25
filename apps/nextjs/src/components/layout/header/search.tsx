@@ -20,7 +20,7 @@ export const DesktopSearchInput = () => {
       w={400}
       size="sm"
       leftSection={<IconSearch size={20} stroke={1.5} />}
-      onClick={openSpotlight}
+      onClick={() => openSpotlight()}
       radius="xl"
     >
       {`${t("search.placeholder")}...`}
@@ -32,7 +32,7 @@ export const MobileSearchButton = () => {
   return (
     <HeaderButton
       data-homarr-dev-benchmark-interaction="search"
-      onClick={openSpotlight}
+      onClick={() => openSpotlight()}
       className={classes.mobileSearch}
     >
       <IconSearch size={20} stroke={1.5} />

@@ -1,17 +1,17 @@
 import { Badge, Group, Image, Stack, Text } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
 import { IconMovie, IconSearch } from "@tabler/icons-react";
-import { keepPreviousData } from "@tanstack/react-query";
 import { useAtomValue } from "jotai";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { getIntegrationName } from "@homarr/definitions";
 import type { MediaAvailability } from "@homarr/integrations/types";
 import { mediaAvailabilityConfiguration } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
 import { createGroup } from "../../lib/group";
+import { useRemoteQuery } from "../../lib/remote-query";
 import { mediaRequestSearchScopeAtom } from "../../spotlight-store";
 import { useMediaRequestSearchInteraction } from "../external/search-engines-search-group";
 
@@ -23,7 +23,14 @@ type MediaRequestSearchResult = RouterOutputs["integration"]["searchMediaRequest
 type MediaRequestSearchOption =
   | {
       key: string;
-      kind: "disabled" | "hint";
+      kind: "disabled";
+      label: string;
+      description: string;
+      unavailable: true;
+    }
+  | {
+      key: string;
+      kind: "hint";
       label: string;
       description: string;
     }
@@ -36,6 +43,7 @@ type MediaRequestSearchOption =
 export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
   keyPath: "key",
   title: (t) => t("search.mode.media.group.title"),
+  source: { kind: "remote", source: "media" },
   Component(option) {
     const tMedia = useI18n("search.mode.media");
 
@@ -66,7 +74,7 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
     return (
       <Group w="100%" wrap="nowrap" align="center" px="md" py="xs">
         {result.image ? (
-          <Image src={result.image} w={35} h={50} fit="cover" radius="md" />
+          <Image src={result.image} alt="" w={35} h={50} fit="cover" radius="md" />
         ) : (
           <IconSearch stroke={1.5} size={35} />
         )}
@@ -98,27 +106,50 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
   useQueryOptions(query) {
     const tMedia = useI18n("search.mode.media");
     const scope = useAtomValue(mediaRequestSearchScopeAtom);
-    const [debouncedQuery] = useDebouncedValue(query.trim(), 150);
-    const targetsQuery = clientApi.integration.mediaRequestSearchTargets.useQuery();
+    const remoteQuery = useRemoteQuery(query, "media");
+    const { data: session, status } = useSession();
+    const targetsQuery = clientApi.integration.mediaRequestSearchTargets.useQuery(undefined, {
+      enabled: status !== "loading" && Boolean(session?.user),
+      staleTime: 60_000,
+    });
 
     const scopedTargets = (targetsQuery.data ?? []).filter((target) =>
       scope.integrationIds ? scope.integrationIds.includes(target.id) : true,
     );
     const hasScopedTargets = scopedTargets.length > 0;
-    const shouldSearch = debouncedQuery.length > 0 && hasScopedTargets;
+    const shouldSearch = remoteQuery.enabled && hasScopedTargets;
     const integrationIds = scope.integrationIds ? scopedTargets.map((target) => target.id) : undefined;
 
     const resultsQuery = clientApi.integration.searchMediaRequests.useQuery(
-      { query: debouncedQuery, integrationIds },
+      { query: remoteQuery.query, integrationIds },
       {
         enabled: shouldSearch,
-        placeholderData: keepPreviousData,
         select: (data) => data.slice(0, 10),
       },
     );
 
     const isLoading = targetsQuery.isLoading || (shouldSearch && resultsQuery.isLoading);
     const isError = targetsQuery.isError || (shouldSearch && resultsQuery.isError);
+
+    if (status === "loading") {
+      return { data: [], isLoading: true, isError: false };
+    }
+
+    if (!session?.user) {
+      return {
+        data: [
+          {
+            key: "disabled",
+            kind: "disabled",
+            label: tMedia("action.search.label"),
+            description: tMedia("action.search.disabled.signInRequired"),
+            unavailable: true,
+          },
+        ],
+        isLoading: false,
+        isError: false,
+      };
+    }
 
     if (!targetsQuery.data) {
       return {
@@ -140,12 +171,13 @@ export const mediaRequestSearchGroup = createGroup<MediaRequestSearchOption>({
             description: scope.integrationIds
               ? tMedia("action.search.disabled.scoped")
               : tMedia("action.search.disabled.noIntegration"),
+            unavailable: true,
           },
         ],
       };
     }
 
-    if (debouncedQuery.length === 0) {
+    if (!remoteQuery.enabled) {
       return {
         isLoading,
         isError,
