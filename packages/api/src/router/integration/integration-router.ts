@@ -715,8 +715,15 @@ export const integrationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const integration = await createIntegrationAsync(ctx.integration);
       const result = await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
-      mediaRequestListRequestHandler.invalidateCache();
-      await mediaRequestStatsRequestHandler.invalidateCacheAsync([ctx.integration.id]);
+      try {
+        mediaRequestListRequestHandler.invalidateCache();
+        await mediaRequestStatsRequestHandler.invalidateCacheAsync([ctx.integration.id]);
+      } catch (error) {
+        logger.warn("Failed to invalidate media request caches after a successful request", {
+          integrationId: ctx.integration.id,
+          error: String(error),
+        });
+      }
       return result;
     }),
 });

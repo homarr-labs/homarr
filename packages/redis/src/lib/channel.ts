@@ -140,7 +140,11 @@ export const createGetSetChannel = <TData>(name: string, options: RedisChannelOp
         await requireRedisConnection(client).set(name, superjson.stringify(data), "PX", options.ttlMs);
         return;
       }
-      if (options?.ttlSeconds) {
+      if (options?.ttlSeconds !== undefined) {
+        if (options.ttlSeconds <= 0) {
+          await requireRedisConnection(client).del(name);
+          return;
+        }
         await requireRedisConnection(client).set(name, superjson.stringify(data), "EX", options.ttlSeconds);
         return;
       }

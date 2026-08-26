@@ -24,6 +24,17 @@ const isProcedure = (value: AnyProcedure | RouterRecord): value is AnyProcedure 
 
 const mergeInputs = (inputs: z.ZodObject[]) => inputs.reduce((merged, input) => merged.extend(input.shape), emptyInput);
 
+const getObjectInput = (input: z.ZodType) => {
+  if (input instanceof z.ZodObject) return input;
+
+  if (input instanceof z.ZodOptional) {
+    const unwrappedInput = input.unwrap();
+    if (unwrappedInput instanceof z.ZodObject) return unwrappedInput;
+  }
+
+  return null;
+};
+
 const getMcpMetadata = (meta: unknown): McpMeta["mcp"] => {
   if (!meta || typeof meta !== "object" || !("mcp" in meta)) return undefined;
 
@@ -41,8 +52,13 @@ const getMcpMetadata = (meta: unknown): McpMeta["mcp"] => {
 
 const getProcedureInput = (inputs: z.ZodType[]) => {
   if (inputs.length === 0) return emptyInput;
-  if (inputs.length === 1) return inputs[0] ?? emptyInput;
-  if (inputs.every((input): input is z.ZodObject => input instanceof z.ZodObject)) return mergeInputs(inputs);
+  if (inputs.length === 1) {
+    const input = inputs[0] ?? emptyInput;
+    return getObjectInput(input) ?? input;
+  }
+
+  const objectInputs = inputs.map(getObjectInput);
+  if (objectInputs.every((input): input is z.ZodObject => input !== null)) return mergeInputs(objectInputs);
   return null;
 };
 
