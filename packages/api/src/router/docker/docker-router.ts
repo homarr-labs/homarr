@@ -87,14 +87,14 @@ export const dockerRouter = createTRPCRouter({
       mcp: {
         enabled: true,
         description:
-          "Invalidate the cached Docker inventory so the next Docker query performs a fresh user-requested discovery. Requires admin permission.",
+          "Invalidate the local Docker inventory and publish a non-persistent Redis refresh event. Returns scope 'published' when Redis accepts the event or 'local' when only this replica is refreshed. Requires admin permission.",
       },
     })
     .concat(dockerMiddleware())
     .mutation(async () => {
       resetDockerInventory();
       const propagated = await publishDockerInventoryRefreshAsync();
-      if (propagated) return { scope: "all" as const };
+      if (propagated) return { scope: "published" as const };
       return { scope: "local" as const };
     }),
   getContainers: permissionRequiredProcedure

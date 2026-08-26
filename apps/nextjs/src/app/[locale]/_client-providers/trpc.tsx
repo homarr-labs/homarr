@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import {
@@ -25,6 +25,8 @@ import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import {
   dashboardSupportingQueryPolicies,
+  isTrpcForbiddenError,
+  isWidgetDataQueryKey,
   queryCacheDefaultGcTimeMs,
   queryCacheDefaultRefetchIntervalMs,
   queryCacheDefaultStaleTimeMs,
@@ -114,6 +116,12 @@ const ScopedTRPCReactProvider = ({
   );
   const [queryClient] = useState(() => {
     const client = new QueryClient({
+      queryCache: new QueryCache({
+        onError(error, query) {
+          if (!isTrpcForbiddenError(error) || !isWidgetDataQueryKey(query.queryKey)) return;
+          query.setState({ data: undefined, dataUpdatedAt: 0, isInvalidated: true });
+        },
+      }),
       defaultOptions: {
         queries: {
           staleTime: queryCacheDefaultStaleTimeMs,

@@ -434,9 +434,10 @@ jobs:
               return;
             }
             const targetTags = target.metadata?.container?.tags ?? [];
-            if (targetTags.includes("v2")) {
+            const extraTags = targetTags.filter((targetTag) => targetTag !== tag);
+            if (extraTags.length > 0) {
               core.setFailed(
-                `Package version ${target.id} also carries protected tag "v2"; refusing cleanup.`,
+                `Package version ${target.id} also carries tag(s) ${extraTags.map((targetTag) => `"${targetTag}"`).join(", ")}; refusing cleanup.`,
               );
               return;
             }

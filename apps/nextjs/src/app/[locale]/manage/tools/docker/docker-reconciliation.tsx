@@ -41,7 +41,7 @@ import type { UrlTemplateMode } from "@homarr/definitions";
 import { getIntegrationName, invariantTechnicalLabels } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr } from "@homarr/modals-collection";
-import { showErrorNotification } from "@homarr/notifications";
+import { showErrorNotification, showWarningNotification } from "@homarr/notifications";
 import { normalizeServiceUrl, ServiceUrlTemplate } from "@homarr/onboarding";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
@@ -69,12 +69,18 @@ export const DockerReconciliation = ({ defaultServerOrigin }: { defaultServerOri
   const reconciliation = clientApi.docker.reconcileServices.useQuery();
   const health = clientApi.docker.getServiceHealth.useQuery(undefined, { enabled: isOpen });
   const refreshInventory = clientApi.docker.refreshInventory.useMutation({
-    async onSuccess() {
+    async onSuccess(result) {
       await Promise.all([
         utils.docker.getContainers.invalidate(),
         utils.docker.reconcileServices.invalidate(),
         utils.docker.getServiceHealth.invalidate(),
       ]);
+      if (result.scope === "local") {
+        showWarningNotification({
+          title: tDockerAction("refresh.notification.warning.title"),
+          message: tDockerAction("refresh.notification.warning.message"),
+        });
+      }
     },
     onError() {
       showErrorNotification({

@@ -21,6 +21,9 @@ const createSuccessfulQuery = (queryKey: readonly unknown[], data: unknown, upda
   return { query, queryClient };
 };
 
+const stockPriceQueryKey = (symbol = "HOMARR") =>
+  [["widget", "stockPrice", "getPriceHistory"], { input: { symbol }, type: "query" }] as const;
+
 const createMemoryStorage = (): Storage => {
   const values = new Map<string, string>();
   return {
@@ -43,11 +46,12 @@ afterEach(() => {
 
 describe("widget query persistence", () => {
   test("persists successful dashboard data but not unrelated, ping, pending, or oversized queries", () => {
-    const widget = createSuccessfulQuery([["widget", "weather", "getWeather"], { type: "query" }], { temp: 21 });
+    const widget = createSuccessfulQuery(stockPriceQueryKey(), { price: 21 });
+    const location = createSuccessfulQuery([["widget", "weather", "atLocation"], { type: "query" }], { temp: 21 });
     const supporting = createSuccessfulQuery([["app", "byIds"], { type: "query" }], [{ id: "app-1" }]);
     const unrelated = createSuccessfulQuery([["board", "getBoardByName"], { type: "query" }], { name: "Home" });
     const ping = createSuccessfulQuery([["widget", "app", "ping"], { type: "query" }], { status: "online" });
-    const oversized = createSuccessfulQuery([["widget", "example"], { type: "query" }], {
+    const oversized = createSuccessfulQuery(stockPriceQueryKey("OVERSIZED"), {
       value: "x".repeat(queryPersistenceMaxDataBytes + 1),
     });
     const pendingClient = new QueryClient();
@@ -55,10 +59,7 @@ describe("widget query persistence", () => {
       queryKey: [["widget", "calendar", "findAllEvents"], { type: "query" }],
       queryFn: () => Promise.resolve([]),
     });
-    const forbidden = createSuccessfulQuery(
-      [["widget", "calendar", "findAllEvents"], { type: "query" }],
-      [{ title: "revoked" }],
-    );
+    const forbidden = createSuccessfulQuery(stockPriceQueryKey("FORBIDDEN"), [{ title: "revoked" }]);
     forbidden.query.setState({
       ...forbidden.query.state,
       error: Object.assign(new Error("access denied"), { data: { code: "FORBIDDEN" } }),
@@ -66,7 +67,8 @@ describe("widget query persistence", () => {
     });
 
     expect(shouldPersistDashboardQuery(widget.query)).toBe(true);
-    expect(shouldPersistDashboardQuery(supporting.query)).toBe(true);
+    expect(shouldPersistDashboardQuery(location.query)).toBe(false);
+    expect(shouldPersistDashboardQuery(supporting.query)).toBe(false);
     expect(shouldPersistDashboardQuery(unrelated.query)).toBe(false);
     expect(shouldPersistDashboardQuery(ping.query)).toBe(false);
     expect(shouldPersistDashboardQuery(oversized.query)).toBe(false);
@@ -100,7 +102,7 @@ describe("widget query persistence", () => {
   });
 
   test("never restores another session scope", async () => {
-    const queryKey = [["widget", "weather", "getWeather"], { type: "query" }] as const;
+    const queryKey = stockPriceQueryKey();
     const { queryClient } = createSuccessfulQuery(queryKey, { temp: 21 });
     const userAPersister = createSessionQueryPersister("user-a");
     userAPersister.persistClient({
@@ -117,9 +119,7 @@ describe("widget query persistence", () => {
   test("stops persisting once the provider tears the cache down", async () => {
     const storage = createMemoryStorage();
     const persister = createSessionQueryPersister("user-a", storage);
-    const { queryClient } = createSuccessfulQuery([["widget", "weather", "getWeather"], { type: "query" }], {
-      temp: 21,
-    });
+    const { queryClient } = createSuccessfulQuery(stockPriceQueryKey(), { price: 21 });
 
     persister.persistClient({
       timestamp: Date.now(),
@@ -160,7 +160,7 @@ describe("widget query persistence", () => {
     const scope = "user-a";
     const key = getQueryPersistenceStorageKey(scope);
     const persister = createSessionQueryPersister(scope);
-    const { query, queryClient } = createSuccessfulQuery([["widget", "calendar", "findAllEvents"], { type: "query" }], {
+    const { query, queryClient } = createSuccessfulQuery(stockPriceQueryKey(), {
       startsAt: new Date("2026-08-22T12:00:00.000Z"),
     });
     query.setState({ ...query.state, error: new Error("private refresh error"), status: "error" });
@@ -202,10 +202,7 @@ describe("widget query persistence", () => {
   test("sanitizes structurally valid but unsafe stored state before hydration", async () => {
     const scope = "user-a";
     const key = getQueryPersistenceStorageKey(scope);
-    const { queryClient } = createSuccessfulQuery(
-      [["widget", "calendar", "findAllEvents"], { type: "query" }],
-      [{ title: "safe" }],
-    );
+    const { queryClient } = createSuccessfulQuery(stockPriceQueryKey(), [{ title: "safe" }]);
     const validQuery = dehydrate(queryClient).queries[0];
     if (!validQuery) throw new Error("Expected a dehydrated query");
 
@@ -259,9 +256,7 @@ describe("widget query persistence", () => {
     vi.setSystemTime(new Date("2026-08-22T12:00:00.000Z"));
     const scope = "user-a";
     const persister = createSessionQueryPersister(scope);
-    const { queryClient } = createSuccessfulQuery([["widget", "weather", "getWeather"], { type: "query" }], {
-      temp: 21,
-    });
+    const { queryClient } = createSuccessfulQuery(stockPriceQueryKey(), { price: 21 });
     persister.persistClient({ timestamp, buster: storedBuster, clientState: dehydrate(queryClient) });
     persister.flush();
 
@@ -273,13 +268,13 @@ describe("widget query persistence", () => {
       buster: queryPersistenceBuster,
     });
 
-    expect(restoredClient.getQueryData([["widget", "weather", "getWeather"], { type: "query" }])).toBeUndefined();
+    expect(restoredClient.getQueryData(stockPriceQueryKey())).toBeUndefined();
     expect(window.sessionStorage.getItem(getQueryPersistenceStorageKey(scope))).toBeNull();
   });
 
   test("quota retry writes the cache after evicting the oldest query", async () => {
-    const old = createSuccessfulQuery([["widget", "old"], { type: "query" }], "old", 1);
-    const recent = createSuccessfulQuery([["widget", "recent"], { type: "query" }], "recent", 2);
+    const old = createSuccessfulQuery(stockPriceQueryKey("OLD"), "old", 1);
+    const recent = createSuccessfulQuery(stockPriceQueryKey("RECENT"), "recent", 2);
     const storage = createMemoryStorage();
     const setItem = storage.setItem.bind(storage);
     const setItemSpy = vi.spyOn(storage, "setItem").mockImplementation((key, value) => {
@@ -303,7 +298,7 @@ describe("widget query persistence", () => {
     expect(setItemSpy).toHaveBeenCalledTimes(2);
     const restored = await persister.restoreClient();
     expect(restored?.clientState.queries).toHaveLength(1);
-    expect(restored?.clientState.queries[0]?.queryKey).toEqual([["widget", "recent"], { type: "query" }]);
+    expect(restored?.clientState.queries[0]?.queryKey).toEqual(stockPriceQueryKey("RECENT"));
 
     persister.persistClient(persistedClient);
     persister.flush();
@@ -314,7 +309,7 @@ describe("widget query persistence", () => {
     vi.useFakeTimers();
     const storage = createMemoryStorage();
     const setItem = vi.spyOn(storage, "setItem");
-    const queryKey = [["widget", "weather", "getWeather"], { type: "query" }] as const;
+    const queryKey = stockPriceQueryKey();
     const first = createSuccessfulQuery(queryKey, { temp: 20 }, 1);
     const latest = createSuccessfulQuery(queryKey, { temp: 21 }, 2);
     const persister = createSessionQueryPersister("user-a", storage);
@@ -355,7 +350,7 @@ describe("widget query persistence", () => {
       },
     } as unknown as Storage;
     const persister = createSessionQueryPersister("blocked", blockedStorage);
-    const { queryClient } = createSuccessfulQuery([["widget", "weather"], { type: "query" }], { temp: 21 });
+    const { queryClient } = createSuccessfulQuery(stockPriceQueryKey(), { price: 21 });
 
     expect(persister.restoreClient()).toBeUndefined();
     expect(() => {

@@ -2,14 +2,18 @@ import type { QueryKey } from "@tanstack/react-query";
 import type { PersistedClient, Persister } from "@tanstack/react-query-persist-client";
 import { parse, stringify } from "superjson";
 
-import { isWidgetDataQueryKey, queryCacheDefaultGcTimeMs } from "@homarr/api/query-cache";
+import {
+  isPersistableDashboardQueryKey,
+  isTrpcForbiddenError,
+  queryCacheDefaultGcTimeMs,
+} from "@homarr/api/query-cache";
 
 export const queryPersistenceMaxAgeMs = queryCacheDefaultGcTimeMs;
 export const queryPersistenceMaxDataBytes = 256 * 1024;
 export const queryPersistenceMaxCacheBytes = 2 * 1024 * 1024;
 export const queryPersistenceThrottleMs = 1_000;
 export const queryPersistenceIdleTimeoutMs = 1_000;
-export const queryPersistenceBuster = "v3-forbidden-filter";
+export const queryPersistenceBuster = "v4-public-data-only";
 
 const queryPersistenceStoragePrefix = "homarr:widget-query-cache";
 
@@ -32,15 +36,6 @@ const budgetVerdictCache = new WeakMap<object, boolean>();
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
-
-interface ForbiddenTrpcError {
-  data: { code: "FORBIDDEN" };
-}
-
-const isTrpcForbiddenError = (error: unknown): error is ForbiddenTrpcError => {
-  if (!isRecord(error) || !isRecord(error.data)) return false;
-  return error.data.code === "FORBIDDEN";
-};
 
 const isQuotaExceededError = (error: unknown): boolean => {
   if (!isRecord(error)) return false;
@@ -77,7 +72,7 @@ const holdsDashboardData = (query: PersistableQuery) =>
   query.state.data !== undefined &&
   Number.isFinite(query.state.dataUpdatedAt) &&
   query.state.dataUpdatedAt > 0 &&
-  isWidgetDataQueryKey(query.queryKey);
+  isPersistableDashboardQueryKey(query.queryKey);
 
 export const shouldPersistDashboardQuery = (query: PersistableQuery) =>
   holdsDashboardData(query) && !isTrpcForbiddenError(query.state.error) && fitsStorageBudget(query.state.data);
@@ -119,7 +114,7 @@ const sanitizePersistedClient = (client: PersistedClient): PersistedClient => ({
   clientState: {
     mutations: [],
     queries: client.clientState.queries
-      .filter((query) => !isTrpcForbiddenError(query.state.error))
+      .filter((query) => holdsDashboardData(query) && !isTrpcForbiddenError(query.state.error))
       .map(sanitizePersistedQuery),
   },
 });
@@ -268,10 +263,9 @@ export const createSessionQueryPersister = (
         }
         quotaLimited = true;
         candidate = keepNewestQueries(candidate, Math.floor(candidate.clientState.queries.length / 2));
+        if (!candidate) return;
       }
     }
-
-    persistenceDisabled = true;
   };
 
   const clearScheduledPersist = () => {
